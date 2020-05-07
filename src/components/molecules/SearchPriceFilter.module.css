@@ -1,0 +1,24 @@
+.input {
+  composes: input from './Form/FieldTemplate.module.css';
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.label {
+  margin-bottom: calc(var(--spacer) / 2);
+}
+
+@media (max-width: 55rem) {
+  .layout {
+    flex-direction: row;
+  }
+
+  .label {
+    flex-basis: auto;
+    width: calc(50% - var(--spacer) / 2);
+  }
+}

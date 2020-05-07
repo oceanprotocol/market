@@ -1,0 +1,35 @@
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+.tag {
+  color: var(--color-secondary);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+  padding: 0.2rem 1.2rem 0.2rem 1.2rem;
+  margin-left: calc(var(--spacer) / 16);
+  margin-right: calc(var(--spacer) / 16);
+  margin-bottom: calc(var(--spacer) / 8);
+  text-align: center;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--color-grey-light);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.tag:hover:not(span),
+.tag:focus:not(span) {
+  color: var(--color-primary);
+}
+
+.tag:first-of-type {
+  margin-left: 0;
+}
+
+.more {
+  font-size: var(--font-size-mini);
+  margin-left: calc(var(--spacer) / 8);
+}

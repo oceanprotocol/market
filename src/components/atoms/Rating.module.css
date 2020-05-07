@@ -1,0 +1,57 @@
+.ratings {
+  display: flex;
+  margin-left: calc(var(--spacer) / -8);
+  font-weight: var(--font-weight-base);
+}
+
+/* Handle half stars our own way */
+.ratings [style*='width:'] {
+  width: 100% !important;
+  clip-path: polygon(0 0, 60% 0, 60% 100%, 0% 100%);
+}
+
+.ratings [style*='width:100%'],
+.ratings [style*='width: 100%'] {
+  width: 100% !important;
+  clip-path: none !important;
+}
+
+.ratings [style*='width:0%'],
+.ratings [style*='width: 0%'] {
+  width: 0 !important;
+  clip-path: none !important;
+}
+
+.star {
+  margin-left: calc(var(--spacer) / 8);
+}
+
+.star svg {
+  fill: none;
+  stroke: var(--color-grey);
+}
+
+.full {
+  composes: star;
+}
+
+.full svg {
+  fill: var(--color-primary);
+  stroke: var(--color-primary);
+}
+
+.ratingVotes {
+  display: inline-block;
+  font-size: var(--font-size-small);
+  padding-left: 5px;
+  color: var(--color-grey);
+}
+
+.readonly {
+  composes: ratings;
+}
+
+.readonly .full svg {
+  fill: var(--color-secondary);
+  stroke: var(--color-secondary);
+}

@@ -1,0 +1,8 @@
+.metaItem {
+  font-size: var(--font-size-small);
+}
+
+.title {
+  font-size: var(--font-size-small);
+  margin-bottom: calc(var(--spacer) / 4);
+}

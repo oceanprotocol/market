@@ -1,0 +1,70 @@
+.form {
+  margin-bottom: var(--spacer);
+}
+
+.inputGroup .input {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.inputGroup button {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  margin-top: -1px;
+  width: 100%;
+  border-width: 1px;
+  background-color: var(--color-grey-light);
+  border-color: var(--color-grey-light);
+  color: var(--color-secondary);
+}
+
+.inputGroup button:hover,
+.inputGroup button:focus,
+.inputGroup .input:focus + button {
+  color: var(--color-white);
+}
+
+.inputGroup button:hover,
+.inputGroup button:focus,
+.inputGroup .input:focus + button:hover,
+.inputGroup .input:focus + button:focus {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.inputGroup .input:focus + button {
+  border-color: var(--color-secondary);
+  background-color: var(--color-secondary);
+}
+
+@media screen and (min-width: 30rem) {
+  .inputGroup {
+    display: flex;
+  }
+
+  .inputGroup .input {
+    border-bottom-left-radius: var(--border-radius);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .inputGroup button {
+    border-top-right-radius: var(--border-radius);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin-top: 0;
+    margin-left: -1px;
+    width: auto;
+  }
+}
+
+.input {
+  composes: input from './Form/FieldTemplate.module.css';
+}
+
+.large {
+  composes: large from './Form/FieldTemplate.module.css';
+}
+
+.filters {
+}

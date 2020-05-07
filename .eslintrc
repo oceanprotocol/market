@@ -1,0 +1,33 @@
+{
+  "extends": ["eslint:recommended", "prettier"],
+  "env": { "es6": true, "browser": true, "node": true },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "overrides": [
+    {
+      "files": ["**/*.ts", "**/*.tsx"],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "project": ["./tsconfig.json"]
+      },
+      "extends": [
+        "oceanprotocol",
+        "oceanprotocol/react",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:prettier/recommended",
+        "prettier/react",
+        "prettier/standard",
+        "prettier/@typescript-eslint"
+      ],
+      "plugins": ["@typescript-eslint", "prettier"],
+      "rules": {
+        "react/prop-types": "off",
+        "@typescript-eslint/explicit-function-return-type": "off"
+      }
+    }
+  ]
+}

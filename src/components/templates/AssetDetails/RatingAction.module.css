@@ -1,0 +1,25 @@
+.rating {
+  composes: box from '../../atoms/Box.module.css';
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  margin-top: 5px;
+  padding: 20px !important;
+}
+
+.rating svg {
+  width: var(--font-size-h3);
+  height: var(--font-size-h3);
+}
+
+.title {
+  font-size: var(--font-size-large);
+}
+
+.success {
+  background-color: var(--color-success);
+}
+
+.error {
+  background-color: var(--color-danger);
+}

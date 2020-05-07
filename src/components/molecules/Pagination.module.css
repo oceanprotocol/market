@@ -1,0 +1,71 @@
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: calc(var(--spacer) * 2);
+  margin-bottom: var(--spacer);
+  padding-left: 0;
+}
+
+.number {
+  text-align: center;
+  font-weight: var(--font-weight-bold);
+  padding: calc(var(--spacer) / 4) calc(var(--spacer) / 2);
+  margin-left: -1px;
+  margin-top: -1px;
+  display: inline-block;
+  cursor: pointer;
+  border: 1px solid var(--color-grey-light);
+  min-width: 3.5rem;
+}
+
+li:first-child .number,
+:global(li.selected):nth-child(2) .number {
+  border-top-left-radius: var(--border-radius);
+  border-bottom-left-radius: var(--border-radius);
+}
+
+li:last-child .number {
+  border-top-right-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+}
+
+.number,
+.number:hover,
+.number:focus,
+.number:active {
+  transform: none;
+  outline: 0;
+}
+
+.number:hover {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.current,
+.prev,
+.next,
+.break {
+  composes: number;
+}
+
+.current {
+  cursor: default;
+  pointer-events: none;
+}
+
+.current,
+.current:hover,
+.current:focus,
+.current:active {
+  color: var(--color-grey);
+}
+
+.next {
+  text-align: right;
+}
+
+.prevNextDisabled {
+  opacity: 0;
+}

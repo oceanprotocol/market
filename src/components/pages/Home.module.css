@@ -1,0 +1,64 @@
+.header {
+  max-width: 37rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: calc(var(--spacer) * 3);
+  margin-top: 3vh;
+}
+
+.header h1 {
+  margin-bottom: calc(var(--spacer) / 4);
+}
+
+.header h2 {
+  font-size: var(--font-size-large);
+  color: var(--color-secondary);
+  margin-bottom: calc(var(--spacer) * 2);
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: var(--spacer);
+  margin: 0 auto;
+}
+
+.action {
+  composes: box from '../atoms/Box.module.css';
+  text-align: center;
+  color: var(--color-secondary);
+  font-size: var(--font-size-small);
+}
+
+.action:hover,
+.action:focus {
+  border-color: var(--color-primary);
+}
+
+.action button {
+  pointer-events: none;
+  margin-top: calc(var(--spacer) / 4);
+}
+
+.actionTitle {
+  font-size: var(--font-size-large);
+  margin-bottom: calc(var(--spacer) / 4);
+}
+
+.action svg {
+  width: 5rem;
+  height: 5rem;
+  margin-bottom: calc(var(--spacer) / 1.5);
+}
+
+.comingSoon {
+  composes: action;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.comingSoon button {
+  background: none;
+  border: 0;
+  color: var(--color-secondary);
+}

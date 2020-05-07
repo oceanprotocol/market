@@ -1,0 +1,11 @@
+.price {
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-large);
+  color: var(--color-dark);
+}
+
+.price span {
+  font-weight: var(--font-weight-base);
+  color: var(--color-secondary);
+  font-size: var(--font-size-small);
+}

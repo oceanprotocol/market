@@ -1,0 +1,9 @@
+.error {
+  background-color: var(--color-danger);
+}
+.success {
+  background-color: var(--color-success);
+}
+.info {
+  background-color: var(--color-info);
+}

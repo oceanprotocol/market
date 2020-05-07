@@ -1,0 +1,17 @@
+.metaSecondary {
+  font-size: var(--font-size-small);
+}
+
+.metaSecondary > * {
+  margin-top: var(--spacer);
+}
+
+.metaSecondary p {
+  /* mimic ListItem spacing */
+  margin-bottom: calc(var(--spacer) / 8);
+}
+
+.samples {
+  composes: box from '../../atoms/Box.module.css';
+  margin-top: calc(var(--spacer) / 2);
+}

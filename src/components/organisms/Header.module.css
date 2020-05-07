@@ -1,0 +1,49 @@
+.header {
+  background-color: var(--color-white);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+}
+
+.content {
+  padding: calc(var(--spacer) / 2) var(--spacer);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: var(--layout-max-width);
+}
+
+.logoUnit {
+  display: flex;
+  align-items: center;
+}
+
+.logoUnit svg {
+  fill: var(--color-primary);
+  width: 70px;
+  height: 40px;
+  margin-right: calc(var(--spacer) / 2);
+}
+
+.title {
+  display: none;
+}
+
+@media screen and (min-width: 40rem) {
+  .title {
+    margin: 0;
+    display: block;
+    color: var(--color-secondary);
+    font-size: var(--font-size-base);
+  }
+
+  .logoUnit svg {
+    margin-top: -0.4rem;
+  }
+}
+
+@media screen and (min-width: 60rem) {
+  .title {
+    font-size: var(--font-size-large);
+  }
+}

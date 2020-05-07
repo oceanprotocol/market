@@ -1,0 +1,45 @@
+.alert {
+  composes: box from './Box.module.css';
+  max-width: 40rem;
+  margin: auto;
+  border-width: 0;
+  border-left-width: 0.5rem;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.alert,
+.title {
+  color: var(--color-white);
+}
+
+.title {
+  font-size: var(--font-size-large);
+  margin-bottom: calc(var(--spacer) / 2);
+  color: inherit;
+}
+
+.text {
+  margin-bottom: 0;
+}
+
+/* States */
+.error {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.success {
+  border-color: var(--color-success);
+  color: var(--color-success);
+}
+
+.info {
+  border-color: var(--color-info);
+  color: var(--color-info);
+}
+
+.warning {
+  border-color: var(--color-warning);
+  color: var(--color-warning);
+}

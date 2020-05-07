@@ -1,0 +1,15 @@
+.box {
+  background: var(--color-white);
+  padding: var(--spacer);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--color-grey-light);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+a.box:hover,
+a.box:focus {
+  outline: 0;
+  border-color: var(--color-grey);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transform: translate3d(0, -2px, 0);
+}

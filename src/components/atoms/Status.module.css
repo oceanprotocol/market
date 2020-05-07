@@ -1,0 +1,28 @@
+/* default: success, green circle */
+.status {
+  width: var(--font-size-small);
+  height: var(--font-size-small);
+  border-radius: 50%;
+  display: inline-block;
+  background: var(--color-success);
+}
+
+/* yellow triangle */
+.warning {
+  composes: status;
+  border-radius: 0;
+  background: none;
+  width: 0;
+  height: 0;
+  border-left: calc(var(--font-size-small) / 1.7) solid transparent;
+  border-right: calc(var(--font-size-small) / 1.7) solid transparent;
+  border-bottom: var(--font-size-small) solid var(--color-warning);
+}
+
+/* red square */
+.error {
+  composes: status;
+  border-radius: 0;
+  background: var(--color-danger);
+  text-transform: capitalize;
+}

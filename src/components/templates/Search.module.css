@@ -1,0 +1,27 @@
+.empty {
+  color: var(--color-secondary);
+  font-style: italic;
+}
+
+.grid {
+  display: grid;
+}
+
+@media (min-width: 55rem) {
+  .grid {
+    grid-column-gap: calc(var(--spacer) * 3);
+    grid-template-columns: minmax(0, 1fr) 3fr;
+    grid-template-areas:
+      'side search'
+      'side results';
+  }
+  .search {
+    grid-area: search;
+  }
+  .side {
+    grid-area: side;
+  }
+  .results {
+    grid-area: results;
+  }
+}

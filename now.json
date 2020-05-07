@@ -1,0 +1,23 @@
+{
+  "name": "dexfreight",
+  "build": {
+    "env": {
+      "NODE_URI": "@node_uri",
+      "AQUARIUS_URI": "@aquarius_uri",
+      "BRIZO_URI": "@brizo_uri",
+      "BRIZO_ADDRESS": "@brizo_address",
+      "SECRET_STORE_URI": "@secret_store_uri",
+      "FAUCET_URI": "@faucet_uri",
+      "RATING_URI": "@rating_uri"
+    }
+  },
+  "env": {
+    "NODE_URI": "@node_uri",
+    "AQUARIUS_URI": "@aquarius_uri",
+    "BRIZO_URI": "@brizo_uri",
+    "BRIZO_ADDRESS": "@brizo_address",
+    "SECRET_STORE_URI": "@secret_store_uri",
+    "FAUCET_URI": "@faucet_uri",
+    "RATING_URI": "@rating_uri"
+  }
+}

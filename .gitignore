@@ -1,0 +1,11 @@
+node_modules
+out
+.DS_Store
+.next
+.idea
+.env
+.env.build
+coverage
+storybook-static
+public/storybook
+.artifacts

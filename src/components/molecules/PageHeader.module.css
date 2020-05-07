@@ -1,0 +1,15 @@
+.header {
+  margin-bottom: var(--spacer);
+  max-width: 50rem;
+}
+
+.title {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.description {
+  font-size: var(--font-size-large);
+  margin-top: calc(var(--spacer) / 4);
+  margin-bottom: 0;
+}

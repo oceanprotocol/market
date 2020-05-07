@@ -1,0 +1,64 @@
+.teaser {
+  max-width: 50rem;
+  height: 100%;
+}
+
+.link {
+  composes: box from '../atoms/Box.module.css';
+  font-size: var(--font-size-small);
+  height: 100%;
+  color: var(--color-dark);
+
+  /* for sticking footer to bottom */
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-all;
+  margin-top: calc(var(--spacer) / 2);
+
+  /* for sticking footer to bottom */
+  flex: 1;
+}
+
+.title {
+  font-size: var(--font-size-h4);
+  color: var(--color-primary);
+  margin-bottom: calc(var(--spacer) / 6);
+}
+
+.tags > * {
+  font-size: var(--font-size-mini);
+}
+
+.foot {
+  color: var(--color-secondary);
+  font-weight: var(--font-weight-bold);
+  margin-top: calc(var(--spacer) / 1.5);
+  border-top: 1px solid var(--color-grey-light);
+  padding-top: calc(var(--spacer) / 3);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.foot p {
+  margin: 0;
+}
+
+.price {
+  text-align: right;
+}
+
+p.copyright {
+  width: 100%;
+  font-weight: var(--font-weight-base);
+  margin-bottom: 0;
+  font-size: var(--font-size-mini);
+  text-align: center;
+  margin-top: calc(var(--spacer) / 3);
+}

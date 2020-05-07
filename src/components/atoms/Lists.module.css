@@ -1,0 +1,18 @@
+.item {
+  display: list-item;
+  margin-top: calc(var(--spacer) / 8);
+  color: var(--color-grey);
+  list-style-position: inside;
+}
+
+.item span {
+  color: var(--color-dark);
+}
+
+.ulItem {
+  list-style-type: square;
+}
+
+.olItem {
+  list-style-type: decimal;
+}

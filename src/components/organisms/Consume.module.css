@@ -1,0 +1,42 @@
+.consume {
+  composes: box from '../atoms/Box.module.css';
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.info {
+  display: flex;
+  width: 100%;
+}
+
+.filewrapper {
+  flex-shrink: 0;
+}
+
+.pricewrapper {
+}
+
+.consume button {
+  margin-left: calc(var(--spacer) / 4);
+}
+
+.consume button:first-of-type {
+  margin-left: 0;
+}
+
+.price {
+  font-size: var(--font-size-h2);
+  margin-top: calc(var(--spacer) / 4);
+  margin-bottom: calc(var(--spacer) / 2);
+}
+
+.price span {
+  font-size: var(--font-size-large);
+}
+
+.feedback {
+  width: 100%;
+  margin-top: calc(var(--spacer) / 1.5);
+  padding-top: calc(var(--spacer) / 1.5);
+  border-top: 1px solid var(--color-grey-light);
+}

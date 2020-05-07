@@ -1,0 +1,18 @@
+.wallet {
+  text-align: right;
+}
+
+.address {
+  font-family: var(--font-family-monospace);
+}
+
+.balance {
+  color: var(--color-secondary);
+  white-space: nowrap;
+}
+
+.balance span {
+  font-weight: var(--font-weight-bold);
+  display: inline-block;
+  margin-left: 0.2rem;
+}

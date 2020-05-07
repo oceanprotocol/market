@@ -1,0 +1,27 @@
+.menu {
+}
+
+.link {
+  display: inline-block;
+  color: var(--color-secondary);
+  font-weight: var(--font-weight-bold);
+  margin: calc(var(--spacer) / 4) var(--spacer);
+}
+
+.link:hover,
+.link:focus,
+.link:active {
+  color: var(--color-dark);
+}
+
+.link.active {
+  color: var(--color-primary);
+}
+
+.link:first-child {
+  margin-left: 0;
+}
+
+.link:last-child {
+  margin-right: 0;
+}

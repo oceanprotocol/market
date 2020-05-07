@@ -1,0 +1,12 @@
+.optionItem {
+  margin-bottom: calc(var(--spacer) / 4);
+  padding-left: 1.5rem;
+}
+
+.optionItem label {
+  display: block;
+}
+
+.optionItem input {
+  margin-left: -1.5rem;
+}
