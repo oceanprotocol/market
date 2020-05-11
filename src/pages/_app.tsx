@@ -3,7 +3,6 @@ import { AppProps } from 'next/app'
 import Head from 'next/head'
 import { DefaultSeo } from 'next-seo'
 import { useRouter } from 'next/router'
-import Web3Provider from '../context/Web3Provider'
 import NProgress from '../components/atoms/NProgress'
 import { title, description, url } from '../../site.config'
 import { toast } from 'react-toastify'
@@ -12,6 +11,7 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import '../styles/global.css'
 import '../components/atoms/NProgress.css'
+import { Web3Provider, OceanProvider } from '@oceanprotocol/react'
 
 export default function dexfreightApp({ Component, pageProps }: AppProps) {
   const { asPath } = useRouter()
@@ -23,6 +23,23 @@ export default function dexfreightApp({ Component, pageProps }: AppProps) {
   // /publish route.
   if (asPath.includes('/publish')) {
     require('../styles/datepicker.css')
+  }
+
+  const config = {
+    nodeUri: process.env.NODE_URI || 'https://pacific.oceanprotocol.com',
+    aquariusUri:
+      process.env.AQUARIUS_URI ||
+      'https://aquarius.pacific.dexfreight.dev-ocean.com',
+    brizoUri:
+      process.env.BRIZO_URI || 'https://brizo.pacific.dexfreight.dev-ocean.com',
+    brizoAddress:
+      process.env.BRIZO_ADDRESS || '0xeD792C5FcC8bF3322a6ba89A6e51eF0B6fB3C530',
+    secretStoreUri:
+      process.env.SECRET_STORE_URI || 'https://secret-store.oceanprotocol.com',
+    faucetUri: process.env.FAUCET_URI || 'https://faucet.oceanprotocol.com',
+    ratingUri:
+      process.env.RATING_URI || 'https://rating.pacific.dexfreight.dev-ocean.com',
+    verbose: 3
   }
 
   return (
@@ -53,7 +70,10 @@ export default function dexfreightApp({ Component, pageProps }: AppProps) {
       />
       <NProgress />
       <Web3Provider>
-        <Component {...pageProps} />
+
+        <OceanProvider config={config} >
+          <Component {...pageProps} />
+        </OceanProvider>
       </Web3Provider>
     </>
   )

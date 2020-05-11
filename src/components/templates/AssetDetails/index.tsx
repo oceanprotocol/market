@@ -15,6 +15,7 @@ import RatingAction from './RatingAction'
 import styles from './index.module.css'
 import { config } from '../../../config/ocean'
 import { findServiceByType } from '../../../utils'
+import { useMetadata } from '@oceanprotocol/react'
 
 export declare type AssetDetailsPageProps = {
   title: string
@@ -41,18 +42,14 @@ const AssetDetailsPageMeta = ({
   } = attributes.additionalInformation
   const { curation } = attributes
 
+  const {getCuration} = useMetadata()
   const [rating, setRating] = useState<number>(curation ? curation.rating : 0)
   const [numVotes, setNumVotes] = useState<number>(
     curation ? curation.numVotes : 0
   )
 
   const onVoteUpdate = async () => {
-    const aquarius = new Aquarius(config.aquariusUri as string, Logger)
-    const newDdo = await aquarius.retrieveDDO(ddo.id)
-    if (!newDdo) return
-    console.log(newDdo)
-    const { attributes } = findServiceByType(newDdo, 'metadata')
-    const { rating, numVotes } = (attributes as MetaDataDexFreight).curation
+    const { rating, numVotes } = await getCuration(ddo.id)
 
     setRating(rating)
     setNumVotes(numVotes)

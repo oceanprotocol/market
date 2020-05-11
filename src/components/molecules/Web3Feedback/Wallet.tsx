@@ -1,8 +1,8 @@
 import React from 'react'
 import styles from './Wallet.module.css'
 import Button from '../../atoms/Button'
-import useWeb3 from '../../../hooks/useWeb3'
 import { formatNumber } from '../../../utils'
+import { useWeb3 } from '@oceanprotocol/react'
 
 const Wallet = ({ balanceOcean }: { balanceOcean: string }) => {
   const { account, balance, web3Connect } = useWeb3()
