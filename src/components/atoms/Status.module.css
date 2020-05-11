@@ -4,7 +4,7 @@
   height: var(--font-size-small);
   border-radius: 50%;
   display: inline-block;
-  background: var(--color-success);
+  background: var(--green);
 }
 
 /* yellow triangle */
@@ -16,13 +16,13 @@
   height: 0;
   border-left: calc(var(--font-size-small) / 1.7) solid transparent;
   border-right: calc(var(--font-size-small) / 1.7) solid transparent;
-  border-bottom: var(--font-size-small) solid var(--color-warning);
+  border-bottom: var(--font-size-small) solid var(--orange);
 }
 
 /* red square */
 .error {
   composes: status;
   border-radius: 0;
-  background: var(--color-danger);
+  background: var(--red);
   text-transform: capitalize;
 }

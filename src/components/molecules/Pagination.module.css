@@ -15,7 +15,7 @@
   margin-top: -1px;
   display: inline-block;
   cursor: pointer;
-  border: 1px solid var(--color-grey-light);
+  border: 1px solid var(--brand-grey-light);
   min-width: 3.5rem;
 }
 
@@ -40,7 +40,7 @@ li:last-child .number {
 
 .number:hover {
   background-color: var(--color-primary);
-  color: var(--color-white);
+  color: var(--brand-white);
 }
 
 .current,
@@ -59,7 +59,7 @@ li:last-child .number {
 .current:hover,
 .current:focus,
 .current:active {
-  color: var(--color-grey);
+  color: var(--brand-grey);
 }
 
 .next {

@@ -11,22 +11,22 @@
   font-weight: var(--font-weight-bold);
   border-radius: var(--border-radius);
   transition: 0.2s ease-out;
-  color: var(--color-white);
+  color: var(--brand-white);
   background: var(--color-secondary);
   user-select: none;
 }
 
 .button:hover,
 .button:focus {
-  color: var(--color-dark);
+  color: var(--brand-grey-dark);
   background: transparent;
   text-decoration: none;
 }
 
 .button:active {
-  color: var(--color-white);
-  background: var(--color-dark);
-  border-color: var(--color-dark);
+  color: var(--brand-white);
+  background: var(--brand-grey-dark);
+  border-color: var(--brand-grey-dark);
   transition: none;
 }
 

@@ -28,7 +28,7 @@
 
 .star svg {
   fill: none;
-  stroke: var(--color-grey);
+  stroke: var(--brand-grey);
 }
 
 .full {
@@ -44,7 +44,7 @@
   display: inline-block;
   font-size: var(--font-size-small);
   padding-left: 5px;
-  color: var(--color-grey);
+  color: var(--brand-grey);
 }
 
 .readonly {

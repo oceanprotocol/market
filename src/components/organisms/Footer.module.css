@@ -1,6 +1,6 @@
 .footer {
-  background-color: var(--color-dark);
-  color: var(--color-grey-light);
+  background-color: var(--brand-grey-dark);
+  color: var(--brand-grey-light);
   font-size: var(--font-size-small);
   text-align: center;
 }

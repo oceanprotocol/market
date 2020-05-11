@@ -14,7 +14,7 @@
   margin-bottom: calc(var(--spacer) / 8);
   text-align: center;
   border-radius: var(--border-radius);
-  border: 1px solid var(--color-grey-light);
+  border: 1px solid var(--brand-grey-light);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

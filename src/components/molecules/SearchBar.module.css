@@ -13,15 +13,15 @@
   margin-top: -1px;
   width: 100%;
   border-width: 1px;
-  background-color: var(--color-grey-light);
-  border-color: var(--color-grey-light);
+  background-color: var(--brand-grey-light);
+  border-color: var(--brand-grey-light);
   color: var(--color-secondary);
 }
 
 .inputGroup button:hover,
 .inputGroup button:focus,
 .inputGroup .input:focus + button {
-  color: var(--color-white);
+  color: var(--brand-white);
 }
 
 .inputGroup button:hover,

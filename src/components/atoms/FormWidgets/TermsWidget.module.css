@@ -1,7 +1,7 @@
 .terms {
   padding: calc(var(--spacer) / 2);
-  border: 1px solid var(--color-grey-light);
-  background-color: var(--color-grey-dimmed);
+  border: 1px solid var(--brand-grey-light);
+  background-color: var(--brand-grey-lighter);
   border-radius: var(--border-radius);
   margin-bottom: calc(var(--spacer) / 2);
   font-size: var(--font-size-small);

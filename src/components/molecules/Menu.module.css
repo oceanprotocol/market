@@ -11,7 +11,7 @@
 .link:hover,
 .link:focus,
 .link:active {
-  color: var(--color-dark);
+  color: var(--brand-grey-dark);
 }
 
 .link.active {

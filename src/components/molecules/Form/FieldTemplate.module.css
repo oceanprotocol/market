@@ -10,11 +10,11 @@
   font-family: var(--font-family-base);
   font-weight: var(--font-weight-bold);
   /* font-weight: var(--font-weight-bold); */
-  color: var(--color-dark);
-  border: 1px solid var(--color-grey-light);
+  color: var(--brand-grey-dark);
+  border: 1px solid var(--brand-grey-light);
   box-shadow: none;
   width: 100%;
-  background: var(--color-white);
+  background: var(--brand-white);
   padding: calc(var(--spacer) / 3);
   margin: 0;
   border-radius: var(--border-radius);
@@ -46,7 +46,7 @@
 .input[disabled],
 .row input[readonly],
 .row input[disabled] {
-  background-color: var(--color-grey-light);
+  background-color: var(--brand-grey-light);
   cursor: not-allowed;
   pointer-events: none;
 }
@@ -68,8 +68,8 @@
     linear-gradient(135deg, var(--color-secondary) 50%, transparent 50%),
     linear-gradient(
       to right,
-      var(--color-grey-light) 0px,
-      var(--color-white) 1.5px
+      var(--brand-grey-light) 0px,
+      var(--brand-white) 1.5px
     );
   background-position: calc(100% - 18px) calc(1rem + 5px),
     calc(100% - 13px) calc(1rem + 5px), 100% 0;
@@ -87,7 +87,7 @@
 }
 
 .row :global(.field-radio-group) {
-  border: 1px solid var(--color-grey-light);
+  border: 1px solid var(--brand-grey-light);
   padding: calc(var(--spacer) / 3);
   border-radius: var(--border-radius);
 }
