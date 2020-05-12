@@ -1,7 +1,4 @@
 :root {
-  --color-primary: #ff4092;
-  --color-secondary: #141414;
-
   --brand-grey: #41474e;
   --brand-grey-light: #8b98a9;
   --brand-grey-dark: #303030;
@@ -18,6 +15,10 @@
   --red: #d80606;
   --orange: #b35f36;
   --yellow: #eac146;
+
+  /* Buttons */
+  --color-primary: #ff4092;
+  --color-secondary: #8b98a9;
 
   --font-family-base: 'Sharp Sans', -apple-system, BlinkMacSystemFont,
     'Segoe UI', Helvetica, Arial, sans-serif;
@@ -52,7 +53,7 @@
   --break-point--huge: 1400px;
 
   --spacer: 2rem;
-  --border-radius: 0.5rem;
+  --border-radius: 2px;
 
   --layout-max-width: 85rem;
 

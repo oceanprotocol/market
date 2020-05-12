@@ -117,7 +117,7 @@ input[type='checkbox'] {
 
 input[type='radio']:checked,
 input[type='checkbox']:checked {
-  background: var(--color-primary);
+  background: var(--brand-white);
 }
 
 @import '_code.css';

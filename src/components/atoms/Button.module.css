@@ -11,16 +11,16 @@
   font-weight: var(--font-weight-bold);
   border-radius: var(--border-radius);
   transition: 0.2s ease-out;
-  color: var(--brand-white);
+  color: var(--brand-grey-lighter);
   background: var(--color-secondary);
   user-select: none;
 }
 
 .button:hover,
 .button:focus {
-  color: var(--brand-grey-dark);
-  background: transparent;
   text-decoration: none;
+  color: var(--brand-white);
+  transform: translate3d(0, -1px, 0);
 }
 
 .button:active {
@@ -61,4 +61,7 @@
   font-family: inherit;
   box-shadow: none;
   cursor: pointer;
+}
+.link:hover {
+  color: var(--color-primary);
 }

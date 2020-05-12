@@ -32,6 +32,7 @@
 .inputGroup .input:focus + button:focus {
   background-color: var(--brand-pink);
   border-color: var(--brand-pink);
+  transform: none;
 }
 
 .inputGroup .input:focus + button {

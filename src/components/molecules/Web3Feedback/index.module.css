@@ -10,6 +10,9 @@
 .statuscontainer {
   flex-grow: 1;
 }
+.statuscontainer h3 {
+  margin-top: 0;
+}
 
 .walletcontainer {
   width: 35%;
@@ -18,7 +21,7 @@
 .feedback i {
   position: absolute;
   left: 0;
-  top: 2px;
+  top: 4px;
 }
 
 .title {
