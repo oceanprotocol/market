@@ -3,7 +3,7 @@
 
 .link {
   display: inline-block;
-  color: var(--color-secondary);
+  color: var(--brand-grey);
   font-weight: var(--font-weight-bold);
   margin: calc(var(--spacer) / 4) var(--spacer);
 }
@@ -11,11 +11,11 @@
 .link:hover,
 .link:focus,
 .link:active {
-  color: var(--brand-grey-dark);
+  color: var(--brand-pink);
 }
 
 .link.active {
-  color: var(--color-primary);
+  color: var(--brand-pink);
 }
 
 .link:first-child {

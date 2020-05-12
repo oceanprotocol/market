@@ -11,7 +11,7 @@
   font-weight: var(--font-weight-bold);
   /* font-weight: var(--font-weight-bold); */
   color: var(--brand-grey-dark);
-  border: 1px solid var(--brand-grey-light);
+  border: 2px solid var(--brand-pink);
   box-shadow: none;
   width: 100%;
   background: var(--brand-white);
@@ -29,7 +29,7 @@
 .row textarea:focus {
   box-shadow: none;
   outline: 0;
-  border-color: var(--color-secondary);
+  border-color: var(--brand-pink);
 }
 
 .input::placeholder,

@@ -1,6 +1,5 @@
 .header {
   background-color: var(--brand-white);
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
 }
 
 .content {
@@ -20,9 +19,16 @@
 
 .logoUnit svg {
   fill: var(--color-primary);
-  width: 70px;
-  height: 40px;
+  width: 4rem;
+  height: 4rem;
   margin-right: calc(var(--spacer) / 2);
+}
+
+.logoUnit path {
+  fill: var(--brand-black);
+}
+.logoUnit:hover path {
+  fill: var(--brand-pink);
 }
 
 .title {

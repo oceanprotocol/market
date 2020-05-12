@@ -9,7 +9,7 @@
 a.box:hover,
 a.box:focus {
   outline: 0;
-  border-color: var(--brand-grey);
+  border-color: var(--brand-pink);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   transform: translate3d(0, -2px, 0);
 }
