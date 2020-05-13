@@ -83,9 +83,7 @@ export function transformPublishFormToMetadata(
       supportEmail
     },
     // ------- curation -------
-    curation: {
-      ...AssetModel.curation
-    }
+    curation: AssetModel.curation
   }
 
   if (dateRange) {
