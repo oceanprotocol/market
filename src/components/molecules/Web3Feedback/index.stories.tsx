@@ -1,13 +1,11 @@
 import React from 'react'
 import Web3Feedback from '.'
-import {
-  InjectedProviderStatus,
-  context,
-  Web3Context
-} from '../../../context/Web3Context'
 import web3Mock from '../../../../tests/unit/__mocks__/web3'
-import web3ProviderMock from '../../../../tests/unit/__mocks__/web3provider'
+import web3ProviderMock, {
+  context
+} from '../../../../tests/unit/__mocks__/web3provider'
 import { Center } from '../../../../.storybook/helpers'
+import { InjectedProviderStatus } from '@oceanprotocol/react'
 
 export default {
   title: 'Molecules/Web3Feedback',
@@ -18,7 +16,7 @@ export const NoWeb3Browser = () => {
   const mock = {
     ...web3ProviderMock,
     web3: null
-  } as Web3Context
+  } as any
 
   return (
     <context.Provider value={mock}>

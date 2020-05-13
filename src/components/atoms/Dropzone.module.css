@@ -1,0 +1,14 @@
+.dropzone {
+  padding: 22px;
+  text-align: center;
+  color: var(--color-secondary);
+  border: 2px dashed var(--color-primary);
+}
+.dragover {
+  border-color: var(--color-secondary);
+}
+.disabled {
+}
+
+.error {
+}

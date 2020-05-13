@@ -16,6 +16,8 @@ export interface Sample {
   url: string
 }
 
+export declare type AccessType = 'Download' | 'Compute'
+
 export interface AdditionalInformationDexFreight extends AdditionalInformation {
   description: string // required for dexFreight
   categories: [string] // required for dexFreight, lock to one category only
@@ -26,9 +28,9 @@ export interface AdditionalInformationDexFreight extends AdditionalInformation {
   granularity?: Granularity
   supportName?: string
   supportEmail?: string
+  access: AccessType
 }
 
 export interface MetaDataDexFreight extends MetaData {
   additionalInformation: AdditionalInformationDexFreight
-  curation: Curation
 }

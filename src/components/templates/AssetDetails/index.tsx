@@ -15,7 +15,7 @@ import RatingAction from './RatingAction'
 import styles from './index.module.css'
 import { config } from '../../../config/ocean'
 import { findServiceByType } from '../../../utils'
-import { useMetadata } from '@oceanprotocol/react'
+import { useMetadata, useWeb3 } from '@oceanprotocol/react'
 
 export declare type AssetDetailsPageProps = {
   title: string
@@ -38,7 +38,8 @@ const AssetDetailsPageMeta = ({
     description,
     copyrightHolder,
     categories,
-    tags
+    tags,
+    access
   } = attributes.additionalInformation
   const { curation } = attributes
 
@@ -47,7 +48,7 @@ const AssetDetailsPageMeta = ({
   const [numVotes, setNumVotes] = useState<number>(
     curation ? curation.numVotes : 0
   )
-
+  const isCompute = access && access === 'Compute'
   const onVoteUpdate = async () => {
     const { rating, numVotes } = await getCuration(ddo.id)
 
