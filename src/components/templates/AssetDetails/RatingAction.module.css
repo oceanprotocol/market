@@ -17,9 +17,9 @@
 }
 
 .success {
-  background-color: var(--color-success);
+  background-color: var(--green);
 }
 
 .error {
-  background-color: var(--color-danger);
+  background-color: var(--red);
 }

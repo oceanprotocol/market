@@ -11,7 +11,7 @@
 
 .file li {
   font-size: var(--font-size-small);
-  color: var(--color-white);
+  color: var(--brand-white);
 }
 
 .file li.empty {
