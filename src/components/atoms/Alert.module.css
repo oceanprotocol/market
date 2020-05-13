@@ -10,7 +10,7 @@
 
 .alert,
 .title {
-  color: var(--color-white);
+  color: var(--brand-white);
 }
 
 .title {
@@ -25,21 +25,21 @@
 
 /* States */
 .error {
-  border-color: var(--color-danger);
-  color: var(--color-danger);
+  border-color: var(--red);
+  color: var(--red);
 }
 
 .success {
-  border-color: var(--color-success);
-  color: var(--color-success);
+  border-color: var(--green);
+  color: var(--green);
 }
 
 .info {
-  border-color: var(--color-info);
-  color: var(--color-info);
+  border-color: var(--yellow);
+  color: var(--yellow);
 }
 
 .warning {
-  border-color: var(--color-warning);
-  color: var(--color-warning);
+  border-color: var(--orange);
+  color: var(--orange);
 }

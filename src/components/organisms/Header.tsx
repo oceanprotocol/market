@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Menu from '../molecules/Menu'
 import styles from './Header.module.css'
 import { title } from '../../../site.config'
-import Logo from '../../images/logo.svg'
+import Logo from '@oceanprotocol/art/logo/logo.svg'
 
 export default function Header() {
   return (

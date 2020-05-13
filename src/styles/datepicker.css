@@ -15,14 +15,14 @@
 .react-datepicker__day-name,
 .react-datepicker__day,
 .react-datepicker__time-name {
-  color: var(--color-dark);
+  color: var(--brand-grey-dark);
 }
 
 .react-datepicker__current-month,
 .react-datepicker-time__header,
 .react-datepicker-year-header,
 .react-datepicker__day-name {
-  color: var(--color-white);
+  color: var(--brand-white);
   font-weight: var(--font-weight-bold);
 }
 
@@ -49,7 +49,7 @@
 .react-datepicker__month-text--in-selecting-range,
 .react-datepicker__month-text--in-range {
   background-color: var(--color-primary);
-  color: var(--color-white);
+  color: var(--brand-white);
   border-radius: 50%;
   font-weight: var(--font-weight-bold);
 }
@@ -59,9 +59,9 @@
   background-color: var(--color-primary);
   border-radius: 50%;
   font-weight: var(--font-weight-bold);
-  color: var(--color-white);
+  color: var(--brand-white);
 }
 
 .react-datepicker__day--outside-month {
-  color: var(--color-grey);
+  color: var(--brand-grey);
 }

@@ -1,9 +1,9 @@
 module.exports = {
-  title: 'Logistics Data Marketplace',
-  description: `Easily buy and sell logistics data from around the world.`,
+  title: 'Data Marketplace',
+  description: `A marketplace to find and publish open data sets in the Ocean Network.`,
   url: 'https://dexfreight.oceanprotocol.com',
   copyright:
-    'All Rights Reserved. Powered by [dexFreight](https://dexfreight.io) & [Ocean Protocol](https://oceanprotocol.com)',
+    'All Rights Reserved. Powered by [Ocean Protocol](https://oceanprotocol.com)',
   refundPolicy: [
     'Data can be challenged within 2 days after purchase.',
     'The marketplace decides if you are eligible for refund.'
