@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { toast } from 'react-toastify'
-import useWeb3 from '../../../hooks/useWeb3'
 import Rating from '../../atoms/Rating'
 import rateAsset from '../../../utils/rateAsset'
 import { DID } from '@oceanprotocol/squid'
 import styles from './RatingAction.module.css'
 import getAssetRating from '../../../utils/getAssetRating'
 import Loader from '../../atoms/Loader'
+import { useWeb3 } from '@oceanprotocol/react'
 export default function RatingAction({
   did,
   onVote
@@ -20,6 +20,7 @@ export default function RatingAction({
 
   useEffect(() => {
     async function getOwnRating() {
+      if (!account) return
       const currentRating = await getAssetRating(did, account)
       currentRating && setRating(currentRating.vote)
     }

@@ -3,8 +3,7 @@ import { render } from '@testing-library/react'
 import AssetDetails, { getMetadata } from '../../../src/pages/asset/[did]'
 import ddo from '../__fixtures__/ddo'
 import { findServiceByType } from '../../../src/utils'
-import { context } from '../../../src/context/Web3Context'
-import web3ProviderMock from '../__mocks__/web3provider'
+import web3ProviderMock, { context } from '../__mocks__/web3provider'
 import { MetaDataDexFreight } from '../../../src/@types/MetaData'
 
 const { attributes } = findServiceByType(ddo, 'metadata')

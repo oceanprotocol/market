@@ -8,8 +8,6 @@ import {
 } from '../../../models/PublishForm'
 import useStoredValue from '../../../hooks/useStoredValue'
 import { MetaDataDexFreight } from '../../../@types/MetaData'
-import useOcean from '../../../hooks/useOcean'
-import useWeb3 from '../../../hooks/useWeb3'
 import { File, MetaData } from '@oceanprotocol/squid'
 import { isBrowser, toStringNoMS } from '../../../utils'
 import { toast } from 'react-toastify'
@@ -17,6 +15,7 @@ import { useRouter } from 'next/router'
 import styles from './PublishForm.module.css'
 import utils from 'web3-utils'
 import AssetModel from '../../../models/Asset'
+import { useWeb3, useOcean } from '@oceanprotocol/react'
 
 declare type PublishFormProps = {}
 
@@ -84,9 +83,7 @@ export function transformPublishFormToMetadata(
       supportEmail
     },
     // ------- curation -------
-    curation: {
-      ...AssetModel.curation
-    }
+    curation: AssetModel.curation
   }
 
   if (dateRange) {
@@ -105,7 +102,7 @@ export function transformPublishFormToMetadata(
 const PublishForm: React.FC<PublishFormProps> = () => {
   const [buttonDisabled, setButtonDisabled] = useState(false)
   const { web3, web3Connect } = useWeb3()
-  const { ocean } = useOcean(web3)
+  const { ocean } = useOcean()
   const router = useRouter()
   const [data, updateData] = useStoredValue(
     PUBLISH_FORM_LOCAL_STORAGE_KEY,

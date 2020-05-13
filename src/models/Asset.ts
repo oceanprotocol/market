@@ -25,7 +25,8 @@ const AssetModel: MetaDataDexFreight = {
     dateRange: undefined,
     granularity: undefined,
     supportName: undefined,
-    supportEmail: undefined
+    supportEmail: undefined,
+    access: 'Download'
   },
   curation: {
     rating: 0,

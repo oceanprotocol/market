@@ -6,35 +6,25 @@ import compareAsBN, { Comparisson } from '../../utils/compareAsBN'
 import Button from '../atoms/Button'
 import File from '../atoms/File'
 import Price from '../atoms/Price'
-import usePurchase from '../../hooks/usePurchase'
 import { MetaDataDexFreight } from '../../@types/MetaData'
 import Web3Feedback from '../molecules/Web3Feedback'
-import useOcean from '../../hooks/useOcean'
-import useWeb3 from '../../hooks/useWeb3'
 import styles from './Consume.module.css'
 import Loader from '../atoms/Loader'
-
-export const feedback: { [key in number]: string } = {
-  99: 'Decrypting file URL...',
-  0: '1/3 Asking for agreement signature...',
-  1: '1/3 Agreement initialized.',
-  2: '2/3 Asking for two payment confirmations...',
-  3: '2/3 Payment confirmed. Requesting access...',
-  4: '3/3 Access granted. Consuming file...'
-}
+import { useWeb3, useOcean, useConsume } from '@oceanprotocol/react'
 
 export default function Consume({ ddo }: { ddo: DDO | undefined }) {
   if (!ddo) return null
 
   const { web3 } = useWeb3()
-  const { ocean, balance } = useOcean(web3)
-  const { purchaseAsset, isLoading, feedbackStep } = usePurchase()
+  const { ocean, balanceInOcean } = useOcean()
+  const { consume, consumeStepText, isLoading } = useConsume()
   const { attributes } = findServiceByType(ddo, 'metadata')
   const { price } = attributes.main
   const file = (attributes as MetaDataDexFreight).main.files[0]
   const isFree = price === '0'
   const isBalanceSufficient =
-    isFree || compareAsBN(balance, Web3.utils.fromWei(price), Comparisson.gte)
+    isFree ||
+    compareAsBN(balanceInOcean, Web3.utils.fromWei(price), Comparisson.gte)
   const isDisabled = !ocean || !isBalanceSufficient || isLoading
 
   const PurchaseButton = () => {
@@ -43,13 +33,9 @@ export default function Consume({ ddo }: { ddo: DDO | undefined }) {
     }
 
     return isLoading ? (
-      <Loader message={feedback[feedbackStep]} isHorizontal />
+      <Loader message={consumeStepText} isHorizontal />
     ) : (
-      <Button
-        primary
-        onClick={() => purchaseAsset(new DDO(ddo))}
-        disabled={isDisabled}
-      >
+      <Button primary onClick={() => consume(ddo.id)} disabled={isDisabled}>
         {isFree ? 'Download' : 'Buy'}
       </Button>
     )
