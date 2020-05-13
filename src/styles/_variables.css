@@ -11,6 +11,8 @@
   --brand-violet: #e000cf;
   --brand-blue: #11597b;
 
+  --brand-gradient: linear-gradient(to right bottom, #7b1173, #ff4092);
+
   --green: #5fb359;
   --red: #d80606;
   --orange: #b35f36;
@@ -53,7 +55,7 @@
   --break-point--huge: 1400px;
 
   --spacer: 2rem;
-  --border-radius: 2px;
+  --border-radius: 0.2rem;
 
   --layout-max-width: 85rem;
 
