@@ -13,29 +13,36 @@
   margin-top: -1px;
   width: 100%;
   border-width: 1px;
-  background-color: var(--color-grey-light);
-  border-color: var(--color-grey-light);
-  color: var(--color-secondary);
-}
-
-.inputGroup button:hover,
-.inputGroup button:focus,
-.inputGroup .input:focus + button {
-  color: var(--color-white);
+  text-transform: uppercase;
+  color: var(--brand-grey-lighter);
+  background: var(--brand-gradient);
+  box-shadow: none;
 }
 
 .inputGroup button:hover,
 .inputGroup button:focus,
 .inputGroup .input:focus + button:hover,
 .inputGroup .input:focus + button:focus {
-  background-color: var(--color-primary);
-  border-color: var(--color-primary);
+  background: var(--brand-gradient);
+  transform: none;
+  box-shadow: none;
 }
 
 .inputGroup .input:focus + button {
-  border-color: var(--color-secondary);
-  background-color: var(--color-secondary);
+  color: var(--brand-white);
 }
+
+/* .inputGroup button:hover,
+.inputGroup button:focus,
+.inputGroup .input:focus + button {
+  color: var(--brand-white);
+  background-color: var(--brand-pink);
+}
+
+.inputGroup .input:focus + button {
+  border-color: var(--brand-pink);
+  background-color: var(--brand-pink);
+} */
 
 @media screen and (min-width: 30rem) {
   .inputGroup {

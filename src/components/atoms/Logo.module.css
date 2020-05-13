@@ -1,0 +1,13 @@
+.logo {
+  width: 4rem;
+  height: 4rem;
+  margin: 0;
+}
+
+.logo path {
+  fill: var(--brand-black);
+}
+
+a > .logo:hover path {
+  fill: var(--brand-pink);
+}

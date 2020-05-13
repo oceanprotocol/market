@@ -1,13 +1,13 @@
 .loaderWrap {
   display: inline-block;
   font-size: var(--font-size-small);
-  color: var(--color-grey);
+  color: var(--brand-grey);
 }
 
 .loader,
 .loader:before,
 .loader:after {
-  background: var(--color-grey);
+  background: var(--brand-grey);
   border-radius: var(--border-radius);
   animation: load1 0.7s infinite ease-in-out;
   font-size: var(--font-size-base);

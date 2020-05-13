@@ -8,6 +8,7 @@ import { title, description, url } from '../../site.config'
 import { toast } from 'react-toastify'
 
 // this is the place to import global css
+import '@oceanprotocol/typographies/css/ocean-typo.css'
 import 'react-toastify/dist/ReactToastify.css'
 import '../styles/global.css'
 import '../components/atoms/NProgress.css'

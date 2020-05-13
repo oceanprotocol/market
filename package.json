@@ -20,6 +20,8 @@
   "dependencies": {
     "@oceanprotocol/react": "0.0.3",
     "@oceanprotocol/squid": "^2.1.1",
+    "@oceanprotocol/art": "^2.2.0",
+    "@oceanprotocol/typographies": "^0.1.0",
     "axios": "^0.19.2",
     "date-fns": "^2.11.0",
     "dotenv": "^8.2.0",

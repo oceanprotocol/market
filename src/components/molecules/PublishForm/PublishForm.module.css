@@ -1,9 +1,9 @@
 .error {
-  background-color: var(--color-danger);
+  background-color: var(--red);
 }
 .success {
-  background-color: var(--color-success);
+  background-color: var(--green);
 }
 .info {
-  background-color: var(--color-info);
+  background-color: var(--yellow);
 }

@@ -1,0 +1,26 @@
+code {
+  font-family: var(--font-family-monospace);
+  font-size: var(--font-size-small);
+  color: var(--brand-grey-light);
+  text-shadow: none;
+}
+
+:not(pre) > code {
+  display: inline-block;
+  padding-left: 0.3rem;
+  padding-right: 0.3rem;
+}
+
+pre {
+  display: block;
+  margin: calc(var(--spacer) / 2) 0;
+  padding: 0;
+  border: 1px solid var(--brand-grey-dark);
+  border-radius: var(--border-radius);
+}
+
+pre code {
+  padding: calc(var(--spacer) / 2);
+  display: block;
+  white-space: pre-wrap;
+}
