@@ -2,7 +2,12 @@ import React from 'react'
 import Status from '../../atoms/Status'
 import Wallet from './Wallet'
 import styles from './index.module.css'
-import { useWeb3, useOcean, InjectedProviderStatus, OceanConnectionStatus } from '@oceanprotocol/react'
+import {
+  useWeb3,
+  useOcean,
+  InjectedProviderStatus,
+  OceanConnectionStatus
+} from '@oceanprotocol/react'
 
 export declare type Web3Error = {
   status: 'error' | 'warning' | 'success'
@@ -15,16 +20,15 @@ export default function Web3Feedback({
 }: {
   isBalanceInsufficient?: boolean
 }) {
-  const {  ethProviderStatus } = useWeb3()
+  const { ethProviderStatus } = useWeb3()
   const { status, balanceInOcean } = useOcean()
   const isEthProviderAbsent =
     ethProviderStatus === InjectedProviderStatus.NOT_AVAILABLE
   const isEthProviderDisconnected =
     ethProviderStatus === InjectedProviderStatus.NOT_CONNECTED
-  const isOceanDisconnected =
-  status === OceanConnectionStatus.NOT_CONNECTED
+  const isOceanDisconnected = status === OceanConnectionStatus.NOT_CONNECTED
   const isOceanConnectionError =
-  status === OceanConnectionStatus.OCEAN_CONNECTION_ERROR
+    status === OceanConnectionStatus.OCEAN_CONNECTION_ERROR
   const hasSuccess =
     ethProviderStatus === InjectedProviderStatus.CONNECTED &&
     status === OceanConnectionStatus.CONNECTED

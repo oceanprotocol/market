@@ -38,7 +38,8 @@ export default function dexfreightApp({ Component, pageProps }: AppProps) {
       process.env.SECRET_STORE_URI || 'https://secret-store.oceanprotocol.com',
     faucetUri: process.env.FAUCET_URI || 'https://faucet.oceanprotocol.com',
     ratingUri:
-      process.env.RATING_URI || 'https://rating.pacific.dexfreight.dev-ocean.com',
+      process.env.RATING_URI ||
+      'https://rating.pacific.dexfreight.dev-ocean.com',
     verbose: 3
   }
 
@@ -70,8 +71,7 @@ export default function dexfreightApp({ Component, pageProps }: AppProps) {
       />
       <NProgress />
       <Web3Provider>
-
-        <OceanProvider config={config} >
+        <OceanProvider config={config}>
           <Component {...pageProps} />
         </OceanProvider>
       </Web3Provider>

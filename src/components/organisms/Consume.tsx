@@ -12,20 +12,19 @@ import styles from './Consume.module.css'
 import Loader from '../atoms/Loader'
 import { useWeb3, useOcean, useConsume } from '@oceanprotocol/react'
 
-
-
 export default function Consume({ ddo }: { ddo: DDO | undefined }) {
   if (!ddo) return null
 
   const { web3 } = useWeb3()
   const { ocean, balanceInOcean } = useOcean()
-  const { consume,consumeStepText,isLoading } = useConsume()
+  const { consume, consumeStepText, isLoading } = useConsume()
   const { attributes } = findServiceByType(ddo, 'metadata')
   const { price } = attributes.main
   const file = (attributes as MetaDataDexFreight).main.files[0]
   const isFree = price === '0'
   const isBalanceSufficient =
-    isFree || compareAsBN(balanceInOcean, Web3.utils.fromWei(price), Comparisson.gte)
+    isFree ||
+    compareAsBN(balanceInOcean, Web3.utils.fromWei(price), Comparisson.gte)
   const isDisabled = !ocean || !isBalanceSufficient || isLoading
 
   const PurchaseButton = () => {
@@ -36,11 +35,7 @@ export default function Consume({ ddo }: { ddo: DDO | undefined }) {
     return isLoading ? (
       <Loader message={consumeStepText} isHorizontal />
     ) : (
-      <Button
-        primary
-        onClick={() => consume(ddo.id)}
-        disabled={isDisabled}
-      >
+      <Button primary onClick={() => consume(ddo.id)} disabled={isDisabled}>
         {isFree ? 'Download' : 'Buy'}
       </Button>
     )

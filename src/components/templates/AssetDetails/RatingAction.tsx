@@ -20,7 +20,7 @@ export default function RatingAction({
 
   useEffect(() => {
     async function getOwnRating() {
-      if(!account) return
+      if (!account) return
       const currentRating = await getAssetRating(did, account)
       currentRating && setRating(currentRating.vote)
     }

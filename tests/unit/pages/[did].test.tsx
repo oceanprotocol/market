@@ -3,9 +3,10 @@ import { render } from '@testing-library/react'
 import AssetDetails, { getMetadata } from '../../../src/pages/asset/[did]'
 import ddo from '../__fixtures__/ddo'
 import { findServiceByType } from '../../../src/utils'
-import { context } from '../../../src/context/Web3Context'
-import web3ProviderMock from '../__mocks__/web3provider'
+import web3ProviderMock, { context } from '../__mocks__/web3provider'
 import { MetaDataDexFreight } from '../../../src/@types/MetaData'
+import { OceanProvider, Config } from '@oceanprotocol/react'
+import { config } from '../../../src/config/ocean'
 
 const { attributes } = findServiceByType(ddo, 'metadata')
 
@@ -15,11 +16,13 @@ describe('AssetDetails', () => {
   it('renders without crashing', () => {
     const { container } = render(
       <context.Provider value={web3ProviderMock}>
-        <AssetDetails
-          ddo={JSON.stringify(ddo) as any}
-          attributes={attributes as MetaDataDexFreight}
-          title="Hello"
-        />
+        <OceanProvider config={config as Config}>
+          <AssetDetails
+            ddo={JSON.stringify(ddo) as any}
+            attributes={attributes as MetaDataDexFreight}
+            title="Hello"
+          />
+        </OceanProvider>
       </context.Provider>
     )
     expect(container.firstChild).toBeInTheDocument()

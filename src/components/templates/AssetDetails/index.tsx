@@ -42,7 +42,7 @@ const AssetDetailsPageMeta = ({
   } = attributes.additionalInformation
   const { curation } = attributes
 
-  const {getCuration} = useMetadata()
+  const { getCuration } = useMetadata()
   const [rating, setRating] = useState<number>(curation ? curation.rating : 0)
   const [numVotes, setNumVotes] = useState<number>(
     curation ? curation.numVotes : 0
