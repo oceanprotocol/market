@@ -1,6 +1,6 @@
 {
-  "name": "dexfreight",
-  "description": "Data marketplace for dexFreight.",
+  "name": "market",
+  "description": "Data marketplace for ocean.",
   "version": "0.0.1",
   "license": "Apache-2.0",
   "scripts": {
@@ -87,7 +87,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/oceanprotocol/dexfreight"
+    "url": "https://github.com/oceanprotocol/market"
   },
   "engines": {
     "node": ">=12"
