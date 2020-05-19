@@ -6,27 +6,14 @@ import SearchPage, { SearchPageProps } from '../components/templates/Search'
 import { config } from '../config/ocean'
 import { JSONparse, priceQueryParamToWei } from '../utils'
 
-const Search: NextPage<SearchPageProps> = ({
-  text,
-  categories,
-  tag,
-  queryResult
-}) => {
-  return (
-    <SearchPage
-      text={text}
-      categories={categories}
-      tag={tag}
-      queryResult={queryResult}
-    />
-  )
+const Search: NextPage<SearchPageProps> = ({ text, tag, queryResult }) => {
+  return <SearchPage text={text} tag={tag} queryResult={queryResult} />
 }
 
 export function getSearchQuery(
   page?: string | string[],
   offset?: string | string[],
   text?: string | string[],
-  categoriesParsed?: string[],
   tag?: string | string[],
   priceQuery?: [string | undefined, string | undefined]
 ) {
@@ -35,7 +22,6 @@ export function getSearchQuery(
     offset: Number(offset) || 20,
     query: {
       text,
-      categories: categoriesParsed,
       tags: tag ? [tag] : undefined,
       price: priceQuery
     },
@@ -51,19 +37,8 @@ export function getSearchQuery(
 }
 
 Search.getInitialProps = async context => {
-  const {
-    text,
-    categories,
-    tag,
-    page,
-    offset,
-    minPrice,
-    maxPrice
-  } = context.query
-  const categoriesParsed = JSONparse<string[]>(
-    categories as string,
-    'Error parsing context.query.categories and setting categoriesParsed'
-  )
+  const { text, tag, page, offset, minPrice, maxPrice } = context.query
+
   const minPriceParsed = priceQueryParamToWei(
     minPrice as string,
     'Error parsing context.query.minPrice'
@@ -83,12 +58,11 @@ Search.getInitialProps = async context => {
 
   const aquarius = new Aquarius(config.aquariusUri as string, Logger)
   const queryResult = await aquarius.queryMetadata(
-    getSearchQuery(page, offset, text, categoriesParsed, tag, priceQuery)
+    getSearchQuery(page, offset, text, tag, priceQuery)
   )
 
   return {
     text: text,
-    categories: categoriesParsed,
     tag: tag,
     queryResult
   }
