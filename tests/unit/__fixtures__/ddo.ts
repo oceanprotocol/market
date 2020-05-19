@@ -37,22 +37,26 @@ const ddo: Partial<DDO> = {
             {
               index: 0,
               contentType: 'csv',
-              contentLength: '114000'
+              contentLength: '114000',
+              url: ''
             },
             {
               index: 1,
               contentType: 'excel',
-              contentLength: '219000'
+              contentLength: '219000',
+              url: ''
             },
             {
               index: 2,
               contentType: 'csv',
-              contentLength: '1300000'
+              contentLength: '1300000',
+              url: ''
             },
             {
               index: 3,
               contentType: 'csv',
-              contentLength: '36300'
+              contentLength: '36300',
+              url: ''
             }
           ]
         },
@@ -60,7 +64,6 @@ const ddo: Partial<DDO> = {
           description:
             'What a Waste is a global project to aggregate data on solid waste management from around the world. This database features the statistics collected through the effort, covering nearly all countries and over 330 cities. The metrics included cover all steps from the waste management value chain, including waste generation, composition, collection, and disposal, as well as information on user fees and financing, the informal sector, administrative structures, public communication, and legal information. The information presented is the best available based on a study of current literature and limited conversations with waste agencies and authorities. While there may be variations in the definitions and quality of reporting for individual data points, general trends should reflect the global reality. All sources and any estimations are noted.',
           copyrightHolder: 'World Bank Group',
-          categories: ['Earth & Climate'],
           tags: ['Sustainability', ' Climate', ' Energy', ' ai-for-good'],
           links: [
             {
@@ -71,9 +74,9 @@ const ddo: Partial<DDO> = {
           deliveryType: 'files',
           termsAndConditions: true,
           dateRange: ['2018-09-20T08:38:58', '2019-12-11T05:19:42'],
-          granularity: 'hourly',
           supportName: 'Jelly McJellyfish',
-          supportEmail: 'jelly@oceanprotocol.com'
+          supportEmail: 'jelly@oceanprotocol.com',
+          access: 'Download'
         },
         curation: {
           numVotes: 100,

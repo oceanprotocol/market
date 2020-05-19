@@ -15,12 +15,7 @@ describe('Search', () => {
       totalResults: 200
     }
     const { container } = render(
-      <Search
-        text="Hello"
-        categories={['Hello']}
-        tag="Hello"
-        queryResult={queryResult}
-      />
+      <Search text="Hello" tag="Hello" queryResult={queryResult} />
     )
     expect(container.firstChild).toBeInTheDocument()
 
@@ -55,12 +50,7 @@ describe('Search', () => {
       totalResults: 0
     }
     const { container } = render(
-      <Search
-        text="Hello"
-        categories={['Hello']}
-        tag="Hello"
-        queryResult={queryResult}
-      />
+      <Search text="Hello" tag="Hello" queryResult={queryResult} />
     )
     expect(container.querySelector('.empty')).toBeInTheDocument()
   })
@@ -72,14 +62,12 @@ describe('Search.getInitialProps', () => {
       context: Partial<NextPageContext>
     ) => {
       text: string
-      categories: string[]
       tag: string
       queryResult: QueryResult
     }
     const context = {
       query: {
         text: 'text',
-        categories: '["category"]',
         tag: 'tag',
         page: '1',
         offset: '1'
@@ -87,7 +75,6 @@ describe('Search.getInitialProps', () => {
     }
     const props = await getInitialProps(context)
     expect(props.text).toEqual('text')
-    expect(props.categories).toEqual(['category'])
     expect(props.tag).toEqual('tag')
   })
 })

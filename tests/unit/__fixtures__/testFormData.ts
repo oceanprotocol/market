@@ -6,8 +6,6 @@ const testFormData: PublishFormDataInterface = {
   license: '',
   price: 0,
   title: '',
-  granularity: 'hourly',
-  category: 'test',
   summary: 'summary',
   termsAndConditions: true
 }
