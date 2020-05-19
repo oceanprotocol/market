@@ -1,11 +1,11 @@
 [![banner](https://raw.githubusercontent.com/oceanprotocol/art/master/github/repo-banner%402x.png)](https://oceanprotocol.com)
 
-<h1 align="center">dexFreight Marketplace</h1>
+<h1 align="center">Ocean Marketplace</h1>
 
-> 🚚 Data marketplace for dexFreight.
+> 
 
-[![Build Status](https://travis-ci.com/oceanprotocol/dexfreight.svg?branch=master)](https://travis-ci.com/oceanprotocol/dexfreight)
-[![Now deployment](https://flat.badgen.net/badge/now/auto-deployment/21c4dd?icon=now)](https://zeit.co/oceanprotocol/dexfreight)
+[![Build Status](https://travis-ci.com/oceanprotocol/market.svg?branch=master)](https://travis-ci.com/oceanprotocol/market)
+[![Now deployment](https://flat.badgen.net/badge/now/auto-deployment/21c4dd?icon=now)](https://zeit.co/oceanprotocol/market)
 [![Maintainability](https://api.codeclimate.com/v1/badges/d114f94f75e6efd2ee71/maintainability)](https://codeclimate.com/repos/5e3933869a31771fd800011c/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/d114f94f75e6efd2ee71/test_coverage)](https://codeclimate.com/repos/5e3933869a31771fd800011c/test_coverage)
 [![js oceanprotocol](https://img.shields.io/badge/js-oceanprotocol-7b1173.svg)](https://github.com/oceanprotocol/eslint-config-oceanprotocol)
