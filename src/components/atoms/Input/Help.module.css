@@ -1,0 +1,5 @@
+.help {
+  font-size: var(--font-size-small);
+  color: var(--brand-grey-light);
+  margin-top: var(--spacer) / 4;
+}

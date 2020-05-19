@@ -24,13 +24,15 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
   let copyrightHolder
   let tags
   let categories
+  let access
 
   if (attributes && attributes.additionalInformation) {
     ;({
       description,
       copyrightHolder,
       tags,
-      categories
+      categories,
+      access
     } = attributes.additionalInformation as AdditionalInformationDexFreight)
   }
 
@@ -41,6 +43,9 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
       <Link href="/asset/[did]" as={`/asset/${ddo.id}`}>
         <a className={styles.link}>
           <h1 className={styles.title}>{name}</h1>
+          {access === 'Compute' && (
+            <div className={styles.accessLabel}>{access}</div>
+          )}
           <Rating curation={curation} readonly />
 
           <div className={styles.content}>

@@ -19,11 +19,11 @@ export const config: Partial<OceanConfig> = {
   nodeUri: process.env.NODE_URI || 'https://pacific.oceanprotocol.com',
   aquariusUri:
     process.env.AQUARIUS_URI ||
-    'https://aquarius.pacific.dexfreight.dev-ocean.com',
+    'https://aquarius.marketplace.oceanprotocol.com',
   brizoUri:
-    process.env.BRIZO_URI || 'https://brizo.pacific.dexfreight.dev-ocean.com',
+    process.env.BRIZO_URI || 'https://brizo.marketplace.oceanprotocol.com',
   brizoAddress:
-    process.env.BRIZO_ADDRESS || '0xeD792C5FcC8bF3322a6ba89A6e51eF0B6fB3C530',
+    process.env.BRIZO_ADDRESS || '0x00c6A0BC5cD0078d6Cd0b659E8061B404cfa5704',
   secretStoreUri:
     process.env.SECRET_STORE_URI || 'https://secret-store.oceanprotocol.com',
   faucetUri: process.env.FAUCET_URI || 'https://faucet.oceanprotocol.com',

@@ -16,6 +16,10 @@ import styles from './PublishForm.module.css'
 import utils from 'web3-utils'
 import AssetModel from '../../../models/Asset'
 import { useWeb3, useOcean } from '@oceanprotocol/react'
+import {
+  Service,
+  ServiceCompute
+} from '@oceanprotocol/squid/dist/node/ddo/Service'
 
 declare type PublishFormProps = {}
 
@@ -49,14 +53,13 @@ export function transformPublishFormToMetadata(
     author,
     license,
     summary,
-    category,
     holder,
     keywords,
     termsAndConditions,
-    granularity,
     supportName,
     supportEmail,
-    dateRange
+    dateRange,
+    access
   } = data
 
   const metadata: MetaDataDexFreight = {
@@ -74,13 +77,12 @@ export function transformPublishFormToMetadata(
     additionalInformation: {
       ...AssetModel.additionalInformation,
       description: summary,
-      categories: [category],
       copyrightHolder: holder,
       tags: keywords?.split(','),
       termsAndConditions,
-      granularity,
       supportName,
-      supportEmail
+      supportEmail,
+      access: 'Download'
     },
     // ------- curation -------
     curation: AssetModel.curation
@@ -101,8 +103,8 @@ export function transformPublishFormToMetadata(
 
 const PublishForm: React.FC<PublishFormProps> = () => {
   const [buttonDisabled, setButtonDisabled] = useState(false)
-  const { web3, web3Connect } = useWeb3()
-  const { ocean } = useOcean()
+  const { web3Connect } = useWeb3()
+  const { ocean, account } = useOcean()
   const router = useRouter()
   const [data, updateData] = useStoredValue(
     PUBLISH_FORM_LOCAL_STORAGE_KEY,
@@ -136,22 +138,51 @@ const PublishForm: React.FC<PublishFormProps> = () => {
     }
 
     if (ocean) {
-      const asset = await ocean.assets.create(
-        (transformPublishFormToMetadata(formData) as unknown) as MetaData,
-        (await ocean.accounts.list())[0]
-      )
+      const metadata = transformPublishFormToMetadata(formData)
+
+      // if services array stays empty, the default access service
+      // will be created by squid-js
+      let services: Service[] = []
+
+      if (metadata.additionalInformation.access === 'Compute') {
+        const computeService: ServiceCompute = await ocean.compute.createComputeServiceAttributes(
+          account,
+          metadata.main.price,
+          // Note: a hack without consequences.
+          // Will make metadata.main.datePublished (automatically created by Aquarius)
+          // go out of sync with this service.main.datePublished.
+          toStringNoMS(new Date(Date.now()))
+        )
+        services = [computeService]
+      }
+
+      try {
+        const asset = await ocean.assets.create(
+          (transformPublishFormToMetadata(formData) as unknown) as MetaData,
+          account,
+          services
+        )
+
+        // Reset the form to initial values
+
+        updateData(publishFormData)
+        clearFilesData()
+
+        // User feedback and redirect
+        toast.success('asset created successfully', {
+          className: styles.success
+        })
+        toast.dismiss(submittingToast)
+        router.push(`/asset/${asset.id}`)
+      } catch (e) {
+        console.log(e)
+      } finally {
+        setButtonDisabled(false)
+      }
 
       // Reset the form to initial values
 
-      updateData(publishFormData)
-      clearFilesData()
-      setButtonDisabled(false)
       // User feedback and redirect
-      toast.success('asset created successfully', {
-        className: styles.success
-      })
-      toast.dismiss(submittingToast)
-      router.push(`/asset/${asset.id}`)
     }
   }
 

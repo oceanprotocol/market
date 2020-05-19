@@ -15,7 +15,6 @@ const AssetModel: MetaDataDexFreight = {
   additionalInformation: {
     description: '',
     copyrightHolder: '',
-    categories: [''],
     tags: undefined,
     // links: [],
 
@@ -23,7 +22,6 @@ const AssetModel: MetaDataDexFreight = {
     deliveryType: 'files',
     termsAndConditions: false,
     dateRange: undefined,
-    granularity: undefined,
     supportName: undefined,
     supportEmail: undefined,
     access: 'Download'

@@ -13,9 +13,9 @@ export default function MetaFull({
   attributes: MetaDataDexFreight
 }) {
   const { dateCreated, author, license } = attributes.main
-  let dateRange, granularity
+  let dateRange
   if (attributes && attributes.additionalInformation) {
-    ;({ dateRange, granularity } = attributes.additionalInformation)
+    ;({ dateRange } = attributes.additionalInformation)
   }
 
   // In practice dateRange will always be defined, but in the rare case it isn't
@@ -42,10 +42,6 @@ export default function MetaFull({
           )
         }
       />
-
-      {granularity && (
-        <MetaItem title="Data Granularity" content={granularity} />
-      )}
 
       <MetaItem title="DID" content={<code>{ddo?.id}</code>} />
     </div>

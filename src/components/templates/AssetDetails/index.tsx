@@ -15,7 +15,8 @@ import RatingAction from './RatingAction'
 import styles from './index.module.css'
 import { config } from '../../../config/ocean'
 import { findServiceByType } from '../../../utils'
-import { useMetadata, useWeb3 } from '@oceanprotocol/react'
+import { useMetadata, useWeb3, useOcean } from '@oceanprotocol/react'
+import Compute from '../../organisms/Compute'
 
 export declare type AssetDetailsPageProps = {
   title: string
@@ -33,6 +34,8 @@ const AssetDetailsPageMeta = ({
 }) => {
   if (!attributes) return null
 
+  const { web3, account } = useWeb3()
+  const { ocean, balanceInOcean } = useOcean()
   const { datePublished } = attributes.main
   const {
     description,
@@ -83,7 +86,12 @@ const AssetDetailsPageMeta = ({
       </div>
       <div>
         <div className={styles.sticky}>
-          <Consume ddo={ddo} />
+          {isCompute ? (
+            <Compute ddo={ddo} ocean={ocean} balance={balanceInOcean} />
+          ) : (
+            <Consume ddo={ddo} />
+          )}
+
           <RatingAction did={ddo.id} onVote={onVoteUpdate} />
           <MetaSecondary attributes={attributes} />
         </div>
