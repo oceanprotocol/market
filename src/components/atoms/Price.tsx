@@ -4,12 +4,16 @@ import styles from './Price.module.css'
 
 export default function Price({
   price,
-  className
+  className,
+  small
 }: {
   price: string
   className?: string
+  small?: boolean
 }) {
-  const classes = className ? `${styles.price} ${className}` : styles.price
+  const classes = small
+    ? `${styles.price} ${styles.small} ${className}`
+    : `${styles.price} ${className}`
   const isFree = price === '0'
   const displayPrice = isFree ? (
     'Free'

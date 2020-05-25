@@ -26,6 +26,10 @@ module.exports = {
     {
       name: 'Publish',
       link: '/publish'
+    },
+    {
+      name: 'Transactions',
+      link: '/transactions'
     }
   ]
 }

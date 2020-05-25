@@ -18,9 +18,6 @@ export const getServerSideProps: GetServerSideProps = async context => {
       created: -1
     }
   } as SearchQuery
-  console.log(config)
-  console.log('process aquarius',process.env.AQUARIUS_URI)
-  console.log('process env',process.env)
   const aquarius = new Aquarius(config.aquariusUri as string, Logger)
   const queryResult = await aquarius.queryMetadata(searchQuery)
   // Note: stringifying the results cause Next.js otherwise complains about
