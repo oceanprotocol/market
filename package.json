@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@oceanprotocol/art": "^2.2.0",
-    "@oceanprotocol/react": "0.0.9",
+    "@oceanprotocol/react": "0.0.10",
     "@oceanprotocol/squid": "^2.2.0",
     "@oceanprotocol/typographies": "^0.1.0",
     "@sindresorhus/slugify": "^1.0.0",

@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import Loader from '../atoms/Loader'
-import { useWeb3, useOcean, OceanConnectionStatus } from '@oceanprotocol/react'
+import {
+  useOcean,
+  OceanConnectionStatus,
+  useSearch
+} from '@oceanprotocol/react'
 import Table from '../atoms/Table'
 import Price from '../atoms/Price'
 import { fromWei } from 'web3-utils'
 import DateCell from '../atoms/Table/DateCell'
 import DdoLinkCell from '../atoms/Table/DdoLinkCell'
+import { DDO, MetaDataMain } from '@oceanprotocol/squid'
+import { findServiceByType } from '../../utils'
+import { config } from '../../config/ocean'
 
 const consumedColumns = [
   {
@@ -35,9 +42,9 @@ const consumedColumns = [
 ]
 
 export default function ConsumedList() {
-  const { account } = useWeb3()
-  const { ocean, status } = useOcean()
+  const { ocean, status, accountId, account } = useOcean()
   const [consumedList, setConsumedList] = useState<any>([])
+  const { getConsumedList } = useSearch()
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
@@ -46,10 +53,11 @@ export default function ConsumedList() {
         return
 
       setIsLoading(true)
-      //  const consumedItems = await getConsumedList()
-
-      // TODO: test this before updating react lib and after backend workd properly
+      const consumedItems = await getConsumedList()
+      // console.log('react cosume',consumedItemsT)
+      // // TODO: test this before updating react lib and after backend workd properly
       // const consumed = await ocean.assets.consumerAssets(accountId)
+      // console.log(consumed)
       // const consumedItemss = await Promise.all(
       //   consumed.map(async (did) => {
       //     const ddo = await ocean.assets.resolve(did)
@@ -65,20 +73,21 @@ export default function ConsumedList() {
       // )
       // const consumedItems = (consumedItemss.filter(value => typeof value !== 'undefined')) as DDO[]
       // console.log('consumedss', consumedItems)
+      if (!consumedItems) return
 
-      // const data = consumedItems.map((ddo) => {
-      //   const { attributes } = findServiceByType(ddo, 'metadata')
-      //   const { name, price, datePublished } = attributes.main as MetaDataMain
-      //   return {
-      //     published: datePublished,
-      //     name: name,
-      //     price: price
-      //   }
-      // })
-      const data = [
-        { published: '2020-05-14T10:00:49Z', name: 'asdf', price: '0', id: 1 },
-        { published: '2020-05-21T10:00:49Z', name: 'test', price: '0', id: 2 }
-      ]
+      const data = consumedItems.map(ddo => {
+        const { attributes } = findServiceByType(ddo, 'metadata')
+        const { name, price, datePublished } = attributes.main as MetaDataMain
+        return {
+          published: datePublished,
+          name: name,
+          price: price
+        }
+      })
+      // const data = [
+      //   { published: '2020-05-14T10:00:49Z', name: 'asdf', price: '0', id: 1 },
+      //   { published: '2020-05-21T10:00:49Z', name: 'test', price: '0', id: 2 }
+      // ]
       setConsumedList(data)
       setIsLoading(false)
     }
