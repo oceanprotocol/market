@@ -54,7 +54,7 @@ export default function ConsumedList() {
       setIsLoading(true)
 
       const consumedItems = await getConsumedList()
-  
+
       if (!consumedItems) return
 
       const data = consumedItems.map(ddo => {
@@ -66,7 +66,7 @@ export default function ConsumedList() {
           price: price
         }
       })
-  
+
       setConsumedList(data)
       setIsLoading(false)
     }

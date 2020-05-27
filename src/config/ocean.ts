@@ -36,8 +36,7 @@ export interface OceanConfig extends Config {
 // why is this partial?
 export const config: OceanConfig = {
   nodeUri: 'https://pacific.oceanprotocol.com',
-  aquariusUri:
-    'https://aquarius.marketplace.oceanprotocol.com',
+  aquariusUri: 'https://aquarius.marketplace.oceanprotocol.com',
   brizoUri: 'https://brizo.marketplace.oceanprotocol.com',
   brizoAddress: '0x00c6A0BC5cD0078d6Cd0b659E8061B404cfa5704',
   secretStoreUri: 'https://secret-store.oceanprotocol.com',
