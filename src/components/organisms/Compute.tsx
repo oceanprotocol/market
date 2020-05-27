@@ -16,6 +16,7 @@ import {
 import styles from './Compute.module.css'
 import Button from '../atoms/Button'
 import Input from '../atoms/Input/Input'
+import { LoggerInstance, LogLevel } from '@oceanprotocol/squid/dist/node/utils/Logger'
 
 export default function Compute({
   ddo,
@@ -27,6 +28,8 @@ export default function Compute({
   ocean: Ocean | null
 }) {
   if (!ddo) return null
+
+
   const { compute, isLoading, computeStepText, computeError } = useCompute()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [, setError] = useState('')
@@ -57,7 +60,7 @@ export default function Compute({
     !isTermsAgreed
 
   useEffect(() => {
-    console.log(Logger)
+
     setIsBalanceSufficient(
       isFree ||
         (balance !== null &&
@@ -88,7 +91,7 @@ export default function Compute({
       setError('')
 
       await compute(ddo.id, algorithmRawCode, computeContainer)
-
+    
       setIsPublished(true)
       setFile(null)
     } catch (error) {

@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'Data Marketplace',
+  title: 'Ocean Market',
   description: `A marketplace to find and publish open data sets in the Ocean Network.`,
   url: 'https://dexfreight.oceanprotocol.com',
   copyright:

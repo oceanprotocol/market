@@ -34,7 +34,7 @@ const AssetDetailsPageMeta = ({
 }) => {
   if (!attributes) return null
 
-  const { web3, account } = useWeb3()
+
   const { ocean, balanceInOcean } = useOcean()
   const { datePublished } = attributes.main
   const {

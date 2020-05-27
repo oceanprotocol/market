@@ -13,9 +13,11 @@ import { fromWei } from 'web3-utils'
 import { findServiceByType } from '../../utils'
 import Table from '../atoms/Table'
 import Button from '../atoms/Button'
-import { MetaDataMain } from '@oceanprotocol/squid'
+import { MetaDataMain, Logger } from '@oceanprotocol/squid'
 import DateCell from '../atoms/Table/DateCell'
 import DdoLinkCell from '../atoms/Table/DdoLinkCell'
+import { config } from '../../config/ocean'
+import shortid from 'shortid'
 
 const columns = [
   {
@@ -61,7 +63,7 @@ const columns = [
 ]
 
 export default function JobsList() {
-  const { ocean, status, account } = useOcean()
+  const { ocean, status, accountId, account } = useOcean()
 
   const [jobList, setJobList] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -69,11 +71,52 @@ export default function JobsList() {
   const { getComputeItems } = useSearch()
 
   const getJobs = async () => {
-    if (!account || !ocean || status !== OceanConnectionStatus.CONNECTED) return
+    if (!accountId || !ocean || status !== OceanConnectionStatus.CONNECTED) return
     setIsLoading(true)
     setUserAgreed(true)
     try {
-      const computeItems = await getComputeItems()
+      
+
+      const jobList = await ocean.compute.status(account)
+      console.log(jobList)
+      const computeItemss = await Promise.all(
+        jobList.map(async (job) => {
+          if (!job) return
+          try {
+
+            const { did } = await ocean.keeper.agreementStoreManager.getAgreement(
+              job.agreementId
+            )
+            console.log(did)
+            if(did==='0x0000000000000000000000000000000000000000000000000000000000000000') return
+            const ddo = await ocean.assets.resolve(did)
+            if (ddo) {
+              
+              // Since we are getting assets from chain there might be
+              // assets from other marketplaces. So return only those assets
+              // whose serviceEndpoint contains the configured Aquarius URI.
+              const metadata = findServiceByType(ddo,'metadata')
+              console.log(did,metadata)
+              if(!metadata) return
+              const { serviceEndpoint } = metadata
+              if (serviceEndpoint?.includes(config.aquariusUri)) {
+                return { job, ddo }
+              }
+            }
+          }
+          catch (err) {
+            console.log(err)
+          }
+
+        })
+      )
+
+      const computeItems = computeItemss.filter(
+        (value) =>  value !== undefined 
+      ) as ComputeItem[] | undefined
+
+     // const computeItems = await getComputeItems()
+      console.log('compute items', computeItems)
       if (!computeItems) return
       const data = computeItems.map(item => {
         const { attributes } = findServiceByType(item.ddo, 'metadata')
@@ -84,13 +127,15 @@ export default function JobsList() {
           status: item.job.statusText,
           name: name,
           price: price,
-          id: item.ddo.id
+          did: item.ddo.id,
+          id: shortid.generate()
         }
       })
 
       setJobList(data)
       setIsLoading(false)
     } catch (err) {
+      Logger.error(err)
       // TODO: no error handling
     } finally {
       setIsLoading(false)
@@ -99,19 +144,19 @@ export default function JobsList() {
 
   return isLoading ? (
     <Loader />
-  ) : account && ocean ? (
+  ) : accountId && ocean ? (
     userAgreed ? (
       <Table data={jobList} columns={columns} />
     ) : (
-      <>
-        <div>
-          <Button primary onClick={getJobs}>
-            Sign to retrieve jobs
+        <>
+          <div>
+            <Button primary onClick={getJobs}>
+              Sign to retrieve jobs
           </Button>
-        </div>
-      </>
-    )
+          </div>
+        </>
+      )
   ) : (
-    <div>Connect your wallet to see your compute jobs.</div>
-  )
+        <div>Connect your wallet to see your compute jobs.</div>
+      )
 }

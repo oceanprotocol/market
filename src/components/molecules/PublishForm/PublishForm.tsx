@@ -82,7 +82,7 @@ export function transformPublishFormToMetadata(
       termsAndConditions,
       supportName,
       supportEmail,
-      access: 'Download'
+      access: access || 'Download'
     },
     // ------- curation -------
     curation: AssetModel.curation
@@ -155,10 +155,10 @@ const PublishForm: React.FC<PublishFormProps> = () => {
         )
         services = [computeService]
       }
-
+      console.log(metadata as MetaData)
       try {
         const asset = await ocean.assets.create(
-          (transformPublishFormToMetadata(formData) as unknown) as MetaData,
+          metadata as MetaData,
           account,
           services
         )
