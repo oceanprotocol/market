@@ -72,4 +72,5 @@ p.copyright {
   color: var(--brand-black);
   background: var(--brand-grey-lighter);
   padding: 0.1px 0.5px 0.1px 0.5px;
+  border-radius: 2px;
 }

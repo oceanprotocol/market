@@ -43,7 +43,7 @@ const publishedColumns = [
 ]
 
 export default function PublishedList() {
-  const { ocean, status, account } = useOcean()
+  const { ocean, status, account, accountId } = useOcean()
   const { getPublishedList } = useSearch()
   const [publishedList, setPublishedList] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -55,7 +55,12 @@ export default function PublishedList() {
 
   useEffect(() => {
     async function getPublished() {
-      if (!account || !ocean || status !== OceanConnectionStatus.CONNECTED)
+      if (
+        !account ||
+        !accountId ||
+        !ocean ||
+        status !== OceanConnectionStatus.CONNECTED
+      )
         return
 
       setIsLoading(true)
@@ -83,7 +88,7 @@ export default function PublishedList() {
       setIsLoading(false)
     }
     getPublished()
-  }, [account, ocean, status])
+  }, [accountId, ocean, status])
 
   return isLoading ? (
     <Loader />

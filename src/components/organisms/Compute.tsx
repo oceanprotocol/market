@@ -16,10 +16,6 @@ import {
 import styles from './Compute.module.css'
 import Button from '../atoms/Button'
 import Input from '../atoms/Input/Input'
-import {
-  LoggerInstance,
-  LogLevel
-} from '@oceanprotocol/squid/dist/node/utils/Logger'
 
 export default function Compute({
   ddo,
@@ -36,7 +32,6 @@ export default function Compute({
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [, setError] = useState('')
   const [isBalanceSufficient, setIsBalanceSufficient] = useState(false)
-
   const [computeType, setComputeType] = useState('')
   const [computeContainer, setComputeContainer] = useState({
     entrypoint: '',

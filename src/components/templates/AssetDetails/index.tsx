@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { DDO, Aquarius, Logger, Curation } from '@oceanprotocol/squid'
 import Link from 'next/link'
 import Layout from '../../../Layout'
-import { MetaDataDexFreight } from '../../../@types/MetaData'
+import { MetaDataMarket } from '../../../@types/MetaData'
 import Time from '../../atoms/Time'
 import Markdown from '../../atoms/Markdown'
 import Consume from '../../organisms/Consume'
@@ -13,15 +13,14 @@ import MetaSecondary from './MetaSecondary'
 import Rating from '../../atoms/Rating'
 import RatingAction from './RatingAction'
 import styles from './index.module.css'
-import { config } from '../../../config/ocean'
-import { findServiceByType } from '../../../utils'
-import { useMetadata, useWeb3, useOcean } from '@oceanprotocol/react'
+import { useMetadata, useOcean } from '@oceanprotocol/react'
 import Compute from '../../organisms/Compute'
+import DeleteAction from '../../molecules/DeleteAsset'
 
 export declare type AssetDetailsPageProps = {
   title: string
   ddo?: DDO
-  attributes?: MetaDataDexFreight
+  attributes?: MetaDataMarket
   error?: string
 }
 
@@ -29,7 +28,7 @@ const AssetDetailsPageMeta = ({
   attributes,
   ddo
 }: {
-  attributes: MetaDataDexFreight
+  attributes: MetaDataMarket
   ddo: DDO
 }) => {
   if (!attributes) return null
@@ -82,6 +81,15 @@ const AssetDetailsPageMeta = ({
         {tags && tags.length > 0 && <Tags items={tags} />}
 
         <MetaFull ddo={ddo} attributes={attributes} />
+        <div className={styles.buttonGroup}>
+          {/* <EditAction
+            ddo={ddo}
+            ocean={ocean}
+            account={account}
+            refetchMetadata={refetchMetadata}
+          /> */}
+          <DeleteAction ddo={ddo} />
+        </div>
       </div>
       <div>
         <div className={styles.sticky}>

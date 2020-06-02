@@ -18,8 +18,8 @@ export interface Sample {
 
 export declare type AccessType = 'Download' | 'Compute'
 
-export interface AdditionalInformationDexFreight extends AdditionalInformation {
-  description: string // required for dexFreight
+export interface AdditionalInformationMarket extends AdditionalInformation {
+  description: string
   links?: Sample[] // redefine existing key, cause not specific enough in Squid
   deliveryType: DeliveryType
   termsAndConditions: boolean
@@ -29,6 +29,6 @@ export interface AdditionalInformationDexFreight extends AdditionalInformation {
   access: AccessType
 }
 
-export interface MetaDataDexFreight extends MetaData {
-  additionalInformation: AdditionalInformationDexFreight
+export interface MetaDataMarket extends MetaData {
+  additionalInformation: AdditionalInformationMarket
 }

@@ -40,3 +40,7 @@
   height: 100%;
   min-height: 70vh;
 }
+.buttonGroup {
+  margin-top: var(--spacer);
+  margin-bottom: var(--spacer);
+}

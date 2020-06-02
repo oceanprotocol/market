@@ -3,8 +3,8 @@ import { DDO } from '@oceanprotocol/squid'
 import Link from 'next/link'
 import Dotdotdot from 'react-dotdotdot'
 import {
-  AdditionalInformationDexFreight,
-  MetaDataDexFreight
+  AdditionalInformationMarket,
+  MetaDataMarket
 } from '../../@types/MetaData'
 import { findServiceByType } from '../../utils'
 import Tags from '../atoms/Tags'
@@ -33,10 +33,10 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
       tags,
       categories,
       access
-    } = attributes.additionalInformation as AdditionalInformationDexFreight)
+    } = attributes.additionalInformation as AdditionalInformationMarket)
   }
 
-  const { curation } = attributes as MetaDataDexFreight
+  const { curation } = attributes as MetaDataMarket
 
   return (
     <article className={styles.teaser}>

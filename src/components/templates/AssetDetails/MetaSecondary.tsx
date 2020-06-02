@@ -1,6 +1,6 @@
 import React from 'react'
 import shortid from 'shortid'
-import { MetaDataDexFreight } from '../../../@types/MetaData'
+import { MetaDataMarket } from '../../../@types/MetaData'
 import { ListItem } from '../../atoms/Lists'
 import { refundPolicy, assetTerms } from '../../../../site.config'
 import MetaItem from './MetaItem'
@@ -9,7 +9,7 @@ import styles from './MetaSecondary.module.css'
 export default function MetaSecondary({
   attributes
 }: {
-  attributes: MetaDataDexFreight
+  attributes: MetaDataMarket
 }) {
   const { price } = attributes.main
   let links, supportName, supportEmail

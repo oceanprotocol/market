@@ -24,7 +24,7 @@ before_script:
   # - cd ..
   - cp .env.example .env && cp .env.example .env.build
   # overwrite AQUARIUS_URI from above .env files, which default to Spree
-  - export AQUARIUS_URI='https://aquarius.pacific.dexfreight.dev-ocean.com'
+  - export AQUARIUS_URI='https://aquarius.pacific.market.dev-ocean.com'
 
 script:
   # will run `npm ci` automatically here

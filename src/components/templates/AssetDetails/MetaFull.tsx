@@ -1,6 +1,6 @@
 import React from 'react'
 import { DDO } from '@oceanprotocol/squid'
-import { MetaDataDexFreight } from '../../../@types/MetaData'
+import { MetaDataMarket } from '../../../@types/MetaData'
 import Time from '../../atoms/Time'
 import MetaItem from './MetaItem'
 import styles from './MetaFull.module.css'
@@ -10,7 +10,7 @@ export default function MetaFull({
   attributes
 }: {
   ddo: DDO | undefined
-  attributes: MetaDataDexFreight
+  attributes: MetaDataMarket
 }) {
   const { dateCreated, author, license } = attributes.main
   let dateRange

@@ -9,7 +9,7 @@ import {
 } from '../../../src/models/PublishForm'
 import testFormData from '../__fixtures__/testFormData'
 import { transformPublishFormToMetadata } from '../../../src/components/molecules/PublishForm/PublishForm'
-import { MetaDataDexFreight } from '../../../src/@types/MetaData'
+import { MetaDataMarket } from '../../../src/@types/MetaData'
 
 describe('PublishForm', () => {
   it('renders without crashing', async () => {
@@ -60,7 +60,7 @@ describe('PublishForm', () => {
 
   it('Form data is correctly transformed to asset MetaData', () => {
     const data: PublishFormDataInterface = publishFormData
-    let metadata: MetaDataDexFreight = transformPublishFormToMetadata(data)
+    let metadata: MetaDataMarket = transformPublishFormToMetadata(data)
 
     expect(metadata.additionalInformation).toBeDefined()
     expect(metadata.main).toBeDefined()

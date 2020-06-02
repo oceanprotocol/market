@@ -7,7 +7,7 @@ import {
   PublishFormDataInterface
 } from '../../../models/PublishForm'
 import useStoredValue from '../../../hooks/useStoredValue'
-import { MetaDataDexFreight } from '../../../@types/MetaData'
+import { MetaDataMarket } from '../../../@types/MetaData'
 import { File, MetaData } from '@oceanprotocol/squid'
 import { isBrowser, toStringNoMS } from '../../../utils'
 import { toast } from 'react-toastify'
@@ -44,7 +44,7 @@ export function clearFilesData() {
 
 export function transformPublishFormToMetadata(
   data: PublishFormDataInterface
-): MetaDataDexFreight {
+): MetaDataMarket {
   const currentTime = toStringNoMS(new Date())
 
   const {
@@ -62,7 +62,7 @@ export function transformPublishFormToMetadata(
     access
   } = data
 
-  const metadata: MetaDataDexFreight = {
+  const metadata: MetaDataMarket = {
     main: {
       ...AssetModel.main,
       name: title,

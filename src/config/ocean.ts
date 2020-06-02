@@ -29,7 +29,7 @@ export interface OceanConfig extends Config {
 //     process.env.SECRET_STORE_URI || 'https://secret-store.oceanprotocol.com',
 //   faucetUri: process.env.FAUCET_URI || 'https://faucet.oceanprotocol.com',
 //   ratingUri:
-//     process.env.RATING_URI || 'https://rating.pacific.dexfreight.dev-ocean.com',
+//     process.env.RATING_URI || 'https://rating.pacific.marketplace.dev-ocean.com',
 //   verbose: 3
 // }
 
@@ -41,7 +41,7 @@ export const config: OceanConfig = {
   brizoAddress: '0x00c6A0BC5cD0078d6Cd0b659E8061B404cfa5704',
   secretStoreUri: 'https://secret-store.oceanprotocol.com',
   faucetUri: 'https://faucet.oceanprotocol.com',
-  ratingUri: 'https://rating.pacific.dexfreight.dev-ocean.com',
+  ratingUri: 'https://rating.pacific.marketplace.dev-ocean.com',
   verbose: 3
 }
 

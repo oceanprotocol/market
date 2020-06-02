@@ -6,8 +6,7 @@ import {
   useSearch,
   ComputeItem
 } from '@oceanprotocol/react'
-import Time from '../atoms/Time'
-import Link from 'next/link'
+
 import Price from '../atoms/Price'
 import { fromWei } from 'web3-utils'
 import { findServiceByType } from '../../utils'
@@ -18,6 +17,10 @@ import DateCell from '../atoms/Table/DateCell'
 import DdoLinkCell from '../atoms/Table/DdoLinkCell'
 import { config } from '../../config/ocean'
 import shortid from 'shortid'
+import ActionsCell from '../atoms/Table/ActionsCell'
+import Tooltip from '../atoms/Tooltip'
+import Tippy from '@tippyjs/react'
+import JobDetailsDialog from '../molecules/JobDetailsDialog'
 
 const columns = [
   {
@@ -58,17 +61,32 @@ const columns = [
   },
   {
     name: 'Actions',
-    selector: 'actions'
+    selector: 'actions',
+    cell: function getCell(row: any) {
+      return (
+        <ActionsCell handleOnClickViewJobDetails={row.onClickViewJobDetails} />
+      )
+    }
   }
 ]
 
 export default function JobsList() {
-  const { ocean, status, accountId, account } = useOcean()
+  const { ocean, status, accountId } = useOcean()
 
   const [jobList, setJobList] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [userAgreed, setUserAgreed] = useState(false)
   const { getComputeItems } = useSearch()
+  const [isOpen, setIsOpen] = useState(false)
+  const [detailsComputeItem, setDetailsComputeItem] = useState<ComputeItem>()
+
+  const onClickViewJobDetails = (compute: ComputeItem) => {
+    setDetailsComputeItem(compute)
+    setIsOpen(true)
+  }
+  const dialogClose = () => {
+    setIsOpen(false)
+  }
 
   const getJobs = async () => {
     if (!accountId || !ocean || status !== OceanConnectionStatus.CONNECTED)
@@ -76,48 +94,7 @@ export default function JobsList() {
     setIsLoading(true)
     setUserAgreed(true)
     try {
-      const jobList = await ocean.compute.status(account)
-      console.log(jobList)
-      const computeItemss = await Promise.all(
-        jobList.map(async job => {
-          if (!job) return
-          try {
-            const {
-              did
-            } = await ocean.keeper.agreementStoreManager.getAgreement(
-              job.agreementId
-            )
-            console.log(did)
-            if (
-              did ===
-              '0x0000000000000000000000000000000000000000000000000000000000000000'
-            )
-              return
-            const ddo = await ocean.assets.resolve(did)
-            if (ddo) {
-              // Since we are getting assets from chain there might be
-              // assets from other marketplaces. So return only those assets
-              // whose serviceEndpoint contains the configured Aquarius URI.
-              const metadata = findServiceByType(ddo, 'metadata')
-              console.log(did, metadata)
-              if (!metadata) return
-              const { serviceEndpoint } = metadata
-              if (serviceEndpoint?.includes(config.aquariusUri)) {
-                return { job, ddo }
-              }
-            }
-          } catch (err) {
-            console.log(err)
-          }
-        })
-      )
-
-      const computeItems = computeItemss.filter(
-        value => value !== undefined
-      ) as ComputeItem[] | undefined
-
-      // const computeItems = await getComputeItems()
-      console.log('compute items', computeItems)
+      const computeItems = await getComputeItems()
       if (!computeItems) return
       const data = computeItems.map(item => {
         const { attributes } = findServiceByType(item.ddo, 'metadata')
@@ -129,7 +106,8 @@ export default function JobsList() {
           name: name,
           price: price,
           did: item.ddo.id,
-          id: shortid.generate()
+          id: shortid.generate(),
+          onClickViewJobDetails: () => onClickViewJobDetails(item)
         }
       })
 
@@ -147,7 +125,14 @@ export default function JobsList() {
     <Loader />
   ) : accountId && ocean ? (
     userAgreed ? (
-      <Table data={jobList} columns={columns} />
+      <>
+        <JobDetailsDialog
+          computeItem={detailsComputeItem}
+          isOpen={isOpen}
+          onClose={dialogClose}
+        />
+        <Table data={jobList} columns={columns} />
+      </>
     ) : (
       <>
         <div>

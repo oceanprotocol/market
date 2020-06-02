@@ -8,6 +8,8 @@ import { title, description, url } from '../../site.config'
 import { toast } from 'react-toastify'
 
 // this is the place to import global css
+import 'tippy.js/dist/tippy.css'
+import 'react-responsive-modal/styles.css'
 import '@oceanprotocol/typographies/css/ocean-typo.css'
 import 'react-toastify/dist/ReactToastify.css'
 import '../styles/global.css'
@@ -15,7 +17,7 @@ import '../components/atoms/NProgress.css'
 import { Web3Provider, OceanProvider, Config } from '@oceanprotocol/react'
 import { config } from '../config/ocean'
 
-export default function dexfreightApp({ Component, pageProps }: AppProps) {
+export default function marketApp({ Component, pageProps }: AppProps) {
   const { asPath } = useRouter()
 
   toast.configure()

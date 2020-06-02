@@ -23,13 +23,13 @@ export default function BaseDialog({
       open={open}
       onClose={onClose}
       classNames={{
-        overlay: 'customOverlay',
-        modal: 'customModal'
+        overlay: styles.customOverlay,
+        modal: styles.customModal
       }}
       {...other}
     >
       <h2>{title}</h2>
-      <p>{children}</p>
+      <div>{children}</div>
     </Modal>
   )
 }

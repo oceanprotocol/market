@@ -6,7 +6,7 @@ import compareAsBN, { Comparisson } from '../../utils/compareAsBN'
 import Button from '../atoms/Button'
 import File from '../atoms/File'
 import Price from '../atoms/Price'
-import { MetaDataDexFreight } from '../../@types/MetaData'
+import { MetaDataMarket } from '../../@types/MetaData'
 import Web3Feedback from '../molecules/Web3Feedback'
 import styles from './Consume.module.css'
 import Loader from '../atoms/Loader'
@@ -20,7 +20,7 @@ export default function Consume({ ddo }: { ddo: DDO | undefined }) {
   const { consume, consumeStepText, isLoading } = useConsume()
   const { attributes } = findServiceByType(ddo, 'metadata')
   const { price } = attributes.main
-  const file = (attributes as MetaDataDexFreight).main.files[0]
+  const file = (attributes as MetaDataMarket).main.files[0]
   const isFree = price === '0'
   const isBalanceSufficient =
     isFree ||

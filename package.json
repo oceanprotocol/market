@@ -23,6 +23,7 @@
     "@oceanprotocol/squid": "^2.2.0",
     "@oceanprotocol/typographies": "^0.1.0",
     "@sindresorhus/slugify": "^1.0.0",
+    "@tippyjs/react": "^4.0.2",
     "@types/classnames": "^2.2.10",
     "axios": "^0.19.2",
     "classnames": "^2.2.6",

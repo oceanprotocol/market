@@ -1,5 +1,5 @@
 import { DDO } from '@oceanprotocol/squid'
-import { MetaDataDexFreight } from '../../../src/@types/MetaData'
+import { MetaDataMarket } from '../../../src/@types/MetaData'
 
 const ddo: Partial<DDO> = {
   '@context': 'https://w3id.org/did/v1',
@@ -82,7 +82,7 @@ const ddo: Partial<DDO> = {
           numVotes: 100,
           rating: 5
         }
-      } as MetaDataDexFreight,
+      } as MetaDataMarket,
       index: 0
     },
     {

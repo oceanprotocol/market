@@ -4,7 +4,7 @@ import AssetDetails, { getMetadata } from '../../../src/pages/asset/[did]'
 import ddo from '../__fixtures__/ddo'
 import { findServiceByType } from '../../../src/utils'
 import web3ProviderMock, { context } from '../__mocks__/web3provider'
-import { MetaDataDexFreight } from '../../../src/@types/MetaData'
+import { MetaDataMarket } from '../../../src/@types/MetaData'
 
 const { attributes } = findServiceByType(ddo, 'metadata')
 
@@ -16,7 +16,7 @@ describe('AssetDetails', () => {
       <context.Provider value={web3ProviderMock}>
         <AssetDetails
           ddo={JSON.stringify(ddo) as any}
-          attributes={attributes as MetaDataDexFreight}
+          attributes={attributes as MetaDataMarket}
           title="Hello"
         />
       </context.Provider>
