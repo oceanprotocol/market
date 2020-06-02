@@ -1,5 +1,5 @@
 {
-  "name": "dexfreight",
+  "name": "market",
   "build": {
     "env": {
       "NODE_URI": "@node_uri",

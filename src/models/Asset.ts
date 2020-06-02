@@ -1,6 +1,6 @@
-import { MetaDataDexFreight } from '../@types/MetaData'
+import { MetaDataMarket } from '../@types/MetaData'
 
-const AssetModel: MetaDataDexFreight = {
+const AssetModel: MetaDataMarket = {
   // OEP-8 Attributes
   // https://github.com/oceanprotocol/OEPs/tree/master/8
   main: {
@@ -15,7 +15,6 @@ const AssetModel: MetaDataDexFreight = {
   additionalInformation: {
     description: '',
     copyrightHolder: '',
-    categories: [''],
     tags: undefined,
     // links: [],
 
@@ -23,7 +22,6 @@ const AssetModel: MetaDataDexFreight = {
     deliveryType: 'files',
     termsAndConditions: false,
     dateRange: undefined,
-    granularity: undefined,
     supportName: undefined,
     supportEmail: undefined,
     access: 'Download'

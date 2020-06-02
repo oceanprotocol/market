@@ -1,9 +1,9 @@
 import AssetModel from '../../src/models/Asset'
-import { MetaDataDexFreight } from '../../src/@types/MetaData'
+import { MetaDataMarket } from '../../src/@types/MetaData'
 
 describe('AssetModel', () => {
   it('values can be reassigned', () => {
-    const newMeta: MetaDataDexFreight = {
+    const newMeta: MetaDataMarket = {
       main: Object.assign(AssetModel.main, {
         name: 'Hello'
       }),

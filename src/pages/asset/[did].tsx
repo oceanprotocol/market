@@ -44,13 +44,29 @@ const AssetDetails: NextPage<AssetDetailsPageProps> = (
     />
   )
 }
+export function normalizeDid(did: string): string {
+  if (did.length === 73) {
+    if (did.charAt(9) === '0' && did.charAt(10) === '0') {
+      return did.substr(0, 9) + did.substr(11)
+    }
+  }
+  return did
+}
 
 export async function getMetadata(did?: string) {
-  if (!did || !isDid(did)) {
+  if (did) {
+    did = normalizeDid(did)
+    if (!isDid(did)) {
+      return {
+        title: 'Not a DID',
+        error:
+          'The provided DID in the URL is not a valid DID. Please check your URL.'
+      }
+    }
+  } else {
     return {
-      title: 'Not a DID',
-      error:
-        'The provided DID in the URL is not a valid DID. Please check your URL.'
+      title: 'No DID provided',
+      error: 'No DID provided. Please check your URL.'
     }
   }
 

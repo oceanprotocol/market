@@ -16,7 +16,7 @@ export default async function getFromFaucet(
       url: `${config.faucetUri}/faucet`,
       data: {
         address: account,
-        agent: 'dexFreight'
+        agent: 'market'
       }
     })
 

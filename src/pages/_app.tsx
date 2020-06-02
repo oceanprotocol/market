@@ -8,13 +8,16 @@ import { title, description, url } from '../../site.config'
 import { toast } from 'react-toastify'
 
 // this is the place to import global css
+import 'tippy.js/dist/tippy.css'
+import 'react-responsive-modal/styles.css'
 import '@oceanprotocol/typographies/css/ocean-typo.css'
 import 'react-toastify/dist/ReactToastify.css'
 import '../styles/global.css'
 import '../components/atoms/NProgress.css'
-import { Web3Provider, OceanProvider } from '@oceanprotocol/react'
+import { Web3Provider, OceanProvider, Config } from '@oceanprotocol/react'
+import { config } from '../config/ocean'
 
-export default function dexfreightApp({ Component, pageProps }: AppProps) {
+export default function marketApp({ Component, pageProps }: AppProps) {
   const { asPath } = useRouter()
 
   toast.configure()
@@ -24,24 +27,6 @@ export default function dexfreightApp({ Component, pageProps }: AppProps) {
   // /publish route.
   if (asPath.includes('/publish')) {
     require('../styles/datepicker.css')
-  }
-
-  const config = {
-    nodeUri: process.env.NODE_URI || 'https://pacific.oceanprotocol.com',
-    aquariusUri:
-      process.env.AQUARIUS_URI ||
-      'https://aquarius.pacific.dexfreight.dev-ocean.com',
-    brizoUri:
-      process.env.BRIZO_URI || 'https://brizo.pacific.dexfreight.dev-ocean.com',
-    brizoAddress:
-      process.env.BRIZO_ADDRESS || '0xeD792C5FcC8bF3322a6ba89A6e51eF0B6fB3C530',
-    secretStoreUri:
-      process.env.SECRET_STORE_URI || 'https://secret-store.oceanprotocol.com',
-    faucetUri: process.env.FAUCET_URI || 'https://faucet.oceanprotocol.com',
-    ratingUri:
-      process.env.RATING_URI ||
-      'https://rating.pacific.dexfreight.dev-ocean.com',
-    verbose: 3
   }
 
   return (
@@ -72,7 +57,7 @@ export default function dexfreightApp({ Component, pageProps }: AppProps) {
       />
       <NProgress />
       <Web3Provider>
-        <OceanProvider config={config}>
+        <OceanProvider config={config as Config}>
           <Component {...pageProps} />
         </OceanProvider>
       </Web3Provider>

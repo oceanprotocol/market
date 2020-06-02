@@ -149,3 +149,12 @@ export function formatBytes(a: number, b: number) {
   const f = Math.floor(Math.log(a) / Math.log(c))
   return parseFloat((a / Math.pow(c, f)).toFixed(d)) + ' ' + e[f]
 }
+
+export async function redeploy(): Promise<AxiosResponse | undefined> {
+  try {
+    const response = await axios.post('/api/redeploy')
+    return response
+  } catch (err) {
+    console.error(err.message)
+  }
+}

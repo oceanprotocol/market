@@ -3,7 +3,7 @@ import { JSONSchema6 } from 'json-schema'
 import TermsWidget from '../components/atoms/FormWidgets/TermsWidget'
 import DateRangeWidget from '../components/atoms/FormWidgets/DateRangeWidget'
 import { ObjectFieldTemplate } from '../components/molecules/Form/ObjectFieldTemplate'
-import { Granularity } from '../@types/MetaData'
+import { Granularity, AccessType } from '../@types/MetaData'
 import FileField from '../components/molecules/Form/FileField'
 
 export const customWidgets = {
@@ -11,26 +11,17 @@ export const customWidgets = {
   DateRangeWidget
 }
 
-// Ref: https://react-jsonschema-form.readthedocs.io/en/latest/form-customization/#the-uischema-object
-export const CATEGORIES = [
-  'Invoices',
-  'Historical location-based data',
-  'Shipment attribute (without rate information)',
-  'Shipment attribute (with rate information)',
-  'Other'
-]
 export const PublishFormSchema: JSONSchema6 = {
   type: 'object',
   required: [
-    'category',
     'title',
     'author',
     'license',
     'price',
     'files',
-    'granularity',
     'summary',
-    'termsAndConditions'
+    'termsAndConditions',
+    'access'
   ],
   definitions: {
     files: {
@@ -43,11 +34,6 @@ export const PublishFormSchema: JSONSchema6 = {
     }
   },
   properties: {
-    category: {
-      type: 'string',
-      title: 'What type of data will you be providing?',
-      enum: CATEGORIES
-    },
     title: {
       type: 'string',
       title: 'Offer Title'
@@ -71,21 +57,14 @@ export const PublishFormSchema: JSONSchema6 = {
       type: 'number',
       minimum: 0
     },
-    granularity: {
-      type: 'string',
-      title: 'Granularity of Data',
-      enum: [
-        'Not updated periodically',
-        'Hourly',
-        'Daily',
-        'Weekly',
-        'Monthly',
-        'Annually'
-      ]
-    },
     author: {
       type: 'string',
       title: 'Author'
+    },
+    access: {
+      title: 'Access type',
+      type: 'string',
+      enum: ['Download', 'Compute']
     },
     license: {
       title: 'License',
@@ -161,9 +140,9 @@ export const PublishFormUiSchema: UiSchema = {
   price: {
     'ui:help': 'Set your price in Ocean Tokens.'
   },
-  granularity: {
+  access: {
     'ui:widget': 'select',
-    'ui:help': 'Select the timeframe your data was collected.'
+    'ui:help': 'Access Type'
   },
   author: {
     'ui:placeholder': 'e.g. Jelly McJellyfish',
@@ -190,8 +169,6 @@ export const PublishFormUiSchema: UiSchema = {
 
 export interface PublishFormDataInterface {
   // ---- required fields ----
-  category: string
-  granularity: Granularity
   summary: string
   termsAndConditions: boolean
   author: string
@@ -199,6 +176,7 @@ export interface PublishFormDataInterface {
   files: string[]
   price: number
   title: string
+  access?: AccessType
   // ---- optional fields ----
   dateRange?: string
   holder?: string
@@ -213,8 +191,6 @@ export const publishFormData: PublishFormDataInterface = {
   title: '',
   files: [''], // should be empty string initially to display the expanded field
   summary: '',
-  category: '',
-  granularity: '',
   license: '',
   termsAndConditions: false,
   dateRange: undefined,

@@ -8,7 +8,7 @@
   font-size: var(--font-size-small);
   height: 100%;
   color: var(--brand-grey-dark);
-
+  position: relative;
   /* for sticking footer to bottom */
   display: flex;
   flex-direction: column;
@@ -61,4 +61,16 @@ p.copyright {
   font-size: var(--font-size-mini);
   text-align: center;
   margin-top: calc(var(--spacer) / 3);
+}
+
+.accessLabel {
+  font-size: var(--font-size-small);
+  width: auto;
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: var(--brand-black);
+  background: var(--brand-grey-lighter);
+  padding: 0.1px 0.5px 0.1px 0.5px;
+  border-radius: 2px;
 }

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { DDO, MetaDataAlgorithm, Ocean, DID } from '@oceanprotocol/squid'
+import { DDO, Ocean, Logger } from '@oceanprotocol/squid'
 import { ServiceMetadata } from '@oceanprotocol/squid/dist/node/ddo/Service'
 import { fromWei } from 'web3-utils'
 import compareAsBN, { Comparisson } from '../../utils/compareAsBN'
 import Loader from '../atoms/Loader'
-import { config } from '../../config/ocean'
 import Web3Feedback from '../molecules/Web3Feedback'
 import Dropzone from '../atoms/Dropzone'
 import Price from '../atoms/Price'
@@ -14,8 +13,9 @@ import {
   useCompute,
   readFileContent
 } from '@oceanprotocol/react'
-import styles from './Consume.module.css'
+import styles from './Compute.module.css'
 import Button from '../atoms/Button'
+import Input from '../atoms/Input/Input'
 
 export default function Compute({
   ddo,
@@ -27,12 +27,11 @@ export default function Compute({
   ocean: Ocean | null
 }) {
   if (!ddo) return null
-  const { compute, computeStep, computeStepText } = useCompute()
-  const [isJobStarting, setIsJobStarting] = useState(false)
-  const [step, setStep] = useState(99)
-  const [error, setError] = useState('')
-  const [isBalanceSufficient, setIsBalanceSufficient] = useState(false)
 
+  const { compute, isLoading, computeStepText, computeError } = useCompute()
+  const [isJobStarting, setIsJobStarting] = useState(false)
+  const [, setError] = useState('')
+  const [isBalanceSufficient, setIsBalanceSufficient] = useState(false)
   const [computeType, setComputeType] = useState('')
   const [computeContainer, setComputeContainer] = useState({
     entrypoint: '',
@@ -48,7 +47,7 @@ export default function Compute({
 
   const isFree = price === '0'
 
-  const [isTermsAgreed, setIsTermsAgreed] = useState(false)
+  const [isTermsAgreed, setIsTermsAgreed] = useState(true)
   const isComputeButtonDisabled =
     isJobStarting ||
     file === null ||
@@ -86,7 +85,9 @@ export default function Compute({
       setIsJobStarting(true)
       setIsPublished(false)
       setError('')
-      // compute(ddo.id, algorithmRawCode, computeContainer)
+
+      await compute(ddo.id, algorithmRawCode, computeContainer)
+
       setIsPublished(true)
       setFile(null)
     } catch (error) {
@@ -96,31 +97,28 @@ export default function Compute({
     setIsJobStarting(false)
   }
 
-  function onCheck(event: any) {
-    console.log(event, event.target.checked)
-    setIsTermsAgreed(event.target.checked)
-  }
-
   return (
     <div className={styles.compute}>
-      <Price price={fromWei(price)} className={styles.price} />
+      <Price price={price} className={styles.price} />
 
       <div className={styles.info}>
         <div className={styles.selectType}>
-          {/* <input
-          type="search"
-          className={large ? `${styles.input} ${styles.large}` : styles.input}
-          placeholder={placeholder || 'What are you looking for?'}
-          value={value}
-          onChange={e => handleChange(e)}
-          required
-        /> */}
+          <Input
+            type="select"
+            name="algorithm"
+            label="Select image to run the algorithm"
+            placeholder=""
+            value={computeType}
+            options={computeOptions.map(x => x.name)}
+            onChange={handleSelectChange}
+          />
         </div>
         <div>
           <Dropzone multiple={false} handleOnDrop={onDrop} />
 
           <div className={styles.jobButtonWrapper}>
             <Button
+              primary
               onClick={() => startJob()}
               disabled={isComputeButtonDisabled}
             >
@@ -130,8 +128,10 @@ export default function Compute({
           {/* <TermsCheckbox onChange={onCheck} /> */}
         </div>
 
-        {isJobStarting && <Loader message={computeStepText} />}
-        {error !== '' && <div className={styles.feedback}>{error}</div>}
+        {isLoading && <Loader message={computeStepText} />}
+        {computeError !== undefined && (
+          <div className={styles.feedback}>{computeError}</div>
+        )}
         {isPublished && (
           <div className={styles.feedback}>
             <p>Your job started! Watch the progress in the history page.</p>
