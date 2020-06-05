@@ -3,23 +3,53 @@ import { render } from '@testing-library/react'
 import AssetDetails, { getMetadata } from '../../../src/pages/asset/[did]'
 import ddo from '../__fixtures__/ddo'
 import { findServiceByType } from '../../../src/utils'
-import web3ProviderMock, { context } from '../__mocks__/web3provider'
 import { MetaDataMarket } from '../../../src/@types/MetaData'
-
+import oceanMock from '../__mocks__/ocean-mock'
+import web3ProviderMock from '../__mocks__/web3'
 const { attributes } = findServiceByType(ddo, 'metadata')
+// import { useOcean } from '@oceanprotocol/react'
 
 jest.mock('web3')
+jest.mock('@oceanprotocol/react')
+
+// eslint-disable-next-line
+jest.mock('@oceanprotocol/react', () => ({
+  useOcean: () => {
+    return {
+      ocean: oceanMock
+    }
+  },
+  useWeb3: () => {
+    return {
+      web3: web3ProviderMock,
+      account: '0x0000000011111111aaaaaaaabbbbbbbb22222222',
+      ethProviderStatus: 1
+    }
+  },
+  useConsume: () => {
+    return {
+      consume: () => null as any,
+      consumeStepText: '',
+      isLoading: false
+    }
+  },
+  useMetadata: () => {
+    return {
+      getCuration: () => {
+        return Promise.resolve({ rating: 0, numVotes: 0 })
+      }
+    }
+  }
+}))
 
 describe('AssetDetails', () => {
   it('renders without crashing', () => {
     const { container } = render(
-      <context.Provider value={web3ProviderMock}>
-        <AssetDetails
-          ddo={JSON.stringify(ddo) as any}
-          attributes={attributes as MetaDataMarket}
-          title="Hello"
-        />
-      </context.Provider>
+      <AssetDetails
+        ddo={JSON.stringify(ddo) as any}
+        attributes={attributes as MetaDataMarket}
+        title="Hello"
+      />
     )
     expect(container.firstChild).toBeInTheDocument()
   })
@@ -40,8 +70,8 @@ describe('getMetadata()', () => {
 
   it('Found', async () => {
     const response = await getMetadata(
-      'did:op:ee8532e6e338484cb439043125270bd1caf45a7a25a64e71a55b3a18f647d7da'
+      'did:op:8898adb69e334755a568738ce3f6c03760f9eb5a4f344c688e483a04cb0855d6'
     )
-    expect(response.title).toBe('Invoices test')
+    expect(response.title).toBe('compute1')
   })
 })

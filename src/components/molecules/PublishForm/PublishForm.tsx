@@ -155,10 +155,9 @@ const PublishForm: React.FC<PublishFormProps> = () => {
         )
         services = [computeService]
       }
-      console.log(metadata as MetaData)
       try {
         const asset = await ocean.assets.create(
-          metadata as MetaData,
+          (metadata as unknown) as MetaData,
           account,
           services
         )

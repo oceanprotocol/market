@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { DDO, Aquarius, Logger, Curation } from '@oceanprotocol/squid'
+import React, { useState } from 'react'
+import { DDO } from '@oceanprotocol/squid'
 import Link from 'next/link'
 import Layout from '../../../Layout'
 import { MetaDataMarket } from '../../../@types/MetaData'

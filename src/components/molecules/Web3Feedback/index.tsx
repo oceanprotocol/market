@@ -22,16 +22,11 @@ export default function Web3Feedback({
 }) {
   const { ethProviderStatus } = useWeb3()
   const { status, balanceInOcean } = useOcean()
-  const isEthProviderAbsent =
-    ethProviderStatus === InjectedProviderStatus.NOT_AVAILABLE
-  const isEthProviderDisconnected =
-    ethProviderStatus === InjectedProviderStatus.NOT_CONNECTED
-  const isOceanDisconnected = status === OceanConnectionStatus.NOT_CONNECTED
-  const isOceanConnectionError =
-    status === OceanConnectionStatus.OCEAN_CONNECTION_ERROR
-  const hasSuccess =
-    ethProviderStatus === InjectedProviderStatus.CONNECTED &&
-    status === OceanConnectionStatus.CONNECTED
+  const isEthProviderAbsent = ethProviderStatus === -1
+  const isEthProviderDisconnected = ethProviderStatus === 0
+  const isOceanDisconnected = status === 0
+  const isOceanConnectionError = status === -1
+  const hasSuccess = ethProviderStatus === 1 && status === 1
 
   const state = isEthProviderAbsent
     ? 'error'

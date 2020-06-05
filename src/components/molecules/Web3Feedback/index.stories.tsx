@@ -28,7 +28,7 @@ export const NoWeb3Browser = () => {
 export const NoAccountConnected = () => {
   const mock = {
     ...web3ProviderMock,
-    ethProviderStatus: InjectedProviderStatus.NOT_CONNECTED,
+    ethProviderStatus: 0,
     account: ''
   }
   return (
@@ -41,7 +41,7 @@ export const NoAccountConnected = () => {
 export const NotConnectedToPacific = () => {
   const mock = {
     ...web3ProviderMock,
-    ethProviderStatus: InjectedProviderStatus.CONNECTED,
+    ethProviderStatus: 1,
     account: '0x0000000011111111aaaaaaaabbbbbbbb22222222',
     balance: '11223.748267896',
     web3: {
@@ -63,7 +63,7 @@ export const NotConnectedToPacific = () => {
 export const ErrorConnectingToOcean = () => {
   const mock = {
     ...web3ProviderMock,
-    ethProviderStatus: InjectedProviderStatus.CONNECTED,
+    ethProviderStatus: 1,
     account: '0x0000000011111111aaaaaaaabbbbbbbb22222222',
     balance: '11223.748267896',
     web3: {
@@ -84,7 +84,7 @@ export const ErrorConnectingToOcean = () => {
 export const ErrorInssuficientBalance = () => {
   const mock = {
     ...web3ProviderMock,
-    ethProviderStatus: InjectedProviderStatus.CONNECTED,
+    ethProviderStatus: 1,
     account: '0x0000000011111111aaaaaaaabbbbbbbb22222222',
     balance: '11223.748267896'
   }
@@ -98,7 +98,7 @@ export const ErrorInssuficientBalance = () => {
 export const ConnectedToOcean = () => {
   const mock = {
     ...web3ProviderMock,
-    ethProviderStatus: InjectedProviderStatus.CONNECTED,
+    ethProviderStatus: 1,
     account: '0x0000000011111111aaaaaaaabbbbbbbb22222222',
     balance: '11223.748267896'
   }
