@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import styles from './Wallet.module.css'
 import Button from '../../atoms/Button'
 import { formatNumber } from '../../../utils'
 import { useWeb3 } from '@oceanprotocol/react'
 
-const Wallet = ({ balanceOcean }: { balanceOcean: string }) => {
+const Wallet = ({ balanceOcean }: { balanceOcean: string }): ReactElement => {
   const { account, balance, web3Connect } = useWeb3()
   const ethBalanceText = formatNumber(Number(balance))
   const oceanBalanceText = formatNumber(Number(balanceOcean))
@@ -24,7 +24,7 @@ const Wallet = ({ balanceOcean }: { balanceOcean: string }) => {
           </li>
         </ul>
       ) : (
-        <Button link onClick={() => web3Connect.connect()}>
+        <Button style="text" size="small" onClick={() => web3Connect.connect()}>
           Activate Wallet
         </Button>
       )}

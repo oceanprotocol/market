@@ -11,7 +11,6 @@ import styles from './Search.module.css'
 import { priceQueryParamToWei } from '../../utils'
 import { Aquarius, Logger } from '@oceanprotocol/squid'
 import { config } from '../../config/ocean'
-import { useLocation } from '@reach/router'
 import queryString from 'query-string'
 
 export declare type SearchPageProps = {
@@ -74,8 +73,11 @@ export async function getResults(params: any): Promise<QueryResult> {
   return queryResult
 }
 
-export default function SearchPage(): ReactElement {
-  const location = useLocation()
+export default function SearchPage({
+  location
+}: {
+  location: Location
+}): ReactElement {
   const parsed = queryString.parse(location.search)
   const { text, tag } = parsed
   const [queryResult, setQueryResult] = useState<QueryResult>()

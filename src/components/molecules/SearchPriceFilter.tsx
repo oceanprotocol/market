@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react'
+import React, { ChangeEvent, ReactElement } from 'react'
 import SearchFilterSection from '../atoms/SearchFilterSection'
 import usePriceQueryParams from '../../hooks/usePriceQueryParams'
 
@@ -17,7 +17,7 @@ export const PriceInput = ({
   value,
   onChange,
   text
-}: PriceInputProps) => {
+}: PriceInputProps): ReactElement => {
   return (
     <Input
       name={label}

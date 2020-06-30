@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import Status from '../../atoms/Status'
 import Wallet from './Wallet'
 import styles from './index.module.css'
@@ -19,7 +19,7 @@ export default function Web3Feedback({
   isBalanceInsufficient
 }: {
   isBalanceInsufficient?: boolean
-}) {
+}): ReactElement {
   const { ethProviderStatus } = useWeb3()
   const { status, balanceInOcean } = useOcean()
   const isEthProviderAbsent = ethProviderStatus === -1
