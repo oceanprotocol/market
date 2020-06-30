@@ -1,22 +1,22 @@
 :root {
-  --brand-grey: #41474e;
-  --brand-grey-light: #8b98a9;
-  --brand-grey-dark: #303030;
-  --brand-grey-lighter: #e2e2e2;
-
   --brand-white: #ffffff;
   --brand-black: #141414;
   --brand-pink: #ff4092;
   --brand-purple: #7b1173;
   --brand-violet: #e000cf;
-  --brand-blue: #11597b;
+
+  --brand-grey-dark: #303030;
+  --brand-grey: #41474e;
+  --brand-grey-light: #8b98a9;
+  --brand-grey-lighter: #e2e2e2;
+  --brand-grey-dimmed: #f7f7f7;
 
   --brand-gradient: linear-gradient(to right bottom, #7b1173, #ff4092);
 
-  --green: #5fb359;
-  --red: #d80606;
-  --orange: #b35f36;
-  --yellow: #eac146;
+  --brand-alert-green: #5fb359;
+  --brand-alert-red: #d80606;
+  --brand-alert-orange: #b35f36;
+  --brand-alert-yellow: #eac146;
 
   /* Buttons */
   --color-primary: #ff4092;

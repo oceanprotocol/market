@@ -6,17 +6,15 @@
   box-sizing: border-box;
 }
 
-html,
-body,
-#__next {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
 html {
   font-size: var(--font-size-root);
+  scroll-behavior: smooth;
+}
+
+@media screen and (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 body {
@@ -55,18 +53,34 @@ h5 {
   color: var(--brand-black);
   line-height: 1.2;
   font-weight: var(--font-weight-bold);
+  margin-top: 0;
+  margin-bottom: var(--spacer);
 }
 
 h1 {
-  font-size: var(--font-size-h1);
-}
-
-h2 {
   font-size: var(--font-size-h2);
 }
 
-h3 {
+h2 {
   font-size: var(--font-size-h3);
+}
+
+h3 {
+  font-size: var(--font-size-h4);
+}
+
+@media (min-width: 30rem) {
+  h1 {
+    font-size: var(--font-size-h1);
+  }
+
+  h2 {
+    font-size: var(--font-size-h2);
+  }
+
+  h3 {
+    font-size: var(--font-size-h3);
+  }
 }
 
 h4 {
@@ -100,24 +114,16 @@ ul li {
   display: block;
 }
 
+::selection {
+  background: var(--brand-black);
+  color: var(--brand-white);
+}
+
 form,
 fieldset {
   border: 0;
   padding: 0;
   margin: 0;
-}
-
-input[type='radio'],
-input[type='checkbox'] {
-  height: var(--checkbox-size);
-  margin: 0 calc(var(--spacer) / 8) 0 0;
-  vertical-align: middle;
-  width: var(--checkbox-size);
-}
-
-input[type='radio']:checked,
-input[type='checkbox']:checked {
-  background: var(--brand-white);
 }
 
 @import '_code.css';
