@@ -3,6 +3,7 @@ import { useNavigate } from '@reach/router'
 import styles from './SearchBar.module.css'
 import Loader from '../atoms/Loader'
 import Button from '../atoms/Button'
+import Input from '../atoms/Input'
 
 export default function SearchBar({
   placeholder,
@@ -35,12 +36,12 @@ export default function SearchBar({
   return (
     <form className={styles.form}>
       <div className={styles.inputGroup}>
-        <input
+        <Input
           type="search"
-          className={large ? `${styles.input} ${styles.large}` : styles.input}
+          name="search"
           placeholder={placeholder || 'What are you looking for?'}
           value={value}
-          onChange={(e) => handleChange(e)}
+          onChange={handleChange}
           required
         />
         <Button onClick={(e: FormEvent<HTMLButtonElement>) => startSearch(e)}>

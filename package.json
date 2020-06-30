@@ -49,6 +49,7 @@
     "intersection-observer": "^0.11.0",
     "is-url-superb": "^4.0.0",
     "numeral": "^2.0.6",
+    "query-string": "^6.13.1",
     "react": "^16.13.1",
     "react-data-table-component": "^6.9.3",
     "react-datepicker": "^3.0.0",

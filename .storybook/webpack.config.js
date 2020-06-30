@@ -65,6 +65,11 @@ module.exports = ({ config }) => {
 
   config.resolve.extensions.push('.ts', '.tsx')
 
+  // 'fs' fix for squid.js
+  config.node = {
+    fs: 'empty'
+  }
+
   // Handle SVGs
   // Don't use Storybook's default SVG Configuration
   config.module.rules = config.module.rules.map((rule) => {

@@ -1,7 +1,3 @@
-.input {
-  composes: input from './Form/FieldTemplate.module.css';
-}
-
 .layout {
   display: flex;
   flex-direction: column;

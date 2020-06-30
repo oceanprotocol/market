@@ -3,6 +3,7 @@ import SearchFilterSection from '../atoms/SearchFilterSection'
 import usePriceQueryParams from '../../hooks/usePriceQueryParams'
 
 import styles from './SearchPriceFilter.module.css'
+import Input from '../atoms/Input'
 
 export declare type PriceInputProps = {
   label: string
@@ -18,18 +19,14 @@ export const PriceInput = ({
   text
 }: PriceInputProps) => {
   return (
-    <label htmlFor={label} className={styles.label}>
-      <input
-        id={label}
-        name={label}
-        type="number"
-        min="0"
-        value={value}
-        onChange={onChange}
-        className={styles.input}
-      />
-      <span>{text}</span>
-    </label>
+    <Input
+      name={label}
+      label={text}
+      type="number"
+      min="0"
+      value={value}
+      onChange={onChange}
+    />
   )
 }
 

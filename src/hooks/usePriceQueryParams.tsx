@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react'
 import { useLocation } from '@reach/router'
+import queryString from 'query-string'
 
 export default function usePriceQueryParams() {
   const location = useLocation()
 
   const [min, setMin] = useState(
-    (JSON.parse(location.search).minPrice as string) || '0'
+    (queryString.parse(location.search).minPrice as string) || '0'
   )
   const [max, setMax] = useState(
-    (JSON.parse(location.search).maxPrice as string) || '0'
+    (queryString.parse(location.search).maxPrice as string) || '0'
   )
 
   useEffect(() => {
