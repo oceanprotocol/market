@@ -51,7 +51,7 @@ export default function SearchBar({
           className={large ? `${styles.input} ${styles.large}` : styles.input}
           placeholder={placeholder || 'What are you looking for?'}
           value={value}
-          onChange={e => handleChange(e)}
+          onChange={(e) => handleChange(e)}
           required
         />
         <Button onClick={(e: FormEvent<HTMLButtonElement>) => startSearch(e)}>

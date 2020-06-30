@@ -42,13 +42,13 @@ export const SearchPriceFilter = () => {
         <PriceInput
           label="minPrice"
           value={min}
-          onChange={ev => setMin(ev.target.value)}
+          onChange={(ev) => setMin(ev.target.value)}
           text="Min price"
         />
         <PriceInput
           label="maxPrice"
           value={max}
-          onChange={ev => setMax(ev.target.value)}
+          onChange={(ev) => setMax(ev.target.value)}
           text="Max price"
         />
       </div>

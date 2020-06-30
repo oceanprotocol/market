@@ -4,8 +4,10 @@ out
 .next
 .idea
 .env
-.env.build
 coverage
+dist
+public
+.cache
 storybook-static
 public/storybook
 .artifacts

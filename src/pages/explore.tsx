@@ -9,7 +9,7 @@ const Explore: NextPage<{ queryResult: string }> = ({ queryResult }) => (
   <ExplorePage queryResult={JSON.parse(queryResult)} />
 )
 
-export const getServerSideProps: GetServerSideProps = async context => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const searchQuery = {
     offset: 15,
     page: Number(context.query.page) || 1,

@@ -36,7 +36,7 @@ export function getSearchQuery(
   } as SearchQuery
 }
 
-Search.getInitialProps = async context => {
+Search.getInitialProps = async (context) => {
   const { text, tag, page, offset, minPrice, maxPrice } = context.query
 
   const minPriceParsed = priceQueryParamToWei(

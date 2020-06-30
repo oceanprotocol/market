@@ -40,7 +40,7 @@ const AssetList: React.FC<AssetListProps> = ({ queryResult }) => {
     <>
       <div className={styles.assetList}>
         {queryResult.results &&
-          queryResult.results.map(ddo => (
+          queryResult.results.map((ddo) => (
             <AssetTeaser ddo={ddo} key={shortid.generate()} />
           ))}
       </div>

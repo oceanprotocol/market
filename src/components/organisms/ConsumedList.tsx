@@ -57,7 +57,7 @@ export default function ConsumedList() {
 
       if (!consumedItems) return
 
-      const data = consumedItems.map(ddo => {
+      const data = consumedItems.map((ddo) => {
         const { attributes } = findServiceByType(ddo, 'metadata')
         const { name, price, datePublished } = attributes.main as MetaDataMain
         return {

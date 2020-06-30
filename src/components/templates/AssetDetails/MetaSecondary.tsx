@@ -25,7 +25,7 @@ export default function MetaSecondary({
             title="Sample Data"
             content={
               <ul>
-                {links?.map(link => (
+                {links?.map((link) => (
                   <ListItem key={shortid.generate()}>
                     <a href={link.url}>{link.name}</a>
                   </ListItem>
@@ -51,7 +51,7 @@ export default function MetaSecondary({
           title="Refund Policy"
           content={
             <ul>
-              {refundPolicy.map(item => (
+              {refundPolicy.map((item) => (
                 <ListItem key={shortid.generate()}>{item}</ListItem>
               ))}
             </ul>
@@ -59,7 +59,7 @@ export default function MetaSecondary({
         />
       )}
 
-      {assetTerms.map(item => (
+      {assetTerms.map((item) => (
         <MetaItem
           key={shortid.generate()}
           title={item.name}

@@ -74,7 +74,7 @@ export default function Compute({
     const comType = event.target.value
     setComputeType(comType)
 
-    const selectedComputeOption = computeOptions.find(x => x.name === comType)
+    const selectedComputeOption = computeOptions.find((x) => x.name === comType)
     if (selectedComputeOption !== undefined)
       setComputeContainer(selectedComputeOption.value)
   }
@@ -109,7 +109,7 @@ export default function Compute({
             label="Select image to run the algorithm"
             placeholder=""
             value={computeType}
-            options={computeOptions.map(x => x.name)}
+            options={computeOptions.map((x) => x.name)}
             onChange={handleSelectChange}
           />
         </div>

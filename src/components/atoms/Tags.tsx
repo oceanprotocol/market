@@ -44,7 +44,7 @@ const Tags: React.FC<TagsProps> = ({
   return (
     <div className={classes}>
       {tags &&
-        tags.map(tag => (
+        tags.map((tag) => (
           <Tag tag={tag} noLinks={noLinks} key={shortid.generate()} />
         ))}
       {shouldShowMore && (

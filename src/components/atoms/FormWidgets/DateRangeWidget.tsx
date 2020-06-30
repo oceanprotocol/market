@@ -75,7 +75,7 @@ export default function DateRangeWidget(props: WidgetProps) {
         <input
           id="range"
           type="checkbox"
-          onChange={ev => setRange(ev.target.checked)}
+          onChange={(ev) => setRange(ev.target.checked)}
           checked={range}
         />
         <label className={styles.label} htmlFor="range">

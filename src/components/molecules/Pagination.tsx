@@ -39,8 +39,8 @@ export default function Pagination({
       // adapt based on media query match
       marginPagesDisplayed={smallViewport ? 0 : 1}
       pageRangeDisplayed={smallViewport ? 3 : 6}
-      onPageChange={data => onPageChange(data.selected)}
-      hrefBuilder={pageIndex => hrefBuilder(pageIndex)}
+      onPageChange={(data) => onPageChange(data.selected)}
+      hrefBuilder={(pageIndex) => hrefBuilder(pageIndex)}
       disableInitialCallback
       previousLabel="←"
       nextLabel="→"

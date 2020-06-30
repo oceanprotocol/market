@@ -34,7 +34,7 @@ export default function useCategoriesQueryParam(allCategories: string[]) {
   // Update url and the state with the selected categories
   const toggleCategory = (category: string) => {
     const newSelectedCategories = selectedCategories.includes(category)
-      ? selectedCategories.filter(c => c !== category)
+      ? selectedCategories.filter((c) => c !== category)
       : [...selectedCategories, category]
     setSelectedCategories(newSelectedCategories)
 

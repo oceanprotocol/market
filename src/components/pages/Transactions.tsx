@@ -38,7 +38,7 @@ const TransactionsPage: React.FC = () => {
     <Layout title={title} description={description}>
       <article className={styles.grid}>
         <div>
-          {sections.map(section => {
+          {sections.map((section) => {
             const { title, component } = section
             return <Section key={title} title={title} component={component} />
           })}

@@ -46,7 +46,7 @@ const HomePage = () => {
       </header>
 
       <div className={styles.actions}>
-        {actions.map(action => (
+        {actions.map((action) => (
           <Link key={shortid.generate()} href={action.link}>
             <a
               className={action.comingSoon ? styles.comingSoon : styles.action}

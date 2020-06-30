@@ -96,7 +96,7 @@ export default function JobsList() {
     try {
       const computeItems = await getComputeItems()
       if (!computeItems) return
-      const data = computeItems.map(item => {
+      const data = computeItems.map((item) => {
         const { attributes } = findServiceByType(item.ddo, 'metadata')
         const { name, price } = attributes.main as MetaDataMain
         return {

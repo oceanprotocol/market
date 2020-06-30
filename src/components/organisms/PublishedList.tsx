@@ -73,7 +73,7 @@ export default function PublishedList() {
         count: publishedItems.totalPages
       })
 
-      const data = publishedItems.results.map(ddo => {
+      const data = publishedItems.results.map((ddo) => {
         const { attributes } = findServiceByType(ddo, 'metadata')
         const { name, price, datePublished } = attributes.main as MetaDataMain
         return {
