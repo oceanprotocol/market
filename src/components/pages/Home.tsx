@@ -1,14 +1,14 @@
 import React from 'react'
-import Link from 'next/link'
+import { Link } from 'gatsby'
 import shortid from 'shortid'
-import Layout from '../../Layout'
+import Layout from '../../components/Layout'
 import Button from '../atoms/Button'
 import SearchBar from '../molecules/SearchBar'
-import { title, description } from '../../../site.config'
 import Explore from '../../images/explore.svg'
 import Publish from '../../images/publish.svg'
 import DataPool from '../../images/datapool.svg'
 import styles from './Home.module.css'
+import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 
 const actions = [
   {
@@ -36,25 +36,29 @@ const actions = [
   }
 ]
 
-const HomePage = () => {
+export default function HomePage() {
+  const { siteTitle, siteDescription } = useSiteMetadata()
+
   return (
     <Layout noPageHeader>
       <header className={styles.header}>
-        <h1>{title}</h1>
-        <h2>{description}</h2>
+        <h1>{siteTitle}</h1>
+        <h2>{siteDescription}</h2>
         <SearchBar large />
       </header>
 
       <div className={styles.actions}>
         {actions.map((action) => (
-          <Link key={shortid.generate()} href={action.link}>
+          <Link key={shortid.generate()} to={action.link}>
             <a
               className={action.comingSoon ? styles.comingSoon : styles.action}
             >
               {action.icon}
               <h3 className={styles.actionTitle}>{action.title}</h3>
               <p>{action.text}</p>
-              <Button primary={action.primary}>{action.action}</Button>
+              <Button style={action.primary ? 'primary' : null}>
+                {action.action}
+              </Button>
             </a>
           </Link>
         ))}
@@ -62,4 +66,3 @@ const HomePage = () => {
     </Layout>
   )
 }
-export default HomePage

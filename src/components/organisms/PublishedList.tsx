@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import Loader from '../atoms/Loader'
-import { DDO, MetaDataMain } from '@oceanprotocol/squid'
+import { MetaDataMain } from '@oceanprotocol/squid'
 import {
   useOcean,
   OceanConnectionStatus,
   useSearch
 } from '@oceanprotocol/react'
 import Table from '../atoms/Table'
-import Time from '../atoms/Time'
-import Link from 'next/link'
 import Price from '../atoms/Price'
 import { fromWei } from 'web3-utils'
 import { findServiceByType } from '../../utils'

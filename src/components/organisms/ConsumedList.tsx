@@ -10,9 +10,8 @@ import Price from '../atoms/Price'
 import { fromWei } from 'web3-utils'
 import DateCell from '../atoms/Table/DateCell'
 import DdoLinkCell from '../atoms/Table/DdoLinkCell'
-import { DDO, MetaDataMain } from '@oceanprotocol/squid'
+import { MetaDataMain } from '@oceanprotocol/squid'
 import { findServiceByType } from '../../utils'
-import { config } from '../../config/ocean'
 
 const consumedColumns = [
   {

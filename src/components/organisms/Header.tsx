@@ -1,19 +1,19 @@
 import React from 'react'
-import Link from 'next/link'
+import { Link } from 'gatsby'
 import Menu from '../molecules/Menu'
 import styles from './Header.module.css'
-import { title } from '../../../site.config'
 import Logo from '@oceanprotocol/art/logo/logo.svg'
+import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 
 export default function Header() {
+  const { siteTitle } = useSiteMetadata()
+
   return (
     <header className={styles.header}>
       <div className={styles.content}>
-        <Link href="/">
-          <a className={styles.logoUnit}>
-            <Logo />
-            <h1 className={styles.title}>{title}</h1>
-          </a>
+        <Link to="/" className={styles.logoUnit}>
+          <Logo />
+          <h1 className={styles.title}>{siteTitle}</h1>
         </Link>
 
         <Menu />

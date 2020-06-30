@@ -1,6 +1,6 @@
 import React from 'react'
 import { DDO } from '@oceanprotocol/squid'
-import Link from 'next/link'
+import { Link } from 'gatsby'
 import Dotdotdot from 'react-dotdotdot'
 import {
   AdditionalInformationMarket,
@@ -40,7 +40,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
 
   return (
     <article className={styles.teaser}>
-      <Link href="/asset/[did]" as={`/asset/${ddo.id}`}>
+      <Link to={`/asset/${ddo.id}`}>
         <a className={styles.link}>
           <h1 className={styles.title}>{name}</h1>
           {access === 'Compute' && (

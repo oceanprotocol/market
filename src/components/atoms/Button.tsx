@@ -1,44 +1,53 @@
-import React, { ReactElement } from 'react'
-import Link from 'next/link'
+import React, { ReactNode, FormEvent } from 'react'
+import { Link } from 'gatsby'
+import classNames from 'classnames/bind'
 import styles from './Button.module.css'
 
-declare type ButtonProps = {
-  children: string | ReactElement
+const cx = classNames.bind(styles)
+
+interface ButtonProps {
+  children: ReactNode
   className?: string
-  primary?: boolean
-  link?: boolean
   href?: string
-  size?: string
-  onClick?: any
+  onClick?: (e: FormEvent) => void
   disabled?: boolean
+  to?: string
+  name?: string
+  size?: 'small'
+  style?: 'primary' | 'ghost' | 'text'
+  type?: 'submit'
+  download?: boolean
 }
 
-const Button = ({
-  primary,
-  link,
+export default function Button({
   href,
-  size,
   children,
   className,
+  to,
+  size,
+  style,
   ...props
-}: ButtonProps) => {
-  const classes = primary
-    ? `${styles.button} ${styles.primary}`
-    : link
-    ? `${styles.button} ${styles.link}`
-    : styles.button
+}: ButtonProps) {
+  const styleClasses = cx({
+    button: true,
+    primary: style === 'primary',
+    ghost: style === 'ghost',
+    text: style === 'text',
+    small: size === 'small',
+    [className]: className
+  })
 
-  return href ? (
-    <Link href={href}>
-      <a className={`${classes} ${className}`} {...props}>
-        {children}
-      </a>
+  return to ? (
+    <Link to={to} className={styleClasses} {...props}>
+      {children}
     </Link>
+  ) : href ? (
+    <a href={href} className={styleClasses} {...props}>
+      {children}
+    </a>
   ) : (
-    <button className={`${classes} ${className}`} {...props}>
+    <button className={styleClasses} {...props}>
       {children}
     </button>
   )
 }
-
-export default Button

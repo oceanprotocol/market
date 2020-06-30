@@ -1,5 +1,5 @@
 import React from 'react'
-import Layout from '../../Layout'
+import Layout from '../../components/Layout'
 import AssetList from '../organisms/AssetList'
 import { QueryResult } from '@oceanprotocol/squid/dist/node/aquarius/Aquarius'
 

@@ -6,7 +6,7 @@ import styles from './JobDetailsDialog.module.css'
 import MetaItem from '../templates/AssetDetails/MetaItem'
 import Time from '../atoms/Time'
 import shortid from 'shortid'
-import Link from 'next/link'
+import { Link } from 'gatsby'
 
 export default function JobDetailsDialog({
   computeItem,
@@ -46,8 +46,8 @@ export default function JobDetailsDialog({
           <MetaItem
             title="Results"
             content={resultsUrls.map((url: string) => (
-              <Link href={url} key={shortid.generate()} passHref>
-                <a>{url}</a>
+              <Link to={url} key={shortid.generate()}>
+                {url}
               </Link>
             ))}
           />
@@ -55,24 +55,12 @@ export default function JobDetailsDialog({
         {algorithmLogUrl && (
           <MetaItem
             title="Algorithm Log"
-            content={
-              <Link href={algorithmLogUrl} key={shortid.generate()} passHref>
-                <a>{algorithmLogUrl}</a>
-              </Link>
-            }
+            content={<Link to={algorithmLogUrl}>{algorithmLogUrl}</Link>}
           />
         )}
         <MetaItem
           title="Data Set"
-          content={
-            <Link
-              href="/asset/[did]"
-              as={`/asset/${computeItem.ddo.id}`}
-              passHref
-            >
-              <a>{name}</a>
-            </Link>
-          }
+          content={<Link to={`/asset/${computeItem.ddo.id}`}>{name}</Link>}
         />
       </div>
     </BaseDialog>

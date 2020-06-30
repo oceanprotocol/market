@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { DDO } from '@oceanprotocol/squid'
-import Link from 'next/link'
-import Layout from '../../../Layout'
+import { Link } from 'gatsby'
+import Layout from '../../../components/Layout'
 import { MetaDataMarket } from '../../../@types/MetaData'
 import Time from '../../atoms/Time'
 import Markdown from '../../atoms/Markdown'
@@ -67,7 +67,7 @@ const AssetDetailsPageMeta = ({
           </p>
           {categories && (
             <p>
-              <Link href={`/search?categories=["${categories[0]}"]`}>
+              <Link to={`/search?categories=["${categories[0]}"]`}>
                 <a>{categories[0]}</a>
               </Link>
             </p>

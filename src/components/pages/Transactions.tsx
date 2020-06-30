@@ -1,5 +1,5 @@
 import React from 'react'
-import Layout from '../../Layout'
+import Layout from '../../components/Layout'
 import styles from './Transactions.module.css'
 import Web3Feedback from '../molecules/Web3Feedback'
 import ConsumedList from '../organisms/ConsumedList'

@@ -16,8 +16,7 @@
   background: var(--brand-grey-light);
   box-shadow: 0 9px 18px 0 rgba(0, 0, 0, 0.1);
   user-select: none;
-  margin-left: calc(var(--spacer) / 4);
-  margin-right: calc(var(--spacer) / 4);
+  text-align: center;
 }
 
 .button:first-child {
@@ -57,20 +56,27 @@
   background: var(--brand-gradient);
 }
 
-.link {
+.ghost,
+.ghost:hover,
+.ghost:focus,
+.ghost:active {
+  color: var(--brand-grey);
+  background: var(--brand-white);
+}
+
+.text,
+.text:hover,
+.text:focus,
+.text:active {
   border: 0;
+  border-radius: 0;
   outline: 0;
+  padding: 0;
   display: inline-block;
   background: 0;
-  padding: 0;
   color: var(--brand-pink);
   box-shadow: none;
   cursor: pointer;
-}
-.link:hover {
-  background: none;
-  color: var(--brand-pink);
-  box-shadow: none;
 }
 
 /* Size Modifiers */

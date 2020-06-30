@@ -1,6 +1,5 @@
 import AssetTeaser from '../molecules/AssetTeaser'
 import React from 'react'
-import { useRouter } from 'next/router'
 import { QueryResult } from '@oceanprotocol/squid/dist/node/aquarius/Aquarius'
 import shortid from 'shortid'
 import Pagination from '../molecules/Pagination'
@@ -12,8 +11,6 @@ declare type AssetListProps = {
 }
 
 const AssetList: React.FC<AssetListProps> = ({ queryResult }) => {
-  const router = useRouter()
-
   // Construct the urls on the pagination links. This is only for UX,
   // since the links are no <Link> they will not work by itself.
   function hrefBuilder(pageIndex: number) {

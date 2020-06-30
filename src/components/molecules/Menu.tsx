@@ -1,8 +1,8 @@
 import React from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { menu } from '../../../site.config'
+import { Link } from 'gatsby'
+import { useLocation } from '@reach/router'
 import styles from './Menu.module.css'
+import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 
 declare type MenuItem = {
   name: string
@@ -10,20 +10,23 @@ declare type MenuItem = {
 }
 
 function MenuLink({ item }: { item: MenuItem }) {
-  const router = useRouter()
+  const location = useLocation()
+
   const classes =
-    router && router.pathname === item.link
+    location && location.pathname === item.link
       ? `${styles.link} ${styles.active}`
       : styles.link
 
   return (
-    <Link key={item.name} href={item.link}>
-      <a className={classes}>{item.name}</a>
+    <Link key={item.name} to={item.link} className={classes}>
+      {item.name}
     </Link>
   )
 }
 
 export default function Menu() {
+  const { menu } = useSiteMetadata()
+
   return (
     <nav className={styles.menu}>
       {menu.map((item: MenuItem) => (

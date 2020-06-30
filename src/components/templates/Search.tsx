@@ -1,6 +1,6 @@
 import React from 'react'
 import { QueryResult } from '@oceanprotocol/squid/dist/node/aquarius/Aquarius'
-import Layout from '../../Layout'
+import Layout from '../../components/Layout'
 import PageHeader from '../molecules/PageHeader'
 import SearchBar from '../molecules/SearchBar'
 import AssetList from '../organisms/AssetList'

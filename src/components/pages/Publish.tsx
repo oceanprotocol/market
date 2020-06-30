@@ -1,5 +1,5 @@
 import React from 'react'
-import Layout from '../../Layout'
+import Layout from '../../components/Layout'
 import PublishForm from '../molecules/PublishForm/PublishForm'
 import styles from './Publish.module.css'
 import Web3Feedback from '../molecules/Web3Feedback'
