@@ -8,16 +8,12 @@
     "copyright": "All Rights Reserved. Powered by [Ocean Protocol](https://oceanprotocol.com)",
     "menu": [
       {
-        "name": "Explore",
-        "link": "/explore"
-      },
-      {
         "name": "Publish",
         "link": "/publish"
       },
       {
-        "name": "Transactions",
-        "link": "/transactions"
+        "name": "History",
+        "link": "/history"
       }
     ]
   }
