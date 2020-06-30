@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NowRequest, NowResponse } from '@now/node'
 import axios, { AxiosResponse } from 'axios'
 import { IncomingHttpHeaders } from 'http'
 
@@ -60,7 +60,7 @@ async function checkUrl(url: string): Promise<FileResponse> {
   }
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async (req: NowRequest, res: NowResponse) => {
   switch (req.method) {
     case 'POST':
       res.status(200).json(await checkUrl(req.body.url))

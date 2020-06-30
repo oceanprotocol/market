@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@loadable/component": "^5.13.0",
+    "@now/node": "^1.7.1",
     "@oceanprotocol/art": "^2.2.0",
     "@oceanprotocol/react": "0.0.11",
     "@oceanprotocol/squid": "^2.2.0",

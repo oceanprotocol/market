@@ -1,12 +1,12 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NowRequest, NowResponse } from '@now/node'
 import axios, { AxiosResponse } from 'axios'
-import siteConfig from '../../../site.config'
+import siteConfig from '../content/site.json'
 
 async function redeploy(
-  req: NextApiRequest
+  req: NowRequest
 ): Promise<AxiosResponse | undefined | string> {
   // Cancel if we are not on live
-  if (req.headers.host !== siteConfig.url) return ''
+  if (req.headers.host !== siteConfig.site.siteUrl) return ''
   console.log('not canceled', req)
   try {
     // Trigger new `master` deployment with Deploy Hook
@@ -19,7 +19,7 @@ async function redeploy(
   }
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+export default async (req: NowRequest, res: NowResponse) => {
   switch (req.method) {
     case 'POST':
       res.status(200).json(await redeploy(req))
