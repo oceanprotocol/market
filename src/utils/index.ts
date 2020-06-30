@@ -1,24 +1,8 @@
 import axios, { AxiosResponse } from 'axios'
 import { toast } from 'react-toastify'
-import { File, DDO } from '@oceanprotocol/squid'
+import { File } from '@oceanprotocol/squid'
 import numeral from 'numeral'
-import {
-  ServiceAccess,
-  ServiceCommon,
-  ServiceType,
-  ServiceMetadata,
-  ServiceAuthorization
-} from '@oceanprotocol/squid/dist/node/ddo/Service'
 import web3Utils from 'web3-utils'
-
-// Helper to work around Next.js serialization of props
-// for replacing usage of ddo.findServiceByType()
-export function findServiceByType(
-  ddo: string | Partial<DDO>,
-  type: ServiceType
-): ServiceCommon | ServiceAccess | ServiceMetadata | ServiceAuthorization {
-  return new DDO(ddo as Partial<DDO>).findServiceByType(type)
-}
 
 export function updateQueryStringParameter(
   uri: string,

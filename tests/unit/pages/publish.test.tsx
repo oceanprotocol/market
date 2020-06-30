@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import Publish from '../../../src/pages/publish'
-import web3ProviderMock, { context } from '../__mocks__/web3provider'
+import web3ProviderMock from '../__mocks__/web3provider'
 import oceanMock from '../__mocks__/ocean-mock'
 
 // eslint-disable-next-line

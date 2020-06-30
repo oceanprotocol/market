@@ -1,7 +1,6 @@
 import React from 'react'
 import { ComputeItem } from '@oceanprotocol/react'
 import BaseDialog from '../atoms/BaseDialog'
-import { findServiceByType } from '../../utils'
 import styles from './JobDetailsDialog.module.css'
 import MetaItem from '../templates/AssetDetails/MetaItem'
 import Time from '../atoms/Time'
@@ -19,7 +18,7 @@ export default function JobDetailsDialog({
 }) {
   if (!computeItem) return null
 
-  const { attributes } = findServiceByType(computeItem.ddo, 'metadata')
+  const { attributes } = computeItem.ddo.findServiceByType('metadata')
   const { name } = attributes.main
   const {
     dateCreated,

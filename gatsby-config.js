@@ -1,10 +1,10 @@
 require('dotenv').config()
 
-const siteConfig = require('./site.config.js')
+const siteConfig = require('./content/site.json')
 
 module.exports = {
   siteMetadata: {
-    ...siteConfig
+    ...siteConfig.site
   },
   plugins: [
     {

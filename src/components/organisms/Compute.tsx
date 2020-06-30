@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { DDO, Ocean, Logger } from '@oceanprotocol/squid'
+import { DDO, Ocean } from '@oceanprotocol/squid'
 import { ServiceMetadata } from '@oceanprotocol/squid/dist/node/ddo/Service'
 import { fromWei } from 'web3-utils'
 import compareAsBN, { Comparisson } from '../../utils/compareAsBN'
@@ -7,7 +7,6 @@ import Loader from '../atoms/Loader'
 import Web3Feedback from '../molecules/Web3Feedback'
 import Dropzone from '../atoms/Dropzone'
 import Price from '../atoms/Price'
-import { findServiceByType } from '../../utils'
 import {
   computeOptions,
   useCompute,
@@ -42,7 +41,7 @@ export default function Compute({
   const [isPublished, setIsPublished] = useState(false)
   const [file, setFile] = useState(null)
 
-  const metadata = findServiceByType(ddo, 'metadata') as ServiceMetadata
+  const metadata = ddo.findServiceByType('metadata') as ServiceMetadata
   const { price } = metadata.attributes.main
 
   const isFree = price === '0'
@@ -118,7 +117,7 @@ export default function Compute({
 
           <div className={styles.jobButtonWrapper}>
             <Button
-              primary
+              style="primary"
               onClick={() => startJob()}
               disabled={isComputeButtonDisabled}
             >

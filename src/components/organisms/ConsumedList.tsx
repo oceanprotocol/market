@@ -11,7 +11,6 @@ import { fromWei } from 'web3-utils'
 import DateCell from '../atoms/Table/DateCell'
 import DdoLinkCell from '../atoms/Table/DdoLinkCell'
 import { MetaDataMain } from '@oceanprotocol/squid'
-import { findServiceByType } from '../../utils'
 
 const consumedColumns = [
   {
@@ -57,7 +56,7 @@ export default function ConsumedList() {
       if (!consumedItems) return
 
       const data = consumedItems.map((ddo) => {
-        const { attributes } = findServiceByType(ddo, 'metadata')
+        const { attributes } = ddo.findServiceByType('metadata')
         const { name, price, datePublished } = attributes.main as MetaDataMain
         return {
           published: datePublished,

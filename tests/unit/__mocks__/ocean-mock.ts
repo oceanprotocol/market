@@ -24,10 +24,8 @@ const oceanMock = {
       return {
         results: [ddo] as any[],
         page: 1,
-        /* eslint-disable @typescript-eslint/camelcase */
         total_pages: 1611,
         total_results: 1611
-        /* eslint-enable @typescript-eslint/camelcase */
       }
     },
     resolve: () => null as any,

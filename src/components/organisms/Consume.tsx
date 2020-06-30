@@ -1,7 +1,6 @@
 import React from 'react'
 import { DDO } from '@oceanprotocol/squid'
 import Web3 from 'web3'
-import { findServiceByType } from '../../utils'
 import compareAsBN, { Comparisson } from '../../utils/compareAsBN'
 import Button from '../atoms/Button'
 import File from '../atoms/File'
@@ -18,9 +17,9 @@ export default function Consume({ ddo }: { ddo: DDO | undefined }) {
   const { web3 } = useWeb3()
   const { ocean, balanceInOcean } = useOcean()
   const { consume, consumeStepText, isLoading } = useConsume()
-  const { attributes } = findServiceByType(ddo, 'metadata')
+  const { attributes } = ddo.findServiceByType('metadata')
   const { price } = attributes.main
-  const file = (attributes as MetaDataMarket).main.files[0]
+  const file = (attributes as any).main.files[0]
   const isFree = price === '0'
   const isBalanceSufficient =
     isFree ||

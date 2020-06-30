@@ -9,7 +9,6 @@ import {
 
 import Price from '../atoms/Price'
 import { fromWei } from 'web3-utils'
-import { findServiceByType } from '../../utils'
 import Table from '../atoms/Table'
 import Button from '../atoms/Button'
 import { MetaDataMain, Logger } from '@oceanprotocol/squid'
@@ -97,7 +96,7 @@ export default function JobsList() {
       const computeItems = await getComputeItems()
       if (!computeItems) return
       const data = computeItems.map((item) => {
-        const { attributes } = findServiceByType(item.ddo, 'metadata')
+        const { attributes } = item.ddo.findServiceByType('metadata')
         const { name, price } = attributes.main as MetaDataMain
         return {
           dateCreated: item.job.dateCreated,
@@ -136,7 +135,7 @@ export default function JobsList() {
     ) : (
       <>
         <div>
-          <Button primary onClick={getJobs}>
+          <Button style="primary" onClick={getJobs}>
             Sign to retrieve jobs
           </Button>
         </div>

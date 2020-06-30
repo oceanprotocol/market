@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { WidgetProps } from 'react-jsonschema-form'
-import dynamic from 'next/dynamic'
+import loadable from '@loadable/component'
 import styles from './DateRangeWidget.module.css'
 import { toStringNoMS } from '../../../utils'
 
 // lazy load this module, it's huge
-const LazyDatePicker = dynamic(() => import('react-datepicker'))
+const LazyDatePicker = loadable(() => import('react-datepicker'))
 
 export function getWidgetValue(
   date1: Date,

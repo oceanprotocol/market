@@ -1,5 +1,5 @@
-import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react'
-import { useRouter } from 'next/router'
+import React, { useState, ChangeEvent, FormEvent } from 'react'
+import { useNavigate } from '@reach/router'
 import styles from './SearchBar.module.css'
 import Loader from '../atoms/Loader'
 import Button from '../atoms/Button'
@@ -15,7 +15,7 @@ export default function SearchBar({
   filters?: boolean
   large?: true
 }) {
-  const router = useRouter()
+  const navigate = useNavigate()
   const [value, setValue] = useState(initialValue || '')
   const [searchStarted, setSearchStarted] = useState(false)
 
@@ -29,19 +29,8 @@ export default function SearchBar({
     if (value === '') return
 
     setSearchStarted(true)
-    router.push(`/search?text=${value}`)
+    navigate(`/search?text=${value}`)
   }
-
-  useEffect(() => {
-    // fix for storybook
-    if (!router) return
-
-    router.events.on('routeChangeComplete', () => setSearchStarted(false))
-
-    return () => {
-      router.events.off('routeChangeComplete', () => setSearchStarted(false))
-    }
-  }, [])
 
   return (
     <form className={styles.form}>

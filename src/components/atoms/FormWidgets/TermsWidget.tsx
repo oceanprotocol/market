@@ -1,8 +1,6 @@
 import React from 'react'
 import { WidgetProps } from 'react-jsonschema-form'
 import styles from './TermsWidget.module.css'
-import Markdown from '../Markdown'
-import terms from '../../../../content/terms.md'
 
 export default function TermsWidget(props: WidgetProps) {
   const {
@@ -21,7 +19,7 @@ export default function TermsWidget(props: WidgetProps) {
 
   return (
     <>
-      <Markdown text={terms} className={styles.terms} />
+      {/* <Markdown text={terms} className={styles.terms} /> */}
       <label
         htmlFor={id}
         className={required ? `${styles.label} ${styles.req}` : styles.label}

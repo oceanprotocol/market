@@ -105,7 +105,7 @@ export default function Form({
       transformErrors={transformErrors}
     >
       <div>
-        <Button disabled={buttonDisabled} primary>
+        <Button disabled={buttonDisabled} style="primary">
           Submit
         </Button>
       </div>

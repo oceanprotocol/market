@@ -9,7 +9,6 @@ import {
 import Table from '../atoms/Table'
 import Price from '../atoms/Price'
 import { fromWei } from 'web3-utils'
-import { findServiceByType } from '../../utils'
 import DateCell from '../atoms/Table/DateCell'
 import DdoLinkCell from '../atoms/Table/DdoLinkCell'
 
@@ -72,7 +71,7 @@ export default function PublishedList() {
       })
 
       const data = publishedItems.results.map((ddo) => {
-        const { attributes } = findServiceByType(ddo, 'metadata')
+        const { attributes } = ddo.findServiceByType('metadata')
         const { name, price, datePublished } = attributes.main as MetaDataMain
         return {
           published: datePublished,

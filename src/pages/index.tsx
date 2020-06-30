@@ -1,7 +1,19 @@
-import React from 'react'
-import { NextPage } from 'next'
-import HomePage from '../components/pages/Home'
+import React, { ReactElement } from 'react'
+import { PageProps } from 'gatsby'
+import PageHome from '../components/pages/Home'
+import { useSiteMetadata } from '../hooks/useSiteMetadata'
+import Layout from '../components/Layout'
 
-const Home: NextPage<{}> = () => <HomePage />
+export default function PageGatsbyHome(props: PageProps): ReactElement {
+  const { siteTitle, siteTagline } = useSiteMetadata()
 
-export default Home
+  return (
+    <Layout
+      title={siteTitle}
+      description={siteTagline}
+      location={props.location}
+    >
+      <PageHome />
+    </Layout>
+  )
+}

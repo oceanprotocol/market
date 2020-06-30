@@ -9,30 +9,11 @@ const query = graphql`
             site {
               siteTitle
               siteTagline
-              siteDescription
               siteUrl
-              siteIcon
-              siteImage {
-                childImageSharp {
-                  original {
-                    src
-                  }
-                }
-              }
-              analyticsId
-              company {
+              copyright
+              menu {
                 name
-                address {
-                  location
-                  street
-                  city
-                  zip
-                  country
-                }
-              }
-              social {
-                name
-                url
+                link
               }
             }
           }

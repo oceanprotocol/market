@@ -11,7 +11,7 @@ const Label = ({
   htmlFor: string
 }) => (
   <label
-    className={required ? styles.required : styles.label}
+    className={`${styles.label} ${required && styles.required}`}
     title={required ? 'Required' : ''}
     {...props}
   >

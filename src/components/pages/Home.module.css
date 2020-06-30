@@ -1,21 +1,3 @@
-.header {
-  max-width: 37rem;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: calc(var(--spacer) * 3);
-  margin-top: 3vh;
-}
-
-.header h1 {
-  margin-bottom: calc(var(--spacer) / 4);
-}
-
-.header h2 {
-  font-size: var(--font-size-large);
-  color: var(--color-secondary);
-  margin-bottom: calc(var(--spacer) * 2);
-}
-
 .actions {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));

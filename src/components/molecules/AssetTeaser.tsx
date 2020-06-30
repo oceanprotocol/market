@@ -6,7 +6,6 @@ import {
   AdditionalInformationMarket,
   MetaDataMarket
 } from '../../@types/MetaData'
-import { findServiceByType } from '../../utils'
 import Tags from '../atoms/Tags'
 import Price from '../atoms/Price'
 import styles from './AssetTeaser.module.css'
@@ -17,7 +16,7 @@ declare type AssetTeaserProps = {
 }
 
 const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
-  const { attributes } = findServiceByType(ddo, 'metadata')
+  const { attributes } = ddo.findServiceByType('metadata')
   const { name, price } = attributes.main
 
   let description

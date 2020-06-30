@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
 import { setProperty, JSONparse } from '../utils'
 
 const CATEGORIES_QUERY_PARAM = 'categories'
@@ -9,8 +8,6 @@ const useGetCategoriesFromQueryParam = (
   allCategories: string[],
   setSelectedCategories: (categories: string[]) => void
 ) => {
-  const router = useRouter()
-
   useEffect(() => {
     if (router.query && router.query.categories) {
       const parsedCategories = JSONparse<string[]>(
@@ -27,7 +24,6 @@ const useGetCategoriesFromQueryParam = (
 }
 
 export default function useCategoriesQueryParam(allCategories: string[]) {
-  const router = useRouter()
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   useGetCategoriesFromQueryParam(allCategories, setSelectedCategories)
 

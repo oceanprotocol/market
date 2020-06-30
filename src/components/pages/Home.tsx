@@ -1,14 +1,12 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { Link } from 'gatsby'
 import shortid from 'shortid'
-import Layout from '../../components/Layout'
 import Button from '../atoms/Button'
 import SearchBar from '../molecules/SearchBar'
 import Explore from '../../images/explore.svg'
 import Publish from '../../images/publish.svg'
 import DataPool from '../../images/datapool.svg'
 import styles from './Home.module.css'
-import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 
 const actions = [
   {
@@ -36,16 +34,10 @@ const actions = [
   }
 ]
 
-export default function HomePage() {
-  const { siteTitle, siteDescription } = useSiteMetadata()
-
+export default function HomePage(): ReactElement {
   return (
-    <Layout noPageHeader>
-      <header className={styles.header}>
-        <h1>{siteTitle}</h1>
-        <h2>{siteDescription}</h2>
-        <SearchBar large />
-      </header>
+    <>
+      <SearchBar large />
 
       <div className={styles.actions}>
         {actions.map((action) => (
@@ -63,6 +55,6 @@ export default function HomePage() {
           </Link>
         ))}
       </div>
-    </Layout>
+    </>
   )
 }
