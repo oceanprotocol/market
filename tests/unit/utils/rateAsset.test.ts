@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from 'axios'
-import { mocked } from 'ts-jest/dist/util/testing'
 import rateAsset, { RatingResponse } from '../../../src/utils/rateAsset'
 import web3 from '../__mocks__/web3'
 
@@ -7,7 +6,7 @@ jest.mock('axios')
 
 describe('rateAsset()', () => {
   it('success', async () => {
-    mocked(axios.post).mockResolvedValueOnce({
+    ;(axios.post as any).mockResolvedValueOnce({
       data: ['4.0', 1]
     } as AxiosResponse)
 
@@ -16,7 +15,7 @@ describe('rateAsset()', () => {
   })
 
   it('string return', async () => {
-    mocked(axios.post).mockResolvedValueOnce({
+    ;(axios.post as any).mockResolvedValueOnce({
       data: 'Missing signature'
     } as AxiosResponse)
 
@@ -25,7 +24,7 @@ describe('rateAsset()', () => {
   })
 
   it('error catch', async () => {
-    mocked(axios.post).mockResolvedValueOnce({
+    ;(axios.post as any).mockResolvedValueOnce({
       data: {}
     } as AxiosResponse)
 

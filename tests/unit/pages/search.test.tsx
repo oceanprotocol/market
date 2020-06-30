@@ -1,6 +1,5 @@
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
-import { NextPageContext } from 'next'
 import Search from '../../../src/pages/search'
 import ddo from '../__fixtures__/ddo'
 import { DDO } from '@oceanprotocol/squid'
@@ -53,28 +52,5 @@ describe('Search', () => {
       <Search text="Hello" tag="Hello" queryResult={queryResult} />
     )
     expect(container.querySelector('.empty')).toBeInTheDocument()
-  })
-})
-
-describe('Search.getInitialProps', () => {
-  it('returns the corresponding props', async () => {
-    const getInitialProps = Search.getInitialProps as (
-      context: Partial<NextPageContext>
-    ) => {
-      text: string
-      tag: string
-      queryResult: QueryResult
-    }
-    const context = {
-      query: {
-        text: 'text',
-        tag: 'tag',
-        page: '1',
-        offset: '1'
-      }
-    }
-    const props = await getInitialProps(context)
-    expect(props.text).toEqual('text')
-    expect(props.tag).toEqual('tag')
   })
 })

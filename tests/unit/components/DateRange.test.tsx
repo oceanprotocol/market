@@ -1,10 +1,9 @@
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, act } from '@testing-library/react'
 import DateRangeWidget, {
   getWidgetValue
 } from '../../../src/components/atoms/FormWidgets/DateRangeWidget'
 import { PublishFormSchema } from '../../../src/models/PublishForm'
-import { act } from 'react-test-renderer'
 
 describe('Date Range Widget', () => {
   it('renders without crashing', () => {

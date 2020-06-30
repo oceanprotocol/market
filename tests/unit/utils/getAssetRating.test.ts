@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from 'axios'
-import { mocked } from 'ts-jest/dist/util/testing'
 import getAssetRating, {
   GetRatingResponse
 } from '../../../src/utils/getAssetRating'
@@ -13,7 +12,8 @@ describe('getAssetRating()', () => {
       datePublished: '',
       vote: 5
     }
-    mocked(axios.get).mockResolvedValueOnce({
+
+    ;(axios.get as any).mockResolvedValueOnce({
       data: [ratingResponse, ratingResponse]
     } as AxiosResponse)
 

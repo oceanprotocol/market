@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from 'axios'
-import { mocked } from 'ts-jest/dist/util/testing'
 
 import {
   toStringNoMS,
@@ -34,7 +33,7 @@ describe('toStringNoMS()', () => {
 
 describe('getFileInfo()', () => {
   it('Success on existing file', async () => {
-    mocked(axios).mockResolvedValue({
+    ;(axios as any).mockResolvedValue({
       data: {
         status: 200,
         result: { contentLength: '10000', contentType: 'application/pdf' }
