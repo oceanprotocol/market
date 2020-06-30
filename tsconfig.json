@@ -4,6 +4,7 @@
     "module": "commonjs",
     "lib": ["dom", "es2017"],
     "resolveJsonModule": true,
+    "moduleResolution": "Node",
     "jsx": "react",
     "esModuleInterop": true,
     "experimentalDecorators": true,

@@ -28,6 +28,13 @@ module.exports = {
         path: `${__dirname}/node_modules/@oceanprotocol/art/`
       }
     },
+    {
+      resolve: 'gatsby-plugin-sharp',
+      options: {
+        defaultQuality: 80
+      }
+    },
+    'gatsby-transformer-sharp',
     'gatsby-transformer-json',
     'gatsby-transformer-remark',
     {
@@ -41,6 +48,20 @@ module.exports = {
     },
     'gatsby-plugin-react-helmet',
     'gatsby-plugin-remove-trailing-slashes',
+    {
+      // https://www.gatsbyjs.org/packages/gatsby-plugin-manifest/#using-with-gatsby-plugin-offline
+      resolve: 'gatsby-plugin-manifest',
+      options: {
+        name: siteConfig.site.siteTitle,
+        short_name: siteConfig.site.siteTitle,
+        start_url: '/',
+        background_color: '#ffffff',
+        theme_color: '#141414',
+        icon: siteConfig.site.siteIcon,
+        display: 'standalone',
+        cache_busting_mode: 'none'
+      }
+    },
     'gatsby-plugin-webpack-size'
   ]
 }

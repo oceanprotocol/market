@@ -20,7 +20,7 @@ before_script:
   # - rm -rf "${HOME}/.ocean/keeper-contracts/artifacts"
   # - bash -x start_ocean.sh --no-commons --no-dashboard 2>&1 > start_ocean.log &
   # - cd ..
-  - cp .env.example .env && cp .env.example .env.build
+  # - cp .env.example .env
   # overwrite AQUARIUS_URI from above .env files, which default to Spree
   - export AQUARIUS_URI='https://aquarius.pacific.market.dev-ocean.com'
 

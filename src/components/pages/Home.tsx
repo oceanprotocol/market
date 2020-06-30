@@ -3,9 +3,9 @@ import { Link } from 'gatsby'
 import shortid from 'shortid'
 import Button from '../atoms/Button'
 import SearchBar from '../molecules/SearchBar'
-import Explore from '../../images/explore.svg'
-import Publish from '../../images/publish.svg'
-import DataPool from '../../images/datapool.svg'
+import { ReactComponent as Explore } from '../../images/explore.svg'
+import { ReactComponent as Publish } from '../../images/publish.svg'
+import { ReactComponent as DataPool } from '../../images/datapool.svg'
 import styles from './Home.module.css'
 
 const actions = [
@@ -41,17 +41,17 @@ export default function HomePage(): ReactElement {
 
       <div className={styles.actions}>
         {actions.map((action) => (
-          <Link key={shortid.generate()} to={action.link}>
-            <a
-              className={action.comingSoon ? styles.comingSoon : styles.action}
-            >
-              {action.icon}
-              <h3 className={styles.actionTitle}>{action.title}</h3>
-              <p>{action.text}</p>
-              <Button style={action.primary ? 'primary' : null}>
-                {action.action}
-              </Button>
-            </a>
+          <Link
+            key={shortid.generate()}
+            to={action.link}
+            className={action.comingSoon ? styles.comingSoon : styles.action}
+          >
+            {action.icon}
+            <h3 className={styles.actionTitle}>{action.title}</h3>
+            <p>{action.text}</p>
+            <Button style={action.primary ? 'primary' : null}>
+              {action.action}
+            </Button>
           </Link>
         ))}
       </div>

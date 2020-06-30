@@ -14,7 +14,7 @@ import {
 } from '@oceanprotocol/react'
 import styles from './Compute.module.css'
 import Button from '../atoms/Button'
-import Input from '../atoms/Input/Input'
+import Input from '../atoms/Input'
 
 export default function Compute({
   ddo,

@@ -10,6 +10,14 @@ const query = graphql`
               siteTitle
               siteTagline
               siteUrl
+              siteIcon
+              siteImage {
+                childImageSharp {
+                  original {
+                    src
+                  }
+                }
+              }
               copyright
               menu {
                 name
