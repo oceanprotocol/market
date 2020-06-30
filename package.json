@@ -70,13 +70,12 @@
   "devDependencies": {
     "@babel/core": "^7.10.3",
     "@babel/preset-typescript": "^7.10.1",
-    "@storybook/addon-actions": "^5.3.19",
+    "@storybook/addon-actions": "^6.0.0-beta.37",
     "@storybook/addon-storyshots": "^6.0.0-beta.37",
     "@storybook/react": "^6.0.0-beta.37",
     "@svgr/webpack": "^5.4.0",
     "@testing-library/jest-dom": "^5.11.0",
     "@testing-library/react": "^10.4.3",
-    "@testing-library/react-hooks": "^3.3.0",
     "@types/jest": "^26.0.3",
     "@types/node": "^14.0.14",
     "@types/numeral": "^0.0.28",
@@ -99,6 +98,7 @@
     "jest": "^26.1.0",
     "node-mocks-http": "^1.8.1",
     "prettier": "^2.0.5",
+    "react-test-renderer": "^16.13.1",
     "serve": "^11.3.2",
     "source-map-explorer": "^2.4.2",
     "typescript": "^3.9.5"

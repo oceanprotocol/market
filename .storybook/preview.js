@@ -1,20 +1,29 @@
 import React from 'react'
 import { addDecorator } from '@storybook/react'
+import {
+  createHistory,
+  createMemorySource,
+  LocationProvider
+} from '@reach/router'
 
 // Import global css with custom properties once for all stories.
 import '../src/global/styles.css'
 
 // Wrapper for all stories previews
+const history = createHistory(createMemorySource('/'))
+
 addDecorator((storyFn) => (
-  <div
-    style={{
-      minHeight: '100vh',
-      width: '100%',
-      padding: '2rem'
-    }}
-  >
-    {storyFn()}
-  </div>
+  <LocationProvider history={history}>
+    <div
+      style={{
+        minHeight: '100vh',
+        width: '100%',
+        padding: '2rem'
+      }}
+    >
+      {storyFn()}
+    </div>
+  </LocationProvider>
 ))
 
 // Gatsby's Link overrides:

@@ -2,7 +2,7 @@ import { useStaticQuery, graphql } from 'gatsby'
 
 const query = graphql`
   query {
-    allFile(filter: { relativePath: { eq: "site.json" } }) {
+    siteMetadata: allFile(filter: { relativePath: { eq: "site.json" } }) {
       edges {
         node {
           childContentJson {
@@ -33,5 +33,5 @@ const query = graphql`
 
 export function useSiteMetadata() {
   const data = useStaticQuery(query)
-  return data.allFile.edges[0].node.childContentJson.site
+  return data.siteMetadata.edges[0].node.childContentJson.site
 }
