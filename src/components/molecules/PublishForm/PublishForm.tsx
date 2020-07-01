@@ -78,8 +78,6 @@ export function transformPublishFormToMetadata(
       copyrightHolder: holder,
       tags: keywords?.split(','),
       termsAndConditions,
-      supportName,
-      supportEmail,
       access: access || 'Download'
     },
     // ------- curation -------

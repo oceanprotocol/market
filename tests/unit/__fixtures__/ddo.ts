@@ -71,11 +71,8 @@ const ddo: Partial<DDO> = {
               url: 'https://demo.com'
             }
           ],
-          deliveryType: 'files',
           termsAndConditions: true,
           dateRange: ['2018-09-20T08:38:58', '2019-12-11T05:19:42'],
-          supportName: 'Jelly McJellyfish',
-          supportEmail: 'jelly@oceanprotocol.com',
           access: 'Download'
         },
         curation: {
