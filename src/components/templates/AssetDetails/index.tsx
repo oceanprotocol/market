@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
-import { DDO } from '@oceanprotocol/squid'
-import { Link } from 'gatsby'
+import React, { useState, ReactElement, useEffect } from 'react'
+import { Aquarius, Logger } from '@oceanprotocol/squid'
+import { Link, PageProps } from 'gatsby'
+import { config } from '../../../config/ocean'
 import Layout from '../../../components/Layout'
-import { MetaDataMarket } from '../../../@types/MetaData'
+import { MetaDataMarket, ServiceMetaDataMarket } from '../../../@types/MetaData'
 import Time from '../../atoms/Time'
 import Markdown from '../../atoms/Markdown'
 import Consume from '../../organisms/Consume'
@@ -10,39 +11,30 @@ import Tags from '../../atoms/Tags'
 import { Alert } from '../../atoms/Alert'
 import MetaFull from './MetaFull'
 import MetaSecondary from './MetaSecondary'
-import Rating from '../../atoms/Rating'
-import RatingAction from './RatingAction'
+// import Rating from '../../atoms/Rating'
+// import RatingAction from './RatingAction'
 import styles from './index.module.css'
 import { useMetadata, useOcean } from '@oceanprotocol/react'
 import Compute from '../../organisms/Compute'
-import DeleteAction from '../../molecules/DeleteAsset'
-
-export declare type AssetDetailsPageProps = {
-  title: string
-  ddo?: DDO
-  attributes?: MetaDataMarket
-  error?: string
-}
+// import DeleteAction from '../../molecules/DeleteAsset'
 
 const AssetDetailsPageMeta = ({
-  attributes,
-  ddo
+  metadata,
+  did
 }: {
-  attributes: MetaDataMarket
-  ddo: DDO
+  metadata: MetaDataMarket
+  did: string
 }) => {
-  if (!attributes) return null
-
   const { ocean, balanceInOcean } = useOcean()
-  const { datePublished } = attributes.main
+  const { datePublished } = metadata.main
   const {
     description,
     copyrightHolder,
     categories,
     tags,
     access
-  } = attributes.additionalInformation
-  const { curation } = attributes
+  } = metadata.additionalInformation
+  const { curation } = metadata
 
   const { getCuration } = useMetadata()
   const [rating, setRating] = useState<number>(curation ? curation.rating : 0)
@@ -50,8 +42,9 @@ const AssetDetailsPageMeta = ({
     curation ? curation.numVotes : 0
   )
   const isCompute = access && access === 'Compute'
+
   const onVoteUpdate = async () => {
-    const { rating, numVotes } = await getCuration(ddo.id)
+    const { rating, numVotes } = await getCuration(did)
 
     setRating(rating)
     setNumVotes(numVotes)
@@ -72,7 +65,7 @@ const AssetDetailsPageMeta = ({
               </Link>
             </p>
           )}
-          <Rating curation={{ rating, numVotes }} readonly />
+          {/* <Rating curation={{ rating, numVotes }} readonly /> */}
         </aside>
 
         <h2 className={styles.sectionTitle}>Summary</h2>
@@ -80,7 +73,7 @@ const AssetDetailsPageMeta = ({
 
         {tags && tags.length > 0 && <Tags items={tags} />}
 
-        <MetaFull ddo={ddo} attributes={attributes} />
+        <MetaFull did={did} metadata={metadata} />
         <div className={styles.buttonGroup}>
           {/* <EditAction
             ddo={ddo}
@@ -88,48 +81,73 @@ const AssetDetailsPageMeta = ({
             account={account}
             refetchMetadata={refetchMetadata}
           /> */}
-          <DeleteAction ddo={ddo} />
+          {/* <DeleteAction ddo={ddo} /> */}
         </div>
       </div>
       <div>
         <div className={styles.sticky}>
           {isCompute ? (
-            <Compute ddo={ddo} ocean={ocean} balance={balanceInOcean} />
+            <Compute
+              did={did}
+              metadata={metadata}
+              ocean={ocean}
+              balance={balanceInOcean}
+            />
           ) : (
-            <Consume ddo={ddo} />
+            <Consume did={did} metadata={metadata} />
           )}
 
-          <RatingAction did={ddo.id} onVote={onVoteUpdate} />
-          <MetaSecondary attributes={attributes} />
+          {/* <RatingAction did={did} onVote={onVoteUpdate} /> */}
+          <MetaSecondary metadata={metadata} />
         </div>
       </div>
     </>
   )
 }
 
-const AssetDetailsPage = ({
-  ddo,
-  attributes,
-  title,
-  error
-}: AssetDetailsPageProps) => {
-  if (error) {
-    return (
-      <Layout title={title} noPageHeader>
-        <Alert title={title} text={error} state="error" />
-      </Layout>
-    )
-  }
+export default function AssetDetailsPage(props: PageProps): ReactElement {
+  const [metadata, setMetadata] = useState<MetaDataMarket>()
+  const [title, setTitle] = useState<string>()
+  const [error, setError] = useState<string>()
 
-  return (
-    <Layout title={title}>
+  const { did } = props.pageContext as { did: string }
+
+  useEffect(() => {
+    async function init() {
+      try {
+        const aquarius = new Aquarius(config.aquariusUri, Logger)
+        const ddo = await aquarius.retrieveDDO(did)
+
+        if (!ddo) {
+          setTitle('Could not retrieve asset')
+          setError('The DDO was not found in Aquarius.')
+          return
+        }
+
+        const { attributes }: ServiceMetaDataMarket = ddo.findServiceByType(
+          'metadata'
+        )
+
+        setTitle(attributes.main.name)
+        console.log(attributes)
+        setMetadata(attributes)
+      } catch (error) {
+        setTitle('Error retrieving asset')
+        setError(error.message)
+      }
+    }
+    init()
+  }, [])
+
+  return error ? (
+    <Layout title={title} noPageHeader uri={props.path}>
+      <Alert title={title} text={error} state="error" />
+    </Layout>
+  ) : did && metadata ? (
+    <Layout title={title} uri={props.path}>
       <article className={styles.grid}>
-        {attributes && (
-          <AssetDetailsPageMeta ddo={ddo as DDO} attributes={attributes} />
-        )}
+        <AssetDetailsPageMeta did={did} metadata={metadata} />
       </article>
     </Layout>
-  )
+  ) : null
 }
-
-export default AssetDetailsPage

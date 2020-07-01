@@ -10,18 +10,18 @@ import { config } from '../config/ocean'
 
 export interface LayoutProps {
   children: ReactNode
-  title?: string
+  title: string
+  uri: string
   description?: string
   noPageHeader?: boolean
-  location?: Location
 }
 
 export default function Layout({
   children,
   title,
+  uri,
   description,
-  noPageHeader,
-  location
+  noPageHeader
 }: LayoutProps): ReactElement {
   return (
     <Web3Provider>
@@ -33,12 +33,7 @@ export default function Layout({
             <meta name="theme-color" content="#ca2935" />
           </Helmet>
 
-          <Seo
-            title={title}
-            description={description}
-            uri={location.href}
-            location={location}
-          />
+          <Seo title={title} description={description} uri={uri} />
 
           <Header />
           <main className={styles.main}>

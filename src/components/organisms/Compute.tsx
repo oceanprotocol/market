@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { DDO, Ocean } from '@oceanprotocol/squid'
-import { ServiceMetadata } from '@oceanprotocol/squid/dist/node/ddo/Service'
+import React, { useState, useEffect, ReactElement } from 'react'
+import { Ocean } from '@oceanprotocol/squid'
 import { fromWei } from 'web3-utils'
 import compareAsBN, { Comparisson } from '../../utils/compareAsBN'
 import Loader from '../atoms/Loader'
@@ -15,18 +14,19 @@ import {
 import styles from './Compute.module.css'
 import Button from '../atoms/Button'
 import Input from '../atoms/Input'
+import { MetaDataMarket } from '../../@types/MetaData'
 
 export default function Compute({
-  ddo,
+  did,
+  metadata,
   balance,
   ocean
 }: {
-  ddo: DDO | null
+  did: string
+  metadata: MetaDataMarket
   balance: string | null
   ocean: Ocean | null
-}) {
-  if (!ddo) return null
-
+}): ReactElement {
   const { compute, isLoading, computeStepText, computeError } = useCompute()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [, setError] = useState('')
@@ -41,9 +41,7 @@ export default function Compute({
   const [isPublished, setIsPublished] = useState(false)
   const [file, setFile] = useState(null)
 
-  const metadata = ddo.findServiceByType('metadata') as ServiceMetadata
-  const { price } = metadata.attributes.main
-
+  const { price } = metadata.main
   const isFree = price === '0'
 
   const [isTermsAgreed, setIsTermsAgreed] = useState(true)
@@ -85,7 +83,7 @@ export default function Compute({
       setIsPublished(false)
       setError('')
 
-      await compute(ddo.id, algorithmRawCode, computeContainer)
+      await compute(did, algorithmRawCode, computeContainer)
 
       setIsPublished(true)
       setFile(null)

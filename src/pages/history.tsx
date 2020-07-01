@@ -8,7 +8,7 @@ export default function PageGatsbyHistory(props: PageProps): ReactElement {
   const { title, description } = content
 
   return (
-    <Layout title={title} description={description} location={props.location}>
+    <Layout title={title} description={description} uri={props.uri}>
       <PageHistory />
     </Layout>
   )

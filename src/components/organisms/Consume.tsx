@@ -1,25 +1,26 @@
-import React from 'react'
-import { DDO } from '@oceanprotocol/squid'
+import React, { ReactElement } from 'react'
 import Web3 from 'web3'
 import compareAsBN, { Comparisson } from '../../utils/compareAsBN'
 import Button from '../atoms/Button'
 import File from '../atoms/File'
 import Price from '../atoms/Price'
-import { MetaDataMarket } from '../../@types/MetaData'
 import Web3Feedback from '../molecules/Web3Feedback'
 import styles from './Consume.module.css'
 import Loader from '../atoms/Loader'
-import { useWeb3, useOcean, useConsume } from '@oceanprotocol/react'
+import { useOcean, useConsume } from '@oceanprotocol/react'
+import { MetaDataMarket } from '../../@types/MetaData'
 
-export default function Consume({ ddo }: { ddo: DDO | undefined }) {
-  if (!ddo) return null
-
-  const { web3 } = useWeb3()
+export default function Consume({
+  did,
+  metadata
+}: {
+  did: string
+  metadata: MetaDataMarket
+}): ReactElement {
   const { ocean, balanceInOcean } = useOcean()
   const { consume, consumeStepText, isLoading } = useConsume()
-  const { attributes } = ddo.findServiceByType('metadata')
-  const { price } = attributes.main
-  const file = (attributes as any).main.files[0]
+  const { price } = metadata.main
+  const file = metadata.main.files[0]
   const isFree = price === '0'
   const isBalanceSufficient =
     isFree ||
@@ -34,7 +35,11 @@ export default function Consume({ ddo }: { ddo: DDO | undefined }) {
     return isLoading ? (
       <Loader message={consumeStepText} isHorizontal />
     ) : (
-      <Button primary onClick={() => consume(ddo.id)} disabled={isDisabled}>
+      <Button
+        style="primary"
+        onClick={() => consume(did)}
+        disabled={isDisabled}
+      >
         {isFree ? 'Download' : 'Buy'}
       </Button>
     )

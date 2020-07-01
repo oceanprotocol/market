@@ -8,11 +8,7 @@ export default function PageGatsbyHome(props: PageProps): ReactElement {
   const { siteTitle, siteTagline } = useSiteMetadata()
 
   return (
-    <Layout
-      title={siteTitle}
-      description={siteTagline}
-      location={props.location}
-    >
+    <Layout title={siteTitle} description={siteTagline} uri={props.uri}>
       <PageHome />
     </Layout>
   )

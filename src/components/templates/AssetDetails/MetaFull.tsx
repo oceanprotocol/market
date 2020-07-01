@@ -1,21 +1,20 @@
-import React from 'react'
-import { DDO } from '@oceanprotocol/squid'
-import { MetaDataMarket } from '../../../@types/MetaData'
+import React, { ReactElement } from 'react'
 import Time from '../../atoms/Time'
 import MetaItem from './MetaItem'
 import styles from './MetaFull.module.css'
+import { MetaDataMarket } from '../../../@types/MetaData'
 
 export default function MetaFull({
-  ddo,
-  attributes
+  did,
+  metadata
 }: {
-  ddo: DDO | undefined
-  attributes: MetaDataMarket
-}) {
-  const { dateCreated, author, license } = attributes.main
+  did: string
+  metadata: MetaDataMarket
+}): ReactElement {
+  const { dateCreated, author, license } = metadata.main
   let dateRange
-  if (attributes && attributes.additionalInformation) {
-    ;({ dateRange } = attributes.additionalInformation)
+  if (metadata && metadata.additionalInformation) {
+    ;({ dateRange } = metadata.additionalInformation)
   }
 
   // In practice dateRange will always be defined, but in the rare case it isn't
@@ -43,7 +42,7 @@ export default function MetaFull({
         }
       />
 
-      <MetaItem title="DID" content={<code>{ddo?.id}</code>} />
+      <MetaItem title="DID" content={<code>{did}</code>} />
     </div>
   )
 }

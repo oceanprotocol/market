@@ -9,7 +9,7 @@ export default function PageGatsbySearch(props: PageProps): ReactElement {
   const { text, tag } = parsed
 
   return (
-    <Layout title={`Search for ${text || tag}`} location={props.location}>
+    <Layout title={`Search for ${text || tag}`} uri={props.uri}>
       <PageSearch location={props.location} />
     </Layout>
   )

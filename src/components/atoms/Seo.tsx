@@ -1,18 +1,16 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { Helmet } from 'react-helmet'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 
 export default function Seo({
   title,
   description,
-  uri,
-  location
+  uri
 }: {
   title?: string
   description?: string
   uri: string
-  location: Location
-}) {
+}): ReactElement {
   const { siteTitle, siteTagline, siteUrl, siteImage } = useSiteMetadata()
 
   // Remove trailing slash from all URLs
@@ -37,7 +35,7 @@ export default function Seo({
       <meta name="description" content={description} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
-      <meta property="og:url" content={location.href} />
+      <meta property="og:url" content={uri} />
 
       <meta
         name="image"

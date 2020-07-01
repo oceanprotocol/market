@@ -1,20 +1,18 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import shortid from 'shortid'
-import { MetaDataMarket } from '../../../@types/MetaData'
 import { ListItem } from '../../atoms/Lists'
-import { refundPolicy, assetTerms } from '../../../../site.config'
 import MetaItem from './MetaItem'
 import styles from './MetaSecondary.module.css'
+import { MetaDataMarket } from '../../../@types/MetaData'
 
 export default function MetaSecondary({
-  attributes
+  metadata
 }: {
-  attributes: MetaDataMarket
-}) {
-  const { price } = attributes.main
-  let links, supportName, supportEmail
-  if (attributes && attributes.additionalInformation) {
-    ;({ links, supportName, supportEmail } = attributes.additionalInformation)
+  metadata: MetaDataMarket
+}): ReactElement {
+  let links
+  if (metadata && metadata.additionalInformation) {
+    ;({ links } = metadata.additionalInformation)
   }
 
   return (
@@ -35,37 +33,6 @@ export default function MetaSecondary({
           />
         </div>
       )}
-      {(supportName || supportEmail) && (
-        <MetaItem
-          title="Support Contact"
-          content={
-            <>
-              {supportName && <p>{supportName}</p>}
-              {supportEmail && <p>{supportEmail}</p>}
-            </>
-          }
-        />
-      )}
-      {price !== '0' && (
-        <MetaItem
-          title="Refund Policy"
-          content={
-            <ul>
-              {refundPolicy.map((item) => (
-                <ListItem key={shortid.generate()}>{item}</ListItem>
-              ))}
-            </ul>
-          }
-        />
-      )}
-
-      {assetTerms.map((item) => (
-        <MetaItem
-          key={shortid.generate()}
-          title={item.name}
-          content={item.value}
-        />
-      ))}
     </aside>
   )
 }
