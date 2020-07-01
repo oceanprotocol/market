@@ -6,6 +6,7 @@ import Pagination from '../molecules/Pagination'
 import { updateQueryStringParameter } from '../../utils'
 import styles from './AssetList.module.css'
 import { MetaDataMarket } from '../../@types/MetaData'
+import { DDO } from '@oceanprotocol/squid'
 
 declare type AssetListProps = {
   queryResult: QueryResult
@@ -38,10 +39,10 @@ const AssetList: React.FC<AssetListProps> = ({ queryResult }) => {
     <>
       <div className={styles.assetList}>
         {queryResult.results &&
-          queryResult.results.map((ddo) => {
-            const { attributes }: MetaDataMarket = ddo.findServiceByType(
-              'metadata'
-            )
+          queryResult.results.map((ddo: DDO) => {
+            const { attributes }: MetaDataMarket = new DDO(
+              ddo
+            ).findServiceByType('metadata')
 
             return (
               <AssetTeaser
