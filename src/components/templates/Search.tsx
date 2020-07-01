@@ -65,7 +65,7 @@ export async function getResults(params: any): Promise<QueryResult> {
         ])
       : undefined
 
-  const aquarius = new Aquarius(config.aquariusUri as string, Logger)
+  const aquarius = new Aquarius(config.aquariusUri, Logger)
   const queryResult = await aquarius.queryMetadata(
     getSearchQuery(page, offset, text, tag, priceQuery)
   )
