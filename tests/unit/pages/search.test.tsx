@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, fireEvent } from '@testing-library/react'
-import Search from '../../../src/components/templates/search'
+import Search from '../../../src/components/templates/Search'
 import {
   createHistory,
   createMemorySource,

@@ -1,23 +1,10 @@
-import React, { ReactElement, useState, useEffect } from 'react'
 import {
-  QueryResult,
-  SearchQuery
+  SearchQuery,
+  QueryResult
 } from '@oceanprotocol/squid/dist/node/aquarius/Aquarius'
-import SearchBar from '../molecules/SearchBar'
-import AssetList from '../organisms/AssetList'
-import { SearchPriceFilter } from '../molecules/SearchPriceFilter'
-
-import styles from './Search.module.css'
-import { priceQueryParamToWei } from '../../utils'
+import { priceQueryParamToWei } from '../../../utils'
 import { Aquarius, Logger } from '@oceanprotocol/squid'
-import { config } from '../../config/ocean'
-import queryString from 'query-string'
-
-export declare type SearchPageProps = {
-  text: string | string[]
-  tag: string | string[]
-  queryResult: QueryResult
-}
+import { config } from '../../../config/ocean'
 
 export function getSearchQuery(
   page?: string | string[],
@@ -71,42 +58,4 @@ export async function getResults(params: any): Promise<QueryResult> {
   )
 
   return queryResult
-}
-
-export default function SearchPage({
-  location
-}: {
-  location: Location
-}): ReactElement {
-  const parsed = queryString.parse(location.search)
-  const { text, tag } = parsed
-  const [queryResult, setQueryResult] = useState<QueryResult>()
-
-  useEffect(() => {
-    async function initSearch() {
-      const results = await getResults(parsed)
-      setQueryResult(results)
-    }
-    initSearch()
-  }, [])
-
-  return (
-    <section className={styles.grid}>
-      <div className={styles.search}>
-        {text && <SearchBar initialValue={text as string} />}
-      </div>
-
-      <aside className={styles.side}>
-        <SearchPriceFilter />
-      </aside>
-
-      <div className={styles.results}>
-        {queryResult && queryResult.results.length > 0 ? (
-          <AssetList queryResult={queryResult} />
-        ) : (
-          <div className={styles.empty}>No results found.</div>
-        )}
-      </div>
-    </section>
-  )
 }
