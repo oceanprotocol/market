@@ -13,7 +13,7 @@ exports.onCreateWebpackConfig = ({ actions }) => {
 
 exports.createPages = async ({ actions, reporter }) => {
   const { createPage } = actions
-  // Query for markdown nodes to use in creating pages.
+  // Query for all assets to use in creating pages.
   const result = await axios(
     `https://aquarius.marketplace.oceanprotocol.com/api/v1/aquarius/assets`
   )
