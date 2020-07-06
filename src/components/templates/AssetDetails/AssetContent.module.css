@@ -17,11 +17,6 @@
   }
 }
 
-.sectionTitle {
-  font-size: var(--font-size-large);
-  color: var(--color-secondary);
-}
-
 .meta {
   margin-bottom: var(--spacer);
   color: var(--color-secondary);
@@ -32,14 +27,11 @@
   margin-bottom: 0;
 }
 
-.loaderWrap {
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  min-height: 70vh;
+.sectionTitle {
+  font-size: var(--font-size-large);
+  color: var(--color-secondary);
 }
+
 .buttonGroup {
   margin-top: var(--spacer);
   margin-bottom: var(--spacer);

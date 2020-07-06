@@ -1,13 +1,14 @@
-import React, { useState, ReactElement, useEffect } from 'react'
-import { Aquarius, Logger } from '@oceanprotocol/squid'
+import React, { useState, useEffect, ReactElement } from 'react'
+import { Router } from '@reach/router'
+import AssetContent from '../../components/templates/AssetDetails/AssetContent'
+import Layout from '../../components/Layout'
 import { PageProps } from 'gatsby'
-import { config } from '../../../config/ocean'
-import Layout from '../../../components/Layout'
-import { MetaDataMarket, ServiceMetaDataMarket } from '../../../@types/MetaData'
-import { Alert } from '../../atoms/Alert'
-import AssetContent from './AssetContent'
+import { MetaDataMarket, ServiceMetaDataMarket } from '../../@types/MetaData'
+import { Aquarius, Logger } from '@oceanprotocol/squid'
+import { config } from '../../config/ocean'
+import { Alert } from '../../components/atoms/Alert'
 
-export default function AssetDetailsTemplate(props: PageProps): ReactElement {
+export default function AssetRoute(props: PageProps): ReactElement {
   const [metadata, setMetadata] = useState<MetaDataMarket>()
   const [title, setTitle] = useState<string>()
   const [error, setError] = useState<string>()
@@ -47,7 +48,9 @@ export default function AssetDetailsTemplate(props: PageProps): ReactElement {
     </Layout>
   ) : did && metadata ? (
     <Layout title={title} uri={props.path}>
-      <AssetContent did={did} metadata={metadata} />
+      <Router basepath="/asset">
+        <AssetContent did={did} metadata={metadata} path="/asset/:did" />
+      </Router>
     </Layout>
   ) : null
 }

@@ -1,0 +1,103 @@
+import { MetaDataMarket } from '../../../@types/MetaData'
+import React, { ReactElement } from 'react'
+import { useOcean } from '@oceanprotocol/react'
+import Time from '../../atoms/Time'
+import { Link } from 'gatsby'
+import Markdown from '../../atoms/Markdown'
+import Tags from '../../atoms/Tags'
+import MetaFull from './MetaFull'
+import Compute from '../../organisms/Compute'
+import Consume from '../../organisms/Consume'
+import MetaSecondary from './MetaSecondary'
+import styles from './AssetContent.module.css'
+
+export interface AssetContentProps {
+  metadata: MetaDataMarket
+  did: string
+  path?: string
+}
+
+export default function AssetContent({
+  metadata,
+  did
+}: AssetContentProps): ReactElement {
+  const { ocean, balanceInOcean } = useOcean()
+  const { datePublished } = metadata.main
+  const {
+    description,
+    copyrightHolder,
+    categories,
+    tags,
+    access
+  } = metadata.additionalInformation
+  const isCompute = access && access === 'Compute'
+
+  // const { curation } = metadata
+
+  // const { getCuration } = useMetadata()
+  // const [rating, setRating] = useState<number>(curation ? curation.rating : 0)
+  // const [numVotes, setNumVotes] = useState<number>(
+  //   curation ? curation.numVotes : 0
+  // )
+
+  // const onVoteUpdate = async () => {
+  //   const { rating, numVotes } = await getCuration(did)
+
+  //   setRating(rating)
+  //   setNumVotes(numVotes)
+  // }
+
+  return (
+    <article className={styles.grid}>
+      <div>
+        <aside className={styles.meta}>
+          <p>
+            <span title="Copyright Holder">{copyrightHolder}</span> -{' '}
+            {datePublished && <Time date={datePublished} />}
+          </p>
+          {categories && (
+            <p>
+              <Link to={`/search?categories=["${categories[0]}"]`}>
+                <a>{categories[0]}</a>
+              </Link>
+            </p>
+          )}
+          {/* <Rating curation={{ rating, numVotes }} readonly /> */}
+        </aside>
+
+        <h2 className={styles.sectionTitle}>Summary</h2>
+        <Markdown text={description || ''} />
+
+        {tags && tags.length > 0 && <Tags items={tags} />}
+
+        <MetaFull did={did} metadata={metadata} />
+        <div className={styles.buttonGroup}>
+          {/* <EditAction
+              ddo={ddo}
+              ocean={ocean}
+              account={account}
+              refetchMetadata={refetchMetadata}
+            /> */}
+          {/* <DeleteAction ddo={ddo} /> */}
+        </div>
+      </div>
+      <div>
+        <div className={styles.sticky}>
+          {isCompute ? (
+            <Compute
+              did={did}
+              metadata={metadata}
+              ocean={ocean}
+              balance={balanceInOcean}
+            />
+          ) : (
+            <Consume did={did} metadata={metadata} />
+          )}
+
+          {/* <RatingAction did={did} onVote={onVoteUpdate} /> */}
+          <MetaSecondary metadata={metadata} />
+        </div>
+      </div>
+    </article>
+  )
+}

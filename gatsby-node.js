@@ -29,13 +29,29 @@ exports.createPages = async ({ actions, reporter }) => {
   const assetDetailsTemplate = path.resolve(
     `src/components/templates/AssetDetails/index.tsx`
   )
-  assets.forEach((did) => {
+
+  await assets.forEach(async (did) => {
     const path = `/asset/${did}`
 
-    createPage({
+    await createPage({
       path,
       component: assetDetailsTemplate,
       context: { did }
     })
   })
+}
+
+exports.onCreatePage = async ({ page, actions }) => {
+  const { createPage } = actions
+
+  // page.matchPath is a special key that's used for matching pages
+  // only on the client.
+  const handleClientSideOnly = page.path.match(/^\/asset/)
+
+  if (handleClientSideOnly) {
+    page.matchPath = '/asset/*'
+
+    // Update the page.
+    createPage(page)
+  }
 }
