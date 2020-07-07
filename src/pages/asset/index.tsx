@@ -1,6 +1,6 @@
 import React, { useState, useEffect, ReactElement } from 'react'
 import { Router } from '@reach/router'
-import AssetContent from '../../components/templates/AssetDetails/AssetContent'
+import AssetContent from '../../components/organisms/AssetContent'
 import Layout from '../../components/Layout'
 import { PageProps } from 'gatsby'
 import { MetaDataMarket, ServiceMetaDataMarket } from '../../@types/MetaData'

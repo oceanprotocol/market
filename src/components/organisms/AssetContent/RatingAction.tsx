@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, ReactElement } from 'react'
 import { toast } from 'react-toastify'
 import Rating from '../../atoms/Rating'
 import rateAsset from '../../../utils/rateAsset'
@@ -13,7 +13,7 @@ export default function RatingAction({
 }: {
   did: DID | string
   onVote: () => void
-}) {
+}): ReactElement {
   const { web3, account } = useWeb3()
   const [rating, setRating] = useState<number>(0)
   const [isloading, setIsLoading] = useState(false)

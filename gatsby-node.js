@@ -15,7 +15,7 @@ exports.createPages = async ({ graphql, actions }) => {
 
   // Create pages for all assets
   const assetDetailsTemplate = path.resolve(
-    'src/components/templates/AssetDetails/index.tsx'
+    'src/components/templates/AssetDetails.tsx'
   )
 
   const result = await graphql(`

@@ -6,10 +6,10 @@ import { Link } from 'gatsby'
 import Markdown from '../../atoms/Markdown'
 import Tags from '../../atoms/Tags'
 import MetaFull from './MetaFull'
-import Compute from '../../organisms/Compute'
-import Consume from '../../organisms/Consume'
+import Compute from '../Compute'
+import Consume from '../Consume'
 import MetaSecondary from './MetaSecondary'
-import styles from './AssetContent.module.css'
+import styles from './index.module.css'
 
 export interface AssetContentProps {
   metadata: MetaDataMarket

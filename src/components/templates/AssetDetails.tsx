@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import { PageProps, graphql } from 'gatsby'
-import Layout from '../../../components/Layout'
-import AssetContent from './AssetContent'
+import Layout from '../Layout'
+import AssetContent from '../organisms/AssetContent'
 
 export default function AssetDetailsTemplate(props: PageProps): ReactElement {
   const { asset } = props.data as any

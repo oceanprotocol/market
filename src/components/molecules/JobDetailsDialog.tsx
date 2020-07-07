@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { ComputeItem } from '@oceanprotocol/react'
 import BaseDialog from '../atoms/BaseDialog'
 import styles from './JobDetailsDialog.module.css'
-import MetaItem from '../templates/AssetDetails/MetaItem'
+import MetaItem from '../organisms/AssetContent/MetaItem'
 import Time from '../atoms/Time'
 import shortid from 'shortid'
 import { Link } from 'gatsby'
@@ -15,7 +15,7 @@ export default function JobDetailsDialog({
   computeItem: ComputeItem | undefined
   isOpen: boolean
   onClose: () => void
-}) {
+}): ReactElement {
   if (!computeItem) return null
 
   const { attributes } = computeItem.ddo.findServiceByType('metadata')
