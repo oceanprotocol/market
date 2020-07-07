@@ -28,6 +28,7 @@ module.exports = {
         path: `${__dirname}/node_modules/@oceanprotocol/art/`
       }
     },
+    'gatsby-source-ocean',
     {
       resolve: 'gatsby-plugin-sharp',
       options: {

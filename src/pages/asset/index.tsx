@@ -13,7 +13,7 @@ export default function AssetRoute(props: PageProps): ReactElement {
   const [title, setTitle] = useState<string>()
   const [error, setError] = useState<string>()
 
-  const { did } = props.pageContext as { did: string }
+  const did = props.location.pathname.split('/')[2]
 
   useEffect(() => {
     async function init() {
@@ -32,7 +32,6 @@ export default function AssetRoute(props: PageProps): ReactElement {
         )
 
         setTitle(attributes.main.name)
-        console.log(attributes)
         setMetadata(attributes)
       } catch (error) {
         setTitle('Error retrieving asset')
@@ -43,14 +42,18 @@ export default function AssetRoute(props: PageProps): ReactElement {
   }, [])
 
   return error ? (
-    <Layout title={title} noPageHeader uri={props.path}>
+    <Layout title={title} noPageHeader uri={props.location.pathname}>
       <Alert title={title} text={error} state="error" />
     </Layout>
   ) : did && metadata ? (
-    <Layout title={title} uri={props.path}>
+    <Layout title={title} uri={props.location.pathname}>
       <Router basepath="/asset">
         <AssetContent did={did} metadata={metadata} path="/asset/:did" />
       </Router>
     </Layout>
-  ) : null
+  ) : (
+    <Layout title="Loading..." uri={props.location.pathname}>
+      Loading...
+    </Layout>
+  )
 }

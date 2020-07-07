@@ -1,5 +1,4 @@
 const path = require('path')
-const axios = require('axios')
 // const { config } = require('./src/config/ocean')
 
 exports.onCreateWebpackConfig = ({ actions }) => {
@@ -11,47 +10,70 @@ exports.onCreateWebpackConfig = ({ actions }) => {
   })
 }
 
-exports.createPages = async ({ actions, reporter }) => {
+exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
-  // Query for all assets to use in creating pages.
-  const result = await axios(
-    `https://aquarius.marketplace.oceanprotocol.com/api/v1/aquarius/assets`
-  )
-  const assets = result.data.ids
 
-  // Handle errors
+  // Create pages for all assets
+  const assetDetailsTemplate = path.resolve(
+    'src/components/templates/AssetDetails/index.tsx'
+  )
+
+  const result = await graphql(`
+    query {
+      allAsset {
+        edges {
+          node {
+            did
+            main {
+              type
+              name
+              dateCreated
+              author
+              license
+              price
+              datePublished
+              files {
+                contentType
+                index
+              }
+            }
+            additionalInformation {
+              description
+              deliveryType
+              termsAndConditions
+              access
+            }
+          }
+        }
+      }
+    }
+  `)
+
   if (result.errors) {
-    reporter.panicOnBuild(`Error while querying Aquarius for all assets.`)
-    return
+    throw result.errors
   }
 
-  // Create pages for each DID
-  const assetDetailsTemplate = path.resolve(
-    `src/components/templates/AssetDetails/index.tsx`
-  )
+  await result.data.allAsset.edges.forEach(({ node }) => {
+    const path = `/asset/${node.did}`
 
-  await assets.forEach(async (did) => {
-    const path = `/asset/${did}`
-
-    await createPage({
+    createPage({
       path,
       component: assetDetailsTemplate,
-      context: { did }
+      context: { did: node.did }
     })
   })
 }
 
-exports.onCreatePage = async ({ page, actions }) => {
-  const { createPage } = actions
+// exports.onCreatePage = async ({ page, actions }) => {
+//   const { createPage } = actions
+//   // page.matchPath is a special key that's used for matching pages
+//   // only on the client.
+//   const handleClientSideOnly = page.path.match(/^\/asset/)
 
-  // page.matchPath is a special key that's used for matching pages
-  // only on the client.
-  const handleClientSideOnly = page.path.match(/^\/asset/)
+//   if (handleClientSideOnly) {
+//     page.matchPath = '/asset/*'
 
-  if (handleClientSideOnly) {
-    page.matchPath = '/asset/*'
-
-    // Update the page.
-    createPage(page)
-  }
-}
+//     // Update the page.
+//     createPage(page)
+//   }
+// }
