@@ -4,6 +4,7 @@
 }
 
 .title {
+  font-size: var(--font-size-h2);
   margin-top: 0;
   margin-bottom: 0;
 }

@@ -7,10 +7,10 @@
 .price span {
   font-weight: var(--font-weight-base);
   color: var(--color-secondary);
-  font-size: var(--font-size-small);
+  font-size: var(--font-size-base);
 }
 
 .small {
-  transform: scale(0.8);
+  transform: scale(0.7);
   transform-origin: left 80%;
 }

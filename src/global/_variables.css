@@ -18,7 +18,6 @@
   --brand-alert-orange: #b35f36;
   --brand-alert-yellow: #eac146;
 
-  /* Buttons */
   --color-primary: #ff4092;
   --color-secondary: #8b98a9;
 
@@ -34,30 +33,26 @@
   --font-size-large: 1.2rem;
   --font-size-small: 0.85rem;
   --font-size-mini: 0.65rem;
-
   --font-size-text: 1rem;
   --font-size-label: 1rem;
   --font-size-title: 1.4rem;
-
   --font-size-h1: 3rem;
-  --font-size-h2: 1.7rem;
-  --font-size-h3: 1.4rem;
-  --font-size-h4: 1.2rem;
+  --font-size-h2: 2.5rem;
+  --font-size-h3: 1.7rem;
+  --font-size-h4: 1.3rem;
   --font-size-h5: 1.1rem;
-
-  --font-weight-base: 400;
+  --font-weight-base: 500;
   --font-weight-bold: 600;
   --line-height: 1.6;
-
-  --break-point--small: 640px;
-  --break-point--medium: 860px;
-  --break-point--large: 1140px;
-  --break-point--huge: 1400px;
 
   --spacer: 2rem;
   --border-radius: 0.2rem;
 
   --layout-max-width: 85rem;
-
   --checkbox-size: 1.6em;
+
+  --break-point--small: 640px;
+  --break-point--medium: 860px;
+  --break-point--large: 1140px;
+  --break-point--huge: 1400px;
 }

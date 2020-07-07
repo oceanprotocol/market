@@ -38,7 +38,7 @@ const AssetList: React.FC<AssetListProps> = ({ queryResult }) => {
   return (
     <>
       <div className={styles.assetList}>
-        {queryResult.results &&
+        {queryResult &&
           queryResult.results.map((ddo: DDO) => {
             const { attributes }: MetaDataMarket = new DDO(
               ddo

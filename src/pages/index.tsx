@@ -21,6 +21,18 @@ export const pageQuery = graphql`
       edges {
         node {
           did
+          main {
+            type
+            name
+            dateCreated
+            author
+            price
+            datePublished
+          }
+          additionalInformation {
+            description
+            access
+          }
         }
       }
     }

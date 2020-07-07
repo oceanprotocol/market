@@ -48,13 +48,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
         </div>
 
         <footer className={styles.foot}>
-          {categories && <p className={styles.type}>{categories[0]}</p>}
-
-          <Price price={price} className={styles.price} />
-
-          <p className={styles.copyright}>
-            Provided by <strong>{copyrightHolder}</strong>
-          </p>
+          <Price price={price} small />
         </footer>
       </Link>
     </article>

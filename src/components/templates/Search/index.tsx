@@ -25,11 +25,11 @@ export default function SearchPage({
 
   useEffect(() => {
     async function initSearch() {
-      const results = await getResults(parsed)
-      setQueryResult(results)
+      const queryResult = await getResults(parsed)
+      setQueryResult(queryResult)
     }
     initSearch()
-  }, [])
+  }, [parsed])
 
   return (
     <section className={styles.grid}>

@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react'
 import SearchBar from '../molecules/SearchBar'
-import { DID } from '@oceanprotocol/squid'
-import { Link } from 'gatsby'
 import shortid from 'shortid'
 import { OceanAsset } from '../../@types/MetaData'
+import AssetTeaser from '../molecules/AssetTeaser'
+import styles from './Home.module.css'
 
 export default function HomePage({
   assets
@@ -16,13 +16,15 @@ export default function HomePage({
     <>
       <SearchBar large />
       {assets && (
-        <ul>
-          {assets.map(({ node }: { node: { did: DID } }) => (
-            <li key={shortid.generate()}>
-              <Link to={`/asset/${node.did}`}>{node.did}</Link>
-            </li>
+        <div className={styles.grid}>
+          {assets.map(({ node }: { node: OceanAsset }) => (
+            <AssetTeaser
+              key={shortid.generate()}
+              did={node.did}
+              metadata={node}
+            />
           ))}
-        </ul>
+        </div>
       )}
     </>
   )

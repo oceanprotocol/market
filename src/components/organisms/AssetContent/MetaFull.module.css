@@ -3,7 +3,7 @@
   font-size: var(--font-size-small);
   padding: var(--spacer);
   border-radius: var(--border-radius);
-  border: 1px solid var(--brand-grey-light);
+  background: var(--brand-grey-dimmed);
   display: grid;
   gap: var(--spacer);
   grid-template-columns: 1fr 1fr;
@@ -11,5 +11,5 @@
 
 .metaFull code {
   /* magic number cause the code font has a bigger visual weight */
-  font-size: 0.7rem;
+  font-size: 0.8rem;
 }

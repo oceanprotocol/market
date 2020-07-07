@@ -51,10 +51,7 @@ export default function AssetContent({
     <article className={styles.grid}>
       <div>
         <aside className={styles.meta}>
-          <p>
-            <span title="Copyright Holder">{copyrightHolder}</span> -{' '}
-            {datePublished && <Time date={datePublished} />}
-          </p>
+          <p>{datePublished && <Time date={datePublished} />}</p>
           {categories && (
             <p>
               <Link to={`/search?categories=["${categories[0]}"]`}>
@@ -65,7 +62,6 @@ export default function AssetContent({
           {/* <Rating curation={{ rating, numVotes }} readonly /> */}
         </aside>
 
-        <h2 className={styles.sectionTitle}>Summary</h2>
         <Markdown text={description || ''} />
 
         {tags && tags.length > 0 && <Tags items={tags} />}

@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { Link } from 'gatsby'
 import Menu from '../molecules/Menu'
 import styles from './Header.module.css'
 import { ReactComponent as Logo } from '@oceanprotocol/art/logo/logo.svg'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 
-export default function Header() {
+export default function Header(): ReactElement {
   const { siteTitle } = useSiteMetadata()
 
   return (

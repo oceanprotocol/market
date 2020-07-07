@@ -13,9 +13,6 @@
   flex-shrink: 0;
 }
 
-.pricewrapper {
-}
-
 .consume button {
   margin-left: calc(var(--spacer) / 4);
 }
@@ -25,18 +22,13 @@
 }
 
 .price {
-  font-size: var(--font-size-h2);
   margin-top: calc(var(--spacer) / 4);
   margin-bottom: calc(var(--spacer) / 2);
-}
-
-.price span {
-  font-size: var(--font-size-large);
 }
 
 .feedback {
   width: 100%;
   margin-top: calc(var(--spacer) / 1.5);
   padding-top: calc(var(--spacer) / 1.5);
-  border-top: 1px solid var(--brand-grey-light);
+  border-top: 1px solid var(--brand-grey-lighter);
 }

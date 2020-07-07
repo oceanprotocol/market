@@ -96,7 +96,7 @@ export default function Compute({
 
   return (
     <div className={styles.compute}>
-      <Price price={price} className={styles.price} />
+      <Price price={price} />
 
       <div className={styles.info}>
         <div className={styles.selectType}>

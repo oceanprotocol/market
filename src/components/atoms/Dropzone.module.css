@@ -1,12 +1,16 @@
 .dropzone {
-  padding: 22px;
+  padding: var(--spacer);
   text-align: center;
   color: var(--color-secondary);
-  border: 2px dashed var(--color-primary);
+  border: 0.1rem dashed var(--color-secondary);
+  font-size: var(--font-size-small);
+  border-radius: var(--border-radius);
 }
+
 .dragover {
-  border-color: var(--color-secondary);
+  border-color: var(--color-primary);
 }
+
 .disabled {
 }
 

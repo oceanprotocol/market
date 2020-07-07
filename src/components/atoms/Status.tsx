@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import styles from './Status.module.css'
 
-export default function Status({ state }: { state?: string }) {
+export default function Status({ state }: { state?: string }): ReactElement {
   const classes =
     state === 'error'
       ? styles.error

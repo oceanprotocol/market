@@ -25,7 +25,7 @@ export function getSearchQuery(
       created: -1
     }
 
-    // Something in squid-js is weird when using 'categories: [type]'
+    // Something in squid-js is weird when using 'tags: [tag]'
     // which is the only way the query actually returns desired results.
     // But it doesn't follow 'SearchQuery' interface so we have to assign
     // it here.

@@ -1,10 +1,10 @@
 /* default: success, green circle */
 .status {
-  width: var(--font-size-small);
-  height: var(--font-size-small);
+  width: var(--font-size-mini);
+  height: var(--font-size-mini);
   border-radius: 50%;
   display: inline-block;
-  background: var(--green);
+  background: var(--brand-alert-green);
 }
 
 /* yellow triangle */
@@ -14,15 +14,15 @@
   background: none;
   width: 0;
   height: 0;
-  border-left: calc(var(--font-size-small) / 1.7) solid transparent;
-  border-right: calc(var(--font-size-small) / 1.7) solid transparent;
-  border-bottom: var(--font-size-small) solid var(--orange);
+  border-left: calc(var(--font-size-mini) / 1.7) solid transparent;
+  border-right: calc(var(--font-size-mini) / 1.7) solid transparent;
+  border-bottom: var(--font-size-mini) solid var(--brand-alert-orange);
 }
 
 /* red square */
 .error {
   composes: status;
   border-radius: 0;
-  background: var(--red);
+  background: var(--brand-alert-red);
   text-transform: capitalize;
 }
