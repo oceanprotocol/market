@@ -4,11 +4,11 @@ import Layout from '../Layout'
 import AssetContent from '../organisms/AssetContent'
 
 export default function AssetDetailsTemplate(props: PageProps): ReactElement {
-  const { asset } = props.data as any
+  const { oceanAsset } = props.data as any
 
   return (
-    <Layout title={asset.main.name} uri={props.path}>
-      <AssetContent did={asset.did} metadata={asset} />
+    <Layout title={oceanAsset.main.name} uri={props.path}>
+      <AssetContent did={oceanAsset.did} metadata={oceanAsset} />
     </Layout>
   )
 }

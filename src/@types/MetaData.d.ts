@@ -23,3 +23,8 @@ export interface MetaDataMarket extends MetaData {
 export interface ServiceMetaDataMarket extends ServiceMetadata {
   attributes: MetaDataMarket
 }
+
+// type for assets pulled into GraphQL
+export interface OceanAsset extends MetaDataMarket {
+  did: DID
+}
