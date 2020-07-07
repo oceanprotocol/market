@@ -11,7 +11,7 @@ export default function MetaFull({
   did: string
   metadata: MetaDataMarket
 }): ReactElement {
-  const { dateCreated, author, license } = metadata.main
+  const { dateCreated, datePublished, author, license } = metadata.main
   let dateRange
   if (metadata && metadata.additionalInformation) {
     ;({ dateRange } = metadata.additionalInformation)
@@ -40,6 +40,11 @@ export default function MetaFull({
             <Time date={dateRange[0]} />
           )
         }
+      />
+
+      <MetaItem
+        title="Data Published"
+        content={<Time date={datePublished} />}
       />
 
       <MetaItem title="DID" content={<code>{did}</code>} />

@@ -25,7 +25,6 @@ export default function AssetContent({
   const { datePublished } = metadata.main
   const {
     description,
-    copyrightHolder,
     categories,
     tags,
     access
@@ -66,7 +65,10 @@ export default function AssetContent({
 
         {tags && tags.length > 0 && <Tags items={tags} />}
 
+        <MetaSecondary metadata={metadata} />
+
         <MetaFull did={did} metadata={metadata} />
+
         <div className={styles.buttonGroup}>
           {/* <EditAction
               ddo={ddo}
@@ -91,7 +93,6 @@ export default function AssetContent({
           )}
 
           {/* <RatingAction did={did} onVote={onVoteUpdate} /> */}
-          <MetaSecondary metadata={metadata} />
         </div>
       </div>
     </article>

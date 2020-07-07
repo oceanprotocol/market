@@ -1,5 +1,5 @@
 .metaFull {
-  margin-top: var(--spacer);
+  margin-top: calc(var(--spacer) * 2);
   font-size: var(--font-size-small);
   padding: var(--spacer);
   border-radius: var(--border-radius);
@@ -12,4 +12,8 @@
 .metaFull code {
   /* magic number cause the code font has a bigger visual weight */
   font-size: 0.8rem;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-all;
+  padding: 0;
 }

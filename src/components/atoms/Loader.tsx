@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import styles from './Loader.module.css'
 
 export default function Loader({
@@ -7,7 +7,7 @@ export default function Loader({
 }: {
   message?: string
   isHorizontal?: boolean
-}) {
+}): ReactElement {
   return (
     <div className={styles.loaderWrap}>
       <span

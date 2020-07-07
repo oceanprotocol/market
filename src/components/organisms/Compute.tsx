@@ -15,6 +15,7 @@ import styles from './Compute.module.css'
 import Button from '../atoms/Button'
 import Input from '../atoms/Input'
 import { MetaDataMarket } from '../../@types/MetaData'
+import { Alert } from '../atoms/Alert'
 
 export default function Compute({
   did,
@@ -125,15 +126,19 @@ export default function Compute({
           {/* <TermsCheckbox onChange={onCheck} /> */}
         </div>
 
-        {isLoading && <Loader message={computeStepText} />}
-        {computeError !== undefined && (
-          <div className={styles.feedback}>{computeError}</div>
-        )}
-        {isPublished && (
-          <div className={styles.feedback}>
-            <p>Your job started! Watch the progress in the history page.</p>
-          </div>
-        )}
+        <div className={styles.feedback}>
+          {isLoading && <Loader message={computeStepText} />}
+          {computeError !== undefined && (
+            <Alert text={computeError} state="error" />
+          )}
+          {isPublished && (
+            <Alert
+              title="Your job started!"
+              text="Watch the progress in the history page."
+              state="success"
+            />
+          )}
+        </div>
       </div>
 
       <footer className={styles.feedback}>

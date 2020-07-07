@@ -2,6 +2,8 @@
   composes: box from '../atoms/Box.module.css';
   display: flex;
   flex-wrap: wrap;
+  max-width: 35rem;
+  margin: auto;
 }
 
 .info {
@@ -28,7 +30,5 @@
 
 .feedback {
   width: 100%;
-  margin-top: calc(var(--spacer) / 1.5);
-  padding-top: calc(var(--spacer) / 1.5);
-  border-top: 1px solid var(--brand-grey-lighter);
+  margin-top: calc(var(--spacer) * 1.5);
 }

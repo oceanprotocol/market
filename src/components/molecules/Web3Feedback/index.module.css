@@ -18,16 +18,15 @@
 .feedback i {
   position: absolute;
   left: 0;
-  top: 4px;
+  top: 2px;
 }
 
 .title {
   margin-bottom: calc(var(--spacer) / 12);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-small);
 }
 
 .error {
-  font-style: italic;
   font-size: var(--font-size-small);
   color: var(--color-secondary);
   margin-bottom: 0;

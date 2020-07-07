@@ -6,6 +6,12 @@
   border-left-width: 0.5rem;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
+  padding-top: calc(var(--spacer) / 2);
+  padding-bottom: calc(var(--spacer) / 2);
+}
+
+.alert + .alert {
+  margin-top: calc(var(--spacer) / 2);
 }
 
 .alert,
@@ -14,32 +20,33 @@
 }
 
 .title {
-  font-size: var(--font-size-large);
-  margin-bottom: calc(var(--spacer) / 2);
+  font-size: var(--font-size-base);
+  margin-bottom: calc(var(--spacer) / 8);
   color: inherit;
 }
 
 .text {
   margin-bottom: 0;
+  font-size: var(--font-size-small);
 }
 
 /* States */
 .error {
-  border-color: var(--red);
-  color: var(--red);
+  border-color: var(--rbrand-alert-ed);
+  color: var(--brand-alert-red);
 }
 
 .success {
-  border-color: var(--green);
-  color: var(--green);
+  border-color: var(--brand-alert-green);
+  color: var(--brand-alert-green);
 }
 
 .info {
-  border-color: var(--yellow);
-  color: var(--yellow);
+  border-color: var(--brand-alert-yellow);
+  color: var(--brand-alert-yellow);
 }
 
 .warning {
-  border-color: var(--orange);
-  color: var(--orange);
+  border-color: var(--brand-alert-orange);
+  color: var(--brand-alert-orange);
 }

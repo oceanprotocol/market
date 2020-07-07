@@ -1,4 +1,5 @@
 import React, { ReactElement } from 'react'
+import { toDataUrl } from 'ethereum-blockies'
 import styles from './Wallet.module.css'
 import Button from '../../atoms/Button'
 import { formatNumber } from '../../../utils'
@@ -8,19 +9,21 @@ const Wallet = ({ balanceOcean }: { balanceOcean: string }): ReactElement => {
   const { account, balance, web3Connect } = useWeb3()
   const ethBalanceText = formatNumber(Number(balance))
   const oceanBalanceText = formatNumber(Number(balanceOcean))
+  const blockies = account && toDataUrl(account)
 
   return (
     <div className={styles.wallet}>
       {account ? (
         <ul>
           <li className={styles.address} title={account}>
-            {`${account.substring(0, 12)}...`}
+            <img className={styles.blockies} src={blockies} alt="Blockies" />
+            {`${account.substring(0, 8)}...`}
           </li>
-          <li className={styles.balance} title="OCEAN">
-            Ọ <span>{oceanBalanceText}</span>
+          <li className={styles.balance}>
+            OCEAN <span>{oceanBalanceText}</span>
           </li>
-          <li className={styles.balance} title="ETH">
-            Ξ <span>{ethBalanceText}</span>
+          <li className={styles.balance}>
+            ETH <span>{ethBalanceText}</span>
           </li>
         </ul>
       ) : (

@@ -2,10 +2,10 @@
   display: grid;
   gap: calc(var(--spacer) * 1.5);
   position: relative;
-  margin-top: -1rem;
+  margin-top: -1.5rem;
 }
 
-@media (min-width: 55rem) {
+@media (min-width: 60rem) {
   .grid {
     gap: calc(var(--spacer) * 3);
     /* lazy golden ratio */
@@ -15,6 +15,7 @@
   .sticky {
     position: sticky;
     top: calc(var(--spacer) / 2);
+    margin-top: calc(var(--spacer) * 1.5);
   }
 }
 
