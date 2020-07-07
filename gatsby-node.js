@@ -20,7 +20,7 @@ exports.createPages = async ({ graphql, actions }) => {
 
   const result = await graphql(`
     query {
-      allAsset {
+      allOceanAsset {
         edges {
           node {
             did
@@ -53,7 +53,7 @@ exports.createPages = async ({ graphql, actions }) => {
     throw result.errors
   }
 
-  await result.data.allAsset.edges.forEach(({ node }) => {
+  await result.data.allOceanAsset.edges.forEach(({ node }) => {
     const path = `/asset/${node.did}`
 
     createPage({

@@ -14,8 +14,8 @@ export default function AssetDetailsTemplate(props: PageProps): ReactElement {
 }
 
 export const templateQuery = graphql`
-  query AssetByDid($did: String!) {
-    asset(did: { eq: $did }) {
+  query OceanAssetByDid($did: String!) {
+    oceanAsset(did: { eq: $did }) {
       did
       main {
         type

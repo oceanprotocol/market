@@ -28,7 +28,12 @@ module.exports = {
         path: `${__dirname}/node_modules/@oceanprotocol/art/`
       }
     },
-    'gatsby-source-ocean',
+    {
+      resolve: 'gatsby-source-ocean',
+      options: {
+        aquariusUri: 'https://aquarius.marketplace.oceanprotocol.com'
+      }
+    },
     {
       resolve: 'gatsby-plugin-sharp',
       options: {

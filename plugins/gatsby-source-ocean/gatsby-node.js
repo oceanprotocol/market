@@ -1,22 +1,20 @@
 const axios = require('axios')
 
-exports.sourceNodes = async ({
-  actions,
-  createNodeId,
-  createContentDigest
-}) => {
+exports.sourceNodes = async (
+  { actions, createNodeId, createContentDigest },
+  pluginOptions
+) => {
   const { createNode } = actions
+  const { aquariusUri } = pluginOptions
 
   // Query for all assets to use in creating pages.
-  const result = await axios(
-    `https://aquarius.marketplace.oceanprotocol.com/api/v1/aquarius/assets`
-  )
+  const result = await axios(`${aquariusUri}/api/v1/aquarius/assets`)
 
   for (let i = 0; i < result.data.ids.length; i++) {
     const did = result.data.ids[i]
 
     const metadataResult = await axios(
-      `https://aquarius.marketplace.oceanprotocol.com/api/v1/aquarius/assets/metadata/${did}`
+      `${aquariusUri}/api/v1/aquarius/assets/metadata/${did}`
     )
 
     const metadata = {
@@ -29,10 +27,9 @@ exports.sourceNodes = async ({
       parent: null,
       children: [],
       internal: {
-        type: 'Asset',
-        mediaType: 'application/json',
-        content: JSON.stringify(metadata),
-        contentDigest: createContentDigest(metadata)
+        type: 'OceanAsset',
+        contentDigest: createContentDigest(metadata),
+        description: `All data sets queried from ${pluginOptions.aquariusUri}`
       }
     }
 
