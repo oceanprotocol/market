@@ -5,7 +5,7 @@ import Layout from '../../components/Layout'
 import { PageProps } from 'gatsby'
 import { MetaDataMarket, ServiceMetaDataMarket } from '../../@types/MetaData'
 import { Aquarius, Logger } from '@oceanprotocol/squid'
-import { config } from '../../config/ocean'
+import { oceanConfig } from '../../../app.config'
 import { Alert } from '../../components/atoms/Alert'
 
 export default function AssetRoute(props: PageProps): ReactElement {
@@ -18,7 +18,7 @@ export default function AssetRoute(props: PageProps): ReactElement {
   useEffect(() => {
     async function init() {
       try {
-        const aquarius = new Aquarius(config.aquariusUri, Logger)
+        const aquarius = new Aquarius(oceanConfig.aquariusUri, Logger)
         const ddo = await aquarius.retrieveDDO(did)
 
         if (!ddo) {

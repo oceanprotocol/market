@@ -1,10 +1,11 @@
 require('dotenv').config()
 
-const siteConfig = require('./content/site.json')
+const siteContent = require('./content/site.json')
+const { oceanConfig } = require('./app.config')
 
 module.exports = {
   siteMetadata: {
-    ...siteConfig.site
+    ...siteContent.site
   },
   plugins: [
     {
@@ -31,7 +32,7 @@ module.exports = {
     {
       resolve: 'gatsby-source-ocean',
       options: {
-        aquariusUri: 'https://aquarius.marketplace.oceanprotocol.com'
+        aquariusUri: oceanConfig.aquariusUri
       }
     },
     {
@@ -58,12 +59,12 @@ module.exports = {
       // https://www.gatsbyjs.org/packages/gatsby-plugin-manifest/#using-with-gatsby-plugin-offline
       resolve: 'gatsby-plugin-manifest',
       options: {
-        name: siteConfig.site.siteTitle,
-        short_name: siteConfig.site.siteTitle,
+        name: siteContent.site.siteTitle,
+        short_name: siteContent.site.siteTitle,
         start_url: '/',
         background_color: '#ffffff',
         theme_color: '#141414',
-        icon: siteConfig.site.siteIcon,
+        icon: siteContent.site.siteIcon,
         display: 'standalone',
         cache_busting_mode: 'none'
       }

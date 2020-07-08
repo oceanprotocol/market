@@ -1,5 +1,4 @@
 const path = require('path')
-// const { config } = require('./src/config/ocean')
 
 exports.onCreateWebpackConfig = ({ actions }) => {
   actions.setWebpackConfig({

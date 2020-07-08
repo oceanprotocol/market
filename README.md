@@ -81,7 +81,7 @@ Files under `/api` are isolated and not part of Gatsby.
 
 ## 🦑 Environment variables
 
-The `./src/config/ocean.ts` file is setup to prioritize environment variables for setting each Ocean component endpoint. By setting environment variables, you can easily switch between Ocean networks the app connects to, without directly modifying `./src/config/ocean.ts`.
+The `app.config.js` file is setup to prioritize environment variables for setting each Ocean component endpoint. By setting environment variables, you can easily switch between Ocean networks the app connects to, without directly modifying `app.config.js`.
 
 For local development, you can use a `.env` file:
 

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { DID } from '@oceanprotocol/squid'
-import { config } from '../config/ocean'
+import { oceanConfig } from '../../app.config'
 
 export declare type GetRatingResponse = {
   comment: string
@@ -8,7 +8,7 @@ export declare type GetRatingResponse = {
   vote: number
 }
 
-const url = config.ratingUri + '/api/v1/rating'
+const url = oceanConfig.ratingUri + '/api/v1/rating'
 
 export default async function getAssetRating(
   did: DID | string,

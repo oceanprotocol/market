@@ -4,7 +4,7 @@ import {
 } from '@oceanprotocol/squid/dist/node/aquarius/Aquarius'
 import { priceQueryParamToWei } from '../../../utils'
 import { Aquarius, Logger } from '@oceanprotocol/squid'
-import { config } from '../../../config/ocean'
+import { oceanConfig } from '../../../../app.config'
 
 export function getSearchQuery(
   page?: string | string[],
@@ -52,7 +52,7 @@ export async function getResults(params: any): Promise<QueryResult> {
         ])
       : undefined
 
-  const aquarius = new Aquarius(config.aquariusUri, Logger)
+  const aquarius = new Aquarius(oceanConfig.aquariusUri, Logger)
   const queryResult = await aquarius.queryMetadata(
     getSearchQuery(page, offset, text, tag, priceQuery)
   )

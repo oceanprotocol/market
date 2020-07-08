@@ -2,10 +2,9 @@ const axios = require('axios')
 
 exports.sourceNodes = async (
   { actions, createNodeId, createContentDigest },
-  pluginOptions
+  { aquariusUri }
 ) => {
   const { createNode } = actions
-  const { aquariusUri } = pluginOptions
 
   // Query for all assets to use in creating pages.
   const result = await axios(`${aquariusUri}/api/v1/aquarius/assets`)
@@ -29,7 +28,7 @@ exports.sourceNodes = async (
       internal: {
         type: 'OceanAsset',
         contentDigest: createContentDigest(metadata),
-        description: `All data sets queried from ${pluginOptions.aquariusUri}`
+        description: `All data sets queried from ${aquariusUri}`
       }
     }
 

@@ -12,8 +12,9 @@
     "noEmit": true,
     "sourceMap": true,
     "noImplicitAny": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "allowJs": true
   },
   "exclude": ["node_modules", "public", ".cache", "*.js"],
-  "include": ["./src/**/*", "./api/**/*", "./tests/**/*"]
+  "include": ["./src/**/*", "./api/**/*", "./tests/**/*", "./app.config.js"]
 }
