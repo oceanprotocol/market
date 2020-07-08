@@ -1,21 +1,21 @@
 import React, { useState, useEffect, ReactElement } from 'react'
 import { Ocean } from '@oceanprotocol/squid'
 import { fromWei } from 'web3-utils'
-import compareAsBN, { Comparisson } from '../../utils/compareAsBN'
-import Loader from '../atoms/Loader'
-import Web3Feedback from '../molecules/Wallet/Feedback'
-import Dropzone from '../atoms/Dropzone'
-import Price from '../atoms/Price'
+import compareAsBN, { Comparisson } from '../../../utils/compareAsBN'
+import Loader from '../../atoms/Loader'
+import Web3Feedback from '../../molecules/Wallet/Feedback'
+import Dropzone from '../../atoms/Dropzone'
+import Price from '../../atoms/Price'
 import {
   computeOptions,
   useCompute,
   readFileContent
 } from '@oceanprotocol/react'
 import styles from './Compute.module.css'
-import Button from '../atoms/Button'
-import Input from '../atoms/Input'
-import { MetaDataMarket } from '../../@types/MetaData'
-import { Alert } from '../atoms/Alert'
+import Button from '../../atoms/Button'
+import Input from '../../atoms/Input'
+import { MetaDataMarket } from '../../../@types/MetaData'
+import { Alert } from '../../atoms/Alert'
 
 export default function Compute({
   did,
@@ -126,7 +126,7 @@ export default function Compute({
           {/* <TermsCheckbox onChange={onCheck} /> */}
         </div>
 
-        <div className={styles.feedback}>
+        <footer className={styles.feedback}>
           {isLoading && <Loader message={computeStepText} />}
           {computeError !== undefined && (
             <Alert text={computeError} state="error" />
@@ -138,12 +138,9 @@ export default function Compute({
               state="success"
             />
           )}
-        </div>
+          <Web3Feedback isBalanceInsufficient={!isBalanceSufficient} />
+        </footer>
       </div>
-
-      <footer className={styles.feedback}>
-        <Web3Feedback isBalanceInsufficient={!isBalanceSufficient} />
-      </footer>
     </div>
   )
 }

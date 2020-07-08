@@ -6,10 +6,9 @@ import { Link } from 'gatsby'
 import Markdown from '../../atoms/Markdown'
 import Tags from '../../atoms/Tags'
 import MetaFull from './MetaFull'
-import Compute from '../Compute'
-import Consume from '../Consume'
 import MetaSecondary from './MetaSecondary'
 import styles from './index.module.css'
+import AssetActions from '../AssetActions'
 
 export interface AssetContentProps {
   metadata: MetaDataMarket
@@ -21,15 +20,8 @@ export default function AssetContent({
   metadata,
   did
 }: AssetContentProps): ReactElement {
-  const { ocean, balanceInOcean } = useOcean()
   const { datePublished } = metadata.main
-  const {
-    description,
-    categories,
-    tags,
-    access
-  } = metadata.additionalInformation
-  const isCompute = access && access === 'Compute'
+  const { description, categories, tags } = metadata.additionalInformation
 
   // const { curation } = metadata
 
@@ -81,16 +73,7 @@ export default function AssetContent({
       </div>
       <div>
         <div className={styles.sticky}>
-          {isCompute ? (
-            <Compute
-              did={did}
-              metadata={metadata}
-              ocean={ocean}
-              balance={balanceInOcean}
-            />
-          ) : (
-            <Consume did={did} metadata={metadata} />
-          )}
+          <AssetActions metadata={metadata} did={did} />
 
           {/* <RatingAction did={did} onVote={onVoteUpdate} /> */}
         </div>

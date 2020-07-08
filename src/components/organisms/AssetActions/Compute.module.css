@@ -1,5 +1,4 @@
 .compute {
-  composes: box from '../atoms/Box.module.css';
   display: flex;
   flex-wrap: wrap;
 }
@@ -10,7 +9,6 @@
 
 .feedback {
   width: 100%;
-  margin-top: var(--spacer);
 }
 
 .compute button {

@@ -1,14 +1,14 @@
 import React, { ReactElement } from 'react'
 import Web3 from 'web3'
-import compareAsBN, { Comparisson } from '../../utils/compareAsBN'
-import Button from '../atoms/Button'
-import File from '../atoms/File'
-import Price from '../atoms/Price'
-import Web3Feedback from '../molecules/Wallet/Feedback'
+import compareAsBN, { Comparisson } from '../../../utils/compareAsBN'
+import Button from '../../atoms/Button'
+import File from '../../atoms/File'
+import Price from '../../atoms/Price'
+import Web3Feedback from '../../molecules/Wallet/Feedback'
 import styles from './Consume.module.css'
-import Loader from '../atoms/Loader'
+import Loader from '../../atoms/Loader'
 import { useOcean, useConsume } from '@oceanprotocol/react'
-import { MetaDataMarket } from '../../@types/MetaData'
+import { MetaDataMarket } from '../../../@types/MetaData'
 
 export default function Consume({
   did,

@@ -1,9 +1,6 @@
 .consume {
-  composes: box from '../atoms/Box.module.css';
   display: flex;
   flex-wrap: wrap;
-  max-width: 35rem;
-  margin: auto;
 }
 
 .info {
@@ -24,11 +21,9 @@
 }
 
 .price {
-  margin-top: calc(var(--spacer) / 4);
   margin-bottom: calc(var(--spacer) / 2);
 }
 
 .feedback {
   width: 100%;
-  margin-top: calc(var(--spacer) * 1.5);
 }

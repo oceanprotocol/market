@@ -1,9 +1,9 @@
 import React from 'react'
 import Consume from './Consume'
-import ddo from '../../../tests/unit/__fixtures__/ddo'
-import web3Mock from '../../../tests/unit/__mocks__/web3'
+import ddo from '../../../../tests/unit/__fixtures__/ddo'
+import web3Mock from '../../../../tests/unit/__mocks__/web3'
 import { DDO } from '@oceanprotocol/squid'
-import { context } from '../../../tests/unit/__mocks__/web3provider'
+import { context } from '../../../../tests/unit/__mocks__/web3provider'
 
 export default {
   title: 'Organisms/Consume',
