@@ -6,29 +6,14 @@ cache:
   npm: true
 
 before_script:
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
-  - './cc-test-reporter before-build'
-  # startup Barge with local Spree network
-  # - git clone https://github.com/oceanprotocol/barge
-  # - cd barge
-  # - export AQUARIUS_VERSION=v1.0.7
-  # - export BRIZO_VERSION=v0.9.3
-  # - export KEEPER_VERSION=v0.13.2
-  # - export EVENTS_HANDLER_VERSION=v0.4.5
-  # - export KEEPER_OWNER_ROLE_ADDRESS="0xe2DD09d719Da89e5a3D0F2549c7E24566e947260"
-  # - rm -rf "${HOME}/.ocean/keeper-contracts/artifacts"
-  # - bash -x start_ocean.sh --no-commons --no-dashboard 2>&1 > start_ocean.log &
-  # - cd ..
-  # - cp .env.example .env
-  # overwrite AQUARIUS_URI from above .env files, which default to Spree
-  - export AQUARIUS_URI='https://aquarius.pacific.market.dev-ocean.com'
+  # - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  # - chmod +x ./cc-test-reporter
+  # - './cc-test-reporter before-build'
 
 script:
   # will run `npm ci` automatically here
-  # - ./scripts/keeper.sh
-  - npm test
-  - './cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT'
+  - npm run lint
+  # - './cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT'
   - npm run build
 
 notifications:
