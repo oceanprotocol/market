@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './History.module.css'
-import Web3Feedback from '../molecules/Web3Feedback'
+import Web3Feedback from '../molecules/Wallet/Feedback'
 import ConsumedList from '../organisms/ConsumedList'
 import PublishedList from '../organisms/PublishedList'
 import JobsList from '../organisms/JobsList'

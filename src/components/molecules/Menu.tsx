@@ -3,6 +3,7 @@ import { Link } from 'gatsby'
 import { useLocation } from '@reach/router'
 import styles from './Menu.module.css'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
+import Wallet from './Wallet'
 
 declare type MenuItem = {
   name: string
@@ -29,6 +30,7 @@ export default function Menu() {
 
   return (
     <nav className={styles.menu}>
+      <Wallet />
       {menu.map((item: MenuItem) => (
         <MenuLink key={item.name} item={item} />
       ))}

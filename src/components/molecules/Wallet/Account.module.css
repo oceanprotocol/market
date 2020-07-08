@@ -1,8 +1,11 @@
 .wallet {
-  text-align: right;
+  border: 1px solid var(--brand-grey-lighter);
+  border-radius: var(--border-radius);
+  padding: calc(var(--spacer) / 8) calc(var(--spacer) / 4);
 }
 
 .address {
+  font-size: var(--font-size-small);
   font-family: var(--font-family-monospace);
   white-space: nowrap;
   margin-bottom: calc(var(--spacer) / 8);
@@ -16,17 +19,4 @@
   display: inline-block;
   vertical-align: middle;
   margin-right: calc(var(--spacer) / 6);
-}
-
-.balance {
-  color: var(--color-secondary);
-  white-space: nowrap;
-  font-size: var(--font-size-mini);
-}
-
-.balance span {
-  font-size: var(--font-size-small);
-  font-weight: var(--font-weight-bold);
-  display: inline-block;
-  margin-left: 0.1rem;
 }

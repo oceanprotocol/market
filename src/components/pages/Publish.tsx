@@ -1,7 +1,7 @@
 import React from 'react'
 import PublishForm from '../molecules/PublishForm/PublishForm'
 import styles from './Publish.module.css'
-import Web3Feedback from '../molecules/Web3Feedback'
+import Web3Feedback from '../molecules/Wallet/Feedback'
 
 const PublishPage: React.FC = () => {
   return (

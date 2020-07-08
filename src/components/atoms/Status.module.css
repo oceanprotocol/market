@@ -1,7 +1,7 @@
 /* default: success, green circle */
 .status {
-  width: var(--font-size-mini);
-  height: var(--font-size-mini);
+  width: var(--font-size-small);
+  height: var(--font-size-small);
   border-radius: 50%;
   display: inline-block;
   background: var(--brand-alert-green);
@@ -14,9 +14,9 @@
   background: none;
   width: 0;
   height: 0;
-  border-left: calc(var(--font-size-mini) / 1.7) solid transparent;
-  border-right: calc(var(--font-size-mini) / 1.7) solid transparent;
-  border-bottom: var(--font-size-mini) solid var(--brand-alert-orange);
+  border-left: calc(var(--font-size-small) / 1.7) solid transparent;
+  border-right: calc(var(--font-size-small) / 1.7) solid transparent;
+  border-bottom: var(--font-size-small) solid var(--brand-alert-yellow);
 }
 
 /* red square */

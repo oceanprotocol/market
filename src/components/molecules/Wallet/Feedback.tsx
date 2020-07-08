@@ -1,13 +1,7 @@
 import React, { ReactElement } from 'react'
 import Status from '../../atoms/Status'
-import Wallet from './Wallet'
-import styles from './index.module.css'
-import {
-  useWeb3,
-  useOcean,
-  InjectedProviderStatus,
-  OceanConnectionStatus
-} from '@oceanprotocol/react'
+import styles from './Feedback.module.css'
+import { useWeb3, useOcean } from '@oceanprotocol/react'
 
 export declare type Web3Error = {
   status: 'error' | 'warning' | 'success'
@@ -21,7 +15,7 @@ export default function Web3Feedback({
   isBalanceInsufficient?: boolean
 }): ReactElement {
   const { ethProviderStatus } = useWeb3()
-  const { status, balanceInOcean } = useOcean()
+  const { status } = useOcean()
   const isEthProviderAbsent = ethProviderStatus === -1
   const isEthProviderDisconnected = ethProviderStatus === 0
   const isOceanDisconnected = status === 0
@@ -60,18 +54,11 @@ export default function Web3Feedback({
     ? 'You do not have enough OCEAN in your wallet to purchase this asset.'
     : 'Something went wrong.'
 
-  return (
+  return !hasSuccess ? (
     <section className={styles.feedback}>
-      <div className={styles.statuscontainer}>
-        <Status state={state} aria-hidden />
-        <h3 className={styles.title}>{title}</h3>
-        {!hasSuccess && <p className={styles.error}>{message}</p>}
-      </div>
-      {!isEthProviderAbsent && (
-        <div className={styles.walletcontainer}>
-          <Wallet balanceOcean={balanceInOcean} />
-        </div>
-      )}
+      <Status state={state} aria-hidden />
+      <h3 className={styles.title}>{title}</h3>
+      <p className={styles.error}>{message}</p>
     </section>
-  )
+  ) : null
 }

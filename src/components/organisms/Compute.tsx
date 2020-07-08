@@ -3,7 +3,7 @@ import { Ocean } from '@oceanprotocol/squid'
 import { fromWei } from 'web3-utils'
 import compareAsBN, { Comparisson } from '../../utils/compareAsBN'
 import Loader from '../atoms/Loader'
-import Web3Feedback from '../molecules/Web3Feedback'
+import Web3Feedback from '../molecules/Wallet/Feedback'
 import Dropzone from '../atoms/Dropzone'
 import Price from '../atoms/Price'
 import {

@@ -1,5 +1,5 @@
 import React from 'react'
-import Web3Feedback from '.'
+import Web3Feedback from './Feedback'
 import web3Mock from '../../../../tests/unit/__mocks__/web3'
 import web3ProviderMock, {
   context
