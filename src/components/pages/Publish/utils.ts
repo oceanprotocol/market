@@ -1,11 +1,10 @@
-import { PublishFormData } from '../../../models/PublishForm'
-import { MetaDataMarket } from '../../../@types/MetaData'
+import { MetaDataMarket, MetaDataPublishForm } from '../../../@types/MetaData'
 import { toStringNoMS } from '../../../utils'
 import AssetModel from '../../../models/Asset'
 import web3Utils from 'web3-utils'
 
 export function transformPublishFormToMetadata(
-  data: PublishFormData
+  data: MetaDataPublishForm
 ): MetaDataMarket {
   const currentTime = toStringNoMS(new Date())
 
@@ -17,9 +16,9 @@ export function transformPublishFormToMetadata(
     description,
     copyrightHolder,
     tags,
+    links,
     termsAndConditions,
     files,
-    dateRange,
     access
   } = data
 
@@ -27,34 +26,27 @@ export function transformPublishFormToMetadata(
     main: {
       ...AssetModel.main,
       name,
-      price: web3Utils.toWei(price.toString()),
+      price: `${web3Utils.toWei(price.toString())}`,
       author,
       dateCreated: currentTime,
       datePublished: currentTime,
-      files,
+      // files: {
+      //   url: files
+      // },
       license
     },
-    // ------- additional information -------
     additionalInformation: {
       ...AssetModel.additionalInformation,
       description,
       copyrightHolder,
       tags: tags?.split(','),
+      // links: {
+      //   url: links
+      // },
       termsAndConditions,
       access: access || 'Download'
     },
-    // ------- curation -------
     curation: AssetModel.curation
-  }
-
-  if (dateRange) {
-    const newDateRange = JSON.parse(dateRange)
-    if (newDateRange.length > 1) {
-      metadata.additionalInformation.dateRange = JSON.parse(dateRange)
-    } else if (newDateRange.length === 1) {
-      // eslint-disable-next-line prefer-destructuring
-      metadata.main.dateCreated = newDateRange[0]
-    }
   }
 
   return metadata

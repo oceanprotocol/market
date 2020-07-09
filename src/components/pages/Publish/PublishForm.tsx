@@ -1,10 +1,5 @@
 import React, { ReactElement } from 'react'
-import {
-  initialValues,
-  validationSchema,
-  PublishFormData
-} from '../../../models/PublishForm'
-import { MetaData } from '@oceanprotocol/squid'
+import * as Yup from 'yup'
 import { toStringNoMS } from '../../../utils'
 import { toast } from 'react-toastify'
 import styles from './PublishForm.module.css'
@@ -18,6 +13,39 @@ import Input from '../../atoms/Input'
 import Button from '../../atoms/Button'
 import { transformPublishFormToMetadata } from './utils'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
+import { MetaDataPublishForm, AccessType } from '../../../@types/MetaData'
+import AssetModel from '../../../models/Asset'
+
+const validationSchema = Yup.object().shape<MetaDataPublishForm>({
+  // ---- required fields ----
+  name: Yup.string().required('Required'),
+  author: Yup.string().required('Required'),
+  price: Yup.string().required('Required'),
+  files: Yup.string().required('Required'),
+  description: Yup.string().required('Required'),
+  license: Yup.string().required('Required'),
+  access: Yup.string().required('Required'),
+  termsAndConditions: Yup.boolean().required('Required'),
+
+  // ---- optional fields ----
+  copyrightHolder: Yup.string(),
+  tags: Yup.string(),
+  links: Yup.string()
+})
+
+const initialValues: MetaDataPublishForm = {
+  name: undefined,
+  author: undefined,
+  price: undefined,
+  files: undefined,
+  description: undefined,
+  license: undefined,
+  access: undefined,
+  termsAndConditions: undefined,
+  copyrightHolder: undefined,
+  tags: undefined,
+  links: undefined
+}
 
 export default function PublishForm({
   content
@@ -26,46 +54,49 @@ export default function PublishForm({
 }): ReactElement {
   const { ocean, account } = useOcean()
 
-  async function handleSubmit(values: PublishFormData) {
+  async function handleSubmit(values: MetaDataPublishForm) {
     const submittingToast = toast.info('submitting asset', {
       className: styles.info
     })
 
+    console.log(values)
     const metadata = transformPublishFormToMetadata(values)
+    console.log(metadata)
 
     // if services array stays empty, the default access service
     // will be created by squid-js
-    let services: Service[] = []
+    // let services: Service[] = []
 
-    if (metadata.additionalInformation.access === 'Compute') {
-      const computeService: ServiceCompute = await ocean.compute.createComputeServiceAttributes(
-        account,
-        metadata.main.price,
-        // Note: a hack without consequences.
-        // Will make metadata.main.datePublished (automatically created by Aquarius)
-        // go out of sync with this service.main.datePublished.
-        toStringNoMS(new Date(Date.now()))
-      )
-      services = [computeService]
-    }
-    try {
-      const asset = await ocean.assets.create(
-        (metadata as unknown) as MetaData,
-        account,
-        services
-      )
+    // if (metadata.additionalInformation.access === 'Compute') {
+    //   const computeService: ServiceCompute = await ocean.compute.createComputeServiceAttributes(
+    //     account,
+    //     metadata.main.price,
+    //     // Note: a hack without consequences.
+    //     // Will make metadata.main.datePublished (automatically created by Aquarius)
+    //     // go out of sync with this service.main.datePublished.
+    //     toStringNoMS(new Date(Date.now()))
+    //   )
+    //   services = [computeService]
+    // }
 
-      // TODO: Reset the form to initial values
+    // try {
+    //   const asset = await ocean.assets.create(
+    //     (metadata as unknown) as MetaData,
+    //     account,
+    //     services
+    //   )
 
-      // User feedback and redirect
-      toast.success('asset created successfully', {
-        className: styles.success
-      })
-      toast.dismiss(submittingToast)
-      // navigate(`/asset/${asset.id}`)
-    } catch (e) {
-      console.error(e.message)
-    }
+    //   // TODO: Reset the form to initial values
+
+    //   // User feedback and redirect
+    //   toast.success('asset created successfully', {
+    //     className: styles.success
+    //   })
+    //   toast.dismiss(submittingToast)
+    //   // navigate(`/asset/${asset.id}`)
+    // } catch (e) {
+    //   console.error(e.message)
+    // }
   }
 
   return (
@@ -94,7 +125,7 @@ export default function PublishForm({
               !ocean ||
               !account ||
               isSubmitting ||
-              !isValid ||
+              //! isValid ||
               status === 'empty'
             }
           >

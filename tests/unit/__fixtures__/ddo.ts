@@ -72,7 +72,6 @@ const ddo: Partial<DDO> = {
             }
           ],
           termsAndConditions: true,
-          dateRange: ['2018-09-20T08:38:58', '2019-12-11T05:19:42'],
           access: 'Download'
         },
         curation: {

@@ -1,4 +1,4 @@
-import { MetaData, AdditionalInformation } from '@oceanprotocol/squid'
+import { File, MetaData, AdditionalInformation } from '@oceanprotocol/squid'
 import { ServiceMetadata } from '@oceanprotocol/squid/dist/node/ddo/Service'
 
 export interface Sample {
@@ -13,11 +13,27 @@ export interface AdditionalInformationMarket extends AdditionalInformation {
   links?: Sample[] // redefine existing key, cause not specific enough in Squid
   termsAndConditions: boolean
   dateRange?: [string, string]
-  access: AccessType
+  access: AccessType | string
 }
 
 export interface MetaDataMarket extends MetaData {
   additionalInformation: AdditionalInformationMarket
+}
+
+export interface MetaDataPublishForm {
+  // ---- required fields ----
+  name: string
+  description: string
+  files: string
+  termsAndConditions: boolean
+  author: string
+  license: string
+  price: string
+  access: string
+  // ---- optional fields ----
+  copyrightHolder?: string
+  tags?: string
+  links?: string
 }
 
 export interface ServiceMetaDataMarket extends ServiceMetadata {

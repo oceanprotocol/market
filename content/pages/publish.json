@@ -51,15 +51,13 @@
       {
         "name": "copyrightHolder",
         "label": "Copyright Holder",
-        "placeholder": "e.g. Marine Institute of Jellyfish",
-        "required": true
+        "placeholder": "e.g. Marine Institute of Jellyfish"
       },
       {
         "name": "tags",
         "label": "Tags",
         "placeholder": "e.g. logistics, ai",
-        "help": "Separate tags with comma.",
-        "required": true
+        "help": "Separate tags with comma."
       },
       {
         "name": "license",

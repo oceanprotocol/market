@@ -15,12 +15,11 @@ const AssetModel: MetaDataMarket = {
   additionalInformation: {
     description: '',
     copyrightHolder: '',
-    tags: undefined,
-    // links: [],
+    tags: [],
+    links: [],
 
     // custom items
     termsAndConditions: false,
-    dateRange: undefined,
     access: 'Download'
   },
   curation: {

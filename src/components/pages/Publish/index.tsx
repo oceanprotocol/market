@@ -2,11 +2,12 @@ import React, { ReactElement } from 'react'
 import PublishForm from './PublishForm'
 import styles from './index.module.css'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
+import { FormContent } from '../../../@types/Form'
 
 export default function PublishPage({
   content
 }: {
-  content: any
+  content: { form: FormContent }
 }): ReactElement {
   return (
     <article className={styles.grid}>

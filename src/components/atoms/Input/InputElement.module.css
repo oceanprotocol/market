@@ -69,34 +69,10 @@
 
 .radioGroup {
   margin-top: calc(var(--spacer) / 2);
-  margin-bottom: -2%;
-}
-
-@media screen and (min-width: 40rem) {
-  .radioGroup {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-  }
 }
 
 .radioWrap {
   position: relative;
-  padding: calc(var(--spacer) / 2);
-  text-align: center;
-  display: flex;
-  align-items: center;
-  margin-bottom: 2%;
-}
-
-@media screen and (min-width: 40rem) {
-  .radioWrap {
-    flex: 0 0 49%;
-  }
-}
-
-.radio:checked + label {
-  border-color: var(--brand-pink);
 }
 
 .radioLabel {
@@ -104,19 +80,8 @@
   padding: 0;
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-small);
-  line-height: 1.2;
-  border: 1px solid var(--brand-grey-lighter);
-  border-radius: 0.2rem;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
   color: var(--brand-grey);
-  text-align: left;
-  padding-left: 2.5rem;
-  display: flex;
-  align-items: center;
+  padding-left: 0.5rem;
 }
 
 /* Size modifiers */

@@ -4,10 +4,12 @@ const testFormData: PublishFormData = {
   author: '',
   files: [],
   license: '',
-  price: 0,
-  title: '',
+  price: '0',
+  name: '',
   description: 'description',
-  termsAndConditions: true
+  termsAndConditions: true,
+  access: 'Download',
+  links: []
 }
 
 export default testFormData
