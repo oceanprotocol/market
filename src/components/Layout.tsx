@@ -5,6 +5,7 @@ import Footer from './organisms/Footer'
 import PageHeader from './molecules/PageHeader'
 import styles from './Layout.module.css'
 import Seo from './atoms/Seo'
+import Container from './atoms/Container'
 
 export interface LayoutProps {
   children: ReactNode
@@ -33,10 +34,12 @@ export default function Layout({
 
       <Header />
       <main className={styles.main}>
-        {title && !noPageHeader && (
-          <PageHeader title={title} description={description} />
-        )}
-        {children}
+        <Container>
+          {title && !noPageHeader && (
+            <PageHeader title={title} description={description} />
+          )}
+          {children}
+        </Container>
       </main>
       <Footer />
     </div>

@@ -6,6 +6,12 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
 html {
   font-size: var(--font-size-root);
   scroll-behavior: smooth;

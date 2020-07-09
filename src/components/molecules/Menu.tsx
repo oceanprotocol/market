@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { Link } from 'gatsby'
 import { useLocation } from '@reach/router'
 import styles from './Menu.module.css'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import Wallet from './Wallet'
+import { ReactComponent as Logo } from '@oceanprotocol/art/logo/logo.svg'
+import Container from '../atoms/Container'
 
 declare type MenuItem = {
   name: string
@@ -25,15 +27,28 @@ function MenuLink({ item }: { item: MenuItem }) {
   )
 }
 
-export default function Menu() {
-  const { menu } = useSiteMetadata()
+export default function Menu(): ReactElement {
+  const { menu, siteTitle } = useSiteMetadata()
 
   return (
     <nav className={styles.menu}>
-      <Wallet />
-      {menu.map((item: MenuItem) => (
-        <MenuLink key={item.name} item={item} />
-      ))}
+      <Container>
+        <Link to="/" className={styles.logoUnit}>
+          <Logo />
+          <h1 className={styles.title}>{siteTitle}</h1>
+        </Link>
+
+        <ul className={styles.navigation}>
+          <li>
+            <Wallet />
+          </li>
+          {menu.map((item: MenuItem) => (
+            <li key={item.name}>
+              <MenuLink item={item} />
+            </li>
+          ))}
+        </ul>
+      </Container>
     </nav>
   )
 }

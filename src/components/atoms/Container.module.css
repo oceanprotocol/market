@@ -1,0 +1,12 @@
+.container {
+  max-width: var(--break-point--large);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: calc(var(--spacer) / 1.2);
+  padding-right: calc(var(--spacer) / 1.2);
+  width: 100%;
+}
+
+.container.narrow {
+  max-width: 42rem;
+}
