@@ -8,7 +8,7 @@ import {
   PublishFormUiSchema
 } from '../../../src/models/PublishForm'
 import testFormData from '../__fixtures__/testFormData'
-import { transformPublishFormToMetadata } from '../../../src/components/molecules/PublishForm/PublishForm'
+import { transformPublishFormToMetadata } from '../../../src/components/pages/Publish/PublishForm'
 import { MetaDataMarket } from '../../../src/@types/MetaData'
 
 describe('PublishForm', () => {

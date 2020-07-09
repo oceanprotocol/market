@@ -15,7 +15,7 @@ import styles from './Compute.module.css'
 import Button from '../../atoms/Button'
 import Input from '../../atoms/Input'
 import { MetaDataMarket } from '../../../@types/MetaData'
-import { Alert } from '../../atoms/Alert'
+import Alert from '../../atoms/Alert'
 
 export default function Compute({
   did,

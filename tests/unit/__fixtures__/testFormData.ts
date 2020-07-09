@@ -1,12 +1,12 @@
-import { PublishFormDataInterface } from '../../../src/models/PublishForm'
+import { PublishFormData } from '../../../src/models/PublishForm'
 
-const testFormData: PublishFormDataInterface = {
+const testFormData: PublishFormData = {
   author: '',
   files: [],
   license: '',
   price: 0,
   title: '',
-  summary: 'summary',
+  description: 'description',
   termsAndConditions: true
 }
 

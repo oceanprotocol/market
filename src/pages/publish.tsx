@@ -9,7 +9,7 @@ export default function PageGatsbyPublish(props: PageProps): ReactElement {
 
   return (
     <Layout title={title} description={description} uri={props.uri}>
-      <PagePublish />
+      <PagePublish content={content} />
     </Layout>
   )
 }
@@ -22,6 +22,20 @@ export const contentQuery = graphql`
           childPagesJson {
             title
             description
+            form {
+              title
+              data {
+                name
+                placeholder
+                label
+                help
+                type
+                required
+                options
+                min
+              }
+              success
+            }
           }
         }
       }

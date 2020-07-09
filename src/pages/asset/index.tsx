@@ -6,7 +6,7 @@ import { PageProps } from 'gatsby'
 import { MetaDataMarket, ServiceMetaDataMarket } from '../../@types/MetaData'
 import { Aquarius, Logger } from '@oceanprotocol/squid'
 import { oceanConfig } from '../../../app.config'
-import { Alert } from '../../components/atoms/Alert'
+import Alert from '../../components/atoms/Alert'
 
 export default function AssetRoute(props: PageProps): ReactElement {
   const [metadata, setMetadata] = useState<MetaDataMarket>()

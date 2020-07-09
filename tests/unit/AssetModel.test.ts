@@ -8,7 +8,7 @@ describe('AssetModel', () => {
         name: 'Hello'
       }),
       additionalInformation: Object.assign(AssetModel.additionalInformation, {
-        supportName: 'Jelly McJellyfish'
+        description: 'Jelly McJellyfish'
       }),
       curation: Object.assign(AssetModel.curation, {
         numVotes: 100,
@@ -18,6 +18,6 @@ describe('AssetModel', () => {
 
     expect(newMeta).toMatchObject(AssetModel)
     expect(newMeta.main.name).toBe('Hello')
-    expect(newMeta.additionalInformation.supportName).toBe('Jelly McJellyfish')
+    expect(newMeta.additionalInformation.description).toBe('Jelly McJellyfish')
   })
 })

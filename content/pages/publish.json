@@ -1,4 +1,96 @@
 {
   "title": "Publish Data",
-  "description": "Highlight the important features of your data set to make it more discoverable and catch the interest of data consumers."
+  "description": "Highlight the important features of your data set to make it more discoverable and catch the interest of data consumers.",
+  "form": {
+    "title": "Publish",
+    "data": [
+      {
+        "name": "name",
+        "label": "Title",
+        "placeholder": "e.g. Shapes of Desert Plants",
+        "help": "Enter a concise title.",
+        "required": true
+      },
+      {
+        "name": "files",
+        "label": "Files",
+        "placeholder": "e.g. https://file.com/file.json",
+        "help": "Please provide a URL to your data set file.",
+        "type": "url",
+        "required": true
+      },
+      {
+        "name": "description",
+        "label": "Description",
+        "help": "Add a thorough description with as much detail as possible.",
+        "type": "textarea",
+        "required": true
+      },
+      {
+        "name": "price",
+        "label": "Price",
+        "help": "Set your price in Ocean Tokens.",
+        "type": "price",
+        "min": 1,
+        "required": true
+      },
+      {
+        "name": "access",
+        "label": "Access Type",
+        "type": "select",
+        "options": ["Download", "Compute"],
+        "required": true
+      },
+      {
+        "name": "author",
+        "label": "Author",
+        "placeholder": "e.g. Jelly McJellyfish",
+        "help": "Give proper attribution for your data set.",
+        "required": true
+      },
+      {
+        "name": "copyrightHolder",
+        "label": "Copyright Holder",
+        "placeholder": "e.g. Marine Institute of Jellyfish",
+        "required": true
+      },
+      {
+        "name": "tags",
+        "label": "Tags",
+        "placeholder": "e.g. logistics, ai",
+        "help": "Separate tags with comma.",
+        "required": true
+      },
+      {
+        "name": "license",
+        "label": "License",
+        "type": "select",
+        "options": [
+          "Public Domain",
+          "PDDL: Public Domain Dedication and License",
+          "ODC-By: Attribution License",
+          "ODC-ODbL: Open Database License",
+          "CDLA-Sharing: Community Data License Agreement",
+          "CDLA-Permissive: Community Data License Agreement",
+          "CC0: Public Domain Dedication",
+          "CC BY: Attribution 4.0 International",
+          "CC BY-SA: Attribution-ShareAlike 4.0 International",
+          "CC BY-ND: Attribution-NoDerivatives 4.0 International",
+          "CC BY-NC: Attribution-NonCommercial 4.0 International",
+          "CC BY-NC-SA: Attribution-NonCommercial-ShareAlike 4.0 International",
+          "CC BY-NC-ND: Attribution-NonCommercial-NoDerivatives 4.0 International",
+          "No License Specified"
+        ],
+        "required": true
+      },
+      {
+        "name": "termsAndConditions",
+        "label": "Terms & Conditions",
+        "type": "checkbox",
+        "options": ["I agree to these Terms and Conditions"],
+        "required": true
+      }
+    ],
+    "success": "Asset Created!"
+  }
 }
