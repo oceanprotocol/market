@@ -1,5 +1,4 @@
 import React from 'react'
-import Button from '../../atoms/Button'
 import styles from './Account.module.css'
 import { useWeb3, useOcean } from '@oceanprotocol/react'
 import { toDataUrl } from 'ethereum-blockies'
@@ -12,25 +11,33 @@ function accountTruncate(account: string) {
   return truncated
 }
 
+const Blockies = ({ account }: { account: string | undefined }) => {
+  if (!account) return null
+  const blockies = toDataUrl(account)
+
+  return (
+    <img
+      className={styles.blockies}
+      src={blockies}
+      alt="Blockies"
+      aria-hidden="true"
+    />
+  )
+}
+
 // Forward ref for Tippy.js
 // eslint-disable-next-line
 const Account = React.forwardRef((props, ref: any) => {
   const { account, web3Connect, ethProviderStatus } = useWeb3()
   const { status } = useOcean()
-  const blockies = account && toDataUrl(account)
   const hasSuccess = ethProviderStatus === 1 && status === 1
 
   return account ? (
     <button className={styles.button} aria-label="Account" ref={ref}>
-      {blockies && (
-        <img
-          className={styles.blockies}
-          src={blockies}
-          alt="Blockies"
-          aria-hidden="true"
-        />
-      )}
-      <span className={styles.address}>{accountTruncate(account)}</span>
+      <Blockies account={account} />
+      <span className={styles.address} title={account}>
+        {accountTruncate(account)}
+      </span>
       {!hasSuccess && (
         <Status className={styles.status} state="warning" aria-hidden />
       )}
