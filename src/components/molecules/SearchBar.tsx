@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react'
+import React, { useState, ChangeEvent, FormEvent, ReactElement } from 'react'
 import { useNavigate } from '@reach/router'
 import styles from './SearchBar.module.css'
 import Loader from '../atoms/Loader'
@@ -15,7 +15,7 @@ export default function SearchBar({
   initialValue?: string
   filters?: boolean
   large?: true
-}) {
+}): ReactElement {
   const navigate = useNavigate()
   const [value, setValue] = useState(initialValue || '')
   const [searchStarted, setSearchStarted] = useState(false)

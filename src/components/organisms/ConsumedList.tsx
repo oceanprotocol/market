@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, ReactElement } from 'react'
 import Loader from '../atoms/Loader'
 import {
   useOcean,
@@ -39,7 +39,7 @@ const consumedColumns = [
   }
 ]
 
-export default function ConsumedList() {
+export default function ConsumedList(): ReactElement {
   const { ocean, status, accountId, account } = useOcean()
   const [consumedList, setConsumedList] = useState<any>([])
   const { getConsumedList } = useSearch()

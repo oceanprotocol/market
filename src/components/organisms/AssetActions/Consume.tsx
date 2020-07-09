@@ -33,7 +33,7 @@ export default function Consume({
     }
 
     return isLoading ? (
-      <Loader message={consumeStepText} isHorizontal />
+      <Loader message={consumeStepText} />
     ) : (
       <Button
         style="primary"

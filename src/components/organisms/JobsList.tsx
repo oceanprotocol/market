@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, ReactElement } from 'react'
 import Loader from '../atoms/Loader'
 import {
   useOcean,
@@ -68,7 +68,7 @@ const columns = [
   }
 ]
 
-export default function JobsList() {
+export default function JobsList(): ReactElement {
   const { ocean, status, accountId } = useOcean()
 
   const [jobList, setJobList] = useState<any[]>([])

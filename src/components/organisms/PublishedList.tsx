@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, ReactElement } from 'react'
 import Loader from '../atoms/Loader'
 import { MetaDataMain } from '@oceanprotocol/squid'
 import {
@@ -39,7 +39,7 @@ const publishedColumns = [
   }
 ]
 
-export default function PublishedList() {
+export default function PublishedList(): ReactElement {
   const { ocean, status, account, accountId } = useOcean()
   const { getPublishedList } = useSearch()
   const [publishedList, setPublishedList] = useState<any[]>([])
