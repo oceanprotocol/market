@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, ReactElement } from 'react'
 import Loader from '../atoms/Loader'
 import {
   useOcean,
@@ -9,13 +9,11 @@ import {
 
 import Price from '../atoms/Price'
 import { fromWei } from 'web3-utils'
-import { findServiceByType } from '../../utils'
 import Table from '../atoms/Table'
 import Button from '../atoms/Button'
 import { MetaDataMain, Logger } from '@oceanprotocol/squid'
 import DateCell from '../atoms/Table/DateCell'
 import DdoLinkCell from '../atoms/Table/DdoLinkCell'
-import { config } from '../../config/ocean'
 import shortid from 'shortid'
 import ActionsCell from '../atoms/Table/ActionsCell'
 import Tooltip from '../atoms/Tooltip'
@@ -70,7 +68,7 @@ const columns = [
   }
 ]
 
-export default function JobsList() {
+export default function JobsList(): ReactElement {
   const { ocean, status, accountId } = useOcean()
 
   const [jobList, setJobList] = useState<any[]>([])
@@ -96,8 +94,8 @@ export default function JobsList() {
     try {
       const computeItems = await getComputeItems()
       if (!computeItems) return
-      const data = computeItems.map(item => {
-        const { attributes } = findServiceByType(item.ddo, 'metadata')
+      const data = computeItems.map((item) => {
+        const { attributes } = item.ddo.findServiceByType('metadata')
         const { name, price } = attributes.main as MetaDataMain
         return {
           dateCreated: item.job.dateCreated,
@@ -136,7 +134,7 @@ export default function JobsList() {
     ) : (
       <>
         <div>
-          <Button primary onClick={getJobs}>
+          <Button style="primary" onClick={getJobs}>
             Sign to retrieve jobs
           </Button>
         </div>

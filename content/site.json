@@ -1,0 +1,20 @@
+{
+  "site": {
+    "siteTitle": "Ocean Market",
+    "siteTagline": "A marketplace to find and publish open data sets in the Ocean Network.",
+    "siteUrl": "https://market.oceanprotocol.now.sh",
+    "siteIcon": "node_modules/@oceanprotocol/art/logo/favicon-white.png",
+    "siteImage": "../src/images/share.png",
+    "copyright": "All Rights Reserved. Powered by [Ocean Protocol](https://oceanprotocol.com)",
+    "menu": [
+      {
+        "name": "Publish",
+        "link": "/publish"
+      },
+      {
+        "name": "History",
+        "link": "/history"
+      }
+    ]
+  }
+}

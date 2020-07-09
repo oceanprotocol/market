@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 import isUrl from 'is-url-superb'
 import Loader from '../../../atoms/Loader'
 import Button from '../../../atoms/Button'
@@ -11,12 +11,12 @@ const FileInput = ({
   children,
   i
 }: {
-  children: any
+  children: ReactNode
   i: number
   formData: string[]
   handleButtonClick(e: React.SyntheticEvent, data: string): void
   isLoading: boolean
-}) => (
+}): ReactElement => (
   <>
     {children}
     {formData[i] && (

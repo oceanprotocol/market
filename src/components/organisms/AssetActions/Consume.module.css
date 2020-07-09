@@ -1,0 +1,29 @@
+.consume {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.info {
+  display: flex;
+  width: 100%;
+}
+
+.filewrapper {
+  flex-shrink: 0;
+}
+
+.consume button {
+  margin-left: calc(var(--spacer) / 4);
+}
+
+.consume button:first-of-type {
+  margin-left: 0;
+}
+
+.price {
+  margin-bottom: calc(var(--spacer) / 2);
+}
+
+.feedback {
+  width: 100%;
+}

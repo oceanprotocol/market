@@ -2,7 +2,15 @@
   margin-bottom: var(--spacer);
 }
 
-.inputGroup .input {
+.inputGroup > div {
+  margin: 0;
+}
+
+.inputGroup label {
+  display: none;
+}
+
+.inputGroup input {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
@@ -12,44 +20,23 @@
   border-top-right-radius: 0;
   margin-top: -1px;
   width: 100%;
-  border-width: 1px;
-  text-transform: uppercase;
-  color: var(--brand-grey-lighter);
-  background: var(--brand-gradient);
-  box-shadow: none;
 }
 
 .inputGroup button:hover,
 .inputGroup button:focus,
-.inputGroup .input:focus + button:hover,
-.inputGroup .input:focus + button:focus {
+.inputGroup input:focus + button:hover,
+.inputGroup input:focus + button:focus {
   background: var(--brand-gradient);
   transform: none;
   box-shadow: none;
 }
-
-.inputGroup .input:focus + button {
-  color: var(--brand-white);
-}
-
-/* .inputGroup button:hover,
-.inputGroup button:focus,
-.inputGroup .input:focus + button {
-  color: var(--brand-white);
-  background-color: var(--brand-pink);
-}
-
-.inputGroup .input:focus + button {
-  border-color: var(--brand-pink);
-  background-color: var(--brand-pink);
-} */
 
 @media screen and (min-width: 30rem) {
   .inputGroup {
     display: flex;
   }
 
-  .inputGroup .input {
+  .inputGroup input {
     border-bottom-left-radius: var(--border-radius);
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
@@ -63,15 +50,4 @@
     margin-left: -1px;
     width: auto;
   }
-}
-
-.input {
-  composes: input from './Form/FieldTemplate.module.css';
-}
-
-.large {
-  composes: large from './Form/FieldTemplate.module.css';
-}
-
-.filters {
 }

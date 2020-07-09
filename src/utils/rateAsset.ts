@@ -1,11 +1,11 @@
 import axios, { AxiosResponse } from 'axios'
 import Web3 from 'web3'
 import { DID } from '@oceanprotocol/squid'
-import { config } from '../config/ocean'
+import { oceanConfig } from '../../app.config'
 
 export declare type RatingResponse = [string, number]
 
-const url = config.ratingUri + '/api/v1/rating'
+const url = oceanConfig.ratingUri + '/api/v1/rating'
 
 export function gethash(message: string) {
   let hex = ''

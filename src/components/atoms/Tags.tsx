@@ -1,5 +1,5 @@
 import React from 'react'
-import Link from 'next/link'
+import { Link } from 'gatsby'
 import shortid from 'shortid'
 import slugify from 'slugify'
 import styles from './Tags.module.css'
@@ -20,10 +20,8 @@ const Tag = ({ tag, noLinks }: { tag: string; noLinks?: boolean }) => {
   return noLinks ? (
     <span className={styles.tag}>{cleanTag}</span>
   ) : (
-    <Link href={`/search?tags=${tag}`}>
-      <a className={styles.tag} title={cleanTag}>
-        {cleanTag}
-      </a>
+    <Link to={`/search?tags=${tag}`} className={styles.tag} title={cleanTag}>
+      {cleanTag}
     </Link>
   )
 }
@@ -44,7 +42,7 @@ const Tags: React.FC<TagsProps> = ({
   return (
     <div className={classes}>
       {tags &&
-        tags.map(tag => (
+        tags.map((tag) => (
           <Tag tag={tag} noLinks={noLinks} key={shortid.generate()} />
         ))}
       {shouldShowMore && (

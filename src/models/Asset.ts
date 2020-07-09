@@ -19,11 +19,8 @@ const AssetModel: MetaDataMarket = {
     // links: [],
 
     // custom items
-    deliveryType: 'files',
     termsAndConditions: false,
     dateRange: undefined,
-    supportName: undefined,
-    supportEmail: undefined,
     access: 'Download'
   },
   curation: {

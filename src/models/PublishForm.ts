@@ -3,7 +3,7 @@ import { JSONSchema6 } from 'json-schema'
 import TermsWidget from '../components/atoms/FormWidgets/TermsWidget'
 import DateRangeWidget from '../components/atoms/FormWidgets/DateRangeWidget'
 import { ObjectFieldTemplate } from '../components/molecules/Form/ObjectFieldTemplate'
-import { Granularity, AccessType } from '../@types/MetaData'
+import { AccessType } from '../@types/MetaData'
 import FileField from '../components/molecules/Form/FileField'
 
 export const customWidgets = {
@@ -98,15 +98,6 @@ export const PublishFormSchema: JSONSchema6 = {
       type: 'string',
       title: 'Keywords'
     },
-    supportName: {
-      type: 'string',
-      title: 'Support Name'
-    },
-    supportEmail: {
-      type: 'string',
-      format: 'email',
-      title: 'Support Email Address'
-    },
     termsAndConditions: {
       type: 'boolean',
       title: 'I agree to these Terms and Conditions'
@@ -181,8 +172,6 @@ export interface PublishFormDataInterface {
   dateRange?: string
   holder?: string
   keywords?: string
-  supportEmail?: string
-  supportName?: string
 }
 // Ref: https://github.com/oceanprotocol/OEPs/blob/master/8/v0.4/README.md#main-attributes
 export const publishFormData: PublishFormDataInterface = {
@@ -195,12 +184,5 @@ export const publishFormData: PublishFormDataInterface = {
   termsAndConditions: false,
   dateRange: undefined,
   holder: undefined,
-  keywords: undefined,
-  supportName: undefined,
-  supportEmail: undefined
+  keywords: undefined
 }
-/* 
-Missing fields:
-links: []
-
-*/

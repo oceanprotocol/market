@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, ReactElement } from 'react'
 import Loader from '../atoms/Loader'
 import {
   useOcean,
@@ -10,9 +10,7 @@ import Price from '../atoms/Price'
 import { fromWei } from 'web3-utils'
 import DateCell from '../atoms/Table/DateCell'
 import DdoLinkCell from '../atoms/Table/DdoLinkCell'
-import { DDO, MetaDataMain } from '@oceanprotocol/squid'
-import { findServiceByType } from '../../utils'
-import { config } from '../../config/ocean'
+import { MetaDataMain } from '@oceanprotocol/squid'
 
 const consumedColumns = [
   {
@@ -41,7 +39,7 @@ const consumedColumns = [
   }
 ]
 
-export default function ConsumedList() {
+export default function ConsumedList(): ReactElement {
   const { ocean, status, accountId, account } = useOcean()
   const [consumedList, setConsumedList] = useState<any>([])
   const { getConsumedList } = useSearch()
@@ -57,8 +55,8 @@ export default function ConsumedList() {
 
       if (!consumedItems) return
 
-      const data = consumedItems.map(ddo => {
-        const { attributes } = findServiceByType(ddo, 'metadata')
+      const data = consumedItems.map((ddo) => {
+        const { attributes } = ddo.findServiceByType('metadata')
         const { name, price, datePublished } = attributes.main as MetaDataMain
         return {
           published: datePublished,

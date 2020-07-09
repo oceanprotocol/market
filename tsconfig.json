@@ -1,19 +1,20 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "node",
+    "target": "esnext",
+    "module": "commonjs",
+    "lib": ["dom", "es2017"],
     "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve"
+    "moduleResolution": "Node",
+    "jsx": "react",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "noEmit": true,
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "allowJs": true
   },
-  "exclude": ["node_modules", ".next"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+  "exclude": ["node_modules", "public", ".cache", "*.js"],
+  "include": ["./src/**/*", "./api/**/*", "./tests/**/*", "./app.config.js"]
 }

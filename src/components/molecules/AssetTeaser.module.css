@@ -7,7 +7,7 @@
   composes: box from '../atoms/Box.module.css';
   font-size: var(--font-size-small);
   height: 100%;
-  color: var(--brand-grey-dark);
+  color: var(--color-secondary);
   position: relative;
   /* for sticking footer to bottom */
   display: flex;
@@ -18,59 +18,32 @@
   overflow-wrap: break-word;
   word-wrap: break-word;
   word-break: break-all;
-  margin-top: calc(var(--spacer) / 2);
 
   /* for sticking footer to bottom */
   flex: 1;
 }
 
 .title {
-  font-size: var(--font-size-h4);
-  color: var(--color-primary);
-  margin-bottom: calc(var(--spacer) / 6);
-}
-
-.tags > * {
-  font-size: var(--font-size-mini);
+  font-size: var(--font-size-large);
+  margin-bottom: calc(var(--spacer) / 4);
 }
 
 .foot {
-  color: var(--color-secondary);
   font-weight: var(--font-weight-bold);
-  margin-top: calc(var(--spacer) / 1.5);
-  border-top: 1px solid var(--brand-grey-light);
-  padding-top: calc(var(--spacer) / 3);
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .foot p {
   margin: 0;
 }
 
-.price {
-  text-align: right;
-}
-
-p.copyright {
-  width: 100%;
-  font-weight: var(--font-weight-base);
-  margin-bottom: 0;
-  font-size: var(--font-size-mini);
-  text-align: center;
-  margin-top: calc(var(--spacer) / 3);
-}
-
 .accessLabel {
-  font-size: var(--font-size-small);
+  font-size: var(--font-size-mini);
   width: auto;
   position: absolute;
   top: 0;
   right: 0;
   color: var(--brand-black);
   background: var(--brand-grey-lighter);
-  padding: 0.1px 0.5px 0.1px 0.5px;
-  border-radius: 2px;
+  padding: 0.2rem 0.5rem;
+  border-bottom-left-radius: var(--border-radius);
 }

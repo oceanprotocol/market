@@ -13,7 +13,7 @@ export const FieldTemplate = ({
   rawErrors,
   children
 }: FieldTemplateProps) => {
-  const noLabel = id !== noLabelFields.filter(f => id === f)[0]
+  const noLabel = id !== noLabelFields.filter((f) => id === f)[0]
   return (
     <section
       key={id}

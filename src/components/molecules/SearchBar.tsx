@@ -1,8 +1,9 @@
-import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react'
-import { useRouter } from 'next/router'
+import React, { useState, ChangeEvent, FormEvent, ReactElement } from 'react'
+import { useNavigate } from '@reach/router'
 import styles from './SearchBar.module.css'
 import Loader from '../atoms/Loader'
 import Button from '../atoms/Button'
+import Input from '../atoms/Input'
 
 export default function SearchBar({
   placeholder,
@@ -14,8 +15,8 @@ export default function SearchBar({
   initialValue?: string
   filters?: boolean
   large?: true
-}) {
-  const router = useRouter()
+}): ReactElement {
+  const navigate = useNavigate()
   const [value, setValue] = useState(initialValue || '')
   const [searchStarted, setSearchStarted] = useState(false)
 
@@ -29,29 +30,18 @@ export default function SearchBar({
     if (value === '') return
 
     setSearchStarted(true)
-    router.push(`/search?text=${value}`)
+    navigate(`/search?text=${value}`)
   }
-
-  useEffect(() => {
-    // fix for storybook
-    if (!router) return
-
-    router.events.on('routeChangeComplete', () => setSearchStarted(false))
-
-    return () => {
-      router.events.off('routeChangeComplete', () => setSearchStarted(false))
-    }
-  }, [])
 
   return (
     <form className={styles.form}>
       <div className={styles.inputGroup}>
-        <input
+        <Input
           type="search"
-          className={large ? `${styles.input} ${styles.large}` : styles.input}
+          name="search"
           placeholder={placeholder || 'What are you looking for?'}
           value={value}
-          onChange={e => handleChange(e)}
+          onChange={handleChange}
           required
         />
         <Button onClick={(e: FormEvent<HTMLButtonElement>) => startSearch(e)}>

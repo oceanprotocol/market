@@ -1,6 +1,7 @@
 {
+  "parser": "babel-eslint",
   "extends": ["eslint:recommended", "prettier"],
-  "env": { "es6": true, "browser": true, "node": true },
+  "env": { "es6": true, "browser": true, "node": true, "jest": true },
   "settings": {
     "react": {
       "version": "detect"
@@ -26,6 +27,7 @@
       "plugins": ["@typescript-eslint", "prettier"],
       "rules": {
         "react/prop-types": "off",
+        "react/no-unused-prop-types": "off",
         "@typescript-eslint/explicit-function-return-type": "off"
       }
     }

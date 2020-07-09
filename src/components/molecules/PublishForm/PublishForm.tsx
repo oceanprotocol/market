@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from '@reach/router'
 import Form from '../../molecules/Form/index'
 import {
   PublishFormSchema,
@@ -11,7 +12,6 @@ import { MetaDataMarket } from '../../../@types/MetaData'
 import { File, MetaData } from '@oceanprotocol/squid'
 import { isBrowser, toStringNoMS } from '../../../utils'
 import { toast } from 'react-toastify'
-import { useRouter } from 'next/router'
 import styles from './PublishForm.module.css'
 import utils from 'web3-utils'
 import AssetModel from '../../../models/Asset'
@@ -20,8 +20,6 @@ import {
   Service,
   ServiceCompute
 } from '@oceanprotocol/squid/dist/node/ddo/Service'
-
-declare type PublishFormProps = {}
 
 const FILES_DATA_LOCAL_STORAGE_KEY = 'filesData'
 const PUBLISH_FORM_LOCAL_STORAGE_KEY = 'publishForm'
@@ -80,8 +78,6 @@ export function transformPublishFormToMetadata(
       copyrightHolder: holder,
       tags: keywords?.split(','),
       termsAndConditions,
-      supportName,
-      supportEmail,
       access: access || 'Download'
     },
     // ------- curation -------
@@ -101,11 +97,11 @@ export function transformPublishFormToMetadata(
   return metadata
 }
 
-const PublishForm: React.FC<PublishFormProps> = () => {
+const PublishForm: React.FC<any> = () => {
   const [buttonDisabled, setButtonDisabled] = useState(false)
   const { web3Connect } = useWeb3()
   const { ocean, account } = useOcean()
-  const router = useRouter()
+  const navigate = useNavigate()
   const [data, updateData] = useStoredValue(
     PUBLISH_FORM_LOCAL_STORAGE_KEY,
     publishFormData
@@ -172,7 +168,7 @@ const PublishForm: React.FC<PublishFormProps> = () => {
           className: styles.success
         })
         toast.dismiss(submittingToast)
-        router.push(`/asset/${asset.id}`)
+        navigate(`/asset/${asset.id}`)
       } catch (e) {
         console.log(e)
       } finally {

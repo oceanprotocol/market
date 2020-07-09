@@ -1,0 +1,19 @@
+.app {
+  height: 100%;
+
+  /* sticky footer technique */
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.app > * {
+  width: 100%;
+}
+
+.main {
+  padding: calc(var(--spacer) * 2) 0;
+
+  /* sticky footer technique */
+  flex: 1;
+}

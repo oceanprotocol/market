@@ -1,8 +1,9 @@
-import React, { ChangeEvent } from 'react'
+import React, { ChangeEvent, ReactElement } from 'react'
 import SearchFilterSection from '../atoms/SearchFilterSection'
 import usePriceQueryParams from '../../hooks/usePriceQueryParams'
 
 import styles from './SearchPriceFilter.module.css'
+import Input from '../atoms/Input'
 
 export declare type PriceInputProps = {
   label: string
@@ -16,20 +17,16 @@ export const PriceInput = ({
   value,
   onChange,
   text
-}: PriceInputProps) => {
+}: PriceInputProps): ReactElement => {
   return (
-    <label htmlFor={label} className={styles.label}>
-      <input
-        id={label}
-        name={label}
-        type="number"
-        min="0"
-        value={value}
-        onChange={onChange}
-        className={styles.input}
-      />
-      <span>{text}</span>
-    </label>
+    <Input
+      name={label}
+      label={text}
+      type="number"
+      min="0"
+      value={value}
+      onChange={onChange}
+    />
   )
 }
 
@@ -42,13 +39,13 @@ export const SearchPriceFilter = () => {
         <PriceInput
           label="minPrice"
           value={min}
-          onChange={ev => setMin(ev.target.value)}
+          onChange={(ev) => setMin(ev.target.value)}
           text="Min price"
         />
         <PriceInput
           label="maxPrice"
           value={max}
-          onChange={ev => setMax(ev.target.value)}
+          onChange={(ev) => setMax(ev.target.value)}
           text="Max price"
         />
       </div>

@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
-import { config } from '../config/ocean'
+import { oceanConfig } from '../../app.config'
 
 export interface FaucetResponse {
   success: boolean
@@ -13,7 +13,7 @@ export default async function getFromFaucet(
   try {
     const response: AxiosResponse = await axios({
       method: 'POST',
-      url: `${config.faucetUri}/faucet`,
+      url: `${oceanConfig.faucetUri}/faucet`,
       data: {
         address: account,
         agent: 'market'

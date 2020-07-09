@@ -1,0 +1,27 @@
+.compute {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.jobButtonWrapper {
+  margin-top: var(--spacer);
+}
+
+.feedback {
+  width: 100%;
+}
+
+.compute button {
+  margin-left: var(--spacer);
+}
+
+.compute button:first {
+  margin-left: 0px;
+}
+
+.info {
+  margin-top: var(--spacer);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}

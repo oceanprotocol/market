@@ -5,7 +5,7 @@ import asset from '../../../tests/unit/__fixtures__/ddo'
 
 const queryResult = {
   results: [asset, asset, asset, asset, asset, asset].map(
-    asset => new DDO(asset)
+    (asset) => new DDO(asset)
   ),
   page: 1,
   totalPages: 100,

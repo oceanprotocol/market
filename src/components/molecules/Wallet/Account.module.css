@@ -1,0 +1,58 @@
+.button {
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-small);
+  text-transform: uppercase;
+  border: 1px solid var(--brand-grey-lighter);
+  border-radius: var(--border-radius);
+  padding: calc(var(--spacer) / 4);
+  white-space: nowrap;
+  background: none;
+  color: var(--brand-grey);
+  margin: 0;
+  transition: border 0.2s ease-out;
+  cursor: pointer;
+}
+
+.button:hover,
+.button:focus {
+  transform: none;
+  outline: 0;
+  border-color: var(--brand-grey-light);
+}
+
+.blockies {
+  width: var(--font-size-large);
+  height: var(--font-size-large);
+  border-radius: 50%;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: calc(var(--spacer) / 6);
+}
+
+.address {
+  text-transform: none;
+  border-right: 1px solid var(--brand-grey-lighter);
+  padding-right: calc(var(--spacer) / 4);
+}
+
+.button svg {
+  width: 1em;
+  height: 1em;
+  fill: var(--brand-grey-lighter);
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: calc(var(--spacer) / 4);
+  transition: transform 0.2s ease-out;
+}
+
+.wallet[aria-expanded='true'] .button svg {
+  transform: rotate(180deg);
+}
+
+.status {
+  margin-left: calc(var(--spacer) / 4);
+  position: relative;
+  top: 1px;
+}

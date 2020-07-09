@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { DDO, Ocean } from '@oceanprotocol/squid'
-import { useRouter } from 'next/router'
-import { findServiceByType, redeploy } from '../../utils'
+import { useNavigate } from '@reach/router'
+import { DDO } from '@oceanprotocol/squid'
+import { redeploy } from '../../utils'
 import Button from '../atoms/Button'
 import BaseDialog from '../atoms/BaseDialog'
 import { useOcean } from '@oceanprotocol/react'
@@ -15,19 +15,17 @@ const content = [
 
 export default function DeleteAction({ ddo }: { ddo: DDO }) {
   const { ocean, accountId } = useOcean()
-
+  const navigate = useNavigate()
   const isOwner = ddo.publicKey[0].owner === accountId
-
-  const router = useRouter()
   const [isModal, setIsModal] = useState(false)
   const [status, setStatus] = useState(0) // 0-confirmation, 1-deleting, 2-success, 3-error
-  const { attributes } = findServiceByType(ddo, 'metadata')
+  const { attributes } = ddo.findServiceByType('metadata')
 
   useEffect(() => {
     let tId: number
     if (status === 2) {
       tId = window.setTimeout(() => {
-        router.push(`/explore`)
+        navigate(`/`)
       }, 1000)
     }
     return () => {

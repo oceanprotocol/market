@@ -1,12 +1,11 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { ComputeItem } from '@oceanprotocol/react'
 import BaseDialog from '../atoms/BaseDialog'
-import { findServiceByType } from '../../utils'
 import styles from './JobDetailsDialog.module.css'
-import MetaItem from '../templates/AssetDetails/MetaItem'
+import MetaItem from '../organisms/AssetContent/MetaItem'
 import Time from '../atoms/Time'
 import shortid from 'shortid'
-import Link from 'next/link'
+import { Link } from 'gatsby'
 
 export default function JobDetailsDialog({
   computeItem,
@@ -16,10 +15,10 @@ export default function JobDetailsDialog({
   computeItem: ComputeItem | undefined
   isOpen: boolean
   onClose: () => void
-}) {
+}): ReactElement {
   if (!computeItem) return null
 
-  const { attributes } = findServiceByType(computeItem.ddo, 'metadata')
+  const { attributes } = computeItem.ddo.findServiceByType('metadata')
   const { name } = attributes.main
   const {
     dateCreated,
@@ -46,8 +45,8 @@ export default function JobDetailsDialog({
           <MetaItem
             title="Results"
             content={resultsUrls.map((url: string) => (
-              <Link href={url} key={shortid.generate()} passHref>
-                <a>{url}</a>
+              <Link to={url} key={shortid.generate()}>
+                {url}
               </Link>
             ))}
           />
@@ -55,24 +54,12 @@ export default function JobDetailsDialog({
         {algorithmLogUrl && (
           <MetaItem
             title="Algorithm Log"
-            content={
-              <Link href={algorithmLogUrl} key={shortid.generate()} passHref>
-                <a>{algorithmLogUrl}</a>
-              </Link>
-            }
+            content={<Link to={algorithmLogUrl}>{algorithmLogUrl}</Link>}
           />
         )}
         <MetaItem
           title="Data Set"
-          content={
-            <Link
-              href="/asset/[did]"
-              as={`/asset/${computeItem.ddo.id}`}
-              passHref
-            >
-              <a>{name}</a>
-            </Link>
-          }
+          content={<Link to={`/asset/${computeItem.ddo.id}`}>{name}</Link>}
         />
       </div>
     </BaseDialog>

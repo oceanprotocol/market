@@ -1,27 +1,16 @@
 import { useEffect, useState } from 'react'
-import { NextRouter, useRouter } from 'next/router'
-import { useDebouncedCallback } from 'use-debounce'
-import { setProperty } from '../utils'
-
-function updateQuery(router: NextRouter) {
-  return (min?: string, max?: string) => {
-    const query = Object.assign({}, router.query)
-
-    setProperty(query, 'minPrice', min)
-    setProperty(query, 'maxPrice', max)
-
-    router.push({
-      pathname: router.pathname,
-      query: query
-    })
-  }
-}
+import { useLocation } from '@reach/router'
+import queryString from 'query-string'
 
 export default function usePriceQueryParams() {
-  const router = useRouter()
-  const [min, setMin] = useState((router.query?.minPrice as string) || '0')
-  const [max, setMax] = useState((router.query?.maxPrice as string) || '0')
-  const [debouncedUpdateQuery] = useDebouncedCallback(updateQuery(router), 1000)
+  const location = useLocation()
+
+  const [min, setMin] = useState(
+    (queryString.parse(location.search).minPrice as string) || '0'
+  )
+  const [max, setMax] = useState(
+    (queryString.parse(location.search).maxPrice as string) || '0'
+  )
 
   useEffect(() => {
     if (parseFloat(max) < parseFloat(min)) {
@@ -34,10 +23,6 @@ export default function usePriceQueryParams() {
       setMin(max)
     }
   }, [max])
-
-  useEffect(() => {
-    debouncedUpdateQuery(min, max)
-  }, [min, max])
 
   return { min, setMin, max, setMax }
 }

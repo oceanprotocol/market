@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, ReactElement } from 'react'
 import Loader from '../atoms/Loader'
-import { DDO, MetaDataMain } from '@oceanprotocol/squid'
+import { MetaDataMain } from '@oceanprotocol/squid'
 import {
   useOcean,
   OceanConnectionStatus,
   useSearch
 } from '@oceanprotocol/react'
 import Table from '../atoms/Table'
-import Time from '../atoms/Time'
-import Link from 'next/link'
 import Price from '../atoms/Price'
 import { fromWei } from 'web3-utils'
-import { findServiceByType } from '../../utils'
 import DateCell from '../atoms/Table/DateCell'
 import DdoLinkCell from '../atoms/Table/DdoLinkCell'
 
@@ -42,7 +39,7 @@ const publishedColumns = [
   }
 ]
 
-export default function PublishedList() {
+export default function PublishedList(): ReactElement {
   const { ocean, status, account, accountId } = useOcean()
   const { getPublishedList } = useSearch()
   const [publishedList, setPublishedList] = useState<any[]>([])
@@ -73,8 +70,8 @@ export default function PublishedList() {
         count: publishedItems.totalPages
       })
 
-      const data = publishedItems.results.map(ddo => {
-        const { attributes } = findServiceByType(ddo, 'metadata')
+      const data = publishedItems.results.map((ddo) => {
+        const { attributes } = ddo.findServiceByType('metadata')
         const { name, price, datePublished } = attributes.main as MetaDataMain
         return {
           published: datePublished,

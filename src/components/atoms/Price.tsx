@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import Web3 from 'web3'
+import classNames from 'classnames/bind'
 import styles from './Price.module.css'
+
+const cx = classNames.bind(styles)
 
 export default function Price({
   price,
@@ -10,11 +13,15 @@ export default function Price({
   price: string
   className?: string
   small?: boolean
-}) {
-  const classes = small
-    ? `${styles.price} ${styles.small} ${className}`
-    : `${styles.price} ${className}`
+}): ReactElement {
+  const styleClasses = cx({
+    price: true,
+    small: small,
+    [className]: className
+  })
+
   const isFree = price === '0'
+
   const displayPrice = isFree ? (
     'Free'
   ) : (
@@ -23,5 +30,5 @@ export default function Price({
     </>
   )
 
-  return <div className={classes}>{displayPrice}</div>
+  return <div className={styleClasses}>{displayPrice}</div>
 }

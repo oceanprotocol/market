@@ -1,9 +1,10 @@
 import React from 'react'
 import styles from './Footer.module.css'
-import { copyright } from '../../../site.config'
 import Markdown from '../atoms/Markdown'
+import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 
 export default function Footer() {
+  const { copyright } = useSiteMetadata()
   const year = new Date().getFullYear()
 
   return (

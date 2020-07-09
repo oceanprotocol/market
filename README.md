@@ -2,8 +2,6 @@
 
 <h1 align="center">Ocean Marketplace</h1>
 
-> 
-
 [![Build Status](https://travis-ci.com/oceanprotocol/market.svg?branch=master)](https://travis-ci.com/oceanprotocol/market)
 [![Now deployment](https://flat.badgen.net/badge/now/auto-deployment/21c4dd?icon=now)](https://zeit.co/oceanprotocol/market)
 [![Maintainability](https://api.codeclimate.com/v1/badges/d114f94f75e6efd2ee71/maintainability)](https://codeclimate.com/repos/5e3933869a31771fd800011c/maintainability)
@@ -15,6 +13,7 @@
 - [🤓 Resources](#-resources)
 - [🏄 Get Started](#-get-started)
   - [Local Spree components with Barge](#local-spree-components-with-barge)
+  - [API](#api)
 - [🦑 Environment variables](#-environment-variables)
 - [🎨 Storybook](#-storybook)
 - [✨ Code Style](#-code-style)
@@ -27,30 +26,25 @@
 
 ## 🤓 Resources
 
-- [UI Design: Figma Mock Up](https://www.figma.com/file/K38ZsQjzndyp2YFJCLxIN7/dexFreight-Marketplace)
-- [Planning: ZenHub Board](https://app.zenhub.com/workspaces/dexfreight-marketplace-5e2f201751116794cf4f2e75/board?repos=236508929)
-
 ## 🏄 Get Started
 
-The app is a React app built with [Next.js](https://nextjs.org) + TypeScript + CSS modules and will connect to Ocean components in Pacific by default.
+The app is a React app built with [Gatsby.js](https://www.gatsbyjs.org) + TypeScript + CSS modules and will connect to Ocean components in Pacific by default.
 
 To start local development:
 
 ```bash
-git clone git@github.com:oceanprotocol/dexfreight.git
-cd dexfreight
+git clone git@github.com:oceanprotocol/market.git
+cd market
 
 npm install
 npm start
 ```
 
-This will launch the app under [localhost:3000](http://localhost:3000).
+This will start the development server under
+`http://localhost:8000`.
 
-Depending on your configuration, you might have to increase the amount of `inotify` watchers:
-
-```
-echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
-```
+To explore the generated GraphQL data structure fire up the accompanying GraphiQL IDE under
+`http://localhost:8000/__graphql`.
 
 ### Local Spree components with Barge
 
@@ -72,32 +66,29 @@ This will take some time on first start, and at the end you need to copy the gen
 
 The script will wait for all contracts to be generated in the `keeper-contracts` Docker container, then will copy the artifacts in place into `node_modules/@oceanprotocol/keeper-contracts/artifacts/`.
 
-Finally, set environment variables to use those local connections in `.env` & `.env.build` in the app:
+Finally, set environment variables to use those local connections in `.env` in the app:
 
 ```bash
 # modify env variables, Spree is enabled by default when using those files
-cp .env.example .env && cp .env.example .env.build
+cp .env.example .env
 ```
+
+### API
+
+Files under `/api` are isolated and not part of Gatsby.
+
+- [API Documentation](api/)
 
 ## 🦑 Environment variables
 
-The `./src/config/ocean.ts` file is setup to prioritize environment variables for setting each Ocean component endpoint. By setting environment variables, you can easily switch between Ocean networks the app connects to, without directly modifying `./src/config/ocean.ts`.
+The `app.config.js` file is setup to prioritize environment variables for setting each Ocean component endpoint. By setting environment variables, you can easily switch between Ocean networks the app connects to, without directly modifying `app.config.js`.
 
-For local development, you can use a `.env` & `.env.build` file:
+For local development, you can use a `.env` file:
 
 ```bash
 # modify env variables, Spree is enabled by default when using those files
-cp .env.example .env && cp .env.example .env.build
+cp .env.example .env
 ```
-
-For a Now deployment, all environment variables defining the Ocean component endpoints need to be added with `now secrets` to `oceanprotocol` org based on the `@` variable names defined in `now.json`, e.g.:
-
-```bash
-now switch
-now secrets add aquarius_uri https://aquarius.pacific.dexfreight.dev-ocean.com
-```
-
-Adding the env vars like that will provide them during both, build & run time.
 
 ## 🎨 Storybook
 
@@ -130,9 +121,7 @@ npm run format
 Test suite for unit tests is setup with [Jest](https://jestjs.io) as a test runner and:
 
 - [react-testing-library](https://github.com/kentcdodds/react-testing-library) for all React components
-- [node-mocks-http](https://github.com/howardabrams/node-mocks-http) for all `src/pages/api/` routes
-
-> Note: fully testing Next.js API routes should be part of integration tests. There are [various problems](https://spectrum.chat/next-js/general/api-routes-unit-testing~aa868f97-3a7d-45fe-97e5-3f0408f0022d) with fully testing them so a proper unit test suite for them should be setup.
+- [node-mocks-http](https://github.com/howardabrams/node-mocks-http) for all `api/` routes
 
 To run all linting and unit tests:
 
@@ -164,7 +153,7 @@ npm run serve
 
 ## ⬆️ Deployment
 
-Every branch or Pull Request is automatically deployed by [Now](https://zeit.co/now) with their GitHub integration. A link to a deployment will appear under each Pull Request.
+Every branch or Pull Request is automatically deployed by [Vercel](https://vercel.com) with their GitHub integration. A link to a deployment will appear under each Pull Request.
 
 The latest deployment of the `master` branch is automatically aliased to `xxx`.
 
@@ -174,47 +163,47 @@ If needed, app can be deployed manually. Make sure to switch to Ocean Protocol o
 
 ```bash
 # first run
-now login
-now switch
+vercel login
+vercel switch
 
 # deploy
-now
+vercel
 # switch alias to new deployment
-now alias
+vercel alias
 ```
 
 ## 🏗 Ocean Protocol Infrastructure
 
-The following Aquarius & Brizo instances specifically for dexFreight marketplace are deployed in Ocean Protocol's AWS K8:
+The following Aquarius & Brizo instances specifically for marketplace are deployed in Ocean Protocol's AWS K8:
 
 **Nile (Staging)**
 
-- K8 namespace: `dexfreight-nile`
-- `aquarius.nile.dexfreight.dev-ocean.com`
-- `brizo.nile.dexfreight.dev-ocean.com`
+- K8 namespace: `market-nile`
+- `aquarius.nile.market.dev-ocean.com`
+- `brizo.nile.market.dev-ocean.com`
 
 Edit command with `kubectl`, e.g.:
 
 ```bash
-kubectl edit deployment -n dexfreight-nile aquarius
+kubectl edit deployment -n market-nile aquarius
 ```
 
 **Pacific (Production)**
 
-- K8 namespace: `dexfreight-pacific`
-- `aquarius.pacific.dexfreight.dev-ocean.com`
-- `brizo.pacific.dexfreight.dev-ocean.com`
+- K8 namespace: `market-pacific`
+- `aquarius.pacific.market.dev-ocean.com`
+- `brizo.pacific.market.dev-ocean.com`
 
 Edit command with `kubectl`, e.g.:
 
 ```bash
-kubectl edit deployment -n dexfreight-pacific aquarius
+kubectl edit deployment -n market-pacific aquarius
 ```
 
 ## 🏛 License
 
 ```text
-Copyright 2019 Ocean Protocol Foundation Ltd.
+Copyright 2020 Ocean Protocol Foundation Ltd.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

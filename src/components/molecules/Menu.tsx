@@ -1,8 +1,11 @@
-import React from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { menu } from '../../../site.config'
+import React, { ReactElement } from 'react'
+import { Link } from 'gatsby'
+import { useLocation } from '@reach/router'
 import styles from './Menu.module.css'
+import { useSiteMetadata } from '../../hooks/useSiteMetadata'
+import Wallet from './Wallet'
+import { ReactComponent as Logo } from '@oceanprotocol/art/logo/logo.svg'
+import Container from '../atoms/Container'
 
 declare type MenuItem = {
   name: string
@@ -10,25 +13,42 @@ declare type MenuItem = {
 }
 
 function MenuLink({ item }: { item: MenuItem }) {
-  const router = useRouter()
+  const location = useLocation()
+
   const classes =
-    router && router.pathname === item.link
+    location && location.pathname === item.link
       ? `${styles.link} ${styles.active}`
       : styles.link
 
   return (
-    <Link key={item.name} href={item.link}>
-      <a className={classes}>{item.name}</a>
+    <Link key={item.name} to={item.link} className={classes}>
+      {item.name}
     </Link>
   )
 }
 
-export default function Menu() {
+export default function Menu(): ReactElement {
+  const { menu, siteTitle } = useSiteMetadata()
+
   return (
     <nav className={styles.menu}>
-      {menu.map((item: MenuItem) => (
-        <MenuLink key={item.name} item={item} />
-      ))}
+      <Container>
+        <Link to="/" className={styles.logoUnit}>
+          <Logo />
+          <h1 className={styles.title}>{siteTitle}</h1>
+        </Link>
+
+        <ul className={styles.navigation}>
+          <li>
+            <Wallet />
+          </li>
+          {menu.map((item: MenuItem) => (
+            <li key={item.name}>
+              <MenuLink item={item} />
+            </li>
+          ))}
+        </ul>
+      </Container>
     </nav>
   )
 }

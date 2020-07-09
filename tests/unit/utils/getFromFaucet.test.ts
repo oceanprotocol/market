@@ -1,11 +1,10 @@
 import axios, { AxiosResponse } from 'axios'
-import { mocked } from 'ts-jest/dist/util/testing'
 import getFromFaucet from '../../../src/utils/getFromFaucet'
 
 jest.mock('axios')
 
 describe('getFromFaucet()', () => {
-  mocked(axios).mockResolvedValue({
+  ;(axios as any).mockResolvedValue({
     data: { success: true, message: 'hello' }
   } as AxiosResponse)
 

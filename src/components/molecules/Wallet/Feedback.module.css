@@ -1,0 +1,26 @@
+.feedback {
+  font-size: var(--font-size-small);
+  padding-left: var(--spacer);
+  padding-top: calc(var(--spacer) / 2);
+  margin-top: calc(var(--spacer) / 2);
+  border-top: 1px solid var(--brand-grey-lighter);
+  position: relative;
+  width: 100%;
+}
+
+.feedback i {
+  position: absolute;
+  left: 0;
+  top: calc(var(--spacer) / 2);
+}
+
+.title {
+  margin-bottom: calc(var(--spacer) / 12);
+  font-size: var(--font-size-base);
+}
+
+.error {
+  font-size: var(--font-size-small);
+  color: var(--color-secondary);
+  margin-bottom: 0;
+}
