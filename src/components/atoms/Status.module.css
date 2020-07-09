@@ -9,7 +9,6 @@
 
 /* yellow triangle */
 .warning {
-  composes: status;
   border-radius: 0;
   background: none;
   width: 0;
@@ -21,7 +20,6 @@
 
 /* red square */
 .error {
-  composes: status;
   border-radius: 0;
   background: var(--brand-alert-red);
   text-transform: capitalize;

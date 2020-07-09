@@ -21,3 +21,33 @@
   display: inline-block;
   margin-left: 0.1rem;
 }
+
+.arrow,
+.arrow::before {
+  position: absolute;
+  width: 1.2rem;
+  height: 1.2rem;
+  z-index: -1;
+}
+
+.arrow::before {
+  content: '';
+  transform: rotate(45deg);
+  background: var(--brand-grey-lighter);
+}
+
+.details[data-placement*='top'] > .arrow {
+  bottom: -4px;
+}
+
+.details[data-placement*='bottom'] > .arrow {
+  top: -4px;
+}
+
+.details[data-placement*='left'] > .arrow {
+  right: -4px;
+}
+
+.details[data-placement*='right'] > .arrow {
+  left: -4px;
+}

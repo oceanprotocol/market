@@ -12,8 +12,8 @@ export default function Details({ attrs }: { attrs: any }): ReactElement {
   const oceanBalanceText = formatNumber(Number(balanceInOcean))
 
   return (
-    <div className={styles.details}>
-      <ul {...attrs}>
+    <div className={styles.details} {...attrs}>
+      <ul>
         <li className={styles.balance}>
           OCEAN <span>{oceanBalanceText}</span>
         </li>
@@ -31,6 +31,7 @@ export default function Details({ attrs }: { attrs: any }): ReactElement {
         </li>
       </ul>
       <Web3Feedback />
+      <div className={styles.arrow} data-popper-arrow />
     </div>
   )
 }

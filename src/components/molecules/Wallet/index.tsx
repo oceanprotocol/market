@@ -4,6 +4,7 @@ import { useSpring, animated } from 'react-spring'
 import { useWeb3 } from '@oceanprotocol/react'
 import Account from './Account'
 import Details from './Details'
+import styles from './index.module.css'
 
 const Tippy = loadable(() => import('@tippyjs/react/headless'))
 
@@ -40,6 +41,7 @@ export default function Wallet(): ReactElement {
     <Tippy
       interactive
       interactiveBorder={30}
+      trigger="click focus"
       render={(attrs: any) => (
         <animated.div style={props}>
           <Details attrs={attrs} />

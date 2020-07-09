@@ -1,4 +1,4 @@
-import React, { ReactNode, FormEvent } from 'react'
+import React, { ReactNode, FormEvent, ReactElement } from 'react'
 import { Link } from 'gatsby'
 import classNames from 'classnames/bind'
 import styles from './Button.module.css'
@@ -27,7 +27,7 @@ export default function Button({
   size,
   style,
   ...props
-}: ButtonProps) {
+}: ButtonProps): ReactElement {
   const styleClasses = cx({
     button: true,
     primary: style === 'primary',
