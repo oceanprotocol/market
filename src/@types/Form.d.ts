@@ -12,7 +12,7 @@ export interface FormFieldProps {
 
 export interface FormContent {
   title: string
-  description: string
+  description?: string
   success: string
   data: FormFieldProps[]
 }

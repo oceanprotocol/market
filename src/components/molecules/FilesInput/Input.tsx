@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react'
 import isUrl from 'is-url-superb'
 import Button from '../../atoms/Button'
-import Input from '../../atoms/Input'
 import { useField } from 'formik'
 import Loader from '../../atoms/Loader'
+import InputElement from '../../atoms/Input/InputElement'
 
 export default function FileInput({
   handleButtonClick,
@@ -17,7 +17,7 @@ export default function FileInput({
 
   return (
     <>
-      <Input type="url" name="url" placeholder="e.g." {...field} />
+      <InputElement {...field} {...props} type="url" />
 
       <Button
         size="small"

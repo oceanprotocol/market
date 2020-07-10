@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import Eye from '../../../images/eye.svg'
 import Button from '../Button'
 import Tooltip from '../Tooltip'
@@ -10,7 +10,7 @@ export declare type ActionsCellProps = {
 
 export default function ActionsCell({
   handleOnClickViewJobDetails
-}: ActionsCellProps) {
+}: ActionsCellProps): ReactElement {
   return (
     <>
       {handleOnClickViewJobDetails && (

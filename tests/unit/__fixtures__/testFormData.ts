@@ -1,6 +1,6 @@
-import { PublishFormData } from '../../../src/models/PublishForm'
+import { MetaDataPublishForm } from '../../../src/@types/MetaData'
 
-const testFormData: PublishFormData = {
+const testFormData: MetaDataPublishForm = {
   author: '',
   files: [],
   license: '',
@@ -8,8 +8,8 @@ const testFormData: PublishFormData = {
   name: '',
   description: 'description',
   termsAndConditions: true,
-  access: 'Download',
-  links: []
+  access: 'Download'
+  // links: []
 }
 
 export default testFormData

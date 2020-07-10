@@ -12,7 +12,9 @@ describe('Layout', () => {
 
   testRender(
     <LocationProvider history={history}>
-      <Layout location={{ href: 'https://demo.com' } as Location}>Hello</Layout>
+      <Layout title="Hello" uri={history.location.href}>
+        Hello
+      </Layout>
     </LocationProvider>
   )
 })

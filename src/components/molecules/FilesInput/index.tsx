@@ -42,6 +42,7 @@ export default function FilesInput(
         <FileInfo file={field.value[0]} removeItem={removeItem} />
       ) : (
         <FileInput
+          {...props}
           {...field}
           isLoading={isLoading}
           handleButtonClick={handleButtonClick}

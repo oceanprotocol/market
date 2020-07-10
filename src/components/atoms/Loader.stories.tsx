@@ -12,7 +12,3 @@ export const Normal = () => <Loader />
 export const WithMessage = () => (
   <Loader message="Crunching all the tech for you..." />
 )
-
-export const WithMessageHorizontal = () => (
-  <Loader message="Crunching all the tech for you..." isHorizontal />
-)
