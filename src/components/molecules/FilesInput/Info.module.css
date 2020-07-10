@@ -1,0 +1,40 @@
+.info {
+  border-radius: var(--border-radius);
+  padding: calc(var(--spacer) / 2);
+  border: 1px solid var(--brand-grey-lighter);
+  background-color: var(--brand-grey-dimmed);
+  position: relative;
+}
+
+.url {
+  margin: 0;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height);
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-all;
+  padding-right: calc(var(--spacer) / 2);
+}
+
+.info ul {
+  margin: 0;
+}
+
+.info li {
+  display: inline-block;
+  font-size: var(--font-size-small);
+  margin-right: calc(var(--spacer) / 2);
+  color: var(--color-secondary);
+}
+
+.removeButton {
+  cursor: pointer;
+  border: none;
+  position: absolute;
+  top: -0.2rem;
+  right: 0;
+  font-size: var(--font-size-h3);
+  cursor: pointer;
+  color: var(--brand-grey);
+  background-color: transparent;
+}

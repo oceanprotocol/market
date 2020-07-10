@@ -35,7 +35,7 @@ export interface InputProps {
   }
 }
 
-export default function Input(props: InputProps) {
+export default function Input(props: InputProps): ReactElement {
   const {
     required,
     name,
@@ -54,6 +54,11 @@ export default function Input(props: InputProps) {
 
       {help && <Help>{help}</Help>}
       {additionalComponent && additionalComponent}
+
+      {/* TODO: Make field errors show up here */}
+      {/* {meta && meta.touched && meta.error ? (
+        <div className="error">{meta.error}</div>
+      ) : null} */}
     </div>
   )
 }

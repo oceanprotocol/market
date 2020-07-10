@@ -1,6 +1,8 @@
 import React from 'react'
 import { render } from '@testing-library/react'
-import Form, { transformErrors } from '../../../src/components/molecules/Form'
+import Form, {
+  transformErrors
+} from '../../../src/components/molecules/FilesInput'
 import {
   publishFormData,
   PublishFormDataInterface,
@@ -8,7 +10,7 @@ import {
   PublishFormUiSchema
 } from '../../../src/models/PublishForm'
 import testFormData from '../__fixtures__/testFormData'
-import { transformPublishFormToMetadata } from '../../../src/components/pages/Publish/PublishForm'
+import { transformPublishFormToMetadata } from '../../../src/components/pages/Publish/utils'
 import { MetaDataMarket } from '../../../src/@types/MetaData'
 
 describe('PublishForm', () => {

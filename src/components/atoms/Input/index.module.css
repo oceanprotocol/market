@@ -1,3 +1,7 @@
 .field {
   margin-bottom: var(--spacer);
 }
+
+.field .field {
+  margin-bottom: calc(var(--spacer) / 2);
+}

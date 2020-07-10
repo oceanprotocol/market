@@ -16,7 +16,7 @@
         "label": "Files",
         "placeholder": "e.g. https://file.com/file.json",
         "help": "Please provide a URL to your data set file.",
-        "type": "url",
+        "type": "files",
         "required": true
       },
       {
