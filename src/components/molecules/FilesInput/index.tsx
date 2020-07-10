@@ -13,7 +13,7 @@ interface Values {
 export default function FilesInput(
   props: FormikProps<Values | File>
 ): ReactElement {
-  const [field, meta, helpers] = useField(props)
+  const [field, meta, helpers] = useField(props as any)
   const [isLoading, setIsLoading] = useState(false)
 
   async function handleButtonClick(e: React.SyntheticEvent, url: string) {

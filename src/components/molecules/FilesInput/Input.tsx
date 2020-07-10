@@ -13,7 +13,7 @@ export default function FileInput({
   handleButtonClick(e: React.SyntheticEvent, data: string): void
   isLoading: boolean
 }): ReactElement {
-  const [field] = useField(props)
+  const [field] = useField(props as any)
 
   return (
     <>
