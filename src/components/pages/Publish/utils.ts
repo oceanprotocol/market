@@ -30,9 +30,7 @@ export function transformPublishFormToMetadata(
       author,
       dateCreated: currentTime,
       datePublished: currentTime,
-      // files: {
-      //   url: files
-      // },
+      files: typeof files !== 'string' && files,
       license
     },
     additionalInformation: {

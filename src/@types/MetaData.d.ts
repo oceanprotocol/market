@@ -24,12 +24,12 @@ export interface MetaDataPublishForm {
   // ---- required fields ----
   name: string
   description: string
-  files: string
-  termsAndConditions: boolean
+  files: string | File[]
   author: string
   license: string
   price: string
   access: string
+  termsAndConditions: boolean
   // ---- optional fields ----
   copyrightHolder?: string
   tags?: string

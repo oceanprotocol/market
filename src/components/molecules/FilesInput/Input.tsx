@@ -2,18 +2,18 @@ import React, { ReactElement } from 'react'
 import isUrl from 'is-url-superb'
 import Button from '../../atoms/Button'
 import Input from '../../atoms/Input'
-import { useField, FormikProps } from 'formik'
-import { File } from '@oceanprotocol/squid'
+import { useField } from 'formik'
+import Loader from '../../atoms/Loader'
 
 export default function FileInput({
   handleButtonClick,
+  isLoading,
   ...props
 }: {
   handleButtonClick(e: React.SyntheticEvent, data: string): void
-  props: FormikProps<File>
+  isLoading: boolean
 }): ReactElement {
-  const [field, meta, helpers] = useField(props)
-  console.log(field)
+  const [field] = useField(props)
 
   return (
     <>
@@ -22,9 +22,9 @@ export default function FileInput({
       <Button
         size="small"
         onClick={(e: React.SyntheticEvent) => handleButtonClick(e, field.value)}
-        // disabled={!isUrl(field && field.value)}
+        disabled={!field.value || !isUrl(field.value)}
       >
-        Add File
+        {isLoading ? <Loader /> : 'Add File'}
       </Button>
     </>
   )

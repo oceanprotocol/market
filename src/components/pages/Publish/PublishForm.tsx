@@ -125,7 +125,7 @@ export default function PublishForm({
               !ocean ||
               !account ||
               isSubmitting ||
-              //! isValid ||
+              !isValid ||
               status === 'empty'
             }
           >
