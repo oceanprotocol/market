@@ -7,6 +7,7 @@ import {
 } from '@reach/router'
 
 // Import global css with custom properties once for all stories.
+import '@oceanprotocol/typographies/css/ocean-typo.css'
 import '../src/global/styles.css'
 
 // Wrapper for all stories previews

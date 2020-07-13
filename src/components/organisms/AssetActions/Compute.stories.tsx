@@ -6,7 +6,7 @@ import squidMock from '../../../../tests/unit/__mocks__/@oceanprotocol/squid'
 import { context } from '../../../../tests/unit/__mocks__/web3provider'
 
 export default {
-  title: 'Organisms/Consume',
+  title: 'Organisms/Compute',
   decorators: [
     (storyFn: () => React.FC): ReactElement => (
       <div style={{ maxWidth: '40rem', margin: 'auto' }}>{storyFn()}</div>
