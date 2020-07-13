@@ -1,7 +1,17 @@
 .field {
   margin-bottom: var(--spacer);
+  position: relative;
 }
 
 .field .field {
   margin-bottom: calc(var(--spacer) / 2);
+}
+
+.error {
+  font-size: var(--font-size-small);
+  color: var(--brand-alert-red);
+  position: absolute;
+  text-align: right;
+  right: 0;
+  top: 0;
 }

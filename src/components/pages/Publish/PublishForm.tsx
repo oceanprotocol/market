@@ -22,10 +22,10 @@ const validationSchema = Yup.object().shape<MetaDataPublishForm>({
   name: Yup.string().required('Required'),
   author: Yup.string().required('Required'),
   price: Yup.string().required('Required'),
-  files: Yup.array<File>().required('Required'),
+  files: Yup.array<File>().required('Required').nullable(),
   description: Yup.string().required('Required'),
   license: Yup.string().required('Required'),
-  access: Yup.string().required('Required'),
+  access: Yup.string().min(4).required('Required'),
   termsAndConditions: Yup.boolean().required('Required'),
 
   // ---- optional fields ----
@@ -58,9 +58,19 @@ export default function PublishForm({
   async function handleSubmit(values: MetaDataPublishForm) {
     const submittingToast = toast.info('submitting asset')
 
-    console.log(values)
+    console.log(`
+      Collected form values:
+      ----------------------
+      ${values}
+    `)
+
     const metadata = transformPublishFormToMetadata(values)
-    console.log(metadata)
+
+    console.log(`
+      Transformed metadata values:
+      ----------------------
+      ${metadata}
+    `)
 
     // if services array stays empty, the default access service
     // will be created by squid-js

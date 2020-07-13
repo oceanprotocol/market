@@ -3,6 +3,7 @@ import InputElement from './InputElement'
 import Help from './Help'
 import Label from './Label'
 import styles from './index.module.css'
+import { ErrorMessage } from 'formik'
 
 export interface InputProps {
   name: string
@@ -35,15 +36,8 @@ export interface InputProps {
   }
 }
 
-export default function Input(props: InputProps): ReactElement {
-  const {
-    required,
-    name,
-    label,
-    help,
-    additionalComponent,
-    field
-  } = props as Partial<InputProps>
+export default function Input(props: Partial<InputProps>): ReactElement {
+  const { required, name, label, help, additionalComponent, field } = props
 
   return (
     <div className={styles.field}>
@@ -52,13 +46,12 @@ export default function Input(props: InputProps): ReactElement {
       </Label>
       <InputElement {...field} {...props} />
 
+      <div className={styles.error}>
+        <ErrorMessage name={field.name} />
+      </div>
+
       {help && <Help>{help}</Help>}
       {additionalComponent && additionalComponent}
-
-      {/* TODO: Make field errors show up here */}
-      {/* {meta && meta.touched && meta.error ? (
-        <div className="error">{meta.error}</div>
-      ) : null} */}
     </div>
   )
 }
