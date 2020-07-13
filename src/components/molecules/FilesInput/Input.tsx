@@ -25,7 +25,11 @@ export default function FileInput(
       <Button
         size="small"
         onClick={(e: React.SyntheticEvent) => handleButtonClick(e, field.value)}
-        disabled={!field.value || !isUrl(field.value)}
+        disabled={
+          !field.value ||
+          // weird static page build fix so is-url-superb won't error
+          isUrl(typeof field.value === 'string' ? field.value : '')
+        }
       >
         {isLoading ? <Loader /> : 'Add File'}
       </Button>
