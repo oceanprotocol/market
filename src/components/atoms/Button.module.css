@@ -46,7 +46,7 @@
 .button:disabled {
   cursor: not-allowed;
   pointer-events: none;
-  opacity: 0.5;
+  background: var(--brand-grey-lighter);
 }
 
 .primary,

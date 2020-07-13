@@ -1,31 +1,43 @@
-.inputGroup {
-  width: 100%;
+.inputGroup input {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
 
-  @media screen and (min-width: $break-point--small) {
+.inputGroup button {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  margin-top: -1px;
+  width: 100%;
+}
+
+.inputGroup button:hover,
+.inputGroup button:focus,
+.inputGroup input:focus + button:hover,
+.inputGroup input:focus + button:focus {
+  background: var(--brand-gradient);
+  transform: none;
+  box-shadow: none;
+}
+
+@media screen and (min-width: 30rem) {
+  .inputGroup {
     display: flex;
   }
-}
-.inputGroup > input {
-  @media screen and (min-width: $break-point--small) {
-    width: 75%;
+
+  .inputGroup input {
+    border-bottom-left-radius: var(--border-radius);
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
-}
-.inputGroup > button {
-  width: 100%;
-  position: absolute;
-  left: 0;
-  bottom: -120%;
 
-  @media screen and (min-width: $break-point--small) {
-    position: relative;
-    bottom: auto;
-    width: 25%;
-    height: 100%;
+  .inputGroup button {
+    border-top-right-radius: var(--border-radius);
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-    box-shadow: none;
+    margin-top: 0;
+    margin-left: -1px;
+    width: fit-content;
+    min-width: 20%;
   }
 }
 

@@ -4,6 +4,7 @@ import styles from './SearchBar.module.css'
 import Loader from '../atoms/Loader'
 import Button from '../atoms/Button'
 import Input from '../atoms/Input'
+import InputGroup from '../atoms/Input/InputGroup'
 
 export default function SearchBar({
   placeholder,
@@ -35,7 +36,7 @@ export default function SearchBar({
 
   return (
     <form className={styles.form}>
-      <div className={styles.inputGroup}>
+      <InputGroup>
         <Input
           type="search"
           name="search"
@@ -47,7 +48,7 @@ export default function SearchBar({
         <Button onClick={(e: FormEvent<HTMLButtonElement>) => startSearch(e)}>
           {searchStarted ? <Loader /> : 'Search'}
         </Button>
-      </div>
+      </InputGroup>
 
       {filters && <fieldset className={styles.filters}>Type, Price</fieldset>}
     </form>
