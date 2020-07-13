@@ -4,16 +4,19 @@ import Button from '../../atoms/Button'
 import { useField } from 'formik'
 import Loader from '../../atoms/Loader'
 import InputElement from '../../atoms/Input/InputElement'
+import { InputProps } from '../../atoms/Input'
 
-export default function FileInput({
-  handleButtonClick,
-  isLoading,
-  ...props
-}: {
-  handleButtonClick(e: React.SyntheticEvent, data: string): void
-  isLoading: boolean
-}): ReactElement {
-  const [field] = useField(props as any)
+export default function FileInput(
+  {
+    handleButtonClick,
+    isLoading
+  }: {
+    handleButtonClick(e: React.SyntheticEvent, data: string): void
+    isLoading: boolean
+  },
+  props: InputProps
+): ReactElement {
+  const [field, meta] = useField(props)
 
   return (
     <>

@@ -1,19 +1,17 @@
 import React, { ReactElement, useState } from 'react'
-import { useField, FormikProps } from 'formik'
-import { File } from '@oceanprotocol/squid'
+import { useField } from 'formik'
 import { toast } from 'react-toastify'
 import FileInfo from './Info'
 import FileInput from './Input'
 import { getFileInfo } from '../../../utils'
+import { InputProps } from '../../atoms/Input'
 
 interface Values {
   url: string
 }
 
-export default function FilesInput(
-  props: FormikProps<Values | File>
-): ReactElement {
-  const [field, meta, helpers] = useField(props as any)
+export default function FilesInput(props: InputProps): ReactElement {
+  const [field, meta, helpers] = useField(props)
   const [isLoading, setIsLoading] = useState(false)
 
   async function handleButtonClick(e: React.SyntheticEvent, url: string) {

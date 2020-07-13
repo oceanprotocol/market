@@ -15,13 +15,14 @@ import { transformPublishFormToMetadata } from './utils'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { MetaDataPublishForm, AccessType } from '../../../@types/MetaData'
 import AssetModel from '../../../models/Asset'
+import { File } from '@oceanprotocol/squid'
 
 const validationSchema = Yup.object().shape<MetaDataPublishForm>({
   // ---- required fields ----
   name: Yup.string().required('Required'),
   author: Yup.string().required('Required'),
   price: Yup.string().required('Required'),
-  files: Yup.string().required('Required'),
+  files: Yup.object<File[]>().required('Required'),
   description: Yup.string().required('Required'),
   license: Yup.string().required('Required'),
   access: Yup.string().required('Required'),
@@ -30,7 +31,7 @@ const validationSchema = Yup.object().shape<MetaDataPublishForm>({
   // ---- optional fields ----
   copyrightHolder: Yup.string(),
   tags: Yup.string(),
-  links: Yup.string()
+  links: Yup.object<File[]>()
 })
 
 const initialValues: MetaDataPublishForm = {
@@ -55,9 +56,7 @@ export default function PublishForm({
   const { ocean, account } = useOcean()
 
   async function handleSubmit(values: MetaDataPublishForm) {
-    const submittingToast = toast.info('submitting asset', {
-      className: styles.info
-    })
+    const submittingToast = toast.info('submitting asset')
 
     console.log(values)
     const metadata = transformPublishFormToMetadata(values)
@@ -112,7 +111,7 @@ export default function PublishForm({
       {({ isSubmitting, isValid, status, setStatus }) => (
         <FormFormik
           className={styles.form}
-          onChange={() => status === 'empty' && setStatus(null)}
+          // onChange={() => status === 'empty' && setStatus(null)}
         >
           {content.data.map((field: FormFieldProps) => (
             <Field key={field.name} {...field} component={Input} />

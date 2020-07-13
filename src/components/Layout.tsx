@@ -1,5 +1,4 @@
 import React, { ReactNode, ReactElement } from 'react'
-import { Helmet } from 'react-helmet'
 import Header from './organisms/Header'
 import Footer from './organisms/Footer'
 import PageHeader from './molecules/PageHeader'
@@ -24,12 +23,6 @@ export default function Layout({
 }: LayoutProps): ReactElement {
   return (
     <div className={styles.app}>
-      <Helmet>
-        <link rel="icon" href="/icons/icon-96x96.png" />
-        <link rel="apple-touch-icon" href="icons/icon-256x256.png" />
-        <meta name="theme-color" content="#ca2935" />
-      </Helmet>
-
       <Seo title={title} description={description} uri={uri} />
 
       <Header />

@@ -1,13 +1,3 @@
 .form {
   composes: box from '../../atoms/Box.module.css';
 }
-
-.error {
-  background-color: var(--red);
-}
-.success {
-  background-color: var(--green);
-}
-.info {
-  background-color: var(--yellow);
-}
