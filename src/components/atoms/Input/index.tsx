@@ -46,9 +46,11 @@ export default function Input(props: Partial<InputProps>): ReactElement {
       </Label>
       <InputElement {...field} {...props} />
 
-      <div className={styles.error}>
-        <ErrorMessage name={field.name} />
-      </div>
+      {field && (
+        <div className={styles.error}>
+          <ErrorMessage name={field.name} />
+        </div>
+      )}
 
       {help && <Help>{help}</Help>}
       {additionalComponent && additionalComponent}

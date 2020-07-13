@@ -13,7 +13,7 @@ import Input from '../../atoms/Input'
 import Button from '../../atoms/Button'
 import { transformPublishFormToMetadata } from './utils'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
-import { MetaDataPublishForm, AccessType } from '../../../@types/MetaData'
+import { MetaDataPublishForm } from '../../../@types/MetaData'
 import AssetModel from '../../../models/Asset'
 import { File } from '@oceanprotocol/squid'
 
