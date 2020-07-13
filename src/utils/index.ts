@@ -8,7 +8,7 @@ export function updateQueryStringParameter(
   uri: string,
   key: string,
   newValue: string
-) {
+): string {
   const regex = new RegExp('([?&])' + key + '=.*?(&|$)', 'i')
   const separator = uri.indexOf('?') !== -1 ? '&' : '?'
 
@@ -19,7 +19,11 @@ export function updateQueryStringParameter(
   }
 }
 
-export function prettySize(bytes: number, separator = ' ', postFix = '') {
+export function prettySize(
+  bytes: number,
+  separator = ' ',
+  postFix = ''
+): string {
   if (bytes) {
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
     const i = Math.min(
@@ -36,7 +40,7 @@ export function prettySize(bytes: number, separator = ' ', postFix = '') {
 // Boolean value that will be true if we are inside a browser, false otherwise
 export const isBrowser = typeof window !== 'undefined'
 
-export function formatNumber(number: number, format?: string) {
+export function formatNumber(number: number, format?: string): string {
   numeral.zeroFormat('0')
   const defaultFormat = '0,0.000'
 
@@ -54,13 +58,9 @@ export async function getFileInfo(url: string): Promise<File> {
     data: { url }
   })
 
-  if (response.status > 299) {
-    throw new Error(response.statusText)
-  }
-
-  if (!response.data.result) {
-    toast.error(response.data.message)
-    return { contentLength: undefined, contentType: '', url }
+  if (response.status > 299 || !response.data.result) {
+    toast.error('Could not connect to File API')
+    return
   }
 
   const { contentLength, contentType } = response.data.result
@@ -72,7 +72,7 @@ export async function getFileInfo(url: string): Promise<File> {
   }
 }
 
-export function isDid(did: string | undefined) {
+export function isDid(did: string | undefined): boolean {
   const didMatch = (did as string).match(/^did:op:([a-f0-9]{64})$/i)
   return !!didMatch
 }
@@ -125,7 +125,7 @@ export function setProperty<T extends Record<string, unknown>>(
   }
 }
 
-export function formatBytes(a: number, b: number) {
+export function formatBytes(a: number, b: number): string {
   if (a === 0) return '0 Bytes'
   const c = 1024
   const d = b || 2

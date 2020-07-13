@@ -7,4 +7,9 @@ export default {
   title: 'Molecules/Asset Teaser'
 }
 
-export const Default = () => <AssetTeaser ddo={new DDO(ddo)} />
+export const Default = () => (
+  <AssetTeaser
+    did={ddo.id}
+    metadata={new DDO(ddo).findServiceByType('metadata').attributes as any}
+  />
+)

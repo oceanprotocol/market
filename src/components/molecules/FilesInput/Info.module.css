@@ -1,8 +1,9 @@
 .info {
   border-radius: var(--border-radius);
   padding: calc(var(--spacer) / 2);
-  border: 1px solid var(--brand-grey-light);
-  background-color: var(--brand-grey-lighter);
+  border: 1px solid var(--brand-grey-lighter);
+  background-color: var(--brand-grey-dimmed);
+  position: relative;
 }
 
 .url {
@@ -34,6 +35,6 @@
   right: 0;
   font-size: var(--font-size-h3);
   cursor: pointer;
-  color: var(--color-secondary);
+  color: var(--brand-grey);
   background-color: transparent;
 }

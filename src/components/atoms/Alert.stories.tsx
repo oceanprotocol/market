@@ -1,6 +1,6 @@
 import React from 'react'
 import { Center } from '../../../.storybook/helpers'
-import { Alert } from './Alert'
+import Alert from './Alert'
 
 export default {
   title: 'Atoms/Alert',

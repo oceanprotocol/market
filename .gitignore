@@ -10,3 +10,4 @@ public
 storybook-static
 public/storybook
 .artifacts
+.vercel

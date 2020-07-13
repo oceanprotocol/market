@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import styles from './Alert.module.css'
 
-export function Alert({
+export default function Alert({
   title,
   text,
   state

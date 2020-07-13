@@ -1,4 +1,3 @@
 .form {
   composes: box from '../../atoms/Box.module.css';
-  margin-bottom: var(--spacer);
 }
