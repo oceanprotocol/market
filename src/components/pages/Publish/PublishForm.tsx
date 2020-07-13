@@ -22,7 +22,7 @@ const validationSchema = Yup.object().shape<MetaDataPublishForm>({
   name: Yup.string().required('Required'),
   author: Yup.string().required('Required'),
   price: Yup.string().required('Required'),
-  files: Yup.object<File[]>().required('Required'),
+  files: Yup.array<File>().required('Required'),
   description: Yup.string().required('Required'),
   license: Yup.string().required('Required'),
   access: Yup.string().required('Required'),
@@ -111,7 +111,7 @@ export default function PublishForm({
       {({ isSubmitting, isValid, status, setStatus }) => (
         <FormFormik
           className={styles.form}
-          // onChange={() => status === 'empty' && setStatus(null)}
+          onChange={() => status === 'empty' && setStatus(null)}
         >
           {content.data.map((field: FormFieldProps) => (
             <Field key={field.name} {...field} component={Input} />
