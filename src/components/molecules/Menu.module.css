@@ -20,6 +20,7 @@
   width: 4rem;
   height: 4rem;
   margin-left: -0.5rem;
+  margin-right: 0.5rem;
 }
 
 .logoUnit path {
@@ -39,17 +40,7 @@
     margin: 0;
     display: block;
     color: var(--color-secondary);
-    font-size: var(--font-size-base);
-  }
-
-  .logoUnit svg {
-    margin-top: -0.4rem;
-  }
-}
-
-@media screen and (min-width: 60rem) {
-  .title {
-    font-size: var(--font-size-large);
+    font-size: var(--font-size-h4);
   }
 }
 
@@ -77,7 +68,7 @@
   text-transform: uppercase;
   color: var(--brand-grey);
   font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-small);
+  font-size: var(--font-size-base);
   position: relative;
   z-index: 1;
 }

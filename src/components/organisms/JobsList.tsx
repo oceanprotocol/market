@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ReactElement } from 'react'
+import React, { useState, ReactElement } from 'react'
 import Loader from '../atoms/Loader'
 import {
   useOcean,
@@ -16,8 +16,6 @@ import DateCell from '../atoms/Table/DateCell'
 import DdoLinkCell from '../atoms/Table/DdoLinkCell'
 import shortid from 'shortid'
 import ActionsCell from '../atoms/Table/ActionsCell'
-import Tooltip from '../atoms/Tooltip'
-import Tippy from '@tippyjs/react'
 import JobDetailsDialog from '../molecules/JobDetailsDialog'
 
 const columns = [

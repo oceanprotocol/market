@@ -1,0 +1,6 @@
+.conversion {
+  display: inline-block;
+  font-size: var(--font-size-mini);
+  margin-left: calc(var(--spacer) / 6);
+  color: var(--color-secondary);
+}

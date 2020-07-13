@@ -4,13 +4,14 @@
   color: var(--brand-grey-dark);
 }
 
-.price span {
+.price span:first-child {
   font-weight: var(--font-weight-base);
   color: var(--color-secondary);
   font-size: var(--font-size-base);
 }
 
 .small {
+  /* lazy making-conversion-smaller-with-same-markup */
   transform: scale(0.7);
   transform-origin: left 80%;
 }

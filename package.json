@@ -68,6 +68,7 @@
     "react-toastify": "^6.0.8",
     "shortid": "^2.2.15",
     "slugify": "^1.4.4",
+    "swr": "^0.2.3",
     "web3connect": "^1.0.0-beta.33",
     "yup": "^0.29.1"
   },

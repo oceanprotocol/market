@@ -72,6 +72,20 @@ export async function getFileInfo(url: string): Promise<File> {
   }
 }
 
+export async function fetchData(url: string): Promise<any> {
+  try {
+    const response = await axios(url)
+
+    if (response.status !== 200) {
+      return console.error('Non-200 response: ' + response.status)
+    }
+
+    return response.data
+  } catch (error) {
+    console.error('Error parsing json: ' + error.message)
+  }
+}
+
 export function isDid(did: string | undefined): boolean {
   const didMatch = (did as string).match(/^did:op:([a-f0-9]{64})$/i)
   return !!didMatch

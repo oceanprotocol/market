@@ -1,7 +1,8 @@
 import React, { ReactElement } from 'react'
-import Web3 from 'web3'
+import { fromWei } from 'web3-utils'
 import classNames from 'classnames/bind'
-import styles from './Price.module.css'
+import PriceConversion from './Conversion'
+import styles from './index.module.css'
 
 const cx = classNames.bind(styles)
 
@@ -26,7 +27,8 @@ export default function Price({
     'Free'
   ) : (
     <>
-      <span>OCEAN</span> {Web3.utils.fromWei(price)}
+      <span>OCEAN</span> {fromWei(price)}
+      <PriceConversion price={fromWei(price)} />
     </>
   )
 
