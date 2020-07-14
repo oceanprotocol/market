@@ -12,5 +12,6 @@ module.exports = {
     verbose: 3
   },
   // Main, Rinkeby, Kovan
-  networks: [1, 4, 42]
+  networks: [1, 4, 42],
+  infuraProjectId: process.env.INFURA_PROJECT_ID
 }
