@@ -178,9 +178,8 @@ The following Metadata Store & Provider instances specifically for marketplace a
 
 **Rinkeby (Staging)**
 
-- K8 namespace: `market-nile`
-- `aquarius.nile.market.dev-ocean.com`
-- `brizo.nile.market.dev-ocean.com`
+- `[aquarius.rinkeby.v3.dev-ocean.com](https://aquarius.rinkeby.v3.dev-ocean.com)`
+- `[provider.rinkeby.v3.dev-ocean.com](https://provider.rinkeby.v3.dev-ocean.com)`
 
 Edit command with `kubectl`, e.g.:
 
