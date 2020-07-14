@@ -6,7 +6,7 @@ import Web3Feedback from './Feedback'
 import { formatNumber } from '../../../utils'
 
 export default function Details({ attrs }: { attrs: any }): ReactElement {
-  const { balance, web3Modal } = useOcean()
+  const { balance, web3Modal, logout } = useOcean()
   const ethBalanceText = 'hello test'
   // || formatNumber(Number(balance.eth))
   const oceanBalanceText = 'hello test'
@@ -25,7 +25,10 @@ export default function Details({ attrs }: { attrs: any }): ReactElement {
           <Button
             style="text"
             size="small"
-            onClick={() => web3Modal.toggleModal()}
+            onClick={async () => {
+              logout()
+              await web3Modal.toggleModal()
+            }}
           >
             Switch Wallet
           </Button>
