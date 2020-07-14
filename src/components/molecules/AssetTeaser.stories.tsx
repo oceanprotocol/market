@@ -1,6 +1,6 @@
 import AssetTeaser from '../molecules/AssetTeaser'
 import * as React from 'react'
-import { DDO } from '@oceanprotocol/squid'
+import { DDO } from '@oceanprotocol/lib'
 import ddo from '../../../tests/unit/__fixtures__/ddo'
 
 export default {

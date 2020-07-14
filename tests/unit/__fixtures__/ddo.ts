@@ -1,4 +1,4 @@
-import { DDO } from '@oceanprotocol/squid'
+import { DDO } from '@oceanprotocol/lib'
 import { MetaDataMarket } from '../../../src/@types/MetaData'
 
 const ddo: Partial<DDO> = {

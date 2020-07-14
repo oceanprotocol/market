@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 import Web3 from 'web3'
-import { DID } from '@oceanprotocol/squid'
+import { DID } from '@oceanprotocol/lib'
 import { oceanConfig } from '../../app.config'
 
 export declare type RatingResponse = [string, number]

@@ -1,4 +1,4 @@
-import { ComputeJob } from '@oceanprotocol/squid'
+import { ComputeJob } from '@oceanprotocol/lib'
 
 // ComputeJob need to be updated in squid
 const job: Partial<ComputeJob> = {

@@ -4,7 +4,7 @@ import AssetContent from '../../components/organisms/AssetContent'
 import Layout from '../../components/Layout'
 import { PageProps } from 'gatsby'
 import { MetaDataMarket, ServiceMetaDataMarket } from '../../@types/MetaData'
-import { Aquarius, Logger } from '@oceanprotocol/squid'
+import { MetadataStore, Logger } from '@oceanprotocol/lib'
 import { oceanConfig } from '../../../app.config'
 import Alert from '../../components/atoms/Alert'
 
@@ -18,12 +18,15 @@ export default function AssetRoute(props: PageProps): ReactElement {
   useEffect(() => {
     async function init() {
       try {
-        const aquarius = new Aquarius(oceanConfig.aquariusUri, Logger)
-        const ddo = await aquarius.retrieveDDO(did)
+        const metadataStore = new MetadataStore(
+          oceanConfig.metadataStoreUri,
+          Logger
+        )
+        const ddo = await metadataStore.retrieveDDO(did)
 
         if (!ddo) {
           setTitle('Could not retrieve asset')
-          setError('The DDO was not found in Aquarius.')
+          setError('The DDO was not found in MetadataStore.')
           return
         }
 

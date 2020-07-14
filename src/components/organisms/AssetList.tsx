@@ -1,12 +1,12 @@
 import AssetTeaser from '../molecules/AssetTeaser'
 import React from 'react'
-import { QueryResult } from '@oceanprotocol/squid/dist/node/aquarius/Aquarius'
+import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatastore/MetadataStore'
 import shortid from 'shortid'
 import Pagination from '../molecules/Pagination'
 import { updateQueryStringParameter } from '../../utils'
 import styles from './AssetList.module.css'
 import { MetaDataMarket } from '../../@types/MetaData'
-import { DDO } from '@oceanprotocol/squid'
+import { DDO } from '@oceanprotocol/lib'
 
 declare type AssetListProps = {
   queryResult: QueryResult

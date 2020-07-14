@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactRating from 'react-rating'
 import Star from '../../images/star.svg'
-import { Curation } from '@oceanprotocol/squid'
+import { Curation } from '@oceanprotocol/lib'
 import styles from './Rating.module.css'
 
 export default function Rating({

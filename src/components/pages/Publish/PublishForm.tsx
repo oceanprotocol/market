@@ -7,7 +7,7 @@ import { useOcean } from '@oceanprotocol/react'
 import {
   Service,
   ServiceCompute
-} from '@oceanprotocol/squid/dist/node/ddo/Service'
+} from '@oceanprotocol/lib/dist/node/ddo/Service'
 import { Formik, Form as FormFormik, Field } from 'formik'
 import Input from '../../atoms/Input'
 import Button from '../../atoms/Button'
@@ -15,7 +15,7 @@ import { transformPublishFormToMetadata } from './utils'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { MetaDataPublishForm } from '../../../@types/MetaData'
 import AssetModel from '../../../models/Asset'
-import { File } from '@oceanprotocol/squid'
+import { File } from '@oceanprotocol/lib'
 
 const validationSchema = Yup.object().shape<MetaDataPublishForm>({
   // ---- required fields ----
@@ -81,7 +81,7 @@ export default function PublishForm({
     //     account,
     //     metadata.main.price,
     //     // Note: a hack without consequences.
-    //     // Will make metadata.main.datePublished (automatically created by Aquarius)
+    //     // Will make metadata.main.datePublished (automatically created by MetadataStore)
     //     // go out of sync with this service.main.datePublished.
     //     toStringNoMS(new Date(Date.now()))
     //   )

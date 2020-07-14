@@ -174,9 +174,9 @@ vercel alias
 
 ## 🏗 Ocean Protocol Infrastructure
 
-The following Aquarius & Brizo instances specifically for marketplace are deployed in Ocean Protocol's AWS K8:
+The following Metadata Store & Provider instances specifically for marketplace are deployed in Ocean Protocol's AWS K8:
 
-**Nile (Staging)**
+**Rinkeby (Staging)**
 
 - K8 namespace: `market-nile`
 - `aquarius.nile.market.dev-ocean.com`
@@ -188,7 +188,7 @@ Edit command with `kubectl`, e.g.:
 kubectl edit deployment -n market-nile aquarius
 ```
 
-**Pacific (Production)**
+**Main (Production)**
 
 - K8 namespace: `market-pacific`
 - `aquarius.pacific.market.dev-ocean.com`
