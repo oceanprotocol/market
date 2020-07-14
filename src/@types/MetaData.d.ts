@@ -1,5 +1,5 @@
-import { File, MetaData, AdditionalInformation } from '@oceanprotocol/squid'
-import { ServiceMetadata } from '@oceanprotocol/squid/dist/node/ddo/Service'
+import { File, MetaData, AdditionalInformation } from '@oceanprotocol/lib'
+import { ServiceMetadata } from '@oceanprotocol/lib/dist/node/ddo/Service'
 
 export declare type AccessType = 'Download' | 'Compute'
 

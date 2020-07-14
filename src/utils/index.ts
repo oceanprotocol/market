@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 import { toast } from 'react-toastify'
-import { File } from '@oceanprotocol/squid'
+import { File } from '@oceanprotocol/lib'
 import numeral from 'numeral'
 import web3Utils from 'web3-utils'
 

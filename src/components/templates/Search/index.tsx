@@ -1,5 +1,5 @@
 import React, { ReactElement, useState, useEffect } from 'react'
-import { QueryResult } from '@oceanprotocol/squid/dist/node/aquarius/Aquarius'
+import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatastore/MetadataStore'
 import SearchBar from '../../molecules/SearchBar'
 import AssetList from '../../organisms/AssetList'
 import { SearchPriceFilter } from '../../molecules/SearchPriceFilter'

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, ReactElement } from 'react'
-import { Ocean } from '@oceanprotocol/squid'
+import { Ocean } from '@oceanprotocol/lib'
 import { fromWei } from 'web3-utils'
 import compareAsBN, { Comparisson } from '../../../utils/compareAsBN'
 import Loader from '../../atoms/Loader'

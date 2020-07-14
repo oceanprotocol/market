@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { DID } from '@oceanprotocol/squid'
+import { DID } from '@oceanprotocol/lib'
 import { oceanConfig } from '../../app.config'
 
 export declare type GetRatingResponse = {

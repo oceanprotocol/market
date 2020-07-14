@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import Compute from './Compute'
 import ddo from '../../../../tests/unit/__fixtures__/ddo'
 import web3Mock from '../../../../tests/unit/__mocks__/web3'
-import squidMock from '../../../../tests/unit/__mocks__/@oceanprotocol/squid'
+import squidMock from '../../../../tests/unit/__mocks__/@oceanprotocol/lib'
 import { context } from '../../../../tests/unit/__mocks__/web3provider'
 
 export default {

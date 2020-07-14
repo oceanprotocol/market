@@ -1,7 +1,7 @@
 import ddo from '../../__fixtures__/ddo'
 import job from '../../__fixtures__/job'
 
-const aquarius = {
+const metadataStore = {
   queryMetadata: () => {
     return {
       results: [] as any[],
@@ -12,13 +12,13 @@ const aquarius = {
 }
 
 const squidMock = {
-  Aquarius: () => aquarius,
+  MetadataStore: () => metadataStore,
   DDO: () => ddo,
   ocean: {
     accounts: {
       list: () => ['xxx', 'xxx']
     },
-    aquarius,
+    metadataStore,
     compute: {
       status: (account: string) => {
         return [job]
@@ -69,13 +69,13 @@ const squidMock = {
             name: 'Squid-js',
             status: 'Working'
           },
-          aquarius: {
-            name: 'Aquarius',
+          metadataStore: {
+            name: 'MetadataStore',
             status: 'Working'
           },
-          brizo: {
-            name: 'Brizo',
-            network: 'Nile',
+          provider: {
+            name: 'Provider',
+            network: 'Rinkeby',
             status: 'Working',
             contracts: {
               hello: 'hello',

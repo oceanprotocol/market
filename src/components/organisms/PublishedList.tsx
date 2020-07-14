@@ -1,6 +1,6 @@
 import React, { useEffect, useState, ReactElement } from 'react'
 import Loader from '../atoms/Loader'
-import { MetaDataMain } from '@oceanprotocol/squid'
+import { MetaDataMain } from '@oceanprotocol/lib'
 import {
   useOcean,
   OceanConnectionStatus,
