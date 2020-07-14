@@ -8,15 +8,15 @@ import JobsList from '../organisms/JobsList'
 const sections = [
   {
     title: 'Published',
-    component: <PublishedList />
+    component: 'Coming Soon...'
   },
   {
     title: 'Downloaded',
-    component: <ConsumedList />
+    component: 'Coming Soon...'
   },
   {
     title: 'Compute Jobs',
-    component: <JobsList />
+    component: 'Coming Soon...'
   }
 ]
 
