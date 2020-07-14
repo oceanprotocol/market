@@ -4,9 +4,10 @@ import styles from './Details.module.css'
 import { useOcean } from '@oceanprotocol/react'
 import Web3Feedback from './Feedback'
 import { formatNumber } from '../../../utils'
+import { connectWallet } from '../../../utils/wallet'
 
 export default function Details({ attrs }: { attrs: any }): ReactElement {
-  const { balance, web3Modal, logout } = useOcean()
+  const { balance, connect, logout } = useOcean()
   const ethBalanceText = 'hello test'
   // || formatNumber(Number(balance.eth))
   const oceanBalanceText = 'hello test'
@@ -26,8 +27,8 @@ export default function Details({ attrs }: { attrs: any }): ReactElement {
             style="text"
             size="small"
             onClick={async () => {
-              logout()
-              await web3Modal.toggleModal()
+              await logout()
+              await connectWallet(connect)
             }}
           >
             Switch Wallet
