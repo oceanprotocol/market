@@ -8,21 +8,18 @@ import { connectWallet } from '../../../utils/wallet'
 
 export default function Details({ attrs }: { attrs: any }): ReactElement {
   const { balance, connect, logout } = useOcean()
-  const ethBalanceText = 'hello test'
-  // || formatNumber(Number(balance.eth))
-  const oceanBalanceText = 'hello test'
-  // || formatNumber(Number(balance.ocean))
+  const oceanBalance = 'Hello Test'
 
   return (
     <div className={styles.details} {...attrs}>
       <ul>
         <li className={styles.balance}>
-          OCEAN <span>{oceanBalanceText}</span>
+          <span>OCEAN</span> {oceanBalance}
         </li>
         <li className={styles.balance}>
-          ETH <span>{ethBalanceText}</span>
+          <span>ETH</span> {formatNumber(Number(balance))}
         </li>
-        <li>
+        <li className={styles.actions}>
           <Button
             style="text"
             size="small"
