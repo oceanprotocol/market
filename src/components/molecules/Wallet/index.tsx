@@ -1,10 +1,10 @@
 import React, { ReactElement } from 'react'
 import loadable from '@loadable/component'
 import { useSpring, animated } from 'react-spring'
-import { useWeb3 } from '@oceanprotocol/react'
 import Account from './Account'
 import Details from './Details'
 import styles from './index.module.css'
+import { useOcean } from '@oceanprotocol/react'
 
 const Tippy = loadable(() => import('@tippyjs/react/headless'))
 
@@ -15,7 +15,7 @@ const animation = {
 }
 
 export default function Wallet(): ReactElement {
-  const { account, ethProviderStatus } = useWeb3()
+  const { accountId } = useOcean()
   const [props, setSpring] = useSpring(() => animation.from)
 
   function onMount() {
@@ -34,9 +34,6 @@ export default function Wallet(): ReactElement {
     })
   }
 
-  const isEthProviderAbsent = ethProviderStatus === -1
-  if (isEthProviderAbsent) return null
-
   return (
     <Tippy
       interactive
@@ -53,7 +50,7 @@ export default function Wallet(): ReactElement {
       animation
       onMount={onMount}
       onHide={onHide}
-      disabled={!account}
+      disabled={!accountId}
       fallback={<Account />}
     >
       <Account />

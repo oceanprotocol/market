@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import { Web3Provider, OceanProvider, Config } from '@oceanprotocol/react'
+import { OceanProvider } from '@oceanprotocol/react'
 import { oceanConfig } from '../../app.config'
 
 const wrapRootElement = ({
@@ -7,9 +7,7 @@ const wrapRootElement = ({
 }: {
   element: ReactElement
 }): ReactElement => (
-  <Web3Provider>
-    <OceanProvider config={oceanConfig as Config}>{element}</OceanProvider>
-  </Web3Provider>
+  <OceanProvider config={oceanConfig}>{element}</OceanProvider>
 )
 
 export default wrapRootElement

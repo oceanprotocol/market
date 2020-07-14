@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './Account.module.css'
-import { useWeb3, useOcean } from '@oceanprotocol/react'
+import { useOcean } from '@oceanprotocol/react'
 import { toDataUrl } from 'ethereum-blockies'
 import { ReactComponent as Caret } from '../../../images/caret.svg'
 import Status from '../../atoms/Status'
@@ -28,15 +28,16 @@ const Blockies = ({ account }: { account: string | undefined }) => {
 // Forward ref for Tippy.js
 // eslint-disable-next-line
 const Account = React.forwardRef((props, ref: any) => {
-  const { account, web3Connect, ethProviderStatus } = useWeb3()
-  const { status } = useOcean()
-  const hasSuccess = ethProviderStatus === 1 && status === 1
+  const { accountId, status, web3Modal } = useOcean()
+  const hasSuccess = status === 1
 
-  return account ? (
+  console.log(web3Modal)
+
+  return accountId ? (
     <button className={styles.button} aria-label="Account" ref={ref}>
-      <Blockies account={account} />
-      <span className={styles.address} title={account}>
-        {accountTruncate(account)}
+      <Blockies account={accountId} />
+      <span className={styles.address} title={accountId}>
+        {accountTruncate(accountId)}
       </span>
       {!hasSuccess && (
         <Status className={styles.status} state="warning" aria-hidden />
@@ -46,7 +47,7 @@ const Account = React.forwardRef((props, ref: any) => {
   ) : (
     <button
       className={styles.button}
-      onClick={() => web3Connect.connect()}
+      onClick={() => web3Modal.toggleModal()}
       // Need the `ref` here although we do not want
       // the Tippy to show in this state.
       ref={ref}
