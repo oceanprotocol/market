@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react'
 import Status from '../../atoms/Status'
 import styles from './Feedback.module.css'
 import { useOcean } from '@oceanprotocol/react'
+import { isCorrectNetwork } from '../../../utils/wallet'
 
 export declare type Web3Error = {
   status: 'error' | 'warning' | 'success'
@@ -14,39 +15,42 @@ export default function Web3Feedback({
 }: {
   isBalanceInsufficient?: boolean
 }): ReactElement {
-  const { web3, status } = useOcean()
-  const isOceanDisconnected = status === 0
+  const { account, status, chainId } = useOcean()
   const isOceanConnectionError = status === -1
+  const correctNetwork = isCorrectNetwork(chainId)
+  const showFeedback = !account || isOceanConnectionError || !correctNetwork
 
-  const state = !web3
+  const state = !account
     ? 'error'
-    : web3 && !isBalanceInsufficient
+    : !correctNetwork
+    ? 'warning'
+    : account && !isBalanceInsufficient
     ? 'success'
     : 'warning'
 
-  const title = !web3
+  const title = !account
     ? 'No account connected'
-    : isOceanDisconnected
-    ? 'Not connected to Pacific network'
     : isOceanConnectionError
     ? 'Error connecting to Ocean'
-    : web3
+    : !correctNetwork
+    ? 'Wrong Network'
+    : account
     ? isBalanceInsufficient === true
       ? 'Insufficient balance'
       : 'Connected to Ocean'
     : 'Something went wrong'
 
-  const message = !web3
+  const message = !account
     ? 'Please connect your Web3 wallet.'
-    : isOceanDisconnected
-    ? 'Please connect in MetaMask to custom RPC https://pacific.oceanprotocol.com.'
     : isOceanConnectionError
-    ? 'Try again.'
+    ? 'Please try again.'
+    : !correctNetwork
+    ? 'Please connect to Main, Rinkeby, or Kovan.'
     : isBalanceInsufficient === true
     ? 'You do not have enough OCEAN in your wallet to purchase this asset.'
     : 'Something went wrong.'
 
-  return web3 ? (
+  return showFeedback ? (
     <section className={styles.feedback}>
       <Status state={state} aria-hidden />
       <h3 className={styles.title}>{title}</h3>
