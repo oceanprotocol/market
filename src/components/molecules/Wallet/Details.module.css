@@ -10,16 +10,26 @@
 }
 
 .balance {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
   color: var(--color-secondary);
   white-space: nowrap;
-  font-size: var(--font-size-small);
 }
 
 .balance span {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-bold);
+  width: 20%;
+  text-align: right;
+  font-weight: var(--font-weight-base);
+  font-size: var(--font-size-small);
   display: inline-block;
-  margin-left: 0.1rem;
+  margin-right: 0.4rem;
+}
+
+.actions {
+  border-top: 1px solid var(--brand-grey-lighter);
+  margin-top: calc(var(--spacer) / 2);
+  padding-top: calc(var(--spacer) / 2);
+  text-align: center;
 }
 
 .arrow,
