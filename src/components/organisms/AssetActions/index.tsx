@@ -13,7 +13,7 @@ export default function AssetActions({
   metadata: MetaDataMarket
   did: string
 }): ReactElement {
-  const { ocean, balanceInOcean } = useOcean()
+  // const { ocean, balanceInOcean } = useOcean()
   const { access } = metadata.additionalInformation
   const isCompute = access && access === 'Compute'
 
@@ -26,12 +26,13 @@ export default function AssetActions({
       <div className={styles.tabContent}>
         <TabPanel>
           {isCompute ? (
-            <Compute
-              did={did}
-              metadata={metadata}
-              ocean={ocean}
-              balance={balanceInOcean}
-            />
+            // <Compute
+            //   did={did}
+            //   metadata={metadata}
+            //   ocean={ocean}
+            //   balance={balanceInOcean}
+            // />
+            'Compute Me'
           ) : (
             <Consume did={did} metadata={metadata} />
           )}

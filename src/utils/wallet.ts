@@ -16,7 +16,7 @@ export async function connectWallet(
     }
   }
 
-  await connect({ providerOptions })
+  await connect({ cacheProvider: true, providerOptions })
 }
 
 export function accountTruncate(account: string): string {
