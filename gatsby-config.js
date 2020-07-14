@@ -32,7 +32,7 @@ module.exports = {
     {
       resolve: 'gatsby-source-ocean',
       options: {
-        aquariusUri: oceanConfig.aquariusUri
+        metadataStoreUri: oceanConfig.metadataStoreUri
       }
     },
     {

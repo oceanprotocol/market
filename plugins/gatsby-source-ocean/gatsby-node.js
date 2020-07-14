@@ -2,18 +2,18 @@ const axios = require('axios')
 
 exports.sourceNodes = async (
   { actions, createNodeId, createContentDigest },
-  { aquariusUri }
+  { metadataStoreUri }
 ) => {
   const { createNode } = actions
 
   // Query for all assets to use in creating pages.
-  const result = await axios(`${aquariusUri}/api/v1/aquarius/assets`)
+  const result = await axios(`${metadataStoreUri}/api/v1/aquarius/assets`)
 
   for (let i = 0; i < result.data.ids.length; i++) {
     const did = result.data.ids[i]
 
     const metadataResult = await axios(
-      `${aquariusUri}/api/v1/aquarius/assets/metadata/${did}`
+      `${metadataStoreUri}/api/v1/aquarius/assets/metadata/${did}`
     )
 
     const metadata = {
@@ -28,7 +28,7 @@ exports.sourceNodes = async (
       internal: {
         type: 'OceanAsset',
         contentDigest: createContentDigest(metadata),
-        description: `All data sets queried from ${aquariusUri}`
+        description: `All data sets queried from ${metadataStoreUri}`
       }
     }
 
