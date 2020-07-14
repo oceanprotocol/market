@@ -28,10 +28,8 @@ const Blockies = ({ account }: { account: string | undefined }) => {
 // Forward ref for Tippy.js
 // eslint-disable-next-line
 const Account = React.forwardRef((props, ref: any) => {
-  const { accountId, status, web3Modal } = useOcean()
+  const { accountId, status, connect } = useOcean()
   const hasSuccess = status === 1
-
-  console.log(web3Modal)
 
   return accountId ? (
     <button className={styles.button} aria-label="Account" ref={ref}>
@@ -47,7 +45,7 @@ const Account = React.forwardRef((props, ref: any) => {
   ) : (
     <button
       className={styles.button}
-      onClick={() => web3Modal.toggleModal()}
+      onClick={() => connect()}
       // Need the `ref` here although we do not want
       // the Tippy to show in this state.
       ref={ref}
