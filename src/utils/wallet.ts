@@ -1,5 +1,5 @@
 import { OceanProviderValue } from '@oceanprotocol/react'
-import { networks } from '../../app.config'
+import { networks, infuraProjectId } from '../../app.config'
 
 export async function connectWallet(
   connect: OceanProviderValue['connect']
@@ -12,7 +12,7 @@ export async function connectWallet(
     walletconnect: {
       package: WalletConnectProvider, // required
       options: {
-        infuraId: 'INFURA_ID' // required
+        infuraId: infuraProjectId // required
       }
     }
   }
