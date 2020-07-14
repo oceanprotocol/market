@@ -1,4 +1,5 @@
 import { OceanProviderValue } from '@oceanprotocol/react'
+import { networks } from '../../app.config'
 
 export async function connectWallet(
   connect: OceanProviderValue['connect']
@@ -17,6 +18,11 @@ export async function connectWallet(
   }
 
   await connect({ cacheProvider: true, providerOptions })
+}
+
+export function isCorrectNetwork(chainId: number): boolean {
+  const allowedIds = networks
+  return allowedIds.includes(chainId)
 }
 
 export function accountTruncate(account: string): string {

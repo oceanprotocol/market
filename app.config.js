@@ -10,5 +10,7 @@ module.exports = {
       process.env.FACTORY_ADDRESS ||
       '0x00c6A0BC5cD0078d6Cd0b659E8061B404cfa5704',
     verbose: 3
-  }
+  },
+  // Main, Rinkeby, Kovan
+  networks: [1, 4, 42]
 }
