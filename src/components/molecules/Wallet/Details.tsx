@@ -5,9 +5,10 @@ import { useOcean } from '@oceanprotocol/react'
 import Web3Feedback from './Feedback'
 import { formatNumber } from '../../../utils'
 import { connectWallet } from '../../../utils/wallet'
+import { getInjectedProviderName } from 'web3modal'
 
 export default function Details({ attrs }: { attrs: any }): ReactElement {
-  const { balance, connect, logout } = useOcean()
+  const { balance, connect, logout, web3Provider } = useOcean()
   const oceanBalance = 'Hello Test'
 
   return (
@@ -20,12 +21,13 @@ export default function Details({ attrs }: { attrs: any }): ReactElement {
           <span>ETH</span> {formatNumber(Number(balance))}
         </li>
         <li className={styles.actions}>
+          <span title="Connected provider">{getInjectedProviderName()}</span>
           <Button
             style="text"
             size="small"
-            onClick={async () => {
-              await logout()
-              await connectWallet(connect)
+            onClick={() => {
+              logout()
+              connectWallet(connect)
             }}
           >
             Switch Wallet

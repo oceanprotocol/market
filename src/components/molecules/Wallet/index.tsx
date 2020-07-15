@@ -39,6 +39,7 @@ export default function Wallet(): ReactElement {
       interactive
       interactiveBorder={30}
       trigger="click focus"
+      zIndex={1}
       render={(attrs: any) => (
         <animated.div style={props}>
           <Details attrs={attrs} />

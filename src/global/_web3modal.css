@@ -1,0 +1,68 @@
+div.web3modal-modal-lightbox {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(3px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  animation: fadeIn 0.2s ease-out backwards;
+}
+
+div.web3modal-modal-card {
+  border-radius: var(--border-radius);
+  padding: var(--spacer);
+  margin: var(--spacer) auto;
+  max-width: var(--break-point--small);
+  border: 1px solid var(--brand-grey-lighter);
+  box-shadow: 0 6px 15px 0 rgba(0, 0, 0, 0.05);
+  animation: moveUp 0.2s ease-out backwards;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+div.web3modal-provider-wrapper {
+  border: none;
+  padding: 0;
+}
+
+div.web3modal-provider-container {
+  padding: var(--spacer);
+}
+
+div.web3modal-provider-icon {
+  filter: grayscale(1) contrast(150%);
+  transition: filter 0.2s ease-out;
+}
+
+div.web3modal-provider-wrapper:hover div.web3modal-provider-icon {
+  filter: none;
+}
+
+div.web3modal-provider-name {
+  font-size: var(--font-size-large);
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-family-title);
+}
+
+div.web3modal-provider-description {
+  font-size: var(--font-size-base);
+  margin-top: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes moveUp {
+  from {
+    transform: translate3d(0, 1rem, 0);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
