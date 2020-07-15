@@ -23,16 +23,17 @@ export default function SearchPage({
   const parsed = queryString.parse(location.search)
   const { text, tag } = parsed
   const [queryResult, setQueryResult] = useState<QueryResult>()
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState<boolean>()
 
   useEffect(() => {
     async function initSearch() {
+      setLoading(true)
       const queryResult = await getResults(parsed)
       setQueryResult(queryResult)
       setLoading(false)
     }
     initSearch()
-  }, [])
+  }, [text, tag])
 
   return (
     <section className={styles.grid}>
@@ -45,13 +46,7 @@ export default function SearchPage({
       </aside>
 
       <div className={styles.results}>
-        {loading ? (
-          <Loader />
-        ) : queryResult && queryResult.results.length > 0 ? (
-          <AssetList queryResult={queryResult} />
-        ) : (
-          <div className={styles.empty}>No results found.</div>
-        )}
+        {loading ? <Loader /> : <AssetList queryResult={queryResult} />}
       </div>
     </section>
   )

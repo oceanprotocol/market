@@ -53,7 +53,7 @@ const AssetList: React.FC<AssetListProps> = ({ queryResult }) => {
           })
         ) : (
           <div className={styles.empty}>
-            No data sets found in {appConfig.oceanConfig.metadataStoreUri}
+            No results found in {appConfig.oceanConfig.metadataStoreUri}
           </div>
         )}
       </div>
