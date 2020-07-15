@@ -1,6 +1,5 @@
 import { MetaDataMarket } from '../../../@types/MetaData'
 import React, { ReactElement } from 'react'
-import { useOcean } from '@oceanprotocol/react'
 import Time from '../../atoms/Time'
 import { Link } from 'gatsby'
 import Markdown from '../../atoms/Markdown'

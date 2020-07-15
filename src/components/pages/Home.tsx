@@ -3,23 +3,27 @@ import SearchBar from '../molecules/SearchBar'
 import { ServiceMetaDataMarket } from '../../@types/MetaData'
 import AssetTeaser from '../molecules/AssetTeaser'
 import styles from './Home.module.css'
-import axios from 'axios'
 import { oceanConfig } from '../../../app.config'
-import { DDO } from '@oceanprotocol/lib'
+import { DDO, MetadataStore, Logger } from '@oceanprotocol/lib'
 
 export default function HomePage(): ReactElement {
   const [assets, setAssets] = useState<DDO[]>()
 
   useEffect(() => {
     async function getAllAssets() {
-      try {
-        const result = await axios(
-          `${oceanConfig.metadataStoreUri}/api/v1/aquarius/assets/ddo`
-        )
-        setAssets(result.data)
-      } catch (error) {
-        console.error(error.message)
-      }
+      const metadataStore = new MetadataStore(
+        oceanConfig.metadataStoreUri,
+        Logger
+      )
+
+      const result = await metadataStore.queryMetadata({
+        page: 1,
+        offset: 10,
+        query: {},
+        sort: { created: -1 }
+      })
+
+      result && result.results && setAssets(result.results)
     }
     getAllAssets()
   }, [])

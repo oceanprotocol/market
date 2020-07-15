@@ -7,7 +7,7 @@ import { MetaDataMarket, ServiceMetaDataMarket } from '../../@types/MetaData'
 import { MetadataStore, Logger } from '@oceanprotocol/lib'
 import { oceanConfig } from '../../../app.config'
 import Alert from '../../components/atoms/Alert'
-import { useMetadata } from '@oceanprotocol/react'
+import Loader from '../../components/atoms/Loader'
 
 export default function AssetRoute(props: PageProps): ReactElement {
   const [metadata, setMetadata] = useState<MetaDataMarket>()
@@ -45,11 +45,7 @@ export default function AssetRoute(props: PageProps): ReactElement {
     init()
   }, [])
 
-  return error ? (
-    <Layout title={title} noPageHeader uri={props.location.pathname}>
-      <Alert title={title} text={error} state="error" />
-    </Layout>
-  ) : did && metadata ? (
+  return did && metadata ? (
     <Layout title={title} uri={props.location.pathname}>
       <Router basepath="/asset">
         <AssetContent
@@ -59,9 +55,13 @@ export default function AssetRoute(props: PageProps): ReactElement {
         />
       </Router>
     </Layout>
+  ) : error ? (
+    <Layout title={title} noPageHeader uri={props.location.pathname}>
+      <Alert title={title} text={error} state="error" />
+    </Layout>
   ) : (
     <Layout title="Loading..." uri={props.location.pathname}>
-      Loading...
+      <Loader />
     </Layout>
   )
 }
