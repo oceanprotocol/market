@@ -14,5 +14,5 @@ module.exports = {
   },
   // Main, Rinkeby, Kovan
   networks: [1, 4, 42],
-  infuraProjectId: process.env.GATSBY_INFURA_PROJECT_ID
+  infuraProjectId: process.env.GATSBY_INFURA_PROJECT_ID || 'xxx'
 }
