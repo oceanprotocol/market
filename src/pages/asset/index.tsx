@@ -5,11 +5,12 @@ import Layout from '../../components/Layout'
 import { PageProps } from 'gatsby'
 import { MetaDataMarket, ServiceMetaDataMarket } from '../../@types/MetaData'
 import { MetadataStore, Logger } from '@oceanprotocol/lib'
-import { oceanConfig } from '../../../app.config'
 import Alert from '../../components/atoms/Alert'
 import Loader from '../../components/atoms/Loader'
+import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 
 export default function AssetRoute(props: PageProps): ReactElement {
+  const { appConfig } = useSiteMetadata()
   const [metadata, setMetadata] = useState<MetaDataMarket>()
   const [title, setTitle] = useState<string>()
   const [error, setError] = useState<string>()
@@ -20,7 +21,7 @@ export default function AssetRoute(props: PageProps): ReactElement {
     async function init() {
       try {
         const metadataStore = new MetadataStore(
-          oceanConfig.metadataStoreUri,
+          appConfig.oceanConfig.metadataStoreUri,
           Logger
         )
         const ddo = await metadataStore.retrieveDDO(did)

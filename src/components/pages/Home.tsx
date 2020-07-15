@@ -1,19 +1,16 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import SearchBar from '../molecules/SearchBar'
 import styles from './Home.module.css'
-import { oceanConfig } from '../../../app.config'
 import { MetadataStore, Logger } from '@oceanprotocol/lib'
 import AssetList from '../organisms/AssetList'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatastore/MetadataStore'
 import Container from '../atoms/Container'
 import Loader from '../atoms/Loader'
+import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 
-async function getLatestAssets() {
+async function getLatestAssets(metadataStoreUri: string) {
   try {
-    const metadataStore = new MetadataStore(
-      oceanConfig.metadataStoreUri,
-      Logger
-    )
+    const metadataStore = new MetadataStore(metadataStoreUri, Logger)
 
     const result = await metadataStore.queryMetadata({
       page: 1,
@@ -29,12 +26,15 @@ async function getLatestAssets() {
 }
 
 export default function HomePage(): ReactElement {
+  const { appConfig } = useSiteMetadata()
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function init() {
-      const results = await getLatestAssets()
+      const results = await getLatestAssets(
+        appConfig.oceanConfig.metadataStoreUri
+      )
       setQueryResult(results)
       setLoading(false)
     }

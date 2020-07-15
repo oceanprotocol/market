@@ -6,13 +6,14 @@ import { updateQueryStringParameter } from '../../utils'
 import styles from './AssetList.module.css'
 import { MetaDataMarket } from '../../@types/MetaData'
 import { DDO } from '@oceanprotocol/lib'
-import { oceanConfig } from '../../../app.config'
+import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 
 declare type AssetListProps = {
   queryResult: QueryResult
 }
 
 const AssetList: React.FC<AssetListProps> = ({ queryResult }) => {
+  const { appConfig } = useSiteMetadata()
   // TODO: restore Pagination behavior
 
   // Construct the urls on the pagination links. This is only for UX,
@@ -52,7 +53,7 @@ const AssetList: React.FC<AssetListProps> = ({ queryResult }) => {
           })
         ) : (
           <div className={styles.empty}>
-            No data sets found in {oceanConfig.metadataStoreUri}
+            No data sets found in {appConfig.oceanConfig.metadataStoreUri}
           </div>
         )}
       </div>
