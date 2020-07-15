@@ -1,6 +1,8 @@
 module.exports = {
   oceanConfig: {
-    nodeUri: process.env.GATSBY_NODE_URI || 'https://pacific.oceanprotocol.com',
+    nodeUri:
+      process.env.GATSBY_NODE_URI ||
+      `https://rinkeby.infura.io/${process.env.GATSBY_INFURA_PROJECT_ID}`,
     metadataStoreUri:
       process.env.GATSBY_METADATA_STORE_URI ||
       'https://aquarius.rinkeby.v3.dev-ocean.com',
@@ -13,6 +15,7 @@ module.exports = {
     verbose: 3
   },
   // Main, Rinkeby, Kovan
-  networks: [1, 4, 42],
+  // networks: [1, 4, 42],
+  networks: [4],
   infuraProjectId: process.env.GATSBY_INFURA_PROJECT_ID || 'xxx'
 }
