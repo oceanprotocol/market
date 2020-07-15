@@ -6,14 +6,16 @@ const cx = classNames.bind(styles)
 
 export default function PageHeader({
   title,
-  description
+  description,
+  center
 }: {
   title: string
   description?: string
   center?: boolean
 }): ReactElement {
   const styleClasses = cx({
-    header: true
+    header: true,
+    center: center
   })
 
   return (

@@ -1,5 +1,5 @@
-import { File, MetaData, AdditionalInformation } from '@oceanprotocol/squid'
-import { ServiceMetadata } from '@oceanprotocol/squid/dist/node/ddo/Service'
+import { File, MetaData, AdditionalInformation } from '@oceanprotocol/lib'
+import { ServiceMetadata } from '@oceanprotocol/lib/dist/node/ddo/Service'
 
 export declare type AccessType = 'Download' | 'Compute'
 
@@ -33,9 +33,4 @@ export interface MetaDataPublishForm {
 
 export interface ServiceMetaDataMarket extends ServiceMetadata {
   attributes: MetaDataMarket
-}
-
-// type for assets pulled into GraphQL
-export interface OceanAsset extends MetaDataMarket {
-  did: DID
 }

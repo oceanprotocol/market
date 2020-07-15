@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import squidMock from './squid'
+import libMock from './lib'
 import web3ProviderMock from '../web3provider'
 
 const reactMock = {
@@ -19,7 +19,7 @@ const reactMock = {
   },
   useOcean: () => {
     return {
-      ocean: squidMock.ocean
+      ocean: libMock.ocean
     }
   },
   useWeb3: () => {

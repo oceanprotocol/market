@@ -4,11 +4,13 @@ import AssetContent from '../../components/organisms/AssetContent'
 import Layout from '../../components/Layout'
 import { PageProps } from 'gatsby'
 import { MetaDataMarket, ServiceMetaDataMarket } from '../../@types/MetaData'
-import { Aquarius, Logger } from '@oceanprotocol/squid'
-import { oceanConfig } from '../../../app.config'
+import { MetadataStore, Logger } from '@oceanprotocol/lib'
 import Alert from '../../components/atoms/Alert'
+import Loader from '../../components/atoms/Loader'
+import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 
 export default function AssetRoute(props: PageProps): ReactElement {
+  const { appConfig } = useSiteMetadata()
   const [metadata, setMetadata] = useState<MetaDataMarket>()
   const [title, setTitle] = useState<string>()
   const [error, setError] = useState<string>()
@@ -18,12 +20,15 @@ export default function AssetRoute(props: PageProps): ReactElement {
   useEffect(() => {
     async function init() {
       try {
-        const aquarius = new Aquarius(oceanConfig.aquariusUri, Logger)
-        const ddo = await aquarius.retrieveDDO(did)
+        const metadataStore = new MetadataStore(
+          appConfig.oceanConfig.metadataStoreUri,
+          Logger
+        )
+        const ddo = await metadataStore.retrieveDDO(did)
 
         if (!ddo) {
           setTitle('Could not retrieve asset')
-          setError('The DDO was not found in Aquarius.')
+          setError('The DDO was not found in MetadataStore.')
           return
         }
 
@@ -39,21 +44,25 @@ export default function AssetRoute(props: PageProps): ReactElement {
       }
     }
     init()
-  }, [])
+  }, [did])
 
-  return error ? (
+  return did && metadata ? (
+    <Layout title={title} uri={props.location.pathname}>
+      <Router basepath="/asset">
+        <AssetContent
+          did={did}
+          metadata={metadata as MetaDataMarket}
+          path=":did"
+        />
+      </Router>
+    </Layout>
+  ) : error ? (
     <Layout title={title} noPageHeader uri={props.location.pathname}>
       <Alert title={title} text={error} state="error" />
     </Layout>
-  ) : did && metadata ? (
-    <Layout title={title} uri={props.location.pathname}>
-      <Router basepath="/asset">
-        <AssetContent did={did} metadata={metadata} path="/asset/:did" />
-      </Router>
-    </Layout>
   ) : (
     <Layout title="Loading..." uri={props.location.pathname}>
-      Loading...
+      <Loader />
     </Layout>
   )
 }

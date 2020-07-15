@@ -1,7 +1,9 @@
 import React, { ReactElement } from 'react'
 import Status from '../../atoms/Status'
 import styles from './Feedback.module.css'
-import { useWeb3, useOcean } from '@oceanprotocol/react'
+import { useOcean } from '@oceanprotocol/react'
+import { isCorrectNetwork, getNetworkName } from '../../../utils/wallet'
+import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 
 export declare type Web3Error = {
   status: 'error' | 'warning' | 'success'
@@ -14,47 +16,46 @@ export default function Web3Feedback({
 }: {
   isBalanceInsufficient?: boolean
 }): ReactElement {
-  const { ethProviderStatus } = useWeb3()
-  const { status } = useOcean()
-  const isEthProviderAbsent = ethProviderStatus === -1
-  const isEthProviderDisconnected = ethProviderStatus === 0
-  const isOceanDisconnected = status === 0
+  const { appConfig } = useSiteMetadata()
+  const { account, status, chainId } = useOcean()
   const isOceanConnectionError = status === -1
-  const hasSuccess = ethProviderStatus === 1 && status === 1
+  const correctNetwork = isCorrectNetwork(chainId)
+  const showFeedback = !account || isOceanConnectionError || !correctNetwork
+  const allowedNetworkNames = appConfig.networks.map((network: number) =>
+    getNetworkName(network)
+  )
 
-  const state = isEthProviderAbsent
+  const state = !account
     ? 'error'
-    : hasSuccess && !isBalanceInsufficient
+    : !correctNetwork
+    ? 'warning'
+    : account && !isBalanceInsufficient
     ? 'success'
     : 'warning'
 
-  const title = isEthProviderAbsent
-    ? 'No Web3 Browser'
-    : isEthProviderDisconnected
+  const title = !account
     ? 'No account connected'
-    : isOceanDisconnected
-    ? 'Not connected to Pacific network'
     : isOceanConnectionError
     ? 'Error connecting to Ocean'
-    : hasSuccess
+    : !correctNetwork
+    ? 'Wrong Network'
+    : account
     ? isBalanceInsufficient === true
       ? 'Insufficient balance'
       : 'Connected to Ocean'
     : 'Something went wrong'
 
-  const message = isEthProviderAbsent
-    ? 'To download data sets you need a browser with Web3 capabilties, like Firefox with MetaMask installed.'
-    : isEthProviderDisconnected
+  const message = !account
     ? 'Please connect your Web3 wallet.'
-    : isOceanDisconnected
-    ? 'Please connect in MetaMask to custom RPC https://pacific.oceanprotocol.com.'
     : isOceanConnectionError
-    ? 'Try again.'
+    ? 'Please try again.'
+    : !correctNetwork
+    ? `Please connect to ${allowedNetworkNames}.`
     : isBalanceInsufficient === true
     ? 'You do not have enough OCEAN in your wallet to purchase this asset.'
     : 'Something went wrong.'
 
-  return !hasSuccess ? (
+  return showFeedback ? (
     <section className={styles.feedback}>
       <Status state={state} aria-hidden />
       <h3 className={styles.title}>{title}</h3>

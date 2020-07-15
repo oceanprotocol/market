@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from '@reach/router'
-import { DDO } from '@oceanprotocol/squid'
+import { DDO } from '@oceanprotocol/lib'
 import { redeploy } from '../../utils'
 import Button from '../atoms/Button'
 import BaseDialog from '../atoms/BaseDialog'

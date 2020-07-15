@@ -1,3 +1,5 @@
+@import '../../node_modules/react-toastify/dist/ReactToastify.css';
+
 div.Toastify__toast {
   font-family: var(--font-family-base);
   font-size: var(--font-size-small);

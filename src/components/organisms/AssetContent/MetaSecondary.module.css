@@ -12,6 +12,5 @@
 }
 
 .samples {
-  composes: box from '../../atoms/Box.module.css';
   margin-top: calc(var(--spacer) / 2);
 }

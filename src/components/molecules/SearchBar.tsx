@@ -1,7 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent, ReactElement } from 'react'
 import { useNavigate } from '@reach/router'
 import styles from './SearchBar.module.css'
-import Loader from '../atoms/Loader'
 import Button from '../atoms/Button'
 import Input from '../atoms/Input'
 import InputGroup from '../atoms/Input/InputGroup'
@@ -19,7 +18,6 @@ export default function SearchBar({
 }): ReactElement {
   const navigate = useNavigate()
   const [value, setValue] = useState(initialValue || '')
-  const [searchStarted, setSearchStarted] = useState(false)
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     setValue(e.target.value)
@@ -27,10 +25,7 @@ export default function SearchBar({
 
   function startSearch(e: FormEvent<HTMLButtonElement>) {
     e.preventDefault()
-
     if (value === '') return
-
-    setSearchStarted(true)
     navigate(`/search?text=${value}`)
   }
 
@@ -46,7 +41,7 @@ export default function SearchBar({
           required
         />
         <Button onClick={(e: FormEvent<HTMLButtonElement>) => startSearch(e)}>
-          {searchStarted ? <Loader /> : 'Search'}
+          Search
         </Button>
       </InputGroup>
 

@@ -1,12 +1,12 @@
 import React, { ReactElement, useState, useEffect } from 'react'
-import { QueryResult } from '@oceanprotocol/squid/dist/node/aquarius/Aquarius'
+import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatastore/MetadataStore'
 import SearchBar from '../../molecules/SearchBar'
 import AssetList from '../../organisms/AssetList'
 import { SearchPriceFilter } from '../../molecules/SearchPriceFilter'
-
 import styles from './index.module.css'
 import queryString from 'query-string'
 import { getResults } from './utils'
+import Loader from '../../atoms/Loader'
 
 export declare type SearchPageProps = {
   text: string | string[]
@@ -20,16 +20,19 @@ export default function SearchPage({
   location: Location
 }): ReactElement {
   const parsed = queryString.parse(location.search)
-  const { text, tag } = parsed
+  const { text, tag, page } = parsed
   const [queryResult, setQueryResult] = useState<QueryResult>()
+  const [loading, setLoading] = useState<boolean>()
 
   useEffect(() => {
     async function initSearch() {
+      setLoading(true)
       const queryResult = await getResults(parsed)
       setQueryResult(queryResult)
+      setLoading(false)
     }
     initSearch()
-  }, [parsed])
+  }, [text, tag, page])
 
   return (
     <section className={styles.grid}>
@@ -42,11 +45,7 @@ export default function SearchPage({
       </aside>
 
       <div className={styles.results}>
-        {queryResult && queryResult.results.length > 0 ? (
-          <AssetList queryResult={queryResult} />
-        ) : (
-          <div className={styles.empty}>No results found.</div>
-        )}
+        {loading ? <Loader /> : <AssetList queryResult={queryResult} />}
       </div>
     </section>
   )

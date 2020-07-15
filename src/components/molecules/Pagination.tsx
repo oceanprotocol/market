@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, ReactElement } from 'react'
 import ReactPaginate from 'react-paginate'
 import styles from './Pagination.module.css'
 
@@ -14,7 +14,9 @@ export default function Pagination({
   currentPage,
   hrefBuilder,
   onPageChange
-}: PaginationProps) {
+}: PaginationProps): ReactElement {
+  if (!totalPages || totalPages < 2) return null
+
   const [smallViewport, setSmallViewport] = useState(true)
 
   function viewportChange(mq: { matches: boolean }) {
@@ -31,7 +33,7 @@ export default function Pagination({
     }
   }, [])
 
-  return totalPages > 1 ? (
+  return (
     <ReactPaginate
       pageCount={totalPages}
       // react-pagination starts counting at 0, we start at 1
@@ -53,5 +55,5 @@ export default function Pagination({
       disabledClassName={styles.prevNextDisabled}
       breakLinkClassName={styles.break}
     />
-  ) : null
+  )
 }

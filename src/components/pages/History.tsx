@@ -8,15 +8,15 @@ import JobsList from '../organisms/JobsList'
 const sections = [
   {
     title: 'Published',
-    component: <PublishedList />
+    component: 'Coming Soon...'
   },
   {
     title: 'Downloaded',
-    component: <ConsumedList />
+    component: 'Coming Soon...'
   },
   {
     title: 'Compute Jobs',
-    component: <JobsList />
+    component: 'Coming Soon...'
   }
 ]
 
@@ -32,7 +32,7 @@ const Section = ({ title, component }: { title: string; component: any }) => {
 const HistoryPage: React.FC = () => {
   return (
     <article className={styles.grid}>
-      <div>
+      <div className={styles.content}>
         {sections.map((section) => {
           const { title, component } = section
           return <Section key={title} title={title} component={component} />

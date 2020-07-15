@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import { File } from '@oceanprotocol/squid'
+import { File } from '@oceanprotocol/lib'
 import { prettySize } from '../../../utils'
 import cleanupContentType from '../../../utils/cleanupContentType'
 import styles from './Info.module.css'

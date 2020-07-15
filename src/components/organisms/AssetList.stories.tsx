@@ -1,5 +1,5 @@
 import React from 'react'
-import { DDO } from '@oceanprotocol/squid'
+import { DDO } from '@oceanprotocol/lib'
 import AssetList from './AssetList'
 import asset from '../../../tests/unit/__fixtures__/ddo'
 

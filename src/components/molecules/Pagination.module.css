@@ -15,7 +15,7 @@
   margin-top: -1px;
   display: inline-block;
   cursor: pointer;
-  border: 1px solid var(--brand-grey-light);
+  border: 1px solid var(--brand-grey-lighter);
   min-width: 3.5rem;
 }
 

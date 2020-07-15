@@ -1,30 +1,49 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import Button from '../../atoms/Button'
 import styles from './Details.module.css'
-import { useWeb3, useOcean } from '@oceanprotocol/react'
+import { useOcean } from '@oceanprotocol/react'
 import Web3Feedback from './Feedback'
 import { formatNumber } from '../../../utils'
+import { connectWallet, getNetworkName } from '../../../utils/wallet'
+import { getInjectedProviderName } from 'web3modal'
 
 export default function Details({ attrs }: { attrs: any }): ReactElement {
-  const { balance, web3Connect } = useWeb3()
-  const { balanceInOcean } = useOcean()
-  const ethBalanceText = formatNumber(Number(balance))
-  const oceanBalanceText = formatNumber(Number(balanceInOcean))
+  const { ocean, balance, connect, logout, chainId } = useOcean()
+  const [balanceOcean, setBalanceOcean] = useState('0')
+
+  useEffect(() => {
+    async function init() {
+      if (!ocean) return
+
+      const accounts = await ocean.accounts.list()
+      const newBalanceOcean = await accounts[0].getOceanBalance()
+      newBalanceOcean && setBalanceOcean(newBalanceOcean)
+    }
+    init()
+  }, [ocean])
 
   return (
     <div className={styles.details} {...attrs}>
       <ul>
         <li className={styles.balance}>
-          OCEAN <span>{oceanBalanceText}</span>
+          <span>OCEAN</span> {balanceOcean}
         </li>
         <li className={styles.balance}>
-          ETH <span>{ethBalanceText}</span>
+          <span>ETH</span> {formatNumber(Number(balance))}
         </li>
-        <li>
+        <li className={styles.actions}>
+          <span title="Connected provider">
+            {getInjectedProviderName()}
+            <br />
+            {getNetworkName(chainId)}
+          </span>
           <Button
             style="text"
             size="small"
-            onClick={() => web3Connect.toggleModal()}
+            onClick={() => {
+              logout()
+              connectWallet(connect)
+            }}
           >
             Switch Wallet
           </Button>

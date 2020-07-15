@@ -4,16 +4,14 @@ import { ListItem } from '../../atoms/Lists'
 import MetaItem from './MetaItem'
 import styles from './MetaSecondary.module.css'
 import { MetaDataMarket } from '../../../@types/MetaData'
+import Tags from '../../atoms/Tags'
 
 export default function MetaSecondary({
   metadata
 }: {
   metadata: MetaDataMarket
 }): ReactElement {
-  let links
-  if (metadata && metadata.additionalInformation) {
-    ;({ links } = metadata.additionalInformation)
-  }
+  const { links, tags } = metadata.additionalInformation
 
   return (
     <aside className={styles.metaSecondary}>
@@ -33,6 +31,8 @@ export default function MetaSecondary({
           />
         </div>
       )}
+
+      {tags && tags.length > 0 && <Tags items={tags} />}
     </aside>
   )
 }

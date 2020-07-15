@@ -2,26 +2,42 @@ import { useStaticQuery, graphql } from 'gatsby'
 
 const query = graphql`
   query {
-    siteMetadata: allFile(filter: { relativePath: { eq: "site.json" } }) {
+    site {
+      siteMetadata {
+        siteTitle
+        siteTagline
+        siteUrl
+        siteIcon
+        copyright
+        menu {
+          name
+          link
+        }
+        appConfig {
+          infuraProjectId
+          networks
+          oceanConfig {
+            factoryAddress
+            metadataStoreUri
+            nodeUri
+            providerUri
+            verbose
+          }
+        }
+      }
+    }
+
+    siteImage: allFile(filter: { relativePath: { eq: "site.json" } }) {
       edges {
         node {
           childContentJson {
             site {
-              siteTitle
-              siteTagline
-              siteUrl
-              siteIcon
               siteImage {
                 childImageSharp {
                   original {
                     src
                   }
                 }
-              }
-              copyright
-              menu {
-                name
-                link
               }
             }
           }
@@ -33,5 +49,11 @@ const query = graphql`
 
 export function useSiteMetadata() {
   const data = useStaticQuery(query)
-  return data.siteMetadata.edges[0].node.childContentJson.site
+
+  const siteMeta = {
+    ...data.siteImage.edges[0].node.childContentJson.site,
+    ...data.site.siteMetadata
+  }
+
+  return siteMeta
 }

@@ -12,6 +12,7 @@ export interface LayoutProps {
   uri: string
   description?: string
   noPageHeader?: boolean
+  headerCenter?: boolean
 }
 
 export default function Layout({
@@ -19,7 +20,8 @@ export default function Layout({
   title,
   uri,
   description,
-  noPageHeader
+  noPageHeader,
+  headerCenter
 }: LayoutProps): ReactElement {
   return (
     <div className={styles.app}>
@@ -29,7 +31,11 @@ export default function Layout({
       <main className={styles.main}>
         <Container>
           {title && !noPageHeader && (
-            <PageHeader title={title} description={description} />
+            <PageHeader
+              title={title}
+              description={description}
+              center={headerCenter}
+            />
           )}
           {children}
         </Container>

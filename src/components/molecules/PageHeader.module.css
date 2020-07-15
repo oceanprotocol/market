@@ -14,3 +14,9 @@
   margin-top: calc(var(--spacer) / 4);
   margin-bottom: 0;
 }
+
+.center {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}

@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import { File as FileMetaData } from '@oceanprotocol/squid'
+import { File as FileMetaData } from '@oceanprotocol/lib'
 import filesize from 'filesize'
 import cleanupContentType from '../../utils/cleanupContentType'
 import styles from './File.module.css'

@@ -1,11 +1,14 @@
 require('dotenv').config()
 
 const siteContent = require('./content/site.json')
-const { oceanConfig } = require('./app.config')
+const appConfig = require('./app.config')
 
 module.exports = {
   siteMetadata: {
-    ...siteContent.site
+    ...siteContent.site,
+    appConfig: {
+      ...appConfig
+    }
   },
   plugins: [
     {
@@ -27,12 +30,6 @@ module.exports = {
       options: {
         name: 'art',
         path: `${__dirname}/node_modules/@oceanprotocol/art/`
-      }
-    },
-    {
-      resolve: 'gatsby-source-ocean',
-      options: {
-        aquariusUri: oceanConfig.aquariusUri
       }
     },
     {
