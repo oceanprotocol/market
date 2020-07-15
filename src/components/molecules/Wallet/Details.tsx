@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import Button from '../../atoms/Button'
 import styles from './Details.module.css'
 import { useOcean } from '@oceanprotocol/react'
@@ -8,14 +8,25 @@ import { connectWallet } from '../../../utils/wallet'
 import { getInjectedProviderName } from 'web3modal'
 
 export default function Details({ attrs }: { attrs: any }): ReactElement {
-  const { balance, connect, logout, web3Provider } = useOcean()
-  const oceanBalance = 'Hello Test'
+  const { ocean, balance, connect, logout } = useOcean()
+  const [balanceOcean, setBalanceOcean] = useState('0')
+
+  useEffect(() => {
+    async function init() {
+      if (!ocean) return
+
+      const accounts = await ocean.accounts.list()
+      const newBalanceOcean = await ocean.accounts.getOceanBalance(accounts[0])
+      newBalanceOcean && setBalanceOcean(newBalanceOcean)
+    }
+    init()
+  }, [ocean])
 
   return (
     <div className={styles.details} {...attrs}>
       <ul>
         <li className={styles.balance}>
-          <span>OCEAN</span> {oceanBalance}
+          <span>OCEAN</span> {balanceOcean}
         </li>
         <li className={styles.balance}>
           <span>ETH</span> {formatNumber(Number(balance))}
