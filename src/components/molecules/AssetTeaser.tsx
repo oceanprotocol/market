@@ -5,7 +5,6 @@ import { MetaDataMarket } from '../../@types/MetaData'
 import Tags from '../atoms/Tags'
 import Price from '../atoms/Price'
 import styles from './AssetTeaser.module.css'
-import Rating from '../atoms/Rating'
 
 declare type AssetTeaserProps = {
   did: string
@@ -26,8 +25,6 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
     access
   } = metadata.additionalInformation
 
-  const { curation } = metadata
-
   return (
     <article className={styles.teaser}>
       <Link to={`/asset/${did}`} className={styles.link}>
@@ -35,7 +32,6 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
         {access === 'Compute' && (
           <div className={styles.accessLabel}>{access}</div>
         )}
-        <Rating curation={curation} readonly />
 
         <div className={styles.content}>
           <Dotdotdot tagName="p" clamp={3}>
