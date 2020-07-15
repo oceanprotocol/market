@@ -24,7 +24,7 @@ export default function AssetContent({
 
   return (
     <article className={styles.grid}>
-      <div>
+      <div className={styles.content}>
         <aside className={styles.meta}>
           <p>{datePublished && <Time date={datePublished} />}</p>
           {categories && (

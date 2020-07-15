@@ -32,7 +32,7 @@ const Section = ({ title, component }: { title: string; component: any }) => {
 const HistoryPage: React.FC = () => {
   return (
     <article className={styles.grid}>
-      <div>
+      <div className={styles.content}>
         {sections.map((section) => {
           const { title, component } = section
           return <Section key={title} title={title} component={component} />
