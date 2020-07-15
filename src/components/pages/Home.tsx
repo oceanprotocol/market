@@ -10,7 +10,7 @@ export default function HomePage(): ReactElement {
   const [assets, setAssets] = useState<DDO[]>()
 
   useEffect(() => {
-    async function getAllAssets() {
+    async function getLatestAssets() {
       const metadataStore = new MetadataStore(
         oceanConfig.metadataStoreUri,
         Logger
@@ -25,7 +25,7 @@ export default function HomePage(): ReactElement {
 
       result && result.results && setAssets(result.results)
     }
-    getAllAssets()
+    getLatestAssets()
   }, [])
 
   return (
