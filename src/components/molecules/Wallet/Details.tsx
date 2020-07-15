@@ -16,7 +16,7 @@ export default function Details({ attrs }: { attrs: any }): ReactElement {
       if (!ocean) return
 
       const accounts = await ocean.accounts.list()
-      const newBalanceOcean = await ocean.accounts.getOceanBalance(accounts[0])
+      const newBalanceOcean = await accounts[0].getOceanBalance()
       newBalanceOcean && setBalanceOcean(newBalanceOcean)
     }
     init()
