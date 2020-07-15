@@ -1,7 +1,6 @@
 require('dotenv').config()
 
 const siteContent = require('./content/site.json')
-const { oceanConfig } = require('./app.config')
 
 module.exports = {
   siteMetadata: {
