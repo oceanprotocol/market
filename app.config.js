@@ -14,7 +14,7 @@ module.exports = {
       '0xB9d406D24B310A7D821D0b782a36909e8c925471',
     oceanTokenAddress:
       process.env.GATSBY_OCEAN_TOKEN_ADDRESS ||
-      '0xf6AE724aD6e6Fa89B6aBc9710C5eb692b7F57139',
+      '0x8967BCF84170c91B0d24D4302C2376283b0B3a07',
     verbose: 3
   },
   // Main, Rinkeby, Kovan
