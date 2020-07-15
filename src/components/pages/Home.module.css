@@ -1,1 +1,14 @@
+.searchWrap {
+  display: flex;
+  justify-content: center;
+  margin-top: calc(var(--spacer) * var(--line-height));
+}
 
+.latest {
+  margin-top: calc(var(--spacer) * 2);
+}
+
+.latest h3 {
+  font-size: var(--font-size-large);
+  color: var(--color-secondary);
+}

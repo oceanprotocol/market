@@ -1,5 +1,8 @@
 import React, { ReactElement, ReactNode } from 'react'
+import classNames from 'classnames/bind'
 import styles from './Container.module.css'
+
+const cx = classNames.bind(styles)
 
 export default function Container({
   children,
@@ -10,13 +13,11 @@ export default function Container({
   narrow?: boolean
   className?: string
 }): ReactElement {
-  return (
-    <div
-      className={`${styles.container} ${narrow && styles.narrow} ${
-        className && className
-      }`}
-    >
-      {children}
-    </div>
-  )
+  const styleClasses = cx({
+    container: true,
+    narrow: narrow,
+    [className]: className
+  })
+
+  return <div className={styleClasses}>{children}</div>
 }

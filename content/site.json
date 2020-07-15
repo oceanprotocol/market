@@ -1,7 +1,7 @@
 {
   "site": {
     "siteTitle": "Ocean Market",
-    "siteTagline": "A marketplace to find and publish open data sets in the Ocean Network.",
+    "siteTagline": "A marketplace to find, publish and trade data sets in the Ocean Network.",
     "siteUrl": "https://market.oceanprotocol.now.sh",
     "siteIcon": "node_modules/@oceanprotocol/art/logo/favicon-white.png",
     "siteImage": "../src/images/share.png",

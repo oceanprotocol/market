@@ -1,12 +1,12 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import SearchBar from '../molecules/SearchBar'
-import { ServiceMetaDataMarket } from '../../@types/MetaData'
-import AssetTeaser from '../molecules/AssetTeaser'
 import styles from './Home.module.css'
 import { oceanConfig } from '../../../app.config'
 import { MetadataStore, Logger } from '@oceanprotocol/lib'
 import AssetList from '../organisms/AssetList'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatastore/MetadataStore'
+import Container from '../atoms/Container'
+import Loader from '../atoms/Loader'
 
 async function getLatestAssets() {
   try {
@@ -30,20 +30,31 @@ async function getLatestAssets() {
 
 export default function HomePage(): ReactElement {
   const [queryResult, setQueryResult] = useState<QueryResult>()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function init() {
       const results = await getLatestAssets()
       setQueryResult(results)
+      setLoading(false)
     }
     init()
   }, [])
 
   return (
     <>
-      <SearchBar large />
-      <h3>Latest Data Sets</h3>
-      {queryResult && <AssetList queryResult={queryResult} />}
+      <Container narrow className={styles.searchWrap}>
+        <SearchBar large />
+      </Container>
+
+      <section className={styles.latest}>
+        <h3>Latest Data Sets</h3>
+        {loading ? (
+          <Loader />
+        ) : (
+          queryResult && <AssetList queryResult={queryResult} />
+        )}
+      </section>
     </>
   )
 }
