@@ -43,7 +43,7 @@ export default function AssetRoute(props: PageProps): ReactElement {
       }
     }
     init()
-  }, [])
+  }, [did])
 
   return did && metadata ? (
     <Layout title={title} uri={props.location.pathname}>
@@ -51,7 +51,7 @@ export default function AssetRoute(props: PageProps): ReactElement {
         <AssetContent
           did={did}
           metadata={metadata as MetaDataMarket}
-          path="/asset/:did"
+          path=":did"
         />
       </Router>
     </Layout>
