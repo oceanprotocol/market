@@ -4,57 +4,46 @@ import { ServiceMetaDataMarket } from '../../@types/MetaData'
 import AssetTeaser from '../molecules/AssetTeaser'
 import styles from './Home.module.css'
 import { oceanConfig } from '../../../app.config'
-import { DDO, MetadataStore, Logger } from '@oceanprotocol/lib'
+import { MetadataStore, Logger } from '@oceanprotocol/lib'
+import AssetList from '../organisms/AssetList'
+import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatastore/MetadataStore'
+
+async function getLatestAssets() {
+  try {
+    const metadataStore = new MetadataStore(
+      oceanConfig.metadataStoreUri,
+      Logger
+    )
+
+    const result = await metadataStore.queryMetadata({
+      page: 1,
+      offset: 10,
+      query: {},
+      sort: { created: -1 }
+    })
+
+    return result
+  } catch (error) {
+    console.error(error.message)
+  }
+}
 
 export default function HomePage(): ReactElement {
-  const [assets, setAssets] = useState<DDO[]>()
+  const [queryResult, setQueryResult] = useState<QueryResult>()
 
   useEffect(() => {
-    async function getLatestAssets() {
-      try {
-        const metadataStore = new MetadataStore(
-          oceanConfig.metadataStoreUri,
-          Logger
-        )
-
-        const result = await metadataStore.queryMetadata({
-          page: 1,
-          offset: 10,
-          query: {},
-          sort: { created: -1 }
-        })
-
-        result && result.results && setAssets(result.results)
-      } catch (error) {
-        console.error(error.message)
-      }
+    async function init() {
+      const results = await getLatestAssets()
+      setQueryResult(results)
     }
-    getLatestAssets()
+    init()
   }, [])
 
   return (
     <>
       <SearchBar large />
-
-      {assets && (
-        <div className={styles.grid}>
-          {assets.length ? (
-            assets.map((ddo: DDO) => {
-              const {
-                attributes
-              }: ServiceMetaDataMarket = ddo.findServiceByType('metadata')
-
-              return (
-                <AssetTeaser key={ddo.id} did={ddo.id} metadata={attributes} />
-              )
-            })
-          ) : (
-            <div className={styles.empty}>
-              No data sets found in {oceanConfig.metadataStoreUri}
-            </div>
-          )}
-        </div>
-      )}
+      <h3>Latest Data Sets</h3>
+      {queryResult && <AssetList queryResult={queryResult} />}
     </>
   )
 }
