@@ -30,12 +30,6 @@ module.exports = {
       }
     },
     {
-      resolve: 'gatsby-source-ocean',
-      options: {
-        metadataStoreUri: oceanConfig.metadataStoreUri
-      }
-    },
-    {
       resolve: 'gatsby-plugin-sharp',
       options: {
         defaultQuality: 80
