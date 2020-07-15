@@ -7,14 +7,13 @@
 .tag {
   color: var(--color-secondary);
   font-size: var(--font-size-small);
-  font-weight: var(--font-weight-bold);
-  padding: 0.2rem 1.2rem 0.2rem 1.2rem;
-  margin-left: calc(var(--spacer) / 16);
-  margin-right: calc(var(--spacer) / 16);
-  margin-bottom: calc(var(--spacer) / 8);
+  padding: 0.1rem 1.2rem 0.1rem 1.2rem;
+  margin-left: calc(var(--spacer) / 8);
+  margin-right: calc(var(--spacer) / 8);
+  margin-bottom: calc(var(--spacer) / 4);
   text-align: center;
   border-radius: var(--border-radius);
-  border: 1px solid var(--brand-grey-light);
+  border: 1px solid var(--brand-grey-lighter);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -23,10 +22,6 @@
 .tag:hover:not(span),
 .tag:focus:not(span) {
   color: var(--color-primary);
-}
-
-.tag:first-of-type {
-  margin-left: 0;
 }
 
 .more {

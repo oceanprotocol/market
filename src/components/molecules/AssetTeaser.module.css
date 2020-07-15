@@ -30,6 +30,7 @@
 
 .foot {
   font-weight: var(--font-weight-bold);
+  margin-top: calc(var(--spacer) / 2);
 }
 
 .foot p {

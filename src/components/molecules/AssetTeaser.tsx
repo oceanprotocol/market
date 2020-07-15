@@ -2,7 +2,6 @@ import React from 'react'
 import { Link } from 'gatsby'
 import Dotdotdot from 'react-dotdotdot'
 import { MetaDataMarket } from '../../@types/MetaData'
-import Tags from '../atoms/Tags'
 import Price from '../atoms/Price'
 import styles from './AssetTeaser.module.css'
 
@@ -16,14 +15,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
   metadata
 }: AssetTeaserProps) => {
   const { name, price } = metadata.main
-
-  const {
-    description,
-    copyrightHolder,
-    tags,
-    categories,
-    access
-  } = metadata.additionalInformation
+  const { description, access } = metadata.additionalInformation
 
   return (
     <article className={styles.teaser}>
@@ -37,14 +29,10 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
           <Dotdotdot tagName="p" clamp={3}>
             {description || ''}
           </Dotdotdot>
-
-          {tags && (
-            <Tags className={styles.tags} items={tags} max={3} noLinks />
-          )}
         </div>
 
         <footer className={styles.foot}>
-          <Price price={price} small />
+          <Price price={price} />
         </footer>
       </Link>
     </article>

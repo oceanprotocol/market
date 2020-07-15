@@ -7,6 +7,7 @@ import { SearchPriceFilter } from '../../molecules/SearchPriceFilter'
 import styles from './index.module.css'
 import queryString from 'query-string'
 import { getResults } from './utils'
+import Loader from '../../atoms/Loader'
 
 export declare type SearchPageProps = {
   text: string | string[]
@@ -22,14 +23,16 @@ export default function SearchPage({
   const parsed = queryString.parse(location.search)
   const { text, tag } = parsed
   const [queryResult, setQueryResult] = useState<QueryResult>()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function initSearch() {
       const queryResult = await getResults(parsed)
       setQueryResult(queryResult)
+      setLoading(false)
     }
     initSearch()
-  }, [parsed])
+  }, [])
 
   return (
     <section className={styles.grid}>
@@ -42,7 +45,9 @@ export default function SearchPage({
       </aside>
 
       <div className={styles.results}>
-        {queryResult && queryResult.results.length > 0 ? (
+        {loading ? (
+          <Loader />
+        ) : queryResult && queryResult.results.length > 0 ? (
           <AssetList queryResult={queryResult} />
         ) : (
           <div className={styles.empty}>No results found.</div>

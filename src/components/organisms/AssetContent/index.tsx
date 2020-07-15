@@ -3,7 +3,6 @@ import React, { ReactElement } from 'react'
 import Time from '../../atoms/Time'
 import { Link } from 'gatsby'
 import Markdown from '../../atoms/Markdown'
-import Tags from '../../atoms/Tags'
 import MetaFull from './MetaFull'
 import MetaSecondary from './MetaSecondary'
 import styles from './index.module.css'
@@ -20,7 +19,7 @@ export default function AssetContent({
   did
 }: AssetContentProps): ReactElement {
   const { datePublished } = metadata.main
-  const { description, categories, tags } = metadata.additionalInformation
+  const { description, categories } = metadata.additionalInformation
 
   return (
     <article className={styles.grid}>
@@ -37,8 +36,6 @@ export default function AssetContent({
         </aside>
 
         <Markdown text={description || ''} />
-
-        {tags && tags.length > 0 && <Tags items={tags} />}
 
         <MetaSecondary metadata={metadata} />
 

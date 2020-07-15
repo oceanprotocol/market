@@ -12,35 +12,14 @@ export default function MetaFull({
   metadata: MetaDataMarket
 }): ReactElement {
   const { dateCreated, datePublished, author, license } = metadata.main
-  let dateRange
-  if (metadata && metadata.additionalInformation) {
-    ;({ dateRange } = metadata.additionalInformation)
-  }
-
-  // In practice dateRange will always be defined, but in the rare case it isn't
-  // we put something to prevent errors
-  if (!dateRange) {
-    dateRange = [dateCreated, dateCreated]
-  }
+  const { categories } = metadata.additionalInformation
 
   return (
     <div className={styles.metaFull}>
       <MetaItem title="Author" content={author} />
       <MetaItem title="License" content={license} />
-      <MetaItem
-        title="Data Created"
-        content={
-          dateRange && dateRange[0] !== dateRange[1] ? (
-            <>
-              <Time date={dateRange[0]} />
-              {' –⁠ '}
-              <Time date={dateRange[1]} />
-            </>
-          ) : (
-            <Time date={dateRange[0]} />
-          )
-        }
-      />
+      <MetaItem title="Category" content={categories[0]} />
+      <MetaItem title="Data Created" content={<Time date={dateCreated} />} />
 
       <MetaItem
         title="Data Published"

@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 import styles from './MetaItem.module.css'
 
 export default function MetaItem({
@@ -6,7 +6,7 @@ export default function MetaItem({
   content
 }: {
   title: string
-  content: any
+  content: ReactNode
 }): ReactElement {
   return (
     <div className={styles.metaItem}>
