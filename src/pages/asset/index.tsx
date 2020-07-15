@@ -7,6 +7,7 @@ import { MetaDataMarket, ServiceMetaDataMarket } from '../../@types/MetaData'
 import { MetadataStore, Logger } from '@oceanprotocol/lib'
 import { oceanConfig } from '../../../app.config'
 import Alert from '../../components/atoms/Alert'
+import { useMetadata } from '@oceanprotocol/react'
 
 export default function AssetRoute(props: PageProps): ReactElement {
   const [metadata, setMetadata] = useState<MetaDataMarket>()
@@ -51,7 +52,11 @@ export default function AssetRoute(props: PageProps): ReactElement {
   ) : did && metadata ? (
     <Layout title={title} uri={props.location.pathname}>
       <Router basepath="/asset">
-        <AssetContent did={did} metadata={metadata} path="/asset/:did" />
+        <AssetContent
+          did={did}
+          metadata={metadata as MetaDataMarket}
+          path="/asset/:did"
+        />
       </Router>
     </Layout>
   ) : (
