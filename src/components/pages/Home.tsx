@@ -11,19 +11,23 @@ export default function HomePage(): ReactElement {
 
   useEffect(() => {
     async function getLatestAssets() {
-      const metadataStore = new MetadataStore(
-        oceanConfig.metadataStoreUri,
-        Logger
-      )
+      try {
+        const metadataStore = new MetadataStore(
+          oceanConfig.metadataStoreUri,
+          Logger
+        )
 
-      const result = await metadataStore.queryMetadata({
-        page: 1,
-        offset: 10,
-        query: {},
-        sort: { created: -1 }
-      })
+        const result = await metadataStore.queryMetadata({
+          page: 1,
+          offset: 10,
+          query: {},
+          sort: { created: -1 }
+        })
 
-      result && result.results && setAssets(result.results)
+        result && result.results && setAssets(result.results)
+      } catch (error) {
+        console.error(error.message)
+      }
     }
     getLatestAssets()
   }, [])

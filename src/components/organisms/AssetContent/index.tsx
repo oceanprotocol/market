@@ -22,21 +22,6 @@ export default function AssetContent({
   const { datePublished } = metadata.main
   const { description, categories, tags } = metadata.additionalInformation
 
-  // const { curation } = metadata
-
-  // const { getCuration } = useMetadata()
-  // const [rating, setRating] = useState<number>(curation ? curation.rating : 0)
-  // const [numVotes, setNumVotes] = useState<number>(
-  //   curation ? curation.numVotes : 0
-  // )
-
-  // const onVoteUpdate = async () => {
-  //   const { rating, numVotes } = await getCuration(did)
-
-  //   setRating(rating)
-  //   setNumVotes(numVotes)
-  // }
-
   return (
     <article className={styles.grid}>
       <div>
@@ -45,11 +30,10 @@ export default function AssetContent({
           {categories && (
             <p>
               <Link to={`/search?categories=["${categories[0]}"]`}>
-                <a>{categories[0]}</a>
+                {categories[0]}
               </Link>
             </p>
           )}
-          {/* <Rating curation={{ rating, numVotes }} readonly /> */}
         </aside>
 
         <Markdown text={description || ''} />
@@ -73,8 +57,6 @@ export default function AssetContent({
       <div>
         <div className={styles.sticky}>
           <AssetActions metadata={metadata} did={did} />
-
-          {/* <RatingAction did={did} onVote={onVoteUpdate} /> */}
         </div>
       </div>
     </article>
