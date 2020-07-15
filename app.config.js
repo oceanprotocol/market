@@ -11,7 +11,10 @@ module.exports = {
       'https://provider.rinkeby.v3.dev-ocean.com',
     factoryAddress:
       process.env.GATSBY_FACTORY_ADDRESS ||
-      '0x00c6A0BC5cD0078d6Cd0b659E8061B404cfa5704',
+      '0xB9d406D24B310A7D821D0b782a36909e8c925471',
+    oceanTokenAddress:
+      process.env.GATSBY_OCEAN_TOKEN_ADDRESS ||
+      '0xf6AE724aD6e6Fa89B6aBc9710C5eb692b7F57139',
     verbose: 3
   },
   // Main, Rinkeby, Kovan
