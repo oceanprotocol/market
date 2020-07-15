@@ -3,7 +3,6 @@ import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatastore/Metadata
 import SearchBar from '../../molecules/SearchBar'
 import AssetList from '../../organisms/AssetList'
 import { SearchPriceFilter } from '../../molecules/SearchPriceFilter'
-
 import styles from './index.module.css'
 import queryString from 'query-string'
 import { getResults } from './utils'
@@ -21,7 +20,7 @@ export default function SearchPage({
   location: Location
 }): ReactElement {
   const parsed = queryString.parse(location.search)
-  const { text, tag } = parsed
+  const { text, tag, page } = parsed
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [loading, setLoading] = useState<boolean>()
 
@@ -33,7 +32,7 @@ export default function SearchPage({
       setLoading(false)
     }
     initSearch()
-  }, [text, tag])
+  }, [text, tag, page])
 
   return (
     <section className={styles.grid}>

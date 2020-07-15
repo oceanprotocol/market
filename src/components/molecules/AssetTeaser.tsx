@@ -14,6 +14,8 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
   did,
   metadata
 }: AssetTeaserProps) => {
+  if (!metadata.additionalInformation) return null
+
   const { name, price } = metadata.main
   const { description, access } = metadata.additionalInformation
 
