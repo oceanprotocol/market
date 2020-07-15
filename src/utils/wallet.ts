@@ -1,4 +1,5 @@
 import { OceanProviderValue } from '@oceanprotocol/react'
+import atlas from '@ethereum-navigator/atlas'
 import { networks, infuraProjectId } from '../../app.config'
 
 const web3ModalTheme = {
@@ -38,4 +39,17 @@ export function accountTruncate(account: string): string {
   const middle = account.substring(6, 38)
   const truncated = account.replace(middle, '…')
   return truncated
+}
+
+export function getNetworkName(chainId: number): string {
+  switch (chainId) {
+    case 1:
+      return 'Main'
+    case 4:
+      return 'Rinkeby'
+    case 42:
+      return 'Kovan'
+    default:
+      return 'Unknown'
+  }
 }

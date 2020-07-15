@@ -4,11 +4,11 @@ import styles from './Details.module.css'
 import { useOcean } from '@oceanprotocol/react'
 import Web3Feedback from './Feedback'
 import { formatNumber } from '../../../utils'
-import { connectWallet } from '../../../utils/wallet'
+import { connectWallet, getNetworkName } from '../../../utils/wallet'
 import { getInjectedProviderName } from 'web3modal'
 
 export default function Details({ attrs }: { attrs: any }): ReactElement {
-  const { ocean, balance, connect, logout } = useOcean()
+  const { ocean, balance, connect, logout, chainId } = useOcean()
   const [balanceOcean, setBalanceOcean] = useState('0')
 
   useEffect(() => {
@@ -32,7 +32,11 @@ export default function Details({ attrs }: { attrs: any }): ReactElement {
           <span>ETH</span> {formatNumber(Number(balance))}
         </li>
         <li className={styles.actions}>
-          <span title="Connected provider">{getInjectedProviderName()}</span>
+          <span title="Connected provider">
+            {getInjectedProviderName()}
+            <br />
+            {getNetworkName(chainId)}
+          </span>
           <Button
             style="text"
             size="small"
