@@ -1,6 +1,6 @@
 import React, { useEffect, useState, ReactElement } from 'react'
 import Loader from '../atoms/Loader'
-import { MetaDataMain } from '@oceanprotocol/lib'
+import { MetadataMain } from '@oceanprotocol/lib'
 import {
   useOcean,
   OceanConnectionStatus,
@@ -72,7 +72,7 @@ export default function PublishedList(): ReactElement {
 
       const data = publishedItems.results.map((ddo) => {
         const { attributes } = ddo.findServiceByType('metadata')
-        const { name, price, datePublished } = attributes.main as MetaDataMain
+        const { name, price, datePublished } = attributes.main as MetadataMain
         return {
           published: datePublished,
           name: name,

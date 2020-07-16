@@ -1,4 +1,4 @@
-import { MetaDataMarket } from '../../../@types/MetaData'
+import { MetadataMarket } from '../../../@types/Metadata'
 import React, { ReactElement } from 'react'
 import Time from '../../atoms/Time'
 import { Link } from 'gatsby'
@@ -9,7 +9,7 @@ import styles from './index.module.css'
 import AssetActions from '../AssetActions'
 
 export interface AssetContentProps {
-  metadata: MetaDataMarket
+  metadata: MetadataMarket
   did: string
   path?: string
 }

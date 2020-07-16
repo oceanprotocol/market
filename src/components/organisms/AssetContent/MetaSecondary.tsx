@@ -3,13 +3,13 @@ import shortid from 'shortid'
 import { ListItem } from '../../atoms/Lists'
 import MetaItem from './MetaItem'
 import styles from './MetaSecondary.module.css'
-import { MetaDataMarket } from '../../../@types/MetaData'
+import { MetadataMarket } from '../../../@types/Metadata'
 import Tags from '../../atoms/Tags'
 
 export default function MetaSecondary({
   metadata
 }: {
-  metadata: MetaDataMarket
+  metadata: MetadataMarket
 }): ReactElement {
   const { links, tags } = metadata.additionalInformation
 

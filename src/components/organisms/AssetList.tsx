@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from '@reach/router'
 import Pagination from '../molecules/Pagination'
 import { updateQueryStringParameter } from '../../utils'
 import styles from './AssetList.module.css'
-import { MetaDataMarket } from '../../@types/MetaData'
+import { MetadataMarket } from '../../@types/Metadata'
 import { DDO } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 
@@ -45,7 +45,7 @@ const AssetList: React.FC<AssetListProps> = ({ queryResult }) => {
       <div className={styles.assetList}>
         {queryResult && queryResult.totalResults > 0 ? (
           queryResult.results.map((ddo: DDO) => {
-            const { attributes }: MetaDataMarket = ddo.findServiceByType(
+            const { attributes }: MetadataMarket = ddo.findServiceByType(
               'metadata'
             )
 

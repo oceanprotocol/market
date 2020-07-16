@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import { File } from '@oceanprotocol/lib'
+import { File as FileMetadata } from '@oceanprotocol/lib/dist/node/ddo/interfaces/File'
 import { prettySize } from '../../../utils'
 import cleanupContentType from '../../../utils/cleanupContentType'
 import styles from './Info.module.css'
@@ -8,7 +8,7 @@ export default function FileInfo({
   file,
   removeItem
 }: {
-  file: File
+  file: FileMetadata
   removeItem(): void
 }): ReactElement {
   return (

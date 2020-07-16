@@ -8,14 +8,14 @@ import Web3Feedback from '../../molecules/Wallet/Feedback'
 import styles from './Consume.module.css'
 import Loader from '../../atoms/Loader'
 import { useOcean, useConsume } from '@oceanprotocol/react'
-import { MetaDataMarket } from '../../../@types/MetaData'
+import { MetadataMarket } from '../../../@types/Metadata'
 
 export default function Consume({
   did,
   metadata
 }: {
   did: string
-  metadata: MetaDataMarket
+  metadata: MetadataMarket
 }): ReactElement {
   const { ocean, balanceInOcean } = useOcean()
   const { consume, consumeStepText, isLoading } = useConsume()

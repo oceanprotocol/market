@@ -2,9 +2,9 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { transformPublishFormToMetadata } from '../../../src/components/pages/Publish/utils'
 import {
-  MetaDataMarket,
-  MetaDataPublishForm
-} from '../../../src/@types/MetaData'
+  MetadataMarket,
+  MetadataPublishForm
+} from '../../../src/@types/Metadata'
 import PublishForm from '../../../src/components/pages/Publish/PublishForm'
 import publishFormData from '../__fixtures__/testFormData'
 import content from '../../../content/pages/publish.json'
@@ -15,9 +15,9 @@ describe('PublishForm', () => {
     expect(container.firstChild).toBeInTheDocument()
   })
 
-  it('Form data is correctly transformed to asset MetaData', () => {
-    const data: MetaDataPublishForm = publishFormData
-    let metadata: MetaDataMarket = transformPublishFormToMetadata(data)
+  it('Form data is correctly transformed to asset Metadata', () => {
+    const data: MetadataPublishForm = publishFormData
+    let metadata: MetadataMarket = transformPublishFormToMetadata(data)
 
     expect(metadata.additionalInformation).toBeDefined()
     expect(metadata.main).toBeDefined()

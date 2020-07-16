@@ -1,6 +1,6 @@
-import { MetaDataPublishForm } from '../../../src/@types/MetaData'
+import { MetadataPublishForm } from '../../../src/@types/Metadata'
 
-const testFormData: MetaDataPublishForm = {
+const testFormData: MetadataPublishForm = {
   author: '',
   files: [],
   license: '',

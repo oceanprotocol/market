@@ -1,5 +1,8 @@
 import { DDO } from '@oceanprotocol/lib'
-import { MetaDataMarket } from '../../../src/@types/MetaData'
+import {
+  MetadataMarket,
+  ServiceMetadataMarket
+} from '../../../src/@types/Metadata'
 
 const ddo: Partial<DDO> = {
   '@context': 'https://w3id.org/did/v1',
@@ -78,9 +81,9 @@ const ddo: Partial<DDO> = {
           numVotes: 100,
           rating: 5
         }
-      } as MetaDataMarket,
+      } as MetadataMarket,
       index: 0
-    },
+    } as ServiceMetadataMarket,
     {
       type: 'authorization',
       serviceEndpoint: 'https://secret-store.pacific.oceanprotocol.com',

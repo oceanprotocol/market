@@ -4,13 +4,13 @@ import styles from './index.module.css'
 import Compute from './Compute'
 import Consume from './Consume'
 import { useOcean } from '@oceanprotocol/react'
-import { MetaDataMarket } from '../../../@types/MetaData'
+import { MetadataMarket } from '../../../@types/Metadata'
 
 export default function AssetActions({
   metadata,
   did
 }: {
-  metadata: MetaDataMarket
+  metadata: MetadataMarket
   did: string
 }): ReactElement {
   // const { ocean, balanceInOcean } = useOcean()

@@ -1,6 +1,6 @@
-import { MetaDataMarket } from '../@types/MetaData'
+import { MetadataMarket } from '../@types/Metadata'
 
-const AssetModel: MetaDataMarket = {
+const AssetModel: MetadataMarket = {
   // OEP-8 Attributes
   // https://github.com/oceanprotocol/OEPs/tree/master/8
   main: {

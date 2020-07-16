@@ -2,14 +2,14 @@ import React, { ReactElement } from 'react'
 import Time from '../../atoms/Time'
 import MetaItem from './MetaItem'
 import styles from './MetaFull.module.css'
-import { MetaDataMarket } from '../../../@types/MetaData'
+import { MetadataMarket } from '../../../@types/Metadata'
 
 export default function MetaFull({
   did,
   metadata
 }: {
   did: string
-  metadata: MetaDataMarket
+  metadata: MetadataMarket
 }): ReactElement {
   const { dateCreated, datePublished, author, license } = metadata.main
   const { categories } = metadata.additionalInformation

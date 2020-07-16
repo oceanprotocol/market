@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 import { toast } from 'react-toastify'
-import { File } from '@oceanprotocol/lib'
+import { File as FileMetadata } from '@oceanprotocol/lib/dist/node/ddo/interfaces/File'
 import numeral from 'numeral'
 import web3Utils from 'web3-utils'
 
@@ -51,7 +51,7 @@ export function toStringNoMS(date: Date): string {
   return date.toISOString().replace(/\.[0-9]{3}Z/, 'Z')
 }
 
-export async function getFileInfo(url: string): Promise<File> {
+export async function getFileInfo(url: string): Promise<FileMetadata> {
   const response: AxiosResponse = await axios({
     method: 'POST',
     url: '/api/file',
@@ -72,7 +72,7 @@ export async function getFileInfo(url: string): Promise<File> {
   }
 }
 
-export async function fetchData(url: string): Promise<any> {
+export async function fetchData(url: string): Promise<Axios> {
   try {
     const response = await axios(url)
 

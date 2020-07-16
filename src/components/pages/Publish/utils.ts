@@ -1,11 +1,11 @@
-import { MetaDataMarket, MetaDataPublishForm } from '../../../@types/MetaData'
+import { MetadataMarket, MetadataPublishForm } from '../../../@types/Metadata'
 import { toStringNoMS } from '../../../utils'
 import AssetModel from '../../../models/Asset'
 import web3Utils from 'web3-utils'
 
 export function transformPublishFormToMetadata(
-  data: MetaDataPublishForm
-): MetaDataMarket {
+  data: MetadataPublishForm
+): MetadataMarket {
   const currentTime = toStringNoMS(new Date())
 
   const {
@@ -22,7 +22,7 @@ export function transformPublishFormToMetadata(
     access
   } = data
 
-  const metadata: MetaDataMarket = {
+  const metadata: MetadataMarket = {
     main: {
       ...AssetModel.main,
       name,

@@ -7,22 +7,22 @@ import { useOcean } from '@oceanprotocol/react'
 import {
   Service,
   ServiceCompute
-} from '@oceanprotocol/lib/dist/node/ddo/Service'
+} from '@oceanprotocol/lib/dist/node/ddo/interfaces/Service'
 import { Formik, Form as FormFormik, Field } from 'formik'
 import Input from '../../atoms/Input'
 import Button from '../../atoms/Button'
 import { transformPublishFormToMetadata } from './utils'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
-import { MetaDataPublishForm } from '../../../@types/MetaData'
+import { MetadataPublishForm } from '../../../@types/Metadata'
 import AssetModel from '../../../models/Asset'
-import { File } from '@oceanprotocol/lib'
+import { File as FileMetadata } from '@oceanprotocol/lib/dist/node/ddo/interfaces/File'
 
-const validationSchema = Yup.object().shape<MetaDataPublishForm>({
+const validationSchema = Yup.object().shape<MetadataPublishForm>({
   // ---- required fields ----
   name: Yup.string().required('Required'),
   author: Yup.string().required('Required'),
   price: Yup.string().required('Required'),
-  files: Yup.array<File>().required('Required').nullable(),
+  files: Yup.array<FileMetadata>().required('Required').nullable(),
   description: Yup.string().required('Required'),
   license: Yup.string().required('Required'),
   access: Yup.string().min(4).required('Required'),
@@ -31,10 +31,10 @@ const validationSchema = Yup.object().shape<MetaDataPublishForm>({
   // ---- optional fields ----
   copyrightHolder: Yup.string(),
   tags: Yup.string(),
-  links: Yup.object<File[]>()
+  links: Yup.object<FileMetadata[]>()
 })
 
-const initialValues: MetaDataPublishForm = {
+const initialValues: MetadataPublishForm = {
   name: undefined,
   author: undefined,
   price: undefined,
@@ -55,7 +55,7 @@ export default function PublishForm({
 }): ReactElement {
   const { ocean, account } = useOcean()
 
-  async function handleSubmit(values: MetaDataPublishForm) {
+  async function handleSubmit(values: MetadataPublishForm) {
     const submittingToast = toast.info('submitting asset')
 
     console.log(`
@@ -90,7 +90,7 @@ export default function PublishForm({
 
     // try {
     //   const asset = await ocean.assets.create(
-    //     (metadata as unknown) as MetaData,
+    //     (metadata as unknown) as Metadata,
     //     account,
     //     services
     //   )

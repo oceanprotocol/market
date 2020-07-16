@@ -1,21 +1,21 @@
-import { File, MetaData, AdditionalInformation } from '@oceanprotocol/lib'
-import { ServiceMetadata } from '@oceanprotocol/lib/dist/node/ddo/Service'
+import { Metadata } from '@oceanprotocol/lib'
+import { AdditionalInformation } from '@oceanprotocol/lib/dist/node/ddo/interfaces/AdditionalInformation'
+import { File } from '@oceanprotocol/lib/dist/node/ddo/interfaces/File'
+import { ServiceMetadata } from '@oceanprotocol/lib/dist/node/ddo/interfaces/Service'
 
 export declare type AccessType = 'Download' | 'Compute'
 
 export interface AdditionalInformationMarket extends AdditionalInformation {
-  description: string
-  links?: File[] // redefine existing key, cause not specific enough in Squid
+  links?: File[]
   termsAndConditions: boolean
-  dateRange?: [string, string]
   access: AccessType | string
 }
 
-export interface MetaDataMarket extends MetaData {
+export interface MetadataMarket extends Metadata {
   additionalInformation: AdditionalInformationMarket
 }
 
-export interface MetaDataPublishForm {
+export interface MetadataPublishForm {
   // ---- required fields ----
   name: string
   description: string
@@ -31,6 +31,6 @@ export interface MetaDataPublishForm {
   links?: string | File[]
 }
 
-export interface ServiceMetaDataMarket extends ServiceMetadata {
-  attributes: MetaDataMarket
+export interface ServiceMetadataMarket extends ServiceMetadata {
+  attributes: MetadataMarket
 }

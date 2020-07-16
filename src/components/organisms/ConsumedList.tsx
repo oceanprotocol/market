@@ -10,7 +10,7 @@ import Price from '../atoms/Price'
 import { fromWei } from 'web3-utils'
 import DateCell from '../atoms/Table/DateCell'
 import DdoLinkCell from '../atoms/Table/DdoLinkCell'
-import { MetaDataMain } from '@oceanprotocol/lib'
+import { MetadataMain } from '@oceanprotocol/lib'
 
 const consumedColumns = [
   {
@@ -57,7 +57,7 @@ export default function ConsumedList(): ReactElement {
 
       const data = consumedItems.map((ddo) => {
         const { attributes } = ddo.findServiceByType('metadata')
-        const { name, price, datePublished } = attributes.main as MetaDataMain
+        const { name, price, datePublished } = attributes.main as MetadataMain
         return {
           published: datePublished,
           name: name,

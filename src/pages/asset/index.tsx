@@ -3,7 +3,7 @@ import { Router } from '@reach/router'
 import AssetContent from '../../components/organisms/AssetContent'
 import Layout from '../../components/Layout'
 import { PageProps } from 'gatsby'
-import { MetaDataMarket, ServiceMetaDataMarket } from '../../@types/MetaData'
+import { MetadataMarket, ServiceMetadataMarket } from '../../@types/Metadata'
 import { MetadataStore, Logger } from '@oceanprotocol/lib'
 import Alert from '../../components/atoms/Alert'
 import Loader from '../../components/atoms/Loader'
@@ -11,7 +11,7 @@ import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 
 export default function AssetRoute(props: PageProps): ReactElement {
   const { appConfig } = useSiteMetadata()
-  const [metadata, setMetadata] = useState<MetaDataMarket>()
+  const [metadata, setMetadata] = useState<MetadataMarket>()
   const [title, setTitle] = useState<string>()
   const [error, setError] = useState<string>()
 
@@ -32,7 +32,7 @@ export default function AssetRoute(props: PageProps): ReactElement {
           return
         }
 
-        const { attributes }: ServiceMetaDataMarket = ddo.findServiceByType(
+        const { attributes }: ServiceMetadataMarket = ddo.findServiceByType(
           'metadata'
         )
 
@@ -51,7 +51,7 @@ export default function AssetRoute(props: PageProps): ReactElement {
       <Router basepath="/asset">
         <AssetContent
           did={did}
-          metadata={metadata as MetaDataMarket}
+          metadata={metadata as MetadataMarket}
           path=":did"
         />
       </Router>

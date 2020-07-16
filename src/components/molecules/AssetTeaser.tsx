@@ -1,13 +1,13 @@
 import React from 'react'
 import { Link } from 'gatsby'
 import Dotdotdot from 'react-dotdotdot'
-import { MetaDataMarket } from '../../@types/MetaData'
+import { MetadataMarket } from '../../@types/Metadata'
 import Price from '../atoms/Price'
 import styles from './AssetTeaser.module.css'
 
 declare type AssetTeaserProps = {
   did: string
-  metadata: MetaDataMarket
+  metadata: MetadataMarket
 }
 
 const AssetTeaser: React.FC<AssetTeaserProps> = ({

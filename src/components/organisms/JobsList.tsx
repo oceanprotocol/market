@@ -11,7 +11,7 @@ import Price from '../atoms/Price'
 import { fromWei } from 'web3-utils'
 import Table from '../atoms/Table'
 import Button from '../atoms/Button'
-import { MetaDataMain, Logger } from '@oceanprotocol/lib'
+import { MetadataMain, Logger } from '@oceanprotocol/lib'
 import DateCell from '../atoms/Table/DateCell'
 import DdoLinkCell from '../atoms/Table/DdoLinkCell'
 import shortid from 'shortid'
@@ -94,7 +94,7 @@ export default function JobsList(): ReactElement {
       if (!computeItems) return
       const data = computeItems.map((item) => {
         const { attributes } = item.ddo.findServiceByType('metadata')
-        const { name, price } = attributes.main as MetaDataMain
+        const { name, price } = attributes.main as MetadataMain
         return {
           dateCreated: item.job.dateCreated,
           dateFinished: item.job.dateFinished,

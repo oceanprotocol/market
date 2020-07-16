@@ -14,7 +14,7 @@ import {
 import styles from './Compute.module.css'
 import Button from '../../atoms/Button'
 import Input from '../../atoms/Input'
-import { MetaDataMarket } from '../../../@types/MetaData'
+import { MetadataMarket } from '../../../@types/Metadata'
 import Alert from '../../atoms/Alert'
 
 export default function Compute({
@@ -24,7 +24,7 @@ export default function Compute({
   ocean
 }: {
   did: string
-  metadata: MetaDataMarket
+  metadata: MetadataMarket
   balance: string | null
   ocean: Ocean | null
 }): ReactElement {
