@@ -60,7 +60,7 @@ export default function PublishForm({
     console.log(`
       Collected form values:
       ----------------------
-      ${values}
+      ${JSON.stringify(values)}
     `)
 
     const metadata = transformPublishFormToMetadata(values)
@@ -69,7 +69,7 @@ export default function PublishForm({
     console.log(`
       Transformed metadata values:
       ----------------------
-      ${metadata}
+      ${JSON.stringify(metadata)}
       Cost: ${values.cost}
       Tokens to mint: ${tokensToMint}
     `)
