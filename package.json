@@ -34,6 +34,7 @@
     "ethereum-blockies": "github:MyEtherWallet/blockies",
     "filesize": "^6.1.0",
     "formik": "^2.1.5",
+    "formik-persist": "^1.1.0",
     "gatsby": "^2.24.3",
     "gatsby-image": "^2.4.13",
     "gatsby-plugin-manifest": "^2.4.18",

@@ -12,6 +12,7 @@ import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { MetadataPublishForm } from '../../../@types/Metadata'
 import { File as FileMetadata } from '@oceanprotocol/lib/dist/node/ddo/interfaces/File'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
+import { Persist } from 'formik-persist'
 
 const validationSchema = Yup.object().shape<MetadataPublishForm>({
   // ---- required fields ----
@@ -123,6 +124,7 @@ export default function PublishForm({
           >
             Submit
           </Button>
+          <Persist name="ocean-publish-form" />
         </FormFormik>
       )}
     </Formik>
