@@ -1,23 +1,16 @@
 import React, { ReactElement } from 'react'
 import * as Yup from 'yup'
 import { useNavigate } from '@reach/router'
-import { toStringNoMS } from '../../../utils'
 import { toast } from 'react-toastify'
 import styles from './PublishForm.module.css'
 import { useOcean, usePublish } from '@oceanprotocol/react'
-import {
-  Service,
-  ServiceCompute
-} from '@oceanprotocol/lib/dist/node/ddo/interfaces/Service'
 import { Formik, Form as FormFormik, Field } from 'formik'
 import Input from '../../atoms/Input'
 import Button from '../../atoms/Button'
 import { transformPublishFormToMetadata } from './utils'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
-import { MetadataPublishForm, MetadataMarket } from '../../../@types/Metadata'
-import AssetModel from '../../../models/Asset'
+import { MetadataPublishForm } from '../../../@types/Metadata'
 import { File as FileMetadata } from '@oceanprotocol/lib/dist/node/ddo/interfaces/File'
-import web3Utils from 'web3-utils'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 
 const validationSchema = Yup.object().shape<MetadataPublishForm>({
@@ -71,14 +64,13 @@ export default function PublishForm({
     `)
 
     const metadata = transformPublishFormToMetadata(values)
-    const cost = web3Utils.toWei(values.cost)
     const tokensToMint = '4' // how to know this?
 
     console.log(`
       Transformed metadata values:
       ----------------------
       ${metadata}
-      Cost: ${cost}
+      Cost: ${values.cost}
       Tokens to mint: ${tokensToMint}
     `)
 
@@ -87,7 +79,7 @@ export default function PublishForm({
         metadata as any,
         tokensToMint,
         marketAddress,
-        cost
+        values.cost
       )
 
       // User feedback and redirect to new asset detail page
@@ -97,22 +89,6 @@ export default function PublishForm({
     } catch (error) {
       console.error(error.message)
     }
-
-    // if services array stays empty, the default access service
-    // will be created by squid-js
-    // let services: Service[] = []
-
-    // if (metadata.additionalInformation.access === 'Compute') {
-    //   const computeService: ServiceCompute = await ocean.compute.createComputeServiceAttributes(
-    //     account,
-    //     metadata.main.price,
-    //     // Note: a hack without consequences.
-    //     // Will make metadata.main.datePublished (automatically created by MetadataStore)
-    //     // go out of sync with this service.main.datePublished.
-    //     toStringNoMS(new Date(Date.now()))
-    //   )
-    //   services = [computeService]
-    // }
   }
 
   return (
