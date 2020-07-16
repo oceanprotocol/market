@@ -51,27 +51,6 @@ export function toStringNoMS(date: Date): string {
   return date.toISOString().replace(/\.[0-9]{3}Z/, 'Z')
 }
 
-export async function getFileInfo(url: string): Promise<FileMetadata> {
-  const response: AxiosResponse = await axios({
-    method: 'POST',
-    url: '/api/file',
-    data: { url }
-  })
-
-  if (response.status > 299 || !response.data.result) {
-    toast.error('Could not connect to File API')
-    return
-  }
-
-  const { contentLength, contentType } = response.data.result
-
-  return {
-    contentLength,
-    contentType: contentType || '', // need to do that cause squid.js File interface requires contentType
-    url
-  }
-}
-
 export async function fetchData(url: string): Promise<Axios> {
   try {
     const response = await axios(url)

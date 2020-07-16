@@ -1,6 +1,7 @@
-import { NowRequest, NowResponse } from '@now/node'
 import axios, { AxiosResponse } from 'axios'
 import { IncomingHttpHeaders } from 'http'
+import { toast } from 'react-toastify'
+import { File as FileMetadata } from '@oceanprotocol/lib/dist/node/ddo/interfaces/File'
 
 interface ResponseResult {
   contentLength?: string
@@ -60,13 +61,19 @@ async function checkUrl(url: string): Promise<FileResponse> {
   }
 }
 
-export default async (req: NowRequest, res: NowResponse) => {
-  switch (req.method) {
-    case 'POST':
-      res.status(200).json(await checkUrl(req.body.url))
-      break
-    default:
-      res.setHeader('Allow', ['POST'])
-      res.status(405).end(`Method ${req.method} Not Allowed`)
+export default async function getFileInfo(url: string): Promise<FileMetadata> {
+  const response = await checkUrl(url)
+
+  if (response.status === 'error') {
+    toast.error(response.message)
+    return
+  }
+
+  const { contentLength, contentType } = response.result
+
+  return {
+    contentLength,
+    contentType: contentType || '', // need to do that cause squid.js File interface requires contentType
+    url
   }
 }

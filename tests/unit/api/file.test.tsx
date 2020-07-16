@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http'
-import apiRoute from '../../../api/file'
+import apiRoute from '../../../src/utils/file'
 
 describe('/api/file', () => {
   test('responds 405 to GET', async () => {
