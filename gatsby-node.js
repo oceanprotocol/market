@@ -3,7 +3,9 @@ exports.onCreateWebpackConfig = ({ actions }) => {
     node: {
       // 'fs' fix for squid.js
       fs: 'empty'
-    }
+    },
+    // fix for 'got'/'swarm-js' dependency
+    externals: ['got']
   })
 }
 
