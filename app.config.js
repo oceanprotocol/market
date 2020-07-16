@@ -23,5 +23,5 @@ module.exports = {
   infuraProjectId: process.env.GATSBY_INFURA_PROJECT_ID || 'xxx',
   marketAddress:
     process.env.GATSBY_MARKET_ADDRESS ||
-    '0x903322C7E45A60d7c8C3EA236c5beA9Af86310c7'
+    '0x36A7f3383A63279cDaF4DfC0F3ABc07d90252C6b'
 }

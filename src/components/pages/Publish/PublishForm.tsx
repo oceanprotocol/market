@@ -86,6 +86,9 @@ export default function PublishForm({
       // User feedback and redirect to new asset detail page
       toast.success('asset created successfully')
       toast.dismiss(submittingToast)
+
+      // TODO: reset form state and make sure persistant form in localStorage is cleared
+
       navigate(`/asset/${ddo.id}`)
     } catch (error) {
       console.error(error.message)
