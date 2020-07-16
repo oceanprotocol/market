@@ -18,6 +18,7 @@ import { MetadataPublishForm, MetadataMarket } from '../../../@types/Metadata'
 import AssetModel from '../../../models/Asset'
 import { File as FileMetadata } from '@oceanprotocol/lib/dist/node/ddo/interfaces/File'
 import web3Utils from 'web3-utils'
+import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 
 const validationSchema = Yup.object().shape<MetadataPublishForm>({
   // ---- required fields ----
@@ -58,6 +59,7 @@ export default function PublishForm({
   const { ocean, account } = useOcean()
   const { publish } = usePublish()
   const navigate = useNavigate()
+  const { marketAddress } = useSiteMetadata()
 
   async function handleSubmit(values: MetadataPublishForm) {
     const submittingToast = toast.info('submitting asset')
@@ -69,16 +71,16 @@ export default function PublishForm({
     `)
 
     const metadata = transformPublishFormToMetadata(values)
+    const cost = web3Utils.toWei(values.cost)
+    const tokensToMint = '4' // how to know this?
 
     console.log(`
       Transformed metadata values:
       ----------------------
       ${metadata}
+      Cost: ${cost}
+      Tokens to mint: ${tokensToMint}
     `)
-
-    const tokensToMint = '4' // how to know this?
-    const marketAddress = '0x4D156A2ef69ffdDC55838176C6712C90f60a2285' // what is this?
-    const cost = `${web3Utils.toWei(values.cost)}`
 
     try {
       const ddo = await publish(

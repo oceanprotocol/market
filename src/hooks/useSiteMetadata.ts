@@ -16,6 +16,7 @@ const query = graphql`
         appConfig {
           infuraProjectId
           networks
+          marketAddress
           oceanConfig {
             factoryAddress
             metadataStoreUri
