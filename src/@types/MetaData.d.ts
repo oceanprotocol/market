@@ -22,7 +22,7 @@ export interface MetadataPublishForm {
   files: string | File[]
   author: string
   license: string
-  price: string
+  cost: string
   access: string
   termsAndConditions: boolean
   // ---- optional fields ----

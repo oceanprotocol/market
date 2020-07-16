@@ -9,7 +9,6 @@ const AssetModel: MetadataMarket = {
     dateCreated: '',
     author: '',
     license: '',
-    price: '0',
     files: []
   },
   additionalInformation: {
