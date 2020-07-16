@@ -1,7 +1,6 @@
 import { MetadataMarket, MetadataPublishForm } from '../../../@types/Metadata'
 import { toStringNoMS } from '../../../utils'
 import AssetModel from '../../../models/Asset'
-import web3Utils from 'web3-utils'
 
 export function transformPublishFormToMetadata(
   data: MetadataPublishForm
@@ -10,7 +9,6 @@ export function transformPublishFormToMetadata(
 
   const {
     name,
-    price,
     author,
     license,
     description,
@@ -26,7 +24,6 @@ export function transformPublishFormToMetadata(
     main: {
       ...AssetModel.main,
       name,
-      price: `${web3Utils.toWei(price.toString())}`,
       author,
       dateCreated: currentTime,
       datePublished: currentTime,

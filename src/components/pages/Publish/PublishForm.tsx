@@ -1,9 +1,10 @@
 import React, { ReactElement } from 'react'
 import * as Yup from 'yup'
+import { useNavigate } from '@reach/router'
 import { toStringNoMS } from '../../../utils'
 import { toast } from 'react-toastify'
 import styles from './PublishForm.module.css'
-import { useOcean } from '@oceanprotocol/react'
+import { useOcean, usePublish } from '@oceanprotocol/react'
 import {
   Service,
   ServiceCompute
@@ -13,9 +14,10 @@ import Input from '../../atoms/Input'
 import Button from '../../atoms/Button'
 import { transformPublishFormToMetadata } from './utils'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
-import { MetadataPublishForm } from '../../../@types/Metadata'
+import { MetadataPublishForm, MetadataMarket } from '../../../@types/Metadata'
 import AssetModel from '../../../models/Asset'
 import { File as FileMetadata } from '@oceanprotocol/lib/dist/node/ddo/interfaces/File'
+import web3Utils from 'web3-utils'
 
 const validationSchema = Yup.object().shape<MetadataPublishForm>({
   // ---- required fields ----
@@ -54,6 +56,8 @@ export default function PublishForm({
   content: FormContent
 }): ReactElement {
   const { ocean, account } = useOcean()
+  const { publish } = usePublish()
+  const navigate = useNavigate()
 
   async function handleSubmit(values: MetadataPublishForm) {
     const submittingToast = toast.info('submitting asset')
@@ -72,6 +76,26 @@ export default function PublishForm({
       ${metadata}
     `)
 
+    const tokensToMint = '4' // how to know this?
+    const marketAddress = '0x4D156A2ef69ffdDC55838176C6712C90f60a2285' // what is this?
+    const cost = `${web3Utils.toWei(values.cost)}`
+
+    try {
+      const ddo = await publish(
+        metadata as any,
+        tokensToMint,
+        marketAddress,
+        cost
+      )
+
+      // User feedback and redirect to new asset detail page
+      toast.success('asset created successfully')
+      toast.dismiss(submittingToast)
+      navigate(`/asset/${ddo.id}`)
+    } catch (error) {
+      console.error(error.message)
+    }
+
     // if services array stays empty, the default access service
     // will be created by squid-js
     // let services: Service[] = []
@@ -86,25 +110,6 @@ export default function PublishForm({
     //     toStringNoMS(new Date(Date.now()))
     //   )
     //   services = [computeService]
-    // }
-
-    // try {
-    //   const asset = await ocean.assets.create(
-    //     (metadata as unknown) as Metadata,
-    //     account,
-    //     services
-    //   )
-
-    //   // TODO: Reset the form to initial values
-
-    //   // User feedback and redirect
-    //   toast.success('asset created successfully', {
-    //     className: styles.success
-    //   })
-    //   toast.dismiss(submittingToast)
-    //   // navigate(`/asset/${asset.id}`)
-    // } catch (e) {
-    //   console.error(e.message)
     // }
   }
 
