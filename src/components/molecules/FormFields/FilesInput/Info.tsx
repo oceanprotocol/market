@@ -9,7 +9,7 @@ export default function FileInfo({
   removeItem
 }: {
   file: FileMetadata
-  removeItem(): void
+  removeItem?(): void
 }): ReactElement {
   return (
     <div className={styles.info}>
@@ -19,9 +19,11 @@ export default function FileInfo({
         {file.contentLength && <li>{prettySize(+file.contentLength)}</li>}
         {file.contentType && <li>{cleanupContentType(file.contentType)}</li>}
       </ul>
-      <button className={styles.removeButton} onClick={() => removeItem()}>
-        &times;
-      </button>
+      {removeItem && (
+        <button className={styles.removeButton} onClick={() => removeItem()}>
+          &times;
+        </button>
+      )}
     </div>
   )
 }

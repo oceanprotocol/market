@@ -12,18 +12,18 @@
         "required": true
       },
       {
+        "name": "description",
+        "label": "Description",
+        "help": "Add a thorough description with as much detail as possible. You can use [Markdown](https://daringfireball.net/projects/markdown/basics).",
+        "type": "textarea",
+        "required": true
+      },
+      {
         "name": "files",
         "label": "Files",
         "placeholder": "e.g. https://file.com/file.json",
         "help": "Please provide a URL to your data set file.",
         "type": "files",
-        "required": true
-      },
-      {
-        "name": "description",
-        "label": "Description",
-        "help": "Add a thorough description with as much detail as possible.",
-        "type": "textarea",
         "required": true
       },
       {

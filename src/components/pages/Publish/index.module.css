@@ -12,6 +12,37 @@
 
   .sticky {
     position: sticky;
-    top: var(--spacer);
+    top: calc(var(--spacer) / 2);
   }
+}
+
+.preview {
+  font-size: var(--font-size-small);
+  margin-bottom: var(--spacer);
+}
+
+.preview header {
+  margin-bottom: var(--spacer);
+}
+
+.metaFull {
+  display: grid;
+  gap: var(--spacer);
+  grid-template-columns: 1fr 1fr;
+}
+
+.preview h2 {
+  margin-bottom: calc(var(--spacer) / 2);
+}
+
+.preview h3 {
+  margin-bottom: calc(var(--spacer) / 12);
+}
+
+.preview [class*='MetaItem-module--metaItem'] {
+  margin-bottom: calc(var(--spacer) / 2);
+}
+
+.file {
+  margin-bottom: calc(var(--spacer) / 2);
 }

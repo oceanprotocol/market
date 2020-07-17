@@ -1,4 +1,5 @@
 .file {
+  font-size: var(--font-size-small);
   background: var(--color-secondary);
   background-size: 100%;
   padding: var(--spacer) calc(var(--spacer) / 2);
@@ -10,11 +11,16 @@
 }
 
 .file li {
-  font-size: var(--font-size-small);
   color: var(--brand-white);
 }
 
 .file li.empty {
   font-size: var(--font-size-mini);
   opacity: 0.75;
+}
+
+.file.small {
+  font-size: var(--font-size-mini);
+  height: 5.75rem;
+  width: 4.5rem;
 }

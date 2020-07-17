@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react'
 import { useNavigate } from '@reach/router'
 import PublishForm from './PublishForm'
+import { File as FileMetadata } from '@oceanprotocol/lib/dist/node/ddo/interfaces/File'
 import styles from './index.module.css'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
 import { FormContent } from '../../../@types/Form'
@@ -11,6 +12,11 @@ import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { MetadataPublishForm } from '../../../@types/Metadata'
 import { transformPublishFormToMetadata } from './utils'
 import { toast } from 'react-toastify'
+import Markdown from '../../atoms/Markdown'
+import Tags from '../../atoms/Tags'
+import MetaItem from '../../organisms/AssetContent/MetaItem'
+import FileInfo from '../../molecules/FormFields/FilesInput/Info'
+import File from '../../atoms/File'
 
 export default function PublishPage({
   content
@@ -78,10 +84,40 @@ export default function PublishPage({
             <PublishForm content={content.form} />
             <aside>
               <div className={styles.sticky}>
-                <Web3Feedback />
                 <div className={styles.preview}>
-                  <h2>{values.name}</h2>
+                  <header>
+                    <h2>{values.name}</h2>
+                    {values.description && (
+                      <Markdown text={values.description} />
+                    )}
+                    {values.files && values.files.length && (
+                      <File
+                        file={values.files[0] as FileMetadata}
+                        className={styles.file}
+                        small
+                      />
+                    )}
+                    {values.tags && <Tags items={values.tags.split(',')} />}
+                  </header>
+
+                  <div className={styles.metaFull}>
+                    {Object.entries(values)
+                      .filter(
+                        ([key, value]) =>
+                          !(
+                            key.includes('name') ||
+                            key.includes('description') ||
+                            key.includes('tags') ||
+                            key.includes('files') ||
+                            key.includes('termsAndConditions')
+                          )
+                      )
+                      .map(([key, value]) => (
+                        <MetaItem key={key} title={key} content={value} />
+                      ))}
+                  </div>
                 </div>
+                <Web3Feedback />
               </div>
             </aside>
           </>
