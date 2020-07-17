@@ -26,7 +26,7 @@ export default function PublishPage({
     console.log(`
       Collected form values:
       ----------------------
-      ${JSON.stringify(values)}
+      ${JSON.stringify(values, null, 2)}
     `)
 
     const metadata = transformPublishFormToMetadata(values)
@@ -36,7 +36,7 @@ export default function PublishPage({
     console.log(`
       Transformed metadata values:
       ----------------------
-      ${JSON.stringify(metadata)}
+      ${JSON.stringify(metadata, null, 2)}
       Cost: 1
       Tokens to mint: ${tokensToMint}
     `)
@@ -56,6 +56,7 @@ export default function PublishPage({
 
       // TODO: reset form state and make sure persistant form in localStorage is cleared
 
+      // Go to new asset detail page
       navigate(`/asset/${ddo.id}`)
     } catch (error) {
       console.error(error.message)

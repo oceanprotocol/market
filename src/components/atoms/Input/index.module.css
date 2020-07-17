@@ -20,3 +20,13 @@
   right: 0;
   top: 0;
 }
+
+.hasError label {
+  color: var(--brand-alert-red);
+}
+
+.hasError input,
+.hasError select,
+.hasError textarea {
+  border-color: var(--brand-alert-red);
+}

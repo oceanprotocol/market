@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import styles from './PublishForm.module.css'
 import { useOcean, usePublish } from '@oceanprotocol/react'
 import { useFormikContext, Form, Field } from 'formik'
@@ -15,11 +15,28 @@ export default function PublishForm({
 }): ReactElement {
   const { ocean, account } = useOcean()
   const { publishStepText, isLoading } = usePublish()
-  const { status, setStatus, isValid } = useFormikContext()
+  const {
+    status,
+    setStatus,
+    isValid,
+    touched,
+    setErrors,
+    setTouched,
+    resetForm,
+    initialValues
+  } = useFormikContext()
+
+  // reset form validation on every mount
+  useEffect(() => {
+    setErrors({})
+    setTouched({})
+    // setSubmitting(false)
+  }, [])
 
   return (
     <Form
       className={styles.form}
+      // do we need this?
       onChange={() => status === 'empty' && setStatus(null)}
     >
       {content.data.map((field: FormFieldProps) => (
@@ -29,13 +46,29 @@ export default function PublishForm({
       {isLoading ? (
         <Loader message={publishStepText} />
       ) : (
-        <Button
-          style="primary"
-          type="submit"
-          disabled={!ocean || !account || !isValid || status === 'empty'}
-        >
-          Submit
-        </Button>
+        <footer className={styles.actions}>
+          <Button
+            style="primary"
+            type="submit"
+            disabled={!ocean || !account || !isValid || status === 'empty'}
+          >
+            Submit
+          </Button>
+
+          {status !== 'empty' && (
+            <Button
+              style="text"
+              size="small"
+              onClick={(e) => {
+                e.preventDefault()
+                resetForm(initialValues)
+                setStatus('empty')
+              }}
+            >
+              Reset Form
+            </Button>
+          )}
+        </footer>
       )}
       <Persist name="ocean-publish-form" />
     </Form>

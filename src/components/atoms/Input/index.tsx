@@ -3,8 +3,10 @@ import InputElement from './InputElement'
 import Help from './Help'
 import Label from './Label'
 import styles from './index.module.css'
-import { ErrorMessage, FormikState, FieldProps, FieldInputProps } from 'formik'
-import { MetadataPublishForm } from '../../../@types/Metadata'
+import { ErrorMessage } from 'formik'
+import classNames from 'classnames/bind'
+
+const cx = classNames.bind(styles)
 
 export interface InputProps {
   name: string
@@ -36,9 +38,18 @@ export interface InputProps {
 export default function Input(props: Partial<InputProps>): ReactElement {
   const { required, name, label, help, additionalComponent, field } = props
 
+  const hasError =
+    props.form.touched[field.name] &&
+    typeof props.form.errors[field.name] === 'string'
+
+  const styleClasses = cx({
+    field: true,
+    hasError: hasError
+  })
+
   return (
     <div
-      className={styles.field}
+      className={styleClasses}
       data-is-submitting={props.form && props.form.isSubmitting ? true : null}
     >
       <Label htmlFor={name} required={required}>

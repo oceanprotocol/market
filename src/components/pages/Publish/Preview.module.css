@@ -14,17 +14,13 @@
 }
 
 .previewTitle {
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-small);
   text-transform: uppercase;
   color: var(--color-secondary);
   margin-bottom: calc(var(--spacer) / 2);
 }
 
 .title {
-  margin-bottom: calc(var(--spacer) / 2);
-}
-
-.preview [class*='MetaItem-module--metaItem'] {
   margin-bottom: calc(var(--spacer) / 2);
 }
 

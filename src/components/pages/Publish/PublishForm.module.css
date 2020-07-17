@@ -1,3 +1,9 @@
 .form {
   composes: box from '../../atoms/Box.module.css';
 }
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

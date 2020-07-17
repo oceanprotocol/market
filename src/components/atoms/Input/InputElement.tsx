@@ -6,7 +6,7 @@ import FilesInput from '../../molecules/FormFields/FilesInput'
 import Terms from '../../molecules/FormFields/Terms'
 
 export default function InputElement(props: InputProps): ReactElement {
-  const { type, options, rows, name } = props
+  const { type, options, rows, name, value } = props
 
   switch (type) {
     case 'select':
@@ -62,10 +62,11 @@ export default function InputElement(props: InputProps): ReactElement {
       return (
         <input
           id={name}
-          type={type || 'text'}
           className={styles.input}
           name={name}
           {...props}
+          value={value || ''}
+          type={type || 'text'}
         />
       )
   }
