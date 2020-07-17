@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react'
-import * as Yup from 'yup'
 import { useNavigate } from '@reach/router'
 import { toast } from 'react-toastify'
 import styles from './PublishForm.module.css'
@@ -10,44 +9,10 @@ import Button from '../../atoms/Button'
 import { transformPublishFormToMetadata } from './utils'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { MetadataPublishForm } from '../../../@types/Metadata'
-import { File as FileMetadata } from '@oceanprotocol/lib/dist/node/ddo/interfaces/File'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { Persist } from 'formik-persist'
 import Loader from '../../atoms/Loader'
-import Alert from '../../atoms/Alert'
-
-const validationSchema = Yup.object().shape<MetadataPublishForm>({
-  // ---- required fields ----
-  name: Yup.string().required('Required'),
-  author: Yup.string().required('Required'),
-  cost: Yup.string().required('Required'),
-  files: Yup.array<FileMetadata>().required('Required').nullable(),
-  description: Yup.string().required('Required'),
-  license: Yup.string().required('Required'),
-  access: Yup.string()
-    .matches(/Compute|Download/g)
-    .required('Required'),
-  termsAndConditions: Yup.boolean().required('Required'),
-
-  // ---- optional fields ----
-  copyrightHolder: Yup.string(),
-  tags: Yup.string(),
-  links: Yup.object<FileMetadata[]>()
-})
-
-const initialValues: MetadataPublishForm = {
-  name: undefined,
-  author: undefined,
-  cost: undefined,
-  files: undefined,
-  description: undefined,
-  license: undefined,
-  access: undefined,
-  termsAndConditions: undefined,
-  copyrightHolder: undefined,
-  tags: undefined,
-  links: undefined
-}
+import { initialValues, validationSchema } from './validation'
 
 export default function PublishForm({
   content
@@ -65,7 +30,7 @@ export default function PublishForm({
   const navigate = useNavigate()
   const { marketAddress } = useSiteMetadata()
 
-  async function handleSubmit(values: MetadataPublishForm) {
+  async function handleSubmit(values: MetadataPublishForm): Promise<void> {
     console.log(`
       Collected form values:
       ----------------------
