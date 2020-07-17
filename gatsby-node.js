@@ -1,12 +1,12 @@
-exports.onCreateWebpackConfig = ({ actions }) => {
-  actions.setWebpackConfig({
-    node: {
-      // 'fs' fix for squid.js
-      fs: 'empty'
-    },
-    // fix for 'got'/'swarm-js' dependency
-    externals: ['got']
-  })
+const createFields = require('./gatsby/createFields')
+const createMarkdownPages = require('./gatsby/createMarkdownPages')
+
+exports.onCreateNode = ({ node, actions, getNode }) => {
+  createFields(node, actions, getNode)
+}
+
+exports.createPages = async ({ graphql, actions }) => {
+  await createMarkdownPages(graphql, actions)
 }
 
 exports.onCreatePage = async ({ page, actions }) => {
@@ -21,4 +21,15 @@ exports.onCreatePage = async ({ page, actions }) => {
     // Update the page.
     createPage(page)
   }
+}
+
+exports.onCreateWebpackConfig = ({ actions }) => {
+  actions.setWebpackConfig({
+    node: {
+      // 'fs' fix for squid.js
+      fs: 'empty'
+    },
+    // fix for 'got'/'swarm-js' dependency
+    externals: ['got']
+  })
 }

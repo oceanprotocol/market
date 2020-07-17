@@ -1,0 +1,121 @@
+.teaser {
+  margin-bottom: calc(var(--spacer) * 2);
+  margin-top: -4rem;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.content {
+  /* handling long text, like URLs */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.content table {
+  overflow-wrap: normal;
+  word-wrap: normal;
+  word-break: normal;
+}
+
+.content h1,
+.content h2 {
+  font-size: var(--font-size-h3);
+}
+
+.content h3 {
+  font-size: var(--font-size-h4);
+}
+
+.content h4 {
+  font-size: var(--font-size-h5);
+}
+
+.content h5 {
+  font-size: var(--font-size-base);
+}
+
+.content ul,
+.content ol {
+  margin: 0;
+  margin-bottom: var(--spacer);
+  padding-left: 1.5rem;
+}
+
+.content ul {
+  list-style: none;
+}
+
+.content ul li {
+  position: relative;
+  display: block;
+}
+
+.content ul li:before {
+  content: '▪';
+  top: -2px;
+  position: absolute;
+  left: -1.5rem;
+  color: var(--brand-grey-light);
+  user-select: none;
+}
+
+.content li + li {
+  margin-top: calc(var(--spacer) / 8);
+}
+
+.content li ul,
+.content li ol,
+.content li p {
+  margin-bottom: 0;
+  margin-top: calc(var(--spacer) / 8);
+}
+
+.content hr {
+  display: block;
+  margin: calc(var(--spacer) * 2) auto;
+  max-width: 20%;
+  border: 0;
+  border-top: 2px solid var(--brand-black);
+}
+
+.content figure {
+  margin-bottom: var(--spacer);
+}
+
+.content figcaption {
+  text-align: center;
+  color: var(--brand-grey-light);
+  margin-top: calc(var(--spacer) / 4);
+  font-size: var(--font-size-small);
+}
+
+.content blockquote {
+  font-style: italic;
+  font-size: var(--font-size-large);
+  padding-left: calc(var(--spacer) / 2);
+  position: relative;
+  margin-top: calc(var(--spacer) * 1.5);
+  margin-bottom: calc(var(--spacer) * 1.5);
+}
+
+.content blockquote::before {
+  content: '‟';
+  font-size: 400%;
+  position: absolute;
+  left: -3rem;
+  top: -2rem;
+  color: var(--brand-grey-light);
+}
+
+.content :global(.anchor) {
+  opacity: 0;
+  color: var(--brand-grey-light);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-base);
+  margin-top: 0.2rem;
+}
+
+.content :global([id]:hover .anchor) {
+  opacity: 1;
+}

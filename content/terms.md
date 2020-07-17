@@ -1,6 +1,9 @@
-# Terms and Conditions
+---
+title: Terms and Conditions
+description: Thanks for using our product and services.
+---
 
-Thanks for using our product and services. By using our products and services you are agreeing to the terms. Please read them carefully.
+By using our products and services you are agreeing to the terms. Please read them carefully.
 
 _Latest Revision: February 20, 2020_
 
