@@ -29,8 +29,8 @@ export interface InputProps {
   pattern?: string
   min?: string
   disabled?: boolean
-  field?: FieldInputProps<any>
-  form?: FormikState<any>
+  field?: any
+  form?: any
 }
 
 export default function Input(props: Partial<InputProps>): ReactElement {

@@ -2,7 +2,8 @@ import React, { ReactElement } from 'react'
 import slugify from '@sindresorhus/slugify'
 import styles from './InputElement.module.css'
 import { InputProps } from '.'
-import FilesInput from '../../molecules/FilesInput'
+import FilesInput from '../../molecules/FormFields/FilesInput'
+import Terms from '../../molecules/FormFields/Terms'
 
 export default function InputElement(props: InputProps): ReactElement {
   const { type, options, rows, name } = props
@@ -55,6 +56,8 @@ export default function InputElement(props: InputProps): ReactElement {
       )
     case 'files':
       return <FilesInput name={name} {...props} />
+    case 'terms':
+      return <Terms name={name} {...props} />
     default:
       return (
         <input
