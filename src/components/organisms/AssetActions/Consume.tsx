@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import Web3 from 'web3'
+import { fromWei } from 'web3-utils'
 import compareAsBN, { Comparisson } from '../../../utils/compareAsBN'
 import Button from '../../atoms/Button'
 import File from '../../atoms/File'
@@ -23,8 +23,7 @@ export default function Consume({
   const file = metadata.main.files[0]
   const isFree = price === '0'
   const isBalanceSufficient =
-    isFree ||
-    compareAsBN(balanceInOcean, Web3.utils.fromWei(price), Comparisson.gte)
+    isFree || compareAsBN(balanceInOcean, fromWei(price), Comparisson.gte)
   const isDisabled = !ocean || !isBalanceSufficient || isLoading
 
   const PurchaseButton = () => {

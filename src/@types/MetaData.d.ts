@@ -1,7 +1,9 @@
-import { Metadata } from '@oceanprotocol/lib'
-import { AdditionalInformation } from '@oceanprotocol/lib/dist/node/ddo/interfaces/AdditionalInformation'
-import { File } from '@oceanprotocol/lib/dist/node/ddo/interfaces/File'
-import { ServiceMetadata } from '@oceanprotocol/lib/dist/node/ddo/interfaces/Service'
+import {
+  Metadata,
+  File,
+  AdditionalInformation,
+  ServiceMetadata
+} from '@oceanprotocol/lib'
 
 export declare type AccessType = 'Download' | 'Compute'
 

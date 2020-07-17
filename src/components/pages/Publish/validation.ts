@@ -1,5 +1,5 @@
 import { MetadataPublishForm } from '../../../@types/Metadata'
-import { File as FileMetadata } from '@oceanprotocol/lib/dist/node/ddo/interfaces/File'
+import { File as FileMetadata } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 
 export const validationSchema = Yup.object().shape<MetadataPublishForm>({

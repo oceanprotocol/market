@@ -1,5 +1,4 @@
 import { OceanProviderValue } from '@oceanprotocol/react'
-import atlas from '@ethereum-navigator/atlas'
 import { networks, infuraProjectId } from '../../app.config'
 
 const web3ModalTheme = {
@@ -17,12 +16,13 @@ export async function connectWallet(
     '@walletconnect/web3-provider'
   )
 
+  // Provider Options
+  // https://github.com/Web3Modal/web3modal#provider-options
   const providerOptions = {
-    /* See Provider Options Section */
     walletconnect: {
-      package: WalletConnectProvider, // required
+      package: WalletConnectProvider,
       options: {
-        infuraId: infuraProjectId // required
+        infuraId: infuraProjectId
       }
     }
   }

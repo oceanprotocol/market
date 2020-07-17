@@ -1,11 +1,13 @@
 import React, { ReactElement } from 'react'
 import { Link } from 'gatsby'
 import { useLocation } from '@reach/router'
+import loadable from '@loadable/component'
 import styles from './Menu.module.css'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
-import Wallet from './Wallet'
 import { ReactComponent as Logo } from '@oceanprotocol/art/logo/logo.svg'
 import Container from '../atoms/Container'
+
+const Wallet = loadable(() => import('./Wallet'))
 
 declare type MenuItem = {
   name: string

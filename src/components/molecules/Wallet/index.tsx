@@ -3,7 +3,6 @@ import loadable from '@loadable/component'
 import { useSpring, animated } from 'react-spring'
 import Account from './Account'
 import Details from './Details'
-import styles from './index.module.css'
 import { useOcean } from '@oceanprotocol/react'
 
 const Tippy = loadable(() => import('@tippyjs/react/headless'))
