@@ -55,13 +55,17 @@ export default function PublishForm({
   content: FormContent
 }): ReactElement {
   const { ocean, account } = useOcean()
-  const { publish, publishStepText, isLoading, publishError } = usePublish()
+  const {
+    publish,
+    publishStepText,
+    publishStep,
+    isLoading,
+    publishError
+  } = usePublish()
   const navigate = useNavigate()
   const { marketAddress } = useSiteMetadata()
 
   async function handleSubmit(values: MetadataPublishForm) {
-    const submittingToast = toast.info('submitting asset')
-
     console.log(`
       Collected form values:
       ----------------------
@@ -85,15 +89,20 @@ export default function PublishForm({
         { serviceType, cost: '1' }
       ])
 
+      if (publishError) {
+        toast.error(publishError)
+        return null
+      }
+
       // User feedback and redirect to new asset detail page
-      ddo && toast.success('asset created successfully')
-      toast.dismiss(submittingToast)
+      ddo && toast.success('Asset created successfully.')
 
       // TODO: reset form state and make sure persistant form in localStorage is cleared
 
       navigate(`/asset/${ddo.id}`)
     } catch (error) {
       console.error(error.message)
+      toast.error(error.message)
     }
   }
 
@@ -118,8 +127,6 @@ export default function PublishForm({
 
           {isLoading ? (
             <Loader message={publishStepText} />
-          ) : publishError ? (
-            <Alert text={publishError} state="error" />
           ) : (
             <Button
               style="primary"
