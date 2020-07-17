@@ -22,7 +22,7 @@
     "@loadable/component": "^5.13.1",
     "@now/node": "^1.7.2",
     "@oceanprotocol/art": "^3.0.0",
-    "@oceanprotocol/react": "^0.0.13",
+    "@oceanprotocol/react": "^0.0.14",
     "@oceanprotocol/typographies": "^0.1.0",
     "@sindresorhus/slugify": "^1.0.0",
     "@tippyjs/react": "^4.1.0",
@@ -73,9 +73,9 @@
   "devDependencies": {
     "@babel/core": "^7.10.5",
     "@babel/preset-typescript": "^7.10.1",
-    "@storybook/addon-actions": "^6.0.0-rc.5",
-    "@storybook/addon-storyshots": "^6.0.0-rc.5",
-    "@storybook/react": "^6.0.0-rc.5",
+    "@storybook/addon-actions": "^6.0.0-rc.8",
+    "@storybook/addon-storyshots": "^6.0.0-rc.8",
+    "@storybook/react": "^6.0.0-rc.8",
     "@svgr/webpack": "^5.4.0",
     "@testing-library/jest-dom": "^5.11.1",
     "@testing-library/react": "^10.4.7",
@@ -105,7 +105,7 @@
     "prettier": "^2.0.5",
     "serve": "^11.3.2",
     "source-map-explorer": "^2.4.2",
-    "typescript": "^3.9.6"
+    "typescript": "^3.9.7"
   },
   "repository": {
     "type": "git",
