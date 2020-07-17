@@ -3,6 +3,11 @@
   position: relative;
 }
 
+.field[data-is-submitting] {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
 .field .field {
   margin-bottom: calc(var(--spacer) / 2);
 }
