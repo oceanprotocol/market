@@ -15,7 +15,7 @@ export default function Preview({
   return (
     <div className={styles.preview}>
       <header>
-        <h2>{values.name}</h2>
+        {values.name && <h2>{values.name}</h2>}
         {values.description && <Markdown text={values.description} />}
         {values.files && values.files.length && (
           <File
@@ -36,7 +36,8 @@ export default function Preview({
                 key.includes('description') ||
                 key.includes('tags') ||
                 key.includes('files') ||
-                key.includes('termsAndConditions')
+                key.includes('termsAndConditions') ||
+                value === undefined
               )
           )
           .map(([key, value]) => (
