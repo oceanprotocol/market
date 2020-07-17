@@ -37,7 +37,8 @@ export default function Preview({
                 key.includes('tags') ||
                 key.includes('files') ||
                 key.includes('termsAndConditions') ||
-                value === undefined
+                value === undefined ||
+                value === ''
               )
           )
           .map(([key, value]) => (
