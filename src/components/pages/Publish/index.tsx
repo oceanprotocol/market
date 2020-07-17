@@ -1,22 +1,17 @@
 import React, { ReactElement } from 'react'
 import { useNavigate } from '@reach/router'
-import PublishForm from './PublishForm'
-import { File as FileMetadata } from '@oceanprotocol/lib/dist/node/ddo/interfaces/File'
+import { toast } from 'react-toastify'
+import { Formik } from 'formik'
+import { usePublish } from '@oceanprotocol/react'
 import styles from './index.module.css'
+import PublishForm from './PublishForm'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
 import { FormContent } from '../../../@types/Form'
-import { Formik } from 'formik'
 import { initialValues, validationSchema } from './validation'
-import { usePublish } from '@oceanprotocol/react'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { MetadataPublishForm } from '../../../@types/Metadata'
 import { transformPublishFormToMetadata } from './utils'
-import { toast } from 'react-toastify'
-import Markdown from '../../atoms/Markdown'
-import Tags from '../../atoms/Tags'
-import MetaItem from '../../organisms/AssetContent/MetaItem'
-import FileInfo from '../../molecules/FormFields/FilesInput/Info'
-import File from '../../atoms/File'
+import Preview from './Preview'
 
 export default function PublishPage({
   content
@@ -84,39 +79,7 @@ export default function PublishPage({
             <PublishForm content={content.form} />
             <aside>
               <div className={styles.sticky}>
-                <div className={styles.preview}>
-                  <header>
-                    <h2>{values.name}</h2>
-                    {values.description && (
-                      <Markdown text={values.description} />
-                    )}
-                    {values.files && values.files.length && (
-                      <File
-                        file={values.files[0] as FileMetadata}
-                        className={styles.file}
-                        small
-                      />
-                    )}
-                    {values.tags && <Tags items={values.tags.split(',')} />}
-                  </header>
-
-                  <div className={styles.metaFull}>
-                    {Object.entries(values)
-                      .filter(
-                        ([key, value]) =>
-                          !(
-                            key.includes('name') ||
-                            key.includes('description') ||
-                            key.includes('tags') ||
-                            key.includes('files') ||
-                            key.includes('termsAndConditions')
-                          )
-                      )
-                      .map(([key, value]) => (
-                        <MetaItem key={key} title={key} content={value} />
-                      ))}
-                  </div>
-                </div>
+                <Preview values={values} />
                 <Web3Feedback />
               </div>
             </aside>
