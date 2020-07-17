@@ -4,7 +4,7 @@ function createMarkdownFields(node, actions, getNode) {
   const { createNodeField } = actions
 
   // Automatically create slugs for specific node types,
-  // relative to ./content/
+  // relative to ./content/pages/
   const { type } = node.internal
 
   if (type === 'MarkdownRemark') {
@@ -12,6 +12,7 @@ function createMarkdownFields(node, actions, getNode) {
     const slug = createFilePath({
       node,
       getNode,
+      basePath: 'pages/',
       trailingSlash: false
     })
 

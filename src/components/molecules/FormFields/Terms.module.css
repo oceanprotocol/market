@@ -1,4 +1,6 @@
 .terms {
+  composes: content from '../../templates/PageMarkdown.module.css';
+
   padding: calc(var(--spacer) / 2);
   border: 1px solid var(--brand-grey-lighter);
   background-color: var(--brand-grey-dimmed);
