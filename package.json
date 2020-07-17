@@ -22,7 +22,7 @@
     "@loadable/component": "^5.13.1",
     "@now/node": "^1.7.2",
     "@oceanprotocol/art": "^3.0.0",
-    "@oceanprotocol/react": "^0.0.14",
+    "@oceanprotocol/react": "^0.0.15",
     "@oceanprotocol/typographies": "^0.1.0",
     "@sindresorhus/slugify": "^1.0.0",
     "@tippyjs/react": "^4.1.0",
