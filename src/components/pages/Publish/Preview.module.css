@@ -13,17 +13,23 @@
   grid-template-columns: 1fr 1fr;
 }
 
-.preview h2 {
-  font-size: var(--font-size-h3);
+.previewTitle {
+  font-size: var(--font-size-base);
+  text-transform: uppercase;
+  color: var(--color-secondary);
   margin-bottom: calc(var(--spacer) / 2);
 }
 
-.preview h3 {
-  margin-bottom: calc(var(--spacer) / 12);
+.title {
+  margin-bottom: calc(var(--spacer) / 2);
 }
 
 .preview [class*='MetaItem-module--metaItem'] {
   margin-bottom: calc(var(--spacer) / 2);
+}
+
+.preview [class*='MetaItem-module--metaItem'] h3 {
+  margin-bottom: calc(var(--spacer) / 12);
 }
 
 .file {

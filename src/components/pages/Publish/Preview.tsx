@@ -14,8 +14,9 @@ export default function Preview({
 }): ReactElement {
   return (
     <div className={styles.preview}>
+      <h2 className={styles.previewTitle}>Preview</h2>
       <header>
-        {values.name && <h2>{values.name}</h2>}
+        {values.name && <h3 className={styles.title}>{values.name}</h3>}
         {values.description && <Markdown text={values.description} />}
         {values.files && values.files.length && (
           <File
