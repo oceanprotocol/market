@@ -39,6 +39,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
   const { required, name, label, help, additionalComponent, field } = props
 
   const hasError =
+    props.form &&
     props.form.touched[field.name] &&
     typeof props.form.errors[field.name] === 'string'
 
