@@ -23,7 +23,7 @@ export interface MetadataPublishForm {
   author: string
   license: string
   cost: string
-  access: string
+  access: 'Download' | 'Compute' | string
   termsAndConditions: boolean
   // ---- optional fields ----
   copyrightHolder?: string

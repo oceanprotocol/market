@@ -13,6 +13,8 @@ import { MetadataPublishForm } from '../../../@types/Metadata'
 import { File as FileMetadata } from '@oceanprotocol/lib/dist/node/ddo/interfaces/File'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { Persist } from 'formik-persist'
+import Loader from '../../atoms/Loader'
+import Alert from '../../atoms/Alert'
 
 const validationSchema = Yup.object().shape<MetadataPublishForm>({
   // ---- required fields ----
@@ -22,7 +24,9 @@ const validationSchema = Yup.object().shape<MetadataPublishForm>({
   files: Yup.array<FileMetadata>().required('Required').nullable(),
   description: Yup.string().required('Required'),
   license: Yup.string().required('Required'),
-  access: Yup.string().min(4).required('Required'),
+  access: Yup.string()
+    .matches(/Compute|Download/g)
+    .required('Required'),
   termsAndConditions: Yup.boolean().required('Required'),
 
   // ---- optional fields ----
@@ -51,7 +55,7 @@ export default function PublishForm({
   content: FormContent
 }): ReactElement {
   const { ocean, account } = useOcean()
-  const { publish } = usePublish()
+  const { publish, publishStepText, isLoading, publishError } = usePublish()
   const navigate = useNavigate()
   const { marketAddress } = useSiteMetadata()
 
@@ -66,22 +70,20 @@ export default function PublishForm({
 
     const metadata = transformPublishFormToMetadata(values)
     const tokensToMint = '4' // how to know this?
+    const serviceType = values.access === 'Download' ? 'access' : 'compute'
 
     console.log(`
       Transformed metadata values:
       ----------------------
       ${JSON.stringify(metadata)}
-      Cost: ${values.cost}
+      Cost: 1
       Tokens to mint: ${tokensToMint}
     `)
 
     try {
-      const ddo = await publish(
-        metadata as any,
-        tokensToMint,
-        marketAddress,
-        values.cost
-      )
+      const ddo = await publish(metadata as any, tokensToMint, marketAddress, [
+        { serviceType, cost: '1' }
+      ])
 
       // User feedback and redirect to new asset detail page
       toast.success('asset created successfully')
@@ -105,7 +107,7 @@ export default function PublishForm({
         setSubmitting(false)
       }}
     >
-      {({ isSubmitting, isValid, status, setStatus }) => (
+      {({ isValid, status, setStatus }) => (
         <FormFormik
           className={styles.form}
           onChange={() => status === 'empty' && setStatus(null)}
@@ -114,19 +116,19 @@ export default function PublishForm({
             <Field key={field.name} {...field} component={Input} />
           ))}
 
-          <Button
-            style="primary"
-            type="submit"
-            disabled={
-              !ocean ||
-              !account ||
-              isSubmitting ||
-              !isValid ||
-              status === 'empty'
-            }
-          >
-            Submit
-          </Button>
+          {isLoading ? (
+            <Loader message={publishStepText} />
+          ) : publishError ? (
+            <Alert text={publishError} state="error" />
+          ) : (
+            <Button
+              style="primary"
+              type="submit"
+              disabled={!ocean || !account || !isValid || status === 'empty'}
+            >
+              Submit
+            </Button>
+          )}
           <Persist name="ocean-publish-form" />
         </FormFormik>
       )}
