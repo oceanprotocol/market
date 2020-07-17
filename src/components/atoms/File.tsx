@@ -1,14 +1,31 @@
 import React, { ReactElement } from 'react'
 import { File as FileMetadata } from '@oceanprotocol/lib/dist/node/ddo/interfaces/File'
 import filesize from 'filesize'
+import classNames from 'classnames/bind'
 import cleanupContentType from '../../utils/cleanupContentType'
 import styles from './File.module.css'
 
-export default function File({ file }: { file: FileMetadata }): ReactElement {
+const cx = classNames.bind(styles)
+
+export default function File({
+  file,
+  className,
+  small
+}: {
+  file: FileMetadata
+  className?: string
+  small?: boolean
+}): ReactElement {
   if (!file) return null
 
+  const styleClasses = cx({
+    file: true,
+    small: small,
+    [className]: className
+  })
+
   return (
-    <ul className={styles.file}>
+    <ul className={styleClasses}>
       {file.contentType || file.contentLength ? (
         <>
           <li>{cleanupContentType(file.contentType)}</li>

@@ -54,7 +54,7 @@ export function toStringNoMS(date: Date): string {
 export async function getFileInfo(url: string): Promise<FileMetadata> {
   const response: AxiosResponse = await axios({
     method: 'POST',
-    url: '/api/file',
+    url: 'https://fileinfo.oceanprotocol.com',
     data: { url }
   })
 
@@ -67,12 +67,12 @@ export async function getFileInfo(url: string): Promise<FileMetadata> {
 
   return {
     contentLength,
-    contentType: contentType || '', // need to do that cause squid.js File interface requires contentType
+    contentType: contentType || '', // need to do that cause lib-js File interface requires contentType
     url
   }
 }
 
-export async function fetchData(url: string): Promise<Axios> {
+export async function fetchData(url: string): Promise<any> {
   try {
     const response = await axios(url)
 

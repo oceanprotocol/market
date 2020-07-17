@@ -12,6 +12,6 @@
 
   .sticky {
     position: sticky;
-    top: var(--spacer);
+    top: calc(var(--spacer) / 2);
   }
 }

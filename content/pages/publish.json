@@ -12,6 +12,13 @@
         "required": true
       },
       {
+        "name": "description",
+        "label": "Description",
+        "help": "Add a thorough description with as much detail as possible. You can use [Markdown](https://daringfireball.net/projects/markdown/basics).",
+        "type": "textarea",
+        "required": true
+      },
+      {
         "name": "files",
         "label": "Files",
         "placeholder": "e.g. https://file.com/file.json",
@@ -20,25 +27,19 @@
         "required": true
       },
       {
-        "name": "description",
-        "label": "Description",
-        "help": "Add a thorough description with as much detail as possible.",
-        "type": "textarea",
-        "required": true
-      },
-      {
-        "name": "price",
-        "label": "Price",
-        "help": "Set your price in Ocean Tokens.",
-        "type": "price",
-        "min": 1,
-        "required": true
-      },
-      {
         "name": "access",
         "label": "Access Type",
+        "help": "Choose how you want your files to be accessible for the specified price.",
         "type": "select",
         "options": ["Download", "Compute"],
+        "required": true
+      },
+      {
+        "name": "cost",
+        "label": "Price",
+        "help": "Set your price for accessing this data set in Ocean Tokens.",
+        "type": "price",
+        "min": 1,
         "required": true
       },
       {
@@ -84,7 +85,7 @@
       {
         "name": "termsAndConditions",
         "label": "Terms & Conditions",
-        "type": "checkbox",
+        "type": "terms",
         "options": ["I agree to these Terms and Conditions"],
         "required": true
       }

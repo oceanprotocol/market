@@ -1,12 +1,11 @@
 import React, { ReactElement } from 'react'
 import isUrl from 'is-url-superb'
-import Button from '../../atoms/Button'
+import Button from '../../../atoms/Button'
 import { useField } from 'formik'
-import Loader from '../../atoms/Loader'
-import InputElement from '../../atoms/Input/InputElement'
-import { InputProps } from '../../atoms/Input'
+import Loader from '../../../atoms/Loader'
+import { InputProps } from '../../../atoms/Input'
 import styles from './Input.module.css'
-import InputGroup from '../../atoms/Input/InputGroup'
+import InputGroup from '../../../atoms/Input/InputGroup'
 
 export default function FileInput({
   handleButtonClick,

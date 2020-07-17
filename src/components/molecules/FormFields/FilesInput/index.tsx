@@ -3,8 +3,8 @@ import { useField } from 'formik'
 import { toast } from 'react-toastify'
 import FileInfo from './Info'
 import FileInput from './Input'
-import { getFileInfo } from '../../../utils'
-import { InputProps } from '../../atoms/Input'
+import { getFileInfo } from '../../../../utils'
+import { InputProps } from '../../../atoms/Input'
 
 interface Values {
   url: string
