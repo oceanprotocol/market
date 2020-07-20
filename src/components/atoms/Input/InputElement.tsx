@@ -4,6 +4,7 @@ import styles from './InputElement.module.css'
 import { InputProps } from '.'
 import FilesInput from '../../molecules/FormFields/FilesInput'
 import Terms from '../../molecules/FormFields/Terms'
+import Price from '../../molecules/FormFields/Price'
 
 export default function InputElement(props: InputProps): ReactElement {
   const { type, options, rows, name, value } = props
@@ -56,6 +57,8 @@ export default function InputElement(props: InputProps): ReactElement {
       )
     case 'files':
       return <FilesInput name={name} {...props} />
+    case 'price':
+      return <Price name={name} {...props} />
     case 'terms':
       return <Terms name={name} {...props} />
     default:

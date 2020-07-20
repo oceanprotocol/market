@@ -1,0 +1,26 @@
+.price {
+  display: flex;
+  gap: calc(var(--spacer) / 2);
+  justify-content: center;
+  background: var(--brand-grey-dimmed);
+  margin-left: -2rem;
+  margin-right: -2rem;
+  padding: calc(var(--spacer) * 1.5) var(--spacer);
+}
+
+.price > div {
+  max-width: 8rem;
+  text-align: center;
+}
+
+.price label {
+  color: var(--color-secondary);
+}
+
+.price input {
+  width: 100%;
+  text-align: center;
+  /* color: var(--brand-white);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--brand-grey); */
+}
