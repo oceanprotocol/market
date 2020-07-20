@@ -1,36 +1,24 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement } from 'react'
 import Button from '../../atoms/Button'
 import styles from './Details.module.css'
 import { useOcean } from '@oceanprotocol/react'
 import Web3Feedback from './Feedback'
-import { formatNumber } from '../../../utils'
 import { connectWallet, getNetworkName } from '../../../utils/wallet'
 import { getInjectedProviderName } from 'web3modal'
 
 export default function Details({ attrs }: { attrs: any }): ReactElement {
-  const { ocean, balance, connect, logout, chainId } = useOcean()
-  const [balanceOcean, setBalanceOcean] = useState('0')
-
-  useEffect(() => {
-    async function init() {
-      if (!ocean) return
-
-      const accounts = await ocean.accounts.list()
-      const newBalanceOcean = await accounts[0].getOceanBalance()
-      newBalanceOcean && setBalanceOcean(newBalanceOcean)
-    }
-    init()
-  }, [ocean])
+  const { balance, connect, logout, chainId } = useOcean()
 
   return (
     <div className={styles.details} {...attrs}>
       <ul>
-        <li className={styles.balance}>
-          <span>OCEAN</span> {balanceOcean}
-        </li>
-        <li className={styles.balance}>
-          <span>ETH</span> {formatNumber(Number(balance))}
-        </li>
+        {balance &&
+          Object.entries(balance).map(([key, value]) => (
+            <li className={styles.balance} key={key}>
+              <span>{key.toUpperCase()}</span> {value}
+            </li>
+          ))}
+
         <li className={styles.actions}>
           <span title="Connected provider">
             {getInjectedProviderName()}

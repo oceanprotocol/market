@@ -1,7 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 import { toast } from 'react-toastify'
-import { File as FileMetadata } from '@oceanprotocol/lib/dist/node/ddo/interfaces/File'
-import numeral from 'numeral'
+import { File as FileMetadata } from '@oceanprotocol/lib'
 import web3Utils from 'web3-utils'
 
 export function updateQueryStringParameter(
@@ -39,13 +38,6 @@ export function prettySize(
 
 // Boolean value that will be true if we are inside a browser, false otherwise
 export const isBrowser = typeof window !== 'undefined'
-
-export function formatNumber(number: number, format?: string): string {
-  numeral.zeroFormat('0')
-  const defaultFormat = '0,0.000'
-
-  return numeral(number).format(format || defaultFormat)
-}
 
 export function toStringNoMS(date: Date): string {
   return date.toISOString().replace(/\.[0-9]{3}Z/, 'Z')
