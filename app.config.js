@@ -11,7 +11,7 @@ module.exports = {
       'https://provider.rinkeby.v3.dev-ocean.com',
     factoryAddress:
       process.env.GATSBY_FACTORY_ADDRESS ||
-      '0xB9d406D24B310A7D821D0b782a36909e8c925471',
+      '0xcDfEe5D80041224cDCe9AE2334E85B3236385EA3',
     oceanTokenAddress:
       process.env.GATSBY_OCEAN_TOKEN_ADDRESS ||
       '0x8967BCF84170c91B0d24D4302C2376283b0B3a07',
