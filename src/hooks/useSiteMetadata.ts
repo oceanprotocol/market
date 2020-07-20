@@ -18,9 +18,10 @@ const query = graphql`
           networks
           marketAddress
           oceanConfig {
+            url
             factoryAddress
+            oceanTokenAddress
             metadataStoreUri
-            nodeUri
             providerUri
             verbose
           }

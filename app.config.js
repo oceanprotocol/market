@@ -1,20 +1,13 @@
+const { ConfigHelper } = require('@oceanprotocol/lib')
+
+const networkConfig = new ConfigHelper().getConfig(
+  process.env.GATSBY_NETWORK || 'rinkeby'
+)
+
 module.exports = {
   oceanConfig: {
-    nodeUri:
-      process.env.GATSBY_NODE_URI ||
-      `https://rinkeby.infura.io/${process.env.GATSBY_INFURA_PROJECT_ID}`,
-    metadataStoreUri:
-      process.env.GATSBY_METADATA_STORE_URI ||
-      'https://aquarius.rinkeby.v3.dev-ocean.com',
-    providerUri:
-      process.env.GATSBY_PROVIDER_URI ||
-      'https://provider.rinkeby.v3.dev-ocean.com',
-    factoryAddress:
-      process.env.GATSBY_FACTORY_ADDRESS ||
-      '0xcDfEe5D80041224cDCe9AE2334E85B3236385EA3',
-    oceanTokenAddress:
-      process.env.GATSBY_OCEAN_TOKEN_ADDRESS ||
-      '0x8967BCF84170c91B0d24D4302C2376283b0B3a07',
+    ...networkConfig,
+    url: `https://rinkeby.infura.io/${process.env.GATSBY_INFURA_PROJECT_ID}`,
     verbose: 3
   },
   // Main, Rinkeby, Kovan
