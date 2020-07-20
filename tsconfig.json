@@ -16,5 +16,5 @@
     "allowJs": true
   },
   "exclude": ["node_modules", "public", ".cache", "*.js"],
-  "include": ["./src/**/*", "./api/**/*", "./tests/**/*", "./app.config.js"]
+  "include": ["./src/**/*", "./tests/**/*", "./app.config.js"]
 }

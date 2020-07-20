@@ -13,7 +13,6 @@
 - [🤓 Resources](#-resources)
 - [🏄 Get Started](#-get-started)
   - [Local Spree components with Barge](#local-spree-components-with-barge)
-  - [API](#api)
 - [🦑 Environment variables](#-environment-variables)
 - [🎨 Storybook](#-storybook)
 - [✨ Code Style](#-code-style)
@@ -72,12 +71,6 @@ Finally, set environment variables to use those local connections in `.env` in t
 # modify env variables, Spree is enabled by default when using those files
 cp .env.example .env
 ```
-
-### API
-
-Files under `/api` are isolated and not part of Gatsby.
-
-- [API Documentation](api/)
 
 ## 🦑 Environment variables
 

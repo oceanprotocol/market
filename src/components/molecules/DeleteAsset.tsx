@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, ReactElement } from 'react'
 import { useNavigate } from '@reach/router'
 import { DDO } from '@oceanprotocol/lib'
-import { redeploy } from '../../utils'
 import Button from '../atoms/Button'
 import BaseDialog from '../atoms/BaseDialog'
 import { useOcean } from '@oceanprotocol/react'
@@ -13,7 +12,7 @@ const content = [
   'Something happened... Your Data Set cannot be deleted'
 ]
 
-export default function DeleteAction({ ddo }: { ddo: DDO }) {
+export default function DeleteAction({ ddo }: { ddo: DDO }): ReactElement {
   const { ocean, accountId } = useOcean()
   const navigate = useNavigate()
   const isOwner = ddo.publicKey[0].owner === accountId
@@ -41,9 +40,6 @@ export default function DeleteAction({ ddo }: { ddo: DDO }) {
     try {
       const consumerAddress = (await ocean.accounts.list())[0]
       await ocean.assets.retire(ddo.id, consumerAddress)
-
-      // trigger new live deployment
-      await redeploy()
 
       setStatus(2)
     } catch (error) {
