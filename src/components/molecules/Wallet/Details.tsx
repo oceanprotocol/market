@@ -5,6 +5,7 @@ import { useOcean } from '@oceanprotocol/react'
 import Web3Feedback from './Feedback'
 import { connectWallet, getNetworkName } from '../../../utils/wallet'
 import { getInjectedProviderName } from 'web3modal'
+import Conversion from '../../atoms/Price/Conversion'
 
 export default function Details({ attrs }: { attrs: any }): ReactElement {
   const { balance, connect, logout, chainId } = useOcean()
@@ -12,12 +13,12 @@ export default function Details({ attrs }: { attrs: any }): ReactElement {
   return (
     <div className={styles.details} {...attrs}>
       <ul>
-        {balance &&
-          Object.entries(balance).map(([key, value]) => (
-            <li className={styles.balance} key={key}>
-              <span>{key.toUpperCase()}</span> {value}
-            </li>
-          ))}
+        {Object.entries(balance).map(([key, value]) => (
+          <li className={styles.balance} key={key}>
+            <span>{key.toUpperCase()}</span> {value}
+            {key === 'ocean' && <Conversion price={value} />}
+          </li>
+        ))}
 
         <li className={styles.actions}>
           <span title="Connected provider">

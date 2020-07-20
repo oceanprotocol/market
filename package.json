@@ -21,7 +21,7 @@
   "dependencies": {
     "@loadable/component": "^5.13.1",
     "@oceanprotocol/art": "^3.0.0",
-    "@oceanprotocol/react": "^0.0.21",
+    "@oceanprotocol/react": "^0.0.23",
     "@oceanprotocol/typographies": "^0.1.0",
     "@sindresorhus/slugify": "^1.0.0",
     "@tippyjs/react": "^4.1.0",
