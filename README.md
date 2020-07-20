@@ -87,8 +87,6 @@ npm run storybook
 
 This will launch the Storybook UI with all stories loaded under [localhost:4000](http://localhost:4000).
 
-Every deployment run will build and deploy the exported storybook under `/storybook/`, e.g. the current one matching `master` under [https://dexfreight-ten.now.sh/storybook/](https://dexfreight-ten.now.sh/storybook/).
-
 ## ✨ Code Style
 
 For linting and auto-formatting you can use from the root of the project:
