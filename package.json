@@ -100,7 +100,6 @@
     "eslint-plugin-react": "^7.20.3",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^26.1.0",
-    "node-mocks-http": "^1.8.1",
     "prettier": "^2.0.5",
     "serve": "^11.3.2",
     "source-map-explorer": "^2.4.2",

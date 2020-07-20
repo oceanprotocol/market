@@ -2,17 +2,16 @@
 
 <h1 align="center">Ocean Marketplace</h1>
 
-[![Build Status](https://travis-ci.com/oceanprotocol/market.svg?branch=master)](https://travis-ci.com/oceanprotocol/market)
-[![Now deployment](https://flat.badgen.net/badge/now/auto-deployment/21c4dd?icon=now)](https://zeit.co/oceanprotocol/market)
+[![Build Status](https://travis-ci.com/oceanprotocol/market.svg?token=3psqw6c8KMDqfdGQ2x6d&branch=master)](https://travis-ci.com/oceanprotocol/market)
+[![Vercel deployment](https://flat.badgen.net/badge/vercel/auto-deployment/21c4dd?icon=now)](https://vercel.com/oceanprotocol/market)
 [![Maintainability](https://api.codeclimate.com/v1/badges/d114f94f75e6efd2ee71/maintainability)](https://codeclimate.com/repos/5e3933869a31771fd800011c/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/d114f94f75e6efd2ee71/test_coverage)](https://codeclimate.com/repos/5e3933869a31771fd800011c/test_coverage)
 [![js oceanprotocol](https://img.shields.io/badge/js-oceanprotocol-7b1173.svg)](https://github.com/oceanprotocol/eslint-config-oceanprotocol)
 
 **Table of Contents**
 
-- [🤓 Resources](#-resources)
 - [🏄 Get Started](#-get-started)
-  - [Local Spree components with Barge](#local-spree-components-with-barge)
+  - [Local components with Barge](#local-components-with-barge)
 - [🦑 Environment variables](#-environment-variables)
 - [🎨 Storybook](#-storybook)
 - [✨ Code Style](#-code-style)
@@ -23,11 +22,9 @@
 - [🏗 Ocean Protocol Infrastructure](#-ocean-protocol-infrastructure)
 - [🏛 License](#-license)
 
-## 🤓 Resources
-
 ## 🏄 Get Started
 
-The app is a React app built with [Gatsby.js](https://www.gatsbyjs.org) + TypeScript + CSS modules and will connect to Ocean components in Pacific by default.
+The app is a React app built with [Gatsby.js](https://www.gatsbyjs.org) + TypeScript + CSS modules and will connect to Ocean components in Rinkeby by default.
 
 To start local development:
 
@@ -45,30 +42,25 @@ This will start the development server under
 To explore the generated GraphQL data structure fire up the accompanying GraphiQL IDE under
 `http://localhost:8000/__graphql`.
 
-### Local Spree components with Barge
+### Local components with Barge
 
-If you prefer to connect to locally running components instead of remote connections to Ocean's network, you can spin up [`barge`](https://github.com/oceanprotocol/barge) and use a local Spree network in another terminal before running `npm start`:
+If you prefer to connect to locally running components instead of remote connections, you can spin up [`barge`](https://github.com/oceanprotocol/barge) and use a local Ganache network in another terminal before running `npm start`:
 
 ```bash
 git clone git@github.com:oceanprotocol/barge.git
 cd barge
 
-# startup with local Spree node
-./start_ocean.sh --no-commons
+# use v3 branch for the time being
+git checkout v3
+
+# startup with local Ganache node
+./start_ocean.sh
 ```
 
-This will take some time on first start, and at the end you need to copy the generated contract artifacts out of the Docker container. To do so, use this script from the root of the app folder:
+Finally, set environment variables to use this local connection in `.env` in the app:
 
 ```bash
-./scripts/keeper.sh
-```
-
-The script will wait for all contracts to be generated in the `keeper-contracts` Docker container, then will copy the artifacts in place into `node_modules/@oceanprotocol/keeper-contracts/artifacts/`.
-
-Finally, set environment variables to use those local connections in `.env` in the app:
-
-```bash
-# modify env variables, Spree is enabled by default when using those files
+# modify env variables, Rinkeby is enabled by default when using those files
 cp .env.example .env
 ```
 
@@ -79,7 +71,7 @@ The `app.config.js` file is setup to prioritize environment variables for settin
 For local development, you can use a `.env` file:
 
 ```bash
-# modify env variables, Spree is enabled by default when using those files
+# modify env variables, Rinkeby is enabled by default when using those files
 cp .env.example .env
 ```
 
@@ -114,7 +106,6 @@ npm run format
 Test suite for unit tests is setup with [Jest](https://jestjs.io) as a test runner and:
 
 - [react-testing-library](https://github.com/kentcdodds/react-testing-library) for all React components
-- [node-mocks-http](https://github.com/howardabrams/node-mocks-http) for all `api/` routes
 
 To run all linting and unit tests:
 
@@ -148,11 +139,11 @@ npm run serve
 
 Every branch or Pull Request is automatically deployed by [Vercel](https://vercel.com) with their GitHub integration. A link to a deployment will appear under each Pull Request.
 
-The latest deployment of the `master` branch is automatically aliased to `xxx`.
+The latest deployment of the `master` branch is automatically aliased to `market-six.now.sh`.
 
 ### Manual Deployment
 
-If needed, app can be deployed manually. Make sure to switch to Ocean Protocol org before deploying:
+If needed, app can be deployed manually to Vercel. Make sure to switch to Ocean Protocol org before deploying:
 
 ```bash
 # first run
@@ -171,25 +162,26 @@ The following Metadata Store & Provider instances specifically for marketplace a
 
 **Rinkeby (Staging)**
 
+- K8 namespace: `xxx`
 - `[aquarius.rinkeby.v3.dev-ocean.com](https://aquarius.rinkeby.v3.dev-ocean.com)`
 - `[provider.rinkeby.v3.dev-ocean.com](https://provider.rinkeby.v3.dev-ocean.com)`
 
 Edit command with `kubectl`, e.g.:
 
 ```bash
-kubectl edit deployment -n market-nile aquarius
+kubectl edit deployment -n xxx aquarius
 ```
 
 **Main (Production)**
 
-- K8 namespace: `market-pacific`
-- `aquarius.pacific.market.dev-ocean.com`
-- `brizo.pacific.market.dev-ocean.com`
+- K8 namespace: `xxx`
+- `xxx`
+- `xxx`
 
 Edit command with `kubectl`, e.g.:
 
 ```bash
-kubectl edit deployment -n market-pacific aquarius
+kubectl edit deployment -n xxx aquarius
 ```
 
 ## 🏛 License
