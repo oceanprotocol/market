@@ -1,4 +1,4 @@
-import { NowRequest, NowResponse } from '@now/node'
+import { NowRequest, NowResponse } from '@vercel/node'
 import axios, { AxiosResponse } from 'axios'
 import siteConfig from '../content/site.json'
 
