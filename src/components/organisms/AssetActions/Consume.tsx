@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react'
 import { fromWei } from 'web3-utils'
 import { toast } from 'react-toastify'
+import { File as FileMetadata } from '@oceanprotocol/lib'
 import compareAsBN, { Comparisson } from '../../../utils/compareAsBN'
 import Button from '../../atoms/Button'
 import File from '../../atoms/File'
@@ -9,17 +10,15 @@ import Web3Feedback from '../../molecules/Wallet/Feedback'
 import styles from './Consume.module.css'
 import Loader from '../../atoms/Loader'
 import { useOcean, useConsume, useMetadata } from '@oceanprotocol/react'
-import { MetadataMarket } from '../../../@types/Metadata'
 
 export default function Consume({
   did,
-  metadata
+  file
 }: {
   did: string
-  metadata: MetadataMarket
+  file: FileMetadata
 }): ReactElement {
   const { ddo } = useMetadata(did)
-  const file = metadata.main.files[0]
   const { cost } = ddo.findServiceByType('access').attributes.main
 
   const { ocean } = useOcean()

@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import { File as FileMetadata } from '@oceanprotocol/lib/dist/node/ddo/interfaces/File'
+import { File as FileMetadata } from '@oceanprotocol/lib'
 import filesize from 'filesize'
 import classNames from 'classnames/bind'
 import cleanupContentType from '../../utils/cleanupContentType'

@@ -3,7 +3,6 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import styles from './index.module.css'
 import Compute from './Compute'
 import Consume from './Consume'
-import { useOcean } from '@oceanprotocol/react'
 import { MetadataMarket } from '../../../@types/Metadata'
 
 export default function AssetActions({
@@ -13,7 +12,6 @@ export default function AssetActions({
   metadata: MetadataMarket
   did: string
 }): ReactElement {
-  // const { ocean, balanceInOcean } = useOcean()
   const { access } = metadata.additionalInformation
   const isCompute = access && access === 'Compute'
 
@@ -26,15 +24,9 @@ export default function AssetActions({
       <div className={styles.tabContent}>
         <TabPanel>
           {isCompute ? (
-            // <Compute
-            //   did={did}
-            //   metadata={metadata}
-            //   ocean={ocean}
-            //   balance={balanceInOcean}
-            // />
-            'Compute Me'
+            <Compute did={did} />
           ) : (
-            <Consume did={did} metadata={metadata} />
+            <Consume did={did} file={metadata.main.files[0]} />
           )}
         </TabPanel>
         <TabPanel>Trade Me</TabPanel>

@@ -9,26 +9,21 @@ import Price from '../../atoms/Price'
 import {
   computeOptions,
   useCompute,
-  readFileContent
+  readFileContent,
+  useMetadata,
+  useOcean
 } from '@oceanprotocol/react'
 import styles from './Compute.module.css'
 import Button from '../../atoms/Button'
 import Input from '../../atoms/Input'
-import { MetadataMarket } from '../../../@types/Metadata'
 import Alert from '../../atoms/Alert'
 
-export default function Compute({
-  did,
-  metadata,
-  balance,
-  ocean
-}: {
-  did: string
-  metadata: MetadataMarket
-  balance: string | null
-  ocean: Ocean | null
-}): ReactElement {
+export default function Compute({ did }: { did: string }): ReactElement {
+  const { ocean } = useOcean()
+  const { ddo } = useMetadata(did)
   const { compute, isLoading, computeStepText, computeError } = useCompute()
+  const computeService = ddo.findServiceByType('compute').attributes.main
+
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [, setError] = useState('')
   const [isBalanceSufficient, setIsBalanceSufficient] = useState(false)
@@ -41,11 +36,10 @@ export default function Compute({
   const [algorithmRawCode, setAlgorithmRawCode] = useState('')
   const [isPublished, setIsPublished] = useState(false)
   const [file, setFile] = useState(null)
-
-  const { price } = metadata.main
-  const isFree = price === '0'
-
   const [isTermsAgreed, setIsTermsAgreed] = useState(true)
+
+  const isFree = computeService.cost === '0'
+
   const isComputeButtonDisabled =
     isJobStarting ||
     file === null ||
@@ -54,13 +48,13 @@ export default function Compute({
     !isBalanceSufficient ||
     !isTermsAgreed
 
-  useEffect(() => {
-    setIsBalanceSufficient(
-      isFree ||
-        (balance !== null &&
-          compareAsBN(balance, fromWei(price), Comparisson.gte))
-    )
-  }, [balance])
+  // useEffect(() => {
+  //   setIsBalanceSufficient(
+  //     isFree ||
+  //       (balance !== null &&
+  //         compareAsBN(balance, fromWei(computeService.cost), Comparisson.gte))
+  //   )
+  // }, [balance])
 
   const onDrop = async (files: any) => {
     setFile(files[0])
@@ -80,11 +74,18 @@ export default function Compute({
   const startJob = async () => {
     try {
       if (!ocean) return
+
       setIsJobStarting(true)
       setIsPublished(false)
       setError('')
 
-      await compute(did, algorithmRawCode, computeContainer)
+      await compute(
+        did,
+        computeService,
+        ddo.dataToken,
+        algorithmRawCode,
+        computeContainer
+      )
 
       setIsPublished(true)
       setFile(null)
@@ -97,7 +98,7 @@ export default function Compute({
 
   return (
     <div className={styles.compute}>
-      <Price price={price} />
+      <Price price={computeService.cost} />
 
       <div className={styles.info}>
         <div className={styles.selectType}>
