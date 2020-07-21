@@ -7,7 +7,7 @@ import MetaFull from './MetaFull'
 import MetaSecondary from './MetaSecondary'
 import styles from './index.module.css'
 import AssetActions from '../AssetActions'
-import { MetadataStore, Logger, DDO } from '@oceanprotocol/lib'
+import { DDO } from '@oceanprotocol/lib'
 
 export interface AssetContentProps {
   metadata: MetadataMarket

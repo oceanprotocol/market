@@ -10,7 +10,6 @@ import {
   computeOptions,
   useCompute,
   readFileContent,
-  useMetadata,
   useOcean
 } from '@oceanprotocol/react'
 import styles from './Compute.module.css'
@@ -18,12 +17,10 @@ import Button from '../../atoms/Button'
 import Input from '../../atoms/Input'
 import Alert from '../../atoms/Alert'
 
-export default function Compute({ did }: { did: string }): ReactElement {
+export default function Compute({ ddo }: { ddo: DDO }): ReactElement {
   const { ocean } = useOcean()
-  const { ddo } = useMetadata(did)
   const { compute, isLoading, computeStepText, computeError } = useCompute()
-  const computeService = new DDO(ddo).findServiceByType('compute').attributes
-    .main
+  const computeService = ddo.findServiceByType('compute').attributes.main
 
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [, setError] = useState('')
@@ -81,7 +78,7 @@ export default function Compute({ did }: { did: string }): ReactElement {
       setError('')
 
       await compute(
-        did,
+        ddo.id,
         computeService,
         ddo.dataToken,
         algorithmRawCode,

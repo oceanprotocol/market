@@ -20,11 +20,10 @@ export default function Consume({
 }): ReactElement {
   const accessService = ddo.findServiceByType('access')
   const { cost } = accessService.attributes.main
-
   const { ocean } = useOcean()
   const { consumeStepText, consume, consumeError } = useConsume()
 
-  // const isFree = cost === '0'
+  const isFree = cost === '0'
   // const isBalanceSufficient =
   //  isFree || compareAsBN(balanceInOcean, fromWei(cost), Comparisson.gte)
   const isDisabled = !ocean
@@ -42,8 +41,7 @@ export default function Consume({
         onClick={() => consume(ddo.id, ddo.dataToken, 'access')}
         disabled={isDisabled}
       >
-        Download
-        {/* {isFree ? 'Download' : 'Buy'} */}
+        {isFree ? 'Download' : 'Buy'}
       </Button>
     )
 

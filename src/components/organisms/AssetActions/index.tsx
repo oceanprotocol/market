@@ -4,7 +4,7 @@ import styles from './index.module.css'
 import Compute from './Compute'
 import Consume from './Consume'
 import { MetadataMarket } from '../../../@types/Metadata'
-import { MetadataStore, Logger, DDO } from '@oceanprotocol/lib'
+import { DDO } from '@oceanprotocol/lib'
 
 export default function AssetActions({
   metadata,
