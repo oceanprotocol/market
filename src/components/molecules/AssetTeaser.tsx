@@ -16,7 +16,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
 }: AssetTeaserProps) => {
   if (!metadata.additionalInformation) return null
 
-  const { name, price } = metadata.main
+  const { name } = metadata.main
   const { description, access } = metadata.additionalInformation
 
   return (
@@ -33,9 +33,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
           </Dotdotdot>
         </div>
 
-        <footer className={styles.foot}>
-          <Price price={price} />
-        </footer>
+        <footer className={styles.foot}>{/* <Price price={price} /> */}</footer>
       </Link>
     </article>
   )

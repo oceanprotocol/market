@@ -1,5 +1,5 @@
 import React, { useState, useEffect, ReactElement } from 'react'
-import { Ocean } from '@oceanprotocol/lib'
+import { DDO } from '@oceanprotocol/lib'
 import { fromWei } from 'web3-utils'
 import compareAsBN, { Comparisson } from '../../../utils/compareAsBN'
 import Loader from '../../atoms/Loader'
@@ -22,7 +22,8 @@ export default function Compute({ did }: { did: string }): ReactElement {
   const { ocean } = useOcean()
   const { ddo } = useMetadata(did)
   const { compute, isLoading, computeStepText, computeError } = useCompute()
-  const computeService = ddo.findServiceByType('compute').attributes.main
+  const computeService = new DDO(ddo).findServiceByType('compute').attributes
+    .main
 
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [, setError] = useState('')

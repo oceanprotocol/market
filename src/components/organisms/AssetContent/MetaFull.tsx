@@ -18,7 +18,7 @@ export default function MetaFull({
     <div className={styles.metaFull}>
       <MetaItem title="Author" content={author} />
       <MetaItem title="License" content={license} />
-      <MetaItem title="Category" content={categories[0]} />
+      {categories && <MetaItem title="Category" content={categories[0]} />}
       <MetaItem title="Data Created" content={<Time date={dateCreated} />} />
 
       <MetaItem

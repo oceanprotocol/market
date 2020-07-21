@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import { fromWei } from 'web3-utils'
 import { toast } from 'react-toastify'
-import { File as FileMetadata } from '@oceanprotocol/lib'
+import { File as FileMetadata, DDO } from '@oceanprotocol/lib'
 import compareAsBN, { Comparisson } from '../../../utils/compareAsBN'
 import Button from '../../atoms/Button'
 import File from '../../atoms/File'
@@ -9,22 +9,22 @@ import Price from '../../atoms/Price'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
 import styles from './Consume.module.css'
 import Loader from '../../atoms/Loader'
-import { useOcean, useConsume, useMetadata } from '@oceanprotocol/react'
+import { useOcean, useConsume } from '@oceanprotocol/react'
 
 export default function Consume({
-  did,
+  ddo,
   file
 }: {
-  did: string
+  ddo: DDO
   file: FileMetadata
 }): ReactElement {
-  const { ddo } = useMetadata(did)
-  const { cost } = ddo.findServiceByType('access').attributes.main
+  const accessService = ddo.findServiceByType('access')
+  const { cost } = accessService.attributes.main
 
   const { ocean } = useOcean()
   const { consumeStepText, consume, consumeError } = useConsume()
 
-  const isFree = cost === '0'
+  // const isFree = cost === '0'
   // const isBalanceSufficient =
   //  isFree || compareAsBN(balanceInOcean, fromWei(cost), Comparisson.gte)
   const isDisabled = !ocean
@@ -39,10 +39,11 @@ export default function Consume({
     ) : (
       <Button
         style="primary"
-        onClick={() => consume(did, ddo.dataToken, 'access')}
+        onClick={() => consume(ddo.id, ddo.dataToken, 'access')}
         disabled={isDisabled}
       >
-        {isFree ? 'Download' : 'Buy'}
+        Download
+        {/* {isFree ? 'Download' : 'Buy'} */}
       </Button>
     )
 
@@ -53,7 +54,7 @@ export default function Consume({
           <File file={file} />
         </div>
         <div className={styles.pricewrapper}>
-          <Price price={cost} className={styles.price} />
+          {/* <Price price={cost} className={styles.price} /> */}
           <PurchaseButton />
         </div>
       </div>

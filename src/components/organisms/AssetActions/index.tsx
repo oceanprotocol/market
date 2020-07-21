@@ -4,13 +4,14 @@ import styles from './index.module.css'
 import Compute from './Compute'
 import Consume from './Consume'
 import { MetadataMarket } from '../../../@types/Metadata'
+import { MetadataStore, Logger, DDO } from '@oceanprotocol/lib'
 
 export default function AssetActions({
   metadata,
-  did
+  ddo
 }: {
   metadata: MetadataMarket
-  did: string
+  ddo: DDO
 }): ReactElement {
   const { access } = metadata.additionalInformation
   const isCompute = access && access === 'Compute'
@@ -24,9 +25,9 @@ export default function AssetActions({
       <div className={styles.tabContent}>
         <TabPanel>
           {isCompute ? (
-            <Compute did={did} />
+            <Compute ddo={ddo} />
           ) : (
-            <Consume did={did} file={metadata.main.files[0]} />
+            <Consume ddo={ddo} file={metadata.main.files[0]} />
           )}
         </TabPanel>
         <TabPanel>Trade Me</TabPanel>

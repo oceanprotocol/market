@@ -4,7 +4,7 @@ import AssetContent from '../../components/organisms/AssetContent'
 import Layout from '../../components/Layout'
 import { PageProps } from 'gatsby'
 import { MetadataMarket, ServiceMetadataMarket } from '../../@types/Metadata'
-import { MetadataStore, Logger } from '@oceanprotocol/lib'
+import { MetadataStore, Logger, DDO } from '@oceanprotocol/lib'
 import Alert from '../../components/atoms/Alert'
 import Loader from '../../components/atoms/Loader'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
@@ -14,6 +14,7 @@ export default function AssetRoute(props: PageProps): ReactElement {
   const [metadata, setMetadata] = useState<MetadataMarket>()
   const [title, setTitle] = useState<string>()
   const [error, setError] = useState<string>()
+  const [ddo, setDdo] = useState<DDO>()
 
   const did = props.location.pathname.split('/')[2]
 
@@ -25,6 +26,7 @@ export default function AssetRoute(props: PageProps): ReactElement {
           Logger
         )
         const ddo = await metadataStore.retrieveDDO(did)
+        setDdo(ddo)
 
         if (!ddo) {
           setTitle('Could not retrieve asset')
@@ -50,7 +52,7 @@ export default function AssetRoute(props: PageProps): ReactElement {
     <Layout title={title} uri={props.location.pathname}>
       <Router basepath="/asset">
         <AssetContent
-          did={did}
+          ddo={ddo}
           metadata={metadata as MetadataMarket}
           path=":did"
         />

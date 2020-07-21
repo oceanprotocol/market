@@ -7,16 +7,17 @@ import MetaFull from './MetaFull'
 import MetaSecondary from './MetaSecondary'
 import styles from './index.module.css'
 import AssetActions from '../AssetActions'
+import { MetadataStore, Logger, DDO } from '@oceanprotocol/lib'
 
 export interface AssetContentProps {
   metadata: MetadataMarket
-  did: string
+  ddo: DDO
   path?: string
 }
 
 export default function AssetContent({
   metadata,
-  did
+  ddo
 }: AssetContentProps): ReactElement {
   const { datePublished } = metadata.main
   const { description, categories } = metadata.additionalInformation
@@ -39,7 +40,7 @@ export default function AssetContent({
 
         <MetaSecondary metadata={metadata} />
 
-        <MetaFull did={did} metadata={metadata} />
+        <MetaFull did={ddo.id} metadata={metadata} />
 
         <div className={styles.buttonGroup}>
           {/* <EditAction
@@ -53,7 +54,7 @@ export default function AssetContent({
       </div>
       <div>
         <div className={styles.sticky}>
-          <AssetActions metadata={metadata} did={did} />
+          <AssetActions metadata={metadata} ddo={ddo} />
         </div>
       </div>
     </article>
