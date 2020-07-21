@@ -6,7 +6,10 @@ export const validationSchema = Yup.object().shape<MetadataPublishForm>({
   // ---- required fields ----
   name: Yup.string().required('Required'),
   author: Yup.string().required('Required'),
-  cost: Yup.string().required('Required'),
+  price: Yup.object().shape({
+    cost: Yup.string().required('Required'),
+    tokensToMint: Yup.string().required('Required')
+  }),
   files: Yup.array<FileMetadata>().required('Required').nullable(),
   description: Yup.string().required('Required'),
   license: Yup.string().required('Required'),
@@ -24,7 +27,10 @@ export const validationSchema = Yup.object().shape<MetadataPublishForm>({
 export const initialValues: MetadataPublishForm = {
   name: '',
   author: '',
-  cost: '',
+  price: {
+    cost: '',
+    tokensToMint: ''
+  },
   files: '',
   description: '',
   license: '',

@@ -35,11 +35,10 @@
         "required": true
       },
       {
-        "name": "cost",
+        "name": "price",
         "label": "Price",
         "help": "Set your price for accessing this data set in Ocean Tokens.",
         "type": "price",
-        "min": 1,
         "required": true
       },
       {

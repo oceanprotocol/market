@@ -68,7 +68,6 @@ export default function InputElement(props: InputProps): ReactElement {
           className={styles.input}
           name={name}
           {...props}
-          value={value || ''}
           type={type || 'text'}
         />
       )

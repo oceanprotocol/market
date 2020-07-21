@@ -24,7 +24,10 @@ export interface MetadataPublishForm {
   files: string | File[]
   author: string
   license: string
-  cost: string
+  price: {
+    cost: string
+    tokensToMint: string
+  }
   access: 'Download' | 'Compute' | string
   termsAndConditions: boolean
   // ---- optional fields ----

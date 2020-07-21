@@ -8,7 +8,7 @@ import PublishForm from './PublishForm'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
 import { FormContent } from '../../../@types/Form'
 import { initialValues, validationSchema } from './validation'
-import { MetadataPublishForm } from '../../../@types/Metadata'
+import { MetadataPublishForm, MetadataMarket } from '../../../@types/Metadata'
 import { transformPublishFormToMetadata } from './utils'
 import Preview from './Preview'
 
@@ -28,20 +28,20 @@ export default function PublishPage({
     `)
 
     const metadata = transformPublishFormToMetadata(values)
-    const tokensToMint = '4' // how to know this?
+    const { cost, tokensToMint } = values.price
     const serviceType = values.access === 'Download' ? 'access' : 'compute'
 
     console.log(`
       Transformed metadata values:
       ----------------------
       ${JSON.stringify(metadata, null, 2)}
-      Cost: 1
+      Cost: ${cost}
       Tokens to mint: ${tokensToMint}
     `)
 
     try {
       const ddo = await publish(metadata as any, tokensToMint, [
-        { serviceType, cost: '1' }
+        { serviceType, cost }
       ])
 
       if (publishError) {
