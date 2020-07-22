@@ -1,17 +1,24 @@
 const { ConfigHelper } = require('@oceanprotocol/lib')
 
-const oceanConfig = new ConfigHelper().getConfig(
-  process.env.GATSBY_NETWORK || 'rinkeby'
-)
+function getDefaultOceanConfig() {
+  return new ConfigHelper().getConfig(
+    process.env.GATSBY_NETWORK || 'rinkeby',
+    process.env.GATSBY_INFURA_PROJECT_ID
+  )
+}
 
-module.exports = {
+const appConfig = {
   oceanConfig: {
-    ...oceanConfig,
-    url: `https://rinkeby.infura.io/${process.env.GATSBY_INFURA_PROJECT_ID}`,
+    ...getDefaultOceanConfig(),
     verbose: 3
   },
   // Main, Rinkeby, Kovan
   // networks: [1, 4, 42],
   networks: [4],
   infuraProjectId: process.env.GATSBY_INFURA_PROJECT_ID || 'xxx'
+}
+
+module.exports = {
+  getDefaultOceanConfig,
+  appConfig
 }

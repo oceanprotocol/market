@@ -7,7 +7,7 @@ import { updateQueryStringParameter } from '../../utils'
 import styles from './AssetList.module.css'
 import { MetadataMarket } from '../../@types/Metadata'
 import { DDO } from '@oceanprotocol/lib'
-import { getOceanConfig } from '../../utils/getConfig'
+import { getDefaultOceanConfig } from '../../../app.config'
 
 declare type AssetListProps = {
   queryResult: QueryResult
@@ -17,7 +17,7 @@ const AssetList: React.FC<AssetListProps> = ({ queryResult }) => {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const { metadataStoreUri } = getOceanConfig()
+  const { metadataStoreUri } = getDefaultOceanConfig()
 
   // Construct the urls on the pagination links. This is only for UX,
   // since the links are no <Link> they will not work by itself.

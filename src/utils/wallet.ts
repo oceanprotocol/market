@@ -1,5 +1,7 @@
 import { OceanProviderValue } from '@oceanprotocol/react'
-import { networks, infuraProjectId } from '../../app.config'
+import { appConfig } from '../../app.config'
+
+const { infuraProjectId, networks } = appConfig
 
 const web3ModalTheme = {
   background: 'var(--brand-white)',

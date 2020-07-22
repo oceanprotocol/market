@@ -4,7 +4,7 @@ import {
 } from '@oceanprotocol/lib/dist/node/metadatastore/MetadataStore'
 import { priceQueryParamToWei } from '../../../utils'
 import { MetadataStore, Logger } from '@oceanprotocol/lib'
-import { getOceanConfig } from '../../../utils/getConfig'
+import { getDefaultOceanConfig } from '../../../../app.config'
 
 export function getSearchQuery(
   page?: string | string[],
@@ -52,7 +52,7 @@ export async function getResults(params: any): Promise<QueryResult> {
         ])
       : undefined
 
-  const { metadataStoreUri } = getOceanConfig()
+  const { metadataStoreUri } = getDefaultOceanConfig()
   const metadataStore = new MetadataStore(metadataStoreUri, Logger)
   const queryResult = await metadataStore.queryMetadata(
     getSearchQuery(page, offset, text, tag, priceQuery)

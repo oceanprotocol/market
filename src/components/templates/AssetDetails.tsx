@@ -6,7 +6,7 @@ import { MetadataMarket, ServiceMetadataMarket } from '../../@types/Metadata'
 import { MetadataStore, Logger, DDO } from '@oceanprotocol/lib'
 import Alert from '../../components/atoms/Alert'
 import Loader from '../../components/atoms/Loader'
-import { getOceanConfig } from '../../utils/getConfig'
+import { getDefaultOceanConfig } from '../../../app.config'
 
 export default function PageTemplateAssetDetails({
   did,
@@ -23,7 +23,7 @@ export default function PageTemplateAssetDetails({
   useEffect(() => {
     async function init() {
       try {
-        const { metadataStoreUri } = getOceanConfig()
+        const { metadataStoreUri } = getDefaultOceanConfig()
         const metadataStore = new MetadataStore(metadataStoreUri, Logger)
         const ddo = await metadataStore.retrieveDDO(did)
         setDdo(ddo)

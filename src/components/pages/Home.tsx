@@ -6,11 +6,11 @@ import AssetList from '../organisms/AssetList'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatastore/MetadataStore'
 import Container from '../atoms/Container'
 import Loader from '../atoms/Loader'
-import { getOceanConfig } from '../../utils/getConfig'
+import { getDefaultOceanConfig } from '../../../app.config'
 
 async function getLatestAssets() {
   try {
-    const { metadataStoreUri } = getOceanConfig()
+    const { metadataStoreUri } = getDefaultOceanConfig()
     const metadataStore = new MetadataStore(metadataStoreUri, Logger)
 
     const result = await metadataStore.queryMetadata({
