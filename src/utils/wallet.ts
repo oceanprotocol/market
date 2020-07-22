@@ -1,7 +1,7 @@
 import { OceanProviderValue } from '@oceanprotocol/react'
 import { appConfig } from '../../app.config'
 
-const { infuraProjectId, networks } = appConfig
+const { infuraProjectId, network, oceanConfig } = appConfig
 
 const web3ModalTheme = {
   background: 'var(--brand-white)',
@@ -29,18 +29,14 @@ export async function connectWallet(
       }
     },
     torus: {
-      package: Torus
-      // options: {
-      // networkParams: {
-      // host: 'https://localhost:8545' // optional
-      //   chainId: 1337, // optional
-      //   networkId: 1337 // optional
-      // },
-      // config: {
-      //   buildEnv: 'development' // optional
-      // }
-      // }
-      // }
+      package: Torus,
+      options: {
+        networkParams: {
+          host: oceanConfig.url // optional
+          // chainId: 1337, // optional
+          // networkId: 1337 // optional
+        }
+      }
     }
   }
 
@@ -48,8 +44,8 @@ export async function connectWallet(
 }
 
 export function isCorrectNetwork(chainId: number): boolean {
-  const allowedIds = networks
-  return allowedIds.includes(chainId)
+  const configuredNetwork = getChainId(network)
+  return configuredNetwork === chainId
 }
 
 export function accountTruncate(account: string): string {
@@ -68,5 +64,18 @@ export function getNetworkName(chainId: number): string {
       return 'Kovan'
     default:
       return 'Unknown'
+  }
+}
+
+export function getChainId(network: string): number {
+  switch (network) {
+    case 'mainnet':
+      return 1
+    case 'rinkeby':
+      return 4
+    case 'kovan':
+      return 42
+    default:
+      return 0
   }
 }

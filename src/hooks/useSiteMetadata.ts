@@ -15,7 +15,7 @@ const query = graphql`
         }
         appConfig {
           infuraProjectId
-          networks
+          network
         }
       }
     }

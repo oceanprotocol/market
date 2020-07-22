@@ -1,8 +1,10 @@
 const { ConfigHelper } = require('@oceanprotocol/lib')
 
+const network = process.env.GATSBY_NETWORK || 'rinkeby'
+
 function getDefaultOceanConfig() {
   return new ConfigHelper().getConfig(
-    process.env.GATSBY_NETWORK || 'rinkeby',
+    network,
     process.env.GATSBY_INFURA_PROJECT_ID
   )
 }
@@ -12,9 +14,7 @@ const appConfig = {
     ...getDefaultOceanConfig(),
     verbose: 3
   },
-  // Main, Rinkeby, Kovan
-  // networks: [1, 4, 42],
-  networks: [4],
+  network,
   infuraProjectId: process.env.GATSBY_INFURA_PROJECT_ID || 'xxx'
 }
 
