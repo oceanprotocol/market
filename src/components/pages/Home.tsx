@@ -6,10 +6,11 @@ import AssetList from '../organisms/AssetList'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatastore/MetadataStore'
 import Container from '../atoms/Container'
 import Loader from '../atoms/Loader'
-import { useSiteMetadata } from '../../hooks/useSiteMetadata'
+import { getOceanConfig } from '../../utils/getConfig'
 
-async function getLatestAssets(metadataStoreUri: string) {
+async function getLatestAssets() {
   try {
+    const { metadataStoreUri } = getOceanConfig()
     const metadataStore = new MetadataStore(metadataStoreUri, Logger)
 
     const result = await metadataStore.queryMetadata({
@@ -26,15 +27,12 @@ async function getLatestAssets(metadataStoreUri: string) {
 }
 
 export default function HomePage(): ReactElement {
-  const { appConfig } = useSiteMetadata()
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function init() {
-      const results = await getLatestAssets(
-        appConfig.oceanConfig.metadataStoreUri
-      )
+      const results = await getLatestAssets()
       setQueryResult(results)
       setLoading(false)
     }

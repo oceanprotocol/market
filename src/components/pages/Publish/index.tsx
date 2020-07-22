@@ -8,7 +8,6 @@ import PublishForm from './PublishForm'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
 import { FormContent } from '../../../@types/Form'
 import { initialValues, validationSchema } from './validation'
-import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { MetadataPublishForm } from '../../../@types/Metadata'
 import { transformPublishFormToMetadata } from './utils'
 import Preview from './Preview'
@@ -20,7 +19,7 @@ export default function PublishPage({
 }): ReactElement {
   const { publish, publishError } = usePublish()
   const navigate = useNavigate()
-  const { marketAddress } = useSiteMetadata()
+  const marketAddress = '0x36A7f3383A63279cDaF4DfC0F3ABc07d90252C6b'
 
   async function handleSubmit(values: MetadataPublishForm): Promise<void> {
     console.log(`
