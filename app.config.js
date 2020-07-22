@@ -1,6 +1,8 @@
-const { getOceanConfig } = require('./src/utils/getConfig')
+const { ConfigHelper } = require('@oceanprotocol/lib')
 
-const oceanConfig = getOceanConfig()
+const oceanConfig = new ConfigHelper().getConfig(
+  process.env.GATSBY_NETWORK || 'rinkeby'
+)
 
 module.exports = {
   oceanConfig: {
