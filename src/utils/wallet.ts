@@ -15,6 +15,7 @@ export async function connectWallet(
   const { default: WalletConnectProvider } = await import(
     '@walletconnect/web3-provider'
   )
+  const { default: Torus } = await import('@toruslabs/torus-embed')
 
   // Provider Options
   // https://github.com/Web3Modal/web3modal#provider-options
@@ -24,6 +25,20 @@ export async function connectWallet(
       options: {
         infuraId: infuraProjectId
       }
+    },
+    torus: {
+      package: Torus
+      // options: {
+      // networkParams: {
+      // host: 'https://localhost:8545' // optional
+      //   chainId: 1337, // optional
+      //   networkId: 1337 // optional
+      // },
+      // config: {
+      //   buildEnv: 'development' // optional
+      // }
+      // }
+      // }
     }
   }
 

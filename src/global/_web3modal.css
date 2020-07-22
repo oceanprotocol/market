@@ -47,6 +47,10 @@ div.web3modal-provider-description {
   margin-top: 0;
 }
 
+#torusIframe {
+  z-index: 3;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
