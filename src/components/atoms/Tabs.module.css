@@ -10,6 +10,7 @@
   padding: calc(var(--spacer) / 12) var(--spacer);
   border-radius: var(--border-radius);
   font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-small);
   text-transform: uppercase;
   cursor: pointer;
   color: var(--brand-grey-light);
