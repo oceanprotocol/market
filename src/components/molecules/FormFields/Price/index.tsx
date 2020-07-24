@@ -7,6 +7,7 @@ import { useFormikContext } from 'formik'
 import { MetadataPublishForm } from '../../../../@types/MetaData'
 import Tabs from '../../../atoms/Tabs'
 import FormHelp from '../../../atoms/Input/Help'
+import Conversion from '../../../atoms/Price/Conversion'
 
 export default function Price(props: InputProps): ReactElement {
   const { values } = useFormikContext()
@@ -21,10 +22,13 @@ export default function Price(props: InputProps): ReactElement {
           value={
             ((values as MetadataPublishForm).price &&
               (values as MetadataPublishForm).price.cost) ||
-            ''
+            0
           }
           name="price.cost"
           type="number"
+        />
+        <Conversion
+          price={(values as MetadataPublishForm).price.cost.toString()}
         />
       </div>
       <FormHelp>{props.help}</FormHelp>
@@ -38,9 +42,8 @@ export default function Price(props: InputProps): ReactElement {
         <InputElement
           {...props.field}
           value={
-            ((values as MetadataPublishForm).price &&
-              (values as MetadataPublishForm).price.cost) ||
-            ''
+            (values as MetadataPublishForm).price &&
+            ((values as MetadataPublishForm).price.cost || 1)
           }
           name="price.cost"
           type="number"
@@ -51,9 +54,8 @@ export default function Price(props: InputProps): ReactElement {
         <InputElement
           {...props.field}
           value={
-            ((values as MetadataPublishForm).price &&
-              (values as MetadataPublishForm).price.tokensToMint) ||
-            ''
+            (values as MetadataPublishForm).price &&
+            ((values as MetadataPublishForm).price.tokensToMint || 1)
           }
           name="price.tokensToMint"
           type="number"

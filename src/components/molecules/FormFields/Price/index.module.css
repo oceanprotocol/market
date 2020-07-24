@@ -25,6 +25,7 @@
 .simpleInput {
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-bottom: calc(var(--spacer) / 2);
 }
 
@@ -35,6 +36,7 @@
 
 .prefix {
   border: 1px solid var(--brand-grey-lighter);
+  min-height: 43px;
   display: flex;
   align-items: center;
   padding-left: calc(var(--spacer) / 2);
