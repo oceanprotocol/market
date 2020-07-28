@@ -7,8 +7,8 @@ import styles from './index.module.css'
 import PublishForm from './PublishForm'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
 import { FormContent } from '../../../@types/Form'
-import { initialValues, validationSchema } from './validation'
-import { MetadataPublishForm, MetadataMarket } from '../../../@types/Metadata'
+import { initialValues, validationSchema } from '../../../models/FormPublish'
+import { MetadataPublishForm } from '../../../@types/Metadata'
 import { transformPublishFormToMetadata } from './utils'
 import Preview from './Preview'
 
@@ -40,9 +40,11 @@ export default function PublishPage({
     `)
 
     try {
-      const ddo = await publish(metadata as any, tokensToMint, [
-        { serviceType, cost }
-      ])
+      const ddo = await publish(
+        metadata as any,
+        tokensToMint.toString(),
+        [{ serviceType, cost: cost.toString() }]
+      )
 
       if (publishError) {
         toast.error(publishError)
