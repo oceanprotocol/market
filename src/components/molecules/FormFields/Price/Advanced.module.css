@@ -1,0 +1,9 @@
+.advancedInput {
+  display: flex;
+  gap: calc(var(--spacer) / 2);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.advancedInput label {
+}

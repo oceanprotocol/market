@@ -6,7 +6,6 @@
 
 .content {
   padding: 0 calc(var(--spacer) / 2);
-  text-align: center;
 }
 
 .content label {
@@ -20,36 +19,4 @@
 
 .content p {
   margin-bottom: 0;
-}
-
-.simpleInput {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: calc(var(--spacer) / 2);
-}
-
-.simpleInput input {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
-.prefix {
-  border: 1px solid var(--brand-grey-lighter);
-  min-height: 43px;
-  display: flex;
-  align-items: center;
-  padding-left: calc(var(--spacer) / 2);
-  padding-right: calc(var(--spacer) / 2);
-  color: var(--color-secondary);
-  font-size: var(--font-size-small);
-  margin-right: -2px;
-  border-top-left-radius: var(--border-radius);
-  border-bottom-left-radius: var(--border-radius);
-}
-
-.advancedInput {
-  display: flex;
-  gap: calc(var(--spacer) / 2);
-  justify-content: center;
 }

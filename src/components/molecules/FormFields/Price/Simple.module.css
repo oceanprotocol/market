@@ -1,0 +1,12 @@
+.simple {
+  margin-bottom: calc(var(--spacer) / 2);
+  text-align: center;
+}
+
+.simple > div {
+  justify-content: center;
+}
+
+.simple label {
+  display: none;
+}
