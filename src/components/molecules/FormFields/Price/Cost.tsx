@@ -11,7 +11,7 @@ export default function Cost(props: InputProps): ReactElement {
 
   return (
     <div>
-      <Label htmlFor="price.cost">Cost</Label>
+      <Label htmlFor="price.cost">Ocean Tokens</Label>
 
       <InputElement
         {...props.field}

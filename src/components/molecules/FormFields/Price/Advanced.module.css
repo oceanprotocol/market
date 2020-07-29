@@ -4,5 +4,5 @@
 .advanced > div:last-child {
   display: grid;
   gap: calc(var(--spacer) / 2);
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
 }

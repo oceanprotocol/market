@@ -11,12 +11,14 @@ import FormHelp from '../../../atoms/Input/Help'
 
 export default function Advanced(props: InputProps): ReactElement {
   const { price } = props.form.values as MetadataPublishForm
-  const [weight, setWeight] = useState('10')
 
-  const liquidity = (price.cost * Number(weight)).toString()
+  const [ocean, setOcean] = useState('1')
+  const weight = '90' // in %
+  const tokensToMint = Number(ocean) * (Number(weight) / 100)
+  const cost = Number(ocean) / Number(tokensToMint)
 
-  function handleWeightChange(event: ChangeEvent<HTMLInputElement>) {
-    setWeight(event.target.value)
+  function handleOceanChange(event: ChangeEvent<HTMLInputElement>) {
+    setOcean(event.target.value)
   }
 
   return (
@@ -29,40 +31,65 @@ export default function Advanced(props: InputProps): ReactElement {
         </FormHelp>
 
         <div>
-          <Cost {...props} />
+          <div>
+            <Label htmlFor="ocean">Ocean Tokens</Label>
+
+            <InputElement
+              value={ocean}
+              name="ocean"
+              type="number"
+              prefix="OCEAN"
+              onChange={handleOceanChange}
+            />
+
+            <Conversion price={ocean} className={stylesIndex.conversion} />
+          </div>
+
+          <div>
+            <Label htmlFor="dt">Data Tokens</Label>
+            <InputElement
+              value={tokensToMint.toString()}
+              name="dt"
+              type="number"
+              readOnly
+            />
+          </div>
+
           <div>
             <Label htmlFor="weight">Weight on Data Token</Label>
             <InputElement
-              value={weight}
+              value="90"
               name="weight"
-              type="number"
-              onChange={handleWeightChange}
               step="10"
               postfix="%"
+              readOnly
             />
           </div>
+
           <div className={styles.liquidity}>
-            <Label htmlFor="liquidity">Liquidity</Label>
+            <Label htmlFor="liquidity">Liquidity to Provide</Label>
             <InputElement
-              value={liquidity}
+              value={cost.toString()}
               name="liquidity"
               readOnly
               prefix="OCEAN"
             />
-            <Conversion price={liquidity} className={stylesIndex.conversion} />
-          </div>
-          <div>
-            <Label htmlFor="price.tokensToMint">Tokens to Mint</Label>
-            <InputElement
-              {...props.field}
-              value={(price && price.tokensToMint) || 1}
-              name="price.tokensToMint"
-              type="number"
-              disabled
+            <Conversion
+              price={cost.toString()}
+              className={stylesIndex.conversion}
             />
           </div>
         </div>
       </div>
+
+      {/* Hidden to fields to actually collect form values for Formik state */}
+      <input type="hidden" {...props.field} name="price.cost" value={cost} />
+      <input
+        type="hidden"
+        {...props.field}
+        name="price.tokensToMint"
+        value={tokensToMint}
+      />
     </div>
   )
 }
