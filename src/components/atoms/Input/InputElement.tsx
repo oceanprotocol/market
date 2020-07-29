@@ -7,7 +7,7 @@ import Terms from '../../molecules/FormFields/Terms'
 import Price from '../../molecules/FormFields/Price'
 
 export default function InputElement(props: InputProps): ReactElement {
-  const { type, options, rows, name, value } = props
+  const { type, options, rows, name, prefix, postfix } = props
 
   switch (type) {
     case 'select':
@@ -62,7 +62,19 @@ export default function InputElement(props: InputProps): ReactElement {
     case 'terms':
       return <Terms name={name} {...props} />
     default:
-      return (
+      return prefix || postfix ? (
+        <div className={`${prefix ? styles.prefixGroup : styles.postfixGroup}`}>
+          {prefix && <div className={styles.prefix}>{prefix}</div>}
+          <input
+            id={name}
+            className={styles.input}
+            name={name}
+            {...props}
+            type={type || 'text'}
+          />
+          {postfix && <div className={styles.postfix}>{postfix}</div>}
+        </div>
+      ) : (
         <input
           id={name}
           className={styles.input}

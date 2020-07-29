@@ -1,4 +1,4 @@
-import React, { FormEvent, ChangeEvent, ReactElement } from 'react'
+import React, { FormEvent, ChangeEvent, ReactElement, ReactNode } from 'react'
 import InputElement from './InputElement'
 import Help from './Help'
 import Label from './Label'
@@ -31,8 +31,12 @@ export interface InputProps {
   pattern?: string
   min?: string
   disabled?: boolean
+  readOnly?: boolean
   field?: any
   form?: any
+  prefix?: string
+  postfix?: string
+  step?: string
 }
 
 export default function Input(props: Partial<InputProps>): ReactElement {

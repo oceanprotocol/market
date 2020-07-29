@@ -20,3 +20,14 @@
 .content p {
   margin-bottom: 0;
 }
+
+.conversion {
+  display: block;
+  padding-left: 5rem;
+  margin-top: calc(var(--spacer) / 6);
+}
+
+.help {
+  text-align: center;
+  margin-bottom: calc(var(--spacer) / 2);
+}

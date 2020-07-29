@@ -1,9 +1,8 @@
-.advancedInput {
-  display: flex;
-  gap: calc(var(--spacer) / 2);
-  justify-content: center;
-  flex-wrap: wrap;
+.advanced {
 }
 
-.advancedInput label {
+.advanced > div:last-child {
+  display: grid;
+  gap: calc(var(--spacer) / 2);
+  grid-template-columns: 1fr 1fr;
 }

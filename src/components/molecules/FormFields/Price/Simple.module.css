@@ -1,10 +1,9 @@
 .simple {
-  margin-bottom: calc(var(--spacer) / 2);
-  text-align: center;
 }
 
-.simple > div {
-  justify-content: center;
+.simple > div:last-child {
+  max-width: 13.25rem;
+  margin: 0 auto;
 }
 
 .simple label {
