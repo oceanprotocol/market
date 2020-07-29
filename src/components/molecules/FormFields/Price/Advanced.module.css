@@ -1,10 +1,29 @@
 .advanced {
 }
 
-.wallet > button {
-  margin: var(--spacer) auto calc(var(--spacer) / 2) auto;
-  display: block;
+.wallet {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: calc(var(--spacer) / 2);
+}
+
+.balance {
+  text-align: center;
+  font-size: var(--font-size-small);
+  border: 1px solid var(--brand-grey-lighter);
+  border-right: 0;
+  margin-right: -3px;
+  padding: calc(var(--spacer) / 4.5) calc(var(--spacer) / 2);
+  border-top-left-radius: var(--border-radius);
+  border-bottom-left-radius: var(--border-radius);
+  color: var(--color-secondary);
+}
+
+.balance strong {
+  color: var(--brand-grey);
 }
 
 .tokens {
+  margin-bottom: var(--spacer);
 }

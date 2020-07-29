@@ -29,5 +29,7 @@
 
 .help {
   text-align: center;
-  margin-bottom: calc(var(--spacer) / 2);
+  margin-bottom: var(--spacer);
+  border-bottom: 1px solid var(--brand-grey-lighter);
+  padding-bottom: var(--spacer);
 }

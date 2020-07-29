@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, ChangeEvent } from 'react'
+import React, { ReactElement, useState, ChangeEvent, useEffect } from 'react'
 import { InputProps } from '../../../atoms/Input'
 import InputElement from '../../../atoms/Input/InputElement'
 import stylesIndex from './index.module.css'
@@ -10,6 +10,7 @@ import Conversion from '../../../atoms/Price/Conversion'
 import FormHelp from '../../../atoms/Input/Help'
 import Wallet from '../../Wallet'
 import { useOcean } from '@oceanprotocol/react'
+import Alert from '../../../atoms/Alert'
 
 export default function Advanced(props: InputProps): ReactElement {
   const { price } = props.form.values as MetadataPublishForm
@@ -20,6 +21,14 @@ export default function Advanced(props: InputProps): ReactElement {
 
   const [ocean, setOcean] = useState('10')
   const tokensToMint = Number(ocean) * (Number(weightOnDataToken) / 10)
+
+  const [error, setError] = useState<string>()
+
+  useEffect(() => {
+    if (balance.ocean < ocean) {
+      setError(`Insufficiant balance. You need at least ${ocean} OCEAN`)
+    }
+  }, [ocean])
 
   function handleOceanChange(event: ChangeEvent<HTMLInputElement>) {
     setOcean(event.target.value)
@@ -34,6 +43,11 @@ export default function Advanced(props: InputProps): ReactElement {
         </FormHelp>
 
         <aside className={styles.wallet}>
+          {balance && balance.ocean && (
+            <div className={styles.balance}>
+              OCEAN <strong>{balance.ocean}</strong>
+            </div>
+          )}
           <Wallet />
         </aside>
 
@@ -70,7 +84,6 @@ export default function Advanced(props: InputProps): ReactElement {
                   {...props.field}
                   value={tokensToMint.toString()}
                   name="price.tokensToMint"
-                  type="number"
                   readOnly
                 />
               </td>
@@ -78,6 +91,8 @@ export default function Advanced(props: InputProps): ReactElement {
             </tr>
           </tbody>
         </table>
+
+        {error && <Alert text={error} state="error" />}
       </div>
 
       {/* Hidden to fields to actually collect form values for Formik state */}
