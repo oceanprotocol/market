@@ -27,9 +27,9 @@ export default function Advanced(props: InputProps): ReactElement {
     <div className={stylesIndex.content}>
       <div className={styles.advanced}>
         <FormHelp className={stylesIndex.help}>
-          Set your price for accessing this data set. A Data Token for this data
-          set worth the entered amount of OCEAN, and a Data Token/OCEAN
-          liquidity pool will be created with Balancer.
+          Set your price for accessing this data set. A Data Token contract for
+          this data set worth the entered amount of OCEAN, and a Data
+          Token/OCEAN liquidity pool will be created with Balancer.
         </FormHelp>
 
         <aside className={styles.wallet}>
