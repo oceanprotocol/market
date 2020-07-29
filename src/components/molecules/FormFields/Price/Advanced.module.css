@@ -1,13 +1,10 @@
 .advanced {
 }
 
-.advanced > div:last-child {
-  display: grid;
-  gap: calc(var(--spacer) / 2);
-  grid-template-columns: 1fr 1fr 1fr;
+.wallet > button {
+  margin: var(--spacer) auto calc(var(--spacer) / 2) auto;
+  display: block;
 }
 
-.wallet > button {
-  margin: calc(var(--spacer) / 2) auto var(--spacer) auto;
-  display: block;
+.tokens {
 }

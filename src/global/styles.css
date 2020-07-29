@@ -132,6 +132,28 @@ fieldset {
   margin: 0;
 }
 
+table {
+  width: 100%;
+  border-collapse: collapse;
+  display: block;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table th,
+table td {
+  border: 0;
+  margin: 0;
+  padding: calc(var(--spacer) / 2);
+  border-bottom: 1px solid var(--brand-grey-lighter);
+  text-align: left;
+  font-size: 90%;
+}
+
+table th {
+  font-weight: var(--font-weight-bold);
+}
+
 @import '_code.css';
 @import '_toast.css';
 @import '_web3modal.css';
