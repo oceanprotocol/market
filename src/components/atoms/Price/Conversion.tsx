@@ -55,5 +55,12 @@ export default function Conversion({
     })
   }
 
-  return <span className={styleClasses}>≈ EUR {priceEur}</span>
+  return (
+    <span
+      className={styleClasses}
+      title="Approximation based on current spot price on Coingecko"
+    >
+      ≈ EUR {priceEur}
+    </span>
+  )
 }
