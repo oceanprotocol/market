@@ -40,7 +40,7 @@ export default function AssetContent({
 
         <MetaSecondary metadata={metadata} />
 
-        <MetaFull did={ddo.id} metadata={metadata} />
+        <MetaFull ddo={ddo} metadata={metadata} />
 
         <div className={styles.buttonGroup}>
           {/* <EditAction
