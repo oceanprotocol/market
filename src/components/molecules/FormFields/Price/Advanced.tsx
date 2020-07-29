@@ -11,6 +11,7 @@ import FormHelp from '../../../atoms/Input/Help'
 import Wallet from '../../Wallet'
 import { useOcean } from '@oceanprotocol/react'
 import Alert from '../../../atoms/Alert'
+import Coin from './Coin'
 
 export default function Advanced(props: InputProps): ReactElement {
   const { price } = props.form.values as MetadataPublishForm
@@ -27,6 +28,8 @@ export default function Advanced(props: InputProps): ReactElement {
   useEffect(() => {
     if (balance.ocean < ocean) {
       setError(`Insufficiant balance. You need at least ${ocean} OCEAN`)
+    } else {
+      setError(undefined)
     }
   }, [ocean])
 
@@ -51,46 +54,25 @@ export default function Advanced(props: InputProps): ReactElement {
           <Wallet />
         </aside>
 
-        <table className={styles.tokens}>
-          <thead>
-            <tr>
-              <th>Asset</th>
-              <th>Weight</th>
-              <th>Amount</th>
-              <th>Value</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>OCEAN</td>
-              <td>{`${100 - Number(weightOnDataToken)}%`}</td>
-              <td>
-                <InputElement
-                  value={ocean}
-                  name="ocean"
-                  type="number"
-                  onChange={handleOceanChange}
-                />
-              </td>
-              <td>
-                <Conversion price={ocean} />
-              </td>
-            </tr>
-            <tr>
-              <td>OCEAN-CAVIAR</td>
-              <td>{`${weightOnDataToken}%`}</td>
-              <td>
-                <InputElement
-                  {...props.field}
-                  value={tokensToMint.toString()}
-                  name="price.tokensToMint"
-                  readOnly
-                />
-              </td>
-              <td />
-            </tr>
-          </tbody>
-        </table>
+        <h4 className={styles.title}>Data Token Liquidity Pool</h4>
+
+        <div className={styles.tokens}>
+          <Coin
+            name="ocean"
+            symbol="OCEAN"
+            value={ocean}
+            weight={`${100 - Number(weightOnDataToken)}%`}
+            onChange={handleOceanChange}
+          />
+          <Coin
+            name="price.tokensToMint"
+            symbol="OCEAN-CAV"
+            value={tokensToMint.toString()}
+            weight={`${weightOnDataToken}%`}
+            readOnly
+            field={props.field}
+          />
+        </div>
 
         {error && <Alert text={error} state="error" />}
       </div>

@@ -23,13 +23,11 @@
 
 .conversion {
   display: block;
-  padding-left: 5rem;
+  text-align: center;
   margin-top: calc(var(--spacer) / 6);
 }
 
 .help {
   text-align: center;
-  margin-bottom: var(--spacer);
-  border-bottom: 1px solid var(--brand-grey-lighter);
-  padding-bottom: var(--spacer);
+  margin-bottom: calc(var(--spacer) / 1.5);
 }

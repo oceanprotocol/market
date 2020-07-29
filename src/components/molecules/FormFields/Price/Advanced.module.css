@@ -24,6 +24,21 @@
   color: var(--brand-grey);
 }
 
+.title {
+  font-size: var(--font-size-base);
+  margin-top: var(--spacer);
+  margin-bottom: 0;
+  color: var(--color-secondary);
+  text-align: center;
+  border: 1px solid var(--brand-grey-lighter);
+  border-bottom: 0;
+  border-top-right-radius: var(--border-radius);
+  border-top-left-radius: var(--border-radius);
+  padding: calc(var(--spacer) / 3);
+}
+
 .tokens {
-  margin-bottom: var(--spacer);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: calc(var(--spacer) / 2);
 }
