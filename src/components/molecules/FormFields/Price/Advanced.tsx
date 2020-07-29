@@ -8,14 +8,16 @@ import { MetadataPublishForm } from '../../../../@types/MetaData'
 import Cost from './Cost'
 import Conversion from '../../../atoms/Price/Conversion'
 import FormHelp from '../../../atoms/Input/Help'
+import Wallet from '../../Wallet'
 
 export default function Advanced(props: InputProps): ReactElement {
   const { price } = props.form.values as MetadataPublishForm
 
-  const [ocean, setOcean] = useState('1')
+  const cost = '1'
   const weight = '90' // in %
+
+  const [ocean, setOcean] = useState('1')
   const tokensToMint = Number(ocean) * (Number(weight) / 100)
-  const cost = Number(ocean) / Number(tokensToMint)
 
   function handleOceanChange(event: ChangeEvent<HTMLInputElement>) {
     setOcean(event.target.value)
@@ -29,6 +31,10 @@ export default function Advanced(props: InputProps): ReactElement {
           set worth the entered amount of OCEAN, and a Data Token/OCEAN
           liquidity pool will be created with Balancer.
         </FormHelp>
+
+        <aside className={styles.wallet}>
+          <Wallet />
+        </aside>
 
         <div>
           <div>

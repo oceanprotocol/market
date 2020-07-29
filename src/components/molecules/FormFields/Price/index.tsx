@@ -7,8 +7,8 @@ import Advanced from './Advanced'
 
 export default function Price(props: InputProps): ReactElement {
   const tabs = [
-    { title: 'Simple', content: <Simple {...props} /> },
-    { title: 'Advanced', content: <Advanced {...props} /> }
+    { title: 'Simple: Fixed', content: <Simple {...props} /> },
+    { title: 'Advanced: Dynamic', content: <Advanced {...props} /> }
   ]
 
   return (

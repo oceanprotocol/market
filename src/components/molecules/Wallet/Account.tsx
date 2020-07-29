@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { FormEvent } from 'react'
 import styles from './Account.module.css'
 import { useOcean } from '@oceanprotocol/react'
 import { toDataUrl } from 'ethereum-blockies'
@@ -26,8 +26,18 @@ const Account = React.forwardRef((props, ref: any) => {
   const { accountId, status, connect, chainId } = useOcean()
   const hasSuccess = status === 1 && isCorrectNetwork(chainId)
 
+  async function handleActivation(e: FormEvent<HTMLButtonElement>) {
+    e.preventDefault()
+    await connectWallet(connect)
+  }
+
   return accountId ? (
-    <button className={styles.button} aria-label="Account" ref={ref}>
+    <button
+      className={styles.button}
+      aria-label="Account"
+      ref={ref}
+      onClick={(e) => e.preventDefault()}
+    >
       <Blockies account={accountId} />
       <span className={styles.address} title={accountId}>
         {accountTruncate(accountId)}
@@ -40,7 +50,7 @@ const Account = React.forwardRef((props, ref: any) => {
   ) : (
     <button
       className={styles.button}
-      onClick={async () => await connect()}
+      onClick={(e) => handleActivation(e)}
       // Need the `ref` here although we do not want
       // the Tippy to show in this state.
       ref={ref}
