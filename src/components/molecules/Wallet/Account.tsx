@@ -27,6 +27,7 @@ const Account = React.forwardRef((props, ref: any) => {
   const hasSuccess = status === 1 && isCorrectNetwork(chainId)
 
   async function handleActivation(e: FormEvent<HTMLButtonElement>) {
+    // prevent accidentially submitting a form the button might be in
     e.preventDefault()
     await connectWallet(connect)
   }
@@ -36,6 +37,7 @@ const Account = React.forwardRef((props, ref: any) => {
       className={styles.button}
       aria-label="Account"
       ref={ref}
+      // prevent accidentially submitting a form the button might be in
       onClick={(e) => e.preventDefault()}
     >
       <Blockies account={accountId} />
@@ -49,13 +51,13 @@ const Account = React.forwardRef((props, ref: any) => {
     </button>
   ) : (
     <button
-      className={styles.button}
+      className={`${styles.button} ${styles.initial}`}
       onClick={(e) => handleActivation(e)}
       // Need the `ref` here although we do not want
       // the Tippy to show in this state.
       ref={ref}
     >
-      Activate Wallet
+      Connect Wallet
     </button>
   )
 })
