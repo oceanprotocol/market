@@ -31,7 +31,7 @@ export default function Advanced(props: InputProps): ReactElement {
   // Check: account, network & insuffciant balance
   useEffect(() => {
     if (!account) {
-      setError(`No account detected. Please connect your wallet.`)
+      setError(`No account connected. Please connect your Web3 wallet.`)
     } else if (!correctNetwork) {
       setError(`Wrong Network. Please connect to ${desiredNetworkName}.`)
     } else if (balance.ocean < ocean) {
