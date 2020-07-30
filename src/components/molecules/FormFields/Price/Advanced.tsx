@@ -82,7 +82,11 @@ export default function Advanced(props: InputProps): ReactElement {
           />
         </div>
 
-        {error && <Alert text={error} state="error" />}
+        {error && (
+          <div className={styles.alertArea}>
+            <Alert text={error} state="error" />
+          </div>
+        )}
       </div>
 
       {/* Hidden to fields to actually collect form values for Formik state */}

@@ -21,6 +21,7 @@
 }
 
 .conversion {
+  width: 100%;
   display: block;
   text-align: center;
   margin-top: calc(var(--spacer) / 6);

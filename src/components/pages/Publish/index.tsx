@@ -40,11 +40,9 @@ export default function PublishPage({
     `)
 
     try {
-      const ddo = await publish(
-        metadata as any,
-        tokensToMint.toString(),
-        [{ serviceType, cost: cost.toString() }]
-      )
+      const ddo = await publish(metadata as any, tokensToMint.toString(), [
+        { serviceType, cost: cost.toString() }
+      ])
 
       if (publishError) {
         toast.error(publishError)

@@ -1,18 +1,10 @@
 .coin {
-  border: 1px solid var(--brand-grey-lighter);
-  border-radius: var(--border-radius);
-  padding: calc(var(--spacer) / 2);
-}
-
-.coin:first-child {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
+  padding: var(--spacer) calc(var(--spacer) / 2);
+  border-top: 1px solid var(--brand-grey-lighter);
 }
 
 .coin:last-child {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  margin-left: -1px;
+  border-left: 1px solid var(--brand-grey-lighter);
 }
 
 .icon {
@@ -26,7 +18,7 @@
   border: 1px solid var(--brand-grey-lighter);
   border-radius: 50%;
   background-color: var(--brand-white);
-  margin-bottom: calc(var(--spacer) / 2);
+  margin-bottom: var(--spacer);
 }
 
 .coin:last-child .icon path {
@@ -36,14 +28,8 @@
   stroke-linejoin: round;
 }
 
-.symbol {
-  text-align: center;
-  display: block;
-  font-size: var(--font-size-base);
-  margin-bottom: calc(var(--spacer) / 4);
-}
-
 .data {
+  position: relative;
   width: 100%;
   display: flex;
   flex-wrap: wrap;
@@ -51,14 +37,18 @@
   text-align: center;
 }
 
+.max {
+  position: absolute;
+  right: var(--spacer);
+  top: calc(var(--spacer) / 2.5);
+}
+
 .weight {
   width: 100%;
-  margin-top: calc(var(--spacer) / 2);
-  padding-top: calc(var(--spacer) / 2);
+  margin-top: var(--spacer);
   text-transform: uppercase;
   font-size: var(--font-size-small);
   color: var(--color-secondary);
-  border-top: 1px solid var(--brand-grey-lighter);
 }
 
 .weight strong {
