@@ -4,7 +4,6 @@ import styles from './Coin.module.css'
 import InputElement from '../../../atoms/Input/InputElement'
 import { ReactComponent as Logo } from '../../../../images/logo.svg'
 import Conversion from '../../../atoms/Price/Conversion'
-import Label from '../../../atoms/Input/Label'
 
 export default function Coin({
   symbol,

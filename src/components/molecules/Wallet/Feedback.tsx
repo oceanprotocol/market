@@ -21,7 +21,7 @@ export default function Web3Feedback({
   const isOceanConnectionError = status === -1
   const correctNetwork = isCorrectNetwork(chainId)
   const showFeedback = !account || isOceanConnectionError || !correctNetwork
-  const networkName = appConfig.network.replace(/^\w/, (c: string) =>
+  const desiredNetworkName = appConfig.network.replace(/^\w/, (c: string) =>
     c.toUpperCase()
   )
 
@@ -50,7 +50,7 @@ export default function Web3Feedback({
     : isOceanConnectionError
     ? 'Please try again.'
     : !correctNetwork
-    ? `Please connect to ${networkName}.`
+    ? `Please connect to ${desiredNetworkName}.`
     : isBalanceInsufficient === true
     ? 'You do not have enough OCEAN in your wallet to purchase this asset.'
     : 'Something went wrong.'

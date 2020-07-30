@@ -1,21 +1,20 @@
 import React, { ReactElement, useState, ChangeEvent, useEffect } from 'react'
 import { InputProps } from '../../../atoms/Input'
-import InputElement from '../../../atoms/Input/InputElement'
 import stylesIndex from './index.module.css'
 import styles from './Advanced.module.css'
-import Label from '../../../atoms/Input/Label'
 import { MetadataPublishForm } from '../../../../@types/MetaData'
-import Cost from './Cost'
-import Conversion from '../../../atoms/Price/Conversion'
 import FormHelp from '../../../atoms/Input/Help'
 import Wallet from '../../Wallet'
 import { useOcean } from '@oceanprotocol/react'
 import Alert from '../../../atoms/Alert'
 import Coin from './Coin'
+import { isCorrectNetwork } from '../../../../utils/wallet'
+import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 
 export default function Advanced(props: InputProps): ReactElement {
+  const { appConfig } = useSiteMetadata()
   const { price } = props.form.values as MetadataPublishForm
-  const { balance } = useOcean()
+  const { account, balance, chainId } = useOcean()
 
   const cost = '1'
   const weightOnDataToken = '90' // in %
@@ -24,9 +23,18 @@ export default function Advanced(props: InputProps): ReactElement {
   const tokensToMint = Number(ocean) * (Number(weightOnDataToken) / 10)
 
   const [error, setError] = useState<string>()
+  const correctNetwork = isCorrectNetwork(chainId)
+  const desiredNetworkName = appConfig.network.replace(/^\w/, (c: string) =>
+    c.toUpperCase()
+  )
 
+  // Check: account, network & insuffciant balance
   useEffect(() => {
-    if (balance.ocean < ocean) {
+    if (!account) {
+      setError(`No account detected. Please connect your wallet.`)
+    } else if (!correctNetwork) {
+      setError(`Wrong Network. Please connect to ${desiredNetworkName}.`)
+    } else if (balance.ocean < ocean) {
       setError(`Insufficiant balance. You need at least ${ocean} OCEAN`)
     } else {
       setError(undefined)
