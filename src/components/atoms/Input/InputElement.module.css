@@ -12,6 +12,7 @@
   border-radius: var(--border-radius);
   transition: 0.2s ease-out;
   min-height: 43px;
+  min-width: 0;
   appearance: none;
   display: block;
 }
@@ -87,13 +88,8 @@
 
 .prefixGroup,
 .postfixGroup {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-}
-
-.prefixGroup input,
-.postfixGroup input {
-  width: auto;
 }
 
 .prefixGroup input {
@@ -114,11 +110,12 @@
   min-height: 43px;
   display: flex;
   align-items: center;
-  padding-left: calc(var(--spacer) / 2);
-  padding-right: calc(var(--spacer) / 2);
+  padding-left: calc(var(--spacer) / 4);
+  padding-right: calc(var(--spacer) / 4);
   color: var(--color-secondary);
   font-size: var(--font-size-small);
   transition: border 0.2s ease-out;
+  white-space: nowrap;
 }
 
 .prefix {
