@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import Status from '../../atoms/Status'
 import styles from './Feedback.module.css'
 import { useOcean } from '@oceanprotocol/react'
-import { isCorrectNetwork, getNetworkName } from '../../../utils/wallet'
+import { isCorrectNetwork } from '../../../utils/wallet'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 
 export declare type Web3Error = {
@@ -21,7 +21,9 @@ export default function Web3Feedback({
   const isOceanConnectionError = status === -1
   const correctNetwork = isCorrectNetwork(chainId)
   const showFeedback = !account || isOceanConnectionError || !correctNetwork
-  const networkName = getNetworkName(appConfig.network)
+  const networkName = appConfig.network.replace(/^\w/, (c: string) =>
+    c.toUpperCase()
+  )
 
   const state = !account
     ? 'error'
