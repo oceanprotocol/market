@@ -1,4 +1,5 @@
-import { OceanProviderValue } from '@oceanprotocol/react'
+import WalletConnectProvider from '@walletconnect/web3-provider'
+import Torus from '@toruslabs/torus-embed'
 import { appConfig } from '../../app.config'
 
 const { infuraProjectId, network, oceanConfig } = appConfig
@@ -11,36 +12,29 @@ const web3ModalTheme = {
   hover: 'var(--brand-grey-dimmed)'
 }
 
-export async function connectWallet(
-  connect: OceanProviderValue['connect']
-): Promise<void> {
-  const { default: WalletConnectProvider } = await import(
-    '@walletconnect/web3-provider'
-  )
-  const { default: Torus } = await import('@toruslabs/torus-embed')
-
-  // Provider Options
-  // https://github.com/Web3Modal/web3modal#provider-options
-  const providerOptions = {
-    walletconnect: {
-      package: WalletConnectProvider,
-      options: {
-        infuraId: infuraProjectId
-      }
-    },
-    torus: {
-      package: Torus,
-      options: {
-        networkParams: {
-          host: oceanConfig.url // optional
-          // chainId: 1337, // optional
-          // networkId: 1337 // optional
-        }
+const providerOptions = {
+  walletconnect: {
+    package: WalletConnectProvider,
+    options: {
+      infuraId: infuraProjectId
+    }
+  },
+  torus: {
+    package: Torus,
+    options: {
+      networkParams: {
+        host: oceanConfig.url // optional
+        // chainId: 1337, // optional
+        // networkId: 1337 // optional
       }
     }
   }
+}
 
-  await connect({ cacheProvider: true, providerOptions, theme: web3ModalTheme })
+export const web3ModalOpts = {
+  cacheProvider: true,
+  providerOptions,
+  theme: web3ModalTheme
 }
 
 export function isCorrectNetwork(chainId: number): boolean {

@@ -3,7 +3,7 @@ import Button from '../../atoms/Button'
 import styles from './Details.module.css'
 import { useOcean } from '@oceanprotocol/react'
 import Web3Feedback from './Feedback'
-import { connectWallet, getNetworkName } from '../../../utils/wallet'
+import { getNetworkName } from '../../../utils/wallet'
 import { getInjectedProviderName } from 'web3modal'
 import Conversion from '../../atoms/Price/Conversion'
 
@@ -31,7 +31,7 @@ export default function Details({ attrs }: { attrs: any }): ReactElement {
             size="small"
             onClick={() => {
               logout()
-              connectWallet(connect)
+              connect()
             }}
           >
             Switch Wallet
