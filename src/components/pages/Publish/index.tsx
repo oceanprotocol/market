@@ -19,7 +19,6 @@ export default function PublishPage({
 }): ReactElement {
   const { publish, publishError } = usePublish()
   const navigate = useNavigate()
-  const marketAddress = '0x36A7f3383A63279cDaF4DfC0F3ABc07d90252C6b'
 
   async function handleSubmit(values: MetadataPublishForm): Promise<void> {
     console.log(`
@@ -41,7 +40,7 @@ export default function PublishPage({
     `)
 
     try {
-      const ddo = await publish(metadata as any, tokensToMint, marketAddress, [
+      const ddo = await publish(metadata as any, tokensToMint, [
         { serviceType, cost: '1' }
       ])
 
