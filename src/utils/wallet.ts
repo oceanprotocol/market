@@ -18,17 +18,17 @@ const providerOptions = {
     options: {
       infuraId: infuraProjectId
     }
-  },
-  torus: {
-    package: Torus,
-    options: {
-      networkParams: {
-        host: oceanConfig.url // optional
-        // chainId: 1337, // optional
-        // networkId: 1337 // optional
-      }
-    }
   }
+  // torus: {
+  //   package: Torus,
+  //   options: {
+  //     networkParams: {
+  //       host: oceanConfig.url // optional
+  //       // chainId: 1337, // optional
+  //       // networkId: 1337 // optional
+  //     }
+  //   }
+  // }
 }
 
 export const web3ModalOpts = {
