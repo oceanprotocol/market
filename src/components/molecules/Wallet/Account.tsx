@@ -29,7 +29,7 @@ const Account = React.forwardRef((props, ref: any) => {
   async function handleActivation(e: FormEvent<HTMLButtonElement>) {
     // prevent accidentially submitting a form the button might be in
     e.preventDefault()
-    await connectWallet(connect)
+    await connect()
   }
 
   return accountId ? (
