@@ -4,11 +4,7 @@ import { useOcean } from '@oceanprotocol/react'
 import { toDataUrl } from 'ethereum-blockies'
 import { ReactComponent as Caret } from '../../../images/caret.svg'
 import Status from '../../atoms/Status'
-import {
-  accountTruncate,
-  connectWallet,
-  isCorrectNetwork
-} from '../../../utils/wallet'
+import { accountTruncate, isCorrectNetwork } from '../../../utils/wallet'
 
 const Blockies = ({ account }: { account: string | undefined }) => {
   if (!account) return null
@@ -44,7 +40,7 @@ const Account = React.forwardRef((props, ref: any) => {
   ) : (
     <button
       className={styles.button}
-      onClick={async () => await connectWallet(connect)}
+      onClick={async () => await connect()}
       // Need the `ref` here although we do not want
       // the Tippy to show in this state.
       ref={ref}
