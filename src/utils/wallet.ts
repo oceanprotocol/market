@@ -11,10 +11,10 @@ const web3ModalTheme = {
   hover: 'var(--brand-grey-dimmed)'
 }
 
-const WalletConnectProvider = loadable(() =>
-  import('@walletconnect/web3-provider')
+const WalletConnectProvider = loadable(
+  () => import('@walletconnect/web3-provider') as any
 )
-const Torus = loadable(() => import('@toruslabs/torus-embed'))
+const Torus = loadable(() => import('@toruslabs/torus-embed') as any)
 
 const providerOptions = {
   walletconnect: {
