@@ -8,10 +8,14 @@
   padding: calc(var(--spacer) / 4);
   white-space: nowrap;
   background: none;
-  color: var(--brand-grey);
   margin: 0;
   transition: border 0.2s ease-out;
   cursor: pointer;
+}
+
+.button,
+.address {
+  color: var(--brand-grey);
 }
 
 .button:hover,
@@ -19,6 +23,10 @@
   transform: none;
   outline: 0;
   border-color: var(--brand-grey-light);
+}
+
+.button.initial {
+  color: var(--brand-pink);
 }
 
 .blockies {

@@ -51,6 +51,10 @@ export default function AssetContent({
             /> */}
           {/* <DeleteAction ddo={ddo} /> */}
         </div>
+
+        <pre>
+          <code>{JSON.stringify(ddo, null, 2)}</code>
+        </pre>
       </div>
       <div>
         <div className={styles.sticky}>

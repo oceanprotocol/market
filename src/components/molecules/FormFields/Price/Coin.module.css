@@ -1,0 +1,59 @@
+.coin {
+  padding: var(--spacer) calc(var(--spacer) / 2);
+  border-top: 1px solid var(--brand-grey-lighter);
+}
+
+.coin:last-child {
+  border-left: 1px solid var(--brand-grey-lighter);
+}
+
+.icon {
+  composes: box from '../../../atoms/Box.module.css';
+  padding: calc(var(--spacer) / 1.5);
+  width: 6rem;
+  height: 6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--brand-grey-lighter);
+  border-radius: 50%;
+  background-color: var(--brand-white);
+  margin-bottom: var(--spacer);
+}
+
+.coin:last-child .icon path {
+  fill: var(--brand-grey-dimmed);
+  stroke: var(--brand-black);
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
+
+.data {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  text-align: center;
+  max-width: 12rem;
+  margin: auto;
+}
+
+.max {
+  position: absolute;
+  right: var(--spacer);
+  top: calc(var(--spacer) / 2.5);
+}
+
+.weight {
+  width: 100%;
+  margin-top: var(--spacer);
+  text-transform: uppercase;
+  font-size: var(--font-size-small);
+  color: var(--color-secondary);
+}
+
+.weight strong {
+  color: var(--brand-grey);
+  font-size: var(--font-size-base);
+}

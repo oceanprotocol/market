@@ -36,7 +36,7 @@ export default function FilesInput(props: InputProps): ReactElement {
 
   return (
     <>
-      {typeof field.value === 'object' ? (
+      {field && typeof field.value === 'object' ? (
         <FileInfo file={field.value[0]} removeItem={removeItem} />
       ) : (
         <FileInput

@@ -7,7 +7,7 @@ import styles from './index.module.css'
 import PublishForm from './PublishForm'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
 import { FormContent } from '../../../@types/Form'
-import { initialValues, validationSchema } from './validation'
+import { initialValues, validationSchema } from '../../../models/FormPublish'
 import { MetadataPublishForm } from '../../../@types/Metadata'
 import { transformPublishFormToMetadata } from './utils'
 import Preview from './Preview'
@@ -28,20 +28,20 @@ export default function PublishPage({
     `)
 
     const metadata = transformPublishFormToMetadata(values)
-    const tokensToMint = '4' // how to know this?
+    const { cost, tokensToMint } = values.price
     const serviceType = values.access === 'Download' ? 'access' : 'compute'
 
     console.log(`
       Transformed metadata values:
       ----------------------
       ${JSON.stringify(metadata, null, 2)}
-      Cost: 1
+      Cost: ${cost}
       Tokens to mint: ${tokensToMint}
     `)
 
     try {
-      const ddo = await publish(metadata as any, tokensToMint, [
-        { serviceType, cost: '1' }
+      const ddo = await publish(metadata as any, tokensToMint.toString(), [
+        { serviceType, cost: cost.toString() }
       ])
 
       if (publishError) {
@@ -82,6 +82,26 @@ export default function PublishPage({
                 <Web3Feedback />
               </div>
             </aside>
+
+            <div>
+              <h5>Collected Form Values</h5>
+              <pre>
+                <code>{JSON.stringify(values, null, 2)}</code>
+              </pre>
+            </div>
+
+            <div>
+              <h5>Transformed Values</h5>
+              <pre>
+                <code>
+                  {JSON.stringify(
+                    transformPublishFormToMetadata(values),
+                    null,
+                    2
+                  )}
+                </code>
+              </pre>
+            </div>
           </>
         )}
       </Formik>

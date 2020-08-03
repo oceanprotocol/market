@@ -1,4 +1,4 @@
-import { MetadataPublishForm } from '../../../@types/Metadata'
+import { MetadataPublishForm } from '../@types/Metadata'
 import { File as FileMetadata } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 
@@ -6,7 +6,10 @@ export const validationSchema = Yup.object().shape<MetadataPublishForm>({
   // ---- required fields ----
   name: Yup.string().required('Required'),
   author: Yup.string().required('Required'),
-  cost: Yup.string().required('Required'),
+  price: Yup.object().shape({
+    cost: Yup.number().required('Required'),
+    tokensToMint: Yup.number().required('Required')
+  }),
   files: Yup.array<FileMetadata>().required('Required').nullable(),
   description: Yup.string().required('Required'),
   license: Yup.string().required('Required'),
@@ -22,15 +25,18 @@ export const validationSchema = Yup.object().shape<MetadataPublishForm>({
 })
 
 export const initialValues: MetadataPublishForm = {
-  name: '',
-  author: '',
-  cost: '',
-  files: '',
-  description: '',
-  license: '',
-  access: '',
+  name: undefined,
+  author: undefined,
+  price: {
+    cost: 1,
+    tokensToMint: 1
+  },
+  files: undefined,
+  description: undefined,
+  license: undefined,
+  access: undefined,
   termsAndConditions: false,
-  copyrightHolder: '',
-  tags: '',
-  links: ''
+  copyrightHolder: undefined,
+  tags: undefined,
+  links: undefined
 }

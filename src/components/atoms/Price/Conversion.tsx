@@ -2,18 +2,28 @@ import React, { useEffect, useState, ReactElement } from 'react'
 import useSWR from 'swr'
 import { fetchData, isBrowser } from '../../../utils'
 import styles from './Conversion.module.css'
+import classNames from 'classnames/bind'
+
+const cx = classNames.bind(styles)
 
 const currencies = 'EUR' // comma-separated list
 const url = `https://api.coingecko.com/api/v3/simple/price?ids=ocean-protocol&vs_currencies=${currencies}&include_24hr_change=true`
 
 export default function Conversion({
   price,
-  update = true
+  update = true,
+  className
 }: {
   price: string // expects price in OCEAN, not wei
   update?: boolean
+  className?: string
 }): ReactElement {
   const [priceEur, setPriceEur] = useState('0.00')
+
+  const styleClasses = cx({
+    conversion: true,
+    [className]: className
+  })
 
   const onSuccess = async (data: { 'ocean-protocol': { eur: number } }) => {
     if (!data) return
@@ -45,5 +55,12 @@ export default function Conversion({
     })
   }
 
-  return <span className={styles.conversion}>≈ EUR {priceEur}</span>
+  return (
+    <span
+      className={styleClasses}
+      title="Approximation based on current spot price on Coingecko"
+    >
+      ≈ EUR {priceEur}
+    </span>
+  )
 }

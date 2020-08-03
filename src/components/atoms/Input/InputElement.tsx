@@ -4,9 +4,23 @@ import styles from './InputElement.module.css'
 import { InputProps } from '.'
 import FilesInput from '../../molecules/FormFields/FilesInput'
 import Terms from '../../molecules/FormFields/Terms'
+import Price from '../../molecules/FormFields/Price'
+
+const DefaultInput = (
+  { name, type }: { name: string; type?: string },
+  props: InputProps
+) => (
+  <input
+    id={name}
+    className={styles.input}
+    name={name}
+    {...props}
+    type={type || 'text'}
+  />
+)
 
 export default function InputElement(props: InputProps): ReactElement {
-  const { type, options, rows, name, value } = props
+  const { type, options, rows, name, prefix, postfix } = props
 
   switch (type) {
     case 'select':
@@ -56,18 +70,19 @@ export default function InputElement(props: InputProps): ReactElement {
       )
     case 'files':
       return <FilesInput name={name} {...props} />
+    case 'price':
+      return <Price name={name} {...props} />
     case 'terms':
       return <Terms name={name} {...props} />
     default:
-      return (
-        <input
-          id={name}
-          className={styles.input}
-          name={name}
-          {...props}
-          value={value || ''}
-          type={type || 'text'}
-        />
+      return prefix || postfix ? (
+        <div className={`${prefix ? styles.prefixGroup : styles.postfixGroup}`}>
+          {prefix && <div className={styles.prefix}>{prefix}</div>}
+          <DefaultInput name={name} type={type || 'text'} />
+          {postfix && <div className={styles.postfix}>{postfix}</div>}
+        </div>
+      ) : (
+        <DefaultInput name={name} type={type || 'text'} />
       )
   }
 }

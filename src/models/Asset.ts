@@ -5,21 +5,20 @@ const AssetModel: MetadataMarket = {
   // https://github.com/oceanprotocol/OEPs/tree/master/8
   main: {
     type: 'dataset',
-    name: '',
-    dateCreated: '',
-    author: '',
-    license: '',
+    name: undefined,
+    dateCreated: undefined,
+    author: undefined,
+    license: undefined,
     files: []
   },
   additionalInformation: {
-    description: '',
-    copyrightHolder: '',
-    tags: [],
-    links: [],
+    description: undefined,
+    copyrightHolder: undefined,
+    tags: undefined,
+    links: undefined,
 
     // custom items
-    termsAndConditions: false,
-    access: 'Download'
+    termsAndConditions: false
   },
   curation: {
     rating: 0,

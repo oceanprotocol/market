@@ -1,0 +1,33 @@
+.price {
+  border: 1px solid var(--brand-grey-lighter);
+  background: var(--brand-grey-dimmed);
+  border-radius: var(--border-radius);
+}
+
+.content {
+  padding: 0 calc(var(--spacer) / 2);
+}
+
+.content label {
+  color: var(--color-secondary);
+}
+
+.content input {
+  text-align: center;
+}
+
+.content p {
+  margin-bottom: 0;
+}
+
+.conversion {
+  width: 100%;
+  display: block;
+  text-align: center;
+  margin-top: calc(var(--spacer) / 6);
+}
+
+.help {
+  text-align: center;
+  margin-bottom: calc(var(--spacer) / 1.5);
+}

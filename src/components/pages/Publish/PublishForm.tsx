@@ -19,7 +19,6 @@ export default function PublishForm({
     status,
     setStatus,
     isValid,
-    touched,
     setErrors,
     setTouched,
     resetForm,
@@ -42,7 +41,6 @@ export default function PublishForm({
       {content.data.map((field: FormFieldProps) => (
         <Field key={field.name} {...field} component={Input} />
       ))}
-
       {isLoading ? (
         <Loader message={publishStepText} />
       ) : (

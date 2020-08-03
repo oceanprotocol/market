@@ -1,7 +1,7 @@
 code {
   font-family: var(--font-family-monospace);
   font-size: var(--font-size-small);
-  color: var(--brand-grey-light);
+  color: var(--brand-grey);
   text-shadow: none;
 }
 
@@ -14,13 +14,22 @@ code {
 pre {
   display: block;
   margin: calc(var(--spacer) / 2) 0;
-  padding: 0;
-  border: 1px solid var(--brand-grey-dark);
+  padding: calc(var(--spacer) / 2);
+  background-color: var(--brand-grey-dimmed) !important;
   border-radius: var(--border-radius);
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  max-height: 800px;
+  width: 100%;
+  position: relative;
 }
 
 pre code {
-  padding: calc(var(--spacer) / 2);
+  padding: 0;
+  white-space: pre;
   display: block;
-  white-space: pre-wrap;
+  overflow-wrap: normal;
+  word-wrap: normal;
+  word-break: normal;
+  width: 100%;
 }

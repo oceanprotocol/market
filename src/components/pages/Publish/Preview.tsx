@@ -38,6 +38,7 @@ export default function Preview({
                 key.includes('tags') ||
                 key.includes('files') ||
                 key.includes('termsAndConditions') ||
+                key.includes('price') ||
                 value === undefined ||
                 value === ''
               )

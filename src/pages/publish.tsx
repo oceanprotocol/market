@@ -32,7 +32,6 @@ export const contentQuery = graphql`
                 type
                 required
                 options
-                min
               }
               success
             }
