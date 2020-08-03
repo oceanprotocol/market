@@ -1,7 +1,6 @@
 import React, { ReactElement, ReactNode } from 'react'
 import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs'
 import styles from './Tabs.module.css'
-import shortid from 'shortid'
 
 interface TabsItem {
   title: string
@@ -19,14 +18,14 @@ export default function Tabs({
     <ReactTabs className={`${className && className}`}>
       <TabList className={styles.tabList}>
         {items.map((item) => (
-          <Tab className={styles.tab} key={shortid.generate()}>
+          <Tab className={styles.tab} key={item.title}>
             {item.title}
           </Tab>
         ))}
       </TabList>
       <div className={styles.tabContent}>
         {items.map((item) => (
-          <TabPanel key={shortid.generate()}>{item.content}</TabPanel>
+          <TabPanel key={item.title}>{item.content}</TabPanel>
         ))}
       </div>
     </ReactTabs>
