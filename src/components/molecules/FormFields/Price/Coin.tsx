@@ -11,7 +11,8 @@ export default function Coin({
   value,
   weight,
   onChange,
-  readOnly
+  readOnly,
+  field
 }: {
   symbol: string
   name: string
@@ -29,6 +30,7 @@ export default function Coin({
 
       <div className={styles.data}>
         <InputElement
+          {...field}
           value={value}
           name={name}
           type="number"

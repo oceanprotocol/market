@@ -29,7 +29,7 @@ export const initialValues: MetadataPublishForm = {
   author: '',
   price: {
     cost: 1,
-    tokensToMint: null
+    tokensToMint: 1
   },
   files: '',
   description: '',

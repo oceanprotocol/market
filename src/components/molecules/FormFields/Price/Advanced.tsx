@@ -1,8 +1,6 @@
 import React, { ReactElement, useState, ChangeEvent, useEffect } from 'react'
-import { InputProps } from '../../../atoms/Input'
 import stylesIndex from './index.module.css'
 import styles from './Advanced.module.css'
-import { MetadataPublishForm } from '../../../../@types/MetaData'
 import FormHelp from '../../../atoms/Input/Help'
 import Wallet from '../../Wallet'
 import { useOcean } from '@oceanprotocol/react'
@@ -11,16 +9,19 @@ import Coin from './Coin'
 import { isCorrectNetwork } from '../../../../utils/wallet'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 
-export default function Advanced(props: InputProps): ReactElement {
+export default function Advanced({
+  ocean,
+  tokensToMint,
+  weightOnDataToken,
+  onChange
+}: {
+  ocean: string
+  tokensToMint: number
+  weightOnDataToken: string
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void
+}): ReactElement {
   const { appConfig } = useSiteMetadata()
-  const { price } = props.form.values as MetadataPublishForm
   const { account, balance, chainId } = useOcean()
-
-  const cost = '1'
-  const weightOnDataToken = '90' // in %
-
-  const [ocean, setOcean] = useState('10')
-  const tokensToMint = Number(ocean) * (Number(weightOnDataToken) / 10)
 
   const [error, setError] = useState<string>()
   const correctNetwork = isCorrectNetwork(chainId)
@@ -40,10 +41,6 @@ export default function Advanced(props: InputProps): ReactElement {
       setError(undefined)
     }
   }, [ocean])
-
-  function handleOceanChange(event: ChangeEvent<HTMLInputElement>) {
-    setOcean(event.target.value)
-  }
 
   return (
     <div className={stylesIndex.content}>
@@ -70,7 +67,7 @@ export default function Advanced(props: InputProps): ReactElement {
             symbol="OCEAN"
             value={ocean}
             weight={`${100 - Number(weightOnDataToken)}%`}
-            onChange={handleOceanChange}
+            onChange={onChange}
           />
           <Coin
             name="price.tokensToMint"
@@ -78,7 +75,6 @@ export default function Advanced(props: InputProps): ReactElement {
             value={tokensToMint.toString()}
             weight={`${weightOnDataToken}%`}
             readOnly
-            field={props.field}
           />
         </div>
 
@@ -88,15 +84,6 @@ export default function Advanced(props: InputProps): ReactElement {
           </div>
         )}
       </div>
-
-      {/* Hidden to fields to actually collect form values for Formik state */}
-      <input type="hidden" {...props.field} name="price.cost" value={cost} />
-      <input
-        type="hidden"
-        {...props.field}
-        name="price.tokensToMint"
-        value={tokensToMint}
-      />
     </div>
   )
 }

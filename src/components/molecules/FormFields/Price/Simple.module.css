@@ -1,8 +1,5 @@
-.simple {
-}
-
-.simple > div:last-child {
-  max-width: 13.25rem;
+.form {
+  max-width: 12rem;
   margin: 0 auto;
 }
 
