@@ -70,7 +70,7 @@ export default function Advanced({
             onChange={onChange}
           />
           <Coin
-            name="price.tokensToMint"
+            name="tokensToMint"
             symbol="OCEAN-CAV"
             value={tokensToMint.toString()}
             weight={`${weightOnDataToken}%`}

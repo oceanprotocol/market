@@ -11,8 +11,7 @@ export default function Coin({
   value,
   weight,
   onChange,
-  readOnly,
-  field
+  readOnly
 }: {
   symbol: string
   name: string
@@ -20,7 +19,6 @@ export default function Coin({
   weight: string
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void
   readOnly?: boolean
-  field?: any
 }): ReactElement {
   return (
     <div className={styles.coin}>
@@ -30,7 +28,6 @@ export default function Coin({
 
       <div className={styles.data}>
         <InputElement
-          {...field}
           value={value}
           name={name}
           type="number"

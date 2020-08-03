@@ -82,6 +82,26 @@ export default function PublishPage({
                 <Web3Feedback />
               </div>
             </aside>
+
+            <div>
+              <h5>Collected Form Values</h5>
+              <pre>
+                <code>{JSON.stringify(values, null, 2)}</code>
+              </pre>
+            </div>
+
+            <div>
+              <h5>Transformed Values</h5>
+              <pre>
+                <code>
+                  {JSON.stringify(
+                    transformPublishFormToMetadata(values),
+                    null,
+                    2
+                  )}
+                </code>
+              </pre>
+            </div>
           </>
         )}
       </Formik>

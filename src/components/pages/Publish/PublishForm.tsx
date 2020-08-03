@@ -16,6 +16,7 @@ export default function PublishForm({
   const { ocean, account } = useOcean()
   const { publishStepText, isLoading } = usePublish()
   const {
+    values,
     status,
     setStatus,
     isValid,
@@ -42,7 +43,6 @@ export default function PublishForm({
       {content.data.map((field: FormFieldProps) => (
         <Field key={field.name} {...field} component={Input} />
       ))}
-
       {isLoading ? (
         <Loader message={publishStepText} />
       ) : (
