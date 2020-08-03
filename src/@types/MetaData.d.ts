@@ -5,12 +5,9 @@ import {
   ServiceMetadata
 } from '@oceanprotocol/lib'
 
-export declare type AccessType = 'Download' | 'Compute'
-
 export interface AdditionalInformationMarket extends AdditionalInformation {
   links?: File[]
   termsAndConditions: boolean
-  access: AccessType | string
 }
 
 export interface MetadataMarket extends Metadata {

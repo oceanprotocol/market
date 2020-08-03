@@ -16,11 +16,9 @@ export default function PublishForm({
   const { ocean, account } = useOcean()
   const { publishStepText, isLoading } = usePublish()
   const {
-    values,
     status,
     setStatus,
     isValid,
-    touched,
     setErrors,
     setTouched,
     resetForm,
