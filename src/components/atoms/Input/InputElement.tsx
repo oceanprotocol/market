@@ -6,26 +6,17 @@ import FilesInput from '../../molecules/FormFields/FilesInput'
 import Terms from '../../molecules/FormFields/Terms'
 import Price from '../../molecules/FormFields/Price'
 
-const DefaultInput = (
-  { name, type }: { name: string; type?: string },
-  props: InputProps
-) => (
-  <input
-    id={name}
-    className={styles.input}
-    name={name}
-    {...props}
-    type={type || 'text'}
-  />
+const DefaultInput = (props: InputProps) => (
+  <input className={styles.input} id={props.name} {...props} />
 )
 
 export default function InputElement(props: InputProps): ReactElement {
-  const { type, options, rows, name, prefix, postfix } = props
+  const { type, options, name, prefix, postfix } = props
 
   switch (type) {
     case 'select':
       return (
-        <select id={name} className={styles.select} name={name} {...props}>
+        <select id={name} className={styles.select} {...props}>
           <option value="">---</option>
           {options &&
             options
@@ -38,15 +29,7 @@ export default function InputElement(props: InputProps): ReactElement {
         </select>
       )
     case 'textarea':
-      return (
-        <textarea
-          id={name}
-          className={styles.input}
-          rows={rows}
-          name={name}
-          {...props}
-        />
-      )
+      return <textarea id={name} className={styles.input} {...props} />
     case 'radio':
     case 'checkbox':
       return (
@@ -58,7 +41,6 @@ export default function InputElement(props: InputProps): ReactElement {
                   className={styles.radio}
                   id={slugify(option)}
                   type={type}
-                  name={name}
                   {...props}
                 />
                 <label className={styles.radioLabel} htmlFor={slugify(option)}>
@@ -69,20 +51,20 @@ export default function InputElement(props: InputProps): ReactElement {
         </div>
       )
     case 'files':
-      return <FilesInput name={name} {...props} />
+      return <FilesInput {...props} />
     case 'price':
-      return <Price name={name} {...props} />
+      return <Price {...props} />
     case 'terms':
-      return <Terms name={name} {...props} />
+      return <Terms {...props} />
     default:
       return prefix || postfix ? (
         <div className={`${prefix ? styles.prefixGroup : styles.postfixGroup}`}>
           {prefix && <div className={styles.prefix}>{prefix}</div>}
-          <DefaultInput name={name} type={type || 'text'} />
+          <DefaultInput type={type || 'text'} {...props} />
           {postfix && <div className={styles.postfix}>{postfix}</div>}
         </div>
       ) : (
-        <DefaultInput name={name} type={type || 'text'} />
+        <DefaultInput type={type || 'text'} {...props} />
       )
   }
 }

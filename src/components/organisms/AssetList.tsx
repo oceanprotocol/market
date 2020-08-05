@@ -50,9 +50,7 @@ const AssetList: React.FC<AssetListProps> = ({ queryResult }) => {
               'metadata'
             )
 
-            return (
-              <AssetTeaser did={ddo.id} metadata={attributes} key={ddo.id} />
-            )
+            return <AssetTeaser ddo={ddo} metadata={attributes} key={ddo.id} />
           })
         ) : (
           <div className={styles.empty}>
