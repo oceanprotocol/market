@@ -10,7 +10,9 @@ export const validationSchema = Yup.object().shape<MetadataPublishForm>({
     tokensToMint: Yup.number().required('Required'),
     type: Yup.string()
       .matches(/simple|advanced/g)
-      .required('Required')
+      .required('Required'),
+    weight: Yup.string().required('Required'),
+    ownerFee: Yup.string()
   }),
   files: Yup.array<FileMetadata>().required('Required').nullable(),
   description: Yup.string().required('Required'),
@@ -31,7 +33,9 @@ export const initialValues: MetadataPublishForm = {
   author: undefined,
   price: {
     type: 'simple',
-    tokensToMint: 1
+    tokensToMint: 1,
+    weight: '9', // 90% on data token
+    ownerFee: '0.03' // in %
   },
   files: undefined,
   description: undefined,

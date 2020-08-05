@@ -77,14 +77,14 @@ export default function Advanced({
             name="ocean"
             symbol="OCEAN"
             value={ocean}
-            weight={`${100 - Number(weightOnDataToken)}%`}
+            weight={`${100 - Number(Number(weightOnDataToken) * 10)}%`}
             onChange={onChange}
           />
           <Coin
             name="tokensToMint"
             symbol="OCEAN-CAV"
             value={tokensToMint.toString()}
-            weight={`${weightOnDataToken}%`}
+            weight={`${Number(weightOnDataToken) * 10}%`}
             readOnly
           />
         </div>
