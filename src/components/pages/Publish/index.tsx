@@ -11,12 +11,14 @@ import { initialValues, validationSchema } from '../../../models/FormPublish'
 import { transformPublishFormToMetadata } from './utils'
 import Preview from './Preview'
 import { MetadataPublishForm } from '../../../@types/MetaData'
+import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 
 export default function PublishPage({
   content
 }: {
   content: { form: FormContent }
 }): ReactElement {
+  const { marketFeeAmount } = useSiteMetadata()
   const { accountId, ocean } = useOcean()
   const { publish, publishError } = usePublish()
   const navigate = useNavigate()
@@ -59,7 +61,7 @@ export default function PublishPage({
             ddo.dataToken,
             tokensToMint.toString(),
             '9',
-            '0.03'
+            marketFeeAmount
           )
         }
       }
