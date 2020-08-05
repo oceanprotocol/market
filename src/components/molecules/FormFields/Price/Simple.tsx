@@ -21,7 +21,7 @@ export default function Simple({
           this data set, worth the entered amount of OCEAN will be created.
         </FormHelp>
 
-        <form className={styles.form}>
+        <div className={styles.form}>
           <Label htmlFor="ocean">Ocean Tokens</Label>
 
           <InputElement
@@ -33,7 +33,7 @@ export default function Simple({
           />
 
           <Conversion price={ocean} className={stylesIndex.conversion} />
-        </form>
+        </div>
       </div>
     </div>
   )
