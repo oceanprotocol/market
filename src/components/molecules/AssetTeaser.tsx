@@ -6,6 +6,7 @@ import Price from '../atoms/Price'
 import styles from './AssetTeaser.module.css'
 import { useMetadata } from '@oceanprotocol/react'
 import { DDO } from '@oceanprotocol/lib'
+import Loader from '../atoms/Loader'
 
 declare type AssetTeaserProps = {
   ddo: DDO
@@ -47,7 +48,11 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
         </div>
 
         <footer className={styles.foot}>
-          {price && <Price price={price} />}
+          {price ? (
+            <Price price={price} />
+          ) : (
+            <Loader message="Retrieving price..." />
+          )}
         </footer>
       </Link>
     </article>

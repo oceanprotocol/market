@@ -1,10 +1,11 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState, useEffect } from 'react'
 import styles from './index.module.css'
 import Compute from './Compute'
 import Consume from './Consume'
 import { MetadataMarket } from '../../../@types/Metadata'
 import { DDO } from '@oceanprotocol/lib'
 import Tabs from '../../atoms/Tabs'
+import { useMetadata } from '@oceanprotocol/react'
 
 export default function AssetActions({
   metadata,
@@ -13,12 +14,22 @@ export default function AssetActions({
   metadata: MetadataMarket
   ddo: DDO
 }): ReactElement {
-  const { access } = metadata.additionalInformation
-  const isCompute = access && access === 'Compute'
+  const { getBestPrice } = useMetadata(ddo.id)
+  const [price, setPrice] = useState<string>()
+
+  useEffect(() => {
+    async function init() {
+      const price = await getBestPrice(ddo.dataToken)
+      price && setPrice(price)
+    }
+    init()
+  }, [])
+
+  const isCompute = Boolean(ddo.findServiceByType('compute'))
   const UseContent = isCompute ? (
-    <Compute ddo={ddo} />
+    <Compute ddo={ddo} price={price} />
   ) : (
-    <Consume ddo={ddo} file={metadata.main.files[0]} />
+    <Consume ddo={ddo} price={price} file={metadata.main.files[0]} />
   )
 
   const tabs = [
