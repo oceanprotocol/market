@@ -34,7 +34,7 @@ export default function PublishPage({
     `)
 
     const metadata = transformPublishFormToMetadata(values)
-    const { tokensToMint, type, weight, ownerFee } = values.price
+    const { tokensToMint, type, weightOnDataToken, ownerFee } = values.price
     const serviceType = values.access === 'Download' ? 'access' : 'compute'
 
     console.log(`
@@ -60,7 +60,7 @@ export default function PublishPage({
             accountId,
             ddo.dataToken,
             tokensToMint.toString(),
-            weight,
+            weightOnDataToken,
             ownerFee
           )
         }
