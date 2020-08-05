@@ -40,8 +40,7 @@ export function transformPublishFormToMetadata(
       // },
       termsAndConditions,
       priceType: price.type
-    },
-    curation: AssetModel.curation
+    }
   }
 
   return metadata

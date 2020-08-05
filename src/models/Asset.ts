@@ -20,12 +20,6 @@ const AssetModel: MetadataMarket = {
     // custom items
     termsAndConditions: false,
     priceType: undefined
-  },
-  curation: {
-    rating: 0,
-    numVotes: 0,
-    schema: '5-star voting',
-    isListed: true
   }
 }
 
