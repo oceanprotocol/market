@@ -48,15 +48,19 @@ export default function PublishPage({
         '',
         ''
       )
+      switch (type) {
+        case 'advanced': {
+          // weight is hardcoded at 9 (90%) and publisher fee at 0.03(this was a random value set by me)
+          const pool = await ocean.pool.createDTPool(
+            accountId,
+            ddo.dataToken,
+            tokensToMint.toString(),
+            '9',
+            '0.03'
+          )
+        }
+      }
 
-      // create pool for the data token, this is the advanced flow , currently hardcoded
-      const pool = await ocean.pool.createDTPool(
-        accountId,
-        ddo.dataToken,
-        tokensToMint.toString(),
-        '9',
-        '0.03'
-      )
       if (publishError) {
         toast.error(publishError)
         return null
