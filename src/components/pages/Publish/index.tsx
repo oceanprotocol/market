@@ -21,7 +21,10 @@ export default function PublishPage({
   const { publish, publishError } = usePublish()
   const navigate = useNavigate()
 
-  async function handleSubmit(values: MetadataPublishForm): Promise<void> {
+  async function handleSubmit(
+    values: MetadataPublishForm,
+    resetForm: () => void
+  ): Promise<void> {
     console.log(`
       Collected form values:
       ----------------------
@@ -69,7 +72,9 @@ export default function PublishPage({
       // User feedback and redirect to new asset detail page
       ddo && toast.success('Asset created successfully.')
 
-      // TODO: reset form state and make sure persistant form in localStorage is cleared
+      // reset form state
+      // TODO: verify persistant form in localStorage is cleared with it too
+      resetForm()
 
       // Go to new asset detail page
       navigate(`/asset/${ddo.id}`)
@@ -85,8 +90,8 @@ export default function PublishPage({
         initialValues={initialValues}
         initialStatus="empty"
         validationSchema={validationSchema}
-        onSubmit={async (values, { setSubmitting }) => {
-          await handleSubmit(values)
+        onSubmit={async (values, { setSubmitting, resetForm }) => {
+          await handleSubmit(values, resetForm)
           setSubmitting(false)
         }}
       >
