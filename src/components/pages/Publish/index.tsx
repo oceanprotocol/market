@@ -42,7 +42,13 @@ export default function PublishPage({
 
     try {
       // mpAddress and mpFee are not yet implemented in ocean js so are not uset
-      const ddo = await publish(metadata as any, tokensToMint.toString(), serviceType, '','')
+      const ddo = await publish(
+        metadata as any,
+        tokensToMint.toString(),
+        serviceType,
+        '',
+        ''
+      )
 
       // create pool for the data token, this is the advanced flow , currently hardcoded
       const pool = await ocean.pool.createDTPool(
