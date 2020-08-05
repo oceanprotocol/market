@@ -16,7 +16,8 @@ export function transformPublishFormToMetadata(
     tags,
     links,
     termsAndConditions,
-    files
+    files,
+    price
   } = data
 
   const metadata: MetadataMarket = {
@@ -37,7 +38,8 @@ export function transformPublishFormToMetadata(
       // links: {
       //   url: links
       // },
-      termsAndConditions
+      termsAndConditions,
+      priceType: price.type
     },
     curation: AssetModel.curation
   }

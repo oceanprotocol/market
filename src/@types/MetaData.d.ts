@@ -8,6 +8,7 @@ import {
 export interface AdditionalInformationMarket extends AdditionalInformation {
   links?: File[]
   termsAndConditions: boolean
+  priceType: string
 }
 
 export interface MetadataMarket extends Metadata {
