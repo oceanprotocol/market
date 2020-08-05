@@ -1,6 +1,5 @@
 import React, { useState, useEffect, ReactElement } from 'react'
 import { DDO } from '@oceanprotocol/lib'
-import { fromWei } from 'web3-utils'
 import compareAsBN, { Comparisson } from '../../../utils/compareAsBN'
 import Loader from '../../atoms/Loader'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
@@ -17,7 +16,13 @@ import Button from '../../atoms/Button'
 import Input from '../../atoms/Input'
 import Alert from '../../atoms/Alert'
 
-export default function Compute({ ddo }: { ddo: DDO }): ReactElement {
+export default function Compute({
+  ddo,
+  price
+}: {
+  ddo: DDO
+  price: string // in OCEAN, not wei
+}): ReactElement {
   const { ocean } = useOcean()
   const { compute, isLoading, computeStepText, computeError } = useCompute()
   const computeService = ddo.findServiceByType('compute').attributes.main
@@ -36,7 +41,7 @@ export default function Compute({ ddo }: { ddo: DDO }): ReactElement {
   const [file, setFile] = useState(null)
   const [isTermsAgreed, setIsTermsAgreed] = useState(true)
 
-  const isFree = computeService.cost === '0'
+  const isFree = price === '0'
 
   const isComputeButtonDisabled =
     isJobStarting ||
@@ -96,7 +101,11 @@ export default function Compute({ ddo }: { ddo: DDO }): ReactElement {
 
   return (
     <div className={styles.compute}>
-      <Price price={computeService.cost} />
+      {price ? (
+        <Price price={price} />
+      ) : (
+        <Loader message="Retrieving price..." />
+      )}
 
       <div className={styles.info}>
         <div className={styles.selectType}>

@@ -22,14 +22,11 @@ pre {
   max-height: 800px;
   width: 100%;
   position: relative;
+  white-space: pre-wrap;
 }
 
 pre code {
   padding: 0;
-  white-space: pre;
   display: block;
-  overflow-wrap: normal;
-  word-wrap: normal;
-  word-break: normal;
   width: 100%;
 }

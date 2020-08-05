@@ -21,7 +21,7 @@ export default function Advanced({
   onChange: (event: ChangeEvent<HTMLInputElement>) => void
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
-  const { account, balance, chainId } = useOcean()
+  const { account, balance, chainId, refreshBalance } = useOcean()
 
   const [error, setError] = useState<string>()
   const correctNetwork = isCorrectNetwork(chainId)
@@ -41,6 +41,17 @@ export default function Advanced({
       setError(undefined)
     }
   }, [ocean])
+
+  // refetch balance periodically
+  useEffect(() => {
+    if (!account) return
+
+    const balanceInterval = setInterval(() => refreshBalance(), 10000) // 10 sec.
+
+    return () => {
+      clearInterval(balanceInterval)
+    }
+  }, [])
 
   return (
     <div className={stylesIndex.content}>

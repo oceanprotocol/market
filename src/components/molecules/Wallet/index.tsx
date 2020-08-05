@@ -14,10 +14,13 @@ const animation = {
 }
 
 export default function Wallet(): ReactElement {
-  const { accountId } = useOcean()
+  const { accountId, refreshBalance } = useOcean()
   const [props, setSpring] = useSpring(() => animation.from)
 
+  // always refetch balance when popover is opened
   function onMount() {
+    accountId && refreshBalance()
+
     setSpring({
       transform: 'scale(1) translateY(0)',
       onRest: (): void => null,

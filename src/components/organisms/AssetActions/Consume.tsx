@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react'
-import { fromWei } from 'web3-utils'
 import { toast } from 'react-toastify'
 import { File as FileMetadata, DDO } from '@oceanprotocol/lib'
 import compareAsBN, { Comparisson } from '../../../utils/compareAsBN'
@@ -13,17 +12,18 @@ import { useOcean, useConsume } from '@oceanprotocol/react'
 
 export default function Consume({
   ddo,
+  price,
   file
 }: {
   ddo: DDO
+  price: string // in OCEAN, not wei
   file: FileMetadata
 }): ReactElement {
   const accessService = ddo.findServiceByType('access')
-  const { cost } = accessService.attributes.main
   const { ocean } = useOcean()
   const { consumeStepText, consume, consumeError } = useConsume()
 
-  const isFree = cost === '0'
+  const isFree = price === '0'
   // const isBalanceSufficient =
   //  isFree || compareAsBN(balanceInOcean, fromWei(cost), Comparisson.gte)
   const isDisabled = !ocean
@@ -52,7 +52,11 @@ export default function Consume({
           <File file={file} />
         </div>
         <div className={styles.pricewrapper}>
-          {/* <Price price={cost} className={styles.price} /> */}
+          {price ? (
+            <Price price={price} />
+          ) : (
+            <Loader message="Retrieving price..." />
+          )}
           <PurchaseButton />
         </div>
       </div>

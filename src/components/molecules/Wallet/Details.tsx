@@ -6,6 +6,7 @@ import Web3Feedback from './Feedback'
 import { getNetworkName } from '../../../utils/wallet'
 import { getInjectedProviderName } from 'web3modal'
 import Conversion from '../../atoms/Price/Conversion'
+import { formatCurrency } from '@coingecko/cryptoformat'
 
 export default function Details({ attrs }: { attrs: any }): ReactElement {
   const { balance, connect, logout, chainId } = useOcean()
@@ -15,7 +16,8 @@ export default function Details({ attrs }: { attrs: any }): ReactElement {
       <ul>
         {Object.entries(balance).map(([key, value]) => (
           <li className={styles.balance} key={key}>
-            <span>{key.toUpperCase()}</span> {value}
+            <span>{key.toUpperCase()}</span>{' '}
+            {formatCurrency(value, '', 'en', true, true)}
             {key === 'ocean' && <Conversion price={value} />}
           </li>
         ))}

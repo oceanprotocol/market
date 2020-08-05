@@ -9,7 +9,6 @@ import { useField } from 'formik'
 export default function Price(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props)
 
-  const cost = 1
   const weightOnDataToken = '90' // in %
   const [ocean, setOcean] = useState('1')
   const [tokensToMint, setTokensToMint] = useState<number>()
@@ -18,11 +17,17 @@ export default function Price(props: InputProps): ReactElement {
     setOcean(event.target.value)
   }
 
+  function handleTabChange(tabName: string) {
+    const type = tabName.startsWith('Simple') ? 'simple' : 'advanced'
+    helpers.setValue({ ...field.value, type })
+  }
+
   // Always update everything when ocean changes
   useEffect(() => {
     const tokensToMint = Number(ocean) * (Number(weightOnDataToken) / 10)
     setTokensToMint(tokensToMint)
-    helpers.setValue({ cost, tokensToMint })
+    console.log(field.value)
+    helpers.setValue({ ...field.value, tokensToMint })
   }, [ocean])
 
   const tabs = [
@@ -45,7 +50,7 @@ export default function Price(props: InputProps): ReactElement {
 
   return (
     <div className={styles.price}>
-      <Tabs items={tabs} />
+      <Tabs items={tabs} handleTabChange={handleTabChange} />
       <pre>
         <code>{JSON.stringify(field.value)}</code>
       </pre>

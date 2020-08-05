@@ -6,6 +6,7 @@ import Price from '../atoms/Price'
 import styles from './AssetTeaser.module.css'
 import { useMetadata } from '@oceanprotocol/react'
 import { DDO } from '@oceanprotocol/lib'
+import Loader from '../atoms/Loader'
 
 declare type AssetTeaserProps = {
   ddo: DDO
@@ -20,6 +21,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
 
   const { name } = metadata.main
   const { description } = metadata.additionalInformation
+  const isCompute = Boolean(ddo.findServiceByType('compute'))
 
   const { getBestPrice } = useMetadata(ddo.id)
   const [price, setPrice] = useState<string>()
@@ -36,9 +38,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
     <article className={styles.teaser}>
       <Link to={`/asset/${ddo.id}`} className={styles.link}>
         <h1 className={styles.title}>{name}</h1>
-        {/* {access === 'Compute' && (
-          <div className={styles.accessLabel}>{access}</div>
-        )} */}
+        {isCompute && <div className={styles.accessLabel}>Compute</div>}
 
         <div className={styles.content}>
           <Dotdotdot tagName="p" clamp={3}>
@@ -47,7 +47,11 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
         </div>
 
         <footer className={styles.foot}>
-          {price && <Price price={price} />}
+          {price ? (
+            <Price price={price} small />
+          ) : (
+            <Loader message="Retrieving price..." />
+          )}
         </footer>
       </Link>
     </article>

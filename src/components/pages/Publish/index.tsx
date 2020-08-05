@@ -29,14 +29,13 @@ export default function PublishPage({
     `)
 
     const metadata = transformPublishFormToMetadata(values)
-    const { cost, tokensToMint } = values.price
+    const { tokensToMint, type } = values.price
     const serviceType = values.access === 'Download' ? 'access' : 'compute'
 
     console.log(`
       Transformed metadata values:
       ----------------------
       ${JSON.stringify(metadata, null, 2)}
-      Cost: ${cost}
       Tokens to mint: ${tokensToMint}
     `)
 
