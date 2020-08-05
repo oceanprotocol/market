@@ -52,7 +52,7 @@ export default function Consume({
           <File file={file} />
         </div>
         <div className={styles.pricewrapper}>
-          {/* <Price price={cost} className={styles.price} /> */}
+          <Price price={cost} className={styles.price} />
           <PurchaseButton />
         </div>
       </div>

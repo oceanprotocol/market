@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react'
-import { fromWei } from 'web3-utils'
 import classNames from 'classnames/bind'
 import PriceConversion from './Conversion'
 import styles from './index.module.css'
@@ -11,7 +10,7 @@ export default function Price({
   className,
   small
 }: {
-  price: string
+  price: string // expects price in OCEAN, not wei
   className?: string
   small?: boolean
 }): ReactElement {
@@ -27,8 +26,8 @@ export default function Price({
     'Free'
   ) : (
     <>
-      <span>OCEAN</span> {fromWei(price)}
-      <PriceConversion price={fromWei(price)} />
+      <span>OCEAN</span> {price}
+      <PriceConversion price={price} />
     </>
   )
 
