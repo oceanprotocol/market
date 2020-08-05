@@ -48,7 +48,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
 
         <footer className={styles.foot}>
           {price ? (
-            <Price price={price} />
+            <Price price={price} small />
           ) : (
             <Loader message="Retrieving price..." />
           )}

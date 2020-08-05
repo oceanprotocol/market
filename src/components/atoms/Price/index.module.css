@@ -12,6 +12,6 @@
 
 .small {
   /* lazy making-conversion-smaller-with-same-markup */
-  transform: scale(0.7);
+  transform: scale(0.8);
   transform-origin: left 80%;
 }
