@@ -3,6 +3,7 @@ import useSWR from 'swr'
 import { fetchData, isBrowser } from '../../../utils'
 import styles from './Conversion.module.css'
 import classNames from 'classnames/bind'
+import { formatCurrency } from '@coingecko/cryptoformat'
 
 const cx = classNames.bind(styles)
 
@@ -34,7 +35,7 @@ export default function Conversion({
 
     const { eur } = data['ocean-protocol']
     const converted = eur * Number(price)
-    setPriceEur(`${converted.toFixed(2)}`)
+    setPriceEur(`${formatCurrency(converted, 'EUR', 'en', true)}`)
   }
 
   useEffect(() => {

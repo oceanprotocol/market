@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react'
 import classNames from 'classnames/bind'
 import PriceConversion from './Conversion'
 import styles from './index.module.css'
+import { formatCurrency } from '@coingecko/cryptoformat'
 
 const cx = classNames.bind(styles)
 
@@ -26,7 +27,7 @@ export default function Price({
     'Free'
   ) : (
     <>
-      <span>OCEAN</span> {price}
+      <span>OCEAN</span> {formatCurrency(Number(price), '', 'en', false, true)}
       <PriceConversion price={price} />
     </>
   )
