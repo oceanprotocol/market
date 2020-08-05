@@ -22,8 +22,8 @@ export interface MetadataPublishForm {
   author: string
   license: string
   price: {
-    cost: number
     tokensToMint: number
+    type: 'simple' | 'advanced' | string
   }
   access: 'Download' | 'Compute' | string
   termsAndConditions: boolean
