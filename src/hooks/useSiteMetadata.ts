@@ -16,6 +16,8 @@ const query = graphql`
         appConfig {
           infuraProjectId
           network
+          marketFeeAddress
+          marketFeeAmount
         }
       }
     }

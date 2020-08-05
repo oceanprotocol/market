@@ -11,12 +11,14 @@ import { initialValues, validationSchema } from '../../../models/FormPublish'
 import { transformPublishFormToMetadata } from './utils'
 import Preview from './Preview'
 import { MetadataPublishForm } from '../../../@types/MetaData'
+import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 
 export default function PublishPage({
   content
 }: {
   content: { form: FormContent }
 }): ReactElement {
+  const { marketFeeAddress, marketFeeAmount } = useSiteMetadata()
   const { accountId, ocean } = useOcean()
   const { publish, publishError } = usePublish()
   const navigate = useNavigate()
@@ -48,8 +50,8 @@ export default function PublishPage({
         metadata as any,
         tokensToMint.toString(),
         serviceType,
-        '',
-        ''
+        marketFeeAddress,
+        marketFeeAmount
       )
       switch (type) {
         case 'advanced': {
