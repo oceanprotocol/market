@@ -29,7 +29,7 @@ export default function PublishPage({
     `)
 
     const metadata = transformPublishFormToMetadata(values)
-    const { tokensToMint } = values.price
+    const { tokensToMint, type } = values.price
     const serviceType = values.access === 'Download' ? 'access' : 'compute'
 
     console.log(`
