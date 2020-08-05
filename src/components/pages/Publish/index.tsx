@@ -45,7 +45,7 @@ export default function PublishPage({
       const ddo = await publish(metadata as any, tokensToMint.toString(), serviceType, '','')
 
       // create pool for the data token, this is the advanced flow , currently hardcoded
-      const pool = ocean.pool.createDTPool(
+      const pool = await ocean.pool.createDTPool(
         accountId,
         ddo.dataToken,
         tokensToMint.toString(),

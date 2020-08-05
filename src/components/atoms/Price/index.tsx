@@ -27,8 +27,8 @@ export default function Price({
     'Free'
   ) : (
     <>
-      <span>OCEAN</span> {fromWei(price)}
-      <PriceConversion price={fromWei(price)} />
+      <span>OCEAN</span> {price}
+      <PriceConversion price={price} />
     </>
   )
 
