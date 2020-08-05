@@ -2,21 +2,22 @@ import React, { ReactElement } from 'react'
 import { useNavigate } from '@reach/router'
 import { toast } from 'react-toastify'
 import { Formik } from 'formik'
-import { usePublish } from '@oceanprotocol/react'
+import { usePublish, useOcean } from '@oceanprotocol/react'
 import styles from './index.module.css'
 import PublishForm from './PublishForm'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
 import { FormContent } from '../../../@types/Form'
 import { initialValues, validationSchema } from '../../../models/FormPublish'
-import { MetadataPublishForm } from '../../../@types/Metadata'
 import { transformPublishFormToMetadata } from './utils'
 import Preview from './Preview'
+import { MetadataPublishForm } from '../../../@types/MetaData'
 
 export default function PublishPage({
   content
 }: {
   content: { form: FormContent }
 }): ReactElement {
+  const { accountId, ocean } = useOcean()
   const { publish, publishError } = usePublish()
   const navigate = useNavigate()
 
@@ -39,9 +40,26 @@ export default function PublishPage({
     `)
 
     try {
-      const ddo = await publish(metadata as any, tokensToMint.toString(), [
-        { serviceType }
-      ])
+      // mpAddress and mpFee are not yet implemented in ocean js so are not uset
+      const ddo = await publish(
+        metadata as any,
+        tokensToMint.toString(),
+        serviceType,
+        '',
+        ''
+      )
+      switch (type) {
+        case 'advanced': {
+          // weight is hardcoded at 9 (90%) and publisher fee at 0.03(this was a random value set by me)
+          const pool = await ocean.pool.createDTPool(
+            accountId,
+            ddo.dataToken,
+            tokensToMint.toString(),
+            '9',
+            '0.03'
+          )
+        }
+      }
 
       if (publishError) {
         toast.error(publishError)
