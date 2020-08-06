@@ -13,39 +13,21 @@ import InputElement from '../../../atoms/Input/InputElement'
 import Label from '../../../atoms/Input/Label'
 import Tooltip from '../../../atoms/Tooltip'
 
-const query = graphql`
-  query PriceAdvancedQuery {
-    tooltips: allFile(filter: { relativePath: { eq: "pages/publish.json" } }) {
-      edges {
-        node {
-          childPagesJson {
-            tooltips {
-              poolInfo
-              liquidityProviderFee
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
 export default function Advanced({
   ocean,
   tokensToMint,
   weightOnDataToken,
   liquidityProviderFee,
-  onOceanChange
+  onOceanChange,
+  content
 }: {
   ocean: string
   tokensToMint: number
   weightOnDataToken: string
   liquidityProviderFee: string
   onOceanChange: (event: ChangeEvent<HTMLInputElement>) => void
+  content: any
 }): ReactElement {
-  const data = useStaticQuery(query)
-  const { tooltips } = data.tooltips.edges[0].node.childPagesJson
-
   const { appConfig } = useSiteMetadata()
   const { account, balance, chainId, refreshBalance } = useOcean()
 
@@ -83,10 +65,7 @@ export default function Advanced({
   return (
     <div className={stylesIndex.content}>
       <div className={styles.advanced}>
-        <FormHelp className={stylesIndex.help}>
-          {`Let's create a decentralized, automated market for your data set. A Data Token contract for this data set worth the entered amount of OCEAN will be created. Additionally, you will provide liquidity into a Data Token/OCEAN
-          liquidity pool with Balancer.`}
-        </FormHelp>
+        <FormHelp className={stylesIndex.help}>{content.info}</FormHelp>
 
         <aside className={styles.wallet}>
           {balance && balance.ocean && (
@@ -98,7 +77,8 @@ export default function Advanced({
         </aside>
 
         <h4 className={styles.title}>
-          Data Token Liquidity Pool <Tooltip content={tooltips.poolInfo} />
+          Data Token Liquidity Pool{' '}
+          <Tooltip content={content.tooltips.poolInfo} />
         </h4>
 
         <div className={styles.tokens}>
@@ -121,7 +101,7 @@ export default function Advanced({
         <footer className={styles.summary}>
           <Label htmlFor="liquidityProviderFee">
             Liquidity Provider Fee{' '}
-            <Tooltip content={tooltips.liquidityProviderFee} />
+            <Tooltip content={content.tooltips.liquidityProviderFee} />
           </Label>
           <InputElement
             value={liquidityProviderFee}
