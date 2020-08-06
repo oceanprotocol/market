@@ -8,17 +8,21 @@ import Alert from '../../../atoms/Alert'
 import Coin from './Coin'
 import { isCorrectNetwork } from '../../../../utils/wallet'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
+import InputElement from '../../../atoms/Input/InputElement'
+import Label from '../../../atoms/Input/Label'
 
 export default function Advanced({
   ocean,
   tokensToMint,
   weightOnDataToken,
-  onChange
+  liquidityProviderFee,
+  onOceanChange
 }: {
   ocean: string
   tokensToMint: number
   weightOnDataToken: string
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void
+  liquidityProviderFee: string
+  onOceanChange: (event: ChangeEvent<HTMLInputElement>) => void
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { account, balance, chainId, refreshBalance } = useOcean()
@@ -40,18 +44,19 @@ export default function Advanced({
     } else {
       setError(undefined)
     }
-  }, [ocean])
+  }, [ocean, chainId, account, balance])
 
   // refetch balance periodically
   useEffect(() => {
     if (!account) return
 
+    refreshBalance()
     const balanceInterval = setInterval(() => refreshBalance(), 10000) // 10 sec.
 
     return () => {
       clearInterval(balanceInterval)
     }
-  }, [])
+  }, [ocean, chainId, account])
 
   return (
     <div className={stylesIndex.content}>
@@ -78,7 +83,7 @@ export default function Advanced({
             symbol="OCEAN"
             value={ocean}
             weight={`${100 - Number(Number(weightOnDataToken) * 10)}%`}
-            onChange={onChange}
+            onOceanChange={onOceanChange}
           />
           <Coin
             name="tokensToMint"
@@ -88,6 +93,16 @@ export default function Advanced({
             readOnly
           />
         </div>
+
+        <footer className={styles.summary}>
+          <Label htmlFor="liquidityProviderFee">Liquidity Provider Fee</Label>
+          <InputElement
+            value={liquidityProviderFee}
+            name="liquidityProviderFee"
+            readOnly
+            postfix="%"
+          />
+        </footer>
 
         {error && (
           <div className={styles.alertArea}>

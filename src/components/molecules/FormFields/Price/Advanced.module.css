@@ -35,9 +35,10 @@
 
 .tokens {
   display: grid;
-  margin-bottom: -2rem;
+
   margin-left: -3rem;
   margin-right: -3rem;
+  border-bottom: 1px solid var(--brand-grey-lighter);
 }
 
 @media screen and (min-width: 40rem) {
@@ -46,11 +47,20 @@
   }
 }
 
+.summary {
+  text-align: center;
+  margin-top: var(--spacer);
+  margin-bottom: -2rem;
+}
+
+.summary input {
+  max-width: 5rem;
+}
+
 .alertArea {
   margin-left: -3rem;
   margin-right: -3rem;
   padding: var(--spacer) calc(var(--spacer) / 2);
   padding-bottom: 0;
   margin-top: var(--spacer);
-  border-top: 1px solid var(--brand-grey-lighter);
 }

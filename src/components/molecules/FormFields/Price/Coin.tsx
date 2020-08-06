@@ -10,14 +10,14 @@ export default function Coin({
   name,
   value,
   weight,
-  onChange,
+  onOceanChange,
   readOnly
 }: {
   symbol: string
   name: string
   value: string
   weight: string
-  onChange?: (event: ChangeEvent<HTMLInputElement>) => void
+  onOceanChange?: (event: ChangeEvent<HTMLInputElement>) => void
   readOnly?: boolean
 }): ReactElement {
   return (
@@ -31,7 +31,7 @@ export default function Coin({
           value={value}
           name={name}
           type="number"
-          onChange={onChange}
+          onChange={onOceanChange}
           readOnly={readOnly}
           prefix={symbol}
         />

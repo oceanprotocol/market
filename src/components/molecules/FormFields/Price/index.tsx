@@ -8,7 +8,7 @@ import { useField } from 'formik'
 
 export default function Price(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props)
-  const { weightOnDataToken } = field.value
+  const { weightOnDataToken, liquidityProviderFee } = field.value
 
   const [ocean, setOcean] = useState('1')
   const [tokensToMint, setTokensToMint] = useState<number>()
@@ -26,7 +26,6 @@ export default function Price(props: InputProps): ReactElement {
   useEffect(() => {
     const tokensToMint = Number(ocean) * Number(weightOnDataToken)
     setTokensToMint(tokensToMint)
-    console.log(field.value)
     helpers.setValue({ ...field.value, tokensToMint })
   }, [ocean])
 
@@ -42,7 +41,8 @@ export default function Price(props: InputProps): ReactElement {
           ocean={ocean}
           tokensToMint={tokensToMint}
           weightOnDataToken={weightOnDataToken}
-          onChange={handleOceanChange}
+          onOceanChange={handleOceanChange}
+          liquidityProviderFee={liquidityProviderFee}
         />
       )
     }
