@@ -35,7 +35,7 @@ export const initialValues: MetadataPublishForm = {
     type: 'simple',
     tokensToMint: 1,
     weightOnDataToken: '9', // 90% on data token
-    liquidityProviderFee: '0.3' // in %
+    liquidityProviderFee: '0.1' // in %
   },
   files: undefined,
   description: undefined,
