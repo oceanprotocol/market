@@ -26,7 +26,7 @@ export interface MetadataPublishForm {
     tokensToMint: number
     type: 'simple' | 'advanced' | string
     weightOnDataToken: string
-    ownerFee: string
+    liquidityProviderFee: string
   }
   access: 'Download' | 'Compute' | string
   termsAndConditions: boolean
