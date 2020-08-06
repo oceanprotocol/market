@@ -53,7 +53,9 @@ export default function Consume({
         </div>
         <div className={styles.pricewrapper}>
           {price ? (
-            <Price price={price} />
+            <Price price={price} small />
+          ) : price === '' ? (
+            'No price found'
           ) : (
             <Loader message="Retrieving price..." />
           )}

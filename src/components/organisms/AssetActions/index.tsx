@@ -20,7 +20,7 @@ export default function AssetActions({
   useEffect(() => {
     async function init() {
       const price = await getBestPrice(ddo.dataToken)
-      price && setPrice(price)
+      setPrice(price)
     }
     init()
   }, [])

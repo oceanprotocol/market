@@ -102,7 +102,9 @@ export default function Compute({
   return (
     <div className={styles.compute}>
       {price ? (
-        <Price price={price} />
+        <Price price={price} small />
+      ) : price === '' ? (
+        'No price found'
       ) : (
         <Loader message="Retrieving price..." />
       )}

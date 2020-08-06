@@ -29,7 +29,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
   useEffect(() => {
     async function init() {
       const price = await getBestPrice(ddo.dataToken)
-      price && setPrice(price)
+      setPrice(price)
     }
     init()
   }, [])
@@ -49,6 +49,8 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
         <footer className={styles.foot}>
           {price ? (
             <Price price={price} small />
+          ) : price === '' ? (
+            'No price found'
           ) : (
             <Loader message="Retrieving price..." />
           )}
