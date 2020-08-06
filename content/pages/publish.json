@@ -89,5 +89,9 @@
       }
     ],
     "success": "Asset Created!"
+  },
+  "tooltips": {
+    "poolInfo": "Help me",
+    "liquidityProviderFee": "Help me"
   }
 }

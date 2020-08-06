@@ -1,4 +1,5 @@
 import React, { ReactElement, useState, ChangeEvent, useEffect } from 'react'
+import { graphql, useStaticQuery } from 'gatsby'
 import stylesIndex from './index.module.css'
 import styles from './Advanced.module.css'
 import FormHelp from '../../../atoms/Input/Help'
@@ -11,6 +12,23 @@ import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import InputElement from '../../../atoms/Input/InputElement'
 import Label from '../../../atoms/Input/Label'
 import Tooltip from '../../../atoms/Tooltip'
+
+const query = graphql`
+  query PriceAdvancedQuery {
+    tooltips: allFile(filter: { relativePath: { eq: "pages/publish.json" } }) {
+      edges {
+        node {
+          childPagesJson {
+            tooltips {
+              poolInfo
+              liquidityProviderFee
+            }
+          }
+        }
+      }
+    }
+  }
+`
 
 export default function Advanced({
   ocean,
@@ -25,6 +43,9 @@ export default function Advanced({
   liquidityProviderFee: string
   onOceanChange: (event: ChangeEvent<HTMLInputElement>) => void
 }): ReactElement {
+  const data = useStaticQuery(query)
+  const { tooltips } = data.tooltips.edges[0].node.childPagesJson
+
   const { appConfig } = useSiteMetadata()
   const { account, balance, chainId, refreshBalance } = useOcean()
 
@@ -76,7 +97,9 @@ export default function Advanced({
           <Wallet />
         </aside>
 
-        <h4 className={styles.title}>Data Token Liquidity Pool</h4>
+        <h4 className={styles.title}>
+          Data Token Liquidity Pool <Tooltip content={tooltips.poolInfo} />
+        </h4>
 
         <div className={styles.tokens}>
           <Coin
@@ -97,7 +120,8 @@ export default function Advanced({
 
         <footer className={styles.summary}>
           <Label htmlFor="liquidityProviderFee">
-            Liquidity Provider Fee <Tooltip content="Help Me" />
+            Liquidity Provider Fee{' '}
+            <Tooltip content={tooltips.liquidityProviderFee} />
           </Label>
           <InputElement
             value={liquidityProviderFee}
