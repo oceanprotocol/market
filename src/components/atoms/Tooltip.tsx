@@ -2,6 +2,7 @@ import React, { ReactElement, ReactNode } from 'react'
 import loadable from '@loadable/component'
 import { useSpring, animated } from 'react-spring'
 import styles from './Tooltip.module.css'
+import { ReactComponent as Info } from '../../images/info.svg'
 
 const Tippy = loadable(() => import('@tippyjs/react/headless'))
 
@@ -14,7 +15,7 @@ const animation = {
 // Forward ref for Tippy.js
 // eslint-disable-next-line
 const DefaultTrigger = React.forwardRef((props, ref: any) => {
-  return <i ref={ref}>Info</i>
+  return <Info className={styles.icon} ref={ref} />
 })
 
 export default function Tooltip({
@@ -49,7 +50,7 @@ export default function Tooltip({
   return (
     <Tippy
       interactive
-      interactiveBorder={30}
+      interactiveBorder={5}
       zIndex={1}
       trigger={trigger || 'mouseenter focus'}
       disabled={disabled || null}

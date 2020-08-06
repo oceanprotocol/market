@@ -10,6 +10,16 @@
   font-size: var(--font-size-small);
 }
 
+.icon {
+  width: 15px;
+  height: 15px;
+  cursor: help;
+  display: inline-block;
+  margin-bottom: -0.1rem;
+  margin-left: calc(var(--spacer) / 6);
+  fill: var(--brand-grey-light);
+}
+
 .arrow,
 .arrow::before {
   position: absolute;
