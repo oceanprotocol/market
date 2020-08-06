@@ -1,4 +1,5 @@
 import React, { ReactElement, useState, ChangeEvent, useEffect } from 'react'
+import { graphql, useStaticQuery } from 'gatsby'
 import { InputProps } from '../../../atoms/Input'
 import styles from './index.module.css'
 import Tabs from '../../../atoms/Tabs'
@@ -6,7 +7,37 @@ import Simple from './Simple'
 import Advanced from './Advanced'
 import { useField } from 'formik'
 
+const query = graphql`
+  query PriceFieldQuery {
+    content: allFile(filter: { relativePath: { eq: "pages/publish.json" } }) {
+      edges {
+        node {
+          childPagesJson {
+            price {
+              simple {
+                title
+                info
+              }
+              advanced {
+                title
+                info
+                tooltips {
+                  poolInfo
+                  liquidityProviderFee
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
 export default function Price(props: InputProps): ReactElement {
+  const data = useStaticQuery(query)
+  const content = data.content.edges[0].node.childPagesJson.price
+
   const [field, meta, helpers] = useField(props)
   const { weightOnDataToken, liquidityProviderFee } = field.value
 
@@ -31,11 +62,17 @@ export default function Price(props: InputProps): ReactElement {
 
   const tabs = [
     {
-      title: 'Simple: Fixed',
-      content: <Simple ocean={ocean} onChange={handleOceanChange} />
+      title: content.simple.title,
+      content: (
+        <Simple
+          ocean={ocean}
+          onChange={handleOceanChange}
+          content={content.simple}
+        />
+      )
     },
     {
-      title: 'Advanced: Dynamic',
+      title: content.advanced.title,
       content: (
         <Advanced
           ocean={ocean}
@@ -43,6 +80,7 @@ export default function Price(props: InputProps): ReactElement {
           weightOnDataToken={weightOnDataToken}
           onOceanChange={handleOceanChange}
           liquidityProviderFee={liquidityProviderFee}
+          content={content.advanced}
         />
       )
     }

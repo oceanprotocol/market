@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import ReactMarkdown from 'react-markdown'
 
 const Markdown = ({
@@ -7,7 +7,7 @@ const Markdown = ({
 }: {
   text: string
   className?: string
-}) => {
+}): ReactElement => {
   // fix react-markdown \n transformation
   // https://github.com/rexxars/react-markdown/issues/105#issuecomment-351585313
   const textCleaned = text.replace(/\\n/g, '\n ')

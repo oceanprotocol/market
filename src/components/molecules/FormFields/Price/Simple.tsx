@@ -8,18 +8,17 @@ import Conversion from '../../../atoms/Price/Conversion'
 
 export default function Simple({
   ocean,
-  onChange
+  onChange,
+  content
 }: {
   ocean: string
   onChange: (event: ChangeEvent<HTMLInputElement>) => void
+  content: any
 }): ReactElement {
   return (
     <div className={stylesIndex.content}>
       <div className={styles.simple}>
-        <FormHelp className={stylesIndex.help}>
-          Set your price for accessing this data set. A Data Token contract for
-          this data set, worth the entered amount of OCEAN will be created.
-        </FormHelp>
+        <FormHelp className={stylesIndex.help}>{content.info}</FormHelp>
 
         <div className={styles.form}>
           <Label htmlFor="ocean">Ocean Tokens</Label>

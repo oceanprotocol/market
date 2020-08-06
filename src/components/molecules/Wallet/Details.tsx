@@ -8,11 +8,11 @@ import { getInjectedProviderName } from 'web3modal'
 import Conversion from '../../atoms/Price/Conversion'
 import { formatCurrency } from '@coingecko/cryptoformat'
 
-export default function Details({ attrs }: { attrs: any }): ReactElement {
+export default function Details(): ReactElement {
   const { balance, connect, logout, chainId } = useOcean()
 
   return (
-    <div className={styles.details} {...attrs}>
+    <div className={styles.details}>
       <ul>
         {Object.entries(balance).map(([key, value]) => (
           <li className={styles.balance} key={key}>
@@ -41,7 +41,6 @@ export default function Details({ attrs }: { attrs: any }): ReactElement {
         </li>
       </ul>
       <Web3Feedback />
-      <div className={styles.arrow} data-popper-arrow />
     </div>
   )
 }
