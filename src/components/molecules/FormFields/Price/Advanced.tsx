@@ -10,6 +10,7 @@ import { isCorrectNetwork } from '../../../../utils/wallet'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import InputElement from '../../../atoms/Input/InputElement'
 import Label from '../../../atoms/Input/Label'
+import Tooltip from '../../../atoms/Tooltip'
 
 export default function Advanced({
   ocean,
@@ -95,7 +96,9 @@ export default function Advanced({
         </div>
 
         <footer className={styles.summary}>
-          <Label htmlFor="liquidityProviderFee">Liquidity Provider Fee</Label>
+          <Label htmlFor="liquidityProviderFee">
+            Liquidity Provider Fee <Tooltip content="Help Me" />
+          </Label>
           <InputElement
             value={liquidityProviderFee}
             name="liquidityProviderFee"

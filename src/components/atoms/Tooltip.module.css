@@ -1,0 +1,41 @@
+.tooltip {
+  display: inline-block;
+}
+
+.content {
+  composes: box from './Box.module.css';
+  padding: calc(var(--spacer) / 4);
+  min-width: 20rem;
+  max-width: 25rem;
+  font-size: var(--font-size-small);
+}
+
+.arrow,
+.arrow::before {
+  position: absolute;
+  width: 1.2rem;
+  height: 1.2rem;
+  z-index: -1;
+}
+
+.arrow::before {
+  content: '';
+  transform: rotate(45deg);
+  background: var(--brand-grey-lighter);
+}
+
+.content[data-placement*='top'] > .arrow {
+  bottom: -4px;
+}
+
+.content[data-placement*='bottom'] > .arrow {
+  top: -4px;
+}
+
+.content[data-placement*='left'] > .arrow {
+  right: -4px;
+}
+
+.content[data-placement*='right'] > .arrow {
+  left: -4px;
+}
