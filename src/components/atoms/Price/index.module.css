@@ -11,6 +11,11 @@
   font-size: var(--font-size-base);
 }
 
+.empty {
+  color: var(--color-secondary);
+  font-weight: var(--font-weight-bold);
+}
+
 .small {
   /* lazy making-conversion-smaller-with-same-markup */
   transform: scale(0.8);

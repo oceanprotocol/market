@@ -50,7 +50,7 @@ export default function Price({
   return price ? (
     <div className={styleClasses}>{displayPrice}</div>
   ) : price === '' ? (
-    <div>
+    <div className={styles.empty}>
       No price found{' '}
       <Tooltip content="We could not find a pool for this data set, which can have multiple reasons. Is your wallet connected to the correct network?" />
     </div>
