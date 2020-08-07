@@ -2,6 +2,7 @@
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-large);
   color: var(--brand-grey-dark);
+  line-height: 1;
 }
 
 .price span:first-child {

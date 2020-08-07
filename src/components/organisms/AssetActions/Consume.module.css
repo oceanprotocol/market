@@ -12,16 +12,18 @@
   flex-shrink: 0;
 }
 
-.consume button {
-  margin-left: calc(var(--spacer) / 4);
+.pricewrapper {
+  display: flex;
+  flex-wrap: wrap;
 }
 
-.consume button:first-of-type {
-  margin-left: 0;
+.pricewrapper button {
+  margin-top: calc(var(--spacer) / 2);
+  align-self: flex-end;
 }
 
-.price {
-  margin-bottom: calc(var(--spacer) / 2);
+.pricewrapper > div {
+  min-height: 30px;
 }
 
 .feedback {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactElement } from 'react'
+import React, { useState, ReactElement } from 'react'
 import { DDO } from '@oceanprotocol/lib'
 import compareAsBN, { Comparisson } from '../../../utils/compareAsBN'
 import Loader from '../../atoms/Loader'
@@ -16,13 +16,7 @@ import Button from '../../atoms/Button'
 import Input from '../../atoms/Input'
 import Alert from '../../atoms/Alert'
 
-export default function Compute({
-  ddo,
-  price
-}: {
-  ddo: DDO
-  price: string // in OCEAN, not wei
-}): ReactElement {
+export default function Compute({ ddo }: { ddo: DDO }): ReactElement {
   const { ocean } = useOcean()
   const { compute, isLoading, computeStepText, computeError } = useCompute()
   const computeService = ddo.findServiceByType('compute').attributes.main
@@ -41,7 +35,7 @@ export default function Compute({
   const [file, setFile] = useState(null)
   const [isTermsAgreed, setIsTermsAgreed] = useState(true)
 
-  const isFree = price === '0'
+  // const isFree = price === '0'
 
   const isComputeButtonDisabled =
     isJobStarting ||
@@ -101,13 +95,7 @@ export default function Compute({
 
   return (
     <div className={styles.compute}>
-      {price ? (
-        <Price price={price} small />
-      ) : price === '' ? (
-        'No price found'
-      ) : (
-        <Loader message="Retrieving price..." />
-      )}
+      <Price ddo={ddo} />
 
       <div className={styles.info}>
         <div className={styles.selectType}>
