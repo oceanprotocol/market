@@ -3,7 +3,7 @@ import classNames from 'classnames/bind'
 import PriceConversion from './Conversion'
 import styles from './index.module.css'
 import { formatCurrency } from '@coingecko/cryptoformat'
-import { useMetadata } from '@oceanprotocol/react'
+import { useMetadata, useOcean } from '@oceanprotocol/react'
 import { DDO } from '@oceanprotocol/lib'
 import Loader from '../Loader'
 import Tooltip from '../Tooltip'
@@ -19,7 +19,8 @@ export default function Price({
   className?: string
   small?: boolean
 }): ReactElement {
-  const { getBestPrice } = useMetadata(ddo.id)
+  const { chainId } = useOcean()
+  const { getBestPrice } = useMetadata()
   const [price, setPrice] = useState<string>()
 
   useEffect(() => {
@@ -28,7 +29,7 @@ export default function Price({
       setPrice(price)
     }
     init()
-  }, [])
+  }, [chainId])
 
   const styleClasses = cx({
     price: true,
