@@ -1,7 +1,13 @@
 import loadable from '@loadable/component'
-import { appConfig } from '../../app.config'
+import { infuraProjectId, network } from '../../app.config'
+import { ConfigHelper } from '@oceanprotocol/lib'
 
-const { infuraProjectId, network, oceanConfig } = appConfig
+export function getOceanConfig(network: string): ConfigHelper {
+  return new ConfigHelper().getConfig(
+    network,
+    process.env.GATSBY_INFURA_PROJECT_ID
+  )
+}
 
 const web3ModalTheme = {
   background: 'var(--brand-white)',
@@ -27,7 +33,7 @@ const providerOptions = {
     package: Torus,
     options: {
       networkParams: {
-        host: oceanConfig.url // optional
+        // host: oceanConfig.url // optional
         // chainId: 1337, // optional
         // networkId: 1337 // optional
       }
