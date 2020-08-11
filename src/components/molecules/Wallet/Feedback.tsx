@@ -20,7 +20,12 @@ export default function Web3Feedback({
   const { account, status, chainId } = useOcean()
   const isOceanConnectionError = status === -1
   const correctNetwork = isCorrectNetwork(chainId)
-  const showFeedback = !account || isOceanConnectionError || !correctNetwork
+  const showFeedback =
+    !account ||
+    isOceanConnectionError ||
+    !correctNetwork ||
+    isBalanceInsufficient === true
+
   const desiredNetworkName = appConfig.network.replace(/^\w/, (c: string) =>
     c.toUpperCase()
   )
