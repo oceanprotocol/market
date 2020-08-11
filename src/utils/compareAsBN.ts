@@ -1,21 +1,16 @@
-import BN from 'bn.js'
+import { Decimal } from 'decimal.js'
 
-export enum Comparisson {
-  'lt' = 'lt',
-  'lte' = 'lte',
-  'gt' = 'gt',
-  'gte' = 'gte',
-  'eq' = 'eq'
-}
+// Run decimal.js comparison
+// http://mikemcl.github.io/decimal.js/#cmp
+export default function compareAsBN(balance: string, price: string): boolean {
+  const aBN = new Decimal(balance)
+  const bBN = new Decimal(price)
+  const compare = aBN.comparedTo(bBN)
 
-// Run the corresponding bn.js comparisson:
-// https://github.com/indutny/bn.js/#utilities
-export default function compareAsBN(
-  a: string,
-  b: string,
-  comparisson: Comparisson
-) {
-  const aBN = new BN(a)
-  const bBN = new BN(b)
-  return aBN[comparisson](bBN)
+  switch (compare) {
+    case 1 || 0: // balance is greater or equal to price
+      return true
+    default:
+      return false
+  }
 }

@@ -1,20 +1,39 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState, useEffect } from 'react'
 import classNames from 'classnames/bind'
 import PriceConversion from './Conversion'
 import styles from './index.module.css'
 import { formatCurrency } from '@coingecko/cryptoformat'
+import { useMetadata, useOcean } from '@oceanprotocol/react'
+import { DDO } from '@oceanprotocol/lib'
+import Loader from '../Loader'
+import Tooltip from '../Tooltip'
 
 const cx = classNames.bind(styles)
 
 export default function Price({
-  price,
+  ddo,
   className,
-  small
+  small,
+  setPriceOutside
 }: {
-  price: string // expects price in OCEAN, not wei
+  ddo: DDO
   className?: string
   small?: boolean
+  setPriceOutside?: (price: string) => void
 }): ReactElement {
+  const { chainId } = useOcean()
+  const { getBestPrice } = useMetadata()
+  const [price, setPrice] = useState<string>()
+
+  useEffect(() => {
+    async function init() {
+      const price = await getBestPrice(ddo.dataToken)
+      setPrice(price)
+      setPriceOutside && price !== '' && setPriceOutside(price)
+    }
+    init()
+  }, [chainId])
+
   const styleClasses = cx({
     price: true,
     small: small,
@@ -32,5 +51,14 @@ export default function Price({
     </>
   )
 
-  return <div className={styleClasses}>{displayPrice}</div>
+  return price ? (
+    <div className={styleClasses}>{displayPrice}</div>
+  ) : price === '' ? (
+    <div className={styles.empty}>
+      No price found{' '}
+      <Tooltip content="We could not find a pool for this data set, which can have multiple reasons. Is your wallet connected to the correct network?" />
+    </div>
+  ) : (
+    <Loader message="Retrieving price..." />
+  )
 }
