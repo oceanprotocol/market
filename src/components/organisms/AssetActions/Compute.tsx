@@ -129,7 +129,7 @@ export default function Compute({
               state="success"
             />
           )}
-          <Web3Feedback isBalanceInsufficient={!isBalanceSufficient} />
+          <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
         </footer>
       </div>
     </div>

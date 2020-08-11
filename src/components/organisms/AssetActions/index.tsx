@@ -17,7 +17,7 @@ export default function AssetActions({
 }): ReactElement {
   const { balance } = useOcean()
   const [price, setPrice] = useState<string>()
-  const [isBalanceSufficient, setIsBalanceSufficient] = useState(false)
+  const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
 
   const isCompute = Boolean(ddo.findServiceByType('compute'))
 

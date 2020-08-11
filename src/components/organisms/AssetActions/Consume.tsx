@@ -55,7 +55,7 @@ export default function Consume({
       </div>
 
       <footer className={styles.feedback}>
-        <Web3Feedback isBalanceInsufficient />
+        <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
       </footer>
     </aside>
   )
