@@ -6,7 +6,7 @@ import { MetadataMarket } from '../../../@types/Metadata'
 import { DDO } from '@oceanprotocol/lib'
 import Tabs from '../../atoms/Tabs'
 import { useOcean } from '@oceanprotocol/react'
-import compareAsBN, { Comparison } from '../../../utils/compareAsBN'
+import compareAsBN from '../../../utils/compareAsBN'
 
 export default function AssetActions({
   metadata,
@@ -26,9 +26,7 @@ export default function AssetActions({
     if (!price || !balance || !balance.ocean) return
 
     const isFree = price === '0'
-    setIsBalanceSufficient(
-      isFree ? true : compareAsBN(balance.ocean, price, Comparison.gte)
-    )
+    setIsBalanceSufficient(isFree ? true : compareAsBN(balance.ocean, price))
 
     return () => {
       setIsBalanceSufficient(false)
