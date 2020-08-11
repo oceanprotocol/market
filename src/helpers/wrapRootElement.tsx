@@ -3,8 +3,9 @@ import { OceanProvider } from '@oceanprotocol/react'
 import { ConfigHelper } from '@oceanprotocol/lib'
 import { web3ModalOpts } from '../utils/wallet'
 import { useSiteMetadata } from '../hooks/useSiteMetadata'
+import { NetworkMonitor } from './NetworkMonitor'
 
-function getOceanConfig(network: string): ConfigHelper {
+export function getOceanConfig(network: string): ConfigHelper {
   return new ConfigHelper().getConfig(
     network,
     process.env.GATSBY_INFURA_PROJECT_ID
@@ -24,6 +25,7 @@ export default function wrapRootElement({
       initialConfig={oceanInitialConfig}
       web3ModalOpts={web3ModalOpts}
     >
+      <NetworkMonitor/>
       {element}
     </OceanProvider>
   )
