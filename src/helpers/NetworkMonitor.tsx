@@ -11,13 +11,12 @@ export function NetworkMonitor() {
         // temp hack
         let network = ''
         switch (chainId) {
-            case 1:
-                {
+            case 1: {
                     network = 'mainnet'
                 }
             case 4: {
-                network = 'rinkeby'
-            }
+                    network = 'rinkeby'
+                }
         }
         const config = getOceanConfig(network)
         connect(config)
