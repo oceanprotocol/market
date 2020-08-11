@@ -1,13 +1,5 @@
 import loadable from '@loadable/component'
 import { infuraProjectId, network } from '../../app.config'
-import { ConfigHelper } from '@oceanprotocol/lib'
-
-export function getOceanConfig(network: string): ConfigHelper {
-  return new ConfigHelper().getConfig(
-    network,
-    process.env.GATSBY_INFURA_PROJECT_ID
-  )
-}
 
 const web3ModalTheme = {
   background: 'var(--brand-white)',
