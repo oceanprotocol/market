@@ -1,7 +1,5 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useOcean } from '@oceanprotocol/react'
-import { ConfigHelper } from '@oceanprotocol/lib'
-import { useEffect } from 'react'
 import { getOceanConfig } from './wrapRootElement'
 
 export function NetworkMonitor() {
@@ -13,9 +11,11 @@ export function NetworkMonitor() {
     switch (chainId) {
       case 1: {
         network = 'mainnet'
+        break
       }
       case 4: {
         network = 'rinkeby'
+        break
       }
     }
     const config = getOceanConfig(network)
