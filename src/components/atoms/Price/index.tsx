@@ -29,7 +29,7 @@ export default function Price({
     async function init() {
       const price = await getBestPrice(ddo.dataToken)
       setPrice(price)
-      setPriceOutside && setPriceOutside(price)
+      setPriceOutside && price !== '' && setPriceOutside(price)
     }
     init()
   }, [chainId])

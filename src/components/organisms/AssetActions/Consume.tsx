@@ -22,13 +22,15 @@ export default function Consume({
   const [price, setPrice] = useState<string>()
   const [isBalanceSufficient, setIsBalanceSufficient] = useState(false)
 
-  const isFree = price === '0'
   const isDisabled = !ocean || !isBalanceSufficient
 
   useEffect(() => {
     if (!price || !balance || !balance.ocean) return
 
-    setIsBalanceSufficient(compareAsBN(balance.ocean, price, Comparison.gte))
+    const isFree = price === '0'
+    setIsBalanceSufficient(
+      isFree ? true : compareAsBN(balance.ocean, price, Comparison.gte)
+    )
 
     return () => {
       setIsBalanceSufficient(false)

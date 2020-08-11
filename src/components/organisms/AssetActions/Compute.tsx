@@ -33,22 +33,23 @@ export default function Compute({ ddo }: { ddo: DDO }): ReactElement {
   const [algorithmRawCode, setAlgorithmRawCode] = useState('')
   const [isPublished, setIsPublished] = useState(false)
   const [file, setFile] = useState(null)
-  const [isTermsAgreed, setIsTermsAgreed] = useState(true)
   const [price, setPrice] = useState<string>()
-
-  const isFree = price === '0'
 
   const isComputeButtonDisabled =
     isJobStarting ||
     file === null ||
     computeType === '' ||
     !ocean ||
-    !isBalanceSufficient ||
-    !isTermsAgreed
+    !isBalanceSufficient
 
   useEffect(() => {
     if (!price || !balance || !balance.ocean) return
-    setIsBalanceSufficient(compareAsBN(balance.ocean, price, Comparison.gte))
+
+    const isFree = price === '0'
+
+    setIsBalanceSufficient(
+      isFree ? true : compareAsBN(balance.ocean, price, Comparison.gte)
+    )
 
     return () => {
       setIsBalanceSufficient(false)
@@ -123,7 +124,6 @@ export default function Compute({ ddo }: { ddo: DDO }): ReactElement {
               Start job
             </Button>
           </div>
-          {/* <TermsCheckbox onChange={onCheck} /> */}
         </div>
 
         <footer className={styles.feedback}>
