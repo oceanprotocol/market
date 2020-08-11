@@ -5,7 +5,8 @@ import Consume from './Consume'
 import { MetadataMarket } from '../../../@types/Metadata'
 import { DDO } from '@oceanprotocol/lib'
 import Tabs from '../../atoms/Tabs'
-import { useMetadata } from '@oceanprotocol/react'
+import { useOcean } from '@oceanprotocol/react'
+import compareAsBN from '../../../utils/compareAsBN'
 
 export default function AssetActions({
   metadata,
@@ -14,22 +15,37 @@ export default function AssetActions({
   metadata: MetadataMarket
   ddo: DDO
 }): ReactElement {
-  const { getBestPrice } = useMetadata(ddo.id)
+  const { balance } = useOcean()
   const [price, setPrice] = useState<string>()
-
-  useEffect(() => {
-    async function init() {
-      const price = await getBestPrice(ddo.dataToken)
-      setPrice(price)
-    }
-    init()
-  }, [])
+  const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
 
   const isCompute = Boolean(ddo.findServiceByType('compute'))
+
+  // Check user balance against price
+  useEffect(() => {
+    if (!price || !balance || !balance.ocean) return
+
+    const isFree = price === '0'
+    setIsBalanceSufficient(isFree ? true : compareAsBN(balance.ocean, price))
+
+    return () => {
+      setIsBalanceSufficient(false)
+    }
+  }, [balance, price])
+
   const UseContent = isCompute ? (
-    <Compute ddo={ddo} price={price} />
+    <Compute
+      ddo={ddo}
+      isBalanceSufficient={isBalanceSufficient}
+      setPrice={setPrice}
+    />
   ) : (
-    <Consume ddo={ddo} price={price} file={metadata.main.files[0]} />
+    <Consume
+      ddo={ddo}
+      isBalanceSufficient={isBalanceSufficient}
+      file={metadata.main.files[0]}
+      setPrice={setPrice}
+    />
   )
 
   const tabs = [

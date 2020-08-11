@@ -12,15 +12,20 @@ export declare type Web3Error = {
 }
 
 export default function Web3Feedback({
-  isBalanceInsufficient
+  isBalanceSufficient
 }: {
-  isBalanceInsufficient?: boolean
+  isBalanceSufficient?: boolean
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { account, status, chainId } = useOcean()
   const isOceanConnectionError = status === -1
   const correctNetwork = isCorrectNetwork(chainId)
-  const showFeedback = !account || isOceanConnectionError || !correctNetwork
+  const showFeedback =
+    !account ||
+    isOceanConnectionError ||
+    !correctNetwork ||
+    isBalanceSufficient === false
+
   const desiredNetworkName = appConfig.network.replace(/^\w/, (c: string) =>
     c.toUpperCase()
   )
@@ -29,7 +34,7 @@ export default function Web3Feedback({
     ? 'error'
     : !correctNetwork
     ? 'warning'
-    : account && !isBalanceInsufficient
+    : account && isBalanceSufficient
     ? 'success'
     : 'warning'
 
@@ -40,7 +45,7 @@ export default function Web3Feedback({
     : !correctNetwork
     ? 'Wrong Network'
     : account
-    ? isBalanceInsufficient === true
+    ? isBalanceSufficient === false
       ? 'Insufficient balance'
       : 'Connected to Ocean'
     : 'Something went wrong'
@@ -51,7 +56,7 @@ export default function Web3Feedback({
     ? 'Please try again.'
     : !correctNetwork
     ? `Please connect to ${desiredNetworkName}.`
-    : isBalanceInsufficient === true
+    : isBalanceSufficient === false
     ? 'You do not have enough OCEAN in your wallet to purchase this asset.'
     : 'Something went wrong.'
 

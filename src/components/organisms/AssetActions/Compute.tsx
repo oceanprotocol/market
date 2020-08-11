@@ -1,6 +1,5 @@
-import React, { useState, useEffect, ReactElement } from 'react'
+import React, { useState, ReactElement } from 'react'
 import { DDO } from '@oceanprotocol/lib'
-import compareAsBN, { Comparisson } from '../../../utils/compareAsBN'
 import Loader from '../../atoms/Loader'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
 import Dropzone from '../../atoms/Dropzone'
@@ -18,10 +17,12 @@ import Alert from '../../atoms/Alert'
 
 export default function Compute({
   ddo,
-  price
+  isBalanceSufficient,
+  setPrice
 }: {
   ddo: DDO
-  price: string // in OCEAN, not wei
+  isBalanceSufficient: boolean
+  setPrice: (price: string) => void
 }): ReactElement {
   const { ocean } = useOcean()
   const { compute, isLoading, computeStepText, computeError } = useCompute()
@@ -29,7 +30,6 @@ export default function Compute({
 
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [, setError] = useState('')
-  const [isBalanceSufficient, setIsBalanceSufficient] = useState(false)
   const [computeType, setComputeType] = useState('')
   const [computeContainer, setComputeContainer] = useState({
     entrypoint: '',
@@ -39,25 +39,13 @@ export default function Compute({
   const [algorithmRawCode, setAlgorithmRawCode] = useState('')
   const [isPublished, setIsPublished] = useState(false)
   const [file, setFile] = useState(null)
-  const [isTermsAgreed, setIsTermsAgreed] = useState(true)
-
-  const isFree = price === '0'
 
   const isComputeButtonDisabled =
     isJobStarting ||
     file === null ||
     computeType === '' ||
     !ocean ||
-    !isBalanceSufficient ||
-    !isTermsAgreed
-
-  // useEffect(() => {
-  //   setIsBalanceSufficient(
-  //     isFree ||
-  //       (balance !== null &&
-  //         compareAsBN(balance, fromWei(computeService.cost), Comparisson.gte))
-  //   )
-  // }, [balance])
+    !isBalanceSufficient
 
   const onDrop = async (files: any) => {
     setFile(files[0])
@@ -101,13 +89,7 @@ export default function Compute({
 
   return (
     <div className={styles.compute}>
-      {price ? (
-        <Price price={price} small />
-      ) : price === '' ? (
-        'No price found'
-      ) : (
-        <Loader message="Retrieving price..." />
-      )}
+      <Price ddo={ddo} setPriceOutside={setPrice} />
 
       <div className={styles.info}>
         <div className={styles.selectType}>
@@ -133,7 +115,6 @@ export default function Compute({
               Start job
             </Button>
           </div>
-          {/* <TermsCheckbox onChange={onCheck} /> */}
         </div>
 
         <footer className={styles.feedback}>
@@ -148,7 +129,7 @@ export default function Compute({
               state="success"
             />
           )}
-          <Web3Feedback isBalanceInsufficient={!isBalanceSufficient} />
+          <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
         </footer>
       </div>
     </div>

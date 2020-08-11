@@ -1,7 +1,6 @@
 import React, { ReactElement } from 'react'
 import { toast } from 'react-toastify'
 import { File as FileMetadata, DDO } from '@oceanprotocol/lib'
-import compareAsBN, { Comparisson } from '../../../utils/compareAsBN'
 import Button from '../../atoms/Button'
 import File from '../../atoms/File'
 import Price from '../../atoms/Price'
@@ -12,21 +11,19 @@ import { useOcean, useConsume } from '@oceanprotocol/react'
 
 export default function Consume({
   ddo,
-  price,
-  file
+  file,
+  isBalanceSufficient,
+  setPrice
 }: {
   ddo: DDO
-  price: string // in OCEAN, not wei
   file: FileMetadata
+  isBalanceSufficient: boolean
+  setPrice: (price: string) => void
 }): ReactElement {
-  const accessService = ddo.findServiceByType('access')
   const { ocean } = useOcean()
   const { consumeStepText, consume, consumeError } = useConsume()
 
-  const isFree = price === '0'
-  // const isBalanceSufficient =
-  //  isFree || compareAsBN(balanceInOcean, fromWei(cost), Comparisson.gte)
-  const isDisabled = !ocean
+  const isDisabled = !ocean || !isBalanceSufficient
 
   if (consumeError) {
     toast.error(consumeError)
@@ -41,7 +38,7 @@ export default function Consume({
         onClick={() => consume(ddo.id, ddo.dataToken, 'access')}
         disabled={isDisabled}
       >
-        {isFree ? 'Download' : 'Buy'}
+        Buy
       </Button>
     )
 
@@ -52,19 +49,13 @@ export default function Consume({
           <File file={file} />
         </div>
         <div className={styles.pricewrapper}>
-          {price ? (
-            <Price price={price} small />
-          ) : price === '' ? (
-            'No price found'
-          ) : (
-            <Loader message="Retrieving price..." />
-          )}
+          <Price ddo={ddo} setPriceOutside={setPrice} />
           <PurchaseButton />
         </div>
       </div>
 
       <footer className={styles.feedback}>
-        <Web3Feedback isBalanceInsufficient />
+        <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
       </footer>
     </aside>
   )
