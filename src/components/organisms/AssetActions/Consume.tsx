@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect } from 'react'
+import React, { ReactElement } from 'react'
 import { toast } from 'react-toastify'
 import { File as FileMetadata, DDO } from '@oceanprotocol/lib'
 import Button from '../../atoms/Button'
@@ -8,34 +8,22 @@ import Web3Feedback from '../../molecules/Wallet/Feedback'
 import styles from './Consume.module.css'
 import Loader from '../../atoms/Loader'
 import { useOcean, useConsume } from '@oceanprotocol/react'
-import compareAsBN, { Comparison } from '../../../utils/compareAsBN'
 
 export default function Consume({
   ddo,
-  file
+  file,
+  isBalanceSufficient,
+  setPrice
 }: {
   ddo: DDO
   file: FileMetadata
+  isBalanceSufficient: boolean
+  setPrice: (price: string) => void
 }): ReactElement {
-  const { ocean, balance } = useOcean()
+  const { ocean } = useOcean()
   const { consumeStepText, consume, consumeError } = useConsume()
-  const [price, setPrice] = useState<string>()
-  const [isBalanceSufficient, setIsBalanceSufficient] = useState(false)
 
   const isDisabled = !ocean || !isBalanceSufficient
-
-  useEffect(() => {
-    if (!price || !balance || !balance.ocean) return
-
-    const isFree = price === '0'
-    setIsBalanceSufficient(
-      isFree ? true : compareAsBN(balance.ocean, price, Comparison.gte)
-    )
-
-    return () => {
-      setIsBalanceSufficient(false)
-    }
-  }, [balance, price])
 
   if (consumeError) {
     toast.error(consumeError)

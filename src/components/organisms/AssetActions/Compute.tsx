@@ -1,6 +1,5 @@
-import React, { useState, ReactElement, useEffect } from 'react'
+import React, { useState, ReactElement } from 'react'
 import { DDO } from '@oceanprotocol/lib'
-import compareAsBN, { Comparison } from '../../../utils/compareAsBN'
 import Loader from '../../atoms/Loader'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
 import Dropzone from '../../atoms/Dropzone'
@@ -16,14 +15,21 @@ import Button from '../../atoms/Button'
 import Input from '../../atoms/Input'
 import Alert from '../../atoms/Alert'
 
-export default function Compute({ ddo }: { ddo: DDO }): ReactElement {
-  const { ocean, balance } = useOcean()
+export default function Compute({
+  ddo,
+  isBalanceSufficient,
+  setPrice
+}: {
+  ddo: DDO
+  isBalanceSufficient: boolean
+  setPrice: (price: string) => void
+}): ReactElement {
+  const { ocean } = useOcean()
   const { compute, isLoading, computeStepText, computeError } = useCompute()
   const computeService = ddo.findServiceByType('compute').attributes.main
 
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [, setError] = useState('')
-  const [isBalanceSufficient, setIsBalanceSufficient] = useState(false)
   const [computeType, setComputeType] = useState('')
   const [computeContainer, setComputeContainer] = useState({
     entrypoint: '',
@@ -33,7 +39,6 @@ export default function Compute({ ddo }: { ddo: DDO }): ReactElement {
   const [algorithmRawCode, setAlgorithmRawCode] = useState('')
   const [isPublished, setIsPublished] = useState(false)
   const [file, setFile] = useState(null)
-  const [price, setPrice] = useState<string>()
 
   const isComputeButtonDisabled =
     isJobStarting ||
@@ -41,20 +46,6 @@ export default function Compute({ ddo }: { ddo: DDO }): ReactElement {
     computeType === '' ||
     !ocean ||
     !isBalanceSufficient
-
-  useEffect(() => {
-    if (!price || !balance || !balance.ocean) return
-
-    const isFree = price === '0'
-
-    setIsBalanceSufficient(
-      isFree ? true : compareAsBN(balance.ocean, price, Comparison.gte)
-    )
-
-    return () => {
-      setIsBalanceSufficient(false)
-    }
-  }, [balance, price])
 
   const onDrop = async (files: any) => {
     setFile(files[0])
