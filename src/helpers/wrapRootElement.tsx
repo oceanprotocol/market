@@ -2,8 +2,8 @@ import React, { ReactElement } from 'react'
 import { OceanProvider } from '@oceanprotocol/react'
 import { ConfigHelper } from '@oceanprotocol/lib'
 import { web3ModalOpts } from '../utils/wallet'
-import { useSiteMetadata } from '../hooks/useSiteMetadata'
 import { NetworkMonitor } from './NetworkMonitor'
+import appConfig from '../../app.config'
 
 export function getOceanConfig(network: string): ConfigHelper {
   return new ConfigHelper().getConfig(
@@ -17,7 +17,6 @@ export default function wrapRootElement({
 }: {
   element: ReactElement
 }): ReactElement {
-  const { appConfig } = useSiteMetadata()
   const oceanInitialConfig = getOceanConfig(appConfig.network)
 
   return (
