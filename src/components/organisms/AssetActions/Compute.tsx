@@ -1,6 +1,6 @@
-import React, { useState, ReactElement } from 'react'
+import React, { useState, ReactElement, useEffect } from 'react'
 import { DDO } from '@oceanprotocol/lib'
-import compareAsBN, { Comparisson } from '../../../utils/compareAsBN'
+import compareAsBN, { Comparison } from '../../../utils/compareAsBN'
 import Loader from '../../atoms/Loader'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
 import Dropzone from '../../atoms/Dropzone'
@@ -17,7 +17,7 @@ import Input from '../../atoms/Input'
 import Alert from '../../atoms/Alert'
 
 export default function Compute({ ddo }: { ddo: DDO }): ReactElement {
-  const { ocean } = useOcean()
+  const { ocean, balance } = useOcean()
   const { compute, isLoading, computeStepText, computeError } = useCompute()
   const computeService = ddo.findServiceByType('compute').attributes.main
 
@@ -34,8 +34,9 @@ export default function Compute({ ddo }: { ddo: DDO }): ReactElement {
   const [isPublished, setIsPublished] = useState(false)
   const [file, setFile] = useState(null)
   const [isTermsAgreed, setIsTermsAgreed] = useState(true)
+  const [price, setPrice] = useState<string>()
 
-  // const isFree = price === '0'
+  const isFree = price === '0'
 
   const isComputeButtonDisabled =
     isJobStarting ||
@@ -45,13 +46,14 @@ export default function Compute({ ddo }: { ddo: DDO }): ReactElement {
     !isBalanceSufficient ||
     !isTermsAgreed
 
-  // useEffect(() => {
-  //   setIsBalanceSufficient(
-  //     isFree ||
-  //       (balance !== null &&
-  //         compareAsBN(balance, fromWei(computeService.cost), Comparisson.gte))
-  //   )
-  // }, [balance])
+  useEffect(() => {
+    if (!price || !balance || !balance.ocean) return
+    setIsBalanceSufficient(compareAsBN(balance.ocean, price, Comparison.gte))
+
+    return () => {
+      setIsBalanceSufficient(false)
+    }
+  }, [balance, price])
 
   const onDrop = async (files: any) => {
     setFile(files[0])
@@ -95,7 +97,7 @@ export default function Compute({ ddo }: { ddo: DDO }): ReactElement {
 
   return (
     <div className={styles.compute}>
-      <Price ddo={ddo} />
+      <Price ddo={ddo} setPriceOutside={setPrice} />
 
       <div className={styles.info}>
         <div className={styles.selectType}>

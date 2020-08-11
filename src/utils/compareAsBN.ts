@@ -1,6 +1,6 @@
 import BN from 'bn.js'
 
-export enum Comparisson {
+export enum Comparison {
   'lt' = 'lt',
   'lte' = 'lte',
   'gt' = 'gt',
@@ -8,14 +8,14 @@ export enum Comparisson {
   'eq' = 'eq'
 }
 
-// Run the corresponding bn.js comparisson:
+// Run the corresponding bn.js comparison:
 // https://github.com/indutny/bn.js/#utilities
 export default function compareAsBN(
   a: string,
   b: string,
-  comparisson: Comparisson
-) {
+  comparison: Comparison
+): boolean {
   const aBN = new BN(a)
   const bBN = new BN(b)
-  return aBN[comparisson](bBN)
+  return aBN[comparison](bBN)
 }

@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState, useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { File as FileMetadata, DDO } from '@oceanprotocol/lib'
 import Button from '../../atoms/Button'
@@ -8,6 +8,7 @@ import Web3Feedback from '../../molecules/Wallet/Feedback'
 import styles from './Consume.module.css'
 import Loader from '../../atoms/Loader'
 import { useOcean, useConsume } from '@oceanprotocol/react'
+import compareAsBN, { Comparison } from '../../../utils/compareAsBN'
 
 export default function Consume({
   ddo,
@@ -16,9 +17,23 @@ export default function Consume({
   ddo: DDO
   file: FileMetadata
 }): ReactElement {
-  const { ocean } = useOcean()
+  const { ocean, balance } = useOcean()
   const { consumeStepText, consume, consumeError } = useConsume()
-  const isDisabled = !ocean
+  const [price, setPrice] = useState<string>()
+  const [isBalanceSufficient, setIsBalanceSufficient] = useState(false)
+
+  const isFree = price === '0'
+  const isDisabled = !ocean || !isBalanceSufficient
+
+  useEffect(() => {
+    if (!price || !balance || !balance.ocean) return
+
+    setIsBalanceSufficient(compareAsBN(balance.ocean, price, Comparison.gte))
+
+    return () => {
+      setIsBalanceSufficient(false)
+    }
+  }, [balance, price])
 
   if (consumeError) {
     toast.error(consumeError)
@@ -44,7 +59,7 @@ export default function Consume({
           <File file={file} />
         </div>
         <div className={styles.pricewrapper}>
-          <Price ddo={ddo} />
+          <Price ddo={ddo} setPriceOutside={setPrice} />
           <PurchaseButton />
         </div>
       </div>

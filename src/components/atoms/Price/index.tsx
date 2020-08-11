@@ -13,11 +13,13 @@ const cx = classNames.bind(styles)
 export default function Price({
   ddo,
   className,
-  small
+  small,
+  setPriceOutside
 }: {
   ddo: DDO
   className?: string
   small?: boolean
+  setPriceOutside?: (price: string) => void
 }): ReactElement {
   const { chainId } = useOcean()
   const { getBestPrice } = useMetadata()
@@ -27,6 +29,7 @@ export default function Price({
     async function init() {
       const price = await getBestPrice(ddo.dataToken)
       setPrice(price)
+      setPriceOutside && setPriceOutside(price)
     }
     init()
   }, [chainId])
