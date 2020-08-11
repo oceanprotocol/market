@@ -25,7 +25,7 @@ export default function wrapRootElement({
       initialConfig={oceanInitialConfig}
       web3ModalOpts={web3ModalOpts}
     >
-      <NetworkMonitor/>
+      <NetworkMonitor />
       {element}
     </OceanProvider>
   )
