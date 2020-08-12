@@ -21,18 +21,19 @@ export default function Price({
   small?: boolean
   setPriceOutside?: (price: string) => void
 }): ReactElement {
-  const { chainId } = useOcean()
+  const { ocean, chainId, accountId } = useOcean()
   const { getBestPrice } = useMetadata()
   const [price, setPrice] = useState<string>()
 
   useEffect(() => {
     async function init() {
+      console.log(ocean)
       const price = await getBestPrice(ddo.dataToken)
       setPrice(price)
       setPriceOutside && price !== '' && setPriceOutside(price)
     }
     init()
-  }, [chainId])
+  }, [chainId, accountId, ocean])
 
   const styleClasses = cx({
     price: true,
@@ -51,7 +52,9 @@ export default function Price({
     </>
   )
 
-  return price ? (
+  return !ocean ? (
+    <div className={styles.empty}>Please connect your wallet to view price</div>
+  ) : price ? (
     <div className={styleClasses}>{displayPrice}</div>
   ) : price === '' ? (
     <div className={styles.empty}>
