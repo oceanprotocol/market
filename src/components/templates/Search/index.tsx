@@ -7,6 +7,7 @@ import styles from './index.module.css'
 import queryString from 'query-string'
 import { getResults } from './utils'
 import Loader from '../../atoms/Loader'
+import { useOcean } from '@oceanprotocol/react'
 
 export declare type SearchPageProps = {
   text: string | string[]
@@ -19,6 +20,7 @@ export default function SearchPage({
 }: {
   location: Location
 }): ReactElement {
+  const { config } = useOcean()
   const parsed = queryString.parse(location.search)
   const { text, tag, page } = parsed
   const [queryResult, setQueryResult] = useState<QueryResult>()
@@ -27,7 +29,7 @@ export default function SearchPage({
   useEffect(() => {
     async function initSearch() {
       setLoading(true)
-      const queryResult = await getResults(parsed)
+      const queryResult = await getResults(parsed, config.metadataStoreUri)
       setQueryResult(queryResult)
       setLoading(false)
     }

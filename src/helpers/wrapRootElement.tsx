@@ -1,16 +1,31 @@
 import React, { ReactElement } from 'react'
 import { OceanProvider } from '@oceanprotocol/react'
-import { appConfig } from '../../app.config'
+import { ConfigHelper } from '@oceanprotocol/lib'
 import { web3ModalOpts } from '../utils/wallet'
+import { NetworkMonitor } from './NetworkMonitor'
+import appConfig from '../../app.config'
 
-const wrapRootElement = ({
+export function getOceanConfig(network: string): ConfigHelper {
+  return new ConfigHelper().getConfig(
+    network,
+    process.env.GATSBY_INFURA_PROJECT_ID
+  )
+}
+
+export default function wrapRootElement({
   element
 }: {
   element: ReactElement
-}): ReactElement => (
-  <OceanProvider config={appConfig.oceanConfig} web3ModalOpts={web3ModalOpts}>
-    {element}
-  </OceanProvider>
-)
+}): ReactElement {
+  const oceanInitialConfig = getOceanConfig(appConfig.network)
 
-export default wrapRootElement
+  return (
+    <OceanProvider
+      initialConfig={oceanInitialConfig}
+      web3ModalOpts={web3ModalOpts}
+    >
+      <NetworkMonitor />
+      {element}
+    </OceanProvider>
+  )
+}

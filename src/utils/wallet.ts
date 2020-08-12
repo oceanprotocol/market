@@ -1,7 +1,5 @@
 import loadable from '@loadable/component'
-import { appConfig } from '../../app.config'
-
-const { infuraProjectId, network, oceanConfig } = appConfig
+import { infuraProjectId, network } from '../../app.config'
 
 const web3ModalTheme = {
   background: 'var(--brand-white)',
@@ -27,7 +25,7 @@ const providerOptions = {
     package: Torus,
     options: {
       networkParams: {
-        host: oceanConfig.url // optional
+        // host: oceanConfig.url // optional
         // chainId: 1337, // optional
         // networkId: 1337 // optional
       }
