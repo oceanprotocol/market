@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement, useEffect, FormEvent } from 'react'
 import styles from './PublishForm.module.css'
 import { useOcean, usePublish } from '@oceanprotocol/react'
 import { useFormikContext, Form, Field } from 'formik'
@@ -22,15 +22,24 @@ export default function PublishForm({
     setErrors,
     setTouched,
     resetForm,
+    setValues,
     initialValues
   } = useFormikContext()
-
+  const formName = 'ocean-publish-form'
   // reset form validation on every mount
   useEffect(() => {
     setErrors({})
     setTouched({})
     // setSubmitting(false)
   }, [])
+
+  const resetFormAndClearStorage = async (e: FormEvent<Element>) => {
+    e.preventDefault()
+
+    await resetForm({ values: initialValues, status: 'empty' })
+
+    setStatus('empty')
+  }
 
   return (
     <Form
@@ -57,18 +66,14 @@ export default function PublishForm({
             <Button
               style="text"
               size="small"
-              onClick={(e) => {
-                e.preventDefault()
-                resetForm(initialValues)
-                setStatus('empty')
-              }}
+              onClick={resetFormAndClearStorage}
             >
               Reset Form
             </Button>
           )}
         </footer>
       )}
-      <Persist name="ocean-publish-form" />
+      <Persist name={formName} />
     </Form>
   )
 }

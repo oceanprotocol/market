@@ -29,20 +29,20 @@ export const validationSchema = Yup.object().shape<MetadataPublishForm>({
 })
 
 export const initialValues: MetadataPublishForm = {
-  name: undefined,
-  author: undefined,
+  name: '',
+  author: '',
   price: {
     type: 'simple',
     tokensToMint: 1,
     weightOnDataToken: '9', // 90% on data token
     liquidityProviderFee: '0.1' // in %
   },
-  files: undefined,
-  description: undefined,
-  license: undefined,
-  access: undefined,
+  files: '',
+  description: '',
+  license: '',
+  access: '',
   termsAndConditions: false,
-  copyrightHolder: undefined,
-  tags: undefined,
-  links: undefined
+  copyrightHolder: '',
+  tags: '',
+  links: ''
 }
