@@ -23,7 +23,7 @@ export default function Tabs({
           <Tab
             className={styles.tab}
             key={item.title}
-            onClick={() => handleTabChange(item.title)}
+            onClick={handleTabChange ? () => handleTabChange(item.title) : null}
           >
             {item.title}
           </Tab>
