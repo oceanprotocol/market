@@ -5,7 +5,7 @@ import Tags from '../../atoms/Tags'
 import MetaItem from '../../organisms/AssetContent/MetaItem'
 import styles from './Preview.module.css'
 import File from '../../atoms/File'
-import { MetadataPublishForm } from '../../../@types/Metadata'
+import { MetadataPublishForm } from '../../../@types/MetaData'
 
 export default function Preview({
   values
