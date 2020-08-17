@@ -7,6 +7,7 @@ import { DDO } from '@oceanprotocol/lib'
 import Tabs from '../../atoms/Tabs'
 import { useOcean } from '@oceanprotocol/react'
 import compareAsBN from '../../../utils/compareAsBN'
+import Trade from './Trade'
 
 export default function AssetActions({
   metadata,
@@ -55,7 +56,7 @@ export default function AssetActions({
     },
     {
       title: 'Trade',
-      content: 'Trade Me'
+      content: <Trade ddo={ddo} />
     }
   ]
 
