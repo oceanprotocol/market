@@ -35,7 +35,7 @@ export default function Conversion({
 
     const { eur } = data['ocean-protocol']
     const converted = eur * Number(price)
-    setPriceEur(`${formatCurrency(converted, 'EUR', 'en', true)}`)
+    setPriceEur(`${formatCurrency(converted, 'EUR', undefined, true)}`)
   }
 
   useEffect(() => {
