@@ -1,8 +1,25 @@
-.title {
+.dataToken {
+  margin-bottom: var(--spacer);
+  padding-bottom: calc(var(--spacer) / 1.5);
   font-size: var(--font-size-large);
-  margin-bottom: calc(var(--spacer) / 4);
+  border-bottom: 1px solid var(--brand-grey-lighter);
+  margin-left: -2rem;
+  margin-right: -2rem;
+  padding-left: var(--spacer);
+  padding-right: var(--spacer);
+  text-align: center;
+}
+
+.poolTokens {
+  display: grid;
+  gap: var(--spacer);
+  grid-template-columns: 1fr 1fr;
+}
+
+.title {
+  font-size: var(--font-size-base);
+  margin-bottom: calc(var(--spacer) / 1.5);
 }
 
 .tokens {
-  margin-bottom: var(--spacer);
 }

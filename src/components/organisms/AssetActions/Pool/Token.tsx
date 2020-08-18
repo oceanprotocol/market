@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import styles from './Token.module.css'
 import { ReactComponent as Logo } from '../../../../images/logo.svg'
-import { formatCurrency } from '@coingecko/cryptoformat'
+import PriceUnit from '../../../atoms/Price/PriceUnit'
 
 export default function Token({
   symbol,
@@ -15,8 +15,7 @@ export default function Token({
       <figure className={`${styles.icon} ${symbol}`}>
         <Logo />
       </figure>
-      {formatCurrency(Number(balance), '', 'en', false, true)}{' '}
-      <span className={styles.symbol}>{symbol}</span>
+      <PriceUnit price={balance} symbol={symbol} small />
     </div>
   )
 }

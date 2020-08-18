@@ -1,24 +1,22 @@
 import React, { ReactElement, useState, useEffect } from 'react'
-import classNames from 'classnames/bind'
-import PriceConversion from './Conversion'
 import styles from './index.module.css'
-import { formatCurrency } from '@coingecko/cryptoformat'
 import { useMetadata, useOcean } from '@oceanprotocol/react'
 import { DDO } from '@oceanprotocol/lib'
 import Loader from '../Loader'
 import Tooltip from '../Tooltip'
-
-const cx = classNames.bind(styles)
+import PriceUnit from './PriceUnit'
 
 export default function Price({
   ddo,
   className,
   small,
+  conversion,
   setPriceOutside
 }: {
   ddo: DDO
   className?: string
   small?: boolean
+  conversion?: boolean
   setPriceOutside?: (price: string) => void
 }): ReactElement {
   const { ocean, chainId, accountId } = useOcean()
@@ -35,27 +33,15 @@ export default function Price({
     init()
   }, [chainId, accountId, ocean])
 
-  const styleClasses = cx({
-    price: true,
-    small: small,
-    [className]: className
-  })
-
-  const isFree = price === '0'
-
-  const displayPrice = isFree ? (
-    'Free'
-  ) : (
-    <>
-      <span>OCEAN</span> {formatCurrency(Number(price), '', 'en', false, true)}
-      <PriceConversion price={price} />
-    </>
-  )
-
   return !ocean ? (
     <div className={styles.empty}>Please connect your wallet to view price</div>
   ) : price ? (
-    <div className={styleClasses}>{displayPrice}</div>
+    <PriceUnit
+      price={price}
+      className={className}
+      small={small}
+      conversion={conversion}
+    />
   ) : price === '' ? (
     <div className={styles.empty}>
       No price found{' '}

@@ -49,7 +49,7 @@ export default function Consume({
           <File file={file} />
         </div>
         <div className={styles.pricewrapper}>
-          <Price ddo={ddo} setPriceOutside={setPrice} />
+          <Price ddo={ddo} setPriceOutside={setPrice} conversion />
           <PurchaseButton />
         </div>
       </div>

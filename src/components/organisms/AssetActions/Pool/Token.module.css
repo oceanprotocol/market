@@ -13,14 +13,14 @@
   display: inline-block;
   border: 1px solid var(--brand-grey-lighter);
   border-radius: 50%;
-  padding: 0.4rem;
+  padding: 0.3rem;
   vertical-align: middle;
   margin-right: calc(var(--spacer) / 8);
 }
 
 .icon svg {
-  width: var(--font-size-large);
-  height: var(--font-size-large);
+  width: var(--font-size-base);
+  height: var(--font-size-base);
 }
 
 /* Data Token Icon Style */

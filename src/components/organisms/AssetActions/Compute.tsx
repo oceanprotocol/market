@@ -89,7 +89,7 @@ export default function Compute({
 
   return (
     <div className={styles.compute}>
-      <Price ddo={ddo} setPriceOutside={setPrice} />
+      <Price ddo={ddo} setPriceOutside={setPrice} conversion />
 
       <div className={styles.info}>
         <div className={styles.selectType}>
