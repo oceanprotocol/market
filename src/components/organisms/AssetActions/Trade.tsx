@@ -1,9 +1,10 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useOcean } from '@oceanprotocol/react'
+import { useOcean, useMetadata } from '@oceanprotocol/react'
 import { DDO } from '@oceanprotocol/lib'
 
 export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
   const { ocean, accountId } = useOcean()
+  const { getBestPool } = useMetadata()
   const [finalTokens, setFinalTokens] = useState()
   const [currentTokens, setCurrentTokens] = useState<string[]>()
   const [numTokens, setNumTokens] = useState()
@@ -11,8 +12,7 @@ export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
   useEffect(() => {
     async function init() {
       try {
-        const pools = await ocean.pool.searchPoolforDT(accountId, ddo.dataToken)
-        const poolAddress = pools[0] // assume there is only one pool
+        const { poolAddress, poolPrice } = await getBestPool(ddo.dataToken)
 
         const numTokens = await ocean.pool.getNumTokens(accountId, poolAddress)
         setNumTokens(numTokens)
