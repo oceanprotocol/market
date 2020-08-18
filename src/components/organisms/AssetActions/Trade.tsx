@@ -8,11 +8,12 @@ export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
   const [currentTokens, setCurrentTokens] = useState<string[]>()
   const [numTokens, setNumTokens] = useState()
 
-  const poolAddress = '0xunknown' // How to get this?
-
   useEffect(() => {
     async function init() {
       try {
+        const pools = await ocean.pool.searchPoolforDT(accountId, ddo.dataToken)
+        const poolAddress = pools[0] // assume there is only one pool
+
         const numTokens = await ocean.pool.getNumTokens(accountId, poolAddress)
         setNumTokens(numTokens)
 
