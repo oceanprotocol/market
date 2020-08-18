@@ -4,6 +4,7 @@ import { DDO } from '@oceanprotocol/lib'
 import styles from './index.module.css'
 import Token from './Token'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
+import Loader from '../../../atoms/Loader'
 
 interface Balance {
   ocean: string
@@ -17,6 +18,8 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const [dtPrice, setDtPrice] = useState<string>()
   const [dtSymbol, setDtSymbol] = useState<string>()
   const [userBalance, setUserBalance] = useState<Balance>()
+
+  const isLoading = !ocean || !totalBalance || !userBalance || !dtPrice
 
   useEffect(() => {
     async function init() {
@@ -58,32 +61,34 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
       }
     }
     init()
-  }, [])
+  }, [ocean, accountId])
 
   return (
     <>
-      <div className={styles.dataToken}>
-        <PriceUnit price="1" symbol={dtSymbol} /> ={' '}
-        <PriceUnit price={dtPrice} />
-      </div>
-
-      <div className={styles.poolTokens}>
-        {userBalance && (
-          <div className={styles.tokens}>
-            <h3 className={styles.title}>Your Pooled Tokens</h3>
-            <Token symbol="OCEAN" balance={userBalance.ocean} />
-            <Token symbol={dtSymbol} balance={userBalance.dt} />
+      {isLoading ? (
+        <Loader message="Retrieving pools..." />
+      ) : (
+        <>
+          <div className={styles.dataToken}>
+            <PriceUnit price="1" symbol={dtSymbol} /> ={' '}
+            <PriceUnit price={dtPrice} />
           </div>
-        )}
 
-        {totalBalance && (
-          <div className={styles.tokens}>
-            <h3 className={styles.title}>Total Pooled Tokens</h3>
-            <Token symbol="OCEAN" balance={totalBalance.ocean} />
-            <Token symbol={dtSymbol} balance={totalBalance.dt} />
+          <div className={styles.poolTokens}>
+            <div className={styles.tokens}>
+              <h3 className={styles.title}>Your Pooled Tokens</h3>
+              <Token symbol="OCEAN" balance={userBalance.ocean} />
+              <Token symbol={dtSymbol} balance={userBalance.dt} />
+            </div>
+
+            <div className={styles.tokens}>
+              <h3 className={styles.title}>Total Pooled Tokens</h3>
+              <Token symbol="OCEAN" balance={totalBalance.ocean} />
+              <Token symbol={dtSymbol} balance={totalBalance.dt} />
+            </div>
           </div>
-        )}
-      </div>
+        </>
+      )}
     </>
   )
 }
