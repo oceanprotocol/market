@@ -3,6 +3,7 @@ import { useOcean, useMetadata } from '@oceanprotocol/react'
 import { DDO } from '@oceanprotocol/lib'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import styles from './index.module.css'
+import Token from './Token'
 
 interface Balance {
   ocean: string
@@ -12,12 +13,11 @@ interface Balance {
 export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const { ocean, accountId } = useOcean()
   const { getBestPool } = useMetadata()
-  const [numTokens, setNumTokens] = useState()
-  const [balance, setBalance] = useState<Balance>()
-  const [sharesBalance, setSharesBalance] = useState()
+  const [totalBalance, setTotalBalance] = useState<Balance>()
   const [poolPrice, setPoolPrice] = useState<string>()
   const [dtPrice, setDtPrice] = useState<string>()
   const [dtSymbol, setDtSymbol] = useState<string>()
+  const [userBalance, setUserBalance] = useState<Balance>()
 
   useEffect(() => {
     async function init() {
@@ -34,15 +34,12 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         const dtPrice = await ocean.pool.getDTPrice(accountId, poolAddress)
         setDtPrice(dtPrice)
 
-        const numTokens = await ocean.pool.getNumTokens(accountId, poolAddress)
-        setNumTokens(numTokens)
-
         const oceanReserve = await ocean.pool.getOceanReserve(
           accountId,
           poolAddress
         )
         const dtReserve = await ocean.pool.getDTReserve(accountId, poolAddress)
-        setBalance({
+        setTotalBalance({
           ocean: oceanReserve,
           dt: dtReserve
         })
@@ -51,7 +48,13 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           accountId,
           poolAddress
         )
-        setSharesBalance(sharesBalance)
+
+        const userBalance = {
+          ocean: `${(sharesBalance / dtReserve) * oceanReserve}`,
+          dt: sharesBalance
+        }
+
+        setUserBalance(userBalance)
       } catch (error) {
         console.error(error.message)
       }
@@ -61,17 +64,22 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
   return (
     <>
-      <p>
-        {numTokens} Pooled Tokens: <br />
-        {balance && (
-          <>
-            <span className={styles.symbol}>OCEAN</span>{' '}
-            {formatCurrency(Number(balance.ocean), '', 'en', false, true)}
-            <br />
-            <span className={styles.symbol}>{dtSymbol}</span> {balance.dt}
-          </>
-        )}
-      </p>
+      <h3 className={styles.title}>Your Pooled Tokens</h3>
+      {userBalance && (
+        <div className={styles.tokens}>
+          <Token symbol="OCEAN" balance={userBalance.ocean} />
+          <Token symbol={dtSymbol} balance={userBalance.dt} />
+        </div>
+      )}
+
+      <h3 className={styles.title}>Total Pooled Tokens</h3>
+      {totalBalance && (
+        <div className={styles.tokens}>
+          <Token symbol="OCEAN" balance={totalBalance.ocean} />
+          <Token symbol={dtSymbol} balance={totalBalance.dt} />
+        </div>
+      )}
+
       {poolPrice && (
         <p>
           Pool Price: <br />
@@ -84,12 +92,6 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           Data Token Price: <br />
           <span className={styles.symbol}>OCEAN</span>{' '}
           {formatCurrency(Number(dtPrice), '', 'en', false, true)}
-        </p>
-      )}
-      {sharesBalance && (
-        <p>
-          Your Pool Shares: <br />
-          {sharesBalance}
         </p>
       )}
     </>

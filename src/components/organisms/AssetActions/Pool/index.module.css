@@ -1,5 +1,8 @@
-.symbol {
-  font-weight: var(--font-weight-base);
-  color: var(--color-secondary);
-  font-size: var(--font-size-base);
+.title {
+  font-size: var(--font-size-large);
+  margin-bottom: calc(var(--spacer) / 4);
+}
+
+.tokens {
+  margin-bottom: var(--spacer);
 }

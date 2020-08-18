@@ -1,0 +1,32 @@
+.token {
+  font-weight: var(--font-weight-bold);
+  margin-bottom: calc(var(--spacer) / 4);
+}
+
+.symbol {
+  font-weight: var(--font-weight-base);
+  color: var(--color-secondary);
+  font-size: var(--font-size-base);
+}
+
+.icon {
+  display: inline-block;
+  border: 1px solid var(--brand-grey-lighter);
+  border-radius: 50%;
+  padding: 0.4rem;
+  vertical-align: middle;
+  margin-right: calc(var(--spacer) / 8);
+}
+
+.icon svg {
+  width: var(--font-size-large);
+  height: var(--font-size-large);
+}
+
+/* Data Token Icon Style */
+.icon[class*='DT'] path {
+  fill: var(--brand-grey-dimmed);
+  stroke: var(--brand-black);
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
