@@ -2,14 +2,14 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import { useOcean, useMetadata } from '@oceanprotocol/react'
 import { DDO } from '@oceanprotocol/lib'
 import { formatCurrency } from '@coingecko/cryptoformat'
-import styles from './Trade.module.css'
+import styles from './index.module.css'
 
 interface Balance {
   ocean: string
   dt: string
 }
 
-export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
+export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const { ocean, accountId } = useOcean()
   const { getBestPool } = useMetadata()
   const [numTokens, setNumTokens] = useState()
