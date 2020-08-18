@@ -2,12 +2,17 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import { useOcean, useMetadata } from '@oceanprotocol/react'
 import { DDO } from '@oceanprotocol/lib'
 
+interface Balance {
+  ocean: string
+  dt: string
+}
+
 export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
   const { ocean, accountId } = useOcean()
   const { getBestPool } = useMetadata()
-  const [finalTokens, setFinalTokens] = useState()
-  const [currentTokens, setCurrentTokens] = useState<string[]>()
   const [numTokens, setNumTokens] = useState()
+  const [balance, setBalance] = useState<Balance>()
+  const [sharesBalance, setSharesBalance] = useState()
 
   useEffect(() => {
     async function init() {
@@ -17,17 +22,21 @@ export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
         const numTokens = await ocean.pool.getNumTokens(accountId, poolAddress)
         setNumTokens(numTokens)
 
-        const currentTokens = await ocean.pool.getCurrentTokens(
+        const oceanReserve = await ocean.pool.getOceanReserve(
           accountId,
           poolAddress
         )
-        setCurrentTokens(currentTokens)
+        const dtReserve = await ocean.pool.getDTReserve(accountId, poolAddress)
+        setBalance({
+          ocean: oceanReserve,
+          dt: dtReserve
+        })
 
-        const finalTokens = await ocean.pool.getFinalTokens(
+        const sharesBalance = await ocean.pool.sharesBalance(
           accountId,
           poolAddress
         )
-        setFinalTokens(finalTokens)
+        setSharesBalance(sharesBalance)
       } catch (error) {
         console.error(error.message)
       }
@@ -37,9 +46,24 @@ export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
 
   return (
     <>
-      <div>Num Tokens: {numTokens}</div>
-      <div>Current Tokens: {currentTokens}</div>
-      <div>Final Tokens: {finalTokens}</div>
+      <div>
+        Num Tokens: <br />
+        {numTokens}
+      </div>
+      <div>
+        Reserve: <br />
+        {balance && (
+          <>
+            OCEAN {balance.ocean}
+            <br />
+            DT {balance.dt}
+          </>
+        )}
+      </div>
+      <div>
+        Shares Balance: <br />
+        {sharesBalance}
+      </div>
     </>
   )
 }
