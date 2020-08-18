@@ -1,6 +1,7 @@
 .token {
   font-weight: var(--font-weight-bold);
   margin-bottom: calc(var(--spacer) / 4);
+  white-space: nowrap;
 }
 
 .symbol {

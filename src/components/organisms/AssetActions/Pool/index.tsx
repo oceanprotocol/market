@@ -5,6 +5,9 @@ import styles from './index.module.css'
 import Token from './Token'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
 import Loader from '../../../atoms/Loader'
+import Button from '../../../atoms/Button'
+import Add from './Add'
+import Remove from './Remove'
 
 interface Balance {
   ocean: string
@@ -18,8 +21,12 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const [dtPrice, setDtPrice] = useState<string>()
   const [dtSymbol, setDtSymbol] = useState<string>()
   const [userBalance, setUserBalance] = useState<Balance>()
+  const [showAdd, setShowAdd] = useState<boolean>()
+  const [showRemove, setShowRemove] = useState<boolean>()
 
   const isLoading = !ocean || !totalBalance || !userBalance || !dtPrice
+  const hasAddedLiquidity =
+    userBalance && (Number(userBalance.ocean) > 0 || Number(userBalance.dt) > 0)
 
   useEffect(() => {
     async function init() {
@@ -67,6 +74,10 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
     <>
       {isLoading ? (
         <Loader message="Retrieving pools..." />
+      ) : showAdd ? (
+        <Add setShowAdd={setShowAdd} />
+      ) : showRemove ? (
+        <Remove setShowRemove={setShowRemove} />
       ) : (
         <>
           <div className={styles.dataToken}>
@@ -86,6 +97,22 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
               <Token symbol="OCEAN" balance={totalBalance.ocean} />
               <Token symbol={dtSymbol} balance={totalBalance.dt} />
             </div>
+          </div>
+
+          <div className={styles.actions}>
+            <Button
+              style="primary"
+              size="small"
+              onClick={() => setShowAdd(true)}
+            >
+              Add Liquidity
+            </Button>
+
+            {hasAddedLiquidity && (
+              <Button size="small" onClick={() => setShowRemove(true)}>
+                Remove
+              </Button>
+            )}
           </div>
         </>
       )}
