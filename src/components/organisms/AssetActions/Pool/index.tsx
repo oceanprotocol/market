@@ -58,7 +58,9 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         )
 
         const userBalance = {
-          ocean: `${(sharesBalance / dtReserve) * oceanReserve}`,
+          ocean: `${
+            (Number(sharesBalance) / Number(dtReserve)) * Number(oceanReserve)
+          }`,
           dt: sharesBalance
         }
 
@@ -75,7 +77,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
       {isLoading ? (
         <Loader message="Retrieving pools..." />
       ) : showAdd ? (
-        <Add setShowAdd={setShowAdd} />
+        <Add setShowAdd={setShowAdd} dtSymbol={dtSymbol} />
       ) : showRemove ? (
         <Remove setShowRemove={setShowRemove} />
       ) : (

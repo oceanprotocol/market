@@ -22,7 +22,7 @@
     "@coingecko/cryptoformat": "^0.3.8",
     "@loadable/component": "^5.13.1",
     "@oceanprotocol/art": "^3.0.0",
-    "@oceanprotocol/lib": "^0.1.12",
+    "@oceanprotocol/lib": "^0.1.13",
     "@oceanprotocol/react": "^0.0.37",
     "@oceanprotocol/typographies": "^0.1.0",
     "@sindresorhus/slugify": "^1.0.0",
