@@ -61,7 +61,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
         const userBalance = {
           ocean: `${
-            (Number(sharesBalance) * Number(dtReserve)) / Number(oceanReserve)
+            (Number(sharesBalance) / Number(dtReserve)) * Number(oceanReserve)
           }`,
           dt: sharesBalance
         }
