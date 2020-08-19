@@ -6,6 +6,7 @@ import Input from '../../../atoms/Input'
 import { useOcean } from '@oceanprotocol/react'
 import Header from './Header'
 import Loader from '../../../atoms/Loader'
+import { toast } from 'react-toastify'
 
 export default function Add({
   setShowAdd,
@@ -19,17 +20,23 @@ export default function Add({
   const { ocean, accountId } = useOcean()
   const [amount, setAmount] = useState<string>()
   const [isLoading, setIsLoading] = useState<boolean>()
-  const [error, setError] = useState<string>()
 
   async function handleAddLiquidity() {
     setIsLoading(true)
-    const result = await ocean.pool.addOceanLiquidity(
-      accountId,
-      poolAddress,
-      amount
-    )
-    console.log(result)
-    setIsLoading(false)
+
+    try {
+      const result = await ocean.pool.addOceanLiquidity(
+        accountId,
+        poolAddress,
+        amount
+      )
+      console.log(result)
+    } catch (error) {
+      console.error(error.message)
+      toast.error(error.message)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   function handleAmountChange(e: ChangeEvent<HTMLInputElement>) {

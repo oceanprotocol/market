@@ -1,9 +1,12 @@
 import React, { ReactElement, useState, ChangeEvent } from 'react'
 import styles from './Remove.module.css'
+import stylesIndex from './index.module.css'
 import Button from '../../../atoms/Button'
 import Input from '../../../atoms/Input'
 import { useOcean } from '@oceanprotocol/react'
 import Header from './Header'
+import { toast } from 'react-toastify'
+import Loader from '../../../atoms/Loader'
 
 export default function Remove({
   setShowRemove,
@@ -14,16 +17,27 @@ export default function Remove({
 }): ReactElement {
   const { ocean, accountId } = useOcean()
   const [amount, setAmount] = useState<string>()
+  const [isLoading, setIsLoading] = useState<boolean>()
 
   const maximumPoolShares = '?'
 
   async function handleRemoveLiquidity() {
-    await ocean.pool.removeOceanLiquidity(
-      accountId,
-      poolAddress,
-      amount,
-      maximumPoolShares
-    )
+    setIsLoading(true)
+
+    try {
+      const result = await ocean.pool.removeOceanLiquidity(
+        accountId,
+        poolAddress,
+        amount,
+        maximumPoolShares
+      )
+      console.log(result)
+    } catch (error) {
+      console.error(error.message)
+      toast.error(error.message)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   function handleAmountChange(e: ChangeEvent<HTMLInputElement>) {
@@ -48,13 +62,19 @@ export default function Remove({
 
       <p>You will receive:</p>
 
-      <Button
-        style="primary"
-        size="small"
-        onClick={() => handleRemoveLiquidity()}
-      >
-        Remove
-      </Button>
+      <div className={stylesIndex.actions}>
+        {isLoading ? (
+          <Loader message="Removing Liquidity..." />
+        ) : (
+          <Button
+            style="primary"
+            size="small"
+            onClick={() => handleRemoveLiquidity()}
+          >
+            Supply
+          </Button>
+        )}
+      </div>
     </div>
   )
 }
