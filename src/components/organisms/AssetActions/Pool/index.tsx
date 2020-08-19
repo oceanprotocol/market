@@ -32,17 +32,15 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   useEffect(() => {
     async function init() {
       try {
-        const { poolAddress } = await getBestPool(ddo.dataToken)
+        const { poolAddress, poolPrice } = await getBestPool(ddo.dataToken)
         setPoolAddress(poolAddress)
+        setDtPrice(poolPrice)
 
         const dtSymbol = await ocean.datatokens.getSymbol(
           ddo.dataToken,
           accountId
         )
         setDtSymbol(dtSymbol)
-
-        const dtPrice = await ocean.pool.getDTPrice(accountId, poolAddress)
-        setDtPrice(dtPrice)
 
         const oceanReserve = await ocean.pool.getOceanReserve(
           accountId,
