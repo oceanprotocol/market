@@ -72,6 +72,11 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
     init()
   }, [ocean, accountId])
 
+  const poolShare =
+    totalBalance &&
+    userBalance &&
+    ((Number(totalBalance.dt) * Number(userBalance.dt)) / 100).toFixed(2)
+
   return (
     <>
       {isLoading ? (
@@ -96,6 +101,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
               <h3 className={styles.title}>Your Pool Share</h3>
               <Token symbol="OCEAN" balance={userBalance.ocean} />
               <Token symbol={dtSymbol} balance={userBalance.dt} />
+              <Token symbol="%" balance={poolShare} />
             </div>
 
             <div className={styles.tokens}>

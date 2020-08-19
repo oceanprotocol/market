@@ -31,3 +31,7 @@
   stroke-width: 5px;
   stroke-linejoin: round;
 }
+
+.icon[class*='%'] {
+  opacity: 0;
+}
