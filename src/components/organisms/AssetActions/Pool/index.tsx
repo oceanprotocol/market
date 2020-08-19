@@ -17,6 +17,7 @@ interface Balance {
 export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const { ocean, accountId } = useOcean()
   const { getBestPool } = useMetadata()
+  const [poolAddress, setPoolAddress] = useState<string>()
   const [totalBalance, setTotalBalance] = useState<Balance>()
   const [dtPrice, setDtPrice] = useState<string>()
   const [dtSymbol, setDtSymbol] = useState<string>()
@@ -32,6 +33,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
     async function init() {
       try {
         const { poolAddress } = await getBestPool(ddo.dataToken)
+        setPoolAddress(poolAddress)
 
         const dtSymbol = await ocean.datatokens.getSymbol(
           ddo.dataToken,
@@ -77,7 +79,11 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
       {isLoading ? (
         <Loader message="Retrieving pools..." />
       ) : showAdd ? (
-        <Add setShowAdd={setShowAdd} dtSymbol={dtSymbol} />
+        <Add
+          setShowAdd={setShowAdd}
+          dtSymbol={dtSymbol}
+          poolAddress={poolAddress}
+        />
       ) : showRemove ? (
         <Remove setShowRemove={setShowRemove} />
       ) : (
