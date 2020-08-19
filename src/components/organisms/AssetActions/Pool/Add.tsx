@@ -49,7 +49,7 @@ export default function Add({
       <p>You will receive:</p>
 
       <Button style="primary" size="small" onClick={() => handleAddLiquidity()}>
-        Add
+        Supply
       </Button>
     </div>
   )
