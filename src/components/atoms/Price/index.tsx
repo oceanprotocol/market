@@ -24,8 +24,9 @@ export default function Price({
   const [price, setPrice] = useState<string>()
 
   useEffect(() => {
+    if (!ocean || !accountId || !chainId) return
+
     async function init() {
-      console.log(ocean)
       const price = await getBestPrice(ddo.dataToken)
       setPrice(price)
       setPriceOutside && price !== '' && setPriceOutside(price)
