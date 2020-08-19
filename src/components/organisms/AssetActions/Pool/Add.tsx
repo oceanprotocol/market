@@ -3,7 +3,6 @@ import styles from './Add.module.css'
 import stylesIndex from './index.module.css'
 import Button from '../../../atoms/Button'
 import Input from '../../../atoms/Input'
-import { Ocean } from '@oceanprotocol/lib'
 import { useOcean } from '@oceanprotocol/react'
 
 export default function Add({
@@ -16,15 +15,14 @@ export default function Add({
   poolAddress: string
 }): ReactElement {
   const { ocean, accountId } = useOcean()
-
   const [amount, setAmount] = useState<string>()
-
-  function handleAmountChange(e: ChangeEvent<HTMLInputElement>) {
-    setAmount(e.target.value)
-  }
 
   async function handleAddLiquidity() {
     await ocean.pool.addOceanLiquidity(accountId, poolAddress, amount)
+  }
+
+  function handleAmountChange(e: ChangeEvent<HTMLInputElement>) {
+    setAmount(e.target.value)
   }
 
   return (

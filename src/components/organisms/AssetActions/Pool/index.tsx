@@ -85,7 +85,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           poolAddress={poolAddress}
         />
       ) : showRemove ? (
-        <Remove setShowRemove={setShowRemove} />
+        <Remove setShowRemove={setShowRemove} poolAddress={poolAddress} />
       ) : (
         <>
           <div className={styles.dataToken}>
