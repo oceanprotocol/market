@@ -8,6 +8,7 @@ import Loader from '../../../atoms/Loader'
 import Button from '../../../atoms/Button'
 import Add from './Add'
 import Remove from './Remove'
+import Tooltip from '../../../atoms/Tooltip'
 
 interface Balance {
   ocean: string
@@ -94,11 +95,15 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           <div className={styles.dataToken}>
             <PriceUnit price="1" symbol={dtSymbol} /> ={' '}
             <PriceUnit price={dtPrice} />
+            <Tooltip content="Explain how this price is determined..." />
           </div>
 
           <div className={styles.poolTokens}>
             <div className={styles.tokens}>
-              <h3 className={styles.title}>Your Pool Share</h3>
+              <h3 className={styles.title}>
+                Your Pool Share{' '}
+                <Tooltip content="Explain what this represents, advantage of providing liquidity..." />
+              </h3>
               <Token symbol="OCEAN" balance={userBalance.ocean} />
               <Token symbol={dtSymbol} balance={userBalance.dt} />
               <Token symbol="%" balance={poolShare} />
