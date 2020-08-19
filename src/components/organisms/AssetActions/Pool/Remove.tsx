@@ -1,9 +1,9 @@
 import React, { ReactElement, useState, ChangeEvent } from 'react'
 import styles from './Remove.module.css'
-import stylesIndex from './index.module.css'
 import Button from '../../../atoms/Button'
 import Input from '../../../atoms/Input'
 import { useOcean } from '@oceanprotocol/react'
+import Header from './Header'
 
 export default function Remove({
   setShowRemove,
@@ -32,16 +32,11 @@ export default function Remove({
 
   return (
     <div className={styles.remove}>
-      <Button
-        className={stylesIndex.back}
-        style="text"
-        size="small"
-        onClick={() => setShowRemove(false)}
-      >
-        ← Back
-      </Button>
+      <Header
+        title="Remove Liquidity"
+        backAction={() => setShowRemove(false)}
+      />
 
-      <h3 className={stylesIndex.title}>Remove Liquidity</h3>
       <Input
         name="ocean"
         label="OCEAN"

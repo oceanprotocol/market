@@ -1,0 +1,15 @@
+.header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--spacer);
+}
+
+.headerTitle {
+  font-size: var(--font-size-large);
+  margin: 0;
+  margin-right: auto;
+}
+
+.back {
+  margin-right: auto;
+}

@@ -24,6 +24,8 @@
 .tokens {
 }
 
+/* Shared Styles for all screens */
+
 .actions {
   margin-left: -2rem;
   margin-right: -2rem;
@@ -33,13 +35,11 @@
   padding-top: calc(var(--spacer) / 1.5);
   border-top: 1px solid var(--brand-grey-lighter);
   text-align: center;
+  display: flex;
+  justify-content: center;
 }
 
 .actions button {
   margin-left: calc(var(--spacer) / 4);
   margin-right: calc(var(--spacer) / 4);
-}
-
-.back {
-  margin-bottom: var(--spacer);
 }

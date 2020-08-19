@@ -4,6 +4,8 @@ import stylesIndex from './index.module.css'
 import Button from '../../../atoms/Button'
 import Input from '../../../atoms/Input'
 import { useOcean } from '@oceanprotocol/react'
+import Header from './Header'
+import Loader from '../../../atoms/Loader'
 
 export default function Add({
   setShowAdd,
@@ -16,9 +18,18 @@ export default function Add({
 }): ReactElement {
   const { ocean, accountId } = useOcean()
   const [amount, setAmount] = useState<string>()
+  const [isLoading, setIsLoading] = useState<boolean>()
+  const [error, setError] = useState<string>()
 
   async function handleAddLiquidity() {
-    await ocean.pool.addOceanLiquidity(accountId, poolAddress, amount)
+    setIsLoading(true)
+    const result = await ocean.pool.addOceanLiquidity(
+      accountId,
+      poolAddress,
+      amount
+    )
+    console.log(result)
+    setIsLoading(false)
   }
 
   function handleAmountChange(e: ChangeEvent<HTMLInputElement>) {
@@ -27,15 +38,7 @@ export default function Add({
 
   return (
     <div className={styles.add}>
-      <Button
-        className={stylesIndex.back}
-        style="text"
-        size="small"
-        onClick={() => setShowAdd(false)}
-      >
-        ← Back
-      </Button>
-      <h3 className={stylesIndex.title}>Add Liquidity</h3>
+      <Header title="Add Liquidity" backAction={() => setShowAdd(false)} />
 
       <Input
         name="ocean"
@@ -48,9 +51,19 @@ export default function Add({
 
       <p>You will receive:</p>
 
-      <Button style="primary" size="small" onClick={() => handleAddLiquidity()}>
-        Supply
-      </Button>
+      <div className={stylesIndex.actions}>
+        {isLoading ? (
+          <Loader message="Adding Liquidity..." />
+        ) : (
+          <Button
+            style="primary"
+            size="small"
+            onClick={() => handleAddLiquidity()}
+          >
+            Supply
+          </Button>
+        )}
+      </div>
     </div>
   )
 }
