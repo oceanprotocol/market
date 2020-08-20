@@ -32,7 +32,7 @@ export default function MetaFull({
       <MetaItem title="DID" content={<code>{id}</code>} />
 
       <MetaItem
-        title="Data Token Address"
+        title="Data Token"
         content={
           <a
             href={`https://rinkeby.etherscan.io/token/${dataToken}`}

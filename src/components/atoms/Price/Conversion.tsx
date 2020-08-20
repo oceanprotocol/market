@@ -61,7 +61,7 @@ export default function Conversion({
       className={styleClasses}
       title="Approximation based on current spot price on Coingecko"
     >
-      ≈ EUR {priceEur}
+      ≈ {priceEur} EUR
     </span>
   )
 }

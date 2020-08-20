@@ -71,7 +71,7 @@ export default function Remove({
             size="small"
             onClick={() => handleRemoveLiquidity()}
           >
-            Supply
+            Remove
           </Button>
         )}
       </div>

@@ -9,6 +9,8 @@ import Button from '../../../atoms/Button'
 import Add from './Add'
 import Remove from './Remove'
 import Tooltip from '../../../atoms/Tooltip'
+import Conversion from '../../../atoms/Price/Conversion'
+import { ReactComponent as External } from '../../../../images/external.svg'
 
 interface Balance {
   ocean: string
@@ -95,6 +97,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           <div className={styles.dataToken}>
             <PriceUnit price="1" symbol={dtSymbol} /> ={' '}
             <PriceUnit price={dtPrice} />
+            <Conversion price={dtPrice} />
             <Tooltip content="Explain how this price is determined..." />
           </div>
 
