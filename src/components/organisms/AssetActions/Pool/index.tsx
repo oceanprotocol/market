@@ -11,6 +11,7 @@ import Remove from './Remove'
 import Tooltip from '../../../atoms/Tooltip'
 import Conversion from '../../../atoms/Price/Conversion'
 import { ReactComponent as External } from '../../../../images/external.svg'
+import EtherscanLink from '../../../atoms/EtherscanLink'
 
 interface Balance {
   ocean: string
@@ -99,6 +100,14 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
             <PriceUnit price={dtPrice} />
             <Conversion price={dtPrice} />
             <Tooltip content="Explain how this price is determined..." />
+            <div className={styles.dataTokenLinks}>
+              <EtherscanLink network="rinkeby" path={`address/${poolAddress}`}>
+                Pool
+              </EtherscanLink>
+              <EtherscanLink network="rinkeby" path={`token/${ddo.dataToken}`}>
+                Data Token
+              </EtherscanLink>
+            </div>
           </div>
 
           <div className={styles.poolTokens}>
