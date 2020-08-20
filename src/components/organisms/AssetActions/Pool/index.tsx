@@ -22,6 +22,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const { price, poolAddress } = useMetadata(ddo)
 
   const [poolTokens, setPoolTokens] = useState<string>()
+  const [totalPoolTokens, setTotalPoolTokens] = useState<string>()
   const [totalBalance, setTotalBalance] = useState<Balance>()
   const [dtSymbol, setDtSymbol] = useState<string>()
   const [userBalance, setUserBalance] = useState<Balance>()
@@ -30,9 +31,13 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const [showRemove, setShowRemove] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
-  // const isLoading = !ocean || !totalBalance || !userBalance || !price
   const hasAddedLiquidity =
     userBalance && (Number(userBalance.ocean) > 0 || Number(userBalance.dt) > 0)
+
+  const poolShare =
+    totalBalance &&
+    userBalance &&
+    ((Number(totalPoolTokens) * Number(poolTokens)) / 100).toFixed(2)
 
   useEffect(() => {
     if (!ocean || !accountId || !poolAddress || !price) return
@@ -63,14 +68,13 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         )
         setPoolTokens(poolTokens)
 
-        // TODO: figure out how to get that
-        // const totalPoolTokens = await ocean.pool.totalSupply(poolAddress)
-        // console.log(totalPoolTokens)
+        const totalPoolTokens = await ocean.pool.totalSupply(poolAddress)
+        setTotalPoolTokens(totalPoolTokens)
 
-        // TODO: replace `dtReserve` with `totalPoolTokens`
         const userBalance = {
           ocean: `${
-            (Number(poolTokens) / Number(dtReserve)) * Number(oceanReserve)
+            (Number(poolTokens) / Number(totalPoolTokens)) *
+            Number(oceanReserve)
           }`,
           dt: '0'
         }
@@ -84,11 +88,6 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
     }
     init()
   }, [ocean, accountId, price, poolAddress])
-
-  const poolShare =
-    totalBalance &&
-    userBalance &&
-    ((Number(totalBalance.dt) * Number(userBalance.dt)) / 100).toFixed(2)
 
   return (
     <>
@@ -135,6 +134,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
               <h3 className={styles.title}>Total Pooled Tokens</h3>
               <Token symbol="OCEAN" balance={totalBalance.ocean} />
               <Token symbol={dtSymbol} balance={totalBalance.dt} />
+              <Token symbol="BPT" balance={totalPoolTokens} />
             </div>
           </div>
 
