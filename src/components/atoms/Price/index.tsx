@@ -18,7 +18,7 @@ export default function Price({
   conversion?: boolean
 }): ReactElement {
   const { ocean } = useOcean()
-  const { price } = useMetadata(ddo.id)
+  const { price } = useMetadata(ddo)
 
   return !ocean ? (
     <div className={styles.empty}>Connect your wallet to view price</div>

@@ -17,7 +17,7 @@ export default function AssetActions({
   ddo: DDO
 }): ReactElement {
   const { balance } = useOcean()
-  const { price } = useMetadata(ddo.id)
+  const { price } = useMetadata(ddo)
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
 
   const isCompute = Boolean(ddo.findServiceByType('compute'))

@@ -19,7 +19,7 @@ interface Balance {
 
 export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const { ocean, accountId } = useOcean()
-  const { price, poolAddress } = useMetadata(ddo.id)
+  const { price, poolAddress } = useMetadata(ddo)
 
   const [poolTokens, setPoolTokens] = useState<string>()
   const [totalBalance, setTotalBalance] = useState<Balance>()

@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Link } from 'gatsby'
 import Dotdotdot from 'react-dotdotdot'
 import { MetadataMarket } from '../../@types/Metadata'
 import Price from '../atoms/Price'
 import styles from './AssetTeaser.module.css'
-import { useMetadata } from '@oceanprotocol/react'
 import { DDO } from '@oceanprotocol/lib'
-import Loader from '../atoms/Loader'
 
 declare type AssetTeaserProps = {
   ddo: DDO
