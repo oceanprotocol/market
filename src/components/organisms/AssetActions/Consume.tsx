@@ -12,13 +12,11 @@ import { useOcean, useConsume } from '@oceanprotocol/react'
 export default function Consume({
   ddo,
   file,
-  isBalanceSufficient,
-  setPrice
+  isBalanceSufficient
 }: {
   ddo: DDO
   file: FileMetadata
   isBalanceSufficient: boolean
-  setPrice: (price: string) => void
 }): ReactElement {
   const { ocean } = useOcean()
   const { consumeStepText, consume, consumeError } = useConsume()
@@ -49,7 +47,7 @@ export default function Consume({
           <File file={file} />
         </div>
         <div className={styles.pricewrapper}>
-          <Price ddo={ddo} setPriceOutside={setPrice} conversion />
+          <Price ddo={ddo} conversion />
           <PurchaseButton />
         </div>
       </div>

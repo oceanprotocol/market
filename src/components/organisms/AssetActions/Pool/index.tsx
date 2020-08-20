@@ -18,28 +18,29 @@ interface Balance {
 }
 
 export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
-  const { ocean, accountId, account } = useOcean()
-  const { getBestPool } = useMetadata()
-  const [poolAddress, setPoolAddress] = useState<string>()
+  const { ocean, accountId } = useOcean()
+  const { price, poolAddress } = useMetadata(ddo.id)
+
   const [poolTokens, setPoolTokens] = useState<string>()
   const [totalBalance, setTotalBalance] = useState<Balance>()
-  const [dtPrice, setDtPrice] = useState<string>()
   const [dtSymbol, setDtSymbol] = useState<string>()
   const [userBalance, setUserBalance] = useState<Balance>()
-  const [showAdd, setShowAdd] = useState<boolean>()
-  const [showRemove, setShowRemove] = useState<boolean>()
 
-  const isLoading = !ocean || !totalBalance || !userBalance || !dtPrice
+  const [showAdd, setShowAdd] = useState(false)
+  const [showRemove, setShowRemove] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+
+  // const isLoading = !ocean || !totalBalance || !userBalance || !price
   const hasAddedLiquidity =
     userBalance && (Number(userBalance.ocean) > 0 || Number(userBalance.dt) > 0)
 
   useEffect(() => {
-    async function init() {
-      try {
-        const { poolAddress, poolPrice } = await getBestPool(ddo.dataToken)
-        setPoolAddress(poolAddress)
-        setDtPrice(poolPrice)
+    if (!ocean || !accountId || !poolAddress || !price) return
 
+    async function init() {
+      setIsLoading(true)
+
+      try {
         const dtSymbol = await ocean.datatokens.getSymbol(
           ddo.dataToken,
           accountId
@@ -63,11 +64,8 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         setPoolTokens(poolTokens)
 
         // TODO: figure out how to get that
-        const totalPoolTokens = await ocean.accounts.getTokenBalance(
-          poolAddress,
-          account
-        )
-        console.log(totalPoolTokens)
+        // const totalPoolTokens = await ocean.pool.totalSupply(poolAddress)
+        // console.log(totalPoolTokens)
 
         // TODO: replace `dtReserve` with `totalPoolTokens`
         const userBalance = {
@@ -80,10 +78,12 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         setUserBalance(userBalance)
       } catch (error) {
         console.error(error.message)
+      } finally {
+        setIsLoading(false)
       }
     }
     init()
-  }, [ocean, accountId])
+  }, [ocean, accountId, price, poolAddress])
 
   const poolShare =
     totalBalance &&
@@ -92,7 +92,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
   return (
     <>
-      {isLoading ? (
+      {isLoading && !userBalance ? (
         <Loader message="Retrieving pools..." />
       ) : showAdd ? (
         <Add
@@ -106,8 +106,8 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         <>
           <div className={styles.dataToken}>
             <PriceUnit price="1" symbol={dtSymbol} /> ={' '}
-            <PriceUnit price={dtPrice} />
-            <Conversion price={dtPrice} />
+            <PriceUnit price={price} />
+            <Conversion price={price} />
             <Tooltip content="Explain how this price is determined..." />
             <div className={styles.dataTokenLinks}>
               <EtherscanLink network="rinkeby" path={`address/${poolAddress}`}>
@@ -122,7 +122,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           <div className={styles.poolTokens}>
             <div className={styles.tokens}>
               <h3 className={styles.title}>
-                Your Pool Share{' '}
+                Your Liquidity{' '}
                 <Tooltip content="Explain what this represents, advantage of providing liquidity..." />
               </h3>
               <Token symbol="OCEAN" balance={userBalance.ocean} />

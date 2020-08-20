@@ -10,32 +10,18 @@ export default function Price({
   ddo,
   className,
   small,
-  conversion,
-  setPriceOutside
+  conversion
 }: {
   ddo: DDO
   className?: string
   small?: boolean
   conversion?: boolean
-  setPriceOutside?: (price: string) => void
 }): ReactElement {
-  const { ocean, chainId, accountId } = useOcean()
-  const { getBestPrice } = useMetadata()
-  const [price, setPrice] = useState<string>()
-
-  useEffect(() => {
-    if (!ocean || !accountId || !chainId) return
-
-    async function init() {
-      const price = await getBestPrice(ddo.dataToken)
-      setPrice(price)
-      setPriceOutside && price !== '' && setPriceOutside(price)
-    }
-    init()
-  }, [chainId, accountId, ocean])
+  const { ocean } = useOcean()
+  const { price } = useMetadata(ddo.id)
 
   return !ocean ? (
-    <div className={styles.empty}>Please connect your wallet to view price</div>
+    <div className={styles.empty}>Connect your wallet to view price</div>
   ) : price ? (
     <PriceUnit
       price={price}
