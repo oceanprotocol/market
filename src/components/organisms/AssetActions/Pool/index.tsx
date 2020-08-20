@@ -10,7 +10,6 @@ import Add from './Add'
 import Remove from './Remove'
 import Tooltip from '../../../atoms/Tooltip'
 import Conversion from '../../../atoms/Price/Conversion'
-import { ReactComponent as External } from '../../../../images/external.svg'
 import EtherscanLink from '../../../atoms/EtherscanLink'
 
 interface Balance {
@@ -19,9 +18,10 @@ interface Balance {
 }
 
 export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
-  const { ocean, accountId } = useOcean()
+  const { ocean, accountId, account } = useOcean()
   const { getBestPool } = useMetadata()
   const [poolAddress, setPoolAddress] = useState<string>()
+  const [poolTokens, setPoolTokens] = useState<string>()
   const [totalBalance, setTotalBalance] = useState<Balance>()
   const [dtPrice, setDtPrice] = useState<string>()
   const [dtSymbol, setDtSymbol] = useState<string>()
@@ -56,16 +56,25 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           dt: dtReserve
         })
 
-        const sharesBalance = await ocean.pool.sharesBalance(
+        const poolTokens = await ocean.pool.sharesBalance(
           accountId,
           poolAddress
         )
+        setPoolTokens(poolTokens)
 
+        // TODO: figure out how to get that
+        const totalPoolTokens = await ocean.accounts.getTokenBalance(
+          poolAddress,
+          account
+        )
+        console.log(totalPoolTokens)
+
+        // TODO: replace `dtReserve` with `totalPoolTokens`
         const userBalance = {
           ocean: `${
-            (Number(sharesBalance) / Number(dtReserve)) * Number(oceanReserve)
+            (Number(poolTokens) / Number(dtReserve)) * Number(oceanReserve)
           }`,
-          dt: sharesBalance
+          dt: '0'
         }
 
         setUserBalance(userBalance)
@@ -118,6 +127,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
               </h3>
               <Token symbol="OCEAN" balance={userBalance.ocean} />
               <Token symbol={dtSymbol} balance={userBalance.dt} />
+              <Token symbol="BPT" balance={poolTokens} />
               <Token symbol="%" balance={poolShare} />
             </div>
 
