@@ -7,7 +7,7 @@ export default function Header({
   backAction
 }: {
   title: string
-  backAction: () => any
+  backAction: () => void
 }): ReactElement {
   return (
     <header className={styles.header}>

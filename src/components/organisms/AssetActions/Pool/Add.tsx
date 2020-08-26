@@ -11,10 +11,6 @@ import Token from './Token'
 import { Balance } from './'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
 
-function calculatePercent(percent: number, num: number) {
-  return (percent / 100) * num
-}
-
 export default function Add({
   setShowAdd,
   poolAddress,
@@ -80,8 +76,8 @@ export default function Add({
         />
       </div>
 
-      <div>
-        <p>You will receive:</p>
+      <div className={styles.output}>
+        <p>You will receive</p>
         <Token symbol="BPT" balance={newPoolTokens} />
         <Token symbol="% of pool" balance={newPoolShare} />
       </div>

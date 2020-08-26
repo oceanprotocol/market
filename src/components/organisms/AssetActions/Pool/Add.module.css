@@ -19,3 +19,11 @@
   transform: scale(0.7);
   transform-origin: right center;
 }
+
+.output {
+  text-align: center;
+}
+
+.output p {
+  font-weight: var(--font-weight-bold);
+}
