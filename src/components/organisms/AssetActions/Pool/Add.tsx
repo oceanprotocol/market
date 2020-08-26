@@ -7,6 +7,7 @@ import { useOcean } from '@oceanprotocol/react'
 import Header from './Header'
 import Loader from '../../../atoms/Loader'
 import { toast } from 'react-toastify'
+import InputElement from '../../../atoms/Input/InputElement'
 
 export default function Add({
   setShowAdd,
@@ -47,14 +48,16 @@ export default function Add({
     <div className={styles.add}>
       <Header title="Add Liquidity" backAction={() => setShowAdd(false)} />
 
-      <Input
-        name="ocean"
-        label="OCEAN"
-        type="number"
-        placeholder="0"
-        onChange={handleAmountChange}
-      />
-      {/* <Input name="dt" label={dtSymbol} type="number" placeholder="0" /> */}
+      <div className={styles.addInput}>
+        <InputElement
+          value={amount}
+          name="ocean"
+          type="number"
+          prefix="OCEAN"
+          placeholder="0"
+          onChange={handleAmountChange}
+        />
+      </div>
 
       <p>You will receive:</p>
 
