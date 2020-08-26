@@ -76,7 +76,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
             (Number(poolTokens) / Number(totalPoolTokens)) *
             Number(oceanReserve)
           }`,
-          dt: '0'
+          dt: '-'
         }
 
         setUserBalance(userBalance)

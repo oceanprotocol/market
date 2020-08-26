@@ -29,6 +29,8 @@ export default function PriceUnit({
     <div className={styleClasses}>
       {Number.isInteger(Number(price))
         ? price
+        : Number.isNaN(Number(price))
+        ? '-'
         : formatCurrency(Number(price), '', undefined, false, true)}{' '}
       <span>{symbol || 'OCEAN'}</span>
       {conversion && <Conversion price={price} />}
