@@ -23,7 +23,7 @@ export default function Add({
   totalBalance: Balance
 }): ReactElement {
   const { ocean, accountId, balance } = useOcean()
-  const [amount, setAmount] = useState<string>()
+  const [amount, setAmount] = useState('')
   const [isLoading, setIsLoading] = useState<boolean>()
 
   const newPoolTokens =

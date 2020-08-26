@@ -16,7 +16,7 @@ export default function Remove({
   poolAddress: string
 }): ReactElement {
   const { ocean, accountId } = useOcean()
-  const [amount, setAmount] = useState<string>()
+  const [amount, setAmount] = useState('')
   const [isLoading, setIsLoading] = useState<boolean>()
 
   const maximumPoolShares = '?'
@@ -64,7 +64,7 @@ export default function Remove({
 
       {/* <Input name="dt" label={dtSymbol} type="number" placeholder="0" /> */}
 
-      <p>You will receive:</p>
+      <p>You will receive</p>
 
       <div className={stylesIndex.actions}>
         {isLoading ? (
