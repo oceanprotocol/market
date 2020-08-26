@@ -2,25 +2,20 @@ import React, { ReactElement, useState, useEffect } from 'react'
 import styles from './index.module.css'
 import Compute from './Compute'
 import Consume from './Consume'
-import { MetadataMarket } from '../../../@types/Metadata'
 import { DDO } from '@oceanprotocol/lib'
 import Tabs from '../../atoms/Tabs'
 import { useOcean, useMetadata } from '@oceanprotocol/react'
 import compareAsBN from '../../../utils/compareAsBN'
 import Pool from './Pool'
 
-export default function AssetActions({
-  metadata,
-  ddo
-}: {
-  metadata: MetadataMarket
-  ddo: DDO
-}): ReactElement {
+export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
   const { balance } = useOcean()
   const { price } = useMetadata(ddo)
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
 
   const isCompute = Boolean(ddo.findServiceByType('compute'))
+  const { attributes } = ddo.findServiceByType('metadata')
+  const { priceType } = attributes.additionalInformation
 
   // Check user balance against price
   useEffect(() => {
@@ -40,7 +35,7 @@ export default function AssetActions({
     <Consume
       ddo={ddo}
       isBalanceSufficient={isBalanceSufficient}
-      file={metadata.main.files[0]}
+      file={attributes.main.files[0]}
     />
   )
 
@@ -49,7 +44,7 @@ export default function AssetActions({
       title: 'Use',
       content: UseContent
     },
-    {
+    (!priceType || priceType === 'advanced') && {
       title: 'Pool',
       content: <Pool ddo={ddo} />
     }
