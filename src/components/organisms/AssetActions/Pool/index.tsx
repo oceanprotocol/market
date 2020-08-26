@@ -96,7 +96,6 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
       ) : showAdd ? (
         <Add
           setShowAdd={setShowAdd}
-          dtSymbol={dtSymbol}
           poolAddress={poolAddress}
           totalPoolTokens={totalPoolTokens}
           totalBalance={totalBalance}

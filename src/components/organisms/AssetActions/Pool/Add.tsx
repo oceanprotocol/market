@@ -17,13 +17,11 @@ function calculatePercent(percent: number, num: number) {
 
 export default function Add({
   setShowAdd,
-  dtSymbol,
   poolAddress,
   totalPoolTokens,
   totalBalance
 }: {
   setShowAdd: (show: boolean) => void
-  dtSymbol: string
   poolAddress: string
   totalPoolTokens: string
   totalBalance: Balance
@@ -31,7 +29,6 @@ export default function Add({
   const { ocean, accountId, balance } = useOcean()
   const [amount, setAmount] = useState<string>()
   const [isLoading, setIsLoading] = useState<boolean>()
-  const [newDtAmount, setNewDtAmount] = useState<string>()
 
   const newPoolTokens =
     totalBalance &&
@@ -85,7 +82,6 @@ export default function Add({
 
       <div>
         <p>You will receive:</p>
-        <Token symbol={dtSymbol} balance={newDtAmount} />
         <Token symbol="BPT" balance={newPoolTokens} />
         <Token symbol="% of pool" balance={newPoolShare} />
       </div>
