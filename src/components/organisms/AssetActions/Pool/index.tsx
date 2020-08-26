@@ -12,7 +12,7 @@ import Tooltip from '../../../atoms/Tooltip'
 import Conversion from '../../../atoms/Price/Conversion'
 import EtherscanLink from '../../../atoms/EtherscanLink'
 
-interface Balance {
+export interface Balance {
   ocean: string
   dt: string
 }
@@ -37,7 +37,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const poolShare =
     totalBalance &&
     userBalance &&
-    ((Number(totalPoolTokens) * Number(poolTokens)) / 100).toFixed(2)
+    ((Number(poolTokens) / Number(totalPoolTokens)) * 100).toFixed(2)
 
   useEffect(() => {
     if (!ocean || !accountId || !poolAddress || !price) return
@@ -98,6 +98,8 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           setShowAdd={setShowAdd}
           dtSymbol={dtSymbol}
           poolAddress={poolAddress}
+          totalPoolTokens={totalPoolTokens}
+          totalBalance={totalBalance}
         />
       ) : showRemove ? (
         <Remove setShowRemove={setShowRemove} poolAddress={poolAddress} />

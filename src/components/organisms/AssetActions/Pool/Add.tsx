@@ -2,25 +2,43 @@ import React, { ReactElement, useState, ChangeEvent } from 'react'
 import styles from './Add.module.css'
 import stylesIndex from './index.module.css'
 import Button from '../../../atoms/Button'
-import Input from '../../../atoms/Input'
 import { useOcean } from '@oceanprotocol/react'
 import Header from './Header'
 import Loader from '../../../atoms/Loader'
 import { toast } from 'react-toastify'
 import InputElement from '../../../atoms/Input/InputElement'
+import Token from './Token'
+import { Balance } from './'
+
+function calculatePercent(percent: number, num: number) {
+  return (percent / 100) * num
+}
 
 export default function Add({
   setShowAdd,
   dtSymbol,
-  poolAddress
+  poolAddress,
+  totalPoolTokens,
+  totalBalance
 }: {
   setShowAdd: (show: boolean) => void
   dtSymbol: string
   poolAddress: string
+  totalPoolTokens: string
+  totalBalance: Balance
 }): ReactElement {
   const { ocean, accountId } = useOcean()
   const [amount, setAmount] = useState<string>()
   const [isLoading, setIsLoading] = useState<boolean>()
+  const [newDtAmount, setNewDtAmount] = useState<string>()
+
+  const newPoolTokens =
+    totalBalance &&
+    ((Number(amount) / Number(totalBalance.ocean)) * 100).toFixed(2)
+
+  const newPoolShare =
+    totalBalance &&
+    ((Number(newPoolTokens) / Number(totalPoolTokens)) * 100).toFixed(2)
 
   async function handleAddLiquidity() {
     setIsLoading(true)
@@ -59,7 +77,12 @@ export default function Add({
         />
       </div>
 
-      <p>You will receive:</p>
+      <div>
+        <p>You will receive:</p>
+        <Token symbol={dtSymbol} balance={newDtAmount} />
+        <Token symbol="BPT" balance={newPoolTokens} />
+        <Token symbol="% of pool" balance={newPoolShare} />
+      </div>
 
       <div className={stylesIndex.actions}>
         {isLoading ? (
