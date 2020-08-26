@@ -9,6 +9,7 @@ import { toast } from 'react-toastify'
 import InputElement from '../../../atoms/Input/InputElement'
 import Token from './Token'
 import { Balance } from './'
+import PriceUnit from '../../../atoms/Price/PriceUnit'
 
 function calculatePercent(percent: number, num: number) {
   return (percent / 100) * num
@@ -27,7 +28,7 @@ export default function Add({
   totalPoolTokens: string
   totalBalance: Balance
 }): ReactElement {
-  const { ocean, accountId } = useOcean()
+  const { ocean, accountId, balance } = useOcean()
   const [amount, setAmount] = useState<string>()
   const [isLoading, setIsLoading] = useState<boolean>()
   const [newDtAmount, setNewDtAmount] = useState<string>()
@@ -67,6 +68,11 @@ export default function Add({
       <Header title="Add Liquidity" backAction={() => setShowAdd(false)} />
 
       <div className={styles.addInput}>
+        <div className={styles.userBalance}>
+          <span>Available:</span>
+          <PriceUnit price={balance.ocean} symbol="OCEAN" small />
+        </div>
+
         <InputElement
           value={amount}
           name="ocean"

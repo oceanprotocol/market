@@ -5,3 +5,17 @@
   max-width: 12rem;
   margin: 0 auto var(--spacer) auto;
 }
+
+.userBalance {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-size-mini);
+  margin-bottom: calc(var(--spacer) / 4);
+  color: var(--color-secondary);
+}
+
+.userBalance span + div {
+  transform: scale(0.7);
+  transform-origin: right center;
+}

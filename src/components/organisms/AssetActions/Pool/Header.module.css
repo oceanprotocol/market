@@ -2,12 +2,20 @@
   display: flex;
   justify-content: center;
   margin-bottom: var(--spacer);
+  padding-bottom: calc(var(--spacer) / 2);
+  border-bottom: 1px solid var(--brand-grey-lighter);
+  margin-top: -1rem;
+  margin-left: -2rem;
+  margin-right: -2rem;
+  padding-left: var(--spacer);
+  padding-right: var(--spacer);
 }
 
 .headerTitle {
   font-size: var(--font-size-large);
   margin: 0;
   margin-right: auto;
+  margin-left: -3rem;
 }
 
 .back {
