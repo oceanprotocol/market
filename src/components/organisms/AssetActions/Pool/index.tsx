@@ -17,6 +17,12 @@ export interface Balance {
   dt: string
 }
 
+/* 
+  TODO: figure out correct userBalance
+  TODO: create tooltip copy
+  TODO: figure out what to do with BPT
+*/
+
 export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const { ocean, accountId } = useOcean()
   const { price, poolAddress } = useMetadata(ddo)
@@ -46,12 +52,18 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
       setIsLoading(true)
 
       try {
+        //
+        // Get data token symbol
+        //
         const dtSymbol = await ocean.datatokens.getSymbol(
           ddo.dataToken,
           accountId
         )
         setDtSymbol(dtSymbol)
 
+        //
+        // Get everything which is in the pool
+        //
         const oceanReserve = await ocean.pool.getOceanReserve(
           accountId,
           poolAddress
@@ -62,20 +74,23 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           dt: dtReserve
         })
 
+        const totalPoolTokens = await ocean.pool.totalSupply(poolAddress)
+        setTotalPoolTokens(totalPoolTokens)
+
+        //
+        // Get everything the user has put into the pool
+        //
         const poolTokens = await ocean.pool.sharesBalance(
           accountId,
           poolAddress
         )
         setPoolTokens(poolTokens)
 
-        const totalPoolTokens = await ocean.pool.totalSupply(poolAddress)
-        setTotalPoolTokens(totalPoolTokens)
+        const userOceanBalance =
+          (Number(poolTokens) / Number(totalPoolTokens)) * Number(oceanReserve)
 
         const userBalance = {
-          ocean: `${
-            (Number(poolTokens) / Number(totalPoolTokens)) *
-            Number(oceanReserve)
-          }`,
+          ocean: `${userOceanBalance}`,
           dt: '-'
         }
 
@@ -122,7 +137,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           <div className={styles.poolTokens}>
             <div className={styles.tokens}>
               <h3 className={styles.title}>
-                Your Liquidity{' '}
+                Your Liquidity
                 <Tooltip content="Explain what this represents, advantage of providing liquidity..." />
               </h3>
               <Token symbol="OCEAN" balance={userBalance.ocean} />
