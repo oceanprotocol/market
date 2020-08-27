@@ -5,16 +5,20 @@ import { useFormikContext, Form, Field } from 'formik'
 import Input from '../../atoms/Input'
 import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
-import { Persist } from 'formik-persist'
 import Loader from '../../atoms/Loader'
+import { Persist } from '../../atoms/FormikPersist'
 
 export default function PublishForm({
-  content
+  content,
+  publishStepText,
+  isLoading
+
 }: {
-  content: FormContent
+  content: FormContent,
+  publishStepText?:string,
+  isLoading:boolean
 }): ReactElement {
   const { ocean, account } = useOcean()
-  const { publishStepText, isLoading } = usePublish()
   const {
     status,
     setStatus,
@@ -30,6 +34,7 @@ export default function PublishForm({
   useEffect(() => {
     setErrors({})
     setTouched({})
+    
     // setSubmitting(false)
   }, [])
 
@@ -57,7 +62,7 @@ export default function PublishForm({
           <Button
             style="primary"
             type="submit"
-            disabled={!ocean || !account || !isValid || status === 'empty'}
+            disabled={!ocean || !account || !isValid || status === 'empty' }
           >
             Submit
           </Button>
@@ -73,7 +78,7 @@ export default function PublishForm({
           )}
         </footer>
       )}
-      <Persist name={formName} />
+      <Persist name={formName} ignoreFields={['isSubmitting']} />
     </Form>
   )
 }
