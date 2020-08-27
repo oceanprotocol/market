@@ -12,11 +12,10 @@ export default function PublishForm({
   content,
   publishStepText,
   isLoading
-
 }: {
-  content: FormContent,
-  publishStepText?:string,
-  isLoading:boolean
+  content: FormContent
+  publishStepText?: string
+  isLoading: boolean
 }): ReactElement {
   const { ocean, account } = useOcean()
   const {
@@ -34,7 +33,7 @@ export default function PublishForm({
   useEffect(() => {
     setErrors({})
     setTouched({})
-    
+
     // setSubmitting(false)
   }, [])
 
@@ -62,7 +61,7 @@ export default function PublishForm({
           <Button
             style="primary"
             type="submit"
-            disabled={!ocean || !account || !isValid || status === 'empty' }
+            disabled={!ocean || !account || !isValid || status === 'empty'}
           >
             Submit
           </Button>

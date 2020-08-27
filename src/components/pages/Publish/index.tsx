@@ -20,7 +20,7 @@ export default function PublishPage({
 }): ReactElement {
   const { marketFeeAddress, marketFeeAmount } = useSiteMetadata()
   const { accountId, ocean } = useOcean()
-  const { publish, publishError,isLoading,publishStepText } = usePublish()
+  const { publish, publishError, isLoading, publishStepText } = usePublish()
   const navigate = useNavigate()
 
   async function handleSubmit(
@@ -104,7 +104,11 @@ export default function PublishPage({
       >
         {({ values }) => (
           <>
-            <PublishForm content={content.form} isLoading={isLoading} publishStepText={publishStepText} />
+            <PublishForm
+              content={content.form}
+              isLoading={isLoading}
+              publishStepText={publishStepText}
+            />
             <aside>
               <div className={styles.sticky}>
                 <Preview values={values} />
