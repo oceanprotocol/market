@@ -47,9 +47,6 @@ export default function Add({
         poolAddress,
         amount
       )
-      // TODO: Figure out the result structure, thenreplace `any` return in lib-js
-      // returns TransactionReceipt
-      console.log(result)
       setTxId(result.transactionHash)
     } catch (error) {
       console.error(error.message)
@@ -85,7 +82,7 @@ export default function Add({
 
       <div className={styles.output}>
         <p>You will receive</p>
-        {/* <Token symbol="BPT" balance={newPoolTokens} /> */}
+        <Token symbol="BPT" balance={newPoolTokens} />
         <Token symbol="% of pool" balance={newPoolShare} />
       </div>
 

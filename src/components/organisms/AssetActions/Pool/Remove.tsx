@@ -33,7 +33,6 @@ export default function Remove({
         amount,
         maximumPoolShares
       )
-      // TODO: Figure out the result structure, thenreplace `any` return in lib-js
       console.log(result)
     } catch (error) {
       console.error(error.message)
