@@ -27,10 +27,7 @@
 
 /* Data Token Icon Style */
 .icon[class*='DT'] path {
-  fill: var(--brand-grey-dimmed);
-  stroke: var(--brand-black);
-  stroke-width: 5px;
-  stroke-linejoin: round;
+  fill: var(--brand-violet);
 }
 
 .icon[class*='%'],

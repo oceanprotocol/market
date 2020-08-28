@@ -18,9 +18,7 @@ export interface Balance {
 }
 
 /* 
-  TODO: figure out correct userBalance
   TODO: create tooltip copy
-  TODO: figure out what to do with BPT
 */
 
 export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
@@ -86,12 +84,16 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         )
         setPoolTokens(poolTokens)
 
+        // calculate user's provided liquidity based on pool tokens
         const userOceanBalance =
           (Number(poolTokens) / Number(totalPoolTokens)) * Number(oceanReserve)
 
+        const userDtBalance =
+          (Number(poolTokens) / Number(totalPoolTokens)) * Number(dtReserve)
+
         const userBalance = {
           ocean: `${userOceanBalance}`,
-          dt: '-'
+          dt: `${userDtBalance}`
         }
 
         setUserBalance(userBalance)
@@ -143,7 +145,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
               <Token symbol="OCEAN" balance={userBalance.ocean} />
               <Token symbol={dtSymbol} balance={userBalance.dt} />
               {/* <Token symbol="BPT" balance={poolTokens} /> */}
-              <Token symbol="%" balance={poolShare} />
+              <Token symbol="% of pool" balance={poolShare} />
             </div>
 
             <div className={styles.tokens}>
