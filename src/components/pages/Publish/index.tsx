@@ -20,18 +20,18 @@ export default function PublishPage({
 }): ReactElement {
   const { marketFeeAddress, marketFeeAmount } = useSiteMetadata()
   const { accountId, ocean } = useOcean()
-  const { publish, publishError } = usePublish()
+  const { publish, publishError, isLoading, publishStepText } = usePublish()
   const navigate = useNavigate()
 
   async function handleSubmit(
     values: MetadataPublishForm,
     resetForm: () => void
   ): Promise<void> {
-    console.log(`
-      Collected form values:
-      ----------------------
-      ${JSON.stringify(values, null, 2)}
-    `)
+    // console.log(`
+    //   Collected form values:
+    //   ----------------------
+    //   ${JSON.stringify(values, null, 2)}
+    // `)
 
     const metadata = transformPublishFormToMetadata(values)
     const {
@@ -42,12 +42,12 @@ export default function PublishPage({
     } = values.price
     const serviceType = values.access === 'Download' ? 'access' : 'compute'
 
-    console.log(`
-      Transformed metadata values:
-      ----------------------
-      ${JSON.stringify(metadata, null, 2)}
-      Tokens to mint: ${tokensToMint}
-    `)
+    // console.log(`
+    //   Transformed metadata values:
+    //   ----------------------
+    //   ${JSON.stringify(metadata, null, 2)}
+    //   Tokens to mint: ${tokensToMint}
+    // `)
 
     try {
       // mpAddress and mpFee are not yet implemented in ocean js so are not uset
@@ -104,7 +104,11 @@ export default function PublishPage({
       >
         {({ values }) => (
           <>
-            <PublishForm content={content.form} />
+            <PublishForm
+              content={content.form}
+              isLoading={isLoading}
+              publishStepText={publishStepText}
+            />
             <aside>
               <div className={styles.sticky}>
                 <Preview values={values} />
