@@ -8,6 +8,8 @@ import { toast } from 'react-toastify'
 import Loader from '../../../atoms/Loader'
 import InputElement from '../../../atoms/Input/InputElement'
 
+// TODO: make it work, figure out maximumPoolShares
+
 export default function Remove({
   setShowRemove,
   poolAddress

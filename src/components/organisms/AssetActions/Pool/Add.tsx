@@ -12,6 +12,8 @@ import { Balance } from './'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
 import Alert from '../../../atoms/Alert'
 
+// TODO: handle and display all fees somehow
+
 export default function Add({
   setShowAdd,
   poolAddress,
@@ -46,6 +48,7 @@ export default function Add({
         amount
       )
       // TODO: Figure out the result structure, thenreplace `any` return in lib-js
+      // returns TransactionReceipt
       console.log(result)
       setTxId(result.transactionHash)
     } catch (error) {
