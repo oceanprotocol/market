@@ -142,7 +142,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
               </h3>
               <Token symbol="OCEAN" balance={userBalance.ocean} />
               <Token symbol={dtSymbol} balance={userBalance.dt} />
-              <Token symbol="BPT" balance={poolTokens} />
+              {/* <Token symbol="BPT" balance={poolTokens} /> */}
               <Token symbol="%" balance={poolShare} />
             </div>
 
@@ -150,7 +150,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
               <h3 className={styles.title}>Pool Statistics</h3>
               <Token symbol="OCEAN" balance={totalBalance.ocean} />
               <Token symbol={dtSymbol} balance={totalBalance.dt} />
-              <Token symbol="BPT" balance={totalPoolTokens} />
+              {/* <Token symbol="BPT" balance={totalPoolTokens} /> */}
             </div>
           </div>
 

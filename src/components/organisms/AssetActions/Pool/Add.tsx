@@ -79,7 +79,7 @@ export default function Add({
 
       <div className={styles.output}>
         <p>You will receive</p>
-        <Token symbol="BPT" balance={newPoolTokens} />
+        {/* <Token symbol="BPT" balance={newPoolTokens} /> */}
         <Token symbol="% of pool" balance={newPoolShare} />
       </div>
 
