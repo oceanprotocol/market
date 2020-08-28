@@ -10,6 +10,7 @@ import InputElement from '../../../atoms/Input/InputElement'
 import Token from './Token'
 import { Balance } from './'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
+import Alert from '../../../atoms/Alert'
 
 export default function Add({
   setShowAdd,
@@ -24,6 +25,7 @@ export default function Add({
 }): ReactElement {
   const { ocean, accountId, balance } = useOcean()
   const [amount, setAmount] = useState('')
+  const [txId, setTxId] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>()
 
   const newPoolTokens =
@@ -45,6 +47,7 @@ export default function Add({
       )
       // TODO: Figure out the result structure, thenreplace `any` return in lib-js
       console.log(result)
+      setTxId(result.transactionHash)
     } catch (error) {
       console.error(error.message)
       toast.error(error.message)
@@ -94,6 +97,12 @@ export default function Add({
           >
             Supply
           </Button>
+        )}
+        {txId && (
+          <Alert
+            text={`Liquidity added. Transaction ID: ${txId}`}
+            state="success"
+          />
         )}
       </div>
     </div>
