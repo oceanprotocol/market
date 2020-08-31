@@ -118,7 +118,11 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           totalBalance={totalBalance}
         />
       ) : showRemove ? (
-        <Remove setShowRemove={setShowRemove} poolAddress={poolAddress} />
+        <Remove
+          setShowRemove={setShowRemove}
+          poolAddress={poolAddress}
+          totalPoolTokens={totalPoolTokens}
+        />
       ) : (
         <>
           <div className={styles.dataToken}>

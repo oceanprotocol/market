@@ -7,21 +7,21 @@ import Header from './Header'
 import { toast } from 'react-toastify'
 import Loader from '../../../atoms/Loader'
 import InputElement from '../../../atoms/Input/InputElement'
-
-// TODO: make it work, figure out maximumPoolShares
+import Alert from '../../../atoms/Alert'
 
 export default function Remove({
   setShowRemove,
-  poolAddress
+  poolAddress,
+  totalPoolTokens
 }: {
   setShowRemove: (show: boolean) => void
   poolAddress: string
+  totalPoolTokens: string
 }): ReactElement {
   const { ocean, accountId } = useOcean()
   const [amount, setAmount] = useState('')
   const [isLoading, setIsLoading] = useState<boolean>()
-
-  const maximumPoolShares = '?'
+  const [txId, setTxId] = useState<string>('')
 
   async function handleRemoveLiquidity() {
     setIsLoading(true)
@@ -31,9 +31,9 @@ export default function Remove({
         accountId,
         poolAddress,
         amount,
-        maximumPoolShares
+        totalPoolTokens
       )
-      console.log(result)
+      setTxId(result.transactionHash)
     } catch (error) {
       console.error(error.message)
       toast.error(error.message)
@@ -79,6 +79,12 @@ export default function Remove({
           >
             Remove
           </Button>
+        )}
+        {txId && (
+          <Alert
+            text={`Liquidity removed. Transaction ID: ${txId}`}
+            state="success"
+          />
         )}
       </div>
     </div>
