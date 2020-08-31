@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, ChangeEvent } from 'react'
+import React, { ReactElement, useState, ChangeEvent, useEffect } from 'react'
 import styles from './Add.module.css'
 import { useOcean } from '@oceanprotocol/react'
 import Header from './Header'
@@ -24,6 +24,7 @@ export default function Add({
 }): ReactElement {
   const { ocean, accountId, balance } = useOcean()
   const [amount, setAmount] = useState('')
+  const [swapFee, setSwapFee] = useState<string>()
   const [txId, setTxId] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>()
 
@@ -34,6 +35,14 @@ export default function Add({
   const newPoolShare =
     totalBalance &&
     ((Number(newPoolTokens) / Number(totalPoolTokens)) * 100).toFixed(2)
+
+  useEffect(() => {
+    async function getFee() {
+      const swapFee = await ocean.pool.getSwapFee(accountId, poolAddress)
+      setSwapFee(swapFee)
+    }
+    getFee()
+  }, [])
 
   async function handleAddLiquidity() {
     setIsLoading(true)
@@ -78,9 +87,16 @@ export default function Add({
       </div>
 
       <div className={styles.output}>
-        <p>You will receive</p>
-        <Token symbol="BPT" balance={newPoolTokens} />
-        <Token symbol="% of pool" balance={newPoolShare} />
+        <div>
+          <p>You will receive</p>
+          <Token symbol="BPT" balance={newPoolTokens} />
+          <Token symbol="% of pool" balance={newPoolShare} />
+        </div>
+        <div>
+          <p>You will earn</p>
+          <Token symbol="%" balance={swapFee} />
+          of each pool transaction
+        </div>
       </div>
 
       <Actions
