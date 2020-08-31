@@ -14,10 +14,3 @@
   word-break: break-all;
   padding: 0;
 }
-
-.metaFull svg {
-  width: var(--font-size-mini);
-  height: var(--font-size-mini);
-  display: inline-block;
-  fill: currentColor;
-}

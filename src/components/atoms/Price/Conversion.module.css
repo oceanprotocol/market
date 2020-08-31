@@ -3,4 +3,5 @@
   font-size: var(--font-size-small);
   margin-left: calc(var(--spacer) / 6);
   color: var(--color-secondary);
+  font-weight: var(--font-weight-base);
 }

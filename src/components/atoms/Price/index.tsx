@@ -1,61 +1,34 @@
 import React, { ReactElement, useState, useEffect } from 'react'
-import classNames from 'classnames/bind'
-import PriceConversion from './Conversion'
 import styles from './index.module.css'
-import { formatCurrency } from '@coingecko/cryptoformat'
 import { useMetadata, useOcean } from '@oceanprotocol/react'
 import { DDO } from '@oceanprotocol/lib'
 import Loader from '../Loader'
 import Tooltip from '../Tooltip'
-
-const cx = classNames.bind(styles)
+import PriceUnit from './PriceUnit'
 
 export default function Price({
   ddo,
   className,
   small,
-  setPriceOutside
+  conversion
 }: {
   ddo: DDO
   className?: string
   small?: boolean
-  setPriceOutside?: (price: string) => void
+  conversion?: boolean
 }): ReactElement {
-  const { ocean, chainId, accountId } = useOcean()
-  const { getBestPrice } = useMetadata()
-  const [price, setPrice] = useState<string>()
-
-  useEffect(() => {
-    async function init() {
-      console.log(ocean)
-      const price = await getBestPrice(ddo.dataToken)
-      setPrice(price)
-      setPriceOutside && price !== '' && setPriceOutside(price)
-    }
-    init()
-  }, [chainId, accountId, ocean])
-
-  const styleClasses = cx({
-    price: true,
-    small: small,
-    [className]: className
-  })
-
-  const isFree = price === '0'
-
-  const displayPrice = isFree ? (
-    'Free'
-  ) : (
-    <>
-      <span>OCEAN</span> {formatCurrency(Number(price), '', 'en', false, true)}
-      <PriceConversion price={price} />
-    </>
-  )
+  const { ocean } = useOcean()
+  const { price } = useMetadata(ddo)
 
   return !ocean ? (
-    <div className={styles.empty}>Please connect your wallet to view price</div>
+    <div className={styles.empty}>Connect your wallet to view price</div>
   ) : price ? (
-    <div className={styleClasses}>{displayPrice}</div>
+    <PriceUnit
+      price={price}
+      className={className}
+      small={small}
+      conversion={conversion}
+    />
   ) : price === '' ? (
     <div className={styles.empty}>
       No price found{' '}

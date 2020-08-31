@@ -1,23 +1,4 @@
-.price {
-  font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-large);
-  color: var(--brand-grey-dark);
-  line-height: 1;
-}
-
-.price span:first-child {
-  font-weight: var(--font-weight-base);
-  color: var(--color-secondary);
-  font-size: var(--font-size-base);
-}
-
 .empty {
   color: var(--color-secondary);
   font-weight: var(--font-weight-bold);
-}
-
-.small {
-  /* lazy making-conversion-smaller-with-same-markup */
-  transform: scale(0.8);
-  transform-origin: left 80%;
 }

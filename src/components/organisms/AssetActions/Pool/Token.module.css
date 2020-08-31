@@ -1,0 +1,36 @@
+.token {
+  font-weight: var(--font-weight-bold);
+  margin-bottom: calc(var(--spacer) / 3);
+  white-space: nowrap;
+}
+
+.symbol {
+  font-weight: var(--font-weight-base);
+  color: var(--color-secondary);
+  font-size: var(--font-size-base);
+}
+
+.icon {
+  display: inline-block;
+  border: 1px solid var(--brand-grey-lighter);
+  border-radius: 50%;
+  padding: 0.3rem;
+  vertical-align: middle;
+  margin-right: calc(var(--spacer) / 8);
+  margin-top: -0.3rem;
+}
+
+.icon svg {
+  width: var(--font-size-base);
+  height: var(--font-size-base);
+}
+
+/* Data Token Icon Style */
+.icon[class*='DT'] path {
+  fill: var(--brand-violet);
+}
+
+.icon[class*='%'],
+.icon[class*='BPT'] {
+  opacity: 0;
+}

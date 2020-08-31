@@ -1,0 +1,24 @@
+.link {
+  color: var(--brand-grey);
+}
+
+.link svg {
+  width: 0.7em;
+  height: 0.7em;
+  display: inline-block;
+  fill: var(--brand-grey-light);
+}
+
+.link code {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-all;
+  padding: 0;
+}
+
+.link:hover,
+.link:focus,
+.link:hover *,
+.link:focus * {
+  color: var(--brand-pink);
+}

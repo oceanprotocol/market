@@ -58,7 +58,7 @@ export default function AssetContent({
       </div>
       <div>
         <div className={styles.sticky}>
-          <AssetActions metadata={metadata} ddo={ddo} />
+          <AssetActions ddo={ddo} />
         </div>
       </div>
     </article>

@@ -17,12 +17,10 @@ import Alert from '../../atoms/Alert'
 
 export default function Compute({
   ddo,
-  isBalanceSufficient,
-  setPrice
+  isBalanceSufficient
 }: {
   ddo: DDO
   isBalanceSufficient: boolean
-  setPrice: (price: string) => void
 }): ReactElement {
   const { ocean } = useOcean()
   const { compute, isLoading, computeStepText, computeError } = useCompute()
@@ -89,7 +87,7 @@ export default function Compute({
 
   return (
     <div className={styles.compute}>
-      <Price ddo={ddo} setPriceOutside={setPrice} />
+      <Price ddo={ddo} conversion />
 
       <div className={styles.info}>
         <div className={styles.selectType}>

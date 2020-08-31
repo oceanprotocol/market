@@ -4,7 +4,7 @@ import MetaItem from './MetaItem'
 import styles from './MetaFull.module.css'
 import { MetadataMarket } from '../../../@types/Metadata'
 import { DDO } from '@oceanprotocol/lib'
-import { ReactComponent as External } from '../../../images/external.svg'
+import EtherscanLink from '../../atoms/EtherscanLink'
 
 export default function MetaFull({
   ddo,
@@ -32,18 +32,11 @@ export default function MetaFull({
       <MetaItem title="DID" content={<code>{id}</code>} />
 
       <MetaItem
-        title="Data Token Address"
+        title="Data Token"
         content={
-          <a
-            href={`https://rinkeby.etherscan.io/token/${dataToken}`}
-            title="View on Etherscan"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <code>
-              {dataToken} <External />
-            </code>
-          </a>
+          <EtherscanLink network="rinkeby" path={`token/${dataToken}`}>
+            <code>{dataToken}</code>
+          </EtherscanLink>
         }
       />
     </div>

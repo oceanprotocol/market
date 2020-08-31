@@ -26,13 +26,14 @@ export default function PageTemplateAssetDetails({
       try {
         const metadataStore = new MetadataStore(config.metadataStoreUri, Logger)
         const ddo = await metadataStore.retrieveDDO(did)
-        setDdo(ddo)
 
         if (!ddo) {
           setTitle('Could not retrieve asset')
           setError('The DDO was not found in MetadataStore.')
           return
         }
+
+        setDdo(ddo)
 
         const { attributes }: ServiceMetadataMarket = ddo.findServiceByType(
           'metadata'
