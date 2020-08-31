@@ -1,13 +1,10 @@
 import React, { ReactElement, useState, ChangeEvent } from 'react'
 import styles from './Remove.module.css'
-import stylesIndex from './index.module.css'
-import Button from '../../../atoms/Button'
 import { useOcean } from '@oceanprotocol/react'
 import Header from './Header'
 import { toast } from 'react-toastify'
-import Loader from '../../../atoms/Loader'
 import InputElement from '../../../atoms/Input/InputElement'
-import Alert from '../../../atoms/Alert'
+import Actions from './Actions'
 
 export default function Remove({
   setShowRemove,
@@ -68,25 +65,13 @@ export default function Remove({
 
       <p>You will receive</p>
 
-      <div className={stylesIndex.actions}>
-        {isLoading ? (
-          <Loader message="Removing Liquidity..." />
-        ) : (
-          <Button
-            style="primary"
-            size="small"
-            onClick={() => handleRemoveLiquidity()}
-          >
-            Remove
-          </Button>
-        )}
-        {txId && (
-          <Alert
-            text={`Liquidity removed. Transaction ID: ${txId}`}
-            state="success"
-          />
-        )}
-      </div>
+      <Actions
+        isLoading={isLoading}
+        loaderMessage="Removing Liquidity..."
+        actionName="Remove"
+        action={handleRemoveLiquidity}
+        txId={txId}
+      />
     </div>
   )
 }

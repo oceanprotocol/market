@@ -2,6 +2,7 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import { useOcean, useMetadata } from '@oceanprotocol/react'
 import { DDO } from '@oceanprotocol/lib'
 import styles from './index.module.css'
+import stylesActions from './Actions.module.css'
 import Token from './Token'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
 import Loader from '../../../atoms/Loader'
@@ -160,7 +161,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
             </div>
           </div>
 
-          <div className={styles.actions}>
+          <div className={stylesActions.actions}>
             <Button
               style="primary"
               size="small"

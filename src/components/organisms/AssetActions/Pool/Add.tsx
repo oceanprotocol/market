@@ -1,16 +1,13 @@
 import React, { ReactElement, useState, ChangeEvent } from 'react'
 import styles from './Add.module.css'
-import stylesIndex from './index.module.css'
-import Button from '../../../atoms/Button'
 import { useOcean } from '@oceanprotocol/react'
 import Header from './Header'
-import Loader from '../../../atoms/Loader'
 import { toast } from 'react-toastify'
 import InputElement from '../../../atoms/Input/InputElement'
 import Token from './Token'
 import { Balance } from './'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
-import Alert from '../../../atoms/Alert'
+import Actions from './Actions'
 
 // TODO: handle and display all fees somehow
 
@@ -86,25 +83,13 @@ export default function Add({
         <Token symbol="% of pool" balance={newPoolShare} />
       </div>
 
-      <div className={stylesIndex.actions}>
-        {isLoading ? (
-          <Loader message="Adding Liquidity..." />
-        ) : (
-          <Button
-            style="primary"
-            size="small"
-            onClick={() => handleAddLiquidity()}
-          >
-            Supply
-          </Button>
-        )}
-        {txId && (
-          <Alert
-            text={`Liquidity added. Transaction ID: ${txId}`}
-            state="success"
-          />
-        )}
-      </div>
+      <Actions
+        isLoading={isLoading}
+        loaderMessage="Adding Liquidity..."
+        actionName="Supply"
+        action={handleAddLiquidity}
+        txId={txId}
+      />
     </div>
   )
 }
