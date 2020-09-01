@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom/extend-expect'
 import * as Gatsby from 'gatsby'
 import siteMetadata from './__fixtures__/siteMetadata.json'
-import mockReact from './__mocks__/@oceanprotocol/react'
+// import mockReact from './__mocks__/@oceanprotocol/react'
 
 if (typeof window.IntersectionObserver === 'undefined') {
   import('intersection-observer')
