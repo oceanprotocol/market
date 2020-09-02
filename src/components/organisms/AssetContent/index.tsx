@@ -27,7 +27,7 @@ export default function AssetContent({
       <div className={styles.content}>
         <aside className={styles.meta}>
           <p>{datePublished && <Time date={datePublished} />}</p>
-          {categories && (
+          {categories && categories.length && (
             <p>
               <Link to={`/search?categories=["${categories[0]}"]`}>
                 {categories[0]}

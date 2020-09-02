@@ -25,7 +25,7 @@ export const validationSchema = Yup.object().shape<MetadataPublishForm>({
   // ---- optional fields ----
   copyrightHolder: Yup.string(),
   tags: Yup.string(),
-  links: Yup.object<FileMetadata[]>()
+  links: Yup.object<FileMetadata[]>().nullable()
 })
 
 export const initialValues: MetadataPublishForm = {

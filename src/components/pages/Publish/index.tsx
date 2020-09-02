@@ -27,12 +27,6 @@ export default function PublishPage({
     values: MetadataPublishForm,
     resetForm: () => void
   ): Promise<void> {
-    // console.log(`
-    //   Collected form values:
-    //   ----------------------
-    //   ${JSON.stringify(values, null, 2)}
-    // `)
-
     const metadata = transformPublishFormToMetadata(values)
     const {
       tokensToMint,
@@ -41,13 +35,6 @@ export default function PublishPage({
       liquidityProviderFee
     } = values.price
     const serviceType = values.access === 'Download' ? 'access' : 'compute'
-
-    // console.log(`
-    //   Transformed metadata values:
-    //   ----------------------
-    //   ${JSON.stringify(metadata, null, 2)}
-    //   Tokens to mint: ${tokensToMint}
-    // `)
 
     try {
       // mpAddress and mpFee are not yet implemented in ocean js so are not uset

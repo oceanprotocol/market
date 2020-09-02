@@ -23,7 +23,7 @@ export default function FilesInput(props: InputProps): ReactElement {
       const newFileInfo = await getFileInfo(url)
       newFileInfo && helpers.setValue([newFileInfo])
     } catch (error) {
-      toast.error('Could not fetch file info. Please check url and try again')
+      toast.error('Could not fetch file info. Please check URL and try again')
       console.error(error.message)
     } finally {
       setIsLoading(false)

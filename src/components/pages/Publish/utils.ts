@@ -35,9 +35,7 @@ export function transformPublishFormToMetadata(
       description,
       copyrightHolder,
       tags: tags?.split(','),
-      // links: {
-      //   url: links
-      // },
+      links: typeof links !== 'string' && links,
       termsAndConditions,
       priceType: price.type
     }

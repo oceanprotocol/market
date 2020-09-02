@@ -6,6 +6,7 @@ import MetaItem from '../../organisms/AssetContent/MetaItem'
 import styles from './Preview.module.css'
 import File from '../../atoms/File'
 import { MetadataPublishForm } from '../../../@types/MetaData'
+import Button from '../../atoms/Button'
 
 export default function Preview({
   values
@@ -18,13 +19,29 @@ export default function Preview({
       <header>
         {values.name && <h3 className={styles.title}>{values.name}</h3>}
         {values.description && <Markdown text={values.description} />}
-        {values.files && values.files.length && (
-          <File
-            file={values.files[0] as FileMetadata}
-            className={styles.file}
-            small
-          />
-        )}
+        {values.files &&
+          typeof values.files !== 'string' &&
+          values.files.length > 0 && (
+            <File
+              file={values.files[0] as FileMetadata}
+              className={styles.file}
+              small
+            />
+          )}
+        {values.links &&
+          typeof values.links !== 'string' &&
+          values.links.length && (
+            <Button
+              href={(values.links[0] as FileMetadata).url}
+              target="_blank"
+              rel="noreferrer"
+              download
+              style="text"
+              size="small"
+            >
+              Download Sample
+            </Button>
+          )}
         {values.tags && <Tags items={values.tags.split(',')} />}
       </header>
 
@@ -37,6 +54,7 @@ export default function Preview({
                 key.includes('description') ||
                 key.includes('tags') ||
                 key.includes('files') ||
+                key.includes('links') ||
                 key.includes('termsAndConditions') ||
                 key.includes('price') ||
                 value === undefined ||

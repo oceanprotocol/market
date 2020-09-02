@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, FormEvent } from 'react'
 import styles from './PublishForm.module.css'
-import { useOcean, usePublish } from '@oceanprotocol/react'
+import { useOcean } from '@oceanprotocol/react'
 import { useFormikContext, Form, Field } from 'formik'
 import Input from '../../atoms/Input'
 import Button from '../../atoms/Button'
@@ -25,7 +25,6 @@ export default function PublishForm({
     setErrors,
     setTouched,
     resetForm,
-    setValues,
     initialValues
   } = useFormikContext()
   const formName = 'ocean-publish-form'
