@@ -17,6 +17,8 @@ interface ButtonProps {
   style?: 'primary' | 'ghost' | 'text'
   type?: 'submit'
   download?: boolean
+  target?: string
+  rel?: string
 }
 
 export default function Button({
