@@ -1,4 +1,5 @@
 import React, { ReactElement, useState } from 'react'
+import Button from '../../../atoms/Button'
 import { useField } from 'formik'
 import { toast } from 'react-toastify'
 import FileInfo from './Info'
@@ -13,15 +14,21 @@ interface Values {
 export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props)
   const [isLoading, setIsLoading] = useState(false)
+  const [files, setFiles] = useState([{}])
 
-  async function handleButtonClick(e: React.SyntheticEvent, url: string) {
+  async function handleButtonClick(
+    e: React.SyntheticEvent,
+    url: string,
+    i: number
+  ) {
     // File example 'https://oceanprotocol.com/tech-whitepaper.pdf'
     e.preventDefault()
 
     try {
       setIsLoading(true)
       const newFileInfo = await getFileInfo(url)
-      newFileInfo && helpers.setValue([newFileInfo])
+      files[i] = newFileInfo
+      newFileInfo && addItem(files)
     } catch (error) {
       toast.error('Could not fetch file info. Please check url and try again')
       console.error(error.message)
@@ -30,21 +37,41 @@ export default function FilesInput(props: InputProps): ReactElement {
     }
   }
 
-  function removeItem() {
-    helpers.setValue(undefined)
+  function addItem(_files: Array<string>) {
+    setFiles([..._files, {}])
+    helpers.setValue(_files)
   }
+
+  function removeItem(i: number) {
+    const newFiles = [...files]
+    newFiles.splice(i, 1)
+    setFiles(newFiles)
+    helpers.setValue(newFiles)
+  }
+
+  console.log('files', files)
 
   return (
     <>
-      {field && typeof field.value === 'object' ? (
-        <FileInfo file={field.value[0]} removeItem={removeItem} />
-      ) : (
-        <FileInput
-          {...props}
-          {...field}
-          isLoading={isLoading}
-          handleButtonClick={handleButtonClick}
-        />
+      {files.map((file: string, i: number) =>
+        file.contentLength ? (
+          <FileInfo
+            key={i}
+            file={file}
+            removeItem={(e: React.SyntheticEvent) => removeItem(i)}
+          />
+        ) : (
+          <FileInput
+            {...props}
+            {...field}
+            key={i}
+            value={file.url || this}
+            isLoading={isLoading}
+            handleButtonClick={(e: React.SyntheticEvent, value: string) =>
+              handleButtonClick(e, value, i)
+            }
+          />
+        )
       )}
     </>
   )

@@ -18,13 +18,20 @@ export default function Preview({
       <header>
         {values.name && <h3 className={styles.title}>{values.name}</h3>}
         {values.description && <Markdown text={values.description} />}
-        {values.files && values.files.length && (
-          <File
-            file={values.files[0] as FileMetadata}
-            className={styles.file}
-            small
-          />
-        )}
+        {values.files &&
+          values.files.length &&
+          values.files.map &&
+          values.files.map(
+            (file, i) =>
+              file.contentType && (
+                <File
+                  key={i}
+                  file={file as FileMetadata}
+                  className={styles.file}
+                  small
+                />
+              )
+          )}
         {values.tags && <Tags items={values.tags.split(',')} />}
       </header>
 

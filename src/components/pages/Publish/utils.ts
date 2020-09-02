@@ -27,7 +27,8 @@ export function transformPublishFormToMetadata(
       author,
       dateCreated: currentTime,
       datePublished: currentTime,
-      files: typeof files !== 'string' && files,
+      files:
+        typeof files !== 'string' && files.filter((file) => file.contentType),
       license
     },
     additionalInformation: {
