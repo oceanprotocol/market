@@ -4,7 +4,12 @@ const testFormData: MetadataPublishForm = {
   author: '',
   files: [],
   license: '',
-  price: '0',
+  price: {
+    tokensToMint: 1,
+    type: 'simple',
+    weightOnDataToken: '1',
+    liquidityProviderFee: '0.1'
+  },
   name: '',
   description: 'description',
   termsAndConditions: true,

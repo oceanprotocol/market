@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect } from 'react'
+import React, { ReactElement } from 'react'
 import styles from './index.module.css'
 import { useMetadata, useOcean } from '@oceanprotocol/react'
 import { DDO } from '@oceanprotocol/lib'

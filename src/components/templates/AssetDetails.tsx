@@ -35,12 +35,9 @@ export default function PageTemplateAssetDetails({
 
         setDdo(ddo)
 
-        const { attributes }: ServiceMetadataMarket = ddo.findServiceByType(
-          'metadata'
-        )
-
+        const { attributes } = ddo.findServiceByType('metadata')
         setTitle(attributes.main.name)
-        setMetadata(attributes)
+        setMetadata((attributes as unknown) as MetadataMarket)
       } catch (error) {
         setTitle('Error retrieving asset')
         setError(error.message)

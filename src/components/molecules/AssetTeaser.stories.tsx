@@ -9,7 +9,7 @@ export default {
 
 export const Default = () => (
   <AssetTeaser
-    did={ddo.id}
+    ddo={ddo as DDO}
     metadata={new DDO(ddo).findServiceByType('metadata').attributes as any}
   />
 )

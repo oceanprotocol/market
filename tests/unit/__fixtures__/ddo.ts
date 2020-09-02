@@ -27,7 +27,7 @@ const ddo: Partial<DDO> = {
       type: 'metadata',
       serviceEndpoint:
         'https://aquarius.pacific.dev-ocean.com/api/v1/aquarius/assets/ddo/did:op:e6fda48e8d814d5d9655645aac3c046cc87528dbc1a9449799e579d7b83d1360',
-      attributes: {
+      attributes: ({
         main: {
           type: 'dataset',
           name: 'What a Waste Global Database',
@@ -81,7 +81,7 @@ const ddo: Partial<DDO> = {
           numVotes: 100,
           rating: 5
         }
-      } as MetadataMarket,
+      } as unknown) as MetadataMarket,
       index: 0
     } as ServiceMetadataMarket,
     {

@@ -1,10 +1,12 @@
+import { DDO } from '@oceanprotocol/lib'
 import React from 'react'
 import Price from '.'
+import ddo from '../../../../tests/unit/__fixtures__/ddo'
 
 export default {
   title: 'Atoms/Price'
 }
 
-export const Normal = () => <Price price="126479107489300000000" />
+export const Normal = () => <Price ddo={ddo as DDO} />
 
-export const Small = () => <Price price="126479107489300000000" small />
+export const Small = () => <Price ddo={ddo as DDO} small />
