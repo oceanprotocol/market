@@ -19,25 +19,29 @@ export default function Preview({
       <header>
         {values.name && <h3 className={styles.title}>{values.name}</h3>}
         {values.description && <Markdown text={values.description} />}
-        {values.files && values.files.length && (
-          <File
-            file={values.files[0] as FileMetadata}
-            className={styles.file}
-            small
-          />
-        )}
-        {values.links && values.links.length && (
-          <Button
-            href={(values.links[0] as FileMetadata).url}
-            target="_blank"
-            rel="noreferrer"
-            download
-            style="text"
-            size="small"
-          >
-            Download Sample
-          </Button>
-        )}
+        {values.files &&
+          typeof values.files !== 'string' &&
+          values.files.length > 0 && (
+            <File
+              file={values.files[0] as FileMetadata}
+              className={styles.file}
+              small
+            />
+          )}
+        {values.links &&
+          typeof values.links !== 'string' &&
+          values.links.length && (
+            <Button
+              href={(values.links[0] as FileMetadata).url}
+              target="_blank"
+              rel="noreferrer"
+              download
+              style="text"
+              size="small"
+            >
+              Download Sample
+            </Button>
+          )}
         {values.tags && <Tags items={values.tags.split(',')} />}
       </header>
 
