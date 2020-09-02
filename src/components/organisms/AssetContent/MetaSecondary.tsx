@@ -1,10 +1,9 @@
 import React, { ReactElement } from 'react'
-import shortid from 'shortid'
-import { ListItem } from '../../atoms/Lists'
 import MetaItem from './MetaItem'
 import styles from './MetaSecondary.module.css'
 import { MetadataMarket } from '../../../@types/Metadata'
 import Tags from '../../atoms/Tags'
+import Button from '../../atoms/Button'
 
 export default function MetaSecondary({
   metadata
@@ -15,18 +14,21 @@ export default function MetaSecondary({
 
   return (
     <aside className={styles.metaSecondary}>
-      {links && (
+      {links && links.length && (
         <div className={styles.samples}>
           <MetaItem
             title="Sample Data"
             content={
-              <ul>
-                {links?.map((link) => (
-                  <ListItem key={shortid.generate()}>
-                    <a href={link.url}>{link.name}</a>
-                  </ListItem>
-                ))}
-              </ul>
+              <Button
+                href={links[0].url}
+                target="_blank"
+                rel="noreferrer"
+                download
+                style="text"
+                size="small"
+              >
+                Download Sample
+              </Button>
             }
           />
         </div>
