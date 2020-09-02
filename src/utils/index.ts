@@ -50,7 +50,7 @@ export async function getFileInfo(url: string): Promise<FileMetadata> {
     data: { url }
   })
 
-  if (response.status > 299 || !response.data.result) {
+  if (response.status > 299 || !response.data) {
     toast.error('Could not connect to File API')
     return
   }
