@@ -5,13 +5,13 @@ import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatastore/Metadata
 import AssetList from './AssetList'
 
 export default function PublishedList(): ReactElement {
-  const { ocean, status, account, accountId } = useOcean()
+  const { ocean, status, accountId } = useOcean()
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     async function getPublished() {
-      if (!account || !accountId || !ocean) return
+      if (!accountId || !ocean) return
 
       setIsLoading(true)
 
@@ -22,11 +22,11 @@ export default function PublishedList(): ReactElement {
       setIsLoading(false)
     }
     getPublished()
-  }, [accountId, ocean, status])
+  }, [ocean, status, accountId])
 
   return isLoading ? (
     <Loader />
-  ) : queryResult ? (
+  ) : accountId && ocean ? (
     <AssetList queryResult={queryResult} />
   ) : (
     <div>Connect your wallet to see your published data sets.</div>

@@ -1,81 +1,34 @@
 import React, { useEffect, useState, ReactElement } from 'react'
 import Loader from '../atoms/Loader'
-import {
-  useOcean,
-  OceanConnectionStatus,
-  useSearch
-} from '@oceanprotocol/react'
-import Table from '../atoms/Table'
-import Price from '../atoms/Price'
-import { fromWei } from 'web3-utils'
-import DateCell from '../atoms/Table/DateCell'
-import DdoLinkCell from '../atoms/Table/DdoLinkCell'
-import { MetadataMain } from '@oceanprotocol/lib'
-
-const consumedColumns = [
-  {
-    name: 'Published',
-    selector: 'published',
-    sortable: true,
-    cell: function getCell(row: any) {
-      return <DateCell date={row.published} />
-    }
-  },
-  {
-    name: 'Name',
-    selector: 'name',
-    sortable: true,
-    cell: function getCell(row: any) {
-      return <DdoLinkCell id={row.id} name={row.name} />
-    }
-  },
-  {
-    name: 'Price',
-    selector: 'price',
-    sortable: true,
-    cell: function getCell(row: any) {
-      return <Price price={fromWei(row.price)} small />
-    }
-  }
-]
+import { useOcean } from '@oceanprotocol/react'
+import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatastore/MetadataStore'
+import AssetList from './AssetList'
 
 export default function ConsumedList(): ReactElement {
-  const { ocean, status, accountId, account } = useOcean()
-  const [consumedList, setConsumedList] = useState<any>([])
-  const { getConsumedList } = useSearch()
+  const { ocean, status, accountId } = useOcean()
+  const [queryResult, setQueryResult] = useState<QueryResult>()
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     async function getConsumed() {
-      if (!accountId || !ocean || status !== OceanConnectionStatus.CONNECTED)
-        return
+      if (!accountId || !ocean) return
+
       setIsLoading(true)
 
-      const consumedItems = await getConsumedList()
+      // const queryResult = await
 
-      if (!consumedItems) return
+      setQueryResult(queryResult)
 
-      const data = consumedItems.map((ddo) => {
-        const { attributes } = ddo.findServiceByType('metadata')
-        const { name, price, datePublished } = attributes.main as MetadataMain
-        return {
-          published: datePublished,
-          name: name,
-          price: price
-        }
-      })
-
-      setConsumedList(data)
       setIsLoading(false)
     }
     getConsumed()
-  }, [accountId, ocean, status])
+  }, [ocean, status, accountId])
 
   return isLoading ? (
     <Loader />
-  ) : account && ocean ? (
-    <Table data={consumedList} columns={consumedColumns} />
+  ) : accountId && ocean ? (
+    <AssetList queryResult={queryResult} />
   ) : (
-    <div>Connect your wallet to see your consumed data sets.</div>
+    <div>Connect your wallet to see your published data sets.</div>
   )
 }

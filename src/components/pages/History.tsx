@@ -1,6 +1,5 @@
-import React from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 import styles from './History.module.css'
-import Web3Feedback from '../molecules/Wallet/Feedback'
 import ConsumedList from '../organisms/ConsumedList'
 import PublishedList from '../organisms/PublishedList'
 import JobsList from '../organisms/JobsList'
@@ -12,7 +11,7 @@ const sections = [
   },
   {
     title: 'Downloaded',
-    component: 'Coming Soon...'
+    component: <ConsumedList />
   },
   {
     title: 'Compute Jobs',
@@ -20,7 +19,13 @@ const sections = [
   }
 ]
 
-const Section = ({ title, component }: { title: string; component: any }) => {
+const Section = ({
+  title,
+  component
+}: {
+  title: string
+  component: ReactNode
+}) => {
   return (
     <div className={styles.section}>
       <h2 className={styles.sectionTitle}>{title}</h2>
@@ -29,23 +34,13 @@ const Section = ({ title, component }: { title: string; component: any }) => {
   )
 }
 
-const HistoryPage: React.FC = () => {
+export default function HistoryPage(): ReactElement {
   return (
-    <article className={styles.grid}>
-      <div className={styles.content}>
-        {sections.map((section) => {
-          const { title, component } = section
-          return <Section key={title} title={title} component={component} />
-        })}
-      </div>
-
-      <aside>
-        <div className={styles.sticky}>
-          <Web3Feedback />
-        </div>
-      </aside>
+    <article className={styles.content}>
+      {sections.map((section) => {
+        const { title, component } = section
+        return <Section key={title} title={title} component={component} />
+      })}
     </article>
   )
 }
-
-export default HistoryPage
