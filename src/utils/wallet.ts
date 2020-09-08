@@ -39,6 +39,19 @@ export const web3ModalOpts = {
   theme: web3ModalTheme
 }
 
+export function getChainId(network: string): number {
+  switch (network) {
+    case 'mainnet':
+      return 1
+    case 'rinkeby':
+      return 4
+    case 'kovan':
+      return 42
+    default:
+      return 0
+  }
+}
+
 export function isCorrectNetwork(chainId: number): boolean {
   const configuredNetwork = getChainId(network)
   return configuredNetwork === chainId
@@ -60,18 +73,5 @@ export function getNetworkName(chainId: number): string {
       return 'Kovan'
     default:
       return 'Unknown'
-  }
-}
-
-export function getChainId(network: string): number {
-  switch (network) {
-    case 'mainnet':
-      return 1
-    case 'rinkeby':
-      return 4
-    case 'kovan':
-      return 42
-    default:
-      return 0
   }
 }
