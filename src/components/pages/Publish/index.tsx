@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import { useNavigate } from '@reach/router'
 import { toast } from 'react-toastify'
 import { Formik } from 'formik'
-import { usePublish, useOcean } from '@oceanprotocol/react'
+import { usePublish, useOcean, PriceOptions } from '@oceanprotocol/react'
 import styles from './index.module.css'
 import PublishForm from './PublishForm'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
@@ -19,7 +19,6 @@ export default function PublishPage({
   content: { form: FormContent }
 }): ReactElement {
   const { marketFeeAddress, marketFeeAmount } = useSiteMetadata()
-  const { accountId, ocean } = useOcean()
   const { publish, publishError, isLoading, publishStepText } = usePublish()
   const navigate = useNavigate()
 
@@ -28,35 +27,18 @@ export default function PublishPage({
     resetForm: () => void
   ): Promise<void> {
     const metadata = transformPublishFormToMetadata(values)
-    const {
-      tokensToMint,
-      type,
-      weightOnDataToken,
-      liquidityProviderFee
-    } = values.price
+    const priceOptions = values.price
     const serviceType = values.access === 'Download' ? 'access' : 'compute'
 
     try {
-      // mpAddress and mpFee are not yet implemented in ocean js so are not uset
+      // mpAddress and mpFee are not yet implemented in ocean js so are not used
       const ddo = await publish(
         metadata as any,
-        tokensToMint.toString(),
-        serviceType,
-        marketFeeAddress,
-        marketFeeAmount
+        priceOptions,
+        serviceType
+        // marketFeeAddress,
+        // marketFeeAmount
       )
-      switch (type) {
-        case 'advanced': {
-          // weight is hardcoded at 9 (90%) and publisher fee at 0.03(this was a random value set by me)
-          const pool = await ocean.pool.createDTPool(
-            accountId,
-            ddo.dataToken,
-            tokensToMint.toString(),
-            weightOnDataToken,
-            liquidityProviderFee
-          )
-        }
-      }
 
       if (publishError) {
         toast.error(publishError)
