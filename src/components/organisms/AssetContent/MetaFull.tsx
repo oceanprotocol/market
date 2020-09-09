@@ -24,6 +24,8 @@ export default function MetaFull({
   const [dtSymbol, setDtSymbol] = useState<string>()
 
   useEffect(() => {
+    if (!ocean) return
+
     async function getDataTokenInfo() {
       const name = await ocean.datatokens.getName(dataToken, accountId)
       setDtName(name)
@@ -31,7 +33,7 @@ export default function MetaFull({
       setDtSymbol(symbol)
     }
     getDataTokenInfo()
-  }, [])
+  }, [ocean])
 
   return (
     <div className={styles.metaFull}>
@@ -50,7 +52,7 @@ export default function MetaFull({
         title="Data Token"
         content={
           <EtherscanLink network="rinkeby" path={`token/${dataToken}`}>
-            {dtName} - {dtSymbol}
+            {dtName ? `${dtName} - ${dtSymbol}` : <code>{dataToken}</code>}
           </EtherscanLink>
         }
       />
