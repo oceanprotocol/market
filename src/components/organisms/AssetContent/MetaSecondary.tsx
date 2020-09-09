@@ -14,6 +14,8 @@ export default function MetaSecondary({
 
   return (
     <aside className={styles.metaSecondary}>
+      {tags && tags.length > 0 && <Tags items={tags} />}
+
       {links && links.length && (
         <div className={styles.samples}>
           <MetaItem
@@ -33,8 +35,6 @@ export default function MetaSecondary({
           />
         </div>
       )}
-
-      {tags && tags.length > 0 && <Tags items={tags} />}
     </aside>
   )
 }
