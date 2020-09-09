@@ -1,22 +1,17 @@
 import React, { useState, ReactElement } from 'react'
-import Loader from '../atoms/Loader'
-import {
-  useOcean,
-  OceanConnectionStatus,
-  useSearch,
-  ComputeItem
-} from '@oceanprotocol/react'
+import Loader from '../../atoms/Loader'
+import { useOcean } from '@oceanprotocol/react'
 
-import Price from '../atoms/Price'
+import Price from '../../atoms/Price'
 import { fromWei } from 'web3-utils'
-import Table from '../atoms/Table'
-import Button from '../atoms/Button'
+import Table from '../../atoms/Table'
+import Button from '../../atoms/Button'
 import { MetadataMain, Logger } from '@oceanprotocol/lib'
-import DateCell from '../atoms/Table/DateCell'
-import DdoLinkCell from '../atoms/Table/DdoLinkCell'
+import DateCell from '../../atoms/Table/DateCell'
+import DdoLinkCell from '../../atoms/Table/DdoLinkCell'
 import shortid from 'shortid'
-import ActionsCell from '../atoms/Table/ActionsCell'
-import JobDetailsDialog from '../molecules/JobDetailsDialog'
+import ActionsCell from '../../atoms/Table/ActionsCell'
+import JobDetailsDialog from './JobDetailsDialog'
 
 const columns = [
   {

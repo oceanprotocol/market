@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react'
 import { ComputeItem } from '@oceanprotocol/react'
-import BaseDialog from '../atoms/BaseDialog'
+import BaseDialog from '../../atoms/BaseDialog'
 import styles from './JobDetailsDialog.module.css'
-import MetaItem from '../organisms/AssetContent/MetaItem'
-import Time from '../atoms/Time'
+import MetaItem from '../../organisms/AssetContent/MetaItem'
+import Time from '../../atoms/Time'
 import shortid from 'shortid'
 import { Link } from 'gatsby'
 

@@ -1,8 +1,8 @@
 import React, { useEffect, useState, ReactElement } from 'react'
-import Loader from '../atoms/Loader'
+import Loader from '../../atoms/Loader'
 import { useOcean } from '@oceanprotocol/react'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatastore/MetadataStore'
-import AssetList from './AssetList'
+import AssetList from '../../organisms/AssetList'
 
 export default function PublishedList(): ReactElement {
   const { ocean, status, accountId } = useOcean()

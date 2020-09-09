@@ -1,17 +1,12 @@
 import React, { ReactElement, ReactNode } from 'react'
-import styles from './History.module.css'
-import ConsumedList from '../organisms/ConsumedList'
-import PublishedList from '../organisms/PublishedList'
-import JobsList from '../organisms/JobsList'
+import styles from './index.module.css'
+import PublishedList from './PublishedList'
+import JobsList from './JobsList'
 
 const sections = [
   {
     title: 'Published',
     component: <PublishedList />
-  },
-  {
-    title: 'Downloaded',
-    component: <ConsumedList />
   },
   {
     title: 'Compute Jobs',
