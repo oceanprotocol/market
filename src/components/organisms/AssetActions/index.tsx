@@ -44,7 +44,7 @@ export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
       title: 'Use',
       content: UseContent
     },
-    (!priceType || priceType === 'advanced') && {
+    (!priceType || priceType === 'dynamic') && {
       title: 'Pool',
       content: <Pool ddo={ddo} />
     }

@@ -9,7 +9,7 @@ export const validationSchema = Yup.object().shape<MetadataPublishForm>({
   price: Yup.object().shape({
     tokensToMint: Yup.number().required('Required'),
     type: Yup.string()
-      .matches(/simple|advanced/g)
+      .matches(/fixed|dynamic/g)
       .required('Required'),
     weightOnDataToken: Yup.string().required('Required'),
     liquidityProviderFee: Yup.string()
@@ -32,7 +32,7 @@ export const initialValues: MetadataPublishForm = {
   name: '',
   author: '',
   price: {
-    type: 'simple',
+    type: 'fixed',
     tokensToMint: 1,
     weightOnDataToken: '9', // 90% on data token
     liquidityProviderFee: '0.1' // in %

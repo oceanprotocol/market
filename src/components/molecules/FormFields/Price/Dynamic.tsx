@@ -1,7 +1,7 @@
 import React, { ReactElement, useState, ChangeEvent, useEffect } from 'react'
 import { graphql, useStaticQuery } from 'gatsby'
 import stylesIndex from './index.module.css'
-import styles from './Advanced.module.css'
+import styles from './Dynamic.module.css'
 import FormHelp from '../../../atoms/Input/Help'
 import Wallet from '../../Wallet'
 import { useOcean } from '@oceanprotocol/react'
@@ -13,7 +13,7 @@ import InputElement from '../../../atoms/Input/InputElement'
 import Label from '../../../atoms/Input/Label'
 import Tooltip from '../../../atoms/Tooltip'
 
-export default function Advanced({
+export default function Dynamic({
   ocean,
   tokensToMint,
   weightOnDataToken,

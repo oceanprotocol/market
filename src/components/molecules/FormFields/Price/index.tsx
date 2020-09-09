@@ -3,8 +3,8 @@ import { graphql, useStaticQuery } from 'gatsby'
 import { InputProps } from '../../../atoms/Input'
 import styles from './index.module.css'
 import Tabs from '../../../atoms/Tabs'
-import Simple from './Simple'
-import Advanced from './Advanced'
+import Fixed from './Fixed'
+import Dynamic from './Dynamic'
 import { useField } from 'formik'
 
 const query = graphql`
@@ -14,11 +14,11 @@ const query = graphql`
         node {
           childPagesJson {
             price {
-              simple {
+              fixed {
                 title
                 info
               }
-              advanced {
+              dynamic {
                 title
                 info
                 tooltips {
@@ -49,7 +49,7 @@ export default function Price(props: InputProps): ReactElement {
   }
 
   function handleTabChange(tabName: string) {
-    const type = tabName.startsWith('Simple') ? 'simple' : 'advanced'
+    const type = tabName.toLowerCase()
     helpers.setValue({ ...field.value, type })
   }
 
@@ -62,25 +62,25 @@ export default function Price(props: InputProps): ReactElement {
 
   const tabs = [
     {
-      title: content.simple.title,
+      title: content.fixed.title,
       content: (
-        <Simple
+        <Fixed
           ocean={ocean}
           onChange={handleOceanChange}
-          content={content.simple}
+          content={content.fixed}
         />
       )
     },
     {
-      title: content.advanced.title,
+      title: content.dynamic.title,
       content: (
-        <Advanced
+        <Dynamic
           ocean={ocean}
           tokensToMint={tokensToMint}
           weightOnDataToken={weightOnDataToken}
           onOceanChange={handleOceanChange}
           liquidityProviderFee={liquidityProviderFee}
-          content={content.advanced}
+          content={content.dynamic}
         />
       )
     }
