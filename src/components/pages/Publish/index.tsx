@@ -12,6 +12,7 @@ import { transformPublishFormToMetadata } from './utils'
 import Preview from './Preview'
 import { MetadataPublishForm } from '../../../@types/MetaData'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
+import { useUserPreferences } from '../../../providers/UserPreferences'
 
 export default function PublishPage({
   content
@@ -19,6 +20,7 @@ export default function PublishPage({
   content: { form: FormContent }
 }): ReactElement {
   const { marketFeeAddress, marketFeeAmount } = useSiteMetadata()
+  const { debug } = useUserPreferences()
   const { publish, publishError, isLoading, publishStepText } = usePublish()
   const navigate = useNavigate()
 
@@ -85,25 +87,29 @@ export default function PublishPage({
               </div>
             </aside>
 
-            <div>
-              <h5>Collected Form Values</h5>
-              <pre>
-                <code>{JSON.stringify(values, null, 2)}</code>
-              </pre>
-            </div>
+            {debug === true && (
+              <>
+                <div>
+                  <h5>Collected Form Values</h5>
+                  <pre>
+                    <code>{JSON.stringify(values, null, 2)}</code>
+                  </pre>
+                </div>
 
-            <div>
-              <h5>Transformed Values</h5>
-              <pre>
-                <code>
-                  {JSON.stringify(
-                    transformPublishFormToMetadata(values),
-                    null,
-                    2
-                  )}
-                </code>
-              </pre>
-            </div>
+                <div>
+                  <h5>Transformed Values</h5>
+                  <pre>
+                    <code>
+                      {JSON.stringify(
+                        transformPublishFormToMetadata(values),
+                        null,
+                        2
+                      )}
+                    </code>
+                  </pre>
+                </div>
+              </>
+            )}
           </>
         )}
       </Formik>
