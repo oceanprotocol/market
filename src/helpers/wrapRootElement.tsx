@@ -1,11 +1,17 @@
 import React, { ReactElement } from 'react'
 import { OceanProvider } from '@oceanprotocol/react'
-import { ConfigHelper } from '@oceanprotocol/lib'
+import { ConfigHelper, Config } from '@oceanprotocol/lib'
 import { web3ModalOpts } from '../utils/wallet'
 import { NetworkMonitor } from './NetworkMonitor'
 import appConfig from '../../app.config'
+import {
+  ConfigHelperNetworkName,
+  ConfigHelperNetworkId
+} from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 
-export function getOceanConfig(network: string): ConfigHelper {
+export function getOceanConfig(
+  network: ConfigHelperNetworkName | ConfigHelperNetworkId
+): Config {
   return new ConfigHelper().getConfig(
     network,
     process.env.GATSBY_INFURA_PROJECT_ID
