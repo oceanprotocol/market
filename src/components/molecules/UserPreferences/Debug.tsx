@@ -15,7 +15,7 @@ export default function Debug(): ReactElement {
         defaultChecked={debug === true}
         onChange={() => setDebug(!debug)}
       />
-      <FormHelp>Show geeky debug information in some places.</FormHelp>
+      <FormHelp>Show geeky information in some places.</FormHelp>
     </li>
   )
 }
