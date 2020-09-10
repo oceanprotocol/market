@@ -1,8 +1,11 @@
 import React, { ReactElement, ReactNode } from 'react'
+import classNames from 'classnames/bind'
 import loadable from '@loadable/component'
 import { useSpring, animated } from 'react-spring'
 import styles from './Tooltip.module.css'
 import { ReactComponent as Info } from '../../images/info.svg'
+
+const cx = classNames.bind(styles)
 
 const Tippy = loadable(() => import('@tippyjs/react/headless'))
 
@@ -22,12 +25,14 @@ export default function Tooltip({
   content,
   children,
   trigger,
-  disabled
+  disabled,
+  className
 }: {
   content: ReactNode
   children?: ReactNode
   trigger?: string
   disabled?: boolean
+  className?: string
 }): ReactElement {
   const [props, setSpring] = useSpring(() => animation.from)
 
@@ -46,6 +51,11 @@ export default function Tooltip({
       config: { ...animation.config, clamp: true }
     })
   }
+
+  const styleClasses = cx({
+    tooltip: true,
+    [className]: className
+  })
 
   return (
     <Tippy
@@ -69,10 +79,10 @@ export default function Tooltip({
       onMount={onMount}
       onHide={onHide}
       fallback={
-        <div className={styles.tooltip}>{children || <DefaultTrigger />}</div>
+        <div className={styleClasses}>{children || <DefaultTrigger />}</div>
       }
     >
-      <div className={styles.tooltip}>{children || <DefaultTrigger />}</div>
+      <div className={styleClasses}>{children || <DefaultTrigger />}</div>
     </Tippy>
   )
 }

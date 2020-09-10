@@ -6,7 +6,7 @@ import React, {
   useState
 } from 'react'
 
-declare type Currency = 'eur' | 'usd'
+declare type Currency = 'EUR' | 'USD'
 
 interface UserPreferencesValue {
   debug: boolean
@@ -23,7 +23,7 @@ function UserPreferencesProvider({
   children: ReactNode
 }): ReactElement {
   const [debug, setDebug] = useState<boolean>(false)
-  const [currency, setCurrency] = useState<Currency>('eur')
+  const [currency, setCurrency] = useState<Currency>('EUR')
 
   return (
     <UserPreferencesContext.Provider

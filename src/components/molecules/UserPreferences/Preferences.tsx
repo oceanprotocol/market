@@ -10,27 +10,27 @@ export default function Preferences(): ReactElement {
     <ul className={styles.preferences}>
       <li>
         <Input
-          name="debug"
-          label="Debug Mode"
-          help="Activate to show geeky debug information in some places throughout the UI."
-          type="checkbox"
-          options={['Enable Debug Mode']}
-          defaultChecked={debug === true}
-          onChange={() => setDebug(!debug)}
-        />
-      </li>
-      <li>
-        <Input
           name="currency"
           label="Currency"
           help="Select your preferred currency."
           type="select"
-          options={['eur', 'usd']}
+          options={['EUR', 'USD']}
           value={currency}
           onChange={(e: ChangeEvent<HTMLSelectElement>) =>
             setCurrency(e.target.value)
           }
           small
+        />
+      </li>
+      <li>
+        <Input
+          name="debug"
+          label="Debug Mode"
+          help="Show geeky debug information in some places."
+          type="checkbox"
+          options={['Activate Debug Mode']}
+          defaultChecked={debug === true}
+          onChange={() => setDebug(!debug)}
         />
       </li>
     </ul>

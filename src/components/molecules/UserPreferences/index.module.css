@@ -1,0 +1,17 @@
+.preferences {
+  padding: calc(var(--spacer) / 2);
+  margin-left: var(--spacer);
+  cursor: pointer;
+}
+
+.icon {
+  fill: var(--brand-grey-light);
+  transition: fill 0.2s ease-out;
+}
+
+.preferences:hover .icon,
+.preferences:focus .icon,
+.preferences:active .icon,
+.preferences[aria-expanded='true'] .icon {
+  fill: var(--brand-grey);
+}

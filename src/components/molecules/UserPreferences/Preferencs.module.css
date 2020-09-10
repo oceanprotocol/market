@@ -1,3 +1,17 @@
 .preferences {
   padding: calc(var(--spacer) / 2);
 }
+
+.preferences li > div {
+  margin-bottom: 0;
+}
+
+.preferences li {
+  border-bottom: 1px solid var(--brand-grey-lighter);
+  margin-bottom: calc(var(--spacer) / 2);
+}
+
+.preferences li:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}

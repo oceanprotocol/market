@@ -58,6 +58,7 @@
 
 .navigation li {
   display: inline-block;
+  vertical-align: middle;
 }
 
 .navigation button,
