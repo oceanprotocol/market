@@ -10,14 +10,27 @@ const DefaultInput = (props: InputProps) => (
   <input className={styles.input} id={props.name} {...props} />
 )
 
-export default function InputElement(props: InputProps): ReactElement {
-  const { type, options, name, prefix, postfix } = props
-
+export default function InputElement({
+  type,
+  options,
+  name,
+  prefix,
+  postfix,
+  small,
+  field,
+  ...props
+}: InputProps): ReactElement {
   switch (type) {
     case 'select':
       return (
-        <select id={name} className={styles.select} {...props}>
-          <option value="">---</option>
+        <select
+          id={name}
+          className={`${styles.select} ${small && styles.selectSmall}`}
+          {...props}
+        >
+          {field !== undefined && field.value === '' && (
+            <option value="">---</option>
+          )}
           {options &&
             options
               .sort((a: string, b: string) => a.localeCompare(b))
@@ -29,7 +42,9 @@ export default function InputElement(props: InputProps): ReactElement {
         </select>
       )
     case 'textarea':
-      return <textarea id={name} className={styles.input} {...props} />
+      return (
+        <textarea name={name} id={name} className={styles.input} {...props} />
+      )
     case 'radio':
     case 'checkbox':
       return (
@@ -41,6 +56,7 @@ export default function InputElement(props: InputProps): ReactElement {
                   className={styles.radio}
                   id={slugify(option)}
                   type={type}
+                  name={name}
                   {...props}
                 />
                 <label className={styles.radioLabel} htmlFor={slugify(option)}>
@@ -51,20 +67,20 @@ export default function InputElement(props: InputProps): ReactElement {
         </div>
       )
     case 'files':
-      return <FilesInput {...props} />
+      return <FilesInput name={name} {...field} {...props} />
     case 'price':
-      return <Price {...props} />
+      return <Price name={name} {...field} {...props} />
     case 'terms':
-      return <Terms {...props} />
+      return <Terms name={name} options={options} {...field} {...props} />
     default:
       return prefix || postfix ? (
         <div className={`${prefix ? styles.prefixGroup : styles.postfixGroup}`}>
           {prefix && <div className={styles.prefix}>{prefix}</div>}
-          <DefaultInput type={type || 'text'} {...props} />
+          <DefaultInput name={name} type={type || 'text'} {...props} />
           {postfix && <div className={styles.postfix}>{postfix}</div>}
         </div>
       ) : (
-        <DefaultInput type={type || 'text'} {...props} />
+        <DefaultInput name={name} type={type || 'text'} {...props} />
       )
   }
 }

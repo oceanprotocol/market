@@ -3,6 +3,7 @@ import { FormikProps, connect } from 'formik'
 import debounce from 'lodash.debounce'
 import omit from 'lodash.omit'
 import isEqual from 'react-fast-compare'
+import { Logger } from '@oceanprotocol/lib'
 
 export interface PersistProps {
   name: string
@@ -21,7 +22,7 @@ class PersistImpl extends React.Component<
 
   saveForm = debounce((data: FormikProps<any>) => {
     const dataToSave = this.omitIgnoredFields(data)
-    console.log('data tosave', dataToSave)
+    Logger.log('data to save', dataToSave)
     if (this.props.isSessionStorage) {
       window.sessionStorage.setItem(this.props.name, JSON.stringify(dataToSave))
     } else {
@@ -31,10 +32,10 @@ class PersistImpl extends React.Component<
 
   omitIgnoredFields = (data: FormikProps<any>) => {
     const { ignoreFields } = this.props
-    console.log('omit fiel', ignoreFields)
+    Logger.log('omitted fields', ignoreFields)
     const { values, touched, errors } = data
 
-    console.log('vale', values, omit(values, ignoreFields))
+    Logger.log('values', values, omit(values, ignoreFields))
     return ignoreFields
       ? omit(
           {

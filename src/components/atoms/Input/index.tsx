@@ -37,10 +37,20 @@ export interface InputProps {
   prefix?: string
   postfix?: string
   step?: string
+  defaultChecked?: boolean
+  small?: boolean
 }
 
 export default function Input(props: Partial<InputProps>): ReactElement {
-  const { required, name, label, help, additionalComponent, field } = props
+  const {
+    required,
+    name,
+    label,
+    help,
+    additionalComponent,
+    small,
+    field
+  } = props
 
   const hasError =
     props.form &&
@@ -60,7 +70,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
       <Label htmlFor={name} required={required}>
         {label}
       </Label>
-      <InputElement {...field} {...props} />
+      <InputElement small={small} {...field} {...props} />
 
       {field && (
         <div className={styles.error}>

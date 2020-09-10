@@ -8,6 +8,7 @@ import MetaSecondary from './MetaSecondary'
 import styles from './index.module.css'
 import AssetActions from '../AssetActions'
 import { DDO } from '@oceanprotocol/lib'
+import { useUserPreferences } from '../../../providers/UserPreferences'
 
 export interface AssetContentProps {
   metadata: MetadataMarket
@@ -21,6 +22,7 @@ export default function AssetContent({
 }: AssetContentProps): ReactElement {
   const { datePublished } = metadata.main
   const { description, categories } = metadata.additionalInformation
+  const { debug } = useUserPreferences()
 
   return (
     <article className={styles.grid}>
@@ -52,9 +54,11 @@ export default function AssetContent({
           {/* <DeleteAction ddo={ddo} /> */}
         </div>
 
-        <pre>
-          <code>{JSON.stringify(ddo, null, 2)}</code>
-        </pre>
+        {debug === true && (
+          <pre>
+            <code>{JSON.stringify(ddo, null, 2)}</code>
+          </pre>
+        )}
       </div>
       <div>
         <div className={styles.sticky}>

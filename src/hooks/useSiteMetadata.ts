@@ -18,6 +18,7 @@ const query = graphql`
           network
           marketFeeAddress
           marketFeeAmount
+          currencies
         }
       }
     }

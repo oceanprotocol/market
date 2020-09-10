@@ -8,6 +8,7 @@ import {
   ConfigHelperNetworkName,
   ConfigHelperNetworkId
 } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
+import { UserPreferencesProvider } from '../providers/UserPreferences'
 
 export function getOceanConfig(
   network: ConfigHelperNetworkName | ConfigHelperNetworkId
@@ -30,8 +31,10 @@ export default function wrapRootElement({
       initialConfig={oceanInitialConfig}
       web3ModalOpts={web3ModalOpts}
     >
-      <NetworkMonitor />
-      {element}
+      <UserPreferencesProvider>
+        <NetworkMonitor />
+        {element}
+      </UserPreferencesProvider>
     </OceanProvider>
   )
 }

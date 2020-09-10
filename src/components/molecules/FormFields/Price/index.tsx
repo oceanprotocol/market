@@ -6,6 +6,7 @@ import Tabs from '../../../atoms/Tabs'
 import Fixed from './Fixed'
 import Dynamic from './Dynamic'
 import { useField } from 'formik'
+import { useUserPreferences } from '../../../../providers/UserPreferences'
 
 const query = graphql`
   query PriceFieldQuery {
@@ -35,6 +36,7 @@ const query = graphql`
 `
 
 export default function Price(props: InputProps): ReactElement {
+  const { debug } = useUserPreferences()
   const data = useStaticQuery(query)
   const content = data.content.edges[0].node.childPagesJson.price
 
@@ -89,9 +91,11 @@ export default function Price(props: InputProps): ReactElement {
   return (
     <div className={styles.price}>
       <Tabs items={tabs} handleTabChange={handleTabChange} />
-      <pre>
-        <code>{JSON.stringify(field.value)}</code>
-      </pre>
+      {debug === true && (
+        <pre>
+          <code>{JSON.stringify(field.value)}</code>
+        </pre>
+      )}
     </div>
   )
 }
