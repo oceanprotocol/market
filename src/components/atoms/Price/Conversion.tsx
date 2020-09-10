@@ -4,10 +4,11 @@ import { fetchData, isBrowser } from '../../../utils'
 import styles from './Conversion.module.css'
 import classNames from 'classnames/bind'
 import { formatCurrency } from '@coingecko/cryptoformat'
+import { useUserPreferences } from '../../../providers/UserPreferences'
 
 const cx = classNames.bind(styles)
 
-const currencies = 'EUR' // comma-separated list
+const currencies = 'EUR,USD' // comma-separated list
 const url = `https://api.coingecko.com/api/v3/simple/price?ids=ocean-protocol&vs_currencies=${currencies}&include_24hr_change=true`
 
 export default function Conversion({
@@ -19,23 +20,27 @@ export default function Conversion({
   update?: boolean
   className?: string
 }): ReactElement {
-  const [priceEur, setPriceEur] = useState('0.00')
+  const [priceFiat, setPriceFiat] = useState('0.00')
+  const { currency } = useUserPreferences()
 
   const styleClasses = cx({
     conversion: true,
     [className]: className
   })
 
-  const onSuccess = async (data: { 'ocean-protocol': { eur: number } }) => {
+  const onSuccess = async (data: {
+    'ocean-protocol': { eur: number; usd: number }
+  }) => {
     if (!data) return
     if (!price || price === '' || price === '0') {
-      setPriceEur('0.00')
+      setPriceFiat('0.00')
       return
     }
 
-    const { eur } = data['ocean-protocol']
-    const converted = eur * Number(price)
-    setPriceEur(`${formatCurrency(converted, 'EUR', undefined, true)}`)
+    const { eur, usd } = data['ocean-protocol']
+    const fiatValue = currency === 'EUR' ? eur : usd
+    const converted = fiatValue * Number(price)
+    setPriceFiat(`${formatCurrency(converted, currency, undefined, true)}`)
   }
 
   useEffect(() => {
@@ -46,7 +51,7 @@ export default function Conversion({
     if (isBrowser && price !== '0') {
       getData()
     }
-  }, [price])
+  }, [price, currency])
 
   if (update) {
     // Fetch new prices periodically with swr
@@ -61,7 +66,7 @@ export default function Conversion({
       className={styleClasses}
       title="Approximation based on current spot price on Coingecko"
     >
-      ≈ {priceEur} EUR
+      ≈ {priceFiat} {currency}
     </span>
   )
 }
