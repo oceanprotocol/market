@@ -11,7 +11,7 @@ const DefaultInput = (props: InputProps) => (
 )
 
 export default function InputElement(props: InputProps): ReactElement {
-  const { type, options, name, prefix, postfix, small } = props
+  const { type, options, name, prefix, postfix, small, field } = props
 
   switch (type) {
     case 'select':
@@ -21,7 +21,9 @@ export default function InputElement(props: InputProps): ReactElement {
           className={`${styles.select} ${small && styles.selectSmall}`}
           {...props}
         >
-          <option value="">---</option>
+          {field !== undefined && field.value === '' && (
+            <option value="">---</option>
+          )}
           {options &&
             options
               .sort((a: string, b: string) => a.localeCompare(b))
