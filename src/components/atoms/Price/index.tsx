@@ -22,14 +22,14 @@ export default function Price({
 
   return !ocean ? (
     <div className={styles.empty}>Connect your wallet to view price</div>
-  ) : price ? (
+  ) : price && price.value ? (
     <PriceUnit
-      price={price}
+      price={price.value}
       className={className}
       small={small}
       conversion={conversion}
     />
-  ) : price === '' ? (
+  ) : price && price.value === '' ? (
     <div className={styles.empty}>
       No price found{' '}
       <Tooltip content="We could not find a pool for this data set, which can have multiple reasons. Is your wallet connected to the correct network?" />

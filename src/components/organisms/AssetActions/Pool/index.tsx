@@ -26,7 +26,7 @@ export interface Balance {
 export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const { debug } = useUserPreferences()
   const { ocean, accountId } = useOcean()
-  const { price, poolAddress } = useMetadata(ddo)
+  const { price } = useMetadata(ddo)
 
   const [poolTokens, setPoolTokens] = useState<string>()
   const [totalPoolTokens, setTotalPoolTokens] = useState<string>()
@@ -47,7 +47,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
     ((Number(poolTokens) / Number(totalPoolTokens)) * 100).toFixed(2)
 
   useEffect(() => {
-    if (!ocean || !accountId || !poolAddress || !price) return
+    if (!ocean || !accountId || !price || !price.value) return
 
     async function init() {
       setIsLoading(true)
@@ -67,15 +67,18 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         //
         const oceanReserve = await ocean.pool.getOceanReserve(
           accountId,
-          poolAddress
+          price.address
         )
-        const dtReserve = await ocean.pool.getDTReserve(accountId, poolAddress)
+        const dtReserve = await ocean.pool.getDTReserve(
+          accountId,
+          price.address
+        )
         setTotalBalance({
           ocean: oceanReserve,
           dt: dtReserve
         })
 
-        const totalPoolTokens = await ocean.pool.totalSupply(poolAddress)
+        const totalPoolTokens = await ocean.pool.totalSupply(price.address)
         setTotalPoolTokens(totalPoolTokens)
 
         //
@@ -83,7 +86,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         //
         const poolTokens = await ocean.pool.sharesBalance(
           accountId,
-          poolAddress
+          price.address
         )
         setPoolTokens(poolTokens)
 
@@ -107,7 +110,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
       }
     }
     init()
-  }, [ocean, accountId, price, poolAddress])
+  }, [ocean, accountId, price])
 
   return (
     <>
@@ -116,25 +119,28 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
       ) : showAdd ? (
         <Add
           setShowAdd={setShowAdd}
-          poolAddress={poolAddress}
+          poolAddress={price.address}
           totalPoolTokens={totalPoolTokens}
           totalBalance={totalBalance}
         />
       ) : showRemove ? (
         <Remove
           setShowRemove={setShowRemove}
-          poolAddress={poolAddress}
+          poolAddress={price.address}
           totalPoolTokens={totalPoolTokens}
         />
       ) : (
         <>
           <div className={styles.dataToken}>
             <PriceUnit price="1" symbol={dtSymbol} /> ={' '}
-            <PriceUnit price={price} />
-            <Conversion price={price} />
+            <PriceUnit price={price.value} />
+            <Conversion price={price.value} />
             <Tooltip content="Explain how this price is determined..." />
             <div className={styles.dataTokenLinks}>
-              <EtherscanLink network="rinkeby" path={`address/${poolAddress}`}>
+              <EtherscanLink
+                network="rinkeby"
+                path={`address/${price.address}`}
+              >
                 Pool
               </EtherscanLink>
               <EtherscanLink network="rinkeby" path={`token/${ddo.dataToken}`}>
