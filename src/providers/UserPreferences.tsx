@@ -20,14 +20,14 @@ const localStorageKey = 'ocean-user-preferences'
 
 function getLocalStorage() {
   const storageParsed =
-    typeof window !== undefined &&
+    typeof window !== 'undefined' &&
     JSON.parse(window.localStorage.getItem(localStorageKey))
   return storageParsed
 }
 
 function setLocalStorage(values: UserPreferencesValue) {
   return (
-    typeof window !== undefined &&
+    typeof window !== 'undefined' &&
     window.localStorage.setItem(localStorageKey, JSON.stringify(values))
   )
 }
