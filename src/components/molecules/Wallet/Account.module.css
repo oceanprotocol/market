@@ -55,7 +55,7 @@
   transition: transform 0.2s ease-out;
 }
 
-.wallet[aria-expanded='true'] .button svg {
+[aria-expanded='true'] .button svg {
   transform: rotate(180deg);
 }
 

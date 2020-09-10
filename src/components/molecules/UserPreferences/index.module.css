@@ -6,7 +6,7 @@
 
 .icon {
   fill: var(--brand-grey-light);
-  transition: fill 0.2s ease-out;
+  transition: 0.2s ease-out;
 }
 
 .preferences:hover .icon,
@@ -14,6 +14,10 @@
 .preferences:active .icon,
 .preferences[aria-expanded='true'] .icon {
   fill: var(--brand-grey);
+}
+
+.preferences[aria-expanded='true'] .icon {
+  transform: rotate(180deg);
 }
 
 .preferencesDetails {
