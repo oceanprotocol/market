@@ -11,12 +11,16 @@ const DefaultInput = (props: InputProps) => (
 )
 
 export default function InputElement(props: InputProps): ReactElement {
-  const { type, options, name, prefix, postfix } = props
+  const { type, options, name, prefix, postfix, small } = props
 
   switch (type) {
     case 'select':
       return (
-        <select id={name} className={styles.select} {...props}>
+        <select
+          id={name}
+          className={`${styles.select} ${small && styles.selectSmall}`}
+          {...props}
+        >
           <option value="">---</option>
           {options &&
             options

@@ -37,6 +37,8 @@ export interface InputProps {
   prefix?: string
   postfix?: string
   step?: string
+  defaultChecked?: boolean
+  small?: boolean
 }
 
 export default function Input(props: Partial<InputProps>): ReactElement {

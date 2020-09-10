@@ -6,6 +6,7 @@ import styles from './Menu.module.css'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import { ReactComponent as Logo } from '@oceanprotocol/art/logo/logo.svg'
 import Container from '../atoms/Container'
+import UserPreferences from './UserPreferences'
 
 const Wallet = loadable(() => import('./Wallet'))
 
@@ -49,6 +50,9 @@ export default function Menu(): ReactElement {
               <MenuLink item={item} />
             </li>
           ))}
+          <li>
+            <UserPreferences />
+          </li>
         </ul>
       </Container>
     </nav>
