@@ -96,6 +96,7 @@
   min-height: 0;
   display: inline-block;
   vertical-align: middle;
+  margin-top: -2px;
 }
 
 .radio::after,

@@ -41,7 +41,11 @@ export default function Conversion({
     const values = data[tokenId]
     const fiatValue = values[currency.toLowerCase()]
     const converted = fiatValue * Number(price)
-    setPriceConverted(`${formatCurrency(converted, currency, undefined, true)}`)
+    const convertedFormatted = Number(
+      formatCurrency(converted, currency, undefined, true)
+    ).toFixed(2)
+
+    setPriceConverted(`${convertedFormatted}`)
   }
 
   useEffect(() => {
