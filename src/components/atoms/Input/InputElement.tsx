@@ -53,7 +53,7 @@ export default function InputElement({
             options.map((option: string, index: number) => (
               <div className={styles.radioWrap} key={index}>
                 <input
-                  className={styles.radio}
+                  className={styles[type]}
                   id={slugify(option)}
                   type={type}
                   name={name}

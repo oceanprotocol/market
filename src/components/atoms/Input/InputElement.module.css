@@ -86,6 +86,68 @@
   padding-left: 0.5rem;
 }
 
+.radio,
+.checkbox {
+  composes: input;
+  position: relative;
+  padding: 0;
+  width: 18px;
+  height: 18px;
+  min-height: 0;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.radio::after,
+.checkbox::after {
+  content: '';
+  display: block;
+  left: 0;
+  top: 0;
+  position: absolute;
+  opacity: 0;
+  transition: transform 0.3s ease-out, opacity 0.2s;
+}
+
+.radio:checked,
+.checkbox:checked {
+  border-color: var(--brand-pink);
+  background: var(--brand-pink);
+}
+
+.radio:focus,
+.checkbox:focus {
+  box-shadow: 0 0 0 var(--brand-pink);
+}
+
+.radio:checked::after,
+.checkbox:checked::after {
+  opacity: 1;
+}
+
+.radio {
+  border-radius: 50%;
+}
+
+.radio::after {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--brand-white);
+  transform: scale(0.7);
+}
+
+.checkbox::after {
+  width: 6px;
+  height: 9px;
+  border: 2px solid var(--brand-white);
+  border-top: 0;
+  border-left: 0;
+  left: 5px;
+  top: 2px;
+  transform: rotate(40deg);
+}
+
 .prefixGroup,
 .postfixGroup {
   display: inline-flex;
