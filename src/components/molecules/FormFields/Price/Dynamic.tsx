@@ -68,7 +68,7 @@ export default function Dynamic({
         <FormHelp className={stylesIndex.help}>{content.info}</FormHelp>
 
         <aside className={styles.wallet}>
-          {balance && balance.ocean && (
+          {balance?.ocean && (
             <div className={styles.balance}>
               OCEAN <strong>{balance.ocean}</strong>
             </div>

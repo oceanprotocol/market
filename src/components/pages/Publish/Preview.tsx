@@ -28,20 +28,18 @@ export default function Preview({
               small
             />
           )}
-        {values.links &&
-          typeof values.links !== 'string' &&
-          values.links.length && (
-            <Button
-              href={(values.links[0] as FileMetadata).url}
-              target="_blank"
-              rel="noreferrer"
-              download
-              style="text"
-              size="small"
-            >
-              Download Sample
-            </Button>
-          )}
+        {typeof values.links !== 'string' && values.links?.length && (
+          <Button
+            href={(values.links[0] as FileMetadata).url}
+            target="_blank"
+            rel="noreferrer"
+            download
+            style="text"
+            size="small"
+          >
+            Download Sample
+          </Button>
+        )}
         {values.tags && <Tags items={values.tags.split(',')} />}
       </header>
 

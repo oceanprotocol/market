@@ -11,7 +11,7 @@ describe('Button', () => {
     const button = container.querySelector('button')
     expect(button).toBeInTheDocument()
     expect(button).toHaveTextContent('primary')
-    expect(button && button.className).toMatch(/primary/)
+    expect(button?.className).toMatch(/primary/)
   })
 
   it('href renders correctly without crashing', () => {
@@ -31,6 +31,6 @@ describe('Button', () => {
     const button = container.querySelector('button')
     expect(button).toBeInTheDocument()
     expect(button).toHaveTextContent('text')
-    expect(button && button.className).toMatch(/text/)
+    expect(button?.className).toMatch(/text/)
   })
 })

@@ -19,7 +19,7 @@ function MenuLink({ item }: { item: MenuItem }) {
   const location = useLocation()
 
   const classes =
-    location && location.pathname === item.link
+    location?.pathname === item.link
       ? `${styles.link} ${styles.active}`
       : styles.link
 

@@ -12,31 +12,29 @@ export default function MetaSecondary({
 }): ReactElement {
   return (
     <aside className={styles.metaSecondary}>
-      {metadata?.additionalInformation?.tags &&
-        metadata?.additionalInformation?.tags.length > 0 && (
-          <Tags items={metadata?.additionalInformation?.tags} />
-        )}
+      {metadata?.additionalInformation?.tags.length > 0 && (
+        <Tags items={metadata?.additionalInformation?.tags} />
+      )}
 
-      {metadata?.additionalInformation?.links &&
-        metadata?.additionalInformation?.links.length && (
-          <div className={styles.samples}>
-            <MetaItem
-              title="Sample Data"
-              content={
-                <Button
-                  href={metadata?.additionalInformation?.links[0].url}
-                  target="_blank"
-                  rel="noreferrer"
-                  download
-                  style="text"
-                  size="small"
-                >
-                  Download Sample
-                </Button>
-              }
-            />
-          </div>
-        )}
+      {metadata?.additionalInformation?.links.length && (
+        <div className={styles.samples}>
+          <MetaItem
+            title="Sample Data"
+            content={
+              <Button
+                href={metadata?.additionalInformation?.links[0].url}
+                target="_blank"
+                rel="noreferrer"
+                download
+                style="text"
+                size="small"
+              >
+                Download Sample
+              </Button>
+            }
+          />
+        </div>
+      )}
     </aside>
   )
 }

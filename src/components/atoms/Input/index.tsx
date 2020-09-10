@@ -53,8 +53,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
   } = props
 
   const hasError =
-    props.form &&
-    props.form.touched[field.name] &&
+    props.form?.touched[field.name] &&
     typeof props.form.errors[field.name] === 'string'
 
   const styleClasses = cx({
@@ -65,7 +64,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
   return (
     <div
       className={styleClasses}
-      data-is-submitting={props.form && props.form.isSubmitting ? true : null}
+      data-is-submitting={props.form?.isSubmitting ? true : null}
     >
       <Label htmlFor={name} required={required}>
         {label}

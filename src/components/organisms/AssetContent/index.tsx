@@ -28,16 +28,15 @@ export default function AssetContent({
       <div className={styles.content}>
         <aside className={styles.meta}>
           <p>{datePublished && <Time date={datePublished} />}</p>
-          {metadata?.additionalInformation?.categories &&
-            metadata?.additionalInformation?.categories?.length && (
-              <p>
-                <Link
-                  to={`/search?categories=["${metadata?.additionalInformation?.categories[0]}"]`}
-                >
-                  {metadata?.additionalInformation?.categories[0]}
-                </Link>
-              </p>
-            )}
+          {metadata?.additionalInformation?.categories?.length && (
+            <p>
+              <Link
+                to={`/search?categories=["${metadata?.additionalInformation?.categories[0]}"]`}
+              >
+                {metadata?.additionalInformation?.categories[0]}
+              </Link>
+            </p>
+          )}
         </aside>
 
         <Markdown text={metadata?.additionalInformation?.description || ''} />

@@ -25,7 +25,7 @@ export default function Table({
 }) {
   return (
     <div>
-      {data && data.length ? (
+      {data?.length ? (
         <DataTable noHeader columns={columns} data={data} />
       ) : (
         <div>No Data Sets Yet.</div>
