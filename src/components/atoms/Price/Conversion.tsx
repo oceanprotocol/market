@@ -5,11 +5,9 @@ import styles from './Conversion.module.css'
 import classNames from 'classnames/bind'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../../providers/UserPreferences'
+import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 
 const cx = classNames.bind(styles)
-
-const currencies = 'EUR,USD' // comma-separated list
-const url = `https://api.coingecko.com/api/v3/simple/price?ids=ocean-protocol&vs_currencies=${currencies}&include_24hr_change=true`
 
 export default function Conversion({
   price,
@@ -20,27 +18,30 @@ export default function Conversion({
   update?: boolean
   className?: string
 }): ReactElement {
-  const [priceFiat, setPriceFiat] = useState('0.00')
+  const { appConfig } = useSiteMetadata()
+  const tokenId = 'ocean-protocol'
+  const currencies = appConfig.currencies.join(',') // comma-separated list
+  const url = `https://api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=${currencies}&include_24hr_change=true`
   const { currency } = useUserPreferences()
+
+  const [priceConverted, setPriceConverted] = useState('0.00')
 
   const styleClasses = cx({
     conversion: true,
     [className]: className
   })
 
-  const onSuccess = async (data: {
-    'ocean-protocol': { eur: number; usd: number }
-  }) => {
+  const onSuccess = async (data: { [tokenId]: { [key: string]: number } }) => {
     if (!data) return
     if (!price || price === '' || price === '0') {
-      setPriceFiat('0.00')
+      setPriceConverted('0.00')
       return
     }
 
-    const { eur, usd } = data['ocean-protocol']
-    const fiatValue = currency === 'EUR' ? eur : usd
+    const values = data[tokenId]
+    const fiatValue = values[currency.toLowerCase()]
     const converted = fiatValue * Number(price)
-    setPriceFiat(`${formatCurrency(converted, currency, undefined, true)}`)
+    setPriceConverted(`${formatCurrency(converted, currency, undefined, true)}`)
   }
 
   useEffect(() => {
@@ -66,7 +67,7 @@ export default function Conversion({
       className={styleClasses}
       title="Approximation based on current spot price on Coingecko"
     >
-      ≈ {priceFiat} {currency}
+      ≈ {priceConverted} {currency}
     </span>
   )
 }

@@ -1,9 +1,11 @@
 import React, { ReactElement, ChangeEvent } from 'react'
+import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import Input from '../../atoms/Input'
 
 export default function Currency(): ReactElement {
   const { currency, setCurrency } = useUserPreferences()
+  const { appConfig } = useSiteMetadata()
 
   return (
     <li>
@@ -12,7 +14,7 @@ export default function Currency(): ReactElement {
         label="Currency"
         help="Select your preferred currency."
         type="select"
-        options={['EUR', 'USD']}
+        options={appConfig.currencies}
         value={currency}
         onChange={(e: ChangeEvent<HTMLSelectElement>) =>
           setCurrency(e.target.value)

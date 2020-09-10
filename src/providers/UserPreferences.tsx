@@ -7,11 +7,9 @@ import React, {
   useEffect
 } from 'react'
 
-declare type Currency = 'EUR' | 'USD'
-
 interface UserPreferencesValue {
   debug: boolean
-  currency: Currency
+  currency: string
   setDebug?: (value: boolean) => void
   setCurrency?: (value: string) => void
 }
@@ -45,7 +43,7 @@ function UserPreferencesProvider({
   const [debug, setDebug] = useState<boolean>(
     (localStorage && localStorage.debug) || false
   )
-  const [currency, setCurrency] = useState<Currency>(
+  const [currency, setCurrency] = useState<string>(
     (localStorage && localStorage.currency) || 'EUR'
   )
 
