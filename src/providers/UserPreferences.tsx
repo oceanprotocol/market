@@ -6,6 +6,8 @@ import React, {
   useState,
   useEffect
 } from 'react'
+import { Logger } from '@oceanprotocol/lib'
+import { LogLevel } from '@oceanprotocol/lib/dist/node/utils/Logger'
 
 interface UserPreferencesValue {
   debug: boolean
@@ -51,6 +53,13 @@ function UserPreferencesProvider({
   useEffect(() => {
     setLocalStorage({ debug, currency })
   }, [debug, currency])
+
+  // Set ocen-lib-js log levels, default: Error
+  useEffect(() => {
+    debug === true
+      ? Logger.setLevel(LogLevel.Verbose)
+      : Logger.setLevel(LogLevel.Error)
+  }, [debug])
 
   return (
     <UserPreferencesContext.Provider
