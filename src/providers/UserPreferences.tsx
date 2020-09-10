@@ -3,7 +3,8 @@ import React, {
   useContext,
   ReactElement,
   ReactNode,
-  useState
+  useState,
+  useEffect
 } from 'react'
 
 declare type Currency = 'EUR' | 'USD'
@@ -11,19 +12,46 @@ declare type Currency = 'EUR' | 'USD'
 interface UserPreferencesValue {
   debug: boolean
   currency: Currency
-  setDebug: (value: boolean) => void
-  setCurrency: (value: string) => void
+  setDebug?: (value: boolean) => void
+  setCurrency?: (value: string) => void
 }
 
 const UserPreferencesContext = createContext(null)
+
+const localStorageKey = 'ocean-user-preferences'
+
+function getLocalStorage() {
+  const storageParsed =
+    window && JSON.parse(window.localStorage.getItem(localStorageKey))
+  return storageParsed
+}
+
+function setLocalStorage(values: UserPreferencesValue) {
+  return (
+    window &&
+    window.localStorage.setItem(localStorageKey, JSON.stringify(values))
+  )
+}
 
 function UserPreferencesProvider({
   children
 }: {
   children: ReactNode
 }): ReactElement {
-  const [debug, setDebug] = useState<boolean>(false)
-  const [currency, setCurrency] = useState<Currency>('EUR')
+  const localStorage = getLocalStorage()
+
+  // Set default values from localStorage
+  const [debug, setDebug] = useState<boolean>(
+    (localStorage && localStorage.debug) || false
+  )
+  const [currency, setCurrency] = useState<Currency>(
+    (localStorage && localStorage.currency) || 'EUR'
+  )
+
+  // Write values to localStorage on change
+  useEffect(() => {
+    setLocalStorage({ debug, currency })
+  }, [debug, currency])
 
   return (
     <UserPreferencesContext.Provider
