@@ -18,7 +18,6 @@ export default function MetaFull({
   const { ocean, accountId } = useOcean()
   const { id, dataToken } = ddo
   const { dateCreated, datePublished, author, license } = metadata.main
-  const { categories, copyrightHolder } = metadata.additionalInformation
 
   const [dtName, setDtName] = useState<string>()
   const [dtSymbol, setDtSymbol] = useState<string>()
@@ -38,9 +37,17 @@ export default function MetaFull({
   return (
     <div className={styles.metaFull}>
       <MetaItem title="Author" content={author} />
-      <MetaItem title="Copyright Holder" content={copyrightHolder} />
+      <MetaItem
+        title="Copyright Holder"
+        content={metadata?.additionalInformation?.copyrightHolder}
+      />
       <MetaItem title="License" content={license} />
-      {categories && <MetaItem title="Category" content={categories[0]} />}
+      {metadata?.additionalInformation?.categories && (
+        <MetaItem
+          title="Category"
+          content={metadata?.additionalInformation?.categories[0]}
+        />
+      )}
       <MetaItem title="Data Created" content={<Time date={dateCreated} />} />
 
       <MetaItem

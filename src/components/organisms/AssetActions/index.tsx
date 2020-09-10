@@ -7,6 +7,7 @@ import Tabs from '../../atoms/Tabs'
 import { useOcean, useMetadata } from '@oceanprotocol/react'
 import compareAsBN from '../../../utils/compareAsBN'
 import Pool from './Pool'
+import { AdditionalInformationMarket } from '../../../@types/MetaData'
 
 export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
   const { balance } = useOcean()
@@ -15,7 +16,6 @@ export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
 
   const isCompute = Boolean(ddo.findServiceByType('compute'))
   const { attributes } = ddo.findServiceByType('metadata')
-  const { priceType } = attributes.additionalInformation
 
   // Check user balance against price
   useEffect(() => {
@@ -44,7 +44,10 @@ export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
       title: 'Use',
       content: UseContent
     },
-    (!priceType || priceType === 'dynamic') && {
+    (!((attributes.additionalInformation as unknown) as AdditionalInformationMarket)
+      ?.priceType ||
+      ((attributes.additionalInformation as unknown) as AdditionalInformationMarket)
+        ?.priceType === 'dynamic') && {
       title: 'Pool',
       content: <Pool ddo={ddo} />
     }

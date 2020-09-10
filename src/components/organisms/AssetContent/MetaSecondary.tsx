@@ -10,31 +10,33 @@ export default function MetaSecondary({
 }: {
   metadata: MetadataMarket
 }): ReactElement {
-  const { links, tags } = metadata.additionalInformation
-
   return (
     <aside className={styles.metaSecondary}>
-      {tags && tags.length > 0 && <Tags items={tags} />}
+      {metadata?.additionalInformation?.tags &&
+        metadata?.additionalInformation?.tags.length > 0 && (
+          <Tags items={metadata?.additionalInformation?.tags} />
+        )}
 
-      {links && links.length && (
-        <div className={styles.samples}>
-          <MetaItem
-            title="Sample Data"
-            content={
-              <Button
-                href={links[0].url}
-                target="_blank"
-                rel="noreferrer"
-                download
-                style="text"
-                size="small"
-              >
-                Download Sample
-              </Button>
-            }
-          />
-        </div>
-      )}
+      {metadata?.additionalInformation?.links &&
+        metadata?.additionalInformation?.links.length && (
+          <div className={styles.samples}>
+            <MetaItem
+              title="Sample Data"
+              content={
+                <Button
+                  href={metadata?.additionalInformation?.links[0].url}
+                  target="_blank"
+                  rel="noreferrer"
+                  download
+                  style="text"
+                  size="small"
+                >
+                  Download Sample
+                </Button>
+              }
+            />
+          </div>
+        )}
     </aside>
   )
 }
