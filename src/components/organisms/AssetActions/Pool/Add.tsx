@@ -8,6 +8,7 @@ import Token from './Token'
 import { Balance } from './'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
 import Actions from './Actions'
+import { useUserPreferences } from '../../../../providers/UserPreferences'
 
 // TODO: handle and display all fees somehow
 
@@ -22,6 +23,7 @@ export default function Add({
   totalPoolTokens: string
   totalBalance: Balance
 }): ReactElement {
+  const { debug } = useUserPreferences()
   const { ocean, accountId, balance } = useOcean()
   const [amount, setAmount] = useState('')
   const [swapFee, setSwapFee] = useState<string>()
@@ -89,7 +91,7 @@ export default function Add({
       <div className={styles.output}>
         <div>
           <p>You will receive</p>
-          <Token symbol="BPT" balance={newPoolTokens} />
+          {debug === true && <Token symbol="BPT" balance={newPoolTokens} />}
           <Token symbol="% of pool" balance={newPoolShare} />
         </div>
         <div>

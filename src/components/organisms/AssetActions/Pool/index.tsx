@@ -12,6 +12,7 @@ import Remove from './Remove'
 import Tooltip from '../../../atoms/Tooltip'
 import Conversion from '../../../atoms/Price/Conversion'
 import EtherscanLink from '../../../atoms/EtherscanLink'
+import { useUserPreferences } from '../../../../providers/UserPreferences'
 
 export interface Balance {
   ocean: string
@@ -23,6 +24,7 @@ export interface Balance {
 */
 
 export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
+  const { debug } = useUserPreferences()
   const { ocean, accountId } = useOcean()
   const { price, poolAddress } = useMetadata(ddo)
 
@@ -149,7 +151,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
               </h3>
               <Token symbol="OCEAN" balance={userBalance.ocean} />
               <Token symbol={dtSymbol} balance={userBalance.dt} />
-              <Token symbol="BPT" balance={poolTokens} />
+              {debug === true && <Token symbol="BPT" balance={poolTokens} />}
               <Token symbol="% of pool" balance={poolShare} />
             </div>
 
@@ -157,7 +159,9 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
               <h3 className={styles.title}>Pool Statistics</h3>
               <Token symbol="OCEAN" balance={totalBalance.ocean} />
               <Token symbol={dtSymbol} balance={totalBalance.dt} />
-              <Token symbol="BPT" balance={totalPoolTokens} />
+              {debug === true && (
+                <Token symbol="BPT" balance={totalPoolTokens} />
+              )}
             </div>
           </div>
 
