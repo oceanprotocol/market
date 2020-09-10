@@ -1,13 +1,19 @@
 import React, { ReactElement } from 'react'
 import Tooltip from '../../atoms/Tooltip'
-import Preferences from './Preferences'
 import { ReactComponent as Cog } from '../../../images/cog.svg'
 import styles from './index.module.css'
+import Currency from './Currency'
+import Debug from './Debug'
 
 export default function UserPreferences(): ReactElement {
   return (
     <Tooltip
-      content={<Preferences />}
+      content={
+        <ul className={styles.preferencesDetails}>
+          <Currency />
+          <Debug />
+        </ul>
+      }
       trigger="click focus"
       className={styles.preferences}
     >

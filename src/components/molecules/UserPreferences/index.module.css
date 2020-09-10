@@ -15,3 +15,21 @@
 .preferences[aria-expanded='true'] .icon {
   fill: var(--brand-grey);
 }
+
+.preferencesDetails {
+  padding: calc(var(--spacer) / 2);
+}
+
+.preferencesDetails li > div {
+  margin-bottom: 0;
+}
+
+.preferencesDetails li {
+  border-bottom: 1px solid var(--brand-grey-lighter);
+  margin-bottom: calc(var(--spacer) / 2);
+}
+
+.preferencesDetails li:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
