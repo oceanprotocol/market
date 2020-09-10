@@ -29,7 +29,8 @@
   margin-bottom: calc(var(--spacer) / 2);
 }
 
-.preferencesDetails li:last-child {
+.preferencesDetails li:last-child,
+.preferencesDetails li:last-child p {
   border-bottom: none;
   margin-bottom: 0;
 }

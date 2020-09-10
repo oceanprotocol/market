@@ -1,21 +1,21 @@
 import React, { ReactElement } from 'react'
 import { useUserPreferences } from '../../../providers/UserPreferences'
-import Input from '../../atoms/Input'
+import FormHelp from '../../atoms/Input/Help'
+import InputElement from '../../atoms/Input/InputElement'
 
 export default function Debug(): ReactElement {
   const { debug, setDebug } = useUserPreferences()
 
   return (
     <li>
-      <Input
+      <InputElement
         name="debug"
-        label="Debug Mode"
-        help="Show geeky debug information in some places."
         type="checkbox"
-        options={['Activate Debug Mode']}
+        options={['Debug Mode']}
         defaultChecked={debug === true}
         onChange={() => setDebug(!debug)}
       />
+      <FormHelp>Show geeky debug information in some places.</FormHelp>
     </li>
   )
 }
