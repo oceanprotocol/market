@@ -14,7 +14,9 @@ async function getLatestAssets(metadataStoreUri: string) {
 
     const result = await metadataStore.queryMetadata({
       page: 1,
-      offset: 10,
+      // TODO: hacky workaround because some assets pushed by external devs are faulty
+      // See molecules/AssetTeaser.tsx
+      offset: 100,
       query: {},
       sort: { created: -1 }
     })

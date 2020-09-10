@@ -45,11 +45,15 @@ const AssetList: React.FC<AssetListProps> = ({ queryResult }) => {
       <div className={styles.assetList}>
         {queryResult && queryResult.totalResults > 0 ? (
           queryResult.results.map((ddo: DDO) => {
-            const { attributes }: MetadataMarket = ddo.findServiceByType(
-              'metadata'
-            )
+            const { attributes } = ddo.findServiceByType('metadata')
 
-            return <AssetTeaser ddo={ddo} metadata={attributes} key={ddo.id} />
+            return (
+              <AssetTeaser
+                ddo={ddo}
+                metadata={(attributes as unknown) as MetadataMarket}
+                key={ddo.id}
+              />
+            )
           })
         ) : (
           <div className={styles.empty}>

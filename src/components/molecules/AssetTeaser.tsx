@@ -15,6 +15,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
   ddo,
   metadata
 }: AssetTeaserProps) => {
+  // TODO: hacky safeguard should be replaced with search query to account for pagination
   if (!metadata.additionalInformation) return null
 
   const { name } = metadata.main
