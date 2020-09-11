@@ -100,11 +100,11 @@
   "price": {
     "fixed": {
       "title": "Fixed",
-      "info": "Set your price for accessing this data set. A Data Token contract for this data set, worth the entered amount of OCEAN will be created."
+      "info": "Set your price for accessing this data set. A Data Token for this data set, worth the entered amount of OCEAN, will be created."
     },
     "dynamic": {
       "title": "Dynamic",
-      "info": "Let's create a decentralized, automated market for your data set. A Data Token contract for this data set worth the entered amount of OCEAN will be created. Additionally, you will provide liquidity into a Data Token/OCEAN liquidity pool with Balancer.",
+      "info": "Let's create a decentralized, automated market for your data set. A Data Token for this data set, worth the entered amount of OCEAN, will be created. Additionally, you will provide liquidity into a Data Token/OCEAN liquidity pool with Balancer.",
       "tooltips": {
         "poolInfo": "Help me",
         "liquidityProviderFee": "Help me"

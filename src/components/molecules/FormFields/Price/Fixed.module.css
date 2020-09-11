@@ -1,6 +1,19 @@
+.fixed {
+  composes: content from './index.module.css';
+}
+
 .form {
   max-width: 12rem;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.grid {
+  margin-top: var(--spacer);
+  display: grid;
+  gap: var(--spacer);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  justify-content: center;
 }
 
 .fixed label {
@@ -9,8 +22,11 @@
 
 .datatoken {
   color: var(--color-secondary);
-  margin-top: calc(var(--spacer) / 4);
-  text-align: center;
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-bold);
+  white-space: nowrap;
+}
+
+.datatoken strong {
+  color: var(--brand-grey);
 }

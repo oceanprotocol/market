@@ -2,12 +2,7 @@ import React, { ReactElement } from 'react'
 import { useNavigate } from '@reach/router'
 import { toast } from 'react-toastify'
 import { Formik } from 'formik'
-import {
-  usePublish,
-  useOcean,
-  PriceOptions,
-  DataTokenOptions
-} from '@oceanprotocol/react'
+import { usePublish, DataTokenOptions } from '@oceanprotocol/react'
 import styles from './index.module.css'
 import PublishForm from './PublishForm'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
@@ -16,7 +11,7 @@ import { initialValues, validationSchema } from '../../../models/FormPublish'
 import { transformPublishFormToMetadata } from './utils'
 import Preview from './Preview'
 import { MetadataPublishForm } from '../../../@types/MetaData'
-import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
+// import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 
 export default function PublishPage({

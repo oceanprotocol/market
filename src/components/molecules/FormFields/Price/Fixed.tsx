@@ -19,12 +19,12 @@ export default function Fixed({
   content: any
 }): ReactElement {
   return (
-    <div className={stylesIndex.content}>
-      <div className={styles.fixed}>
-        <FormHelp className={stylesIndex.help}>{content.info}</FormHelp>
+    <div className={styles.fixed}>
+      <FormHelp className={stylesIndex.help}>{content.info}</FormHelp>
 
+      <div className={styles.grid}>
         <div className={styles.form}>
-          <Label htmlFor="ocean">Ocean Tokens</Label>
+          <Label htmlFor="ocean">Ocean Token</Label>
           <InputElement
             value={ocean}
             name="ocean"
@@ -36,7 +36,9 @@ export default function Fixed({
         </div>
         {datatokenOptions && (
           <div className={styles.datatoken}>
-            {datatokenOptions?.symbol} | {datatokenOptions?.name}
+            <strong>Data Token</strong>
+            <br />
+            {datatokenOptions?.name} | {datatokenOptions?.symbol}
           </div>
         )}
       </div>

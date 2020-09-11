@@ -61,60 +61,58 @@ export default function Dynamic({
   }, [ocean, chainId, account])
 
   return (
-    <div className={stylesIndex.content}>
-      <div className={styles.advanced}>
-        <FormHelp className={stylesIndex.help}>{content.info}</FormHelp>
+    <div className={styles.dynamic}>
+      <FormHelp className={stylesIndex.help}>{content.info}</FormHelp>
 
-        <aside className={styles.wallet}>
-          {balance?.ocean && (
-            <div className={styles.balance}>
-              OCEAN <strong>{balance.ocean}</strong>
-            </div>
-          )}
-          <Wallet />
-        </aside>
-
-        <h4 className={styles.title}>
-          Data Token Liquidity Pool{' '}
-          <Tooltip content={content.tooltips.poolInfo} />
-        </h4>
-
-        <div className={styles.tokens}>
-          <Coin
-            name="ocean"
-            datatokenOptions={{ symbol: 'OCEAN', name: 'Ocean Token' }}
-            value={ocean}
-            weight={`${100 - Number(Number(weightOnDataToken) * 10)}%`}
-            onOceanChange={onOceanChange}
-          />
-          <Coin
-            name="tokensToMint"
-            datatokenOptions={datatokenOptions}
-            value={tokensToMint.toString()}
-            weight={`${Number(weightOnDataToken) * 10}%`}
-            readOnly
-          />
-        </div>
-
-        <footer className={styles.summary}>
-          <Label htmlFor="liquidityProviderFee">
-            Liquidity Provider Fee{' '}
-            <Tooltip content={content.tooltips.liquidityProviderFee} />
-          </Label>
-          <InputElement
-            value={liquidityProviderFee}
-            name="liquidityProviderFee"
-            readOnly
-            postfix="%"
-          />
-        </footer>
-
-        {error && (
-          <div className={styles.alertArea}>
-            <Alert text={error} state="error" />
+      <aside className={styles.wallet}>
+        {balance?.ocean && (
+          <div className={styles.balance}>
+            OCEAN <strong>{balance.ocean}</strong>
           </div>
         )}
+        <Wallet />
+      </aside>
+
+      <h4 className={styles.title}>
+        Data Token Liquidity Pool{' '}
+        <Tooltip content={content.tooltips.poolInfo} />
+      </h4>
+
+      <div className={styles.tokens}>
+        <Coin
+          name="ocean"
+          datatokenOptions={{ symbol: 'OCEAN', name: 'Ocean Token' }}
+          value={ocean}
+          weight={`${100 - Number(Number(weightOnDataToken) * 10)}%`}
+          onOceanChange={onOceanChange}
+        />
+        <Coin
+          name="tokensToMint"
+          datatokenOptions={datatokenOptions}
+          value={tokensToMint.toString()}
+          weight={`${Number(weightOnDataToken) * 10}%`}
+          readOnly
+        />
       </div>
+
+      <footer className={styles.summary}>
+        <Label htmlFor="liquidityProviderFee">
+          Liquidity Provider Fee{' '}
+          <Tooltip content={content.tooltips.liquidityProviderFee} />
+        </Label>
+        <InputElement
+          value={liquidityProviderFee}
+          name="liquidityProviderFee"
+          readOnly
+          postfix="%"
+        />
+      </footer>
+
+      {error && (
+        <div className={styles.alertArea}>
+          <Alert text={error} state="error" />
+        </div>
+      )}
     </div>
   )
 }
