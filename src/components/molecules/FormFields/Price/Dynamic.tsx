@@ -1,10 +1,9 @@
 import React, { ReactElement, useState, ChangeEvent, useEffect } from 'react'
-import { graphql, useStaticQuery } from 'gatsby'
 import stylesIndex from './index.module.css'
 import styles from './Dynamic.module.css'
 import FormHelp from '../../../atoms/Input/Help'
 import Wallet from '../../Wallet'
-import { useOcean } from '@oceanprotocol/react'
+import { DataTokenOptions, PriceOptions, useOcean } from '@oceanprotocol/react'
 import Alert from '../../../atoms/Alert'
 import Coin from './Coin'
 import { isCorrectNetwork } from '../../../../utils/wallet'
@@ -15,21 +14,22 @@ import Tooltip from '../../../atoms/Tooltip'
 
 export default function Dynamic({
   ocean,
-  tokensToMint,
-  weightOnDataToken,
-  liquidityProviderFee,
+  priceOptions,
+  datatokenOptions,
   onOceanChange,
+  generateName,
   content
 }: {
   ocean: string
-  tokensToMint: number
-  weightOnDataToken: string
-  liquidityProviderFee: string
+  priceOptions: PriceOptions
+  datatokenOptions: DataTokenOptions
   onOceanChange: (event: ChangeEvent<HTMLInputElement>) => void
+  generateName: () => void
   content: any
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { account, balance, chainId, refreshBalance } = useOcean()
+  const { weightOnDataToken, tokensToMint, liquidityProviderFee } = priceOptions
 
   const [error, setError] = useState<string>()
   const correctNetwork = isCorrectNetwork(chainId)
@@ -63,60 +63,59 @@ export default function Dynamic({
   }, [ocean, chainId, account])
 
   return (
-    <div className={stylesIndex.content}>
-      <div className={styles.advanced}>
-        <FormHelp className={stylesIndex.help}>{content.info}</FormHelp>
+    <div className={styles.dynamic}>
+      <FormHelp className={stylesIndex.help}>{content.info}</FormHelp>
 
-        <aside className={styles.wallet}>
-          {balance?.ocean && (
-            <div className={styles.balance}>
-              OCEAN <strong>{balance.ocean}</strong>
-            </div>
-          )}
-          <Wallet />
-        </aside>
-
-        <h4 className={styles.title}>
-          Data Token Liquidity Pool{' '}
-          <Tooltip content={content.tooltips.poolInfo} />
-        </h4>
-
-        <div className={styles.tokens}>
-          <Coin
-            name="ocean"
-            symbol="OCEAN"
-            value={ocean}
-            weight={`${100 - Number(Number(weightOnDataToken) * 10)}%`}
-            onOceanChange={onOceanChange}
-          />
-          <Coin
-            name="tokensToMint"
-            symbol="OCEAN-CAV"
-            value={tokensToMint.toString()}
-            weight={`${Number(weightOnDataToken) * 10}%`}
-            readOnly
-          />
-        </div>
-
-        <footer className={styles.summary}>
-          <Label htmlFor="liquidityProviderFee">
-            Liquidity Provider Fee{' '}
-            <Tooltip content={content.tooltips.liquidityProviderFee} />
-          </Label>
-          <InputElement
-            value={liquidityProviderFee}
-            name="liquidityProviderFee"
-            readOnly
-            postfix="%"
-          />
-        </footer>
-
-        {error && (
-          <div className={styles.alertArea}>
-            <Alert text={error} state="error" />
+      <aside className={styles.wallet}>
+        {balance?.ocean && (
+          <div className={styles.balance}>
+            OCEAN <strong>{balance.ocean}</strong>
           </div>
         )}
+        <Wallet />
+      </aside>
+
+      <h4 className={styles.title}>
+        Data Token Liquidity Pool{' '}
+        <Tooltip content={content.tooltips.poolInfo} />
+      </h4>
+
+      <div className={styles.tokens}>
+        <Coin
+          name="ocean"
+          datatokenOptions={{ symbol: 'OCEAN', name: 'Ocean Token' }}
+          value={ocean}
+          weight={`${100 - Number(Number(weightOnDataToken) * 10)}%`}
+          onOceanChange={onOceanChange}
+        />
+        <Coin
+          name="tokensToMint"
+          datatokenOptions={datatokenOptions}
+          value={tokensToMint.toString()}
+          weight={`${Number(weightOnDataToken) * 10}%`}
+          generateName={generateName}
+          readOnly
+        />
       </div>
+
+      <footer className={styles.summary}>
+        <Label htmlFor="liquidityProviderFee">
+          Liquidity Provider Fee{' '}
+          <Tooltip content={content.tooltips.liquidityProviderFee} />
+        </Label>
+        <InputElement
+          value={liquidityProviderFee}
+          name="liquidityProviderFee"
+          readOnly
+          postfix="%"
+        />
+      </footer>
+
+      {error && (
+        <div className={styles.alertArea}>
+          <Alert text={error} state="error" />
+        </div>
+      )}
     </div>
   )
 }

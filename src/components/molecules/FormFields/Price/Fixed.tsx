@@ -5,24 +5,29 @@ import FormHelp from '../../../atoms/Input/Help'
 import Label from '../../../atoms/Input/Label'
 import InputElement from '../../../atoms/Input/InputElement'
 import Conversion from '../../../atoms/Price/Conversion'
+import { DataTokenOptions } from '@oceanprotocol/react'
+import RefreshName from './RefreshName'
 
 export default function Fixed({
   ocean,
+  datatokenOptions,
   onChange,
+  generateName,
   content
 }: {
   ocean: string
+  datatokenOptions: DataTokenOptions
   onChange: (event: ChangeEvent<HTMLInputElement>) => void
+  generateName: () => void
   content: any
 }): ReactElement {
   return (
-    <div className={stylesIndex.content}>
-      <div className={styles.fixed}>
-        <FormHelp className={stylesIndex.help}>{content.info}</FormHelp>
+    <div className={styles.fixed}>
+      <FormHelp className={stylesIndex.help}>{content.info}</FormHelp>
 
+      <div className={styles.grid}>
         <div className={styles.form}>
-          <Label htmlFor="ocean">Ocean Tokens</Label>
-
+          <Label htmlFor="ocean">Ocean Token</Label>
           <InputElement
             value={ocean}
             name="ocean"
@@ -30,9 +35,16 @@ export default function Fixed({
             prefix="OCEAN"
             onChange={onChange}
           />
-
           <Conversion price={ocean} className={stylesIndex.conversion} />
         </div>
+        {datatokenOptions && (
+          <div className={styles.datatoken}>
+            <strong>Data Token</strong>
+            <RefreshName generateName={generateName} />
+            <br />
+            {datatokenOptions?.name} | {datatokenOptions?.symbol}
+          </div>
+        )}
       </div>
     </div>
   )
