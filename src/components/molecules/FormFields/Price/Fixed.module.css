@@ -2,17 +2,18 @@
   composes: content from './index.module.css';
 }
 
-.form {
-  max-width: 12rem;
-  margin-left: auto;
-  margin-right: auto;
+@media (min-width: 55rem) {
+  .form {
+    max-width: 12rem;
+    margin-left: auto;
+  }
 }
 
 .grid {
   margin-top: var(--spacer);
   display: grid;
   gap: var(--spacer);
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
   justify-content: center;
 }
 
@@ -21,12 +22,18 @@
 }
 
 .datatoken {
+  margin-top: calc(var(--spacer) / 6);
   color: var(--color-secondary);
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-bold);
-  white-space: nowrap;
+}
+
+.datatoken h4 {
+  font-size: var(--font-size-small);
+  color: var(--color-secondary);
+  margin: 0;
 }
 
 .datatoken strong {
-  color: var(--brand-grey);
+  color: var(--brand-grey-dark);
 }

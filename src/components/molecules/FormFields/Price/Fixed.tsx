@@ -39,10 +39,11 @@ export default function Fixed({
         </div>
         {datatokenOptions && (
           <div className={styles.datatoken}>
-            <strong>Data Token</strong>
-            <RefreshName generateName={generateName} />
-            <br />
-            {datatokenOptions?.name} | {datatokenOptions?.symbol}
+            <h4>
+              Data Token <RefreshName generateName={generateName} />
+            </h4>
+            <strong>{datatokenOptions?.name}</strong> —{' '}
+            <strong>{datatokenOptions?.symbol}</strong>
           </div>
         )}
       </div>

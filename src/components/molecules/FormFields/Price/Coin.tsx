@@ -32,7 +32,7 @@ export default function Coin({
 
       <h4 className={styles.tokenName}>
         {datatokenOptions?.name || 'Data Token'}
-        {datatokenOptions?.name && generateName && (
+        {datatokenOptions?.name && typeof generateName === 'function' && (
           <RefreshName generateName={generateName} />
         )}
       </h4>
