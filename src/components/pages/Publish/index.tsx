@@ -2,7 +2,12 @@ import React, { ReactElement } from 'react'
 import { useNavigate } from '@reach/router'
 import { toast } from 'react-toastify'
 import { Formik } from 'formik'
-import { usePublish, useOcean, PriceOptions } from '@oceanprotocol/react'
+import {
+  usePublish,
+  useOcean,
+  PriceOptions,
+  DataTokenOptions
+} from '@oceanprotocol/react'
 import styles from './index.module.css'
 import PublishForm from './PublishForm'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
@@ -19,7 +24,8 @@ export default function PublishPage({
 }: {
   content: { form: FormContent }
 }): ReactElement {
-  const { marketFeeAddress, marketFeeAmount } = useSiteMetadata()
+  // TODO: implement marketFee
+  // const { marketFeeAddress, marketFeeAmount } = useSiteMetadata()
   const { debug } = useUserPreferences()
   const { publish, publishError, isLoading, publishStepText } = usePublish()
   const navigate = useNavigate()
@@ -31,15 +37,15 @@ export default function PublishPage({
     const metadata = transformPublishFormToMetadata(values)
     const priceOptions = values.price
     const serviceType = values.access === 'Download' ? 'access' : 'compute'
+    let datatokenOptions: DataTokenOptions
 
     try {
       // mpAddress and mpFee are not yet implemented in ocean js so are not used
       const ddo = await publish(
         metadata as any,
         priceOptions,
-        serviceType
-        // marketFeeAddress,
-        // marketFeeAmount
+        serviceType,
+        datatokenOptions
       )
 
       if (publishError) {

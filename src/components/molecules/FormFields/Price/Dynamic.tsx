@@ -4,7 +4,7 @@ import stylesIndex from './index.module.css'
 import styles from './Dynamic.module.css'
 import FormHelp from '../../../atoms/Input/Help'
 import Wallet from '../../Wallet'
-import { useOcean } from '@oceanprotocol/react'
+import { DataTokenOptions, PriceOptions, useOcean } from '@oceanprotocol/react'
 import Alert from '../../../atoms/Alert'
 import Coin from './Coin'
 import { isCorrectNetwork } from '../../../../utils/wallet'
@@ -15,21 +15,20 @@ import Tooltip from '../../../atoms/Tooltip'
 
 export default function Dynamic({
   ocean,
-  tokensToMint,
-  weightOnDataToken,
-  liquidityProviderFee,
+  priceOptions,
+  datatokenOptions,
   onOceanChange,
   content
 }: {
   ocean: string
-  tokensToMint: number
-  weightOnDataToken: string
-  liquidityProviderFee: string
+  priceOptions: PriceOptions
+  datatokenOptions: DataTokenOptions
   onOceanChange: (event: ChangeEvent<HTMLInputElement>) => void
   content: any
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { account, balance, chainId, refreshBalance } = useOcean()
+  const { weightOnDataToken, tokensToMint, liquidityProviderFee } = priceOptions
 
   const [error, setError] = useState<string>()
   const correctNetwork = isCorrectNetwork(chainId)
@@ -91,7 +90,7 @@ export default function Dynamic({
           />
           <Coin
             name="tokensToMint"
-            symbol="OCEAN-CAV"
+            symbol={datatokenOptions.symbol}
             value={tokensToMint.toString()}
             weight={`${Number(weightOnDataToken) * 10}%`}
             readOnly

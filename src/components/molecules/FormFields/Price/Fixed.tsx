@@ -5,13 +5,16 @@ import FormHelp from '../../../atoms/Input/Help'
 import Label from '../../../atoms/Input/Label'
 import InputElement from '../../../atoms/Input/InputElement'
 import Conversion from '../../../atoms/Price/Conversion'
+import { DataTokenOptions } from '@oceanprotocol/react'
 
 export default function Fixed({
   ocean,
+  datatokenOptions,
   onChange,
   content
 }: {
   ocean: string
+  datatokenOptions: DataTokenOptions
   onChange: (event: ChangeEvent<HTMLInputElement>) => void
   content: any
 }): ReactElement {
@@ -22,7 +25,6 @@ export default function Fixed({
 
         <div className={styles.form}>
           <Label htmlFor="ocean">Ocean Tokens</Label>
-
           <InputElement
             value={ocean}
             name="ocean"
@@ -30,8 +32,8 @@ export default function Fixed({
             prefix="OCEAN"
             onChange={onChange}
           />
-
           <Conversion price={ocean} className={stylesIndex.conversion} />
+          {datatokenOptions?.symbol} | {datatokenOptions?.name}
         </div>
       </div>
     </div>

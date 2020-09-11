@@ -7,6 +7,7 @@ import Fixed from './Fixed'
 import Dynamic from './Dynamic'
 import { useField } from 'formik'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
+import { DataTokenOptions, PriceOptions, useOcean } from '@oceanprotocol/react'
 
 const query = graphql`
   query PriceFieldQuery {
@@ -39,15 +40,17 @@ export default function Price(props: InputProps): ReactElement {
   const { debug } = useUserPreferences()
   const data = useStaticQuery(query)
   const content = data.content.edges[0].node.childPagesJson.price
+  const { ocean } = useOcean()
 
   const [field, meta, helpers] = useField(props)
-  const { weightOnDataToken, liquidityProviderFee } = field.value
+  const priceOptions: PriceOptions = field.value
 
-  const [ocean, setOcean] = useState('1')
+  const [amountOcean, setAmountOcean] = useState('1')
   const [tokensToMint, setTokensToMint] = useState<number>()
+  const [datatokenOptions, setDatatokenOptions] = useState<DataTokenOptions>()
 
   function handleOceanChange(event: ChangeEvent<HTMLInputElement>) {
-    setOcean(event.target.value)
+    setAmountOcean(event.target.value)
   }
 
   function handleTabChange(tabName: string) {
@@ -55,11 +58,19 @@ export default function Price(props: InputProps): ReactElement {
     helpers.setValue({ ...field.value, type })
   }
 
-  // Always update everything when ocean changes
+  // Always update everything when amountOcean changes
   useEffect(() => {
-    const tokensToMint = Number(ocean) * Number(weightOnDataToken)
+    const tokensToMint =
+      Number(amountOcean) * Number(priceOptions.weightOnDataToken)
     setTokensToMint(tokensToMint)
     helpers.setValue({ ...field.value, tokensToMint })
+  }, [amountOcean])
+
+  // Generate new DT name & symbol
+  useEffect(() => {
+    if (!ocean) return
+    const newDatatokenOptions = ocean.datatokens.generateDtName()
+    setDatatokenOptions(newDatatokenOptions)
   }, [ocean])
 
   const tabs = [
@@ -67,7 +78,8 @@ export default function Price(props: InputProps): ReactElement {
       title: content.fixed.title,
       content: (
         <Fixed
-          ocean={ocean}
+          ocean={amountOcean}
+          datatokenOptions={datatokenOptions}
           onChange={handleOceanChange}
           content={content.fixed}
         />
@@ -77,11 +89,10 @@ export default function Price(props: InputProps): ReactElement {
       title: content.dynamic.title,
       content: (
         <Dynamic
-          ocean={ocean}
-          tokensToMint={tokensToMint}
-          weightOnDataToken={weightOnDataToken}
+          ocean={amountOcean}
+          priceOptions={{ ...priceOptions, tokensToMint }}
+          datatokenOptions={datatokenOptions}
           onOceanChange={handleOceanChange}
-          liquidityProviderFee={liquidityProviderFee}
           content={content.dynamic}
         />
       )
