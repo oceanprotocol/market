@@ -1,5 +1,4 @@
 import React, { ReactElement, useState, ChangeEvent, useEffect } from 'react'
-import { graphql, useStaticQuery } from 'gatsby'
 import stylesIndex from './index.module.css'
 import styles from './Dynamic.module.css'
 import FormHelp from '../../../atoms/Input/Help'
@@ -83,14 +82,14 @@ export default function Dynamic({
         <div className={styles.tokens}>
           <Coin
             name="ocean"
-            symbol="OCEAN"
+            datatokenOptions={{ symbol: 'OCEAN', name: 'Ocean Token' }}
             value={ocean}
             weight={`${100 - Number(Number(weightOnDataToken) * 10)}%`}
             onOceanChange={onOceanChange}
           />
           <Coin
             name="tokensToMint"
-            symbol={datatokenOptions.symbol}
+            datatokenOptions={datatokenOptions}
             value={tokensToMint.toString()}
             weight={`${Number(weightOnDataToken) * 10}%`}
             readOnly

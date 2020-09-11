@@ -4,16 +4,17 @@ import styles from './Coin.module.css'
 import InputElement from '../../../atoms/Input/InputElement'
 import { ReactComponent as Logo } from '../../../../images/logo.svg'
 import Conversion from '../../../atoms/Price/Conversion'
+import { DataTokenOptions } from '@oceanprotocol/react'
 
 export default function Coin({
-  symbol,
+  datatokenOptions,
   name,
   value,
   weight,
   onOceanChange,
   readOnly
 }: {
-  symbol: string
+  datatokenOptions: DataTokenOptions
   name: string
   value: string
   weight: string
@@ -26,6 +27,10 @@ export default function Coin({
         <Logo />
       </figure>
 
+      <h4 className={styles.tokenName}>
+        {datatokenOptions?.name || 'Data Token'}
+      </h4>
+
       <div className={styles.data}>
         <InputElement
           value={value}
@@ -33,7 +38,7 @@ export default function Coin({
           type="number"
           onChange={onOceanChange}
           readOnly={readOnly}
-          prefix={symbol}
+          prefix={datatokenOptions?.symbol || 'DT'}
         />
         <Conversion price={value} className={stylesIndex.conversion} />
 

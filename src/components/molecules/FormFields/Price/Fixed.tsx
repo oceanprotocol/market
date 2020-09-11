@@ -33,8 +33,12 @@ export default function Fixed({
             onChange={onChange}
           />
           <Conversion price={ocean} className={stylesIndex.conversion} />
-          {datatokenOptions?.symbol} | {datatokenOptions?.name}
         </div>
+        {datatokenOptions && (
+          <div className={styles.datatoken}>
+            {datatokenOptions?.symbol} | {datatokenOptions?.name}
+          </div>
+        )}
       </div>
     </div>
   )
