@@ -1,0 +1,9 @@
+.refresh {
+  margin-left: calc(var(--spacer) / 4) !important;
+}
+
+.refresh svg {
+  fill: var(--brand-pink);
+  width: var(--font-size-mini);
+  height: var(--font-size-mini);
+}

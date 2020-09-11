@@ -5,6 +5,7 @@ import InputElement from '../../../atoms/Input/InputElement'
 import { ReactComponent as Logo } from '../../../../images/logo.svg'
 import Conversion from '../../../atoms/Price/Conversion'
 import { DataTokenOptions } from '@oceanprotocol/react'
+import RefreshName from './RefreshName'
 
 export default function Coin({
   datatokenOptions,
@@ -12,6 +13,7 @@ export default function Coin({
   value,
   weight,
   onOceanChange,
+  generateName,
   readOnly
 }: {
   datatokenOptions: DataTokenOptions
@@ -19,6 +21,7 @@ export default function Coin({
   value: string
   weight: string
   onOceanChange?: (event: ChangeEvent<HTMLInputElement>) => void
+  generateName?: () => void
   readOnly?: boolean
 }): ReactElement {
   return (
@@ -29,6 +32,9 @@ export default function Coin({
 
       <h4 className={styles.tokenName}>
         {datatokenOptions?.name || 'Data Token'}
+        {datatokenOptions?.name && generateName && (
+          <RefreshName generateName={generateName} />
+        )}
       </h4>
 
       <div className={styles.data}>

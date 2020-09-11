@@ -19,6 +19,7 @@ interface ButtonProps {
   download?: boolean
   target?: string
   rel?: string
+  title?: string
 }
 
 export default function Button({

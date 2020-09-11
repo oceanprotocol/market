@@ -17,12 +17,14 @@ export default function Dynamic({
   priceOptions,
   datatokenOptions,
   onOceanChange,
+  generateName,
   content
 }: {
   ocean: string
   priceOptions: PriceOptions
   datatokenOptions: DataTokenOptions
   onOceanChange: (event: ChangeEvent<HTMLInputElement>) => void
+  generateName: () => void
   content: any
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
@@ -91,6 +93,7 @@ export default function Dynamic({
           datatokenOptions={datatokenOptions}
           value={tokensToMint.toString()}
           weight={`${Number(weightOnDataToken) * 10}%`}
+          generateName={generateName}
           readOnly
         />
       </div>

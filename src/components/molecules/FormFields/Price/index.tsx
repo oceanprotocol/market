@@ -58,6 +58,12 @@ export default function Price(props: InputProps): ReactElement {
     helpers.setValue({ ...field.value, type })
   }
 
+  function generateName() {
+    if (!ocean) return
+    const newDatatokenOptions = ocean.datatokens.generateDtName()
+    setDatatokenOptions(newDatatokenOptions)
+  }
+
   // Always update everything when amountOcean changes
   useEffect(() => {
     const tokensToMint =
@@ -68,9 +74,7 @@ export default function Price(props: InputProps): ReactElement {
 
   // Generate new DT name & symbol
   useEffect(() => {
-    if (!ocean) return
-    const newDatatokenOptions = ocean.datatokens.generateDtName()
-    setDatatokenOptions(newDatatokenOptions)
+    generateName()
   }, [ocean])
 
   const tabs = [
@@ -81,6 +85,7 @@ export default function Price(props: InputProps): ReactElement {
           ocean={amountOcean}
           datatokenOptions={datatokenOptions}
           onChange={handleOceanChange}
+          generateName={generateName}
           content={content.fixed}
         />
       )
@@ -93,6 +98,7 @@ export default function Price(props: InputProps): ReactElement {
           priceOptions={{ ...priceOptions, tokensToMint }}
           datatokenOptions={datatokenOptions}
           onOceanChange={handleOceanChange}
+          generateName={generateName}
           content={content.dynamic}
         />
       )

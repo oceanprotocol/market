@@ -6,16 +6,19 @@ import Label from '../../../atoms/Input/Label'
 import InputElement from '../../../atoms/Input/InputElement'
 import Conversion from '../../../atoms/Price/Conversion'
 import { DataTokenOptions } from '@oceanprotocol/react'
+import RefreshName from './RefreshName'
 
 export default function Fixed({
   ocean,
   datatokenOptions,
   onChange,
+  generateName,
   content
 }: {
   ocean: string
   datatokenOptions: DataTokenOptions
   onChange: (event: ChangeEvent<HTMLInputElement>) => void
+  generateName: () => void
   content: any
 }): ReactElement {
   return (
@@ -37,6 +40,7 @@ export default function Fixed({
         {datatokenOptions && (
           <div className={styles.datatoken}>
             <strong>Data Token</strong>
+            <RefreshName generateName={generateName} />
             <br />
             {datatokenOptions?.name} | {datatokenOptions?.symbol}
           </div>
