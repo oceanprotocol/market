@@ -7,6 +7,7 @@ import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import { ReactComponent as Logo } from '@oceanprotocol/art/logo/logo.svg'
 import Container from '../atoms/Container'
 import UserPreferences from './UserPreferences'
+import Badge from '../atoms/Badge'
 
 const Wallet = loadable(() => import('./Wallet'))
 
@@ -38,7 +39,9 @@ export default function Menu(): ReactElement {
       <Container>
         <Link to="/" className={styles.logoUnit}>
           <Logo />
-          <h1 className={styles.title}>{siteTitle}</h1>
+          <h1 className={styles.title}>
+            {siteTitle} <Badge label="beta" />
+          </h1>
         </Link>
 
         <ul className={styles.navigation}>
