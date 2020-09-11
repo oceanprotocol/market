@@ -37,6 +37,10 @@ export default function Coin({
         )}
       </h4>
 
+      <div className={styles.weight}>
+        Weight <strong>{weight}</strong>
+      </div>
+
       <div className={styles.data}>
         <InputElement
           value={value}
@@ -46,11 +50,9 @@ export default function Coin({
           readOnly={readOnly}
           prefix={datatokenOptions?.symbol || 'DT'}
         />
-        <Conversion price={value} className={stylesIndex.conversion} />
-
-        <div className={styles.weight}>
-          Weight <strong>{weight}</strong>
-        </div>
+        {datatokenOptions?.symbol === 'OCEAN' && (
+          <Conversion price={value} className={stylesIndex.conversion} />
+        )}
       </div>
     </div>
   )
