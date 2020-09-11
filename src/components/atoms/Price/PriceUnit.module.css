@@ -12,8 +12,11 @@
   font-size: var(--font-size-base);
 }
 
-.small {
-  /* lazy making-conversion-smaller-with-same-markup */
-  transform: scale(0.8);
-  transform-origin: left 80%;
+.price.small {
+  display: inline-block;
+  font-size: var(--font-size-base);
+}
+
+.price.small span:first-child {
+  font-size: var(--font-size-small);
 }

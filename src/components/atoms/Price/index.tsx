@@ -5,6 +5,7 @@ import { DDO } from '@oceanprotocol/lib'
 import Loader from '../Loader'
 import Tooltip from '../Tooltip'
 import PriceUnit from './PriceUnit'
+import Badge from '../Badge'
 
 export default function Price({
   ddo,
@@ -23,12 +24,17 @@ export default function Price({
   return !ocean ? (
     <div className={styles.empty}>Connect your wallet to view price</div>
   ) : price?.value ? (
-    <PriceUnit
-      price={price.value}
-      className={className}
-      small={small}
-      conversion={conversion}
-    />
+    <>
+      <PriceUnit
+        price={price.value}
+        className={className}
+        small={small}
+        conversion={conversion}
+      />
+      {price?.type === 'pool' && (
+        <Badge label="pool" className={styles.badge} />
+      )}
+    </>
   ) : price?.value === '' ? (
     <div className={styles.empty}>
       No price found{' '}

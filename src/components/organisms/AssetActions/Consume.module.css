@@ -12,18 +12,8 @@
   flex-shrink: 0;
 }
 
-.pricewrapper {
-  display: flex;
-  flex-wrap: wrap;
-}
-
 .pricewrapper button {
-  margin-top: calc(var(--spacer) / 2);
-  align-self: flex-end;
-}
-
-.pricewrapper > div {
-  min-height: 30px;
+  margin-top: var(--spacer);
 }
 
 .feedback {
