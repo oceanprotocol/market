@@ -6,7 +6,7 @@ import { MetadataMarket } from '../../@types/Metadata'
 import { MetadataStore, Logger, DDO } from '@oceanprotocol/lib'
 import Alert from '../../components/atoms/Alert'
 import Loader from '../../components/atoms/Loader'
-import { useOcean, useMetadata } from '@oceanprotocol/react'
+import { useOcean } from '@oceanprotocol/react'
 
 export default function PageTemplateAssetDetails({
   did,
@@ -16,7 +16,6 @@ export default function PageTemplateAssetDetails({
   uri: string
 }): ReactElement {
   const { config } = useOcean()
-  const metadataMinimal = useMetadata(did)
   const [metadata, setMetadata] = useState<MetadataMarket>()
   const [title, setTitle] = useState<string>()
   const [error, setError] = useState<string>()
@@ -62,7 +61,7 @@ export default function PageTemplateAssetDetails({
       <Alert title={title} text={error} state="error" />
     </Layout>
   ) : (
-    <Layout title={metadataMinimal.title} uri={uri}>
+    <Layout title={undefined} uri={uri}>
       <Loader />
     </Layout>
   )
