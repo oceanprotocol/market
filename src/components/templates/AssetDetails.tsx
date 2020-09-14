@@ -2,7 +2,7 @@ import React, { useState, useEffect, ReactElement } from 'react'
 import { Router } from '@reach/router'
 import AssetContent from '../../components/organisms/AssetContent'
 import Layout from '../../components/Layout'
-import { MetadataMarket, ServiceMetadataMarket } from '../../@types/Metadata'
+import { MetadataMarket } from '../../@types/Metadata'
 import { MetadataStore, Logger, DDO } from '@oceanprotocol/lib'
 import Alert from '../../components/atoms/Alert'
 import Loader from '../../components/atoms/Loader'
@@ -61,7 +61,7 @@ export default function PageTemplateAssetDetails({
       <Alert title={title} text={error} state="error" />
     </Layout>
   ) : (
-    <Layout title="Loading..." uri={uri}>
+    <Layout title={undefined} uri={uri}>
       <Loader />
     </Layout>
   )
