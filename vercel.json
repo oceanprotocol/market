@@ -1,4 +1,5 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "routes": [{ "src": "/asset/*", "dest": "/asset/index.html" }]
 }
