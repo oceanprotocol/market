@@ -1,4 +1,1 @@
-{
-  "cleanUrls": true,
-  "trailingSlash": false
-}
+{ "rewrites": [{ "source": "/asset/:did", "destination": "/asset/" }] }
