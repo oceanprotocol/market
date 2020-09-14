@@ -2,11 +2,11 @@ import React, { useState, useEffect, ReactElement } from 'react'
 import { Router } from '@reach/router'
 import AssetContent from '../../components/organisms/AssetContent'
 import Layout from '../../components/Layout'
-import { MetadataMarket, ServiceMetadataMarket } from '../../@types/Metadata'
+import { MetadataMarket } from '../../@types/Metadata'
 import { MetadataStore, Logger, DDO } from '@oceanprotocol/lib'
 import Alert from '../../components/atoms/Alert'
 import Loader from '../../components/atoms/Loader'
-import { useOcean } from '@oceanprotocol/react'
+import { useOcean, useMetadata } from '@oceanprotocol/react'
 
 export default function PageTemplateAssetDetails({
   did,
@@ -16,6 +16,7 @@ export default function PageTemplateAssetDetails({
   uri: string
 }): ReactElement {
   const { config } = useOcean()
+  const metadataMinimal = useMetadata(did)
   const [metadata, setMetadata] = useState<MetadataMarket>()
   const [title, setTitle] = useState<string>()
   const [error, setError] = useState<string>()
@@ -61,7 +62,7 @@ export default function PageTemplateAssetDetails({
       <Alert title={title} text={error} state="error" />
     </Layout>
   ) : (
-    <Layout title="Loading..." uri={uri}>
+    <Layout title={metadataMinimal.title} uri={uri}>
       <Loader />
     </Layout>
   )
