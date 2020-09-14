@@ -1,3 +1,1 @@
-{
-  "redirects": [{ "source": "/asset/*", "destination": "/asset/" }]
-}
+{ "rewrites": [{ "source": "/asset/:did", "destination": "/asset/" }] }

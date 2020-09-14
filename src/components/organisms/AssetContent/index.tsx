@@ -13,7 +13,6 @@ import { useUserPreferences } from '../../../providers/UserPreferences'
 export interface AssetContentProps {
   metadata: MetadataMarket
   ddo: DDO
-  path?: string
 }
 
 export default function AssetContent({

@@ -1,8 +1,7 @@
 import React, { useState, useEffect, ReactElement } from 'react'
-import { Router } from '@reach/router'
 import AssetContent from '../../components/organisms/AssetContent'
 import Layout from '../../components/Layout'
-import { MetadataMarket, ServiceMetadataMarket } from '../../@types/Metadata'
+import { MetadataMarket } from '../../@types/Metadata'
 import { MetadataStore, Logger, DDO } from '@oceanprotocol/lib'
 import Alert from '../../components/atoms/Alert'
 import Loader from '../../components/atoms/Loader'
@@ -14,6 +13,7 @@ export default function PageTemplateAssetDetails({
 }: {
   did: string
   uri: string
+  path: string
 }): ReactElement {
   const { config } = useOcean()
   const [metadata, setMetadata] = useState<MetadataMarket>()
@@ -48,13 +48,7 @@ export default function PageTemplateAssetDetails({
 
   return did && metadata ? (
     <Layout title={title} uri={uri}>
-      <Router basepath="/asset">
-        <AssetContent
-          ddo={ddo}
-          metadata={metadata as MetadataMarket}
-          path=":did"
-        />
-      </Router>
+      <AssetContent ddo={ddo} metadata={metadata as MetadataMarket} />
     </Layout>
   ) : error ? (
     <Layout title={title} noPageHeader uri={uri}>
