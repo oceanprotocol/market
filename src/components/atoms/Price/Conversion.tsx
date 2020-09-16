@@ -11,11 +11,9 @@ const cx = classNames.bind(styles)
 
 export default function Conversion({
   price,
-  update = true,
   className
 }: {
   price: string // expects price in OCEAN, not wei
-  update?: boolean
   className?: string
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
@@ -56,15 +54,13 @@ export default function Conversion({
     if (isBrowser && price !== '0') {
       getData()
     }
-  }, [price, currency])
+  }, [price, currency, url])
 
-  if (update) {
-    // Fetch new prices periodically with swr
-    useSWR(url, fetchData, {
-      refreshInterval: 30000, // 30 sec.
-      onSuccess
-    })
-  }
+  // Fetch new prices periodically with swr
+  useSWR(url, fetchData, {
+    refreshInterval: 30000, // 30 sec.
+    onSuccess
+  })
 
   return (
     <span
