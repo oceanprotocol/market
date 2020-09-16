@@ -15,8 +15,6 @@ export default function Pagination({
   hrefBuilder,
   onPageChange
 }: PaginationProps): ReactElement {
-  if (!totalPages || totalPages < 2) return null
-
   const [smallViewport, setSmallViewport] = useState(true)
 
   function viewportChange(mq: { matches: boolean }) {
@@ -24,6 +22,8 @@ export default function Pagination({
   }
 
   useEffect(() => {
+    if (!totalPages || totalPages < 2) return null
+
     const mq = window.matchMedia('(min-width: 600px)')
     viewportChange(mq)
     mq.addListener(viewportChange)
@@ -31,7 +31,7 @@ export default function Pagination({
     return () => {
       mq.removeListener(viewportChange)
     }
-  }, [])
+  }, [totalPages])
 
   return (
     <ReactPaginate
