@@ -207,6 +207,12 @@
   font-size: var(--font-size-small);
 }
 
+.prefix.small,
+.postfix.small {
+  min-height: 34px;
+  font-size: var(--font-size-mini);
+}
+
 .selectSmall {
   composes: small;
   height: 34px;

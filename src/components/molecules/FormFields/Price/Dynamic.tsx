@@ -100,21 +100,54 @@ export default function Dynamic({
         />
       </div>
 
+      <div className={styles.fees}>
+        <div>
+          <Label htmlFor="liquidityProviderFee">
+            Liquidity Provider Fee{' '}
+            <Tooltip content={content.tooltips.liquidityProviderFee} />
+          </Label>
+          <InputElement
+            type="number"
+            value={liquidityProviderFee}
+            name="liquidityProviderFee"
+            postfix="%"
+            onChange={onLiquidityProviderFeeChange}
+            min="0.1"
+            max="0.9"
+            step="0.1"
+            small
+          />
+        </div>
+        <div>
+          <Label htmlFor="communityFee">
+            Community Fee <Tooltip content={content.tooltips.communityFee} />
+          </Label>
+          <InputElement
+            value="0.1"
+            name="communityFee"
+            postfix="%"
+            readOnly
+            small
+          />
+        </div>
+        <div>
+          <Label htmlFor="marketplaceFee">
+            Marketplace Fee{' '}
+            <Tooltip content={content.tooltips.marketplaceFee} />
+          </Label>
+          <InputElement
+            value={appConfig.marketFeeAmount}
+            name="marketplaceFee"
+            postfix="%"
+            readOnly
+            small
+          />
+        </div>
+      </div>
+
       <footer className={styles.summary}>
-        <Label htmlFor="liquidityProviderFee">
-          Liquidity Provider Fee{' '}
-          <Tooltip content={content.tooltips.liquidityProviderFee} />
-        </Label>
-        <InputElement
-          type="number"
-          value={liquidityProviderFee}
-          name="liquidityProviderFee"
-          postfix="%"
-          onChange={onLiquidityProviderFeeChange}
-          min="0.1"
-          max="0.9"
-          step="0.1"
-        />
+        You will get: <br />
+        100% share of pool
       </footer>
 
       {error && (
