@@ -13,6 +13,7 @@ import Preview from './Preview'
 import { MetadataPublishForm } from '../../../@types/MetaData'
 // import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../providers/UserPreferences'
+import { Logger } from '@oceanprotocol/lib'
 
 export default function PublishPage({
   content
@@ -35,7 +36,8 @@ export default function PublishPage({
     let datatokenOptions: DataTokenOptions
 
     try {
-      // mpAddress and mpFee are not yet implemented in ocean js so are not used
+      Logger.log('Publish with ', priceOptions, serviceType, datatokenOptions)
+
       const ddo = await publish(
         metadata as any,
         priceOptions,

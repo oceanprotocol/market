@@ -51,6 +51,7 @@ export default function Price(props: InputProps): ReactElement {
 
   function handleOceanChange(event: ChangeEvent<HTMLInputElement>) {
     setAmountOcean(event.target.value)
+    helpers.setValue({ ...field.value, price: event.target.value })
   }
 
   function handleTabChange(tabName: string) {
