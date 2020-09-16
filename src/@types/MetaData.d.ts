@@ -4,6 +4,7 @@ import {
   AdditionalInformation,
   ServiceMetadata
 } from '@oceanprotocol/lib'
+import { PriceOptions } from '@oceanprotocol/react'
 
 export interface AdditionalInformationMarket extends AdditionalInformation {
   links?: File[]
@@ -22,12 +23,7 @@ export interface MetadataPublishForm {
   files: string | File[]
   author: string
   license: string
-  price: {
-    tokensToMint: number
-    type: 'simple' | 'advanced' | string
-    weightOnDataToken: string
-    liquidityProviderFee: string
-  }
+  price: PriceOptions
   access: 'Download' | 'Compute' | string
   termsAndConditions: boolean
   // ---- optional fields ----
