@@ -17,6 +17,7 @@ export default function Dynamic({
   priceOptions,
   datatokenOptions,
   onOceanChange,
+  onLiquidityProviderFeeChange,
   generateName,
   content
 }: {
@@ -24,6 +25,7 @@ export default function Dynamic({
   priceOptions: PriceOptions
   datatokenOptions: DataTokenOptions
   onOceanChange: (event: ChangeEvent<HTMLInputElement>) => void
+  onLiquidityProviderFeeChange: (event: ChangeEvent<HTMLInputElement>) => void
   generateName: () => void
   content: any
 }): ReactElement {
@@ -104,10 +106,14 @@ export default function Dynamic({
           <Tooltip content={content.tooltips.liquidityProviderFee} />
         </Label>
         <InputElement
+          type="number"
           value={liquidityProviderFee}
           name="liquidityProviderFee"
-          readOnly
           postfix="%"
+          onChange={onLiquidityProviderFeeChange}
+          min="0.1"
+          max="0.9"
+          step="0.1"
         />
       </footer>
 

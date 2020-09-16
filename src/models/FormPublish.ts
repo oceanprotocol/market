@@ -13,6 +13,10 @@ export const validationSchema = Yup.object().shape<MetadataPublishForm>({
       .required('Required'),
     weightOnDataToken: Yup.string().required('Required'),
     liquidityProviderFee: Yup.string()
+      .length(3)
+      .min(0.1)
+      .max(0.9)
+      .required('Required')
   }),
   files: Yup.array<FileMetadata>().required('Required').nullable(),
   description: Yup.string().required('Required'),

@@ -48,10 +48,20 @@ export default function Price(props: InputProps): ReactElement {
   const [amountOcean, setAmountOcean] = useState('1')
   const [tokensToMint, setTokensToMint] = useState<number>()
   const [datatokenOptions, setDatatokenOptions] = useState<DataTokenOptions>()
+  const [liquidityProviderFee, setLiquidityProviderFee] = useState<string>(
+    priceOptions.liquidityProviderFee
+  )
 
   function handleOceanChange(event: ChangeEvent<HTMLInputElement>) {
     setAmountOcean(event.target.value)
     helpers.setValue({ ...field.value, price: event.target.value })
+  }
+
+  // TODO: trigger Yup inline validation
+  function handleLiquidityProviderFeeChange(
+    event: ChangeEvent<HTMLInputElement>
+  ) {
+    setLiquidityProviderFee(event.target.value)
   }
 
   function handleTabChange(tabName: string) {
@@ -72,6 +82,10 @@ export default function Price(props: InputProps): ReactElement {
     setTokensToMint(tokensToMint)
     helpers.setValue({ ...field.value, tokensToMint })
   }, [amountOcean])
+
+  useEffect(() => {
+    helpers.setValue({ ...field.value, liquidityProviderFee })
+  }, [liquidityProviderFee])
 
   // Generate new DT name & symbol
   useEffect(() => {
@@ -96,9 +110,10 @@ export default function Price(props: InputProps): ReactElement {
       content: (
         <Dynamic
           ocean={amountOcean}
-          priceOptions={{ ...priceOptions, tokensToMint }}
+          priceOptions={{ ...priceOptions, tokensToMint, liquidityProviderFee }}
           datatokenOptions={datatokenOptions}
           onOceanChange={handleOceanChange}
+          onLiquidityProviderFeeChange={handleLiquidityProviderFeeChange}
           generateName={generateName}
           content={content.dynamic}
         />
@@ -111,7 +126,7 @@ export default function Price(props: InputProps): ReactElement {
       <Tabs items={tabs} handleTabChange={handleTabChange} />
       {debug === true && (
         <pre>
-          <code>{JSON.stringify(field.value)}</code>
+          <code>{JSON.stringify(field.value, null, 2)}</code>
         </pre>
       )}
     </div>

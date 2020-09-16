@@ -30,6 +30,7 @@ export interface InputProps {
   multiple?: boolean
   pattern?: string
   min?: string
+  max?: string
   disabled?: boolean
   readOnly?: boolean
   field?: any
