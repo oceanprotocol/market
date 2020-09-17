@@ -28,6 +28,7 @@
     "@sindresorhus/slugify": "^1.0.0",
     "@tippyjs/react": "^4.1.0",
     "@toruslabs/torus-embed": "^1.8.4",
+    "@truffle/hdwallet-provider": "^1.0.44",
     "@types/classnames": "^2.2.10",
     "@vercel/node": "^1.8.2",
     "@walletconnect/web3-provider": "^1.2.2",

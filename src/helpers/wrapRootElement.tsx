@@ -9,6 +9,7 @@ import {
   ConfigHelperNetworkId
 } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import { UserPreferencesProvider } from '../providers/UserPreferences'
+import HDWalletProvider from '@truffle/hdwallet-provider'
 
 export function getOceanConfig(
   network: ConfigHelperNetworkName | ConfigHelperNetworkId
@@ -27,8 +28,21 @@ export default function wrapRootElement({
   const { metadataStoreUri, network } = appConfig
   const oceanInitialConfig = getOceanConfig(network)
 
+  let burnerWeb3provider
+
+  if (!window?.ethereum) {
+    const mnemonic =
+      'chapter method soul still duty bunker swallow tell flower obvious until claim' // 12 word
+    burnerWeb3provider = new HDWalletProvider(
+      mnemonic,
+      oceanInitialConfig.nodeUri
+    )
+    console.log(burnerWeb3provider)
+  }
+
   const initialConfig = {
     ...oceanInitialConfig,
+    ...(burnerWeb3provider && { web3provider: burnerWeb3provider }),
     // add metadataStoreUri only when defined
     ...(metadataStoreUri && { metadataStoreUri })
   }
