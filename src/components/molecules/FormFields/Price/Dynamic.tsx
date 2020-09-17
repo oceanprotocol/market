@@ -43,12 +43,12 @@ export default function Dynamic({
       setError(`No account connected. Please connect your Web3 wallet.`)
     } else if (!correctNetwork) {
       setError(`Wrong Network. Please connect to ${desiredNetworkName}.`)
-    } else if (balance.ocean < ocean) {
+    } else if (Number(balance.ocean) < Number(ocean)) {
       setError(`Insufficiant balance. You need at least ${ocean} OCEAN`)
     } else {
       setError(undefined)
     }
-  }, [ocean, chainId, account, balance])
+  }, [ocean, chainId, account, balance, correctNetwork, desiredNetworkName])
 
   // refetch balance periodically
   useEffect(() => {
