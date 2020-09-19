@@ -13,7 +13,10 @@ export interface AdditionalInformationMarket extends AdditionalInformation {
 }
 
 export interface MetadataMarket extends Metadata {
-  additionalInformation: AdditionalInformationMarket
+  // While required for this market, Aquarius/Plecos will keep this as optional
+  // allowing external pushes of assets without `additionalInformation`.
+  // Making it optional here helps safeguarding against those assets.
+  additionalInformation?: AdditionalInformationMarket
 }
 
 export interface MetadataPublishForm {

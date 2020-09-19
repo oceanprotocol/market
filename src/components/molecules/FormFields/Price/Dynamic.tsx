@@ -8,9 +8,8 @@ import Alert from '../../../atoms/Alert'
 import Coin from './Coin'
 import { isCorrectNetwork } from '../../../../utils/wallet'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
-import InputElement from '../../../atoms/Input/InputElement'
-import Label from '../../../atoms/Input/Label'
 import Tooltip from '../../../atoms/Tooltip'
+import Fees from './Fees'
 
 export default function Dynamic({
   ocean,
@@ -39,14 +38,14 @@ export default function Dynamic({
     c.toUpperCase()
   )
 
-  // Check: account, network & insuffciant balance
+  // Check: account, network & insufficient balance
   useEffect(() => {
     if (!account) {
       setError(`No account connected. Please connect your Web3 wallet.`)
     } else if (!correctNetwork) {
       setError(`Wrong Network. Please connect to ${desiredNetworkName}.`)
     } else if (Number(balance.ocean) < Number(ocean)) {
-      setError(`Insufficiant balance. You need at least ${ocean} OCEAN`)
+      setError(`Insufficient balance. You need at least ${ocean} OCEAN`)
     } else {
       setError(undefined)
     }
@@ -100,50 +99,11 @@ export default function Dynamic({
         />
       </div>
 
-      <div className={styles.fees}>
-        <div>
-          <Label htmlFor="liquidityProviderFee">
-            Liquidity Provider Fee{' '}
-            <Tooltip content={content.tooltips.liquidityProviderFee} />
-          </Label>
-          <InputElement
-            type="number"
-            value={liquidityProviderFee}
-            name="liquidityProviderFee"
-            postfix="%"
-            onChange={onLiquidityProviderFeeChange}
-            min="0.1"
-            max="0.9"
-            step="0.1"
-            small
-          />
-        </div>
-        <div>
-          <Label htmlFor="communityFee">
-            Community Fee <Tooltip content={content.tooltips.communityFee} />
-          </Label>
-          <InputElement
-            value="0.1"
-            name="communityFee"
-            postfix="%"
-            readOnly
-            small
-          />
-        </div>
-        <div>
-          <Label htmlFor="marketplaceFee">
-            Marketplace Fee{' '}
-            <Tooltip content={content.tooltips.marketplaceFee} />
-          </Label>
-          <InputElement
-            value={appConfig.marketFeeAmount}
-            name="marketplaceFee"
-            postfix="%"
-            readOnly
-            small
-          />
-        </div>
-      </div>
+      <Fees
+        liquidityProviderFee={liquidityProviderFee}
+        onLiquidityProviderFeeChange={onLiquidityProviderFeeChange}
+        tooltips={content.tooltips}
+      />
 
       <footer className={styles.summary}>
         You will get: <br />

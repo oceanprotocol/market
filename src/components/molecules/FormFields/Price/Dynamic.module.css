@@ -34,8 +34,7 @@
   padding-bottom: calc(var(--spacer) / 3);
 }
 
-.tokens,
-.fees {
+.tokens {
   display: grid;
 
   margin-left: -2rem;
@@ -47,24 +46,6 @@
   .tokens {
     grid-template-columns: 1fr 1fr;
   }
-}
-
-.fees {
-  margin-top: var(--spacer);
-  padding: var(--spacer);
-  padding-top: 0;
-  gap: var(--spacer);
-  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
-  align-items: center;
-  border-bottom: 1px solid var(--brand-grey-lighter);
-}
-
-.fees label {
-  white-space: nowrap;
-}
-
-.fees input {
-  max-width: 5rem;
 }
 
 .summary {

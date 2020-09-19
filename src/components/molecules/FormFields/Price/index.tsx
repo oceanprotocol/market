@@ -56,7 +56,6 @@ export default function Price(props: InputProps): ReactElement {
 
   function handleOceanChange(event: ChangeEvent<HTMLInputElement>) {
     setAmountOcean(event.target.value)
-    helpers.setValue({ ...field.value, price: event.target.value })
   }
 
   // TODO: trigger Yup inline validation
@@ -82,7 +81,7 @@ export default function Price(props: InputProps): ReactElement {
     const tokensToMint =
       Number(amountOcean) * Number(priceOptions.weightOnDataToken)
     setTokensToMint(tokensToMint)
-    helpers.setValue({ ...field.value, tokensToMint })
+    helpers.setValue({ ...field.value, price: amountOcean, tokensToMint })
   }, [amountOcean])
 
   useEffect(() => {
