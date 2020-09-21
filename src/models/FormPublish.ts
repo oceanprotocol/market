@@ -19,7 +19,13 @@ export const validationSchema = Yup.object().shape<MetadataPublishForm>({
       liquidityProviderFee: Yup.number()
         .min(0.1, 'Must be more or equal to 0.1')
         .max(0.9, 'Must be less or equal to 0.9')
-        .required('Required')
+        .required('Required'),
+      datatoken: Yup.object()
+        .shape({
+          name: Yup.string(),
+          symbol: Yup.string()
+        })
+        .nullable()
     })
     .required('Required'),
   files: Yup.array<FileMetadata>().required('Required').nullable(),
