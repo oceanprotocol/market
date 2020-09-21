@@ -44,26 +44,11 @@ export default function Price(props: InputProps): ReactElement {
   const content = data.content.edges[0].node.childPagesJson.price
   const { ocean } = useOcean()
 
-  const [field, meta, helpers] = useField(props)
+  const [field, meta, helpers] = useField(props.name)
   const priceOptions: PriceOptions = field.value
 
-  const [amountOcean, setAmountOcean] = useState('1')
   const [tokensToMint, setTokensToMint] = useState<number>()
   const [datatokenOptions, setDatatokenOptions] = useState<DataTokenOptions>()
-  const [liquidityProviderFee, setLiquidityProviderFee] = useState<string>(
-    priceOptions.liquidityProviderFee
-  )
-
-  function handleOceanChange(event: ChangeEvent<HTMLInputElement>) {
-    setAmountOcean(event.target.value)
-  }
-
-  // TODO: trigger Yup inline validation
-  function handleLiquidityProviderFeeChange(
-    event: ChangeEvent<HTMLInputElement>
-  ) {
-    setLiquidityProviderFee(event.target.value)
-  }
 
   function handleTabChange(tabName: string) {
     const type = tabName.toLowerCase()
@@ -79,14 +64,10 @@ export default function Price(props: InputProps): ReactElement {
   // Always update everything when amountOcean changes
   useEffect(() => {
     const tokensToMint =
-      Number(amountOcean) * Number(priceOptions.weightOnDataToken)
+      Number(field.value.price) * Number(priceOptions.weightOnDataToken)
     setTokensToMint(tokensToMint)
-    helpers.setValue({ ...field.value, price: amountOcean, tokensToMint })
-  }, [amountOcean])
-
-  useEffect(() => {
-    helpers.setValue({ ...field.value, liquidityProviderFee })
-  }, [liquidityProviderFee])
+    helpers.setValue({ ...field.value, tokensToMint })
+  }, [field.value.price])
 
   // Generate new DT name & symbol
   useEffect(() => {
@@ -98,9 +79,7 @@ export default function Price(props: InputProps): ReactElement {
       title: content.fixed.title,
       content: (
         <Fixed
-          ocean={amountOcean}
           datatokenOptions={datatokenOptions}
-          onChange={handleOceanChange}
           generateName={generateName}
           content={content.fixed}
         />
@@ -110,11 +89,9 @@ export default function Price(props: InputProps): ReactElement {
       title: content.dynamic.title,
       content: (
         <Dynamic
-          ocean={amountOcean}
-          priceOptions={{ ...priceOptions, tokensToMint, liquidityProviderFee }}
+          ocean={field.value.price}
+          priceOptions={{ ...priceOptions, tokensToMint }}
           datatokenOptions={datatokenOptions}
-          onOceanChange={handleOceanChange}
-          onLiquidityProviderFeeChange={handleLiquidityProviderFeeChange}
           generateName={generateName}
           content={content.dynamic}
         />

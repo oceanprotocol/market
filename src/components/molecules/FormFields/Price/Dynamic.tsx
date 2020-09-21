@@ -15,22 +15,18 @@ export default function Dynamic({
   ocean,
   priceOptions,
   datatokenOptions,
-  onOceanChange,
-  onLiquidityProviderFeeChange,
   generateName,
   content
 }: {
   ocean: string
   priceOptions: PriceOptions
   datatokenOptions: DataTokenOptions
-  onOceanChange: (event: ChangeEvent<HTMLInputElement>) => void
-  onLiquidityProviderFeeChange: (event: ChangeEvent<HTMLInputElement>) => void
   generateName: () => void
   content: any
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { account, balance, chainId, refreshBalance } = useOcean()
-  const { weightOnDataToken, tokensToMint, liquidityProviderFee } = priceOptions
+  const { weightOnDataToken } = priceOptions
 
   const [error, setError] = useState<string>()
   const correctNetwork = isCorrectNetwork(chainId)
@@ -77,33 +73,25 @@ export default function Dynamic({
       </aside>
 
       <h4 className={styles.title}>
-        Data Token Liquidity Pool{' '}
-        <Tooltip content={content.tooltips.poolInfo} />
+        Datatoken Liquidity Pool <Tooltip content={content.tooltips.poolInfo} />
       </h4>
 
       <div className={styles.tokens}>
         <Coin
-          name="ocean"
+          name="price.price"
           datatokenOptions={{ symbol: 'OCEAN', name: 'Ocean Token' }}
-          value={ocean}
           weight={`${100 - Number(Number(weightOnDataToken) * 10)}%`}
-          onOceanChange={onOceanChange}
         />
         <Coin
-          name="tokensToMint"
+          name="price.tokensToMint"
           datatokenOptions={datatokenOptions}
-          value={tokensToMint.toString()}
           weight={`${Number(weightOnDataToken) * 10}%`}
           generateName={generateName}
           readOnly
         />
       </div>
 
-      <Fees
-        liquidityProviderFee={liquidityProviderFee}
-        onLiquidityProviderFeeChange={onLiquidityProviderFeeChange}
-        tooltips={content.tooltips}
-      />
+      <Fees tooltips={content.tooltips} />
 
       <footer className={styles.summary}>
         You will get: <br />

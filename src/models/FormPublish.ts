@@ -6,19 +6,17 @@ export const validationSchema = Yup.object().shape<MetadataPublishForm>({
   // ---- required fields ----
   name: Yup.string().required('Required'),
   author: Yup.string().required('Required'),
-  price: Yup.object().shape({
-    price: Yup.number().required('Required'),
-    tokensToMint: Yup.number().required('Required'),
-    type: Yup.string()
-      .matches(/fixed|dynamic/g)
-      .required('Required'),
-    weightOnDataToken: Yup.string().required('Required'),
-    liquidityProviderFee: Yup.string()
-      .length(3)
-      .min(0.1)
-      .max(0.9)
-      .required('Required')
-  }),
+  price: Yup.object()
+    .shape({
+      price: Yup.number().min(1, 'Must be greater than 0').required('Required'),
+      tokensToMint: Yup.number().required('Required'),
+      type: Yup.string()
+        .matches(/fixed|dynamic/g)
+        .required('Required'),
+      weightOnDataToken: Yup.string().required('Required'),
+      liquidityProviderFee: Yup.string().min(0.1).max(0.9).required('Required')
+    })
+    .required('Required'),
   files: Yup.array<FileMetadata>().required('Required').nullable(),
   description: Yup.string().required('Required'),
   license: Yup.string().required('Required'),
