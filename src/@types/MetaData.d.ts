@@ -4,7 +4,7 @@ import {
   AdditionalInformation,
   ServiceMetadata
 } from '@oceanprotocol/lib'
-import { PriceOptions } from '@oceanprotocol/react'
+import { PriceOptions, DataTokenOptions } from '@oceanprotocol/react'
 
 export interface AdditionalInformationMarket extends AdditionalInformation {
   links?: File[]
@@ -21,6 +21,7 @@ export interface MetadataMarket extends Metadata {
 
 export interface PriceOptionsMarket extends PriceOptions {
   liquidityProviderFee: number
+  datatoken?: DataTokenOptions
 }
 
 export interface MetadataPublishForm {

@@ -7,7 +7,7 @@ import Fixed from './Fixed'
 import Dynamic from './Dynamic'
 import { useField } from 'formik'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
-import { DataTokenOptions, useOcean } from '@oceanprotocol/react'
+import { useOcean } from '@oceanprotocol/react'
 import { PriceOptionsMarket } from '../../../../@types/MetaData'
 
 const query = graphql`
@@ -49,7 +49,6 @@ export default function Price(props: InputProps): ReactElement {
   const { price }: PriceOptionsMarket = field.value
 
   const [tokensToMint, setTokensToMint] = useState<number>()
-  const [datatokenOptions, setDatatokenOptions] = useState<DataTokenOptions>()
 
   function handleTabChange(tabName: string) {
     const type = tabName.toLowerCase()
@@ -58,8 +57,8 @@ export default function Price(props: InputProps): ReactElement {
 
   function generateName() {
     if (!ocean) return
-    const newDatatokenOptions = ocean.datatokens.generateDtName()
-    setDatatokenOptions(newDatatokenOptions)
+    const datatoken = ocean.datatokens.generateDtName()
+    helpers.setValue({ ...field.value, datatoken })
   }
 
   // Always update everything when amountOcean changes
@@ -79,7 +78,7 @@ export default function Price(props: InputProps): ReactElement {
       title: content.fixed.title,
       content: (
         <Fixed
-          datatokenOptions={datatokenOptions}
+          datatokenOptions={field.value.datatoken}
           generateName={generateName}
           content={content.fixed}
         />
@@ -91,7 +90,7 @@ export default function Price(props: InputProps): ReactElement {
         <Dynamic
           ocean={price}
           priceOptions={{ ...field.value, tokensToMint }}
-          datatokenOptions={datatokenOptions}
+          datatokenOptions={field.value.datatoken}
           generateName={generateName}
           content={content.dynamic}
         />
