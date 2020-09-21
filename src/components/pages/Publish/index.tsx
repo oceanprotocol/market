@@ -47,6 +47,7 @@ export default function PublishPage({
 
       if (publishError) {
         toast.error(publishError)
+        console.error(publishError)
         return null
       }
 

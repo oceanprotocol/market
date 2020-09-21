@@ -10,13 +10,14 @@ export default function MetaSecondary({
 }: {
   metadata: MetadataMarket
 }): ReactElement {
+  console.log(metadata)
   return (
     <aside className={styles.metaSecondary}>
-      {metadata?.additionalInformation?.tags.length > 0 && (
+      {metadata?.additionalInformation?.tags?.length > 0 && (
         <Tags items={metadata?.additionalInformation?.tags} />
       )}
 
-      {metadata?.additionalInformation?.links.length && (
+      {metadata?.additionalInformation?.links?.length && (
         <div className={styles.samples}>
           <MetaItem
             title="Sample Data"
