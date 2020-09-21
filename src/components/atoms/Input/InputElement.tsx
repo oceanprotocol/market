@@ -6,9 +6,9 @@ import FilesInput from '../../molecules/FormFields/FilesInput'
 import Terms from '../../molecules/FormFields/Terms'
 import Price from '../../molecules/FormFields/Price'
 
-const DefaultInput = (props: InputProps) => (
+const DefaultInput = ({ small, ...props }: InputProps) => (
   <input
-    className={`${styles.input} ${props.small ? styles.small : null}`}
+    className={`${styles.input} ${small ? styles.small : null}`}
     id={props.name}
     {...props}
   />
@@ -22,6 +22,10 @@ export default function InputElement({
   postfix,
   small,
   field,
+  label,
+  help,
+  form,
+  additionalComponent,
   ...props
 }: InputProps): ReactElement {
   switch (type) {
