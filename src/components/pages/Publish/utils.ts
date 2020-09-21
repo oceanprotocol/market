@@ -3,7 +3,7 @@ import { toStringNoMS } from '../../../utils'
 import AssetModel from '../../../models/Asset'
 
 export function transformPublishFormToMetadata(
-  data: MetadataPublishForm
+  data: Partial<MetadataPublishForm>
 ): MetadataMarket {
   const currentTime = toStringNoMS(new Date())
 

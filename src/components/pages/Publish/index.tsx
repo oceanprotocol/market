@@ -11,7 +11,6 @@ import { initialValues, validationSchema } from '../../../models/FormPublish'
 import { transformPublishFormToMetadata } from './utils'
 import Preview from './Preview'
 import { MetadataPublishForm } from '../../../@types/MetaData'
-// import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import { Logger } from '@oceanprotocol/lib'
 
@@ -20,17 +19,17 @@ export default function PublishPage({
 }: {
   content: { form: FormContent }
 }): ReactElement {
-  // TODO: implement marketFee
-  // const { marketFeeAddress, marketFeeAmount } = useSiteMetadata()
   const { debug } = useUserPreferences()
   const { publish, publishError, isLoading, publishStepText } = usePublish()
   const navigate = useNavigate()
 
   async function handleSubmit(
-    values: MetadataPublishForm,
+    values: Partial<MetadataPublishForm>,
     resetForm: () => void
   ): Promise<void> {
-    const metadata = transformPublishFormToMetadata(values)
+    const metadata = transformPublishFormToMetadata(
+      values as MetadataPublishForm
+    )
     const priceOptions = values.price
     const serviceType = values.access === 'Download' ? 'access' : 'compute'
     let datatokenOptions: DataTokenOptions
@@ -40,7 +39,10 @@ export default function PublishPage({
 
       const ddo = await publish(
         metadata as any,
-        priceOptions,
+        {
+          ...priceOptions,
+          liquidityProviderFee: `${priceOptions.liquidityProviderFee}`
+        },
         serviceType,
         datatokenOptions
       )
@@ -55,7 +57,7 @@ export default function PublishPage({
       ddo && toast.success('Asset created successfully.')
 
       // reset form state
-      // TODO: verify persistant form in localStorage is cleared with it too
+      // TODO: verify persistent form in localStorage is cleared with it too
       resetForm()
 
       // Go to new asset detail page
