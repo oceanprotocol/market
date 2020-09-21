@@ -2,6 +2,10 @@
   composes: content from './index.module.css';
 }
 
+.form {
+  position: relative;
+}
+
 @media (min-width: 55rem) {
   .form {
     max-width: 12rem;

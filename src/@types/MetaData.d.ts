@@ -19,6 +19,10 @@ export interface MetadataMarket extends Metadata {
   additionalInformation?: AdditionalInformationMarket
 }
 
+export interface PriceOptionsMarket extends PriceOptions {
+  liquidityProviderFee: number
+}
+
 export interface MetadataPublishForm {
   // ---- required fields ----
   name: string
@@ -26,7 +30,7 @@ export interface MetadataPublishForm {
   files: string | File[]
   author: string
   license: string
-  price: PriceOptions
+  price: PriceOptionsMarket
   access: 'Download' | 'Compute' | string
   termsAndConditions: boolean
   // ---- optional fields ----

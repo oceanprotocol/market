@@ -1,15 +1,16 @@
-import React, { ReactElement, useState, ChangeEvent, useEffect } from 'react'
+import React, { ReactElement, useState, useEffect } from 'react'
 import stylesIndex from './index.module.css'
 import styles from './Dynamic.module.css'
 import FormHelp from '../../../atoms/Input/Help'
 import Wallet from '../../Wallet'
-import { DataTokenOptions, PriceOptions, useOcean } from '@oceanprotocol/react'
+import { DataTokenOptions, useOcean } from '@oceanprotocol/react'
 import Alert from '../../../atoms/Alert'
 import Coin from './Coin'
 import { isCorrectNetwork } from '../../../../utils/wallet'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import Tooltip from '../../../atoms/Tooltip'
 import Fees from './Fees'
+import { PriceOptionsMarket } from '../../../../@types/MetaData'
 
 export default function Dynamic({
   ocean,
@@ -19,7 +20,7 @@ export default function Dynamic({
   content
 }: {
   ocean: number
-  priceOptions: PriceOptions
+  priceOptions: PriceOptionsMarket
   datatokenOptions: DataTokenOptions
   generateName: () => void
   content: any

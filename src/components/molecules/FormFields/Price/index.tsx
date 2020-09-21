@@ -8,6 +8,7 @@ import Dynamic from './Dynamic'
 import { useField } from 'formik'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import { DataTokenOptions, PriceOptions, useOcean } from '@oceanprotocol/react'
+import { PriceOptionsMarket } from '../../../../@types/MetaData'
 
 const query = graphql`
   query PriceFieldQuery {
@@ -45,7 +46,7 @@ export default function Price(props: InputProps): ReactElement {
   const { ocean } = useOcean()
 
   const [field, meta, helpers] = useField(props.name)
-  const { price }: PriceOptions = field.value
+  const { price }: PriceOptionsMarket = field.value
 
   const [tokensToMint, setTokensToMint] = useState<number>()
   const [datatokenOptions, setDatatokenOptions] = useState<DataTokenOptions>()

@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react'
 import stylesIndex from './index.module.css'
 import styles from './Coin.module.css'
+import stylesInput from '../../../atoms/Input/index.module.css'
 import InputElement from '../../../atoms/Input/InputElement'
 import { ReactComponent as Logo } from '../../../../images/logo.svg'
 import Conversion from '../../../atoms/Price/Conversion'
@@ -21,7 +22,7 @@ export default function Coin({
   generateName?: () => void
   readOnly?: boolean
 }): ReactElement {
-  const [field] = useField(name)
+  const [field, meta] = useField(name)
 
   return (
     <div className={styles.coin}>
@@ -49,6 +50,9 @@ export default function Coin({
         />
         {datatokenOptions?.symbol === 'OCEAN' && (
           <Conversion price={field.value} className={stylesIndex.conversion} />
+        )}
+        {meta.error && meta.touched && (
+          <div className={stylesInput.error}>{meta.error}</div>
         )}
       </div>
     </div>

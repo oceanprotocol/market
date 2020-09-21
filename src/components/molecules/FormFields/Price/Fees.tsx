@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react'
 import Tooltip from '../../../atoms/Tooltip'
 import styles from './Fees.module.css'
+import stylesInput from '../../../atoms/Input/index.module.css'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import { useField } from 'formik'
 import Input from '../../../atoms/Input'
@@ -31,7 +32,10 @@ export default function Fees({
           small
           {...field}
           additionalComponent={
-            meta.error && meta.touched && <div>{meta.error}</div>
+            meta.error &&
+            meta.touched && (
+              <div className={stylesInput.error}>{meta.error}</div>
+            )
           }
         />
 

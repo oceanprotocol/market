@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react'
 import stylesIndex from './index.module.css'
 import styles from './Fixed.module.css'
+import stylesInput from '../../../atoms/Input/index.module.css'
 import FormHelp from '../../../atoms/Input/Help'
 import Conversion from '../../../atoms/Price/Conversion'
 import { DataTokenOptions } from '@oceanprotocol/react'
@@ -32,10 +33,18 @@ export default function Fixed({
             type="number"
             prefix="OCEAN"
             {...field}
+            additionalComponent={
+              <Conversion
+                price={field.value}
+                className={stylesIndex.conversion}
+              />
+            }
           />
-          <Conversion price={field.value} className={stylesIndex.conversion} />
+          {meta.error && meta.touched && (
+            <div className={stylesInput.error}>{meta.error}</div>
+          )}
         </div>
-        {meta.error && meta.touched && <div>{meta.error}</div>}
+
         {datatokenOptions && (
           <div className={styles.datatoken}>
             <h4>
