@@ -6,19 +6,7 @@ export function NetworkMonitor() {
   const { connect, web3Provider } = useOcean()
 
   const handleNetworkChanged = (chainId: number) => {
-    // temp hack
-    let network = ''
-    switch (chainId) {
-      case 1: {
-        network = 'mainnet'
-        break
-      }
-      case 4: {
-        network = 'rinkeby'
-        break
-      }
-    }
-    const config = getOceanConfig(network)
+    const config = getOceanConfig(chainId)
     connect(config)
   }
   useEffect(() => {
