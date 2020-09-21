@@ -144,7 +144,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
                 Pool
               </EtherscanLink>
               <EtherscanLink network="rinkeby" path={`token/${ddo.dataToken}`}>
-                Data Token
+                Datatoken
               </EtherscanLink>
             </div>
           </div>

@@ -56,7 +56,7 @@ export default function MetaFull({
       />
 
       <MetaItem
-        title="Data Token"
+        title="Datatoken"
         content={
           <EtherscanLink network="rinkeby" path={`token/${dataToken}`}>
             {dtName ? `${dtName} - ${dtSymbol}` : <code>{dataToken}</code>}
