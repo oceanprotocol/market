@@ -31,12 +31,12 @@ export const validationSchema = Yup.object().shape<MetadataPublishForm>({
   termsAndConditions: Yup.boolean().required('Required'),
 
   // ---- optional fields ----
-  copyrightHolder: Yup.string(),
-  tags: Yup.string(),
+  copyrightHolder: Yup.string().nullable(),
+  tags: Yup.string().nullable(),
   links: Yup.object<FileMetadata[]>().nullable()
 })
 
-export const initialValues: MetadataPublishForm = {
+export const initialValues: Partial<MetadataPublishForm> = {
   name: '',
   author: '',
   price: {
@@ -50,8 +50,5 @@ export const initialValues: MetadataPublishForm = {
   description: '',
   license: '',
   access: '',
-  termsAndConditions: false,
-  copyrightHolder: '',
-  tags: '',
-  links: ''
+  termsAndConditions: false
 }

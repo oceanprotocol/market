@@ -6,12 +6,8 @@ import FileInput from './Input'
 import { getFileInfo } from '../../../../utils'
 import { InputProps } from '../../../atoms/Input'
 
-interface Values {
-  url: string
-}
-
 export default function FilesInput(props: InputProps): ReactElement {
-  const [field, meta, helpers] = useField(props)
+  const [field, meta, helpers] = useField(props.name)
   const [isLoading, setIsLoading] = useState(false)
 
   async function handleButtonClick(e: React.SyntheticEvent, url: string) {
@@ -36,7 +32,7 @@ export default function FilesInput(props: InputProps): ReactElement {
 
   return (
     <>
-      {field && typeof field.value === 'object' ? (
+      {field?.value && field.value[0] && typeof field.value === 'object' ? (
         <FileInfo file={field.value[0]} removeItem={removeItem} />
       ) : (
         <FileInput
