@@ -1,4 +1,4 @@
-import React, { ReactElement, ChangeEvent } from 'react'
+import React, { ReactElement } from 'react'
 import stylesIndex from './index.module.css'
 import styles from './Coin.module.css'
 import InputElement from '../../../atoms/Input/InputElement'
@@ -21,7 +21,7 @@ export default function Coin({
   generateName?: () => void
   readOnly?: boolean
 }): ReactElement {
-  const [field, meta, helpers] = useField(name)
+  const [field] = useField(name)
 
   return (
     <div className={styles.coin}>
@@ -42,8 +42,6 @@ export default function Coin({
 
       <div className={styles.data}>
         <InputElement
-          value={field.value}
-          name={name}
           type="number"
           readOnly={readOnly}
           prefix={datatokenOptions?.symbol || 'DT'}

@@ -18,7 +18,7 @@ export default function Dynamic({
   generateName,
   content
 }: {
-  ocean: string
+  ocean: number
   priceOptions: PriceOptions
   datatokenOptions: DataTokenOptions
   generateName: () => void

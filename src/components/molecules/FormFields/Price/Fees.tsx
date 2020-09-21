@@ -1,4 +1,4 @@
-import React, { ChangeEvent, ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 import Tooltip from '../../../atoms/Tooltip'
 import styles from './Fees.module.css'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
@@ -11,14 +11,7 @@ export default function Fees({
   tooltips: { [key: string]: string }
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
-  const [field, meta, helpers] = useField('price.liquidityProviderFee')
-
-  // TODO: trigger Yup inline validation
-  function handleLiquidityProviderFeeChange(
-    event: ChangeEvent<HTMLInputElement>
-  ) {
-    helpers.setValue(event.target.value)
-  }
+  const [field, meta] = useField('price.liquidityProviderFee')
 
   return (
     <>
@@ -31,15 +24,15 @@ export default function Fees({
             </>
           }
           type="number"
-          value={field.value}
-          name="price.liquidityProviderFee"
           postfix="%"
-          onChange={handleLiquidityProviderFeeChange}
           min="0.1"
           max="0.9"
           step="0.1"
           small
           {...field}
+          additionalComponent={
+            meta.error && meta.touched && <div>{meta.error}</div>
+          }
         />
 
         <Input
@@ -70,7 +63,6 @@ export default function Fees({
           small
         />
       </div>
-      {meta.error && meta.touched && <div>{meta.error}</div>}
     </>
   )
 }

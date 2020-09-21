@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, ChangeEvent, useEffect } from 'react'
+import React, { ReactElement, useState, useEffect } from 'react'
 import { graphql, useStaticQuery } from 'gatsby'
 import { InputProps } from '../../../atoms/Input'
 import styles from './index.module.css'
@@ -45,7 +45,7 @@ export default function Price(props: InputProps): ReactElement {
   const { ocean } = useOcean()
 
   const [field, meta, helpers] = useField(props.name)
-  const priceOptions: PriceOptions = field.value
+  const { price }: PriceOptions = field.value
 
   const [tokensToMint, setTokensToMint] = useState<number>()
   const [datatokenOptions, setDatatokenOptions] = useState<DataTokenOptions>()
@@ -63,11 +63,10 @@ export default function Price(props: InputProps): ReactElement {
 
   // Always update everything when amountOcean changes
   useEffect(() => {
-    const tokensToMint =
-      Number(field.value.price) * Number(priceOptions.weightOnDataToken)
+    const tokensToMint = Number(price) * Number(field.value.weightOnDataToken)
     setTokensToMint(tokensToMint)
     helpers.setValue({ ...field.value, tokensToMint })
-  }, [field.value.price])
+  }, [price])
 
   // Generate new DT name & symbol
   useEffect(() => {
@@ -89,8 +88,8 @@ export default function Price(props: InputProps): ReactElement {
       title: content.dynamic.title,
       content: (
         <Dynamic
-          ocean={field.value.price}
-          priceOptions={{ ...priceOptions, tokensToMint }}
+          ocean={price}
+          priceOptions={{ ...field.value, tokensToMint }}
           datatokenOptions={datatokenOptions}
           generateName={generateName}
           content={content.dynamic}

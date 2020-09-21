@@ -17,7 +17,7 @@ export default function Fixed({
   generateName: () => void
   content: any
 }): ReactElement {
-  const [field, meta, helpers] = useField('price.price')
+  const [field, meta] = useField('price.price')
 
   return (
     <div className={styles.fixed}>
