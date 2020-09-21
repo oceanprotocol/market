@@ -9,7 +9,9 @@ export const validationSchema = Yup.object().shape<MetadataPublishForm>({
   price: Yup.object()
     .shape({
       price: Yup.number().min(1, 'Must be greater than 0').required('Required'),
-      tokensToMint: Yup.number().positive().required('Required'),
+      tokensToMint: Yup.number()
+        .min(1, 'Must be greater than 0')
+        .required('Required'),
       type: Yup.string()
         .matches(/fixed|dynamic/g)
         .required('Required'),

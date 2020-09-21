@@ -1,13 +1,13 @@
 import React, { ReactElement } from 'react'
 import stylesIndex from './index.module.css'
 import styles from './Fixed.module.css'
-import stylesInput from '../../../atoms/Input/index.module.css'
 import FormHelp from '../../../atoms/Input/Help'
 import Conversion from '../../../atoms/Price/Conversion'
 import { DataTokenOptions } from '@oceanprotocol/react'
 import RefreshName from './RefreshName'
 import { useField } from 'formik'
 import Input from '../../../atoms/Input'
+import Error from './Error'
 
 export default function Fixed({
   datatokenOptions,
@@ -40,9 +40,7 @@ export default function Fixed({
               />
             }
           />
-          {meta.error && meta.touched && (
-            <div className={stylesInput.error}>{meta.error}</div>
-          )}
+          <Error meta={meta} />
         </div>
 
         {datatokenOptions && (

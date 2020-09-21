@@ -7,7 +7,7 @@ import Fixed from './Fixed'
 import Dynamic from './Dynamic'
 import { useField } from 'formik'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
-import { DataTokenOptions, PriceOptions, useOcean } from '@oceanprotocol/react'
+import { DataTokenOptions, useOcean } from '@oceanprotocol/react'
 import { PriceOptionsMarket } from '../../../../@types/MetaData'
 
 const query = graphql`
