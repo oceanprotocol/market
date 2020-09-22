@@ -20,7 +20,7 @@ export default function Conversion({
   const tokenId = 'ocean-protocol'
   const currencies = appConfig.currencies.join(',') // comma-separated list
   const url = `https://api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=${currencies}&include_24hr_change=true`
-  const { currency } = useUserPreferences()
+  const { currency, locale } = useUserPreferences()
 
   const [priceConverted, setPriceConverted] = useState('0.00')
 
@@ -39,11 +39,14 @@ export default function Conversion({
     const values = data[tokenId]
     const fiatValue = values[currency.toLowerCase()]
     const converted = fiatValue * Number(price)
-    const convertedFormatted = Number(
-      formatCurrency(converted, currency, 'en', true)
-    ).toFixed(2)
-
-    setPriceConverted(`${convertedFormatted}`)
+    const convertedFormatted = formatCurrency(
+      converted,
+      currency,
+      locale,
+      true,
+      { decimalPlaces: 2 }
+    )
+    setPriceConverted(convertedFormatted)
   }
 
   useEffect(() => {

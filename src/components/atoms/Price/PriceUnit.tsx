@@ -3,6 +3,7 @@ import { formatCurrency } from '@coingecko/cryptoformat'
 import classNames from 'classnames/bind'
 import Conversion from './Conversion'
 import styles from './PriceUnit.module.css'
+import { useUserPreferences } from '../../../providers/UserPreferences'
 
 const cx = classNames.bind(styles)
 
@@ -19,6 +20,8 @@ export default function PriceUnit({
   conversion?: boolean
   symbol?: string
 }): ReactElement {
+  const { locale } = useUserPreferences()
+
   const styleClasses = cx({
     price: true,
     small: small,
@@ -29,7 +32,7 @@ export default function PriceUnit({
     <div className={styleClasses}>
       {Number.isNaN(Number(price))
         ? '-'
-        : formatCurrency(Number(price), '', 'en', false, {
+        : formatCurrency(Number(price), '', locale, false, {
             // Not exactly clear what `significant figures` are for this library,
             // but setting this seems to give us the formatting we want.
             // See https://github.com/oceanprotocol/market/issues/70
