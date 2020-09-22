@@ -1,265 +1,86 @@
 import { DDO } from '@oceanprotocol/lib'
-import {
-  MetadataMarket,
-  ServiceMetadataMarket
-} from '../../../src/@types/Metadata'
 
 const ddo: Partial<DDO> = {
   '@context': 'https://w3id.org/did/v1',
-  id: 'did:op:e6fda48e8d814d5d9655645aac3c046cc87528dbc1a9449799e579d7b83d1360',
+  id: 'did:op:7b4e90b05ec243dbaaca2a503fdde119706577f9645b45b9ab65cf2c3970f757',
   publicKey: [
     {
       id:
-        'did:op:e6fda48e8d814d5d9655645aac3c046cc87528dbc1a9449799e579d7b83d1360',
+        'did:op:7b4e90b05ec243dbaaca2a503fdde119706577f9645b45b9ab65cf2c3970f757',
       type: 'EthereumECDSAKey',
-      owner: '0x610D9314EDF2ced7681BA1633C33fdb8cF365a12'
+      owner: '0x4D156A2ef69ffdDC55838176C6712C90f60a2285'
     }
   ],
   authentication: [
     {
       type: 'RsaSignatureAuthentication2018',
       publicKey:
-        'did:op:e6fda48e8d814d5d9655645aac3c046cc87528dbc1a9449799e579d7b83d1360'
+        'did:op:7b4e90b05ec243dbaaca2a503fdde119706577f9645b45b9ab65cf2c3970f757'
     }
   ],
   service: [
     {
       type: 'metadata',
-      serviceEndpoint:
-        'https://aquarius.pacific.dev-ocean.com/api/v1/aquarius/assets/ddo/did:op:e6fda48e8d814d5d9655645aac3c046cc87528dbc1a9449799e579d7b83d1360',
-      attributes: ({
+      attributes: {
         main: {
           type: 'dataset',
-          name: 'What a Waste Global Database',
-          dateCreated: '2018-09-20T08:38:58',
-          datePublished: '2019-12-11T05:19:42',
-          author: 'World Development Indicators, The World Bank',
-          license: 'CC-BY 4.0',
-          price: '100000000000000000000',
+          name: 'Endangered coral reefs',
+          dateCreated: '2020-09-21T09:58:35Z',
+          author: 'me',
+          license:
+            'CC BY-NC-SA: Attribution-NonCommercial-ShareAlike 4.0 International',
           files: [
             {
-              index: 0,
-              contentType: 'csv',
-              contentLength: '114000',
-              url: ''
-            },
-            {
-              index: 1,
-              contentType: 'excel',
-              contentLength: '219000',
-              url: ''
-            },
-            {
-              index: 2,
-              contentType: 'csv',
-              contentLength: '1300000',
-              url: ''
-            },
-            {
-              index: 3,
-              contentType: 'csv',
-              contentLength: '36300',
-              url: ''
+              contentLength: '1256',
+              contentType: 'text/html',
+              index: 0
             }
-          ]
+          ],
+          datePublished: '2020-09-21T09:59:07Z'
         },
         additionalInformation: {
-          description:
-            'What a Waste is a global project to aggregate data on solid waste management from around the world. This database features the statistics collected through the effort, covering nearly all countries and over 330 cities. The metrics included cover all steps from the waste management value chain, including waste generation, composition, collection, and disposal, as well as information on user fees and financing, the informal sector, administrative structures, public communication, and legal information. The information presented is the best available based on a study of current literature and limited conversations with waste agencies and authorities. While there may be variations in the definitions and quality of reporting for individual data points, general trends should reflect the global reality. All sources and any estimations are noted.',
-          copyrightHolder: 'World Bank Group',
-          tags: ['Sustainability', ' Climate', ' Energy', ' ai-for-good'],
+          description: 'test',
+          copyrightHolder: '',
+          tags: ['coral'],
           links: [
             {
-              name: 'Hello',
-              url: 'https://demo.com'
+              contentLength: '1256',
+              contentType: 'text/html',
+              url: 'https://www.example.com'
             }
           ],
           termsAndConditions: true,
-          access: 'Download'
-        },
-        curation: {
-          numVotes: 100,
-          rating: 5
+          priceType: 'fixed'
         }
-      } as unknown) as MetadataMarket,
-      index: 0
-    } as ServiceMetadataMarket,
-    {
-      type: 'authorization',
-      serviceEndpoint: 'https://secret-store.pacific.oceanprotocol.com',
-      attributes: {
-        main: {}
       },
-      index: 2
+      index: 0
     },
     {
       type: 'access',
+      index: 1,
       serviceEndpoint:
-        'https://brizo.pacific.dev-ocean.com/api/v1/brizo/services/consume',
+        'https://provider.rinkeby.v3.dev-ocean.com/api/v1/services/consume',
       attributes: {
-        serviceAgreementTemplate: {
-          contractName: 'EscrowAccessSecretStoreTemplate',
-          events: [
-            {
-              name: 'AgreementCreated',
-              actorType: 'consumer',
-              handler: {
-                moduleName: 'escrowAccessSecretStoreTemplate',
-                functionName: 'fulfillLockRewardCondition',
-                version: '0.1'
-              }
-            }
-          ],
-          fulfillmentOrder: [
-            'lockReward.fulfill',
-            'accessSecretStore.fulfill',
-            'escrowReward.fulfill'
-          ],
-          conditionDependency: {
-            lockReward: [],
-            accessSecretStore: [],
-            escrowReward: ['lockReward', 'accessSecretStore']
-          },
-          conditions: [
-            {
-              name: 'lockReward',
-              timelock: 0,
-              timeout: 0,
-              contractName: 'LockRewardCondition',
-              functionName: 'fulfill',
-              events: [
-                {
-                  name: 'Fulfilled',
-                  actorType: 'publisher',
-                  handler: {
-                    moduleName: 'lockRewardCondition',
-                    functionName: 'fulfillAccessSecretStoreCondition',
-                    version: '0.1'
-                  }
-                }
-              ],
-              parameters: [
-                {
-                  name: '_rewardAddress',
-                  type: 'address',
-                  value: '0x656Aa3D9b37A6eA770701ae2c612f760d9254A66'
-                },
-                {
-                  name: '_amount',
-                  type: 'uint256',
-                  value: '0'
-                }
-              ]
-            },
-            {
-              name: 'accessSecretStore',
-              timelock: 0,
-              timeout: 0,
-              contractName: 'AccessSecretStoreCondition',
-              functionName: 'fulfill',
-              events: [
-                {
-                  name: 'Fulfilled',
-                  actorType: 'publisher',
-                  handler: {
-                    moduleName: 'accessSecretStore',
-                    functionName: 'fulfillEscrowRewardCondition',
-                    version: '0.1'
-                  }
-                },
-                {
-                  name: 'TimedOut',
-                  actorType: 'consumer',
-                  handler: {
-                    moduleName: 'accessSecretStore',
-                    functionName: 'fulfillEscrowRewardCondition',
-                    version: '0.1'
-                  }
-                }
-              ],
-              parameters: [
-                {
-                  name: '_documentId',
-                  type: 'bytes32',
-                  value:
-                    'e6fda48e8d814d5d9655645aac3c046cc87528dbc1a9449799e579d7b83d1360'
-                },
-                {
-                  name: '_grantee',
-                  type: 'address',
-                  value: ''
-                }
-              ]
-            },
-            {
-              name: 'escrowReward',
-              timelock: 0,
-              timeout: 0,
-              contractName: 'EscrowReward',
-              functionName: 'fulfill',
-              events: [
-                {
-                  name: 'Fulfilled',
-                  actorType: 'publisher',
-                  handler: {
-                    moduleName: 'escrowRewardCondition',
-                    functionName: 'verifyRewardTokens',
-                    version: '0.1'
-                  }
-                }
-              ],
-              parameters: [
-                {
-                  name: '_amount',
-                  type: 'uint256',
-                  value: '0'
-                },
-                {
-                  name: '_receiver',
-                  type: 'address',
-                  value: ''
-                },
-                {
-                  name: '_sender',
-                  type: 'address',
-                  value: ''
-                },
-                {
-                  name: '_lockCondition',
-                  type: 'bytes32',
-                  value: ''
-                },
-                {
-                  name: '_releaseCondition',
-                  type: 'bytes32',
-                  value: ''
-                }
-              ]
-            }
-          ]
-        },
-        additionalInformation: {
-          description: ''
-        },
         main: {
-          name: 'dataAssetAccessServiceAgreement',
-          creator: '',
-          datePublished: '2019-12-11T05:19:42Z',
-          price: '',
-          timeout: 36000
+          creator: '0x4D156A2ef69ffdDC55838176C6712C90f60a2285',
+          datePublished: '2020-09-21T09:58:35Z',
+          cost: '1000000000000000000',
+          timeout: 0,
+          name: 'dataAssetAccess'
         }
-      },
-      index: 3
+      }
     }
   ],
-  created: '2019-06-26T14:53:09',
+  dataToken: '0x932c3937cBc983790e67A258Cb6F8959F2466407',
+  created: '2020-09-21T09:59:01Z',
   proof: {
+    created: '2020-09-21T09:59:06Z',
+    creator: '0x4D156A2ef69ffdDC55838176C6712C90f60a2285',
     type: 'DDOIntegritySignature',
-    created: '2019-06-26T14:53:14Z',
-    creator: '0x610D9314EDF2ced7681BA1633C33fdb8cF365a12',
     signatureValue:
-      '0x989cda083ff1711f885bf0fa95a149654edb07da7698b8f4bb3482788b1960f562aa265259767de8ed03a1d1bdaa1885cf42c5a41ec33145e84975ae7444f0d91b'
-  }
+      '0xc2157630d4f15d1575f1320ee1ea8007c750e8b06f5866941cc8372596cde39424dff2a75c2b9ac16683add2c2d1972f77953f207239191c7a48af64c4deb8c21c'
+  },
+  updated: '2020-09-21T09:59:01Z'
 }
 
 export default ddo
