@@ -11,7 +11,7 @@ import Button from '../../atoms/Button'
 export default function Preview({
   values
 }: {
-  values: MetadataPublishForm
+  values: Partial<MetadataPublishForm>
 }): ReactElement {
   return (
     <div className={styles.preview}>

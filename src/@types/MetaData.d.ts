@@ -4,7 +4,7 @@ import {
   AdditionalInformation,
   ServiceMetadata
 } from '@oceanprotocol/lib'
-import { PriceOptions } from '@oceanprotocol/react'
+import { PriceOptions, DataTokenOptions } from '@oceanprotocol/react'
 
 export interface AdditionalInformationMarket extends AdditionalInformation {
   links?: File[]
@@ -13,7 +13,17 @@ export interface AdditionalInformationMarket extends AdditionalInformation {
 }
 
 export interface MetadataMarket extends Metadata {
-  additionalInformation: AdditionalInformationMarket
+  // While required for this market, Aquarius/Plecos will keep this as optional
+  // allowing external pushes of assets without `additionalInformation`.
+  // Making it optional here helps safeguarding against those assets.
+  additionalInformation?: AdditionalInformationMarket
+}
+
+export interface PriceOptionsMarket extends PriceOptions {
+  // easier to keep this as number for Yup input validation
+  liquidityProviderFee: number
+  // collect datatoken info for publishing
+  datatoken?: DataTokenOptions
 }
 
 export interface MetadataPublishForm {
@@ -23,7 +33,7 @@ export interface MetadataPublishForm {
   files: string | File[]
   author: string
   license: string
-  price: PriceOptions
+  price: PriceOptionsMarket
   access: 'Download' | 'Compute' | string
   termsAndConditions: boolean
   // ---- optional fields ----

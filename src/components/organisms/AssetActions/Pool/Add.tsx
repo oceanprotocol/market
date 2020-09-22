@@ -16,17 +16,18 @@ export default function Add({
   setShowAdd,
   poolAddress,
   totalPoolTokens,
-  totalBalance
+  totalBalance,
+  liquidityProviderFee
 }: {
   setShowAdd: (show: boolean) => void
   poolAddress: string
   totalPoolTokens: string
   totalBalance: Balance
+  liquidityProviderFee: string
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { ocean, accountId, balance } = useOcean()
   const [amount, setAmount] = useState('')
-  const [swapFee, setSwapFee] = useState<string>()
   const [txId, setTxId] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>()
 
@@ -37,14 +38,6 @@ export default function Add({
   const newPoolShare =
     totalBalance &&
     ((Number(newPoolTokens) / Number(totalPoolTokens)) * 100).toFixed(2)
-
-  useEffect(() => {
-    async function getFee() {
-      const swapFee = await ocean.pool.getSwapFee(accountId, poolAddress)
-      setSwapFee(swapFee)
-    }
-    getFee()
-  }, [])
 
   async function handleAddLiquidity() {
     setIsLoading(true)
@@ -96,7 +89,7 @@ export default function Add({
         </div>
         <div>
           <p>You will earn</p>
-          <Token symbol="%" balance={swapFee} />
+          <Token symbol="%" balance={liquidityProviderFee} />
           of each pool transaction
         </div>
       </div>

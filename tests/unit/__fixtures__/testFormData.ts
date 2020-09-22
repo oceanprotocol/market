@@ -5,10 +5,11 @@ const testFormData: MetadataPublishForm = {
   files: [],
   license: '',
   price: {
-    tokensToMint: 1,
-    type: 'simple',
+    price: 1,
+    tokensToMint: 9,
+    type: 'fixed',
     weightOnDataToken: '1',
-    liquidityProviderFee: '0.1'
+    liquidityProviderFee: 0.1
   },
   name: '',
   description: 'description',

@@ -10,7 +10,6 @@ export default function MetaSecondary({
 }: {
   metadata: MetadataMarket
 }): ReactElement {
-  console.log(metadata)
   return (
     <aside className={styles.metaSecondary}>
       {metadata?.additionalInformation?.tags?.length > 0 && (

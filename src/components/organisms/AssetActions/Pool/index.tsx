@@ -33,6 +33,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const [totalBalance, setTotalBalance] = useState<Balance>()
   const [dtSymbol, setDtSymbol] = useState<string>()
   const [userBalance, setUserBalance] = useState<Balance>()
+  const [liquidityProviderFee, setLiquidityProviderFee] = useState<string>()
 
   const [showAdd, setShowAdd] = useState(false)
   const [showRemove, setShowRemove] = useState(false)
@@ -103,6 +104,13 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         }
 
         setUserBalance(userBalance)
+
+        // Get liquidity provider fee
+        const liquidityProviderFee = await ocean.pool.getSwapFee(
+          accountId,
+          price.address
+        )
+        setLiquidityProviderFee(liquidityProviderFee)
       } catch (error) {
         console.error(error.message)
       } finally {
@@ -122,6 +130,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           poolAddress={price.address}
           totalPoolTokens={totalPoolTokens}
           totalBalance={totalBalance}
+          liquidityProviderFee={liquidityProviderFee}
         />
       ) : showRemove ? (
         <Remove
@@ -144,7 +153,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
                 Pool
               </EtherscanLink>
               <EtherscanLink network="rinkeby" path={`token/${ddo.dataToken}`}>
-                Data Token
+                Datatoken
               </EtherscanLink>
             </div>
           </div>
@@ -168,6 +177,10 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
               {debug === true && (
                 <Token symbol="BPT" balance={totalPoolTokens} />
               )}
+              <Token
+                symbol="% liquidity provider fee"
+                balance={liquidityProviderFee}
+              />
             </div>
           </div>
 

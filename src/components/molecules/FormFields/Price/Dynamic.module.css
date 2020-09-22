@@ -49,12 +49,7 @@
 }
 
 .summary {
-  text-align: center;
   margin-top: var(--spacer);
-}
-
-.summary input {
-  max-width: 5rem;
 }
 
 .alertArea {

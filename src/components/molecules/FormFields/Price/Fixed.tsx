@@ -1,42 +1,49 @@
-import React, { ReactElement, ChangeEvent } from 'react'
+import React, { ReactElement } from 'react'
 import stylesIndex from './index.module.css'
 import styles from './Fixed.module.css'
 import FormHelp from '../../../atoms/Input/Help'
-import Label from '../../../atoms/Input/Label'
-import InputElement from '../../../atoms/Input/InputElement'
 import Conversion from '../../../atoms/Price/Conversion'
 import { DataTokenOptions } from '@oceanprotocol/react'
 import RefreshName from './RefreshName'
+import { useField } from 'formik'
+import Input from '../../../atoms/Input'
+import Error from './Error'
 
 export default function Fixed({
-  ocean,
   datatokenOptions,
-  onChange,
   generateName,
   content
 }: {
-  ocean: string
   datatokenOptions: DataTokenOptions
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void
   generateName: () => void
   content: any
 }): ReactElement {
+  const [field, meta] = useField('price.price')
+
   return (
     <div className={styles.fixed}>
       <FormHelp className={stylesIndex.help}>{content.info}</FormHelp>
 
       <div className={styles.grid}>
         <div className={styles.form}>
-          <Label htmlFor="ocean">Ocean Token</Label>
-          <InputElement
-            value={ocean}
-            name="ocean"
+          <Input
+            label="Ocean Token"
+            value={field.value}
+            name="price.price"
             type="number"
             prefix="OCEAN"
-            onChange={onChange}
+            min="1"
+            {...field}
+            additionalComponent={
+              <Conversion
+                price={field.value}
+                className={stylesIndex.conversion}
+              />
+            }
           />
-          <Conversion price={ocean} className={stylesIndex.conversion} />
+          <Error meta={meta} />
         </div>
+
         {datatokenOptions && (
           <div className={styles.datatoken}>
             <h4>

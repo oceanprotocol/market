@@ -6,8 +6,12 @@ import FilesInput from '../../molecules/FormFields/FilesInput'
 import Terms from '../../molecules/FormFields/Terms'
 import Price from '../../molecules/FormFields/Price'
 
-const DefaultInput = (props: InputProps) => (
-  <input className={styles.input} id={props.name} {...props} />
+const DefaultInput = ({ small, ...props }: InputProps) => (
+  <input
+    className={`${styles.input} ${small ? styles.small : null}`}
+    id={props.name}
+    {...props}
+  />
 )
 
 export default function InputElement({
@@ -18,6 +22,10 @@ export default function InputElement({
   postfix,
   small,
   field,
+  label,
+  help,
+  form,
+  additionalComponent,
   ...props
 }: InputProps): ReactElement {
   switch (type) {
@@ -75,12 +83,30 @@ export default function InputElement({
     default:
       return prefix || postfix ? (
         <div className={`${prefix ? styles.prefixGroup : styles.postfixGroup}`}>
-          {prefix && <div className={styles.prefix}>{prefix}</div>}
-          <DefaultInput name={name} type={type || 'text'} {...props} />
-          {postfix && <div className={styles.postfix}>{postfix}</div>}
+          {prefix && (
+            <div className={`${styles.prefix} ${small ? styles.small : ''}`}>
+              {prefix}
+            </div>
+          )}
+          <DefaultInput
+            name={name}
+            type={type || 'text'}
+            small={small}
+            {...props}
+          />
+          {postfix && (
+            <div className={`${styles.postfix} ${small ? styles.small : ''}`}>
+              {postfix}
+            </div>
+          )}
         </div>
       ) : (
-        <DefaultInput name={name} type={type || 'text'} {...props} />
+        <DefaultInput
+          name={name}
+          type={type || 'text'}
+          small={small}
+          {...props}
+        />
       )
   }
 }

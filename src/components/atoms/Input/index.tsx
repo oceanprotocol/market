@@ -10,7 +10,7 @@ const cx = classNames.bind(styles)
 
 export interface InputProps {
   name: string
-  label?: string
+  label?: string | ReactNode
   placeholder?: string
   required?: boolean
   help?: string
@@ -30,6 +30,7 @@ export interface InputProps {
   multiple?: boolean
   pattern?: string
   min?: string
+  max?: string
   disabled?: boolean
   readOnly?: boolean
   field?: any
@@ -53,8 +54,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
   } = props
 
   const hasError =
-    props.form?.touched[field.name] &&
-    typeof props.form.errors[field.name] === 'string'
+    props.form?.touched[field.name] && props.form?.errors[field.name]
 
   const styleClasses = cx({
     field: true,
@@ -71,7 +71,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
       </Label>
       <InputElement small={small} {...field} {...props} />
 
-      {field && (
+      {field && field.name !== 'price' && (
         <div className={styles.error}>
           <ErrorMessage name={field.name} />
         </div>

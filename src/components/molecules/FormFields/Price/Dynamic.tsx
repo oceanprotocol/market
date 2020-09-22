@@ -1,35 +1,33 @@
-import React, { ReactElement, useState, ChangeEvent, useEffect } from 'react'
+import React, { ReactElement, useState, useEffect } from 'react'
 import stylesIndex from './index.module.css'
 import styles from './Dynamic.module.css'
 import FormHelp from '../../../atoms/Input/Help'
 import Wallet from '../../Wallet'
-import { DataTokenOptions, PriceOptions, useOcean } from '@oceanprotocol/react'
+import { DataTokenOptions, useOcean } from '@oceanprotocol/react'
 import Alert from '../../../atoms/Alert'
 import Coin from './Coin'
 import { isCorrectNetwork } from '../../../../utils/wallet'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
-import InputElement from '../../../atoms/Input/InputElement'
-import Label from '../../../atoms/Input/Label'
 import Tooltip from '../../../atoms/Tooltip'
+import Fees from './Fees'
+import { PriceOptionsMarket } from '../../../../@types/MetaData'
 
 export default function Dynamic({
   ocean,
   priceOptions,
   datatokenOptions,
-  onOceanChange,
   generateName,
   content
 }: {
-  ocean: string
-  priceOptions: PriceOptions
+  ocean: number
+  priceOptions: PriceOptionsMarket
   datatokenOptions: DataTokenOptions
-  onOceanChange: (event: ChangeEvent<HTMLInputElement>) => void
   generateName: () => void
   content: any
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { account, balance, chainId, refreshBalance } = useOcean()
-  const { weightOnDataToken, tokensToMint, liquidityProviderFee } = priceOptions
+  const { weightOnDataToken } = priceOptions
 
   const [error, setError] = useState<string>()
   const correctNetwork = isCorrectNetwork(chainId)
@@ -37,14 +35,14 @@ export default function Dynamic({
     c.toUpperCase()
   )
 
-  // Check: account, network & insuffciant balance
+  // Check: account, network & insufficient balance
   useEffect(() => {
     if (!account) {
       setError(`No account connected. Please connect your Web3 wallet.`)
     } else if (!correctNetwork) {
       setError(`Wrong Network. Please connect to ${desiredNetworkName}.`)
     } else if (Number(balance.ocean) < Number(ocean)) {
-      setError(`Insufficiant balance. You need at least ${ocean} OCEAN`)
+      setError(`Insufficient balance. You need at least ${ocean} OCEAN`)
     } else {
       setError(undefined)
     }
@@ -76,39 +74,29 @@ export default function Dynamic({
       </aside>
 
       <h4 className={styles.title}>
-        Data Token Liquidity Pool{' '}
-        <Tooltip content={content.tooltips.poolInfo} />
+        Datatoken Liquidity Pool <Tooltip content={content.tooltips.poolInfo} />
       </h4>
 
       <div className={styles.tokens}>
         <Coin
-          name="ocean"
+          name="price.price"
           datatokenOptions={{ symbol: 'OCEAN', name: 'Ocean Token' }}
-          value={ocean}
           weight={`${100 - Number(Number(weightOnDataToken) * 10)}%`}
-          onOceanChange={onOceanChange}
         />
         <Coin
-          name="tokensToMint"
+          name="price.tokensToMint"
           datatokenOptions={datatokenOptions}
-          value={tokensToMint.toString()}
           weight={`${Number(weightOnDataToken) * 10}%`}
           generateName={generateName}
           readOnly
         />
       </div>
 
+      <Fees tooltips={content.tooltips} />
+
       <footer className={styles.summary}>
-        <Label htmlFor="liquidityProviderFee">
-          Liquidity Provider Fee{' '}
-          <Tooltip content={content.tooltips.liquidityProviderFee} />
-        </Label>
-        <InputElement
-          value={liquidityProviderFee}
-          name="liquidityProviderFee"
-          readOnly
-          postfix="%"
-        />
+        You will get: <br />
+        100% share of pool
       </footer>
 
       {error && (

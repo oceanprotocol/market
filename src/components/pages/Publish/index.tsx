@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import { useNavigate } from '@reach/router'
 import { toast } from 'react-toastify'
 import { Formik } from 'formik'
-import { usePublish, DataTokenOptions } from '@oceanprotocol/react'
+import { usePublish } from '@oceanprotocol/react'
 import styles from './index.module.css'
 import PublishForm from './PublishForm'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
@@ -11,7 +11,6 @@ import { initialValues, validationSchema } from '../../../models/FormPublish'
 import { transformPublishFormToMetadata } from './utils'
 import Preview from './Preview'
 import { MetadataPublishForm } from '../../../@types/MetaData'
-// import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import { Logger } from '@oceanprotocol/lib'
 
@@ -20,44 +19,38 @@ export default function PublishPage({
 }: {
   content: { form: FormContent }
 }): ReactElement {
-  // TODO: implement marketFee
-  // const { marketFeeAddress, marketFeeAmount } = useSiteMetadata()
   const { debug } = useUserPreferences()
   const { publish, publishError, isLoading, publishStepText } = usePublish()
   const navigate = useNavigate()
 
   async function handleSubmit(
-    values: MetadataPublishForm,
+    values: Partial<MetadataPublishForm>,
     resetForm: () => void
   ): Promise<void> {
     const metadata = transformPublishFormToMetadata(values)
-    const priceOptions = values.price
+    const { price } = values
     const serviceType = values.access === 'Download' ? 'access' : 'compute'
-    let datatokenOptions: DataTokenOptions
 
     try {
-      Logger.log('Publish with ', priceOptions, serviceType, datatokenOptions)
+      Logger.log('Publish with ', price, serviceType, price.datatoken)
 
       const ddo = await publish(
         metadata as any,
-        priceOptions,
+        {
+          ...price,
+          liquidityProviderFee: `${price.liquidityProviderFee}`
+        },
         serviceType,
-        datatokenOptions
+        price.datatoken
       )
 
       if (publishError) {
-        toast.error(publishError)
-        console.error(publishError)
+        toast.error(publishError) && console.error(publishError)
         return null
       }
 
       // User feedback and redirect to new asset detail page
-      ddo && toast.success('Asset created successfully.')
-
-      // reset form state
-      // TODO: verify persistant form in localStorage is cleared with it too
-      resetForm()
-
+      ddo && toast.success('Asset created successfully.') && resetForm()
       // Go to new asset detail page
       navigate(`/asset/${ddo.id}`)
     } catch (error) {

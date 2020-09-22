@@ -20,6 +20,11 @@
   margin-bottom: 0;
 }
 
+.content [class*='error'] {
+  text-align: left;
+  top: 100%;
+}
+
 .conversion {
   width: 100%;
   display: block;
