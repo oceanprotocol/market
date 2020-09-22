@@ -40,7 +40,7 @@ export default function Conversion({
     const fiatValue = values[currency.toLowerCase()]
     const converted = fiatValue * Number(price)
     const convertedFormatted = Number(
-      formatCurrency(converted, currency, undefined, true)
+      formatCurrency(converted, currency, 'en', true)
     ).toFixed(2)
 
     setPriceConverted(`${convertedFormatted}`)

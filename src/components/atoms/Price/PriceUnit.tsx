@@ -27,11 +27,14 @@ export default function PriceUnit({
 
   return (
     <div className={styleClasses}>
-      {Number.isInteger(Number(price))
-        ? price
-        : Number.isNaN(Number(price))
+      {Number.isNaN(Number(price))
         ? '-'
-        : formatCurrency(Number(price), '', undefined, false, true)}{' '}
+        : formatCurrency(Number(price), '', 'en', false, {
+            // Not exactly clear what `significant figures` are for this library,
+            // but setting this seems to give us the formatting we want.
+            // See https://github.com/oceanprotocol/market/issues/70
+            significantFigures: 4
+          })}{' '}
       <span>{symbol || 'OCEAN'}</span>
       {conversion && <Conversion price={price} />}
     </div>
