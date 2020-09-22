@@ -2,8 +2,26 @@
 }
 
 .addInput {
-  max-width: 12rem;
-  margin: 0 auto var(--spacer) auto;
+  margin: 0 auto calc(var(--spacer) / 1.5) auto;
+  background: var(--brand-grey-dimmed);
+  padding: var(--spacer) calc(var(--spacer) * 3) calc(var(--spacer) * 1.2)
+    calc(var(--spacer) * 3);
+  border-bottom: 1px solid var(--brand-grey-lighter);
+  margin-top: -2rem;
+  margin-left: -2rem;
+  margin-right: -2rem;
+  position: relative;
+}
+
+.addInput input {
+  text-align: center;
+}
+
+.buttonMax {
+  position: absolute;
+  font-size: var(--font-size-mini);
+  bottom: calc(var(--spacer) / 2);
+  right: calc(var(--spacer) * 3);
 }
 
 .userBalance {
@@ -16,7 +34,7 @@
 }
 
 .userBalance span + div {
-  transform: scale(0.7);
+  transform: scale(0.8);
   transform-origin: right center;
 }
 
@@ -28,5 +46,13 @@
 
 .output p {
   font-weight: var(--font-weight-bold);
-  margin-bottom: calc(var(--spacer) / 4);
+  margin-bottom: calc(var(--spacer) / 8);
+}
+
+.output [class*='token'] {
+  white-space: normal;
+}
+
+.output [class*='token'] > figure {
+  display: none;
 }

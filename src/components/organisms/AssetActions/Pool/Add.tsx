@@ -4,13 +4,12 @@ import { useOcean } from '@oceanprotocol/react'
 import Header from './Header'
 import { toast } from 'react-toastify'
 import InputElement from '../../../atoms/Input/InputElement'
+import Button from '../../../atoms/Button'
 import Token from './Token'
 import { Balance } from './'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
 import Actions from './Actions'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
-
-// TODO: handle and display all fees somehow
 
 export default function Add({
   setShowAdd,
@@ -61,13 +60,17 @@ export default function Add({
     setAmount(e.target.value)
   }
 
+  function handleMax() {
+    setAmount(balance.ocean)
+  }
+
   return (
     <div className={styles.add}>
       <Header title="Add Liquidity" backAction={() => setShowAdd(false)} />
 
       <div className={styles.addInput}>
         <div className={styles.userBalance}>
-          <span>Available:</span>
+          <span>Available: </span>
           <PriceUnit price={balance.ocean} symbol="OCEAN" small />
         </div>
 
@@ -79,6 +82,17 @@ export default function Add({
           placeholder="0"
           onChange={handleAmountChange}
         />
+
+        {balance.ocean > amount && (
+          <Button
+            className={styles.buttonMax}
+            style="text"
+            size="small"
+            onClick={handleMax}
+          >
+            Use Max
+          </Button>
+        )}
       </div>
 
       <div className={styles.output}>
@@ -89,8 +103,10 @@ export default function Add({
         </div>
         <div>
           <p>You will earn</p>
-          <Token symbol="%" balance={liquidityProviderFee} />
-          of each pool transaction
+          <Token
+            symbol="% of each pool transaction"
+            balance={liquidityProviderFee}
+          />
         </div>
       </div>
 
