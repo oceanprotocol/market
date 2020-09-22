@@ -20,7 +20,9 @@ export interface MetadataMarket extends Metadata {
 }
 
 export interface PriceOptionsMarket extends PriceOptions {
+  // easier to keep this as number for Yup input validation
   liquidityProviderFee: number
+  // collect datatoken info for publishing
   datatoken?: DataTokenOptions
 }
 

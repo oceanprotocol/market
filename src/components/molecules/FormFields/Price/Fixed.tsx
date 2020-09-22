@@ -32,6 +32,7 @@ export default function Fixed({
             name="price.price"
             type="number"
             prefix="OCEAN"
+            min="1"
             {...field}
             additionalComponent={
               <Conversion

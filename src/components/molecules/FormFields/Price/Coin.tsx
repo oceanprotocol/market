@@ -46,6 +46,7 @@ export default function Coin({
           type="number"
           readOnly={readOnly}
           prefix={datatokenOptions?.symbol || 'DT'}
+          min="1"
           {...field}
         />
         {datatokenOptions?.symbol === 'OCEAN' && (
