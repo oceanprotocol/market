@@ -2,6 +2,10 @@
   padding: calc(var(--spacer) / 4);
 }
 
+.details > section[class*="feedback"] {
+  margin-top: calc(var(--spacer) / 2)
+}
+
 .balance {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-bold);
