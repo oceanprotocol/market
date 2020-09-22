@@ -1,5 +1,4 @@
 import ddo from '../../__fixtures__/ddo'
-import job from '../../__fixtures__/job'
 
 const metadataStore = {
   queryMetadata: () => {
@@ -19,11 +18,11 @@ const libMock = {
       list: () => ['xxx', 'xxx']
     },
     metadataStore,
-    compute: {
-      status: (account: string) => {
-        return [job]
-      }
-    },
+    // compute: {
+    //   status: (account: string) => {
+    //     return [job]
+    //   }
+    // },
     assets: {
       query: () => {
         return {

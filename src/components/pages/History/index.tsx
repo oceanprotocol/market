@@ -1,7 +1,6 @@
 import React, { ReactElement, ReactNode } from 'react'
 import styles from './index.module.css'
 import PublishedList from './PublishedList'
-import JobsList from './JobsList'
 
 const sections = [
   {
