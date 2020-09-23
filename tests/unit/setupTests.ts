@@ -19,6 +19,7 @@ export const globalMock = {
 
 beforeAll(() => {
   jest.mock('web3')
+  jest.mock('@oceanprotocol/lib')
   jest.mock('@oceanprotocol/react')
 
   // useOcean.mockImplementation(() => mockReact.useOcean())

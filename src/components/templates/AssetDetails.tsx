@@ -44,7 +44,7 @@ export default function PageTemplateAssetDetails({
       }
     }
     init()
-  }, [did])
+  }, [did, config.metadataStoreUri])
 
   return did && metadata ? (
     <Layout title={title} uri={uri}>

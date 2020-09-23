@@ -1,8 +1,7 @@
 import React, { ReactElement } from 'react'
 import Consume from './Consume'
 import ddo from '../../../../tests/unit/__fixtures__/ddo'
-import web3Mock from '../../../../tests/unit/__mocks__/web3'
-import { context } from '../../../../tests/unit/__mocks__/web3provider'
+import { DDO } from '@oceanprotocol/lib'
 
 export default {
   title: 'Organisms/Consume',
@@ -14,10 +13,9 @@ export default {
 }
 
 export const PricedAsset = (): ReactElement => (
-  <context.Provider value={web3Mock}>
-    <Consume
-      did={ddo.id}
-      metadata={ddo.findServiceByType('metadata').attributes as any}
-    />
-  </context.Provider>
+  <Consume
+    ddo={ddo as DDO}
+    isBalanceSufficient
+    file={new DDO(ddo).findServiceByType('metadata').attributes.main.files[0]}
+  />
 )

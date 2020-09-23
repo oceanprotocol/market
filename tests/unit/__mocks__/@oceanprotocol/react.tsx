@@ -1,15 +1,7 @@
 import React, { ReactElement } from 'react'
 import libMock from './lib'
-import web3ProviderMock from '../web3provider'
 
 const reactMock = {
-  Web3Provider: function Component({
-    children
-  }: {
-    children: ReactElement
-  }): ReactElement {
-    return <div>{children}</div>
-  },
   OceanProvider: function Component({
     children
   }: {
@@ -19,14 +11,13 @@ const reactMock = {
   },
   useOcean: () => {
     return {
-      ocean: libMock.ocean
-    }
-  },
-  useWeb3: () => {
-    return {
-      ...web3ProviderMock,
-      account: '0x0000000011111111aaaaaaaabbbbbbbb22222222',
-      ethProviderStatus: 1
+      ocean: libMock.ocean,
+      config: {},
+      web3: null,
+      web3Modal: null,
+      web3Provider: null,
+      accountId: '0x0000000011111111aaaaaaaabbbbbbbb22222222',
+      balance: '0.12'
     }
   },
   useConsume: () => {

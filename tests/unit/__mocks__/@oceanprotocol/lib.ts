@@ -11,7 +11,7 @@ const metadataStore = {
   }
 }
 
-const squidMock = {
+const libMock = {
   MetadataStore: () => metadataStore,
   DDO: () => ddo,
   ocean: {
@@ -41,26 +41,6 @@ const squidMock = {
       },
       consume: () => null as any,
       getFreeWhiteList: () => Promise.resolve([])
-    },
-    keeper: {
-      conditions: {
-        accessSecretStoreCondition: {
-          getGrantedDidByConsumer: () => {
-            return {
-              find: Promise.resolve(
-                'did:op:e6fda48e8d814d5d9655645aac3c046cc87528dbc1a9449799e579d7b83d1360'
-              )
-            }
-          }
-        }
-      },
-      agreementStoreManager: {
-        getAgreement: (agreementId: string) =>
-          Promise.resolve({
-            did:
-              'did:op:e6fda48e8d814d5d9655645aac3c046cc87528dbc1a9449799e579d7b83d1360'
-          })
-      }
     },
     versions: {
       get: () =>
@@ -92,4 +72,4 @@ const squidMock = {
   }
 }
 
-export default squidMock
+export default libMock
