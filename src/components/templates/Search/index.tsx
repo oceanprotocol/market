@@ -42,9 +42,9 @@ export default function SearchPage({
         {text && <SearchBar initialValue={text as string} />}
       </div>
 
-      <aside className={styles.side}>
+      {/* <aside className={styles.side}>
         <SearchPriceFilter />
-      </aside>
+      </aside> */}
 
       <div className={styles.results}>
         {loading ? <Loader /> : <AssetList queryResult={queryResult} />}

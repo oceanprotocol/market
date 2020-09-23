@@ -22,7 +22,7 @@ export default function Pagination({
   }
 
   useEffect(() => {
-    if (!totalPages || totalPages < 2) return null
+    if (!totalPages || totalPages < 2) return
 
     const mq = window.matchMedia('(min-width: 600px)')
     viewportChange(mq)
