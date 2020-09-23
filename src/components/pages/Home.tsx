@@ -38,12 +38,12 @@ export default function HomePage(): ReactElement {
       setLoading(false)
     }
     init()
-  }, [])
+  }, [config.metadataStoreUri])
 
   return (
     <>
       <Container narrow className={styles.searchWrap}>
-        <SearchBar large />
+        <SearchBar />
       </Container>
 
       <section className={styles.latest}>

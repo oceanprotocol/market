@@ -22,7 +22,7 @@ export default function Table({
   columns: any
   data: any
   pagination?: AssetTablePagination
-}) {
+}): ReactElement {
   return (
     <div>
       {data?.length ? (

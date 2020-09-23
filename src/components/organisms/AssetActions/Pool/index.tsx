@@ -118,7 +118,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
       }
     }
     init()
-  }, [ocean, accountId, price])
+  }, [ocean, accountId, price, ddo.dataToken])
 
   return (
     <>

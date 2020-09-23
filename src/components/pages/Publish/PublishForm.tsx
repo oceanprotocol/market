@@ -28,19 +28,18 @@ export default function PublishForm({
     initialValues
   } = useFormikContext()
   const formName = 'ocean-publish-form'
+
   // reset form validation on every mount
   useEffect(() => {
     setErrors({})
     setTouched({})
 
     // setSubmitting(false)
-  }, [])
+  }, [setErrors, setTouched])
 
-  const resetFormAndClearStorage = async (e: FormEvent<Element>) => {
+  const resetFormAndClearStorage = (e: FormEvent<Element>) => {
     e.preventDefault()
-
-    await resetForm({ values: initialValues, status: 'empty' })
-
+    resetForm({ values: initialValues, status: 'empty' })
     setStatus('empty')
   }
 

@@ -10,9 +10,9 @@ import { FormContent } from '../../../@types/Form'
 import { initialValues, validationSchema } from '../../../models/FormPublish'
 import { transformPublishFormToMetadata } from './utils'
 import Preview from './Preview'
-import { MetadataPublishForm } from '../../../@types/MetaData'
+import { MetadataMarket, MetadataPublishForm } from '../../../@types/MetaData'
 import { useUserPreferences } from '../../../providers/UserPreferences'
-import { Logger } from '@oceanprotocol/lib'
+import { Logger, Metadata } from '@oceanprotocol/lib'
 
 export default function PublishPage({
   content
@@ -35,7 +35,7 @@ export default function PublishPage({
       Logger.log('Publish with ', price, serviceType, price.datatoken)
 
       const ddo = await publish(
-        metadata as any,
+        (metadata as unknown) as Metadata,
         {
           ...price,
           liquidityProviderFee: `${price.liquidityProviderFee}`

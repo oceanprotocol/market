@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 import styles from './Row.module.css'
 
-const Row = ({ children }: { children: any }) => (
+const Row = ({ children }: { children: ReactNode }): ReactElement => (
   <div className={styles.row}>{children}</div>
 )
 

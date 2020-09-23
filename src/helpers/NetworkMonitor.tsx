@@ -1,23 +1,24 @@
-import React, { useEffect } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import { useOcean } from '@oceanprotocol/react'
 import { getOceanConfig } from './wrapRootElement'
 
-export function NetworkMonitor() {
+export function NetworkMonitor(): ReactElement {
   const { connect, web3Provider } = useOcean()
 
-  const handleNetworkChanged = (chainId: number) => {
-    const config = getOceanConfig(chainId)
-    connect(config)
-  }
   useEffect(() => {
     if (!web3Provider) return
+
+    async function handleNetworkChanged(chainId: number) {
+      const config = getOceanConfig(chainId)
+      await connect(config)
+    }
 
     web3Provider.on('chainChanged', handleNetworkChanged)
 
     return () => {
       web3Provider.removeListener('chainChanged', handleNetworkChanged)
     }
-  }, [web3Provider])
+  }, [web3Provider, connect])
 
   return <></>
 }

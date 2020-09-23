@@ -1,4 +1,4 @@
-import React, { useState, ReactElement } from 'react'
+import React, { useState, ReactElement, ChangeEvent } from 'react'
 import { DDO } from '@oceanprotocol/lib'
 import Loader from '../../atoms/Loader'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
@@ -45,13 +45,13 @@ export default function Compute({
     !ocean ||
     !isBalanceSufficient
 
-  const onDrop = async (files: any) => {
+  const onDrop = async (files: File[]) => {
     setFile(files[0])
     const fileText = await readFileContent(files[0])
     setAlgorithmRawCode(fileText)
   }
 
-  const handleSelectChange = (event: any) => {
+  const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const comType = event.target.value
     setComputeType(comType)
 

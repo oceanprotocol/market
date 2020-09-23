@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import styles from './Footer.module.css'
 import Markdown from '../atoms/Markdown'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 
-export default function Footer() {
+export default function Footer(): ReactElement {
   const { copyright } = useSiteMetadata()
   const year = new Date().getFullYear()
 

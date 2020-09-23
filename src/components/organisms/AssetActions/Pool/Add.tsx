@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, ChangeEvent, useEffect } from 'react'
+import React, { ReactElement, useState, ChangeEvent } from 'react'
 import styles from './Add.module.css'
 import { useOcean } from '@oceanprotocol/react'
 import Header from './Header'

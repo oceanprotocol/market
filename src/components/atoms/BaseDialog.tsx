@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode, ReactElement } from 'react'
 import styles from './BaseDialog.module.css'
 import { Modal } from 'react-responsive-modal'
 
@@ -14,10 +14,10 @@ export default function BaseDialog({
   open: boolean
   title: string
   onClose: () => void
-  children: React.ReactNode
+  children: ReactNode
   disableClose?: boolean
   actions?: any
-}) {
+}): ReactElement {
   return (
     <Modal
       open={open}

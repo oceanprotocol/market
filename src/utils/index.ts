@@ -64,7 +64,7 @@ export async function getFileInfo(url: string): Promise<FileMetadata> {
   }
 }
 
-export async function fetchData(url: string): Promise<any> {
+export async function fetchData(url: string): Promise<AxiosResponse['data']> {
   try {
     const response = await axios(url)
 
@@ -123,7 +123,7 @@ export function setProperty<T extends Record<string, unknown>>(
   objectToBeUpdated: T,
   propertyName: keyof T,
   value?: T[keyof T]
-) {
+): void {
   if (value) {
     objectToBeUpdated[propertyName] = value
   } else {

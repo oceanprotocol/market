@@ -1,4 +1,4 @@
-const cleanupContentType = (contentType: string) => {
+const cleanupContentType = (contentType: string): string => {
   // strip away the 'application/' part
   const contentTypeSplit = contentType.split('/')[1]
 

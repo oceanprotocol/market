@@ -32,7 +32,7 @@ export default function MetaFull({
       setDtSymbol(symbol)
     }
     getDataTokenInfo()
-  }, [ocean])
+  }, [ocean, accountId, dataToken])
 
   return (
     <div className={styles.metaFull}>

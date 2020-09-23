@@ -44,7 +44,7 @@ export default function Tooltip({
     })
   }
 
-  function onHide({ unmount }: { unmount: any }) {
+  function onHide({ unmount }: { unmount: () => void }) {
     setSpring({
       ...animation.from,
       onRest: unmount,

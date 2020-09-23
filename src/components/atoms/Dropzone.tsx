@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { ReactElement, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 import styles from './Dropzone.module.css'
 import { formatBytes } from '../../utils'
@@ -13,7 +13,7 @@ export default function Dropzone({
   disabled?: boolean
   multiple?: boolean
   error?: string
-}) {
+}): ReactElement {
   const onDrop = useCallback((acceptedFiles) => handleOnDrop(acceptedFiles), [
     handleOnDrop
   ])

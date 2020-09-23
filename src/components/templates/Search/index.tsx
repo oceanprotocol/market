@@ -34,7 +34,7 @@ export default function SearchPage({
       setLoading(false)
     }
     initSearch()
-  }, [text, tag, page])
+  }, [text, tag, page, config.metadataStoreUri, parsed])
 
   return (
     <section className={styles.grid}>

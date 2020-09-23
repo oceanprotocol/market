@@ -64,7 +64,7 @@ class PersistImpl extends React.Component<
     }
   }
 
-  render(): any {
+  render(): null {
     return null
   }
 }

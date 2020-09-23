@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { format, formatDistance } from 'date-fns'
 
 export default function Time({
@@ -7,7 +7,7 @@ export default function Time({
 }: {
   date: string
   relative?: boolean
-}) {
+}): ReactElement {
   const dateNew = new Date(date)
   const dateIso = dateNew.toISOString()
 
