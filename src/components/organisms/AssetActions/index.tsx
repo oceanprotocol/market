@@ -46,15 +46,20 @@ export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
     {
       title: 'Use',
       content: UseContent
-    },
-    (!((attributes.additionalInformation as unknown) as AdditionalInformationMarket)
-      ?.priceType ||
-      ((attributes.additionalInformation as unknown) as AdditionalInformationMarket)
-        ?.priceType === 'dynamic') && {
-      title: 'Pool',
-      content: <Pool ddo={ddo} />
     }
   ]
+
+  // Check from metadata, cause that is available earlier
+  const hasPool =
+    ((attributes.additionalInformation as unknown) as AdditionalInformationMarket)
+      ?.priceType === 'dynamic'
+  // price?.type === 'pool'
+
+  hasPool &&
+    tabs.push({
+      title: 'Pool',
+      content: <Pool ddo={ddo} />
+    })
 
   return <Tabs items={tabs} className={styles.actions} />
 }

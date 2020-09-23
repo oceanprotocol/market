@@ -27,18 +27,21 @@ export default function Consume({
     toast.error(consumeError)
   }
 
-  const PurchaseButton = () =>
-    consumeStepText ? (
-      <Loader message={consumeStepText} />
-    ) : (
-      <Button
-        style="primary"
-        onClick={() => consume(ddo.id, ddo.dataToken, 'access')}
-        disabled={isDisabled}
-      >
-        Buy
-      </Button>
-    )
+  const PurchaseButton = () => (
+    <div>
+      {consumeStepText ? (
+        <Loader message={consumeStepText} />
+      ) : (
+        <Button
+          style="primary"
+          onClick={() => consume(ddo.id, ddo.dataToken, 'access')}
+          disabled={isDisabled}
+        >
+          Buy
+        </Button>
+      )}
+    </div>
+  )
 
   return (
     <aside className={styles.consume}>
