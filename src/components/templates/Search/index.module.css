@@ -15,11 +15,6 @@
     grid-area: search;
   }
 
-  .side {
-    grid-area: side;
-    margin-top: calc(var(--spacer) * 2.5);
-  }
-
   .results {
     grid-area: results;
   }
