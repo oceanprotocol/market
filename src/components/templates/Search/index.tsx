@@ -2,7 +2,6 @@ import React, { ReactElement, useState, useEffect } from 'react'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatastore/MetadataStore'
 import SearchBar from '../../molecules/SearchBar'
 import AssetList from '../../organisms/AssetList'
-import { SearchPriceFilter } from '../../molecules/SearchPriceFilter'
 import styles from './index.module.css'
 import queryString from 'query-string'
 import { getResults } from './utils'
@@ -41,10 +40,6 @@ export default function SearchPage({
       <div className={styles.search}>
         {text && <SearchBar initialValue={text as string} />}
       </div>
-
-      {/* <aside className={styles.side}>
-        <SearchPriceFilter />
-      </aside> */}
 
       <div className={styles.results}>
         {loading ? <Loader /> : <AssetList queryResult={queryResult} />}
