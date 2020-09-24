@@ -1,7 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 import { toast } from 'react-toastify'
 import { File as FileMetadata } from '@oceanprotocol/lib'
-import web3Utils from 'web3-utils'
 
 export function updateQueryStringParameter(
   uri: string,
@@ -81,54 +80,6 @@ export async function fetchData(url: string): Promise<AxiosResponse['data']> {
 export function isDid(did: string | undefined): boolean {
   const didMatch = (did as string).match(/^did:op:([a-f0-9]{64})$/i)
   return !!didMatch
-}
-
-export function JSONparse<T>(
-  input: string | undefined,
-  errorMessage: string
-): T | undefined {
-  if (input === undefined) {
-    return undefined
-  }
-  try {
-    return JSON.parse(input) as T
-  } catch (err) {
-    console.error(errorMessage)
-  }
-}
-
-export function priceQueryParamToWei(
-  priceQueryParam: string | undefined,
-  errorMessage?: string
-): string | undefined {
-  if (priceQueryParam === undefined) {
-    return undefined
-  }
-  try {
-    return web3Utils.toWei(priceQueryParam as string)
-  } catch (err) {
-    console.error(
-      errorMessage || 'Error in priceQueryParamToWei',
-      priceQueryParam
-    )
-  }
-}
-
-// The types of this function are deceivingly cryptic. This is just a helper
-// that sets or removes a property on any object based on if the value passed is
-// truthy or falsy
-// e.g: setProperty({foo: 'bar'}, 'foo', false) -> {}
-// setProperty({foo: 'bar'}, 'foo', 'baaz') -> { foo: 'baaz' }
-export function setProperty<T extends Record<string, unknown>>(
-  objectToBeUpdated: T,
-  propertyName: keyof T,
-  value?: T[keyof T]
-): void {
-  if (value) {
-    objectToBeUpdated[propertyName] = value
-  } else {
-    delete objectToBeUpdated[propertyName]
-  }
 }
 
 export function formatBytes(a: number, b: number): string {

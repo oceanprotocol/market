@@ -2,23 +2,20 @@ import {
   SearchQuery,
   QueryResult
 } from '@oceanprotocol/lib/dist/node/metadatastore/MetadataStore'
-import { priceQueryParamToWei } from '../../../utils'
 import { MetadataStore, Logger } from '@oceanprotocol/lib'
 
 export function getSearchQuery(
   page?: string | string[],
   offset?: string | string[],
   text?: string | string[],
-  tag?: string | string[],
-  priceQuery?: [string | undefined, string | undefined]
+  tag?: string | string[]
 ): SearchQuery {
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 20,
     query: {
       text,
-      tags: tag ? [tag] : undefined,
-      price: priceQuery
+      tags: tag ? [tag] : undefined
     },
     sort: {
       created: -1
@@ -32,31 +29,14 @@ export function getSearchQuery(
 }
 
 export async function getResults(
-  params: any,
+  params: { text?: string; tag?: string; page?: string; offset?: string },
   metadataStoreUri: string
 ): Promise<QueryResult> {
-  const { text, tag, page, offset, minPrice, maxPrice } = params
-
-  const minPriceParsed = priceQueryParamToWei(
-    minPrice as string,
-    'Error parsing context.query.minPrice'
-  )
-  const maxPriceParsed = priceQueryParamToWei(
-    maxPrice as string,
-    'Error parsing context.query.maxPrice'
-  )
-  const priceQuery =
-    minPriceParsed || maxPriceParsed
-      ? // sometimes TS gets a bit silly
-        ([minPriceParsed, maxPriceParsed] as [
-          string | undefined,
-          string | undefined
-        ])
-      : undefined
+  const { text, tag, page, offset } = params
 
   const metadataStore = new MetadataStore(metadataStoreUri, Logger)
   const queryResult = await metadataStore.queryMetadata(
-    getSearchQuery(page, offset, text, tag, priceQuery)
+    getSearchQuery(page, offset, text, tag)
   )
 
   return queryResult
