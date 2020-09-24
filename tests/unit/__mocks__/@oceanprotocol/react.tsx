@@ -13,9 +13,9 @@ const reactMock = {
     return {
       ocean: libMock.ocean,
       config: {},
-      web3: null,
-      web3Modal: null,
-      web3Provider: null,
+      web3: null as any,
+      web3Modal: null as any,
+      web3Provider: null as any,
       accountId: '0x0000000011111111aaaaaaaabbbbbbbb22222222',
       balance: '0.12'
     }
