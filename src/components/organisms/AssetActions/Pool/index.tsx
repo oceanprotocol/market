@@ -106,10 +106,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         setUserBalance(userBalance)
 
         // Get liquidity provider fee
-        const swapFee = await ocean.pool.getSwapFee(
-          accountId,
-          price.address
-        )
+        const swapFee = await ocean.pool.getSwapFee(accountId, price.address)
         setSwapFee(swapFee)
       } catch (error) {
         console.error(error.message)
@@ -177,10 +174,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
               {debug === true && (
                 <Token symbol="BPT" balance={totalPoolTokens} />
               )}
-              <Token
-                symbol="% liquidity provider fee"
-                balance={swapFee}
-              />
+              <Token symbol="% swap fee" balance={swapFee} />
             </div>
           </div>
 

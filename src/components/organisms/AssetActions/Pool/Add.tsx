@@ -103,10 +103,7 @@ export default function Add({
         </div>
         <div>
           <p>You will earn</p>
-          <Token
-            symbol="% of each pool transaction"
-            balance={swapFee}
-          />
+          <Token symbol="% swap fee" balance={swapFee} />
         </div>
       </div>
 

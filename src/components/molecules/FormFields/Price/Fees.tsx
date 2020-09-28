@@ -20,7 +20,7 @@ export default function Fees({
         <Input
           label={
             <>
-              Liquidity Provider Fee
+              Swap Fee
               <Tooltip content={tooltips.swapFee} />
             </>
           }
