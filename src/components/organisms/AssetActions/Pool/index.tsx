@@ -33,7 +33,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const [totalBalance, setTotalBalance] = useState<Balance>()
   const [dtSymbol, setDtSymbol] = useState<string>()
   const [userBalance, setUserBalance] = useState<Balance>()
-  const [liquidityProviderFee, setLiquidityProviderFee] = useState<string>()
+  const [swapFee, setSwapFee] = useState<string>()
 
   const [showAdd, setShowAdd] = useState(false)
   const [showRemove, setShowRemove] = useState(false)
@@ -106,11 +106,11 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         setUserBalance(userBalance)
 
         // Get liquidity provider fee
-        const liquidityProviderFee = await ocean.pool.getSwapFee(
+        const swapFee = await ocean.pool.getSwapFee(
           accountId,
           price.address
         )
-        setLiquidityProviderFee(liquidityProviderFee)
+        setSwapFee(swapFee)
       } catch (error) {
         console.error(error.message)
       } finally {
@@ -130,7 +130,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           poolAddress={price.address}
           totalPoolTokens={totalPoolTokens}
           totalBalance={totalBalance}
-          liquidityProviderFee={liquidityProviderFee}
+          swapFee={swapFee}
         />
       ) : showRemove ? (
         <Remove
@@ -179,7 +179,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
               )}
               <Token
                 symbol="% liquidity provider fee"
-                balance={liquidityProviderFee}
+                balance={swapFee}
               />
             </div>
           </div>

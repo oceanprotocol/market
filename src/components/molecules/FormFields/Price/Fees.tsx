@@ -12,7 +12,7 @@ export default function Fees({
   tooltips: { [key: string]: string }
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
-  const [field, meta] = useField('price.liquidityProviderFee')
+  const [field, meta] = useField('price.swapFee')
 
   return (
     <>
@@ -21,7 +21,7 @@ export default function Fees({
           label={
             <>
               Liquidity Provider Fee
-              <Tooltip content={tooltips.liquidityProviderFee} />
+              <Tooltip content={tooltips.swapFee} />
             </>
           }
           type="number"
