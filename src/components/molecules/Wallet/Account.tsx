@@ -1,10 +1,10 @@
-import React, { FormEvent } from 'react'
-import styles from './Account.module.css'
 import { useOcean } from '@oceanprotocol/react'
 import { toDataUrl } from 'ethereum-blockies'
+import React, { FormEvent } from 'react'
 import { ReactComponent as Caret } from '../../../images/caret.svg'
-import Status from '../../atoms/Status'
 import { accountTruncate, isCorrectNetwork } from '../../../utils/wallet'
+import Status from '../../atoms/Status'
+import styles from './Account.module.css'
 
 const Blockies = ({ account }: { account: string | undefined }) => {
   if (!account) return null
@@ -32,13 +32,17 @@ const Account = React.forwardRef((props, ref: any) => {
     await connect()
   }
 
+  // prevent accidentially submitting a form the button might be in
+  function handleButton(e: FormEvent<HTMLButtonElement>) {
+    e.preventDefault()
+  }
+
   return accountId ? (
     <button
       className={styles.button}
       aria-label="Account"
       ref={ref}
-      // prevent accidentially submitting a form the button might be in
-      onClick={(e) => e.preventDefault()}
+      onClick={(e) => handleButton(e)}
     >
       <Blockies account={accountId} />
       <span className={styles.address} title={accountId}>
