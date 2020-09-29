@@ -1,11 +1,16 @@
 import React, { ReactElement, ReactNode } from 'react'
 import styles from './index.module.css'
+import PoolTransactions from './PoolTransactions'
 import PublishedList from './PublishedList'
 
 const sections = [
   {
     title: 'Published',
     component: <PublishedList />
+  },
+  {
+    title: 'Pool Transactions',
+    component: <PoolTransactions />
   },
   {
     title: 'Compute Jobs',

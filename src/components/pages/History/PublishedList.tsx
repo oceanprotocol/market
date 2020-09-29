@@ -1,8 +1,8 @@
-import React, { useEffect, useState, ReactElement } from 'react'
-import Loader from '../../atoms/Loader'
-import { useOcean } from '@oceanprotocol/react'
 import { Logger } from '@oceanprotocol/lib'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatastore/MetadataStore'
+import { useOcean } from '@oceanprotocol/react'
+import React, { ReactElement, useEffect, useState } from 'react'
+import Loader from '../../atoms/Loader'
 import AssetList from '../../organisms/AssetList'
 
 export default function PublishedList(): ReactElement {
