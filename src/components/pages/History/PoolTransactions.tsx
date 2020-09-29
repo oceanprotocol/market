@@ -10,7 +10,7 @@ export default function PoolTransactions(): ReactElement {
     async function getLogs() {
       if (!ocean || !accountId) return
 
-      const logs = await ocean.pool.getAllPoolLogs(accountId)
+      const logs = await ocean.pool.getAllPoolLogs(accountId, true, true, true)
       setLogs(logs)
     }
     getLogs()
