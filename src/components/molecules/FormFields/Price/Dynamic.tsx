@@ -58,7 +58,7 @@ export default function Dynamic({
     return () => {
       clearInterval(balanceInterval)
     }
-  }, [ocean, chainId, account, refreshBalance])
+  }, [ocean, chainId, account])
 
   return (
     <div className={styles.dynamic}>
