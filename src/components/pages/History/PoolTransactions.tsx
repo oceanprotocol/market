@@ -8,13 +8,19 @@ export default function PoolTransactions(): ReactElement {
 
   useEffect(() => {
     async function getLogs() {
+      if (!ocean || !accountId) return
+
       const logs = await ocean.pool.getAllPoolLogs(accountId)
       setLogs(logs)
     }
     getLogs()
   }, [ocean, accountId])
 
-  logs && console.log(logs)
-
-  return <div>Hello</div>
+  return (
+    <div>
+      <pre>
+        <code>{JSON.stringify(logs, null, 2)}</code>
+      </pre>
+    </div>
+  )
 }
