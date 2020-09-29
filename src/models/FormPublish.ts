@@ -16,7 +16,7 @@ export const validationSchema = Yup.object().shape<MetadataPublishForm>({
         .matches(/fixed|dynamic/g)
         .required('Required'),
       weightOnDataToken: Yup.string().required('Required'),
-      liquidityProviderFee: Yup.number()
+      swapFee: Yup.number()
         .min(0.1, 'Must be more or equal to 0.1')
         .max(0.9, 'Must be less or equal to 0.9')
         .required('Required'),
@@ -50,7 +50,7 @@ export const initialValues: Partial<MetadataPublishForm> = {
     type: 'fixed',
     tokensToMint: 1,
     weightOnDataToken: '9', // 90% on data token
-    liquidityProviderFee: 0.1 // in %
+    swapFee: 0.1 // in %
   },
   files: '',
   description: '',

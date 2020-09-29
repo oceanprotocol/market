@@ -9,7 +9,7 @@ const testFormData: MetadataPublishForm = {
     tokensToMint: 9,
     type: 'fixed',
     weightOnDataToken: '1',
-    liquidityProviderFee: 0.1
+    swapFee: 0.1
   },
   name: '',
   description: 'description',

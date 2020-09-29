@@ -16,13 +16,13 @@ export default function Add({
   poolAddress,
   totalPoolTokens,
   totalBalance,
-  liquidityProviderFee
+  swapFee
 }: {
   setShowAdd: (show: boolean) => void
   poolAddress: string
   totalPoolTokens: string
   totalBalance: Balance
-  liquidityProviderFee: string
+  swapFee: string
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { ocean, accountId, balance } = useOcean()
@@ -103,10 +103,7 @@ export default function Add({
         </div>
         <div>
           <p>You will earn</p>
-          <Token
-            symbol="% of each pool transaction"
-            balance={liquidityProviderFee}
-          />
+          <Token symbol="% swap fee" balance={swapFee} />
         </div>
       </div>
 

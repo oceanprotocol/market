@@ -26,7 +26,7 @@ const query = graphql`
                 info
                 tooltips {
                   poolInfo
-                  liquidityProviderFee
+                  swapFee
                   communityFee
                   marketplaceFee
                 }

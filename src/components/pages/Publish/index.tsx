@@ -38,7 +38,7 @@ export default function PublishPage({
         (metadata as unknown) as Metadata,
         {
           ...price,
-          liquidityProviderFee: `${price.liquidityProviderFee}`
+          swapFee: `${price.swapFee}`
         },
         serviceType,
         price.datatoken
