@@ -10,9 +10,14 @@ import { FormContent } from '../../../@types/Form'
 import { initialValues, validationSchema } from '../../../models/FormPublish'
 import { transformPublishFormToMetadata } from './utils'
 import Preview from './Preview'
-import { MetadataMarket, MetadataPublishForm } from '../../../@types/MetaData'
+import { MetadataPublishForm } from '../../../@types/MetaData'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import { Logger, Metadata } from '@oceanprotocol/lib'
+import Loader from '../../atoms/Loader'
+import { Persist } from '../../atoms/FormikPersist'
+import Debug from './Debug'
+
+const formName = 'ocean-publish-form'
 
 export default function PublishPage({
   content
@@ -60,56 +65,38 @@ export default function PublishPage({
   }
 
   return (
-    <article className={styles.grid}>
-      <Formik
-        initialValues={initialValues}
-        initialStatus="empty"
-        validationSchema={validationSchema}
-        onSubmit={async (values, { setSubmitting, resetForm }) => {
-          await handleSubmit(values, resetForm)
-          setSubmitting(false)
-        }}
-      >
-        {({ values }) => (
-          <>
-            <PublishForm
-              content={content.form}
-              isLoading={isLoading}
-              publishStepText={publishStepText}
-            />
-            <aside>
-              <div className={styles.sticky}>
-                <Preview values={values} />
-                <Web3Feedback />
-              </div>
-            </aside>
+    <Formik
+      initialValues={initialValues}
+      initialStatus="empty"
+      validationSchema={validationSchema}
+      onSubmit={async (values, { setSubmitting, resetForm }) => {
+        await handleSubmit(values, resetForm)
+        setSubmitting(false)
+      }}
+    >
+      {({ values }) => (
+        <>
+          <Persist name={formName} ignoreFields={['isSubmitting']} />
 
-            {debug === true && (
-              <>
-                <div>
-                  <h5>Collected Form Values</h5>
-                  <pre>
-                    <code>{JSON.stringify(values, null, 2)}</code>
-                  </pre>
+          {isLoading ? (
+            <div className={styles.feedback}>
+              <Loader message={publishStepText} />
+            </div>
+          ) : (
+            <article className={styles.grid}>
+              <PublishForm content={content.form} />
+              <aside>
+                <div className={styles.sticky}>
+                  <Preview values={values} />
+                  <Web3Feedback />
                 </div>
+              </aside>
+            </article>
+          )}
 
-                <div>
-                  <h5>Transformed Values</h5>
-                  <pre>
-                    <code>
-                      {JSON.stringify(
-                        transformPublishFormToMetadata(values),
-                        null,
-                        2
-                      )}
-                    </code>
-                  </pre>
-                </div>
-              </>
-            )}
-          </>
-        )}
-      </Formik>
-    </article>
+          {debug === true && <Debug values={values} />}
+        </>
+      )}
+    </Formik>
   )
 }

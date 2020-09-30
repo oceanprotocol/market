@@ -15,3 +15,11 @@
     top: calc(var(--spacer) / 2);
   }
 }
+
+.feedback {
+  width: 100%;
+  min-height: 60vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

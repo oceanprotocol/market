@@ -5,7 +5,7 @@ import styles from './index.module.css'
 import Tabs from '../../../atoms/Tabs'
 import Fixed from './Fixed'
 import Dynamic from './Dynamic'
-import { useField } from 'formik'
+import { useField, useFormikContext } from 'formik'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import { useOcean } from '@oceanprotocol/react'
 import { PriceOptionsMarket } from '../../../../@types/MetaData'
@@ -68,8 +68,9 @@ export default function Price(props: InputProps): ReactElement {
     helpers.setValue({ ...field.value, tokensToMint })
   }, [price])
 
-  // Generate new DT name & symbol
+  // Generate new DT name & symbol, but only once automatically
   useEffect(() => {
+    if (!ocean || typeof field?.value?.datatoken?.name !== 'undefined') return
     generateName()
   }, [ocean])
 
@@ -100,7 +101,11 @@ export default function Price(props: InputProps): ReactElement {
 
   return (
     <div className={styles.price}>
-      <Tabs items={tabs} handleTabChange={handleTabChange} />
+      <Tabs
+        items={tabs}
+        handleTabChange={handleTabChange}
+        defaultIndex={field?.value?.type === 'fixed' ? 0 : 1}
+      />
       {debug === true && (
         <pre>
           <code>{JSON.stringify(field.value, null, 2)}</code>
