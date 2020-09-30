@@ -1,46 +1,47 @@
-import {
-  PoolAction,
-  PoolLogs
-} from '@oceanprotocol/lib/dist/node/balancer/OceanPool'
+import { PoolTransaction } from '@oceanprotocol/lib/dist/node/balancer/OceanPool'
 import { useOcean } from '@oceanprotocol/react'
 import React, { ReactElement, useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component'
 
-const data: PoolLogs = {
-  joins: [
-    {
-      poolAddress: '0xxxxx',
-      caller: '',
-      transactionHash: '0xxxxx',
-      blockNumber: 2,
-      tokenIn: 'OCEAN',
-      tokenAmountIn: '10'
-    }
-  ],
-  exits: [],
-  swaps: []
-}
+const data: PoolTransaction[] = [
+  {
+    poolAddress: '0xxxxx',
+    dtAddress: '0xxxxx',
+    caller: '0xxxxx',
+    transactionHash: '0xxxxx',
+    blockNumber: 2,
+    timestamp: 1,
+    tokenIn: 'OCEAN',
+    tokenAmountIn: '10',
+    type: 'join'
+  }
+]
 
 const columns = [
   {
     name: 'Title',
-    selector: (row: PoolAction) => `Add ${row.tokenAmountIn} ${row.tokenIn}`
+    selector: (row: PoolTransaction) =>
+      `Add ${row.tokenAmountIn} ${row.tokenIn}`
   },
   {
     name: 'Pool',
     selector: 'poolAddress'
+  },
+  {
+    name: 'Account',
+    selector: 'caller'
   }
 ]
 
 export default function PoolTransactions(): ReactElement {
   const { ocean, accountId } = useOcean()
-  const [logs, setLogs] = useState<PoolLogs>()
+  const [logs, setLogs] = useState<PoolTransaction[]>()
 
   useEffect(() => {
     async function getLogs() {
       if (!ocean || !accountId) return
 
-      const logs = await ocean.pool.getAllPoolLogs(accountId, true, true, true)
+      const logs = await ocean.pool.getAllPoolLogs(accountId)
       setLogs(logs)
     }
     getLogs()
@@ -48,7 +49,7 @@ export default function PoolTransactions(): ReactElement {
 
   return (
     <div>
-      <DataTable columns={columns} data={data.joins} />
+      <DataTable columns={columns} data={data} />
       <pre>
         <code>{JSON.stringify(logs, null, 2)}</code>
       </pre>
