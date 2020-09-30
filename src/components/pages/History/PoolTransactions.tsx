@@ -5,6 +5,7 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component'
 import EtherscanLink from '../../atoms/EtherscanLink'
 import Time from '../../atoms/Time'
+import styles from './PoolTransactions.module.css'
 
 export default function PoolTransactions(): ReactElement {
   const { ocean, accountId } = useOcean()
@@ -49,18 +50,24 @@ export default function PoolTransactions(): ReactElement {
     async function getLogs() {
       if (!ocean || !accountId) return
 
-      const logs = await ocean.pool.getAllPoolLogs(accountId)
-      setLogs(logs)
+      const logs = await ocean.pool.getAllPoolLogs(
+        '0xe08A1dAe983BC701D05E492DB80e0144f8f4b909'
+      )
+      // limit to 20 latest transactions for now
+      setLogs(logs.slice(0, 19))
     }
     getLogs()
   }, [ocean, accountId])
 
   return (
     <div>
-      <DataTable columns={columns} data={logs} />
-      <pre>
-        <code>{JSON.stringify(logs, null, 2)}</code>
-      </pre>
+      <DataTable
+        columns={columns}
+        data={logs}
+        className={styles.table}
+        noHeader
+        pagination
+      />
     </div>
   )
 }

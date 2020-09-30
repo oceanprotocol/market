@@ -21,7 +21,7 @@
 }
 
 .section {
-  margin-bottom: var(--spacer);
+  margin-top: calc(var(--spacer) * 1.5);
 }
 
 .section:last-child {

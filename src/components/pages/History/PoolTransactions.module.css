@@ -1,0 +1,10 @@
+.table {
+}
+
+.table div {
+  background-color: transparent !important;
+}
+
+.table [role='columnheader'] {
+  font-weight: var(--font-weight-bold);
+}
