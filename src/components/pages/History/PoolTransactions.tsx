@@ -36,7 +36,6 @@ const columns = [
       return <AssetTitle did={did} />
     }
   },
-
   {
     name: 'Time',
     selector: function getTimeRow(row: PoolTransaction) {
