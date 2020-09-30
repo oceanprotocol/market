@@ -1,11 +1,16 @@
 import { PoolTransaction } from '@oceanprotocol/lib/dist/node/balancer/OceanPool'
-import { useOcean } from '@oceanprotocol/react'
+import { useMetadata, useOcean } from '@oceanprotocol/react'
 import { Link } from 'gatsby'
 import React, { ReactElement, useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component'
 import EtherscanLink from '../../atoms/EtherscanLink'
 import Time from '../../atoms/Time'
 import styles from './PoolTransactions.module.css'
+
+function AssetTitle({ did }: { did: string }): ReactElement {
+  const { title } = useMetadata(did)
+  return <Link to={`/asset/${did}`}>{title || did}</Link>
+}
 
 const columns = [
   {
@@ -25,10 +30,10 @@ const columns = [
     }
   },
   {
-    name: 'Asset',
+    name: 'Data Set',
     selector: function getAssetRow(row: PoolTransaction) {
       const did = row.dtAddress.replace('0x', 'did:op:')
-      return <Link to={`/asset/${did}`}>{did}</Link>
+      return <AssetTitle did={did} />
     }
   },
 
