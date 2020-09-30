@@ -50,7 +50,9 @@ export default function PoolTransactions(): ReactElement {
     async function getLogs() {
       if (!ocean || !accountId) return
 
-      const logs = await ocean.pool.getAllPoolLogs(accountId)
+      const logs = await ocean.pool.getAllPoolLogs(
+        '0xe08A1dAe983BC701D05E492DB80e0144f8f4b909'
+      )
       // limit to 100 latest transactions for now
       setLogs(logs.slice(0, 99))
     }
@@ -63,7 +65,8 @@ export default function PoolTransactions(): ReactElement {
       data={logs}
       className={styles.table}
       noHeader
-      pagination
+      pagination={logs?.length >= 19}
+      paginationPerPage={20}
     />
   )
 }
