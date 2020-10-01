@@ -1,4 +1,4 @@
-import { MetadataPublishForm } from '../@types/Metadata'
+import { MetadataPublishForm } from '../@types/MetaData'
 import { File as FileMetadata } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 

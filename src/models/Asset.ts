@@ -1,4 +1,4 @@
-import { MetadataMarket } from '../@types/Metadata'
+import { MetadataMarket } from '../@types/MetaData'
 
 const AssetModel: MetadataMarket = {
   // OEP-8 Attributes

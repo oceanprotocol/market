@@ -4,7 +4,7 @@ import { transformPublishFormToMetadata } from '../../../src/components/pages/Pu
 import {
   MetadataMarket,
   MetadataPublishForm
-} from '../../../src/@types/Metadata'
+} from '../../../src/@types/MetaData'
 import PublishForm from '../../../src/components/pages/Publish/PublishForm'
 import publishFormData from '../__fixtures__/testFormData'
 import content from '../../../content/pages/publish.json'

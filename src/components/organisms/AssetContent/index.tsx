@@ -1,4 +1,4 @@
-import { MetadataMarket } from '../../../@types/Metadata'
+import { MetadataMarket } from '../../../@types/MetaData'
 import React, { ReactElement } from 'react'
 import Time from '../../atoms/Time'
 import { Link } from 'gatsby'

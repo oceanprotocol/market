@@ -1,4 +1,4 @@
-import { MetadataPublishForm } from '../../../src/@types/Metadata'
+import { MetadataPublishForm } from '../../../src/@types/MetaData'
 
 const testFormData: MetadataPublishForm = {
   author: '',
