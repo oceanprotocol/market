@@ -43,7 +43,7 @@ const AssetList: React.FC<AssetListProps> = ({ queryResult }) => {
   return (
     <>
       <div className={styles.assetList}>
-        {queryResult?.totalResults > 0 ? (
+        {queryResult?.results.length > 0 ? (
           queryResult.results.map((ddo: DDO) => {
             const { attributes } = ddo.findServiceByType('metadata')
 
