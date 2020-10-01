@@ -12,6 +12,10 @@ function AssetTitle({ did }: { did: string }): ReactElement {
   return <Link to={`/asset/${did}`}>{title || did}</Link>
 }
 
+function Empty() {
+  return <div className={styles.empty}>No results found</div>
+}
+
 const columns = [
   {
     name: 'Title',
@@ -69,6 +73,7 @@ export default function PoolTransactions(): ReactElement {
       noHeader
       pagination={logs?.length >= 19}
       paginationPerPage={20}
+      noDataComponent={<Empty />}
     />
   )
 }
