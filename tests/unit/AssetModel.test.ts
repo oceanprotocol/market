@@ -1,5 +1,5 @@
 import AssetModel from '../../src/models/Asset'
-import { MetadataMarket } from '../../src/@types/Metadata'
+import { MetadataMarket } from '../../src/@types/MetaData'
 
 describe('AssetModel', () => {
   it('values can be reassigned', () => {

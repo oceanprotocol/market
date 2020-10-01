@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'gatsby'
 import Dotdotdot from 'react-dotdotdot'
-import { MetadataMarket } from '../../@types/Metadata'
+import { MetadataMarket } from '../../@types/MetaData'
 import Price from '../atoms/Price'
 import styles from './AssetTeaser.module.css'
 import { DDO } from '@oceanprotocol/lib'

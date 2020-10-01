@@ -1,4 +1,4 @@
-import { MetadataMarket, MetadataPublishForm } from '../../../@types/Metadata'
+import { MetadataMarket, MetadataPublishForm } from '../../../@types/MetaData'
 import { toStringNoMS } from '../../../utils'
 import AssetModel from '../../../models/Asset'
 

@@ -17,6 +17,18 @@
 }
 
 .content {
-  composes: box from '../atoms/Box.module.css';
   margin-top: var(--spacer);
+}
+
+.section {
+  margin-top: calc(var(--spacer) * 1.5);
+}
+
+.section:last-child {
+  margin-bottom: 0;
+}
+
+.sectionTitle {
+  font-size: var(--font-size-h3);
+  margin-bottom: calc(var(--spacer) / 2);
 }

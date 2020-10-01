@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from '@reach/router'
 import Pagination from '../molecules/Pagination'
 import { updateQueryStringParameter } from '../../utils'
 import styles from './AssetList.module.css'
-import { MetadataMarket } from '../../@types/Metadata'
+import { MetadataMarket } from '../../@types/MetaData'
 import { DDO } from '@oceanprotocol/lib'
 import { useOcean } from '@oceanprotocol/react'
 
