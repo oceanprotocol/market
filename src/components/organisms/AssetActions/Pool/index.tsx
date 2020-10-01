@@ -57,23 +57,14 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         //
         // Get data token symbol
         //
-        const dtSymbol = await ocean.datatokens.getSymbol(
-          ddo.dataToken,
-          accountId
-        )
+        const dtSymbol = await ocean.datatokens.getSymbol(ddo.dataToken)
         setDtSymbol(dtSymbol)
 
         //
         // Get everything which is in the pool
         //
-        const oceanReserve = await ocean.pool.getOceanReserve(
-          accountId,
-          price.address
-        )
-        const dtReserve = await ocean.pool.getDTReserve(
-          accountId,
-          price.address
-        )
+        const oceanReserve = await ocean.pool.getOceanReserve(price.address)
+        const dtReserve = await ocean.pool.getDTReserve(price.address)
         setTotalBalance({
           ocean: oceanReserve,
           dt: dtReserve
@@ -106,7 +97,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         setUserBalance(userBalance)
 
         // Get liquidity provider fee
-        const swapFee = await ocean.pool.getSwapFee(accountId, price.address)
+        const swapFee = await ocean.pool.getSwapFee(price.address)
         setSwapFee(swapFee)
       } catch (error) {
         console.error(error.message)

@@ -15,7 +15,7 @@ export default function MetaFull({
   ddo: DDO
   metadata: MetadataMarket
 }): ReactElement {
-  const { ocean, accountId } = useOcean()
+  const { ocean } = useOcean()
   const { id, dataToken } = ddo
   const { dateCreated, datePublished, author, license } = metadata.main
 
@@ -26,13 +26,13 @@ export default function MetaFull({
     if (!ocean) return
 
     async function getDataTokenInfo() {
-      const name = await ocean.datatokens.getName(dataToken, accountId)
+      const name = await ocean.datatokens.getName(dataToken)
       setDtName(name)
-      const symbol = await ocean.datatokens.getSymbol(dataToken, accountId)
+      const symbol = await ocean.datatokens.getSymbol(dataToken)
       setDtSymbol(symbol)
     }
     getDataTokenInfo()
-  }, [ocean, accountId, dataToken])
+  }, [ocean, dataToken])
 
   return (
     <div className={styles.metaFull}>
