@@ -25,7 +25,6 @@ const Blockies = ({ account }: { account: string | undefined }) => {
 const Account = React.forwardRef((props, ref: any) => {
   const { accountId, status, connect, networkId } = useOcean()
   const hasSuccess = status === 1 && isCorrectNetwork(networkId)
-  console.log(networkId)
 
   async function handleActivation(e: FormEvent<HTMLButtonElement>) {
     // prevent accidentially submitting a form the button might be in

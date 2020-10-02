@@ -8,8 +8,8 @@ export function NetworkMonitor(): ReactElement {
   useEffect(() => {
     if (!web3Provider) return
 
-    async function handleNetworkChanged(chainId: number) {
-      const config = getOceanConfig(chainId)
+    async function handleNetworkChanged(chainId: string) {
+      const config = getOceanConfig(Number(chainId.replace('0x', '')))
       await connect(config)
     }
 
