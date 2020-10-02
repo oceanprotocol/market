@@ -10,7 +10,7 @@ import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 
 export default function Details(): ReactElement {
-  const { balance, connect, logout, chainId } = useOcean()
+  const { balance, connect, logout, networkId } = useOcean()
   const { locale } = useUserPreferences()
 
   return (
@@ -30,7 +30,7 @@ export default function Details(): ReactElement {
           <span title="Connected provider">
             {getInjectedProviderName()}
             <br />
-            {getNetworkName(chainId)}
+            {getNetworkName(networkId)}
           </span>
           <Button
             style="text"

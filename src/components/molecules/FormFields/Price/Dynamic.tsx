@@ -26,11 +26,11 @@ export default function Dynamic({
   content: any
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
-  const { account, balance, chainId, refreshBalance } = useOcean()
+  const { account, balance, networkId, refreshBalance } = useOcean()
   const { weightOnDataToken } = priceOptions
 
   const [error, setError] = useState<string>()
-  const correctNetwork = isCorrectNetwork(chainId)
+  const correctNetwork = isCorrectNetwork(networkId)
   const desiredNetworkName = appConfig.network.replace(/^\w/, (c: string) =>
     c.toUpperCase()
   )
@@ -46,7 +46,7 @@ export default function Dynamic({
     } else {
       setError(undefined)
     }
-  }, [ocean, chainId, account, balance, correctNetwork, desiredNetworkName])
+  }, [ocean, networkId, account, balance, correctNetwork, desiredNetworkName])
 
   // refetch balance periodically
   useEffect(() => {
@@ -58,7 +58,7 @@ export default function Dynamic({
     return () => {
       clearInterval(balanceInterval)
     }
-  }, [ocean, chainId, account])
+  }, [ocean, networkId, account])
 
   return (
     <div className={styles.dynamic}>

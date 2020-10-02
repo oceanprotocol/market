@@ -39,7 +39,7 @@ export const web3ModalOpts = {
   theme: web3ModalTheme
 }
 
-export function getChainId(network: string): number {
+export function getNetworkId(network: string): number {
   switch (network) {
     case 'mainnet':
       return 1
@@ -47,14 +47,16 @@ export function getChainId(network: string): number {
       return 4
     case 'kovan':
       return 42
+    case 'development':
+      return 8996
     default:
       return 0
   }
 }
 
-export function isCorrectNetwork(chainId: number): boolean {
-  const configuredNetwork = getChainId(network)
-  return configuredNetwork === chainId
+export function isCorrectNetwork(networkId: number): boolean {
+  const configuredNetwork = getNetworkId(network)
+  return configuredNetwork === networkId
 }
 
 export function accountTruncate(account: string): string {
@@ -63,14 +65,16 @@ export function accountTruncate(account: string): string {
   return truncated
 }
 
-export function getNetworkName(chainId: number): string {
-  switch (chainId) {
+export function getNetworkName(networkId: number): string {
+  switch (networkId) {
     case 1:
       return 'Main'
     case 4:
       return 'Rinkeby'
     case 42:
       return 'Kovan'
+    case 8996:
+      return 'Development'
     default:
       return 'Unknown'
   }

@@ -17,9 +17,9 @@ export default function Web3Feedback({
   isBalanceSufficient?: boolean
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
-  const { account, status, chainId } = useOcean()
+  const { account, status, networkId } = useOcean()
   const isOceanConnectionError = status === -1
-  const correctNetwork = isCorrectNetwork(chainId)
+  const correctNetwork = isCorrectNetwork(networkId)
   const showFeedback =
     !account ||
     isOceanConnectionError ||
