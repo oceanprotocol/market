@@ -76,8 +76,14 @@ export default function PoolTransactions(): ReactElement {
       if (!ocean || !accountId) return
 
       const logs = await ocean.pool.getAllPoolLogs(accountId)
-      // limit to 100 latest transactions for now
-      setLogs(logs.slice(0, 99))
+      setLogs(
+        // sort logs by date, newest first
+        logs.sort((a, b) => {
+          if (a.timestamp > b.timestamp) return -1
+          if (a.timestamp < b.timestamp) return 1
+          return 0
+        })
+      )
     }
     getLogs()
   }, [ocean, accountId])
