@@ -96,9 +96,10 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
         setUserBalance(userBalance)
 
-        // Get liquidity provider fee
+        // Get swap fee
+        // swapFee is tricky: to get 0.1% you need to convert from 0.001
         const swapFee = await ocean.pool.getSwapFee(price.address)
-        setSwapFee(swapFee)
+        setSwapFee(`${Number(swapFee) * 100}`)
       } catch (error) {
         console.error(error.message)
       } finally {
