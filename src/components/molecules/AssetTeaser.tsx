@@ -5,6 +5,7 @@ import { MetadataMarket } from '../../@types/MetaData'
 import Price from '../atoms/Price'
 import styles from './AssetTeaser.module.css'
 import { DDO } from '@oceanprotocol/lib'
+import removeMarkdown from 'remove-markdown'
 
 declare type AssetTeaserProps = {
   ddo: DDO
@@ -26,7 +27,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
 
         <div className={styles.content}>
           <Dotdotdot tagName="p" clamp={3}>
-            {metadata?.additionalInformation?.description || ''}
+            {removeMarkdown(metadata?.additionalInformation?.description || '')}
           </Dotdotdot>
         </div>
 
