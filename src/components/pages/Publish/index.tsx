@@ -1,6 +1,4 @@
-import React, { ReactElement } from 'react'
-import { useNavigate } from '@reach/router'
-import { toast } from 'react-toastify'
+import React, { ReactElement, useState } from 'react'
 import { Formik } from 'formik'
 import { usePublish } from '@oceanprotocol/react'
 import styles from './index.module.css'
@@ -10,9 +8,14 @@ import { FormContent } from '../../../@types/Form'
 import { initialValues, validationSchema } from '../../../models/FormPublish'
 import { transformPublishFormToMetadata } from './utils'
 import Preview from './Preview'
-import { MetadataMarket, MetadataPublishForm } from '../../../@types/MetaData'
+import { MetadataPublishForm } from '../../../@types/MetaData'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import { Logger, Metadata } from '@oceanprotocol/lib'
+import { Persist } from '../../atoms/FormikPersist'
+import Debug from './Debug'
+import Feedback from './Feedback'
+
+const formName = 'ocean-publish-form'
 
 export default function PublishPage({
   content
@@ -21,7 +24,12 @@ export default function PublishPage({
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { publish, publishError, isLoading, publishStepText } = usePublish()
-  const navigate = useNavigate()
+
+  const [success, setSuccess] = useState<string>()
+  const [error, setError] = useState<string>()
+  const [did, setDid] = useState<string>()
+
+  const hasFeedback = isLoading || error || success
 
   async function handleSubmit(
     values: Partial<MetadataPublishForm>,
@@ -36,80 +44,70 @@ export default function PublishPage({
 
       const ddo = await publish(
         (metadata as unknown) as Metadata,
-        {
-          ...price,
-          swapFee: `${price.swapFee}`
-        },
+        { ...price, swapFee: `${price.swapFee}` },
         serviceType,
         price.datatoken
       )
 
+      // Publish failed
       if (publishError) {
-        toast.error(publishError) && console.error(publishError)
-        return null
+        setError(publishError)
+        Logger.error(publishError)
+        return
       }
 
-      // User feedback and redirect to new asset detail page
-      ddo && toast.success('Asset created successfully.') && resetForm()
-      // Go to new asset detail page
-      navigate(`/asset/${ddo.id}`)
+      // Publish succeeded
+      if (ddo) {
+        setDid(ddo.id)
+        setSuccess('🎉 Successfully published your data set. 🎉')
+        resetForm()
+      }
     } catch (error) {
-      console.error(error.message)
-      toast.error(error.message)
+      setError(error.message)
+      Logger.error(error.message)
     }
   }
 
   return (
-    <article className={styles.grid}>
-      <Formik
-        initialValues={initialValues}
-        initialStatus="empty"
-        validationSchema={validationSchema}
-        onSubmit={async (values, { setSubmitting, resetForm }) => {
-          await handleSubmit(values, resetForm)
-          setSubmitting(false)
-        }}
-      >
-        {({ values }) => (
-          <>
-            <PublishForm
-              content={content.form}
-              isLoading={isLoading}
+    <Formik
+      initialValues={initialValues}
+      initialStatus="empty"
+      validationSchema={validationSchema}
+      onSubmit={async (values, { setSubmitting, resetForm }) => {
+        // move user's focus to top of screen
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+        // kick off publishing
+        await handleSubmit(values, resetForm)
+        setSubmitting(false)
+      }}
+    >
+      {({ values }) => (
+        <>
+          <Persist name={formName} ignoreFields={['isSubmitting']} />
+
+          {hasFeedback ? (
+            <Feedback
+              error={error}
+              success={success}
               publishStepText={publishStepText}
+              did={did}
+              setError={setError}
             />
-            <aside>
-              <div className={styles.sticky}>
-                <Preview values={values} />
-                <Web3Feedback />
-              </div>
-            </aside>
-
-            {debug === true && (
-              <>
-                <div>
-                  <h5>Collected Form Values</h5>
-                  <pre>
-                    <code>{JSON.stringify(values, null, 2)}</code>
-                  </pre>
+          ) : (
+            <article className={styles.grid}>
+              <PublishForm content={content.form} />
+              <aside>
+                <div className={styles.sticky}>
+                  <Preview values={values} />
+                  <Web3Feedback />
                 </div>
+              </aside>
+            </article>
+          )}
 
-                <div>
-                  <h5>Transformed Values</h5>
-                  <pre>
-                    <code>
-                      {JSON.stringify(
-                        transformPublishFormToMetadata(values),
-                        null,
-                        2
-                      )}
-                    </code>
-                  </pre>
-                </div>
-              </>
-            )}
-          </>
-        )}
-      </Formik>
-    </article>
+          {debug === true && <Debug values={values} />}
+        </>
+      )}
+    </Formik>
   )
 }

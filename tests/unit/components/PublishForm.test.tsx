@@ -11,9 +11,7 @@ import content from '../../../content/pages/publish.json'
 
 describe('PublishForm', () => {
   it('renders without crashing', async () => {
-    const { container } = render(
-      <PublishForm content={content.form} isLoading={null} />
-    )
+    const { container } = render(<PublishForm content={content.form} />)
     expect(container.firstChild).toBeInTheDocument()
   })
 
