@@ -44,10 +44,7 @@ export default function PublishPage({
 
       const ddo = await publish(
         (metadata as unknown) as Metadata,
-        {
-          ...price,
-          swapFee: `${price.swapFee}`
-        },
+        { ...price, swapFee: `${price.swapFee}` },
         serviceType,
         price.datatoken
       )

@@ -30,6 +30,11 @@
   }
 }
 
+.feedback [class*='loaderWrap'] {
+  justify-content: center;
+  text-align: center;
+}
+
 .action {
   margin-top: calc(var(--spacer) / 1.5);
 }
