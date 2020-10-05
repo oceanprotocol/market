@@ -59,13 +59,19 @@
 .navigation li {
   display: inline-block;
   vertical-align: middle;
+  margin-left: var(--spacer);
+}
+
+@media screen and (min-width: 60rem) {
+  .navigation li {
+    margin-left: calc(var(--spacer) * 2);
+  }
 }
 
 .navigation button,
 .link {
   display: block;
   padding: calc(var(--spacer) / 2);
-  margin-left: var(--spacer);
   text-transform: uppercase;
   color: var(--brand-grey-light);
   font-weight: var(--font-weight-bold);

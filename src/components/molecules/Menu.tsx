@@ -45,14 +45,14 @@ export default function Menu(): ReactElement {
         </Link>
 
         <ul className={styles.navigation}>
-          <li>
-            <Wallet />
-          </li>
           {menu.map((item: MenuItem) => (
             <li key={item.name}>
               <MenuLink item={item} />
             </li>
           ))}
+          <li>
+            <Wallet />
+          </li>
           <li>
             <UserPreferences />
           </li>

@@ -1,12 +1,31 @@
 .preferences {
-  padding: calc(var(--spacer) / 2);
-  margin-left: var(--spacer);
+  padding: calc(var(--spacer) / 5) calc(var(--spacer) / 4)
+    calc(var(--spacer) / 5) 0;
   cursor: pointer;
+}
+
+.preferences svg {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.preferences[aria-expanded='true'] svg {
+  transform: rotate(180deg);
+}
+
+.preferences svg:last-child {
+  width: 1em;
+  height: 1em;
+  fill: var(--brand-grey-lighter);
+  margin-left: calc(var(--spacer) / 4);
+  transition: transform 0.2s ease-out;
 }
 
 .icon {
   fill: var(--brand-grey-light);
   transition: 0.2s ease-out;
+  width: 1.2em;
+  height: 1.2em;
 }
 
 .preferences:hover .icon,
@@ -14,10 +33,6 @@
 .preferences:active .icon,
 .preferences[aria-expanded='true'] .icon {
   fill: var(--brand-grey);
-}
-
-.preferences[aria-expanded='true'] .icon {
-  transform: rotate(180deg);
 }
 
 .preferencesDetails {
