@@ -16,21 +16,38 @@ function Empty() {
   return <div className={styles.empty}>No results found</div>
 }
 
+function Title({ row }: { row: PoolTransaction }) {
+  const { ocean } = useOcean()
+  const [dtSymbol, setDtSymbol] = useState<string>()
+
+  const title = row.tokenAmountIn
+    ? `Add ${row.tokenAmountIn} ${dtSymbol || 'OCEAN'}`
+    : `Remove ${row.tokenAmountOut} ${dtSymbol || 'OCEAN'}`
+
+  useEffect(() => {
+    if (!ocean) return
+
+    async function getSymbol() {
+      const symbol = await ocean.datatokens.getSymbol(
+        row.tokenIn || row.tokenOut
+      )
+      setDtSymbol(symbol)
+    }
+    getSymbol()
+  }, [ocean, row])
+
+  return (
+    <EtherscanLink network="rinkeby" path={`/tx/${row.transactionHash}`}>
+      {title}
+    </EtherscanLink>
+  )
+}
+
 const columns = [
   {
     name: 'Title',
     selector: function getTitleRow(row: PoolTransaction) {
-      // TODO: replace hardcoded symbol with symbol fetching based
-      // on row.tonenIn & row.tokenOut
-      const title = row.tokenAmountIn
-        ? `Add ${row.tokenAmountIn} OCEAN`
-        : `Remove ${row.tokenAmountOut} OCEAN`
-
-      return (
-        <EtherscanLink network="rinkeby" path={`/tx/${row.transactionHash}`}>
-          {title}
-        </EtherscanLink>
-      )
+      return <Title row={row} />
     }
   },
   {
