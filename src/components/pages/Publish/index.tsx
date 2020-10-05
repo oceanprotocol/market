@@ -1,6 +1,4 @@
-import React, { ReactElement } from 'react'
-import { useNavigate } from '@reach/router'
-import { toast } from 'react-toastify'
+import React, { ReactElement, useState } from 'react'
 import { Formik } from 'formik'
 import { usePublish } from '@oceanprotocol/react'
 import styles from './index.module.css'
@@ -13,9 +11,9 @@ import Preview from './Preview'
 import { MetadataPublishForm } from '../../../@types/MetaData'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import { Logger, Metadata } from '@oceanprotocol/lib'
-import Loader from '../../atoms/Loader'
 import { Persist } from '../../atoms/FormikPersist'
 import Debug from './Debug'
+import Feedback from './Feedback'
 
 const formName = 'ocean-publish-form'
 
@@ -26,7 +24,12 @@ export default function PublishPage({
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { publish, publishError, isLoading, publishStepText } = usePublish()
-  const navigate = useNavigate()
+
+  const [success, setSuccess] = useState<string>()
+  const [error, setError] = useState<string>()
+  const [did, setDid] = useState<string>()
+
+  const hasFeedback = isLoading || error || success
 
   async function handleSubmit(
     values: Partial<MetadataPublishForm>,
@@ -49,18 +52,22 @@ export default function PublishPage({
         price.datatoken
       )
 
+      // Publish failed
       if (publishError) {
-        toast.error(publishError) && console.error(publishError)
-        return null
+        setError(publishError)
+        Logger.error(publishError)
+        return
       }
 
-      // User feedback and redirect to new asset detail page
-      ddo && toast.success('Asset created successfully.') && resetForm()
-      // Go to new asset detail page
-      navigate(`/asset/${ddo.id}`)
+      // Publish succeeded
+      if (ddo) {
+        setDid(ddo.id)
+        setSuccess('🎉 Successfully published your data set. 🎉')
+        resetForm()
+      }
     } catch (error) {
-      console.error(error.message)
-      toast.error(error.message)
+      setError(error.message)
+      Logger.error(error.message)
     }
   }
 
@@ -78,10 +85,14 @@ export default function PublishPage({
         <>
           <Persist name={formName} ignoreFields={['isSubmitting']} />
 
-          {isLoading ? (
-            <div className={styles.feedback}>
-              <Loader message={publishStepText} />
-            </div>
+          {hasFeedback ? (
+            <Feedback
+              error={error}
+              success={success}
+              publishStepText={publishStepText}
+              did={did}
+              setError={setError}
+            />
           ) : (
             <article className={styles.grid}>
               <PublishForm content={content.form} />
