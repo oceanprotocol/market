@@ -74,6 +74,9 @@ export default function PublishPage({
       initialStatus="empty"
       validationSchema={validationSchema}
       onSubmit={async (values, { setSubmitting, resetForm }) => {
+        // move user's focus to top of screen
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+        // kick off publishing
         await handleSubmit(values, resetForm)
         setSubmitting(false)
       }}
