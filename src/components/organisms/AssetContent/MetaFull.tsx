@@ -37,17 +37,23 @@ export default function MetaFull({
   return (
     <div className={styles.metaFull}>
       <MetaItem title="Author" content={author} />
-      <MetaItem
-        title="Copyright Holder"
-        content={metadata?.additionalInformation?.copyrightHolder}
-      />
+
+      {metadata?.additionalInformation?.copyrightHolder && (
+        <MetaItem
+          title="Copyright Holder"
+          content={metadata?.additionalInformation?.copyrightHolder}
+        />
+      )}
+
       <MetaItem title="License" content={license} />
+
       {metadata?.additionalInformation?.categories && (
         <MetaItem
           title="Category"
           content={metadata?.additionalInformation?.categories[0]}
         />
       )}
+
       <MetaItem title="Data Created" content={<Time date={dateCreated} />} />
 
       <MetaItem
