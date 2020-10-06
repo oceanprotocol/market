@@ -6,6 +6,6 @@
   composes: buttonMax from './Add.module.css';
 }
 
-.userBalance {
-  composes: userBalance from './Add.module.css';
+.userLiquidity {
+  composes: userLiquidity from './Add.module.css';
 }

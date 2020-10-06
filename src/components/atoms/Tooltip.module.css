@@ -5,7 +5,6 @@
 .content {
   composes: box from './Box.module.css';
   padding: calc(var(--spacer) / 4);
-  min-width: 20rem;
   max-width: 25rem;
   font-size: var(--font-size-small);
 }

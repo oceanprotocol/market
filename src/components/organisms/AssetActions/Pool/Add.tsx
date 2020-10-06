@@ -10,25 +10,30 @@ import { Balance } from './'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
 import Actions from './Actions'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
+import Tooltip from '../../../atoms/Tooltip'
+import { ReactComponent as Caret } from '../../../../images/caret.svg'
 
 export default function Add({
   setShowAdd,
   poolAddress,
   totalPoolTokens,
   totalBalance,
-  swapFee
+  swapFee,
+  dtSymbol
 }: {
   setShowAdd: (show: boolean) => void
   poolAddress: string
   totalPoolTokens: string
   totalBalance: Balance
   swapFee: string
+  dtSymbol: string
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { ocean, accountId, balance } = useOcean()
   const [amount, setAmount] = useState('')
   const [txId, setTxId] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>()
+  const [coin, setCoin] = useState<string>('OCEAN')
 
   const newPoolTokens =
     totalBalance &&
@@ -41,12 +46,13 @@ export default function Add({
   async function handleAddLiquidity() {
     setIsLoading(true)
 
+    const addMethod =
+      coin === 'OCEAN'
+        ? ocean.pool.addOceanLiquidity
+        : ocean.pool.addDTLiquidity
+
     try {
-      const result = await ocean.pool.addOceanLiquidity(
-        accountId,
-        poolAddress,
-        amount
-      )
+      const result = await addMethod(accountId, poolAddress, amount)
       setTxId(result.transactionHash)
     } catch (error) {
       console.error(error.message)
@@ -64,21 +70,38 @@ export default function Add({
     setAmount(balance.ocean)
   }
 
+  const CoinSelect = () => (
+    <ul className={styles.coinPopover}>
+      <li onClick={() => setCoin('OCEAN')}>OCEAN</li>
+      <li onClick={() => setCoin(dtSymbol)}>{dtSymbol}</li>
+    </ul>
+  )
+
   return (
-    <div className={styles.add}>
+    <>
       <Header title="Add Liquidity" backAction={() => setShowAdd(false)} />
 
       <div className={styles.addInput}>
-        <div className={styles.userBalance}>
+        <div className={styles.userLiquidity}>
           <span>Available: </span>
           <PriceUnit price={balance.ocean} symbol="OCEAN" small />
         </div>
 
         <InputElement
           value={amount}
-          name="ocean"
+          name="coin"
           type="number"
-          prefix="OCEAN"
+          prefix={
+            <Tooltip
+              content={<CoinSelect />}
+              trigger="click focus"
+              className={styles.coinswitch}
+              placement="bottom"
+            >
+              {coin}
+              <Caret aria-hidden="true" />
+            </Tooltip>
+          }
           placeholder="0"
           onChange={handleAmountChange}
         />
@@ -114,6 +137,6 @@ export default function Add({
         action={handleAddLiquidity}
         txId={txId}
       />
-    </div>
+    </>
   )
 }

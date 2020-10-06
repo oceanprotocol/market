@@ -4,6 +4,7 @@ import loadable from '@loadable/component'
 import { useSpring, animated } from 'react-spring'
 import styles from './Tooltip.module.css'
 import { ReactComponent as Info } from '../../images/info.svg'
+import { Placement } from 'tippy.js'
 
 const cx = classNames.bind(styles)
 
@@ -26,13 +27,15 @@ export default function Tooltip({
   children,
   trigger,
   disabled,
-  className
+  className,
+  placement
 }: {
   content: ReactNode
   children?: ReactNode
   trigger?: string
   disabled?: boolean
   className?: string
+  placement?: Placement
 }): ReactElement {
   const [props, setSpring] = useSpring(() => animation.from)
 
@@ -64,6 +67,7 @@ export default function Tooltip({
       zIndex={1}
       trigger={trigger || 'mouseenter focus'}
       disabled={disabled || null}
+      placement={placement}
       render={(attrs: any) => (
         <animated.div style={props}>
           <div className={styles.content} {...attrs}>

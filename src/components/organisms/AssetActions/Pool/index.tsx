@@ -32,7 +32,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const [totalPoolTokens, setTotalPoolTokens] = useState<string>()
   const [totalBalance, setTotalBalance] = useState<Balance>()
   const [dtSymbol, setDtSymbol] = useState<string>()
-  const [userBalance, setUserBalance] = useState<Balance>()
+  const [userLiquidity, setUserBalance] = useState<Balance>()
   const [swapFee, setSwapFee] = useState<string>()
 
   const [showAdd, setShowAdd] = useState(false)
@@ -40,11 +40,12 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const [isLoading, setIsLoading] = useState(true)
 
   const hasAddedLiquidity =
-    userBalance && (Number(userBalance.ocean) > 0 || Number(userBalance.dt) > 0)
+    userLiquidity &&
+    (Number(userLiquidity.ocean) > 0 || Number(userLiquidity.dt) > 0)
 
   const poolShare =
     totalBalance &&
-    userBalance &&
+    userLiquidity &&
     ((Number(poolTokens) / Number(totalPoolTokens)) * 100).toFixed(2)
 
   useEffect(() => {
@@ -89,12 +90,12 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         const userDtBalance =
           (Number(poolTokens) / Number(totalPoolTokens)) * Number(dtReserve)
 
-        const userBalance = {
+        const userLiquidity = {
           ocean: `${userOceanBalance}`,
           dt: `${userDtBalance}`
         }
 
-        setUserBalance(userBalance)
+        setUserBalance(userLiquidity)
 
         // Get swap fee
         // swapFee is tricky: to get 0.1% you need to convert from 0.001
@@ -111,7 +112,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
   return (
     <>
-      {isLoading && !userBalance ? (
+      {isLoading && !userLiquidity ? (
         <Loader message="Retrieving pools..." />
       ) : showAdd ? (
         <Add
@@ -120,13 +121,14 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           totalPoolTokens={totalPoolTokens}
           totalBalance={totalBalance}
           swapFee={swapFee}
+          dtSymbol={dtSymbol}
         />
       ) : showRemove ? (
         <Remove
           setShowRemove={setShowRemove}
           poolAddress={price.address}
           totalPoolTokens={totalPoolTokens}
-          userBalance={userBalance}
+          userLiquidity={userLiquidity}
         />
       ) : (
         <>
@@ -154,8 +156,8 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
                 Your Liquidity
                 <Tooltip content="Explain what this represents, advantage of providing liquidity..." />
               </h3>
-              <Token symbol="OCEAN" balance={userBalance.ocean} />
-              <Token symbol={dtSymbol} balance={userBalance.dt} />
+              <Token symbol="OCEAN" balance={userLiquidity.ocean} />
+              <Token symbol={dtSymbol} balance={userLiquidity.dt} />
               {debug === true && <Token symbol="BPT" balance={poolTokens} />}
               <Token symbol="% of pool" balance={poolShare} />
             </div>

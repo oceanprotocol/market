@@ -14,12 +14,12 @@ export default function Remove({
   setShowRemove,
   poolAddress,
   totalPoolTokens,
-  userBalance
+  userLiquidity
 }: {
   setShowRemove: (show: boolean) => void
   poolAddress: string
   totalPoolTokens: string
-  userBalance: Balance
+  userLiquidity: Balance
 }): ReactElement {
   const { ocean, accountId } = useOcean()
   const [amount, setAmount] = useState('')
@@ -50,7 +50,7 @@ export default function Remove({
   }
 
   function handleMax() {
-    setAmount(userBalance.ocean)
+    setAmount(userLiquidity.ocean)
   }
 
   return (
@@ -61,9 +61,9 @@ export default function Remove({
       />
 
       <form className={styles.removeInput}>
-        <div className={styles.userBalance}>
+        <div className={styles.userLiquidity}>
           <span>Your pool liquidity: </span>
-          <PriceUnit price={userBalance.ocean} symbol="OCEAN" small />
+          <PriceUnit price={userLiquidity.ocean} symbol="OCEAN" small />
         </div>
         <InputElement
           value={amount}
@@ -74,7 +74,7 @@ export default function Remove({
           onChange={handleAmountChange}
         />
 
-        {userBalance.ocean > amount && (
+        {userLiquidity.ocean > amount && (
           <Button
             className={styles.buttonMax}
             style="text"

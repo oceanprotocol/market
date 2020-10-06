@@ -35,8 +35,8 @@ export interface InputProps {
   readOnly?: boolean
   field?: any
   form?: any
-  prefix?: string
-  postfix?: string
+  prefix?: ReactNode | string
+  postfix?: ReactNode | string
   step?: string
   defaultChecked?: boolean
   small?: boolean
