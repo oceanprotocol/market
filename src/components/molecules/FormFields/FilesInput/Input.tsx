@@ -1,9 +1,8 @@
 import React, { ReactElement } from 'react'
 import isUrl from 'is-url-superb'
 import Button from '../../../atoms/Button'
-import { useField } from 'formik'
+import { FieldInputProps, useField } from 'formik'
 import Loader from '../../../atoms/Loader'
-import { InputProps } from '../../../atoms/Input'
 import styles from './Input.module.css'
 import InputGroup from '../../../atoms/Input/InputGroup'
 
@@ -15,7 +14,7 @@ export default function FileInput({
   handleButtonClick(e: React.SyntheticEvent, data: string): void
   isLoading: boolean
 }): ReactElement {
-  const [field, meta] = useField(props as InputProps)
+  const [field, meta] = useField(props as FieldInputProps<any>)
 
   return (
     <InputGroup>
