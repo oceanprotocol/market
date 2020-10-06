@@ -28,9 +28,6 @@
   margin-bottom: calc(var(--spacer) / 12);
 }
 
-.file {
-}
-
 .asset {
   display: grid;
   grid-template-columns: 1fr 4fr;
@@ -39,4 +36,9 @@
 }
 
 .price {
+  min-width: 0;
+}
+
+.price:only-child {
+  margin-right: -100%;
 }
