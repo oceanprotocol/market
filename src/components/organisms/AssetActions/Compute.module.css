@@ -1,27 +1,24 @@
-.compute {
+.info {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
+  width: auto;
+  margin-bottom: var(--spacer);
+  border-bottom: 1px solid var(--brand-grey-lighter);
+  margin-top: -1rem;
+  margin-left: -2rem;
+  margin-right: -2rem;
+  padding: 0 var(--spacer) calc(var(--spacer) / 2) var(--spacer);
 }
 
-.jobButtonWrapper {
+.filewrapper {
+  flex-shrink: 0;
+}
+
+.actions {
   margin-top: var(--spacer);
+  text-align: center;
 }
 
 .feedback {
-  width: 100%;
-}
-
-.compute button {
-  margin-left: var(--spacer);
-}
-
-.compute button:first {
-  margin-left: 0px;
-}
-
-.info {
-  margin-top: var(--spacer);
-  display: flex;
-  flex-direction: column;
   width: 100%;
 }

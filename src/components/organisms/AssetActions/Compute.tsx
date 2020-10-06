@@ -1,9 +1,10 @@
 import React, { useState, ReactElement, ChangeEvent } from 'react'
-import { DDO } from '@oceanprotocol/lib'
+import { DDO, Logger } from '@oceanprotocol/lib'
 import Loader from '../../atoms/Loader'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
 import Dropzone from '../../atoms/Dropzone'
 import Price from '../../atoms/Price'
+import File from '../../atoms/File'
 import {
   computeOptions,
   useCompute,
@@ -25,10 +26,11 @@ export default function Compute({
   const { ocean } = useOcean()
   const { compute, isLoading, computeStepText, computeError } = useCompute()
   const computeService = ddo.findServiceByType('compute').attributes.main
+  const metadataService = ddo.findServiceByType('metadata')
 
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [, setError] = useState('')
-  const [computeType, setComputeType] = useState('')
+  const [computeType, setComputeType] = useState('nodejs')
   const [computeContainer, setComputeContainer] = useState({
     entrypoint: '',
     image: '',
@@ -39,7 +41,7 @@ export default function Compute({
   const [file, setFile] = useState(null)
 
   const isComputeButtonDisabled =
-    isJobStarting ||
+    isJobStarting === true ||
     file === null ||
     computeType === '' ||
     !ocean ||
@@ -80,56 +82,59 @@ export default function Compute({
       setFile(null)
     } catch (error) {
       setError('Failed to start job!')
-      console.log(error)
+      Logger.error(error.message)
+    } finally {
+      setIsJobStarting(false)
     }
-    setIsJobStarting(false)
   }
 
   return (
-    <div className={styles.compute}>
-      <Price ddo={ddo} conversion />
-
+    <>
       <div className={styles.info}>
-        <div className={styles.selectType}>
-          <Input
-            type="select"
-            name="algorithm"
-            label="Select image to run the algorithm"
-            placeholder=""
-            value={computeType}
-            options={computeOptions.map((x) => x.name)}
-            onChange={handleSelectChange}
-          />
+        <div className={styles.filewrapper}>
+          <File file={metadataService.attributes.main.files[0]} small />
         </div>
-        <div>
-          <Dropzone multiple={false} handleOnDrop={onDrop} />
-
-          <div className={styles.jobButtonWrapper}>
-            <Button
-              style="primary"
-              onClick={() => startJob()}
-              disabled={isComputeButtonDisabled}
-            >
-              Start job
-            </Button>
-          </div>
+        <div className={styles.pricewrapper}>
+          <Price ddo={ddo} conversion />
         </div>
-
-        <footer className={styles.feedback}>
-          {isLoading && <Loader message={computeStepText} />}
-          {computeError !== undefined && (
-            <Alert text={computeError} state="error" />
-          )}
-          {isPublished && (
-            <Alert
-              title="Your job started!"
-              text="Watch the progress in the history page."
-              state="success"
-            />
-          )}
-          <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
-        </footer>
       </div>
-    </div>
+
+      <Input
+        type="select"
+        name="algorithm"
+        label="Select image to run the algorithm"
+        placeholder=""
+        small
+        value={computeType}
+        options={computeOptions.map((x) => x.name)}
+        onChange={handleSelectChange}
+      />
+      <Dropzone multiple={false} handleOnDrop={onDrop} />
+
+      <div className={styles.actions}>
+        <Button
+          style="primary"
+          onClick={() => startJob()}
+          disabled={isComputeButtonDisabled}
+        >
+          Start job
+        </Button>
+      </div>
+
+      <footer className={styles.feedback}>
+        {isLoading && <Loader message={computeStepText} />}
+        {computeError !== undefined && (
+          <Alert text={computeError} state="error" />
+        )}
+        {isPublished && (
+          <Alert
+            title="Your job started!"
+            text="Watch the progress in the history page."
+            state="success"
+          />
+        )}
+        <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
+      </footer>
+    </>
   )
 }
