@@ -1,4 +1,11 @@
 .removeInput {
-  max-width: 12rem;
-  margin: 0 auto var(--spacer) auto;
+  composes: addInput from './Add.module.css';
+}
+
+.buttonMax {
+  composes: buttonMax from './Add.module.css';
+}
+
+.userBalance {
+  composes: userBalance from './Add.module.css';
 }

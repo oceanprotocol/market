@@ -5,15 +5,21 @@ import Header from './Header'
 import { toast } from 'react-toastify'
 import InputElement from '../../../atoms/Input/InputElement'
 import Actions from './Actions'
+import { Logger } from '@oceanprotocol/lib'
+import Button from '../../../atoms/Button'
+import PriceUnit from '../../../atoms/Price/PriceUnit'
+import { Balance } from '.'
 
 export default function Remove({
   setShowRemove,
   poolAddress,
-  totalPoolTokens
+  totalPoolTokens,
+  userBalance
 }: {
   setShowRemove: (show: boolean) => void
   poolAddress: string
   totalPoolTokens: string
+  userBalance: Balance
 }): ReactElement {
   const { ocean, accountId } = useOcean()
   const [amount, setAmount] = useState('')
@@ -32,7 +38,7 @@ export default function Remove({
       )
       setTxId(result.transactionHash)
     } catch (error) {
-      console.error(error.message)
+      Logger.error(error.message)
       toast.error(error.message)
     } finally {
       setIsLoading(false)
@@ -43,6 +49,10 @@ export default function Remove({
     setAmount(e.target.value)
   }
 
+  function handleMax() {
+    setAmount(userBalance.ocean)
+  }
+
   return (
     <div className={styles.remove}>
       <Header
@@ -50,7 +60,11 @@ export default function Remove({
         backAction={() => setShowRemove(false)}
       />
 
-      <div className={styles.removeInput}>
+      <form className={styles.removeInput}>
+        <div className={styles.userBalance}>
+          <span>Your pool liquidity: </span>
+          <PriceUnit price={userBalance.ocean} symbol="OCEAN" small />
+        </div>
         <InputElement
           value={amount}
           name="ocean"
@@ -59,7 +73,18 @@ export default function Remove({
           placeholder="0"
           onChange={handleAmountChange}
         />
-      </div>
+
+        {userBalance.ocean > amount && (
+          <Button
+            className={styles.buttonMax}
+            style="text"
+            size="small"
+            onClick={handleMax}
+          >
+            Use Max
+          </Button>
+        )}
+      </form>
 
       {/* <Input name="dt" label={dtSymbol} type="number" placeholder="0" /> */}
 
