@@ -6,7 +6,13 @@ import FilesInput from '../../molecules/FormFields/FilesInput'
 import Terms from '../../molecules/FormFields/Terms'
 import Price from '../../molecules/FormFields/Price'
 
-const DefaultInput = ({ small, ...props }: InputProps) => (
+const DefaultInput = ({
+  small,
+  prefix,
+  postfix,
+  additionalComponent,
+  ...props
+}: InputProps) => (
   <input
     className={`${styles.input} ${small ? styles.small : null}`}
     id={props.name}
