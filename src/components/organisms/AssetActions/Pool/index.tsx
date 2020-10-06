@@ -3,7 +3,7 @@ import { useOcean, useMetadata } from '@oceanprotocol/react'
 import { DDO } from '@oceanprotocol/lib'
 import styles from './index.module.css'
 import stylesActions from './Actions.module.css'
-import Token from './Token'
+import { useUserPreferences } from '../../../../providers/UserPreferences'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
 import Loader from '../../../atoms/Loader'
 import Button from '../../../atoms/Button'
@@ -12,7 +12,8 @@ import Remove from './Remove'
 import Tooltip from '../../../atoms/Tooltip'
 import Conversion from '../../../atoms/Price/Conversion'
 import EtherscanLink from '../../../atoms/EtherscanLink'
-import { useUserPreferences } from '../../../../providers/UserPreferences'
+import PoolStatistics from './PoolStatistics'
+import Token from './Token'
 
 export interface Balance {
   ocean: string
@@ -163,15 +164,13 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
               <Token symbol="% of pool" balance={poolShare} />
             </div>
 
-            <div className={styles.tokens}>
-              <h3 className={styles.title}>Pool Statistics</h3>
-              <Token symbol="OCEAN" balance={totalBalance.ocean} />
-              <Token symbol={dtSymbol} balance={totalBalance.dt} />
-              {debug === true && (
-                <Token symbol="BPT" balance={totalPoolTokens} />
-              )}
-              <Token symbol="% swap fee" balance={swapFee} />
-            </div>
+            <PoolStatistics
+              price={price.value}
+              totalPoolTokens={totalPoolTokens}
+              totalBalance={totalBalance}
+              swapFee={swapFee}
+              dtSymbol={dtSymbol}
+            />
           </div>
 
           <div className={stylesActions.actions}>
