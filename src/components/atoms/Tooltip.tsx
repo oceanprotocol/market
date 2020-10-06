@@ -67,7 +67,7 @@ export default function Tooltip({
       zIndex={1}
       trigger={trigger || 'mouseenter focus'}
       disabled={disabled || null}
-      placement={placement}
+      placement={placement || 'auto'}
       render={(attrs: any) => (
         <animated.div style={props}>
           <div className={styles.content} {...attrs}>
