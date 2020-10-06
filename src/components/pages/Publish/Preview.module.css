@@ -28,6 +28,16 @@
   margin-bottom: calc(var(--spacer) / 12);
 }
 
+.description {
+  position: relative;
+}
+
+.toggle {
+  position: absolute;
+  bottom: 0.15rem;
+  right: 0;
+}
+
 .asset {
   display: grid;
   grid-template-columns: 1fr 4fr;

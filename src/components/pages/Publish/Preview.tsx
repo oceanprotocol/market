@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { FormEvent, ReactElement, useState } from 'react'
 import { File as FileMetadata } from '@oceanprotocol/lib/dist/node/ddo/interfaces/File'
 import Markdown from '../../atoms/Markdown'
 import Tags from '../../atoms/Tags'
@@ -15,12 +15,42 @@ export default function Preview({
 }: {
   values: Partial<MetadataPublishForm>
 }): ReactElement {
+  const [fullDescription, setFullDescription] = useState<boolean>(false)
+
+  const textLimit = 500 // string.length
+  const description =
+    fullDescription === true
+      ? values.description
+      : `${values.description.substring(0, textLimit)}${
+          values.description.length > textLimit ? `...` : ''
+        }`
+
+  function handleDescriptionToggle(e: FormEvent<HTMLButtonElement>) {
+    e.preventDefault()
+    setFullDescription(!fullDescription)
+  }
+
   return (
     <div className={styles.preview}>
       <h2 className={styles.previewTitle}>Preview</h2>
       <header>
         {values.name && <h3 className={styles.title}>{values.name}</h3>}
-        {values.description && <Markdown text={values.description} />}
+
+        {values.description && (
+          <div className={styles.description}>
+            <Markdown text={description} />
+            {values.description.length > textLimit && (
+              <Button
+                style="text"
+                size="small"
+                onClick={handleDescriptionToggle}
+                className={styles.toggle}
+              >
+                {fullDescription === true ? 'Close' : 'Expand'}
+              </Button>
+            )}
+          </div>
+        )}
 
         <div className={styles.asset}>
           {values.files?.length > 0 && typeof values.files !== 'string' && (
