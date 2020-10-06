@@ -7,6 +7,8 @@ import styles from './Preview.module.css'
 import File from '../../atoms/File'
 import { MetadataPublishForm } from '../../../@types/MetaData'
 import Button from '../../atoms/Button'
+import Conversion from '../../atoms/Price/Conversion'
+import PriceUnit from '../../atoms/Price/PriceUnit'
 
 export default function Preview({
   values
@@ -19,15 +21,36 @@ export default function Preview({
       <header>
         {values.name && <h3 className={styles.title}>{values.name}</h3>}
         {values.description && <Markdown text={values.description} />}
-        {values.files &&
-          typeof values.files !== 'string' &&
-          values.files.length > 0 && (
+
+        <div className={styles.asset}>
+          {values.files?.length > 0 && typeof values.files !== 'string' && (
             <File
               file={values.files[0] as FileMetadata}
               className={styles.file}
               small
             />
           )}
+
+          {values.price && (
+            <div className={styles.price}>
+              <MetaItem
+                title={`Price: ${values.price.type}`}
+                content={
+                  <>
+                    <PriceUnit
+                      price="1"
+                      symbol={values.price.datatoken?.symbol}
+                      small
+                    />{' '}
+                    = <PriceUnit price={`${values.price.price}`} small />
+                    <Conversion price={`${values.price.price}`} />
+                  </>
+                }
+              />
+            </div>
+          )}
+        </div>
+
         {typeof values.links !== 'string' && values.links?.length && (
           <Button
             href={(values.links[0] as FileMetadata).url}

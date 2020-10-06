@@ -47,7 +47,7 @@ export const initialValues: Partial<MetadataPublishForm> = {
   author: '',
   price: {
     price: 1,
-    type: 'fixed',
+    type: 'dynamic',
     tokensToMint: 1,
     weightOnDataToken: '9', // 90% on data token
     swapFee: 0.1 // in %

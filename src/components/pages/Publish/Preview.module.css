@@ -29,5 +29,14 @@
 }
 
 .file {
+}
+
+.asset {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+  align-items: center;
   margin-bottom: calc(var(--spacer) / 2);
+}
+
+.price {
 }
