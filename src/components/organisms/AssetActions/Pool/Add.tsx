@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, ChangeEvent } from 'react'
+import React, { ReactElement, useState, ChangeEvent, useEffect } from 'react'
 import styles from './Add.module.css'
 import { useOcean } from '@oceanprotocol/react'
 import Header from './Header'
@@ -19,7 +19,8 @@ export default function Add({
   totalPoolTokens,
   totalBalance,
   swapFee,
-  dtSymbol
+  dtSymbol,
+  dtAddress
 }: {
   setShowAdd: (show: boolean) => void
   poolAddress: string
@@ -27,6 +28,7 @@ export default function Add({
   totalBalance: Balance
   swapFee: string
   dtSymbol: string
+  dtAddress: string
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { ocean, accountId, balance } = useOcean()
@@ -34,6 +36,7 @@ export default function Add({
   const [txId, setTxId] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>()
   const [coin, setCoin] = useState<string>('OCEAN')
+  const [dtBalance, setDtBalance] = useState<string>()
 
   const newPoolTokens =
     totalBalance &&
@@ -42,6 +45,16 @@ export default function Add({
   const newPoolShare =
     totalBalance &&
     ((Number(newPoolTokens) / Number(totalPoolTokens)) * 100).toFixed(2)
+
+  useEffect(() => {
+    if (!ocean) return
+
+    async function getDtBalance() {
+      const dtBalance = await ocean.datatokens.balance(dtAddress, accountId)
+      setDtBalance(dtBalance)
+    }
+    getDtBalance()
+  }, [ocean, accountId, dtAddress])
 
   async function handleAddLiquidity() {
     setIsLoading(true)
@@ -67,7 +80,7 @@ export default function Add({
   }
 
   function handleMax() {
-    setAmount(balance.ocean)
+    setAmount(coin === 'OCEAN' ? balance.ocean : dtBalance)
   }
 
   const CoinSelect = () => (
@@ -84,7 +97,11 @@ export default function Add({
       <div className={styles.addInput}>
         <div className={styles.userLiquidity}>
           <span>Available: </span>
-          <PriceUnit price={balance.ocean} symbol="OCEAN" small />
+          {coin === 'OCEAN' ? (
+            <PriceUnit price={balance.ocean} symbol="OCEAN" small />
+          ) : (
+            <PriceUnit price={dtBalance} symbol={dtSymbol} small />
+          )}
         </div>
 
         <InputElement
@@ -106,7 +123,7 @@ export default function Add({
           onChange={handleAmountChange}
         />
 
-        {balance.ocean > amount && (
+        {(balance.ocean || dtBalance) > amount && (
           <Button
             className={styles.buttonMax}
             style="text"

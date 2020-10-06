@@ -122,6 +122,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           totalBalance={totalBalance}
           swapFee={swapFee}
           dtSymbol={dtSymbol}
+          dtAddress={ddo.dataToken}
         />
       ) : showRemove ? (
         <Remove
