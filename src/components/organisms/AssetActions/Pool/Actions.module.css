@@ -11,6 +11,11 @@
   justify-content: center;
 }
 
+.actions + div {
+  margin-top: calc(var(--spacer) / 2);
+  margin-bottom: calc(var(--spacer) / 2);
+}
+
 .actions button {
   margin-left: calc(var(--spacer) / 4);
   margin-right: calc(var(--spacer) / 4);
