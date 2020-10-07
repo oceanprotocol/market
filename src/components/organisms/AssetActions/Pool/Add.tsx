@@ -59,14 +59,13 @@ export default function Add({
   async function handleAddLiquidity() {
     setIsLoading(true)
 
-    const addMethod =
-      coin === 'OCEAN'
-        ? ocean.pool.addOceanLiquidity
-        : ocean.pool.addDTLiquidity
-
     try {
-      const result = await addMethod(accountId, poolAddress, amount)
-      setTxId(result.transactionHash)
+      const result =
+        coin === 'OCEAN'
+          ? await ocean.pool.addOceanLiquidity(accountId, poolAddress, amount)
+          : await ocean.pool.addDTLiquidity(accountId, poolAddress, amount)
+
+      setTxId(result?.transactionHash)
     } catch (error) {
       console.error(error.message)
       toast.error(error.message)
