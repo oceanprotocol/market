@@ -82,6 +82,10 @@ export default function Add({
     setAmount(coin === 'OCEAN' ? balance.ocean : dtBalance)
   }
 
+  // TODO: this is only a prototype and is an accessibility nightmare.
+  // Needs to be refactored to either use custom select element instead of tippy.js,
+  // or use <button> in this implementation.
+  // Also needs to be closed when users click an option.
   const CoinSelect = () => (
     <ul className={styles.coinPopover}>
       <li onClick={() => setCoin('OCEAN')}>OCEAN</li>
