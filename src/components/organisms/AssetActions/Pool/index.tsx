@@ -16,8 +16,8 @@ import PoolStatistics from './PoolStatistics'
 import Token from './Token'
 
 export interface Balance {
-  ocean: string
-  datatoken: string
+  ocean: number
+  datatoken: number
 }
 
 /* 
@@ -86,8 +86,8 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           Number(price.datatoken)
 
         const userLiquidity = {
-          ocean: `${userOceanBalance}`,
-          datatoken: `${userDtBalance}`
+          ocean: userOceanBalance,
+          datatoken: userDtBalance
         }
 
         setUserBalance(userLiquidity)
@@ -130,8 +130,8 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         <>
           <div className={styles.dataToken}>
             <PriceUnit price="1" symbol={dtSymbol} /> ={' '}
-            <PriceUnit price={price.value} />
-            <Conversion price={price.value} />
+            <PriceUnit price={`${price.value}`} />
+            <Conversion price={`${price.value}`} />
             <Tooltip content="Explain how this price is determined..." />
             <div className={styles.dataTokenLinks}>
               <EtherscanLink
@@ -152,14 +152,14 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
                 Your Liquidity
                 <Tooltip content="Explain what this represents, advantage of providing liquidity..." />
               </h3>
-              <Token symbol="OCEAN" balance={userLiquidity.ocean} />
-              <Token symbol={dtSymbol} balance={userLiquidity.datatoken} />
+              <Token symbol="OCEAN" balance={`${userLiquidity.ocean}`} />
+              <Token symbol={dtSymbol} balance={`${userLiquidity.datatoken}`} />
               {debug === true && <Token symbol="BPT" balance={poolTokens} />}
               <Token symbol="% of pool" balance={poolShare} />
             </div>
 
             <PoolStatistics
-              price={price.value}
+              price={`${price.value}`}
               totalPoolTokens={totalPoolTokens}
               totalBalance={{ ocean: price.ocean, datatoken: price.datatoken }}
               swapFee={swapFee}

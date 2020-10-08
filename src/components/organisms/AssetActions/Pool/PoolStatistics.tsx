@@ -26,8 +26,8 @@ export default function PoolStatistics({
   return (
     <div className={styles.statistics}>
       <h3 className={styles.title}>Pool Statistics</h3>
-      <Token symbol="OCEAN" balance={totalBalance.ocean} />
-      <Token symbol={dtSymbol} balance={totalBalance.datatoken} />
+      <Token symbol="OCEAN" balance={`${totalBalance.ocean}`} />
+      <Token symbol={dtSymbol} balance={`${totalBalance.datatoken}`} />
       {debug === true && <Token symbol="BPT" balance={totalPoolTokens} />}
       <Token symbol="% swap fee" balance={swapFee} />
       <Conversion price={`${totalLiquidityInOcean}`} />
