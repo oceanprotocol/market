@@ -4,3 +4,7 @@
 .title {
   composes: title from './index.module.css';
 }
+
+.totalLiquidity {
+  composes: totalLiquidity from './index.module.css';
+}

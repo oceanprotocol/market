@@ -12,8 +12,7 @@
 
 @media (min-width: 60rem) {
   .grid {
-    /* lazy golden ratio */
-    grid-template-columns: 1.618fr minmax(0, 1fr);
+    grid-template-columns: 1.5fr minmax(0, 1fr);
   }
 
   .sticky {

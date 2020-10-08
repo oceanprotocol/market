@@ -68,9 +68,9 @@ export default function Conversion({
   return (
     <span
       className={styleClasses}
-      title="Approximation based on current spot price on Coingecko"
+      title="Approximation based on current OCEAN spot price on Coingecko"
     >
-      ≈ {priceConverted} {currency}
+      ≈ <strong>{priceConverted}</strong> {currency}
     </span>
   )
 }

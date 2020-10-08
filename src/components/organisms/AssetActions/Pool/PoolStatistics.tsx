@@ -21,7 +21,7 @@ export default function PoolStatistics({
   const { debug } = useUserPreferences()
 
   const totalLiquidityInOcean =
-    Number(totalBalance.ocean) + Number(totalBalance.datatoken) * Number(price)
+    totalBalance.ocean + totalBalance.datatoken * Number(price)
 
   return (
     <div className={styles.statistics}>
@@ -29,8 +29,11 @@ export default function PoolStatistics({
       <Token symbol="OCEAN" balance={`${totalBalance.ocean}`} />
       <Token symbol={dtSymbol} balance={`${totalBalance.datatoken}`} />
       {debug === true && <Token symbol="BPT" balance={totalPoolTokens} />}
+      <Conversion
+        price={`${totalLiquidityInOcean}`}
+        className={styles.totalLiquidity}
+      />
       <Token symbol="% swap fee" balance={swapFee} />
-      <Conversion price={`${totalLiquidityInOcean}`} />
     </div>
   )
 }

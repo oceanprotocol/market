@@ -32,7 +32,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const [poolTokens, setPoolTokens] = useState<string>()
   const [totalPoolTokens, setTotalPoolTokens] = useState<string>()
   const [dtSymbol, setDtSymbol] = useState<string>()
-  const [userLiquidity, setUserBalance] = useState<Balance>()
+  const [userLiquidity, setUserLiquidity] = useState<Balance>()
   const [swapFee, setSwapFee] = useState<string>()
 
   const [showAdd, setShowAdd] = useState(false)
@@ -40,14 +40,16 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const [isLoading, setIsLoading] = useState(true)
 
   const hasAddedLiquidity =
-    userLiquidity &&
-    (Number(userLiquidity.ocean) > 0 || Number(userLiquidity.datatoken) > 0)
+    userLiquidity && (userLiquidity.ocean > 0 || userLiquidity.datatoken > 0)
 
   const poolShare =
     price?.ocean &&
     price?.datatoken &&
     userLiquidity &&
     ((Number(poolTokens) / Number(totalPoolTokens)) * 100).toFixed(2)
+
+  const totalUserLiquidityInOcean =
+    userLiquidity?.ocean + userLiquidity?.datatoken * price?.value
 
   useEffect(() => {
     if (!ocean || !accountId || !price || !price.value) return
@@ -79,18 +81,17 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
         // calculate user's provided liquidity based on pool tokens
         const userOceanBalance =
-          (Number(poolTokens) / Number(totalPoolTokens)) * Number(price.ocean)
+          (Number(poolTokens) / Number(totalPoolTokens)) * price.ocean
 
         const userDtBalance =
-          (Number(poolTokens) / Number(totalPoolTokens)) *
-          Number(price.datatoken)
+          (Number(poolTokens) / Number(totalPoolTokens)) * price.datatoken
 
         const userLiquidity = {
           ocean: userOceanBalance,
           datatoken: userDtBalance
         }
 
-        setUserBalance(userLiquidity)
+        setUserLiquidity(userLiquidity)
 
         // Get swap fee
         // swapFee is tricky: to get 0.1% you need to convert from 0.001
@@ -155,6 +156,10 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
               <Token symbol="OCEAN" balance={`${userLiquidity.ocean}`} />
               <Token symbol={dtSymbol} balance={`${userLiquidity.datatoken}`} />
               {debug === true && <Token symbol="BPT" balance={poolTokens} />}
+              <Conversion
+                price={`${totalUserLiquidityInOcean}`}
+                className={styles.totalLiquidity}
+              />
               <Token symbol="% of pool" balance={poolShare} />
             </div>
 
