@@ -18,15 +18,12 @@ export default function Price({
   small?: boolean
   conversion?: boolean
 }): ReactElement {
-  const { ocean } = useOcean()
   const { price } = useMetadata(ddo)
 
-  return !ocean ? (
-    <div className={styles.empty}>Connect your wallet to view price</div>
-  ) : price?.value ? (
+  return price?.value ? (
     <>
       <PriceUnit
-        price={price.value}
+        price={`${price.value}`}
         className={className}
         small={small}
         conversion={conversion}
@@ -35,7 +32,7 @@ export default function Price({
         <Badge label="pool" className={styles.badge} />
       )}
     </>
-  ) : price?.value === '' ? (
+  ) : !price || price?.value === 0 ? (
     <div className={styles.empty}>
       No price found{' '}
       <Tooltip content="We could not find a pool for this data set, which can have multiple reasons. Is your wallet connected to the correct network?" />

@@ -50,7 +50,7 @@ export default function Remove({
   }
 
   function handleMax() {
-    setAmount(userLiquidity.ocean)
+    setAmount(`${userLiquidity.ocean}`)
   }
 
   return (
@@ -63,7 +63,7 @@ export default function Remove({
       <form className={styles.removeInput}>
         <div className={styles.userLiquidity}>
           <span>Your pool liquidity: </span>
-          <PriceUnit price={userLiquidity.ocean} symbol="OCEAN" small />
+          <PriceUnit price={`${userLiquidity.ocean}`} symbol="OCEAN" small />
         </div>
         <InputElement
           value={amount}
@@ -74,7 +74,7 @@ export default function Remove({
           onChange={handleAmountChange}
         />
 
-        {userLiquidity.ocean > amount && (
+        {userLiquidity.ocean > Number(amount) && (
           <Button
             className={styles.buttonMax}
             style="text"

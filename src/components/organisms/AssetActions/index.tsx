@@ -21,11 +21,7 @@ export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
   useEffect(() => {
     if (!price || !price.value || !balance || !balance.ocean) return
 
-    const isFree = price.value === '0'
-
-    setIsBalanceSufficient(
-      isFree ? true : compareAsBN(balance.ocean, price.value)
-    )
+    setIsBalanceSufficient(compareAsBN(balance.ocean, `${price.value}`))
 
     return () => {
       setIsBalanceSufficient(false)
