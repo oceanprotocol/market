@@ -14,10 +14,8 @@ import { useOcean } from '@oceanprotocol/react'
 const queryHighest = {
   page: 1,
   offset: 3,
-  query: {
-    dtPrice: [0, 9999999]
-  },
-  sort: { dtPrice: 1 }
+  query: { 'price.ocean': [0, 99999] },
+  sort: { 'price.value': 1 }
 }
 
 const queryLatest = {
