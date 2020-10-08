@@ -14,7 +14,9 @@ import { useOcean } from '@oceanprotocol/react'
 const queryHighest = {
   page: 1,
   offset: 3,
-  query: {},
+  query: {
+    dtPrice: [0, 9999999]
+  },
   sort: { dtPrice: 1 }
 }
 
@@ -28,7 +30,6 @@ const queryLatest = {
 async function getAssets(query: SearchQuery, metadataStoreUri: string) {
   try {
     const metadataStore = new MetadataStore(metadataStoreUri, Logger)
-
     const result = await metadataStore.queryMetadata(query)
 
     return result
