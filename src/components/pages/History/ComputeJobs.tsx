@@ -85,7 +85,7 @@ const columns = [
 
 export default function ComputeJobs(): ReactElement {
   const { ocean, account } = useOcean()
-  const [jobs] = useState<ComputeJob[]>()
+  const [jobs,setJobs] = useState<ComputeJob[]>()
   const [isLoading, setIsLoading] = useState(false)
   const [userAgreed, setUserAgreed] = useState(false)
 
@@ -99,13 +99,13 @@ export default function ComputeJobs(): ReactElement {
         100
       )
       console.log('orders', orderHistory)
-      // const userJobs = await ocean.compute.status(account)
+       const userJobs = await ocean.compute.status(account)
 
-      // setJobs(userJobs.sort((a, b) => {
-      //     if (a.dateCreated > b.dateCreated) return -1
-      //     if (a.dateCreated < b.dateCreated) return 1
-      //     return 0
-      // }))
+      setJobs(userJobs.sort((a, b) => {
+          if (a.dateCreated > b.dateCreated) return -1
+          if (a.dateCreated < b.dateCreated) return 1
+          return 0
+      }))
       setUserAgreed(true)
     } catch (e) {
       console.log(e)
