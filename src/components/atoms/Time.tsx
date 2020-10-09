@@ -3,12 +3,14 @@ import { format, formatDistance } from 'date-fns'
 
 export default function Time({
   date,
-  relative
+  relative,
+  isUnix
 }: {
   date: string
   relative?: boolean
+  isUnix?: boolean
 }): ReactElement {
-  const dateNew = new Date(date)
+  const dateNew = isUnix ? new Date(Number(date) * 1000) : new Date(date)
   const dateIso = dateNew.toISOString()
 
   return (

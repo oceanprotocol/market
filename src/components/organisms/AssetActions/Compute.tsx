@@ -25,17 +25,15 @@ export default function Compute({
 }): ReactElement {
   const { ocean } = useOcean()
   const { compute, isLoading, computeStepText, computeError } = useCompute()
-  const computeService = ddo.findServiceByType('compute').attributes.main
+  const computeService = ddo.findServiceByType('compute')
   const metadataService = ddo.findServiceByType('metadata')
 
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [, setError] = useState('')
   const [computeType, setComputeType] = useState('nodejs')
-  const [computeContainer, setComputeContainer] = useState({
-    entrypoint: '',
-    image: '',
-    tag: ''
-  })
+  const [computeContainer, setComputeContainer] = useState(
+    computeOptions[0].value
+  )
   const [algorithmRawCode, setAlgorithmRawCode] = useState('')
   const [isPublished, setIsPublished] = useState(false)
   const [file, setFile] = useState(null)

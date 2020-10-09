@@ -60,9 +60,7 @@ const columns = [
   {
     name: 'Time',
     selector: function getTimeRow(row: PoolTransaction) {
-      return (
-        <Time date={new Date(row.timestamp * 1000).toUTCString()} relative />
-      )
+      return <Time date={row.timestamp.toString()} relative isUnix />
     }
   }
 ]

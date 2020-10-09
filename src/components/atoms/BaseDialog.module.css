@@ -4,3 +4,7 @@
   border-radius: 15px;
   margin: auto;
 }
+
+.dialogTitle {
+  margin-top: 30px !important;
+}
