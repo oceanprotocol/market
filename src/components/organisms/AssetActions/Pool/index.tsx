@@ -130,6 +130,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           poolAddress={price.address}
           totalPoolTokens={totalPoolTokens}
           userLiquidity={userLiquidity}
+          dtSymbol={dtSymbol}
         />
       ) : (
         <>

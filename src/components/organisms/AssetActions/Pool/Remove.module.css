@@ -4,8 +4,19 @@
 
 .buttonMax {
   composes: buttonMax from './Add.module.css';
+  bottom: -1rem;
+  right: 0;
 }
 
 .userLiquidity {
   composes: userLiquidity from './Add.module.css';
+}
+
+.removeRow {
+  position: relative;
+  margin-bottom: var(--spacer);
+}
+
+.removeRow:last-child {
+  margin-bottom: 0;
 }

@@ -14,26 +14,33 @@ export default function Remove({
   setShowRemove,
   poolAddress,
   totalPoolTokens,
-  userLiquidity
+  userLiquidity,
+  dtSymbol
 }: {
   setShowRemove: (show: boolean) => void
   poolAddress: string
   totalPoolTokens: string
   userLiquidity: Balance
+  dtSymbol: string
 }): ReactElement {
   const { ocean, accountId } = useOcean()
-  const [amount, setAmount] = useState('')
+  const [amountOcean, setAmountOcean] = useState('')
+  const [amountDatatoken, setAmountDatatoken] = useState('')
   const [isLoading, setIsLoading] = useState<boolean>()
   const [txId, setTxId] = useState<string>('')
 
   async function handleRemoveLiquidity() {
     setIsLoading(true)
 
+    // TODO: can remove OCEAN & DT in one transaction?
+    // exitswapExternAmountOut? exitswapPoolAmountIn?
+    // TODO: when user hits 'use max', use pool.exitPool()
+
     try {
       const result = await ocean.pool.removeOceanLiquidity(
         accountId,
         poolAddress,
-        amount,
+        amountOcean,
         totalPoolTokens
       )
       setTxId(result.transactionHash)
@@ -45,12 +52,25 @@ export default function Remove({
     }
   }
 
-  function handleAmountChange(e: ChangeEvent<HTMLInputElement>) {
-    setAmount(e.target.value)
+  // TODO: enforce correct weight rules
+  function handleOceanAmountChange(e: ChangeEvent<HTMLInputElement>) {
+    setAmountOcean(e.target.value)
+    setAmountDatatoken(`${Number(e.target.value) * 9}`)
   }
 
-  function handleMax() {
-    setAmount(`${userLiquidity.ocean}`)
+  function handleMaxOcean() {
+    setAmountOcean(`${userLiquidity.ocean}`)
+    setAmountDatatoken(`${userLiquidity.ocean * 9}`)
+  }
+
+  function handleMaxDatatoken() {
+    setAmountDatatoken(`${userLiquidity.datatoken}`)
+    setAmountOcean(`${userLiquidity.ocean / 9}`)
+  }
+
+  function handleDatatokenAmountChange(e: ChangeEvent<HTMLInputElement>) {
+    setAmountDatatoken(e.target.value)
+    setAmountOcean(`${Number(e.target.value) / 9}`)
   }
 
   return (
@@ -61,32 +81,62 @@ export default function Remove({
       />
 
       <form className={styles.removeInput}>
-        <div className={styles.userLiquidity}>
-          <span>Your pool liquidity: </span>
-          <PriceUnit price={`${userLiquidity.ocean}`} symbol="OCEAN" small />
-        </div>
-        <InputElement
-          value={amount}
-          name="ocean"
-          type="number"
-          prefix="OCEAN"
-          placeholder="0"
-          onChange={handleAmountChange}
-        />
+        <fieldset className={styles.removeRow}>
+          <div className={styles.userLiquidity}>
+            <span>Your pool liquidity: </span>
+            <PriceUnit price={`${userLiquidity.ocean}`} symbol="OCEAN" small />
+          </div>
+          <InputElement
+            value={amountOcean}
+            name="ocean"
+            type="number"
+            prefix="OCEAN"
+            placeholder="0"
+            onChange={handleOceanAmountChange}
+          />
 
-        {userLiquidity.ocean > Number(amount) && (
-          <Button
-            className={styles.buttonMax}
-            style="text"
-            size="small"
-            onClick={handleMax}
-          >
-            Use Max
-          </Button>
-        )}
+          {userLiquidity.ocean > Number(amountOcean) && (
+            <Button
+              className={styles.buttonMax}
+              style="text"
+              size="small"
+              onClick={handleMaxOcean}
+            >
+              Use Max
+            </Button>
+          )}
+        </fieldset>
+
+        <fieldset className={styles.removeRow}>
+          <div className={styles.userLiquidity}>
+            <span>Your pool liquidity: </span>
+            <PriceUnit
+              price={`${userLiquidity.datatoken}`}
+              symbol={dtSymbol}
+              small
+            />
+          </div>
+          <InputElement
+            value={amountDatatoken}
+            name="ocean"
+            type="number"
+            prefix={dtSymbol}
+            placeholder="0"
+            onChange={handleDatatokenAmountChange}
+          />
+
+          {userLiquidity.datatoken > Number(amountDatatoken) && (
+            <Button
+              className={styles.buttonMax}
+              style="text"
+              size="small"
+              onClick={handleMaxDatatoken}
+            >
+              Use Max
+            </Button>
+          )}
+        </fieldset>
       </form>
-
-      {/* <Input name="dt" label={dtSymbol} type="number" placeholder="0" /> */}
 
       <p>You will receive</p>
 
