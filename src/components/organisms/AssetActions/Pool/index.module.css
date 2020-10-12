@@ -21,26 +21,6 @@
   margin-right: calc(var(--spacer) / 3);
 }
 
-.tokeninfo {
-  background: var(--brand-grey-dimmed);
-  padding: calc(var(--spacer) / 1.5) var(--spacer) calc(var(--spacer) / 2)
-    var(--spacer);
-  border-bottom: 1px solid var(--brand-grey-lighter);
-  margin-left: -2rem;
-  margin-right: -2rem;
-}
-
-.tokens {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-auto-flow: row;
-}
-
-.title {
-  font-size: var(--font-size-base);
-  margin-bottom: calc(var(--spacer) / 3);
-}
-
 .totalLiquidity {
   composes: token from './Token.module.css';
   margin-bottom: 0;

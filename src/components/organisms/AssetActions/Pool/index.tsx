@@ -13,6 +13,7 @@ import Conversion from '../../../atoms/Price/Conversion'
 import EtherscanLink from '../../../atoms/EtherscanLink'
 import PoolStatistics from './PoolStatistics'
 import Token from './Token'
+import TokenList from './TokenList'
 
 export interface Balance {
   ocean: number
@@ -145,30 +146,28 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
             </div>
           </div>
 
-          <div className={styles.tokeninfo}>
-            <h3 className={styles.title}>
-              Your Liquidity
-              <Tooltip content="Explain what this represents, advantage of providing liquidity..." />
-            </h3>
-
-            <div className={styles.tokens}>
-              <div>
-                <Token symbol="OCEAN" balance={`${userLiquidity.ocean}`} />
-                <Token
-                  symbol={dtSymbol}
-                  balance={`${userLiquidity.datatoken}`}
-                />
-              </div>
-              <div>
-                <Token symbol="pool shares" balance={poolTokens} noIcon />
-                <Token symbol="% of pool" balance={poolShare} noIcon />
-              </div>
-              <Conversion
-                price={`${totalUserLiquidityInOcean}`}
-                className={styles.totalLiquidity}
-              />
+          <TokenList
+            title={
+              <>
+                Your Liquidity
+                <Tooltip content="Explain what this represents, advantage of providing liquidity..." />
+              </>
+            }
+            highlight
+          >
+            <div>
+              <Token symbol="OCEAN" balance={`${userLiquidity.ocean}`} />
+              <Token symbol={dtSymbol} balance={`${userLiquidity.datatoken}`} />
             </div>
-          </div>
+            <div>
+              <Token symbol="pool shares" balance={poolTokens} noIcon />
+              <Token symbol="% of pool" balance={poolShare} noIcon />
+            </div>
+            <Conversion
+              price={`${totalUserLiquidityInOcean}`}
+              className={styles.totalLiquidity}
+            />
+          </TokenList>
 
           <PoolStatistics
             price={`${price.value}`}
