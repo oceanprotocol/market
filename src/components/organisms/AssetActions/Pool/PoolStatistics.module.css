@@ -1,4 +1,9 @@
-.statistics {
+.tokeninfo {
+  margin-top: calc(var(--spacer) / 1.5);
+}
+
+.tokens {
+  composes: tokens from './index.module.css';
 }
 
 .title {

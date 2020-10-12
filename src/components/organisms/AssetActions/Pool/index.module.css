@@ -1,12 +1,11 @@
 .dataToken {
-  margin-bottom: var(--spacer);
   padding-bottom: calc(var(--spacer) / 1.5);
   font-size: var(--font-size-large);
   border-bottom: 1px solid var(--brand-grey-lighter);
   margin-left: -2rem;
   margin-right: -2rem;
-  padding-left: var(--spacer);
-  padding-right: var(--spacer);
+  padding-left: calc(var(--spacer) / 1.5);
+  padding-right: calc(var(--spacer) / 1.5);
   text-align: center;
 }
 
@@ -22,25 +21,33 @@
   margin-right: calc(var(--spacer) / 3);
 }
 
-.poolTokens {
+.tokeninfo {
+  background: var(--brand-grey-dimmed);
+  padding: calc(var(--spacer) / 1.5) var(--spacer) calc(var(--spacer) / 2)
+    var(--spacer);
+  border-bottom: 1px solid var(--brand-grey-lighter);
+  margin-left: -2rem;
+  margin-right: -2rem;
+}
+
+.tokens {
   display: grid;
-  gap: var(--spacer);
   grid-template-columns: 1fr 1fr;
+  grid-auto-flow: row;
 }
 
 .title {
   font-size: var(--font-size-base);
-  margin-bottom: calc(var(--spacer) / 1.5);
+  margin-bottom: calc(var(--spacer) / 3);
 }
 
 .totalLiquidity {
   composes: token from './Token.module.css';
+  margin-bottom: 0;
   font-weight: var(--font-weight-base) !important;
   font-size: var(--font-size-small);
   padding-left: var(--font-size-base);
-  padding-top: calc(var(--spacer) / 3);
-  width: 100%;
-  border-top: 1px solid var(--brand-grey-lighter);
+  min-height: 24px;
 }
 
 .totalLiquidity strong {

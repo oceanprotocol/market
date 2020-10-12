@@ -145,30 +145,38 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
             </div>
           </div>
 
-          <div className={styles.poolTokens}>
+          <div className={styles.tokeninfo}>
+            <h3 className={styles.title}>
+              Your Liquidity
+              <Tooltip content="Explain what this represents, advantage of providing liquidity..." />
+            </h3>
+
             <div className={styles.tokens}>
-              <h3 className={styles.title}>
-                Your Liquidity
-                <Tooltip content="Explain what this represents, advantage of providing liquidity..." />
-              </h3>
-              <Token symbol="OCEAN" balance={`${userLiquidity.ocean}`} />
-              <Token symbol={dtSymbol} balance={`${userLiquidity.datatoken}`} />
-              <Token symbol="pool shares" balance={poolTokens} noIcon />
-              <Token symbol="% of pool" balance={poolShare} noIcon />
+              <div>
+                <Token symbol="OCEAN" balance={`${userLiquidity.ocean}`} />
+                <Token
+                  symbol={dtSymbol}
+                  balance={`${userLiquidity.datatoken}`}
+                />
+              </div>
+              <div>
+                <Token symbol="pool shares" balance={poolTokens} noIcon />
+                <Token symbol="% of pool" balance={poolShare} noIcon />
+              </div>
               <Conversion
                 price={`${totalUserLiquidityInOcean}`}
                 className={styles.totalLiquidity}
               />
             </div>
-
-            <PoolStatistics
-              price={`${price.value}`}
-              totalPoolTokens={totalPoolTokens}
-              totalBalance={{ ocean: price.ocean, datatoken: price.datatoken }}
-              swapFee={swapFee}
-              dtSymbol={dtSymbol}
-            />
           </div>
+
+          <PoolStatistics
+            price={`${price.value}`}
+            totalPoolTokens={totalPoolTokens}
+            totalBalance={{ ocean: price.ocean, datatoken: price.datatoken }}
+            swapFee={swapFee}
+            dtSymbol={dtSymbol}
+          />
 
           <div className={stylesActions.actions}>
             <Button
