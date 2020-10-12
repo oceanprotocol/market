@@ -1,0 +1,47 @@
+.tokeninfo {
+  padding-top: calc(var(--spacer) / 1.5);
+}
+
+.tokens {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+/* visually tweak the order so tokens are underneath each other */
+.tokens > *:nth-child(1) {
+  grid-row: 1 / 2;
+}
+
+.tokens > *:nth-child(2) {
+  grid-row: 2 / 2;
+}
+
+.title {
+  font-size: var(--font-size-base);
+  margin-bottom: calc(var(--spacer) / 3);
+  color: var(--color-secondary);
+}
+
+.highlight {
+  background: var(--brand-grey-dimmed);
+  padding: calc(var(--spacer) / 1.5) var(--spacer) calc(var(--spacer) / 2)
+    var(--spacer);
+  border-bottom: 1px solid var(--brand-grey-lighter);
+  margin-left: -2rem;
+  margin-right: -2rem;
+}
+
+.totalLiquidity {
+  composes: token from './Token.module.css';
+  margin-bottom: 0;
+  font-weight: var(--font-weight-base) !important;
+  font-size: var(--font-size-small);
+  padding-left: var(--font-size-base);
+  padding-top: calc(var(--spacer) / 10);
+}
+
+.totalLiquidity strong {
+  font-size: var(--font-size-base);
+  color: var(--brand-grey-dark);
+  line-height: 1;
+}

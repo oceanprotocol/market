@@ -1,6 +1,6 @@
 .token {
   font-weight: var(--font-weight-bold);
-  margin-bottom: calc(var(--spacer) / 3);
+  margin-bottom: calc(var(--spacer) / 4);
   white-space: nowrap;
 }
 
@@ -17,7 +17,7 @@
   padding: 0.3rem;
   vertical-align: middle;
   margin-right: calc(var(--spacer) / 8);
-  margin-top: -0.3rem;
+  margin-top: -0.2rem;
 }
 
 .icon svg {

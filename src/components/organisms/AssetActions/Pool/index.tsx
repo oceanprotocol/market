@@ -11,8 +11,8 @@ import Remove from './Remove'
 import Tooltip from '../../../atoms/Tooltip'
 import Conversion from '../../../atoms/Price/Conversion'
 import EtherscanLink from '../../../atoms/EtherscanLink'
-import PoolStatistics from './PoolStatistics'
 import Token from './Token'
+import TokenList from './TokenList'
 
 export interface Balance {
   ocean: number
@@ -37,6 +37,8 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const [showRemove, setShowRemove] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
+  // TODO: put all these variables behind some useEffect
+  // to prevent unneccessary updating on every render
   const hasAddedLiquidity =
     userLiquidity && (userLiquidity.ocean > 0 || userLiquidity.datatoken > 0)
 
@@ -48,6 +50,8 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
   const totalUserLiquidityInOcean =
     userLiquidity?.ocean + userLiquidity?.datatoken * price?.value
+
+  const totalLiquidityInOcean = price?.ocean + price?.datatoken * price?.value
 
   useEffect(() => {
     if (!ocean || !accountId || !price || !price.value) return
@@ -145,30 +149,33 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
             </div>
           </div>
 
-          <div className={styles.poolTokens}>
-            <div className={styles.tokens}>
-              <h3 className={styles.title}>
+          <TokenList
+            title={
+              <>
                 Your Liquidity
                 <Tooltip content="Explain what this represents, advantage of providing liquidity..." />
-              </h3>
-              <Token symbol="OCEAN" balance={`${userLiquidity.ocean}`} />
-              <Token symbol={dtSymbol} balance={`${userLiquidity.datatoken}`} />
-              <Token symbol="pool shares" balance={poolTokens} noIcon />
-              <Token symbol="% of pool" balance={poolShare} noIcon />
-              <Conversion
-                price={`${totalUserLiquidityInOcean}`}
-                className={styles.totalLiquidity}
-              />
-            </div>
+              </>
+            }
+            ocean={`${userLiquidity.ocean}`}
+            dt={`${userLiquidity.datatoken}`}
+            dtSymbol={dtSymbol}
+            poolShares={poolTokens}
+            conversion={totalUserLiquidityInOcean}
+            highlight
+          >
+            <Token symbol="% of pool" balance={poolShare} noIcon />
+          </TokenList>
 
-            <PoolStatistics
-              price={`${price.value}`}
-              totalPoolTokens={totalPoolTokens}
-              totalBalance={{ ocean: price.ocean, datatoken: price.datatoken }}
-              swapFee={swapFee}
-              dtSymbol={dtSymbol}
-            />
-          </div>
+          <TokenList
+            title="Pool Statistics"
+            ocean={`${price.ocean}`}
+            dt={`${price.datatoken}`}
+            dtSymbol={dtSymbol}
+            poolShares={totalPoolTokens}
+            conversion={totalLiquidityInOcean}
+          >
+            <Token symbol="% swap fee" balance={swapFee} noIcon />
+          </TokenList>
 
           <div className={stylesActions.actions}>
             <Button
