@@ -17,7 +17,6 @@ const query = graphql`
           infuraProjectId
           network
           marketFeeAddress
-          marketFeeAmount
           currencies
         }
       }
