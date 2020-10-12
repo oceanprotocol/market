@@ -15,7 +15,7 @@ const queryHighest = {
   page: 1,
   offset: 3,
   query: { 'price.type': ['pool'] },
-  sort: { 'price.value': 1 }
+  sort: { 'price.ocean': -1 }
 }
 
 const queryLatest = {
