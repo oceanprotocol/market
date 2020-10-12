@@ -1,15 +1,3 @@
-.tokeninfo {
-  margin-top: calc(var(--spacer) / 1.5);
-}
-
-.tokens {
-  composes: tokens from './index.module.css';
-}
-
-.title {
-  composes: title from './index.module.css';
-}
-
 .totalLiquidity {
   composes: totalLiquidity from './index.module.css';
 }

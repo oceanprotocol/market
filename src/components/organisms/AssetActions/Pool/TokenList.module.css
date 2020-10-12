@@ -11,6 +11,7 @@
 .title {
   font-size: var(--font-size-base);
   margin-bottom: calc(var(--spacer) / 3);
+  color: var(--color-secondary);
 }
 
 .highlight {

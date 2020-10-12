@@ -163,10 +163,12 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
               <Token symbol="pool shares" balance={poolTokens} noIcon />
               <Token symbol="% of pool" balance={poolShare} noIcon />
             </div>
-            <Conversion
-              price={`${totalUserLiquidityInOcean}`}
-              className={styles.totalLiquidity}
-            />
+            {totalUserLiquidityInOcean > 0 && (
+              <Conversion
+                price={`${totalUserLiquidityInOcean}`}
+                className={styles.totalLiquidity}
+              />
+            )}
           </TokenList>
 
           <PoolStatistics
