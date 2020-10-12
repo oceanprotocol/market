@@ -3,7 +3,6 @@ import { useOcean, useMetadata } from '@oceanprotocol/react'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import styles from './index.module.css'
 import stylesActions from './Actions.module.css'
-import { useUserPreferences } from '../../../../providers/UserPreferences'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
 import Loader from '../../../atoms/Loader'
 import Button from '../../../atoms/Button'
@@ -25,7 +24,6 @@ export interface Balance {
 */
 
 export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
-  const { debug } = useUserPreferences()
   const { ocean, accountId } = useOcean()
   const { price } = useMetadata(ddo)
 
@@ -155,12 +153,12 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
               </h3>
               <Token symbol="OCEAN" balance={`${userLiquidity.ocean}`} />
               <Token symbol={dtSymbol} balance={`${userLiquidity.datatoken}`} />
-              {debug === true && <Token symbol="BPT" balance={poolTokens} />}
+              <Token symbol="pool shares" balance={poolTokens} noIcon />
+              <Token symbol="% of pool" balance={poolShare} noIcon />
               <Conversion
                 price={`${totalUserLiquidityInOcean}`}
                 className={styles.totalLiquidity}
               />
-              <Token symbol="% of pool" balance={poolShare} />
             </div>
 
             <PoolStatistics

@@ -1,4 +1,3 @@
-import { useUserPreferences } from '../../../../providers/UserPreferences'
 import React, { ReactElement } from 'react'
 import { Balance } from '.'
 import styles from './PoolStatistics.module.css'
@@ -18,8 +17,6 @@ export default function PoolStatistics({
   totalPoolTokens: string
   swapFee: string
 }): ReactElement {
-  const { debug } = useUserPreferences()
-
   const totalLiquidityInOcean =
     totalBalance.ocean + totalBalance.datatoken * Number(price)
 
@@ -28,12 +25,12 @@ export default function PoolStatistics({
       <h3 className={styles.title}>Pool Statistics</h3>
       <Token symbol="OCEAN" balance={`${totalBalance.ocean}`} />
       <Token symbol={dtSymbol} balance={`${totalBalance.datatoken}`} />
-      {debug === true && <Token symbol="BPT" balance={totalPoolTokens} />}
+      <Token symbol="pool shares" balance={totalPoolTokens} noIcon />
+      <Token symbol="% swap fee" balance={swapFee} noIcon />
       <Conversion
         price={`${totalLiquidityInOcean}`}
         className={styles.totalLiquidity}
       />
-      <Token symbol="% swap fee" balance={swapFee} />
     </div>
   )
 }

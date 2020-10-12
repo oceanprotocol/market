@@ -9,7 +9,6 @@ import Token from './Token'
 import { Balance } from './'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
 import Actions from './Actions'
-import { useUserPreferences } from '../../../../providers/UserPreferences'
 import Tooltip from '../../../atoms/Tooltip'
 import { ReactComponent as Caret } from '../../../../images/caret.svg'
 
@@ -30,7 +29,6 @@ export default function Add({
   dtSymbol: string
   dtAddress: string
 }): ReactElement {
-  const { debug } = useUserPreferences()
   const { ocean, accountId, balance } = useOcean()
   const [amount, setAmount] = useState('')
   const [txId, setTxId] = useState<string>('')
@@ -141,7 +139,7 @@ export default function Add({
       <div className={styles.output}>
         <div>
           <p>You will receive</p>
-          {debug === true && <Token symbol="BPT" balance={newPoolTokens} />}
+          <Token symbol="pool shares" balance={newPoolTokens} />
           <Token symbol="% of pool" balance={newPoolShare} />
         </div>
         <div>

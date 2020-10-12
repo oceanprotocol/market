@@ -30,7 +30,6 @@
   fill: var(--brand-violet);
 }
 
-.icon[class*='%'],
-.icon[class*='BPT'] {
+.noIcon {
   opacity: 0;
 }
