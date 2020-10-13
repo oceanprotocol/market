@@ -1,5 +1,5 @@
 import { Logger } from '@oceanprotocol/lib'
-import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatastore/MetadataStore'
+import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { useOcean } from '@oceanprotocol/react'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Loader from '../../atoms/Loader'

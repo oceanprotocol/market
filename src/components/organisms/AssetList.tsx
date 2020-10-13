@@ -1,6 +1,6 @@
 import AssetTeaser from '../molecules/AssetTeaser'
 import React from 'react'
-import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatastore/MetadataStore'
+import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { useLocation, useNavigate } from '@reach/router'
 import Pagination from '../molecules/Pagination'
 import { updateQueryStringParameter } from '../../utils'
@@ -57,7 +57,7 @@ const AssetList: React.FC<AssetListProps> = ({ queryResult }) => {
           })
         ) : (
           <div className={styles.empty}>
-            No results found in {config.metadataStoreUri}
+            No results found in {config.metadataCacheUri}
           </div>
         )}
       </div>

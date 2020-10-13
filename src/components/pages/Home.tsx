@@ -1,12 +1,12 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import SearchBar from '../molecules/SearchBar'
 import styles from './Home.module.css'
-import { MetadataStore, Logger } from '@oceanprotocol/lib'
+import { MetadataCache, Logger } from '@oceanprotocol/lib'
 import AssetList from '../organisms/AssetList'
 import {
   QueryResult,
   SearchQuery
-} from '@oceanprotocol/lib/dist/node/metadatastore/MetadataStore'
+} from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import Container from '../atoms/Container'
 import Loader from '../atoms/Loader'
 import { useOcean } from '@oceanprotocol/react'
@@ -25,10 +25,10 @@ const queryLatest = {
   sort: { created: -1 }
 }
 
-async function getAssets(query: SearchQuery, metadataStoreUri: string) {
+async function getAssets(query: SearchQuery, metadataCacheUri: string) {
   try {
-    const metadataStore = new MetadataStore(metadataStoreUri, Logger)
-    const result = await metadataStore.queryMetadata(query)
+    const metadataCache = new MetadataCache(metadataCacheUri, Logger)
+    const result = await metadataCache.queryMetadata(query)
 
     return result
   } catch (error) {
@@ -46,19 +46,19 @@ export default function HomePage(): ReactElement {
     async function init() {
       const queryResultHighest = await getAssets(
         queryHighest,
-        config.metadataStoreUri
+        config.metadataCacheUri
       )
       setQueryResultHighest(queryResultHighest)
 
       const queryResultLatest = await getAssets(
         queryLatest,
-        config.metadataStoreUri
+        config.metadataCacheUri
       )
       setQueryResultLatest(queryResultLatest)
       setLoading(false)
     }
     init()
-  }, [config.metadataStoreUri])
+  }, [config.metadataCacheUri])
 
   return (
     <>

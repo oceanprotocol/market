@@ -1,5 +1,5 @@
 import React, { ReactElement, useState, useEffect } from 'react'
-import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatastore/MetadataStore'
+import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import SearchBar from '../../molecules/SearchBar'
 import AssetList from '../../organisms/AssetList'
 import styles from './index.module.css'
@@ -28,12 +28,12 @@ export default function SearchPage({
   useEffect(() => {
     async function initSearch() {
       setLoading(true)
-      const queryResult = await getResults(parsed, config.metadataStoreUri)
+      const queryResult = await getResults(parsed, config.metadataCacheUri)
       setQueryResult(queryResult)
       setLoading(false)
     }
     initSearch()
-  }, [text, tag, page, config.metadataStoreUri])
+  }, [text, tag, page, config.metadataCacheUri])
 
   return (
     <section className={styles.grid}>

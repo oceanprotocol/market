@@ -1,7 +1,7 @@
 module.exports = {
   network: process.env.GATSBY_NETWORK || 'rinkeby',
   infuraProjectId: process.env.GATSBY_INFURA_PROJECT_ID || 'xxx',
-  metadataStoreUri: process.env.GATSBY_METADATA_STORE_URI,
+  metadataCacheUri: process.env.GATSBY_METADATA_CACHE_URI,
   // The ETH address the marketplace fee will be sent to.
   marketFeeAddress:
     process.env.GATSBY_MARKET_FEE_ADDRESS ||
