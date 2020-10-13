@@ -12,11 +12,14 @@
   composes: userLiquidity from './Add.module.css';
 }
 
-.removeRow {
-  position: relative;
-  margin-bottom: var(--spacer);
+.range {
+  text-align: center;
 }
 
-.removeRow:last-child {
-  margin-bottom: 0;
+.range h3 {
+  margin-bottom: calc(var(--spacer) / 4);
+}
+
+.range input {
+  width: 100%;
 }

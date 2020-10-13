@@ -1,47 +1,44 @@
-import React, { ReactElement, useState, ChangeEvent } from 'react'
+import React, { ReactElement, useState, ChangeEvent, useEffect } from 'react'
 import styles from './Remove.module.css'
 import { useOcean } from '@oceanprotocol/react'
 import Header from './Header'
 import { toast } from 'react-toastify'
-import InputElement from '../../../atoms/Input/InputElement'
 import Actions from './Actions'
 import { Logger } from '@oceanprotocol/lib'
-import Button from '../../../atoms/Button'
-import PriceUnit from '../../../atoms/Price/PriceUnit'
 import { Balance } from '.'
+import Token from './Token'
 
 export default function Remove({
   setShowRemove,
   poolAddress,
+  poolTokens,
   totalPoolTokens,
   userLiquidity,
   dtSymbol
 }: {
   setShowRemove: (show: boolean) => void
   poolAddress: string
+  poolTokens: string
   totalPoolTokens: string
   userLiquidity: Balance
   dtSymbol: string
 }): ReactElement {
   const { ocean, accountId } = useOcean()
-  const [amountOcean, setAmountOcean] = useState('')
-  const [amountDatatoken, setAmountDatatoken] = useState('')
+  const [amountPercent, setAmountPercent] = useState('0')
+  const [amountPoolShares, setAmountPoolShares] = useState('0')
+  const [amountOcean, setAmountOcean] = useState('0')
+  const [amountDatatoken, setAmountDatatoken] = useState('0')
   const [isLoading, setIsLoading] = useState<boolean>()
   const [txId, setTxId] = useState<string>('')
 
   async function handleRemoveLiquidity() {
     setIsLoading(true)
 
-    // TODO: can remove OCEAN & DT in one transaction?
-    // exitswapExternAmountOut? exitswapPoolAmountIn?
-    // TODO: when user hits 'use max', use pool.exitPool()
-
     try {
-      const result = await ocean.pool.removeOceanLiquidity(
+      const result = await ocean.pool.removePoolLiquidity(
         accountId,
         poolAddress,
-        amountOcean,
-        totalPoolTokens
+        amountPoolShares
       )
       setTxId(result.transactionHash)
     } catch (error) {
@@ -52,26 +49,32 @@ export default function Remove({
     }
   }
 
-  // TODO: enforce correct weight rules
-  function handleOceanAmountChange(e: ChangeEvent<HTMLInputElement>) {
-    setAmountOcean(e.target.value)
-    setAmountDatatoken(`${Number(e.target.value) * 9}`)
+  function handleAmountPercentChange(e: ChangeEvent<HTMLInputElement>) {
+    setAmountPercent(e.target.value)
   }
 
-  function handleMaxOcean() {
-    setAmountOcean(`${userLiquidity.ocean}`)
-    setAmountDatatoken(`${userLiquidity.ocean * 9}`)
-  }
+  useEffect(() => {
+    if (!ocean) return
 
-  function handleMaxDatatoken() {
-    setAmountDatatoken(`${userLiquidity.datatoken}`)
-    setAmountOcean(`${userLiquidity.ocean / 9}`)
-  }
+    async function getValues() {
+      const amountPoolShares =
+        (Number(poolTokens) / Number(amountPercent)) * 100
+      setAmountPoolShares(`${amountPoolShares}`)
 
-  function handleDatatokenAmountChange(e: ChangeEvent<HTMLInputElement>) {
-    setAmountDatatoken(e.target.value)
-    setAmountOcean(`${Number(e.target.value) / 9}`)
-  }
+      const amountOcean = await ocean.pool.getPoolSharesForRemoveOcean(
+        poolAddress,
+        `${amountPoolShares}`
+      )
+      setAmountOcean(amountOcean)
+
+      const amountDatatoken = await ocean.pool.getPoolSharesForRemoveDT(
+        poolAddress,
+        `${amountPoolShares}`
+      )
+      setAmountDatatoken(amountDatatoken)
+    }
+    getValues()
+  }, [amountPercent, ocean, poolTokens, poolAddress])
 
   return (
     <div className={styles.remove}>
@@ -81,64 +84,23 @@ export default function Remove({
       />
 
       <form className={styles.removeInput}>
-        <fieldset className={styles.removeRow}>
-          <div className={styles.userLiquidity}>
-            <span>Your pool liquidity: </span>
-            <PriceUnit price={`${userLiquidity.ocean}`} symbol="OCEAN" small />
-          </div>
-          <InputElement
-            value={amountOcean}
-            name="ocean"
-            type="number"
-            prefix="OCEAN"
-            placeholder="0"
-            onChange={handleOceanAmountChange}
+        <div className={styles.range}>
+          <h3>{amountPercent}%</h3>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            step="25"
+            value={amountPercent}
+            onChange={handleAmountPercentChange}
           />
-
-          {userLiquidity.ocean > Number(amountOcean) && (
-            <Button
-              className={styles.buttonMax}
-              style="text"
-              size="small"
-              onClick={handleMaxOcean}
-            >
-              Use Max
-            </Button>
-          )}
-        </fieldset>
-
-        <fieldset className={styles.removeRow}>
-          <div className={styles.userLiquidity}>
-            <span>Your pool liquidity: </span>
-            <PriceUnit
-              price={`${userLiquidity.datatoken}`}
-              symbol={dtSymbol}
-              small
-            />
-          </div>
-          <InputElement
-            value={amountDatatoken}
-            name="ocean"
-            type="number"
-            prefix={dtSymbol}
-            placeholder="0"
-            onChange={handleDatatokenAmountChange}
-          />
-
-          {userLiquidity.datatoken > Number(amountDatatoken) && (
-            <Button
-              className={styles.buttonMax}
-              style="text"
-              size="small"
-              onClick={handleMaxDatatoken}
-            >
-              Use Max
-            </Button>
-          )}
-        </fieldset>
+        </div>
       </form>
 
       <p>You will receive</p>
+
+      <Token symbol="OCEAN" balance={amountOcean} />
+      <Token symbol={dtSymbol} balance={amountDatatoken} />
 
       <Actions
         isLoading={isLoading}
