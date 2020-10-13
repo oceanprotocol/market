@@ -129,8 +129,6 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           setShowRemove={setShowRemove}
           poolAddress={price.address}
           poolTokens={poolTokens}
-          totalPoolTokens={totalPoolTokens}
-          userLiquidity={userLiquidity}
           dtSymbol={dtSymbol}
         />
       ) : (

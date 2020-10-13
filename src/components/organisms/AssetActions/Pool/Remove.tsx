@@ -5,31 +5,26 @@ import Header from './Header'
 import { toast } from 'react-toastify'
 import Actions from './Actions'
 import { Logger } from '@oceanprotocol/lib'
-import { Balance } from '.'
 import Token from './Token'
 
 export default function Remove({
   setShowRemove,
   poolAddress,
   poolTokens,
-  totalPoolTokens,
-  userLiquidity,
   dtSymbol
 }: {
   setShowRemove: (show: boolean) => void
   poolAddress: string
   poolTokens: string
-  totalPoolTokens: string
-  userLiquidity: Balance
   dtSymbol: string
 }): ReactElement {
   const { ocean, accountId } = useOcean()
   const [amountPercent, setAmountPercent] = useState('0')
   const [amountPoolShares, setAmountPoolShares] = useState('0')
-  const [amountOcean, setAmountOcean] = useState('0')
-  const [amountDatatoken, setAmountDatatoken] = useState('0')
+  const [amountOcean, setAmountOcean] = useState<string>()
+  const [amountDatatoken, setAmountDatatoken] = useState<string>()
   const [isLoading, setIsLoading] = useState<boolean>()
-  const [txId, setTxId] = useState<string>('')
+  const [txId, setTxId] = useState<string>()
 
   async function handleRemoveLiquidity() {
     setIsLoading(true)
@@ -53,12 +48,13 @@ export default function Remove({
     setAmountPercent(e.target.value)
   }
 
+  // Check and set outputs when percentage changes
   useEffect(() => {
-    if (!ocean) return
+    if (!ocean || !poolTokens) return
 
     async function getValues() {
       const amountPoolShares =
-        (Number(poolTokens) / Number(amountPercent)) * 100
+        (Number(amountPercent) / Number(poolTokens)) * 100
       setAmountPoolShares(`${amountPoolShares}`)
 
       const amountOcean = await ocean.pool.getPoolSharesForRemoveOcean(
@@ -96,6 +92,10 @@ export default function Remove({
           />
         </div>
       </form>
+
+      <p>You will spend</p>
+
+      <Token symbol="pool shares" balance={amountPoolShares} noIcon />
 
       <p>You will receive</p>
 
