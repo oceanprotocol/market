@@ -54,7 +54,7 @@ export default function Remove({
 
     async function getValues() {
       const amountPoolShares =
-        (Number(amountPercent) / Number(poolTokens)) * 100
+        (Number(amountPercent) / 100) * Number(poolTokens)
       setAmountPoolShares(`${amountPoolShares}`)
 
       const amountOcean = await ocean.pool.getOceanRemovedforPoolShares(
