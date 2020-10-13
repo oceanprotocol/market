@@ -57,13 +57,13 @@ export default function Remove({
         (Number(amountPercent) / Number(poolTokens)) * 100
       setAmountPoolShares(`${amountPoolShares}`)
 
-      const amountOcean = await ocean.pool.getPoolSharesForRemoveOcean(
+      const amountOcean = await ocean.pool.getOceanRemovedforPoolShares(
         poolAddress,
         `${amountPoolShares}`
       )
       setAmountOcean(amountOcean)
 
-      const amountDatatoken = await ocean.pool.getPoolSharesForRemoveDT(
+      const amountDatatoken = await ocean.pool.getDTRemovedforPoolShares(
         poolAddress,
         `${amountPoolShares}`
       )
