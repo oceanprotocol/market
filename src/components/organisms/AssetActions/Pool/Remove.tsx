@@ -25,6 +25,7 @@ const contentQuery = graphql`
           childContentJson {
             pool {
               remove {
+                title
                 simple
                 advanced
                 output {
