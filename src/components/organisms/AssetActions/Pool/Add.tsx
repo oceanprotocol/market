@@ -11,6 +11,29 @@ import PriceUnit from '../../../atoms/Price/PriceUnit'
 import Actions from './Actions'
 import Tooltip from '../../../atoms/Tooltip'
 import { ReactComponent as Caret } from '../../../../images/caret.svg'
+import { graphql, useStaticQuery } from 'gatsby'
+
+const contentQuery = graphql`
+  query PoolAddQuery {
+    content: allFile(filter: { relativePath: { eq: "price.json" } }) {
+      edges {
+        node {
+          childContentJson {
+            pool {
+              add {
+                output {
+                  titleIn
+                  titleOut
+                }
+                action
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
 
 export default function Add({
   setShowAdd,
@@ -29,6 +52,9 @@ export default function Add({
   dtSymbol: string
   dtAddress: string
 }): ReactElement {
+  const data = useStaticQuery(contentQuery)
+  const content = data.content.edges[0].node.childContentJson.pool.add
+
   const { ocean, accountId, balance } = useOcean()
   const [amount, setAmount] = useState('')
   const [txId, setTxId] = useState<string>('')
@@ -93,7 +119,7 @@ export default function Add({
 
   return (
     <>
-      <Header title="Add Liquidity" backAction={() => setShowAdd(false)} />
+      <Header title={content.title} backAction={() => setShowAdd(false)} />
 
       <div className={styles.addInput}>
         <div className={styles.userLiquidity}>
@@ -138,12 +164,12 @@ export default function Add({
 
       <div className={styles.output}>
         <div>
-          <p>You will receive</p>
+          <p>{content.output.titleIn}</p>
           <Token symbol="pool shares" balance={newPoolTokens} />
           <Token symbol="% of pool" balance={newPoolShare} />
         </div>
         <div>
-          <p>You will earn</p>
+          <p>{content.output.titleOut}</p>
           <Token symbol="% swap fee" balance={swapFee} />
         </div>
       </div>
@@ -151,7 +177,7 @@ export default function Add({
       <Actions
         isLoading={isLoading}
         loaderMessage="Adding Liquidity..."
-        actionName="Supply"
+        actionName={content.action}
         action={handleAddLiquidity}
         txId={txId}
       />

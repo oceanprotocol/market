@@ -1,0 +1,26 @@
+{
+  "pool": {
+    "tooltips": {
+      "price": "Explain how this price is determined...",
+      "liquidity": "Explain what this represents, advantage of providing liquidity..."
+    },
+    "add": {
+      "title": "Add Liquidity",
+      "output": {
+        "titleIn": "You will receive",
+        "titleOut": "You will earn"
+      },
+      "action": "Supply"
+    },
+    "remove": {
+      "title": "Remove Liquidity",
+      "simple": "Set the amount of your pool shares to spend. You will get the equivalent value in OCEAN, limited to maximum amount for pool protection.",
+      "advanced": "Set the amount of your pool shares to spend. You will get OCEAN and Datatokens equivalent to your pool share, without any limit.",
+      "output": {
+        "titleIn": "You will spend",
+        "titleOut": "You will receive"
+      },
+      "action": "Remove"
+    }
+  }
+}

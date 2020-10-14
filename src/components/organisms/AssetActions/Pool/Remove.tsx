@@ -15,13 +15,31 @@ import Token from './Token'
 import FormHelp from '../../../atoms/Input/Help'
 import Button from '../../../atoms/Button'
 import { getMaxValuesRemove } from './utils'
+import { graphql, useStaticQuery } from 'gatsby'
 
-const help = {
-  simple:
-    'You will get the equivalent value in OCEAN, limited to 60% of the total liquidity.',
-  advanced:
-    'You will get OCEAN and Datatokens equivalent to your pool share, without any limit.'
-}
+const contentQuery = graphql`
+  query PoolRemoveQuery {
+    content: allFile(filter: { relativePath: { eq: "price.json" } }) {
+      edges {
+        node {
+          childContentJson {
+            pool {
+              remove {
+                simple
+                advanced
+                output {
+                  titleIn
+                  titleOut
+                }
+                action
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
 
 export default function Remove({
   setShowRemove,
@@ -34,6 +52,9 @@ export default function Remove({
   poolTokens: string
   dtSymbol: string
 }): ReactElement {
+  const data = useStaticQuery(contentQuery)
+  const content = data.content.edges[0].node.childContentJson.pool.remove
+
   const { ocean, accountId } = useOcean()
   const [amountPercent, setAmountPercent] = useState('0')
   const [amountMaxPercent, setAmountMaxPercent] = useState('100')
@@ -114,10 +135,7 @@ export default function Remove({
 
   return (
     <div className={styles.remove}>
-      <Header
-        title="Remove Liquidity"
-        backAction={() => setShowRemove(false)}
-      />
+      <Header title={content.title} backAction={() => setShowRemove(false)} />
 
       <form className={styles.removeInput}>
         <div className={styles.range}>
@@ -139,9 +157,7 @@ export default function Remove({
           </div>
 
           <FormHelp>
-            {`Set the amount of your pool shares to spend. ${
-              isAdvanced === true ? help.advanced : help.simple
-            }`}
+            {isAdvanced === true ? content.advanced : content.simple}
           </FormHelp>
           <Button style="text" size="small" onClick={handleAdvancedButton}>
             {isAdvanced === true ? 'Simple' : 'Advanced'}
@@ -151,11 +167,11 @@ export default function Remove({
 
       <div className={styles.output}>
         <div>
-          <p>You will spend</p>
+          <p>{content.output.titleIn}</p>
           <Token symbol="pool shares" balance={amountPoolShares} noIcon />
         </div>
         <div>
-          <p>You will receive</p>
+          <p>{content.output.titleOut}</p>
           <Token symbol="OCEAN" balance={amountOcean} />
           {isAdvanced === true && (
             <Token symbol={dtSymbol} balance={amountDatatoken} />
@@ -166,7 +182,7 @@ export default function Remove({
       <Actions
         isLoading={isLoading}
         loaderMessage="Removing Liquidity..."
-        actionName="Remove"
+        actionName={content.action}
         action={handleRemoveLiquidity}
         txId={txId}
       />

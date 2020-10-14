@@ -13,17 +13,36 @@ import Conversion from '../../../atoms/Price/Conversion'
 import EtherscanLink from '../../../atoms/EtherscanLink'
 import Token from './Token'
 import TokenList from './TokenList'
+import { graphql, useStaticQuery } from 'gatsby'
 
 export interface Balance {
   ocean: number
   datatoken: number
 }
 
-/* 
-  TODO: create tooltip copy
-*/
+const contentQuery = graphql`
+  query PoolQuery {
+    content: allFile(filter: { relativePath: { eq: "price.json" } }) {
+      edges {
+        node {
+          childContentJson {
+            pool {
+              tooltips {
+                price
+                liquidity
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
 
 export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
+  const data = useStaticQuery(contentQuery)
+  const content = data.content.edges[0].node.childContentJson.pool
+
   const { ocean, accountId } = useOcean()
   const { price } = useMetadata(ddo)
 
@@ -137,7 +156,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
             <PriceUnit price="1" symbol={dtSymbol} /> ={' '}
             <PriceUnit price={`${price.value}`} />
             <Conversion price={`${price.value}`} />
-            <Tooltip content="Explain how this price is determined..." />
+            <Tooltip content={content.tooltips.price} />
             <div className={styles.dataTokenLinks}>
               <EtherscanLink
                 network="rinkeby"
@@ -155,7 +174,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
             title={
               <>
                 Your Liquidity
-                <Tooltip content="Explain what this represents, advantage of providing liquidity..." />
+                <Tooltip content={content.tooltips.liquidity} />
               </>
             }
             ocean={`${userLiquidity.ocean}`}
