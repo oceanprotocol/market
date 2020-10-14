@@ -21,6 +21,7 @@ const contentQuery = graphql`
           childContentJson {
             pool {
               add {
+                title
                 output {
                   titleIn
                   titleOut
