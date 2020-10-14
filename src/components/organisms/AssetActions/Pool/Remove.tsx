@@ -6,6 +6,7 @@ import { toast } from 'react-toastify'
 import Actions from './Actions'
 import { Logger } from '@oceanprotocol/lib'
 import Token from './Token'
+import FormHelp from '../../../atoms/Input/Help'
 
 export default function Remove({
   setShowRemove,
@@ -84,6 +85,10 @@ export default function Remove({
             value={amountPercent}
             onChange={handleAmountPercentChange}
           />
+          <FormHelp>
+            Set the amount of your pool shares to spend. You will get the
+            equivalent value in OCEAN.
+          </FormHelp>
         </div>
       </form>
 
