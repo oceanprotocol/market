@@ -10,43 +10,17 @@ import { useOcean } from '@oceanprotocol/react'
 import Header from './Header'
 import { toast } from 'react-toastify'
 import Actions from './Actions'
-import { Logger, Ocean } from '@oceanprotocol/lib'
+import { Logger } from '@oceanprotocol/lib'
 import Token from './Token'
 import FormHelp from '../../../atoms/Input/Help'
 import Button from '../../../atoms/Button'
+import { getMaxValuesRemove } from './utils'
 
 const help = {
   simple:
     'You will get the equivalent value in OCEAN, limited to 60% of the total liquidity.',
   advanced:
     'You will get OCEAN and Datatokens equivalent to your pool share, without any limit.'
-}
-
-async function getMaxValues(
-  ocean: Ocean,
-  poolAddress: string,
-  poolTokens: string,
-  amountPoolShares: string
-) {
-  const amountMaxOcean = await ocean.pool.getOceanMaxRemoveLiquidity(
-    poolAddress
-  )
-
-  const amountMaxPoolShares = await ocean.pool.getPoolSharesRequiredToRemoveOcean(
-    poolAddress,
-    amountMaxOcean
-  )
-
-  const amountMaxPercent = `${Math.floor(
-    (Number(amountMaxPoolShares) / Number(poolTokens)) * 100
-  )}`
-
-  const amountOcean = await ocean.pool.getOceanRemovedforPoolShares(
-    poolAddress,
-    amountPoolShares
-  )
-
-  return { amountMaxPercent, amountOcean }
 }
 
 export default function Remove({
@@ -125,7 +99,7 @@ export default function Remove({
         setAmountOcean(tokens?.oceanAmount)
         setAmountDatatoken(tokens?.dtAmount)
       } else {
-        const { amountMaxPercent, amountOcean } = await getMaxValues(
+        const { amountMaxPercent, amountOcean } = await getMaxValuesRemove(
           ocean,
           poolAddress,
           poolTokens,
@@ -183,7 +157,9 @@ export default function Remove({
         <div>
           <p>You will receive</p>
           <Token symbol="OCEAN" balance={amountOcean} />
-          {isAdvanced && <Token symbol={dtSymbol} balance={amountDatatoken} />}
+          {isAdvanced === true && (
+            <Token symbol={dtSymbol} balance={amountDatatoken} />
+          )}
         </div>
       </div>
 
