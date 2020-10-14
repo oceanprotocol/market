@@ -1,11 +1,66 @@
 .removeInput {
   composes: addInput from './Add.module.css';
-}
-
-.buttonMax {
-  composes: buttonMax from './Add.module.css';
+  padding-left: calc(var(--spacer) * 2);
+  padding-right: calc(var(--spacer) * 2);
 }
 
 .userLiquidity {
   composes: userLiquidity from './Add.module.css';
+}
+
+.range {
+  text-align: center;
+}
+
+.range h3 {
+  margin-bottom: calc(var(--spacer) / 4);
+}
+
+.range input {
+  width: 100%;
+}
+
+.range p {
+  margin-bottom: 0;
+  margin-left: -2rem;
+  margin-right: -2rem;
+}
+
+.range button {
+  margin-top: calc(var(--spacer) / 4);
+  margin-bottom: 0;
+  position: absolute;
+  bottom: 1rem;
+  right: 2rem;
+  font-size: var(--font-size-mini);
+}
+
+.slider {
+  position: relative;
+  z-index: 1;
+}
+
+.maximum {
+  position: absolute;
+  right: -1.5rem;
+  bottom: 1.5rem;
+  font-size: var(--font-size-small);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.output {
+  composes: output from './Add.module.css';
+}
+
+.output [class*='token'] {
+  white-space: nowrap;
+}
+
+.output [class*='token'] > figure {
+  display: inline-block;
+}
+
+.output figure[class*='pool shares'] {
+  display: none;
 }
