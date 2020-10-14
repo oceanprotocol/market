@@ -32,6 +32,20 @@
   margin-bottom: 0;
 }
 
+.slider {
+  position: relative;
+  z-index: 1;
+}
+
+.maximum {
+  position: absolute;
+  right: -1.5rem;
+  bottom: 1.5rem;
+  font-size: var(--font-size-small);
+  z-index: 0;
+  pointer-events: none;
+}
+
 .output {
   composes: output from './Add.module.css';
 }

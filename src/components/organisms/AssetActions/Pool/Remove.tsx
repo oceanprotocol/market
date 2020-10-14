@@ -10,16 +10,43 @@ import { useOcean } from '@oceanprotocol/react'
 import Header from './Header'
 import { toast } from 'react-toastify'
 import Actions from './Actions'
-import { Logger } from '@oceanprotocol/lib'
+import { Logger, Ocean } from '@oceanprotocol/lib'
 import Token from './Token'
 import FormHelp from '../../../atoms/Input/Help'
 import Button from '../../../atoms/Button'
 
 const help = {
   simple:
-    'You will get the equivalent value in OCEAN, limited to xxx% of the total liquidity.',
+    'You will get the equivalent value in OCEAN, limited to 60% of the total liquidity.',
   advanced:
     'You will get OCEAN and Datatokens equivalent to your pool share, without any limit.'
+}
+
+async function getMaxValues(
+  ocean: Ocean,
+  poolAddress: string,
+  poolTokens: string,
+  amountPoolShares: string
+) {
+  const amountMaxOcean = await ocean.pool.getOceanMaxRemoveLiquidity(
+    poolAddress
+  )
+
+  const amountMaxPoolShares = await ocean.pool.getPoolSharesRequiredToRemoveOcean(
+    poolAddress,
+    amountMaxOcean
+  )
+
+  const amountMaxPercent = `${Math.floor(
+    (Number(amountMaxPoolShares) / Number(poolTokens)) * 100
+  )}`
+
+  const amountOcean = await ocean.pool.getOceanRemovedforPoolShares(
+    poolAddress,
+    amountPoolShares
+  )
+
+  return { amountMaxPercent, amountOcean }
 }
 
 export default function Remove({
@@ -96,20 +123,13 @@ export default function Remove({
         setAmountOcean(tokens?.oceanAmount)
         setAmountDatatoken(tokens?.dtAmount)
       } else {
-        const amountMaxOcean = await ocean.pool.getOceanMaxRemoveLiquidity(
-          poolAddress
-        )
-        console.log(amountMaxOcean)
-
-        // TODO: Calculate maximum percentage a user can remove based on maximum OCEAN
-        // to limit the range slider
-        // const maxPercent = ??
-        // setAmountMaxPercent(maxPercent)
-
-        const amountOcean = await ocean.pool.getOceanRemovedforPoolShares(
+        const { amountMaxPercent, amountOcean } = await getMaxValues(
+          ocean,
           poolAddress,
+          poolTokens,
           `${amountPoolShares}`
         )
+        setAmountMaxPercent(amountMaxPercent)
         setAmountOcean(amountOcean)
       }
     }
@@ -126,14 +146,20 @@ export default function Remove({
       <form className={styles.removeInput}>
         <div className={styles.range}>
           <h3>{amountPercent}%</h3>
-          <input
-            type="range"
-            min="0"
-            max={amountMaxPercent}
-            step="10"
-            value={amountPercent}
-            onChange={handleAmountPercentChange}
-          />
+          <div className={styles.slider}>
+            <input
+              type="range"
+              min="0"
+              max={amountMaxPercent}
+              step={Number(amountMaxPercent) < 10 ? '1' : '10'}
+              value={amountPercent}
+              onChange={handleAmountPercentChange}
+            />
+            <span
+              className={styles.maximum}
+            >{`${amountMaxPercent}% max.`}</span>
+          </div>
+
           <FormHelp>
             {`Set the amount of your pool shares to spend. ${
               isAdvanced === true ? help.advanced : help.simple
