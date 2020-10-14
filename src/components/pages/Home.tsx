@@ -18,6 +18,13 @@ const queryHighest = {
   sort: { 'price.ocean': -1 }
 }
 
+const queryPoolsLatest = {
+  page: 1,
+  offset: 6,
+  query: { 'price.type': ['pool'] },
+  sort: { created: -1 }
+}
+
 const queryLatest = {
   page: 1,
   offset: 20,
@@ -39,6 +46,9 @@ async function getAssets(query: SearchQuery, metadataCacheUri: string) {
 export default function HomePage(): ReactElement {
   const { config } = useOcean()
   const [queryResultLatest, setQueryResultLatest] = useState<QueryResult>()
+  const [queryResultPoolsLatest, setQueryResultPoolsLatest] = useState<
+    QueryResult
+  >()
   const [queryResultHighest, setQueryResultHighest] = useState<QueryResult>()
   const [loading, setLoading] = useState(true)
 
@@ -49,6 +59,12 @@ export default function HomePage(): ReactElement {
         config.metadataCacheUri
       )
       setQueryResultHighest(queryResultHighest)
+
+      const queryResultPoolsLatest = await getAssets(
+        queryPoolsLatest,
+        config.metadataCacheUri
+      )
+      setQueryResultPoolsLatest(queryResultPoolsLatest)
 
       const queryResultLatest = await getAssets(
         queryLatest,
@@ -67,7 +83,7 @@ export default function HomePage(): ReactElement {
       </Container>
 
       <section className={styles.latest}>
-        <h3>Highest Liquidity</h3>
+        <h3>Highest Liquidity Pools</h3>
         {loading ? (
           <Loader />
         ) : (
@@ -76,7 +92,18 @@ export default function HomePage(): ReactElement {
       </section>
 
       <section className={styles.latest}>
-        <h3>Latest</h3>
+        <h3>New Liquidity Pools</h3>
+        {loading ? (
+          <Loader />
+        ) : (
+          queryResultPoolsLatest && (
+            <AssetList queryResult={queryResultPoolsLatest} />
+          )
+        )}
+      </section>
+
+      <section className={styles.latest}>
+        <h3>New Data Sets</h3>
         {loading ? (
           <Loader />
         ) : (
