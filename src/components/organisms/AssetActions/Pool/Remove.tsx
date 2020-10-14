@@ -1,4 +1,10 @@
-import React, { ReactElement, useState, ChangeEvent, useEffect } from 'react'
+import React, {
+  ReactElement,
+  useState,
+  ChangeEvent,
+  useEffect,
+  FormEvent
+} from 'react'
 import styles from './Remove.module.css'
 import { useOcean } from '@oceanprotocol/react'
 import Header from './Header'
@@ -7,20 +13,32 @@ import Actions from './Actions'
 import { Logger } from '@oceanprotocol/lib'
 import Token from './Token'
 import FormHelp from '../../../atoms/Input/Help'
+import Button from '../../../atoms/Button'
+
+const help = {
+  simple:
+    'You will get the equivalent value in OCEAN, limited to xxx% of the total liquidity.',
+  advanced:
+    'You will get OCEAN and Datatokens equivalent to your pool share, without any limit.'
+}
 
 export default function Remove({
   setShowRemove,
   poolAddress,
-  poolTokens
+  poolTokens,
+  dtSymbol
 }: {
   setShowRemove: (show: boolean) => void
   poolAddress: string
   poolTokens: string
+  dtSymbol: string
 }): ReactElement {
   const { ocean, accountId } = useOcean()
   const [amountPercent, setAmountPercent] = useState('0')
   const [amountPoolShares, setAmountPoolShares] = useState('0')
   const [amountOcean, setAmountOcean] = useState<string>()
+  const [amountDatatoken, setAmountDatatoken] = useState<string>()
+  const [isAdvanced, setIsAdvanced] = useState(false)
   const [isLoading, setIsLoading] = useState<boolean>()
   const [txId, setTxId] = useState<string>()
 
@@ -28,12 +46,21 @@ export default function Remove({
     setIsLoading(true)
 
     try {
-      const result = await ocean.pool.removePoolLiquidity(
-        accountId,
-        poolAddress,
-        amountPoolShares
-      )
-      setTxId(result.transactionHash)
+      const result =
+        isAdvanced === true
+          ? await ocean.pool.removePoolLiquidity(
+              accountId,
+              poolAddress,
+              amountPoolShares
+            )
+          : await ocean.pool.removeOceanLiquidity(
+              accountId,
+              poolAddress,
+              amountDatatoken,
+              amountPoolShares
+            )
+
+      setTxId(result?.transactionHash)
     } catch (error) {
       Logger.error(error.message)
       toast.error(error.message)
@@ -44,6 +71,11 @@ export default function Remove({
 
   function handleAmountPercentChange(e: ChangeEvent<HTMLInputElement>) {
     setAmountPercent(e.target.value)
+  }
+
+  function handleAdvancedButton(e: FormEvent<HTMLButtonElement>) {
+    e.preventDefault()
+    setIsAdvanced(!isAdvanced)
   }
 
   // Check and set outputs when percentage changes
@@ -63,9 +95,17 @@ export default function Remove({
         `${amountPoolShares}`
       )
       setAmountOcean(amountOcean)
+
+      if (!isAdvanced) return
+
+      const amountDatatoken = await ocean.pool.getDTRemovedforPoolShares(
+        poolAddress,
+        `${amountPoolShares}`
+      )
+      setAmountDatatoken(amountDatatoken)
     }
     getValues()
-  }, [amountPercent, ocean, poolTokens, poolAddress])
+  }, [amountPercent, ocean, poolTokens, poolAddress, isAdvanced])
 
   return (
     <div className={styles.remove}>
@@ -81,14 +121,18 @@ export default function Remove({
             type="range"
             min="0"
             max="100"
-            step="25"
+            step="10"
             value={amountPercent}
             onChange={handleAmountPercentChange}
           />
           <FormHelp>
-            Set the amount of your pool shares to spend. You will get the
-            equivalent value in OCEAN.
+            {`Set the amount of your pool shares to spend. ${
+              isAdvanced === true ? help.advanced : help.simple
+            }`}
           </FormHelp>
+          <Button style="text" size="small" onClick={handleAdvancedButton}>
+            {isAdvanced === true ? 'Simple' : 'Advanced'}
+          </Button>
         </div>
       </form>
 
@@ -99,6 +143,7 @@ export default function Remove({
       <p>You will receive</p>
 
       <Token symbol="OCEAN" balance={amountOcean} />
+      {isAdvanced && <Token symbol={dtSymbol} balance={amountDatatoken} />}
 
       <Actions
         isLoading={isLoading}
