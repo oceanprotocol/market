@@ -35,6 +35,7 @@ export default function Remove({
 }): ReactElement {
   const { ocean, accountId } = useOcean()
   const [amountPercent, setAmountPercent] = useState('0')
+  const [amountMaxPercent, setAmountMaxPercent] = useState('100')
   const [amountPoolShares, setAmountPoolShares] = useState('0')
   const [amountOcean, setAmountOcean] = useState<string>()
   const [amountDatatoken, setAmountDatatoken] = useState<string>()
@@ -95,11 +96,15 @@ export default function Remove({
         setAmountOcean(tokens?.oceanAmount)
         setAmountDatatoken(tokens?.dtAmount)
       } else {
-        // TODO: check max amount to be able to remove
-        const maxOcean = await ocean.pool.getOceanMaxRemoveLiquidity(
+        const amountMaxOcean = await ocean.pool.getOceanMaxRemoveLiquidity(
           poolAddress
         )
-        console.log(maxOcean)
+        console.log(amountMaxOcean)
+
+        // TODO: Calculate maximum percentage a user can remove based on maximum OCEAN
+        // to limit the range slider
+        // const maxPercent = ??
+        // setAmountMaxPercent(maxPercent)
 
         const amountOcean = await ocean.pool.getOceanRemovedforPoolShares(
           poolAddress,
@@ -124,7 +129,7 @@ export default function Remove({
           <input
             type="range"
             min="0"
-            max="100"
+            max={amountMaxPercent}
             step="10"
             value={amountPercent}
             onChange={handleAmountPercentChange}
