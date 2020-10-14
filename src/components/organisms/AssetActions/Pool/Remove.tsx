@@ -64,8 +64,8 @@ export default function Remove({
   const [amountPercent, setAmountPercent] = useState('0')
   const [amountMaxPercent, setAmountMaxPercent] = useState('100')
   const [amountPoolShares, setAmountPoolShares] = useState('0')
-  const [amountOcean, setAmountOcean] = useState<string>()
-  const [amountDatatoken, setAmountDatatoken] = useState<string>()
+  const [amountOcean, setAmountOcean] = useState('0')
+  const [amountDatatoken, setAmountDatatoken] = useState('0')
   const [isAdvanced, setIsAdvanced] = useState(false)
   const [isLoading, setIsLoading] = useState<boolean>()
   const [txId, setTxId] = useState<string>()
@@ -116,6 +116,8 @@ export default function Remove({
       setAmountPoolShares(`${amountPoolShares}`)
 
       if (isAdvanced === true) {
+        setAmountMaxPercent('100')
+
         const tokens = await ocean.pool.getTokensRemovedforPoolShares(
           poolAddress,
           `${amountPoolShares}`
@@ -155,9 +157,11 @@ export default function Remove({
               value={amountPercent}
               onChange={handleAmountPercentChange}
             />
-            <span
-              className={styles.maximum}
-            >{`${amountMaxPercent}% max.`}</span>
+            {isAdvanced === false && (
+              <span
+                className={styles.maximum}
+              >{`${amountMaxPercent}% max.`}</span>
+            )}
           </div>
 
           <FormHelp>
