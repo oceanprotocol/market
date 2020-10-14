@@ -2,7 +2,6 @@
   composes: addInput from './Add.module.css';
   padding-left: calc(var(--spacer) * 2);
   padding-right: calc(var(--spacer) * 2);
-  padding-bottom: calc(var(--spacer) / 2);
 }
 
 .userLiquidity {
@@ -30,6 +29,10 @@
 .range button {
   margin-top: calc(var(--spacer) / 4);
   margin-bottom: 0;
+  position: absolute;
+  bottom: 1rem;
+  right: 2rem;
+  font-size: var(--font-size-mini);
 }
 
 .slider {
