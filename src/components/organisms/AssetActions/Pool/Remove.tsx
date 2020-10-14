@@ -82,30 +82,34 @@ export default function Remove({
   useEffect(() => {
     if (!ocean || !poolTokens) return
 
-    // TODO: check max amount to be able to remove
-    // getOceanMaxRemoveLiquidity()
-
     async function getValues() {
       const amountPoolShares =
         (Number(amountPercent) / 100) * Number(poolTokens)
       setAmountPoolShares(`${amountPoolShares}`)
 
-      const amountOcean = await ocean.pool.getOceanRemovedforPoolShares(
-        poolAddress,
-        `${amountPoolShares}`
-      )
-      setAmountOcean(amountOcean)
+      if (isAdvanced === true) {
+        const tokens = await ocean.pool.getTokensRemovedforPoolShares(
+          poolAddress,
+          `${amountPoolShares}`
+        )
+        setAmountOcean(tokens?.oceanAmount)
+        setAmountDatatoken(tokens?.dtAmount)
+      } else {
+        // TODO: check max amount to be able to remove
+        const maxOcean = await ocean.pool.getOceanMaxRemoveLiquidity(
+          poolAddress
+        )
+        console.log(maxOcean)
 
-      if (!isAdvanced) return
-
-      const amountDatatoken = await ocean.pool.getDTRemovedforPoolShares(
-        poolAddress,
-        `${amountPoolShares}`
-      )
-      setAmountDatatoken(amountDatatoken)
+        const amountOcean = await ocean.pool.getOceanRemovedforPoolShares(
+          poolAddress,
+          `${amountPoolShares}`
+        )
+        setAmountOcean(amountOcean)
+      }
     }
     getValues()
-  }, [amountPercent, ocean, poolTokens, poolAddress, isAdvanced])
+  }, [amountPercent, isAdvanced, ocean, poolTokens, poolAddress])
 
   return (
     <div className={styles.remove}>
@@ -136,14 +140,17 @@ export default function Remove({
         </div>
       </form>
 
-      <p>You will spend</p>
-
-      <Token symbol="pool shares" balance={amountPoolShares} noIcon />
-
-      <p>You will receive</p>
-
-      <Token symbol="OCEAN" balance={amountOcean} />
-      {isAdvanced && <Token symbol={dtSymbol} balance={amountDatatoken} />}
+      <div className={styles.output}>
+        <div>
+          <p>You will spend</p>
+          <Token symbol="pool shares" balance={amountPoolShares} noIcon />
+        </div>
+        <div>
+          <p>You will receive</p>
+          <Token symbol="OCEAN" balance={amountOcean} />
+          {isAdvanced && <Token symbol={dtSymbol} balance={amountDatatoken} />}
+        </div>
+      </div>
 
       <Actions
         isLoading={isLoading}

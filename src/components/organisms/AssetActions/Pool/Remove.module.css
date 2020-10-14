@@ -31,3 +31,19 @@
   margin-top: calc(var(--spacer) / 4);
   margin-bottom: 0;
 }
+
+.output {
+  composes: output from './Add.module.css';
+}
+
+.output [class*='token'] {
+  white-space: nowrap;
+}
+
+.output [class*='token'] > figure {
+  display: inline-block;
+}
+
+.output figure[class*='pool shares'] {
+  display: none;
+}
