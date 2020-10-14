@@ -69,7 +69,9 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         //
         // Get everything which is in the pool
         //
-        const totalPoolTokens = await ocean.pool.totalSupply(price.address)
+        const totalPoolTokens = await ocean.pool.getPoolSharesTotalSupply(
+          price.address
+        )
         setTotalPoolTokens(totalPoolTokens)
 
         //
