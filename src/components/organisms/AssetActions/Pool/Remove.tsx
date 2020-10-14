@@ -10,19 +10,16 @@ import Token from './Token'
 export default function Remove({
   setShowRemove,
   poolAddress,
-  poolTokens,
-  dtSymbol
+  poolTokens
 }: {
   setShowRemove: (show: boolean) => void
   poolAddress: string
   poolTokens: string
-  dtSymbol: string
 }): ReactElement {
   const { ocean, accountId } = useOcean()
   const [amountPercent, setAmountPercent] = useState('0')
   const [amountPoolShares, setAmountPoolShares] = useState('0')
   const [amountOcean, setAmountOcean] = useState<string>()
-  const [amountDatatoken, setAmountDatatoken] = useState<string>()
   const [isLoading, setIsLoading] = useState<boolean>()
   const [txId, setTxId] = useState<string>()
 
@@ -52,6 +49,9 @@ export default function Remove({
   useEffect(() => {
     if (!ocean || !poolTokens) return
 
+    // TODO: check max amount to be able to remove
+    // getOceanMaxRemoveLiquidity()
+
     async function getValues() {
       const amountPoolShares =
         (Number(amountPercent) / 100) * Number(poolTokens)
@@ -62,12 +62,6 @@ export default function Remove({
         `${amountPoolShares}`
       )
       setAmountOcean(amountOcean)
-
-      const amountDatatoken = await ocean.pool.getDTRemovedforPoolShares(
-        poolAddress,
-        `${amountPoolShares}`
-      )
-      setAmountDatatoken(amountDatatoken)
     }
     getValues()
   }, [amountPercent, ocean, poolTokens, poolAddress])
@@ -100,7 +94,6 @@ export default function Remove({
       <p>You will receive</p>
 
       <Token symbol="OCEAN" balance={amountOcean} />
-      <Token symbol={dtSymbol} balance={amountDatatoken} />
 
       <Actions
         isLoading={isLoading}
