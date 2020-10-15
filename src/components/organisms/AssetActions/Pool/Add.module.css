@@ -21,13 +21,16 @@
   right: calc(var(--spacer) * 3);
 }
 
-.userLiquidity {
+.userLiquidity > div {
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: var(--font-size-mini);
-  margin-bottom: calc(var(--spacer) / 4);
   color: var(--color-secondary);
+}
+
+.userLiquidity > div:last-child {
+  margin-bottom: calc(var(--spacer) / 4);
 }
 
 .userLiquidity span + div {

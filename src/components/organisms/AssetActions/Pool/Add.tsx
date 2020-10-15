@@ -12,6 +12,7 @@ import Actions from './Actions'
 import Tooltip from '../../../atoms/Tooltip'
 import { ReactComponent as Caret } from '../../../../images/caret.svg'
 import { graphql, useStaticQuery } from 'gatsby'
+import FormHelp from '../../../atoms/Input/Help'
 
 const contentQuery = graphql`
   query PoolAddQuery {
@@ -62,6 +63,7 @@ export default function Add({
   const [isLoading, setIsLoading] = useState<boolean>()
   const [coin, setCoin] = useState<string>('OCEAN')
   const [dtBalance, setDtBalance] = useState<string>()
+  const [amountMax, setAmountMax] = useState<string>()
 
   const newPoolTokens =
     totalBalance &&
@@ -71,15 +73,30 @@ export default function Add({
     totalBalance &&
     ((Number(newPoolTokens) / Number(totalPoolTokens)) * 100).toFixed(2)
 
+  // Get datatoken balance when datatoken selected
   useEffect(() => {
-    if (!ocean) return
+    if (!ocean || coin === 'OCEAN') return
 
     async function getDtBalance() {
       const dtBalance = await ocean.datatokens.balance(dtAddress, accountId)
       setDtBalance(dtBalance)
     }
     getDtBalance()
-  }, [ocean, accountId, dtAddress])
+  }, [ocean, accountId, dtAddress, coin])
+
+  // Get maximum amount for either OCEAN or datatoken
+  useEffect(() => {
+    if (!ocean) return
+
+    async function getMaximum() {
+      const amountMax =
+        coin === 'OCEAN'
+          ? await ocean.pool.getOceanMaxAddLiquidity(poolAddress)
+          : await ocean.pool.getDTMaxAddLiquidity(poolAddress)
+      setAmountMax(amountMax)
+    }
+    getMaximum()
+  }, [ocean, poolAddress, coin])
 
   async function handleAddLiquidity() {
     setIsLoading(true)
@@ -104,7 +121,7 @@ export default function Add({
   }
 
   function handleMax() {
-    setAmount(coin === 'OCEAN' ? balance.ocean : dtBalance)
+    setAmount(amountMax)
   }
 
   // TODO: this is only a prototype and is an accessibility nightmare.
@@ -124,18 +141,25 @@ export default function Add({
 
       <div className={styles.addInput}>
         <div className={styles.userLiquidity}>
-          <span>Available: </span>
-          {coin === 'OCEAN' ? (
-            <PriceUnit price={balance.ocean} symbol="OCEAN" small />
-          ) : (
-            <PriceUnit price={dtBalance} symbol={dtSymbol} small />
-          )}
+          <div>
+            <span>Available:</span>
+            {coin === 'OCEAN' ? (
+              <PriceUnit price={balance.ocean} symbol="OCEAN" small />
+            ) : (
+              <PriceUnit price={dtBalance} symbol={dtSymbol} small />
+            )}
+          </div>
+          <div>
+            <span>Maximum:</span>
+            <PriceUnit price={amountMax} symbol={coin} small />
+          </div>
         </div>
 
         <InputElement
           value={amount}
           name="coin"
           type="number"
+          max={amountMax}
           prefix={
             <Tooltip
               content={<CoinSelect />}
