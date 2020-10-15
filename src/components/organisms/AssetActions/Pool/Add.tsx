@@ -12,7 +12,9 @@ import Actions from './Actions'
 import Tooltip from '../../../atoms/Tooltip'
 import { ReactComponent as Caret } from '../../../../images/caret.svg'
 import { graphql, useStaticQuery } from 'gatsby'
-import FormHelp from '../../../atoms/Input/Help'
+import * as Yup from 'yup'
+import { Field, Formik } from 'formik'
+import Input from '../../../atoms/Input'
 
 const contentQuery = graphql`
   query PoolAddQuery {
@@ -37,6 +39,10 @@ const contentQuery = graphql`
   }
 `
 
+const initialValues: Partial<{ amount: number }> = {
+  amount: 1
+}
+
 export default function Add({
   setShowAdd,
   poolAddress,
@@ -58,20 +64,11 @@ export default function Add({
   const content = data.content.edges[0].node.childContentJson.pool.add
 
   const { ocean, accountId, balance } = useOcean()
-  const [amount, setAmount] = useState('')
   const [txId, setTxId] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>()
   const [coin, setCoin] = useState<string>('OCEAN')
   const [dtBalance, setDtBalance] = useState<string>()
   const [amountMax, setAmountMax] = useState<string>()
-
-  const newPoolTokens =
-    totalBalance &&
-    ((Number(amount) / Number(totalBalance.ocean)) * 100).toFixed(2)
-
-  const newPoolShare =
-    totalBalance &&
-    ((Number(newPoolTokens) / Number(totalPoolTokens)) * 100).toFixed(2)
 
   // Get datatoken balance when datatoken selected
   useEffect(() => {
@@ -98,16 +95,21 @@ export default function Add({
     getMaximum()
   }, [ocean, poolAddress, coin])
 
-  async function handleAddLiquidity() {
+  async function handleAddLiquidity(amount: number, resetForm: () => void) {
     setIsLoading(true)
 
     try {
       const result =
         coin === 'OCEAN'
-          ? await ocean.pool.addOceanLiquidity(accountId, poolAddress, amount)
-          : await ocean.pool.addDTLiquidity(accountId, poolAddress, amount)
+          ? await ocean.pool.addOceanLiquidity(
+              accountId,
+              poolAddress,
+              `${amount}`
+            )
+          : await ocean.pool.addDTLiquidity(accountId, poolAddress, `${amount}`)
 
       setTxId(result?.transactionHash)
+      resetForm()
     } catch (error) {
       console.error(error.message)
       toast.error(error.message)
@@ -116,13 +118,15 @@ export default function Add({
     }
   }
 
-  function handleAmountChange(e: ChangeEvent<HTMLInputElement>) {
-    setAmount(e.target.value)
-  }
-
-  function handleMax() {
-    setAmount(amountMax)
-  }
+  const validationSchema = Yup.object().shape<{ amount: number }>({
+    amount: Yup.number()
+      .min(1, 'Must be more or equal to 1')
+      .max(
+        Number(amountMax),
+        `Must be less or equal to ${Number(amountMax).toFixed(2)}`
+      )
+      .required('Required')
+  })
 
   // TODO: this is only a prototype and is an accessibility nightmare.
   // Needs to be refactored to either use custom select element instead of tippy.js,
@@ -139,73 +143,100 @@ export default function Add({
     <>
       <Header title={content.title} backAction={() => setShowAdd(false)} />
 
-      <div className={styles.addInput}>
-        <div className={styles.userLiquidity}>
-          <div>
-            <span>Available:</span>
-            {coin === 'OCEAN' ? (
-              <PriceUnit price={balance.ocean} symbol="OCEAN" small />
-            ) : (
-              <PriceUnit price={dtBalance} symbol={dtSymbol} small />
-            )}
-          </div>
-          <div>
-            <span>Maximum:</span>
-            <PriceUnit price={amountMax} symbol={coin} small />
-          </div>
-        </div>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={async (values, { setSubmitting, resetForm }) => {
+          console.log('Hello')
+          // kick off
+          await handleAddLiquidity(values.amount, resetForm)
+          setSubmitting(false)
+        }}
+      >
+        {({ values, setFieldValue, submitForm }) => {
+          const newPoolTokens =
+            totalBalance &&
+            ((values.amount / Number(totalBalance.ocean)) * 100).toFixed(2)
 
-        <InputElement
-          value={amount}
-          name="coin"
-          type="number"
-          max={amountMax}
-          prefix={
-            <Tooltip
-              content={<CoinSelect />}
-              trigger="click focus"
-              className={styles.coinswitch}
-              placement="bottom"
-            >
-              {coin}
-              <Caret aria-hidden="true" />
-            </Tooltip>
-          }
-          placeholder="0"
-          onChange={handleAmountChange}
-        />
+          const newPoolShare =
+            totalBalance &&
+            ((Number(newPoolTokens) / Number(totalPoolTokens)) * 100).toFixed(2)
 
-        {(balance.ocean || dtBalance) > amount && (
-          <Button
-            className={styles.buttonMax}
-            style="text"
-            size="small"
-            onClick={handleMax}
-          >
-            Use Max
-          </Button>
-        )}
-      </div>
+          return (
+            <>
+              <div className={styles.addInput}>
+                <div className={styles.userLiquidity}>
+                  <div>
+                    <span>Available:</span>
+                    {coin === 'OCEAN' ? (
+                      <PriceUnit price={balance.ocean} symbol="OCEAN" small />
+                    ) : (
+                      <PriceUnit price={dtBalance} symbol={dtSymbol} small />
+                    )}
+                  </div>
+                  <div>
+                    <span>Maximum:</span>
+                    <PriceUnit price={amountMax} symbol={coin} small />
+                  </div>
+                </div>
 
-      <div className={styles.output}>
-        <div>
-          <p>{content.output.titleIn}</p>
-          <Token symbol="pool shares" balance={newPoolTokens} />
-          <Token symbol="% of pool" balance={newPoolShare} />
-        </div>
-        <div>
-          <p>{content.output.titleOut}</p>
-          <Token symbol="% swap fee" balance={swapFee} />
-        </div>
-      </div>
+                <Field name="amount">
+                  {({ field }: { field: any }) => (
+                    <Input
+                      type="number"
+                      max={amountMax}
+                      prefix={
+                        <Tooltip
+                          content={<CoinSelect />}
+                          trigger="click focus"
+                          className={styles.coinswitch}
+                          placement="bottom"
+                        >
+                          {coin}
+                          <Caret aria-hidden="true" />
+                        </Tooltip>
+                      }
+                      placeholder="0"
+                      field={field}
+                    />
+                  )}
+                </Field>
 
-      <Actions
-        isLoading={isLoading}
-        loaderMessage="Adding Liquidity..."
-        actionName={content.action}
-        action={handleAddLiquidity}
-        txId={txId}
-      />
+                {(Number(balance.ocean) || dtBalance) > values.amount && (
+                  <Button
+                    className={styles.buttonMax}
+                    style="text"
+                    size="small"
+                    onClick={() => setFieldValue('amount', amountMax)}
+                  >
+                    Use Max
+                  </Button>
+                )}
+              </div>
+
+              <div className={styles.output}>
+                <div>
+                  <p>{content.output.titleIn}</p>
+                  <Token symbol="pool shares" balance={newPoolTokens} />
+                  <Token symbol="% of pool" balance={newPoolShare} />
+                </div>
+                <div>
+                  <p>{content.output.titleOut}</p>
+                  <Token symbol="% swap fee" balance={swapFee} />
+                </div>
+              </div>
+
+              <Actions
+                isLoading={isLoading}
+                loaderMessage="Adding Liquidity..."
+                actionName={content.action}
+                action={submitForm}
+                txId={txId}
+              />
+            </>
+          )
+        }}
+      </Formik>
     </>
   )
 }
