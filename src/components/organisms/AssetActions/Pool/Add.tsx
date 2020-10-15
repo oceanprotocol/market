@@ -3,7 +3,6 @@ import styles from './Add.module.css'
 import { useOcean } from '@oceanprotocol/react'
 import Header from './Header'
 import { toast } from 'react-toastify'
-import InputElement from '../../../atoms/Input/InputElement'
 import Button from '../../../atoms/Button'
 import Token from './Token'
 import { Balance } from './'
@@ -40,7 +39,7 @@ const contentQuery = graphql`
 `
 
 const initialValues: Partial<{ amount: number }> = {
-  amount: 1
+  amount: undefined
 }
 
 export default function Add({
@@ -147,7 +146,6 @@ export default function Add({
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={async (values, { setSubmitting, resetForm }) => {
-          console.log('Hello')
           // kick off
           await handleAddLiquidity(values.amount, resetForm)
           setSubmitting(false)
