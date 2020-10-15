@@ -179,7 +179,7 @@ export default function Add({
                 </div>
 
                 <Field name="amount">
-                  {({ field }: { field: any }) => (
+                  {({ field, form }: { field: any; form: any }) => (
                     <Input
                       type="number"
                       max={amountMax}
@@ -196,6 +196,7 @@ export default function Add({
                       }
                       placeholder="0"
                       field={field}
+                      form={form}
                     />
                   )}
                 </Field>

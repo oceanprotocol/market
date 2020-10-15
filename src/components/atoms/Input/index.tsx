@@ -71,7 +71,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
       </Label>
       <InputElement small={small} {...field} {...props} />
 
-      {field && field.name !== 'price' && (
+      {field && field.name !== 'price' && hasError && (
         <div className={styles.error}>
           <ErrorMessage name={field.name} />
         </div>
