@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, ChangeEvent, useEffect } from 'react'
+import React, { ReactElement, useState, useEffect, ChangeEvent } from 'react'
 import styles from './Add.module.css'
 import { useOcean } from '@oceanprotocol/react'
 import Header from './Header'
@@ -12,7 +12,7 @@ import Tooltip from '../../../atoms/Tooltip'
 import { ReactComponent as Caret } from '../../../../images/caret.svg'
 import { graphql, useStaticQuery } from 'gatsby'
 import * as Yup from 'yup'
-import { Field, FieldInputProps, Formik } from 'formik'
+import { Field, Formik } from 'formik'
 import Input from '../../../atoms/Input'
 
 const contentQuery = graphql`
@@ -100,14 +100,23 @@ export default function Add({
     if (!ocean) return
 
     async function getMaximum() {
-      const amountMax =
+      const amountMaxPool =
         coin === 'OCEAN'
           ? await ocean.pool.getOceanMaxAddLiquidity(poolAddress)
           : await ocean.pool.getDTMaxAddLiquidity(poolAddress)
+
+      const amountMax =
+        coin === 'OCEAN'
+          ? Number(balance.ocean) > Number(amountMaxPool)
+            ? amountMaxPool
+            : balance.ocean
+          : Number(dtBalance) > Number(amountMaxPool)
+          ? amountMaxPool
+          : dtBalance
       setAmountMax(amountMax)
     }
     getMaximum()
-  }, [ocean, poolAddress, coin])
+  }, [ocean, poolAddress, coin, dtBalance, balance.ocean])
 
   // Submit
   async function handleAddLiquidity(amount: number, resetForm: () => void) {
@@ -152,7 +161,15 @@ export default function Add({
           setSubmitting(false)
         }}
       >
-        {({ values, isSubmitting, setFieldValue, submitForm }) => {
+        {({
+          values,
+          touched,
+          setTouched,
+          isSubmitting,
+          setFieldValue,
+          submitForm,
+          handleChange
+        }) => {
           // TODO: move these 2 const to some useEffect() so it dos not
           // constantly re-renders all the time
           const newPoolTokens =
@@ -186,6 +203,7 @@ export default function Add({
                     <Input
                       type="number"
                       max={amountMax}
+                      value={`${values.amount}`}
                       prefix={
                         <Tooltip
                           content={<CoinSelect />}
@@ -200,6 +218,11 @@ export default function Add({
                       placeholder="0"
                       field={field}
                       form={form}
+                      onChange={(e) => {
+                        // Workaround so validation kicks in on first touch
+                        !touched?.amount && setTouched({ amount: true })
+                        handleChange(e)
+                      }}
                     />
                   )}
                 </Field>

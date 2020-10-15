@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, FormEvent } from 'react'
 import styles from './PublishForm.module.css'
 import { useOcean } from '@oceanprotocol/react'
-import { useFormikContext, Form, Field } from 'formik'
+import { useFormikContext, Field } from 'formik'
 import Input from '../../atoms/Input'
 import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
@@ -37,7 +37,7 @@ export default function PublishForm({
   }
 
   return (
-    <Form
+    <form
       className={styles.form}
       // do we need this?
       onChange={() => status === 'empty' && setStatus(null)}
@@ -61,6 +61,6 @@ export default function PublishForm({
           </Button>
         )}
       </footer>
-    </Form>
+    </form>
   )
 }
