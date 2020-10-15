@@ -12,7 +12,7 @@ import Tooltip from '../../../atoms/Tooltip'
 import { ReactComponent as Caret } from '../../../../images/caret.svg'
 import { graphql, useStaticQuery } from 'gatsby'
 import * as Yup from 'yup'
-import { Field, Formik } from 'formik'
+import { Field, FieldInputProps, Formik } from 'formik'
 import Input from '../../../atoms/Input'
 
 const contentQuery = graphql`
@@ -38,7 +38,11 @@ const contentQuery = graphql`
   }
 `
 
-const initialValues: Partial<{ amount: number }> = {
+interface FormAddLiquidity {
+  amount: number
+}
+
+const initialValues: FormAddLiquidity = {
   amount: undefined
 }
 
@@ -64,10 +68,21 @@ export default function Add({
 
   const { ocean, accountId, balance } = useOcean()
   const [txId, setTxId] = useState<string>('')
-  const [isLoading, setIsLoading] = useState<boolean>()
   const [coin, setCoin] = useState<string>('OCEAN')
   const [dtBalance, setDtBalance] = useState<string>()
   const [amountMax, setAmountMax] = useState<string>()
+
+  // Live validation rules
+  // https://github.com/jquense/yup#number
+  const validationSchema = Yup.object().shape<FormAddLiquidity>({
+    amount: Yup.number()
+      .min(1, 'Must be more or equal to 1')
+      .max(
+        Number(amountMax),
+        `Must be less or equal to ${Number(amountMax).toFixed(2)}`
+      )
+      .required('Required')
+  })
 
   // Get datatoken balance when datatoken selected
   useEffect(() => {
@@ -94,9 +109,8 @@ export default function Add({
     getMaximum()
   }, [ocean, poolAddress, coin])
 
+  // Submit
   async function handleAddLiquidity(amount: number, resetForm: () => void) {
-    setIsLoading(true)
-
     try {
       const result =
         coin === 'OCEAN'
@@ -112,20 +126,8 @@ export default function Add({
     } catch (error) {
       console.error(error.message)
       toast.error(error.message)
-    } finally {
-      setIsLoading(false)
     }
   }
-
-  const validationSchema = Yup.object().shape<{ amount: number }>({
-    amount: Yup.number()
-      .min(1, 'Must be more or equal to 1')
-      .max(
-        Number(amountMax),
-        `Must be less or equal to ${Number(amountMax).toFixed(2)}`
-      )
-      .required('Required')
-  })
 
   // TODO: this is only a prototype and is an accessibility nightmare.
   // Needs to be refactored to either use custom select element instead of tippy.js,
@@ -146,12 +148,13 @@ export default function Add({
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={async (values, { setSubmitting, resetForm }) => {
-          // kick off
           await handleAddLiquidity(values.amount, resetForm)
           setSubmitting(false)
         }}
       >
-        {({ values, setFieldValue, submitForm }) => {
+        {({ values, isSubmitting, setFieldValue, submitForm }) => {
+          // TODO: move these 2 const to some useEffect() so it dos not
+          // constantly re-renders all the time
           const newPoolTokens =
             totalBalance &&
             ((values.amount / Number(totalBalance.ocean)) * 100).toFixed(2)
@@ -201,7 +204,8 @@ export default function Add({
                   )}
                 </Field>
 
-                {(Number(balance.ocean) || dtBalance) > values.amount && (
+                {(Number(balance.ocean) || dtBalance) >
+                  (values.amount || 0) && (
                   <Button
                     className={styles.buttonMax}
                     style="text"
@@ -226,7 +230,7 @@ export default function Add({
               </div>
 
               <Actions
-                isLoading={isLoading}
+                isLoading={isSubmitting}
                 loaderMessage="Adding Liquidity..."
                 actionName={content.action}
                 action={submitForm}
