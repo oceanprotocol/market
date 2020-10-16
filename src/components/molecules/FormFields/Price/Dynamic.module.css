@@ -11,18 +11,18 @@
 
 .balance {
   text-align: center;
-  font-size: var(--font-size-small);
+  font-size: var(--font-size-small) !important;
   border: 1px solid var(--brand-grey-lighter);
   border-right: 0;
   margin-right: -3px;
-  padding: calc(var(--spacer) / 4.5) calc(var(--spacer) / 2);
+  height: 35px;
+  padding: calc(var(--spacer) / 3) calc(var(--spacer) / 2)
+    calc(var(--spacer) / 4.5) calc(var(--spacer) / 2);
   border-top-left-radius: var(--border-radius);
   border-bottom-left-radius: var(--border-radius);
   color: var(--color-secondary);
-}
-
-.balance strong {
-  color: var(--brand-grey);
+  display: flex;
+  align-items: center;
 }
 
 .title {

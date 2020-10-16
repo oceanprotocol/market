@@ -1,6 +1,7 @@
 .coinSelect {
   composes: select from '../../../atoms/Input/InputElement.module.css';
   font-size: var(--font-size-small);
+  font-weight: var(--font-weight-base);
   border: none;
   margin-left: -0.5rem;
   margin-right: -0.5rem;
