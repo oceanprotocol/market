@@ -10,7 +10,7 @@
         "titleIn": "You will receive",
         "titleOut": "You will earn"
       },
-      "action": "Supply"
+      "action": "Approve & Supply"
     },
     "remove": {
       "title": "Remove Liquidity",
@@ -20,7 +20,7 @@
         "titleIn": "You will spend",
         "titleOut": "You will receive"
       },
-      "action": "Remove"
+      "action": "Approve & Remove"
     }
   }
 }
