@@ -1,5 +1,6 @@
-import loadable from '@loadable/component'
 import { infuraProjectId, network } from '../../app.config'
+import WalletConnectProvider from '@walletconnect/web3-provider'
+import Torus from '@toruslabs/torus-embed'
 
 const web3ModalTheme = {
   background: 'var(--brand-white)',
@@ -8,11 +9,6 @@ const web3ModalTheme = {
   border: 'var(--brand-grey-lighter)',
   hover: 'var(--brand-grey-dimmed)'
 }
-
-const WalletConnectProvider = loadable(
-  () => import('@walletconnect/web3-provider') as any
-)
-const Torus = loadable(() => import('@toruslabs/torus-embed') as any)
 
 const providerOptions = {
   walletconnect: {
