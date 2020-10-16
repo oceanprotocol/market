@@ -1,8 +1,8 @@
 .addInput {
   margin: 0 auto calc(var(--spacer) / 1.5) auto;
   background: var(--brand-grey-dimmed);
-  padding: var(--spacer) calc(var(--spacer) * 3) calc(var(--spacer) * 1.2)
-    calc(var(--spacer) * 3);
+  padding: var(--spacer) calc(var(--spacer) * 2.5) calc(var(--spacer) * 1.2)
+    calc(var(--spacer) * 2.5);
   border-bottom: 1px solid var(--brand-grey-lighter);
   margin-top: -2rem;
   margin-left: -2rem;
@@ -22,7 +22,7 @@
   position: absolute;
   font-size: var(--font-size-mini);
   bottom: calc(var(--spacer) / 2);
-  right: calc(var(--spacer) * 3);
+  right: calc(var(--spacer) * 2.5);
 }
 
 .userLiquidity > div {
@@ -40,24 +40,6 @@
 .userLiquidity span + div {
   transform: scale(0.8);
   transform-origin: right center;
-}
-
-.coinswitch,
-.coinPopover li {
-  cursor: pointer;
-}
-
-.coinswitch svg {
-  width: 0.6em;
-  height: 0.6em;
-  display: inline-block;
-  fill: currentColor;
-  margin-right: 0.5rem;
-  margin-left: 0.25rem;
-}
-
-.coinPopover li {
-  padding: calc(var(--spacer) / 4) calc(var(--spacer) / 2);
 }
 
 .output {

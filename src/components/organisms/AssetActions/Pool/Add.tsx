@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect, ChangeEvent } from 'react'
+import React, { ReactElement, useState, useEffect } from 'react'
 import styles from './Add.module.css'
 import { useOcean } from '@oceanprotocol/react'
 import Header from './Header'
@@ -8,12 +8,11 @@ import Token from './Token'
 import { Balance } from './'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
 import Actions from './Actions'
-import Tooltip from '../../../atoms/Tooltip'
-import { ReactComponent as Caret } from '../../../../images/caret.svg'
 import { graphql, useStaticQuery } from 'gatsby'
 import * as Yup from 'yup'
 import { Field, Formik } from 'formik'
 import Input from '../../../atoms/Input'
+import CoinSelect from './CoinSelect'
 
 const contentQuery = graphql`
   query PoolAddQuery {
@@ -138,17 +137,6 @@ export default function Add({
     }
   }
 
-  // TODO: this is only a prototype and is an accessibility nightmare.
-  // Needs to be refactored to either use custom select element instead of tippy.js,
-  // or use <button> in this implementation.
-  // Also needs to be closed when users click an option.
-  const CoinSelect = () => (
-    <ul className={styles.coinPopover}>
-      <li onClick={() => setCoin('OCEAN')}>OCEAN</li>
-      <li onClick={() => setCoin(dtSymbol)}>{dtSymbol}</li>
-    </ul>
-  )
-
   return (
     <>
       <Header title={content.title} backAction={() => setShowAdd(false)} />
@@ -205,15 +193,7 @@ export default function Add({
                       max={amountMax}
                       value={`${values.amount}`}
                       prefix={
-                        <Tooltip
-                          content={<CoinSelect />}
-                          trigger="click focus"
-                          className={styles.coinswitch}
-                          placement="bottom"
-                        >
-                          {coin}
-                          <Caret aria-hidden="true" />
-                        </Tooltip>
+                        <CoinSelect dtSymbol={dtSymbol} setCoin={setCoin} />
                       }
                       placeholder="0"
                       field={field}

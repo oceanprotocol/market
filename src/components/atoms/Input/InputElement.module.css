@@ -11,7 +11,7 @@
   margin: 0;
   border-radius: var(--border-radius);
   transition: 0.2s ease-out;
-  min-height: 43px;
+  height: 43px;
   min-width: 0;
   appearance: none;
   display: block;
@@ -179,7 +179,7 @@
 .prefix,
 .postfix {
   border: 1px solid var(--brand-grey-lighter);
-  min-height: 43px;
+  height: 43px;
   display: flex;
   align-items: center;
   padding-left: calc(var(--spacer) / 4);
@@ -188,6 +188,7 @@
   font-size: var(--font-size-small);
   transition: border 0.2s ease-out;
   white-space: nowrap;
+  position: relative;
 }
 
 .prefix {
