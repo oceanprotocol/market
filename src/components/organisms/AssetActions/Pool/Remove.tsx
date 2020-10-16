@@ -16,6 +16,7 @@ import FormHelp from '../../../atoms/Input/Help'
 import Button from '../../../atoms/Button'
 import { getMaxValuesRemove } from './utils'
 import { graphql, useStaticQuery } from 'gatsby'
+import PriceUnit from '../../../atoms/Price/PriceUnit'
 
 const contentQuery = graphql`
   query PoolRemoveQuery {
@@ -139,6 +140,13 @@ export default function Remove({
       <Header title={content.title} backAction={() => setShowRemove(false)} />
 
       <form className={styles.removeInput}>
+        <div className={styles.userLiquidity}>
+          <div>
+            <span>Available:</span>
+            <PriceUnit price={poolTokens} symbol="pool shares" small />
+          </div>
+        </div>
+
         <div className={styles.range}>
           <h3>{amountPercent}%</h3>
           <div className={styles.slider}>
@@ -146,7 +154,6 @@ export default function Remove({
               type="range"
               min="0"
               max={amountMaxPercent}
-              step={Number(amountMaxPercent) < 10 ? '1' : '10'}
               value={amountPercent}
               onChange={handleAmountPercentChange}
             />

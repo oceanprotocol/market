@@ -6,6 +6,11 @@
 
 .userLiquidity {
   composes: userLiquidity from './Add.module.css';
+  max-width: 12rem;
+  margin-top: -1rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: calc(var(--spacer) / 2);
 }
 
 .range {
