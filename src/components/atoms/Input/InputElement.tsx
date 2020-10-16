@@ -57,7 +57,12 @@ export default function InputElement({
       )
     case 'textarea':
       return (
-        <textarea name={name} id={name} className={styles.input} {...props} />
+        <textarea
+          name={name}
+          id={name}
+          className={styles.textarea}
+          {...props}
+        />
       )
     case 'radio':
     case 'checkbox':

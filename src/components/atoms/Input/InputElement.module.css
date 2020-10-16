@@ -49,6 +49,11 @@
   display: none;
 }
 
+.textarea {
+  composes: input;
+  height: auto;
+}
+
 .select {
   composes: input;
   height: 43px;
