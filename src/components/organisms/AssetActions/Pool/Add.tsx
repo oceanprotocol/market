@@ -10,7 +10,7 @@ import PriceUnit from '../../../atoms/Price/PriceUnit'
 import Actions from './Actions'
 import { graphql, useStaticQuery } from 'gatsby'
 import * as Yup from 'yup'
-import { Field, Formik } from 'formik'
+import { Field, FieldInputProps, Formik } from 'formik'
 import Input from '../../../atoms/Input'
 import CoinSelect from './CoinSelect'
 
@@ -66,8 +66,8 @@ export default function Add({
   const content = data.content.edges[0].node.childContentJson.pool.add
 
   const { ocean, accountId, balance } = useOcean()
-  const [txId, setTxId] = useState<string>('')
-  const [coin, setCoin] = useState<string>('OCEAN')
+  const [txId, setTxId] = useState<string>()
+  const [coin, setCoin] = useState('OCEAN')
   const [dtBalance, setDtBalance] = useState<string>()
   const [amountMax, setAmountMax] = useState<string>()
 
@@ -78,7 +78,7 @@ export default function Add({
       .min(1, 'Must be more or equal to 1')
       .max(
         Number(amountMax),
-        `Must be less or equal to ${Number(amountMax).toFixed(2)}`
+        `Maximum you can add is ${Number(amountMax).toFixed(2)} ${coin}`
       )
       .required('Required')
   })
@@ -158,8 +158,6 @@ export default function Add({
           submitForm,
           handleChange
         }) => {
-          // TODO: move these 2 const to some useEffect() so it dos not
-          // constantly re-renders all the time
           const newPoolTokens =
             totalBalance &&
             ((values.amount / Number(totalBalance.ocean)) * 100).toFixed(2)
@@ -187,7 +185,13 @@ export default function Add({
                 </div>
 
                 <Field name="amount">
-                  {({ field, form }: { field: any; form: any }) => (
+                  {({
+                    field,
+                    form
+                  }: {
+                    field: FieldInputProps<FormAddLiquidity>
+                    form: any
+                  }) => (
                     <Input
                       type="number"
                       max={amountMax}
