@@ -1,6 +1,6 @@
 import { infuraProjectId, network } from '../../app.config'
 import WalletConnectProvider from '@walletconnect/web3-provider'
-import Torus from '@toruslabs/torus-embed'
+// import Torus from '@toruslabs/torus-embed'
 
 const web3ModalTheme = {
   background: 'var(--brand-white)',
@@ -16,17 +16,17 @@ const providerOptions = {
     options: {
       infuraId: infuraProjectId
     }
-  },
-  torus: {
-    package: Torus,
-    options: {
-      networkParams: {
-        // host: oceanConfig.url // optional
-        // chainId: 1337, // optional
-        // networkId: 1337 // optional
-      }
-    }
   }
+  // torus: {
+  //   package: Torus,
+  //   options: {
+  //     networkParams: {
+  //       // host: oceanConfig.url // optional
+  //       // chainId: 1337, // optional
+  //       // networkId: 1337 // optional
+  //     }
+  //   }
+  // }
 }
 
 export const web3ModalOpts = {
