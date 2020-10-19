@@ -22,3 +22,9 @@
 .feedback {
   width: 100%;
 }
+
+.hasTokens {
+  font-size: var(--font-size-small);
+  color: var(--color-secondary);
+  margin-top: calc(var(--spacer) / 4);
+}
