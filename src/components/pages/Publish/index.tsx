@@ -10,7 +10,7 @@ import { transformPublishFormToMetadata } from './utils'
 import Preview from './Preview'
 import { MetadataPublishForm } from '../../../@types/MetaData'
 import { useUserPreferences } from '../../../providers/UserPreferences'
-import { Logger, Metadata } from '@oceanprotocol/lib'
+import { DDO, Logger, Metadata } from '@oceanprotocol/lib'
 import { Persist } from '../../atoms/FormikPersist'
 import Debug from './Debug'
 import Feedback from './Feedback'
@@ -27,7 +27,7 @@ export default function PublishPage({
 
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
-  const [did, setDid] = useState<string>()
+  const [ddo, setDdo] = useState<DDO>()
 
   const hasFeedback = isLoading || error || success
 
@@ -61,7 +61,7 @@ export default function PublishPage({
 
       // Publish succeeded
       if (ddo) {
-        setDid(ddo.id)
+        setDdo(ddo)
         setSuccess('🎉 Successfully published your data set. 🎉')
         resetForm()
       }
@@ -93,7 +93,7 @@ export default function PublishPage({
               error={error}
               success={success}
               publishStepText={publishStepText}
-              did={did}
+              ddo={ddo}
               setError={setError}
             />
           ) : (
