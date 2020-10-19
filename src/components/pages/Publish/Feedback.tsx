@@ -5,18 +5,21 @@ import React, { ReactElement } from 'react'
 import styles from './Feedback.module.css'
 import SuccessConfetti from '../../atoms/SuccessConfetti'
 import { DDO } from '@oceanprotocol/lib'
+import Pricing from './Pricing'
 
 export default function Feedback({
   error,
   success,
   ddo,
   publishStepText,
+  isPricing,
   setError
 }: {
   error: string
   success: string
   ddo: DDO
   publishStepText: string
+  isPricing: boolean
   setError: (error: string) => void
 }): ReactElement {
   const SuccessAction = () => (
@@ -46,6 +49,8 @@ export default function Feedback({
               Try Again
             </Button>
           </>
+        ) : isPricing ? (
+          <Pricing ddo={ddo} />
         ) : success ? (
           <SuccessConfetti success={success} action={<SuccessAction />} />
         ) : (

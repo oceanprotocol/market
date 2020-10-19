@@ -1,6 +1,6 @@
 import React, { ReactElement, useState } from 'react'
 import { Formik } from 'formik'
-import { usePublish } from '@oceanprotocol/react'
+import { usePublish, usePricing } from '@oceanprotocol/react'
 import styles from './index.module.css'
 import PublishForm from './PublishForm'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
@@ -27,6 +27,7 @@ export default function PublishPage({
 
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
+  const [isPricing, setIsPricing] = useState<boolean>()
   const [ddo, setDdo] = useState<DDO>()
 
   const hasFeedback = isLoading || error || success
@@ -59,12 +60,16 @@ export default function PublishPage({
         return
       }
 
+      if (!ddo) return
+
       // Publish succeeded
-      if (ddo) {
-        setDdo(ddo)
-        setSuccess('🎉 Successfully published your data set. 🎉')
-        resetForm()
-      }
+      setDdo(ddo)
+      resetForm()
+
+      // Create pricing
+      setIsPricing(true)
+
+      // setSuccess('🎉 Successfully published your data set. 🎉')
     } catch (error) {
       setError(error.message)
       Logger.error(error.message)
@@ -94,6 +99,7 @@ export default function PublishPage({
               success={success}
               publishStepText={publishStepText}
               ddo={ddo}
+              isPricing={isPricing}
               setError={setError}
             />
           ) : (
