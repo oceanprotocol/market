@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import styles from './index.module.css'
-import { useMetadata, useOcean } from '@oceanprotocol/react'
+import { useMetadata } from '@oceanprotocol/react'
 import { DDO } from '@oceanprotocol/lib'
 import Loader from '../Loader'
 import Tooltip from '../Tooltip'

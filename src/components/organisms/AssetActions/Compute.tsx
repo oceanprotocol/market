@@ -15,6 +15,7 @@ import styles from './Compute.module.css'
 import Button from '../../atoms/Button'
 import Input from '../../atoms/Input'
 import Alert from '../../atoms/Alert'
+import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 
 export default function Compute({
   ddo,
@@ -25,6 +26,7 @@ export default function Compute({
 }): ReactElement {
   const { ocean } = useOcean()
   const { compute, isLoading, computeStepText, computeError } = useCompute()
+  const { marketFeeAddress } = useSiteMetadata()
   const computeService = ddo.findServiceByType('compute')
   const metadataService = ddo.findServiceByType('metadata')
 
@@ -73,7 +75,8 @@ export default function Compute({
         computeService,
         ddo.dataToken,
         algorithmRawCode,
-        computeContainer
+        computeContainer,
+        marketFeeAddress
       )
 
       setIsPublished(true)

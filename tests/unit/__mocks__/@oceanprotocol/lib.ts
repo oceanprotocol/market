@@ -1,6 +1,6 @@
 import ddo from '../../__fixtures__/ddo'
 
-const metadataStore = {
+const metadataCache = {
   queryMetadata: () => {
     return {
       results: [] as any[],
@@ -11,13 +11,13 @@ const metadataStore = {
 }
 
 const libMock = {
-  MetadataStore: () => metadataStore,
+  MetadataStore: () => metadataCache,
   DDO: () => ddo,
   ocean: {
     accounts: {
       list: () => ['xxx', 'xxx']
     },
-    metadataStore,
+    metadataCache,
     // compute: {
     //   status: (account: string) => {
     //     return [job]

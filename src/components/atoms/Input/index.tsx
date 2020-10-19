@@ -3,7 +3,7 @@ import InputElement from './InputElement'
 import Help from './Help'
 import Label from './Label'
 import styles from './index.module.css'
-import { ErrorMessage } from 'formik'
+import { ErrorMessage, FieldInputProps } from 'formik'
 import classNames from 'classnames/bind'
 
 const cx = classNames.bind(styles)
@@ -33,7 +33,7 @@ export interface InputProps {
   max?: string
   disabled?: boolean
   readOnly?: boolean
-  field?: any
+  field?: FieldInputProps<any>
   form?: any
   prefix?: string | ReactElement
   postfix?: string | ReactElement
@@ -71,7 +71,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
       </Label>
       <InputElement small={small} {...field} {...props} />
 
-      {field && field.name !== 'price' && (
+      {field && field.name !== 'price' && hasError && (
         <div className={styles.error}>
           <ErrorMessage name={field.name} />
         </div>

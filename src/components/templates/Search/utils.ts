@@ -1,8 +1,8 @@
 import {
   SearchQuery,
   QueryResult
-} from '@oceanprotocol/lib/dist/node/metadatastore/MetadataStore'
-import { MetadataStore, Logger } from '@oceanprotocol/lib'
+} from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
+import { MetadataCache, Logger } from '@oceanprotocol/lib'
 
 export function getSearchQuery(
   page?: string | string[],
@@ -30,12 +30,12 @@ export function getSearchQuery(
 
 export async function getResults(
   params: { text?: string; tag?: string; page?: string; offset?: string },
-  metadataStoreUri: string
+  metadataCacheUri: string
 ): Promise<QueryResult> {
   const { text, tag, page, offset } = params
 
-  const metadataStore = new MetadataStore(metadataStoreUri, Logger)
-  const queryResult = await metadataStore.queryMetadata(
+  const metadataCache = new MetadataCache(metadataCacheUri, Logger)
+  const queryResult = await metadataCache.queryMetadata(
     getSearchQuery(page, offset, text, tag)
   )
 

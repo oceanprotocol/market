@@ -24,13 +24,13 @@ export default function wrapRootElement({
 }: {
   element: ReactElement
 }): ReactElement {
-  const { metadataStoreUri, network } = appConfig
+  const { metadataCacheUri, network } = appConfig
   const oceanInitialConfig = getOceanConfig(network)
 
   const initialConfig = {
     ...oceanInitialConfig,
-    // add metadataStoreUri only when defined
-    ...(metadataStoreUri && { metadataStoreUri })
+    // add metadataCacheUri only when defined
+    ...(metadataCacheUri && { metadataCacheUri })
   }
 
   return (

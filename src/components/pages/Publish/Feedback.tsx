@@ -1,9 +1,9 @@
 import Alert from '../../atoms/Alert'
-import Success from './Success'
 import Button from '../../atoms/Button'
 import Loader from '../../atoms/Loader'
 import React, { ReactElement } from 'react'
 import styles from './Feedback.module.css'
+import SuccessConfetti from '../../atoms/SuccessConfetti'
 
 export default function Feedback({
   error,
@@ -18,6 +18,17 @@ export default function Feedback({
   publishStepText: string
   setError: (error: string) => void
 }): ReactElement {
+  const SuccessAction = () => (
+    <Button
+      style="primary"
+      size="small"
+      href={`/asset/${did}`}
+      className={styles.action}
+    >
+      Go to data set →
+    </Button>
+  )
+
   return (
     <div className={styles.feedback}>
       <div className={styles.box}>
@@ -35,7 +46,7 @@ export default function Feedback({
             </Button>
           </>
         ) : success ? (
-          <Success success={success} did={did} />
+          <SuccessConfetti success={success} action={<SuccessAction />} />
         ) : (
           <Loader message={publishStepText} />
         )}

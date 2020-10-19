@@ -13,12 +13,18 @@
 }
 
 .error {
-  font-size: var(--font-size-small);
-  color: var(--brand-alert-red);
+  display: inline-block;
+  font-size: var(--font-size-mini);
+  line-height: 1.2;
+  font-weight: var(--font-weight-bold);
+  color: var(--brand-white);
+  background: var(--brand-alert-red);
+  border-radius: var(--border-radius);
+  padding: 0.2rem 0.4rem;
   position: absolute;
-  text-align: right;
   right: 0;
-  top: 0;
+  top: 85%;
+  z-index: 1;
 }
 
 .hasError label {
@@ -26,7 +32,10 @@
 }
 
 .hasError input,
+.hasError input:focus,
 .hasError select,
-.hasError textarea {
+.hasError textarea,
+.hasError [class*='prefix'],
+.hasError [class*='postfix'] {
   border-color: var(--brand-alert-red);
 }

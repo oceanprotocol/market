@@ -55,7 +55,7 @@ export default function Fees({
               <Tooltip content={tooltips.marketplaceFee} />
             </>
           }
-          value={appConfig.marketFeeAmount}
+          value="0.1"
           name="marketplaceFee"
           postfix="%"
           readOnly

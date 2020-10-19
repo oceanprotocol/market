@@ -5,7 +5,7 @@ import appConfig from '../../app.config'
 import { Logger } from '@oceanprotocol/lib'
 
 export function NetworkMonitor(): ReactElement {
-  const { metadataStoreUri } = appConfig
+  const { metadataCacheUri } = appConfig
   const { connect, web3Provider } = useOcean()
 
   useEffect(() => {
@@ -16,8 +16,8 @@ export function NetworkMonitor(): ReactElement {
 
       const newConfig = {
         ...initialConfig,
-        // add metadataStoreUri only when defined
-        ...(metadataStoreUri && { metadataStoreUri })
+        // add metadataCacheUri only when defined
+        ...(metadataCacheUri && { metadataCacheUri })
       }
 
       try {
@@ -32,7 +32,7 @@ export function NetworkMonitor(): ReactElement {
     return () => {
       web3Provider.removeListener('chainChanged', handleNetworkChanged)
     }
-  }, [web3Provider, connect, metadataStoreUri])
+  }, [web3Provider, connect, metadataCacheUri])
 
   return <></>
 }

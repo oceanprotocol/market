@@ -8,6 +8,7 @@ import Web3Feedback from '../../molecules/Wallet/Feedback'
 import styles from './Consume.module.css'
 import Loader from '../../atoms/Loader'
 import { useOcean, useConsume } from '@oceanprotocol/react'
+import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 
 export default function Consume({
   ddo,
@@ -19,6 +20,7 @@ export default function Consume({
   isBalanceSufficient: boolean
 }): ReactElement {
   const { ocean } = useOcean()
+  const { marketFeeAddress } = useSiteMetadata()
   const { consumeStepText, consume, consumeError } = useConsume()
 
   const isDisabled = !ocean || !isBalanceSufficient
@@ -34,7 +36,9 @@ export default function Consume({
       ) : (
         <Button
           style="primary"
-          onClick={() => consume(ddo.id, ddo.dataToken, 'access')}
+          onClick={() =>
+            consume(ddo.id, ddo.dataToken, 'access', marketFeeAddress)
+          }
           disabled={isDisabled}
         >
           Buy

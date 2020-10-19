@@ -1,4 +1,5 @@
 import { DataTokenOptions, useOcean } from '@oceanprotocol/react'
+import PriceUnit from '../../../atoms/Price/PriceUnit'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { PriceOptionsMarket } from '../../../../@types/MetaData'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
@@ -66,9 +67,12 @@ export default function Dynamic({
 
       <aside className={styles.wallet}>
         {balance?.ocean && (
-          <div className={styles.balance}>
-            OCEAN <strong>{balance.ocean}</strong>
-          </div>
+          <PriceUnit
+            className={styles.balance}
+            price={balance.ocean}
+            symbol="OCEAN"
+            small
+          />
         )}
         <Wallet />
       </aside>

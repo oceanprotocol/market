@@ -1,17 +1,49 @@
-import React, { ReactElement, useState, ChangeEvent, useEffect } from 'react'
+import React, { ReactElement, useState, useEffect } from 'react'
 import styles from './Add.module.css'
 import { useOcean } from '@oceanprotocol/react'
 import Header from './Header'
 import { toast } from 'react-toastify'
-import InputElement from '../../../atoms/Input/InputElement'
 import Button from '../../../atoms/Button'
 import Token from './Token'
 import { Balance } from './'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
 import Actions from './Actions'
-import { useUserPreferences } from '../../../../providers/UserPreferences'
-import Tooltip from '../../../atoms/Tooltip'
-import { ReactComponent as Caret } from '../../../../images/caret.svg'
+import { graphql, useStaticQuery } from 'gatsby'
+import * as Yup from 'yup'
+import { Field, FieldInputProps, Formik } from 'formik'
+import Input from '../../../atoms/Input'
+import CoinSelect from './CoinSelect'
+
+const contentQuery = graphql`
+  query PoolAddQuery {
+    content: allFile(filter: { relativePath: { eq: "price.json" } }) {
+      edges {
+        node {
+          childContentJson {
+            pool {
+              add {
+                title
+                output {
+                  titleIn
+                  titleOut
+                }
+                action
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+interface FormAddLiquidity {
+  amount: number
+}
+
+const initialValues: FormAddLiquidity = {
+  amount: undefined
+}
 
 export default function Add({
   setShowAdd,
@@ -30,133 +62,191 @@ export default function Add({
   dtSymbol: string
   dtAddress: string
 }): ReactElement {
-  const { debug } = useUserPreferences()
+  const data = useStaticQuery(contentQuery)
+  const content = data.content.edges[0].node.childContentJson.pool.add
+
   const { ocean, accountId, balance } = useOcean()
-  const [amount, setAmount] = useState('')
-  const [txId, setTxId] = useState<string>('')
-  const [isLoading, setIsLoading] = useState<boolean>()
-  const [coin, setCoin] = useState<string>('OCEAN')
+  const [txId, setTxId] = useState<string>()
+  const [coin, setCoin] = useState('OCEAN')
   const [dtBalance, setDtBalance] = useState<string>()
+  const [amountMax, setAmountMax] = useState<string>()
 
-  const newPoolTokens =
-    totalBalance &&
-    ((Number(amount) / Number(totalBalance.ocean)) * 100).toFixed(2)
+  // Live validation rules
+  // https://github.com/jquense/yup#number
+  const validationSchema = Yup.object().shape<FormAddLiquidity>({
+    amount: Yup.number()
+      .min(1, 'Must be more or equal to 1')
+      .max(
+        Number(amountMax),
+        `Maximum you can add is ${Number(amountMax).toFixed(2)} ${coin}`
+      )
+      .required('Required')
+  })
 
-  const newPoolShare =
-    totalBalance &&
-    ((Number(newPoolTokens) / Number(totalPoolTokens)) * 100).toFixed(2)
-
+  // Get datatoken balance when datatoken selected
   useEffect(() => {
-    if (!ocean) return
+    if (!ocean || coin === 'OCEAN') return
 
     async function getDtBalance() {
       const dtBalance = await ocean.datatokens.balance(dtAddress, accountId)
       setDtBalance(dtBalance)
     }
     getDtBalance()
-  }, [ocean, accountId, dtAddress])
+  }, [ocean, accountId, dtAddress, coin])
 
-  async function handleAddLiquidity() {
-    setIsLoading(true)
+  // Get maximum amount for either OCEAN or datatoken
+  useEffect(() => {
+    if (!ocean) return
 
+    async function getMaximum() {
+      const amountMaxPool =
+        coin === 'OCEAN'
+          ? await ocean.pool.getOceanMaxAddLiquidity(poolAddress)
+          : await ocean.pool.getDTMaxAddLiquidity(poolAddress)
+
+      const amountMax =
+        coin === 'OCEAN'
+          ? Number(balance.ocean) > Number(amountMaxPool)
+            ? amountMaxPool
+            : balance.ocean
+          : Number(dtBalance) > Number(amountMaxPool)
+          ? amountMaxPool
+          : dtBalance
+      setAmountMax(amountMax)
+    }
+    getMaximum()
+  }, [ocean, poolAddress, coin, dtBalance, balance.ocean])
+
+  // Submit
+  async function handleAddLiquidity(amount: number, resetForm: () => void) {
     try {
       const result =
         coin === 'OCEAN'
-          ? await ocean.pool.addOceanLiquidity(accountId, poolAddress, amount)
-          : await ocean.pool.addDTLiquidity(accountId, poolAddress, amount)
+          ? await ocean.pool.addOceanLiquidity(
+              accountId,
+              poolAddress,
+              `${amount}`
+            )
+          : await ocean.pool.addDTLiquidity(accountId, poolAddress, `${amount}`)
 
       setTxId(result?.transactionHash)
+      resetForm()
     } catch (error) {
       console.error(error.message)
       toast.error(error.message)
-    } finally {
-      setIsLoading(false)
     }
   }
 
-  function handleAmountChange(e: ChangeEvent<HTMLInputElement>) {
-    setAmount(e.target.value)
-  }
-
-  function handleMax() {
-    setAmount(coin === 'OCEAN' ? balance.ocean : dtBalance)
-  }
-
-  // TODO: this is only a prototype and is an accessibility nightmare.
-  // Needs to be refactored to either use custom select element instead of tippy.js,
-  // or use <button> in this implementation.
-  // Also needs to be closed when users click an option.
-  const CoinSelect = () => (
-    <ul className={styles.coinPopover}>
-      <li onClick={() => setCoin('OCEAN')}>OCEAN</li>
-      <li onClick={() => setCoin(dtSymbol)}>{dtSymbol}</li>
-    </ul>
-  )
-
   return (
     <>
-      <Header title="Add Liquidity" backAction={() => setShowAdd(false)} />
+      <Header title={content.title} backAction={() => setShowAdd(false)} />
 
-      <div className={styles.addInput}>
-        <div className={styles.userLiquidity}>
-          <span>Available: </span>
-          {coin === 'OCEAN' ? (
-            <PriceUnit price={balance.ocean} symbol="OCEAN" small />
-          ) : (
-            <PriceUnit price={dtBalance} symbol={dtSymbol} small />
-          )}
-        </div>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={async (values, { setSubmitting, resetForm }) => {
+          await handleAddLiquidity(values.amount, resetForm)
+          setSubmitting(false)
+        }}
+      >
+        {({
+          values,
+          touched,
+          setTouched,
+          isSubmitting,
+          setFieldValue,
+          submitForm,
+          handleChange
+        }) => {
+          const newPoolTokens =
+            totalBalance &&
+            ((values.amount / Number(totalBalance.ocean)) * 100).toFixed(2)
 
-        <InputElement
-          value={amount}
-          name="coin"
-          type="number"
-          prefix={
-            <Tooltip
-              content={<CoinSelect />}
-              trigger="click focus"
-              className={styles.coinswitch}
-              placement="bottom"
-            >
-              {coin}
-              <Caret aria-hidden="true" />
-            </Tooltip>
-          }
-          placeholder="0"
-          onChange={handleAmountChange}
-        />
+          const newPoolShare =
+            totalBalance &&
+            ((Number(newPoolTokens) / Number(totalPoolTokens)) * 100).toFixed(2)
 
-        {(balance.ocean || dtBalance) > amount && (
-          <Button
-            className={styles.buttonMax}
-            style="text"
-            size="small"
-            onClick={handleMax}
-          >
-            Use Max
-          </Button>
-        )}
-      </div>
+          return (
+            <>
+              <div className={styles.addInput}>
+                <div className={styles.userLiquidity}>
+                  <div>
+                    <span>Available:</span>
+                    {coin === 'OCEAN' ? (
+                      <PriceUnit price={balance.ocean} symbol="OCEAN" small />
+                    ) : (
+                      <PriceUnit price={dtBalance} symbol={dtSymbol} small />
+                    )}
+                  </div>
+                  <div>
+                    <span>Maximum:</span>
+                    <PriceUnit price={amountMax} symbol={coin} small />
+                  </div>
+                </div>
 
-      <div className={styles.output}>
-        <div>
-          <p>You will receive</p>
-          {debug === true && <Token symbol="BPT" balance={newPoolTokens} />}
-          <Token symbol="% of pool" balance={newPoolShare} />
-        </div>
-        <div>
-          <p>You will earn</p>
-          <Token symbol="% swap fee" balance={swapFee} />
-        </div>
-      </div>
+                <Field name="amount">
+                  {({
+                    field,
+                    form
+                  }: {
+                    field: FieldInputProps<FormAddLiquidity>
+                    form: any
+                  }) => (
+                    <Input
+                      type="number"
+                      max={amountMax}
+                      value={`${values.amount}`}
+                      prefix={
+                        <CoinSelect dtSymbol={dtSymbol} setCoin={setCoin} />
+                      }
+                      placeholder="0"
+                      field={field}
+                      form={form}
+                      onChange={(e) => {
+                        // Workaround so validation kicks in on first touch
+                        !touched?.amount && setTouched({ amount: true })
+                        handleChange(e)
+                      }}
+                    />
+                  )}
+                </Field>
 
-      <Actions
-        isLoading={isLoading}
-        loaderMessage="Adding Liquidity..."
-        actionName="Supply"
-        action={handleAddLiquidity}
-        txId={txId}
-      />
+                {(Number(balance.ocean) || dtBalance) >
+                  (values.amount || 0) && (
+                  <Button
+                    className={styles.buttonMax}
+                    style="text"
+                    size="small"
+                    onClick={() => setFieldValue('amount', amountMax)}
+                  >
+                    Use Max
+                  </Button>
+                )}
+              </div>
+
+              <div className={styles.output}>
+                <div>
+                  <p>{content.output.titleIn}</p>
+                  <Token symbol="pool shares" balance={newPoolTokens} />
+                  <Token symbol="% of pool" balance={newPoolShare} />
+                </div>
+                <div>
+                  <p>{content.output.titleOut}</p>
+                  <Token symbol="% swap fee" balance={swapFee} />
+                </div>
+              </div>
+
+              <Actions
+                isLoading={isSubmitting}
+                loaderMessage="Adding Liquidity..."
+                actionName={content.action}
+                action={submitForm}
+                txId={txId}
+              />
+            </>
+          )
+        }}
+      </Formik>
     </>
   )
 }
