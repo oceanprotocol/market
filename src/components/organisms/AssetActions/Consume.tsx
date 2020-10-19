@@ -23,15 +23,21 @@ export default function Consume({
 }): ReactElement {
   const { ocean } = useOcean()
   const { marketFeeAddress } = useSiteMetadata()
-  const { buyDT, pricingStepText, pricingError } = usePricing()
+  const {
+    dtSymbol,
+    buyDT,
+    pricingStepText,
+    pricingError,
+    pricingIsLoading
+  } = usePricing(ddo)
   const { consumeStepText, consume, consumeError } = useConsume()
 
   const isDisabled =
-    !ocean || !isBalanceSufficient || consumeStepText || pricingStepText
+    !ocean || !isBalanceSufficient || consumeStepText || pricingIsLoading
   const hasDatatoken = Number(dtBalance) >= 1
 
   async function handleConsume() {
-    !hasDatatoken && (await buyDT(ddo.dataToken, '1'))
+    !hasDatatoken && (await buyDT('1'))
     await consume(ddo.id, ddo.dataToken, 'access', marketFeeAddress)
   }
 
@@ -42,8 +48,8 @@ export default function Consume({
   }, [consumeError, pricingError])
 
   const PurchaseButton = () => (
-    <div>
-      {consumeStepText || pricingStepText ? (
+    <div className={styles.actions}>
+      {consumeStepText || pricingIsLoading ? (
         <Loader message={consumeStepText || pricingStepText} />
       ) : (
         <Button style="primary" onClick={handleConsume} disabled={isDisabled}>
@@ -63,8 +69,8 @@ export default function Consume({
           <Price ddo={ddo} conversion />
           {hasDatatoken && (
             <div className={styles.hasTokens}>
-              You own {dtBalance} {ddo.dataTokenInfo?.symbol || 'DT'} so you can
-              use this asset without paying again.
+              You own {dtBalance} {dtSymbol} so you can use this asset without
+              paying again.
             </div>
           )}
           <PurchaseButton />

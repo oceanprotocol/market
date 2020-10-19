@@ -12,12 +12,9 @@
   flex-shrink: 0;
 }
 
-.pricewrapper button {
-  margin-top: var(--spacer);
-}
-
-.feedback {
+.actions {
   width: 100%;
+  margin-top: calc(var(--spacer) / 2);
 }
 
 .hasTokens {
