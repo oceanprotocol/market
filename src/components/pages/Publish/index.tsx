@@ -36,18 +36,20 @@ export default function PublishPage({
     resetForm: () => void
   ): Promise<void> {
     const metadata = transformPublishFormToMetadata(values)
-    const { price } = values
     const serviceType = values.access === 'Download' ? 'access' : 'compute'
 
     try {
-      Logger.log('Publish with ', price, serviceType, price.datatoken)
+      Logger.log(
+        'Publish with ',
+        metadata,
+        serviceType,
+        values.dataTokenOptions
+      )
 
       const ddo = await publish(
         (metadata as unknown) as Metadata,
-        // swapFee is tricky: to get 0.1% you need to send 0.001 as value
-        { ...price, swapFee: `${price.swapFee / 100}` },
         serviceType,
-        price.datatoken
+        values.dataTokenOptions
       )
 
       // Publish failed

@@ -42,9 +42,9 @@
         "required": true
       },
       {
-        "name": "price",
-        "label": "Price",
-        "type": "price",
+        "name": "dataTokenOptions",
+        "label": "Datatoken",
+        "type": "datatoken",
         "required": true
       },
       {

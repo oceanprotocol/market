@@ -5,9 +5,8 @@ import styles from './index.module.css'
 import Tabs from '../../../atoms/Tabs'
 import Fixed from './Fixed'
 import Dynamic from './Dynamic'
-import { useField, useFormikContext } from 'formik'
+import { useField } from 'formik'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
-import { useOcean } from '@oceanprotocol/react'
 import { PriceOptionsMarket } from '../../../../@types/MetaData'
 
 const query = graphql`
@@ -43,7 +42,6 @@ export default function Price(props: InputProps): ReactElement {
   const { debug } = useUserPreferences()
   const data = useStaticQuery(query)
   const content = data.content.edges[0].node.childPagesJson.price
-  const { ocean } = useOcean()
 
   const [field, meta, helpers] = useField(props.name)
   const { price }: PriceOptionsMarket = field.value
@@ -55,12 +53,6 @@ export default function Price(props: InputProps): ReactElement {
     helpers.setValue({ ...field.value, type })
   }
 
-  function generateName() {
-    if (!ocean) return
-    const datatoken = ocean.datatokens.generateDtName()
-    helpers.setValue({ ...field.value, datatoken })
-  }
-
   // Always update everything when amountOcean changes
   useEffect(() => {
     const tokensToMint = Number(price) * Number(field.value.weightOnDataToken)
@@ -68,22 +60,10 @@ export default function Price(props: InputProps): ReactElement {
     helpers.setValue({ ...field.value, tokensToMint })
   }, [price])
 
-  // Generate new DT name & symbol, but only once automatically
-  useEffect(() => {
-    if (!ocean || typeof field?.value?.datatoken?.name !== 'undefined') return
-    generateName()
-  }, [ocean])
-
   const tabs = [
     {
       title: content.fixed.title,
-      content: (
-        <Fixed
-          datatokenOptions={field.value.datatoken}
-          generateName={generateName}
-          content={content.fixed}
-        />
-      )
+      content: <Fixed content={content.fixed} />
     },
     {
       title: content.dynamic.title,
@@ -92,7 +72,6 @@ export default function Price(props: InputProps): ReactElement {
           ocean={price}
           priceOptions={{ ...field.value, tokensToMint }}
           datatokenOptions={field.value.datatoken}
-          generateName={generateName}
           content={content.dynamic}
         />
       )

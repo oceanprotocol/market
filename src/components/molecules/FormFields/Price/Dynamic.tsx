@@ -17,13 +17,11 @@ export default function Dynamic({
   ocean,
   priceOptions,
   datatokenOptions,
-  generateName,
   content
 }: {
   ocean: number
   priceOptions: PriceOptionsMarket
   datatokenOptions: DataTokenOptions
-  generateName: () => void
   content: any
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
@@ -91,7 +89,6 @@ export default function Dynamic({
           name="price.tokensToMint"
           datatokenOptions={datatokenOptions}
           weight={`${Number(weightOnDataToken) * 10}%`}
-          generateName={generateName}
           readOnly
         />
       </div>

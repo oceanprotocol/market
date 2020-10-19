@@ -5,6 +5,7 @@ import { InputProps } from '.'
 import FilesInput from '../../molecules/FormFields/FilesInput'
 import Terms from '../../molecules/FormFields/Terms'
 import Price from '../../molecules/FormFields/Price'
+import Datatoken from '../../molecules/FormFields/Datatoken'
 
 const DefaultInput = ({
   small,
@@ -89,6 +90,8 @@ export default function InputElement({
       return <FilesInput name={name} {...field} {...props} />
     case 'price':
       return <Price name={name} {...field} {...props} />
+    case 'datatoken':
+      return <Datatoken name={name} {...field} {...props} />
     case 'terms':
       return <Terms name={name} options={options} {...field} {...props} />
     default:
