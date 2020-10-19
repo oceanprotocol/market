@@ -19,10 +19,12 @@ import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 
 export default function Compute({
   ddo,
-  isBalanceSufficient
+  isBalanceSufficient,
+  dtBalance
 }: {
   ddo: DDO
   isBalanceSufficient: boolean
+  dtBalance: string
 }): ReactElement {
   const { ocean } = useOcean()
   const { compute, isLoading, computeStepText, computeError } = useCompute()

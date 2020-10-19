@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import { toast } from 'react-toastify'
 import { File as FileMetadata, DDO } from '@oceanprotocol/lib'
 import Button from '../../atoms/Button'
@@ -13,11 +13,13 @@ import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 export default function Consume({
   ddo,
   file,
-  isBalanceSufficient
+  isBalanceSufficient,
+  dtBalance
 }: {
   ddo: DDO
   file: FileMetadata
   isBalanceSufficient: boolean
+  dtBalance: string
 }): ReactElement {
   const { ocean } = useOcean()
   const { marketFeeAddress } = useSiteMetadata()
@@ -25,22 +27,20 @@ export default function Consume({
 
   const isDisabled = !ocean || !isBalanceSufficient
 
-  if (consumeError) {
-    toast.error(consumeError)
+  async function handleConsume() {
+    await consume(ddo.id, ddo.dataToken, 'access', marketFeeAddress)
   }
+
+  useEffect(() => {
+    consumeError && toast.error(consumeError)
+  }, [consumeError])
 
   const PurchaseButton = () => (
     <div>
       {consumeStepText ? (
         <Loader message={consumeStepText} />
       ) : (
-        <Button
-          style="primary"
-          onClick={() =>
-            consume(ddo.id, ddo.dataToken, 'access', marketFeeAddress)
-          }
-          disabled={isDisabled}
-        >
+        <Button style="primary" onClick={handleConsume} disabled={isDisabled}>
           Buy
         </Button>
       )}
