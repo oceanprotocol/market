@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import Tooltip from '../../../../atoms/Tooltip'
 import styles from './Fees.module.css'
-import { useField } from 'formik'
+import { useField, useFormikContext } from 'formik'
 import Input from '../../../../atoms/Input'
 import Error from './Error'
 

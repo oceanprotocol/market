@@ -10,7 +10,7 @@ export const validationSchema = Yup.object().shape<PriceOptionsMarket>({
   weightOnDataToken: Yup.string().required('Required'),
   swapFee: Yup.number()
     .min(0.1, 'Must be more or equal to 0.1')
-    .max(0.9, 'Must be less or equal to 0.9')
+    .max(10, 'Maximum is 10%')
     .required('Required')
     .nullable()
 })

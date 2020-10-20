@@ -1,16 +1,11 @@
 .pricing {
-  margin-bottom: var(--spacer);
+  composes: box from '../../../atoms/Box.module.css';
+  padding: 0;
   padding-bottom: var(--spacer);
-  border-bottom: 1px solid var(--brand-grey-lighter);
-  margin-left: -2rem;
-  margin-right: -2rem;
+  margin-top: var(--spacer);
 }
 
-.feedback {
-  width: 100%;
-  min-height: 20vh;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
+.pricing [class*='alert'] {
+  margin: var(--spacer);
+  margin-bottom: 0;
 }

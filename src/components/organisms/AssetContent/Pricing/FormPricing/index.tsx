@@ -48,7 +48,7 @@ export default function FormPricing({
   ]
 
   return (
-    <div className={styles.price}>
+    <>
       <Tabs
         items={tabs}
         handleTabChange={handleTabChange}
@@ -69,6 +69,6 @@ export default function FormPricing({
           <code>{JSON.stringify(values, null, 2)}</code>
         </pre>
       )}
-    </div>
+    </>
   )
 }

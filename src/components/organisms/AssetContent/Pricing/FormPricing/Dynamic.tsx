@@ -1,4 +1,4 @@
-import { DataTokenOptions, useOcean, usePricing } from '@oceanprotocol/react'
+import { useOcean, usePricing } from '@oceanprotocol/react'
 import PriceUnit from '../../../../atoms/Price/PriceUnit'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useSiteMetadata } from '../../../../../hooks/useSiteMetadata'

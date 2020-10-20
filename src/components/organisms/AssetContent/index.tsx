@@ -33,44 +33,47 @@ export default function AssetContent({
 
   return (
     <article className={styles.grid}>
-      <div className={styles.content}>
+      <div>
         {showPricing && <Pricing ddo={ddo} />}
 
-        <aside className={styles.meta}>
-          <p>{datePublished && <Time date={datePublished} />}</p>
-          {metadata?.additionalInformation?.categories?.length && (
-            <p>
-              <Link
-                to={`/search?categories=["${metadata?.additionalInformation?.categories[0]}"]`}
-              >
-                {metadata?.additionalInformation?.categories[0]}
-              </Link>
-            </p>
-          )}
-        </aside>
+        <div className={styles.content}>
+          <aside className={styles.meta}>
+            <p>{datePublished && <Time date={datePublished} />}</p>
+            {metadata?.additionalInformation?.categories?.length && (
+              <p>
+                <Link
+                  to={`/search?categories=["${metadata?.additionalInformation?.categories[0]}"]`}
+                >
+                  {metadata?.additionalInformation?.categories[0]}
+                </Link>
+              </p>
+            )}
+          </aside>
 
-        <Markdown text={metadata?.additionalInformation?.description || ''} />
+          <Markdown text={metadata?.additionalInformation?.description || ''} />
 
-        <MetaSecondary metadata={metadata} />
+          <MetaSecondary metadata={metadata} />
 
-        <MetaFull ddo={ddo} metadata={metadata} />
+          <MetaFull ddo={ddo} metadata={metadata} />
 
-        <div className={styles.buttonGroup}>
-          {/* <EditAction
+          <div className={styles.buttonGroup}>
+            {/* <EditAction
               ddo={ddo}
               ocean={ocean}
               account={account}
               refetchMetadata={refetchMetadata}
             /> */}
-          {/* <DeleteAction ddo={ddo} /> */}
-        </div>
+            {/* <DeleteAction ddo={ddo} /> */}
+          </div>
 
-        {debug === true && (
-          <pre>
-            <code>{JSON.stringify(ddo, null, 2)}</code>
-          </pre>
-        )}
+          {debug === true && (
+            <pre>
+              <code>{JSON.stringify(ddo, null, 2)}</code>
+            </pre>
+          )}
+        </div>
       </div>
+
       <div>
         <div className={styles.sticky}>
           <AssetActions ddo={ddo} />

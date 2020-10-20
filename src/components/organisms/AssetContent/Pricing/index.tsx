@@ -104,27 +104,25 @@ export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
           setSubmitting(false)
         }}
       >
-        {() =>
-          hasFeedback ? (
-            <Feedback success={success} pricingStepText={pricingStepText} />
-          ) : showPricing ? (
-            <FormPricing
-              ddo={ddo}
-              setShowPricing={setShowPricing}
-              content={content}
-            />
-          ) : (
-            <Alert
-              state="info"
-              title={content.empty.title}
-              text={content.empty.info}
-              action={{
-                name: content.empty.action,
-                handleAction: handleShowPricingForm
-              }}
-            />
-          )
-        }
+        {hasFeedback ? (
+          <Feedback success={success} pricingStepText={pricingStepText} />
+        ) : showPricing ? (
+          <FormPricing
+            ddo={ddo}
+            setShowPricing={setShowPricing}
+            content={content}
+          />
+        ) : (
+          <Alert
+            state="info"
+            title={content.empty.title}
+            text={content.empty.info}
+            action={{
+              name: content.empty.action,
+              handleAction: handleShowPricingForm
+            }}
+          />
+        )}
       </Formik>
     </div>
   )
