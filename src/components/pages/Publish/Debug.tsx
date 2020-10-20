@@ -8,6 +8,24 @@ export default function Debug({
 }: {
   values: Partial<MetadataPublishForm>
 }): ReactElement {
+  const ddo = {
+    '@context': 'https://w3id.org/did/v1',
+    dataTokenInfo: {
+      ...values.dataTokenOptions
+    },
+    service: [
+      {
+        index: 0,
+        type: 'metadata',
+        attributes: { ...transformPublishFormToMetadata(values) }
+      },
+      {
+        index: 1,
+        type: values.access,
+        attributes: {}
+      }
+    ]
+  }
   return (
     <div className={styles.grid}>
       <div>
@@ -18,11 +36,9 @@ export default function Debug({
       </div>
 
       <div>
-        <h5>Transformed Values</h5>
+        <h5>Transformed DDO Values</h5>
         <pre>
-          <code>
-            {JSON.stringify(transformPublishFormToMetadata(values), null, 2)}
-          </code>
+          <code>{JSON.stringify(ddo, null, 2)}</code>
         </pre>
       </div>
     </div>
