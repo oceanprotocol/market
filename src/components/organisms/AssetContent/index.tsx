@@ -27,7 +27,7 @@ export default function AssetContent({
   return (
     <article className={styles.grid}>
       <div className={styles.content}>
-        {/* TODO: check for ddo creator */}
+        {/* TODO: check for ddo creator & no price */}
         <Pricing ddo={ddo} />
 
         <aside className={styles.meta}>

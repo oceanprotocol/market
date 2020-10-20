@@ -52,7 +52,7 @@ export default function FormPricing({
   const content = data.content.edges[0].node.childContentJson.create
 
   // Connect with form
-  const { values, setFieldValue } = useFormikContext()
+  const { values, setFieldValue, submitForm } = useFormikContext()
   const { price, weightOnDataToken, type } = values as PriceOptionsMarket
 
   // Switch type value upon tab change
@@ -87,7 +87,7 @@ export default function FormPricing({
       />
 
       <div className={styles.actions}>
-        <Button style="primary" type="submit">
+        <Button style="primary" onClick={() => submitForm()}>
           Create Pricing
         </Button>
         <Button style="text" size="small" onClick={() => setShowPricing(false)}>
