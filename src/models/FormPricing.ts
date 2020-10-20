@@ -15,7 +15,7 @@ export const validationSchema = Yup.object().shape<PriceOptionsMarket>({
     .nullable()
 })
 
-export const initialValues: Partial<PriceOptionsMarket> = {
+export const initialValues: PriceOptionsMarket = {
   price: 1,
   type: 'dynamic',
   dtAmount: 1,

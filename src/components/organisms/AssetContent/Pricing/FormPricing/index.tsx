@@ -34,7 +34,7 @@ export default function FormPricing({
   useEffect(() => {
     const dtAmount = Number(price) * Number(weightOnDataToken)
     setFieldValue('dtAmount', dtAmount)
-  }, [price])
+  }, [price, weightOnDataToken])
 
   const tabs = [
     {

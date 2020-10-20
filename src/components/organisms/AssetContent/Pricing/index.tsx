@@ -50,18 +50,20 @@ export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
   const data = useStaticQuery(query)
   const content = data.content.edges[0].node.childContentJson.create
 
+  // View states
+  const [showPricing, setShowPricing] = useState(false)
+  const [success, setSuccess] = useState<string>()
+
   const {
     createPricing,
     pricingIsLoading,
     pricingError,
     pricingStepText
   } = usePricing(ddo)
-  const [showPricing, setShowPricing] = useState(false)
-  const [success, setSuccess] = useState<string>()
 
-  const hasFeedback = pricingIsLoading || success
+  const hasFeedback = pricingIsLoading || typeof success !== 'undefined'
 
-  async function handleCreatePricing(values: Partial<PriceOptionsMarket>) {
+  async function handleCreatePricing(values: PriceOptionsMarket) {
     try {
       const priceOptions = {
         ...values,
@@ -78,7 +80,8 @@ export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
       }
 
       // Pricing succeeded
-      setSuccess(`🎉 Successfully created a ${values.type} price. 🎉`)
+      setSuccess(`🎉 Successfully created a ${values.type} price. 🎉 `)
+      Logger.log(`Transaction: ${tx}`)
     } catch (error) {
       toast.error(error.message)
       Logger.error(error.message)
