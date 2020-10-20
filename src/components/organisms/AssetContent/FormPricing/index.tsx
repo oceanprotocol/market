@@ -38,20 +38,23 @@ const query = graphql`
   }
 `
 
-export default function Price(): ReactElement {
+export default function FormPricing(): ReactElement {
   const { debug } = useUserPreferences()
+  // Get content
   const data = useStaticQuery(query)
   const content = data.content.edges[0].node.childPagesJson.price
 
+  // Connect with form
   const { values, setFieldValue } = useFormikContext()
   const { price, weightOnDataToken, type } = values as PriceOptionsMarket
 
+  // Switch type value upon tab change
   function handleTabChange(tabName: string) {
     const type = tabName.toLowerCase()
     setFieldValue('type', type)
   }
 
-  // Always update everything when price changes
+  // Always update everything when price value changes
   useEffect(() => {
     const dtAmount = Number(price) * Number(weightOnDataToken)
     setFieldValue('dtAmount', dtAmount)

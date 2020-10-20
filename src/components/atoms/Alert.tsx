@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, FormEvent } from 'react'
 import styles from './Alert.module.css'
 import Button from './Button'
 
@@ -11,7 +11,10 @@ export default function Alert({
   title?: string
   text: string
   state: 'error' | 'warning' | 'info' | 'success'
-  action?: { name: string; handleAction: () => void }
+  action?: {
+    name: string
+    handleAction: (e: FormEvent<HTMLButtonElement>) => void
+  }
 }): ReactElement {
   return (
     <div className={`${styles.alert} ${styles[state]}`}>

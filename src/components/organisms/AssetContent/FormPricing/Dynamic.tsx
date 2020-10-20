@@ -12,6 +12,7 @@ import styles from './Dynamic.module.css'
 import Fees from './Fees'
 import stylesIndex from './index.module.css'
 import { useFormikContext } from 'formik'
+import { PriceOptionsMarket } from '../../../../@types/MetaData'
 
 export default function Dynamic({
   datatokenOptions,
@@ -22,7 +23,10 @@ export default function Dynamic({
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { account, balance, networkId, refreshBalance } = useOcean()
+
+  // Connect with form
   const { values } = useFormikContext()
+  const { price, weightOnDataToken } = values as PriceOptionsMarket
 
   const [error, setError] = useState<string>()
   const correctNetwork = isCorrectNetwork(networkId)
@@ -36,19 +40,12 @@ export default function Dynamic({
       setError(`No account connected. Please connect your Web3 wallet.`)
     } else if (!correctNetwork) {
       setError(`Wrong Network. Please connect to ${desiredNetworkName}.`)
-    } else if (Number(balance.ocean) < Number(values.price)) {
-      setError(`Insufficient balance. You need at least ${values.price} OCEAN`)
+    } else if (Number(balance.ocean) < Number(price)) {
+      setError(`Insufficient balance. You need at least ${price} OCEAN`)
     } else {
       setError(undefined)
     }
-  }, [
-    values.price,
-    networkId,
-    account,
-    balance,
-    correctNetwork,
-    desiredNetworkName
-  ])
+  }, [price, networkId, account, balance, correctNetwork, desiredNetworkName])
 
   // refetch balance periodically
   useEffect(() => {
@@ -86,12 +83,12 @@ export default function Dynamic({
         <Coin
           name="price"
           datatokenOptions={{ symbol: 'OCEAN', name: 'Ocean Token' }}
-          weight={`${100 - Number(Number(values.weightOnDataToken) * 10)}%`}
+          weight={`${100 - Number(Number(weightOnDataToken) * 10)}%`}
         />
         <Coin
           name="dtAmount"
           datatokenOptions={datatokenOptions}
-          weight={`${Number(values.weightOnDataToken) * 10}%`}
+          weight={`${Number(weightOnDataToken) * 10}%`}
           readOnly
         />
       </div>

@@ -1,7 +1,7 @@
 .fees {
   display: grid;
   gap: var(--spacer);
-  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
   margin-left: -2rem;
   margin-right: -2rem;
   border-bottom: 1px solid var(--brand-grey-lighter);

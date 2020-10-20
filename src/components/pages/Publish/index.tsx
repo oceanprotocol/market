@@ -1,8 +1,8 @@
 import React, { ReactElement, useState } from 'react'
 import { Formik } from 'formik'
-import { usePublish, usePricing } from '@oceanprotocol/react'
+import { usePublish } from '@oceanprotocol/react'
 import styles from './index.module.css'
-import PublishForm from './PublishForm'
+import FormPublish from './FormPublish'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
 import { FormContent } from '../../../@types/Form'
 import { initialValues, validationSchema } from '../../../models/FormPublish'
@@ -101,7 +101,7 @@ export default function PublishPage({
             />
           ) : (
             <article className={styles.grid}>
-              <PublishForm content={content.form} />
+              <FormPublish content={content.form} />
               <aside>
                 <div className={styles.sticky}>
                   <Preview values={values} />
