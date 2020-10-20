@@ -7,6 +7,7 @@ import { usePricing } from '@oceanprotocol/react'
 import { PriceOptionsMarket } from '../../../@types/MetaData'
 import Alert from '../../atoms/Alert'
 import styles from './Pricing.module.css'
+import Price from './Price'
 
 export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
   const { createPricing } = usePricing(ddo)
@@ -32,27 +33,7 @@ export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
             setSubmitting(false)
           }}
         >
-          {() => (
-            <>
-              <Field name="price">
-                {({
-                  field,
-                  form
-                }: {
-                  field: FieldInputProps<PriceOptionsMarket>
-                  form: any
-                }) => (
-                  <Input
-                    type="price"
-                    name="price"
-                    label="Create Price"
-                    field={field}
-                    form={form}
-                  />
-                )}
-              </Field>
-            </>
-          )}
+          {(props) => <Price name="price" {...props} />}
         </Formik>
       ) : (
         <Alert

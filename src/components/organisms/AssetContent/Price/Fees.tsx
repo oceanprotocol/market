@@ -1,7 +1,6 @@
 import React, { ReactElement } from 'react'
 import Tooltip from '../../../atoms/Tooltip'
 import styles from './Fees.module.css'
-import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import { useField } from 'formik'
 import Input from '../../../atoms/Input'
 import Error from './Error'
@@ -11,8 +10,7 @@ export default function Fees({
 }: {
   tooltips: { [key: string]: string }
 }): ReactElement {
-  const { appConfig } = useSiteMetadata()
-  const [field, meta] = useField('price.swapFee')
+  const [field, meta] = useField('swapFee')
 
   return (
     <>

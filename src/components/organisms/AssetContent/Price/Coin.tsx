@@ -20,6 +20,7 @@ export default function Coin({
   readOnly?: boolean
 }): ReactElement {
   const [field, meta] = useField(name)
+  console.log(field)
 
   return (
     <div className={styles.coin}>
@@ -41,6 +42,8 @@ export default function Coin({
           readOnly={readOnly}
           prefix={datatokenOptions?.symbol || 'DT'}
           min="1"
+          name={name}
+          value={field.value}
           {...field}
         />
         {datatokenOptions?.symbol === 'OCEAN' && (

@@ -1,12 +1,12 @@
-import React, { ReactElement, useState, useEffect } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import { graphql, useStaticQuery } from 'gatsby'
-import { InputProps } from '../../../atoms/Input'
 import styles from './index.module.css'
 import Tabs from '../../../atoms/Tabs'
 import Fixed from './Fixed'
 import Dynamic from './Dynamic'
-import { useField } from 'formik'
+import { useFormikContext } from 'formik'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
+import ddo from '../../../../../tests/unit/__fixtures__/ddo'
 import { PriceOptionsMarket } from '../../../../@types/MetaData'
 
 const query = graphql`
@@ -38,26 +38,23 @@ const query = graphql`
   }
 `
 
-export default function Price(props: InputProps): ReactElement {
+export default function Price(): ReactElement {
   const { debug } = useUserPreferences()
   const data = useStaticQuery(query)
   const content = data.content.edges[0].node.childPagesJson.price
 
-  const [field, meta, helpers] = useField(props.name)
-  const { price }: PriceOptionsMarket = field.value
-
-  const [tokensToMint, setTokensToMint] = useState<number>()
+  const { values, setFieldValue } = useFormikContext()
+  const { price, weightOnDataToken, type } = values as PriceOptionsMarket
 
   function handleTabChange(tabName: string) {
     const type = tabName.toLowerCase()
-    helpers.setValue({ ...field.value, type })
+    setFieldValue('type', type)
   }
 
-  // Always update everything when amountOcean changes
+  // Always update everything when price changes
   useEffect(() => {
-    const tokensToMint = Number(price) * Number(field.value.weightOnDataToken)
-    setTokensToMint(tokensToMint)
-    helpers.setValue({ ...field.value, tokensToMint })
+    const dtAmount = Number(price) * Number(weightOnDataToken)
+    setFieldValue('dtAmount', dtAmount)
   }, [price])
 
   const tabs = [
@@ -69,9 +66,7 @@ export default function Price(props: InputProps): ReactElement {
       title: content.dynamic.title,
       content: (
         <Dynamic
-          ocean={price}
-          priceOptions={{ ...field.value, tokensToMint }}
-          datatokenOptions={field.value.datatoken}
+          datatokenOptions={ddo.dataTokenInfo}
           content={content.dynamic}
         />
       )
@@ -83,11 +78,11 @@ export default function Price(props: InputProps): ReactElement {
       <Tabs
         items={tabs}
         handleTabChange={handleTabChange}
-        defaultIndex={field?.value?.type === 'fixed' ? 0 : 1}
+        defaultIndex={type === 'fixed' ? 0 : 1}
       />
       {debug === true && (
         <pre>
-          <code>{JSON.stringify(field.value, null, 2)}</code>
+          <code>{JSON.stringify(values, null, 2)}</code>
         </pre>
       )}
     </div>

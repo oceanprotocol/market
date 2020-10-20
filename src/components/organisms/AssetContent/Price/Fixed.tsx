@@ -8,7 +8,7 @@ import Input from '../../../atoms/Input'
 import Error from './Error'
 
 export default function Fixed({ content }: { content: any }): ReactElement {
-  const [field, meta] = useField('price.price')
+  const [field, meta] = useField('price')
 
   return (
     <div className={styles.fixed}>
@@ -19,7 +19,7 @@ export default function Fixed({ content }: { content: any }): ReactElement {
           <Input
             label="Ocean Token"
             value={field.value}
-            name="price.price"
+            name="price"
             type="number"
             prefix="OCEAN"
             min="1"

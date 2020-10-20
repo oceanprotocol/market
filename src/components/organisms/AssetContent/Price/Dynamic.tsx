@@ -1,32 +1,28 @@
 import { DataTokenOptions, useOcean } from '@oceanprotocol/react'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
 import React, { ReactElement, useEffect, useState } from 'react'
-import { PriceOptionsMarket } from '../../../../@types/MetaData'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import { isCorrectNetwork } from '../../../../utils/wallet'
 import Alert from '../../../atoms/Alert'
 import FormHelp from '../../../atoms/Input/Help'
 import Tooltip from '../../../atoms/Tooltip'
-import Wallet from '../../Wallet'
+import Wallet from '../../../molecules/Wallet'
 import Coin from './Coin'
 import styles from './Dynamic.module.css'
 import Fees from './Fees'
 import stylesIndex from './index.module.css'
+import { useFormikContext } from 'formik'
 
 export default function Dynamic({
-  ocean,
-  priceOptions,
   datatokenOptions,
   content
 }: {
-  ocean: number
-  priceOptions: PriceOptionsMarket
   datatokenOptions: DataTokenOptions
   content: any
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { account, balance, networkId, refreshBalance } = useOcean()
-  const { weightOnDataToken } = priceOptions
+  const { values } = useFormikContext()
 
   const [error, setError] = useState<string>()
   const correctNetwork = isCorrectNetwork(networkId)
@@ -40,12 +36,19 @@ export default function Dynamic({
       setError(`No account connected. Please connect your Web3 wallet.`)
     } else if (!correctNetwork) {
       setError(`Wrong Network. Please connect to ${desiredNetworkName}.`)
-    } else if (Number(balance.ocean) < Number(ocean)) {
-      setError(`Insufficient balance. You need at least ${ocean} OCEAN`)
+    } else if (Number(balance.ocean) < Number(values.price)) {
+      setError(`Insufficient balance. You need at least ${values.price} OCEAN`)
     } else {
       setError(undefined)
     }
-  }, [ocean, networkId, account, balance, correctNetwork, desiredNetworkName])
+  }, [
+    values.price,
+    networkId,
+    account,
+    balance,
+    correctNetwork,
+    desiredNetworkName
+  ])
 
   // refetch balance periodically
   useEffect(() => {
@@ -57,7 +60,7 @@ export default function Dynamic({
     return () => {
       clearInterval(balanceInterval)
     }
-  }, [ocean, networkId, account])
+  }, [networkId, account])
 
   return (
     <div className={styles.dynamic}>
@@ -81,14 +84,14 @@ export default function Dynamic({
 
       <div className={styles.tokens}>
         <Coin
-          name="price.price"
+          name="price"
           datatokenOptions={{ symbol: 'OCEAN', name: 'Ocean Token' }}
-          weight={`${100 - Number(Number(weightOnDataToken) * 10)}%`}
+          weight={`${100 - Number(Number(values.weightOnDataToken) * 10)}%`}
         />
         <Coin
-          name="price.tokensToMint"
+          name="dtAmount"
           datatokenOptions={datatokenOptions}
-          weight={`${Number(weightOnDataToken) * 10}%`}
+          weight={`${Number(values.weightOnDataToken) * 10}%`}
           readOnly
         />
       </div>
