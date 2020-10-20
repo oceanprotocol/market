@@ -9,8 +9,47 @@ import styles from './index.module.css'
 import FormPricing from './FormPricing'
 import { toast } from 'react-toastify'
 import Feedback from './Feedback'
+import { graphql, useStaticQuery } from 'gatsby'
+
+const query = graphql`
+  query PricingQuery {
+    content: allFile(filter: { relativePath: { eq: "price.json" } }) {
+      edges {
+        node {
+          childContentJson {
+            create {
+              empty {
+                title
+                info
+                action
+              }
+              fixed {
+                title
+                info
+              }
+              dynamic {
+                title
+                info
+                tooltips {
+                  poolInfo
+                  swapFee
+                  communityFee
+                  marketplaceFee
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
 
 export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
+  // Get content
+  const data = useStaticQuery(query)
+  const content = data.content.edges[0].node.childContentJson.create
+
   const {
     createPricing,
     pricingIsLoading,
@@ -33,17 +72,22 @@ export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
 
       // Pricing failed
       if (!tx || pricingError) {
-        toast.error(pricingError)
-        Logger.error(pricingError)
+        toast.error(pricingError || 'Price creation failed.')
+        Logger.error(pricingError || 'Price creation failed.')
         return
       }
 
       // Pricing succeeded
-      tx && setSuccess(`🎉 Successfully created a ${values.type} price. 🎉`)
+      setSuccess(`🎉 Successfully created a ${values.type} price. 🎉`)
     } catch (error) {
       toast.error(error.message)
       Logger.error(error.message)
     }
+  }
+
+  function handleShowPricingForm(e: FormEvent<HTMLButtonElement>) {
+    e.preventDefault()
+    setShowPricing(true)
   }
 
   return (
@@ -64,18 +108,19 @@ export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
           hasFeedback ? (
             <Feedback success={success} pricingStepText={pricingStepText} />
           ) : showPricing ? (
-            <FormPricing ddo={ddo} setShowPricing={setShowPricing} />
+            <FormPricing
+              ddo={ddo}
+              setShowPricing={setShowPricing}
+              content={content}
+            />
           ) : (
             <Alert
               state="info"
-              title="No Price Created"
-              text="This data set has no price yet. As the publisher you can create a fixed price, or a dynamic price for it. Onwards!"
+              title={content.empty.title}
+              text={content.empty.info}
               action={{
-                name: 'Create Pricing',
-                handleAction: (e: FormEvent<HTMLButtonElement>) => {
-                  e.preventDefault()
-                  setShowPricing(true)
-                }
+                name: content.empty.action,
+                handleAction: handleShowPricingForm
               }}
             />
           )

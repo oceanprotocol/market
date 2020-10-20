@@ -1,5 +1,10 @@
 {
   "create": {
+    "empty": {
+      "title": "No Price Created",
+      "info": "This data set has no price yet. As the publisher you can create a fixed price, or a dynamic price for it. Onwards!",
+      "action": "Create Pricing"
+    },
     "fixed": {
       "title": "Fixed",
       "info": "Set your price for accessing this data set. The datatoken for this data set will be worth the entered amount of OCEAN."
