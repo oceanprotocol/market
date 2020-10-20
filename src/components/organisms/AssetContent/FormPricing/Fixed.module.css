@@ -14,11 +14,16 @@
 }
 
 .grid {
-  margin-top: var(--spacer);
+  margin-left: -2rem;
+  margin-right: -2rem;
+  padding-top: var(--spacer);
   display: grid;
   gap: var(--spacer);
   grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
   justify-content: center;
+  background: var(--brand-grey-dimmed);
+  border-top: 1px solid var(--brand-grey-lighter);
+  border-bottom: 1px solid var(--brand-grey-lighter);
 }
 
 .fixed label {
@@ -26,14 +31,14 @@
 }
 
 .datatoken {
-  margin-top: calc(var(--spacer) / 6);
+  margin-top: calc(var(--spacer) / 2);
   color: var(--color-secondary);
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-bold);
 }
 
 .datatoken h4 {
-  font-size: var(--font-size-small);
+  font-size: var(--font-size-base);
   color: var(--color-secondary);
   margin: 0;
 }

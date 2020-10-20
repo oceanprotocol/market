@@ -7,6 +7,7 @@ import { useField } from 'formik'
 import Input from '../../../atoms/Input'
 import Error from './Error'
 import { DDO } from '@oceanprotocol/lib'
+import { usePricing } from '@oceanprotocol/react'
 
 export default function Fixed({
   ddo,
@@ -16,6 +17,7 @@ export default function Fixed({
   content: any
 }): ReactElement {
   const [field, meta] = useField('price')
+  const { dtName, dtSymbol } = usePricing(ddo)
 
   return (
     <div className={styles.fixed}>
@@ -39,6 +41,11 @@ export default function Fixed({
             }
           />
           <Error meta={meta} />
+        </div>
+        <div className={styles.datatoken}>
+          <h4>
+            = <strong>1</strong> {dtName} — {dtSymbol}
+          </h4>
         </div>
       </div>
     </div>

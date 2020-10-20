@@ -66,7 +66,7 @@ export default function PublishPage({
       resetForm()
 
       setSuccess(
-        '🎉 Successfully published. Now create a price on your data set. 🎉'
+        '🎉 Successfully published. 🎉 Now create a price on your data set.'
       )
     } catch (error) {
       setError(error.message)

@@ -23,7 +23,7 @@ export default function Feedback({
     <Button
       style="primary"
       size="small"
-      href={`/asset/${ddo.id}`}
+      href={`/asset/${ddo?.id}`}
       className={styles.action}
     >
       Go to data set →

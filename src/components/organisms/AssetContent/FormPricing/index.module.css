@@ -1,6 +1,8 @@
 .price {
   margin: -2rem;
   margin-bottom: 0;
+  border-bottom: 1px solid var(--brand-grey-lighter);
+  padding-bottom: var(--spacer);
 }
 
 .content {
