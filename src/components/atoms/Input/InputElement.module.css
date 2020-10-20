@@ -242,7 +242,7 @@ input[type='range']::-moz-range-track {
 
 .small {
   font-size: var(--font-size-small);
-  min-height: 34px;
+  height: 34px;
   padding: calc(var(--spacer) / 4);
 }
 
@@ -252,7 +252,7 @@ input[type='range']::-moz-range-track {
 
 .prefix.small,
 .postfix.small {
-  min-height: 34px;
+  height: 34px;
   font-size: var(--font-size-mini);
 }
 

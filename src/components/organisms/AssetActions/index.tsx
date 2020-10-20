@@ -7,7 +7,6 @@ import Tabs from '../../atoms/Tabs'
 import { useOcean, useMetadata } from '@oceanprotocol/react'
 import compareAsBN from '../../../utils/compareAsBN'
 import Pool from './Pool'
-import { AdditionalInformationMarket } from '../../../@types/MetaData'
 
 export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
   const { ocean, balance, accountId } = useOcean()
@@ -73,10 +72,7 @@ export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
   ]
 
   // Check from metadata, cause that is available earlier
-  const hasPool =
-    ((attributes.additionalInformation as unknown) as AdditionalInformationMarket)
-      ?.priceType === 'dynamic'
-  // price?.type === 'pool'
+  const hasPool = ddo.price?.type === 'pool'
 
   hasPool &&
     tabs.push({
