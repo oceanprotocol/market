@@ -33,7 +33,10 @@ export default function Consume({
   const { consumeStepText, consume, consumeError } = useConsume()
 
   const isDisabled =
-    !ocean || !isBalanceSufficient || consumeStepText || pricingIsLoading
+    !ocean ||
+    !isBalanceSufficient ||
+    typeof consumeStepText !== 'undefined' ||
+    pricingIsLoading
   const hasDatatoken = Number(dtBalance) >= 1
 
   async function handleConsume() {
@@ -69,8 +72,8 @@ export default function Consume({
           <Price ddo={ddo} conversion />
           {hasDatatoken && (
             <div className={styles.hasTokens}>
-              You own {dtBalance} {dtSymbol} so you can use this asset without
-              paying again.
+              You own {dtBalance} {dtSymbol} allowing you to use this data set
+              without paying again.
             </div>
           )}
           <PurchaseButton />

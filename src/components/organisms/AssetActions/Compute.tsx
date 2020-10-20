@@ -110,8 +110,8 @@ export default function Compute({
           <Price ddo={ddo} conversion />
           {hasDatatoken && (
             <div className={styles.hasTokens}>
-              You own {dtBalance} {dtSymbol} so you can use this asset without
-              paying again.
+              You own {dtBalance} {dtSymbol} allowing you to use this data set
+              without paying again.
             </div>
           )}
         </div>
@@ -135,7 +135,7 @@ export default function Compute({
           onClick={() => startJob()}
           disabled={isComputeButtonDisabled}
         >
-          Start job
+          {hasDatatoken ? 'Start job' : 'Buy'}
         </Button>
       </div>
 

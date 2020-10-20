@@ -18,7 +18,5 @@
 }
 
 .hasTokens {
-  font-size: var(--font-size-small);
-  color: var(--color-secondary);
-  margin-top: calc(var(--spacer) / 4);
+  composes: hasTokens from './index.module.css';
 }
