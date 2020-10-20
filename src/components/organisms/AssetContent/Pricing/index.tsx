@@ -1,15 +1,14 @@
 import React, { FormEvent, ReactElement, useState } from 'react'
 import { Formik } from 'formik'
-import { initialValues, validationSchema } from '../../../models/FormPricing'
+import { initialValues, validationSchema } from '../../../../models/FormPricing'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import { usePricing } from '@oceanprotocol/react'
-import { PriceOptionsMarket } from '../../../@types/MetaData'
-import Alert from '../../atoms/Alert'
-import styles from './Pricing.module.css'
+import { PriceOptionsMarket } from '../../../../@types/MetaData'
+import Alert from '../../../atoms/Alert'
+import styles from './index.module.css'
 import FormPricing from './FormPricing'
-import Loader from '../../atoms/Loader'
-import SuccessConfetti from '../../atoms/SuccessConfetti'
 import { toast } from 'react-toastify'
+import Feedback from './Feedback'
 
 export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
   const {
@@ -63,11 +62,7 @@ export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
       >
         {() =>
           hasFeedback ? (
-            success ? (
-              <SuccessConfetti success={success} />
-            ) : (
-              <Loader message={pricingStepText} />
-            )
+            <Feedback success={success} pricingStepText={pricingStepText} />
           ) : showPricing ? (
             <FormPricing ddo={ddo} setShowPricing={setShowPricing} />
           ) : (

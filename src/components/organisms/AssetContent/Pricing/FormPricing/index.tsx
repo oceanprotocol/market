@@ -1,13 +1,13 @@
 import React, { ReactElement, useEffect } from 'react'
 import { graphql, useStaticQuery } from 'gatsby'
 import styles from './index.module.css'
-import Tabs from '../../../atoms/Tabs'
+import Tabs from '../../../../atoms/Tabs'
 import Fixed from './Fixed'
 import Dynamic from './Dynamic'
 import { useFormikContext } from 'formik'
-import { useUserPreferences } from '../../../../providers/UserPreferences'
-import { PriceOptionsMarket } from '../../../../@types/MetaData'
-import Button from '../../../atoms/Button'
+import { useUserPreferences } from '../../../../../providers/UserPreferences'
+import { PriceOptionsMarket } from '../../../../../@types/MetaData'
+import Button from '../../../../atoms/Button'
 import { DDO } from '@oceanprotocol/lib'
 
 const query = graphql`

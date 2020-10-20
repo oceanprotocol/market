@@ -1,5 +1,12 @@
 .pricing {
   margin-bottom: var(--spacer);
+  padding-bottom: var(--spacer);
+  border-bottom: 1px solid var(--brand-grey-lighter);
+  margin-left: -2rem;
+  margin-right: -2rem;
+}
+
+.feedback {
   width: 100%;
   min-height: 20vh;
   display: flex;

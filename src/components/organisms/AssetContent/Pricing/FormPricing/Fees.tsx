@@ -1,8 +1,8 @@
 import React, { ReactElement } from 'react'
-import Tooltip from '../../../atoms/Tooltip'
+import Tooltip from '../../../../atoms/Tooltip'
 import styles from './Fees.module.css'
 import { useField } from 'formik'
-import Input from '../../../atoms/Input'
+import Input from '../../../../atoms/Input'
 import Error from './Error'
 
 export default function Fees({
