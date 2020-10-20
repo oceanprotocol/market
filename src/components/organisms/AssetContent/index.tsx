@@ -10,6 +10,7 @@ import AssetActions from '../AssetActions'
 import { DDO } from '@oceanprotocol/lib'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import Pricing from './Pricing'
+import { useOcean } from '@oceanprotocol/react'
 
 export interface AssetContentProps {
   metadata: MetadataMarket
@@ -23,12 +24,17 @@ export default function AssetContent({
 }: AssetContentProps): ReactElement {
   const { datePublished } = metadata.main
   const { debug } = useUserPreferences()
+  const { accountId } = useOcean()
+
+  const isOwner = accountId === ddo.publicKey[0].owner
+  // TODO: check if assets without price actually have ddo.price or not
+  const hasPrice = typeof ddo.price !== 'undefined'
+  const showPricing = isOwner && !hasPrice
 
   return (
     <article className={styles.grid}>
       <div className={styles.content}>
-        {/* TODO: check for ddo creator & no price */}
-        <Pricing ddo={ddo} />
+        {showPricing && <Pricing ddo={ddo} />}
 
         <aside className={styles.meta}>
           <p>{datePublished && <Time date={datePublished} />}</p>
