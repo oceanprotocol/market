@@ -53,21 +53,18 @@ export default function PublishPage({
       )
 
       // Publish failed
-      if (publishError) {
-        setError(publishError)
-        Logger.error(publishError)
+      if (!ddo || publishError) {
+        setError(publishError || 'Publishing DDO failed.')
+        Logger.error(publishError || 'Publishing DDO failed.')
         return
       }
 
-      if (!ddo) return
-
       // Publish succeeded
       setDdo(ddo)
-      resetForm()
-
       setSuccess(
         '🎉 Successfully published. 🎉 Now create a price on your data set.'
       )
+      resetForm()
     } catch (error) {
       setError(error.message)
       Logger.error(error.message)

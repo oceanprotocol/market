@@ -5,6 +5,30 @@ import { useField } from 'formik'
 import Input from '../../../../atoms/Input'
 import Error from './Error'
 
+const Default = ({
+  title,
+  name,
+  tooltip
+}: {
+  title: string
+  name: string
+  tooltip: string
+}) => (
+  <Input
+    label={
+      <>
+        {title}
+        <Tooltip content={tooltip} />
+      </>
+    }
+    value="0.1"
+    name={name}
+    postfix="%"
+    readOnly
+    small
+  />
+)
+
 export default function Fees({
   tooltips
 }: {
@@ -32,32 +56,16 @@ export default function Fees({
           additionalComponent={<Error meta={meta} />}
         />
 
-        <Input
-          label={
-            <>
-              Community Fee
-              <Tooltip content={tooltips.communityFee} />
-            </>
-          }
-          value="0.1"
+        <Default
+          title="Community Fee"
           name="communityFee"
-          postfix="%"
-          readOnly
-          small
+          tooltip={tooltips.communityFee}
         />
 
-        <Input
-          label={
-            <>
-              Marketplace Fee
-              <Tooltip content={tooltips.marketplaceFee} />
-            </>
-          }
-          value="0.1"
+        <Default
+          title="Marketplace Fee"
           name="marketplaceFee"
-          postfix="%"
-          readOnly
-          small
+          tooltip={tooltips.marketplaceFee}
         />
       </div>
     </>
