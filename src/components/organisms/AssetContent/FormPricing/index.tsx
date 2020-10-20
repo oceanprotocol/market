@@ -6,16 +6,17 @@ import Fixed from './Fixed'
 import Dynamic from './Dynamic'
 import { useFormikContext } from 'formik'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
-import ddo from '../../../../../tests/unit/__fixtures__/ddo'
 import { PriceOptionsMarket } from '../../../../@types/MetaData'
+import Button from '../../../atoms/Button'
+import { DDO } from '@oceanprotocol/lib'
 
 const query = graphql`
   query PriceFieldQuery {
-    content: allFile(filter: { relativePath: { eq: "pages/publish.json" } }) {
+    content: allFile(filter: { relativePath: { eq: "price.json" } }) {
       edges {
         node {
-          childPagesJson {
-            price {
+          childContentJson {
+            create {
               fixed {
                 title
                 info
@@ -38,11 +39,17 @@ const query = graphql`
   }
 `
 
-export default function FormPricing(): ReactElement {
+export default function FormPricing({
+  ddo,
+  setShowPricing
+}: {
+  ddo: DDO
+  setShowPricing: (value: boolean) => void
+}): ReactElement {
   const { debug } = useUserPreferences()
   // Get content
   const data = useStaticQuery(query)
-  const content = data.content.edges[0].node.childPagesJson.price
+  const content = data.content.edges[0].node.childContentJson.create
 
   // Connect with form
   const { values, setFieldValue } = useFormikContext()
@@ -63,16 +70,11 @@ export default function FormPricing(): ReactElement {
   const tabs = [
     {
       title: content.fixed.title,
-      content: <Fixed content={content.fixed} />
+      content: <Fixed content={content.fixed} ddo={ddo} />
     },
     {
       title: content.dynamic.title,
-      content: (
-        <Dynamic
-          datatokenOptions={ddo.dataTokenInfo}
-          content={content.dynamic}
-        />
-      )
+      content: <Dynamic content={content.dynamic} ddo={ddo} />
     }
   ]
 
@@ -83,6 +85,16 @@ export default function FormPricing(): ReactElement {
         handleTabChange={handleTabChange}
         defaultIndex={type === 'fixed' ? 0 : 1}
       />
+
+      <div className={styles.actions}>
+        <Button style="primary" type="submit">
+          Create Pricing
+        </Button>
+        <Button style="text" size="small" onClick={() => setShowPricing(false)}>
+          Cancel
+        </Button>
+      </div>
+
       {debug === true && (
         <pre>
           <code>{JSON.stringify(values, null, 2)}</code>

@@ -96,21 +96,5 @@
       }
     ],
     "success": "Asset Created!"
-  },
-  "price": {
-    "fixed": {
-      "title": "Fixed",
-      "info": "Set your price for accessing this data set. A Datatoken for this data set, worth the entered amount of OCEAN, will be created."
-    },
-    "dynamic": {
-      "title": "Dynamic",
-      "info": "Let's create a decentralized, automated market for your data set. A Datatoken for this data set, worth the entered amount of OCEAN, will be created. Additionally, you will provide liquidity into a OCEAN/Datatoken liquidity pool with Balancer.",
-      "tooltips": {
-        "poolInfo": "Explain what is going on here...",
-        "swapFee": "Explain liquidity provider fee...",
-        "communityFee": "Explain community fee...",
-        "marketplaceFee": "Explain marketplace fee..."
-      }
-    }
   }
 }

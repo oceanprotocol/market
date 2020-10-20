@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useOcean, useMetadata } from '@oceanprotocol/react'
+import { useOcean, useMetadata, usePricing } from '@oceanprotocol/react'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import styles from './index.module.css'
 import stylesActions from './Actions.module.css'
@@ -45,10 +45,10 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
   const { ocean, accountId } = useOcean()
   const { price } = useMetadata(ddo)
+  const { dtSymbol } = usePricing(ddo)
 
   const [poolTokens, setPoolTokens] = useState<string>()
   const [totalPoolTokens, setTotalPoolTokens] = useState<string>()
-  const [dtSymbol, setDtSymbol] = useState<string>()
   const [userLiquidity, setUserLiquidity] = useState<Balance>()
   const [swapFee, setSwapFee] = useState<string>()
 
@@ -79,12 +79,6 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
       setIsLoading(true)
 
       try {
-        //
-        // Get data token symbol
-        //
-        const dtSymbol = await ocean.datatokens.getSymbol(ddo.dataToken)
-        setDtSymbol(dtSymbol)
-
         //
         // Get everything which is in the pool
         //

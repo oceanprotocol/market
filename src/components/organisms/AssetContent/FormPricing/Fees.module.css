@@ -5,12 +5,12 @@
   margin-left: -2rem;
   margin-right: -2rem;
   border-bottom: 1px solid var(--brand-grey-lighter);
-  margin-top: var(--spacer);
-  padding: 0 var(--spacer) calc(var(--spacer) / 2) var(--spacer);
+  padding: var(--spacer) var(--spacer) calc(var(--spacer) / 2) var(--spacer);
 
   justify-content: center;
   text-align: center;
   border-bottom: 1px solid var(--brand-grey-lighter);
+  background: var(--brand-grey-dimmed);
 }
 
 .fees label {

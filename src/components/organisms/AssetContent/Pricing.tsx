@@ -33,7 +33,7 @@ export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
       >
         {() =>
           showPricing ? (
-            <FormPricing />
+            <FormPricing ddo={ddo} setShowPricing={setShowPricing} />
           ) : (
             <Alert
               state="info"

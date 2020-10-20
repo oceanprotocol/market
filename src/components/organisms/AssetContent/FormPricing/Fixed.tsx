@@ -6,8 +6,15 @@ import Conversion from '../../../atoms/Price/Conversion'
 import { useField } from 'formik'
 import Input from '../../../atoms/Input'
 import Error from './Error'
+import { DDO } from '@oceanprotocol/lib'
 
-export default function Fixed({ content }: { content: any }): ReactElement {
+export default function Fixed({
+  ddo,
+  content
+}: {
+  ddo: DDO
+  content: any
+}): ReactElement {
   const [field, meta] = useField('price')
 
   return (

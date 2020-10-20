@@ -20,7 +20,6 @@ export default function Coin({
   readOnly?: boolean
 }): ReactElement {
   const [field, meta] = useField(name)
-  console.log(field)
 
   return (
     <div className={styles.coin}>

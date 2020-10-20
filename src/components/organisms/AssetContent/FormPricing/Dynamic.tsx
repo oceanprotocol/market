@@ -1,4 +1,4 @@
-import { DataTokenOptions, useOcean } from '@oceanprotocol/react'
+import { DataTokenOptions, useOcean, usePricing } from '@oceanprotocol/react'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
@@ -13,16 +13,18 @@ import Fees from './Fees'
 import stylesIndex from './index.module.css'
 import { useFormikContext } from 'formik'
 import { PriceOptionsMarket } from '../../../../@types/MetaData'
+import { DDO } from '@oceanprotocol/lib'
 
 export default function Dynamic({
-  datatokenOptions,
+  ddo,
   content
 }: {
-  datatokenOptions: DataTokenOptions
+  ddo: DDO
   content: any
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { account, balance, networkId, refreshBalance } = useOcean()
+  const { dtSymbol, dtName } = usePricing(ddo)
 
   // Connect with form
   const { values } = useFormikContext()
@@ -87,7 +89,7 @@ export default function Dynamic({
         />
         <Coin
           name="dtAmount"
-          datatokenOptions={datatokenOptions}
+          datatokenOptions={{ symbol: dtSymbol, name: dtName }}
           weight={`${Number(weightOnDataToken) * 10}%`}
           readOnly
         />
