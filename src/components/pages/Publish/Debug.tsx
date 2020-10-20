@@ -3,6 +3,15 @@ import { MetadataPublishForm } from '../../../@types/MetaData'
 import styles from './index.module.css'
 import { transformPublishFormToMetadata } from './utils'
 
+const Output = ({ title, output }: { title: string; output: any }) => (
+  <div>
+    <h5>{title}</h5>
+    <pre>
+      <code>{JSON.stringify(output, null, 2)}</code>
+    </pre>
+  </div>
+)
+
 export default function Debug({
   values
 }: {
@@ -26,21 +35,11 @@ export default function Debug({
       }
     ]
   }
+
   return (
     <div className={styles.grid}>
-      <div>
-        <h5>Collected Form Values</h5>
-        <pre>
-          <code>{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      </div>
-
-      <div>
-        <h5>Transformed DDO Values</h5>
-        <pre>
-          <code>{JSON.stringify(ddo, null, 2)}</code>
-        </pre>
-      </div>
+      <Output title="Collected Form Values" output={values} />
+      <Output title="Transformed DDO Values" output={ddo} />
     </div>
   )
 }
