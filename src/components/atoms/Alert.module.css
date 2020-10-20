@@ -30,6 +30,10 @@
   font-size: var(--font-size-small);
 }
 
+.action {
+  margin-top: calc(var(--spacer) / 2);
+}
+
 /* States */
 .error {
   border-color: var(--rbrand-alert-ed);
@@ -43,7 +47,7 @@
 
 .info {
   border-color: var(--brand-alert-yellow);
-  color: var(--brand-alert-yellow);
+  color: #9f7e19;
 }
 
 .warning {

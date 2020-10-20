@@ -9,6 +9,7 @@ import styles from './index.module.css'
 import AssetActions from '../AssetActions'
 import { DDO } from '@oceanprotocol/lib'
 import { useUserPreferences } from '../../../providers/UserPreferences'
+import Pricing from './Pricing'
 
 export interface AssetContentProps {
   metadata: MetadataMarket
@@ -26,6 +27,9 @@ export default function AssetContent({
   return (
     <article className={styles.grid}>
       <div className={styles.content}>
+        {/* TODO: check for ddo creator */}
+        <Pricing ddo={ddo} />
+
         <aside className={styles.meta}>
           <p>{datePublished && <Time date={datePublished} />}</p>
           {metadata?.additionalInformation?.categories?.length && (

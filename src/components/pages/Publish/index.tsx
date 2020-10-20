@@ -27,7 +27,6 @@ export default function PublishPage({
 
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
-  const [isPricing, setIsPricing] = useState<boolean>()
   const [ddo, setDdo] = useState<DDO>()
 
   const hasFeedback = isLoading || error || success
@@ -66,10 +65,9 @@ export default function PublishPage({
       setDdo(ddo)
       resetForm()
 
-      // Create pricing
-      setIsPricing(true)
-
-      // setSuccess('🎉 Successfully published your data set. 🎉')
+      setSuccess(
+        '🎉 Successfully published. Now create a price on your data set. 🎉'
+      )
     } catch (error) {
       setError(error.message)
       Logger.error(error.message)
@@ -99,7 +97,6 @@ export default function PublishPage({
               success={success}
               publishStepText={publishStepText}
               ddo={ddo}
-              isPricing={isPricing}
               setError={setError}
             />
           ) : (
