@@ -1,5 +1,6 @@
 import { PoolTransaction } from '@oceanprotocol/lib/dist/node/balancer/OceanPool'
 import { useMetadata, useOcean } from '@oceanprotocol/react'
+import Loader from '../../atoms/Loader'
 import { Link } from 'gatsby'
 import React, { ReactElement, useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component'
@@ -68,11 +69,12 @@ const columns = [
 export default function PoolTransactions(): ReactElement {
   const { ocean, accountId } = useOcean()
   const [logs, setLogs] = useState<PoolTransaction[]>()
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     async function getLogs() {
       if (!ocean || !accountId) return
-
+      setIsLoading(true)
       const logs = await ocean.pool.getAllPoolLogs(accountId)
       setLogs(
         // sort logs by date, newest first
@@ -82,11 +84,14 @@ export default function PoolTransactions(): ReactElement {
           return 0
         })
       )
+      setIsLoading(false)
     }
     getLogs()
   }, [ocean, accountId])
 
-  return (
+  return isLoading ? (
+    <Loader />
+  ) : (
     <DataTable
       columns={columns}
       data={logs}
