@@ -28,7 +28,7 @@ export default function SuccessConfetti({
   action
 }: {
   success: string
-  action: ReactNode
+  action?: ReactNode
 }): ReactElement {
   // Have some confetti upon success
   useEffect(() => {

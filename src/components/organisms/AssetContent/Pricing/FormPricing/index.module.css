@@ -1,9 +1,3 @@
-.price {
-  border: 1px solid var(--brand-grey-lighter);
-  background: var(--brand-grey-dimmed);
-  border-radius: var(--border-radius);
-}
-
 .content {
   padding: 0;
 }
@@ -35,4 +29,19 @@
 .help {
   text-align: center;
   margin-bottom: calc(var(--spacer) / 1.5);
+}
+
+.actions {
+  text-align: center;
+}
+
+.actions button {
+  margin-left: calc(var(--spacer) / 2);
+  margin-right: calc(var(--spacer) / 2);
+}
+
+.actionsHelp {
+  margin-top: calc(var(--spacer) / 2);
+  padding-left: var(--spacer);
+  padding-right: var(--spacer);
 }

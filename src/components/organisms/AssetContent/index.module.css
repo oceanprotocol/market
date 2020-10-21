@@ -5,6 +5,10 @@
   margin-top: -1.5rem;
 }
 
+.grid > div {
+  overflow: hidden;
+}
+
 .content {
   composes: box from '../../atoms/Box.module.css';
   margin-top: var(--spacer);
@@ -12,7 +16,7 @@
 
 @media (min-width: 60rem) {
   .grid {
-    grid-template-columns: 1.5fr minmax(0, 1fr);
+    grid-template-columns: 1.5fr 1fr;
   }
 
   .sticky {

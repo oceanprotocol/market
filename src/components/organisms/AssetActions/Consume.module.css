@@ -12,10 +12,11 @@
   flex-shrink: 0;
 }
 
-.pricewrapper button {
-  margin-top: var(--spacer);
+.actions {
+  width: 100%;
+  margin-top: calc(var(--spacer) / 2);
 }
 
-.feedback {
-  width: 100%;
+.hasTokens {
+  composes: hasTokens from './index.module.css';
 }

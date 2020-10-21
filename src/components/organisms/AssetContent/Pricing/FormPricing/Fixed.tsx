@@ -1,24 +1,23 @@
 import React, { ReactElement } from 'react'
 import stylesIndex from './index.module.css'
 import styles from './Fixed.module.css'
-import FormHelp from '../../../atoms/Input/Help'
-import Conversion from '../../../atoms/Price/Conversion'
-import { DataTokenOptions } from '@oceanprotocol/react'
-import RefreshName from './RefreshName'
+import FormHelp from '../../../../atoms/Input/Help'
+import Conversion from '../../../../atoms/Price/Conversion'
 import { useField } from 'formik'
-import Input from '../../../atoms/Input'
+import Input from '../../../../atoms/Input'
 import Error from './Error'
+import { DDO } from '@oceanprotocol/lib'
+import { usePricing } from '@oceanprotocol/react'
 
 export default function Fixed({
-  datatokenOptions,
-  generateName,
+  ddo,
   content
 }: {
-  datatokenOptions: DataTokenOptions
-  generateName: () => void
+  ddo: DDO
   content: any
 }): ReactElement {
-  const [field, meta] = useField('price.price')
+  const [field, meta] = useField('price')
+  const { dtName, dtSymbol } = usePricing(ddo)
 
   return (
     <div className={styles.fixed}>
@@ -29,7 +28,7 @@ export default function Fixed({
           <Input
             label="Ocean Token"
             value={field.value}
-            name="price.price"
+            name="price"
             type="number"
             prefix="OCEAN"
             min="1"
@@ -43,16 +42,11 @@ export default function Fixed({
           />
           <Error meta={meta} />
         </div>
-
-        {datatokenOptions && (
-          <div className={styles.datatoken}>
-            <h4>
-              Data Token <RefreshName generateName={generateName} />
-            </h4>
-            <strong>{datatokenOptions?.name}</strong> —{' '}
-            <strong>{datatokenOptions?.symbol}</strong>
-          </div>
-        )}
+        <div className={styles.datatoken}>
+          <h4>
+            = <strong>1</strong> {dtName} — {dtSymbol}
+          </h4>
+        </div>
       </div>
     </div>
   )

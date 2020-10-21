@@ -1,12 +1,11 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement } from 'react'
 import Time from '../../atoms/Time'
 import MetaItem from './MetaItem'
 import styles from './MetaFull.module.css'
 import { MetadataMarket } from '../../../@types/MetaData'
 import { DDO } from '@oceanprotocol/lib'
 import EtherscanLink from '../../atoms/EtherscanLink'
-
-import { useOcean } from '@oceanprotocol/react'
+import { usePricing } from '@oceanprotocol/react'
 
 export default function MetaFull({
   ddo,
@@ -15,24 +14,9 @@ export default function MetaFull({
   ddo: DDO
   metadata: MetadataMarket
 }): ReactElement {
-  const { ocean } = useOcean()
   const { id, dataToken } = ddo
   const { dateCreated, datePublished, author, license } = metadata.main
-
-  const [dtName, setDtName] = useState<string>()
-  const [dtSymbol, setDtSymbol] = useState<string>()
-
-  useEffect(() => {
-    if (!ocean) return
-
-    async function getDataTokenInfo() {
-      const name = await ocean.datatokens.getName(dataToken)
-      setDtName(name)
-      const symbol = await ocean.datatokens.getSymbol(dataToken)
-      setDtSymbol(symbol)
-    }
-    getDataTokenInfo()
-  }, [ocean, dataToken])
+  const { dtSymbol, dtName } = usePricing(ddo)
 
   return (
     <div className={styles.metaFull}>

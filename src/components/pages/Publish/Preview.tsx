@@ -7,8 +7,6 @@ import styles from './Preview.module.css'
 import File from '../../atoms/File'
 import { MetadataPublishForm } from '../../../@types/MetaData'
 import Button from '../../atoms/Button'
-import Conversion from '../../atoms/Price/Conversion'
-import PriceUnit from '../../atoms/Price/PriceUnit'
 
 export default function Preview({
   values
@@ -60,25 +58,6 @@ export default function Preview({
               small
             />
           )}
-
-          {values.price && (
-            <div className={styles.price}>
-              <MetaItem
-                title={`Price: ${values.price.type}`}
-                content={
-                  <>
-                    <PriceUnit
-                      price="1"
-                      symbol={values.price.datatoken?.symbol}
-                      small
-                    />{' '}
-                    = <PriceUnit price={`${values.price.price}`} small />
-                    <Conversion price={`${values.price.price}`} />
-                  </>
-                }
-              />
-            </div>
-          )}
         </div>
 
         {typeof values.links !== 'string' && values.links?.length && (
@@ -107,7 +86,7 @@ export default function Preview({
                 key.includes('files') ||
                 key.includes('links') ||
                 key.includes('termsAndConditions') ||
-                key.includes('price') ||
+                key.includes('dataTokenOptions') ||
                 value === undefined ||
                 value === ''
               )

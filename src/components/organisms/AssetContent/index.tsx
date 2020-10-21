@@ -9,6 +9,8 @@ import styles from './index.module.css'
 import AssetActions from '../AssetActions'
 import { DDO } from '@oceanprotocol/lib'
 import { useUserPreferences } from '../../../providers/UserPreferences'
+import Pricing from './Pricing'
+import { useOcean } from '@oceanprotocol/react'
 
 export interface AssetContentProps {
   metadata: MetadataMarket
@@ -22,45 +24,55 @@ export default function AssetContent({
 }: AssetContentProps): ReactElement {
   const { datePublished } = metadata.main
   const { debug } = useUserPreferences()
+  const { accountId } = useOcean()
+
+  const isOwner = accountId === ddo.publicKey[0].owner
+  const hasNoPrice = ddo.price.type === ''
+  const showPricing = isOwner && hasNoPrice
 
   return (
     <article className={styles.grid}>
-      <div className={styles.content}>
-        <aside className={styles.meta}>
-          <p>{datePublished && <Time date={datePublished} />}</p>
-          {metadata?.additionalInformation?.categories?.length && (
-            <p>
-              <Link
-                to={`/search?categories=["${metadata?.additionalInformation?.categories[0]}"]`}
-              >
-                {metadata?.additionalInformation?.categories[0]}
-              </Link>
-            </p>
-          )}
-        </aside>
+      <div>
+        {showPricing && <Pricing ddo={ddo} />}
 
-        <Markdown text={metadata?.additionalInformation?.description || ''} />
+        <div className={styles.content}>
+          <aside className={styles.meta}>
+            <p>{datePublished && <Time date={datePublished} />}</p>
+            {metadata?.additionalInformation?.categories?.length && (
+              <p>
+                <Link
+                  to={`/search?categories=["${metadata?.additionalInformation?.categories[0]}"]`}
+                >
+                  {metadata?.additionalInformation?.categories[0]}
+                </Link>
+              </p>
+            )}
+          </aside>
 
-        <MetaSecondary metadata={metadata} />
+          <Markdown text={metadata?.additionalInformation?.description || ''} />
 
-        <MetaFull ddo={ddo} metadata={metadata} />
+          <MetaSecondary metadata={metadata} />
 
-        <div className={styles.buttonGroup}>
-          {/* <EditAction
+          <MetaFull ddo={ddo} metadata={metadata} />
+
+          <div className={styles.buttonGroup}>
+            {/* <EditAction
               ddo={ddo}
               ocean={ocean}
               account={account}
               refetchMetadata={refetchMetadata}
             /> */}
-          {/* <DeleteAction ddo={ddo} /> */}
-        </div>
+            {/* <DeleteAction ddo={ddo} /> */}
+          </div>
 
-        {debug === true && (
-          <pre>
-            <code>{JSON.stringify(ddo, null, 2)}</code>
-          </pre>
-        )}
+          {debug === true && (
+            <pre>
+              <code>{JSON.stringify(ddo, null, 2)}</code>
+            </pre>
+          )}
+        </div>
       </div>
+
       <div>
         <div className={styles.sticky}>
           <AssetActions ddo={ddo} />
