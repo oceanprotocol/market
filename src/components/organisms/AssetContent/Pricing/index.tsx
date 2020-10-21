@@ -84,7 +84,9 @@ export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
       }
 
       // Pricing succeeded
-      setSuccess(`🎉 Successfully created a ${values.type} price. 🎉 `)
+      setSuccess(
+        `🎉 Successfully created a ${values.type} price. 🎉 Reload the page to get all updates.`
+      )
       Logger.log(`Transaction: ${tx}`)
     } catch (error) {
       toast.error(error.message)
