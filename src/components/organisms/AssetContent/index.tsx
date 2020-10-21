@@ -27,8 +27,8 @@ export default function AssetContent({
   const { accountId } = useOcean()
 
   const isOwner = accountId === ddo.publicKey[0].owner
-  // TODO: check if assets without price actually have ddo.price or not
-  const hasPrice = typeof ddo.price !== 'undefined'
+  // TODO: change type overwrite
+  const hasPrice = (ddo.price.type as any) !== ''
   const showPricing = isOwner && !hasPrice
 
   return (
