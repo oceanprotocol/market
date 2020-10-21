@@ -16,9 +16,9 @@ export default function Datatoken(props: InputProps): ReactElement {
     helpers.setValue({ ...dataTokenOptions })
   }
 
-  // Generate new DT name & symbol, but only once automatically
+  // Generate new DT name & symbol
   useEffect(() => {
-    if (!ocean || typeof field?.value?.name !== 'undefined') return
+    if (!ocean) return
     generateName()
   }, [ocean])
 
