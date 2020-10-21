@@ -13,5 +13,5 @@ export default {
 }
 
 export const Default = (): ReactElement => (
-  <Compute ddo={ddo as DDO} isBalanceSufficient />
+  <Compute ddo={ddo as DDO} dtBalance="1" isBalanceSufficient />
 )
