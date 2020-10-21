@@ -27,9 +27,8 @@ export default function AssetContent({
   const { accountId } = useOcean()
 
   const isOwner = accountId === ddo.publicKey[0].owner
-  // TODO: change type overwrite
-  const hasPrice = (ddo.price.type as any) !== ''
-  const showPricing = isOwner && !hasPrice
+  const hasNoPrice = ddo.price.type === ''
+  const showPricing = isOwner && hasNoPrice
 
   return (
     <article className={styles.grid}>
