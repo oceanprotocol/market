@@ -70,6 +70,7 @@ export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
         // swapFee is tricky: to get 0.1% you need to send 0.001 as value
         swapFee: `${values.swapFee / 100}`
       }
+      // TODO: check if we need to mint first
       const tx = await createPricing(priceOptions)
 
       // Pricing failed
