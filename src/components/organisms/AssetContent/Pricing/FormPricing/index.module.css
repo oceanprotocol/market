@@ -39,3 +39,9 @@
   margin-left: calc(var(--spacer) / 2);
   margin-right: calc(var(--spacer) / 2);
 }
+
+.actionsHelp {
+  margin-top: calc(var(--spacer) / 2);
+  padding-left: var(--spacer);
+  padding-right: var(--spacer);
+}

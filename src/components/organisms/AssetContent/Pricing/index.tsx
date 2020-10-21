@@ -21,7 +21,10 @@ const query = graphql`
               empty {
                 title
                 info
-                action
+                action {
+                  name
+                  help
+                }
               }
               fixed {
                 title
@@ -122,7 +125,7 @@ export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
             title={content.empty.title}
             text={content.empty.info}
             action={{
-              name: content.empty.action,
+              name: content.empty.action.name,
               handleAction: handleShowPricingForm
             }}
           />

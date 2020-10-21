@@ -8,6 +8,7 @@ import { useUserPreferences } from '../../../../../providers/UserPreferences'
 import { PriceOptionsMarket } from '../../../../../@types/MetaData'
 import Button from '../../../../atoms/Button'
 import { DDO } from '@oceanprotocol/lib'
+import FormHelp from '../../../../atoms/Input/Help'
 
 export default function FormPricing({
   ddo,
@@ -57,11 +58,14 @@ export default function FormPricing({
 
       <div className={styles.actions}>
         <Button style="primary" onClick={() => submitForm()}>
-          {content.empty.action}
+          {content.empty.action.name}
         </Button>
         <Button style="text" size="small" onClick={() => setShowPricing(false)}>
           Cancel
         </Button>
+        <FormHelp className={styles.actionsHelp}>
+          {content.empty.action.help}
+        </FormHelp>
       </div>
 
       {debug === true && (

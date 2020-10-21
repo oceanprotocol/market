@@ -3,7 +3,10 @@
     "empty": {
       "title": "No Price Created",
       "info": "This data set has no price yet. As the publisher you can create a fixed price, or a dynamic price for it. Onwards!",
-      "action": "Create Pricing"
+      "action": {
+        "name": "Create Pricing",
+        "help": "Create Pricing will mint your datatokens, approve spending, and create either a pool or a fixed rate exchange in one process. You will need to approve those multiple steps in your wallet."
+      }
     },
     "fixed": {
       "title": "Fixed",
