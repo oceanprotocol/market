@@ -128,17 +128,20 @@ export default function Compute({
       <Dropzone multiple={false} handleOnDrop={onDrop} />
 
       <div className={styles.actions}>
-        <Button
-          style="primary"
-          onClick={() => startJob()}
-          disabled={isComputeButtonDisabled}
-        >
-          {hasDatatoken ? 'Start job' : 'Buy'}
-        </Button>
+        {isLoading ? (
+          <Loader message={computeStepText} />
+        ) : (
+          <Button
+            style="primary"
+            onClick={() => startJob()}
+            disabled={isComputeButtonDisabled}
+          >
+            {hasDatatoken ? 'Start job' : 'Buy'}
+          </Button>
+        )}
       </div>
 
       <footer className={styles.feedback}>
-        {isLoading && <Loader message={computeStepText} />}
         {computeError !== undefined && (
           <Alert text={computeError} state="error" />
         )}
