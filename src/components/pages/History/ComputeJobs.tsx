@@ -114,13 +114,12 @@ export default function ComputeJobs(): ReactElement {
             })
           })
         }
-        setJobs(
-          jobs.sort((a, b) => {
-            if (a.dateCreated > b.dateCreated) return -1
-            if (a.dateCreated < b.dateCreated) return 1
-            return 0
-          })
-        )
+        const jobsSorted = jobs.sort((a, b) => {
+          if (a.dateCreated > b.dateCreated) return -1
+          if (a.dateCreated < b.dateCreated) return 1
+          return 0
+        })
+        setJobs(jobsSorted)
       } catch (error) {
         Logger.log(error.message)
       } finally {
@@ -130,5 +129,13 @@ export default function ComputeJobs(): ReactElement {
     getJobs()
   }, [ocean, account])
 
-  return <Table columns={columns} data={jobs} isLoading={isLoading} />
+  return (
+    <Table
+      columns={columns}
+      data={jobs}
+      isLoading={isLoading}
+      defaultSortField="row.dateCreated"
+      defaultSortAsc={false}
+    />
+  )
 }

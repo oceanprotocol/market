@@ -75,14 +75,13 @@ export default function PoolTransactions(): ReactElement {
       if (!ocean || !accountId) return
       setIsLoading(true)
       const logs = await ocean.pool.getAllPoolLogs(accountId)
-      setLogs(
-        // sort logs by date, newest first
-        logs.sort((a, b) => {
-          if (a.timestamp > b.timestamp) return -1
-          if (a.timestamp < b.timestamp) return 1
-          return 0
-        })
-      )
+      // sort logs by date, newest first
+      const logsSorted = logs.sort((a, b) => {
+        if (a.timestamp > b.timestamp) return -1
+        if (a.timestamp < b.timestamp) return 1
+        return 0
+      })
+      setLogs(logsSorted)
       setIsLoading(false)
     }
     getLogs()
