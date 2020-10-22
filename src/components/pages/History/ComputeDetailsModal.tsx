@@ -54,23 +54,23 @@ export default function ComputeDetailsModal({
       {isLoading ? (
         <Loader />
       ) : (
-          <>
-            <p>{computeJob.assetName}</p>
-            <p>
-              <Time date={computeJob.dateCreated} isUnix />
-            </p>
-            <p>
-              <Time date={computeJob.dateFinished} isUnix />
-            </p>
-            <p>{computeJob.statusText}</p>
-            <p>{computeJob.algorithmLogUrl}</p>
-            <p>
-              {computeJob.resultsUrls?.map((url) => {
-                return <span key={shortid.generate()}>{url}</span>
-              })}{' '}
-            </p>
-          </>
-        )}
+        <>
+          <p>{computeJob.assetName}</p>
+          <p>
+            <Time date={computeJob.dateCreated} isUnix />
+          </p>
+          <p>
+            <Time date={computeJob.dateFinished} isUnix />
+          </p>
+          <p>{computeJob.statusText}</p>
+          <p>{computeJob.algorithmLogUrl}</p>
+          <p>
+            {computeJob.resultsUrls?.map((url) => {
+              return <span key={shortid.generate()}>{url}</span>
+            })}{' '}
+          </p>
+        </>
+      )}
     </Modal>
   )
 }

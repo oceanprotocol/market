@@ -85,7 +85,6 @@ export default function ComputeJobs(): ReactElement {
       if (!ocean || !account) return
       setIsLoading(true)
       try {
-
         const orderHistory = await ocean.assets.getOrderHistory(
           account,
           'compute',
@@ -110,7 +109,7 @@ export default function ComputeJobs(): ReactElement {
               assetName: assetName,
               status: item.status,
               statusText: item.statusText,
-              algorithmLogUrl: "",
+              algorithmLogUrl: '',
               resultsUrls: []
             })
           })
@@ -122,7 +121,6 @@ export default function ComputeJobs(): ReactElement {
             return 0
           })
         )
-
       } catch (error) {
         Logger.log(error.message)
       } finally {
