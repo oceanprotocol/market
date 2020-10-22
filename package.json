@@ -22,13 +22,8 @@
     "@coingecko/cryptoformat": "^0.4.2",
     "@loadable/component": "5.13.1",
     "@oceanprotocol/art": "^3.0.0",
-<<<<<<< HEAD
-    "@oceanprotocol/lib": "^0.6.7",
-    "@oceanprotocol/react": "^0.2.2",
-=======
     "@oceanprotocol/lib": "^0.7.1",
     "@oceanprotocol/react": "^0.3.2",
->>>>>>> main
     "@oceanprotocol/typographies": "^0.1.0",
     "@sindresorhus/slugify": "^1.0.0",
     "@tippyjs/react": "^4.2.0",
