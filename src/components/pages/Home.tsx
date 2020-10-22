@@ -27,7 +27,7 @@ const queryPoolsLatest = {
 
 const queryLatest = {
   page: 1,
-  offset: 20,
+  offset: 9,
   query: {},
   sort: { created: -1 }
 }
