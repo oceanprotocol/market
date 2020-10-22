@@ -75,22 +75,30 @@ export default function ComputeDetailsModal({
           <>
             <ul>
               <ListItem>
-                <a
-                  href={computeJob.algorithmLogUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  View Log
-                </a>
+                {computeJob.algorithmLogUrl ? (
+                  <a
+                    href={computeJob.algorithmLogUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    View Log
+                  </a>
+                ) : (
+                  'No logs found'
+                )}
               </ListItem>
 
-              {computeJob.resultsUrls?.map((url, i) => (
-                <ListItem key={shortid.generate()}>
-                  <a href={url} target="_blank" rel="noreferrer">
-                    View Result {i}
-                  </a>
-                </ListItem>
-              ))}
+              {computeJob.resultsUrls?.map((url, i) =>
+                url ? (
+                  <ListItem key={shortid.generate()}>
+                    <a href={url} target="_blank" rel="noreferrer">
+                      View Result {i}
+                    </a>
+                  </ListItem>
+                ) : (
+                  'No results found.'
+                )
+              )}
             </ul>
           </>
         ))}
