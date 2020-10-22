@@ -97,8 +97,8 @@ export default function PoolTransactions(): ReactElement {
       data={logs}
       className={styles.table}
       noHeader
-      pagination={logs?.length >= 19}
-      paginationPerPage={20}
+      pagination={logs?.length >= 9}
+      paginationPerPage={10}
       noDataComponent={<Empty />}
     />
   )
