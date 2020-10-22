@@ -51,7 +51,7 @@ const columns = [
   {
     name: 'Finished',
     selector: function getTimeRow(row: ComputeJobMetaData) {
-      return <Time date={row.dateFinished} isUnix />
+      return <Time date={row.dateFinished} isUnix relative />
     }
   },
   {

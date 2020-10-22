@@ -35,7 +35,7 @@ export default function ComputeDetailsModal({
           computeJob.did,
           computeJob.jobId
         )
-        if (job && job.length > 0) {
+        if (job?.length > 0) {
           computeJob.algorithmLogUrl = job[0].algorithmLogUrl
           // hack because ComputeJob returns resultsUrl instead of resultsUrls, issue created already
           computeJob.resultsUrls =
@@ -58,11 +58,11 @@ export default function ComputeDetailsModal({
     >
       <h3 className={styles.title}>{computeJob.assetName}</h3>
       <p>
-        Created on <Time date={computeJob.dateCreated} isUnix />
+        Created <Time date={computeJob.dateCreated} isUnix relative />
         {computeJob.dateFinished && (
           <>
             <br />
-            Finished on <Time date={computeJob.dateFinished} isUnix />
+            Finished <Time date={computeJob.dateFinished} isUnix relative />
           </>
         )}
       </p>
