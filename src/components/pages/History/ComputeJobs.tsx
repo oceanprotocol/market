@@ -100,6 +100,7 @@ export default function ComputeJobs(): ReactElement {
             account,
             orderHistory[i].did,
             undefined,
+            orderHistory[i].transactionHash,
             false
           )
           computeJob.forEach((item) => {
