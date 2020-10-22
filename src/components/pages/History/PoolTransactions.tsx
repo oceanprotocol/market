@@ -2,18 +2,18 @@ import { PoolTransaction } from '@oceanprotocol/lib/dist/node/balancer/OceanPool
 import { useMetadata, useOcean } from '@oceanprotocol/react'
 import { Link } from 'gatsby'
 import React, { ReactElement, useEffect, useState } from 'react'
-import DataTable from 'react-data-table-component'
 import EtherscanLink from '../../atoms/EtherscanLink'
 import Time from '../../atoms/Time'
-import styles from './PoolTransactions.module.css'
+import Dotdotdot from 'react-dotdotdot'
+import Table from '../../atoms/Table'
 
 function AssetTitle({ did }: { did: string }): ReactElement {
   const { title } = useMetadata(did)
-  return <Link to={`/asset/${did}`}>{title || did}</Link>
-}
-
-function Empty() {
-  return <div className={styles.empty}>No results found</div>
+  return (
+    <Dotdotdot clamp={2}>
+      <Link to={`/asset/${did}`}>{title || did}</Link>
+    </Dotdotdot>
+  )
 }
 
 function Title({ row }: { row: PoolTransaction }) {
@@ -60,9 +60,7 @@ const columns = [
   {
     name: 'Time',
     selector: function getTimeRow(row: PoolTransaction) {
-      return (
-        <Time date={new Date(row.timestamp * 1000).toUTCString()} relative />
-      )
+      return <Time date={row.timestamp.toString()} relative isUnix />
     }
   }
 ]
@@ -70,33 +68,24 @@ const columns = [
 export default function PoolTransactions(): ReactElement {
   const { ocean, accountId } = useOcean()
   const [logs, setLogs] = useState<PoolTransaction[]>()
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     async function getLogs() {
       if (!ocean || !accountId) return
-
+      setIsLoading(true)
       const logs = await ocean.pool.getAllPoolLogs(accountId)
-      setLogs(
-        // sort logs by date, newest first
-        logs.sort((a, b) => {
-          if (a.timestamp > b.timestamp) return -1
-          if (a.timestamp < b.timestamp) return 1
-          return 0
-        })
-      )
+      // sort logs by date, newest first
+      const logsSorted = logs.sort((a, b) => {
+        if (a.timestamp > b.timestamp) return -1
+        if (a.timestamp < b.timestamp) return 1
+        return 0
+      })
+      setLogs(logsSorted)
+      setIsLoading(false)
     }
     getLogs()
   }, [ocean, accountId])
 
-  return (
-    <DataTable
-      columns={columns}
-      data={logs}
-      className={styles.table}
-      noHeader
-      pagination={logs?.length >= 19}
-      paginationPerPage={20}
-      noDataComponent={<Empty />}
-    />
-  )
+  return <Table columns={columns} data={logs} isLoading={isLoading} />
 }

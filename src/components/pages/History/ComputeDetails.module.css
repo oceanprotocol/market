@@ -1,0 +1,3 @@
+.title {
+  margin-bottom: calc(var(--spacer) / 4);
+}

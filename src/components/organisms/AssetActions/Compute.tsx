@@ -39,11 +39,9 @@ export default function Compute({
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [, setError] = useState('')
   const [computeType, setComputeType] = useState('nodejs')
-  const [computeContainer, setComputeContainer] = useState({
-    entrypoint: '',
-    image: '',
-    tag: ''
-  })
+  const [computeContainer, setComputeContainer] = useState(
+    computeOptions[0].value
+  )
   const [algorithmRawCode, setAlgorithmRawCode] = useState('')
   const [isPublished, setIsPublished] = useState(false)
   const [file, setFile] = useState(null)
@@ -130,17 +128,20 @@ export default function Compute({
       <Dropzone multiple={false} handleOnDrop={onDrop} />
 
       <div className={styles.actions}>
-        <Button
-          style="primary"
-          onClick={() => startJob()}
-          disabled={isComputeButtonDisabled}
-        >
-          {hasDatatoken ? 'Start job' : 'Buy'}
-        </Button>
+        {isLoading ? (
+          <Loader message={computeStepText} />
+        ) : (
+          <Button
+            style="primary"
+            onClick={() => startJob()}
+            disabled={isComputeButtonDisabled}
+          >
+            {hasDatatoken ? 'Start job' : 'Buy'}
+          </Button>
+        )}
       </div>
 
       <footer className={styles.feedback}>
-        {isLoading && <Loader message={computeStepText} />}
         {computeError !== undefined && (
           <Alert text={computeError} state="error" />
         )}
