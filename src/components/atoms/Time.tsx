@@ -13,7 +13,9 @@ export default function Time({
   const dateNew = isUnix ? new Date(Number(date) * 1000) : new Date(date)
   const dateIso = dateNew.toISOString()
 
-  return (
+  return !date ? (
+    <></>
+  ) : (
     <time
       title={relative ? format(dateNew, 'MMMM d, yyyy') : undefined}
       dateTime={dateIso}
