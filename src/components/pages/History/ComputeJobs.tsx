@@ -98,12 +98,15 @@ export default function ComputeJobs(): ReactElement {
           const assetName = await getTitle(orderHistory[i].did)
           const computeJob = await ocean.compute.status(
             account,
-            orderHistory[i].did
+            orderHistory[i].did,
+            undefined,
+            false
           )
           console.log(computeJob)
           computeJob.forEach((item) => {
             jobs.push({
               did: orderHistory[i].did,
+              jobId: item.jobId,
               dateCreated: item.dateCreated,
               dateFinished: item.dateFinished,
               assetName: assetName,
@@ -116,7 +119,14 @@ export default function ComputeJobs(): ReactElement {
           })
         }
         console.log(jobs)
-        setJobs(jobs)
+        jobs
+        setJobs(
+          jobs.sort((a, b) => {
+            if (a.dateCreated > b.dateCreated) return -1
+            if (a.dateCreated < b.dateCreated) return 1
+            return 0
+          })
+        )
 
         setUserAgreed(true)
       } catch (e) {

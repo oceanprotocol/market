@@ -1,4 +1,5 @@
 export interface ComputeJobMetaData {
+  jobId: string
   did: string
   dateCreated: string
   dateFinished: string

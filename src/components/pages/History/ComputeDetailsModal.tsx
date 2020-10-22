@@ -7,6 +7,7 @@ import BaseDialog from '../../atoms/BaseDialog'
 import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/ComputeJob'
 import { ComputeJobMetaData } from '@types/ComputeJobMetaData'
 import Time from '../../atoms/Time'
+import shortid from 'shortid'
 
 export default function ComputeDetailsModal({
   computeJob,
@@ -17,13 +18,28 @@ export default function ComputeDetailsModal({
   open: boolean
   onClose: () => void
 }): ReactElement {
-  const { ocean, status, accountId } = useOcean()
+  const { ocean, status, account } = useOcean()
   const [isLoading, setIsLoading] = useState(false)
+
   useEffect(() => {
     async function getDetails() {
-      if (!accountId || !ocean || !computeJob) return
+      console.log('open', open)
+      if (!account || !ocean || !computeJob || !open) return
+
+      console.log('open', open)
       try {
         setIsLoading(true)
+        const job = await ocean.compute.status(
+          account,
+          computeJob.did,
+          computeJob.jobId
+        )
+        console.log(job[0])
+        if (job && job.length > 0) {
+          computeJob.algorithmLogUrl = job[0].algorithmLogUrl
+          computeJob.resultsUrls =
+            (job[0] as any).resultsUrl !== '' ? (job[0] as any).resultsUrl : []
+        }
       } catch (error) {
         Logger.error(error.message)
       } finally {
@@ -31,7 +47,7 @@ export default function ComputeDetailsModal({
       }
     }
     getDetails()
-  }, [ocean, status, accountId])
+  }, [ocean, status, account, open])
 
   return (
     <BaseDialog open={open} onClose={onClose} title="Compute job details">
@@ -50,7 +66,7 @@ export default function ComputeDetailsModal({
           <p>{computeJob.algorithmLogUrl}</p>
           <p>
             {computeJob.resultsUrls?.map((url) => {
-              return <span>{url}</span>
+              return <span key={shortid.generate()}>{url}</span>
             })}{' '}
           </p>
         </>
