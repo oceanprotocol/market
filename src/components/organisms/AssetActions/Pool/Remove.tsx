@@ -103,6 +103,29 @@ export default function Remove({
     setIsAdvanced(!isAdvanced)
   }
 
+  useEffect(() => {
+    if (!ocean || !poolTokens) return
+    async function resetValues() {
+      setAmountPoolShares(`0`)
+      setAmountPercent('0')
+      setAmountOcean('0')
+
+      if (isAdvanced === true) {
+        setAmountMaxPercent('100')
+        setAmountDatatoken('0')
+      } else {
+        const { amountMaxPercent } = await getMaxValuesRemove(
+          ocean,
+          poolAddress,
+          poolTokens,
+          `0`
+        )
+        setAmountMaxPercent(amountMaxPercent)
+      }
+    }
+    resetValues()
+  }, [isAdvanced])
+
   // Check and set outputs when percentage changes
   useEffect(() => {
     if (!ocean || !poolTokens) return
@@ -113,8 +136,6 @@ export default function Remove({
       setAmountPoolShares(`${amountPoolShares}`)
 
       if (isAdvanced === true) {
-        setAmountMaxPercent('100')
-
         const tokens = await ocean.pool.getTokensRemovedforPoolShares(
           poolAddress,
           `${amountPoolShares}`
@@ -122,13 +143,12 @@ export default function Remove({
         setAmountOcean(tokens?.oceanAmount)
         setAmountDatatoken(tokens?.dtAmount)
       } else {
-        const { amountMaxPercent, amountOcean } = await getMaxValuesRemove(
+        const { amountOcean } = await getMaxValuesRemove(
           ocean,
           poolAddress,
           poolTokens,
           `${amountPoolShares}`
         )
-        setAmountMaxPercent(amountMaxPercent)
         setAmountOcean(amountOcean)
       }
     }
