@@ -8,14 +8,14 @@ export function getSearchQuery(
   page?: string | string[],
   offset?: string | string[],
   text?: string | string[],
-  tag?: string | string[]
+  tags?: string | string[]
 ): SearchQuery {
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 20,
     query: {
       text,
-      tags: tag ? [tag] : undefined
+      tags: tags ? [tags] : undefined
     },
     sort: {
       created: -1
@@ -29,14 +29,16 @@ export function getSearchQuery(
 }
 
 export async function getResults(
-  params: { text?: string; tag?: string; page?: string; offset?: string },
+  params: { text?: string; tags?: string; page?: string; offset?: string },
   metadataCacheUri: string
 ): Promise<QueryResult> {
-  const { text, tag, page, offset } = params
+  const { text, tags, page, offset } = params
 
   const metadataCache = new MetadataCache(metadataCacheUri, Logger)
+  const sQuery = getSearchQuery(page, offset, text, tags)
+  console.log(sQuery)
   const queryResult = await metadataCache.queryMetadata(
-    getSearchQuery(page, offset, text, tag)
+    getSearchQuery(page, offset, text, tags)
   )
 
   return queryResult
