@@ -7,14 +7,16 @@ import DataTable from 'react-data-table-component'
 import EtherscanLink from '../../atoms/EtherscanLink'
 import Time from '../../atoms/Time'
 import styles from './PoolTransactions.module.css'
+import Empty from './Empty'
+import Dotdotdot from 'react-dotdotdot'
 
 function AssetTitle({ did }: { did: string }): ReactElement {
   const { title } = useMetadata(did)
-  return <Link to={`/asset/${did}`}>{title || did}</Link>
-}
-
-function Empty() {
-  return <div className={styles.empty}>No results found</div>
+  return (
+    <Dotdotdot clamp={2}>
+      <Link to={`/asset/${did}`}>{title || did}</Link>
+    </Dotdotdot>
+  )
 }
 
 function Title({ row }: { row: PoolTransaction }) {

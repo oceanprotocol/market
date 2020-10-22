@@ -2,24 +2,26 @@ import { useOcean } from '@oceanprotocol/react'
 import React, { ReactElement, useEffect, useState } from 'react'
 import DataTable from 'react-data-table-component'
 import Time from '../../atoms/Time'
-import styles from './PoolTransactions.module.css'
+import styles from './ComputeJobs.module.css'
 import Loader from '../../atoms/Loader'
 import Tooltip from '../../atoms/Tooltip'
 import Button from '../../atoms/Button'
-import ComputeDetailsModal from './ComputeDetailsModal'
-import { ComputeJobMetaData } from '@types/ComputeJobMetaData'
+import ComputeDetails from './ComputeDetails'
+import { ComputeJobMetaData } from '../../../@types/ComputeJobMetaData'
 import { Link } from 'gatsby'
 import { Logger } from '@oceanprotocol/lib'
+import Empty from './Empty'
+import Dotdotdot from 'react-dotdotdot'
 
 function DetailsButton({ row }: { row: ComputeJobMetaData }): ReactElement {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   return (
     <>
-      <Button name="Details" onClick={() => setIsDialogOpen(true)}>
-        Details
+      <Button style="text" size="small" onClick={() => setIsDialogOpen(true)}>
+        Show Details
       </Button>
-      <ComputeDetailsModal
+      <ComputeDetails
         computeJob={row}
         isOpen={isDialogOpen}
         onToggleModal={() => setIsDialogOpen(false)}
@@ -28,15 +30,25 @@ function DetailsButton({ row }: { row: ComputeJobMetaData }): ReactElement {
   )
 }
 
-function Empty() {
-  return <div className={styles.empty}>No results found</div>
+export function Status({ children }: { children: string }): ReactElement {
+  return <div className={styles.status}>{children}</div>
 }
 
 const columns = [
   {
+    name: 'Data Set',
+    selector: function getAssetRow(row: ComputeJobMetaData) {
+      return (
+        <Dotdotdot clamp={2}>
+          <Link to={`/asset/${row.did}`}>{row.assetName}</Link>
+        </Dotdotdot>
+      )
+    }
+  },
+  {
     name: 'Created',
     selector: function getTimeRow(row: ComputeJobMetaData) {
-      return <Time date={row.dateCreated} isUnix />
+      return <Time date={row.dateCreated} isUnix relative />
     }
   },
   {
@@ -46,19 +58,9 @@ const columns = [
     }
   },
   {
-    name: 'Name',
-    selector: function getAssetRow(row: ComputeJobMetaData) {
-      return (
-        <Tooltip content={row.assetName}>
-          <Link to={`/asset/${row.did}`}>{row.assetName}</Link>{' '}
-        </Tooltip>
-      )
-    }
-  },
-  {
     name: 'Status',
     selector: function getStatus(row: ComputeJobMetaData) {
-      return <>{row.statusText}</>
+      return <Status>{row.statusText}</Status>
     }
   },
   {
@@ -90,7 +92,7 @@ export default function ComputeJobs(): ReactElement {
           'compute',
           100
         )
-        let jobs: ComputeJobMetaData[] = []
+        const jobs: ComputeJobMetaData[] = []
 
         for (let i = 0; i < orderHistory.length; i++) {
           const assetName = await getTitle(orderHistory[i].did)

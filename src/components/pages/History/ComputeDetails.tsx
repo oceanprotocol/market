@@ -3,9 +3,11 @@ import { useOcean } from '@oceanprotocol/react'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Loader from '../../atoms/Loader'
 import Modal from '../../atoms/Modal'
-import { ComputeJobMetaData } from '@types/ComputeJobMetaData'
+import { ComputeJobMetaData } from '../../../@types/ComputeJobMetaData'
 import Time from '../../atoms/Time'
 import shortid from 'shortid'
+import styles from './ComputeDetails.module.css'
+import { Status } from './ComputeJobs'
 
 export default function ComputeDetailsModal({
   computeJob,
@@ -19,9 +21,11 @@ export default function ComputeDetailsModal({
   const { ocean, status, account } = useOcean()
   const [isLoading, setIsLoading] = useState(false)
 
+  const isFinished = computeJob.dateFinished !== null
+
   useEffect(() => {
     async function getDetails() {
-      if (!account || !ocean || !computeJob || !isOpen) return
+      if (!account || !ocean || !computeJob || !isOpen || !isFinished) return
 
       try {
         setIsLoading(true)
@@ -32,7 +36,7 @@ export default function ComputeDetailsModal({
         )
         if (job && job.length > 0) {
           computeJob.algorithmLogUrl = job[0].algorithmLogUrl
-          //hack because ComputeJob returns resultsUrl instead of resultsUrls, issue created already
+          // hack because ComputeJob returns resultsUrl instead of resultsUrls, issue created already
           computeJob.resultsUrls =
             (job[0] as any).resultsUrl !== '' ? (job[0] as any).resultsUrl : []
         }
@@ -43,7 +47,7 @@ export default function ComputeDetailsModal({
       }
     }
     getDetails()
-  }, [ocean, status, account, isOpen])
+  }, [ocean, status, account, isOpen, computeJob, isFinished])
 
   return (
     <Modal
@@ -51,26 +55,30 @@ export default function ComputeDetailsModal({
       isOpen={isOpen}
       onToggleModal={onToggleModal}
     >
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <>
-          <p>{computeJob.assetName}</p>
-          <p>
-            <Time date={computeJob.dateCreated} isUnix />
-          </p>
-          <p>
-            <Time date={computeJob.dateFinished} isUnix />
-          </p>
-          <p>{computeJob.statusText}</p>
-          <p>{computeJob.algorithmLogUrl}</p>
-          <p>
-            {computeJob.resultsUrls?.map((url) => {
-              return <span key={shortid.generate()}>{url}</span>
-            })}{' '}
-          </p>
-        </>
+      <h3 className={styles.title}>{computeJob.assetName}</h3>
+      <p>
+        Created on <Time date={computeJob.dateCreated} isUnix />
+      </p>
+      <Status>{computeJob.statusText}</Status>
+      {computeJob.dateFinished && (
+        <p>
+          Finished on <Time date={computeJob.dateFinished} isUnix />
+        </p>
       )}
+
+      {isFinished &&
+        (isLoading ? (
+          <Loader />
+        ) : (
+          <>
+            <p>{computeJob.algorithmLogUrl}</p>
+            <p>
+              {computeJob.resultsUrls?.map((url) => {
+                return <span key={shortid.generate()}>{url}</span>
+              })}{' '}
+            </p>
+          </>
+        ))}
     </Modal>
   )
 }
