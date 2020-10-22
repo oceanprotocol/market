@@ -8,6 +8,7 @@ import Time from '../../atoms/Time'
 import shortid from 'shortid'
 import styles from './ComputeDetails.module.css'
 import { Status } from './ComputeJobs'
+import { ListItem } from 'components/atoms/Lists'
 
 export default function ComputeDetailsModal({
   computeJob,
@@ -58,25 +59,39 @@ export default function ComputeDetailsModal({
       <h3 className={styles.title}>{computeJob.assetName}</h3>
       <p>
         Created on <Time date={computeJob.dateCreated} isUnix />
+        {computeJob.dateFinished && (
+          <>
+            <br />
+            Finished on <Time date={computeJob.dateFinished} isUnix />
+          </>
+        )}
       </p>
       <Status>{computeJob.statusText}</Status>
-      {computeJob.dateFinished && (
-        <p>
-          Finished on <Time date={computeJob.dateFinished} isUnix />
-        </p>
-      )}
 
       {isFinished &&
         (isLoading ? (
           <Loader />
         ) : (
           <>
-            <p>{computeJob.algorithmLogUrl}</p>
-            <p>
-              {computeJob.resultsUrls?.map((url) => {
-                return <span key={shortid.generate()}>{url}</span>
-              })}{' '}
-            </p>
+            <ul>
+              <ListItem>
+                <a
+                  href={computeJob.algorithmLogUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  View Log
+                </a>
+              </ListItem>
+
+              {computeJob.resultsUrls?.map((url, i) => (
+                <ListItem key={shortid.generate()}>
+                  <a href={url} target="_blank" rel="noreferrer">
+                    View Result {i}
+                  </a>
+                </ListItem>
+              ))}
+            </ul>
           </>
         ))}
     </Modal>
