@@ -3,8 +3,6 @@ import { useOcean } from '@oceanprotocol/react'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Loader from '../../atoms/Loader'
 import Modal from '../../atoms/Modal'
-import AssetList from '../../organisms/AssetList'
-import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/ComputeJob'
 import { ComputeJobMetaData } from '@types/ComputeJobMetaData'
 import Time from '../../atoms/Time'
 import shortid from 'shortid'
@@ -32,9 +30,9 @@ export default function ComputeDetailsModal({
           computeJob.did,
           computeJob.jobId
         )
-        console.log(job[0])
         if (job && job.length > 0) {
           computeJob.algorithmLogUrl = job[0].algorithmLogUrl
+          //hack because ComputeJob returns resultsUrl instead of resultsUrls, issue created already
           computeJob.resultsUrls =
             (job[0] as any).resultsUrl !== '' ? (job[0] as any).resultsUrl : []
         }
@@ -45,7 +43,7 @@ export default function ComputeDetailsModal({
       }
     }
     getDetails()
-  }, [ocean, status, account, open])
+  }, [ocean, status, account, isOpen])
 
   return (
     <Modal

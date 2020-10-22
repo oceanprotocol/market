@@ -9,6 +9,7 @@ import Button from '../../atoms/Button'
 import ComputeDetailsModal from './ComputeDetailsModal'
 import { ComputeJobMetaData } from '@types/ComputeJobMetaData'
 import { Link } from 'gatsby'
+import { Logger } from '@oceanprotocol/lib'
 
 function DetailsButton({ row }: { row: ComputeJobMetaData }): ReactElement {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -84,13 +85,12 @@ export default function ComputeJobs(): ReactElement {
       if (!ocean || !account) return
       setIsLoading(true)
       try {
-        console.log('get jobs')
+
         const orderHistory = await ocean.assets.getOrderHistory(
           account,
           'compute',
           100
         )
-        console.log('orders', orderHistory)
         let jobs: ComputeJobMetaData[] = []
 
         for (let i = 0; i < orderHistory.length; i++) {
@@ -101,7 +101,6 @@ export default function ComputeJobs(): ReactElement {
             undefined,
             false
           )
-          console.log(computeJob)
           computeJob.forEach((item) => {
             jobs.push({
               did: orderHistory[i].did,
@@ -111,14 +110,11 @@ export default function ComputeJobs(): ReactElement {
               assetName: assetName,
               status: item.status,
               statusText: item.statusText,
-              algorithmLogUrl: item.algorithmLogUrl,
-              resultsUrls:
-                (item as any).resultsUrl !== '' ? (item as any).resultsUrl : []
+              algorithmLogUrl: "",
+              resultsUrls: []
             })
           })
         }
-        console.log(jobs)
-        jobs
         setJobs(
           jobs.sort((a, b) => {
             if (a.dateCreated > b.dateCreated) return -1
@@ -127,9 +123,8 @@ export default function ComputeJobs(): ReactElement {
           })
         )
 
-        setUserAgreed(true)
-      } catch (e) {
-        console.log(e)
+      } catch (error) {
+        Logger.log(error.message)
       } finally {
         setIsLoading(false)
       }
