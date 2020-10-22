@@ -15,6 +15,7 @@ export default {
 export const PricedAsset = (): ReactElement => (
   <Consume
     ddo={ddo as DDO}
+    dtBalance="1"
     isBalanceSufficient
     file={new DDO(ddo).findServiceByType('metadata').attributes.main.files[0]}
   />

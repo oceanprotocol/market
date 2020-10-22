@@ -22,3 +22,7 @@
 .feedback {
   width: 100%;
 }
+
+.hasTokens {
+  composes: hasTokens from './index.module.css';
+}

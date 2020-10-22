@@ -1,4 +1,28 @@
 {
+  "create": {
+    "empty": {
+      "title": "No Price Created",
+      "info": "This data set has no price yet. As the publisher you can create a fixed price, or a dynamic price for it. Onwards!",
+      "action": {
+        "name": "Create Pricing",
+        "help": "Create Pricing will mint your datatokens, approve spending, and create either a pool or a fixed rate exchange in one process. You will need to approve those multiple steps in your wallet."
+      }
+    },
+    "fixed": {
+      "title": "Fixed",
+      "info": "Set your price for accessing this data set. The datatoken for this data set will be worth the entered amount of OCEAN."
+    },
+    "dynamic": {
+      "title": "Dynamic",
+      "info": "Let's create a decentralized, automated market for your data set. The datatoken for this data set will be worth the entered amount of OCEAN. Additionally, you will provide liquidity into a Datatoken/OCEAN liquidity pool with Balancer.",
+      "tooltips": {
+        "poolInfo": "Explain what is going on here...",
+        "swapFee": "Explain liquidity provider fee...",
+        "communityFee": "Explain community fee...",
+        "marketplaceFee": "Explain marketplace fee..."
+      }
+    }
+  },
   "pool": {
     "tooltips": {
       "price": "Explain how this price is determined...",

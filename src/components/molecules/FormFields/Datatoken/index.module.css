@@ -1,0 +1,5 @@
+.datatoken {
+  border: 1px solid var(--brand-grey-lighter);
+  padding: calc(var(--spacer) / 3);
+  border-radius: var(--border-radius);
+}

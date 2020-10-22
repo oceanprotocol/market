@@ -40,6 +40,7 @@
   margin-left: -2rem;
   margin-right: -2rem;
   border-bottom: 1px solid var(--brand-grey-lighter);
+  background: var(--brand-grey-dimmed);
 }
 
 @media screen and (min-width: 40rem) {

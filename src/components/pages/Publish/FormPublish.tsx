@@ -1,12 +1,12 @@
 import React, { ReactElement, useEffect, FormEvent } from 'react'
-import styles from './PublishForm.module.css'
+import styles from './FormPublish.module.css'
 import { useOcean } from '@oceanprotocol/react'
-import { useFormikContext, Field } from 'formik'
+import { useFormikContext, Field, Form } from 'formik'
 import Input from '../../atoms/Input'
 import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
 
-export default function PublishForm({
+export default function FormPublish({
   content
 }: {
   content: FormContent
@@ -37,7 +37,7 @@ export default function PublishForm({
   }
 
   return (
-    <form
+    <Form
       className={styles.form}
       // do we need this?
       onChange={() => status === 'empty' && setStatus(null)}
@@ -61,6 +61,6 @@ export default function PublishForm({
           </Button>
         )}
       </footer>
-    </form>
+    </Form>
   )
 }

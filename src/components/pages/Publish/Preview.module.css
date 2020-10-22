@@ -44,11 +44,3 @@
   align-items: center;
   margin-bottom: calc(var(--spacer) / 2);
 }
-
-.price {
-  min-width: 0;
-}
-
-.price:only-child {
-  margin-right: -100%;
-}

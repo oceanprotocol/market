@@ -16,8 +16,7 @@ export function transformPublishFormToMetadata(
     tags,
     links,
     termsAndConditions,
-    files,
-    price
+    files
   } = data
 
   const metadata: MetadataMarket = {
@@ -36,8 +35,7 @@ export function transformPublishFormToMetadata(
       copyrightHolder,
       tags: tags?.split(','),
       links: typeof links !== 'string' && links,
-      termsAndConditions,
-      priceType: price.type
+      termsAndConditions
     }
   }
 
