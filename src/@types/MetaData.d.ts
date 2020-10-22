@@ -4,12 +4,11 @@ import {
   AdditionalInformation,
   ServiceMetadata
 } from '@oceanprotocol/lib'
-import { PriceOptions, DataTokenOptions } from '@oceanprotocol/react'
+import { DataTokenOptions, PriceOptions } from '@oceanprotocol/react'
 
 export interface AdditionalInformationMarket extends AdditionalInformation {
   links?: File[]
   termsAndConditions: boolean
-  priceType: string
 }
 
 export interface MetadataMarket extends Metadata {
@@ -22,8 +21,6 @@ export interface MetadataMarket extends Metadata {
 export interface PriceOptionsMarket extends PriceOptions {
   // easier to keep this as number for Yup input validation
   swapFee: number
-  // collect datatoken info for publishing
-  datatoken?: DataTokenOptions
 }
 
 export interface MetadataPublishForm {
@@ -33,7 +30,7 @@ export interface MetadataPublishForm {
   files: string | File[]
   author: string
   license: string
-  price: PriceOptionsMarket
+  dataTokenOptions: DataTokenOptions
   access: 'Download' | 'Compute' | string
   termsAndConditions: boolean
   // ---- optional fields ----

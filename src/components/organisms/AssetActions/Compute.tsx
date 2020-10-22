@@ -9,22 +9,30 @@ import {
   computeOptions,
   useCompute,
   readFileContent,
-  useOcean
+  useOcean,
+  usePricing
 } from '@oceanprotocol/react'
 import styles from './Compute.module.css'
 import Button from '../../atoms/Button'
 import Input from '../../atoms/Input'
 import Alert from '../../atoms/Alert'
+import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 
 export default function Compute({
   ddo,
-  isBalanceSufficient
+  isBalanceSufficient,
+  dtBalance
 }: {
   ddo: DDO
   isBalanceSufficient: boolean
+  dtBalance: string
 }): ReactElement {
+  const { marketFeeAddress } = useSiteMetadata()
+
   const { ocean } = useOcean()
   const { compute, isLoading, computeStepText, computeError } = useCompute()
+  const { buyDT, dtSymbol } = usePricing(ddo)
+
   const computeService = ddo.findServiceByType('compute')
   const metadataService = ddo.findServiceByType('metadata')
 
@@ -44,6 +52,7 @@ export default function Compute({
     computeType === '' ||
     !ocean ||
     !isBalanceSufficient
+  const hasDatatoken = Number(dtBalance) >= 1
 
   const onDrop = async (files: File[]) => {
     setFile(files[0])
@@ -68,12 +77,15 @@ export default function Compute({
       setIsPublished(false)
       setError('')
 
+      !hasDatatoken && (await buyDT('1'))
+
       await compute(
         ddo.id,
         computeService,
         ddo.dataToken,
         algorithmRawCode,
-        computeContainer
+        computeContainer,
+        marketFeeAddress
       )
 
       setIsPublished(true)
@@ -94,6 +106,12 @@ export default function Compute({
         </div>
         <div className={styles.pricewrapper}>
           <Price ddo={ddo} conversion />
+          {hasDatatoken && (
+            <div className={styles.hasTokens}>
+              You own {dtBalance} {dtSymbol} allowing you to use this data set
+              without paying again.
+            </div>
+          )}
         </div>
       </div>
 
@@ -115,7 +133,7 @@ export default function Compute({
           onClick={() => startJob()}
           disabled={isComputeButtonDisabled}
         >
-          Start job
+          {hasDatatoken ? 'Start job' : 'Buy'}
         </Button>
       </div>
 

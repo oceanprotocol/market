@@ -1,12 +1,12 @@
 .loaderWrap {
   display: flex;
-  align-items: center;
 }
 
 .loader {
   display: block;
-  width: 20px;
-  height: 20px;
+  flex: 0 0 1.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
   border-radius: 50%;
   border: 2px solid var(--brand-purple);
   border-top-color: var(--brand-violet);

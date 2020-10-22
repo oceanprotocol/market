@@ -1,8 +1,7 @@
-import Alert from '../../atoms/Alert'
-import Button from '../../atoms/Button'
-import React, { ReactElement, useEffect } from 'react'
+import Alert from './Alert'
+import React, { ReactElement, ReactNode, useEffect } from 'react'
 import { confetti } from 'dom-confetti'
-import styles from './Success.module.css'
+import styles from './SuccessConfetti.module.css'
 
 const confettiConfig = {
   angle: 90,
@@ -24,33 +23,29 @@ const confettiConfig = {
   ]
 }
 
-export default function Success({
+export default function SuccessConfetti({
   success,
-  did
+  action
 }: {
   success: string
-  did: string
+  action?: ReactNode
 }): ReactElement {
   // Have some confetti upon success
   useEffect(() => {
     if (!success || typeof window === 'undefined') return
 
-    const startElement: HTMLElement = document.querySelector('a[data-confetti]')
+    const startElement: HTMLElement = document.querySelector(
+      'span[data-confetti]'
+    )
     confetti(startElement, confettiConfig)
   }, [success])
 
   return (
     <>
       <Alert text={success} state="success" />
-      <Button
-        style="primary"
-        size="small"
-        href={`/asset/${did}`}
-        className={styles.action}
-        data-confetti
-      >
-        Go to data set →
-      </Button>
+      <span className={styles.action} data-confetti>
+        {action}
+      </span>
     </>
   )
 }

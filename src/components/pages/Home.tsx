@@ -1,12 +1,12 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import SearchBar from '../molecules/SearchBar'
 import styles from './Home.module.css'
-import { MetadataStore, Logger } from '@oceanprotocol/lib'
+import { MetadataCache, Logger } from '@oceanprotocol/lib'
 import AssetList from '../organisms/AssetList'
 import {
   QueryResult,
   SearchQuery
-} from '@oceanprotocol/lib/dist/node/metadatastore/MetadataStore'
+} from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import Container from '../atoms/Container'
 import Loader from '../atoms/Loader'
 import { useOcean } from '@oceanprotocol/react'
@@ -15,7 +15,14 @@ const queryHighest = {
   page: 1,
   offset: 3,
   query: { 'price.type': ['pool'] },
-  sort: { 'price.value': 1 }
+  sort: { 'price.ocean': -1 }
+}
+
+const queryPoolsLatest = {
+  page: 1,
+  offset: 6,
+  query: { 'price.type': ['pool'] },
+  sort: { created: -1 }
 }
 
 const queryLatest = {
@@ -25,10 +32,10 @@ const queryLatest = {
   sort: { created: -1 }
 }
 
-async function getAssets(query: SearchQuery, metadataStoreUri: string) {
+async function getAssets(query: SearchQuery, metadataCacheUri: string) {
   try {
-    const metadataStore = new MetadataStore(metadataStoreUri, Logger)
-    const result = await metadataStore.queryMetadata(query)
+    const metadataCache = new MetadataCache(metadataCacheUri, Logger)
+    const result = await metadataCache.queryMetadata(query)
 
     return result
   } catch (error) {
@@ -39,6 +46,9 @@ async function getAssets(query: SearchQuery, metadataStoreUri: string) {
 export default function HomePage(): ReactElement {
   const { config } = useOcean()
   const [queryResultLatest, setQueryResultLatest] = useState<QueryResult>()
+  const [queryResultPoolsLatest, setQueryResultPoolsLatest] = useState<
+    QueryResult
+  >()
   const [queryResultHighest, setQueryResultHighest] = useState<QueryResult>()
   const [loading, setLoading] = useState(true)
 
@@ -46,19 +56,25 @@ export default function HomePage(): ReactElement {
     async function init() {
       const queryResultHighest = await getAssets(
         queryHighest,
-        config.metadataStoreUri
+        config.metadataCacheUri
       )
       setQueryResultHighest(queryResultHighest)
 
+      const queryResultPoolsLatest = await getAssets(
+        queryPoolsLatest,
+        config.metadataCacheUri
+      )
+      setQueryResultPoolsLatest(queryResultPoolsLatest)
+
       const queryResultLatest = await getAssets(
         queryLatest,
-        config.metadataStoreUri
+        config.metadataCacheUri
       )
       setQueryResultLatest(queryResultLatest)
       setLoading(false)
     }
     init()
-  }, [config.metadataStoreUri])
+  }, [config.metadataCacheUri])
 
   return (
     <>
@@ -67,7 +83,7 @@ export default function HomePage(): ReactElement {
       </Container>
 
       <section className={styles.latest}>
-        <h3>Highest Liquidity</h3>
+        <h3>Highest Liquidity Pools</h3>
         {loading ? (
           <Loader />
         ) : (
@@ -76,7 +92,18 @@ export default function HomePage(): ReactElement {
       </section>
 
       <section className={styles.latest}>
-        <h3>Latest</h3>
+        <h3>New Liquidity Pools</h3>
+        {loading ? (
+          <Loader />
+        ) : (
+          queryResultPoolsLatest && (
+            <AssetList queryResult={queryResultPoolsLatest} />
+          )
+        )}
+      </section>
+
+      <section className={styles.latest}>
+        <h3>New Data Sets</h3>
         {loading ? (
           <Loader />
         ) : (

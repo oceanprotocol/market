@@ -1,23 +1,35 @@
 import Alert from '../../atoms/Alert'
-import Success from './Success'
 import Button from '../../atoms/Button'
 import Loader from '../../atoms/Loader'
 import React, { ReactElement } from 'react'
 import styles from './Feedback.module.css'
+import SuccessConfetti from '../../atoms/SuccessConfetti'
+import { DDO } from '@oceanprotocol/lib'
 
 export default function Feedback({
   error,
   success,
-  did,
+  ddo,
   publishStepText,
   setError
 }: {
   error: string
   success: string
-  did: string
+  ddo: DDO
   publishStepText: string
   setError: (error: string) => void
 }): ReactElement {
+  const SuccessAction = () => (
+    <Button
+      style="primary"
+      size="small"
+      to={`/asset/${ddo?.id}`}
+      className={styles.action}
+    >
+      Go to data set →
+    </Button>
+  )
+
   return (
     <div className={styles.feedback}>
       <div className={styles.box}>
@@ -35,7 +47,7 @@ export default function Feedback({
             </Button>
           </>
         ) : success ? (
-          <Success success={success} did={did} />
+          <SuccessConfetti success={success} action={<SuccessAction />} />
         ) : (
           <Loader message={publishStepText} />
         )}

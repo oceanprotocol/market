@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react'
 import Loader from '../../../atoms/Loader'
 import Button from '../../../atoms/Button'
-import Alert from '../../../atoms/Alert'
 import styles from './Actions.module.css'
 import EtherscanLink from '../../../atoms/EtherscanLink'
+import SuccessConfetti from '../../../atoms/SuccessConfetti'
 
 export default function Actions({
   isLoading,
@@ -30,15 +30,14 @@ export default function Actions({
         )}
       </div>
       {txId && (
-        <>
-          <Alert
-            text={`Successfully added liquidity. Transaction ID: ${txId}`}
-            state="success"
-          />
-          <EtherscanLink network="rinkeby" path={`/tx/${txId}`}>
-            Etherscan
-          </EtherscanLink>
-        </>
+        <SuccessConfetti
+          success="Successfully added liquidity."
+          action={
+            <EtherscanLink network="rinkeby" path={`/tx/${txId}`}>
+              See on Etherscan
+            </EtherscanLink>
+          }
+        />
       )}
     </>
   )

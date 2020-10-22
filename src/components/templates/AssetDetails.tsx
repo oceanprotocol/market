@@ -3,7 +3,7 @@ import { Router } from '@reach/router'
 import AssetContent from '../../components/organisms/AssetContent'
 import Layout from '../../components/Layout'
 import { MetadataMarket } from '../../@types/MetaData'
-import { MetadataStore, Logger, DDO } from '@oceanprotocol/lib'
+import { MetadataCache, Logger, DDO } from '@oceanprotocol/lib'
 import Alert from '../../components/atoms/Alert'
 import Loader from '../../components/atoms/Loader'
 import { useOcean } from '@oceanprotocol/react'
@@ -23,13 +23,17 @@ export default function PageTemplateAssetDetails({
 
   useEffect(() => {
     async function init() {
+      if (ddo) return
+
       try {
-        const metadataStore = new MetadataStore(config.metadataStoreUri, Logger)
-        const ddo = await metadataStore.retrieveDDO(did)
+        const metadataCache = new MetadataCache(config.metadataCacheUri, Logger)
+        const ddo = await metadataCache.retrieveDDO(did)
 
         if (!ddo) {
           setTitle('Could not retrieve asset')
-          setError('The DDO was not found in MetadataStore.')
+          setError(
+            `The DDO for ${did} was not found in MetadataCache. If you just published a new data set, wait some seconds and refresh this page.`
+          )
           return
         }
 
@@ -44,7 +48,11 @@ export default function PageTemplateAssetDetails({
       }
     }
     init()
-  }, [did, config.metadataStoreUri])
+
+    // Periodically try to get DDO when not present yet
+    const timer = !ddo && setInterval(() => init(), 2000)
+    return () => clearInterval(timer)
+  }, [ddo, did, config.metadataCacheUri])
 
   return did && metadata ? (
     <Layout title={title} uri={uri}>

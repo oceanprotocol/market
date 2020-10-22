@@ -2,37 +2,63 @@ import React, { ReactElement, useState, useEffect } from 'react'
 import styles from './index.module.css'
 import Compute from './Compute'
 import Consume from './Consume'
-import { DDO } from '@oceanprotocol/lib'
+import { DDO, Logger } from '@oceanprotocol/lib'
 import Tabs from '../../atoms/Tabs'
 import { useOcean, useMetadata } from '@oceanprotocol/react'
 import compareAsBN from '../../../utils/compareAsBN'
 import Pool from './Pool'
-import { AdditionalInformationMarket } from '../../../@types/MetaData'
 
 export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
-  const { balance } = useOcean()
+  const { ocean, balance, accountId } = useOcean()
   const { price } = useMetadata(ddo)
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
+  const [dtBalance, setDtBalance] = useState<string>()
 
   const isCompute = Boolean(ddo.findServiceByType('compute'))
   const { attributes } = ddo.findServiceByType('metadata')
 
+  // Get and set user DT balance
+  useEffect(() => {
+    if (!ocean || !accountId) return
+
+    async function init() {
+      try {
+        const dtBalance = await ocean.datatokens.balance(
+          ddo.dataToken,
+          accountId
+        )
+        setDtBalance(dtBalance)
+      } catch (e) {
+        Logger.error(e.message)
+      }
+    }
+    init()
+  }, [ocean, accountId, ddo.dataToken])
+
   // Check user balance against price
   useEffect(() => {
-    if (!price || !price.value || !balance || !balance.ocean) return
+    if (!price || !price.value || !balance || !balance.ocean || !dtBalance)
+      return
 
-    setIsBalanceSufficient(compareAsBN(balance.ocean, `${price.value}`))
+    setIsBalanceSufficient(
+      compareAsBN(balance.ocean, `${price.value}`) || Number(dtBalance) >= 1
+    )
 
     return () => {
       setIsBalanceSufficient(false)
     }
-  }, [balance, price])
+  }, [balance, price, dtBalance])
 
   const UseContent = isCompute ? (
-    <Compute ddo={ddo} isBalanceSufficient={isBalanceSufficient} />
+    <Compute
+      ddo={ddo}
+      dtBalance={dtBalance}
+      isBalanceSufficient={isBalanceSufficient}
+    />
   ) : (
     <Consume
       ddo={ddo}
+      dtBalance={dtBalance}
       isBalanceSufficient={isBalanceSufficient}
       file={attributes.main.files[0]}
     />
@@ -46,10 +72,7 @@ export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
   ]
 
   // Check from metadata, cause that is available earlier
-  const hasPool =
-    ((attributes.additionalInformation as unknown) as AdditionalInformationMarket)
-      ?.priceType === 'dynamic'
-  // price?.type === 'pool'
+  const hasPool = ddo.price?.type === 'pool'
 
   hasPool &&
     tabs.push({

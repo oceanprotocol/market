@@ -8,7 +8,7 @@
 }
 
 .icon {
-  composes: box from '../../../atoms/Box.module.css';
+  composes: box from '../../../../atoms/Box.module.css';
   padding: calc(var(--spacer) / 1.5);
   width: 6rem;
   height: 6rem;

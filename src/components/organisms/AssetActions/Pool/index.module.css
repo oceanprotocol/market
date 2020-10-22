@@ -1,12 +1,11 @@
 .dataToken {
-  margin-bottom: var(--spacer);
   padding-bottom: calc(var(--spacer) / 1.5);
   font-size: var(--font-size-large);
   border-bottom: 1px solid var(--brand-grey-lighter);
   margin-left: -2rem;
   margin-right: -2rem;
-  padding-left: var(--spacer);
-  padding-right: var(--spacer);
+  padding-left: calc(var(--spacer) / 1.5);
+  padding-right: calc(var(--spacer) / 1.5);
   text-align: center;
 }
 
@@ -20,28 +19,4 @@
 .dataTokenLinks a {
   margin-left: calc(var(--spacer) / 3);
   margin-right: calc(var(--spacer) / 3);
-}
-
-.poolTokens {
-  display: grid;
-  gap: var(--spacer);
-  grid-template-columns: 1fr 1fr;
-}
-
-.title {
-  font-size: var(--font-size-base);
-  margin-bottom: calc(var(--spacer) / 1.5);
-}
-
-.totalLiquidity {
-  composes: token from './Token.module.css';
-  font-weight: var(--font-weight-base) !important;
-  font-size: var(--font-size-small);
-  padding-left: var(--font-size-base);
-}
-
-.totalLiquidity strong {
-  font-size: var(--font-size-base);
-  color: var(--brand-grey-dark);
-  line-height: 1;
 }
