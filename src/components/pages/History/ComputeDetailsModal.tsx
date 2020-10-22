@@ -2,8 +2,8 @@ import { Logger } from '@oceanprotocol/lib'
 import { useOcean } from '@oceanprotocol/react'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Loader from '../../atoms/Loader'
+import Modal from '../../atoms/Modal'
 import AssetList from '../../organisms/AssetList'
-import BaseDialog from '../../atoms/BaseDialog'
 import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/ComputeJob'
 import { ComputeJobMetaData } from '@types/ComputeJobMetaData'
 import Time from '../../atoms/Time'
@@ -11,22 +11,20 @@ import shortid from 'shortid'
 
 export default function ComputeDetailsModal({
   computeJob,
-  open,
-  onClose
+  isOpen,
+  onToggleModal
 }: {
   computeJob: ComputeJobMetaData
-  open: boolean
-  onClose: () => void
+  isOpen: boolean
+  onToggleModal: () => void
 }): ReactElement {
   const { ocean, status, account } = useOcean()
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     async function getDetails() {
-      console.log('open', open)
-      if (!account || !ocean || !computeJob || !open) return
+      if (!account || !ocean || !computeJob || !isOpen) return
 
-      console.log('open', open)
       try {
         setIsLoading(true)
         const job = await ocean.compute.status(
@@ -50,27 +48,31 @@ export default function ComputeDetailsModal({
   }, [ocean, status, account, open])
 
   return (
-    <BaseDialog open={open} onClose={onClose} title="Compute job details">
+    <Modal
+      title="Compute job details"
+      isOpen={isOpen}
+      onToggleModal={onToggleModal}
+    >
       {isLoading ? (
         <Loader />
       ) : (
-        <>
-          <p>{computeJob.assetName}</p>
-          <p>
-            <Time date={computeJob.dateCreated} isUnix />
-          </p>
-          <p>
-            <Time date={computeJob.dateFinished} isUnix />
-          </p>
-          <p>{computeJob.statusText}</p>
-          <p>{computeJob.algorithmLogUrl}</p>
-          <p>
-            {computeJob.resultsUrls?.map((url) => {
-              return <span key={shortid.generate()}>{url}</span>
-            })}{' '}
-          </p>
-        </>
-      )}
-    </BaseDialog>
+          <>
+            <p>{computeJob.assetName}</p>
+            <p>
+              <Time date={computeJob.dateCreated} isUnix />
+            </p>
+            <p>
+              <Time date={computeJob.dateFinished} isUnix />
+            </p>
+            <p>{computeJob.statusText}</p>
+            <p>{computeJob.algorithmLogUrl}</p>
+            <p>
+              {computeJob.resultsUrls?.map((url) => {
+                return <span key={shortid.generate()}>{url}</span>
+              })}{' '}
+            </p>
+          </>
+        )}
+    </Modal>
   )
 }

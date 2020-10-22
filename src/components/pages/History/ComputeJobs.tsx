@@ -20,8 +20,8 @@ function DetailsButton({ row }: { row: ComputeJobMetaData }): ReactElement {
       </Button>
       <ComputeDetailsModal
         computeJob={row}
-        open={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
+        isOpen={isDialogOpen}
+        onToggleModal={() => setIsDialogOpen(false)}
       />
     </>
   )
@@ -72,7 +72,6 @@ export default function ComputeJobs(): ReactElement {
   const { ocean, account } = useOcean()
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>()
   const [isLoading, setIsLoading] = useState(false)
-  const [userAgreed, setUserAgreed] = useState(false)
 
   const getTitle = async (did: string) => {
     const ddo = await ocean.metadatacache.retrieveDDO(did)
