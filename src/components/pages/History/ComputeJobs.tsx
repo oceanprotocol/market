@@ -37,8 +37,8 @@ function DetailsButton({ row }: { row: ComputeJob }): ReactElement {
       </Button>
       <ComputeDetailsModal
         computeJob={row}
-        open={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
+        isOpen={isDialogOpen}
+        onToggleModal={() => setIsDialogOpen(false)}
       />
     </>
   )
@@ -64,7 +64,7 @@ const columns = [
   {
     name: 'Name',
     selector: function getAssetRow() {
-      //const did = row.dtAddress.replace('0x', 'did:op:')
+      // const did = row.dtAddress.replace('0x', 'did:op:')
       // return <AssetTitle did={did} />
       return <></>
     }
@@ -85,7 +85,7 @@ const columns = [
 
 export default function ComputeJobs(): ReactElement {
   const { ocean, account } = useOcean()
-  const [jobs,setJobs] = useState<ComputeJob[]>()
+  const [jobs, setJobs] = useState<ComputeJob[]>()
   const [isLoading, setIsLoading] = useState(false)
   const [userAgreed, setUserAgreed] = useState(false)
 
@@ -99,13 +99,15 @@ export default function ComputeJobs(): ReactElement {
         100
       )
       console.log('orders', orderHistory)
-       const userJobs = await ocean.compute.status(account)
+      const userJobs = await ocean.compute.status(account)
 
-      setJobs(userJobs.sort((a, b) => {
+      setJobs(
+        userJobs.sort((a, b) => {
           if (a.dateCreated > b.dateCreated) return -1
           if (a.dateCreated < b.dateCreated) return 1
           return 0
-      }))
+        })
+      )
       setUserAgreed(true)
     } catch (e) {
       console.log(e)

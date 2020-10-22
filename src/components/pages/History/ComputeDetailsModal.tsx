@@ -2,24 +2,26 @@ import { Logger } from '@oceanprotocol/lib'
 import { useOcean } from '@oceanprotocol/react'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Loader from '../../atoms/Loader'
+import Modal from '../../atoms/Modal'
 import AssetList from '../../organisms/AssetList'
-import BaseDialog from '../../atoms/BaseDialog'
 import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/ComputeJob'
 
 export default function ComputeDetailsModal({
   computeJob,
-  open,
-  onClose
+  isOpen,
+  onToggleModal
 }: {
   computeJob: ComputeJob
-  open: boolean
-  onClose: () => void
+  isOpen: boolean
+  onToggleModal: () => void
 }): ReactElement {
   const { ocean, status, accountId } = useOcean()
   const [isLoading, setIsLoading] = useState(false)
+
   useEffect(() => {
     async function getDetails() {
       if (!accountId || !ocean || !computeJob) return
+
       try {
         setIsLoading(true)
       } catch (error) {
@@ -29,11 +31,15 @@ export default function ComputeDetailsModal({
       }
     }
     getDetails()
-  }, [ocean, status, accountId])
+  }, [ocean, status, accountId, computeJob])
 
   return (
-    <BaseDialog open={open} onClose={onClose} title="Compute job details">
-      {isLoading ? <Loader /> : <>Details</>}
-    </BaseDialog>
+    <Modal
+      title="Compute job details"
+      isOpen={isOpen}
+      onToggleModal={onToggleModal}
+    >
+      {isLoading ? <Loader /> : 'Details'}
+    </Modal>
   )
 }
