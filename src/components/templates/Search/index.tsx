@@ -21,19 +21,20 @@ export default function SearchPage({
 }): ReactElement {
   const { config } = useOcean()
   const parsed = queryString.parse(location.search)
-  const { text, tag, page } = parsed
+  const { text, tags, page } = parsed
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [loading, setLoading] = useState<boolean>()
 
   useEffect(() => {
     async function initSearch() {
       setLoading(true)
+      console.log(parsed)
       const queryResult = await getResults(parsed, config.metadataCacheUri)
       setQueryResult(queryResult)
       setLoading(false)
     }
     initSearch()
-  }, [text, tag, page, config.metadataCacheUri])
+  }, [text, tags, page, config.metadataCacheUri])
 
   return (
     <section className={styles.grid}>
