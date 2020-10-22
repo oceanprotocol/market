@@ -1,16 +1,14 @@
 import { useOcean } from '@oceanprotocol/react'
 import React, { ReactElement, useEffect, useState } from 'react'
-import DataTable from 'react-data-table-component'
 import Time from '../../atoms/Time'
 import styles from './ComputeJobs.module.css'
-import Loader from '../../atoms/Loader'
 import Button from '../../atoms/Button'
 import ComputeDetails from './ComputeDetails'
 import { ComputeJobMetaData } from '../../../@types/ComputeJobMetaData'
 import { Link } from 'gatsby'
 import { Logger } from '@oceanprotocol/lib'
-import Empty from './Empty'
 import Dotdotdot from 'react-dotdotdot'
+import Table from '../../atoms/Table'
 
 function DetailsButton({ row }: { row: ComputeJobMetaData }): ReactElement {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -75,13 +73,13 @@ export default function ComputeJobs(): ReactElement {
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>()
   const [isLoading, setIsLoading] = useState(false)
 
-  const getTitle = async (did: string) => {
-    const ddo = await ocean.metadatacache.retrieveDDO(did)
-    const metadata = ddo.findServiceByType('metadata')
-    return metadata.attributes.main.name
-  }
-
   useEffect(() => {
+    async function getTitle(did: string) {
+      const ddo = await ocean.metadatacache.retrieveDDO(did)
+      const metadata = ddo.findServiceByType('metadata')
+      return metadata.attributes.main.name
+    }
+
     async function getJobs() {
       if (!ocean || !account) return
       setIsLoading(true)
@@ -132,17 +130,5 @@ export default function ComputeJobs(): ReactElement {
     getJobs()
   }, [ocean, account])
 
-  return isLoading ? (
-    <Loader />
-  ) : (
-    <DataTable
-      columns={columns}
-      data={jobs}
-      className={styles.table}
-      noHeader
-      pagination={jobs?.length >= 9}
-      paginationPerPage={10}
-      noDataComponent={<Empty />}
-    />
-  )
+  return <Table columns={columns} data={jobs} isLoading={isLoading} />
 }

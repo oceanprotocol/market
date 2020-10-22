@@ -8,7 +8,7 @@ import Time from '../../atoms/Time'
 import shortid from 'shortid'
 import styles from './ComputeDetails.module.css'
 import { Status } from './ComputeJobs'
-import { ListItem } from 'components/atoms/Lists'
+import { ListItem } from '../../atoms/Lists'
 
 export default function ComputeDetailsModal({
   computeJob,

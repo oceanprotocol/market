@@ -2,7 +2,3 @@
   text-transform: uppercase;
   color: var(--color-secondary);
 }
-
-.table {
-  composes: table from './PoolTransactions.module.css';
-}

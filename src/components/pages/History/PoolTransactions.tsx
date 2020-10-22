@@ -1,14 +1,11 @@
 import { PoolTransaction } from '@oceanprotocol/lib/dist/node/balancer/OceanPool'
 import { useMetadata, useOcean } from '@oceanprotocol/react'
-import Loader from '../../atoms/Loader'
 import { Link } from 'gatsby'
 import React, { ReactElement, useEffect, useState } from 'react'
-import DataTable from 'react-data-table-component'
 import EtherscanLink from '../../atoms/EtherscanLink'
 import Time from '../../atoms/Time'
-import styles from './PoolTransactions.module.css'
-import Empty from './Empty'
 import Dotdotdot from 'react-dotdotdot'
+import Table from '../../atoms/Table'
 
 function AssetTitle({ did }: { did: string }): ReactElement {
   const { title } = useMetadata(did)
@@ -91,17 +88,5 @@ export default function PoolTransactions(): ReactElement {
     getLogs()
   }, [ocean, accountId])
 
-  return isLoading ? (
-    <Loader />
-  ) : (
-    <DataTable
-      columns={columns}
-      data={logs}
-      className={styles.table}
-      noHeader
-      pagination={logs?.length >= 9}
-      paginationPerPage={10}
-      noDataComponent={<Empty />}
-    />
-  )
+  return <Table columns={columns} data={logs} isLoading={isLoading} />
 }

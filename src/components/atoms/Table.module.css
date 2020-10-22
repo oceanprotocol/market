@@ -1,3 +1,11 @@
+.table div {
+  background-color: transparent !important;
+}
+
+.table [role='columnheader'] {
+  font-weight: var(--font-weight-bold);
+}
+
 .empty {
   width: 100%;
   text-align: left;
