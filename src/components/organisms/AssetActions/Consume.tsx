@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { File as FileMetadata, DDO } from '@oceanprotocol/lib'
 import Button from '../../atoms/Button'
@@ -21,8 +21,9 @@ export default function Consume({
   isBalanceSufficient: boolean
   dtBalance: string
 }): ReactElement {
-  const { ocean, account } = useOcean()
+  const { ocean, accountId } = useOcean()
   const { marketFeeAddress } = useSiteMetadata()
+  const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
   const {
     dtSymbol,
     buyDT,
@@ -31,7 +32,6 @@ export default function Consume({
     pricingIsLoading
   } = usePricing(ddo)
   const { consumeStepText, consume, consumeError } = useConsume()
-
   const isDisabled =
     !ocean ||
     !isBalanceSufficient ||
@@ -39,19 +39,26 @@ export default function Consume({
     pricingIsLoading
   const hasDatatoken = Number(dtBalance) >= 1
 
-  const service = ddo.findServiceByType('access')
-  const previousOrder = ocean.datatokens.getPreviousValidOrders(
-    ddo.dataToken,
-    service.attributes.main.cost,
-    service.index,
-    service.attributes.main.timeout,
-    account.getId()
-  )
-  const hasPreviousOrder = !!previousOrder
+  useEffect(() => {
+    async function checkPreviousOrders() {
+      const service = ddo.findServiceByType('access')
+      const previousOrder = await ocean.datatokens.getPreviousValidOrders(
+        ddo.dataToken,
+        service.attributes.main.cost,
+        service.index,
+        service.attributes.main.timeout,
+        accountId
+      )
+      console.log('prev ord', previousOrder, !!previousOrder)
+      setHasPreviousOrder(!!previousOrder)
+    }
+    checkPreviousOrders()
+  }, [ddo, accountId])
 
   async function handleConsume() {
-    !hasDatatoken && (await buyDT('1'))
+    !hasPreviousOrder && !hasDatatoken && (await buyDT('1'))
     await consume(ddo.id, ddo.dataToken, 'access', marketFeeAddress)
+    setHasPreviousOrder(true)
   }
 
   // Output errors in UI

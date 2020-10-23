@@ -1,4 +1,4 @@
-import React, { useState, ReactElement, ChangeEvent } from 'react'
+import React, { useState, ReactElement, ChangeEvent, useEffect } from 'react'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import Loader from '../../atoms/Loader'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
@@ -29,7 +29,7 @@ export default function Compute({
 }): ReactElement {
   const { marketFeeAddress } = useSiteMetadata()
 
-  const { ocean, account } = useOcean()
+  const { ocean, accountId } = useOcean()
   const { compute, isLoading, computeStepText, computeError } = useCompute()
   const { buyDT, dtSymbol } = usePricing(ddo)
 
@@ -45,6 +45,7 @@ export default function Compute({
   const [algorithmRawCode, setAlgorithmRawCode] = useState('')
   const [isPublished, setIsPublished] = useState(false)
   const [file, setFile] = useState(null)
+  const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
 
   const isComputeButtonDisabled =
     isJobStarting === true ||
@@ -54,14 +55,22 @@ export default function Compute({
     !isBalanceSufficient
   const hasDatatoken = Number(dtBalance) >= 1
 
-  const previousOrder = ocean.datatokens.getPreviousValidOrders(
-    ddo.dataToken,
-    computeService.attributes.main.cost,
-    computeService.index,
-    computeService.attributes.main.timeout,
-    account.getId()
-  )
-  const hasPreviousOrder = !!previousOrder
+  useEffect(() => {
+    async function checkPreviousOrders() {
+      const service = ddo.findServiceByType('access')
+      const previousOrder = await ocean.datatokens.getPreviousValidOrders(
+        ddo.dataToken,
+        service.attributes.main.cost,
+        service.index,
+        service.attributes.main.timeout,
+        accountId
+      )
+      console.log('prev ord', previousOrder, !!previousOrder)
+      setHasPreviousOrder(!!previousOrder)
+    }
+    checkPreviousOrders()
+  }, [ddo, accountId])
+
   const onDrop = async (files: File[]) => {
     setFile(files[0])
     const fileText = await readFileContent(files[0])
@@ -85,7 +94,7 @@ export default function Compute({
       setIsPublished(false)
       setError('')
 
-      !hasDatatoken && (await buyDT('1'))
+      !hasPreviousOrder && !hasDatatoken && (await buyDT('1'))
 
       await compute(
         ddo.id,
@@ -96,6 +105,7 @@ export default function Compute({
         marketFeeAddress
       )
 
+      setHasPreviousOrder(true)
       setIsPublished(true)
       setFile(null)
     } catch (error) {
@@ -114,7 +124,7 @@ export default function Compute({
         </div>
         <div className={styles.pricewrapper}>
           <Price ddo={ddo} conversion />
-          {hasDatatoken && (
+          {hasPreviousOrder && hasDatatoken && (
             <div className={styles.hasTokens}>
               You own {dtBalance} {dtSymbol} allowing you to use this data set
               without paying again.
