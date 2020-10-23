@@ -58,7 +58,7 @@ export default function Compute({
 
   useEffect(() => {
     async function checkPreviousOrders() {
-      const orderId = await checkPreviousOrder(ocean, accountId, ddo)
+      const orderId = await checkPreviousOrder(ocean, accountId, ddo, 'compute')
       setPreviousOrderId(orderId)
       setHasPreviousOrder(!!orderId)
     }
