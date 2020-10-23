@@ -2,12 +2,15 @@ import React, { ReactElement, useEffect } from 'react'
 import { useOcean } from '@oceanprotocol/react'
 import { getOceanConfig } from './wrapRootElement'
 import { Logger } from '@oceanprotocol/lib'
+import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 
 export function NetworkMonitor(): ReactElement {
-  const { connect, web3Provider } = useOcean()
+  const { connect, web3Provider, web3, networkId, config } = useOcean()
 
-  async function handleNetworkChanged(chainId: string) {
-    const initialNewConfig = getOceanConfig(Number(chainId.replace('0x', '')))
+  async function handleNetworkChanged(chainId: string | number) {
+    const initialNewConfig = getOceanConfig(
+      typeof chainId === 'string' ? Number(chainId.replace('0x', '')) : chainId
+    )
 
     const newConfig = {
       ...initialNewConfig,
@@ -28,20 +31,22 @@ export function NetworkMonitor(): ReactElement {
     }
   }
 
-  // Re-connect on mount when network is different from user network
-  // useEffect(() => {
-  //   if (!web3 || !networkId) return
+  // Re-connect on mount when network is different from user network.
+  // Bit nasty to just overwrite the initialConfig passed to OceanProvider
+  // while it's connecting to that, but YOLO.
+  useEffect(() => {
+    if (!web3 || !networkId) return
 
-  //   async function init() {
-  //     if (
-  //       (await web3.eth.getChainId()) ===
-  //       (config as ConfigHelperConfig).networkId
-  //     )
-  //       return
-  //     await handleNetworkChanged(networkId)
-  //   }
-  //   init()
-  // }, [web3, networkId])
+    async function init() {
+      if (
+        (await web3.eth.getChainId()) ===
+        (config as ConfigHelperConfig).networkId
+      )
+        return
+      await handleNetworkChanged(networkId)
+    }
+    init()
+  }, [web3, networkId])
 
   // Handle network change events
   useEffect(() => {
