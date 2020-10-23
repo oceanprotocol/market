@@ -119,7 +119,7 @@ export default function Compute({
         </div>
         <div className={styles.pricewrapper}>
           <Price ddo={ddo} conversion />
-          {hasPreviousOrder && hasDatatoken && (
+          {hasDatatoken && (
             <div className={styles.hasTokens}>
               You own {dtBalance} {dtSymbol} allowing you to use this data set
               without paying again.
