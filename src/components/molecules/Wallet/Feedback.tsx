@@ -2,8 +2,7 @@ import React, { ReactElement } from 'react'
 import Status from '../../atoms/Status'
 import styles from './Feedback.module.css'
 import { useOcean } from '@oceanprotocol/react'
-import { isCorrectNetwork } from '../../../utils/wallet'
-import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
+import { getNetworkName } from '../../../utils/wallet'
 
 export declare type Web3Error = {
   status: 'error' | 'warning' | 'success'
@@ -16,23 +15,18 @@ export default function Web3Feedback({
 }: {
   isBalanceSufficient?: boolean
 }): ReactElement {
-  const { appConfig } = useSiteMetadata()
   const { account, status, networkId } = useOcean()
   const isOceanConnectionError = status === -1
-  const correctNetwork = isCorrectNetwork(networkId)
+  const isMainnet = networkId === 1
   const showFeedback =
     !account ||
     isOceanConnectionError ||
-    !correctNetwork ||
+    !isMainnet ||
     isBalanceSufficient === false
-
-  const desiredNetworkName = appConfig.network.replace(/^\w/, (c: string) =>
-    c.toUpperCase()
-  )
 
   const state = !account
     ? 'error'
-    : !correctNetwork
+    : !isMainnet
     ? 'warning'
     : account && isBalanceSufficient
     ? 'success'
@@ -42,8 +36,8 @@ export default function Web3Feedback({
     ? 'No account connected'
     : isOceanConnectionError
     ? 'Error connecting to Ocean'
-    : !correctNetwork
-    ? 'Wrong Network'
+    : !isMainnet
+    ? getNetworkName(networkId)
     : account
     ? isBalanceSufficient === false
       ? 'Insufficient balance'
@@ -54,8 +48,8 @@ export default function Web3Feedback({
     ? 'Please connect your Web3 wallet.'
     : isOceanConnectionError
     ? 'Please try again.'
-    : !correctNetwork
-    ? `Please connect to ${desiredNetworkName}.`
+    : !isMainnet
+    ? undefined
     : isBalanceSufficient === false
     ? 'You do not have enough OCEAN in your wallet to purchase this asset.'
     : 'Something went wrong.'
@@ -64,7 +58,7 @@ export default function Web3Feedback({
     <section className={styles.feedback}>
       <Status state={state} aria-hidden />
       <h3 className={styles.title}>{title}</h3>
-      <p className={styles.error}>{message}</p>
+      {message && <p className={styles.error}>{message}</p>}
     </section>
   ) : null
 }

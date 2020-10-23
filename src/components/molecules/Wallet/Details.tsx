@@ -3,14 +3,13 @@ import Button from '../../atoms/Button'
 import styles from './Details.module.css'
 import { useOcean } from '@oceanprotocol/react'
 import Web3Feedback from './Feedback'
-import { getNetworkName } from '../../../utils/wallet'
 import { getInjectedProviderName } from 'web3modal'
 import Conversion from '../../atoms/Price/Conversion'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 
 export default function Details(): ReactElement {
-  const { balance, connect, logout, networkId } = useOcean()
+  const { balance, connect, logout } = useOcean()
   const { locale } = useUserPreferences()
 
   return (
@@ -27,11 +26,7 @@ export default function Details(): ReactElement {
         ))}
 
         <li className={styles.actions}>
-          <span title="Connected provider">
-            {getInjectedProviderName()}
-            <br />
-            {getNetworkName(networkId)}
-          </span>
+          <span title="Connected provider">{getInjectedProviderName()}</span>
           <Button
             style="text"
             size="small"

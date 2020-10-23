@@ -4,6 +4,7 @@ import Button from '../../../atoms/Button'
 import styles from './Actions.module.css'
 import EtherscanLink from '../../../atoms/EtherscanLink'
 import SuccessConfetti from '../../../atoms/SuccessConfetti'
+import { useOcean } from '@oceanprotocol/react'
 
 export default function Actions({
   isLoading,
@@ -18,6 +19,8 @@ export default function Actions({
   actionName: string
   action: () => void
 }): ReactElement {
+  const { networkId } = useOcean()
+
   return (
     <>
       <div className={styles.actions}>
@@ -33,7 +36,7 @@ export default function Actions({
         <SuccessConfetti
           success="Successfully added liquidity."
           action={
-            <EtherscanLink network="rinkeby" path={`/tx/${txId}`}>
+            <EtherscanLink networkId={networkId} path={`/tx/${txId}`}>
               See on Etherscan
             </EtherscanLink>
           }
