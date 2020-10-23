@@ -43,7 +43,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childContentJson.pool
 
-  const { ocean, accountId } = useOcean()
+  const { ocean, accountId, networkId } = useOcean()
   const { price } = useMetadata(ddo)
   const { dtSymbol } = usePricing(ddo)
 
@@ -153,12 +153,15 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
             <Tooltip content={content.tooltips.price} />
             <div className={styles.dataTokenLinks}>
               <EtherscanLink
-                network="rinkeby"
+                networkId={networkId}
                 path={`address/${price.address}`}
               >
                 Pool
               </EtherscanLink>
-              <EtherscanLink network="rinkeby" path={`token/${ddo.dataToken}`}>
+              <EtherscanLink
+                networkId={networkId}
+                path={`token/${ddo.dataToken}`}
+              >
                 Datatoken
               </EtherscanLink>
             </div>

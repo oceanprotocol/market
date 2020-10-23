@@ -1,19 +1,21 @@
 import React, { ReactElement, ReactNode } from 'react'
+import { getNetworkName } from '../../utils/wallet'
 import { ReactComponent as External } from '../../images/external.svg'
 import styles from './EtherscanLink.module.css'
 
 export default function EtherscanLink({
-  network,
+  networkId,
   path,
   children
 }: {
-  network?: 'rinkeby' | 'kovan' | 'ropsten'
+  networkId: number
   path: string
   children: ReactNode
 }): ReactElement {
-  const url = network
-    ? `https://${network}.etherscan.io`
-    : `https://etherscan.io`
+  const url =
+    networkId === 1
+      ? `https://etherscan.io`
+      : `https://${getNetworkName(networkId).toLowerCase()}.etherscan.io`
 
   return (
     <a
