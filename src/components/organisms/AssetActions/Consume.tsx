@@ -21,7 +21,7 @@ export default function Consume({
   isBalanceSufficient: boolean
   dtBalance: string
 }): ReactElement {
-  const { ocean } = useOcean()
+  const { ocean, account } = useOcean()
   const { marketFeeAddress } = useSiteMetadata()
   const {
     dtSymbol,
@@ -38,6 +38,16 @@ export default function Consume({
     typeof consumeStepText !== 'undefined' ||
     pricingIsLoading
   const hasDatatoken = Number(dtBalance) >= 1
+
+  const service = ddo.findServiceByType('access')
+  const previousOrder = ocean.datatokens.getPreviousValidOrders(
+    ddo.dataToken,
+    service.attributes.main.cost,
+    service.index,
+    service.attributes.main.timeout,
+    account.getId()
+  )
+  const hasPreviousOrder = !!previousOrder
 
   async function handleConsume() {
     !hasDatatoken && (await buyDT('1'))
@@ -56,7 +66,7 @@ export default function Consume({
         <Loader message={consumeStepText || pricingStepText} />
       ) : (
         <Button style="primary" onClick={handleConsume} disabled={isDisabled}>
-          {hasDatatoken ? 'Download' : 'Buy'}
+          {hasDatatoken || hasPreviousOrder ? 'Download' : 'Buy'}
         </Button>
       )}
     </div>

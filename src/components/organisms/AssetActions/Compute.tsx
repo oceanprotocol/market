@@ -29,7 +29,7 @@ export default function Compute({
 }): ReactElement {
   const { marketFeeAddress } = useSiteMetadata()
 
-  const { ocean } = useOcean()
+  const { ocean, account } = useOcean()
   const { compute, isLoading, computeStepText, computeError } = useCompute()
   const { buyDT, dtSymbol } = usePricing(ddo)
 
@@ -54,6 +54,14 @@ export default function Compute({
     !isBalanceSufficient
   const hasDatatoken = Number(dtBalance) >= 1
 
+  const previousOrder = ocean.datatokens.getPreviousValidOrders(
+    ddo.dataToken,
+    computeService.attributes.main.cost,
+    computeService.index,
+    computeService.attributes.main.timeout,
+    account.getId()
+  )
+  const hasPreviousOrder = !!previousOrder
   const onDrop = async (files: File[]) => {
     setFile(files[0])
     const fileText = await readFileContent(files[0])
@@ -136,7 +144,7 @@ export default function Compute({
             onClick={() => startJob()}
             disabled={isComputeButtonDisabled}
           >
-            {hasDatatoken ? 'Start job' : 'Buy'}
+            {hasDatatoken || hasPreviousOrder ? 'Start job' : 'Buy'}
           </Button>
         )}
       </div>
