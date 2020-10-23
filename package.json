@@ -23,7 +23,7 @@
     "@loadable/component": "5.13.1",
     "@oceanprotocol/art": "^3.0.0",
     "@oceanprotocol/lib": "^0.8.0",
-    "@oceanprotocol/react": "^0.3.7",
+    "@oceanprotocol/react": "^0.3.8",
     "@oceanprotocol/typographies": "^0.1.0",
     "@sindresorhus/slugify": "^1.0.0",
     "@tippyjs/react": "^4.2.0",
