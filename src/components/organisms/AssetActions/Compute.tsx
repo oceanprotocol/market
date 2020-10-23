@@ -1,4 +1,4 @@
-import React, { useState, ReactElement, ChangeEvent } from 'react'
+import React, { useState, ReactElement, ChangeEvent, useEffect } from 'react'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import Loader from '../../atoms/Loader'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
@@ -17,6 +17,7 @@ import Button from '../../atoms/Button'
 import Input from '../../atoms/Input'
 import Alert from '../../atoms/Alert'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
+import checkPreviousOrder from '../../../utils/checkPreviousOrder'
 
 export default function Compute({
   ddo,
@@ -29,7 +30,7 @@ export default function Compute({
 }): ReactElement {
   const { marketFeeAddress } = useSiteMetadata()
 
-  const { ocean } = useOcean()
+  const { ocean, accountId } = useOcean()
   const { compute, isLoading, computeStepText, computeError } = useCompute()
   const { buyDT, dtSymbol } = usePricing(ddo)
 
@@ -45,7 +46,8 @@ export default function Compute({
   const [algorithmRawCode, setAlgorithmRawCode] = useState('')
   const [isPublished, setIsPublished] = useState(false)
   const [file, setFile] = useState(null)
-
+  const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
+  const [previousOrderId, setPreviousOrderId] = useState<string>()
   const isComputeButtonDisabled =
     isJobStarting === true ||
     file === null ||
@@ -53,6 +55,15 @@ export default function Compute({
     !ocean ||
     !isBalanceSufficient
   const hasDatatoken = Number(dtBalance) >= 1
+
+  useEffect(() => {
+    async function checkPreviousOrders() {
+      const orderId = await checkPreviousOrder(ocean, accountId, ddo)
+      setPreviousOrderId(orderId)
+      setHasPreviousOrder(!!orderId)
+    }
+    checkPreviousOrders()
+  }, [ddo, accountId])
 
   const onDrop = async (files: File[]) => {
     setFile(files[0])
@@ -77,7 +88,7 @@ export default function Compute({
       setIsPublished(false)
       setError('')
 
-      !hasDatatoken && (await buyDT('1'))
+      !hasPreviousOrder && !hasDatatoken && (await buyDT('1'))
 
       await compute(
         ddo.id,
@@ -85,9 +96,11 @@ export default function Compute({
         ddo.dataToken,
         algorithmRawCode,
         computeContainer,
-        marketFeeAddress
+        marketFeeAddress,
+        previousOrderId
       )
 
+      setHasPreviousOrder(true)
       setIsPublished(true)
       setFile(null)
     } catch (error) {
@@ -136,7 +149,7 @@ export default function Compute({
             onClick={() => startJob()}
             disabled={isComputeButtonDisabled}
           >
-            {hasDatatoken ? 'Start job' : 'Buy'}
+            {hasDatatoken || hasPreviousOrder ? 'Start job' : 'Buy'}
           </Button>
         )}
       </div>

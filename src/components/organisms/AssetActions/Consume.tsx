@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { File as FileMetadata, DDO } from '@oceanprotocol/lib'
 import Button from '../../atoms/Button'
@@ -9,6 +9,7 @@ import styles from './Consume.module.css'
 import Loader from '../../atoms/Loader'
 import { useOcean, useConsume, usePricing } from '@oceanprotocol/react'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
+import checkPreviousOrder from '../../../utils/checkPreviousOrder'
 
 export default function Consume({
   ddo,
@@ -21,8 +22,11 @@ export default function Consume({
   isBalanceSufficient: boolean
   dtBalance: string
 }): ReactElement {
-  const { ocean } = useOcean()
+  const { ocean, accountId } = useOcean()
   const { marketFeeAddress } = useSiteMetadata()
+  const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
+  const [previousOrderId, setPreviousOrderId] = useState<string>()
+
   const {
     dtSymbol,
     buyDT,
@@ -31,7 +35,6 @@ export default function Consume({
     pricingIsLoading
   } = usePricing(ddo)
   const { consumeStepText, consume, consumeError } = useConsume()
-
   const isDisabled =
     !ocean ||
     !isBalanceSufficient ||
@@ -39,9 +42,25 @@ export default function Consume({
     pricingIsLoading
   const hasDatatoken = Number(dtBalance) >= 1
 
+  useEffect(() => {
+    async function checkOrders() {
+      const orderId = await checkPreviousOrder(ocean, accountId, ddo)
+      setPreviousOrderId(orderId)
+      setHasPreviousOrder(!!orderId)
+    }
+    checkOrders()
+  }, [ddo, accountId])
+
   async function handleConsume() {
-    !hasDatatoken && (await buyDT('1'))
-    await consume(ddo.id, ddo.dataToken, 'access', marketFeeAddress)
+    !hasPreviousOrder && !hasDatatoken && (await buyDT('1'))
+    await consume(
+      ddo.id,
+      ddo.dataToken,
+      'access',
+      marketFeeAddress,
+      previousOrderId
+    )
+    setHasPreviousOrder(true)
   }
 
   // Output errors in UI
@@ -56,7 +75,7 @@ export default function Consume({
         <Loader message={consumeStepText || pricingStepText} />
       ) : (
         <Button style="primary" onClick={handleConsume} disabled={isDisabled}>
-          {hasDatatoken ? 'Download' : 'Buy'}
+          {hasDatatoken || hasPreviousOrder ? 'Download' : 'Buy'}
         </Button>
       )}
     </div>
