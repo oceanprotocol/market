@@ -44,7 +44,7 @@ export default function Consume({
 
   useEffect(() => {
     async function checkOrders() {
-      const orderId = await checkPreviousOrder(ocean, accountId, ddo)
+      const orderId = await checkPreviousOrder(ocean, accountId, ddo, 'access')
       setPreviousOrderId(orderId)
       setHasPreviousOrder(!!orderId)
     }
