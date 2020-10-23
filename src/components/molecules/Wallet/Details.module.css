@@ -1,5 +1,6 @@
 .details {
   padding: calc(var(--spacer) / 4);
+  min-width: 17rem;
 }
 
 .details > section[class*='feedback'] {

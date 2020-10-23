@@ -50,7 +50,7 @@ export function getNetworkId(network: string): number {
   }
 }
 
-export function isCorrectNetwork(networkId: number): boolean {
+export function isDefaultNetwork(networkId: number): boolean {
   const configuredNetwork = getNetworkId(network)
   return configuredNetwork === networkId
 }
