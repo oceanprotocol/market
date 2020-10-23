@@ -17,6 +17,7 @@ import Button from '../../atoms/Button'
 import Input from '../../atoms/Input'
 import Alert from '../../atoms/Alert'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
+import checkPreviousOrder from '../../../utils/checkPreviousOrder'
 
 export default function Compute({
   ddo,
@@ -46,7 +47,7 @@ export default function Compute({
   const [isPublished, setIsPublished] = useState(false)
   const [file, setFile] = useState(null)
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
-
+  const [previousOrderId, setPreviousOrderId] = useState<string>()
   const isComputeButtonDisabled =
     isJobStarting === true ||
     file === null ||
@@ -57,16 +58,9 @@ export default function Compute({
 
   useEffect(() => {
     async function checkPreviousOrders() {
-      const service = ddo.findServiceByType('access')
-      const previousOrder = await ocean.datatokens.getPreviousValidOrders(
-        ddo.dataToken,
-        service.attributes.main.cost,
-        service.index,
-        service.attributes.main.timeout,
-        accountId
-      )
-      console.log('prev ord', previousOrder, !!previousOrder)
-      setHasPreviousOrder(!!previousOrder)
+      const orderId = await checkPreviousOrder(ocean, accountId, ddo)
+      setPreviousOrderId(orderId)
+      setHasPreviousOrder(!!orderId)
     }
     checkPreviousOrders()
   }, [ddo, accountId])
@@ -102,7 +96,8 @@ export default function Compute({
         ddo.dataToken,
         algorithmRawCode,
         computeContainer,
-        marketFeeAddress
+        marketFeeAddress,
+        previousOrderId
       )
 
       setHasPreviousOrder(true)

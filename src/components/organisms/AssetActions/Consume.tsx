@@ -9,6 +9,7 @@ import styles from './Consume.module.css'
 import Loader from '../../atoms/Loader'
 import { useOcean, useConsume, usePricing } from '@oceanprotocol/react'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
+import checkPreviousOrder from '../../../utils/checkPreviousOrder'
 
 export default function Consume({
   ddo,
@@ -24,6 +25,8 @@ export default function Consume({
   const { ocean, accountId } = useOcean()
   const { marketFeeAddress } = useSiteMetadata()
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
+  const [previousOrderId, setPreviousOrderId] = useState<string>()
+
   const {
     dtSymbol,
     buyDT,
@@ -40,24 +43,23 @@ export default function Consume({
   const hasDatatoken = Number(dtBalance) >= 1
 
   useEffect(() => {
-    async function checkPreviousOrders() {
-      const service = ddo.findServiceByType('access')
-      const previousOrder = await ocean.datatokens.getPreviousValidOrders(
-        ddo.dataToken,
-        service.attributes.main.cost,
-        service.index,
-        service.attributes.main.timeout,
-        accountId
-      )
-      console.log('prev ord', previousOrder, !!previousOrder)
-      setHasPreviousOrder(!!previousOrder)
+    async function checkOrders() {
+      const orderId = await checkPreviousOrder(ocean, accountId, ddo)
+      setPreviousOrderId(orderId)
+      setHasPreviousOrder(!!orderId)
     }
-    checkPreviousOrders()
+    checkOrders()
   }, [ddo, accountId])
 
   async function handleConsume() {
     !hasPreviousOrder && !hasDatatoken && (await buyDT('1'))
-    await consume(ddo.id, ddo.dataToken, 'access', marketFeeAddress)
+    await consume(
+      ddo.id,
+      ddo.dataToken,
+      'access',
+      marketFeeAddress,
+      previousOrderId
+    )
     setHasPreviousOrder(true)
   }
 
