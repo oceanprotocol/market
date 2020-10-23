@@ -38,7 +38,7 @@
         "label": "Access Type",
         "help": "Choose how you want your files to be accessible for the specified price.",
         "type": "select",
-        "options": ["Download", "Compute"],
+        "options": ["Download"],
         "required": true
       },
       {
