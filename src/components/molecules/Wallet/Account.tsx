@@ -2,7 +2,7 @@ import { useOcean } from '@oceanprotocol/react'
 import { toDataUrl } from 'ethereum-blockies'
 import React, { FormEvent } from 'react'
 import { ReactComponent as Caret } from '../../../images/caret.svg'
-import { accountTruncate, isCorrectNetwork } from '../../../utils/wallet'
+import { accountTruncate } from '../../../utils/wallet'
 import Status from '../../atoms/Status'
 import styles from './Account.module.css'
 
@@ -24,7 +24,7 @@ const Blockies = ({ account }: { account: string | undefined }) => {
 // eslint-disable-next-line
 const Account = React.forwardRef((props, ref: any) => {
   const { accountId, status, connect, networkId } = useOcean()
-  const hasSuccess = status === 1 && isCorrectNetwork(networkId)
+  const hasSuccess = status === 1 && networkId === 1
 
   async function handleActivation(e: FormEvent<HTMLButtonElement>) {
     // prevent accidentially submitting a form the button might be in

@@ -1,8 +1,6 @@
 import { useOcean, usePricing } from '@oceanprotocol/react'
 import PriceUnit from '../../../../atoms/Price/PriceUnit'
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useSiteMetadata } from '../../../../../hooks/useSiteMetadata'
-import { isCorrectNetwork } from '../../../../../utils/wallet'
 import Alert from '../../../../atoms/Alert'
 import FormHelp from '../../../../atoms/Input/Help'
 import Tooltip from '../../../../atoms/Tooltip'
@@ -22,7 +20,6 @@ export default function Dynamic({
   ddo: DDO
   content: any
 }): ReactElement {
-  const { appConfig } = useSiteMetadata()
   const { account, balance, networkId, refreshBalance } = useOcean()
   const { dtSymbol, dtName } = usePricing(ddo)
 
@@ -31,23 +28,17 @@ export default function Dynamic({
   const { price, weightOnDataToken } = values as PriceOptionsMarket
 
   const [error, setError] = useState<string>()
-  const correctNetwork = isCorrectNetwork(networkId)
-  const desiredNetworkName = appConfig.network.replace(/^\w/, (c: string) =>
-    c.toUpperCase()
-  )
 
   // Check: account, network & insufficient balance
   useEffect(() => {
     if (!account) {
       setError(`No account connected. Please connect your Web3 wallet.`)
-    } else if (!correctNetwork) {
-      setError(`Wrong Network. Please connect to ${desiredNetworkName}.`)
     } else if (Number(balance.ocean) < Number(price)) {
       setError(`Insufficient balance. You need at least ${price} OCEAN`)
     } else {
       setError(undefined)
     }
-  }, [price, networkId, account, balance, correctNetwork, desiredNetworkName])
+  }, [price, networkId, account, balance])
 
   // refetch balance periodically
   useEffect(() => {

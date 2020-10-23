@@ -20,3 +20,7 @@
 .hasTokens {
   composes: hasTokens from './index.module.css';
 }
+
+.feedback {
+  width: 100%;
+}

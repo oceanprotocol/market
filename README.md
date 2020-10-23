@@ -19,8 +19,7 @@
 - [🛳 Production](#-production)
 - [⬆️ Deployment](#️-deployment)
   - [Manual Deployment](#manual-deployment)
-- [🏗 Ocean Protocol Infrastructure](#-ocean-protocol-infrastructure)
-- [🏛 License](#-license)
+- [� License](#-license)
 
 ## 🏄 Get Started
 
@@ -152,34 +151,6 @@ vercel switch
 vercel
 # switch alias to new deployment
 vercel alias
-```
-
-## 🏗 Ocean Protocol Infrastructure
-
-The following Metadata Store & Provider instances specifically for marketplace are deployed in Ocean Protocol's AWS K8:
-
-**Rinkeby (Staging)**
-
-- K8 namespace: `xxx`
-- `[aquarius.rinkeby.v3.dev-ocean.com](https://aquarius.rinkeby.v3.dev-ocean.com)`
-- `[provider.rinkeby.v3.dev-ocean.com](https://provider.rinkeby.v3.dev-ocean.com)`
-
-Edit command with `kubectl`, e.g.:
-
-```bash
-kubectl edit deployment -n xxx aquarius
-```
-
-**Main (Production)**
-
-- K8 namespace: `xxx`
-- `xxx`
-- `xxx`
-
-Edit command with `kubectl`, e.g.:
-
-```bash
-kubectl edit deployment -n xxx aquarius
 ```
 
 ## 🏛 License

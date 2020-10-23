@@ -56,7 +56,5 @@
 .alertArea {
   margin-left: -2rem;
   margin-right: -2rem;
-  padding: var(--spacer) calc(var(--spacer) / 2);
-  padding-bottom: 0;
-  margin-top: var(--spacer);
+  padding: 0 calc(var(--spacer) / 2);
 }
