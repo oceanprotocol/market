@@ -5,7 +5,7 @@ import styles from './MetaFull.module.css'
 import { MetadataMarket } from '../../../@types/MetaData'
 import { DDO } from '@oceanprotocol/lib'
 import EtherscanLink from '../../atoms/EtherscanLink'
-import { usePricing } from '@oceanprotocol/react'
+import { useOcean, usePricing } from '@oceanprotocol/react'
 
 export default function MetaFull({
   ddo,
@@ -14,6 +14,7 @@ export default function MetaFull({
   ddo: DDO
   metadata: MetadataMarket
 }): ReactElement {
+  const { networkId } = useOcean()
   const { id, dataToken } = ddo
   const { dateCreated, datePublished, author, license } = metadata.main
   const { dtSymbol, dtName } = usePricing(ddo)
@@ -48,7 +49,7 @@ export default function MetaFull({
       <MetaItem
         title="Datatoken"
         content={
-          <EtherscanLink network="rinkeby" path={`token/${dataToken}`}>
+          <EtherscanLink networkId={networkId} path={`token/${dataToken}`}>
             {dtName ? `${dtName} - ${dtSymbol}` : <code>{dataToken}</code>}
           </EtherscanLink>
         }

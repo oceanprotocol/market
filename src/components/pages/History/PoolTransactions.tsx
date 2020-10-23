@@ -17,7 +17,7 @@ function AssetTitle({ did }: { did: string }): ReactElement {
 }
 
 function Title({ row }: { row: PoolTransaction }) {
-  const { ocean } = useOcean()
+  const { ocean, networkId } = useOcean()
   const [dtSymbol, setDtSymbol] = useState<string>()
 
   const title = row.tokenAmountIn
@@ -37,7 +37,7 @@ function Title({ row }: { row: PoolTransaction }) {
   }, [ocean, row])
 
   return (
-    <EtherscanLink network="rinkeby" path={`/tx/${row.transactionHash}`}>
+    <EtherscanLink networkId={networkId} path={`/tx/${row.transactionHash}`}>
       {title}
     </EtherscanLink>
   )
