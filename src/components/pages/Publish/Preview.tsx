@@ -7,6 +7,7 @@ import styles from './Preview.module.css'
 import File from '../../atoms/File'
 import { MetadataPublishForm } from '../../../@types/MetaData'
 import Button from '../../atoms/Button'
+import { transformTags } from './utils'
 
 export default function Preview({
   values
@@ -72,7 +73,7 @@ export default function Preview({
             Download Sample
           </Button>
         )}
-        {values.tags && <Tags items={values.tags.split(',')} />}
+        {values.tags && <Tags items={transformTags(values.tags)} />}
       </header>
 
       <div className={styles.metaFull}>

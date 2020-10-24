@@ -1,6 +1,13 @@
 import { MetadataMarket, MetadataPublishForm } from '../../../@types/MetaData'
 import { toStringNoMS } from '../../../utils'
 import AssetModel from '../../../models/Asset'
+import slugify from '@sindresorhus/slugify'
+
+export function transformTags(value: string): string[] {
+  const originalTags = value?.split(',')
+  const transformedTags = originalTags?.map((tag) => slugify(tag).toLowerCase())
+  return transformedTags
+}
 
 export function transformPublishFormToMetadata(
   data: Partial<MetadataPublishForm>
@@ -33,7 +40,7 @@ export function transformPublishFormToMetadata(
       ...AssetModel.additionalInformation,
       description,
       copyrightHolder,
-      tags: tags?.split(','),
+      tags: transformTags(tags),
       links: typeof links !== 'string' && links,
       termsAndConditions
     }
