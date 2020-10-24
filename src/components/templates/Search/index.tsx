@@ -8,12 +8,6 @@ import { getResults } from './utils'
 import Loader from '../../atoms/Loader'
 import { useOcean } from '@oceanprotocol/react'
 
-export declare type SearchPageProps = {
-  text: string | string[]
-  tag: string | string[]
-  queryResult: QueryResult
-}
-
 export default function SearchPage({
   location
 }: {
@@ -28,7 +22,6 @@ export default function SearchPage({
   useEffect(() => {
     async function initSearch() {
       setLoading(true)
-      console.log(parsed)
       const queryResult = await getResults(parsed, config.metadataCacheUri)
       setQueryResult(queryResult)
       setLoading(false)

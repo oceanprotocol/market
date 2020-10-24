@@ -10,6 +10,7 @@ import {
 import Container from '../atoms/Container'
 import Loader from '../atoms/Loader'
 import { useOcean } from '@oceanprotocol/react'
+import Button from '../atoms/Button'
 
 const queryHighest = {
   page: 1,
@@ -108,6 +109,11 @@ export default function HomePage(): ReactElement {
           <Loader />
         ) : (
           queryResultLatest && <AssetList queryResult={queryResultLatest} />
+        )}
+        {queryResultLatest?.results.length === 9 && (
+          <Button style="text" to="/search">
+            All data sets →
+          </Button>
         )}
       </section>
     </>

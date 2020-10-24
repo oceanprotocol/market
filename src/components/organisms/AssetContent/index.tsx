@@ -60,7 +60,7 @@ export default function AssetContent({
             {metadata?.additionalInformation?.categories?.length && (
               <p>
                 <Link
-                  to={`/search?categories=["${metadata?.additionalInformation?.categories[0]}"]`}
+                  to={`/search?categories=${metadata?.additionalInformation?.categories[0]}`}
                 >
                   {metadata?.additionalInformation?.categories[0]}
                 </Link>

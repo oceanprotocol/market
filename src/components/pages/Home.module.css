@@ -12,3 +12,7 @@
   font-size: var(--font-size-large);
   color: var(--color-secondary);
 }
+
+.latest [class*='button'] {
+  margin-top: var(--spacer);
+}

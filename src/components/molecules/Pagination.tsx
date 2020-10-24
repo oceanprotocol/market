@@ -22,18 +22,16 @@ export default function Pagination({
   }
 
   useEffect(() => {
-    if (!totalPages || totalPages < 2) return
-
     const mq = window.matchMedia('(min-width: 600px)')
     viewportChange(mq)
-    mq.addListener(viewportChange)
+    mq.addEventListener('change', viewportChange)
 
     return () => {
-      mq.removeListener(viewportChange)
+      mq.removeEventListener('change', viewportChange)
     }
-  }, [totalPages])
+  }, [])
 
-  return (
+  return totalPages && totalPages > 1 ? (
     <ReactPaginate
       pageCount={totalPages}
       // react-pagination starts counting at 0, we start at 1
@@ -55,5 +53,5 @@ export default function Pagination({
       disabledClassName={styles.prevNextDisabled}
       breakLinkClassName={styles.break}
     />
-  )
+  ) : null
 }
