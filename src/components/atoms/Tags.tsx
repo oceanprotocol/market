@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link } from 'gatsby'
 import shortid from 'shortid'
-import slugify from 'slugify'
 import styles from './Tags.module.css'
 
 declare type TagsProps = {
@@ -13,15 +12,11 @@ declare type TagsProps = {
 }
 
 const Tag = ({ tag, noLinks }: { tag: string; noLinks?: boolean }) => {
-  // TODO: we should slugify all tags upon publish, so only
-  // slug-style tags should be allowed.
-  const cleanTag = slugify(tag).toLowerCase()
-
   return noLinks ? (
-    <span className={styles.tag}>{cleanTag}</span>
+    <span className={styles.tag}>{tag}</span>
   ) : (
-    <Link to={`/search?tags=${tag}`} className={styles.tag} title={cleanTag}>
-      {cleanTag}
+    <Link to={`/search?tags=${tag}`} className={styles.tag} title={tag}>
+      {tag}
     </Link>
   )
 }
@@ -35,7 +30,8 @@ const Tags: React.FC<TagsProps> = ({
 }) => {
   max = max || items.length
   const remainder = items.length - max
-  const tags = items.slice(0, max)
+  // filter out empty array items, and restrict to `max`
+  const tags = items.filter((tag) => tag !== '').slice(0, max)
   const shouldShowMore = showMore && remainder > 0
   const classes = className ? `${styles.tags} ${className}` : styles.tags
 
