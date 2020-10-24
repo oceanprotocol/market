@@ -10,7 +10,9 @@ import AssetActions from '../AssetActions'
 import { DDO } from '@oceanprotocol/lib'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import Pricing from './Pricing'
-import { useOcean } from '@oceanprotocol/react'
+import { useOcean, usePricing } from '@oceanprotocol/react'
+import EtherscanLink from '../../atoms/EtherscanLink'
+import MetaItem from './MetaItem'
 
 export interface AssetContentProps {
   metadata: MetadataMarket
@@ -22,9 +24,9 @@ export default function AssetContent({
   metadata,
   ddo
 }: AssetContentProps): ReactElement {
-  const { datePublished } = metadata.main
   const { debug } = useUserPreferences()
-  const { accountId } = useOcean()
+  const { accountId, networkId } = useOcean()
+  const { dtSymbol, dtName } = usePricing(ddo)
 
   const isOwner = accountId === ddo.publicKey[0].owner
   const hasNoPrice = ddo.price.type === ''
@@ -37,7 +39,24 @@ export default function AssetContent({
 
         <div className={styles.content}>
           <aside className={styles.meta}>
-            <p>{datePublished && <Time date={datePublished} />}</p>
+            <p className={styles.author}>
+              {metadata?.additionalInformation?.copyrightHolder ||
+                metadata?.main.author}
+            </p>
+
+            <p className={styles.datatoken}>
+              <EtherscanLink
+                networkId={networkId}
+                path={`token/${ddo.dataToken}`}
+              >
+                {dtName ? (
+                  `${dtName} - ${dtSymbol}`
+                ) : (
+                  <code>{ddo.dataToken}</code>
+                )}
+              </EtherscanLink>
+            </p>
+
             {metadata?.additionalInformation?.categories?.length && (
               <p>
                 <Link

@@ -57,7 +57,8 @@
       {
         "name": "copyrightHolder",
         "label": "Copyright Holder",
-        "placeholder": "e.g. Marine Institute of Jellyfish"
+        "placeholder": "e.g. Marine Institute of Jellyfish",
+        "help": "Add this if the holder of the copyright is different from the author."
       },
       {
         "name": "tags",

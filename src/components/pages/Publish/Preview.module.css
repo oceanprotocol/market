@@ -21,7 +21,14 @@
 }
 
 .title {
-  margin-bottom: calc(var(--spacer) / 2);
+  margin: 0;
+}
+
+.author {
+  margin-top: calc(var(--spacer) / 8);
+  margin-bottom: 0;
+  color: var(--color-secondary);
+  font-weight: var(--font-weight-bold);
 }
 
 .preview [class*='MetaItem-module--metaItem'] h3 {
@@ -30,6 +37,7 @@
 
 .description {
   position: relative;
+  margin-top: calc(var(--spacer) / 4);
 }
 
 .toggle {

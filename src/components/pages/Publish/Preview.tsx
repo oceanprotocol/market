@@ -34,6 +34,7 @@ export default function Preview({
       <h2 className={styles.previewTitle}>Preview</h2>
       <header>
         {values.name && <h3 className={styles.title}>{values.name}</h3>}
+        {values.author && <p className={styles.author}>{values.author}</p>}
 
         {values.description && (
           <div className={styles.description}>
@@ -81,6 +82,7 @@ export default function Preview({
           .filter(
             ([key, value]) =>
               !(
+                key.includes('author') ||
                 key.includes('name') ||
                 key.includes('description') ||
                 key.includes('tags') ||

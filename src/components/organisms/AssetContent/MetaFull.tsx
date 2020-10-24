@@ -4,8 +4,6 @@ import MetaItem from './MetaItem'
 import styles from './MetaFull.module.css'
 import { MetadataMarket } from '../../../@types/MetaData'
 import { DDO } from '@oceanprotocol/lib'
-import EtherscanLink from '../../atoms/EtherscanLink'
-import { useOcean, usePricing } from '@oceanprotocol/react'
 
 export default function MetaFull({
   ddo,
@@ -14,15 +12,12 @@ export default function MetaFull({
   ddo: DDO
   metadata: MetadataMarket
 }): ReactElement {
-  const { networkId } = useOcean()
-  const { id, dataToken } = ddo
-  const { dateCreated, datePublished, author, license } = metadata.main
-  const { dtSymbol, dtName } = usePricing(ddo)
+  const { id } = ddo
+  const { dateCreated, datePublished, license } = metadata.main
 
   return (
     <div className={styles.metaFull}>
-      <MetaItem title="Author" content={author} />
-
+      <MetaItem title="Author" content={metadata?.main.author} />
       {metadata?.additionalInformation?.copyrightHolder && (
         <MetaItem
           title="Copyright Holder"
@@ -40,21 +35,7 @@ export default function MetaFull({
       )}
 
       <MetaItem title="Data Created" content={<Time date={dateCreated} />} />
-
-      <MetaItem
-        title="Data Published"
-        content={<Time date={datePublished} />}
-      />
-
-      <MetaItem
-        title="Datatoken"
-        content={
-          <EtherscanLink networkId={networkId} path={`token/${dataToken}`}>
-            {dtName ? `${dtName} - ${dtSymbol}` : <code>{dataToken}</code>}
-          </EtherscanLink>
-        }
-      />
-
+      <MetaItem title="Published" content={<Time date={datePublished} />} />
       <MetaItem title="DID" content={<code>{id}</code>} />
     </div>
   )

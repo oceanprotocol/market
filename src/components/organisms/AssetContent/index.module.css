@@ -29,11 +29,18 @@
 .meta {
   margin-bottom: var(--spacer);
   color: var(--color-secondary);
-  font-weight: var(--font-weight-bold);
 }
 
 .meta p {
   margin-bottom: 0;
+}
+
+.author {
+  font-weight: var(--font-weight-bold);
+}
+
+.datatoken a {
+  color: var(--color-secondary);
 }
 
 .buttonGroup {

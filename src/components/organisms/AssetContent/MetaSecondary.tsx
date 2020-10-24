@@ -4,6 +4,7 @@ import styles from './MetaSecondary.module.css'
 import { MetadataMarket } from '../../../@types/MetaData'
 import Tags from '../../atoms/Tags'
 import Button from '../../atoms/Button'
+import Time from '../../atoms/Time'
 
 export default function MetaSecondary({
   metadata
@@ -12,10 +13,6 @@ export default function MetaSecondary({
 }): ReactElement {
   return (
     <aside className={styles.metaSecondary}>
-      {metadata?.additionalInformation?.tags?.length > 0 && (
-        <Tags items={metadata?.additionalInformation?.tags} />
-      )}
-
       {metadata?.additionalInformation?.links?.length && (
         <div className={styles.samples}>
           <MetaItem
@@ -35,6 +32,14 @@ export default function MetaSecondary({
           />
         </div>
       )}
+
+      {metadata?.additionalInformation?.tags?.length > 0 && (
+        <Tags items={metadata?.additionalInformation?.tags} />
+      )}
+
+      <p className={styles.date}>
+        Published <Time date={metadata?.main.datePublished} relative />
+      </p>
     </aside>
   )
 }

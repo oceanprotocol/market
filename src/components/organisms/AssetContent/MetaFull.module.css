@@ -1,5 +1,5 @@
 .metaFull {
-  margin-top: calc(var(--spacer) * 2);
+  margin-top: var(--spacer);
   font-size: var(--font-size-small);
   display: grid;
   gap: var(--spacer);

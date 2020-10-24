@@ -14,3 +14,7 @@
 .samples {
   margin-top: var(--spacer);
 }
+
+.date {
+  color: var(--color-secondary);
+}
