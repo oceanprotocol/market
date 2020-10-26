@@ -2,7 +2,12 @@ import PriceUnit from '../../../../atoms/Price/PriceUnit'
 import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react'
 import styles from './FormAdd.module.css'
 import Input from '../../../../atoms/Input'
-import { FormikContextType, useField, useFormikContext } from 'formik'
+import {
+  Field,
+  FieldInputProps,
+  FormikContextType,
+  useFormikContext
+} from 'formik'
 import Button from '../../../../atoms/Button'
 import Token from '../Token'
 import CoinSelect from '../CoinSelect'
@@ -37,15 +42,12 @@ export default function FormAdd({
 
   // Connect with form
   const {
-    isSubmitting,
     touched,
     setTouched,
     handleChange,
-    submitForm,
     setFieldValue,
     values
   }: FormikContextType<FormAddLiquidity> = useFormikContext()
-  const [field, meta] = useField('amount')
 
   const [newPoolTokens, setNewPoolTokens] = useState('0')
   const [newPoolShare, setNewPoolShare] = useState('0')
@@ -93,21 +95,32 @@ export default function FormAdd({
             <PriceUnit price={amountMax} symbol={coin} small />
           </div>
         </div>
-
-        <Input
-          type="number"
-          max={amountMax}
-          value={`${values.amount}`}
-          prefix={<CoinSelect dtSymbol={dtSymbol} setCoin={setCoin} />}
-          placeholder="0"
-          field={field}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => {
-            // Workaround so validation kicks in on first touch
-            !touched?.amount && setTouched({ amount: true })
-            handleChange(e)
-          }}
-          disabled={!ocean}
-        />
+        <Field name="amount">
+          {({
+            field,
+            form
+          }: {
+            field: FieldInputProps<FormAddLiquidity>
+            form: any
+          }) => (
+            <Input
+              type="number"
+              name="amount"
+              max={amountMax}
+              value={`${values.amount}`}
+              prefix={<CoinSelect dtSymbol={dtSymbol} setCoin={setCoin} />}
+              placeholder="0"
+              field={field}
+              form={form}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                // Workaround so validation kicks in on first touch
+                !touched?.amount && setTouched({ amount: true })
+                handleChange(e)
+              }}
+              disabled={!ocean}
+            />
+          )}
+        </Field>
 
         {(Number(balance.ocean) || dtBalance) > (values.amount || 0) && (
           <Button
