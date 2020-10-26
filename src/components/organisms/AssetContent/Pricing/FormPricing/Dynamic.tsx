@@ -27,7 +27,11 @@ export default function Dynamic({
 
   // Connect with form
   const { values } = useFormikContext()
-  const { price, weightOnDataToken } = values as PriceOptionsMarket
+  const {
+    price,
+    weightOnDataToken,
+    weightOnOcean
+  } = values as PriceOptionsMarket
 
   const [error, setError] = useState<string>()
 
@@ -84,7 +88,7 @@ export default function Dynamic({
         <Coin
           name="oceanAmount"
           datatokenOptions={{ symbol: 'OCEAN', name: 'Ocean Token' }}
-          weight={`${100 - Number(Number(weightOnDataToken) * 10)}%`}
+          weight={`${Number(weightOnOcean) * 10}%`}
         />
         <Coin
           name="dtAmount"
