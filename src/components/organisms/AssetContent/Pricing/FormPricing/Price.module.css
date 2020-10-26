@@ -9,17 +9,20 @@
   }
 }
 
-.grid {
+.price {
   margin-left: -2rem;
   margin-right: -2rem;
   padding-top: var(--spacer);
+  background: var(--brand-grey-dimmed);
+  border-top: 1px solid var(--brand-grey-lighter);
+  border-bottom: 1px solid var(--brand-grey-lighter);
+}
+
+.grid {
   display: grid;
   gap: var(--spacer);
   grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
   justify-content: center;
-  background: var(--brand-grey-dimmed);
-  border-top: 1px solid var(--brand-grey-lighter);
-  border-bottom: 1px solid var(--brand-grey-lighter);
 }
 
 .fixed label {
@@ -41,4 +44,14 @@
 
 .datatoken strong {
   color: var(--brand-grey-dark);
+}
+
+.firstPrice {
+  font-size: var(--font-size-small);
+  color: var(--color-secondary);
+  text-align: center;
+  margin-top: -1rem;
+  padding-top: calc(var(--spacer) / 3);
+  padding-bottom: calc(var(--spacer) / 3);
+  border-top: 1px solid var(--brand-grey-lighter);
 }

@@ -98,14 +98,7 @@ export default function Dynamic({
         Price <Tooltip content={content.tooltips.poolInfo} />
       </h4>
 
-      <Price ddo={ddo} />
-
-      {Number(firstPrice) > 0 && (
-        <aside className={styles.firstPrice}>
-          Expected first price:{' '}
-          <PriceUnit price={firstPrice} small conversion />
-        </aside>
-      )}
+      <Price ddo={ddo} firstPrice={firstPrice} />
 
       <h4 className={styles.title}>
         Datatoken Liquidity Pool <Tooltip content={content.tooltips.poolInfo} />
