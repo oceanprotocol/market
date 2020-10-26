@@ -51,7 +51,7 @@ export default function Dynamic({
     const foo = y.pow(weightRatio).minus(new Decimal(1))
     const tokenAmountIn = new Decimal(oceanAmount)
       .times(foo)
-      .div(new Decimal(1).minus(new Decimal(swapFee)))
+      .div(new Decimal(1).minus(new Decimal(swapFee / 100)))
     setFirstPrice(`${tokenAmountIn}`)
   }, [swapFee, weightOnOcean, weightOnDataToken, dtAmount, oceanAmount])
 
