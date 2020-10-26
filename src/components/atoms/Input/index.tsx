@@ -53,7 +53,6 @@ export default function Input(props: Partial<InputProps>): ReactElement {
     field
   } = props
 
-  console.log(props)
   const hasError =
     props.form?.touched[field.name] && props.form?.errors[field.name]
 
