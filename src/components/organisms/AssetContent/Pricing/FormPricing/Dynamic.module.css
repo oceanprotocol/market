@@ -58,3 +58,8 @@
   margin-right: -2rem;
   padding: 0 calc(var(--spacer) / 2);
 }
+
+.firstPrice {
+  text-align: center;
+  padding-top: calc(var(--spacer) / 4);
+}

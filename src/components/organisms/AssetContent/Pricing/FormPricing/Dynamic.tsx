@@ -40,7 +40,7 @@ export default function Dynamic({
 
   const [error, setError] = useState<string>()
 
-  // Calculate firstPrice whenever
+  // Calculate firstPrice whenever user values change
   useEffect(() => {
     const tokenAmountOut = 1
     const weightRatio = new Decimal(weightOnDataToken).div(
@@ -100,7 +100,12 @@ export default function Dynamic({
 
       <Price ddo={ddo} />
 
-      {firstPrice}
+      {Number(firstPrice) > 0 && (
+        <aside className={styles.firstPrice}>
+          Expected first price:{' '}
+          <PriceUnit price={firstPrice} small conversion />
+        </aside>
+      )}
 
       <h4 className={styles.title}>
         Datatoken Liquidity Pool <Tooltip content={content.tooltips.poolInfo} />
