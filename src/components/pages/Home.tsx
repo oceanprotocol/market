@@ -14,7 +14,7 @@ import Button from '../atoms/Button'
 
 const queryHighest = {
   page: 1,
-  offset: 3,
+  offset: 6,
   query: { 'price.type': ['pool'] },
   sort: { 'price.ocean': -1 }
 }
