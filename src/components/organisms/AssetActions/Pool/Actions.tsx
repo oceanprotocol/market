@@ -19,7 +19,7 @@ export default function Actions({
   actionName: string
   action: () => void
 }): ReactElement {
-  const { networkId } = useOcean()
+  const { networkId, ocean } = useOcean()
 
   return (
     <>
@@ -27,7 +27,12 @@ export default function Actions({
         {isLoading ? (
           <Loader message={loaderMessage} />
         ) : (
-          <Button style="primary" size="small" onClick={() => action()}>
+          <Button
+            style="primary"
+            size="small"
+            onClick={() => action()}
+            disabled={!ocean}
+          >
             {actionName}
           </Button>
         )}

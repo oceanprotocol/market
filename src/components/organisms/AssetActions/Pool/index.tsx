@@ -167,8 +167,8 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
                 <Tooltip content={content.tooltips.liquidity} />
               </>
             }
-            ocean={`${userLiquidity?.ocean}` || '0'}
-            dt={`${userLiquidity?.datatoken}` || '0'}
+            ocean={`${userLiquidity?.ocean}`}
+            dt={`${userLiquidity?.datatoken}`}
             dtSymbol={dtSymbol}
             poolShares={poolTokens}
             conversion={totalUserLiquidityInOcean}
