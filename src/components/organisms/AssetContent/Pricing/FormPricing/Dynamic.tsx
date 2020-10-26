@@ -12,6 +12,8 @@ import stylesIndex from './index.module.css'
 import { useFormikContext } from 'formik'
 import { PriceOptionsMarket } from '../../../../../@types/MetaData'
 import { DDO } from '@oceanprotocol/lib'
+import Fixed from './Fixed'
+import Price from './Price'
 
 export default function Dynamic({
   ddo,
@@ -25,7 +27,11 @@ export default function Dynamic({
 
   // Connect with form
   const { values } = useFormikContext()
-  const { price, weightOnDataToken } = values as PriceOptionsMarket
+  const {
+    price,
+    weightOnDataToken,
+    weightOnOcean
+  } = values as PriceOptionsMarket
 
   const [error, setError] = useState<string>()
 
@@ -69,14 +75,20 @@ export default function Dynamic({
       </aside>
 
       <h4 className={styles.title}>
+        Price <Tooltip content={content.tooltips.poolInfo} />
+      </h4>
+
+      <Price ddo={ddo} />
+
+      <h4 className={styles.title}>
         Datatoken Liquidity Pool <Tooltip content={content.tooltips.poolInfo} />
       </h4>
 
       <div className={styles.tokens}>
         <Coin
-          name="price"
+          name="oceanAmount"
           datatokenOptions={{ symbol: 'OCEAN', name: 'Ocean Token' }}
-          weight={`${100 - Number(Number(weightOnDataToken) * 10)}%`}
+          weight={`${Number(weightOnOcean) * 10}%`}
         />
         <Coin
           name="dtAmount"

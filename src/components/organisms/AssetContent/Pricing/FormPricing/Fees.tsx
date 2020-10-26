@@ -49,7 +49,7 @@ export default function Fees({
           type="number"
           postfix="%"
           min="0.1"
-          max="0.9"
+          max="10"
           step="0.1"
           small
           {...field}
