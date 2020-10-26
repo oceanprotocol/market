@@ -13,6 +13,7 @@ import { useFormikContext } from 'formik'
 import { PriceOptionsMarket } from '../../../../../@types/MetaData'
 import { DDO } from '@oceanprotocol/lib'
 import Price from './Price'
+import Decimal from 'decimal.js'
 
 export default function Dynamic({
   ddo,
@@ -32,7 +33,9 @@ export default function Dynamic({
     price,
     weightOnDataToken,
     weightOnOcean,
-    swapFee
+    swapFee,
+    dtAmount,
+    oceanAmount
   } = values as PriceOptionsMarket
 
   const [error, setError] = useState<string>()
@@ -40,14 +43,16 @@ export default function Dynamic({
   // Calculate firstPrice whenever
   useEffect(() => {
     const tokenAmountOut = 1
-    const weightRatio = Decimal(weightOnDataToken).div(Decimal(weightOnOcean))
-    const diff = Decimal(dtBalance).minus(tokenAmountOut)
-    const y = Decimal(dtBalance).div(diff)
-    const foo = y.pow(weightRatio).minus(Decimal(1))
-    const tokenAmountIn = Decimal(oceanBalance)
+    const weightRatio = new Decimal(weightOnDataToken).div(
+      new Decimal(weightOnOcean)
+    )
+    const diff = new Decimal(dtAmount).minus(tokenAmountOut)
+    const y = new Decimal(dtAmount).div(diff)
+    const foo = y.pow(weightRatio).minus(new Decimal(1))
+    const tokenAmountIn = new Decimal(oceanAmount)
       .times(foo)
-      .div(Decimal(1).minus(Decimal(swapFee)))
-    setFirstPrice(tokenAmountIn)
+      .div(new Decimal(1).minus(new Decimal(swapFee)))
+    setFirstPrice(`${tokenAmountIn}`)
   }, [swapFee, weightOnOcean, weightOnDataToken])
 
   // Check: account, network & insufficient balance
