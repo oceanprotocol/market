@@ -1,6 +1,7 @@
 import React, { ReactElement, FormEvent } from 'react'
 import styles from './Alert.module.css'
 import Button from './Button'
+import Markdown from './Markdown'
 
 export default function Alert({
   title,
@@ -19,7 +20,7 @@ export default function Alert({
   return (
     <div className={`${styles.alert} ${styles[state]}`}>
       {title && <h3 className={styles.title}>{title}</h3>}
-      <p className={styles.text}>{text}</p>
+      <Markdown className={styles.text} text={text} />
       {action && (
         <Button
           className={styles.action}

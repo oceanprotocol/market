@@ -5,6 +5,7 @@ import PageHeader from './molecules/PageHeader'
 import styles from './Layout.module.css'
 import Seo from './atoms/Seo'
 import Container from './atoms/Container'
+import Alert from './atoms/Alert'
 
 export interface LayoutProps {
   children: ReactNode
@@ -28,6 +29,12 @@ export default function Layout({
       <Seo title={title} description={description} uri={uri} />
 
       <Header />
+
+      <Alert
+        text="Given the beta status, publishing on Rinkeby first is strongly recommended. [Learn about the market](https://blog.oceanprotocol.com)."
+        state="info"
+      />
+
       <main className={styles.main}>
         <Container>
           {title && !noPageHeader && (

@@ -14,7 +14,7 @@
 }
 
 .main {
-  padding: calc(var(--spacer) * 2) 0;
+  padding: var(--spacer) 0 calc(var(--spacer) * 2) 0;
 
   /* sticky footer technique */
   flex: 1;

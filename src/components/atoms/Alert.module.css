@@ -26,8 +26,11 @@
 }
 
 .text {
-  margin-bottom: 0;
   font-size: var(--font-size-small);
+}
+
+.text p:last-child {
+  margin-bottom: 0;
 }
 
 .action {
