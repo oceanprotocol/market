@@ -82,7 +82,7 @@ export default function Dynamic({
 
       <div className={styles.tokens}>
         <Coin
-          name="price"
+          name="oceanAmount"
           datatokenOptions={{ symbol: 'OCEAN', name: 'Ocean Token' }}
           weight={`${100 - Number(Number(weightOnDataToken) * 10)}%`}
         />

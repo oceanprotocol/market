@@ -21,6 +21,7 @@ export interface MetadataMarket extends Metadata {
 export interface PriceOptionsMarket extends PriceOptions {
   // easier to keep this as number for Yup input validation
   swapFee: number
+  oceanAmount: number
 }
 
 export interface MetadataPublishForm {

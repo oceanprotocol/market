@@ -4,6 +4,9 @@ import * as Yup from 'yup'
 export const validationSchema = Yup.object().shape<PriceOptionsMarket>({
   price: Yup.number().min(1, 'Must be greater than 0').required('Required'),
   dtAmount: Yup.number().min(1, 'Must be greater than 0').required('Required'),
+  oceanAmount: Yup.number()
+    .min(1, 'Must be greater than 0')
+    .required('Required'),
   type: Yup.string()
     .matches(/fixed|dynamic/g)
     .required('Required'),
@@ -18,7 +21,8 @@ export const validationSchema = Yup.object().shape<PriceOptionsMarket>({
 export const initialValues: PriceOptionsMarket = {
   price: 1,
   type: 'dynamic',
-  dtAmount: 1,
+  dtAmount: 9,
+  oceanAmount: 1,
   weightOnDataToken: '9', // 90% on data token
   swapFee: 0.1 // in %
 }
