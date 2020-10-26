@@ -53,7 +53,7 @@ export default function Dynamic({
       .times(foo)
       .div(new Decimal(1).minus(new Decimal(swapFee)))
     setFirstPrice(`${tokenAmountIn}`)
-  }, [swapFee, weightOnOcean, weightOnDataToken])
+  }, [swapFee, weightOnOcean, weightOnDataToken, dtAmount, oceanAmount])
 
   // Check: account, network & insufficient balance
   useEffect(() => {
