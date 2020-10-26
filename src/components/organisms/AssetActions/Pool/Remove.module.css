@@ -1,11 +1,11 @@
 .removeInput {
-  composes: addInput from './Add.module.css';
+  composes: addInput from './Add/index.module.css';
   padding-left: calc(var(--spacer) * 2);
   padding-right: calc(var(--spacer) * 2);
 }
 
 .userLiquidity {
-  composes: userLiquidity from './Add.module.css';
+  composes: userLiquidity from './Add/index.module.css';
   max-width: 12rem;
   margin-top: -1rem;
   margin-left: auto;
@@ -55,7 +55,7 @@
 }
 
 .output {
-  composes: output from './Add.module.css';
+  composes: output from './Add/index.module.css';
 }
 
 .output [class*='token'] {
