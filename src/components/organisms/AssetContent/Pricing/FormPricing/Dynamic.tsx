@@ -12,7 +12,6 @@ import stylesIndex from './index.module.css'
 import { useFormikContext } from 'formik'
 import { PriceOptionsMarket } from '../../../../../@types/MetaData'
 import { DDO } from '@oceanprotocol/lib'
-import Fixed from './Fixed'
 import Price from './Price'
 
 export default function Dynamic({
@@ -25,15 +24,31 @@ export default function Dynamic({
   const { account, balance, networkId, refreshBalance } = useOcean()
   const { dtSymbol, dtName } = usePricing(ddo)
 
+  const [firstPrice, setFirstPrice] = useState<string>()
+
   // Connect with form
   const { values } = useFormikContext()
   const {
     price,
     weightOnDataToken,
-    weightOnOcean
+    weightOnOcean,
+    swapFee
   } = values as PriceOptionsMarket
 
   const [error, setError] = useState<string>()
+
+  // Calculate firstPrice whenever
+  useEffect(() => {
+    const tokenAmountOut = 1
+    const weightRatio = Decimal(weightOnDataToken).div(Decimal(weightOnOcean))
+    const diff = Decimal(dtBalance).minus(tokenAmountOut)
+    const y = Decimal(dtBalance).div(diff)
+    const foo = y.pow(weightRatio).minus(Decimal(1))
+    const tokenAmountIn = Decimal(oceanBalance)
+      .times(foo)
+      .div(Decimal(1).minus(Decimal(swapFee)))
+    setFirstPrice(tokenAmountIn)
+  }, [swapFee, weightOnOcean, weightOnDataToken])
 
   // Check: account, network & insufficient balance
   useEffect(() => {
@@ -79,6 +94,8 @@ export default function Dynamic({
       </h4>
 
       <Price ddo={ddo} />
+
+      {firstPrice}
 
       <h4 className={styles.title}>
         Datatoken Liquidity Pool <Tooltip content={content.tooltips.poolInfo} />
