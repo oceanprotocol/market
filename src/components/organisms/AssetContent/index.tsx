@@ -30,8 +30,7 @@ export default function AssetContent({
 
   const isOwner = accountId === ddo.publicKey[0].owner
   const hasNoPrice = ddo.price.type === ''
-  // TODO: JUST FOR DEBUGGING
-  const showPricing = true || (isOwner && hasNoPrice)
+  const showPricing = isOwner && hasNoPrice
 
   return (
     <article className={styles.grid}>
