@@ -38,12 +38,13 @@ export default function FormPricing({
 
   // Always update everything when price value changes
   useEffect(() => {
+    // with `weightOnDataToken` we assume it's measured against 1 OCEAN
+    const weightOnOcean = 1
     const dtAmount =
-      (Number(oceanAmount) / Number(weightOnOcean) / price) *
-      Number(weightOnDataToken)
+      (Number(oceanAmount) / weightOnOcean / price) * Number(weightOnDataToken)
 
     setFieldValue('dtAmount', dtAmount)
-  }, [oceanAmount, weightOnDataToken])
+  }, [price, oceanAmount, weightOnDataToken])
 
   const tabs = [
     {
