@@ -12,6 +12,8 @@ import stylesIndex from './index.module.css'
 import { useFormikContext } from 'formik'
 import { PriceOptionsMarket } from '../../../../../@types/MetaData'
 import { DDO } from '@oceanprotocol/lib'
+import Fixed from './Fixed'
+import Price from './Price'
 
 export default function Dynamic({
   ddo,
@@ -67,6 +69,12 @@ export default function Dynamic({
         )}
         <Wallet />
       </aside>
+
+      <h4 className={styles.title}>
+        Price <Tooltip content={content.tooltips.poolInfo} />
+      </h4>
+
+      <Price ddo={ddo} />
 
       <h4 className={styles.title}>
         Datatoken Liquidity Pool <Tooltip content={content.tooltips.poolInfo} />
