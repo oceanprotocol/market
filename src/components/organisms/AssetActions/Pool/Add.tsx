@@ -162,18 +162,25 @@ export default function Add({
           const [newPoolShare, setNewPoolShare] = useState('0')
           useEffect(() => {
             async function calculatePoolShares() {
-              if (!values.amount) return
+              if (!values.amount) {
+                setNewPoolTokens('0')
+                setNewPoolShare('0')
+                return
+              }
               if (Number(values.amount) > Number(amountMax)) return
               const poolTokens = await ocean.pool.calcPoolOutGivenSingleIn(
                 poolAddress,
-                ocean.pool.oceanAddress,
+                coin === 'OCEAN'
+                  ? ocean.pool.oceanAddress
+                  : ocean.pool.dtAddress,
                 values.amount.toString()
               )
               setNewPoolTokens(poolTokens)
               setNewPoolShare(
                 totalBalance &&
                   (
-                    (Number(poolTokens) / Number(totalPoolTokens)) *
+                    (Number(poolTokens) /
+                      (Number(totalPoolTokens) + Number(poolTokens))) *
                     100
                   ).toFixed(2)
               )
