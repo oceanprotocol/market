@@ -1,18 +1,14 @@
 import React, { ReactElement, useState, useEffect } from 'react'
-import styles from './Add.module.css'
 import { useOcean } from '@oceanprotocol/react'
-import Header from './Header'
+import Header from '../Header'
 import { toast } from 'react-toastify'
-import Button from '../../../atoms/Button'
-import Token from './Token'
-import { Balance } from './'
-import PriceUnit from '../../../atoms/Price/PriceUnit'
-import Actions from './Actions'
+import { Balance } from '..'
+import Actions from '../Actions'
 import { graphql, useStaticQuery } from 'gatsby'
 import * as Yup from 'yup'
-import { Field, FieldInputProps, Formik } from 'formik'
-import Input from '../../../atoms/Input'
-import CoinSelect from './CoinSelect'
+import { Formik } from 'formik'
+import FormAdd from './FormAdd'
+import styles from './index.module.css'
 
 const contentQuery = graphql`
   query PoolAddQuery {
@@ -37,7 +33,7 @@ const contentQuery = graphql`
   }
 `
 
-interface FormAddLiquidity {
+export interface FormAddLiquidity {
   amount: number
 }
 
@@ -149,104 +145,30 @@ export default function Add({
           setSubmitting(false)
         }}
       >
-        {({
-          values,
-          touched,
-          setTouched,
-          isSubmitting,
-          setFieldValue,
-          submitForm,
-          handleChange
-        }) => {
-          const newPoolTokens =
-            totalBalance &&
-            ((values.amount / Number(totalBalance.ocean)) * 100).toFixed(2)
+        {({ isSubmitting, submitForm }) => (
+          <>
+            <FormAdd
+              coin={coin}
+              content={content}
+              dtBalance={dtBalance}
+              dtSymbol={dtSymbol}
+              amountMax={amountMax}
+              setCoin={setCoin}
+              totalPoolTokens={totalPoolTokens}
+              totalBalance={totalBalance}
+              swapFee={swapFee}
+              poolAddress={poolAddress}
+            />
 
-          const newPoolShare =
-            totalBalance &&
-            ((Number(newPoolTokens) / Number(totalPoolTokens)) * 100).toFixed(2)
-
-          return (
-            <>
-              <div className={styles.addInput}>
-                <div className={styles.userLiquidity}>
-                  <div>
-                    <span>Available:</span>
-                    {coin === 'OCEAN' ? (
-                      <PriceUnit price={balance.ocean} symbol="OCEAN" small />
-                    ) : (
-                      <PriceUnit price={dtBalance} symbol={dtSymbol} small />
-                    )}
-                  </div>
-                  <div>
-                    <span>Maximum:</span>
-                    <PriceUnit price={amountMax} symbol={coin} small />
-                  </div>
-                </div>
-
-                <Field name="amount">
-                  {({
-                    field,
-                    form
-                  }: {
-                    field: FieldInputProps<FormAddLiquidity>
-                    form: any
-                  }) => (
-                    <Input
-                      type="number"
-                      max={amountMax}
-                      value={`${values.amount}`}
-                      prefix={
-                        <CoinSelect dtSymbol={dtSymbol} setCoin={setCoin} />
-                      }
-                      placeholder="0"
-                      field={field}
-                      form={form}
-                      onChange={(e) => {
-                        // Workaround so validation kicks in on first touch
-                        !touched?.amount && setTouched({ amount: true })
-                        handleChange(e)
-                      }}
-                      disabled={!ocean}
-                    />
-                  )}
-                </Field>
-
-                {(Number(balance.ocean) || dtBalance) >
-                  (values.amount || 0) && (
-                  <Button
-                    className={styles.buttonMax}
-                    style="text"
-                    size="small"
-                    onClick={() => setFieldValue('amount', amountMax)}
-                  >
-                    Use Max
-                  </Button>
-                )}
-              </div>
-
-              <div className={styles.output}>
-                <div>
-                  <p>{content.output.titleIn}</p>
-                  <Token symbol="pool shares" balance={newPoolTokens} />
-                  <Token symbol="% of pool" balance={newPoolShare} />
-                </div>
-                <div>
-                  <p>{content.output.titleOut}</p>
-                  <Token symbol="% swap fee" balance={swapFee} />
-                </div>
-              </div>
-
-              <Actions
-                isLoading={isSubmitting}
-                loaderMessage="Adding Liquidity..."
-                actionName={content.action}
-                action={submitForm}
-                txId={txId}
-              />
-            </>
-          )
-        }}
+            <Actions
+              isLoading={isSubmitting}
+              loaderMessage="Adding Liquidity..."
+              actionName={content.action}
+              action={submitForm}
+              txId={txId}
+            />
+          </>
+        )}
       </Formik>
     </>
   )
