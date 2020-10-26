@@ -2,8 +2,8 @@ import { PriceOptionsMarket } from '../@types/MetaData'
 import * as Yup from 'yup'
 
 export const validationSchema = Yup.object().shape<PriceOptionsMarket>({
-  price: Yup.number().min(1, 'Must be greater than 0').required('Required'),
-  dtAmount: Yup.number().min(1, 'Must be greater than 0').required('Required'),
+  price: Yup.number().min(1, 'Must be greater than 1').required('Required'),
+  dtAmount: Yup.number().min(9, 'Must be greater than 9').required('Required'),
   oceanAmount: Yup.number()
     .min(1, 'Must be greater than 0')
     .required('Required'),
