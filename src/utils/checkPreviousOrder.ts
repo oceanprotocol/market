@@ -6,6 +6,8 @@ export default async function checkPreviousOrder(
   ddo: DDO,
   serviceType: ServiceType
 ) {
+  if (!ocean) return
+
   const service = ddo.findServiceByType(serviceType)
   // apparenlty cost and timeout are not found, even though they are there...
   const previousOrder = await ocean.datatokens.getPreviousValidOrders(

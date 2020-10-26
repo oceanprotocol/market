@@ -54,7 +54,6 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
   const [showAdd, setShowAdd] = useState(false)
   const [showRemove, setShowRemove] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
 
   // TODO: put all these variables behind some useEffect
   // to prevent unneccessary updating on every render
@@ -76,8 +75,6 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
     if (!ocean || !accountId || !price || !price.value) return
 
     async function init() {
-      setIsLoading(true)
-
       try {
         //
         // Get everything which is in the pool
@@ -116,8 +113,6 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         setSwapFee(`${Number(swapFee) * 100}`)
       } catch (error) {
         Logger.error(error.message)
-      } finally {
-        setIsLoading(false)
       }
     }
     init()
@@ -125,9 +120,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
   return (
     <>
-      {isLoading && !userLiquidity ? (
-        <Loader message="Retrieving pools..." />
-      ) : showAdd ? (
+      {showAdd ? (
         <Add
           setShowAdd={setShowAdd}
           poolAddress={price.address}
@@ -148,13 +141,13 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         <>
           <div className={styles.dataToken}>
             <PriceUnit price="1" symbol={dtSymbol} /> ={' '}
-            <PriceUnit price={`${price.value}`} />
-            <Conversion price={`${price.value}`} />
+            <PriceUnit price={`${price?.value}`} />
+            <Conversion price={`${price?.value}`} />
             <Tooltip content={content.tooltips.price} />
             <div className={styles.dataTokenLinks}>
               <EtherscanLink
                 networkId={networkId}
-                path={`address/${price.address}`}
+                path={`address/${price?.address}`}
               >
                 Pool
               </EtherscanLink>
@@ -174,8 +167,8 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
                 <Tooltip content={content.tooltips.liquidity} />
               </>
             }
-            ocean={`${userLiquidity.ocean}`}
-            dt={`${userLiquidity.datatoken}`}
+            ocean={`${userLiquidity?.ocean}`}
+            dt={`${userLiquidity?.datatoken}`}
             dtSymbol={dtSymbol}
             poolShares={poolTokens}
             conversion={totalUserLiquidityInOcean}
@@ -186,8 +179,8 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
           <TokenList
             title="Pool Statistics"
-            ocean={`${price.ocean}`}
-            dt={`${price.datatoken}`}
+            ocean={`${price?.ocean}`}
+            dt={`${price?.datatoken}`}
             dtSymbol={dtSymbol}
             poolShares={totalPoolTokens}
             conversion={totalLiquidityInOcean}

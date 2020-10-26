@@ -207,6 +207,7 @@ export default function Add({
                         !touched?.amount && setTouched({ amount: true })
                         handleChange(e)
                       }}
+                      disabled={!ocean}
                     />
                   )}
                 </Field>
