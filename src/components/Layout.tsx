@@ -6,6 +6,8 @@ import styles from './Layout.module.css'
 import Seo from './atoms/Seo'
 import Container from './atoms/Container'
 import Alert from './atoms/Alert'
+import ConsentProvider from '../hooks/useConsent'
+import CookieBanner from './molecules/CookieBanner'
 
 export interface LayoutProps {
   children: ReactNode
@@ -34,20 +36,23 @@ export default function Layout({
         text="Given the beta status, publishing on Rinkeby first is strongly recommended. [Learn about the market](https://blog.oceanprotocol.com)."
         state="info"
       />
+      <ConsentProvider>
+        <main className={styles.main}>
+          <Container>
+            {title && !noPageHeader && (
+              <PageHeader
+                title={title}
+                description={description}
+                center={headerCenter}
+              />
+            )}
+            {children}
+          </Container>
+        </main>
+        <CookieBanner />
 
-      <main className={styles.main}>
-        <Container>
-          {title && !noPageHeader && (
-            <PageHeader
-              title={title}
-              description={description}
-              center={headerCenter}
-            />
-          )}
-          {children}
-        </Container>
-      </main>
-      <Footer />
+        <Footer />
+      </ConsentProvider>
     </div>
   )
 }

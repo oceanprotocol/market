@@ -1,0 +1,11 @@
+{
+  "cookies": {
+    "cookieName": "OceanCookieConsent",
+    "text": "We use [cookies](/privacy#cookies) to optimize and continuously improve our website. You can accept or reject them, and you can change your settings at any time.",
+    "accept": "OK",
+    "reject": "Reject",
+    "placeholder": "Accepting cookies is required to view this external content."
+  },
+  "newsletter": "We will only use your email to send you our newsletter and by submitting this form you give us permission to do so. You can change your mind at any time by clicking the unsubscribe link of any newsletter you receive from us, deleting your data in the process. For more information visit our [Privacy Policy](/privacy). \n\nWe use SendGrid for our newsletter and by submitting this form, you acknowledge that the information you provide will be transferred to SendGrid for processing in accordance with their [Terms](https://sendgrid.com/policies/tos/) and [Privacy Policy](https://sendgrid.com/policies/privacy/).",
+  "forms": "We will only use your entered data to get in touch with you and by submitting this form you give us permission to do so. You can change your mind at any time by sending an email to [gdpr@oceanprotocol.com](mailto:gdpr@oceanprotocol.com) and asking for deletion of your data. For more information visit our [Privacy Policy](/privacy).\n\nWe use Google Sheets and by submitting this form, you acknowledge that the information you provide will be transferred to Google Sheets for processing in accordance with their [Terms](https://policies.google.com/terms) and [Privacy Policy](https://policies.google.com/privacy)."
+}

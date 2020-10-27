@@ -1,0 +1,61 @@
+.wrapper {
+  max-width: 30rem;
+  position: sticky;
+  left: calc(var(--spacer) / 2);
+  bottom: calc(var(--spacer) / 2) !important;
+  right: calc(var(--spacer) / 2);
+  z-index: 10;
+}
+
+@media (min-width: 30rem) {
+  .wrapper {
+    left: auto;
+    margin-left: auto;
+  }
+}
+
+.banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--brand-grey);
+  backdrop-filter: saturate(150%) blur(7px);
+  font-size: var(--font-size-mini);
+  background: rgba(245, 245, 245, 0.5);
+  padding: calc(var(--spacer) / 2);
+  border-radius: var(--border-radius);
+}
+
+@media (min-width: 30rem) {
+  .banner {
+    padding-left: var(--spacer);
+    padding-right: var(--spacer);
+  }
+}
+
+.banner p {
+  margin: 0;
+}
+
+.banner > div:last-child {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-left: calc(var(--spacer) * 1.5);
+}
+
+.approveButton {
+  composes: button small from '../atoms/Button.module.css';
+  order: 1;
+  padding-top: 0.35rem;
+  padding-bottom: 0.35rem;
+}
+
+.rejectButton {
+  composes: button text from '../atoms/Button.module.css';
+  font-size: var(--font-size-small);
+  color: var(--brand-grey-light) !important;
+  order: 2;
+  margin-top: calc(var(--spacer) / 2);
+  padding: 0;
+}
