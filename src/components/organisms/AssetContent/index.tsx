@@ -39,10 +39,7 @@ export default function AssetContent({
 
         <div className={styles.content}>
           <aside className={styles.meta}>
-            <p className={styles.author}>
-              {metadata?.additionalInformation?.copyrightHolder ||
-                metadata?.main.author}
-            </p>
+            <p className={styles.author}>{metadata?.main.author}</p>
 
             <p className={styles.datatoken}>
               <EtherscanLink

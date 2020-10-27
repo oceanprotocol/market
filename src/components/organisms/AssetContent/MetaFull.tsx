@@ -13,19 +13,11 @@ export default function MetaFull({
   metadata: MetadataMarket
 }): ReactElement {
   const { id } = ddo
-  const { dateCreated, datePublished, license } = metadata.main
+  const { dateCreated, datePublished } = metadata.main
 
   return (
     <div className={styles.metaFull}>
       <MetaItem title="Author" content={metadata?.main.author} />
-      {metadata?.additionalInformation?.copyrightHolder && (
-        <MetaItem
-          title="Copyright Holder"
-          content={metadata?.additionalInformation?.copyrightHolder}
-        />
-      )}
-
-      <MetaItem title="License" content={license} />
 
       {metadata?.additionalInformation?.categories && (
         <MetaItem

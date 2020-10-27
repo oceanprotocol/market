@@ -30,12 +30,10 @@ export interface MetadataPublishForm {
   description: string
   files: string | File[]
   author: string
-  license: string
   dataTokenOptions: DataTokenOptions
   access: 'Download' | 'Compute' | string
   termsAndConditions: boolean
   // ---- optional fields ----
-  copyrightHolder?: string
   tags?: string
   links?: string | File[]
 }
