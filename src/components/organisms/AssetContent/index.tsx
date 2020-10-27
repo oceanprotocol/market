@@ -29,7 +29,7 @@ export default function AssetContent({
   const { dtSymbol, dtName } = usePricing(ddo)
 
   const isOwner = accountId === ddo.publicKey[0].owner
-  const hasNoPrice = ddo.price.type === ''
+  const hasNoPrice = ddo.price.datatoken == 0 && ddo.price.value == 0
   const showPricing = isOwner && hasNoPrice
 
   return (
