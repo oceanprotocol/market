@@ -35,7 +35,7 @@ export default function FormPricing({
   function handleTabChange(tabName: string) {
     const type = tabName.toLowerCase()
     setFieldValue('type', type)
-    type == 'fixed' && setFieldValue('dtAmount', 1000)
+    type === 'fixed' && setFieldValue('dtAmount', 1000)
   }
 
   // Always update everything when price value changes
