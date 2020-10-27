@@ -43,13 +43,15 @@ export default function Consume({
   const hasDatatoken = Number(dtBalance) >= 1
 
   useEffect(() => {
+    if (!ocean || !accountId) return
+
     async function checkOrders() {
       const orderId = await checkPreviousOrder(ocean, accountId, ddo, 'access')
       setPreviousOrderId(orderId)
       setHasPreviousOrder(!!orderId)
     }
     checkOrders()
-  }, [ddo, accountId])
+  }, [ocean, ddo, accountId])
 
   async function handleConsume() {
     !hasPreviousOrder && !hasDatatoken && (await buyDT('1'))

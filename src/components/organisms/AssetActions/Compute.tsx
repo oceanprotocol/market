@@ -57,13 +57,15 @@ export default function Compute({
   const hasDatatoken = Number(dtBalance) >= 1
 
   useEffect(() => {
+    if (!ocean || !accountId) return
+
     async function checkPreviousOrders() {
       const orderId = await checkPreviousOrder(ocean, accountId, ddo, 'compute')
       setPreviousOrderId(orderId)
       setHasPreviousOrder(!!orderId)
     }
     checkPreviousOrders()
-  }, [ddo, accountId])
+  }, [ocean, ddo, accountId])
 
   const onDrop = async (files: File[]) => {
     setFile(files[0])
