@@ -66,6 +66,22 @@ module.exports = {
         cache_busting_mode: 'none'
       }
     },
-    'gatsby-plugin-webpack-size'
+    'gatsby-plugin-webpack-size',
+    {
+      resolve: 'gatsby-plugin-google-analytics',
+      options: {
+        // The property ID; the tracking code won't be generated without it
+        trackingId: 'UA-60614729-11',
+        // Defines where to place the tracking script - `true` in the head and `false` in the body
+        head: false,
+        // Setting this parameter is optional
+        anonymize: true,
+        // Setting this parameter is also optional
+        respectDNT: true,
+        // Defers execution of google analytics script after page load
+        defer: true,
+        cookieDomain: 'oceanprotocol.com'
+      }
+    }
   ]
 }
