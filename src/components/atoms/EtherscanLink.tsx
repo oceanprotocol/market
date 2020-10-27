@@ -15,7 +15,7 @@ export default function EtherscanLink({
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const url =
-    networkId === 1
+    (!networkId && appConfig.network === 'mainnet') || networkId === 1
       ? `https://etherscan.io`
       : `https://${
           networkId
