@@ -15,7 +15,7 @@ Ocean Marketplace Terms and Conditions (this “**Agreement**”) is made and en
 
 “**Documentation**” means the user guides (in each case exclusive of content referenced via hyperlink) for the Ocean Marketplace, as such user guides may be updated by Ocean from time to time.
 
-“**Ocean Website**” means the website at https://www.market.oceanprotocol.com  (and any successor or related site designated by Ocean), as may be updated by Ocean from time to time.
+“**Ocean Website**” means the website at https://market.oceanprotocol.com  (and any successor or related site designated by Ocean), as may be updated by Ocean from time to time.
 
 “**Modifications Effective Date**” will have the meaning as set out in Section 2.2.
 
@@ -25,7 +25,7 @@ Ocean Marketplace Terms and Conditions (this “**Agreement**”) is made and en
 
 “**Service**” means each of the services made available by Ocean or its affiliates, including those web services described in the Service Terms. Services do not include Third-Party Content.
 
-“**Service Terms**” means the rights and restrictions for particular Services located at [https://www.market.oceanprotocol.com](https://www.market.oceanprotocol.com/) (and any successor or related locations designated by Ocean), as may be updated by Ocean from time to time.
+“**Service Terms**” means the rights and restrictions for particular Services located at [https://market.oceanprotocol.com](https://market.oceanprotocol.com/) (and any successor or related locations designated by Ocean), as may be updated by Ocean from time to time.
 
 “**Website Terms**” means the terms of use located at [https://www.oceanprotocol.com](https://www.oceanprotocol.com/) (and any successor or related locations designated by Ocean), as may be updated by Ocean from time to time.
 
