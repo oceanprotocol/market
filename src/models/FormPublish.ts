@@ -14,14 +14,12 @@ export const validationSchema = Yup.object().shape<MetadataPublishForm>({
     .required('Required'),
   files: Yup.array<FileMetadata>().required('Required').nullable(),
   description: Yup.string().required('Required'),
-  license: Yup.string().required('Required'),
   access: Yup.string()
     .matches(/Compute|Download/g)
     .required('Required'),
   termsAndConditions: Yup.boolean().required('Required'),
 
   // ---- optional fields ----
-  copyrightHolder: Yup.string().nullable(),
   tags: Yup.string().nullable(),
   links: Yup.object<FileMetadata[]>().nullable()
 })
@@ -35,7 +33,6 @@ export const initialValues: Partial<MetadataPublishForm> = {
   },
   files: '',
   description: '',
-  license: '',
   access: '',
   termsAndConditions: false
 }

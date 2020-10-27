@@ -17,9 +17,7 @@ export function transformPublishFormToMetadata(
   const {
     name,
     author,
-    license,
     description,
-    copyrightHolder,
     tags,
     links,
     termsAndConditions,
@@ -34,12 +32,11 @@ export function transformPublishFormToMetadata(
       dateCreated: currentTime,
       datePublished: currentTime,
       files: typeof files !== 'string' && files,
-      license
+      license: 'https://market.oceanprotocol.com/terms'
     },
     additionalInformation: {
       ...AssetModel.additionalInformation,
       description,
-      copyrightHolder,
       tags: transformTags(tags),
       links: typeof links !== 'string' && links,
       termsAndConditions
