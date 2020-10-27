@@ -71,7 +71,7 @@ export default function Add({
   // https://github.com/jquense/yup#number
   const validationSchema = Yup.object().shape<FormAddLiquidity>({
     amount: Yup.number()
-      .min(1, 'Must be more or equal to 1')
+      .min(0.01, 'Must be more or equal to 0.01')
       .max(
         Number(amountMax),
         `Maximum you can add is ${Number(amountMax).toFixed(2)} ${coin}`
