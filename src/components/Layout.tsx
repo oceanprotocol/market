@@ -31,7 +31,7 @@ export default function Layout({
       <Header />
 
       <Alert
-        text="Given the beta status, publishing on Rinkeby first is strongly recommended. [Learn about the market](https://blog.oceanprotocol.com)."
+        text="Given the beta status, publishing on Rinkeby first is strongly recommended. [Learn about the market](https://oceanprotocol.com/technology/marketplaces)."
         state="info"
       />
 
