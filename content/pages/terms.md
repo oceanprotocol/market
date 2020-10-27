@@ -1,67 +1,150 @@
----
-title: Terms and Conditions
-description: Thanks for using our product and services.
----
 
-By using our products and services you are agreeing to the terms. Please read them carefully.
+Ocean Marketplace Terms and Conditions (this “**Agreement**”) is made and entered into by and between Ocean Protocol Foundation Ltd., with office at The Commerze @ Irving, 1 Irving Place, #08-11, Singapore, 369546 Singapore (“**Ocean**”) and the legal entity set forth in the Account Information (“**Customer**”). It governs Customer’s access to and use of the Ocean Marketplace (as defined below) and takes effect on the date of its acceptance by Customer (the “**Effective Date**”). Customer represents being lawfully able to enter into contracts and having legal authority to bind Customer’s entity.
 
-_Latest Revision: February 20, 2020_
+**DEFINITIONS**
 
-## Definitions
+“**Service**“** **means all websites, software and services offered and operated by Ocean.
 
-- _Users_ mean buyers and sellers of data in the marketplace.
-- _Data seller or provider_ means individual or an institution offering to sell the data in the marketplace.
-- _Data buyer or recipient_ means individual or an institution offering to buy the data from the marketplace.
-- _Marketplace_ means the web-based logistics data marketplace via which users can sell and buy logistics data.
+“**API**” means an application program interface.
 
-## Your agreement
+“**Customer**” means any individual or entity that directly or indirectly through another user: (a) accesses or uses published assets; or (b) otherwise accesses or uses the Ocean Marketplace.
 
-By using this Marketplace, you agree to be bound by, and to comply with, these Terms and Conditions. If you do not agree to these Terms and Conditions, please do not use it.
+“**Data Buyer**” means any Customer or legal entity and its employees that sources or intends to source external data
 
-## Toxicity
+“**Data Vendor**” means any Customer or legal entity and its employees that provides or intends to provide data.
 
-You shall not use the Marketplace to advertise, sell, or exchange any data, products or services relating to illegal or illicit activities, including, without limitation, pornographic products or services, illegal drug products or services, or illegal weapons.
+“**Documentation**” means the user guides (in each case exclusive of content referenced via hyperlink) for the Ocean Marketplace, as such user guides may be updated by Ocean from time to time.
 
-## Data Sharing
+“**Ocean Website**” means the website at https://www.market.oceanprotocol.com  (and any successor or related site designated by Ocean), as may be updated by Ocean from time to time.
 
-The data recipient or buyer will not release data to a third party without prior approval from the data provider or seller. The data recipient will not share, publish, or otherwise release any findings or conclusions derived from analysis of data obtained from the data provider or data seller without prior approval from the data seller. BigchainDB is not responsible and guarantee quality of data provided by the sellers.
+“**Modifications Effective Date**” will have the meaning as set out in Section 2.2.
 
-## Delivery of the Data
+“**Policies**” means the Privacy Policy, the Platform Terms, the Service Terms, all restrictions described in the Ocean Marketplace and on the Ocean Website, and any other policy or terms referenced in or incorporated into this Agreement, but does not include whitepapers or other marketing materials referenced on the Ocean Website.
 
-BigchainDB does not host in its premises the data being offered or already offered in the Marketplace by the data provider. If the provider selects IPFS as a medium to host data, then the data is stored in distributed data storage which BigchainDB has control over or the ability to manage.
+“**Privacy Policy**” means the privacy policy located at https://www.oceanprotocol.com (and any successor or related locations designated by Ocean), as it may be updated by Ocean from time to time.
 
-## Right to Remove Published Metadata
+“**Service**” means each of the services made available by Ocean or its affiliates, including those web services described in the Service Terms. Services do not include Third-Party Content.
 
-BigchainDB holds the right to remove published data if found in violation of these terms and conditions. We also reserve the right to remove published data that are deemed out of scope of the Marketplace. That means data published by the sellers has to be logistics data and consistent with the data categories mentioned in the Marketplace.
+“**Service Terms**” means the rights and restrictions for particular Services located at [https://www.market.oceanprotocol.com](https://www.market.oceanprotocol.com/) (and any successor or related locations designated by Ocean), as may be updated by Ocean from time to time.
 
-## Confidentiality
+“**Website Terms**” means the terms of use located at [https://www.oceanprotocol.com](https://www.oceanprotocol.com/) (and any successor or related locations designated by Ocean), as may be updated by Ocean from time to time.
 
-The Recipient shall: (a) protect the Confidential Information of the Provider with at least the same degree of care with which it protects its own confidential or proprietary information, but not less than a reasonable degree of care, and (b) instruct its employees and all other parties who are authorized to have access to the Provider’s Confidential Information of the restrictions contained in this Agreement. Each Recipient shall limit access to the Provider’s Confidential Information to its own employees, agents, contractors and consultants strictly with a "need to know"; provided, however, that such parties have executed an agreement with the Recipient with confidentiality provisions at least as restrictive as those contained herein. The parties hereby undertake to ensure the individual compliance of such employees, agents, contractors, and consultants with the terms hereof and shall be responsible for any actions of such employees, agents, contractors, and consultants. The Recipient shall, as soon as reasonably practical after discovery, report to the Provider any unauthorized use of, disclosure of or access to the Provider’s Confidential Information, subject to any reasonable restrictions placed on the timing of such notice by a law enforcement or regulatory agency investigating the incident; and take all reasonable measures to prevent any further unauthorized disclosure or access.
+“**Term**” means the term of this Agreement described in Section 7.1.
 
-## Indemnification
+“**Termination Date**” means the effective date of termination provided in accordance with Section 7.1.
 
-Users of the Marketplace shall defend, indemnify and hold harmless BigchainDB from and against any and all claims, demands, judgments, liability, damages, losses, costs, and expenses, including reasonable attorneys' fees, arising out of or resulting from the User’s or its Client's or Third Party Service Provider's misuse or unauthorized use of the Marketplace . In addition, both Data Provider and Data Recipients will hold each other harmless from and against any and all claims, demands, judgements, liability, damages, losses, costs, and expenses as a result of using Provider’s data.
+ 
 
-## Warranty Disclaimer / Limitation of Liability
+**1 ACCESS TO AND USE OF THE PLATFORM SERVICES**
 
-The Logistics Data Marketplace (referred to as Marketplace from here on) may be subject to transcription and transmission errors, accordingly, the Marketplace is provided on an "as is," "as available" basis. Any use or reliance upon the Marketplace by Users shall be at its own risk. EXCEPT AS SET FORTH IN THIS SECTION, NEITHER BIGCHAINDB NOR THE DATA PROVIDER MAKES ANY WARRANTIES, EXPRESS OR IMPLIED, HEREUNDER WITH RESPECT TO THE SERVICES, DATA, OR THE MEDIA ON WHICH THE DATA IS PROVIDED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF ACCURACY, COMPLETENESS, CURRENTNESS, MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. BIGCHAINDB AND THE DATA PROVIDERS AGGREGATE LIABILITY TO DATA RECIPIENT OR ANY THIRD PARTY, WHETHER FOR NEGLIGENCE, BREACH OF WARRANTY, OR ANY OTHER CAUSE OF ACTION, SHALL BE LIMITED TO THE PRICE PAID FOR THE PRODUCT OR SERVICES TO WHICH THE INCIDENT RELATES. IN NO EVENT SHALL BIGCHAINDB OR DATA PROVIDER BE LIABLE FOR ANY SPECIAL, INDIRECT, INCIDENTAL OR CONSEQUENTIAL DAMAGES, WHETHER OR NOT FORESEEABLE AND HOWEVER ARISING, INCLUDING BUT NOT LIMITED TO LOST INCOME OR LOST REVENUE, WHETHER BASED IN CONTRACT, TORT OR ANY OTHER THEORY.
+**1.1**	The Customer can access and use the Ocean Marketplace in accordance with this Agreement. Customer undertakes to comply with the terms of this Agreement and all laws, rules and regulations applicable to Customer’s use of the Ocean Marketplace.
 
-## Audit / Non-Compliance
+**1.2**	To access the Ocean Marketplace, Customer must have a Web3 wallet (e.g. MetaMask) and must have Ocean tokens in their wallet.
 
-BigchainDB may monitor your use of the Marketplace. BigchainDB reserves the right, in its sole discretion, to immediately suspend your use of the Marketplace in the event of any suspected or actual violation of the terms of this Agreement. In the event an audit reveals that you are not in compliance with the terms and conditions of this Agreement, you shall be responsible for the costs of the audit, as well as any and all damages resulting from such non-compliance including, without limitation, any special, incidental, indirect, or consequential damages whatsoever (including punitive damages and damages for loss of goodwill).
+ **1.3**    Ocean Marketplace connects Data Buyers and Data Vendors directly, without any 3rd party control via the marketplace. This means that Customers are responsible for their own activity on the marketplace. Customers must adhere to the laws in their own legal jurisdiction as well as their conscience. Ocean is not responsible for any malicious use of the Ocean Marketplace or any losses associated with the use of the Ocean Marketplace of any source.  
 
-## Regulations
+**1.4**	By clicking any button or box marked “accept” or “agree” (or a similar term) in connection with this Agreement, or by accessing or using the Ocean Marketplace, you agree to be bound by this Agreement, a current version of which is available at the Ocean Website, and which may be modified from time to time at our sole discretion. We are only providing our services if you accept all of these terms. By using the Ocean Marketplace, the Customer confirms their understanding and agrees to be bound by all of these terms. If Customer accepts these terms on behalf of a company or other legal entity, Customer represents that they have the legal authority to accept these terms on that entity’s behalf, in which case Customer will mean that entity.  If Customer does not accept all of these terms, then you may not access or use the Ocean Marketplace.  
 
-Users shall comply with all Federal and State laws and regulations governing the confidentiality of the information that is the subject of this Agreement.
+**2 MODIFICATIONS**
 
-## Intended Use
+**2.1**	Ocean may modify this Agreement, change or discontinue any Service (including any policies and Service Level Agreements) at any time with no prior notification  Ocean will provide 15 days advance notice prior to the effective date of software modifications (“**Modifications Effective Date**”).
 
-BigchainDB reserves the right to review and pre-approve the User’s intended use of the Marketplace.
+**2.2**	If Customer continues to use the Ocean Marketplace after the Modifications Effective Date, Customer will be deemed to be bound by the modified terms as of the Modifications Effective Date.
 
-## Force Majeure
+**2.3**	If Customer objects to the software modifications , the Customer may cease to use the Ocean Market.
 
-BigchainDB shall not be liable for any losses arising out of the delay or interruption of its performance of the Marketplace due to any act of God, act of governmental authority, act of public enemy, war, riot, flood, civil commotion, insurrection, severe weather conditions, or any other cause beyond the reasonable control of the party.
+**3 SECURITY – DATA PROTECTION**
 
-By accessing and using this Marketplace, you accept and agree to be bound by the terms and conditions of this agreement. In addition, when using the Marketplace, you shall be subject to any posted guidelines or rules applicable to using the services. Any participation in this Marketplace will constitute acceptance of this agreement. If you do not agree to abide by the above, please do not use the Marketplace.
+**3.1**    Without limiting Customer obligations under Section 4.2, Ocean will implement reasonable and appropriate measures designed to help Customer secure published assets against accidental or unlawful loss, access or disclosure.
 
-These terms and conditions are subject to change.
+**3.2**	Published assets will be stored on-chain. Ocean will not store any information.
+
+**3.3**	Transactions that take place on the Ocean Marketplace are managed and confirmed via the Ethereum blockchain. Your Ethereum public address will be made publicly visible whenever you engage in a transaction on the Ocean Marketplace.
+
+**3.4**	We neither own nor control MetaMask, Coinbase, Google Chrome, the Ethereum network, or any other third parties site, product, or service that you might access, visit, or use for the purpose of enabling you to use the various features of the Ocean Market. We will not be liable for the acts or omissions of any such third parties, nor will we be liable for any damage that you may suffer as a result of your transactions or any other interaction with any such third parties.
+
+**3.5**	We use the minimum amount of cookies and similar tracking technologies to track the activity on our websites and hold certain information. Cookies are files with a small amount of data which may include an anonymous unique identifier. Cookies are sent to your browser from a website and stored on your device. Tracking technologies also used are beacons, tags, and scripts to collect and track information and to improve and analyze our services. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent. However, if you do not accept cookies, you may not be able to use some portions of our services.
+
+**3.6**	The security of your data is important to us, but remember that no method of transmission over the Internet, or method of electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your Personal Data, we cannot guarantee its absolute security and we do not take any liability in case of security breaches.
+
+**4 CUSTOMER’S RESPONSIBILITIES**
+
+**4.1**    Customer is responsible for all activities, regardless of whether the activities are authorized by Customer or undertaken by Customer, Customer’s employees or a third party (including Customer’s contractors, agents or End Users). Ocean and its affiliates are not responsible for unauthorized access to Customer Account.
+
+**4.2**    Customer will ensure that published assets and Customer and End Users’ use of published assets or the Ocean Market will not violate any of the Policies or any applicable law. The Customer is solely responsible for the development, content, operation, maintenance, and use of published assets.
+
+**4.3**    Where Customer permits, assists or facilitates such action, Customer will be deemed to have taken any action by any person or entity related to this Agreement, published assets or use of the Ocean Market. Customer is responsible for End Users’ use of published assets and the Ocean Market. Customer will ensure that all End Users comply with obligations mirroring those of Customer under this Agreement and that the terms of Customer’s agreements with each End User are consistent with this Agreement. If Customer becomes aware of any violation of Customer’s obligations under this Agreement caused by an End User, Customer will immediately suspend access to published assets and the Ocean Marketplace by such End User. Ocean does not provide any support or services to End Users, unless Ocean has a separate agreement with Customer or an End User obligating Ocean to provide such support or services.
+
+**5 FEES, PAYMENT**
+
+**5.1**    If you elect to purchase, trade or publish data on Ocean Marketplace, it will be conducted solely through the Ethereum network via MetaMask (or other Ethereum-compatible wallets and browsers). We will have no insight into or control over these payments or transactions, nor do we have the ability to reverse any transactions. With that in mind, we will have no liability to you or to any third party for any claims or damages that may arise as a result of any transactions that you engage in via the App, or using the Smart Contracts, or any other transactions that you conduct via the Ethereum network or MetaMask.
+
+**5.2**    Ethereum requires the payment of a transaction fee (a “Gas Fee”) for every transaction that occurs on the Ethereum network. The Gas Fee funds the network of computers that run the decentralized Ethereum network. This means that you will need to pay a Gas Fee for each transaction that occurs via the Ocean Marketplace. In addition to the Gas Fee, we have hardcoded 0.1% of the total value of the transaction for the Ocean Protocol community development fund.
+
+Customer acknowledges and agrees that the Commission will be transferred directly to the Ocean Protocol community development fund through the Ethereum network as part of any transactions or payments. 
+
+**5.3**    Each Party will be responsible, as required under applicable law, for identifying and paying all taxes and other governmental fees and charges (and any penalties, interest, and other additions thereto) that are imposed on that Party upon or with respect to the transactions and payments under this Agreement.
+
+**6 SUSPENSION**
+
+**6.1**	Ocean may suspend Customer or any End User’s right to access or use any portion or all of the Ocean Marketplace immediately with no notice to Customer if Ocean determines that the Customer or an End User’s use of the Ocean Marketplace:
+
+(b) poses a security risk to the Ocean Marketplace or any third party,
+
+(c) could adversely impact Ocean systems, the Ocean Marketplace or the systems or Content of any other Ocean customer,
+
+(d) could subject Ocean, Ocean affiliates, or any third party to liability, and/or
+
+(e) could be fraudulent;
+
+(f) Customer or any End User is in breach of this Agreement; or
+
+(g) Customer has ceased to operate in the ordinary course, made an assignment for the benefit of creditors or similar disposition of Customer assets, or become the subject of any bankruptcy, reorganization, liquidation, dissolution or similar proceeding.
+
+**6.2**	If Ocean, according to Section 6.1, suspends Customer’s right to access or use any portion or all of the Ocean Marketplace:
+
+(a) Customer remains responsible for all fees and charges Customer incurs during the period of suspension; and
+
+(b) Customer will not be entitled to any service credits under the Service Level Agreements for any period of suspension.
+
+**7 TERMINATION**
+
+**7.1**	This agreement can be terminated at any time by discontinuing Customer access to and use of the Ocean Marketplace. You will not receive any refunds, you agree that we, in our sole discretion and for any or no reason, may terminate these Terms and suspend and/or terminate the access to the Ocean Marketplace and that we will not be liable to you or to any third party for any such suspension or termination.
+
+**8 INTELLECTUAL PROPERTY RIGHTS AND LICENSE**
+
+**8.1**    Except as provided in this Section 8, Ocean obtains no rights whatsoever under this Agreement from Customer (or Customer’s licensors) to published assets.
+
+**8.2**    Customer represents and warrants to Ocean that:
+
+(a) Customer or Customer’s licensors own all right, title, and interest in and of the published assets and
+
+(b) Customer has all rights in published assets necessary to grant the rights contemplated by this Agreement.
+
+**8.3**    Subject to the terms of this Agreement, Ocean grants Customer a limited, revocable, non-exclusive, non-sublicensable, non-transferable license to access and use the Ocean Marketplace solely in accordance with this Agreement.
+
+**8.4**    Except as provided in Section 8.3, the Customer obtains no rights under this Agreement from Ocean, Ocean affiliates or Ocean licensors to the Ocean Marketplace, including any related intellectual property rights.
+
+**8.5**	Ocean Content and Third-Party Content may be provided to the Customer under a separate agreement and/or a separate license. In the event of a conflict between this Agreement and any separate agreement and/or separate license, the separate agreement and/or separate license will prevail with respect to the Ocean Content or Third-Party Content that is the subject of such separate agreement and/or separate license.
+
+**9 WARRANTIES; LIMITATIONS OF LIABILITY**
+
+**9.1**    Warranties. The Ocean Marketplace is provided “as is”. Except to the extent prohibited by law, or to the extent any statutory rights apply that cannot be excluded, limited or waived, Ocean its affiliates and licensors:
+
+(a) make no representations or warranties of any kind, whether express, implied, statutory or otherwise regarding the service offerings or the Third-Party Content, and
+
+(b) disclaim all warranties, including any implied or express warranties
+
+(c) of merchantability, satisfactory quality, fitness for a particular purpose, non- infringement, or quiet enjoyment,
+
+(d) arising out of any course of dealing or usage of trade,
+
+(e) that any content will be secure or not otherwise lost or altered.
+
+**10 GOVERNING LAW**
+
+**10.1**	The laws of Singapore, without reference to conflict of law rules, govern this Agreement and any dispute of any sort that might arise between Customer and Ocean. The United Nations Convention for the International Sale of Goods does not apply to this Agreement.
+
+**10.2**	Any dispute arising from or in connection with this Agreement or the fulfilment thereof will be exclusively adjudicated in the Courts of Singapore and Customer consents to this exclusive jurisdiction and venue.
+
+**10.3**    Notwithstanding the foregoing Ocean and Customer both agree that Ocean may bring suit against Customer before the court at any of Customer’s business seats and/or at the court where any breach of this Agreement or infringement of Ocean rights occurred.
