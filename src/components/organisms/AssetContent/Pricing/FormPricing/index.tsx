@@ -35,16 +35,18 @@ export default function FormPricing({
   function handleTabChange(tabName: string) {
     const type = tabName.toLowerCase()
     setFieldValue('type', type)
+    type === 'fixed' && setFieldValue('dtAmount', 1000)
   }
 
   // Always update everything when price value changes
   useEffect(() => {
+    if (type === 'fixed') return
     const dtAmount =
       (Number(oceanAmount) / Number(weightOnOcean) / price) *
       Number(weightOnDataToken)
 
     setFieldValue('dtAmount', dtAmount)
-  }, [price, oceanAmount, weightOnOcean, weightOnDataToken])
+  }, [price, oceanAmount, weightOnOcean, weightOnDataToken, type])
 
   const tabs = [
     {
