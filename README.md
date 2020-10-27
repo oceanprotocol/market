@@ -19,7 +19,7 @@
 - [🛳 Production](#-production)
 - [⬆️ Deployment](#️-deployment)
   - [Manual Deployment](#manual-deployment)
-- [� License](#-license)
+- [🏛 License](#-license)
 
 ## 🏄 Get Started
 
@@ -48,9 +48,6 @@ If you prefer to connect to locally running components instead of remote connect
 ```bash
 git clone git@github.com:oceanprotocol/barge.git
 cd barge
-
-# use v3 branch for the time being
-git checkout v3
 
 # startup with local Ganache node
 ./start_ocean.sh

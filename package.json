@@ -3,7 +3,7 @@
   "description": "Data marketplace for ocean.",
   "version": "0.1.0",
   "license": "Apache-2.0",
-  "homepage": "https://oceanprotocol.com",
+  "homepage": "https://market.oceanprotocol.com",
   "scripts": {
     "start": "gatsby develop --host 0.0.0.0",
     "build": "gatsby clean && gatsby build",
