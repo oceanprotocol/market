@@ -7,7 +7,6 @@ import AssetList from '../../organisms/AssetList'
 
 export default function PublishedList(): ReactElement {
   const { ocean, status, accountId } = useOcean()
-  // TODO: wait for ocean-lib-js with https://github.com/oceanprotocol/ocean-lib-js/pull/308
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [isLoading, setIsLoading] = useState(false)
 

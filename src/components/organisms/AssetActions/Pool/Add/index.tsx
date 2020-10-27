@@ -92,7 +92,7 @@ export default function Add({
 
   // Get maximum amount for either OCEAN or datatoken
   useEffect(() => {
-    if (!ocean) return
+    if (!ocean || !poolAddress) return
 
     async function getMaximum() {
       const amountMaxPool =
