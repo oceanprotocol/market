@@ -40,13 +40,16 @@ export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
     if (!price || !price.value || !balance || !balance.ocean || !dtBalance)
       return
 
-    setIsBalanceSufficient(
-      compareAsBN(balance.ocean, `${price.value}`) || Number(dtBalance) >= 1
-    )
+    // TODO: quick hack for
+    // https://github.com/oceanprotocol/market/issues/145
+    setIsBalanceSufficient(true)
+    // setIsBalanceSufficient(
+    //   compareAsBN(balance.ocean, `${price.value}`) || Number(dtBalance) >= 1
+    // )
 
-    return () => {
-      setIsBalanceSufficient(false)
-    }
+    // return () => {
+    //   setIsBalanceSufficient(false)
+    // }
   }, [balance, price, dtBalance])
 
   const UseContent = isCompute ? (
