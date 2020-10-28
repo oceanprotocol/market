@@ -9,12 +9,14 @@ import { useOcean } from '@oceanprotocol/react'
 export default function Actions({
   isLoading,
   loaderMessage,
+  successMessage,
   txId,
   actionName,
   action
 }: {
   isLoading: boolean
   loaderMessage: string
+  successMessage: string
   txId: string
   actionName: string
   action: () => void
@@ -39,7 +41,7 @@ export default function Actions({
       </div>
       {txId && (
         <SuccessConfetti
-          success="Successfully added liquidity."
+          success={successMessage}
           action={
             <EtherscanLink networkId={networkId} path={`/tx/${txId}`}>
               See on Etherscan

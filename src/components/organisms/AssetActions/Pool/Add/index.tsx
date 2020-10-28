@@ -163,6 +163,7 @@ export default function Add({
             <Actions
               isLoading={isSubmitting}
               loaderMessage="Adding Liquidity..."
+              successMessage="Successfully added liquidity."
               actionName={content.action}
               action={submitForm}
               txId={txId}

@@ -212,6 +212,7 @@ export default function Remove({
         loaderMessage="Removing Liquidity..."
         actionName={content.action}
         action={handleRemoveLiquidity}
+        successMessage="Successfully removed liquidity."
         txId={txId}
       />
     </div>
