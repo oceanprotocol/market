@@ -13,7 +13,7 @@ export function getSearchQuery(
 ): SearchQuery {
   return {
     page: Number(page) || 1,
-    offset: Number(offset) || 20,
+    offset: Number(offset) || 21,
     query: {
       text,
       tags: tags ? [tags] : undefined,
