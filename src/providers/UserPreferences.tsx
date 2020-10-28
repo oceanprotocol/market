@@ -72,7 +72,7 @@ function UserPreferencesProvider({
   }, [])
 
   function addBookmark(didToAdd: string): void {
-    const newPinned = bookmarks.concat(didToAdd)
+    const newPinned = [didToAdd].concat(bookmarks)
     setBookmarks(newPinned)
   }
 
