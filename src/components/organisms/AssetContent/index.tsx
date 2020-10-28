@@ -65,7 +65,10 @@ export default function AssetContent({
             )}
           </aside>
 
-          <Markdown text={metadata?.additionalInformation?.description || ''} />
+          <Markdown
+            className={styles.description}
+            text={metadata?.additionalInformation?.description || ''}
+          />
 
           <MetaSecondary metadata={metadata} />
 
