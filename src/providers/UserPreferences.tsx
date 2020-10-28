@@ -6,18 +6,18 @@ import React, {
   useState,
   useEffect
 } from 'react'
-import { DID, Logger } from '@oceanprotocol/lib'
+import { Logger } from '@oceanprotocol/lib'
 import { LogLevel } from '@oceanprotocol/lib/dist/node/utils/Logger'
 
 interface UserPreferencesValue {
   debug: boolean
   currency: string
   locale: string
-  pins: DID[]
+  pins: string[]
   setDebug: (value: boolean) => void
   setCurrency: (value: string) => void
-  addPin: (did: DID) => void
-  removePin: (did: DID) => void
+  addPin: (did: string) => void
+  removePin: (did: string) => void
 }
 
 const UserPreferencesContext = createContext(null)
@@ -51,14 +51,14 @@ function UserPreferencesProvider({
     localStorage?.currency || 'EUR'
   )
   const [locale, setLocale] = useState<string>()
-  const [pins, setPins] = useState<DID[]>(localStorage?.pins)
+  const [pins, setPins] = useState(localStorage?.pins || [])
 
   // Write values to localStorage on change
   useEffect(() => {
-    setLocalStorage({ debug, currency })
-  }, [debug, currency])
+    setLocalStorage({ debug, currency, pins })
+  }, [debug, currency, pins])
 
-  // Set ocean-lib-js log levels, default: Error
+  // Set ocean.js log levels, default: Error
   useEffect(() => {
     debug === true
       ? Logger.setLevel(LogLevel.Verbose)
@@ -71,13 +71,13 @@ function UserPreferencesProvider({
     setLocale(window.navigator.language)
   }, [])
 
-  function addPin(didToAdd: DID): void {
-    const newPinned = pins.filter((did: DID) => did !== didToAdd)
+  function addPin(didToAdd: string): void {
+    const newPinned = pins.concat(didToAdd)
     setPins(newPinned)
   }
 
-  function removePin(didToAdd: DID): void {
-    const newPinned = pins.concat(didToAdd)
+  function removePin(didToAdd: string): void {
+    const newPinned = pins.filter((did: string) => did !== didToAdd)
     setPins(newPinned)
   }
 

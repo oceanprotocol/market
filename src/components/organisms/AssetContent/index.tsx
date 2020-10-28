@@ -7,12 +7,13 @@ import MetaFull from './MetaFull'
 import MetaSecondary from './MetaSecondary'
 import styles from './index.module.css'
 import AssetActions from '../AssetActions'
-import { DDO } from '@oceanprotocol/lib'
+import { DDO, DID } from '@oceanprotocol/lib'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import Pricing from './Pricing'
 import { useOcean, usePricing } from '@oceanprotocol/react'
 import EtherscanLink from '../../atoms/EtherscanLink'
 import MetaItem from './MetaItem'
+import Pin from './Pin'
 
 export interface AssetContentProps {
   metadata: MetadataMarket
@@ -89,6 +90,8 @@ export default function AssetContent({
               <code>{JSON.stringify(ddo, null, 2)}</code>
             </pre>
           )}
+
+          <Pin did={ddo.id} />
         </div>
       </div>
 
