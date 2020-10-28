@@ -1,6 +1,5 @@
 import React, {
   useState,
-  useEffect,
   ReactElement,
   createContext,
   useContext,
@@ -12,18 +11,14 @@ import { useSiteMetadata } from '../hooks/useSiteMetadata'
 import { Logger } from '@oceanprotocol/lib'
 
 interface PricesValue {
-  prices: {
-    [key: string]: number
-  }
+  [key: string]: number
 }
 
 const initialData: PricesValue = {
-  prices: {
-    eur: 0.0,
-    usd: 0.0,
-    eth: 0.0,
-    btc: 0.0
-  }
+  eur: 0.0,
+  usd: 0.0,
+  eth: 0.0,
+  btc: 0.0
 }
 
 const PricesContext = createContext(null)
@@ -36,26 +31,21 @@ export default function PricesProvider({
   const { appConfig } = useSiteMetadata()
   const tokenId = 'ocean-protocol'
   const currencies = appConfig.currencies.join(',') // comma-separated list
-  const url = `https://api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=${currencies}&include_24hr_change=true`
+  const url = `https://api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=${currencies}`
 
   const [prices, setPrices] = useState(initialData)
 
-  const { data } = useSWR(url, fetchData, {
-    initialData,
-    refreshInterval: 30000, // 30 sec.
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    onSuccess
-  })
-
-  async function onSuccess() {
+  const onSuccess = async (data: { [tokenId]: { [key: string]: number } }) => {
     if (!data) return
-    Logger.log(`Got new prices. ${JSON.stringify(data)}`)
-    setPrices(data)
+    Logger.log(`Got new prices. ${JSON.stringify(data[tokenId])}`)
+    setPrices(data[tokenId])
   }
 
-  useEffect(() => {
-    onSuccess()
-  }, [data])
+  // Fetch new prices periodically with swr
+  useSWR(url, fetchData, {
+    refreshInterval: 30000, // 30 sec.
+    onSuccess
+  })
 
   return (
     <PricesContext.Provider value={{ prices }}>
