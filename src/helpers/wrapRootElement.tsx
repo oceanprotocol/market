@@ -9,6 +9,7 @@ import {
   ConfigHelperNetworkId
 } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import { UserPreferencesProvider } from '../providers/UserPreferences'
+import PricesProvider from '../providers/Prices'
 
 export function getOceanConfig(
   network: ConfigHelperNetworkName | ConfigHelperNetworkId
@@ -34,7 +35,7 @@ export default function wrapRootElement({
     >
       <UserPreferencesProvider>
         <NetworkMonitor />
-        {element}
+        <PricesProvider>{element}</PricesProvider>
       </UserPreferencesProvider>
     </OceanProvider>
   )
