@@ -1,19 +1,17 @@
 import { MetadataMarket } from '../../../@types/MetaData'
 import React, { ReactElement } from 'react'
-import Time from '../../atoms/Time'
 import { Link } from 'gatsby'
 import Markdown from '../../atoms/Markdown'
 import MetaFull from './MetaFull'
 import MetaSecondary from './MetaSecondary'
 import styles from './index.module.css'
 import AssetActions from '../AssetActions'
-import { DDO, DID } from '@oceanprotocol/lib'
+import { DDO } from '@oceanprotocol/lib'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import Pricing from './Pricing'
 import { useOcean, usePricing } from '@oceanprotocol/react'
 import EtherscanLink from '../../atoms/EtherscanLink'
-import MetaItem from './MetaItem'
-import Pin from './Pin'
+import Bookmark from './Bookmark'
 
 export interface AssetContentProps {
   metadata: MetadataMarket
@@ -91,7 +89,7 @@ export default function AssetContent({
             </pre>
           )}
 
-          <Pin did={ddo.id} />
+          <Bookmark did={ddo.id} />
         </div>
       </div>
 

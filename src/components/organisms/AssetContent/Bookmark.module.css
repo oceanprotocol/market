@@ -1,0 +1,21 @@
+.bookmark {
+  position: absolute;
+  top: -5px;
+  right: calc(var(--spacer) / 4);
+  appearance: none;
+  background: none;
+  border: none;
+  box-shadow: none;
+  outline: 0;
+  cursor: pointer;
+}
+
+.bookmark svg {
+  fill: var(--brand-grey-light);
+  height: 32px;
+  width: 32px;
+}
+
+.bookmark.active svg {
+  fill: var(--brand-violet);
+}

@@ -13,11 +13,11 @@ interface UserPreferencesValue {
   debug: boolean
   currency: string
   locale: string
-  pins: string[]
+  bookmarks: string[]
   setDebug: (value: boolean) => void
   setCurrency: (value: string) => void
-  addPin: (did: string) => void
-  removePin: (did: string) => void
+  addBookmark: (did: string) => void
+  removeBookmark: (did: string) => void
 }
 
 const UserPreferencesContext = createContext(null)
@@ -51,12 +51,12 @@ function UserPreferencesProvider({
     localStorage?.currency || 'EUR'
   )
   const [locale, setLocale] = useState<string>()
-  const [pins, setPins] = useState(localStorage?.pins || [])
+  const [bookmarks, setBookmarks] = useState(localStorage?.bookmarks || [])
 
   // Write values to localStorage on change
   useEffect(() => {
-    setLocalStorage({ debug, currency, pins })
-  }, [debug, currency, pins])
+    setLocalStorage({ debug, currency, bookmarks })
+  }, [debug, currency, bookmarks])
 
   // Set ocean.js log levels, default: Error
   useEffect(() => {
@@ -71,14 +71,14 @@ function UserPreferencesProvider({
     setLocale(window.navigator.language)
   }, [])
 
-  function addPin(didToAdd: string): void {
-    const newPinned = pins.concat(didToAdd)
-    setPins(newPinned)
+  function addBookmark(didToAdd: string): void {
+    const newPinned = bookmarks.concat(didToAdd)
+    setBookmarks(newPinned)
   }
 
-  function removePin(didToAdd: string): void {
-    const newPinned = pins.filter((did: string) => did !== didToAdd)
-    setPins(newPinned)
+  function removeBookmark(didToAdd: string): void {
+    const newPinned = bookmarks.filter((did: string) => did !== didToAdd)
+    setBookmarks(newPinned)
   }
 
   return (
@@ -88,11 +88,11 @@ function UserPreferencesProvider({
           debug,
           currency,
           locale,
-          pins,
+          bookmarks,
           setDebug,
           setCurrency,
-          addPin,
-          removePin
+          addBookmark,
+          removeBookmark
         } as UserPreferencesValue
       }
     >

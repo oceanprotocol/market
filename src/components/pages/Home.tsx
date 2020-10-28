@@ -11,7 +11,7 @@ import Container from '../atoms/Container'
 import Loader from '../atoms/Loader'
 import { useOcean } from '@oceanprotocol/react'
 import Button from '../atoms/Button'
-import Pins from '../molecules/Pins'
+import Bookmarks from '../molecules/Bookmarks'
 
 const queryHighest = {
   page: 1,
@@ -86,8 +86,8 @@ export default function HomePage(): ReactElement {
       </Container>
 
       <section className={styles.latest}>
-        <h3>Pinned Data Sets</h3>
-        <Pins />
+        <h3>Bookmarks</h3>
+        <Bookmarks />
       </section>
 
       <section className={styles.latest}>
