@@ -17,12 +17,15 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
   metadata
 }: AssetTeaserProps) => {
   const { name } = metadata.main
+  const { dataTokenInfo } = ddo
   const isCompute = Boolean(ddo.findServiceByType('compute'))
 
   return (
     <article className={styles.teaser}>
       <Link to={`/asset/${ddo.id}`} className={styles.link}>
+        <p className={styles.symbol}>{dataTokenInfo?.symbol}</p>
         <h1 className={styles.title}>{name}</h1>
+
         {isCompute && <div className={styles.accessLabel}>Compute</div>}
 
         <div className={styles.content}>

@@ -29,11 +29,10 @@
 
 .title {
   font-size: var(--font-size-large);
-  margin-bottom: calc(var(--spacer) / 3);
+  margin-bottom: calc(var(--spacer) / 2);
 }
 
 .foot {
-  font-weight: var(--font-weight-bold);
   margin-top: calc(var(--spacer) / 4);
 }
 
@@ -51,4 +50,8 @@
   background: var(--brand-grey-lighter);
   padding: 0.2rem 0.5rem;
   border-bottom-left-radius: var(--border-radius);
+}
+
+.symbol {
+  margin-bottom: 0;
 }
