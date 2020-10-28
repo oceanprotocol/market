@@ -1,0 +1,16 @@
+.title {
+  line-height: var(--line-height);
+  margin: 0;
+  display: inline;
+}
+
+.title a {
+  font-size: var(--font-size-base);
+  color: var(--brand-black);
+}
+
+.empty {
+  font-size: var(--font-size-small);
+  color: var(--color-secondary);
+  font-style: italic;
+}

@@ -6,6 +6,7 @@ import Price from '../atoms/Price'
 import styles from './AssetTeaser.module.css'
 import { DDO } from '@oceanprotocol/lib'
 import removeMarkdown from 'remove-markdown'
+import Tooltip from '../atoms/Tooltip'
 
 declare type AssetTeaserProps = {
   ddo: DDO
@@ -23,7 +24,13 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
   return (
     <article className={styles.teaser}>
       <Link to={`/asset/${ddo.id}`} className={styles.link}>
-        <p className={styles.symbol}>{dataTokenInfo?.symbol}</p>
+        <Tooltip
+          placement="left"
+          content={dataTokenInfo?.name}
+          className={styles.symbol}
+        >
+          {dataTokenInfo?.symbol}
+        </Tooltip>
         <h1 className={styles.title}>{name}</h1>
 
         {isCompute && <div className={styles.accessLabel}>Compute</div>}

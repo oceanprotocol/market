@@ -1,6 +1,5 @@
 import { MetadataMarket } from '../../../@types/MetaData'
 import React, { ReactElement } from 'react'
-import Time from '../../atoms/Time'
 import { Link } from 'gatsby'
 import Markdown from '../../atoms/Markdown'
 import MetaFull from './MetaFull'
@@ -12,7 +11,7 @@ import { useUserPreferences } from '../../../providers/UserPreferences'
 import Pricing from './Pricing'
 import { useOcean, usePricing } from '@oceanprotocol/react'
 import EtherscanLink from '../../atoms/EtherscanLink'
-import MetaItem from './MetaItem'
+import Bookmark from './Bookmark'
 
 export interface AssetContentProps {
   metadata: MetadataMarket
@@ -89,6 +88,8 @@ export default function AssetContent({
               <code>{JSON.stringify(ddo, null, 2)}</code>
             </pre>
           )}
+
+          <Bookmark did={ddo.id} />
         </div>
       </div>
 

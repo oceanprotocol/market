@@ -14,7 +14,8 @@ function Empty(): ReactElement {
 export default function Table({
   data,
   columns,
-  isLoading
+  isLoading,
+  ...props
 }: TableProps): ReactElement {
   return (
     <DataTable
@@ -27,6 +28,7 @@ export default function Table({
       noDataComponent={<Empty />}
       progressPending={isLoading}
       progressComponent={<Loader />}
+      {...props}
     />
   )
 }

@@ -11,6 +11,7 @@ import Container from '../atoms/Container'
 import Loader from '../atoms/Loader'
 import { useOcean } from '@oceanprotocol/react'
 import Button from '../atoms/Button'
+import Bookmarks from '../molecules/Bookmarks'
 
 const queryHighest = {
   page: 1,
@@ -46,6 +47,7 @@ async function getAssets(query: SearchQuery, metadataCacheUri: string) {
 
 export default function HomePage(): ReactElement {
   const { config } = useOcean()
+
   const [queryResultLatest, setQueryResultLatest] = useState<QueryResult>()
   const [queryResultPoolsLatest, setQueryResultPoolsLatest] = useState<
     QueryResult
@@ -82,6 +84,11 @@ export default function HomePage(): ReactElement {
       <Container narrow className={styles.searchWrap}>
         <SearchBar />
       </Container>
+
+      <section className={styles.latest}>
+        <h3>Bookmarks</h3>
+        <Bookmarks />
+      </section>
 
       <section className={styles.latest}>
         <h3>Highest Liquidity Pools</h3>

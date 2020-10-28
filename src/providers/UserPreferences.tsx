@@ -13,8 +13,11 @@ interface UserPreferencesValue {
   debug: boolean
   currency: string
   locale: string
+  bookmarks: string[]
   setDebug: (value: boolean) => void
   setCurrency: (value: string) => void
+  addBookmark: (did: string) => void
+  removeBookmark: (did: string) => void
 }
 
 const UserPreferencesContext = createContext(null)
@@ -48,13 +51,14 @@ function UserPreferencesProvider({
     localStorage?.currency || 'EUR'
   )
   const [locale, setLocale] = useState<string>()
+  const [bookmarks, setBookmarks] = useState(localStorage?.bookmarks || [])
 
   // Write values to localStorage on change
   useEffect(() => {
-    setLocalStorage({ debug, currency })
-  }, [debug, currency])
+    setLocalStorage({ debug, currency, bookmarks })
+  }, [debug, currency, bookmarks])
 
-  // Set ocean-lib-js log levels, default: Error
+  // Set ocean.js log levels, default: Error
   useEffect(() => {
     debug === true
       ? Logger.setLevel(LogLevel.Verbose)
@@ -67,6 +71,16 @@ function UserPreferencesProvider({
     setLocale(window.navigator.language)
   }, [])
 
+  function addBookmark(didToAdd: string): void {
+    const newPinned = bookmarks.concat(didToAdd)
+    setBookmarks(newPinned)
+  }
+
+  function removeBookmark(didToAdd: string): void {
+    const newPinned = bookmarks.filter((did: string) => did !== didToAdd)
+    setBookmarks(newPinned)
+  }
+
   return (
     <UserPreferencesContext.Provider
       value={
@@ -74,8 +88,11 @@ function UserPreferencesProvider({
           debug,
           currency,
           locale,
+          bookmarks,
           setDebug,
-          setCurrency
+          setCurrency,
+          addBookmark,
+          removeBookmark
         } as UserPreferencesValue
       }
     >
