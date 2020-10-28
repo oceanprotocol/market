@@ -81,7 +81,7 @@ export default function Remove({
           : await ocean.pool.removeOceanLiquidity(
               accountId,
               poolAddress,
-              amountDatatoken,
+              amountOcean,
               amountPoolShares
             )
 

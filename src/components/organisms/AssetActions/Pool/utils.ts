@@ -15,9 +15,12 @@ export async function getMaxValuesRemove(
     amountMaxOcean
   )
 
-  const amountMaxPercent = `${Math.floor(
+  let amountMaxPercent = `${Math.floor(
     (Number(amountMaxPoolShares) / Number(poolTokens)) * 100
   )}`
+  if (Number(amountMaxPercent) > 100) {
+    amountMaxPercent = '100'
+  }
 
   const amountOcean = await ocean.pool.getOceanRemovedforPoolShares(
     poolAddress,
