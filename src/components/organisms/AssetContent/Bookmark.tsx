@@ -1,7 +1,7 @@
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import React, { ReactElement } from 'react'
 import styles from './Bookmark.module.css'
-import { ReactComponent as PinIcon } from '../../../images/bookmark.svg'
+import { ReactComponent as BookmarkIcon } from '../../../images/bookmark.svg'
 
 export default function Bookmark({ did }: { did: string }): ReactElement {
   const { bookmarks, addBookmark, removeBookmark } = useUserPreferences()
@@ -15,9 +15,9 @@ export default function Bookmark({ did }: { did: string }): ReactElement {
     <button
       onClick={handleBookmark}
       className={`${styles.bookmark} ${isBookmarked ? styles.active : ''} `}
-      title={isBookmarked ? 'Remove' : 'Pin'}
+      title={isBookmarked ? 'Remove Bookmark' : 'Add Bookmark'}
     >
-      <PinIcon />
+      <BookmarkIcon />
     </button>
   )
 }

@@ -1,6 +1,6 @@
 .bookmark {
   position: absolute;
-  top: -5px;
+  top: -10px;
   right: calc(var(--spacer) / 4);
   appearance: none;
   background: none;
@@ -8,12 +8,19 @@
   box-shadow: none;
   outline: 0;
   cursor: pointer;
+  transition: 0.2s ease-out;
 }
 
 .bookmark svg {
   fill: var(--brand-grey-light);
-  height: 32px;
-  width: 32px;
+  height: 40px;
+  width: 40px;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+}
+
+.bookmark:hover,
+.bookmark:focus {
+  transform: translate3d(0, 6px, 0);
 }
 
 .bookmark.active svg {
