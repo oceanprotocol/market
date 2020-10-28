@@ -6,6 +6,7 @@ import { useOcean } from '@oceanprotocol/react'
 import { Link } from 'gatsby'
 import styles from './Bookmarks.module.css'
 import Price from '../atoms/Price'
+import Tooltip from '../atoms/Tooltip'
 
 async function getAssetsBookmarked(pins: string[], metadataCacheUri: string) {
   try {
@@ -34,6 +35,16 @@ const columns = [
       )
     },
     grow: 2
+  },
+  {
+    name: 'Datatoken Symbol',
+    selector: function getAssetRow(row: DDO) {
+      return (
+        <Tooltip content={row.dataTokenInfo.name}>
+          {row.dataTokenInfo.symbol}
+        </Tooltip>
+      )
+    }
   },
   {
     name: 'Price',
