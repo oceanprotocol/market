@@ -62,10 +62,8 @@ export default function Bookmarks(): ReactElement {
   const [pinned, setPinned] = useState<DDO[]>()
   const [isLoading, setIsLoading] = useState<boolean>()
 
-  const noBookmarks = !bookmarks || !bookmarks.length
-
   useEffect(() => {
-    if (noBookmarks) return
+    if (!bookmarks || !bookmarks.length) return
 
     async function init() {
       setIsLoading(true)
@@ -77,11 +75,15 @@ export default function Bookmarks(): ReactElement {
       setIsLoading(false)
     }
     init()
-  }, [bookmarks, config.metadataCacheUri, noBookmarks])
+  }, [bookmarks, config.metadataCacheUri])
 
-  return noBookmarks ? (
-    <div className={styles.empty}>Your bookmarks will appear here.</div>
-  ) : (
-    <Table columns={columns} data={pinned} isLoading={isLoading} noTableHead />
+  return (
+    <Table
+      columns={columns}
+      data={pinned}
+      isLoading={isLoading}
+      emptyMessage="Your bookmarks will appear here."
+      noTableHead
+    />
   )
 }

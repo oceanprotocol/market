@@ -8,9 +8,3 @@
   font-size: var(--font-size-base);
   color: var(--brand-black);
 }
-
-.empty {
-  font-size: var(--font-size-small);
-  color: var(--color-secondary);
-  font-style: italic;
-}
