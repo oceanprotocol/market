@@ -6,15 +6,18 @@ import React, {
   useState,
   useEffect
 } from 'react'
-import { Logger } from '@oceanprotocol/lib'
+import { DID, Logger } from '@oceanprotocol/lib'
 import { LogLevel } from '@oceanprotocol/lib/dist/node/utils/Logger'
 
 interface UserPreferencesValue {
   debug: boolean
   currency: string
   locale: string
+  pins: DID[]
   setDebug: (value: boolean) => void
   setCurrency: (value: string) => void
+  addPin: (did: DID) => void
+  removePin: (did: DID) => void
 }
 
 const UserPreferencesContext = createContext(null)
@@ -48,6 +51,7 @@ function UserPreferencesProvider({
     localStorage?.currency || 'EUR'
   )
   const [locale, setLocale] = useState<string>()
+  const [pins, setPins] = useState<DID[]>(localStorage?.pins)
 
   // Write values to localStorage on change
   useEffect(() => {
@@ -67,6 +71,16 @@ function UserPreferencesProvider({
     setLocale(window.navigator.language)
   }, [])
 
+  function addPin(didToAdd: DID): void {
+    const newPinned = pins.filter((did: DID) => did !== didToAdd)
+    setPins(newPinned)
+  }
+
+  function removePin(didToAdd: DID): void {
+    const newPinned = pins.concat(didToAdd)
+    setPins(newPinned)
+  }
+
   return (
     <UserPreferencesContext.Provider
       value={
@@ -74,8 +88,11 @@ function UserPreferencesProvider({
           debug,
           currency,
           locale,
+          pins,
           setDebug,
-          setCurrency
+          setCurrency,
+          addPin,
+          removePin
         } as UserPreferencesValue
       }
     >
