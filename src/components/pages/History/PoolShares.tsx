@@ -4,6 +4,13 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import Dotdotdot from 'react-dotdotdot'
 import Table from '../../atoms/Table'
 import { DDO, Logger, MetadataCache } from '@oceanprotocol/lib'
+import Price from '../../atoms/Price'
+import PriceUnit from '../../atoms/Price/PriceUnit'
+
+interface Asset {
+  ddo: DDO
+  shares: string
+}
 
 function AssetTitle({ did }: { did: string }): ReactElement {
   const { title } = useMetadata(did)
@@ -17,16 +24,29 @@ function AssetTitle({ did }: { did: string }): ReactElement {
 const columns = [
   {
     name: 'Data Set',
-    selector: function getAssetRow(row: DDO) {
-      const did = row.id
+    selector: function getAssetRow(row: Asset) {
+      const did = row.ddo.id
       return <AssetTitle did={did} />
+    },
+    grow: 2
+  },
+  {
+    name: 'Pool Shares',
+    selector: function getAssetRow(row: Asset) {
+      return <PriceUnit price={row.shares} symbol="pool shares" small />
+    }
+  },
+  {
+    name: 'Price',
+    selector: function getAssetRow(row: Asset) {
+      return <Price ddo={row.ddo} small conversion />
     }
   }
 ]
 
 export default function PoolShares(): ReactElement {
   const { ocean, accountId, config } = useOcean()
-  const [assets, setAssets] = useState<DDO[]>()
+  const [assets, setAssets] = useState<Asset[]>()
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
@@ -37,11 +57,11 @@ export default function PoolShares(): ReactElement {
       try {
         const pools = await ocean.pool.getPoolSharesByAddress(accountId)
         const metadataCache = new MetadataCache(config.metadataCacheUri, Logger)
-        const result: DDO[] = []
+        const result: Asset[] = []
 
         for (const pool of pools) {
-          const ddo = await metadataCache.retrieveDDO(pool)
-          ddo && result.push(ddo)
+          const ddo = await metadataCache.retrieveDDO(pool.did)
+          ddo && result.push({ ddo, shares: pool.shares })
         }
 
         setAssets(result)
@@ -54,5 +74,7 @@ export default function PoolShares(): ReactElement {
     getAssets()
   }, [ocean, accountId, config.metadataCacheUri])
 
-  return <Table columns={columns} data={assets} isLoading={isLoading} />
+  return (
+    <Table columns={columns} data={assets} isLoading={isLoading} noTableHead />
+  )
 }
