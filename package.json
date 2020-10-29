@@ -75,9 +75,7 @@
     "remove-markdown": "^0.3.0",
     "shortid": "^2.2.16",
     "slugify": "^1.4.5",
-    "styled-components": "^5.2.0",
     "swr": "^0.3.6",
-    "web3modal": "^1.9.1",
     "yup": "^0.29.3"
   },
   "devDependencies": {
