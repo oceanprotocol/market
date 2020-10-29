@@ -17,6 +17,7 @@ import Button from '../../../atoms/Button'
 import { getMaxValuesRemove } from './utils'
 import { graphql, useStaticQuery } from 'gatsby'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
+import debounce from 'lodash.debounce'
 
 const contentQuery = graphql`
   query PoolRemoveQuery {
@@ -130,7 +131,7 @@ export default function Remove({
   useEffect(() => {
     if (!ocean || !poolTokens) return
 
-    async function getValues() {
+    const getValues = debounce(async () => {
       const amountPoolShares =
         (Number(amountPercent) / 100) * Number(poolTokens)
       setAmountPoolShares(`${amountPoolShares}`)
@@ -151,7 +152,7 @@ export default function Remove({
         )
         setAmountOcean(amountOcean)
       }
-    }
+    }, 300)
     getValues()
   }, [amountPercent, isAdvanced, ocean, poolTokens, poolAddress])
 
