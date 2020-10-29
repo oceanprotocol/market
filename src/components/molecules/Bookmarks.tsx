@@ -3,11 +3,10 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import Table from '../atoms/Table'
 import { DDO, Logger, MetadataCache } from '@oceanprotocol/lib'
 import { useOcean } from '@oceanprotocol/react'
-import { Link } from 'gatsby'
-import styles from './Bookmarks.module.css'
 import Price from '../atoms/Price'
 import Tooltip from '../atoms/Tooltip'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
+import AssetTitle from './AssetTitle'
 
 async function getAssetsBookmarked(
   bookmarks: string[],
@@ -28,12 +27,7 @@ const columns = [
   {
     name: 'Data Set',
     selector: function getAssetRow(row: DDO) {
-      const { attributes } = row.findServiceByType('metadata')
-      return (
-        <h3 className={styles.title}>
-          <Link to={`/asset/${row.id}`}>{attributes.main.name}</Link>
-        </h3>
-      )
+      return <AssetTitle did={row.id} />
     },
     grow: 2
   },

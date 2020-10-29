@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import SearchBar from '../molecules/SearchBar'
 import styles from './Home.module.css'
 import { MetadataCache, Logger } from '@oceanprotocol/lib'
-import AssetList from '../organisms/AssetList'
+import AssetQueryList from '../organisms/AssetQueryList'
 import {
   QueryResult,
   SearchQuery
@@ -95,7 +95,9 @@ export default function HomePage(): ReactElement {
         {loading ? (
           <Loader />
         ) : (
-          queryResultHighest && <AssetList queryResult={queryResultHighest} />
+          queryResultHighest && (
+            <AssetQueryList queryResult={queryResultHighest} />
+          )
         )}
       </section>
 
@@ -105,7 +107,7 @@ export default function HomePage(): ReactElement {
           <Loader />
         ) : (
           queryResultPoolsLatest && (
-            <AssetList queryResult={queryResultPoolsLatest} />
+            <AssetQueryList queryResult={queryResultPoolsLatest} />
           )
         )}
       </section>
@@ -115,7 +117,9 @@ export default function HomePage(): ReactElement {
         {loading ? (
           <Loader />
         ) : (
-          queryResultLatest && <AssetList queryResult={queryResultLatest} />
+          queryResultLatest && (
+            <AssetQueryList queryResult={queryResultLatest} />
+          )
         )}
         {queryResultLatest?.results.length === 9 && (
           <Button style="text" to="/search">

@@ -1,0 +1,13 @@
+.totalLiquidity {
+  margin-bottom: 0;
+  font-weight: var(--font-weight-base) !important;
+  font-size: var(--font-size-small);
+  padding-left: var(--font-size-base);
+  padding-top: calc(var(--spacer) / 10);
+}
+
+.totalLiquidity strong {
+  font-size: var(--font-size-base);
+  color: var(--brand-grey-dark);
+  line-height: 1;
+}

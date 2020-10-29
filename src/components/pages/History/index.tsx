@@ -1,6 +1,7 @@
 import React, { ReactElement, ReactNode } from 'react'
 import ComputeJobs from './ComputeJobs'
 import styles from './index.module.css'
+import PoolShares from './PoolShares'
 import PoolTransactions from './PoolTransactions'
 import PublishedList from './PublishedList'
 
@@ -8,6 +9,10 @@ const sections = [
   {
     title: 'Published',
     component: <PublishedList />
+  },
+  {
+    title: 'Pool Shares',
+    component: <PoolShares />
   },
   {
     title: 'Pool Transactions',

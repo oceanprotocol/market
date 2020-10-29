@@ -4,15 +4,15 @@ import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/Metadata
 import { useLocation, useNavigate } from '@reach/router'
 import Pagination from '../molecules/Pagination'
 import { updateQueryStringParameter } from '../../utils'
-import styles from './AssetList.module.css'
+import styles from './AssetQueryList.module.css'
 import { MetadataMarket } from '../../@types/MetaData'
 import { DDO } from '@oceanprotocol/lib'
 
-declare type AssetListProps = {
+declare type AssetQueryListProps = {
   queryResult: QueryResult
 }
 
-const AssetList: React.FC<AssetListProps> = ({ queryResult }) => {
+const AssetQueryList: React.FC<AssetQueryListProps> = ({ queryResult }) => {
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -74,4 +74,4 @@ const AssetList: React.FC<AssetListProps> = ({ queryResult }) => {
   )
 }
 
-export default AssetList
+export default AssetQueryList
