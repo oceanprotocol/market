@@ -43,7 +43,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const content = data.content.edges[0].node.childContentJson.pool
 
   const { ocean, accountId, networkId } = useOcean()
-  const { price } = useMetadata(ddo)
+  const { price, refreshPrice } = useMetadata(ddo)
   const { dtSymbol } = usePricing(ddo)
 
   const [poolTokens, setPoolTokens] = useState<string>()
@@ -54,6 +54,8 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const [showAdd, setShowAdd] = useState(false)
   const [showRemove, setShowRemove] = useState(false)
 
+  // the purpose of the value is just to trigger the effect
+  const [refreshPool, setRefreshPool] = useState(false)
   // TODO: put all these variables behind some useEffect
   // to prevent unneccessary updating on every render
   const hasAddedLiquidity =
@@ -115,13 +117,18 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
       }
     }
     init()
-  }, [ocean, accountId, price, ddo.dataToken])
+  }, [ocean, accountId, price, ddo.dataToken, refreshPool])
 
+  const refreshInfo = async () => {
+    setRefreshPool(!refreshPool)
+    await refreshPrice()
+  }
   return (
     <>
       {showAdd ? (
         <Add
           setShowAdd={setShowAdd}
+          refreshInfo={refreshInfo}
           poolAddress={price.address}
           totalPoolTokens={totalPoolTokens}
           totalBalance={{ ocean: price.ocean, datatoken: price.datatoken }}
@@ -132,6 +139,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
       ) : showRemove ? (
         <Remove
           setShowRemove={setShowRemove}
+          refreshInfo={refreshInfo}
           poolAddress={price.address}
           poolTokens={poolTokens}
           dtSymbol={dtSymbol}
