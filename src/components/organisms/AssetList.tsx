@@ -7,14 +7,12 @@ import { updateQueryStringParameter } from '../../utils'
 import styles from './AssetList.module.css'
 import { MetadataMarket } from '../../@types/MetaData'
 import { DDO } from '@oceanprotocol/lib'
-import { useOcean } from '@oceanprotocol/react'
 
 declare type AssetListProps = {
   queryResult: QueryResult
 }
 
 const AssetList: React.FC<AssetListProps> = ({ queryResult }) => {
-  const { config } = useOcean()
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -56,9 +54,7 @@ const AssetList: React.FC<AssetListProps> = ({ queryResult }) => {
             )
           })
         ) : (
-          <div className={styles.empty}>
-            No results found in {config.metadataCacheUri}
-          </div>
+          <div className={styles.empty}>No results found.</div>
         )}
       </div>
 
