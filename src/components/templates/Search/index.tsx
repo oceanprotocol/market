@@ -1,7 +1,7 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import SearchBar from '../../molecules/SearchBar'
-import AssetList from '../../organisms/AssetList'
+import AssetQueryList from '../../organisms/AssetQueryList'
 import styles from './index.module.css'
 import queryString from 'query-string'
 import { getResults } from './utils'
@@ -36,7 +36,7 @@ export default function SearchPage({
       </div>
 
       <div className={styles.results}>
-        {loading ? <Loader /> : <AssetList queryResult={queryResult} />}
+        {loading ? <Loader /> : <AssetQueryList queryResult={queryResult} />}
       </div>
     </section>
   )

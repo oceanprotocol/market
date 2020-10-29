@@ -1,6 +1,6 @@
 import React from 'react'
 import { DDO } from '@oceanprotocol/lib'
-import AssetList from './AssetList'
+import AssetQueryList from './AssetQueryList'
 import asset from '../../../tests/unit/__fixtures__/ddo'
 
 const queryResult = {
@@ -16,4 +16,4 @@ export default {
   title: 'Organisms/Asset List'
 }
 
-export const Default = () => <AssetList queryResult={queryResult} />
+export const Default = () => <AssetQueryList queryResult={queryResult} />
