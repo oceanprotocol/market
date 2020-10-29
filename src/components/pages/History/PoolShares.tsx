@@ -1,25 +1,15 @@
 import { useMetadata, useOcean } from '@oceanprotocol/react'
-import { Link } from 'gatsby'
 import React, { ReactElement, useEffect, useState } from 'react'
-import Dotdotdot from 'react-dotdotdot'
 import Table from '../../atoms/Table'
 import { DDO, Logger, MetadataCache } from '@oceanprotocol/lib'
 import PriceUnit from '../../atoms/Price/PriceUnit'
 import Conversion from '../../atoms/Price/Conversion'
 import styles from './PoolShares.module.css'
+import AssetTitle from '../../molecules/AssetTitle'
 
 interface Asset {
   ddo: DDO
   shares: string
-}
-
-function AssetTitle({ did }: { did: string }): ReactElement {
-  const { title } = useMetadata(did)
-  return (
-    <Dotdotdot clamp={2}>
-      <Link to={`/asset/${did}`}>{title || did}</Link>
-    </Dotdotdot>
-  )
 }
 
 function TotalLiquidity({ ddo }: { ddo: DDO }): ReactElement {

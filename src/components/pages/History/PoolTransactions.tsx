@@ -1,20 +1,10 @@
 import { PoolTransaction } from '@oceanprotocol/lib/dist/node/balancer/OceanPool'
-import { useMetadata, useOcean } from '@oceanprotocol/react'
-import { Link } from 'gatsby'
+import { useOcean } from '@oceanprotocol/react'
 import React, { ReactElement, useEffect, useState } from 'react'
 import EtherscanLink from '../../atoms/EtherscanLink'
 import Time from '../../atoms/Time'
-import Dotdotdot from 'react-dotdotdot'
 import Table from '../../atoms/Table'
-
-function AssetTitle({ did }: { did: string }): ReactElement {
-  const { title } = useMetadata(did)
-  return (
-    <Dotdotdot clamp={2}>
-      <Link to={`/asset/${did}`}>{title || did}</Link>
-    </Dotdotdot>
-  )
-}
+import AssetTitle from '../../molecules/AssetTitle'
 
 function Title({ row }: { row: PoolTransaction }) {
   const { ocean, networkId } = useOcean()

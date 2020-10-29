@@ -8,3 +8,8 @@
   font-size: var(--font-size-base);
   color: var(--brand-black);
 }
+
+.title a:hover,
+.title a:focus {
+  color: var(--brand-pink);
+}
