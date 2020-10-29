@@ -45,11 +45,13 @@ const contentQuery = graphql`
 
 export default function Remove({
   setShowRemove,
+  refreshInfo,
   poolAddress,
   poolTokens,
   dtSymbol
 }: {
   setShowRemove: (show: boolean) => void
+  refreshInfo: () => void
   poolAddress: string
   poolTokens: string
   dtSymbol: string
@@ -86,6 +88,7 @@ export default function Remove({
             )
 
       setTxId(result?.transactionHash)
+      refreshInfo()
     } catch (error) {
       Logger.error(error.message)
       toast.error(error.message)

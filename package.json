@@ -23,7 +23,7 @@
     "@loadable/component": "5.13.1",
     "@oceanprotocol/art": "^3.0.0",
     "@oceanprotocol/lib": "^0.9.6",
-    "@oceanprotocol/react": "^0.3.13",
+    "@oceanprotocol/react": "^0.3.14",
     "@oceanprotocol/typographies": "^0.1.0",
     "@sindresorhus/slugify": "^1.0.0",
     "@tippyjs/react": "^4.2.0",
@@ -75,7 +75,9 @@
     "remove-markdown": "^0.3.0",
     "shortid": "^2.2.16",
     "slugify": "^1.4.5",
+    "styled-components": "^5.2.0",
     "swr": "^0.3.6",
+    "web3modal": "^1.9.1",
     "yup": "^0.29.3"
   },
   "devDependencies": {

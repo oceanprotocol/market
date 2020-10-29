@@ -43,6 +43,7 @@ const initialValues: FormAddLiquidity = {
 
 export default function Add({
   setShowAdd,
+  refreshInfo,
   poolAddress,
   totalPoolTokens,
   totalBalance,
@@ -51,6 +52,7 @@ export default function Add({
   dtAddress
 }: {
   setShowAdd: (show: boolean) => void
+  refreshInfo: () => void
   poolAddress: string
   totalPoolTokens: string
   totalBalance: Balance
@@ -127,6 +129,7 @@ export default function Add({
 
       setTxId(result?.transactionHash)
       resetForm()
+      refreshInfo()
     } catch (error) {
       console.error(error.message)
       toast.error(error.message)
