@@ -45,7 +45,7 @@ const columns = [
   {
     name: 'Price',
     selector: function getAssetRow(row: DDO) {
-      return <Price ddo={row} small conversion />
+      return <Price ddo={row} small />
     },
     right: true
   }

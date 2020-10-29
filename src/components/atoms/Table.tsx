@@ -27,6 +27,7 @@ export default function Table({
       noHeader
       pagination={data?.length >= 9}
       paginationPerPage={10}
+      paginationComponentOptions={{ noRowsPerPage: true }}
       noDataComponent={<Empty message={emptyMessage} />}
       progressPending={isLoading}
       progressComponent={<Loader />}

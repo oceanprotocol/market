@@ -6,6 +6,27 @@
   font-weight: var(--font-weight-bold);
 }
 
+.table + div [class*='rdt_Pagination'] {
+  font-size: var(--font-size-small);
+  color: var(--brand-grey-light);
+}
+
+.table + div [class*='rdt_Pagination'] svg {
+  fill: var(--brand-grey-light);
+}
+
+.table + div [class*='rdt_Pagination'] [disabled] svg {
+  fill: var(--brand-grey-lighter);
+}
+
+.table + div [class*='rdt_Pagination'] button:hover:not(:disabled) {
+  background: none;
+}
+
+.table + div [class*='rdt_Pagination'] button:hover:not(:disabled) svg {
+  fill: var(--brand-pink);
+}
+
 .empty {
   width: 100%;
   text-align: left;
