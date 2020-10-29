@@ -8,12 +8,17 @@ import React, {
 } from 'react'
 import { Logger } from '@oceanprotocol/lib'
 import { LogLevel } from '@oceanprotocol/lib/dist/node/utils/Logger'
+import { useOcean } from '@oceanprotocol/react'
+import { getNetworkName } from '../utils/wallet'
+import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 
 interface UserPreferencesValue {
   debug: boolean
   currency: string
   locale: string
-  bookmarks: string[]
+  bookmarks: {
+    [network: string]: string[]
+  }
   setDebug: (value: boolean) => void
   setCurrency: (value: string) => void
   addBookmark: (did: string) => void
@@ -43,6 +48,8 @@ function UserPreferencesProvider({
 }: {
   children: ReactNode
 }): ReactElement {
+  const { config } = useOcean()
+  const networkName = (config as ConfigHelperConfig).network
   const localStorage = getLocalStorage()
 
   // Set default values from localStorage
@@ -51,7 +58,7 @@ function UserPreferencesProvider({
     localStorage?.currency || 'EUR'
   )
   const [locale, setLocale] = useState<string>()
-  const [bookmarks, setBookmarks] = useState(localStorage?.bookmarks || [])
+  const [bookmarks, setBookmarks] = useState(localStorage?.bookmarks || {})
 
   // Write values to localStorage on change
   useEffect(() => {
@@ -72,12 +79,20 @@ function UserPreferencesProvider({
   }, [])
 
   function addBookmark(didToAdd: string): void {
-    const newPinned = [didToAdd].concat(bookmarks)
+    const newPinned = {
+      ...bookmarks,
+      [networkName]: [didToAdd].concat(bookmarks[networkName])
+    }
     setBookmarks(newPinned)
   }
 
   function removeBookmark(didToAdd: string): void {
-    const newPinned = bookmarks.filter((did: string) => did !== didToAdd)
+    const newPinned = {
+      ...bookmarks,
+      [networkName]: bookmarks[networkName].filter(
+        (did: string) => did !== didToAdd
+      )
+    }
     setBookmarks(newPinned)
   }
 

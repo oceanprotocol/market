@@ -7,20 +7,21 @@ import { Link } from 'gatsby'
 import styles from './Bookmarks.module.css'
 import Price from '../atoms/Price'
 import Tooltip from '../atoms/Tooltip'
+import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 
-async function getAssetsBookmarked(pins: string[], metadataCacheUri: string) {
-  try {
-    const metadataCache = new MetadataCache(metadataCacheUri, Logger)
-    const result: DDO[] = []
+async function getAssetsBookmarked(
+  bookmarks: string[],
+  metadataCacheUri: string
+) {
+  const metadataCache = new MetadataCache(metadataCacheUri, Logger)
+  const result: DDO[] = []
 
-    for (const pin of pins) {
-      result.push(await metadataCache.retrieveDDO(pin))
-    }
-
-    return result
-  } catch (error) {
-    Logger.error(error.message)
+  for (const bookmark of bookmarks) {
+    const ddo = bookmark && (await metadataCache.retrieveDDO(bookmark))
+    ddo && result.push(ddo)
   }
+
+  return result
 }
 
 const columns = [
@@ -63,19 +64,32 @@ export default function Bookmarks(): ReactElement {
   const [isLoading, setIsLoading] = useState<boolean>()
 
   useEffect(() => {
-    if (!bookmarks || !bookmarks.length) return
+    if (!config || bookmarks === {}) return
+
+    const networkName = (config as ConfigHelperConfig).network
 
     async function init() {
+      if (!bookmarks[networkName]?.length) {
+        setPinned([])
+        return
+      }
+
       setIsLoading(true)
-      const resultPinned = await getAssetsBookmarked(
-        bookmarks,
-        config.metadataCacheUri
-      )
-      setPinned(resultPinned)
+
+      try {
+        const resultPinned = await getAssetsBookmarked(
+          bookmarks[networkName],
+          config.metadataCacheUri
+        )
+        setPinned(resultPinned)
+      } catch (error) {
+        Logger.error(error.message)
+      }
+
       setIsLoading(false)
     }
     init()
-  }, [bookmarks, config.metadataCacheUri])
+  }, [bookmarks, config.metadataCacheUri, config])
 
   return (
     <Table
