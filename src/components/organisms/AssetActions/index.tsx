@@ -10,10 +10,8 @@ import Pool from './Pool'
 
 export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
   const { ocean, balance, accountId } = useOcean()
-  // const { price } = useMetadata(ddo)
-  // TODO: quick hack for
-  // https://github.com/oceanprotocol/market/issues/145
-  const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>(true)
+  const { price } = useMetadata(ddo)
+  const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
   const [dtBalance, setDtBalance] = useState<string>()
 
   const isCompute = Boolean(ddo.findServiceByType('compute'))
@@ -37,22 +35,19 @@ export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
     init()
   }, [ocean, accountId, ddo.dataToken])
 
-  // TODO: quick hack for
-  // https://github.com/oceanprotocol/market/issues/145
-
   // Check user balance against price
-  // useEffect(() => {
-  //   if (!price || !price.value || !balance || !balance.ocean || !dtBalance)
-  //     return
+  useEffect(() => {
+    if (!price || !price.value || !balance || !balance.ocean || !dtBalance)
+      return
 
-  //   setIsBalanceSufficient(
-  //     compareAsBN(balance.ocean, `${price.value}`) || Number(dtBalance) >= 1
-  //   )
+    setIsBalanceSufficient(
+      compareAsBN(balance.ocean, `${price.value}`) || Number(dtBalance) >= 1
+    )
 
-  //   return () => {
-  //     setIsBalanceSufficient(false)
-  //   }
-  // }, [balance, price, dtBalance])
+    return () => {
+      setIsBalanceSufficient(false)
+    }
+  }, [balance, price, dtBalance])
 
   const UseContent = isCompute ? (
     <Compute
