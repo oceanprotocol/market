@@ -28,7 +28,7 @@ const columns = [
     name: 'Data Set',
     selector: function getAssetRow(row: DDO) {
       const { attributes } = row.findServiceByType('metadata')
-      return <AssetTitle title={attributes.main.name} />
+      return <AssetTitle title={attributes.main.name} did={row.id} />
     },
     grow: 2
   },
