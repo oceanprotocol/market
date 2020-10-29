@@ -112,13 +112,6 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         // swapFee is tricky: to get 0.1% you need to convert from 0.001
         const swapFee = await ocean.pool.getSwapFee(price.address)
         setSwapFee(`${Number(swapFee) * 100}`)
-
-        console.log(
-          'const pol inf',
-          totalUserLiquidityInOcean,
-          totalLiquidityInOcean,
-          poolShare
-        )
       } catch (error) {
         Logger.error(error.message)
       }
@@ -129,7 +122,6 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const refreshInfo = async () => {
     setRefreshPool(!refreshPool)
     await refreshPrice()
-    console.log('refresh')
   }
   return (
     <>
