@@ -96,6 +96,13 @@ function UserPreferencesProvider({
     setBookmarks(newPinned)
   }
 
+  // Bookmarks old data structure migration
+  useEffect(() => {
+    if (!bookmarks.length) return
+    const newPinned = { mainnet: bookmarks as any }
+    setBookmarks(newPinned)
+  }, [bookmarks])
+
   return (
     <UserPreferencesContext.Provider
       value={
