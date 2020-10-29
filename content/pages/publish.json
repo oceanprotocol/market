@@ -43,8 +43,9 @@
       },
       {
         "name": "dataTokenOptions",
-        "label": "Datatoken",
+        "label": "Datatoken Name & Symbol",
         "type": "datatoken",
+        "help": "The datatoken for this data set will be created with this name & symbol.",
         "required": true
       },
       {
