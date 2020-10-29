@@ -4,8 +4,9 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import Dotdotdot from 'react-dotdotdot'
 import Table from '../../atoms/Table'
 import { DDO, Logger, MetadataCache } from '@oceanprotocol/lib'
-import Price from '../../atoms/Price'
 import PriceUnit from '../../atoms/Price/PriceUnit'
+import Conversion from '../../atoms/Price/Conversion'
+import styles from './PoolShares.module.css'
 
 interface Asset {
   ddo: DDO
@@ -21,6 +22,18 @@ function AssetTitle({ did }: { did: string }): ReactElement {
   )
 }
 
+function TotalLiquidity({ ddo }: { ddo: DDO }): ReactElement {
+  const { price } = useMetadata(ddo)
+  const totalLiquidityInOcean = price?.ocean + price?.datatoken * price?.value
+
+  return (
+    <Conversion
+      price={`${totalLiquidityInOcean}`}
+      className={styles.totalLiquidity}
+    />
+  )
+}
+
 const columns = [
   {
     name: 'Data Set',
@@ -31,15 +44,19 @@ const columns = [
     grow: 2
   },
   {
-    name: 'Pool Shares',
+    name: 'Datatoken',
+    selector: 'ddo.dataTokenInfo.symbol'
+  },
+  {
+    name: 'Your Pool Shares',
     selector: function getAssetRow(row: Asset) {
       return <PriceUnit price={row.shares} symbol="pool shares" small />
     }
   },
   {
-    name: 'Price',
+    name: 'Total Pool Liquidity',
     selector: function getAssetRow(row: Asset) {
-      return <Price ddo={row.ddo} small conversion />
+      return <TotalLiquidity ddo={row.ddo} />
     }
   }
 ]
@@ -74,7 +91,5 @@ export default function PoolShares(): ReactElement {
     getAssets()
   }, [ocean, accountId, config.metadataCacheUri])
 
-  return (
-    <Table columns={columns} data={assets} isLoading={isLoading} noTableHead />
-  )
+  return <Table columns={columns} data={assets} isLoading={isLoading} />
 }
