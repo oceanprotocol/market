@@ -4,6 +4,7 @@ import classNames from 'classnames/bind'
 import Conversion from './Conversion'
 import styles from './PriceUnit.module.css'
 import { useUserPreferences } from '../../../providers/UserPreferences'
+import Badge from '../Badge'
 
 const cx = classNames.bind(styles)
 
@@ -12,9 +13,11 @@ export default function PriceUnit({
   className,
   small,
   conversion,
-  symbol
+  symbol,
+  type
 }: {
   price: string
+  type?: string
   className?: string
   small?: boolean
   conversion?: boolean
@@ -30,15 +33,21 @@ export default function PriceUnit({
 
   return (
     <div className={styleClasses}>
-      {Number.isNaN(Number(price))
-        ? '-'
-        : formatCurrency(Number(price), '', locale, false, {
-            // Not exactly clear what `significant figures` are for this library,
-            // but setting this seems to give us the formatting we want.
-            // See https://github.com/oceanprotocol/market/issues/70
-            significantFigures: 4
-          })}{' '}
-      <span>{symbol || 'OCEAN'}</span>
+      <div>
+        {Number.isNaN(Number(price))
+          ? '-'
+          : formatCurrency(Number(price), '', locale, false, {
+              // Not exactly clear what `significant figures` are for this library,
+              // but setting this seems to give us the formatting we want.
+              // See https://github.com/oceanprotocol/market/issues/70
+              significantFigures: 4
+            })}{' '}
+        <span>{symbol || 'OCEAN'}</span>
+        {type && type === 'pool' && (
+          <Badge label="pool" className={styles.badge} />
+        )}
+      </div>
+
       {conversion && <Conversion price={price} />}
     </div>
   )
