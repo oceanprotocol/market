@@ -1,5 +1,7 @@
 .form {
   margin-bottom: var(--spacer);
+  width: 100%;
+  max-width: 30rem;
 }
 
 .form > div > div {

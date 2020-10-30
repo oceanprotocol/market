@@ -82,7 +82,7 @@ export default function HomePage(): ReactElement {
   return (
     <>
       <Container narrow className={styles.searchWrap}>
-        <SearchBar />
+        <SearchBar size="large" />
       </Container>
 
       <section className={styles.latest}>
