@@ -3,7 +3,7 @@
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-small);
   text-transform: uppercase;
-  border: 1px solid var(--brand-grey-lighter);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   padding: calc(var(--spacer) / 4);
   white-space: nowrap;
@@ -22,11 +22,10 @@
 .button:focus {
   transform: none;
   outline: 0;
-  border-color: var(--brand-grey-light);
 }
 
 .button.initial {
-  color: var(--brand-pink);
+  color: var(--color-primary);
 }
 
 .blockies {
@@ -41,14 +40,14 @@
 
 .address {
   text-transform: none;
-  border-right: 1px solid var(--brand-grey-lighter);
+  border-right: 1px solid var(--border-color);
   padding-right: calc(var(--spacer) / 4);
 }
 
 .button svg {
   width: 1em;
   height: 1em;
-  fill: var(--brand-grey-lighter);
+  fill: var(--border-color);
   display: inline-block;
   vertical-align: middle;
   margin-left: calc(var(--spacer) / 4);

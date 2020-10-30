@@ -39,7 +39,7 @@ div.web3modal-provider-wrapper:hover div.web3modal-provider-icon {
 div.web3modal-provider-name {
   font-size: var(--font-size-large);
   font-weight: var(--font-weight-bold);
-  font-family: var(--font-family-title);
+  font-family: var(--font-family-heading);
 }
 
 div.web3modal-provider-description {

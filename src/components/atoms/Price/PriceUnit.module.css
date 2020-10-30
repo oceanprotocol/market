@@ -2,7 +2,7 @@
   display: inline-block;
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-large);
-  color: var(--brand-grey-dark);
+  color: var(--color-text-heading);
   line-height: 1.2;
 }
 
