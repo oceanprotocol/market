@@ -1,33 +1,45 @@
 import React, { ReactElement, FormEvent } from 'react'
+import classNames from 'classnames/bind'
 import styles from './Alert.module.css'
 import Button from './Button'
 import Markdown from './Markdown'
+
+const cx = classNames.bind(styles)
 
 export default function Alert({
   title,
   text,
   state,
   action,
-  onDismiss
+  onDismiss,
+  className
 }: {
   title?: string
   text: string
   state: 'error' | 'warning' | 'info' | 'success'
   action?: {
     name: string
+    style?: 'text' | 'primary' | 'ghost'
     handleAction: (e: FormEvent<HTMLButtonElement>) => void
   }
   onDismiss?: () => void
+  className?: string
 }): ReactElement {
+  const styleClasses = cx({
+    alert: true,
+    [state]: state,
+    [className]: className
+  })
+
   return (
-    <div className={`${styles.alert} ${styles[state]}`}>
+    <div className={styleClasses}>
       {title && <h3 className={styles.title}>{title}</h3>}
       <Markdown className={styles.text} text={text} />
       {action && (
         <Button
           className={styles.action}
           size="small"
-          style="primary"
+          style={action.style || 'primary'}
           onClick={action.handleAction}
         >
           {action.name}

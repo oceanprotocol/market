@@ -9,9 +9,8 @@ import * as Yup from 'yup'
 import { Formik } from 'formik'
 import FormAdd from './FormAdd'
 import styles from './index.module.css'
-import Warning from './Warning'
 import Token from '../Token'
-import PriceUnit from '../../../../atoms/Price/PriceUnit'
+import Alert from '../../../../atoms/Alert'
 
 const contentQuery = graphql`
   query PoolAddQuery {
@@ -171,7 +170,17 @@ export default function Add({
                   setNewPoolShare={setNewPoolShare}
                 />
               ) : (
-                <Warning />
+                <Alert
+                  className={styles.warning}
+                  text="Warning"
+                  state="error"
+                  action={{
+                    name: 'I understand',
+                    style: 'text',
+                    handleAction: () => setIsWarningAccepted(true)
+                  }}
+                  onDismiss={() => setIsWarningAccepted(true)}
+                />
               )}
             </div>
 
