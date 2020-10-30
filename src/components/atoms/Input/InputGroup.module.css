@@ -24,6 +24,10 @@
     display: flex;
   }
 
+  .inputGroup > div {
+    flex: 1;
+  }
+
   .inputGroup input {
     border-bottom-left-radius: var(--border-radius);
     border-top-right-radius: 0;
@@ -37,7 +41,7 @@
     margin-top: 0;
     margin-left: -1px;
     width: fit-content;
-    min-width: 20%;
+    white-space: nowrap;
   }
 }
 

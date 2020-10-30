@@ -240,7 +240,8 @@ input[type='range']::-moz-range-track {
 
 /* Size modifiers */
 
-.small {
+.small,
+.select.small {
   font-size: var(--font-size-small);
   height: 34px;
   padding: calc(var(--spacer) / 4);
@@ -256,9 +257,32 @@ input[type='range']::-moz-range-track {
   font-size: var(--font-size-mini);
 }
 
-.selectSmall {
-  composes: small;
-  height: 34px;
+.select.small {
+  padding-right: 2rem;
+
+  /* custom arrow */
+  background-position: calc(100% - 14px) 1rem, calc(100% - 9px) 1rem, 100% 0;
+  background-size: 5px 5px, 5px 5px, 2rem 3rem;
+}
+
+.large,
+.select.large {
+  font-size: var(--font-size-large);
+  height: 62px;
+  padding: calc(var(--spacer) / 1.5);
+}
+
+.large::placeholder {
+  font-size: var(--font-size-large);
+}
+
+.prefix.large,
+.postfix.large {
+  height: 62px;
+  font-size: var(--font-size-base);
+}
+
+.select.large {
   padding-right: 2rem;
 
   /* custom arrow */

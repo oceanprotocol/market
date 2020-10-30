@@ -5,16 +5,19 @@ import { InputProps } from '.'
 import FilesInput from '../../molecules/FormFields/FilesInput'
 import Terms from '../../molecules/FormFields/Terms'
 import Datatoken from '../../molecules/FormFields/Datatoken'
+import classNames from 'classnames/bind'
+
+const cx = classNames.bind(styles)
 
 const DefaultInput = ({
-  small,
+  size,
   prefix,
   postfix,
   additionalComponent,
   ...props
 }: InputProps) => (
   <input
-    className={`${styles.input} ${small ? styles.small : null}`}
+    className={cx({ input: true, [size]: size })}
     id={props.name}
     {...props}
   />
@@ -26,7 +29,7 @@ export default function InputElement({
   name,
   prefix,
   postfix,
-  small,
+  size,
   field,
   label,
   help,
@@ -34,14 +37,12 @@ export default function InputElement({
   additionalComponent,
   ...props
 }: InputProps): ReactElement {
+  const styleClasses = cx({ select: true, [size]: size })
+
   switch (type) {
     case 'select':
       return (
-        <select
-          id={name}
-          className={`${styles.select} ${small && styles.selectSmall}`}
-          {...props}
-        >
+        <select id={name} className={styleClasses} {...props}>
           {field !== undefined && field.value === '' && (
             <option value="">---</option>
           )}
@@ -95,27 +96,23 @@ export default function InputElement({
       return prefix || postfix ? (
         <div className={`${prefix ? styles.prefixGroup : styles.postfixGroup}`}>
           {prefix && (
-            <div className={`${styles.prefix} ${small ? styles.small : ''}`}>
-              {prefix}
-            </div>
+            <div className={cx({ prefix: true, [size]: size })}>{prefix}</div>
           )}
           <DefaultInput
             name={name}
             type={type || 'text'}
-            small={small}
+            size={size}
             {...props}
           />
           {postfix && (
-            <div className={`${styles.postfix} ${small ? styles.small : ''}`}>
-              {postfix}
-            </div>
+            <div className={cx({ postfix: true, [size]: size })}>{postfix}</div>
           )}
         </div>
       ) : (
         <DefaultInput
           name={name}
           type={type || 'text'}
-          small={small}
+          size={size}
           {...props}
         />
       )
