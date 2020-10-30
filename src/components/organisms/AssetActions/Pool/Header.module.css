@@ -3,7 +3,7 @@
   justify-content: center;
   margin-bottom: var(--spacer);
   padding-bottom: calc(var(--spacer) / 2);
-  border-bottom: 1px solid var(--brand-grey-lighter);
+  border-bottom: 1px solid var(--border-color);
   margin-top: -1rem;
   margin-left: -2rem;
   margin-right: -2rem;

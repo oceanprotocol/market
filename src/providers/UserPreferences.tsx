@@ -9,7 +9,6 @@ import React, {
 import { Logger } from '@oceanprotocol/lib'
 import { LogLevel } from '@oceanprotocol/lib/dist/node/utils/Logger'
 import { useOcean } from '@oceanprotocol/react'
-import { getNetworkName } from '../utils/wallet'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 
 interface UserPreferencesValue {

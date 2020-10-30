@@ -16,7 +16,7 @@
 .preferences svg:last-child {
   width: 1em;
   height: 1em;
-  fill: var(--brand-grey-lighter);
+  fill: var(--border-color);
   margin-left: calc(var(--spacer) / 4);
   transition: transform 0.2s ease-out;
 }
@@ -32,20 +32,26 @@
 .preferences:focus .icon,
 .preferences:active .icon,
 .preferences[aria-expanded='true'] .icon {
-  fill: var(--brand-grey);
+  fill: var(--font-color-text);
 }
 
 .preferencesDetails {
   padding: calc(var(--spacer) / 2);
 }
 
-.preferencesDetails li > div {
-  margin-bottom: 0;
+.preferencesDetails li > div,
+.preferencesDetails li p {
+  margin: 0;
+}
+
+.preferencesDetails li p {
+  margin-top: calc(var(--spacer) / 8);
 }
 
 .preferencesDetails li {
-  border-bottom: 1px solid var(--brand-grey-lighter);
-  margin-bottom: calc(var(--spacer) / 2);
+  padding-top: calc(var(--spacer) / 2);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: calc(var(--spacer) / 2);
 }
 
 .preferencesDetails li:last-child,

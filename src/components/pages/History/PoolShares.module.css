@@ -8,6 +8,6 @@
 
 .totalLiquidity strong {
   font-size: var(--font-size-base);
-  color: var(--brand-grey-dark);
+  color: var(--font-color-text);
   line-height: 1;
 }

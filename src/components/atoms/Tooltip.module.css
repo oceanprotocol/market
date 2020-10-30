@@ -16,7 +16,7 @@
   display: inline-block;
   margin-bottom: -0.1rem;
   margin-left: calc(var(--spacer) / 6);
-  fill: var(--brand-grey-light);
+  fill: var(--color-secondary);
 }
 
 .arrow,
@@ -30,7 +30,7 @@
 .arrow::before {
   content: '';
   transform: rotate(45deg);
-  background: var(--brand-grey-lighter);
+  background: var(--border-color);
 }
 
 .content[data-placement*='top'] > .arrow {

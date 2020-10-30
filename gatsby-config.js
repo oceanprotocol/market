@@ -82,6 +82,13 @@ module.exports = {
         defer: true,
         cookieDomain: 'oceanprotocol.com'
       }
+    },
+    {
+      resolve: 'gatsby-plugin-use-dark-mode',
+      options: {
+        ...appConfig.darkModeConfig,
+        minify: true
+      }
     }
   ]
 }

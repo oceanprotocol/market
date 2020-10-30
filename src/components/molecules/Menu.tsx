@@ -4,10 +4,10 @@ import { useLocation } from '@reach/router'
 import loadable from '@loadable/component'
 import styles from './Menu.module.css'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
-import { ReactComponent as Logo } from '@oceanprotocol/art/logo/logo.svg'
 import Container from '../atoms/Container'
 import UserPreferences from './UserPreferences'
 import Badge from '../atoms/Badge'
+import Logo from '../atoms/Logo'
 
 const Wallet = loadable(() => import('./Wallet'))
 

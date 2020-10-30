@@ -6,10 +6,10 @@
 
 .title a {
   font-size: var(--font-size-base);
-  color: var(--brand-black);
+  color: var(--font-color-heading);
 }
 
 .title a:hover,
 .title a:focus {
-  color: var(--brand-pink);
+  color: var(--color-primary);
 }

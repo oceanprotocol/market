@@ -5,7 +5,7 @@
   border: none;
   margin-left: -0.5rem;
   margin-right: -0.5rem;
-  background-color: var(--brand-grey-dimmed);
+  background-color: var(--background-highlight);
   width: auto;
   padding: 0 1.25rem 0 0.25rem;
   height: 41px;
@@ -15,12 +15,12 @@
   background-image: linear-gradient(
       45deg,
       transparent 50%,
-      var(--brand-purple) 50%
+      var(--font-color-text) 50%
     ),
-    linear-gradient(135deg, var(--brand-grey) 50%, transparent 50%);
+    linear-gradient(135deg, var(--font-color-text) 50%, transparent 50%);
   background-position: calc(100% - 14px) 1.2rem, calc(100% - 9px) 1.2rem, 100% 0;
 }
 
 .option {
-  color: var(--brand-grey-dark);
+  color: var(--font-color-heading);
 }

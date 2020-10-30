@@ -12,7 +12,7 @@
 .balance {
   text-align: center;
   font-size: var(--font-size-small) !important;
-  border: 1px solid var(--brand-grey-lighter);
+  border: 1px solid var(--border-color);
   border-right: 0;
   margin-right: -3px;
   height: 35px;
@@ -39,7 +39,7 @@
 
   margin-left: -2rem;
   margin-right: -2rem;
-  border-bottom: 1px solid var(--brand-grey-lighter);
+  border-bottom: 1px solid var(--border-color);
   background: var(--brand-grey-dimmed);
 }
 

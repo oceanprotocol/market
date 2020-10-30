@@ -1,5 +1,5 @@
 .link {
-  color: var(--brand-grey);
+  color: inherit;
 }
 
 .link svg {

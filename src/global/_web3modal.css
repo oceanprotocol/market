@@ -1,5 +1,6 @@
-div.web3modal-modal-lightbox {
-  background: rgba(255, 255, 255, 0.8);
+div.web3modal-modal-lightbox,
+div.walletconnect-qrcode__base {
+  background: var(--background-body-transparent);
   backdrop-filter: blur(3px);
   overflow-x: hidden;
   overflow-y: auto;
@@ -12,8 +13,8 @@ div.web3modal-modal-card {
   padding: var(--spacer);
   margin: var(--spacer) auto;
   max-width: var(--break-point--small);
-  border: 1px solid var(--brand-grey-lighter);
-  box-shadow: 0 6px 15px 0 rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 6px 15px 0 var(--box-shadow-color);
   animation: moveUp 0.2s ease-out backwards;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 }
@@ -39,7 +40,7 @@ div.web3modal-provider-wrapper:hover div.web3modal-provider-icon {
 div.web3modal-provider-name {
   font-size: var(--font-size-large);
   font-weight: var(--font-weight-bold);
-  font-family: var(--font-family-title);
+  font-family: var(--font-family-heading);
 }
 
 div.web3modal-provider-description {

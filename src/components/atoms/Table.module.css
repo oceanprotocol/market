@@ -2,21 +2,38 @@
   background-color: transparent !important;
 }
 
+.table [role='table'],
+.table [role='row'] {
+  color: var(--font-color-text);
+  font-size: var(--font-size-small);
+}
+
+.table [class~='rdt_TableCol'] {
+  border-bottom: 1px solid var(--border-color);
+}
+
 .table [role='columnheader'] {
-  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  color: var(--color-secondary);
+  font-size: var(--font-size-small);
+}
+
+.table [role='row']:not(:last-of-type) {
+  border-color: var(--border-color);
 }
 
 .table + div [class*='rdt_Pagination'] {
   font-size: var(--font-size-small);
-  color: var(--brand-grey-light);
+  color: var(--color-secondary);
+  background: none;
 }
 
 .table + div [class*='rdt_Pagination'] svg {
-  fill: var(--brand-grey-light);
+  fill: var(--color-secondary);
 }
 
 .table + div [class*='rdt_Pagination'] [disabled] svg {
-  fill: var(--brand-grey-lighter);
+  fill: var(--background-highlight);
 }
 
 .table + div [class*='rdt_Pagination'] button:hover:not(:disabled) {

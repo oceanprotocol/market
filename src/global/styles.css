@@ -24,7 +24,7 @@ html {
 } */
 
 body {
-  color: var(--brand-grey);
+  color: var(--font-color-text);
   font-size: var(--font-size-base);
   font-family: var(--font-family-base);
   font-weight: var(--font-weight-base);
@@ -33,6 +33,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   position: relative;
+  background: var(--background-body);
 }
 
 a {
@@ -55,8 +56,8 @@ h2,
 h3,
 h4,
 h5 {
-  font-family: var(--font-family-title);
-  color: var(--brand-black);
+  font-family: var(--font-family-heading);
+  color: var(--font-color-heading);
   line-height: 1.2;
   font-weight: var(--font-weight-bold);
   margin-top: 0;
@@ -145,7 +146,7 @@ table td {
   border: 0;
   margin: 0;
   padding: calc(var(--spacer) / 2);
-  border-bottom: 1px solid var(--brand-grey-lighter);
+  border-bottom: 1px solid var(--border-color);
   text-align: left;
   font-size: 90%;
 }
