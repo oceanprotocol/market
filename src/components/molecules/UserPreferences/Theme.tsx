@@ -27,7 +27,7 @@ export default function Theme({
       <Input
         name="theme"
         label="Theme"
-        help="Select your preferred theme."
+        help="Defaults to your OS settings, select a theme to override."
         type="select"
         options={options}
         value={value}
