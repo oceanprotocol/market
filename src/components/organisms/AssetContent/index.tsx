@@ -12,6 +12,7 @@ import Pricing from './Pricing'
 import { useOcean, usePricing } from '@oceanprotocol/react'
 import EtherscanLink from '../../atoms/EtherscanLink'
 import Bookmark from './Bookmark'
+import { accountTruncate } from '../../../utils/wallet'
 
 export interface AssetContentProps {
   metadata: MetadataMarket
@@ -38,7 +39,9 @@ export default function AssetContent({
 
         <div className={styles.content}>
           <aside className={styles.meta}>
-            <p className={styles.author}>{metadata?.main.author}</p>
+            <p className={styles.author} title="Author">
+              {metadata?.main.author}
+            </p>
 
             <p className={styles.datatoken}>
               <EtherscanLink
@@ -50,6 +53,16 @@ export default function AssetContent({
                 ) : (
                   <code>{ddo.dataToken}</code>
                 )}
+              </EtherscanLink>
+            </p>
+
+            <p className={styles.datatoken} title={ddo.publicKey[0].owner}>
+              Published by{' '}
+              <EtherscanLink
+                networkId={networkId}
+                path={`address/${ddo.publicKey[0].owner}`}
+              >
+                {accountTruncate(ddo.publicKey[0].owner)}
               </EtherscanLink>
             </p>
 
