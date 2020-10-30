@@ -22,8 +22,8 @@ export const validationSchema = Yup.object().shape<PriceOptionsMarket>({
 export const initialValues: PriceOptionsMarket = {
   price: 1,
   type: 'dynamic',
-  dtAmount: 9,
-  oceanAmount: 1,
+  dtAmount: 10,
+  oceanAmount: 10,
   weightOnOcean: '5', // 50% on OCEAN
   weightOnDataToken: '5', // 50% on datatoken
   swapFee: 0.1 // in %

@@ -42,6 +42,8 @@ export default function Dynamic({
 
   // Calculate firstPrice whenever user values change
   useEffect(() => {
+    if (`${oceanAmount}` === '') return
+
     const tokenAmountOut = 1
     const weightRatio = new Decimal(weightOnDataToken).div(
       new Decimal(weightOnOcean)
