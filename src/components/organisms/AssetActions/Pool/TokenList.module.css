@@ -3,11 +3,11 @@
   margin-right: -2rem;
   padding: calc(var(--spacer) / 1.5) var(--spacer) calc(var(--spacer) / 2)
     var(--spacer);
-  border-top: 1px solid var(--brand-grey-lighter);
+  border-top: 1px solid var(--border-color);
 }
 
 .tokenlist.highlight {
-  background: var(--brand-grey-dimmed);
+  background: var(--background-highlight);
 }
 
 .tokens {
@@ -41,6 +41,6 @@
 
 .totalLiquidity strong {
   font-size: var(--font-size-base);
-  color: var(--brand-grey-dark);
+  color: var(--font-color-heading);
   line-height: 1;
 }

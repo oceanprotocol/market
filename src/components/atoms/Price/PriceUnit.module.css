@@ -2,7 +2,7 @@
   display: inline-block;
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-large);
-  color: var(--color-text-heading);
+  color: var(--font-color-text);
   line-height: 1.2;
 }
 

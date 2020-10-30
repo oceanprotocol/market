@@ -9,7 +9,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--background-body-transparent);
   backdrop-filter: blur(3px);
   overflow-x: hidden;
   overflow-y: auto;
@@ -67,7 +67,7 @@
   top: calc(var(--spacer) / 4);
   right: calc(var(--spacer) / 2);
   font-size: var(--font-size-h2);
-  color: var(--brand-grey);
+  color: var(--font-color-text);
 }
 
 .close:hover,

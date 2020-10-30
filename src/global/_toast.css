@@ -5,10 +5,10 @@ div.Toastify__toast {
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-bold);
   border-radius: var(--border-radius);
-  box-shadow: 0 6px 15px 0 rgba(0, 0, 0, 0.05);
+  box-shadow: 0 6px 15px 0 var(--box-shadow-color);
   padding: calc(var(--spacer) / 2) var(--spacer);
-  background: var(--brand-white);
-  color: var(--brand-grey);
+  background: var(--background-body);
+  color: var(--font-color-text);
 }
 
 div.Toastify__toast--error {

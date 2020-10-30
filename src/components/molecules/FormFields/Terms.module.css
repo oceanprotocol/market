@@ -2,8 +2,8 @@
   composes: content from '../../templates/PageMarkdown.module.css';
 
   padding: calc(var(--spacer) / 2);
-  border: 1px solid var(--brand-grey-lighter);
-  background-color: var(--brand-grey-dimmed);
+  border: 1px solid var(--border-color);
+  background-color: var(--background-highlight);
   border-radius: var(--border-radius);
   margin-bottom: calc(var(--spacer) / 2);
   font-size: var(--font-size-small);

@@ -1,7 +1,7 @@
 code {
   font-family: var(--font-family-monospace);
   font-size: var(--font-size-small);
-  color: var(--brand-grey);
+  color: var(--font-color-text);
   text-shadow: none;
 }
 
@@ -15,7 +15,7 @@ pre {
   display: block;
   margin: calc(var(--spacer) / 2) 0;
   padding: calc(var(--spacer) / 2);
-  background-color: var(--brand-grey-dimmed) !important;
+  background-color: var(--background-highlight) !important;
   border-radius: var(--border-radius);
   overflow: auto;
   -webkit-overflow-scrolling: touch;

@@ -16,7 +16,7 @@
 .preferences svg:last-child {
   width: 1em;
   height: 1em;
-  fill: var(--brand-grey-lighter);
+  fill: var(--border-color);
   margin-left: calc(var(--spacer) / 4);
   transition: transform 0.2s ease-out;
 }
@@ -32,7 +32,7 @@
 .preferences:focus .icon,
 .preferences:active .icon,
 .preferences[aria-expanded='true'] .icon {
-  fill: var(--brand-grey);
+  fill: var(--font-color-text);
 }
 
 .preferencesDetails {
@@ -44,7 +44,7 @@
 }
 
 .preferencesDetails li {
-  border-bottom: 1px solid var(--brand-grey-lighter);
+  border-bottom: 1px solid var(--border-color);
   margin-bottom: calc(var(--spacer) / 2);
 }
 

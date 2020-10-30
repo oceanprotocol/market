@@ -14,8 +14,8 @@
   margin-right: -2rem;
   padding-top: var(--spacer);
   background: var(--brand-grey-dimmed);
-  border-top: 1px solid var(--brand-grey-lighter);
-  border-bottom: 1px solid var(--brand-grey-lighter);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .grid {
@@ -53,5 +53,5 @@
   margin-top: -1rem;
   padding-top: calc(var(--spacer) / 3);
   padding-bottom: calc(var(--spacer) / 3);
-  border-top: 1px solid var(--brand-grey-lighter);
+  border-top: 1px solid var(--border-color);
 }

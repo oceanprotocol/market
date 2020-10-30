@@ -5,9 +5,9 @@
 }
 
 .logo path {
-  fill: var(--brand-black);
+  fill: var(--font-color-heading);
 }
 
 a > .logo:hover path {
-  fill: var(--brand-pink);
+  fill: var(--color-primary);
 }

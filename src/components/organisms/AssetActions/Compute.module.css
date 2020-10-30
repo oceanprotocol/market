@@ -3,7 +3,7 @@
   align-items: center;
   width: auto;
   margin-bottom: var(--spacer);
-  border-bottom: 1px solid var(--brand-grey-lighter);
+  border-bottom: 1px solid var(--border-color);
   margin-top: -1rem;
   margin-left: -2rem;
   margin-right: -2rem;

@@ -15,7 +15,7 @@
 
 .button,
 .address {
-  color: var(--brand-grey);
+  color: var(--font-color-text);
 }
 
 .button:hover,

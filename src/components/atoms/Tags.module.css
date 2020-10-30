@@ -13,7 +13,7 @@
   margin-bottom: calc(var(--spacer) / 4);
   text-align: center;
   border-radius: var(--border-radius);
-  border: 1px solid var(--brand-grey-lighter);
+  border: 1px solid var(--border-color);
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

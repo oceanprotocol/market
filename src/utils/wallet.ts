@@ -3,11 +3,11 @@ import { infuraProjectId, network } from '../../app.config'
 // import Torus from '@toruslabs/torus-embed'
 
 const web3ModalTheme = {
-  background: 'var(--brand-white)',
-  main: 'var(--brand-black)',
+  background: 'var(--background-body)',
+  main: 'var(--font-color-heading)',
   secondary: 'var(--brand-grey-light)',
-  border: 'var(--brand-grey-lighter)',
-  hover: 'var(--brand-grey-dimmed)'
+  border: 'var(--border-color)',
+  hover: 'var(--background-highlight)'
 }
 
 const providerOptions = {

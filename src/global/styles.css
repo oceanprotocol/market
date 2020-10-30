@@ -146,7 +146,7 @@ table td {
   border: 0;
   margin: 0;
   padding: calc(var(--spacer) / 2);
-  border-bottom: 1px solid var(--brand-grey-lighter);
+  border-bottom: 1px solid var(--border-color);
   text-align: left;
   font-size: 90%;
 }

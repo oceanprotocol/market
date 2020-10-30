@@ -16,7 +16,7 @@
 .message {
   font-weight: var(--font-weight-base);
   font-size: var(--font-size-small);
-  color: var(--brand-grey-light);
+  color: var(--color-secondary);
   display: block;
   margin-left: calc(var(--spacer) / 4);
 }
