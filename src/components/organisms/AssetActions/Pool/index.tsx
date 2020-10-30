@@ -54,23 +54,40 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const [showAdd, setShowAdd] = useState(false)
   const [showRemove, setShowRemove] = useState(false)
 
+  const [hasAddedLiquidity, setHasAddedLiquidity] = useState(false)
+  const [poolShare, setPoolShare] = useState<string>()
+  const [totalUserLiquidityInOcean, setTotalUserLiquidityInOcean] = useState(0)
+  const [totalLiquidityInOcean, setTotalLiquidityInOcean] = useState(0)
+
+  const [
+    creatorTotalLiquidityInOcean,
+    setCreatorTotalLiquidityInOcean
+  ] = useState(0)
+  const [creatorLiquidity, setCreatorLiquidity] = useState<Balance>()
+  const [creatorPoolTokens, setCreatorPoolTokens] = useState<string>()
+  const [creatorPoolShare, setCreatorPoolShare] = useState<string>()
   // the purpose of the value is just to trigger the effect
   const [refreshPool, setRefreshPool] = useState(false)
-  // TODO: put all these variables behind some useEffect
-  // to prevent unneccessary updating on every render
-  const hasAddedLiquidity =
-    userLiquidity && (userLiquidity.ocean > 0 || userLiquidity.datatoken > 0)
 
-  const poolShare =
-    price?.ocean &&
-    price?.datatoken &&
-    userLiquidity &&
-    ((Number(poolTokens) / Number(totalPoolTokens)) * 100).toFixed(2)
+  useEffect(() => {
+    const hasAddedLiquidity =
+      userLiquidity && (userLiquidity.ocean > 0 || userLiquidity.datatoken > 0)
+    setHasAddedLiquidity(hasAddedLiquidity)
 
-  const totalUserLiquidityInOcean =
-    userLiquidity?.ocean + userLiquidity?.datatoken * price?.value
+    const poolShare =
+      price?.ocean &&
+      price?.datatoken &&
+      userLiquidity &&
+      ((Number(poolTokens) / Number(totalPoolTokens)) * 100).toFixed(2)
+    setPoolShare(poolShare)
 
-  const totalLiquidityInOcean = price?.ocean + price?.datatoken * price?.value
+    const totalUserLiquidityInOcean =
+      userLiquidity?.ocean + userLiquidity?.datatoken * price?.value
+    setTotalUserLiquidityInOcean(totalUserLiquidityInOcean)
+
+    const totalLiquidityInOcean = price?.ocean + price?.datatoken * price?.value
+    setTotalLiquidityInOcean(totalLiquidityInOcean)
+  }, [userLiquidity, price])
 
   useEffect(() => {
     if (!ocean || !accountId || !price) return
@@ -108,6 +125,43 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
         setUserLiquidity(userLiquidity)
 
+        //
+        // Get everything the creator put into the pool
+        //
+
+        const creatorPoolTokens = await ocean.pool.sharesBalance(
+          ddo.publicKey[0].owner,
+          price.address
+        )
+        setCreatorPoolTokens(creatorPoolTokens)
+
+        // calculate creator's provided liquidity based on pool tokens
+
+        const creatorOceanBalance =
+          (Number(creatorPoolTokens) / Number(totalPoolTokens)) * price.ocean
+
+        const creatorDtBalance =
+          (Number(creatorPoolTokens) / Number(totalPoolTokens)) *
+          price.datatoken
+
+        const creatorLiquidity = {
+          ocean: creatorOceanBalance,
+          datatoken: creatorDtBalance
+        }
+        setCreatorLiquidity(creatorLiquidity)
+
+        const totalCreatorLiquidityInOcean =
+          creatorLiquidity?.ocean + creatorLiquidity?.datatoken * price?.value
+        setCreatorTotalLiquidityInOcean(totalCreatorLiquidityInOcean)
+
+        const creatorPoolShare =
+          price?.ocean &&
+          price?.datatoken &&
+          creatorLiquidity &&
+          ((Number(creatorPoolTokens) / Number(totalPoolTokens)) * 100).toFixed(
+            2
+          )
+        setCreatorPoolShare(creatorPoolShare)
         // Get swap fee
         // swapFee is tricky: to get 0.1% you need to convert from 0.001
         const swapFee = await ocean.pool.getSwapFee(price.address)
@@ -123,6 +177,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
     setRefreshPool(!refreshPool)
     await refreshPrice()
   }
+
   return (
     <>
       {showAdd ? (
@@ -182,6 +237,17 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
             highlight
           >
             <Token symbol="% of pool" balance={poolShare} noIcon />
+          </TokenList>
+
+          <TokenList
+            title="Pool Creator Liquidity"
+            ocean={`${creatorLiquidity?.ocean}`}
+            dt={`${creatorLiquidity?.datatoken}`}
+            dtSymbol={dtSymbol}
+            poolShares={creatorPoolTokens}
+            conversion={creatorTotalLiquidityInOcean}
+          >
+            <Token symbol="% of pool" balance={creatorPoolShare} noIcon />
           </TokenList>
 
           <TokenList
