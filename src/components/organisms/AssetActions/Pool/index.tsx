@@ -68,8 +68,6 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const [creatorPoolShare, setCreatorPoolShare] = useState<string>()
   // the purpose of the value is just to trigger the effect
   const [refreshPool, setRefreshPool] = useState(false)
-  // TODO: put all these variables behind some useEffect
-  // to prevent unneccessary updating on every render
 
   useEffect(() => {
     const hasAddedLiquidity =
