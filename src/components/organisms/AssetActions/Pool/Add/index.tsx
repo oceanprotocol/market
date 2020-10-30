@@ -9,6 +9,9 @@ import * as Yup from 'yup'
 import { Formik } from 'formik'
 import FormAdd from './FormAdd'
 import styles from './index.module.css'
+import Warning from './Warning'
+import Token from '../Token'
+import PriceUnit from '../../../../atoms/Price/PriceUnit'
 
 const contentQuery = graphql`
   query PoolAddQuery {
@@ -68,6 +71,9 @@ export default function Add({
   const [coin, setCoin] = useState('OCEAN')
   const [dtBalance, setDtBalance] = useState<string>()
   const [amountMax, setAmountMax] = useState<string>()
+  const [newPoolTokens, setNewPoolTokens] = useState('0')
+  const [newPoolShare, setNewPoolShare] = useState('0')
+  const [isWarningAccepted, setIsWarningAccepted] = useState(false)
 
   // Live validation rules
   // https://github.com/jquense/yup#number
@@ -150,18 +156,36 @@ export default function Add({
       >
         {({ isSubmitting, submitForm }) => (
           <>
-            <FormAdd
-              coin={coin}
-              content={content}
-              dtBalance={dtBalance}
-              dtSymbol={dtSymbol}
-              amountMax={amountMax}
-              setCoin={setCoin}
-              totalPoolTokens={totalPoolTokens}
-              totalBalance={totalBalance}
-              swapFee={swapFee}
-              poolAddress={poolAddress}
-            />
+            <div className={styles.addInput}>
+              {isWarningAccepted ? (
+                <FormAdd
+                  coin={coin}
+                  dtBalance={dtBalance}
+                  dtSymbol={dtSymbol}
+                  amountMax={amountMax}
+                  setCoin={setCoin}
+                  totalPoolTokens={totalPoolTokens}
+                  totalBalance={totalBalance}
+                  poolAddress={poolAddress}
+                  setNewPoolTokens={setNewPoolTokens}
+                  setNewPoolShare={setNewPoolShare}
+                />
+              ) : (
+                <Warning />
+              )}
+            </div>
+
+            <div className={styles.output}>
+              <div>
+                <p>{content.output.titleIn}</p>
+                <Token symbol="pool shares" balance={newPoolTokens} />
+                <Token symbol="% of pool" balance={newPoolShare} />
+              </div>
+              <div>
+                <p>{content.output.titleOut}</p>
+                <Token symbol="% swap fee" balance={swapFee} />
+              </div>
+            </div>
 
             <Actions
               isLoading={isSubmitting}
