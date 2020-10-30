@@ -1,5 +1,5 @@
 import PriceUnit from '../../../../atoms/Price/PriceUnit'
-import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react'
+import React, { ChangeEvent, ReactElement, useEffect } from 'react'
 import styles from './FormAdd.module.css'
 import Input from '../../../../atoms/Input'
 import {
@@ -9,14 +9,12 @@ import {
   useFormikContext
 } from 'formik'
 import Button from '../../../../atoms/Button'
-import Token from '../Token'
 import CoinSelect from '../CoinSelect'
 import { FormAddLiquidity } from '.'
 import { useOcean } from '@oceanprotocol/react'
 import { Balance } from '..'
 
 export default function FormAdd({
-  content,
   coin,
   dtBalance,
   dtSymbol,
@@ -24,10 +22,10 @@ export default function FormAdd({
   setCoin,
   totalPoolTokens,
   totalBalance,
-  swapFee,
-  poolAddress
+  poolAddress,
+  setNewPoolTokens,
+  setNewPoolShare
 }: {
-  content: any
   coin: string
   dtBalance: string
   dtSymbol: string
@@ -35,8 +33,9 @@ export default function FormAdd({
   setCoin: (value: string) => void
   totalPoolTokens: string
   totalBalance: Balance
-  swapFee: string
   poolAddress: string
+  setNewPoolTokens: (value: string) => void
+  setNewPoolShare: (value: string) => void
 }): ReactElement {
   const { ocean, balance } = useOcean()
 
@@ -48,9 +47,6 @@ export default function FormAdd({
     setFieldValue,
     values
   }: FormikContextType<FormAddLiquidity> = useFormikContext()
-
-  const [newPoolTokens, setNewPoolTokens] = useState('0')
-  const [newPoolShare, setNewPoolShare] = useState('0')
 
   useEffect(() => {
     async function calculatePoolShares() {
@@ -80,71 +76,58 @@ export default function FormAdd({
 
   return (
     <>
-      <div className={styles.addInput}>
-        <div className={styles.userLiquidity}>
-          <div>
-            <span>Available:</span>
-            {coin === 'OCEAN' ? (
-              <PriceUnit price={balance.ocean} symbol="OCEAN" small />
-            ) : (
-              <PriceUnit price={dtBalance} symbol={dtSymbol} small />
-            )}
-          </div>
-          <div>
-            <span>Maximum:</span>
-            <PriceUnit price={amountMax} symbol={coin} small />
-          </div>
-        </div>
-        <Field name="amount">
-          {({
-            field,
-            form
-          }: {
-            field: FieldInputProps<FormAddLiquidity>
-            form: any
-          }) => (
-            <Input
-              type="number"
-              name="amount"
-              max={amountMax}
-              value={`${values.amount}`}
-              prefix={<CoinSelect dtSymbol={dtSymbol} setCoin={setCoin} />}
-              placeholder="0"
-              field={field}
-              form={form}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                // Workaround so validation kicks in on first touch
-                !touched?.amount && setTouched({ amount: true })
-                handleChange(e)
-              }}
-              disabled={!ocean}
-            />
+      <div className={styles.userLiquidity}>
+        <div>
+          <span>Available:</span>
+          {coin === 'OCEAN' ? (
+            <PriceUnit price={balance.ocean} symbol="OCEAN" small />
+          ) : (
+            <PriceUnit price={dtBalance} symbol={dtSymbol} small />
           )}
-        </Field>
+        </div>
+        <div>
+          <span>Maximum:</span>
+          <PriceUnit price={amountMax} symbol={coin} small />
+        </div>
+      </div>
 
-        {(Number(balance.ocean) || dtBalance) > (values.amount || 0) && (
-          <Button
-            className={styles.buttonMax}
-            style="text"
-            size="small"
-            onClick={() => setFieldValue('amount', amountMax)}
-          >
-            Use Max
-          </Button>
+      <Field name="amount">
+        {({
+          field,
+          form
+        }: {
+          field: FieldInputProps<FormAddLiquidity>
+          form: any
+        }) => (
+          <Input
+            type="number"
+            name="amount"
+            max={amountMax}
+            value={`${values.amount}`}
+            prefix={<CoinSelect dtSymbol={dtSymbol} setCoin={setCoin} />}
+            placeholder="0"
+            field={field}
+            form={form}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              // Workaround so validation kicks in on first touch
+              !touched?.amount && setTouched({ amount: true })
+              handleChange(e)
+            }}
+            disabled={!ocean}
+          />
         )}
-      </div>
+      </Field>
 
-      <div className={styles.output}>
-        <div>
-          <p>{content.output.titleIn}</p>
-          <Token symbol="pool shares" balance={newPoolTokens} />
-          <Token symbol="% of pool" balance={newPoolShare} />
-        </div>
-        <div>
-          <p>{content.output.titleOut}</p>
-          <Token symbol="% swap fee" balance={swapFee} />
-        </div>
-      </div>
+      {(Number(balance.ocean) || dtBalance) > (values.amount || 0) && (
+        <Button
+          className={styles.buttonMax}
+          style="text"
+          size="small"
+          onClick={() => setFieldValue('amount', amountMax)}
+        >
+          Use Max
+        </Button>
+      )}
     </>
   )
 }

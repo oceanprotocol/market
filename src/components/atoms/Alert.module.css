@@ -8,6 +8,7 @@
   border-bottom-left-radius: 0;
   padding-top: calc(var(--spacer) / 2);
   padding-bottom: calc(var(--spacer) / 2);
+  position: relative;
 }
 
 .alert + .alert {
@@ -35,6 +36,24 @@
 
 .action {
   margin-top: calc(var(--spacer) / 2);
+}
+
+.close {
+  position: absolute;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  outline: 0;
+  top: 0;
+  right: 0;
+  font-size: var(--font-size-large);
+  color: var(--brand-grey);
+}
+
+.close:hover,
+.close:focus {
+  opacity: 0.7;
 }
 
 /* States */
