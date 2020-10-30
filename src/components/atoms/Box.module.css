@@ -5,7 +5,13 @@
   border: 1px solid var(--border-color);
   box-shadow: 0 6px 17px 0 var(--box-shadow-color);
   overflow: hidden;
-  padding: var(--spacer);
+  padding: calc(var(--spacer) / 1.5);
+}
+
+@media (min-width: 40rem) {
+  .box {
+    padding: var(--spacer);
+  }
 }
 
 a.box:hover,

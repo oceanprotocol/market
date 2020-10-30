@@ -16,12 +16,12 @@ export default function Theme({
       <Input
         name="theme"
         label="Theme"
-        help="Defaults to your OS settings, select a theme to override."
+        help="Defaults to your OS setting, select a theme to override."
         type="select"
         options={options}
         value={value}
         onChange={() => darkMode.toggle()}
-        small
+        size="small"
       />
     </li>
   )

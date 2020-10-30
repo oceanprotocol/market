@@ -4,9 +4,15 @@
 }
 
 .title {
-  font-size: var(--font-size-h2);
+  font-size: var(--font-size-h3);
   margin-top: 0;
   margin-bottom: 0;
+}
+
+@media (min-width: 40rem) {
+  .title {
+    font-size: var(--font-size-h2);
+  }
 }
 
 .description {

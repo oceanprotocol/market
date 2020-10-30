@@ -135,7 +135,7 @@ export default function Compute({
         name="algorithm"
         label="Select image to run the algorithm"
         placeholder=""
-        small
+        size="small"
         value={computeType}
         options={computeOptions.map((x) => x.name)}
         onChange={handleSelectChange}

@@ -36,7 +36,8 @@
 }
 
 .preferencesDetails {
-  padding: calc(var(--spacer) / 2);
+  padding: calc(var(--spacer) / 4) calc(var(--spacer) / 2);
+  max-width: 20rem;
 }
 
 .preferencesDetails li > div,

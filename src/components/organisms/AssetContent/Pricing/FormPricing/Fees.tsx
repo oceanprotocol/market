@@ -25,7 +25,7 @@ const Default = ({
     name={name}
     postfix="%"
     readOnly
-    small
+    size="small"
   />
 )
 
@@ -51,7 +51,7 @@ export default function Fees({
           min="0.1"
           max="10"
           step="0.1"
-          small
+          size="small"
           {...field}
           additionalComponent={<Error meta={meta} />}
         />
