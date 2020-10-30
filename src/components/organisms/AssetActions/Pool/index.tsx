@@ -8,7 +8,6 @@ import Button from '../../../atoms/Button'
 import Add from './Add'
 import Remove from './Remove'
 import Tooltip from '../../../atoms/Tooltip'
-import Conversion from '../../../atoms/Price/Conversion'
 import EtherscanLink from '../../../atoms/EtherscanLink'
 import Token from './Token'
 import TokenList from './TokenList'
@@ -87,7 +86,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
     const totalLiquidityInOcean = price?.ocean + price?.datatoken * price?.value
     setTotalLiquidityInOcean(totalLiquidityInOcean)
-  }, [userLiquidity, price])
+  }, [userLiquidity, price, poolTokens, totalPoolTokens])
 
   useEffect(() => {
     if (!ocean || !accountId || !price) return
@@ -171,7 +170,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
       }
     }
     init()
-  }, [ocean, accountId, price, ddo.dataToken, refreshPool])
+  }, [ocean, accountId, price, ddo.dataToken, refreshPool, ddo.publicKey])
 
   const refreshInfo = async () => {
     setRefreshPool(!refreshPool)

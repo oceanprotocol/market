@@ -23,7 +23,7 @@ export default function TokenList({
   highlight?: boolean
 }): ReactElement {
   return (
-    <div className={`${styles.tokeninfo} ${highlight ? styles.highlight : ''}`}>
+    <div className={`${styles.tokenlist} ${highlight ? styles.highlight : ''}`}>
       <h3 className={styles.title}>{title}</h3>
       <div className={styles.tokens}>
         <Token symbol="OCEAN" balance={ocean} />
