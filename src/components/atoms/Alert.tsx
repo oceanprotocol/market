@@ -7,7 +7,8 @@ export default function Alert({
   title,
   text,
   state,
-  action
+  action,
+  onDismiss
 }: {
   title?: string
   text: string
@@ -16,6 +17,7 @@ export default function Alert({
     name: string
     handleAction: (e: FormEvent<HTMLButtonElement>) => void
   }
+  onDismiss?: () => void
 }): ReactElement {
   return (
     <div className={`${styles.alert} ${styles[state]}`}>
@@ -30,6 +32,11 @@ export default function Alert({
         >
           {action.name}
         </Button>
+      )}
+      {onDismiss && (
+        <button className={styles.close} onClick={onDismiss}>
+          &times;
+        </button>
       )}
     </div>
   )
