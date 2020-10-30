@@ -26,6 +26,7 @@ const contentQuery = graphql`
                   titleOut
                 }
                 action
+                warning
               }
             }
           }
@@ -172,8 +173,8 @@ export default function Add({
               ) : (
                 <Alert
                   className={styles.warning}
-                  text="Warning"
-                  state="error"
+                  text={content.warning}
+                  state="info"
                   action={{
                     name: 'I understand',
                     style: 'text',
