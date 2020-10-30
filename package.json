@@ -48,6 +48,7 @@
     "gatsby-plugin-remove-trailing-slashes": "^2.3.13",
     "gatsby-plugin-sharp": "^2.6.43",
     "gatsby-plugin-svgr": "^2.0.2",
+    "gatsby-plugin-use-dark-mode": "^1.1.2",
     "gatsby-plugin-webpack-size": "^1.0.0",
     "gatsby-source-filesystem": "^2.3.37",
     "gatsby-source-graphql": "^2.7.6",
@@ -76,6 +77,7 @@
     "shortid": "^2.2.16",
     "slugify": "^1.4.5",
     "swr": "^0.3.6",
+    "use-dark-mode": "^2.3.1",
     "yup": "^0.29.3"
   },
   "devDependencies": {

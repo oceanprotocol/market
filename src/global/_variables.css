@@ -67,14 +67,12 @@
   --break-point--huge: 1400px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --font-color-text: #e2e2e2;
-    --font-color-heading: #f7f7f7;
-    --background-body: #141414;
-    --background-body-transparent: rgba(20, 20, 20, 0.9);
-    --background-highlight: #201f1f;
-    --border-color: #303030;
-    --box-shadow-color: rgba(0, 0, 0, 0.2);
-  }
+.dark {
+  --font-color-text: #e2e2e2;
+  --font-color-heading: #f7f7f7;
+  --background-body: #141414;
+  --background-body-transparent: rgba(20, 20, 20, 0.9);
+  --background-highlight: #201f1f;
+  --border-color: #303030;
+  --box-shadow-color: rgba(0, 0, 0, 0.2);
 }
