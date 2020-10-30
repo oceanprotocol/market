@@ -87,7 +87,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
     const totalLiquidityInOcean = price?.ocean + price?.datatoken * price?.value
     setTotalLiquidityInOcean(totalLiquidityInOcean)
-  }, [userLiquidity])
+  }, [userLiquidity, price])
 
   useEffect(() => {
     if (!ocean || !accountId || !price) return
