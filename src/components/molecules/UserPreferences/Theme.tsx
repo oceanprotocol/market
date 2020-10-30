@@ -1,4 +1,4 @@
-import React, { ChangeEvent, ReactElement, useState } from 'react'
+import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react'
 import { DarkMode } from 'use-dark-mode'
 import Input from '../../atoms/Input'
 
@@ -11,6 +11,16 @@ export default function Theme({
 }): ReactElement {
   const initialValue = darkMode.value ? options[2] : options[1]
   const [value, setValue] = useState(initialValue)
+
+  useEffect(() => {
+    switch (value) {
+      case 'Light':
+        darkMode.disable()
+        return
+      case 'Dark':
+        darkMode.enable()
+    }
+  }, [value, darkMode])
 
   return (
     <li>

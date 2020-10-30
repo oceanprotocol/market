@@ -7,14 +7,11 @@ import Debug from './Debug'
 import { ReactComponent as Caret } from '../../../images/caret.svg'
 import useDarkMode from 'use-dark-mode'
 import Theme from './Theme'
+import { darkModeConfig } from '../../../../app.config'
 
 export default function UserPreferences(): ReactElement {
   // Calling this here because <Theme /> is not mounted on first load
-  const darkMode = useDarkMode(false, {
-    classNameDark: 'dark',
-    classNameLight: 'light',
-    storageKey: 'oceanDarkMode'
-  })
+  const darkMode = useDarkMode(false, darkModeConfig)
 
   return (
     <Tooltip
