@@ -180,7 +180,6 @@ export default function Add({
                     style: 'text',
                     handleAction: () => setIsWarningAccepted(true)
                   }}
-                  onDismiss={() => setIsWarningAccepted(true)}
                 />
               )}
             </div>
