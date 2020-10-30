@@ -9,7 +9,7 @@ export default function Theme({
 }: {
   darkMode: DarkMode
 }): ReactElement {
-  const value = darkMode.value === true ? options[2] : options[1]
+  const value = darkMode.value === true ? 'Dark' : 'Light'
 
   return (
     <li>
