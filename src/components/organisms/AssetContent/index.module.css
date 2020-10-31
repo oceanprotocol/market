@@ -42,9 +42,6 @@
   color: var(--color-secondary);
 }
 
-.owner {
-}
-
 .buttonGroup {
   margin-top: var(--spacer);
   margin-bottom: var(--spacer);

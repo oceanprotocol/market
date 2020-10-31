@@ -57,9 +57,12 @@ export default function AssetContent({
               </EtherscanLink>
             </p>
 
-            <p className={styles.owner} title={owner}>
+            <p>
               Published by{' '}
-              <Link to={`/search?owner=${owner}`}>
+              <Link
+                to={`/search?owner=${owner}`}
+                title="Show all data sets created by this account."
+              >
                 {accountTruncate(owner)}
               </Link>{' '}
               (
