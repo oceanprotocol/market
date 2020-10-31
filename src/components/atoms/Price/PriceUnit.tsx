@@ -42,7 +42,7 @@ export default function PriceUnit({
               // See https://github.com/oceanprotocol/market/issues/70
               significantFigures: 4
             })}{' '}
-        <span>{symbol || 'OCEAN'}</span>
+        <span className={styles.symbol}>{symbol || 'OCEAN'}</span>
         {type && type === 'pool' && (
           <Badge label="pool" className={styles.badge} />
         )}

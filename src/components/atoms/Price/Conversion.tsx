@@ -42,7 +42,13 @@ export default function Conversion({
       false,
       { decimalPlaces: 2 }
     )
-    setPriceConverted(convertedFormatted)
+    // It's a hack! Wrap everything in the string which is not a number or `.` or `,`
+    // with a span for consistent visual symbol formatting.
+    const convertedFormattedHTMLstring = convertedFormatted.replace(
+      /([^.,0-9]+)/g,
+      (match) => `<span>${match}</span>`
+    )
+    setPriceConverted(convertedFormattedHTMLstring)
   }, [price, prices, currency, locale, isFiat])
 
   return (
@@ -50,7 +56,8 @@ export default function Conversion({
       className={styleClasses}
       title="Approximation based on current OCEAN spot price on Coingecko"
     >
-      ≈ <strong>{priceConverted}</strong> {isFiat ? '' : currency}
+      ≈ <strong dangerouslySetInnerHTML={{ __html: priceConverted }} />{' '}
+      {!isFiat && currency}
     </span>
   )
 }
