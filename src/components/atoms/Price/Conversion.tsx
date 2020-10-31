@@ -18,7 +18,7 @@ export default function Conversion({
   const { currency, locale } = useUserPreferences()
 
   const [priceConverted, setPriceConverted] = useState('0.00')
-  const isFiat = currency === 'EUR' || currency === 'USD'
+  const isFiat = /(EUR|USD|CAD|SGD|CNY|GBP)/g.test(currency)
 
   const styleClasses = cx({
     conversion: true,
@@ -33,11 +33,15 @@ export default function Conversion({
 
     const conversionValue = (prices as any)[currency.toLowerCase()]
     const converted = conversionValue * Number(price)
-    const convertedFormatted = formatCurrency(converted, '', locale, false, {
-      decimalPlaces: 2,
-      // only this gives us 2 decimals for fiat
-      ...(isFiat && { significantFigures: 2 })
-    })
+    const convertedFormatted = formatCurrency(
+      converted,
+      // No passing of `currency` for non-fiat so symbol conversion
+      // doesn't get triggered.
+      isFiat ? currency : '',
+      locale,
+      false,
+      { decimalPlaces: 2 }
+    )
     setPriceConverted(convertedFormatted)
   }, [price, prices, currency, locale, isFiat])
 
@@ -46,7 +50,7 @@ export default function Conversion({
       className={styleClasses}
       title="Approximation based on current OCEAN spot price on Coingecko"
     >
-      ≈ <strong>{priceConverted}</strong> {currency}
+      ≈ <strong>{priceConverted}</strong> {isFiat ? '' : currency}
     </span>
   )
 }
