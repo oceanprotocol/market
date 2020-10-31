@@ -15,7 +15,7 @@ export default function SearchPage({
 }): ReactElement {
   const { config } = useOcean()
   const parsed = queryString.parse(location.search)
-  const { text, tags, page } = parsed
+  const { text, owner, tags, page } = parsed
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [loading, setLoading] = useState<boolean>()
 
@@ -27,7 +27,7 @@ export default function SearchPage({
       setLoading(false)
     }
     initSearch()
-  }, [text, tags, page, config.metadataCacheUri])
+  }, [text, owner, tags, page, config.metadataCacheUri])
 
   return (
     <section className={styles.grid}>
