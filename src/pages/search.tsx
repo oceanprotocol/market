@@ -9,18 +9,19 @@ import { accountTruncate } from '../utils/wallet'
 export default function PageGatsbySearch(props: PageProps): ReactElement {
   const parsed = queryString.parse(props.location.search)
   const { text, owner, tags, categories } = parsed
-  const searchValue = text || tags || categories
-  const title = owner
-    ? `Published by ${accountTruncate(owner as string)}`
-    : `Search for ${searchValue || 'all data sets'}`
 
   // Switch to owner search when ETH address in `text` is detected,
-  // effectively modifying props.location.
+  // effectively modifying props.location, starting this file again.
   const isETHAddress = text && ethereumAddress.isAddress(text as string)
   if (isETHAddress) {
     navigate(`/search/?owner=${text}`)
     return null
   }
+
+  const searchValue = text || tags || categories
+  const title = owner
+    ? `Published by ${accountTruncate(owner as string)}`
+    : `Search for ${searchValue || 'all data sets'}`
 
   return (
     <Layout title={title} uri={props.uri}>
