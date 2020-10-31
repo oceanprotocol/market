@@ -18,7 +18,8 @@ export default function Conversion({
   const { currency, locale } = useUserPreferences()
 
   const [priceConverted, setPriceConverted] = useState('0.00')
-  const isFiat = /(EUR|USD|CAD|SGD|CNY|GBP)/g.test(currency)
+  // detect fiat, only have those kick in full @coingecko/cryptoformat formatting
+  const isFiat = /(EUR|USD|CAD|SGD|HKD|CNY|JPY|GBP|INR|RUB)/g.test(currency)
 
   const styleClasses = cx({
     conversion: true,
