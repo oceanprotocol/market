@@ -5,23 +5,22 @@ import {
 import { MetadataCache, Logger } from '@oceanprotocol/lib'
 
 export function getSearchQuery(
-  page?: string,
-  offset?: string,
   text?: string,
   owner?: string,
   tags?: string,
-  categories?: string
+  categories?: string,
+  page?: string,
+  offset?: string
 ): SearchQuery {
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
-    query: owner
-      ? { 'publicKey.owner': [owner] }
-      : {
-          text,
-          tags: tags ? [tags] : undefined,
-          categories: categories ? [categories] : undefined
-        },
+    query: {
+      text,
+      ...(owner && { 'publicKey.owner': [owner] }),
+      ...(tags && { tags: [tags] }),
+      ...(categories && { categories: [categories] })
+    },
     sort: {
       created: -1
     }
@@ -48,7 +47,7 @@ export async function getResults(
 
   const metadataCache = new MetadataCache(metadataCacheUri, Logger)
   const queryResult = await metadataCache.queryMetadata(
-    getSearchQuery(page, offset, text, owner, tags, categories)
+    getSearchQuery(text, owner, tags, categories, page, offset)
   )
 
   return queryResult
