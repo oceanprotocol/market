@@ -1,7 +1,7 @@
 import React, { useEffect, useState, ReactElement } from 'react'
 import styles from './Conversion.module.css'
 import classNames from 'classnames/bind'
-import { formatCurrency } from '@coingecko/cryptoformat'
+import { formatCurrency, isCrypto } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import { usePrices } from '../../../providers/Prices'
 
@@ -19,7 +19,9 @@ export default function Conversion({
 
   const [priceConverted, setPriceConverted] = useState('0.00')
   // detect fiat, only have those kick in full @coingecko/cryptoformat formatting
-  const isFiat = /(EUR|USD|CAD|SGD|HKD|CNY|JPY|GBP|INR|RUB)/g.test(currency)
+  const isFiat = !isCrypto(currency)
+  // isCrypto() only checks for BTC & ETH & unknown but seems sufficient for now
+  // const isFiat = /(EUR|USD|CAD|SGD|HKD|CNY|JPY|GBP|INR|RUB)/g.test(currency)
 
   const styleClasses = cx({
     conversion: true,

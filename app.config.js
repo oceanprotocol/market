@@ -11,7 +11,6 @@ module.exports = {
     '0x903322C7E45A60d7c8C3EA236c5beA9Af86310c7',
   // Used for conversion display, can be whatever coingecko API supports
   // see: https://api.coingecko.com/api/v3/simple/supported_vs_currencies
-  // Needs to be synced with the `isFiat` regex in atoms/Price/Conversion.tsx
   currencies: [
     'EUR',
     'USD',
