@@ -14,6 +14,7 @@ import { DDO, Logger, Metadata } from '@oceanprotocol/lib'
 import { Persist } from '../../atoms/FormikPersist'
 import Debug from './Debug'
 import Feedback from './Feedback'
+import Alert from '../../atoms/Alert'
 
 const formName = 'ocean-publish-form'
 
@@ -97,15 +98,23 @@ export default function PublishPage({
               setError={setError}
             />
           ) : (
-            <article className={styles.grid}>
-              <FormPublish content={content.form} />
-              <aside>
-                <div className={styles.sticky}>
-                  <Preview values={values} />
-                  <Web3Feedback />
-                </div>
-              </aside>
-            </article>
+            <>
+              <Alert
+                text="Given the beta status, publishing on Rinkeby first is strongly recommended. [Learn about the market](https://oceanprotocol.com/technology/marketplaces)."
+                state="info"
+                className={styles.alert}
+              />
+              <article className={styles.grid}>
+                <FormPublish content={content.form} />
+
+                <aside>
+                  <div className={styles.sticky}>
+                    <Preview values={values} />
+                    <Web3Feedback />
+                  </div>
+                </aside>
+              </article>
+            </>
           )}
 
           {debug === true && <Debug values={values} />}
