@@ -41,13 +41,15 @@ const columns = [
     name: 'Your Pool Shares',
     selector: function getAssetRow(row: Asset) {
       return <PriceUnit price={row.shares} symbol="pool shares" small />
-    }
+    },
+    right: true
   },
   {
     name: 'Total Pool Liquidity',
     selector: function getAssetRow(row: Asset) {
       return <TotalLiquidity ddo={row.ddo} />
-    }
+    },
+    right: true
   }
 ]
 

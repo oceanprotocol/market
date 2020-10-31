@@ -5,3 +5,9 @@
   color: var(--color-secondary);
   font-weight: var(--font-weight-base);
 }
+
+/* fiat currency symbol */
+.conversion strong span {
+  font-weight: var(--font-weight-base);
+  color: var(--color-secondary);
+}
