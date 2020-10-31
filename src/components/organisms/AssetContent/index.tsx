@@ -28,7 +28,8 @@ export default function AssetContent({
   const { accountId, networkId } = useOcean()
   const { dtSymbol, dtName } = usePricing(ddo)
 
-  const isOwner = accountId === ddo.publicKey[0].owner
+  const { owner } = ddo.publicKey[0]
+  const isOwner = accountId === owner
   const hasNoPrice = ddo.price.datatoken === 0 && ddo.price.value === 0
   const showPricing = isOwner && hasNoPrice
 
@@ -56,14 +57,16 @@ export default function AssetContent({
               </EtherscanLink>
             </p>
 
-            <p className={styles.datatoken} title={ddo.publicKey[0].owner}>
+            <p className={styles.owner} title={owner}>
               Published by{' '}
-              <EtherscanLink
-                networkId={networkId}
-                path={`address/${ddo.publicKey[0].owner}`}
-              >
-                {accountTruncate(ddo.publicKey[0].owner)}
+              <Link to={`/search?owner=${owner}`}>
+                {accountTruncate(owner)}
+              </Link>{' '}
+              (
+              <EtherscanLink networkId={networkId} path={`address/${owner}`}>
+                Etherscan
               </EtherscanLink>
+              )
             </p>
 
             {metadata?.additionalInformation?.categories?.length && (
