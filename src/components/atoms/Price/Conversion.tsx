@@ -18,6 +18,7 @@ export default function Conversion({
   const { currency, locale } = useUserPreferences()
 
   const [priceConverted, setPriceConverted] = useState('0.00')
+  const isFiat = currency === 'EUR' || currency === 'USD'
 
   const styleClasses = cx({
     conversion: true,
@@ -30,17 +31,15 @@ export default function Conversion({
       return
     }
 
-    const fiatValue = (prices as any)[currency.toLowerCase()]
-    const converted = fiatValue * Number(price)
-    const convertedFormatted = formatCurrency(
-      converted,
-      currency,
-      locale,
-      true,
-      { decimalPlaces: 2 }
-    )
+    const conversionValue = (prices as any)[currency.toLowerCase()]
+    const converted = conversionValue * Number(price)
+    const convertedFormatted = formatCurrency(converted, '', locale, false, {
+      decimalPlaces: 2,
+      // only this gives us 2 decimals for fiat
+      ...(isFiat && { significantFigures: 2 })
+    })
     setPriceConverted(convertedFormatted)
-  }, [price, prices, currency, locale])
+  }, [price, prices, currency, locale, isFiat])
 
   return (
     <span
