@@ -50,7 +50,7 @@ export default function AssetContent({
                 path={`token/${ddo.dataToken}`}
               >
                 {dtName ? (
-                  `${dtName} - ${dtSymbol}`
+                  `${dtName} — ${dtSymbol}`
                 ) : (
                   <code>{ddo.dataToken}</code>
                 )}
@@ -64,12 +64,11 @@ export default function AssetContent({
                 title="Show all data sets created by this account."
               >
                 {accountTruncate(owner)}
-              </Link>{' '}
-              (
+              </Link>
+              {' — '}
               <EtherscanLink networkId={networkId} path={`address/${owner}`}>
                 Etherscan
               </EtherscanLink>
-              )
             </p>
 
             {metadata?.additionalInformation?.categories?.length && (

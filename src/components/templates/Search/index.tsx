@@ -32,7 +32,9 @@ export default function SearchPage({
   return (
     <section className={styles.grid}>
       <div className={styles.search}>
-        {text && <SearchBar initialValue={text as string} />}
+        {(text || owner) && (
+          <SearchBar initialValue={(text || owner) as string} />
+        )}
       </div>
 
       <div className={styles.results}>
