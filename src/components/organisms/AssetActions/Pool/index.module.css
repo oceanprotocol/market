@@ -53,19 +53,6 @@
   animation: pulse 2s ease-in-out infinite;
 }
 
-.transactions {
-  composes: container;
-  border-top: 1px solid var(--border-color);
-  margin-top: calc(var(--spacer) / 1.5);
-  padding: calc(var(--spacer) / 1.5);
-  background: var(--background-highlight);
-  margin-bottom: -2rem;
-}
-
-.transactions [class*='rdt_Pagination'] {
-  margin-bottom: -1rem;
-}
-
 @keyframes pulse {
   0% {
     background: transparent;

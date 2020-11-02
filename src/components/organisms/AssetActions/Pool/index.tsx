@@ -13,6 +13,7 @@ import Token from './Token'
 import TokenList from './TokenList'
 import { graphql, useStaticQuery } from 'gatsby'
 import PoolTransactions from '../../../molecules/PoolTransactions'
+import Transactions from './Transactions'
 
 export interface Balance {
   ocean: number
@@ -283,12 +284,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
             )}
           </div>
 
-          {accountId && (
-            <div className={styles.transactions}>
-              <h3 className={styles.title}>Your Pool Transactions</h3>
-              <PoolTransactions poolAddress={price?.address} minimal />
-            </div>
-          )}
+          {accountId && <Transactions poolAddress={price?.address} />}
         </>
       )}
     </>
