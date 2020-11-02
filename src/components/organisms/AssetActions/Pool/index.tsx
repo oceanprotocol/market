@@ -180,7 +180,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
   const refreshInfo = async () => {
     setRefreshPool(!refreshPool)
-    refreshPrice()
+    await refreshPrice()
   }
 
   return (
