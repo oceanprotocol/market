@@ -1,10 +1,10 @@
 import { PoolTransaction } from '@oceanprotocol/lib/dist/node/balancer/OceanPool'
 import { useOcean } from '@oceanprotocol/react'
 import React, { ReactElement, useEffect, useState } from 'react'
-import EtherscanLink from '../../atoms/EtherscanLink'
-import Time from '../../atoms/Time'
-import Table from '../../atoms/Table'
-import AssetTitle from '../../molecules/AssetTitle'
+import EtherscanLink from '../atoms/EtherscanLink'
+import Time from '../atoms/Time'
+import Table from '../atoms/Table'
+import AssetTitle from '../molecules/AssetTitle'
 
 function Title({ row }: { row: PoolTransaction }) {
   const { ocean, networkId } = useOcean()
@@ -33,29 +33,13 @@ function Title({ row }: { row: PoolTransaction }) {
   )
 }
 
-const columns = [
-  {
-    name: 'Title',
-    selector: function getTitleRow(row: PoolTransaction) {
-      return <Title row={row} />
-    }
-  },
-  {
-    name: 'Data Set',
-    selector: function getAssetRow(row: PoolTransaction) {
-      const did = row.dtAddress.replace('0x', 'did:op:')
-      return <AssetTitle did={did} />
-    }
-  },
-  {
-    name: 'Time',
-    selector: function getTimeRow(row: PoolTransaction) {
-      return <Time date={row.timestamp.toString()} relative isUnix />
-    }
-  }
-]
-
-export default function PoolTransactions(): ReactElement {
+export default function PoolTransactions({
+  poolAddress,
+  minimal
+}: {
+  poolAddress?: string
+  minimal?: boolean
+}): ReactElement {
   const { ocean, accountId } = useOcean()
   const [logs, setLogs] = useState<PoolTransaction[]>()
   const [isLoading, setIsLoading] = useState(false)
@@ -64,7 +48,9 @@ export default function PoolTransactions(): ReactElement {
     async function getLogs() {
       if (!ocean || !accountId) return
       setIsLoading(true)
-      const logs = await ocean.pool.getAllPoolLogs(accountId)
+      const logs = poolAddress
+        ? await ocean.pool.getPoolLogs(poolAddress, 0, accountId)
+        : await ocean.pool.getAllPoolLogs(accountId)
       // sort logs by date, newest first
       const logsSorted = logs.sort((a, b) => {
         if (a.timestamp > b.timestamp) return -1
@@ -75,7 +61,39 @@ export default function PoolTransactions(): ReactElement {
       setIsLoading(false)
     }
     getLogs()
-  }, [ocean, accountId])
+  }, [ocean, accountId, poolAddress])
 
-  return <Table columns={columns} data={logs} isLoading={isLoading} />
+  const columns = [
+    {
+      name: 'Title',
+      selector: function getTitleRow(row: PoolTransaction) {
+        return <Title row={row} />
+      }
+    },
+    {
+      ...(!minimal && {
+        name: 'Data Set',
+        selector: function getAssetRow(row: PoolTransaction) {
+          const did = row.dtAddress.replace('0x', 'did:op:')
+          return <AssetTitle did={did} />
+        }
+      })
+    },
+    {
+      name: 'Time',
+      selector: function getTimeRow(row: PoolTransaction) {
+        return <Time date={row.timestamp.toString()} relative isUnix />
+      }
+    }
+  ]
+
+  return (
+    <Table
+      columns={columns}
+      data={logs}
+      isLoading={isLoading}
+      noTableHead={minimal}
+      dense={minimal}
+    />
+  )
 }

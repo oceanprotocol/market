@@ -12,6 +12,7 @@ import EtherscanLink from '../../../atoms/EtherscanLink'
 import Token from './Token'
 import TokenList from './TokenList'
 import { graphql, useStaticQuery } from 'gatsby'
+import PoolTransactions from '../../PoolTransactions'
 
 export interface Balance {
   ocean: number
@@ -287,6 +288,10 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
               </Button>
             )}
           </div>
+
+          {hasAddedLiquidity && (
+            <PoolTransactions poolAddress={price?.address} minimal />
+          )}
         </>
       )}
     </>
