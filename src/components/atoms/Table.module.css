@@ -6,6 +6,7 @@
 .table [role='row'] {
   color: var(--font-color-text);
   font-size: var(--font-size-small);
+  min-width: 0;
 }
 
 .table [class~='rdt_TableCol'] {
@@ -26,6 +27,7 @@
   font-size: var(--font-size-small);
   color: var(--color-secondary);
   background: none;
+  min-height: 0;
 }
 
 .table + div [class*='rdt_Pagination'] svg {

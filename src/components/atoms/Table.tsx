@@ -17,6 +17,8 @@ export default function Table({
   columns,
   isLoading,
   emptyMessage,
+  pagination,
+  paginationPerPage,
   ...props
 }: TableProps): ReactElement {
   return (
@@ -25,8 +27,8 @@ export default function Table({
       data={data}
       className={styles.table}
       noHeader
-      pagination={data?.length >= 9}
-      paginationPerPage={10}
+      pagination={pagination || data?.length >= 9}
+      paginationPerPage={paginationPerPage || 10}
       paginationComponentOptions={{ noRowsPerPage: true }}
       noDataComponent={<Empty message={emptyMessage} />}
       progressPending={isLoading}

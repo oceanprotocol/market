@@ -12,6 +12,8 @@ import EtherscanLink from '../../../atoms/EtherscanLink'
 import Token from './Token'
 import TokenList from './TokenList'
 import { graphql, useStaticQuery } from 'gatsby'
+import PoolTransactions from '../../../molecules/PoolTransactions'
+import Transactions from './Transactions'
 
 export interface Balance {
   ocean: number
@@ -44,7 +46,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const content = data.content.edges[0].node.childContentJson.pool
 
   const { ocean, accountId, networkId } = useOcean()
-  const { price, refreshPrice } = useMetadata(ddo)
+  const { price, refreshPrice, owner } = useMetadata(ddo)
   const { dtSymbol } = usePricing(ddo)
 
   const [poolTokens, setPoolTokens] = useState<string>()
@@ -71,16 +73,12 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const [refreshPool, setRefreshPool] = useState(false)
 
   useEffect(() => {
-    const hasAddedLiquidity =
-      userLiquidity && (userLiquidity.ocean > 0 || userLiquidity.datatoken > 0)
-    setHasAddedLiquidity(hasAddedLiquidity)
-
     const poolShare =
       price?.ocean &&
       price?.datatoken &&
-      userLiquidity &&
-      ((Number(poolTokens) / Number(totalPoolTokens)) * 100).toFixed(2)
+      ((Number(poolTokens) / Number(totalPoolTokens)) * 100).toFixed(5)
     setPoolShare(poolShare)
+    setHasAddedLiquidity(Number(poolShare) > 0)
 
     const totalUserLiquidityInOcean =
       userLiquidity?.ocean + userLiquidity?.datatoken * price?.value
@@ -129,15 +127,13 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         //
         // Get everything the creator put into the pool
         //
-
         const creatorPoolTokens = await ocean.pool.sharesBalance(
-          ddo.publicKey[0].owner,
+          owner,
           price.address
         )
         setCreatorPoolTokens(creatorPoolTokens)
 
-        // calculate creator's provided liquidity based on pool tokens
-
+        // Calculate creator's provided liquidity based on pool tokens
         const creatorOceanBalance =
           (Number(creatorPoolTokens) / Number(totalPoolTokens)) * price.ocean
 
@@ -287,6 +283,8 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
               </Button>
             )}
           </div>
+
+          {accountId && <Transactions poolAddress={price?.address} />}
         </>
       )}
     </>
