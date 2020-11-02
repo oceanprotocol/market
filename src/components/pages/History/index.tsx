@@ -2,7 +2,7 @@ import React, { ReactElement, ReactNode } from 'react'
 import ComputeJobs from './ComputeJobs'
 import styles from './index.module.css'
 import PoolShares from './PoolShares'
-import PoolTransactions from '../../organisms/PoolTransactions'
+import PoolTransactions from '../../molecules/PoolTransactions'
 import PublishedList from './PublishedList'
 
 const sections = [

@@ -4,15 +4,29 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import EtherscanLink from '../atoms/EtherscanLink'
 import Time from '../atoms/Time'
 import Table from '../atoms/Table'
-import AssetTitle from '../molecules/AssetTitle'
+import AssetTitle from './AssetTitle'
+import styles from './PoolTransactions.module.css'
+import { formatCurrency } from '@coingecko/cryptoformat'
+import { useUserPreferences } from '../../providers/UserPreferences'
+
+function formatNumber(number: number, locale: string) {
+  return formatCurrency(number, '', locale, false, {
+    significantFigures: 4
+  })
+}
 
 function Title({ row }: { row: PoolTransaction }) {
   const { ocean, networkId } = useOcean()
   const [dtSymbol, setDtSymbol] = useState<string>()
+  const { locale } = useUserPreferences()
 
   const title = row.tokenAmountIn
-    ? `Add ${row.tokenAmountIn} ${dtSymbol || 'OCEAN'}`
-    : `Remove ${row.tokenAmountOut} ${dtSymbol || 'OCEAN'}`
+    ? `Add ${formatNumber(Number(row.tokenAmountIn), locale)} ${
+        dtSymbol || 'OCEAN'
+      }`
+    : `Remove ${formatNumber(Number(row.tokenAmountOut), locale)} ${
+        dtSymbol || 'OCEAN'
+      }`
 
   useEffect(() => {
     if (!ocean) return
@@ -68,7 +82,9 @@ export default function PoolTransactions({
       name: 'Title',
       selector: function getTitleRow(row: PoolTransaction) {
         return <Title row={row} />
-      }
+      },
+      minWidth: '14rem',
+      grow: 1
     },
     {
       name: 'Data Set',
@@ -81,7 +97,14 @@ export default function PoolTransactions({
     {
       name: 'Time',
       selector: function getTimeRow(row: PoolTransaction) {
-        return <Time date={row.timestamp.toString()} relative isUnix />
+        return (
+          <Time
+            className={styles.time}
+            date={row.timestamp.toString()}
+            relative
+            isUnix
+          />
+        )
       }
     }
   ]
@@ -95,6 +118,7 @@ export default function PoolTransactions({
       dense={minimal}
       pagination={minimal ? logs?.length >= 4 : logs?.length >= 9}
       paginationPerPage={minimal ? 5 : 10}
+      emptyMessage="Your pool transactions will show up here"
     />
   )
 }
