@@ -37,6 +37,8 @@ const contentQuery = graphql`
   }
 `
 
+const refreshInterval = 10000 // 10 sec.
+
 export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childContentJson.pool
@@ -171,12 +173,10 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
     }
     init()
 
-    // Re-fetch price every 10 sec., triggering re-calculation of everything
-    const interval = setInterval(refreshPrice, 10000)
-    return () => {
-      clearInterval(interval)
-    }
-  }, [ocean, accountId, price, ddo.dataToken, refreshPool, ddo.publicKey])
+    // Re-fetch price periodically, triggering re-calculation of everything
+    const interval = setInterval(() => refreshPrice(), refreshInterval)
+    return () => clearInterval(interval)
+  }, [ocean, accountId, price, ddo, refreshPool])
 
   const refreshInfo = async () => {
     setRefreshPool(!refreshPool)
@@ -264,6 +264,10 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           >
             <Token symbol="% swap fee" balance={swapFee} noIcon />
           </TokenList>
+
+          <div className={styles.update}>
+            Fetching every {refreshInterval / 1000} sec.
+          </div>
 
           <div className={stylesActions.actions}>
             <Button
