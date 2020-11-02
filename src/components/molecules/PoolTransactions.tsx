@@ -47,37 +47,8 @@ function Title({ row }: { row: PoolTransaction }) {
   )
 }
 
-export default function PoolTransactions({
-  poolAddress,
-  minimal
-}: {
-  poolAddress?: string
-  minimal?: boolean
-}): ReactElement {
-  const { ocean, accountId } = useOcean()
-  const [logs, setLogs] = useState<PoolTransaction[]>()
-  const [isLoading, setIsLoading] = useState(false)
-
-  useEffect(() => {
-    async function getLogs() {
-      if (!ocean || !accountId) return
-      setIsLoading(true)
-      const logs = poolAddress
-        ? await ocean.pool.getPoolLogs(poolAddress, 0, accountId)
-        : await ocean.pool.getAllPoolLogs(accountId)
-      // sort logs by date, newest first
-      const logsSorted = logs.sort((a, b) => {
-        if (a.timestamp > b.timestamp) return -1
-        if (a.timestamp < b.timestamp) return 1
-        return 0
-      })
-      setLogs(logsSorted)
-      setIsLoading(false)
-    }
-    getLogs()
-  }, [ocean, accountId, poolAddress])
-
-  const columns = [
+function getColumns(minimal?: boolean) {
+  return [
     {
       name: 'Title',
       selector: function getTitleRow(row: PoolTransaction) {
@@ -108,10 +79,42 @@ export default function PoolTransactions({
       }
     }
   ]
+}
+
+export default function PoolTransactions({
+  poolAddress,
+  minimal
+}: {
+  poolAddress?: string
+  minimal?: boolean
+}): ReactElement {
+  const { ocean, accountId } = useOcean()
+  const [logs, setLogs] = useState<PoolTransaction[]>()
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    async function getLogs() {
+      if (!ocean || !accountId) return
+
+      setIsLoading(true)
+      const logs = poolAddress
+        ? await ocean.pool.getPoolLogs(poolAddress, 0, accountId)
+        : await ocean.pool.getAllPoolLogs(accountId)
+      // sort logs by date, newest first
+      const logsSorted = logs.sort((a, b) => {
+        if (a.timestamp > b.timestamp) return -1
+        if (a.timestamp < b.timestamp) return 1
+        return 0
+      })
+      setLogs(logsSorted)
+      setIsLoading(false)
+    }
+    getLogs()
+  }, [ocean, accountId, poolAddress])
 
   return (
     <Table
-      columns={columns}
+      columns={getColumns(minimal)}
       data={logs}
       isLoading={isLoading}
       noTableHead={minimal}

@@ -283,10 +283,12 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
             )}
           </div>
 
-          <div className={styles.transactions}>
-            <h3 className={styles.title}>Your Pool Transactions</h3>
-            <PoolTransactions poolAddress={price?.address} minimal />
-          </div>
+          {accountId && (
+            <div className={styles.transactions}>
+              <h3 className={styles.title}>Your Pool Transactions</h3>
+              <PoolTransactions poolAddress={price?.address} minimal />
+            </div>
+          )}
         </>
       )}
     </>
