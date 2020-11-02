@@ -45,7 +45,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const content = data.content.edges[0].node.childContentJson.pool
 
   const { ocean, accountId, networkId } = useOcean()
-  const { price, refreshPrice } = useMetadata(ddo)
+  const { price, refreshPrice, owner } = useMetadata(ddo)
   const { dtSymbol } = usePricing(ddo)
 
   const [poolTokens, setPoolTokens] = useState<string>()
@@ -127,7 +127,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         // Get everything the creator put into the pool
         //
         const creatorPoolTokens = await ocean.pool.sharesBalance(
-          ddo.publicKey[0].owner,
+          owner,
           price.address
         )
         setCreatorPoolTokens(creatorPoolTokens)
