@@ -266,9 +266,11 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
             <Token symbol="% swap fee" balance={swapFee} noIcon />
           </TokenList>
 
-          <div className={styles.update}>
-            Fetching every {refreshInterval / 1000} sec.
-          </div>
+          {ocean && (
+            <div className={styles.update}>
+              Fetching every {refreshInterval / 1000} sec.
+            </div>
+          )}
 
           <div className={stylesActions.actions}>
             <Button
