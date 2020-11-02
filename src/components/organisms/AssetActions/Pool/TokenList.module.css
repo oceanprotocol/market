@@ -4,6 +4,7 @@
   padding: calc(var(--spacer) / 1.5) calc(var(--spacer) / 1.5)
     calc(var(--spacer) / 2) calc(var(--spacer) / 1.5);
   border-top: 1px solid var(--border-color);
+  position: relative;
 }
 
 @media (min-width: 40rem) {
