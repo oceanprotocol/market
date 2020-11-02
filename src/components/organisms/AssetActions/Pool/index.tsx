@@ -290,7 +290,10 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           </div>
 
           {hasAddedLiquidity && (
-            <PoolTransactions poolAddress={price?.address} minimal />
+            <div className={styles.transactions}>
+              <h3 className={styles.title}>Your Transactions</h3>
+              <PoolTransactions poolAddress={price?.address} minimal />
+            </div>
           )}
         </>
       )}

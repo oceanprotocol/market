@@ -71,13 +71,12 @@ export default function PoolTransactions({
       }
     },
     {
-      ...(!minimal && {
-        name: 'Data Set',
-        selector: function getAssetRow(row: PoolTransaction) {
-          const did = row.dtAddress.replace('0x', 'did:op:')
-          return <AssetTitle did={did} />
-        }
-      })
+      name: 'Data Set',
+      selector: function getAssetRow(row: PoolTransaction) {
+        const did = row.dtAddress.replace('0x', 'did:op:')
+        return <AssetTitle did={did} />
+      },
+      omit: minimal
     },
     {
       name: 'Time',
@@ -94,6 +93,8 @@ export default function PoolTransactions({
       isLoading={isLoading}
       noTableHead={minimal}
       dense={minimal}
+      pagination={minimal ? logs?.length >= 4 : logs?.length >= 9}
+      paginationPerPage={minimal ? 5 : 10}
     />
   )
 }

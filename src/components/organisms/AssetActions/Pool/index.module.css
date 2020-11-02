@@ -1,10 +1,14 @@
-.dataToken {
-  padding-bottom: calc(var(--spacer) / 1.5);
-  font-size: var(--font-size-large);
+.container {
   margin-left: -2rem;
   margin-right: -2rem;
   padding-left: calc(var(--spacer) / 1.5);
   padding-right: calc(var(--spacer) / 1.5);
+}
+
+.dataToken {
+  composes: container;
+  padding-bottom: calc(var(--spacer) / 1.5);
+  font-size: var(--font-size-large);
   text-align: center;
   position: relative;
 }
@@ -21,13 +25,18 @@
   margin-right: calc(var(--spacer) / 3);
 }
 
+.title {
+  font-size: var(--font-size-base);
+  margin-bottom: calc(var(--spacer) / 3);
+  color: var(--color-secondary);
+}
+
 .update {
+  composes: container;
   font-size: var(--font-size-mini);
   color: var(--color-secondary);
   text-align: center;
   border-top: 1px solid var(--border-color);
-  margin-left: -2rem;
-  margin-right: -2rem;
   padding-top: calc(var(--spacer) / 4);
 }
 
@@ -42,6 +51,15 @@
   margin-top: -0.1rem;
   vertical-align: middle;
   animation: pulse 2s ease-in-out infinite;
+}
+
+.transactions {
+  composes: container;
+  border-top: 1px solid var(--border-color);
+  margin-top: calc(var(--spacer) / 1.5);
+  padding: calc(var(--spacer) / 1.5);
+  background: var(--background-highlight);
+  margin-bottom: -2rem;
 }
 
 @keyframes pulse {

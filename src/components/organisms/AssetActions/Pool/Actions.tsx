@@ -41,6 +41,7 @@ export default function Actions({
       </div>
       {txId && (
         <SuccessConfetti
+          className={styles.success}
           success={successMessage}
           action={
             <EtherscanLink networkId={networkId} path={`/tx/${txId}`}>
