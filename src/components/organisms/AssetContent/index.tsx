@@ -106,10 +106,8 @@ export default function AssetContent({
         </div>
       </div>
 
-      <div>
-        <div className={styles.sticky}>
-          <AssetActions ddo={ddo} />
-        </div>
+      <div className={styles.actions}>
+        <AssetActions ddo={ddo} />
       </div>
     </article>
   )
