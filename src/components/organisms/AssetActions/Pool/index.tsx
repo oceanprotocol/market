@@ -170,11 +170,17 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
       }
     }
     init()
+
+    // Re-fetch price every 10 sec., triggering re-calculation of everything
+    const interval = setInterval(refreshPrice, 10000)
+    return () => {
+      clearInterval(interval)
+    }
   }, [ocean, accountId, price, ddo.dataToken, refreshPool, ddo.publicKey])
 
   const refreshInfo = async () => {
     setRefreshPool(!refreshPool)
-    await refreshPrice()
+    refreshPrice()
   }
 
   return (
