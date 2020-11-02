@@ -49,12 +49,14 @@ export default function Remove({
   refreshInfo,
   poolAddress,
   poolTokens,
+  totalPoolTokens,
   dtSymbol
 }: {
   setShowRemove: (show: boolean) => void
   refreshInfo: () => void
   poolAddress: string
   poolTokens: string
+  totalPoolTokens: string
   dtSymbol: string
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
@@ -157,7 +159,14 @@ export default function Remove({
       }
     }, 300)
     getValues()
-  }, [amountPercent, isAdvanced, ocean, poolTokens, poolAddress])
+  }, [
+    amountPercent,
+    isAdvanced,
+    ocean,
+    poolTokens,
+    poolAddress,
+    totalPoolTokens
+  ])
 
   return (
     <div className={styles.remove}>

@@ -202,6 +202,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           refreshInfo={refreshInfo}
           poolAddress={price.address}
           poolTokens={poolTokens}
+          totalPoolTokens={totalPoolTokens}
           dtSymbol={dtSymbol}
         />
       ) : (
