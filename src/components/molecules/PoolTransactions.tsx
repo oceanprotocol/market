@@ -10,8 +10,8 @@ import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../providers/UserPreferences'
 
 function formatNumber(number: number, locale: string) {
-  return formatCurrency(number, '', locale, false, {
-    significantFigures: 4
+  return formatCurrency(number, '', locale, true, {
+    significantFigures: 6
   })
 }
 
