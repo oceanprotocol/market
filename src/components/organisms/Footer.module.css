@@ -14,3 +14,8 @@
 .content p {
   display: inline;
 }
+
+.stats > div > div {
+  display: inline-block;
+  margin-bottom: var(--spacer);
+}
