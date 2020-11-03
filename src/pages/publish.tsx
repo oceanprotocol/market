@@ -22,6 +22,7 @@ export const contentQuery = graphql`
           childPagesJson {
             title
             description
+            warning
             form {
               title
               data {

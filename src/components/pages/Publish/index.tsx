@@ -21,7 +21,7 @@ const formName = 'ocean-publish-form'
 export default function PublishPage({
   content
 }: {
-  content: { form: FormContent }
+  content: { warning: string; form: FormContent }
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { publish, publishError, isLoading, publishStepText } = usePublish()
@@ -100,7 +100,7 @@ export default function PublishPage({
           ) : (
             <>
               <Alert
-                text="Given the beta status, publishing on Rinkeby first is strongly recommended. [Learn about the market](https://oceanprotocol.com/technology/marketplaces)."
+                text={content.warning}
                 state="info"
                 className={styles.alert}
               />

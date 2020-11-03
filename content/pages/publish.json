@@ -1,6 +1,7 @@
 {
   "title": "Publish",
   "description": "Highlight the important features of your data set to make it more discoverable and catch the interest of data consumers.",
+  "warning": "Given the beta status, publishing on Rinkeby first is strongly recommended. [Learn about the market](https://oceanprotocol.com/technology/marketplaces).",
   "form": {
     "title": "Publish",
     "data": [
