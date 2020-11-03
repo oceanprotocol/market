@@ -2,7 +2,6 @@ import React, { ReactElement, useState, useEffect } from 'react'
 import { useOcean } from '@oceanprotocol/react'
 import Header from '../Header'
 import { toast } from 'react-toastify'
-import { Balance } from '..'
 import Actions from '../Actions'
 import { graphql, useStaticQuery } from 'gatsby'
 import * as Yup from 'yup'
@@ -11,6 +10,7 @@ import FormAdd from './FormAdd'
 import styles from './index.module.css'
 import Token from '../Token'
 import Alert from '../../../../atoms/Alert'
+import DtBalance from '../../../../../models/DtBalance'
 
 const contentQuery = graphql`
   query PoolAddQuery {
@@ -58,7 +58,7 @@ export default function Add({
   refreshInfo: () => void
   poolAddress: string
   totalPoolTokens: string
-  totalBalance: Balance
+  totalBalance: DtBalance
   swapFee: string
   dtSymbol: string
   dtAddress: string

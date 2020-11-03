@@ -13,11 +13,7 @@ import EtherscanLink from '../../../atoms/EtherscanLink'
 import Token from './Token'
 import TokenList from './TokenList'
 import { graphql, useStaticQuery } from 'gatsby'
-
-export interface Balance {
-  ocean: number
-  datatoken: number
-}
+import DtBalance from '../../../../models/DtBalance'
 
 const contentQuery = graphql`
   query PoolQuery {
@@ -48,7 +44,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
   const [poolTokens, setPoolTokens] = useState<string>()
   const [totalPoolTokens, setTotalPoolTokens] = useState<string>()
-  const [userLiquidity, setUserLiquidity] = useState<Balance>()
+  const [userLiquidity, setUserLiquidity] = useState<DtBalance>()
   const [swapFee, setSwapFee] = useState<string>()
 
   const [showAdd, setShowAdd] = useState(false)
@@ -63,7 +59,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
     creatorTotalLiquidityInOcean,
     setCreatorTotalLiquidityInOcean
   ] = useState(0)
-  const [creatorLiquidity, setCreatorLiquidity] = useState<Balance>()
+  const [creatorLiquidity, setCreatorLiquidity] = useState<DtBalance>()
   const [creatorPoolTokens, setCreatorPoolTokens] = useState<string>()
   const [creatorPoolShare, setCreatorPoolShare] = useState<string>()
   // the purpose of the value is just to trigger the effect

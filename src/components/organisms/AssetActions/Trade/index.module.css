@@ -1,0 +1,74 @@
+.dataToken {
+  padding-bottom: calc(var(--spacer) / 1.5);
+  font-size: var(--font-size-large);
+  border-bottom: 1px solid var(--brand-grey-lighter);
+  margin-left: -2rem;
+  margin-right: -2rem;
+  padding-left: calc(var(--spacer) / 1.5);
+  padding-right: calc(var(--spacer) / 1.5);
+  text-align: center;
+}
+
+.dataTokenLinks {
+  display: flex;
+  justify-content: center;
+  font-size: var(--font-size-small);
+  margin-top: calc(var(--spacer) / 4);
+}
+
+.dataTokenLinks a {
+  margin-left: calc(var(--spacer) / 3);
+  margin-right: calc(var(--spacer) / 3);
+}
+
+.swapButton { 
+  text-align: center;
+  justify-content: center;
+}
+
+.swapButton svg {
+  width: 1.5em;
+  height: 1.5em;
+  fill: var(--brand-pink);
+}
+
+
+.tradeInput {
+  padding: var(--spacer) calc(var(--spacer) * 2.5) calc(var(--spacer) * 1.2)
+    calc(var(--spacer) * 2.5);
+  margin-left: -2rem;
+  margin-right: -2rem;
+  position: relative;
+}
+
+.tradeInput input {
+  text-align: center;
+}
+
+.tradeInput div[class*='field'] {
+  margin-bottom: 0;
+}
+
+.output {
+  display: grid;
+  gap: var(--spacer);
+  grid-template-columns: 1fr 1fr;
+}
+
+.output p {
+  font-weight: var(--font-weight-bold);
+  margin-bottom: calc(var(--spacer) / 8);
+}
+
+.output [class*='token'] {
+  white-space: normal;
+}
+
+.output [class*='token'] > figure {
+  display: none;
+}
+
+.warning {
+  margin-left: -3rem;
+  margin-right: -3rem;
+}
