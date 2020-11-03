@@ -5,6 +5,7 @@ import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import { Link } from 'gatsby'
 import axios from 'axios'
 import PriceUnit from '../atoms/Price/PriceUnit'
+import Conversion from '../atoms/Price/Conversion'
 
 interface MarketStatsResponse {
   datasets: number
@@ -32,7 +33,8 @@ export default function Footer(): ReactElement {
     <footer className={styles.footer}>
       <div className={styles.content}>
         <div className={styles.stats}>
-          Pooled <PriceUnit price={`${stats?.ocean}`} conversion />
+          Total of <PriceUnit price={`${stats?.ocean}`} small /> across all
+          pools <Conversion price={`${stats?.ocean}`} />
         </div>
         <div>
           © {year} <Markdown text={copyright} /> —{' '}

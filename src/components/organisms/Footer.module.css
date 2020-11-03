@@ -15,7 +15,6 @@
   display: inline;
 }
 
-.stats > div > div {
-  display: inline-block;
+.stats {
   margin-bottom: var(--spacer);
 }
