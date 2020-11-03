@@ -9,7 +9,7 @@ import AssetActions from '../AssetActions'
 import { DDO } from '@oceanprotocol/lib'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import Pricing from './Pricing'
-import { useOcean, usePricing } from '@oceanprotocol/react'
+import { useMetadata, useOcean, usePricing } from '@oceanprotocol/react'
 import EtherscanLink from '../../atoms/EtherscanLink'
 import Bookmark from './Bookmark'
 import { accountTruncate } from '../../../utils/wallet'
@@ -26,9 +26,10 @@ export default function AssetContent({
 }: AssetContentProps): ReactElement {
   const { debug } = useUserPreferences()
   const { accountId, networkId } = useOcean()
+  const { owner } = useMetadata(ddo)
   const { dtSymbol, dtName } = usePricing(ddo)
 
-  const isOwner = accountId === ddo.publicKey[0].owner
+  const isOwner = accountId === owner
   const hasNoPrice = ddo.price.datatoken === 0 && ddo.price.value === 0
   const showPricing = isOwner && hasNoPrice
 
@@ -49,20 +50,24 @@ export default function AssetContent({
                 path={`token/${ddo.dataToken}`}
               >
                 {dtName ? (
-                  `${dtName} - ${dtSymbol}`
+                  `${dtName} — ${dtSymbol}`
                 ) : (
                   <code>{ddo.dataToken}</code>
                 )}
               </EtherscanLink>
             </p>
 
-            <p className={styles.datatoken} title={ddo.publicKey[0].owner}>
+            <p>
               Published by{' '}
-              <EtherscanLink
-                networkId={networkId}
-                path={`address/${ddo.publicKey[0].owner}`}
+              <Link
+                to={`/search/?owner=${owner}`}
+                title="Show all data sets created by this account."
               >
-                {accountTruncate(ddo.publicKey[0].owner)}
+                {owner && accountTruncate(owner)}
+              </Link>
+              {' — '}
+              <EtherscanLink networkId={networkId} path={`address/${owner}`}>
+                Etherscan
               </EtherscanLink>
             </p>
 

@@ -3,17 +3,24 @@ import PageSearch from '../components/templates/Search'
 import { PageProps } from 'gatsby'
 import Layout from '../components/Layout'
 import queryString from 'query-string'
+import { accountTruncate } from '../utils/wallet'
+import ethereumAddress from 'ethereum-address'
 
 export default function PageGatsbySearch(props: PageProps): ReactElement {
   const parsed = queryString.parse(props.location.search)
-  const { text, tags, categories } = parsed
-  const searchValue = text || tags || categories
+  const { text, owner, tags, categories } = parsed
+
+  const isETHAddress = ethereumAddress.isAddress(text as string)
+  const searchValue =
+    (isETHAddress ? accountTruncate(text as string) : text) ||
+    tags ||
+    categories
+  const title = owner
+    ? `Published by ${accountTruncate(owner as string)}`
+    : `Search for ${searchValue || 'all data sets'}`
 
   return (
-    <Layout
-      title={`Search for ${searchValue || 'all data sets'}`}
-      uri={props.uri}
-    >
+    <Layout title={title} uri={props.uri}>
       <PageSearch location={props.location} />
     </Layout>
   )
