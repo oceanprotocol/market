@@ -6,7 +6,7 @@ import Currency from './Currency'
 import Debug from './Debug'
 import { ReactComponent as Caret } from '../../../images/caret.svg'
 import useDarkMode from 'use-dark-mode'
-import Theme from './Theme'
+import Appearance from './Appearance'
 import { darkModeConfig } from '../../../../app.config'
 
 export default function UserPreferences(): ReactElement {
@@ -18,7 +18,7 @@ export default function UserPreferences(): ReactElement {
       content={
         <ul className={styles.preferencesDetails}>
           <Currency />
-          <Theme darkMode={darkMode} />
+          <Appearance darkMode={darkMode} />
           <Debug />
         </ul>
       }

@@ -50,9 +50,8 @@
 }
 
 .preferencesDetails li {
-  padding-top: calc(var(--spacer) / 2);
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: calc(var(--spacer) / 2);
+  padding-top: calc(var(--spacer) / 3);
+  padding-bottom: calc(var(--spacer) / 3);
 }
 
 .preferencesDetails li:last-child,
