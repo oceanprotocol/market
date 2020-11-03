@@ -37,7 +37,6 @@
     "decimal.js": "^10.2.1",
     "dom-confetti": "^0.2.2",
     "dotenv": "^8.2.0",
-    "ethereum-address": "0.0.4",
     "ethereum-blockies": "github:MyEtherWallet/blockies",
     "filesize": "^6.1.0",
     "formik": "^2.2.1",

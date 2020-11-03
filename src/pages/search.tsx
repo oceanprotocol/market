@@ -1,22 +1,13 @@
 import React, { ReactElement } from 'react'
 import PageSearch from '../components/templates/Search'
-import { navigate, PageProps } from 'gatsby'
+import { PageProps } from 'gatsby'
 import Layout from '../components/Layout'
 import queryString from 'query-string'
-import ethereumAddress from 'ethereum-address'
 import { accountTruncate } from '../utils/wallet'
 
 export default function PageGatsbySearch(props: PageProps): ReactElement {
   const parsed = queryString.parse(props.location.search)
   const { text, owner, tags, categories } = parsed
-
-  // Switch to owner search when ETH address in `text` is detected,
-  // effectively modifying props.location, starting this file again.
-  const isETHAddress = text && ethereumAddress.isAddress(text as string)
-  if (isETHAddress) {
-    navigate(`/search/?owner=${text}`)
-    return null
-  }
 
   const searchValue = text || tags || categories
   const title = owner
