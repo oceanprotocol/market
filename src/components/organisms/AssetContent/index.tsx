@@ -9,7 +9,7 @@ import AssetActions from '../AssetActions'
 import { DDO } from '@oceanprotocol/lib'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import Pricing from './Pricing'
-import { useOcean, usePricing } from '@oceanprotocol/react'
+import { useMetadata, useOcean, usePricing } from '@oceanprotocol/react'
 import EtherscanLink from '../../atoms/EtherscanLink'
 import Bookmark from './Bookmark'
 import { accountTruncate } from '../../../utils/wallet'
@@ -26,9 +26,9 @@ export default function AssetContent({
 }: AssetContentProps): ReactElement {
   const { debug } = useUserPreferences()
   const { accountId, networkId } = useOcean()
+  const { owner } = useMetadata(ddo)
   const { dtSymbol, dtName } = usePricing(ddo)
 
-  const { owner } = ddo.publicKey[0]
   const isOwner = accountId === owner
   const hasNoPrice = ddo.price.datatoken === 0 && ddo.price.value === 0
   const showPricing = isOwner && hasNoPrice
@@ -63,7 +63,7 @@ export default function AssetContent({
                 to={`/search?owner=${owner}`}
                 title="Show all data sets created by this account."
               >
-                {accountTruncate(owner)}
+                {owner && accountTruncate(owner)}
               </Link>
               {' — '}
               <EtherscanLink networkId={networkId} path={`address/${owner}`}>
