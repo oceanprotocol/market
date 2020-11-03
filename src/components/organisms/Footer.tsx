@@ -6,6 +6,7 @@ import { Link } from 'gatsby'
 import axios from 'axios'
 import PriceUnit from '../atoms/Price/PriceUnit'
 import Conversion from '../atoms/Price/Conversion'
+import { Logger } from '@oceanprotocol/lib'
 
 interface MarketStatsResponse {
   datasets: number
@@ -22,9 +23,13 @@ export default function Footer(): ReactElement {
 
   useEffect(() => {
     async function getStats() {
-      const response = await axios('https://market-stats.vercel.app')
-      if (!response || response.status !== 200) return
-      setStats(response.data)
+      try {
+        const response = await axios('https://market-stats.oceanprotocol.com')
+        if (!response || response.status !== 200) return
+        setStats(response.data)
+      } catch (error) {
+        Logger.error(error.message)
+      }
     }
     getStats()
   }, [])
