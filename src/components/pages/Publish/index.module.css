@@ -4,7 +4,8 @@
   position: relative;
 }
 
-.alert {
+.alert,
+div.alert {
   margin-bottom: var(--spacer);
   margin-left: 0;
 }
