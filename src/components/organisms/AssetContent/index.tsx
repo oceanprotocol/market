@@ -60,7 +60,7 @@ export default function AssetContent({
             <p>
               Published by{' '}
               <Link
-                to={`/search?owner=${owner}`}
+                to={`/search/?owner=${owner}`}
                 title="Show all data sets created by this account."
               >
                 {owner && accountTruncate(owner)}
