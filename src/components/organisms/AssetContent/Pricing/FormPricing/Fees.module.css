@@ -4,12 +4,12 @@
   grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
   margin-left: -2rem;
   margin-right: -2rem;
-  border-bottom: 1px solid var(--brand-grey-lighter);
+  border-bottom: 1px solid var(--border-color);
   padding: var(--spacer) var(--spacer) calc(var(--spacer) / 2) var(--spacer);
 
   justify-content: center;
   text-align: center;
-  border-bottom: 1px solid var(--brand-grey-lighter);
+  border-bottom: 1px solid var(--border-color);
   background: var(--brand-grey-dimmed);
 }
 

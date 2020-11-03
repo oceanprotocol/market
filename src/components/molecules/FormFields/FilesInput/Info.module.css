@@ -1,8 +1,8 @@
 .info {
   border-radius: var(--border-radius);
   padding: calc(var(--spacer) / 2);
-  border: 1px solid var(--brand-grey-lighter);
-  background-color: var(--brand-grey-dimmed);
+  border: 1px solid var(--border-color);
+  background-color: var(--background-highlight);
   position: relative;
 }
 
@@ -35,6 +35,6 @@
   right: 0;
   font-size: var(--font-size-h3);
   cursor: pointer;
-  color: var(--brand-grey);
+  color: var(--font-color-text);
   background-color: transparent;
 }

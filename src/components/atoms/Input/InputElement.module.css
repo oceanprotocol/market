@@ -2,11 +2,11 @@
   font-size: var(--font-size-base);
   font-family: var(--font-family-base);
   font-weight: var(--font-weight-bold);
-  color: var(--brand-black);
-  border: 1px solid var(--brand-grey-lighter);
+  color: var(--font-color-heading);
+  border: 1px solid var(--border-color);
   box-shadow: none;
   width: 100%;
-  background: var(--brand-white);
+  background: var(--background-body);
   padding: calc(var(--spacer) / 3);
   margin: 0;
   border-radius: var(--border-radius);
@@ -18,7 +18,7 @@
 }
 
 .input:focus {
-  border-color: var(--brand-grey);
+  border-color: var(--font-color-text);
   box-shadow: none;
   outline: 0;
 }
@@ -63,12 +63,12 @@
   background-image: linear-gradient(
       45deg,
       transparent 50%,
-      var(--brand-purple) 50%
+      var(--font-color-text) 50%
     ),
-    linear-gradient(135deg, var(--brand-grey) 50%, transparent 50%),
+    linear-gradient(135deg, var(--font-color-text) 50%, transparent 50%),
     linear-gradient(
       to right,
-      var(--brand-grey-lighter) 1px,
+      var(--border-color) 1px,
       transparent 1px,
       transparent
     );
@@ -96,7 +96,7 @@
   padding: 0;
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-small);
-  color: var(--brand-grey);
+  color: var(--font-color-text);
   padding-left: 0.5rem;
 }
 
@@ -126,13 +126,13 @@
 
 .radio:checked,
 .checkbox:checked {
-  border-color: var(--brand-pink);
-  background: var(--brand-pink);
+  border-color: var(--color-primary);
+  background: var(--color-primary);
 }
 
 .radio:focus,
 .checkbox:focus {
-  box-shadow: 0 0 0 var(--brand-pink);
+  box-shadow: 0 0 0 var(--color-primary);
 }
 
 .radio:checked::after,
@@ -183,7 +183,7 @@
 
 .prefix,
 .postfix {
-  border: 1px solid var(--brand-grey-lighter);
+  border: 1px solid var(--border-color);
   height: 43px;
   display: flex;
   align-items: center;
@@ -222,7 +222,7 @@ input[type='range']::-webkit-slider-thumb,
 input[type='range']::-moz-range-thumb {
   appearance: none;
   background: var(--brand-gradient);
-  border: 2px solid var(--brand-grey-lighter);
+  border: 2px solid var(--border-color);
   width: var(--font-size-large);
   height: var(--font-size-large);
   border-radius: 50%;
@@ -232,7 +232,7 @@ input[type='range']::-moz-range-thumb {
 
 input[type='range']::-webkit-slider-runnable-track,
 input[type='range']::-moz-range-track {
-  background: var(--brand-grey-lighter);
+  background: var(--border-color);
   border-radius: var(--border-radius);
   height: 0.3rem;
   border: none;
@@ -240,7 +240,8 @@ input[type='range']::-moz-range-track {
 
 /* Size modifiers */
 
-.small {
+.small,
+.select.small {
   font-size: var(--font-size-small);
   height: 34px;
   padding: calc(var(--spacer) / 4);
@@ -256,9 +257,32 @@ input[type='range']::-moz-range-track {
   font-size: var(--font-size-mini);
 }
 
-.selectSmall {
-  composes: small;
-  height: 34px;
+.select.small {
+  padding-right: 2rem;
+
+  /* custom arrow */
+  background-position: calc(100% - 14px) 1rem, calc(100% - 9px) 1rem, 100% 0;
+  background-size: 5px 5px, 5px 5px, 2rem 3rem;
+}
+
+.large,
+.select.large {
+  font-size: var(--font-size-large);
+  height: 62px;
+  padding: calc(var(--spacer) / 1.5);
+}
+
+.large::placeholder {
+  font-size: var(--font-size-large);
+}
+
+.prefix.large,
+.postfix.large {
+  height: 62px;
+  font-size: var(--font-size-base);
+}
+
+.select.large {
   padding-right: 2rem;
 
   /* custom arrow */

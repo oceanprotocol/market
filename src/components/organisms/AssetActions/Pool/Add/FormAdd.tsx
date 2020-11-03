@@ -43,10 +43,20 @@ export default function FormAdd({
   const {
     touched,
     setTouched,
-    handleChange,
     setFieldValue,
+    validateField,
     values
   }: FormikContextType<FormAddLiquidity> = useFormikContext()
+
+  function handleFieldChange(e: ChangeEvent<HTMLInputElement>) {
+    // Workaround so validation kicks in on first touch
+    !touched?.amount && setTouched({ amount: true })
+
+    // Manually handle change events instead of using `handleChange` from Formik.
+    // Solves bug where 0.0 can't be typed.
+    validateField('amount')
+    setFieldValue('amount', e.target.value)
+  }
 
   useEffect(() => {
     async function calculatePoolShares() {
@@ -104,15 +114,12 @@ export default function FormAdd({
             name="amount"
             max={amountMax}
             value={`${values.amount}`}
+            step="any"
             prefix={<CoinSelect dtSymbol={dtSymbol} setCoin={setCoin} />}
             placeholder="0"
             field={field}
             form={form}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => {
-              // Workaround so validation kicks in on first touch
-              !touched?.amount && setTouched({ amount: true })
-              handleChange(e)
-            }}
+            onChange={handleFieldChange}
             disabled={!ocean}
           />
         )}
@@ -123,6 +130,7 @@ export default function FormAdd({
           className={styles.buttonMax}
           style="text"
           size="small"
+          disabled={!ocean}
           onClick={() => setFieldValue('amount', amountMax)}
         >
           Use Max

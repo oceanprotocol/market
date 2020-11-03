@@ -11,6 +11,7 @@ import styles from './index.module.css'
 import Token from '../Token'
 import Alert from '../../../../atoms/Alert'
 import DtBalance from '../../../../../models/DtBalance'
+import { useUserPreferences } from '../../../../../providers/UserPreferences'
 
 const contentQuery = graphql`
   query PoolAddQuery {
@@ -67,6 +68,7 @@ export default function Add({
   const content = data.content.edges[0].node.childContentJson.pool.add
 
   const { ocean, accountId, balance } = useOcean()
+  const { debug } = useUserPreferences()
   const [txId, setTxId] = useState<string>()
   const [coin, setCoin] = useState('OCEAN')
   const [dtBalance, setDtBalance] = useState<string>()
@@ -79,7 +81,7 @@ export default function Add({
   // https://github.com/jquense/yup#number
   const validationSchema = Yup.object().shape<FormAddLiquidity>({
     amount: Yup.number()
-      .min(0.01, 'Must be more or equal to 0.01')
+      .min(0.00001, (param) => `Must be more or equal to ${param.min}`)
       .max(
         Number(amountMax),
         `Maximum you can add is ${Number(amountMax).toFixed(2)} ${coin}`
@@ -154,7 +156,7 @@ export default function Add({
           setSubmitting(false)
         }}
       >
-        {({ isSubmitting, submitForm }) => (
+        {({ isSubmitting, submitForm, values }) => (
           <>
             <div className={styles.addInput}>
               {isWarningAccepted ? (
@@ -204,6 +206,11 @@ export default function Add({
               action={submitForm}
               txId={txId}
             />
+            {debug && (
+              <pre>
+                <code>{JSON.stringify(values, null, 2)}</code>
+              </pre>
+            )}
           </>
         )}
       </Formik>

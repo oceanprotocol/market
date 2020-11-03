@@ -39,7 +39,7 @@ export interface InputProps {
   postfix?: string | ReactElement
   step?: string
   defaultChecked?: boolean
-  small?: boolean
+  size?: 'small' | 'large' | 'default'
 }
 
 export default function Input(props: Partial<InputProps>): ReactElement {
@@ -49,7 +49,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
     label,
     help,
     additionalComponent,
-    small,
+    size,
     field
   } = props
 
@@ -69,7 +69,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
       <Label htmlFor={name} required={required}>
         {label}
       </Label>
-      <InputElement small={small} {...field} {...props} />
+      <InputElement size={size} {...field} {...props} />
 
       {field && field.name !== 'price' && hasError && (
         <div className={styles.error}>

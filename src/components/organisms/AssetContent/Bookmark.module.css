@@ -15,7 +15,7 @@
   fill: var(--brand-grey-light);
   height: 40px;
   width: 40px;
-  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow(0 4px 6px var(--box-shadow-color));
 }
 
 .bookmark:hover,

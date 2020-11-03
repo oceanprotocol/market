@@ -1,6 +1,6 @@
 .tabList {
   text-align: center;
-  border-bottom: 1px solid var(--brand-grey-lighter);
+  border-bottom: 1px solid var(--border-color);
   padding-top: calc(var(--spacer) / 2);
   padding-bottom: calc(var(--spacer) / 2);
 }
@@ -13,12 +13,12 @@
   font-size: var(--font-size-small);
   text-transform: uppercase;
   cursor: pointer;
-  color: var(--brand-grey-light);
+  color: var(--color-secondary);
 }
 
 .tab[aria-selected='true'] {
-  background: var(--brand-black);
-  color: var(--brand-white);
+  background: var(--font-color-heading);
+  color: var(--background-body);
 }
 
 .tabContent {

@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import styles from './Token.module.css'
-import { ReactComponent as Logo } from '../../../../images/logo.svg'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
+import Logo from '../../../atoms/Logo'
 
 export default function Token({
   symbol,
@@ -17,7 +17,7 @@ export default function Token({
       <figure
         className={`${styles.icon} ${symbol} ${noIcon ? styles.noIcon : ''}`}
       >
-        <Logo />
+        <Logo noWordmark />
       </figure>
       <PriceUnit price={balance} symbol={symbol} small />
     </div>

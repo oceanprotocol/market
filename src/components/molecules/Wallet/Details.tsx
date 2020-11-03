@@ -17,7 +17,7 @@ export default function Details(): ReactElement {
       <ul>
         {Object.entries(balance).map(([key, value]) => (
           <li className={styles.balance} key={key}>
-            <span>{key.toUpperCase()}</span>{' '}
+            <span className={styles.symbol}>{key.toUpperCase()}</span>{' '}
             {formatCurrency(Number(value), '', locale, false, {
               significantFigures: 4
             })}

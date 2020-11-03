@@ -1,22 +1,22 @@
 import { infuraProjectId, network } from '../../app.config'
-import WalletConnectProvider from '@walletconnect/web3-provider'
+// import WalletConnectProvider from '@walletconnect/web3-provider'
 // import Torus from '@toruslabs/torus-embed'
 
 const web3ModalTheme = {
-  background: 'var(--brand-white)',
-  main: 'var(--brand-black)',
+  background: 'var(--background-body)',
+  main: 'var(--font-color-heading)',
   secondary: 'var(--brand-grey-light)',
-  border: 'var(--brand-grey-lighter)',
-  hover: 'var(--brand-grey-dimmed)'
+  border: 'var(--border-color)',
+  hover: 'var(--background-highlight)'
 }
 
 const providerOptions = {
-  walletconnect: {
-    package: WalletConnectProvider,
-    options: {
-      infuraId: infuraProjectId
-    }
-  }
+  // walletconnect: {
+  //   package: WalletConnectProvider,
+  //   options: {
+  //     infuraId: infuraProjectId
+  //   }
+  // }
   // torus: {
   //   package: Torus,
   //   options: {

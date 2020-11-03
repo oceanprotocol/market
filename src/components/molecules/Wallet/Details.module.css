@@ -14,7 +14,7 @@
   white-space: nowrap;
 }
 
-.balance span {
+.symbol {
   width: 20%;
   text-align: right;
   font-weight: var(--font-weight-base);
@@ -24,7 +24,7 @@
 }
 
 .actions {
-  border-top: 1px solid var(--brand-grey-lighter);
+  border-top: 1px solid var(--border-color);
   margin-top: calc(var(--spacer) / 2);
   padding-top: calc(var(--spacer) / 2);
   display: flex;

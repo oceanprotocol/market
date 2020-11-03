@@ -20,9 +20,7 @@
     grid-template-columns: 1.5fr 1fr;
   }
 
-  .sticky {
-    position: sticky;
-    top: calc(var(--spacer) / 2);
+  .actions {
     margin-top: var(--spacer);
   }
 }

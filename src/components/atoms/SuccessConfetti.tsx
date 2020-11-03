@@ -25,10 +25,12 @@ const confettiConfig = {
 
 export default function SuccessConfetti({
   success,
-  action
+  action,
+  className
 }: {
   success: string
   action?: ReactNode
+  className?: string
 }): ReactElement {
   // Have some confetti upon success
   useEffect(() => {
@@ -41,11 +43,11 @@ export default function SuccessConfetti({
   }, [success])
 
   return (
-    <>
+    <div className={className || null}>
       <Alert text={success} state="success" />
       <span className={styles.action} data-confetti>
         {action}
       </span>
-    </>
+    </div>
   )
 }

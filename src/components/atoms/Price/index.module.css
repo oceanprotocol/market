@@ -2,8 +2,3 @@
   color: var(--color-secondary);
   font-weight: var(--font-weight-bold);
 }
-
-.badge {
-  vertical-align: middle;
-  margin-left: calc(var(--spacer) / 6);
-}

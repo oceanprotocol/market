@@ -2,11 +2,15 @@
   display: inline-block;
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-large);
-  color: var(--brand-grey-dark);
-  line-height: 1;
+  color: var(--font-color-text);
+  line-height: 1.2;
 }
 
-.price span:first-child {
+.price > div:firt-child {
+  white-space: nowrap;
+}
+
+.symbol {
   font-weight: var(--font-weight-base);
   color: var(--color-secondary);
   font-size: var(--font-size-base);
@@ -17,6 +21,11 @@
   font-size: var(--font-size-base);
 }
 
-.price.small span:first-child {
+.price.small .symbol {
   font-size: var(--font-size-small);
+}
+
+.badge {
+  vertical-align: middle;
+  margin-left: calc(var(--spacer) / 6);
 }

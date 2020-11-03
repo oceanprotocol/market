@@ -2,9 +2,16 @@
   max-width: var(--break-point--large);
   margin-left: auto;
   margin-right: auto;
-  padding-left: calc(var(--spacer) / 1.2);
-  padding-right: calc(var(--spacer) / 1.2);
+  padding-left: calc(var(--spacer) / 3);
+  padding-right: calc(var(--spacer) / 3);
   width: 100%;
+}
+
+@media (min-width: 40rem) {
+  .container {
+    padding-left: calc(var(--spacer) / 1.2);
+    padding-right: calc(var(--spacer) / 1.2);
+  }
 }
 
 .container.narrow {

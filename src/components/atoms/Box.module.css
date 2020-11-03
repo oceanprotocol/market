@@ -1,16 +1,22 @@
 .box {
   display: block;
-  background: var(--brand-white);
+  background: var(--background-body);
   border-radius: var(--border-radius);
-  border: 1px solid var(--brand-grey-lighter);
-  box-shadow: 0 6px 15px 0 rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 6px 17px 0 var(--box-shadow-color);
   overflow: hidden;
-  padding: var(--spacer);
+  padding: calc(var(--spacer) / 1.5);
+}
+
+@media (min-width: 40rem) {
+  .box {
+    padding: var(--spacer);
+  }
 }
 
 a.box:hover,
 a.box:focus {
   outline: 0;
   transform: translate3d(0, -0.1rem, 0);
-  box-shadow: 0 10px 25px 0 rgba(0, 0, 0, 0.07);
+  box-shadow: 0 10px 25px 0 var(--box-shadow-color);
 }

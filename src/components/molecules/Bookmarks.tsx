@@ -30,7 +30,8 @@ const columns = [
       const { attributes } = row.findServiceByType('metadata')
       return <AssetTitle title={attributes.main.name} did={row.id} />
     },
-    grow: 2
+    maxWidth: '45rem',
+    grow: 1
   },
   {
     name: 'Datatoken Symbol',
@@ -40,7 +41,8 @@ const columns = [
           {row.dataTokenInfo.symbol}
         </Tooltip>
       )
-    }
+    },
+    maxWidth: '10rem'
   },
   {
     name: 'Price',

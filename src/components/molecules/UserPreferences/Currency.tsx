@@ -12,14 +12,14 @@ export default function Currency(): ReactElement {
       <Input
         name="currency"
         label="Currency"
-        help="Select your preferred currency."
+        help="Your conversion display currency."
         type="select"
         options={appConfig.currencies}
         value={currency}
         onChange={(e: ChangeEvent<HTMLSelectElement>) =>
           setCurrency(e.target.value)
         }
-        small
+        size="small"
       />
     </li>
   )

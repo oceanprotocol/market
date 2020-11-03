@@ -1,7 +1,7 @@
 .item {
   display: list-item;
   margin-top: calc(var(--spacer) / 8);
-  color: var(--brand-grey);
+  color: var(--font-color-text);
   list-style-position: inside;
 }
 

@@ -16,19 +16,8 @@
 }
 
 .logoUnit svg {
-  fill: var(--color-primary);
-  width: 4rem;
-  height: 4rem;
   margin-left: -0.5rem;
   margin-right: 0.5rem;
-}
-
-.logoUnit path {
-  fill: var(--brand-black);
-}
-
-.logoUnit:hover path {
-  fill: var(--brand-pink);
 }
 
 .title {
@@ -73,7 +62,7 @@
   display: block;
   padding: calc(var(--spacer) / 2);
   text-transform: uppercase;
-  color: var(--brand-grey-light);
+  color: var(--color-secondary);
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-base);
   position: relative;
@@ -95,7 +84,7 @@
 .link[aria-current],
 .link[aria-current]:hover,
 .link[aria-current]:focus {
-  color: var(--brand-black);
+  color: var(--font-color-heading);
 }
 
 .link:last-child {

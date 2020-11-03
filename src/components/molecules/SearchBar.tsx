@@ -8,11 +8,13 @@ import InputGroup from '../atoms/Input/InputGroup'
 export default function SearchBar({
   placeholder,
   initialValue,
-  filters
+  filters,
+  size
 }: {
   placeholder?: string
   initialValue?: string
   filters?: boolean
+  size?: 'small' | 'large'
 }): ReactElement {
   const navigate = useNavigate()
   const [value, setValue] = useState(initialValue || '')
@@ -37,6 +39,7 @@ export default function SearchBar({
           value={value}
           onChange={handleChange}
           required
+          size={size}
         />
         <Button onClick={(e: FormEvent<HTMLButtonElement>) => startSearch(e)}>
           Search

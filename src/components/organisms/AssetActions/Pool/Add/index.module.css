@@ -1,9 +1,9 @@
 .addInput {
   margin: 0 auto calc(var(--spacer) / 1.5) auto;
-  background: var(--brand-grey-dimmed);
+  background: var(--background-highlight);
   padding: var(--spacer) calc(var(--spacer) * 2.5) calc(var(--spacer) * 1.2)
     calc(var(--spacer) * 2.5);
-  border-bottom: 1px solid var(--brand-grey-lighter);
+  border-bottom: 1px solid var(--border-color);
   margin-top: -2rem;
   margin-left: -2rem;
   margin-right: -2rem;

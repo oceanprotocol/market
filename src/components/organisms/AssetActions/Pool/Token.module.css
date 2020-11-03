@@ -12,12 +12,13 @@
 
 .icon {
   display: inline-block;
-  border: 1px solid var(--brand-grey-lighter);
+  border: 1px solid var(--border-color);
   border-radius: 50%;
   padding: 0.3rem;
   vertical-align: middle;
   margin-right: calc(var(--spacer) / 8);
   margin-top: -0.2rem;
+  background: var(--background-body);
 }
 
 .icon svg {

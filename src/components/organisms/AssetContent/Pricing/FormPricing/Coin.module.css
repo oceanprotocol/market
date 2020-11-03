@@ -1,10 +1,10 @@
 .coin {
   padding: var(--spacer) calc(var(--spacer) / 2);
-  border-top: 1px solid var(--brand-grey-lighter);
+  border-top: 1px solid var(--border-color);
 }
 
 .coin:last-child {
-  border-left: 1px solid var(--brand-grey-lighter);
+  border-left: 1px solid var(--border-color);
 }
 
 .icon {
@@ -15,7 +15,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--brand-grey-lighter);
+  border: 1px solid var(--border-color);
   border-radius: 50%;
   background-color: var(--brand-white);
   margin-bottom: calc(var(--spacer) / 2);
