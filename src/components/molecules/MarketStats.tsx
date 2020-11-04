@@ -22,9 +22,13 @@ export default function MarketStats(): ReactElement {
   const [stats, setStats] = useState<MarketStatsResponse>()
 
   useEffect(() => {
+    const source = axios.CancelToken.source()
+
     async function getStats() {
       try {
-        const response = await axios('https://market-stats.oceanprotocol.com')
+        const response = await axios('https://market-stats.oceanprotocol.com', {
+          cancelToken: source.token
+        })
         if (!response || response.status !== 200) return
         setStats(response.data)
       } catch (error) {
@@ -41,7 +45,10 @@ export default function MarketStats(): ReactElement {
 
     getStats()
 
-    return () => clearInterval(interval)
+    return () => {
+      clearInterval(interval)
+      source.cancel()
+    }
   }, [inView])
 
   return (
