@@ -19,7 +19,7 @@ export default function Seo({
   return (
     <Helmet
       defaultTitle={`${siteTitle} — ${siteTagline}`}
-      titleTemplate="%s — Ocean Protocol"
+      titleTemplate={`%s — ${siteTitle}`}
       title={title}
     >
       <html lang="en" />

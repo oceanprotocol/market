@@ -14,13 +14,14 @@ import { DDO, Logger, Metadata } from '@oceanprotocol/lib'
 import { Persist } from '../../atoms/FormikPersist'
 import Debug from './Debug'
 import Feedback from './Feedback'
+import Alert from '../../atoms/Alert'
 
 const formName = 'ocean-publish-form'
 
 export default function PublishPage({
   content
 }: {
-  content: { form: FormContent }
+  content: { warning: string; form: FormContent }
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { publish, publishError, isLoading, publishStepText } = usePublish()
@@ -97,15 +98,23 @@ export default function PublishPage({
               setError={setError}
             />
           ) : (
-            <article className={styles.grid}>
-              <FormPublish content={content.form} />
-              <aside>
-                <div className={styles.sticky}>
-                  <Preview values={values} />
-                  <Web3Feedback />
-                </div>
-              </aside>
-            </article>
+            <>
+              <Alert
+                text={content.warning}
+                state="info"
+                className={styles.alert}
+              />
+              <article className={styles.grid}>
+                <FormPublish content={content.form} />
+
+                <aside>
+                  <div className={styles.sticky}>
+                    <Preview values={values} />
+                    <Web3Feedback />
+                  </div>
+                </aside>
+              </article>
+            </>
           )}
 
           {debug === true && <Debug values={values} />}

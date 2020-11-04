@@ -1,0 +1,16 @@
+.stats {
+  margin-bottom: calc(var(--spacer) * 2);
+  font-size: var(--font-size-base);
+}
+
+.stats > div > div {
+  display: inline-block;
+}
+
+.stats > div strong {
+  font-size: var(--font-size-base) !important;
+}
+
+.total {
+  color: var(--color-secondary) !important;
+}

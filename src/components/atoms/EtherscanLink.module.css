@@ -3,8 +3,8 @@
 }
 
 .link svg {
-  width: 0.7em;
-  height: 0.7em;
+  width: 0.6em;
+  height: 0.6em;
   display: inline-block;
   fill: var(--brand-grey-light);
 }

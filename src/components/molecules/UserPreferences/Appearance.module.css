@@ -1,0 +1,33 @@
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: calc(var(--spacer) / 8);
+}
+
+.button {
+  display: block;
+  flex: 0 0 48%;
+  padding: calc(var(--spacer) / 3) calc(var(--spacer) / 2)
+    calc(var(--spacer) / 4) calc(var(--spacer) / 2) !important;
+  border-radius: var(--border-radius);
+  text-transform: none;
+}
+
+.button,
+.button:hover,
+.button:active {
+  color: var(--color-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.button svg {
+  width: var(--font-size-h4);
+  height: var(--font-size-h4);
+  fill: currentColor;
+  margin-bottom: calc(var(--spacer) / 5);
+}
+
+.button.selected {
+  color: var(--font-color-text);
+  border-color: var(--color-secondary);
+}

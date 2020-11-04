@@ -13,6 +13,7 @@ const query = graphql`
           name
           link
         }
+        warning
         appConfig {
           infuraProjectId
           network

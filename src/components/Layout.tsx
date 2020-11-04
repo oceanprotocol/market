@@ -6,6 +6,7 @@ import styles from './Layout.module.css'
 import Seo from './atoms/Seo'
 import Container from './atoms/Container'
 import Alert from './atoms/Alert'
+import { useSiteMetadata } from '../hooks/useSiteMetadata'
 
 export interface LayoutProps {
   children: ReactNode
@@ -24,16 +25,17 @@ export default function Layout({
   noPageHeader,
   headerCenter
 }: LayoutProps): ReactElement {
+  const { warning } = useSiteMetadata()
+
   return (
     <div className={styles.app}>
       <Seo title={title} description={description} uri={uri} />
 
       <Header />
 
-      <Alert
-        text="Given the beta status, publishing on Rinkeby first is strongly recommended. [Learn about the market](https://oceanprotocol.com/technology/marketplaces)."
-        state="info"
-      />
+      {uri === '/' && (
+        <Alert text={warning} state="info" className={styles.banner} />
+      )}
 
       <main className={styles.main}>
         <Container>

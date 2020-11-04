@@ -4,6 +4,12 @@
   position: relative;
 }
 
+.alert,
+div.alert {
+  margin-bottom: var(--spacer);
+  margin-left: 0;
+}
+
 @media (min-width: 55rem) {
   .grid {
     /* lazy golden ratio */
