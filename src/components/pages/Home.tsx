@@ -105,7 +105,9 @@ export default function HomePage(): ReactElement {
           />
         </h3>
         {loading ? (
-          <Loader />
+          <div className={styles.loaderWrap}>
+            <Loader />
+          </div>
         ) : (
           queryResultPartners && (
             <AssetQueryCarousel queryResult={queryResultPartners} />
@@ -121,7 +123,9 @@ export default function HomePage(): ReactElement {
       <section className={styles.latest}>
         <h3>Highest Liquidity Pools</h3>
         {loading ? (
-          <Loader />
+          <div className={styles.loaderWrap}>
+            <Loader />
+          </div>
         ) : (
           queryResultHighest && (
             <AssetQueryList queryResult={queryResultHighest} />
@@ -132,7 +136,9 @@ export default function HomePage(): ReactElement {
       <section className={styles.latest}>
         <h3>New Data Sets</h3>
         {loading ? (
-          <Loader />
+          <div className={styles.loaderWrap}>
+            <Loader />
+          </div>
         ) : (
           queryResultLatest && (
             <AssetQueryList queryResult={queryResultLatest} />

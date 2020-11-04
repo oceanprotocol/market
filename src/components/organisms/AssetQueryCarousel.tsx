@@ -15,6 +15,13 @@ declare type AssetQueryCarouselProps = {
   className?: string
 }
 
+const responsive = {
+  0: { items: 1 },
+  600: { items: 2 },
+  1280: { items: 3 },
+  1600: { items: 4 }
+}
+
 const Item = ({ ddo }: { ddo: DDO }) => {
   const { attributes } = ddo.findServiceByType('metadata')
 
@@ -24,13 +31,6 @@ const Item = ({ ddo }: { ddo: DDO }) => {
       metadata={(attributes as unknown) as MetadataMarket}
     />
   )
-}
-
-const responsive = {
-  0: { items: 1 },
-  767: { items: 2 },
-  1280: { items: 3 },
-  1600: { items: 4 }
 }
 
 const AssetQueryCarousel: React.FC<AssetQueryCarouselProps> = ({
@@ -56,11 +56,10 @@ const AssetQueryCarousel: React.FC<AssetQueryCarouselProps> = ({
       <AliceCarousel
         items={items}
         responsive={responsive}
-        paddingLeft={25}
-        paddingRight={25}
+        paddingLeft={10}
+        paddingRight={10}
         disableButtonsControls
         animationDuration={300}
-        // autoHeight
       />
     </div>
   )

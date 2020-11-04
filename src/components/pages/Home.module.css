@@ -25,7 +25,13 @@
   background: var(--background-highlight);
   padding-top: var(--spacer);
   padding-bottom: var(--spacer);
-  min-height: 320px;
+  min-height: 360px;
   margin-left: calc(-50vw + 50%);
   margin-right: calc(-50vw + 50%);
+}
+
+.loaderWrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
