@@ -5,7 +5,6 @@ import { useLocation, useNavigate } from '@reach/router'
 import Pagination from '../molecules/Pagination'
 import { updateQueryStringParameter } from '../../utils'
 import styles from './AssetQueryList.module.css'
-import { MetadataMarket } from '../../@types/MetaData'
 import { DDO } from '@oceanprotocol/lib'
 import classNames from 'classnames/bind'
 
@@ -54,17 +53,9 @@ const AssetQueryList: React.FC<AssetQueryListProps> = ({
     <>
       <div className={styleClasses}>
         {queryResult?.results.length > 0 ? (
-          queryResult.results.map((ddo: DDO) => {
-            const { attributes } = ddo.findServiceByType('metadata')
-
-            return (
-              <AssetTeaser
-                ddo={ddo}
-                metadata={(attributes as unknown) as MetadataMarket}
-                key={ddo.id}
-              />
-            )
-          })
+          queryResult.results.map((ddo: DDO) => (
+            <AssetTeaser ddo={ddo} key={ddo.id} />
+          ))
         ) : (
           <div className={styles.empty}>No results found.</div>
         )}

@@ -3,16 +3,9 @@ import { ReactComponent as PartnerIcon } from '../../images/partner.svg'
 import styles from './Partner.module.css'
 import classNames from 'classnames/bind'
 import Tooltip from './Tooltip'
+import { PartnerData } from '../../hooks/useDataPartner'
 
 const cx = classNames.bind(styles)
-
-export interface PartnerData {
-  name: string
-  accounts: string[]
-  links: {
-    [key: string]: string
-  }
-}
 
 export default function Partner({
   partner,

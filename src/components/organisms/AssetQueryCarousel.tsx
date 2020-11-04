@@ -2,7 +2,6 @@ import AssetTeaser from '../molecules/AssetTeaser'
 import React from 'react'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import styles from './AssetQueryCarousel.module.css'
-import { MetadataMarket } from '../../@types/MetaData'
 import { DDO } from '@oceanprotocol/lib'
 import classNames from 'classnames/bind'
 import AliceCarousel from 'react-alice-carousel'
@@ -22,17 +21,6 @@ const responsive = {
   1600: { items: 4 }
 }
 
-const Item = ({ ddo }: { ddo: DDO }) => {
-  const { attributes } = ddo.findServiceByType('metadata')
-
-  return (
-    <AssetTeaser
-      ddo={ddo}
-      metadata={(attributes as unknown) as MetadataMarket}
-    />
-  )
-}
-
 const AssetQueryCarousel: React.FC<AssetQueryCarouselProps> = ({
   queryResult,
   className
@@ -44,7 +32,9 @@ const AssetQueryCarousel: React.FC<AssetQueryCarouselProps> = ({
 
   const items =
     queryResult?.results.length > 0
-      ? queryResult.results.map((ddo: DDO) => <Item key={ddo.id} ddo={ddo} />)
+      ? queryResult.results.map((ddo: DDO) => (
+          <AssetTeaser key={ddo.id} ddo={ddo} />
+        ))
       : [
           <div className={styles.empty} key="empty">
             No results found.
