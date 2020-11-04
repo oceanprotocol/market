@@ -9,6 +9,7 @@ import removeMarkdown from 'remove-markdown'
 import Tooltip from '../atoms/Tooltip'
 import listPartners from '../../../content/list-datapartners.json'
 import { useMetadata } from '@oceanprotocol/react'
+import Partner from '../atoms/Partner'
 
 const partnerAccounts = listPartners.map((partner) =>
   partner.accounts.join(',')
@@ -43,8 +44,9 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
           {dataTokenInfo?.symbol}
         </Tooltip>
         <h1 className={styles.title}>{name}</h1>
-        {isDataPartner && <p className={styles.partner}>{dataPartner.name}</p>}
-
+        {isDataPartner && (
+          <Partner className={styles.partner} partner={dataPartner} />
+        )}
         {isCompute && <div className={styles.accessLabel}>Compute</div>}
 
         <div className={styles.content}>

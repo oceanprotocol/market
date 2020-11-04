@@ -23,6 +23,7 @@
   margin-left: calc(-50vw + 50%);
   margin-right: calc(-50vw + 50%);
   padding-left: calc(50vw - 50%);
+  min-height: 320px;
 }
 
 .assetList.overflow li {

@@ -12,7 +12,7 @@ import Pricing from './Pricing'
 import { useMetadata, useOcean, usePricing } from '@oceanprotocol/react'
 import EtherscanLink from '../../atoms/EtherscanLink'
 import Bookmark from './Bookmark'
-import { accountTruncate } from '../../../utils/wallet'
+import Byline from './Byline'
 
 export interface AssetContentProps {
   metadata: MetadataMarket
@@ -57,19 +57,7 @@ export default function AssetContent({
               </EtherscanLink>
             </p>
 
-            <p>
-              Published by{' '}
-              <Link
-                to={`/search/?owner=${owner}`}
-                title="Show all data sets created by this account."
-              >
-                {owner && accountTruncate(owner)}
-              </Link>
-              {' — '}
-              <EtherscanLink networkId={networkId} path={`address/${owner}`}>
-                Etherscan
-              </EtherscanLink>
-            </p>
+            <Byline owner={owner} />
 
             {metadata?.additionalInformation?.categories?.length && (
               <p>

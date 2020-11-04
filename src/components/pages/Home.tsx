@@ -28,7 +28,7 @@ const queryHighest = {
 
 const queryPartners = {
   page: 1,
-  offset: 9,
+  offset: 100,
   query: { 'publicKey.owner': partnerAccounts },
   sort: { created: -1 }
 }

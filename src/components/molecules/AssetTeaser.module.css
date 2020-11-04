@@ -33,18 +33,16 @@
   margin-bottom: 0;
 }
 
+.partner {
+  font-size: var(--font-size-small);
+}
+
 .foot {
   margin-top: calc(var(--spacer) / 4);
 }
 
 .foot p {
   margin: 0;
-}
-
-.partner {
-  font-weight: var(--font-weight-bold);
-  margin-top: calc(var(--spacer) / 10);
-  margin-bottom: 0;
 }
 
 .accessLabel {

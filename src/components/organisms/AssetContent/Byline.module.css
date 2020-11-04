@@ -1,0 +1,23 @@
+.byline {
+}
+
+.bylineLinks {
+  display: inline;
+}
+
+.bylineLinks a {
+  margin-left: calc(var(--spacer) / 4);
+  color: inherit;
+}
+
+.bylineLinks a:hover,
+.bylineLinks a:focus {
+  color: var(--brand-pink);
+}
+
+.bylineExternal {
+  width: 0.6em;
+  height: 0.6em;
+  display: inline-block;
+  fill: var(--brand-grey-light);
+}
