@@ -30,12 +30,13 @@
 
 .title {
   font-size: var(--font-size-large);
-  margin: 0;
+  margin-top: calc(var(--spacer) / 12);
+  margin-bottom: 0;
 }
 
 .partner {
   font-size: var(--font-size-small);
-  margin-top: calc(var(--spacer) / 6);
+  margin-top: calc(var(--spacer) / 12);
 }
 
 .foot {
