@@ -18,6 +18,10 @@
 }
 
 .listPartners {
+  composes: latest;
+}
+
+.listPartners > div {
   background: var(--background-highlight);
   padding-top: var(--spacer);
   padding-bottom: var(--spacer);

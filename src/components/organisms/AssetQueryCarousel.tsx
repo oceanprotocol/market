@@ -1,5 +1,5 @@
 import AssetTeaser from '../molecules/AssetTeaser'
-import React, { ReactElement } from 'react'
+import React from 'react'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import styles from './AssetQueryCarousel.module.css'
 import { MetadataMarket } from '../../@types/MetaData'
@@ -28,9 +28,9 @@ const Item = ({ ddo }: { ddo: DDO }) => {
 
 const responsive = {
   0: { items: 1 },
-  568: { items: 2 },
-  1024: { items: 3 },
-  1280: { items: 4 }
+  767: { items: 2 },
+  1280: { items: 3 },
+  1600: { items: 4 }
 }
 
 const AssetQueryCarousel: React.FC<AssetQueryCarouselProps> = ({
@@ -56,8 +56,8 @@ const AssetQueryCarousel: React.FC<AssetQueryCarouselProps> = ({
       <AliceCarousel
         items={items}
         responsive={responsive}
-        paddingLeft={50}
-        paddingRight={50}
+        paddingLeft={25}
+        paddingRight={25}
         disableButtonsControls
         animationDuration={300}
         // autoHeight

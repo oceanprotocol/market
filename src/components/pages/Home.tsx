@@ -90,7 +90,7 @@ export default function HomePage(): ReactElement {
         <SearchBar size="large" />
       </Container>
 
-      <section className={styles.latest}>
+      <section className={styles.listPartners}>
         <h3>
           Data Partners{' '}
           <Tooltip
@@ -108,10 +108,7 @@ export default function HomePage(): ReactElement {
           <Loader />
         ) : (
           queryResultPartners && (
-            <AssetQueryCarousel
-              queryResult={queryResultPartners}
-              className={styles.listPartners}
-            />
+            <AssetQueryCarousel queryResult={queryResultPartners} />
           )
         )}
       </section>

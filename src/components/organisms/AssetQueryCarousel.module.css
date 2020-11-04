@@ -13,11 +13,24 @@
   padding-bottom: calc(var(--spacer) / 2);
 }
 
+.assetCarousel [class='alice-carousel__stage'] {
+  /* display: flex; */
+}
+
 .assetCarousel [class='alice-carousel__stage'] > li {
+  height: 100%;
+  /* display: block;
+  white-space: nowrap; */
+}
+
+.assetCarousel [class='alice-carousel__stage'] > li article {
   margin-left: calc(var(--spacer) / 2);
   margin-right: calc(var(--spacer) / 2);
-  height: 100%;
 }
+
+/* .assetCarousel [class='alice-carousel__stage'] > li * {
+  white-space: normal;
+} */
 
 .assetCarousel [class='alice-carousel__dots'] {
   margin-top: calc(var(--spacer) / 2);
