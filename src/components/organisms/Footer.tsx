@@ -9,7 +9,12 @@ import Conversion from '../atoms/Price/Conversion'
 import { Logger } from '@oceanprotocol/lib'
 
 interface MarketStatsResponse {
-  datasets: number
+  datasets: {
+    pools: number
+    exchange: number
+    none: number
+    total: number
+  }
   owners: number
   ocean: number
   datatoken: number
@@ -38,8 +43,19 @@ export default function Footer(): ReactElement {
     <footer className={styles.footer}>
       <div className={styles.content}>
         <div className={styles.stats}>
-          Total of <PriceUnit price={`${stats?.ocean}`} small /> across all
-          pools <Conversion price={`${stats?.ocean}`} />
+          Total of <strong>{stats?.datasets.total}</strong> data sets published
+          by <strong>{stats?.owners}</strong> accounts.
+          <br />
+          <PriceUnit
+            price={`${stats?.ocean}`}
+            small
+            className={styles.total}
+            conversion
+          />{' '}
+          in <strong>{stats?.datasets.pools}</strong> data set pools.
+          <br />
+          <strong>{stats?.datasets.none}</strong> data sets have no price set
+          yet.
         </div>
         <div>
           © {year} <Markdown text={copyright} /> —{' '}
