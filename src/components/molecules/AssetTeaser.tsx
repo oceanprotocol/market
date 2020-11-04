@@ -7,6 +7,12 @@ import styles from './AssetTeaser.module.css'
 import { DDO } from '@oceanprotocol/lib'
 import removeMarkdown from 'remove-markdown'
 import Tooltip from '../atoms/Tooltip'
+import listPartners from '../../../content/list-datapartners.json'
+import { useMetadata } from '@oceanprotocol/react'
+
+const partnerAccounts = listPartners.map((partner) =>
+  partner.accounts.join(',')
+)
 
 declare type AssetTeaserProps = {
   ddo: DDO
@@ -17,9 +23,14 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
   ddo,
   metadata
 }: AssetTeaserProps) => {
+  const { owner } = useMetadata(ddo)
   const { name } = metadata.main
   const { dataTokenInfo } = ddo
   const isCompute = Boolean(ddo.findServiceByType('compute'))
+  const isDataPartner = partnerAccounts.includes(owner)
+  const dataPartner = listPartners.filter((partner) =>
+    partner.accounts.includes(owner)
+  )[0]
 
   return (
     <article className={styles.teaser}>
@@ -32,6 +43,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
           {dataTokenInfo?.symbol}
         </Tooltip>
         <h1 className={styles.title}>{name}</h1>
+        {isDataPartner && <p className={styles.partner}>{dataPartner.name}</p>}
 
         {isCompute && <div className={styles.accessLabel}>Compute</div>}
 

@@ -15,6 +15,7 @@
 }
 
 .content {
+  margin-top: calc(var(--spacer) / 2);
   overflow-wrap: break-word;
   word-wrap: break-word;
   word-break: break-all;
@@ -29,7 +30,7 @@
 
 .title {
   font-size: var(--font-size-large);
-  margin-bottom: calc(var(--spacer) / 2);
+  margin-bottom: 0;
 }
 
 .foot {
@@ -38,6 +39,12 @@
 
 .foot p {
   margin: 0;
+}
+
+.partner {
+  font-weight: var(--font-weight-bold);
+  margin-top: calc(var(--spacer) / 10);
+  margin-bottom: 0;
 }
 
 .accessLabel {
