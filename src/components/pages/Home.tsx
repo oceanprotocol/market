@@ -14,6 +14,7 @@ import Button from '../atoms/Button'
 import Bookmarks from '../molecules/Bookmarks'
 import listPartners from '../../../content/list-datapartners.json'
 import Tooltip from '../atoms/Tooltip'
+import AssetQueryCarousel from '../organisms/AssetQueryCarousel'
 
 const partnerAccounts = listPartners.map((partner) =>
   partner.accounts.join(',')
@@ -90,11 +91,6 @@ export default function HomePage(): ReactElement {
       </Container>
 
       <section className={styles.latest}>
-        <h3>Bookmarks</h3>
-        <Bookmarks />
-      </section>
-
-      <section className={styles.latest}>
         <h3>
           Data Partners{' '}
           <Tooltip
@@ -112,13 +108,17 @@ export default function HomePage(): ReactElement {
           <Loader />
         ) : (
           queryResultPartners && (
-            <AssetQueryList
+            <AssetQueryCarousel
               queryResult={queryResultPartners}
-              overflow
               className={styles.listPartners}
             />
           )
         )}
+      </section>
+
+      <section className={styles.latest}>
+        <h3>Bookmarks</h3>
+        <Bookmarks />
       </section>
 
       <section className={styles.latest}>

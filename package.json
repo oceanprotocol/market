@@ -62,6 +62,7 @@
     "lodash.omit": "^4.5.0",
     "query-string": "^6.13.6",
     "react": "^16.14.0",
+    "react-alice-carousel": "^2.0.2",
     "react-data-table-component": "^6.11.5",
     "react-datepicker": "^3.3.0",
     "react-dom": "^16.14.0",

@@ -14,13 +14,11 @@ const cx = classNames.bind(styles)
 declare type AssetQueryListProps = {
   queryResult: QueryResult
   className?: string
-  overflow?: boolean
 }
 
 const AssetQueryList: React.FC<AssetQueryListProps> = ({
   queryResult,
-  className,
-  overflow
+  className
 }) => {
   const location = useLocation()
   const navigate = useNavigate()
@@ -49,30 +47,28 @@ const AssetQueryList: React.FC<AssetQueryListProps> = ({
 
   const styleClasses = cx({
     assetList: true,
-    overflow: overflow,
     [className]: className
   })
 
   return (
     <>
-      <ul className={styleClasses}>
+      <div className={styleClasses}>
         {queryResult?.results.length > 0 ? (
           queryResult.results.map((ddo: DDO) => {
             const { attributes } = ddo.findServiceByType('metadata')
 
             return (
-              <li key={ddo.id}>
-                <AssetTeaser
-                  ddo={ddo}
-                  metadata={(attributes as unknown) as MetadataMarket}
-                />
-              </li>
+              <AssetTeaser
+                ddo={ddo}
+                metadata={(attributes as unknown) as MetadataMarket}
+                key={ddo.id}
+              />
             )
           })
         ) : (
           <div className={styles.empty}>No results found.</div>
         )}
-      </ul>
+      </div>
 
       {/* 
         Little hack cause the pagination navigation only works 

@@ -1,0 +1,30 @@
+.assetCarousel [class*='alice-carousel__dots-item'] {
+  width: var(--font-size-mini);
+  height: var(--font-size-mini);
+  background: var(--color-secondary);
+}
+
+.assetCarousel [class*='alice-carousel__dots-item']:hover,
+.assetCarousel [class*='alice-carousel__dots-item __active'] {
+  background: var(--brand-black) !important;
+}
+
+.assetCarousel [class='alice-carousel__wrapper'] {
+  padding-bottom: calc(var(--spacer) / 2);
+}
+
+.assetCarousel [class='alice-carousel__stage'] > li {
+  margin-left: calc(var(--spacer) / 2);
+  margin-right: calc(var(--spacer) / 2);
+  height: 100%;
+}
+
+.assetCarousel [class='alice-carousel__dots'] {
+  margin-top: calc(var(--spacer) / 2);
+}
+
+.empty {
+  color: var(--color-secondary);
+  font-size: var(--font-size-small);
+  font-style: italic;
+}
