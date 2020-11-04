@@ -21,7 +21,7 @@ export interface TradeLiquidity {
   type: 'buy' | 'sell'
 }
 
-const refreshInterval = 2000 // 10 sec.
+const refreshInterval = 3000 // 3 sec, if the interval is bellow 3 seconds the price will be 0 all the time
 
 export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
   const { ocean, networkId, balance, accountId } = useOcean()
