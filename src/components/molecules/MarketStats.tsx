@@ -32,7 +32,11 @@ export default function MarketStats(): ReactElement {
         if (!response || response.status !== 200) return
         setStats(response.data)
       } catch (error) {
-        Logger.error(error.message)
+        if (axios.isCancel(error)) {
+          Logger.log(error.message)
+        } else {
+          Logger.error(error.message)
+        }
       }
     }
 
