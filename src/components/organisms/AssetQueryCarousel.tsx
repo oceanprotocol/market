@@ -18,7 +18,8 @@ const responsive = {
   0: { items: 1 },
   600: { items: 2 },
   1280: { items: 3 },
-  1600: { items: 4 }
+  1600: { items: 4 },
+  2400: { items: 6 }
 }
 
 const AssetQueryCarousel: React.FC<AssetQueryCarouselProps> = ({

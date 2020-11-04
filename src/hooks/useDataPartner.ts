@@ -13,6 +13,8 @@ export function useDataPartner(
 ): {
   partner: PartnerData
 } {
+  // if (!owner) return
+
   const partner = listPartners.filter((partner) =>
     partner.accounts.includes(owner)
   )[0]
