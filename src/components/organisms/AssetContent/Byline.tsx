@@ -25,8 +25,8 @@ export default function Byline({ owner }: { owner: string }): ReactElement {
           owner && accountTruncate(owner)
         )}
       </Link>
-      {' —'}
       <div className={styles.bylineLinks}>
+        {' — '}
         {partner &&
           Object.entries(partner.links).map(([key, value]) => (
             <a href={value} key={key} target="_blank" rel="noreferrer">

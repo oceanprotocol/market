@@ -2,12 +2,22 @@
 }
 
 .bylineLinks {
-  display: inline;
+}
+
+@media (min-width: 40rem) {
+  .bylineLinks {
+    display: inline;
+  }
 }
 
 .bylineLinks a {
   margin-left: calc(var(--spacer) / 4);
   color: inherit;
+  font-size: var(--font-size-small);
+}
+
+.bylineLinks a:first-child {
+  margin-left: 0;
 }
 
 .bylineLinks a:hover,

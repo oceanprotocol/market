@@ -29,7 +29,7 @@ export default function Partner({
 
   return (
     <span className={styleClasses}>
-      <Tooltip content="Ocean Protocol Data Partner">
+      <Tooltip content="Ocean Protocol Data Partner" placement="top">
         <PartnerBadge />
         {partner.name}
       </Tooltip>
