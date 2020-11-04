@@ -7,6 +7,14 @@ import { PartnerData } from '../../hooks/useDataPartner'
 
 const cx = classNames.bind(styles)
 
+export function PartnerBadge(): ReactElement {
+  return (
+    <span className={styles.badge}>
+      <PartnerIcon />
+    </span>
+  )
+}
+
 export default function Partner({
   partner,
   className
@@ -22,9 +30,7 @@ export default function Partner({
   return (
     <span className={styleClasses}>
       <Tooltip content="Ocean Protocol Data Partner">
-        <span className={styles.badge}>
-          <PartnerIcon />
-        </span>
+        <PartnerBadge />
         {partner.name}
       </Tooltip>
     </span>
