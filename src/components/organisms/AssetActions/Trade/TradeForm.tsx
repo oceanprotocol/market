@@ -94,10 +94,6 @@ export default function TradeForm({
     }
   }
 
-  useEffect(() => {
-    if (!balance) return
-  }, [ddo, dtSymbol, balance, maxOcean, maxDt])
-
   return (
     <Formik
       initialValues={initialValues}
