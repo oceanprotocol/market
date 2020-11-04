@@ -39,11 +39,20 @@ export default function AssetContent({
         {showPricing && <Pricing ddo={ddo} />}
 
         <div className={styles.content}>
-          <aside className={styles.meta}>
-            <p className={styles.author} title="Author">
-              {metadata?.main.author}
+          <p className={styles.author} title="Author">
+            {metadata?.main.author}
+          </p>
+          {metadata?.additionalInformation?.categories?.length && (
+            <p>
+              <Link
+                to={`/search?categories=${metadata?.additionalInformation?.categories[0]}`}
+              >
+                {metadata?.additionalInformation?.categories[0]}
+              </Link>
             </p>
+          )}
 
+          <aside className={styles.meta}>
             <p className={styles.datatoken}>
               <EtherscanLink
                 networkId={networkId}
@@ -56,18 +65,7 @@ export default function AssetContent({
                 )}
               </EtherscanLink>
             </p>
-
-            <Byline owner={owner} />
-
-            {metadata?.additionalInformation?.categories?.length && (
-              <p>
-                <Link
-                  to={`/search?categories=${metadata?.additionalInformation?.categories[0]}`}
-                >
-                  {metadata?.additionalInformation?.categories[0]}
-                </Link>
-              </p>
-            )}
+            <Byline owner={owner} prefix="Published by " />
           </aside>
 
           <Markdown

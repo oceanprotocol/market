@@ -15,6 +15,7 @@ import Bookmarks from '../molecules/Bookmarks'
 import listPartners from '../../../content/list-datapartners.json'
 import Tooltip from '../atoms/Tooltip'
 import AssetQueryCarousel from '../organisms/AssetQueryCarousel'
+import { useDataPartner } from '../../hooks/useDataPartner'
 
 const partnerAccounts = listPartners.map((partner) =>
   partner.accounts.join(',')
@@ -54,6 +55,7 @@ async function getAssets(query: SearchQuery, metadataCacheUri: string) {
 
 export default function HomePage(): ReactElement {
   const { config } = useOcean()
+  const { partnerAccounts } = useDataPartner()
 
   const [queryResultLatest, setQueryResultLatest] = useState<QueryResult>()
   const [queryResultPartners, setQueryResultPartners] = useState<QueryResult>()
@@ -113,6 +115,12 @@ export default function HomePage(): ReactElement {
             <AssetQueryCarousel queryResult={queryResultPartners} />
           )
         )}
+        {/* <Button
+          style="text"
+          to={`/search/?owner=${partnerAccounts?.toString()}`}
+        >
+          All data partner sets →
+        </Button> */}
       </section>
 
       <section className={styles.latest}>

@@ -46,9 +46,16 @@ export async function getResults(
   const { text, owner, tags, page, offset, categories } = params
 
   const metadataCache = new MetadataCache(metadataCacheUri, Logger)
-  const queryResult = await metadataCache.queryMetadata(
-    getSearchQuery(text, owner, tags, categories, page, offset)
+  const searchQuery = getSearchQuery(
+    text,
+    owner,
+    tags,
+    categories,
+    page,
+    offset
   )
+  console.log(searchQuery)
+  const queryResult = await metadataCache.queryMetadata(searchQuery)
 
   return queryResult
 }

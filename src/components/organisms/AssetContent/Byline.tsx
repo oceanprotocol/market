@@ -8,13 +8,19 @@ import EtherscanLink from '../../atoms/EtherscanLink'
 import { useOcean } from '@oceanprotocol/react'
 import { useDataPartner } from '../../../hooks/useDataPartner'
 
-export default function Byline({ owner }: { owner: string }): ReactElement {
+export default function Byline({
+  owner,
+  prefix
+}: {
+  owner: string
+  prefix?: string
+}): ReactElement {
   const { networkId } = useOcean()
   const { partner } = useDataPartner(owner)
 
   return (
     <div className={styles.byline}>
-      Published by{' '}
+      {prefix}
       <Link
         to={`/search/?owner=${owner}`}
         title="Show all data sets created by this account."

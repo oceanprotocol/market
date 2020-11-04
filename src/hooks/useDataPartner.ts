@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import listPartners from '../../content/list-datapartners.json'
 
 export interface PartnerData {
@@ -9,15 +10,26 @@ export interface PartnerData {
 }
 
 export function useDataPartner(
-  owner: string
+  owner?: string
 ): {
   partner: PartnerData
+  partnerAccounts: string[]
 } {
-  // if (!owner) return
+  const [partnerAccounts, setPartnerAccounts] = useState<string[]>()
+  const [partner, setPartner] = useState<PartnerData>()
 
-  const partner = listPartners.filter((partner) =>
-    partner.accounts.includes(owner)
-  )[0]
+  useEffect(() => {
+    const accounts = [] as string[]
+    listPartners.map((partner) => accounts.push(...partner.accounts))
+    setPartnerAccounts(accounts)
 
-  return { partner }
+    if (!owner) return
+
+    const partner = listPartners.filter((partner) =>
+      partner.accounts.includes(owner)
+    )[0]
+    setPartner(partner)
+  }, [owner])
+
+  return { partner, partnerAccounts }
 }

@@ -1,7 +1,5 @@
 .byline {
-}
-
-.bylineLinks {
+  display: inline-block;
 }
 
 @media (min-width: 40rem) {
@@ -11,9 +9,9 @@
 }
 
 .bylineLinks a {
-  margin-left: calc(var(--spacer) / 4);
+  margin-left: calc(var(--spacer) / 3);
   color: inherit;
-  font-size: var(--font-size-small);
+  font-size: var(--font-size-mini);
 }
 
 .bylineLinks a:first-child {
