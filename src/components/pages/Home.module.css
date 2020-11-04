@@ -16,3 +16,8 @@
 .latest [class*='button'] {
   margin-top: var(--spacer);
 }
+
+.listPartners {
+  background: var(--background-highlight);
+  padding-top: var(--spacer);
+}

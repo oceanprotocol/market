@@ -7,12 +7,21 @@ import { updateQueryStringParameter } from '../../utils'
 import styles from './AssetQueryList.module.css'
 import { MetadataMarket } from '../../@types/MetaData'
 import { DDO } from '@oceanprotocol/lib'
+import classNames from 'classnames/bind'
+
+const cx = classNames.bind(styles)
 
 declare type AssetQueryListProps = {
   queryResult: QueryResult
+  className?: string
+  overflow?: boolean
 }
 
-const AssetQueryList: React.FC<AssetQueryListProps> = ({ queryResult }) => {
+const AssetQueryList: React.FC<AssetQueryListProps> = ({
+  queryResult,
+  className,
+  overflow
+}) => {
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -38,25 +47,32 @@ const AssetQueryList: React.FC<AssetQueryListProps> = ({ queryResult }) => {
     return navigate(newUrl)
   }
 
+  const styleClasses = cx({
+    assetList: true,
+    overflow: overflow,
+    [className]: className
+  })
+
   return (
     <>
-      <div className={styles.assetList}>
+      <ul className={styleClasses}>
         {queryResult?.results.length > 0 ? (
           queryResult.results.map((ddo: DDO) => {
             const { attributes } = ddo.findServiceByType('metadata')
 
             return (
-              <AssetTeaser
-                ddo={ddo}
-                metadata={(attributes as unknown) as MetadataMarket}
-                key={ddo.id}
-              />
+              <li key={ddo.id}>
+                <AssetTeaser
+                  ddo={ddo}
+                  metadata={(attributes as unknown) as MetadataMarket}
+                />
+              </li>
             )
           })
         ) : (
           <div className={styles.empty}>No results found.</div>
         )}
-      </div>
+      </ul>
 
       {/* 
         Little hack cause the pagination navigation only works 

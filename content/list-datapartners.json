@@ -1,0 +1,26 @@
+[
+  {
+    "name": "SwashData Tech Oy",
+    "accounts": ["0x242752acA5c560457a3C49d17d6F7824a595af18"],
+    "links": {
+      "Home": "https://swashapp.io",
+      "Twitter": "https://twitter.com/swashapp"
+    }
+  },
+  {
+    "name": "Thalus AI",
+    "accounts": ["0x370366a853d67ace92cb219354b02FE02eAF6036"],
+    "links": {
+      "Home": "https://thalus.ai",
+      "Twitter": "https://twitter.com/thalus_ai"
+    }
+  },
+  {
+    "name": "Transport Genie",
+    "accounts": ["0x61Ae4E8691335569776eEAd72D16f4f002E64a56"],
+    "links": {
+      "Home": "https://transportgenie.ca",
+      "Twitter": "https://twitter.com/Transportgenie"
+    }
+  }
+]
