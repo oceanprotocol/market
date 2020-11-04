@@ -70,30 +70,24 @@ export default function TradeForm({
 
   async function handleTrade(values: TradeLiquidity) {
     try {
-      switch (values.type) {
-        case 'buy': {
-          //i added 10% to max values, random percent, didn't think this through
-          const tx = await ocean.pool.buyDT(
-            accountId,
-            price.address,
-            values.datatoken.toString(),
-            (values.ocean * 1.1).toString(),
-            (price.value * 1.1).toString()
-          )
-          setTxId(tx?.transactionHash)
-          break
-        }
-        case 'sell': {
-          const tx = await ocean.pool.sellDT(
-            accountId,
-            price.address,
-            values.datatoken.toString(),
-            (values.ocean * 0.9).toString(),
-            (price.value * 1.1).toString()
-          )
-          setTxId(tx?.transactionHash)
-        }
-      }
+      const tx =
+        values.type === 'buy'
+          ? await ocean.pool.buyDT(
+              accountId,
+              price.address,
+              values.datatoken.toString(),
+              (values.ocean * 1.1).toString(),
+              (price.value * 1.1).toString()
+            )
+          : await ocean.pool.sellDT(
+              accountId,
+              price.address,
+              values.datatoken.toString(),
+              (values.ocean * 0.9).toString(),
+              (price.value * 1.1).toString()
+            )
+
+      setTxId(tx?.transactionHash)
     } catch (error) {
       Logger.error(error.message)
       toast.error(error.message)

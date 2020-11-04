@@ -64,32 +64,20 @@ export default function Swap({
     setFieldValue('type', values.type === 'buy' ? 'sell' : 'buy')
   }
 
-  const handleOceanChange = async (value: number) => {
-    const dtValue = value / price.value
-    setFieldValue('datatoken', dtValue)
-    validateForm()
-  }
-  const handleDatatokenChange = async (value: number) => {
-    const oceanValue = value * price.value
-    setFieldValue('ocean', oceanValue)
+  const handleValueChange = async (name: string, value: number) => {
+    const newValue =
+      name === 'ocean' ? value / price.value : value * price.value
+    setFieldValue(name === 'ocean' ? 'datatoken' : 'ocean', newValue)
     validateForm()
   }
   return (
     <>
       <div className={styles.tradeInput}>
-        {values.type === 'sell' ? (
-          <TradeInput
-            name="datatoken"
-            item={dtItem}
-            handleValueChange={handleDatatokenChange}
-          />
-        ) : (
-          <TradeInput
-            name="ocean"
-            item={oceanItem}
-            handleValueChange={handleOceanChange}
-          />
-        )}
+        <TradeInput
+          name={values.type === 'sell' ? 'datatoken' : 'ocean'}
+          item={values.type === 'sell' ? dtItem : oceanItem}
+          handleValueChange={handleValueChange}
+        />
       </div>
       <div className={styles.swapButton}>
         <Button style="text" onClick={swapTokens}>
@@ -97,19 +85,11 @@ export default function Swap({
         </Button>
       </div>
       <div className={styles.tradeInput}>
-        {values.type === 'sell' ? (
-          <TradeInput
-            name="ocean"
-            item={oceanItem}
-            handleValueChange={handleOceanChange}
-          />
-        ) : (
-          <TradeInput
-            name="datatoken"
-            item={dtItem}
-            handleValueChange={handleDatatokenChange}
-          />
-        )}
+        <TradeInput
+          name={values.type === 'sell' ? 'ocean' : 'datatoken'}
+          item={values.type === 'sell' ? oceanItem : dtItem}
+          handleValueChange={handleValueChange}
+        />
       </div>
     </>
   )

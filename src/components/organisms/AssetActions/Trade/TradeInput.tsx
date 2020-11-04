@@ -21,7 +21,7 @@ export default function TradeInput({
 }: {
   name: string
   item: TradeItem
-  handleValueChange: (value: number) => void
+  handleValueChange: (name: string, value: number) => void
 }): ReactElement {
   const { ocean } = useOcean()
   // Connect with form
@@ -61,7 +61,7 @@ export default function TradeInput({
             field={field}
             form={form}
             onChange={(e: ChangeEvent<HTMLInputElement>) => {
-              handleValueChange(Number(e.target.value))
+              handleValueChange(name, Number(e.target.value))
               validateForm()
               handleChange(e)
             }}
@@ -75,7 +75,7 @@ export default function TradeInput({
         size="small"
         onClick={() => {
           setFieldValue(name, item.maxAmount)
-          handleValueChange(item.maxAmount)
+          handleValueChange(name, item.maxAmount)
         }}
       >
         Use Max
