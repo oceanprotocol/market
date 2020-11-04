@@ -49,8 +49,8 @@
     }
   },
 
-  "trade":{
-    "title":"Swap tokens",
+  "trade": {
+    "title": "Swap tokens",
     "action": "Approve & Swap"
   }
 }

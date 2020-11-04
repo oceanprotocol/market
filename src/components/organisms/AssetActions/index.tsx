@@ -75,13 +75,16 @@ export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
   const hasPool = ddo.price?.type === 'pool'
 
   hasPool &&
-    tabs.push({
-      title: 'Pool',
-      content: <Pool ddo={ddo} />
-    },{
-      title: 'Trade',
-      content: <Trade ddo={ddo} />
-    })
+    tabs.push(
+      {
+        title: 'Pool',
+        content: <Pool ddo={ddo} />
+      },
+      {
+        title: 'Trade',
+        content: <Trade ddo={ddo} />
+      }
+    )
 
   return <Tabs items={tabs} className={styles.actions} />
 }

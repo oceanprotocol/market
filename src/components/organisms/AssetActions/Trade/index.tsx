@@ -3,93 +3,76 @@ import { useOcean, useMetadata, usePricing } from '@oceanprotocol/react'
 import { DDO } from '@oceanprotocol/lib'
 import styles from './index.module.css'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
-import * as Yup from 'yup'
 import Conversion from '../../../atoms/Price/Conversion'
 import EtherscanLink from '../../../atoms/EtherscanLink'
 
-import { Formik } from 'formik'
-import { toast } from 'react-toastify'
-import Actions from '../Pool/Actions'
-import { graphql, useStaticQuery } from 'gatsby'
 import TradeForm from './TradeForm'
-export interface TradeValue {
+import DtBalance from '../../../../models/DtBalance'
+
+export interface TradeItem {
   amount: number
   token: string
   maxAmount: number
 }
 export interface TradeLiquidity {
-  buyToken: number
-  sellToken: number
+  ocean: number
+  datatoken: number
+  // in refrence to datatoken, buy = swap from ocean to dt ( buy dt) , sell = swap from dt to ocean (sell dt)
+  type: 'buy' | 'sell'
 }
 
-const contentQuery = graphql`
-  query TradeQuery {
-    content: allFile(filter: { relativePath: { eq: "price.json" } }) {
-      edges {
-        node {
-          childContentJson {
-            trade {
-              title
-              action
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
-const initialValues: TradeLiquidity = {
-  buyToken: undefined,
-  sellToken: undefined
-}
+const refreshInterval = 2000 // 10 sec.
 
 export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
-  const data = useStaticQuery(contentQuery)
-  const content = data.content.edges[0].node.childContentJson.trade
-
-  const { ocean, networkId, balance } = useOcean()
+  const { ocean, networkId, balance, accountId } = useOcean()
+  const [dtBalance, setDtBalance] = useState<DtBalance>()
   const { price, refreshPrice } = useMetadata(ddo)
   const { dtSymbol } = usePricing(ddo)
   const [poolAddress, setPoolAddress] = useState<string>()
-  // the purpose of the value is just to trigger the effect
-  const [refreshPool, setRefreshPool] = useState(false)
-  const [txId, setTxId] = useState<string>()
-  const validationSchema = Yup.object().shape<TradeLiquidity>({
-    buyToken:  Yup.number()
-        .min(0.01, 'Must be more or equal to 0.01')
-        .required('Required'),
-    sellToken: Yup.number()
-        .min(0.01, 'Must be more or equal to 0.01')
-        .required('Required')
-  })
-
-  const refreshInfo = async () => {
-    setRefreshPool(!refreshPool)
-    await refreshPrice()
-  }
-
+  const [maxDt, setMaxDt] = useState(0)
+  const [maxOcean, setMaxOcean] = useState(0)
   useEffect(() => {
-    if (!price) return
+    // Re-fetch price periodically, triggering re-calculation of everything
+    const interval = setInterval(
+      async () => await refreshPrice(),
+      refreshInterval
+    )
+    return () => clearInterval(interval)
+  }, [ddo])
+  useEffect(() => {
+    if (!price || !accountId || !ddo) return
     setPoolAddress(price.address)
-  }, [price])
+    async function getDtBalance() {
+      const dtBalance = await ocean.datatokens.balance(ddo.dataToken, accountId)
+      setDtBalance({
+        ocean: Number(balance.ocean),
+        datatoken: Number(dtBalance)
+      })
+    }
+    getDtBalance()
+  }, [price, accountId, ddo])
 
   // Get maximum amount for either OCEAN or datatoken
   useEffect(() => {
-    if (!ocean || !poolAddress) return
+    if (!ocean || !poolAddress || !price || price.value === 0) return
 
-    async function getMaximum() {}
-    getMaximum()
-  }, [ocean, poolAddress, balance.ocean])
+    async function getMaximum() {
+      const maxCanBuy = Number(balance.ocean) / Number(price.value)
+      const maxTokensInPool = await ocean.pool.getDTMaxBuyQuantity(poolAddress)
+      setMaxDt(
+        maxCanBuy > Number(maxTokensInPool)
+          ? Number(maxTokensInPool)
+          : maxCanBuy
+      )
 
-  async function handleTrade(values: TradeLiquidity, resetForm: () => void) {
-    try {
-      console.log(values)
-    } catch (error) {
-      console.error(error.message)
-      toast.error(error.message)
+      const maxOceanInPool = await ocean.pool.getMaxBuyQuantity(
+        poolAddress,
+        ocean.pool.oceanAddress
+      )
+      setMaxOcean(Number(maxOceanInPool))
     }
-  }
+    getMaximum()
+  }, [ocean, poolAddress, balance.ocean, price])
 
   return (
     <>
@@ -110,29 +93,12 @@ export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
         </div>
       </div>
 
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={async (values, { setSubmitting, resetForm }) => {
-          await handleTrade(values, resetForm)
-          setSubmitting(false)
-        }}
-      >
-        {({ isSubmitting, submitForm }) => (
-          <>
-            <TradeForm ddo={ddo} />
-
-            <Actions
-              isLoading={isSubmitting}
-              loaderMessage="Swaping tokens..."
-              successMessage="Successfully swaped tokens."
-              actionName={content.action}
-              action={submitForm}
-              txId={txId}
-            />
-          </>
-        )}
-      </Formik>
+      <TradeForm
+        ddo={ddo}
+        balance={dtBalance}
+        maxDt={maxDt}
+        maxOcean={maxOcean}
+      />
     </>
   )
 }

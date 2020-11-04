@@ -21,7 +21,7 @@
   margin-right: calc(var(--spacer) / 3);
 }
 
-.swapButton { 
+.swapButton {
   text-align: center;
   justify-content: center;
 }
@@ -31,7 +31,6 @@
   height: 1.5em;
   fill: var(--brand-pink);
 }
-
 
 .tradeInput {
   padding: var(--spacer) calc(var(--spacer) * 2.5) calc(var(--spacer) * 1.2)
