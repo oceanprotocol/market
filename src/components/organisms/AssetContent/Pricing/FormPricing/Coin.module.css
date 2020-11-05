@@ -17,17 +17,18 @@
   justify-content: center;
   border: 1px solid var(--border-color);
   border-radius: 50%;
-  background-color: var(--brand-white);
+  background-color: var(--background-body);
   margin-bottom: calc(var(--spacer) / 2);
+  fill: var(--font-color-text);
 }
 
-.coin:last-child .icon path {
+.coin:last-child .icon {
   fill: var(--brand-violet);
 }
 
 .tokenName {
   font-size: var(--font-size-base);
-  color: var(--brand-grey);
+  color: var(--font-color-text);
   text-align: center;
   margin-bottom: calc(var(--spacer) / 6);
 }
@@ -59,5 +60,5 @@
 }
 
 .weight strong {
-  color: var(--brand-grey);
+  color: var(--font-color-text);
 }
