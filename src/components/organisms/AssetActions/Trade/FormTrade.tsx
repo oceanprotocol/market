@@ -34,7 +34,7 @@ const contentQuery = graphql`
   }
 `
 
-export default function TradeForm({
+export default function FormTrade({
   ddo,
   balance,
   maxDt,

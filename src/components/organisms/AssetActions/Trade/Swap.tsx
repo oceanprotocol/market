@@ -72,24 +72,24 @@ export default function Swap({
   }
 
   return (
-    <>
-      <div className={styles.tradeInput}>
-        <TradeInput
-          name={values.type === 'sell' ? 'datatoken' : 'ocean'}
-          item={values.type === 'sell' ? dtItem : oceanItem}
-          handleValueChange={handleValueChange}
-        />
-      </div>
+    <div className={styles.swap}>
+      <TradeInput
+        name={values.type === 'sell' ? 'datatoken' : 'ocean'}
+        item={values.type === 'sell' ? dtItem : oceanItem}
+        handleValueChange={handleValueChange}
+      />
+
       <Button className={styles.swapButton} style="text" onClick={swapTokens}>
+        <span>From</span>
         <Arrow />
+        <span>To</span>
       </Button>
-      <div className={styles.tradeInput}>
-        <TradeInput
-          name={values.type === 'sell' ? 'ocean' : 'datatoken'}
-          item={values.type === 'sell' ? oceanItem : dtItem}
-          handleValueChange={handleValueChange}
-        />
-      </div>
-    </>
+
+      <TradeInput
+        name={values.type === 'sell' ? 'ocean' : 'datatoken'}
+        item={values.type === 'sell' ? oceanItem : dtItem}
+        handleValueChange={handleValueChange}
+      />
+    </div>
   )
 }

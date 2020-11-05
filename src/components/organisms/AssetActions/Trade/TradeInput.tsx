@@ -29,21 +29,12 @@ export default function TradeInput({
   const {
     handleChange,
     setFieldValue,
-    validateForm,
-    values
+    validateForm
   }: FormikContextType<TradeLiquidity> = useFormikContext()
 
   return (
-    <>
+    <div className={styles.tradeInput}>
       <div className={styles.userLiquidity}>
-        <div>
-          <span>
-            {(name === 'ocean' && values.type === 'sell') ||
-            (name === 'datatoken' && values.type === 'buy')
-              ? `To`
-              : `From`}
-          </span>
-        </div>
         <div>
           <span>Available:</span>
           <PriceUnit price={`${item?.amount}`} symbol={item?.token} small />
@@ -82,6 +73,6 @@ export default function TradeInput({
       >
         Use Max
       </Button>
-    </>
+    </div>
   )
 }

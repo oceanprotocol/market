@@ -1,29 +1,27 @@
+.swap {
+  padding: var(--spacer) calc(var(--spacer) * 1.5);
+}
+
 .swapButton {
+  padding: 0;
   display: block;
   width: 100%;
   text-align: center;
+  margin-top: var(--spacer);
+  margin-bottom: var(--spacer);
 }
 
 .swapButton svg {
   display: inline-block;
-  width: 1.5em;
-  height: 1.5em;
+  width: var(--font-size-large);
+  height: var(--font-size-large);
   fill: var(--brand-pink);
   transform: rotate(90deg);
+  margin-top: calc(var(--spacer) / 2);
+  margin-bottom: calc(var(--spacer) / 2);
 }
 
-.tradeInput {
-  padding: var(--spacer) calc(var(--spacer) * 2.5) calc(var(--spacer) * 1.2)
-    calc(var(--spacer) * 2.5);
-  margin-left: -2rem;
-  margin-right: -2rem;
-  position: relative;
-}
-
-.tradeInput input {
-  text-align: center;
-}
-
-.tradeInput div[class*='field'] {
-  margin-bottom: 0;
+.swapButton span {
+  display: block;
+  color: var(--font-color-text);
 }

@@ -1,8 +1,27 @@
+.tradeInput {
+  position: relative;
+}
+
+.tradeInput input {
+  text-align: center;
+}
+
+.tradeInput div[class*='field'] {
+  margin-bottom: 0;
+}
+
+.label {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-base);
+  text-align: center;
+  display: block;
+}
+
 .buttonMax {
   position: absolute;
   font-size: var(--font-size-mini);
-  bottom: calc(var(--spacer) / 2);
-  right: calc(var(--spacer) * 2.5);
+  bottom: -1rem;
+  right: 0;
 }
 
 .userLiquidity > div {
@@ -11,10 +30,6 @@
   align-items: center;
   font-size: var(--font-size-mini);
   color: var(--color-secondary);
-}
-
-.userLiquidity > div:last-child {
-  margin-bottom: calc(var(--spacer) / 4);
 }
 
 .userLiquidity span + div {

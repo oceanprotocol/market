@@ -5,7 +5,7 @@ import styles from './index.module.css'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
 import Conversion from '../../../atoms/Price/Conversion'
 import EtherscanLink from '../../../atoms/EtherscanLink'
-import TradeForm from './TradeForm'
+import FormTrade from './FormTrade'
 import DtBalance from '../../../../models/DtBalance'
 
 export interface TradeItem {
@@ -13,6 +13,7 @@ export interface TradeItem {
   token: string
   maxAmount: number
 }
+
 export interface TradeLiquidity {
   ocean: number
   datatoken: number
@@ -95,7 +96,7 @@ export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
         </div>
       </div>
 
-      <TradeForm
+      <FormTrade
         ddo={ddo}
         balance={dtBalance}
         maxDt={maxDt}
