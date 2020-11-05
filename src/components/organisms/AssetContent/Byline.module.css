@@ -1,0 +1,31 @@
+.byline {
+  display: inline-block;
+}
+
+@media (min-width: 40rem) {
+  .bylineLinks {
+    display: inline;
+  }
+}
+
+.bylineLinks a {
+  margin-left: calc(var(--spacer) / 3);
+  color: inherit;
+  font-size: var(--font-size-mini);
+}
+
+.bylineLinks a:first-child {
+  margin-left: 0;
+}
+
+.bylineLinks a:hover,
+.bylineLinks a:focus {
+  color: var(--brand-pink);
+}
+
+.bylineExternal {
+  width: 0.6em;
+  height: 0.6em;
+  display: inline-block;
+  fill: var(--brand-grey-light);
+}

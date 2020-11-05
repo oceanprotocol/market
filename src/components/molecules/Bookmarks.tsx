@@ -6,7 +6,7 @@ import { useOcean } from '@oceanprotocol/react'
 import Price from '../atoms/Price'
 import Tooltip from '../atoms/Tooltip'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
-import AssetTitle from './AssetTitle'
+import AssetTitle from './AssetListTitle'
 
 async function getAssetsBookmarked(
   bookmarks: string[],
@@ -28,7 +28,13 @@ const columns = [
     name: 'Data Set',
     selector: function getAssetRow(row: DDO) {
       const { attributes } = row.findServiceByType('metadata')
-      return <AssetTitle title={attributes.main.name} did={row.id} />
+      return (
+        <AssetTitle
+          title={attributes.main.name}
+          did={row.id}
+          owner={row.publicKey[0].owner}
+        />
+      )
     },
     maxWidth: '45rem',
     grow: 1

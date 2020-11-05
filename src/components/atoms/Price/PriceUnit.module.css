@@ -28,4 +28,5 @@
 .badge {
   vertical-align: middle;
   margin-left: calc(var(--spacer) / 6);
+  background: var(--color-secondary);
 }
