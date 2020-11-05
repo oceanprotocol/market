@@ -80,9 +80,7 @@ export default function Swap({
       />
 
       <Button className={styles.swapButton} style="text" onClick={swapTokens}>
-        <span>From</span>
         <Arrow />
-        <span>To</span>
       </Button>
 
       <TradeInput
