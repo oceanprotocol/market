@@ -9,6 +9,12 @@
   flex-direction: column;
 }
 
+@media (min-width: 2000px) {
+  .app {
+    background-size: contain;
+  }
+}
+
 .app > * {
   width: 100%;
 }

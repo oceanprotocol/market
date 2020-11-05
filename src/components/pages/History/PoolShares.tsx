@@ -5,7 +5,7 @@ import { DDO, Logger, MetadataCache } from '@oceanprotocol/lib'
 import PriceUnit from '../../atoms/Price/PriceUnit'
 import Conversion from '../../atoms/Price/Conversion'
 import styles from './PoolShares.module.css'
-import AssetTitle from '../../molecules/AssetTitle'
+import AssetTitle from '../../molecules/AssetListTitle'
 
 interface Asset {
   ddo: DDO
@@ -28,8 +28,9 @@ const columns = [
   {
     name: 'Data Set',
     selector: function getAssetRow(row: Asset) {
-      const did = row.ddo.id
-      return <AssetTitle did={did} />
+      const { attributes } = row.ddo.findServiceByType('metadata')
+      const { owner } = row.ddo.publicKey[0]
+      return <AssetTitle title={attributes.main.name} owner={owner} />
     },
     grow: 2
   },

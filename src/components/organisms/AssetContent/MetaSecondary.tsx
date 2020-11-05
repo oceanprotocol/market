@@ -13,7 +13,7 @@ export default function MetaSecondary({
 }): ReactElement {
   return (
     <aside className={styles.metaSecondary}>
-      {metadata?.additionalInformation?.links?.length && (
+      {metadata?.additionalInformation?.links?.length > 0 && (
         <div className={styles.samples}>
           <MetaItem
             title="Sample Data"

@@ -35,12 +35,19 @@ export default function Consume({
     pricingIsLoading
   } = usePricing(ddo)
   const { consumeStepText, consume, consumeError } = useConsume()
-  const isDisabled =
-    !ocean ||
-    !isBalanceSufficient ||
-    typeof consumeStepText !== 'undefined' ||
-    pricingIsLoading
+  const [isDisabled, setIsDisabled] = useState(true)
+
   const hasDatatoken = Number(dtBalance) >= 1
+
+  useEffect(() => {
+    setIsDisabled(
+      (!ocean ||
+        !isBalanceSufficient ||
+        typeof consumeStepText !== 'undefined' ||
+        pricingIsLoading) &&
+        !hasPreviousOrder
+    )
+  }, [hasPreviousOrder, isBalanceSufficient, consumeStepText, pricingIsLoading])
 
   useEffect(() => {
     if (!ocean || !accountId) return

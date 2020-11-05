@@ -12,18 +12,25 @@ import Loader from '../atoms/Loader'
 import { useOcean } from '@oceanprotocol/react'
 import Button from '../atoms/Button'
 import Bookmarks from '../molecules/Bookmarks'
+import listPartners from '@oceanprotocol/list-datapartners'
+import Tooltip from '../atoms/Tooltip'
+import AssetQueryCarousel from '../organisms/AssetQueryCarousel'
+
+const partnerAccounts = listPartners.map((partner) =>
+  partner.accounts.join(',')
+)
 
 const queryHighest = {
   page: 1,
-  offset: 6,
+  offset: 9,
   query: { 'price.type': ['pool'] },
   sort: { 'price.ocean': -1 }
 }
 
-const queryPoolsLatest = {
+const queryPartners = {
   page: 1,
-  offset: 6,
-  query: { 'price.type': ['pool'] },
+  offset: 100,
+  query: { 'publicKey.owner': partnerAccounts },
   sort: { created: -1 }
 }
 
@@ -38,20 +45,49 @@ async function getAssets(query: SearchQuery, metadataCacheUri: string) {
   try {
     const metadataCache = new MetadataCache(metadataCacheUri, Logger)
     const result = await metadataCache.queryMetadata(query)
-
     return result
   } catch (error) {
     Logger.error(error.message)
   }
 }
 
+function LoaderArea() {
+  return (
+    <div className={styles.loaderWrap}>
+      <Loader />
+    </div>
+  )
+}
+
+function SectionQuery({
+  title,
+  result,
+  loading,
+  action
+}: {
+  title: ReactElement | string
+  result: QueryResult
+  loading: boolean
+  action?: ReactElement
+}) {
+  return (
+    <section className={styles.section}>
+      <h3>{title}</h3>
+      {loading ? (
+        <LoaderArea />
+      ) : (
+        result && <AssetQueryList queryResult={result} />
+      )}
+      {action && action}
+    </section>
+  )
+}
+
 export default function HomePage(): ReactElement {
   const { config } = useOcean()
 
   const [queryResultLatest, setQueryResultLatest] = useState<QueryResult>()
-  const [queryResultPoolsLatest, setQueryResultPoolsLatest] = useState<
-    QueryResult
-  >()
+  const [queryResultPartners, setQueryResultPartners] = useState<QueryResult>()
   const [queryResultHighest, setQueryResultHighest] = useState<QueryResult>()
   const [loading, setLoading] = useState(true)
 
@@ -63,11 +99,11 @@ export default function HomePage(): ReactElement {
       )
       setQueryResultHighest(queryResultHighest)
 
-      const queryResultPoolsLatest = await getAssets(
-        queryPoolsLatest,
+      const queryResultPartners = await getAssets(
+        queryPartners,
         config.metadataCacheUri
       )
-      setQueryResultPoolsLatest(queryResultPoolsLatest)
+      setQueryResultPartners(queryResultPartners)
 
       const queryResultLatest = await getAssets(
         queryLatest,
@@ -85,48 +121,56 @@ export default function HomePage(): ReactElement {
         <SearchBar size="large" />
       </Container>
 
-      <section className={styles.latest}>
+      <section className={styles.listPartners}>
+        <h3>
+          Data Partners{' '}
+          <Tooltip
+            content={
+              <>
+                Ocean Protocol{' '}
+                <a href="https://github.com/oceanprotocol/list-datapartners">
+                  Data Partners
+                </a>
+              </>
+            }
+          />
+        </h3>
+        {loading ? (
+          <LoaderArea />
+        ) : (
+          queryResultPartners && (
+            <AssetQueryCarousel queryResult={queryResultPartners} />
+          )
+        )}
+        {/* <Button
+          style="text"
+          to={`/search/?owner=${partnerAccounts?.toString()}`}
+        >
+          All data partner sets →
+        </Button> */}
+      </section>
+
+      <section className={styles.section}>
         <h3>Bookmarks</h3>
         <Bookmarks />
       </section>
 
-      <section className={styles.latest}>
-        <h3>Highest Liquidity Pools</h3>
-        {loading ? (
-          <Loader />
-        ) : (
-          queryResultHighest && (
-            <AssetQueryList queryResult={queryResultHighest} />
-          )
-        )}
-      </section>
+      <SectionQuery
+        title="Highest Liquidity Pools"
+        loading={loading}
+        result={queryResultHighest}
+      />
 
-      <section className={styles.latest}>
-        <h3>New Liquidity Pools</h3>
-        {loading ? (
-          <Loader />
-        ) : (
-          queryResultPoolsLatest && (
-            <AssetQueryList queryResult={queryResultPoolsLatest} />
-          )
-        )}
-      </section>
-
-      <section className={styles.latest}>
-        <h3>New Data Sets</h3>
-        {loading ? (
-          <Loader />
-        ) : (
-          queryResultLatest && (
-            <AssetQueryList queryResult={queryResultLatest} />
-          )
-        )}
-        {queryResultLatest?.results.length === 9 && (
+      <SectionQuery
+        title="New Data Sets"
+        loading={loading}
+        result={queryResultLatest}
+        action={
           <Button style="text" to="/search">
             All data sets →
           </Button>
-        )}
-      </section>
+        }
+      />
     </>
   )
 }

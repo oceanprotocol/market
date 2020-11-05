@@ -4,15 +4,34 @@
   margin-top: calc(var(--spacer) * var(--line-height));
 }
 
-.latest {
+.section {
   margin-top: calc(var(--spacer) * 2);
 }
 
-.latest h3 {
+.section h3 {
   font-size: var(--font-size-large);
   color: var(--color-secondary);
 }
 
-.latest [class*='button'] {
+.section [class*='button'] {
   margin-top: var(--spacer);
+}
+
+.listPartners {
+  composes: section;
+}
+
+.listPartners > div {
+  background: var(--background-highlight);
+  padding-top: var(--spacer);
+  padding-bottom: var(--spacer);
+  min-height: 360px;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+}
+
+.loaderWrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
