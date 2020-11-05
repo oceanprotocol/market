@@ -1,13 +1,6 @@
 import { useEffect, useState } from 'react'
-import listPartners from '../../content/list-datapartners.json'
-
-export interface PartnerData {
-  name: string
-  accounts: string[]
-  links: {
-    [key: string]: string
-  }
-}
+import listPartners from '@oceanprotocol/list-datapartners'
+import { PartnerData } from '@oceanprotocol/list-datapartners/types'
 
 export function useDataPartner(
   owner?: string

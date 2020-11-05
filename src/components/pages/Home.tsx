@@ -12,10 +12,9 @@ import Loader from '../atoms/Loader'
 import { useOcean } from '@oceanprotocol/react'
 import Button from '../atoms/Button'
 import Bookmarks from '../molecules/Bookmarks'
-import listPartners from '../../../content/list-datapartners.json'
+import listPartners from '@oceanprotocol/list-datapartners'
 import Tooltip from '../atoms/Tooltip'
 import AssetQueryCarousel from '../organisms/AssetQueryCarousel'
-import { useDataPartner } from '../../hooks/useDataPartner'
 
 const partnerAccounts = listPartners.map((partner) =>
   partner.accounts.join(',')
@@ -46,7 +45,6 @@ async function getAssets(query: SearchQuery, metadataCacheUri: string) {
   try {
     const metadataCache = new MetadataCache(metadataCacheUri, Logger)
     const result = await metadataCache.queryMetadata(query)
-
     return result
   } catch (error) {
     Logger.error(error.message)
@@ -55,7 +53,7 @@ async function getAssets(query: SearchQuery, metadataCacheUri: string) {
 
 export default function HomePage(): ReactElement {
   const { config } = useOcean()
-  const { partnerAccounts } = useDataPartner()
+  // const { partnerAccounts } = useDataPartner()
 
   const [queryResultLatest, setQueryResultLatest] = useState<QueryResult>()
   const [queryResultPartners, setQueryResultPartners] = useState<QueryResult>()
