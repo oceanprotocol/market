@@ -24,7 +24,7 @@ export const initialValues: PriceOptionsMarket = {
   type: 'dynamic',
   dtAmount: 10,
   oceanAmount: 10,
-  weightOnOcean: '9', // 90% on OCEAN
-  weightOnDataToken: '1', // 10% on datatoken
+  weightOnOcean: '7', // 70% on OCEAN
+  weightOnDataToken: '3', // 30% on datatoken
   swapFee: 0.1 // in %
 }
