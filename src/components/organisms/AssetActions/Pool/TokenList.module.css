@@ -23,15 +23,6 @@
   grid-template-columns: 1fr 1fr;
 }
 
-/* visually tweak the order so tokens are underneath each other */
-.tokens > *:nth-child(1) {
-  grid-row: 1 / 2;
-}
-
-.tokens > *:nth-child(2) {
-  grid-row: 2 / 2;
-}
-
 .title {
   composes: title from './index.module.css';
 }
