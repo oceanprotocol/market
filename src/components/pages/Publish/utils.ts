@@ -38,7 +38,7 @@ export function transformPublishFormToMetadata(
       ...AssetModel.additionalInformation,
       description,
       tags: transformTags(tags),
-      links: typeof links !== 'string' && links,
+      links: typeof links !== 'string' ? links : [],
       termsAndConditions
     }
   }
