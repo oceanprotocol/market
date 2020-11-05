@@ -76,15 +76,13 @@ export default function TradeForm({
               accountId,
               price.address,
               values.datatoken.toString(),
-              (values.ocean * 1.1).toString(),
-              (price.value * 1.1).toString()
+              (values.ocean * 1.1).toString()
             )
           : await ocean.pool.sellDT(
               accountId,
               price.address,
               values.datatoken.toString(),
-              (values.ocean * 0.9).toString(),
-              (price.value * 1.1).toString()
+              (values.ocean * 0.9).toString()
             )
 
       setTxId(tx?.transactionHash)
