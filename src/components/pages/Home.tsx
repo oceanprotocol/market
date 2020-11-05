@@ -53,7 +53,6 @@ async function getAssets(query: SearchQuery, metadataCacheUri: string) {
 
 export default function HomePage(): ReactElement {
   const { config } = useOcean()
-  // const { partnerAccounts } = useDataPartner()
 
   const [queryResultLatest, setQueryResultLatest] = useState<QueryResult>()
   const [queryResultPartners, setQueryResultPartners] = useState<QueryResult>()
@@ -96,9 +95,9 @@ export default function HomePage(): ReactElement {
           <Tooltip
             content={
               <>
-                Learn more about{' '}
-                <a href="https://blog.oceanprotocol.com/announcing-ocean-market-data-launch-partners-3b531601e63a">
-                  our data partners
+                Ocean Protocol{' '}
+                <a href="https://github.com/oceanprotocol/list-datapartners">
+                  Data Partners
                 </a>
               </>
             }
