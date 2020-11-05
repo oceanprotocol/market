@@ -31,7 +31,7 @@ export default function TradeInput({
     validateForm,
     values
   }: FormikContextType<TradeLiquidity> = useFormikContext()
-  return item ? (
+  return (
     <>
       <div className={styles.userLiquidity}>
         <div>
@@ -44,19 +44,19 @@ export default function TradeInput({
         </div>
         <div>
           <span>Available:</span>
-          <PriceUnit price={`${item.amount}`} symbol={item.token} small />
+          <PriceUnit price={`${item?.amount}`} symbol={item?.token} small />
         </div>
         <div>
           <span>Maximum:</span>
-          <PriceUnit price={`${item.maxAmount}`} symbol={item.token} small />
+          <PriceUnit price={`${item?.maxAmount}`} symbol={item?.token} small />
         </div>
       </div>
       <Field name={name}>
         {({ field, form }: { field: FieldInputProps<number>; form: any }) => (
           <Input
             type="number"
-            max={`${item.maxAmount}`}
-            prefix={item.token}
+            max={`${item?.maxAmount}`}
+            prefix={item?.token}
             placeholder="0"
             field={field}
             form={form}
@@ -74,14 +74,12 @@ export default function TradeInput({
         style="text"
         size="small"
         onClick={() => {
-          setFieldValue(name, item.maxAmount)
-          handleValueChange(name, item.maxAmount)
+          setFieldValue(name, item?.maxAmount)
+          handleValueChange(name, item?.maxAmount)
         }}
       >
         Use Max
       </Button>
     </>
-  ) : (
-    <></>
   )
 }
