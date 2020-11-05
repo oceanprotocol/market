@@ -34,7 +34,7 @@
 
 .input[readonly],
 .input[disabled] {
-  background-color: var(--brand-grey-dimmed);
+  background-color: var(--background-highlight);
   color: var(--brand-grey-light);
   cursor: not-allowed;
   pointer-events: none;
@@ -189,7 +189,7 @@
   align-items: center;
   padding-left: calc(var(--spacer) / 4);
   padding-right: calc(var(--spacer) / 4);
-  color: var(--brand-grey);
+  color: var(--font-color-text);
   font-size: var(--font-size-small);
   transition: border 0.2s ease-out;
   white-space: nowrap;
