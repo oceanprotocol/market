@@ -4,21 +4,21 @@
   margin-top: calc(var(--spacer) * var(--line-height));
 }
 
-.latest {
+.section {
   margin-top: calc(var(--spacer) * 2);
 }
 
-.latest h3 {
+.section h3 {
   font-size: var(--font-size-large);
   color: var(--color-secondary);
 }
 
-.latest [class*='button'] {
+.section [class*='button'] {
   margin-top: var(--spacer);
 }
 
 .listPartners {
-  composes: latest;
+  composes: section;
 }
 
 .listPartners > div {

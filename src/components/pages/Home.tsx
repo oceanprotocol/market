@@ -51,6 +51,32 @@ async function getAssets(query: SearchQuery, metadataCacheUri: string) {
   }
 }
 
+function SectionQuery({
+  title,
+  result,
+  loading,
+  action
+}: {
+  title: ReactElement | string
+  result: QueryResult
+  loading: boolean
+  action?: ReactElement
+}) {
+  return (
+    <section className={styles.section}>
+      <h3>{title}</h3>
+      {loading ? (
+        <div className={styles.loaderWrap}>
+          <Loader />
+        </div>
+      ) : (
+        result && <AssetQueryList queryResult={result} />
+      )}
+      {action && action}
+    </section>
+  )
+}
+
 export default function HomePage(): ReactElement {
   const { config } = useOcean()
 
@@ -120,41 +146,27 @@ export default function HomePage(): ReactElement {
         </Button> */}
       </section>
 
-      <section className={styles.latest}>
+      <section className={styles.section}>
         <h3>Bookmarks</h3>
         <Bookmarks />
       </section>
 
-      <section className={styles.latest}>
-        <h3>Highest Liquidity Pools</h3>
-        {loading ? (
-          <div className={styles.loaderWrap}>
-            <Loader />
-          </div>
-        ) : (
-          queryResultHighest && (
-            <AssetQueryList queryResult={queryResultHighest} />
-          )
-        )}
-      </section>
+      <SectionQuery
+        title="Highest Liquidity Pools"
+        loading={loading}
+        result={queryResultHighest}
+      />
 
-      <section className={styles.latest}>
-        <h3>New Data Sets</h3>
-        {loading ? (
-          <div className={styles.loaderWrap}>
-            <Loader />
-          </div>
-        ) : (
-          queryResultLatest && (
-            <AssetQueryList queryResult={queryResultLatest} />
-          )
-        )}
-        {queryResultLatest?.results.length === 9 && (
+      <SectionQuery
+        title="New Data Sets"
+        loading={loading}
+        result={queryResultLatest}
+        action={
           <Button style="text" to="/search">
             All data sets →
           </Button>
-        )}
-      </section>
+        }
+      />
     </>
   )
 }
