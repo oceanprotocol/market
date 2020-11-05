@@ -51,6 +51,14 @@ async function getAssets(query: SearchQuery, metadataCacheUri: string) {
   }
 }
 
+function LoaderArea() {
+  return (
+    <div className={styles.loaderWrap}>
+      <Loader />
+    </div>
+  )
+}
+
 function SectionQuery({
   title,
   result,
@@ -66,9 +74,7 @@ function SectionQuery({
     <section className={styles.section}>
       <h3>{title}</h3>
       {loading ? (
-        <div className={styles.loaderWrap}>
-          <Loader />
-        </div>
+        <LoaderArea />
       ) : (
         result && <AssetQueryList queryResult={result} />
       )}
@@ -130,9 +136,7 @@ export default function HomePage(): ReactElement {
           />
         </h3>
         {loading ? (
-          <div className={styles.loaderWrap}>
-            <Loader />
-          </div>
+          <LoaderArea />
         ) : (
           queryResultPartners && (
             <AssetQueryCarousel queryResult={queryResultPartners} />
