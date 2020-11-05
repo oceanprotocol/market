@@ -1,11 +1,10 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useMetadata, usePricing } from '@oceanprotocol/react'
 import { DDO } from '@oceanprotocol/lib'
-import styles from './index.module.css'
-
+import styles from './Swap.module.css'
 import TradeInput from './TradeInput'
 import Button from '../../../atoms/Button'
-import { ReactComponent as Arrow } from '../../../../images/arrowDown.svg'
+import { ReactComponent as Arrow } from '../../../../images/arrow.svg'
 import { TradeLiquidity, TradeItem } from '.'
 import { FormikContextType, useFormikContext } from 'formik'
 import DtBalance from '../../../../models/DtBalance'
@@ -29,6 +28,7 @@ export default function Swap({
   const [dtItem, setDtItem] = useState<TradeItem>()
   const { dtSymbol } = usePricing(ddo)
   const { price } = useMetadata(ddo)
+
   const {
     setFieldValue,
     values,
@@ -70,6 +70,7 @@ export default function Swap({
     setFieldValue(name === 'ocean' ? 'datatoken' : 'ocean', newValue)
     validateForm()
   }
+
   return (
     <>
       <div className={styles.tradeInput}>
@@ -79,11 +80,9 @@ export default function Swap({
           handleValueChange={handleValueChange}
         />
       </div>
-      <div className={styles.swapButton}>
-        <Button style="text" onClick={swapTokens}>
-          <Arrow />
-        </Button>
-      </div>
+      <Button className={styles.swapButton} style="text" onClick={swapTokens}>
+        <Arrow />
+      </Button>
       <div className={styles.tradeInput}>
         <TradeInput
           name={values.type === 'sell' ? 'ocean' : 'datatoken'}

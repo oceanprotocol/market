@@ -26,7 +26,7 @@
 .input::placeholder {
   font-family: var(--font-family-base);
   font-size: var(--font-size-base);
-  color: var(--brand-grey-light);
+  color: var(--color-secondary);
   font-weight: var(--font-weight-base);
   transition: 0.2s ease-out;
   opacity: 0.7;
@@ -34,8 +34,8 @@
 
 .input[readonly],
 .input[disabled] {
-  background-color: var(--brand-grey-dimmed);
-  color: var(--brand-grey-light);
+  background-color: var(--background-highlight);
+  color: var(--color-secondary);
   cursor: not-allowed;
   pointer-events: none;
   /* for hiding spin buttons in Firefox */
@@ -189,7 +189,7 @@
   align-items: center;
   padding-left: calc(var(--spacer) / 4);
   padding-right: calc(var(--spacer) / 4);
-  color: var(--brand-grey);
+  color: var(--font-color-text);
   font-size: var(--font-size-small);
   transition: border 0.2s ease-out;
   white-space: nowrap;

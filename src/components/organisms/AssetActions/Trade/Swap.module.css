@@ -1,0 +1,29 @@
+.swapButton {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+.swapButton svg {
+  display: inline-block;
+  width: 1.5em;
+  height: 1.5em;
+  fill: var(--brand-pink);
+  transform: rotate(90deg);
+}
+
+.tradeInput {
+  padding: var(--spacer) calc(var(--spacer) * 2.5) calc(var(--spacer) * 1.2)
+    calc(var(--spacer) * 2.5);
+  margin-left: -2rem;
+  margin-right: -2rem;
+  position: relative;
+}
+
+.tradeInput input {
+  text-align: center;
+}
+
+.tradeInput div[class*='field'] {
+  margin-bottom: 0;
+}

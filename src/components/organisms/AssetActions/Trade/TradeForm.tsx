@@ -1,5 +1,5 @@
-import React, { ReactElement, useEffect, useState } from 'react'
-import { useMetadata, useOcean, usePricing } from '@oceanprotocol/react'
+import React, { ReactElement, useState } from 'react'
+import { useMetadata, useOcean } from '@oceanprotocol/react'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 import { TradeLiquidity } from '.'
@@ -49,7 +49,6 @@ export default function TradeForm({
   const content = data.content.edges[0].node.childContentJson.trade
   const { ocean, accountId } = useOcean()
   const { debug } = useUserPreferences()
-  const { dtSymbol } = usePricing(ddo)
   const { price } = useMetadata(ddo)
   const [txId, setTxId] = useState<string>()
 

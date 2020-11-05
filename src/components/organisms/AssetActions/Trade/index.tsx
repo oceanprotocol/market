@@ -5,7 +5,6 @@ import styles from './index.module.css'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
 import Conversion from '../../../atoms/Price/Conversion'
 import EtherscanLink from '../../../atoms/EtherscanLink'
-
 import TradeForm from './TradeForm'
 import DtBalance from '../../../../models/DtBalance'
 
@@ -31,6 +30,7 @@ export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
   const [poolAddress, setPoolAddress] = useState<string>()
   const [maxDt, setMaxDt] = useState(0)
   const [maxOcean, setMaxOcean] = useState(0)
+
   useEffect(() => {
     // Re-fetch price periodically, triggering re-calculation of everything
     const interval = setInterval(
@@ -39,8 +39,10 @@ export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
     )
     return () => clearInterval(interval)
   }, [ddo])
+
   useEffect(() => {
     if (!price || !accountId || !ddo) return
+
     setPoolAddress(price.address)
     async function getDtBalance() {
       const dtBalance = await ocean.datatokens.balance(ddo.dataToken, accountId)
@@ -50,7 +52,7 @@ export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
       })
     }
     getDtBalance()
-  }, [price, accountId, ddo])
+  }, [balance.ocean, ocean, price, accountId, ddo])
 
   // Get maximum amount for either OCEAN or datatoken
   useEffect(() => {

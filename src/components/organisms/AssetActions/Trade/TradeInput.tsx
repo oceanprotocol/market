@@ -24,6 +24,7 @@ export default function TradeInput({
   handleValueChange: (name: string, value: number) => void
 }): ReactElement {
   const { ocean } = useOcean()
+
   // Connect with form
   const {
     handleChange,
@@ -31,6 +32,7 @@ export default function TradeInput({
     validateForm,
     values
   }: FormikContextType<TradeLiquidity> = useFormikContext()
+
   return (
     <>
       <div className={styles.userLiquidity}>
