@@ -1,14 +1,11 @@
-.swap {
-  padding: var(--spacer) calc(var(--spacer) * 1.5);
-}
-
 .swapButton,
 .swapButton:hover {
   padding: 0;
   display: block;
-  width: calc(100% + 10rem);
+  width: calc(100% + 4rem);
   text-align: center;
-  margin: var(--spacer) -5rem calc(var(--spacer) / 2) -5rem;
+  margin-left: -2rem;
+  margin-right: -2rem;
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
   padding: calc(var(--spacer) / 3) 0 calc(var(--spacer) / 6) 0;

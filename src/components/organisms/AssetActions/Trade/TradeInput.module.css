@@ -1,5 +1,10 @@
 .tradeInput {
   position: relative;
+  padding: calc(var(--spacer) / 2) calc(var(--spacer) * 2) var(--spacer)
+    calc(var(--spacer) * 2);
+  margin-left: -2rem;
+  margin-right: -2rem;
+  background: var(--background-highlight);
 }
 
 .tradeInput input {
@@ -20,8 +25,8 @@
 .buttonMax {
   position: absolute;
   font-size: var(--font-size-mini);
-  bottom: -1rem;
-  right: 0;
+  bottom: calc(var(--spacer) / 2);
+  right: calc(var(--spacer) * 2);
 }
 
 .userLiquidity > div {

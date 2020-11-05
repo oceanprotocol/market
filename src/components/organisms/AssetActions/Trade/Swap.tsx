@@ -72,7 +72,7 @@ export default function Swap({
   }
 
   return (
-    <div className={styles.swap}>
+    <>
       <TradeInput
         name={values.type === 'sell' ? 'datatoken' : 'ocean'}
         item={values.type === 'sell' ? dtItem : oceanItem}
@@ -88,6 +88,6 @@ export default function Swap({
         item={values.type === 'sell' ? oceanItem : dtItem}
         handleValueChange={handleValueChange}
       />
-    </div>
+    </>
   )
 }

@@ -33,7 +33,7 @@ export default function TradeInput({
   }: FormikContextType<TradeLiquidity> = useFormikContext()
 
   return (
-    <div className={styles.tradeInput}>
+    <section className={styles.tradeInput}>
       <div className={styles.userLiquidity}>
         <div>
           <span>Available:</span>
@@ -73,6 +73,6 @@ export default function TradeInput({
       >
         Use Max
       </Button>
-    </div>
+    </section>
   )
 }
