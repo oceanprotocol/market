@@ -2,6 +2,23 @@ import React, { ReactElement } from 'react'
 import PriceUnit from './Price/PriceUnit'
 import styles from './UserLiquidity.module.css'
 
+function UserLiquidityLine({
+  title,
+  amount,
+  symbol
+}: {
+  title: string
+  amount: string
+  symbol: string
+}) {
+  return (
+    <div>
+      <span>{title}</span>
+      <PriceUnit price={amount} symbol={symbol} small />
+    </div>
+  )
+}
+
 export default function UserLiquidity({
   amount,
   symbol,
@@ -13,15 +30,9 @@ export default function UserLiquidity({
 }): ReactElement {
   return (
     <div className={styles.userLiquidity}>
-      <div>
-        <span>Available:</span>
-        <PriceUnit price={amount} symbol={symbol} small />
-      </div>
+      <UserLiquidityLine title="Available" amount={amount} symbol={symbol} />
       {amountMax && (
-        <div>
-          <span>Maximum:</span>
-          <PriceUnit price={amountMax} symbol={symbol} small />
-        </div>
+        <UserLiquidityLine title="Maximum" amount={amountMax} symbol={symbol} />
       )}
     </div>
   )
