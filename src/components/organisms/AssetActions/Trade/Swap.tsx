@@ -96,7 +96,7 @@ export default function Swap({
   }
 
   return (
-    <>
+    <div className={styles.swap}>
       <TradeInput
         name={values.type === 'sell' ? 'datatoken' : 'ocean'}
         item={values.type === 'sell' ? dtItem : oceanItem}
@@ -115,15 +115,15 @@ export default function Swap({
 
       <div className={styles.output}>
         <div>
+          <p>Minimum Received</p>
+          <Token symbol="OCEAN" balance="100" />
+        </div>
+        <div>
           {/* <p>Slippage</p> */}
           <Token symbol="% slippage" balance="10" />
           <Token symbol="% swap fee" balance={swapFee} />
         </div>
-        <div>
-          <p>Minimum Received</p>
-          <Token symbol="OCEAN" balance="100" />
-        </div>
       </div>
-    </>
+    </div>
   )
 }

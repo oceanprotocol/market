@@ -1,3 +1,7 @@
+.swap {
+  margin-top: -2rem;
+}
+
 .swapButton,
 .swapButton:hover {
   padding: 0;
@@ -20,6 +24,9 @@
 }
 
 .output {
+  border-top: 1px solid var(--border-color);
+  padding-top: var(--spacer);
+  padding-bottom: var(--spacer);
   display: grid;
   gap: var(--spacer);
   grid-template-columns: 1fr 1fr;
