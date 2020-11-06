@@ -1,11 +1,10 @@
 import { Ocean } from '@oceanprotocol/lib'
 
-export async function getMaxValuesRemove(
+export async function getMaxPercentRemove(
   ocean: Ocean,
   poolAddress: string,
-  poolTokens: string,
-  amountPoolShares: string
-): Promise<{ amountMaxPercent: string; amountOcean: string }> {
+  poolTokens: string
+): Promise<string> {
   const amountMaxOcean = await ocean.pool.getOceanMaxRemoveLiquidity(
     poolAddress
   )
@@ -22,10 +21,5 @@ export async function getMaxValuesRemove(
     amountMaxPercent = '100'
   }
 
-  const amountOcean = await ocean.pool.getOceanRemovedforPoolShares(
-    poolAddress,
-    amountPoolShares
-  )
-
-  return { amountMaxPercent, amountOcean }
+  return amountMaxPercent
 }

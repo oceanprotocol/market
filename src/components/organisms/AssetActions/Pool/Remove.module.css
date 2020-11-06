@@ -2,6 +2,7 @@
   composes: addInput from './Add/index.module.css';
   padding-left: calc(var(--spacer) * 2);
   padding-right: calc(var(--spacer) * 2);
+  padding-bottom: calc(var(--spacer) / 2);
 }
 
 .userLiquidity {
@@ -38,18 +39,18 @@
 
 .maximum {
   position: absolute;
-  right: -1.5rem;
+  right: -2rem;
   bottom: 2rem;
   font-size: var(--font-size-mini);
+  min-width: 5rem;
+  text-align: center;
 }
 
 .toggle {
-  margin-top: calc(var(--spacer) / 4);
+  margin-top: calc(var(--spacer) / 2);
   margin-bottom: 0;
-  position: absolute;
-  bottom: 1rem;
-  right: 2rem;
   font-size: var(--font-size-mini);
+  margin-bottom: -2rem;
 }
 
 .output {

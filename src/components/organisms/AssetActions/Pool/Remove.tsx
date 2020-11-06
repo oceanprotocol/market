@@ -14,7 +14,7 @@ import { Logger } from '@oceanprotocol/lib'
 import Token from './Token'
 import FormHelp from '../../../atoms/Input/Help'
 import Button from '../../../atoms/Button'
-import { getMaxValuesRemove } from './utils'
+import { getMaxPercentRemove } from './utils'
 import { graphql, useStaticQuery } from 'gatsby'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
 import debounce from 'lodash.debounce'
@@ -100,53 +100,55 @@ export default function Remove({
     }
   }
 
+  // Set amountPoolShares based on set slider value
   function handleAmountPercentChange(e: ChangeEvent<HTMLInputElement>) {
     setAmountPercent(e.target.value)
+    if (!poolTokens) return
+
+    const amountPoolShares = (Number(e.target.value) / 100) * Number(poolTokens)
+    setAmountPoolShares(`${amountPoolShares}`)
   }
 
   function handleMaxButton(e: ChangeEvent<HTMLInputElement>) {
     e.preventDefault()
     setAmountPercent('100')
+    setAmountPoolShares(poolTokens)
   }
 
   function handleAdvancedButton(e: FormEvent<HTMLButtonElement>) {
     e.preventDefault()
     setIsAdvanced(!isAdvanced)
+
+    setAmountPoolShares(`0`)
+    setAmountPercent('0')
+    setAmountOcean('0')
+    setAmountMaxPercent('100')
+
+    if (isAdvanced === true) {
+      setAmountDatatoken('0')
+    }
   }
 
+  // Get and set max percentage
   useEffect(() => {
-    if (!ocean || !poolTokens) return
+    if (!ocean || !poolTokens || isAdvanced === true) return
 
-    async function resetValues() {
-      setAmountPoolShares(`0`)
-      setAmountPercent('0')
-      setAmountOcean('0')
-
-      if (isAdvanced === true) {
-        setAmountMaxPercent('100')
-        setAmountDatatoken('0')
-      } else {
-        const { amountMaxPercent } = await getMaxValuesRemove(
-          ocean,
-          poolAddress,
-          poolTokens,
-          `0`
-        )
-        setAmountMaxPercent(amountMaxPercent)
-      }
+    async function getMax() {
+      const amountMaxPercent = await getMaxPercentRemove(
+        ocean,
+        poolAddress,
+        poolTokens
+      )
+      setAmountMaxPercent(amountMaxPercent)
     }
-    resetValues()
+    getMax()
   }, [ocean, isAdvanced, poolAddress, poolTokens])
 
-  // Check and set outputs when percentage changes
+  // Check and set outputs when amountPoolShares changes
   useEffect(() => {
     if (!ocean || !poolTokens) return
 
     const getValues = debounce(async () => {
-      const amountPoolShares =
-        (Number(amountPercent) / 100) * Number(poolTokens)
-      setAmountPoolShares(`${amountPoolShares}`)
-
       if (isAdvanced === true) {
         const tokens = await ocean.pool.getTokensRemovedforPoolShares(
           poolAddress,
@@ -154,19 +156,19 @@ export default function Remove({
         )
         setAmountOcean(tokens?.oceanAmount)
         setAmountDatatoken(tokens?.dtAmount)
-      } else {
-        const { amountOcean } = await getMaxValuesRemove(
-          ocean,
-          poolAddress,
-          poolTokens,
-          `${amountPoolShares}`
-        )
-        setAmountOcean(amountOcean)
+        return
       }
-    }, 300)
+
+      const amountOcean = await ocean.pool.getOceanRemovedforPoolShares(
+        poolAddress,
+        amountPoolShares
+      )
+      setAmountOcean(amountOcean)
+    }, 200)
+
     getValues()
   }, [
-    amountPercent,
+    amountPoolShares,
     isAdvanced,
     ocean,
     poolTokens,
@@ -196,14 +198,14 @@ export default function Remove({
               value={amountPercent}
               onChange={handleAmountPercentChange}
             />
-            {isAdvanced === false && (
-              <Button
-                style="text"
-                size="small"
-                className={styles.maximum}
-                onClick={handleMaxButton}
-              >{`${amountMaxPercent}% max`}</Button>
-            )}
+            <Button
+              style="text"
+              size="small"
+              className={styles.maximum}
+              onClick={handleMaxButton}
+            >
+              {isAdvanced === false ? `${amountMaxPercent}% max` : 'max'}
+            </Button>
           </div>
 
           <FormHelp>
