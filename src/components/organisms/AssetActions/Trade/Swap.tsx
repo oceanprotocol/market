@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useMetadata, usePricing } from '@oceanprotocol/react'
-import { DDO } from '@oceanprotocol/lib'
+import { usePricing } from '@oceanprotocol/react'
+import { BestPrice, DDO } from '@oceanprotocol/lib'
 import styles from './Swap.module.css'
 import TradeInput from './TradeInput'
 import Button from '../../../atoms/Button'
@@ -14,6 +14,7 @@ export default function Swap({
   maxDt,
   maxOcean,
   balance,
+  price,
   setMaximumDt,
   setMaximumOcean
 }: {
@@ -21,13 +22,13 @@ export default function Swap({
   maxDt: number
   maxOcean: number
   balance: DtBalance
+  price: BestPrice
   setMaximumDt: (value: number) => void
   setMaximumOcean: (value: number) => void
 }): ReactElement {
   const [oceanItem, setOceanItem] = useState<TradeItem>()
   const [dtItem, setDtItem] = useState<TradeItem>()
   const { dtSymbol } = usePricing(ddo)
-  const { price } = useMetadata(ddo)
 
   const {
     setFieldValue,

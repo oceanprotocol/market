@@ -21,8 +21,7 @@ export interface TradeLiquidity {
   type: 'buy' | 'sell'
 }
 
-const refreshInterval = 10000 // 10 sec, if the interval is bellow 3-5 seconds the price will be 0 all the time
-
+const refreshInterval = 3000 // 10 sec, if the interval is bellow 3-5 seconds the price will be 0 all the time
 export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
   const { ocean, networkId, balance, accountId } = useOcean()
   const [dtBalance, setDtBalance] = useState<DtBalance>()
@@ -34,12 +33,9 @@ export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
 
   useEffect(() => {
     // Re-fetch price periodically, triggering re-calculation of everything
-    const interval = setInterval(
-      async () => await refreshPrice(),
-      refreshInterval
-    )
+    const interval = setInterval(() => refreshPrice(), refreshInterval)
     return () => clearInterval(interval)
-  }, [ddo])
+  }, [ddo, refreshPrice])
 
   useEffect(() => {
     if (!price || !accountId || !ddo) return
@@ -98,6 +94,7 @@ export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
 
       <FormTrade
         ddo={ddo}
+        price={price}
         balance={dtBalance}
         maxDt={maxDt}
         maxOcean={maxOcean}

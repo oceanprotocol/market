@@ -69,6 +69,12 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const [refreshPool, setRefreshPool] = useState(false)
 
   useEffect(() => {
+    // Re-fetch price periodically, triggering re-calculation of everything
+    const interval = setInterval(() => refreshPrice(), refreshInterval)
+    return () => clearInterval(interval)
+  }, [ddo, refreshPrice])
+
+  useEffect(() => {
     const poolShare =
       price?.ocean &&
       price?.datatoken &&
@@ -83,6 +89,10 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
     const totalLiquidityInOcean = price?.ocean + price?.datatoken * price?.value
     setTotalLiquidityInOcean(totalLiquidityInOcean)
   }, [userLiquidity, price, poolTokens, totalPoolTokens])
+
+  useEffect(() => {
+    console.log('pool price updated')
+  }, [price])
 
   useEffect(() => {
     if (!ocean || !accountId || !price) return
@@ -164,10 +174,6 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
       }
     }
     init()
-
-    // Re-fetch price periodically, triggering re-calculation of everything
-    const interval = setInterval(() => refreshPrice(), refreshInterval)
-    return () => clearInterval(interval)
   }, [ocean, accountId, price, ddo, refreshPool])
 
   const refreshInfo = async () => {

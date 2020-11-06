@@ -1,6 +1,6 @@
 import React, { ReactElement, useState } from 'react'
-import { useMetadata, useOcean } from '@oceanprotocol/react'
-import { DDO, Logger } from '@oceanprotocol/lib'
+import { useOcean } from '@oceanprotocol/react'
+import { BestPrice, DDO, Logger } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 import { TradeLiquidity } from '.'
 import { Formik } from 'formik'
@@ -38,18 +38,19 @@ export default function FormTrade({
   ddo,
   balance,
   maxDt,
-  maxOcean
+  maxOcean,
+  price
 }: {
   ddo: DDO
   balance: DtBalance
   maxDt: number
   maxOcean: number
+  price: BestPrice
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childContentJson.trade
   const { ocean, accountId } = useOcean()
   const { debug } = useUserPreferences()
-  const { price } = useMetadata(ddo)
   const [txId, setTxId] = useState<string>()
 
   const [maximumOcean, setMaximumOcean] = useState(maxOcean)
@@ -108,6 +109,7 @@ export default function FormTrade({
             balance={balance}
             maxDt={maxDt}
             maxOcean={maxOcean}
+            price={price}
             setMaximumOcean={setMaximumOcean}
             setMaximumDt={setMaximumDt}
           />
