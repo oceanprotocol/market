@@ -21,25 +21,6 @@
   margin-right: calc(var(--spacer) / 3);
 }
 
-.output {
-  display: grid;
-  gap: var(--spacer);
-  grid-template-columns: 1fr 1fr;
-}
-
-.output p {
-  font-weight: var(--font-weight-bold);
-  margin-bottom: calc(var(--spacer) / 8);
-}
-
-.output [class*='token'] {
-  white-space: normal;
-}
-
-.output [class*='token'] > figure {
-  display: none;
-}
-
 .warning {
   margin-left: -3rem;
   margin-right: -3rem;

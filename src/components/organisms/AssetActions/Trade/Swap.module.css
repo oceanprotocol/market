@@ -18,3 +18,22 @@
   fill: var(--brand-pink);
   transform: rotate(90deg);
 }
+
+.output {
+  display: grid;
+  gap: var(--spacer);
+  grid-template-columns: 1fr 1fr;
+}
+
+.output p {
+  font-weight: var(--font-weight-bold);
+  margin-bottom: calc(var(--spacer) / 8);
+}
+
+.output [class*='token'] {
+  white-space: normal;
+}
+
+.output [class*='token'] > figure {
+  display: none;
+}

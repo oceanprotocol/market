@@ -8,6 +8,7 @@ import { ReactComponent as Arrow } from '../../../../images/arrow.svg'
 import { TradeLiquidity, TradeItem } from '.'
 import { FormikContextType, useFormikContext } from 'formik'
 import DtBalance from '../../../../models/DtBalance'
+import Token from '../Pool/Token'
 
 export default function Swap({
   ddo,
@@ -97,6 +98,17 @@ export default function Swap({
         item={values.type === 'sell' ? oceanItem : dtItem}
         handleValueChange={handleValueChange}
       />
+
+      <div className={styles.output}>
+        <div>
+          <p>Slippage</p>
+          <Token symbol="%" balance="10" />
+        </div>
+        <div>
+          <p>Minimum Received</p>
+          <Token symbol="OCEAN" balance="100" />
+        </div>
+      </div>
     </>
   )
 }

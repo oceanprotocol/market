@@ -7,6 +7,7 @@ import Conversion from '../../../atoms/Price/Conversion'
 import EtherscanLink from '../../../atoms/EtherscanLink'
 import FormTrade from './FormTrade'
 import DtBalance from '../../../../models/DtBalance'
+import Token from '../Pool/Token'
 
 export interface TradeItem {
   amount: number
