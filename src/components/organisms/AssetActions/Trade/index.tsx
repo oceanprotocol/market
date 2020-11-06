@@ -32,13 +32,15 @@ export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
   const [maxOcean, setMaxOcean] = useState(0)
 
   useEffect(() => {
+    if (!ocean) return
+
     // Re-fetch price periodically, triggering re-calculation of everything
     const interval = setInterval(() => refreshPrice(), refreshInterval)
     return () => clearInterval(interval)
-  }, [ddo, refreshPrice])
+  }, [ocean, ddo, refreshPrice])
 
   useEffect(() => {
-    if (!price || !accountId || !ddo) return
+    if (!ocean || !price || !accountId || !ddo) return
 
     setPoolAddress(price.address)
     async function getDtBalance() {

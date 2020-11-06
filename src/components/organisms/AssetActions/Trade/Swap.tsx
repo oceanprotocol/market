@@ -26,9 +26,16 @@ export default function Swap({
   setMaximumDt: (value: number) => void
   setMaximumOcean: (value: number) => void
 }): ReactElement {
-  const [oceanItem, setOceanItem] = useState<TradeItem>()
-  const [dtItem, setDtItem] = useState<TradeItem>()
-  const { dtSymbol } = usePricing(ddo)
+  const [oceanItem, setOceanItem] = useState<TradeItem>({
+    amount: 0,
+    token: 'OCEAN',
+    maxAmount: 0
+  })
+  const [dtItem, setDtItem] = useState<TradeItem>({
+    amount: 0,
+    token: ddo.dataTokenInfo.symbol,
+    maxAmount: 0
+  })
 
   const {
     setFieldValue,
@@ -37,7 +44,8 @@ export default function Swap({
   }: FormikContextType<TradeLiquidity> = useFormikContext()
 
   useEffect(() => {
-    if (!ddo || !balance || !values) return
+    if (!ddo || !balance || !values || !price) return
+
     const maximumDt = values.type === 'sell' ? balance.datatoken : maxDt
     const maximumOcean =
       values.type === 'sell'
@@ -50,16 +58,16 @@ export default function Swap({
     setMaximumDt(maximumDt)
     setMaximumOcean(maximumOcean)
     setOceanItem({
+      ...oceanItem,
       amount: balance.ocean,
-      token: 'OCEAN',
       maxAmount: maximumOcean
     })
     setDtItem({
+      ...dtItem,
       amount: balance.datatoken,
-      token: dtSymbol,
       maxAmount: maximumDt
     })
-  }, [ddo, dtSymbol, maxOcean, maxDt, balance, values.type])
+  }, [ddo, maxOcean, maxDt, balance, price?.value, values.type])
 
   const swapTokens = () => {
     setFieldValue('type', values.type === 'buy' ? 'sell' : 'buy')
