@@ -36,9 +36,7 @@ export default function TradeInput({
   const isTopField =
     (name === 'ocean' && values.type === 'buy') ||
     (name === 'datatoken' && values.type === 'sell')
-  const titleAvailable = isTopField
-    ? `Available to spend`
-    : `Available to receive`
+  const titleAvailable = isTopField ? `Available to spend` : `Available in pool`
   const titleMaximum = isTopField ? `Maximum to spend` : `Maximum to receive`
 
   return (
@@ -69,17 +67,19 @@ export default function TradeInput({
           />
         )}
       </Field>
-      <Button
-        className={styles.buttonMax}
-        style="text"
-        size="small"
-        onClick={() => {
-          setFieldValue(name, item?.maxAmount)
-          handleValueChange(name, item?.maxAmount)
-        }}
-      >
-        Use Max
-      </Button>
+      {!isTopField && (
+        <Button
+          className={styles.buttonMax}
+          style="text"
+          size="small"
+          onClick={() => {
+            setFieldValue(name, item?.maxAmount)
+            handleValueChange(name, item?.maxAmount)
+          }}
+        >
+          Use Max
+        </Button>
+      )}
     </section>
   )
 }
