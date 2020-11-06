@@ -31,15 +31,6 @@
   margin-right: -2rem;
 }
 
-.range button {
-  margin-top: calc(var(--spacer) / 4);
-  margin-bottom: 0;
-  position: absolute;
-  bottom: 1rem;
-  right: 2rem;
-  font-size: var(--font-size-mini);
-}
-
 .slider {
   position: relative;
   z-index: 1;
@@ -48,10 +39,17 @@
 .maximum {
   position: absolute;
   right: -1.5rem;
-  bottom: 1.5rem;
-  font-size: var(--font-size-small);
-  z-index: 0;
-  pointer-events: none;
+  bottom: 2rem;
+  font-size: var(--font-size-mini);
+}
+
+.toggle {
+  margin-top: calc(var(--spacer) / 4);
+  margin-bottom: 0;
+  position: absolute;
+  bottom: 1rem;
+  right: 2rem;
+  font-size: var(--font-size-mini);
 }
 
 .output {

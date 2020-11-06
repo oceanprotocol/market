@@ -104,6 +104,11 @@ export default function Remove({
     setAmountPercent(e.target.value)
   }
 
+  function handleMaxButton(e: ChangeEvent<HTMLInputElement>) {
+    e.preventDefault()
+    setAmountPercent('100')
+  }
+
   function handleAdvancedButton(e: FormEvent<HTMLButtonElement>) {
     e.preventDefault()
     setIsAdvanced(!isAdvanced)
@@ -111,6 +116,7 @@ export default function Remove({
 
   useEffect(() => {
     if (!ocean || !poolTokens) return
+
     async function resetValues() {
       setAmountPoolShares(`0`)
       setAmountPercent('0')
@@ -130,7 +136,7 @@ export default function Remove({
       }
     }
     resetValues()
-  }, [isAdvanced])
+  }, [ocean, isAdvanced, poolAddress, poolTokens])
 
   // Check and set outputs when percentage changes
   useEffect(() => {
@@ -191,16 +197,24 @@ export default function Remove({
               onChange={handleAmountPercentChange}
             />
             {isAdvanced === false && (
-              <span
+              <Button
+                style="text"
+                size="small"
                 className={styles.maximum}
-              >{`${amountMaxPercent}% max.`}</span>
+                onClick={handleMaxButton}
+              >{`${amountMaxPercent}% max`}</Button>
             )}
           </div>
 
           <FormHelp>
             {isAdvanced === true ? content.advanced : content.simple}
           </FormHelp>
-          <Button style="text" size="small" onClick={handleAdvancedButton}>
+          <Button
+            style="text"
+            size="small"
+            onClick={handleAdvancedButton}
+            className={styles.toggle}
+          >
             {isAdvanced === true ? 'Simple' : 'Advanced'}
           </Button>
         </div>
