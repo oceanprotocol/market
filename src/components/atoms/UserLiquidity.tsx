@@ -23,7 +23,7 @@ export default function UserLiquidity({
   amount,
   symbol,
   amountMax,
-  titleAvailable = 'Available',
+  titleAvailable = 'Balance',
   titleMaximum = 'Maximum'
 }: {
   amount: string
