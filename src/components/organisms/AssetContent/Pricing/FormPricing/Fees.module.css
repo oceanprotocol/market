@@ -10,7 +10,7 @@
   justify-content: center;
   text-align: center;
   border-bottom: 1px solid var(--border-color);
-  background: var(--brand-grey-dimmed);
+  background: var(--background-highlight);
 }
 
 .fees label {

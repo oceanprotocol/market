@@ -13,7 +13,7 @@
   margin-left: -2rem;
   margin-right: -2rem;
   padding-top: var(--spacer);
-  background: var(--brand-grey-dimmed);
+  background: var(--background-highlight);
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
 }
@@ -43,7 +43,7 @@
 }
 
 .datatoken strong {
-  color: var(--brand-grey-dark);
+  color: var(--font-color-text);
 }
 
 .firstPrice {
@@ -54,4 +54,8 @@
   padding-top: calc(var(--spacer) / 3);
   padding-bottom: calc(var(--spacer) / 3);
   border-top: 1px solid var(--border-color);
+}
+
+.firstPrice div {
+  display: inline-block;
 }

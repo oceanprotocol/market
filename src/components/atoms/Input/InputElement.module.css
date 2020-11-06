@@ -35,7 +35,7 @@
 .input[readonly],
 .input[disabled] {
   background-color: var(--background-highlight);
-  color: var(--color-secondary);
+  color: var(--brand-grey-light);
   cursor: not-allowed;
   pointer-events: none;
   /* for hiding spin buttons in Firefox */
