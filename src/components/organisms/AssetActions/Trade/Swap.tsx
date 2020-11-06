@@ -47,7 +47,7 @@ export default function Swap({
   }: FormikContextType<TradeLiquidity> = useFormikContext()
 
   useEffect(() => {
-    if (!ocean) return
+    if (!ocean || !price?.address) return
 
     // Get swap fee
     // swapFee is tricky: to get 0.1% you need to convert from 0.001
