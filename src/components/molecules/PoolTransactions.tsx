@@ -20,13 +20,19 @@ function Title({ row }: { row: PoolTransaction }) {
   const [dtSymbol, setDtSymbol] = useState<string>()
   const { locale } = useUserPreferences()
 
-  const title = row.tokenAmountIn
-    ? `Add ${formatNumber(Number(row.tokenAmountIn), locale)} ${
-        dtSymbol || 'OCEAN'
-      }`
-    : `Remove ${formatNumber(Number(row.tokenAmountOut), locale)} ${
-        dtSymbol || 'OCEAN'
-      }`
+  const symbol = dtSymbol || 'OCEAN'
+  const title =
+    row.type === 'join'
+      ? `Add ${formatNumber(Number(row.tokenAmountIn), locale)} ${symbol}`
+      : row.type === 'exit'
+      ? `Remove ${formatNumber(Number(row.tokenAmountOut), locale)} ${symbol}`
+      : `Swap ${formatNumber(
+          Number(row.tokenAmountIn),
+          locale
+        )} ${symbol} for ${formatNumber(
+          Number(row.tokenAmountOut),
+          locale
+        )} ${symbol}`
 
   useEffect(() => {
     if (!ocean) return
