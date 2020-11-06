@@ -114,8 +114,8 @@ export default function FormTrade({
           />
           <Actions
             isLoading={isSubmitting}
-            loaderMessage="Swaping tokens..."
-            successMessage="Successfully swaped tokens."
+            loaderMessage="Swapping tokens..."
+            successMessage="Successfully swapped tokens."
             actionName={content.action}
             action={submitForm}
             txId={txId}
