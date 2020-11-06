@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { usePricing } from '@oceanprotocol/react'
+import { useOcean, usePricing } from '@oceanprotocol/react'
 import { BestPrice, DDO } from '@oceanprotocol/lib'
 import styles from './Swap.module.css'
 import TradeInput from './TradeInput'
@@ -27,6 +27,8 @@ export default function Swap({
   setMaximumDt: (value: number) => void
   setMaximumOcean: (value: number) => void
 }): ReactElement {
+  const { ocean } = useOcean()
+  const [swapFee, setSwapFee] = useState<string>()
   const [oceanItem, setOceanItem] = useState<TradeItem>({
     amount: 0,
     token: 'OCEAN',
@@ -43,6 +45,18 @@ export default function Swap({
     values,
     validateForm
   }: FormikContextType<TradeLiquidity> = useFormikContext()
+
+  useEffect(() => {
+    if (!ocean) return
+
+    // Get swap fee
+    // swapFee is tricky: to get 0.1% you need to convert from 0.001
+    async function getSwapFee() {
+      const swapFee = await ocean.pool.getSwapFee(price.address)
+      setSwapFee(`${Number(swapFee) * 100}`)
+    }
+    getSwapFee()
+  }, [ocean, price?.address])
 
   useEffect(() => {
     if (!ddo || !balance || !values || !price) return
@@ -101,8 +115,9 @@ export default function Swap({
 
       <div className={styles.output}>
         <div>
-          <p>Slippage</p>
-          <Token symbol="%" balance="10" />
+          {/* <p>Slippage</p> */}
+          <Token symbol="% slippage" balance="10" />
+          <Token symbol="% swap fee" balance={swapFee} />
         </div>
         <div>
           <p>Minimum Received</p>

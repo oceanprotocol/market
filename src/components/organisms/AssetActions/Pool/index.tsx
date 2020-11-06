@@ -13,7 +13,6 @@ import Token from './Token'
 import TokenList from './TokenList'
 import { graphql, useStaticQuery } from 'gatsby'
 import DtBalance from '../../../../models/DtBalance'
-import PoolTransactions from '../../../molecules/PoolTransactions'
 import Transactions from './Transactions'
 
 const contentQuery = graphql`

@@ -1,7 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useOcean, useMetadata } from '@oceanprotocol/react'
 import { DDO } from '@oceanprotocol/lib'
-import styles from './index.module.css'
 import FormTrade from './FormTrade'
 import DtBalance from '../../../../models/DtBalance'
 
