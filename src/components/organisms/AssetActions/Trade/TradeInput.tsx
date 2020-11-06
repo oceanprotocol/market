@@ -13,6 +13,7 @@ import { TradeLiquidity, TradeItem } from '.'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
 import Input from '../../../atoms/Input'
 import Button from '../../../atoms/Button'
+import UserLiquidity from '../../../atoms/UserLiquidity'
 
 export default function TradeInput({
   name,
@@ -34,16 +35,12 @@ export default function TradeInput({
 
   return (
     <section className={styles.tradeInput}>
-      <div className={styles.userLiquidity}>
-        <div>
-          <span>Available:</span>
-          <PriceUnit price={`${item?.amount}`} symbol={item?.token} small />
-        </div>
-        <div>
-          <span>Maximum:</span>
-          <PriceUnit price={`${item?.maxAmount}`} symbol={item?.token} small />
-        </div>
-      </div>
+      <UserLiquidity
+        amount={`${item?.amount}`}
+        amountMax={`${item?.maxAmount}`}
+        symbol={item?.token}
+      />
+
       <Field name={name}>
         {({ field, form }: { field: FieldInputProps<number>; form: any }) => (
           <Input

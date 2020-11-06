@@ -4,16 +4,8 @@
   padding-right: calc(var(--spacer) * 2);
 }
 
-.userLiquidity {
-  composes: userLiquidity from './Add/FormAdd.module.css';
-  max-width: 12rem;
-  margin-top: -1rem;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: calc(var(--spacer) / 2);
-}
-
 .range {
+  margin-top: calc(var(--spacer) / 2);
   text-align: center;
 }
 

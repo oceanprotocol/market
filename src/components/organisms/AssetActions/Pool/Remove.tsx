@@ -18,6 +18,7 @@ import { getMaxValuesRemove } from './utils'
 import { graphql, useStaticQuery } from 'gatsby'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
 import debounce from 'lodash.debounce'
+import UserLiquidity from '../../../atoms/UserLiquidity'
 
 const contentQuery = graphql`
   query PoolRemoveQuery {
@@ -173,12 +174,7 @@ export default function Remove({
       <Header title={content.title} backAction={() => setShowRemove(false)} />
 
       <form className={styles.removeInput}>
-        <div className={styles.userLiquidity}>
-          <div>
-            <span>Available:</span>
-            <PriceUnit price={poolTokens} symbol="pool shares" small />
-          </div>
-        </div>
+        <UserLiquidity amount={poolTokens} symbol="pool shares" />
 
         <div className={styles.range}>
           <h3>{amountPercent}%</h3>

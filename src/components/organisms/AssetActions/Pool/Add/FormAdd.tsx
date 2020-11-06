@@ -13,6 +13,7 @@ import CoinSelect from '../CoinSelect'
 import { FormAddLiquidity } from '.'
 import { useOcean } from '@oceanprotocol/react'
 import DtBalance from '../../../../../models/DtBalance'
+import UserLiquidity from '../../../../atoms/UserLiquidity'
 
 export default function FormAdd({
   coin,
@@ -86,20 +87,11 @@ export default function FormAdd({
 
   return (
     <>
-      <div className={styles.userLiquidity}>
-        <div>
-          <span>Available:</span>
-          {coin === 'OCEAN' ? (
-            <PriceUnit price={balance.ocean} symbol="OCEAN" small />
-          ) : (
-            <PriceUnit price={dtBalance} symbol={dtSymbol} small />
-          )}
-        </div>
-        <div>
-          <span>Maximum:</span>
-          <PriceUnit price={amountMax} symbol={coin} small />
-        </div>
-      </div>
+      <UserLiquidity
+        amount={coin === 'OCEAN' ? balance.ocean : dtBalance}
+        amountMax={amountMax}
+        symbol={coin}
+      />
 
       <Field name="amount">
         {({

@@ -24,7 +24,6 @@ const contentQuery = graphql`
         node {
           childContentJson {
             trade {
-              title
               action
             }
           }

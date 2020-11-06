@@ -15,6 +15,12 @@
   margin-bottom: 0;
 }
 
+.tradeInput div[class*='prefix'] {
+  min-width: 6.5rem;
+  width: fit-content;
+  justify-content: center;
+}
+
 .label {
   font-family: var(--font-family-heading);
   font-size: var(--font-size-base);
@@ -27,17 +33,4 @@
   font-size: var(--font-size-mini);
   bottom: calc(var(--spacer) / 2);
   right: calc(var(--spacer) * 2);
-}
-
-.userLiquidity > div {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: var(--font-size-mini);
-  color: var(--color-secondary);
-}
-
-.userLiquidity span + div {
-  transform: scale(0.8);
-  transform-origin: right center;
 }
