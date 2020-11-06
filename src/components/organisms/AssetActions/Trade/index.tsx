@@ -1,13 +1,9 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useOcean, useMetadata, usePricing } from '@oceanprotocol/react'
+import { useOcean, useMetadata } from '@oceanprotocol/react'
 import { DDO } from '@oceanprotocol/lib'
 import styles from './index.module.css'
-import PriceUnit from '../../../atoms/Price/PriceUnit'
-import Conversion from '../../../atoms/Price/Conversion'
-import EtherscanLink from '../../../atoms/EtherscanLink'
 import FormTrade from './FormTrade'
 import DtBalance from '../../../../models/DtBalance'
-import Token from '../Pool/Token'
 
 export interface TradeItem {
   amount: number
@@ -24,10 +20,9 @@ export interface TradeLiquidity {
 
 const refreshInterval = 3000 // 10 sec, if the interval is bellow 3-5 seconds the price will be 0 all the time
 export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
-  const { ocean, networkId, balance, accountId } = useOcean()
+  const { ocean, balance, accountId } = useOcean()
   const [dtBalance, setDtBalance] = useState<DtBalance>()
   const { price, refreshPrice } = useMetadata(ddo)
-  const { dtSymbol } = usePricing(ddo)
   const [poolAddress, setPoolAddress] = useState<string>()
   const [maxDt, setMaxDt] = useState(0)
   const [maxOcean, setMaxOcean] = useState(0)
@@ -77,31 +72,12 @@ export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
   }, [ocean, poolAddress, balance.ocean, price])
 
   return (
-    <>
-      <div className={styles.dataToken}>
-        <PriceUnit price="1" symbol={dtSymbol} /> ={' '}
-        <PriceUnit price={`${price?.value}`} />
-        <Conversion price={`${price?.value}`} />
-        <div className={styles.dataTokenLinks}>
-          <EtherscanLink
-            networkId={networkId}
-            path={`address/${price?.address}`}
-          >
-            Pool
-          </EtherscanLink>
-          <EtherscanLink networkId={networkId} path={`token/${ddo.dataToken}`}>
-            Datatoken
-          </EtherscanLink>
-        </div>
-      </div>
-
-      <FormTrade
-        ddo={ddo}
-        price={price}
-        balance={dtBalance}
-        maxDt={maxDt}
-        maxOcean={maxOcean}
-      />
-    </>
+    <FormTrade
+      ddo={ddo}
+      price={price}
+      balance={dtBalance}
+      maxDt={maxDt}
+      maxOcean={maxOcean}
+    />
   )
 }

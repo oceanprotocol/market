@@ -1,26 +1,3 @@
-.dataToken {
-  padding-bottom: calc(var(--spacer) / 1.5);
-  font-size: var(--font-size-large);
-  border-bottom: 1px solid var(--border-color);
-  margin-left: -2rem;
-  margin-right: -2rem;
-  padding-left: calc(var(--spacer) / 1.5);
-  padding-right: calc(var(--spacer) / 1.5);
-  text-align: center;
-}
-
-.dataTokenLinks {
-  display: flex;
-  justify-content: center;
-  font-size: var(--font-size-small);
-  margin-top: calc(var(--spacer) / 4);
-}
-
-.dataTokenLinks a {
-  margin-left: calc(var(--spacer) / 3);
-  margin-right: calc(var(--spacer) / 3);
-}
-
 .warning {
   margin-left: -3rem;
   margin-right: -3rem;
