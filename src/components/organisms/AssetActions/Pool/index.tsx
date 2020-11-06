@@ -91,10 +91,6 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   }, [userLiquidity, price, poolTokens, totalPoolTokens])
 
   useEffect(() => {
-    console.log('pool price updated')
-  }, [price])
-
-  useEffect(() => {
     if (!ocean || !accountId || !price) return
 
     async function init() {
