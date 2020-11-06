@@ -10,7 +10,6 @@ import {
 
 import { useOcean } from '@oceanprotocol/react'
 import { TradeLiquidity, TradeItem } from '.'
-import PriceUnit from '../../../atoms/Price/PriceUnit'
 import Input from '../../../atoms/Input'
 import Button from '../../../atoms/Button'
 import UserLiquidity from '../../../atoms/UserLiquidity'

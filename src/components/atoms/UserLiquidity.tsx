@@ -22,17 +22,29 @@ function UserLiquidityLine({
 export default function UserLiquidity({
   amount,
   symbol,
-  amountMax
+  amountMax,
+  titleAvailable = 'Available',
+  titleMaximum = 'Maximum'
 }: {
   amount: string
   symbol: string
+  titleAvailable?: string
+  titleMaximum?: string
   amountMax?: string
 }): ReactElement {
   return (
     <div className={styles.userLiquidity}>
-      <UserLiquidityLine title="Available" amount={amount} symbol={symbol} />
+      <UserLiquidityLine
+        title={titleAvailable}
+        amount={amount}
+        symbol={symbol}
+      />
       {amountMax && (
-        <UserLiquidityLine title="Maximum" amount={amountMax} symbol={symbol} />
+        <UserLiquidityLine
+          title={titleMaximum}
+          amount={amountMax}
+          symbol={symbol}
+        />
       )}
     </div>
   )

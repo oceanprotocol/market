@@ -17,7 +17,7 @@ export interface TradeItem {
 export interface TradeLiquidity {
   ocean: number
   datatoken: number
-  // in refrence to datatoken, buy = swap from ocean to dt ( buy dt) , sell = swap from dt to ocean (sell dt)
+  // in reference to datatoken, buy = swap from ocean to dt ( buy dt) , sell = swap from dt to ocean (sell dt)
   type: 'buy' | 'sell'
 }
 
