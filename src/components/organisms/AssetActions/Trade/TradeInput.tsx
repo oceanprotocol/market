@@ -29,8 +29,17 @@ export default function TradeInput({
   const {
     handleChange,
     setFieldValue,
-    validateForm
+    validateForm,
+    values
   }: FormikContextType<TradeLiquidity> = useFormikContext()
+
+  const isTopField =
+    (name === 'ocean' && values.type === 'buy') ||
+    (name === 'datatoken' && values.type === 'sell')
+  const titleAvailable = isTopField
+    ? `Available to spend`
+    : `Available to receive`
+  const titleMaximum = isTopField ? `Maximum to spend` : `Maximum to receive`
 
   return (
     <section className={styles.tradeInput}>
@@ -38,6 +47,8 @@ export default function TradeInput({
         amount={`${item?.amount}`}
         amountMax={`${item?.maxAmount}`}
         symbol={item?.token}
+        titleAvailable={titleAvailable}
+        titleMaximum={titleMaximum}
       />
 
       <Field name={name}>
