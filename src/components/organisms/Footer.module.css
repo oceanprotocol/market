@@ -14,3 +14,19 @@
 .content p {
   display: inline;
 }
+
+.content a {
+  color: inherit;
+}
+
+.content a:hover,
+.content a:focus {
+  color: var(--color-primary);
+}
+
+.commitId {
+  display: inline-block;
+  font-size: var(--font-size-mini);
+  margin-bottom: var(--spacer);
+  font-family: var(--font-family-monospace);
+}
