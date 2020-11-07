@@ -1,16 +1,14 @@
 .stats {
   margin-bottom: calc(var(--spacer) * 2);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-small);
+  line-height: 2;
 }
 
 .stats > div > div {
   display: inline-block;
 }
 
-.stats > div strong {
-  font-size: var(--font-size-base) !important;
-}
-
 .total {
   color: var(--color-secondary) !important;
+  font-size: var(--font-size-small) !important;
 }
