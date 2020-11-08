@@ -13,6 +13,7 @@ import { useMetadata, useOcean, usePricing } from '@oceanprotocol/react'
 import EtherscanLink from '../../atoms/EtherscanLink'
 import Bookmark from './Bookmark'
 import Byline from './Byline'
+import Share from './Share'
 
 export interface AssetContentProps {
   metadata: MetadataMarket
@@ -86,7 +87,7 @@ export default function AssetContent({
             /> */}
             {/* <DeleteAction ddo={ddo} /> */}
           </div>
-
+          <Share did={ddo.id} />
           {debug === true && (
             <pre>
               <code>{JSON.stringify(ddo, null, 2)}</code>
@@ -94,6 +95,7 @@ export default function AssetContent({
           )}
 
           <Bookmark did={ddo.id} />
+        
         </div>
       </div>
 
