@@ -4,13 +4,14 @@ import Markdown from '../atoms/Markdown'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import { Link } from 'gatsby'
 import MarketStats from '../molecules/MarketStats'
+import repoMetadata from '../../../repo-metadata.json'
 
 export default function Footer(): ReactElement {
   const { copyright } = useSiteMetadata()
   const year = new Date().getFullYear()
 
-  const commitBranch = process.env.VERCEL_GITHUB_COMMIT_REF || 'dev'
-  const commitId = process.env.VERCEL_GITHUB_COMMIT_SHA
+  const commitBranch = repoMetadata.branch
+  const commitId = repoMetadata.commit
   const isMainBranch = commitBranch === 'main'
 
   return (
