@@ -3,6 +3,11 @@
 
 const execSync = require('child_process').execSync
 
+//
+// VERCEL_GITHUB_COMMIT_REF & VERCEL_GITHUB_COMMIT_SHA need to be added with empty
+// values in Vercel environment variables, making them available to builds.
+// https://vercel.com/docs/build-step#system-environment-variables
+//
 process.stdout.write(
   JSON.stringify(
     {
