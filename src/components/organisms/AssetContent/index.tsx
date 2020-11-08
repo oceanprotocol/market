@@ -95,7 +95,6 @@ export default function AssetContent({
           )}
 
           <Bookmark did={ddo.id} />
-        
         </div>
       </div>
 
