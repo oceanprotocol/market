@@ -37,7 +37,7 @@ export default function Output({
 
     async function getOutput() {
       // Minimum received
-      // TODO: correct method? Is the same as getting the max values, so would be redundant?
+      // TODO: check ity is actually the minimum received after transaction.
       const minOutput =
         values.type === 'buy'
           ? await ocean.pool.getDTReceived(poolAddress, `${values.ocean}`)

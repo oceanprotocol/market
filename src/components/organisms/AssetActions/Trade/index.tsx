@@ -17,12 +17,12 @@ export interface TradeLiquidity {
   type: 'buy' | 'sell'
 }
 
+// TODO: lower interval for production
 const refreshInterval = 3000 // 10 sec, if the interval is bellow 3-5 seconds the price will be 0 all the time
 export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
   const { ocean, balance, accountId } = useOcean()
   const [dtBalance, setDtBalance] = useState<DtBalance>()
   const { price, refreshPrice } = useMetadata(ddo)
-  const [poolAddress, setPoolAddress] = useState<string>()
   const [maxDt, setMaxDt] = useState(0)
   const [maxOcean, setMaxOcean] = useState(0)
 
@@ -37,7 +37,6 @@ export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
   useEffect(() => {
     if (!ocean || !price || !accountId || !ddo) return
 
-    setPoolAddress(price.address)
     async function getDtBalance() {
       const dtBalance = await ocean.datatokens.balance(ddo.dataToken, accountId)
       setDtBalance({
@@ -50,21 +49,21 @@ export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
 
   // Get maximum amount for either OCEAN or datatoken
   useEffect(() => {
-    if (!ocean || !poolAddress || !price || price.value === 0) return
+    if (!ocean || !price || price.value === 0) return
 
     async function getMaximum() {
-      const maxTokensInPool = await ocean.pool.getDTMaxBuyQuantity(poolAddress)
+      const maxTokensInPool = await ocean.pool.getDTMaxBuyQuantity(
+        price.address
+      )
       setMaxDt(Number(maxTokensInPool))
 
-      const maxOceanInPool = await ocean.pool.getMaxBuyQuantity(
-        poolAddress,
-        ocean.pool.oceanAddress
+      const maxOceanInPool = await ocean.pool.getOceanMaxBuyQuantity(
+        price.address
       )
-
       setMaxOcean(Number(maxOceanInPool))
     }
     getMaximum()
-  }, [ocean, poolAddress, balance.ocean, price])
+  }, [ocean, balance.ocean, price])
 
   return (
     <FormTrade
