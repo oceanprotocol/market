@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useOcean, usePricing } from '@oceanprotocol/react'
+import { useOcean } from '@oceanprotocol/react'
 import { BestPrice, DDO } from '@oceanprotocol/lib'
 import styles from './Swap.module.css'
 import TradeInput from './TradeInput'
@@ -8,7 +8,7 @@ import { ReactComponent as Arrow } from '../../../../images/arrow.svg'
 import { TradeLiquidity, TradeItem } from '.'
 import { FormikContextType, useFormikContext } from 'formik'
 import DtBalance from '../../../../models/DtBalance'
-import Token from '../Pool/Token'
+import Output from './Output'
 
 export default function Swap({
   ddo,
@@ -28,7 +28,6 @@ export default function Swap({
   setMaximumOcean: (value: number) => void
 }): ReactElement {
   const { ocean } = useOcean()
-  const [swapFee, setSwapFee] = useState<string>()
   const [oceanItem, setOceanItem] = useState<TradeItem>({
     amount: 0,
     token: 'OCEAN',
@@ -46,18 +45,6 @@ export default function Swap({
     setErrors,
     validateForm
   }: FormikContextType<TradeLiquidity> = useFormikContext()
-
-  useEffect(() => {
-    if (!ocean || !price?.address) return
-
-    // Get swap fee
-    // swapFee is tricky: to get 0.1% you need to convert from 0.001
-    async function getSwapFee() {
-      const swapFee = await ocean.pool.getSwapFee(price.address)
-      setSwapFee(`${Number(swapFee) * 100}`)
-    }
-    getSwapFee()
-  }, [ocean, price?.address])
 
   useEffect(() => {
     if (!ddo || !balance || !values || !price) return
@@ -150,17 +137,7 @@ export default function Swap({
         handleValueChange={handleValueChange}
       />
 
-      <div className={styles.output}>
-        <div>
-          <p>Minimum Received</p>
-          <Token symbol="OCEAN" balance="100" />
-        </div>
-        <div>
-          {/* <p>Slippage</p> */}
-          <Token symbol="% slippage" balance="10" />
-          <Token symbol="% swap fee" balance={swapFee} />
-        </div>
-      </div>
+      <Output poolAddress={price?.address} />
     </div>
   )
 }

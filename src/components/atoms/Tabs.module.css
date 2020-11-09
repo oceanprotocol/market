@@ -8,17 +8,30 @@
 .tab {
   display: inline-block;
   padding: calc(var(--spacer) / 12) var(--spacer);
-  border-radius: var(--border-radius);
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-small);
   text-transform: uppercase;
   cursor: pointer;
   color: var(--color-secondary);
+  border: 1px solid var(--border-color);
+  margin-right: -1px;
+  min-width: 100px;
+}
+
+.tab:first-child {
+  border-top-left-radius: var(--border-radius);
+  border-bottom-left-radius: var(--border-radius);
+}
+
+.tab:last-child {
+  border-top-right-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
 }
 
 .tab[aria-selected='true'] {
   background: var(--font-color-heading);
   color: var(--background-body);
+  border-color: var(--font-color-heading);
 }
 
 .tabContent {
