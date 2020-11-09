@@ -262,7 +262,17 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           </TokenList>
 
           <TokenList
-            title="Pool Statistics"
+            title={
+              <>
+                Pool Statistics{' '}
+                <span
+                  className={styles.titleInfo}
+                  title={`Weight of ${weightOcean}% OCEAN & ${weightDt}% ${dtSymbol}`}
+                >
+                  {weightOcean}/{weightDt}
+                </span>
+              </>
+            }
             ocean={`${price?.ocean}`}
             dt={`${price?.datatoken}`}
             dtSymbol={dtSymbol}
@@ -270,8 +280,6 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
             conversion={totalLiquidityInOcean}
           >
             <Token symbol="% swap fee" balance={swapFee} noIcon />
-            <Token symbol="% OCEAN" balance={weightOcean} noIcon />
-            <Token symbol={`% ${dtSymbol}`} balance={weightDt} noIcon />
           </TokenList>
 
           {ocean && (
