@@ -100,45 +100,15 @@ export default function Remove({
     }
   }
 
-  // Set amountPoolShares based on set slider value
-  function handleAmountPercentChange(e: ChangeEvent<HTMLInputElement>) {
-    setAmountPercent(e.target.value)
-    if (!poolTokens) return
-
-    const amountPoolShares = (Number(e.target.value) / 100) * Number(poolTokens)
-    setAmountPoolShares(`${amountPoolShares}`)
-  }
-
-  function handleMaxButton(e: ChangeEvent<HTMLInputElement>) {
-    e.preventDefault()
-    setAmountPercent('100')
-    setAmountPoolShares(poolTokens)
-  }
-
-  function handleAdvancedButton(e: FormEvent<HTMLButtonElement>) {
-    e.preventDefault()
-    setIsAdvanced(!isAdvanced)
-
-    setAmountPoolShares(`0`)
-    setAmountPercent('0')
-    setAmountOcean('0')
-    setAmountMaxPercent('100')
-
-    if (isAdvanced === true) {
-      setAmountDatatoken('0')
-    }
-  }
-
   // Get and set max percentage
   useEffect(() => {
-    if (!ocean || !poolTokens || isAdvanced === true) return
+    if (!ocean || !poolTokens) return
 
     async function getMax() {
-      const amountMaxPercent = await getMaxPercentRemove(
-        ocean,
-        poolAddress,
-        poolTokens
-      )
+      const amountMaxPercent =
+        isAdvanced === true
+          ? '100'
+          : await getMaxPercentRemove(ocean, poolAddress, poolTokens)
       setAmountMaxPercent(amountMaxPercent)
     }
     getMax()
@@ -176,6 +146,37 @@ export default function Remove({
     totalPoolTokens
   ])
 
+  // Set amountPoolShares based on set slider value
+  function handleAmountPercentChange(e: ChangeEvent<HTMLInputElement>) {
+    setAmountPercent(e.target.value)
+    if (!poolTokens) return
+
+    const amountPoolShares = (Number(e.target.value) / 100) * Number(poolTokens)
+    setAmountPoolShares(`${amountPoolShares}`)
+  }
+
+  function handleMaxButton(e: ChangeEvent<HTMLInputElement>) {
+    e.preventDefault()
+    setAmountPercent(amountMaxPercent)
+
+    const amountPoolShares =
+      (Number(amountMaxPercent) / 100) * Number(poolTokens)
+    setAmountPoolShares(`${amountPoolShares}`)
+  }
+
+  function handleAdvancedButton(e: FormEvent<HTMLButtonElement>) {
+    e.preventDefault()
+    setIsAdvanced(!isAdvanced)
+
+    setAmountPoolShares('0')
+    setAmountPercent('0')
+    setAmountOcean('0')
+
+    if (isAdvanced === true) {
+      setAmountDatatoken('0')
+    }
+  }
+
   return (
     <div className={styles.remove}>
       <Header title={content.title} backAction={() => setShowRemove(false)} />
@@ -204,7 +205,7 @@ export default function Remove({
               className={styles.maximum}
               onClick={handleMaxButton}
             >
-              {isAdvanced === false ? `${amountMaxPercent}% max` : 'max'}
+              {`${amountMaxPercent}% max`}
             </Button>
           </div>
 
