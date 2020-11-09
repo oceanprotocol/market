@@ -3,7 +3,9 @@ import React, {
   useState,
   ChangeEvent,
   useEffect,
-  FormEvent
+  FormEvent,
+  useCallback,
+  useRef
 } from 'react'
 import styles from './Remove.module.css'
 import { useOcean } from '@oceanprotocol/react'
@@ -18,7 +20,7 @@ import { getMaxPercentRemove } from './utils'
 import { graphql, useStaticQuery } from 'gatsby'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
 import debounce from 'lodash.debounce'
-
+import { throttle } from 'lodash'
 const contentQuery = graphql`
   query PoolRemoveQuery {
     content: allFile(filter: { relativePath: { eq: "price.json" } }) {
@@ -114,15 +116,13 @@ export default function Remove({
     getMax()
   }, [ocean, isAdvanced, poolAddress, poolTokens])
 
-  // Check and set outputs when amountPoolShares changes
-  useEffect(() => {
-    if (!ocean || !poolTokens) return
-
-    const getValues = debounce(async () => {
+  const getValues = useRef(
+    debounce(async (newAmountPoolShares, isAdvanced) => {
+      console.log('values', newAmountPoolShares, isAdvanced)
       if (isAdvanced === true) {
         const tokens = await ocean.pool.getTokensRemovedforPoolShares(
           poolAddress,
-          `${amountPoolShares}`
+          `${newAmountPoolShares}`
         )
         setAmountOcean(tokens?.oceanAmount)
         setAmountDatatoken(tokens?.dtAmount)
@@ -131,12 +131,16 @@ export default function Remove({
 
       const amountOcean = await ocean.pool.getOceanRemovedforPoolShares(
         poolAddress,
-        amountPoolShares
+        newAmountPoolShares
       )
       setAmountOcean(amountOcean)
-    }, 200)
-
-    getValues()
+    }, 300)
+  )
+  // Check and set outputs when amountPoolShares changes
+  useEffect(() => {
+    if (!ocean || !poolTokens) return
+    console.log('eff', amountPoolShares, isAdvanced)
+    getValues.current(amountPoolShares, isAdvanced)
   }, [
     amountPoolShares,
     isAdvanced,
