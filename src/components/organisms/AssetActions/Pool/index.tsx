@@ -264,13 +264,15 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           <TokenList
             title={
               <>
-                Pool Statistics{' '}
-                <span
-                  className={styles.titleInfo}
-                  title={`Weight of ${weightOcean}% OCEAN & ${weightDt}% ${dtSymbol}`}
-                >
-                  {weightOcean}/{weightDt}
-                </span>
+                Pool Statistics
+                {weightDt && (
+                  <span
+                    className={styles.titleInfo}
+                    title={`Weight of ${weightOcean}% OCEAN & ${weightDt}% ${dtSymbol}`}
+                  >
+                    {weightOcean}/{weightDt}
+                  </span>
+                )}
               </>
             }
             ocean={`${price?.ocean}`}
