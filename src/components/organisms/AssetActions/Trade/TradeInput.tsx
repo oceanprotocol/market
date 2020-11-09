@@ -36,7 +36,7 @@ export default function TradeInput({
   const isTopField =
     (name === 'ocean' && values.type === 'buy') ||
     (name === 'datatoken' && values.type === 'sell')
-  const titleAvailable = isTopField ? `Balance` : `Pool Balance`
+  const titleAvailable = isTopField ? `Balance` : `Available from pool`
   const titleMaximum = isTopField ? `Maximum to spend` : `Maximum to receive`
 
   return (

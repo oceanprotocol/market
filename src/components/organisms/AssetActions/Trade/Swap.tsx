@@ -137,7 +137,7 @@ export default function Swap({
         handleValueChange={handleValueChange}
       />
 
-      <Output poolAddress={price?.address} />
+      <Output dtSymbol={dtItem.token} poolAddress={price?.address} />
     </div>
   )
 }
