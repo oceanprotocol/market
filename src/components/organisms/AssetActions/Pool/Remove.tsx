@@ -4,7 +4,6 @@ import React, {
   ChangeEvent,
   useEffect,
   FormEvent,
-  useCallback,
   useRef
 } from 'react'
 import styles from './Remove.module.css'
@@ -20,7 +19,7 @@ import { getMaxPercentRemove } from './utils'
 import { graphql, useStaticQuery } from 'gatsby'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
 import debounce from 'lodash.debounce'
-import { throttle } from 'lodash'
+
 const contentQuery = graphql`
   query PoolRemoveQuery {
     content: allFile(filter: { relativePath: { eq: "price.json" } }) {
@@ -133,7 +132,7 @@ export default function Remove({
         newAmountPoolShares
       )
       setAmountOcean(amountOcean)
-    }, 300)
+    }, 150)
   )
   // Check and set outputs when amountPoolShares changes
   useEffect(() => {
