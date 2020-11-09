@@ -11,3 +11,4 @@ storybook-static
 public/storybook
 .artifacts
 .vercel
+repo-metadata.json

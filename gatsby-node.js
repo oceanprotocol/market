@@ -1,6 +1,10 @@
 const path = require('path')
 const createFields = require('./gatsby/createFields')
 const createMarkdownPages = require('./gatsby/createMarkdownPages')
+const execSync = require('child_process').execSync
+
+// Write out repo metadata
+execSync(`node ./scripts/write-repo-metadata > repo-metadata.json`)
 
 exports.onCreateNode = ({ node, actions, getNode }) => {
   createFields(node, actions, getNode)

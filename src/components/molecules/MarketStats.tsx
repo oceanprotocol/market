@@ -57,14 +57,21 @@ export default function MarketStats(): ReactElement {
 
   return (
     <div className={styles.stats} ref={ref}>
-      Total of <strong>{stats?.datasets.total}</strong> data sets & datatokens
-      published by <strong>{stats?.owners}</strong> accounts.
+      Total of <strong>{stats?.datasets.total}</strong> data sets & unique
+      datatokens published by <strong>{stats?.owners}</strong> accounts.
       <br />
       <PriceUnit
         price={`${stats?.ocean}`}
         small
         className={styles.total}
         conversion
+      />{' '}
+      and{' '}
+      <PriceUnit
+        price={`${stats?.datatoken}`}
+        symbol="datatokens"
+        small
+        className={styles.total}
       />{' '}
       in <strong>{stats?.datasets.pools}</strong> data set pools.
       <br />
