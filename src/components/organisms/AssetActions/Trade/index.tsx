@@ -53,18 +53,14 @@ export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
     if (!ocean || !poolAddress || !price || price.value === 0) return
 
     async function getMaximum() {
-      const maxCanBuy = Number(balance.ocean) / Number(price.value)
       const maxTokensInPool = await ocean.pool.getDTMaxBuyQuantity(poolAddress)
-      setMaxDt(
-        maxCanBuy > Number(maxTokensInPool)
-          ? Number(maxTokensInPool)
-          : maxCanBuy
-      )
+      setMaxDt(Number(maxTokensInPool))
 
       const maxOceanInPool = await ocean.pool.getMaxBuyQuantity(
         poolAddress,
         ocean.pool.oceanAddress
       )
+
       setMaxOcean(Number(maxOceanInPool))
     }
     getMaximum()

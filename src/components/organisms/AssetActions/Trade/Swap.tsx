@@ -43,6 +43,7 @@ export default function Swap({
   const {
     setFieldValue,
     values,
+    setErrors,
     validateForm
   }: FormikContextType<TradeLiquidity> = useFormikContext()
 
@@ -61,36 +62,72 @@ export default function Swap({
   useEffect(() => {
     if (!ddo || !balance || !values || !price) return
 
-    const maximumDt = values.type === 'sell' ? balance.datatoken : maxDt
-    const maximumOcean =
-      values.type === 'sell'
-        ? balance.datatoken * price.value > maxOcean
-          ? maxOcean
-          : balance.datatoken * price.value
-        : maxDt * price.value > balance.ocean
-        ? balance.ocean
-        : maxDt * price.value
-    setMaximumDt(maximumDt)
-    setMaximumOcean(maximumOcean)
-    setOceanItem({
-      ...oceanItem,
-      amount: balance.ocean,
-      maxAmount: maximumOcean
-    })
-    setDtItem({
-      ...dtItem,
-      amount: balance.datatoken,
-      maxAmount: maximumDt
-    })
+    async function calculateMaximum() {
+      const dtAmount = values.type === 'buy' ? maxDt : balance.datatoken
+      const oceanAmount = values.type === 'buy' ? balance.ocean : maxOcean
+
+      const maxBuyOcean = await ocean.pool.getOceanReceived(
+        price.address,
+        dtAmount.toString()
+      )
+      const maxBuyDt = await ocean.pool.getDTReceived(
+        price.address,
+        oceanAmount.toString()
+      )
+
+      const maximumDt =
+        values.type === 'buy'
+          ? Number(dtAmount) > Number(maxBuyDt)
+            ? Number(maxBuyDt)
+            : Number(dtAmount)
+          : Number(dtAmount) > balance.datatoken
+          ? balance.datatoken
+          : Number(dtAmount)
+
+      const maximumOcean =
+        values.type === 'sell'
+          ? Number(oceanAmount) > Number(maxBuyOcean)
+            ? Number(maxBuyOcean)
+            : Number(oceanAmount)
+          : Number(oceanAmount) > balance.ocean
+          ? balance.ocean
+          : Number(oceanAmount)
+
+      setMaximumDt(maximumDt)
+      setMaximumOcean(maximumOcean)
+      setOceanItem({
+        ...oceanItem,
+        amount: oceanAmount,
+        maxAmount: maximumOcean
+      })
+      setDtItem({
+        ...dtItem,
+        amount: dtAmount,
+        maxAmount: maximumDt
+      })
+    }
+    calculateMaximum()
   }, [ddo, maxOcean, maxDt, balance, price?.value, values.type])
 
   const swapTokens = () => {
     setFieldValue('type', values.type === 'buy' ? 'sell' : 'buy')
+    // don't reset form because we don't want to reset type
+    setFieldValue('datatoken', 0)
+    setFieldValue('ocean', 0)
+    setErrors({})
   }
 
   const handleValueChange = async (name: string, value: number) => {
+    // this is incorrect
     const newValue =
-      name === 'ocean' ? value / price.value : value * price.value
+      name === 'ocean'
+        ? values.type === 'sell'
+          ? await ocean.pool.getDTNeeded(price.address, value.toString())
+          : await ocean.pool.getDTReceived(price.address, value.toString())
+        : values.type === 'sell'
+        ? await ocean.pool.getOceanReceived(price.address, value.toString())
+        : await ocean.pool.getOceanNeeded(price.address, value.toString())
+
     setFieldValue(name === 'ocean' ? 'datatoken' : 'ocean', newValue)
     validateForm()
   }
