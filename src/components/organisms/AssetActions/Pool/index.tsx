@@ -12,7 +12,6 @@ import EtherscanLink from '../../../atoms/EtherscanLink'
 import Token from './Token'
 import TokenList from './TokenList'
 import { graphql, useStaticQuery } from 'gatsby'
-import PoolTransactions from '../../../molecules/PoolTransactions'
 import Transactions from './Transactions'
 
 export interface Balance {
@@ -53,6 +52,8 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const [totalPoolTokens, setTotalPoolTokens] = useState<string>()
   const [userLiquidity, setUserLiquidity] = useState<Balance>()
   const [swapFee, setSwapFee] = useState<string>()
+  const [weightOcean, setWeightOcean] = useState<string>()
+  const [weightDt, setWeightDt] = useState<string>()
 
   const [showAdd, setShowAdd] = useState(false)
   const [showRemove, setShowRemove] = useState(false)
@@ -159,10 +160,19 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
             2
           )
         setCreatorPoolShare(creatorPoolShare)
+
         // Get swap fee
         // swapFee is tricky: to get 0.1% you need to convert from 0.001
         const swapFee = await ocean.pool.getSwapFee(price.address)
         setSwapFee(`${Number(swapFee) * 100}`)
+
+        // Get weights
+        const weightDt = await ocean.pool.getDenormalizedWeight(
+          price.address,
+          ddo.dataToken
+        )
+        setWeightDt(`${Number(weightDt) * 10}`)
+        setWeightOcean(`${100 - Number(weightDt) * 10}`)
       } catch (error) {
         Logger.error(error.message)
       }
@@ -172,7 +182,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
     // Re-fetch price periodically, triggering re-calculation of everything
     const interval = setInterval(() => refreshPrice(), refreshInterval)
     return () => clearInterval(interval)
-  }, [ocean, accountId, price, ddo, refreshPool])
+  }, [ocean, accountId, price, ddo, refreshPool, owner])
 
   const refreshInfo = async () => {
     setRefreshPool(!refreshPool)
@@ -252,7 +262,19 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           </TokenList>
 
           <TokenList
-            title="Pool Statistics"
+            title={
+              <>
+                Pool Statistics
+                {weightDt && (
+                  <span
+                    className={styles.titleInfo}
+                    title={`Weight of ${weightOcean}% OCEAN & ${weightDt}% ${dtSymbol}`}
+                  >
+                    {weightOcean}/{weightDt}
+                  </span>
+                )}
+              </>
+            }
             ocean={`${price?.ocean}`}
             dt={`${price?.datatoken}`}
             dtSymbol={dtSymbol}

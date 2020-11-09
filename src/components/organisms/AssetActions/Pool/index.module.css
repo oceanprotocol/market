@@ -31,6 +31,14 @@
   color: var(--color-secondary);
 }
 
+.titleInfo {
+  font-size: var(--font-size-mini);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-base);
+  display: inline-block;
+  margin-left: 0.3rem;
+}
+
 .update {
   composes: container;
   font-size: var(--font-size-mini);
