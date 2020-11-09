@@ -24,6 +24,7 @@ export default function Footer(): ReactElement {
           }`}
           target="_blank"
           rel="noreferrer"
+          title="Build ID referring to the linked commit hash."
         >
           {isMainBranch ? commitId.substring(0, 7) : commitBranch}
         </a>
