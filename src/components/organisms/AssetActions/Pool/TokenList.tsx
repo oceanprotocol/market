@@ -26,18 +26,22 @@ export default function TokenList({
     <div className={`${styles.tokenlist} ${highlight ? styles.highlight : ''}`}>
       <h3 className={styles.title}>{title}</h3>
       <div className={styles.tokens}>
-        <Token symbol="OCEAN" balance={ocean} />
-        <Token symbol={dtSymbol} balance={dt} />
-        <Token symbol="pool shares" balance={poolShares} noIcon />
+        <div>
+          <Token symbol="OCEAN" balance={ocean} />
+          <Token symbol={dtSymbol} balance={dt} />
+          {conversion > 0 && (
+            <Conversion
+              price={`${conversion}`}
+              className={styles.totalLiquidity}
+            />
+          )}
+        </div>
 
-        {children}
+        <div>
+          <Token symbol="pool shares" balance={poolShares} noIcon />
 
-        {conversion > 0 && (
-          <Conversion
-            price={`${conversion}`}
-            className={styles.totalLiquidity}
-          />
-        )}
+          {children}
+        </div>
       </div>
     </div>
   )

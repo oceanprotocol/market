@@ -14,3 +14,12 @@
 .content p {
   display: inline;
 }
+
+.content a {
+  color: inherit;
+}
+
+.content a:hover,
+.content a:focus {
+  color: var(--color-primary);
+}
