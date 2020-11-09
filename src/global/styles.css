@@ -122,8 +122,8 @@ ul li {
 }
 
 ::selection {
-  background: var(--brand-black);
-  color: var(--brand-white);
+  background: var(--font-color-heading);
+  color: var(--background-body);
 }
 
 form,
