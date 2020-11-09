@@ -118,7 +118,6 @@ export default function Remove({
 
   const getValues = useRef(
     debounce(async (newAmountPoolShares, isAdvanced) => {
-      console.log('values', newAmountPoolShares, isAdvanced)
       if (isAdvanced === true) {
         const tokens = await ocean.pool.getTokensRemovedforPoolShares(
           poolAddress,
