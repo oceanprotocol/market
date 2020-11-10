@@ -17,8 +17,8 @@ export interface TradeLiquidity {
   type: 'buy' | 'sell'
 }
 
-// TODO: lower interval for production
-const refreshInterval = 3000 // 10 sec, if the interval is bellow 3-5 seconds the price will be 0 all the time
+const refreshInterval = 6000 // 6 sec, if the interval is bellow 3-5 seconds the price will be 0 all the time
+
 export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
   const { ocean, balance, accountId } = useOcean()
   const [dtBalance, setDtBalance] = useState<DtBalance>()
