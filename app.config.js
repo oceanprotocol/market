@@ -32,5 +32,8 @@ module.exports = {
     classNameDark: 'dark',
     classNameLight: 'light',
     storageKey: 'oceanDarkMode'
-  }
+  },
+
+  // Analytics
+  analyticsId: process.env.GATSBY_ANALYTICS_ID || 'xxx'
 }
