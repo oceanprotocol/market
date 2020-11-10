@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ChangeEvent, ReactElement } from 'react'
 import stylesIndex from './index.module.css'
 import styles from './Coin.module.css'
 import InputElement from '../../../../atoms/Input/InputElement'
