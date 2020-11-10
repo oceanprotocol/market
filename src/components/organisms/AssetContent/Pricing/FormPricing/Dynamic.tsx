@@ -9,7 +9,7 @@ import Coin from './Coin'
 import styles from './Dynamic.module.css'
 import Fees from './Fees'
 import stylesIndex from './index.module.css'
-import { useFormikContext } from 'formik'
+import { FormikContextType, useFormikContext } from 'formik'
 import { PriceOptionsMarket } from '../../../../../@types/MetaData'
 import { DDO } from '@oceanprotocol/lib'
 import Price from './Price'
@@ -28,7 +28,8 @@ export default function Dynamic({
   const [firstPrice, setFirstPrice] = useState<string>()
 
   // Connect with form
-  const { values } = useFormikContext()
+  const { values }: FormikContextType<PriceOptionsMarket> = useFormikContext()
+
   const {
     price,
     weightOnDataToken,
@@ -36,7 +37,7 @@ export default function Dynamic({
     swapFee,
     dtAmount,
     oceanAmount
-  } = values as PriceOptionsMarket
+  } = values
 
   const [error, setError] = useState<string>()
 

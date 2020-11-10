@@ -104,6 +104,7 @@ export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
+        validateOnChange
         onSubmit={async (values, { setSubmitting }) => {
           // move user's focus to top of screen
           window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
