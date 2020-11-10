@@ -61,7 +61,7 @@ export default function FormTrade({
 
   const validationSchema = Yup.object().shape<TradeLiquidity>({
     ocean: Yup.number()
-      .max(maxOcean, `Must be less or equal than ${maximumOcean}`)
+      .max(maximumOcean, (param) => `Must be more or equal to ${param.max}`)
       .min(0.001, (param) => `Must be more or equal to ${param.min}`)
       .required('Required')
       .nullable(),
