@@ -38,15 +38,12 @@ export default function Output({
     async function getOutput() {
       // Minimum received
       // TODO: check ity is actually the minimum received after transaction.
-      const minOutput =
+      const maxPrice =
         values.type === 'buy'
-          ? await ocean.pool.getDTReceived(poolAddress, `${values.ocean}`)
-          : await ocean.pool.getOceanReceived(
-              poolAddress,
-              `${values.datatoken}`
-            )
+          ? await ocean.pool.getOceanNeeded(poolAddress, `${values.ocean}`)
+          : await ocean.pool.getDTNeeded(`${values.datatoken}`, `1`)
 
-      setMinOutput(minOutput)
+      setMinOutput(maxPrice)
     }
     getOutput()
   }, [ocean, poolAddress, values])
@@ -54,7 +51,7 @@ export default function Output({
   return (
     <div className={styles.output}>
       <div>
-        <p>Minimum Received</p>
+        <p>Maxiumum Paid</p>
         <Token
           symbol={values.type === 'buy' ? dtSymbol : 'OCEAN'}
           balance={minOutput}

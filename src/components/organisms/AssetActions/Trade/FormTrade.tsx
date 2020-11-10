@@ -10,6 +10,7 @@ import { useUserPreferences } from '../../../../providers/UserPreferences'
 import { toast } from 'react-toastify'
 import Swap from './Swap'
 import DtBalance from '../../../../models/DtBalance'
+import Alert from '../../../atoms/Alert'
 
 const initialValues: TradeLiquidity = {
   ocean: 0,
@@ -25,6 +26,7 @@ const contentQuery = graphql`
           childContentJson {
             trade {
               action
+              warning
             }
           }
         }
@@ -54,6 +56,7 @@ export default function FormTrade({
 
   const [maximumOcean, setMaximumOcean] = useState(maxOcean)
   const [maximumDt, setMaximumDt] = useState(maxDt)
+  const [isWarningAccepted, setIsWarningAccepted] = useState(false)
 
   const validationSchema = Yup.object().shape<TradeLiquidity>({
     ocean: Yup.number()
@@ -75,13 +78,13 @@ export default function FormTrade({
               accountId,
               price.address,
               values.datatoken.toString(),
-              (values.ocean * 1.1).toString()
+              (values.ocean * 1.01).toString()
             )
           : await ocean.pool.sellDT(
               accountId,
               price.address,
               values.datatoken.toString(),
-              (values.ocean * 0.9).toString()
+              (values.ocean * 0.99).toString()
             )
 
       setTxId(tx?.transactionHash)
@@ -103,15 +106,27 @@ export default function FormTrade({
     >
       {({ isSubmitting, submitForm, values }) => (
         <>
-          <Swap
-            ddo={ddo}
-            balance={balance}
-            maxDt={maxDt}
-            maxOcean={maxOcean}
-            price={price}
-            setMaximumOcean={setMaximumOcean}
-            setMaximumDt={setMaximumDt}
-          />
+          {isWarningAccepted ? (
+            <Swap
+              ddo={ddo}
+              balance={balance}
+              maxDt={maxDt}
+              maxOcean={maxOcean}
+              price={price}
+              setMaximumOcean={setMaximumOcean}
+              setMaximumDt={setMaximumDt}
+            />
+          ) : (
+            <Alert
+              text={content.warning}
+              state="info"
+              action={{
+                name: 'I understand',
+                style: 'text',
+                handleAction: () => setIsWarningAccepted(true)
+              }}
+            />
+          )}
           <Actions
             isLoading={isSubmitting}
             loaderMessage="Swapping tokens..."
