@@ -11,6 +11,7 @@ import { toast } from 'react-toastify'
 import Swap from './Swap'
 import DtBalance from '../../../../models/DtBalance'
 import Alert from '../../../atoms/Alert'
+import styles from './FormTrade.module.css'
 
 const initialValues: TradeLiquidity = {
   ocean: 0,
@@ -117,17 +118,20 @@ export default function FormTrade({
               setMaximumDt={setMaximumDt}
             />
           ) : (
-            <Alert
-              text={content.warning}
-              state="info"
-              action={{
-                name: 'I understand',
-                style: 'text',
-                handleAction: () => setIsWarningAccepted(true)
-              }}
-            />
+            <div className={styles.alertWrap}>
+              <Alert
+                text={content.warning}
+                state="info"
+                action={{
+                  name: 'I understand',
+                  style: 'text',
+                  handleAction: () => setIsWarningAccepted(true)
+                }}
+              />
+            </div>
           )}
           <Actions
+            isDisabled={!isWarningAccepted}
             isLoading={isSubmitting}
             loaderMessage="Swapping tokens..."
             successMessage="Successfully swapped tokens."

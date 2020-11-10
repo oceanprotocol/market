@@ -12,7 +12,8 @@ export default function Actions({
   successMessage,
   txId,
   actionName,
-  action
+  action,
+  isDisabled
 }: {
   isLoading: boolean
   loaderMessage: string
@@ -20,6 +21,7 @@ export default function Actions({
   txId: string
   actionName: string
   action: () => void
+  isDisabled?: boolean
 }): ReactElement {
   const { networkId, ocean } = useOcean()
 
@@ -33,7 +35,7 @@ export default function Actions({
             style="primary"
             size="small"
             onClick={() => action()}
-            disabled={!ocean}
+            disabled={!ocean || isDisabled}
           >
             {actionName}
           </Button>

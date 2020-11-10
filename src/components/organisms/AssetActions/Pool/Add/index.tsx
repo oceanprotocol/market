@@ -199,6 +199,7 @@ export default function Add({
             </div>
 
             <Actions
+              isDisabled={!isWarningAccepted}
               isLoading={isSubmitting}
               loaderMessage="Adding Liquidity..."
               successMessage="Successfully added liquidity."
