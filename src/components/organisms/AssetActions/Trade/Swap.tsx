@@ -96,7 +96,7 @@ export default function Swap({
     calculateMaximum()
   }, [ddo, maxOcean, maxDt, balance, price?.value, values.type])
 
-  const swapTokens = () => {
+  const switchTokens = () => {
     setFieldValue('type', values.type === 'buy' ? 'sell' : 'buy')
     // don't reset form because we don't want to reset type
     setFieldValue('datatoken', 0)
@@ -127,7 +127,7 @@ export default function Swap({
         handleValueChange={handleValueChange}
       />
 
-      <Button className={styles.swapButton} style="text" onClick={swapTokens}>
+      <Button className={styles.swapButton} style="text" onClick={switchTokens}>
         <Arrow />
       </Button>
 

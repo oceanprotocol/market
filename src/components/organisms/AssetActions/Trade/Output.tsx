@@ -13,7 +13,7 @@ export default function Output({
   poolAddress: string
 }): ReactElement {
   const { ocean } = useOcean()
-  const [minOutput, setMinOutput] = useState<string>()
+  const [maxOutput, setMaxOutput] = useState<string>()
   const [swapFee, setSwapFee] = useState<string>()
 
   // Connect with form
@@ -41,9 +41,9 @@ export default function Output({
       const maxPrice =
         values.type === 'buy'
           ? await ocean.pool.getOceanNeeded(poolAddress, `${values.ocean}`)
-          : await ocean.pool.getDTNeeded(`${values.datatoken}`, `1`)
+          : await ocean.pool.getDTNeeded(poolAddress, `${values.datatoken}`)
 
-      setMinOutput(maxPrice)
+      setMaxOutput(maxPrice)
     }
     getOutput()
   }, [ocean, poolAddress, values])
@@ -54,7 +54,7 @@ export default function Output({
         <p>Maxiumum Paid</p>
         <Token
           symbol={values.type === 'buy' ? dtSymbol : 'OCEAN'}
-          balance={minOutput}
+          balance={maxOutput}
         />
         <Token symbol="% slippage" balance="10" />
       </div>
