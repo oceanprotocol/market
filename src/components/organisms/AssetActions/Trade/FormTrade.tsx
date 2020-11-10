@@ -14,8 +14,8 @@ import Alert from '../../../atoms/Alert'
 import styles from './FormTrade.module.css'
 
 const initialValues: TradeLiquidity = {
-  ocean: 0,
-  datatoken: 0,
+  ocean: undefined,
+  datatoken: undefined,
   type: 'buy'
 }
 
@@ -63,11 +63,13 @@ export default function FormTrade({
     ocean: Yup.number()
       .max(maxOcean, `Must be less or equal than ${maximumOcean}`)
       .min(0.001, (param) => `Must be more or equal to ${param.min}`)
-      .required('Required'),
+      .required('Required')
+      .nullable(),
     datatoken: Yup.number()
       .max(maxDt, `Must be less or equal than ${maximumDt}`)
       .min(0.00001, (param) => `Must be more or equal to ${param.min}`)
-      .required('Required'),
+      .required('Required')
+      .nullable(),
     type: Yup.string()
   })
 

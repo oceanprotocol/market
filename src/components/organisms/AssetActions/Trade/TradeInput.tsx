@@ -58,6 +58,7 @@ export default function TradeInput({
             placeholder="0"
             field={field}
             form={form}
+            value={`${field.value}`}
             onChange={(e: ChangeEvent<HTMLInputElement>) => {
               handleValueChange(name, Number(e.target.value))
               validateForm()
