@@ -15,6 +15,7 @@ export interface TradeLiquidity {
   datatoken: number
   // in reference to datatoken, buy = swap from ocean to dt ( buy dt) , sell = swap from dt to ocean (sell dt)
   type: 'buy' | 'sell'
+  slippage: string
 }
 
 const refreshInterval = 6000 // 6 sec, if the interval is bellow 3-5 seconds the price will be 0 all the time

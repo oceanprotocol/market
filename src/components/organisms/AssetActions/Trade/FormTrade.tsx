@@ -16,8 +16,11 @@ import styles from './FormTrade.module.css'
 const initialValues: TradeLiquidity = {
   ocean: undefined,
   datatoken: undefined,
-  type: 'buy'
+  type: 'buy',
+  slippage: '5%'
 }
+
+export const slippagePresets = ['0.1%', '1%', '5%', '15%', '25%']
 
 const contentQuery = graphql`
   query TradeQuery {
@@ -70,7 +73,8 @@ export default function FormTrade({
       .min(0.00001, (param) => `Must be more or equal to ${param.min}`)
       .required('Required')
       .nullable(),
-    type: Yup.string()
+    type: Yup.string(),
+    slippage: Yup.string()
   })
 
   async function handleTrade(values: TradeLiquidity) {

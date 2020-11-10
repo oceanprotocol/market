@@ -56,7 +56,7 @@ export default function Output({
           symbol={values.type === 'buy' ? dtSymbol : 'OCEAN'}
           balance={maxOutput}
         />
-        <Token symbol="% slippage" balance="10" />
+        <Token symbol="% price impact" balance="10" />
       </div>
       <div>
         <p>&nbsp;</p>

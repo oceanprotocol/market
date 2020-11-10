@@ -9,6 +9,7 @@ import { TradeLiquidity, TradeItem } from '.'
 import { FormikContextType, useFormikContext } from 'formik'
 import DtBalance from '../../../../models/DtBalance'
 import Output from './Output'
+import Slippage from './Slippage'
 
 export default function Swap({
   ddo,
@@ -105,7 +106,7 @@ export default function Swap({
   }
 
   const handleValueChange = async (name: string, value: number) => {
-    // this is incorrect
+    // TODO: this is incorrect
     const newValue =
       name === 'ocean'
         ? values.type === 'sell'
@@ -138,6 +139,8 @@ export default function Swap({
       />
 
       <Output dtSymbol={dtItem.token} poolAddress={price?.address} />
+
+      <Slippage />
     </div>
   )
 }
