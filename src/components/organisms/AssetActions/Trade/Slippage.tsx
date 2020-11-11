@@ -1,8 +1,7 @@
 import { FormikContextType, useFormikContext } from 'formik'
 import React, { ChangeEvent, ReactElement } from 'react'
-import { TradeLiquidity } from '.'
+import { FormTradeData, slippagePresets } from '../../../../models/FormTrade'
 import InputElement from '../../../atoms/Input/InputElement'
-import { slippagePresets } from './FormTrade'
 import styles from './Slippage.module.css'
 
 export default function Slippage(): ReactElement {
@@ -10,7 +9,7 @@ export default function Slippage(): ReactElement {
   const {
     setFieldValue,
     values
-  }: FormikContextType<TradeLiquidity> = useFormikContext()
+  }: FormikContextType<FormTradeData> = useFormikContext()
 
   function handleChange(e: ChangeEvent<HTMLSelectElement>) {
     setFieldValue('slippage', e.target.value)

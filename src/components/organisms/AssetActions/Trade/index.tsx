@@ -2,21 +2,7 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import { useOcean, useMetadata } from '@oceanprotocol/react'
 import { DDO } from '@oceanprotocol/lib'
 import FormTrade from './FormTrade'
-import TokenBalance from '../../../../models/TokenBalance'
-
-export interface TradeItem {
-  amount: number
-  token: string
-  maxAmount: number
-}
-
-export interface TradeLiquidity {
-  ocean: number
-  datatoken: number
-  // in reference to datatoken, buy = swap from ocean to dt ( buy dt) , sell = swap from dt to ocean (sell dt)
-  type: 'buy' | 'sell'
-  slippage: string
-}
+import TokenBalance from '../../../../@types/TokenBalance'
 
 const refreshInterval = 6000 // 6 sec, if the interval is bellow 3-5 seconds the price will be 0 all the time
 

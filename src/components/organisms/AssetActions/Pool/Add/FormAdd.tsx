@@ -11,7 +11,7 @@ import Button from '../../../../atoms/Button'
 import CoinSelect from '../CoinSelect'
 import { FormAddLiquidity } from '.'
 import { useOcean } from '@oceanprotocol/react'
-import TokenBalance from '../../../../../models/TokenBalance'
+import TokenBalance from '../../../../../@types/TokenBalance'
 import UserLiquidity from '../../../../atoms/UserLiquidity'
 
 export default function FormAdd({

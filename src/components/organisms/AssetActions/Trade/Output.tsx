@@ -1,7 +1,7 @@
 import { useOcean } from '@oceanprotocol/react'
 import { FormikContextType, useFormikContext } from 'formik'
 import React, { ReactElement, useEffect, useState } from 'react'
-import { TradeLiquidity } from '.'
+import { FormTradeData } from '../../../../models/FormTrade'
 import Token from '../Pool/Token'
 import styles from './Output.module.css'
 
@@ -17,7 +17,7 @@ export default function Output({
   const [swapFee, setSwapFee] = useState<string>()
 
   // Connect with form
-  const { values }: FormikContextType<TradeLiquidity> = useFormikContext()
+  const { values }: FormikContextType<FormTradeData> = useFormikContext()
 
   // Get swap fee
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function Output({
 
     async function getOutput() {
       // Minimum received
-      // TODO: check it's is actually the minimum received after transaction.
+      // TODO: check if this here is redundant cause we call some of that already in Swap.tsx
       const maxPrice =
         values.type === 'buy'
           ? await ocean.pool.getOceanNeeded(poolAddress, `${values.ocean}`)
@@ -51,7 +51,7 @@ export default function Output({
   return (
     <div className={styles.output}>
       <div>
-        <p>Maxiumum Paid</p>
+        <p>Maximum Paid</p>
         <Token
           symbol={values.type === 'buy' ? dtSymbol : 'OCEAN'}
           balance={maxOutput}

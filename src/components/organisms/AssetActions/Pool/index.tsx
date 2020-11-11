@@ -12,7 +12,7 @@ import EtherscanLink from '../../../atoms/EtherscanLink'
 import Token from './Token'
 import TokenList from './TokenList'
 import { graphql, useStaticQuery } from 'gatsby'
-import TokenBalance from '../../../../models/TokenBalance'
+import TokenBalance from '../../../../@types/TokenBalance'
 import Transactions from './Transactions'
 
 const contentQuery = graphql`

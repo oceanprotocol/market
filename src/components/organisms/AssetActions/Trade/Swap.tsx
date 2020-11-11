@@ -5,11 +5,11 @@ import styles from './Swap.module.css'
 import TradeInput from './TradeInput'
 import Button from '../../../atoms/Button'
 import { ReactComponent as Arrow } from '../../../../images/arrow.svg'
-import { TradeLiquidity, TradeItem } from '.'
 import { FormikContextType, useFormikContext } from 'formik'
-import TokenBalance from '../../../../models/TokenBalance'
+import TokenBalance from '../../../../@types/TokenBalance'
 import Output from './Output'
 import Slippage from './Slippage'
+import { FormTradeData, TradeItem } from '../../../../models/FormTrade'
 
 export default function Swap({
   ddo,
@@ -45,7 +45,7 @@ export default function Swap({
     values,
     setErrors,
     validateForm
-  }: FormikContextType<TradeLiquidity> = useFormikContext()
+  }: FormikContextType<FormTradeData> = useFormikContext()
 
   useEffect(() => {
     if (!ddo || !balance || !values || !price) return

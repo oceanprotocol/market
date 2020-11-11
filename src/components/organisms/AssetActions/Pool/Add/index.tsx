@@ -10,7 +10,7 @@ import FormAdd from './FormAdd'
 import styles from './index.module.css'
 import Token from '../Token'
 import Alert from '../../../../atoms/Alert'
-import TokenBalance from '../../../../../models/TokenBalance'
+import TokenBalance from '../../../../../@types/TokenBalance'
 import { useUserPreferences } from '../../../../../providers/UserPreferences'
 
 const contentQuery = graphql`

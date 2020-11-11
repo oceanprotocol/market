@@ -2,25 +2,16 @@ import React, { ReactElement, useState } from 'react'
 import { useOcean } from '@oceanprotocol/react'
 import { BestPrice, DDO, Logger } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
-import { TradeLiquidity } from '.'
 import { Formik } from 'formik'
 import Actions from '../Pool/Actions'
 import { graphql, useStaticQuery } from 'gatsby'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import { toast } from 'react-toastify'
 import Swap from './Swap'
-import TokenBalance from '../../../../models/TokenBalance'
+import TokenBalance from '../../../../@types/TokenBalance'
 import Alert from '../../../atoms/Alert'
 import styles from './FormTrade.module.css'
-
-const initialValues: TradeLiquidity = {
-  ocean: undefined,
-  datatoken: undefined,
-  type: 'buy',
-  slippage: '5%'
-}
-
-export const slippagePresets = ['1%', '5%', '15%']
+import { FormTradeData, initialValues } from '../../../../models/FormTrade'
 
 const contentQuery = graphql`
   query TradeQuery {
@@ -62,7 +53,7 @@ export default function FormTrade({
   const [maximumDt, setMaximumDt] = useState(maxDt)
   const [isWarningAccepted, setIsWarningAccepted] = useState(false)
 
-  const validationSchema = Yup.object().shape<TradeLiquidity>({
+  const validationSchema = Yup.object().shape<FormTradeData>({
     ocean: Yup.number()
       .max(maximumOcean, (param) => `Must be more or equal to ${param.max}`)
       .min(0.001, (param) => `Must be more or equal to ${param.min}`)
@@ -77,7 +68,7 @@ export default function FormTrade({
     slippage: Yup.string()
   })
 
-  async function handleTrade(values: TradeLiquidity) {
+  async function handleTrade(values: FormTradeData) {
     try {
       const tx =
         values.type === 'buy'
