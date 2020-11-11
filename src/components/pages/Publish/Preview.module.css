@@ -40,25 +40,6 @@
   margin-top: calc(var(--spacer) / 4);
 }
 
-/* Markdown tweaks */
-
-.description h1 {
-  font-size: var(--font-size-h3);
-}
-
-.description h2 {
-  font-size: var(--font-size-h4);
-}
-
-.description h3 {
-  font-size: var(--font-size-large);
-}
-
-.description h4,
-.description h5 {
-  font-size: var(--font-size-base);
-}
-
 .toggle {
   position: absolute;
   bottom: 0.15rem;
