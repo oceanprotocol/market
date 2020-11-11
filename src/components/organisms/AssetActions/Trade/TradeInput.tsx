@@ -9,10 +9,10 @@ import {
 } from 'formik'
 
 import { useOcean } from '@oceanprotocol/react'
-import { TradeLiquidity, TradeItem } from '.'
 import Input from '../../../atoms/Input'
 import Button from '../../../atoms/Button'
 import UserLiquidity from '../../../atoms/UserLiquidity'
+import { FormTradeData, TradeItem } from '../../../../models/FormTrade'
 
 export default function TradeInput({
   name,
@@ -31,7 +31,7 @@ export default function TradeInput({
     setFieldValue,
     validateForm,
     values
-  }: FormikContextType<TradeLiquidity> = useFormikContext()
+  }: FormikContextType<FormTradeData> = useFormikContext()
 
   const isTopField =
     (name === 'ocean' && values.type === 'buy') ||
