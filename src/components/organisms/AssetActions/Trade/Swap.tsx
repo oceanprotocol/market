@@ -7,7 +7,7 @@ import Button from '../../../atoms/Button'
 import { ReactComponent as Arrow } from '../../../../images/arrow.svg'
 import { TradeLiquidity, TradeItem } from '.'
 import { FormikContextType, useFormikContext } from 'formik'
-import DtBalance from '../../../../models/DtBalance'
+import TokenBalance from '../../../../models/TokenBalance'
 import Output from './Output'
 import Slippage from './Slippage'
 
@@ -23,7 +23,7 @@ export default function Swap({
   ddo: DDO
   maxDt: number
   maxOcean: number
-  balance: DtBalance
+  balance: TokenBalance
   price: BestPrice
   setMaximumDt: (value: number) => void
   setMaximumOcean: (value: number) => void

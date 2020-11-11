@@ -12,7 +12,7 @@ export default function Slippage(): ReactElement {
     values
   }: FormikContextType<TradeLiquidity> = useFormikContext()
 
-  function handleButtonClick(e: ChangeEvent<HTMLSelectElement>) {
+  function handleChange(e: ChangeEvent<HTMLSelectElement>) {
     setFieldValue('slippage', e.target.value)
   }
 
@@ -27,7 +27,7 @@ export default function Slippage(): ReactElement {
           size="mini"
           options={slippagePresets}
           value={values.slippage}
-          onChange={handleButtonClick}
+          onChange={handleChange}
         />{' '}
         additional limit.
       </div>

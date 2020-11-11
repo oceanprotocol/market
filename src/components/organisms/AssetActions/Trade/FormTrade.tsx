@@ -9,7 +9,7 @@ import { graphql, useStaticQuery } from 'gatsby'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import { toast } from 'react-toastify'
 import Swap from './Swap'
-import DtBalance from '../../../../models/DtBalance'
+import TokenBalance from '../../../../models/TokenBalance'
 import Alert from '../../../atoms/Alert'
 import styles from './FormTrade.module.css'
 
@@ -47,7 +47,7 @@ export default function FormTrade({
   price
 }: {
   ddo: DDO
-  balance: DtBalance
+  balance: TokenBalance
   maxDt: number
   maxOcean: number
   price: BestPrice

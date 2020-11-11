@@ -10,7 +10,7 @@ import FormAdd from './FormAdd'
 import styles from './index.module.css'
 import Token from '../Token'
 import Alert from '../../../../atoms/Alert'
-import DtBalance from '../../../../../models/DtBalance'
+import TokenBalance from '../../../../../models/TokenBalance'
 import { useUserPreferences } from '../../../../../providers/UserPreferences'
 
 const contentQuery = graphql`
@@ -59,7 +59,7 @@ export default function Add({
   refreshInfo: () => void
   poolAddress: string
   totalPoolTokens: string
-  totalBalance: DtBalance
+  totalBalance: TokenBalance
   swapFee: string
   dtSymbol: string
   dtAddress: string

@@ -11,7 +11,7 @@ import Button from '../../../../atoms/Button'
 import CoinSelect from '../CoinSelect'
 import { FormAddLiquidity } from '.'
 import { useOcean } from '@oceanprotocol/react'
-import DtBalance from '../../../../../models/DtBalance'
+import TokenBalance from '../../../../../models/TokenBalance'
 import UserLiquidity from '../../../../atoms/UserLiquidity'
 
 export default function FormAdd({
@@ -32,7 +32,7 @@ export default function FormAdd({
   amountMax: string
   setCoin: (value: string) => void
   totalPoolTokens: string
-  totalBalance: DtBalance
+  totalBalance: TokenBalance
   poolAddress: string
   setNewPoolTokens: (value: string) => void
   setNewPoolShare: (value: string) => void
