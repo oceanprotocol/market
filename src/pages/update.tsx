@@ -7,10 +7,11 @@ import { useOcean } from '@oceanprotocol/react'
 import Loader from '../components/atoms/Loader'
 import { DDO } from '@oceanprotocol/lib'
 import Alert from '../components/atoms/Alert'
+import styles from '../components/atoms/Box.module.css'
 
 const pageTitle = 'Update Data Set'
 const pageDescription =
-  'Interim solution for updating title & description of a data set until a proper editing flow is implemented. No validation, no checks. Make sure your DID is correct and you are connected with the account you published the to-be-edited data set.'
+  'Interim solution for updating title & description of a data set until a proper editing flow is implemented. No validation, no checks. Make sure your DID is correct and that you are connected with the account you used to published your data set.'
 
 export default function PageGatsbyUpdateAsset(props: PageProps): ReactElement {
   const { ocean, account } = useOcean()
@@ -54,8 +55,14 @@ export default function PageGatsbyUpdateAsset(props: PageProps): ReactElement {
 
   return (
     <Layout title={pageTitle} description={pageDescription} uri={props.uri}>
-      <form>
-        <Input name="did" label="DID" onChange={handleChangeDid} required />
+      <form className={styles.box}>
+        <Input
+          name="did"
+          label="DID"
+          placeholder="e.g. did:op:C1d97aEAb57622B2d139f10351B48CBf94071e5c"
+          onChange={handleChangeDid}
+          required
+        />
         <Input name="title" label="New Title" onChange={handleChangeTitle} />
         <Input
           type="textarea"
@@ -64,7 +71,11 @@ export default function PageGatsbyUpdateAsset(props: PageProps): ReactElement {
           onChange={handleChangeDescription}
           rows={4}
         />
-        <Button style="primary" onClick={handleSubmit}>
+        <Button
+          style="primary"
+          onClick={handleSubmit}
+          disabled={isLoading || !ocean || !account || !did}
+        >
           {isLoading ? <Loader /> : 'Submit'}
         </Button>
 
