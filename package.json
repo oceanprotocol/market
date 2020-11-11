@@ -24,7 +24,7 @@
     "@loadable/component": "^5.14.1",
     "@oceanprotocol/art": "^3.0.0",
     "@oceanprotocol/lib": "^0.9.10",
-    "@oceanprotocol/list-datapartners": "^1.0.1",
+    "@oceanprotocol/list-datapartners": "^1.0.2",
     "@oceanprotocol/react": "^0.3.16",
     "@oceanprotocol/typographies": "^0.1.0",
     "@sindresorhus/slugify": "^1.0.0",
