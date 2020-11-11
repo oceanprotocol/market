@@ -37,7 +37,7 @@ export default function Output({
 
     async function getOutput() {
       // Minimum received
-      // TODO: check ity is actually the minimum received after transaction.
+      // TODO: check it's is actually the minimum received after transaction.
       const maxPrice =
         values.type === 'buy'
           ? await ocean.pool.getOceanNeeded(poolAddress, `${values.ocean}`)
@@ -56,7 +56,6 @@ export default function Output({
           symbol={values.type === 'buy' ? dtSymbol : 'OCEAN'}
           balance={maxOutput}
         />
-        <Token symbol="% price impact" balance="10" />
       </div>
       <div>
         <p>&nbsp;</p>

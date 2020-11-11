@@ -20,7 +20,7 @@ const initialValues: TradeLiquidity = {
   slippage: '5%'
 }
 
-export const slippagePresets = ['0.1%', '1%', '5%', '15%', '25%']
+export const slippagePresets = ['1%', '5%', '15%']
 
 const contentQuery = graphql`
   query TradeQuery {
