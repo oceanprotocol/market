@@ -5,11 +5,16 @@ node_js: node
 cache:
   npm: true
 
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install python3-pip
+  - sudo -H pip3 install --upgrade pip
+  - sudo -H pip3 install -U setuptools
+
 before_script:
   # - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   # - chmod +x ./cc-test-reporter
   # - './cc-test-reporter before-build'
-
 script:
   # will run `npm ci` automatically here
   - npm run lint
