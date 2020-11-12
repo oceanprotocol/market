@@ -6,7 +6,7 @@
   "homepage": "https://market.oceanprotocol.com",
   "scripts": {
     "start": "gatsby develop --host 0.0.0.0",
-    "build": "gatsby clean && gatsby build",
+    "build": "gatsby clean && gatsby build && cp _redirects public/_redirects",
     "serve": "serve -s public/",
     "jest": "NODE_ENV=test jest -c tests/unit/jest.config.js",
     "test": "npm run lint && npm run jest",
@@ -24,7 +24,7 @@
     "@loadable/component": "^5.14.1",
     "@oceanprotocol/art": "^3.0.0",
     "@oceanprotocol/lib": "^0.9.10",
-    "@oceanprotocol/list-datapartners": "^1.0.1",
+    "@oceanprotocol/list-datapartners": "^1.0.2",
     "@oceanprotocol/react": "^0.3.16",
     "@oceanprotocol/typographies": "^0.1.0",
     "@sindresorhus/slugify": "^1.0.0",
