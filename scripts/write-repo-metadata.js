@@ -12,9 +12,11 @@ process.stdout.write(
   JSON.stringify(
     {
       version: require('../package.json').version,
-      branch: process.env.VERCEL_GITHUB_COMMIT_REF || 'dev',
+      branch:
+        process.env.VERCEL_GITHUB_COMMIT_REF || process.env.BRANCH || 'dev',
       commit:
         process.env.VERCEL_GITHUB_COMMIT_SHA ||
+        process.env.COMMIT_REF ||
         execSync(`git rev-parse HEAD`).toString().trim()
     },
     null,
