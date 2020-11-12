@@ -3,7 +3,7 @@
 # required environment variables:
 # AWS_ACCESS_KEY_ID
 # AWS_SECRET_ACCESS_KEY
-# AWS_DEFAULT_REGION
+# AWS_DEFAULT_REGION us-east-1
 AWS_S3_BUCKET="www-market"
 AWS_S3_BUCKET_BETA="www-market-beta"
 
