@@ -16,5 +16,10 @@ script:
   # - './cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT'
   - npm run build
 
+after_success:
+  - pip3 install --user awscli
+  - export PATH=$PATH:$HOME/.local/bin
+  - npm run deploy
+
 notifications:
   email: false
