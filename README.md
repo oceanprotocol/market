@@ -3,7 +3,7 @@
 <h1 align="center">Ocean Marketplace</h1>
 
 [![Build Status](https://travis-ci.com/oceanprotocol/market.svg?token=3psqw6c8KMDqfdGQ2x6d&branch=main)](https://travis-ci.com/oceanprotocol/market)
-[![Vercel deployment](https://flat.badgen.net/badge/vercel/auto-deployment/21c4dd?icon=now)](https://vercel.com/oceanprotocol/market)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/c85f4d8b-95e1-4010-95a4-2bacd8b90981/deploy-status)](https://app.netlify.com/sites/market-oceanprotocol/deploys)
 [![Maintainability](https://api.codeclimate.com/v1/badges/d114f94f75e6efd2ee71/maintainability)](https://codeclimate.com/repos/5e3933869a31771fd800011c/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/d114f94f75e6efd2ee71/test_coverage)](https://codeclimate.com/repos/5e3933869a31771fd800011c/test_coverage)
 [![js oceanprotocol](https://img.shields.io/badge/js-oceanprotocol-7b1173.svg)](https://github.com/oceanprotocol/eslint-config-oceanprotocol)
@@ -18,7 +18,6 @@
 - [👩‍🔬 Testing](#-testing)
 - [🛳 Production](#-production)
 - [⬆️ Deployment](#️-deployment)
-  - [Manual Deployment](#manual-deployment)
 - [🏛 License](#-license)
 
 ## 🏄 Get Started
@@ -131,24 +130,9 @@ npm run serve
 
 ## ⬆️ Deployment
 
-Every branch or Pull Request is automatically deployed by [Vercel](https://vercel.com) with their GitHub integration. A link to a deployment will appear under each Pull Request.
+Every branch or Pull Request is automatically deployed by [Netlify](https://netlify.com) with their GitHub integration. A link to a deployment will appear under each Pull Request.
 
-The latest deployment of the `main` branch is automatically aliased to `market-six.now.sh`.
-
-### Manual Deployment
-
-If needed, app can be deployed manually to Vercel. Make sure to switch to Ocean Protocol org before deploying:
-
-```bash
-# first run
-vercel login
-vercel switch
-
-# deploy
-vercel
-# switch alias to new deployment
-vercel alias
-```
+The latest deployment of the `main` branch is automatically aliased to `market.oceanprotocol.com`.
 
 ## 🏛 License
 
@@ -167,4 +151,3 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
- 
