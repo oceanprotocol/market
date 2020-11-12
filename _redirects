@@ -1,1 +1,1 @@
-/asset/:did /asset 200
+/asset/* /asset/index.html 200
