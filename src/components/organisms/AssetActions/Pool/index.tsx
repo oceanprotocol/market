@@ -302,21 +302,19 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           )}
 
           <div className={stylesActions.actions}>
-            <Button
-              style="primary"
-              size="small"
-              onClick={() => setShowAdd(true)}
-              disabled={isInPurgatory}
-            >
-              Add Liquidity
-            </Button>
-
-            {hasAddedLiquidity && (
+            {!isInPurgatory && (
               <Button
+                style="primary"
                 size="small"
-                onClick={() => setShowRemove(true)}
-                disabled={isRemoveDisabled}
+                onClick={() => setShowAdd(true)}
+                disabled={isInPurgatory}
               >
+                Add Liquidity
+              </Button>
+            )}
+
+            {hasAddedLiquidity && !isRemoveDisabled && (
+              <Button size="small" onClick={() => setShowRemove(true)}>
                 Remove
               </Button>
             )}
