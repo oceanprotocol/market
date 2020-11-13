@@ -73,21 +73,9 @@
   color: var(--brand-alert-red);
 }
 
-.error.inverse {
-  background: var(--brand-alert-red);
-  border-color: var(--brand-white);
-  color: var(--brand-white);
-}
-
 .success {
   border-color: var(--brand-alert-green);
   color: var(--brand-alert-green);
-}
-
-.success.inverse {
-  background: var(--brand-alert-green);
-  border-color: var(--brand-white);
-  color: var(--brand-white);
 }
 
 .info {
@@ -95,19 +83,7 @@
   color: #9f7e19;
 }
 
-.info.inverse {
-  background: #9f7e19;
-  border-color: var(--brand-white);
-  color: var(--brand-white);
-}
-
 .warning {
   border-color: var(--brand-alert-orange);
   color: var(--brand-alert-orange);
-}
-
-.warning.inverse {
-  background: var(--brand-alert-orange);
-  border-color: var(--brand-white);
-  color: var(--brand-white);
 }

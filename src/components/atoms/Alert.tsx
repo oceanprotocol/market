@@ -1,4 +1,4 @@
-import React, { ReactElement, FormEvent, ReactNode } from 'react'
+import React, { ReactElement, FormEvent } from 'react'
 import classNames from 'classnames/bind'
 import styles from './Alert.module.css'
 import Button from './Button'
@@ -12,7 +12,6 @@ export default function Alert({
   badge,
   text,
   state,
-  style,
   action,
   onDismiss,
   className
@@ -21,7 +20,6 @@ export default function Alert({
   badge?: string
   text: string
   state: 'error' | 'warning' | 'info' | 'success'
-  style?: 'inverse'
   action?: {
     name: string
     style?: 'text' | 'primary' | 'ghost'
@@ -33,7 +31,6 @@ export default function Alert({
   const styleClasses = cx({
     alert: true,
     [state]: state,
-    [style]: style,
     [className]: className
   })
 
