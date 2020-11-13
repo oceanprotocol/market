@@ -5,8 +5,8 @@ import axios from 'axios'
 import { useOcean } from '@oceanprotocol/react'
 
 function constructGraphData(data: ChartData[]): ChartData {
-  const labels = data.map((item: any) => new Date(item[0]))
-  const dataValues = data.map((item: any) => item[1])
+  const labels = data.map((item: any) => new Date(item[1]))
+  const dataValues = data.map((item: any) => item[0])
 
   return {
     labels,
