@@ -18,6 +18,7 @@ import Token from './Token'
 import TokenList from './TokenList'
 import { graphql, useStaticQuery } from 'gatsby'
 import Transactions from './Transactions'
+import Graph from './Graph'
 
 export interface Balance {
   ocean: number
@@ -224,6 +225,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         />
       ) : (
         <>
+          <Graph poolAddress={ddo.price.address} />
           <div className={styles.dataToken}>
             <PriceUnit price="1" symbol={dtSymbol} /> ={' '}
             <PriceUnit price={`${price?.value}`} />
