@@ -51,7 +51,7 @@ export default function Layout({
       {isAccountInPurgatory && accountPurgatory && (
         <Alert
           title="Account In Purgatory"
-          badge={accountPurgatory.reason}
+          badge={`Reason: ${accountPurgatory.reason}`}
           text="No further actions are permitted by this account. For more details go to [list-purgatory](https://github.com/oceanprotocol/list-purgatory)."
           state="error"
         />
@@ -60,7 +60,7 @@ export default function Layout({
       {isInPurgatory && purgatoryData && (
         <Alert
           title="Data Set In Purgatory"
-          badge={purgatoryData.reason}
+          badge={`Reason: ${purgatoryData.reason}`}
           text="Except for removing liquidity, no further actions are permitted on this data set and it will not be returned in any search. For more details go to [list-purgatory](https://github.com/oceanprotocol/list-purgatory)."
           state="error"
         />
