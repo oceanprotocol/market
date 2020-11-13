@@ -15,8 +15,8 @@ export function getSearchQuery(
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
+    text,
     query: {
-      text,
       isInPurgatory: ['false'],
       ...(owner && { 'publicKey.owner': [owner] }),
       ...(tags && { tags: [tags] }),
