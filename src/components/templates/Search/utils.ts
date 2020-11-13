@@ -16,8 +16,7 @@ export function getSearchQuery(
     page: Number(page) || 1,
     offset: Number(offset) || 21,
     query: {
-      text,
-      isInPurgatory: ['false'],
+      query_string: { query: `(${text}) -isInPurgatory:true` },
       ...(owner && { 'publicKey.owner': [owner] }),
       ...(tags && { tags: [tags] }),
       ...(categories && { categories: [categories] })
@@ -30,7 +29,8 @@ export function getSearchQuery(
     // which is the only way the query actually returns desired results.
     // But it doesn't follow 'SearchQuery' interface so we have to assign
     // it here.
-  } as SearchQuery
+    // } as SearchQuery
+  } as any
 }
 
 export async function getResults(
