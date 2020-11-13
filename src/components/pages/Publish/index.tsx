@@ -72,7 +72,7 @@ export default function PublishPage({
     }
   }
 
-  return isInPurgatory && purgatoryData  ? (
+  return isInPurgatory && purgatoryData ? (
     <Alert
       className={styles.warning}
       text={`Account in purgatory - You are not allowed to publish new assets! Reason: ${purgatoryData.reason}. For more details go [here](https://github.com/oceanprotocol/list-purgatory) `}

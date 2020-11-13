@@ -9,11 +9,7 @@ import AssetActions from '../AssetActions'
 import { DDO } from '@oceanprotocol/lib'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import Pricing from './Pricing'
-import {
-  useMetadata,
-  useOcean,
-  usePricing
-} from '@oceanprotocol/react'
+import { useMetadata, useOcean, usePricing } from '@oceanprotocol/react'
 import EtherscanLink from '../../atoms/EtherscanLink'
 import Bookmark from './Bookmark'
 import Byline from './Byline'

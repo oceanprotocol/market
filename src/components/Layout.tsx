@@ -33,9 +33,9 @@ export default function Layout({
     purgatoryData: accountPurgatory
   } = useOcean()
 
-  useEffect(()=>{
-    console.log('isInPurgatory',isInPurgatory,purgatoryData)
-  },[isInPurgatory])
+  useEffect(() => {
+    console.log('isInPurgatory', isInPurgatory, purgatoryData)
+  }, [isInPurgatory])
   return (
     <div className={styles.app}>
       <Seo title={title} description={description} uri={uri} />
