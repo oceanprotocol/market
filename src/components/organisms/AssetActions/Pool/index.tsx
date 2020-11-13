@@ -63,7 +63,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
   const [showAdd, setShowAdd] = useState(false)
   const [showRemove, setShowRemove] = useState(false)
-  const [isAddDisabled, setIsAddDisabled] = useState(false)
+  const [isRemoveDisabled, setIsRemoveDisabled] = useState(false)
 
   const [hasAddedLiquidity, setHasAddedLiquidity] = useState(false)
   const [poolShare, setPoolShare] = useState<string>()
@@ -81,9 +81,8 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const [refreshPool, setRefreshPool] = useState(false)
 
   useEffect(() => {
-    console.log(isInPurgatory)
-    setIsAddDisabled(!isInPurgatory)
-  }, [isInPurgatory])
+    setIsRemoveDisabled(isInPurgatory && owner === accountId)
+  }, [isInPurgatory, owner, accountId])
 
   useEffect(() => {
     const poolShare =
@@ -313,7 +312,11 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
             </Button>
 
             {hasAddedLiquidity && (
-              <Button size="small" onClick={() => setShowRemove(true)}>
+              <Button
+                size="small"
+                onClick={() => setShowRemove(true)}
+                disabled={isRemoveDisabled}
+              >
                 Remove
               </Button>
             )}
