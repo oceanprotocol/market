@@ -27,6 +27,8 @@ Ocean Marketplace Terms and Conditions (this “**Agreement**”) is made and en
 
 “**Privacy Policy**” means the privacy policy located at https://www.oceanprotocol.com (and any successor or related locations designated by Ocean), as it may be updated by Ocean from time to time.
 
+“**Purgatory**” means a state in which a publisher or data asset is tagged in Ocean Market. The purgatory policies are located at https://github.com/oceanprotocol/list-purgatory/tree/main/policies
+
 “**Service**” means each of the services made available by Ocean or its affiliates, including those web services described in the Service Terms. Services do not include Third-Party Content.
 
 “**Service Terms**” means the rights and restrictions for particular Services located at [https://market.oceanprotocol.com](https://market.oceanprotocol.com/) (and any successor or related locations designated by Ocean), as may be updated by Ocean from time to time.
@@ -45,7 +47,7 @@ Ocean Marketplace Terms and Conditions (this “**Agreement**”) is made and en
 
 **1.2**	To access the Ocean Marketplace, Customer must have a Web3 wallet (e.g. MetaMask) and must have Ocean tokens in their wallet.
 
- **1.3**    Ocean Marketplace connects Data Buyers and Data Vendors directly, without any 3rd party control via the marketplace. This means that Customers are responsible for their own activity on the marketplace. Customers must adhere to the laws in their own legal jurisdiction as well as their conscience. Ocean is not responsible for any malicious use of the Ocean Marketplace or any losses associated with the use of the Ocean Marketplace of any source.  
+**1.3**    Ocean Marketplace connects Data Buyers and Data Vendors directly, without any 3rd party control via the marketplace. This means that Customers are responsible for their own activity on the marketplace. Customers must adhere to the laws in their own legal jurisdiction as well as their conscience. Ocean is not responsible for any malicious use of the Ocean Marketplace or any losses associated with the use of the Ocean Marketplace of any source.  
 
 **1.4**	By clicking any button or box marked “accept” or “agree” (or a similar term) in connection with this Agreement, or by accessing or using the Ocean Marketplace, you agree to be bound by this Agreement, a current version of which is available at the Ocean Website, and which may be modified from time to time at our sole discretion. We are only providing our services if you accept all of these terms. By using the Ocean Marketplace, the Customer confirms their understanding and agrees to be bound by all of these terms. If Customer accepts these terms on behalf of a company or other legal entity, Customer represents that they have the legal authority to accept these terms on that entity’s behalf, in which case Customer will mean that entity.  If Customer does not accept all of these terms, then you may not access or use the Ocean Marketplace.  
 
@@ -111,9 +113,11 @@ Customer acknowledges and agrees that the Commission will be transferred directl
 
 (b) Customer will not be entitled to any service credits under the Service Level Agreements for any period of suspension.
 
-**7 TERMINATION**
+**7 PURGATORY & TERMINATION**
 
-**7.1**	This agreement can be terminated at any time by discontinuing Customer access to and use of the Ocean Marketplace. You will not receive any refunds, you agree that we, in our sole discretion and for any or no reason, may terminate these Terms and suspend and/or terminate the access to the Ocean Marketplace and that we will not be liable to you or to any third party for any such suspension or termination.
+**7.1**	Purgatory is a state in which a publisher or data asset is tagged as "in purgatory". Being in purgatory has implications into how the asset is displayed in Ocean Market, and what actions are permitted to be performed on the asset. Once in purgatory, the asset or publisher may stay there or leave purgatory if certain conditions are fulfilled. 
+
+**7.2**	This agreement can be terminated at any time by discontinuing Customer access to and use of the Ocean Marketplace. You will not receive any refunds, you agree that we, in our sole discretion and for any or no reason, may terminate these Terms and suspend and/or terminate the access to the Ocean Marketplace and that we will not be liable to you or to any third party for any such suspension or termination.
 
 **8 INTELLECTUAL PROPERTY RIGHTS AND LICENSE**
 
