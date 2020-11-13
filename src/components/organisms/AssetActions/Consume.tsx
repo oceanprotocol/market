@@ -49,11 +49,16 @@ export default function Consume({
       (!ocean ||
         !isBalanceSufficient ||
         typeof consumeStepText !== 'undefined' ||
-        pricingIsLoading ||
-        isInPurgatory) &&
+        pricingIsLoading) &&
         !hasPreviousOrder
     )
-  }, [hasPreviousOrder, isBalanceSufficient, consumeStepText, pricingIsLoading])
+  }, [
+    ocean,
+    hasPreviousOrder,
+    isBalanceSufficient,
+    consumeStepText,
+    pricingIsLoading
+  ])
 
   useEffect(() => {
     if (!ocean || !accountId) return
@@ -110,7 +115,7 @@ export default function Consume({
               without paying again.
             </div>
           )}
-          <PurchaseButton />
+          {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>
 
