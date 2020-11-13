@@ -1,22 +1,27 @@
-import React, { ReactElement, FormEvent } from 'react'
+import React, { ReactElement, FormEvent, ReactNode } from 'react'
 import classNames from 'classnames/bind'
 import styles from './Alert.module.css'
 import Button from './Button'
 import Markdown from './Markdown'
+import Badge from './Badge'
 
 const cx = classNames.bind(styles)
 
 export default function Alert({
   title,
+  badge,
   text,
   state,
+  style,
   action,
   onDismiss,
   className
 }: {
   title?: string
+  badge?: string
   text: string
   state: 'error' | 'warning' | 'info' | 'success'
+  style?: 'inverse'
   action?: {
     name: string
     style?: 'text' | 'primary' | 'ghost'
@@ -28,12 +33,17 @@ export default function Alert({
   const styleClasses = cx({
     alert: true,
     [state]: state,
+    [style]: style,
     [className]: className
   })
 
   return (
     <div className={styleClasses}>
-      {title && <h3 className={styles.title}>{title}</h3>}
+      {title && (
+        <h3 className={styles.title}>
+          {title} {badge && <Badge className={styles.badge} label={badge} />}
+        </h3>
+      )}
       <Markdown className={styles.text} text={text} />
       {action && (
         <Button

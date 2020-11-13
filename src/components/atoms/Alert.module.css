@@ -26,8 +26,19 @@
   color: inherit;
 }
 
+.badge {
+  vertical-align: middle;
+  margin-left: calc(var(--spacer) / 8);
+  margin-top: -0.3rem;
+}
+
 .text {
   font-size: var(--font-size-small);
+}
+
+.text a {
+  color: inherit;
+  text-decoration: underline;
 }
 
 .text p:last-child {
@@ -58,8 +69,14 @@
 
 /* States */
 .error {
-  border-color: var(--rbrand-alert-ed);
+  border-color: var(--brand-alert-red);
   color: var(--brand-alert-red);
+}
+
+.error.inverse {
+  background: var(--brand-alert-red);
+  border-color: var(--brand-white);
+  color: var(--brand-white);
 }
 
 .success {
@@ -67,12 +84,30 @@
   color: var(--brand-alert-green);
 }
 
+.success.inverse {
+  background: var(--brand-alert-green);
+  border-color: var(--brand-white);
+  color: var(--brand-white);
+}
+
 .info {
   border-color: var(--brand-alert-yellow);
   color: #9f7e19;
 }
 
+.info.inverse {
+  background: #9f7e19;
+  border-color: var(--brand-white);
+  color: var(--brand-white);
+}
+
 .warning {
   border-color: var(--brand-alert-orange);
   color: var(--brand-alert-orange);
+}
+
+.warning.inverse {
+  background: var(--brand-alert-orange);
+  border-color: var(--brand-white);
+  color: var(--brand-white);
 }

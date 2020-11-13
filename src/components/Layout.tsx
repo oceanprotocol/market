@@ -8,6 +8,7 @@ import Container from './atoms/Container'
 import Alert from './atoms/Alert'
 import { useSiteMetadata } from '../hooks/useSiteMetadata'
 import { useAsset, useOcean } from '@oceanprotocol/react'
+import { Logger } from '@oceanprotocol/lib'
 
 export interface LayoutProps {
   children: ReactNode
@@ -34,8 +35,9 @@ export default function Layout({
   } = useOcean()
 
   useEffect(() => {
-    console.log('isInPurgatory', isInPurgatory, purgatoryData)
-  }, [isInPurgatory])
+    Logger.log('isInPurgatory', isInPurgatory, purgatoryData)
+  }, [isInPurgatory, purgatoryData])
+
   return (
     <div className={styles.app}>
       <Seo title={title} description={description} uri={uri} />
@@ -48,16 +50,18 @@ export default function Layout({
 
       {isAccountInPurgatory && accountPurgatory && (
         <Alert
-          className={styles.warning}
-          text={`Account in purgatory - No further actions permitted! Reason: ${accountPurgatory.reason}. For more details go [here](https://github.com/oceanprotocol/list-purgatory) `}
+          title="Account In Purgatory"
+          badge={accountPurgatory.reason}
+          text="No further actions are permitted by this account. For more details go to [list-purgatory](https://github.com/oceanprotocol/list-purgatory)."
           state="error"
         />
       )}
 
       {isInPurgatory && purgatoryData && (
         <Alert
-          className={styles.warning}
-          text={`Asset in purgatory - No further actions permitted! Reason: ${purgatoryData.reason}. For more details go [here](https://github.com/oceanprotocol/list-purgatory) `}
+          title="Data Set In Purgatory"
+          badge={purgatoryData.reason}
+          text="Except for removing liquidity, no further actions are permitted on this data set and it will not be returned in any search. For more details go to [list-purgatory](https://github.com/oceanprotocol/list-purgatory)."
           state="error"
         />
       )}

@@ -25,7 +25,3 @@
   /* sticky footer technique */
   flex: 1;
 }
-
-.banner {
-  margin-bottom: -2rem !important;
-}
