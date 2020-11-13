@@ -23,21 +23,21 @@ const partnerAccounts = listPartners.map((partner) =>
 const queryHighest = {
   page: 1,
   offset: 9,
-  query: { 'price.type': ['pool'] },
+  query: { 'price.type': ['pool'] , 'isInPurgatory': ["false"]},
   sort: { 'price.ocean': -1 }
 }
 
 const queryPartners = {
   page: 1,
   offset: 100,
-  query: { 'publicKey.owner': partnerAccounts },
+  query: { 'publicKey.owner': partnerAccounts , 'isInPurgatory': ["false"]},
   sort: { created: -1 }
 }
 
 const queryLatest = {
   page: 1,
   offset: 9,
-  query: {},
+  query: {'isInPurgatory': ["false"]},
   sort: { created: -1 }
 }
 

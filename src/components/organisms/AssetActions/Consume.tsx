@@ -7,7 +7,7 @@ import Price from '../../atoms/Price'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
 import styles from './Consume.module.css'
 import Loader from '../../atoms/Loader'
-import { useOcean, useConsume, usePricing } from '@oceanprotocol/react'
+import { useOcean, useConsume, usePricing, useAsset } from '@oceanprotocol/react'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import checkPreviousOrder from '../../../utils/checkPreviousOrder'
 
@@ -26,7 +26,7 @@ export default function Consume({
   const { marketFeeAddress } = useSiteMetadata()
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
   const [previousOrderId, setPreviousOrderId] = useState<string>()
-
+  const { isInPurgatory } = useAsset()
   const {
     dtSymbol,
     buyDT,
@@ -44,7 +44,7 @@ export default function Consume({
       (!ocean ||
         !isBalanceSufficient ||
         typeof consumeStepText !== 'undefined' ||
-        pricingIsLoading) &&
+        pricingIsLoading || isInPurgatory) &&
         !hasPreviousOrder
     )
   }, [hasPreviousOrder, isBalanceSufficient, consumeStepText, pricingIsLoading])

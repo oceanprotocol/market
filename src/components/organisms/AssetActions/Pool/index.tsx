@@ -1,5 +1,10 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useOcean, useMetadata, usePricing } from '@oceanprotocol/react'
+import {
+  useOcean,
+  useMetadata,
+  usePricing,
+  useAsset
+} from '@oceanprotocol/react'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import styles from './index.module.css'
 import stylesActions from './Actions.module.css'
@@ -47,6 +52,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const { ocean, accountId, networkId } = useOcean()
   const { price, refreshPrice, owner } = useMetadata(ddo)
   const { dtSymbol } = usePricing(ddo)
+  const { isInPurgatory } = useAsset()
 
   const [poolTokens, setPoolTokens] = useState<string>()
   const [totalPoolTokens, setTotalPoolTokens] = useState<string>()
@@ -57,6 +63,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
   const [showAdd, setShowAdd] = useState(false)
   const [showRemove, setShowRemove] = useState(false)
+  const [isAddDisabled, setIsAddDisabled] = useState(false)
 
   const [hasAddedLiquidity, setHasAddedLiquidity] = useState(false)
   const [poolShare, setPoolShare] = useState<string>()
@@ -72,6 +79,11 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const [creatorPoolShare, setCreatorPoolShare] = useState<string>()
   // the purpose of the value is just to trigger the effect
   const [refreshPool, setRefreshPool] = useState(false)
+
+  useEffect(() => {
+    console.log(isInPurgatory)
+    setIsAddDisabled(!isInPurgatory)
+  }, [isInPurgatory])
 
   useEffect(() => {
     const poolShare =
@@ -295,6 +307,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
               style="primary"
               size="small"
               onClick={() => setShowAdd(true)}
+              disabled={isInPurgatory}
             >
               Add Liquidity
             </Button>
