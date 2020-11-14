@@ -22,9 +22,11 @@ export function getSearchQuery(
           owner
             ? `publicKey.owner:${owner}`
             : tags
-            ? `service.attributes.additionalInformation.tags:${tags}`
+            ? // eslint-disable-next-line no-useless-escape
+              `service.attributes.additionalInformation.tags:\"${tags}\"`
             : categories
-            ? `service.attributes.additionalInformation.categories:${categories}`
+            ? // eslint-disable-next-line no-useless-escape
+              `service.attributes.additionalInformation.categories:\"${categories}\"`
             : text
         }) -isInPurgatory:true `
       }
