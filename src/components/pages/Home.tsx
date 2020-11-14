@@ -20,24 +20,39 @@ const partnerAccounts = listPartners.map((partner) =>
   partner.accounts.join(',')
 )
 
-const queryHighest = {
-  page: 1,
-  offset: 9,
-  query: { 'price.type': ['pool'], isInPurgatory: ['false'] },
-  sort: { 'price.ocean': -1 }
-}
-
 const queryPartners = {
   page: 1,
   offset: 100,
-  query: { 'publicKey.owner': partnerAccounts, isInPurgatory: ['false'] },
+  query: {
+    nativeSearch: 1,
+    query_string: {
+      query: `(publicKey.owner:${partnerAccounts}) -isInPurgatory:true`
+    }
+  },
   sort: { created: -1 }
+}
+
+const queryHighest = {
+  page: 1,
+  offset: 9,
+  query: {
+    nativeSearch: 1,
+    query_string: {
+      query: `(price.type:pool) -isInPurgatory:true`
+    }
+  },
+  sort: { 'price.ocean': -1 }
 }
 
 const queryLatest = {
   page: 1,
   offset: 9,
-  query: { isInPurgatory: ['false'] },
+  query: {
+    nativeSearch: 1,
+    query_string: {
+      query: `-isInPurgatory:true`
+    }
+  },
   sort: { created: -1 }
 }
 
