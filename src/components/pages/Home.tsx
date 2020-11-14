@@ -16,9 +16,14 @@ import listPartners from '@oceanprotocol/list-datapartners'
 import Tooltip from '../atoms/Tooltip'
 import AssetQueryCarousel from '../organisms/AssetQueryCarousel'
 
-const partnerAccounts = listPartners.map((partner) =>
-  partner.accounts.join(',')
-)
+const partnerAccounts = listPartners
+  .map((partner) => partner.accounts.join(','))
+  .filter((account) => account !== '')
+
+const searchAccounts = JSON.stringify(partnerAccounts)
+  .replace(/"/g, '')
+  .replace(/,/g, ' OR ')
+  .replace(/(\[|\])/g, '')
 
 const queryPartners = {
   page: 1,
@@ -26,7 +31,7 @@ const queryPartners = {
   query: {
     nativeSearch: 1,
     query_string: {
-      query: `(publicKey.owner:${partnerAccounts}) -isInPurgatory:true`
+      query: `(publicKey.owner:${searchAccounts}) -isInPurgatory:true`
     }
   },
   sort: { created: -1 }
