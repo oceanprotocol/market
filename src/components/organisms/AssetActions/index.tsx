@@ -2,6 +2,7 @@ import React, { ReactElement, useState, useEffect } from 'react'
 import styles from './index.module.css'
 import Compute from './Compute'
 import Consume from './Consume'
+import Rate from './Rate'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import Tabs from '../../atoms/Tabs'
 import { useOcean, useMetadata } from '@oceanprotocol/react'
@@ -63,6 +64,10 @@ export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
     />
   )
 
+  const RateContent = (
+    <Rate />
+  )
+
   const tabs = [
     {
       title: 'Use',
@@ -77,6 +82,10 @@ export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
     tabs.push({
       title: 'Pool',
       content: <Pool ddo={ddo} />
+    })
+    tabs.push({
+      title: 'Rating',
+      content: RateContent
     })
 
   return <Tabs items={tabs} className={styles.actions} />

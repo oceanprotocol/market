@@ -76,6 +76,7 @@
     "react-markdown": "^5.0.2",
     "react-modal": "^3.11.2",
     "react-paginate": "^6.5.0",
+    "react-rating-stars-component": "^2.2.0",
     "react-spring": "^8.0.27",
     "react-tabs": "^3.1.1",
     "react-toastify": "^6.1.0",
