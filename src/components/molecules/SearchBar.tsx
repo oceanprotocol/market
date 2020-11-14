@@ -26,7 +26,7 @@ export default function SearchBar({
   function startSearch(e: FormEvent<HTMLButtonElement>) {
     e.preventDefault()
     if (value === '') return
-    navigate(`/search/?text=${value}`)
+    navigate(`/search?text=${value}`)
   }
 
   return (
