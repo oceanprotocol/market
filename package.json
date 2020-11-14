@@ -17,15 +17,16 @@
     "analyze": "npm run build && source-map-explorer 'public/*.js'",
     "storybook": "start-storybook -p 4000 -c .storybook",
     "storybook:build": "build-storybook -c .storybook -o public/storybook",
-    "write:repoMetadata": "node ./scripts/write-repo-metadata > repo-metadata.json"
+    "write:repoMetadata": "node ./scripts/write-repo-metadata > repo-metadata.json",
+    "deploy": "./scripts/deploy.sh"
   },
   "dependencies": {
     "@coingecko/cryptoformat": "^0.4.2",
     "@loadable/component": "^5.14.1",
     "@oceanprotocol/art": "^3.0.0",
-    "@oceanprotocol/lib": "^0.9.10",
-    "@oceanprotocol/list-datapartners": "^1.0.2",
-    "@oceanprotocol/react": "^0.3.16",
+    "@oceanprotocol/lib": "^0.9.12",
+    "@oceanprotocol/list-datapartners": "^1.0.3",
+    "@oceanprotocol/react": "^0.3.19",
     "@oceanprotocol/typographies": "^0.1.0",
     "@sindresorhus/slugify": "^1.0.0",
     "@tippyjs/react": "^4.2.0",

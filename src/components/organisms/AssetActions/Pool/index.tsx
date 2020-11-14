@@ -1,5 +1,10 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useOcean, useMetadata, usePricing } from '@oceanprotocol/react'
+import {
+  useOcean,
+  useMetadata,
+  usePricing,
+  useAsset
+} from '@oceanprotocol/react'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import styles from './index.module.css'
 import stylesActions from './Actions.module.css'
@@ -43,6 +48,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const { ocean, accountId, networkId } = useOcean()
   const { price, refreshPrice, owner } = useMetadata(ddo)
   const { dtSymbol } = usePricing(ddo)
+  const { isInPurgatory } = useAsset()
 
   const [poolTokens, setPoolTokens] = useState<string>()
   const [totalPoolTokens, setTotalPoolTokens] = useState<string>()
@@ -53,6 +59,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
   const [showAdd, setShowAdd] = useState(false)
   const [showRemove, setShowRemove] = useState(false)
+  const [isRemoveDisabled, setIsRemoveDisabled] = useState(false)
 
   const [hasAddedLiquidity, setHasAddedLiquidity] = useState(false)
   const [poolShare, setPoolShare] = useState<string>()
@@ -74,6 +81,10 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
     const interval = setInterval(() => refreshPrice(), refreshInterval)
     return () => clearInterval(interval)
   }, [ddo, refreshPrice])
+
+  useEffect(() => {
+    setIsRemoveDisabled(isInPurgatory && owner === accountId)
+  }, [isInPurgatory, owner, accountId])
 
   useEffect(() => {
     const poolShare =
@@ -293,15 +304,18 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           )}
 
           <div className={stylesActions.actions}>
-            <Button
-              style="primary"
-              size="small"
-              onClick={() => setShowAdd(true)}
-            >
-              Add Liquidity
-            </Button>
+            {!isInPurgatory && (
+              <Button
+                style="primary"
+                size="small"
+                onClick={() => setShowAdd(true)}
+                disabled={isInPurgatory}
+              >
+                Add Liquidity
+              </Button>
+            )}
 
-            {hasAddedLiquidity && (
+            {hasAddedLiquidity && !isRemoveDisabled && (
               <Button size="small" onClick={() => setShowRemove(true)}>
                 Remove
               </Button>

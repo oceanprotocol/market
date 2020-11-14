@@ -12,14 +12,27 @@ export function getSearchQuery(
   page?: string,
   offset?: string
 ): SearchQuery {
+  const searchTerm = owner
+    ? `(publicKey.owner:${owner})`
+    : tags
+    ? // eslint-disable-next-line no-useless-escape
+      `(service.attributes.additionalInformation.tags:\"${tags}\")`
+    : categories
+    ? // eslint-disable-next-line no-useless-escape
+      `(service.attributes.additionalInformation.categories:\"${categories}\")`
+    : text || ''
+
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
     query: {
-      text,
-      ...(owner && { 'publicKey.owner': [owner] }),
-      ...(tags && { tags: [tags] }),
-      ...(categories && { categories: [categories] })
+      nativeSearch: 1,
+      query_string: {
+        query: `${searchTerm} -isInPurgatory:true`
+      }
+      // ...(owner && { 'publicKey.owner': [owner] }),
+      // ...(tags && { tags: [tags] }),
+      // ...(categories && { categories: [categories] })
     },
     sort: {
       created: -1
@@ -29,7 +42,11 @@ export function getSearchQuery(
     // which is the only way the query actually returns desired results.
     // But it doesn't follow 'SearchQuery' interface so we have to assign
     // it here.
-  } as SearchQuery
+    // } as SearchQuery
+
+    // And the next hack,
+    // nativeSearch is not implmeneted on ocean.js typings
+  } as any
 }
 
 export async function getResults(

@@ -16,28 +16,48 @@ import listPartners from '@oceanprotocol/list-datapartners'
 import Tooltip from '../atoms/Tooltip'
 import AssetQueryCarousel from '../organisms/AssetQueryCarousel'
 
-const partnerAccounts = listPartners.map((partner) =>
-  partner.accounts.join(',')
-)
+const partnerAccounts = listPartners
+  .map((partner) => partner.accounts.join(','))
+  .filter((account) => account !== '')
 
-const queryHighest = {
-  page: 1,
-  offset: 9,
-  query: { 'price.type': ['pool'] },
-  sort: { 'price.ocean': -1 }
-}
+const searchAccounts = JSON.stringify(partnerAccounts)
+  .replace(/"/g, '')
+  .replace(/,/g, ' OR ')
+  .replace(/(\[|\])/g, '')
 
 const queryPartners = {
   page: 1,
   offset: 100,
-  query: { 'publicKey.owner': partnerAccounts },
+  query: {
+    nativeSearch: 1,
+    query_string: {
+      query: `(publicKey.owner:${searchAccounts}) -isInPurgatory:true`
+    }
+  },
   sort: { created: -1 }
+}
+
+const queryHighest = {
+  page: 1,
+  offset: 9,
+  query: {
+    nativeSearch: 1,
+    query_string: {
+      query: `(price.type:pool) -isInPurgatory:true`
+    }
+  },
+  sort: { 'price.ocean': -1 }
 }
 
 const queryLatest = {
   page: 1,
   offset: 9,
-  query: {},
+  query: {
+    nativeSearch: 1,
+    query_string: {
+      query: `-isInPurgatory:true`
+    }
+  },
   sort: { created: -1 }
 }
 
@@ -92,21 +112,22 @@ export default function HomePage(): ReactElement {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // TODO: remove any once ocean.js has nativeSearch typings
     async function init() {
       const queryResultHighest = await getAssets(
-        queryHighest,
+        queryHighest as any,
         config.metadataCacheUri
       )
       setQueryResultHighest(queryResultHighest)
 
       const queryResultPartners = await getAssets(
-        queryPartners,
+        queryPartners as any,
         config.metadataCacheUri
       )
       setQueryResultPartners(queryResultPartners)
 
       const queryResultLatest = await getAssets(
-        queryLatest,
+        queryLatest as any,
         config.metadataCacheUri
       )
       setQueryResultLatest(queryResultLatest)

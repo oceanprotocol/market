@@ -13,6 +13,7 @@ import { useMetadata, useOcean, usePricing } from '@oceanprotocol/react'
 import EtherscanLink from '../../atoms/EtherscanLink'
 import Bookmark from './Bookmark'
 import Byline from './Byline'
+import Alert from '../../atoms/Alert'
 
 export interface AssetContentProps {
   metadata: MetadataMarket
@@ -28,7 +29,6 @@ export default function AssetContent({
   const { accountId, networkId } = useOcean()
   const { owner } = useMetadata(ddo)
   const { dtSymbol, dtName } = usePricing(ddo)
-
   const isOwner = accountId === owner
   const hasNoPrice = ddo.price.datatoken === 0 && ddo.price.value === 0
   const showPricing = isOwner && hasNoPrice
@@ -37,7 +37,6 @@ export default function AssetContent({
     <article className={styles.grid}>
       <div>
         {showPricing && <Pricing ddo={ddo} />}
-
         <div className={styles.content}>
           <p className={styles.author} title="Author">
             {metadata?.main.author}
