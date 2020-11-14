@@ -12,23 +12,23 @@ export function getSearchQuery(
   page?: string,
   offset?: string
 ): SearchQuery {
+  const searchTerm = owner
+    ? `(publicKey.owner:${owner})`
+    : tags
+    ? // eslint-disable-next-line no-useless-escape
+      `(service.attributes.additionalInformation.tags:\"${tags}\")`
+    : categories
+    ? // eslint-disable-next-line no-useless-escape
+      `(service.attributes.additionalInformation.categories:\"${categories}\")`
+    : text || ''
+
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
     query: {
       nativeSearch: 1,
       query_string: {
-        query: `(${
-          owner
-            ? `publicKey.owner:${owner}`
-            : tags
-            ? // eslint-disable-next-line no-useless-escape
-              `service.attributes.additionalInformation.tags:\"${tags}\"`
-            : categories
-            ? // eslint-disable-next-line no-useless-escape
-              `service.attributes.additionalInformation.categories:\"${categories}\"`
-            : text
-        }) -isInPurgatory:true `
+        query: `${searchTerm} -isInPurgatory:true`
       }
       // ...(owner && { 'publicKey.owner': [owner] }),
       // ...(tags && { tags: [tags] }),
