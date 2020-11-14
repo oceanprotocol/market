@@ -1,5 +1,6 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { format, formatDistance } from 'date-fns'
+import { setDate } from 'date-fns/esm'
 
 export default function Time({
   date,
@@ -12,10 +13,16 @@ export default function Time({
   isUnix?: boolean
   className?: string
 }): ReactElement {
-  const dateNew = isUnix ? new Date(Number(date) * 1000) : new Date(date)
-  const dateIso = dateNew.toISOString()
+  const [dateIso, setDateIso] = useState<string>()
+  const [dateNew, setDateNew] = useState<Date>()
+  useEffect(() => {
+    if (!date) return
+    const dateNew = isUnix ? new Date(Number(date) * 1000) : new Date(date)
+    setDateIso(dateNew.toISOString())
+    setDateNew(dateNew)
+  }, [date])
 
-  return !date ? (
+  return !dateIso || !dateNew ? (
     <></>
   ) : (
     <time

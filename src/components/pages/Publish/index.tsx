@@ -1,6 +1,6 @@
 import React, { ReactElement, useState } from 'react'
 import { Formik } from 'formik'
-import { usePublish } from '@oceanprotocol/react'
+import { usePublish, useOcean } from '@oceanprotocol/react'
 import styles from './index.module.css'
 import FormPublish from './FormPublish'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
@@ -25,7 +25,7 @@ export default function PublishPage({
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { publish, publishError, isLoading, publishStepText } = usePublish()
-
+  const { isInPurgatory, purgatoryData } = useOcean()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const [ddo, setDdo] = useState<DDO>()
@@ -72,7 +72,7 @@ export default function PublishPage({
     }
   }
 
-  return (
+  return isInPurgatory && purgatoryData ? null : (
     <Formik
       initialValues={initialValues}
       initialStatus="empty"

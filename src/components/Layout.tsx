@@ -1,4 +1,4 @@
-import React, { ReactNode, ReactElement } from 'react'
+import React, { ReactNode, ReactElement, useEffect } from 'react'
 import Header from './organisms/Header'
 import Footer from './organisms/Footer'
 import PageHeader from './molecules/PageHeader'
@@ -7,6 +7,8 @@ import Seo from './atoms/Seo'
 import Container from './atoms/Container'
 import Alert from './atoms/Alert'
 import { useSiteMetadata } from '../hooks/useSiteMetadata'
+import { useAsset, useOcean } from '@oceanprotocol/react'
+import { Logger } from '@oceanprotocol/lib'
 
 export interface LayoutProps {
   children: ReactNode
@@ -26,6 +28,15 @@ export default function Layout({
   headerCenter
 }: LayoutProps): ReactElement {
   const { warning } = useSiteMetadata()
+  const { isInPurgatory, purgatoryData } = useAsset()
+  const {
+    isInPurgatory: isAccountInPurgatory,
+    purgatoryData: accountPurgatory
+  } = useOcean()
+
+  useEffect(() => {
+    Logger.log('isInPurgatory', isInPurgatory, purgatoryData)
+  }, [isInPurgatory, purgatoryData])
 
   return (
     <div className={styles.app}>
@@ -35,6 +46,24 @@ export default function Layout({
 
       {uri === '/' && (
         <Alert text={warning} state="info" className={styles.banner} />
+      )}
+
+      {isAccountInPurgatory && accountPurgatory && (
+        <Alert
+          title="Account In Purgatory"
+          badge={`Reason: ${accountPurgatory.reason}`}
+          text="No further actions are permitted by this account. For more details go to [list-purgatory](https://github.com/oceanprotocol/list-purgatory)."
+          state="error"
+        />
+      )}
+
+      {isInPurgatory && purgatoryData && (
+        <Alert
+          title="Data Set In Purgatory"
+          badge={`Reason: ${purgatoryData.reason}`}
+          text="Except for removing liquidity, no further actions are permitted on this data set and it will not be returned in any search. For more details go to [list-purgatory](https://github.com/oceanprotocol/list-purgatory)."
+          state="error"
+        />
       )}
 
       <main className={styles.main}>

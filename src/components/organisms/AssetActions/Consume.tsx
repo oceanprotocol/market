@@ -7,7 +7,12 @@ import Price from '../../atoms/Price'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
 import styles from './Consume.module.css'
 import Loader from '../../atoms/Loader'
-import { useOcean, useConsume, usePricing } from '@oceanprotocol/react'
+import {
+  useOcean,
+  useConsume,
+  usePricing,
+  useAsset
+} from '@oceanprotocol/react'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import checkPreviousOrder from '../../../utils/checkPreviousOrder'
 
@@ -26,7 +31,7 @@ export default function Consume({
   const { marketFeeAddress } = useSiteMetadata()
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
   const [previousOrderId, setPreviousOrderId] = useState<string>()
-
+  const { isInPurgatory } = useAsset()
   const {
     dtSymbol,
     buyDT,
@@ -47,7 +52,13 @@ export default function Consume({
         pricingIsLoading) &&
         !hasPreviousOrder
     )
-  }, [hasPreviousOrder, isBalanceSufficient, consumeStepText, pricingIsLoading])
+  }, [
+    ocean,
+    hasPreviousOrder,
+    isBalanceSufficient,
+    consumeStepText,
+    pricingIsLoading
+  ])
 
   useEffect(() => {
     if (!ocean || !accountId) return
@@ -104,7 +115,7 @@ export default function Consume({
               without paying again.
             </div>
           )}
-          <PurchaseButton />
+          {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>
 

@@ -26,8 +26,19 @@
   color: inherit;
 }
 
+.badge {
+  vertical-align: middle;
+  margin-left: calc(var(--spacer) / 8);
+  margin-top: -0.3rem;
+}
+
 .text {
   font-size: var(--font-size-small);
+}
+
+.text a {
+  color: inherit;
+  text-decoration: underline;
 }
 
 .text p:last-child {
@@ -58,7 +69,7 @@
 
 /* States */
 .error {
-  border-color: var(--rbrand-alert-ed);
+  border-color: var(--brand-alert-red);
   color: var(--brand-alert-red);
 }
 
