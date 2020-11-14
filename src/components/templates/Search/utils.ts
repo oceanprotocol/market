@@ -16,10 +16,21 @@ export function getSearchQuery(
     page: Number(page) || 1,
     offset: Number(offset) || 21,
     query: {
-      query_string: { query: `(${text}) -isInPurgatory:true` },
-      ...(owner && { 'publicKey.owner': [owner] }),
-      ...(tags && { tags: [tags] }),
-      ...(categories && { categories: [categories] })
+      nativeSearch: 1,
+      query_string: {
+        query: `(${
+          owner
+            ? `publicKey.owner:${owner}`
+            : tags
+            ? `service.attributes.additionalInformation.tags:${tags}`
+            : categories
+            ? `service.attributes.additionalInformation.categories:${categories}`
+            : text
+        }) -isInPurgatory:true `
+      }
+      // ...(owner && { 'publicKey.owner': [owner] }),
+      // ...(tags && { tags: [tags] }),
+      // ...(categories && { categories: [categories] })
     },
     sort: {
       created: -1
@@ -30,6 +41,9 @@ export function getSearchQuery(
     // But it doesn't follow 'SearchQuery' interface so we have to assign
     // it here.
     // } as SearchQuery
+
+    // And the next hack,
+    // nativeSearch is not implmeneted on ocean.js typings
   } as any
 }
 
