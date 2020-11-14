@@ -26,9 +26,12 @@ export default function MarketStats(): ReactElement {
 
     async function getStats() {
       try {
-        const response = await axios('https://market-stats.oceanprotocol.com', {
-          cancelToken: source.token
-        })
+        const response = await axios(
+          'https://market-stats-git-feature-purgatory.oceanprotocol.vercel.app',
+          {
+            cancelToken: source.token
+          }
+        )
         if (!response || response.status !== 200) return
         setStats(response.data)
       } catch (error) {
