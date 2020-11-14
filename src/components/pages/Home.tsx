@@ -107,21 +107,22 @@ export default function HomePage(): ReactElement {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // TODO: remove any once ocean.js has nativeSearch typings
     async function init() {
       const queryResultHighest = await getAssets(
-        queryHighest,
+        queryHighest as any,
         config.metadataCacheUri
       )
       setQueryResultHighest(queryResultHighest)
 
       const queryResultPartners = await getAssets(
-        queryPartners,
+        queryPartners as any,
         config.metadataCacheUri
       )
       setQueryResultPartners(queryResultPartners)
 
       const queryResultLatest = await getAssets(
-        queryLatest,
+        queryLatest as any,
         config.metadataCacheUri
       )
       setQueryResultLatest(queryResultLatest)
