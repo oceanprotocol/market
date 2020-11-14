@@ -1,35 +1,61 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { Line } from 'react-chartjs-2'
-import { ChartData, ChartTooltipItem } from 'chart.js'
+import {
+  ChartData,
+  ChartDataSets,
+  ChartOptions,
+  ChartTooltipItem
+} from 'chart.js'
 import axios from 'axios'
 import { useOcean } from '@oceanprotocol/react'
+import styles from './Graph.module.css'
+import Loader from '../../../atoms/Loader'
 
-function constructGraphData(data: ChartData[]): ChartData {
-  const labels = data.map((item: any) => new Date(item[1]))
-  const dataValues = data.map((item: any) => item[0])
+const cumulativeSum = ((sum) => (value: any) => (sum += value[0]))(0)
+
+const sharedStyle: Partial<ChartDataSets> = {
+  fill: false,
+  lineTension: 0.1,
+  borderWidth: 1,
+  pointBorderWidth: 0,
+  pointRadius: 0,
+  pointHoverRadius: 3,
+  pointHitRadius: 2
+}
+
+function constructGraphData(data: {
+  ocean: ChartData[]
+  datatoken: ChartData[]
+}): ChartData {
+  const labelsOcean = data.ocean.map((item: any) => item[1])
+  const dataValuesOcean = data.ocean.map(cumulativeSum)
+
+  const labelsDt = data.datatoken.map((item: any) => new Date(item[1]))
+  const dataValuesDt = data.datatoken.map(cumulativeSum)
 
   return {
-    labels,
+    labels: labelsOcean,
     datasets: [
       {
-        data: dataValues,
-        fill: true,
-        lineTension: 0.1,
-        backgroundColor: `#e2e2e2`,
-        borderColor: `#ff4092`,
-        borderCapStyle: 'butt',
-        borderJoinStyle: 'miter',
-        pointBackgroundColor: `#ff4092`,
-        pointBorderWidth: 0,
-        pointRadius: 1,
-        pointHoverRadius: 5,
-        pointHitRadius: 10
+        ...sharedStyle,
+        label: 'Liquidity (OCEAN)',
+        data: dataValuesOcean,
+        borderColor: `#8b98a9`,
+        pointBackgroundColor: `#8b98a9`
       }
+      // {
+      //   ...sharedStyle,
+      //   label: 'Liquidity (Datatoken)',
+      //   data: dataValuesDt,
+      //   borderColor: `#7b1173`,
+      //   pointBackgroundColor: `#7b1173`
+      // }
     ]
   }
 }
 
-const options = {
+const options: ChartOptions = {
+  spanGaps: true,
   tooltips: {
     backgroundColor: `#141414`,
     titleFontColor: `#e2e2e2`,
@@ -38,13 +64,13 @@ const options = {
     bodyFontFamily: `'Sharp Sans Display', -apple-system, BlinkMacSystemFont,
       'Segoe UI', Helvetica, Arial, sans-serif`,
     bodyFontColor: `#fff`,
-    bodyFontSize: 14,
+    bodyFontSize: 11,
     displayColors: false,
-    xPadding: 10,
-    yPadding: 10,
+    xPadding: 5,
+    yPadding: 5,
     cornerRadius: 3,
     callbacks: {
-      label: (tooltipItem: ChartTooltipItem) => `$ ${tooltipItem.yLabel}`
+      label: (tooltipItem: ChartTooltipItem) => `${tooltipItem.yLabel} OCEAN`
     }
   },
   legend: {
@@ -70,7 +96,7 @@ export default function Graph({
     async function getData() {
       try {
         const response = await axios(url)
-        const graphData = constructGraphData(response.data.ocean)
+        const graphData = constructGraphData(response.data)
         setData(graphData)
       } catch (error) {
         console.error(error.message)
@@ -80,5 +106,9 @@ export default function Graph({
     getData()
   }, [config.metadataCacheUri, poolAddress])
 
-  return data ? <Line height={70} data={data} options={options} /> : null
+  return (
+    <div className={styles.graphWrap}>
+      {data ? <Line height={70} data={data} options={options} /> : <Loader />}
+    </div>
+  )
 }

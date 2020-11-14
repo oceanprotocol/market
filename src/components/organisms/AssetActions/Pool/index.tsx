@@ -225,7 +225,6 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         />
       ) : (
         <>
-          <Graph poolAddress={ddo.price.address} />
           <div className={styles.dataToken}>
             <PriceUnit price="1" symbol={dtSymbol} /> ={' '}
             <PriceUnit price={`${price?.value}`} />
@@ -286,6 +285,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
                     {weightOcean}/{weightDt}
                   </span>
                 )}
+                <Graph poolAddress={ddo.price.address} />
               </>
             }
             ocean={`${price?.ocean}`}
