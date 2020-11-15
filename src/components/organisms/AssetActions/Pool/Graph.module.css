@@ -1,8 +1,7 @@
 .graphWrap {
-  margin-left: -2rem;
-  margin-right: -2rem;
   min-height: 97px;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: calc(var(--spacer) / 2) -2rem;
 }

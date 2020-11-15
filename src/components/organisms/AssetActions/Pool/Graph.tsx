@@ -4,23 +4,47 @@ import {
   ChartData,
   ChartDataSets,
   ChartOptions,
-  ChartTooltipItem
+  ChartTooltipItem,
+  ChartTooltipOptions
 } from 'chart.js'
 import axios from 'axios'
 import { useOcean } from '@oceanprotocol/react'
 import styles from './Graph.module.css'
 import Loader from '../../../atoms/Loader'
+import { formatPrice } from '../../../atoms/Price/PriceUnit'
+import { useUserPreferences } from '../../../../providers/UserPreferences'
+import useDarkMode from 'use-dark-mode'
+import { darkModeConfig } from '../../../../../app.config'
 
 const cumulativeSum = ((sum) => (value: any) => (sum += value[0]))(0)
 
-const sharedStyle: Partial<ChartDataSets> = {
+const lineStyle: Partial<ChartDataSets> = {
   fill: false,
   lineTension: 0.1,
-  borderWidth: 1,
+  borderWidth: 2,
   pointBorderWidth: 0,
   pointRadius: 0,
   pointHoverRadius: 3,
-  pointHitRadius: 2
+  pointHitRadius: 4
+}
+
+const tooltipOptions: Partial<ChartTooltipOptions> = {
+  intersect: false,
+  backgroundColor: `#303030`,
+  titleFontColor: `#e2e2e2`,
+  titleFontFamily: `'Sharp Sans', -apple-system, BlinkMacSystemFont,
+  'Segoe UI', Helvetica, Arial, sans-serif`,
+  titleFontStyle: 'normal',
+  titleFontSize: 10,
+  bodyFontFamily: `'Sharp Sans', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Helvetica, Arial, sans-serif`,
+  bodyFontColor: `#fff`,
+  bodyFontSize: 12,
+  bodyFontStyle: 'bold',
+  displayColors: false,
+  xPadding: 5,
+  yPadding: 5,
+  cornerRadius: 3
 }
 
 function constructGraphData(data: {
@@ -28,6 +52,8 @@ function constructGraphData(data: {
   datatoken: ChartData[]
 }): ChartData {
   const labelsOcean = data.ocean.map((item: any) => item[1])
+
+  console.log(labelsOcean)
   const dataValuesOcean = data.ocean.map(cumulativeSum)
 
   const labelsDt = data.datatoken.map((item: any) => new Date(item[1]))
@@ -37,14 +63,14 @@ function constructGraphData(data: {
     labels: labelsOcean,
     datasets: [
       {
-        ...sharedStyle,
+        ...lineStyle,
         label: 'Liquidity (OCEAN)',
         data: dataValuesOcean,
         borderColor: `#8b98a9`,
         pointBackgroundColor: `#8b98a9`
       }
       // {
-      //   ...sharedStyle,
+      //   ...lineStyle,
       //   label: 'Liquidity (Datatoken)',
       //   data: dataValuesDt,
       //   borderColor: `#7b1173`,
@@ -54,31 +80,32 @@ function constructGraphData(data: {
   }
 }
 
-const options: ChartOptions = {
-  spanGaps: true,
-  tooltips: {
-    backgroundColor: `#141414`,
-    titleFontColor: `#e2e2e2`,
-    titleFontFamily: '1rem',
-    titleFontStyle: '500',
-    bodyFontFamily: `'Sharp Sans Display', -apple-system, BlinkMacSystemFont,
-      'Segoe UI', Helvetica, Arial, sans-serif`,
-    bodyFontColor: `#fff`,
-    bodyFontSize: 11,
-    displayColors: false,
-    xPadding: 5,
-    yPadding: 5,
-    cornerRadius: 3,
-    callbacks: {
-      label: (tooltipItem: ChartTooltipItem) => `${tooltipItem.yLabel} OCEAN`
+function getOptions(locale: string, isDarkMode: boolean): ChartOptions {
+  return {
+    tooltips: {
+      ...tooltipOptions,
+      callbacks: {
+        label: (tooltipItem: ChartTooltipItem) =>
+          `${formatPrice(`${tooltipItem.yLabel}`, locale)} OCEAN`
+      }
+    },
+    legend: {
+      display: false
+    },
+    scales: {
+      yAxes: [
+        {
+          display: false,
+          // gridLines: {
+          //   drawBorder: false,
+          //   color: isDarkMode ? '#303030' : '#e2e2e2',
+          //   zeroLineColor: isDarkMode ? '#303030' : '#e2e2e2'
+          // },
+          ticks: { display: false }
+        }
+      ],
+      xAxes: [{ display: false, gridLines: { display: true } }]
     }
-  },
-  legend: {
-    display: false
-  },
-  scales: {
-    yAxes: [{ display: false }],
-    xAxes: [{ display: false }]
   }
 }
 
@@ -88,6 +115,8 @@ export default function Graph({
   poolAddress: string
 }): ReactElement {
   const { config } = useOcean()
+  const { locale } = useUserPreferences()
+  const darkMode = useDarkMode(false, darkModeConfig)
   const [data, setData] = useState<ChartData>()
 
   useEffect(() => {
@@ -108,7 +137,15 @@ export default function Graph({
 
   return (
     <div className={styles.graphWrap}>
-      {data ? <Line height={70} data={data} options={options} /> : <Loader />}
+      {data ? (
+        <Line
+          height={70}
+          data={data}
+          options={getOptions(locale, darkMode.value)}
+        />
+      ) : (
+        <Loader />
+      )}
     </div>
   )
 }
