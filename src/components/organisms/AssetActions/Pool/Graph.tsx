@@ -119,15 +119,12 @@ export default function Graph({
 }): ReactElement {
   const { locale } = useUserPreferences()
   const darkMode = useDarkMode(false, darkModeConfig)
+  const options = getOptions(locale, darkMode.value)
 
   return (
     <div className={styles.graphWrap}>
       {data ? (
-        <Line
-          height={70}
-          data={constructGraphData(data)}
-          options={getOptions(locale, darkMode.value)}
-        />
+        <Line height={70} data={constructGraphData(data)} options={options} />
       ) : (
         <Loader />
       )}
