@@ -18,7 +18,8 @@ import Token from './Token'
 import TokenList from './TokenList'
 import { graphql, useStaticQuery } from 'gatsby'
 import Transactions from './Transactions'
-import Graph from './Graph'
+import Graph, { ChartDataLiqudity } from './Graph'
+import axios from 'axios'
 
 export interface Balance {
   ocean: number
@@ -50,7 +51,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childContentJson.pool
 
-  const { ocean, accountId, networkId } = useOcean()
+  const { ocean, accountId, networkId, config } = useOcean()
   const { price, refreshPrice, owner } = useMetadata(ddo)
   const { dtSymbol } = usePricing(ddo)
   const { isInPurgatory } = useAsset()
@@ -78,6 +79,8 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const [creatorLiquidity, setCreatorLiquidity] = useState<Balance>()
   const [creatorPoolTokens, setCreatorPoolTokens] = useState<string>()
   const [creatorPoolShare, setCreatorPoolShare] = useState<string>()
+  const [graphData, setGraphData] = useState<ChartDataLiqudity>()
+
   // the purpose of the value is just to trigger the effect
   const [refreshPool, setRefreshPool] = useState(false)
 
@@ -196,6 +199,35 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
     return () => clearInterval(interval)
   }, [ocean, accountId, price, ddo, refreshPool, owner])
 
+  // Get graph data
+  useEffect(() => {
+    if (!price) return
+
+    const source = axios.CancelToken.source()
+    const url = `${config.metadataCacheUri}/api/v1/aquarius/pools/history/${price.address}`
+
+    async function getData() {
+      try {
+        const response = await axios(url, {
+          cancelToken: source.token
+        })
+        if (!response || response.status !== 200) return
+        setGraphData(response.data)
+      } catch (error) {
+        if (axios.isCancel(error)) {
+          Logger.log(error.message)
+        } else {
+          Logger.error(error.message)
+        }
+      }
+    }
+    getData()
+
+    return () => {
+      source.cancel()
+    }
+  }, [config.metadataCacheUri, price])
+
   const refreshInfo = async () => {
     setRefreshPool(!refreshPool)
     await refreshPrice()
@@ -285,7 +317,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
                     {weightOcean}/{weightDt}
                   </span>
                 )}
-                <Graph poolAddress={ddo.price.address} />
+                <Graph data={graphData} />
               </>
             }
             ocean={`${price?.ocean}`}

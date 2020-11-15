@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement } from 'react'
 import { Line } from 'react-chartjs-2'
 import {
   ChartData,
@@ -7,14 +7,17 @@ import {
   ChartTooltipItem,
   ChartTooltipOptions
 } from 'chart.js'
-import axios from 'axios'
-import { useOcean } from '@oceanprotocol/react'
 import styles from './Graph.module.css'
 import Loader from '../../../atoms/Loader'
 import { formatPrice } from '../../../atoms/Price/PriceUnit'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import useDarkMode from 'use-dark-mode'
 import { darkModeConfig } from '../../../../../app.config'
+
+export interface ChartDataLiqudity {
+  ocean: ChartData[]
+  datatoken: ChartData[]
+}
 
 const cumulativeSum = ((sum) => (value: any) => (sum += value[0]))(0)
 
@@ -47,10 +50,7 @@ const tooltipOptions: Partial<ChartTooltipOptions> = {
   cornerRadius: 3
 }
 
-function constructGraphData(data: {
-  ocean: ChartData[]
-  datatoken: ChartData[]
-}): ChartData {
+function constructGraphData(data: ChartDataLiqudity): ChartData {
   const timestampsOcean = data.ocean.map((item: any) => {
     // convert timestamps from epoch to locale date & time string
     const date = new Date(item[1] * 1000)
@@ -113,37 +113,19 @@ function getOptions(locale: string, isDarkMode: boolean): ChartOptions {
 }
 
 export default function Graph({
-  poolAddress
+  data
 }: {
-  poolAddress: string
+  data: ChartDataLiqudity
 }): ReactElement {
-  const { config } = useOcean()
   const { locale } = useUserPreferences()
   const darkMode = useDarkMode(false, darkModeConfig)
-  const [data, setData] = useState<ChartData>()
-
-  useEffect(() => {
-    const url = `${config.metadataCacheUri}/api/v1/aquarius/pools/history/${poolAddress}`
-
-    async function getData() {
-      try {
-        const response = await axios(url)
-        const graphData = constructGraphData(response.data)
-        setData(graphData)
-      } catch (error) {
-        console.error(error.message)
-      }
-    }
-
-    getData()
-  }, [config.metadataCacheUri, poolAddress])
 
   return (
     <div className={styles.graphWrap}>
       {data ? (
         <Line
           height={70}
-          data={data}
+          data={constructGraphData(data)}
           options={getOptions(locale, darkMode.value)}
         />
       ) : (
