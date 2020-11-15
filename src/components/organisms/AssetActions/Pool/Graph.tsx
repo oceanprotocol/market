@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import { Line } from 'react-chartjs-2'
+import { Line, defaults } from 'react-chartjs-2'
 import {
   ChartData,
   ChartDataSets,
@@ -21,33 +21,33 @@ export interface ChartDataLiqudity {
 
 const cumulativeSum = ((sum) => (value: any) => (sum += value[0]))(0)
 
+// Chart.js global defaults
+defaults.global.defaultFontFamily = `'Sharp Sans', -apple-system, BlinkMacSystemFont,
+'Segoe UI', Helvetica, Arial, sans-serif`
+
 const lineStyle: Partial<ChartDataSets> = {
   fill: false,
   lineTension: 0.1,
   borderWidth: 2,
   pointBorderWidth: 0,
   pointRadius: 0,
-  pointHoverRadius: 3,
-  pointHitRadius: 4
+  pointHoverRadius: 4,
+  pointHoverBorderWidth: 0,
+  pointHitRadius: 2,
+  pointHoverBackgroundColor: '#ff4092'
 }
 
 const tooltipOptions: Partial<ChartTooltipOptions> = {
   intersect: false,
-  backgroundColor: `#303030`,
-  titleFontColor: `#e2e2e2`,
-  titleFontFamily: `'Sharp Sans', -apple-system, BlinkMacSystemFont,
-  'Segoe UI', Helvetica, Arial, sans-serif`,
   titleFontStyle: 'normal',
   titleFontSize: 10,
-  bodyFontFamily: `'Sharp Sans', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Helvetica, Arial, sans-serif`,
-  bodyFontColor: `#fff`,
   bodyFontSize: 12,
   bodyFontStyle: 'bold',
   displayColors: false,
-  xPadding: 5,
-  yPadding: 5,
-  cornerRadius: 3
+  xPadding: 10,
+  yPadding: 10,
+  cornerRadius: 3,
+  borderWidth: 1
 }
 
 function constructGraphData(data: ChartDataLiqudity): ChartData {
@@ -84,9 +84,13 @@ function constructGraphData(data: ChartDataLiqudity): ChartData {
 
 function getOptions(locale: string, isDarkMode: boolean): ChartOptions {
   return {
-    spanGaps: true,
+    // spanGaps: true,
     tooltips: {
       ...tooltipOptions,
+      backgroundColor: isDarkMode ? `#141414` : `#fff`,
+      titleFontColor: isDarkMode ? `#e2e2e2` : `#303030`,
+      bodyFontColor: isDarkMode ? `#fff` : `#141414`,
+      borderColor: isDarkMode ? `#41474e` : `#e2e2e2`,
       callbacks: {
         label: (tooltipItem: ChartTooltipItem) =>
           `${formatPrice(`${tooltipItem.yLabel}`, locale)} OCEAN`

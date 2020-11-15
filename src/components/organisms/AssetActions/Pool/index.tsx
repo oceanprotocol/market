@@ -226,7 +226,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
     return () => {
       source.cancel()
     }
-  }, [config.metadataCacheUri, price.address, price.ocean])
+  }, [config.metadataCacheUri, price?.address, price?.ocean])
 
   const refreshInfo = async () => {
     setRefreshPool(!refreshPool)
