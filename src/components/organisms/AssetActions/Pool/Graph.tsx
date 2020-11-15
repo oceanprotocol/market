@@ -51,16 +51,18 @@ function constructGraphData(data: {
   ocean: ChartData[]
   datatoken: ChartData[]
 }): ChartData {
-  const labelsOcean = data.ocean.map((item: any) => item[1])
-
-  console.log(labelsOcean)
+  const timestampsOcean = data.ocean.map((item: any) => {
+    // convert timestamps from epoch to locale date & time string
+    const date = new Date(item[1] * 1000)
+    return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+  })
   const dataValuesOcean = data.ocean.map(cumulativeSum)
 
-  const labelsDt = data.datatoken.map((item: any) => new Date(item[1]))
-  const dataValuesDt = data.datatoken.map(cumulativeSum)
+  // const timestampsDt = data.datatoken.map((item: any) => item[1])
+  // const dataValuesDt = data.datatoken.map(cumulativeSum)
 
   return {
-    labels: labelsOcean,
+    labels: timestampsOcean,
     datasets: [
       {
         ...lineStyle,
@@ -82,6 +84,7 @@ function constructGraphData(data: {
 
 function getOptions(locale: string, isDarkMode: boolean): ChartOptions {
   return {
+    spanGaps: true,
     tooltips: {
       ...tooltipOptions,
       callbacks: {
