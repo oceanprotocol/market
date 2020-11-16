@@ -81,6 +81,14 @@ function constructGraphData(data: ChartData[]): ChartData {
 
 function getOptions(locale: string, isDarkMode: boolean): ChartOptions {
   return {
+    layout: {
+      padding: {
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 10
+      }
+    },
     tooltips: {
       ...tooltipOptions,
       backgroundColor: isDarkMode ? `#141414` : `#fff`,

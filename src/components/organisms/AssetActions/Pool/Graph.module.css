@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: calc(var(--spacer) / 4) -2rem calc(var(--spacer) / 2) -2rem;
+  margin: calc(var(--spacer) / 6) -2rem calc(var(--spacer) / 1.5) -2rem;
   position: relative;
 }
 
@@ -14,7 +14,7 @@
 
 .type {
   position: absolute;
-  bottom: -5px;
+  bottom: -10px;
   z-index: 1;
   text-align: center;
   padding: 5px var(--spacer);
