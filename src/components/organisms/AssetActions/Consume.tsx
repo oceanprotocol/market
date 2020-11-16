@@ -106,7 +106,7 @@ export default function Consume({
           )}
           {(!hasDatatoken || !hasPreviousOrder) && (
             <div className={styles.help}>
-              For using this data set, you will buy 1 {dtSymbol} and immediatly
+              For using this data set, you will buy 1 {dtSymbol} and immediately
               spend it back to the publisher and pool.
             </div>
           )}
