@@ -71,25 +71,13 @@ export default function FormTrade({
 
   async function handleTrade(values: FormTradeData) {
     try {
-      Decimal.set({ precision: 5 })
       const impact = new Decimal(100 - Number(values.slippage)).div(100)
-      const precision = 5
+      const precision = 15
 
       console.log(
         new Decimal(values.datatoken).mul(impact).toFixed(precision).toString(),
         new Decimal(values.ocean).toFixed(precision).toString()
       )
-
-      // const test = await ocean.pool.swapExactAmountIn(
-      //   accountId,
-      //   price.address,
-      //   ocean.pool.oceanAddress,
-      //   new Decimal(values.ocean).toFixed(precision).toString(),
-      //   ddo.dataToken,
-      //   new Decimal(values.datatoken).mul(impact).toFixed(precision).toString()
-      // )
-
-      // console.log(test)
 
       const tx =
         values.type === 'buy'
