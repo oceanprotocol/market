@@ -15,8 +15,11 @@ import useDarkMode from 'use-dark-mode'
 import { darkModeConfig } from '../../../../../app.config'
 
 export interface ChartDataLiqudity {
-  ocean: ChartData[]
-  datatoken: ChartData[]
+  oceanAddRemove: ChartData[]
+  datatokenAddRemove: ChartData[]
+  oceanReserveHistory: ChartData[]
+  datatokenReserveHistory: ChartData[]
+  datatokenPriceHistory: ChartData[]
 }
 
 // This one-liner feels like magic.
@@ -54,12 +57,12 @@ const tooltipOptions: Partial<ChartTooltipOptions> = {
 }
 
 function constructGraphData(data: ChartDataLiqudity): ChartData {
-  const timestampsOcean = data.ocean.map((item: any) => {
+  const timestampsOcean = data.oceanReserveHistory.map((item: any) => {
     // convert timestamps from epoch to locale date & time string
     const date = new Date(item[1] * 1000)
     return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
   })
-  const dataValuesOcean = data.ocean.map(cumulativeSum)
+  const dataValuesOcean = data.oceanReserveHistory.map((item: any) => item[0])
 
   // const timestampsDt = data.datatoken.map((item: any) => item[1])
   // const dataValuesDt = data.datatoken.map(cumulativeSum)
