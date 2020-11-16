@@ -93,8 +93,8 @@ export default function FormTrade({
           : await ocean.pool.sellDT(
               accountId,
               price.address,
-              new Decimal(values.datatoken).toString(),
-              new Decimal(values.ocean).mul(impact).toString()
+              new Decimal(values.datatoken).toFixed(precision).toString(),
+              new Decimal(values.ocean).mul(impact).toFixed(precision).toString()
             )
 
       setTxId(tx?.transactionHash)
