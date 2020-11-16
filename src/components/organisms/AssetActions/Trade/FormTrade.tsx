@@ -72,11 +72,17 @@ export default function FormTrade({
     try {
       const tx =
         values.type === 'buy'
-          ? await ocean.pool.buyDT(
+          ? // ? await ocean.pool.buyDT(
+            //     accountId,
+            //     price.address,
+            //     values.datatoken.toString(),
+            //     (values.ocean * 1.01).toString()
+            //   )
+            await ocean.pool.buyDTWithExactOcean(
               accountId,
               price.address,
-              values.datatoken.toString(),
-              (values.ocean * 1.01).toString()
+              (values.datatoken * 0.99).toString(),
+              values.ocean.toString()
             )
           : await ocean.pool.sellDT(
               accountId,

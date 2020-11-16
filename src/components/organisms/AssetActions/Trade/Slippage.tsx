@@ -1,5 +1,5 @@
 import { FormikContextType, useFormikContext } from 'formik'
-import React, { ChangeEvent, ReactElement } from 'react'
+import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react'
 import { FormTradeData, slippagePresets } from '../../../../models/FormTrade'
 import InputElement from '../../../atoms/Input/InputElement'
 import styles from './Slippage.module.css'
@@ -17,18 +17,18 @@ export default function Slippage(): ReactElement {
 
   return (
     <>
-      <h3 className={styles.title}>Expected Price Impact</h3>
       <div className={styles.slippage}>
-        <strong>xx.xx%</strong> with{' '}
+        <strong>Expected price impact</strong>
         <InputElement
           name="slippage"
           type="select"
           size="mini"
+          postfix="%"
+          sortOptions={false}
           options={slippagePresets}
           value={values.slippage}
           onChange={handleChange}
-        />{' '}
-        additional limit.
+        />
       </div>
     </>
   )

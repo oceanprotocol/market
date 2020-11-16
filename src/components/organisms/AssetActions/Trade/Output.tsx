@@ -15,7 +15,7 @@ export default function Output({
   const { ocean } = useOcean()
   const [maxOutput, setMaxOutput] = useState<string>()
   const [swapFee, setSwapFee] = useState<string>()
-
+  const [swapFeeValue, setSwapFeeValue] = useState<string>()
   // Connect with form
   const { values }: FormikContextType<FormTradeData> = useFormikContext()
 
@@ -27,9 +27,16 @@ export default function Output({
       const swapFee = await ocean.pool.getSwapFee(poolAddress)
       // swapFee is tricky: to get 0.1% you need to convert from 0.001
       setSwapFee(`${Number(swapFee) * 100}`)
+
+      console.log(swapFee)
+      const value =
+        values.type === 'buy'
+          ? Number(swapFee) * values.ocean
+          : Number(swapFee) * values.datatoken
+      setSwapFeeValue(value.toString())
     }
     getSwapFee()
-  }, [ocean, poolAddress])
+  }, [ocean, poolAddress, values])
 
   // Get output values
   useEffect(() => {
@@ -38,10 +45,11 @@ export default function Output({
     async function getOutput() {
       // Minimum received
       // TODO: check if this here is redundant cause we call some of that already in Swap.tsx
+      const maxImpact = 1 - Number(values.slippage) / 100
       const maxPrice =
         values.type === 'buy'
-          ? await ocean.pool.getOceanNeeded(poolAddress, `${values.ocean}`)
-          : await ocean.pool.getDTNeeded(poolAddress, `${values.datatoken}`)
+          ? (values.datatoken * maxImpact).toString()
+          : (values.ocean * maxImpact).toString()
 
       setMaxOutput(maxPrice)
     }
@@ -51,15 +59,22 @@ export default function Output({
   return (
     <div className={styles.output}>
       <div>
-        <p>Maximum Paid</p>
+        <p>Minimum Received</p>
         <Token
           symbol={values.type === 'buy' ? dtSymbol : 'OCEAN'}
           balance={maxOutput}
         />
       </div>
       <div>
-        <p>&nbsp;</p>
-        <Token symbol="% swap fee" balance={swapFee} />
+        <p>Swap fee</p>
+        <Token
+          symbol={
+            values.type === 'buy'
+              ? `OCEAN [${swapFee}%]`
+              : `${dtSymbol} [${swapFee}%]`
+          }
+          balance={swapFeeValue}
+        />
       </div>
     </div>
   )

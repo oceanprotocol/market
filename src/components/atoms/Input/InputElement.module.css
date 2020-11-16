@@ -278,7 +278,7 @@ input[type='range']::-moz-range-track {
 }
 
 .select.mini {
-  padding-right: 1.5rem;
+  padding-right: 2rem;
 
   /* custom arrow */
   background-position: calc(100% - 14px) 0.6rem, calc(100% - 9px) 0.6rem, 100% 0;

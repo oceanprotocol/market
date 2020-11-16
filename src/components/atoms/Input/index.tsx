@@ -17,6 +17,7 @@ export interface InputProps {
   tag?: string
   type?: string
   options?: string[]
+  sortOptions?: boolean
   additionalComponent?: ReactElement
   value?: string
   onChange?(

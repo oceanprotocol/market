@@ -106,7 +106,6 @@ export default function Swap({
   }
 
   const handleValueChange = async (name: string, value: number) => {
-    // TODO: this is incorrect
     const newValue =
       name === 'ocean'
         ? values.type === 'sell'
