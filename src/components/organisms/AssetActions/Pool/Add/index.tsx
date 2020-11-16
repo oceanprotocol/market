@@ -2,7 +2,6 @@ import React, { ReactElement, useState, useEffect } from 'react'
 import { useOcean } from '@oceanprotocol/react'
 import Header from '../Header'
 import { toast } from 'react-toastify'
-import { Balance } from '..'
 import Actions from '../Actions'
 import { graphql, useStaticQuery } from 'gatsby'
 import * as Yup from 'yup'
@@ -11,6 +10,7 @@ import FormAdd from './FormAdd'
 import styles from './index.module.css'
 import Token from '../Token'
 import Alert from '../../../../atoms/Alert'
+import TokenBalance from '../../../../../@types/TokenBalance'
 import { useUserPreferences } from '../../../../../providers/UserPreferences'
 
 const contentQuery = graphql`
@@ -59,7 +59,7 @@ export default function Add({
   refreshInfo: () => void
   poolAddress: string
   totalPoolTokens: string
-  totalBalance: Balance
+  totalBalance: TokenBalance
   swapFee: string
   dtSymbol: string
   dtAddress: string
@@ -199,6 +199,7 @@ export default function Add({
             </div>
 
             <Actions
+              isDisabled={!isWarningAccepted}
               isLoading={isSubmitting}
               loaderMessage="Adding Liquidity..."
               successMessage="Successfully added liquidity."

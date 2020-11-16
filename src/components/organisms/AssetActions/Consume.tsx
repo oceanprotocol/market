@@ -94,9 +94,23 @@ export default function Consume({
       {consumeStepText || pricingIsLoading ? (
         <Loader message={consumeStepText || pricingStepText} />
       ) : (
-        <Button style="primary" onClick={handleConsume} disabled={isDisabled}>
-          {hasDatatoken || hasPreviousOrder ? 'Download' : 'Buy'}
-        </Button>
+        <>
+          <Button style="primary" onClick={handleConsume} disabled={isDisabled}>
+            {hasDatatoken || hasPreviousOrder ? 'Download' : 'Buy'}
+          </Button>
+          {hasDatatoken && (
+            <div className={styles.help}>
+              You own {dtBalance} {dtSymbol} allowing you to use this data set
+              without paying again.
+            </div>
+          )}
+          {(!hasDatatoken || !hasPreviousOrder) && (
+            <div className={styles.help}>
+              For using this data set, you will buy 1 {dtSymbol} and immediatly
+              spend it back to the publisher and pool.
+            </div>
+          )}
+        </>
       )}
     </div>
   )
@@ -109,12 +123,6 @@ export default function Consume({
         </div>
         <div className={styles.pricewrapper}>
           <Price ddo={ddo} conversion />
-          {hasDatatoken && (
-            <div className={styles.hasTokens}>
-              You own {dtBalance} {dtSymbol} allowing you to use this data set
-              without paying again.
-            </div>
-          )}
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>

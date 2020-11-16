@@ -1,0 +1,30 @@
+.slippage {
+  font-size: var(--font-size-small);
+  border-top: 1px solid var(--border-color);
+  margin-left: -2rem;
+  margin-right: -2rem;
+  padding: calc(var(--spacer) / 4) var(--spacer);
+  text-align: center;
+  color: var(--color-secondary);
+}
+
+.slippage strong {
+  font-weight: var(--font-weight-base);
+  color: var(--font-color-heading);
+}
+
+.title {
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-base);
+  font-size: var(--font-size-mini);
+  text-align: center;
+  margin-bottom: calc(var(--spacer) / 4);
+  color: var(--color-secondary);
+}
+
+.slippage select {
+  width: fit-content;
+  display: inline-block;
+  margin-left: calc(var(--spacer) / 4);
+  margin-right: calc(var(--spacer) / 4);
+}

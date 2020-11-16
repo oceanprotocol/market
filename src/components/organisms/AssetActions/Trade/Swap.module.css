@@ -1,0 +1,24 @@
+.swap {
+  margin-top: -2rem;
+}
+
+.swapButton,
+.swapButton:hover {
+  padding: 0;
+  display: block;
+  width: calc(100% + 4rem);
+  text-align: center;
+  margin-left: -2rem;
+  margin-right: -2rem;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  padding: calc(var(--spacer) / 3) 0 calc(var(--spacer) / 6) 0;
+}
+
+.swapButton svg {
+  display: inline-block;
+  width: var(--font-size-large);
+  height: var(--font-size-large);
+  fill: var(--brand-pink);
+  transform: rotate(90deg);
+}

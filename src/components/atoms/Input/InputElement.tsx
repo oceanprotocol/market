@@ -26,6 +26,7 @@ const DefaultInput = ({
 export default function InputElement({
   type,
   options,
+  sortOptions,
   name,
   prefix,
   postfix,
@@ -40,22 +41,25 @@ export default function InputElement({
   const styleClasses = cx({ select: true, [size]: size })
 
   switch (type) {
-    case 'select':
+    case 'select': {
+      const sortedOptions =
+        !sortOptions && sortOptions === false
+          ? options
+          : options.sort((a: string, b: string) => a.localeCompare(b))
       return (
         <select id={name} className={styleClasses} {...props}>
           {field !== undefined && field.value === '' && (
             <option value="">---</option>
           )}
-          {options &&
-            options
-              .sort((a: string, b: string) => a.localeCompare(b))
-              .map((option: string, index: number) => (
-                <option key={index} value={option}>
-                  {option}
-                </option>
-              ))}
+          {sortedOptions &&
+            sortedOptions.map((option: string, index: number) => (
+              <option key={index} value={option}>
+                {option} {postfix}
+              </option>
+            ))}
         </select>
       )
+    }
     case 'textarea':
       return (
         <textarea

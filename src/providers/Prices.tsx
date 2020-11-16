@@ -43,7 +43,7 @@ export default function PricesProvider({
 
   // Fetch new prices periodically with swr
   useSWR(url, fetchData, {
-    refreshInterval: 30000, // 30 sec.
+    refreshInterval: 60000, // 60 sec.
     onSuccess
   })
 

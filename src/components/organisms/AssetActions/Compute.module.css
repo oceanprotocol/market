@@ -23,6 +23,6 @@
   width: 100%;
 }
 
-.hasTokens {
-  composes: hasTokens from './index.module.css';
+.help {
+  composes: help from './index.module.css';
 }

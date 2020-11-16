@@ -17,14 +17,10 @@ import EtherscanLink from '../../../atoms/EtherscanLink'
 import Token from './Token'
 import TokenList from './TokenList'
 import { graphql, useStaticQuery } from 'gatsby'
+import TokenBalance from '../../../../@types/TokenBalance'
 import Transactions from './Transactions'
 import Graph, { ChartDataLiqudity } from './Graph'
 import axios from 'axios'
-
-export interface Balance {
-  ocean: number
-  datatoken: number
-}
 
 const contentQuery = graphql`
   query PoolQuery {
@@ -58,7 +54,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
   const [poolTokens, setPoolTokens] = useState<string>()
   const [totalPoolTokens, setTotalPoolTokens] = useState<string>()
-  const [userLiquidity, setUserLiquidity] = useState<Balance>()
+  const [userLiquidity, setUserLiquidity] = useState<TokenBalance>()
   const [swapFee, setSwapFee] = useState<string>()
   const [weightOcean, setWeightOcean] = useState<string>()
   const [weightDt, setWeightDt] = useState<string>()
@@ -76,13 +72,19 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
     creatorTotalLiquidityInOcean,
     setCreatorTotalLiquidityInOcean
   ] = useState(0)
-  const [creatorLiquidity, setCreatorLiquidity] = useState<Balance>()
+  const [creatorLiquidity, setCreatorLiquidity] = useState<TokenBalance>()
   const [creatorPoolTokens, setCreatorPoolTokens] = useState<string>()
   const [creatorPoolShare, setCreatorPoolShare] = useState<string>()
   const [graphData, setGraphData] = useState<ChartDataLiqudity>()
 
   // the purpose of the value is just to trigger the effect
   const [refreshPool, setRefreshPool] = useState(false)
+
+  useEffect(() => {
+    // Re-fetch price periodically, triggering re-calculation of everything
+    const interval = setInterval(() => refreshPrice(), refreshInterval)
+    return () => clearInterval(interval)
+  }, [ddo, refreshPrice])
 
   useEffect(() => {
     setIsRemoveDisabled(isInPurgatory && owner === accountId)

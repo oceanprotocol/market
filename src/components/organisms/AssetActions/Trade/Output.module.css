@@ -1,0 +1,22 @@
+.output {
+  border-top: 1px solid var(--border-color);
+  padding: var(--spacer);
+  display: grid;
+  gap: var(--spacer);
+  grid-template-columns: 1fr 1fr;
+  margin-left: -2rem;
+  margin-right: -2rem;
+}
+
+.output p {
+  font-weight: var(--font-weight-bold);
+  margin-bottom: calc(var(--spacer) / 8);
+}
+
+.output [class*='token'] {
+  white-space: normal;
+}
+
+.output [class*='token'] > figure {
+  display: none;
+}

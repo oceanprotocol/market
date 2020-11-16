@@ -26,7 +26,7 @@
 .input::placeholder {
   font-family: var(--font-family-base);
   font-size: var(--font-size-base);
-  color: var(--brand-grey-light);
+  color: var(--color-secondary);
   font-weight: var(--font-weight-base);
   transition: 0.2s ease-out;
   opacity: 0.7;
@@ -167,6 +167,7 @@
 .postfixGroup {
   display: inline-flex;
   align-items: center;
+  width: 100%;
 }
 
 .prefixGroup input {
@@ -258,6 +259,31 @@ input[type='range']::-moz-range-track {
 }
 
 /* Size modifiers */
+
+.mini,
+.select.mini {
+  font-size: var(--font-size-mini);
+  height: 24px;
+  padding: calc(var(--spacer) / 8);
+}
+
+.mini::placeholder {
+  font-size: var(--font-size-mini);
+}
+
+.prefix.mini,
+.postfix.mini {
+  height: 24px;
+  font-size: var(--font-size-mini);
+}
+
+.select.mini {
+  padding-right: 2rem;
+
+  /* custom arrow */
+  background-position: calc(100% - 14px) 0.6rem, calc(100% - 9px) 0.6rem, 100% 0;
+  background-size: 5px 5px, 5px 5px, 1.75rem 3rem;
+}
 
 .small,
 .select.small {

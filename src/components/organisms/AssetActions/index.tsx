@@ -7,6 +7,7 @@ import Tabs from '../../atoms/Tabs'
 import { useOcean, useMetadata } from '@oceanprotocol/react'
 import compareAsBN from '../../../utils/compareAsBN'
 import Pool from './Pool'
+import Trade from './Trade'
 
 export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
   const { ocean, balance, accountId } = useOcean()
@@ -74,10 +75,16 @@ export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
   const hasPool = ddo.price?.type === 'pool'
 
   hasPool &&
-    tabs.push({
-      title: 'Pool',
-      content: <Pool ddo={ddo} />
-    })
+    tabs.push(
+      {
+        title: 'Pool',
+        content: <Pool ddo={ddo} />
+      },
+      {
+        title: 'Trade',
+        content: <Trade ddo={ddo} />
+      }
+    )
 
   return <Tabs items={tabs} className={styles.actions} />
 }

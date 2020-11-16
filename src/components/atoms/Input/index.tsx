@@ -17,6 +17,7 @@ export interface InputProps {
   tag?: string
   type?: string
   options?: string[]
+  sortOptions?: boolean
   additionalComponent?: ReactElement
   value?: string
   onChange?(
@@ -39,7 +40,7 @@ export interface InputProps {
   postfix?: string | ReactElement
   step?: string
   defaultChecked?: boolean
-  size?: 'small' | 'large' | 'default'
+  size?: 'mini' | 'small' | 'large' | 'default'
 }
 
 export default function Input(props: Partial<InputProps>): ReactElement {

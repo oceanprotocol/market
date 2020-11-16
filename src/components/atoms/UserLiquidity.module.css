@@ -1,0 +1,12 @@
+.userLiquidity > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-size-mini);
+  color: var(--color-secondary);
+}
+
+.userLiquidity span + div {
+  transform: scale(0.8);
+  transform-origin: right center;
+}

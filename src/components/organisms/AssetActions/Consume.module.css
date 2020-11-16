@@ -17,8 +17,8 @@
   margin-top: calc(var(--spacer) / 2);
 }
 
-.hasTokens {
-  composes: hasTokens from './index.module.css';
+.help {
+  composes: help from './index.module.css';
 }
 
 .feedback {

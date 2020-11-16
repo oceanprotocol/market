@@ -46,6 +46,7 @@
   text-align: center;
   border-top: 1px solid var(--border-color);
   padding-top: calc(var(--spacer) / 4);
+  padding-bottom: calc(var(--spacer) / 4);
 }
 
 .update:before {

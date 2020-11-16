@@ -1,0 +1,35 @@
+.tradeInput {
+  position: relative;
+  padding: var(--spacer) calc(var(--spacer) * 2);
+  margin-left: -2rem;
+  margin-right: -2rem;
+  background: var(--background-highlight);
+}
+
+.tradeInput input {
+  text-align: center;
+}
+
+.tradeInput div[class*='field'] {
+  margin-bottom: 0;
+}
+
+.tradeInput div[class*='prefix'] {
+  min-width: 6.5rem;
+  width: fit-content;
+  justify-content: center;
+}
+
+.label {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-base);
+  text-align: center;
+  display: block;
+}
+
+.buttonMax {
+  position: absolute;
+  font-size: var(--font-size-mini);
+  bottom: calc(var(--spacer) / 2);
+  right: calc(var(--spacer) * 2);
+}
