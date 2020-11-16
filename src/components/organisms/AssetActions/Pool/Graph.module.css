@@ -1,0 +1,37 @@
+.graphWrap {
+  min-height: 97px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: calc(var(--spacer) / 6) -2rem calc(var(--spacer) / 1.5) -2rem;
+  position: relative;
+}
+
+.graphWrap canvas {
+  position: relative;
+  z-index: 0;
+}
+
+.type {
+  position: absolute;
+  bottom: -10px;
+  z-index: 1;
+  text-align: center;
+  padding: 5px var(--spacer);
+}
+
+.button,
+.button:hover {
+  display: inline-block;
+  color: var(--color-secondary);
+  font-size: var(--font-size-mini);
+  border: 1px solid transparent;
+  border-radius: var(--border-radius);
+  padding: calc(var(--spacer) / 16) calc(var(--spacer) / 4) !important;
+  transform: none;
+}
+
+.button.active {
+  color: var(--font-color-text);
+  border-color: var(--border-color);
+}
