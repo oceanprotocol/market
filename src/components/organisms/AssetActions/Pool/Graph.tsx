@@ -24,6 +24,7 @@ const cumulativeSum = ((sum) => (value: any) => (sum += value[0]))(0)
 // Chart.js global defaults
 defaults.global.defaultFontFamily = `'Sharp Sans', -apple-system, BlinkMacSystemFont,
 'Segoe UI', Helvetica, Arial, sans-serif`
+defaults.global.animation = { easing: 'easeInOutQuart', duration: 800 }
 
 const lineStyle: Partial<ChartDataSets> = {
   fill: false,
@@ -124,11 +125,12 @@ export default function Graph({
   const { locale } = useUserPreferences()
   const darkMode = useDarkMode(false, darkModeConfig)
   const options = getOptions(locale, darkMode.value)
+  const graphData = data && constructGraphData(data)
 
   return (
     <div className={styles.graphWrap}>
-      {data ? (
-        <Line height={70} data={constructGraphData(data)} options={options} />
+      {graphData ? (
+        <Line height={70} data={graphData} options={options} />
       ) : (
         <Loader />
       )}
