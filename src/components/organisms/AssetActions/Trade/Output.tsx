@@ -66,11 +66,9 @@ export default function Output({
       <div>
         <p>Swap fee</p>
         <Token
-          symbol={
-            values.type === 'buy'
-              ? `OCEAN (${swapFee}%)`
-              : `${dtSymbol} (${swapFee}%)`
-          }
+          symbol={`${values.type === 'buy' ? `OCEAN` : dtSymbol} ${
+            swapFee ? `(${swapFee}%)` : ''
+          }`}
           balance={swapFeeValue}
         />
       </div>
