@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react'
 import { Line, defaults } from 'react-chartjs-2'
 import {
   ChartData,
@@ -13,6 +13,8 @@ import { formatPrice } from '../../../atoms/Price/PriceUnit'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import useDarkMode from 'use-dark-mode'
 import { darkModeConfig } from '../../../../../app.config'
+import Button from '../../../atoms/Button'
+import { Logger } from '@oceanprotocol/lib'
 
 export interface ChartDataLiqudity {
   oceanAddRemove: ChartData[]
@@ -22,9 +24,7 @@ export interface ChartDataLiqudity {
   datatokenPriceHistory: ChartData[]
 }
 
-// This one-liner feels like magic.
-// Stolen from https://stackoverflow.com/a/55261098/733677
-const cumulativeSum = ((sum) => (value: any) => (sum += value[0]))(0)
+declare type GraphType = 'liquidity' | 'price'
 
 // Chart.js global defaults
 defaults.global.defaultFontFamily = `'Sharp Sans', -apple-system, BlinkMacSystemFont,
@@ -53,44 +53,34 @@ const tooltipOptions: Partial<ChartTooltipOptions> = {
   xPadding: 10,
   yPadding: 10,
   cornerRadius: 3,
-  borderWidth: 1
+  borderWidth: 1,
+  caretSize: 7
 }
 
-function constructGraphData(data: ChartDataLiqudity): ChartData {
-  const timestampsOcean = data.oceanReserveHistory.map((item: any) => {
+function constructGraphData(data: ChartData[]): ChartData {
+  const timestamps = data.map((item: any) => {
     // convert timestamps from epoch to locale date & time string
     const date = new Date(item[1] * 1000)
     return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
   })
-  const dataValuesOcean = data.oceanReserveHistory.map((item: any) => item[0])
-
-  // const timestampsDt = data.datatoken.map((item: any) => item[1])
-  // const dataValuesDt = data.datatoken.map(cumulativeSum)
+  const values = data.map((item: any) => item[0])
 
   return {
-    labels: timestampsOcean,
+    labels: timestamps,
     datasets: [
       {
         ...lineStyle,
         label: 'Liquidity (OCEAN)',
-        data: dataValuesOcean,
+        data: values,
         borderColor: `#8b98a9`,
         pointBackgroundColor: `#8b98a9`
       }
-      // {
-      //   ...lineStyle,
-      //   label: 'Liquidity (Datatoken)',
-      //   data: dataValuesDt,
-      //   borderColor: `#7b1173`,
-      //   pointBackgroundColor: `#7b1173`
-      // }
     ]
   }
 }
 
 function getOptions(locale: string, isDarkMode: boolean): ChartOptions {
   return {
-    // spanGaps: true,
     tooltips: {
       ...tooltipOptions,
       backgroundColor: isDarkMode ? `#141414` : `#fff`,
@@ -108,19 +98,21 @@ function getOptions(locale: string, isDarkMode: boolean): ChartOptions {
     scales: {
       yAxes: [
         {
-          display: false,
+          display: false
           // gridLines: {
           //   drawBorder: false,
           //   color: isDarkMode ? '#303030' : '#e2e2e2',
           //   zeroLineColor: isDarkMode ? '#303030' : '#e2e2e2'
           // },
-          ticks: { display: false }
+          // ticks: { display: false }
         }
       ],
       xAxes: [{ display: false, gridLines: { display: true } }]
     }
   }
 }
+
+const graphTypes = ['Liquidity', 'Price']
 
 export default function Graph({
   data
@@ -132,24 +124,50 @@ export default function Graph({
 
   const [graphData, setGraphData] = useState<ChartData>()
   const [options, setOptions] = useState<ChartOptions>()
+  const [graphType, setGraphType] = useState<GraphType>('liquidity')
 
   useEffect(() => {
-    console.log('Fired GraphOptions!')
+    Logger.log('Fired GraphOptions!')
     const options = getOptions(locale, darkMode.value)
     setOptions(options)
   }, [locale, darkMode.value])
 
   useEffect(() => {
     if (!data) return
-    console.log('Fired GraphData!')
-    const graphData = constructGraphData(data)
+    Logger.log('Fired GraphData!')
+    const graphData =
+      graphType === 'liquidity'
+        ? constructGraphData(data.oceanReserveHistory)
+        : constructGraphData(data.datatokenPriceHistory)
     setGraphData(graphData)
-  }, [data])
+  }, [data, graphType])
+
+  function handleGraphTypeSwitch(e: ChangeEvent<HTMLButtonElement>) {
+    e.preventDefault()
+    setGraphType(e.currentTarget.textContent.toLowerCase() as GraphType)
+  }
 
   return (
     <div className={styles.graphWrap}>
       {graphData ? (
-        <Line height={70} data={graphData} options={options} />
+        <>
+          <nav className={styles.type}>
+            {graphTypes.map((type: GraphType) => (
+              <Button
+                key={type}
+                style="text"
+                size="small"
+                onClick={handleGraphTypeSwitch}
+                className={`${styles.button} ${
+                  graphType === type.toLowerCase() ? styles.active : null
+                }`}
+              >
+                {type}
+              </Button>
+            ))}
+          </nav>
+          <Line height={70} data={graphData} options={options} />
+        </>
       ) : (
         <Loader />
       )}
