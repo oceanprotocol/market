@@ -19,6 +19,8 @@ export interface ChartDataLiqudity {
   datatoken: ChartData[]
 }
 
+// This one-liner feels like magic.
+// Stolen from https://stackoverflow.com/a/55261098/733677
 const cumulativeSum = ((sum) => (value: any) => (sum += value[0]))(0)
 
 // Chart.js global defaults
@@ -124,9 +126,15 @@ export default function Graph({
 }): ReactElement {
   const { locale } = useUserPreferences()
   const darkMode = useDarkMode(false, darkModeConfig)
-  const options = getOptions(locale, darkMode.value)
 
   const [graphData, setGraphData] = useState<ChartData>()
+  const [options, setOptions] = useState<ChartOptions>()
+
+  useEffect(() => {
+    console.log('Fired GraphOptions!')
+    const options = getOptions(locale, darkMode.value)
+    setOptions(options)
+  }, [locale, darkMode.value])
 
   useEffect(() => {
     if (!data) return
