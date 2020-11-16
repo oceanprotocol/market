@@ -68,8 +68,8 @@ export default function Output({
         <Token
           symbol={
             values.type === 'buy'
-              ? `OCEAN [${swapFee}%]`
-              : `${dtSymbol} [${swapFee}%]`
+              ? `OCEAN (${swapFee}%)`
+              : `${dtSymbol} (${swapFee}%)`
           }
           balance={swapFeeValue}
         />
