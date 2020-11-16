@@ -207,6 +207,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
     const url = `${config.metadataCacheUri}/api/v1/aquarius/pools/history/${price.address}`
 
     async function getData() {
+      console.log('Fired!')
       try {
         const response = await axios(url, {
           cancelToken: source.token

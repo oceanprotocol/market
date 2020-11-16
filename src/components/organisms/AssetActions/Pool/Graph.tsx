@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { Line, defaults } from 'react-chartjs-2'
 import {
   ChartData,
@@ -125,7 +125,15 @@ export default function Graph({
   const { locale } = useUserPreferences()
   const darkMode = useDarkMode(false, darkModeConfig)
   const options = getOptions(locale, darkMode.value)
-  const graphData = data && constructGraphData(data)
+
+  const [graphData, setGraphData] = useState<ChartData>()
+
+  useEffect(() => {
+    if (!data) return
+    console.log('Fired GraphData!')
+    const graphData = constructGraphData(data)
+    setGraphData(graphData)
+  }, [data])
 
   return (
     <div className={styles.graphWrap}>
