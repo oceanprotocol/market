@@ -8,6 +8,15 @@ import Badge from '../Badge'
 
 const cx = classNames.bind(styles)
 
+export function formatPrice(price: string, locale: string): string {
+  return formatCurrency(Number(price), '', locale, false, {
+    // Not exactly clear what `significant figures` are for this library,
+    // but setting this seems to give us the formatting we want.
+    // See https://github.com/oceanprotocol/market/issues/70
+    significantFigures: 4
+  })
+}
+
 export default function PriceUnit({
   price,
   className,
@@ -34,14 +43,7 @@ export default function PriceUnit({
   return (
     <div className={styleClasses}>
       <div>
-        {Number.isNaN(Number(price))
-          ? '-'
-          : formatCurrency(Number(price), '', locale, false, {
-              // Not exactly clear what `significant figures` are for this library,
-              // but setting this seems to give us the formatting we want.
-              // See https://github.com/oceanprotocol/market/issues/70
-              significantFigures: 4
-            })}{' '}
+        {Number.isNaN(Number(price)) ? '-' : formatPrice(price, locale)}{' '}
         <span className={styles.symbol}>{symbol || 'OCEAN'}</span>
         {type && type === 'pool' && (
           <Badge label="pool" className={styles.badge} />
