@@ -50,6 +50,6 @@
   },
   "trade": {
     "action": "Approve & Swap",
-    "warning": "[PLACEHOLDER] Use at your own risk. Please familiarize yourself [with the risks](https://blog.oceanprotocol.com/on-staking-on-data-in-ocean-market-3d8e09eb0a13) and the [Terms of Use](/terms)."
+    "warning": "Use at your own risk. Please familiarize yourself [with the risks](https://blog.oceanprotocol.com/on-staking-on-data-in-ocean-market-3d8e09eb0a13) and the [Terms of Use](/terms)."
   }
 }
