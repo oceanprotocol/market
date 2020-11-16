@@ -80,6 +80,17 @@ export default function FormTrade({
         new Decimal(values.ocean).toFixed(precision).toString()
       )
 
+      // const test = await ocean.pool.swapExactAmountIn(
+      //   accountId,
+      //   price.address,
+      //   ocean.pool.oceanAddress,
+      //   new Decimal(values.ocean).toFixed(precision).toString(),
+      //   ddo.dataToken,
+      //   new Decimal(values.datatoken).mul(impact).toFixed(precision).toString()
+      // )
+
+      // console.log(test)
+
       const tx =
         values.type === 'buy'
           ? await ocean.pool.buyDTWithExactOcean(
