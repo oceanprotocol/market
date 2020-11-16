@@ -13,7 +13,6 @@ export function NetworkMonitor(): ReactElement {
       typeof chainId === 'string' ? Number(chainId.replace('0x', '')) : chainId
     )
 
-
     const newConfig = {
       ...initialNewConfig,
 

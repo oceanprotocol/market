@@ -71,18 +71,18 @@ export default function FormTrade({
 
   async function handleTrade(values: FormTradeData) {
     try {
-
-      Decimal.set({ precision: 5 })
-      const buyOcean = (new Decimal(values.datatoken * 0.99))
-      console.log(buyOcean.toPrecision().toString())
+      Decimal.set({ precision: 20 })
+      const impact = new Decimal(100 - Number(values.slippage)).div(100)
+      const buyOcean = new Decimal(values.ocean)
+      const butDt = new Decimal(values.datatoken).mul(impact)
+      console.log(impact.toString(), buyOcean.toString())
       const tx =
         values.type === 'buy'
-          ? 
-            await ocean.pool.buyDTWithExactOcean(
+          ? await ocean.pool.buyDTWithExactOcean(
               accountId,
               price.address,
-              (values.datatoken * 0.99).toString(),
-              values.ocean.toString()
+              butDt.toString(),
+              buyOcean.toString()
             )
           : await ocean.pool.sellDT(
               accountId,
