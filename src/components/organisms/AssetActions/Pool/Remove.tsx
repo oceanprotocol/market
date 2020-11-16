@@ -138,7 +138,6 @@ export default function Remove({
   // Check and set outputs when amountPoolShares changes
   useEffect(() => {
     if (!ocean || !poolTokens) return
-    console.log('eff', amountPoolShares, isAdvanced)
     getValues.current(amountPoolShares, isAdvanced)
   }, [
     amountPoolShares,

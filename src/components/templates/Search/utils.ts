@@ -71,7 +71,6 @@ export async function getResults(
     page,
     offset
   )
-  console.log(searchQuery)
   const queryResult = await metadataCache.queryMetadata(searchQuery)
 
   return queryResult
