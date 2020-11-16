@@ -79,6 +79,7 @@ export default function FormTrade({
         new Decimal(values.datatoken).mul(impact).toFixed(precision).toString(),
         new Decimal(values.ocean).toFixed(precision).toString()
       )
+
       const tx =
         values.type === 'buy'
           ? await ocean.pool.buyDTWithExactOcean(
@@ -94,9 +95,12 @@ export default function FormTrade({
               accountId,
               price.address,
               new Decimal(values.datatoken).toFixed(precision).toString(),
-              new Decimal(values.ocean).mul(impact).toFixed(precision).toString()
+              new Decimal(values.ocean)
+                .mul(impact)
+                .toFixed(precision)
+                .toString()
             )
-
+      console.log(tx)
       setTxId(tx?.transactionHash)
     } catch (error) {
       Logger.error(error.message)
