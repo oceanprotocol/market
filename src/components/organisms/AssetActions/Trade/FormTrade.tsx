@@ -12,6 +12,7 @@ import TokenBalance from '../../../../@types/TokenBalance'
 import Alert from '../../../atoms/Alert'
 import styles from './FormTrade.module.css'
 import { FormTradeData, initialValues } from '../../../../models/FormTrade'
+import Decimal from 'decimal.js'
 
 const contentQuery = graphql`
   query TradeQuery {
@@ -70,14 +71,13 @@ export default function FormTrade({
 
   async function handleTrade(values: FormTradeData) {
     try {
+
+      Decimal.set({ precision: 5 })
+      const buyOcean = (new Decimal(values.datatoken * 0.99))
+      console.log(buyOcean.toPrecision().toString())
       const tx =
         values.type === 'buy'
-          ? // ? await ocean.pool.buyDT(
-            //     accountId,
-            //     price.address,
-            //     values.datatoken.toString(),
-            //     (values.ocean * 1.01).toString()
-            //   )
+          ? 
             await ocean.pool.buyDTWithExactOcean(
               accountId,
               price.address,

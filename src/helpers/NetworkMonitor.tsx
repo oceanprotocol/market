@@ -3,6 +3,7 @@ import { useOcean } from '@oceanprotocol/react'
 import { getOceanConfig } from './wrapRootElement'
 import { Logger } from '@oceanprotocol/lib'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
+import { LogLevel } from '@oceanprotocol/lib/dist/node/utils'
 
 export function NetworkMonitor(): ReactElement {
   const { connect, web3Provider, web3, networkId, config } = useOcean()
@@ -11,6 +12,7 @@ export function NetworkMonitor(): ReactElement {
     const initialNewConfig = getOceanConfig(
       typeof chainId === 'string' ? Number(chainId.replace('0x', '')) : chainId
     )
+
 
     const newConfig = {
       ...initialNewConfig,
@@ -23,6 +25,7 @@ export function NetworkMonitor(): ReactElement {
         metadataContractAddress: '0xEBe77E16736359Bf0F9013F6017242a5971cAE76'
       })
     }
+    newConfig.verbose = LogLevel.Verbose
 
     try {
       await connect(newConfig)

@@ -10,6 +10,7 @@ import {
 } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import { UserPreferencesProvider } from '../providers/UserPreferences'
 import PricesProvider from '../providers/Prices'
+import { LogLevel } from '@oceanprotocol/lib/dist/node/utils'
 
 export function getOceanConfig(
   network: ConfigHelperNetworkName | ConfigHelperNetworkId
@@ -27,8 +28,8 @@ export default function wrapRootElement({
 }): ReactElement {
   const { network } = appConfig
   const oceanInitialConfig = getOceanConfig(network)
-  oceanInitialConfig.verbose = true
-  
+  oceanInitialConfig.verbose = LogLevel.Verbose
+
   return (
     <OceanProvider
       initialConfig={oceanInitialConfig}
