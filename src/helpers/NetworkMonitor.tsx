@@ -24,7 +24,6 @@ export function NetworkMonitor(): ReactElement {
         metadataContractAddress: '0xEBe77E16736359Bf0F9013F6017242a5971cAE76'
       })
     }
-    newConfig.verbose = LogLevel.Verbose
 
     try {
       await connect(newConfig)
