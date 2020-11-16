@@ -12,6 +12,7 @@ import TokenBalance from '../../../../@types/TokenBalance'
 import Alert from '../../../atoms/Alert'
 import styles from './FormTrade.module.css'
 import { FormTradeData, initialValues } from '../../../../models/FormTrade'
+import Decimal from 'decimal.js'
 
 const contentQuery = graphql`
   query TradeQuery {
@@ -70,27 +71,28 @@ export default function FormTrade({
 
   async function handleTrade(values: FormTradeData) {
     try {
+      const impact = new Decimal(100 - Number(values.slippage)).div(100)
+      const precision = 15
       const tx =
         values.type === 'buy'
-          ? // ? await ocean.pool.buyDT(
-            //     accountId,
-            //     price.address,
-            //     values.datatoken.toString(),
-            //     (values.ocean * 1.01).toString()
-            //   )
-            await ocean.pool.buyDTWithExactOcean(
+          ? await ocean.pool.buyDTWithExactOcean(
               accountId,
               price.address,
-              (values.datatoken * 0.99).toString(),
-              values.ocean.toString()
+              new Decimal(values.datatoken)
+                .mul(impact)
+                .toFixed(precision)
+                .toString(),
+              new Decimal(values.ocean).toFixed(precision).toString()
             )
           : await ocean.pool.sellDT(
               accountId,
               price.address,
-              values.datatoken.toString(),
-              (values.ocean * 0.99).toString()
+              new Decimal(values.datatoken).toFixed(precision).toString(),
+              new Decimal(values.ocean)
+                .mul(impact)
+                .toFixed(precision)
+                .toString()
             )
-
       setTxId(tx?.transactionHash)
     } catch (error) {
       Logger.error(error.message)

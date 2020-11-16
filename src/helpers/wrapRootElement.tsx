@@ -10,6 +10,7 @@ import {
 } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import { UserPreferencesProvider } from '../providers/UserPreferences'
 import PricesProvider from '../providers/Prices'
+import { LogLevel } from '@oceanprotocol/lib/dist/node/utils'
 
 export function getOceanConfig(
   network: ConfigHelperNetworkName | ConfigHelperNetworkId
