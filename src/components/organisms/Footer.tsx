@@ -14,7 +14,7 @@ export default function Footer(): ReactElement {
     <footer className={styles.footer}>
       <div className={styles.content}>
         <BuildId />
-        <MarketStats />
+        {/* <MarketStats /> */}
 
         <div className={styles.copyright}>
           © {year} <Markdown text={copyright} /> —{' '}
