@@ -67,7 +67,7 @@ export default function Bookmarks(): ReactElement {
   const [isLoading, setIsLoading] = useState<boolean>()
 
   useEffect(() => {
-    if (!config || bookmarks === {}) return
+    if (!config?.metadataCacheUri || bookmarks === {}) return
 
     const networkName = (config as ConfigHelperConfig).network
 
