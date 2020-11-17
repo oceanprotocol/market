@@ -4,7 +4,7 @@ import { DDO } from '@oceanprotocol/lib'
 import FormTrade from './FormTrade'
 import TokenBalance from '../../../../@types/TokenBalance'
 
-const refreshInterval = 6000 // 6 sec, if the interval is bellow 3-5 seconds the price will be 0 all the time
+const refreshInterval = 10000 // 10 sec, if the interval is bellow 3-5 seconds the price will be 0 all the time
 
 export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
   const { ocean, balance, accountId, networkId, refreshBalance } = useOcean()

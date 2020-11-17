@@ -21,6 +21,8 @@ const initialData: PricesValue = {
   btc: 0.0
 }
 
+const refreshInterval = 120000 // 120 sec.
+
 const PricesContext = createContext(null)
 
 export default function PricesProvider({
@@ -43,7 +45,7 @@ export default function PricesProvider({
 
   // Fetch new prices periodically with swr
   useSWR(url, fetchData, {
-    refreshInterval: 60000, // 60 sec.
+    refreshInterval,
     onSuccess
   })
 
