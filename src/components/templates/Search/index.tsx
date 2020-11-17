@@ -20,6 +20,8 @@ export default function SearchPage({
   const [loading, setLoading] = useState<boolean>()
 
   useEffect(() => {
+    if (!config?.metadataCacheUri) return
+
     async function initSearch() {
       setLoading(true)
       const queryResult = await getResults(parsed, config.metadataCacheUri)
