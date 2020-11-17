@@ -26,9 +26,12 @@ export default function MarketStats(): ReactElement {
 
     async function getStats() {
       try {
-        const response = await axios('https://market-stats.oceanprotocol.com', {
-          cancelToken: source.token
-        })
+        const response = await axios(
+          'https://market-stats-git-patch-1.oceanprotocol.vercel.app',
+          {
+            cancelToken: source.token
+          }
+        )
         if (!response || response.status !== 200) return
         setStats(response.data)
       } catch (error) {
@@ -40,8 +43,8 @@ export default function MarketStats(): ReactElement {
       }
     }
 
-    // Update every 10 sec. when in viewport
-    const interval = setInterval(getStats, 10000)
+    // Update every 30 sec. when in viewport
+    const interval = setInterval(getStats, 30000)
 
     if (!inView) {
       clearInterval(interval)
