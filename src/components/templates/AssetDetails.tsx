@@ -50,7 +50,7 @@ export default function PageTemplateAssetDetails({
     init()
 
     // Periodically try to get DDO when not present yet
-    const timer = !ddo && setInterval(() => init(), 2000)
+    const timer = !ddo && setInterval(() => init(), 5000)
     return () => clearInterval(timer)
   }, [ddo, did, config.metadataCacheUri])
 

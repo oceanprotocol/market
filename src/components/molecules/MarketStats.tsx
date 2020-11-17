@@ -17,6 +17,8 @@ interface MarketStatsResponse {
   datatoken: number
 }
 
+const refreshInterval = 60000 // 60 sec.
+
 export default function MarketStats(): ReactElement {
   const [ref, inView] = useInView()
   const [stats, setStats] = useState<MarketStatsResponse>()
@@ -40,8 +42,8 @@ export default function MarketStats(): ReactElement {
       }
     }
 
-    // Update every 10 sec. when in viewport
-    const interval = setInterval(getStats, 10000)
+    // Update periodically when in viewport
+    const interval = setInterval(getStats, refreshInterval)
 
     if (!inView) {
       clearInterval(interval)

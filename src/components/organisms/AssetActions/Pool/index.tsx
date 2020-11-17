@@ -41,7 +41,7 @@ const contentQuery = graphql`
   }
 `
 
-const refreshInterval = 10000 // 10 sec.
+const refreshInterval = 15000 // 15 sec.
 
 export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const data = useStaticQuery(contentQuery)

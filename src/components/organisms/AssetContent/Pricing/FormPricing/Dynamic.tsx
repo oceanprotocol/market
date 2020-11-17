@@ -15,6 +15,8 @@ import { DDO } from '@oceanprotocol/lib'
 import Price from './Price'
 import Decimal from 'decimal.js'
 
+const refreshInterval = 10000 // 10 sec.
+
 export default function Dynamic({
   ddo,
   content
@@ -74,7 +76,7 @@ export default function Dynamic({
     if (!account) return
 
     refreshBalance()
-    const balanceInterval = setInterval(() => refreshBalance(), 10000) // 10 sec.
+    const balanceInterval = setInterval(() => refreshBalance(), refreshInterval)
 
     return () => {
       clearInterval(balanceInterval)
