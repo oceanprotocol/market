@@ -12,15 +12,35 @@ async function getAssetsBookmarked(
   bookmarks: string[],
   metadataCacheUri: string
 ) {
-  const metadataCache = new MetadataCache(metadataCacheUri, Logger)
-  const result: DDO[] = []
+  const searchDids = JSON.stringify(bookmarks)
+    .replace(/,/g, ' ')
+    .replace(/"/g, '')
+    .replace(/(\[|\])/g, '')
+    // for whatever reason ddo.id is not searchable, so use ddo.dataToken instead
+    .replace(/(did:op:)/g, '0x')
 
-  for (const bookmark of bookmarks) {
-    const ddo = bookmark && (await metadataCache.retrieveDDO(bookmark))
-    ddo && result.push(ddo)
+  const queryBookmarks = {
+    page: 1,
+    offset: 100,
+    query: {
+      nativeSearch: 1,
+      query_string: {
+        query: searchDids,
+        fields: ['dataToken'],
+        default_operator: 'OR'
+      }
+    },
+    sort: { created: -1 }
+  } as any
+
+  try {
+    const metadataCache = new MetadataCache(metadataCacheUri, Logger)
+    const result = await metadataCache.queryMetadata(queryBookmarks)
+
+    return result
+  } catch (error) {
+    Logger.error(error.message)
   }
-
-  return result
 }
 
 const columns = [
@@ -84,7 +104,7 @@ export default function Bookmarks(): ReactElement {
           bookmarks[networkName],
           config.metadataCacheUri
         )
-        setPinned(resultPinned)
+        setPinned(resultPinned.results)
       } catch (error) {
         Logger.error(error.message)
       }
