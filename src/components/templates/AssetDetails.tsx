@@ -22,6 +22,8 @@ export default function PageTemplateAssetDetails({
   const [ddo, setDdo] = useState<DDO>()
 
   useEffect(() => {
+    if (!config?.metadataCacheUri) return
+
     async function init() {
       if (ddo) return
 

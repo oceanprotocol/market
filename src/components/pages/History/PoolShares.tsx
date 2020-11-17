@@ -67,7 +67,7 @@ export default function PoolShares(): ReactElement {
 
   useEffect(() => {
     async function getAssets() {
-      if (!ocean || !accountId) return
+      if (!ocean || !accountId || !config?.metadataCacheUri) return
       setIsLoading(true)
 
       try {

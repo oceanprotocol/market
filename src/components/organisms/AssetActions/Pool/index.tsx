@@ -203,7 +203,13 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
   // Get graph history data
   useEffect(() => {
-    if (!price?.address || !price?.ocean || !price?.value) return
+    if (
+      !price?.address ||
+      !price?.ocean ||
+      !price?.value ||
+      !config?.metadataCacheUri
+    )
+      return
 
     const source = axios.CancelToken.source()
     const url = `${config.metadataCacheUri}/api/v1/aquarius/pools/history/${price.address}`
