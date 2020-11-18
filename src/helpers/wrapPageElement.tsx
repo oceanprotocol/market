@@ -1,10 +1,13 @@
+import { PageProps } from 'gatsby'
 import React, { ReactElement } from 'react'
-import Styles from '../global/Styles'
+import App from '../components/App'
 
 const wrapPageElement = ({
-  element
+  element,
+  props
 }: {
   element: ReactElement
-}): ReactElement => <Styles>{element}</Styles>
+  props: PageProps
+}): ReactElement => <App {...props}>{element}</App>
 
 export default wrapPageElement

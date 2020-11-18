@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import PagePublish from '../components/pages/Publish'
-import Layout from '../components/Layout'
+import Page from '../components/templates/Page'
 import { graphql, PageProps } from 'gatsby'
 
 export default function PageGatsbyPublish(props: PageProps): ReactElement {
@@ -8,9 +8,9 @@ export default function PageGatsbyPublish(props: PageProps): ReactElement {
   const { title, description } = content
 
   return (
-    <Layout title={title} description={description} uri={props.uri}>
+    <Page title={title} description={description} uri={props.uri}>
       <PagePublish content={content} />
-    </Layout>
+    </Page>
   )
 }
 
