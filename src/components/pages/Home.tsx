@@ -1,12 +1,8 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import SearchBar from '../molecules/SearchBar'
 import styles from './Home.module.css'
-import { MetadataCache, Logger, DDO } from '@oceanprotocol/lib'
 import AssetQueryList from '../organisms/AssetQueryList'
-import {
-  QueryResult,
-  SearchQuery
-} from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
+import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import Container from '../atoms/Container'
 import Loader from '../atoms/Loader'
 import { useOcean } from '@oceanprotocol/react'
@@ -15,7 +11,8 @@ import Bookmarks from '../molecules/Bookmarks'
 import listPartners from '@oceanprotocol/list-datapartners'
 import Tooltip from '../atoms/Tooltip'
 import AssetQueryCarousel from '../organisms/AssetQueryCarousel'
-import axios, { AxiosResponse, CancelToken } from 'axios'
+import axios from 'axios'
+import { queryMetadata } from '../../utils/aquarius'
 
 const partnerAccounts = listPartners
   .map((partner) => partner.accounts.join(','))
@@ -60,53 +57,6 @@ const queryLatest = {
     }
   },
   sort: { created: -1 }
-}
-
-// TODO: import directly from ocean.js somehow.
-// Transforming Aquarius' direct response is needed for getting actual DDOs
-// and not just strings of DDOs. For now, taken from
-// https://github.com/oceanprotocol/ocean.js/blob/main/src/metadatacache/MetadataCache.ts#L361-L375
-function transformResult(
-  {
-    results,
-    page,
-    total_pages: totalPages,
-    total_results: totalResults
-  }: any = {
-    result: [],
-    page: 0,
-    total_pages: 0,
-    total_results: 0
-  }
-): QueryResult {
-  return {
-    results: (results || []).map((ddo: DDO) => new DDO(ddo as DDO)),
-    page,
-    totalPages,
-    totalResults
-  }
-}
-
-async function getAssets(
-  query: SearchQuery,
-  metadataCacheUri: string,
-  cancelToken: CancelToken
-) {
-  try {
-    const response: AxiosResponse<QueryResult> = await axios.post(
-      `${metadataCacheUri}/api/v1/aquarius/assets/ddo/query`,
-      { ...query, cancelToken }
-    )
-    if (!response || response.status !== 200 || !response.data) return
-
-    return transformResult(response.data)
-  } catch (error) {
-    if (axios.isCancel(error)) {
-      Logger.log(error.message)
-    } else {
-      Logger.error(error.message)
-    }
-  }
 }
 
 function LoaderArea() {
@@ -156,21 +106,21 @@ export default function HomePage(): ReactElement {
 
     async function init() {
       // TODO: remove any once ocean.js has nativeSearch typings
-      const queryResultHighest = await getAssets(
+      const queryResultHighest = await queryMetadata(
         queryHighest as any,
         config.metadataCacheUri,
         source.token
       )
       setQueryResultHighest(queryResultHighest)
 
-      const queryResultPartners = await getAssets(
+      const queryResultPartners = await queryMetadata(
         queryPartners as any,
         config.metadataCacheUri,
         source.token
       )
       setQueryResultPartners(queryResultPartners)
 
-      const queryResultLatest = await getAssets(
+      const queryResultLatest = await queryMetadata(
         queryLatest as any,
         config.metadataCacheUri,
         source.token
