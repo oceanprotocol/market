@@ -1,5 +1,5 @@
 import React, { ChangeEvent, ReactElement, useState } from 'react'
-import Layout from '../components/Layout'
+import Page from '../components/templates/Page'
 import { PageProps } from 'gatsby'
 import Input from '../components/atoms/Input'
 import Button from '../components/atoms/Button'
@@ -54,7 +54,7 @@ export default function PageGatsbyUpdateAsset(props: PageProps): ReactElement {
   }
 
   return (
-    <Layout title={pageTitle} description={pageDescription} uri={props.uri}>
+    <Page title={pageTitle} description={pageDescription} uri={props.uri}>
       <form className={styles.box}>
         <Input
           name="did"
@@ -81,6 +81,6 @@ export default function PageGatsbyUpdateAsset(props: PageProps): ReactElement {
 
         {ddo?.id && <Alert state="success" text="Updated!" />}
       </form>
-    </Layout>
+    </Page>
   )
 }
