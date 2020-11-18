@@ -1,12 +1,8 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import SearchBar from '../molecules/SearchBar'
 import styles from './Home.module.css'
-import { MetadataCache, Logger } from '@oceanprotocol/lib'
 import AssetQueryList from '../organisms/AssetQueryList'
-import {
-  QueryResult,
-  SearchQuery
-} from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
+import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import Container from '../atoms/Container'
 import Loader from '../atoms/Loader'
 import { useOcean } from '@oceanprotocol/react'
@@ -15,6 +11,8 @@ import Bookmarks from '../molecules/Bookmarks'
 import listPartners from '@oceanprotocol/list-datapartners'
 import Tooltip from '../atoms/Tooltip'
 import AssetQueryCarousel from '../organisms/AssetQueryCarousel'
+import axios from 'axios'
+import { queryMetadata } from '../../utils/aquarius'
 
 const partnerAccounts = listPartners
   .map((partner) => partner.accounts.join(','))
@@ -61,16 +59,6 @@ const queryLatest = {
   sort: { created: -1 }
 }
 
-async function getAssets(query: SearchQuery, metadataCacheUri: string) {
-  try {
-    const metadataCache = new MetadataCache(metadataCacheUri, Logger)
-    const result = await metadataCache.queryMetadata(query)
-    return result
-  } catch (error) {
-    Logger.error(error.message)
-  }
-}
-
 function LoaderArea() {
   return (
     <div className={styles.loaderWrap}>
@@ -79,17 +67,41 @@ function LoaderArea() {
   )
 }
 
-function SectionQuery({
+function SectionQueryResult({
   title,
-  result,
-  loading,
+  query,
   action
 }: {
   title: ReactElement | string
-  result: QueryResult
-  loading: boolean
+  query: any
   action?: ReactElement
 }) {
+  const { config } = useOcean()
+  const [result, setResult] = useState<QueryResult>()
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (!config?.metadataCacheUri) return
+
+    const source = axios.CancelToken.source()
+
+    async function init() {
+      // TODO: remove any once ocean.js has nativeSearch typings
+      const result = await queryMetadata(
+        query as any,
+        config.metadataCacheUri,
+        source.token
+      )
+      setResult(result)
+      setLoading(false)
+    }
+    init()
+
+    return () => {
+      source.cancel()
+    }
+  }, [config?.metadataCacheUri, query])
+
   return (
     <section className={styles.section}>
       <h3>{title}</h3>
@@ -106,37 +118,30 @@ function SectionQuery({
 export default function HomePage(): ReactElement {
   const { config } = useOcean()
 
-  const [queryResultLatest, setQueryResultLatest] = useState<QueryResult>()
   const [queryResultPartners, setQueryResultPartners] = useState<QueryResult>()
-  const [queryResultHighest, setQueryResultHighest] = useState<QueryResult>()
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (!config?.metadataCacheUri) return
 
-    // TODO: remove any once ocean.js has nativeSearch typings
-    async function init() {
-      const queryResultHighest = await getAssets(
-        queryHighest as any,
-        config.metadataCacheUri
-      )
-      setQueryResultHighest(queryResultHighest)
+    const source = axios.CancelToken.source()
 
-      const queryResultPartners = await getAssets(
+    async function init() {
+      // TODO: remove any once ocean.js has nativeSearch typings
+      const queryResultPartners = await queryMetadata(
         queryPartners as any,
-        config.metadataCacheUri
+        config.metadataCacheUri,
+        source.token
       )
       setQueryResultPartners(queryResultPartners)
-
-      const queryResultLatest = await getAssets(
-        queryLatest as any,
-        config.metadataCacheUri
-      )
-      setQueryResultLatest(queryResultLatest)
       setLoading(false)
     }
     init()
-  }, [config.metadataCacheUri])
+
+    return () => {
+      source.cancel()
+    }
+  }, [config?.metadataCacheUri])
 
   return (
     <>
@@ -178,16 +183,14 @@ export default function HomePage(): ReactElement {
         <Bookmarks />
       </section>
 
-      <SectionQuery
+      <SectionQueryResult
         title="Highest Liquidity Pools"
-        loading={loading}
-        result={queryResultHighest}
+        query={queryHighest}
       />
 
-      <SectionQuery
+      <SectionQueryResult
         title="New Data Sets"
-        loading={loading}
-        result={queryResultLatest}
+        query={queryLatest}
         action={
           <Button style="text" to="/search">
             All data sets →
