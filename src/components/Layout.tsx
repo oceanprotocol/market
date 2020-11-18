@@ -1,6 +1,4 @@
 import React, { ReactNode, ReactElement, useEffect } from 'react'
-import Header from './organisms/Header'
-import Footer from './organisms/Footer'
 import PageHeader from './molecules/PageHeader'
 import styles from './Layout.module.css'
 import Seo from './atoms/Seo'
