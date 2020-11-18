@@ -1,20 +1,20 @@
 import React from 'react'
 import testRender from '../testRender'
-import Layout from '../../../src/components/Layout'
+import Page from '../../../src/components/templates/Page'
 import {
   createHistory,
   createMemorySource,
   LocationProvider
 } from '@reach/router'
 
-describe('Layout', () => {
+describe('Page', () => {
   const history = createHistory(createMemorySource('/'))
 
   testRender(
     <LocationProvider history={history}>
-      <Layout title="Hello" uri={history.location.href}>
+      <Page title="Hello" uri={history.location.href}>
         Hello
-      </Layout>
+      </Page>
     </LocationProvider>
   )
 })
