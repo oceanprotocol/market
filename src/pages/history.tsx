@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import PageHistory from '../components/pages/History'
-import Layout from '../components/Layout'
+import Page from '../components/templates/Page'
 import { graphql, PageProps } from 'gatsby'
 
 export default function PageGatsbyHistory(props: PageProps): ReactElement {
@@ -8,9 +8,9 @@ export default function PageGatsbyHistory(props: PageProps): ReactElement {
   const { title, description } = content
 
   return (
-    <Layout title={title} description={description} uri={props.uri}>
+    <Page title={title} description={description} uri={props.uri}>
       <PageHistory />
-    </Layout>
+    </Page>
   )
 }
 

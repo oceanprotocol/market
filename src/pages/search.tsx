@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import PageSearch from '../components/templates/Search'
 import { PageProps } from 'gatsby'
-import Layout from '../components/Layout'
+import Page from '../components/templates/Page'
 import queryString from 'query-string'
 import { accountTruncate } from '../utils/wallet'
 import ethereumAddress from 'ethereum-address'
@@ -20,8 +20,8 @@ export default function PageGatsbySearch(props: PageProps): ReactElement {
     : `Search for ${searchValue || 'all data sets'}`
 
   return (
-    <Layout title={title} uri={props.uri}>
+    <Page title={title} uri={props.uri}>
       <PageSearch location={props.location} />
-    </Layout>
+    </Page>
   )
 }

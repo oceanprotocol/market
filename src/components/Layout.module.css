@@ -1,6 +1,0 @@
-.main {
-  padding: calc(var(--spacer) * 2) 0;
-
-  /* sticky footer technique */
-  flex: 1;
-}

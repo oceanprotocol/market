@@ -3,7 +3,6 @@ import { useOcean } from '@oceanprotocol/react'
 import { getOceanConfig } from './wrapRootElement'
 import { Logger } from '@oceanprotocol/lib'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
-import { LogLevel } from '@oceanprotocol/lib/dist/node/utils'
 
 export function NetworkMonitor(): ReactElement {
   const { connect, web3Provider, web3, networkId, config } = useOcean()
