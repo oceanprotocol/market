@@ -67,17 +67,41 @@ function LoaderArea() {
   )
 }
 
-function SectionQuery({
+function SectionQueryResult({
   title,
-  result,
-  loading,
+  query,
   action
 }: {
   title: ReactElement | string
-  result: QueryResult
-  loading: boolean
+  query: any
   action?: ReactElement
 }) {
+  const { config } = useOcean()
+  const [result, setResult] = useState<QueryResult>()
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (!config?.metadataCacheUri) return
+
+    const source = axios.CancelToken.source()
+
+    async function init() {
+      // TODO: remove any once ocean.js has nativeSearch typings
+      const result = await queryMetadata(
+        query as any,
+        config.metadataCacheUri,
+        source.token
+      )
+      setResult(result)
+      setLoading(false)
+    }
+    init()
+
+    return () => {
+      source.cancel()
+    }
+  }, [config?.metadataCacheUri, query])
+
   return (
     <section className={styles.section}>
       <h3>{title}</h3>
@@ -94,9 +118,7 @@ function SectionQuery({
 export default function HomePage(): ReactElement {
   const { config } = useOcean()
 
-  const [queryResultLatest, setQueryResultLatest] = useState<QueryResult>()
   const [queryResultPartners, setQueryResultPartners] = useState<QueryResult>()
-  const [queryResultHighest, setQueryResultHighest] = useState<QueryResult>()
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -106,26 +128,12 @@ export default function HomePage(): ReactElement {
 
     async function init() {
       // TODO: remove any once ocean.js has nativeSearch typings
-      const queryResultHighest = await queryMetadata(
-        queryHighest as any,
-        config.metadataCacheUri,
-        source.token
-      )
-      setQueryResultHighest(queryResultHighest)
-
       const queryResultPartners = await queryMetadata(
         queryPartners as any,
         config.metadataCacheUri,
         source.token
       )
       setQueryResultPartners(queryResultPartners)
-
-      const queryResultLatest = await queryMetadata(
-        queryLatest as any,
-        config.metadataCacheUri,
-        source.token
-      )
-      setQueryResultLatest(queryResultLatest)
       setLoading(false)
     }
     init()
@@ -175,16 +183,14 @@ export default function HomePage(): ReactElement {
         <Bookmarks />
       </section>
 
-      <SectionQuery
+      <SectionQueryResult
         title="Highest Liquidity Pools"
-        loading={loading}
-        result={queryResultHighest}
+        query={queryHighest}
       />
 
-      <SectionQuery
+      <SectionQueryResult
         title="New Data Sets"
-        loading={loading}
-        result={queryResultLatest}
+        query={queryLatest}
         action={
           <Button style="text" to="/search">
             All data sets →
