@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import Button from '../../atoms/Button'
 import styles from './Details.module.css'
 import { useOcean } from '@oceanprotocol/react'
@@ -7,10 +7,17 @@ import { getInjectedProviderName } from 'web3modal'
 import Conversion from '../../atoms/Price/Conversion'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../../providers/UserPreferences'
+import { useProfile } from '../../../providers/Profile'
 
 export default function Details(): ReactElement {
   const { balance, connect, logout } = useOcean()
   const { locale } = useUserPreferences()
+
+  const { box, getProfile } = useProfile()
+
+  useEffect(() => {
+    console.log(box)
+  }, [box])
 
   return (
     <div className={styles.details}>
@@ -36,6 +43,15 @@ export default function Details(): ReactElement {
             }}
           >
             Switch Wallet
+          </Button>
+          <Button
+            style="text"
+            size="small"
+            onClick={() => {
+              getProfile()
+            }}
+          >
+            Sign in profile
           </Button>
         </li>
       </ul>
