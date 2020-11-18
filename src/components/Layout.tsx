@@ -39,10 +39,8 @@ export default function Layout({
   }, [isInPurgatory, purgatoryData])
 
   return (
-    <div className={styles.app}>
+    <>
       <Seo title={title} description={description} uri={uri} />
-
-      <Header />
 
       {uri === '/' && (
         <Alert text={warning} state="info" className={styles.banner} />
@@ -78,7 +76,6 @@ export default function Layout({
           {children}
         </Container>
       </main>
-      <Footer />
-    </div>
+    </>
   )
 }
