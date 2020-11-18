@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import SearchBar from '../molecules/SearchBar'
 import styles from './Home.module.css'
-import { MetadataCache, Logger } from '@oceanprotocol/lib'
+import { MetadataCache, Logger, DDO } from '@oceanprotocol/lib'
 import AssetQueryList from '../organisms/AssetQueryList'
 import {
   QueryResult,
@@ -15,6 +15,7 @@ import Bookmarks from '../molecules/Bookmarks'
 import listPartners from '@oceanprotocol/list-datapartners'
 import Tooltip from '../atoms/Tooltip'
 import AssetQueryCarousel from '../organisms/AssetQueryCarousel'
+import axios, { AxiosResponse, CancelToken } from 'axios'
 
 const partnerAccounts = listPartners
   .map((partner) => partner.accounts.join(','))
@@ -61,13 +62,50 @@ const queryLatest = {
   sort: { created: -1 }
 }
 
-async function getAssets(query: SearchQuery, metadataCacheUri: string) {
+// TODO: import directly from ocean.js somehow.
+// Transforming Aquarius' direct response is needed for getting actual DDOs
+// and not just strings of DDOs. For now, taken from
+// https://github.com/oceanprotocol/ocean.js/blob/main/src/metadatacache/MetadataCache.ts#L361-L375
+function transformResult(
+  {
+    results,
+    page,
+    total_pages: totalPages,
+    total_results: totalResults
+  }: any = {
+    result: [],
+    page: 0,
+    total_pages: 0,
+    total_results: 0
+  }
+): QueryResult {
+  return {
+    results: (results || []).map((ddo: DDO) => new DDO(ddo as DDO)),
+    page,
+    totalPages,
+    totalResults
+  }
+}
+
+async function getAssets(
+  query: SearchQuery,
+  metadataCacheUri: string,
+  cancelToken: CancelToken
+) {
   try {
-    const metadataCache = new MetadataCache(metadataCacheUri, Logger)
-    const result = await metadataCache.queryMetadata(query)
-    return result
+    const response: AxiosResponse<QueryResult> = await axios.post(
+      `${metadataCacheUri}/api/v1/aquarius/assets/ddo/query`,
+      { ...query, cancelToken }
+    )
+    if (!response || response.status !== 200 || !response.data) return
+
+    return transformResult(response.data)
   } catch (error) {
-    Logger.error(error.message)
+    if (axios.isCancel(error)) {
+      Logger.log(error.message)
+    } else {
+      Logger.error(error.message)
+    }
   }
 }
 
@@ -114,29 +152,38 @@ export default function HomePage(): ReactElement {
   useEffect(() => {
     if (!config?.metadataCacheUri) return
 
-    // TODO: remove any once ocean.js has nativeSearch typings
+    const source = axios.CancelToken.source()
+
     async function init() {
+      // TODO: remove any once ocean.js has nativeSearch typings
       const queryResultHighest = await getAssets(
         queryHighest as any,
-        config.metadataCacheUri
+        config.metadataCacheUri,
+        source.token
       )
       setQueryResultHighest(queryResultHighest)
 
       const queryResultPartners = await getAssets(
         queryPartners as any,
-        config.metadataCacheUri
+        config.metadataCacheUri,
+        source.token
       )
       setQueryResultPartners(queryResultPartners)
 
       const queryResultLatest = await getAssets(
         queryLatest as any,
-        config.metadataCacheUri
+        config.metadataCacheUri,
+        source.token
       )
       setQueryResultLatest(queryResultLatest)
       setLoading(false)
     }
     init()
-  }, [config.metadataCacheUri])
+
+    return () => {
+      source.cancel()
+    }
+  }, [config?.metadataCacheUri])
 
   return (
     <>
