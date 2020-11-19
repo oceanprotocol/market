@@ -7,8 +7,7 @@ import React, {
   useEffect,
   useState
 } from 'react'
-
-const Box = require('3box')
+import Box from '3box'
 
 interface ProfileValue {
   box: Box
@@ -27,7 +26,9 @@ function ProfileProvider({ children }: { children: ReactNode }): ReactElement {
     const profile = await box.public.all()
     setProfile(profile)
   }
+
   const init3Box = async () => {
+    if (window && typeof window === 'undefined') return
     const box = await Box.openBox(accountId, web3Provider)
     await box.syncDone
     setBox(box)
@@ -36,7 +37,7 @@ function ProfileProvider({ children }: { children: ReactNode }): ReactElement {
   useEffect(() => {
     if (!accountId || status !== 1) return
     init3Box()
-  }, [accountId])
+  }, [accountId, status])
 
   return (
     <ProfileContext.Provider
