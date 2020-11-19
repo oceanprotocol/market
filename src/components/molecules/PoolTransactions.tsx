@@ -10,8 +10,8 @@ import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../providers/UserPreferences'
 import { Ocean } from '@oceanprotocol/lib'
 
-function formatNumber(number: number, locale: string) {
-  return formatCurrency(number, '', locale, true, {
+function formatNumber(number: string, locale: string) {
+  return formatCurrency(Number(number), '', locale, true, {
     significantFigures: 6
   })
 }
@@ -43,26 +43,18 @@ async function getTitle(
 
   const title =
     row.type === 'join'
-      ? `Add ${formatNumber(
-          Number(row.tokenAmountIn),
-          locale
-        )} ${addRemoveSymbol}`
+      ? `Add ${formatNumber(row.tokenAmountIn, locale)} ${addRemoveSymbol}`
       : row.type === 'exit'
-      ? `Remove ${formatNumber(
-          Number(row.tokenAmountOut),
-          locale
-        )} ${addRemoveSymbol}`
-      : `Swap ${formatNumber(
-          Number(row.tokenAmountIn),
-          locale
-        )} ${await getSymbol(
+      ? `Remove ${formatNumber(row.tokenAmountOut, locale)} ${addRemoveSymbol}`
+      : `Swap ${formatNumber(row.tokenAmountIn, locale)} ${await getSymbol(
           ocean,
           row.tokenIn,
           oceanTokenAddress
-        )} for ${formatNumber(
-          Number(row.tokenAmountOut),
-          locale
-        )} ${await getSymbol(ocean, row.tokenOut, oceanTokenAddress)}`
+        )} for ${formatNumber(row.tokenAmountOut, locale)} ${await getSymbol(
+          ocean,
+          row.tokenOut,
+          oceanTokenAddress
+        )}`
 
   return title
 }
