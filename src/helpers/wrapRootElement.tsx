@@ -27,7 +27,6 @@ export default function wrapRootElement({
 }): ReactElement {
   const { network } = appConfig
   const oceanInitialConfig = getOceanConfig(network)
-  console.log('config', oceanInitialConfig)
   return (
     <OceanProvider
       initialConfig={oceanInitialConfig}

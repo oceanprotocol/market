@@ -97,7 +97,6 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
   useEffect(() => {
     if (!ocean || !accountId || !price) return
-    console.log('pool calc')
     async function init() {
       try {
         //
