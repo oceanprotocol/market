@@ -52,6 +52,24 @@ function AssetProvider({
 
   const [owner, setOwner] = useState<string>()
 
+  async function refreshPrice(): Promise<void> {
+    if (
+      !ddo ||
+      status !== 1 ||
+      networkId !== (config as ConfigHelperConfig).networkId
+    )
+      return
+
+    setPrice(
+      await getDataTokenPrice(
+        ocean,
+        ddo.dataToken,
+        ddo?.price?.type,
+        ddo.price.pools[0]
+      )
+    )
+  }
+
   const getDDO = useCallback(
     async (did: string, cancelToken: CancelToken): Promise<DDO | undefined> => {
       if (!config.metadataCacheUri) return
@@ -151,23 +169,6 @@ function AssetProvider({
     initMetadata(ddo)
   }, [ddo])
 
-  async function refreshPrice(): Promise<void> {
-    if (
-      !ddo ||
-      status !== 1 ||
-      networkId !== (config as ConfigHelperConfig).networkId
-    )
-      return
-
-    setPrice(
-      await getDataTokenPrice(
-        ocean,
-        ddo.dataToken,
-        ddo?.price?.type,
-        ddo.price.pools[0]
-      )
-    )
-  }
   return (
     <AssetContext.Provider
       value={
