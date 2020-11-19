@@ -29,6 +29,7 @@
 }
 
 .title {
+  line-height: 1.3 !important;
   font-size: var(--font-size-large);
   margin-top: calc(var(--spacer) / 12);
   margin-bottom: 0;

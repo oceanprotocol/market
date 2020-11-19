@@ -1,10 +1,11 @@
 .badge {
   display: inline-block;
   font-size: var(--font-size-mini);
+  font-family: var(--font-family-base);
   font-weight: var(--font-weight-bold);
-  line-height: 1;
+  line-height: 1 !important;
   text-transform: uppercase;
-  padding: 0.2rem 0.2rem 0.1rem 0.2rem;
+  padding: 0.2rem;
   border-radius: var(--border-radius);
   color: var(--brand-white);
   background: var(--brand-purple);

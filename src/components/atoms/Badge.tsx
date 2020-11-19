@@ -1,5 +1,8 @@
 import React, { ReactElement } from 'react'
 import styles from './Badge.module.css'
+import classNames from 'classnames/bind'
+
+const cx = classNames.bind(styles)
 
 export default function Badge({
   label,
@@ -8,5 +11,10 @@ export default function Badge({
   label: string
   className?: string
 }): ReactElement {
-  return <span className={`${styles.badge} ${className}`}>{label}</span>
+  const styleClasses = cx({
+    badge: true,
+    [className]: className
+  })
+
+  return <span className={styleClasses}>{label}</span>
 }
