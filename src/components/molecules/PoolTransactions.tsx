@@ -16,22 +16,30 @@ function formatNumber(number: number, locale: string) {
   })
 }
 
-async function getSymbol(ocean: Ocean, contractAddress: string) {
-  // OCEAN contract on mainnet, rinkeby
-  const oceanContracts = [
-    '0x967da4048cD07aB37855c090aAF366e4ce1b9F48',
-    '0x8967bcf84170c91b0d24d4302c2376283b0b3a07'
-  ]
-
-  const symbol = oceanContracts.includes(contractAddress)
-    ? 'OCEAN'
-    : await ocean.datatokens.getSymbol(contractAddress)
+async function getSymbol(
+  ocean: Ocean,
+  tokenAddress: string,
+  oceanTokenAddress: string
+) {
+  const symbol =
+    oceanTokenAddress === tokenAddress
+      ? 'OCEAN'
+      : await ocean.datatokens.getSymbol(tokenAddress)
 
   return symbol
 }
 
-async function getTitle(ocean: Ocean, row: PoolTransaction, locale: string) {
-  const addRemoveSymbol = await getSymbol(ocean, row.tokenIn || row.tokenOut)
+async function getTitle(
+  ocean: Ocean,
+  row: PoolTransaction,
+  locale: string,
+  oceanTokenAddress: string
+) {
+  const addRemoveSymbol = await getSymbol(
+    ocean,
+    row.tokenIn || row.tokenOut,
+    oceanTokenAddress
+  )
 
   const title =
     row.type === 'join'
@@ -47,28 +55,32 @@ async function getTitle(ocean: Ocean, row: PoolTransaction, locale: string) {
       : `Swap ${formatNumber(
           Number(row.tokenAmountIn),
           locale
-        )} ${await getSymbol(ocean, row.tokenIn)} for ${formatNumber(
+        )} ${await getSymbol(
+          ocean,
+          row.tokenIn,
+          oceanTokenAddress
+        )} for ${formatNumber(
           Number(row.tokenAmountOut),
           locale
-        )} ${await getSymbol(ocean, row.tokenOut)}`
+        )} ${await getSymbol(ocean, row.tokenOut, oceanTokenAddress)}`
 
   return title
 }
 
 function Title({ row }: { row: PoolTransaction }) {
-  const { ocean, networkId } = useOcean()
+  const { ocean, networkId, config } = useOcean()
   const [title, setTitle] = useState<string>()
   const { locale } = useUserPreferences()
 
   useEffect(() => {
-    if (!ocean || !locale || !row) return
+    if (!ocean || !locale || !row || !config?.oceanTokenAddress) return
 
     async function init() {
-      const title = await getTitle(ocean, row, locale)
+      const title = await getTitle(ocean, row, locale, config.oceanTokenAddress)
       setTitle(title)
     }
     init()
-  }, [ocean, row, locale])
+  }, [ocean, row, locale, config?.oceanTokenAddress])
 
   return title ? (
     <EtherscanLink networkId={networkId} path={`/tx/${row.transactionHash}`}>
