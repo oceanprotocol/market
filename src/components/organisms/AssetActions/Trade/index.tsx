@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useOcean, useMetadata } from '@oceanprotocol/react'
-import { DDO } from '@oceanprotocol/lib'
+import { BestPrice, DDO } from '@oceanprotocol/lib'
 import FormTrade from './FormTrade'
 import TokenBalance from '../../../../@types/TokenBalance'
 
@@ -9,9 +9,10 @@ const refreshInterval = 10000 // 10 sec, if the interval is bellow 3-5 seconds t
 export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
   const { ocean, balance, accountId, networkId, refreshBalance } = useOcean()
   const [tokenBalance, setTokenBalance] = useState<TokenBalance>()
-  const { price, refreshPrice } = useMetadata(ddo)
+  const { price, getLivePrice } = useMetadata(ddo)
   const [maxDt, setMaxDt] = useState(0)
   const [maxOcean, setMaxOcean] = useState(0)
+  const [livePrice, setLivePrice] = useState<BestPrice>(price)
 
   // Get datatoken balance, and combine with OCEAN balance from hooks into one object
   useEffect(() => {
@@ -31,36 +32,41 @@ export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
   useEffect(() => {
     if (!ocean || !networkId || !accountId) return
 
+    let isMounted = true
     const interval = setInterval(async () => {
-      refreshPrice()
+      if (!isMounted) return
+      setLivePrice(await getLivePrice())
       refreshBalance()
     }, refreshInterval)
 
-    return () => clearInterval(interval)
-  }, [ocean, ddo, networkId, accountId, refreshPrice, refreshBalance])
+    return () => {
+      isMounted = false
+      clearInterval(interval)
+    }
+  }, [ocean, ddo, networkId, accountId, getLivePrice, refreshBalance])
 
   // Get maximum amount for either OCEAN or datatoken
   useEffect(() => {
-    if (!ocean || !price || price.value === 0) return
+    if (!ocean || !livePrice || livePrice.value === 0) return
 
     async function getMaximum() {
       const maxTokensInPool = await ocean.pool.getDTMaxBuyQuantity(
-        price.address
+        livePrice.address
       )
       setMaxDt(Number(maxTokensInPool))
 
       const maxOceanInPool = await ocean.pool.getOceanMaxBuyQuantity(
-        price.address
+        livePrice.address
       )
       setMaxOcean(Number(maxOceanInPool))
     }
     getMaximum()
-  }, [ocean, balance.ocean, price])
+  }, [ocean, balance.ocean, livePrice])
 
   return (
     <FormTrade
       ddo={ddo}
-      price={price}
+      price={livePrice}
       balance={tokenBalance}
       maxDt={maxDt}
       maxOcean={maxOcean}
