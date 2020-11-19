@@ -12,8 +12,7 @@ import { PurgatoryData } from '@oceanprotocol/lib/dist/node/ddo/interfaces/Purga
 import { isDDO, getDataTokenPrice, useOcean } from '@oceanprotocol/react'
 import getAssetPurgatoryData from '../utils/purgatory'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
-import { CancelToken } from 'axios'
-import axios from 'axios'
+import axios, { CancelToken } from 'axios'
 
 interface AssetProviderValue {
   isInPurgatory: boolean
