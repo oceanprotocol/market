@@ -7,7 +7,6 @@ import React, {
   useEffect,
   useState
 } from 'react'
-import Box from '3box'
 
 interface ProfileValue {
   box: Box
@@ -28,7 +27,8 @@ function ProfileProvider({ children }: { children: ReactNode }): ReactElement {
   }
 
   const init3Box = async () => {
-    const box = await Box.openBox(accountId, web3Provider)
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const box = await require('3box').openBox(accountId, web3Provider)
     await box.syncDone
     setBox(box)
   }
