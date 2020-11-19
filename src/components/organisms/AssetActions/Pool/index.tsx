@@ -203,12 +203,6 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
       }
     }
     init()
-
-    // TODO why is this again here ?!?!?!
-
-    // // Re-fetch price periodically, triggering re-calculation of everything
-    // const interval = setInterval(() => refreshPrice(), refreshInterval)
-    // return () => clearInterval(interval)
   }, [ocean, accountId, price, ddo, refreshPool, owner])
 
   // Get graph history data
