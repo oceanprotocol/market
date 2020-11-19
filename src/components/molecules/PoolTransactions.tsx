@@ -8,6 +8,7 @@ import AssetTitle from './AssetListTitle'
 import styles from './PoolTransactions.module.css'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../providers/UserPreferences'
+import { Ocean } from '@oceanprotocol/lib'
 
 function formatNumber(number: number, locale: string) {
   return formatCurrency(number, '', locale, true, {
@@ -15,36 +16,51 @@ function formatNumber(number: number, locale: string) {
   })
 }
 
+async function getSymbol(ocean: Ocean, contractAddress: string) {
+  // OCEAN contract on mainnet, rinkeby
+  const oceanContracts = [
+    '0x967da4048cD07aB37855c090aAF366e4ce1b9F48',
+    '0x8967bcf84170c91b0d24d4302c2376283b0b3a07'
+  ]
+
+  const symbol = oceanContracts.includes(contractAddress)
+    ? 'OCEAN'
+    : await ocean.datatokens.getSymbol(contractAddress)
+
+  return symbol
+}
+
 function Title({ row }: { row: PoolTransaction }) {
   const { ocean, networkId } = useOcean()
-  const [dtSymbol, setDtSymbol] = useState<string>()
+  const [title, setTitle] = useState<string>()
   const { locale } = useUserPreferences()
 
-  const symbol = dtSymbol || 'OCEAN'
-  const title =
-    row.type === 'join'
-      ? `Add ${formatNumber(Number(row.tokenAmountIn), locale)} ${symbol}`
-      : row.type === 'exit'
-      ? `Remove ${formatNumber(Number(row.tokenAmountOut), locale)} ${symbol}`
-      : `Swap ${formatNumber(
-          Number(row.tokenAmountIn),
-          locale
-        )} ${symbol} for ${formatNumber(
-          Number(row.tokenAmountOut),
-          locale
-        )} ${symbol}`
-
   useEffect(() => {
-    if (!ocean) return
+    if (!ocean || !locale || !row) return
 
-    async function getSymbol() {
-      const symbol = await ocean.datatokens.getSymbol(
-        row.tokenIn || row.tokenOut
-      )
-      setDtSymbol(symbol)
+    async function init() {
+      const title =
+        row.type === 'join'
+          ? `Add ${formatNumber(
+              Number(row.tokenAmountIn),
+              locale
+            )} ${await getSymbol(ocean, row.tokenIn)}`
+          : row.type === 'exit'
+          ? `Remove ${formatNumber(
+              Number(row.tokenAmountOut),
+              locale
+            )} ${await getSymbol(ocean, row.tokenOut)}`
+          : `Swap ${formatNumber(
+              Number(row.tokenAmountIn),
+              locale
+            )} ${await getSymbol(ocean, row.tokenIn)} for ${formatNumber(
+              Number(row.tokenAmountOut),
+              locale
+            )} ${await getSymbol(ocean, row.tokenOut)}`
+      setTitle(title)
     }
-    getSymbol()
-  }, [ocean, row])
+    init()
+  }, [ocean, row, locale])
 
   return (
     <EtherscanLink networkId={networkId} path={`/tx/${row.transactionHash}`}>
