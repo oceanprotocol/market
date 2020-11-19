@@ -203,7 +203,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
       }
     }
     init()
-  }, [ocean, accountId, price, ddo, refreshPool, owner])
+  }, [ocean, accountId, livePrice, ddo, refreshPool, owner])
 
   // Get graph history data
   useEffect(() => {
@@ -216,7 +216,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
       return
 
     const source = axios.CancelToken.source()
-    const url = `${config.metadataCacheUri}/api/v1/aquarius/pools/history/${price.address}`
+    const url = `${config.metadataCacheUri}/api/v1/aquarius/pools/history/${livePrice.address}`
 
     async function getData() {
       Logger.log('Fired GetGraphData!')
