@@ -1,11 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import {
-  useOcean,
-  useMetadata,
-  usePricing,
-  useAsset
-} from '@oceanprotocol/react'
-import { DDO, Logger } from '@oceanprotocol/lib'
+import { useOcean, useMetadata, usePricing } from '@oceanprotocol/react'
+import { BestPrice, DDO, Logger } from '@oceanprotocol/lib'
 import styles from './index.module.css'
 import stylesActions from './Actions.module.css'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
@@ -21,6 +16,7 @@ import TokenBalance from '../../../../@types/TokenBalance'
 import Transactions from './Transactions'
 import Graph, { ChartDataLiqudity } from './Graph'
 import axios from 'axios'
+import { useAsset } from '../../../../providers/Asset'
 
 const contentQuery = graphql`
   query PoolQuery {
@@ -48,7 +44,9 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const content = data.content.edges[0].node.childContentJson.pool
 
   const { ocean, accountId, networkId, config } = useOcean()
-  const { price, refreshPrice, owner } = useMetadata(ddo)
+  const { price, getLivePrice, owner } = useMetadata(ddo)
+  const [livePrice, setLivePrice] = useState<BestPrice>(price)
+
   const { dtSymbol } = usePricing(ddo)
   const { isInPurgatory } = useAsset()
 
@@ -82,9 +80,16 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
   useEffect(() => {
     // Re-fetch price periodically, triggering re-calculation of everything
-    const interval = setInterval(() => refreshPrice(), refreshInterval)
-    return () => clearInterval(interval)
-  }, [ddo, refreshPrice])
+    let isMounted = true
+    const interval = setInterval(async () => {
+      if (!isMounted) return
+      setLivePrice(await getLivePrice())
+    }, refreshInterval)
+    return () => {
+      clearInterval(interval)
+      isMounted = false
+    }
+  }, [ddo, getLivePrice])
 
   useEffect(() => {
     setIsRemoveDisabled(isInPurgatory && owner === accountId)
@@ -92,22 +97,23 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
   useEffect(() => {
     const poolShare =
-      price?.ocean &&
-      price?.datatoken &&
+      livePrice?.ocean &&
+      livePrice?.datatoken &&
       ((Number(poolTokens) / Number(totalPoolTokens)) * 100).toFixed(5)
     setPoolShare(poolShare)
     setHasAddedLiquidity(Number(poolShare) > 0)
 
     const totalUserLiquidityInOcean =
-      userLiquidity?.ocean + userLiquidity?.datatoken * price?.value
+      userLiquidity?.ocean + userLiquidity?.datatoken * livePrice?.value
     setTotalUserLiquidityInOcean(totalUserLiquidityInOcean)
 
-    const totalLiquidityInOcean = price?.ocean + price?.datatoken * price?.value
+    const totalLiquidityInOcean =
+      livePrice?.ocean + livePrice?.datatoken * livePrice?.value
     setTotalLiquidityInOcean(totalLiquidityInOcean)
-  }, [userLiquidity, price, poolTokens, totalPoolTokens])
+  }, [userLiquidity, livePrice, poolTokens, totalPoolTokens])
 
   useEffect(() => {
-    if (!ocean || !accountId || !price) return
+    if (!ocean || !accountId || !livePrice) return
 
     async function init() {
       try {
@@ -115,7 +121,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         // Get everything which is in the pool
         //
         const totalPoolTokens = await ocean.pool.getPoolSharesTotalSupply(
-          price.address
+          livePrice.address
         )
         setTotalPoolTokens(totalPoolTokens)
 
@@ -124,16 +130,16 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         //
         const poolTokens = await ocean.pool.sharesBalance(
           accountId,
-          price.address
+          livePrice.address
         )
         setPoolTokens(poolTokens)
 
         // calculate user's provided liquidity based on pool tokens
         const userOceanBalance =
-          (Number(poolTokens) / Number(totalPoolTokens)) * price.ocean
+          (Number(poolTokens) / Number(totalPoolTokens)) * livePrice.ocean
 
         const userDtBalance =
-          (Number(poolTokens) / Number(totalPoolTokens)) * price.datatoken
+          (Number(poolTokens) / Number(totalPoolTokens)) * livePrice.datatoken
 
         const userLiquidity = {
           ocean: userOceanBalance,
@@ -147,17 +153,18 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         //
         const creatorPoolTokens = await ocean.pool.sharesBalance(
           owner,
-          price.address
+          livePrice.address
         )
         setCreatorPoolTokens(creatorPoolTokens)
 
         // Calculate creator's provided liquidity based on pool tokens
         const creatorOceanBalance =
-          (Number(creatorPoolTokens) / Number(totalPoolTokens)) * price.ocean
+          (Number(creatorPoolTokens) / Number(totalPoolTokens)) *
+          livePrice.ocean
 
         const creatorDtBalance =
           (Number(creatorPoolTokens) / Number(totalPoolTokens)) *
-          price.datatoken
+          livePrice.datatoken
 
         const creatorLiquidity = {
           ocean: creatorOceanBalance,
@@ -166,12 +173,13 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         setCreatorLiquidity(creatorLiquidity)
 
         const totalCreatorLiquidityInOcean =
-          creatorLiquidity?.ocean + creatorLiquidity?.datatoken * price?.value
+          creatorLiquidity?.ocean +
+          creatorLiquidity?.datatoken * livePrice?.value
         setCreatorTotalLiquidityInOcean(totalCreatorLiquidityInOcean)
 
         const creatorPoolShare =
-          price?.ocean &&
-          price?.datatoken &&
+          livePrice?.ocean &&
+          livePrice?.datatoken &&
           creatorLiquidity &&
           ((Number(creatorPoolTokens) / Number(totalPoolTokens)) * 100).toFixed(
             2
@@ -180,12 +188,12 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
         // Get swap fee
         // swapFee is tricky: to get 0.1% you need to convert from 0.001
-        const swapFee = await ocean.pool.getSwapFee(price.address)
+        const swapFee = await ocean.pool.getSwapFee(livePrice.address)
         setSwapFee(`${Number(swapFee) * 100}`)
 
         // Get weights
         const weightDt = await ocean.pool.getDenormalizedWeight(
-          price.address,
+          livePrice.address,
           ddo.dataToken
         )
         setWeightDt(`${Number(weightDt) * 10}`)
@@ -196,17 +204,19 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
     }
     init()
 
-    // Re-fetch price periodically, triggering re-calculation of everything
-    const interval = setInterval(() => refreshPrice(), refreshInterval)
-    return () => clearInterval(interval)
+    // TODO why is this again here ?!?!?!
+
+    // // Re-fetch price periodically, triggering re-calculation of everything
+    // const interval = setInterval(() => refreshPrice(), refreshInterval)
+    // return () => clearInterval(interval)
   }, [ocean, accountId, price, ddo, refreshPool, owner])
 
   // Get graph history data
   useEffect(() => {
     if (
-      !price?.address ||
-      !price?.ocean ||
-      !price?.value ||
+      !livePrice?.address ||
+      !livePrice?.ocean ||
+      !livePrice?.value ||
       !config?.metadataCacheUri
     )
       return
@@ -233,11 +243,16 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
     return () => {
       source.cancel()
     }
-  }, [config.metadataCacheUri, price?.address, price?.ocean, price?.value])
+  }, [
+    config.metadataCacheUri,
+    livePrice?.address,
+    livePrice?.ocean,
+    livePrice?.value
+  ])
 
   const refreshInfo = async () => {
     setRefreshPool(!refreshPool)
-    await refreshPrice()
+    setLivePrice(await getLivePrice())
   }
 
   return (
@@ -246,9 +261,12 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         <Add
           setShowAdd={setShowAdd}
           refreshInfo={refreshInfo}
-          poolAddress={price.address}
+          poolAddress={livePrice.address}
           totalPoolTokens={totalPoolTokens}
-          totalBalance={{ ocean: price.ocean, datatoken: price.datatoken }}
+          totalBalance={{
+            ocean: livePrice.ocean,
+            datatoken: livePrice.datatoken
+          }}
           swapFee={swapFee}
           dtSymbol={dtSymbol}
           dtAddress={ddo.dataToken}
@@ -257,7 +275,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         <Remove
           setShowRemove={setShowRemove}
           refreshInfo={refreshInfo}
-          poolAddress={price.address}
+          poolAddress={livePrice.address}
           poolTokens={poolTokens}
           totalPoolTokens={totalPoolTokens}
           dtSymbol={dtSymbol}
@@ -266,12 +284,12 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         <>
           <div className={styles.dataToken}>
             <PriceUnit price="1" symbol={dtSymbol} /> ={' '}
-            <PriceUnit price={`${price?.value}`} />
+            <PriceUnit price={`${livePrice?.value}`} />
             <Tooltip content={content.tooltips.price} />
             <div className={styles.dataTokenLinks}>
               <EtherscanLink
                 networkId={networkId}
-                path={`address/${price?.address}`}
+                path={`address/${livePrice?.address}`}
               >
                 Pool
               </EtherscanLink>
@@ -327,8 +345,8 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
                 <Graph data={graphData} />
               </>
             }
-            ocean={`${price?.ocean}`}
-            dt={`${price?.datatoken}`}
+            ocean={`${livePrice?.ocean}`}
+            dt={`${livePrice?.datatoken}`}
             dtSymbol={dtSymbol}
             poolShares={totalPoolTokens}
             conversion={totalLiquidityInOcean}
@@ -361,7 +379,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
             )}
           </div>
 
-          {accountId && <Transactions poolAddress={price?.address} />}
+          {accountId && <Transactions poolAddress={livePrice?.address} />}
         </>
       )}
     </>

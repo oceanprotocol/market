@@ -6,7 +6,8 @@ import { MetadataMarket } from '../../@types/MetaData'
 import { MetadataCache, Logger, DDO } from '@oceanprotocol/lib'
 import Alert from '../atoms/Alert'
 import Loader from '../atoms/Loader'
-import { useAsset, useOcean } from '@oceanprotocol/react'
+import { useOcean } from '@oceanprotocol/react'
+import { useAsset } from '../../providers/Asset'
 
 export default function PageTemplateAssetDetails({
   did,
