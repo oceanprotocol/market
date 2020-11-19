@@ -21,42 +21,15 @@ export default function PageTemplateAssetDetails({
   const [metadata, setMetadata] = useState<MetadataMarket>()
   const [title, setTitle] = useState<string>()
   const [error, setError] = useState<string>()
-  const [ddo, setDdo] = useState<DDO>()
+  //  const [ddo, setDdo] = useState<DDO>()
+  const { ddo } = useAsset()
 
   useEffect(() => {
-    if (!config?.metadataCacheUri) return
-
-    async function init() {
-      if (ddo) return
-
-      try {
-        const metadataCache = new MetadataCache(config.metadataCacheUri, Logger)
-        const ddo = await metadataCache.retrieveDDO(did)
-
-        if (!ddo) {
-          setTitle('Could not retrieve asset')
-          setError(
-            `The DDO for ${did} was not found in MetadataCache. If you just published a new data set, wait some seconds and refresh this page.`
-          )
-          return
-        }
-
-        setDdo(ddo)
-
-        const { attributes } = ddo.findServiceByType('metadata')
-        setTitle(attributes.main.name)
-        setMetadata((attributes as unknown) as MetadataMarket)
-      } catch (error) {
-        setTitle('Error retrieving asset')
-        setError(error.message)
-      }
-    }
-    init()
-
-    // Periodically try to get DDO when not present yet
-    const timer = !ddo && setInterval(() => init(), 5000)
-    return () => clearInterval(timer)
-  }, [ddo, did, config.metadataCacheUri])
+    if (!ddo) return
+    const { attributes } = ddo.findServiceByType('metadata')
+    setTitle(attributes.main.name)
+    setMetadata((attributes as unknown) as MetadataMarket)
+  }, [ddo])
 
   return did && metadata ? (
     <>

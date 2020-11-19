@@ -21,7 +21,6 @@ export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
   // Get and set user DT balance
   useEffect(() => {
     if (!ocean || !accountId) return
-
     async function init() {
       try {
         const dtBalance = await ocean.datatokens.balance(
