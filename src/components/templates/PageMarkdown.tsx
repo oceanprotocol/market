@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import { graphql, PageProps } from 'gatsby'
-import Layout from '../Layout'
+import Page from './Page'
 import styles from './PageMarkdown.module.css'
 import Container from '../atoms/Container'
 
@@ -9,19 +9,14 @@ export default function PageTemplateMarkdown(props: PageProps): ReactElement {
   const { title, description } = frontmatter
 
   return (
-    <Layout
-      title={title}
-      description={description}
-      uri={props.uri}
-      headerCenter
-    >
+    <Page title={title} description={description} uri={props.uri} headerCenter>
       <Container narrow>
         <div
           className={styles.content}
           dangerouslySetInnerHTML={{ __html: html }}
         />
       </Container>
-    </Layout>
+    </Page>
   )
 }
 

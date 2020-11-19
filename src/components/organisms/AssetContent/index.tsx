@@ -13,7 +13,6 @@ import { useMetadata, useOcean, usePricing } from '@oceanprotocol/react'
 import EtherscanLink from '../../atoms/EtherscanLink'
 import Bookmark from './Bookmark'
 import Byline from './Byline'
-import Alert from '../../atoms/Alert'
 
 export interface AssetContentProps {
   metadata: MetadataMarket

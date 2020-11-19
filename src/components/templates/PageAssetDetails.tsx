@@ -1,12 +1,12 @@
 import React, { useState, useEffect, ReactElement } from 'react'
 import { Router } from '@reach/router'
-import AssetContent from '../../components/organisms/AssetContent'
-import Layout from '../../components/Layout'
+import AssetContent from '../organisms/AssetContent'
+import Page from './Page'
 import { MetadataMarket } from '../../@types/MetaData'
 import { MetadataCache, Logger, DDO } from '@oceanprotocol/lib'
-import Alert from '../../components/atoms/Alert'
-import Loader from '../../components/atoms/Loader'
-import { useOcean } from '@oceanprotocol/react'
+import Alert from '../atoms/Alert'
+import Loader from '../atoms/Loader'
+import { useAsset, useOcean } from '@oceanprotocol/react'
 
 export default function PageTemplateAssetDetails({
   did,
@@ -16,6 +16,7 @@ export default function PageTemplateAssetDetails({
   uri: string
 }): ReactElement {
   const { config } = useOcean()
+  const { isInPurgatory, purgatoryData } = useAsset()
   const [metadata, setMetadata] = useState<MetadataMarket>()
   const [title, setTitle] = useState<string>()
   const [error, setError] = useState<string>()
@@ -57,22 +58,32 @@ export default function PageTemplateAssetDetails({
   }, [ddo, did, config.metadataCacheUri])
 
   return did && metadata ? (
-    <Layout title={title} uri={uri}>
-      <Router basepath="/asset">
-        <AssetContent
-          ddo={ddo}
-          metadata={metadata as MetadataMarket}
-          path=":did"
+    <>
+      {isInPurgatory && purgatoryData && (
+        <Alert
+          title="Data Set In Purgatory"
+          badge={`Reason: ${purgatoryData.reason}`}
+          text="Except for removing liquidity, no further actions are permitted on this data set and it will not be returned in any search. For more details go to [list-purgatory](https://github.com/oceanprotocol/list-purgatory)."
+          state="error"
         />
-      </Router>
-    </Layout>
+      )}
+      <Page title={title} uri={uri}>
+        <Router basepath="/asset">
+          <AssetContent
+            ddo={ddo}
+            metadata={metadata as MetadataMarket}
+            path=":did"
+          />
+        </Router>
+      </Page>
+    </>
   ) : error ? (
-    <Layout title={title} noPageHeader uri={uri}>
+    <Page title={title} noPageHeader uri={uri}>
       <Alert title={title} text={error} state="error" />
-    </Layout>
+    </Page>
   ) : (
-    <Layout title={undefined} uri={uri}>
+    <Page title={undefined} uri={uri}>
       <Loader />
-    </Layout>
+    </Page>
   )
 }
