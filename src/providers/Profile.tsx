@@ -28,14 +28,13 @@ function ProfileProvider({ children }: { children: ReactNode }): ReactElement {
   }
 
   const init3Box = async () => {
-    if (window && typeof window === 'undefined') return
     const box = await Box.openBox(accountId, web3Provider)
     await box.syncDone
     setBox(box)
   }
 
   useEffect(() => {
-    if (!accountId || status !== 1) return
+    if (typeof window === 'undefined' || !accountId || status !== 1) return
     init3Box()
   }, [accountId, status])
 
