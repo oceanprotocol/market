@@ -6,15 +6,9 @@ import Time from '../atoms/Time'
 import Table from '../atoms/Table'
 import AssetTitle from './AssetListTitle'
 import styles from './PoolTransactions.module.css'
-import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../providers/UserPreferences'
 import { Ocean } from '@oceanprotocol/lib'
-
-function formatNumber(number: string, locale: string) {
-  return formatCurrency(Number(number), '', locale, true, {
-    significantFigures: 6
-  })
-}
+import { formatPrice } from '../atoms/Price/PriceUnit'
 
 async function getSymbol(
   ocean: Ocean,
@@ -43,14 +37,14 @@ async function getTitle(
 
   const title =
     row.type === 'join'
-      ? `Add ${formatNumber(row.tokenAmountIn, locale)} ${addRemoveSymbol}`
+      ? `Add ${formatPrice(row.tokenAmountIn, locale)} ${addRemoveSymbol}`
       : row.type === 'exit'
-      ? `Remove ${formatNumber(row.tokenAmountOut, locale)} ${addRemoveSymbol}`
-      : `Swap ${formatNumber(row.tokenAmountIn, locale)} ${await getSymbol(
+      ? `Remove ${formatPrice(row.tokenAmountOut, locale)} ${addRemoveSymbol}`
+      : `Swap ${formatPrice(row.tokenAmountIn, locale)} ${await getSymbol(
           ocean,
           row.tokenIn,
           oceanTokenAddress
-        )} for ${formatNumber(row.tokenAmountOut, locale)} ${await getSymbol(
+        )} for ${formatPrice(row.tokenAmountOut, locale)} ${await getSymbol(
           ocean,
           row.tokenOut,
           oceanTokenAddress
