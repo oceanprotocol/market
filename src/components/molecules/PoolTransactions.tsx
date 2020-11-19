@@ -30,6 +30,31 @@ async function getSymbol(ocean: Ocean, contractAddress: string) {
   return symbol
 }
 
+async function getTitle(ocean: Ocean, row: PoolTransaction, locale: string) {
+  const addRemoveSymbol = await getSymbol(ocean, row.tokenIn || row.tokenOut)
+
+  const title =
+    row.type === 'join'
+      ? `Add ${formatNumber(
+          Number(row.tokenAmountIn),
+          locale
+        )} ${addRemoveSymbol}`
+      : row.type === 'exit'
+      ? `Remove ${formatNumber(
+          Number(row.tokenAmountOut),
+          locale
+        )} ${addRemoveSymbol}`
+      : `Swap ${formatNumber(
+          Number(row.tokenAmountIn),
+          locale
+        )} ${await getSymbol(ocean, row.tokenIn)} for ${formatNumber(
+          Number(row.tokenAmountOut),
+          locale
+        )} ${await getSymbol(ocean, row.tokenOut)}`
+
+  return title
+}
+
 function Title({ row }: { row: PoolTransaction }) {
   const { ocean, networkId } = useOcean()
   const [title, setTitle] = useState<string>()
@@ -39,34 +64,17 @@ function Title({ row }: { row: PoolTransaction }) {
     if (!ocean || !locale || !row) return
 
     async function init() {
-      const title =
-        row.type === 'join'
-          ? `Add ${formatNumber(
-              Number(row.tokenAmountIn),
-              locale
-            )} ${await getSymbol(ocean, row.tokenIn)}`
-          : row.type === 'exit'
-          ? `Remove ${formatNumber(
-              Number(row.tokenAmountOut),
-              locale
-            )} ${await getSymbol(ocean, row.tokenOut)}`
-          : `Swap ${formatNumber(
-              Number(row.tokenAmountIn),
-              locale
-            )} ${await getSymbol(ocean, row.tokenIn)} for ${formatNumber(
-              Number(row.tokenAmountOut),
-              locale
-            )} ${await getSymbol(ocean, row.tokenOut)}`
+      const title = await getTitle(ocean, row, locale)
       setTitle(title)
     }
     init()
   }, [ocean, row, locale])
 
-  return (
+  return title ? (
     <EtherscanLink networkId={networkId} path={`/tx/${row.transactionHash}`}>
       {title}
     </EtherscanLink>
-  )
+  ) : null
 }
 
 function getColumns(minimal?: boolean) {
