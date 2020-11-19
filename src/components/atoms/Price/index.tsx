@@ -17,6 +17,7 @@ export default function Price({
   small?: boolean
   conversion?: boolean
 }): ReactElement {
+  // price is not fetched from the chain anymore , will update one AssetProvider is implemented
   const { price } = useMetadata(ddo)
 
   return price?.value ? (
