@@ -21,7 +21,9 @@
 }
 
 .button,
-.button:hover {
+.button:hover,
+.button:focus,
+.button:active {
   display: inline-block;
   color: var(--color-secondary);
   font-size: var(--font-size-mini);
