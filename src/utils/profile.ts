@@ -14,7 +14,6 @@ export default async function get3BoxProfile(
       `${ipfsUrl}${accountId}`,
       { cancelToken }
     )
-    console.log('prof res', response)
     if (!response || response.status !== 200 || !response.data) return
 
     return {

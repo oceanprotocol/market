@@ -7,7 +7,6 @@ import { MetadataCache, Logger, DDO } from '@oceanprotocol/lib'
 import Alert from '../atoms/Alert'
 import Loader from '../atoms/Loader'
 import { useAsset, useOcean } from '@oceanprotocol/react'
-import get3BoxProfile from '../../utils/profile'
 
 export default function PageTemplateAssetDetails({
   did,
@@ -16,21 +15,12 @@ export default function PageTemplateAssetDetails({
   did: string
   uri: string
 }): ReactElement {
-  const { config, accountId } = useOcean()
+  const { config } = useOcean()
   const { isInPurgatory, purgatoryData } = useAsset()
   const [metadata, setMetadata] = useState<MetadataMarket>()
   const [title, setTitle] = useState<string>()
   const [error, setError] = useState<string>()
   const [ddo, setDdo] = useState<DDO>()
-
-  useEffect(() => {
-    if (!accountId) return
-    async function init() {
-      const prof = await get3BoxProfile(accountId, null)
-      console.log(prof)
-    }
-    init()
-  }, [accountId])
 
   useEffect(() => {
     if (!config?.metadataCacheUri) return
