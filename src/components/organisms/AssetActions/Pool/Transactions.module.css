@@ -43,3 +43,15 @@
 .open .toggle svg {
   transform: rotate(180deg);
 }
+
+.transactions [class*='Table-module--table'] {
+  /* 
+    react-data-table-component sets a default width: 100% 
+    which often leads to unneccessary overflows. Following lines make
+    sure table always spans between edges of container, without any overflow
+    when enough space is available. But it also destroys overflow table on narrow
+    viewports.
+  */
+  width: fit-content !important;
+  min-width: 100%;
+}

@@ -1,6 +1,7 @@
 .price {
   display: inline-block;
   font-weight: var(--font-weight-bold);
+  font-family: var(--font-family-base);
   font-size: var(--font-size-large);
   color: var(--font-color-text);
   line-height: 1.2;
@@ -25,7 +26,7 @@
   font-size: var(--font-size-small);
 }
 
-.badge {
+.price .badge {
   vertical-align: middle;
   margin-left: calc(var(--spacer) / 6);
   background: var(--color-secondary);

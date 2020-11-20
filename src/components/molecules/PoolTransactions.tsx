@@ -6,51 +6,73 @@ import Time from '../atoms/Time'
 import Table from '../atoms/Table'
 import AssetTitle from './AssetListTitle'
 import styles from './PoolTransactions.module.css'
-import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../providers/UserPreferences'
+import { Ocean } from '@oceanprotocol/lib'
+import { formatPrice } from '../atoms/Price/PriceUnit'
 
-function formatNumber(number: number, locale: string) {
-  return formatCurrency(number, '', locale, true, {
-    significantFigures: 6
-  })
+async function getSymbol(
+  ocean: Ocean,
+  tokenAddress: string,
+  oceanTokenAddress: string
+) {
+  const symbol =
+    oceanTokenAddress === tokenAddress
+      ? 'OCEAN'
+      : await ocean.datatokens.getSymbol(tokenAddress)
+
+  return symbol
+}
+
+async function getTitle(
+  ocean: Ocean,
+  row: PoolTransaction,
+  locale: string,
+  oceanTokenAddress: string
+) {
+  const addRemoveSymbol = await getSymbol(
+    ocean,
+    row.tokenIn || row.tokenOut,
+    oceanTokenAddress
+  )
+
+  const title =
+    row.type === 'join'
+      ? `Add ${formatPrice(row.tokenAmountIn, locale)} ${addRemoveSymbol}`
+      : row.type === 'exit'
+      ? `Remove ${formatPrice(row.tokenAmountOut, locale)} ${addRemoveSymbol}`
+      : `Swap ${formatPrice(row.tokenAmountIn, locale)} ${await getSymbol(
+          ocean,
+          row.tokenIn,
+          oceanTokenAddress
+        )} for ${formatPrice(row.tokenAmountOut, locale)} ${await getSymbol(
+          ocean,
+          row.tokenOut,
+          oceanTokenAddress
+        )}`
+
+  return title
 }
 
 function Title({ row }: { row: PoolTransaction }) {
-  const { ocean, networkId } = useOcean()
-  const [dtSymbol, setDtSymbol] = useState<string>()
+  const { ocean, networkId, config } = useOcean()
+  const [title, setTitle] = useState<string>()
   const { locale } = useUserPreferences()
 
-  const symbol = dtSymbol || 'OCEAN'
-  const title =
-    row.type === 'join'
-      ? `Add ${formatNumber(Number(row.tokenAmountIn), locale)} ${symbol}`
-      : row.type === 'exit'
-      ? `Remove ${formatNumber(Number(row.tokenAmountOut), locale)} ${symbol}`
-      : `Swap ${formatNumber(
-          Number(row.tokenAmountIn),
-          locale
-        )} ${symbol} for ${formatNumber(
-          Number(row.tokenAmountOut),
-          locale
-        )} ${symbol}`
-
   useEffect(() => {
-    if (!ocean) return
+    if (!ocean || !locale || !row || !config?.oceanTokenAddress) return
 
-    async function getSymbol() {
-      const symbol = await ocean.datatokens.getSymbol(
-        row.tokenIn || row.tokenOut
-      )
-      setDtSymbol(symbol)
+    async function init() {
+      const title = await getTitle(ocean, row, locale, config.oceanTokenAddress)
+      setTitle(title)
     }
-    getSymbol()
-  }, [ocean, row])
+    init()
+  }, [ocean, row, locale, config?.oceanTokenAddress])
 
-  return (
+  return title ? (
     <EtherscanLink networkId={networkId} path={`/tx/${row.transactionHash}`}>
       {title}
     </EtherscanLink>
-  )
+  ) : null
 }
 
 function getColumns(minimal?: boolean) {
@@ -59,9 +81,7 @@ function getColumns(minimal?: boolean) {
       name: 'Title',
       selector: function getTitleRow(row: PoolTransaction) {
         return <Title row={row} />
-      },
-      minWidth: '14rem',
-      grow: 1
+      }
     },
     {
       name: 'Data Set',
@@ -82,7 +102,8 @@ function getColumns(minimal?: boolean) {
             isUnix
           />
         )
-      }
+      },
+      maxWidth: '10rem'
     }
   ]
 }

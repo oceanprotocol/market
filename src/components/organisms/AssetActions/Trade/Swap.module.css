@@ -3,7 +3,9 @@
 }
 
 .swapButton,
-.swapButton:hover {
+.swapButton:hover,
+.swapButton:focus,
+.swapButton:active {
   padding: 0;
   display: block;
   width: calc(100% + 4rem);
@@ -13,6 +15,7 @@
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
   padding: calc(var(--spacer) / 3) 0 calc(var(--spacer) / 6) 0;
+  transform: none;
 }
 
 .swapButton svg {
