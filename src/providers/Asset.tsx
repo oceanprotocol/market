@@ -46,9 +46,7 @@ function AssetProvider({
   const [did, setDID] = useState<string>()
   const [metadata, setMetadata] = useState<Metadata>()
   const [title, setTitle] = useState<string>()
-
   const [price, setPrice] = useState<BestPrice>()
-
   const [owner, setOwner] = useState<string>()
 
   const refreshPrice = useCallback(async () => {
@@ -66,6 +64,7 @@ function AssetProvider({
       ddo.price.pools[0]
     )
     setPrice(newPrice)
+    Logger.log(`Refreshed asset price: ${newPrice?.value}`)
   }, [ocean, config, ddo, networkId, status])
 
   const getDDO = useCallback(
@@ -92,6 +91,7 @@ function AssetProvider({
     const source = axios.CancelToken.source()
     let isMounted = true
     Logger.log('Init asset, get ddo')
+
     async function init(): Promise<void> {
       if (isDDO(asset as string | DDO)) {
         setDDO(asset as DDO)
@@ -106,11 +106,12 @@ function AssetProvider({
       }
     }
     init()
+
     return () => {
       isMounted = false
       source.cancel()
     }
-  }, [asset])
+  }, [asset, getDDO])
 
   useEffect(() => {
     // Re-fetch price periodically, triggering re-calculation of everything
@@ -144,25 +145,23 @@ function AssetProvider({
     }
   }, [])
 
-  const getMetadata = useCallback(async (ddo: DDO): Promise<Metadata> => {
-    const metadata = ddo.findServiceByType('metadata')
-    return metadata.attributes
-  }, [])
+  const initMetadata = useCallback(
+    async (ddo: DDO): Promise<void> => {
+      if (!ddo) return
 
-  const initMetadata = useCallback(async (ddo: DDO): Promise<void> => {
-    if (!ddo) return
-    Logger.log('Init metadata')
-    // Set price from DDO first
-    setPrice(ddo.price)
+      Logger.log('Init metadata')
+      // Set price & metadata from DDO first
+      setPrice(ddo.price)
+      const { attributes } = ddo.findServiceByType('metadata')
+      setMetadata(attributes)
+      setTitle(attributes?.main.name)
+      setOwner(ddo.publicKey[0].owner)
 
-    const metadata = await getMetadata(ddo)
-    setMetadata(metadata)
-    setTitle(metadata.main.name)
-    setOwner(ddo.publicKey[0].owner)
-
-    await setPurgatory(ddo.id)
-    refreshPrice()
-  }, [])
+      await setPurgatory(ddo.id)
+      refreshPrice()
+    },
+    [refreshPrice, setPurgatory]
+  )
 
   useEffect(() => {
     if (!ddo) return
