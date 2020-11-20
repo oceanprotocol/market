@@ -3,7 +3,7 @@ module.exports = {
   // on start. App will automatically switch network configs when user switches
   // networks in their wallet.
   // Ocean Protocol contracts are deployed for: 'mainnet', 'rinkeby', 'development'
-  network: process.env.GATSBY_NETWORK || 'rinkeby',
+  network: process.env.GATSBY_NETWORK || 'mainnet',
   infuraProjectId: process.env.GATSBY_INFURA_PROJECT_ID || 'xxx',
   // The ETH address the marketplace fee will be sent to.
   marketFeeAddress:

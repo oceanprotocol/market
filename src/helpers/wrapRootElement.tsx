@@ -10,7 +10,6 @@ import {
 } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import { UserPreferencesProvider } from '../providers/UserPreferences'
 import PricesProvider from '../providers/Prices'
-import { ProfileProvider } from '../providers/Profile'
 
 export function getOceanConfig(
   network: ConfigHelperNetworkName | ConfigHelperNetworkId
@@ -35,10 +34,8 @@ export default function wrapRootElement({
       web3ModalOpts={web3ModalOpts}
     >
       <UserPreferencesProvider>
-        <ProfileProvider>
-          <NetworkMonitor />
-          <PricesProvider>{element}</PricesProvider>
-        </ProfileProvider>
+        <NetworkMonitor />
+        <PricesProvider>{element}</PricesProvider>
       </UserPreferencesProvider>
     </OceanProvider>
   )
