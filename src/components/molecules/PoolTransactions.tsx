@@ -81,9 +81,7 @@ function getColumns(minimal?: boolean) {
       name: 'Title',
       selector: function getTitleRow(row: PoolTransaction) {
         return <Title row={row} />
-      },
-      minWidth: '14rem',
-      grow: 1
+      }
     },
     {
       name: 'Data Set',
@@ -104,7 +102,8 @@ function getColumns(minimal?: boolean) {
             isUnix
           />
         )
-      }
+      },
+      maxWidth: '10rem'
     }
   ]
 }
