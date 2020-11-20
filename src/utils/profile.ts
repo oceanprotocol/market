@@ -1,9 +1,15 @@
 import { Profile, Profile3Box } from '../models/Profile'
 import axios, { AxiosResponse, CancelToken } from 'axios'
-import jwt_decode from 'jwt-decode'
+import { default as jwtDecode } from 'jwt-decode'
 import { Logger } from '@oceanprotocol/lib'
 
 const ipfsUrl = 'https://ipfs.3box.io/profile?address='
+
+function getTwitterUser(proofJWT: string) {
+  if (!proofJWT) return
+  const proof = jwtDecode(proofJWT) as any
+  return proof.claim.twitter_handle
+}
 
 export default async function get3BoxProfile(
   accountId: string,
@@ -27,10 +33,4 @@ export default async function get3BoxProfile(
     Logger.log(`No profile found for ${accountId}`)
   }
   return
-}
-
-function getTwitterUser(proofJWT: string) {
-  if (!proofJWT) return
-  const proof = jwt_decode(proofJWT) as any
-  return proof.claim.twitter_handle
 }
