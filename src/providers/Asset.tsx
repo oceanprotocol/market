@@ -9,7 +9,7 @@ import React, {
 } from 'react'
 import { Logger, DDO, Metadata, BestPrice } from '@oceanprotocol/lib'
 import { PurgatoryData } from '@oceanprotocol/lib/dist/node/ddo/interfaces/PurgatoryData'
-import { isDDO, getDataTokenPrice, useOcean } from '@oceanprotocol/react'
+import { getDataTokenPrice, useOcean } from '@oceanprotocol/react'
 import getAssetPurgatoryData from '../utils/purgatory'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import axios, { CancelToken } from 'axios'
@@ -32,7 +32,6 @@ const AssetContext = createContext({} as AssetProviderValue)
 
 const refreshInterval = 10000 // 10 sec.
 
-// TODO component still WIP , only isInPurgatory, purgatoryData and price are relevant
 function AssetProvider({
   asset,
   children
@@ -175,7 +174,7 @@ function AssetProvider({
   useEffect(() => {
     if (!ddo) return
     initMetadata(ddo)
-  }, [ddo])
+  }, [ddo, initMetadata])
 
   return (
     <AssetContext.Provider

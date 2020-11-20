@@ -5,13 +5,14 @@ import AssetProvider from '../../providers/Asset'
 
 export default function PageGatsbyAssetDetails(props: PageProps): ReactElement {
   const [did, setDid] = useState<string>()
+
   useEffect(() => {
     setDid(props.location.pathname.split('/')[2])
   }, [props.location.pathname])
 
   return (
     <AssetProvider asset={did}>
-      <PageTemplateAssetDetails did={did} uri={props.location.pathname} />
+      <PageTemplateAssetDetails uri={props.location.pathname} />
     </AssetProvider>
   )
 }

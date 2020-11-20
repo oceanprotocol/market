@@ -3,20 +3,15 @@ import { Router } from '@reach/router'
 import AssetContent from '../organisms/AssetContent'
 import Page from './Page'
 import { MetadataMarket } from '../../@types/MetaData'
-import { MetadataCache, Logger, DDO } from '@oceanprotocol/lib'
 import Alert from '../atoms/Alert'
 import Loader from '../atoms/Loader'
-import { useOcean } from '@oceanprotocol/react'
 import { useAsset } from '../../providers/Asset'
 
 export default function PageTemplateAssetDetails({
-  did,
   uri
 }: {
-  did: string
   uri: string
 }): ReactElement {
-  const { config } = useOcean()
   const { isInPurgatory, purgatoryData } = useAsset()
   const [metadata, setMetadata] = useState<MetadataMarket>()
   const [title, setTitle] = useState<string>()
