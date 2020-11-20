@@ -7,7 +7,9 @@ export interface Profile {
 }
 
 export interface Profile3Box {
+  // eslint-disable-next-line
   proof_twitter: string
+  // eslint-disable-next-line
   proof_github: string
   emoji: string
   job: string
@@ -17,5 +19,6 @@ export interface Profile3Box {
   name: string
   description: string
   memberSince: string
+  // eslint-disable-next-line
   proof_did: string
 }
