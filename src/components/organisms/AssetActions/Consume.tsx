@@ -7,14 +7,10 @@ import Price from '../../atoms/Price'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
 import styles from './Consume.module.css'
 import Loader from '../../atoms/Loader'
-import {
-  useOcean,
-  useConsume,
-  usePricing,
-  useAsset
-} from '@oceanprotocol/react'
+import { useOcean, useConsume, usePricing } from '@oceanprotocol/react'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import checkPreviousOrder from '../../../utils/checkPreviousOrder'
+import { useAsset } from '../../../providers/Asset'
 
 export default function Consume({
   ddo,

@@ -1,11 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import {
-  useOcean,
-  useMetadata,
-  usePricing,
-  useAsset
-} from '@oceanprotocol/react'
-import { DDO, Logger } from '@oceanprotocol/lib'
+import { useOcean, useMetadata, usePricing } from '@oceanprotocol/react'
+import { BestPrice, DDO, Logger } from '@oceanprotocol/lib'
 import styles from './index.module.css'
 import stylesActions from './Actions.module.css'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
@@ -21,6 +16,7 @@ import TokenBalance from '../../../../@types/TokenBalance'
 import Transactions from './Transactions'
 import Graph, { ChartDataLiqudity } from './Graph'
 import axios from 'axios'
+import { useAsset } from '../../../../providers/Asset'
 
 const contentQuery = graphql`
   query PoolQuery {
@@ -41,16 +37,15 @@ const contentQuery = graphql`
   }
 `
 
-const refreshInterval = 15000 // 15 sec.
-
 export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childContentJson.pool
 
   const { ocean, accountId, networkId, config } = useOcean()
-  const { price, refreshPrice, owner } = useMetadata(ddo)
+  const { owner } = useMetadata(ddo)
+
   const { dtSymbol } = usePricing(ddo)
-  const { isInPurgatory } = useAsset()
+  const { isInPurgatory, price, refreshInterval, refreshPrice } = useAsset()
 
   const [poolTokens, setPoolTokens] = useState<string>()
   const [totalPoolTokens, setTotalPoolTokens] = useState<string>()
@@ -81,12 +76,6 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const [refreshPool, setRefreshPool] = useState(false)
 
   useEffect(() => {
-    // Re-fetch price periodically, triggering re-calculation of everything
-    const interval = setInterval(() => refreshPrice(), refreshInterval)
-    return () => clearInterval(interval)
-  }, [ddo, refreshPrice])
-
-  useEffect(() => {
     setIsRemoveDisabled(isInPurgatory && owner === accountId)
   }, [isInPurgatory, owner, accountId])
 
@@ -108,7 +97,6 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
   useEffect(() => {
     if (!ocean || !accountId || !price) return
-
     async function init() {
       try {
         //
@@ -195,10 +183,6 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
       }
     }
     init()
-
-    // Re-fetch price periodically, triggering re-calculation of everything
-    const interval = setInterval(() => refreshPrice(), refreshInterval)
-    return () => clearInterval(interval)
   }, [ocean, accountId, price, ddo, refreshPool, owner])
 
   // Get graph history data
@@ -248,7 +232,10 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           refreshInfo={refreshInfo}
           poolAddress={price.address}
           totalPoolTokens={totalPoolTokens}
-          totalBalance={{ ocean: price.ocean, datatoken: price.datatoken }}
+          totalBalance={{
+            ocean: price.ocean,
+            datatoken: price.datatoken
+          }}
           swapFee={swapFee}
           dtSymbol={dtSymbol}
           dtAddress={ddo.dataToken}
