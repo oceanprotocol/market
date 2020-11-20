@@ -1,5 +1,4 @@
 import React, { useState, useEffect, ReactElement } from 'react'
-import { Router } from '@reach/router'
 import AssetContent from '../organisms/AssetContent'
 import Page from './Page'
 import { MetadataMarket } from '../../@types/MetaData'
@@ -39,13 +38,7 @@ export default function PageTemplateAssetDetails({
         />
       )}
       <Page title={title} uri={uri}>
-        <Router basepath="/asset">
-          <AssetContent
-            ddo={ddo}
-            metadata={metadata as MetadataMarket}
-            path=":did"
-          />
-        </Router>
+        <AssetContent ddo={ddo} metadata={metadata as MetadataMarket} />
       </Page>
     </>
   ) : error ? (

@@ -14,20 +14,6 @@ exports.createPages = async ({ graphql, actions }) => {
   await createMarkdownPages(graphql, actions)
 }
 
-exports.onCreatePage = async ({ page, actions }) => {
-  const { createPage } = actions
-  // page.matchPath is a special key that's used for matching pages
-  // only on the client.
-  const handleClientSideOnly = page.path.match(/^\/asset/)
-
-  if (handleClientSideOnly) {
-    page.matchPath = '/asset/*'
-
-    // Update the page.
-    createPage(page)
-  }
-}
-
 exports.onCreateWebpackConfig = ({ actions }) => {
   actions.setWebpackConfig({
     node: {
