@@ -20,18 +20,20 @@ export default function PageTemplateAssetDetails({
   const { isInPurgatory, purgatoryData } = useAsset()
   const [metadata, setMetadata] = useState<MetadataMarket>()
   const [title, setTitle] = useState<string>()
-  const [error, setError] = useState<string>()
-  //  const [ddo, setDdo] = useState<DDO>()
-  const { ddo } = useAsset()
+  const { ddo, error } = useAsset()
 
   useEffect(() => {
-    if (!ddo) return
+    if (!ddo || error) {
+      setTitle('Could not retrieve asset')
+      return
+    }
+
     const { attributes } = ddo.findServiceByType('metadata')
     setTitle(attributes.main.name)
     setMetadata((attributes as unknown) as MetadataMarket)
-  }, [ddo])
+  }, [ddo, error])
 
-  return did && metadata ? (
+  return ddo && metadata ? (
     <>
       {isInPurgatory && purgatoryData && (
         <Alert

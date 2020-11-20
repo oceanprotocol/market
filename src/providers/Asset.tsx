@@ -23,6 +23,7 @@ interface AssetProviderValue {
   title: string | undefined
   owner: string | undefined
   price: BestPrice | undefined
+  error?: string
   refreshInterval: number
   refreshPrice: () => Promise<void>
 }
@@ -48,6 +49,7 @@ function AssetProvider({
   const [title, setTitle] = useState<string>()
   const [price, setPrice] = useState<BestPrice>()
   const [owner, setOwner] = useState<string>()
+  const [error, setError] = useState<string>()
 
   const refreshPrice = useCallback(async () => {
     if (
@@ -71,13 +73,17 @@ function AssetProvider({
     async (did: string, cancelToken: CancelToken): Promise<DDO | undefined> => {
       if (!config.metadataCacheUri) return
 
-      const request = await axios.get(
-        `${config.metadataCacheUri}/api/v1/aquarius/assets/ddo/${did}`,
-        { cancelToken }
-      )
-      const ddo = request.data as DDO
-
-      return new DDO(ddo)
+      try {
+        const request = await axios.get(
+          `${config.metadataCacheUri}/api/v1/aquarius/assets/ddo/${did}`,
+          { cancelToken }
+        )
+        const ddo = request.data as DDO
+        return new DDO(ddo)
+      } catch (error) {
+        Logger.error(error.message)
+        return undefined
+      }
     },
     [config.metadataCacheUri]
   )
@@ -93,17 +99,20 @@ function AssetProvider({
     Logger.log('Init asset, get ddo')
 
     async function init(): Promise<void> {
-      if (isDDO(asset as string | DDO)) {
-        setDDO(asset as DDO)
-        setDID((asset as DDO).id)
+      const ddo = await getDDO(asset as string, source.token)
+
+      if (!ddo) {
+        setError(
+          `The DDO for ${asset} was not found in MetadataCache. If you just published a new data set, wait some seconds and refresh this page.`
+        )
       } else {
-        // asset is a DID
-        const ddo = await getDDO(asset as string, source.token)
-        if (!isMounted) return
-        Logger.debug('DDO', ddo)
-        setDDO(ddo)
-        setDID(asset as string)
+        setError(undefined)
       }
+
+      if (!isMounted) return
+      Logger.debug('DDO', ddo)
+      setDDO(ddo)
+      setDID(asset as string)
     }
     init()
 
@@ -178,6 +187,7 @@ function AssetProvider({
           title,
           owner,
           price,
+          error,
           isInPurgatory,
           purgatoryData,
           refreshInterval,
