@@ -5,6 +5,7 @@ import { MetadataMarket } from '../../@types/MetaData'
 import Alert from '../atoms/Alert'
 import Loader from '../atoms/Loader'
 import { useAsset } from '../../providers/Asset'
+import { Router } from '@reach/router'
 
 export default function PageTemplateAssetDetails({
   uri
@@ -38,7 +39,17 @@ export default function PageTemplateAssetDetails({
         />
       )}
       <Page title={title} uri={uri}>
-        <AssetContent ddo={ddo} metadata={metadata as MetadataMarket} />
+        {/* 
+          The router is used here for SSR only
+          See https://www.gatsbyjs.com/docs/client-only-routes-and-user-authentication#configuring-and-handling-client-only-routes-on-a-server 
+        */}
+        <Router basepath="/asset">
+          <AssetContent
+            ddo={ddo}
+            metadata={metadata as MetadataMarket}
+            path=":did"
+          />
+        </Router>
       </Page>
     </>
   ) : error ? (
