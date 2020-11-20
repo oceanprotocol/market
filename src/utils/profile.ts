@@ -1,6 +1,6 @@
 import { Profile, Profile3Box } from '../models/Profile'
 import axios, { AxiosResponse, CancelToken } from 'axios'
-import { default as jwtDecode } from 'jwt-decode'
+import jwtDecode from 'jwt-decode'
 import { Logger } from '@oceanprotocol/lib'
 
 const ipfsUrl = 'https://ipfs.3box.io/profile?address='
@@ -32,5 +32,4 @@ export default async function get3BoxProfile(
   } catch (error) {
     Logger.log(`No profile found for ${accountId}`)
   }
-  return
 }
