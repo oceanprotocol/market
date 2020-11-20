@@ -24,6 +24,11 @@
   margin-top: calc(var(--spacer) / 2);
 }
 
+.assetCarousel [class*='alice-carousel__stage-item'] *,
+.assetCarousel [class*='alice-carousel__stage-item'] {
+  line-height: var(--line-height);
+}
+
 .empty {
   color: var(--color-secondary);
   font-size: var(--font-size-small);
