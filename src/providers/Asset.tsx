@@ -29,7 +29,7 @@ interface AssetProviderValue {
 
 const AssetContext = createContext({} as AssetProviderValue)
 
-const refreshInterval = 15000 // 15 sec.
+const refreshInterval = 10000 // 10 sec.
 
 // TODO component still WIP , only isInPurgatory, purgatoryData and price are relevant
 function AssetProvider({
@@ -51,7 +51,7 @@ function AssetProvider({
 
   const [owner, setOwner] = useState<string>()
 
-  async function refreshPrice(): Promise<void> {
+  const refreshPrice = useCallback(async () => {
     if (
       !ddo ||
       status !== 1 ||
@@ -59,15 +59,14 @@ function AssetProvider({
     )
       return
 
-    setPrice(
-      await getDataTokenPrice(
-        ocean,
-        ddo.dataToken,
-        ddo?.price?.type,
-        ddo.price.pools[0]
-      )
+    const newPrice = await getDataTokenPrice(
+      ocean,
+      ddo.dataToken,
+      ddo?.price?.type,
+      ddo.price.pools[0]
     )
-  }
+    setPrice(newPrice)
+  }, [ocean, config, ddo, networkId, status])
 
   const getDDO = useCallback(
     async (did: string, cancelToken: CancelToken): Promise<DDO | undefined> => {
@@ -116,15 +115,17 @@ function AssetProvider({
   useEffect(() => {
     // Re-fetch price periodically, triggering re-calculation of everything
     let isMounted = true
-    const interval = setInterval(async () => {
+
+    const interval = setInterval(() => {
       if (!isMounted) return
       refreshPrice()
     }, refreshInterval)
+
     return () => {
       clearInterval(interval)
       isMounted = false
     }
-  }, [ddo, networkId])
+  }, [ddo, networkId, refreshPrice])
 
   const setPurgatory = useCallback(async (did: string): Promise<void> => {
     if (!did) return
