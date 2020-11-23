@@ -4,14 +4,15 @@ import Compute from './Compute'
 import Consume from './Consume'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import Tabs from '../../atoms/Tabs'
-import { useOcean, useMetadata } from '@oceanprotocol/react'
+import { useOcean } from '@oceanprotocol/react'
 import compareAsBN from '../../../utils/compareAsBN'
 import Pool from './Pool'
 import Trade from './Trade'
+import { useAsset } from '../../../providers/Asset'
 
 export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
   const { ocean, balance, accountId } = useOcean()
-  const { price } = useMetadata(ddo)
+  const { price } = useAsset()
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
   const [dtBalance, setDtBalance] = useState<string>()
 
@@ -21,7 +22,6 @@ export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
   // Get and set user DT balance
   useEffect(() => {
     if (!ocean || !accountId) return
-
     async function init() {
       try {
         const dtBalance = await ocean.datatokens.balance(

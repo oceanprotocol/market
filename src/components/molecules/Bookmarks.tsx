@@ -1,16 +1,19 @@
 import { useUserPreferences } from '../../providers/UserPreferences'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Table from '../atoms/Table'
-import { DDO, Logger, MetadataCache } from '@oceanprotocol/lib'
+import { DDO, Logger } from '@oceanprotocol/lib'
 import { useOcean } from '@oceanprotocol/react'
 import Price from '../atoms/Price'
 import Tooltip from '../atoms/Tooltip'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import AssetTitle from './AssetListTitle'
+import { queryMetadata } from '../../utils/aquarius'
+import axios, { CancelToken } from 'axios'
 
 async function getAssetsBookmarked(
   bookmarks: string[],
-  metadataCacheUri: string
+  metadataCacheUri: string,
+  cancelToken: CancelToken
 ) {
   const searchDids = JSON.stringify(bookmarks)
     .replace(/,/g, ' ')
@@ -34,8 +37,11 @@ async function getAssetsBookmarked(
   } as any
 
   try {
-    const metadataCache = new MetadataCache(metadataCacheUri, Logger)
-    const result = await metadataCache.queryMetadata(queryBookmarks)
+    const result = await queryMetadata(
+      queryBookmarks,
+      metadataCacheUri,
+      cancelToken
+    )
 
     return result
   } catch (error) {
@@ -51,7 +57,7 @@ const columns = [
       return (
         <AssetTitle
           title={attributes.main.name}
-          did={row.id}
+          ddo={row}
           owner={row.publicKey[0].owner}
         />
       )
@@ -86,10 +92,12 @@ export default function Bookmarks(): ReactElement {
   const [pinned, setPinned] = useState<DDO[]>()
   const [isLoading, setIsLoading] = useState<boolean>()
 
-  useEffect(() => {
-    if (!config?.metadataCacheUri || bookmarks === {}) return
+  const networkName = (config as ConfigHelperConfig)?.network
 
-    const networkName = (config as ConfigHelperConfig).network
+  useEffect(() => {
+    if (!config?.metadataCacheUri || !networkName || bookmarks === {}) return
+
+    const source = axios.CancelToken.source()
 
     async function init() {
       if (!bookmarks[networkName]?.length) {
@@ -102,9 +110,10 @@ export default function Bookmarks(): ReactElement {
       try {
         const resultPinned = await getAssetsBookmarked(
           bookmarks[networkName],
-          config.metadataCacheUri
+          config.metadataCacheUri,
+          source.token
         )
-        setPinned(resultPinned.results)
+        setPinned(resultPinned?.results)
       } catch (error) {
         Logger.error(error.message)
       }
@@ -112,7 +121,11 @@ export default function Bookmarks(): ReactElement {
       setIsLoading(false)
     }
     init()
-  }, [bookmarks, config.metadataCacheUri, config])
+
+    return () => {
+      source.cancel()
+    }
+  }, [bookmarks, config.metadataCacheUri, networkName])
 
   return (
     <Table
