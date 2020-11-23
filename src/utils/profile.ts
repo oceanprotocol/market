@@ -3,7 +3,8 @@ import axios, { AxiosResponse, CancelToken } from 'axios'
 import jwtDecode from 'jwt-decode'
 import { Logger } from '@oceanprotocol/lib'
 
-const ipfsUrl = 'https://ipfs.3box.io'
+// https://docs.3box.io/api/rest-api
+const apiUri = 'https://ipfs.3box.io'
 
 function decodeProof(proofJWT: string) {
   if (!proofJWT) return
@@ -41,7 +42,7 @@ export default async function get3BoxProfile(
 ): Promise<Profile> {
   try {
     const response: AxiosResponse<ResponseData3Box> = await axios(
-      `${ipfsUrl}/profile?address=${accountId}`,
+      `${apiUri}/profile?address=${accountId}`,
       { cancelToken }
     )
 
@@ -53,6 +54,7 @@ export default async function get3BoxProfile(
       name,
       description,
       website,
+      emoji,
       /* eslint-disable camelcase */
       proof_twitter,
       proof_github
@@ -66,6 +68,7 @@ export default async function get3BoxProfile(
       // Conditionally add profile items if they exist
       ...(name && { name }),
       ...(description && { description }),
+      ...(emoji && { emoji }),
       ...(links.length && { links })
     }
 

@@ -11,6 +11,8 @@ import { accountTruncate } from '../../utils/wallet'
 import axios from 'axios'
 import { useOcean } from '@oceanprotocol/react'
 import { ReactComponent as External } from '../../images/external.svg'
+import { ReactComponent as Info } from '../../images/info.svg'
+import Dotdotdot from 'react-dotdotdot'
 
 const cx = classNames.bind(styles)
 
@@ -46,27 +48,6 @@ function PublisherLinks({
   )
 }
 
-function Output({ profile, account }: { profile: Profile; account: string }) {
-  return (
-    <Tooltip
-      content={
-        profile ? (
-          <>
-            Data from <a href="https://3box.io">3box</a>
-          </>
-        ) : (
-          <>
-            Add profile on <a href="https://3box.io">3box</a>
-          </>
-        )
-      }
-      placement="top"
-    >
-      {profile?.name || accountTruncate(account)}
-    </Tooltip>
-  )
-}
-
 export default function Publisher({
   account,
   minimal,
@@ -76,6 +57,7 @@ export default function Publisher({
   minimal?: boolean
   className?: string
 }): ReactElement {
+  const { networkId } = useOcean()
   const [profile, setProfile] = useState<Profile>()
 
   useEffect(() => {
@@ -87,7 +69,7 @@ export default function Publisher({
       const profile = await get3BoxProfile(account, source.token)
       if (!profile) return
       setProfile(profile)
-      Logger.log(`Found 3box profile for ${account}`, profile)
+      Logger.log(`Found 3Box profile for ${account}`, profile)
     }
     get3Box()
 
@@ -111,9 +93,59 @@ export default function Publisher({
             to={`/search/?owner=${account}`}
             title="Show all data sets created by this account."
           >
-            <Output profile={profile} account={account} />
+            {profile?.name || accountTruncate(account)}
           </Link>
-          <PublisherLinks account={account} links={profile?.links} />
+
+          <div className={styles.links}>
+            {' — '}
+            <Tooltip
+              content={
+                <div className={styles.details}>
+                  {profile ? (
+                    <>
+                      <div className={styles.profile}>
+                        <h3 className={styles.title}>
+                          {profile?.emoji} {profile?.name}
+                        </h3>
+                        <p>
+                          <code>{account}</code>
+                          <br />
+                          <code>{profile.did}</code>
+                        </p>
+                        {profile?.description && (
+                          <Dotdotdot tagName="p" clamp={4}>
+                            {profile?.description}
+                          </Dotdotdot>
+                        )}
+                        <PublisherLinks
+                          account={account}
+                          links={profile?.links}
+                        />
+                      </div>
+                      <div className={styles.meta}>
+                        Profile data from{' '}
+                        <a href="https://3box.io/hub">3Box Hub</a>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      Add a profile on{' '}
+                      <a href="https://3box.io/hub">3Box Hub</a>. Allowed data:
+                      name, description, emoji, website, twitter, github.
+                    </>
+                  )}
+                </div>
+              }
+              placement="top"
+            >
+              <span className={styles.detailsTrigger}>
+                Profile <Info />
+              </span>
+            </Tooltip>
+            <EtherscanLink networkId={networkId} path={`address/${account}`}>
+              Etherscan
+            </EtherscanLink>
+          </div>
         </>
       )}
     </div>

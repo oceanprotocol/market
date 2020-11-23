@@ -7,6 +7,7 @@ export interface Profile {
   did: string
   name?: string
   description?: string
+  emoji?: string
   links?: ProfileLink[]
 }
 
