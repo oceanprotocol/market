@@ -12,7 +12,8 @@ import { PurgatoryData } from '@oceanprotocol/lib/dist/node/ddo/interfaces/Purga
 import { getDataTokenPrice, useOcean } from '@oceanprotocol/react'
 import getAssetPurgatoryData from '../utils/purgatory'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
-import axios, { CancelToken } from 'axios'
+import axios from 'axios'
+import { retrieveDDO } from '../utils/aquarius'
 
 interface AssetProviderValue {
   isInPurgatory: boolean
@@ -68,37 +69,22 @@ function AssetProvider({
     Logger.log(`Refreshed asset price: ${newPrice?.value}`)
   }, [ocean, config, ddo, networkId, status])
 
-  const getDDO = useCallback(
-    async (did: string, cancelToken: CancelToken): Promise<DDO | undefined> => {
-      if (!config.metadataCacheUri) return
-
-      try {
-        const request = await axios.get(
-          `${config.metadataCacheUri}/api/v1/aquarius/assets/ddo/${did}`,
-          { cancelToken }
-        )
-        const ddo = request.data as DDO
-        return new DDO(ddo)
-      } catch (error) {
-        Logger.error(error.message)
-        return undefined
-      }
-    },
-    [config.metadataCacheUri]
-  )
-
   //
   // Get and set DDO based on passed DDO or DID
   //
   useEffect(() => {
-    if (!asset) return
+    if (!asset || !config?.metadataCacheUri) return
 
     const source = axios.CancelToken.source()
     let isMounted = true
     Logger.log('Init asset, get ddo')
 
     async function init(): Promise<void> {
-      const ddo = await getDDO(asset as string, source.token)
+      const ddo = await retrieveDDO(
+        asset as string,
+        config.metadataCacheUri,
+        source.token
+      )
 
       if (!ddo) {
         setError(
@@ -119,7 +105,7 @@ function AssetProvider({
       isMounted = false
       source.cancel()
     }
-  }, [asset, getDDO])
+  }, [asset, config?.metadataCacheUri])
 
   useEffect(() => {
     // Re-fetch price periodically, triggering re-calculation of everything
