@@ -16,14 +16,7 @@ import Dotdotdot from 'react-dotdotdot'
 
 const cx = classNames.bind(styles)
 
-function PublisherLinks({
-  account,
-  links
-}: {
-  account: string
-  links: ProfileLink[]
-}) {
-  const { networkId } = useOcean()
+function PublisherLinks({ links }: { links: ProfileLink[] }) {
   return (
     <div className={styles.links}>
       {' — '}
@@ -41,9 +34,6 @@ function PublisherLinks({
           </a>
         )
       })}
-      <EtherscanLink networkId={networkId} path={`address/${account}`}>
-        Etherscan
-      </EtherscanLink>
     </div>
   )
 }
@@ -98,50 +88,52 @@ export default function Publisher({
 
           <div className={styles.links}>
             {' — '}
-            <Tooltip
-              content={
-                <div className={styles.details}>
-                  {profile ? (
-                    <>
-                      <div className={styles.profile}>
-                        <h3 className={styles.title}>
-                          {profile?.emoji} {profile?.name}
-                        </h3>
-                        <p>
+            {profile && (
+              <Tooltip
+                content={
+                  <div className={styles.details}>
+                    <div className={styles.profile}>
+                      <h3 className={styles.title}>
+                        {profile?.emoji} {profile?.name}
+                      </h3>
+
+                      {profile?.description && (
+                        <Dotdotdot tagName="p" clamp={4}>
+                          {profile?.description}
+                        </Dotdotdot>
+                      )}
+                      <PublisherLinks links={profile?.links} />
+                      <p className={styles.ids}>
+                        <a
+                          href={`https://www.3box.io/${account}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <code>{accountTruncate(profile.did)}</code>{' '}
+                          <External className={styles.linksExternal} />
+                        </a>
+                        <br />
+                        <EtherscanLink
+                          networkId={networkId}
+                          path={`address/${account}`}
+                        >
                           <code>{account}</code>
-                          <br />
-                          <code>{profile.did}</code>
-                        </p>
-                        {profile?.description && (
-                          <Dotdotdot tagName="p" clamp={4}>
-                            {profile?.description}
-                          </Dotdotdot>
-                        )}
-                        <PublisherLinks
-                          account={account}
-                          links={profile?.links}
-                        />
-                      </div>
-                      <div className={styles.meta}>
-                        Profile data from{' '}
-                        <a href="https://3box.io/hub">3Box Hub</a>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      Add a profile on{' '}
-                      <a href="https://3box.io/hub">3Box Hub</a>. Allowed data:
-                      name, description, emoji, website, twitter, github.
-                    </>
-                  )}
-                </div>
-              }
-              placement="top"
-            >
-              <span className={styles.detailsTrigger}>
-                Profile <Info />
-              </span>
-            </Tooltip>
+                        </EtherscanLink>
+                      </p>
+                    </div>
+                    <div className={styles.meta}>
+                      Profile data from{' '}
+                      <a href={`https://www.3box.io/${account}`}>3Box Hub</a>
+                    </div>
+                  </div>
+                }
+                placement="top"
+              >
+                <span className={styles.detailsTrigger}>
+                  Profile <Info />
+                </span>
+              </Tooltip>
+            )}
             <EtherscanLink networkId={networkId} path={`address/${account}`}>
               Etherscan
             </EtherscanLink>

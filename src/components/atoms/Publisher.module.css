@@ -28,10 +28,10 @@
 
 .linksExternal,
 .detailsTrigger svg {
-  width: 0.6em;
-  height: 0.6em;
+  width: 0.6rem;
+  height: 0.6rem;
   display: inline-block;
-  fill: var(--brand-grey-light);
+  fill: var(--color-secondary);
 }
 
 .details {
@@ -41,15 +41,14 @@
   cursor: help;
 }
 
-.detailsTrigger svg {
-  width: 0.9em;
-  height: 0.9em;
-}
-
 .profile {
   background: var(--background-highlight);
   border-radius: var(--border-radius);
   padding: calc(var(--spacer) / 2);
+  margin-bottom: calc(var(--spacer) / 4);
+}
+
+.profile p {
   margin-bottom: calc(var(--spacer) / 4);
 }
 
@@ -64,7 +63,15 @@
 
 .title {
   font-size: var(--font-size-base);
-  margin-bottom: calc(var(--spacer) / 8);
+  margin-bottom: calc(var(--spacer) / 4);
+}
+
+.profile p:last-child {
+  margin-bottom: 0;
+}
+
+.ids {
+  margin-top: calc(var(--spacer) / 4);
 }
 
 .meta {
