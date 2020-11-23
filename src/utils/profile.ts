@@ -11,23 +11,37 @@ function decodeProof(proofJWT: string) {
   return proof
 }
 
+function getLinks(website: string, twitterProof: string, githubProof: string) {
+  // Conditionally add links if they exist
+  const links = [
+    ...(website ? [{ name: 'Website', value: website }] : []),
+    ...(twitterProof
+      ? [
+          {
+            name: 'Twitter',
+            value: decodeProof(twitterProof).claim.twitter_handle
+          }
+        ]
+      : []),
+    ...(githubProof
+      ? [{ name: 'GitHub', value: githubProof.split('/')[3] }]
+      : [])
+  ]
+
+  return links
+}
+
 export default async function get3BoxProfile(
   accountId: string,
   cancelToken: CancelToken
 ): Promise<Profile> {
   try {
-    const response: AxiosResponse<ResponseData3Box> = await axios.get(
+    const response: AxiosResponse<ResponseData3Box> = await axios(
       `${ipfsUrl}/profile?address=${accountId}`,
       { cancelToken }
     )
 
-    if (
-      !response ||
-      response.status !== 200 ||
-      !response.data ||
-      response.data.status === 'error'
-    )
-      return
+    if (!response || !response.data || response.data.status === 'error') return
 
     const {
       name,
@@ -36,24 +50,10 @@ export default async function get3BoxProfile(
       /* eslint-disable camelcase */
       proof_twitter,
       proof_github
+      /* eslint-enable camelcase */
     } = response.data
 
-    // Conditionally add links if they exist
-    const links = [
-      ...(website ? [{ name: 'Website', value: website }] : []),
-      ...(proof_twitter
-        ? [
-            {
-              name: 'Twitter',
-              value: decodeProof(proof_twitter).claim.twitter_handle
-            }
-          ]
-        : []),
-      ...(proof_github
-        ? [{ name: 'GitHub', value: proof_github.split('/')[3] }]
-        : [])
-    ]
-    /* eslint-enable camelcase */
+    const links = getLinks(website, proof_twitter, proof_github)
 
     const profile = {
       did: decodeProof(response.data.proof_did).iss,

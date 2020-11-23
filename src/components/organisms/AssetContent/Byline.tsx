@@ -28,16 +28,10 @@ export default function Byline({
 
     const source = axios.CancelToken.source()
     async function get3Box() {
-      try {
-        const profile = await get3BoxProfile(owner, source.token)
-        if (!profile) return
-        setProfile(profile)
-        Logger.log(
-          `Found 3box profile for ${owner}: ${JSON.stringify(profile)}`
-        )
-      } catch (error) {
-        Logger.log('No 3box profile')
-      }
+      const profile = await get3BoxProfile(owner, source.token)
+      if (!profile) return
+      setProfile(profile)
+      Logger.log(`Found 3box profile for ${owner}`, profile)
     }
     get3Box()
 
