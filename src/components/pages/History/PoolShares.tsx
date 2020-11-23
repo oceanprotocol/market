@@ -28,15 +28,8 @@ const columns = [
   {
     name: 'Data Set',
     selector: function getAssetRow(row: Asset) {
-      const { attributes } = row.ddo.findServiceByType('metadata')
       const { owner } = row.ddo.publicKey[0]
-      return (
-        <AssetTitle
-          did={row.ddo.id}
-          title={attributes.main.name}
-          owner={owner}
-        />
-      )
+      return <AssetTitle ddo={row.ddo} owner={owner} />
     },
     grow: 2
   },
