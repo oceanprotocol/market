@@ -46,11 +46,34 @@ function PublisherLinks({
   )
 }
 
+function Output({ profile, account }: { profile: Profile; account: string }) {
+  return (
+    <Tooltip
+      content={
+        profile ? (
+          <>
+            Data from <a href="https://3box.io">3box</a>
+          </>
+        ) : (
+          <>
+            Add profile on <a href="https://3box.io">3box</a>
+          </>
+        )
+      }
+      placement="top"
+    >
+      {profile?.name || accountTruncate(account)}
+    </Tooltip>
+  )
+}
+
 export default function Publisher({
   account,
+  minimal,
   className
 }: {
   account: string
+  minimal?: boolean
   className?: string
 }): ReactElement {
   const [profile, setProfile] = useState<Profile>()
@@ -59,6 +82,7 @@ export default function Publisher({
     if (!account) return
 
     const source = axios.CancelToken.source()
+
     async function get3Box() {
       const profile = await get3BoxProfile(account, source.token)
       if (!profile) return
@@ -79,22 +103,19 @@ export default function Publisher({
 
   return account ? (
     <div className={styleClasses}>
-      <Link
-        to={`/search/?owner=${account}`}
-        title="Show all data sets created by this account."
-      >
-        <Tooltip
-          content={
-            <>
-              Data from <a href="https://3box.io">3box</a>
-            </>
-          }
-          placement="top"
-        >
-          {profile?.name || accountTruncate(account)}
-        </Tooltip>
-      </Link>
-      <PublisherLinks account={account} links={profile?.links} />
+      {minimal ? (
+        profile?.name || accountTruncate(account)
+      ) : (
+        <>
+          <Link
+            to={`/search/?owner=${account}`}
+            title="Show all data sets created by this account."
+          >
+            <Output profile={profile} account={account} />
+          </Link>
+          <PublisherLinks account={account} links={profile?.links} />
+        </>
+      )}
     </div>
   ) : null
 }

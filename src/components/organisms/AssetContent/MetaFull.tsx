@@ -18,7 +18,7 @@ export default function MetaFull({
 
   return (
     <div className={styles.metaFull}>
-      <MetaItem title="Author" content={metadata?.main.author} />
+      <MetaItem title="Data Author" content={metadata?.main.author} />
       <MetaItem
         title="Owner"
         content={<Publisher account={publicKey[0].owner} />}

@@ -1,4 +1,4 @@
-import { Profile, ResponseData3Box } from '../models/Profile'
+import { Profile, ProfileLink, ResponseData3Box } from '../models/Profile'
 import axios, { AxiosResponse, CancelToken } from 'axios'
 import jwtDecode from 'jwt-decode'
 import { Logger } from '@oceanprotocol/lib'
@@ -11,7 +11,11 @@ function decodeProof(proofJWT: string) {
   return proof
 }
 
-function getLinks(website: string, twitterProof: string, githubProof: string) {
+function getLinks(
+  website: string,
+  twitterProof: string,
+  githubProof: string
+): ProfileLink[] {
   // Conditionally add links if they exist
   const links = [
     ...(website ? [{ name: 'Website', value: website }] : []),
@@ -40,6 +44,8 @@ export default async function get3BoxProfile(
       `${ipfsUrl}/profile?address=${accountId}`,
       { cancelToken }
     )
+
+    // TODO: prevent 404 from showing up in console somehow.
 
     if (!response || !response.data || response.data.status === 'error') return
 
