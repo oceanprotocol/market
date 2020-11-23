@@ -4,7 +4,7 @@ import MetaItem from './MetaItem'
 import styles from './MetaFull.module.css'
 import { MetadataMarket } from '../../../@types/MetaData'
 import { DDO } from '@oceanprotocol/lib'
-import Byline from './Byline'
+import Publisher from '../../atoms/Publisher'
 
 export default function MetaFull({
   ddo,
@@ -19,7 +19,10 @@ export default function MetaFull({
   return (
     <div className={styles.metaFull}>
       <MetaItem title="Author" content={metadata?.main.author} />
-      <MetaItem title="Owner" content={<Byline owner={publicKey[0].owner} />} />
+      <MetaItem
+        title="Owner"
+        content={<Publisher account={publicKey[0].owner} />}
+      />
 
       {metadata?.additionalInformation?.categories && (
         <MetaItem

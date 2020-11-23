@@ -55,7 +55,7 @@ export default async function get3BoxProfile(
 
     const links = getLinks(website, proof_twitter, proof_github)
 
-    const profile = {
+    const profile: Profile = {
       did: decodeProof(response.data.proof_did).iss,
       // Conditionally add profile items if they exist
       ...(name && { name }),

@@ -1,29 +1,30 @@
-.byline {
+.publisher {
+  margin: 0;
   display: inline-block;
 }
 
 @media (min-width: 40rem) {
-  .bylineLinks {
+  .links {
     display: inline;
   }
 }
 
-.bylineLinks a {
+.links a {
   margin-left: calc(var(--spacer) / 3);
   color: inherit;
   font-size: var(--font-size-mini);
 }
 
-.bylineLinks a:first-child {
+.links a:first-child {
   margin-left: 0;
 }
 
-.bylineLinks a:hover,
-.bylineLinks a:focus {
+.links a:hover,
+.links a:focus {
   color: var(--brand-pink);
 }
 
-.bylineExternal {
+.linksExternal {
   width: 0.6em;
   height: 0.6em;
   display: inline-block;

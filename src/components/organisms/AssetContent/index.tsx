@@ -12,7 +12,7 @@ import Pricing from './Pricing'
 import { useMetadata, useOcean, usePricing } from '@oceanprotocol/react'
 import EtherscanLink from '../../atoms/EtherscanLink'
 import Bookmark from './Bookmark'
-import Byline from './Byline'
+import Publisher from '../../atoms/Publisher'
 
 export interface AssetContentProps {
   metadata: MetadataMarket
@@ -37,9 +37,6 @@ export default function AssetContent({
       <div>
         {showPricing && <Pricing ddo={ddo} />}
         <div className={styles.content}>
-          <p className={styles.author} title="Author">
-            {metadata?.main.author}
-          </p>
           {metadata?.additionalInformation?.categories?.length && (
             <p>
               <Link
@@ -63,7 +60,7 @@ export default function AssetContent({
                 )}
               </EtherscanLink>
             </p>
-            <Byline owner={owner} prefix="Published by " />
+            Published By <Publisher account={owner} />
           </aside>
 
           <Markdown
