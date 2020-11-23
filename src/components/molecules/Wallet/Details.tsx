@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement } from 'react'
 import Button from '../../atoms/Button'
 import styles from './Details.module.css'
 import { useOcean } from '@oceanprotocol/react'

@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './Byline.module.css'
 import { accountTruncate } from '../../../utils/wallet'
 import Partner from '../../atoms/Partner'
@@ -7,6 +7,10 @@ import { Link } from 'gatsby'
 import EtherscanLink from '../../atoms/EtherscanLink'
 import { useOcean } from '@oceanprotocol/react'
 import { useDataPartner } from '../../../hooks/useDataPartner'
+import get3BoxProfile from '../../../utils/profile'
+import axios from 'axios'
+import { Profile } from '../../../models/Profile'
+import { Logger } from '@oceanprotocol/lib'
 
 export default function Byline({
   owner,
@@ -17,6 +21,30 @@ export default function Byline({
 }): ReactElement {
   const { networkId } = useOcean()
   const { partner } = useDataPartner(owner)
+  const [profile, setProfile] = useState<Profile>()
+
+  useEffect(() => {
+    if (!owner) return
+
+    const source = axios.CancelToken.source()
+    async function get3Box() {
+      try {
+        const profile = await get3BoxProfile(owner, source.token)
+        if (!profile) return
+        setProfile(profile)
+        Logger.log(
+          `Found 3box profile for ${owner}: ${JSON.stringify(profile)}`
+        )
+      } catch (error) {
+        Logger.log('No 3box profile')
+      }
+    }
+    get3Box()
+
+    return () => {
+      source.cancel()
+    }
+  }, [owner])
 
   return (
     <div className={styles.byline}>

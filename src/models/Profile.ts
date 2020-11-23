@@ -1,24 +1,28 @@
-export interface Profile {
-  twitter: string
-  github: string
-  website: string
+export interface ProfileLink {
   name: string
-  description: string
+  value: string
 }
 
-export interface Profile3Box {
-  // eslint-disable-next-line
+export interface Profile {
+  did: string
+  name?: string
+  description?: string
+  links?: ProfileLink[]
+}
+
+export interface ResponseData3Box {
+  name: string
+  description: string
+  website: string
+  status?: 'error'
+  /* eslint-disable camelcase */
+  proof_did: string
   proof_twitter: string
-  // eslint-disable-next-line
   proof_github: string
+  /* eslint-enable camelcase */
   emoji: string
   job: string
   employer: string
-  website: string
   location: string
-  name: string
-  description: string
   memberSince: string
-  // eslint-disable-next-line
-  proof_did: string
 }
