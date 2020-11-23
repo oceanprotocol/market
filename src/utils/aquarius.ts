@@ -1,4 +1,4 @@
-import { DDO, Logger } from '@oceanprotocol/lib'
+import { DDO, DID, Logger } from '@oceanprotocol/lib'
 import {
   QueryResult,
   SearchQuery
@@ -43,6 +43,28 @@ export async function queryMetadata(
     if (!response || response.status !== 200 || !response.data) return
 
     return transformQueryResult(response.data)
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      Logger.log(error.message)
+    } else {
+      Logger.error(error.message)
+    }
+  }
+}
+
+export async function retrieveDDO(
+  did: string | DID,
+  metadataCacheUri: string,
+  cancelToken: CancelToken
+): Promise<DDO> {
+  try {
+    const response: AxiosResponse<DDO> = await axios.get(
+      `${metadataCacheUri}/api/v1/aquarius/assets/ddo/${did}`,
+      { cancelToken }
+    )
+    if (!response || response.status !== 200 || !response.data) return
+
+    return new DDO(response.data)
   } catch (error) {
     if (axios.isCancel(error)) {
       Logger.log(error.message)
