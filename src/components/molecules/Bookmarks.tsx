@@ -54,13 +54,7 @@ const columns = [
     name: 'Data Set',
     selector: function getAssetRow(row: DDO) {
       const { attributes } = row.findServiceByType('metadata')
-      return (
-        <AssetTitle
-          title={attributes.main.name}
-          ddo={row}
-          owner={row.publicKey[0].owner}
-        />
-      )
+      return <AssetTitle title={attributes.main.name} ddo={row} />
     },
     maxWidth: '45rem',
     grow: 1

@@ -8,32 +8,8 @@ import Loader from '../atoms/Loader'
 import { useOcean } from '@oceanprotocol/react'
 import Button from '../atoms/Button'
 import Bookmarks from '../molecules/Bookmarks'
-import listPartners from '@oceanprotocol/list-datapartners'
-import Tooltip from '../atoms/Tooltip'
-import AssetQueryCarousel from '../organisms/AssetQueryCarousel'
 import axios from 'axios'
 import { queryMetadata } from '../../utils/aquarius'
-
-const partnerAccounts = listPartners
-  .map((partner) => partner.accounts.join(','))
-  .filter((account) => account !== '')
-
-const searchAccounts = JSON.stringify(partnerAccounts)
-  .replace(/"/g, '')
-  .replace(/,/g, ' OR ')
-  .replace(/(\[|\])/g, '')
-
-const queryPartners = {
-  page: 1,
-  offset: 100,
-  query: {
-    nativeSearch: 1,
-    query_string: {
-      query: `(publicKey.owner:${searchAccounts}) -isInPurgatory:true`
-    }
-  },
-  sort: { created: -1 }
-}
 
 const queryHighest = {
   page: 1,
@@ -116,67 +92,11 @@ function SectionQueryResult({
 }
 
 export default function HomePage(): ReactElement {
-  const { config } = useOcean()
-
-  const [queryResultPartners, setQueryResultPartners] = useState<QueryResult>()
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    if (!config?.metadataCacheUri) return
-
-    const source = axios.CancelToken.source()
-
-    async function init() {
-      // TODO: remove any once ocean.js has nativeSearch typings
-      const queryResultPartners = await queryMetadata(
-        queryPartners as any,
-        config.metadataCacheUri,
-        source.token
-      )
-      setQueryResultPartners(queryResultPartners)
-      setLoading(false)
-    }
-    init()
-
-    return () => {
-      source.cancel()
-    }
-  }, [config?.metadataCacheUri])
-
   return (
     <>
       <Container narrow className={styles.searchWrap}>
         <SearchBar size="large" />
       </Container>
-
-      <section className={styles.listPartners}>
-        <h3>
-          Data Partners{' '}
-          <Tooltip
-            content={
-              <>
-                Ocean Protocol{' '}
-                <a href="https://github.com/oceanprotocol/list-datapartners">
-                  Data Partners
-                </a>
-              </>
-            }
-          />
-        </h3>
-        {loading ? (
-          <LoaderArea />
-        ) : (
-          queryResultPartners && (
-            <AssetQueryCarousel queryResult={queryResultPartners} />
-          )
-        )}
-        {/* <Button
-          style="text"
-          to={`/search/?owner=${partnerAccounts?.toString()}`}
-        >
-          All data partner sets →
-        </Button> */}
-      </section>
 
       <section className={styles.section}>
         <h3>Bookmarks</h3>

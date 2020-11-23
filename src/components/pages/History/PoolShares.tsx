@@ -28,8 +28,7 @@ const columns = [
   {
     name: 'Data Set',
     selector: function getAssetRow(row: Asset) {
-      const { owner } = row.ddo.publicKey[0]
-      return <AssetTitle ddo={row.ddo} owner={owner} />
+      return <AssetTitle ddo={row.ddo} />
     },
     grow: 2
   },
