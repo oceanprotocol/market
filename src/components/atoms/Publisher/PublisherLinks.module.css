@@ -1,12 +1,15 @@
-.links a,
-.links span {
-  margin-left: calc(var(--spacer) / 3);
-  color: inherit;
-  font-size: var(--font-size-mini);
+.links,
+.links a {
+  font-size: var(--font-size-small);
+  color: var(--color-secondary);
 }
 
-.links a:first-child,
-.links span:first-child {
+.links a {
+  margin-left: calc(var(--spacer) / 3);
+  color: inherit;
+}
+
+.links a:first-child {
   margin-left: 0;
 }
 
@@ -17,4 +20,6 @@
 
 .linksExternal {
   composes: linksExternal from './index.module.css';
+  width: 6px;
+  height: 6px;
 }

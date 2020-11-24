@@ -5,6 +5,7 @@ import { Logger } from '@oceanprotocol/lib'
 
 // https://docs.3box.io/api/rest-api
 const apiUri = 'https://ipfs.3box.io'
+const ipfsUrl = 'https://ipfs.oceanprotocol.com'
 
 function decodeProof(proofJWT: string) {
   if (!proofJWT) return
@@ -55,6 +56,7 @@ export default async function get3BoxProfile(
       description,
       website,
       emoji,
+      image,
       /* eslint-disable camelcase */
       proof_twitter,
       proof_github
@@ -69,8 +71,14 @@ export default async function get3BoxProfile(
       ...(name && { name }),
       ...(description && { description }),
       ...(emoji && { emoji }),
+      ...(image && {
+        image: `${ipfsUrl}/ipfs/${
+          image.map((img: any) => img.contentUrl['/'])[0]
+        }`
+      }),
       ...(links.length && { links })
     }
+    console.log(profile)
 
     return profile
   } catch (error) {

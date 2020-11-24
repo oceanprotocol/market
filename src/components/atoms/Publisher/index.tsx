@@ -74,7 +74,7 @@ export default function Publisher({
                     account={account}
                   />
                 }
-                placement="top"
+                // placement="top"
               >
                 <span className={styles.detailsTrigger}>
                   Profile <Info className={styles.linksExternal} />

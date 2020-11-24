@@ -2,9 +2,6 @@ import React, { ReactElement } from 'react'
 import styles from './ProfileDetails.module.css'
 import { Profile } from '../../../models/Profile'
 import EtherscanLink from '../EtherscanLink'
-import { accountTruncate } from '../../../utils/wallet'
-import { ReactComponent as External } from '../../../images/external.svg'
-import Dotdotdot from 'react-dotdotdot'
 import PublisherLinks from './PublisherLinks'
 
 export default function ProfileDetails({
@@ -17,9 +14,14 @@ export default function ProfileDetails({
   account: string
 }): ReactElement {
   return (
-    <div className={styles.details}>
+    <>
       <div className={styles.profile}>
         <header className={styles.header}>
+          {profile?.image && (
+            <div className={styles.image}>
+              <img src={profile.image} width="48" height="48" />
+            </div>
+          )}
           <h3 className={styles.title}>
             {profile?.emoji} {profile?.name}
           </h3>
@@ -30,26 +32,14 @@ export default function ProfileDetails({
         </header>
 
         {profile?.description && (
-          <Dotdotdot tagName="p" clamp={4}>
-            {profile?.description}
-          </Dotdotdot>
+          <p className={styles.description}>{profile?.description}</p>
         )}
         <PublisherLinks links={profile?.links} />
-        <p className={styles.ids}>
-          <a
-            href={`https://www.3box.io/${account}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <code>{accountTruncate(profile.did)}</code>{' '}
-            <External className={styles.linksExternal} />
-          </a>
-        </p>
       </div>
       <div className={styles.meta}>
         Profile data from{' '}
         <a href={`https://www.3box.io/${account}`}>3Box Hub</a>
       </div>
-    </div>
+    </>
   )
 }

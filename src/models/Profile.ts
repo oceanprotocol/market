@@ -8,6 +8,7 @@ export interface Profile {
   name?: string
   description?: string
   emoji?: string
+  image?: string
   links?: ProfileLink[]
 }
 
@@ -26,4 +27,9 @@ export interface ResponseData3Box {
   employer: string
   location: string
   memberSince: string
+  image: {
+    contentUrl: {
+      [key: string]: string
+    }
+  }[]
 }
