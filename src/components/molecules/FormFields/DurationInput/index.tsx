@@ -5,6 +5,7 @@ import InputGroup from '../../../atoms/Input/InputGroup'
 import Help from '../../../atoms/Input/Help'
 import styles from './index.module.css'
 import { Timeout } from '../../../../@types/MetaData'
+import { FormFieldProps } from '../../../../@types/Form'
 
 export function computeTimeoutInSecons(
   values: Partial<Timeout>
@@ -36,7 +37,13 @@ function unit(key: string, value: number) {
   return key
 }
 
-export function MetaTimeout({ content }: { content: any }) {
+export function MetaTimeout({
+  content,
+  data
+}: {
+  content: any
+  data?: FormFieldProps
+}) {
   return (
     <>
       {Object.keys(content)
@@ -44,7 +51,7 @@ export function MetaTimeout({ content }: { content: any }) {
           content[key] ? `${content[key]} ${unit(key, content[key])}` : null
         )
         .filter((v) => v)
-        .join(', ')}
+        .join(', ') || data.placeholder}
     </>
   )
 }

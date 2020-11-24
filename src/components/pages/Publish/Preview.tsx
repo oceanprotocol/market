@@ -105,7 +105,13 @@ export default function Preview({
               )
           )
           .map(([key, value]) => (
-            <MetaItem key={key} title={key} content={value} type={key} />
+            <MetaItem
+              key={key}
+              title={key}
+              content={value}
+              type={key}
+              data={data}
+            />
           ))}
       </div>
     </div>
