@@ -1,7 +1,5 @@
 .tooltip {
   display: inline-block;
-  position: relative;
-  z-index: 10;
 }
 
 .content {

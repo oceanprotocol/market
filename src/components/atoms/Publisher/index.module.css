@@ -1,0 +1,38 @@
+.publisher {
+  margin: 0;
+  display: inline-block;
+}
+
+@media (min-width: 40rem) {
+  .links {
+    display: inline;
+  }
+}
+
+.links a,
+.links span {
+  margin-left: calc(var(--spacer) / 3);
+  color: inherit;
+  font-size: var(--font-size-mini);
+}
+
+.links a:first-child,
+.links span:first-child {
+  margin-left: 0;
+}
+
+.links a:hover,
+.links a:focus {
+  color: var(--brand-pink);
+}
+
+.linksExternal {
+  width: 8px;
+  height: 8px;
+  display: inline-block;
+  fill: var(--color-secondary);
+}
+
+.detailsTrigger {
+  cursor: help;
+}

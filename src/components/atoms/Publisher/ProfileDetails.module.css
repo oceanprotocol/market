@@ -1,44 +1,4 @@
-.publisher {
-  margin: 0;
-  display: inline-block;
-}
-
-@media (min-width: 40rem) {
-  .links {
-    display: inline;
-  }
-}
-
-.links a,
-.links span {
-  margin-left: calc(var(--spacer) / 3);
-  color: inherit;
-  font-size: var(--font-size-mini);
-}
-
-.links a:first-child,
-.links span:first-child {
-  margin-left: 0;
-}
-
-.links a:hover,
-.links a:focus {
-  color: var(--brand-pink);
-}
-
-.linksExternal,
-.detailsTrigger svg {
-  width: 0.6rem;
-  height: 0.6rem;
-  display: inline-block;
-  fill: var(--color-secondary);
-}
-
 .details {
-}
-
-.detailsTrigger {
-  cursor: help;
 }
 
 .profile {
@@ -61,9 +21,13 @@
   word-break: break-word;
 }
 
+.header {
+  margin-bottom: calc(var(--spacer) / 4);
+}
+
 .title {
   font-size: var(--font-size-base);
-  margin-bottom: calc(var(--spacer) / 4);
+  margin-bottom: 0;
 }
 
 .profile p:last-child {
@@ -78,4 +42,8 @@
   color: var(--color-secondary);
   font-size: var(--font-size-mini);
   text-align: right;
+}
+
+.linksExternal {
+  composes: linksExternal from './index.module.css';
 }

@@ -1,0 +1,20 @@
+.links a,
+.links span {
+  margin-left: calc(var(--spacer) / 3);
+  color: inherit;
+  font-size: var(--font-size-mini);
+}
+
+.links a:first-child,
+.links span:first-child {
+  margin-left: 0;
+}
+
+.links a:hover,
+.links a:focus {
+  color: var(--brand-pink);
+}
+
+.linksExternal {
+  composes: linksExternal from './index.module.css';
+}
