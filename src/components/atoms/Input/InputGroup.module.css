@@ -19,6 +19,33 @@
   box-shadow: none;
 }
 
+@media screen and (min-width: 21.7rem) {
+  .inputGroup > label:not(:last-child) > input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right-width: 0;
+  }
+
+  .inputGroup > label:not(:last-child) > input:focus {
+    border-right-width: 1px;
+  }
+
+  .inputGroup > label:last-child > input {
+    border-top-right-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+  }
+
+  .inputGroup > label:not(:first-child) > input {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  .inputGroup > label:first-child > input {
+    border-top-left-radius: var(--border-radius);
+    border-bottom-left-radius: var(--border-radius);
+  }
+}
+
 @media screen and (min-width: 30rem) {
   .inputGroup {
     display: flex;

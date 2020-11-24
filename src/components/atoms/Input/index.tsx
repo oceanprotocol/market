@@ -5,6 +5,7 @@ import Label from './Label'
 import styles from './index.module.css'
 import { ErrorMessage, FieldInputProps } from 'formik'
 import classNames from 'classnames/bind'
+import { MetadataPublishForm } from '../../../@types/MetaData'
 
 const cx = classNames.bind(styles)
 
@@ -41,6 +42,18 @@ export interface InputProps {
   step?: string
   defaultChecked?: boolean
   size?: 'mini' | 'small' | 'large' | 'default'
+  values?: Partial<MetadataPublishForm>
+}
+export function mustBeHidden(
+  values: Partial<MetadataPublishForm>,
+  options: string[]
+) {
+  return (
+    options &&
+    options.length &&
+    options[0] === 'neverused-code-67df661ee1bc9df3c2756f3172846914' &&
+    values[options[1]] !== options[2]
+  )
 }
 
 export default function Input(props: Partial<InputProps>): ReactElement {
@@ -51,7 +64,9 @@ export default function Input(props: Partial<InputProps>): ReactElement {
     help,
     additionalComponent,
     size,
-    field
+    field,
+    values,
+    options
   } = props
 
   const hasError =
@@ -62,6 +77,9 @@ export default function Input(props: Partial<InputProps>): ReactElement {
     hasError: hasError
   })
 
+  if (mustBeHidden(values, options)) {
+    return null
+  }
   return (
     <div
       className={styleClasses}
@@ -72,11 +90,21 @@ export default function Input(props: Partial<InputProps>): ReactElement {
       </Label>
       <InputElement size={size} {...field} {...props} />
 
-      {field && hasError && (
-        <div className={styles.error}>
-          <ErrorMessage name={field.name} />
-        </div>
-      )}
+      {field &&
+        hasError &&
+        (field.value !== Object(field.value) ? (
+          <div className={styles.error}>
+            <ErrorMessage name={field.name} />
+          </div>
+        ) : (
+          <div className={styles.error}>
+            {Object.keys(field.value).map((key) => (
+              <div key={field.name + key}>
+                {props.form?.errors[field.name][key]}
+              </div>
+            ))}
+          </div>
+        ))}
 
       {help && <Help>{help}</Help>}
       {additionalComponent && additionalComponent}

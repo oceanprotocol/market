@@ -21,10 +21,15 @@
   background: var(--brand-alert-red);
   border-radius: var(--border-radius);
   padding: 0.2rem 0.4rem;
-  position: absolute;
-  right: 0;
-  top: 85%;
   z-index: 1;
+}
+
+@media screen and (min-width: 12rem) {
+  .error {
+    position: absolute;
+    right: 0;
+    top: 85%;
+  }
 }
 
 .hasError label {

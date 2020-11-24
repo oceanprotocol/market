@@ -1,6 +1,20 @@
-import { MetadataPublishForm } from '../@types/MetaData'
+import { MetadataPublishForm, Timeout } from '../@types/MetaData'
 import { File as FileMetadata } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
+
+const timecheck = Yup.number()
+  .min(0)
+  .nullable()
+  .transform((v) => (v === '' ? null : v))
+
+const timeoutValidationSchema = {
+  years: timecheck,
+  months: timecheck,
+  days: timecheck,
+  hours: timecheck,
+  minutes: timecheck,
+  seconds: timecheck
+}
 
 export const validationSchema = Yup.object().shape<MetadataPublishForm>({
   // ---- required fields ----
@@ -21,8 +35,24 @@ export const validationSchema = Yup.object().shape<MetadataPublishForm>({
 
   // ---- optional fields ----
   tags: Yup.string().nullable(),
-  links: Yup.object<FileMetadata[]>().nullable()
+  links: Yup.object<FileMetadata[]>().nullable(),
+  providerUri: Yup.string().nullable(),
+  accessTimeout: Yup.object<Timeout>()
+    .shape<Timeout>(timeoutValidationSchema)
+    .nullable(),
+  computeTimeout: Yup.object<Timeout>()
+    .shape<Timeout>(timeoutValidationSchema)
+    .nullable()
 })
+
+const defaultTimeout: Timeout = {
+  years: '',
+  months: '',
+  days: '',
+  hours: '',
+  minutes: '',
+  seconds: ''
+}
 
 export const initialValues: Partial<MetadataPublishForm> = {
   name: '',
@@ -34,5 +64,7 @@ export const initialValues: Partial<MetadataPublishForm> = {
   files: '',
   description: '',
   access: '',
-  termsAndConditions: false
+  termsAndConditions: false,
+  accessTimeout: defaultTimeout,
+  computeTimeout: defaultTimeout
 }

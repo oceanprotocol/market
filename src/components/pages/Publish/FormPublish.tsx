@@ -5,11 +5,14 @@ import { useFormikContext, Field, Form } from 'formik'
 import Input from '../../atoms/Input'
 import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
+import { MetadataPublishForm } from '../../../@types/MetaData'
 
 export default function FormPublish({
-  content
+  content,
+  values
 }: {
   content: FormContent
+  values?: Partial<MetadataPublishForm>
 }): ReactElement {
   const { ocean, account } = useOcean()
   const {
@@ -43,7 +46,7 @@ export default function FormPublish({
       onChange={() => status === 'empty' && setStatus(null)}
     >
       {content.data.map((field: FormFieldProps) => (
-        <Field key={field.name} {...field} component={Input} />
+        <Field key={field.name} {...field} values={values} component={Input} />
       ))}
 
       <footer className={styles.actions}>

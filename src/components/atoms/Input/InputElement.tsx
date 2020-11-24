@@ -6,6 +6,7 @@ import FilesInput from '../../molecules/FormFields/FilesInput'
 import Terms from '../../molecules/FormFields/Terms'
 import Datatoken from '../../molecules/FormFields/Datatoken'
 import classNames from 'classnames/bind'
+import DurationInput from '../../molecules/FormFields/DurationInput'
 
 const cx = classNames.bind(styles)
 
@@ -96,6 +97,10 @@ export default function InputElement({
       return <Datatoken name={name} {...field} {...props} />
     case 'terms':
       return <Terms name={name} options={options} {...field} {...props} />
+    case 'duration':
+      return (
+        <DurationInput name={name} {...field} {...props} options={options} />
+      )
     default:
       return prefix || postfix ? (
         <div className={`${prefix ? styles.prefixGroup : styles.postfixGroup}`}>

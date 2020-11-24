@@ -8,11 +8,15 @@ import File from '../../atoms/File'
 import { MetadataPublishForm } from '../../../@types/MetaData'
 import Button from '../../atoms/Button'
 import { transformTags } from './utils'
+import { FormFieldProps } from '../../../@types/Form'
+import { mustBeHidden } from '../../atoms/Input'
 
 export default function Preview({
-  values
+  values,
+  data
 }: {
   values: Partial<MetadataPublishForm>
+  data?: FormFieldProps[]
 }): ReactElement {
   const [fullDescription, setFullDescription] = useState<boolean>(false)
 
@@ -90,12 +94,18 @@ export default function Preview({
                 key.includes('links') ||
                 key.includes('termsAndConditions') ||
                 key.includes('dataTokenOptions') ||
+                key.includes('providerUri') ||
                 value === undefined ||
-                value === ''
+                value === '' ||
+                (data &&
+                  mustBeHidden(
+                    values,
+                    data.find((field) => field.name === key).options
+                  ))
               )
           )
           .map(([key, value]) => (
-            <MetaItem key={key} title={key} content={value} />
+            <MetaItem key={key} title={key} content={value} type={key} />
           ))}
       </div>
     </div>

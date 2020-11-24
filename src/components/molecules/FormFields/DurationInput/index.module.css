@@ -1,0 +1,53 @@
+.input {
+  composes: input from '../../../atoms/Input/InputElement.module.css';
+}
+
+.unit {
+  composes: unit from '../../../atoms/Input/InputElement.module.css';
+}
+
+@media screen and (min-width: 12rem) {
+  :global(.duration-input-group) {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  :global(.duration-input-group) label {
+    flex-basis: 33%;
+  }
+
+  :global(.duration-input-group) > :not(:nth-child(3n)) > input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right-width: 0;
+  }
+
+  :global(.duration-input-group) > :not(:nth-child(3n)) > input:focus {
+    border-right-width: 1px;
+  }
+
+  :global(.duration-input-group) > :nth-child(3n) > input {
+    border-top-right-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+  }
+
+  :global(.duration-input-group) > :not(:nth-child(3n + 1)) > input {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  :global(.duration-input-group) > :nth-child(3n + 1) > input {
+    border-top-left-radius: var(--border-radius);
+    border-bottom-left-radius: var(--border-radius);
+  }
+}
+
+@media screen and (min-width: 21.7rem) {
+  :global(.duration-input-group) {
+    flex-wrap: nowrap;
+  }
+
+  :global(.duration-input-group) label {
+    flex-basis: unset;
+  }
+}

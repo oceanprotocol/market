@@ -15,6 +15,7 @@ import { Persist } from '../../atoms/FormikPersist'
 import Debug from './Debug'
 import Feedback from './Feedback'
 import Alert from '../../atoms/Alert'
+import { computeTimeoutInSecons } from '../../molecules/FormFields/DurationInput'
 
 const formName = 'ocean-publish-form'
 
@@ -38,19 +39,28 @@ export default function PublishPage({
   ): Promise<void> {
     const metadata = transformPublishFormToMetadata(values)
     const serviceType = values.access === 'Download' ? 'access' : 'compute'
+    const timeout = computeTimeoutInSecons(
+      values.access === 'Download'
+        ? values.accessTimeout
+        : values.computeTimeout
+    )
 
     try {
       Logger.log(
         'Publish with ',
         metadata,
         serviceType,
-        values.dataTokenOptions
+        values.dataTokenOptions,
+        timeout,
+        values.providerUri
       )
 
       const ddo = await publish(
         (metadata as unknown) as Metadata,
         serviceType,
-        values.dataTokenOptions
+        values.dataTokenOptions,
+        timeout,
+        values.providerUri
       )
 
       // Publish failed
@@ -105,11 +115,11 @@ export default function PublishPage({
                 className={styles.alert}
               />
               <article className={styles.grid}>
-                <FormPublish content={content.form} />
+                <FormPublish content={content.form} values={values} />
 
                 <aside>
                   <div className={styles.sticky}>
-                    <Preview values={values} />
+                    <Preview values={values} data={content.form.data} />
                     <Web3Feedback />
                   </div>
                 </aside>

@@ -63,6 +63,30 @@
         "help": "Separate tags with comma."
       },
       {
+        "name": "providerUri",
+        "label": "Provider URL",
+        "placeholder": "e.g. https://provider.cloud-server.com/service/access",
+        "help": "Server endpoint for access / compute. If not provided, the dev-ocean.com server will be used.",
+        "type": "url",
+        "required": false
+      },
+      {
+        "name": "accessTimeout",
+        "label": "Timeout for accessing data",
+        "placeholder": "forever access",
+        "type": "duration",
+        "required": false,
+        "options": ["neverused-code-67df661ee1bc9df3c2756f3172846914", "access", "Download"]
+      },
+      {
+        "name": "computeTimeout",
+        "label": "Timeout for computing on the data",
+        "placeholder": "one hour computing",
+        "type": "duration",
+        "required": false,
+        "options": ["neverused-code-67df661ee1bc9df3c2756f3172846914", "access", "Compute"]
+      },
+      {
         "name": "termsAndConditions",
         "label": "Terms & Conditions",
         "type": "terms",

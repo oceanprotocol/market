@@ -24,6 +24,15 @@ export interface PriceOptionsMarket extends PriceOptions {
   swapFee: number
 }
 
+export interface Timeout {
+  years?: number | ''
+  months?: number | ''
+  days?: number | ''
+  hours?: number | ''
+  minutes?: number | ''
+  seconds?: number | ''
+}
+
 export interface MetadataPublishForm {
   // ---- required fields ----
   name: string
@@ -36,6 +45,9 @@ export interface MetadataPublishForm {
   // ---- optional fields ----
   tags?: string
   links?: string | File[]
+  accessTimeout?: Timeout
+  computeTimeout?: Timeout
+  providerUri?: string
 }
 
 export interface ServiceMetadataMarket extends ServiceMetadata {

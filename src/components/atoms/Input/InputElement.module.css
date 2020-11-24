@@ -17,10 +17,35 @@
   display: block;
 }
 
+.input + div.unit {
+  text-align: right;
+  position: relative;
+  line-height: 100%;
+  top: -0.4rem;
+  font-size: var(--font-size-mini);
+  padding-right: 10%;
+  padding-left: 10%;
+  color: var(--border-color);
+}
+
+@media screen and (min-width: 30rem) {
+  .input + div.unit {
+    font-size: var(--font-size-small);
+  }
+}
+
 .input:focus {
   border-color: var(--font-color-text);
   box-shadow: none;
   outline: 0;
+}
+
+.input:focus + div.unit {
+  color: var(--font-color-text);
+}
+
+.input:not([value='']) + div.unit {
+  color: var(--font-color-text);
 }
 
 .input::placeholder {
