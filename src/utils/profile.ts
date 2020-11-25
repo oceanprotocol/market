@@ -37,51 +37,85 @@ function getLinks(
   return links
 }
 
+function transformResponse({
+  name,
+  description,
+  website,
+  emoji,
+  image,
+  /* eslint-disable camelcase */
+  proof_twitter,
+  proof_github,
+  proof_did
+}: ResponseData3Box) {
+  /* eslint-enable camelcase */
+  const links = getLinks(website, proof_twitter, proof_github)
+
+  const profile: Profile = {
+    did: decodeProof(proof_did).iss,
+    // Conditionally add profile items if they exist
+    ...(name && { name }),
+    ...(description && { description }),
+    ...(emoji && { emoji }),
+    ...(image && {
+      image: `${ipfsUrl}/ipfs/${
+        image.map(
+          (img: { contentUrl: { [key: string]: string } }) =>
+            img.contentUrl['/']
+        )[0]
+      }`
+    }),
+    ...(links.length && { links })
+  }
+
+  return profile
+}
+
 export default async function get3BoxProfile(
   accountId: string,
   cancelToken: CancelToken
 ): Promise<Profile> {
   try {
+    // const interceptor = axios.interceptors.response.use(
+    //   (response) => {
+    //     // Any status code that lie within the range of 2xx cause this function to trigger
+    //     // Do something with response data
+    //     return response
+    //   },
+    //   (error) => {
+    //     // Any status codes that falls outside the range of 2xx cause this function to trigger
+    //     // Do something with response error
+    //     console.log('Intercepted error', error.message)
+    //     return Promise.resolve({ status: 200 })
+    //   }
+    // )
+
     const response: AxiosResponse<ResponseData3Box> = await axios(
       `${apiUri}/profile?address=${accountId}`,
-      { cancelToken }
+      {
+        cancelToken
+        // validateStatus: () => true
+      }
     )
+    // axios.interceptors.request.eject(interceptor)
 
     // TODO: prevent 404 from showing up in console somehow.
 
-    if (!response || !response.data || response.data.status === 'error') return
+    if (
+      !response ||
+      !response.data ||
+      response.status !== 200 ||
+      response.data.status === 'error'
+    )
+      return
 
-    const {
-      name,
-      description,
-      website,
-      emoji,
-      image,
-      /* eslint-disable camelcase */
-      proof_twitter,
-      proof_github
-      /* eslint-enable camelcase */
-    } = response.data
-
-    const links = getLinks(website, proof_twitter, proof_github)
-
-    const profile: Profile = {
-      did: decodeProof(response.data.proof_did).iss,
-      // Conditionally add profile items if they exist
-      ...(name && { name }),
-      ...(description && { description }),
-      ...(emoji && { emoji }),
-      ...(image && {
-        image: `${ipfsUrl}/ipfs/${
-          image.map((img: any) => img.contentUrl['/'])[0]
-        }`
-      }),
-      ...(links.length && { links })
-    }
-    console.log(profile)
-
+    Logger.log(`3Box profile found for ${accountId}`, response.data)
+    const profile = transformResponse(response.data)
     return profile
   } catch (error) {
-    Logger.log(`No profile found for ${accountId}`)
+    // prevent 404 error from appearing in console
+    // if (error.response && error.response.status === 404) {
+    //   console.clear()
+    // }
   }
 }

@@ -1,18 +1,20 @@
 .publisher {
   margin: 0;
-  display: inline-block;
 }
 
-@media (min-width: 40rem) {
-  .links {
-    display: inline;
+@media (min-width: 32rem) {
+  .publisher {
+    display: inline-block;
   }
+}
+
+.links {
+  display: inline;
 }
 
 .links a,
 .links span {
   margin-left: calc(var(--spacer) / 3);
-  color: inherit;
   font-size: var(--font-size-mini);
 }
 
@@ -27,12 +29,19 @@
 }
 
 .linksExternal {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   display: inline-block;
   fill: var(--color-secondary);
 }
 
 .detailsTrigger {
   cursor: help;
+}
+
+.detailsTrigger svg {
+  width: 10px;
+  height: 10px;
+  position: relative;
+  bottom: -1px;
 }

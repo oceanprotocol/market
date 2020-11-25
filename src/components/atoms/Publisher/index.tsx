@@ -12,6 +12,7 @@ import axios from 'axios'
 import { useOcean } from '@oceanprotocol/react'
 import { ReactComponent as Info } from '../../../images/info.svg'
 import ProfileDetails from './ProfileDetails'
+import Add from './Add'
 
 const cx = classNames.bind(styles)
 
@@ -24,19 +25,26 @@ export default function Publisher({
   minimal?: boolean
   className?: string
 }): ReactElement {
-  const { networkId } = useOcean()
+  const { networkId, accountId } = useOcean()
   const [profile, setProfile] = useState<Profile>()
+  const [name, setName] = useState<string>()
 
   useEffect(() => {
     if (!account) return
+    console.log('Fired!')
 
     const source = axios.CancelToken.source()
 
+    setName(accountTruncate(account))
+
     async function get3Box() {
-      const profile = await get3BoxProfile(account, source.token)
-      if (!profile) return
-      setProfile(profile)
-      Logger.log(`Found 3Box profile for ${account}`, profile)
+      const newProfile = await get3BoxProfile(account, source.token)
+      console.log(newProfile)
+
+      if (!newProfile) return
+
+      setProfile(newProfile)
+      newProfile?.name && setName(newProfile.name)
     }
     get3Box()
 
@@ -50,17 +58,17 @@ export default function Publisher({
     [className]: className
   })
 
-  return account ? (
+  return (
     <div className={styleClasses}>
       {minimal ? (
-        profile?.name || accountTruncate(account)
+        name
       ) : (
         <>
           <Link
             to={`/search/?owner=${account}`}
             title="Show all data sets created by this account."
           >
-            {profile?.name || accountTruncate(account)}
+            {name}
           </Link>
 
           <div className={styles.links}>
@@ -74,13 +82,13 @@ export default function Publisher({
                     account={account}
                   />
                 }
-                // placement="top"
               >
                 <span className={styles.detailsTrigger}>
                   Profile <Info className={styles.linksExternal} />
                 </span>
               </Tooltip>
             )}
+            {account === accountId && !profile && <Add />}
             <EtherscanLink networkId={networkId} path={`address/${account}`}>
               Etherscan
             </EtherscanLink>
@@ -88,5 +96,5 @@ export default function Publisher({
         </>
       )}
     </div>
-  ) : null
+  )
 }

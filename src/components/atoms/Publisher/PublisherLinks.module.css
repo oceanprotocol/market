@@ -20,6 +20,4 @@
 
 .linksExternal {
   composes: linksExternal from './index.module.css';
-  width: 6px;
-  height: 6px;
 }
