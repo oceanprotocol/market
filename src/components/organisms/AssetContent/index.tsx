@@ -33,7 +33,6 @@ export default function AssetContent({
   const { price } = useAsset()
 
   useEffect(() => {
-    console.log(price)
     setShowPricing(accountId === owner && price.isConsumable === '')
   }, [accountId, owner, price])
 
