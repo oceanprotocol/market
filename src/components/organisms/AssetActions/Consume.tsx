@@ -42,7 +42,7 @@ export default function Consume({
 
   useEffect(() => {
     setIsConsumable(
-      price.isConsumable != undefined ? price.isConsumable === 'true' : true
+      price.isConsumable !== undefined ? price.isConsumable === 'true' : true
     )
   }, [price])
 
