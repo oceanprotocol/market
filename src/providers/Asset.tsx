@@ -152,7 +152,7 @@ function AssetProvider({
       setOwner(ddo.publicKey[0].owner)
 
       await setPurgatory(ddo.id)
-      refreshPrice()
+      await refreshPrice()
     },
     [refreshPrice, setPurgatory]
   )
