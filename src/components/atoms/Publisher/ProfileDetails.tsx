@@ -38,7 +38,13 @@ export default function ProfileDetails({
       </div>
       <div className={styles.meta}>
         Profile data from{' '}
-        <a href={`https://www.3box.io/${account}`}>3Box Hub</a>
+        <a
+          href={`https://www.3box.io/${account}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          3Box Hub
+        </a>
       </div>
     </>
   )
