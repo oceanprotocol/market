@@ -41,7 +41,7 @@ export default function Tooltip({
 
   function onMount() {
     setSpring({
-      transform: 'scale(1) translateY(0)',
+      ...animation.to,
       onRest: (): void => null,
       config: animation.config
     })

@@ -2,7 +2,13 @@
   background: var(--background-highlight);
   border-radius: var(--border-radius);
   padding: calc(var(--spacer) / 2);
-  margin: calc(var(--spacer) / 4);
+  margin-bottom: calc(var(--spacer) / 4);
+}
+
+@media (min-width: 40rem) {
+  .profile {
+    margin: calc(var(--spacer) / 4);
+  }
 }
 
 .profile p {

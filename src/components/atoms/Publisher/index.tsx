@@ -73,6 +73,7 @@ export default function Publisher({
             {' — '}
             {profile && (
               <Tooltip
+                placement="bottom"
                 content={
                   <ProfileDetails
                     profile={profile}
