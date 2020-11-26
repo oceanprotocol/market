@@ -4,7 +4,7 @@ import jwtDecode from 'jwt-decode'
 import { Logger } from '@oceanprotocol/lib'
 
 // https://docs.3box.io/api/rest-api
-const apiUri = 'https://ipfs.3box.io'
+const apiUri = 'https://market-stats.oceanprotocol.com/api'
 const ipfsUrl = 'https://ipfs.oceanprotocol.com'
 
 function decodeProof(proofJWT: string) {
@@ -76,30 +76,10 @@ export default async function get3BoxProfile(
   cancelToken: CancelToken
 ): Promise<Profile> {
   try {
-    // const interceptor = axios.interceptors.response.use(
-    //   (response) => {
-    //     // Any status code that lie within the range of 2xx cause this function to trigger
-    //     // Do something with response data
-    //     return response
-    //   },
-    //   (error) => {
-    //     // Any status codes that falls outside the range of 2xx cause this function to trigger
-    //     // Do something with response error
-    //     console.log('Intercepted error', error.message)
-    //     return Promise.resolve({ status: 200 })
-    //   }
-    // )
-
     const response: AxiosResponse<ResponseData3Box> = await axios(
       `${apiUri}/profile?address=${accountId}`,
-      {
-        cancelToken
-        // validateStatus: () => true
-      }
+      { cancelToken }
     )
-    // axios.interceptors.request.eject(interceptor)
-
-    // TODO: prevent 404 from showing up in console somehow.
 
     if (
       !response ||
@@ -112,10 +92,6 @@ export default async function get3BoxProfile(
     Logger.log(`3Box profile found for ${accountId}`, response.data)
     const profile = transformResponse(response.data)
     return profile
-  } catch (error) {
-    // prevent 404 error from appearing in console
-    // if (error.response && error.response.status === 404) {
-    //   console.clear()
-    // }
-  }
+    // eslint-disable-next-line no-empty
+  } catch (error) {}
 }

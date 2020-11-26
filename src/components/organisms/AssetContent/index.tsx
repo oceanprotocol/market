@@ -9,10 +9,11 @@ import AssetActions from '../AssetActions'
 import { DDO } from '@oceanprotocol/lib'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import Pricing from './Pricing'
-import { useMetadata, useOcean, usePricing } from '@oceanprotocol/react'
+import { useOcean, usePricing } from '@oceanprotocol/react'
 import EtherscanLink from '../../atoms/EtherscanLink'
 import Bookmark from './Bookmark'
 import Publisher from '../../atoms/Publisher'
+import { useAsset } from '../../../providers/Asset'
 
 export interface AssetContentProps {
   metadata: MetadataMarket
@@ -26,7 +27,7 @@ export default function AssetContent({
 }: AssetContentProps): ReactElement {
   const { debug } = useUserPreferences()
   const { accountId, networkId } = useOcean()
-  const { owner } = useMetadata(ddo)
+  const { owner } = useAsset()
   const { dtSymbol, dtName } = usePricing(ddo)
   const isOwner = accountId === owner
   const hasNoPrice = ddo.price.datatoken === 0 && ddo.price.value === 0

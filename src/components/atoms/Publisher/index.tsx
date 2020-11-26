@@ -3,7 +3,6 @@ import styles from './index.module.css'
 import classNames from 'classnames/bind'
 import Tooltip from '../Tooltip'
 import { Profile } from '../../../models/Profile'
-import { Logger } from '@oceanprotocol/lib'
 import { Link } from 'gatsby'
 import get3BoxProfile from '../../../utils/profile'
 import EtherscanLink from '../EtherscanLink'
@@ -29,22 +28,21 @@ export default function Publisher({
   const [profile, setProfile] = useState<Profile>()
   const [name, setName] = useState<string>()
 
+  const showAdd = account === accountId && !profile
+
   useEffect(() => {
     if (!account) return
-    console.log('Fired!')
-
-    const source = axios.CancelToken.source()
 
     setName(accountTruncate(account))
+    const source = axios.CancelToken.source()
 
     async function get3Box() {
-      const newProfile = await get3BoxProfile(account, source.token)
-      console.log(newProfile)
+      const profile = await get3BoxProfile(account, source.token)
+      if (!profile) return
 
-      if (!newProfile) return
-
-      setProfile(newProfile)
-      newProfile?.name && setName(newProfile.name)
+      setProfile(profile)
+      const { name } = profile
+      name && setName(name)
     }
     get3Box()
 
@@ -88,7 +86,7 @@ export default function Publisher({
                 </span>
               </Tooltip>
             )}
-            {account === accountId && !profile && <Add />}
+            {showAdd && <Add />}
             <EtherscanLink networkId={networkId} path={`address/${account}`}>
               Etherscan
             </EtherscanLink>
