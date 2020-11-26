@@ -31,13 +31,10 @@ export default function AssetContent({
   const { dtSymbol, dtName } = usePricing(ddo)
   const [showPricing, setShowPricing] = useState(false)
   const { price } = useAsset()
-  // const isOwner = accountId === owner
-  // const hasNoPrice = ddo.price.datatoken === 0 && ddo.price.value === 0
-  // const showPricing = isOwner && hasNoPrice
 
   useEffect(() => {
     console.log(price)
-    setShowPricing(accountId === owner && price.isConsumable == '')
+    setShowPricing(accountId === owner && price.isConsumable === '')
   }, [accountId, owner, price])
 
   return (

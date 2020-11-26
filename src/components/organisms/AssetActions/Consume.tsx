@@ -49,7 +49,6 @@ export default function Consume({
   }, [dtBalance])
 
   useEffect(() => {
-    console.log(price)
     setIsDisabled(
       (!ocean ||
         !isBalanceSufficient ||
