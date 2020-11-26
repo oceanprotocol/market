@@ -27,7 +27,7 @@ export default function Consume({
   const { marketFeeAddress } = useSiteMetadata()
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
   const [previousOrderId, setPreviousOrderId] = useState<string>()
-  const { isInPurgatory } = useAsset()
+  const { isInPurgatory, price } = useAsset()
   const {
     dtSymbol,
     buyDT,
@@ -37,23 +37,36 @@ export default function Consume({
   } = usePricing(ddo)
   const { consumeStepText, consume, consumeError } = useConsume()
   const [isDisabled, setIsDisabled] = useState(true)
-
-  const hasDatatoken = Number(dtBalance) >= 1
+  const [hasDatatoken, setHasDatatoken] = useState(false)
+  const [isConsumable, setIsConsumable] = useState(true)
 
   useEffect(() => {
+    setIsConsumable(price.isConsumable === 'true')
+  }, [price])
+
+  useEffect(() => {
+    setHasDatatoken(Number(dtBalance) >= 1)
+  }, [dtBalance])
+
+  useEffect(() => {
+    console.log(price)
     setIsDisabled(
       (!ocean ||
         !isBalanceSufficient ||
         typeof consumeStepText !== 'undefined' ||
-        pricingIsLoading) &&
-        !hasPreviousOrder
+        pricingIsLoading ||
+        !isConsumable) &&
+        !hasPreviousOrder &&
+        !hasDatatoken
     )
   }, [
     ocean,
     hasPreviousOrder,
     isBalanceSufficient,
     consumeStepText,
-    pricingIsLoading
+    pricingIsLoading,
+    isConsumable,
+    hasDatatoken
   ])
 
   useEffect(() => {
@@ -118,7 +131,13 @@ export default function Consume({
           <File file={file} />
         </div>
         <div className={styles.pricewrapper}>
-          <Price ddo={ddo} conversion />
+          {isConsumable ? (
+            <Price ddo={ddo} conversion />
+          ) : (
+            <div className={styles.help}>
+              There is not enough liquidity in the pool to consume the data set.
+            </div>
+          )}
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>
