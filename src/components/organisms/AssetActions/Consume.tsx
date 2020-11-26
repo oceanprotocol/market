@@ -41,11 +41,6 @@ export default function Consume({
   const [isConsumable, setIsConsumable] = useState(true)
 
   useEffect(() => {
-    console.log('iscons', price.isConsumable, price.isConsumable != undefined)
-    console.log(
-      'iscons state',
-      price.isConsumable != undefined && price.isConsumable === 'true'
-    )
     setIsConsumable(
       price.isConsumable != undefined ? price.isConsumable === 'true' : true
     )
