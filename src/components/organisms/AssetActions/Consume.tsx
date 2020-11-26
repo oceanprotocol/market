@@ -134,7 +134,7 @@ export default function Consume({
             <Price ddo={ddo} conversion />
           ) : (
             <div className={styles.help}>
-              There is not enough liquidity in the pool to consume the data set.
+              There is not enough liquidity in the pool to buy this data set.
             </div>
           )}
           {!isInPurgatory && <PurchaseButton />}
