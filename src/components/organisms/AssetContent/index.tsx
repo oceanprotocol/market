@@ -1,5 +1,5 @@
 import { MetadataMarket } from '../../../@types/MetaData'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { Link } from 'gatsby'
 import Markdown from '../../atoms/Markdown'
 import MetaFull from './MetaFull'
@@ -29,9 +29,12 @@ export default function AssetContent({
   const { accountId, networkId } = useOcean()
   const { owner } = useAsset()
   const { dtSymbol, dtName } = usePricing(ddo)
-  const isOwner = accountId === owner
-  const hasNoPrice = ddo.price.datatoken === 0 && ddo.price.value === 0
-  const showPricing = isOwner && hasNoPrice
+  const [showPricing, setShowPricing] = useState(false)
+  const { price } = useAsset()
+
+  useEffect(() => {
+    setShowPricing(accountId === owner && price.isConsumable === '')
+  }, [accountId, owner, price])
 
   return (
     <article className={styles.grid}>
