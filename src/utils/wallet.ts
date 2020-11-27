@@ -56,6 +56,7 @@ export function isDefaultNetwork(networkId: number): boolean {
 }
 
 export function accountTruncate(account: string): string {
+  if (!account) return
   const middle = account.substring(6, 38)
   const truncated = account.replace(middle, '…')
   return truncated

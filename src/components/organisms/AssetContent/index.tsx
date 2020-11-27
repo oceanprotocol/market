@@ -9,10 +9,10 @@ import AssetActions from '../AssetActions'
 import { DDO } from '@oceanprotocol/lib'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import Pricing from './Pricing'
-import { useMetadata, useOcean, usePricing } from '@oceanprotocol/react'
+import { useOcean, usePricing } from '@oceanprotocol/react'
 import EtherscanLink from '../../atoms/EtherscanLink'
 import Bookmark from './Bookmark'
-import Byline from './Byline'
+import Publisher from '../../atoms/Publisher'
 import { useAsset } from '../../../providers/Asset'
 
 export interface AssetContentProps {
@@ -27,7 +27,7 @@ export default function AssetContent({
 }: AssetContentProps): ReactElement {
   const { debug } = useUserPreferences()
   const { accountId, networkId } = useOcean()
-  const { owner } = useMetadata(ddo)
+  const { owner } = useAsset()
   const { dtSymbol, dtName } = usePricing(ddo)
   const [showPricing, setShowPricing] = useState(false)
   const { price } = useAsset()
@@ -41,9 +41,6 @@ export default function AssetContent({
       <div>
         {showPricing && <Pricing ddo={ddo} />}
         <div className={styles.content}>
-          <p className={styles.author} title="Author">
-            {metadata?.main.author}
-          </p>
           {metadata?.additionalInformation?.categories?.length && (
             <p>
               <Link
@@ -67,7 +64,7 @@ export default function AssetContent({
                 )}
               </EtherscanLink>
             </p>
-            <Byline owner={owner} prefix="Published by " />
+            Published By <Publisher account={owner} />
           </aside>
 
           <Markdown

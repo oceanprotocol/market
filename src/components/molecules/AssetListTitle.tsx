@@ -2,25 +2,20 @@ import { DDO } from '@oceanprotocol/lib'
 import { useOcean } from '@oceanprotocol/react'
 import { Link } from 'gatsby'
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useDataPartner } from '../../hooks/useDataPartner'
 import { retrieveDDO } from '../../utils/aquarius'
-import { PartnerBadge } from '../atoms/Partner'
 import styles from './AssetListTitle.module.css'
 import axios from 'axios'
 
 export default function AssetListTitle({
   ddo,
   did,
-  title,
-  owner
+  title
 }: {
   ddo?: DDO
   did?: string
   title?: string
-  owner?: string
 }): ReactElement {
   const { config } = useOcean()
-  const { partner } = useDataPartner(owner)
   const [assetTitle, setAssetTitle] = useState<string>(title)
 
   useEffect(() => {
@@ -49,9 +44,7 @@ export default function AssetListTitle({
 
   return (
     <h3 className={styles.title}>
-      <Link to={`/asset/${did || ddo.id}`}>
-        {partner && <PartnerBadge />} {assetTitle}
-      </Link>
+      <Link to={`/asset/${did || ddo.id}`}>{assetTitle}</Link>
     </h3>
   )
 }

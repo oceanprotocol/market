@@ -34,10 +34,6 @@
   margin-bottom: 0;
 }
 
-.author {
-  font-weight: var(--font-weight-bold);
-}
-
 .datatoken a {
   color: var(--color-secondary);
 }

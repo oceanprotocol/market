@@ -76,7 +76,7 @@
   margin: calc(var(--spacer) * 2) auto;
   max-width: 20%;
   border: 0;
-  border-top: 2px solid var(--brand-black);
+  border-top: 2px solid var(--border-color);
 }
 
 .content figure {
