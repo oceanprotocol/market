@@ -18,26 +18,6 @@
   margin-bottom: 0;
 }
 
-.output {
-  display: grid;
-  gap: var(--spacer);
-  grid-template-columns: 1fr 1fr;
-  padding-bottom: calc(var(--spacer) / 2);
-}
-
-.output p {
-  font-weight: var(--font-weight-bold);
-  margin-bottom: calc(var(--spacer) / 8);
-}
-
-.output [class*='token'] {
-  white-space: normal;
-}
-
-.output [class*='token'] > figure {
-  display: none;
-}
-
 .warning {
   margin-left: -3rem;
   margin-right: -3rem;

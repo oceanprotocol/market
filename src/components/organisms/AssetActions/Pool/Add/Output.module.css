@@ -1,0 +1,19 @@
+.output {
+  display: grid;
+  gap: var(--spacer);
+  grid-template-columns: 1fr 1fr;
+  padding-bottom: calc(var(--spacer) / 2);
+}
+
+.output p {
+  font-weight: var(--font-weight-bold);
+  margin-bottom: calc(var(--spacer) / 8);
+}
+
+.output div:first-child [class*='token'] {
+  white-space: normal;
+}
+
+.output div:first-child [class*='token'] > figure {
+  display: none;
+}
