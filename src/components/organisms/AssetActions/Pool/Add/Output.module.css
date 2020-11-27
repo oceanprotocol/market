@@ -17,3 +17,7 @@
 .output div:first-child [class*='token'] > figure {
   display: none;
 }
+
+.help {
+  text-align: center;
+}
