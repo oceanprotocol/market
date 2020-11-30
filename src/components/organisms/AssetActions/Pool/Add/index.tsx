@@ -187,6 +187,8 @@ export default function Add({
               newPoolShare={newPoolShare}
               swapFee={swapFee}
               dtSymbol={dtSymbol}
+              totalPoolTokens={totalPoolTokens}
+              totalBalance={totalBalance}
             />
 
             <Actions

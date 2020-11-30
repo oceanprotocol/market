@@ -1,5 +1,6 @@
 import { graphql, useStaticQuery } from 'gatsby'
 import React, { ReactElement } from 'react'
+import TokenBalance from '../../../../../@types/TokenBalance'
 import FormHelp from '../../../../atoms/Input/Help'
 import Token from '../Token'
 import styles from './Output.module.css'
@@ -29,12 +30,16 @@ export default function Output({
   newPoolTokens,
   newPoolShare,
   swapFee,
-  dtSymbol
+  dtSymbol,
+  totalPoolTokens,
+  totalBalance
 }: {
   newPoolTokens: string
   newPoolShare: string
   swapFee: string
   dtSymbol: string
+  totalPoolTokens: string
+  totalBalance: TokenBalance
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const {
