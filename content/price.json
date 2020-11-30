@@ -31,6 +31,7 @@
     "add": {
       "title": "Add Liquidity",
       "output": {
+        "help": "Providing liquidity will earn you SWAPFEE% on every transaction in this pool, proportionally to your share of the pool. Your token input will be converted based on the weight of the pool.",
         "titleIn": "You will receive",
         "titleOut": "Pool conversion"
       },

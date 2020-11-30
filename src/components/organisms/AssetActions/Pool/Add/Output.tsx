@@ -16,6 +16,7 @@ const contentQuery = graphql`
             pool {
               add {
                 output {
+                  help
                   titleIn
                   titleOut
                 }
@@ -47,6 +48,7 @@ export default function Output({
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const {
+    help,
     titleIn,
     titleOut
   } = data.content.edges[0].node.childContentJson.pool.add.output
@@ -81,9 +83,7 @@ export default function Output({
   return (
     <>
       <FormHelp className={styles.help}>
-        {`Providing liquidity will earn you ${swapFee}% on every
-        transaction happening in this pool, proportionally to your share of the
-        pool. Your token input will be converted based on the weight of the pool.`}
+        {help.replace('SWAPFEE', swapFee)}
       </FormHelp>
       <div className={styles.output}>
         <div>
