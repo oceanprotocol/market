@@ -23,15 +23,17 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
   return (
     <article className={styles.teaser}>
       <Link to={`/asset/${ddo.id}`} className={styles.link}>
-        <Tooltip
-          placement="left"
-          content={dataTokenInfo?.name}
-          className={styles.symbol}
-        >
-          {dataTokenInfo?.symbol}
-        </Tooltip>
-        <h1 className={styles.title}>{name}</h1>
-        <Publisher account={owner} minimal />
+        <header className={styles.header}>
+          <Tooltip
+            placement="left"
+            content={dataTokenInfo?.name}
+            className={styles.symbol}
+          >
+            {dataTokenInfo?.symbol}
+          </Tooltip>
+          <h1 className={styles.title}>{name}</h1>
+          <Publisher account={owner} minimal className={styles.publisher} />
+        </header>
         {isCompute && <div className={styles.accessLabel}>Compute</div>}
 
         <div className={styles.content}>

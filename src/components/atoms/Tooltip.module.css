@@ -43,7 +43,7 @@
 }
 
 .content[data-placement*='left'] > .arrow {
-  right: -4px;
+  right: 6px;
 }
 
 .content[data-placement*='right'] > .arrow {

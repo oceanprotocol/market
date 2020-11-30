@@ -7,7 +7,8 @@
 
 @media (min-width: 40rem) {
   .profile {
-    margin: calc(var(--spacer) / 4);
+    margin: calc(var(--spacer) / 8);
+    margin-bottom: calc(var(--spacer) / 4);
   }
 }
 
