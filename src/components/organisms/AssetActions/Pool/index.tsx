@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useOcean, useMetadata, usePricing } from '@oceanprotocol/react'
-import { BestPrice, DDO, Logger } from '@oceanprotocol/lib'
+import { DDO, Logger } from '@oceanprotocol/lib'
 import styles from './index.module.css'
 import stylesActions from './Actions.module.css'
 import PriceUnit from '../../../atoms/Price/PriceUnit'

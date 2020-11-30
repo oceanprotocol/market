@@ -60,7 +60,7 @@ export default function Output({
   const [poolDatatoken, setPoolDatatoken] = useState('0')
 
   useEffect(() => {
-    if (!values.amount) return
+    if (!values.amount || !totalBalance || !totalPoolTokens) return
 
     const newPoolSupply = Number(totalPoolTokens) + Number(newPoolShare)
     const ratio = Number(newPoolShare) / newPoolSupply
@@ -90,7 +90,6 @@ export default function Output({
           <p>{titleIn}</p>
           <Token symbol="pool shares" balance={newPoolTokens} />
           <Token symbol="% of pool" balance={newPoolShare} />
-          {/* <Token symbol="% swap fee" balance={swapFee} /> */}
         </div>
         <div>
           <p>{titleOut}</p>
