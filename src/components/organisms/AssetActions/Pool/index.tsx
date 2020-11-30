@@ -275,7 +275,12 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
             title={
               <>
                 Your Liquidity
-                <Tooltip content={content.tooltips.liquidity} />
+                <Tooltip
+                  content={content.tooltips.liquidity.replace(
+                    'SWAPFEE',
+                    swapFee
+                  )}
+                />
               </>
             }
             ocean={`${userLiquidity?.ocean}`}

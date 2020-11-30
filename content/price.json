@@ -26,7 +26,7 @@
   "pool": {
     "tooltips": {
       "price": "Explain how this price is determined...",
-      "liquidity": "Explain what this represents, advantage of providing liquidity..."
+      "liquidity": "Providing liquidity will earn you SWAPFEE% on every transaction in this pool, proportionally to your share of the pool."
     },
     "add": {
       "title": "Add Liquidity",
