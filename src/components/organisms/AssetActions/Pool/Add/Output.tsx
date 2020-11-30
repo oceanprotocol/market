@@ -1,5 +1,7 @@
+import { FormikContextType, useFormikContext } from 'formik'
 import { graphql, useStaticQuery } from 'gatsby'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
+import { FormAddLiquidity } from '.'
 import TokenBalance from '../../../../../@types/TokenBalance'
 import FormHelp from '../../../../atoms/Input/Help'
 import Token from '../Token'
@@ -32,7 +34,8 @@ export default function Output({
   swapFee,
   dtSymbol,
   totalPoolTokens,
-  totalBalance
+  totalBalance,
+  coin
 }: {
   newPoolTokens: string
   newPoolShare: string
@@ -40,6 +43,7 @@ export default function Output({
   dtSymbol: string
   totalPoolTokens: string
   totalBalance: TokenBalance
+  coin: string
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const {
@@ -47,9 +51,32 @@ export default function Output({
     titleOut
   } = data.content.edges[0].node.childContentJson.pool.add.output
 
-  // TODO: calculation fun!
-  const poolOcean = '70'
-  const poolDatatoken = '30'
+  // Connect with form
+  const { values }: FormikContextType<FormAddLiquidity> = useFormikContext()
+
+  const [poolOcean, setPoolOcean] = useState('0')
+  const [poolDatatoken, setPoolDatatoken] = useState('0')
+
+  useEffect(() => {
+    if (!values.amount) return
+
+    const newPoolSupply = Number(totalPoolTokens) + Number(newPoolShare)
+    const ratio = Number(newPoolShare) / newPoolSupply
+
+    const newOceanReserve =
+      coin === 'OCEAN'
+        ? Number(totalBalance.ocean) + Number(values.amount)
+        : totalBalance.ocean
+    const newDtReserve =
+      coin === 'OCEAN'
+        ? totalBalance.datatoken
+        : Number(totalBalance.datatoken) + Number(values.amount)
+
+    const poolOcean = `${Number(newOceanReserve) * ratio}`
+    const poolDatatoken = `${Number(newDtReserve) * ratio}`
+    setPoolOcean(poolOcean)
+    setPoolDatatoken(poolDatatoken)
+  }, [values.amount, coin, totalBalance, totalPoolTokens, newPoolShare])
 
   return (
     <>

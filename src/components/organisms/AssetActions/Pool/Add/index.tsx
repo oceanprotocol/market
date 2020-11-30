@@ -189,6 +189,7 @@ export default function Add({
               dtSymbol={dtSymbol}
               totalPoolTokens={totalPoolTokens}
               totalBalance={totalBalance}
+              coin={coin}
             />
 
             <Actions
