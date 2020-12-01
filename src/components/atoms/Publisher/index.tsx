@@ -41,8 +41,8 @@ export default function Publisher({
       if (!profile) return
 
       setProfile(profile)
-      const { name } = profile
-      name && setName(name)
+      const { name, emoji } = profile
+      name && setName(`${emoji || ''} ${name}`)
     }
     get3Box()
 

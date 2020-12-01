@@ -1,5 +1,5 @@
 .teaser {
-  max-width: 50rem;
+  max-width: 40rem;
   height: 100%;
 }
 
@@ -29,15 +29,13 @@
 }
 
 .title {
-  line-height: 1.3 !important;
   font-size: var(--font-size-large);
-  margin-top: calc(var(--spacer) / 12);
-  margin-bottom: 0;
+  margin: 0;
+  padding-bottom: calc(var(--spacer) / 6);
 }
 
-.partner {
-  font-size: var(--font-size-small);
-  margin-top: calc(var(--spacer) / 8);
+.publisher {
+  display: block;
 }
 
 .foot {
