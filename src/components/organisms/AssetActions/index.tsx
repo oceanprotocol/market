@@ -9,7 +9,13 @@ import compareAsBN from '../../../utils/compareAsBN'
 import Pool from './Pool'
 import Trade from './Trade'
 import { useAsset } from '../../../providers/Asset'
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 
+const client = new ApolloClient({
+  uri:
+    'http://54.81.231.185:8000/subgraphs/name/oceanprotocol/ocean-subgraph',
+  cache: new InMemoryCache()
+})
 export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
   const { ocean, balance, accountId } = useOcean()
   const { price } = useAsset()
@@ -86,5 +92,9 @@ export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
       }
     )
 
-  return <Tabs items={tabs} className={styles.actions} />
+  return (
+    <ApolloProvider client={client}>
+      <Tabs items={tabs} className={styles.actions} />
+    </ApolloProvider>
+  )
 }

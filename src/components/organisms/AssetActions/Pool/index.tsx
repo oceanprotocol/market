@@ -17,6 +17,8 @@ import Transactions from './Transactions'
 import Graph, { ChartDataLiqudity } from './Graph'
 import axios from 'axios'
 import { useAsset } from '../../../../providers/Asset'
+import { gql, useQuery } from '@apollo/client'
+import { User } from './__generated__/User'
 
 const contentQuery = graphql`
   query PoolQuery {
@@ -37,9 +39,27 @@ const contentQuery = graphql`
   }
 `
 
+const users_query = gql`
+  query User($id: ID!) {
+    user(id: $id) {
+      id
+      tokenBalancesOwned {
+        id
+      }
+      sharesOwned {
+        id
+        poolId {
+          id
+        }
+        balance
+      }
+    }
+  }
+`
+
 export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
-  const data = useStaticQuery(contentQuery)
-  const content = data.content.edges[0].node.childContentJson.pool
+  const staticData = useStaticQuery(contentQuery)
+  const content = staticData.content.edges[0].node.childContentJson.pool
 
   const { ocean, accountId, networkId, config } = useOcean()
   const { owner } = useMetadata(ddo)
@@ -74,6 +94,55 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
   // the purpose of the value is just to trigger the effect
   const [refreshPool, setRefreshPool] = useState(false)
+
+  const { loading, error, data } = useQuery<User>(users_query, {
+    variables: { id: ddo.publicKey[0].owner.toLowerCase() },
+    pollInterval: 500
+  })
+
+  useEffect(() => {
+    console.log(loading, error, data)
+  }, [loading, error, data])
+
+  useEffect(() => {
+    async function init() {
+      if (!data) return
+
+      const poolShares = data.user.sharesOwned.filter((share: any)=> share.poolId.id ===ddo.price?.address.toLowerCase() )
+      console.log(poolShares)
+      //
+      // Get everything the creator put into the pool
+      //
+      
+      const creatorPoolTokens = poolShares[0].balance
+      setCreatorPoolTokens(creatorPoolTokens)
+
+      // Calculate creator's provided liquidity based on pool tokens
+      const creatorOceanBalance =
+        (Number(creatorPoolTokens) / Number(totalPoolTokens)) * price.ocean
+
+      const creatorDtBalance =
+        (Number(creatorPoolTokens) / Number(totalPoolTokens)) * price.datatoken
+
+      const creatorLiquidity = {
+        ocean: creatorOceanBalance,
+        datatoken: creatorDtBalance
+      }
+      setCreatorLiquidity(creatorLiquidity)
+
+      const totalCreatorLiquidityInOcean =
+        creatorLiquidity?.ocean + creatorLiquidity?.datatoken * price?.value
+      setCreatorTotalLiquidityInOcean(totalCreatorLiquidityInOcean)
+
+      const creatorPoolShare =
+        price?.ocean &&
+        price?.datatoken &&
+        creatorLiquidity &&
+        ((Number(creatorPoolTokens) / Number(totalPoolTokens)) * 100).toFixed(2)
+      setCreatorPoolShare(creatorPoolShare)
+    }
+    init()
+  }, [data])
 
   useEffect(() => {
     setIsRemoveDisabled(isInPurgatory && owner === accountId)
@@ -129,42 +198,6 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         }
 
         setUserLiquidity(userLiquidity)
-
-        //
-        // Get everything the creator put into the pool
-        //
-        const creatorPoolTokens = await ocean.pool.sharesBalance(
-          owner,
-          price.address
-        )
-        setCreatorPoolTokens(creatorPoolTokens)
-
-        // Calculate creator's provided liquidity based on pool tokens
-        const creatorOceanBalance =
-          (Number(creatorPoolTokens) / Number(totalPoolTokens)) * price.ocean
-
-        const creatorDtBalance =
-          (Number(creatorPoolTokens) / Number(totalPoolTokens)) *
-          price.datatoken
-
-        const creatorLiquidity = {
-          ocean: creatorOceanBalance,
-          datatoken: creatorDtBalance
-        }
-        setCreatorLiquidity(creatorLiquidity)
-
-        const totalCreatorLiquidityInOcean =
-          creatorLiquidity?.ocean + creatorLiquidity?.datatoken * price?.value
-        setCreatorTotalLiquidityInOcean(totalCreatorLiquidityInOcean)
-
-        const creatorPoolShare =
-          price?.ocean &&
-          price?.datatoken &&
-          creatorLiquidity &&
-          ((Number(creatorPoolTokens) / Number(totalPoolTokens)) * 100).toFixed(
-            2
-          )
-        setCreatorPoolShare(creatorPoolShare)
 
         // Get swap fee
         // swapFee is tricky: to get 0.1% you need to convert from 0.001
