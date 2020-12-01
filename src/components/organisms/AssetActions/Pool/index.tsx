@@ -39,7 +39,7 @@ const contentQuery = graphql`
   }
 `
 
-const users_query = gql`
+const usersQuery = gql`
   query User($id: ID!) {
     user(id: $id) {
       id
@@ -95,7 +95,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   // the purpose of the value is just to trigger the effect
   const [refreshPool, setRefreshPool] = useState(false)
 
-  const { loading, error, data } = useQuery<User>(users_query, {
+  const { loading, error, data } = useQuery<User>(usersQuery, {
     variables: { id: ddo.publicKey[0].owner.toLowerCase() },
     pollInterval: 500
   })
