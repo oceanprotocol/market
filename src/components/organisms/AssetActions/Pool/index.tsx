@@ -108,12 +108,14 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
     async function init() {
       if (!data) return
 
-      const poolShares = data.user.sharesOwned.filter((share: any)=> share.poolId.id ===ddo.price?.address.toLowerCase() )
+      const poolShares = data.user.sharesOwned.filter(
+        (share: any) => share.poolId.id === ddo.price?.address.toLowerCase()
+      )
       console.log(poolShares)
       //
       // Get everything the creator put into the pool
       //
-      
+
       const creatorPoolTokens = poolShares[0].balance
       setCreatorPoolTokens(creatorPoolTokens)
 

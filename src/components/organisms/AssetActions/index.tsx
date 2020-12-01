@@ -9,11 +9,19 @@ import compareAsBN from '../../../utils/compareAsBN'
 import Pool from './Pool'
 import Trade from './Trade'
 import { useAsset } from '../../../providers/Asset'
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
-
+import {
+  ApolloClient,
+  ApolloProvider,
+  HttpLink,
+  InMemoryCache
+} from '@apollo/client'
+import fetch from 'cross-fetch'
 const client = new ApolloClient({
-  uri:
-    'http://54.81.231.185:8000/subgraphs/name/oceanprotocol/ocean-subgraph',
+  link: new HttpLink({
+    uri:
+      'http://54.81.231.185:8000/subgraphs/name/oceanprotocol/ocean-subgraph',
+    fetch
+  }),
   cache: new InMemoryCache()
 })
 export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
