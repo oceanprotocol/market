@@ -31,6 +31,7 @@ git clone git@github.com:oceanprotocol/market.git
 cd market
 
 npm install
+apollo client:codegen --target typescript
 npm start
 ```
 
