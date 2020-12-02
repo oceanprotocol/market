@@ -24,13 +24,13 @@ export default function PageTemplateAssetDetails({
     }
 
     const { attributes } = ddo.findServiceByType('metadata')
-    setTitle(attributes.main.name)
+    setTitle(isInPurgatory ? '' : attributes.main.name)
     setMetadata((attributes as unknown) as MetadataMarket)
-  }, [ddo, error])
+  }, [ddo, error, isInPurgatory])
 
   return ddo && metadata ? (
     <>
-      <Page title={isInPurgatory ? '' : title} uri={uri}>
+      <Page title={title} uri={uri}>
         <Router basepath="/asset">
           <AssetContent
             ddo={ddo}
