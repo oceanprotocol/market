@@ -49,10 +49,10 @@ export default function App({
           <Alert text={warning} state="info" />
         )}
 
-        {isAccountInPurgatory && accountPurgatory && (
+        {isAccountInPurgatory && (
           <Alert
             title={purgatory.title}
-            badge={`Reason: ${accountPurgatory.reason}`}
+            badge={`Reason: ${accountPurgatory?.reason}`}
             text={purgatory.description}
             state="error"
           />

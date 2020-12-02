@@ -88,10 +88,10 @@ export default function AssetContent({
             Published By <Publisher account={owner} />
           </aside>
 
-          {isInPurgatory && purgatoryData ? (
+          {isInPurgatory ? (
             <Alert
               title={content.title}
-              badge={`Reason: ${purgatoryData.reason}`}
+              badge={`Reason: ${purgatoryData?.reason}`}
               text={content.description}
               state="error"
             />

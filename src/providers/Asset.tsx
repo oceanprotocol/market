@@ -150,6 +150,7 @@ function AssetProvider({
       setMetadata(attributes)
       setTitle(attributes?.main.name)
       setOwner(ddo.publicKey[0].owner)
+      setIsInPurgatory(ddo.isInPurgatory === 'true')
 
       await setPurgatory(ddo.id)
       await refreshPrice()
