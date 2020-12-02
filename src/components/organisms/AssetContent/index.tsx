@@ -1,6 +1,6 @@
 import { MetadataMarket } from '../../../@types/MetaData'
 import React, { ReactElement, useEffect, useState } from 'react'
-import { Link } from 'gatsby'
+import { graphql, Link, useStaticQuery } from 'gatsby'
 import Markdown from '../../atoms/Markdown'
 import MetaFull from './MetaFull'
 import MetaSecondary from './MetaSecondary'
@@ -22,10 +22,30 @@ export interface AssetContentProps {
   path?: string
 }
 
+const contentQuery = graphql`
+  query AssetContentQuery {
+    purgatory: allFile(filter: { relativePath: { eq: "purgatory.json" } }) {
+      edges {
+        node {
+          childContentJson {
+            asset {
+              title
+              description
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
 export default function AssetContent({
   metadata,
   ddo
 }: AssetContentProps): ReactElement {
+  const data = useStaticQuery(contentQuery)
+  const content = data.purgatory.edges[0].node.childContentJson.asset
+
   const { debug } = useUserPreferences()
   const { accountId, networkId } = useOcean()
   const { owner, isInPurgatory, purgatoryData } = useAsset()
@@ -70,9 +90,9 @@ export default function AssetContent({
 
           {isInPurgatory && purgatoryData ? (
             <Alert
-              title="Data Set In Purgatory"
+              title={content.title}
               badge={`Reason: ${purgatoryData.reason}`}
-              text="Except for removing liquidity, no further actions are permitted on this data set and it will not be returned in any search. For more details go to [list-purgatory](https://github.com/oceanprotocol/list-purgatory)."
+              text={content.description}
               state="error"
             />
           ) : (
@@ -86,7 +106,11 @@ export default function AssetContent({
             </>
           )}
 
-          <MetaFull ddo={ddo} metadata={metadata} />
+          <MetaFull
+            ddo={ddo}
+            metadata={metadata}
+            isInPurgatory={isInPurgatory}
+          />
 
           {debug === true && (
             <pre>

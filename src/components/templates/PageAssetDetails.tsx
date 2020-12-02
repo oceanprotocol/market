@@ -12,6 +12,7 @@ export default function PageTemplateAssetDetails({
 }: {
   uri: string
 }): ReactElement {
+  const { isInPurgatory } = useAsset()
   const [metadata, setMetadata] = useState<MetadataMarket>()
   const [title, setTitle] = useState<string>()
   const { ddo, error } = useAsset()
@@ -29,7 +30,7 @@ export default function PageTemplateAssetDetails({
 
   return ddo && metadata ? (
     <>
-      <Page title={title} uri={uri}>
+      <Page title={isInPurgatory ? '' : title} uri={uri}>
         <Router basepath="/asset">
           <AssetContent
             ddo={ddo}
