@@ -115,14 +115,11 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           price.address
         )
         setPoolTokens(poolTokens)
-
         // calculate user's provided liquidity based on pool tokens
         const userOceanBalance =
           (Number(poolTokens) / Number(totalPoolTokens)) * price.ocean
-
         const userDtBalance =
           (Number(poolTokens) / Number(totalPoolTokens)) * price.datatoken
-
         const userLiquidity = {
           ocean: userOceanBalance,
           datatoken: userDtBalance

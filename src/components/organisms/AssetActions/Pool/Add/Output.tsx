@@ -62,10 +62,8 @@ export default function Output({
 
   useEffect(() => {
     if (!values.amount || !totalBalance || !totalPoolTokens) return
-
-    const newPoolSupply = new Decimal(totalPoolTokens).plus(newPoolShare)
-    const ratio = new Decimal(newPoolShare).div(newPoolSupply)
-
+    const newPoolSupply = new Decimal(totalPoolTokens).plus(newPoolTokens)
+    const ratio = new Decimal(newPoolTokens).div(newPoolSupply)
     const newOceanReserve =
       coin === 'OCEAN'
         ? new Decimal(totalBalance.ocean).plus(values.amount)
@@ -74,7 +72,6 @@ export default function Output({
       coin === 'OCEAN'
         ? new Decimal(totalBalance.datatoken)
         : new Decimal(totalBalance.datatoken).plus(values.amount)
-
     const poolOcean = newOceanReserve.mul(ratio).toString()
     const poolDatatoken = newDtReserve.mul(ratio).toString()
     setPoolOcean(poolOcean)
