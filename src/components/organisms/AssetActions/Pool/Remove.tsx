@@ -17,7 +17,6 @@ import FormHelp from '../../../atoms/Input/Help'
 import Button from '../../../atoms/Button'
 import { getMaxPercentRemove } from './utils'
 import { graphql, useStaticQuery } from 'gatsby'
-import PriceUnit from '../../../atoms/Price/PriceUnit'
 import debounce from 'lodash.debounce'
 import UserLiquidity from '../../../atoms/UserLiquidity'
 

@@ -26,13 +26,14 @@
   "pool": {
     "tooltips": {
       "price": "Explain how this price is determined...",
-      "liquidity": "Explain what this represents, advantage of providing liquidity..."
+      "liquidity": "Providing liquidity will earn you SWAPFEE% on every transaction in this pool, proportionally to your share of the pool."
     },
     "add": {
       "title": "Add Liquidity",
       "output": {
+        "help": "Providing liquidity will earn you SWAPFEE% on every transaction in this pool, proportionally to your share of the pool. Your token input will be converted based on the weight of the pool.",
         "titleIn": "You will receive",
-        "titleOut": "You will earn"
+        "titleOut": "Pool conversion"
       },
       "action": "Approve & Supply",
       "warning": "Use at your own risk. Please familiarize yourself [with the risks](https://blog.oceanprotocol.com/on-staking-on-data-in-ocean-market-3d8e09eb0a13) and the [Terms of Use](/terms)."

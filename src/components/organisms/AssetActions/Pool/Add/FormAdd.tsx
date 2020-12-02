@@ -66,23 +66,34 @@ export default function FormAdd({
         return
       }
       if (Number(values.amount) > Number(amountMax)) return
+
       const poolTokens = await ocean.pool.calcPoolOutGivenSingleIn(
         poolAddress,
         coin === 'OCEAN' ? ocean.pool.oceanAddress : ocean.pool.dtAddress,
-        values.amount.toString()
+        `${values.amount}`
       )
       setNewPoolTokens(poolTokens)
-      setNewPoolShare(
-        totalBalance &&
-          (
+      totalBalance &&
+        setNewPoolShare(
+          `${
             (Number(poolTokens) /
               (Number(totalPoolTokens) + Number(poolTokens))) *
             100
-          ).toFixed(2)
-      )
+          }`
+        )
     }
     calculatePoolShares()
-  }, [values.amount])
+  }, [
+    values.amount,
+    totalBalance,
+    totalPoolTokens,
+    amountMax,
+    coin,
+    poolAddress,
+    ocean.pool,
+    setNewPoolTokens,
+    setNewPoolShare
+  ])
 
   return (
     <>

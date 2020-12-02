@@ -8,10 +8,10 @@ import * as Yup from 'yup'
 import { Formik } from 'formik'
 import FormAdd from './FormAdd'
 import styles from './index.module.css'
-import Token from '../Token'
 import Alert from '../../../../atoms/Alert'
 import TokenBalance from '../../../../../@types/TokenBalance'
 import { useUserPreferences } from '../../../../../providers/UserPreferences'
+import Output from './Output'
 
 const contentQuery = graphql`
   query PoolAddQuery {
@@ -22,10 +22,6 @@ const contentQuery = graphql`
             pool {
               add {
                 title
-                output {
-                  titleIn
-                  titleOut
-                }
                 action
                 warning
               }
@@ -186,17 +182,15 @@ export default function Add({
               )}
             </div>
 
-            <div className={styles.output}>
-              <div>
-                <p>{content.output.titleIn}</p>
-                <Token symbol="pool shares" balance={newPoolTokens} />
-                <Token symbol="% of pool" balance={newPoolShare} />
-              </div>
-              <div>
-                <p>{content.output.titleOut}</p>
-                <Token symbol="% swap fee" balance={swapFee} />
-              </div>
-            </div>
+            <Output
+              newPoolTokens={newPoolTokens}
+              newPoolShare={newPoolShare}
+              swapFee={swapFee}
+              dtSymbol={dtSymbol}
+              totalPoolTokens={totalPoolTokens}
+              totalBalance={totalBalance}
+              coin={coin}
+            />
 
             <Actions
               isDisabled={!isWarningAccepted}
