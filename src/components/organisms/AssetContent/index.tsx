@@ -1,6 +1,6 @@
 import { MetadataMarket } from '../../../@types/MetaData'
 import React, { ReactElement, useEffect, useState } from 'react'
-import { Link } from 'gatsby'
+import { graphql, Link, useStaticQuery } from 'gatsby'
 import Markdown from '../../atoms/Markdown'
 import MetaFull from './MetaFull'
 import MetaSecondary from './MetaSecondary'
@@ -14,6 +14,7 @@ import EtherscanLink from '../../atoms/EtherscanLink'
 import Bookmark from './Bookmark'
 import Publisher from '../../atoms/Publisher'
 import { useAsset } from '../../../providers/Asset'
+import Alert from '../../atoms/Alert'
 
 export interface AssetContentProps {
   metadata: MetadataMarket
@@ -21,13 +22,33 @@ export interface AssetContentProps {
   path?: string
 }
 
+const contentQuery = graphql`
+  query AssetContentQuery {
+    purgatory: allFile(filter: { relativePath: { eq: "purgatory.json" } }) {
+      edges {
+        node {
+          childContentJson {
+            asset {
+              title
+              description
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
 export default function AssetContent({
   metadata,
   ddo
 }: AssetContentProps): ReactElement {
+  const data = useStaticQuery(contentQuery)
+  const content = data.purgatory.edges[0].node.childContentJson.asset
+
   const { debug } = useUserPreferences()
   const { accountId, networkId } = useOcean()
-  const { owner } = useAsset()
+  const { owner, isInPurgatory, purgatoryData } = useAsset()
   const { dtSymbol, dtName } = usePricing(ddo)
   const [showPricing, setShowPricing] = useState(false)
   const { price } = useAsset()
@@ -67,24 +88,29 @@ export default function AssetContent({
             Published By <Publisher account={owner} />
           </aside>
 
-          <Markdown
-            className={styles.description}
-            text={metadata?.additionalInformation?.description || ''}
+          {isInPurgatory ? (
+            <Alert
+              title={content.title}
+              badge={`Reason: ${purgatoryData?.reason}`}
+              text={content.description}
+              state="error"
+            />
+          ) : (
+            <>
+              <Markdown
+                className={styles.description}
+                text={metadata?.additionalInformation?.description || ''}
+              />
+
+              <MetaSecondary metadata={metadata} />
+            </>
+          )}
+
+          <MetaFull
+            ddo={ddo}
+            metadata={metadata}
+            isInPurgatory={isInPurgatory}
           />
-
-          <MetaSecondary metadata={metadata} />
-
-          <MetaFull ddo={ddo} metadata={metadata} />
-
-          <div className={styles.buttonGroup}>
-            {/* <EditAction
-              ddo={ddo}
-              ocean={ocean}
-              account={account}
-              refetchMetadata={refetchMetadata}
-            /> */}
-            {/* <DeleteAction ddo={ddo} /> */}
-          </div>
 
           {debug === true && (
             <pre>

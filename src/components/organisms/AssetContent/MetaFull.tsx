@@ -8,17 +8,21 @@ import Publisher from '../../atoms/Publisher'
 
 export default function MetaFull({
   ddo,
-  metadata
+  metadata,
+  isInPurgatory
 }: {
   ddo: DDO
   metadata: MetadataMarket
+  isInPurgatory: boolean
 }): ReactElement {
   const { id, publicKey } = ddo
   const { dateCreated, datePublished } = metadata.main
 
   return (
     <div className={styles.metaFull}>
-      <MetaItem title="Data Author" content={metadata?.main.author} />
+      {!isInPurgatory && (
+        <MetaItem title="Data Author" content={metadata?.main.author} />
+      )}
       <MetaItem
         title="Owner"
         content={<Publisher account={publicKey[0].owner} />}
