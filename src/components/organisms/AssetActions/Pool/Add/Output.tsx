@@ -6,6 +6,7 @@ import TokenBalance from '../../../../../@types/TokenBalance'
 import FormHelp from '../../../../atoms/Input/Help'
 import Token from '../Token'
 import styles from './Output.module.css'
+import Decimal from 'decimal.js'
 
 const contentQuery = graphql`
   query PoolAddOutputQuery {
@@ -62,20 +63,20 @@ export default function Output({
   useEffect(() => {
     if (!values.amount || !totalBalance || !totalPoolTokens) return
 
-    const newPoolSupply = Number(totalPoolTokens) + Number(newPoolShare)
-    const ratio = Number(newPoolShare) / newPoolSupply
+    const newPoolSupply = new Decimal(totalPoolTokens).plus(newPoolShare)
+    const ratio = new Decimal(newPoolShare).div(newPoolSupply)
 
     const newOceanReserve =
       coin === 'OCEAN'
-        ? Number(totalBalance.ocean) + Number(values.amount)
-        : totalBalance.ocean
+        ? new Decimal(totalBalance.ocean).plus(values.amount)
+        : new Decimal(totalBalance.ocean)
     const newDtReserve =
       coin === 'OCEAN'
-        ? totalBalance.datatoken
-        : Number(totalBalance.datatoken) + Number(values.amount)
+        ? new Decimal(totalBalance.datatoken)
+        : new Decimal(totalBalance.datatoken).plus(values.amount)
 
-    const poolOcean = `${Number(newOceanReserve) * ratio}`
-    const poolDatatoken = `${Number(newDtReserve) * ratio}`
+    const poolOcean = newOceanReserve.mul(ratio).toString()
+    const poolDatatoken = newDtReserve.mul(ratio).toString()
     setPoolOcean(poolOcean)
     setPoolDatatoken(poolDatatoken)
   }, [values.amount, coin, totalBalance, totalPoolTokens, newPoolShare])
