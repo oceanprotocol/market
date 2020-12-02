@@ -14,6 +14,7 @@ import EtherscanLink from '../../atoms/EtherscanLink'
 import Bookmark from './Bookmark'
 import Publisher from '../../atoms/Publisher'
 import { useAsset } from '../../../providers/Asset'
+import Alert from '../../atoms/Alert'
 
 export interface AssetContentProps {
   metadata: MetadataMarket
@@ -27,7 +28,7 @@ export default function AssetContent({
 }: AssetContentProps): ReactElement {
   const { debug } = useUserPreferences()
   const { accountId, networkId } = useOcean()
-  const { owner } = useAsset()
+  const { owner, isInPurgatory, purgatoryData } = useAsset()
   const { dtSymbol, dtName } = usePricing(ddo)
   const [showPricing, setShowPricing] = useState(false)
   const { price } = useAsset()
@@ -67,24 +68,25 @@ export default function AssetContent({
             Published By <Publisher account={owner} />
           </aside>
 
-          <Markdown
-            className={styles.description}
-            text={metadata?.additionalInformation?.description || ''}
-          />
+          {isInPurgatory && purgatoryData ? (
+            <Alert
+              title="Data Set In Purgatory"
+              badge={`Reason: ${purgatoryData.reason}`}
+              text="Except for removing liquidity, no further actions are permitted on this data set and it will not be returned in any search. For more details go to [list-purgatory](https://github.com/oceanprotocol/list-purgatory)."
+              state="error"
+            />
+          ) : (
+            <>
+              <Markdown
+                className={styles.description}
+                text={metadata?.additionalInformation?.description || ''}
+              />
 
-          <MetaSecondary metadata={metadata} />
+              <MetaSecondary metadata={metadata} />
+            </>
+          )}
 
           <MetaFull ddo={ddo} metadata={metadata} />
-
-          <div className={styles.buttonGroup}>
-            {/* <EditAction
-              ddo={ddo}
-              ocean={ocean}
-              account={account}
-              refetchMetadata={refetchMetadata}
-            /> */}
-            {/* <DeleteAction ddo={ddo} /> */}
-          </div>
 
           {debug === true && (
             <pre>

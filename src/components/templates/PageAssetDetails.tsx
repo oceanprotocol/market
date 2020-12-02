@@ -12,7 +12,6 @@ export default function PageTemplateAssetDetails({
 }: {
   uri: string
 }): ReactElement {
-  const { isInPurgatory, purgatoryData } = useAsset()
   const [metadata, setMetadata] = useState<MetadataMarket>()
   const [title, setTitle] = useState<string>()
   const { ddo, error } = useAsset()
@@ -30,14 +29,6 @@ export default function PageTemplateAssetDetails({
 
   return ddo && metadata ? (
     <>
-      {isInPurgatory && purgatoryData && (
-        <Alert
-          title="Data Set In Purgatory"
-          badge={`Reason: ${purgatoryData.reason}`}
-          text="Except for removing liquidity, no further actions are permitted on this data set and it will not be returned in any search. For more details go to [list-purgatory](https://github.com/oceanprotocol/list-purgatory)."
-          state="error"
-        />
-      )}
       <Page title={title} uri={uri}>
         <Router basepath="/asset">
           <AssetContent
