@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useOcean, useMetadata, usePricing } from '@oceanprotocol/react'
-import { BestPrice, DDO, Logger } from '@oceanprotocol/lib'
+import { DDO, Logger } from '@oceanprotocol/lib'
 import styles from './index.module.css'
 import stylesActions from './Actions.module.css'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
@@ -19,6 +19,7 @@ import axios from 'axios'
 import { useAsset } from '../../../../providers/Asset'
 import { gql, useQuery } from '@apollo/client'
 import { User } from './__generated__/User'
+import { PoolLiquidity } from './__generated__/PoolLiquidity'
 
 const contentQuery = graphql`
   query PoolQuery {
@@ -52,6 +53,21 @@ const usersQuery = gql`
           id
         }
         balance
+      }
+    }
+  }
+`
+
+const poolLiquidityQuery = gql`
+  query PoolLiquidity($id: ID!) {
+    pool(id: $id) {
+      id
+      totalShares
+      swapFee
+      tokens {
+        tokenAddress
+        balance
+        denormWeight
       }
     }
   }
@@ -97,21 +113,54 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
   const { loading, error, data } = useQuery<User>(usersQuery, {
     variables: { id: ddo.publicKey[0].owner.toLowerCase() },
-    pollInterval: 500
+    pollInterval: 5000
   })
 
+  const {
+    loading: loadingLiquidity,
+    error: errorLiquidity,
+    data: dataLiquidity
+  } = useQuery<PoolLiquidity>(poolLiquidityQuery, {
+    variables: { id: ddo.price.address.toLowerCase() },
+    pollInterval: 5000
+  })
+
+  useEffect(() => {
+    console.log(loadingLiquidity, errorLiquidity, dataLiquidity)
+  }, [loadingLiquidity, errorLiquidity, dataLiquidity])
   useEffect(() => {
     console.log(loading, error, data)
   }, [loading, error, data])
 
   useEffect(() => {
     async function init() {
-      if (!data) return
+      if (!dataLiquidity) return
+
+      // Total pool shares
+      setTotalPoolTokens(dataLiquidity.pool.totalShares)
+
+      // Get swap fee
+      // swapFee is tricky: to get 0.1% you need to convert from 0.001
+      setSwapFee(`${Number(dataLiquidity.pool.swapFee) * 100}`)
+
+      // Get weights
+      const weightDt = dataLiquidity.pool.tokens.filter(
+        (token) => token.tokenAddress === ddo.dataToken.toLowerCase()
+      )[0].denormWeight
+
+      setWeightDt(`${Number(weightDt) * 10}`)
+      setWeightOcean(`${100 - Number(weightDt) * 10}`)
+    }
+    init()
+  }, [dataLiquidity])
+
+  useEffect(() => {
+    async function init() {
+      if (!data || !totalPoolTokens) return
 
       const poolShares = data.user.sharesOwned.filter(
         (share: any) => share.poolId.id === ddo.price?.address.toLowerCase()
       )
-      console.log(poolShares)
       //
       // Get everything the creator put into the pool
       //
@@ -144,7 +193,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
       setCreatorPoolShare(creatorPoolShare)
     }
     init()
-  }, [data])
+  }, [data, totalPoolTokens])
 
   useEffect(() => {
     setIsRemoveDisabled(isInPurgatory && owner === accountId)
@@ -171,14 +220,6 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
     async function init() {
       try {
         //
-        // Get everything which is in the pool
-        //
-        const totalPoolTokens = await ocean.pool.getPoolSharesTotalSupply(
-          price.address
-        )
-        setTotalPoolTokens(totalPoolTokens)
-
-        //
         // Get everything the user has put into the pool
         //
         const poolTokens = await ocean.pool.sharesBalance(
@@ -200,19 +241,6 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
         }
 
         setUserLiquidity(userLiquidity)
-
-        // Get swap fee
-        // swapFee is tricky: to get 0.1% you need to convert from 0.001
-        const swapFee = await ocean.pool.getSwapFee(price.address)
-        setSwapFee(`${Number(swapFee) * 100}`)
-
-        // Get weights
-        const weightDt = await ocean.pool.getDenormalizedWeight(
-          price.address,
-          ddo.dataToken
-        )
-        setWeightDt(`${Number(weightDt) * 10}`)
-        setWeightOcean(`${100 - Number(weightDt) * 10}`)
       } catch (error) {
         Logger.error(error.message)
       }

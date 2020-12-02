@@ -9,6 +9,33 @@ import styles from './PoolTransactions.module.css'
 import { useUserPreferences } from '../../providers/UserPreferences'
 import { Ocean } from '@oceanprotocol/lib'
 import { formatPrice } from '../atoms/Price/PriceUnit'
+import { gql } from '@apollo/client'
+
+const txHistoryQuery = gql`
+  query Pool($id: ID!, $user: String!) {
+    pool(id: $id) {
+      transactions(orderBy: timestamp, where: { userAddressStr: $user }) {
+        tx
+        timestamp
+        spotPrice
+        event
+        sharesTransferAmount
+        tokens {
+          type
+          value
+          tokenAddress
+          poolToken {
+            tokenId {
+              symbol
+              name
+            }
+            tokenAddress
+          }
+        }
+      }
+    }
+  }
+`
 
 async function getSymbol(
   ocean: Ocean,
