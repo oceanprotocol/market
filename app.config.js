@@ -35,5 +35,8 @@ module.exports = {
   },
 
   // Analytics
-  analyticsId: process.env.GATSBY_ANALYTICS_ID || 'xxx'
+  analyticsId: process.env.GATSBY_ANALYTICS_ID || 'xxx',
+
+  // Wallets
+  portisId: process.env.GATSBY_PORTIS_ID || 'xxx'
 }

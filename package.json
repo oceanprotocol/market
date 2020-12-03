@@ -29,6 +29,7 @@
     "@oceanprotocol/lib": "^0.10.1",
     "@oceanprotocol/react": "^0.5.1",
     "@oceanprotocol/typographies": "^0.1.0",
+    "@portis/web3": "^2.0.0-beta.59",
     "@sindresorhus/slugify": "^1.0.0",
     "@tippyjs/react": "^4.2.0",
     "@toruslabs/torus-embed": "^1.9.5",
