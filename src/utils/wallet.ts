@@ -4,7 +4,7 @@ import {
   network
 } from '../../app.config'
 import WalletConnectProvider from '@walletconnect/web3-provider'
-import Portis from '@portis/web3'
+// import Portis from '@portis/web3'
 // import Torus from '@toruslabs/torus-embed'
 
 const web3ModalTheme = {
@@ -15,28 +15,31 @@ const web3ModalTheme = {
   hover: 'var(--background-highlight)'
 }
 
-const providerOptions = {
-  walletconnect: {
-    package: WalletConnectProvider,
-    options: { infuraId }
-  },
-  portis: {
-    package: Portis,
-    options: {
-      id: portisId
-    }
-  }
-  // torus: {
-  //   package: Torus,
-  //   options: {
-  //     networkParams: {
-  //       // host: oceanConfig.url // optional
-  //       // chainId: 1337, // optional
-  //       // networkId: 1337 // optional
-  //     }
-  //   }
-  // }
-}
+const providerOptions =
+  typeof window !== 'undefined'
+    ? {
+        walletconnect: {
+          package: WalletConnectProvider,
+          options: { infuraId }
+        },
+        portis: {
+          package: require('@portis/web3'),
+          options: {
+            id: portisId
+          }
+        }
+        // torus: {
+        //   package: Torus,
+        //   options: {
+        //     networkParams: {
+        //       // host: oceanConfig.url // optional
+        //       // chainId: 1337, // optional
+        //       // networkId: 1337 // optional
+        //     }
+        //   }
+        // }
+      }
+    : {}
 
 export const web3ModalOpts = {
   cacheProvider: true,
