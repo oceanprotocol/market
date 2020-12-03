@@ -25,20 +25,12 @@ const Blockies = ({ account }: { account: string | undefined }) => {
 const Account = React.forwardRef((props, ref: any) => {
   const { accountId, status, connect, networkId } = useOcean()
   const hasSuccess = status === 1 && networkId === 1
-  const canHandleWeb3 = window?.web3 || window?.ethereum
 
   async function handleActivation(e: FormEvent<HTMLButtonElement>) {
     // prevent accidentially submitting a form the button might be in
     e.preventDefault()
 
-    canHandleWeb3
-      ? await connect()
-      : (location.href = 'https://metamask.io/download.html')
-  }
-
-  // prevent accidentially submitting a form the button might be in
-  function handleButton(e: FormEvent<HTMLButtonElement>) {
-    e.preventDefault()
+    await connect()
   }
 
   return accountId ? (
@@ -46,7 +38,7 @@ const Account = React.forwardRef((props, ref: any) => {
       className={styles.button}
       aria-label="Account"
       ref={ref}
-      onClick={(e) => handleButton(e)}
+      onClick={(e) => e.preventDefault()}
     >
       <Blockies account={accountId} />
       <span className={styles.address} title={accountId}>
@@ -65,7 +57,7 @@ const Account = React.forwardRef((props, ref: any) => {
       // the Tippy to show in this state.
       ref={ref}
     >
-      {canHandleWeb3 ? 'Connect Wallet' : 'Get MetaMask'}
+      Connect Wallet
     </button>
   )
 })

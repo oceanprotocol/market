@@ -48,6 +48,29 @@ div.web3modal-provider-description {
   margin-top: 0;
 }
 
+div.walletconnect-modal__base {
+  background: var(--background-body);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 6px 17px 0 var(--box-shadow-color);
+}
+
+div.walletconnect-modal__header p {
+  color: var(--font-color-heading);
+}
+
+p.walletconnect-qrcode__text {
+  color: var(--color-secondary);
+}
+
+svg.walletconnect-qrcode__image path:first-child {
+  fill: var(--background-body);
+}
+
+svg.walletconnect-qrcode__image path:last-child {
+  stroke: var(--font-color-heading);
+}
+
 #torusIframe {
   z-index: 3;
 }
