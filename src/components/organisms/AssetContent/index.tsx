@@ -133,6 +133,8 @@ export default function AssetContent({
 
       <div className={styles.actions}>
         <AssetActions ddo={ddo} />
+
+        {/* TODO: show only for owner */}
         <Button
           style="text"
           size="small"

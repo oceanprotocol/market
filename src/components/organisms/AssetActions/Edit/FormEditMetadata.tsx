@@ -4,6 +4,7 @@ import { Field, FieldInputProps } from 'formik'
 import { MetadataPublishForm } from '../../../../@types/MetaData'
 import Button from '../../../atoms/Button'
 import Input from '../../../atoms/Input'
+import { useOcean } from '@oceanprotocol/react'
 
 export default function FormEditMetadata({
   values,
@@ -12,6 +13,8 @@ export default function FormEditMetadata({
   values: Partial<MetadataPublishForm>
   setShowEdit: (show: boolean) => void
 }): ReactElement {
+  const { ocean, accountId } = useOcean()
+
   return (
     <form className={styles.form}>
       <Field name="name">
@@ -54,12 +57,14 @@ export default function FormEditMetadata({
         )}
       </Field>
 
-      <Button style="primary" disabled>
-        Submit
-      </Button>
-      <Button style="text" onClick={() => setShowEdit(false)}>
-        Cancel
-      </Button>
+      <footer className={styles.actions}>
+        <Button style="primary" disabled={!ocean || !accountId}>
+          Submit
+        </Button>
+        <Button style="text" onClick={() => setShowEdit(false)}>
+          Cancel
+        </Button>
+      </footer>
     </form>
   )
 }

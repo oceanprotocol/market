@@ -1,8 +1,7 @@
 import React, { ReactElement } from 'react'
-import { MetadataPublishForm } from '../../../@types/MetaData'
-import DebugOutput from '../../atoms/DebugOutput'
-import styles from './index.module.css'
-import { transformPublishFormToMetadata } from './utils'
+import { MetadataPublishForm } from '../../../../@types/MetaData'
+import { transformPublishFormToMetadata } from '../../../pages/Publish/utils'
+import DebugOutput from '../../../atoms/DebugOutput'
 
 export default function Debug({
   values
@@ -11,27 +10,19 @@ export default function Debug({
 }): ReactElement {
   const ddo = {
     '@context': 'https://w3id.org/did/v1',
-    dataTokenInfo: {
-      ...values.dataTokenOptions
-    },
     service: [
       {
         index: 0,
         type: 'metadata',
         attributes: { ...transformPublishFormToMetadata(values) }
-      },
-      {
-        index: 1,
-        type: values.access,
-        attributes: {}
       }
     ]
   }
 
   return (
-    <div className={styles.grid}>
+    <>
       <DebugOutput title="Collected Form Values" output={values} />
       <DebugOutput title="Transformed DDO Values" output={ddo} />
-    </div>
+    </>
   )
 }

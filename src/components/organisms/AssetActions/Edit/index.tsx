@@ -5,9 +5,14 @@ import {
   MetadataMarket,
   MetadataPublishForm
 } from '../../../../@types/MetaData'
-import { validationSchema } from '../../../../models/FormEditMetadata'
+import {
+  validationSchema,
+  getInitialValues
+} from '../../../../models/FormEditMetadata'
 import { useAsset } from '../../../../providers/Asset'
+import { useUserPreferences } from '../../../../providers/UserPreferences'
 import MetadataPreview from '../../../molecules/MetadataPreview'
+import Debug from './Debug'
 import Web3Feedback from '../../../molecules/Wallet/Feedback'
 import FormEditMetadata from './FormEditMetadata'
 import styles from './index.module.css'
@@ -19,13 +24,9 @@ export default function Edit({
   metadata: MetadataMarket
   setShowEdit: (show: boolean) => void
 }): ReactElement {
+  const { debug } = useUserPreferences()
   const { ocean, account } = useOcean()
   const { did } = useAsset()
-
-  const initialValues = {
-    name: metadata.main.name,
-    description: metadata.additionalInformation.description
-  }
 
   async function handleSubmit(values: Partial<MetadataPublishForm>) {
     try {
@@ -41,13 +42,14 @@ export default function Edit({
 
   return (
     <>
+      {/* TODO: move content out of here into content folder, and source from there */}
       <p className={styles.description}>
         Update selected metadata of this data set. Updating metadata will create
-        a transaction on-chain.
+        an on-chain transaction you have to approve in your wallet.
       </p>
       <article className={styles.grid}>
         <Formik
-          initialValues={initialValues}
+          initialValues={getInitialValues(metadata)}
           validationSchema={validationSchema}
           onSubmit={async (values, { setSubmitting }) => {
             await handleSubmit(values)
@@ -55,6 +57,7 @@ export default function Edit({
           }}
         >
           {({ isSubmitting, submitForm, values }) => (
+            // TODO: somehow handle submitting state. Either only in the actions within FormEditMetadata, or replacing the whole view
             <>
               <FormEditMetadata values={values} setShowEdit={setShowEdit} />
 
@@ -62,6 +65,8 @@ export default function Edit({
                 <MetadataPreview values={values} />
                 <Web3Feedback />
               </aside>
+
+              {debug === true && <Debug values={values} />}
             </>
           )}
         </Formik>
