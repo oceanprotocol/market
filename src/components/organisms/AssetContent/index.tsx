@@ -15,6 +15,8 @@ import Bookmark from './Bookmark'
 import Publisher from '../../atoms/Publisher'
 import { useAsset } from '../../../providers/Asset'
 import Alert from '../../atoms/Alert'
+import Button from '../../atoms/Button'
+import Edit from '../AssetActions/Edit'
 
 export interface AssetContentProps {
   metadata: MetadataMarket
@@ -51,80 +53,94 @@ export default function AssetContent({
   const { owner, isInPurgatory, purgatoryData } = useAsset()
   const { dtSymbol, dtName } = usePricing(ddo)
   const [showPricing, setShowPricing] = useState(false)
+  const [showEdit, setShowEdit] = useState<boolean>()
   const { price } = useAsset()
 
   useEffect(() => {
     setShowPricing(accountId === owner && price.isConsumable === '')
   }, [accountId, owner, price])
 
+  function handleEditButton() {
+    setShowEdit(true)
+  }
+
   return (
     <article className={styles.grid}>
-      <div>
-        {showPricing && <Pricing ddo={ddo} />}
-        <div className={styles.content}>
-          {metadata?.additionalInformation?.categories?.length && (
-            <p>
-              <Link
-                to={`/search?categories=${metadata?.additionalInformation?.categories[0]}`}
-              >
-                {metadata?.additionalInformation?.categories[0]}
-              </Link>
-            </p>
-          )}
+      {showEdit ? (
+        <Edit setShowEdit={setShowEdit} />
+      ) : (
+        <>
+          <div>
+            {showPricing && <Pricing ddo={ddo} />}
+            <div className={styles.content}>
+              {metadata?.additionalInformation?.categories?.length && (
+                <p>
+                  <Link
+                    to={`/search?categories=${metadata?.additionalInformation?.categories[0]}`}
+                  >
+                    {metadata?.additionalInformation?.categories[0]}
+                  </Link>
+                </p>
+              )}
 
-          <aside className={styles.meta}>
-            <p className={styles.datatoken}>
-              <EtherscanLink
-                networkId={networkId}
-                path={`token/${ddo.dataToken}`}
-              >
-                {dtName ? (
-                  `${dtName} — ${dtSymbol}`
-                ) : (
-                  <code>{ddo.dataToken}</code>
-                )}
-              </EtherscanLink>
-            </p>
-            Published By <Publisher account={owner} />
-          </aside>
+              <aside className={styles.meta}>
+                <p className={styles.datatoken}>
+                  <EtherscanLink
+                    networkId={networkId}
+                    path={`token/${ddo.dataToken}`}
+                  >
+                    {dtName ? (
+                      `${dtName} — ${dtSymbol}`
+                    ) : (
+                      <code>{ddo.dataToken}</code>
+                    )}
+                  </EtherscanLink>
+                </p>
+                Published By <Publisher account={owner} />
+              </aside>
 
-          {isInPurgatory ? (
-            <Alert
-              title={content.title}
-              badge={`Reason: ${purgatoryData?.reason}`}
-              text={content.description}
-              state="error"
-            />
-          ) : (
-            <>
-              <Markdown
-                className={styles.description}
-                text={metadata?.additionalInformation?.description || ''}
+              {isInPurgatory ? (
+                <Alert
+                  title={content.title}
+                  badge={`Reason: ${purgatoryData?.reason}`}
+                  text={content.description}
+                  state="error"
+                />
+              ) : (
+                <>
+                  <Markdown
+                    className={styles.description}
+                    text={metadata?.additionalInformation?.description || ''}
+                  />
+
+                  <MetaSecondary metadata={metadata} />
+                </>
+              )}
+
+              <MetaFull
+                ddo={ddo}
+                metadata={metadata}
+                isInPurgatory={isInPurgatory}
               />
 
-              <MetaSecondary metadata={metadata} />
-            </>
-          )}
+              {debug === true && (
+                <pre>
+                  <code>{JSON.stringify(ddo, null, 2)}</code>
+                </pre>
+              )}
 
-          <MetaFull
-            ddo={ddo}
-            metadata={metadata}
-            isInPurgatory={isInPurgatory}
-          />
+              <Bookmark did={ddo.id} />
+            </div>
+          </div>
 
-          {debug === true && (
-            <pre>
-              <code>{JSON.stringify(ddo, null, 2)}</code>
-            </pre>
-          )}
-
-          <Bookmark did={ddo.id} />
-        </div>
-      </div>
-
-      <div className={styles.actions}>
-        <AssetActions ddo={ddo} />
-      </div>
+          <div className={styles.actions}>
+            <AssetActions ddo={ddo} />
+            <Button style="text" size="small" onClick={handleEditButton}>
+              Edit Metadata
+            </Button>
+          </div>
+        </>
+      )}
     </article>
   )
 }

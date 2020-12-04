@@ -1,0 +1,4 @@
+.form {
+  composes: box from '../../../atoms/Box.module.css';
+  margin-top: var(--spacer);
+}
