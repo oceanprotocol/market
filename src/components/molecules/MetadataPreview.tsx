@@ -9,19 +9,15 @@ import { MetadataPublishForm } from '../../@types/MetaData'
 import Button from '../atoms/Button'
 import { transformTags } from '../pages/Publish/utils'
 
-export default function MetadataPreview({
-  values
-}: {
-  values: Partial<MetadataPublishForm>
-}): ReactElement {
+function Description({ description }: { description: string }) {
   const [fullDescription, setFullDescription] = useState<boolean>(false)
 
   const textLimit = 500 // string.length
-  const description =
+  const descriptionDisplay =
     fullDescription === true
-      ? values.description
-      : `${values.description.substring(0, textLimit)}${
-          values.description.length > textLimit ? `...` : ''
+      ? description
+      : `${description.substring(0, textLimit)}${
+          description.length > textLimit ? `...` : ''
         }`
 
   function handleDescriptionToggle(e: FormEvent<HTMLButtonElement>) {
@@ -30,27 +26,34 @@ export default function MetadataPreview({
   }
 
   return (
+    <div className={styles.description}>
+      <Markdown text={descriptionDisplay} />
+      {description.length > textLimit && (
+        <Button
+          style="text"
+          size="small"
+          onClick={handleDescriptionToggle}
+          className={styles.toggle}
+        >
+          {fullDescription === true ? 'Close' : 'Expand'}
+        </Button>
+      )}
+    </div>
+  )
+}
+
+export default function MetadataPreview({
+  values
+}: {
+  values: Partial<MetadataPublishForm>
+}): ReactElement {
+  return (
     <div className={styles.preview}>
       <h2 className={styles.previewTitle}>Preview</h2>
       <header>
         {values.name && <h3 className={styles.title}>{values.name}</h3>}
         {values.author && <p className={styles.author}>{values.author}</p>}
-
-        {values.description && (
-          <div className={styles.description}>
-            <Markdown text={description} />
-            {values.description.length > textLimit && (
-              <Button
-                style="text"
-                size="small"
-                onClick={handleDescriptionToggle}
-                className={styles.toggle}
-              >
-                {fullDescription === true ? 'Close' : 'Expand'}
-              </Button>
-            )}
-          </div>
-        )}
+        {values.description && <Description description={values.description} />}
 
         <div className={styles.asset}>
           {values.files?.length > 0 && typeof values.files !== 'string' && (
