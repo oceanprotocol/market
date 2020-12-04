@@ -3,10 +3,6 @@
   margin-top: var(--spacer);
 }
 
-.form {
-  composes: box from '../../../atoms/Box.module.css';
-}
-
 .description {
   font-size: var(--font-size-large);
   margin-top: calc(var(--spacer) / 2);

@@ -1,9 +1,15 @@
+import { useOcean } from '@oceanprotocol/react'
+import { Formik } from 'formik'
 import React, { ReactElement } from 'react'
-import { MetadataMarket } from '../../../../@types/MetaData'
-import Button from '../../../atoms/Button'
-import Input from '../../../atoms/Input'
+import {
+  MetadataMarket,
+  MetadataPublishForm
+} from '../../../../@types/MetaData'
+import { validationSchema } from '../../../../models/FormEditMetadata'
+import { useAsset } from '../../../../providers/Asset'
 import MetadataPreview from '../../../molecules/MetadataPreview'
 import Web3Feedback from '../../../molecules/Wallet/Feedback'
+import FormEditMetadata from './FormEditMetadata'
 import styles from './index.module.css'
 
 export default function Edit({
@@ -13,9 +19,24 @@ export default function Edit({
   metadata: MetadataMarket
   setShowEdit: (show: boolean) => void
 }): ReactElement {
-  const values = {
+  const { ocean, account } = useOcean()
+  const { did } = useAsset()
+
+  const initialValues = {
     name: metadata.main.name,
     description: metadata.additionalInformation.description
+  }
+
+  async function handleSubmit(values: Partial<MetadataPublishForm>) {
+    try {
+      const ddo = await ocean.assets.editMetadata(
+        did,
+        { title: values.name, description: values.description },
+        account
+      )
+    } catch (error) {
+      console.error(error.message)
+    }
   }
 
   return (
@@ -25,34 +46,25 @@ export default function Edit({
         a transaction on-chain.
       </p>
       <article className={styles.grid}>
-        <form className={styles.form}>
-          <Input
-            name="name"
-            label="New Title"
-            value={values.name}
-            help="Enter a concise title."
-          />
-          <Input
-            name="description"
-            label="New Description"
-            value={values.description}
-            help="Add a thorough description with as much detail as possible. You can use [Markdown](https://daringfireball.net/projects/markdown/basics)."
-            type="textarea"
-            rows={10}
-          />
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={async (values, { setSubmitting }) => {
+            await handleSubmit(values)
+            setSubmitting(false)
+          }}
+        >
+          {({ isSubmitting, submitForm, values }) => (
+            <>
+              <FormEditMetadata values={values} setShowEdit={setShowEdit} />
 
-          <Button style="primary" disabled>
-            Submit
-          </Button>
-          <Button style="text" onClick={() => setShowEdit(false)}>
-            Cancel
-          </Button>
-        </form>
-
-        <aside>
-          <MetadataPreview values={values} />
-          <Web3Feedback />
-        </aside>
+              <aside>
+                <MetadataPreview values={values} />
+                <Web3Feedback />
+              </aside>
+            </>
+          )}
+        </Formik>
       </article>
     </>
   )
