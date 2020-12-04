@@ -7,7 +7,7 @@ import Web3Feedback from '../../molecules/Wallet/Feedback'
 import { FormContent } from '../../../@types/Form'
 import { initialValues, validationSchema } from '../../../models/FormPublish'
 import { transformPublishFormToMetadata } from './utils'
-import Preview from './Preview'
+import MetadataPreview from '../../molecules/MetadataPreview'
 import { MetadataPublishForm } from '../../../@types/MetaData'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import { DDO, Logger, Metadata } from '@oceanprotocol/lib'
@@ -109,7 +109,7 @@ export default function PublishPage({
 
                 <aside>
                   <div className={styles.sticky}>
-                    <Preview values={values} />
+                    <MetadataPreview values={values} />
                     <Web3Feedback />
                   </div>
                 </aside>

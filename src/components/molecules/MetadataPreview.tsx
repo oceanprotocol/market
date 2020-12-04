@@ -1,15 +1,15 @@
 import React, { FormEvent, ReactElement, useState } from 'react'
 import { File as FileMetadata } from '@oceanprotocol/lib/dist/node/ddo/interfaces/File'
-import Markdown from '../../atoms/Markdown'
-import Tags from '../../atoms/Tags'
-import MetaItem from '../../organisms/AssetContent/MetaItem'
-import styles from './Preview.module.css'
-import File from '../../atoms/File'
-import { MetadataPublishForm } from '../../../@types/MetaData'
-import Button from '../../atoms/Button'
-import { transformTags } from './utils'
+import Markdown from '../atoms/Markdown'
+import Tags from '../atoms/Tags'
+import MetaItem from '../organisms/AssetContent/MetaItem'
+import styles from './MetadataPreview.module.css'
+import File from '../atoms/File'
+import { MetadataPublishForm } from '../../@types/MetaData'
+import Button from '../atoms/Button'
+import { transformTags } from '../pages/Publish/utils'
 
-export default function Preview({
+export default function MetadataPreview({
   values
 }: {
   values: Partial<MetadataPublishForm>

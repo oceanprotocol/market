@@ -64,83 +64,84 @@ export default function AssetContent({
     setShowEdit(true)
   }
 
-  return (
+  return showEdit ? (
+    <Edit metadata={metadata} setShowEdit={setShowEdit} />
+  ) : (
     <article className={styles.grid}>
-      {showEdit ? (
-        <Edit setShowEdit={setShowEdit} />
-      ) : (
-        <>
-          <div>
-            {showPricing && <Pricing ddo={ddo} />}
-            <div className={styles.content}>
-              {metadata?.additionalInformation?.categories?.length && (
-                <p>
-                  <Link
-                    to={`/search?categories=${metadata?.additionalInformation?.categories[0]}`}
-                  >
-                    {metadata?.additionalInformation?.categories[0]}
-                  </Link>
-                </p>
-              )}
+      <div>
+        {showPricing && <Pricing ddo={ddo} />}
+        <div className={styles.content}>
+          {metadata?.additionalInformation?.categories?.length && (
+            <p>
+              <Link
+                to={`/search?categories=${metadata?.additionalInformation?.categories[0]}`}
+              >
+                {metadata?.additionalInformation?.categories[0]}
+              </Link>
+            </p>
+          )}
 
-              <aside className={styles.meta}>
-                <p className={styles.datatoken}>
-                  <EtherscanLink
-                    networkId={networkId}
-                    path={`token/${ddo.dataToken}`}
-                  >
-                    {dtName ? (
-                      `${dtName} — ${dtSymbol}`
-                    ) : (
-                      <code>{ddo.dataToken}</code>
-                    )}
-                  </EtherscanLink>
-                </p>
-                Published By <Publisher account={owner} />
-              </aside>
+          <aside className={styles.meta}>
+            <p className={styles.datatoken}>
+              <EtherscanLink
+                networkId={networkId}
+                path={`token/${ddo.dataToken}`}
+              >
+                {dtName ? (
+                  `${dtName} — ${dtSymbol}`
+                ) : (
+                  <code>{ddo.dataToken}</code>
+                )}
+              </EtherscanLink>
+            </p>
+            Published By <Publisher account={owner} />
+          </aside>
 
-              {isInPurgatory ? (
-                <Alert
-                  title={content.title}
-                  badge={`Reason: ${purgatoryData?.reason}`}
-                  text={content.description}
-                  state="error"
-                />
-              ) : (
-                <>
-                  <Markdown
-                    className={styles.description}
-                    text={metadata?.additionalInformation?.description || ''}
-                  />
-
-                  <MetaSecondary metadata={metadata} />
-                </>
-              )}
-
-              <MetaFull
-                ddo={ddo}
-                metadata={metadata}
-                isInPurgatory={isInPurgatory}
+          {isInPurgatory ? (
+            <Alert
+              title={content.title}
+              badge={`Reason: ${purgatoryData?.reason}`}
+              text={content.description}
+              state="error"
+            />
+          ) : (
+            <>
+              <Markdown
+                className={styles.description}
+                text={metadata?.additionalInformation?.description || ''}
               />
 
-              {debug === true && (
-                <pre>
-                  <code>{JSON.stringify(ddo, null, 2)}</code>
-                </pre>
-              )}
+              <MetaSecondary metadata={metadata} />
+            </>
+          )}
 
-              <Bookmark did={ddo.id} />
-            </div>
-          </div>
+          <MetaFull
+            ddo={ddo}
+            metadata={metadata}
+            isInPurgatory={isInPurgatory}
+          />
 
-          <div className={styles.actions}>
-            <AssetActions ddo={ddo} />
-            <Button style="text" size="small" onClick={handleEditButton}>
-              Edit Metadata
-            </Button>
-          </div>
-        </>
-      )}
+          {debug === true && (
+            <pre>
+              <code>{JSON.stringify(ddo, null, 2)}</code>
+            </pre>
+          )}
+
+          <Bookmark did={ddo.id} />
+        </div>
+      </div>
+
+      <div className={styles.actions}>
+        <AssetActions ddo={ddo} />
+        <Button
+          style="text"
+          size="small"
+          onClick={handleEditButton}
+          className={styles.actionLink}
+        >
+          Edit Metadata
+        </Button>
+      </div>
     </article>
   )
 }
