@@ -5,5 +5,6 @@
 
 .description {
   font-size: var(--font-size-large);
-  margin-top: calc(var(--spacer) / 2);
+  margin-top: -1.5rem;
+  max-width: 50rem;
 }

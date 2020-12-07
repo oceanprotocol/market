@@ -26,7 +26,7 @@
 }
 
 .meta {
-  margin-bottom: var(--spacer);
+  margin-bottom: calc(var(--spacer) / 1.5);
   color: var(--color-secondary);
 }
 
@@ -34,10 +34,24 @@
   margin-bottom: 0;
 }
 
-.dateUpdated {
+.date {
   font-size: var(--font-size-mini);
+  margin-top: calc(var(--spacer) / 2);
 }
 
-.actionLink {
+.ownerActions {
+  text-align: center;
   margin-top: var(--spacer);
+  margin-bottom: calc(var(--spacer) * 1.5);
+  margin-left: -2rem;
+  margin-right: -2rem;
+  padding: calc(var(--spacer) / 4) var(--spacer);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--background-highlight);
+}
+
+.ownerActions a,
+.ownerActions button {
+  color: var(--color-secondary);
 }

@@ -64,6 +64,8 @@ export default function AssetContent({
   }, [isOwner, price])
 
   function handleEditButton() {
+    // move user's focus to top of screen
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     setShowEdit(true)
   }
 
@@ -100,14 +102,12 @@ export default function AssetContent({
             <p>
               Published By <Publisher account={owner} />
             </p>
-            <p>
+            <p className={styles.date}>
               <Time date={ddo.created} relative />
               {ddo.created !== ddo.updated && (
                 <>
                   {' — '}
-                  <span className={styles.dateUpdated}>
-                    updated <Time date={ddo.updated} relative />
-                  </span>
+                  updated <Time date={ddo.updated} relative />
                 </>
               )}
             </p>
@@ -128,6 +128,14 @@ export default function AssetContent({
               />
 
               <MetaSecondary metadata={metadata} />
+
+              {isOwner && (
+                <div className={styles.ownerActions}>
+                  <Button style="text" size="small" onClick={handleEditButton}>
+                    Edit Metadata
+                  </Button>
+                </div>
+              )}
             </>
           )}
 
@@ -149,17 +157,6 @@ export default function AssetContent({
 
       <div className={styles.actions}>
         <AssetActions ddo={ddo} />
-
-        {isOwner && (
-          <Button
-            style="text"
-            size="small"
-            onClick={handleEditButton}
-            className={styles.actionLink}
-          >
-            Edit Metadata
-          </Button>
-        )}
       </div>
     </article>
   )
