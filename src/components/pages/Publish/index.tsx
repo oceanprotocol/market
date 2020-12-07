@@ -13,8 +13,8 @@ import { useUserPreferences } from '../../../providers/UserPreferences'
 import { DDO, Logger, Metadata } from '@oceanprotocol/lib'
 import { Persist } from '../../atoms/FormikPersist'
 import Debug from './Debug'
-import Feedback from './Feedback'
 import Alert from '../../atoms/Alert'
+import MetadataFeedback from '../../molecules/MetadataFeedback'
 
 const formName = 'ocean-publish-form'
 
@@ -77,12 +77,11 @@ export default function PublishPage({
       initialValues={initialValues}
       initialStatus="empty"
       validationSchema={validationSchema}
-      onSubmit={async (values, { setSubmitting, resetForm }) => {
+      onSubmit={async (values, { resetForm }) => {
         // move user's focus to top of screen
         window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
         // kick off publishing
         await handleSubmit(values, resetForm)
-        setSubmitting(false)
       }}
     >
       {({ values }) => (
@@ -90,12 +89,16 @@ export default function PublishPage({
           <Persist name={formName} ignoreFields={['isSubmitting']} />
 
           {hasFeedback ? (
-            <Feedback
+            <MetadataFeedback
+              title="Publishing Data Set"
               error={error}
               success={success}
-              publishStepText={publishStepText}
-              ddo={ddo}
+              loading={publishStepText}
               setError={setError}
+              successAction={{
+                name: 'Go to data set →',
+                to: `/asset/${ddo?.id}`
+              }}
             />
           ) : (
             <>

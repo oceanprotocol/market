@@ -1,6 +1,6 @@
 import { useOcean } from '@oceanprotocol/react'
 import { Formik } from 'formik'
-import React, { FormEvent, ReactElement, useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import {
   MetadataMarket,
   MetadataPublishForm
@@ -17,7 +17,7 @@ import Web3Feedback from '../../../molecules/Wallet/Feedback'
 import FormEditMetadata from './FormEditMetadata'
 import styles from './index.module.css'
 import { Logger } from '@oceanprotocol/lib'
-import Feedback from './Feedback'
+import MetadataFeedback from '../../../molecules/MetadataFeedback'
 
 export default function Edit({
   metadata,
@@ -72,21 +72,25 @@ export default function Edit({
       <Formik
         initialValues={getInitialValues(metadata)}
         validationSchema={validationSchema}
-        onSubmit={async (values, { setSubmitting, resetForm }) => {
+        onSubmit={async (values, { resetForm }) => {
           // move user's focus to top of screen
           window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
           // kick off editing
           await handleSubmit(values, resetForm)
-          setSubmitting(false)
         }}
       >
         {({ isSubmitting, values }) =>
           isSubmitting || hasFeedback ? (
-            <Feedback
+            <MetadataFeedback
+              title="Updating Data Set"
               error={error}
               success={success}
-              loaderText="Updating DDO..."
+              loading="Updating DDO..."
               setError={setError}
+              successAction={{
+                name: 'Refresh Page',
+                onClick: () => window.location.reload()
+              }}
             />
           ) : (
             <article className={styles.grid}>

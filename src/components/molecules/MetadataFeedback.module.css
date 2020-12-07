@@ -9,7 +9,7 @@
 }
 
 .box {
-  composes: box from '../../../atoms/Box.module.css';
+  composes: box from '../atoms/Box.module.css';
   width: 100%;
 }
 
