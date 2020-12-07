@@ -30,7 +30,6 @@ export function transformPublishFormToMetadata(
       name,
       author,
       dateCreated: currentTime,
-      datePublished: currentTime,
       files: typeof files !== 'string' && files,
       license: 'https://market.oceanprotocol.com/terms'
     },

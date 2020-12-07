@@ -17,6 +17,7 @@ import { useAsset } from '../../../providers/Asset'
 import Alert from '../../atoms/Alert'
 import Button from '../../atoms/Button'
 import Edit from '../AssetActions/Edit'
+import Time from '../../atoms/Time'
 
 export interface AssetContentProps {
   metadata: MetadataMarket
@@ -82,7 +83,7 @@ export default function AssetContent({
           )}
 
           <aside className={styles.meta}>
-            <p className={styles.datatoken}>
+            <p>
               <EtherscanLink
                 networkId={networkId}
                 path={`token/${ddo.dataToken}`}
@@ -94,7 +95,20 @@ export default function AssetContent({
                 )}
               </EtherscanLink>
             </p>
-            Published By <Publisher account={owner} />
+            <p>
+              Published By <Publisher account={owner} />
+            </p>
+            <p>
+              <Time date={ddo.created} relative />
+              {ddo.created !== ddo.updated && (
+                <>
+                  {' — '}
+                  <span className={styles.dateUpdated}>
+                    updated <Time date={ddo.updated} relative />
+                  </span>
+                </>
+              )}
+            </p>
           </aside>
 
           {isInPurgatory ? (

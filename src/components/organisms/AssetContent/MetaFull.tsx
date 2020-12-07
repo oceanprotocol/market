@@ -15,8 +15,8 @@ export default function MetaFull({
   metadata: MetadataMarket
   isInPurgatory: boolean
 }): ReactElement {
-  const { id, publicKey } = ddo
-  const { dateCreated, datePublished } = metadata.main
+  const { id, publicKey, created, updated } = ddo
+  const { dateCreated } = metadata.main
 
   return (
     <div className={styles.metaFull}>
@@ -36,7 +36,10 @@ export default function MetaFull({
       )}
 
       <MetaItem title="Data Created" content={<Time date={dateCreated} />} />
-      <MetaItem title="Published" content={<Time date={datePublished} />} />
+      <MetaItem title="Published" content={<Time date={created} />} />
+      {created !== updated && (
+        <MetaItem title="Updated" content={<Time date={updated} />} />
+      )}
       <MetaItem title="DID" content={<code>{id}</code>} />
     </div>
   )

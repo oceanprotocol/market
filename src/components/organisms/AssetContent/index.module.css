@@ -34,13 +34,8 @@
   margin-bottom: 0;
 }
 
-.datatoken a {
-  color: var(--color-secondary);
-}
-
-.buttonGroup {
-  margin-top: var(--spacer);
-  margin-bottom: var(--spacer);
+.dateUpdated {
+  font-size: var(--font-size-mini);
 }
 
 .actionLink {
