@@ -57,9 +57,11 @@ export default function AssetContent({
   const [showEdit, setShowEdit] = useState<boolean>()
   const { price } = useAsset()
 
+  const isOwner = accountId === owner
+
   useEffect(() => {
-    setShowPricing(accountId === owner && price.isConsumable === '')
-  }, [accountId, owner, price])
+    setShowPricing(isOwner && price.isConsumable === '')
+  }, [isOwner, price])
 
   function handleEditButton() {
     setShowEdit(true)
@@ -148,15 +150,16 @@ export default function AssetContent({
       <div className={styles.actions}>
         <AssetActions ddo={ddo} />
 
-        {/* TODO: show only for owner */}
-        <Button
-          style="text"
-          size="small"
-          onClick={handleEditButton}
-          className={styles.actionLink}
-        >
-          Edit Metadata
-        </Button>
+        {isOwner && (
+          <Button
+            style="text"
+            size="small"
+            onClick={handleEditButton}
+            className={styles.actionLink}
+          >
+            Edit Metadata
+          </Button>
+        )}
       </div>
     </article>
   )
