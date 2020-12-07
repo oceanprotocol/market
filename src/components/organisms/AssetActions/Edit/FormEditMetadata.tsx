@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import styles from './FormEditMetadata.module.css'
-import { Field, FieldInputProps } from 'formik'
+import { Field, Form, FieldInputProps } from 'formik'
 import { MetadataPublishForm } from '../../../../@types/MetaData'
 import Button from '../../../atoms/Button'
 import Input from '../../../atoms/Input'
@@ -16,7 +16,7 @@ export default function FormEditMetadata({
   const { ocean, accountId } = useOcean()
 
   return (
-    <form className={styles.form}>
+    <Form className={styles.form}>
       <Field name="name">
         {({
           field,
@@ -32,6 +32,7 @@ export default function FormEditMetadata({
             help="Enter a concise title."
             field={field}
             form={form}
+            required
           />
         )}
       </Field>
@@ -53,6 +54,7 @@ export default function FormEditMetadata({
             rows={10}
             field={field}
             form={form}
+            required
           />
         )}
       </Field>
@@ -65,6 +67,6 @@ export default function FormEditMetadata({
           Cancel
         </Button>
       </footer>
-    </form>
+    </Form>
   )
 }

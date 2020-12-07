@@ -1,6 +1,6 @@
 import { useOcean } from '@oceanprotocol/react'
 import { Formik } from 'formik'
-import React, { ReactElement } from 'react'
+import React, { FormEvent, ReactElement, useState } from 'react'
 import {
   MetadataMarket,
   MetadataPublishForm
@@ -16,6 +16,8 @@ import Debug from './Debug'
 import Web3Feedback from '../../../molecules/Wallet/Feedback'
 import FormEditMetadata from './FormEditMetadata'
 import styles from './index.module.css'
+import { Logger } from '@oceanprotocol/lib'
+import Feedback from './Feedback'
 
 export default function Edit({
   metadata,
@@ -27,16 +29,35 @@ export default function Edit({
   const { debug } = useUserPreferences()
   const { ocean, account } = useOcean()
   const { did } = useAsset()
+  const [success, setSuccess] = useState<string>()
+  const [error, setError] = useState<string>()
 
-  async function handleSubmit(values: Partial<MetadataPublishForm>) {
+  const hasFeedback = error || success
+
+  async function handleSubmit(
+    values: Partial<MetadataPublishForm>,
+    resetForm: () => void
+  ) {
     try {
       const ddo = await ocean.assets.editMetadata(
         did,
         { title: values.name, description: values.description },
         account
       )
+
+      // Edit failed
+      if (!ddo) {
+        setError('Updating DDO failed.')
+        Logger.error('Updating DDO failed.')
+        return
+      }
+
+      // Edit succeeded
+      setSuccess('🎉 Successfully updated. 🎉 Reload to see your changes.')
+      resetForm()
     } catch (error) {
-      console.error(error.message)
+      Logger.error(error.message)
+      setError(error.message)
     }
   }
 
@@ -47,18 +68,28 @@ export default function Edit({
         Update selected metadata of this data set. Updating metadata will create
         an on-chain transaction you have to approve in your wallet.
       </p>
-      <article className={styles.grid}>
-        <Formik
-          initialValues={getInitialValues(metadata)}
-          validationSchema={validationSchema}
-          onSubmit={async (values, { setSubmitting }) => {
-            await handleSubmit(values)
-            setSubmitting(false)
-          }}
-        >
-          {({ isSubmitting, submitForm, values }) => (
-            // TODO: somehow handle submitting state. Either only in the actions within FormEditMetadata, or replacing the whole view
-            <>
+
+      <Formik
+        initialValues={getInitialValues(metadata)}
+        validationSchema={validationSchema}
+        onSubmit={async (values, { setSubmitting, resetForm }) => {
+          // move user's focus to top of screen
+          window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+          // kick off editing
+          await handleSubmit(values, resetForm)
+          setSubmitting(false)
+        }}
+      >
+        {({ isSubmitting, values }) =>
+          isSubmitting || hasFeedback ? (
+            <Feedback
+              error={error}
+              success={success}
+              loaderText="Updating DDO..."
+              setError={setError}
+            />
+          ) : (
+            <article className={styles.grid}>
               <FormEditMetadata values={values} setShowEdit={setShowEdit} />
 
               <aside>
@@ -67,10 +98,10 @@ export default function Edit({
               </aside>
 
               {debug === true && <Debug values={values} />}
-            </>
-          )}
-        </Formik>
-      </article>
+            </article>
+          )
+        }
+      </Formik>
     </>
   )
 }
