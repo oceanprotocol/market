@@ -18,6 +18,36 @@ import FormEditMetadata from './FormEditMetadata'
 import styles from './index.module.css'
 import { Logger } from '@oceanprotocol/lib'
 import MetadataFeedback from '../../../molecules/MetadataFeedback'
+import { graphql, useStaticQuery } from 'gatsby'
+
+const contentQuery = graphql`
+  query EditMetadataQuery {
+    content: allFile(filter: { relativePath: { eq: "pages/edit.json" } }) {
+      edges {
+        node {
+          childPagesJson {
+            description
+            form {
+              success
+              successAction
+              error
+              data {
+                name
+                placeholder
+                label
+                help
+                type
+                required
+                options
+                rows
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
 
 export default function Edit({
   metadata,
@@ -26,6 +56,9 @@ export default function Edit({
   metadata: MetadataMarket
   setShowEdit: (show: boolean) => void
 }): ReactElement {
+  const data = useStaticQuery(contentQuery)
+  const content = data.content.edges[0].node.childPagesJson
+
   const { debug } = useUserPreferences()
   const { ocean, account } = useOcean()
   const { did } = useAsset()
@@ -47,13 +80,13 @@ export default function Edit({
 
       // Edit failed
       if (!ddo) {
-        setError('Updating DDO failed.')
-        Logger.error('Updating DDO failed.')
+        setError(content.form.error)
+        Logger.error(content.form.error)
         return
       }
 
       // Edit succeeded
-      setSuccess('🎉 Successfully updated. 🎉 Reload to see your changes.')
+      setSuccess(content.form.success)
       resetForm()
     } catch (error) {
       Logger.error(error.message)
@@ -63,11 +96,7 @@ export default function Edit({
 
   return (
     <>
-      {/* TODO: move content out of here into content folder, and source from there */}
-      <p className={styles.description}>
-        Update selected metadata of this data set. Updating metadata will create
-        an on-chain transaction you have to approve in your wallet.
-      </p>
+      <p className={styles.description}>{content.description}</p>
 
       <Formik
         initialValues={getInitialValues(metadata)}
@@ -87,13 +116,16 @@ export default function Edit({
               success={success}
               setError={setError}
               successAction={{
-                name: 'Refresh Page',
+                name: content.form.successAction,
                 onClick: () => window.location.reload()
               }}
             />
           ) : (
             <article className={styles.grid}>
-              <FormEditMetadata values={values} setShowEdit={setShowEdit} />
+              <FormEditMetadata
+                data={content.form.data}
+                setShowEdit={setShowEdit}
+              />
 
               <aside>
                 <MetadataPreview values={values} />

@@ -1,0 +1,25 @@
+{
+  "description": "Update selected metadata of this data set. Updating metadata will create an on-chain transaction you have to approve in your wallet.",
+  "form": {
+    "success": "🎉 Successfully updated. 🎉 Reload to see your changes.",
+    "successAction": "Reload Page",
+    "error": "Updating DDO failed.",
+    "data": [
+      {
+        "name": "name",
+        "label": "New Title",
+        "placeholder": "e.g. Shapes of Desert Plants",
+        "help": "Enter a concise title.",
+        "required": true
+      },
+      {
+        "name": "description",
+        "label": "New Description",
+        "help": "Add a thorough description with as much detail as possible. You can use [Markdown](https://daringfireball.net/projects/markdown/basics).",
+        "type": "textarea",
+        "rows": 10,
+        "required": true
+      }
+    ]
+  }
+}
