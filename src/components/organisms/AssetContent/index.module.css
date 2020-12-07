@@ -48,10 +48,11 @@
   padding: calc(var(--spacer) / 4) var(--spacer);
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
-  background-color: var(--background-highlight);
 }
 
 .ownerActions a,
 .ownerActions button {
   color: var(--color-secondary);
+  margin-left: calc(var(--spacer) / 4);
+  margin-right: calc(var(--spacer) / 4);
 }
