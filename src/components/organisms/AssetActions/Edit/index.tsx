@@ -85,7 +85,6 @@ export default function Edit({
               title="Updating Data Set"
               error={error}
               success={success}
-              loading="Updating DDO..."
               setError={setError}
               successAction={{
                 name: 'Refresh Page',

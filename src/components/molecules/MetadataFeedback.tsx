@@ -5,22 +5,24 @@ import React, { ReactElement } from 'react'
 import styles from './MetadataFeedback.module.css'
 import SuccessConfetti from '../atoms/SuccessConfetti'
 
-interface SuccessAction {
+interface Action {
   name: string
   onClick?: () => void
   to?: string
 }
 
-function ActionSuccess({ successAction }: { successAction: SuccessAction }) {
+function ActionSuccess({ action }: { action: Action }) {
+  const { name, onClick, to } = action
+
   return (
     <Button
       style="primary"
       size="small"
-      onClick={successAction.onClick ? successAction.onClick : null}
-      to={successAction.to ? successAction.to : null}
+      onClick={onClick || null}
+      to={to || null}
       className={styles.action}
     >
-      successAction.name
+      {name}
     </Button>
   )
 }
@@ -49,8 +51,8 @@ export default function MetadataFeedback({
   title: string
   error: string
   success: string
-  loading: string
-  successAction: SuccessAction
+  loading?: string
+  successAction: Action
   setError: (error: string) => void
 }): ReactElement {
   return (
@@ -65,7 +67,7 @@ export default function MetadataFeedback({
         ) : success ? (
           <SuccessConfetti
             success={success}
-            action={<ActionSuccess successAction={successAction} />}
+            action={<ActionSuccess action={successAction} />}
           />
         ) : (
           <Loader message={loading} />
