@@ -15,7 +15,6 @@ import { graphql, useStaticQuery } from 'gatsby'
 import TokenBalance from '../../../../@types/TokenBalance'
 import Transactions from './Transactions'
 import Graph from './Graph'
-import axios from 'axios'
 import { useAsset } from '../../../../providers/Asset'
 import { gql, useQuery } from '@apollo/client'
 import { PoolLiquidity } from './__generated__/PoolLiquidity'
@@ -62,7 +61,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const staticData = useStaticQuery(contentQuery)
   const content = staticData.content.edges[0].node.childContentJson.pool
 
-  const { ocean, accountId, networkId, config } = useOcean()
+  const { ocean, accountId, networkId } = useOcean()
   const { owner } = useMetadata(ddo)
 
   const { dtSymbol } = usePricing(ddo)
@@ -94,21 +93,13 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
   // the purpose of the value is just to trigger the effect
   const [refreshPool, setRefreshPool] = useState(false)
-  const {
-    loading: loadingLiquidity,
-    error: errorLiquidity,
-    data: dataLiquidity
-  } = useQuery<PoolLiquidity>(poolLiquidityQuery, {
+  const { data: dataLiquidity } = useQuery<PoolLiquidity>(poolLiquidityQuery, {
     variables: {
       id: ddo.price.address.toLowerCase(),
       shareId: `${ddo.price.address.toLowerCase()}-${ddo.publicKey[0].owner.toLowerCase()}`
     },
     pollInterval: 5000
   })
-
-  useEffect(() => {
-    console.log(loadingLiquidity, errorLiquidity, dataLiquidity)
-  }, [loadingLiquidity, errorLiquidity, dataLiquidity])
 
   useEffect(() => {
     async function init() {
@@ -162,7 +153,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
       setCreatorPoolShare(creatorPoolShare)
     }
     init()
-  }, [dataLiquidity])
+  }, [dataLiquidity, ddo.dataToken, price.datatoken, price.ocean, price?.value])
 
   useEffect(() => {
     setIsRemoveDisabled(isInPurgatory && owner === accountId)
@@ -215,41 +206,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
       }
     }
     init()
-  }, [ocean, accountId, price, ddo, refreshPool, owner])
-
-  // Get graph history data
-  // useEffect(() => {
-  //   if (
-  //     !price?.address ||
-  //     !price?.ocean ||
-  //     !price?.value ||
-  //     !config?.metadataCacheUri
-  //   )
-  //     return
-
-  //   const source = axios.CancelToken.source()
-  //   const url = `${config.metadataCacheUri}/api/v1/aquarius/pools/history/${price.address}`
-
-  //   async function getData() {
-  //     Logger.log('Fired GetGraphData!')
-  //     try {
-  //       const response = await axios(url, { cancelToken: source.token })
-  //       if (!response || response.status !== 200) return
-  //       setGraphData(response.data)
-  //     } catch (error) {
-  //       if (axios.isCancel(error)) {
-  //         Logger.log(error.message)
-  //       } else {
-  //         Logger.error(error.message)
-  //       }
-  //     }
-  //   }
-  //   getData()
-
-  //   return () => {
-  //     source.cancel()
-  //   }
-  // }, [config.metadataCacheUri, price?.address, price?.ocean, price?.value])
+  }, [ocean, accountId, price, ddo, refreshPool, owner, totalPoolTokens])
 
   const refreshInfo = async () => {
     setRefreshPool(!refreshPool)

@@ -75,7 +75,7 @@ function constructGraphData(
             result.timestamps.push(
               `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
             )
-            result.values.push(currentItem.tokens[0].tokenReserve)
+            result.values.push(Number(currentItem.tokens[0].tokenReserve))
           }
 
           return result
@@ -93,7 +93,7 @@ function constructGraphData(
           result.timestamps.push(
             `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
           )
-          result.values.push(currentItem.spotPrice)
+          result.values.push(Number(currentItem.spotPrice))
 
           return result
         },
@@ -102,7 +102,6 @@ function constructGraphData(
       break
     }
   }
-  console.log('graph values', graphData)
   return {
     labels: graphData.timestamps,
     datasets: [
