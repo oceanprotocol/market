@@ -14,11 +14,10 @@ import TokenList from './TokenList'
 import { graphql, useStaticQuery } from 'gatsby'
 import TokenBalance from '../../../../@types/TokenBalance'
 import Transactions from './Transactions'
-import Graph, { ChartDataLiqudity } from './Graph'
+import Graph from './Graph'
 import axios from 'axios'
 import { useAsset } from '../../../../providers/Asset'
 import { gql, useQuery } from '@apollo/client'
-import { User } from './__generated__/User'
 import { PoolLiquidity } from './__generated__/PoolLiquidity'
 
 const contentQuery = graphql`
@@ -40,26 +39,8 @@ const contentQuery = graphql`
   }
 `
 
-const usersQuery = gql`
-  query User($id: ID!) {
-    user(id: $id) {
-      id
-      tokenBalancesOwned {
-        id
-      }
-      sharesOwned {
-        id
-        poolId {
-          id
-        }
-        balance
-      }
-    }
-  }
-`
-
 const poolLiquidityQuery = gql`
-  query PoolLiquidity($id: ID!) {
+  query PoolLiquidity($id: ID!, $shareId: ID) {
     pool(id: $id) {
       id
       totalShares
@@ -68,6 +49,10 @@ const poolLiquidityQuery = gql`
         tokenAddress
         balance
         denormWeight
+      }
+      shares(where: { id: $shareId }) {
+        id
+        balance
       }
     }
   }
@@ -106,38 +91,32 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   const [creatorLiquidity, setCreatorLiquidity] = useState<TokenBalance>()
   const [creatorPoolTokens, setCreatorPoolTokens] = useState<string>()
   const [creatorPoolShare, setCreatorPoolShare] = useState<string>()
-  const [graphData, setGraphData] = useState<ChartDataLiqudity>()
 
   // the purpose of the value is just to trigger the effect
   const [refreshPool, setRefreshPool] = useState(false)
-
-  const { loading, error, data } = useQuery<User>(usersQuery, {
-    variables: { id: ddo.publicKey[0].owner.toLowerCase() },
-    pollInterval: 5000
-  })
-
   const {
     loading: loadingLiquidity,
     error: errorLiquidity,
     data: dataLiquidity
   } = useQuery<PoolLiquidity>(poolLiquidityQuery, {
-    variables: { id: ddo.price.address.toLowerCase() },
+    variables: {
+      id: ddo.price.address.toLowerCase(),
+      shareId: `${ddo.price.address.toLowerCase()}-${ddo.publicKey[0].owner.toLowerCase()}`
+    },
     pollInterval: 5000
   })
 
   useEffect(() => {
     console.log(loadingLiquidity, errorLiquidity, dataLiquidity)
   }, [loadingLiquidity, errorLiquidity, dataLiquidity])
-  useEffect(() => {
-    console.log(loading, error, data)
-  }, [loading, error, data])
 
   useEffect(() => {
     async function init() {
-      if (!dataLiquidity) return
+      if (!dataLiquidity || !dataLiquidity.pool) return
 
       // Total pool shares
-      setTotalPoolTokens(dataLiquidity.pool.totalShares)
+      const totalPoolTokens = dataLiquidity.pool.totalShares
+      setTotalPoolTokens(totalPoolTokens)
 
       // Get swap fee
       // swapFee is tricky: to get 0.1% you need to convert from 0.001
@@ -150,22 +129,12 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
       setWeightDt(`${Number(weightDt) * 10}`)
       setWeightOcean(`${100 - Number(weightDt) * 10}`)
-    }
-    init()
-  }, [dataLiquidity])
 
-  useEffect(() => {
-    async function init() {
-      if (!data || !totalPoolTokens) return
-
-      const poolShares = data.user.sharesOwned.filter(
-        (share: any) => share.poolId.id === ddo.price?.address.toLowerCase()
-      )
       //
       // Get everything the creator put into the pool
       //
 
-      const creatorPoolTokens = poolShares[0].balance
+      const creatorPoolTokens = dataLiquidity.pool.shares[0].balance
       setCreatorPoolTokens(creatorPoolTokens)
 
       // Calculate creator's provided liquidity based on pool tokens
@@ -193,7 +162,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
       setCreatorPoolShare(creatorPoolShare)
     }
     init()
-  }, [data, totalPoolTokens])
+  }, [dataLiquidity])
 
   useEffect(() => {
     setIsRemoveDisabled(isInPurgatory && owner === accountId)
@@ -249,38 +218,38 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
   }, [ocean, accountId, price, ddo, refreshPool, owner])
 
   // Get graph history data
-  useEffect(() => {
-    if (
-      !price?.address ||
-      !price?.ocean ||
-      !price?.value ||
-      !config?.metadataCacheUri
-    )
-      return
+  // useEffect(() => {
+  //   if (
+  //     !price?.address ||
+  //     !price?.ocean ||
+  //     !price?.value ||
+  //     !config?.metadataCacheUri
+  //   )
+  //     return
 
-    const source = axios.CancelToken.source()
-    const url = `${config.metadataCacheUri}/api/v1/aquarius/pools/history/${price.address}`
+  //   const source = axios.CancelToken.source()
+  //   const url = `${config.metadataCacheUri}/api/v1/aquarius/pools/history/${price.address}`
 
-    async function getData() {
-      Logger.log('Fired GetGraphData!')
-      try {
-        const response = await axios(url, { cancelToken: source.token })
-        if (!response || response.status !== 200) return
-        setGraphData(response.data)
-      } catch (error) {
-        if (axios.isCancel(error)) {
-          Logger.log(error.message)
-        } else {
-          Logger.error(error.message)
-        }
-      }
-    }
-    getData()
+  //   async function getData() {
+  //     Logger.log('Fired GetGraphData!')
+  //     try {
+  //       const response = await axios(url, { cancelToken: source.token })
+  //       if (!response || response.status !== 200) return
+  //       setGraphData(response.data)
+  //     } catch (error) {
+  //       if (axios.isCancel(error)) {
+  //         Logger.log(error.message)
+  //       } else {
+  //         Logger.error(error.message)
+  //       }
+  //     }
+  //   }
+  //   getData()
 
-    return () => {
-      source.cancel()
-    }
-  }, [config.metadataCacheUri, price?.address, price?.ocean, price?.value])
+  //   return () => {
+  //     source.cancel()
+  //   }
+  // }, [config.metadataCacheUri, price?.address, price?.ocean, price?.value])
 
   const refreshInfo = async () => {
     setRefreshPool(!refreshPool)
@@ -374,7 +343,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
                     {weightOcean}/{weightDt}
                   </span>
                 )}
-                <Graph data={graphData} />
+                <Graph />
               </>
             }
             ocean={`${price?.ocean}`}

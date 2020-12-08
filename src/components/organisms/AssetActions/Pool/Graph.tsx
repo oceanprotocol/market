@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react'
 import { Line, defaults } from 'react-chartjs-2'
 import {
@@ -15,17 +16,19 @@ import useDarkMode from 'use-dark-mode'
 import { darkModeConfig } from '../../../../../app.config'
 import Button from '../../../atoms/Button'
 import { Logger } from '@oceanprotocol/lib'
-
-export interface ChartDataLiqudity {
-  oceanAddRemove: ChartData[]
-  datatokenAddRemove: ChartData[]
-  oceanReserveHistory: ChartData[]
-  datatokenReserveHistory: ChartData[]
-  datatokenPriceHistory: ChartData[]
-}
+import { useAsset } from '../../../../providers/Asset'
+import getAddressesForMain from '../../../../utils/getAddressesForMain'
+import { gql, useQuery } from '@apollo/client'
+import {
+  PoolHistory,
+  PoolHistory_pool_transactions
+} from './__generated__/PoolHistory'
 
 declare type GraphType = 'liquidity' | 'price'
-
+declare type GraphData = {
+  timestamps: string[]
+  values: number[]
+}
 // Chart.js global defaults
 defaults.global.defaultFontFamily = `'Sharp Sans', -apple-system, BlinkMacSystemFont,
 'Segoe UI', Helvetica, Arial, sans-serif`
@@ -57,21 +60,56 @@ const tooltipOptions: Partial<ChartTooltipOptions> = {
   caretSize: 7
 }
 
-function constructGraphData(data: ChartData[]): ChartData {
-  const timestamps = data.map((item: any) => {
-    // convert timestamps from epoch to locale date & time string
-    const date = new Date(item[1] * 1000)
-    return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
-  })
-  const values = data.map((item: any) => item[0])
+function constructGraphData(
+  data: PoolHistory,
+  graphType: GraphType
+): ChartData {
+  let graphData
+  switch (graphType) {
+    case 'liquidity': {
+      graphData = data.pool.transactions.reduce<GraphData>(
+        (result: GraphData, currentItem: PoolHistory_pool_transactions) => {
+          // convert timestamps from epoch to locale date & time string
+          if (currentItem.tokens.length > 0) {
+            const date = new Date(currentItem.timestamp * 1000)
+            result.timestamps.push(
+              `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+            )
+            result.values.push(currentItem.tokens[0].tokenReserve)
+          }
 
+          return result
+        },
+        { timestamps: [], values: [] }
+      )
+      break
+    }
+    case 'price': {
+      graphData = data.pool.transactions.reduce<GraphData>(
+        (result: GraphData, currentItem: PoolHistory_pool_transactions) => {
+          // convert timestamps from epoch to locale date & time string
+
+          const date = new Date(currentItem.timestamp * 1000)
+          result.timestamps.push(
+            `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+          )
+          result.values.push(currentItem.spotPrice)
+
+          return result
+        },
+        { timestamps: [], values: [] }
+      )
+      break
+    }
+  }
+  console.log('graph values', graphData)
   return {
-    labels: timestamps,
+    labels: graphData.timestamps,
     datasets: [
       {
         ...lineStyle,
         label: 'Liquidity (OCEAN)',
-        data: values,
+        data: graphData.values,
         borderColor: `#8b98a9`,
         pointBackgroundColor: `#8b98a9`
       }
@@ -122,17 +160,37 @@ function getOptions(locale: string, isDarkMode: boolean): ChartOptions {
 
 const graphTypes = ['Liquidity', 'Price']
 
-export default function Graph({
-  data
-}: {
-  data: ChartDataLiqudity
-}): ReactElement {
+const poolHistory = gql`
+  query PoolHistory($id: ID!, $poolToken: String!) {
+    pool(id: $id) {
+      transactions(orderBy: timestamp) {
+        spotPrice
+        timestamp
+        tokens(where: { poolToken: $poolToken }) {
+          tokenReserve
+        }
+      }
+    }
+  }
+`
+
+export default function Graph(): ReactElement {
   const { locale } = useUserPreferences()
   const darkMode = useDarkMode(false, darkModeConfig)
 
   const [graphData, setGraphData] = useState<ChartData>()
   const [options, setOptions] = useState<ChartOptions>()
   const [graphType, setGraphType] = useState<GraphType>('liquidity')
+
+  const { price } = useAsset()
+
+  const { data } = useQuery<PoolHistory>(poolHistory, {
+    variables: {
+      id: price.address.toLowerCase(),
+      poolToken: `${price.address.toLowerCase()}-${getAddressesForMain().oceanTokenAddress.toLowerCase()}`
+    },
+    pollInterval: 5000
+  })
 
   useEffect(() => {
     Logger.log('Fired GraphOptions!')
@@ -143,10 +201,7 @@ export default function Graph({
   useEffect(() => {
     if (!data) return
     Logger.log('Fired GraphData!')
-    const graphData =
-      graphType === 'liquidity'
-        ? constructGraphData(data.oceanReserveHistory)
-        : constructGraphData(data.datatokenPriceHistory)
+    const graphData = constructGraphData(data, graphType)
     setGraphData(graphData)
   }, [data, graphType])
 
