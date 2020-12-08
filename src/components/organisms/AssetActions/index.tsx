@@ -77,11 +77,11 @@ export default function AssetActions(): ReactElement {
     tabs.push(
       {
         title: 'Pool',
-        content: <Pool ddo={ddo} />
+        content: <Pool />
       },
       {
         title: 'Trade',
-        content: <Trade ddo={ddo} />
+        content: <Trade />
       }
     )
 

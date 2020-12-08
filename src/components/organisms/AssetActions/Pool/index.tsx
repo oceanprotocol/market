@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useOcean, useMetadata, usePricing } from '@oceanprotocol/react'
-import { DDO, Logger } from '@oceanprotocol/lib'
+import { useOcean } from '@oceanprotocol/react'
+import { Logger } from '@oceanprotocol/lib'
 import styles from './index.module.css'
 import stylesActions from './Actions.module.css'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
@@ -37,13 +37,19 @@ const contentQuery = graphql`
   }
 `
 
-export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
+export default function Pool(): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childContentJson.pool
 
   const { ocean, accountId, networkId, config } = useOcean()
-  const { owner } = useMetadata(ddo)
-  const { isInPurgatory, price, refreshInterval, refreshPrice } = useAsset()
+  const {
+    isInPurgatory,
+    ddo,
+    owner,
+    price,
+    refreshInterval,
+    refreshPrice
+  } = useAsset()
   const dtSymbol = ddo?.dataTokenInfo.symbol
 
   const [poolTokens, setPoolTokens] = useState<string>()
