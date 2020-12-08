@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { graphql, Link, useStaticQuery } from 'gatsby'
+import { graphql, useStaticQuery } from 'gatsby'
 import Markdown from '../../atoms/Markdown'
 import MetaFull from './MetaFull'
 import MetaSecondary from './MetaSecondary'
@@ -8,15 +8,13 @@ import AssetActions from '../AssetActions'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import Pricing from './Pricing'
 import { useOcean } from '@oceanprotocol/react'
-import EtherscanLink from '../../atoms/EtherscanLink'
 import Bookmark from './Bookmark'
-import Publisher from '../../atoms/Publisher'
 import { useAsset } from '../../../providers/Asset'
 import Alert from '../../atoms/Alert'
 import Button from '../../atoms/Button'
 import Edit from '../AssetActions/Edit'
-import Time from '../../atoms/Time'
 import DebugOutput from '../../atoms/DebugOutput'
+import MetaMain from './MetaMain'
 // import EditHistory from './EditHistory'
 
 export interface AssetContentProps {
@@ -43,16 +41,13 @@ const contentQuery = graphql`
 export default function AssetContent(props: AssetContentProps): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.purgatory.edges[0].node.childContentJson.asset
-
   const { debug } = useUserPreferences()
-  const { accountId, networkId } = useOcean()
+  const { accountId } = useOcean()
   const { owner, isInPurgatory, purgatoryData } = useAsset()
   const [showPricing, setShowPricing] = useState(false)
   const [showEdit, setShowEdit] = useState<boolean>()
   const { ddo, price, metadata } = useAsset()
-
   const isOwner = accountId === owner
-  const isUpdated = ddo.created !== ddo.updated
 
   useEffect(() => {
     if (!price) return
@@ -73,38 +68,8 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
       <div>
         {showPricing && <Pricing ddo={ddo} />}
         <div className={styles.content}>
-          {metadata?.additionalInformation?.categories?.length && (
-            <p>
-              <Link
-                to={`/search?categories=${metadata?.additionalInformation?.categories[0]}`}
-              >
-                {metadata?.additionalInformation?.categories[0]}
-              </Link>
-            </p>
-          )}
-
-          <aside className={styles.meta}>
-            <p>
-              <EtherscanLink
-                networkId={networkId}
-                path={`token/${ddo.dataToken}`}
-              >
-                {`${ddo.dataTokenInfo.name} — ${ddo.dataTokenInfo.symbol}`}
-              </EtherscanLink>
-            </p>
-            <p>
-              Published By <Publisher account={owner} />
-            </p>
-            <p className={styles.date}>
-              <Time date={ddo.created} relative />
-              {isUpdated && (
-                <>
-                  {' — '}
-                  updated <Time date={ddo.updated} relative />
-                </>
-              )}
-            </p>
-          </aside>
+          <MetaMain />
+          <Bookmark did={ddo.id} />
 
           {isInPurgatory ? (
             <Alert
@@ -133,12 +98,8 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
           )}
 
           <MetaFull />
-
           {/* <EditHistory /> */}
-
           {debug === true && <DebugOutput title="DDO" output={ddo} />}
-
-          <Bookmark did={ddo.id} />
         </div>
       </div>
 

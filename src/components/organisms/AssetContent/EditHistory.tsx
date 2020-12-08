@@ -50,7 +50,7 @@ export default function EditHistory(): ReactElement {
         <li className={styles.item}>
           {/* TODO: get this initial metadata creation tx somehow */}
           <EtherscanLink networkId={networkId} path="/tx/xxx">
-            created <Time date={ddo.created} relative />
+            published <Time date={ddo.created} relative />
           </EtherscanLink>
         </li>
       </ul>

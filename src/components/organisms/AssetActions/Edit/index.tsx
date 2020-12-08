@@ -90,32 +90,31 @@ export default function Edit({
   }
 
   return (
-    <>
-      <p className={styles.description}>{content.description}</p>
-
-      <Formik
-        initialValues={getInitialValues(metadata)}
-        validationSchema={validationSchema}
-        onSubmit={async (values, { resetForm }) => {
-          // move user's focus to top of screen
-          window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-          // kick off editing
-          await handleSubmit(values, resetForm)
-        }}
-      >
-        {({ isSubmitting, values }) =>
-          isSubmitting || hasFeedback ? (
-            <MetadataFeedback
-              title="Updating Data Set"
-              error={error}
-              success={success}
-              setError={setError}
-              successAction={{
-                name: content.form.successAction,
-                onClick: () => window.location.reload()
-              }}
-            />
-          ) : (
+    <Formik
+      initialValues={getInitialValues(metadata)}
+      validationSchema={validationSchema}
+      onSubmit={async (values, { resetForm }) => {
+        // move user's focus to top of screen
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+        // kick off editing
+        await handleSubmit(values, resetForm)
+      }}
+    >
+      {({ isSubmitting, values }) =>
+        isSubmitting || hasFeedback ? (
+          <MetadataFeedback
+            title="Updating Data Set"
+            error={error}
+            success={success}
+            setError={setError}
+            successAction={{
+              name: content.form.successAction,
+              onClick: () => window.location.reload()
+            }}
+          />
+        ) : (
+          <>
+            <p className={styles.description}>{content.description}</p>
             <article className={styles.grid}>
               <FormEditMetadata
                 data={content.form.data}
@@ -129,9 +128,9 @@ export default function Edit({
 
               {debug === true && <Debug values={values} ddo={ddo} />}
             </article>
-          )
-        }
-      </Formik>
-    </>
+          </>
+        )
+      }
+    </Formik>
   )
 }
