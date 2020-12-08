@@ -1,4 +1,3 @@
-import { MetadataMarket } from '../../../@types/MetaData'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { graphql, Link, useStaticQuery } from 'gatsby'
 import Markdown from '../../atoms/Markdown'
@@ -6,10 +5,9 @@ import MetaFull from './MetaFull'
 import MetaSecondary from './MetaSecondary'
 import styles from './index.module.css'
 import AssetActions from '../AssetActions'
-import { DDO } from '@oceanprotocol/lib'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import Pricing from './Pricing'
-import { useOcean, usePricing } from '@oceanprotocol/react'
+import { useOcean } from '@oceanprotocol/react'
 import EtherscanLink from '../../atoms/EtherscanLink'
 import Bookmark from './Bookmark'
 import Publisher from '../../atoms/Publisher'
@@ -18,10 +16,9 @@ import Alert from '../../atoms/Alert'
 import Button from '../../atoms/Button'
 import Edit from '../AssetActions/Edit'
 import Time from '../../atoms/Time'
+import DebugOutput from '../../atoms/DebugOutput'
 
 export interface AssetContentProps {
-  metadata: MetadataMarket
-  ddo: DDO
   path?: string
 }
 
@@ -42,24 +39,22 @@ const contentQuery = graphql`
   }
 `
 
-export default function AssetContent({
-  metadata,
-  ddo
-}: AssetContentProps): ReactElement {
+export default function AssetContent(props: AssetContentProps): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.purgatory.edges[0].node.childContentJson.asset
 
   const { debug } = useUserPreferences()
   const { accountId, networkId } = useOcean()
   const { owner, isInPurgatory, purgatoryData } = useAsset()
-  const { dtSymbol, dtName } = usePricing(ddo)
   const [showPricing, setShowPricing] = useState(false)
   const [showEdit, setShowEdit] = useState<boolean>()
-  const { price } = useAsset()
+  const { ddo, price, metadata } = useAsset()
 
   const isOwner = accountId === owner
 
   useEffect(() => {
+    if (!price) return
+
     setShowPricing(isOwner && price.isConsumable === '')
   }, [isOwner, price])
 
@@ -70,7 +65,7 @@ export default function AssetContent({
   }
 
   return showEdit ? (
-    <Edit metadata={metadata} setShowEdit={setShowEdit} />
+    <Edit setShowEdit={setShowEdit} />
   ) : (
     <article className={styles.grid}>
       <div>
@@ -92,11 +87,7 @@ export default function AssetContent({
                 networkId={networkId}
                 path={`token/${ddo.dataToken}`}
               >
-                {dtName ? (
-                  `${dtName} — ${dtSymbol}`
-                ) : (
-                  <code>{ddo.dataToken}</code>
-                )}
+                {`${ddo.dataTokenInfo.name} — ${ddo.dataTokenInfo.symbol}`}
               </EtherscanLink>
             </p>
             <p>
@@ -127,7 +118,7 @@ export default function AssetContent({
                 text={metadata?.additionalInformation?.description || ''}
               />
 
-              <MetaSecondary metadata={metadata} />
+              <MetaSecondary />
 
               {isOwner && (
                 <div className={styles.ownerActions}>
@@ -139,24 +130,16 @@ export default function AssetContent({
             </>
           )}
 
-          <MetaFull
-            ddo={ddo}
-            metadata={metadata}
-            isInPurgatory={isInPurgatory}
-          />
+          <MetaFull />
 
-          {debug === true && (
-            <pre>
-              <code>{JSON.stringify(ddo, null, 2)}</code>
-            </pre>
-          )}
+          {debug === true && <DebugOutput title="DDO" output={ddo} />}
 
           <Bookmark did={ddo.id} />
         </div>
       </div>
 
       <div className={styles.actions}>
-        <AssetActions ddo={ddo} />
+        <AssetActions />
       </div>
     </article>
   )

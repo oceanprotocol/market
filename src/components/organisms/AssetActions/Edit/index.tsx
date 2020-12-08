@@ -50,10 +50,8 @@ const contentQuery = graphql`
 `
 
 export default function Edit({
-  metadata,
   setShowEdit
 }: {
-  metadata: MetadataMarket
   setShowEdit: (show: boolean) => void
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
@@ -61,7 +59,7 @@ export default function Edit({
 
   const { debug } = useUserPreferences()
   const { ocean, account } = useOcean()
-  const { did } = useAsset()
+  const { did, metadata, ddo } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
 
@@ -132,7 +130,7 @@ export default function Edit({
                 <Web3Feedback />
               </aside>
 
-              {debug === true && <Debug values={values} />}
+              {debug === true && <Debug values={values} ddo={ddo} />}
             </article>
           )
         }

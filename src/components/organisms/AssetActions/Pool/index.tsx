@@ -43,9 +43,8 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
   const { ocean, accountId, networkId, config } = useOcean()
   const { owner } = useMetadata(ddo)
-
-  const { dtSymbol } = usePricing(ddo)
   const { isInPurgatory, price, refreshInterval, refreshPrice } = useAsset()
+  const dtSymbol = ddo?.dataTokenInfo.symbol
 
   const [poolTokens, setPoolTokens] = useState<string>()
   const [totalPoolTokens, setTotalPoolTokens] = useState<string>()

@@ -7,20 +7,21 @@ import React, {
   useCallback,
   ReactNode
 } from 'react'
-import { Logger, DDO, Metadata, BestPrice } from '@oceanprotocol/lib'
+import { Logger, DDO, BestPrice } from '@oceanprotocol/lib'
 import { PurgatoryData } from '@oceanprotocol/lib/dist/node/ddo/interfaces/PurgatoryData'
 import { getDataTokenPrice, useOcean } from '@oceanprotocol/react'
 import getAssetPurgatoryData from '../utils/purgatory'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import axios from 'axios'
 import { retrieveDDO } from '../utils/aquarius'
+import { MetadataMarket } from '../@types/MetaData'
 
 interface AssetProviderValue {
   isInPurgatory: boolean
   purgatoryData: PurgatoryData
   ddo: DDO | undefined
   did: string | undefined
-  metadata: Metadata | undefined
+  metadata: MetadataMarket | undefined
   title: string | undefined
   owner: string | undefined
   price: BestPrice | undefined
@@ -45,7 +46,7 @@ function AssetProvider({
   const [purgatoryData, setPurgatoryData] = useState<PurgatoryData>()
   const [ddo, setDDO] = useState<DDO>()
   const [did, setDID] = useState<string>()
-  const [metadata, setMetadata] = useState<Metadata>()
+  const [metadata, setMetadata] = useState<MetadataMarket>()
   const [title, setTitle] = useState<string>()
   const [price, setPrice] = useState<BestPrice>()
   const [owner, setOwner] = useState<string>()
@@ -130,10 +131,10 @@ function AssetProvider({
       if (result?.did !== undefined) {
         setIsInPurgatory(true)
         setPurgatoryData(result)
-      } else {
-        setIsInPurgatory(false)
+        return
       }
-      setPurgatoryData(result)
+
+      setIsInPurgatory(false)
     } catch (error) {
       Logger.error(error)
     }
@@ -147,7 +148,7 @@ function AssetProvider({
       // Set price & metadata from DDO first
       setPrice(ddo.price)
       const { attributes } = ddo.findServiceByType('metadata')
-      setMetadata(attributes)
+      setMetadata((attributes as unknown) as MetadataMarket)
       setTitle(attributes?.main.name)
       setOwner(ddo.publicKey[0].owner)
       setIsInPurgatory(ddo.isInPurgatory === 'true')

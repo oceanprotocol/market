@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import { MetadataPublishForm } from '../../../@types/MetaData'
 import DebugOutput from '../../atoms/DebugOutput'
 import styles from './index.module.css'
-import { transformPublishFormToMetadata } from './utils'
+import { transformPublishFormToMetadata } from '../../../utils/metadata'
 
 export default function Debug({
   values

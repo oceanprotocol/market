@@ -14,3 +14,8 @@
   word-break: break-all;
   padding: 0;
 }
+
+/* debug output */
+.metaFull + div {
+  margin-top: var(--spacer);
+}

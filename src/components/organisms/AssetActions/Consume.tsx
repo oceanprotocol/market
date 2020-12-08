@@ -28,19 +28,17 @@ export default function Consume({
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
   const [previousOrderId, setPreviousOrderId] = useState<string>()
   const { isInPurgatory, price } = useAsset()
-  const {
-    dtSymbol,
-    buyDT,
-    pricingStepText,
-    pricingError,
-    pricingIsLoading
-  } = usePricing(ddo)
+  const { buyDT, pricingStepText, pricingError, pricingIsLoading } = usePricing(
+    ddo
+  )
   const { consumeStepText, consume, consumeError } = useConsume()
   const [isDisabled, setIsDisabled] = useState(true)
   const [hasDatatoken, setHasDatatoken] = useState(false)
   const [isConsumable, setIsConsumable] = useState(true)
 
   useEffect(() => {
+    if (!price) return
+
     setIsConsumable(
       price.isConsumable !== undefined ? price.isConsumable === 'true' : true
     )
@@ -110,14 +108,14 @@ export default function Consume({
           </Button>
           {hasDatatoken && (
             <div className={styles.help}>
-              You own {dtBalance} {dtSymbol} allowing you to use this data set
-              without paying again.
+              You own {dtBalance} {ddo.dataTokenInfo.symbol} allowing you to use
+              this data set without paying again.
             </div>
           )}
           {(!hasDatatoken || !hasPreviousOrder) && (
             <div className={styles.help}>
-              For using this data set, you will buy 1 {dtSymbol} and immediately
-              spend it back to the publisher and pool.
+              For using this data set, you will buy 1 {ddo.dataTokenInfo.symbol}{' '}
+              and immediately spend it back to the publisher and pool.
             </div>
           )}
         </>

@@ -1,15 +1,13 @@
 import React, { ReactElement } from 'react'
 import MetaItem from './MetaItem'
 import styles from './MetaSecondary.module.css'
-import { MetadataMarket } from '../../../@types/MetaData'
 import Tags from '../../atoms/Tags'
 import Button from '../../atoms/Button'
+import { useAsset } from '../../../providers/Asset'
 
-export default function MetaSecondary({
-  metadata
-}: {
-  metadata: MetadataMarket
-}): ReactElement {
+export default function MetaSecondary(): ReactElement {
+  const { metadata } = useAsset()
+
   return (
     <aside className={styles.metaSecondary}>
       {metadata?.additionalInformation?.links?.length > 0 && (

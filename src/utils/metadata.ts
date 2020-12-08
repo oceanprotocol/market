@@ -1,7 +1,8 @@
-import { MetadataMarket, MetadataPublishForm } from '../../../@types/MetaData'
-import { toStringNoMS } from '../../../utils'
-import AssetModel from '../../../models/Asset'
+import { MetadataMarket, MetadataPublishForm } from '../@types/MetaData'
+import { toStringNoMS } from '.'
+import AssetModel from '../models/Asset'
 import slugify from '@sindresorhus/slugify'
+import { DDO } from '@oceanprotocol/lib'
 
 export function transformTags(value: string): string[] {
   const originalTags = value?.split(',')
@@ -10,7 +11,8 @@ export function transformTags(value: string): string[] {
 }
 
 export function transformPublishFormToMetadata(
-  data: Partial<MetadataPublishForm>
+  data: Partial<MetadataPublishForm>,
+  ddo?: DDO
 ): MetadataMarket {
   const currentTime = toStringNoMS(new Date())
 
@@ -29,7 +31,7 @@ export function transformPublishFormToMetadata(
       ...AssetModel.main,
       name,
       author,
-      dateCreated: currentTime,
+      dateCreated: ddo ? ddo.created : currentTime,
       files: typeof files !== 'string' && files,
       license: 'https://market.oceanprotocol.com/terms'
     },

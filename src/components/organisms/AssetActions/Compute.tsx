@@ -13,7 +13,6 @@ import {
   usePricing
 } from '@oceanprotocol/react'
 import styles from './Compute.module.css'
-import Button from '../../atoms/Button'
 import Input from '../../atoms/Input'
 import Alert from '../../atoms/Alert'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'

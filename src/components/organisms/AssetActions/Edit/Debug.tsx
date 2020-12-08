@@ -1,20 +1,23 @@
+import { DDO } from '@oceanprotocol/lib'
 import React, { ReactElement } from 'react'
 import { MetadataPublishForm } from '../../../../@types/MetaData'
-import { transformPublishFormToMetadata } from '../../../pages/Publish/utils'
+import { transformPublishFormToMetadata } from '../../../../utils/metadata'
 import DebugOutput from '../../../atoms/DebugOutput'
 
 export default function Debug({
-  values
+  values,
+  ddo
 }: {
   values: Partial<MetadataPublishForm>
+  ddo: DDO
 }): ReactElement {
-  const ddo = {
+  const newDdo = {
     '@context': 'https://w3id.org/did/v1',
     service: [
       {
         index: 0,
         type: 'metadata',
-        attributes: { ...transformPublishFormToMetadata(values) }
+        attributes: { ...transformPublishFormToMetadata(values, ddo) }
       }
     ]
   }
@@ -22,7 +25,7 @@ export default function Debug({
   return (
     <>
       <DebugOutput title="Collected Form Values" output={values} />
-      <DebugOutput title="Transformed DDO Values" output={ddo} />
+      <DebugOutput title="Transformed DDO Values" output={newDdo} />
     </>
   )
 }
