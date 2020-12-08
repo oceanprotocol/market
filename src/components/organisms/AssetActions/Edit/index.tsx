@@ -1,10 +1,7 @@
 import { useOcean } from '@oceanprotocol/react'
 import { Formik } from 'formik'
 import React, { ReactElement, useState } from 'react'
-import {
-  MetadataMarket,
-  MetadataPublishForm
-} from '../../../../@types/MetaData'
+import { MetadataPublishForm } from '../../../../@types/MetaData'
 import {
   validationSchema,
   getInitialValues
