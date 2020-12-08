@@ -1,6 +1,5 @@
 .metaFull {
   margin-top: var(--spacer);
-  font-size: var(--font-size-small);
   display: grid;
   gap: var(--spacer);
   grid-template-columns: 1fr 1fr;

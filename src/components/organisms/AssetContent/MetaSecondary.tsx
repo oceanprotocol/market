@@ -5,6 +5,19 @@ import Tags from '../../atoms/Tags'
 import Button from '../../atoms/Button'
 import { useAsset } from '../../../providers/Asset'
 
+const SampleButton = ({ url }: { url: string }) => (
+  <Button
+    href={url}
+    target="_blank"
+    rel="noreferrer"
+    download
+    style="text"
+    size="small"
+  >
+    Download Sample
+  </Button>
+)
+
 export default function MetaSecondary(): ReactElement {
   const { metadata } = useAsset()
 
@@ -15,16 +28,9 @@ export default function MetaSecondary(): ReactElement {
           <MetaItem
             title="Sample Data"
             content={
-              <Button
-                href={metadata?.additionalInformation?.links[0].url}
-                target="_blank"
-                rel="noreferrer"
-                download
-                style="text"
-                size="small"
-              >
-                Download Sample
-              </Button>
+              <SampleButton
+                url={metadata?.additionalInformation?.links[0].url}
+              />
             }
           />
         </div>

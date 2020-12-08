@@ -17,6 +17,7 @@ import Button from '../../atoms/Button'
 import Edit from '../AssetActions/Edit'
 import Time from '../../atoms/Time'
 import DebugOutput from '../../atoms/DebugOutput'
+// import EditHistory from './EditHistory'
 
 export interface AssetContentProps {
   path?: string
@@ -51,6 +52,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   const { ddo, price, metadata } = useAsset()
 
   const isOwner = accountId === owner
+  const isUpdated = ddo.created !== ddo.updated
 
   useEffect(() => {
     if (!price) return
@@ -95,7 +97,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
             </p>
             <p className={styles.date}>
               <Time date={ddo.created} relative />
-              {ddo.created !== ddo.updated && (
+              {isUpdated && (
                 <>
                   {' — '}
                   updated <Time date={ddo.updated} relative />
@@ -131,6 +133,8 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
           )}
 
           <MetaFull />
+
+          {/* <EditHistory /> */}
 
           {debug === true && <DebugOutput title="DDO" output={ddo} />}
 

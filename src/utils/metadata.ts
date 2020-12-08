@@ -11,12 +11,7 @@ export function transformTags(value: string): string[] {
 }
 
 export function transformPublishFormToMetadata(
-  data: Partial<MetadataPublishForm>,
-  ddo?: DDO
-): MetadataMarket {
-  const currentTime = toStringNoMS(new Date())
-
-  const {
+  {
     name,
     author,
     description,
@@ -24,7 +19,10 @@ export function transformPublishFormToMetadata(
     links,
     termsAndConditions,
     files
-  } = data
+  }: Partial<MetadataPublishForm>,
+  ddo?: DDO
+): MetadataMarket {
+  const currentTime = toStringNoMS(new Date())
 
   const metadata: MetadataMarket = {
     main: {
