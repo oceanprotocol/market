@@ -17,9 +17,9 @@ export default function MetaMain(): ReactElement {
           {`${ddo?.dataTokenInfo.name} — ${ddo?.dataTokenInfo.symbol}`}
         </EtherscanLink>
       </p>
-      <p>
+      <div>
         Published By <Publisher account={owner} />
-      </p>
+      </div>
       <p className={styles.date}>
         <Time date={ddo?.created} relative />
         {ddo?.created !== ddo?.updated && (
