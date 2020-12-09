@@ -4,8 +4,10 @@ import * as Yup from 'yup'
 export const validationSchema = Yup.object().shape<
   Partial<MetadataPublishForm>
 >({
-  name: Yup.string().required('Required'),
-  description: Yup.string().required('Required')
+  name: Yup.string()
+    .min(4, (param) => `Title must be at least ${param.min} characters`)
+    .required('Required'),
+  description: Yup.string().required('Required').min(10)
 })
 
 export function getInitialValues(
