@@ -51,8 +51,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
 
   useEffect(() => {
     if (!price) return
-
-    setShowPricing(isOwner && price.isConsumable === '')
+    setShowPricing(isOwner && price.address === '')
   }, [isOwner, price])
 
   function handleEditButton() {
