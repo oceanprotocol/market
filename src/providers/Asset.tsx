@@ -12,7 +12,7 @@ import { PurgatoryData } from '@oceanprotocol/lib/dist/node/ddo/interfaces/Purga
 import { getDataTokenPrice, useOcean } from '@oceanprotocol/react'
 import getAssetPurgatoryData from '../utils/purgatory'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
-import axios from 'axios'
+import axios, { CancelToken } from 'axios'
 import { retrieveDDO } from '../utils/aquarius'
 import { MetadataMarket } from '../@types/MetaData'
 
@@ -27,6 +27,7 @@ interface AssetProviderValue {
   price: BestPrice | undefined
   error?: string
   refreshInterval: number
+  refreshDdo: (token?: CancelToken) => Promise<void>
   refreshPrice: () => Promise<void>
 }
 
@@ -70,6 +71,29 @@ function AssetProvider({
     Logger.log(`Refreshed asset price: ${newPrice?.value}`)
   }, [ocean, config, ddo, networkId, status])
 
+  const fetchDdo = async (token?: CancelToken) => {
+    Logger.log('Init asset, get ddo')
+    const ddo = await retrieveDDO(
+      asset as string,
+      config.metadataCacheUri,
+      token
+    )
+
+    if (!ddo) {
+      setError(
+        `The DDO for ${asset} was not found in MetadataCache. If you just published a new data set, wait some seconds and refresh this page.`
+      )
+    } else {
+      setError(undefined)
+    }
+    return ddo
+  }
+
+  const refreshDdo = async (token?: CancelToken) => {
+    const ddo = await fetchDdo(token)
+    Logger.debug('DDO', ddo)
+    setDDO(ddo)
+  }
   //
   // Get and set DDO based on passed DDO or DID
   //
@@ -80,28 +104,14 @@ function AssetProvider({
     let isMounted = true
     Logger.log('Init asset, get ddo')
 
-    async function init(): Promise<void> {
-      const ddo = await retrieveDDO(
-        asset as string,
-        config.metadataCacheUri,
-        source.token
-      )
-
-      if (!ddo) {
-        setError(
-          `The DDO for ${asset} was not found in MetadataCache. If you just published a new data set, wait some seconds and refresh this page.`
-        )
-      } else {
-        setError(undefined)
-      }
-
+    async function init() {
+      const ddo = await fetchDdo(source.token)
       if (!isMounted) return
       Logger.debug('DDO', ddo)
       setDDO(ddo)
       setDID(asset as string)
     }
     init()
-
     return () => {
       isMounted = false
       source.cancel()
@@ -178,6 +188,7 @@ function AssetProvider({
           isInPurgatory,
           purgatoryData,
           refreshInterval,
+          refreshDdo,
           refreshPrice
         } as AssetProviderValue
       }

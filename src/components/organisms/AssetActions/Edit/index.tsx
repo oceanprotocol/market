@@ -56,7 +56,7 @@ export default function Edit({
 
   const { debug } = useUserPreferences()
   const { ocean, account } = useOcean()
-  const { did, metadata, ddo } = useAsset()
+  const { did, metadata, ddo, refreshDdo } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
 
@@ -109,7 +109,10 @@ export default function Edit({
             setError={setError}
             successAction={{
               name: content.form.successAction,
-              onClick: () => window.location.reload()
+              onClick: async () => {
+                await refreshDdo()
+                setShowEdit(false)
+              }
             }}
           />
         ) : (
