@@ -42,6 +42,46 @@ function Description({ description }: { description: string }) {
   )
 }
 
+function MetaFull({ values }: { values: Partial<MetadataPublishForm> }) {
+  return (
+    <div className={styles.metaFull}>
+      {Object.entries(values)
+        .filter(
+          ([key, value]) =>
+            !(
+              key.includes('name') ||
+              key.includes('description') ||
+              key.includes('tags') ||
+              key.includes('files') ||
+              key.includes('links') ||
+              key.includes('termsAndConditions') ||
+              key.includes('dataTokenOptions') ||
+              value === undefined ||
+              value === ''
+            )
+        )
+        .map(([key, value]) => (
+          <MetaItem key={key} title={key} content={value} />
+        ))}
+    </div>
+  )
+}
+
+function Sample({ url }: { url: string }) {
+  return (
+    <Button
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+      download
+      style="text"
+      size="small"
+    >
+      Download Sample
+    </Button>
+  )
+}
+
 export default function MetadataPreview({
   values
 }: {
@@ -70,40 +110,12 @@ export default function MetadataPreview({
         </div>
 
         {typeof values.links !== 'string' && values.links?.length && (
-          <Button
-            href={(values.links[0] as FileMetadata).url}
-            target="_blank"
-            rel="noreferrer"
-            download
-            style="text"
-            size="small"
-          >
-            Download Sample
-          </Button>
+          <Sample url={(values.links[0] as FileMetadata).url} />
         )}
         {values.tags && <Tags items={transformTags(values.tags)} />}
       </header>
 
-      <div className={styles.metaFull}>
-        {Object.entries(values)
-          .filter(
-            ([key, value]) =>
-              !(
-                key.includes('name') ||
-                key.includes('description') ||
-                key.includes('tags') ||
-                key.includes('files') ||
-                key.includes('links') ||
-                key.includes('termsAndConditions') ||
-                key.includes('dataTokenOptions') ||
-                value === undefined ||
-                value === ''
-              )
-          )
-          .map(([key, value]) => (
-            <MetaItem key={key} title={key} content={value} />
-          ))}
-      </div>
+      <MetaFull values={values} />
     </div>
   )
 }
