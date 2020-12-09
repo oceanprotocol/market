@@ -10,7 +10,7 @@ import { transformPublishFormToMetadata } from '../../../utils/metadata'
 import MetadataPreview from '../../molecules/MetadataPreview'
 import { MetadataPublishForm } from '../../../@types/MetaData'
 import { useUserPreferences } from '../../../providers/UserPreferences'
-import { DDO, Logger, Metadata } from '@oceanprotocol/lib'
+import { Logger, Metadata } from '@oceanprotocol/lib'
 import { Persist } from '../../atoms/FormikPersist'
 import Debug from './Debug'
 import Alert from '../../atoms/Alert'
@@ -28,7 +28,7 @@ export default function PublishPage({
   const { isInPurgatory, purgatoryData } = useOcean()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
-  const [ddo, setDdo] = useState<DDO>()
+  const [did, setDid] = useState<string>()
 
   const hasFeedback = isLoading || error || success
 
@@ -61,7 +61,7 @@ export default function PublishPage({
       }
 
       // Publish succeeded
-      setDdo(ddo)
+      setDid(ddo.id)
       setSuccess(
         '🎉 Successfully published. 🎉 Now create a price on your data set.'
       )
@@ -97,7 +97,7 @@ export default function PublishPage({
               setError={setError}
               successAction={{
                 name: 'Go to data set →',
-                to: `/asset/${ddo?.id}`
+                to: `/asset/${did}`
               }}
             />
           ) : (
