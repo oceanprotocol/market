@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import styles from './FormEditMetadata.module.css'
-import { Field, Form } from 'formik'
+import { Field, Form, useFormikContext } from 'formik'
 import Button from '../../../atoms/Button'
 import Input from '../../../atoms/Input'
 import { useOcean } from '@oceanprotocol/react'
@@ -14,6 +14,7 @@ export default function FormEditMetadata({
   setShowEdit: (show: boolean) => void
 }): ReactElement {
   const { ocean, accountId } = useOcean()
+  const { isValid } = useFormikContext()
 
   return (
     <Form className={styles.form}>
@@ -22,7 +23,7 @@ export default function FormEditMetadata({
       ))}
 
       <footer className={styles.actions}>
-        <Button style="primary" disabled={!ocean || !accountId}>
+        <Button style="primary" disabled={!ocean || !accountId || !isValid}>
           Submit
         </Button>
         <Button style="text" onClick={() => setShowEdit(false)}>
