@@ -1,7 +1,7 @@
 {
   "description": "Update selected metadata of this data set. Updating metadata will create an on-chain transaction you have to approve in your wallet.",
   "form": {
-    "success": "🎉 Successfully updated. 🎉 Reload to see your changes.",
+    "success": "🎉 Successfully updated. 🎉",
     "successAction": "Reload Page",
     "error": "Updating DDO failed.",
     "data": [
