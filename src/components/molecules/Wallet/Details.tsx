@@ -37,6 +37,16 @@ export default function Details(): ReactElement {
           >
             Switch Wallet
           </Button>
+          <Button
+            style="text"
+            size="small"
+            onClick={() => {
+              logout()
+              location.reload()
+            }}
+          >
+            Disconnect
+          </Button>
         </li>
       </ul>
       <Web3Feedback />
