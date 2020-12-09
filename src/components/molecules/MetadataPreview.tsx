@@ -52,7 +52,11 @@ export default function MetadataPreview({
       <h2 className={styles.previewTitle}>Preview</h2>
       <header>
         {values.name && <h3 className={styles.title}>{values.name}</h3>}
-        {values.author && <p className={styles.author}>{values.author}</p>}
+        {values.dataTokenOptions?.name && (
+          <p
+            className={styles.datatoken}
+          >{`${values.dataTokenOptions.name} — ${values.dataTokenOptions.symbol}`}</p>
+        )}
         {values.description && <Description description={values.description} />}
 
         <div className={styles.asset}>
@@ -85,7 +89,6 @@ export default function MetadataPreview({
           .filter(
             ([key, value]) =>
               !(
-                key.includes('author') ||
                 key.includes('name') ||
                 key.includes('description') ||
                 key.includes('tags') ||
