@@ -10,7 +10,9 @@ export function getSearchQuery(
   tags?: string,
   categories?: string,
   page?: string,
-  offset?: string
+  offset?: string,
+  priceType?: string,
+  items?: any
 ): SearchQuery {
   const searchTerm = owner
     ? `(publicKey.owner:${owner})`
@@ -20,7 +22,7 @@ export function getSearchQuery(
     : categories
     ? // eslint-disable-next-line no-useless-escape
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
-    : text || ''
+    : text || '' + ` price.type:\"${priceType}\"`
 
   return {
     page: Number(page) || 1,
@@ -34,9 +36,13 @@ export function getSearchQuery(
       // ...(tags && { tags: [tags] }),
       // ...(categories && { categories: [categories] })
     },
-    sort: {
-      created: -1
-    }
+    sort: items
+      ? items.reduce((acc, e) => ({ ...acc, [e.id]: e.direction }), {})
+      : {
+          created: -1,
+          'price.ocean': -1,
+          'price.value': -1
+        }
 
     // Something in ocean.js is weird when using 'tags: [tag]'
     // which is the only way the query actually returns desired results.
@@ -58,7 +64,9 @@ export async function getResults(
     page?: string
     offset?: string
   },
-  metadataCacheUri: string
+  metadataCacheUri: string,
+  priceType?: string,
+  items?: any
 ): Promise<QueryResult> {
   const { text, owner, tags, page, offset, categories } = params
 
@@ -69,7 +77,9 @@ export async function getResults(
     tags,
     categories,
     page,
-    offset
+    offset,
+    priceType,
+    items
   )
   const queryResult = await metadataCache.queryMetadata(searchQuery)
 
