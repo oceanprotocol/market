@@ -135,7 +135,8 @@ export default function Graph(): ReactElement {
   const [lastBlock, setLastBlock] = useState(0)
   const [priceHistory, setPriceHistory] = useState([])
   const [liquidityHistory, setLiquidityHistory] = useState([])
-  const { data, refetch } = useQuery<PoolHistory>(poolHistory, {
+
+  const { data, refetch, loading } = useQuery<PoolHistory>(poolHistory, {
     variables: {
       id: price.address.toLowerCase(),
       block: lastBlock
@@ -199,7 +200,7 @@ export default function Graph(): ReactElement {
 
   return (
     <div className={styles.graphWrap}>
-      {graphData ? (
+      {!loading && graphData ? (
         <>
           <nav className={styles.type}>
             {graphTypes.map((type: GraphType) => (
