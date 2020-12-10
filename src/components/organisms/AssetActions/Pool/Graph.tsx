@@ -140,7 +140,7 @@ export default function Graph(): ReactElement {
       id: price.address.toLowerCase(),
       block: lastBlock
     },
-    pollInterval: 5000
+    pollInterval: 20000
   })
 
   useEffect(() => {
