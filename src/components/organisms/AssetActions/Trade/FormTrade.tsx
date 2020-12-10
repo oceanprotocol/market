@@ -54,20 +54,22 @@ export default function FormTrade({
   const [maximumDt, setMaximumDt] = useState(maxDt)
   const [isWarningAccepted, setIsWarningAccepted] = useState(false)
 
-  const validationSchema = Yup.object().shape<FormTradeData>({
-    ocean: Yup.number()
-      .max(maximumOcean, (param) => `Must be more or equal to ${param.max}`)
-      .min(0.001, (param) => `Must be more or equal to ${param.min}`)
-      .required('Required')
-      .nullable(),
-    datatoken: Yup.number()
-      .max(maxDt, `Must be less or equal than ${maximumDt}`)
-      .min(0.00001, (param) => `Must be more or equal to ${param.min}`)
-      .required('Required')
-      .nullable(),
-    type: Yup.string(),
-    slippage: Yup.string()
-  })
+  const validationSchema: Yup.SchemaOf<FormTradeData> = Yup.object()
+    .shape({
+      ocean: Yup.number()
+        .max(maximumOcean, (param) => `Must be more or equal to ${param.max}`)
+        .min(0.001, (param) => `Must be more or equal to ${param.min}`)
+        .required('Required')
+        .nullable(),
+      datatoken: Yup.number()
+        .max(maxDt, `Must be less or equal than ${maximumDt}`)
+        .min(0.00001, (param) => `Must be more or equal to ${param.min}`)
+        .required('Required')
+        .nullable(),
+      type: Yup.string(),
+      slippage: Yup.string()
+    })
+    .defined()
 
   async function handleTrade(values: FormTradeData) {
     try {

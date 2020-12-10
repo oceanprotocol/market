@@ -76,7 +76,7 @@ export default function Add({
 
   // Live validation rules
   // https://github.com/jquense/yup#number
-  const validationSchema = Yup.object().shape<FormAddLiquidity>({
+  const validationSchema: Yup.SchemaOf<FormAddLiquidity> = Yup.object().shape({
     amount: Yup.number()
       .min(0.00001, (param) => `Must be more or equal to ${param.min}`)
       .max(
