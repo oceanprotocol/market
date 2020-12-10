@@ -12,8 +12,14 @@ export function getSearchQuery(
   page?: string,
   offset?: string,
   priceType?: string,
-  items?: any
+  items?: any,
+  sort?: string,
+  sortOrder?: string
 ): SearchQuery {
+  
+  const sortTerm = ( sort == "liquidity" ) ? "price.ocean" : (( sort == "price" ) ? "price.value" : "created")
+  const sortValue = ( sortOrder == "asc" ) ? 1 : -1
+
   const searchTerm = owner
     ? `(publicKey.owner:${owner})`
     : tags
@@ -36,13 +42,20 @@ export function getSearchQuery(
       // ...(tags && { tags: [tags] }),
       // ...(categories && { categories: [categories] })
     },
-    sort: items
-      ? items.reduce((acc, e) => ({ ...acc, [e.id]: e.direction }), {})
-      : {
-          created: -1,
-          'price.ocean': -1,
-          'price.value': -1
-        }
+    sort: {
+      [sortTerm] : sortValue
+      // "created" : - 1 by default, sort results by date created, newest first
+      // "price.value" : - 1 sort results by price, from highest to lowest (ddo.price.value)
+      // "price.ocean" : - 1 sort results by liquidity, from highest to lowest (ddo.price.ocean) 
+    }
+    // Andreea sort version
+    // sort: items
+    //   ? items.reduce((acc, e) => ({ ...acc, [e.id]: e.direction }), {})
+    //   : {
+    //       created: -1,
+    //       'price.ocean': -1,
+    //       'price.value': -1
+    //     }
 
     // Something in ocean.js is weird when using 'tags: [tag]'
     // which is the only way the query actually returns desired results.
@@ -63,12 +76,14 @@ export async function getResults(
     categories?: string
     page?: string
     offset?: string
+    sort?: string,
+    sortOrder?: string
   },
   metadataCacheUri: string,
   priceType?: string,
   items?: any
 ): Promise<QueryResult> {
-  const { text, owner, tags, page, offset, categories } = params
+  const { text, owner, tags, page, offset, categories, sort, sortOrder } = params
 
   const metadataCache = new MetadataCache(metadataCacheUri, Logger)
   const searchQuery = getSearchQuery(
@@ -79,7 +94,9 @@ export async function getResults(
     page,
     offset,
     priceType,
-    items
+    // items,
+    sort,
+    sortOrder
   )
   const queryResult = await metadataCache.queryMetadata(searchQuery)
 
