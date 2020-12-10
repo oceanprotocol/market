@@ -111,22 +111,22 @@ const poolHistory = gql`
   }
 `
 
+const graphData: ChartData = {
+  labels: [],
+  datasets: [
+    {
+      ...lineStyle,
+      label: 'Liquidity (OCEAN)',
+      data: [],
+      borderColor: `#8b98a9`,
+      pointBackgroundColor: `#8b98a9`
+    }
+  ]
+}
+
 export default function Graph(): ReactElement {
   const { locale } = useUserPreferences()
   const darkMode = useDarkMode(false, darkModeConfig)
-
-  const [graphData] = useState<ChartData>({
-    labels: [],
-    datasets: [
-      {
-        ...lineStyle,
-        label: 'Liquidity (OCEAN)',
-        data: [],
-        borderColor: `#8b98a9`,
-        pointBackgroundColor: `#8b98a9`
-      }
-    ]
-  })
   const [options, setOptions] = useState<ChartOptions>()
   const [graphType, setGraphType] = useState<GraphType>('liquidity')
 
@@ -136,7 +136,7 @@ export default function Graph(): ReactElement {
   const [priceHistory, setPriceHistory] = useState([])
   const [liquidityHistory, setLiquidityHistory] = useState([])
 
-  const { data, refetch, loading } = useQuery<PoolHistory>(poolHistory, {
+  const { data, refetch, loading, error } = useQuery<PoolHistory>(poolHistory, {
     variables: {
       id: price.address.toLowerCase(),
       block: lastBlock
@@ -200,7 +200,11 @@ export default function Graph(): ReactElement {
 
   return (
     <div className={styles.graphWrap}>
-      {!loading && graphData ? (
+      {loading ? (
+        <Loader />
+      ) : error ? (
+        <small>{error.message}</small>
+      ) : (
         <>
           <nav className={styles.type}>
             {graphTypes.map((type: GraphType) => (
@@ -219,8 +223,6 @@ export default function Graph(): ReactElement {
           </nav>
           <Line height={70} data={graphData} options={options} />
         </>
-      ) : (
-        <Loader />
       )}
     </div>
   )
