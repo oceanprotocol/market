@@ -20,7 +20,7 @@ import fetch from 'cross-fetch'
 const client = new ApolloClient({
   link: new HttpLink({
     uri:
-      'http://54.81.231.185:8000/subgraphs/name/oceanprotocol/ocean-subgraph',
+      'https://subgraph.mainnet.oceanprotocol.com/subgraphs/name/oceanprotocol/ocean-subgraph',
     fetch
   }),
   cache: new InMemoryCache()
