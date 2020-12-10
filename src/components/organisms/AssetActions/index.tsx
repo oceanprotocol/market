@@ -3,6 +3,7 @@ import styles from './index.module.css'
 import Compute from './Compute'
 import Consume from './Consume'
 import { Logger } from '@oceanprotocol/lib'
+import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import Tabs from '../../atoms/Tabs'
 import { useOcean } from '@oceanprotocol/react'
 import compareAsBN from '../../../utils/compareAsBN'
@@ -28,11 +29,10 @@ export default function AssetActions(): ReactElement {
   const isCompute = Boolean(ddo?.findServiceByType('compute'))
 
   useEffect(() => {
-    console.log('config', config)
     const newClient = new ApolloClient({
       link: new HttpLink({
         uri: `${
-          (config as any).subgraphUri
+          (config as ConfigHelperConfig).subgraphUri
         }/subgraphs/name/oceanprotocol/ocean-subgraph`,
         fetch
       }),
@@ -40,9 +40,11 @@ export default function AssetActions(): ReactElement {
     })
     setClient(newClient)
   }, [config])
+
   // Get and set user DT balance
   useEffect(() => {
     if (!ocean || !accountId) return
+
     async function init() {
       try {
         const dtBalance = await ocean.datatokens.balance(
