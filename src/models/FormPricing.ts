@@ -1,27 +1,29 @@
 import { PriceOptionsMarket } from '../@types/MetaData'
 import * as Yup from 'yup'
 
-export const validationSchema = Yup.object().shape<PriceOptionsMarket>({
-  price: Yup.number()
-    .min(1, (param) => `Must be more or equal to ${param.min}`)
-    .required('Required'),
-  dtAmount: Yup.number()
-    .min(9, (param) => `Must be more or equal to ${param.min}`)
-    .required('Required'),
-  oceanAmount: Yup.number()
-    .min(21, (param) => `Must be more or equal to ${param.min}`)
-    .required('Required'),
-  type: Yup.string()
-    .matches(/fixed|dynamic/g)
-    .required('Required'),
-  weightOnDataToken: Yup.string().required('Required'),
-  weightOnOcean: Yup.string().required('Required'),
-  swapFee: Yup.number()
-    .min(0.1, (param) => `Must be more or equal to ${param.min}`)
-    .max(10, 'Maximum is 10%')
-    .required('Required')
-    .nullable()
-})
+export const validationSchema: Yup.SchemaOf<PriceOptionsMarket> = Yup.object().shape(
+  {
+    price: Yup.number()
+      .min(1, (param) => `Must be more or equal to ${param.min}`)
+      .required('Required'),
+    dtAmount: Yup.number()
+      .min(9, (param) => `Must be more or equal to ${param.min}`)
+      .required('Required'),
+    oceanAmount: Yup.number()
+      .min(21, (param) => `Must be more or equal to ${param.min}`)
+      .required('Required'),
+    type: Yup.string()
+      .matches(/fixed|dynamic/g, { excludeEmptyString: true })
+      .required('Required'),
+    weightOnDataToken: Yup.string().required('Required'),
+    weightOnOcean: Yup.string().required('Required'),
+    swapFee: Yup.number()
+      .min(0.1, (param) => `Must be more or equal to ${param.min}`)
+      .max(10, 'Maximum is 10%')
+      .required('Required')
+      .nullable()
+  }
+)
 
 export const initialValues: PriceOptionsMarket = {
   price: 1,
