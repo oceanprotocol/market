@@ -12,6 +12,7 @@ import Alert from '../../../../atoms/Alert'
 import TokenBalance from '../../../../../@types/TokenBalance'
 import { useUserPreferences } from '../../../../../providers/UserPreferences'
 import Output from './Output'
+import DebugOutput from '../../../../atoms/DebugOutput'
 
 const contentQuery = graphql`
   query PoolAddQuery {
@@ -201,11 +202,7 @@ export default function Add({
               action={submitForm}
               txId={txId}
             />
-            {debug && (
-              <pre>
-                <code>{JSON.stringify(values, null, 2)}</code>
-              </pre>
-            )}
+            {debug && <DebugOutput title="Collected values" output={values} />}
           </>
         )}
       </Formik>

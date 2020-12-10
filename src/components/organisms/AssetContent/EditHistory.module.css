@@ -1,0 +1,41 @@
+.title {
+  composes: title from './MetaItem.module.css';
+  margin-top: var(--spacer);
+  margin-bottom: calc(var(--spacer) / 2);
+}
+
+.history {
+  font-size: var(--font-size-small);
+  padding-left: 1.25rem;
+}
+
+.item {
+  position: relative;
+  display: block;
+  margin-bottom: calc(var(--spacer) / 4);
+  color: var(--color-secondary);
+}
+
+.item::before {
+  content: '▪';
+  position: absolute;
+  top: -1px;
+  left: -1.25rem;
+  color: var(--color-secondary);
+  user-select: none;
+}
+
+.item::after {
+  content: '';
+  position: absolute;
+  left: -1rem;
+  top: 62%;
+  display: block;
+  width: 1px;
+  height: 110%;
+  background-color: var(--color-secondary);
+}
+
+.item:last-child::after {
+  display: none;
+}

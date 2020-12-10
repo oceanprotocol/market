@@ -6,15 +6,15 @@ import FormPublish from './FormPublish'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
 import { FormContent } from '../../../@types/Form'
 import { initialValues, validationSchema } from '../../../models/FormPublish'
-import { transformPublishFormToMetadata } from './utils'
-import Preview from './Preview'
+import { transformPublishFormToMetadata } from '../../../utils/metadata'
+import MetadataPreview from '../../molecules/MetadataPreview'
 import { MetadataPublishForm } from '../../../@types/MetaData'
 import { useUserPreferences } from '../../../providers/UserPreferences'
-import { DDO, Logger, Metadata } from '@oceanprotocol/lib'
+import { Logger, Metadata } from '@oceanprotocol/lib'
 import { Persist } from '../../atoms/FormikPersist'
 import Debug from './Debug'
-import Feedback from './Feedback'
 import Alert from '../../atoms/Alert'
+import MetadataFeedback from '../../molecules/MetadataFeedback'
 
 const formName = 'ocean-publish-form'
 
@@ -28,7 +28,7 @@ export default function PublishPage({
   const { isInPurgatory, purgatoryData } = useOcean()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
-  const [ddo, setDdo] = useState<DDO>()
+  const [did, setDid] = useState<string>()
 
   const hasFeedback = isLoading || error || success
 
@@ -61,7 +61,7 @@ export default function PublishPage({
       }
 
       // Publish succeeded
-      setDdo(ddo)
+      setDid(ddo.id)
       setSuccess(
         '🎉 Successfully published. 🎉 Now create a price on your data set.'
       )
@@ -77,12 +77,11 @@ export default function PublishPage({
       initialValues={initialValues}
       initialStatus="empty"
       validationSchema={validationSchema}
-      onSubmit={async (values, { setSubmitting, resetForm }) => {
+      onSubmit={async (values, { resetForm }) => {
         // move user's focus to top of screen
         window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
         // kick off publishing
         await handleSubmit(values, resetForm)
-        setSubmitting(false)
       }}
     >
       {({ values }) => (
@@ -90,12 +89,16 @@ export default function PublishPage({
           <Persist name={formName} ignoreFields={['isSubmitting']} />
 
           {hasFeedback ? (
-            <Feedback
+            <MetadataFeedback
+              title="Publishing Data Set"
               error={error}
               success={success}
-              publishStepText={publishStepText}
-              ddo={ddo}
+              loading={publishStepText}
               setError={setError}
+              successAction={{
+                name: 'Go to data set →',
+                to: `/asset/${did}`
+              }}
             />
           ) : (
             <>
@@ -109,7 +112,7 @@ export default function PublishPage({
 
                 <aside>
                   <div className={styles.sticky}>
-                    <Preview values={values} />
+                    <MetadataPreview values={values} />
                     <Web3Feedback />
                   </div>
                 </aside>

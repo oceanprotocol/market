@@ -1,16 +1,26 @@
 import React, { ReactElement } from 'react'
 import MetaItem from './MetaItem'
 import styles from './MetaSecondary.module.css'
-import { MetadataMarket } from '../../../@types/MetaData'
 import Tags from '../../atoms/Tags'
 import Button from '../../atoms/Button'
-import Time from '../../atoms/Time'
+import { useAsset } from '../../../providers/Asset'
 
-export default function MetaSecondary({
-  metadata
-}: {
-  metadata: MetadataMarket
-}): ReactElement {
+const SampleButton = ({ url }: { url: string }) => (
+  <Button
+    href={url}
+    target="_blank"
+    rel="noreferrer"
+    download
+    style="text"
+    size="small"
+  >
+    Download Sample
+  </Button>
+)
+
+export default function MetaSecondary(): ReactElement {
+  const { metadata } = useAsset()
+
   return (
     <aside className={styles.metaSecondary}>
       {metadata?.additionalInformation?.links?.length > 0 && (
@@ -18,16 +28,9 @@ export default function MetaSecondary({
           <MetaItem
             title="Sample Data"
             content={
-              <Button
-                href={metadata?.additionalInformation?.links[0].url}
-                target="_blank"
-                rel="noreferrer"
-                download
-                style="text"
-                size="small"
-              >
-                Download Sample
-              </Button>
+              <SampleButton
+                url={metadata?.additionalInformation?.links[0].url}
+              />
             }
           />
         </div>
@@ -36,10 +39,6 @@ export default function MetaSecondary({
       {metadata?.additionalInformation?.tags?.length > 0 && (
         <Tags items={metadata?.additionalInformation?.tags} />
       )}
-
-      <p className={styles.date}>
-        Published <Time date={metadata?.main.datePublished} relative />
-      </p>
     </aside>
   )
 }

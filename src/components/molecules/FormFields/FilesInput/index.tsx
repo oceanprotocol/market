@@ -11,6 +11,10 @@ export default function FilesInput(props: InputProps): ReactElement {
   const [isLoading, setIsLoading] = useState(false)
 
   async function handleButtonClick(e: React.SyntheticEvent, url: string) {
+    // hack so the onBlur-triggered validation does not show,
+    // like when this field is required
+    helpers.setTouched(false)
+
     // File example 'https://oceanprotocol.com/tech-whitepaper.pdf'
     e.preventDefault()
 
@@ -26,14 +30,10 @@ export default function FilesInput(props: InputProps): ReactElement {
     }
   }
 
-  function removeItem() {
-    helpers.setValue(undefined)
-  }
-
   return (
     <>
       {field?.value && field.value[0] && typeof field.value === 'object' ? (
-        <FileInfo file={field.value[0]} removeItem={removeItem} />
+        <FileInfo name={props.name} file={field.value[0]} />
       ) : (
         <FileInput
           {...props}

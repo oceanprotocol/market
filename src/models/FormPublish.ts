@@ -4,7 +4,9 @@ import * as Yup from 'yup'
 
 export const validationSchema = Yup.object().shape<MetadataPublishForm>({
   // ---- required fields ----
-  name: Yup.string().required('Required'),
+  name: Yup.string()
+    .min(4, (param) => `Title must be at least ${param.min} characters`)
+    .required('Required'),
   author: Yup.string().required('Required'),
   dataTokenOptions: Yup.object()
     .shape({
@@ -13,7 +15,7 @@ export const validationSchema = Yup.object().shape<MetadataPublishForm>({
     })
     .required('Required'),
   files: Yup.array<FileMetadata>().required('Required').nullable(),
-  description: Yup.string().required('Required'),
+  description: Yup.string().min(10).required('Required'),
   access: Yup.string()
     .matches(/Compute|Download/g)
     .required('Required'),
