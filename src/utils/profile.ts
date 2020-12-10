@@ -4,7 +4,7 @@ import jwtDecode from 'jwt-decode'
 import { Logger } from '@oceanprotocol/lib'
 
 // https://docs.3box.io/api/rest-api
-const apiUri = 'https://market-stats.oceanprotocol.com/api'
+const apiUri = 'https://3box.oceanprotocol.com'
 const ipfsUrl = 'https://ipfs.oceanprotocol.com'
 
 function decodeProof(proofJWT: string) {
@@ -77,7 +77,7 @@ export default async function get3BoxProfile(
 ): Promise<Profile> {
   try {
     const response: AxiosResponse<ResponseData3Box> = await axios(
-      `${apiUri}/profile?address=${accountId}`,
+      `${apiUri}/profile/${accountId}`,
       { cancelToken }
     )
 

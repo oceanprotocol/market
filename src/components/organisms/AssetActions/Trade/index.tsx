@@ -1,14 +1,13 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useOcean } from '@oceanprotocol/react'
-import { DDO } from '@oceanprotocol/lib'
 import FormTrade from './FormTrade'
 import TokenBalance from '../../../../@types/TokenBalance'
 import { useAsset } from '../../../../providers/Asset'
 
-export default function Trade({ ddo }: { ddo: DDO }): ReactElement {
+export default function Trade(): ReactElement {
   const { ocean, balance, accountId } = useOcean()
   const [tokenBalance, setTokenBalance] = useState<TokenBalance>()
-  const { price } = useAsset()
+  const { price, ddo } = useAsset()
   const [maxDt, setMaxDt] = useState(0)
   const [maxOcean, setMaxOcean] = useState(0)
 

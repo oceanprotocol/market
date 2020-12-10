@@ -46,7 +46,7 @@
 }
 
 .output {
-  composes: output from './Add/index.module.css';
+  composes: output from './Add/Output.module.css';
 }
 
 .output [class*='token'] {

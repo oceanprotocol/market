@@ -24,11 +24,10 @@
   margin: 0;
 }
 
-.author {
+.datatoken {
   margin-top: calc(var(--spacer) / 8);
   margin-bottom: 0;
   color: var(--color-secondary);
-  font-weight: var(--font-weight-bold);
 }
 
 .preview [class*='MetaItem-module--metaItem'] h3 {

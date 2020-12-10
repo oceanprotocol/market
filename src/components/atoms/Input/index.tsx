@@ -44,15 +44,7 @@ export interface InputProps {
 }
 
 export default function Input(props: Partial<InputProps>): ReactElement {
-  const {
-    required,
-    name,
-    label,
-    help,
-    additionalComponent,
-    size,
-    field
-  } = props
+  const { label, help, additionalComponent, size, field } = props
 
   const hasError =
     props.form?.touched[field.name] && props.form?.errors[field.name]
@@ -67,7 +59,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
       className={styleClasses}
       data-is-submitting={props.form?.isSubmitting ? true : null}
     >
-      <Label htmlFor={name} required={required}>
+      <Label htmlFor={props.name} required={props.required}>
         {label}
       </Label>
       <InputElement size={size} {...field} {...props} />

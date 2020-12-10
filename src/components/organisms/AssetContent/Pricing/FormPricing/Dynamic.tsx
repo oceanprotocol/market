@@ -25,8 +25,6 @@ export default function Dynamic({
   content: any
 }): ReactElement {
   const { account, balance, networkId, refreshBalance } = useOcean()
-  const { dtSymbol, dtName } = usePricing(ddo)
-
   const [firstPrice, setFirstPrice] = useState<string>()
 
   // Connect with form
@@ -117,7 +115,10 @@ export default function Dynamic({
         />
         <Coin
           name="dtAmount"
-          datatokenOptions={{ symbol: dtSymbol, name: dtName }}
+          datatokenOptions={{
+            symbol: ddo.dataTokenInfo.symbol,
+            name: ddo.dataTokenInfo.name
+          }}
           weight={`${Number(weightOnDataToken) * 10}%`}
           readOnly
         />

@@ -2,7 +2,7 @@ import React, { ReactElement, useState, useEffect } from 'react'
 import styles from './index.module.css'
 import Compute from './Compute'
 import Consume from './Consume'
-import { DDO, Logger } from '@oceanprotocol/lib'
+import { Logger } from '@oceanprotocol/lib'
 import Tabs from '../../atoms/Tabs'
 import { useOcean } from '@oceanprotocol/react'
 import compareAsBN from '../../../utils/compareAsBN'
@@ -18,15 +18,14 @@ import {
 } from '@apollo/client'
 import fetch from 'cross-fetch'
 
-export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
+export default function AssetActions(): ReactElement {
   const { ocean, balance, accountId, config } = useOcean()
+  const { price, ddo, metadata } = useAsset()
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>()
-  const { price } = useAsset()
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
   const [dtBalance, setDtBalance] = useState<string>()
 
-  const isCompute = Boolean(ddo.findServiceByType('compute'))
-  const { attributes } = ddo.findServiceByType('metadata')
+  const isCompute = Boolean(ddo?.findServiceByType('compute'))
 
   useEffect(() => {
     console.log('config', config)
@@ -82,7 +81,7 @@ export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
       ddo={ddo}
       dtBalance={dtBalance}
       isBalanceSufficient={isBalanceSufficient}
-      file={attributes.main.files[0]}
+      file={metadata?.main.files[0]}
     />
   )
 
@@ -94,17 +93,17 @@ export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
   ]
 
   // Check from metadata, cause that is available earlier
-  const hasPool = ddo.price?.type === 'pool'
+  const hasPool = ddo?.price?.type === 'pool'
 
   hasPool &&
     tabs.push(
       {
         title: 'Pool',
-        content: <Pool ddo={ddo} />
+        content: <Pool />
       },
       {
         title: 'Trade',
-        content: <Trade ddo={ddo} />
+        content: <Trade />
       }
     )
 

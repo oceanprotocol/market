@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useOcean, useMetadata, usePricing } from '@oceanprotocol/react'
-import { DDO, Logger } from '@oceanprotocol/lib'
+import { useOcean } from '@oceanprotocol/react'
+import { Logger } from '@oceanprotocol/lib'
 import styles from './index.module.css'
 import stylesActions from './Actions.module.css'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
@@ -37,7 +37,6 @@ const contentQuery = graphql`
     }
   }
 `
-
 const poolLiquidityQuery = gql`
   query PoolLiquidity($id: ID!, $shareId: ID) {
     pool(id: $id) {
@@ -57,15 +56,20 @@ const poolLiquidityQuery = gql`
   }
 `
 
-export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
-  const staticData = useStaticQuery(contentQuery)
-  const content = staticData.content.edges[0].node.childContentJson.pool
+export default function Pool(): ReactElement {
+  const data = useStaticQuery(contentQuery)
+  const content = data.content.edges[0].node.childContentJson.pool
 
-  const { ocean, accountId, networkId } = useOcean()
-  const { owner } = useMetadata(ddo)
-
-  const { dtSymbol } = usePricing(ddo)
-  const { isInPurgatory, price, refreshInterval, refreshPrice } = useAsset()
+  const { ocean, accountId, networkId, config } = useOcean()
+  const {
+    isInPurgatory,
+    ddo,
+    owner,
+    price,
+    refreshInterval,
+    refreshPrice
+  } = useAsset()
+  const dtSymbol = ddo?.dataTokenInfo.symbol
 
   const [poolTokens, setPoolTokens] = useState<string>()
   const [totalPoolTokens, setTotalPoolTokens] = useState<string>()
@@ -115,7 +119,7 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
 
       // Get weights
       const weightDt = dataLiquidity.pool.tokens.filter(
-        (token) => token.tokenAddress === ddo.dataToken.toLowerCase()
+        (token: any) => token.tokenAddress === ddo.dataToken.toLowerCase()
       )[0].denormWeight
 
       setWeightDt(`${Number(weightDt) * 10}`)
@@ -187,14 +191,11 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
           price.address
         )
         setPoolTokens(poolTokens)
-
         // calculate user's provided liquidity based on pool tokens
         const userOceanBalance =
           (Number(poolTokens) / Number(totalPoolTokens)) * price.ocean
-
         const userDtBalance =
           (Number(poolTokens) / Number(totalPoolTokens)) * price.datatoken
-
         const userLiquidity = {
           ocean: userOceanBalance,
           datatoken: userDtBalance
@@ -264,7 +265,12 @@ export default function Pool({ ddo }: { ddo: DDO }): ReactElement {
             title={
               <>
                 Your Liquidity
-                <Tooltip content={content.tooltips.liquidity} />
+                <Tooltip
+                  content={content.tooltips.liquidity.replace(
+                    'SWAPFEE',
+                    swapFee
+                  )}
+                />
               </>
             }
             ocean={`${userLiquidity?.ocean}`}

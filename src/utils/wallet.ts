@@ -1,5 +1,5 @@
-import { infuraProjectId, network } from '../../app.config'
-// import WalletConnectProvider from '@walletconnect/web3-provider'
+import { infuraProjectId as infuraId, network } from '../../app.config'
+import WalletConnectProvider from '@walletconnect/web3-provider'
 // import Torus from '@toruslabs/torus-embed'
 
 const web3ModalTheme = {
@@ -11,12 +11,10 @@ const web3ModalTheme = {
 }
 
 const providerOptions = {
-  // walletconnect: {
-  //   package: WalletConnectProvider,
-  //   options: {
-  //     infuraId: infuraProjectId
-  //   }
-  // }
+  walletconnect: {
+    package: WalletConnectProvider,
+    options: { infuraId }
+  }
   // torus: {
   //   package: Torus,
   //   options: {

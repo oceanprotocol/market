@@ -17,7 +17,9 @@ export default function PublisherLinks({
             ? `https://twitter.com/${link.value}`
             : link.name === 'GitHub'
             ? `https://github.com/${link.value}`
-            : link.value
+            : link.value.includes('http') // safeguard against urls without protocol defined
+            ? link.value
+            : `//${link.value}`
 
         return (
           <a href={href} key={link.name} target="_blank" rel="noreferrer">
