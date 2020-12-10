@@ -13,20 +13,14 @@ import {
   ApolloClient,
   ApolloProvider,
   HttpLink,
-  InMemoryCache
+  InMemoryCache,
+  NormalizedCacheObject
 } from '@apollo/client'
 import fetch from 'cross-fetch'
 
-const client = new ApolloClient({
-  link: new HttpLink({
-    uri:
-      'https://subgraph.mainnet.oceanprotocol.com/subgraphs/name/oceanprotocol/ocean-subgraph',
-    fetch
-  }),
-  cache: new InMemoryCache()
-})
 export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
-  const { ocean, balance, accountId } = useOcean()
+  const { ocean, balance, accountId, config } = useOcean()
+  const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>()
   const { price } = useAsset()
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
   const [dtBalance, setDtBalance] = useState<string>()
@@ -34,6 +28,19 @@ export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
   const isCompute = Boolean(ddo.findServiceByType('compute'))
   const { attributes } = ddo.findServiceByType('metadata')
 
+  useEffect(() => {
+    console.log('config', config)
+    const newClient = new ApolloClient({
+      link: new HttpLink({
+        uri: `${
+          (config as any).subgraphUri
+        }/subgraphs/name/oceanprotocol/ocean-subgraph`,
+        fetch
+      }),
+      cache: new InMemoryCache()
+    })
+    setClient(newClient)
+  }, [config])
   // Get and set user DT balance
   useEffect(() => {
     if (!ocean || !accountId) return
@@ -101,9 +108,11 @@ export default function AssetActions({ ddo }: { ddo: DDO }): ReactElement {
       }
     )
 
-  return (
+  return client ? (
     <ApolloProvider client={client}>
       <Tabs items={tabs} className={styles.actions} />
     </ApolloProvider>
+  ) : (
+    <></>
   )
 }
