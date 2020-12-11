@@ -111,18 +111,18 @@ const poolHistory = gql`
   }
 `
 
-const graphData: ChartData = {
-  labels: [],
-  datasets: [
-    {
-      ...lineStyle,
-      label: 'Liquidity (OCEAN)',
-      data: [],
-      borderColor: `#8b98a9`,
-      pointBackgroundColor: `#8b98a9`
-    }
-  ]
-}
+// const graphData: ChartData = {
+//   labels: [],
+//   datasets: [
+//     {
+//       ...lineStyle,
+//       label: 'Liquidity (OCEAN)',
+//       data: [],
+//       borderColor: `#8b98a9`,
+//       pointBackgroundColor: `#8b98a9`
+//     }
+//   ]
+// }
 
 export default function Graph(): ReactElement {
   const { locale } = useUserPreferences()
@@ -135,6 +135,19 @@ export default function Graph(): ReactElement {
   const [lastBlock, setLastBlock] = useState(0)
   const [priceHistory, setPriceHistory] = useState([])
   const [liquidityHistory, setLiquidityHistory] = useState([])
+
+  const [graphData, setGraphData] = useState<ChartData>({
+    labels: [],
+    datasets: [
+      {
+        ...lineStyle,
+        label: 'Liquidity (OCEAN)',
+        data: [],
+        borderColor: `#8b98a9`,
+        pointBackgroundColor: `#8b98a9`
+      }
+    ]
+  })
 
   const { data, refetch, loading, error } = useQuery<PoolHistory>(poolHistory, {
     variables: {
@@ -185,6 +198,7 @@ export default function Graph(): ReactElement {
       }
     }
 
+    setGraphData(graphData)
     if (data.poolTransactions.length > 0) {
       setLastBlock(
         data.poolTransactions[data.poolTransactions.length - 1].block
