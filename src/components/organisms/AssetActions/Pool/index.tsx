@@ -17,7 +17,7 @@ import Transactions from './Transactions'
 import Graph from './Graph'
 import { useAsset } from '../../../../providers/Asset'
 import { gql, useQuery } from '@apollo/client'
-import { PoolLiquidity } from './__generated__/PoolLiquidity'
+import { PoolLiquidity } from '../../../../@types/apollo/PoolLiquidity'
 
 const contentQuery = graphql`
   query PoolQuery {

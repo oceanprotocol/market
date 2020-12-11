@@ -18,7 +18,7 @@ import Button from '../../../atoms/Button'
 import { Logger } from '@oceanprotocol/lib'
 import { useAsset } from '../../../../providers/Asset'
 import { gql, useQuery } from '@apollo/client'
-import { PoolHistory } from './__generated__/PoolHistory'
+import { PoolHistory } from '../../../../@types/apollo/PoolHistory'
 
 declare type GraphType = 'liquidity' | 'price'
 
