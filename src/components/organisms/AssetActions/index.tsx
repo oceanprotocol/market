@@ -3,6 +3,7 @@ import styles from './index.module.css'
 import Compute from './Compute'
 import Consume from './Consume'
 import { Logger } from '@oceanprotocol/lib'
+import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import Tabs from '../../atoms/Tabs'
 import { useOcean } from '@oceanprotocol/react'
 import compareAsBN from '../../../utils/compareAsBN'
@@ -22,6 +23,7 @@ export default function AssetActions(): ReactElement {
   // Get and set user DT balance
   useEffect(() => {
     if (!ocean || !accountId) return
+
     async function init() {
       try {
         const dtBalance = await ocean.datatokens.balance(

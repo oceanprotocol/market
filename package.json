@@ -9,7 +9,7 @@
     "build": "gatsby build && cp _redirects public/_redirects",
     "serve": "serve -s public/",
     "jest": "NODE_ENV=test jest -c tests/unit/jest.config.js",
-    "test": "npm run lint && npm run jest",
+    "test": "npm run apollo:codegen && npm run lint && npm run jest",
     "test:watch": "npm run lint && npm run jest -- --watch",
     "lint": "npm run write:repoMetadata && eslint --ignore-path .gitignore --ext .js --ext .ts --ext .tsx . && npm run type-check",
     "format": "prettier --ignore-path .gitignore './**/*.{css,yml,js,ts,tsx,json}' --write",
@@ -18,7 +18,8 @@
     "storybook": "start-storybook -p 4000 -c .storybook",
     "storybook:build": "build-storybook -c .storybook -o public/storybook",
     "write:repoMetadata": "node ./scripts/write-repo-metadata > repo-metadata.json",
-    "deploy": "./scripts/deploy.sh"
+    "deploy": "./scripts/deploy.sh",
+    "apollo:codegen": "apollo client:codegen --target typescript"
   },
   "dependencies": {
     "@apollo/client": "^3.3.2",
