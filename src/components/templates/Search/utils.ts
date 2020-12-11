@@ -42,8 +42,8 @@ export function getSearchQuery(
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
     : text || '';
 
-  searchTerm = (priceType) ? searchTerm+' AND price.type:'+priceType : searchTerm
-
+  searchTerm = priceType ? `${searchTerm} AND price.type:${priceType}` : searchTerm
+  
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
@@ -110,8 +110,6 @@ export async function getResults(
     sortOrder,
     priceType
   )
-  console.log('searchQuery ',searchQuery)
   const queryResult = await metadataCache.queryMetadata(searchQuery)
-  console.log('queryResult ',queryResult)
   return queryResult
 }
