@@ -25,7 +25,7 @@ declare type GraphType = 'liquidity' | 'price'
 // Chart.js global defaults
 defaults.global.defaultFontFamily = `'Sharp Sans', -apple-system, BlinkMacSystemFont,
 'Segoe UI', Helvetica, Arial, sans-serif`
-defaults.global.animation = { easing: 'easeInOutQuart', duration: 0 }
+defaults.global.animation = { easing: 'easeInOutQuart', duration: 1000 }
 
 const lineStyle: Partial<ChartDataSets> = {
   fill: false,
@@ -111,19 +111,6 @@ const poolHistory = gql`
   }
 `
 
-// const graphData: ChartData = {
-//   labels: [],
-//   datasets: [
-//     {
-//       ...lineStyle,
-//       label: 'Liquidity (OCEAN)',
-//       data: [],
-//       borderColor: `#8b98a9`,
-//       pointBackgroundColor: `#8b98a9`
-//     }
-//   ]
-// }
-
 export default function Graph(): ReactElement {
   const { locale } = useUserPreferences()
   const darkMode = useDarkMode(false, darkModeConfig)
@@ -135,21 +122,12 @@ export default function Graph(): ReactElement {
   const [lastBlock, setLastBlock] = useState(0)
   const [priceHistory, setPriceHistory] = useState([])
   const [liquidityHistory, setLiquidityHistory] = useState([])
+  const [timestamps, setTimestamps] = useState([])
 
-  const [graphData, setGraphData] = useState<ChartData>({
-    labels: [],
-    datasets: [
-      {
-        ...lineStyle,
-        label: 'Liquidity (OCEAN)',
-        data: [],
-        borderColor: `#8b98a9`,
-        pointBackgroundColor: `#8b98a9`
-      }
-    ]
-  })
+  const [isLoading, setIsLoading] = useState(true)
+  const [graphData, setGraphData] = useState<ChartData>()
 
-  const { data, refetch, loading, error } = useQuery<PoolHistory>(poolHistory, {
+  const { data, refetch, error } = useQuery<PoolHistory>(poolHistory, {
     variables: {
       id: price.address.toLowerCase(),
       block: lastBlock
@@ -167,12 +145,15 @@ export default function Graph(): ReactElement {
     if (!data) return
     Logger.log('Fired GraphData!')
 
-    graphData.labels.push(
+    const latestTimestamps = [
+      ...timestamps,
       ...data.poolTransactions.map((item) => {
         const date = new Date(item.timestamp * 1000)
         return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
       })
-    )
+    ]
+
+    setTimestamps(latestTimestamps)
 
     const latestLiquidtyHistory = [
       ...liquidityHistory,
@@ -187,23 +168,28 @@ export default function Graph(): ReactElement {
     ]
     setPriceHistory(latestPriceHistory)
 
-    switch (graphType) {
-      case 'liquidity': {
-        graphData.datasets[0].data = latestLiquidtyHistory.slice(0)
-        break
-      }
-      case 'price': {
-        graphData.datasets[0].data = latestPriceHistory.slice(0)
-        break
-      }
-    }
-
-    setGraphData(graphData)
     if (data.poolTransactions.length > 0) {
       setLastBlock(
         data.poolTransactions[data.poolTransactions.length - 1].block
       )
       refetch()
+    } else {
+      setIsLoading(false)
+      setGraphData({
+        labels: timestamps.slice(0),
+        datasets: [
+          {
+            ...lineStyle,
+            label: 'Liquidity (OCEAN)',
+            data:
+              graphType === 'liquidity'
+                ? latestLiquidtyHistory.slice(0)
+                : latestPriceHistory.slice(0),
+            borderColor: `#8b98a9`,
+            pointBackgroundColor: `#8b98a9`
+          }
+        ]
+      })
     }
   }, [data, graphType])
 
@@ -214,7 +200,7 @@ export default function Graph(): ReactElement {
 
   return (
     <div className={styles.graphWrap}>
-      {loading ? (
+      {isLoading ? (
         <Loader />
       ) : error ? (
         <small>{error.message}</small>
