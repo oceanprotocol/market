@@ -28,19 +28,14 @@ export function getSearchQuery(
   sortOrder?: string,
   priceType?: string
 ): SearchQuery {
-  
-  const sortTerm = 
+  const sortTerm =
     sort === SortTermOptions.Liquidity
-    ? 'price.ocean'
-    : sort === SortTermOptions.Price
-    ? 'price.value'
-    : SortTermOptions.Created
+      ? 'price.ocean'
+      : sort === SortTermOptions.Price
+      ? 'price.value'
+      : SortTermOptions.Created
 
-  const sortValue = 
-    sortOrder === SortValueOptions.Ascending 
-    ? 1 
-    : -1 
-
+  const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
   let searchTerm = owner
     ? `(publicKey.owner:${owner})`
     : tags
@@ -50,11 +45,9 @@ export function getSearchQuery(
     ? // eslint-disable-next-line no-useless-escape
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
     : text || ''
-
-  searchTerm = priceType 
+  searchTerm = priceType
     ? `${searchTerm} AND price.type:${priceType}`
     : searchTerm
-  
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
@@ -68,14 +61,13 @@ export function getSearchQuery(
       // ...(categories && { categories: [categories] })
     },
     sort: {
-      [sortTerm] : sortValue
+      [sortTerm]: sortValue
     }
     // Something in ocean.js is weird when using 'tags: [tag]'
     // which is the only way the query actually returns desired results.
     // But it doesn't follow 'SearchQuery' interface so we have to assign
     // it here.
     // } as SearchQuery
-
     // And the next hack,
     // nativeSearch is not implmeneted on ocean.js typings
   } as any
@@ -95,15 +87,15 @@ export async function getResults(
   },
   metadataCacheUri: string
 ): Promise<QueryResult> {
-  const { 
-    text, 
-    owner, 
-    tags, 
-    page, 
-    offset, 
-    categories, 
-    sort, 
-    sortOrder, 
+  const {
+    text,
+    owner,
+    tags,
+    page,
+    offset,
+    categories,
+    sort,
+    sortOrder,
     priceType
   } = params
   const metadataCache = new MetadataCache(metadataCacheUri, Logger)
