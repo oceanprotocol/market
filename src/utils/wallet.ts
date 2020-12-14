@@ -37,6 +37,8 @@ export function getNetworkId(network: string): number {
   switch (network) {
     case 'mainnet':
       return 1
+    case 'ropsten':
+      return 3
     case 'rinkeby':
       return 4
     case 'kovan':
@@ -64,6 +66,8 @@ export function getNetworkName(networkId: number): string {
   switch (networkId) {
     case 1:
       return 'Main'
+    case 3:
+      return 'Ropsten'
     case 4:
       return 'Rinkeby'
     case 42:
