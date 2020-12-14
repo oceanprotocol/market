@@ -3,47 +3,13 @@ import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/Metadata
 import SearchBar from '../../molecules/SearchBar'
 import AssetQueryList from '../../organisms/AssetQueryList'
 import styles from './index.module.css'
+import PriceFilter from './filterPrice'
+import Sort, { initItems } from './sort'
 import queryString from 'query-string'
-import { getResults } from './utils'
+import { getResults, SortItem, makeQueryString } from './utils'
 import Loader from '../../atoms/Loader'
 import { useOcean } from '@oceanprotocol/react'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-const defaultSearchItems = () =>
-  ['created', 'price.ocean', 'price.value'].map((e) => ({
-    id: e,
-    direction: -1
-  }))
-
-// a little function to help us with reordering the result
-const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list)
-  const [removed] = result.splice(startIndex, 1)
-  result.splice(endIndex, 0, removed)
-
-  return result
-}
-
-const grid = 8
-
-const getItemStyle = (isDragging, draggableStyle) => ({
-  // some basic styles to make the items look a bit nicer
-  userSelect: 'none',
-  padding: grid,
-  margin: `0 ${grid}px 0 0`,
-
-  // change background colour if dragging
-  background: isDragging ? 'lightgreen' : 'transparent',
-  border: '1px solid grey',
-
-  // styles we need to apply on draggables
-  ...draggableStyle
-})
-
-const getListStyle = () => ({
-  display: 'inline-flex',
-  padding: grid,
-  overflow: 'auto'
-})
+import { useNavigate } from '@reach/router'
 
 export default function SearchPage({
   location
@@ -52,99 +18,49 @@ export default function SearchPage({
 }): ReactElement {
   const { config } = useOcean()
   const parsed = queryString.parse(location.search)
-  const { text, owner, tags, page } = parsed
+  const { text, owner, tags, page, sort, price } = parsed
   const [queryResult, setQueryResult] = useState<QueryResult>()
-  const [loading, setLoading] = useState<boolean>()
-  const [priceType, setPriceType] = useState<string>('')
-  const [items, setItems] = useState(defaultSearchItems())
-
-  function onClick(i) {
-    setItems([
-      ...items.slice(0, i),
-      { ...items[i], direction: -items[i].direction },
-      ...items.slice(i + 1)
-    ])
-  }
-  const onDragEnd = (result) => {
-    // dropped outside the list
-    if (!result.destination) {
-      return
-    }
-
-    const i = reorder(items, result.source.index, result.destination.index)
-
-    setItems(i)
-  }
-
+  const [loading, setLoading] = useState<boolean>(true)
+  const [priceType, setPriceType] = useState<string>(price as string)
+  const [text2, setText] = useState<string>(text as string)
+  const [items, setItems] = useState<SortItem[]>(initItems(sort as string[]))
+  const navigate = useNavigate()
+  useEffect(() => {
+    navigate(
+      `/search?` + makeQueryString(text2, owner, tags, '1', priceType, items)
+    )
+  }, [text2, owner, tags, priceType, items]) // reset to first page if any other parameter changed
   useEffect(() => {
     if (!config?.metadataCacheUri) return
 
     async function initSearch() {
       setLoading(true)
+      navigate(
+        `/search?` + makeQueryString(text2, owner, tags, page, priceType, items)
+      )
       const queryResult = await getResults(
-        parsed,
-        config.metadataCacheUri,
-        priceType,
-        items
+        { ...parsed, sort: items, priceType, text: text2 },
+        config.metadataCacheUri
       )
       setQueryResult(queryResult)
       setLoading(false)
     }
     initSearch()
-  }, [text, owner, tags, page, config.metadataCacheUri, priceType, items])
+  }, [config.metadataCacheUri, text2, owner, tags, page, priceType, items])
 
   return (
     <section className={styles.grid}>
       <div className={styles.search}>
-        {(text || owner) && (
-          <SearchBar initialValue={(text || owner) as string} />
+        {(text2 || owner || true) && (
+          <SearchBar
+            initialValue={(text2 || owner) as string}
+            setText={setText}
+          />
         )}
-        Filtering:{' '}
-        <select
-          value={priceType}
-          onChange={(e) => setPriceType(e.target.value)}
-        >
-          <option value=""></option>
-          <option value="exchange">exchange</option>
-          <option value="pool">pool</option>
-        </select>
-        <DragDropContext onDragEnd={onDragEnd}>
-          <br />
-          Sorting:{' '}
-          <Droppable droppableId="droppable" direction="horizontal">
-            {(provided, snapshot) => (
-              <div
-                ref={provided.innerRef}
-                style={getListStyle()}
-                {...provided.droppableProps}
-              >
-                {items.map((item, index) => (
-                  <Draggable key={item.id} draggableId={item.id} index={index}>
-                    {(provided, snapshot) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        style={getItemStyle(
-                          snapshot.isDragging,
-                          provided.draggableProps.style
-                        )}
-                      >
-                        <div>
-                          {item.id}
-                          <button onClick={(e) => onClick(index)}>
-                            {item.direction === -1 ? '\u25bc' : '\u25b2'}
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
+        <div className={styles.row}>
+          <PriceFilter priceType={priceType} setPriceType={setPriceType} />
+          <Sort items={items} setItems={setItems} />
+        </div>
       </div>
 
       <div className={styles.results}>

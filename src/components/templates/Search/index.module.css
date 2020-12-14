@@ -2,6 +2,31 @@
   display: grid;
 }
 
+.row {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
+  margin-bottom: calc(var(--spacer) / 2);
+}
+@media (min-width: 930px) {
+  .row {
+    flex-direction: row;
+  }
+}
+
+.description {
+  background: var(--background-body);
+  margin-right: calc(var(--spacer) / 4);
+  white-space: nowrap;
+  font-size: var(--font-size-large);
+}
+.column {
+  display: flex;
+  align-items: center;
+  margin-top: calc(var(--spacer) / 2);
+}
+
 @media (min-width: 55rem) {
   .grid {
     grid-column-gap: calc(var(--spacer) * 3);

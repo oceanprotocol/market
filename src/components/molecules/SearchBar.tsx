@@ -9,12 +9,14 @@ export default function SearchBar({
   placeholder,
   initialValue,
   filters,
-  size
+  size,
+  setText = null
 }: {
   placeholder?: string
   initialValue?: string
   filters?: boolean
   size?: 'small' | 'large'
+  setText: React.Dispatch<React.SetStateAction<string>>
 }): ReactElement {
   const navigate = useNavigate()
   const [value, setValue] = useState(initialValue || '')
@@ -25,8 +27,12 @@ export default function SearchBar({
 
   function startSearch(e: FormEvent<HTMLButtonElement>) {
     e.preventDefault()
-    if (value === '') return
-    navigate(`/search?text=${value}`)
+    if (setText) {
+      setText(value)
+    } else {
+      if (value === '') return
+      navigate(`/search?text=${value}`)
+    }
   }
 
   return (

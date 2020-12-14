@@ -4,18 +4,37 @@ import {
 } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { MetadataCache, Logger } from '@oceanprotocol/lib'
 
-const SortTermOptions = {
+export const SortTermOptions = {
   Liquidity: 'liquidity',
   Price: 'price',
-  Created: 'created',
+  Published: 'published'
 } as const
-type SortTermOptions = typeof SortTermOptions[keyof typeof SortTermOptions]
-
-const SortValueOptions = {
+const SortTermElasticOptions = {
+  [SortTermOptions.Liquidity]: 'price.ocean',
+  [SortTermOptions.Price]: 'price.value',
+  [SortTermOptions.Published]: 'created'
+}
+export type SortTermOptions = typeof SortTermOptions[keyof typeof SortTermOptions]
+export const SortValueOptions = {
   Ascending: 'asc',
-  Descending: 'desc',
+  Descending: 'desc'
 } as const
-type SortValueOptions = typeof SortValueOptions[keyof typeof SortValueOptions]
+export type SortValueOptions = typeof SortValueOptions[keyof typeof SortValueOptions]
+export interface SortItem {
+  by: SortTermOptions
+  direction: SortValueOptions
+}
+
+const PriceTypeOptions = {
+  Fixed: 'fixed',
+  Dynamic: 'dynamic'
+}
+const PriceTypeElasticOptions = {
+  [PriceTypeOptions.Fixed]: 'exchange',
+  [PriceTypeOptions.Dynamic]: 'pool'
+}
+const convertPriceType = (priceType: string) =>
+  priceType ? PriceTypeElasticOptions[priceType] : null
 
 export function getSearchQuery(
   text?: string,
@@ -24,13 +43,21 @@ export function getSearchQuery(
   categories?: string,
   page?: string,
   offset?: string,
-  sort?: string,
-  sortOrder?: string,
+  sort?: SortItem[],
   priceType?: string
 ): SearchQuery {
-  
-  const sortTerm = ( sort == SortTermOptions.Liquidity ) ? "price.ocean" : (( sort == SortTermOptions.Price ) ? "price.value" : SortTermOptions.Created)
-  const sortValue = ( sortOrder == SortValueOptions.Ascending ) ? 1 : -1
+  const sortObj = sort
+    ? sort.reduce(
+        (acc, elem) => ({
+          ...acc,
+          [SortTermElasticOptions[elem.by]]:
+            elem.direction === SortValueOptions.Ascending ? 1 : -1
+        }),
+        {}
+      )
+    : {}
+
+  console.log('sortObj', sortObj)
 
   let searchTerm = owner
     ? `(publicKey.owner:${owner})`
@@ -40,10 +67,14 @@ export function getSearchQuery(
     : categories
     ? // eslint-disable-next-line no-useless-escape
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
-    : text || '';
+    : text || ''
 
-  searchTerm = priceType ? `${searchTerm} AND price.type:${priceType}` : searchTerm
-  
+  console.log('priceType', priceType)
+
+  searchTerm = priceType
+    ? `${searchTerm} AND price.type:${convertPriceType(priceType)}`
+    : searchTerm
+
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
@@ -56,20 +87,7 @@ export function getSearchQuery(
       // ...(tags && { tags: [tags] }),
       // ...(categories && { categories: [categories] })
     },
-    sort: {
-      [sortTerm] : sortValue
-      // "created" : - 1 by default, sort results by date created, newest first
-      // "price.value" : - 1 sort results by price, from highest to lowest (ddo.price.value)
-      // "price.ocean" : - 1 sort results by liquidity, from highest to lowest (ddo.price.ocean) 
-    }
-    // Andreea sort version
-    // sort: items
-    //   ? items.reduce((acc, e) => ({ ...acc, [e.id]: e.direction }), {})
-    //   : {
-    //       created: -1,
-    //       'price.ocean': -1,
-    //       'price.value': -1
-    //     }
+    sort: sortObj
 
     // Something in ocean.js is weird when using 'tags: [tag]'
     // which is the only way the query actually returns desired results.
@@ -90,13 +108,21 @@ export async function getResults(
     categories?: string
     page?: string
     offset?: string
-    sort?: string
-    sortOrder?: string
+    sort?: SortItem[]
     priceType?: string
   },
-  metadataCacheUri: string,
+  metadataCacheUri: string
 ): Promise<QueryResult> {
-  const { text, owner, tags, page, offset, categories, sort, sortOrder, priceType } = params
+  const {
+    text,
+    owner,
+    tags,
+    page,
+    offset,
+    categories,
+    sort,
+    priceType
+  } = params
   console.log('params', params)
   const metadataCache = new MetadataCache(metadataCacheUri, Logger)
   const searchQuery = getSearchQuery(
@@ -107,9 +133,37 @@ export async function getResults(
     page,
     offset,
     sort,
-    sortOrder,
     priceType
   )
   const queryResult = await metadataCache.queryMetadata(searchQuery)
   return queryResult
+}
+export const makeQueryString = (
+  text: string | string[],
+  owner: string | string[],
+  tags: string | string[],
+  page: string | string[],
+  priceType: string,
+  items: SortItem[]
+) => {
+  let ret = []
+  if (text) {
+    ret.push(`text=${text}`)
+  }
+  if (tags) {
+    ret.push(`tags=${tags}`)
+  }
+  if (owner) {
+    ret.push(`owner=${owner}`)
+  }
+  if (page) {
+    ret.push(`page=${page}`)
+  }
+  if (priceType) {
+    ret.push(`price=${priceType}`)
+  }
+  if (items) {
+    items.map((item: SortItem) => ret.push(`sort=${item.by}:${item.direction}`))
+  }
+  return ret.join('&')
 }
