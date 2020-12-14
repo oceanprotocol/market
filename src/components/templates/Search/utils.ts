@@ -7,13 +7,13 @@ import { MetadataCache, Logger } from '@oceanprotocol/lib'
 const SortTermOptions = {
   Liquidity: 'liquidity',
   Price: 'price',
-  Created: 'created',
+  Created: 'created'
 } as const
 type SortTermOptions = typeof SortTermOptions[keyof typeof SortTermOptions]
 
 const SortValueOptions = {
   Ascending: 'asc',
-  Descending: 'desc',
+  Descending: 'desc'
 } as const
 type SortValueOptions = typeof SortValueOptions[keyof typeof SortValueOptions]
 
@@ -29,8 +29,17 @@ export function getSearchQuery(
   priceType?: string
 ): SearchQuery {
   
-  const sortTerm = ( sort == SortTermOptions.Liquidity ) ? "price.ocean" : (( sort == SortTermOptions.Price ) ? "price.value" : SortTermOptions.Created)
-  const sortValue = ( sortOrder == SortValueOptions.Ascending ) ? 1 : -1
+  const sortTerm = 
+    sort === SortTermOptions.Liquidity
+    ? 'price.ocean'
+    : sort === SortTermOptions.Price
+    ? 'price.value'
+    : SortTermOptions.Created
+
+  const sortValue = 
+    sortOrder === SortValueOptions.Ascending 
+    ? 1 
+    : -1 
 
   let searchTerm = owner
     ? `(publicKey.owner:${owner})`
@@ -40,9 +49,11 @@ export function getSearchQuery(
     : categories
     ? // eslint-disable-next-line no-useless-escape
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
-    : text || '';
+    : text || ''
 
-  searchTerm = priceType ? `${searchTerm} AND price.type:${priceType}` : searchTerm
+  searchTerm = priceType 
+    ? `${searchTerm} AND price.type:${priceType}`
+    : searchTerm
   
   return {
     page: Number(page) || 1,
@@ -58,19 +69,7 @@ export function getSearchQuery(
     },
     sort: {
       [sortTerm] : sortValue
-      // "created" : - 1 by default, sort results by date created, newest first
-      // "price.value" : - 1 sort results by price, from highest to lowest (ddo.price.value)
-      // "price.ocean" : - 1 sort results by liquidity, from highest to lowest (ddo.price.ocean) 
     }
-    // Andreea sort version
-    // sort: items
-    //   ? items.reduce((acc, e) => ({ ...acc, [e.id]: e.direction }), {})
-    //   : {
-    //       created: -1,
-    //       'price.ocean': -1,
-    //       'price.value': -1
-    //     }
-
     // Something in ocean.js is weird when using 'tags: [tag]'
     // which is the only way the query actually returns desired results.
     // But it doesn't follow 'SearchQuery' interface so we have to assign
@@ -94,10 +93,19 @@ export async function getResults(
     sortOrder?: string
     priceType?: string
   },
-  metadataCacheUri: string,
+  metadataCacheUri: string
 ): Promise<QueryResult> {
-  const { text, owner, tags, page, offset, categories, sort, sortOrder, priceType } = params
-  console.log('params', params)
+  const { 
+    text, 
+    owner, 
+    tags, 
+    page, 
+    offset, 
+    categories, 
+    sort, 
+    sortOrder, 
+    priceType
+  } = params
   const metadataCache = new MetadataCache(metadataCacheUri, Logger)
   const searchQuery = getSearchQuery(
     text,
