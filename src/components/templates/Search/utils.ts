@@ -57,8 +57,6 @@ export function getSearchQuery(
       )
     : {}
 
-  console.log('sortObj', sortObj)
-
   let searchTerm = owner
     ? `(publicKey.owner:${owner})`
     : tags
@@ -68,8 +66,6 @@ export function getSearchQuery(
     ? // eslint-disable-next-line no-useless-escape
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
     : text || ''
-
-  console.log('priceType', priceType)
 
   searchTerm = priceType
     ? `${searchTerm} AND price.type:${convertPriceType(priceType)}`
@@ -94,7 +90,6 @@ export function getSearchQuery(
     // But it doesn't follow 'SearchQuery' interface so we have to assign
     // it here.
     // } as SearchQuery
-
     // And the next hack,
     // nativeSearch is not implmeneted on ocean.js typings
   } as any
@@ -123,7 +118,6 @@ export async function getResults(
     sort,
     priceType
   } = params
-  console.log('params', params)
   const metadataCache = new MetadataCache(metadataCacheUri, Logger)
   const searchQuery = getSearchQuery(
     text,
