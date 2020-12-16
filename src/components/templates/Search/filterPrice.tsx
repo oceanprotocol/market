@@ -17,13 +17,17 @@ export default ({
       { display: 'all', value: null },
       { display: 'fixed', value: 'fixed' },
       { display: 'dynamic', value: 'dynamic' }
-    ].map((e) => {
+    ].map((e, index) => {
       const filter = cx({
-        [styles.selected]: e.value == priceType,
+        [styles.selected]: e.value === priceType,
         [styles.filter]: true
       })
       return (
-        <div className={filter} onClick={() => setPriceType(e.value)}>
+        <div
+          key={index}
+          className={filter}
+          onClick={() => setPriceType(e.value)}
+        >
           {e.display}
         </div>
       )

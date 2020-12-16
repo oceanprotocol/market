@@ -16,7 +16,7 @@ export default function SearchBar({
   initialValue?: string
   filters?: boolean
   size?: 'small' | 'large'
-  setText: React.Dispatch<React.SetStateAction<string>>
+  setText?: React.Dispatch<React.SetStateAction<string>>
 }): ReactElement {
   const navigate = useNavigate()
   const [value, setValue] = useState(initialValue || '')

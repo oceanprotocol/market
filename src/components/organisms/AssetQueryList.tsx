@@ -65,14 +65,15 @@ const AssetQueryList: React.FC<AssetQueryListProps> = ({
         Little hack cause the pagination navigation only works 
         on the search page right now.
       */}
-      {(location.pathname === '/search/' || location.pathname === '/search') && queryResult && (
-        <Pagination
-          totalPages={queryResult.totalPages}
-          currentPage={queryResult.page}
-          hrefBuilder={hrefBuilder}
-          onPageChange={onPageChange}
-        />
-      )}
+      {(location.pathname === '/search/' || location.pathname === '/search') &&
+        queryResult && (
+          <Pagination
+            totalPages={queryResult.totalPages}
+            currentPage={queryResult.page}
+            hrefBuilder={hrefBuilder}
+            onPageChange={onPageChange}
+          />
+        )}
     </>
   )
 }

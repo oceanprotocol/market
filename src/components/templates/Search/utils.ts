@@ -140,7 +140,7 @@ export const makeQueryString = (
   priceType: string,
   items: SortItem[]
 ) => {
-  let ret = []
+  const ret = []
   if (text) {
     ret.push(`text=${text}`)
   }

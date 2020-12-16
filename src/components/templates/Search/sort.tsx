@@ -120,19 +120,19 @@ export default ({
                           className={styles.draggable}
                         >
                           <div className={styles.wheels}>
-                            {[1, 2].map(() => (
-                              <div className={styles.pair}>
-                                {[1, 2].map(() => (
-                                  <div className={wheel}></div>
+                            {[1, 2].map((value, index) => (
+                              <div key={index} className={styles.pair}>
+                                {[1, 2].map((value, index) => (
+                                  <div key={index} className={wheel} />
                                 ))}
                               </div>
                             ))}
                           </div>
-                          <div className={bufferBefore}></div>
+                          <div className={bufferBefore} />
                           <div className={sortItem}>
                             <div className={styles.windows}>
-                              {[1, 2, 3, 4].map(() => (
-                                <div className={styles.window}></div>
+                              {[1, 2, 3, 4].map((value, index) => (
+                                <div key={index} className={styles.window} />
                               ))}
                             </div>
                             <div className={styles.payload}>
@@ -153,7 +153,7 @@ export default ({
                               </Tooltip>
                             </div>
                           </div>
-                          <div className={bufferAfter}></div>
+                          <div className={bufferAfter} />
                         </div>
                       )
                     }}
