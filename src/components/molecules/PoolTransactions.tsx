@@ -9,29 +9,23 @@ import styles from './PoolTransactions.module.css'
 import { useUserPreferences } from '../../providers/UserPreferences'
 import { Ocean } from '@oceanprotocol/lib'
 import { formatPrice } from '../atoms/Price/PriceUnit'
-import { gql } from '@apollo/client'
+import { gql, useQuery } from '@apollo/client'
+import { TransactionHistory } from '../../@types/apollo/TransactionHistory'
 
 const txHistoryQuery = gql`
-  query Pool($id: ID!, $user: String!) {
-    pool(id: $id) {
-      transactions(orderBy: timestamp, where: { userAddressStr: $user }) {
-        tx
-        timestamp
-        spotPrice
-        event
-        sharesTransferAmount
-        tokens {
-          type
-          value
-          tokenAddress
-          poolToken {
-            tokenId {
-              symbol
-              name
-            }
-            tokenAddress
-          }
-        }
+  query TransactionHistory($user: String, $pool: String) {
+    poolTransactions(
+      orderBy: timestamp
+      where: { userAddress: $user, poolAddress: $pool }
+      first: 1000
+    ) {
+      tx
+      event
+      timestamp
+      tokens {
+        value
+        type
+        tokenAddress
       }
     }
   }
@@ -143,8 +137,20 @@ export default function PoolTransactions({
   minimal?: boolean
 }): ReactElement {
   const { ocean, accountId } = useOcean()
-  const [logs, setLogs] = useState<PoolTransaction[]>()
+  const [logs, setLogs] = useState<[]>()
   const [isLoading, setIsLoading] = useState(false)
+
+  const { data, loading } = useQuery<TransactionHistory>(txHistoryQuery, {
+    variables: {
+      user: accountId.toLowerCase(),
+      pool: poolAddress.toLowerCase()
+    },
+    pollInterval: 20000
+  })
+
+  useEffect(() => {
+    console.log(data.poolTransactions)
+  }, [data, loading])
 
   useEffect(() => {
     async function getLogs() {
