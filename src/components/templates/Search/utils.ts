@@ -15,6 +15,16 @@ const SortTermElasticOptions = {
   [SortTermOptions.Price]: 'price.value',
   [SortTermOptions.Published]: 'created'
 }
+export type SortTermOptions = typeof SortTermOptions[keyof typeof SortTermOptions]
+export const SortValueOptions = {
+  Ascending: 'asc',
+  Descending: 'desc'
+} as const
+export type SortValueOptions = typeof SortValueOptions[keyof typeof SortValueOptions]
+export interface SortItem {
+  by: SortTermOptions
+  direction: SortValueOptions
+}
 function getSortObj(sort: SortItem[]) {
   return sort
     ? sort.reduce(
@@ -26,16 +36,6 @@ function getSortObj(sort: SortItem[]) {
         {}
       )
     : { created: -1 }
-}
-export type SortTermOptions = typeof SortTermOptions[keyof typeof SortTermOptions]
-export const SortValueOptions = {
-  Ascending: 'asc',
-  Descending: 'desc'
-} as const
-export type SortValueOptions = typeof SortValueOptions[keyof typeof SortValueOptions]
-export interface SortItem {
-  by: SortTermOptions
-  direction: SortValueOptions
 }
 
 interface SearchParams {
@@ -60,21 +60,31 @@ const PriceTypeElasticOptions = {
 const convertPriceType = (priceType: string) =>
   priceType ? PriceTypeElasticOptions[priceType] : null
 
+const getOwnerTerm = (owner: string) =>
+  owner ? `(publicKey.owner:${owner})` : null
+const getTagsTerm = (tags: string) =>
+  tags
+    ? // eslint-disable-next-line no-useless-escape
+      `(service.attributes.additionalInformation.tags:\"${tags}\")`
+    : null
+const getCategoriesTerm = (categories: string) =>
+  categories
+    ? // eslint-disable-next-line no-useless-escape
+      `(service.attributes.additionalInformation.categories:\"${categories}\")`
+    : null
+const getTextTerm = (text: string) => text || ''
 function getSearchTerm(
   owner: string,
   tags: string,
   categories: string,
   text: string
 ) {
-  return owner
-    ? `(publicKey.owner:${owner})`
-    : tags
-    ? // eslint-disable-next-line no-useless-escape
-      `(service.attributes.additionalInformation.tags:\"${tags}\")`
-    : categories
-    ? // eslint-disable-next-line no-useless-escape
-      `(service.attributes.additionalInformation.categories:\"${categories}\")`
-    : text || ''
+  return (
+    getOwnerTerm(owner) ||
+    getTagsTerm(tags) ||
+    getCategoriesTerm(categories) ||
+    getTextTerm(text)
+  )
 }
 
 function applyFilterOnSearchQuery(searchField: string, priceFilter: string) {
@@ -86,7 +96,7 @@ function applyFilterOnSearchQuery(searchField: string, priceFilter: string) {
   return searchQuerry
 }
 
-export function getSearchQuery(params: SearchParams): SearchQuery {
+function getSearchQuery(params: SearchParams): SearchQuery {
   const {
     text,
     owner,
@@ -98,8 +108,6 @@ export function getSearchQuery(params: SearchParams): SearchQuery {
     priceType
   } = params
   const sortObj = getSortObj(sort)
-
-
   let searchTerm = getSearchTerm(owner, tags, categories, text)
   searchTerm = applyFilterOnSearchQuery(searchTerm, priceType)
 
@@ -116,7 +124,6 @@ export function getSearchQuery(params: SearchParams): SearchQuery {
       // ...(categories && { categories: [categories] })
     },
     sort: sortObj
-
     // Something in ocean.js is weird when using 'tags: [tag]'
     // which is the only way the query actually returns desired results.
     // But it doesn't follow 'SearchQuery' interface so we have to assign
@@ -131,27 +138,8 @@ export async function getResults(
   params: SearchParams,
   metadataCacheUri: string
 ): Promise<QueryResult> {
-  const {
-    text,
-    owner,
-    tags,
-    page,
-    offset,
-    categories,
-    sort,
-    priceType
-  } = params
   const metadataCache = new MetadataCache(metadataCacheUri, Logger)
-  const searchQuery = getSearchQuery({
-    text,
-    owner,
-    tags,
-    categories,
-    page,
-    offset,
-    sort,
-    priceType
-  })
+  const searchQuery = getSearchQuery(params)
   const queryResult = await metadataCache.queryMetadata(searchQuery)
   return queryResult
 }
