@@ -77,6 +77,15 @@ function getSearchTerm(
     : text || ''
 }
 
+function applyFilterOnSearchQuery(searchField: string, priceFilter: string) {
+  const searchQuerry = priceFilter
+    ? searchField === ''
+      ? `price.type:${convertPriceType(priceFilter)}`
+      : `${searchField} AND price.type:${convertPriceType(priceFilter)}`
+    : searchField
+  return searchQuerry
+}
+
 export function getSearchQuery(params: SearchParams): SearchQuery {
   const {
     text,
@@ -90,10 +99,9 @@ export function getSearchQuery(params: SearchParams): SearchQuery {
   } = params
   const sortObj = getSortObj(sort)
 
+
   let searchTerm = getSearchTerm(owner, tags, categories, text)
-  searchTerm = priceType
-    ? `${searchTerm} AND price.type:${convertPriceType(priceType)}`
-    : searchTerm
+  searchTerm = applyFilterOnSearchQuery(searchTerm, priceType)
 
   return {
     page: Number(page) || 1,
