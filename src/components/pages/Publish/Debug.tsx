@@ -1,16 +1,8 @@
 import React, { ReactElement } from 'react'
 import { MetadataPublishForm } from '../../../@types/MetaData'
+import DebugOutput from '../../atoms/DebugOutput'
 import styles from './index.module.css'
-import { transformPublishFormToMetadata } from './utils'
-
-const Output = ({ title, output }: { title: string; output: any }) => (
-  <div>
-    <h5>{title}</h5>
-    <pre>
-      <code>{JSON.stringify(output, null, 2)}</code>
-    </pre>
-  </div>
-)
+import { transformPublishFormToMetadata } from '../../../utils/metadata'
 
 export default function Debug({
   values
@@ -38,8 +30,8 @@ export default function Debug({
 
   return (
     <div className={styles.grid}>
-      <Output title="Collected Form Values" output={values} />
-      <Output title="Transformed DDO Values" output={ddo} />
+      <DebugOutput title="Collected Form Values" output={values} />
+      <DebugOutput title="Transformed DDO Values" output={ddo} />
     </div>
   )
 }

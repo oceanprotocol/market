@@ -1,0 +1,10 @@
+.grid {
+  composes: grid from '../../AssetContent/index.module.css';
+  margin-top: var(--spacer);
+}
+
+.description {
+  font-size: var(--font-size-large);
+  margin-top: -1.5rem;
+  max-width: 50rem;
+}

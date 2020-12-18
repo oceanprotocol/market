@@ -1,10 +1,11 @@
-import React, { ReactElement, useEffect, FormEvent } from 'react'
+import React, { ReactElement, useEffect, FormEvent, ChangeEvent } from 'react'
 import styles from './FormPublish.module.css'
 import { useOcean } from '@oceanprotocol/react'
-import { useFormikContext, Field, Form } from 'formik'
+import { useFormikContext, Field, Form, FormikContextType } from 'formik'
 import Input from '../../atoms/Input'
 import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
+import { MetadataPublishForm } from '../../../@types/MetaData'
 
 export default function FormPublish({
   content
@@ -19,8 +20,10 @@ export default function FormPublish({
     setErrors,
     setTouched,
     resetForm,
-    initialValues
-  } = useFormikContext()
+    initialValues,
+    validateField,
+    setFieldValue
+  }: FormikContextType<MetadataPublishForm> = useFormikContext()
 
   // reset form validation on every mount
   useEffect(() => {
@@ -29,6 +32,16 @@ export default function FormPublish({
 
     // setSubmitting(false)
   }, [setErrors, setTouched])
+
+  // Manually handle change events instead of using `handleChange` from Formik.
+  // Workaround for default `validateOnChange` not kicking in
+  function handleFieldChange(
+    e: ChangeEvent<HTMLInputElement>,
+    field: FormFieldProps
+  ) {
+    validateField(field.name)
+    setFieldValue(field.name, e.target.value)
+  }
 
   const resetFormAndClearStorage = (e: FormEvent<Element>) => {
     e.preventDefault()
@@ -43,7 +56,14 @@ export default function FormPublish({
       onChange={() => status === 'empty' && setStatus(null)}
     >
       {content.data.map((field: FormFieldProps) => (
-        <Field key={field.name} {...field} component={Input} />
+        <Field
+          key={field.name}
+          {...field}
+          component={Input}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            handleFieldChange(e, field)
+          }
+        />
       ))}
 
       <footer className={styles.actions}>

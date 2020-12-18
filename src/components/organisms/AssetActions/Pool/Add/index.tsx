@@ -12,6 +12,7 @@ import Alert from '../../../../atoms/Alert'
 import TokenBalance from '../../../../../@types/TokenBalance'
 import { useUserPreferences } from '../../../../../providers/UserPreferences'
 import Output from './Output'
+import DebugOutput from '../../../../atoms/DebugOutput'
 
 const contentQuery = graphql`
   query PoolAddQuery {
@@ -75,7 +76,7 @@ export default function Add({
 
   // Live validation rules
   // https://github.com/jquense/yup#number
-  const validationSchema = Yup.object().shape<FormAddLiquidity>({
+  const validationSchema: Yup.SchemaOf<FormAddLiquidity> = Yup.object().shape({
     amount: Yup.number()
       .min(0.00001, (param) => `Must be more or equal to ${param.min}`)
       .max(
@@ -201,11 +202,7 @@ export default function Add({
               action={submitForm}
               txId={txId}
             />
-            {debug && (
-              <pre>
-                <code>{JSON.stringify(values, null, 2)}</code>
-              </pre>
-            )}
+            {debug && <DebugOutput title="Collected values" output={values} />}
           </>
         )}
       </Formik>

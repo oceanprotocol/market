@@ -1,0 +1,13 @@
+.meta {
+  margin-bottom: calc(var(--spacer) / 1.5);
+  color: var(--color-secondary);
+}
+
+.meta p {
+  margin-bottom: 0;
+}
+
+.date {
+  font-size: var(--font-size-mini);
+  margin-top: calc(var(--spacer) / 2);
+}

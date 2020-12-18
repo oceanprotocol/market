@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from '@testing-library/react'
-import { transformPublishFormToMetadata } from '../../../src/components/pages/Publish/utils'
+import { transformPublishFormToMetadata } from '../../../src/utils/metadata'
 import {
   MetadataMarket,
   MetadataPublishForm
