@@ -19,7 +19,7 @@
     "storybook:build": "build-storybook -c .storybook -o public/storybook",
     "write:repoMetadata": "node ./scripts/write-repo-metadata > repo-metadata.json",
     "deploy": "./scripts/deploy.sh",
-    "apollo:codegen": "mkdir -p src/@types/apollo/ && apollo client:codegen --target typescript --tsFileExtension='d.ts' --outputFlat './src/@types/apollo/'"
+    "apollo:codegen": "mkdir -p src/@types/apollo/ && apollo client:codegen --target typescript --tsFileExtension='d.ts' --outputFlat './src/@types/apollo/' && find ./src/@types/apollo -type f -exec sed -i -r 's/_([a-z])/\\U\\1/gi' {} \\;"
   },
   "dependencies": {
     "@apollo/client": "^3.3.2",

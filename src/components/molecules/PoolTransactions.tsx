@@ -10,18 +10,25 @@ import { useUserPreferences } from '../../providers/UserPreferences'
 import { Ocean } from '@oceanprotocol/lib'
 import { formatPrice } from '../atoms/Price/PriceUnit'
 import { gql, useQuery } from '@apollo/client'
-import { TransactionHistory } from '../../@types/apollo/TransactionHistory'
+import {
+  TransactionHistory,
+  TransactionHistoryPoolTransactions
+} from '../../@types/apollo/TransactionHistory'
 
 const txHistoryQuery = gql`
   query TransactionHistory($user: String, $pool: String) {
     poolTransactions(
       orderBy: timestamp
+      orderDirection: desc
       where: { userAddress: $user, poolAddress: $pool }
       first: 1000
     ) {
       tx
       event
       timestamp
+      poolAddress {
+        datatokenAddress
+      }
       tokens {
         value
         type
@@ -46,35 +53,30 @@ async function getSymbol(
 
 async function getTitle(
   ocean: Ocean,
-  row: PoolTransaction,
+  row: TransactionHistoryPoolTransactions,
   locale: string,
   oceanTokenAddress: string
 ) {
-  const addRemoveSymbol = await getSymbol(
-    ocean,
-    row.tokenIn || row.tokenOut,
-    oceanTokenAddress
-  )
-
+  // const addRemoveSymbol = await getSymbol(
+  //   ocean,
+  //   row.tokenIn || row.tokenOut,
+  //   oceanTokenAddress
+  // )
+  const addRemoveSymbol = 'place'
   const title =
-    row.type === 'join'
-      ? `Add ${formatPrice(row.tokenAmountIn, locale)} ${addRemoveSymbol}`
-      : row.type === 'exit'
-      ? `Remove ${formatPrice(row.tokenAmountOut, locale)} ${addRemoveSymbol}`
-      : `Swap ${formatPrice(row.tokenAmountIn, locale)} ${await getSymbol(
-          ocean,
-          row.tokenIn,
-          oceanTokenAddress
-        )} for ${formatPrice(row.tokenAmountOut, locale)} ${await getSymbol(
-          ocean,
-          row.tokenOut,
-          oceanTokenAddress
-        )}`
+    row.event === 'join'
+      ? `Add ${formatPrice('0', locale)} ${addRemoveSymbol}`
+      : row.event === 'exit'
+      ? `Remove ${formatPrice('0', locale)} ${addRemoveSymbol}`
+      : `Swap ${formatPrice('0', locale)} ${'place'} for ${formatPrice(
+          '0',
+          locale
+        )} ${'place'}`
 
   return title
 }
 
-function Title({ row }: { row: PoolTransaction }) {
+function Title({ row }: { row: TransactionHistoryPoolTransactions }) {
   const { ocean, networkId, config } = useOcean()
   const [title, setTitle] = useState<string>()
   const { locale } = useUserPreferences()
@@ -90,7 +92,7 @@ function Title({ row }: { row: PoolTransaction }) {
   }, [ocean, row, locale, config?.oceanTokenAddress])
 
   return title ? (
-    <EtherscanLink networkId={networkId} path={`/tx/${row.transactionHash}`}>
+    <EtherscanLink networkId={networkId} path={`/tx/${row.tx}`}>
       {title}
     </EtherscanLink>
   ) : null
@@ -100,21 +102,21 @@ function getColumns(minimal?: boolean) {
   return [
     {
       name: 'Title',
-      selector: function getTitleRow(row: PoolTransaction) {
+      selector: function getTitleRow(row: TransactionHistoryPoolTransactions) {
         return <Title row={row} />
       }
     },
     {
       name: 'Data Set',
-      selector: function getAssetRow(row: PoolTransaction) {
-        const did = row.dtAddress.replace('0x', 'did:op:')
+      selector: function getAssetRow(row: TransactionHistoryPoolTransactions) {
+        const did = row.poolAddress.datatokenAddress.replace('0x', 'did:op:')
         return <AssetTitle did={did} />
       },
       omit: minimal
     },
     {
       name: 'Time',
-      selector: function getTimeRow(row: PoolTransaction) {
+      selector: function getTimeRow(row: TransactionHistoryPoolTransactions) {
         return (
           <Time
             className={styles.time}
@@ -137,7 +139,7 @@ export default function PoolTransactions({
   minimal?: boolean
 }): ReactElement {
   const { ocean, accountId } = useOcean()
-  const [logs, setLogs] = useState<[]>()
+  const [logs, setLogs] = useState<TransactionHistoryPoolTransactions[]>()
   const [isLoading, setIsLoading] = useState(false)
 
   const { data, loading } = useQuery<TransactionHistory>(txHistoryQuery, {
@@ -149,7 +151,9 @@ export default function PoolTransactions({
   })
 
   useEffect(() => {
+    if (!data) return
     console.log(data.poolTransactions)
+    setLogs(data.poolTransactions)
   }, [data, loading])
 
   useEffect(() => {
@@ -166,7 +170,7 @@ export default function PoolTransactions({
         if (a.timestamp < b.timestamp) return 1
         return 0
       })
-      setLogs(logsSorted)
+      // setLogs(logsSorted)
       setIsLoading(false)
     }
     getLogs()
@@ -176,7 +180,7 @@ export default function PoolTransactions({
     <Table
       columns={getColumns(minimal)}
       data={logs}
-      isLoading={isLoading}
+      isLoading={loading}
       noTableHead={minimal}
       dense={minimal}
       pagination={minimal ? logs?.length >= 4 : logs?.length >= 9}

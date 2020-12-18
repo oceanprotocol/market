@@ -68,7 +68,7 @@ function AssetProvider({
       ddo.price.pools[0]
     )
     setPrice(newPrice)
-    Logger.log(`Refreshed asset price: ${newPrice?.value}`)
+    Logger.log(`Refreshed asset price: ${newPrice?.value}`, newPrice)
   }, [ocean, config, ddo, networkId, status])
 
   const fetchDdo = async (token?: CancelToken) => {
