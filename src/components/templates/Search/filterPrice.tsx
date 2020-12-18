@@ -14,12 +14,12 @@ export default ({
   <div className={generalStyles.column}>
     <div className={generalStyles.description}>Filter by price: </div>
     {[
-      { display: 'all', value: null },
+      { display: 'all', value: undefined },
       { display: 'fixed', value: 'fixed' },
       { display: 'dynamic', value: 'dynamic' }
     ].map((e, index) => {
       const filter = cx({
-        [styles.selected]: e.value == priceType,
+        [styles.selected]: e.value === priceType,
         [styles.filter]: true
       })
       return (
