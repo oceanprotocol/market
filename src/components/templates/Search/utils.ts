@@ -3,6 +3,7 @@ import {
   QueryResult
 } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { MetadataCache, Logger } from '@oceanprotocol/lib'
+import { add } from 'date-fns'
 
 export const SortTermOptions = {
   Liquidity: 'liquidity',
@@ -14,6 +15,18 @@ const SortTermElasticOptions = {
   [SortTermOptions.Price]: 'price.value',
   [SortTermOptions.Published]: 'created'
 }
+function getSortObj(sort: SortItem[]) {
+  return sort
+    ? sort.reduce(
+        (acc, elem) => ({
+          ...acc,
+          [SortTermElasticOptions[elem.by]]:
+            elem.direction === SortValueOptions.Ascending ? 1 : -1
+        }),
+        {}
+      )
+    : { created: -1 }
+}
 export type SortTermOptions = typeof SortTermOptions[keyof typeof SortTermOptions]
 export const SortValueOptions = {
   Ascending: 'asc',
@@ -23,6 +36,17 @@ export type SortValueOptions = typeof SortValueOptions[keyof typeof SortValueOpt
 export interface SortItem {
   by: SortTermOptions
   direction: SortValueOptions
+}
+
+interface SearchParams {
+  text?: string
+  owner?: string
+  tags?: string
+  categories?: string
+  page?: string
+  offset?: string
+  sort?: SortItem[]
+  priceType?: string
 }
 
 const PriceTypeOptions = {
@@ -36,16 +60,24 @@ const PriceTypeElasticOptions = {
 const convertPriceType = (priceType: string) =>
   priceType ? PriceTypeElasticOptions[priceType] : null
 
-export function getSearchQuery(params: {
-  text?: string
-  owner?: string
-  tags?: string
-  categories?: string
-  page?: string
-  offset?: string
-  sort?: SortItem[]
-  priceType?: string
-}): SearchQuery {
+function getSearchTerm(
+  owner: string,
+  tags: string,
+  categories: string,
+  text: string
+) {
+  return owner
+    ? `(publicKey.owner:${owner})`
+    : tags
+    ? // eslint-disable-next-line no-useless-escape
+      `(service.attributes.additionalInformation.tags:\"${tags}\")`
+    : categories
+    ? // eslint-disable-next-line no-useless-escape
+      `(service.attributes.additionalInformation.categories:\"${categories}\")`
+    : text || ''
+}
+
+export function getSearchQuery(params: SearchParams): SearchQuery {
   const {
     text,
     owner,
@@ -56,27 +88,9 @@ export function getSearchQuery(params: {
     sort,
     priceType
   } = params
-  const sortObj = sort
-    ? sort.reduce(
-        (acc, elem) => ({
-          ...acc,
-          [SortTermElasticOptions[elem.by]]:
-            elem.direction === SortValueOptions.Ascending ? 1 : -1
-        }),
-        {}
-      )
-    : {}
+  const sortObj = getSortObj(sort)
 
-  let searchTerm = owner
-    ? `(publicKey.owner:${owner})`
-    : tags
-    ? // eslint-disable-next-line no-useless-escape
-      `(service.attributes.additionalInformation.tags:\"${tags}\")`
-    : categories
-    ? // eslint-disable-next-line no-useless-escape
-      `(service.attributes.additionalInformation.categories:\"${categories}\")`
-    : text || ''
-
+  let searchTerm = getSearchTerm(owner, tags, categories, text)
   searchTerm = priceType
     ? `${searchTerm} AND price.type:${convertPriceType(priceType)}`
     : searchTerm
@@ -106,16 +120,7 @@ export function getSearchQuery(params: {
 }
 
 export async function getResults(
-  params: {
-    text?: string
-    owner?: string
-    tags?: string
-    categories?: string
-    page?: string
-    offset?: string
-    sort?: SortItem[]
-    priceType?: string
-  },
+  params: SearchParams,
   metadataCacheUri: string
 ): Promise<QueryResult> {
   const {
@@ -142,6 +147,11 @@ export async function getResults(
   const queryResult = await metadataCache.queryMetadata(searchQuery)
   return queryResult
 }
+function addParam(name: string, value: any, ret: string[]) {
+  if (value) {
+    ret.push(`${name}=${value}`)
+  }
+}
 export const makeQueryString = (params: {
   text: string | string[]
   owner: string | string[]
@@ -151,22 +161,12 @@ export const makeQueryString = (params: {
   items: SortItem[]
 }) => {
   const { text, owner, tags, page, priceType, items } = params
-  const ret = []
-  if (text) {
-    ret.push(`text=${text}`)
-  }
-  if (tags) {
-    ret.push(`tags=${tags}`)
-  }
-  if (owner) {
-    ret.push(`owner=${owner}`)
-  }
-  if (page) {
-    ret.push(`page=${page}`)
-  }
-  if (priceType) {
-    ret.push(`price=${priceType}`)
-  }
+  const ret: string[] = []
+  addParam('text', text, ret)
+  addParam('tags', tags, ret)
+  addParam('owner', owner, ret)
+  addParam('page', page, ret)
+  addParam('price', priceType, ret)
   if (items) {
     items.map((item: SortItem) => ret.push(`sort=${item.by}:${item.direction}`))
   }
