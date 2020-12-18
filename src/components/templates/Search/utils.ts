@@ -86,6 +86,8 @@ function getSearchTerm(
     getTextTerm(text)
   )
 }
+const getPriceTypeTerm = (priceType: string) =>
+  priceType ? ` AND price.type:${convertPriceType(priceType)}` : ''
 
 function getSearchQuery(params: SearchParams): SearchQuery {
   const {
@@ -99,10 +101,9 @@ function getSearchQuery(params: SearchParams): SearchQuery {
     priceType
   } = params
   const sortObj = getSortObj(sort)
-  let searchTerm = getSearchTerm(owner, tags, categories, text)
-  searchTerm = priceType
-    ? `${searchTerm} AND price.type:${convertPriceType(priceType)}`
-    : searchTerm
+  const searchTerm =
+    getSearchTerm(owner, tags, categories, text) + getPriceTypeTerm(priceType)
+
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
