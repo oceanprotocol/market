@@ -36,16 +36,26 @@ const PriceTypeElasticOptions = {
 const convertPriceType = (priceType: string) =>
   priceType ? PriceTypeElasticOptions[priceType] : null
 
-export function getSearchQuery(
-  text?: string,
-  owner?: string,
-  tags?: string,
-  categories?: string,
-  page?: string,
-  offset?: string,
-  sort?: SortItem[],
+export function getSearchQuery(params: {
+  text?: string
+  owner?: string
+  tags?: string
+  categories?: string
+  page?: string
+  offset?: string
+  sort?: SortItem[]
   priceType?: string
-): SearchQuery {
+}): SearchQuery {
+  const {
+    text,
+    owner,
+    tags,
+    categories,
+    page,
+    offset,
+    sort,
+    priceType
+  } = params
   const sortObj = sort
     ? sort.reduce(
         (acc, elem) => ({
@@ -119,7 +129,7 @@ export async function getResults(
     priceType
   } = params
   const metadataCache = new MetadataCache(metadataCacheUri, Logger)
-  const searchQuery = getSearchQuery(
+  const searchQuery = getSearchQuery({
     text,
     owner,
     tags,
@@ -128,18 +138,19 @@ export async function getResults(
     offset,
     sort,
     priceType
-  )
+  })
   const queryResult = await metadataCache.queryMetadata(searchQuery)
   return queryResult
 }
-export const makeQueryString = (
-  text: string | string[],
-  owner: string | string[],
-  tags: string | string[],
-  page: string | string[],
-  priceType: string,
+export const makeQueryString = (params: {
+  text: string | string[]
+  owner: string | string[]
+  tags: string | string[]
+  page: string | string[]
+  priceType: string
   items: SortItem[]
-) => {
+}) => {
+  const { text, owner, tags, page, priceType, items } = params
   const ret = []
   if (text) {
     ret.push(`text=${text}`)

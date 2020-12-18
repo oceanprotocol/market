@@ -6,8 +6,8 @@ import Input from '../atoms/Input'
 import InputGroup from '../atoms/Input/InputGroup'
 
 export default function SearchBar({
-  placeholder,
-  initialValue,
+  placeholder = 'What are you looking for?',
+  initialValue = '',
   filters,
   size,
   setText = null
@@ -19,7 +19,7 @@ export default function SearchBar({
   setText?: React.Dispatch<React.SetStateAction<string>>
 }): ReactElement {
   const navigate = useNavigate()
-  const [value, setValue] = useState(initialValue || '')
+  const [value, setValue] = useState(initialValue)
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     setValue(e.target.value)
@@ -29,10 +29,10 @@ export default function SearchBar({
     e.preventDefault()
     if (setText) {
       setText(value)
-    } else {
-      if (value === '') return
-      navigate(`/search?text=${value}`)
+      return
     }
+    if (value === '') return
+    navigate(`/search?text=${value}`)
   }
 
   return (
@@ -41,7 +41,7 @@ export default function SearchBar({
         <Input
           type="search"
           name="search"
-          placeholder={placeholder || 'What are you looking for?'}
+          placeholder={placeholder}
           value={value}
           onChange={handleChange}
           required

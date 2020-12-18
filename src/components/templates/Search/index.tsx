@@ -23,30 +23,52 @@ export default function SearchPage({
   const [loading, setLoading] = useState<boolean>(true)
   const [priceType, setPriceType] = useState<string>(price as string)
   const [text2, setText] = useState<string>(text as string)
+  const [page2, setPage] = useState<string>(page as string)
+
   const [items, setItems] = useState<SortItem[]>(initItems(sort as string[]))
   const navigate = useNavigate()
   useEffect(() => {
-    navigate(
-      `/search?` + makeQueryString(text2, owner, tags, '1', priceType, items)
-    )
-  }, [text2, owner, tags, priceType, items]) // reset to first page if any other parameter changed
+    setPage('1')
+  }, [text, text2, owner, tags, priceType, items]) // reset to first page if any other parameter changed
+  useEffect(() => {
+    setPage(page as string)
+  }, [page])
   useEffect(() => {
     if (!config?.metadataCacheUri) return
 
     async function initSearch() {
       setLoading(true)
-      navigate(
-        `/search?` + makeQueryString(text2, owner, tags, page, priceType, items)
+      await navigate(
+        `/search?` +
+          makeQueryString({
+            text: text2,
+            owner,
+            tags,
+            page: page2,
+            priceType,
+            items
+          })
       )
       const queryResult = await getResults(
-        { ...parsed, sort: items, priceType, text: text2 },
+        { ...parsed, sort: items, priceType, text: text2, page: page2 },
         config.metadataCacheUri
       )
       setQueryResult(queryResult)
+      console.log(queryResult)
       setLoading(false)
     }
     initSearch()
-  }, [config.metadataCacheUri, text2, owner, tags, page, priceType, items])
+  }, [
+    config.metadataCacheUri,
+    text,
+    text2,
+    owner,
+    tags,
+    page,
+    page2,
+    priceType,
+    items
+  ])
 
   return (
     <section className={styles.grid}>

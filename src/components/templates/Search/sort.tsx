@@ -28,7 +28,6 @@ const defaultSearchItems = () =>
     by: e,
     direction: SortValueOptions.Descending
   }))
-
 export const initItems = (sort: string[]) =>
   sort
     ? (sort as string[]).map((e) => {

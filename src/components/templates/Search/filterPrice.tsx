@@ -19,7 +19,7 @@ export default ({
       { display: 'dynamic', value: 'dynamic' }
     ].map((e, index) => {
       const filter = cx({
-        [styles.selected]: e.value === priceType,
+        [styles.selected]: e.value == priceType,
         [styles.filter]: true
       })
       return (
