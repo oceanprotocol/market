@@ -61,3 +61,8 @@
 .symbol {
   display: block;
 }
+
+.date {
+  font-size: var(--font-size-mini);
+  margin-top: calc(var(--spacer) / 2);
+}
