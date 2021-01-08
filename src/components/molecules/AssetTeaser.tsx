@@ -46,13 +46,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
         </div>
 
         <p className={styles.date}>
-          <Time date={ddo?.created} relative />
-          {ddo?.created !== ddo?.updated && (
-            <>
-              {' — '}
-              updated <Time date={ddo?.updated} relative />
-            </>
-          )}
+          <Time date={ddo?.created}/>
         </p>
 
         <footer className={styles.foot}>
