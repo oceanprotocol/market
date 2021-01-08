@@ -68,13 +68,6 @@ export default function MarketStats(): ReactElement {
         className={styles.total}
         conversion
       />{' '}
-      and{' '}
-      <PriceUnit
-        price={`${stats?.datatoken}`}
-        symbol="datatokens"
-        small
-        className={styles.total}
-      />{' '}
       in <strong>{stats?.datasets.pools}</strong> data set pools.
       <br />
       <strong>{stats?.datasets.none}</strong> data sets have no price set yet.
