@@ -46,7 +46,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
         </div>
 
         <p className={styles.date}>
-          <Time date={ddo?.created}/>
+          <Time date={ddo?.created} />
         </p>
 
         <footer className={styles.foot}>
