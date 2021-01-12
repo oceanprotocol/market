@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { useState, useEffect, ReactElement } from 'react'
 import Time from '../../atoms/Time'
 import MetaItem from './MetaItem'
 import styles from './MetaFull.module.css'
@@ -7,6 +7,25 @@ import { useAsset } from '../../../providers/Asset'
 
 export default function MetaFull(): ReactElement {
   const { ddo, metadata, isInPurgatory } = useAsset()
+  const [assetTimeout, setAssetTimeout] = useState('')
+
+
+  const renderedTimeout = (timeout: number) => {
+    switch (timeout) {
+      case 0:
+        return 'Forever'
+      case 3600:
+        return '1 hour'
+      default:
+        return ''
+    }
+  }
+
+  useEffect(() => {
+    const timeout = ddo.findServiceByType('access').attributes.main.timeout
+    var assetAvailability = renderedTimeout(timeout);
+    setAssetTimeout(assetAvailability)
+  },[])
 
   return (
     <div className={styles.metaFull}>
@@ -24,6 +43,7 @@ export default function MetaFull(): ReactElement {
 
       {/* TODO: remove those 2 date items here when EditHistory component is ready */}
       <MetaItem title="Published" content={<Time date={ddo?.created} />} />
+      <MetaItem title="Availability" content={<p>{assetTimeout}</p>} />
       {ddo?.created !== ddo?.updated && (
         <MetaItem title="Updated" content={<Time date={ddo?.updated} />} />
       )}
