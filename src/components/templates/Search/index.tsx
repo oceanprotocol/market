@@ -9,9 +9,11 @@ import Loader from '../../atoms/Loader'
 import { useOcean } from '@oceanprotocol/react'
 
 export default function SearchPage({
-  location
+  location,
+  setTotalResults
 }: {
   location: Location
+  setTotalResults: (totalResults: number) => void
 }): ReactElement {
   const { config } = useOcean()
   const parsed = queryString.parse(location.search)
@@ -24,8 +26,10 @@ export default function SearchPage({
 
     async function initSearch() {
       setLoading(true)
+      setTotalResults(undefined)
       const queryResult = await getResults(parsed, config.metadataCacheUri)
       setQueryResult(queryResult)
+      setTotalResults(queryResult.totalResults)
       setLoading(false)
     }
     initSearch()
@@ -38,7 +42,6 @@ export default function SearchPage({
           <SearchBar initialValue={(text || owner) as string} />
         )}
       </div>
-
       <div className={styles.results}>
         {loading ? <Loader /> : <AssetQueryList queryResult={queryResult} />}
       </div>
