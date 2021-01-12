@@ -40,6 +40,9 @@
 
 .foot {
   margin-top: calc(var(--spacer) / 4);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
 }
 
 .foot p {

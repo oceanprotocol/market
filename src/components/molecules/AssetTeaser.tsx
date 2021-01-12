@@ -45,12 +45,11 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
           </Dotdotdot>
         </div>
 
-        <p className={styles.date}>
-          <Time date={ddo?.created} />
-        </p>
-
         <footer className={styles.foot}>
           <Price ddo={ddo} small />
+          <p className={styles.date}>
+            <Time date={ddo?.created} relative />
+          </p>
         </footer>
       </Link>
     </article>
