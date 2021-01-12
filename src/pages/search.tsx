@@ -19,9 +19,14 @@ export default function PageGatsbySearch(props: PageProps): ReactElement {
   const title = owner
     ? `Published by ${accountTruncate(owner as string)}`
     : `${
-        totalResults
+        totalResults !== undefined
           ? searchValue
-            ? totalResults + ' results for ' + searchValue
+            ? totalResults === 0
+              ? 'No results'
+              : totalResults +
+                (totalResults > 1 ? ' results' : ' result') +
+                ' for ' +
+                searchValue
             : totalResults + ' datasets'
           : 'Searching...'
       }`
