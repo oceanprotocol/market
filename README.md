@@ -13,6 +13,7 @@
 - [🏄 Get Started](#-get-started)
   - [Local components with Barge](#local-components-with-barge)
 - [🦑 Environment variables](#-environment-variables)
+- [🦀 Ocean Protocol Subgraph](#-ocean-protocol-subgraph)
 - [🎨 Storybook](#-storybook)
 - [✨ Code Style](#-code-style)
 - [👩‍🔬 Testing](#-testing)
@@ -68,6 +69,30 @@ For local development, you can use a `.env` file:
 ```bash
 # modify env variables, Rinkeby is enabled by default when using those files
 cp .env.example .env
+```
+
+## 🦀 Ocean Protocol Subgraph
+
+Most financial data in the market is retrieved with GraphQL from [our own subgraph](https://github.com/oceanprotocol/ocean-subgraph).
+
+The app has [Apollo Client](https://www.apollographql.com/docs/react/) setup to query the respective subgraph based on network. In any component this client can be used like so:
+
+```tsx
+import { gql, useQuery } from '@apollo/client'
+
+const query = gql`
+  query PoolLiquidity($id: ID!, $shareId: ID) {
+    pool(id: $id) {
+      id
+      totalShares
+    }
+  }
+`
+
+function Component() {
+  const { data } = useQuery(query, {}, pollInterval: 5000 })
+  return <div>{data}</div>
+}
 ```
 
 ## 🎨 Storybook
