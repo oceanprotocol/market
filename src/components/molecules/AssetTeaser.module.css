@@ -32,9 +32,6 @@
   font-size: var(--font-size-large);
   margin: 0;
   padding-bottom: calc(var(--spacer) / 6);
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 
 .publisher {

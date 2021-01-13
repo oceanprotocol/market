@@ -31,7 +31,9 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
           >
             {dataTokenInfo?.symbol}
           </Tooltip>
-          <h1 className={styles.title}>{name}</h1>
+          <Dotdotdot clamp={3}>
+            <h1 className={styles.title}>{name}</h1>
+          </Dotdotdot>
           <Publisher account={owner} minimal className={styles.publisher} />
         </header>
         {isCompute && <div className={styles.accessLabel}>Compute</div>}
