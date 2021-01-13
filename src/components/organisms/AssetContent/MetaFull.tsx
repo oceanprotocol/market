@@ -4,11 +4,11 @@ import MetaItem from './MetaItem'
 import styles from './MetaFull.module.css'
 import Publisher from '../../atoms/Publisher'
 import { useAsset } from '../../../providers/Asset'
+import { time } from 'console'
 
 export default function MetaFull(): ReactElement {
   const { ddo, metadata, isInPurgatory } = useAsset()
   const [assetTimeout, setAssetTimeout] = useState('')
-
 
   const renderedTimeout = (timeout: number) => {
     switch (timeout) {
@@ -22,10 +22,9 @@ export default function MetaFull(): ReactElement {
   }
 
   useEffect(() => {
-    const timeout = ddo.findServiceByType('access').attributes.main.timeout
-    var assetAvailability = renderedTimeout(timeout);
-    setAssetTimeout(assetAvailability)
-  },[])
+    const { timeout } = ddo.findServiceByType('access').attributes.main
+    setAssetTimeout(renderedTimeout(timeout))
+  }, [ddo])
 
   return (
     <div className={styles.metaFull}>
