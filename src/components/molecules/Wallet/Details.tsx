@@ -27,16 +27,28 @@ export default function Details(): ReactElement {
 
         <li className={styles.actions}>
           <span title="Connected provider">{getInjectedProviderName()}</span>
-          <Button
-            style="text"
-            size="small"
-            onClick={() => {
-              logout()
-              connect()
-            }}
-          >
-            Switch Wallet
-          </Button>
+          <p>
+            <Button
+              style="text"
+              size="small"
+              onClick={() => {
+                logout()
+                connect()
+              }}
+            >
+              Switch Wallet
+            </Button>
+            <Button
+              style="text"
+              size="small"
+              onClick={() => {
+                logout()
+                location.reload()
+              }}
+            >
+              Disconnect
+            </Button>
+          </p>
         </li>
       </ul>
       <Web3Feedback />
