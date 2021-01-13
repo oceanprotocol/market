@@ -4,7 +4,6 @@ import MetaItem from './MetaItem'
 import styles from './MetaFull.module.css'
 import Publisher from '../../atoms/Publisher'
 import { useAsset } from '../../../providers/Asset'
-import { time } from 'console'
 
 export default function MetaFull(): ReactElement {
   const { ddo, metadata, isInPurgatory } = useAsset()
