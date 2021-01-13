@@ -13,7 +13,10 @@
 - [🏄 Get Started](#-get-started)
   - [Local components with Barge](#local-components-with-barge)
 - [🦑 Environment variables](#-environment-variables)
-- [🦀 Ocean Protocol Subgraph](#-ocean-protocol-subgraph)
+- [🦀 Data Sources](#-data-sources)
+  - [Aquarius](#aquarius)
+  - [Ocean Protocol Subgraph](#ocean-protocol-subgraph)
+  - [Purgatory](#purgatory)
 - [🎨 Storybook](#-storybook)
 - [✨ Code Style](#-code-style)
 - [👩‍🔬 Testing](#-testing)
@@ -71,7 +74,70 @@ For local development, you can use a `.env` file:
 cp .env.example .env
 ```
 
-## 🦀 Ocean Protocol Subgraph
+## 🦀 Data Sources
+
+All displayed data in the app is presented around the concept of one data set, which is a combination of:
+
+- metadata about a data set
+- the actual data set files
+- the datatoken which represents the data set
+- financial data connected to this datatoken, either a pool or a fixed rate exchange contract
+- calculations and conversions based on financial data
+
+All this data then comes from multiple sources:
+
+### Aquarius
+
+All initial data sets and their metadata (DDO) is retrieved from the [Aquarius](https://github.com/oceanprotocol/aquarius) instance for each network. All app calls to Aquarius are done with 2 internal methods which mimic the same methods on ocean.js, but allow us:
+
+- to cancel requests when components get unmounted in combination with [axios](https://github.com/axios/axios)
+- hit Aquarius as early as possible without relying on any ocean.js initialization
+
+Aquarius runs Elasticsearch under the hood so its stored metadata can be queried with [Elasticsearch queries](https://www.elastic.co/guide/en/elasticsearch/reference/current/full-text-queries.html) like so:
+
+```tsx
+import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
+import { queryMetadata } from '../../utils/aquarius'
+
+const queryLatest = {
+  page: 1,
+  offset: 9,
+  query: {
+    nativeSearch: 1,
+    // https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html
+    query_string: { query: `-isInPurgatory:true` }
+  },
+  sort: { created: -1 }
+}
+
+function Component() {
+  const { config } = useOcean()
+  const [result, setResult] = useState<QueryResult>()
+
+  useEffect(() => {
+    if (!config?.metadataCacheUri) return
+    const source = axios.CancelToken.source()
+
+    async function init() {
+      const result = await queryMetadata(
+        query,
+        config.metadataCacheUri,
+        source.token
+      )
+      setResult(result)
+    }
+    init()
+
+    return () => {
+      source.cancel()
+    }
+  }, [config?.metadataCacheUri, query])
+
+  return <div>{result}</div>
+}
+```
+
+### Ocean Protocol Subgraph
 
 Most financial data in the market is retrieved with GraphQL from [our own subgraph](https://github.com/oceanprotocol/ocean-subgraph).
 
@@ -92,6 +158,19 @@ const query = gql`
 function Component() {
   const { data } = useQuery(query, {}, pollInterval: 5000 })
   return <div>{data}</div>
+}
+```
+
+### Purgatory
+
+Based on [list-purgatory](https://github.com/oceanprotocol/list-purgatory) some data sets get additional data. Within most components this can be done with the internal `useAsset()` hook which fetches data from the [market-purgatory](https://github.com/oceanprotocol/market-purgatory) endpoint in the background.
+
+```tsx
+import { useAsset } from '../../../providers/Asset'
+
+function Component() {
+  const { isInPurgatory, purgatoryData } = useAsset()
+  return isInPurgatory ? <div>{purgatoryData.reason}</div> : null
 }
 ```
 
