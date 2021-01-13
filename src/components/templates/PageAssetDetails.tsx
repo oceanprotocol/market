@@ -20,6 +20,8 @@ export default function PageTemplateAssetDetails({
       return
     }
 
+    console.log(ddo)
+
     setPageTitle(isInPurgatory ? '' : title)
   }, [ddo, error, isInPurgatory, title])
 

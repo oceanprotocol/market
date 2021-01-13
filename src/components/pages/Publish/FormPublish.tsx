@@ -39,6 +39,8 @@ export default function FormPublish({
     e: ChangeEvent<HTMLInputElement>,
     field: FormFieldProps
   ) {
+    console.log(field.name)
+    console.log(e.target.value)
     validateField(field.name)
     setFieldValue(field.name, e.target.value)
   }

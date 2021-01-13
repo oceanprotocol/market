@@ -10,6 +10,8 @@ export default function PageGatsbyAssetDetails(props: PageProps): ReactElement {
     setDid(props.location.pathname.split('/')[2])
   }, [props.location.pathname])
 
+  console.log(did)
+
   return (
     <AssetProvider asset={did}>
       <PageTemplateAssetDetails uri={props.location.pathname} />

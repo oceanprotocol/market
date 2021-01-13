@@ -37,6 +37,14 @@ export default function PublishPage({
     resetForm: () => void
   ): Promise<void> {
     const metadata = transformPublishFormToMetadata(values)
+    const timeout =
+      values.timeout === 'Forever'
+        ? 0
+        : values.timeout === '1 week'
+        ? 604800
+        : values.timeout === '1 month'
+        ? 2630000
+        : 31536000
     const serviceType = values.access === 'Download' ? 'access' : 'compute'
 
     try {
@@ -50,7 +58,8 @@ export default function PublishPage({
       const ddo = await publish(
         (metadata as unknown) as Metadata,
         serviceType,
-        values.dataTokenOptions
+        values.dataTokenOptions,
+        timeout
       )
 
       // Publish failed
