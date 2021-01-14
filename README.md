@@ -90,7 +90,7 @@ All this data then comes from multiple sources:
 
 ### Aquarius
 
-All initial data sets and their metadata (DDO) is retrieved from the [Aquarius](https://github.com/oceanprotocol/aquarius) instance for each network. All app calls to Aquarius are done with 2 internal methods which mimic the same methods on ocean.js, but allow us:
+All initial data sets and their metadata (DDO) is retrieved client-side on run-time from the [Aquarius](https://github.com/oceanprotocol/aquarius) instance for each network. All app calls to Aquarius are done with 2 internal methods which mimic the same methods in ocean.js, but allow us:
 
 - to cancel requests when components get unmounted in combination with [axios](https://github.com/axios/axios)
 - hit Aquarius as early as possible without relying on any ocean.js initialization
@@ -225,6 +225,8 @@ function Component() {
 
 ## 🎨 Storybook
 
+> TODO: this is broken for most components. See https://github.com/oceanprotocol/market/issues/128
+
 [Storybook](https://storybook.js.org) is set up for this project and is used for UI development of components. Stories are created inside `src/components/` alongside each component in the form of `ComponentName.stories.tsx`.
 
 To run the Storybook server, execute in your Terminal:
@@ -248,6 +250,8 @@ npm run format
 ```
 
 ## 👩‍🔬 Testing
+
+> TODO: this is broken and never runs in CI. See https://github.com/oceanprotocol/market/issues/128
 
 Test suite for unit tests is setup with [Jest](https://jestjs.io) as a test runner and:
 
@@ -283,9 +287,15 @@ npm run serve
 
 ## ⬆️ Deployment
 
-Every branch or Pull Request is automatically deployed by [Netlify](https://netlify.com) with their GitHub integration. A link to a deployment will appear under each Pull Request.
+Every branch or Pull Request is automatically deployed to multiple hosts for redundancy and emergency reasons:
 
-The latest deployment of the `main` branch is automatically aliased to `market.oceanprotocol.com`.
+- [Netlify](https://netlify.com)
+- [Vercel](https://vercel.com)
+- [S3](https://aws.amazon.com/s3/)
+
+A link to a deployment will appear under each Pull Request.
+
+The latest deployment of the `main` branch is automatically aliased to `market.oceanprotocol.com`, where the deployment on Netlify is the current live deployment.
 
 ## 🏛 License
 
