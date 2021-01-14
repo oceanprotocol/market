@@ -21,18 +21,20 @@ export default function PageHeader({
 
   const [fontSize, setFontSize] = useState('')
   const [lineHeight, setLineHeight] = useState('')
+  const [isTitleLong, setIsTitleLong] = useState(false)
 
   const setFontSizeAndLineHeight = (
     fontSize: number,
     linesNumber: number,
     lineHeight: number
   ) => {
-    if (linesNumber > 1) {
+    if (linesNumber > 3) {
       linesNumber += 4
       fontSize -= linesNumber
       lineHeight -= linesNumber
       setFontSize(fontSize + 'px')
       setLineHeight(lineHeight + 'px')
+      setIsTitleLong(true)
     }
   }
 
@@ -48,9 +50,13 @@ export default function PageHeader({
   }
 
   useEffect(() => {
-    const titleElement = document.getElementsByClassName(
+    const titleElement = document.querySelector(
+      'h1[class*=PageHeader-module--title]'
+    )
+    console.log(titleElement)
+    /* const titleElement = document.getElementsByClassName(
       'PageHeader-module--title--2n3-e'
-    )[0]
+    )[0] */
     const lines = countLines(titleElement)
     const currentFontSize = parseInt(
       document.defaultView
@@ -68,7 +74,9 @@ export default function PageHeader({
     <header className={styleClasses}>
       <h1
         className={styles.title}
-        style={{ fontSize: fontSize, lineHeight: lineHeight }}
+        style={
+          isTitleLong ? { fontVariationSettings: '"wght" 0, "wdth" 0' } : {}
+        }
       >
         {title}
       </h1>
