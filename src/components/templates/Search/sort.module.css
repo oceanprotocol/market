@@ -1,4 +1,5 @@
 .sorted {
+    display: inline-flex;
     padding: calc(var(--spacer) / 4);
     border: 1px solid var(--border-color);
     text-transform: uppercase;

@@ -28,7 +28,7 @@ export function getSearchQuery(
   sortOrder?: string,
   priceType?: string
 ): SearchQuery {
-
+  console.log('getSearchQuery priceType ',priceType)
   const sortTerm = sort === SortTermOptions.Liquidity
   ? 'price.ocean'
   : sort === SortTermOptions.Price
@@ -94,7 +94,7 @@ export async function getResults(
   metadataCacheUri: string
 ): Promise<QueryResult> {
   const { text, owner, tags, page, offset, categories, sort, sortOrder, priceType } = params
-  console.log("params",params)
+  console.log("getResults params ",params)
   const metadataCache = new MetadataCache(metadataCacheUri, Logger)
   const searchQuery = getSearchQuery(
     text,

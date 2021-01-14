@@ -14,29 +14,32 @@ export default function FilterPrice ({
   setPriceType: React.Dispatch<React.SetStateAction<string>>
 }) : ReactElement {
     const navigate = useNavigate()
-    
+
     function applyFilter(filterBy: string) {
         const parsed = queryString.parse(location.search)
         let urlLocation = '/search?'
         for (let querryParam in parsed) {
-            let value = parsed[querryParam];
-            urlLocation = `${urlLocation}${querryParam}=${value}&`
+            if(querryParam !== 'priceType'){
+                let value = parsed[querryParam];
+                urlLocation = `${urlLocation}${querryParam}=${value}&`
+            }
         }
         if (filterBy){
             urlLocation = `${urlLocation}priceType=${filterBy}`
         } else {
             urlLocation = urlLocation.slice(0, -1); 
-        }   
+        } 
+        console.log('filterBy ',filterBy)
+        console.log('urlLocation ',urlLocation)
         navigate(urlLocation)
     }
-  
     return (
         <div className={generalStyles.column}>
             <div className={generalStyles.description}>Filter by price: </div>
                 {[
                     { display: 'all', value: undefined },
-                    { display: 'fixed', value: 'fixed' },
-                    { display: 'dynamic', value: 'dynamic' }
+                    { display: 'fixed', value: 'exchange' },
+                    { display: 'dynamic', value: 'pool' }
                 ].map((e, index) => {
                     const filter = cx({
                         [filterStyles.selected]: e.value === priceType,

@@ -29,7 +29,8 @@ export default function SearchPage({
     if (!config?.metadataCacheUri) return
 
     async function initSearch() {
-      console.log('init search')
+      parsed.priceType = priceType
+      parsed.sort = sortType
       setLoading(true)
       setTotalResults(undefined)
       const queryResult = await getResults(parsed, config.metadataCacheUri)
@@ -38,7 +39,7 @@ export default function SearchPage({
       setLoading(false)
     }
     initSearch()
-  }, [text, owner, tags, page, priceType, config.metadataCacheUri])
+  }, [text, owner, tags, page, sortType, priceType, config.metadataCacheUri])
 
   return (
     <section className={styles.grid}>
@@ -48,8 +49,6 @@ export default function SearchPage({
         )}
         <div className={styles.row}>
           <PriceFilter priceType={priceType} setPriceType={setPriceType} />
-        </div>
-        <div className={styles.row}>
           <Sort sortType={sortType} setSortType={setSortType} />
         </div>
       </div>
