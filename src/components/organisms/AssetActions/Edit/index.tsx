@@ -53,6 +53,7 @@ export default function Edit({
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
+  console.log(content.form)
 
   const { debug } = useUserPreferences()
   const { ocean, account } = useOcean()
@@ -66,7 +67,35 @@ export default function Edit({
     values: Partial<MetadataPublishForm>,
     resetForm: () => void
   ) {
+    console.log(values)
     try {
+    const ddo = await ocean.assets.editMetadata()
+    if (!ddo) {
+      setError(content.form.error)
+      Logger.error(content.form.error)
+      return
+    }
+
+    const newddo = ocean.assets.updateServiceTimeout()
+    if (!newddo) {
+      setError(content.form.error)
+      Logger.error(content.form.error)
+      return
+    }
+
+    const storedddo = ocean.assets.OnChainMetadataCache.update(
+      newddo.id,
+      newddo,
+      account.getId()
+    )
+
+    // Edit succeeded
+    setSuccess(content.form.success)
+    resetForm()
+  } catch (error) {
+    Logger.error(error.message)
+    setError(error.message)
+    /* try {
       const ddo = await ocean.assets.editMetadata(
         did,
         { title: values.name, description: values.description },
@@ -86,12 +115,15 @@ export default function Edit({
     } catch (error) {
       Logger.error(error.message)
       setError(error.message)
-    }
+    } */
   }
 
   return (
     <Formik
-      initialValues={getInitialValues(metadata)}
+      initialValues={getInitialValues(
+        metadata,
+        ddo.findServiceByType('access').attributes.main.timeout
+      )}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
         // move user's focus to top of screen
