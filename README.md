@@ -16,6 +16,7 @@
 - [🦀 Data Sources](#-data-sources)
   - [Aquarius](#aquarius)
   - [Ocean Protocol Subgraph](#ocean-protocol-subgraph)
+  - [3Box](#3box)
   - [Purgatory](#purgatory)
 - [🎨 Storybook](#-storybook)
 - [✨ Code Style](#-code-style)
@@ -83,6 +84,7 @@ All displayed data in the app is presented around the concept of one data set, w
 - the datatoken which represents the data set
 - financial data connected to this datatoken, either a pool or a fixed rate exchange contract
 - calculations and conversions based on financial data
+- metadata about publishers
 
 All this data then comes from multiple sources:
 
@@ -137,9 +139,20 @@ function Component() {
 }
 ```
 
+For components within a single data set view the `useAsset()` hook can be used, which in the background gets the respective metadata from Aquarius.
+
+```tsx
+import { useAsset } from '../../../providers/Asset'
+
+function Component() {
+  const { ddo } = useAsset()
+  return <div>{ddo}</div>
+}
+```
+
 ### Ocean Protocol Subgraph
 
-Most financial data in the market is retrieved with GraphQL from [our own subgraph](https://github.com/oceanprotocol/ocean-subgraph).
+Most financial data in the market is retrieved with GraphQL from [our own subgraph](https://github.com/oceanprotocol/ocean-subgraph), rendered on top of the initial data coming from Aquarius.
 
 The app has [Apollo Client](https://www.apollographql.com/docs/react/) setup to query the respective subgraph based on network. In any component this client can be used like so:
 
@@ -158,6 +171,42 @@ const query = gql`
 function Component() {
   const { data } = useQuery(query, {}, pollInterval: 5000 })
   return <div>{data}</div>
+}
+```
+
+### 3Box
+
+Publishers can create a profile on [3Box Hub](https://www.3box.io/hub) and when found, it will be displayed in the app.
+
+For this our own [3box-proxy](https://github.com/oceanprotocol/3box-proxy) is used, within the app the utility method `get3BoxProfile()` can be used to get all info:
+
+```tsx
+import get3BoxProfile from '../../../utils/profile'
+
+function Component() {
+  const [profile, setProfile] = useState<Profile>()
+
+  useEffect(() => {
+    if (!account) return
+    const source = axios.CancelToken.source()
+
+    async function get3Box() {
+      const profile = await get3BoxProfile(account, source.token)
+      if (!profile) return
+
+      setProfile(profile)
+    }
+    get3Box()
+
+    return () => {
+      source.cancel()
+    }
+  }, [account])
+  return (
+    <div>
+      {profile.emoji} {profile.name}
+    </div>
+  )
 }
 ```
 
