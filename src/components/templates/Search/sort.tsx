@@ -35,7 +35,7 @@ export default function Sort ({
     }
 
     return (
-        <div className={generalStyles.column}>
+        <div className={generalStyles.column, sortStyles.sortList}>
             <div className={generalStyles.description}>Sort by: </div>
                 {[
                     { display: 'Published', value: 'created' },

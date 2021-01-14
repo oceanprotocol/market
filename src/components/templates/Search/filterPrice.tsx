@@ -34,7 +34,7 @@ export default function FilterPrice ({
         navigate(urlLocation)
     }
     return (
-        <div className={generalStyles.column}>
+        <div className={generalStyles.column, filterStyles.filterList}>
             <div className={generalStyles.description}>Filter by price: </div>
                 {[
                     { display: 'all', value: undefined },

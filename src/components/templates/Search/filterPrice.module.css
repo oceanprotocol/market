@@ -1,3 +1,8 @@
+.filterList {
+    display: inline-flex;
+    float: left;
+}
+
 .filter {
     padding: calc(var(--spacer) / 4);
     border: 1px solid var(--border-color);
