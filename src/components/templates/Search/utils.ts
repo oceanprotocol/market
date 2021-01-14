@@ -4,15 +4,39 @@ import {
 } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { MetadataCache, Logger } from '@oceanprotocol/lib'
 
+const SortTermOptions = {
+  Liquidity: 'liquidity',
+  Price: 'price',
+  Created: 'created',
+} as const
+type SortTermOptions = typeof SortTermOptions[keyof typeof SortTermOptions]
+
+const SortValueOptions = {
+  Ascending: 'asc',
+  Descending: 'desc',
+} as const
+type SortValueOptions = typeof SortValueOptions[keyof typeof SortValueOptions]
+
 export function getSearchQuery(
   text?: string,
   owner?: string,
   tags?: string,
   categories?: string,
   page?: string,
-  offset?: string
+  offset?: string,
+  sort?: string,
+  sortOrder?: string,
+  priceType?: string
 ): SearchQuery {
-  const searchTerm = owner
+
+  const sortTerm = sort === SortTermOptions.Liquidity
+  ? 'price.ocean'
+  : sort === SortTermOptions.Price
+  ? 'price.value'
+  : SortTermOptions.Created
+  const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
+
+  let searchTerm = owner
     ? `(publicKey.owner:${owner})`
     : tags
     ? // eslint-disable-next-line no-useless-escape
@@ -22,6 +46,12 @@ export function getSearchQuery(
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
     : text || ''
 
+    searchTerm = priceType
+    ? searchTerm === ''
+      ? `price.type:${priceType}`
+      : `${searchTerm} AND price.type:${priceType}`
+    : searchTerm
+    
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
@@ -35,7 +65,7 @@ export function getSearchQuery(
       // ...(categories && { categories: [categories] })
     },
     sort: {
-      created: -1
+      [sortTerm]: sortValue
     }
 
     // Something in ocean.js is weird when using 'tags: [tag]'
@@ -57,11 +87,14 @@ export async function getResults(
     categories?: string
     page?: string
     offset?: string
+    sort?: string
+    sortOrder?: string
+    priceType?: string
   },
   metadataCacheUri: string
 ): Promise<QueryResult> {
-  const { text, owner, tags, page, offset, categories } = params
-
+  const { text, owner, tags, page, offset, categories, sort, sortOrder, priceType } = params
+  console.log("params",params)
   const metadataCache = new MetadataCache(metadataCacheUri, Logger)
   const searchQuery = getSearchQuery(
     text,
@@ -69,8 +102,12 @@ export async function getResults(
     tags,
     categories,
     page,
-    offset
+    offset,
+    sort,
+    sortOrder,
+    priceType
   )
+  console.log("searchQuery",searchQuery)
   const queryResult = await metadataCache.queryMetadata(searchQuery)
 
   return queryResult
