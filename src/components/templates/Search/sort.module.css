@@ -1,0 +1,14 @@
+.sorted {
+    padding: calc(var(--spacer) / 4);
+    border: 1px solid var(--border-color);
+    text-transform: uppercase;
+    border-radius: var(--border-radius);
+    margin-right: calc(var(--spacer) / 4);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-secondary);
+    background: var(--background-body);
+    cursor: pointer;
+  }
+  .selected {
+    color: var(--font-color-text);
+  }

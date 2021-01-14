@@ -5,6 +5,7 @@ import AssetQueryList from '../../organisms/AssetQueryList'
 import styles from './index.module.css'
 import queryString from 'query-string'
 import PriceFilter from './filterPrice'
+import Sort from './sort'
 import { getResults } from './utils'
 import Loader from '../../atoms/Loader'
 import { useOcean } from '@oceanprotocol/react'
@@ -22,11 +23,13 @@ export default function SearchPage({
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [loading, setLoading] = useState<boolean>()
   const [priceType, setPriceType] = useState<string>(price as string)
+  const [sortType, setSortType] = useState<string>(sort as string)
 
   useEffect(() => {
     if (!config?.metadataCacheUri) return
 
     async function initSearch() {
+      console.log('init search')
       setLoading(true)
       setTotalResults(undefined)
       const queryResult = await getResults(parsed, config.metadataCacheUri)
@@ -35,7 +38,7 @@ export default function SearchPage({
       setLoading(false)
     }
     initSearch()
-  }, [text, owner, tags, page, config.metadataCacheUri])
+  }, [text, owner, tags, page, priceType, config.metadataCacheUri])
 
   return (
     <section className={styles.grid}>
@@ -45,6 +48,9 @@ export default function SearchPage({
         )}
         <div className={styles.row}>
           <PriceFilter priceType={priceType} setPriceType={setPriceType} />
+        </div>
+        <div className={styles.row}>
+          <Sort sortType={sortType} setSortType={setSortType} />
         </div>
       </div>
       <div className={styles.results}>
