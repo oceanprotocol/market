@@ -7,13 +7,13 @@ import { MetadataCache, Logger } from '@oceanprotocol/lib'
 const SortTermOptions = {
   Liquidity: 'liquidity',
   Price: 'price',
-  Created: 'created',
+  Created: 'created'
 } as const
 type SortTermOptions = typeof SortTermOptions[keyof typeof SortTermOptions]
 
 const SortValueOptions = {
   Ascending: 'asc',
-  Descending: 'desc',
+  Descending: 'desc'
 } as const
 type SortValueOptions = typeof SortValueOptions[keyof typeof SortValueOptions]
 
@@ -28,12 +28,13 @@ export function getSearchQuery(
   sortOrder?: string,
   priceType?: string
 ): SearchQuery {
-  console.log('getSearchQuery priceType ',priceType)
-  const sortTerm = sort === SortTermOptions.Liquidity
-  ? 'price.ocean'
-  : sort === SortTermOptions.Price
-  ? 'price.value'
-  : SortTermOptions.Created
+  console.log('getSearchQuery priceType ', priceType)
+  const sortTerm =
+    sort === SortTermOptions.Liquidity
+      ? 'price.ocean'
+      : sort === SortTermOptions.Price
+      ? 'price.value'
+      : SortTermOptions.Created
   const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
 
   let searchTerm = owner
@@ -46,12 +47,12 @@ export function getSearchQuery(
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
     : text || ''
 
-    searchTerm = priceType
+  searchTerm = priceType
     ? searchTerm === ''
       ? `price.type:${priceType}`
       : `${searchTerm} AND price.type:${priceType}`
     : searchTerm
-    
+
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
@@ -93,8 +94,18 @@ export async function getResults(
   },
   metadataCacheUri: string
 ): Promise<QueryResult> {
-  const { text, owner, tags, page, offset, categories, sort, sortOrder, priceType } = params
-  console.log("getResults params ",params)
+  const {
+    text,
+    owner,
+    tags,
+    page,
+    offset,
+    categories,
+    sort,
+    sortOrder,
+    priceType
+  } = params
+  console.log('getResults params ', params)
   const metadataCache = new MetadataCache(metadataCacheUri, Logger)
   const searchQuery = getSearchQuery(
     text,
@@ -107,7 +118,7 @@ export async function getResults(
     sortOrder,
     priceType
   )
-  console.log("searchQuery",searchQuery)
+  console.log('searchQuery', searchQuery)
   const queryResult = await metadataCache.queryMetadata(searchQuery)
 
   return queryResult

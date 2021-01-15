@@ -20,6 +20,7 @@ export default function SearchPage({
   const { config } = useOcean()
   const parsed = queryString.parse(location.search)
   const { text, owner, tags, page, sort, sortOrder, price } = parsed
+  console.log('parsed upper ', parsed)
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [loading, setLoading] = useState<boolean>()
   const [priceType, setPriceType] = useState<string>(price as string)
@@ -29,6 +30,8 @@ export default function SearchPage({
     if (!config?.metadataCacheUri) return
 
     async function initSearch() {
+      console.log('parsed ', parsed)
+      console.log('priceType ', priceType)
       parsed.priceType = priceType
       parsed.sort = sortType
       setLoading(true)

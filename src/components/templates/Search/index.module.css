@@ -8,16 +8,19 @@ row {
   align-items: stretch;
   justify-content: space-between;
   margin-bottom: calc(var(--spacer) / 2);
+  margin-bottom: var(--spacer);
 }
-@media (min-width: 930px) {
+@media (min-width: 55rem) {
   .row {
     flex-direction: row;
+    padding-bottom: calc(var(--spacer) * 2);
   }
 }
 
 .description {
   background: var(--background-body);
   margin-right: calc(var(--spacer) / 4);
+  padding-top: calc(var(--spacer) / 6);
   white-space: nowrap;
   font-size: var(--font-size-large);
 }
