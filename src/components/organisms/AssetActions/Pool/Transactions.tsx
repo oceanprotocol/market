@@ -3,14 +3,11 @@ import Button from '../../../atoms/Button'
 import PoolTransactions from '../../../molecules/PoolTransactions'
 import styles from './Transactions.module.css'
 import { ReactComponent as Caret } from '../../../../images/caret.svg'
+import { useAsset } from '../../../../providers/Asset'
 
-export default function Transactions({
-  poolAddress
-}: {
-  poolAddress: string
-}): ReactElement {
+export default function Transactions(): ReactElement {
   const [open, setOpen] = useState(false)
-
+  const { ddo } = useAsset()
   function handleClick() {
     setOpen(!open)
   }
@@ -31,7 +28,9 @@ export default function Transactions({
           {open ? 'Hide' : 'Show'} <Caret />
         </Button>
       </h3>
-      {open === true && <PoolTransactions poolAddress={poolAddress} minimal />}
+      {open === true && (
+        <PoolTransactions poolAddress={ddo.price?.address} minimal />
+      )}
     </div>
   )
 }

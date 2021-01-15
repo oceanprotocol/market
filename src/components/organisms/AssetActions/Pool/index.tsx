@@ -343,7 +343,7 @@ export default function Pool(): ReactElement {
             )}
           </div>
 
-          {accountId && <Transactions poolAddress={price?.address} />}
+          {accountId && <Transactions />}
         </>
       )}
     </>

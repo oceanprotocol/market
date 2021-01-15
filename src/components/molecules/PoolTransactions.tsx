@@ -1,4 +1,3 @@
-import { PoolTransaction } from '@oceanprotocol/lib/dist/node/balancer/OceanPool'
 import { useOcean } from '@oceanprotocol/react'
 import React, { ReactElement, useEffect, useState } from 'react'
 import EtherscanLink from '../atoms/EtherscanLink'
@@ -15,8 +14,10 @@ import {
   TransactionHistoryPoolTransactions
 } from '../../@types/apollo/TransactionHistory'
 
-const txHistoryQuery = gql`
-  query TransactionHistory($user: String, $pool: String) {
+import web3 from 'web3'
+
+const txHistoryQueryByPool = gql`
+  query TransactionHistoryByPool($user: String, $pool: String) {
     poolTransactions(
       orderBy: timestamp
       orderDirection: desc
@@ -37,14 +38,31 @@ const txHistoryQuery = gql`
     }
   }
 `
-
-async function getSymbol(
-  ocean: Ocean,
-  tokenAddress: string,
-  oceanTokenAddress: string
-) {
+const txHistoryQuery = gql`
+  query TransactionHistory($user: String, $pool: String) {
+    poolTransactions(
+      orderBy: timestamp
+      orderDirection: desc
+      where: { userAddress: $user }
+      first: 1000
+    ) {
+      tx
+      event
+      timestamp
+      poolAddress {
+        datatokenAddress
+      }
+      tokens {
+        value
+        type
+        tokenAddress
+      }
+    }
+  }
+`
+async function getSymbol(ocean: Ocean, tokenAddress: string) {
   const symbol =
-    oceanTokenAddress === tokenAddress
+    ocean.pool.oceanAddress === tokenAddress
       ? 'OCEAN'
       : await ocean.datatokens.getSymbol(tokenAddress)
 
@@ -54,46 +72,69 @@ async function getSymbol(
 async function getTitle(
   ocean: Ocean,
   row: TransactionHistoryPoolTransactions,
-  locale: string,
-  oceanTokenAddress: string
+  locale: string
 ) {
-  // const addRemoveSymbol = await getSymbol(
-  //   ocean,
-  //   row.tokenIn || row.tokenOut,
-  //   oceanTokenAddress
-  // )
-  const addRemoveSymbol = 'place'
-  const title =
-    row.event === 'join'
-      ? `Add ${formatPrice('0', locale)} ${addRemoveSymbol}`
-      : row.event === 'exit'
-      ? `Remove ${formatPrice('0', locale)} ${addRemoveSymbol}`
-      : `Swap ${formatPrice('0', locale)} ${'place'} for ${formatPrice(
-          '0',
-          locale
-        )} ${'place'}`
+  let title = ''
 
+  switch (row.event) {
+    case 'join': {
+      for (let i = 0; i < row.tokens.length; i++) {
+        const tokenSymbol = await getSymbol(ocean, row.tokens[i].tokenAddress)
+
+        title += `Add ${formatPrice(
+          row.tokens[i].value,
+          locale
+        )} ${tokenSymbol}`
+      }
+      break
+    }
+    case 'exit': {
+      for (let i = 0; i < row.tokens.length; i++) {
+        const tokenSymbol = await getSymbol(ocean, row.tokens[i].tokenAddress)
+        if (i > 0) title += '\n'
+        title += `Remove ${formatPrice(
+          Math.abs(row.tokens[i].value).toString(),
+          locale
+        )} ${tokenSymbol}`
+      }
+      break
+    }
+    case 'swap': {
+      const inToken = row.tokens.filter((x) => x.type === 'in')[0]
+      const inTokenSymbol = await getSymbol(ocean, inToken.tokenAddress)
+      const outToken = row.tokens.filter((x) => x.type === 'out')[0]
+      const outTokenSymbol = await getSymbol(ocean, outToken.tokenAddress)
+      title += `Swap ${formatPrice(
+        Math.abs(inToken.value).toString(),
+        locale
+      )} ${inTokenSymbol} for ${formatPrice(
+        Math.abs(outToken.value).toString(),
+        locale
+      )} ${outTokenSymbol}`
+      break
+    }
+  }
   return title
 }
 
 function Title({ row }: { row: TransactionHistoryPoolTransactions }) {
-  const { ocean, networkId, config } = useOcean()
+  const { ocean, networkId } = useOcean()
   const [title, setTitle] = useState<string>()
   const { locale } = useUserPreferences()
 
   useEffect(() => {
-    if (!ocean || !locale || !row || !config?.oceanTokenAddress) return
+    if (!ocean || !locale || !row) return
 
     async function init() {
-      const title = await getTitle(ocean, row, locale, config.oceanTokenAddress)
+      const title = await getTitle(ocean, row, locale)
       setTitle(title)
     }
     init()
-  }, [ocean, row, locale, config?.oceanTokenAddress])
+  }, [ocean, row, locale])
 
   return title ? (
     <EtherscanLink networkId={networkId} path={`/tx/${row.tx}`}>
-      {title}
+      <span className={styles.titleText}>{title}</span>
     </EtherscanLink>
   ) : null
 }
@@ -109,7 +150,10 @@ function getColumns(minimal?: boolean) {
     {
       name: 'Data Set',
       selector: function getAssetRow(row: TransactionHistoryPoolTransactions) {
-        const did = row.poolAddress.datatokenAddress.replace('0x', 'did:op:')
+        const did = web3.utils
+          .toChecksumAddress(row.poolAddress.datatokenAddress)
+          .replace('0x', 'did:op:')
+
         return <AssetTitle did={did} />
       },
       omit: minimal
@@ -138,43 +182,24 @@ export default function PoolTransactions({
   poolAddress?: string
   minimal?: boolean
 }): ReactElement {
-  const { ocean, accountId } = useOcean()
+  const { accountId } = useOcean()
   const [logs, setLogs] = useState<TransactionHistoryPoolTransactions[]>()
-  const [isLoading, setIsLoading] = useState(false)
 
-  const { data, loading } = useQuery<TransactionHistory>(txHistoryQuery, {
-    variables: {
-      user: accountId.toLowerCase(),
-      pool: poolAddress.toLowerCase()
-    },
-    pollInterval: 20000
-  })
+  const { data, loading } = useQuery<TransactionHistory>(
+    poolAddress ? txHistoryQueryByPool : txHistoryQuery,
+    {
+      variables: {
+        user: accountId?.toLowerCase(),
+        pool: poolAddress?.toLowerCase()
+      }
+      // pollInterval: 20000
+    }
+  )
 
   useEffect(() => {
     if (!data) return
-    console.log(data.poolTransactions)
     setLogs(data.poolTransactions)
   }, [data, loading])
-
-  useEffect(() => {
-    async function getLogs() {
-      if (!ocean || !accountId) return
-
-      setIsLoading(true)
-      const logs = poolAddress
-        ? await ocean.pool.getPoolLogs(poolAddress, 0, accountId)
-        : await ocean.pool.getAllPoolLogs(accountId)
-      // sort logs by date, newest first
-      const logsSorted = logs.sort((a, b) => {
-        if (a.timestamp > b.timestamp) return -1
-        if (a.timestamp < b.timestamp) return 1
-        return 0
-      })
-      // setLogs(logsSorted)
-      setIsLoading(false)
-    }
-    getLogs()
-  }, [ocean, accountId, poolAddress])
 
   return (
     <Table

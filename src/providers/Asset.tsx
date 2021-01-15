@@ -33,7 +33,7 @@ interface AssetProviderValue {
 
 const AssetContext = createContext({} as AssetProviderValue)
 
-const refreshInterval = 10000 // 10 sec.
+const refreshInterval = 60000 // 10 sec.
 
 function AssetProvider({
   asset,

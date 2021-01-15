@@ -31,6 +31,8 @@ export default function AssetListTitle({
 
     async function getDDO() {
       const ddo = await retrieveDDO(did, config.metadataCacheUri, source.token)
+      if (!ddo) return
+      console.log('un ddo', ddo)
       const { attributes } = ddo.findServiceByType('metadata')
       setAssetTitle(attributes.main.name)
     }
