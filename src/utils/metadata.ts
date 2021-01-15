@@ -10,6 +10,18 @@ export function transformTags(value: string): string[] {
   return transformedTags
 }
 
+export function mapTimeoutStringToSeconds(timeout: string): number {
+  const seconds =
+    timeout === 'Forever'
+      ? 0
+      : timeout === '1 week'
+      ? 604800
+      : timeout === '1 month'
+      ? 2630000
+      : 31536000
+  return seconds
+}
+
 export function transformPublishFormToMetadata(
   {
     name,

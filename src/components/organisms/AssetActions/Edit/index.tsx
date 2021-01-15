@@ -12,6 +12,7 @@ import MetadataPreview from '../../../molecules/MetadataPreview'
 import Debug from './Debug'
 import Web3Feedback from '../../../molecules/Wallet/Feedback'
 import FormEditMetadata from './FormEditMetadata'
+import { mapTimeoutStringToSeconds } from '../../../../utils/metadata'
 import styles from './index.module.css'
 import { Logger } from '@oceanprotocol/lib'
 import MetadataFeedback from '../../../molecules/MetadataFeedback'
@@ -53,11 +54,10 @@ export default function Edit({
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
-  console.log(content.form)
 
   const { debug } = useUserPreferences()
   const { ocean, account } = useOcean()
-  const { did, metadata, ddo, refreshDdo } = useAsset()
+  const { metadata, ddo, refreshDdo } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
 
@@ -67,55 +67,48 @@ export default function Edit({
     values: Partial<MetadataPublishForm>,
     resetForm: () => void
   ) {
-    console.log(values)
     try {
-    const ddo = await ocean.assets.editMetadata()
-    if (!ddo) {
-      setError(content.form.error)
-      Logger.error(content.form.error)
-      return
-    }
-
-    const newddo = ocean.assets.updateServiceTimeout()
-    if (!newddo) {
-      setError(content.form.error)
-      Logger.error(content.form.error)
-      return
-    }
-
-    const storedddo = ocean.assets.OnChainMetadataCache.update(
-      newddo.id,
-      newddo,
-      account.getId()
-    )
-
-    // Edit succeeded
-    setSuccess(content.form.success)
-    resetForm()
-  } catch (error) {
-    Logger.error(error.message)
-    setError(error.message)
-    /* try {
-      const ddo = await ocean.assets.editMetadata(
-        did,
-        { title: values.name, description: values.description },
-        account
-      )
-
-      // Edit failed
-      if (!ddo) {
+      const ddoEditedMetdata = await ocean.assets.editMetadata(ddo, {
+        title: values.name,
+        description: values.description
+      })
+      if (!ddoEditedMetdata) {
         setError(content.form.error)
         Logger.error(content.form.error)
         return
       }
 
-      // Edit succeeded
-      setSuccess(content.form.success)
-      resetForm()
+      const service = ddo.findServiceByType('access')
+      const timeout = mapTimeoutStringToSeconds(values.timeout)
+      const ddoEditedTimeout = await ocean.assets.editServiceTimeout(
+        ddo,
+        service.index,
+        timeout
+      )
+      if (!ddoEditedTimeout) {
+        setError(content.form.error)
+        Logger.error(content.form.error)
+        return
+      }
+
+      const storedddo = await ocean.OnChainMetadataCache.update(
+        ddoEditedTimeout.id,
+        ddoEditedTimeout,
+        account.getId()
+      )
+      if (!storedddo) {
+        setError(content.form.error)
+        Logger.error(content.form.error)
+        return
+      } else {
+        // Edit succeeded
+        setSuccess(content.form.success)
+        resetForm()
+      }
     } catch (error) {
       Logger.error(error.message)
       setError(error.message)
-    } */
+    }
   }
 
   return (

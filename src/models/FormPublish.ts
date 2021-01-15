@@ -38,7 +38,8 @@ export const initialValues: Partial<MetadataPublishForm> = {
   },
   files: '',
   description: '',
-  timeout: '',
+  timeout: 'Forever',
   access: '',
-  termsAndConditions: false
+  termsAndConditions: false,
+  tags: ''
 }
