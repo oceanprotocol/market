@@ -76,44 +76,29 @@ async function getTitle(
 ) {
   let title = ''
 
-  switch (row.event) {
-    case 'join': {
-      for (let i = 0; i < row.tokens.length; i++) {
-        const tokenSymbol = await getSymbol(ocean, row.tokens[i].tokenAddress)
-
-        title += `Add ${formatPrice(
-          row.tokens[i].value,
-          locale
-        )} ${tokenSymbol}`
-      }
-      break
-    }
-    case 'exit': {
-      for (let i = 0; i < row.tokens.length; i++) {
-        const tokenSymbol = await getSymbol(ocean, row.tokens[i].tokenAddress)
-        if (i > 0) title += '\n'
-        title += `Remove ${formatPrice(
-          Math.abs(row.tokens[i].value).toString(),
-          locale
-        )} ${tokenSymbol}`
-      }
-      break
-    }
-    case 'swap': {
-      const inToken = row.tokens.filter((x) => x.type === 'in')[0]
-      const inTokenSymbol = await getSymbol(ocean, inToken.tokenAddress)
-      const outToken = row.tokens.filter((x) => x.type === 'out')[0]
-      const outTokenSymbol = await getSymbol(ocean, outToken.tokenAddress)
-      title += `Swap ${formatPrice(
-        Math.abs(inToken.value).toString(),
+  if (row.event === 'swap') {
+    const inToken = row.tokens.filter((x) => x.type === 'in')[0]
+    const inTokenSymbol = await getSymbol(ocean, inToken.tokenAddress)
+    const outToken = row.tokens.filter((x) => x.type === 'out')[0]
+    const outTokenSymbol = await getSymbol(ocean, outToken.tokenAddress)
+    title += `Swap ${formatPrice(
+      Math.abs(inToken.value).toString(),
+      locale
+    )}${inTokenSymbol} for ${formatPrice(
+      Math.abs(outToken.value).toString(),
+      locale
+    )}${outTokenSymbol}`
+  } else {
+    for (let i = 0; i < row.tokens.length; i++) {
+      const tokenSymbol = await getSymbol(ocean, row.tokens[i].tokenAddress)
+      if (i > 0) title += '\n'
+      title += `${row.event === 'join' ? 'Add' : 'Remove'} ${formatPrice(
+        Math.abs(row.tokens[i].value).toString(),
         locale
-      )} ${inTokenSymbol} for ${formatPrice(
-        Math.abs(outToken.value).toString(),
-        locale
-      )} ${outTokenSymbol}`
-      break
+      )}${tokenSymbol}`
     }
   }
+
   return title
 }
 
