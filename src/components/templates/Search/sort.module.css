@@ -19,3 +19,13 @@
 .selected {
   color: var(--font-color-text);
 }
+
+.direction {
+  background: transparent;
+  border: none;
+  color: var(--font-color-text);
+  font-size: 1.3em;
+  outline: none;
+  padding-right: 0;
+  cursor: pointer;
+}

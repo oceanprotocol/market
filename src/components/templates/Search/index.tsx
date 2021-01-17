@@ -20,20 +20,22 @@ export default function SearchPage({
   const { config } = useOcean()
   const parsed = queryString.parse(location.search)
   const { text, owner, tags, page, sort, sortOrder, price } = parsed
-  console.log('parsed upper ', parsed)
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [loading, setLoading] = useState<boolean>()
   const [priceType, setPriceType] = useState<string>(price as string)
   const [sortType, setSortType] = useState<string>(sort as string)
+  const [sortDirection, setSortDirection] = useState<string>(
+    sortOrder as string
+  )
 
   useEffect(() => {
     if (!config?.metadataCacheUri) return
 
     async function initSearch() {
-      console.log('parsed ', parsed)
-      console.log('priceType ', priceType)
       parsed.priceType = priceType
       parsed.sort = sortType
+      parsed.sortOrder = sortDirection
+      console.log('parsed')
       setLoading(true)
       setTotalResults(undefined)
       const queryResult = await getResults(parsed, config.metadataCacheUri)
@@ -42,7 +44,16 @@ export default function SearchPage({
       setLoading(false)
     }
     initSearch()
-  }, [text, owner, tags, page, sortType, priceType, config.metadataCacheUri])
+  }, [
+    text,
+    owner,
+    tags,
+    page,
+    sortType,
+    priceType,
+    sortDirection,
+    config.metadataCacheUri
+  ])
 
   return (
     <section className={styles.grid}>
@@ -52,7 +63,12 @@ export default function SearchPage({
         )}
         <div className={styles.row}>
           <PriceFilter priceType={priceType} setPriceType={setPriceType} />
-          <Sort sortType={sortType} setSortType={setSortType} />
+          <Sort
+            sortType={sortType}
+            sortDirection={sortDirection}
+            setSortType={setSortType}
+            setSortDirection={setSortDirection}
+          />
         </div>
       </div>
       <div className={styles.results}>
