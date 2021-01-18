@@ -11,6 +11,7 @@ import { useOcean, useConsume, usePricing } from '@oceanprotocol/react'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import checkPreviousOrder from '../../../utils/checkPreviousOrder'
 import { useAsset } from '../../../providers/Asset'
+import { mapSecondsToTimeoutString } from '../../../utils/metadata'
 
 export default function Consume({
   ddo,
@@ -37,26 +38,9 @@ export default function Consume({
   const [isConsumable, setIsConsumable] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
 
-  const renderedTimeout = (timeout: number) => {
-    switch (timeout) {
-      case 0:
-        return 'forever'
-      case 3600:
-        return '1 hour'
-      case 86400:
-        return '1 day'
-      case 604800:
-        return '1 week'
-      case 2630000:
-        return '1 month'
-      default:
-        return '1 year'
-    }
-  }
-
   useEffect(() => {
     const { timeout } = ddo.findServiceByType('access').attributes.main
-    setAssetTimeout(renderedTimeout(timeout))
+    setAssetTimeout(mapSecondsToTimeoutString(timeout))
   }, [ddo])
 
   useEffect(() => {

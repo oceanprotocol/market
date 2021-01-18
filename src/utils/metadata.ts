@@ -27,6 +27,23 @@ export function mapTimeoutStringToSeconds(timeout: string): number {
   }
 }
 
+export function mapSecondsToTimeoutString(timeout: number): string {
+  switch (timeout) {
+    case 0:
+      return 'forever'
+    case 3600:
+      return '1 hour'
+    case 86400:
+      return '1 day'
+    case 604800:
+      return '1 week'
+    case 2630000:
+      return '1 month'
+    default:
+      return '1 year'
+  }
+}
+
 export function transformPublishFormToMetadata(
   {
     name,
