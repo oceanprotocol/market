@@ -11,7 +11,6 @@ import { useOcean, useConsume, usePricing } from '@oceanprotocol/react'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import checkPreviousOrder from '../../../utils/checkPreviousOrder'
 import { useAsset } from '../../../providers/Asset'
-import moment from 'moment'
 
 export default function Consume({
   ddo,
@@ -39,10 +38,19 @@ export default function Consume({
   const [assetTimeout, setAssetTimeout] = useState('')
 
   const renderedTimeout = (timeout: number) => {
-    if (timeout === 0) {
-      return 'unlimited'
-    } else {
-      return moment.duration(timeout * 1000).humanize()
+    switch (timeout) {
+      case 0:
+        return 'forever'
+      case 3600:
+        return '1 hour'
+      case 86400:
+        return '1 day'
+      case 604800:
+        return '1 week'
+      case 2630000:
+        return '1 month'
+      default:
+        return '1 year'
     }
   }
 
@@ -122,8 +130,7 @@ export default function Consume({
             {hasDatatoken || hasPreviousOrder ? 'Download' : 'Buy'}
           </Button>
           <div className={styles.help}>
-            {hasDatatoken || hasPreviousOrder ? 'Download ' : 'Buy '}
-            allowance <strong>{assetTimeout}</strong>
+            Access allowance <strong>{assetTimeout}</strong>
           </div>
           {hasDatatoken && (
             <div className={styles.help}>
