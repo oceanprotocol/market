@@ -36,6 +36,7 @@ const contentQuery = graphql`
                 help
                 type
                 required
+                sortOptions
                 options
                 rows
               }
