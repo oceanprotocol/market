@@ -78,10 +78,10 @@ export default function Edit({
         return
       }
 
-      const service = ddo.findServiceByType('access')
+      const service = ddoEditedMetdata.findServiceByType('access')
       const timeout = mapTimeoutStringToSeconds(values.timeout)
       const ddoEditedTimeout = await ocean.assets.editServiceTimeout(
-        ddo,
+        ddoEditedMetdata,
         service.index,
         timeout
       )
