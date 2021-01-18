@@ -4,6 +4,7 @@ import {
 } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { MetadataCache, Logger } from '@oceanprotocol/lib'
 import queryString from 'query-string'
+import { func } from 'prop-types'
 
 export const SortTermOptions = {
   Liquidity: 'liquidity',
@@ -31,6 +32,25 @@ export const FilterByPriceOptions = {
 } as const
 type FilterByPriceOptions = typeof FilterByPriceOptions[keyof typeof FilterByPriceOptions]
 
+function addPriceFilterToQuerry(sortTerm: string, priceFilter: string): string {
+  sortTerm = priceFilter
+    ? sortTerm === ''
+      ? `price.type:${priceFilter}`
+      : `${sortTerm} AND price.type:${priceFilter}`
+    : sortTerm
+  return sortTerm
+}
+
+function getSortType(sortParam: string): string {
+  let sortTerm =
+    sortParam === SortTermOptions.Liquidity
+      ? SortElasticTerm.Liquidity
+      : sortParam === SortTermOptions.Price
+      ? SortElasticTerm.Price
+      : SortTermOptions.Created
+  return sortTerm
+}
+
 export function getSearchQuery(
   text?: string,
   owner?: string,
@@ -42,14 +62,8 @@ export function getSearchQuery(
   sortOrder?: string,
   priceType?: string
 ): SearchQuery {
-  const sortTerm =
-    sort === SortTermOptions.Liquidity
-      ? SortElasticTerm.Liquidity
-      : sort === SortTermOptions.Price
-      ? SortElasticTerm.Price
-      : SortTermOptions.Created
+  const sortTerm = getSortType(sort)
   const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
-
   let searchTerm = owner
     ? `(publicKey.owner:${owner})`
     : tags
@@ -59,12 +73,7 @@ export function getSearchQuery(
     ? // eslint-disable-next-line no-useless-escape
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
     : text || ''
-
-  searchTerm = priceType
-    ? searchTerm === ''
-      ? `price.type:${priceType}`
-      : `${searchTerm} AND price.type:${priceType}`
-    : searchTerm
+  searchTerm = addPriceFilterToQuerry(searchTerm, priceType)
 
   return {
     page: Number(page) || 1,

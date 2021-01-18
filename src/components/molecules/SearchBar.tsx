@@ -27,7 +27,6 @@ export default function SearchBar({
   async function startSearch(e: FormEvent<HTMLButtonElement>) {
     e.preventDefault()
     if (value === '') return
-    // navigate(`/search?text=${value}&sort=created&sortOrder=desc`)
     const url = await addExistingParamsToUrl(location, 'text')
     navigate(`${url}&text=${value}`)
   }
