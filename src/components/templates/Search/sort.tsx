@@ -22,23 +22,17 @@ export default function Sort({
   setSortDirection: React.Dispatch<React.SetStateAction<string>>
 }): ReactElement {
   const navigate = useNavigate()
-
-  async function changeSortDirection(direction: string) {
-    let urlLocation = await addExistingParamsToUrl(location, 'sortOrder')
-    if (direction) {
+  async function sortResults(sortBy?: string, direction?: string) {
+    let urlLocation: string
+    if (sortBy) {
+      urlLocation = await addExistingParamsToUrl(location, 'sort')
+      urlLocation = `${urlLocation}&sort=${sortBy}`
+    } else if (direction) {
+      urlLocation = await addExistingParamsToUrl(location, 'sortOrder')
       urlLocation = `${urlLocation}&sortOrder=${direction}`
     }
     navigate(urlLocation)
   }
-
-  async function applySort(sortBy: string) {
-    let urlLocation = await addExistingParamsToUrl(location, 'sort')
-    if (sortBy) {
-      urlLocation = `${urlLocation}&sort=${sortBy}`
-    }
-    navigate(urlLocation)
-  }
-
   return (
     <div className={(generalStyles.column, sortStyles.sortList)}>
       <div className={generalStyles.description}>Sort by: </div>
@@ -59,15 +53,15 @@ export default function Sort({
               onClick={() => {
                 if (e.value === sortType) {
                   if (sortDirection === SortValueOptions.Descending) {
-                    changeSortDirection(SortValueOptions.Ascending)
+                    sortResults(null, SortValueOptions.Ascending)
                     setSortDirection(SortValueOptions.Ascending)
                   } else {
-                    changeSortDirection(SortValueOptions.Descending)
+                    sortResults(null, SortValueOptions.Descending)
                     setSortDirection(SortValueOptions.Descending)
                   }
                 } else {
                   setSortType(e.value)
-                  applySort(e.value)
+                  sortResults(e.value, null)
                 }
               }}
             >
