@@ -1,9 +1,7 @@
 import { MetadataMarket, MetadataPublishForm } from '../@types/MetaData'
 import * as Yup from 'yup'
 
-export const validationSchema: Yup.SchemaOf<
-  Partial<MetadataPublishForm>
-> = Yup.object().shape({
+export const validationSchema = Yup.object().shape({
   name: Yup.string()
     .min(4, (param) => `Title must be at least ${param.min} characters`)
     .required('Required'),

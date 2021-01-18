@@ -8,6 +8,7 @@ import removeMarkdown from 'remove-markdown'
 import Tooltip from '../atoms/Tooltip'
 import Publisher from '../atoms/Publisher'
 import { useMetadata } from '@oceanprotocol/react'
+import Time from '../atoms/Time'
 
 declare type AssetTeaserProps = {
   ddo: DDO
@@ -46,6 +47,9 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
 
         <footer className={styles.foot}>
           <Price ddo={ddo} small />
+          <p className={styles.date}>
+            <Time date={ddo?.created} relative />
+          </p>
         </footer>
       </Link>
     </article>
