@@ -46,7 +46,7 @@ export function getSearchQuery(
     sort === SortTermOptions.Liquidity
       ? SortElasticTerm.Liquidity
       : sort === SortTermOptions.Price
-      ? SortTermOptions.Price
+      ? SortElasticTerm.Price
       : SortTermOptions.Created
   const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
 
