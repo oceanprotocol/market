@@ -14,6 +14,8 @@ export function mapTimeoutStringToSeconds(timeout: string): number {
   const seconds =
     timeout === 'Forever'
       ? 0
+      : timeout === '1 day'
+      ? 86400
       : timeout === '1 week'
       ? 604800
       : timeout === '1 month'

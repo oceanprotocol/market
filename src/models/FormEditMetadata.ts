@@ -19,6 +19,8 @@ export function getInitialValues(
     timeout:
       timeout === 0
         ? 'Forever'
+        : timeout === 86400
+        ? '1 day'
         : timeout === 604800
         ? '1 week'
         : timeout === 2630000
