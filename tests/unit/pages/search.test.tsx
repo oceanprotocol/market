@@ -10,10 +10,16 @@ import {
 describe('Search', () => {
   it('renders without crashing', async () => {
     const history = createHistory(createMemorySource('/search?text=water'))
+    const setTotalResults = (totalResults: number) => {
+      const results = totalResults
+    }
 
     const { container } = render(
       <LocationProvider history={history}>
-        <Search location={{ search: '?text=water' } as any} />
+        <Search
+          location={{ search: '?text=water' } as any}
+          setTotalResults={(totalResults) => setTotalResults(totalResults)}
+        />
       </LocationProvider>
     )
     expect(container.firstChild).toBeInTheDocument()

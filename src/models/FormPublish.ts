@@ -17,6 +17,7 @@ export const validationSchema: Yup.SchemaOf<MetadataPublishForm> = Yup.object()
       .required('Required'),
     files: Yup.array<FileMetadata>().required('Required').nullable(),
     description: Yup.string().min(10).required('Required'),
+    timeout: Yup.string().required('Required'),
     access: Yup.string()
       .matches(/Compute|Download/g, { excludeEmptyString: true })
       .required('Required'),
@@ -37,6 +38,8 @@ export const initialValues: Partial<MetadataPublishForm> = {
   },
   files: '',
   description: '',
+  timeout: 'Forever',
   access: '',
-  termsAndConditions: false
+  termsAndConditions: false,
+  tags: ''
 }

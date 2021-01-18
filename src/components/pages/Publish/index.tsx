@@ -6,7 +6,10 @@ import FormPublish from './FormPublish'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
 import { FormContent } from '../../../@types/Form'
 import { initialValues, validationSchema } from '../../../models/FormPublish'
-import { transformPublishFormToMetadata } from '../../../utils/metadata'
+import {
+  transformPublishFormToMetadata,
+  mapTimeoutStringToSeconds
+} from '../../../utils/metadata'
 import MetadataPreview from '../../molecules/MetadataPreview'
 import { MetadataPublishForm } from '../../../@types/MetaData'
 import { useUserPreferences } from '../../../providers/UserPreferences'
@@ -37,6 +40,8 @@ export default function PublishPage({
     resetForm: () => void
   ): Promise<void> {
     const metadata = transformPublishFormToMetadata(values)
+    const timeout = mapTimeoutStringToSeconds(values.timeout)
+
     const serviceType = values.access === 'Download' ? 'access' : 'compute'
 
     try {
@@ -50,7 +55,8 @@ export default function PublishPage({
       const ddo = await publish(
         (metadata as unknown) as Metadata,
         serviceType,
-        values.dataTokenOptions
+        values.dataTokenOptions,
+        timeout
       )
 
       // Publish failed

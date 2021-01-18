@@ -40,6 +40,9 @@
 
 .foot {
   margin-top: calc(var(--spacer) / 4);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
 }
 
 .foot p {
@@ -60,4 +63,9 @@
 
 .symbol {
   display: block;
+}
+
+.date {
+  font-size: var(--font-size-mini);
+  margin-top: calc(var(--spacer) / 2);
 }

@@ -12,6 +12,7 @@ import MetadataPreview from '../../../molecules/MetadataPreview'
 import Debug from './Debug'
 import Web3Feedback from '../../../molecules/Wallet/Feedback'
 import FormEditMetadata from './FormEditMetadata'
+import { mapTimeoutStringToSeconds } from '../../../../utils/metadata'
 import styles from './index.module.css'
 import { Logger } from '@oceanprotocol/lib'
 import MetadataFeedback from '../../../molecules/MetadataFeedback'
@@ -35,6 +36,7 @@ const contentQuery = graphql`
                 help
                 type
                 required
+                sortOptions
                 options
                 rows
               }
@@ -56,7 +58,7 @@ export default function Edit({
 
   const { debug } = useUserPreferences()
   const { ocean, account } = useOcean()
-  const { did, metadata, ddo, refreshDdo } = useAsset()
+  const { metadata, ddo, refreshDdo } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
 
@@ -67,22 +69,43 @@ export default function Edit({
     resetForm: () => void
   ) {
     try {
-      const ddo = await ocean.assets.editMetadata(
-        did,
-        { title: values.name, description: values.description },
-        account
-      )
-
-      // Edit failed
-      if (!ddo) {
+      const ddoEditedMetdata = await ocean.assets.editMetadata(ddo, {
+        title: values.name,
+        description: values.description
+      })
+      if (!ddoEditedMetdata) {
         setError(content.form.error)
         Logger.error(content.form.error)
         return
       }
 
-      // Edit succeeded
-      setSuccess(content.form.success)
-      resetForm()
+      const service = ddoEditedMetdata.findServiceByType('access')
+      const timeout = mapTimeoutStringToSeconds(values.timeout)
+      const ddoEditedTimeout = await ocean.assets.editServiceTimeout(
+        ddoEditedMetdata,
+        service.index,
+        timeout
+      )
+      if (!ddoEditedTimeout) {
+        setError(content.form.error)
+        Logger.error(content.form.error)
+        return
+      }
+
+      const storedddo = await ocean.OnChainMetadataCache.update(
+        ddoEditedTimeout.id,
+        ddoEditedTimeout,
+        account.getId()
+      )
+      if (!storedddo) {
+        setError(content.form.error)
+        Logger.error(content.form.error)
+        return
+      } else {
+        // Edit succeeded
+        setSuccess(content.form.success)
+        resetForm()
+      }
     } catch (error) {
       Logger.error(error.message)
       setError(error.message)
@@ -91,7 +114,10 @@ export default function Edit({
 
   return (
     <Formik
-      initialValues={getInitialValues(metadata)}
+      initialValues={getInitialValues(
+        metadata,
+        ddo.findServiceByType('access').attributes.main.timeout
+      )}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
         // move user's focus to top of screen

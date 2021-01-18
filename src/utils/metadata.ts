@@ -10,6 +10,23 @@ export function transformTags(value: string): string[] {
   return transformedTags
 }
 
+export function mapTimeoutStringToSeconds(timeout: string): number {
+  switch (timeout) {
+    case 'Forever':
+      return 0
+    case '1 day':
+      return 86400
+    case '1 week':
+      return 604800
+    case '1 month':
+      return 2630000
+    case '1 year':
+      return 31556952
+    default:
+      return 0
+  }
+}
+
 export function transformPublishFormToMetadata(
   {
     name,
