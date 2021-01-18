@@ -6,7 +6,7 @@ import styles from './index.module.css'
 import queryString from 'query-string'
 import PriceFilter from './filterPrice'
 import Sort from './sort'
-import { getResults } from './utils'
+import { getResults, addExistingParamsToUrl } from './utils'
 import Loader from '../../atoms/Loader'
 import { useOcean } from '@oceanprotocol/react'
 
@@ -35,7 +35,6 @@ export default function SearchPage({
       parsed.priceType = priceType
       parsed.sort = sortType
       parsed.sortOrder = sortDirection
-      console.log('parsed')
       setLoading(true)
       setTotalResults(undefined)
       const queryResult = await getResults(parsed, config.metadataCacheUri)

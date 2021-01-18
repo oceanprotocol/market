@@ -1,10 +1,10 @@
-import React, { ReactElement, useState, useEffect } from 'react'
+import React, { ReactElement } from 'react'
+import { useNavigate } from '@reach/router'
 import generalStyles from './index.module.css'
 import filterStyles from './filterPrice.module.css'
 import classNames from 'classnames/bind'
-import queryString from 'query-string'
+import { addExistingParamsToUrl, FilterByPriceOptions } from './utils'
 const cx = classNames.bind(filterStyles)
-import { useNavigate } from '@reach/router'
 
 export default function FilterPrice({
   priceType,
@@ -15,22 +15,11 @@ export default function FilterPrice({
 }): ReactElement {
   const navigate = useNavigate()
 
-  function applyFilter(filterBy: string) {
-    const parsed = queryString.parse(location.search)
-    let urlLocation = '/search?'
-    for (let querryParam in parsed) {
-      if (querryParam !== 'priceType') {
-        let value = parsed[querryParam]
-        urlLocation = `${urlLocation}${querryParam}=${value}&`
-      }
-    }
+  async function applyFilter(filterBy: string) {
+    let urlLocation = await addExistingParamsToUrl(location, 'priceType')
     if (filterBy) {
-      urlLocation = `${urlLocation}priceType=${filterBy}`
-    } else {
-      urlLocation = urlLocation.slice(0, -1)
+      urlLocation = `${urlLocation}&priceType=${filterBy}`
     }
-    console.log('filterBy ', filterBy)
-    console.log('urlLocation ', urlLocation)
     navigate(urlLocation)
   }
 
@@ -39,8 +28,8 @@ export default function FilterPrice({
       <div className={generalStyles.description}>Filter by price: </div>
       {[
         { display: 'all', value: undefined },
-        { display: 'fixed', value: 'exchange' },
-        { display: 'dynamic', value: 'pool' }
+        { display: 'fixed', value: FilterByPriceOptions.Fixed },
+        { display: 'dynamic', value: FilterByPriceOptions.Dynamic }
       ].map((e, index) => {
         const filter = cx({
           [filterStyles.selected]: e.value === priceType,

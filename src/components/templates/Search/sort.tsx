@@ -1,11 +1,15 @@
-import React, { ReactElement, useState, useEffect } from 'react'
+import React, { ReactElement } from 'react'
+import { useNavigate } from '@reach/router'
 import Tooltip from '../../atoms/Tooltip'
+import {
+  addExistingParamsToUrl,
+  SortTermOptions,
+  SortValueOptions
+} from './utils'
 import generalStyles from './index.module.css'
 import sortStyles from './sort.module.css'
 import classNames from 'classnames/bind'
-import queryString from 'query-string'
 const cx = classNames.bind(sortStyles)
-import { useNavigate } from '@reach/router'
 
 export default function Sort({
   sortType,
@@ -20,41 +24,19 @@ export default function Sort({
 }): ReactElement {
   const navigate = useNavigate()
 
-  function changeSortDirection(direction: string) {
-    const parsed = queryString.parse(location.search)
-    let urlLocation = '/search?'
-    for (let querryParam in parsed) {
-      if (querryParam !== 'sortOrder') {
-        let value = parsed[querryParam]
-        urlLocation = `${urlLocation}${querryParam}=${value}&`
-      }
-    }
+  async function changeSortDirection(direction: string) {
+    let urlLocation = await addExistingParamsToUrl(location, 'sortOrder')
     if (direction) {
-      urlLocation = `${urlLocation}sortOrder=${direction}`
-    } else {
-      urlLocation = urlLocation.slice(0, -1)
+      urlLocation = `${urlLocation}&sortOrder=${direction}`
     }
-    console.log('sortOrder ', direction)
-    console.log('urlLocation ', urlLocation)
     navigate(urlLocation)
   }
 
-  function applySort(sortBy: string) {
-    const parsed = queryString.parse(location.search)
-    let urlLocation = '/search?'
-    for (let querryParam in parsed) {
-      if (querryParam !== 'sort') {
-        let value = parsed[querryParam]
-        urlLocation = `${urlLocation}${querryParam}=${value}&`
-      }
-    }
+  async function applySort(sortBy: string) {
+    let urlLocation = await addExistingParamsToUrl(location, 'sort')
     if (sortBy) {
-      urlLocation = `${urlLocation}sort=${sortBy}`
-    } else {
-      urlLocation = urlLocation.slice(0, -1)
+      urlLocation = `${urlLocation}&sort=${sortBy}`
     }
-    console.log('sortBy ', sortBy)
-    console.log('urlLocation ', urlLocation)
     navigate(urlLocation)
   }
 
@@ -62,16 +44,16 @@ export default function Sort({
     <div className={(generalStyles.column, sortStyles.sortList)}>
       <div className={generalStyles.description}>Sort by: </div>
       {[
-        { display: 'Published', value: 'created' },
-        { display: 'Liquidity', value: 'liquidity' },
-        { display: 'Price', value: 'price' }
+        { display: 'Published', value: SortTermOptions.Created },
+        { display: 'Liquidity', value: SortTermOptions.Liquidity },
+        { display: 'Price', value: SortTermOptions.Price }
       ].map((e, index) => {
         const sorted = cx({
           [sortStyles.selected]: e.value === sortType,
           [sortStyles.sorted]: true
         })
         return (
-          <div>
+          <div key={index}>
             <div
               key={index}
               className={sorted}
@@ -88,11 +70,11 @@ export default function Sort({
                     placement="bottom"
                     key={e.value + ' tlt'}
                   >
-                    {sortDirection === 'desc' ? (
+                    {sortDirection === SortValueOptions.Descending ? (
                       <button
                         onClick={(e) => {
-                          changeSortDirection('asc')
-                          setSortDirection('asc')
+                          changeSortDirection(SortValueOptions.Ascending)
+                          setSortDirection(SortValueOptions.Ascending)
                         }}
                         className={sortStyles.direction}
                         key={e.value + ' dir'}
@@ -102,8 +84,8 @@ export default function Sort({
                     ) : (
                       <button
                         onClick={(e) => {
-                          changeSortDirection('desc')
-                          setSortDirection('desc')
+                          changeSortDirection(SortValueOptions.Descending)
+                          setSortDirection(SortValueOptions.Descending)
                         }}
                         className={sortStyles.direction}
                         key={e.value + ' dir'}

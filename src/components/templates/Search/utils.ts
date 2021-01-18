@@ -3,19 +3,33 @@ import {
   QueryResult
 } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { MetadataCache, Logger } from '@oceanprotocol/lib'
+import queryString from 'query-string'
 
-const SortTermOptions = {
+export const SortTermOptions = {
   Liquidity: 'liquidity',
   Price: 'price',
   Created: 'created'
 } as const
 type SortTermOptions = typeof SortTermOptions[keyof typeof SortTermOptions]
 
-const SortValueOptions = {
+export const SortElasticTerm = {
+  Liquidity: 'price.ocean',
+  Price: 'price.value',
+  Created: 'created'
+} as const
+type SortElasticTerm = typeof SortElasticTerm[keyof typeof SortElasticTerm]
+
+export const SortValueOptions = {
   Ascending: 'asc',
   Descending: 'desc'
 } as const
 type SortValueOptions = typeof SortValueOptions[keyof typeof SortValueOptions]
+
+export const FilterByPriceOptions = {
+  Fixed: 'exchange',
+  Dynamic: 'pool'
+} as const
+type FilterByPriceOptions = typeof FilterByPriceOptions[keyof typeof FilterByPriceOptions]
 
 export function getSearchQuery(
   text?: string,
@@ -28,12 +42,11 @@ export function getSearchQuery(
   sortOrder?: string,
   priceType?: string
 ): SearchQuery {
-  console.log('getSearchQuery priceType ', priceType)
   const sortTerm =
     sort === SortTermOptions.Liquidity
-      ? 'price.ocean'
+      ? SortElasticTerm.Liquidity
       : sort === SortTermOptions.Price
-      ? 'price.value'
+      ? SortTermOptions.Price
       : SortTermOptions.Created
   const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
 
@@ -105,7 +118,6 @@ export async function getResults(
     sortOrder,
     priceType
   } = params
-  console.log('getResults params ', params)
   const metadataCache = new MetadataCache(metadataCacheUri, Logger)
   const searchQuery = getSearchQuery(
     text,
@@ -118,8 +130,31 @@ export async function getResults(
     sortOrder,
     priceType
   )
-  console.log('searchQuery', searchQuery)
   const queryResult = await metadataCache.queryMetadata(searchQuery)
 
   return queryResult
+}
+
+export async function addExistingParamsToUrl(
+  location: Location,
+  excluded: string
+): Promise<string> {
+  const parsed = queryString.parse(location.search)
+  let urlLocation = '/search?'
+  if (Object.keys(parsed).length > 0) {
+    for (const querryParam in parsed) {
+      if (querryParam !== excluded) {
+        if (querryParam === 'page' && excluded === 'text') {
+          Logger.log('remove page when starting a new search')
+        } else {
+          const value = parsed[querryParam]
+          urlLocation = `${urlLocation}${querryParam}=${value}&`
+        }
+      }
+    }
+  } else {
+    urlLocation = `${urlLocation}sort=${SortTermOptions.Created}&sortOrder=${SortValueOptions.Descending}&`
+  }
+  urlLocation = urlLocation.slice(0, -1)
+  return urlLocation
 }
