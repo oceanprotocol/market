@@ -39,7 +39,7 @@ const txHistoryQueryByPool = gql`
   }
 `
 const txHistoryQuery = gql`
-  query TransactionHistory($user: String, $pool: String) {
+  query TransactionHistory($user: String) {
     poolTransactions(
       orderBy: timestamp
       orderDirection: desc
@@ -180,6 +180,9 @@ export default function PoolTransactions({
       // pollInterval: 20000
     }
   )
+  const onPageChange = (page: any, totalRows: any) => {
+    console.log('page c', page, totalRows)
+  }
 
   useEffect(() => {
     if (!data) return
