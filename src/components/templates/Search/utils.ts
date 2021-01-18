@@ -42,7 +42,7 @@ function addPriceFilterToQuerry(sortTerm: string, priceFilter: string): string {
 }
 
 function getSortType(sortParam: string): string {
-  let sortTerm =
+  const sortTerm =
     sortParam === SortTermOptions.Liquidity
       ? SortElasticTerm.Liquidity
       : sortParam === SortTermOptions.Price
