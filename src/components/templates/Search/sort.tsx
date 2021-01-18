@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react'
 import { useNavigate } from '@reach/router'
-import Tooltip from '../../atoms/Tooltip'
 import {
   addExistingParamsToUrl,
   SortTermOptions,
@@ -58,42 +57,32 @@ export default function Sort({
               key={index}
               className={sorted}
               onClick={() => {
-                setSortType(e.value)
-                applySort(e.value)
+                if (e.value === sortType) {
+                  if (sortDirection === SortValueOptions.Descending) {
+                    changeSortDirection(SortValueOptions.Ascending)
+                    setSortDirection(SortValueOptions.Ascending)
+                  } else {
+                    changeSortDirection(SortValueOptions.Descending)
+                    setSortDirection(SortValueOptions.Descending)
+                  }
+                } else {
+                  setSortType(e.value)
+                  applySort(e.value)
+                }
               }}
             >
               {e.display}
               {e.value === sortType ? (
                 <div key={e.value}>
-                  <Tooltip
-                    content="click to change direction"
-                    placement="bottom"
-                    key={e.value + ' tlt'}
-                  >
-                    {sortDirection === SortValueOptions.Descending ? (
-                      <button
-                        onClick={(e) => {
-                          changeSortDirection(SortValueOptions.Ascending)
-                          setSortDirection(SortValueOptions.Ascending)
-                        }}
-                        className={sortStyles.direction}
-                        key={e.value + ' dir'}
-                      >
-                        {String.fromCharCode(9660)}
-                      </button>
-                    ) : (
-                      <button
-                        onClick={(e) => {
-                          changeSortDirection(SortValueOptions.Descending)
-                          setSortDirection(SortValueOptions.Descending)
-                        }}
-                        className={sortStyles.direction}
-                        key={e.value + ' dir'}
-                      >
-                        {String.fromCharCode(9650)}
-                      </button>
-                    )}
-                  </Tooltip>
+                  {sortDirection === SortValueOptions.Descending ? (
+                    <button className={sortStyles.direction}>
+                      {String.fromCharCode(9660)}
+                    </button>
+                  ) : (
+                    <button className={sortStyles.direction}>
+                      {String.fromCharCode(9650)}
+                    </button>
+                  )}
                 </div>
               ) : null}
             </div>
