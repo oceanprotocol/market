@@ -11,6 +11,7 @@ import { useOcean, useConsume, usePricing } from '@oceanprotocol/react'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import checkPreviousOrder from '../../../utils/checkPreviousOrder'
 import { useAsset } from '../../../providers/Asset'
+import moment from 'moment'
 
 export default function Consume({
   ddo,
@@ -35,6 +36,20 @@ export default function Consume({
   const [isDisabled, setIsDisabled] = useState(true)
   const [hasDatatoken, setHasDatatoken] = useState(false)
   const [isConsumable, setIsConsumable] = useState(true)
+  const [assetTimeout, setAssetTimeout] = useState('')
+
+  const renderedTimeout = (timeout: number) => {
+    if (timeout === 0) {
+      return 'unlimited'
+    } else {
+      return moment.duration(timeout * 1000).humanize()
+    }
+  }
+
+  useEffect(() => {
+    const { timeout } = ddo.findServiceByType('access').attributes.main
+    setAssetTimeout(renderedTimeout(timeout))
+  }, [ddo])
 
   useEffect(() => {
     if (!price) return
@@ -106,6 +121,10 @@ export default function Consume({
           <Button style="primary" onClick={handleConsume} disabled={isDisabled}>
             {hasDatatoken || hasPreviousOrder ? 'Download' : 'Buy'}
           </Button>
+          <div className={styles.help}>
+            {hasDatatoken || hasPreviousOrder ? 'Download ' : 'Buy '}
+            allowance <strong>{assetTimeout}</strong>
+          </div>
           {hasDatatoken && (
             <div className={styles.help}>
               You own {dtBalance} {ddo.dataTokenInfo.symbol} allowing you to use
