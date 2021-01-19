@@ -6,13 +6,17 @@ import Input from '../../../atoms/Input'
 import { useOcean } from '@oceanprotocol/react'
 import { FormFieldProps } from '../../../../@types/Form'
 import { MetadataPublishForm } from '../../../../@types/MetaData'
+import { checkIfTimeoutInPredefinedValues } from '../../../../utils/metadata'
+import { initialValues } from '../../../../models/FormTrade'
 
 export default function FormEditMetadata({
   data,
-  setShowEdit
+  setShowEdit,
+  values
 }: {
   data: FormFieldProps[]
   setShowEdit: (show: boolean) => void
+  values: Partial<MetadataPublishForm>
 }): ReactElement {
   const { ocean, accountId } = useOcean()
   const {
@@ -30,6 +34,30 @@ export default function FormEditMetadata({
     validateField(field.name)
     setFieldValue(field.name, e.target.value)
   }
+
+  function handleTimeoutCustomOption() {
+    const timeoutInputIndex = data.findIndex(
+      (element) => element.name === 'timeout'
+    )
+    if (
+      data[timeoutInputIndex].options.length < 6 &&
+      !checkIfTimeoutInPredefinedValues(values.timeout)
+    ) {
+      data[timeoutInputIndex].options.push(values.timeout)
+    } else if (
+      data[timeoutInputIndex].options.length === 6 &&
+      checkIfTimeoutInPredefinedValues(values.timeout)
+    ) {
+      data[timeoutInputIndex].options.pop()
+    } else if (
+      data[timeoutInputIndex].options.length === 6 &&
+      data[timeoutInputIndex].options[5] !== values.timeout
+    ) {
+      data[timeoutInputIndex].options[5] = values.timeout
+    }
+  }
+
+  handleTimeoutCustomOption()
 
   return (
     <Form className={styles.form}>

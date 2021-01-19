@@ -127,7 +127,7 @@ export default function Edit({
         await handleSubmit(values, resetForm)
       }}
     >
-      {({ isSubmitting, values }) =>
+      {({ isSubmitting, values, initialValues }) =>
         isSubmitting || hasFeedback ? (
           <MetadataFeedback
             title="Updating Data Set"
@@ -149,6 +149,7 @@ export default function Edit({
               <FormEditMetadata
                 data={content.form.data}
                 setShowEdit={setShowEdit}
+                values={initialValues}
               />
 
               <aside>

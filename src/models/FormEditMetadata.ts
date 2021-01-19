@@ -1,4 +1,5 @@
 import { MetadataMarket, MetadataPublishForm } from '../@types/MetaData'
+import { mapSecondsToTimeoutString } from '../utils/metadata'
 import * as Yup from 'yup'
 
 export const validationSchema = Yup.object().shape({
@@ -9,23 +10,6 @@ export const validationSchema = Yup.object().shape({
   timeout: Yup.string().required('Required')
 })
 
-function mapTimoutSecondsToString(timeout: number) {
-  switch (timeout) {
-    case 0:
-      return 'Forever'
-    case 86400:
-      return '1 day'
-    case 604800:
-      return '1 week'
-    case 2630000:
-      return '1 month'
-    case 31556952:
-      return '1 year'
-    default:
-      return 'Forever'
-  }
-}
-
 export function getInitialValues(
   metadata: MetadataMarket,
   timeout: number
@@ -33,6 +17,6 @@ export function getInitialValues(
   return {
     name: metadata.main.name,
     description: metadata.additionalInformation.description,
-    timeout: mapTimoutSecondsToString(timeout)
+    timeout: mapSecondsToTimeoutString(timeout)
   }
 }
