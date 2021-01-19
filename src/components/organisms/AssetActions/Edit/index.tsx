@@ -55,8 +55,8 @@ export default function Edit({
   const content = data.content.edges[0].node.childPagesJson
 
   const { debug } = useUserPreferences()
-  const { ocean, account } = useOcean()
-  const { did, metadata, ddo, refreshDdo } = useAsset()
+  const { ocean } = useOcean()
+  const { metadata, ddo, refreshDdo } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
 
@@ -67,14 +67,13 @@ export default function Edit({
     resetForm: () => void
   ) {
     try {
-      const ddo = await ocean.assets.editMetadata(
-        did,
-        { title: values.name, description: values.description },
-        account
-      )
+      const newDdo = await ocean.assets.editMetadata(ddo, {
+        title: values.name,
+        description: values.description
+      })
 
       // Edit failed
-      if (!ddo) {
+      if (!newDdo) {
         setError(content.form.error)
         Logger.error(content.form.error)
         return
