@@ -19,6 +19,7 @@
 
 .help {
   composes: help from './index.module.css';
+  margin-top: calc(var(--spacer) / 7);
 }
 
 .feedback {
