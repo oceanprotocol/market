@@ -1,14 +1,14 @@
-.filterList {
+/* .filterList {
   display: inline-flex;
   float: left;
-}
+} */
 
 .filter {
-  padding: calc(var(--spacer) / 4);
+  padding: calc(var(--spacer) / 6);
   border: 1px solid var(--border-color);
   text-transform: uppercase;
   border-radius: var(--border-radius);
-  margin-right: calc(var(--spacer) / 4);
+  margin-right: calc(var(--spacer) / 6);
   font-weight: var(--font-weight-bold);
   color: var(--color-secondary);
   background: var(--background-body);

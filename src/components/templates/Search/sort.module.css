@@ -1,17 +1,32 @@
 .sortList {
-  display: inline-flex;
-  float: right;
+  display: flex;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  background: var(--background-body);
+}
+
+.sortLabel {
+  color: var(--color-secondary);
+  font-size: var(--font-size-small);
+  font-family: var(--font-family-heading);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+  display: block;
+  margin-bottom: calc(var(--spacer) / 4);
+  padding-top: calc(var(--spacer) / 4);
+  margin-left: calc(var(--spacer) / 2);
+  margin-right: calc(var(--spacer) / 4);
+  text-transform: uppercase;
+  background: var(--background-body);
 }
 
 .sorted {
-  display: inline-flex;
+  display: flex;
   padding: calc(var(--spacer) / 4);
-  border: 1px solid var(--border-color);
-  text-transform: uppercase;
-  border-radius: var(--border-radius);
   margin-right: calc(var(--spacer) / 4);
-  font-weight: var(--font-weight-bold);
   color: var(--color-secondary);
+  text-transform: capitalize;
+  font-weight: var(--font-weight-base);
   background: var(--background-body);
   cursor: pointer;
 }
@@ -21,11 +36,14 @@
 }
 
 .direction {
+  display: flex;
   background: transparent;
   border: none;
   color: var(--font-color-text);
-  font-size: 1.3em;
+  font-size: 0.75em;
   outline: none;
+  margin-left: calc(var(--spacer) / 8);
+  margin-top: calc(var(--spacer) / 14);
   padding-right: 0;
   cursor: pointer;
 }

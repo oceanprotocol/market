@@ -2,18 +2,18 @@
   display: grid;
 }
 
-row {
-  display: flex;
+.row {
+  display: inline-flex;
   flex-direction: column;
   align-items: stretch;
   justify-content: space-between;
   margin-bottom: calc(var(--spacer) / 2);
-  margin-bottom: var(--spacer);
+  width: 100%;
 }
+
 @media (min-width: 55rem) {
   .row {
     flex-direction: row;
-    padding-bottom: calc(var(--spacer) * 2);
   }
 }
 
@@ -23,11 +23,6 @@ row {
   padding-top: calc(var(--spacer) / 6);
   white-space: nowrap;
   font-size: var(--font-size-large);
-}
-.column {
-  display: flex;
-  align-items: center;
-  margin-top: calc(var(--spacer) / 2);
 }
 
 @media (min-width: 55rem) {

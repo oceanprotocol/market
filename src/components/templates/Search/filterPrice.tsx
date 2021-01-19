@@ -4,6 +4,7 @@ import generalStyles from './index.module.css'
 import filterStyles from './filterPrice.module.css'
 import classNames from 'classnames/bind'
 import { addExistingParamsToUrl, FilterByPriceOptions } from './utils'
+import Button from '../../atoms/Button'
 const cx = classNames.bind(filterStyles)
 
 export default function FilterPrice({
@@ -24,19 +25,20 @@ export default function FilterPrice({
   }
 
   return (
-    <div className={(generalStyles.column, filterStyles.filterList)}>
-      <div className={generalStyles.description}>Filter by price: </div>
+    // <div className={(generalStyles.column, filterStyles.filterList)}>
+    <div>
       {[
         { display: 'all', value: undefined },
-        { display: 'fixed', value: FilterByPriceOptions.Fixed },
-        { display: 'dynamic', value: FilterByPriceOptions.Dynamic }
+        { display: 'fixed price', value: FilterByPriceOptions.Fixed },
+        { display: 'dynamic price', value: FilterByPriceOptions.Dynamic }
       ].map((e, index) => {
         const filter = cx({
           [filterStyles.selected]: e.value === priceType,
           [filterStyles.filter]: true
         })
         return (
-          <div
+          <Button
+            size="small"
             key={index}
             className={filter}
             onClick={async () => {
@@ -45,7 +47,7 @@ export default function FilterPrice({
             }}
           >
             {e.display}
-          </div>
+          </Button>
         )
       })}
     </div>

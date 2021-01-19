@@ -5,6 +5,8 @@ import {
   SortTermOptions,
   SortValueOptions
 } from './utils'
+import Button from '../../atoms/Button'
+import Label from '../../atoms/Input/Label'
 import generalStyles from './index.module.css'
 import sortStyles from './sort.module.css'
 import classNames from 'classnames/bind'
@@ -34,8 +36,8 @@ export default function Sort({
     navigate(urlLocation)
   }
   return (
-    <div className={(generalStyles.column, sortStyles.sortList)}>
-      <div className={generalStyles.description}>Sort by: </div>
+    <div className={sortStyles.sortList}>
+      <Label className={sortStyles.sortLabel}>Sort</Label>
       {[
         { display: 'Published', value: SortTermOptions.Created },
         { display: 'Liquidity', value: SortTermOptions.Liquidity },
@@ -47,9 +49,10 @@ export default function Sort({
         })
         return (
           <div key={index}>
-            <div
+            <Button
               key={index}
               className={sorted}
+              size="small"
               onClick={() => {
                 if (e.value === sortType) {
                   if (sortDirection === SortValueOptions.Descending) {
@@ -69,17 +72,17 @@ export default function Sort({
               {e.value === sortType ? (
                 <div key={e.value}>
                   {sortDirection === SortValueOptions.Descending ? (
-                    <button className={sortStyles.direction}>
+                    <Label className={sortStyles.direction}>
                       {String.fromCharCode(9660)}
-                    </button>
+                    </Label>
                   ) : (
-                    <button className={sortStyles.direction}>
+                    <Label className={sortStyles.direction}>
                       {String.fromCharCode(9650)}
-                    </button>
+                    </Label>
                   )}
                 </div>
               ) : null}
-            </div>
+            </Button>
           </div>
         )
       })}
