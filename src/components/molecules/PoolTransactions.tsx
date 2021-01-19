@@ -176,13 +176,10 @@ export default function PoolTransactions({
       variables: {
         user: accountId?.toLowerCase(),
         pool: poolAddress?.toLowerCase()
-      }
-      // pollInterval: 20000
+      },
+      pollInterval: 20000
     }
   )
-  const onPageChange = (page: any, totalRows: any) => {
-    console.log('page c', page, totalRows)
-  }
 
   useEffect(() => {
     if (!data) return
