@@ -75,7 +75,7 @@ export default function ComputeJobs(): ReactElement {
 
   useEffect(() => {
     async function getTitle(did: string) {
-      const ddo = await ocean.metadatacache.retrieveDDO(did)
+      const ddo = await ocean.metadataCache.retrieveDDO(did)
       const metadata = ddo.findServiceByType('metadata')
       return metadata.attributes.main.name
     }
