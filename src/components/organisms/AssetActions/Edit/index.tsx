@@ -55,7 +55,7 @@ export default function Edit({
   const content = data.content.edges[0].node.childPagesJson
 
   const { debug } = useUserPreferences()
-  const { ocean } = useOcean()
+  const { ocean, accountId } = useOcean()
   const { metadata, ddo, refreshDdo } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
@@ -67,13 +67,17 @@ export default function Edit({
     resetForm: () => void
   ) {
     try {
+      // Construct new DDO with new values
       const newDdo = await ocean.assets.editMetadata(ddo, {
         title: values.name,
         description: values.description
       })
 
+      // Update DDO on-chain
+      const tx = await ocean.assets.updateMetadata(newDdo, accountId)
+
       // Edit failed
-      if (!newDdo) {
+      if (!newDdo || !tx) {
         setError(content.form.error)
         Logger.error(content.form.error)
         return
