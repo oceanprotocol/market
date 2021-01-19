@@ -20,7 +20,8 @@ export default function Footer(): ReactElement {
           © {year} <Markdown text={copyright} /> —{' '}
           <Link to="/terms">Terms</Link>
           {' — '}
-          <a href="https://oceanprotocol.com/privacy">Privacy</a>
+          {/*ewai change */}
+          <a href="https://energyweb.org/privacy-tbd">Privacy</a>{' '}
         </div>
       </div>
     </footer>

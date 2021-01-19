@@ -1,6 +1,35 @@
-[![banner](https://raw.githubusercontent.com/oceanprotocol/art/master/github/repo-banner%402x.png)](https://oceanprotocol.com)
+![EWAI Header](https://adivate.net/doc/ewai/header2.jpg)
 
-<h1 align="center">Ocean Marketplace</h1>
+# EnergyWeb Renewables & Clean Energy Data Marketplace for Analytics and A.I. Learning
+
+# OVERVIEW
+
+Imagine being able to do analysis and learning across clean energy and renewables devices, networks and industries, for example, by analyzing and learning from energy consumption and usage patterns across wind, solar, EV, hydro and geothermal networks by being able to apply AI learning to energy consumption patterns to improve overall grid and IOT device efficiencies. The application of AI techniques can potentially expose heretofore unknown energy consumption patterns across clean energy and renewables networks resulting in efficiency recommendations and improvements.
+
+EWAI, short for EnergyWeb A.I., is a conceptual prototype for an EW to OCEAN API bridge and subsystem which enables the creation of OCEAN IOT Energy Data Marketplace(s) fed by millions/billions of EW-DOS enabled devices. The EW-DOS devices send Power Telemetry Data (PDT) about energy and power usage and consumption metrics to the marketplace(s). OCEAN's data marketplaces would be an ideal way to apply AI learning to improve the energy efficiency of IOT devices and networks by studying patterns visible from their real-world consumption data. Gathering decentralized PTD data together into Ocean data tokens would also allow algos to be developed and applied to energy data which may look for and identify unusual and heretofore unknown consumption patterns, and even potentially start automatically addressing areas of network and system efficiency improvements and optimizations through learning techniques.
+
+An EWAI deployment consists of an [EWAI-SERVER](https://github.com/energywebfoundation/ewai) instance paired with an [EWAI-MARKET](https://github.com/energywebfoundation/ewai-market) instance (along with supporting EnergyWeb components):
+
+1. [EWAI-SERVER](https://github.com/energywebfoundation/ewai): This is the server component which offers a streaming data cache for DER PTD (Power Telemetry Data), and
+2. [EWAI-MARKET](https://github.com/energywebfoundation/ewai-market): This repository, which is a fork of the [V3 Ocean Protocol Marketplace](https://github.com/oceanprotocol/market), whereby the EWAI energy data assets can be published via Ocean Protocol data tokens. You should familiarize yourself first therefore with Ocean Protocol, as understanding how Ocean works will be necessary also.
+
+# PREREQUISITES
+
+In order to setup and run this EWAI-MARKET code, you must first learn, configure and setup an [EWAI-SERVER](https://github.com/energywebfoundation/ewai) instance. Therefore, please start with [that repo]https://github.com/energywebfoundation/ewai) as it contains the main documentation and instructions for setting up an EWAI instance. EWAI also requires an understanding (and prior configuration) of all of the following EnergyWeb subsystems:
+
+1. Energy Web: https://energyweb.org
+2. Energy Web Chain (EWC): https://www.energyweb.org/technology/energy-web-chain/
+3. Energy Web Token (EWT): https://www.energyweb.org/technology/token/
+4. Ocean Protocol: https://oceanprotocol.com/
+5. Energy Web EW-DOS: https://www.energyweb.org/technology/ew-dos/
+6. Energy Web Name Service (EWNS): https://ens.energyweb.org
+7. Energy Web EW-Switchboard: https://switchboard.energyweb.org/
+8. Energy Web EW-Messaging: https://github.com/energywebfoundation/messaging
+9. Decentralized Identifiers (DIDs): https://github.com/energywebfoundation/passport-did-auth, https://github.com/energywebfoundation/iam-client-lib, https://en.wikipedia.org/wiki/Decentralized_Identifiers
+
+The Instructions below are about how to setup and utilize this marketplace component.
+
+# EWAI-MARKETPLACE
 
 [![Build Status](https://travis-ci.com/oceanprotocol/market.svg?token=3psqw6c8KMDqfdGQ2x6d&branch=main)](https://travis-ci.com/oceanprotocol/market)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/c85f4d8b-95e1-4010-95a4-2bacd8b90981/deploy-status)](https://app.netlify.com/sites/market-oceanprotocol/deploys)

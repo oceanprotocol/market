@@ -31,7 +31,7 @@ export function transformPublishFormToMetadata(
       author,
       dateCreated: ddo ? ddo.created : currentTime,
       files: typeof files !== 'string' && files,
-      license: 'https://market.oceanprotocol.com/terms'
+      license: 'https://market.energyweb.org/terms' // ewai change
     },
     additionalInformation: {
       ...AssetModel.additionalInformation,

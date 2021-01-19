@@ -24,9 +24,10 @@ export default function Seo({
     >
       <html lang="en" />
 
+      {/*ewai change*/}
       {typeof window !== 'undefined' &&
         window.location &&
-        window.location.hostname !== 'oceanprotocol.com' && (
+        window.location.hostname !== 'energyweb.org' && (
           <meta name="robots" content="noindex,nofollow" />
         )}
 

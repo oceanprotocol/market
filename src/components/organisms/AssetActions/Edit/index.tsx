@@ -16,6 +16,12 @@ import styles from './index.module.css'
 import { Logger } from '@oceanprotocol/lib'
 import MetadataFeedback from '../../../molecules/MetadataFeedback'
 import { graphql, useStaticQuery } from 'gatsby'
+import * as EwaiUtils from '../../../../ewai/ewaiutils'
+import {
+  EwaiClient,
+  IEwaiAssetFormFields,
+  IEwaiAssetMetadata
+} from '../../../../ewai/client/ewai-js'
 
 const contentQuery = graphql`
   query EditMetadataQuery {
@@ -56,7 +62,7 @@ export default function Edit({
 
   const { debug } = useUserPreferences()
   const { ocean, account } = useOcean()
-  const { did, metadata, ddo, refreshDdo } = useAsset()
+  const { did, metadata, ewaiAsset, ddo, refreshDdo } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
 
@@ -80,6 +86,39 @@ export default function Edit({
         return
       }
 
+      // ---------------------------------------------
+      // update EWAI
+      // ---------------------------------------------
+
+      // create an EWAI Client instance:
+      const ewaiClient = new EwaiClient({
+        username: process.env.EWAI_API_USERNAME,
+        password: process.env.EWAI_API_PASSWORD,
+        graphQlUrl: process.env.EWAI_API_GRAPHQL_URL
+      })
+
+      // get ewai specific form fields:
+      const ewaiAssetFormInfo: IEwaiAssetFormFields = EwaiUtils.transformEditFormToEwaiAssetInfo(
+        values
+      )
+
+      const ewaiAssetMetadata: any = {
+        title: values.name,
+        description: values.description,
+        category: ewaiAssetFormInfo.ewaiCategory,
+        vendor: ewaiAssetFormInfo.ewaiVendor,
+        tags: ewaiAsset.metadata.tags
+      }
+      const updateEwaiAsset = await ewaiClient.updateEwaiAssetAsync(
+        ddo.id,
+        ewaiAssetFormInfo,
+        ewaiAssetMetadata
+      )
+
+      // --------------------------------------------
+      // END EWAI
+      // --------------------------------------------
+
       // Edit succeeded
       setSuccess(content.form.success)
       resetForm()
@@ -91,7 +130,7 @@ export default function Edit({
 
   return (
     <Formik
-      initialValues={getInitialValues(metadata)}
+      initialValues={getInitialValues(metadata, ewaiAsset)}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
         // move user's focus to top of screen

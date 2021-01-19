@@ -3,6 +3,7 @@ import { graphql, useStaticQuery } from 'gatsby'
 import Markdown from '../../atoms/Markdown'
 import MetaFull from './MetaFull'
 import MetaSecondary from './MetaSecondary'
+import MetaEwai from './MetaEwai'
 import styles from './index.module.css'
 import AssetActions from '../AssetActions'
 import { useUserPreferences } from '../../../providers/UserPreferences'
@@ -85,6 +86,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
               />
 
               <MetaSecondary />
+              <MetaEwai />
 
               {isOwner && (
                 <div className={styles.ownerActions}>

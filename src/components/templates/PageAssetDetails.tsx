@@ -16,7 +16,7 @@ export default function PageTemplateAssetDetails({
 
   useEffect(() => {
     if (!ddo || error) {
-      setPageTitle('Could not retrieve asset')
+      setPageTitle(`Could not retrieve asset${error ? ', ' + error : ''}`) // ewai change
       return
     }
 

@@ -1,25 +1,96 @@
 {
-  "description": "Update selected metadata of this data set. Updating metadata will create an on-chain transaction you have to approve in your wallet.",
-  "form": {
-    "success": "🎉 Successfully updated. 🎉",
-    "successAction": "Close",
-    "error": "Updating DDO failed.",
-    "data": [
-      {
-        "name": "name",
-        "label": "New Title",
-        "placeholder": "e.g. Shapes of Desert Plants",
-        "help": "Enter a concise title.",
-        "required": true
-      },
-      {
-        "name": "description",
-        "label": "New Description",
-        "help": "Add a thorough description with as much detail as possible. You can use [Markdown](https://daringfireball.net/projects/markdown/basics).",
-        "type": "textarea",
-        "rows": 10,
-        "required": true
-      }
-    ]
-  }
+    "description": "Update selected metadata of this data set. Updating metadata will create an on-chain transaction you have to approve in your wallet.",
+    "form": {
+        "success": "🎉 Successfully updated. 🎉",
+        "successAction": "Close",
+        "error": "Updating DDO failed.",
+        "data": [{
+                "name": "name",
+                "label": "New Title",
+                "placeholder": "e.g. Shapes of Desert Plants",
+                "help": "Enter a concise title.",
+                "required": true
+            },
+            {
+                "name": "description",
+                "label": "New Description",
+                "help": "Add a thorough description with as much detail as possible. You can use [Markdown](https://daringfireball.net/projects/markdown/basics).",
+                "type": "textarea",
+                "rows": 10,
+                "required": true
+            },
+            {
+                "name": "ewaiCategory",
+                "label": "Category",
+                "help": "Specify the energy category for the data asset.",
+                "type": "select",
+                "options": [
+                    "--SELECT ONE--",
+                    "Bioenergy",
+                    "EV",
+                    "Geothermal",
+                    "Hydropower",
+                    "Hydrogen",
+                    "Ocean/Marine",
+                    "Solar",
+                    "Wind",
+                    "Other"
+                ],
+                "required": true
+            },
+            {
+                "name": "ewaiVendor",
+                "label": "Vendor/Manufacturer",
+                "placeholder": "e.g.: Sunspec",
+                "help": "Enter the vendor/manufacturer of the DERs sending data into this dataset (if desired)",
+                "required": false
+            },
+            {
+                "name": "ewaiPublishRole",
+                "label": "Publish Role Required",
+                "placeholder": "e.g.: datapub.roles.orgname.iam.ewc",
+                "help": "Enter the EW Switchboard role that DERs must have in order to be able to send data into this dataset. You must have set this up in EW Switchboard",
+                "required": true
+            },
+            {
+                "name": "ewaiIncomingMsgFormat",
+                "label": "Incoming Message Format",
+                "help": "Specify the format for PTD data messages which DERs will be sending into this data asset.",
+                "type": "select",
+                "options": [
+                    "--SELECT ONE--",
+                    "Json",
+                    "Text"
+                ],
+                "required": true
+            },
+            {
+                "name": "ewaiSchemaValidationOn",
+                "label": "EWAI Schema Validation Enabled",
+                "help": "Specify whether to perform schema validation on the PTD data messages being sent into this dataset. This only applies when using Json incoming message format. Message schema validation will be performed when this flag is true and a Json Schema has been entered in the next field below. All other times, no schema validation on incoming messages will occur.",
+                "type": "select",
+                "options": [
+                    "--SELECT ONE--",
+                    "No",
+                    "Yes"
+                ],
+                "required": true
+            },
+            {
+                "name": "ewaiMsgSchema",
+                "label": "EWAI Message Schema",
+                "help": "Enter the JSON Schema validation to be used to ensure all messages sent to this data asset meet a specified data shape. See [JSON Schema](https://json-schema.org/draft/2019-09/json-schema-validation.html). Note: Schema validation is only supported for incoming Json Message types at this time.",
+                "type": "textarea",
+                "rows": 25,
+                "required": false
+            },
+            {
+                "name": "ewaiPathToPtdTimestamp",
+                "label": "Specify where the timestamp is in the incoming PTD messages",
+                "placeholder": "e.g.: ts or sensor.data.timestamp or time=(.*?);",
+                "help": "For Json message types, enter the fully qualified Json Path to the timestamp field in the message. For Text message types, enter a RegEx that will extract the timestamp from the message.",
+                "required": false
+            }
+        ]
+    }
 }

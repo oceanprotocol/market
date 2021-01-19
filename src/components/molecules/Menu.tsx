@@ -31,6 +31,7 @@ function MenuLink({ item }: { item: MenuItem }) {
   )
 }
 
+// ewai removed beta below:
 export default function Menu(): ReactElement {
   const { menu, siteTitle } = useSiteMetadata()
 
@@ -39,9 +40,6 @@ export default function Menu(): ReactElement {
       <Container>
         <Link to="/" className={styles.logoUnit}>
           <Logo />
-          <h1 className={styles.title}>
-            {siteTitle} <Badge label="beta" />
-          </h1>
         </Link>
 
         <ul className={styles.navigation}>

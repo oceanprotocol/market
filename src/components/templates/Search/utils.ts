@@ -5,6 +5,7 @@ import {
 import { MetadataCache, Logger } from '@oceanprotocol/lib'
 
 export function getSearchQuery(
+  ewaiMarketName: string,
   text?: string,
   owner?: string,
   tags?: string,
@@ -28,7 +29,9 @@ export function getSearchQuery(
     query: {
       nativeSearch: 1,
       query_string: {
-        query: `${searchTerm} -isInPurgatory:true`
+        query: `${searchTerm} ${
+          searchTerm ? ' && ' : ''
+        } (service.attributes.additionalInformation.energyweb.ewai.instance:"${ewaiMarketName}") -isInPurgatory:true`
       }
       // ...(owner && { 'publicKey.owner': [owner] }),
       // ...(tags && { tags: [tags] }),
@@ -50,6 +53,7 @@ export function getSearchQuery(
 }
 
 export async function getResults(
+  ewaiMarketName: string,
   params: {
     text?: string
     owner?: string
@@ -64,6 +68,7 @@ export async function getResults(
 
   const metadataCache = new MetadataCache(metadataCacheUri, Logger)
   const searchQuery = getSearchQuery(
+    ewaiMarketName,
     text,
     owner,
     tags,

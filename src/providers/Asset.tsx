@@ -15,6 +15,7 @@ import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHel
 import axios, { CancelToken } from 'axios'
 import { retrieveDDO } from '../utils/aquarius'
 import { MetadataMarket } from '../@types/MetaData'
+import { EwaiClient, IEwaiLookupAssetResult } from '../ewai/client/ewai-js'
 
 interface AssetProviderValue {
   isInPurgatory: boolean
@@ -27,6 +28,8 @@ interface AssetProviderValue {
   price: BestPrice | undefined
   error?: string
   refreshInterval: number
+  // -- ewai info --
+  ewaiAsset?: IEwaiLookupAssetResult
   refreshDdo: (token?: CancelToken) => Promise<void>
   refreshPrice: () => Promise<void>
 }
@@ -52,6 +55,7 @@ function AssetProvider({
   const [price, setPrice] = useState<BestPrice>()
   const [owner, setOwner] = useState<string>()
   const [error, setError] = useState<string>()
+  const [ewaiAsset, setEwaiAsset] = useState<IEwaiLookupAssetResult>()
 
   const refreshPrice = useCallback(async () => {
     if (
@@ -169,10 +173,34 @@ function AssetProvider({
     [refreshPrice, setPurgatory]
   )
 
+  const initEwai = useCallback(
+    async (ddo: DDO): Promise<void> => {
+      if (!ddo) return
+      Logger.log('Init ewai')
+      // ---------------------------------------------
+      // retrieve EWAI asset info
+      // ---------------------------------------------
+      const ewaiClient = new EwaiClient({
+        username: process.env.EWAI_API_USERNAME,
+        password: process.env.EWAI_API_PASSWORD,
+        graphQlUrl: process.env.EWAI_API_GRAPHQL_URL
+      })
+      try {
+        const ewaiAsset = await ewaiClient.lookupEwaiAssetAsync(ddo.id)
+        setEwaiAsset(ewaiAsset)
+      } catch (error) {
+        Logger.log(error.message)
+        setError(error.message)
+      }
+    },
+    [ddo, setEwaiAsset]
+  )
+
   useEffect(() => {
     if (!ddo) return
     initMetadata(ddo)
-  }, [ddo, initMetadata])
+    initEwai(ddo)
+  }, [ddo, initMetadata, initEwai])
 
   return (
     <AssetContext.Provider
@@ -188,6 +216,7 @@ function AssetProvider({
           isInPurgatory,
           purgatoryData,
           refreshInterval,
+          ewaiAsset,
           refreshDdo,
           refreshPrice
         } as AssetProviderValue

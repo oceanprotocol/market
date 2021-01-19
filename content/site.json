@@ -1,21 +1,20 @@
 {
-  "site": {
-    "siteTitle": "Ocean Market",
-    "siteTagline": "A marketplace to find, publish and trade data sets in the Ocean Network.",
-    "siteUrl": "https://market.oceanprotocol.com",
-    "siteIcon": "node_modules/@oceanprotocol/art/logo/favicon-white.png",
-    "siteImage": "../src/images/share.png",
-    "copyright": "All Rights Reserved. Powered by [Ocean Protocol](https://oceanprotocol.com)",
-    "menu": [
-      {
-        "name": "Publish",
-        "link": "/publish"
-      },
-      {
-        "name": "History",
-        "link": "/history"
-      }
-    ],
-    "warning": "We are in beta. Please familiarize yourself with [the market](https://oceanprotocol.com/technology/marketplaces), [the risks](https://blog.oceanprotocol.com/on-staking-on-data-in-ocean-market-3d8e09eb0a13), and the [Terms of Use](/terms)."
-  }
+    "site": {
+        "siteTitle": "Energy Web A.I. Data Marketplace",
+        "siteTagline": "Publish Energy Datasets via EW-DOS and Ocean Protocol.",
+        "siteUrl": "https://ewai.energyweb.com",
+        "siteIcon": "./src/ewai/images/ew-logo.png",
+        "siteImage": "../src/images/share.png",
+        "copyright": "All Rights Reserved. Powered by [Energy Web](https://energyweb.org) and [Ocean Protocol](https://oceanprotocol.com)",
+        "menu": [{
+                "name": "Publish",
+                "link": "/publish"
+            },
+            {
+                "name": "History",
+                "link": "/history"
+            }
+        ],
+        "warning": "This is an ALPHA conceptual prototype site! Please familiarize yourself with [Energy Web EWAI](https://energyweb.org), [Ocean Protocol Marketplaces](https://oceanprotocol.com/technology/marketplaces), [the risks](https://blog.oceanprotocol.com/on-staking-on-data-in-ocean-market-3d8e09eb0a13), and the [Terms of Use](#)."
+    }
 }

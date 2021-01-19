@@ -4,6 +4,7 @@ import PriceUnit from '../atoms/Price/PriceUnit'
 import axios from 'axios'
 import styles from './MarketStats.module.css'
 import { useInView } from 'react-intersection-observer'
+import { EwaiClient, IEwaiStatsResult } from '../../ewai/client/ewai-js'
 
 interface MarketStatsResponse {
   datasets: {
@@ -21,18 +22,18 @@ const refreshInterval = 60000 // 60 sec.
 
 export default function MarketStats(): ReactElement {
   const [ref, inView] = useInView()
-  const [stats, setStats] = useState<MarketStatsResponse>()
+  const [stats, setStats] = useState<IEwaiStatsResult>()
 
   useEffect(() => {
-    const source = axios.CancelToken.source()
-
     async function getStats() {
       try {
-        const response = await axios('https://market-stats.oceanprotocol.com', {
-          cancelToken: source.token
+        const ewaiClient = new EwaiClient({
+          username: process.env.EWAI_API_USERNAME,
+          password: process.env.EWAI_API_PASSWORD,
+          graphQlUrl: process.env.EWAI_API_GRAPHQL_URL
         })
-        if (!response || response.status !== 200) return
-        setStats(response.data)
+        const ewaiStats = await ewaiClient.ewaiStatsAsync()
+        setStats(ewaiStats)
       } catch (error) {
         if (axios.isCancel(error)) {
           Logger.log(error.message)
@@ -53,31 +54,13 @@ export default function MarketStats(): ReactElement {
 
     return () => {
       clearInterval(interval)
-      source.cancel()
     }
   }, [inView])
 
   return (
     <div className={styles.stats} ref={ref}>
-      Total of <strong>{stats?.datasets.total}</strong> data sets & unique
-      datatokens published by <strong>{stats?.owners}</strong> accounts.
-      <br />
-      <PriceUnit
-        price={`${stats?.ocean}`}
-        small
-        className={styles.total}
-        conversion
-      />{' '}
-      and{' '}
-      <PriceUnit
-        price={`${stats?.datatoken}`}
-        symbol="datatokens"
-        small
-        className={styles.total}
-      />{' '}
-      in <strong>{stats?.datasets.pools}</strong> data set pools.
-      <br />
-      <strong>{stats?.datasets.none}</strong> data sets have no price set yet.
+      There are <strong>{stats?.count}</strong> EWAI energy data sets published
+      in this marketplace by <strong>{stats?.addresses}</strong> addresses.
     </div>
   )
 }
