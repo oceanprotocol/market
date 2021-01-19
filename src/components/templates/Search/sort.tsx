@@ -37,7 +37,7 @@ export default function Sort({
   }
   return (
     <div className={sortStyles.sortList}>
-      <Label className={sortStyles.sortLabel}>Sort</Label>
+      <label className={sortStyles.sortLabel}>Sort</label>
       {[
         { display: 'Published', value: SortTermOptions.Created },
         { display: 'Liquidity', value: SortTermOptions.Liquidity },
@@ -72,13 +72,13 @@ export default function Sort({
               {e.value === sortType ? (
                 <div key={e.value}>
                   {sortDirection === SortValueOptions.Descending ? (
-                    <Label className={sortStyles.direction}>
+                    <label className={sortStyles.direction}>
                       {String.fromCharCode(9660)}
-                    </Label>
+                    </label>
                   ) : (
-                    <Label className={sortStyles.direction}>
+                    <label className={sortStyles.direction}>
                       {String.fromCharCode(9650)}
-                    </Label>
+                    </label>
                   )}
                 </div>
               ) : null}
