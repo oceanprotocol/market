@@ -1,11 +1,17 @@
 import React, { ReactElement } from 'react'
 import { useNavigate } from '@reach/router'
-import generalStyles from './index.module.css'
-import filterStyles from './filterPrice.module.css'
+import styles from './filterPrice.module.css'
 import classNames from 'classnames/bind'
 import { addExistingParamsToUrl, FilterByPriceOptions } from './utils'
 import Button from '../../atoms/Button'
-const cx = classNames.bind(filterStyles)
+
+const cx = classNames.bind(styles)
+
+const filterItems = [
+  { display: 'all', value: undefined },
+  { display: 'fixed price', value: FilterByPriceOptions.Fixed },
+  { display: 'dynamic price', value: FilterByPriceOptions.Dynamic }
+]
 
 export default function FilterPrice({
   priceType,
@@ -27,18 +33,15 @@ export default function FilterPrice({
   return (
     // <div className={(generalStyles.column, filterStyles.filterList)}>
     <div>
-      {[
-        { display: 'all', value: undefined },
-        { display: 'fixed price', value: FilterByPriceOptions.Fixed },
-        { display: 'dynamic price', value: FilterByPriceOptions.Dynamic }
-      ].map((e, index) => {
+      {filterItems.map((e, index) => {
         const filter = cx({
-          [filterStyles.selected]: e.value === priceType,
-          [filterStyles.filter]: true
+          [styles.selected]: e.value === priceType,
+          [styles.filter]: true
         })
         return (
           <Button
             size="small"
+            style="text"
             key={index}
             className={filter}
             onClick={async () => {

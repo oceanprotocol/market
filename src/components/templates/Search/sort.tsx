@@ -6,11 +6,16 @@ import {
   SortValueOptions
 } from './utils'
 import Button from '../../atoms/Button'
-import Label from '../../atoms/Input/Label'
-import generalStyles from './index.module.css'
-import sortStyles from './sort.module.css'
+import styles from './sort.module.css'
 import classNames from 'classnames/bind'
-const cx = classNames.bind(sortStyles)
+
+const cx = classNames.bind(styles)
+
+const sortItems = [
+  { display: 'Published', value: SortTermOptions.Created },
+  { display: 'Liquidity', value: SortTermOptions.Liquidity },
+  { display: 'Price', value: SortTermOptions.Price }
+]
 
 export default function Sort({
   sortType,
@@ -36,54 +41,46 @@ export default function Sort({
     navigate(urlLocation)
   }
   return (
-    <div className={sortStyles.sortList}>
-      <label className={sortStyles.sortLabel}>Sort</label>
-      {[
-        { display: 'Published', value: SortTermOptions.Created },
-        { display: 'Liquidity', value: SortTermOptions.Liquidity },
-        { display: 'Price', value: SortTermOptions.Price }
-      ].map((e, index) => {
+    <div className={styles.sortList}>
+      <label className={styles.sortLabel}>Sort</label>
+      {sortItems.map((e, index) => {
         const sorted = cx({
-          [sortStyles.selected]: e.value === sortType,
-          [sortStyles.sorted]: true
+          [styles.selected]: e.value === sortType,
+          [styles.sorted]: true
         })
         return (
-          <div key={index}>
-            <Button
-              key={index}
-              className={sorted}
-              size="small"
-              onClick={() => {
-                if (e.value === sortType) {
-                  if (sortDirection === SortValueOptions.Descending) {
-                    sortResults(null, SortValueOptions.Ascending)
-                    setSortDirection(SortValueOptions.Ascending)
-                  } else {
-                    sortResults(null, SortValueOptions.Descending)
-                    setSortDirection(SortValueOptions.Descending)
-                  }
+          <Button
+            key={index}
+            className={sorted}
+            size="small"
+            onClick={() => {
+              if (e.value === sortType) {
+                if (sortDirection === SortValueOptions.Descending) {
+                  sortResults(null, SortValueOptions.Ascending)
+                  setSortDirection(SortValueOptions.Ascending)
                 } else {
-                  setSortType(e.value)
-                  sortResults(e.value, null)
+                  sortResults(null, SortValueOptions.Descending)
+                  setSortDirection(SortValueOptions.Descending)
                 }
-              }}
-            >
-              {e.display}
-              {e.value === sortType ? (
-                <div key={e.value}>
-                  {sortDirection === SortValueOptions.Descending ? (
-                    <label className={sortStyles.direction}>
-                      {String.fromCharCode(9660)}
-                    </label>
-                  ) : (
-                    <label className={sortStyles.direction}>
-                      {String.fromCharCode(9650)}
-                    </label>
-                  )}
-                </div>
-              ) : null}
-            </Button>
-          </div>
+              } else {
+                setSortType(e.value)
+                sortResults(e.value, null)
+              }
+            }}
+          >
+            {e.display}
+            {e.value === sortType ? (
+              sortDirection === SortValueOptions.Descending ? (
+                <span className={styles.direction}>
+                  {String.fromCharCode(9660)}
+                </span>
+              ) : (
+                <span className={styles.direction}>
+                  {String.fromCharCode(9650)}
+                </span>
+              )
+            ) : null}
+          </Button>
         )
       })}
     </div>
