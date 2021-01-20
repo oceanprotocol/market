@@ -112,10 +112,8 @@ export default function Consume({
         <>
           <Button style="primary" onClick={handleConsume} disabled={isDisabled}>
             {hasDatatoken || hasPreviousOrder ? 'Download' : 'Buy'}
+            {assetTimeout === 'Forever' ? '' : ' for ' + assetTimeout}
           </Button>
-          <div className={styles.help}>
-            Access allowance <strong>{assetTimeout}</strong>
-          </div>
           {hasDatatoken && (
             <div className={styles.help}>
               You own {dtBalance} {ddo.dataTokenInfo.symbol} allowing you to use
