@@ -3,17 +3,31 @@
   float: left;
 } */
 
-.filter {
-  padding: calc(var(--spacer) / 6);
+.filter,
+button.filter,
+.filter:hover,
+.filter:active,
+.filter:focus {
   border: 1px solid var(--border-color);
   text-transform: uppercase;
   border-radius: var(--border-radius);
   margin-right: calc(var(--spacer) / 6);
-  font-weight: var(--font-weight-bold);
   color: var(--color-secondary);
   background: var(--background-body);
-  cursor: pointer;
+
+  /* the only thing not possible to overwrite button style="text" with more specifity of selectors, so sledgehammer */
+  padding: calc(var(--spacer) / 5) !important;
 }
-.selected {
+
+.filter:hover,
+.filter:focus {
   color: var(--font-color-text);
+  background: inherit;
+  transform: none;
+}
+
+.filter.selected {
+  color: var(--background-body);
+  background: var(--brand-white);
+  border-color: var(--background-body);
 }
