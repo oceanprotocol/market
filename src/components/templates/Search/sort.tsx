@@ -32,6 +32,20 @@ export default function Sort({
   setPriceType: React.Dispatch<React.SetStateAction<string>>
 }): ReactElement {
   const navigate = useNavigate()
+  const directionArrow = String.fromCharCode(
+    sortDirection === SortValueOptions.Ascending ? 9650 : 9660
+  )
+  function handleSortButtonClick(value: string) {
+    if (value === sortType) {
+      if (sortDirection === SortValueOptions.Descending) {
+        sortResults(null, SortValueOptions.Ascending)
+      } else {
+        sortResults(null, SortValueOptions.Descending)
+      }
+    } else {
+      sortResults(value, null)
+    }
+  }
   async function sortResults(sortBy?: string, direction?: string) {
     let urlLocation: string
     if (sortBy) {
@@ -65,28 +79,12 @@ export default function Sort({
             className={sorted}
             size="small"
             onClick={() => {
-              if (e.value === sortType) {
-                if (sortDirection === SortValueOptions.Descending) {
-                  sortResults(null, SortValueOptions.Ascending)
-                } else {
-                  sortResults(null, SortValueOptions.Descending)
-                }
-              } else {
-                sortResults(e.value, null)
-              }
+              handleSortButtonClick(e.value)
             }}
           >
             {e.display}
             {e.value === sortType ? (
-              sortDirection === SortValueOptions.Descending ? (
-                <span className={styles.direction}>
-                  {String.fromCharCode(9660)}
-                </span>
-              ) : (
-                <span className={styles.direction}>
-                  {String.fromCharCode(9650)}
-                </span>
-              )
+              <span className={styles.direction}>{directionArrow}</span>
             ) : null}
           </Button>
         )

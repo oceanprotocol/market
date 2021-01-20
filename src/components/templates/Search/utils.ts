@@ -80,7 +80,7 @@ export function getSearchQuery(
     query: {
       nativeSearch: 1,
       query_string: {
-        query: `${searchTerm} AND -isInPurgatory:true`
+        query: `${searchTerm} -isInPurgatory:true`
       }
       // ...(owner && { 'publicKey.owner': [owner] }),
       // ...(tags && { tags: [tags] }),
