@@ -21,11 +21,11 @@ export default function FilterPrice({
     if (filterBy) {
       urlLocation = `${urlLocation}&priceType=${filterBy}`
     }
+    setPriceType(filterBy)
     navigate(urlLocation)
   }
 
   return (
-    // <div className={(generalStyles.column, filterStyles.filterList)}>
     <div>
       {[
         { display: 'all', value: undefined },
@@ -43,7 +43,6 @@ export default function FilterPrice({
             className={filter}
             onClick={async () => {
               await applyFilter(e.value)
-              setPriceType(e.value)
             }}
           >
             {e.display}

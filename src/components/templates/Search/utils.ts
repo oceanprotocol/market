@@ -81,7 +81,7 @@ export function getSearchQuery(
     query: {
       nativeSearch: 1,
       query_string: {
-        query: `${searchTerm} -isInPurgatory:true`
+        query: `${searchTerm} AND -isInPurgatory:true`
       }
       // ...(owner && { 'publicKey.owner': [owner] }),
       // ...(tags && { tags: [tags] }),
@@ -146,14 +146,18 @@ export async function getResults(
 
 export async function addExistingParamsToUrl(
   location: Location,
-  excluded: string
+  excludedParam: string,
+  secondExcludedParam?: string
 ): Promise<string> {
   const parsed = queryString.parse(location.search)
   let urlLocation = '/search?'
   if (Object.keys(parsed).length > 0) {
     for (const querryParam in parsed) {
-      if (querryParam !== excluded) {
-        if (querryParam === 'page' && excluded === 'text') {
+      if (
+        querryParam !== excludedParam &&
+        querryParam !== secondExcludedParam
+      ) {
+        if (querryParam === 'page' && excludedParam === 'text') {
           Logger.log('remove page when starting a new search')
         } else {
           const value = parsed[querryParam]

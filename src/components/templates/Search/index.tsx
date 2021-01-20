@@ -19,10 +19,10 @@ export default function SearchPage({
 }): ReactElement {
   const { config } = useOcean()
   const parsed = queryString.parse(location.search)
-  const { text, owner, tags, page, sort, sortOrder, price } = parsed
+  const { text, owner, tags, page, sort, sortOrder, priceType } = parsed
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [loading, setLoading] = useState<boolean>()
-  const [priceType, setPriceType] = useState<string>(price as string)
+  const [price, setPriceType] = useState<string>(priceType as string)
   const [sortType, setSortType] = useState<string>(sort as string)
   const [sortDirection, setSortDirection] = useState<string>(
     sortOrder as string
@@ -32,9 +32,6 @@ export default function SearchPage({
     if (!config?.metadataCacheUri) return
 
     async function initSearch() {
-      parsed.priceType = priceType
-      parsed.sort = sortType
-      parsed.sortOrder = sortDirection
       setLoading(true)
       setTotalResults(undefined)
       const queryResult = await getResults(parsed, config.metadataCacheUri)
@@ -48,9 +45,9 @@ export default function SearchPage({
     owner,
     tags,
     page,
-    sortType,
+    sort,
     priceType,
-    sortDirection,
+    sortOrder,
     config.metadataCacheUri
   ])
 
@@ -61,12 +58,13 @@ export default function SearchPage({
           <SearchBar initialValue={(text || owner) as string} />
         )}
         <div className={styles.row}>
-          <PriceFilter priceType={priceType} setPriceType={setPriceType} />
+          <PriceFilter priceType={price} setPriceType={setPriceType} />
           <Sort
             sortType={sortType}
             sortDirection={sortDirection}
             setSortType={setSortType}
             setSortDirection={setSortDirection}
+            setPriceType={setPriceType}
           />
         </div>
       </div>
