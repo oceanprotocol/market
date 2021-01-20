@@ -7,15 +7,16 @@ import { useOcean } from '@oceanprotocol/react'
 import { FormFieldProps } from '../../../../@types/Form'
 import { MetadataPublishForm } from '../../../../@types/MetaData'
 import { checkIfTimeoutInPredefinedValues } from '../../../../utils/metadata'
-import { initialValues } from '../../../../models/FormTrade'
 
 export default function FormEditMetadata({
   data,
   setShowEdit,
+  setTimeoutStringValue,
   values
 }: {
   data: FormFieldProps[]
   setShowEdit: (show: boolean) => void
+  setTimeoutStringValue: (value: string) => void
   values: Partial<MetadataPublishForm>
 }): ReactElement {
   const { ocean, accountId } = useOcean()
@@ -73,7 +74,11 @@ export default function FormEditMetadata({
       ))}
 
       <footer className={styles.actions}>
-        <Button style="primary" disabled={!ocean || !accountId || !isValid}>
+        <Button
+          style="primary"
+          disabled={!ocean || !accountId || !isValid}
+          onClick={() => setTimeoutStringValue(values.timeout)}
+        >
           Submit
         </Button>
         <Button style="text" onClick={() => setShowEdit(false)}>

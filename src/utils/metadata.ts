@@ -41,8 +41,11 @@ export function millisecondsToStr(milliseconds: number): string {
   if (years) {
     return years + ' year' + numberEnding(years)
   }
-  // TODO: Months! Maybe weeks?
-  const days = Math.floor((temp %= 31536000) / 86400)
+  const weeks = Math.floor((temp %= 31536000) / 604800)
+  if (weeks) {
+    return weeks + ' week' + numberEnding(weeks)
+  }
+  const days = Math.floor((temp %= 604800) / 86400)
   if (days) {
     return days + ' day' + numberEnding(days)
   }

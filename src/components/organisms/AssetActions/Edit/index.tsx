@@ -61,6 +61,7 @@ export default function Edit({
   const { metadata, ddo, refreshDdo } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
+  const [timeoutStringValue, setTimeoutStringValue] = useState<string>()
 
   const hasFeedback = error || success
 
@@ -80,14 +81,17 @@ export default function Edit({
         Logger.error(content.form.error)
         return
       }
+      let ddoEditedTimeout = ddoEditedMetdata
+      if (timeoutStringValue !== values.timeout) {
+        const service = ddoEditedMetdata.findServiceByType('access')
+        const timeout = mapTimeoutStringToSeconds(values.timeout)
+        ddoEditedTimeout = await ocean.assets.editServiceTimeout(
+          ddoEditedMetdata,
+          service.index,
+          timeout
+        )
+      }
 
-      const service = ddoEditedMetdata.findServiceByType('access')
-      const timeout = mapTimeoutStringToSeconds(values.timeout)
-      const ddoEditedTimeout = await ocean.assets.editServiceTimeout(
-        ddoEditedMetdata,
-        service.index,
-        timeout
-      )
       if (!ddoEditedTimeout) {
         setError(content.form.error)
         Logger.error(content.form.error)
@@ -149,6 +153,7 @@ export default function Edit({
               <FormEditMetadata
                 data={content.form.data}
                 setShowEdit={setShowEdit}
+                setTimeoutStringValue={setTimeoutStringValue}
                 values={initialValues}
               />
 
