@@ -52,7 +52,7 @@ export default function SearchPage({
   ])
 
   return (
-    <section className={styles.grid}>
+    <>
       <div className={styles.search}>
         {(text || owner) && (
           <SearchBar initialValue={(text || owner) as string} />
@@ -71,6 +71,6 @@ export default function SearchPage({
       <div className={styles.results}>
         {loading ? <Loader /> : <AssetQueryList queryResult={queryResult} />}
       </div>
-    </section>
+    </>
   )
 }

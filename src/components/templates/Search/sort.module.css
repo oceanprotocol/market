@@ -24,6 +24,7 @@
   border-radius: 0;
   font-weight: var(--font-weight-base);
   background: var(--background-body);
+  box-shadow: none;
 }
 
 .sorted:hover,
@@ -32,6 +33,7 @@
   color: var(--font-color-text);
   background: inherit;
   transform: none;
+  box-shadow: none;
 }
 
 .direction {

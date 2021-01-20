@@ -28,6 +28,6 @@ button.filter,
 
 .filter.selected {
   color: var(--background-body);
-  background: var(--brand-white);
+  background: var(--font-color-text);
   border-color: var(--background-body);
 }
