@@ -18,6 +18,7 @@
 - [👩‍🔬 Testing](#-testing)
 - [🛳 Production](#-production)
 - [⬆️ Deployment](#️-deployment)
+- [💖 Contributing](#-contributing)
 - [🏛 License](#-license)
 
 ## 🏄 Get Started
@@ -133,6 +134,14 @@ npm run serve
 Every branch or Pull Request is automatically deployed by [Netlify](https://netlify.com) with their GitHub integration. A link to a deployment will appear under each Pull Request.
 
 The latest deployment of the `main` branch is automatically aliased to `market.oceanprotocol.com`.
+
+## 💖 Contributing
+
+We welcome contributions in form of bug reports, feature requests, code changes, or documentation improvements. Have a look at our contribution documentation for instructions and workflows:
+
+- [**Ways to Contribute →**](https://docs.oceanprotocol.com/concepts/contributing/)
+- [Code of Conduct →](https://docs.oceanprotocol.com/concepts/code-of-conduct/)
+- [Reporting Vulnerabilities →](https://docs.oceanprotocol.com/concepts/vulnerabilities/)
 
 ## 🏛 License
 
