@@ -35,17 +35,6 @@ export default function Sort({
   const directionArrow = String.fromCharCode(
     sortDirection === SortValueOptions.Ascending ? 9650 : 9660
   )
-  function handleSortButtonClick(value: string) {
-    if (value === sortType) {
-      if (sortDirection === SortValueOptions.Descending) {
-        sortResults(null, SortValueOptions.Ascending)
-      } else {
-        sortResults(null, SortValueOptions.Descending)
-      }
-    } else {
-      sortResults(value, null)
-    }
-  }
   async function sortResults(sortBy?: string, direction?: string) {
     let urlLocation: string
     if (sortBy) {
@@ -64,6 +53,17 @@ export default function Sort({
       setSortDirection(direction)
     }
     navigate(urlLocation)
+  }
+  function handleSortButtonClick(value: string) {
+    if (value === sortType) {
+      if (sortDirection === SortValueOptions.Descending) {
+        sortResults(null, SortValueOptions.Ascending)
+      } else {
+        sortResults(null, SortValueOptions.Descending)
+      }
+    } else {
+      sortResults(value, null)
+    }
   }
   return (
     <div className={styles.sortList}>
