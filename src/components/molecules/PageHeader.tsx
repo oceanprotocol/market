@@ -1,7 +1,6 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement } from 'react'
 import classNames from 'classnames/bind'
 import styles from './PageHeader.module.css'
-import { ca } from 'date-fns/esm/locale'
 
 const cx = classNames.bind(styles)
 
