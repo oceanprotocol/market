@@ -31,16 +31,15 @@ function numberEnding(number: number): string {
   return number > 1 ? 's' : ''
 }
 
-export function millisecondsToStr(milliseconds: number): string {
-  if (milliseconds === 0) return 'Forever'
+export function secondsToString(numberOfSeconds: number): string {
+  if (numberOfSeconds === 0) return 'Forever'
 
-  let temp = Math.floor(milliseconds / 1000)
-  const years = Math.floor(temp / 31536000)
-  const weeks = Math.floor((temp %= 31536000) / 604800)
-  const days = Math.floor((temp %= 604800) / 86400)
-  const hours = Math.floor((temp %= 86400) / 3600)
-  const minutes = Math.floor((temp %= 3600) / 60)
-  const seconds = temp % 60
+  const years = Math.floor(numberOfSeconds / 31536000)
+  const weeks = Math.floor((numberOfSeconds %= 31536000) / 604800)
+  const days = Math.floor((numberOfSeconds %= 604800) / 86400)
+  const hours = Math.floor((numberOfSeconds %= 86400) / 3600)
+  const minutes = Math.floor((numberOfSeconds %= 3600) / 60)
+  const seconds = numberOfSeconds % 60
 
   return years
     ? `${years} year${numberEnding(years)}`
@@ -63,11 +62,6 @@ export function checkIfTimeoutInPredefinedValues(timeout: string): boolean {
     return true
   }
   return false
-}
-
-export function mapSecondsToTimeoutString(seconds: number): string {
-  const milliseconds = seconds * 1000
-  return millisecondsToStr(milliseconds)
 }
 
 export function transformPublishFormToMetadata(

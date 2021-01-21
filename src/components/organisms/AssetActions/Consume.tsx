@@ -11,7 +11,7 @@ import { useOcean, useConsume, usePricing } from '@oceanprotocol/react'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import checkPreviousOrder from '../../../utils/checkPreviousOrder'
 import { useAsset } from '../../../providers/Asset'
-import { mapSecondsToTimeoutString } from '../../../utils/metadata'
+import { secondsToString } from '../../../utils/metadata'
 
 function getHelpText(
   dtBalance: string,
@@ -57,7 +57,7 @@ export default function Consume({
 
   useEffect(() => {
     const { timeout } = ddo.findServiceByType('access').attributes.main
-    setAssetTimeout(mapSecondsToTimeoutString(timeout))
+    setAssetTimeout(secondsToString(timeout))
   }, [ddo])
 
   useEffect(() => {

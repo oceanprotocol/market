@@ -1,5 +1,5 @@
 import { MetadataMarket, MetadataPublishForm } from '../@types/MetaData'
-import { mapSecondsToTimeoutString } from '../utils/metadata'
+import { secondsToString } from '../utils/metadata'
 import * as Yup from 'yup'
 
 export const validationSchema = Yup.object().shape({
@@ -17,6 +17,6 @@ export function getInitialValues(
   return {
     name: metadata.main.name,
     description: metadata.additionalInformation.description,
-    timeout: mapSecondsToTimeoutString(timeout)
+    timeout: secondsToString(timeout)
   }
 }
