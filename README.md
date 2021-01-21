@@ -13,11 +13,17 @@
 - [🏄 Get Started](#-get-started)
   - [Local components with Barge](#local-components-with-barge)
 - [🦑 Environment variables](#-environment-variables)
+- [🦀 Data Sources](#-data-sources)
+  - [Aquarius](#aquarius)
+  - [Ocean Protocol Subgraph](#ocean-protocol-subgraph)
+  - [3Box](#3box)
+  - [Purgatory](#purgatory)
 - [🎨 Storybook](#-storybook)
 - [✨ Code Style](#-code-style)
 - [👩‍🔬 Testing](#-testing)
 - [🛳 Production](#-production)
 - [⬆️ Deployment](#️-deployment)
+- [💖 Contributing](#-contributing)
 - [🏛 License](#-license)
 
 ## 🏄 Get Started
@@ -70,7 +76,157 @@ For local development, you can use a `.env` file:
 cp .env.example .env
 ```
 
+## 🦀 Data Sources
+
+All displayed data in the app is presented around the concept of one data set, which is a combination of:
+
+- metadata about a data set
+- the actual data set files
+- the datatoken which represents the data set
+- financial data connected to this datatoken, either a pool or a fixed rate exchange contract
+- calculations and conversions based on financial data
+- metadata about publishers
+
+All this data then comes from multiple sources:
+
+### Aquarius
+
+All initial data sets and their metadata (DDO) is retrieved client-side on run-time from the [Aquarius](https://github.com/oceanprotocol/aquarius) instance for each network. All app calls to Aquarius are done with 2 internal methods which mimic the same methods in ocean.js, but allow us:
+
+- to cancel requests when components get unmounted in combination with [axios](https://github.com/axios/axios)
+- hit Aquarius as early as possible without relying on any ocean.js initialization
+
+Aquarius runs Elasticsearch under the hood so its stored metadata can be queried with [Elasticsearch queries](https://www.elastic.co/guide/en/elasticsearch/reference/current/full-text-queries.html) like so:
+
+```tsx
+import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
+import { queryMetadata } from '../../utils/aquarius'
+
+const queryLatest = {
+  page: 1,
+  offset: 9,
+  query: {
+    nativeSearch: 1,
+    // https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html
+    query_string: { query: `-isInPurgatory:true` }
+  },
+  sort: { created: -1 }
+}
+
+function Component() {
+  const { config } = useOcean()
+  const [result, setResult] = useState<QueryResult>()
+
+  useEffect(() => {
+    if (!config?.metadataCacheUri) return
+    const source = axios.CancelToken.source()
+
+    async function init() {
+      const result = await queryMetadata(
+        query,
+        config.metadataCacheUri,
+        source.token
+      )
+      setResult(result)
+    }
+    init()
+
+    return () => {
+      source.cancel()
+    }
+  }, [config?.metadataCacheUri, query])
+
+  return <div>{result}</div>
+}
+```
+
+For components within a single data set view the `useAsset()` hook can be used, which in the background gets the respective metadata from Aquarius.
+
+```tsx
+import { useAsset } from '../../../providers/Asset'
+
+function Component() {
+  const { ddo } = useAsset()
+  return <div>{ddo}</div>
+}
+```
+
+### Ocean Protocol Subgraph
+
+Most financial data in the market is retrieved with GraphQL from [our own subgraph](https://github.com/oceanprotocol/ocean-subgraph), rendered on top of the initial data coming from Aquarius.
+
+The app has [Apollo Client](https://www.apollographql.com/docs/react/) setup to query the respective subgraph based on network. In any component this client can be used like so:
+
+```tsx
+import { gql, useQuery } from '@apollo/client'
+
+const query = gql`
+  query PoolLiquidity($id: ID!, $shareId: ID) {
+    pool(id: $id) {
+      id
+      totalShares
+    }
+  }
+`
+
+function Component() {
+  const { data } = useQuery(query, {}, pollInterval: 5000 })
+  return <div>{data}</div>
+}
+```
+
+### 3Box
+
+Publishers can create a profile on [3Box Hub](https://www.3box.io/hub) and when found, it will be displayed in the app.
+
+For this our own [3box-proxy](https://github.com/oceanprotocol/3box-proxy) is used, within the app the utility method `get3BoxProfile()` can be used to get all info:
+
+```tsx
+import get3BoxProfile from '../../../utils/profile'
+
+function Component() {
+  const [profile, setProfile] = useState<Profile>()
+
+  useEffect(() => {
+    if (!account) return
+    const source = axios.CancelToken.source()
+
+    async function get3Box() {
+      const profile = await get3BoxProfile(account, source.token)
+      if (!profile) return
+
+      setProfile(profile)
+    }
+    get3Box()
+
+    return () => {
+      source.cancel()
+    }
+  }, [account])
+  return (
+    <div>
+      {profile.emoji} {profile.name}
+    </div>
+  )
+}
+```
+
+### Purgatory
+
+Based on [list-purgatory](https://github.com/oceanprotocol/list-purgatory) some data sets get additional data. Within most components this can be done with the internal `useAsset()` hook which fetches data from the [market-purgatory](https://github.com/oceanprotocol/market-purgatory) endpoint in the background.
+
+```tsx
+import { useAsset } from '../../../providers/Asset'
+
+function Component() {
+  const { isInPurgatory, purgatoryData } = useAsset()
+  return isInPurgatory ? <div>{purgatoryData.reason}</div> : null
+}
+```
+
 ## 🎨 Storybook
+
+> TODO: this is broken for most components. See https://github.com/oceanprotocol/market/issues/128
 
 [Storybook](https://storybook.js.org) is set up for this project and is used for UI development of components. Stories are created inside `src/components/` alongside each component in the form of `ComponentName.stories.tsx`.
 
@@ -95,6 +251,8 @@ npm run format
 ```
 
 ## 👩‍🔬 Testing
+
+> TODO: this is broken and never runs in CI. See https://github.com/oceanprotocol/market/issues/128
 
 Test suite for unit tests is setup with [Jest](https://jestjs.io) as a test runner and:
 
@@ -130,14 +288,28 @@ npm run serve
 
 ## ⬆️ Deployment
 
-Every branch or Pull Request is automatically deployed by [Netlify](https://netlify.com) with their GitHub integration. A link to a deployment will appear under each Pull Request.
+Every branch or Pull Request is automatically deployed to multiple hosts for redundancy and emergency reasons:
 
-The latest deployment of the `main` branch is automatically aliased to `market.oceanprotocol.com`.
+- [Netlify](https://netlify.com)
+- [Vercel](https://vercel.com)
+- [S3](https://aws.amazon.com/s3/)
+
+A link to a deployment will appear under each Pull Request.
+
+The latest deployment of the `main` branch is automatically aliased to `market.oceanprotocol.com`, where the deployment on Netlify is the current live deployment.
+
+## 💖 Contributing
+
+We welcome contributions in form of bug reports, feature requests, code changes, or documentation improvements. Have a look at our contribution documentation for instructions and workflows:
+
+- [**Ways to Contribute →**](https://docs.oceanprotocol.com/concepts/contributing/)
+- [Code of Conduct →](https://docs.oceanprotocol.com/concepts/code-of-conduct/)
+- [Reporting Vulnerabilities →](https://docs.oceanprotocol.com/concepts/vulnerabilities/)
 
 ## 🏛 License
 
 ```text
-Copyright 2020 Ocean Protocol Foundation Ltd.
+Copyright 2021 Ocean Protocol Foundation Ltd.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

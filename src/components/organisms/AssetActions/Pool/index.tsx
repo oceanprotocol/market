@@ -60,7 +60,7 @@ export default function Pool(): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childContentJson.pool
 
-  const { ocean, accountId, networkId, config } = useOcean()
+  const { ocean, accountId, networkId } = useOcean()
   const {
     isInPurgatory,
     ddo,

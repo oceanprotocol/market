@@ -65,7 +65,7 @@ function AssetProvider({
       ocean,
       ddo.dataToken,
       ddo?.price?.type,
-      ddo.price.pools[0]
+      ddo.price.address
     )
     setPrice(newPrice)
     Logger.log(`Refreshed asset price: ${newPrice?.value}`, newPrice)

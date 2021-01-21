@@ -15,7 +15,11 @@ const Tag = ({ tag, noLinks }: { tag: string; noLinks?: boolean }) => {
   return noLinks ? (
     <span className={styles.tag}>{tag}</span>
   ) : (
-    <Link to={`/search?tags=${tag}`} className={styles.tag} title={tag}>
+    <Link
+      to={`/search?tags=${tag}&sort=created&sortOrder=desc`}
+      className={styles.tag}
+      title={tag}
+    >
       {tag}
     </Link>
   )

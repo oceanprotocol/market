@@ -63,7 +63,7 @@ export default function Publisher({
       ) : (
         <>
           <Link
-            to={`/search/?owner=${account}`}
+            to={`/search/?owner=${account}&sort=created&sortOrder=desc`}
             title="Show all data sets created by this account."
           >
             {name}

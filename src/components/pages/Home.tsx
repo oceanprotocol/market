@@ -112,7 +112,7 @@ export default function HomePage(): ReactElement {
         title="New Data Sets"
         query={queryLatest}
         action={
-          <Button style="text" to="/search">
+          <Button style="text" to="/search?sort=created&sortOrder=desc">
             All data sets →
           </Button>
         }
