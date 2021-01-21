@@ -111,13 +111,15 @@ export default function Consume({
       ) : (
         <>
           <Button style="primary" onClick={handleConsume} disabled={isDisabled}>
-            {hasPreviousOrder ? 'Download' : 'Buy'}
-            {assetTimeout === 'Forever' ? '' : ` for ${assetTimeout}`}
+            {hasPreviousOrder
+              ? 'Download'
+              : `Buy ${assetTimeout !== 'Forever' && ` for ${assetTimeout}`}`}
           </Button>
           {hasDatatoken && (
             <div className={styles.help}>
               You own {dtBalance} {ddo.dataTokenInfo.symbol} allowing you to use
-              this data set without paying OCEAN again.
+              this data set by spending 1 {ddo.dataTokenInfo.symbol}, but
+              without paying OCEAN again.
             </div>
           )}
           {(!hasDatatoken || !hasPreviousOrder) && (
