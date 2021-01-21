@@ -12,3 +12,4 @@ public/storybook
 .artifacts
 .vercel
 repo-metadata.json
+src/@types/apollo

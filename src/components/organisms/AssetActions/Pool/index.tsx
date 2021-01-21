@@ -14,9 +14,10 @@ import TokenList from './TokenList'
 import { graphql, useStaticQuery } from 'gatsby'
 import TokenBalance from '../../../../@types/TokenBalance'
 import Transactions from './Transactions'
-import Graph, { ChartDataLiqudity } from './Graph'
-import axios from 'axios'
+import Graph from './Graph'
 import { useAsset } from '../../../../providers/Asset'
+import { gql, useQuery } from '@apollo/client'
+import { PoolLiquidity } from '../../../../@types/apollo/PoolLiquidity'
 
 const contentQuery = graphql`
   query PoolQuery {
@@ -36,12 +37,30 @@ const contentQuery = graphql`
     }
   }
 `
+const poolLiquidityQuery = gql`
+  query PoolLiquidity($id: ID!, $shareId: ID) {
+    pool(id: $id) {
+      id
+      totalShares
+      swapFee
+      tokens {
+        tokenAddress
+        balance
+        denormWeight
+      }
+      shares(where: { id: $shareId }) {
+        id
+        balance
+      }
+    }
+  }
+`
 
 export default function Pool(): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childContentJson.pool
 
-  const { ocean, accountId, networkId, config } = useOcean()
+  const { ocean, accountId, networkId } = useOcean()
   const {
     isInPurgatory,
     ddo,
@@ -75,10 +94,70 @@ export default function Pool(): ReactElement {
   const [creatorLiquidity, setCreatorLiquidity] = useState<TokenBalance>()
   const [creatorPoolTokens, setCreatorPoolTokens] = useState<string>()
   const [creatorPoolShare, setCreatorPoolShare] = useState<string>()
-  const [graphData, setGraphData] = useState<ChartDataLiqudity>()
 
   // the purpose of the value is just to trigger the effect
   const [refreshPool, setRefreshPool] = useState(false)
+  const { data: dataLiquidity } = useQuery<PoolLiquidity>(poolLiquidityQuery, {
+    variables: {
+      id: ddo.price.address.toLowerCase(),
+      shareId: `${ddo.price.address.toLowerCase()}-${ddo.publicKey[0].owner.toLowerCase()}`
+    },
+    pollInterval: 5000
+  })
+
+  useEffect(() => {
+    async function init() {
+      if (!dataLiquidity || !dataLiquidity.pool) return
+
+      // Total pool shares
+      const totalPoolTokens = dataLiquidity.pool.totalShares
+      setTotalPoolTokens(totalPoolTokens)
+
+      // Get swap fee
+      // swapFee is tricky: to get 0.1% you need to convert from 0.001
+      setSwapFee(`${Number(dataLiquidity.pool.swapFee) * 100}`)
+
+      // Get weights
+      const weightDt = dataLiquidity.pool.tokens.filter(
+        (token: any) => token.tokenAddress === ddo.dataToken.toLowerCase()
+      )[0].denormWeight
+
+      setWeightDt(`${Number(weightDt) * 10}`)
+      setWeightOcean(`${100 - Number(weightDt) * 10}`)
+
+      //
+      // Get everything the creator put into the pool
+      //
+
+      const creatorPoolTokens = dataLiquidity.pool.shares[0].balance
+      setCreatorPoolTokens(creatorPoolTokens)
+
+      // Calculate creator's provided liquidity based on pool tokens
+      const creatorOceanBalance =
+        (Number(creatorPoolTokens) / Number(totalPoolTokens)) * price.ocean
+
+      const creatorDtBalance =
+        (Number(creatorPoolTokens) / Number(totalPoolTokens)) * price.datatoken
+
+      const creatorLiquidity = {
+        ocean: creatorOceanBalance,
+        datatoken: creatorDtBalance
+      }
+      setCreatorLiquidity(creatorLiquidity)
+
+      const totalCreatorLiquidityInOcean =
+        creatorLiquidity?.ocean + creatorLiquidity?.datatoken * price?.value
+      setCreatorTotalLiquidityInOcean(totalCreatorLiquidityInOcean)
+
+      const creatorPoolShare =
+        price?.ocean &&
+        price?.datatoken &&
+        creatorLiquidity &&
+        ((Number(creatorPoolTokens) / Number(totalPoolTokens)) * 100).toFixed(2)
+      setCreatorPoolShare(creatorPoolShare)
+    }
+    init()
+  }, [dataLiquidity, ddo.dataToken, price.datatoken, price.ocean, price?.value])
 
   useEffect(() => {
     setIsRemoveDisabled(isInPurgatory && owner === accountId)
@@ -105,14 +184,6 @@ export default function Pool(): ReactElement {
     async function init() {
       try {
         //
-        // Get everything which is in the pool
-        //
-        const totalPoolTokens = await ocean.pool.getPoolSharesTotalSupply(
-          price.address
-        )
-        setTotalPoolTokens(totalPoolTokens)
-
-        //
         // Get everything the user has put into the pool
         //
         const poolTokens = await ocean.pool.sharesBalance(
@@ -131,95 +202,12 @@ export default function Pool(): ReactElement {
         }
 
         setUserLiquidity(userLiquidity)
-
-        //
-        // Get everything the creator put into the pool
-        //
-        const creatorPoolTokens = await ocean.pool.sharesBalance(
-          owner,
-          price.address
-        )
-        setCreatorPoolTokens(creatorPoolTokens)
-
-        // Calculate creator's provided liquidity based on pool tokens
-        const creatorOceanBalance =
-          (Number(creatorPoolTokens) / Number(totalPoolTokens)) * price.ocean
-
-        const creatorDtBalance =
-          (Number(creatorPoolTokens) / Number(totalPoolTokens)) *
-          price.datatoken
-
-        const creatorLiquidity = {
-          ocean: creatorOceanBalance,
-          datatoken: creatorDtBalance
-        }
-        setCreatorLiquidity(creatorLiquidity)
-
-        const totalCreatorLiquidityInOcean =
-          creatorLiquidity?.ocean + creatorLiquidity?.datatoken * price?.value
-        setCreatorTotalLiquidityInOcean(totalCreatorLiquidityInOcean)
-
-        const creatorPoolShare =
-          price?.ocean &&
-          price?.datatoken &&
-          creatorLiquidity &&
-          ((Number(creatorPoolTokens) / Number(totalPoolTokens)) * 100).toFixed(
-            2
-          )
-        setCreatorPoolShare(creatorPoolShare)
-
-        // Get swap fee
-        // swapFee is tricky: to get 0.1% you need to convert from 0.001
-        const swapFee = await ocean.pool.getSwapFee(price.address)
-        setSwapFee(`${Number(swapFee) * 100}`)
-
-        // Get weights
-        const weightDt = await ocean.pool.getDenormalizedWeight(
-          price.address,
-          ddo.dataToken
-        )
-        setWeightDt(`${Number(weightDt) * 10}`)
-        setWeightOcean(`${100 - Number(weightDt) * 10}`)
       } catch (error) {
         Logger.error(error.message)
       }
     }
     init()
-  }, [ocean, accountId, price, ddo, refreshPool, owner])
-
-  // Get graph history data
-  useEffect(() => {
-    if (
-      !price?.address ||
-      !price?.ocean ||
-      !price?.value ||
-      !config?.metadataCacheUri
-    )
-      return
-
-    const source = axios.CancelToken.source()
-    const url = `${config.metadataCacheUri}/api/v1/aquarius/pools/history/${price.address}`
-
-    async function getData() {
-      Logger.log('Fired GetGraphData!')
-      try {
-        const response = await axios(url, { cancelToken: source.token })
-        if (!response || response.status !== 200) return
-        setGraphData(response.data)
-      } catch (error) {
-        if (axios.isCancel(error)) {
-          Logger.log(error.message)
-        } else {
-          Logger.error(error.message)
-        }
-      }
-    }
-    getData()
-
-    return () => {
-      source.cancel()
-    }
-  }, [config.metadataCacheUri, price?.address, price?.ocean, price?.value])
+  }, [ocean, accountId, price, ddo, refreshPool, owner, totalPoolTokens])
 
   const refreshInfo = async () => {
     setRefreshPool(!refreshPool)
@@ -318,7 +306,7 @@ export default function Pool(): ReactElement {
                     {weightOcean}/{weightDt}
                   </span>
                 )}
-                <Graph data={graphData} />
+                <Graph />
               </>
             }
             ocean={`${price?.ocean}`}
