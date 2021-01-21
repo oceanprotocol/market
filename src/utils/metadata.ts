@@ -27,41 +27,34 @@ export function mapTimeoutStringToSeconds(timeout: string): number {
   }
 }
 
-export function millisecondsToStr(milliseconds: number): string {
-  function numberEnding(number: number): string {
-    return number > 1 ? 's' : ''
-  }
+function numberEnding(number: number): string {
+  return number > 1 ? 's' : ''
+}
 
-  if (milliseconds === 0) {
-    return 'Forever'
-  }
+export function millisecondsToStr(milliseconds: number): string {
+  if (milliseconds === 0) return 'Forever'
 
   let temp = Math.floor(milliseconds / 1000)
   const years = Math.floor(temp / 31536000)
-  if (years) {
-    return years + ' year' + numberEnding(years)
-  }
   const weeks = Math.floor((temp %= 31536000) / 604800)
-  if (weeks) {
-    return weeks + ' week' + numberEnding(weeks)
-  }
   const days = Math.floor((temp %= 604800) / 86400)
-  if (days) {
-    return days + ' day' + numberEnding(days)
-  }
   const hours = Math.floor((temp %= 86400) / 3600)
-  if (hours) {
-    return hours + ' hour' + numberEnding(hours)
-  }
   const minutes = Math.floor((temp %= 3600) / 60)
-  if (minutes) {
-    return minutes + ' minute' + numberEnding(minutes)
-  }
   const seconds = temp % 60
-  if (seconds) {
-    return seconds + ' second' + numberEnding(seconds)
-  }
-  return 'less than a second'
+
+  return years
+    ? `${years} year${numberEnding(years)}`
+    : weeks
+    ? `${weeks} week${numberEnding(weeks)}`
+    : days
+    ? `${days} day${numberEnding(days)}`
+    : hours
+    ? `${hours} hour${numberEnding(hours)}`
+    : minutes
+    ? `${minutes} minute${numberEnding(minutes)}`
+    : seconds
+    ? `${seconds} second${numberEnding(seconds)}`
+    : 'less than a second'
 }
 
 export function checkIfTimeoutInPredefinedValues(timeout: string): boolean {
