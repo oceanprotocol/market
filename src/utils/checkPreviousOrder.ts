@@ -5,7 +5,7 @@ export default async function checkPreviousOrder(
   accountId: string,
   ddo: DDO,
   serviceType: ServiceType
-) {
+): Promise<string> {
   if (!ocean) return
 
   const service = ddo.findServiceByType(serviceType)
