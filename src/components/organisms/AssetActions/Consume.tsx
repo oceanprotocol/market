@@ -112,7 +112,7 @@ export default function Consume({
         <>
           <Button style="primary" onClick={handleConsume} disabled={isDisabled}>
             {hasPreviousOrder ? 'Download' : 'Buy'}
-            {assetTimeout === 'Forever' && ` for ${assetTimeout}`}
+            {assetTimeout === 'Forever' ? '' : ` for ${assetTimeout}`}
           </Button>
           {hasDatatoken && (
             <div className={styles.help}>
