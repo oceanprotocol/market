@@ -62,7 +62,7 @@ const txHistoryQuery = gql`
 `
 async function getSymbol(ocean: Ocean, tokenAddress: string) {
   const symbol =
-    ocean.pool.oceanAddress === tokenAddress
+    ocean.pool.oceanAddress.toLowerCase() === tokenAddress.toLowerCase()
       ? 'OCEAN'
       : await ocean.datatokens.getSymbol(tokenAddress)
 
@@ -92,9 +92,15 @@ async function getTitle(
       break
     }
     case 'setup': {
-      const firstToken = row.tokens[0]
+      const firstToken = row.tokens.filter(
+        (x) =>
+          x.tokenAddress.toLowerCase() === ocean.pool.oceanAddress.toLowerCase()
+      )[0]
       const firstTokenSymbol = await getSymbol(ocean, firstToken.tokenAddress)
-      const secondToken = row.tokens[1]
+      const secondToken = row.tokens.filter(
+        (x) =>
+          x.tokenAddress.toLowerCase() !== ocean.pool.oceanAddress.toLowerCase()
+      )[0]
       const secondTokenSymbol = await getSymbol(ocean, secondToken.tokenAddress)
       title += `Create pool with ${formatPrice(
         Math.abs(firstToken.value).toString(),
