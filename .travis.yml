@@ -17,6 +17,7 @@ before_script:
   # - './cc-test-reporter before-build'
 script:
   # will run `npm ci` automatically here
+  - npm run apollo:codegen
   - npm run lint
   # - './cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT'
   - npm run build

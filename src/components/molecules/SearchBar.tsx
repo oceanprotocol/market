@@ -4,6 +4,7 @@ import styles from './SearchBar.module.css'
 import Button from '../atoms/Button'
 import Input from '../atoms/Input'
 import InputGroup from '../atoms/Input/InputGroup'
+import { addExistingParamsToUrl } from '../templates/Search/utils'
 
 export default function SearchBar({
   placeholder,
@@ -23,10 +24,11 @@ export default function SearchBar({
     setValue(e.target.value)
   }
 
-  function startSearch(e: FormEvent<HTMLButtonElement>) {
+  async function startSearch(e: FormEvent<HTMLButtonElement>) {
     e.preventDefault()
     if (value === '') return
-    navigate(`/search?text=${value}`)
+    const url = await addExistingParamsToUrl(location, 'text')
+    navigate(`${url}&text=${value}`)
   }
 
   return (
@@ -41,7 +43,11 @@ export default function SearchBar({
           required
           size={size}
         />
-        <Button onClick={(e: FormEvent<HTMLButtonElement>) => startSearch(e)}>
+        <Button
+          onClick={async (e: FormEvent<HTMLButtonElement>) =>
+            await startSearch(e)
+          }
+        >
           Search
         </Button>
       </InputGroup>
