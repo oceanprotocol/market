@@ -15,6 +15,7 @@ import {
   NormalizedCacheObject
 } from '@apollo/client'
 import fetch from 'cross-fetch'
+import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 const contentQuery = graphql`
   query AppQuery {
     purgatory: allFile(filter: { relativePath: { eq: "purgatory.json" } }) {
@@ -54,7 +55,7 @@ export default function App({
     const newClient = new ApolloClient({
       link: new HttpLink({
         uri: `${
-          (config as any).subgraphUri
+          (config as ConfigHelperConfig).subgraphUri
         }/subgraphs/name/oceanprotocol/ocean-subgraph`,
         fetch
       }),

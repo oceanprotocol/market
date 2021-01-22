@@ -19,8 +19,7 @@ export default function AssetListTitle({
   const [assetTitle, setAssetTitle] = useState<string>(title)
 
   useEffect(() => {
-    if (assetTitle || !config?.metadataCacheUri) return
-
+    if (title || !config?.metadataCacheUri) return
     if (ddo) {
       const { attributes } = ddo.findServiceByType('metadata')
       setAssetTitle(attributes.main.name)
@@ -31,6 +30,8 @@ export default function AssetListTitle({
 
     async function getDDO() {
       const ddo = await retrieveDDO(did, config.metadataCacheUri, source.token)
+
+      if (!ddo) return
       const { attributes } = ddo.findServiceByType('metadata')
       setAssetTitle(attributes.main.name)
     }
@@ -38,9 +39,10 @@ export default function AssetListTitle({
     !ddo && did && getDDO()
 
     return () => {
+      console.log('canceled?')
       source.cancel()
     }
-  }, [assetTitle, config?.metadataCacheUri, ddo, did])
+  }, [assetTitle, config?.metadataCacheUri, ddo, did, title])
 
   return (
     <h3 className={styles.title}>

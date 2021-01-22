@@ -1,4 +1,3 @@
-import { PoolTransaction } from '@oceanprotocol/lib/dist/node/balancer/OceanPool'
 import { useOcean } from '@oceanprotocol/react'
 import React, { ReactElement, useEffect, useState } from 'react'
 import EtherscanLink from '../atoms/EtherscanLink'
@@ -9,41 +8,61 @@ import styles from './PoolTransactions.module.css'
 import { useUserPreferences } from '../../providers/UserPreferences'
 import { Ocean } from '@oceanprotocol/lib'
 import { formatPrice } from '../atoms/Price/PriceUnit'
-import { gql } from '@apollo/client'
+import { gql, useQuery } from '@apollo/client'
+import {
+  TransactionHistory,
+  TransactionHistoryPoolTransactions
+} from '../../@types/apollo/TransactionHistory'
 
-const txHistoryQuery = gql`
-  query Pool($id: ID!, $user: String!) {
-    pool(id: $id) {
-      transactions(orderBy: timestamp, where: { userAddressStr: $user }) {
-        tx
-        timestamp
-        spotPrice
-        event
-        sharesTransferAmount
-        tokens {
-          type
-          value
-          tokenAddress
-          poolToken {
-            tokenId {
-              symbol
-              name
-            }
-            tokenAddress
-          }
-        }
+import web3 from 'web3'
+
+const txHistoryQueryByPool = gql`
+  query TransactionHistoryByPool($user: String, $pool: String) {
+    poolTransactions(
+      orderBy: timestamp
+      orderDirection: desc
+      where: { userAddress: $user, poolAddress: $pool }
+      first: 1000
+    ) {
+      tx
+      event
+      timestamp
+      poolAddress {
+        datatokenAddress
+      }
+      tokens {
+        value
+        type
+        tokenAddress
       }
     }
   }
 `
-
-async function getSymbol(
-  ocean: Ocean,
-  tokenAddress: string,
-  oceanTokenAddress: string
-) {
+const txHistoryQuery = gql`
+  query TransactionHistory($user: String) {
+    poolTransactions(
+      orderBy: timestamp
+      orderDirection: desc
+      where: { userAddress: $user }
+      first: 1000
+    ) {
+      tx
+      event
+      timestamp
+      poolAddress {
+        datatokenAddress
+      }
+      tokens {
+        value
+        type
+        tokenAddress
+      }
+    }
+  }
+`
+async function getSymbol(ocean: Ocean, tokenAddress: string) {
   const symbol =
-    oceanTokenAddress === tokenAddress
+    ocean.pool.oceanAddress.toLowerCase() === tokenAddress.toLowerCase()
       ? 'OCEAN'
       : await ocean.datatokens.getSymbol(tokenAddress)
 
@@ -52,52 +71,81 @@ async function getSymbol(
 
 async function getTitle(
   ocean: Ocean,
-  row: PoolTransaction,
-  locale: string,
-  oceanTokenAddress: string
+  row: TransactionHistoryPoolTransactions,
+  locale: string
 ) {
-  const addRemoveSymbol = await getSymbol(
-    ocean,
-    row.tokenIn || row.tokenOut,
-    oceanTokenAddress
-  )
+  let title = ''
 
-  const title =
-    row.type === 'join'
-      ? `Add ${formatPrice(row.tokenAmountIn, locale)} ${addRemoveSymbol}`
-      : row.type === 'exit'
-      ? `Remove ${formatPrice(row.tokenAmountOut, locale)} ${addRemoveSymbol}`
-      : `Swap ${formatPrice(row.tokenAmountIn, locale)} ${await getSymbol(
-          ocean,
-          row.tokenIn,
-          oceanTokenAddress
-        )} for ${formatPrice(row.tokenAmountOut, locale)} ${await getSymbol(
-          ocean,
-          row.tokenOut,
-          oceanTokenAddress
-        )}`
+  switch (row.event) {
+    case 'swap': {
+      const inToken = row.tokens.filter((x) => x.type === 'in')[0]
+      const inTokenSymbol = await getSymbol(ocean, inToken.tokenAddress)
+      const outToken = row.tokens.filter((x) => x.type === 'out')[0]
+      const outTokenSymbol = await getSymbol(ocean, outToken.tokenAddress)
+      title += `Swap ${formatPrice(
+        Math.abs(inToken.value).toString(),
+        locale
+      )}${inTokenSymbol} for ${formatPrice(
+        Math.abs(outToken.value).toString(),
+        locale
+      )}${outTokenSymbol}`
+      break
+    }
+    case 'setup': {
+      const firstToken = row.tokens.filter(
+        (x) =>
+          x.tokenAddress.toLowerCase() === ocean.pool.oceanAddress.toLowerCase()
+      )[0]
+      const firstTokenSymbol = await getSymbol(ocean, firstToken.tokenAddress)
+      const secondToken = row.tokens.filter(
+        (x) =>
+          x.tokenAddress.toLowerCase() !== ocean.pool.oceanAddress.toLowerCase()
+      )[0]
+      const secondTokenSymbol = await getSymbol(ocean, secondToken.tokenAddress)
+      title += `Create pool with ${formatPrice(
+        Math.abs(firstToken.value).toString(),
+        locale
+      )}${firstTokenSymbol} and ${formatPrice(
+        Math.abs(secondToken.value).toString(),
+        locale
+      )}${secondTokenSymbol}`
+      break
+    }
+    case 'join':
+    case 'exit': {
+      for (let i = 0; i < row.tokens.length; i++) {
+        const tokenSymbol = await getSymbol(ocean, row.tokens[i].tokenAddress)
+        if (i > 0) title += '\n'
+        title += `${row.event === 'join' ? 'Add' : 'Remove'} ${formatPrice(
+          Math.abs(row.tokens[i].value).toString(),
+          locale
+        )}${tokenSymbol}`
+      }
+      break
+    }
+  }
 
   return title
 }
 
-function Title({ row }: { row: PoolTransaction }) {
-  const { ocean, networkId, config } = useOcean()
+function Title({ row }: { row: TransactionHistoryPoolTransactions }) {
+  const { ocean, networkId } = useOcean()
   const [title, setTitle] = useState<string>()
   const { locale } = useUserPreferences()
 
   useEffect(() => {
-    if (!ocean || !locale || !row || !config?.oceanTokenAddress) return
+    if (!ocean || !locale || !row) return
 
     async function init() {
-      const title = await getTitle(ocean, row, locale, config.oceanTokenAddress)
+      const title = await getTitle(ocean, row, locale)
       setTitle(title)
     }
     init()
-  }, [ocean, row, locale, config?.oceanTokenAddress])
+  }, [ocean, row, locale])
 
   return title ? (
-    <EtherscanLink networkId={networkId} path={`/tx/${row.transactionHash}`}>
-      {title}
+    <EtherscanLink networkId={networkId} path={`/tx/${row.tx}`}>
+      <span className={styles.titleText}>{title}</span>
     </EtherscanLink>
   ) : null
 }
@@ -106,21 +154,24 @@ function getColumns(minimal?: boolean) {
   return [
     {
       name: 'Title',
-      selector: function getTitleRow(row: PoolTransaction) {
+      selector: function getTitleRow(row: TransactionHistoryPoolTransactions) {
         return <Title row={row} />
       }
     },
     {
       name: 'Data Set',
-      selector: function getAssetRow(row: PoolTransaction) {
-        const did = row.dtAddress.replace('0x', 'did:op:')
+      selector: function getAssetRow(row: TransactionHistoryPoolTransactions) {
+        const did = web3.utils
+          .toChecksumAddress(row.poolAddress.datatokenAddress)
+          .replace('0x', 'did:op:')
+
         return <AssetTitle did={did} />
       },
       omit: minimal
     },
     {
       name: 'Time',
-      selector: function getTimeRow(row: PoolTransaction) {
+      selector: function getTimeRow(row: TransactionHistoryPoolTransactions) {
         return (
           <Time
             className={styles.time}
@@ -142,35 +193,30 @@ export default function PoolTransactions({
   poolAddress?: string
   minimal?: boolean
 }): ReactElement {
-  const { ocean, accountId } = useOcean()
-  const [logs, setLogs] = useState<PoolTransaction[]>()
-  const [isLoading, setIsLoading] = useState(false)
+  const { accountId } = useOcean()
+  const [logs, setLogs] = useState<TransactionHistoryPoolTransactions[]>()
+
+  const { data, loading } = useQuery<TransactionHistory>(
+    poolAddress ? txHistoryQueryByPool : txHistoryQuery,
+    {
+      variables: {
+        user: accountId?.toLowerCase(),
+        pool: poolAddress?.toLowerCase()
+      },
+      pollInterval: 20000
+    }
+  )
 
   useEffect(() => {
-    async function getLogs() {
-      if (!ocean || !accountId) return
-
-      setIsLoading(true)
-      const logs = poolAddress
-        ? await ocean.pool.getPoolLogs(poolAddress, 0, accountId)
-        : await ocean.pool.getAllPoolLogs(accountId)
-      // sort logs by date, newest first
-      const logsSorted = logs.sort((a, b) => {
-        if (a.timestamp > b.timestamp) return -1
-        if (a.timestamp < b.timestamp) return 1
-        return 0
-      })
-      setLogs(logsSorted)
-      setIsLoading(false)
-    }
-    getLogs()
-  }, [ocean, accountId, poolAddress])
+    if (!data) return
+    setLogs(data.poolTransactions)
+  }, [data, loading])
 
   return (
     <Table
       columns={getColumns(minimal)}
       data={logs}
-      isLoading={isLoading}
+      isLoading={loading}
       noTableHead={minimal}
       dense={minimal}
       pagination={minimal ? logs?.length >= 4 : logs?.length >= 9}
