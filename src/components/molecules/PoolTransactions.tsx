@@ -76,26 +76,46 @@ async function getTitle(
 ) {
   let title = ''
 
-  if (row.event === 'swap') {
-    const inToken = row.tokens.filter((x) => x.type === 'in')[0]
-    const inTokenSymbol = await getSymbol(ocean, inToken.tokenAddress)
-    const outToken = row.tokens.filter((x) => x.type === 'out')[0]
-    const outTokenSymbol = await getSymbol(ocean, outToken.tokenAddress)
-    title += `Swap ${formatPrice(
-      Math.abs(inToken.value).toString(),
-      locale
-    )}${inTokenSymbol} for ${formatPrice(
-      Math.abs(outToken.value).toString(),
-      locale
-    )}${outTokenSymbol}`
-  } else {
-    for (let i = 0; i < row.tokens.length; i++) {
-      const tokenSymbol = await getSymbol(ocean, row.tokens[i].tokenAddress)
-      if (i > 0) title += '\n'
-      title += `${row.event === 'join' ? 'Add' : 'Remove'} ${formatPrice(
-        Math.abs(row.tokens[i].value).toString(),
+  switch (row.event) {
+    case 'swap': {
+      const inToken = row.tokens.filter((x) => x.type === 'in')[0]
+      const inTokenSymbol = await getSymbol(ocean, inToken.tokenAddress)
+      const outToken = row.tokens.filter((x) => x.type === 'out')[0]
+      const outTokenSymbol = await getSymbol(ocean, outToken.tokenAddress)
+      title += `Swap ${formatPrice(
+        Math.abs(inToken.value).toString(),
         locale
-      )}${tokenSymbol}`
+      )}${inTokenSymbol} for ${formatPrice(
+        Math.abs(outToken.value).toString(),
+        locale
+      )}${outTokenSymbol}`
+      break
+    }
+    case 'setup': {
+      const firstToken = row.tokens[0]
+      const firstTokenSymbol = await getSymbol(ocean, firstToken.tokenAddress)
+      const secondToken = row.tokens[1]
+      const secondTokenSymbol = await getSymbol(ocean, secondToken.tokenAddress)
+      title += `Create pool with ${formatPrice(
+        Math.abs(firstToken.value).toString(),
+        locale
+      )}${firstTokenSymbol} and ${formatPrice(
+        Math.abs(secondToken.value).toString(),
+        locale
+      )}${secondTokenSymbol}`
+      break
+    }
+    case 'join':
+    case 'exit': {
+      for (let i = 0; i < row.tokens.length; i++) {
+        const tokenSymbol = await getSymbol(ocean, row.tokens[i].tokenAddress)
+        if (i > 0) title += '\n'
+        title += `${row.event === 'join' ? 'Add' : 'Remove'} ${formatPrice(
+          Math.abs(row.tokens[i].value).toString(),
+          locale
+        )}${tokenSymbol}`
+      }
+      break
     }
   }
 
