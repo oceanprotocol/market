@@ -56,9 +56,11 @@ export function secondsToString(numberOfSeconds: number): string {
     : 'less than a second'
 }
 
-export function checkIfTimeoutInPredefinedValues(timeout: string): boolean {
-  const predefinedValues = ['Forever', '1 day', '1 week', '1 month', '1 year']
-  if (predefinedValues.indexOf(timeout) > -1) {
+export function checkIfTimeoutInPredefinedValues(
+  timeout: string,
+  timeoutOptions: string[]
+): boolean {
+  if (timeoutOptions.indexOf(timeout) > -1) {
     return true
   }
   return false

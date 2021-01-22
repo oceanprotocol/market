@@ -12,17 +12,20 @@ function handleTimeoutCustomOption(
   data: FormFieldProps[],
   values: Partial<MetadataPublishForm>
 ) {
+  const timeoutOptions = data.map((field) => {
+    if (field.name === 'timeout') return field.options
+  })[0]
   const timeoutInputIndex = data.findIndex(
     (element) => element.name === 'timeout'
   )
   if (
     data[timeoutInputIndex].options.length < 6 &&
-    !checkIfTimeoutInPredefinedValues(values.timeout)
+    !checkIfTimeoutInPredefinedValues(values.timeout, timeoutOptions)
   ) {
     data[timeoutInputIndex].options.push(values.timeout)
   } else if (
     data[timeoutInputIndex].options.length === 6 &&
-    checkIfTimeoutInPredefinedValues(values.timeout)
+    checkIfTimeoutInPredefinedValues(values.timeout, timeoutOptions)
   ) {
     data[timeoutInputIndex].options.pop()
   } else if (
