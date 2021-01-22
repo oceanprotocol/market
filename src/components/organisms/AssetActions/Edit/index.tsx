@@ -12,6 +12,7 @@ import MetadataPreview from '../../../molecules/MetadataPreview'
 import Debug from './Debug'
 import Web3Feedback from '../../../molecules/Wallet/Feedback'
 import FormEditMetadata from './FormEditMetadata'
+import { mapTimeoutStringToSeconds } from '../../../../utils/metadata'
 import styles from './index.module.css'
 import { Logger } from '@oceanprotocol/lib'
 import MetadataFeedback from '../../../molecules/MetadataFeedback'
@@ -35,6 +36,7 @@ const contentQuery = graphql`
                 help
                 type
                 required
+                sortOptions
                 options
                 rows
               }
@@ -59,6 +61,7 @@ export default function Edit({
   const { metadata, ddo, refreshDdo } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
+  const [timeoutStringValue, setTimeoutStringValue] = useState<string>()
 
   const hasFeedback = error || success
 
@@ -68,24 +71,46 @@ export default function Edit({
   ) {
     try {
       // Construct new DDO with new values
-      const newDdo = await ocean.assets.editMetadata(ddo, {
+      const ddoEditedMetdata = await ocean.assets.editMetadata(ddo, {
         title: values.name,
         description: values.description
       })
 
-      // Update DDO on-chain
-      const tx = await ocean.assets.updateMetadata(newDdo, accountId)
+      if (!ddoEditedMetdata) {
+        setError(content.form.error)
+        Logger.error(content.form.error)
+        return
+      }
+      let ddoEditedTimeout = ddoEditedMetdata
+      if (timeoutStringValue !== values.timeout) {
+        const service = ddoEditedMetdata.findServiceByType('access')
+        const timeout = mapTimeoutStringToSeconds(values.timeout)
+        ddoEditedTimeout = await ocean.assets.editServiceTimeout(
+          ddoEditedMetdata,
+          service.index,
+          timeout
+        )
+      }
 
-      // Edit failed
-      if (!newDdo || !tx) {
+      if (!ddoEditedTimeout) {
         setError(content.form.error)
         Logger.error(content.form.error)
         return
       }
 
-      // Edit succeeded
-      setSuccess(content.form.success)
-      resetForm()
+      const storedddo = await ocean.assets.updateMetadata(
+        ddoEditedTimeout,
+        accountId
+      )
+      if (!storedddo) {
+        setError(content.form.error)
+        Logger.error(content.form.error)
+        return
+      } else {
+        // Edit succeeded
+        setSuccess(content.form.success)
+        resetForm()
+      }
     } catch (error) {
       Logger.error(error.message)
       setError(error.message)
@@ -94,7 +119,10 @@ export default function Edit({
 
   return (
     <Formik
-      initialValues={getInitialValues(metadata)}
+      initialValues={getInitialValues(
+        metadata,
+        ddo.findServiceByType('access').attributes.main.timeout
+      )}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
         // move user's focus to top of screen
@@ -103,7 +131,7 @@ export default function Edit({
         await handleSubmit(values, resetForm)
       }}
     >
-      {({ isSubmitting, values }) =>
+      {({ isSubmitting, values, initialValues }) =>
         isSubmitting || hasFeedback ? (
           <MetadataFeedback
             title="Updating Data Set"
@@ -125,6 +153,8 @@ export default function Edit({
               <FormEditMetadata
                 data={content.form.data}
                 setShowEdit={setShowEdit}
+                setTimeoutStringValue={setTimeoutStringValue}
+                values={initialValues}
               />
 
               <aside>

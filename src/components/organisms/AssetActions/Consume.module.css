@@ -21,6 +21,10 @@
   composes: help from './index.module.css';
 }
 
+.help:not(:empty) {
+  margin-top: calc(var(--spacer) / 2);
+}
+
 .feedback {
   width: 100%;
 }

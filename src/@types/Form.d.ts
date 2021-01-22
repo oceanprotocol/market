@@ -3,6 +3,7 @@ export interface FormFieldProps {
   name: string
   type?: string
   options?: string[]
+  sortOptions?: boolean
   required?: boolean
   help?: string
   placeholder?: string

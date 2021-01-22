@@ -43,6 +43,15 @@
         "required": true
       },
       {
+        "name": "timeout",
+        "label": "Timeout",
+        "help": "Define how long buyers should be able to download the data set again after the initial purchase.",
+        "type": "select",
+        "options": ["Forever", "1 day", "1 week", "1 month", "1 year"],
+        "sortOptions": false,
+        "required": true
+      },
+      {
         "name": "dataTokenOptions",
         "label": "Datatoken Name & Symbol",
         "type": "datatoken",
