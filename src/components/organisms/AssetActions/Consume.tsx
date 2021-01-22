@@ -14,12 +14,15 @@ import { useAsset } from '../../../providers/Asset'
 import { secondsToString } from '../../../utils/metadata'
 
 function getHelpText(
-  dtBalance: string,
-  dtSymbol: string,
+  token: {
+    dtBalance: string
+    dtSymbol: string
+  },
   hasDatatoken: boolean,
   hasPreviousOrder: boolean,
   timeout: string
 ) {
+  const { dtBalance, dtSymbol } = token
   const assetTimeout = timeout === 'Forever' ? '' : ` for ${timeout}`
   const text = hasPreviousOrder
     ? `You bought this data set already allowing you to download it without paying again${assetTimeout}.`
@@ -137,8 +140,7 @@ export default function Consume({
           </Button>
           <div className={styles.help}>
             {getHelpText(
-              dtBalance,
-              ddo.dataTokenInfo.symbol,
+              { dtBalance, dtSymbol: ddo.dataTokenInfo.symbol },
               hasDatatoken,
               hasPreviousOrder,
               assetTimeout
