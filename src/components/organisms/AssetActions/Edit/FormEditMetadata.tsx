@@ -12,20 +12,26 @@ function handleTimeoutCustomOption(
   data: FormFieldProps[],
   values: Partial<MetadataPublishForm>
 ) {
-  const timeoutOptions = data.map((field) => {
-    if (field.name === 'timeout') return field.options
-  })[0]
+  const timeoutFieldContent = data.filter(
+    (field) => field.name === 'timeout'
+  )[0]
   const timeoutInputIndex = data.findIndex(
     (element) => element.name === 'timeout'
   )
   if (
     data[timeoutInputIndex].options.length < 6 &&
-    !checkIfTimeoutInPredefinedValues(values.timeout, timeoutOptions)
+    !checkIfTimeoutInPredefinedValues(
+      values.timeout,
+      timeoutFieldContent.options
+    )
   ) {
     data[timeoutInputIndex].options.push(values.timeout)
   } else if (
     data[timeoutInputIndex].options.length === 6 &&
-    checkIfTimeoutInPredefinedValues(values.timeout, timeoutOptions)
+    checkIfTimeoutInPredefinedValues(
+      values.timeout,
+      timeoutFieldContent.options
+    )
   ) {
     data[timeoutInputIndex].options.pop()
   } else if (
@@ -67,7 +73,7 @@ export default function FormEditMetadata({
   // This component is handled by Formik so it's not rendered like a "normal" react component,
   // so handleTimeoutCustomOption is called only once.
   // https://github.com/oceanprotocol/market/pull/324#discussion_r561132310
-  handleTimeoutCustomOption(data, values)
+  if (data && values) handleTimeoutCustomOption(data, values)
 
   return (
     <Form className={styles.form}>
