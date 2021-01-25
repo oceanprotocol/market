@@ -1,19 +1,26 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import Button from '../../atoms/Button'
 import styles from './Details.module.css'
 import { useOcean } from '@oceanprotocol/react'
 import Web3Feedback from './Feedback'
-import { getInjectedProviderName } from 'web3modal'
+import { getProviderInfo } from 'web3modal'
 import Conversion from '../../atoms/Price/Conversion'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 
 export default function Details(): ReactElement {
-  const { balance, connect, logout, web3Modal, web3Provider } = useOcean()
+  const { balance, connect, logout, web3Provider } = useOcean()
   const { locale } = useUserPreferences()
+  const [providerName, setProviderName] = useState<string>()
 
-  console.log(getInjectedProviderName())
-  console.log(web3Modal.cachedProvider)
+  // Workaround cause getInjectedProviderName() always returns `MetaMask`
+  // https://github.com/oceanprotocol/market/issues/332
+  useEffect(() => {
+    if (!web3Provider) return
+
+    const { name } = getProviderInfo(web3Provider)
+    setProviderName(name)
+  }, [web3Provider])
 
   return (
     <div className={styles.details}>
@@ -29,15 +36,13 @@ export default function Details(): ReactElement {
         ))}
 
         <li className={styles.actions}>
-          <span title="Connected provider">{web3Modal.cachedProvider}</span>
+          <span title="Connected provider">{providerName}</span>
           <p>
-            {web3Modal.cachedProvider === 'portis' && (
+            {providerName && providerName === 'Portis' && (
               <Button
                 style="text"
                 size="small"
-                onClick={() => {
-                  web3Provider._portis.showPortis()
-                }}
+                onClick={() => web3Provider._portis.showPortis()}
               >
                 Show Portis
               </Button>
