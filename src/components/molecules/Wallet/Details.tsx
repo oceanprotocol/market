@@ -27,8 +27,11 @@ export default function Details(): ReactElement {
   // Handle network change for Portis
   async function handlePortisNetworkChange(e: ChangeEvent<HTMLSelectElement>) {
     setPortisNetwork(e.target.value)
-    web3Provider._portis.changeNetwork(e.target.value.toLowerCase())
-    await connect()
+    const portisNetworkName = e.target.value.toLowerCase()
+    await web3Provider._portis.changeNetwork(portisNetworkName)
+    // TODO: using our connect initializes a new Portis instance,
+    // which then defaults back to initial network (Mainnet).
+    // await connect()
   }
 
   return (
