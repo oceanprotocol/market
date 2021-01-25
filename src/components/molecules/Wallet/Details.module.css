@@ -53,3 +53,12 @@
 .actions button:first-child {
   margin-top: calc(var(--spacer) / 8);
 }
+
+.walletLogo {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: calc(var(--spacer) / 8);
+  margin-top: -0.2rem;
+}

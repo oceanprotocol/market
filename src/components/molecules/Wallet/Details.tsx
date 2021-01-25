@@ -3,7 +3,7 @@ import Button from '../../atoms/Button'
 import styles from './Details.module.css'
 import { useOcean } from '@oceanprotocol/react'
 import Web3Feedback from './Feedback'
-import { getProviderInfo } from 'web3modal'
+import { getProviderInfo, IProviderInfo } from 'web3modal'
 import Conversion from '../../atoms/Price/Conversion'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../../providers/UserPreferences'
@@ -11,15 +11,15 @@ import { useUserPreferences } from '../../../providers/UserPreferences'
 export default function Details(): ReactElement {
   const { balance, connect, logout, web3Provider } = useOcean()
   const { locale } = useUserPreferences()
-  const [providerName, setProviderName] = useState<string>()
+  const [providerInfo, setProviderInfo] = useState<IProviderInfo>()
 
   // Workaround cause getInjectedProviderName() always returns `MetaMask`
   // https://github.com/oceanprotocol/market/issues/332
   useEffect(() => {
     if (!web3Provider) return
 
-    const { name } = getProviderInfo(web3Provider)
-    setProviderName(name)
+    const providerInfo = getProviderInfo(web3Provider)
+    setProviderInfo(providerInfo)
   }, [web3Provider])
 
   return (
@@ -36,9 +36,12 @@ export default function Details(): ReactElement {
         ))}
 
         <li className={styles.actions}>
-          <span title="Connected provider">{providerName}</span>
+          <span title="Connected provider">
+            <img className={styles.walletLogo} src={providerInfo?.logo} />
+            {providerInfo?.name}
+          </span>
           <p>
-            {providerName && providerName === 'Portis' && (
+            {providerInfo?.name === 'Portis' && (
               <Button
                 style="text"
                 size="small"
