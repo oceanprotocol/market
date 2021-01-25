@@ -25,8 +25,10 @@ export default function Details(): ReactElement {
   }, [web3Provider])
 
   // Handle network change for Portis
-  function handleNetworkChange(e: ChangeEvent<HTMLSelectElement>) {
+  async function handlePortisNetworkChange(e: ChangeEvent<HTMLSelectElement>) {
     setPortisNetwork(e.target.value)
+    web3Provider._portis.changeNetwork(e.target.value.toLowerCase())
+    await connect()
   }
 
   return (
@@ -53,7 +55,7 @@ export default function Details(): ReactElement {
                 options={['Mainnet', 'Ropsten', 'Rinkeby']}
                 size="mini"
                 value={portisNetwork}
-                onChange={handleNetworkChange}
+                onChange={handlePortisNetworkChange}
               />
             )}
           </span>
