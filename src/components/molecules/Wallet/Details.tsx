@@ -9,8 +9,11 @@ import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 
 export default function Details(): ReactElement {
-  const { balance, connect, logout } = useOcean()
+  const { balance, connect, logout, web3Modal, web3Provider } = useOcean()
   const { locale } = useUserPreferences()
+
+  console.log(getInjectedProviderName())
+  console.log(web3Modal.cachedProvider)
 
   return (
     <div className={styles.details}>
@@ -26,8 +29,19 @@ export default function Details(): ReactElement {
         ))}
 
         <li className={styles.actions}>
-          <span title="Connected provider">{getInjectedProviderName()}</span>
+          <span title="Connected provider">{web3Modal.cachedProvider}</span>
           <p>
+            {web3Modal.cachedProvider === 'portis' && (
+              <Button
+                style="text"
+                size="small"
+                onClick={() => {
+                  web3Provider._portis.showPortis()
+                }}
+              >
+                Show Portis
+              </Button>
+            )}
             <Button
               style="text"
               size="small"
