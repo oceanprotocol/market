@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react'
 import Button from '../../atoms/Button'
 import styles from './Details.module.css'
 import { useOcean } from '@oceanprotocol/react'
@@ -7,11 +7,13 @@ import { getProviderInfo, IProviderInfo } from 'web3modal'
 import Conversion from '../../atoms/Price/Conversion'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../../providers/UserPreferences'
+import InputElement from '../../atoms/Input/InputElement'
 
 export default function Details(): ReactElement {
   const { balance, connect, logout, web3Provider } = useOcean()
   const { locale } = useUserPreferences()
   const [providerInfo, setProviderInfo] = useState<IProviderInfo>()
+  const [portisNetwork, setPortisNetwork] = useState<string>()
 
   // Workaround cause getInjectedProviderName() always returns `MetaMask`
   // https://github.com/oceanprotocol/market/issues/332
@@ -21,6 +23,11 @@ export default function Details(): ReactElement {
     const providerInfo = getProviderInfo(web3Provider)
     setProviderInfo(providerInfo)
   }, [web3Provider])
+
+  // Handle network change for Portis
+  function handleNetworkChange(e: ChangeEvent<HTMLSelectElement>) {
+    setPortisNetwork(e.target.value)
+  }
 
   return (
     <div className={styles.details}>
@@ -39,6 +46,16 @@ export default function Details(): ReactElement {
           <span title="Connected provider">
             <img className={styles.walletLogo} src={providerInfo?.logo} />
             {providerInfo?.name}
+            {providerInfo?.name === 'Portis' && (
+              <InputElement
+                name="network"
+                type="select"
+                options={['Mainnet', 'Ropsten', 'Rinkeby']}
+                size="mini"
+                value={portisNetwork}
+                onChange={handleNetworkChange}
+              />
+            )}
           </span>
           <p>
             {providerInfo?.name === 'Portis' && (
