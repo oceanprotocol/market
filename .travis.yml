@@ -5,11 +5,11 @@ node_js: node
 cache:
   npm: true
 
-before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install python3-pip
-  - sudo -H pip3 install --upgrade pip
-  - sudo -H pip3 install -U setuptools
+addons:
+  apt:
+    packages:
+      - python3
+      - python3-pip
 
 before_script:
   # - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
