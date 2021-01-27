@@ -19,7 +19,6 @@ const query = graphql`
           network
           marketFeeAddress
           currencies
-          analyticsId
         }
       }
     }
