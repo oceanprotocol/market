@@ -6,6 +6,26 @@ import PriceUnit from '../../atoms/Price/PriceUnit'
 import Conversion from '../../atoms/Price/Conversion'
 import styles from './PoolShares.module.css'
 import AssetTitle from '../../molecules/AssetListTitle'
+import { gql, useQuery } from '@apollo/client'
+import { PoolShare } from '@oceanprotocol/lib/dist/node/balancer/OceanPool'
+
+const poolSharesQuery = gql`
+  query PoolShares() {
+    poolShares(
+      orderDirection: desc
+      first: 1000
+    ) {
+      id
+      balance
+      userAddress {
+        id
+      }
+      poolId {
+        id
+      }
+    }
+  }
+`
 
 interface Asset {
   ddo: DDO
@@ -56,6 +76,26 @@ export default function PoolShares(): ReactElement {
   const { ocean, accountId, config } = useOcean()
   const [assets, setAssets] = useState<Asset[]>()
   const [isLoading, setIsLoading] = useState(false)
+  const { data, loading } = useQuery<PoolShare>(poolSharesQuery, {
+    variables: {
+      user: accountId?.toLowerCase()
+    },
+    pollInterval: 20000
+  })
+
+  console.log(
+    useQuery<PoolShare>(poolSharesQuery, {
+      variables: {
+        user: accountId?.toLowerCase()
+      },
+      pollInterval: 20000
+    }).data
+  )
+
+  useEffect(() => {
+    if (!data) return
+    console.log(data)
+  }, [data, loading])
 
   useEffect(() => {
     async function getAssets() {
@@ -81,6 +121,8 @@ export default function PoolShares(): ReactElement {
     }
     getAssets()
   }, [ocean, accountId, config.metadataCacheUri])
+
+  console.log(assets)
 
   return <Table columns={columns} data={assets} isLoading={isLoading} />
 }
