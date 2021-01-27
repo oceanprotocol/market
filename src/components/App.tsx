@@ -65,28 +65,29 @@ export default function App({
   }, [config])
   return (
     <Styles>
-      <div className={styles.app}>
-        <Header />
-        {(props as PageProps).uri === '/' && (
-          <Alert text={warning} state="info" />
-        )}
-        {isAccountInPurgatory && (
-          <Alert
-            title={purgatory.title}
-            badge={`Reason: ${accountPurgatory?.reason}`}
-            text={purgatory.description}
-            state="error"
-          />
-        )}
-        {client ? (
+      {client ? (
           <ApolloProvider client={client}>
+            <div className={styles.app}>
+            <Header />
+            {(props as PageProps).uri === '/' && (
+                <Alert text={warning} state="info" />
+              )}
+              {isAccountInPurgatory && (
+                <Alert
+                  title={purgatory.title}
+                  badge={`Reason: ${accountPurgatory?.reason}`}
+                  text={purgatory.description}
+                  state="error"
+                />
+              )}
             <main className={styles.main}>{children}</main>
+            <Footer />
+            </div>
           </ApolloProvider>
         ) : (
           <></>
         )}
-        <Footer />
-      </div>
+      
     </Styles>
   )
 }

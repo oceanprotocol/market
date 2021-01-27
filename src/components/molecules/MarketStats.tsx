@@ -4,6 +4,7 @@ import PriceUnit from '../atoms/Price/PriceUnit'
 import axios from 'axios'
 import styles from './MarketStats.module.css'
 import { useInView } from 'react-intersection-observer'
+import { gql, useQuery } from '@apollo/client'
 
 interface MarketStatsResponse {
   datasets: {
@@ -19,9 +20,29 @@ interface MarketStatsResponse {
 
 const refreshInterval = 60000 // 60 sec.
 
+const getPools = gql`
+  query PoolsData {
+    pools {
+      id
+      datatokenReserve
+      oceanReserve
+      spotPrice
+      lockedValue
+   }
+  }
+`
+
 export default function MarketStats(): ReactElement {
   const [ref, inView] = useInView()
   const [stats, setStats] = useState<MarketStatsResponse>()
+
+  const { data } = useQuery(getPools)
+  console.log("DATA: ", data)
+
+  useEffect(() => {
+    if (!data) return
+    console.log(data)
+  }, [data])
 
   useEffect(() => {
     const source = axios.CancelToken.source()
