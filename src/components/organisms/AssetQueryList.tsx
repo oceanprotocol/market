@@ -1,7 +1,8 @@
 import AssetTeaser from '../molecules/AssetTeaser'
 import React from 'react'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
-import { useLocation, useNavigate } from '@reach/router'
+import { useLocation } from '@reach/router'
+import { navigate } from 'gatsby'
 import Pagination from '../molecules/Pagination'
 import { updateQueryStringParameter } from '../../utils'
 import styles from './AssetQueryList.module.css'
@@ -20,7 +21,6 @@ const AssetQueryList: React.FC<AssetQueryListProps> = ({
   className
 }) => {
   const location = useLocation()
-  const navigate = useNavigate()
 
   // Construct the urls on the pagination links. This is only for UX,
   // since the links are no <Link> they will not work by itself.
