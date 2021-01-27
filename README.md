@@ -23,7 +23,7 @@ An EWAI deployment consists of an [EWAI-SERVER](https://github.com/energywebfoun
 
 You will not be able to use this repo unless you properly setup EWAI-SERVER first and understand what is needed. Please therefore start here FIRST:
 
-[Read the EWAI Docs](https://readthedocs.com/projects/energy-web-foundation-energyweb-ewai/)
+[Read the EWAI Docs](https://energy-web-foundation-energyweb-ewai.readthedocs-hosted.com/)
 
 # PREREQUISITES
 
