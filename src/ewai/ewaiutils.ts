@@ -36,13 +36,14 @@ export function outputDataFormatToFileContentType(
   return 'application/json'
 }
 
-export function pickRoles(obj: any, props: string[]): any {
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+export function pickProps(obj: any, props: string[]): any {
   // Make sure object and properties are provided
   if (!obj || !props) {
-    undefined
+    return undefined
   }
   // Create new object
-  let picked: any = {}
+  const picked: any = {}
   // Loop through props and push to new object
   props.forEach(function (prop) {
     picked[prop] = obj[prop]
@@ -50,10 +51,11 @@ export function pickRoles(obj: any, props: string[]): any {
   return picked
 }
 
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 export function transformPublishFormToEwaiAssetInfo(
   formValues: any
 ): IEwaiAssetFormFields {
-  return pickRoles(formValues, [
+  return pickProps(formValues, [
     'ewaiEwns',
     'ewaiCategory',
     'ewaiVendor',
@@ -66,10 +68,11 @@ export function transformPublishFormToEwaiAssetInfo(
   ])
 }
 
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 export function transformEditFormToEwaiAssetInfo(
   formValues: any
 ): IEwaiAssetFormFields {
-  return pickRoles(formValues, [
+  return pickProps(formValues, [
     'ewaiCategory',
     'ewaiVendor',
     'ewaiPublishRole',

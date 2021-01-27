@@ -1,0 +1,82 @@
+{
+    "title": "EWAI Enrol",
+    "description": "In order to publish energy datasets on this marketplace, you must first enrol your DID (your Decentralized Identity, which is your wallet address) to have the correct role. You can use the links below to get more information and to enrol.",
+    "warning": "This is an ALPHA conceptual prototype site! Please familiarize yourself with [Energy Web EWAI](https://energyweb.org), [Ocean Protocol Marketplaces](https://oceanprotocol.com/technology/marketplaces), [the risks](https://blog.oceanprotocol.com/on-staking-on-data-in-ocean-market-3d8e09eb0a13), and the [Terms of Use](#).",
+    "infolinks": [{
+            "title": "EW-Switchboard & EWNS",
+            "links": [{
+                    "text": "ABOUT SWITCHBOARD",
+                    "url": "https://switchboard.energyweb.org/",
+                    "blank": true
+                },
+                {
+                    "text": "SWITCHBOARD dAPP",
+                    "url": "https://volta-switchboard.energyweb.org",
+                    "blank": true
+                },
+                {
+                    "text": "ABOUT EWNS",
+                    "url": "https://medium.com/energy-web-insights/ethereum-name-service-ens-is-now-available-for-the-energy-web-a8d884138790",
+                    "blank": true
+                },
+                {
+                    "text": "EWNS dAPP",
+                    "url": "https://ens.energyweb.org/",
+                    "blank": true
+                }
+            ]
+        },
+        {
+            "title": "About EW-DOS",
+            "links": [{
+                "text": "LEARN MORE",
+                "url": "https://www.energyweb.org/technology/ew-dos/",
+                "blank": true
+            }]
+        },
+        {
+            "title": "About Decentralized Identities (DIDs)",
+            "links": [{
+                    "text": "DID SPECIFICATION",
+                    "url": "https://www.w3.org/TR/did-core/",
+                    "blank": true
+                },
+                {
+                    "text": "WIKIPEDIA",
+                    "url": "https://en.wikipedia.org/wiki/Decentralized_identifiers",
+                    "blank": true
+                }
+            ]
+        },
+        {
+            "title": "About EnergyWeb",
+            "links": [{
+                "text": "LEARN MORE",
+                "url": "https://energyweb.org",
+                "blank": true
+            }]
+        },
+        {
+            "title": "About EWAI",
+            "links": [{
+                    "text": "EWAI-Server",
+                    "url": "https://github.com/energywebfoundation/ewai",
+                    "blank": true
+                },
+                {
+                    "text": "EWAI-Market",
+                    "url": "https://github.com/energywebfoundation/ewai-market",
+                    "blank": true
+                }
+            ]
+        },
+        {
+            "title": "About Ocean Protocol",
+            "links": [{
+                "text": "LEARN MORE",
+                "url": "https://oceanprotocol.com",
+                "blank": true
+            }]
+        }
+    ]
+}

@@ -1,12 +1,10 @@
-import axios from 'axios'
 import * as EwaiTypes from './ewai.types'
 import * as EwaiGraphQl from './ewai.graphql'
 
-// -------------------------------
-// simple logger
-// -------------------------------
-function log(msg: string): void {
-  console.log(msg)
+export interface IEwaiLoginGraphQLResult {
+  data?: {
+    login: EwaiTypes.IEwaiLoginResult
+  }
 }
 
 export interface IEwaiClientOpts {
@@ -49,22 +47,15 @@ export class EwaiClient {
         password: this.password
       }
     }
-    log('<<<EWAI ewaiApiLoginAsync body>>>: ' + JSON.stringify(body))
-    const {
-      data: gqlResult
-    } = await axios.post<EwaiGraphQl.IEwaiLoginGraphQLResult>(
+    const result = await EwaiGraphQl.ewaiCallGraphQlAsync<EwaiTypes.IEwaiLoginResult>(
+      'login',
       this.graphQlUrl,
       body
     )
-    log('<<<EWAI ewaiApiLoginAsync result>>>: ' + JSON.stringify(gqlResult))
-    if (!gqlResult.data || gqlResult.errors) {
-      return [gqlResult.errors[0].message]
+    if (result.message !== EwaiGraphQl.GraphQlCallSuccess || !result.data) {
+      return [result.message]
     }
-    // convert to a real date:
-    //gqlResult.data.login.expires_at = Date.parse(
-    //  gqlResult.data.login.expires_at
-    //)
-    return [null, gqlResult.data.login]
+    return [null, result.data]
   }
 
   // ---------------------------------------
@@ -72,7 +63,7 @@ export class EwaiClient {
   // Axios config header for auth
   // ---------------------------------------
   async getEwaiAuthHeaderConfigAsync(): Promise<EwaiGraphQl.IGraphQlAuthConfig> {
-    let isExpired: boolean = true
+    let isExpired = true
     if (this.credentials) {
       // add 2 mins to be safe to allow Ocean contracts to finish without needing to re-auth
       const tSoon = new Date().getTime() + 120_000
@@ -97,6 +88,43 @@ export class EwaiClient {
   }
 
   // --------------------------------------------
+  // get ewai instance info
+  // --------------------------------------------
+  async ewaiInstanceAsync(): Promise<EwaiTypes.IEwaiInstanceResult> {
+    const config = await this.getEwaiAuthHeaderConfigAsync()
+    const body = {
+      query: `
+        query EWAIINSTANCE {
+          ewaiInstance {
+            name
+            apiVersion
+            marketplacePublishRole
+            marketplacePublishRoleEnrolUrl
+            switchboardUrl
+            enforceMarketplacePublishRole
+            restApiUrl
+            graphQlUrl
+            ethRpcUrl
+            ethChainId
+            ewcRpcUrl
+            ewcChainId
+          }
+        }
+      `
+    }
+    const result = await EwaiGraphQl.ewaiCallGraphQlAsync<EwaiTypes.IEwaiInstanceResult>(
+      'ewaiInstance',
+      this.graphQlUrl,
+      body,
+      config
+    )
+    if (result.message !== EwaiGraphQl.GraphQlCallSuccess || !result.data) {
+      throw new Error('EWAI Error, Reason: ' + result.message)
+    }
+    return result.data
+  }
+
+  // --------------------------------------------
   // get asset stats from db
   // --------------------------------------------
   async ewaiStatsAsync(): Promise<EwaiTypes.IEwaiStatsResult> {
@@ -112,19 +140,16 @@ export class EwaiClient {
         }
       `
     }
-    log('<<<EWAI ewaiStats body>>>: ' + JSON.stringify(body))
-    const {
-      data: statsResult
-    } = await axios.post<EwaiGraphQl.IEwaiStatsGraphQLResult>(
+    const result = await EwaiGraphQl.ewaiCallGraphQlAsync<EwaiTypes.IEwaiStatsResult>(
+      'ewaiStats',
       this.graphQlUrl,
       body,
       config
     )
-    log('<<<EWAI ewaiStats result>>>: ' + JSON.stringify(statsResult))
-    if (!statsResult.data || statsResult.errors) {
-      throw new Error('EWAI Error, Reason: ' + statsResult.errors[0].message)
+    if (result.message !== EwaiGraphQl.GraphQlCallSuccess || !result.data) {
+      throw new Error('EWAI Error, Reason: ' + result.message)
     }
-    return statsResult.data.ewaiStats
+    return result.data
   }
 
   // --------------------------------------------
@@ -145,24 +170,16 @@ export class EwaiClient {
         checkList: checkList
       }
     }
-    log('<<<EWAI validateExternalDidsAsync body>>>: ' + JSON.stringify(body))
-    const {
-      data: validateExternalDidsResult
-    } = await axios.post<EwaiGraphQl.IEwaiValidateDidsGraphQLResult>(
+    const result = await EwaiGraphQl.ewaiCallGraphQlAsync<string[]>(
+      'ewaiValidateExternalDids',
       this.graphQlUrl,
       body,
       config
     )
-    log(
-      '<<<EWAI validateExternalDidsAsync result>>>: ' +
-        JSON.stringify(validateExternalDidsResult)
-    )
-    if (!validateExternalDidsResult.data || validateExternalDidsResult.errors) {
-      throw new Error(
-        'EWAI Error, Reason: ' + validateExternalDidsResult.errors[0].message
-      )
+    if (result.message !== EwaiGraphQl.GraphQlCallSuccess || !result.data) {
+      throw new Error('EWAI Error, Reason: ' + result.message)
     }
-    return validateExternalDidsResult.data.ewaiValidateExternalDids
+    return result.data
   }
 
   // --------------------------------------------
@@ -188,9 +205,6 @@ export class EwaiClient {
             metadataKey
             message
           }
-          ewaiInstance {
-            name
-          }
         }
       `,
       variables: {
@@ -198,24 +212,54 @@ export class EwaiClient {
         address: walletAddress
       }
     }
-    log('<<<EWAI canCreateEwaiAssetAsync body>>>: ' + JSON.stringify(body))
-    const {
-      data: canCreateAssetResult
-    } = await axios.post<EwaiGraphQl.IEwaiCanCreateAssetGraphQLResult>(
+    const result = await EwaiGraphQl.ewaiCallGraphQlAsync<EwaiTypes.IEwaiCanCreateAssetResult>(
+      'ewaiCanCreateAsset',
       this.graphQlUrl,
       body,
       config
     )
-    log(
-      '<<<EWAI canCreateEwaiAssetAsync result>>>: ' +
-        JSON.stringify(canCreateAssetResult)
-    )
-    if (!canCreateAssetResult.data || canCreateAssetResult.errors) {
-      throw new Error(
-        'EWAI Error, Reason: ' + canCreateAssetResult.errors[0].message
-      )
+    if (result.message !== EwaiGraphQl.GraphQlCallSuccess || !result.data) {
+      throw new Error('EWAI Error, Reason: ' + result.message)
     }
-    return canCreateAssetResult.data.ewaiCanCreateAsset
+    return result.data
+  }
+
+  // --------------------------------------------
+  // check if a user has the necessary publish role
+  // for this marketplace
+  // --------------------------------------------
+  async ewaiCanPublishAssetsOnMarketplaceAsync(
+    walletAddress: string
+  ): Promise<EwaiTypes.IEwaiCanPublishAssetsOnMarketplaceResult> {
+    const config = await this.getEwaiAuthHeaderConfigAsync()
+    const body = {
+      query: `
+        query CanPublish($address: String!) {
+          ewaiCanPublishAssetsOnMarketplace(address: $address) {
+            ewaiInstance
+            marketplacePublishRole
+            enforceMarketplacePublishRole
+            address
+            canPublish
+            enrolUrl
+            message
+          }
+        }
+      `,
+      variables: {
+        address: walletAddress
+      }
+    }
+    const result = await EwaiGraphQl.ewaiCallGraphQlAsync<EwaiTypes.IEwaiCanPublishAssetsOnMarketplaceResult>(
+      'ewaiCanPublishAssetsOnMarketplace',
+      this.graphQlUrl,
+      body,
+      config
+    )
+    if (result.message !== EwaiGraphQl.GraphQlCallSuccess || !result.data) {
+      throw new Error('EWAI Error, Reason: ' + result.message)
+    }
+    return result.data
   }
 
   // -------------------------------
@@ -230,6 +274,7 @@ export class EwaiClient {
   ): Promise<EwaiTypes.IEwaiCreateAssetResult> {
     const config = await this.getEwaiAuthHeaderConfigAsync()
 
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     const assetMetadataObject: any = {
       title: assetMetadata.title,
       description: assetMetadata.description,
@@ -287,7 +332,8 @@ export class EwaiClient {
           ? assetInfo.ewaiPathToPtdTimestamp
           : null,
         schemaValidationOn: assetInfo.ewaiSchemaValidationOn === 'Yes',
-        externalDid: oceanDid ? oceanDid : null,
+        /* eslint-disable no-unneeded-ternary */
+        externalDid: oceanDid ? oceanDid : null, // I actually think the ternary is needed here, we want null specifically (not undefined)
         incomingMsgFormat: assetInfo.ewaiIncomingMsgFormat.toLowerCase(),
         outputDataFormat: assetInfo.ewaiOutputFormat.toLowerCase(),
         msgSchema: assetInfo.ewaiMsgSchema
@@ -296,24 +342,16 @@ export class EwaiClient {
         metadata: assetMetadataObject
       }
     }
-    log('<<<EWAI createEwaiAssetAsync body>>>: ' + JSON.stringify(body))
-    const {
-      data: createAssetResult
-    } = await axios.post<EwaiGraphQl.IEwaiCreateAssetGraphQLResult>(
+    const result = await EwaiGraphQl.ewaiCallGraphQlAsync<EwaiTypes.IEwaiCreateAssetResult>(
+      'createEwaiAsset',
       this.graphQlUrl,
       body,
       config
     )
-    log(
-      '<<<EWAI createEwaiAssetAsync result>>>: ' +
-        JSON.stringify(createAssetResult)
-    )
-    if (!createAssetResult.data || createAssetResult.errors) {
-      throw new Error(
-        'EWAI Error, Reason: ' + createAssetResult.errors[0].message
-      )
+    if (result.message !== EwaiGraphQl.GraphQlCallSuccess || !result.data) {
+      throw new Error('EWAI Error, Reason: ' + result.message)
     }
-    return createAssetResult.data.createEwaiAsset
+    return result.data
   }
 
   // -------------------------------
@@ -344,24 +382,16 @@ export class EwaiClient {
         externalDid: oceanDid || ''
       }
     }
-    log('<<<EWAI setEwaiAssetExternalDidAsync body>>>: ' + JSON.stringify(body))
-    const {
-      data: updateDataResult
-    } = await axios.post<EwaiGraphQl.IEwaiSetExternalDidGraphQLResult>(
+    const result = await EwaiGraphQl.ewaiCallGraphQlAsync<EwaiTypes.IEwaiUpdateAssetResult>(
+      'updateEwaiAsset',
       this.graphQlUrl,
       body,
       config
     )
-    log(
-      '<<<EWAI setEwaiAssetExternalDidAsync result>>>: ' +
-        JSON.stringify(updateDataResult)
-    )
-    if (!updateDataResult.data || updateDataResult.errors) {
-      throw new Error(
-        'EWAI Error, Reason: ' + updateDataResult.errors[0].message
-      )
+    if (result.message !== EwaiGraphQl.GraphQlCallSuccess || !result.data) {
+      throw new Error('EWAI Error, Reason: ' + result.message)
     }
-    return updateDataResult.data.updateEwaiAsset
+    return result.data
   }
 
   // --------------------------------------------------------------
@@ -402,27 +432,19 @@ export class EwaiClient {
         externalDid: oceanDid
       }
     }
-    log('<<<EWAI lookupEwaiAssetAsync body>>>: ' + JSON.stringify(body))
-    const {
-      data: lookupAssetResult
-    } = await axios.post<EwaiGraphQl.IEwaiLookupAssetGraphQLResult>(
+    const result = await EwaiGraphQl.ewaiCallGraphQlAsync<EwaiTypes.IEwaiLookupAssetResult>(
+      'ewaiAsset',
       this.graphQlUrl,
       body,
       config
     )
-    log(
-      '<<<EWAI lookupEwaiAssetAsync result>>>: ' +
-        JSON.stringify(lookupAssetResult)
-    )
-    if (!lookupAssetResult.data || lookupAssetResult.errors) {
-      throw new Error(
-        'EWAI Error, Reason: ' + lookupAssetResult.errors[0].message
-      )
+    if (result.message !== EwaiGraphQl.GraphQlCallSuccess || !result.data) {
+      throw new Error('EWAI Error, Reason: ' + result.message)
     }
-    if (!lookupAssetResult?.data?.ewaiAsset?.ewns) {
+    if (!result?.data?.ewns) {
       throw new Error(`The ${oceanDid} asset was not found in EWAI`)
     }
-    return lookupAssetResult.data.ewaiAsset
+    return result.data
   }
 
   // --------------------------------------------------------------
@@ -436,6 +458,7 @@ export class EwaiClient {
   ): Promise<EwaiTypes.IEwaiUpdateAssetResult> {
     const config = await this.getEwaiAuthHeaderConfigAsync()
 
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     const assetMetadataObject: any = {
       title: assetMetadata.title,
       description: assetMetadata.description,
@@ -494,24 +517,43 @@ export class EwaiClient {
         metadata: assetMetadataObject
       }
     }
-    log('<<<EWAI updateEwaiAssetAsync body>>>: ' + JSON.stringify(body))
-    const {
-      data: updateAssetResult
-    } = await axios.post<EwaiGraphQl.IEwaiUpdateAssetGraphQLResult>(
+    const result = await EwaiGraphQl.ewaiCallGraphQlAsync<EwaiTypes.IEwaiUpdateAssetResult>(
+      'updateEwaiAsset',
       this.graphQlUrl,
       body,
       config
     )
-    log(
-      '<<<EWAI updateEwaiAssetAsync result>>>: ' +
-        JSON.stringify(updateAssetResult)
-    )
-    if (!updateAssetResult.data || updateAssetResult.errors) {
-      throw new Error(
-        'EWAI Error, Reason: ' + updateAssetResult.errors[0].message
-      )
+    if (result.message !== EwaiGraphQl.GraphQlCallSuccess || !result.data) {
+      throw new Error('EWAI Error, Reason: ' + result.message)
     }
-    return updateAssetResult.data.updateEwaiAsset
+    return result.data
+  }
+
+  // -------------------------------
+  // reset Asset data
+  // -------------------------------
+  async resetEwaiAssetDataAsync(oceanDid: string): Promise<boolean> {
+    const config = await this.getEwaiAuthHeaderConfigAsync()
+    const body = {
+      query: `
+        mutation ResetAssetData ($externalDid: String!) {
+          resetEwaiAssetData( where: { externalDid: $externalDid } )
+        }
+      `,
+      variables: {
+        externalDid: oceanDid
+      }
+    }
+    const result = await EwaiGraphQl.ewaiCallGraphQlAsync<boolean>(
+      'resetEwaiAssetData',
+      this.graphQlUrl,
+      body,
+      config
+    )
+    if (result.message !== EwaiGraphQl.GraphQlCallSuccess || !result.data) {
+      throw new Error('EWAI Error, Reason: ' + result.message)
+    }
+    return result.data
   }
 
   // -------------------------------
@@ -529,21 +571,15 @@ export class EwaiClient {
         uuid: uuid
       }
     }
-    log('<<<EWAI deleteEwaiAssetAsync body>>>: ' + JSON.stringify(body))
-    const {
-      data: deleteAssetResult
-    } = await axios.post<EwaiGraphQl.IEwaiDeleteAssetGraphQLResult>(
+    const result = await EwaiGraphQl.ewaiCallGraphQlAsync<boolean>(
+      'deleteEwaiAsset',
       this.graphQlUrl,
       body,
       config
     )
-    log(
-      '<<<EWAI deleteEwaiAssetAsync result>>>: ' +
-        JSON.stringify(deleteAssetResult)
-    )
-    if (!deleteAssetResult.data || deleteAssetResult.errors) {
-      return false
+    if (result.message !== EwaiGraphQl.GraphQlCallSuccess || !result.data) {
+      throw new Error('EWAI Error, Reason: ' + result.message)
     }
-    return deleteAssetResult.data.deleteEwaiAsset
+    return result.data
   }
 }

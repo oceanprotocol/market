@@ -3,6 +3,7 @@ out
 .DS_Store
 .idea
 .env
+.env.development
 coverage
 dist
 public

@@ -13,6 +13,18 @@ An EWAI deployment consists of an [EWAI-SERVER](https://github.com/energywebfoun
 1. [EWAI-SERVER](https://github.com/energywebfoundation/ewai): This is the server component which offers a streaming data cache for DER PTD (Power Telemetry Data), and
 2. [EWAI-MARKET](https://github.com/energywebfoundation/ewai-market): This repository, which is a fork of the [V3 Ocean Protocol Marketplace](https://github.com/oceanprotocol/market), whereby the EWAI energy data assets can be published via Ocean Protocol data tokens. You should familiarize yourself first therefore with Ocean Protocol, as understanding how Ocean works will be necessary also.
 
+---
+
+**🐲🦑 THERE BE ELVES AND GREMLINS LURKING. This is in ALPHA state and you can expect to run into problems. If you see any issues, please open up [a new issue](#). 🦑🐲**
+
+---
+
+# START HERE FIRST!!
+
+You will not be able to use this repo unless you properly setup EWAI-SERVER first and understand what is needed. Please therefore start here FIRST:
+
+[Read the EWAI Docs](https://readthedocs.com/projects/energy-web-foundation-energyweb-ewai/)
+
 # PREREQUISITES
 
 In order to setup and run this EWAI-MARKET code, you must first learn, configure and setup an [EWAI-SERVER](https://github.com/energywebfoundation/ewai) instance. Therefore, please start with [that repo]https://github.com/energywebfoundation/ewai) as it contains the main documentation and instructions for setting up an EWAI instance. EWAI also requires an understanding (and prior configuration) of all of the following EnergyWeb subsystems:

@@ -13,7 +13,9 @@ import { queryMetadata } from '../../utils/aquarius'
 import { useStaticQuery, graphql } from 'gatsby'
 import { DDO } from '@oceanprotocol/lib'
 import { ewaiCheckResultsForSpamAsync } from '../../ewai/ewaifilter'
-import { EwaiInstanceQuery } from '../../ewai/client/ewai-js'
+import { useEwaiInstance } from '../../ewai/client/ewai-js'
+import { useSiteMetadata } from '../../hooks/useSiteMetadata'
+import Alert from '../atoms/Alert'
 
 function LoaderArea() {
   return (
@@ -51,7 +53,7 @@ function SectionQueryResult({
       let filteredResultsSet = false
       if (
         process.env.EWAI_CHECK_FOR_SPAM_ASSETS?.toLowerCase() === 'true' &&
-        result?.results.length > 0
+        result?.results?.length > 0
       ) {
         const filteredResults = await ewaiCheckResultsForSpamAsync(result)
         setResult(filteredResults)
@@ -83,17 +85,7 @@ function SectionQueryResult({
 }
 
 export default function HomePage(): ReactElement {
-  const data = useStaticQuery<EwaiInstanceQuery>(
-    graphql`
-      query EwaiInstanceHome {
-        ewai {
-          ewaiInstance {
-            name
-          }
-        }
-      }
-    `
-  )
+  const ewaiInstance = useEwaiInstance()
 
   const queryHighest = {
     page: 1,
@@ -101,7 +93,7 @@ export default function HomePage(): ReactElement {
     query: {
       nativeSearch: 1,
       query_string: {
-        query: `(service.attributes.additionalInformation.energyweb.ewai.instance:"${data.ewai.ewaiInstance.name}") && (price.type:pool) -isInPurgatory:true`
+        query: `(service.attributes.additionalInformation.energyweb.ewai.instance:"${ewaiInstance.name}") && (price.type:pool) -isInPurgatory:true`
       }
     },
     sort: { 'price.ocean': -1 }
@@ -113,14 +105,17 @@ export default function HomePage(): ReactElement {
     query: {
       nativeSearch: 1,
       query_string: {
-        query: `(service.attributes.additionalInformation.energyweb.ewai.instance:"${data.ewai.ewaiInstance.name}") -isInPurgatory:true`
+        query: `(service.attributes.additionalInformation.energyweb.ewai.instance:"${ewaiInstance.name}") -isInPurgatory:true`
       }
     },
     sort: { created: -1 }
   }
 
+  const { warning } = useSiteMetadata()
+
   return (
     <>
+      <Alert text={warning} state="info" />
       <Container narrow className={styles.searchWrap}>
         <SearchBar size="large" />
       </Container>
@@ -130,10 +125,12 @@ export default function HomePage(): ReactElement {
         <Bookmarks />
       </section>
 
-      <SectionQueryResult
-        title="Highest Liquidity Pools"
-        query={queryHighest}
-      />
+      {process.env.SHOW_LIQUIDITY_POOLS === 'true' && (
+        <SectionQueryResult
+          title="Highest Liquidity Pools"
+          query={queryHighest}
+        />
+      )}
 
       <SectionQueryResult
         title="New Data Sets"

@@ -12,7 +12,7 @@ import { DDO } from '@oceanprotocol/lib'
 export async function ewaiCheckResultsForSpamAsync(
   unfilteredResult: QueryResult
 ): Promise<QueryResult> {
-  let checkList = new Array<IEwaiSpamCheckType>()
+  const checkList = new Array<IEwaiSpamCheckType>()
   unfilteredResult?.results?.forEach((ddo: DDO) =>
     checkList.push(
       new IEwaiSpamCheckType(
@@ -34,8 +34,8 @@ export async function ewaiCheckResultsForSpamAsync(
     const filteredDDOs = unfilteredResult.results.filter(
       (ddo) => validatedDids.indexOf(ddo.id) !== -1
     )
-    // note, if we filtered out many results, the paging may be off now.
-    // (if it becomes an issue fix later, TBD)
+    // TO DO: since we may have filtered out many (spam) asset results,
+    // the paging may be off now. (if it becomes an issue fix later)
     const filteredResults = {
       results: filteredDDOs,
       page: unfilteredResult.page,

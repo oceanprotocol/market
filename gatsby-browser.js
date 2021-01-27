@@ -5,6 +5,7 @@ export const wrapPageElement = wrapPageElementWithStyles
 export const wrapRootElement = wrapRootElementWithProviders
 
 // IntersectionObserver polyfill for gatsby-image (Safari, IE)
-if (typeof window.IntersectionObserver === 'undefined') {
-  import('intersection-observer')
-}
+// TO DO: EWAI COMMENTED OUT BROKE IN LATEST GATSBY UPDATE!:
+//if (typeof window.IntersectionObserver === 'undefined') {
+//    import ('intersection-observer')
+//}

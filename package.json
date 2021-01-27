@@ -7,6 +7,7 @@
     "scripts": {
         "start": "yarn develop",
         "develop": "gatsby develop --host 0.0.0.0",
+        "clean": "gatsby clean",
         "build": "gatsby build && cp _redirects public/_redirects",
         "serve": "serve -s public/",
         "jest": "NODE_ENV=test jest -c tests/unit/jest.config.js",
@@ -62,7 +63,7 @@
         "gatsby-transformer-json": "^2.9.0",
         "gatsby-transformer-remark": "^2.14.0",
         "gatsby-transformer-sharp": "^2.10.1",
-        "iam-client-lib": "^1.0.4",
+        "iam-client-lib": "^1.1.0",
         "intersection-observer": "^0.12.0",
         "is-url-superb": "^5.0.0",
         "jwt-decode": "^3.1.2",

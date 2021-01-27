@@ -1,12 +1,16 @@
 {
     "site": {
         "siteTitle": "Energy Web A.I. Data Marketplace",
-        "siteTagline": "Publish Energy Datasets via EW-DOS and Ocean Protocol.",
+        "siteTagline": "Publish Clean Energy Datasets via EW-DOS and Ocean Protocol.",
         "siteUrl": "https://ewai.energyweb.com",
         "siteIcon": "./src/ewai/images/ew-logo.png",
         "siteImage": "../src/images/share.png",
         "copyright": "All Rights Reserved. Powered by [Energy Web](https://energyweb.org) and [Ocean Protocol](https://oceanprotocol.com)",
         "menu": [{
+                "name": "Enrol",
+                "link": "/enrol"
+            },
+            {
                 "name": "Publish",
                 "link": "/publish"
             },

@@ -9,6 +9,7 @@ import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHel
 import AssetTitle from './AssetListTitle'
 import { queryMetadata } from '../../utils/aquarius'
 import axios, { CancelToken } from 'axios'
+import { ewaiCheckResultsForSpamAsync } from '../../ewai/ewaifilter'
 
 async function getAssetsBookmarked(
   bookmarks: string[],
@@ -107,7 +108,20 @@ export default function Bookmarks(): ReactElement {
           config.metadataCacheUri,
           source.token
         )
-        setPinned(resultPinned?.results)
+        let filteredResultsSet = false
+        if (
+          process.env.EWAI_CHECK_FOR_SPAM_ASSETS?.toLowerCase() === 'true' &&
+          resultPinned?.results?.length > 0
+        ) {
+          const filteredResults = await ewaiCheckResultsForSpamAsync(
+            resultPinned
+          )
+          setPinned(filteredResults?.results)
+          filteredResultsSet = true
+        }
+        if (!filteredResultsSet) {
+          setPinned(resultPinned?.results)
+        }
       } catch (error) {
         Logger.error(error.message)
       }

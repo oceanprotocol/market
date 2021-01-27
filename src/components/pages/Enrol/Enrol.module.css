@@ -1,0 +1,12 @@
+.section {
+    margin-top: calc(var(--spacer) * 1.5);
+}
+
+.section h3 {
+    font-size: var(--font-size-h3);
+    color: var(--brand-white);
+}
+
+.section [class*='button'] {
+    margin-top: var(--spacer);
+}

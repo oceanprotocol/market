@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useState, useEffect } from 'react'
 import { Formik } from 'formik'
 import { usePublish, useOcean } from '@oceanprotocol/react'
 import styles from './index.module.css'
@@ -16,19 +16,18 @@ import Debug from './Debug'
 import Alert from '../../atoms/Alert'
 import MetadataFeedback from '../../molecules/MetadataFeedback'
 import * as EwaiUtils from '../../../ewai/ewaiutils'
-import {
-  EwaiClient,
-  IEwaiAssetFormFields,
-  IEwaiAssetMetadata
-} from '../../../ewai/client/ewai-js'
+import { EwaiClient, IEwaiAssetFormFields } from '../../../ewai/client/ewai-js'
 import ddo from '../../../../tests/unit/__fixtures__/ddo'
+import { navigate } from 'gatsby'
 
 const formName = 'ocean-publish-form'
 
 export default function PublishPage({
-  content
+  content,
+  ewaiInstance
 }: {
   content: { warning: string; form: FormContent }
+  ewaiInstance: any
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { publish, publishError, isLoading, publishStepText } = usePublish()
@@ -38,6 +37,26 @@ export default function PublishPage({
   const [did, setDid] = useState<string>()
 
   const hasFeedback = isLoading || error || success
+
+  // Only allow this page if the user has the proper EWAI marketplace data publisher role set
+  useEffect(() => {
+    if (ewaiInstance.enforceMarketplacePublishRole && account) {
+      const checkRoles = async () => {
+        const ewaiClient = new EwaiClient({
+          username: process.env.EWAI_API_USERNAME,
+          password: process.env.EWAI_API_PASSWORD,
+          graphQlUrl: process.env.EWAI_API_GRAPHQL_URL
+        })
+        const canPubResult = await ewaiClient.ewaiCanPublishAssetsOnMarketplaceAsync(
+          account.getId()
+        )
+        if (!canPubResult.canPublish) {
+          navigate('/enrol')
+        }
+      }
+      checkRoles()
+    }
+  }, [account])
 
   async function handleSubmit(
     values: Partial<MetadataPublishForm>,
@@ -81,11 +100,8 @@ export default function PublishPage({
       const metadata = transformPublishFormToMetadata(values)
       const serviceType = values.access === 'Download' ? 'access' : 'compute'
 
-      // check if the desired EWNS is available and also that this wallet address has
-      // either ownership of that EWNS and role permission to publish on this marketplace
-      //
-      // TBD: we should have checked this wallet has role permission to publish on
-      // this marketplace before here! TBD
+      // check if the desired EWNS is available. We have already checked that this
+      // wallet DID has publish permission role on this marketplace before here
       const ewaiCanCreateAsset = await ewaiClient.canCreateEwaiAssetAsync(
         ewaiAssetFormInfo.ewaiEwns,
         walletAddress
@@ -206,17 +222,12 @@ export default function PublishPage({
     } catch (error) {
       // something bad went wrong somewhere, delete any EWAI
       // asset that was created (if any)
-      const s = JSON.stringify(error)
       if (ewaiUuid) {
         try {
           await ewaiClient.deleteEwaiAssetAsync(ewaiUuid)
         } catch {}
       }
-      if (error.message.toString().indexOf('status code 400') !== -1) {
-        setError(JSON.stringify(error))
-      } else {
-        setError(error.message)
-      }
+      setError(error.message)
       Logger.error(error.message)
     }
   }

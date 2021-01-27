@@ -8,7 +8,7 @@ import { getResults } from './utils'
 import Loader from '../../atoms/Loader'
 import { useOcean } from '@oceanprotocol/react'
 import { useStaticQuery, graphql } from 'gatsby'
-import { EwaiInstanceQuery } from '../../../ewai/client/ewai-js'
+import { useEwaiInstance } from '../../../ewai/client/ewai-js'
 import { ewaiCheckResultsForSpamAsync } from '../../../ewai/ewaifilter'
 
 export default function SearchPage({
@@ -23,18 +23,7 @@ export default function SearchPage({
   const { text, owner, tags, page } = parsed
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [loading, setLoading] = useState<boolean>()
-
-  const data = useStaticQuery<EwaiInstanceQuery>(
-    graphql`
-      query EwaiInstanceSearch {
-        ewai {
-          ewaiInstance {
-            name
-          }
-        }
-      }
-    `
-  )
+  const ewaiInstance = useEwaiInstance()
 
   useEffect(() => {
     if (!config?.metadataCacheUri) return
@@ -43,7 +32,7 @@ export default function SearchPage({
       setLoading(true)
       setTotalResults(undefined)
       const queryResult = await getResults(
-        data.ewai.ewaiInstance.name,
+        ewaiInstance.name,
         parsed,
         config.metadataCacheUri
       )

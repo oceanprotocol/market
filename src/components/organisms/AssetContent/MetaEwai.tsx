@@ -5,28 +5,17 @@ import Tags from '../../atoms/Tags'
 import Button from '../../atoms/Button'
 import { useAsset } from '../../../providers/Asset'
 const highlight = require('cli-highlight').highlight
-import { useStaticQuery, graphql } from 'gatsby'
-import { EwaiInstanceQuery } from '../../../ewai/client/ewai-js'
+import { useEwaiInstance } from '../../../ewai/client/ewai-js'
 
 export default function MetaEwai(): ReactElement {
   const { ewaiAsset } = useAsset()
-  const data = useStaticQuery<EwaiInstanceQuery>(
-    graphql`
-      query EwaiInstance {
-        ewai {
-          ewaiInstance {
-            name
-          }
-        }
-      }
-    `
-  )
+  const ewaiInstance = useEwaiInstance()
 
   return (
     <aside className={styles.metaSecondary}>
       <div>
         <p>EWNS:</p>
-        <Tags items={[data.ewai.ewaiInstance.name, '=>', ewaiAsset?.ewns]} />
+        <Tags items={[ewaiInstance.name, '=>', ewaiAsset?.ewns]} />
       </div>
       <div>
         <p>Output Data Format:</p>
@@ -63,6 +52,7 @@ export default function MetaEwai(): ReactElement {
           }
           rows={25}
           cols={60}
+          readOnly={true}
         />
       </div>
       <div>

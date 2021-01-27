@@ -76,11 +76,7 @@ export function getInitialValues(
     ewaiIncomingMsgFormat: ewaiAsset?.incomingMsgFormat
       ? EwaiUtils.capitalize(ewaiAsset?.incomingMsgFormat)
       : 'Json',
-    ewaiSchemaValidationOn: ewaiAsset?.schemaValidationOn
-      ? ewaiAsset?.schemaValidationOn
-        ? 'Yes'
-        : 'No'
-      : '--SELECT ONE--',
+    ewaiSchemaValidationOn: ewaiAsset?.schemaValidationOn ? 'Yes' : 'No',
     ewaiMsgSchema: ewaiAsset?.msgSchema
       ? highlight(JSON.stringify(ewaiAsset.msgSchema, null, 4), {
           language: 'json',

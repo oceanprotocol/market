@@ -1,3 +1,5 @@
+import { StringSchema } from 'yup'
+
 export enum IncomingMessageFormat {
   json = 'json',
   text = 'text'
@@ -11,10 +13,52 @@ export enum OutputDataFormat {
   xml = 'xml'
 }
 
-export interface EwaiInstanceQuery {
-  ewai: { ewaiInstance: { name: string } }
+export interface IEwaiInstanceResult {
+  name: string
+  apiVersion: string
+  marketplacePublishRole: string
+  marketplacePublishRoleEnrolUrl: string
+  switchboardUrl: string
+  enforceMarketplacePublishRole: boolean
+  restApiUrl: string
+  graphQlUrl: string
+  ethRpcUrl: string
+  ethChainId: number
+  ewcRpcUrl: string
+  ewcChainId: number
+  addresses: number
 }
 
+export interface EwaiInstanceQuery {
+  ewai: {
+    ewaiInstance: IEwaiInstanceResult
+  }
+}
+
+export interface MDInfo {
+  node: {
+    id: string
+    fields: { slug: string }
+    frontmatter: { title: string; description: string }
+    html: string
+  }
+}
+export interface EwaiEnrolQuery {
+  allMarkdownRemark: {
+    edges: MDInfo[]
+  }
+  ewai: {
+    ewaiInstance: {
+      name: string
+      marketplacePublishRole: string
+      marketplacePublishRoleEnrolUrl: string
+      enforceMarketplacePublishRole: boolean
+      graphQlUrl: string
+    }
+  }
+}
+
+/* eslint-disable camelcase */
 export interface IEwaiLoginResult {
   access_token: string
   expires_at: string
@@ -45,6 +89,16 @@ export interface IEwaiCanCreateAssetResult {
   message?: string
 }
 
+export interface IEwaiCanPublishAssetsOnMarketplaceResult {
+  ewaiInstance: string
+  marketplacePublishRole: string
+  enforceMarketplacePublishRole: boolean
+  address: string
+  canPublish: boolean
+  enrolUrl: string
+  message?: string
+}
+
 export interface IEwaiCreateAssetResult {
   uuid: string
   ewns: string
@@ -55,8 +109,10 @@ export interface IEwaiCreateAssetResult {
   previewUrls: string[]
 }
 
+/* eslint-disable @typescript-eslint/no-empty-interface */
 export interface IEwaiUpdateAssetResult extends IEwaiCreateAssetResult {}
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface IEwaiLookupAssetResult {
   uuid: string
   ewns: string

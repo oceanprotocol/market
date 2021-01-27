@@ -48,7 +48,7 @@ export default function Seo({
       />
 
       <meta property="og:site_name" content={siteTitle} />
-      <meta name="twitter:creator" content="@oceanprotocol" />
+      <meta name="twitter:creator" content="@energyweb" />
       <meta name="twitter:card" content="summary_large_image" />
     </Helmet>
   )
