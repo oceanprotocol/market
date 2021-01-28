@@ -5,6 +5,8 @@ import axios from 'axios'
 import styles from './MarketStats.module.css'
 import { useInView } from 'react-intersection-observer'
 import { gql, useQuery } from '@apollo/client'
+import { setNestedObjectValues } from 'formik'
+import Conversion from '../atoms/Price/Conversion'
 
 interface MarketStatsResponse {
   datasets: {
@@ -20,28 +22,29 @@ interface MarketStatsResponse {
 
 const refreshInterval = 60000 // 60 sec.
 
-const getPools = gql`
+const getTotalPoolsValues = gql`
   query PoolsData {
-    pools {
-      id
-      datatokenReserve
-      oceanReserve
-      spotPrice
-      lockedValue
-   }
+    poolFactories {
+      totalLockedValue
+      totalLiquidity
+      totalSwapVolume
+      totalSwapFee
+      poolCount
+      finalizedPoolCount
+    }
   }
 `
 
 export default function MarketStats(): ReactElement {
   const [ref, inView] = useInView()
   const [stats, setStats] = useState<MarketStatsResponse>()
+  const [totalLockedValue, setTotalLockedValue] = useState()
 
-  const { data } = useQuery(getPools)
-  console.log("DATA: ", data)
+  const { data } = useQuery(getTotalPoolsValues)
 
   useEffect(() => {
     if (!data) return
-    console.log(data)
+    setTotalLockedValue(data.poolFactories[0].totalLockedValue)
   }, [data])
 
   useEffect(() => {
@@ -83,20 +86,12 @@ export default function MarketStats(): ReactElement {
       Total of <strong>{stats?.datasets.total}</strong> data sets & unique
       datatokens published by <strong>{stats?.owners}</strong> accounts.
       <br />
-      <PriceUnit
-        price={`${stats?.ocean}`}
-        small
-        className={styles.total}
-        conversion
-      />{' '}
-      and{' '}
-      <PriceUnit
-        price={`${stats?.datatoken}`}
-        symbol="datatokens"
-        small
-        className={styles.total}
-      />{' '}
-      in <strong>{stats?.datasets.pools}</strong> data set pools.
+      <Conversion
+        price={`${totalLockedValue}`}
+        hideApproximationSign={true}
+      />{' '} TVL (total value locked) across
+      {' '}
+      <strong>{stats?.datasets.pools}</strong> data set pools that contain {' '} and datatokens for each pool.
       <br />
       <strong>{stats?.datasets.none}</strong> data sets have no price set yet.
     </div>

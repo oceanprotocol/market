@@ -9,10 +9,12 @@ const cx = classNames.bind(styles)
 
 export default function Conversion({
   price,
-  className
+  className,
+  hideApproximationSign
 }: {
   price: string // expects price in OCEAN, not wei
   className?: string
+  hideApproximationSign?: boolean
 }): ReactElement {
   const { prices } = usePrices()
   const { currency, locale } = useUserPreferences()
@@ -59,7 +61,7 @@ export default function Conversion({
       className={styleClasses}
       title="Approximation based on current OCEAN spot price on Coingecko"
     >
-      ≈ <strong dangerouslySetInnerHTML={{ __html: priceConverted }} />{' '}
+      {hideApproximationSign ? <> </> : <> ≈ </>} <strong dangerouslySetInnerHTML={{ __html: priceConverted }} />{' '}
       {!isFiat && currency}
     </span>
   )
