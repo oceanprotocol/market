@@ -66,28 +66,27 @@ export default function App({
   return (
     <Styles>
       {client ? (
-          <ApolloProvider client={client}>
-            <div className={styles.app}>
+        <ApolloProvider client={client}>
+          <div className={styles.app}>
             <Header />
             {(props as PageProps).uri === '/' && (
-                <Alert text={warning} state="info" />
-              )}
-              {isAccountInPurgatory && (
-                <Alert
-                  title={purgatory.title}
-                  badge={`Reason: ${accountPurgatory?.reason}`}
-                  text={purgatory.description}
-                  state="error"
-                />
-              )}
+              <Alert text={warning} state="info" />
+            )}
+            {isAccountInPurgatory && (
+              <Alert
+                title={purgatory.title}
+                badge={`Reason: ${accountPurgatory?.reason}`}
+                text={purgatory.description}
+                state="error"
+              />
+            )}
             <main className={styles.main}>{children}</main>
             <Footer />
-            </div>
-          </ApolloProvider>
-        ) : (
-          <></>
-        )}
-      
+          </div>
+        </ApolloProvider>
+      ) : (
+        <></>
+      )}
     </Styles>
   )
 }
