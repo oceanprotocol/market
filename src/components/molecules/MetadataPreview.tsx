@@ -17,7 +17,7 @@ function Description({ description }: { description: string }) {
     fullDescription === true
       ? description
       : `${description.substring(0, textLimit)}${
-          description.length > textLimit ? `...` : ''
+          description.length > textLimit ? '...' : ''
         }`
 
   function handleDescriptionToggle(e: FormEvent<HTMLButtonElement>) {
