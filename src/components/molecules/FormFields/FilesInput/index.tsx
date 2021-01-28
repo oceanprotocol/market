@@ -22,9 +22,8 @@ export default function FilesInput(props: InputProps): ReactElement {
 
     try {
       setIsLoading(true)
-      let filesArray: FileMetadata[] = await ocean.provider.fileinfo(url)
+      const filesArray: FileMetadata[] = await ocean.provider.fileinfo(url)
       filesArray[0].url = url
-      console.log('File array', filesArray)
       filesArray[0] && helpers.setValue(filesArray)
     } catch (error) {
       toast.error('Could not fetch file info. Please check URL and try again')
