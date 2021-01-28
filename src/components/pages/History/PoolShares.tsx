@@ -7,12 +7,13 @@ import Conversion from '../../atoms/Price/Conversion'
 import styles from './PoolShares.module.css'
 import AssetTitle from '../../molecules/AssetListTitle'
 import { gql, useQuery } from '@apollo/client'
-import { PoolShare } from '@oceanprotocol/lib/dist/node/balancer/OceanPool'
+import { PoolShares as PoolShare } from '../../../@types/apollo/PoolShares'
 
 const poolSharesQuery = gql`
-  query PoolShares() {
+  query PoolShares($user: String) {
     poolShares(
       orderDirection: desc
+      where: { userAddress: $user }
       first: 1000
     ) {
       id
@@ -76,25 +77,19 @@ export default function PoolShares(): ReactElement {
   const { ocean, accountId, config } = useOcean()
   const [assets, setAssets] = useState<Asset[]>()
   const [isLoading, setIsLoading] = useState(false)
+  const [pools, setPools] = useState([])
   const { data, loading } = useQuery<PoolShare>(poolSharesQuery, {
     variables: {
-      user: accountId?.toLowerCase()
+      user: '0x020a507256a55f006e86d0b9d3b2f6546f2deb9a'
     },
     pollInterval: 20000
   })
-
-  console.log(
-    useQuery<PoolShare>(poolSharesQuery, {
-      variables: {
-        user: accountId?.toLowerCase()
-      },
-      pollInterval: 20000
-    }).data
-  )
+  console.log(accountId.toLowerCase())
 
   useEffect(() => {
     if (!data) return
-    console.log(data)
+    console.log(data.poolShares)
+    setPools(data.poolShares)
   }, [data, loading])
 
   useEffect(() => {
@@ -108,6 +103,7 @@ export default function PoolShares(): ReactElement {
         const result: Asset[] = []
 
         for (const pool of pools) {
+          console.log(pool)
           const ddo = await metadataCache.retrieveDDO(pool.did)
           ddo && result.push({ ddo, shares: pool.shares })
         }
@@ -121,8 +117,6 @@ export default function PoolShares(): ReactElement {
     }
     getAssets()
   }, [ocean, accountId, config.metadataCacheUri])
-
-  console.log(assets)
 
   return <Table columns={columns} data={assets} isLoading={isLoading} />
 }
