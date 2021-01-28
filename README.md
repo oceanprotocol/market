@@ -242,7 +242,7 @@ This will launch the Storybook UI with all stories loaded under [localhost:4000]
 
 Code style is automatically enforced through [ESLint](https://eslint.org) & [Prettier](https://prettier.io) rules:
 
-- Git pre-commit hook runs `npm run format` on staged files, setup with [Husky](https://typicode.github.io/husky)
+- Git pre-commit hook runs `prettier` on staged files, setup with [Husky](https://typicode.github.io/husky)
 - VS Code suggested extensions and settings for auto-formatting on file save
 - CI runs a linting & TypeScript typings check with `npm run lint`, and fails if errors are found
 
@@ -252,7 +252,7 @@ For running linting and auto-formatting manually, you can use from the root of t
 # linting check, also runs Typescript typings check
 npm run lint
 
-# auto format all files with prettier, taking all configs into account
+# auto format all files in the project with prettier, taking all configs into account
 npm run format
 ```
 
