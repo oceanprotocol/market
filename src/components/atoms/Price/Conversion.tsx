@@ -61,7 +61,8 @@ export default function Conversion({
       className={styleClasses}
       title="Approximation based on current OCEAN spot price on Coingecko"
     >
-      {hideApproximationSign ? <> </> : <> ≈ </>} <strong dangerouslySetInnerHTML={{ __html: priceConverted }} />{' '}
+      {hideApproximationSign ? <> </> : <> ≈ </>}
+      <strong dangerouslySetInnerHTML={{ __html: priceConverted }} />{' '}
       {!isFiat && currency}
     </span>
   )

@@ -86,12 +86,9 @@ export default function MarketStats(): ReactElement {
       Total of <strong>{stats?.datasets.total}</strong> data sets & unique
       datatokens published by <strong>{stats?.owners}</strong> accounts.
       <br />
-      <Conversion
-        price={`${totalLockedValue}`}
-        hideApproximationSign={true}
-      />{' '} TVL (total value locked) across
-      {' '}
-      <strong>{stats?.datasets.pools}</strong> data set pools that contain {' '} and datatokens for each pool.
+      <Conversion price={`${totalLockedValue}`} hideApproximationSign /> TVL
+      (total value locked) across <strong>{stats?.datasets.pools}</strong> data
+      set pools that contain and datatokens for each pool.
       <br />
       <strong>{stats?.datasets.none}</strong> data sets have no price set yet.
     </div>
