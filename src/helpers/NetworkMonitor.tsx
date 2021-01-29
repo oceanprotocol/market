@@ -5,7 +5,14 @@ import { Logger } from '@oceanprotocol/lib'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 
 export function NetworkMonitor(): ReactElement {
-  const { connect, web3Provider, web3, networkId, config } = useOcean()
+  const {
+    connect,
+    web3Provider,
+    web3,
+    networkId,
+    config,
+    accountId
+  } = useOcean()
 
   async function handleNetworkChanged(chainId: string | number) {
     const initialNewConfig = getOceanConfig(
@@ -38,15 +45,19 @@ export function NetworkMonitor(): ReactElement {
     if (!web3 || !networkId) return
 
     async function init() {
+      // TODO: for debugging only
+      await web3Provider?._portis?.changeNetwork('rinkeby')
+
       if (
         (await web3.eth.getChainId()) ===
         (config as ConfigHelperConfig).networkId
       )
         return
+
       await handleNetworkChanged(networkId)
     }
     init()
-  }, [web3, networkId])
+  }, [web3, networkId, accountId])
 
   // Handle network change events
   useEffect(() => {
