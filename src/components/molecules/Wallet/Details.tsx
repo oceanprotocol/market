@@ -1,4 +1,4 @@
-import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import Button from '../../atoms/Button'
 import styles from './Details.module.css'
 import { useOcean } from '@oceanprotocol/react'
@@ -7,13 +7,12 @@ import { getProviderInfo, IProviderInfo } from 'web3modal'
 import Conversion from '../../atoms/Price/Conversion'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../../providers/UserPreferences'
-import InputElement from '../../atoms/Input/InputElement'
 
 export default function Details(): ReactElement {
   const { balance, connect, logout, web3Provider } = useOcean()
   const { locale } = useUserPreferences()
   const [providerInfo, setProviderInfo] = useState<IProviderInfo>()
-  const [portisNetwork, setPortisNetwork] = useState<string>()
+  // const [portisNetwork, setPortisNetwork] = useState<string>()
 
   // Workaround cause getInjectedProviderName() always returns `MetaMask`
   // https://github.com/oceanprotocol/market/issues/332
@@ -25,14 +24,14 @@ export default function Details(): ReactElement {
   }, [web3Provider])
 
   // Handle network change for Portis
-  async function handlePortisNetworkChange(e: ChangeEvent<HTMLSelectElement>) {
-    setPortisNetwork(e.target.value)
-    const portisNetworkName = e.target.value.toLowerCase()
-    await web3Provider._portis.changeNetwork(portisNetworkName)
-    // TODO: using our connect initializes a new Portis instance,
-    // which then defaults back to initial network (Mainnet).
-    // await connect()
-  }
+  // async function handlePortisNetworkChange(e: ChangeEvent<HTMLSelectElement>) {
+  //   setPortisNetwork(e.target.value)
+  //   const portisNetworkName = e.target.value.toLowerCase()
+  //   await web3Provider._portis.changeNetwork(portisNetworkName)
+  //   // TODO: using our connect initializes a new Portis instance,
+  //   // which then defaults back to initial network (Mainnet).
+  //   // await connect()
+  // }
 
   return (
     <div className={styles.details}>
@@ -51,7 +50,7 @@ export default function Details(): ReactElement {
           <span title="Connected provider">
             <img className={styles.walletLogo} src={providerInfo?.logo} />
             {providerInfo?.name}
-            {providerInfo?.name === 'Portis' && (
+            {/* {providerInfo?.name === 'Portis' && (
               <InputElement
                 name="network"
                 type="select"
@@ -60,7 +59,7 @@ export default function Details(): ReactElement {
                 value={portisNetwork}
                 onChange={handlePortisNetworkChange}
               />
-            )}
+            )} */}
           </span>
           <p>
             {providerInfo?.name === 'Portis' && (
