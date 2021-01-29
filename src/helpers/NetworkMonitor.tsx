@@ -4,8 +4,17 @@ import { getOceanConfig } from './wrapRootElement'
 import { Logger } from '@oceanprotocol/lib'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 
+const refreshInterval = 5000 // 5 sec.
 export function NetworkMonitor(): ReactElement {
-  const { connect, web3Provider, web3, networkId, config } = useOcean()
+  const {
+    connect,
+    refreshBalance,
+    web3Provider,
+    web3,
+    networkId,
+    account,
+    config
+  } = useOcean()
 
   async function handleNetworkChanged(chainId: string | number) {
     const initialNewConfig = getOceanConfig(
@@ -30,7 +39,16 @@ export function NetworkMonitor(): ReactElement {
       Logger.error(error.message)
     }
   }
+  useEffect(() => {
+    if (!account) return
 
+    refreshBalance()
+    const balanceInterval = setInterval(() => refreshBalance(), refreshInterval)
+
+    return () => {
+      clearInterval(balanceInterval)
+    }
+  }, [networkId, account])
   // Re-connect on mount when network is different from user network.
   // Bit nasty to just overwrite the initialConfig passed to OceanProvider
   // while it's connecting to that, but YOLO.
