@@ -6,7 +6,9 @@ import styles from './index.module.css'
 import queryString from 'query-string'
 import PriceFilter from './filterPrice'
 import Sort from './sort'
-import { getResults, addExistingParamsToUrl } from './utils'
+import { getResults } from './utils'
+import { useNavigate } from '@reach/router'
+import { updateQueryStringParameter } from '../../../utils'
 import Loader from '../../atoms/Loader'
 import { useOcean } from '@oceanprotocol/react'
 
@@ -17,11 +19,10 @@ export default function SearchPage({
   location: Location
   setTotalResults: (totalResults: number) => void
 }): ReactElement {
+  const navigate = useNavigate()
   const { config } = useOcean()
-  const { text, owner, tags, sort, sortOrder, priceType } = queryString.parse(
-    location.search
-  )
-  const [parsed, setParsed] = useState(queryString.parse(location.search))
+  const parsed = queryString.parse(location.search)
+  const { text, owner, tags, page, sort, sortOrder, priceType } = parsed
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [loading, setLoading] = useState<boolean>()
   const [price, setPriceType] = useState<string>(priceType as string)
@@ -36,15 +37,7 @@ export default function SearchPage({
     async function initSearch() {
       setLoading(true)
       setTotalResults(undefined)
-      if (!parsed.page) {
-        parsed.page = '1'
-      }
-      const newParse = {
-        ...queryString.parse(location.search)
-      }
-      newParse.page = parsed.page
-      setParsed(newParse)
-      const queryResult = await getResults(newParse, config.metadataCacheUri)
+      const queryResult = await getResults(parsed, config.metadataCacheUri)
       setQueryResult(queryResult)
       setTotalResults(queryResult.totalResults)
       setLoading(false)
@@ -55,11 +48,20 @@ export default function SearchPage({
     owner,
     tags,
     sort,
-    parsed.page,
+    page,
     priceType,
     sortOrder,
     config.metadataCacheUri
   ])
+
+  function setPage(page: number) {
+    const newUrl = updateQueryStringParameter(
+      location.pathname + location.search,
+      'page',
+      `${page}`
+    )
+    return navigate(newUrl)
+  }
 
   return (
     <>
@@ -82,11 +84,7 @@ export default function SearchPage({
         {loading ? (
           <Loader />
         ) : (
-          <AssetQueryList
-            queryResult={queryResult}
-            query={parsed}
-            setQuery={setParsed}
-          />
+          <AssetQueryList queryResult={queryResult} setPage={setPage} />
         )}
       </div>
     </>

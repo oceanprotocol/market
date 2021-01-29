@@ -5,27 +5,23 @@ import Pagination from '../molecules/Pagination'
 import styles from './AssetQueryList.module.css'
 import { DDO } from '@oceanprotocol/lib'
 import classNames from 'classnames/bind'
-import { ParsedQuery } from 'query-string'
 
 const cx = classNames.bind(styles)
 
 declare type AssetQueryListProps = {
   queryResult: QueryResult
-  query?: ParsedQuery
-  setQuery?: React.Dispatch<React.SetStateAction<ParsedQuery<string>>>
+  setPage?: React.Dispatch<React.SetStateAction<number>>
   className?: string
 }
 
 const AssetQueryList: React.FC<AssetQueryListProps> = ({
   queryResult,
-  query,
-  setQuery,
+  setPage,
   className
 }) => {
   // // This changes the page field inside the query
   function onPageChange(selected: number) {
-    query.page = String(selected + 1)
-    setQuery({ ...query })
+    setPage(selected + 1)
   }
 
   const styleClasses = cx({
@@ -45,7 +41,7 @@ const AssetQueryList: React.FC<AssetQueryListProps> = ({
         )}
       </div>
 
-      {query.page && setQuery && queryResult && (
+      {setPage && queryResult && (
         <Pagination
           totalPages={queryResult.totalPages}
           currentPage={queryResult.page}
