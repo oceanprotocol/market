@@ -22,8 +22,6 @@ const AssetQueryList: React.FC<AssetQueryListProps> = ({
   setQuery,
   className
 }) => {
-  console.log(query)
-
   // // This changes the page field inside the query
   function onPageChange(selected: number) {
     query.page = String(selected + 1)

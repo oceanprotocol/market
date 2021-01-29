@@ -40,9 +40,9 @@ export default function SearchPage({
         parsed.page = '1'
       }
       const newParse = {
-        ...queryString.parse(location.search),
-        page: parsed.page
+        ...queryString.parse(location.search)
       }
+      newParse.page = parsed.page
       setParsed(newParse)
       const queryResult = await getResults(newParse, config.metadataCacheUri)
       setQueryResult(queryResult)
