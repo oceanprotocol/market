@@ -8,12 +8,12 @@ const refreshInterval = 5000 // 5 sec.
 export function NetworkMonitor(): ReactElement {
   const {
     connect,
-    refreshBalance,
     web3Provider,
     web3,
     networkId,
-    account,
-    config
+    config,
+    refreshBalance,
+    account
   } = useOcean()
 
   async function handleNetworkChanged(chainId: string | number) {
@@ -61,6 +61,7 @@ export function NetworkMonitor(): ReactElement {
         (config as ConfigHelperConfig).networkId
       )
         return
+
       await handleNetworkChanged(networkId)
     }
     init()

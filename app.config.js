@@ -32,5 +32,8 @@ module.exports = {
     classNameDark: 'dark',
     classNameLight: 'light',
     storageKey: 'oceanDarkMode'
-  }
+  },
+
+  // Wallets
+  portisId: process.env.GATSBY_PORTIS_ID || 'xxx'
 }

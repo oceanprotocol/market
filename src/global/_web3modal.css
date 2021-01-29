@@ -12,20 +12,46 @@ div.web3modal-modal-card {
   border-radius: var(--border-radius);
   padding: var(--spacer);
   margin: var(--spacer) auto;
-  max-width: var(--break-point--small);
+  max-width: 100%;
   border: 1px solid var(--border-color);
   box-shadow: 0 6px 15px 0 var(--box-shadow-color);
   animation: moveUp 0.2s ease-out backwards;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: 1fr;
 }
 
 div.web3modal-provider-wrapper {
-  border: none;
+  border: 0;
+  border-bottom: 1px solid var(--border-color);
   padding: 0;
 }
 
+div.web3modal-provider-wrapper:last-child {
+  border-bottom: 0;
+}
+
 div.web3modal-provider-container {
+  border-radius: 0;
   padding: var(--spacer);
+}
+
+@media (min-width: 40rem) {
+  div.web3modal-modal-card {
+    grid-template-columns: 1fr 1fr;
+    max-width: var(--break-point--small);
+  }
+
+  div.web3modal-provider-wrapper {
+    border-bottom: 0;
+  }
+
+  div.web3modal-provider-wrapper:nth-child(1),
+  div.web3modal-provider-wrapper:nth-child(2) {
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  div.web3modal-provider-wrapper:nth-child(2n + 1) {
+    border-right: 1px solid var(--border-color);
+  }
 }
 
 div.web3modal-provider-icon {
