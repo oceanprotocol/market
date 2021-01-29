@@ -11,7 +11,7 @@ const cx = classNames.bind(styles)
 
 declare type AssetQueryListProps = {
   queryResult: QueryResult
-  query: ParsedQuery
+  query?: ParsedQuery
   setQuery?: React.Dispatch<React.SetStateAction<ParsedQuery<string>>>
   className?: string
 }
