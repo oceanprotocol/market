@@ -6,7 +6,7 @@ interface PaginationProps {
   totalPages: number
   currentPage: number
   onPageChange(selected: number): void
-  hrefBuilder(pageIndex: number): void
+  hrefBuilder?(pageIndex: number): void
 }
 
 export default function Pagination({

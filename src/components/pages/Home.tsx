@@ -84,7 +84,7 @@ function SectionQueryResult({
       {loading ? (
         <LoaderArea />
       ) : (
-        result && <AssetQueryList queryResult={result} />
+        result && <AssetQueryList queryResult={result} query={query} />
       )}
       {action && action}
     </section>

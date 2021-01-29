@@ -18,8 +18,10 @@ export default function SearchPage({
   setTotalResults: (totalResults: number) => void
 }): ReactElement {
   const { config } = useOcean()
-  const parsed = queryString.parse(location.search)
-  const { text, owner, tags, page, sort, sortOrder, priceType } = parsed
+  const { text, owner, tags, sort, sortOrder, priceType } = queryString.parse(
+    location.search
+  )
+  const [parsed, setParsed] = useState(queryString.parse(location.search))
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [loading, setLoading] = useState<boolean>()
   const [price, setPriceType] = useState<string>(priceType as string)
@@ -34,7 +36,15 @@ export default function SearchPage({
     async function initSearch() {
       setLoading(true)
       setTotalResults(undefined)
-      const queryResult = await getResults(parsed, config.metadataCacheUri)
+      if (!parsed.page) {
+        parsed.page = '1'
+      }
+      const newParse = {
+        ...queryString.parse(location.search),
+        page: parsed.page
+      }
+      setParsed(newParse)
+      const queryResult = await getResults(newParse, config.metadataCacheUri)
       setQueryResult(queryResult)
       setTotalResults(queryResult.totalResults)
       setLoading(false)
@@ -44,8 +54,8 @@ export default function SearchPage({
     text,
     owner,
     tags,
-    page,
     sort,
+    parsed.page,
     priceType,
     sortOrder,
     config.metadataCacheUri
@@ -69,7 +79,15 @@ export default function SearchPage({
         </div>
       </div>
       <div className={styles.results}>
-        {loading ? <Loader /> : <AssetQueryList queryResult={queryResult} />}
+        {loading ? (
+          <Loader />
+        ) : (
+          <AssetQueryList
+            queryResult={queryResult}
+            query={parsed}
+            setQuery={setParsed}
+          />
+        )}
       </div>
     </>
   )
