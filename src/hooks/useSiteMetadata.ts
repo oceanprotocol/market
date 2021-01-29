@@ -19,6 +19,7 @@ const query = graphql`
           network
           marketFeeAddress
           currencies
+          portisId
         }
       }
     }
