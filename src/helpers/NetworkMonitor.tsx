@@ -45,9 +45,6 @@ export function NetworkMonitor(): ReactElement {
     if (!web3 || !networkId) return
 
     async function init() {
-      // TODO: for debugging only
-      await web3Provider?._portis?.changeNetwork('rinkeby')
-
       if (
         (await web3.eth.getChainId()) ===
         (config as ConfigHelperConfig).networkId
@@ -57,7 +54,7 @@ export function NetworkMonitor(): ReactElement {
       await handleNetworkChanged(networkId)
     }
     init()
-  }, [web3, networkId, accountId])
+  }, [web3, networkId])
 
   // Handle network change events
   useEffect(() => {
