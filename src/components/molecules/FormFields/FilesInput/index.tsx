@@ -12,6 +12,16 @@ export default function FilesInput(props: InputProps): ReactElement {
   const [isLoading, setIsLoading] = useState(false)
   const { ocean } = useOcean()
 
+  async function checkFileUrl(url: string): Promise<FileMetadata> {
+    const filesArray: FileMetadata[] = await ocean.provider.fileinfo(url)
+    if (filesArray[0] && filesArray[0].valid) {
+      filesArray[0].url = url
+      return filesArray[0]
+    }
+    toast.error('Could not fetch file info. Please check URL and try again')
+    return null
+  }
+
   async function handleButtonClick(e: React.SyntheticEvent, url: string) {
     // hack so the onBlur-triggered validation does not show,
     // like when this field is required
@@ -22,11 +32,12 @@ export default function FilesInput(props: InputProps): ReactElement {
 
     try {
       setIsLoading(true)
-      const filesArray: FileMetadata[] = await ocean.provider.fileinfo(url)
-      filesArray[0].url = url
-      filesArray[0] && helpers.setValue(filesArray)
+      const fileInfo = await checkFileUrl(url)
+      fileInfo && helpers.setValue([fileInfo])
     } catch (error) {
-      toast.error('Could not fetch file info. Please check URL and try again')
+      toast.error(
+        'Could not fetch file info. Please connect your Web3 wallet and try again'
+      )
       console.error(error.message)
     } finally {
       setIsLoading(false)
