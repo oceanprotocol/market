@@ -37,14 +37,6 @@ jobs:
 
       - run: npm ci
       - run: npm run apollo:codegen
-
-      ## DEBUGGING ##
-      - uses: actions/upload-artifact@v1
-        with:
-          name: typesApollo-${{ runner.os }}-${{ matrix.node }}
-          path: src/@types/apollo
-      ## END DEBUGGING ##
-
       - run: npm run lint
       # - run: npm test
       - run: npm run build

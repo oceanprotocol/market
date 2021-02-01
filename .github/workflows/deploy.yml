@@ -3,15 +3,16 @@ name: 'Deploy'
 on:
   push:
     branches:
-      - main
+      - '**'
 
 jobs:
-  deploy:
+  s3:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
+      - run: npm ci
       - run: npm run build
       - run: npm run deploy:s3
         env:
