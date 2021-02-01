@@ -33,31 +33,13 @@ jobs:
         with:
           path: ~/.npm
           key: ${{ runner.os }}-${{ matrix.node }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ matrix.node }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-${{ matrix.node }}-build-
-            ${{ runner.os }}-${{ matrix.node }}-
+          restore-keys: ${{ runner.os }}-${{ matrix.node }}-build-${{ env.cache-name }}-
 
       - run: npm ci
       - run: npm run apollo:codegen
       - run: npm run lint
       # - run: npm test
       - run: npm run build
-
-  # Build and deploy to S3 if we're on main branch
-  deploy:
-    needs: test
-    if: success() && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-      - run: npm run build
-      - run: npm run deploy:s3
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
   # coverage:
   #   runs-on: ubuntu-latest
