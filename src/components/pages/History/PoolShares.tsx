@@ -8,6 +8,7 @@ import styles from './PoolShares.module.css'
 import AssetTitle from '../../molecules/AssetListTitle'
 import { gql, useQuery } from '@apollo/client'
 import { PoolShares as PoolShare } from '../../../@types/apollo/PoolShares'
+import web3 from 'web3'
 
 const poolSharesQuery = gql`
   query PoolShares($user: String) {
@@ -23,6 +24,7 @@ const poolSharesQuery = gql`
       }
       poolId {
         id
+        datatokenAddress
       }
     }
   }
@@ -78,19 +80,17 @@ export default function PoolShares(): ReactElement {
   const [assets, setAssets] = useState<Asset[]>()
   const [isLoading, setIsLoading] = useState(false)
   const [pools, setPools] = useState([])
-  const { data, loading } = useQuery<PoolShare>(poolSharesQuery, {
+  const { data } = useQuery<PoolShare>(poolSharesQuery, {
     variables: {
-      user: '0x020a507256a55f006e86d0b9d3b2f6546f2deb9a'
+      user: accountId?.toLowerCase()
     },
     pollInterval: 20000
   })
-  console.log(accountId.toLowerCase())
 
   useEffect(() => {
     if (!data) return
-    console.log(data.poolShares)
     setPools(data.poolShares)
-  }, [data, loading])
+  }, [data])
 
   useEffect(() => {
     async function getAssets() {
@@ -98,14 +98,14 @@ export default function PoolShares(): ReactElement {
       setIsLoading(true)
 
       try {
-        const pools = await ocean.pool.getPoolSharesByAddress(accountId)
         const metadataCache = new MetadataCache(config.metadataCacheUri, Logger)
         const result: Asset[] = []
-
         for (const pool of pools) {
-          console.log(pool)
-          const ddo = await metadataCache.retrieveDDO(pool.did)
-          ddo && result.push({ ddo, shares: pool.shares })
+          const did = web3.utils
+            .toChecksumAddress(pool.poolId.datatokenAddress)
+            .replace('0x', 'did:op:')
+          const ddo = await metadataCache.retrieveDDO(did)
+          ddo && result.push({ ddo, shares: pool.balance })
         }
 
         setAssets(result)
@@ -116,7 +116,7 @@ export default function PoolShares(): ReactElement {
       }
     }
     getAssets()
-  }, [ocean, accountId, config.metadataCacheUri])
+  }, [ocean, accountId, pools, config.metadataCacheUri])
 
   return <Table columns={columns} data={assets} isLoading={isLoading} />
 }
