@@ -19,7 +19,7 @@
     "storybook:build": "build-storybook -c .storybook -o public/storybook",
     "write:repoMetadata": "node ./scripts/write-repo-metadata > repo-metadata.json",
     "deploy:s3": "./scripts/deploy-s3.sh",
-    "apollo:codegen": "npx mkdirp src/@types/apollo/ && apollo client:codegen --target typescript --tsFileExtension='d.ts' --outputFlat './src/@types/apollo/'",
+    "apollo:codegen": "npx mkdirp './src/@types/apollo/' && apollo client:codegen --target typescript --tsFileExtension='d.ts' --outputFlat './src/@types/apollo/'",
     "postinstall": "husky install"
   },
   "dependencies": {

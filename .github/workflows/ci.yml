@@ -26,26 +26,17 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: Cache node modules
-        uses: actions/cache@v1
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: ${{ runner.os }}-node-
-
-      - name: Cache Gatsby Cache Folder
-        uses: actions/cache@v1
-        with:
-          path: .cache
-          key: ${{ runner.os }}-cache-gatsby
-          restore-keys: ${{ runner.os }}-cache-gatsby
-
-      - name: Cache Gatsby Public Folder
-        uses: actions/cache@v1
-        with:
-          path: public/
-          key: ${{ runner.os }}-public-gatsby
-          restore-keys: ${{ runner.os }}-public-gatsby
+          key: ${{ runner.os }}-${{ matrix.node }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.node }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-${{ matrix.node }}-build-
+            ${{ runner.os }}-${{ matrix.node }}-
 
       - run: npm ci
       - run: npm run apollo:codegen
