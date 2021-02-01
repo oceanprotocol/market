@@ -3,7 +3,7 @@ import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/Metadata
 import { useOcean } from '@oceanprotocol/react'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Loader from '../../atoms/Loader'
-import AssetQueryList from '../../organisms/AssetQueryList'
+import AssetList from '../../organisms/AssetList'
 
 export default function PublishedList(): ReactElement {
   const { ocean, status, accountId } = useOcean()
@@ -29,8 +29,8 @@ export default function PublishedList(): ReactElement {
 
   return isLoading ? (
     <Loader />
-  ) : accountId && ocean ? (
-    <AssetQueryList queryResult={queryResult} />
+  ) : accountId && ocean && queryResult ? (
+    <AssetList assets={queryResult.results} showPagination={false} />
   ) : (
     <div>Connect your wallet to see your published data sets.</div>
   )

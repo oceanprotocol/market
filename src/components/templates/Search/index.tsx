@@ -1,7 +1,7 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import SearchBar from '../../molecules/SearchBar'
-import AssetQueryList from '../../organisms/AssetQueryList'
+import AssetList from '../../organisms/AssetList'
 import styles from './index.module.css'
 import queryString from 'query-string'
 import PriceFilter from './filterPrice'
@@ -83,8 +83,16 @@ export default function SearchPage({
       <div className={styles.results}>
         {loading ? (
           <Loader />
+        ) : queryResult ? (
+          <AssetList
+            assets={queryResult.results}
+            showPagination
+            page={queryResult.page}
+            totalPages={queryResult.totalPages}
+            onPageChange={setPage}
+          />
         ) : (
-          <AssetQueryList queryResult={queryResult} setPage={setPage} />
+          ''
         )}
       </div>
     </>

@@ -11,7 +11,7 @@ import { formatPrice } from '../atoms/Price/PriceUnit'
 import { gql, useQuery } from '@apollo/client'
 import {
   TransactionHistory,
-  TransactionHistory_poolTransactions as TransactionHistoryPoolTransactions
+  TransactionHistoryPoolTransactions
 } from '../../@types/apollo/TransactionHistory'
 
 import web3 from 'web3'
