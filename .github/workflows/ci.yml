@@ -41,7 +41,7 @@ jobs:
       ## DEBUGGING ##
       - uses: actions/upload-artifact@v1
         with:
-          name: typesApollo
+          name: typesApollo-${{ runner.os }}-${{ matrix.node }}
           path: src/@types/apollo
       ## END DEBUGGING ##
 
