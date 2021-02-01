@@ -1,0 +1,81 @@
+name: 'CI'
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: ['15', '14'] # Latest + LTS
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+
+      - name: Cache Gatsby Cache Folder
+        uses: actions/cache@v1
+        with:
+          path: .cache
+          key: ${{ runner.os }}-cache-gatsby
+          restore-keys: ${{ runner.os }}-cache-gatsby
+
+      - name: Cache Gatsby Public Folder
+        uses: actions/cache@v1
+        with:
+          path: public/
+          key: ${{ runner.os }}-public-gatsby
+          restore-keys: ${{ runner.os }}-public-gatsby
+
+      - run: npm ci
+      - run: npm run apollo:codegen
+      - run: npm run lint
+      # - run: npm test
+      - run: npm run build
+
+  # Build and deploy to S3 if we're on main branch
+  deploy:
+    needs: test
+    if: success() && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - run: npm run build
+      - run: npm run deploy:s3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  # coverage:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-node@v2
+  #     - run: npm ci
+  #     - uses: paambaati/codeclimate-action@v2.7.5
+  #       env:
+  #         CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+  #       with:
+  #         coverageCommand: npm test
