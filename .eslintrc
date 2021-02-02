@@ -1,7 +1,14 @@
 {
   "parser": "babel-eslint",
-  "extends": ["eslint:recommended", "prettier"],
-  "env": { "es6": true, "browser": true, "node": true, "jest": true },
+  "extends": ["eslint:recommended", "prettier", "plugin:cypress/recommended"],
+  "plugins": ["cypress"],
+  "env": {
+    "es6": true,
+    "browser": true,
+    "node": true,
+    "jest": true,
+    "cypress/globals": true
+  },
   "settings": {
     "react": {
       "version": "detect"

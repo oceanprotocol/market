@@ -14,3 +14,9 @@ public/storybook
 repo-metadata.json
 content/networks-metadata.json
 src/@types/apollo
+
+# cypress
+**/cypress/screenshots
+**/cypress/videos
+**/cypress/fixtures/did.txt
+artifacts

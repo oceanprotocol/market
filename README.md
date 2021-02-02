@@ -22,6 +22,9 @@
 - [🎨 Storybook](#-storybook)
 - [✨ Code Style](#-code-style)
 - [👩‍🔬 Testing](#-testing)
+  - [Integration Testing](#integration-testing)
+  - [Unit Testing](#unit-testing)
+  - [Bundle Size](#bundle-size)
 - [🛳 Production](#-production)
 - [⬆️ Deployment](#️-deployment)
 - [💖 Contributing](#-contributing)
@@ -304,6 +307,24 @@ npm run format
 
 ## 👩‍🔬 Testing
 
+### Integration Testing
+
+To run all integration tests in headless mode, run:
+
+```bash
+npm run test:integration
+```
+
+This will automatically spin up the app, and then run the integration tests against it.
+
+If you already have the app running, you can also use the UI of Cypress to run and inspect the integration tests locally for more flexibility:
+
+```bash
+npm run cypress:open
+```
+
+### Unit Testing
+
 > TODO: this is broken and never runs in CI. See https://github.com/oceanprotocol/market/issues/128
 
 Test suite for unit tests is setup with [Jest](https://jestjs.io) as a test runner and:
@@ -313,14 +334,16 @@ Test suite for unit tests is setup with [Jest](https://jestjs.io) as a test runn
 To run all linting and unit tests:
 
 ```bash
-npm test
+npm run test:unit
 ```
 
 For local development, you can start the test runner in a watch mode.
 
 ```bash
-npm run test:watch
+npm run test:unit:watch
 ```
+
+### Bundle Size
 
 For analyzing the generated JavaScript bundle sizes you can use:
 
