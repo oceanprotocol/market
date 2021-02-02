@@ -3,6 +3,7 @@ import { toDataUrl } from 'ethereum-blockies'
 import React, { FormEvent } from 'react'
 import { ReactComponent as Caret } from '../../../images/caret.svg'
 import { accountTruncate } from '../../../utils/wallet'
+import Loader from '../../atoms/Loader'
 import Status from '../../atoms/Status'
 import styles from './Account.module.css'
 
@@ -23,7 +24,7 @@ const Blockies = ({ account }: { account: string | undefined }) => {
 // Forward ref for Tippy.js
 // eslint-disable-next-line
 const Account = React.forwardRef((props, ref: any) => {
-  const { accountId, status, connect, networkId } = useOcean()
+  const { accountId, status, connect, networkId, web3Modal } = useOcean()
   const hasSuccess = status === 1 && networkId === 1
 
   async function handleActivation(e: FormEvent<HTMLButtonElement>) {
@@ -33,7 +34,12 @@ const Account = React.forwardRef((props, ref: any) => {
     await connect()
   }
 
-  return accountId ? (
+  return !accountId && web3Modal?.cachedProvider ? (
+    // Improve user experience for cached provider when connecting takes some time
+    <button className={styles.button} onClick={(e) => e.preventDefault()}>
+      <Loader message="Reconnecting wallet..." />
+    </button>
+  ) : accountId ? (
     <button
       className={styles.button}
       aria-label="Account"

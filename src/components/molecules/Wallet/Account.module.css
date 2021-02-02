@@ -11,6 +11,7 @@
   margin: 0;
   transition: border 0.2s ease-out;
   cursor: pointer;
+  min-width: 190px;
 }
 
 .button,
