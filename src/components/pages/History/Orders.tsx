@@ -11,12 +11,18 @@ const getTokenOrders = gql`
     tokenOrders(
       orderBy: timestamp
       orderDirection: desc
-      where: { payer: $user }
+      where: { consumer: $user }
     ) {
       consumer {
         id
       }
+      datatokenId {
+        name
+        address
+        publisher
+      }
       id
+      datatokenId
       timestamp
       tx
       serviceId
@@ -25,6 +31,18 @@ const getTokenOrders = gql`
 `
 
 const columns = [
+  {
+    name: 'Data Set',
+    selector: function getAssetRow(row: OrdersDataTokenOrders) {
+      return <></>
+    }
+  },
+  {
+    name: 'Title',
+    selector: function getTitleRow(row: OrdersDataTokenOrders) {
+      return <></>
+    }
+  },
   {
     name: 'Time',
     selector: function getTimeRow(row: OrdersDataTokenOrders) {
@@ -36,18 +54,6 @@ const columns = [
           isUnix
         />
       )
-    }
-  },
-  {
-    name: 'Data Set',
-    selector: function getAssetRow(row: OrdersDataTokenOrders) {
-      return <></>
-    }
-  },
-  {
-    name: 'Tx',
-    selector: function getAssetRow(row: OrdersDataTokenOrders) {
-      return <></>
     }
   }
 ]
