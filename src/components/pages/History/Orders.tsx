@@ -4,8 +4,7 @@ import Table from '../../atoms/Table'
 import { gql, useQuery } from '@apollo/client'
 import Time from '../../atoms/Time'
 import styles from './Orders.module.css'
-import web3 from 'web3'
-import AssetTitle from '../../../components/molecules/AssetListTitle'
+import { OrdersDataTokenOrders } from '../../../@types/apollo/OrdersData'
 
 const getTokenOrders = gql`
   query OrdersData($user: String!) {
@@ -28,7 +27,7 @@ const getTokenOrders = gql`
 const columns = [
   {
     name: 'Time',
-    selector: function getTimeRow(row: ) {
+    selector: function getTimeRow(row: OrdersDataTokenOrders) {
       return (
         <Time
           className={styles.time}
@@ -41,15 +40,15 @@ const columns = [
   },
   {
     name: 'Data Set',
-    selector: function getAssetRow(row: ) {
-      const did = web3.utils
-        .toChecksumAddress(row.poolAddress.datatokenAddress)
-        .replace('0x', 'did:op:')
-      return <AssetTitle did={did} />
+    selector: function getAssetRow(row: OrdersDataTokenOrders) {
+      return <></>
     }
   },
   {
-    name: 'Title'
+    name: 'Tx',
+    selector: function getAssetRow(row: OrdersDataTokenOrders) {
+      return <></>
+    }
   }
 ]
 
