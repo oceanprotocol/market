@@ -4,6 +4,7 @@ import styles from './index.module.css'
 import PoolShares from './PoolShares'
 import PoolTransactions from '../../molecules/PoolTransactions'
 import PublishedList from './PublishedList'
+import Orders from './Orders'
 
 const sections = [
   {
@@ -21,6 +22,10 @@ const sections = [
   {
     title: 'Compute Jobs',
     component: <ComputeJobs />
+  },
+  {
+    title: 'Orders',
+    component: <Orders />
   }
 ]
 
