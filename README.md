@@ -309,18 +309,29 @@ npm run format
 
 ### Integration Testing
 
-To run all integration tests in headless mode, run:
+This requires locally running Ocean Protocol components with [Barge](https://github.com/oceanprotocol/barge) and the app pointing to it:
+
+```bash
+git clone git@github.com:oceanprotocol/barge.git
+cd barge
+./start_ocean.sh
+```
+
+To run all integration tests in headless mode, wait for barge to start up and then in another Terminal run:
 
 ```bash
 npm run test:integration
 ```
 
-This will automatically spin up the app, and then run the integration tests against it.
+This will automatically spin up the app in Chrome pointed against local Barge components, and then run the integration tests against it.
 
-If you already have the app running, you can also use the UI of Cypress to run and inspect the integration tests locally for more flexibility:
+If you already have the app running, you can also use the UI of Cypress to run and inspect the integration tests locally for more flexibility and browser choices:
 
 ```bash
 npm run cypress:open
+
+# auto-run test suite
+npm run cypress:run
 ```
 
 ### Unit Testing

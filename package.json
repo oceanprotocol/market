@@ -11,7 +11,7 @@
     "jest": "NODE_ENV=test jest -c tests/unit/jest.config.js",
     "test:unit": "npm run apollo:codegen && npm run lint && npm run jest",
     "test:unit:watch": "npm run lint && npm run jest -- --watch",
-    "test:integration": "GATBSY_NETWORK=development start-test start http-get://localhost:8000 cypress:run",
+    "test:integration": "GATSBY_NETWORK=development start-test start http-get://localhost:8000 cypress:run",
     "lint": "npm run write:repoMetadata && eslint --ignore-path .gitignore --ext .js --ext .ts --ext .tsx . && npm run type-check",
     "format": "prettier --ignore-path .gitignore './**/*.{css,yml,js,ts,tsx,json}' --write",
     "type-check": "tsc --noEmit",

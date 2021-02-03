@@ -19,15 +19,16 @@ describe('Publish', () => {
       'https://oceanprotocol.com/tech-whitepaper.pdf'
     )
     // Add file to main form
-    cy.get('button').contains('Add File').click()
+    cy.get('input[name=files] + button').click()
     // Add sample
     cy.get('input[name=links]').type(
       'https://oceanprotocol.com/tech-whitepaper.pdf'
     )
+    cy.get('input[name=links] + button').click()
     // Access
     cy.get('#access').select('Download')
     // Author
-    cy.get('#author').select('Download')
+    cy.get('#author').type('Jelly McJellyfish')
     // Tags
     cy.get('#tags').type('fish, ocean, squid')
     // Terms
@@ -41,7 +42,7 @@ describe('Publish', () => {
     //   timeout: 12000
     // }).should('be.visible')
 
-    // // Store DID
+    // // Store DID for other tests to pick up
     // cy.get('a')
     //   .contains('See published asset')
     //   .invoke('attr', 'href')
