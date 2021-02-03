@@ -42,6 +42,8 @@ export default function PublishPage({
     const metadata = transformPublishFormToMetadata(values)
     const timeout = mapTimeoutStringToSeconds(values.timeout)
 
+    console.log(values)
+
     const serviceType = values.access === 'Download' ? 'access' : 'compute'
 
     try {
@@ -49,7 +51,9 @@ export default function PublishPage({
         'Publish with ',
         metadata,
         serviceType,
-        values.dataTokenOptions
+        values.dataTokenOptions,
+        timeout,
+        values.providerUri
       )
 
       const ddo = await publish(
@@ -59,6 +63,8 @@ export default function PublishPage({
         timeout,
         values.providerUri
       )
+
+      console.log(ddo)
 
       // Publish failed
       if (!ddo || publishError) {

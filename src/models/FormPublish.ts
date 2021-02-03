@@ -17,7 +17,6 @@ export const validationSchema: Yup.SchemaOf<MetadataPublishForm> = Yup.object()
       .required('Required'),
     files: Yup.array<FileMetadata>().required('Required').nullable(),
     description: Yup.string().min(10).required('Required'),
-    providerUri: Yup.string(),
     timeout: Yup.string().required('Required'),
     access: Yup.string()
       .matches(/Compute|Download/g, { excludeEmptyString: true })
@@ -26,7 +25,17 @@ export const validationSchema: Yup.SchemaOf<MetadataPublishForm> = Yup.object()
 
     // ---- optional fields ----
     tags: Yup.string().nullable(),
-    links: Yup.array<FileMetadata[]>().nullable()
+    links: Yup.array<FileMetadata[]>().nullable(),
+    providerUri: Yup.lazy((value) =>
+      /^data/.test(value)
+        ? Yup.string()
+            .trim()
+            .matches(
+              /^data:([a-z]+\/[a-z0-9-+.]+(;[a-z-]+=[a-z0-9-]+)?)?(;base64)?,([a-z0-9!$&',()*+;=\-._~:@/?%\s]*)$/i,
+              'Must be a valid data URI'
+            )
+        : Yup.string().trim().url('Must be a valid URL')
+    )
   })
   .defined()
 
