@@ -35,6 +35,13 @@
         "type": "files"
       },
       {
+        "name": "providerUri",
+        "label": "Provider",
+        "placeholder": "e.g. https://myproviders.com/provider",
+        "help": "You can provide an endpoint to your own provider",
+        "type": "url"
+      },
+      {
         "name": "access",
         "label": "Access Type",
         "help": "Choose how you want your files to be accessible for the specified price.",

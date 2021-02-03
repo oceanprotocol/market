@@ -56,7 +56,8 @@ export default function PublishPage({
         (metadata as unknown) as Metadata,
         serviceType,
         values.dataTokenOptions,
-        timeout
+        timeout,
+        values.providerUri
       )
 
       // Publish failed

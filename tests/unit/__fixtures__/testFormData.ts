@@ -9,6 +9,7 @@ const testFormData: MetadataPublishForm = {
   },
   name: '',
   timeout: '',
+  providerUri: '',
   description: 'description',
   termsAndConditions: true,
   access: 'Download'

@@ -31,6 +31,7 @@ export interface MetadataPublishForm {
   files: string | File[]
   author: string
   timeout: string
+  providerUri: string
   dataTokenOptions: DataTokenOptions
   access: 'Download' | 'Compute' | string
   termsAndConditions: boolean
