@@ -4,7 +4,7 @@ import Table from '../../atoms/Table'
 import { gql, useQuery } from '@apollo/client'
 import Time from '../../atoms/Time'
 import styles from './Orders.module.css'
-import { OrdersDataTokenOrders } from '../../../@types/apollo/OrdersData'
+import { OrdersData_tokenOrders as OrdersDataTokenOrders } from '../../../@types/apollo/OrdersData'
 import web3 from 'web3'
 import AssetTitle from '../../molecules/AssetListTitle'
 
