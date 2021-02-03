@@ -7,7 +7,7 @@ import queryString from 'query-string'
 import PriceFilter from './filterPrice'
 import Sort from './sort'
 import { getResults } from './utils'
-import { useNavigate } from '@reach/router'
+import { navigate } from 'gatsby'
 import { updateQueryStringParameter } from '../../../utils'
 import Loader from '../../atoms/Loader'
 import { useOcean } from '@oceanprotocol/react'
@@ -19,7 +19,6 @@ export default function SearchPage({
   location: Location
   setTotalResults: (totalResults: number) => void
 }): ReactElement {
-  const navigate = useNavigate()
   const { config } = useOcean()
   const parsed = queryString.parse(location.search)
   const { text, owner, tags, page, sort, sortOrder, priceType } = parsed
