@@ -17,6 +17,7 @@ const getTokenOrders = gql`
     ) {
       datatokenId {
         address
+        symbol
       }
       timestamp
       tx
@@ -36,9 +37,9 @@ const columns = [
     }
   },
   {
-    name: 'Title',
+    name: 'Datatoken',
     selector: function getTitleRow(row: OrdersDataTokenOrders) {
-      return <></>
+      return row.datatokenId.symbol
     }
   },
   {
