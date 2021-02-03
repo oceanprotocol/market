@@ -67,6 +67,8 @@ jobs:
             [ -f "$HOME/.ocean/ocean-contracts/artifacts/ready" ] && break
             done
           ls -la "$HOME/.ocean/ocean-contracts/artifacts/"
+        env:
+          CONTRACTS_VERSION: next
 
       - name: Run Cypress integration test
         run: npm run test:integration
