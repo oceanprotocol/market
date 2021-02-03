@@ -15,19 +15,11 @@ const getTokenOrders = gql`
       orderDirection: desc
       where: { consumer: $user }
     ) {
-      consumer {
-        id
-      }
       datatokenId {
-        name
         address
-        publisher
       }
-      id
-      datatokenId
       timestamp
       tx
-      serviceId
     }
   }
 `
@@ -66,14 +58,13 @@ const columns = [
 
 export default function ComputeJobs(): ReactElement {
   const { accountId } = useOcean()
-  const [orders, setOrders] = useState()
+  const [orders, setOrders] = useState<OrdersDataTokenOrders[]>()
   const { data } = useQuery(getTokenOrders, {
     variables: { user: accountId?.toLowerCase() }
   })
 
   useEffect(() => {
     if (!data) return
-    console.log('DATA: ', data)
     setOrders(data.tokenOrders)
   }, [data])
 
