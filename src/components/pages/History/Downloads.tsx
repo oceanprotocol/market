@@ -57,7 +57,7 @@ const columns = [
   }
 ]
 
-export default function ComputeJobs(): ReactElement {
+export default function ComputeDownloads(): ReactElement {
   const { accountId } = useOcean()
   const [orders, setOrders] = useState<OrdersDataTokenOrders[]>()
   const { data } = useQuery(getTokenOrders, {
@@ -74,7 +74,7 @@ export default function ComputeJobs(): ReactElement {
       columns={columns}
       data={orders}
       paginationPerPage={10}
-      emptyMessage="Your orders will show up here"
+      emptyMessage="Your downloads will show up here"
     />
   )
 }
