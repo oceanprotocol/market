@@ -3,7 +3,6 @@ import { useOcean } from '@oceanprotocol/react'
 import Table from '../../atoms/Table'
 import { gql, useQuery } from '@apollo/client'
 import Time from '../../atoms/Time'
-import styles from './Orders.module.css'
 import { OrdersData_tokenOrders as OrdersDataTokenOrders } from '../../../@types/apollo/OrdersData'
 import web3 from 'web3'
 import AssetTitle from '../../molecules/AssetListTitle'
@@ -45,14 +44,7 @@ const columns = [
   {
     name: 'Time',
     selector: function getTimeRow(row: OrdersDataTokenOrders) {
-      return (
-        <Time
-          className={styles.time}
-          date={row.timestamp.toString()}
-          relative
-          isUnix
-        />
-      )
+      return <Time date={row.timestamp.toString()} relative isUnix />
     }
   }
 ]
