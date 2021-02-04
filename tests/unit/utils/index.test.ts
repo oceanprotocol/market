@@ -3,8 +3,7 @@ import axios, { AxiosResponse } from 'axios'
 import {
   toStringNoMS,
   updateQueryStringParameter,
-  isDid,
-  getFileInfo
+  isDid
 } from '../../../src/utils'
 
 jest.mock('axios')
@@ -25,20 +24,6 @@ describe('toStringNoMS()', () => {
     expect(toStringNoMS(new Date(1583956486719))).toEqual(
       '2020-03-11T19:54:46Z'
     )
-  })
-})
-
-describe('getFileInfo()', () => {
-  it('Success on existing file', async () => {
-    ;(axios as any).mockResolvedValue({
-      data: {
-        status: 200,
-        result: { contentLength: '10000', contentType: 'application/pdf' }
-      }
-    } as AxiosResponse)
-
-    const fileInfo = await getFileInfo('https://demo.com')
-    expect(fileInfo.contentType).toBe('application/pdf')
   })
 })
 
