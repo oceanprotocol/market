@@ -33,10 +33,6 @@ export async function fileinfo(
       url
     }
   } catch (error) {
-    if (axios.isCancel(error)) {
-      Logger.log(error.message)
-    } else {
-      Logger.error(error.message)
-    }
+    Logger.log(error.message)
   }
 }
