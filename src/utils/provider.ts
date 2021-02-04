@@ -33,6 +33,6 @@ export async function fileinfo(
       url
     }
   } catch (error) {
-    Logger.log(error.message)
+    Logger.error(error.message)
   }
 }

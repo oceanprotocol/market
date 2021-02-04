@@ -23,7 +23,7 @@ export default function FilesInput(props: InputProps): ReactElement {
         const checkedFile = await fileinfo(
           fileUrl,
           config.providerUri,
-          undefined
+          source.token
         )
         checkedFile && helpers.setValue([checkedFile])
       } catch (error) {
