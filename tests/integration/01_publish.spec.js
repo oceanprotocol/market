@@ -10,21 +10,16 @@ describe('Publish', () => {
   })
 
   it('should publish a data set with all fields', () => {
-    // Fill title
+    // Add title
     cy.get('#name').type('Ocean Market Integration Test')
-    // Fill description
+    // Add description
     cy.get('#description').type('Ocean Market Integration Test')
-    // Fill url of file
-    cy.get('input[name=files]').type(
-      'https://oceanprotocol.com/tech-whitepaper.pdf'
-    )
-    // Add file to main form
-    cy.get('input[name=files] + button').click()
-    // Add sample
-    cy.get('input[name=links]').type(
-      'https://oceanprotocol.com/tech-whitepaper.pdf'
-    )
-    cy.get('input[name=links] + button').click()
+    // Add url of file
+    cy.get('#files').type('https://oceanprotocol.com/tech-whitepaper.pdf')
+    cy.get('#files + button').click()
+    // Add url of sample
+    cy.get('#links').type('https://oceanprotocol.com/tech-whitepaper.pdf')
+    cy.get('#links + button').click()
     // Access
     cy.get('#access').select('Download')
     // Author

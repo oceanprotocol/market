@@ -5,6 +5,7 @@
   "pluginsFile": "tests/integration/cypress/plugins/index.js",
   "screenshotsFolder": "tests/integration/cypress/screenshots",
   "videosFolder": "tests/integration/cypress/videos",
+  "downloadsFolder": "tests/integration/cypress/downloads",
   "supportFile": "tests/integration/cypress/support/index.js",
   "testFiles": ["**/*.spec.js"]
 }
