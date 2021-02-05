@@ -1,12 +1,28 @@
 /// <reference types="Cypress" />
+
+const HDWalletProvider = require('@truffle/hdwallet-provider')
+const Web3 = require('web3')
+const bip39 = require('bip39')
+
 describe('Publish', () => {
   beforeEach(() => {
+    const provider = new HDWalletProvider({
+      mnemonic: {
+        phrase: bip39.generateMnemonic()
+      },
+      providerOrUrl: 'http://localhost:8545'
+    })
+
+    window.web3 = new Web3(provider)
+
     cy.visit('/publish')
 
     cy.get('main header p', { timeout: 60000 }).should(
       'contain',
       'Highlight the important features'
     )
+
+    cy.contains('Connect Wallet').click()
   })
 
   it('should publish a data set with all fields', () => {

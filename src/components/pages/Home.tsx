@@ -29,7 +29,7 @@ const queryLatest = {
   offset: 9,
   query: {
     query_string: {
-      query: `-isInPurgatory:true`
+      query: `_exists_:id -isInPurgatory:true`
     }
   },
   sort: { created: -1 }
