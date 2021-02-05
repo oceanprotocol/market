@@ -15,12 +15,7 @@ import web3 from 'web3'
 
 const poolSharesQuery = gql`
   query PoolShares($user: String) {
-    poolShares(
-      orderBy: balance
-      orderDirection: desc
-      where: { userAddress: $user, balance_gt: 0.001 }
-      first: 1000
-    ) {
+    poolShares(where: { userAddress: $user, balance_gt: 0.001 }, first: 1000) {
       id
       balance
       userAddress {
@@ -58,7 +53,6 @@ function calculateUserLiquidity(poolShare: PoolShare) {
     poolShare.poolId.datatokenReserve
   const totalLiquidity = ocean + datatokens * poolShare.poolId.consumePrice
   return totalLiquidity
-  // <Conversion price={`${totalLiquidity}`} className={styles.totalLiquidity} />
 }
 
 function Symbol({ tokens }: { tokens: PoolSharePoolIdTokens[] }) {
