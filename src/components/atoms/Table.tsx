@@ -7,6 +7,7 @@ interface TableProps extends IDataTableProps {
   isLoading?: boolean
   emptyMessage?: string
   sortField?: string
+  sortAsc?: boolean
 }
 
 function Empty({ message }: { message?: string }): ReactElement {
@@ -21,6 +22,7 @@ export default function Table({
   pagination,
   paginationPerPage,
   sortField,
+  sortAsc,
   ...props
 }: TableProps): ReactElement {
   return (
@@ -35,8 +37,8 @@ export default function Table({
       noDataComponent={<Empty message={emptyMessage} />}
       progressPending={isLoading}
       progressComponent={<Loader />}
-      defaultSortField="symbol"
-      defaultSortAsc
+      defaultSortField={sortField}
+      defaultSortAsc={sortAsc}
       {...props}
     />
   )

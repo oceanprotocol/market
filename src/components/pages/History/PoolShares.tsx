@@ -9,7 +9,7 @@ import { gql, useQuery } from '@apollo/client'
 import {
   PoolShares as PoolSharesList,
   PoolShares_poolShares as PoolShare,
-  PoolShares_poolShares_poolId_tokens
+  PoolShares_poolShares_poolId_tokens as PoolSharePoolIdTokens
 } from '../../../@types/apollo/PoolShares'
 import web3 from 'web3'
 
@@ -38,29 +38,30 @@ const poolSharesQuery = gql`
         oceanReserve
         datatokenReserve
         totalShares
-        spotPrice
+        consumePrice
       }
     }
   }
 `
 
-function UserLiquidity({ row }: { row: PoolShare }): ReactElement {
-  console.log('balance', row.balance)
-  console.log('totalShares', row.poolId.totalShares)
-  console.log('oceanReserve', row.poolId.oceanReserve)
-  console.log('datatokenReserve', row.poolId.datatokenReserve)
-  console.log('spotPrice', row.poolId.spotPrice)
-  console.log('-------------------------------------')
-  const ocean = (row.balance / row.poolId.totalShares) * row.poolId.oceanReserve
-  const datatokens =
-    (row.balance / row.poolId.totalShares) * row.poolId.datatokenReserve
-  const totalLiquidity = ocean + datatokens * row.poolId.spotPrice
-  return (
-    <Conversion price={`${totalLiquidity}`} className={styles.totalLiquidity} />
-  )
+interface Asset {
+  userLiquidity: number
+  poolShare: PoolShare
 }
 
-function Symbol({ tokens }: { tokens: PoolShares_poolShares_poolId_tokens[] }) {
+function calculateUserLiquidity(poolShare: PoolShare) {
+  const ocean =
+    (poolShare.balance / poolShare.poolId.totalShares) *
+    poolShare.poolId.oceanReserve
+  const datatokens =
+    (poolShare.balance / poolShare.poolId.totalShares) *
+    poolShare.poolId.datatokenReserve
+  const totalLiquidity = ocean + datatokens * poolShare.poolId.consumePrice
+  return totalLiquidity
+  // <Conversion price={`${totalLiquidity}`} className={styles.totalLiquidity} />
+}
+
+function Symbol({ tokens }: { tokens: PoolSharePoolIdTokens[] }) {
   const symbol = tokens.find((token) => token.tokenId !== null)
   return <>{symbol.tokenId.symbol}</>
 }
@@ -68,9 +69,9 @@ function Symbol({ tokens }: { tokens: PoolShares_poolShares_poolId_tokens[] }) {
 const columns = [
   {
     name: 'Data Set',
-    selector: function getAssetRow(row: PoolShare) {
+    selector: function getAssetRow(row: Asset) {
       const did = web3.utils
-        .toChecksumAddress(row.poolId.datatokenAddress)
+        .toChecksumAddress(row.poolShare.poolId.datatokenAddress)
         .replace('0x', 'did:op:')
       return <AssetTitle did={did} />
     },
@@ -78,30 +79,36 @@ const columns = [
   },
   {
     name: 'Datatoken',
-    selector: function getSymbol(row: PoolShare) {
-      return <Symbol tokens={row.poolId.tokens} />
+    selector: function getSymbol(row: Asset) {
+      return <Symbol tokens={row.poolShare.poolId.tokens} />
     }
   },
   {
     name: 'Your Pool Shares',
-    selector: function getAssetRow(row: PoolShare) {
-      return <PriceUnit price={row.balance} symbol="pool shares" small />
+    selector: function getAssetRow(row: Asset) {
+      return (
+        <PriceUnit price={row.poolShare.balance} symbol="pool shares" small />
+      )
     },
     right: true
   },
   {
     name: 'Value',
-    selector: function getAssetRow(row: PoolShare) {
-      return <UserLiquidity row={row} />
+    selector: function getAssetRow(row: Asset) {
+      return (
+        <Conversion
+          price={`${row.userLiquidity}`}
+          className={styles.totalLiquidity}
+        />
+      )
     },
-    right: true,
-    sortable: true
+    right: true
   }
 ]
 
 export default function PoolShares(): ReactElement {
   const { accountId } = useOcean()
-  const [assets, setAssets] = useState<PoolShare[]>()
+  const [assets, setAssets] = useState<Asset[]>()
   const { data, loading } = useQuery<PoolSharesList>(poolSharesQuery, {
     variables: {
       user: accountId?.toLowerCase()
@@ -111,7 +118,15 @@ export default function PoolShares(): ReactElement {
 
   useEffect(() => {
     if (!data) return
-    setAssets(data.poolShares)
+    const assetList: Asset[] = []
+    data.poolShares.forEach((poolShare) => {
+      const userLiquidity = calculateUserLiquidity(poolShare)
+      assetList.push({
+        poolShare: poolShare,
+        userLiquidity: userLiquidity
+      })
+    })
+    setAssets(assetList)
   }, [data, loading])
 
   return (
@@ -119,7 +134,8 @@ export default function PoolShares(): ReactElement {
       columns={columns}
       data={assets}
       isLoading={loading}
-      sortField="Datatoken"
+      sortField="userLiquidity"
+      sortAsc={false}
     />
   )
 }

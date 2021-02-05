@@ -133,15 +133,11 @@ export default function Pool(): ReactElement {
       setCreatorPoolTokens(creatorPoolTokens)
 
       // Calculate creator's provided liquidity based on pool tokens
-      console.log('creatorPoolTokens', Number(creatorPoolTokens))
-      console.log('totalPoolTokens', Number(creatorPoolTokens))
       const creatorOceanBalance =
         (Number(creatorPoolTokens) / Number(totalPoolTokens)) * price.ocean
 
       const creatorDtBalance =
         (Number(creatorPoolTokens) / Number(totalPoolTokens)) * price.datatoken
-      console.log('creatorOceanBalance', Number(creatorOceanBalance))
-      console.log('creatorDtBalance', Number(creatorDtBalance))
 
       const creatorLiquidity = {
         ocean: creatorOceanBalance,
@@ -177,7 +173,6 @@ export default function Pool(): ReactElement {
     const totalUserLiquidityInOcean =
       userLiquidity?.ocean + userLiquidity?.datatoken * price?.value
     setTotalUserLiquidityInOcean(totalUserLiquidityInOcean)
-    console.log('price.value', price.value)
     const totalLiquidityInOcean = price?.ocean + price?.datatoken * price?.value
     setTotalLiquidityInOcean(totalLiquidityInOcean)
   }, [userLiquidity, price, poolTokens, totalPoolTokens])
