@@ -4,6 +4,14 @@
   min-width: 17rem;
 }
 
+@media (min-width: 40rem) {
+  .details {
+    padding: calc(var(--spacer) / 2);
+    margin-right: calc(var(--spacer) / 3);
+    min-width: 20rem;
+  }
+}
+
 .details > section[class*='feedback'] {
   margin-top: calc(var(--spacer) / 2);
 }
@@ -46,10 +54,24 @@
 .actions button:hover {
   display: block;
   font-size: var(--font-size-mini);
-  margin-top: calc(var(--spacer) / 4);
+  margin-top: calc(var(--spacer) / 3);
   text-align: left;
 }
 
 .actions button:first-child {
   margin-top: calc(var(--spacer) / 8);
+}
+
+.walletLogo {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: calc(var(--spacer) / 8);
+  margin-top: -0.2rem;
+}
+
+.actions select {
+  margin-top: calc(var(--spacer) / 4);
+  min-width: 6rem;
 }

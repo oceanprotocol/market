@@ -2,7 +2,7 @@
 
 <h1 align="center">Ocean Marketplace</h1>
 
-[![Build Status](https://travis-ci.com/oceanprotocol/market.svg?token=3psqw6c8KMDqfdGQ2x6d&branch=main)](https://travis-ci.com/oceanprotocol/market)
+[![Build Status](https://github.com/oceanprotocol/market/workflows/CI/badge.svg)](https://github.com/oceanprotocol/market/actions)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/c85f4d8b-95e1-4010-95a4-2bacd8b90981/deploy-status)](https://app.netlify.com/sites/market-oceanprotocol/deploys)
 [![Maintainability](https://api.codeclimate.com/v1/badges/d114f94f75e6efd2ee71/maintainability)](https://codeclimate.com/repos/5e3933869a31771fd800011c/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/d114f94f75e6efd2ee71/test_coverage)](https://codeclimate.com/repos/5e3933869a31771fd800011c/test_coverage)
@@ -240,13 +240,19 @@ This will launch the Storybook UI with all stories loaded under [localhost:4000]
 
 ## ✨ Code Style
 
-For linting and auto-formatting you can use from the root of the project:
+Code style is automatically enforced through [ESLint](https://eslint.org) & [Prettier](https://prettier.io) rules:
+
+- Git pre-commit hook runs `prettier` on staged files, setup with [Husky](https://typicode.github.io/husky)
+- VS Code suggested extensions and settings for auto-formatting on file save
+- CI runs a linting & TypeScript typings check with `npm run lint`, and fails if errors are found
+
+For running linting and auto-formatting manually, you can use from the root of the project:
 
 ```bash
-# lint all js with eslint
+# linting check, also runs Typescript typings check
 npm run lint
 
-# auto format all js & css with prettier, taking all configs into account
+# auto format all files in the project with prettier, taking all configs into account
 npm run format
 ```
 
@@ -294,7 +300,7 @@ Every branch or Pull Request is automatically deployed to multiple hosts for red
 - [Vercel](https://vercel.com)
 - [S3](https://aws.amazon.com/s3/)
 
-A link to a deployment will appear under each Pull Request.
+A link to a preview deployment will appear under each Pull Request.
 
 The latest deployment of the `main` branch is automatically aliased to `market.oceanprotocol.com`, where the deployment on Netlify is the current live deployment.
 
