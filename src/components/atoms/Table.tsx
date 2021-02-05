@@ -6,6 +6,7 @@ import styles from './Table.module.css'
 interface TableProps extends IDataTableProps {
   isLoading?: boolean
   emptyMessage?: string
+  sortField?: string
 }
 
 function Empty({ message }: { message?: string }): ReactElement {
@@ -19,6 +20,7 @@ export default function Table({
   emptyMessage,
   pagination,
   paginationPerPage,
+  sortField,
   ...props
 }: TableProps): ReactElement {
   return (
@@ -33,6 +35,8 @@ export default function Table({
       noDataComponent={<Empty message={emptyMessage} />}
       progressPending={isLoading}
       progressComponent={<Loader />}
+      defaultSortField="symbol"
+      defaultSortAsc
       {...props}
     />
   )

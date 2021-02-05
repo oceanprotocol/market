@@ -8,7 +8,8 @@ import AssetTitle from '../../molecules/AssetListTitle'
 import { gql, useQuery } from '@apollo/client'
 import {
   PoolShares as PoolSharesList,
-  PoolShares_poolShares as PoolShare
+  PoolShares_poolShares as PoolShare,
+  PoolShares_poolShares_poolId_tokens
 } from '../../../@types/apollo/PoolShares'
 import web3 from 'web3'
 
@@ -17,7 +18,7 @@ const poolSharesQuery = gql`
     poolShares(
       orderBy: balance
       orderDirection: desc
-      where: { userAddress: $user }
+      where: { userAddress: $user, balance_gt: 0.001 }
       first: 1000
     ) {
       id
@@ -29,26 +30,39 @@ const poolSharesQuery = gql`
         id
         datatokenAddress
         lockedValue
+        tokens {
+          tokenId {
+            symbol
+          }
+        }
+        oceanReserve
+        datatokenReserve
+        totalShares
+        spotPrice
       }
     }
   }
 `
 
-function UserLiquidity({ lockedValue }: { lockedValue: string }): ReactElement {
+function UserLiquidity({ row }: { row: PoolShare }): ReactElement {
+  console.log('balance', row.balance)
+  console.log('totalShares', row.poolId.totalShares)
+  console.log('oceanReserve', row.poolId.oceanReserve)
+  console.log('datatokenReserve', row.poolId.datatokenReserve)
+  console.log('spotPrice', row.poolId.spotPrice)
+  console.log('-------------------------------------')
+  const ocean = (row.balance / row.poolId.totalShares) * row.poolId.oceanReserve
+  const datatokens =
+    (row.balance / row.poolId.totalShares) * row.poolId.datatokenReserve
+  const totalLiquidity = ocean + datatokens * row.poolId.spotPrice
   return (
-    <Conversion price={`${lockedValue}`} className={styles.totalLiquidity} />
+    <Conversion price={`${totalLiquidity}`} className={styles.totalLiquidity} />
   )
 }
 
-function Symbol({ tokenAddress }: { tokenAddress: string }) {
-  const { ocean } = useOcean()
-  const [symbol, setSymbol] = useState<string>()
-  ocean.pool.oceanAddress.toLowerCase() === tokenAddress.toLowerCase()
-    ? setSymbol('OCEAN')
-    : ocean.datatokens.getSymbol(tokenAddress).then((value) => {
-        setSymbol(value)
-      })
-  return <>{symbol}</>
+function Symbol({ tokens }: { tokens: PoolShares_poolShares_poolId_tokens[] }) {
+  const symbol = tokens.find((token) => token.tokenId !== null)
+  return <>{symbol.tokenId.symbol}</>
 }
 
 const columns = [
@@ -65,7 +79,7 @@ const columns = [
   {
     name: 'Datatoken',
     selector: function getSymbol(row: PoolShare) {
-      return <Symbol tokenAddress={row.poolId.datatokenAddress} />
+      return <Symbol tokens={row.poolId.tokens} />
     }
   },
   {
@@ -78,9 +92,10 @@ const columns = [
   {
     name: 'Value',
     selector: function getAssetRow(row: PoolShare) {
-      return <UserLiquidity lockedValue={row.poolId.lockedValue} />
+      return <UserLiquidity row={row} />
     },
-    right: true
+    right: true,
+    sortable: true
   }
 ]
 
@@ -99,5 +114,12 @@ export default function PoolShares(): ReactElement {
     setAssets(data.poolShares)
   }, [data, loading])
 
-  return <Table columns={columns} data={assets} isLoading={loading} />
+  return (
+    <Table
+      columns={columns}
+      data={assets}
+      isLoading={loading}
+      sortField="Datatoken"
+    />
+  )
 }
