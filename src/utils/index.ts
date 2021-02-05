@@ -1,6 +1,4 @@
 import axios, { AxiosResponse } from 'axios'
-import { toast } from 'react-toastify'
-import { File as FileMetadata } from '@oceanprotocol/lib'
 
 export function updateQueryStringParameter(
   uri: string,
@@ -40,27 +38,6 @@ export const isBrowser = typeof window !== 'undefined'
 
 export function toStringNoMS(date: Date): string {
   return date.toISOString().replace(/\.[0-9]{3}Z/, 'Z')
-}
-
-export async function getFileInfo(url: string): Promise<FileMetadata> {
-  const response: AxiosResponse = await axios({
-    method: 'POST',
-    url: 'https://fileinfo.oceanprotocol.com',
-    data: { url }
-  })
-
-  if (response.status > 299 || !response.data) {
-    toast.error('Could not connect to File API')
-    return
-  }
-
-  const { contentLength, contentType } = response.data.result
-
-  return {
-    contentLength,
-    contentType: contentType || '', // need to do that cause lib-js File interface requires contentType
-    url
-  }
 }
 
 export async function fetchData(url: string): Promise<AxiosResponse['data']> {
