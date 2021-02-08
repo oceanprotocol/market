@@ -27,7 +27,6 @@ export default function SearchBar({
     e.preventDefault()
     if (value === '') return
     const urlEncodedValue = encodeURIComponent(value)
-    console.log('VALUE: ', urlEncodedValue)
     const url = await addExistingParamsToUrl(location, 'text')
     navigate(`${url}&text=${urlEncodedValue}`)
   }
