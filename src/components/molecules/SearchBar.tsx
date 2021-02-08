@@ -26,8 +26,10 @@ export default function SearchBar({
   async function startSearch(e: FormEvent<HTMLButtonElement>) {
     e.preventDefault()
     if (value === '') return
+    const urlEncodedValue = encodeURIComponent(value)
+    console.log('VALUE: ', urlEncodedValue)
     const url = await addExistingParamsToUrl(location, 'text')
-    navigate(`${url}&text=${value}`)
+    navigate(`${url}&text=${urlEncodedValue}`)
   }
 
   return (

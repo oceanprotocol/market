@@ -12,12 +12,12 @@ declare type TagsProps = {
 }
 
 const Tag = ({ tag, noLinks }: { tag: string; noLinks?: boolean }) => {
-  const encodedTag = encodeURIComponent(tag)
+  const urlEncodedTag = encodeURIComponent(tag)
   return noLinks ? (
     <span className={styles.tag}>{tag}</span>
   ) : (
     <Link
-      to={`/search?tags=${encodedTag}&sort=created&sortOrder=desc`}
+      to={`/search?tags=${urlEncodedTag}&sort=created&sortOrder=desc`}
       className={styles.tag}
       title={tag}
     >
