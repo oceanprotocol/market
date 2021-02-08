@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent, ReactElement } from 'react'
-import { useNavigate } from '@reach/router'
+import { navigate } from 'gatsby'
 import styles from './SearchBar.module.css'
 import Button from '../atoms/Button'
 import Input from '../atoms/Input'
@@ -17,7 +17,6 @@ export default function SearchBar({
   filters?: boolean
   size?: 'small' | 'large'
 }): ReactElement {
-  const navigate = useNavigate()
   const [value, setValue] = useState(initialValue || '')
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
@@ -27,8 +26,9 @@ export default function SearchBar({
   async function startSearch(e: FormEvent<HTMLButtonElement>) {
     e.preventDefault()
     if (value === '') return
+    const urlEncodedValue = encodeURIComponent(value)
     const url = await addExistingParamsToUrl(location, 'text')
-    navigate(`${url}&text=${value}`)
+    navigate(`${url}&text=${urlEncodedValue}`)
   }
 
   return (
