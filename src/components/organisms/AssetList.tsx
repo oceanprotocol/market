@@ -38,7 +38,10 @@ const AssetList: React.FC<AssetListProps> = ({
     <>
       <div className={styleClasses}>
         {/* 
-          HEADS UP! The `!(assets[0] as any).last_block` check is a failsafe so AssetList does not break app when some Aquarius query returns something unexpected for empty results.
+          HEADS UP! The `!(assets[0] as any).last_block` check 
+          is a failsafe so AssetList does not break app when 
+          some Aquarius query returns something unexpected for 
+          what should be empty results.
         */}
         {assets.length > 0 && !(assets[0] as any).last_block ? (
           assets.map((ddo) => <AssetTeaser ddo={ddo} key={ddo.id} />)

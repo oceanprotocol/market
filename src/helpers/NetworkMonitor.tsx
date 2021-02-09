@@ -6,6 +6,7 @@ import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHel
 import contractAddresses from '@oceanprotocol/contracts/artifacts/address.json'
 
 const refreshInterval = 5000 // 5 sec.
+
 export function NetworkMonitor(): ReactElement {
   const {
     connect,
@@ -42,6 +43,8 @@ export function NetworkMonitor(): ReactElement {
       Logger.error(error.message)
     }
   }
+
+  // Periodically refresh wallet balance
   useEffect(() => {
     if (!account) return
 
@@ -56,20 +59,27 @@ export function NetworkMonitor(): ReactElement {
   // Re-connect on mount when network is different from user network.
   // Bit nasty to just overwrite the initialConfig passed to OceanProvider
   // while it's connecting to that, but YOLO.
-  // useEffect(() => {
-  //   if (!web3 || !networkId) return
+  useEffect(() => {
+    if (!web3 || !networkId) return
 
-  //   async function init() {
-  //     if (
-  //       (await web3.eth.getChainId()) ===
-  //       (config as ConfigHelperConfig).networkId
-  //     )
-  //       return
+    async function init() {
+      const chainIdWeb3 = await web3.eth.getChainId()
+      const chainIdConfig = (config as ConfigHelperConfig).networkId
+      console.log(chainIdWeb3)
+      console.log(chainIdConfig)
 
-  //     await handleNetworkChanged(networkId)
-  //   }
-  //   init()
-  // }, [web3, networkId])
+      // HEADS UP! MetaMask built-in `Localhost 8545` network selection
+      // will have `1337` as chainId but we use `8996` in our config
+      if (
+        chainIdWeb3 === chainIdConfig ||
+        (chainIdWeb3 === 1337 && chainIdConfig === 8996)
+      )
+        return
+
+      await handleNetworkChanged(networkId)
+    }
+    init()
+  }, [web3, networkId])
 
   // Handle network change events
   useEffect(() => {
