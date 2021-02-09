@@ -8,6 +8,7 @@ interface TableProps extends IDataTableProps {
   emptyMessage?: string
   sortField?: string
   sortAsc?: boolean
+  className?: string
 }
 
 function Empty({ message }: { message?: string }): ReactElement {
@@ -23,13 +24,14 @@ export default function Table({
   paginationPerPage,
   sortField,
   sortAsc,
+  className,
   ...props
 }: TableProps): ReactElement {
   return (
     <DataTable
       columns={columns}
       data={data}
-      className={styles.table}
+      className={className ? styles.table + ` ${className}` : styles.table}
       noHeader
       pagination={pagination || data?.length >= 9}
       paginationPerPage={paginationPerPage || 10}
