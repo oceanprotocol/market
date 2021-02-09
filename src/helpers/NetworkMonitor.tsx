@@ -65,8 +65,6 @@ export function NetworkMonitor(): ReactElement {
     async function init() {
       const chainIdWeb3 = await web3.eth.getChainId()
       const chainIdConfig = (config as ConfigHelperConfig).networkId
-      console.log(chainIdWeb3)
-      console.log(chainIdConfig)
 
       // HEADS UP! MetaMask built-in `Localhost 8545` network selection
       // will have `1337` as chainId but we use `8996` in our config
