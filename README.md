@@ -58,10 +58,16 @@ cd barge
 ./start_ocean.sh
 ```
 
+Barge will deploy contracts to the local Ganache node which will take some time. At the end the compiled artifacts need to be copied over to this project into `node_modules/@oceanprotocol/contracts/artifacts`. This script will do that for you:
+
+```bash
+./scripts/copy-contracts.sh
+```
+
 Finally, set environment variables to use this local connection in `.env` in the app:
 
 ```bash
-# modify env variables, Rinkeby is enabled by default when using those files
+# modify env variables, setting GATSBY_NETWORK="development"
 cp .env.example .env
 ```
 
