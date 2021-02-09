@@ -137,15 +137,16 @@ const columns = [
     }
   },
   {
-    name: 'Pool Liquidity',
-    selector: function getAssetRow(row: Asset) {
-      return <PoolLiquidity row={row} />
-    }
-  },
-  {
     name: 'Your Liquidity',
     selector: function getAssetRow(row: Asset) {
       return <YourLiquidity row={row} />
+    },
+    right: true
+  },
+  {
+    name: 'Pool Liquidity',
+    selector: function getAssetRow(row: Asset) {
+      return <PoolLiquidity row={row} />
     },
     right: true
   }
