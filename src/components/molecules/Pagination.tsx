@@ -6,13 +6,11 @@ interface PaginationProps {
   totalPages: number
   currentPage: number
   onPageChange(selected: number): void
-  hrefBuilder(pageIndex: number): void
 }
 
 export default function Pagination({
   totalPages,
   currentPage,
-  hrefBuilder,
   onPageChange
 }: PaginationProps): ReactElement {
   const [smallViewport, setSmallViewport] = useState(true)
@@ -40,7 +38,6 @@ export default function Pagination({
       marginPagesDisplayed={smallViewport ? 0 : 1}
       pageRangeDisplayed={smallViewport ? 3 : 6}
       onPageChange={(data) => onPageChange(data.selected)}
-      hrefBuilder={(pageIndex) => hrefBuilder(pageIndex)}
       disableInitialCallback
       previousLabel="←"
       nextLabel="→"

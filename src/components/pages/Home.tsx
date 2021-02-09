@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import SearchBar from '../molecules/SearchBar'
 import styles from './Home.module.css'
-import AssetQueryList from '../organisms/AssetQueryList'
+import AssetList from '../organisms/AssetList'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import Container from '../atoms/Container'
 import Loader from '../atoms/Loader'
@@ -84,7 +84,7 @@ function SectionQueryResult({
       {loading ? (
         <LoaderArea />
       ) : (
-        result && <AssetQueryList queryResult={result} />
+        result && <AssetList assets={result.results} showPagination={false} />
       )}
       {action && action}
     </section>

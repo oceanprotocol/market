@@ -1,12 +1,14 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import SearchBar from '../../molecules/SearchBar'
-import AssetQueryList from '../../organisms/AssetQueryList'
+import AssetList from '../../organisms/AssetList'
 import styles from './index.module.css'
 import queryString from 'query-string'
 import PriceFilter from './filterPrice'
 import Sort from './sort'
-import { getResults, addExistingParamsToUrl } from './utils'
+import { getResults } from './utils'
+import { navigate } from 'gatsby'
+import { updateQueryStringParameter } from '../../../utils'
 import Loader from '../../atoms/Loader'
 import { useOcean } from '@oceanprotocol/react'
 
@@ -44,12 +46,21 @@ export default function SearchPage({
     text,
     owner,
     tags,
-    page,
     sort,
+    page,
     priceType,
     sortOrder,
     config.metadataCacheUri
   ])
+
+  function setPage(page: number) {
+    const newUrl = updateQueryStringParameter(
+      location.pathname + location.search,
+      'page',
+      `${page}`
+    )
+    return navigate(newUrl)
+  }
 
   return (
     <>
@@ -69,7 +80,19 @@ export default function SearchPage({
         </div>
       </div>
       <div className={styles.results}>
-        {loading ? <Loader /> : <AssetQueryList queryResult={queryResult} />}
+        {loading ? (
+          <Loader />
+        ) : queryResult ? (
+          <AssetList
+            assets={queryResult.results}
+            showPagination
+            page={queryResult.page}
+            totalPages={queryResult.totalPages}
+            onPageChange={setPage}
+          />
+        ) : (
+          ''
+        )}
       </div>
     </>
   )
