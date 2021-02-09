@@ -38,7 +38,7 @@ export default function FilesInput(props: InputProps): ReactElement {
     return () => {
       source.cancel()
     }
-  }, [fileUrl])
+  }, [fileUrl, config.providerUri])
 
   async function handleButtonClick(e: React.SyntheticEvent, url: string) {
     // hack so the onBlur-triggered validation does not show,
