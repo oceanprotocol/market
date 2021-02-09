@@ -8,7 +8,7 @@ import classNames from 'classnames/bind'
 const cx = classNames.bind(styles)
 
 declare type AssetListProps = {
-  assets: Array<any>
+  assets: DDO[]
   showPagination: boolean
   page?: number
   totalPages?: number
@@ -37,8 +37,11 @@ const AssetList: React.FC<AssetListProps> = ({
   return (
     <>
       <div className={styleClasses}>
-        {assets.length > 0 ? (
-          assets.map((ddo: DDO) => <AssetTeaser ddo={ddo} key={ddo.id} />)
+        {/* 
+          HEADS UP! The `!(assets[0] as any).last_block` check is a failsafe so AssetList does not break app when some Aquarius query returns something unexpected for empty results.
+        */}
+        {assets.length > 0 && !(assets[0] as any).last_block ? (
+          assets.map((ddo) => <AssetTeaser ddo={ddo} key={ddo.id} />)
         ) : (
           <div className={styles.empty}>No results found.</div>
         )}
