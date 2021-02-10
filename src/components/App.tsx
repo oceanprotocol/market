@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement } from 'react'
 import Footer from './organisms/Footer'
 import Header from './organisms/Header'
 import Styles from '../global/Styles'
