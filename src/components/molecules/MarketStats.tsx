@@ -30,7 +30,7 @@ export default function MarketStats(): ReactElement {
 
   return (
     <div className={styles.stats}>
-      <Conversion price={`${totalValueLocked}`} hideApproximationSign />{' '}
+      <Conversion price={`${totalValueLocked}`} hideApproximateSymbol />{' '}
       <abbr title="Total Value Locked">TVL</abbr> across{' '}
       <strong>{poolCount}</strong> data set pools that contain{' '}
       <PriceUnit price={totalOceanLiquidity} small className={styles.total} />{' '}
