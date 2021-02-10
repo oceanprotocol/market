@@ -115,6 +115,7 @@ export default function FormAdd({
             type="number"
             name="amount"
             max={amountMax}
+            min="0"
             value={`${values.amount}`}
             step="any"
             prefix={<CoinSelect dtSymbol={dtSymbol} setCoin={setCoin} />}

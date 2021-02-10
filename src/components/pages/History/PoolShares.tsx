@@ -1,26 +1,107 @@
-import { useMetadata, useOcean } from '@oceanprotocol/react'
+import { useOcean } from '@oceanprotocol/react'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Table from '../../atoms/Table'
-import { DDO, Logger, MetadataCache } from '@oceanprotocol/lib'
-import PriceUnit from '../../atoms/Price/PriceUnit'
 import Conversion from '../../atoms/Price/Conversion'
 import styles from './PoolShares.module.css'
 import AssetTitle from '../../molecules/AssetListTitle'
+import { gql, useQuery } from '@apollo/client'
+import {
+  PoolShares as PoolSharesList,
+  PoolShares_poolShares as PoolShare,
+  PoolShares_poolShares_poolId_tokens as PoolSharePoolIdTokens
+} from '../../../@types/apollo/PoolShares'
+import web3 from 'web3'
+import Token from '../../organisms/AssetActions/Pool/Token'
+
+const poolSharesQuery = gql`
+  query PoolShares($user: String) {
+    poolShares(where: { userAddress: $user, balance_gt: 0.001 }, first: 1000) {
+      id
+      balance
+      userAddress {
+        id
+      }
+      poolId {
+        id
+        datatokenAddress
+        valueLocked
+        tokens {
+          tokenId {
+            symbol
+          }
+        }
+        oceanReserve
+        datatokenReserve
+        totalShares
+        consumePrice
+        spotPrice
+      }
+    }
+  }
+`
 
 interface Asset {
-  ddo: DDO
-  shares: string
+  userLiquidity: number
+  poolShare: PoolShare
 }
 
-function TotalLiquidity({ ddo }: { ddo: DDO }): ReactElement {
-  const { price } = useMetadata(ddo)
-  const totalLiquidityInOcean = price?.ocean + price?.datatoken * price?.value
+function calculateUserLiquidity(poolShare: PoolShare) {
+  const ocean =
+    (poolShare.balance / poolShare.poolId.totalShares) *
+    poolShare.poolId.oceanReserve
+  const datatokens =
+    (poolShare.balance / poolShare.poolId.totalShares) *
+    poolShare.poolId.datatokenReserve
+  const totalLiquidity = ocean + datatokens * poolShare.poolId.consumePrice
+  return totalLiquidity
+}
 
+function findValidToken(tokens: PoolSharePoolIdTokens[]) {
+  const symbol = tokens.find((token) => token.tokenId !== null)
+  return symbol.tokenId.symbol
+}
+
+function Symbol({ tokens }: { tokens: PoolSharePoolIdTokens[] }) {
+  return <>{findValidToken(tokens)}</>
+}
+
+function Liquidity({ row, type }: { row: Asset; type: string }) {
+  let price = ``
+  let oceanTokenBalance = ''
+  let dataTokenBalance = ''
+  if (type === 'user') {
+    price = `${row.userLiquidity}`
+    const userShare = row.poolShare.balance / row.poolShare.poolId.totalShares
+    oceanTokenBalance = (
+      userShare * row.poolShare.poolId.oceanReserve
+    ).toString()
+    dataTokenBalance = (
+      userShare * row.poolShare.poolId.datatokenReserve
+    ).toString()
+  }
+  if (type === 'pool') {
+    price = `${
+      Number(row.poolShare.poolId.oceanReserve) +
+      Number(row.poolShare.poolId.datatokenReserve) *
+        row.poolShare.poolId.consumePrice
+    }`
+    oceanTokenBalance = row.poolShare.poolId.oceanReserve.toString()
+    dataTokenBalance = row.poolShare.poolId.datatokenReserve.toString()
+  }
   return (
-    <Conversion
-      price={`${totalLiquidityInOcean}`}
-      className={styles.totalLiquidity}
-    />
+    <div className={styles.yourLiquidity}>
+      <Conversion
+        price={price}
+        className={styles.totalLiquidity}
+        hideApproximateSymbol
+      />
+      <Token symbol="OCEAN" balance={oceanTokenBalance} noIcon />
+      <Token
+        symbol={findValidToken(row.poolShare.poolId.tokens)}
+        balance={dataTokenBalance}
+        noIcon
+      />
+    </div>
   )
 }
 
@@ -28,59 +109,68 @@ const columns = [
   {
     name: 'Data Set',
     selector: function getAssetRow(row: Asset) {
-      return <AssetTitle ddo={row.ddo} />
+      const did = web3.utils
+        .toChecksumAddress(row.poolShare.poolId.datatokenAddress)
+        .replace('0x', 'did:op:')
+      return <AssetTitle did={did} />
     },
     grow: 2
   },
   {
     name: 'Datatoken',
-    selector: 'ddo.dataTokenInfo.symbol'
+    selector: function getSymbol(row: Asset) {
+      return <Symbol tokens={row.poolShare.poolId.tokens} />
+    }
   },
   {
-    name: 'Your Pool Shares',
+    name: 'Your Liquidity',
     selector: function getAssetRow(row: Asset) {
-      return <PriceUnit price={row.shares} symbol="pool shares" small />
+      return <Liquidity row={row} type="user" />
     },
     right: true
   },
   {
-    name: 'Total Pool Liquidity',
+    name: 'Pool Liquidity',
     selector: function getAssetRow(row: Asset) {
-      return <TotalLiquidity ddo={row.ddo} />
+      return <Liquidity row={row} type="pool" />
     },
     right: true
   }
 ]
 
 export default function PoolShares(): ReactElement {
-  const { ocean, accountId, config } = useOcean()
+  const { accountId } = useOcean()
   const [assets, setAssets] = useState<Asset[]>()
-  const [isLoading, setIsLoading] = useState(false)
+  const { data, loading } = useQuery<PoolSharesList>(poolSharesQuery, {
+    variables: {
+      user: accountId?.toLowerCase()
+    },
+    pollInterval: 20000
+  })
 
   useEffect(() => {
-    async function getAssets() {
-      if (!ocean || !accountId || !config?.metadataCacheUri) return
-      setIsLoading(true)
+    if (!data) return
+    const assetList: Asset[] = []
+    data.poolShares.forEach((poolShare) => {
+      const userLiquidity = calculateUserLiquidity(poolShare)
+      assetList.push({
+        poolShare: poolShare,
+        userLiquidity: userLiquidity
+      })
+    })
+    setAssets(assetList)
+  }, [data, loading])
 
-      try {
-        const pools = await ocean.pool.getPoolSharesByAddress(accountId)
-        const metadataCache = new MetadataCache(config.metadataCacheUri, Logger)
-        const result: Asset[] = []
-
-        for (const pool of pools) {
-          const ddo = await metadataCache.retrieveDDO(pool.did)
-          ddo && result.push({ ddo, shares: pool.shares })
-        }
-
-        setAssets(result)
-      } catch (error) {
-        Logger.error(error.message)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-    getAssets()
-  }, [ocean, accountId, config.metadataCacheUri])
-
-  return <Table columns={columns} data={assets} isLoading={isLoading} />
+  return (
+    <Table
+      columns={columns}
+      className={styles.poolSharesTable}
+      data={assets}
+      pagination
+      paginationPerPage={5}
+      isLoading={loading}
+      sortField="userLiquidity"
+      sortAsc={false}
+    />
+  )
 }
