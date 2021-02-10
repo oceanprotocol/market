@@ -28,7 +28,7 @@ export async function fileinfo(
     const { contentLength, contentType } = response.data[0]
 
     return {
-      contentLength,
+      contentLength: contentLength || '',
       contentType: contentType || '', // need to do that cause lib-js File interface requires contentType
       url
     }
