@@ -71,13 +71,12 @@ function Liquidity({ row, type }: { row: Asset; type: string }) {
   let dataTokenBalance = ''
   if (type === 'user') {
     price = `${row.userLiquidity}`
+    const userShare = row.poolShare.balance / row.poolShare.poolId.totalShares
     oceanTokenBalance = (
-      (row.poolShare.balance / row.poolShare.poolId.totalShares) *
-      row.poolShare.poolId.oceanReserve
+      userShare * row.poolShare.poolId.oceanReserve
     ).toString()
     dataTokenBalance = (
-      (row.poolShare.balance / row.poolShare.poolId.totalShares) *
-      row.poolShare.poolId.datatokenReserve
+      userShare * row.poolShare.poolId.datatokenReserve
     ).toString()
   }
   if (type === 'pool') {
