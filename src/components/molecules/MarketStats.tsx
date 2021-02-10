@@ -9,7 +9,7 @@ const getTotalPoolsValues = gql`
     poolFactories {
       totalValueLocked
       totalOceanLiquidity
-      poolCount
+      finalizedPoolCount
     }
   }
 `
@@ -25,7 +25,7 @@ export default function MarketStats(): ReactElement {
 
     setTotalValueLocked(data.poolFactories[0].totalValueLocked)
     setTotalOceanLiquidity(data.poolFactories[0].totalOceanLiquidity)
-    setPoolCount(data.poolFactories[0].poolCount)
+    setPoolCount(data.poolFactories[0].finalizedPoolCount)
   }, [data])
 
   return (
