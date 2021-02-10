@@ -52,6 +52,8 @@ export default function App({
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>()
 
   useEffect(() => {
+    if (!(config as ConfigHelperConfig)?.subgraphUri) return
+
     const newClient = new ApolloClient({
       link: new HttpLink({
         uri: `${
@@ -62,31 +64,31 @@ export default function App({
       cache: new InMemoryCache()
     })
     setClient(newClient)
-  }, [config])
+  }, [config, client])
   return (
     <Styles>
-      {client ? (
-        <ApolloProvider client={client}>
-          <div className={styles.app}>
-            <Header />
-            {(props as PageProps).uri === '/' && (
-              <Alert text={warning} state="info" />
-            )}
-            {isAccountInPurgatory && (
-              <Alert
-                title={purgatory.title}
-                badge={`Reason: ${accountPurgatory?.reason}`}
-                text={purgatory.description}
-                state="error"
-              />
-            )}
+      <div className={styles.app}>
+        <Header />
+        {(props as PageProps).uri === '/' && (
+          <Alert text={warning} state="info" />
+        )}
+        {isAccountInPurgatory && (
+          <Alert
+            title={purgatory.title}
+            badge={`Reason: ${accountPurgatory?.reason}`}
+            text={purgatory.description}
+            state="error"
+          />
+        )}
+        {client ? (
+          <ApolloProvider client={client}>
             <main className={styles.main}>{children}</main>
-            <Footer />
-          </div>
-        </ApolloProvider>
-      ) : (
-        <></>
-      )}
+          </ApolloProvider>
+        ) : (
+          <></>
+        )}
+        <Footer />
+      </div>
     </Styles>
   )
 }

@@ -6,7 +6,6 @@ import { useInView } from 'react-intersection-observer'
 import { gql, useQuery } from '@apollo/client'
 import Conversion from '../atoms/Price/Conversion'
 import PriceUnit from '../atoms/Price/PriceUnit'
-import Price from '../organisms/AssetContent/Pricing/FormPricing/Price'
 
 interface MarketStatsResponse {
   datasets: {
@@ -26,7 +25,7 @@ const getTotalPoolsValues = gql`
   query PoolsData {
     poolFactories {
       totalLockedValue
-      totalOceanLiquidity
+      totalLiquidity
       poolCount
       finalizedPoolCount
     }
@@ -36,14 +35,14 @@ const getTotalPoolsValues = gql`
 export default function MarketStats(): ReactElement {
   const [ref, inView] = useInView()
   const [stats, setStats] = useState<MarketStatsResponse>()
-  const [totalLockedValue, setTotalLockedValue] = useState<string>()
-  const [totalOceanLiquidity, setTotalOceanLiquidity] = useState<string>()
+  const [totalValueLocked, setTotalValueLocked] = useState<string>()
+  const [totalLiquidity, setTotalLiquidity] = useState<string>()
   const { data } = useQuery(getTotalPoolsValues)
 
   useEffect(() => {
     if (!data) return
-    setTotalLockedValue(data.poolFactories[0].totalLockedValue)
-    setTotalOceanLiquidity(data.poolFactories[0].totalOceanLiquidity)
+    setTotalValueLocked(data.poolFactories[0].totalLockedValue)
+    setTotalLiquidity(data.poolFactories[0].totalLiquidity)
   }, [data])
 
   useEffect(() => {
@@ -82,13 +81,12 @@ export default function MarketStats(): ReactElement {
 
   return (
     <div className={styles.stats} ref={ref}>
-      <Conversion price={`${totalLockedValue}`} hideApproximationSign />{' '}
-      <abbr title="Total Value Locked">TVL</abbr> (total value locked) across{' '}
+      <Conversion price={`${totalValueLocked}`} hideApproximationSign />{' '}
+      <abbr title="Total Value Locked">TVL</abbr> across{' '}
       <strong>{stats?.datasets.pools}</strong> data set pools that contain{' '}
-      <PriceUnit price={totalOceanLiquidity} small className={styles.total} />{' '}
+      <PriceUnit price={totalLiquidity} small className={styles.total} /> and
       and datatokens for each pool.
       <br />
-      <strong>{stats?.datasets.none}</strong> data sets have no price set yet.
     </div>
   )
 }

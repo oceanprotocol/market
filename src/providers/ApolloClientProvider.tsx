@@ -9,7 +9,7 @@ import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHel
 import { useOcean } from '@oceanprotocol/react'
 import React, { useState, useEffect, ReactNode, ReactElement } from 'react'
 
-export default function ApolloClentProvider({
+export default function ApolloClientProvider({
   children
 }: {
   children: ReactNode
@@ -18,6 +18,8 @@ export default function ApolloClentProvider({
   const { config } = useOcean()
 
   useEffect(() => {
+    if (!(config as ConfigHelperConfig)?.subgraphUri) return
+
     const newClient = new ApolloClient({
       link: new HttpLink({
         uri: `${
@@ -27,10 +29,11 @@ export default function ApolloClentProvider({
       }),
       cache: new InMemoryCache()
     })
+
     setClient(newClient)
-  }, [config])
+  }, [config, client])
 
   return <ApolloProvider client={client}>{children}</ApolloProvider>
 }
 
-export { ApolloClentProvider }
+export { ApolloClientProvider }
