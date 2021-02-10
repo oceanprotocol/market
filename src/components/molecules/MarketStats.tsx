@@ -17,14 +17,15 @@ const getTotalPoolsValues = gql`
 export default function MarketStats(): ReactElement {
   const [totalValueLocked, setTotalValueLocked] = useState<string>()
   const [totalOceanLiquidity, setTotalOceanLiquidity] = useState<string>()
-  const [poolCount, setPoolCount] = useState<string>()
+  const [poolCount, setPoolCount] = useState<number>()
   const { data } = useQuery(getTotalPoolsValues)
 
   useEffect(() => {
     if (!data) return
+
     setTotalValueLocked(data.poolFactories[0].totalValueLocked)
     setTotalOceanLiquidity(data.poolFactories[0].totalOceanLiquidity)
-    setPoolCount(data.poolFactories[0].totalOceanLiquidity)
+    setPoolCount(data.poolFactories[0].poolCount)
   }, [data])
 
   return (
