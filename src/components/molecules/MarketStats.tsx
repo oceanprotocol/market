@@ -3,6 +3,7 @@ import styles from './MarketStats.module.css'
 import { gql, useQuery } from '@apollo/client'
 import Conversion from '../atoms/Price/Conversion'
 import PriceUnit from '../atoms/Price/PriceUnit'
+import Tooltip from '../atoms/Tooltip'
 
 const getTotalPoolsValues = gql`
   query PoolsData {
@@ -35,6 +36,12 @@ export default function MarketStats(): ReactElement {
       <strong>{poolCount}</strong> data set pools that contain{' '}
       <PriceUnit price={totalOceanLiquidity} small className={styles.total} />{' '}
       and datatokens for each pool.
+      <Tooltip
+        className={styles.info}
+        content="Counted on-chain from our pool factory. Does not filter out data sets in "
+        reference="list-purgatory"
+        link="https://github.com/oceanprotocol/list-purgatory"
+      />
       <br />
     </div>
   )
