@@ -65,54 +65,41 @@ function Symbol({ tokens }: { tokens: PoolSharePoolIdTokens[] }) {
   return <>{findValidToken(tokens)}</>
 }
 
-function YourLiquidity({ row }: { row: Asset }) {
+function Liquidity({ row, type }: { row: Asset; type: string }) {
+  let price = ``
+  let oceanTokenBalance = ''
+  let dataTokenBalance = ''
+  if (type === 'user') {
+    price = `${row.userLiquidity}`
+    oceanTokenBalance = (
+      (row.poolShare.balance / row.poolShare.poolId.totalShares) *
+      row.poolShare.poolId.oceanReserve
+    ).toString()
+    dataTokenBalance = (
+      (row.poolShare.balance / row.poolShare.poolId.totalShares) *
+      row.poolShare.poolId.datatokenReserve
+    ).toString()
+  }
+  if (type === 'pool') {
+    price = `${
+      Number(row.poolShare.poolId.oceanReserve) +
+      Number(row.poolShare.poolId.datatokenReserve) *
+        row.poolShare.poolId.consumePrice
+    }`
+    oceanTokenBalance = row.poolShare.poolId.oceanReserve.toString()
+    dataTokenBalance = row.poolShare.poolId.datatokenReserve.toString()
+  }
   return (
     <div className={styles.yourLiquidity}>
       <Conversion
-        price={`${row.userLiquidity}`}
+        price={price}
         className={styles.totalLiquidity}
         hideApproximateSymbol
       />
-      <Token
-        symbol="OCEAN"
-        balance={(
-          (row.poolShare.balance / row.poolShare.poolId.totalShares) *
-          row.poolShare.poolId.oceanReserve
-        ).toString()}
-        noIcon
-      />
+      <Token symbol="OCEAN" balance={oceanTokenBalance} noIcon />
       <Token
         symbol={findValidToken(row.poolShare.poolId.tokens)}
-        balance={(
-          (row.poolShare.balance / row.poolShare.poolId.totalShares) *
-          row.poolShare.poolId.datatokenReserve
-        ).toString()}
-        noIcon
-      />
-    </div>
-  )
-}
-
-function PoolLiquidity({ row }: { row: Asset }) {
-  return (
-    <div className={styles.yourLiquidity}>
-      <Conversion
-        price={`${
-          Number(row.poolShare.poolId.oceanReserve) +
-          Number(row.poolShare.poolId.datatokenReserve) *
-            row.poolShare.poolId.consumePrice
-        }`}
-        className={styles.totalLiquidity}
-        hideApproximateSymbol
-      />
-      <Token
-        symbol="OCEAN"
-        balance={row.poolShare.poolId.oceanReserve.toString()}
-        noIcon
-      />
-      <Token
-        symbol={findValidToken(row.poolShare.poolId.tokens)}
-        balance={row.poolShare.poolId.datatokenReserve.toString()}
+        balance={dataTokenBalance}
         noIcon
       />
     </div>
@@ -139,14 +126,14 @@ const columns = [
   {
     name: 'Your Liquidity',
     selector: function getAssetRow(row: Asset) {
-      return <YourLiquidity row={row} />
+      return <Liquidity row={row} type="user" />
     },
     right: true
   },
   {
     name: 'Pool Liquidity',
     selector: function getAssetRow(row: Asset) {
-      return <PoolLiquidity row={row} />
+      return <Liquidity row={row} type="pool" />
     },
     right: true
   }
@@ -180,6 +167,8 @@ export default function PoolShares(): ReactElement {
       columns={columns}
       className={styles.poolSharesTable}
       data={assets}
+      pagination
+      paginationPerPage={5}
       isLoading={loading}
       sortField="userLiquidity"
       sortAsc={false}

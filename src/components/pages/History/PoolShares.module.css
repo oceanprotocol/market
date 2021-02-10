@@ -17,12 +17,16 @@
 }
 
 .poolSharesTable [class*='AssetListTitle-module--title'] {
-  line-height: 0;
+  line-height: 0 !important;
+}
+
+.poolSharesTable [class*='Token-module--token'] div {
+  color: var(--color-secondary);
 }
 
 @media (min-width: 30rem) {
   .poolSharesTable [class*='AssetListTitle-module--title'] {
-    line-height: 0;
+    line-height: 0 !important;
   }
 }
 
