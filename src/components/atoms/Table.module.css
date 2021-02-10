@@ -15,8 +15,12 @@
 
 .table [role='columnheader'] {
   text-transform: uppercase;
-  color: var(--color-secondary);
   font-size: var(--font-size-small);
+}
+
+.table [role='columnheader'] > span,
+.table [role='columnheader'] > div {
+  color: var(--color-secondary);
 }
 
 .table [role='row']:not(:last-of-type) {

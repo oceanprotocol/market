@@ -148,7 +148,6 @@ export default function Pool(): ReactElement {
       const totalCreatorLiquidityInOcean =
         creatorLiquidity?.ocean + creatorLiquidity?.datatoken * price?.value
       setCreatorTotalLiquidityInOcean(totalCreatorLiquidityInOcean)
-
       const creatorPoolShare =
         price?.ocean &&
         price?.datatoken &&
@@ -174,7 +173,6 @@ export default function Pool(): ReactElement {
     const totalUserLiquidityInOcean =
       userLiquidity?.ocean + userLiquidity?.datatoken * price?.value
     setTotalUserLiquidityInOcean(totalUserLiquidityInOcean)
-
     const totalLiquidityInOcean = price?.ocean + price?.datatoken * price?.value
     setTotalLiquidityInOcean(totalLiquidityInOcean)
   }, [userLiquidity, price, poolTokens, totalPoolTokens])
