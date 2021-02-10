@@ -24,7 +24,7 @@ const poolSharesQuery = gql`
       poolId {
         id
         datatokenAddress
-        lockedValue
+        valueLocked
         tokens {
           tokenId {
             symbol
