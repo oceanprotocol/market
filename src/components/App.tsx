@@ -7,15 +7,7 @@ import { useSiteMetadata } from '../hooks/useSiteMetadata'
 import { useOcean } from '@oceanprotocol/react'
 import Alert from './atoms/Alert'
 import { graphql, PageProps, useStaticQuery } from 'gatsby'
-import {
-  ApolloClient,
-  ApolloProvider,
-  HttpLink,
-  InMemoryCache,
-  NormalizedCacheObject
-} from '@apollo/client'
-import fetch from 'cross-fetch'
-import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
+
 const contentQuery = graphql`
   query AppQuery {
     purgatory: allFile(filter: { relativePath: { eq: "purgatory.json" } }) {
@@ -45,26 +37,9 @@ export default function App({
   const { warning } = useSiteMetadata()
   const {
     isInPurgatory: isAccountInPurgatory,
-    purgatoryData: accountPurgatory,
-    config
+    purgatoryData: accountPurgatory
   } = useOcean()
 
-  const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>()
-
-  useEffect(() => {
-    if (!(config as ConfigHelperConfig)?.subgraphUri) return
-
-    const newClient = new ApolloClient({
-      link: new HttpLink({
-        uri: `${
-          (config as ConfigHelperConfig).subgraphUri
-        }/subgraphs/name/oceanprotocol/ocean-subgraph`,
-        fetch
-      }),
-      cache: new InMemoryCache()
-    })
-    setClient(newClient)
-  }, [config, client])
   return (
     <Styles>
       <div className={styles.app}>
@@ -80,13 +55,7 @@ export default function App({
             state="error"
           />
         )}
-        {client ? (
-          <ApolloProvider client={client}>
-            <main className={styles.main}>{children}</main>
-          </ApolloProvider>
-        ) : (
-          <></>
-        )}
+        <main className={styles.main}>{children}</main>
         <Footer />
       </div>
     </Styles>

@@ -31,7 +31,7 @@ export default function ApolloClientProvider({
     })
 
     setClient(newClient)
-  }, [config, client])
+  }, [config])
 
   return <ApolloProvider client={client}>{children}</ApolloProvider>
 }
