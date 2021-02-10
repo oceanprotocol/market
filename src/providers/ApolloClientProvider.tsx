@@ -7,6 +7,7 @@ import {
 } from '@apollo/client'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import { useOcean } from '@oceanprotocol/react'
+import fetch from 'cross-fetch'
 import React, { useState, useEffect, ReactNode, ReactElement } from 'react'
 
 export default function ApolloClientProvider({
@@ -43,7 +44,11 @@ export default function ApolloClientProvider({
     setClient(newClient)
   }, [config])
 
-  return <ApolloProvider client={client}>{children}</ApolloProvider>
+  return client ? (
+    <ApolloProvider client={client}>{children}</ApolloProvider>
+  ) : (
+    <></>
+  )
 }
 
 export { ApolloClientProvider }
