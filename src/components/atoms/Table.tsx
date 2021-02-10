@@ -6,6 +6,9 @@ import styles from './Table.module.css'
 interface TableProps extends IDataTableProps {
   isLoading?: boolean
   emptyMessage?: string
+  sortField?: string
+  sortAsc?: boolean
+  className?: string
 }
 
 function Empty({ message }: { message?: string }): ReactElement {
@@ -19,13 +22,16 @@ export default function Table({
   emptyMessage,
   pagination,
   paginationPerPage,
+  sortField,
+  sortAsc,
+  className,
   ...props
 }: TableProps): ReactElement {
   return (
     <DataTable
       columns={columns}
       data={data}
-      className={styles.table}
+      className={className ? styles.table + ` ${className}` : styles.table}
       noHeader
       pagination={pagination || data?.length >= 9}
       paginationPerPage={paginationPerPage || 10}
@@ -33,6 +39,8 @@ export default function Table({
       noDataComponent={<Empty message={emptyMessage} />}
       progressPending={isLoading}
       progressComponent={<Loader />}
+      defaultSortField={sortField}
+      defaultSortAsc={sortAsc}
       {...props}
     />
   )
