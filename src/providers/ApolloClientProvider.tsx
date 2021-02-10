@@ -14,8 +14,18 @@ export default function ApolloClientProvider({
 }: {
   children: ReactNode
 }): ReactElement {
-  const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>()
   const { config } = useOcean()
+  const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>(
+    new ApolloClient({
+      link: new HttpLink({
+        uri: `${
+          (config as ConfigHelperConfig).subgraphUri
+        }/subgraphs/name/oceanprotocol/ocean-subgraph`,
+        fetch
+      }),
+      cache: new InMemoryCache()
+    })
+  )
 
   useEffect(() => {
     if (!(config as ConfigHelperConfig)?.subgraphUri) return
