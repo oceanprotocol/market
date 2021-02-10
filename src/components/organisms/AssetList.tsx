@@ -8,7 +8,7 @@ import classNames from 'classnames/bind'
 const cx = classNames.bind(styles)
 
 declare type AssetListProps = {
-  assets: Array<any>
+  assets: DDO[]
   showPagination: boolean
   page?: number
   totalPages?: number
@@ -38,7 +38,7 @@ const AssetList: React.FC<AssetListProps> = ({
     <>
       <div className={styleClasses}>
         {assets.length > 0 ? (
-          assets.map((ddo: DDO) => <AssetTeaser ddo={ddo} key={ddo.id} />)
+          assets.map((ddo) => <AssetTeaser ddo={ddo} key={ddo.id} />)
         ) : (
           <div className={styles.empty}>No results found.</div>
         )}

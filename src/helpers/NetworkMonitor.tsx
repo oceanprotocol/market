@@ -3,8 +3,10 @@ import { useOcean } from '@oceanprotocol/react'
 import { getOceanConfig } from './wrapRootElement'
 import { Logger } from '@oceanprotocol/lib'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
+import contractAddresses from '@oceanprotocol/contracts/artifacts/address.json'
 
 const refreshInterval = 5000 // 5 sec.
+
 export function NetworkMonitor(): ReactElement {
   const {
     connect,
@@ -26,10 +28,12 @@ export function NetworkMonitor(): ReactElement {
 
       // add local dev values
       ...(chainId === '8996' && {
-        factoryAddress: '0x312213d6f6b5FCF9F56B7B8946A6C727Bf4Bc21f',
-        poolFactoryAddress: '0xF9E633CBeEB2A474D3Fe22261046C99e805beeC4',
-        fixedRateExchangeAddress: '0xefdcb16b16C7842ec27c6fdCf56adc316B9B29B8',
-        metadataContractAddress: '0xEBe77E16736359Bf0F9013F6017242a5971cAE76'
+        factoryAddress: contractAddresses.development?.DTFactory,
+        poolFactoryAddress: contractAddresses.development?.BFactory,
+        fixedRateExchangeAddress:
+          contractAddresses.development?.FixedRateExchange,
+        metadataContractAddress: contractAddresses.development?.Metadata,
+        oceanTokenAddress: contractAddresses.development?.Ocean
       })
     }
 
@@ -39,6 +43,8 @@ export function NetworkMonitor(): ReactElement {
       Logger.error(error.message)
     }
   }
+
+  // Periodically refresh wallet balance
   useEffect(() => {
     if (!account) return
 
@@ -49,6 +55,7 @@ export function NetworkMonitor(): ReactElement {
       clearInterval(balanceInterval)
     }
   }, [networkId, account])
+
   // Re-connect on mount when network is different from user network.
   // Bit nasty to just overwrite the initialConfig passed to OceanProvider
   // while it's connecting to that, but YOLO.
@@ -56,9 +63,14 @@ export function NetworkMonitor(): ReactElement {
     if (!web3 || !networkId) return
 
     async function init() {
+      const chainIdWeb3 = await web3.eth.getChainId()
+      const chainIdConfig = (config as ConfigHelperConfig).networkId
+
+      // HEADS UP! MetaMask built-in `Localhost 8545` network selection
+      // will have `1337` as chainId but we use `8996` in our config
       if (
-        (await web3.eth.getChainId()) ===
-        (config as ConfigHelperConfig).networkId
+        chainIdWeb3 === chainIdConfig ||
+        (chainIdWeb3 === 1337 && chainIdConfig === 8996)
       )
         return
 
