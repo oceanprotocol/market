@@ -106,6 +106,14 @@ export default function HomePage(): ReactElement {
       <SectionQueryResult
         title="Highest Liquidity Pools"
         query={queryHighest}
+        action={
+          <Button
+            style="text"
+            to="/search?priceType=pool&sort=liquidity&sortOrder=desc"
+          >
+            Highest Liquidity pools →
+          </Button>
+        }
       />
 
       <SectionQueryResult
