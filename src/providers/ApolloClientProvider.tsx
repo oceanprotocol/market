@@ -10,6 +10,18 @@ import { useOcean } from '@oceanprotocol/react'
 import fetch from 'cross-fetch'
 import React, { useState, useEffect, ReactNode, ReactElement } from 'react'
 
+function createClient(subgraphUri: string) {
+  const client = new ApolloClient({
+    link: new HttpLink({
+      uri: `${subgraphUri}/subgraphs/name/oceanprotocol/ocean-subgraph`,
+      fetch
+    }),
+    cache: new InMemoryCache()
+  })
+
+  return client
+}
+
 export default function ApolloClientProvider({
   children
 }: {
@@ -21,16 +33,7 @@ export default function ApolloClientProvider({
   useEffect(() => {
     if (!(config as ConfigHelperConfig)?.subgraphUri) return
 
-    const newClient = new ApolloClient({
-      link: new HttpLink({
-        uri: `${
-          (config as ConfigHelperConfig).subgraphUri
-        }/subgraphs/name/oceanprotocol/ocean-subgraph`,
-        fetch
-      }),
-      cache: new InMemoryCache()
-    })
-
+    const newClient = createClient((config as ConfigHelperConfig).subgraphUri)
     setClient(newClient)
   }, [config])
 

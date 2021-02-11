@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import { OceanProvider } from '@oceanprotocol/react'
 import { ConfigHelper, Config } from '@oceanprotocol/lib'
 import { web3ModalOpts } from '../utils/wallet'
-import { NetworkMonitor } from './NetworkMonitor'
+import { getDevelopmentConfig, NetworkMonitor } from './NetworkMonitor'
 import appConfig from '../../app.config'
 import {
   ConfigHelperNetworkName,
@@ -27,7 +27,15 @@ export default function wrapRootElement({
   element: ReactElement
 }): ReactElement {
   const { network } = appConfig
-  const oceanInitialConfig = getOceanConfig(network)
+  const oceanInitialConfig = {
+    ...getOceanConfig(network),
+
+    // add local dev values
+    ...(network === 'development' && {
+      ...getDevelopmentConfig()
+    })
+  }
+
   return (
     <OceanProvider
       initialConfig={oceanInitialConfig}
