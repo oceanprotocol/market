@@ -5,6 +5,7 @@ import {
   InMemoryCache,
   NormalizedCacheObject
 } from '@apollo/client'
+import { Logger } from '@oceanprotocol/lib'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import { useOcean } from '@oceanprotocol/react'
 import fetch from 'cross-fetch'
@@ -31,7 +32,12 @@ export default function ApolloClientProvider({
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>()
 
   useEffect(() => {
-    if (!(config as ConfigHelperConfig)?.subgraphUri) return
+    if (!(config as ConfigHelperConfig)?.subgraphUri) {
+      Logger.error(
+        'No subgraphUri defined, preventing ApolloProvider from initialization.'
+      )
+      return
+    }
 
     const newClient = createClient((config as ConfigHelperConfig).subgraphUri)
     setClient(newClient)
