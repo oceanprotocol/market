@@ -30,13 +30,13 @@ export default function PublishedList(): ReactElement {
         sort: { 'price.ocean': -1 }
       }
       try {
-        setIsLoading(true)
-        const queryResult = await queryMetadata(
+        queryResult || setIsLoading(true)
+        const result = await queryMetadata(
           queryPublishedAssets as any,
           config.metadataCacheUri,
           source.token
         )
-        setQueryResult(queryResult)
+        setQueryResult(result)
       } catch (error) {
         Logger.error(error.message)
       } finally {
