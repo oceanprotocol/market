@@ -111,7 +111,7 @@ export default function HomePage(): ReactElement {
             style="text"
             to="/search?priceType=pool&sort=liquidity&sortOrder=desc"
           >
-            Highest Liquidity pools →
+            All data set pools →
           </Button>
         }
       />
