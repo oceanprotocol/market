@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react'
 import DataTable, { IDataTableProps } from 'react-data-table-component'
 import Loader from './Loader'
+import Pagination from '../molecules/Pagination'
 import styles from './Table.module.css'
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
@@ -36,14 +37,11 @@ export default function Table({
       noHeader
       pagination={pagination || data?.length >= 9}
       paginationPerPage={paginationPerPage || 10}
-      paginationComponentOptions={{ noRowsPerPage: true }}
-      paginationIconNext={<Arrow className={styles.arrow} />}
-      paginationIconPrevious={
-        <Arrow className={`${styles.arrow} ${styles.previous}`} />
-      }
+      // paginationComponentOptions={{ noRowsPerPage: true }}
       noDataComponent={<Empty message={emptyMessage} />}
       progressPending={isLoading}
       progressComponent={<Loader />}
+      paginationComponent={Pagination}
       defaultSortField={sortField}
       defaultSortAsc={sortAsc}
       {...props}

@@ -1,46 +1,32 @@
 import React, { useState, useEffect, ReactElement } from 'react'
 import ReactPaginate from 'react-paginate'
 import styles from './Pagination.module.css'
-import { ReactComponent as Arrow } from '../../images/arrow.svg'
+import PropTypes from 'prop-types'
 
 interface PaginationProps {
-  totalPages?: number
-  currentPage?: number
-  onChangePage(selected: number): void
-  rowsPerPage?: number
-  rowCount?: number
+  rowsPerPage: number
+  rowCount: number
+  onChangePage(page: number): void
 }
 
 export default function Pagination({
-  totalPages,
-  currentPage,
   rowsPerPage,
   rowCount,
   onChangePage
 }: PaginationProps): ReactElement {
   const [smallViewport, setSmallViewport] = useState(true)
-  const [totalPageNumbers, setTotalPageNumbers] = useState<number>()
-
-  function getTotalPages() {
-    if (totalPages) return setTotalPageNumbers(totalPages)
-    const doublePageNumber = rowCount / rowsPerPage
-    const total =
-      Math.round(doublePageNumber) < doublePageNumber
-        ? Math.round(doublePageNumber) + 1
-        : Math.round(doublePageNumber)
-    setTotalPageNumbers(total)
-  }
-
-  function onPageChange(page: number) {
-    totalPages ? onChangePage(page) : onChangePage(page + 1)
-  }
+  const doublePageNumber = rowCount / rowsPerPage
+  const totalPages =
+    Math.round(doublePageNumber) < doublePageNumber
+      ? Math.round(doublePageNumber) + 1
+      : Math.round(doublePageNumber)
+  console.log(totalPages)
 
   function viewportChange(mq: { matches: boolean }) {
     setSmallViewport(!mq.matches)
   }
 
   useEffect(() => {
-    getTotalPages()
     const mq = window.matchMedia('(min-width: 600px)')
     viewportChange(mq)
     mq.addEventListener('change', viewportChange)
@@ -50,18 +36,20 @@ export default function Pagination({
     }
   }, [])
 
-  return totalPageNumbers && totalPageNumbers > 1 ? (
+  return totalPages && totalPages > 1 ? (
     <ReactPaginate
-      pageCount={totalPageNumbers}
+      pageCount={totalPages}
       // react-pagination starts counting at 0, we start at 1
-      initialPage={currentPage ? currentPage - 1 : 0}
+      initialPage={0}
       // adapt based on media query match
       marginPagesDisplayed={smallViewport ? 0 : 1}
       pageRangeDisplayed={smallViewport ? 3 : 6}
-      onPageChange={(data) => onPageChange(data.selected)}
+      onPageChange={(data) => {
+        onChangePage(data.selected + 1)
+      }}
       disableInitialCallback
-      previousLabel={<Arrow className={`${styles.arrow} ${styles.previous}`} />}
-      nextLabel={<Arrow className={styles.arrow} />}
+      previousLabel="←"
+      nextLabel="→"
       breakLabel="..."
       containerClassName={styles.pagination}
       pageLinkClassName={styles.number}
