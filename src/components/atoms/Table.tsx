@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react'
 import DataTable, { IDataTableProps } from 'react-data-table-component'
 import Loader from './Loader'
 import styles from './Table.module.css'
+import { ReactComponent as Arrow } from '../../images/arrow.svg'
 
 interface TableProps extends IDataTableProps {
   isLoading?: boolean
@@ -36,6 +37,10 @@ export default function Table({
       pagination={pagination || data?.length >= 9}
       paginationPerPage={paginationPerPage || 10}
       paginationComponentOptions={{ noRowsPerPage: true }}
+      paginationIconNext={<Arrow className={styles.arrow} />}
+      paginationIconPrevious={
+        <Arrow className={`${styles.arrow} ${styles.previous}`} />
+      }
       noDataComponent={<Empty message={emptyMessage} />}
       progressPending={isLoading}
       progressComponent={<Loader />}
