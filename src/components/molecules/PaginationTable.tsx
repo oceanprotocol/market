@@ -1,7 +1,6 @@
 import React, { useState, useEffect, ReactElement } from 'react'
 import ReactPaginate from 'react-paginate'
 import styles from './Pagination.module.css'
-import PropTypes from 'prop-types'
 
 interface PaginationProps {
   rowsPerPage: number
@@ -20,7 +19,6 @@ export default function Pagination({
     Math.round(doublePageNumber) < doublePageNumber
       ? Math.round(doublePageNumber) + 1
       : Math.round(doublePageNumber)
-  console.log(totalPages)
 
   function viewportChange(mq: { matches: boolean }) {
     setSmallViewport(!mq.matches)
