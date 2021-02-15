@@ -24,10 +24,11 @@ export default function Pagination({
   function getTotalPages() {
     if (totalPages) return setTotalPageNumbers(totalPages)
     const doublePageNumber = rowCount / rowsPerPage
+    const roundedPageNumber = Math.round(doublePageNumber)
     const total =
-      Math.round(doublePageNumber) < doublePageNumber
-        ? Math.round(doublePageNumber) + 1
-        : Math.round(doublePageNumber)
+      roundedPageNumber < doublePageNumber
+        ? roundedPageNumber + 1
+        : roundedPageNumber
     setTotalPageNumbers(total)
   }
 
