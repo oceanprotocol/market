@@ -23,8 +23,8 @@
   color: var(--color-secondary);
 }
 
-.table [role='row']:not(:last-of-type) {
-  border-color: var(--border-color);
+.table [role='row'] {
+  border-bottom: 1px solid var(--border-color) !important;
 }
 
 .table + div [class*='rdt_Pagination'] {
