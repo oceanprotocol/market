@@ -44,7 +44,7 @@ export default function PublishedList(): ReactElement {
       }
     }
     getPublished()
-  }, [accountId, page])
+  }, [accountId, page, config.metadataCacheUri])
 
   return isLoading ? (
     <Loader />
