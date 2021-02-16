@@ -4,7 +4,7 @@ import { usePublish, useOcean } from '@oceanprotocol/react'
 import styles from './index.module.css'
 import FormPublish from './FormPublish'
 import FormAlgoPublish from './FormAlgoPublish'
-import PublishType from './PublishType'
+import { PublishType, TypeOfPublish } from './PublishType'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
 import { FormContent } from '../../../@types/Form'
 import { initialValues, validationSchema } from '../../../models/FormPublish'
@@ -55,7 +55,7 @@ export default function PublishPage({
   const hasFeedback = isLoading || error || success
 
   useEffect(() => {
-    publishType === 'data'
+    publishType === TypeOfPublish.dataset
       ? setTitle('Publishing Data Set')
       : setTitle('Publishing Algorithm')
   }, [publishType])
@@ -136,17 +136,21 @@ export default function PublishPage({
   return isInPurgatory && purgatoryData ? null : (
     <Formik
       initialValues={
-        publishType === 'data' ? initialValues : initialValuesAlgorithm
+        publishType === TypeOfPublish.dataset
+          ? initialValues
+          : initialValuesAlgorithm
       }
       initialStatus="empty"
       validationSchema={
-        publishType === 'data' ? validationSchema : validationSchemaAlgorithm
+        publishType === TypeOfPublish.dataset
+          ? validationSchema
+          : validationSchemaAlgorithm
       }
       onSubmit={async (values, { resetForm }) => {
         // move user's focus to top of screen
         window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
         // kick off publishing
-        publishType === 'data'
+        publishType === TypeOfPublish.dataset
           ? await handleSubmit(values, resetForm)
           : await handleAlgorithmSubmit(values, resetForm)
       }}
@@ -176,7 +180,7 @@ export default function PublishPage({
                 className={styles.alert}
               />
               <article className={styles.grid}>
-                {publishType === 'data' ? (
+                {publishType === TypeOfPublish.dataset ? (
                   <FormPublish content={content.form} />
                 ) : (
                   <FormAlgoPublish content={contentAlgoPublish.form} />
@@ -184,7 +188,7 @@ export default function PublishPage({
 
                 <aside>
                   <div className={styles.sticky}>
-                    {publishType === 'data' ? (
+                    {publishType === TypeOfPublish.dataset ? (
                       <MetadataPreview values={values} />
                     ) : (
                       <MetadataAlgorithmPreview values={values} />

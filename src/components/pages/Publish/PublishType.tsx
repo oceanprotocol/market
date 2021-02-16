@@ -5,12 +5,13 @@ import Button from '../../atoms/Button'
 
 const cx = classNames.bind(styles)
 
-const publishTypes = [
-  { display: 'data', value: 'data' },
-  { display: 'algorithms', value: 'algorithms' }
-]
+export const TypeOfPublish = {
+  dataset: 'dataset',
+  algorithm: 'algorithm'
+} as const
+type TypeOfPublish = typeof TypeOfPublish[keyof typeof TypeOfPublish]
 
-export default function PublishType({
+export function PublishType({
   type,
   setType
 }: {
@@ -18,14 +19,14 @@ export default function PublishType({
   setType: React.Dispatch<React.SetStateAction<string>>
 }): ReactElement {
   useEffect(() => {
-    setType(publishTypes[0].value)
+    setType(TypeOfPublish.dataset)
   }, [])
 
   return (
     <div>
-      {publishTypes.map((e, index) => {
+      {Object.keys(TypeOfPublish).map((key, index) => {
         const tabElement = cx({
-          [styles.selected]: e.value === type,
+          [styles.selected]: key === type,
           [styles.tabElement]: true
         })
         return (
@@ -35,10 +36,10 @@ export default function PublishType({
             key={index}
             className={tabElement}
             onClick={async () => {
-              setType(e.value)
+              setType(key)
             }}
           >
-            {e.display}
+            {key}
           </Button>
         )
       })}
