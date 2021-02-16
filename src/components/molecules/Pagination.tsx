@@ -42,6 +42,9 @@ export default function Pagination({
 
   useEffect(() => {
     getTotalPages()
+  }, [totalPages, rowCount])
+
+  useEffect(() => {
     const mq = window.matchMedia('(min-width: 600px)')
     viewportChange(mq)
     mq.addEventListener('change', viewportChange)
