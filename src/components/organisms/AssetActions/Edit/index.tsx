@@ -8,7 +8,7 @@ import {
 } from '../../../../models/FormEditMetadata'
 import { useAsset } from '../../../../providers/Asset'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
-import MetadataPreview from '../../../molecules/MetadataPreview'
+import { MetadataPreview } from '../../../molecules/MetadataPreview'
 import Debug from './Debug'
 import Web3Feedback from '../../../molecules/Wallet/Feedback'
 import FormEditMetadata from './FormEditMetadata'

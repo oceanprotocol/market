@@ -1,8 +1,12 @@
-import { MetadataMarket, MetadataPublishForm } from '../@types/MetaData'
+import {
+  MetadataMarket,
+  MetadataPublishForm,
+  AlgorithmPublishForm
+} from '../@types/MetaData'
 import { toStringNoMS } from '.'
 import AssetModel from '../models/Asset'
 import slugify from '@sindresorhus/slugify'
-import { DDO } from '@oceanprotocol/lib'
+import { DDO, MetadataAlgorithm } from '@oceanprotocol/lib'
 
 export function transformTags(value: string): string[] {
   const originalTags = value?.split(',')
@@ -66,6 +70,21 @@ export function checkIfTimeoutInPredefinedValues(
   return false
 }
 
+function getAlgoithComponent(selectedAlgorithm: string): MetadataAlgorithm {
+  return {
+    language: selectedAlgorithm === 'NodeJS' ? 'js' : 'py',
+    format: 'docker-image',
+    version: '0.1',
+    container: {
+      entrypoint:
+        selectedAlgorithm === 'NodeJS' ? 'node $ALGO' : 'python $ALGO',
+      image:
+        selectedAlgorithm === 'NodeJS' ? 'node' : 'oceanprotocol/algo_dockers',
+      tag: selectedAlgorithm === 'NodeJS' ? '10' : 'python-panda'
+    }
+  }
+}
+
 export function transformPublishFormToMetadata(
   {
     name,
@@ -94,6 +113,42 @@ export function transformPublishFormToMetadata(
       description,
       tags: transformTags(tags),
       links: typeof links !== 'string' ? links : [],
+      termsAndConditions
+    }
+  }
+
+  return metadata
+}
+
+export function transformPublishAlgorithmFormToMetadata(
+  {
+    name,
+    author,
+    description,
+    tags,
+    dockerImage,
+    termsAndConditions,
+    files
+  }: Partial<AlgorithmPublishForm>,
+  ddo?: DDO
+): MetadataMarket {
+  const currentTime = toStringNoMS(new Date())
+  const algorithm = getAlgoithComponent(dockerImage)
+  const metadata: MetadataMarket = {
+    main: {
+      ...AssetModel.main,
+      name,
+      type: 'algorithm',
+      author,
+      dateCreated: ddo ? ddo.created : currentTime,
+      files: typeof files !== 'string' && files,
+      license: 'https://market.oceanprotocol.com/terms',
+      algorithm: algorithm
+    },
+    additionalInformation: {
+      ...AssetModel.additionalInformation,
+      description,
+      tags: transformTags(tags),
       termsAndConditions
     }
   }

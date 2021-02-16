@@ -5,7 +5,10 @@ import Tags from '../atoms/Tags'
 import MetaItem from '../organisms/AssetContent/MetaItem'
 import styles from './MetadataPreview.module.css'
 import File from '../atoms/File'
-import { MetadataPublishForm } from '../../@types/MetaData'
+import {
+  MetadataPublishForm,
+  AlgorithmPublishForm
+} from '../../@types/MetaData'
 import Button from '../atoms/Button'
 import { transformTags } from '../../utils/metadata'
 
@@ -82,7 +85,7 @@ function Sample({ url }: { url: string }) {
   )
 }
 
-export default function MetadataPreview({
+export function MetadataPreview({
   values
 }: {
   values: Partial<MetadataPublishForm>
@@ -112,6 +115,35 @@ export default function MetadataPreview({
         {typeof values.links !== 'string' && values.links?.length && (
           <Sample url={(values.links[0] as FileMetadata).url} />
         )}
+        {values.tags && <Tags items={transformTags(values.tags)} />}
+      </header>
+
+      <MetaFull values={values} />
+    </div>
+  )
+}
+
+export function MetadataAlgorithmPreview({
+  values
+}: {
+  values: Partial<AlgorithmPublishForm>
+}): ReactElement {
+  return (
+    <div className={styles.preview}>
+      <h2 className={styles.previewTitle}>Preview</h2>
+      <header>
+        {values.name && <h3 className={styles.title}>{values.name}</h3>}
+        {values.description && <Description description={values.description} />}
+
+        <div className={styles.asset}>
+          {values.files?.length > 0 && typeof values.files !== 'string' && (
+            <File
+              file={values.files[0] as FileMetadata}
+              className={styles.file}
+              small
+            />
+          )}
+        </div>
         {values.tags && <Tags items={transformTags(values.tags)} />}
       </header>
 

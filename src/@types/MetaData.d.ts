@@ -39,6 +39,18 @@ export interface MetadataPublishForm {
   links?: string | File[]
 }
 
+export interface AlgorithmPublishForm {
+  // ---- required fields ----
+  name: string
+  description: string
+  files: string | File[]
+  author: string
+  dockerImage: string
+  termsAndConditions: boolean
+  // ---- optional fields ----
+  tags?: string
+}
+
 export interface ServiceMetadataMarket extends ServiceMetadata {
   attributes: MetadataMarket
 }

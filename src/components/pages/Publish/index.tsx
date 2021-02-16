@@ -1,18 +1,31 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useState, useEffect } from 'react'
 import { Formik } from 'formik'
 import { usePublish, useOcean } from '@oceanprotocol/react'
 import styles from './index.module.css'
 import FormPublish from './FormPublish'
+import FormAlgoPublish from './FormAlgoPublish'
 import PublishType from './PublishType'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
 import { FormContent } from '../../../@types/Form'
 import { initialValues, validationSchema } from '../../../models/FormPublish'
 import {
+  initialValues as initialValuesAlgorithm,
+  validationSchema as validationSchemaAlgorithm
+} from '../../../models/FormAlgoPublish'
+
+import {
   transformPublishFormToMetadata,
+  transformPublishAlgorithmFormToMetadata,
   mapTimeoutStringToSeconds
 } from '../../../utils/metadata'
-import MetadataPreview from '../../molecules/MetadataPreview'
-import { MetadataPublishForm } from '../../../@types/MetaData'
+import {
+  MetadataPreview,
+  MetadataAlgorithmPreview
+} from '../../molecules/MetadataPreview'
+import {
+  MetadataPublishForm,
+  AlgorithmPublishForm
+} from '../../../@types/MetaData'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import { Logger, Metadata } from '@oceanprotocol/lib'
 import { Persist } from '../../atoms/FormikPersist'
@@ -24,19 +37,28 @@ import Button from '../../atoms/Button'
 const formName = 'ocean-publish-form'
 
 export default function PublishPage({
-  content
+  content,
+  contentAlgoPublish
 }: {
   content: { warning: string; form: FormContent }
+  contentAlgoPublish: { warning: string; form: FormContent }
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { publish, publishError, isLoading, publishStepText } = usePublish()
   const { isInPurgatory, purgatoryData } = useOcean()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
+  const [title, setTitle] = useState<string>()
   const [did, setDid] = useState<string>()
   const [publishType, setPublishType] = useState<string>()
 
   const hasFeedback = isLoading || error || success
+
+  useEffect(() => {
+    publishType === 'data'
+      ? setTitle('Publishing Data Set')
+      : setTitle('Publishing Algorithm')
+  }, [publishType])
 
   async function handleSubmit(
     values: Partial<MetadataPublishForm>,
@@ -81,16 +103,52 @@ export default function PublishPage({
     }
   }
 
+  async function handleAlgorithmSubmit(
+    values: Partial<AlgorithmPublishForm>,
+    resetForm: () => void
+  ): Promise<void> {
+    const metadata = transformPublishAlgorithmFormToMetadata(values)
+
+    try {
+      Logger.log('Publish Algorithm with ', metadata)
+
+      const ddo = await publish((metadata as unknown) as Metadata, 'access')
+
+      // Publish failed
+      if (!ddo || publishError) {
+        setError(publishError || 'Publishing DDO failed.')
+        Logger.error(publishError || 'Publishing DDO failed.')
+        return
+      }
+
+      // Publish succeeded
+      setDid(ddo.id)
+      setSuccess(
+        '🎉 Successfully published. 🎉 Now create a price for your algorithm.'
+      )
+      resetForm()
+    } catch (error) {
+      setError(error.message)
+      Logger.error(error.message)
+    }
+  }
+
   return isInPurgatory && purgatoryData ? null : (
     <Formik
-      initialValues={initialValues}
+      initialValues={
+        publishType === 'data' ? initialValues : initialValuesAlgorithm
+      }
       initialStatus="empty"
-      validationSchema={validationSchema}
+      validationSchema={
+        publishType === 'data' ? validationSchema : validationSchemaAlgorithm
+      }
       onSubmit={async (values, { resetForm }) => {
         // move user's focus to top of screen
         window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
         // kick off publishing
-        await handleSubmit(values, resetForm)
+        publishType === 'data'
+          ? await handleSubmit(values, resetForm)
+          : await handleAlgorithmSubmit(values, resetForm)
       }}
     >
       {({ values }) => (
@@ -99,7 +157,7 @@ export default function PublishPage({
 
           {hasFeedback ? (
             <MetadataFeedback
-              title="Publishing Data Set"
+              title={title}
               error={error}
               success={success}
               loading={publishStepText}
@@ -111,21 +169,26 @@ export default function PublishPage({
             />
           ) : (
             <>
-              <PublishType
-                type={publishType}
-                setType={setPublishType}
-              ></PublishType>
+              <PublishType type={publishType} setType={setPublishType} />
               <Alert
                 text={content.warning}
                 state="info"
                 className={styles.alert}
               />
               <article className={styles.grid}>
-                <FormPublish content={content.form} />
+                {publishType === 'data' ? (
+                  <FormPublish content={content.form} />
+                ) : (
+                  <FormAlgoPublish content={contentAlgoPublish.form} />
+                )}
 
                 <aside>
                   <div className={styles.sticky}>
-                    <MetadataPreview values={values} />
+                    {publishType === 'data' ? (
+                      <MetadataPreview values={values} />
+                    ) : (
+                      <MetadataAlgorithmPreview values={values} />
+                    )}
                     <Web3Feedback />
                   </div>
                 </aside>
