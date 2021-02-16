@@ -7,6 +7,18 @@ import contractAddresses from '@oceanprotocol/contracts/artifacts/address.json'
 
 const refreshInterval = 5000 // 5 sec.
 
+export function getDevelopmentConfig(): Partial<ConfigHelperConfig> {
+  return {
+    factoryAddress: contractAddresses.development?.DTFactory,
+    poolFactoryAddress: contractAddresses.development?.BFactory,
+    fixedRateExchangeAddress: contractAddresses.development?.FixedRateExchange,
+    metadataContractAddress: contractAddresses.development?.Metadata,
+    oceanTokenAddress: contractAddresses.development?.Ocean,
+    // There is no subgraph in barge so we hardcode the Rinkeby one for now
+    subgraphUri: 'https://subgraph.rinkeby.oceanprotocol.com'
+  }
+}
+
 export function NetworkMonitor(): ReactElement {
   const {
     connect,
@@ -28,12 +40,7 @@ export function NetworkMonitor(): ReactElement {
 
       // add local dev values
       ...(chainId === '8996' && {
-        factoryAddress: contractAddresses.development?.DTFactory,
-        poolFactoryAddress: contractAddresses.development?.BFactory,
-        fixedRateExchangeAddress:
-          contractAddresses.development?.FixedRateExchange,
-        metadataContractAddress: contractAddresses.development?.Metadata,
-        oceanTokenAddress: contractAddresses.development?.Ocean
+        ...getDevelopmentConfig()
       })
     }
 

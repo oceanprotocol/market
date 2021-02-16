@@ -12,3 +12,7 @@
   color: var(--color-secondary) !important;
   font-size: var(--font-size-small) !important;
 }
+
+.info {
+  width: .85rem
+}
