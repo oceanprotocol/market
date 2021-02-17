@@ -40,9 +40,7 @@ export default function FormPublish({
     field: FormFieldProps
   ) {
     const value =
-      field.type === 'checkbox'
-        ? !Boolean(JSON.parse(e.target.value))
-        : e.target.value
+      field.type === 'checkbox' ? !JSON.parse(e.target.value) : e.target.value
     validateField(field.name)
     setFieldValue(field.name, value)
   }
