@@ -3,6 +3,7 @@ import { Formik } from 'formik'
 import { usePublish, useOcean } from '@oceanprotocol/react'
 import styles from './index.module.css'
 import FormPublish from './FormPublish'
+import PublishType from './PublishType'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
 import { FormContent } from '../../../@types/Form'
 import { initialValues, validationSchema } from '../../../models/FormPublish'
@@ -18,6 +19,7 @@ import { Persist } from '../../atoms/FormikPersist'
 import Debug from './Debug'
 import Alert from '../../atoms/Alert'
 import MetadataFeedback from '../../molecules/MetadataFeedback'
+import Button from '../../atoms/Button'
 
 const formName = 'ocean-publish-form'
 
@@ -32,6 +34,7 @@ export default function PublishPage({
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const [did, setDid] = useState<string>()
+  const [publishType, setPublishType] = useState<string>()
 
   const hasFeedback = isLoading || error || success
 
@@ -108,6 +111,10 @@ export default function PublishPage({
             />
           ) : (
             <>
+              <PublishType
+                type={publishType}
+                setType={setPublishType}
+              ></PublishType>
               <Alert
                 text={content.warning}
                 state="info"
