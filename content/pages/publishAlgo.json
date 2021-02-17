@@ -37,6 +37,13 @@
         "required": true
       },
       {
+        "name": "algorithmPrivacy",
+        "label": "Algorithm Privacy",
+        "type": "checkbox",
+        "options": ["Keep my algorithm private"],
+        "required": false
+      },
+      {
         "name": "author",
         "label": "Author",
         "placeholder": "e.g. Jelly McJellyfish",

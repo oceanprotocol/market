@@ -112,7 +112,10 @@ export default function PublishPage({
     try {
       Logger.log('Publish Algorithm with ', metadata)
 
-      const ddo = await publish((metadata as unknown) as Metadata, 'access')
+      const ddo = await publish(
+        (metadata as unknown) as Metadata,
+        values.algorithmPrivacy === true ? 'compute' : 'access'
+      )
 
       // Publish failed
       if (!ddo || publishError) {

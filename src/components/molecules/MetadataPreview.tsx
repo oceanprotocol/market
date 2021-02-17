@@ -59,6 +59,8 @@ function MetaFull({ values }: { values: Partial<MetadataPublishForm> }) {
               key.includes('links') ||
               key.includes('termsAndConditions') ||
               key.includes('dataTokenOptions') ||
+              key.includes('dockerImage') ||
+              key.includes('algorithmPrivacy') ||
               value === undefined ||
               value === ''
             )
@@ -146,7 +148,18 @@ export function MetadataAlgorithmPreview({
         </div>
         {values.tags && <Tags items={transformTags(values.tags)} />}
       </header>
-
+      <div className={styles.metaAlgorithm}>
+        {values.dockerImage && (
+          <MetaItem
+            key="dockerImage"
+            title="Docker Image"
+            content={values.dockerImage}
+          />
+        )}
+        {values.algorithmPrivacy && (
+          <MetaItem key="dockerImage" title="Private Algorithm" content="Yes" />
+        )}
+      </div>
       <MetaFull values={values} />
     </div>
   )

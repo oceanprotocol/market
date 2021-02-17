@@ -16,6 +16,7 @@ export const validationSchema: Yup.SchemaOf<AlgorithmPublishForm> = Yup.object()
     author: Yup.string().required('Required'),
     termsAndConditions: Yup.boolean().required('Required'),
     // ---- optional fields ----
+    algorithmPrivacy: Yup.boolean().nullable(),
     tags: Yup.string().nullable(),
     links: Yup.array<FileMetadata[]>().nullable()
   })
@@ -27,6 +28,7 @@ export const initialValues: Partial<AlgorithmPublishForm> = {
   dockerImage: '',
   files: '',
   description: '',
+  algorithmPrivacy: false,
   termsAndConditions: false,
   tags: ''
 }

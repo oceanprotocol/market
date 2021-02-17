@@ -13,6 +13,13 @@
   grid-template-columns: 1fr 1fr;
 }
 
+.metaAlgorithm {
+  display: grid;
+  gap: var(--spacer);
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: var(--spacer/2);
+}
+
 .previewTitle {
   font-size: var(--font-size-small);
   text-transform: uppercase;

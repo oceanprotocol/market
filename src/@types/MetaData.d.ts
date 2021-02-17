@@ -46,6 +46,7 @@ export interface AlgorithmPublishForm {
   files: string | File[]
   author: string
   dockerImage: string
+  algorithmPrivacy: boolean
   termsAndConditions: boolean
   // ---- optional fields ----
   tags?: string
