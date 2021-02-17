@@ -35,6 +35,18 @@ const queryLatest = {
   sort: { created: -1 }
 }
 
+const queryAlgorithms = {
+  page: 1,
+  offset: 9,
+  query: {
+    nativeSearch: 1,
+    query_string: {
+      query: `service.main.type == algorithm`
+    }
+  },
+  sort: { created: -1 }
+}
+
 function LoaderArea() {
   return (
     <div className={styles.loaderWrap}>
@@ -114,6 +126,16 @@ export default function HomePage(): ReactElement {
         action={
           <Button style="text" to="/search?sort=created&sortOrder=desc">
             All data sets →
+          </Button>
+        }
+      />
+
+      <SectionQueryResult
+        title="New Algorithms"
+        query={queryAlgorithms}
+        action={
+          <Button style="text" to="/search?sort=created&">
+            All algorithms →
           </Button>
         }
       />
