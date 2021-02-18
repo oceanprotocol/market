@@ -33,8 +33,29 @@
         "placeholder": "e.g. python3.7",
         "help": "Please select a predefined image to run your algorithm.",
         "type": "select",
-        "options": ["NodeJS", "Python 3.7"],
+        "options": ["node:pre-defined", "python:pre-defined", "custom image"],
         "required": true
+      },
+      {
+        "name": "image",
+        "label": "Image URL",
+        "placeholder": "e.g. node or https://hub.docker.com/_/node ",
+        "help": "Provide the name of a docker image or the full url if you have it hosted in a 3rd party repo",
+        "required": false
+      },
+      {
+        "name": "version",
+        "label": "Version",
+        "placeholder": "e.g. 10",
+        "help": "Provide the version for your image.",
+        "required": false
+      },
+      {
+        "name": "entrypoint",
+        "label": "Entrypoint",
+        "placeholder": "e.g. python $ALGO",
+        "help": "Provide the entrypoint for your algorithm.",
+        "required": false
       },
       {
         "name": "algorithmPrivacy",

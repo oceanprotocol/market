@@ -49,6 +49,9 @@ export interface AlgorithmPublishForm {
   algorithmPrivacy: boolean
   termsAndConditions: boolean
   // ---- optional fields ----
+  image: string
+  version: string
+  entrypoint: string
   tags?: string
 }
 

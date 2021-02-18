@@ -70,19 +70,27 @@ export function checkIfTimeoutInPredefinedValues(
   return false
 }
 
-function getAlgoithComponent(selectedAlgorithm: string): MetadataAlgorithm {
+function getAlgoithComponent(
+  image: string,
+  version: string,
+  entrypoint: string,
+  algorithmLanguace: string
+): MetadataAlgorithm {
   return {
-    language: selectedAlgorithm === 'NodeJS' ? 'js' : 'py',
+    language: algorithmLanguace,
     format: 'docker-image',
     version: '0.1',
     container: {
-      entrypoint:
-        selectedAlgorithm === 'NodeJS' ? 'node $ALGO' : 'python $ALGO',
-      image:
-        selectedAlgorithm === 'NodeJS' ? 'node' : 'oceanprotocol/algo_dockers',
-      tag: selectedAlgorithm === 'NodeJS' ? '10' : 'python-panda'
+      entrypoint: entrypoint,
+      image: image,
+      tag: version
     }
   }
+}
+
+function getAlgoithFileExtension(fileUrl: string): string {
+  const splitedFileUrl = fileUrl.split('.')
+  return splitedFileUrl[splitedFileUrl.length - 1]
 }
 
 export function transformPublishFormToMetadata(
@@ -127,13 +135,23 @@ export function transformPublishAlgorithmFormToMetadata(
     description,
     tags,
     dockerImage,
+    image,
+    version,
+    entrypoint,
     termsAndConditions,
     files
   }: Partial<AlgorithmPublishForm>,
   ddo?: DDO
 ): MetadataMarket {
   const currentTime = toStringNoMS(new Date())
-  const algorithm = getAlgoithComponent(dockerImage)
+  const fileUrl = typeof files !== 'string' && files[0].url
+  const algorithmLanguace = getAlgoithFileExtension(fileUrl)
+  const algorithm = getAlgoithComponent(
+    image,
+    version,
+    entrypoint,
+    algorithmLanguace
+  )
   const metadata: MetadataMarket = {
     main: {
       ...AssetModel.main,

@@ -11,8 +11,13 @@ export const validationSchema: Yup.SchemaOf<AlgorithmPublishForm> = Yup.object()
     description: Yup.string().min(10).required('Required'),
     files: Yup.array<FileMetadata>().required('Required').nullable(),
     dockerImage: Yup.string()
-      .matches(/NodeJS|Python 3.7/g, { excludeEmptyString: true })
+      .matches(/node:pre-defined|python:pre-defined|custom image/g, {
+        excludeEmptyString: true
+      })
       .required('Required'),
+    image: Yup.string().required('Required'),
+    version: Yup.string().required('Required'),
+    entrypoint: Yup.string().required('Required'),
     author: Yup.string().required('Required'),
     termsAndConditions: Yup.boolean().required('Required'),
     // ---- optional fields ----
@@ -26,6 +31,9 @@ export const initialValues: Partial<AlgorithmPublishForm> = {
   name: '',
   author: '',
   dockerImage: '',
+  image: '',
+  version: '',
+  entrypoint: '',
   files: '',
   description: '',
   algorithmPrivacy: false,

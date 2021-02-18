@@ -33,16 +33,48 @@ export default function FormPublish({
     // setSubmitting(false)
   }, [setErrors, setTouched])
 
+  function handleImageSelectChange(imageSelected: string) {
+    switch (imageSelected) {
+      case 'node:pre-defined': {
+        setFieldValue('dockerImage', imageSelected)
+        setFieldValue('image', 'node')
+        setFieldValue('version', '10')
+        setFieldValue('entrypoint', 'node $ALGO')
+        break
+      }
+      case 'python:pre-defined': {
+        setFieldValue('dockerImage', imageSelected)
+        setFieldValue('image', 'oceanprotocol/algo_dockers')
+        setFieldValue('version', 'python-panda')
+        setFieldValue('entrypoint', 'python $ALGO')
+        break
+      }
+      default: {
+        setFieldValue('dockerImage', imageSelected)
+        setFieldValue('image', '')
+        setFieldValue('version', '')
+        setFieldValue('entrypoint', '')
+        break
+      }
+    }
+  }
+
   // Manually handle change events instead of using `handleChange` from Formik.
   // Workaround for default `validateOnChange` not kicking in
   function handleFieldChange(
     e: ChangeEvent<HTMLInputElement>,
     field: FormFieldProps
   ) {
+    console.log(field)
     const value =
       field.type === 'checkbox' ? !JSON.parse(e.target.value) : e.target.value
-    validateField(field.name)
-    setFieldValue(field.name, value)
+    if (field.name === 'dockerImage') {
+      validateField(field.name)
+      handleImageSelectChange(e.target.value)
+    } else {
+      validateField(field.name)
+      setFieldValue(field.name, value)
+    }
   }
 
   const resetFormAndClearStorage = (e: FormEvent<Element>) => {
