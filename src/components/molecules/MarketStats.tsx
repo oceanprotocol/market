@@ -1,83 +1,47 @@
-import { Logger } from '@oceanprotocol/lib'
 import React, { ReactElement, useEffect, useState } from 'react'
-import PriceUnit from '../atoms/Price/PriceUnit'
-import axios from 'axios'
 import styles from './MarketStats.module.css'
-import { useInView } from 'react-intersection-observer'
+import { gql, useQuery } from '@apollo/client'
+import Conversion from '../atoms/Price/Conversion'
+import PriceUnit from '../atoms/Price/PriceUnit'
+import Tooltip from '../atoms/Tooltip'
 
-interface MarketStatsResponse {
-  datasets: {
-    pools: number
-    exchanges: number
-    none: number
-    total: number
+const getTotalPoolsValues = gql`
+  query PoolsData {
+    poolFactories {
+      totalValueLocked
+      totalOceanLiquidity
+      finalizedPoolCount
+    }
   }
-  owners: number
-  ocean: number
-  datatoken: number
-}
-
-const refreshInterval = 60000 // 60 sec.
+`
 
 export default function MarketStats(): ReactElement {
-  const [ref, inView] = useInView()
-  const [stats, setStats] = useState<MarketStatsResponse>()
+  const [totalValueLocked, setTotalValueLocked] = useState<string>()
+  const [totalOceanLiquidity, setTotalOceanLiquidity] = useState<string>()
+  const [poolCount, setPoolCount] = useState<number>()
+  const { data } = useQuery(getTotalPoolsValues)
 
   useEffect(() => {
-    const source = axios.CancelToken.source()
+    if (!data) return
 
-    async function getStats() {
-      try {
-        const response = await axios('https://market-stats.oceanprotocol.com', {
-          cancelToken: source.token
-        })
-        if (!response || response.status !== 200) return
-        setStats(response.data)
-      } catch (error) {
-        if (axios.isCancel(error)) {
-          Logger.log(error.message)
-        } else {
-          Logger.error(error.message)
-        }
-      }
-    }
-
-    // Update periodically when in viewport
-    const interval = setInterval(getStats, refreshInterval)
-
-    if (!inView) {
-      clearInterval(interval)
-    }
-
-    getStats()
-
-    return () => {
-      clearInterval(interval)
-      source.cancel()
-    }
-  }, [inView])
+    setTotalValueLocked(data.poolFactories[0].totalValueLocked)
+    setTotalOceanLiquidity(data.poolFactories[0].totalOceanLiquidity)
+    setPoolCount(data.poolFactories[0].finalizedPoolCount)
+  }, [data])
 
   return (
-    <div className={styles.stats} ref={ref}>
-      Total of <strong>{stats?.datasets.total}</strong> data sets & unique
-      datatokens published by <strong>{stats?.owners}</strong> accounts.
-      <br />
-      <PriceUnit
-        price={`${stats?.ocean}`}
-        small
-        className={styles.total}
-        conversion
-      />{' '}
-      and{' '}
-      <PriceUnit
-        price={`${stats?.datatoken}`}
-        symbol="datatokens"
-        small
-        className={styles.total}
-      />{' '}
-      in <strong>{stats?.datasets.pools}</strong> data set pools.
-      <br />
-      <strong>{stats?.datasets.none}</strong> data sets have no price set yet.
+    <div className={styles.stats}>
+      <Conversion price={`${totalValueLocked}`} hideApproximateSymbol />{' '}
+      <abbr title="Total Value Locked">TVL</abbr> across{' '}
+      <strong>{poolCount}</strong> data set pools that contain{' '}
+      <PriceUnit price={totalOceanLiquidity} small className={styles.total} />,
+      plus datatokens for each pool.
+      <Tooltip
+        className={styles.info}
+        content="Counted on-chain from our pool factory. Does not filter out data sets in "
+        reference="list-purgatory"
+        link="https://github.com/oceanprotocol/list-purgatory"
+      />
     </div>
   )
 }

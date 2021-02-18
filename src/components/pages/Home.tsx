@@ -116,12 +116,20 @@ export default function HomePage(): ReactElement {
       </section>
 
       <SectionQueryResult
-        title="Highest Liquidity Pools"
+        title="Highest Liquidity"
         query={queryHighest}
+        action={
+          <Button
+            style="text"
+            to="/search?priceType=pool&sort=liquidity&sortOrder=desc"
+          >
+            All data sets with pool →
+          </Button>
+        }
       />
 
       <SectionQueryResult
-        title="New Data Sets"
+        title="Recently Published"
         query={queryLatest}
         action={
           <Button style="text" to="/search?sort=created&sortOrder=desc">
