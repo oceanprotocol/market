@@ -23,15 +23,17 @@
   color: var(--color-secondary);
 }
 
-.table [role='row']:not(:last-of-type) {
-  border-color: var(--border-color);
+.table [role='row'] {
+  border-bottom: 1px solid var(--border-color) !important;
 }
 
 .table + div [class*='rdt_Pagination'] {
   font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
   color: var(--color-secondary);
   background: none;
   min-height: 0;
+  padding-top: calc(var(--spacer) / 2);
 }
 
 .table + div [class*='rdt_Pagination'] svg {
@@ -50,10 +52,23 @@
   fill: var(--brand-pink);
 }
 
+.table + div [class*='rdt_Pagination'] button[aria-label='First Page'],
+.table + div [class*='rdt_Pagination'] button[aria-label='Last Page'] {
+  display: none;
+}
+
 .empty {
   width: 100%;
   text-align: left;
   color: var(--color-secondary);
   font-size: var(--font-size-small);
   font-style: italic;
+}
+
+.arrow {
+  composes: arrow from '../molecules/Pagination.module.css';
+}
+
+.previous {
+  composes: previous from '../molecules/Pagination.module.css';
 }
