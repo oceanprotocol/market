@@ -111,10 +111,7 @@ export default function PublishPage({
             />
           ) : (
             <>
-              <PublishType
-                type={publishType}
-                setType={setPublishType}
-              ></PublishType>
+              <PublishType type={publishType} setType={setPublishType} />
               <Alert
                 text={content.warning}
                 state="info"
