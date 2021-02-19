@@ -34,6 +34,7 @@ export const contentQuery = graphql`
                 help
                 type
                 required
+                disabled
                 sortOptions
                 options
               }
@@ -61,6 +62,7 @@ export const contentQuery = graphql`
                 help
                 type
                 required
+                disabled
                 sortOptions
                 options
               }

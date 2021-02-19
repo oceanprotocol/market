@@ -33,10 +33,17 @@ export default function FormPublish({
     // setSubmitting(false)
   }, [setErrors, setTouched])
 
+  function setDisableFlag(flag: boolean) {
+    content.data.forEach((field) => {
+      if (field.disabled !== null) field.disabled = flag
+    })
+  }
+
   function handleImageSelectChange(imageSelected: string) {
     switch (imageSelected) {
       case 'node:pre-defined': {
         setFieldValue('dockerImage', imageSelected)
+        setDisableFlag(true)
         setFieldValue('image', 'node')
         setFieldValue('version', '10')
         setFieldValue('entrypoint', 'node $ALGO')
@@ -44,6 +51,7 @@ export default function FormPublish({
       }
       case 'python:pre-defined': {
         setFieldValue('dockerImage', imageSelected)
+        setDisableFlag(true)
         setFieldValue('image', 'oceanprotocol/algo_dockers')
         setFieldValue('version', 'python-panda')
         setFieldValue('entrypoint', 'python $ALGO')
@@ -51,6 +59,7 @@ export default function FormPublish({
       }
       default: {
         setFieldValue('dockerImage', imageSelected)
+        setDisableFlag(false)
         setFieldValue('image', '')
         setFieldValue('version', '')
         setFieldValue('entrypoint', '')
@@ -65,7 +74,6 @@ export default function FormPublish({
     e: ChangeEvent<HTMLInputElement>,
     field: FormFieldProps
   ) {
-    console.log(field)
     const value =
       field.type === 'checkbox' ? !JSON.parse(e.target.value) : e.target.value
     if (field.name === 'dockerImage') {
@@ -93,6 +101,7 @@ export default function FormPublish({
         <Field
           key={field.name}
           {...field}
+          disabled={field.disabled}
           component={Input}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             handleFieldChange(e, field)
