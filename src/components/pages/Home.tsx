@@ -29,7 +29,7 @@ const queryLatest = {
   query: {
     nativeSearch: 1,
     query_string: {
-      query: `-isInPurgatory:true`
+      query: `(service.attributes.main.type:dataset) -isInPurgatory:true`
     }
   },
   sort: { created: -1 }
@@ -41,7 +41,7 @@ const queryAlgorithms = {
   query: {
     nativeSearch: 1,
     query_string: {
-      query: `service.main.type == algorithm`
+      query: `(service.attributes.main.type:algorithm) -isInPurgatory:true`
     }
   },
   sort: { created: -1 }
@@ -142,7 +142,7 @@ export default function HomePage(): ReactElement {
         title="New Algorithms"
         query={queryAlgorithms}
         action={
-          <Button style="text" to="/search?sort=created&">
+          <Button style="text" to="/search?sort=created&sortOrder=desc&service">
             All algorithms →
           </Button>
         }

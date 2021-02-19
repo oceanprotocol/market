@@ -31,3 +31,7 @@ button.filter,
   background: var(--font-color-text);
   border-color: var(--background-body);
 }
+
+.filterList:first-of-type{
+  margin-bottom: calc(var(--spacer) / 6);
+}
