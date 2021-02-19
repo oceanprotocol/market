@@ -17,12 +17,11 @@ declare type AssetTeaserProps = {
 const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
   const { owner } = useMetadata(ddo)
   const { attributes } = ddo.findServiceByType('metadata')
-  const { name } = attributes.main
+  const { name, type } = attributes.main
   const { dataTokenInfo } = ddo
-  const isCompute = Boolean(ddo.findServiceByType('compute'))
 
   return (
-    <article className={styles.teaser}>
+    <article className={`${styles.teaser} ${styles[type]}`}>
       <Link to={`/asset/${ddo.id}`} className={styles.link}>
         <header className={styles.header}>
           <Tooltip
@@ -37,7 +36,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
           </Dotdotdot>
           <Publisher account={owner} minimal className={styles.publisher} />
         </header>
-        {isCompute && <div className={styles.accessLabel}>Compute</div>}
+        <div className={styles.typeLabel}>{type}</div>
 
         <div className={styles.content}>
           <Dotdotdot tagName="p" clamp={3}>
