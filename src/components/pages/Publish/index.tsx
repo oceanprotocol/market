@@ -37,11 +37,9 @@ import Button from '../../atoms/Button'
 const formName = 'ocean-publish-form'
 
 export default function PublishPage({
-  content,
-  contentAlgoPublish
+  content
 }: {
-  content: { warning: string; form: FormContent }
-  contentAlgoPublish: { warning: string; form: FormContent }
+  content: { warning: string }
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { publish, publishError, isLoading, publishStepText } = usePublish()
@@ -184,9 +182,9 @@ export default function PublishPage({
               />
               <article className={styles.grid}>
                 {publishType === TypeOfPublish.dataset ? (
-                  <FormPublish content={content.form} />
+                  <FormPublish />
                 ) : (
-                  <FormAlgoPublish content={contentAlgoPublish.form} />
+                  <FormAlgoPublish />
                 )}
 
                 <aside>

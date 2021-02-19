@@ -1,4 +1,5 @@
 import React, { ReactElement, useEffect, FormEvent, ChangeEvent } from 'react'
+import { useStaticQuery, graphql } from 'gatsby'
 import styles from './FormPublish.module.css'
 import { useOcean } from '@oceanprotocol/react'
 import { useFormikContext, Field, Form, FormikContextType } from 'formik'
@@ -7,11 +8,37 @@ import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { AlgorithmPublishForm } from '../../../@types/MetaData'
 
-export default function FormPublish({
-  content
-}: {
-  content: FormContent
-}): ReactElement {
+const query = graphql`
+  query {
+    content: allFile(
+      filter: { relativePath: { eq: "pages/form-algorithm.json" } }
+    ) {
+      edges {
+        node {
+          childPagesJson {
+            title
+            data {
+              name
+              placeholder
+              label
+              help
+              type
+              required
+              disabled
+              sortOptions
+              options
+            }
+            warning
+          }
+        }
+      }
+    }
+  }
+`
+
+export default function FormPublish({}: {}): ReactElement {
+  const data = useStaticQuery(query)
+  const content: FormContent = data.content.edges[0].node.childPagesJson
   const { ocean, account } = useOcean()
   const {
     status,
