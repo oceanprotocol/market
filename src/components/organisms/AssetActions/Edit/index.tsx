@@ -1,7 +1,7 @@
 import { useOcean } from '@oceanprotocol/react'
 import { Formik } from 'formik'
 import React, { ReactElement, useState } from 'react'
-import { MetadataPublishForm } from '../../../../@types/MetaData'
+import { MetadataPublishFormDataset } from '../../../../@types/MetaData'
 import {
   validationSchema,
   getInitialValues
@@ -66,7 +66,7 @@ export default function Edit({
   const hasFeedback = error || success
 
   async function handleSubmit(
-    values: Partial<MetadataPublishForm>,
+    values: Partial<MetadataPublishFormDataset>,
     resetForm: () => void
   ) {
     try {

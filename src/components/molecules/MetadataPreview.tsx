@@ -6,8 +6,8 @@ import MetaItem from '../organisms/AssetContent/MetaItem'
 import styles from './MetadataPreview.module.css'
 import File from '../atoms/File'
 import {
-  MetadataPublishForm,
-  AlgorithmPublishForm
+  MetadataPublishFormDataset,
+  MetadataPublishFormAlgorithm
 } from '../../@types/MetaData'
 import Button from '../atoms/Button'
 import { transformTags } from '../../utils/metadata'
@@ -45,7 +45,7 @@ function Description({ description }: { description: string }) {
   )
 }
 
-function MetaFull({ values }: { values: Partial<MetadataPublishForm> }) {
+function MetaFull({ values }: { values: Partial<MetadataPublishFormDataset> }) {
   return (
     <div className={styles.metaFull}>
       {Object.entries(values)
@@ -90,7 +90,7 @@ function Sample({ url }: { url: string }) {
 export function MetadataPreview({
   values
 }: {
-  values: Partial<MetadataPublishForm>
+  values: Partial<MetadataPublishFormDataset>
 }): ReactElement {
   return (
     <div className={styles.preview}>
@@ -128,7 +128,7 @@ export function MetadataPreview({
 export function MetadataAlgorithmPreview({
   values
 }: {
-  values: Partial<AlgorithmPublishForm>
+  values: Partial<MetadataPublishFormAlgorithm>
 }): ReactElement {
   return (
     <div className={styles.preview}>

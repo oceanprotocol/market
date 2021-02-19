@@ -1,8 +1,8 @@
-import { AlgorithmPublishForm } from '../@types/MetaData'
+import { MetadataPublishFormAlgorithm } from '../@types/MetaData'
 import { File as FileMetadata } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 
-export const validationSchema: Yup.SchemaOf<AlgorithmPublishForm> = Yup.object()
+export const validationSchema: Yup.SchemaOf<MetadataPublishFormAlgorithm> = Yup.object()
   .shape({
     // ---- required fields ----
     name: Yup.string()
@@ -27,7 +27,7 @@ export const validationSchema: Yup.SchemaOf<AlgorithmPublishForm> = Yup.object()
   })
   .defined()
 
-export const initialValues: Partial<AlgorithmPublishForm> = {
+export const initialValues: Partial<MetadataPublishFormAlgorithm> = {
   name: '',
   author: '',
   dockerImage: '',

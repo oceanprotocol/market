@@ -6,7 +6,7 @@ import { useFormikContext, Field, Form, FormikContextType } from 'formik'
 import Input from '../../atoms/Input'
 import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
-import { MetadataPublishForm } from '../../../@types/MetaData'
+import { MetadataPublishFormDataset } from '../../../@types/MetaData'
 
 const query = graphql`
   query {
@@ -50,7 +50,7 @@ export default function FormPublish(): ReactElement {
     initialValues,
     validateField,
     setFieldValue
-  }: FormikContextType<MetadataPublishForm> = useFormikContext()
+  }: FormikContextType<MetadataPublishFormDataset> = useFormikContext()
 
   // reset form validation on every mount
   useEffect(() => {

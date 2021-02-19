@@ -1,7 +1,7 @@
 import {
   MetadataMarket,
-  MetadataPublishForm,
-  AlgorithmPublishForm
+  MetadataPublishFormDataset,
+  MetadataPublishFormAlgorithm
 } from '../@types/MetaData'
 import { toStringNoMS } from '.'
 import AssetModel from '../models/Asset'
@@ -102,7 +102,7 @@ export function transformPublishFormToMetadata(
     links,
     termsAndConditions,
     files
-  }: Partial<MetadataPublishForm>,
+  }: Partial<MetadataPublishFormDataset>,
   ddo?: DDO
 ): MetadataMarket {
   const currentTime = toStringNoMS(new Date())
@@ -140,7 +140,7 @@ export function transformPublishAlgorithmFormToMetadata(
     entrypoint,
     termsAndConditions,
     files
-  }: Partial<AlgorithmPublishForm>,
+  }: Partial<MetadataPublishFormAlgorithm>,
   ddo?: DDO
 ): MetadataMarket {
   const currentTime = toStringNoMS(new Date())

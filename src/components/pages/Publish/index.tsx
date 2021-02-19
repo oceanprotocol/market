@@ -23,8 +23,8 @@ import {
   MetadataAlgorithmPreview
 } from '../../molecules/MetadataPreview'
 import {
-  MetadataPublishForm,
-  AlgorithmPublishForm
+  MetadataPublishFormDataset,
+  MetadataPublishFormAlgorithm
 } from '../../../@types/MetaData'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import { Logger, Metadata } from '@oceanprotocol/lib'
@@ -59,7 +59,7 @@ export default function PublishPage({
   }, [publishType])
 
   async function handleSubmit(
-    values: Partial<MetadataPublishForm>,
+    values: Partial<MetadataPublishFormDataset>,
     resetForm: () => void
   ): Promise<void> {
     const metadata = transformPublishFormToMetadata(values)
@@ -102,7 +102,7 @@ export default function PublishPage({
   }
 
   async function handleAlgorithmSubmit(
-    values: Partial<AlgorithmPublishForm>,
+    values: Partial<MetadataPublishFormAlgorithm>,
     resetForm: () => void
   ): Promise<void> {
     const metadata = transformPublishAlgorithmFormToMetadata(values)
