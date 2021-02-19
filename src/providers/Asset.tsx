@@ -25,6 +25,7 @@ interface AssetProviderValue {
   title: string | undefined
   owner: string | undefined
   price: BestPrice | undefined
+  type: string | undefined
   error?: string
   refreshInterval: number
   refreshDdo: (token?: CancelToken) => Promise<void>
@@ -52,6 +53,7 @@ function AssetProvider({
   const [price, setPrice] = useState<BestPrice>()
   const [owner, setOwner] = useState<string>()
   const [error, setError] = useState<string>()
+  const [type, setType] = useState<string>()
 
   const refreshPrice = useCallback(async () => {
     if (
@@ -160,6 +162,7 @@ function AssetProvider({
       const { attributes } = ddo.findServiceByType('metadata')
       setMetadata((attributes as unknown) as MetadataMarket)
       setTitle(attributes?.main.name)
+      setType(attributes.main.type)
       setOwner(ddo.publicKey[0].owner)
       setIsInPurgatory(ddo.isInPurgatory === 'true')
 
@@ -184,6 +187,7 @@ function AssetProvider({
           title,
           owner,
           price,
+          type,
           error,
           isInPurgatory,
           purgatoryData,
