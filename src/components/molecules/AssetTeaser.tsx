@@ -9,6 +9,8 @@ import Tooltip from '../atoms/Tooltip'
 import Publisher from '../atoms/Publisher'
 import { useMetadata } from '@oceanprotocol/react'
 import Time from '../atoms/Time'
+import { ReactComponent as Compute } from '../../images/compute.svg'
+import { ReactComponent as Download } from '../../images/download.svg'
 
 declare type AssetTeaserProps = {
   ddo: DDO
@@ -19,6 +21,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
   const { attributes } = ddo.findServiceByType('metadata')
   const { name, type } = attributes.main
   const { dataTokenInfo } = ddo
+  const accessType = ddo.service[1].type
 
   return (
     <article className={`${styles.teaser} ${styles[type]}`}>
@@ -36,7 +39,20 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
           </Dotdotdot>
           <Publisher account={owner} minimal className={styles.publisher} />
         </header>
-        <div className={styles.typeLabel}>{type}</div>
+
+        <div className={styles.typeDetails}>
+          <Tooltip
+            content={accessType === 'access' ? 'download' : 'compute'}
+            trigger="click focus"
+          >
+            {accessType === 'access' ? (
+              <Download className={styles.icon} />
+            ) : (
+              <Compute className={styles.icon} />
+            )}
+          </Tooltip>
+          <div className={styles.typeLabel}>{type}</div>
+        </div>
 
         <div className={styles.content}>
           <Dotdotdot tagName="p" clamp={3}>

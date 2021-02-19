@@ -57,7 +57,6 @@
   font-size: var(--font-size-mini);
   text-transform: uppercase;
   width: auto;
-  position: absolute;
   top: calc(var(--spacer) / 4);
   right: calc(var(--spacer) / 3);
 }
@@ -69,4 +68,19 @@
 .date {
   font-size: var(--font-size-mini);
   margin-top: calc(var(--spacer) / 2);
+}
+
+.typeDetails {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  top: calc(var(--spacer) / 4);
+  right: calc(var(--spacer) / 3);
+}
+
+.icon {
+  fill: var(--brand-grey-light);
+  width: .9em;
+  height: .9em;
+  margin-right: calc(var(--spacer) / 5);
 }

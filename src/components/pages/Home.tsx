@@ -142,7 +142,7 @@ export default function HomePage(): ReactElement {
         title="New Algorithms"
         query={queryAlgorithms}
         action={
-          <Button style="text" to="/search?sort=created&sortOrder=desc&service">
+          <Button style="text" to="/search?sort=created&sortOrder=desc">
             All algorithms →
           </Button>
         }
