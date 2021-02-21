@@ -42,8 +42,9 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
 
         <div className={styles.typeDetails}>
           <Tooltip
-            content={accessType === 'access' ? 'download' : 'compute'}
-            trigger="click focus"
+            content={
+              accessType === 'access' ? 'Download data set' : 'Compute data set'
+            }
           >
             {accessType === 'access' ? (
               <Download className={styles.icon} />
