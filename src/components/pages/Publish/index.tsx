@@ -32,7 +32,8 @@ import Debug from './Debug'
 import Alert from '../../atoms/Alert'
 import MetadataFeedback from '../../molecules/MetadataFeedback'
 
-const formName = 'ocean-publish-form'
+const formNameDatasets = 'ocean-publish-form-datasets'
+const formNameAlgorithms = 'ocean-publish-form-algorithms'
 
 function TabContent({
   publishType,
@@ -192,7 +193,14 @@ export default function PublishPage({
 
         return (
           <>
-            <Persist name={formName} ignoreFields={['isSubmitting']} />
+            <Persist
+              name={
+                publishType === 'dataset'
+                  ? formNameDatasets
+                  : formNameAlgorithms
+              }
+              ignoreFields={['isSubmitting']}
+            />
 
             {hasFeedback ? (
               <MetadataFeedback
@@ -214,16 +222,13 @@ export default function PublishPage({
                   className={styles.alert}
                 />
 
-                <div className={styles.tabs}>
-                  <Tabs
-                    items={tabs}
-                    handleTabChange={(title) =>
-                      setPublishType(
-                        title.toLowerCase().replace(' ', '') as any
-                      )
-                    }
-                  />
-                </div>
+                <Tabs
+                  className={styles.tabs}
+                  items={tabs}
+                  handleTabChange={(title) =>
+                    setPublishType(title.toLowerCase().replace(' ', '') as any)
+                  }
+                />
               </>
             )}
 
