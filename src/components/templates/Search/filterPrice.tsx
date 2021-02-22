@@ -25,10 +25,14 @@ const filterItemsType = [
 
 export default function FilterPrice({
   priceType,
-  setPriceType
+  setPriceType,
+  serviceType,
+  setServiceType
 }: {
   priceType: string
   setPriceType: React.Dispatch<React.SetStateAction<string>>
+  serviceType: string
+  setServiceType: React.Dispatch<React.SetStateAction<string>>
 }): ReactElement {
   const navigate = useNavigate()
 
@@ -41,12 +45,21 @@ export default function FilterPrice({
     navigate(urlLocation)
   }
 
+  async function applyTypeFilter(filterBy: string) {
+    let urlLocation = await addExistingParamsToUrl(location, 'serviceType')
+    if (filterBy) {
+      urlLocation = `${urlLocation}&serviceType=${filterBy}`
+    }
+    setServiceType(filterBy)
+    navigate(urlLocation)
+  }
+
   return (
     <div>
       <div className={styles.filterList}>
         {filterItemsType.map((e, index) => {
           const filter = cx({
-            [styles.selected]: e.value === priceType,
+            [styles.selected]: e.value === serviceType,
             [styles.filter]: true
           })
           return (
@@ -56,7 +69,7 @@ export default function FilterPrice({
               key={index}
               className={filter}
               onClick={async () => {
-                await applyFilter(e.value)
+                await applyTypeFilter(e.value)
               }}
             >
               {e.display}

@@ -33,7 +33,7 @@ export const FilterByPriceOptions = {
 type FilterByPriceOptions = typeof FilterByPriceOptions[keyof typeof FilterByPriceOptions]
 
 export const FilterByTypeOptions = {
-  Data: 'data',
+  Data: 'dataset',
   Algorithm: 'algorithm'
 } as const
 type FilterByTypeOptions = typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
@@ -91,7 +91,7 @@ export function getSearchQuery(
     : text || ''
   searchTerm = addPriceFilterToQuerry(searchTerm, priceType)
   searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
-
+  console.log('search', searchTerm, serviceType)
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
