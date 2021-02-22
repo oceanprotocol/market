@@ -41,11 +41,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
         </header>
 
         <div className={styles.typeDetails}>
-          <Tooltip
-            content={
-              accessType === 'access' ? 'Download data set' : 'Compute data set'
-            }
-          >
+          <Tooltip content={accessType === 'access' ? 'Download' : 'Compute'}>
             {accessType === 'access' ? (
               <Download className={styles.icon} />
             ) : (
