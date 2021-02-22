@@ -12,11 +12,11 @@ import stylesIndex from './index.module.css'
 const query = graphql`
   query {
     content: allFile(
-      filter: { relativePath: { eq: "pages/form-dataset.json" } }
+      filter: { relativePath: { eq: "pages/publish/form-dataset.json" } }
     ) {
       edges {
         node {
-          childPagesJson {
+          childPublishJson {
             title
             data {
               name
@@ -39,7 +39,7 @@ const query = graphql`
 
 export default function FormPublish(): ReactElement {
   const data = useStaticQuery(query)
-  const content: FormContent = data.content.edges[0].node.childPagesJson
+  const content: FormContent = data.content.edges[0].node.childPublishJson
   const { ocean, account } = useOcean()
   const {
     status,

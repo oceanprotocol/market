@@ -72,7 +72,9 @@ export default function PublishPage({
   const [error, setError] = useState<string>()
   const [title, setTitle] = useState<string>()
   const [did, setDid] = useState<string>()
-  const [publishType, setPublishType] = useState<MetadataMain['type']>()
+  const [publishType, setPublishType] = useState<MetadataMain['type']>(
+    'dataset'
+  )
 
   const hasFeedback = isLoading || error || success
 
