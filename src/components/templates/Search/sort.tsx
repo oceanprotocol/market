@@ -4,7 +4,8 @@ import {
   addExistingParamsToUrl,
   SortTermOptions,
   SortValueOptions,
-  FilterByPriceOptions
+  FilterByPriceOptions,
+  FilterByTypeOptions
 } from './utils'
 import Button from '../../atoms/Button'
 import styles from './sort.module.css'

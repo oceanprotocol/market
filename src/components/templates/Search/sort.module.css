@@ -1,4 +1,6 @@
 .sortList {
+  align-self: flex-end;
+  padding: calc(var(--spacer) / 10);
   display: flex;
   align-items: center;
   border-radius: var(--border-radius);
