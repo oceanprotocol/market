@@ -35,18 +35,6 @@ const queryLatest = {
   sort: { created: -1 }
 }
 
-const queryAlgorithms = {
-  page: 1,
-  offset: 9,
-  query: {
-    nativeSearch: 1,
-    query_string: {
-      query: `(service.attributes.main.type:algorithm) -isInPurgatory:true`
-    }
-  },
-  sort: { created: -1 }
-}
-
 function LoaderArea() {
   return (
     <div className={styles.loaderWrap}>
@@ -123,7 +111,7 @@ export default function HomePage(): ReactElement {
             style="text"
             to="/search?priceType=pool&sort=liquidity&sortOrder=desc"
           >
-            All data sets with pool →
+            All data sets and algorithms with pool →
           </Button>
         }
       />
@@ -133,17 +121,7 @@ export default function HomePage(): ReactElement {
         query={queryLatest}
         action={
           <Button style="text" to="/search?sort=created&sortOrder=desc">
-            All data sets →
-          </Button>
-        }
-      />
-
-      <SectionQueryResult
-        title="New Algorithms"
-        query={queryAlgorithms}
-        action={
-          <Button style="text" to="/search?sort=created&sortOrder=desc">
-            All algorithms →
+            All data sets and algorithms →
           </Button>
         }
       />

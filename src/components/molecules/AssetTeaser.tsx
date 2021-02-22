@@ -41,13 +41,15 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
         </header>
 
         <div className={styles.typeDetails}>
-          <Tooltip content={accessType === 'access' ? 'Download' : 'Compute'}>
-            {accessType === 'access' ? (
-              <Download className={styles.icon} />
-            ) : (
-              <Compute className={styles.icon} />
-            )}
-          </Tooltip>
+          {accessType === 'access' ? (
+            <Download
+              role="img"
+              aria-label="Download"
+              className={styles.icon}
+            />
+          ) : (
+            <Compute role="img" aria-label="Compute" className={styles.icon} />
+          )}
           <div className={styles.typeLabel}>{type}</div>
         </div>
 
