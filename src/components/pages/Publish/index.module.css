@@ -26,3 +26,7 @@ div.alert {
     top: calc(var(--spacer) / 2);
   }
 }
+
+.formTitle {
+  font-size: var(--font-size-h4);
+}

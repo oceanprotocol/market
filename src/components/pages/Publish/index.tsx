@@ -39,9 +39,7 @@ function TabContent({
   values
 }: {
   publishType: MetadataMain['type']
-  values:
-    | Partial<MetadataPublishFormDataset>
-    | Partial<MetadataPublishFormAlgorithm>
+  values: Partial<MetadataPublishFormAlgorithm | MetadataPublishFormDataset>
 }) {
   return (
     <article className={styles.grid}>

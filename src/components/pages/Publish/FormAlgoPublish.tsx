@@ -7,6 +7,7 @@ import Input from '../../atoms/Input'
 import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { MetadataPublishFormAlgorithm } from '../../../@types/MetaData'
+import stylesIndex from './index.module.css'
 
 const query = graphql`
   query {
@@ -124,6 +125,7 @@ export default function FormPublish(): ReactElement {
       // do we need this?
       onChange={() => status === 'empty' && setStatus(null)}
     >
+      <h2 className={stylesIndex.formTitle}>{content.title}</h2>
       {content.data.map((field: FormFieldProps) => (
         <Field
           key={field.name}
