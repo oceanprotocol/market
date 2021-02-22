@@ -20,7 +20,7 @@ const filterItemsPrice = [
 const filterItemsType = [
   { display: 'all', value: undefined },
   { display: 'algorithms', value: FilterByTypeOptions.Algorithm },
-  { display: 'data', value: FilterByTypeOptions.Data }
+  { display: 'data sets', value: FilterByTypeOptions.Data }
 ]
 
 export default function FilterPrice({
