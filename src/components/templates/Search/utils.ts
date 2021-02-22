@@ -4,6 +4,7 @@ import {
 } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { MetadataCache, Logger } from '@oceanprotocol/lib'
 import queryString from 'query-string'
+import { TypeOf } from 'yup'
 
 export const SortTermOptions = {
   Liquidity: 'liquidity',
@@ -31,11 +32,26 @@ export const FilterByPriceOptions = {
 } as const
 type FilterByPriceOptions = typeof FilterByPriceOptions[keyof typeof FilterByPriceOptions]
 
+export const FilterByTypeOptions = {
+  Data: 'dataset',
+  Algorithm: 'algorithm'
+} as const
+type FilterByTypeOptions = typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
+
 function addPriceFilterToQuerry(sortTerm: string, priceFilter: string): string {
   sortTerm = priceFilter
     ? sortTerm === ''
       ? `price.type:${priceFilter}`
       : `${sortTerm} AND price.type:${priceFilter}`
+    : sortTerm
+  return sortTerm
+}
+
+function addTypeFilterToQuery(sortTerm: string, typeFilter: string): string {
+  sortTerm = typeFilter
+    ? sortTerm === ''
+      ? `service.attributes.main.type:${typeFilter}`
+      : `${sortTerm} AND service.attributes.main.type:${typeFilter}`
     : sortTerm
   return sortTerm
 }
@@ -59,7 +75,8 @@ export function getSearchQuery(
   offset?: string,
   sort?: string,
   sortOrder?: string,
-  priceType?: string
+  priceType?: string,
+  serviceType?: string
 ): SearchQuery {
   const sortTerm = getSortType(sort)
   const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
@@ -73,7 +90,8 @@ export function getSearchQuery(
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
     : text || ''
   searchTerm = addPriceFilterToQuerry(searchTerm, priceType)
-
+  searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
+  console.log('search', searchTerm, serviceType)
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
@@ -112,6 +130,7 @@ export async function getResults(
     sort?: string
     sortOrder?: string
     priceType?: string
+    serviceType?: string
   },
   metadataCacheUri: string
 ): Promise<QueryResult> {
@@ -124,7 +143,8 @@ export async function getResults(
     categories,
     sort,
     sortOrder,
-    priceType
+    priceType,
+    serviceType
   } = params
   const metadataCache = new MetadataCache(metadataCacheUri, Logger)
   const searchQuery = getSearchQuery(
@@ -136,7 +156,8 @@ export async function getResults(
     offset,
     sort,
     sortOrder,
-    priceType
+    priceType,
+    serviceType
   )
   const queryResult = await metadataCache.queryMetadata(searchQuery)
 
