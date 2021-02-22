@@ -25,7 +25,7 @@
   /* Only use these vars for most color referencing for easy light/dark mode */
   --font-color-text: #41474e;
   --font-color-heading: #141414;
-  --background-body: #fdfdfd;
+  --background-body: #fafafa;
   --background-body-transparent: rgba(255, 255, 255, 0.8);
   --background-content: #fff;
   --background-highlight: #f7f7f7;
