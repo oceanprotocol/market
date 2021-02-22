@@ -29,7 +29,7 @@ const queryLatest = {
   query: {
     nativeSearch: 1,
     query_string: {
-      query: `(service.attributes.main.type:dataset) -isInPurgatory:true`
+      query: `-isInPurgatory:true`
     }
   },
   sort: { created: -1 }
