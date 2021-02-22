@@ -60,6 +60,8 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
     setShowEdit(true)
   }
 
+  console.log(ddo)
+
   return showEdit ? (
     <Edit setShowEdit={setShowEdit} />
   ) : (

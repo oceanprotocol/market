@@ -21,6 +21,13 @@
         "required": true
       },
       {
+        "name": "price",
+        "label": "New Price",
+        "placeholder": "e.g. Shapes of Desert Plants",
+        "help": "Enter a new price.",
+        "required": true
+      },
+      {
         "name": "timeout",
         "label": "Timeout",
         "help": "Define how long buyers should be able to download the data set again after the initial purchase.",

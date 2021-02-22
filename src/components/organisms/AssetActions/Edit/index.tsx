@@ -73,7 +73,8 @@ export default function Edit({
       // Construct new DDO with new values
       const ddoEditedMetdata = await ocean.assets.editMetadata(ddo, {
         title: values.name,
-        description: values.description
+        description: values.description,
+        price: values.price
       })
 
       if (!ddoEditedMetdata) {
@@ -121,7 +122,8 @@ export default function Edit({
     <Formik
       initialValues={getInitialValues(
         metadata,
-        ddo.findServiceByType('access').attributes.main.timeout
+        ddo.findServiceByType('access').attributes.main.timeout,
+        ddo.price.value
       )}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
