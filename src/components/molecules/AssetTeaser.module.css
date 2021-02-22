@@ -53,14 +53,6 @@
   margin: 0;
 }
 
-.typeLabel {
-  font-size: var(--font-size-mini);
-  text-transform: uppercase;
-  width: auto;
-  top: calc(var(--spacer) / 4);
-  right: calc(var(--spacer) / 3);
-}
-
 .symbol {
   display: block;
 }
@@ -71,16 +63,26 @@
 }
 
 .typeDetails {
-  display: flex;
-  flex-direction: row;
   position: absolute;
-  top: calc(var(--spacer) / 4);
+  top: calc(var(--spacer) / 3);
   right: calc(var(--spacer) / 3);
+  width: auto;
+  font-size: var(--font-size-mini);
 }
 
 .icon {
   fill: var(--brand-grey-light);
-  width: .9em;
-  height: .9em;
-  margin-right: calc(var(--spacer) / 5);
+  width: 1.1em;
+  height: 1.1em;
+  vertical-align: baseline;
+  margin-bottom: -0.2em;
+  display: inline-block;
+}
+
+.typeLabel {
+  display: inline-block;
+  text-transform: uppercase;
+  border-right: 1px solid var(--border-color);
+  padding-right: calc(var(--spacer) / 3.5);
+  margin-right: calc(var(--spacer) / 4);
 }

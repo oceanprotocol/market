@@ -111,7 +111,7 @@ export default function HomePage(): ReactElement {
             style="text"
             to="/search?priceType=pool&sort=liquidity&sortOrder=desc"
           >
-            All data sets and algorithms with pool →
+            Data sets and algorithms with pool →
           </Button>
         }
       />
