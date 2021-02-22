@@ -4,9 +4,8 @@ import { usePublish, useOcean } from '@oceanprotocol/react'
 import styles from './index.module.css'
 import FormPublish from './FormPublish'
 import FormAlgoPublish from './FormAlgoPublish'
-import { PublishType, TypeOfPublish } from './PublishType'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
-import { FormContent } from '../../../@types/Form'
+import Tabs from '../../atoms/Tabs'
 import { initialValues, validationSchema } from '../../../models/FormPublish'
 import {
   initialValues as initialValuesAlgorithm,
@@ -27,14 +26,41 @@ import {
   MetadataPublishFormAlgorithm
 } from '../../../@types/MetaData'
 import { useUserPreferences } from '../../../providers/UserPreferences'
-import { Logger, Metadata } from '@oceanprotocol/lib'
+import { Logger, Metadata, MetadataMain } from '@oceanprotocol/lib'
 import { Persist } from '../../atoms/FormikPersist'
 import Debug from './Debug'
 import Alert from '../../atoms/Alert'
 import MetadataFeedback from '../../molecules/MetadataFeedback'
-import Button from '../../atoms/Button'
 
 const formName = 'ocean-publish-form'
+
+function TabContent({
+  publishType,
+  values
+}: {
+  publishType: MetadataMain['type']
+  values:
+    | Partial<MetadataPublishFormDataset>
+    | Partial<MetadataPublishFormAlgorithm>
+}) {
+  return (
+    <article className={styles.grid}>
+      {publishType === 'dataset' ? <FormPublish /> : <FormAlgoPublish />}
+
+      <aside>
+        <div className={styles.sticky}>
+          {publishType === 'dataset' ? (
+            <MetadataPreview values={values} />
+          ) : (
+            <MetadataAlgorithmPreview values={values} />
+          )}
+
+          <Web3Feedback />
+        </div>
+      </aside>
+    </article>
+  )
+}
 
 export default function PublishPage({
   content
@@ -48,12 +74,12 @@ export default function PublishPage({
   const [error, setError] = useState<string>()
   const [title, setTitle] = useState<string>()
   const [did, setDid] = useState<string>()
-  const [publishType, setPublishType] = useState<string>()
+  const [publishType, setPublishType] = useState<MetadataMain['type']>()
 
   const hasFeedback = isLoading || error || success
 
   useEffect(() => {
-    publishType === TypeOfPublish.dataset
+    publishType === 'dataset'
       ? setTitle('Publishing Data Set')
       : setTitle('Publishing Algorithm')
   }, [publishType])
@@ -137,73 +163,74 @@ export default function PublishPage({
   return isInPurgatory && purgatoryData ? null : (
     <Formik
       initialValues={
-        publishType === TypeOfPublish.dataset
-          ? initialValues
-          : initialValuesAlgorithm
+        publishType === 'dataset' ? initialValues : initialValuesAlgorithm
       }
       initialStatus="empty"
       validationSchema={
-        publishType === TypeOfPublish.dataset
-          ? validationSchema
-          : validationSchemaAlgorithm
+        publishType === 'dataset' ? validationSchema : validationSchemaAlgorithm
       }
       onSubmit={async (values, { resetForm }) => {
         // move user's focus to top of screen
         window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
         // kick off publishing
-        publishType === TypeOfPublish.dataset
+        publishType === 'dataset'
           ? await handleSubmit(values, resetForm)
           : await handleAlgorithmSubmit(values, resetForm)
       }}
     >
-      {({ values }) => (
-        <>
-          <Persist name={formName} ignoreFields={['isSubmitting']} />
+      {({ values }) => {
+        const tabs = [
+          {
+            title: 'Data Set',
+            content: <TabContent values={values} publishType={publishType} />
+          },
+          {
+            title: 'Algorithm',
+            content: <TabContent values={values} publishType={publishType} />
+          }
+        ]
 
-          {hasFeedback ? (
-            <MetadataFeedback
-              title={title}
-              error={error}
-              success={success}
-              loading={publishStepText}
-              setError={setError}
-              successAction={{
-                name: 'Go to data set →',
-                to: `/asset/${did}`
-              }}
-            />
-          ) : (
-            <>
-              <PublishType type={publishType} setType={setPublishType} />
-              <Alert
-                text={content.warning}
-                state="info"
-                className={styles.alert}
+        return (
+          <>
+            <Persist name={formName} ignoreFields={['isSubmitting']} />
+
+            {hasFeedback ? (
+              <MetadataFeedback
+                title={title}
+                error={error}
+                success={success}
+                loading={publishStepText}
+                setError={setError}
+                successAction={{
+                  name: 'Go to data set →',
+                  to: `/asset/${did}`
+                }}
               />
-              <article className={styles.grid}>
-                {publishType === TypeOfPublish.dataset ? (
-                  <FormPublish />
-                ) : (
-                  <FormAlgoPublish />
-                )}
+            ) : (
+              <>
+                <Alert
+                  text={content.warning}
+                  state="info"
+                  className={styles.alert}
+                />
 
-                <aside>
-                  <div className={styles.sticky}>
-                    {publishType === TypeOfPublish.dataset ? (
-                      <MetadataPreview values={values} />
-                    ) : (
-                      <MetadataAlgorithmPreview values={values} />
-                    )}
-                    <Web3Feedback />
-                  </div>
-                </aside>
-              </article>
-            </>
-          )}
+                <div className={styles.tabs}>
+                  <Tabs
+                    items={tabs}
+                    handleTabChange={(title) =>
+                      setPublishType(
+                        title.toLowerCase().replace(' ', '') as any
+                      )
+                    }
+                  />
+                </div>
+              </>
+            )}
 
-          {debug === true && <Debug values={values} />}
-        </>
-      )}
+            {debug === true && <Debug values={values} />}
+          </>
+        )
+      }}
     </Formik>
   )
 }
