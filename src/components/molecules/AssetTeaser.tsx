@@ -34,7 +34,9 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
         </header>
 
         <aside className={styles.typeDetails}>
-          <div className={styles.typeLabel}>{type}</div>
+          <div className={styles.typeLabel}>
+            {type === 'dataset' ? 'data set' : 'algorithm'}
+          </div>
           {accessType === 'access' ? (
             <Download
               role="img"
