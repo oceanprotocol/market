@@ -27,13 +27,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
     <article className={`${styles.teaser} ${styles[type]}`}>
       <Link to={`/asset/${ddo.id}`} className={styles.link}>
         <header className={styles.header}>
-          <Tooltip
-            placement="left"
-            content={dataTokenInfo?.name}
-            className={styles.symbol}
-          >
-            {dataTokenInfo?.symbol}
-          </Tooltip>
+          {dataTokenInfo?.symbol}
           <Dotdotdot clamp={3}>
             <h1 className={styles.title}>{name}</h1>
           </Dotdotdot>
