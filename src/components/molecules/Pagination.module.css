@@ -2,21 +2,25 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin-top: calc(var(--spacer) * 2);
+  margin-top: var(--spacer);
   margin-bottom: var(--spacer);
   padding-left: 0;
+  font-size: var(--font-size-small);
 }
 
 .number {
-  text-align: center;
   font-weight: var(--font-weight-bold);
   padding: calc(var(--spacer) / 4) calc(var(--spacer) / 2);
   margin-left: -1px;
   margin-top: -1px;
-  display: inline-block;
+  display: block;
   cursor: pointer;
-  border: 1px solid var(--border-color);
-  min-width: 3.5rem;
+  min-width: 3rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-secondary);
 }
 
 li:first-child .number,
@@ -39,8 +43,7 @@ li:last-child .number {
 }
 
 .number:hover {
-  background-color: var(--color-primary);
-  color: var(--brand-white);
+  color: var(--brand-pink);
 }
 
 .current,
@@ -59,7 +62,7 @@ li:last-child .number {
 .current:hover,
 .current:focus,
 .current:active {
-  color: var(--brand-grey);
+  color: var(--text-color);
 }
 
 .next {
@@ -68,4 +71,14 @@ li:last-child .number {
 
 .prevNextDisabled {
   opacity: 0;
+}
+
+.arrow {
+  width: 1rem;
+  height: 1rem;
+  fill: currentColor;
+}
+
+.arrow.previous {
+  transform: rotate(180deg);
 }

@@ -2,23 +2,37 @@ import React, { ReactElement } from 'react'
 import { useNavigate } from '@reach/router'
 import styles from './filterPrice.module.css'
 import classNames from 'classnames/bind'
-import { addExistingParamsToUrl, FilterByPriceOptions } from './utils'
+import {
+  addExistingParamsToUrl,
+  FilterByPriceOptions,
+  FilterByTypeOptions
+} from './utils'
 import Button from '../../atoms/Button'
 
 const cx = classNames.bind(styles)
 
-const filterItems = [
+const filterItemsPrice = [
   { display: 'all', value: undefined },
   { display: 'fixed price', value: FilterByPriceOptions.Fixed },
   { display: 'dynamic price', value: FilterByPriceOptions.Dynamic }
 ]
 
+const filterItemsType = [
+  { display: 'all', value: undefined },
+  { display: 'algorithms', value: FilterByTypeOptions.Algorithm },
+  { display: 'data sets', value: FilterByTypeOptions.Data }
+]
+
 export default function FilterPrice({
   priceType,
-  setPriceType
+  setPriceType,
+  serviceType,
+  setServiceType
 }: {
   priceType: string
   setPriceType: React.Dispatch<React.SetStateAction<string>>
+  serviceType: string
+  setServiceType: React.Dispatch<React.SetStateAction<string>>
 }): ReactElement {
   const navigate = useNavigate()
 
@@ -31,27 +45,59 @@ export default function FilterPrice({
     navigate(urlLocation)
   }
 
+  async function applyTypeFilter(filterBy: string) {
+    let urlLocation = await addExistingParamsToUrl(location, 'serviceType')
+    if (filterBy) {
+      urlLocation = `${urlLocation}&serviceType=${filterBy}`
+    }
+    setServiceType(filterBy)
+    navigate(urlLocation)
+  }
+
   return (
     <div>
-      {filterItems.map((e, index) => {
-        const filter = cx({
-          [styles.selected]: e.value === priceType,
-          [styles.filter]: true
-        })
-        return (
-          <Button
-            size="small"
-            style="text"
-            key={index}
-            className={filter}
-            onClick={async () => {
-              await applyFilter(e.value)
-            }}
-          >
-            {e.display}
-          </Button>
-        )
-      })}
+      <div className={styles.filterList}>
+        {filterItemsType.map((e, index) => {
+          const filter = cx({
+            [styles.selected]: e.value === serviceType,
+            [styles.filter]: true
+          })
+          return (
+            <Button
+              size="small"
+              style="text"
+              key={index}
+              className={filter}
+              onClick={async () => {
+                await applyTypeFilter(e.value)
+              }}
+            >
+              {e.display}
+            </Button>
+          )
+        })}
+      </div>
+      <div className={styles.filterList}>
+        {filterItemsPrice.map((e, index) => {
+          const filter = cx({
+            [styles.selected]: e.value === priceType,
+            [styles.filter]: true
+          })
+          return (
+            <Button
+              size="small"
+              style="text"
+              key={index}
+              className={filter}
+              onClick={async () => {
+                await applyFilter(e.value)
+              }}
+            >
+              {e.display}
+            </Button>
+          )
+        })}
+      </div>
     </div>
   )
 }
