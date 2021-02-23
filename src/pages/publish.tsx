@@ -4,7 +4,7 @@ import Page from '../components/templates/Page'
 import { graphql, PageProps } from 'gatsby'
 
 export default function PageGatsbyPublish(props: PageProps): ReactElement {
-  const content = (props.data as any).content.edges[0].node.childPagesJson
+  const content = (props.data as any).content.edges[0].node.childPublishJson
   const { title, description } = content
 
   return (
@@ -16,10 +16,12 @@ export default function PageGatsbyPublish(props: PageProps): ReactElement {
 
 export const contentQuery = graphql`
   query PublishPageQuery {
-    content: allFile(filter: { relativePath: { eq: "pages/index.json" } }) {
+    content: allFile(
+      filter: { relativePath: { eq: "pages/publish/index.json" } }
+    ) {
       edges {
         node {
-          childPagesJson {
+          childPublishJson {
             title
             description
             warning

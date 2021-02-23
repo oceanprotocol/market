@@ -7,15 +7,16 @@ import Input from '../../atoms/Input'
 import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { MetadataPublishFormDataset } from '../../../@types/MetaData'
+import stylesIndex from './index.module.css'
 
 const query = graphql`
   query {
     content: allFile(
-      filter: { relativePath: { eq: "pages/form-dataset.json" } }
+      filter: { relativePath: { eq: "pages/publish/form-dataset.json" } }
     ) {
       edges {
         node {
-          childPagesJson {
+          childPublishJson {
             title
             data {
               name
@@ -38,7 +39,7 @@ const query = graphql`
 
 export default function FormPublish(): ReactElement {
   const data = useStaticQuery(query)
-  const content: FormContent = data.content.edges[0].node.childPagesJson
+  const content: FormContent = data.content.edges[0].node.childPublishJson
   const { ocean, account } = useOcean()
   const {
     status,
@@ -82,6 +83,7 @@ export default function FormPublish(): ReactElement {
       // do we need this?
       onChange={() => status === 'empty' && setStatus(null)}
     >
+      <h2 className={stylesIndex.formTitle}>{content.title}</h2>
       {content.data.map((field: FormFieldProps) => (
         <Field
           key={field.name}
