@@ -73,9 +73,14 @@ export default function Edit({
       // Construct new DDO with new values
       const ddoEditedMetdata = await ocean.assets.editMetadata(ddo, {
         title: values.name,
-        description: values.description,
-        price: values.price
+        description: values.description
       })
+
+      await ocean.fixedRateExchange.setRate(
+        'exchangeId',
+        values.price,
+        ddo.price.address
+      )
 
       if (!ddoEditedMetdata) {
         setError(content.form.error)
