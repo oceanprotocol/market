@@ -15,6 +15,7 @@ import Button from '../../atoms/Button'
 import Edit from '../AssetActions/Edit'
 import DebugOutput from '../../atoms/DebugOutput'
 import MetaMain from './MetaMain'
+import AssetTypeDetails from '../../atoms/AssetTypeDetails'
 // import EditHistory from './EditHistory'
 
 export interface AssetContentProps {
@@ -46,8 +47,9 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   const { owner, isInPurgatory, purgatoryData } = useAsset()
   const [showPricing, setShowPricing] = useState(false)
   const [showEdit, setShowEdit] = useState<boolean>()
-  const { ddo, price, metadata } = useAsset()
+  const { ddo, price, metadata, type } = useAsset()
   const isOwner = accountId === owner
+  const accessType = ddo.service[1].type
 
   useEffect(() => {
     if (!price) return
@@ -67,6 +69,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
       <div>
         {showPricing && <Pricing ddo={ddo} />}
         <div className={styles.content}>
+          <AssetTypeDetails type={type} accessType={accessType} />
           <MetaMain />
           <Bookmark did={ddo.id} />
 

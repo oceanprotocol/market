@@ -8,8 +8,7 @@ import removeMarkdown from 'remove-markdown'
 import Publisher from '../atoms/Publisher'
 import { useMetadata } from '@oceanprotocol/react'
 import Time from '../atoms/Time'
-import { ReactComponent as Compute } from '../../images/compute.svg'
-import { ReactComponent as Download } from '../../images/download.svg'
+import AssetTypeDetails from '../atoms/AssetTypeDetails'
 
 declare type AssetTeaserProps = {
   ddo: DDO
@@ -33,20 +32,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
           <Publisher account={owner} minimal className={styles.publisher} />
         </header>
 
-        <aside className={styles.typeDetails}>
-          <div className={styles.typeLabel}>
-            {type === 'dataset' ? 'data set' : 'algorithm'}
-          </div>
-          {accessType === 'access' ? (
-            <Download
-              role="img"
-              aria-label="Download"
-              className={styles.icon}
-            />
-          ) : (
-            <Compute role="img" aria-label="Compute" className={styles.icon} />
-          )}
-        </aside>
+        <AssetTypeDetails type={type} accessType={accessType} />
 
         <div className={styles.content}>
           <Dotdotdot tagName="p" clamp={3}>

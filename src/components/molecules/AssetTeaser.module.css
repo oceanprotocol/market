@@ -61,28 +61,3 @@
   font-size: var(--font-size-mini);
   margin-top: calc(var(--spacer) / 2);
 }
-
-.typeDetails {
-  position: absolute;
-  top: calc(var(--spacer) / 3);
-  right: calc(var(--spacer) / 3);
-  width: auto;
-  font-size: var(--font-size-mini);
-}
-
-.icon {
-  fill: var(--brand-grey-light);
-  width: 1.1em;
-  height: 1.1em;
-  vertical-align: baseline;
-  margin-bottom: -0.2em;
-  display: inline-block;
-}
-
-.typeLabel {
-  display: inline-block;
-  text-transform: uppercase;
-  border-right: 1px solid var(--border-color);
-  padding-right: calc(var(--spacer) / 3.5);
-  margin-right: calc(var(--spacer) / 4);
-}
