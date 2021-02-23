@@ -11,22 +11,21 @@ import Button from '../../atoms/Button'
 
 const cx = classNames.bind(styles)
 
-const filterItemsPrice = [
+const priceFilterItems = [
   { display: 'all', value: undefined },
   { display: 'fixed price', value: FilterByPriceOptions.Fixed },
   { display: 'dynamic price', value: FilterByPriceOptions.Dynamic }
 ]
 
-const filterItemsType = [
-  { display: 'all', value: undefined },
-  { display: 'algorithms', value: FilterByTypeOptions.Algorithm },
-  { display: 'data sets', value: FilterByTypeOptions.Data }
+const serviceFilterItems = [
+  { display: 'data sets', value: FilterByTypeOptions.Data },
+  { display: 'algorithms', value: FilterByTypeOptions.Algorithm }
 ]
 
 export default function FilterPrice({
   priceType,
-  setPriceType,
   serviceType,
+  setPriceType,
   setServiceType
 }: {
   priceType: string
@@ -36,7 +35,7 @@ export default function FilterPrice({
 }): ReactElement {
   const navigate = useNavigate()
 
-  async function applyFilter(filterBy: string) {
+  async function applyPriceFilter(filterBy: string) {
     let urlLocation = await addExistingParamsToUrl(location, 'priceType')
     if (filterBy) {
       urlLocation = `${urlLocation}&priceType=${filterBy}`
@@ -45,7 +44,7 @@ export default function FilterPrice({
     navigate(urlLocation)
   }
 
-  async function applyTypeFilter(filterBy: string) {
+  async function applyServiceFilter(filterBy: string) {
     let urlLocation = await addExistingParamsToUrl(location, 'serviceType')
     if (filterBy) {
       urlLocation = `${urlLocation}&serviceType=${filterBy}`
@@ -57,43 +56,65 @@ export default function FilterPrice({
   return (
     <div>
       <div className={styles.filterList}>
-        {filterItemsType.map((e, index) => {
-          const filter = cx({
-            [styles.selected]: e.value === serviceType,
-            [styles.filter]: true
-          })
-          return (
-            <Button
-              size="small"
-              style="text"
-              key={index}
-              className={filter}
-              onClick={async () => {
-                await applyTypeFilter(e.value)
-              }}
-            >
-              {e.display}
-            </Button>
-          )
-        })}
-      </div>
-      <div className={styles.filterList}>
-        {filterItemsPrice.map((e, index) => {
-          const filter = cx({
+        {priceFilterItems.map((e, index) => {
+          const selectFilter = cx({
             [styles.selected]: e.value === priceType,
             [styles.filter]: true
           })
+          const isSelected = e.value === priceType
           return (
             <Button
               size="small"
               style="text"
               key={index}
-              className={filter}
-              onClick={async () => {
-                await applyFilter(e.value)
-              }}
+              className={selectFilter}
+              onClick={
+                isSelected
+                  ? async () => {
+                      await applyPriceFilter(undefined)
+                    }
+                  : async () => {
+                      await applyPriceFilter(e.value)
+                    }
+              }
             >
               {e.display}
+              {isSelected && e.display !== 'all' ? (
+                <span className={styles.escape}>✕</span>
+              ) : (
+                <></>
+              )}
+            </Button>
+          )
+        })}
+        {serviceFilterItems.map((e, index) => {
+          const selectFilter = cx({
+            [styles.selected]: e.value === serviceType,
+            [styles.filter]: true
+          })
+          const isSelected = e.value === serviceType
+          return (
+            <Button
+              size="small"
+              style="text"
+              key={index}
+              className={selectFilter}
+              onClick={
+                isSelected
+                  ? async () => {
+                      await applyServiceFilter(undefined)
+                    }
+                  : async () => {
+                      await applyServiceFilter(e.value)
+                    }
+              }
+            >
+              {e.display}
+              {isSelected && e.display !== 'all' ? (
+                <span className={styles.escape}>✕</span>
+              ) : (
+                <></>
+              )}
             </Button>
           )
         })}

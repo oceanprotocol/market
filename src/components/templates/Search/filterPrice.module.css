@@ -35,3 +35,14 @@ button.filter,
 .filterList:first-of-type{
   margin-bottom: calc(var(--spacer) / 6);
 }
+
+.escape {
+  /* position: absolute; */
+  /* border-radius: 50%; */
+  /* background-color: var(--color-secondary); */
+  /* text-align: center; */
+  /* padding: 0rem .1rem; */
+  margin-left: calc(var(--spacer) / 6);
+  color: var(--background-body);
+
+}
