@@ -57,7 +57,7 @@ export default function FormPublish(): ReactElement {
   useEffect(() => {
     setErrors({})
     setTouched({})
-    resetForm({ values: initialValues, status: 'empty' })
+
     // setSubmitting(false)
   }, [setErrors, setTouched])
 
