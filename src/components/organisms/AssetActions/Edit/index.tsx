@@ -65,6 +65,12 @@ export default function Edit({
 
   const hasFeedback = error || success
 
+  ocean.fixedRateExchange
+    .getExchangesbyCreator(ddo.proof.creator)
+    .then((resp) => {
+      console.log(resp)
+    })
+
   async function handleSubmit(
     values: Partial<MetadataPublishForm>,
     resetForm: () => void
@@ -76,11 +82,25 @@ export default function Edit({
         description: values.description
       })
 
-      await ocean.fixedRateExchange.setRate(
-        'exchangeId',
-        values.price,
-        ddo.price.address
+      console.log('herrrreeee')
+
+      const exchandeId = await ocean.fixedRateExchange.generateExchangeId(
+        ddo.dataToken,
+        ddo.proof.creator
       )
+
+      console.log(exchandeId)
+
+      const setPriceResp = await ocean.fixedRateExchange.setRate(
+        exchandeId,
+        values.price,
+        ddo.proof.creator
+      )
+      if (!setPriceResp) {
+        setError(content.form.error)
+        Logger.error(content.form.error)
+        return
+      }
 
       if (!ddoEditedMetdata) {
         setError(content.form.error)
