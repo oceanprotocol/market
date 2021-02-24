@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { useNavigate } from '@reach/router'
 import styles from './filterPrice.module.css'
 import classNames from 'classnames/bind'
@@ -12,7 +12,6 @@ import Button from '../../atoms/Button'
 const cx = classNames.bind(styles)
 
 const priceFilterItems = [
-  { display: 'all', value: undefined },
   { display: 'fixed price', value: FilterByPriceOptions.Fixed },
   { display: 'dynamic price', value: FilterByPriceOptions.Dynamic }
 ]
@@ -35,6 +34,9 @@ export default function FilterPrice({
 }): ReactElement {
   const navigate = useNavigate()
 
+  const [priceSelections, setPriceSelections] = useState<string[]>([])
+  const [serviceSelections, setServiceSelections] = useState<string[]>([])
+
   async function applyPriceFilter(filterBy: string) {
     let urlLocation = await addExistingParamsToUrl(location, 'priceType')
     if (filterBy) {
@@ -46,7 +48,7 @@ export default function FilterPrice({
 
   async function applyServiceFilter(filterBy: string) {
     let urlLocation = await addExistingParamsToUrl(location, 'serviceType')
-    if (filterBy) {
+    if (filterBy && location.search.indexOf('&serviceType') === -1) {
       urlLocation = `${urlLocation}&serviceType=${filterBy}`
     }
     setServiceType(filterBy)
@@ -57,11 +59,12 @@ export default function FilterPrice({
     <div>
       <div className={styles.filterList}>
         {priceFilterItems.map((e, index) => {
+          const isSelected =
+            e.value === priceType || priceSelections.includes(e.value)
           const selectFilter = cx({
-            [styles.selected]: e.value === priceType,
+            [styles.selected]: isSelected,
             [styles.filter]: true
           })
-          const isSelected = e.value === priceType
           return (
             <Button
               size="small"
@@ -69,30 +72,46 @@ export default function FilterPrice({
               key={index}
               className={selectFilter}
               onClick={
+                // only works for two price options
                 isSelected
                   ? async () => {
-                      await applyPriceFilter(undefined)
+                      if (priceSelections.length > 1) {
+                        // both selected -> select the other one
+                        const otherValue = priceFilterItems.find(
+                          (p) => p.value !== e.value
+                        ).value
+                        await applyPriceFilter(otherValue)
+                        setPriceSelections([otherValue])
+                      } else {
+                        // only the current one selected -> deselect it
+                        await applyPriceFilter(undefined)
+                        setPriceSelections([])
+                      }
                     }
                   : async () => {
-                      await applyPriceFilter(e.value)
+                      if (priceSelections.length) {
+                        // one already selected -> both selected
+                        await applyPriceFilter(undefined)
+                        setPriceSelections(priceFilterItems.map((p) => p.value))
+                      } else {
+                        // none selected -> select
+                        await applyPriceFilter(e.value)
+                        setPriceSelections([e.value])
+                      }
                     }
               }
             >
               {e.display}
-              {isSelected && e.display !== 'all' ? (
-                <span className={styles.escape}>✕</span>
-              ) : (
-                <></>
-              )}
             </Button>
           )
         })}
         {serviceFilterItems.map((e, index) => {
+          const isSelected =
+            e.value === serviceType || serviceSelections.includes(e.value)
           const selectFilter = cx({
-            [styles.selected]: e.value === serviceType,
+            [styles.selected]: isSelected,
             [styles.filter]: true
           })
-          const isSelected = e.value === serviceType
           return (
             <Button
               size="small"
@@ -102,19 +121,35 @@ export default function FilterPrice({
               onClick={
                 isSelected
                   ? async () => {
-                      await applyServiceFilter(undefined)
+                      if (serviceSelections.length > 1) {
+                        // both selected -> select the other one
+                        const otherValue = serviceFilterItems.find(
+                          (p) => p.value !== e.value
+                        ).value
+                        await applyServiceFilter(otherValue)
+                        setServiceSelections([otherValue])
+                      } else {
+                        // only the current one selected -> deselect it
+                        await applyServiceFilter(undefined)
+                        setServiceSelections([])
+                      }
                     }
                   : async () => {
-                      await applyServiceFilter(e.value)
+                      if (serviceSelections.length) {
+                        // one already selected -> both selected
+                        await applyServiceFilter(undefined)
+                        setServiceSelections(
+                          serviceFilterItems.map((p) => p.value)
+                        )
+                      } else {
+                        // none selected -> select
+                        await applyServiceFilter(e.value)
+                        setServiceSelections([e.value])
+                      }
                     }
               }
             >
               {e.display}
-              {isSelected && e.display !== 'all' ? (
-                <span className={styles.escape}>✕</span>
-              ) : (
-                <></>
-              )}
             </Button>
           )
         })}
