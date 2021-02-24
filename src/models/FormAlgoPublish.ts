@@ -16,7 +16,7 @@ export const validationSchema: Yup.SchemaOf<MetadataPublishFormAlgorithm> = Yup.
       })
       .required('Required'),
     image: Yup.string().required('Required'),
-    version: Yup.string().required('Required'),
+    containerTag: Yup.string().required('Required'),
     entrypoint: Yup.string().required('Required'),
     author: Yup.string().required('Required'),
     termsAndConditions: Yup.boolean().required('Required'),
@@ -30,9 +30,9 @@ export const validationSchema: Yup.SchemaOf<MetadataPublishFormAlgorithm> = Yup.
 export const initialValues: Partial<MetadataPublishFormAlgorithm> = {
   name: '',
   author: '',
-  dockerImage: '',
+  dockerImage: 'node:pre-defined',
   image: '',
-  version: '',
+  containerTag: '',
   entrypoint: '',
   files: '',
   description: '',

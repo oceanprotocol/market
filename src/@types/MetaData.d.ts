@@ -50,7 +50,7 @@ export interface MetadataPublishFormAlgorithm {
   termsAndConditions: boolean
   // ---- optional fields ----
   image: string
-  version: string
+  containerTag: string
   entrypoint: string
   tags?: string
 }

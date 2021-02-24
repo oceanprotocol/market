@@ -73,7 +73,7 @@ export default function FormPublish(): ReactElement {
         setFieldValue('dockerImage', imageSelected)
         setDisableFlag(true)
         setFieldValue('image', 'node')
-        setFieldValue('version', '10')
+        setFieldValue('containerTag', '10')
         setFieldValue('entrypoint', 'node $ALGO')
         break
       }
@@ -81,7 +81,7 @@ export default function FormPublish(): ReactElement {
         setFieldValue('dockerImage', imageSelected)
         setDisableFlag(true)
         setFieldValue('image', 'oceanprotocol/algo_dockers')
-        setFieldValue('version', 'python-panda')
+        setFieldValue('containerTag', 'python-panda')
         setFieldValue('entrypoint', 'python $ALGO')
         break
       }
@@ -89,7 +89,7 @@ export default function FormPublish(): ReactElement {
         setFieldValue('dockerImage', imageSelected)
         setDisableFlag(false)
         setFieldValue('image', '')
-        setFieldValue('version', '')
+        setFieldValue('containerTag', '')
         setFieldValue('entrypoint', '')
         break
       }

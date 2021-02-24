@@ -72,7 +72,7 @@ export function checkIfTimeoutInPredefinedValues(
 
 function getAlgoithComponent(
   image: string,
-  version: string,
+  containerTag: string,
   entrypoint: string,
   algorithmLanguace: string
 ): MetadataAlgorithm {
@@ -83,7 +83,7 @@ function getAlgoithComponent(
     container: {
       entrypoint: entrypoint,
       image: image,
-      tag: version
+      tag: containerTag
     }
   }
 }
@@ -136,7 +136,7 @@ export function transformPublishAlgorithmFormToMetadata(
     tags,
     dockerImage,
     image,
-    version,
+    containerTag,
     entrypoint,
     termsAndConditions,
     files
@@ -148,7 +148,7 @@ export function transformPublishAlgorithmFormToMetadata(
   const algorithmLanguace = getAlgoithFileExtension(fileUrl)
   const algorithm = getAlgoithComponent(
     image,
-    version,
+    containerTag,
     entrypoint,
     algorithmLanguace
   )

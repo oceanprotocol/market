@@ -27,7 +27,7 @@
       "name": "dockerImage",
       "label": "Docker Image",
       "placeholder": "e.g. python3.7",
-      "help": "Please select a predefined image to run your algorithm.",
+      "help": "Please select a image to run your algorithm.",
       "type": "select",
       "options": ["node:pre-defined", "python:pre-defined", "custom image"],
       "required": true
@@ -35,16 +35,16 @@
     {
       "name": "image",
       "label": "Image URL",
-      "placeholder": "e.g. node or https://hub.docker.com/_/node",
+      "placeholder": "e.g. oceanprotocol/algo_dockers or https://example.com/image_path",
       "disabled": true,
-      "help": "Provide the name of a docker image or the full url if you have it hosted in a 3rd party repo",
+      "help": "Provide the name of a public docker image or the full url if you have it hosted in a 3rd party repo",
       "required": false
     },
     {
-      "name": "version",
-      "label": "Version",
-      "placeholder": "e.g. 10",
-      "help": "Provide the version for your image.",
+      "name": "containerTag",
+      "label": "Docker Image Tag",
+      "placeholder": "e.g. latest",
+      "help": "Provide the tag for your docker image.",
       "disabled": true,
       "required": false
     },
