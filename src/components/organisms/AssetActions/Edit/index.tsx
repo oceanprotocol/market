@@ -58,7 +58,7 @@ export default function Edit({
 
   const { debug } = useUserPreferences()
   const { ocean, accountId } = useOcean()
-  const { metadata, ddo, refreshDdo } = useAsset()
+  const { metadata, ddo, refreshDdo, price } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const [timeoutStringValue, setTimeoutStringValue] = useState<string>()
@@ -82,20 +82,23 @@ export default function Edit({
         description: values.description
       })
 
-      console.log('herrrreeee')
-
-      const exchandeId = await ocean.fixedRateExchange.generateExchangeId(
+      /* const exchanges = await ocean.fixedRateExchange.searchforDT(
         ddo.dataToken,
-        ddo.proof.creator
+        '1'
       )
 
-      console.log(exchandeId)
+      console.log(exchanges[0].exchangeOwner)
+      console.log(accountId)
+      console.log('-----------------------')
+      console.log(exchanges[0].exchangeID)
+      console.log(price.address) */
 
       const setPriceResp = await ocean.fixedRateExchange.setRate(
-        exchandeId,
+        price.address,
         values.price,
-        ddo.proof.creator
+        accountId
       )
+
       if (!setPriceResp) {
         setError(content.form.error)
         Logger.error(content.form.error)
