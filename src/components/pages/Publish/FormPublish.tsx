@@ -25,7 +25,6 @@ const query = graphql`
               help
               type
               required
-              disabled
               sortOptions
               options
             }

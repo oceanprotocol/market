@@ -36,7 +36,6 @@
       "name": "image",
       "label": "Image URL",
       "placeholder": "e.g. oceanprotocol/algo_dockers or https://example.com/image_path",
-      "disabled": true,
       "help": "Provide the name of a public docker image or the full url if you have it hosted in a 3rd party repo",
       "required": false
     },
@@ -45,7 +44,6 @@
       "label": "Docker Image Tag",
       "placeholder": "e.g. latest",
       "help": "Provide the tag for your docker image.",
-      "disabled": true,
       "required": false
     },
     {
@@ -53,7 +51,6 @@
       "label": "Entrypoint",
       "placeholder": "e.g. python $ALGO",
       "help": "Provide the entrypoint for your algorithm.",
-      "disabled": true,
       "required": false
     },
     {

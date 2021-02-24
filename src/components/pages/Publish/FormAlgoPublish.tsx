@@ -1,4 +1,10 @@
-import React, { ReactElement, useEffect, FormEvent, ChangeEvent } from 'react'
+import React, {
+  ReactElement,
+  useEffect,
+  useState,
+  FormEvent,
+  ChangeEvent
+} from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 import styles from './FormPublish.module.css'
 import { useOcean } from '@oceanprotocol/react'
@@ -25,7 +31,6 @@ const query = graphql`
               help
               type
               required
-              disabled
               sortOptions
               options
             }
@@ -52,7 +57,9 @@ export default function FormPublish(): ReactElement {
     validateField,
     setFieldValue
   }: FormikContextType<MetadataPublishFormAlgorithm> = useFormikContext()
-
+  const [selectedDockerImage, setSelectedDockerImage] = useState<string>(
+    initialValues.dockerImage
+  )
   // reset form validation on every mount
   useEffect(() => {
     setErrors({})
@@ -61,33 +68,21 @@ export default function FormPublish(): ReactElement {
     // setSubmitting(false)
   }, [setErrors, setTouched])
 
-  function setDisableFlag(flag: boolean) {
-    content.data.forEach((field) => {
-      if (field.disabled !== null) field.disabled = flag
-    })
-  }
-
   function handleImageSelectChange(imageSelected: string) {
     switch (imageSelected) {
       case 'node:pre-defined': {
-        setFieldValue('dockerImage', imageSelected)
-        setDisableFlag(true)
         setFieldValue('image', 'node')
         setFieldValue('containerTag', '10')
         setFieldValue('entrypoint', 'node $ALGO')
         break
       }
       case 'python:pre-defined': {
-        setFieldValue('dockerImage', imageSelected)
-        setDisableFlag(true)
         setFieldValue('image', 'oceanprotocol/algo_dockers')
         setFieldValue('containerTag', 'python-panda')
         setFieldValue('entrypoint', 'python $ALGO')
         break
       }
       default: {
-        setFieldValue('dockerImage', imageSelected)
-        setDisableFlag(false)
         setFieldValue('image', '')
         setFieldValue('containerTag', '')
         setFieldValue('entrypoint', '')
@@ -105,12 +100,11 @@ export default function FormPublish(): ReactElement {
     const value =
       field.type === 'checkbox' ? !JSON.parse(e.target.value) : e.target.value
     if (field.name === 'dockerImage') {
-      validateField(field.name)
+      setSelectedDockerImage(e.target.value)
       handleImageSelectChange(e.target.value)
-    } else {
-      validateField(field.name)
-      setFieldValue(field.name, value)
     }
+    validateField(field.name)
+    setFieldValue(field.name, value)
   }
 
   const resetFormAndClearStorage = (e: FormEvent<Element>) => {
@@ -126,17 +120,23 @@ export default function FormPublish(): ReactElement {
       onChange={() => status === 'empty' && setStatus(null)}
     >
       <h2 className={stylesIndex.formTitle}>{content.title}</h2>
-      {content.data.map((field: FormFieldProps) => (
-        <Field
-          key={field.name}
-          {...field}
-          disabled={field.disabled}
-          component={Input}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            handleFieldChange(e, field)
-          }
-        />
-      ))}
+      {content.data.map(
+        (field: FormFieldProps) =>
+          ((field.name !== 'entrypoint' &&
+            field.name !== 'image' &&
+            field.name !== 'containerTag') ||
+            selectedDockerImage === 'custom image') && (
+            <Field
+              key={field.name}
+              {...field}
+              disabled={field.disabled}
+              component={Input}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                handleFieldChange(e, field)
+              }
+            />
+          )
+      )}
 
       <footer className={styles.actions}>
         <Button
