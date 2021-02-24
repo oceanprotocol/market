@@ -73,6 +73,12 @@ export default function PublishPage({
   const [error, setError] = useState<string>()
   const [title, setTitle] = useState<string>()
   const [did, setDid] = useState<string>()
+  const [algoInitialValues, setAlgoInitialValues] = useState<
+    Partial<MetadataPublishFormAlgorithm>
+  >(initialValuesAlgorithm)
+  const [datasetInitialValues, setdatasetInitialValues] = useState<
+    Partial<MetadataPublishFormDataset>
+  >(initialValues)
   const [publishType, setPublishType] = useState<MetadataMain['type']>(
     'dataset'
   )
@@ -164,7 +170,7 @@ export default function PublishPage({
   return isInPurgatory && purgatoryData ? null : (
     <Formik
       initialValues={
-        publishType === 'dataset' ? initialValues : initialValuesAlgorithm
+        publishType === 'dataset' ? datasetInitialValues : algoInitialValues
       }
       initialStatus="empty"
       validationSchema={
@@ -178,6 +184,7 @@ export default function PublishPage({
           ? await handleSubmit(values, resetForm)
           : await handleAlgorithmSubmit(values, resetForm)
       }}
+      enableReinitialize
     >
       {({ values }) => {
         const tabs = [
@@ -225,9 +232,12 @@ export default function PublishPage({
                 <Tabs
                   className={styles.tabs}
                   items={tabs}
-                  handleTabChange={(title) =>
+                  handleTabChange={(title) => {
                     setPublishType(title.toLowerCase().replace(' ', '') as any)
-                  }
+                    title === 'Algorithm'
+                      ? setdatasetInitialValues(values)
+                      : setAlgoInitialValues(values)
+                  }}
                 />
               </>
             )}
