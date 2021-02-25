@@ -28,7 +28,8 @@ type SortValueOptions = typeof SortValueOptions[keyof typeof SortValueOptions]
 
 export const FilterByPriceOptions = {
   Fixed: 'exchange',
-  Dynamic: 'pool'
+  Dynamic: 'pool',
+  All: 'all'
 } as const
 type FilterByPriceOptions = typeof FilterByPriceOptions[keyof typeof FilterByPriceOptions]
 
@@ -39,11 +40,20 @@ export const FilterByTypeOptions = {
 type FilterByTypeOptions = typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
 
 function addPriceFilterToQuerry(sortTerm: string, priceFilter: string): string {
-  sortTerm = priceFilter
-    ? sortTerm === ''
-      ? `price.type:${priceFilter}`
-      : `${sortTerm} AND price.type:${priceFilter}`
-    : sortTerm
+  if (priceFilter === FilterByPriceOptions.All) {
+    sortTerm = priceFilter
+      ? sortTerm === ''
+        ? `(price.type:${FilterByPriceOptions.Fixed} OR price.type:${FilterByPriceOptions.Dynamic})`
+        : `${sortTerm} AND (price.type:${FilterByPriceOptions.Dynamic} OR price.type:${FilterByPriceOptions.Fixed})`
+      : sortTerm
+  } else {
+    sortTerm = priceFilter
+      ? sortTerm === ''
+        ? `price.type:${priceFilter}`
+        : `${sortTerm} AND price.type:${priceFilter}`
+      : sortTerm
+  }
+  console.log('SORT TERM: ', sortTerm)
   return sortTerm
 }
 

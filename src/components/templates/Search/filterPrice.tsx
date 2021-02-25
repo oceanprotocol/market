@@ -57,8 +57,8 @@ export default function FilterPrice({
 
   async function handleSelectedFilter(isSelected: boolean, value: string) {
     if (
-      FilterByPriceOptions.Dynamic.includes(value) ||
-      FilterByPriceOptions.Fixed.includes(value)
+      value === FilterByPriceOptions.Fixed ||
+      value === FilterByPriceOptions.Dynamic
     ) {
       if (isSelected) {
         if (priceSelections.length > 1) {
@@ -75,7 +75,7 @@ export default function FilterPrice({
       } else {
         if (priceSelections.length) {
           // one already selected -> both selected
-          await applyPriceFilter(undefined)
+          await applyPriceFilter(FilterByPriceOptions.All)
           setPriceSelections(priceFilterItems.map((p) => p.value))
         } else {
           // none selected -> select
