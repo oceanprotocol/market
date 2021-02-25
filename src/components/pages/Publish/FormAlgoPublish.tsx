@@ -13,6 +13,8 @@ import Input from '../../atoms/Input'
 import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { MetadataPublishFormAlgorithm } from '../../../@types/MetaData'
+import { initialValues as initialValuesAlgorithm } from '../../../models/FormAlgoPublish'
+
 import stylesIndex from './index.module.css'
 
 const query = graphql`
@@ -109,7 +111,10 @@ export default function FormPublish(): ReactElement {
 
   const resetFormAndClearStorage = (e: FormEvent<Element>) => {
     e.preventDefault()
-    resetForm({ values: initialValues, status: 'empty' })
+    resetForm({
+      values: initialValuesAlgorithm as MetadataPublishFormAlgorithm,
+      status: 'empty'
+    })
     setStatus('empty')
   }
 
