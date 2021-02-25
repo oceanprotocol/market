@@ -7,7 +7,7 @@ import React, {
   useCallback,
   ReactNode
 } from 'react'
-import { Logger, DDO, BestPrice } from '@oceanprotocol/lib'
+import { Logger, DDO, BestPrice, MetadataMain } from '@oceanprotocol/lib'
 import { PurgatoryData } from '@oceanprotocol/lib/dist/node/ddo/interfaces/PurgatoryData'
 import { getDataTokenPrice, useOcean } from '@oceanprotocol/react'
 import getAssetPurgatoryData from '../utils/purgatory'
@@ -25,7 +25,7 @@ interface AssetProviderValue {
   title: string | undefined
   owner: string | undefined
   price: BestPrice | undefined
-  type: 'dataset' | 'algorithm' | undefined
+  type: MetadataMain['type'] | undefined
   error?: string
   refreshInterval: number
   refreshDdo: (token?: CancelToken) => Promise<void>
@@ -53,7 +53,7 @@ function AssetProvider({
   const [price, setPrice] = useState<BestPrice>()
   const [owner, setOwner] = useState<string>()
   const [error, setError] = useState<string>()
-  const [type, setType] = useState<string>()
+  const [type, setType] = useState<MetadataMain['type']>()
 
   const refreshPrice = useCallback(async () => {
     if (
