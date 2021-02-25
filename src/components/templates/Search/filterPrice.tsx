@@ -55,6 +55,57 @@ export default function FilterPrice({
     navigate(urlLocation)
   }
 
+  async function handleSelectedFilter(isSelected: boolean, value: string) {
+    if (
+      FilterByPriceOptions.Dynamic.includes(value) ||
+      FilterByPriceOptions.Fixed.includes(value)
+    ) {
+      if (isSelected) {
+        if (priceSelections.length > 1) {
+          // both selected -> select the other one
+          const otherValue = priceFilterItems.find((p) => p.value !== value)
+            .value
+          await applyPriceFilter(otherValue)
+          setPriceSelections([otherValue])
+        } else {
+          // only the current one selected -> deselect it
+          await applyPriceFilter(undefined)
+          setPriceSelections([])
+        }
+      } else {
+        if (priceSelections.length) {
+          // one already selected -> both selected
+          await applyPriceFilter(undefined)
+          setPriceSelections(priceFilterItems.map((p) => p.value))
+        } else {
+          // none selected -> select
+          await applyPriceFilter(value)
+          setPriceSelections([value])
+        }
+      }
+    } else {
+      if (isSelected) {
+        if (serviceSelections.length > 1) {
+          const otherValue = serviceFilterItems.find((p) => p.value !== value)
+            .value
+          await applyServiceFilter(otherValue)
+          setServiceSelections([otherValue])
+        } else {
+          await applyServiceFilter(undefined)
+          setServiceSelections([])
+        }
+      } else {
+        if (serviceSelections.length) {
+          await applyServiceFilter(undefined)
+          setServiceSelections(serviceFilterItems.map((p) => p.value))
+        } else {
+          await applyServiceFilter(value)
+          setServiceSelections([value])
+        }
+      }
+    }
+  }
+
   return (
     <div>
       <div className={styles.filterList}>
@@ -71,35 +122,9 @@ export default function FilterPrice({
               style="text"
               key={index}
               className={selectFilter}
-              onClick={
-                // only works for two price options
-                isSelected
-                  ? async () => {
-                      if (priceSelections.length > 1) {
-                        // both selected -> select the other one
-                        const otherValue = priceFilterItems.find(
-                          (p) => p.value !== e.value
-                        ).value
-                        await applyPriceFilter(otherValue)
-                        setPriceSelections([otherValue])
-                      } else {
-                        // only the current one selected -> deselect it
-                        await applyPriceFilter(undefined)
-                        setPriceSelections([])
-                      }
-                    }
-                  : async () => {
-                      if (priceSelections.length) {
-                        // one already selected -> both selected
-                        await applyPriceFilter(undefined)
-                        setPriceSelections(priceFilterItems.map((p) => p.value))
-                      } else {
-                        // none selected -> select
-                        await applyPriceFilter(e.value)
-                        setPriceSelections([e.value])
-                      }
-                    }
-              }
+              onClick={async () => {
+                handleSelectedFilter(isSelected, e.value)
+              }}
             >
               {e.display}
             </Button>
@@ -118,36 +143,9 @@ export default function FilterPrice({
               style="text"
               key={index}
               className={selectFilter}
-              onClick={
-                isSelected
-                  ? async () => {
-                      if (serviceSelections.length > 1) {
-                        // both selected -> select the other one
-                        const otherValue = serviceFilterItems.find(
-                          (p) => p.value !== e.value
-                        ).value
-                        await applyServiceFilter(otherValue)
-                        setServiceSelections([otherValue])
-                      } else {
-                        // only the current one selected -> deselect it
-                        await applyServiceFilter(undefined)
-                        setServiceSelections([])
-                      }
-                    }
-                  : async () => {
-                      if (serviceSelections.length) {
-                        // one already selected -> both selected
-                        await applyServiceFilter(undefined)
-                        setServiceSelections(
-                          serviceFilterItems.map((p) => p.value)
-                        )
-                      } else {
-                        // none selected -> select
-                        await applyServiceFilter(e.value)
-                        setServiceSelections([e.value])
-                      }
-                    }
-              }
+              onClick={async () => {
+                handleSelectedFilter(isSelected, e.value)
+              }}
             >
               {e.display}
             </Button>
