@@ -8,7 +8,7 @@ import removeMarkdown from 'remove-markdown'
 import Publisher from '../atoms/Publisher'
 import { useMetadata } from '@oceanprotocol/react'
 import Time from '../atoms/Time'
-import AssetTypeDetails from '../atoms/AssetTypeDetails'
+import AssetType from '../atoms/AssetType'
 
 declare type AssetTeaserProps = {
   ddo: DDO
@@ -32,7 +32,11 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
           <Publisher account={owner} minimal className={styles.publisher} />
         </header>
 
-        <AssetTypeDetails type={type} accessType={accessType} />
+        <AssetType
+          type={type}
+          accessType={accessType}
+          className={styles.typeDetails}
+        />
 
         <div className={styles.content}>
           <Dotdotdot tagName="p" clamp={3}>

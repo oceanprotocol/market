@@ -5,10 +5,12 @@ import EtherscanLink from '../../atoms/EtherscanLink'
 import Publisher from '../../atoms/Publisher'
 import Time from '../../atoms/Time'
 import styles from './MetaMain.module.css'
+import AssetType from '../../atoms/AssetType'
 
 export default function MetaMain(): ReactElement {
-  const { ddo, owner } = useAsset()
+  const { ddo, owner, type } = useAsset()
   const { networkId } = useOcean()
+  const accessType = ddo.service[1].type
 
   return (
     <aside className={styles.meta}>
@@ -20,15 +22,22 @@ export default function MetaMain(): ReactElement {
       <div>
         Published By <Publisher account={owner} />
       </div>
-      <p className={styles.date}>
-        <Time date={ddo?.created} relative />
-        {ddo?.created !== ddo?.updated && (
-          <>
-            {' — '}
-            updated <Time date={ddo?.updated} relative />
-          </>
-        )}
-      </p>
+      <div className={styles.typeAndDate}>
+        <AssetType
+          type={type}
+          accessType={accessType}
+          className={styles.typeDetails}
+        />
+        <p className={styles.date}>
+          <Time date={ddo?.created} relative />
+          {ddo?.created !== ddo?.updated && (
+            <>
+              {' — '}
+              updated <Time date={ddo?.updated} relative />
+            </>
+          )}
+        </p>
+      </div>
     </aside>
   )
 }

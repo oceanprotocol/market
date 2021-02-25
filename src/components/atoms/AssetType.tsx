@@ -1,17 +1,25 @@
 import React, { ReactElement } from 'react'
-import styles from './AssetTypeDetails.module.css'
+import styles from './AssetType.module.css'
+import classNames from 'classnames/bind'
 import { ReactComponent as Compute } from '../../images/compute.svg'
 import { ReactComponent as Download } from '../../images/download.svg'
 
-export default function AssetTypeDetails({
+const cx = classNames.bind(styles)
+
+export default function AssetType({
   type,
-  accessType
+  accessType,
+  className
 }: {
   type: string
   accessType: string
+  className?: string
 }): ReactElement {
+  const styleClasses = cx({
+    [className]: className
+  })
   return (
-    <aside className={styles.typeDetails}>
+    <div className={styleClasses}>
       <div className={styles.typeLabel}>
         {type === 'dataset' ? 'data set' : 'algorithm'}
       </div>
@@ -20,6 +28,6 @@ export default function AssetTypeDetails({
       ) : (
         <Compute role="img" aria-label="Compute" className={styles.icon} />
       )}
-    </aside>
+    </div>
   )
 }

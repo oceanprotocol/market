@@ -9,5 +9,17 @@
 
 .date {
   font-size: var(--font-size-mini);
+}
+
+.typeAndDate {
   margin-top: calc(var(--spacer) / 2);
+  display: flex;
+}
+
+.typeDetails {
+  border-right: 1px solid var(--border-color);
+  padding-right: calc(var(--spacer) / 3.5);
+  margin-right: calc(var(--spacer) / 4);
+  width: auto;
+  font-size: var(--font-size-mini);
 }

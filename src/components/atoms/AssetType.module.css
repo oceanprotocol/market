@@ -1,11 +1,3 @@
-.typeDetails {
-  position: absolute;
-  top: calc(var(--spacer) / 3);
-  right: calc(var(--spacer) / 3);
-  width: auto;
-  font-size: var(--font-size-mini);
-}
-
 .icon {
   fill: var(--brand-grey-light);
   width: 1.1em;
