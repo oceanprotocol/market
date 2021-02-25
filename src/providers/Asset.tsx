@@ -25,7 +25,7 @@ interface AssetProviderValue {
   title: string | undefined
   owner: string | undefined
   price: BestPrice | undefined
-  type: string | undefined
+  type: 'dataset' | 'algorithm' | undefined
   error?: string
   refreshInterval: number
   refreshDdo: (token?: CancelToken) => Promise<void>

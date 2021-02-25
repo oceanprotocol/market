@@ -19,7 +19,8 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
   const { attributes } = ddo.findServiceByType('metadata')
   const { name, type } = attributes.main
   const { dataTokenInfo } = ddo
-  const accessType = ddo.service[1].type
+  const isCompute = Boolean(ddo?.findServiceByType('compute'))
+  const accessType = isCompute ? 'compute' : 'access'
 
   return (
     <article className={`${styles.teaser} ${styles[type]}`}>

@@ -157,25 +157,17 @@ export default function Consume({
         <div className={styles.filewrapper}>
           <File file={file} />
         </div>
-        {type === 'algorithm' ? (
-          <div className={styles.pricewrapper}>
-            This asset can not be downloaded, it can only be used in a compute
-            job
-          </div>
-        ) : (
-          <div className={styles.pricewrapper}>
-            {isConsumable ? (
-              <Price ddo={ddo} conversion />
-            ) : (
-              <div className={styles.help}>
-                There is not enough liquidity in the pool to buy this data set.
-              </div>
-            )}
-            {!isInPurgatory && <PurchaseButton />}
-          </div>
-        )}
+        <div className={styles.pricewrapper}>
+          {isConsumable ? (
+            <Price ddo={ddo} conversion />
+          ) : (
+            <div className={styles.help}>
+              There is not enough liquidity in the pool to buy this data set.
+            </div>
+          )}
+          {!isInPurgatory && <PurchaseButton />}
+        </div>
       </div>
-
       <footer className={styles.feedback}>
         <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
       </footer>

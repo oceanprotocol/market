@@ -10,7 +10,8 @@ import AssetType from '../../atoms/AssetType'
 export default function MetaMain(): ReactElement {
   const { ddo, owner, type } = useAsset()
   const { networkId } = useOcean()
-  const accessType = ddo.service[1].type
+  const isCompute = Boolean(ddo?.findServiceByType('compute'))
+  const accessType = isCompute ? 'compute' : 'access'
 
   return (
     <aside className={styles.meta}>
