@@ -11,11 +11,11 @@ import {
   initialValues as initialValuesAlgorithm,
   validationSchema as validationSchemaAlgorithm
 } from '../../../models/FormAlgoPublish'
-
 import {
   transformPublishFormToMetadata,
   transformPublishAlgorithmFormToMetadata,
-  mapTimeoutStringToSeconds
+  mapTimeoutStringToSeconds,
+  validateDockerImage
 } from '../../../utils/metadata'
 import {
   MetadataPreview,
@@ -156,9 +156,13 @@ export default function PublishPage({
     ) => void
   ): Promise<void> {
     const metadata = transformPublishAlgorithmFormToMetadata(values)
-
     try {
       Logger.log('Publish Algorithm with ', metadata)
+
+      const validImage = await validateDockerImage(
+        values.image,
+        values.containerTag
+      )
 
       const ddo = await publish(
         (metadata as unknown) as Metadata,

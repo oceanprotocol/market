@@ -1,3 +1,5 @@
+import axios, { CancelToken, AxiosResponse } from 'axios'
+import { toast } from 'react-toastify'
 import {
   MetadataMarket,
   MetadataPublishFormDataset,
@@ -6,7 +8,7 @@ import {
 import { toStringNoMS } from '.'
 import AssetModel from '../models/Asset'
 import slugify from '@sindresorhus/slugify'
-import { DDO, MetadataAlgorithm } from '@oceanprotocol/lib'
+import { DDO, MetadataAlgorithm, Logger } from '@oceanprotocol/lib'
 
 export function transformTags(value: string): string[] {
   const originalTags = value?.split(',')
@@ -126,6 +128,67 @@ export function transformPublishFormToMetadata(
   }
 
   return metadata
+}
+
+async function isDockerHubImageValid(
+  image: string,
+  tag: string
+): Promise<boolean> {
+  try {
+    const response = await axios.get(
+      `https://hub.docker.com/v2/repositories/${image}/tags/${tag}`
+    )
+    if (!response || response.status !== 200 || !response.data) {
+      toast.error(
+        'Could not fetch docker hub image info. Please check image name and tag and try again'
+      )
+      return false
+    }
+
+    return true
+  } catch (error) {
+    Logger.error(error.message)
+    return false
+  }
+}
+
+async function is3rdPartyImageValid(imageURL: string): Promise<boolean> {
+  try {
+    const response = await axios.options(imageURL)
+    if (!response || response.status !== 200) {
+      toast.error(
+        'Could not fetch docker image info. Please check URL and try again'
+      )
+      return false
+    }
+    return true
+  } catch (error) {
+    Logger.error(error.message)
+    return false
+  }
+}
+
+function isUrl(image: string): boolean {
+  const pattern = new RegExp(
+    '^(https?:\\/\\/)?' +
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' +
+      '((\\d{1,3}\\.){3}\\d{1,3}))' +
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' +
+      '(\\?[;&a-z\\d%_.~+=-]*)?' +
+      '(\\#[-a-z\\d_]*)?$',
+    'i'
+  )
+  return !!pattern.test(image)
+}
+
+export async function validateDockerImage(
+  dockerImage: string,
+  tag: string
+): Promise<boolean> {
+  const isValid = isUrl(dockerImage)
+    ? await is3rdPartyImageValid(dockerImage)
+    : await isDockerHubImageValid(dockerImage, tag)
+  return isValid
 }
 
 export function transformPublishAlgorithmFormToMetadata(
