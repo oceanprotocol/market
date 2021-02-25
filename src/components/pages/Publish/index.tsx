@@ -1,5 +1,5 @@
 import React, { ReactElement, useState, useEffect } from 'react'
-import { Formik } from 'formik'
+import { Formik, FormikState } from 'formik'
 import { usePublish, useOcean } from '@oceanprotocol/react'
 import styles from './index.module.css'
 import FormPublish from './FormPublish'
@@ -75,10 +75,20 @@ export default function PublishPage({
   const [did, setDid] = useState<string>()
   const [algoInitialValues, setAlgoInitialValues] = useState<
     Partial<MetadataPublishFormAlgorithm>
-  >(initialValuesAlgorithm)
+  >(
+    (localStorage.getItem('ocean-publish-form-algorithms') &&
+      (JSON.parse(localStorage.getItem('ocean-publish-form-algorithms'))
+        .initialValues as MetadataPublishFormAlgorithm)) ||
+      initialValuesAlgorithm
+  )
   const [datasetInitialValues, setdatasetInitialValues] = useState<
     Partial<MetadataPublishFormDataset>
-  >(initialValues)
+  >(
+    (localStorage.getItem('ocean-publish-form-datasets') &&
+      (JSON.parse(localStorage.getItem('ocean-publish-form-datasets'))
+        .initialValues as MetadataPublishFormDataset)) ||
+      initialValues
+  )
   const [publishType, setPublishType] = useState<MetadataMain['type']>(
     'dataset'
   )
@@ -93,7 +103,9 @@ export default function PublishPage({
 
   async function handleSubmit(
     values: Partial<MetadataPublishFormDataset>,
-    resetForm: () => void
+    resetForm: (
+      nextState?: Partial<FormikState<Partial<MetadataPublishFormDataset>>>
+    ) => void
   ): Promise<void> {
     const metadata = transformPublishFormToMetadata(values)
     const timeout = mapTimeoutStringToSeconds(values.timeout)
@@ -127,7 +139,10 @@ export default function PublishPage({
       setSuccess(
         '🎉 Successfully published. 🎉 Now create a price on your data set.'
       )
-      resetForm()
+      resetForm({
+        values: initialValues as MetadataPublishFormDataset,
+        status: 'empty'
+      })
     } catch (error) {
       setError(error.message)
       Logger.error(error.message)
@@ -136,7 +151,9 @@ export default function PublishPage({
 
   async function handleAlgorithmSubmit(
     values: Partial<MetadataPublishFormAlgorithm>,
-    resetForm: () => void
+    resetForm: (
+      nextState?: Partial<FormikState<Partial<MetadataPublishFormAlgorithm>>>
+    ) => void
   ): Promise<void> {
     const metadata = transformPublishAlgorithmFormToMetadata(values)
 
@@ -160,7 +177,10 @@ export default function PublishPage({
       setSuccess(
         '🎉 Successfully published. 🎉 Now create a price for your algorithm.'
       )
-      resetForm()
+      resetForm({
+        values: initialValuesAlgorithm as MetadataPublishFormAlgorithm,
+        status: 'empty'
+      })
     } catch (error) {
       setError(error.message)
       Logger.error(error.message)
