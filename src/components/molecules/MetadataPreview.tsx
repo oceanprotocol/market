@@ -157,7 +157,11 @@ export function MetadataAlgorithmPreview({
           />
         )}
         {values.algorithmPrivacy && (
-          <MetaItem key="dockerImage" title="Private Algorithm" content="Yes" />
+          <MetaItem
+            key="privateAlgorithm"
+            title="Private Algorithm"
+            content="Yes"
+          />
         )}
       </div>
       <MetaFull values={values} />
