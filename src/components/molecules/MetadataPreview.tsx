@@ -158,7 +158,7 @@ export function MetadataAlgorithmPreview({
         )}
         {values.algorithmPrivacy && (
           <MetaItem
-            key="algorithmPreview"
+            key="privateAlgorithm"
             title="Private Algorithm"
             content="Yes"
           />
