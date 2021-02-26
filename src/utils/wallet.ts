@@ -86,6 +86,8 @@ export function getNetworkName(networkId: number): string {
       return 'Rinkeby'
     case 42:
       return 'Kovan'
+    case 137:
+      return 'Polygon'
     case 8996:
       return 'Development'
     default:
