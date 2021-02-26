@@ -156,35 +156,36 @@ export default function PublishPage({
     ) => void
   ): Promise<void> {
     const metadata = transformPublishAlgorithmFormToMetadata(values)
+    const validDockerImage =
+      values.dockerImage === 'custom image'
+        ? await validateDockerImage(values.image, values.containerTag)
+        : true
     try {
-      Logger.log('Publish Algorithm with ', metadata)
+      if (validDockerImage) {
+        Logger.log('Publish Algorithm with ', metadata)
 
-      const validImage = await validateDockerImage(
-        values.image,
-        values.containerTag
-      )
+        const ddo = await publish(
+          (metadata as unknown) as Metadata,
+          values.algorithmPrivacy === true ? 'compute' : 'access'
+        )
 
-      const ddo = await publish(
-        (metadata as unknown) as Metadata,
-        values.algorithmPrivacy === true ? 'compute' : 'access'
-      )
+        // Publish failed
+        if (!ddo || publishError) {
+          setError(publishError || 'Publishing DDO failed.')
+          Logger.error(publishError || 'Publishing DDO failed.')
+          return
+        }
 
-      // Publish failed
-      if (!ddo || publishError) {
-        setError(publishError || 'Publishing DDO failed.')
-        Logger.error(publishError || 'Publishing DDO failed.')
-        return
+        // Publish succeeded
+        setDid(ddo.id)
+        setSuccess(
+          '🎉 Successfully published. 🎉 Now create a price for your algorithm.'
+        )
+        resetForm({
+          values: initialValuesAlgorithm as MetadataPublishFormAlgorithm,
+          status: 'empty'
+        })
       }
-
-      // Publish succeeded
-      setDid(ddo.id)
-      setSuccess(
-        '🎉 Successfully published. 🎉 Now create a price for your algorithm.'
-      )
-      resetForm({
-        values: initialValuesAlgorithm as MetadataPublishFormAlgorithm,
-        status: 'empty'
-      })
     } catch (error) {
       setError(error.message)
       Logger.error(error.message)

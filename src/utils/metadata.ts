@@ -148,6 +148,9 @@ async function isDockerHubImageValid(
     return true
   } catch (error) {
     Logger.error(error.message)
+    toast.error(
+      'Could not fetch docker hub image info. Please check image name and tag and try again'
+    )
     return false
   }
 }
@@ -164,6 +167,9 @@ async function is3rdPartyImageValid(imageURL: string): Promise<boolean> {
     return true
   } catch (error) {
     Logger.error(error.message)
+    toast.error(
+      'Could not fetch docker image info. Please check URL and try again'
+    )
     return false
   }
 }
