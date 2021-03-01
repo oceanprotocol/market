@@ -28,7 +28,7 @@
     "@loadable/component": "^5.14.1",
     "@oceanprotocol/art": "^3.0.0",
     "@oceanprotocol/lib": "^0.11.0",
-    "@oceanprotocol/react": "^0.5.1",
+    "@oceanprotocol/react": "^0.5.3",
     "@oceanprotocol/typographies": "^0.1.0",
     "@portis/web3": "^3.0.3",
     "@sindresorhus/slugify": "^1.0.0",
