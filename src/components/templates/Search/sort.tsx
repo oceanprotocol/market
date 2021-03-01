@@ -46,8 +46,6 @@ export default function Sort({
       if (sortBy === SortTermOptions.Liquidity) {
         urlLocation = `${urlLocation}&priceType=${FilterByPriceOptions.Dynamic}`
         setPriceType(FilterByPriceOptions.Dynamic)
-      } else {
-        setPriceType(undefined)
       }
       setSortType(sortBy)
     } else if (direction) {
