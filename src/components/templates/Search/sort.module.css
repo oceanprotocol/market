@@ -4,7 +4,7 @@
   align-items: center;
   border-radius: var(--border-radius);
   border: 1px solid var(--border-color);
-  background: var(--background-body);
+  background: var(--background-content);
   overflow-y: auto;
 }
 

@@ -18,7 +18,7 @@ button.filter,
   margin-right: calc(var(--spacer) / 6);
   margin-bottom: calc(var(--spacer) / 6);
   color: var(--color-secondary);
-  background: var(--background-body);
+  background: var(--background-content);
 
   /* the only thing not possible to overwrite button style="text" with more specifity of selectors, so sledgehammer */
   padding: calc(var(--spacer) / 6) !important;
