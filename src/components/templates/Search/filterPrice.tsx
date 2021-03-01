@@ -38,7 +38,7 @@ export default function FilterPrice({
 
   const [priceSelections, setPriceSelections] = useState<string[]>([])
   const [serviceSelections, setServiceSelections] = useState<string[]>([])
-  const [clearSelected, setClearSeleted] = useState<boolean>(false)
+  const [clearSelected, setClearSelected] = useState<boolean>(false)
 
   async function applyPriceFilter(filterBy: string) {
     let urlLocation = await addExistingParamsToUrl(location, 'priceType')
@@ -84,12 +84,12 @@ export default function FilterPrice({
           // one already selected -> both selected
           await applyPriceFilter(FilterByPriceOptions.All)
           setPriceSelections(priceFilterItems.map((p) => p.value))
-          setClearSeleted(false)
+          setClearSelected(false)
         } else {
           // none selected -> select
           await applyPriceFilter(value)
           setPriceSelections([value])
-          setClearSeleted(false)
+          setClearSelected(false)
         }
       }
     } else {
@@ -111,11 +111,11 @@ export default function FilterPrice({
         if (serviceSelections.length) {
           await applyServiceFilter(undefined)
           setServiceSelections(serviceFilterItems.map((p) => p.value))
-          setClearSeleted(false)
+          setClearSelected(false)
         } else {
           await applyServiceFilter(value)
           setServiceSelections([value])
-          setClearSeleted(false)
+          setClearSelected(false)
         }
       }
     }
@@ -133,7 +133,7 @@ export default function FilterPrice({
     setServiceSelections([])
     setPriceSelections([])
 
-    setClearSeleted(true)
+    setClearSelected(true)
     setPriceType(undefined)
     setServiceType(undefined)
     navigate(urlLocation)
