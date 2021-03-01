@@ -28,10 +28,10 @@ export default function Price({
       conversion={conversion}
       type={price.type}
     />
-  ) : !price || !price.address ? (
+  ) : !price || !price.address || price.address === '' ? (
     <div className={styles.empty}>
       No price set{' '}
-      <Tooltip content="We could not find a pool for this data set, which can have multiple reasons. Is your wallet connected to the correct network?" />
+      <Tooltip content="No pricing mechanism has been set yet on this asset." />
     </div>
   ) : price.isConsumable !== 'true' ? (
     <div className={styles.empty}>
