@@ -33,7 +33,7 @@
   text-transform: capitalize;
   border-radius: 0;
   font-weight: var(--font-weight-base);
-  background: var(--background-body);
+  background: var(--background-content);
   box-shadow: none;
 }
 
