@@ -1,7 +1,12 @@
-/* .filterList {
-  display: inline-flex;
-  float: left;
-} */
+.filterList,
+div.filterList {
+  white-space: normal;
+  margin-bottom: 0;
+}
+
+.filter {
+  display: inline-block;
+}
 
 .filter,
 button.filter,
@@ -9,14 +14,14 @@ button.filter,
 .filter:active,
 .filter:focus {
   border: 1px solid var(--border-color);
-  text-transform: uppercase;
   border-radius: var(--border-radius);
   margin-right: calc(var(--spacer) / 6);
+  margin-bottom: calc(var(--spacer) / 6);
   color: var(--color-secondary);
-  background: var(--background-body);
+  background: var(--background-content);
 
   /* the only thing not possible to overwrite button style="text" with more specifity of selectors, so sledgehammer */
-  padding: calc(var(--spacer) / 5) !important;
+  padding: calc(var(--spacer) / 6) !important;
 }
 
 .filter:hover,
@@ -36,8 +41,4 @@ button.filter,
   content: '✕';
   margin-left: calc(var(--spacer) / 6);
   color: var(--background-body);
-}
-
-.filterList:first-of-type{
-  margin-bottom: calc(var(--spacer) / 6);
 }
