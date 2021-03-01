@@ -39,7 +39,7 @@ export const FilterByTypeOptions = {
 } as const
 type FilterByTypeOptions = typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
 
-function addPriceFilterToQuerry(sortTerm: string, priceFilter: string): string {
+function addPriceFilterToQuery(sortTerm: string, priceFilter: string): string {
   if (priceFilter === FilterByPriceOptions.All) {
     sortTerm = priceFilter
       ? sortTerm === ''
@@ -53,7 +53,6 @@ function addPriceFilterToQuerry(sortTerm: string, priceFilter: string): string {
         : `${sortTerm} AND price.type:${priceFilter}`
       : sortTerm
   }
-  console.log('SORT TERM: ', sortTerm)
   return sortTerm
 }
 
@@ -99,9 +98,9 @@ export function getSearchQuery(
     ? // eslint-disable-next-line no-useless-escape
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
     : text || ''
-  searchTerm = addPriceFilterToQuerry(searchTerm, priceType)
   searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
-  console.log('search', searchTerm, serviceType)
+  searchTerm = addPriceFilterToQuery(searchTerm, priceType)
+
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
