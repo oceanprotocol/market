@@ -31,12 +31,12 @@ export default function Price({
   ) : !price || !price.address || price.address === '' ? (
     <div className={styles.empty}>
       No price set{' '}
-      <Tooltip content="No pricing mechanism has been set yet on this asset." />
+      <Tooltip content="No pricing mechanism has been set on this asset yet." />
     </div>
   ) : price.isConsumable !== 'true' ? (
     <div className={styles.empty}>
-      Not enough liquidity{' '}
-      <Tooltip content="This pool does not have enough liquidity for using thisa data set." />
+      Low liquidity{' '}
+      <Tooltip content="This pool does not have enough liquidity for using this data set." />
     </div>
   ) : (
     <Loader message="Retrieving price..." />
