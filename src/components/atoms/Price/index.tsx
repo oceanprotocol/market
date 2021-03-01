@@ -28,10 +28,15 @@ export default function Price({
       conversion={conversion}
       type={price.type}
     />
-  ) : !price || price?.value === 0 ? (
+  ) : !price || !price.address ? (
     <div className={styles.empty}>
-      No price found{' '}
+      No price set{' '}
       <Tooltip content="We could not find a pool for this data set, which can have multiple reasons. Is your wallet connected to the correct network?" />
+    </div>
+  ) : price.isConsumable !== 'true' ? (
+    <div className={styles.empty}>
+      Not enough liquidity{' '}
+      <Tooltip content="This pool does not have enough liquidity for using thisa data set." />
     </div>
   ) : (
     <Loader message="Retrieving price..." />
