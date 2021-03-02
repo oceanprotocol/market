@@ -1,0 +1,16 @@
+.network {
+  border: 1px solid var(--border-color);
+  border-right: none;
+  border-top-left-radius: var(--border-radius);
+  border-bottom-left-radius: var(--border-radius);
+  padding: calc(var(--spacer) / 4) calc(var(--spacer) / 2);
+  white-space: nowrap;
+  color: var(--color-secondary);
+  margin-right: -3px;
+}
+
+.name {
+  font-size: var(--font-size-small);
+  margin-left: calc(var(--spacer) / 8);
+  display: inline-block;
+}
