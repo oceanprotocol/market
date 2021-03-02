@@ -34,7 +34,7 @@ export default function SearchPage({
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [loading, setLoading] = useState<boolean>()
   const [price, setPriceType] = useState<string>(priceType as string)
-  const [type, setType] = useState<string>(serviceType as string)
+  const [service, setServiceType] = useState<string>(serviceType as string)
   const [sortType, setSortType] = useState<string>(sort as string)
   const [sortDirection, setSortDirection] = useState<string>(
     sortOrder as string
@@ -82,9 +82,9 @@ export default function SearchPage({
         <div className={styles.row}>
           <PriceFilter
             priceType={price}
+            serviceType={service}
             setPriceType={setPriceType}
-            serviceType={type}
-            setServiceType={setType}
+            setServiceType={setServiceType}
           />
           <Sort
             sortType={sortType}
@@ -92,6 +92,7 @@ export default function SearchPage({
             setSortType={setSortType}
             setSortDirection={setSortDirection}
             setPriceType={setPriceType}
+            setServiceType={setServiceType}
           />
         </div>
       </div>
