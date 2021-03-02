@@ -11,7 +11,7 @@ import { useUserPreferences } from '../../../../providers/UserPreferences'
 import MetadataPreview from '../../../molecules/MetadataPreview'
 import Debug from './Debug'
 import Web3Feedback from '../../../molecules/Wallet/Feedback'
-import FormEditMetadata from './FormEditMetadata'
+import FormEditComputeDataset from './FormEditComputeDataset'
 import { mapTimeoutStringToSeconds } from '../../../../utils/metadata'
 import styles from './index.module.css'
 import { Logger } from '@oceanprotocol/lib'
@@ -19,8 +19,10 @@ import MetadataFeedback from '../../../molecules/MetadataFeedback'
 import { graphql, useStaticQuery } from 'gatsby'
 
 const contentQuery = graphql`
-  query EditMetadataQuery {
-    content: allFile(filter: { relativePath: { eq: "pages/edit.json" } }) {
+  query EditComputeDataQuery {
+    content: allFile(
+      filter: { relativePath: { eq: "pages/editComputeDataset.json" } }
+    ) {
       edges {
         node {
           childPagesJson {
@@ -48,7 +50,7 @@ const contentQuery = graphql`
   }
 `
 
-export default function Edit({
+export default function EditComputeDataset({
   setShowEdit
 }: {
   setShowEdit: (show: boolean) => void
@@ -152,7 +154,7 @@ export default function Edit({
           <>
             <p className={styles.description}>{content.description}</p>
             <article className={styles.grid}>
-              <FormEditMetadata
+              <FormEditComputeDataset
                 data={content.form.data}
                 setShowEdit={setShowEdit}
                 setTimeoutStringValue={setTimeoutStringValue}

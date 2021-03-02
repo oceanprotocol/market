@@ -1,0 +1,35 @@
+{
+  "description": "Update compute settings of this data set. Updating compute will create an on-chain transaction you have to approve in your wallet.",
+  "form": {
+    "success": "🎉 Successfully updated. 🎉",
+    "successAction": "Close",
+    "error": "Updating DDO failed.",
+    "data": [
+      {
+        "name": "allowRawAlgorithms",
+        "label": "Raw algorithms",
+        "help": "Enter a concise title.",
+        "type": "checkbox",
+        "options": ["Allow raw algorithms"],
+        "required": true
+      },
+      {
+        "name": "allowPublishedAlgorithms",
+        "label": "Published algorithms",
+        "help": "Add a thorough description with as much detail as possible. You can use [Markdown](https://daringfireball.net/projects/markdown/basics).",
+        "type": "checkbox",
+        "options": ["Allow all published algorithms"],
+        "required": true
+      },
+      {
+        "name": "trustedAlgorithms",
+        "label": "Publisher trusted algorithms",
+        "help": "Define how long buyers should be able to download the data set again after the initial purchase.",
+        "type": "select",
+        "options": [],
+        "sortOptions": false,
+        "required": true
+      }
+    ]
+  }
+}

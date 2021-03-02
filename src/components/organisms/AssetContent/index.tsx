@@ -13,6 +13,7 @@ import { useAsset } from '../../../providers/Asset'
 import Alert from '../../atoms/Alert'
 import Button from '../../atoms/Button'
 import Edit from '../AssetActions/Edit'
+import EditComputeDataset from '../AssetActions/Edit/EditComputeDataset'
 import DebugOutput from '../../atoms/DebugOutput'
 import MetaMain from './MetaMain'
 // import EditHistory from './EditHistory'
@@ -46,6 +47,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   const { owner, isInPurgatory, purgatoryData } = useAsset()
   const [showPricing, setShowPricing] = useState(false)
   const [showEdit, setShowEdit] = useState<boolean>()
+  const [showEditCompute, setShowEditCompute] = useState<boolean>()
   const { ddo, price, metadata } = useAsset()
   const isOwner = accountId === owner
 
@@ -60,8 +62,19 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
     setShowEdit(true)
   }
 
-  return showEdit ? (
-    <Edit setShowEdit={setShowEdit} />
+  function handleEditComputeButton() {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    setShowEditCompute(true)
+  }
+
+  return showEdit || showEditCompute ? (
+    <>
+      {showEdit ? (
+        <Edit setShowEdit={setShowEdit} />
+      ) : (
+        <EditComputeDataset setShowEdit={setShowEditCompute} />
+      )}
+    </>
   ) : (
     <article className={styles.grid}>
       <div>
@@ -91,6 +104,15 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
                   <Button style="text" size="small" onClick={handleEditButton}>
                     Edit Metadata
                   </Button>
+                  {ddo.findServiceByType('compute') && (
+                    <Button
+                      style="text"
+                      size="small"
+                      onClick={handleEditComputeButton}
+                    >
+                      Edit Compute Settings
+                    </Button>
+                  )}
                 </div>
               )}
             </>
