@@ -144,7 +144,7 @@ export default function FilterPrice({
       <div className={styles.filterList}>
         {clearFilters.map((e, index) => {
           const selectFilter = cx({
-            [styles.selected]: clearSelected,
+            [styles.clearSelected]: clearSelected,
             [styles.filter]: true
           })
           return (

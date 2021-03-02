@@ -42,3 +42,14 @@ button.filter,
   margin-left: calc(var(--spacer) / 6);
   color: var(--background-body);
 }
+
+.filter.clearSelected {
+  color: var(--background-body);
+  background: var(--font-color-text);
+  border-color: var(--background-body);
+}
+
+.filter.clearSelected::after {
+  margin-left: calc(var(--spacer) / 6);
+  color: var(--background-body);
+}
