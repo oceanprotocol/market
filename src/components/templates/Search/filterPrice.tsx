@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useNavigate } from '@reach/router'
 import styles from './filterPrice.module.css'
 import classNames from 'classnames/bind'
@@ -11,7 +11,7 @@ import Button from '../../atoms/Button'
 
 const cx = classNames.bind(styles)
 
-const clearFilters = [{ display: 'clear', value: '' }]
+const clearFilters = [{ display: 'Clear', value: '' }]
 
 const priceFilterItems = [
   { display: 'fixed price', value: FilterByPriceOptions.Fixed },
@@ -38,7 +38,6 @@ export default function FilterPrice({
 
   const [priceSelections, setPriceSelections] = useState<string[]>([])
   const [serviceSelections, setServiceSelections] = useState<string[]>([])
-  const [clearSelected, setClearSelected] = useState<boolean>(false)
 
   async function applyPriceFilter(filterBy: string) {
     let urlLocation = await addExistingParamsToUrl(location, 'priceType')
@@ -64,58 +63,43 @@ export default function FilterPrice({
       value === FilterByPriceOptions.Dynamic
     ) {
       if (isSelected) {
-        if (clearSelected) {
-          setPriceSelections([])
+        if (priceSelections.length > 1) {
+          // both selected -> select the other one
+          const otherValue = priceFilterItems.find((p) => p.value !== value)
+            .value
+          await applyPriceFilter(otherValue)
         } else {
-          if (priceSelections.length > 1) {
-            // both selected -> select the other one
-            const otherValue = priceFilterItems.find((p) => p.value !== value)
-              .value
-            await applyPriceFilter(otherValue)
-            setPriceSelections([otherValue])
-          } else {
-            // only the current one selected -> deselect it
-            await applyPriceFilter(undefined)
-            setPriceSelections([])
-          }
+          // only the current one selected -> deselect it
+          await applyPriceFilter(undefined)
         }
       } else {
         if (priceSelections.length > 0) {
           // one already selected -> both selected
           await applyPriceFilter(FilterByPriceOptions.All)
           setPriceSelections(priceFilterItems.map((p) => p.value))
-          setClearSelected(false)
         } else {
           // none selected -> select
           await applyPriceFilter(value)
           setPriceSelections([value])
-          setClearSelected(false)
         }
       }
     } else {
       if (isSelected) {
-        if (clearSelected) {
-          setServiceSelections([])
+        if (serviceSelections.length > 1) {
+          const otherValue = serviceFilterItems.find((p) => p.value !== value)
+            .value
+          await applyServiceFilter(otherValue)
+          setServiceSelections([otherValue])
         } else {
-          if (serviceSelections.length > 1) {
-            const otherValue = serviceFilterItems.find((p) => p.value !== value)
-              .value
-            await applyServiceFilter(otherValue)
-            setServiceSelections([otherValue])
-          } else {
-            await applyServiceFilter(undefined)
-            setServiceSelections([])
-          }
+          await applyServiceFilter(undefined)
         }
       } else {
         if (serviceSelections.length) {
           await applyServiceFilter(undefined)
           setServiceSelections(serviceFilterItems.map((p) => p.value))
-          setClearSelected(false)
         } else {
           await applyServiceFilter(value)
           setServiceSelections([value])
-          setClearSelected(false)
         }
       }
     }
@@ -133,79 +117,72 @@ export default function FilterPrice({
     setServiceSelections([])
     setPriceSelections([])
 
-    setClearSelected(true)
     setPriceType(undefined)
     setServiceType(undefined)
     navigate(urlLocation)
   }
 
   return (
-    <div>
-      <div className={styles.filterList}>
-        {clearFilters.map((e, index) => {
-          const selectFilter = cx({
-            [styles.clearSelected]: clearSelected,
-            [styles.filter]: true
-          })
-          return (
-            <Button
-              size="small"
-              style="text"
-              key={index}
-              className={selectFilter}
-              onClick={async () => {
-                applyClearFilter()
-              }}
-            >
-              {e.display}
-            </Button>
-          )
-        })}
-        {priceFilterItems.map((e, index) => {
-          const isPriceSelected =
-            (e.value === priceType || priceSelections.includes(e.value)) &&
-            clearSelected === false
-          const selectFilter = cx({
-            [styles.selected]: isPriceSelected,
-            [styles.filter]: true
-          })
-          return (
-            <Button
-              size="small"
-              style="text"
-              key={index}
-              className={selectFilter}
-              onClick={async () => {
-                handleSelectedFilter(isPriceSelected, e.value)
-              }}
-            >
-              {e.display}
-            </Button>
-          )
-        })}
-        {serviceFilterItems.map((e, index) => {
-          const isServiceSelected =
-            (e.value === serviceType || serviceSelections.includes(e.value)) &&
-            clearSelected === false
-          const selectFilter = cx({
-            [styles.selected]: isServiceSelected,
-            [styles.filter]: true
-          })
-          return (
-            <Button
-              size="small"
-              style="text"
-              key={index}
-              className={selectFilter}
-              onClick={async () => {
-                handleSelectedFilter(isServiceSelected, e.value)
-              }}
-            >
-              {e.display}
-            </Button>
-          )
-        })}
-      </div>
+    <div className={styles.filterList}>
+      {priceFilterItems.map((e, index) => {
+        const isPriceSelected =
+          e.value === priceType || priceSelections.includes(e.value)
+        const selectFilter = cx({
+          [styles.selected]: isPriceSelected,
+          [styles.filter]: true
+        })
+        return (
+          <Button
+            size="small"
+            style="text"
+            key={index}
+            className={selectFilter}
+            onClick={async () => {
+              handleSelectedFilter(isPriceSelected, e.value)
+            }}
+          >
+            {e.display}
+          </Button>
+        )
+      })}
+      {serviceFilterItems.map((e, index) => {
+        const isServiceSelected =
+          e.value === serviceType || serviceSelections.includes(e.value)
+        const selectFilter = cx({
+          [styles.selected]: isServiceSelected,
+          [styles.filter]: true
+        })
+        return (
+          <Button
+            size="small"
+            style="text"
+            key={index}
+            className={selectFilter}
+            onClick={async () => {
+              handleSelectedFilter(isServiceSelected, e.value)
+            }}
+          >
+            {e.display}
+          </Button>
+        )
+      })}
+      {clearFilters.map((e, index) => {
+        const showClear =
+          priceSelections.length > 0 || serviceSelections.length > 0
+        return (
+          <Button
+            size="small"
+            style="text"
+            key={index}
+            className={showClear ? styles.showClear : styles.hideClear}
+            onClick={async () => {
+              applyClearFilter()
+            }}
+          >
+            {e.display}
+          </Button>
+        )
+      })}
     </div>
   )
 }
