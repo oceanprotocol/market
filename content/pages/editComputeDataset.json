@@ -6,17 +6,17 @@
     "error": "Updating DDO failed.",
     "data": [
       {
-        "name": "allowRawAlgorithms",
-        "label": "Raw algorithms",
-        "help": "Enter a concise title.",
+        "name": "allowRawAlgorithm",
+        "label": "Raw algorithm",
+        "help": "Enable raw algorithms to run on dataset.",
         "type": "checkbox",
         "options": ["Allow raw algorithms"],
         "required": true
       },
       {
-        "name": "allowPublishedAlgorithms",
+        "name": "allowNetworkAccess",
         "label": "Published algorithms",
-        "help": "Add a thorough description with as much detail as possible. You can use [Markdown](https://daringfireball.net/projects/markdown/basics).",
+        "help": "Enable published algorithms to run on dataset.",
         "type": "checkbox",
         "options": ["Allow all published algorithms"],
         "required": true
@@ -24,7 +24,7 @@
       {
         "name": "trustedAlgorithms",
         "label": "Publisher trusted algorithms",
-        "help": "Define how long buyers should be able to download the data set again after the initial purchase.",
+        "help": "Choose a list of algorithms you trust to run on dataset",
         "type": "select",
         "options": [],
         "sortOptions": false,

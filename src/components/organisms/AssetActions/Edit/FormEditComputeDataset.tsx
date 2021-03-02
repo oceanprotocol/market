@@ -5,25 +5,23 @@ import Button from '../../../atoms/Button'
 import Input from '../../../atoms/Input'
 import { useOcean } from '@oceanprotocol/react'
 import { FormFieldProps } from '../../../../@types/Form'
-import { MetadataPublishForm } from '../../../../@types/MetaData'
+import { ComputePrivacy } from '../../../../@types/ComputePrivacy'
 
 export default function FormEditComputeDataset({
   data,
   setShowEdit,
-  setTimeoutStringValue,
   values
 }: {
   data: FormFieldProps[]
   setShowEdit: (show: boolean) => void
-  setTimeoutStringValue: (value: string) => void
-  values: Partial<MetadataPublishForm>
+  values: ComputePrivacy
 }): ReactElement {
   const { ocean, accountId } = useOcean()
   const {
     isValid,
     validateField,
     setFieldValue
-  }: FormikContextType<Partial<MetadataPublishForm>> = useFormikContext()
+  }: FormikContextType<ComputePrivacy> = useFormikContext()
 
   // Manually handle change events instead of using `handleChange` from Formik.
   // Workaround for default `validateOnChange` not kicking in
@@ -32,6 +30,8 @@ export default function FormEditComputeDataset({
     field: FormFieldProps
   ) {
     validateField(field.name)
+    console.log(e.target.value)
+    console.log(field.name)
     setFieldValue(field.name, e.target.value)
   }
 
@@ -49,11 +49,7 @@ export default function FormEditComputeDataset({
       ))}
 
       <footer className={styles.actions}>
-        <Button
-          style="primary"
-          disabled={!ocean || !accountId || !isValid}
-          onClick={() => setTimeoutStringValue(values.timeout)}
-        >
+        <Button style="primary" disabled={!ocean || !accountId || !isValid}>
           Submit
         </Button>
         <Button style="text" onClick={() => setShowEdit(false)}>

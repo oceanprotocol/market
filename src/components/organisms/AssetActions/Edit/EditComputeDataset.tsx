@@ -1,18 +1,17 @@
 import { useOcean } from '@oceanprotocol/react'
 import { Formik } from 'formik'
 import React, { ReactElement, useState } from 'react'
-import { MetadataPublishForm } from '../../../../@types/MetaData'
+import { ComputePrivacy } from '../../../../@types/ComputePrivacy'
 import {
   validationSchema,
   getInitialValues
-} from '../../../../models/FormEditMetadata'
+} from '../../../../models/FormEditComputeDataset'
 import { useAsset } from '../../../../providers/Asset'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import MetadataPreview from '../../../molecules/MetadataPreview'
 import Debug from './Debug'
 import Web3Feedback from '../../../molecules/Wallet/Feedback'
 import FormEditComputeDataset from './FormEditComputeDataset'
-import { mapTimeoutStringToSeconds } from '../../../../utils/metadata'
 import styles from './index.module.css'
 import { Logger } from '@oceanprotocol/lib'
 import MetadataFeedback from '../../../molecules/MetadataFeedback'
@@ -63,51 +62,15 @@ export default function EditComputeDataset({
   const { metadata, ddo, refreshDdo } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
-  const [timeoutStringValue, setTimeoutStringValue] = useState<string>()
-  const timeout = ddo.findServiceByType('access')
-    ? ddo.findServiceByType('access').attributes.main.timeout
-    : ddo.findServiceByType('compute').attributes.main.timeout
 
   const hasFeedback = error || success
 
-  async function handleSubmit(
-    values: Partial<MetadataPublishForm>,
-    resetForm: () => void
-  ) {
+  async function handleSubmit(values: ComputePrivacy, resetForm: () => void) {
     try {
       // Construct new DDO with new values
-      const ddoEditedMetdata = await ocean.assets.editMetadata(ddo, {
-        title: values.name,
-        description: values.description
-      })
+      const ddoEditedCompute = true
 
-      if (!ddoEditedMetdata) {
-        setError(content.form.error)
-        Logger.error(content.form.error)
-        return
-      }
-      let ddoEditedTimeout = ddoEditedMetdata
-      if (timeoutStringValue !== values.timeout) {
-        const service = ddoEditedMetdata.findServiceByType('access')
-        const timeout = mapTimeoutStringToSeconds(values.timeout)
-        ddoEditedTimeout = await ocean.assets.editServiceTimeout(
-          ddoEditedMetdata,
-          service.index,
-          timeout
-        )
-      }
-
-      if (!ddoEditedTimeout) {
-        setError(content.form.error)
-        Logger.error(content.form.error)
-        return
-      }
-
-      const storedddo = await ocean.assets.updateMetadata(
-        ddoEditedTimeout,
-        accountId
-      )
-      if (!storedddo) {
+      if (!ddoEditedCompute) {
         setError(content.form.error)
         Logger.error(content.form.error)
         return
@@ -126,7 +89,9 @@ export default function EditComputeDataset({
 
   return (
     <Formik
-      initialValues={getInitialValues(metadata, timeout)}
+      initialValues={getInitialValues(
+        ddo.findServiceByType('compute').attributes.main.privacy
+      )}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
         // move user's focus to top of screen
@@ -157,16 +122,17 @@ export default function EditComputeDataset({
               <FormEditComputeDataset
                 data={content.form.data}
                 setShowEdit={setShowEdit}
-                setTimeoutStringValue={setTimeoutStringValue}
                 values={initialValues}
               />
 
               <aside>
+                {/*
                 <MetadataPreview values={values} />
+                */}
                 <Web3Feedback />
               </aside>
 
-              {debug === true && <Debug values={values} ddo={ddo} />}
+              {/* debug === true && <Debug values={values} ddo={ddo} /> */}
             </article>
           </>
         )
