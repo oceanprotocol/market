@@ -24,6 +24,13 @@ export interface PriceOptionsMarket extends PriceOptions {
   swapFee: number
 }
 
+export interface MetadataEditForm {
+  name: string
+  description: string
+  timeout: string
+  links?: string | EditableMetadataLinks[]
+}
+
 export interface MetadataPublishForm {
   // ---- required fields ----
   name: string
