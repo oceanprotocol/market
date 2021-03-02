@@ -1,8 +1,9 @@
-import React, { ReactElement, ReactNode } from 'react'
-import { getNetworkName } from '../../utils/wallet'
+import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
+import { getNetworkData } from '../../utils/wallet'
 import { ReactComponent as External } from '../../images/external.svg'
 import styles from './EtherscanLink.module.css'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
+import axios from 'axios'
 
 export default function EtherscanLink({
   networkId,
@@ -14,14 +15,26 @@ export default function EtherscanLink({
   children: ReactNode
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
+  const [network, setNetwork] = useState<string>()
+
+  useEffect(() => {
+    const source = axios.CancelToken.source()
+
+    async function init() {
+      const network = await getNetworkData(networkId, source.token)
+      setNetwork(network.network)
+    }
+    init()
+
+    return () => {
+      source.cancel()
+    }
+  }, [networkId])
+
   const url =
     (!networkId && appConfig.network === 'mainnet') || networkId === 1
       ? `https://etherscan.io`
-      : `https://${
-          networkId
-            ? getNetworkName(networkId).toLowerCase()
-            : appConfig.network
-        }.etherscan.io`
+      : `https://${networkId ? network : appConfig.network}.etherscan.io`
 
   return (
     <a

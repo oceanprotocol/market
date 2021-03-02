@@ -1,9 +1,7 @@
-import {
-  infuraProjectId as infuraId,
-  portisId,
-  network
-} from '../../app.config'
+import { infuraProjectId as infuraId, portisId } from '../../app.config'
 import WalletConnectProvider from '@walletconnect/web3-provider'
+import axios, { CancelToken } from 'axios'
+import { Logger } from '@oceanprotocol/lib'
 
 const web3ModalTheme = {
   background: 'var(--background-body)',
@@ -47,28 +45,6 @@ export const web3ModalOpts = {
   theme: web3ModalTheme
 }
 
-export function getNetworkId(network: string): number {
-  switch (network) {
-    case 'mainnet':
-      return 1
-    case 'ropsten':
-      return 3
-    case 'rinkeby':
-      return 4
-    case 'kovan':
-      return 42
-    case 'development':
-      return 8996
-    default:
-      return 0
-  }
-}
-
-export function isDefaultNetwork(networkId: number): boolean {
-  const configuredNetwork = getNetworkId(network)
-  return configuredNetwork === networkId
-}
-
 export function accountTruncate(account: string): string {
   if (!account) return
   const middle = account.substring(6, 38)
@@ -76,19 +52,44 @@ export function accountTruncate(account: string): string {
   return truncated
 }
 
-export function getNetworkName(networkId: number): string {
-  switch (networkId) {
-    case 1:
-      return 'Main'
-    case 3:
-      return 'Ropsten'
-    case 4:
-      return 'Rinkeby'
-    case 42:
-      return 'Kovan'
-    case 8996:
-      return 'Development'
-    default:
-      return 'Unknown'
+export async function getNetworkData(
+  networkId: number,
+  cancelToken: CancelToken
+): Promise<any> {
+  if (!networkId) return
+
+  try {
+    // https://github.com/ethereum-lists/chains
+    const response = await axios('https://chainid.network/chains.json', {
+      cancelToken
+    })
+    const network = response.data.filter(
+      (item: { networkId: number }) => item.networkId === networkId
+    )[0]
+
+    return network
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      Logger.log(error.message)
+    } else {
+      Logger.error(
+        `Could not fetch from chainid.network/chains.json: ${error.message}`
+      )
+    }
   }
+}
+
+export async function getNetworkDisplayName(
+  networkId: number,
+  cancelToken: CancelToken
+): Promise<string> {
+  const network = await getNetworkData(networkId, cancelToken)
+
+  const networkName = network
+    ? `${network.chain} ${network.network}`
+    : networkId === 8996
+    ? 'Development'
+    : 'Unknown'
+
+  return networkName
 }

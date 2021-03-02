@@ -13,4 +13,5 @@
   font-size: var(--font-size-small);
   margin-left: calc(var(--spacer) / 8);
   display: inline-block;
+  text-transform: capitalize;
 }
