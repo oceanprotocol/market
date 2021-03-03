@@ -1,7 +1,20 @@
 import { infuraProjectId as infuraId, portisId } from '../../app.config'
 import WalletConnectProvider from '@walletconnect/web3-provider'
-import axios, { CancelToken } from 'axios'
+import axios, { AxiosResponse, CancelToken } from 'axios'
 import { Logger } from '@oceanprotocol/lib'
+
+export interface EthereumListsChain {
+  name: string
+  chainId: number
+  shortName: string
+  chain: string
+  network: string
+  networkId: number
+  nativeCurrency: { name: string; symbol: string; decimals: number }
+  rpc: string[]
+  faucets: string[]
+  infoURL: string
+}
 
 const web3ModalTheme = {
   background: 'var(--background-body)',
@@ -55,14 +68,17 @@ export function accountTruncate(account: string): string {
 export async function getNetworkData(
   networkId: number,
   cancelToken: CancelToken
-): Promise<any> {
+): Promise<EthereumListsChain> {
   if (!networkId) return
 
   try {
     // https://github.com/ethereum-lists/chains
-    const response = await axios('https://chainid.network/chains.json', {
-      cancelToken
-    })
+    const response: AxiosResponse<EthereumListsChain[]> = await axios(
+      'https://chainid.network/chains.json',
+      {
+        cancelToken
+      }
+    )
     const network = response.data.filter(
       (item: { networkId: number }) => item.networkId === networkId
     )[0]
