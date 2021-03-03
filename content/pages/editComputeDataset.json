@@ -10,16 +10,14 @@
         "label": "Raw algorithm",
         "help": "Enable raw algorithms to run on dataset.",
         "type": "checkbox",
-        "options": ["Allow raw algorithms"],
-        "required": true
+        "options": ["Allow raw algorithms"]
       },
       {
         "name": "allowNetworkAccess",
         "label": "Published algorithms",
         "help": "Enable published algorithms to run on dataset.",
         "type": "checkbox",
-        "options": ["Allow all published algorithms"],
-        "required": true
+        "options": ["Allow all published algorithms"]
       },
       {
         "name": "trustedAlgorithms",
@@ -27,8 +25,7 @@
         "help": "Choose a list of algorithms you trust to run on dataset",
         "type": "select",
         "options": [],
-        "sortOptions": false,
-        "required": true
+        "sortOptions": false
       }
     ]
   }

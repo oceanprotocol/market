@@ -68,9 +68,24 @@ export default function EditComputeDataset({
   async function handleSubmit(values: ComputePrivacy, resetForm: () => void) {
     try {
       // Construct new DDO with new values
-      const ddoEditedCompute = true
+      console.log(values)
+      const ddoEditedComputePrivacy = await ocean.compute.editComputePrivacy(
+        ddo,
+        1,
+        values
+      )
 
-      if (!ddoEditedCompute) {
+      if (!ddoEditedComputePrivacy) {
+        setError(content.form.error)
+        Logger.error(content.form.error)
+        return
+      }
+
+      const storedddo = await ocean.assets.updateMetadata(
+        ddoEditedComputePrivacy,
+        accountId
+      )
+      if (!storedddo) {
         setError(content.form.error)
         Logger.error(content.form.error)
         return

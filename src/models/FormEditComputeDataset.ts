@@ -2,8 +2,8 @@ import { ComputePrivacy } from '../@types/ComputePrivacy'
 import * as Yup from 'yup'
 
 export const validationSchema = Yup.object().shape({
-  allowRawAlgorithm: Yup.boolean().required('Required'),
-  allowNetworkAccess: Yup.boolean().required('Required'),
+  allowRawAlgorithm: Yup.boolean().nullable(),
+  allowNetworkAccess: Yup.boolean().nullable(),
   trustedAlgorithms: Yup.array().required('Required')
 })
 

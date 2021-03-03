@@ -29,10 +29,10 @@ export default function FormEditComputeDataset({
     e: ChangeEvent<HTMLInputElement>,
     field: FormFieldProps
   ) {
+    const value =
+      field.type === 'checkbox' ? !JSON.parse(e.target.value) : e.target.value
     validateField(field.name)
-    console.log(e.target.value)
-    console.log(field.name)
-    setFieldValue(field.name, e.target.value)
+    setFieldValue(field.name, value)
   }
 
   return (
