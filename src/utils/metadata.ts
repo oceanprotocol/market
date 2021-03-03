@@ -1,5 +1,6 @@
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { toast } from 'react-toastify'
+import isUrl from 'is-url-superb'
 import {
   MetadataMarket,
   MetadataPublishFormDataset,
@@ -157,7 +158,7 @@ async function isDockerHubImageValid(
 
 async function is3rdPartyImageValid(imageURL: string): Promise<boolean> {
   try {
-    const response = await axios.options(imageURL)
+    const response = await axios.head(imageURL)
     if (!response || response.status !== 200) {
       toast.error(
         'Could not fetch docker image info. Please check URL and try again'
@@ -172,19 +173,6 @@ async function is3rdPartyImageValid(imageURL: string): Promise<boolean> {
     )
     return false
   }
-}
-
-function isUrl(image: string): boolean {
-  const pattern = new RegExp(
-    '^(https?:\\/\\/)?' +
-      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' +
-      '((\\d{1,3}\\.){3}\\d{1,3}))' +
-      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' +
-      '(\\?[;&a-z\\d%_.~+=-]*)?' +
-      '(\\#[-a-z\\d_]*)?$',
-    'i'
-  )
-  return !!pattern.test(image)
 }
 
 export async function validateDockerImage(

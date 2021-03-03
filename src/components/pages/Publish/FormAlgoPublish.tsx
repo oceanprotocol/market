@@ -134,7 +134,6 @@ export default function FormPublish(): ReactElement {
             <Field
               key={field.name}
               {...field}
-              disabled={field.disabled}
               component={Input}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 handleFieldChange(e, field)
