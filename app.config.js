@@ -4,11 +4,17 @@ module.exports = {
   // networks in their wallet.
   // Ocean Protocol contracts are deployed for: 'mainnet', 'rinkeby', 'development'
   network: process.env.GATSBY_NETWORK || 'mainnet',
+
+  // List of supported networkId the market works with. Used for showing UI hints.
+  supportedNetworks: [1, 3, 4, 137, 80001],
+
   infuraProjectId: process.env.GATSBY_INFURA_PROJECT_ID || 'xxx',
+
   // The ETH address the marketplace fee will be sent to.
   marketFeeAddress:
     process.env.GATSBY_MARKET_FEE_ADDRESS ||
     '0x903322C7E45A60d7c8C3EA236c5beA9Af86310c7',
+
   // Used for conversion display, can be whatever coingecko API supports
   // see: https://api.coingecko.com/api/v3/simple/supported_vs_currencies
   currencies: [

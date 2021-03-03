@@ -70,7 +70,7 @@ function getNetworkDisplayName(
   networkId: number
 ): string {
   const displayName = data
-    ? `${data.chain} ${data.network}`
+    ? `${data.chain} ${data.network === 'mainnet' ? '' : data.network}`
     : networkId === 8996
     ? 'Development'
     : 'Unknown'

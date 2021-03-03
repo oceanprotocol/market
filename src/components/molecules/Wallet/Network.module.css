@@ -21,3 +21,7 @@
   background-color: var(--border-color);
   color: var(--font-color-text);
 }
+
+.warning {
+  margin-right: calc(var(--spacer) / 4);
+}
