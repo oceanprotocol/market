@@ -65,25 +65,36 @@ export function accountTruncate(account: string): string {
   return truncated
 }
 
+function getNetworkDisplayName(
+  data: EthereumListsChain,
+  networkId: number
+): string {
+  const displayName = data
+    ? `${data.chain} ${data.network}`
+    : networkId === 8996
+    ? 'Development'
+    : 'Unknown'
+
+  return displayName
+}
+
 export async function getNetworkData(
   networkId: number,
   cancelToken: CancelToken
-): Promise<EthereumListsChain> {
-  if (!networkId) return
+): Promise<{ displayName: string; data: EthereumListsChain }> {
+  // https://github.com/ethereum-lists/chains
+  const chainDataUrl = 'https://chainid.network/chains.json'
 
   try {
-    // https://github.com/ethereum-lists/chains
-    const response: AxiosResponse<EthereumListsChain[]> = await axios(
-      'https://chainid.network/chains.json',
-      {
-        cancelToken
-      }
-    )
-    const network = response.data.filter(
+    const response: AxiosResponse<
+      EthereumListsChain[]
+    > = await axios(chainDataUrl, { cancelToken })
+    const data = response.data.filter(
       (item: { networkId: number }) => item.networkId === networkId
     )[0]
+    const displayName = getNetworkDisplayName(data, networkId)
 
-    return network
+    return { displayName, data }
   } catch (error) {
     if (axios.isCancel(error)) {
       Logger.log(error.message)
@@ -93,19 +104,4 @@ export async function getNetworkData(
       )
     }
   }
-}
-
-export async function getNetworkDisplayName(
-  networkId: number,
-  cancelToken: CancelToken
-): Promise<string> {
-  const network = await getNetworkData(networkId, cancelToken)
-
-  const networkName = network
-    ? `${network.chain} ${network.network}`
-    : networkId === 8996
-    ? 'Development'
-    : 'Unknown'
-
-  return networkName
 }

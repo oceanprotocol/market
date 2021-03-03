@@ -22,7 +22,7 @@ export default function EtherscanLink({
 
     async function init() {
       const network = await getNetworkData(networkId, source.token)
-      setNetwork(network.network)
+      setNetwork(network.data.network)
     }
     init()
 
