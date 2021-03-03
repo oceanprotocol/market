@@ -17,6 +17,7 @@ import Input from '../../atoms/Input'
 import Alert from '../../atoms/Alert'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import checkPreviousOrder from '../../../utils/checkPreviousOrder'
+import { useAsset } from '../../../providers/Asset'
 
 export default function Compute({
   ddo,
@@ -29,6 +30,7 @@ export default function Compute({
 }): ReactElement {
   const { marketFeeAddress } = useSiteMetadata()
 
+  const { type } = useAsset()
   const { ocean, accountId } = useOcean()
   const { compute, isLoading, computeStepText, computeError } = useCompute()
   const { buyDT, dtSymbol } = usePricing(ddo)
@@ -129,16 +131,29 @@ export default function Compute({
         </div>
       </div>
 
-      <Input
-        type="select"
-        name="algorithm"
-        label="Select image to run the algorithm"
-        placeholder=""
-        size="small"
-        value={computeType}
-        options={computeOptions.map((x) => x.name)}
-        onChange={handleSelectChange}
-      />
+      {type === 'algorithm' ? (
+        <Input
+          type="select"
+          name="data"
+          label="Select dataset for the algorithm"
+          placeholder=""
+          size="small"
+          value="dataset-1"
+          options={['dataset-1', 'dataset-2', 'dataset-3'].map((x) => x)}
+          onChange={handleSelectChange}
+        />
+      ) : (
+        <Input
+          type="select"
+          name="algorithm"
+          label="Select image to run the algorithm"
+          placeholder=""
+          size="small"
+          value={computeType}
+          options={computeOptions.map((x) => x.name)}
+          onChange={handleSelectChange}
+        />
+      )}
       <Dropzone multiple={false} handleOnDrop={onDrop} />
 
       <div className={styles.actions}>

@@ -1,0 +1,33 @@
+import React, { ReactElement } from 'react'
+import styles from './AssetType.module.css'
+import classNames from 'classnames/bind'
+import { ReactComponent as Compute } from '../../images/compute.svg'
+import { ReactComponent as Download } from '../../images/download.svg'
+
+const cx = classNames.bind(styles)
+
+export default function AssetType({
+  type,
+  accessType,
+  className
+}: {
+  type: string
+  accessType: string
+  className?: string
+}): ReactElement {
+  const styleClasses = cx({
+    [className]: className
+  })
+  return (
+    <div className={styleClasses}>
+      <div className={styles.typeLabel}>
+        {type === 'dataset' ? 'data set' : 'algorithm'}
+      </div>
+      {accessType === 'access' ? (
+        <Download role="img" aria-label="Download" className={styles.icon} />
+      ) : (
+        <Compute role="img" aria-label="Compute" className={styles.icon} />
+      )}
+    </div>
+  )
+}

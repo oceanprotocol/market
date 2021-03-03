@@ -27,7 +27,7 @@ export default function PageGatsbySearch(props: PageProps): ReactElement {
                 (totalResults > 1 ? ' results' : ' result') +
                 ' for ' +
                 searchValue
-            : totalResults + ' datasets'
+            : totalResults + ' results'
           : 'Searching...'
       }`
 

@@ -28,7 +28,8 @@ type SortValueOptions = typeof SortValueOptions[keyof typeof SortValueOptions]
 
 export const FilterByPriceOptions = {
   Fixed: 'exchange',
-  Dynamic: 'pool'
+  Dynamic: 'pool',
+  All: 'all'
 } as const
 type FilterByPriceOptions = typeof FilterByPriceOptions[keyof typeof FilterByPriceOptions]
 
@@ -38,12 +39,20 @@ export const FilterByTypeOptions = {
 } as const
 type FilterByTypeOptions = typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
 
-function addPriceFilterToQuerry(sortTerm: string, priceFilter: string): string {
-  sortTerm = priceFilter
-    ? sortTerm === ''
-      ? `price.type:${priceFilter}`
-      : `${sortTerm} AND price.type:${priceFilter}`
-    : sortTerm
+function addPriceFilterToQuery(sortTerm: string, priceFilter: string): string {
+  if (priceFilter === FilterByPriceOptions.All) {
+    sortTerm = priceFilter
+      ? sortTerm === ''
+        ? `(price.type:${FilterByPriceOptions.Fixed} OR price.type:${FilterByPriceOptions.Dynamic})`
+        : `${sortTerm} AND (price.type:${FilterByPriceOptions.Dynamic} OR price.type:${FilterByPriceOptions.Fixed})`
+      : sortTerm
+  } else {
+    sortTerm = priceFilter
+      ? sortTerm === ''
+        ? `price.type:${priceFilter}`
+        : `${sortTerm} AND price.type:${priceFilter}`
+      : sortTerm
+  }
   return sortTerm
 }
 
@@ -89,9 +98,9 @@ export function getSearchQuery(
     ? // eslint-disable-next-line no-useless-escape
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
     : text || ''
-  searchTerm = addPriceFilterToQuerry(searchTerm, priceType)
   searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
-  console.log('search', searchTerm, serviceType)
+  searchTerm = addPriceFilterToQuery(searchTerm, priceType)
+
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,

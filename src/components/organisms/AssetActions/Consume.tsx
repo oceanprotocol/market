@@ -48,7 +48,7 @@ export default function Consume({
   const { marketFeeAddress } = useSiteMetadata()
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
   const [previousOrderId, setPreviousOrderId] = useState<string>()
-  const { isInPurgatory, price } = useAsset()
+  const { isInPurgatory, price, type } = useAsset()
   const { buyDT, pricingStepText, pricingError, pricingIsLoading } = usePricing(
     ddo
   )
@@ -158,17 +158,10 @@ export default function Consume({
           <File file={file} />
         </div>
         <div className={styles.pricewrapper}>
-          {isConsumable ? (
-            <Price ddo={ddo} conversion />
-          ) : (
-            <div className={styles.help}>
-              There is not enough liquidity in the pool to buy this data set.
-            </div>
-          )}
+          <Price ddo={ddo} conversion />
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>
-
       <footer className={styles.feedback}>
         <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
       </footer>
