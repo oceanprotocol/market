@@ -40,7 +40,6 @@ export default function AssetListTitle({
     !ddo && did && getAssetName()
 
     return () => {
-      console.log('canceled?')
       source.cancel()
     }
   }, [assetTitle, config?.metadataCacheUri, ddo, did, title])
