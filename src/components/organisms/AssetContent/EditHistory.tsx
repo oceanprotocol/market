@@ -11,11 +11,10 @@ const getReceipts = gql`
     datatokens(where: { id: $address }) {
       createTime
       tx
-      updates {
+      updates(orderBy: timestamp, orderDirection: desc) {
         id
         tx
         timestamp
-        userAddress
       }
     }
   }
