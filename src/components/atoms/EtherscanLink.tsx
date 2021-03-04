@@ -36,12 +36,14 @@ export default function EtherscanLink({
   const [url, setUrl] = useState<string>()
 
   useEffect(() => {
-    const networkData = getNetworkData(networksList, networkId)
+    const networkData = networkId
+      ? getNetworkData(networksList, networkId)
+      : null
     const url =
       (!networkId && appConfig.network === 'mainnet') || networkId === 1
         ? `https://etherscan.io`
         : `https://${
-            networkId ? networkData.network : appConfig.network
+            networkData ? networkData.network : appConfig.network
           }.etherscan.io`
 
     setUrl(url)
