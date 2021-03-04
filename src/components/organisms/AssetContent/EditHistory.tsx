@@ -44,7 +44,8 @@ export default function EditHistory(): ReactElement {
         {receipts?.map((receipt) => (
           <li key={receipt.id} className={styles.item}>
             <EtherscanLink networkId={networkId} path={`/tx/${receipt.tx}`}>
-              edited <Time date={receipt.timestamp} relative isUnix />
+              edited{' '}
+              <Time date={receipt.timestamp.toString()} relative isUnix />
             </EtherscanLink>
           </li>
         ))}
