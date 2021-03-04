@@ -1,15 +1,37 @@
 import React, { useState, useEffect, ReactElement } from 'react'
 import { useOcean } from '@oceanprotocol/react'
 import Status from '../../atoms/Status'
-import { getNetworkData } from '../../../utils/wallet'
+import {
+  EthereumListsChain,
+  getNetworkData,
+  getNetworkDisplayName
+} from '../../../utils/wallet'
 import { ConfigHelper } from '@oceanprotocol/lib'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import styles from './Network.module.css'
-import axios from 'axios'
 import Badge from '../../atoms/Badge'
 import Tooltip from '../../atoms/Tooltip'
+import { graphql, useStaticQuery } from 'gatsby'
+
+const networksQuery = graphql`
+  query NetworksQuery {
+    allNetworksMetadataJson {
+      edges {
+        node {
+          chain
+          network
+          networkId
+        }
+      }
+    }
+  }
+`
 
 export default function Network(): ReactElement {
+  const data = useStaticQuery(networksQuery)
+  const networksList: { node: EthereumListsChain }[] =
+    data.allNetworksMetadataJson.edges
+
   const { config, networkId } = useOcean()
   const networkIdConfig = (config as ConfigHelperConfig).networkId
 
@@ -19,9 +41,6 @@ export default function Network(): ReactElement {
   const [isSupportedNetwork, setIsSupportedNetwork] = useState<boolean>()
 
   useEffect(() => {
-    let isMounted = true
-    const source = axios.CancelToken.source()
-
     // take network from user when present,
     // otherwise use the default configured one of app
     const network = networkId || networkIdConfig
@@ -33,21 +52,13 @@ export default function Network(): ReactElement {
     const isSupportedNetwork = Boolean(new ConfigHelper().getConfig(network))
     setIsSupportedNetwork(isSupportedNetwork)
 
-    async function getName() {
-      const networkData = await getNetworkData(network, source.token)
+    // Figure out if we're on a chain's testnet, or not
+    const networkData = getNetworkData(networksList, network)
+    setIsTestnet(networkData.network !== 'mainnet')
 
-      if (isMounted) {
-        setIsTestnet(networkData.data.network !== 'mainnet')
-        setNetworkName(networkData.displayName)
-      }
-    }
-    getName()
-
-    return () => {
-      isMounted = false
-      source.cancel()
-    }
-  }, [networkId, networkIdConfig])
+    const networkName = getNetworkDisplayName(networkData, network)
+    setNetworkName(networkName)
+  }, [networkId, networkIdConfig, networksList])
 
   return !isMainnet && networkName ? (
     <div className={styles.network}>

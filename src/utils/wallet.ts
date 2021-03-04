@@ -1,7 +1,5 @@
 import { infuraProjectId as infuraId, portisId } from '../../app.config'
 import WalletConnectProvider from '@walletconnect/web3-provider'
-import axios, { AxiosResponse, CancelToken } from 'axios'
-import { Logger } from '@oceanprotocol/lib'
 
 export interface EthereumListsChain {
   name: string
@@ -65,7 +63,7 @@ export function accountTruncate(account: string): string {
   return truncated
 }
 
-function getNetworkDisplayName(
+export function getNetworkDisplayName(
   data: EthereumListsChain,
   networkId: number
 ): string {
@@ -78,30 +76,12 @@ function getNetworkDisplayName(
   return displayName
 }
 
-export async function getNetworkData(
-  networkId: number,
-  cancelToken: CancelToken
-): Promise<{ displayName: string; data: EthereumListsChain }> {
-  // https://github.com/ethereum-lists/chains
-  const chainDataUrl = 'https://chainid.network/chains.json'
-
-  try {
-    const response: AxiosResponse<
-      EthereumListsChain[]
-    > = await axios(chainDataUrl, { cancelToken })
-    const data = response.data.filter(
-      (item: { networkId: number }) => item.networkId === networkId
-    )[0]
-    const displayName = getNetworkDisplayName(data, networkId)
-
-    return { displayName, data }
-  } catch (error) {
-    if (axios.isCancel(error)) {
-      Logger.log(error.message)
-    } else {
-      Logger.error(
-        `Could not fetch from chainid.network/chains.json: ${error.message}`
-      )
-    }
-  }
+export function getNetworkData(
+  data: { node: EthereumListsChain }[],
+  networkId: number
+): EthereumListsChain {
+  const networkData = data.filter(
+    ({ node }: { node: EthereumListsChain }) => node.networkId === networkId
+  )[0]
+  return networkData.node
 }
