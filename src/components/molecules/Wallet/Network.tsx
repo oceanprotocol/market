@@ -35,7 +35,7 @@ export default function Network(): ReactElement {
   const { config, networkId } = useOcean()
   const networkIdConfig = (config as ConfigHelperConfig).networkId
 
-  const [isMainnet, setIsMainnet] = useState<boolean>()
+  const [isEthMainnet, setIsEthMainnet] = useState<boolean>()
   const [networkName, setNetworkName] = useState<string>()
   const [isTestnet, setIsTestnet] = useState<boolean>()
   const [isSupportedNetwork, setIsSupportedNetwork] = useState<boolean>()
@@ -44,8 +44,8 @@ export default function Network(): ReactElement {
     // take network from user when present,
     // otherwise use the default configured one of app
     const network = networkId || networkIdConfig
-    const isMainnet = network === 1
-    setIsMainnet(isMainnet)
+    const isEthMainnet = network === 1
+    setIsEthMainnet(isEthMainnet)
 
     // Check networkId against ocean.js ConfigHelper configs
     // to figure out if network is supported.
@@ -60,7 +60,7 @@ export default function Network(): ReactElement {
     setNetworkName(networkName)
   }, [networkId, networkIdConfig, networksList])
 
-  return !isMainnet && networkName ? (
+  return !isEthMainnet && networkName ? (
     <div className={styles.network}>
       {!isSupportedNetwork && (
         <Tooltip content="No Ocean Protocol contracts are deployed to this network.">

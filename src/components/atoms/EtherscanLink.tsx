@@ -1,9 +1,23 @@
 import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
-import { getNetworkData } from '../../utils/wallet'
+import { EthereumListsChain, getNetworkData } from '../../utils/wallet'
 import { ReactComponent as External } from '../../images/external.svg'
 import styles from './EtherscanLink.module.css'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
-import axios from 'axios'
+import { graphql, useStaticQuery } from 'gatsby'
+
+const networksQuery = graphql`
+  query {
+    allNetworksMetadataJson {
+      edges {
+        node {
+          chain
+          network
+          networkId
+        }
+      }
+    }
+  }
+`
 
 export default function EtherscanLink({
   networkId,
@@ -14,27 +28,24 @@ export default function EtherscanLink({
   path: string
   children: ReactNode
 }): ReactElement {
+  const data = useStaticQuery(networksQuery)
+  const networksList: { node: EthereumListsChain }[] =
+    data.allNetworksMetadataJson.edges
+
   const { appConfig } = useSiteMetadata()
-  const [network, setNetwork] = useState<string>()
+  const [url, setUrl] = useState<string>()
 
   useEffect(() => {
-    const source = axios.CancelToken.source()
+    const networkData = getNetworkData(networksList, networkId)
+    const url =
+      (!networkId && appConfig.network === 'mainnet') || networkId === 1
+        ? `https://etherscan.io`
+        : `https://${
+            networkId ? networkData.network : appConfig.network
+          }.etherscan.io`
 
-    async function init() {
-      const network = await getNetworkData(networkId, source.token)
-      setNetwork(network.data.network)
-    }
-    init()
-
-    return () => {
-      source.cancel()
-    }
-  }, [networkId])
-
-  const url =
-    (!networkId && appConfig.network === 'mainnet') || networkId === 1
-      ? `https://etherscan.io`
-      : `https://${networkId ? network : appConfig.network}.etherscan.io`
+    setUrl(url)
+  }, [networkId, networksList, appConfig.network])
 
   return (
     <a
