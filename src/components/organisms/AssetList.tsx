@@ -48,7 +48,7 @@ const AssetList: React.FC<AssetListProps> = ({
         <Pagination
           totalPages={totalPages}
           currentPage={page}
-          onPageChange={handlePageChange}
+          onChangePage={handlePageChange}
         />
       )}
     </>

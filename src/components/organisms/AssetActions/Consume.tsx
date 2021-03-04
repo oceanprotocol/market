@@ -158,13 +158,7 @@ export default function Consume({
           <File file={file} />
         </div>
         <div className={styles.pricewrapper}>
-          {isConsumable ? (
-            <Price ddo={ddo} conversion />
-          ) : (
-            <div className={styles.help}>
-              There is not enough liquidity in the pool to buy this data set.
-            </div>
-          )}
+          <Price ddo={ddo} conversion />
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>
