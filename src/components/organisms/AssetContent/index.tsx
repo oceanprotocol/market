@@ -15,7 +15,7 @@ import Button from '../../atoms/Button'
 import Edit from '../AssetActions/Edit'
 import DebugOutput from '../../atoms/DebugOutput'
 import MetaMain from './MetaMain'
-// import EditHistory from './EditHistory'
+import EditHistory from './EditHistory'
 
 export interface AssetContentProps {
   path?: string
@@ -97,7 +97,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
           )}
 
           <MetaFull />
-          {/* <EditHistory /> */}
+          <EditHistory />
           {debug === true && <DebugOutput title="DDO" output={ddo} />}
         </div>
       </div>
