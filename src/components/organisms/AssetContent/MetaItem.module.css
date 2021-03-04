@@ -10,3 +10,9 @@
   color: var(--color-secondary);
   text-transform: uppercase;
 }
+
+.content {
+  width: 11.5rem;
+  word-wrap: break-word;
+  white-space: normal;
+}
