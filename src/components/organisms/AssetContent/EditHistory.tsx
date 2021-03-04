@@ -8,7 +8,7 @@ import { gql, useQuery } from '@apollo/client'
 import { ReceiptData_datatokens_updates as ReceiptData } from '../../../@types/apollo/ReceiptData'
 
 const getReceipts = gql`
-  query ReceiptData($address: String!) {
+  query ReceiptData($address: ID!) {
     datatokens(where: { id: $address }) {
       createTime
       tx
