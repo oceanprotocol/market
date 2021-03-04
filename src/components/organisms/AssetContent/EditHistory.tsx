@@ -5,6 +5,7 @@ import EtherscanLink from '../../atoms/EtherscanLink'
 import Time from '../../atoms/Time'
 import styles from './EditHistory.module.css'
 import { gql, useQuery } from '@apollo/client'
+import { ReceiptData_datatokens_updates as ReceiptData } from '../../../@types/apollo/ReceiptData'
 
 const getReceipts = gql`
   query ReceiptData($address: String!) {
@@ -19,11 +20,6 @@ const getReceipts = gql`
     }
   }
 `
-interface Receipt {
-  id: string
-  tx: string
-  timestamp: string
-}
 
 export default function EditHistory(): ReactElement {
   const { networkId } = useOcean()
@@ -32,7 +28,7 @@ export default function EditHistory(): ReactElement {
     variables: { address: ddo?.dataToken.toLowerCase() }
   })
 
-  const [receipts, setReceipts] = useState<Receipt[]>()
+  const [receipts, setReceipts] = useState<ReceiptData[]>()
   const [creationTx, setCreationTx] = useState<string>()
 
   useEffect(() => {
