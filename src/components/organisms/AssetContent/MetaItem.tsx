@@ -1,7 +1,5 @@
 import React, { ReactElement, ReactNode } from 'react'
 import styles from './MetaItem.module.css'
-import { syncBuiltinESMExports } from 'module'
-import style from 'react-syntax-highlighter/dist/esm/styles/hljs/github-gist'
 
 export default function MetaItem({
   title,
