@@ -2,15 +2,14 @@ import React, { useState, useEffect, ReactElement } from 'react'
 import { useOcean } from '@oceanprotocol/react'
 import Status from '../../atoms/Status'
 import { getNetworkData } from '../../../utils/wallet'
+import { ConfigHelper } from '@oceanprotocol/lib'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import styles from './Network.module.css'
 import axios from 'axios'
 import Badge from '../../atoms/Badge'
-import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import Tooltip from '../../atoms/Tooltip'
 
 export default function Network(): ReactElement {
-  const { appConfig } = useSiteMetadata()
   const { config, networkId } = useOcean()
   const networkIdConfig = (config as ConfigHelperConfig).networkId
 
@@ -29,6 +28,11 @@ export default function Network(): ReactElement {
     const isMainnet = network === 1
     setIsMainnet(isMainnet)
 
+    // Check networkId against ocean.js ConfigHelper configs
+    // to figure out if network is supported.
+    const isSupportedNetwork = Boolean(new ConfigHelper().getConfig(network))
+    setIsSupportedNetwork(isSupportedNetwork)
+
     async function getName() {
       const networkData = await getNetworkData(network, source.token)
 
@@ -39,14 +43,11 @@ export default function Network(): ReactElement {
     }
     getName()
 
-    const isSupportedNetwork = appConfig.supportedNetworks.includes(network)
-    setIsSupportedNetwork(isSupportedNetwork)
-
     return () => {
       isMounted = false
       source.cancel()
     }
-  }, [networkId, networkIdConfig, appConfig.supportedNetworks])
+  }, [networkId, networkIdConfig])
 
   return !isMainnet && networkName ? (
     <div className={styles.network}>

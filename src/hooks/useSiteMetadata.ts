@@ -17,7 +17,6 @@ const query = graphql`
         appConfig {
           infuraProjectId
           network
-          supportedNetworks
           marketFeeAddress
           currencies
           portisId

@@ -5,9 +5,6 @@ module.exports = {
   // Ocean Protocol contracts are deployed for: 'mainnet', 'rinkeby', 'development'
   network: process.env.GATSBY_NETWORK || 'mainnet',
 
-  // List of supported networkId the market works with. Used for showing UI hints.
-  supportedNetworks: [1, 3, 4, 137, 80001],
-
   infuraProjectId: process.env.GATSBY_INFURA_PROJECT_ID || 'xxx',
 
   // The ETH address the marketplace fee will be sent to.
