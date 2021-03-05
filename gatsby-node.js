@@ -11,6 +11,14 @@ execSync(`node ./scripts/write-repo-metadata > repo-metadata.json`, {
 // Generate Apollo typings
 execSync(`npm run apollo:codegen`, { stdio: 'inherit' })
 
+// Fetch EVM networks metadata
+execSync(
+  `node ./scripts/write-networks-metadata > content/networks-metadata.json`,
+  {
+    stdio: 'inherit'
+  }
+)
+
 exports.onCreateNode = ({ node, actions, getNode }) => {
   createFields(node, actions, getNode)
 }

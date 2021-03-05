@@ -24,8 +24,8 @@ const Blockies = ({ account }: { account: string | undefined }) => {
 // Forward ref for Tippy.js
 // eslint-disable-next-line
 const Account = React.forwardRef((props, ref: any) => {
-  const { accountId, status, connect, networkId, web3Modal } = useOcean()
-  const hasSuccess = status === 1 && networkId === 1
+  const { accountId, status, connect, web3Modal } = useOcean()
+  const hasSuccess = status === 1
 
   async function handleActivation(e: FormEvent<HTMLButtonElement>) {
     // prevent accidentially submitting a form the button might be in

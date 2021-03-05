@@ -25,6 +25,7 @@ export default function MetaFull(): ReactElement {
         title="Owner"
         content={<Publisher account={ddo?.publicKey[0].owner} />}
       />
+
       {type === 'algorithm' && (
         <MetaItem title="Docker Image" content={<DockerImage />} />
       )}

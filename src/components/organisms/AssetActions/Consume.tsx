@@ -12,6 +12,23 @@ import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import checkPreviousOrder from '../../../utils/checkPreviousOrder'
 import { useAsset } from '../../../providers/Asset'
 import { secondsToString } from '../../../utils/metadata'
+import { gql, useQuery } from '@apollo/client'
+import { OrdersData } from '../../../@types/apollo/OrdersData'
+import BigNumber from 'bignumber.js'
+
+const previousOrderQuery = gql`
+  query PreviousOrder($id: String!, $account: String!) {
+    tokenOrders(
+      first: 1
+      where: { datatokenId: $id, payer: $account }
+      orderBy: timestamp
+      orderDirection: desc
+    ) {
+      timestamp
+      tx
+    }
+  }
+`
 
 function getHelpText(
   token: {
@@ -58,6 +75,34 @@ export default function Consume({
   const [isConsumable, setIsConsumable] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
 
+  const { data } = useQuery<OrdersData>(previousOrderQuery, {
+    variables: {
+      id: ddo.dataToken?.toLowerCase(),
+      account: accountId?.toLowerCase()
+    },
+    pollInterval: 5000
+  })
+
+  useEffect(() => {
+    if (!data || !assetTimeout || data.tokenOrders.length === 0) return
+
+    const lastOrder = data.tokenOrders[0]
+
+    if (assetTimeout === 'Forever') {
+      setPreviousOrderId(lastOrder.tx)
+      setHasPreviousOrder(true)
+    } else {
+      const expiry = new BigNumber(lastOrder.timestamp).plus(assetTimeout)
+      const unixTime = new BigNumber(Math.floor(Date.now() / 1000))
+      if (unixTime.isLessThan(expiry)) {
+        setPreviousOrderId(lastOrder.tx)
+        setHasPreviousOrder(true)
+      } else {
+        setHasPreviousOrder(false)
+      }
+    }
+  }, [data, assetTimeout])
+
   useEffect(() => {
     const { timeout } = ddo.findServiceByType('access').attributes.main
     setAssetTimeout(secondsToString(timeout))
@@ -94,18 +139,6 @@ export default function Consume({
     isConsumable,
     hasDatatoken
   ])
-
-  useEffect(() => {
-    if (!ocean || !accountId) return
-
-    async function checkOrders() {
-      // HEADS UP! checkPreviousOrder() also checks for expiration of possible set timeout.
-      const orderId = await checkPreviousOrder(ocean, accountId, ddo, 'access')
-      setPreviousOrderId(orderId)
-      setHasPreviousOrder(!!orderId)
-    }
-    checkOrders()
-  }, [ocean, ddo, accountId])
 
   async function handleConsume() {
     !hasPreviousOrder && !hasDatatoken && (await buyDT('1'))
