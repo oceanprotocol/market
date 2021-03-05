@@ -11,13 +11,13 @@
 .metaFull {
   display: grid;
   gap: var(--spacer);
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
 }
 
 .metaAlgorithm {
   display: grid;
   gap: var(--spacer);
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
   margin-bottom: var(--spacer);
 }
 
