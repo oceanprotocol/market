@@ -21,6 +21,10 @@ const networksQuery = graphql`
           chain
           network
           networkId
+          nativeCurrency {
+            name
+            symbol
+          }
         }
       }
     }
