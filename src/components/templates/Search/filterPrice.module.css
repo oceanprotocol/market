@@ -43,6 +43,10 @@ button.filter,
   color: var(--background-body);
 }
 
+.filterList:first-of-type {
+  margin-bottom: calc(var(--spacer) / 6);
+}
+
 .showClear {
   display: inline-flex;
   text-transform: capitalize;

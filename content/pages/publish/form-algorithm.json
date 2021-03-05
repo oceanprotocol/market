@@ -1,0 +1,85 @@
+{
+  "title": "Publish an Algorithm",
+  "data": [
+    {
+      "name": "name",
+      "label": "Title",
+      "placeholder": "e.g. Shapes of Desert Plants",
+      "help": "Enter a concise title.",
+      "required": true
+    },
+    {
+      "name": "description",
+      "label": "Description",
+      "help": "Add a thorough description with as much detail as possible. You can use [Markdown](https://daringfireball.net/projects/markdown/basics).",
+      "type": "textarea",
+      "required": true
+    },
+    {
+      "name": "files",
+      "label": "File",
+      "placeholder": "e.g. https://file.com/file.json",
+      "help": "Please provide a URL to your algorith file. This URL will be stored encrypted after publishing.",
+      "type": "files",
+      "required": true
+    },
+    {
+      "name": "dockerImage",
+      "label": "Docker Image",
+      "placeholder": "e.g. python3.7",
+      "help": "Please select a image to run your algorithm.",
+      "type": "select",
+      "options": ["node:pre-defined", "python:pre-defined", "custom image"],
+      "required": true
+    },
+    {
+      "name": "image",
+      "label": "Image URL",
+      "placeholder": "e.g. oceanprotocol/algo_dockers or https://example.com/image_path",
+      "help": "Provide the name of a public docker image or the full url if you have it hosted in a 3rd party repo",
+      "required": false
+    },
+    {
+      "name": "containerTag",
+      "label": "Docker Image Tag",
+      "placeholder": "e.g. latest",
+      "help": "Provide the tag for your docker image.",
+      "required": false
+    },
+    {
+      "name": "entrypoint",
+      "label": "Entrypoint",
+      "placeholder": "e.g. python $ALGO",
+      "help": "Provide the entrypoint for your algorithm.",
+      "required": false
+    },
+    {
+      "name": "algorithmPrivacy",
+      "label": "Algorithm Privacy",
+      "type": "checkbox",
+      "options": ["Keep my algorithm private"],
+      "required": false
+    },
+    {
+      "name": "author",
+      "label": "Author",
+      "placeholder": "e.g. Jelly McJellyfish",
+      "help": "Give proper attribution for your algorith.",
+      "required": true
+    },
+    {
+      "name": "tags",
+      "label": "Tags",
+      "placeholder": "e.g. logistics, ai",
+      "help": "Separate tags with comma."
+    },
+    {
+      "name": "termsAndConditions",
+      "label": "Terms & Conditions",
+      "type": "terms",
+      "options": ["I agree to these Terms and Conditions"],
+      "required": true
+    }
+  ],
+  "success": "Algorithm Published!"
+}

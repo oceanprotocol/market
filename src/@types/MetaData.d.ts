@@ -24,7 +24,7 @@ export interface PriceOptionsMarket extends PriceOptions {
   swapFee: number
 }
 
-export interface MetadataPublishForm {
+export interface MetadataPublishFormDataset {
   // ---- required fields ----
   name: string
   description: string
@@ -37,6 +37,22 @@ export interface MetadataPublishForm {
   // ---- optional fields ----
   tags?: string
   links?: string | File[]
+}
+
+export interface MetadataPublishFormAlgorithm {
+  // ---- required fields ----
+  name: string
+  description: string
+  files: string | File[]
+  author: string
+  dockerImage: string
+  algorithmPrivacy: boolean
+  termsAndConditions: boolean
+  // ---- optional fields ----
+  image: string
+  containerTag: string
+  entrypoint: string
+  tags?: string
 }
 
 export interface ServiceMetadataMarket extends ServiceMetadata {

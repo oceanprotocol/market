@@ -1,4 +1,4 @@
-import { MetadataMarket, MetadataPublishForm } from '../@types/MetaData'
+import { MetadataMarket, MetadataPublishFormDataset } from '../@types/MetaData'
 import { secondsToString } from '../utils/metadata'
 import * as Yup from 'yup'
 
@@ -13,7 +13,7 @@ export const validationSchema = Yup.object().shape({
 export function getInitialValues(
   metadata: MetadataMarket,
   timeout: number
-): Partial<MetadataPublishForm> {
+): Partial<MetadataPublishFormDataset> {
   return {
     name: metadata.main.name,
     description: metadata.additionalInformation.description,
