@@ -46,7 +46,6 @@ export default function Details(): ReactElement {
 
   useEffect(() => {
     if (!networkId) return
-    console.log('networks', networksList, networkId)
     // Figure out if we're on a chain's testnet, or not
     const networkData = getNetworkData(networksList, networkId)
     setMainCurrency(networkData.nativeCurrency.symbol)
