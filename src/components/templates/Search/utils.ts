@@ -33,9 +33,9 @@ type FilterByPriceOptions = typeof FilterByPriceOptions[keyof typeof FilterByPri
 
 function addPriceFilterToQuerry(sortTerm: string, priceFilter: string): string {
   sortTerm = priceFilter
-    ? sortTerm === ''
-      ? `price.type:${priceFilter}`
-      : `${sortTerm} AND price.type:${priceFilter}`
+    ? /\S/.test(sortTerm)
+      ? `${sortTerm} AND price.type:${priceFilter}`
+      : `price.type:${priceFilter}`
     : sortTerm
   return sortTerm
 }

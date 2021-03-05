@@ -1,9 +1,18 @@
-import {
-  infuraProjectId as infuraId,
-  portisId,
-  network
-} from '../../app.config'
+import { infuraProjectId as infuraId, portisId } from '../../app.config'
 import WalletConnectProvider from '@walletconnect/web3-provider'
+
+export interface EthereumListsChain {
+  name: string
+  chainId: number
+  shortName: string
+  chain: string
+  network: string
+  networkId: number
+  nativeCurrency: { name: string; symbol: string; decimals: number }
+  rpc: string[]
+  faucets: string[]
+  infoURL: string
+}
 
 const web3ModalTheme = {
   background: 'var(--background-body)',
@@ -47,28 +56,6 @@ export const web3ModalOpts = {
   theme: web3ModalTheme
 }
 
-export function getNetworkId(network: string): number {
-  switch (network) {
-    case 'mainnet':
-      return 1
-    case 'ropsten':
-      return 3
-    case 'rinkeby':
-      return 4
-    case 'kovan':
-      return 42
-    case 'development':
-      return 8996
-    default:
-      return 0
-  }
-}
-
-export function isDefaultNetwork(networkId: number): boolean {
-  const configuredNetwork = getNetworkId(network)
-  return configuredNetwork === networkId
-}
-
 export function accountTruncate(account: string): string {
   if (!account) return
   const middle = account.substring(6, 38)
@@ -76,21 +63,25 @@ export function accountTruncate(account: string): string {
   return truncated
 }
 
-export function getNetworkName(networkId: number): string {
-  switch (networkId) {
-    case 1:
-      return 'Main'
-    case 3:
-      return 'Ropsten'
-    case 4:
-      return 'Rinkeby'
-    case 42:
-      return 'Kovan'
-    case 137:
-      return 'Polygon'
-    case 8996:
-      return 'Development'
-    default:
-      return 'Unknown'
-  }
+export function getNetworkDisplayName(
+  data: EthereumListsChain,
+  networkId: number
+): string {
+  const displayName = data
+    ? `${data.chain} ${data.network === 'mainnet' ? '' : data.network}`
+    : networkId === 8996
+    ? 'Development'
+    : 'Unknown'
+
+  return displayName
+}
+
+export function getNetworkData(
+  data: { node: EthereumListsChain }[],
+  networkId: number
+): EthereumListsChain {
+  const networkData = data.filter(
+    ({ node }: { node: EthereumListsChain }) => node.networkId === networkId
+  )[0]
+  return networkData.node
 }

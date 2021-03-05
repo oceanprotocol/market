@@ -5,7 +5,7 @@ import { Logger } from '@oceanprotocol/lib'
 
 // https://docs.3box.io/api/rest-api
 const apiUri = 'https://3box.oceanprotocol.com'
-const ipfsUrl = 'https://ipfs.oceanprotocol.com'
+const ipfsUrl = 'https://dweb.link'
 
 function decodeProof(proofJWT: string) {
   if (!proofJWT) return

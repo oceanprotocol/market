@@ -2,7 +2,6 @@ import React, { ReactElement } from 'react'
 import Status from '../../atoms/Status'
 import styles from './Feedback.module.css'
 import { useOcean } from '@oceanprotocol/react'
-import { getNetworkName } from '../../../utils/wallet'
 
 export declare type Web3Error = {
   status: 'error' | 'warning' | 'success'
@@ -15,19 +14,13 @@ export default function Web3Feedback({
 }: {
   isBalanceSufficient?: boolean
 }): ReactElement {
-  const { account, status, networkId } = useOcean()
+  const { account, status } = useOcean()
   const isOceanConnectionError = status === -1
-  const isMainnet = networkId === 1
   const showFeedback =
-    !account ||
-    isOceanConnectionError ||
-    !isMainnet ||
-    isBalanceSufficient === false
+    !account || isOceanConnectionError || isBalanceSufficient === false
 
   const state = !account
     ? 'error'
-    : !isMainnet
-    ? 'warning'
     : account && isBalanceSufficient
     ? 'success'
     : 'warning'
@@ -36,8 +29,6 @@ export default function Web3Feedback({
     ? 'No account connected'
     : isOceanConnectionError
     ? 'Error connecting to Ocean'
-    : !isMainnet
-    ? getNetworkName(networkId)
     : account
     ? isBalanceSufficient === false
       ? 'Insufficient balance'
@@ -48,8 +39,6 @@ export default function Web3Feedback({
     ? 'Please connect your Web3 wallet.'
     : isOceanConnectionError
     ? 'Please try again.'
-    : !isMainnet
-    ? undefined
     : isBalanceSufficient === false
     ? 'You do not have enough OCEAN in your wallet to purchase this asset.'
     : 'Something went wrong.'
