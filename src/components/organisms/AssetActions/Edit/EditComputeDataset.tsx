@@ -127,9 +127,11 @@ export default function EditComputeDataset({
   ) {
     const trustedAlgorithms: PublisherTrustedAlgorithm[] = []
     for (const selectedAlgorithmDID of selectedAlgorithmsDIDs) {
-      const trustedAlgorithm = await ocean.compute.createPublisherTrustedAlgorithmfromDID(
-        selectedAlgorithmDID.toString()
-      )
+      const trustedAlgorithm = selectedAlgorithmDID.did
+        ? selectedAlgorithmDID
+        : await ocean.compute.createPublisherTrustedAlgorithmfromDID(
+            selectedAlgorithmDID.toString()
+          )
       trustedAlgorithms.push(trustedAlgorithm)
     }
     return trustedAlgorithms
@@ -142,6 +144,8 @@ export default function EditComputeDataset({
     try {
       // Construct new DDO with new values
       let trustedAlgorithms: PublisherTrustedAlgorithm[] = []
+
+      console.log(values)
 
       trustedAlgorithms = await createTrustedAlgorithmList(
         values.publisherTrustedAlgorithms
@@ -158,6 +162,8 @@ export default function EditComputeDataset({
           algo
         )
       }) */
+
+      console.log(privacy)
 
       const ddoEditedComputePrivacy = await ocean.compute.editComputePrivacy(
         ddo,
