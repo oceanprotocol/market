@@ -20,11 +20,13 @@
         "options": ["Allow all published algorithms"]
       },
       {
-        "name": "trustedAlgorithms",
+        "name": "publisherTrustedAlgorithms",
         "label": "Publisher trusted algorithms",
         "help": "Choose a list of algorithms you trust to run on dataset",
         "type": "select",
+        "multiple": true,
         "options": [],
+        "size": 5,
         "sortOptions": false
       }
     ]

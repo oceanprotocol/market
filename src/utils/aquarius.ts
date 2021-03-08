@@ -73,3 +73,27 @@ export async function retrieveDDO(
     }
   }
 }
+
+export async function getAssetsNames(
+  didList: string[] | DID[],
+  metadataCacheUri: string,
+  cancelToken: CancelToken
+): Promise<Record<string, string>[]> {
+  try {
+    const response: AxiosResponse<Record<string, string>[]> = await axios.post(
+      `${metadataCacheUri}/api/v1/aquarius/assets/names`,
+      {
+        didList,
+        cancelToken
+      }
+    )
+    if (!response || response.status !== 200 || !response.data) return
+    return response.data
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      Logger.log(error.message)
+    } else {
+      Logger.error(error.message)
+    }
+  }
+}
