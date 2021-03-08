@@ -4,6 +4,8 @@ import { ReactComponent as External } from '../../images/external.svg'
 import styles from './EtherscanLink.module.css'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import { graphql, useStaticQuery } from 'gatsby'
+import { useOcean } from '@oceanprotocol/react'
+import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 
 const networksQuery = graphql`
   query {
@@ -29,25 +31,12 @@ export default function EtherscanLink({
   children: ReactNode
 }): ReactElement {
   const data = useStaticQuery(networksQuery)
-  const networksList: { node: EthereumListsChain }[] =
-    data.allNetworksMetadataJson.edges
-
-  const { appConfig } = useSiteMetadata()
+  const { config } = useOcean()
   const [url, setUrl] = useState<string>()
 
   useEffect(() => {
-    const networkData = networkId
-      ? getNetworkData(networksList, networkId)
-      : null
-    const url =
-      (!networkId && appConfig.network === 'mainnet') || networkId === 1
-        ? `https://etherscan.io`
-        : `https://${
-            networkData ? networkData.network : appConfig.network
-          }.etherscan.io`
-
-    setUrl(url)
-  }, [networkId, networksList, appConfig.network])
+    setUrl((config as ConfigHelperConfig).explorerUri)
+  }, [config])
 
   return (
     <a
