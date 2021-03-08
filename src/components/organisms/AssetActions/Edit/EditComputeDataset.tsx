@@ -110,9 +110,11 @@ export default function EditComputeDataset({
     )
     const algorithmList: AlgorithmOption[] = []
     didList.forEach((did: string) => {
-      algorithmList.push({ did: did, name: ddoNames[did] })
+      algorithmList.push({
+        did: did,
+        name: ddoNames[did]
+      })
     })
-    console.log(ddoNames)
     setAlgorithms(algorithmList)
   }
 
@@ -120,18 +122,34 @@ export default function EditComputeDataset({
     getAlgorithms()
   }, [])
 
-  async function handleSubmit(values: ComputePrivacy, resetForm: () => void) {
+  async function createTrustedAlgorithmList(
+    selectedAlgorithmsDIDs: PublisherTrustedAlgorithm[]
+  ) {
+    const trustedAlgorithms: PublisherTrustedAlgorithm[] = []
+    for (const selectedAlgorithmDID of selectedAlgorithmsDIDs) {
+      const trustedAlgorithm = await ocean.compute.createPublisherTrustedAlgorithmfromDID(
+        selectedAlgorithmDID.toString()
+      )
+      trustedAlgorithms.push(trustedAlgorithm)
+    }
+    return trustedAlgorithms
+  }
+
+  async function handleSubmit(
+    values: ServiceComputePrivacy,
+    resetForm: () => void
+  ) {
     try {
       // Construct new DDO with new values
-      console.log('values:', values)
-      const trustedAlgo: PublisherTrustedAlgorithm = await ocean.compute.createPublisherTrustedAlgorithmfromDID(
+      let trustedAlgorithms: PublisherTrustedAlgorithm[] = []
+
+      trustedAlgorithms = await createTrustedAlgorithmList(
         values.publisherTrustedAlgorithms
       )
-      console.log(trustedAlgo)
       const privacy: ServiceComputePrivacy = {
         allowRawAlgorithm: values.allowRawAlgorithm,
         allowNetworkAccess: values.allowNetworkAccess,
-        publisherTrustedAlgorithms: [trustedAlgo]
+        publisherTrustedAlgorithms: trustedAlgorithms
       }
       /* await values.trustedAlgorithms.forEach(async (algo) => {
         const newDDO = await ocean.compute.addTrustedAlgorithmtoAsset(
@@ -147,7 +165,7 @@ export default function EditComputeDataset({
         privacy
       )
 
-      console.log(ddoEditedComputePrivacy)
+      // console.log(ddoEditedComputePrivacy)
 
       if (!ddoEditedComputePrivacy) {
         setError(content.form.error)
@@ -174,7 +192,7 @@ export default function EditComputeDataset({
     }
   }
 
-  async function getAssetsNamesList() {
+  /* async function getAssetsNamesList() {
     const didList = [
       ddo.findServiceByType('compute').attributes.main.privacy
         .publisherTrustedAlgorithms[0].did
@@ -190,9 +208,7 @@ export default function EditComputeDataset({
       namesList.push(ddoNames[did])
     })
     return namesList[0]
-  }
-
-  console.log(ddo.findServiceByType('compute').attributes.main.privacy)
+  } */
 
   return (
     <Formik

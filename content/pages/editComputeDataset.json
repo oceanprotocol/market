@@ -25,7 +25,7 @@
         "help": "Choose a list of algorithms you trust to run on dataset",
         "type": "select",
         "multiple": true,
-        "options": [],
+        "options": [""],
         "size": 5,
         "sortOptions": false
       }

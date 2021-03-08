@@ -12,6 +12,6 @@ export function getInitialValues(compute: ServiceComputePrivacy) {
   return {
     allowRawAlgorithm: compute.allowRawAlgorithm,
     allowNetworkAccess: compute.allowNetworkAccess,
-    publisherTrustedAlgorithms: compute.publisherTrustedAlgorithms[0].did
+    publisherTrustedAlgorithms: compute.publisherTrustedAlgorithms
   }
 }

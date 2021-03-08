@@ -120,8 +120,6 @@ export default function Edit({
     }
   }
 
-  console.log(ddo)
-
   return (
     <Formik
       initialValues={getInitialValues(metadata, timeout)}

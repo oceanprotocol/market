@@ -6,7 +6,6 @@ import Input from '../../../atoms/Input'
 import { useOcean } from '@oceanprotocol/react'
 import { FormFieldProps } from '../../../../@types/Form'
 import { ServiceComputePrivacy } from '@oceanprotocol/lib'
-import { ComputePrivacy } from '../../../../@types/ComputePrivacy'
 
 interface AlgorithmOption {
   did: string
@@ -21,7 +20,7 @@ export default function FormEditComputeDataset({
 }: {
   data: FormFieldProps[]
   setShowEdit: (show: boolean) => void
-  values: ComputePrivacy
+  values: ServiceComputePrivacy
   algorithmList: AlgorithmOption[]
 }): ReactElement {
   const { ocean, accountId } = useOcean()
@@ -34,13 +33,19 @@ export default function FormEditComputeDataset({
   // Manually handle change events instead of using `handleChange` from Formik.
   // Workaround for default `validateOnChange` not kicking in
   function handleFieldChange(
-    e: ChangeEvent<HTMLInputElement>,
+    e: ChangeEvent<HTMLSelectElement>,
     field: FormFieldProps
   ) {
-    console.log(field.name)
-    console.log(e.target.value)
     if (field.type === 'select') {
-      setFieldValue(field.name, e.target.value)
+      let selectedValues = Array.from(
+        e.target.selectedOptions,
+        (option: HTMLOptionElement) => option.value
+      )
+      selectedValues = selectedValues.filter(
+        (value: string) => value.length > 0
+      )
+      console.log('selectedValues', selectedValues)
+      setFieldValue(field.name, selectedValues)
       validateField(field.name)
       return
     }
@@ -51,7 +56,8 @@ export default function FormEditComputeDataset({
 
   useEffect(() => {
     const select = document.getElementsByTagName('select')[0]
-    console.log(values)
+    select.setAttribute('multiple', 'true')
+    select.setAttribute('size', '4')
 
     algorithmList &&
       algorithmList.forEach((algorithm: AlgorithmOption) => {
@@ -59,9 +65,11 @@ export default function FormEditComputeDataset({
         option.text = algorithm.name
         option.value = algorithm.did
         if (values.publisherTrustedAlgorithms) {
-          if (algorithm.did === values.publisherTrustedAlgorithms) {
-            option.selected = true
-          }
+          values.publisherTrustedAlgorithms.forEach((publishedAlgorithm) => {
+            if (algorithm.did === publishedAlgorithm.did) {
+              option.selected = true
+            }
+          })
         }
 
         select.add(option)
@@ -75,12 +83,11 @@ export default function FormEditComputeDataset({
           key={field.name}
           {...field}
           component={Input}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+          onChange={(e: ChangeEvent<HTMLSelectElement>) =>
             handleFieldChange(e, field)
           }
         />
       ))}
-
       <footer className={styles.actions}>
         <Button style="primary" disabled={!ocean || !accountId || !isValid}>
           Submit

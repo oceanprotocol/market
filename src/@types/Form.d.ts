@@ -5,6 +5,7 @@ export interface FormFieldProps {
   options?: string[]
   sortOptions?: boolean
   required?: boolean
+  multiple?: boolean
   help?: string
   placeholder?: string
   pattern?: string

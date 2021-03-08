@@ -78,9 +78,9 @@ export async function getAssetsNames(
   didList: string[] | DID[],
   metadataCacheUri: string,
   cancelToken: CancelToken
-): Promise<Record<string, string>[]> {
+): Promise<Record<string, string>> {
   try {
-    const response: AxiosResponse<Record<string, string>[]> = await axios.post(
+    const response: AxiosResponse<Record<string, string>> = await axios.post(
       `${metadataCacheUri}/api/v1/aquarius/assets/names`,
       {
         didList,
