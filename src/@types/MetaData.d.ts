@@ -36,7 +36,7 @@ export interface MetadataPublishFormDataset {
   termsAndConditions: boolean
   // ---- optional fields ----
   tags?: string
-  links?: string | File[]
+  links?: string | EditableMetadataLinks[]
 }
 
 export interface MetadataPublishFormAlgorithm {
@@ -53,6 +53,13 @@ export interface MetadataPublishFormAlgorithm {
   containerTag: string
   entrypoint: string
   tags?: string
+}
+
+export interface MetadataEditForm {
+  name: string
+  description: string
+  timeout: string
+  links?: string | EditableMetadataLinks[]
 }
 
 export interface ServiceMetadataMarket extends ServiceMetadata {
