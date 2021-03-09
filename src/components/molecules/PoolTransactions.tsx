@@ -150,41 +150,41 @@ function Title({ row }: { row: TransactionHistoryPoolTransactions }) {
   ) : null
 }
 
-function getColumns(minimal?: boolean) {
-  return [
-    {
-      name: 'Title',
-      selector: function getTitleRow(row: TransactionHistoryPoolTransactions) {
-        return <Title row={row} />
-      }
-    },
-    {
-      name: 'Data Set',
-      selector: function getAssetRow(row: TransactionHistoryPoolTransactions) {
-        const did = web3.utils
-          .toChecksumAddress(row.poolAddress.datatokenAddress)
-          .replace('0x', 'did:op:')
-
-        return <AssetTitle did={did} />
-      },
-      omit: minimal
-    },
-    {
-      name: 'Time',
-      selector: function getTimeRow(row: TransactionHistoryPoolTransactions) {
-        return (
-          <Time
-            className={styles.time}
-            date={row.timestamp.toString()}
-            relative
-            isUnix
-          />
-        )
-      },
-      maxWidth: '10rem'
+const columns = [
+  {
+    name: 'Title',
+    selector: function getTitleRow(row: TransactionHistoryPoolTransactions) {
+      return <Title row={row} />
     }
-  ]
-}
+  },
+  {
+    name: 'Data Set',
+    selector: function getAssetRow(row: TransactionHistoryPoolTransactions) {
+      const did = web3.utils
+        .toChecksumAddress(row.poolAddress.datatokenAddress)
+        .replace('0x', 'did:op:')
+
+      return <AssetTitle did={did} />
+    }
+  },
+  {
+    name: 'Time',
+    selector: function getTimeRow(row: TransactionHistoryPoolTransactions) {
+      return (
+        <Time
+          className={styles.time}
+          date={row.timestamp.toString()}
+          relative
+          isUnix
+        />
+      )
+    },
+    maxWidth: '10rem'
+  }
+]
+
+// hack! if we use a function to omit one field this will display a strange refresh to the enduser for each row
+const columnsMinimal = [columns[0], columns[2]]
 
 export default function PoolTransactions({
   poolAddress,
@@ -214,7 +214,7 @@ export default function PoolTransactions({
 
   return (
     <Table
-      columns={getColumns(minimal)}
+      columns={minimal ? columnsMinimal : columns}
       data={logs}
       isLoading={loading}
       noTableHead={minimal}
