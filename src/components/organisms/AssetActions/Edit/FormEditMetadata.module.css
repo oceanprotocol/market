@@ -23,6 +23,6 @@
   margin-right: calc(var(--spacer) / 2);
 }
 
-select[multiple='true'] {
+select[multiple] {
   height: 130px;
 }

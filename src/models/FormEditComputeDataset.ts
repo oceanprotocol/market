@@ -1,5 +1,4 @@
 import { ServiceComputePrivacy } from '@oceanprotocol/lib'
-import { ComputePrivacy } from '../@types/ComputePrivacy'
 import * as Yup from 'yup'
 
 export const validationSchema = Yup.object().shape({

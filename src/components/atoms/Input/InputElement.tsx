@@ -33,13 +33,13 @@ export default function InputElement({
   size,
   field,
   label,
+  multiple,
   help,
   form,
   additionalComponent,
   ...props
 }: InputProps): ReactElement {
   const styleClasses = cx({ select: true, [size]: size })
-
   switch (type) {
     case 'select': {
       const sortedOptions =
@@ -47,7 +47,12 @@ export default function InputElement({
           ? options
           : options.sort((a: string, b: string) => a.localeCompare(b))
       return (
-        <select id={name} className={styleClasses} {...props}>
+        <select
+          id={name}
+          className={styleClasses}
+          {...props}
+          multiple={multiple}
+        >
           {field !== undefined && field.value === '' && (
             <option value="">---</option>
           )}

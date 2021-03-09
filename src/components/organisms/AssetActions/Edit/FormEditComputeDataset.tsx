@@ -36,29 +36,28 @@ export default function FormEditComputeDataset({
     e: ChangeEvent<HTMLSelectElement>,
     field: FormFieldProps
   ) {
-    if (field.type === 'select') {
-      let selectedValues = Array.from(
-        e.target.selectedOptions,
-        (option: HTMLOptionElement) => option.value
-      )
-      selectedValues = selectedValues.filter(
-        (value: string) => value.length > 0
-      )
-      console.log('selectedValues', selectedValues)
-      setFieldValue(field.name, selectedValues)
-      validateField(field.name)
-      return
+    let value: any
+    switch (field.type) {
+      case 'select':
+        value = Array.from(
+          e.target.selectedOptions,
+          (option: HTMLOptionElement) => option.value
+        )
+        value = value.filter((value: string) => value.length > 0)
+        break
+      case 'checkbox':
+        value = !JSON.parse(e.target.value)
+        break
+      default:
+        value = JSON.parse(e.target.value)
     }
-    const value =
-      field.type === 'checkbox' ? !JSON.parse(e.target.value) : e.target.value
     setFieldValue(field.name, value)
+    validateField(field.name)
   }
 
   useEffect(() => {
     const select = document.getElementsByTagName('select')[0]
-    select.setAttribute('multiple', 'true')
-    select.setAttribute('size', '4')
-
+    select.autofocus = false
     algorithmList &&
       algorithmList.forEach((algorithm: AlgorithmOption) => {
         const option = document.createElement('option')
@@ -68,13 +67,17 @@ export default function FormEditComputeDataset({
           values.publisherTrustedAlgorithms.forEach((publishedAlgorithm) => {
             if (algorithm.did === publishedAlgorithm.did) {
               option.selected = true
+              console.log(option)
             }
           })
         }
 
         select.add(option)
       })
-  }, [algorithmList])
+    console.log(select)
+  }, [])
+
+  console.log(document.getElementsByTagName('select')[0])
 
   return (
     <Form className={styles.form}>

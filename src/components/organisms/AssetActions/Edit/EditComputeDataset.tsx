@@ -1,7 +1,6 @@
 import { useOcean } from '@oceanprotocol/react'
 import { Formik } from 'formik'
 import React, { ReactElement, useEffect, useState } from 'react'
-import { ComputePrivacy } from '../../../../@types/ComputePrivacy'
 import {
   validationSchema,
   getInitialValues
@@ -23,6 +22,7 @@ import MetadataFeedback from '../../../molecules/MetadataFeedback'
 import { graphql, useStaticQuery } from 'gatsby'
 import axios from 'axios'
 import { queryMetadata, getAssetsNames } from '../../../../utils/aquarius'
+import Loader from '../../../atoms/Loader'
 import web3 from 'web3'
 
 const contentQuery = graphql`
@@ -47,6 +47,7 @@ const contentQuery = graphql`
                 required
                 sortOptions
                 options
+                multiple
                 rows
               }
             }
@@ -71,6 +72,17 @@ export default function EditComputeDataset({
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const [algorithms, setAlgorithms] = useState<AlgorithmOption[]>()
+  const query = {
+    page: 1,
+    query: {
+      nativeSearch: 1,
+      query_string: {
+        query: `(service.attributes.main.type:algorithm) -isInPurgatory:true`
+      }
+    },
+    sort: { created: -1 }
+  }
+  const source = axios.CancelToken.source()
 
   const hasFeedback = error || success
 
@@ -80,23 +92,12 @@ export default function EditComputeDataset({
   }
 
   async function getAlgorithms() {
-    const query = {
-      page: 1,
-      query: {
-        nativeSearch: 1,
-        query_string: {
-          query: `(service.attributes.main.type:algorithm) -isInPurgatory:true`
-        }
-      },
-      sort: { created: -1 }
-    }
-    const source = axios.CancelToken.source()
+    const didList: string[] = []
     const result = await queryMetadata(
       query as any,
       config.metadataCacheUri,
       source.token
     )
-    const didList: string[] = []
     await result.results.forEach((ddo: DDO) => {
       const did: string = web3.utils
         .toChecksumAddress(ddo.dataToken)
@@ -142,9 +143,7 @@ export default function EditComputeDataset({
     resetForm: () => void
   ) {
     try {
-      // Construct new DDO with new values
       let trustedAlgorithms: PublisherTrustedAlgorithm[] = []
-
       console.log(values)
 
       trustedAlgorithms = await createTrustedAlgorithmList(
@@ -155,14 +154,6 @@ export default function EditComputeDataset({
         allowNetworkAccess: values.allowNetworkAccess,
         publisherTrustedAlgorithms: trustedAlgorithms
       }
-      /* await values.trustedAlgorithms.forEach(async (algo) => {
-        const newDDO = await ocean.compute.addTrustedAlgorithmtoAsset(
-          ddo,
-          1,
-          algo
-        )
-      }) */
-
       console.log(privacy)
 
       const ddoEditedComputePrivacy = await ocean.compute.editComputePrivacy(
@@ -170,8 +161,6 @@ export default function EditComputeDataset({
         1,
         privacy
       )
-
-      // console.log(ddoEditedComputePrivacy)
 
       if (!ddoEditedComputePrivacy) {
         setError(content.form.error)
@@ -197,24 +186,6 @@ export default function EditComputeDataset({
       setError(error.message)
     }
   }
-
-  /* async function getAssetsNamesList() {
-    const didList = [
-      ddo.findServiceByType('compute').attributes.main.privacy
-        .publisherTrustedAlgorithms[0].did
-    ]
-    const source = axios.CancelToken.source()
-    const namesList: string[] = []
-    const ddoNames = await getAssetsNames(
-      didList,
-      config.metadataCacheUri,
-      source.token
-    )
-    didList.forEach((did: string) => {
-      namesList.push(ddoNames[did])
-    })
-    return namesList[0]
-  } */
 
   return (
     <Formik
@@ -248,19 +219,25 @@ export default function EditComputeDataset({
           <>
             <p className={styles.description}>{content.description}</p>
             <article className={styles.grid}>
-              <FormEditComputeDataset
-                data={content.form.data}
-                setShowEdit={setShowEdit}
-                values={initialValues}
-                algorithmList={algorithms}
-              />
+              {algorithms ? (
+                <>
+                  <FormEditComputeDataset
+                    data={content.form.data}
+                    setShowEdit={setShowEdit}
+                    values={initialValues}
+                    algorithmList={algorithms}
+                  />
 
-              <aside>
-                {/*
+                  <aside>
+                    {/*
                 <MetadataPreview values={values} />
                 */}
-                <Web3Feedback />
-              </aside>
+                    <Web3Feedback />
+                  </aside>
+                </>
+              ) : (
+                <Loader />
+              )}
 
               {/* debug === true && <Debug values={values} ddo={ddo} /> */}
             </article>
