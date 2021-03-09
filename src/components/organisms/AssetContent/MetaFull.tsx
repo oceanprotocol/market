@@ -17,16 +17,6 @@ export default function MetaFull(): ReactElement {
         title="Owner"
         content={<Publisher account={ddo?.publicKey[0].owner} />}
       />
-      {/* <MetaItem
-        title="Data Created"
-        content={<Time date={metadata?.main.dateCreated} />}
-      /> */}
-
-      {/* TODO: remove those 2 date items here when EditHistory component is ready */}
-      <MetaItem title="Published" content={<Time date={ddo?.created} />} />
-      {ddo?.created !== ddo?.updated && (
-        <MetaItem title="Updated" content={<Time date={ddo?.updated} />} />
-      )}
       <MetaItem title="DID" content={<code>{ddo?.id}</code>} />
     </div>
   )
