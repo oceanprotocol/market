@@ -8,12 +8,7 @@ import React, {
   useEffect
 } from 'react'
 import { Ocean, Logger, Account, Config } from '@oceanprotocol/lib'
-import {
-  getBalance,
-  getDevelopmentConfig,
-  getOceanConfig,
-  getUserInfo
-} from './utils'
+import { getDevelopmentConfig, getOceanConfig, getUserInfo } from './utils'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import { useWeb3 } from '../Web3'
 import {
@@ -92,7 +87,9 @@ function OceanProvider({
     setBalance(balance)
   }
 
+  // -----------------------------------
   // Initial connection
+  // -----------------------------------
   useEffect(() => {
     async function init() {
       await connect()
@@ -107,7 +104,9 @@ function OceanProvider({
     }
   }, [])
 
+  // -----------------------------------
   // Get user info, handle account change from web3
+  // -----------------------------------
   useEffect(() => {
     if (!ocean || !accountId) return
 
@@ -119,7 +118,9 @@ function OceanProvider({
     getInfo()
   }, [ocean, accountId])
 
+  // -----------------------------------
   // Handle network change from web3
+  // -----------------------------------
   useEffect(() => {
     if (!networkId) return
 
@@ -142,7 +143,9 @@ function OceanProvider({
     reconnect()
   }, [networkId])
 
+  // -----------------------------------
   // TODO: create usePurgatory() hook instead of mixing it up with Ocean connections
+  // -----------------------------------
   const [isInPurgatory, setIsInPurgatory] = useState(false)
   const [purgatoryData, setPurgatoryData] = useState<AccountPurgatoryData>()
 

@@ -29,21 +29,16 @@ export function getDevelopmentConfig(): Partial<ConfigHelperConfig> {
   }
 }
 
-export async function getBalance(account: Account): Promise<Balance> {
-  const eth = await account.getEtherBalance()
-  const ocean = await account.getOceanBalance()
-  return { eth, ocean }
-}
-
 export async function getUserInfo(
   ocean: Ocean
 ): Promise<{ account: Account; balance: Balance }> {
-  // OCEAN ACCOUNT
   const account = (await ocean.accounts.list())[0]
   Logger.log('Account ', account)
 
-  // BALANCE
-  const balance = account && (await getBalance(account))
+  const balance = {
+    eth: await account.getEtherBalance(),
+    ocean: await account.getOceanBalance()
+  }
   Logger.log('balance', JSON.stringify(balance))
 
   return { account, balance }

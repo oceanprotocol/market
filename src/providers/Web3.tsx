@@ -8,11 +8,10 @@ import React, {
   useCallback
 } from 'react'
 import Web3 from 'web3'
-import Web3Modal, { ICoreOptions } from 'web3modal'
-import { infuraProjectId as infuraId, portisId } from '../../../app.config'
+import Web3Modal from 'web3modal'
+import { infuraProjectId as infuraId, portisId } from '../../app.config'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import { Logger } from '@oceanprotocol/lib'
-import { getAccountId } from './utils'
 
 interface Web3ProviderValue {
   web3: Web3
@@ -88,11 +87,11 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
       setWeb3(web3)
       Logger.log('Web3 created.', web3)
 
-      const networkId = web3 && (await web3.eth.net.getId())
+      const networkId = await web3.eth.net.getId()
       setNetworkId(networkId)
       Logger.log('network id ', networkId)
 
-      const accountId = await getAccountId(web3)
+      const accountId = (await web3.eth.getAccounts())[0]
       setAccountId(accountId)
       Logger.log('account id', accountId)
     } catch (error) {
@@ -100,8 +99,10 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
     }
   }, [web3Modal])
 
+  // -----------------------------------
   // Create iniital Web3Modal instance,
   // and reconnect automatically for returning users
+  // -----------------------------------
   useEffect(() => {
     async function init() {
       if (web3Modal) return
@@ -119,13 +120,16 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
     web3Modal?.clearCachedProvider()
   }
 
+  // -----------------------------------
   // Handle change events
+  // -----------------------------------
   async function handleNetworkChanged(chainId: string) {
     Logger.log('Network changed', chainId)
     setNetworkId(Number(chainId.replace('0x', '')))
   }
 
   async function handleAccountsChanged(accounts: string[]) {
+    Logger.log('Account changed', accounts[0])
     setAccountId(accounts[0])
   }
 
