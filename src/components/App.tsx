@@ -55,12 +55,6 @@ export default function App({
             state="info"
           />
         )}
-        {(props as PageProps).uri === '/publish' && networkId === 137 && (
-          <Alert
-            text="Note: Only republish datatokens from Ethereum mainnet here if there is <1000 OCEAN liquidity in the original pool. Doing otherwise will lead to purgatory"
-            state="info"
-          />
-        )}
 
         {isAccountInPurgatory && (
           <Alert
