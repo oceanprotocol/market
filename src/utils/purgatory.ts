@@ -1,25 +1,28 @@
-import { PurgatoryData } from '@oceanprotocol/lib'
-import axios from 'axios'
+import { PurgatoryData as PurgatoryDataAsset } from '@oceanprotocol/lib'
+import axios, { AxiosResponse } from 'axios'
 
 const purgatoryUrl = 'https://market-purgatory.oceanprotocol.com/api/'
 
-export interface AccountPurgatoryData {
+export interface PurgatoryDataAccount {
   address: string
   reason: string
 }
 
+async function fetchPurgatory(url: string) {
+  const response: AxiosResponse = await axios(url)
+  return response.data[0]
+}
+
 export default async function getAssetPurgatoryData(
   did: string
-): Promise<PurgatoryData> {
-  const response = await axios(`${purgatoryUrl}asset?did=${did}`)
-  const responseJson = await response.data[0]
-  return { did: responseJson?.did, reason: responseJson?.reason }
+): Promise<PurgatoryDataAsset> {
+  const data = await fetchPurgatory(`${purgatoryUrl}asset?did=${did}`)
+  return { did: data?.did, reason: data?.reason }
 }
 
 export async function getAccountPurgatoryData(
   address: string
-): Promise<AccountPurgatoryData> {
-  const response = await axios(`${purgatoryUrl}account?address=${address}`)
-  const responseJson = await response.data[0]
-  return { address: responseJson?.address, reason: responseJson?.reason }
+): Promise<PurgatoryDataAccount> {
+  const data = await fetchPurgatory(`${purgatoryUrl}account?address=${address}`)
+  return { address: data?.address, reason: data?.reason }
 }

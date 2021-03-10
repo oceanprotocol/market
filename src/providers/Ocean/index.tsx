@@ -12,7 +12,7 @@ import { getDevelopmentConfig, getOceanConfig, getUserInfo } from './utils'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import { useWeb3 } from '../Web3'
 import {
-  AccountPurgatoryData,
+  PurgatoryDataAccount,
   getAccountPurgatoryData
 } from '../../utils/purgatory'
 
@@ -28,7 +28,7 @@ interface OceanProviderValue {
   config: ConfigHelperConfig | Config
   account: Account
   isInPurgatory: boolean
-  purgatoryData: AccountPurgatoryData
+  purgatoryData: PurgatoryDataAccount
   balance: Balance
   connect: (config?: Config) => Promise<void>
   refreshBalance: () => Promise<void>
@@ -147,7 +147,7 @@ function OceanProvider({
   // TODO: create usePurgatory() hook instead of mixing it up with Ocean connections
   // -----------------------------------
   const [isInPurgatory, setIsInPurgatory] = useState(false)
-  const [purgatoryData, setPurgatoryData] = useState<AccountPurgatoryData>()
+  const [purgatoryData, setPurgatoryData] = useState<PurgatoryDataAccount>()
 
   const setAccountPurgatory = useCallback(
     async (address: string): Promise<void> => {
