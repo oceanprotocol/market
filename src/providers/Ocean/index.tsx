@@ -8,15 +8,13 @@ import React, {
   useEffect
 } from 'react'
 import { Ocean, Logger, Account, Config } from '@oceanprotocol/lib'
-import {
-  getBalance,
-  AccountPurgatoryData,
-  getAccountPurgatoryData,
-  getDevelopmentConfig,
-  getOceanConfig
-} from './utils'
+import { getBalance, getDevelopmentConfig, getOceanConfig } from './utils'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import { useWeb3 } from '../Web3'
+import {
+  AccountPurgatoryData,
+  getAccountPurgatoryData
+} from '../../utils/purgatory'
 
 const refreshInterval = 5000 // 5 sec.
 

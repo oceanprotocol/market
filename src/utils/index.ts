@@ -1,3 +1,4 @@
+import { DDO, DID } from '@oceanprotocol/lib'
 import axios, { AxiosResponse } from 'axios'
 
 export function updateQueryStringParameter(
@@ -57,6 +58,15 @@ export async function fetchData(url: string): Promise<AxiosResponse['data']> {
 export function isDid(did: string | undefined): boolean {
   const didMatch = (did as string).match(/^did:op:([a-f0-9]{64})$/i)
   return !!didMatch
+}
+
+export function isDDO(
+  toBeDetermined: DID | string | DDO
+): toBeDetermined is DDO {
+  if ((toBeDetermined as DDO).id) {
+    return true
+  }
+  return false
 }
 
 export function formatBytes(a: number, b: number): string {

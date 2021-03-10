@@ -1,5 +1,4 @@
-import axios from 'axios'
-import { Account, Config, DDO, DID } from '@oceanprotocol/lib'
+import { Account, Config } from '@oceanprotocol/lib'
 import { Balance } from '.'
 import contractAddresses from '@oceanprotocol/contracts/artifacts/address.json'
 import {
@@ -30,32 +29,8 @@ export function getDevelopmentConfig(): Partial<ConfigHelperConfig> {
   }
 }
 
-const purgatoryUrl = 'https://market-purgatory.oceanprotocol.com/api/'
-
-export interface AccountPurgatoryData {
-  address: string
-  reason: string
-}
-
-export async function getAccountPurgatoryData(
-  address: string
-): Promise<AccountPurgatoryData> {
-  const response = await axios(`${purgatoryUrl}account?address=${address}`)
-  const responseJson = await response.data[0]
-  return { address: responseJson?.address, reason: responseJson?.reason }
-}
-
 export async function getBalance(account: Account): Promise<Balance> {
   const eth = await account.getEtherBalance()
   const ocean = await account.getOceanBalance()
   return { eth, ocean }
-}
-
-export function isDDO(
-  toBeDetermined: DID | string | DDO
-): toBeDetermined is DDO {
-  if ((toBeDetermined as DDO).id) {
-    return true
-  }
-  return false
 }

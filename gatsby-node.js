@@ -1,4 +1,3 @@
-const path = require('path')
 const createFields = require('./gatsby/createFields')
 const createMarkdownPages = require('./gatsby/createMarkdownPages')
 const execSync = require('child_process').execSync
