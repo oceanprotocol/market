@@ -9,12 +9,14 @@ import React, {
 } from 'react'
 import { Logger, DDO, BestPrice } from '@oceanprotocol/lib'
 import { PurgatoryData } from '@oceanprotocol/lib/dist/node/ddo/interfaces/PurgatoryData'
-import { getDataTokenPrice, useOcean } from '@oceanprotocol/react'
+import { getDataTokenPrice } from '@oceanprotocol/react'
 import getAssetPurgatoryData from '../utils/purgatory'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import axios, { CancelToken } from 'axios'
 import { retrieveDDO } from '../utils/aquarius'
 import { MetadataMarket } from '../@types/MetaData'
+import { useOcean } from './Ocean'
+import { useWeb3 } from './Web3'
 
 interface AssetProviderValue {
   isInPurgatory: boolean
@@ -42,7 +44,8 @@ function AssetProvider({
   asset: string | DDO
   children: ReactNode
 }): ReactElement {
-  const { ocean, status, config, networkId } = useOcean()
+  const { networkId } = useWeb3()
+  const { ocean, status, config } = useOcean()
   const [isInPurgatory, setIsInPurgatory] = useState(false)
   const [purgatoryData, setPurgatoryData] = useState<PurgatoryData>()
   const [ddo, setDDO] = useState<DDO>()

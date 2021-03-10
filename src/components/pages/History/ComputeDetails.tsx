@@ -1,5 +1,4 @@
 import { Logger } from '@oceanprotocol/lib'
-import { useOcean } from '@oceanprotocol/react'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Loader from '../../atoms/Loader'
 import Modal from '../../atoms/Modal'
@@ -9,6 +8,7 @@ import shortid from 'shortid'
 import styles from './ComputeDetails.module.css'
 import { Status } from './ComputeJobs'
 import { ListItem } from '../../atoms/Lists'
+import { useOcean } from '../../../providers/Ocean'
 
 export default function ComputeDetailsModal({
   computeJob,

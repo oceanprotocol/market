@@ -1,5 +1,4 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useOcean } from '@oceanprotocol/react'
 import { BestPrice, DDO } from '@oceanprotocol/lib'
 import styles from './Swap.module.css'
 import TradeInput from './TradeInput'
@@ -10,6 +9,7 @@ import TokenBalance from '../../../../@types/TokenBalance'
 import Output from './Output'
 import Slippage from './Slippage'
 import { FormTradeData, TradeItem } from '../../../../models/FormTrade'
+import { useOcean } from '../../../../providers/Ocean'
 
 export default function Swap({
   ddo,

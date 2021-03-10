@@ -1,4 +1,3 @@
-import { useOcean } from '@oceanprotocol/react'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useAsset } from '../../../providers/Asset'
 import EtherscanLink from '../../atoms/EtherscanLink'
@@ -6,6 +5,7 @@ import Time from '../../atoms/Time'
 import styles from './EditHistory.module.css'
 import { gql, useQuery } from '@apollo/client'
 import { ReceiptData_datatokens_updates as ReceiptData } from '../../../@types/apollo/ReceiptData'
+import { useWeb3 } from '../../../providers/Web3'
 
 const getReceipts = gql`
   query ReceiptData($address: ID!) {
@@ -22,7 +22,7 @@ const getReceipts = gql`
 `
 
 export default function EditHistory(): ReactElement {
-  const { networkId } = useOcean()
+  const { networkId } = useWeb3()
   const { ddo } = useAsset()
   const { data } = useQuery(getReceipts, {
     variables: { address: ddo?.dataToken.toLowerCase() }

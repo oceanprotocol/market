@@ -1,8 +1,8 @@
 import { DDO } from '@oceanprotocol/lib'
-import { useOcean } from '@oceanprotocol/react'
+import { useOcean } from '../../providers/Ocean'
 import { Link } from 'gatsby'
 import React, { ReactElement, useEffect, useState } from 'react'
-import { retrieveDDO, getAssetsNames } from '../../utils/aquarius'
+import { getAssetsNames } from '../../utils/aquarius'
 import styles from './AssetListTitle.module.css'
 import axios from 'axios'
 

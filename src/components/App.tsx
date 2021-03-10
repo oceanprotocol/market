@@ -4,7 +4,7 @@ import Header from './organisms/Header'
 import Styles from '../global/Styles'
 import styles from './App.module.css'
 import { useSiteMetadata } from '../hooks/useSiteMetadata'
-import { useOcean } from '@oceanprotocol/react'
+import { useOcean } from '../providers/Ocean'
 import Alert from './atoms/Alert'
 import { graphql, PageProps, useStaticQuery } from 'gatsby'
 

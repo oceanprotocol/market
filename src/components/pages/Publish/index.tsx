@@ -1,6 +1,6 @@
 import React, { ReactElement, useState } from 'react'
 import { Formik } from 'formik'
-import { usePublish, useOcean } from '@oceanprotocol/react'
+import { usePublish } from '@oceanprotocol/react'
 import styles from './index.module.css'
 import FormPublish from './FormPublish'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
@@ -18,6 +18,7 @@ import { Persist } from '../../atoms/FormikPersist'
 import Debug from './Debug'
 import Alert from '../../atoms/Alert'
 import MetadataFeedback from '../../molecules/MetadataFeedback'
+import { useOcean } from '../../../providers/Ocean'
 
 const formName = 'ocean-publish-form'
 

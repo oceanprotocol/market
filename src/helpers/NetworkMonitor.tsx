@@ -1,9 +1,10 @@
 import React, { ReactElement, useEffect } from 'react'
-import { useOcean } from '@oceanprotocol/react'
 import { getOceanConfig } from './wrapRootElement'
 import { Logger } from '@oceanprotocol/lib'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import contractAddresses from '@oceanprotocol/contracts/artifacts/address.json'
+import { useOcean } from '../providers/Ocean'
+import { useWeb3 } from '../providers/Web3'
 
 const refreshInterval = 5000 // 5 sec.
 
@@ -20,15 +21,8 @@ export function getDevelopmentConfig(): Partial<ConfigHelperConfig> {
 }
 
 export function NetworkMonitor(): ReactElement {
-  const {
-    connect,
-    web3Provider,
-    web3,
-    networkId,
-    config,
-    refreshBalance,
-    account
-  } = useOcean()
+  const { web3Provider, web3, networkId } = useWeb3()
+  const { connect, config, refreshBalance, account } = useOcean()
 
   async function handleNetworkChanged(chainId: string | number) {
     const initialNewConfig = getOceanConfig(

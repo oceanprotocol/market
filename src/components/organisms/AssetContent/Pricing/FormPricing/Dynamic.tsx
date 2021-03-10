@@ -1,4 +1,3 @@
-import { useOcean, usePricing } from '@oceanprotocol/react'
 import PriceUnit from '../../../../atoms/Price/PriceUnit'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Alert from '../../../../atoms/Alert'
@@ -14,6 +13,8 @@ import { PriceOptionsMarket } from '../../../../../@types/MetaData'
 import { DDO } from '@oceanprotocol/lib'
 import Price from './Price'
 import Decimal from 'decimal.js'
+import { useOcean } from '../../../../../providers/Ocean'
+import { useWeb3 } from '../../../../../providers/Web3'
 
 const refreshInterval = 10000 // 10 sec.
 
@@ -24,7 +25,8 @@ export default function Dynamic({
   ddo: DDO
   content: any
 }): ReactElement {
-  const { account, balance, networkId, refreshBalance } = useOcean()
+  const { networkId } = useWeb3()
+  const { account, balance, refreshBalance } = useOcean()
   const [firstPrice, setFirstPrice] = useState<string>()
 
   // Connect with form

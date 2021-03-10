@@ -1,5 +1,4 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useOcean } from '@oceanprotocol/react'
 import { Logger } from '@oceanprotocol/lib'
 import styles from './index.module.css'
 import stylesActions from './Actions.module.css'
@@ -18,6 +17,8 @@ import Graph from './Graph'
 import { useAsset } from '../../../../providers/Asset'
 import { gql, useQuery } from '@apollo/client'
 import { PoolLiquidity } from '../../../../@types/apollo/PoolLiquidity'
+import { useOcean } from '../../../../providers/Ocean'
+import { useWeb3 } from '../../../../providers/Web3'
 
 const contentQuery = graphql`
   query PoolQuery {
@@ -60,7 +61,8 @@ export default function Pool(): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childContentJson.pool
 
-  const { ocean, accountId, networkId } = useOcean()
+  const { accountId, networkId } = useWeb3()
+  const { ocean } = useOcean()
   const {
     isInPurgatory,
     ddo,

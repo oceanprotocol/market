@@ -3,16 +3,17 @@ import styles from './index.module.css'
 import Compute from './Compute'
 import Consume from './Consume'
 import { Logger } from '@oceanprotocol/lib'
-import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import Tabs from '../../atoms/Tabs'
-import { useOcean } from '@oceanprotocol/react'
 import compareAsBN from '../../../utils/compareAsBN'
 import Pool from './Pool'
 import Trade from './Trade'
 import { useAsset } from '../../../providers/Asset'
+import { useOcean } from '../../../providers/Ocean'
+import { useWeb3 } from '../../../providers/Web3'
 
 export default function AssetActions(): ReactElement {
-  const { ocean, balance, accountId } = useOcean()
+  const { accountId } = useWeb3()
+  const { ocean, balance } = useOcean()
   const { price, ddo, metadata } = useAsset()
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()

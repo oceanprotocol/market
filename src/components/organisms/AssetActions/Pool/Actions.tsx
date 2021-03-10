@@ -4,7 +4,8 @@ import Button from '../../../atoms/Button'
 import styles from './Actions.module.css'
 import EtherscanLink from '../../../atoms/EtherscanLink'
 import SuccessConfetti from '../../../atoms/SuccessConfetti'
-import { useOcean } from '@oceanprotocol/react'
+import { useOcean } from '../../../../providers/Ocean'
+import { useWeb3 } from '../../../../providers/Web3'
 
 export default function Actions({
   isLoading,
@@ -23,7 +24,8 @@ export default function Actions({
   action: () => void
   isDisabled?: boolean
 }): ReactElement {
-  const { networkId, ocean } = useOcean()
+  const { networkId } = useWeb3()
+  const { ocean } = useOcean()
 
   return (
     <>

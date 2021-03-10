@@ -3,10 +3,11 @@ import styles from './FormEditMetadata.module.css'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import Button from '../../../atoms/Button'
 import Input from '../../../atoms/Input'
-import { useOcean } from '@oceanprotocol/react'
 import { FormFieldProps } from '../../../../@types/Form'
 import { MetadataPublishForm } from '../../../../@types/MetaData'
 import { checkIfTimeoutInPredefinedValues } from '../../../../utils/metadata'
+import { useOcean } from '../../../../providers/Ocean'
+import { useWeb3 } from '../../../../providers/Web3'
 
 function handleTimeoutCustomOption(
   data: FormFieldProps[],
@@ -53,7 +54,8 @@ export default function FormEditMetadata({
   setTimeoutStringValue: (value: string) => void
   values: Partial<MetadataPublishForm>
 }): ReactElement {
-  const { ocean, accountId } = useOcean()
+  const { accountId } = useWeb3()
+  const { ocean } = useOcean()
   const {
     isValid,
     validateField,

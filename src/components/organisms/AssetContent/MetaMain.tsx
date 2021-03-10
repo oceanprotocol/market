@@ -1,6 +1,6 @@
-import { useOcean } from '@oceanprotocol/react'
 import React, { ReactElement } from 'react'
 import { useAsset } from '../../../providers/Asset'
+import { useWeb3 } from '../../../providers/Web3'
 import EtherscanLink from '../../atoms/EtherscanLink'
 import Publisher from '../../atoms/Publisher'
 import Time from '../../atoms/Time'
@@ -8,7 +8,7 @@ import styles from './MetaMain.module.css'
 
 export default function MetaMain(): ReactElement {
   const { ddo, owner } = useAsset()
-  const { networkId } = useOcean()
+  const { networkId } = useWeb3()
 
   return (
     <aside className={styles.meta}>

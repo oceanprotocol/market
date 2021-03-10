@@ -9,7 +9,6 @@ import {
   computeOptions,
   useCompute,
   readFileContent,
-  useOcean,
   usePricing
 } from '@oceanprotocol/react'
 import styles from './Compute.module.css'
@@ -17,6 +16,8 @@ import Input from '../../atoms/Input'
 import Alert from '../../atoms/Alert'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import checkPreviousOrder from '../../../utils/checkPreviousOrder'
+import { useOcean } from '../../../providers/Ocean'
+import { useWeb3 } from '../../../providers/Web3'
 
 export default function Compute({
   ddo,
@@ -28,8 +29,8 @@ export default function Compute({
   dtBalance: string
 }): ReactElement {
   const { marketFeeAddress } = useSiteMetadata()
-
-  const { ocean, accountId } = useOcean()
+  const { accountId } = useWeb3()
+  const { ocean } = useOcean()
   const { compute, isLoading, computeStepText, computeError } = useCompute()
   const { buyDT, dtSymbol } = usePricing(ddo)
 
