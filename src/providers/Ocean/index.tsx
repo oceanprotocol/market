@@ -113,96 +113,68 @@ function OceanProvider({
         Logger.error(error)
       }
     },
-    [config, web3]
+    [web3, config]
   )
 
+  // Initial connection
   useEffect(() => {
-    async function init() {
-      await connect()
+    connect()
+  }, [])
+
+  // Handle account change from web3
+  useEffect(() => {
+    if (!ocean) return
+
+    async function getAccount() {
+      const account = (await ocean.accounts.list())[0]
+      setAccount(account)
+      Logger.log('Account ', account)
+
+      const balance = await getBalance(account)
+      setBalance(balance)
+      Logger.log('balance', JSON.stringify(balance))
     }
-    init()
-  }, [connect])
+    getAccount()
+  }, [accountId])
+
+  // Handle network change from web3
+  useEffect(() => {
+    if (!networkId) return
+
+    async function reconnect() {
+      const newConfig = {
+        ...getOceanConfig(networkId),
+
+        // add local dev values
+        ...(networkId === 8996 && {
+          ...getDevelopmentConfig()
+        })
+      }
+
+      try {
+        await connect(newConfig)
+      } catch (error) {
+        Logger.error(error.message)
+      }
+    }
+    reconnect()
+  }, [networkId])
 
   async function refreshBalance() {
     const balance = account && (await getBalance(account))
     setBalance(balance)
   }
 
-  // Handle account change from web3
-  useEffect(() => {
-    if (!accountId || !ocean) return
-
-    async function getAccount() {
-      const account = (await ocean.accounts.list())[0]
-      setAccount(account)
-      Logger.log('Account ', account)
-    }
-    getAccount()
-  }, [ocean, accountId])
-
-  // Handle network change from web3
-  // useEffect(() => {
-  //   if (!chainId) return
-
-  //   async function reconnect() {
-  //     const initialNewConfig = getOceanConfig(
-  //       typeof chainId === 'string'
-  //         ? Number(chainId.replace('0x', ''))
-  //         : chainId
-  //     )
-
-  //     const newConfig = {
-  //       ...initialNewConfig,
-
-  //       // add local dev values
-  //       ...(chainId === '8996' && {
-  //         ...getDevelopmentConfig()
-  //       })
-  //     }
-
-  //     try {
-  //       await connect(newConfig)
-  //     } catch (error) {
-  //       Logger.error(error.message)
-  //     }
-  //   }
-  //   reconnect()
-  // }, [chainId, connect])
-
   // Periodically refresh wallet balance
   useEffect(() => {
     if (!account) return
 
-    refreshBalance()
     const balanceInterval = setInterval(() => refreshBalance(), refreshInterval)
 
     return () => {
       clearInterval(balanceInterval)
     }
-  }, [networkId, account])
-
-  // Re-connect on mount when network is different from user network.
-  // Bit nasty to just overwrite the initialConfig passed to OceanProvider
-  // while it's connecting to that, but YOLO.
-  // useEffect(() => {
-  //   if (!web3 || !networkId) return
-
-  //   async function init() {
-  //     const chainIdWeb3 = await web3.eth.getChainId()
-  //     const chainIdConfig = (config as ConfigHelperConfig).networkId
-
-  //     // HEADS UP! MetaMask built-in `Localhost 8545` network selection
-  //     // will have `1337` as chainId but we use `8996` in our config
-  //     if (
-  //       chainIdWeb3 === chainIdConfig ||
-  //       (chainIdWeb3 === 1337 && chainIdConfig === 8996)
-  //     )
-  //       return
-
-  //     await handleNetworkChanged(networkId)
-  //   }
-  //   init()
-  // }, [web3, networkId])
+  }, [])
 
   return (
     <OceanContext.Provider

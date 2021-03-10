@@ -45,7 +45,7 @@ function AssetProvider({
   children: ReactNode
 }): ReactElement {
   const { networkId } = useWeb3()
-  const { ocean, status, config } = useOcean()
+  const { ocean, config } = useOcean()
   const [isInPurgatory, setIsInPurgatory] = useState(false)
   const [purgatoryData, setPurgatoryData] = useState<PurgatoryData>()
   const [ddo, setDDO] = useState<DDO>()
@@ -59,7 +59,7 @@ function AssetProvider({
   const refreshPrice = useCallback(async () => {
     if (
       !ddo ||
-      status !== 1 ||
+      !ocean ||
       networkId !== (config as ConfigHelperConfig).networkId
     )
       return
@@ -72,7 +72,7 @@ function AssetProvider({
     )
     setPrice(newPrice)
     Logger.log(`Refreshed asset price: ${newPrice?.value}`, newPrice)
-  }, [ocean, config, ddo, networkId, status])
+  }, [ocean, config, ddo, networkId])
 
   const fetchDdo = async (token?: CancelToken) => {
     Logger.log('Init asset, get ddo')

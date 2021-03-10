@@ -7,9 +7,10 @@ import { getProviderInfo, IProviderInfo } from 'web3modal'
 import Conversion from '../../atoms/Price/Conversion'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../../providers/UserPreferences'
+import { useWeb3 } from '../../../providers/Web3'
 
 export default function Details(): ReactElement {
-  // const { balance, connect, logout, web3Provider } = useOcean()
+  const { web3Provider } = useWeb3()
   const { balance, connect } = useOcean()
   const { locale } = useUserPreferences()
   const [providerInfo, setProviderInfo] = useState<IProviderInfo>()
@@ -17,12 +18,11 @@ export default function Details(): ReactElement {
 
   // Workaround cause getInjectedProviderName() always returns `MetaMask`
   // https://github.com/oceanprotocol/market/issues/332
-  // useEffect(() => {
-  //   if (!web3Provider) return
-
-  //   const providerInfo = getProviderInfo(web3Provider)
-  //   setProviderInfo(providerInfo)
-  // }, [web3Provider])
+  useEffect(() => {
+    if (!web3Provider) return
+    const providerInfo = getProviderInfo(web3Provider)
+    setProviderInfo(providerInfo)
+  }, [web3Provider])
 
   // Handle network change for Portis
   // async function handlePortisNetworkChange(e: ChangeEvent<HTMLSelectElement>) {

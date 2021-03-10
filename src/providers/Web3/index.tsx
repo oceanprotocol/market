@@ -114,9 +114,14 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
     web3Modal?.cachedProvider && connect()
   }, [connect, web3Modal])
 
+  async function logout() {
+    web3Modal?.clearCachedProvider()
+  }
+
   // Handle change events
-  async function handleNetworkChanged(networkId: string) {
-    setNetworkId(Number(networkId))
+  async function handleNetworkChanged(chainId: string) {
+    console.log('Network changed', networkId)
+    setNetworkId(Number(chainId.replace('0x', '')))
   }
 
   async function handleAccountsChanged(accounts: string[]) {
@@ -126,11 +131,11 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
   useEffect(() => {
     if (!web3Provider || !web3) return
 
-    web3Provider.on('networkChanged', handleNetworkChanged)
+    web3Provider.on('chainChanged', handleNetworkChanged)
     web3Provider.on('accountsChanged', handleAccountsChanged)
 
     return () => {
-      web3Provider.removeListener('networkChanged')
+      web3Provider.removeListener('chainChanged')
       web3Provider.removeListener('accountsChanged')
     }
   }, [web3Provider, web3])
