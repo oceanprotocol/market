@@ -1,4 +1,10 @@
-import React, { ReactElement, useEffect, FormEvent, ChangeEvent } from 'react'
+import React, {
+  ReactElement,
+  useEffect,
+  useState,
+  FormEvent,
+  ChangeEvent
+} from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 import styles from './FormPublish.module.css'
 import { useOcean } from '@oceanprotocol/react'
@@ -6,14 +12,15 @@ import { useFormikContext, Field, Form, FormikContextType } from 'formik'
 import Input from '../../atoms/Input'
 import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
-import { MetadataPublishFormDataset } from '../../../@types/MetaData'
-import { initialValues as initialValuesDataset } from '../../../models/FormAlgoPublish'
+import { MetadataPublishFormAlgorithm } from '../../../@types/MetaData'
+import { initialValues as initialValuesAlgorithm } from '../../../models/FormAlgoPublish'
+
 import stylesIndex from './index.module.css'
 
 const query = graphql`
   query {
     content: allFile(
-      filter: { relativePath: { eq: "pages/publish/form-dataset.json" } }
+      filter: { relativePath: { eq: "pages/publish/form-algorithm.json" } }
     ) {
       edges {
         node {
@@ -51,8 +58,10 @@ export default function FormPublish(): ReactElement {
     initialValues,
     validateField,
     setFieldValue
-  }: FormikContextType<MetadataPublishFormDataset> = useFormikContext()
-
+  }: FormikContextType<MetadataPublishFormAlgorithm> = useFormikContext()
+  const [selectedDockerImage, setSelectedDockerImage] = useState<string>(
+    initialValues.dockerImage
+  )
   // reset form validation on every mount
   useEffect(() => {
     setErrors({})
@@ -61,20 +70,49 @@ export default function FormPublish(): ReactElement {
     // setSubmitting(false)
   }, [setErrors, setTouched])
 
+  function handleImageSelectChange(imageSelected: string) {
+    switch (imageSelected) {
+      case 'node:pre-defined': {
+        setFieldValue('image', 'node')
+        setFieldValue('containerTag', '10')
+        setFieldValue('entrypoint', 'node $ALGO')
+        break
+      }
+      case 'python:pre-defined': {
+        setFieldValue('image', 'oceanprotocol/algo_dockers')
+        setFieldValue('containerTag', 'python-panda')
+        setFieldValue('entrypoint', 'python $ALGO')
+        break
+      }
+      default: {
+        setFieldValue('image', '')
+        setFieldValue('containerTag', '')
+        setFieldValue('entrypoint', '')
+        break
+      }
+    }
+  }
+
   // Manually handle change events instead of using `handleChange` from Formik.
   // Workaround for default `validateOnChange` not kicking in
   function handleFieldChange(
     e: ChangeEvent<HTMLInputElement>,
     field: FormFieldProps
   ) {
+    const value =
+      field.type === 'checkbox' ? !JSON.parse(e.target.value) : e.target.value
+    if (field.name === 'dockerImage') {
+      setSelectedDockerImage(e.target.value)
+      handleImageSelectChange(e.target.value)
+    }
     validateField(field.name)
-    setFieldValue(field.name, e.target.value)
+    setFieldValue(field.name, value)
   }
 
   const resetFormAndClearStorage = (e: FormEvent<Element>) => {
     e.preventDefault()
     resetForm({
-      values: initialValuesDataset as MetadataPublishFormDataset,
+      values: initialValuesAlgorithm as MetadataPublishFormAlgorithm,
       status: 'empty'
     })
     setStatus('empty')
@@ -87,16 +125,22 @@ export default function FormPublish(): ReactElement {
       onChange={() => status === 'empty' && setStatus(null)}
     >
       <h2 className={stylesIndex.formTitle}>{content.title}</h2>
-      {content.data.map((field: FormFieldProps) => (
-        <Field
-          key={field.name}
-          {...field}
-          component={Input}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            handleFieldChange(e, field)
-          }
-        />
-      ))}
+      {content.data.map(
+        (field: FormFieldProps) =>
+          ((field.name !== 'entrypoint' &&
+            field.name !== 'image' &&
+            field.name !== 'containerTag') ||
+            selectedDockerImage === 'custom image') && (
+            <Field
+              key={field.name}
+              {...field}
+              component={Input}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                handleFieldChange(e, field)
+              }
+            />
+          )
+      )}
 
       <footer className={styles.actions}>
         <Button

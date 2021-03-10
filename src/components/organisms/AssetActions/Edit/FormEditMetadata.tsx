@@ -5,12 +5,12 @@ import Button from '../../../atoms/Button'
 import Input from '../../../atoms/Input'
 import { useOcean } from '@oceanprotocol/react'
 import { FormFieldProps } from '../../../../@types/Form'
-import { MetadataPublishForm } from '../../../../@types/MetaData'
+import { MetadataPublishFormDataset } from '../../../../@types/MetaData'
 import { checkIfTimeoutInPredefinedValues } from '../../../../utils/metadata'
 
 function handleTimeoutCustomOption(
   data: FormFieldProps[],
-  values: Partial<MetadataPublishForm>
+  values: Partial<MetadataPublishFormDataset>
 ) {
   const timeoutFieldContent = data.filter(
     (field) => field.name === 'timeout'
@@ -51,14 +51,14 @@ export default function FormEditMetadata({
   data: FormFieldProps[]
   setShowEdit: (show: boolean) => void
   setTimeoutStringValue: (value: string) => void
-  values: Partial<MetadataPublishForm>
+  values: Partial<MetadataPublishFormDataset>
 }): ReactElement {
   const { ocean, accountId } = useOcean()
   const {
     isValid,
     validateField,
     setFieldValue
-  }: FormikContextType<Partial<MetadataPublishForm>> = useFormikContext()
+  }: FormikContextType<Partial<MetadataPublishFormDataset>> = useFormikContext()
 
   // Manually handle change events instead of using `handleChange` from Formik.
   // Workaround for default `validateOnChange` not kicking in

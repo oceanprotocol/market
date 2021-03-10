@@ -2,7 +2,7 @@ import { DDO } from '@oceanprotocol/lib'
 import { useOcean } from '@oceanprotocol/react'
 import { Link } from 'gatsby'
 import React, { ReactElement, useEffect, useState } from 'react'
-import { retrieveDDO } from '../../utils/aquarius'
+import { retrieveDDO, getAssetsNames } from '../../utils/aquarius'
 import styles from './AssetListTitle.module.css'
 import axios from 'axios'
 
@@ -28,18 +28,18 @@ export default function AssetListTitle({
 
     const source = axios.CancelToken.source()
 
-    async function getDDO() {
-      const ddo = await retrieveDDO(did, config.metadataCacheUri, source.token)
-
-      if (!ddo) return
-      const { attributes } = ddo.findServiceByType('metadata')
-      setAssetTitle(attributes.main.name)
+    async function getAssetName() {
+      const title = await getAssetsNames(
+        [did],
+        config.metadataCacheUri,
+        source.token
+      )
+      setAssetTitle(title[did])
     }
 
-    !ddo && did && getDDO()
+    !ddo && did && getAssetName()
 
     return () => {
-      console.log('canceled?')
       source.cancel()
     }
   }, [assetTitle, config?.metadataCacheUri, ddo, did, title])

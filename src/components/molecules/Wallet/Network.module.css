@@ -1,0 +1,27 @@
+.network {
+  border: 1px solid var(--border-color);
+  border-right: none;
+  border-top-left-radius: var(--border-radius);
+  border-bottom-left-radius: var(--border-radius);
+  padding: calc(var(--spacer) / 4) calc(var(--spacer) / 2);
+  white-space: nowrap;
+  margin-right: -3px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.name {
+  font-size: var(--font-size-small);
+  display: inline-block;
+  text-transform: capitalize;
+}
+
+.badge {
+  margin-left: calc(var(--spacer) / 8);
+  background-color: var(--border-color);
+  color: var(--font-color-text);
+}
+
+.warning {
+  margin-right: calc(var(--spacer) / 4);
+}

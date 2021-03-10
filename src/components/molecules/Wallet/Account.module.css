@@ -12,6 +12,7 @@
   transition: border 0.2s ease-out;
   cursor: pointer;
   min-width: 190px;
+  height: 100%;
 }
 
 .button,
@@ -42,7 +43,7 @@
 .address {
   text-transform: none;
   border-right: 1px solid var(--border-color);
-  padding-right: calc(var(--spacer) / 4);
+  padding-right: calc(var(--spacer) / 3);
 }
 
 .button svg {
@@ -51,7 +52,7 @@
   fill: var(--border-color);
   display: inline-block;
   vertical-align: middle;
-  margin-left: calc(var(--spacer) / 4);
+  margin-left: calc(var(--spacer) / 3);
   transition: transform 0.2s ease-out;
 }
 

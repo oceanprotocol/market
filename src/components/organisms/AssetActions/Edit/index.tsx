@@ -1,14 +1,14 @@
 import { useOcean } from '@oceanprotocol/react'
 import { Formik } from 'formik'
 import React, { ReactElement, useState } from 'react'
-import { MetadataPublishForm } from '../../../../@types/MetaData'
+import { MetadataEditForm } from '../../../../@types/MetaData'
 import {
   validationSchema,
   getInitialValues
 } from '../../../../models/FormEditMetadata'
 import { useAsset } from '../../../../providers/Asset'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
-import MetadataPreview from '../../../molecules/MetadataPreview'
+import { MetadataPreview } from '../../../molecules/MetadataPreview'
 import Debug from './Debug'
 import Web3Feedback from '../../../molecules/Wallet/Feedback'
 import FormEditMetadata from './FormEditMetadata'
@@ -69,14 +69,15 @@ export default function Edit({
   const hasFeedback = error || success
 
   async function handleSubmit(
-    values: Partial<MetadataPublishForm>,
+    values: Partial<MetadataEditForm>,
     resetForm: () => void
   ) {
     try {
       // Construct new DDO with new values
       const ddoEditedMetdata = await ocean.assets.editMetadata(ddo, {
         title: values.name,
-        description: values.description
+        description: values.description,
+        links: typeof values.links !== 'string' ? values.links : []
       })
 
       if (!ddoEditedMetdata) {
