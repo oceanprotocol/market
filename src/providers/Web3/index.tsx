@@ -74,16 +74,9 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
   const [networkId, setNetworkId] = useState<number>()
   const [accountId, setAccountId] = useState<string>()
 
-  useEffect(() => {
-    async function init() {
-      const web3ModalInstance = new Web3Modal(web3ModalOpts)
-      setWeb3Modal(web3ModalInstance)
-      Logger.log('Web3Modal instance created.', web3ModalInstance)
-    }
-    init()
-  }, [])
-
   const connect = useCallback(async () => {
+    if (!web3Modal) return
+
     try {
       Logger.log('Connecting Web3...')
 
@@ -105,6 +98,34 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
       Logger.error(error)
     }
   }, [web3Modal])
+
+  useEffect(() => {
+    async function init() {
+      if (web3Modal) return
+
+      const web3ModalInstance = new Web3Modal(web3ModalOpts)
+      setWeb3Modal(web3ModalInstance)
+      Logger.log('Web3Modal instance created.', web3ModalInstance)
+    }
+    init()
+
+    web3Modal?.cachedProvider && connect()
+  }, [connect, web3Modal])
+
+  // async function handleNetworkChanged() {
+
+  // }
+
+  // // Handle network change events
+  // useEffect(() => {
+  //   if (!web3Provider) return
+
+  //   web3Provider.on('chainChanged', handleNetworkChanged)
+
+  //   return () => {
+  //     web3Provider.removeListener('chainChanged', handleNetworkChanged)
+  //   }
+  // }, [web3Provider])
 
   return (
     <Web3Context.Provider

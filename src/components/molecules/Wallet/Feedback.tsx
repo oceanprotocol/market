@@ -14,10 +14,8 @@ export default function Web3Feedback({
 }: {
   isBalanceSufficient?: boolean
 }): ReactElement {
-  const { account, status } = useOcean()
-  const isOceanConnectionError = status === -1
-  const showFeedback =
-    !account || isOceanConnectionError || isBalanceSufficient === false
+  const { account, ocean } = useOcean()
+  const showFeedback = !account || !ocean || isBalanceSufficient === false
 
   const state = !account
     ? 'error'
@@ -27,7 +25,7 @@ export default function Web3Feedback({
 
   const title = !account
     ? 'No account connected'
-    : isOceanConnectionError
+    : !ocean
     ? 'Error connecting to Ocean'
     : account
     ? isBalanceSufficient === false
@@ -37,7 +35,7 @@ export default function Web3Feedback({
 
   const message = !account
     ? 'Please connect your Web3 wallet.'
-    : isOceanConnectionError
+    : !ocean
     ? 'Please try again.'
     : isBalanceSufficient === false
     ? 'You do not have enough OCEAN in your wallet to purchase this asset.'

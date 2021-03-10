@@ -19,7 +19,7 @@ export default function ComputeDetailsModal({
   isOpen: boolean
   onToggleModal: () => void
 }): ReactElement {
-  const { ocean, status, account } = useOcean()
+  const { ocean, account } = useOcean()
   const [isLoading, setIsLoading] = useState(false)
 
   const isFinished = computeJob.dateFinished !== null
@@ -48,7 +48,7 @@ export default function ComputeDetailsModal({
       }
     }
     getDetails()
-  }, [ocean, status, account, isOpen, computeJob, isFinished])
+  }, [ocean, account, isOpen, computeJob, isFinished])
 
   return (
     <Modal

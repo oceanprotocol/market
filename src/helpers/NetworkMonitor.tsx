@@ -2,23 +2,10 @@ import React, { ReactElement, useEffect } from 'react'
 import { getOceanConfig } from './wrapRootElement'
 import { Logger } from '@oceanprotocol/lib'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
-import contractAddresses from '@oceanprotocol/contracts/artifacts/address.json'
 import { useOcean } from '../providers/Ocean'
 import { useWeb3 } from '../providers/Web3'
 
 const refreshInterval = 5000 // 5 sec.
-
-export function getDevelopmentConfig(): Partial<ConfigHelperConfig> {
-  return {
-    factoryAddress: contractAddresses.development?.DTFactory,
-    poolFactoryAddress: contractAddresses.development?.BFactory,
-    fixedRateExchangeAddress: contractAddresses.development?.FixedRateExchange,
-    metadataContractAddress: contractAddresses.development?.Metadata,
-    oceanTokenAddress: contractAddresses.development?.Ocean,
-    // There is no subgraph in barge so we hardcode the Rinkeby one for now
-    subgraphUri: 'https://subgraph.rinkeby.oceanprotocol.com'
-  }
-}
 
 export function NetworkMonitor(): ReactElement {
   const { web3Provider, web3, networkId } = useWeb3()

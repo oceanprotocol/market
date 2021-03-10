@@ -7,16 +7,18 @@ import React, {
   ReactNode,
   useEffect
 } from 'react'
-import Web3 from 'web3'
 import { Ocean, Logger, Account, Config } from '@oceanprotocol/lib'
 import {
-  ProviderStatus,
   getBalance,
   AccountPurgatoryData,
-  getAccountPurgatoryData
+  getAccountPurgatoryData,
+  getDevelopmentConfig,
+  getOceanConfig
 } from './utils'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import { useWeb3 } from '../Web3'
+
+const refreshInterval = 5000 // 5 sec.
 
 interface Balance {
   eth: string
@@ -25,12 +27,11 @@ interface Balance {
 
 interface OceanProviderValue {
   ocean: Ocean
-  config: Config | ConfigHelperConfig
+  config: ConfigHelperConfig | Config
   account: Account
   isInPurgatory: boolean
   purgatoryData: AccountPurgatoryData
   balance: Balance
-  status: ProviderStatus
   connect: (config?: Config) => Promise<void>
   refreshBalance: () => Promise<void>
 }
@@ -44,21 +45,17 @@ function OceanProvider({
   initialConfig: Config | ConfigHelperConfig
   children: ReactNode
 }): ReactElement {
-  const { web3, accountId } = useWeb3()
+  const { web3, accountId, networkId } = useWeb3()
   const [ocean, setOcean] = useState<Ocean>()
   const [account, setAccount] = useState<Account>()
   const [balance, setBalance] = useState<Balance>({
     eth: undefined,
     ocean: undefined
   })
-
   const [isInPurgatory, setIsInPurgatory] = useState(false)
   const [purgatoryData, setPurgatoryData] = useState<AccountPurgatoryData>()
-  const [config, setConfig] = useState<Config | ConfigHelperConfig>(
+  const [config, setConfig] = useState<ConfigHelperConfig | Config>(
     initialConfig
-  )
-  const [status, setStatus] = useState<ProviderStatus>(
-    ProviderStatus.NOT_AVAILABLE
   )
 
   const setPurgatory = useCallback(async (address: string): Promise<void> => {
@@ -80,8 +77,13 @@ function OceanProvider({
     }
   }, [])
 
+  useEffect(() => {
+    if (!accountId) return
+    setPurgatory(accountId)
+  }, [accountId, setPurgatory])
+
   const connect = useCallback(
-    async (newConfig?: Config | ConfigHelperConfig) => {
+    async (newConfig?: ConfigHelperConfig | Config) => {
       if (!web3) return
 
       try {
@@ -97,13 +99,11 @@ function OceanProvider({
         // ========
 
         // OCEAN ACCOUNT
-
         const account = (await ocean.accounts.list())[0]
         setAccount(account)
         Logger.log('Account ', account)
 
         // BALANCE
-
         const balance = await getBalance(account)
         setBalance(balance)
         Logger.log('balance', JSON.stringify(balance))
@@ -114,16 +114,73 @@ function OceanProvider({
     [config, web3]
   )
 
+  useEffect(() => {
+    async function init() {
+      await connect()
+    }
+    init()
+  }, [connect])
+
   async function refreshBalance() {
     const balance = account && (await getBalance(account))
     setBalance(balance)
   }
 
+  async function handleNetworkChanged(chainId: string | number) {
+    const initialNewConfig = getOceanConfig(
+      typeof chainId === 'string' ? Number(chainId.replace('0x', '')) : chainId
+    )
+
+    const newConfig = {
+      ...initialNewConfig,
+
+      // add local dev values
+      ...(chainId === '8996' && {
+        ...getDevelopmentConfig()
+      })
+    }
+
+    try {
+      await connect(newConfig)
+    } catch (error) {
+      Logger.error(error.message)
+    }
+  }
+
+  // Periodically refresh wallet balance
   useEffect(() => {
-    if (!accountId) return
-    Logger.log('balanc ref', accountId)
-    setPurgatory(accountId)
-  }, [accountId, setPurgatory])
+    if (!account) return
+
+    refreshBalance()
+    const balanceInterval = setInterval(() => refreshBalance(), refreshInterval)
+
+    return () => {
+      clearInterval(balanceInterval)
+    }
+  }, [networkId, account])
+
+  // Re-connect on mount when network is different from user network.
+  // Bit nasty to just overwrite the initialConfig passed to OceanProvider
+  // while it's connecting to that, but YOLO.
+  // useEffect(() => {
+  //   if (!web3 || !networkId) return
+
+  //   async function init() {
+  //     const chainIdWeb3 = await web3.eth.getChainId()
+  //     const chainIdConfig = (config as ConfigHelperConfig).networkId
+
+  //     // HEADS UP! MetaMask built-in `Localhost 8545` network selection
+  //     // will have `1337` as chainId but we use `8996` in our config
+  //     if (
+  //       chainIdWeb3 === chainIdConfig ||
+  //       (chainIdWeb3 === 1337 && chainIdConfig === 8996)
+  //     )
+  //       return
+
+  //     await handleNetworkChanged(networkId)
+  //   }
+  //   init()
+  // }, [web3, networkId])
 
   return (
     <OceanContext.Provider
@@ -134,7 +191,6 @@ function OceanProvider({
           balance,
           isInPurgatory,
           purgatoryData,
-          status,
           config,
           connect,
           refreshBalance

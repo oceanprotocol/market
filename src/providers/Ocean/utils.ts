@@ -1,19 +1,40 @@
 import axios from 'axios'
-import Web3 from 'web3'
-import { Account, DDO, DID } from '@oceanprotocol/lib'
+import { Account, Config, DDO, DID } from '@oceanprotocol/lib'
 import { Balance } from '.'
+import contractAddresses from '@oceanprotocol/contracts/artifacts/address.json'
+import {
+  ConfigHelper,
+  ConfigHelperConfig,
+  ConfigHelperNetworkId,
+  ConfigHelperNetworkName
+} from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
+
+export function getOceanConfig(
+  network: ConfigHelperNetworkName | ConfigHelperNetworkId
+): Config {
+  return new ConfigHelper().getConfig(
+    network,
+    process.env.GATSBY_INFURA_PROJECT_ID
+  )
+}
+
+export function getDevelopmentConfig(): Partial<ConfigHelperConfig> {
+  return {
+    factoryAddress: contractAddresses.development?.DTFactory,
+    poolFactoryAddress: contractAddresses.development?.BFactory,
+    fixedRateExchangeAddress: contractAddresses.development?.FixedRateExchange,
+    metadataContractAddress: contractAddresses.development?.Metadata,
+    oceanTokenAddress: contractAddresses.development?.Ocean,
+    // There is no subgraph in barge so we hardcode the Rinkeby one for now
+    subgraphUri: 'https://subgraph.rinkeby.oceanprotocol.com'
+  }
+}
 
 const purgatoryUrl = 'https://market-purgatory.oceanprotocol.com/api/'
 
 export interface AccountPurgatoryData {
   address: string
   reason: string
-}
-
-export enum ProviderStatus {
-  NOT_AVAILABLE = -1,
-  NOT_CONNECTED = 0,
-  CONNECTED = 1
 }
 
 export async function getAccountPurgatoryData(
