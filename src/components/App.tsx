@@ -37,7 +37,8 @@ export default function App({
   const { warning } = useSiteMetadata()
   const {
     isInPurgatory: isAccountInPurgatory,
-    purgatoryData: accountPurgatory
+    purgatoryData: accountPurgatory,
+    networkId
   } = useOcean()
 
   return (
@@ -45,8 +46,16 @@ export default function App({
       <div className={styles.app}>
         <Header />
         {(props as PageProps).uri === '/' && (
-          <Alert text={warning} state="info" />
+          <Alert
+            text={
+              (networkId === 137
+                ? 'Polygon/Matic EVM support is in early stages. Use the Matic bridge to [get mOCEAN](https://docs.oceanprotocol.com/tutorials/polygon-bridge/).\\n\\n'
+                : '') + warning
+            }
+            state="info"
+          />
         )}
+
         {isAccountInPurgatory && (
           <Alert
             title={purgatory.title}

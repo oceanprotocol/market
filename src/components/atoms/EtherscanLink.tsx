@@ -37,7 +37,7 @@ export default function EtherscanLink({
   return (
     <a
       href={`${url}/${path}`}
-      title="View on Etherscan"
+      title={`View on ${(config as ConfigHelperConfig).explorerUri}`}
       target="_blank"
       rel="noreferrer"
       className={styles.link}
