@@ -48,14 +48,6 @@ exports.onCreateWebpackConfig = ({ actions }) => {
       fs: 'empty'
     },
     // fix for 'got'/'swarm-js' dependency
-    externals: ['got'],
-
-    // fix for being able to use `npm link` with @oceanprotocol/react
-    // see https://github.com/facebook/react/issues/13991
-    resolve: {
-      alias: {
-        react: path.resolve('./node_modules/react')
-      }
-    }
+    externals: ['got']
   })
 }

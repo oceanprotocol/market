@@ -9,7 +9,6 @@ import React, {
 } from 'react'
 import { Logger, DDO, BestPrice } from '@oceanprotocol/lib'
 import { PurgatoryData } from '@oceanprotocol/lib/dist/node/ddo/interfaces/PurgatoryData'
-import { getDataTokenPrice } from '@oceanprotocol/react'
 import getAssetPurgatoryData from '../utils/purgatory'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import axios, { CancelToken } from 'axios'
@@ -17,6 +16,7 @@ import { retrieveDDO } from '../utils/aquarius'
 import { MetadataMarket } from '../@types/MetaData'
 import { useOcean } from './Ocean'
 import { useWeb3 } from './Web3'
+import { getDataTokenPrice } from '../utils/dtUtils'
 
 interface AssetProviderValue {
   isInPurgatory: boolean

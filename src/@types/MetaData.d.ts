@@ -5,7 +5,7 @@ import {
   ServiceMetadata
 } from '@oceanprotocol/lib'
 import { DataTokenOptions } from '../hooks/usePublish'
-import { PriceOptions } from '@oceanprotocol/react'
+import { PriceOptions } from '../hooks/usePricing'
 
 export interface AdditionalInformationMarket extends AdditionalInformation {
   links?: File[]
