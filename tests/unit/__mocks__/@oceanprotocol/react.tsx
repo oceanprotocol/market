@@ -35,13 +35,6 @@ const reactMock = {
       computeError: ''
     }
   },
-  useMetadata: () => {
-    return {
-      getCuration: () => {
-        return Promise.resolve({ rating: 0, numVotes: 0 })
-      }
-    }
-  },
   computeOptions: ['', '']
 }
 

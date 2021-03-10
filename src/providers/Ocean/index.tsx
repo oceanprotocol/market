@@ -82,6 +82,8 @@ function OceanProvider({
 
   const connect = useCallback(
     async (newConfig?: Config | ConfigHelperConfig) => {
+      if (!web3) return
+
       try {
         Logger.log('Connecting ...', newConfig)
 
