@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react'
-import { OceanProvider } from '@oceanprotocol/react'
 import { ConfigHelper, Config } from '@oceanprotocol/lib'
 import { web3ModalOpts } from '../utils/wallet'
 import { getDevelopmentConfig, NetworkMonitor } from './NetworkMonitor'
@@ -11,6 +10,7 @@ import {
 import { UserPreferencesProvider } from '../providers/UserPreferences'
 import PricesProvider from '../providers/Prices'
 import ApolloClientProvider from '../providers/ApolloClientProvider'
+import OceanProvider from '../providers/Ocean'
 
 export function getOceanConfig(
   network: ConfigHelperNetworkName | ConfigHelperNetworkId
@@ -35,15 +35,13 @@ export default function wrapRootElement({
       ...getDevelopmentConfig()
     })
   }
+  console.log(oceanInitialConfig)
 
   return (
-    <OceanProvider
-      initialConfig={oceanInitialConfig}
-      web3ModalOpts={web3ModalOpts}
-    >
+    <OceanProvider initialConfig={oceanInitialConfig}>
       <ApolloClientProvider>
         <UserPreferencesProvider>
-          <NetworkMonitor />
+          {/* <NetworkMonitor /> */}
           <PricesProvider>{element}</PricesProvider>
         </UserPreferencesProvider>
       </ApolloClientProvider>

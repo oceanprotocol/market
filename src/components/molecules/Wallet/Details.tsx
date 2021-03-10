@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import Button from '../../atoms/Button'
 import styles from './Details.module.css'
-import { useOcean } from '@oceanprotocol/react'
+import { useOcean } from '../../../providers/Ocean'
 import Web3Feedback from './Feedback'
 import { getProviderInfo, IProviderInfo } from 'web3modal'
 import Conversion from '../../atoms/Price/Conversion'
@@ -9,19 +9,20 @@ import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 
 export default function Details(): ReactElement {
-  const { balance, connect, logout, web3Provider } = useOcean()
+  // const { balance, connect, logout, web3Provider } = useOcean()
+  const { balance, connect } = useOcean()
   const { locale } = useUserPreferences()
   const [providerInfo, setProviderInfo] = useState<IProviderInfo>()
   // const [portisNetwork, setPortisNetwork] = useState<string>()
 
   // Workaround cause getInjectedProviderName() always returns `MetaMask`
   // https://github.com/oceanprotocol/market/issues/332
-  useEffect(() => {
-    if (!web3Provider) return
+  // useEffect(() => {
+  //   if (!web3Provider) return
 
-    const providerInfo = getProviderInfo(web3Provider)
-    setProviderInfo(providerInfo)
-  }, [web3Provider])
+  //   const providerInfo = getProviderInfo(web3Provider)
+  //   setProviderInfo(providerInfo)
+  // }, [web3Provider])
 
   // Handle network change for Portis
   // async function handlePortisNetworkChange(e: ChangeEvent<HTMLSelectElement>) {
@@ -66,7 +67,7 @@ export default function Details(): ReactElement {
               <Button
                 style="text"
                 size="small"
-                onClick={() => web3Provider._portis.showPortis()}
+                // onClick={() => web3Provider._portis.showPortis()}
               >
                 Show Portis
               </Button>
@@ -75,7 +76,7 @@ export default function Details(): ReactElement {
               style="text"
               size="small"
               onClick={() => {
-                logout()
+                // logout()
                 connect()
               }}
             >
@@ -85,7 +86,7 @@ export default function Details(): ReactElement {
               style="text"
               size="small"
               onClick={() => {
-                logout()
+                // logout()
                 location.reload()
               }}
             >
