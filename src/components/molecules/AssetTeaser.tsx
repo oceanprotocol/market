@@ -7,7 +7,7 @@ import { DDO } from '@oceanprotocol/lib'
 import removeMarkdown from 'remove-markdown'
 import Tooltip from '../atoms/Tooltip'
 import Publisher from '../atoms/Publisher'
-import { useMetadata } from '@oceanprotocol/react'
+import { useMetadata } from '../../hooks/useMetadata'
 import Time from '../atoms/Time'
 
 declare type AssetTeaserProps = {

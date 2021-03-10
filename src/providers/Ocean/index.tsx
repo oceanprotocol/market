@@ -1,38 +1,35 @@
 import React, {
   useContext,
   useState,
-  useEffect,
   createContext,
   ReactElement,
   useCallback,
-  ReactNode
+  ReactNode,
+  useEffect
 } from 'react'
 import Web3 from 'web3'
 import { Ocean, Logger, Account, Config } from '@oceanprotocol/lib'
 import {
   ProviderStatus,
-  getAccountId,
   getBalance,
   AccountPurgatoryData,
   getAccountPurgatoryData
 } from './utils'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
+import { useWeb3 } from '../Web3'
 
 interface Balance {
-  eth: string | undefined
-  ocean: string | undefined
+  eth: string
+  ocean: string
 }
 
 interface OceanProviderValue {
-  web3: Web3 | undefined
   ocean: Ocean
   config: Config | ConfigHelperConfig
   account: Account
   isInPurgatory: boolean
   purgatoryData: AccountPurgatoryData
-  accountId: string
   balance: Balance
-  networkId: number | undefined
   status: ProviderStatus
   connect: (config?: Config) => Promise<void>
   refreshBalance: () => Promise<void>
@@ -47,11 +44,10 @@ function OceanProvider({
   initialConfig: Config | ConfigHelperConfig
   children: ReactNode
 }): ReactElement {
-  const [ocean, setOcean] = useState<Ocean | undefined>()
-  const [account, setAccount] = useState<Account | undefined>()
-  const [accountId, setAccountId] = useState<string | undefined>()
-  const [networkId, setNetworkId] = useState<number | undefined>()
-  const [balance, setBalance] = useState<Balance | undefined>({
+  const { web3, accountId } = useWeb3()
+  const [ocean, setOcean] = useState<Ocean>()
+  const [account, setAccount] = useState<Account>()
+  const [balance, setBalance] = useState<Balance>({
     eth: undefined,
     ocean: undefined
   })
@@ -92,40 +88,28 @@ function OceanProvider({
         newConfig && setConfig(newConfig)
 
         // ========
-        // config.web3Provider = web3
+        config.web3Provider = web3
         const ocean = await Ocean.getInstance(config)
         setOcean(ocean)
         Logger.log('Ocean instance created.', ocean)
         // ========
 
-        // NETWORK ID
+        // OCEAN ACCOUNT
 
-        // const networkId = web3 && (await web3.eth.net.getId())
-        // setNetworkId(networkId)
-        // Logger.log('network id ', networkId)
-
-        // ACCOUNT
-
-        // const account = (await ocean.accounts.list())[0]
-        // setAccount(account)
-        // Logger.log('Account ', account)
-
-        // ACCOUNT ID
-
-        // const accountId = await getAccountId(web3)
-        // setAccountId(accountId)
-        // Logger.log('account id', accountId)
+        const account = (await ocean.accounts.list())[0]
+        setAccount(account)
+        Logger.log('Account ', account)
 
         // BALANCE
 
-        // const balance = await getBalance(account)
-        // setBalance(balance)
-        // Logger.log('balance', JSON.stringify(balance))
+        const balance = await getBalance(account)
+        setBalance(balance)
+        Logger.log('balance', JSON.stringify(balance))
       } catch (error) {
         Logger.error(error)
       }
     },
-    [config]
+    [config, web3]
   )
 
   async function refreshBalance() {
@@ -135,7 +119,7 @@ function OceanProvider({
 
   useEffect(() => {
     if (!accountId) return
-    console.log('balanc ref', accountId)
+    Logger.log('balanc ref', accountId)
     setPurgatory(accountId)
   }, [accountId, setPurgatory])
 
@@ -145,8 +129,6 @@ function OceanProvider({
         {
           ocean,
           account,
-          accountId,
-          networkId,
           balance,
           isInPurgatory,
           purgatoryData,

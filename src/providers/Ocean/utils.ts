@@ -24,11 +24,6 @@ export async function getAccountPurgatoryData(
   return { address: responseJson?.address, reason: responseJson?.reason }
 }
 
-export async function getAccountId(web3: Web3): Promise<string> {
-  const accounts = await web3.eth.getAccounts()
-  return accounts[0]
-}
-
 export async function getBalance(account: Account): Promise<Balance> {
   const eth = await account.getEtherBalance()
   const ocean = await account.getOceanBalance()

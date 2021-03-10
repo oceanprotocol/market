@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import { DID, DDO, Metadata, Logger, BestPrice } from '@oceanprotocol/lib'
+import { getDataTokenPrice } from '@oceanprotocol/react'
 import { useOcean } from '../providers/Ocean'
 import { isDDO } from '../providers/Ocean/utils'
-import { getDataTokenPrice } from '../providers/Ocean/dtUtils'
 import axios, { CancelToken } from 'axios'
 
 interface UseMetadata {

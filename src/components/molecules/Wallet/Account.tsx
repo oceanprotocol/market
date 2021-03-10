@@ -1,4 +1,4 @@
-import { useOcean } from '@oceanprotocol/react'
+import { useOcean } from '../../../providers/Ocean'
 import { toDataUrl } from 'ethereum-blockies'
 import React, { FormEvent } from 'react'
 import { ReactComponent as Caret } from '../../../images/caret.svg'
@@ -6,6 +6,7 @@ import { accountTruncate } from '../../../utils/wallet'
 import Loader from '../../atoms/Loader'
 import Status from '../../atoms/Status'
 import styles from './Account.module.css'
+import { useWeb3 } from '../../../providers/Web3'
 
 const Blockies = ({ account }: { account: string | undefined }) => {
   if (!account) return null
@@ -24,7 +25,8 @@ const Blockies = ({ account }: { account: string | undefined }) => {
 // Forward ref for Tippy.js
 // eslint-disable-next-line
 const Account = React.forwardRef((props, ref: any) => {
-  const { accountId, status, connect, web3Modal } = useOcean()
+  const { status } = useOcean()
+  const { accountId, web3Modal, connect } = useWeb3()
   const hasSuccess = status === 1
 
   async function handleActivation(e: FormEvent<HTMLButtonElement>) {
