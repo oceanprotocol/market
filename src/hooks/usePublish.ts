@@ -15,16 +15,14 @@ interface DataTokenOptions {
   symbol?: string
 }
 
-interface publishOptions {
-  asset: Metadata
-  serviceType: ServiceType
-  dataTokenOptions?: DataTokenOptions
-  timeout?: number
-  providerUri?: string
-}
-
 interface UsePublish {
-  publish: (options: publishOptions) => Promise<DDO | undefined | null>
+  publish: (
+    asset: Metadata,
+    serviceType: ServiceType,
+    dataTokenOptions?: DataTokenOptions,
+    timeout?: number,
+    providerUri?: string
+  ) => Promise<DDO | undefined | null>
   publishStep?: number
   publishStepText?: string
   publishError?: string
@@ -50,13 +48,13 @@ function usePublish(): UsePublish {
    * @param  {DataTokenOptions} dataTokenOptions custom name, symbol and cap for datatoken
    * @return {Promise<DDO>} Returns the newly published ddo
    */
-  async function publish({
-    asset,
-    serviceType,
-    dataTokenOptions,
-    timeout,
-    providerUri
-  }: publishOptions): Promise<DDO | undefined | null> {
+  async function publish(
+    asset: Metadata,
+    serviceType: ServiceType,
+    dataTokenOptions?: DataTokenOptions,
+    timeout?: number,
+    providerUri?: string
+  ): Promise<DDO | undefined | null> {
     if (!ocean || !account) return null
     setIsLoading(true)
     setPublishError(undefined)

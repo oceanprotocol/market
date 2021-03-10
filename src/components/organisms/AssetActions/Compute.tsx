@@ -8,8 +8,7 @@ import File from '../../atoms/File'
 import {
   computeOptions,
   useCompute,
-  readFileContent,
-  usePricing
+  readFileContent
 } from '@oceanprotocol/react'
 import styles from './Compute.module.css'
 import Input from '../../atoms/Input'
@@ -18,6 +17,7 @@ import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import checkPreviousOrder from '../../../utils/checkPreviousOrder'
 import { useOcean } from '../../../providers/Ocean'
 import { useWeb3 } from '../../../providers/Web3'
+import { usePricing } from '../../../hooks/usePricing'
 
 export default function Compute({
   ddo,

@@ -7,7 +7,7 @@ import Price from '../../atoms/Price'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
 import styles from './Consume.module.css'
 import Loader from '../../atoms/Loader'
-import { useConsume, usePricing } from '@oceanprotocol/react'
+import { useConsume } from '@oceanprotocol/react'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import checkPreviousOrder from '../../../utils/checkPreviousOrder'
 import { useAsset } from '../../../providers/Asset'
@@ -17,6 +17,7 @@ import { OrdersData } from '../../../@types/apollo/OrdersData'
 import BigNumber from 'bignumber.js'
 import { useOcean } from '../../../providers/Ocean'
 import { useWeb3 } from '../../../providers/Web3'
+import { usePricing } from '../../../hooks/usePricing'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {
