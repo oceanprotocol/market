@@ -57,12 +57,7 @@ function AssetProvider({
   const [error, setError] = useState<string>()
 
   const refreshPrice = useCallback(async () => {
-    if (
-      !ddo ||
-      !ocean ||
-      networkId !== (config as ConfigHelperConfig).networkId
-    )
-      return
+    if (!ddo || !ocean) return
 
     const newPrice = await getDataTokenPrice(
       ocean,
@@ -72,7 +67,7 @@ function AssetProvider({
     )
     setPrice(newPrice)
     Logger.log(`Refreshed asset price: ${newPrice?.value}`, newPrice)
-  }, [ocean, config, ddo, networkId])
+  }, [ocean, ddo])
 
   const fetchDdo = async (token?: CancelToken) => {
     Logger.log('Init asset, get ddo')

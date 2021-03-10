@@ -121,7 +121,7 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
 
   // Handle change events
   async function handleNetworkChanged(chainId: string) {
-    console.log('Network changed', networkId)
+    Logger.log('Network changed', chainId)
     setNetworkId(Number(chainId.replace('0x', '')))
   }
 

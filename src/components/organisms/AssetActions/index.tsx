@@ -13,7 +13,7 @@ import { useWeb3 } from '../../../providers/Web3'
 
 export default function AssetActions(): ReactElement {
   const { accountId } = useWeb3()
-  const { ocean, balance } = useOcean()
+  const { ocean, balance, account } = useOcean()
   const { price, ddo, metadata } = useAsset()
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
@@ -41,7 +41,7 @@ export default function AssetActions(): ReactElement {
 
   // Check user balance against price
   useEffect(() => {
-    if (!price?.value || !accountId || !balance?.ocean || !dtBalance) return
+    if (!price?.value || !account || !balance?.ocean || !dtBalance) return
 
     setIsBalanceSufficient(
       compareAsBN(balance.ocean, `${price.value}`) || Number(dtBalance) >= 1
@@ -50,7 +50,7 @@ export default function AssetActions(): ReactElement {
     return () => {
       setIsBalanceSufficient(false)
     }
-  }, [balance, accountId, price, dtBalance])
+  }, [balance, account, price, dtBalance])
 
   const UseContent = isCompute ? (
     <Compute

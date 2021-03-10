@@ -16,8 +16,6 @@ import Decimal from 'decimal.js'
 import { useOcean } from '../../../../../providers/Ocean'
 import { useWeb3 } from '../../../../../providers/Web3'
 
-const refreshInterval = 10000 // 10 sec.
-
 export default function Dynamic({
   ddo,
   content
@@ -26,7 +24,7 @@ export default function Dynamic({
   content: any
 }): ReactElement {
   const { networkId } = useWeb3()
-  const { account, balance, refreshBalance } = useOcean()
+  const { account, balance } = useOcean()
   const [firstPrice, setFirstPrice] = useState<string>()
 
   // Connect with form
@@ -70,18 +68,6 @@ export default function Dynamic({
       setError(undefined)
     }
   }, [price, networkId, account, balance])
-
-  // refetch balance periodically
-  useEffect(() => {
-    if (!account) return
-
-    refreshBalance()
-    const balanceInterval = setInterval(() => refreshBalance(), refreshInterval)
-
-    return () => {
-      clearInterval(balanceInterval)
-    }
-  }, [networkId, account])
 
   return (
     <div className={styles.dynamic}>

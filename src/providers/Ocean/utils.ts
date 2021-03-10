@@ -1,4 +1,4 @@
-import { Account, Config } from '@oceanprotocol/lib'
+import { Account, Config, Logger, Ocean } from '@oceanprotocol/lib'
 import { Balance } from '.'
 import contractAddresses from '@oceanprotocol/contracts/artifacts/address.json'
 import {
@@ -33,4 +33,18 @@ export async function getBalance(account: Account): Promise<Balance> {
   const eth = await account.getEtherBalance()
   const ocean = await account.getOceanBalance()
   return { eth, ocean }
+}
+
+export async function getUserInfo(
+  ocean: Ocean
+): Promise<{ account: Account; balance: Balance }> {
+  // OCEAN ACCOUNT
+  const account = (await ocean.accounts.list())[0]
+  Logger.log('Account ', account)
+
+  // BALANCE
+  const balance = account && (await getBalance(account))
+  Logger.log('balance', JSON.stringify(balance))
+
+  return { account, balance }
 }

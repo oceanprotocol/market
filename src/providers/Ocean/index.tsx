@@ -8,7 +8,12 @@ import React, {
   useEffect
 } from 'react'
 import { Ocean, Logger, Account, Config } from '@oceanprotocol/lib'
-import { getBalance, getDevelopmentConfig, getOceanConfig } from './utils'
+import {
+  getBalance,
+  getDevelopmentConfig,
+  getOceanConfig,
+  getUserInfo
+} from './utils'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import { useWeb3 } from '../Web3'
 import {
@@ -16,7 +21,7 @@ import {
   getAccountPurgatoryData
 } from '../../utils/purgatory'
 
-const refreshInterval = 5000 // 5 sec.
+const refreshInterval = 20000 // 20 sec.
 
 interface Balance {
   eth: string
@@ -54,59 +59,24 @@ function OceanProvider({
     initialConfig
   )
 
-  // TODO: create usePurgatory() hook instead of mixing it up with Ocean connections
-  const [isInPurgatory, setIsInPurgatory] = useState(false)
-  const [purgatoryData, setPurgatoryData] = useState<AccountPurgatoryData>()
-
-  const setPurgatory = useCallback(async (address: string): Promise<void> => {
-    if (!address) return
-
-    try {
-      const result = await getAccountPurgatoryData(address)
-
-      if (result?.address !== undefined) {
-        setIsInPurgatory(true)
-        setPurgatoryData(result)
-      } else {
-        setIsInPurgatory(false)
-      }
-
-      setPurgatoryData(result)
-    } catch (error) {
-      Logger.error(error)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (!accountId) return
-    setPurgatory(accountId)
-  }, [accountId, setPurgatory])
-
   const connect = useCallback(
     async (newConfig?: ConfigHelperConfig | Config) => {
       if (!web3) return
 
       try {
-        Logger.log('Connecting Ocean...', newConfig)
+        const usedConfig = newConfig || config
+        Logger.log('Connecting Ocean...', usedConfig)
 
-        newConfig && setConfig(newConfig)
+        usedConfig.web3Provider = web3
 
-        // ========
-        config.web3Provider = web3
-        const ocean = await Ocean.getInstance(config)
-        setOcean(ocean)
-        Logger.log('Ocean instance created.', ocean)
-        // ========
+        if (newConfig) {
+          usedConfig.web3Provider = web3
+          setConfig(usedConfig)
+        }
 
-        // OCEAN ACCOUNT
-        const account = (await ocean.accounts.list())[0]
-        setAccount(account)
-        Logger.log('Account ', account)
-
-        // BALANCE
-        const balance = await getBalance(account)
-        setBalance(balance)
-        Logger.log('balance', JSON.stringify(balance))
+        const newOcean = await Ocean.getInstance(usedConfig)
+        setOcean(newOcean)
+        Logger.log('Ocean instance created.', newOcean)
       } catch (error) {
         Logger.error(error)
       }
@@ -114,26 +84,40 @@ function OceanProvider({
     [web3, config]
   )
 
+  async function refreshBalance() {
+    if (!ocean || !account) return
+
+    const { balance } = await getUserInfo(ocean)
+    Logger.log('balance', JSON.stringify(balance))
+    setBalance(balance)
+  }
+
   // Initial connection
   useEffect(() => {
-    connect()
+    async function init() {
+      await connect()
+    }
+    init()
+
+    // init periodic refresh of wallet balance
+    const balanceInterval = setInterval(() => refreshBalance(), refreshInterval)
+
+    return () => {
+      clearInterval(balanceInterval)
+    }
   }, [])
 
-  // Handle account change from web3
+  // Get user info, handle account change from web3
   useEffect(() => {
-    if (!ocean) return
+    if (!ocean || !accountId) return
 
-    async function getAccount() {
-      const account = (await ocean.accounts.list())[0]
+    async function getInfo() {
+      const { account, balance } = await getUserInfo(ocean)
       setAccount(account)
-      Logger.log('Account ', account)
-
-      const balance = await getBalance(account)
       setBalance(balance)
-      Logger.log('balance', JSON.stringify(balance))
     }
-    getAccount()
-  }, [accountId])
+    getInfo()
+  }, [ocean, accountId])
 
   // Handle network change from web3
   useEffect(() => {
@@ -158,21 +142,36 @@ function OceanProvider({
     reconnect()
   }, [networkId])
 
-  async function refreshBalance() {
-    const balance = account && (await getBalance(account))
-    setBalance(balance)
-  }
+  // TODO: create usePurgatory() hook instead of mixing it up with Ocean connections
+  const [isInPurgatory, setIsInPurgatory] = useState(false)
+  const [purgatoryData, setPurgatoryData] = useState<AccountPurgatoryData>()
 
-  // Periodically refresh wallet balance
+  const setAccountPurgatory = useCallback(
+    async (address: string): Promise<void> => {
+      if (!address) return
+
+      try {
+        const result = await getAccountPurgatoryData(address)
+
+        if (result?.address !== undefined) {
+          setIsInPurgatory(true)
+          setPurgatoryData(result)
+        } else {
+          setIsInPurgatory(false)
+        }
+
+        setPurgatoryData(result)
+      } catch (error) {
+        Logger.error(error)
+      }
+    },
+    []
+  )
+
   useEffect(() => {
-    if (!account) return
-
-    const balanceInterval = setInterval(() => refreshBalance(), refreshInterval)
-
-    return () => {
-      clearInterval(balanceInterval)
-    }
-  }, [])
+    if (!accountId) return
+    setAccountPurgatory(accountId)
+  }, [accountId, setAccountPurgatory])
 
   return (
     <OceanContext.Provider
