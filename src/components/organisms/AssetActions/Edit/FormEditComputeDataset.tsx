@@ -43,7 +43,6 @@ export default function FormEditComputeDataset({
           e.target.selectedOptions,
           (option: HTMLOptionElement) => option.value
         )
-        value = value.filter((value: string) => value.length > 0)
         break
       case 'checkbox':
         value = !JSON.parse(e.target.value)
@@ -75,7 +74,7 @@ export default function FormEditComputeDataset({
         select.add(option)
       })
     console.log(select)
-  }, [])
+  }, [data])
 
   console.log(document.getElementsByTagName('select')[0])
 

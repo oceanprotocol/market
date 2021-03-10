@@ -104,15 +104,17 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
                   <Button style="text" size="small" onClick={handleEditButton}>
                     Edit Metadata
                   </Button>
-                  <span className={styles.separator}>|</span>
                   {ddo.findServiceByType('compute') && (
-                    <Button
-                      style="text"
-                      size="small"
-                      onClick={handleEditComputeButton}
-                    >
-                      Edit Compute Settings
-                    </Button>
+                    <>
+                      <span className={styles.separator}>|</span>
+                      <Button
+                        style="text"
+                        size="small"
+                        onClick={handleEditComputeButton}
+                      >
+                        Edit Compute Settings
+                      </Button>
+                    </>
                   )}
                 </div>
               )}
