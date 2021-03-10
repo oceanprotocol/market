@@ -99,6 +99,8 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
     }
   }, [web3Modal])
 
+  // Create iniital Web3Modal instance,
+  // and reconnect automatically for returning users
   useEffect(() => {
     async function init() {
       if (web3Modal) return
@@ -112,20 +114,26 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
     web3Modal?.cachedProvider && connect()
   }, [connect, web3Modal])
 
-  // async function handleNetworkChanged() {
+  // Handle change events
+  async function handleNetworkChanged(networkId: string) {
+    setNetworkId(Number(networkId))
+  }
 
-  // }
+  async function handleAccountsChanged(accounts: string[]) {
+    setAccountId(accounts[0])
+  }
 
-  // // Handle network change events
-  // useEffect(() => {
-  //   if (!web3Provider) return
+  useEffect(() => {
+    if (!web3Provider || !web3) return
 
-  //   web3Provider.on('chainChanged', handleNetworkChanged)
+    web3Provider.on('networkChanged', handleNetworkChanged)
+    web3Provider.on('accountsChanged', handleAccountsChanged)
 
-  //   return () => {
-  //     web3Provider.removeListener('chainChanged', handleNetworkChanged)
-  //   }
-  // }, [web3Provider])
+    return () => {
+      web3Provider.removeListener('networkChanged')
+      web3Provider.removeListener('accountsChanged')
+    }
+  }, [web3Provider, web3])
 
   return (
     <Web3Context.Provider

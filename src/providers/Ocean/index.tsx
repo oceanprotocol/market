@@ -52,11 +52,13 @@ function OceanProvider({
     eth: undefined,
     ocean: undefined
   })
-  const [isInPurgatory, setIsInPurgatory] = useState(false)
-  const [purgatoryData, setPurgatoryData] = useState<AccountPurgatoryData>()
   const [config, setConfig] = useState<ConfigHelperConfig | Config>(
     initialConfig
   )
+
+  // TODO: create usePurgatory() hook instead of mixing it up with Ocean connections
+  const [isInPurgatory, setIsInPurgatory] = useState(false)
+  const [purgatoryData, setPurgatoryData] = useState<AccountPurgatoryData>()
 
   const setPurgatory = useCallback(async (address: string): Promise<void> => {
     if (!address) return
@@ -126,26 +128,46 @@ function OceanProvider({
     setBalance(balance)
   }
 
-  async function handleNetworkChanged(chainId: string | number) {
-    const initialNewConfig = getOceanConfig(
-      typeof chainId === 'string' ? Number(chainId.replace('0x', '')) : chainId
-    )
+  // Handle account change from web3
+  useEffect(() => {
+    if (!accountId || !ocean) return
 
-    const newConfig = {
-      ...initialNewConfig,
-
-      // add local dev values
-      ...(chainId === '8996' && {
-        ...getDevelopmentConfig()
-      })
+    async function getAccount() {
+      const account = (await ocean.accounts.list())[0]
+      setAccount(account)
+      Logger.log('Account ', account)
     }
+    getAccount()
+  }, [ocean, accountId])
 
-    try {
-      await connect(newConfig)
-    } catch (error) {
-      Logger.error(error.message)
-    }
-  }
+  // Handle network change from web3
+  // useEffect(() => {
+  //   if (!chainId) return
+
+  //   async function reconnect() {
+  //     const initialNewConfig = getOceanConfig(
+  //       typeof chainId === 'string'
+  //         ? Number(chainId.replace('0x', ''))
+  //         : chainId
+  //     )
+
+  //     const newConfig = {
+  //       ...initialNewConfig,
+
+  //       // add local dev values
+  //       ...(chainId === '8996' && {
+  //         ...getDevelopmentConfig()
+  //       })
+  //     }
+
+  //     try {
+  //       await connect(newConfig)
+  //     } catch (error) {
+  //       Logger.error(error.message)
+  //     }
+  //   }
+  //   reconnect()
+  // }, [chainId, connect])
 
   // Periodically refresh wallet balance
   useEffect(() => {
