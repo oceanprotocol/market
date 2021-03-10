@@ -14,15 +14,12 @@ import FormEditComputeDataset from './FormEditComputeDataset'
 import styles from './index.module.css'
 import {
   Logger,
-  DDO,
   ServiceComputePrivacy,
   publisherTrustedAlgorithm as PublisherTrustedAlgorithm
 } from '@oceanprotocol/lib'
 import MetadataFeedback from '../../../molecules/MetadataFeedback'
 import { graphql, useStaticQuery } from 'gatsby'
-import Loader from '../../../atoms/Loader'
 import { AlgorithmOption } from '../../../../@types/ComputeDataset'
-import { getAlgorithmsOptions } from '../../../../utils/aquarius'
 
 const contentQuery = graphql`
   query EditComputeDataQuery {
@@ -74,27 +71,22 @@ async function createTrustedAlgorithmList(
 }
 
 export default function EditComputeDataset({
-  setShowEdit
+  setShowEdit,
+  algorithmOptions
 }: {
   setShowEdit: (show: boolean) => void
+  algorithmOptions: AlgorithmOption[]
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
 
   const { debug } = useUserPreferences()
-  const { ocean, accountId, config } = useOcean()
+  const { ocean, accountId } = useOcean()
   const { metadata, ddo, refreshDdo } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
-  const [algorithms, setAlgorithms] = useState<AlgorithmOption[]>()
 
   const hasFeedback = error || success
-
-  useEffect(() => {
-    getAlgorithmsOptions(config).then((algorithms) => {
-      setAlgorithms(algorithms)
-    })
-  }, [])
 
   async function handleSubmit(
     values: ServiceComputePrivacy,
@@ -178,27 +170,22 @@ export default function EditComputeDataset({
           <>
             <p className={styles.description}>{content.description}</p>
             <article className={styles.grid}>
-              {algorithms ? (
-                <>
-                  <FormEditComputeDataset
-                    data={content.form.data}
-                    setShowEdit={setShowEdit}
-                    values={initialValues}
-                    algorithmList={algorithms}
-                  />
+              <>
+                <FormEditComputeDataset
+                  data={content.form.data}
+                  setShowEdit={setShowEdit}
+                  values={initialValues}
+                  algorithmList={algorithmOptions}
+                />
 
-                  <aside>
-                    {/*
+                <aside>
+                  {/*
                 <MetadataPreview values={values} />
                 */}
-                    <Web3Feedback />
-                  </aside>
-                </>
-              ) : (
-                <Loader />
-              )}
-
-              {/* debug === true && <Debug values={values} ddo={ddo} /> */}
+                  <Web3Feedback />
+                </aside>
+              </>
+              ){/* debug === true && <Debug values={values} ddo={ddo} /> */}
             </article>
           </>
         )

@@ -14,6 +14,8 @@ import Alert from '../../atoms/Alert'
 import Button from '../../atoms/Button'
 import Edit from '../AssetActions/Edit'
 import EditComputeDataset from '../AssetActions/Edit/EditComputeDataset'
+import { getAlgorithmsOptions } from '../../../utils/aquarius'
+import { AlgorithmOption } from '../../../@types/ComputeDataset'
 import DebugOutput from '../../atoms/DebugOutput'
 import MetaMain from './MetaMain'
 // import EditHistory from './EditHistory'
@@ -43,11 +45,12 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.purgatory.edges[0].node.childContentJson.asset
   const { debug } = useUserPreferences()
-  const { accountId } = useOcean()
+  const { accountId, config } = useOcean()
   const { owner, isInPurgatory, purgatoryData } = useAsset()
   const [showPricing, setShowPricing] = useState(false)
   const [showEdit, setShowEdit] = useState<boolean>()
   const [showEditCompute, setShowEditCompute] = useState<boolean>()
+  const [algorithms, setAlgorithms] = useState<AlgorithmOption[]>()
   const { ddo, price, metadata } = useAsset()
   const isOwner = accountId === owner
 
@@ -67,12 +70,21 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
     setShowEditCompute(true)
   }
 
+  useEffect(() => {
+    getAlgorithmsOptions(config).then((algorithms) => {
+      setAlgorithms(algorithms)
+    })
+  }, [])
+
   return showEdit || showEditCompute ? (
     <>
       {showEdit ? (
         <Edit setShowEdit={setShowEdit} />
       ) : (
-        <EditComputeDataset setShowEdit={setShowEditCompute} />
+        <EditComputeDataset
+          setShowEdit={setShowEditCompute}
+          algorithmOptions={algorithms}
+        />
       )}
     </>
   ) : (
