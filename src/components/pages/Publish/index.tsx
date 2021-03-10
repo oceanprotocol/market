@@ -1,6 +1,6 @@
 import React, { ReactElement, useState } from 'react'
 import { Formik } from 'formik'
-import { usePublish } from '@oceanprotocol/react'
+import { usePublish } from '../../../hooks/usePublish'
 import styles from './index.module.css'
 import FormPublish from './FormPublish'
 import Web3Feedback from '../../molecules/Wallet/Feedback'

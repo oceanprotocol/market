@@ -67,3 +67,9 @@ export function formatBytes(a: number, b: number): string {
   const f = Math.floor(Math.log(a) / Math.log(c))
   return parseFloat((a / Math.pow(c, f)).toFixed(d)) + ' ' + e[f]
 }
+
+export function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
+}
