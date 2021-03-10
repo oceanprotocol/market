@@ -12,6 +12,7 @@ import styles from './Network.module.css'
 import Badge from '../../atoms/Badge'
 import Tooltip from '../../atoms/Tooltip'
 import { graphql, useStaticQuery } from 'gatsby'
+import { useWeb3 } from '../../../providers/Web3'
 
 const networksQuery = graphql`
   query NetworksQuery {
@@ -32,7 +33,8 @@ export default function Network(): ReactElement {
   const networksList: { node: EthereumListsChain }[] =
     data.allNetworksMetadataJson.edges
 
-  const { config, networkId } = useOcean()
+  const { networkId } = useWeb3()
+  const { config } = useOcean()
   const networkIdConfig = (config as ConfigHelperConfig).networkId
 
   const [isEthMainnet, setIsEthMainnet] = useState<boolean>()

@@ -4,6 +4,7 @@ import { getDataTokenPrice } from '@oceanprotocol/react'
 import { useOcean } from '../providers/Ocean'
 import { isDDO } from '../providers/Ocean/utils'
 import axios, { CancelToken } from 'axios'
+import { useWeb3 } from '../providers/Web3'
 
 interface UseMetadata {
   ddo: DDO | undefined
@@ -16,7 +17,8 @@ interface UseMetadata {
 }
 
 function useMetadata(asset?: DID | string | DDO): UseMetadata {
-  const { ocean, config, status, networkId } = useOcean()
+  const { networkId } = useWeb3()
+  const { ocean, config, status } = useOcean()
   const [internalDdo, setDDO] = useState<DDO>()
   const [internalDid, setDID] = useState<DID | string>()
   const [metadata, setMetadata] = useState<Metadata>()
