@@ -20,15 +20,12 @@
   margin-top: var(--spacer);
 }
 
-.section {
-  margin-top: calc(var(--spacer) * 1.5);
+.historyTabs [class*='tabList'] {
+  text-align: start;
+  border-bottom: 0;
 }
 
-.section:last-child {
-  margin-bottom: 0;
-}
-
-.sectionTitle {
-  font-size: var(--font-size-h3);
-  margin-bottom: calc(var(--spacer) / 2);
+.historyTabs [class*='tabContent'] {
+  padding: 0;
+  padding-top: calc(var(--spacer) / 2);
 }
