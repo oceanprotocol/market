@@ -21,7 +21,6 @@ export default function wrapRootElement({
       ...getDevelopmentConfig()
     })
   }
-  console.log(oceanInitialConfig)
 
   return (
     <Web3Provider>

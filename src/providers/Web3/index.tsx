@@ -21,6 +21,7 @@ interface Web3ProviderValue {
   accountId: string
   networkId: number
   connect: () => Promise<void>
+  logout: () => Promise<void>
 }
 
 const web3ModalTheme = {
@@ -142,16 +143,15 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
 
   return (
     <Web3Context.Provider
-      value={
-        {
-          web3,
-          web3Provider,
-          web3Modal,
-          accountId,
-          networkId,
-          connect
-        } as Web3ProviderValue
-      }
+      value={{
+        web3,
+        web3Provider,
+        web3Modal,
+        accountId,
+        networkId,
+        connect,
+        logout
+      }}
     >
       {children}
     </Web3Context.Provider>

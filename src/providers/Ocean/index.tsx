@@ -89,7 +89,7 @@ function OceanProvider({
       if (!web3) return
 
       try {
-        Logger.log('Connecting ...', newConfig)
+        Logger.log('Connecting Ocean...', newConfig)
 
         newConfig && setConfig(newConfig)
 

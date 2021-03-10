@@ -10,8 +10,8 @@ import { useUserPreferences } from '../../../providers/UserPreferences'
 import { useWeb3 } from '../../../providers/Web3'
 
 export default function Details(): ReactElement {
-  const { web3Provider } = useWeb3()
-  const { balance, connect } = useOcean()
+  const { web3Provider, connect, logout } = useWeb3()
+  const { balance } = useOcean()
   const { locale } = useUserPreferences()
   const [providerInfo, setProviderInfo] = useState<IProviderInfo>()
   // const [portisNetwork, setPortisNetwork] = useState<string>()
@@ -67,7 +67,7 @@ export default function Details(): ReactElement {
               <Button
                 style="text"
                 size="small"
-                // onClick={() => web3Provider._portis.showPortis()}
+                onClick={() => web3Provider._portis.showPortis()}
               >
                 Show Portis
               </Button>
@@ -76,7 +76,7 @@ export default function Details(): ReactElement {
               style="text"
               size="small"
               onClick={() => {
-                // logout()
+                logout()
                 connect()
               }}
             >
@@ -86,7 +86,7 @@ export default function Details(): ReactElement {
               style="text"
               size="small"
               onClick={() => {
-                // logout()
+                logout()
                 location.reload()
               }}
             >
