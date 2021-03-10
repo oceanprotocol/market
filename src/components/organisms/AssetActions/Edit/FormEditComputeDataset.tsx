@@ -6,11 +6,7 @@ import Input from '../../../atoms/Input'
 import { useOcean } from '@oceanprotocol/react'
 import { FormFieldProps } from '../../../../@types/Form'
 import { ServiceComputePrivacy } from '@oceanprotocol/lib'
-
-interface AlgorithmOption {
-  did: string
-  name: string
-}
+import { AlgorithmOption } from '../../../../@types/ComputeDataset'
 
 export default function FormEditComputeDataset({
   data,

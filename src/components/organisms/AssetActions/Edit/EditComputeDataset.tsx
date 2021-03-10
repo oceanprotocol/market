@@ -20,10 +20,9 @@ import {
 } from '@oceanprotocol/lib'
 import MetadataFeedback from '../../../molecules/MetadataFeedback'
 import { graphql, useStaticQuery } from 'gatsby'
-import axios from 'axios'
-import { queryMetadata, getAssetsNames } from '../../../../utils/aquarius'
 import Loader from '../../../atoms/Loader'
-import web3 from 'web3'
+import { AlgorithmOption } from '../../../../@types/ComputeDataset'
+import { getAlgorithmsOptions } from '../../../../utils/aquarius'
 
 const contentQuery = graphql`
   query EditComputeDataQuery {
@@ -58,6 +57,22 @@ const contentQuery = graphql`
   }
 `
 
+async function createTrustedAlgorithmList(
+  selectedAlgorithmsDIDs: PublisherTrustedAlgorithm[],
+  ocean: any
+) {
+  const trustedAlgorithms: PublisherTrustedAlgorithm[] = []
+  for (const selectedAlgorithmDID of selectedAlgorithmsDIDs) {
+    const trustedAlgorithm = selectedAlgorithmDID.did
+      ? selectedAlgorithmDID
+      : await ocean.compute.createPublisherTrustedAlgorithmfromDID(
+          selectedAlgorithmDID.toString()
+        )
+    trustedAlgorithms.push(trustedAlgorithm)
+  }
+  return trustedAlgorithms
+}
+
 export default function EditComputeDataset({
   setShowEdit
 }: {
@@ -72,71 +87,14 @@ export default function EditComputeDataset({
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const [algorithms, setAlgorithms] = useState<AlgorithmOption[]>()
-  const query = {
-    page: 1,
-    query: {
-      nativeSearch: 1,
-      query_string: {
-        query: `(service.attributes.main.type:algorithm) -isInPurgatory:true`
-      }
-    },
-    sort: { created: -1 }
-  }
-  const source = axios.CancelToken.source()
 
   const hasFeedback = error || success
 
-  interface AlgorithmOption {
-    did: string
-    name: string
-  }
-
-  async function getAlgorithms() {
-    const didList: string[] = []
-    const result = await queryMetadata(
-      query as any,
-      config.metadataCacheUri,
-      source.token
-    )
-    await result.results.forEach((ddo: DDO) => {
-      const did: string = web3.utils
-        .toChecksumAddress(ddo.dataToken)
-        .replace('0x', 'did:op:')
-      didList.push(did)
-    })
-    const ddoNames = await getAssetsNames(
-      didList,
-      config.metadataCacheUri,
-      source.token
-    )
-    const algorithmList: AlgorithmOption[] = []
-    didList.forEach((did: string) => {
-      algorithmList.push({
-        did: did,
-        name: ddoNames[did]
-      })
-    })
-    setAlgorithms(algorithmList)
-  }
-
   useEffect(() => {
-    getAlgorithms()
+    getAlgorithmsOptions(config).then((algorithms) => {
+      setAlgorithms(algorithms)
+    })
   }, [])
-
-  async function createTrustedAlgorithmList(
-    selectedAlgorithmsDIDs: PublisherTrustedAlgorithm[]
-  ) {
-    const trustedAlgorithms: PublisherTrustedAlgorithm[] = []
-    for (const selectedAlgorithmDID of selectedAlgorithmsDIDs) {
-      const trustedAlgorithm = selectedAlgorithmDID.did
-        ? selectedAlgorithmDID
-        : await ocean.compute.createPublisherTrustedAlgorithmfromDID(
-            selectedAlgorithmDID.toString()
-          )
-      trustedAlgorithms.push(trustedAlgorithm)
-    }
-    return trustedAlgorithms
-  }
 
   async function handleSubmit(
     values: ServiceComputePrivacy,
@@ -147,7 +105,8 @@ export default function EditComputeDataset({
       console.log(values)
 
       trustedAlgorithms = await createTrustedAlgorithmList(
-        values.publisherTrustedAlgorithms
+        values.publisherTrustedAlgorithms,
+        ocean
       )
       const privacy: ServiceComputePrivacy = {
         allowRawAlgorithm: values.allowRawAlgorithm,

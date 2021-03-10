@@ -1,9 +1,11 @@
-import { DDO, DID, Logger } from '@oceanprotocol/lib'
+import { DDO, DID, Logger } from '@oceanprotocol/lib/'
 import {
   QueryResult,
   SearchQuery
 } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
+import { AlgorithmOption } from '../@types/ComputeDataset'
 import axios, { CancelToken, AxiosResponse } from 'axios'
+import web3 from 'web3'
 
 // TODO: import directly from ocean.js somehow.
 // Transforming Aquarius' direct response is needed for getting actual DDOs
@@ -96,4 +98,45 @@ export async function getAssetsNames(
       Logger.error(error.message)
     }
   }
+}
+
+export async function getAlgorithmsOptions(
+  config: any
+): Promise<AlgorithmOption[]> {
+  const query = {
+    page: 1,
+    query: {
+      nativeSearch: 1,
+      query_string: {
+        query: `(service.attributes.main.type:algorithm) -isInPurgatory:true`
+      }
+    },
+    sort: { created: -1 }
+  }
+  const source = axios.CancelToken.source()
+  const didList: string[] = []
+  const result = await queryMetadata(
+    query as any,
+    config.metadataCacheUri,
+    source.token
+  )
+  result.results.forEach((ddo: DDO) => {
+    const did: string = web3.utils
+      .toChecksumAddress(ddo.dataToken)
+      .replace('0x', 'did:op:')
+    didList.push(did)
+  })
+  const ddoNames = await getAssetsNames(
+    didList,
+    config.metadataCacheUri,
+    source.token
+  )
+  const algorithmList: AlgorithmOption[] = []
+  didList.forEach((did: string) => {
+    algorithmList.push({
+      did: did,
+      name: ddoNames[did]
+    })
+  })
+  return algorithmList
 }
