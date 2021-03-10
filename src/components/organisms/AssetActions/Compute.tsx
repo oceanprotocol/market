@@ -2,14 +2,9 @@ import React, { useState, ReactElement, ChangeEvent, useEffect } from 'react'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import Loader from '../../atoms/Loader'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
-import Dropzone from '../../atoms/Dropzone'
 import Price from '../../atoms/Price'
 import File from '../../atoms/File'
-import {
-  computeOptions,
-  useCompute,
-  readFileContent
-} from '@oceanprotocol/react'
+import { computeOptions, useCompute } from '../../../hooks/useCompute'
 import styles from './Compute.module.css'
 import Input from '../../atoms/Input'
 import Alert from '../../atoms/Alert'
@@ -66,12 +61,6 @@ export default function Compute({
     }
     checkPreviousOrders()
   }, [ocean, ddo, accountId])
-
-  const onDrop = async (files: File[]) => {
-    setFile(files[0])
-    const fileText = await readFileContent(files[0])
-    setAlgorithmRawCode(fileText)
-  }
 
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const comType = event.target.value
@@ -140,7 +129,6 @@ export default function Compute({
         options={computeOptions.map((x) => x.name)}
         onChange={handleSelectChange}
       />
-      <Dropzone multiple={false} handleOnDrop={onDrop} />
 
       <div className={styles.actions}>
         {isLoading ? (

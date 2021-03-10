@@ -26,16 +26,7 @@ const reactMock = {
       consumeStepText: '',
       isLoading: false
     }
-  },
-  useCompute: () => {
-    return {
-      compute: () => null as any,
-      isLoading: false,
-      computeStepText: 0,
-      computeError: ''
-    }
-  },
-  computeOptions: ['', '']
+  }
 }
 
 export default reactMock
