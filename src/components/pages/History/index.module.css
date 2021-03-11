@@ -18,17 +18,29 @@
 
 .content {
   margin-top: var(--spacer);
+  background-color: var(--background-content) !important;
 }
 
-.section {
-  margin-top: calc(var(--spacer) * 1.5);
+.tabs div[class*='tabs'] {
+  background-color: var(--background-content);
 }
 
-.section:last-child {
-  margin-bottom: 0;
+.tabs ul[class*='tabList'] {
+  background-color: var(--background-content);
+  border: 1px solid var(--border-color);
+  border-bottom: 0;
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+  white-space: nowrap;
+  overflow-y: hidden;
+  overflow-x: auto;
 }
 
-.sectionTitle {
-  font-size: var(--font-size-h3);
-  margin-bottom: calc(var(--spacer) / 2);
+.tabs div[class*='tabContent'] {
+  border: 1px solid var(--border-color);
+  padding-bottom: 0;
+}
+
+.tabs div[class*='tab-panel--selected'] {
+  margin-bottom: var(--spacer);
 }
