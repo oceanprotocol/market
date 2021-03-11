@@ -1,7 +1,7 @@
 import { toDataUrl } from 'ethereum-blockies'
 import React, { FormEvent } from 'react'
 import { ReactComponent as Caret } from '../../../images/caret.svg'
-import { accountTruncate } from '../../../utils/wallet'
+import { accountTruncate } from '../../../utils/web3'
 import Loader from '../../atoms/Loader'
 import styles from './Account.module.css'
 import { useWeb3 } from '../../../providers/Web3'

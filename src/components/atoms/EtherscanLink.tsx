@@ -1,5 +1,5 @@
 import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
-import { EthereumListsChain, getNetworkData } from '../../utils/wallet'
+import { EthereumListsChain, getNetworkData } from '../../utils/web3'
 import { ReactComponent as External } from '../../images/external.svg'
 import styles from './EtherscanLink.module.css'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'

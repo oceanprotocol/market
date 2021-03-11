@@ -1,5 +1,4 @@
 import { Account, Config, Logger, Ocean } from '@oceanprotocol/lib'
-import { Balance } from '.'
 import contractAddresses from '@oceanprotocol/contracts/artifacts/address.json'
 import {
   ConfigHelper,
@@ -7,6 +6,11 @@ import {
   ConfigHelperNetworkId,
   ConfigHelperNetworkName
 } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
+
+export interface Balance {
+  eth: string
+  ocean: string
+}
 
 export function getOceanConfig(
   network: ConfigHelperNetworkName | ConfigHelperNetworkId

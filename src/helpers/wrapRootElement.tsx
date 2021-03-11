@@ -5,7 +5,7 @@ import { UserPreferencesProvider } from '../providers/UserPreferences'
 import PricesProvider from '../providers/Prices'
 import ApolloClientProvider from '../providers/ApolloClientProvider'
 import OceanProvider from '../providers/Ocean'
-import { getOceanConfig, getDevelopmentConfig } from '../providers/Ocean/utils'
+import { getDevelopmentConfig, getOceanConfig } from '../utils/ocean'
 
 export default function wrapRootElement({
   element

@@ -5,7 +5,7 @@ import {
   EthereumListsChain,
   getNetworkData,
   getNetworkDisplayName
-} from '../../../utils/wallet'
+} from '../../../utils/web3'
 import { ConfigHelper } from '@oceanprotocol/lib'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import styles from './Network.module.css'

@@ -8,20 +8,20 @@ import React, {
   useEffect
 } from 'react'
 import { Ocean, Logger, Account, Config } from '@oceanprotocol/lib'
-import { getDevelopmentConfig, getOceanConfig, getUserInfo } from './utils'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
-import { useWeb3 } from '../Web3'
+import { useWeb3 } from './Web3'
 import {
   PurgatoryDataAccount,
   getAccountPurgatoryData
-} from '../../utils/purgatory'
+} from '../utils/purgatory'
+import {
+  Balance,
+  getDevelopmentConfig,
+  getOceanConfig,
+  getUserInfo
+} from '../utils/ocean'
 
 const refreshInterval = 20000 // 20 sec.
-
-interface Balance {
-  eth: string
-  ocean: string
-}
 
 interface OceanProviderValue {
   ocean: Ocean
@@ -54,6 +54,9 @@ function OceanProvider({
     initialConfig
   )
 
+  // -----------------------------------
+  // Create Ocean instance
+  // -----------------------------------
   const connect = useCallback(
     async (newConfig?: ConfigHelperConfig | Config) => {
       if (!web3) return
@@ -65,7 +68,6 @@ function OceanProvider({
         usedConfig.web3Provider = web3
 
         if (newConfig) {
-          usedConfig.web3Provider = web3
           setConfig(usedConfig)
         }
 

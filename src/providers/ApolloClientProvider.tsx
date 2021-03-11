@@ -7,7 +7,7 @@ import {
 } from '@apollo/client'
 import { Logger } from '@oceanprotocol/lib'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
-import { useOcean } from '../providers/Ocean'
+import { useOcean } from './Ocean'
 import fetch from 'cross-fetch'
 import React, { useState, useEffect, ReactNode, ReactElement } from 'react'
 

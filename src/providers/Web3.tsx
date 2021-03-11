@@ -12,6 +12,7 @@ import Web3Modal from 'web3modal'
 import { infuraProjectId as infuraId, portisId } from '../../app.config'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import { Logger } from '@oceanprotocol/lib'
+import { isBrowser } from '../utils'
 
 interface Web3ProviderValue {
   web3: Web3
@@ -33,31 +34,30 @@ const web3ModalTheme = {
 
 // HEADS UP! We inline-require some packages so the Gatsby SSR build does not break.
 // We only need them client-side.
-const providerOptions =
-  typeof window !== 'undefined'
-    ? {
-        walletconnect: {
-          package: WalletConnectProvider,
-          options: { infuraId }
-        },
-        portis: {
-          package: require('@portis/web3'),
-          options: {
-            id: portisId
-          }
+const providerOptions = isBrowser
+  ? {
+      walletconnect: {
+        package: WalletConnectProvider,
+        options: { infuraId }
+      },
+      portis: {
+        package: require('@portis/web3'),
+        options: {
+          id: portisId
         }
-        // torus: {
-        //   package: require('@toruslabs/torus-embed')
-        //   // options: {
-        //   //   networkParams: {
-        //   //     host: oceanConfig.url, // optional
-        //   //     chainId: 1337, // optional
-        //   //     networkId: 1337 // optional
-        //   //   }
-        //   // }
-        // }
       }
-    : {}
+      // torus: {
+      //   package: require('@toruslabs/torus-embed')
+      //   // options: {
+      //   //   networkParams: {
+      //   //     host: oceanConfig.url, // optional
+      //   //     chainId: 1337, // optional
+      //   //     networkId: 1337 // optional
+      //   //   }
+      //   // }
+      // }
+    }
+  : {}
 
 export const web3ModalOpts = {
   cacheProvider: true,

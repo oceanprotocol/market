@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import { useOcean } from '../../providers/Ocean'
-import { getOceanConfig } from '../../providers/Ocean/utils'
+import { getOceanConfig } from '../../utils/ocean'
 import Menu from '../molecules/Menu'
 import styles from './Header.module.css'
 

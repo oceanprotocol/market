@@ -1,7 +1,6 @@
 import React, { ReactElement, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
 import styles from './Dropzone.module.css'
-import { formatBytes } from '../../utils'
 
 export default function Dropzone({
   handleOnDrop,
@@ -28,7 +27,7 @@ export default function Dropzone({
 
   const files = acceptedFiles.map((file: any) => (
     <li key={file.path}>
-      {file.path} - {formatBytes(file.size, 0)}
+      {file.path} - {file.size}
     </li>
   ))
 
