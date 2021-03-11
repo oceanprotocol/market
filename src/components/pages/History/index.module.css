@@ -25,7 +25,17 @@
   border-bottom: 0;
 }
 
-.historyTabs [class*='tabContent'] {
+.historyTabs [class*='--tab--'][aria-selected='false'] {
+  background-color: var(--background-body);
+}
+
+.historyTabs [class*='TableHead'],
+.historyTabs [class*='TableBody'] {
   padding: 0;
-  padding-top: calc(var(--spacer) / 2);
+  background-color: var(--background-body) !important;
+}
+
+.historyTabs [class*='tabContent'] {
+  padding-left: 0;
+  padding-right: 0;
 }
