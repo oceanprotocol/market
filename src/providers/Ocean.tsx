@@ -11,10 +11,6 @@ import { Ocean, Logger, Account, Config } from '@oceanprotocol/lib'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import { useWeb3 } from './Web3'
 import {
-  PurgatoryDataAccount,
-  getAccountPurgatoryData
-} from '../utils/purgatory'
-import {
   Balance,
   getDevelopmentConfig,
   getOceanConfig,
@@ -27,8 +23,6 @@ interface OceanProviderValue {
   ocean: Ocean
   config: ConfigHelperConfig | Config
   account: Account
-  isInPurgatory: boolean
-  purgatoryData: PurgatoryDataAccount
   balance: Balance
   connect: (config?: Config) => Promise<void>
   refreshBalance: () => Promise<void>
@@ -145,39 +139,6 @@ function OceanProvider({
     reconnect()
   }, [networkId])
 
-  // -----------------------------------
-  // TODO: create usePurgatory() hook instead of mixing it up with Ocean connections
-  // -----------------------------------
-  const [isInPurgatory, setIsInPurgatory] = useState(false)
-  const [purgatoryData, setPurgatoryData] = useState<PurgatoryDataAccount>()
-
-  const setAccountPurgatory = useCallback(
-    async (address: string): Promise<void> => {
-      if (!address) return
-
-      try {
-        const result = await getAccountPurgatoryData(address)
-
-        if (result?.address !== undefined) {
-          setIsInPurgatory(true)
-          setPurgatoryData(result)
-        } else {
-          setIsInPurgatory(false)
-        }
-
-        setPurgatoryData(result)
-      } catch (error) {
-        Logger.error(error)
-      }
-    },
-    []
-  )
-
-  useEffect(() => {
-    if (!accountId) return
-    setAccountPurgatory(accountId)
-  }, [accountId, setAccountPurgatory])
-
   return (
     <OceanContext.Provider
       value={
@@ -185,8 +146,6 @@ function OceanProvider({
           ocean,
           account,
           balance,
-          isInPurgatory,
-          purgatoryData,
           config,
           connect,
           refreshBalance

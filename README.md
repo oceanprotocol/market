@@ -229,11 +229,26 @@ function Component() {
 
 Based on [list-purgatory](https://github.com/oceanprotocol/list-purgatory) some data sets get additional data. Within most components this can be done with the internal `useAsset()` hook which fetches data from the [market-purgatory](https://github.com/oceanprotocol/market-purgatory) endpoint in the background.
 
+For asset purgatory:
+
 ```tsx
 import { useAsset } from '../../../providers/Asset'
 
 function Component() {
   const { isInPurgatory, purgatoryData } = useAsset()
+  return isInPurgatory ? <div>{purgatoryData.reason}</div> : null
+}
+```
+
+For account purgatory:
+
+```tsx
+import { useWeb3 } from '../../../providers/Web3'
+import { useAccountPurgatory } from '../../../hooks/useAccountPurgatory'
+
+function Component() {
+  const { accountId } = useWeb3()
+  const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
   return isInPurgatory ? <div>{purgatoryData.reason}</div> : null
 }
 ```

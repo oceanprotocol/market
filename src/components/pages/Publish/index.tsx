@@ -18,7 +18,8 @@ import { Persist } from '../../atoms/FormikPersist'
 import Debug from './Debug'
 import Alert from '../../atoms/Alert'
 import MetadataFeedback from '../../molecules/MetadataFeedback'
-import { useOcean } from '../../../providers/Ocean'
+import { useAccountPurgatory } from '../../../hooks/useAccountPurgatory'
+import { useWeb3 } from '../../../providers/Web3'
 
 const formName = 'ocean-publish-form'
 
@@ -28,8 +29,10 @@ export default function PublishPage({
   content: { warning: string; form: FormContent }
 }): ReactElement {
   const { debug } = useUserPreferences()
+  const { accountId } = useWeb3()
+  const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
   const { publish, publishError, isLoading, publishStepText } = usePublish()
-  const { isInPurgatory, purgatoryData } = useOcean()
+
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const [did, setDid] = useState<string>()
