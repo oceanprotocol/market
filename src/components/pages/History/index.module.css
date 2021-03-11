@@ -38,4 +38,9 @@
 
 .tabs div[class*='tabContent'] {
   border: 1px solid var(--border-color);
+  padding-bottom: 0;
+}
+
+.tabs div[class*='tab-panel--selected'] {
+  margin-bottom: var(--spacer);
 }
