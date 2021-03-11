@@ -31,6 +31,9 @@
   border-bottom: 0;
   border-top-left-radius: var(--border-radius);
   border-top-right-radius: var(--border-radius);
+  white-space: nowrap;
+  overflow-y: hidden;
+  overflow-x: auto;
 }
 
 .tabs div[class*='tabContent'] {
