@@ -123,10 +123,10 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
   // -----------------------------------
   // Handle change events
   // -----------------------------------
-  async function handleNetworkChanged(chainId: string) {
-    Logger.log('Network changed', chainId)
-    const networkId = Number(chainId.replace('0x', ''))
-    setNetworkId(networkId)
+  async function handleNetworkChanged(networkId: string) {
+    Logger.log('Network changed', networkId)
+    // const networkId = Number(chainId.replace('0x', ''))
+    setNetworkId(Number(networkId))
   }
 
   async function handleAccountsChanged(accounts: string[]) {
@@ -137,11 +137,18 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
   useEffect(() => {
     if (!web3Provider || !web3) return
 
-    web3Provider.on('chainChanged', handleNetworkChanged)
+    //
+    // HEADS UP! We should rather listen to `chainChanged` exposing the `chainId`
+    // but for whatever reason the exposed `chainId` is wildly different from
+    // what is shown on https://chainid.network, in turn breaking our network/config
+    // mapping. The networkChanged is deprecated but works as expected for our case.
+    // See: https://eips.ethereum.org/EIPS/eip-1193#chainchanged
+    //
+    web3Provider.on('networkChanged', handleNetworkChanged)
     web3Provider.on('accountsChanged', handleAccountsChanged)
 
     return () => {
-      web3Provider.removeListener('chainChanged')
+      web3Provider.removeListener('networkChanged')
       web3Provider.removeListener('accountsChanged')
     }
   }, [web3Provider, web3])
