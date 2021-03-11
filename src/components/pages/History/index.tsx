@@ -33,7 +33,7 @@ const tabs = [
 export default function HistoryPage(): ReactElement {
   return (
     <article className={styles.content}>
-      <Tabs items={tabs} className={styles.historyTabs} />
+      <Tabs items={tabs} className={styles.tabs} />
     </article>
   )
 }

@@ -18,24 +18,21 @@
 
 .content {
   margin-top: var(--spacer);
+  background-color: var(--background-content) !important;
 }
 
-.historyTabs [class*='tabList'] {
-  text-align: start;
+.tabs div[class*='tabs'] {
+  background-color: var(--background-content);
+}
+
+.tabs ul[class*='tabList'] {
+  background-color: var(--background-content);
+  border: 1px solid var(--border-color);
   border-bottom: 0;
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
 }
 
-.historyTabs [class*='--tab--'][aria-selected='false'] {
-  background-color: var(--background-body);
-}
-
-.historyTabs [class*='TableHead'],
-.historyTabs [class*='TableBody'] {
-  padding: 0;
-  background-color: var(--background-body) !important;
-}
-
-.historyTabs [class*='tabContent'] {
-  padding-left: 0;
-  padding-right: 0;
+.tabs div[class*='tabContent'] {
+  border: 1px solid var(--border-color);
 }

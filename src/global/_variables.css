@@ -26,6 +26,7 @@
   --font-color-text: #41474e;
   --font-color-heading: #141414;
   --background-body: #fff;
+  --background-content: #fff;
   --background-body-transparent: rgba(255, 255, 255, 0.8);
   --background-highlight: #f7f7f7;
   --border-color: #e2e2e2;
@@ -70,6 +71,7 @@
 .dark {
   --font-color-text: #e2e2e2;
   --font-color-heading: #f7f7f7;
+  --background-content: #141414;
   --background-body: #141414;
   --background-body-transparent: rgba(20, 20, 20, 0.9);
   --background-highlight: #201f1f;
