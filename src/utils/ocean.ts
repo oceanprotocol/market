@@ -32,6 +32,8 @@ export function getDevelopmentConfig(): Partial<ConfigHelperConfig> {
 export async function getUserInfo(
   ocean: Ocean
 ): Promise<{ account: Account; balance: UserBalance }> {
+  if (!ocean) return { account: null, balance: { eth: '0', ocean: '0' } }
+
   const account = (await ocean.accounts.list())[0]
   Logger.log('Account ', account)
 

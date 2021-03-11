@@ -125,7 +125,8 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
   // -----------------------------------
   async function handleNetworkChanged(chainId: string) {
     Logger.log('Network changed', chainId)
-    setNetworkId(Number(chainId.replace('0x', '')))
+    const networkId = Number(chainId.replace('0x', ''))
+    setNetworkId(networkId)
   }
 
   async function handleAccountsChanged(accounts: string[]) {

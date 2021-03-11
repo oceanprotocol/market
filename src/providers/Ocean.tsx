@@ -53,30 +53,30 @@ function OceanProvider({
   // -----------------------------------
   const connect = useCallback(
     async (newConfig?: ConfigHelperConfig | Config) => {
-      if (!web3) return
-
       try {
         const usedConfig = newConfig || config
         Logger.log('Connecting Ocean...', usedConfig)
 
-        usedConfig.web3Provider = web3
+        usedConfig.web3Provider = web3 || initialConfig.web3Provider
 
         if (newConfig) {
           setConfig(usedConfig)
         }
 
-        const newOcean = await Ocean.getInstance(usedConfig)
-        setOcean(newOcean)
-        Logger.log('Ocean instance created.', newOcean)
+        if (usedConfig.web3Provider) {
+          const newOcean = await Ocean.getInstance(usedConfig)
+          setOcean(newOcean)
+          Logger.log('Ocean instance created.', newOcean)
+        }
       } catch (error) {
         Logger.error(error)
       }
     },
-    [web3, config]
+    [web3, config, initialConfig.web3Provider]
   )
 
   async function refreshBalance() {
-    if (!ocean || !account) return
+    if (!ocean || !account || !web3) return
 
     const { balance } = await getUserInfo(ocean)
     Logger.log('balance', JSON.stringify(balance))
@@ -104,7 +104,7 @@ function OceanProvider({
   // Get user info, handle account change from web3
   // -----------------------------------
   useEffect(() => {
-    if (!ocean || !accountId) return
+    if (!ocean || !accountId || !web3) return
 
     async function getInfo() {
       const { account, balance } = await getUserInfo(ocean)
@@ -112,7 +112,7 @@ function OceanProvider({
       setBalance(balance)
     }
     getInfo()
-  }, [ocean, accountId])
+  }, [ocean, accountId, web3])
 
   // -----------------------------------
   // Handle network change from web3
