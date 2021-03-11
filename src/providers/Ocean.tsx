@@ -11,11 +11,11 @@ import { Ocean, Logger, Account, Config } from '@oceanprotocol/lib'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import { useWeb3 } from './Web3'
 import {
-  Balance,
   getDevelopmentConfig,
   getOceanConfig,
   getUserInfo
 } from '../utils/ocean'
+import { UserBalance } from '../@types/TokenBalance'
 
 const refreshInterval = 20000 // 20 sec.
 
@@ -23,7 +23,7 @@ interface OceanProviderValue {
   ocean: Ocean
   config: ConfigHelperConfig | Config
   account: Account
-  balance: Balance
+  balance: UserBalance
   connect: (config?: Config) => Promise<void>
   refreshBalance: () => Promise<void>
 }
@@ -40,7 +40,7 @@ function OceanProvider({
   const { web3, accountId, networkId } = useWeb3()
   const [ocean, setOcean] = useState<Ocean>()
   const [account, setAccount] = useState<Account>()
-  const [balance, setBalance] = useState<Balance>({
+  const [balance, setBalance] = useState<UserBalance>({
     eth: undefined,
     ocean: undefined
   })
@@ -160,5 +160,5 @@ function OceanProvider({
 // Helper hook to access the provider values
 const useOcean = (): OceanProviderValue => useContext(OceanContext)
 
-export { OceanProvider, useOcean, OceanProviderValue, Balance, OceanContext }
+export { OceanProvider, useOcean, OceanProviderValue, OceanContext }
 export default OceanProvider

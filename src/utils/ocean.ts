@@ -6,11 +6,7 @@ import {
   ConfigHelperNetworkId,
   ConfigHelperNetworkName
 } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
-
-export interface Balance {
-  eth: string
-  ocean: string
-}
+import { UserBalance } from '../@types/TokenBalance'
 
 export function getOceanConfig(
   network: ConfigHelperNetworkName | ConfigHelperNetworkId
@@ -35,7 +31,7 @@ export function getDevelopmentConfig(): Partial<ConfigHelperConfig> {
 
 export async function getUserInfo(
   ocean: Ocean
-): Promise<{ account: Account; balance: Balance }> {
+): Promise<{ account: Account; balance: UserBalance }> {
   const account = (await ocean.accounts.list())[0]
   Logger.log('Account ', account)
 

@@ -8,7 +8,7 @@ import { Formik } from 'formik'
 import FormAdd from './FormAdd'
 import styles from './index.module.css'
 import Alert from '../../../../atoms/Alert'
-import TokenBalance from '../../../../../@types/TokenBalance'
+import { PoolBalance } from '../../../../../@types/TokenBalance'
 import { useUserPreferences } from '../../../../../providers/UserPreferences'
 import Output from './Output'
 import DebugOutput from '../../../../atoms/DebugOutput'
@@ -57,7 +57,7 @@ export default function Add({
   refreshInfo: () => void
   poolAddress: string
   totalPoolTokens: string
-  totalBalance: TokenBalance
+  totalBalance: PoolBalance
   swapFee: string
   dtSymbol: string
   dtAddress: string

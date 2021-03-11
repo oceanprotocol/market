@@ -11,7 +11,7 @@ import EtherscanLink from '../../../atoms/EtherscanLink'
 import Token from './Token'
 import TokenList from './TokenList'
 import { graphql, useStaticQuery } from 'gatsby'
-import TokenBalance from '../../../../@types/TokenBalance'
+import { PoolBalance } from '../../../../@types/TokenBalance'
 import Transactions from './Transactions'
 import Graph from './Graph'
 import { useAsset } from '../../../../providers/Asset'
@@ -75,7 +75,7 @@ export default function Pool(): ReactElement {
 
   const [poolTokens, setPoolTokens] = useState<string>()
   const [totalPoolTokens, setTotalPoolTokens] = useState<string>()
-  const [userLiquidity, setUserLiquidity] = useState<TokenBalance>()
+  const [userLiquidity, setUserLiquidity] = useState<PoolBalance>()
   const [swapFee, setSwapFee] = useState<string>()
   const [weightOcean, setWeightOcean] = useState<string>()
   const [weightDt, setWeightDt] = useState<string>()
@@ -93,7 +93,7 @@ export default function Pool(): ReactElement {
     creatorTotalLiquidityInOcean,
     setCreatorTotalLiquidityInOcean
   ] = useState(0)
-  const [creatorLiquidity, setCreatorLiquidity] = useState<TokenBalance>()
+  const [creatorLiquidity, setCreatorLiquidity] = useState<PoolBalance>()
   const [creatorPoolTokens, setCreatorPoolTokens] = useState<string>()
   const [creatorPoolShare, setCreatorPoolShare] = useState<string>()
 
