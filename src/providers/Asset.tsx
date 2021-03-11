@@ -132,16 +132,12 @@ function AssetProvider({
 
   const setPurgatory = useCallback(async (did: string): Promise<void> => {
     if (!did) return
+
     try {
       const result = await getAssetPurgatoryData(did)
-
-      if (result?.did !== undefined) {
-        setIsInPurgatory(true)
-        setPurgatoryData(result)
-        return
-      }
-
-      setIsInPurgatory(false)
+      const isInPurgatory = result?.did !== undefined
+      setIsInPurgatory(isInPurgatory)
+      isInPurgatory && setPurgatoryData(result)
     } catch (error) {
       Logger.error(error)
     }

@@ -23,15 +23,9 @@ function useAccountPurgatory(accountId: string): UseAccountPurgatory {
       try {
         setIsLoading(true)
         const result = await getAccountPurgatoryData(address)
-
-        if (result?.address !== undefined) {
-          setIsInPurgatory(true)
-          setPurgatoryData(result)
-        } else {
-          setIsInPurgatory(false)
-        }
-
-        setPurgatoryData(result)
+        const isInPurgatory = result?.address !== undefined
+        setIsInPurgatory(isInPurgatory)
+        isInPurgatory && setPurgatoryData(result)
       } catch (error) {
         Logger.error(error)
       } finally {
