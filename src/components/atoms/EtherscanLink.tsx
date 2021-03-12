@@ -1,8 +1,8 @@
 import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
 import { ReactComponent as External } from '../../images/external.svg'
 import styles from './EtherscanLink.module.css'
-import { useOcean } from '@oceanprotocol/react'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
+import { useOcean } from '../../providers/Ocean'
 
 export default function EtherscanLink({
   path,

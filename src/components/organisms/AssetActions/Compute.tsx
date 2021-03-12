@@ -13,6 +13,7 @@ import checkPreviousOrder from '../../../utils/checkPreviousOrder'
 import { useOcean } from '../../../providers/Ocean'
 import { useWeb3 } from '../../../providers/Web3'
 import { usePricing } from '../../../hooks/usePricing'
+import { useAsset } from '../../../providers/Asset'
 
 export default function Compute({
   ddo,
@@ -28,7 +29,7 @@ export default function Compute({
   const { ocean } = useOcean()
   const { compute, isLoading, computeStepText, computeError } = useCompute()
   const { buyDT, dtSymbol } = usePricing(ddo)
-
+  const { price } = useAsset()
   const computeService = ddo.findServiceByType('compute')
   const metadataService = ddo.findServiceByType('metadata')
 
@@ -79,7 +80,7 @@ export default function Compute({
       setIsPublished(false)
       setError('')
 
-      !hasPreviousOrder && !hasDatatoken && (await buyDT('1'))
+      !hasPreviousOrder && !hasDatatoken && (await buyDT('1', price))
 
       await compute(
         ddo.id,
