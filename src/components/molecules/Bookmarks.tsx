@@ -73,7 +73,7 @@ const columns = [
   {
     name: 'Price',
     selector: function getAssetRow(row: DDO) {
-      return <Price ddo={row} small />
+      return <Price price={row.price} small />
     },
     right: true
   }
