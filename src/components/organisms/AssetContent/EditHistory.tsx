@@ -32,7 +32,7 @@ export default function EditHistory(): ReactElement {
   const [creationTx, setCreationTx] = useState<string>()
 
   useEffect(() => {
-    if (!data) return
+    if (!data || data.datatokens.length === 0) return
     setReceipts(data.datatokens[0].updates)
     setCreationTx(data.datatokens[0].tx)
   }, [data])
