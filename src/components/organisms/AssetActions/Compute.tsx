@@ -71,36 +71,36 @@ export default function Compute({
       setComputeContainer(selectedComputeOption.value)
   }
 
-  const startJob = async () => {
-    try {
-      if (!ocean) return
+  // const startJob = async () => {
+  //   try {
+  //     if (!ocean) return
 
-      setIsJobStarting(true)
-      setIsPublished(false)
-      setError('')
+  //     setIsJobStarting(true)
+  //     setIsPublished(false)
+  //     setError('')
 
-      !hasPreviousOrder && !hasDatatoken && (await buyDT('1'))
+  //     !hasPreviousOrder && !hasDatatoken && (await buyDT('1'))
 
-      await compute(
-        ddo.id,
-        computeService,
-        ddo.dataToken,
-        algorithmRawCode,
-        computeContainer,
-        marketFeeAddress,
-        previousOrderId
-      )
+  //     await compute(
+  //       ddo.id,
+  //       computeService,
+  //       ddo.dataToken,
+  //       algorithmRawCode,
+  //       computeContainer,
+  //       marketFeeAddress,
+  //       previousOrderId
+  //     )
 
-      setHasPreviousOrder(true)
-      setIsPublished(true)
-      setFile(null)
-    } catch (error) {
-      setError('Failed to start job!')
-      Logger.error(error.message)
-    } finally {
-      setIsJobStarting(false)
-    }
-  }
+  //     setHasPreviousOrder(true)
+  //     setIsPublished(true)
+  //     setFile(null)
+  //   } catch (error) {
+  //     setError('Failed to start job!')
+  //     Logger.error(error.message)
+  //   } finally {
+  //     setIsJobStarting(false)
+  //   }
+  // }
 
   return (
     <>
