@@ -110,7 +110,7 @@ export default function Compute({
           <File file={metadataService.attributes.main.files[0]} small />
         </div>
         <div className={styles.pricewrapper}>
-          <Price ddo={ddo} conversion />
+          <Price price={price} conversion />
           {hasDatatoken && (
             <div className={styles.hasTokens}>
               You own {dtBalance} {dtSymbol} allowing you to use this data set

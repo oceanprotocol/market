@@ -194,7 +194,7 @@ export default function Consume({
           <File file={file} />
         </div>
         <div className={styles.pricewrapper}>
-          <Price ddo={ddo} conversion />
+          <Price price={price} conversion />
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>
