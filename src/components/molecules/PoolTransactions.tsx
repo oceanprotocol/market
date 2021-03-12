@@ -1,6 +1,6 @@
 import { useOcean } from '../../providers/Ocean'
 import React, { ReactElement, useEffect, useState } from 'react'
-import EtherscanLink from '../atoms/EtherscanLink'
+import ExplorerLink from '../atoms/ExplorerLink'
 import Time from '../atoms/Time'
 import Table from '../atoms/Table'
 import AssetTitle from './AssetListTitle'
@@ -146,9 +146,9 @@ function Title({ row }: { row: TransactionHistoryPoolTransactions }) {
   }, [ocean, row, locale])
 
   return title ? (
-    <EtherscanLink networkId={networkId} path={`/tx/${row.tx}`}>
+    <ExplorerLink networkId={networkId} path={`/tx/${row.tx}`}>
       <span className={styles.titleText}>{title}</span>
-    </EtherscanLink>
+    </ExplorerLink>
   ) : null
 }
 

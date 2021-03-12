@@ -7,7 +7,7 @@ import Button from '../../../atoms/Button'
 import Add from './Add'
 import Remove from './Remove'
 import Tooltip from '../../../atoms/Tooltip'
-import EtherscanLink from '../../../atoms/EtherscanLink'
+import ExplorerLink from '../../../atoms/ExplorerLink'
 import Token from './Token'
 import TokenList from './TokenList'
 import { graphql, useStaticQuery } from 'gatsby'
@@ -241,18 +241,18 @@ export default function Pool(): ReactElement {
             <PriceUnit price={`${price?.value}`} />
             <Tooltip content={content.tooltips.price} />
             <div className={styles.dataTokenLinks}>
-              <EtherscanLink
+              <ExplorerLink
                 networkId={networkId}
                 path={`address/${price?.address}`}
               >
                 Pool
-              </EtherscanLink>
-              <EtherscanLink
+              </ExplorerLink>
+              <ExplorerLink
                 networkId={networkId}
                 path={`token/${ddo.dataToken}`}
               >
                 Datatoken
-              </EtherscanLink>
+              </ExplorerLink>
             </div>
           </div>
 

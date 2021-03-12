@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import Loader from '../../../atoms/Loader'
 import Button from '../../../atoms/Button'
 import styles from './Actions.module.css'
-import EtherscanLink from '../../../atoms/EtherscanLink'
+import ExplorerLink from '../../../atoms/ExplorerLink'
 import SuccessConfetti from '../../../atoms/SuccessConfetti'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
@@ -48,9 +48,9 @@ export default function Actions({
           className={styles.success}
           success={successMessage}
           action={
-            <EtherscanLink networkId={networkId} path={`/tx/${txId}`}>
-              See on Etherscan
-            </EtherscanLink>
+            <ExplorerLink networkId={networkId} path={`/tx/${txId}`}>
+              View transaction
+            </ExplorerLink>
           }
         />
       )}

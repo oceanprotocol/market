@@ -5,7 +5,7 @@ import Tooltip from '../Tooltip'
 import { Profile } from '../../../models/Profile'
 import { Link } from 'gatsby'
 import get3BoxProfile from '../../../utils/profile'
-import EtherscanLink from '../EtherscanLink'
+import ExplorerLink from '../ExplorerLink'
 import { accountTruncate } from '../../../utils/web3'
 import axios from 'axios'
 import { ReactComponent as Info } from '../../../images/info.svg'
@@ -88,9 +88,9 @@ export default function Publisher({
               </Tooltip>
             )}
             {showAdd && <Add />}
-            <EtherscanLink networkId={networkId} path={`address/${account}`}>
+            <ExplorerLink networkId={networkId} path={`address/${account}`}>
               View transaction
-            </EtherscanLink>
+            </ExplorerLink>
           </div>
         </>
       )}

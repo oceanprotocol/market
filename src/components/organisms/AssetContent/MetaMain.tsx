@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import { useAsset } from '../../../providers/Asset'
 import { useWeb3 } from '../../../providers/Web3'
-import EtherscanLink from '../../atoms/EtherscanLink'
+import ExplorerLink from '../../atoms/ExplorerLink'
 import Publisher from '../../atoms/Publisher'
 import Time from '../../atoms/Time'
 import styles from './MetaMain.module.css'
@@ -13,9 +13,9 @@ export default function MetaMain(): ReactElement {
   return (
     <aside className={styles.meta}>
       <p>
-        <EtherscanLink networkId={networkId} path={`token/${ddo?.dataToken}`}>
+        <ExplorerLink networkId={networkId} path={`token/${ddo?.dataToken}`}>
           {`${ddo?.dataTokenInfo.name} — ${ddo?.dataTokenInfo.symbol}`}
-        </EtherscanLink>
+        </ExplorerLink>
       </p>
       <div>
         Published By <Publisher account={owner} />
