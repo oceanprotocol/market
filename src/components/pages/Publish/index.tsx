@@ -29,10 +29,9 @@ export default function PublishPage({
   content: { warning: string; form: FormContent }
 }): ReactElement {
   const { debug } = useUserPreferences()
-  const { accountId } = useWeb3()
+  const { accountId, networkId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
   const { publish, publishError, isLoading, publishStepText } = usePublish()
-
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const [did, setDid] = useState<string>()
@@ -112,6 +111,13 @@ export default function PublishPage({
             />
           ) : (
             <>
+              {networkId === 137 && (
+                <Alert
+                  text="Note: Only republish datatokens from Ethereum mainnet here if there is <1000 OCEAN liquidity in the original pool. Doing otherwise will lead to purgatory"
+                  state="info"
+                  className={styles.alert}
+                />
+              )}
               <Alert
                 text={content.warning}
                 state="info"

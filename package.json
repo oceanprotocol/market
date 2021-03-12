@@ -23,7 +23,7 @@
     "postinstall": "husky install"
   },
   "dependencies": {
-    "@apollo/client": "^3.3.6",
+    "@apollo/client": "^3.3.11",
     "@coingecko/cryptoformat": "^0.4.2",
     "@loadable/component": "^5.14.1",
     "@oceanprotocol/art": "^3.0.0",

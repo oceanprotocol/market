@@ -144,7 +144,7 @@ export default function Consume({
   ])
 
   async function handleConsume() {
-    !hasPreviousOrder && !hasDatatoken && (await buyDT('1'))
+    !hasPreviousOrder && !hasDatatoken && (await buyDT('1', price))
     await consume(
       ddo.id,
       ddo.dataToken,

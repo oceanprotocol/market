@@ -1,8 +1,8 @@
-import { DDO, Logger } from '@oceanprotocol/lib'
+import { DDO, Logger, BestPrice } from '@oceanprotocol/lib'
 import { useEffect, useState } from 'react'
 import { TransactionReceipt } from 'web3-core'
 import { Decimal } from 'decimal.js'
-import { getFirstPoolPrice, getDataTokenPrice } from '../utils/dtUtils'
+import { getFirstPoolPrice } from '../utils/dtUtils'
 import {
   getCreatePricingPoolFeedback,
   getCreatePricingExchangeFeedback,
@@ -29,9 +29,12 @@ interface UsePricing {
   createPricing: (
     priceOptions: PriceOptions
   ) => Promise<TransactionReceipt | string | void>
-  buyDT: (dtAmount: number | string) => Promise<TransactionReceipt | void>
   sellDT: (dtAmount: number | string) => Promise<TransactionReceipt | void>
   mint: (tokensToMint: string) => Promise<TransactionReceipt | void>
+  buyDT: (
+    dtAmount: number | string,
+    price: BestPrice
+  ) => Promise<TransactionReceipt | void>
   pricingStep?: number
   pricingStepText?: string
   pricingError?: string
@@ -113,7 +116,8 @@ function usePricing(ddo: DDO): UsePricing {
   }
 
   async function buyDT(
-    dtAmount: number | string
+    dtAmount: number | string,
+    price: BestPrice
   ): Promise<TransactionReceipt | void> {
     if (!ocean || !accountId) return
 
@@ -124,24 +128,18 @@ function usePricing(ddo: DDO): UsePricing {
       setPricingError(undefined)
       setStep(1, 'buy')
 
-      const bestPrice = await await getDataTokenPrice(
-        ocean,
-        ddo.dataToken,
-        ddo?.price?.type,
-        ddo.price.address
-      )
-      Logger.log('Price found for buying', bestPrice)
-      switch (bestPrice?.type) {
+      Logger.log('Price found for buying', price)
+      switch (price?.type) {
         case 'pool': {
-          const price = new Decimal(bestPrice.value).times(1.05).toString()
-          const maxPrice = new Decimal(bestPrice.value).times(2).toString()
+          const oceanAmmount = new Decimal(price.value).times(1.05).toString()
+          const maxPrice = new Decimal(price.value).times(2).toString()
           setStep(2, 'buy')
-          Logger.log('Buying token from pool', bestPrice, accountId, price)
+          Logger.log('Buying token from pool', price, accountId, price)
           tx = await ocean.pool.buyDT(
             accountId,
-            bestPrice.address,
+            price.address,
             String(dtAmount),
-            price,
+            oceanAmmount,
             maxPrice
           )
           setStep(3, 'buy')
@@ -157,16 +155,16 @@ function usePricing(ddo: DDO): UsePricing {
             Logger.error(`'fixedRateExchangeAddress' not set in config`)
             return
           }
-          Logger.log('Buying token from exchange', bestPrice, accountId)
+          Logger.log('Buying token from exchange', price, accountId)
           await ocean.datatokens.approve(
             config.oceanTokenAddress,
             config.fixedRateExchangeAddress,
-            `${bestPrice.value}`,
+            `${price.value}`,
             accountId
           )
           setStep(2, 'buy')
           tx = await ocean.fixedRateExchange.buyDT(
-            bestPrice.address,
+            price.address,
             `${dtAmount}`,
             accountId
           )

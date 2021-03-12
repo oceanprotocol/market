@@ -89,7 +89,7 @@ export default function Publisher({
             )}
             {showAdd && <Add />}
             <EtherscanLink networkId={networkId} path={`address/${account}`}>
-              Etherscan
+              View transaction
             </EtherscanLink>
           </div>
         </>

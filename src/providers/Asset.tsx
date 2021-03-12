@@ -15,7 +15,9 @@ import { retrieveDDO } from '../utils/aquarius'
 import { MetadataMarket } from '../@types/MetaData'
 import { useOcean } from './Ocean'
 import { useWeb3 } from './Web3'
-import { getDataTokenPrice } from '../utils/dtUtils'
+import { gql, useQuery } from '@apollo/client'
+import { PoolPrice } from '../@types/apollo/PoolPrice'
+import { FrePrice } from '../@types/apollo/FrePrice'
 
 interface AssetProviderValue {
   isInPurgatory: boolean
@@ -29,8 +31,23 @@ interface AssetProviderValue {
   error?: string
   refreshInterval: number
   refreshDdo: (token?: CancelToken) => Promise<void>
-  refreshPrice: () => Promise<void>
 }
+
+const poolQuery = gql`
+  query PoolPrice($datatoken: String) {
+    pools(where: { datatokenAddress: $datatoken }) {
+      spotPrice
+    }
+  }
+`
+
+const freQuery = gql`
+  query FrePrice($datatoken: String) {
+    fixedRateExchanges(orderBy: id, where: { datatoken: $datatoken }) {
+      rate
+    }
+  }
+`
 
 const AssetContext = createContext({} as AssetProviderValue)
 
@@ -54,19 +71,46 @@ function AssetProvider({
   const [price, setPrice] = useState<BestPrice>()
   const [owner, setOwner] = useState<string>()
   const [error, setError] = useState<string>()
+  const [variables, setVariables] = useState({})
 
-  const refreshPrice = useCallback(async () => {
-    if (!ddo || !ocean) return
+  const {
+    refetch: refetchFre,
+    startPolling: startPollingFre,
+    data: frePrice
+  } = useQuery<FrePrice>(freQuery, {
+    variables,
+    skip: true
+  })
+  const {
+    refetch: refetchPool,
+    startPolling: startPollingPool,
+    data: poolPrice
+  } = useQuery<PoolPrice>(poolQuery, {
+    variables,
+    skip: true
+  })
+  useEffect(() => {
+    if (!ddo || !variables) return
+    if (ddo.price.type === 'exchange') {
+      refetchFre(variables)
+      startPollingFre(refreshInterval)
+    } else {
+      refetchPool(variables)
+      startPollingPool(refreshInterval)
+    }
+  }, [ddo, variables])
 
-    const newPrice = await getDataTokenPrice(
-      ocean,
-      ddo.dataToken,
-      ddo?.price?.type,
-      ddo.price.address
-    )
-    setPrice(newPrice)
-    Logger.log(`Refreshed asset price: ${newPrice?.value}`, newPrice)
-  }, [ocean, ddo])
+  useEffect(() => {
+    if (!frePrice || frePrice.fixedRateExchanges.length === 0) return
+    price.value = frePrice.fixedRateExchanges[0].rate
+    setPrice(price)
+  }, [frePrice])
+  useEffect(() => {
+    if (!poolPrice || poolPrice.pools.length === 0) return
+    price.value = poolPrice.pools[0].spotPrice
+    price.value = 3222222
+    setPrice(price)
+  }, [poolPrice])
 
   const fetchDdo = async (token?: CancelToken) => {
     Logger.log('Init asset, get ddo')
@@ -115,21 +159,6 @@ function AssetProvider({
     }
   }, [asset, config?.metadataCacheUri])
 
-  useEffect(() => {
-    // Re-fetch price periodically, triggering re-calculation of everything
-    let isMounted = true
-
-    const interval = setInterval(() => {
-      if (!isMounted) return
-      refreshPrice()
-    }, refreshInterval)
-
-    return () => {
-      clearInterval(interval)
-      isMounted = false
-    }
-  }, [ddo, networkId, refreshPrice])
-
   const setPurgatory = useCallback(async (did: string): Promise<void> => {
     if (!did) return
 
@@ -143,24 +172,23 @@ function AssetProvider({
     }
   }, [])
 
-  const initMetadata = useCallback(
-    async (ddo: DDO): Promise<void> => {
-      if (!ddo) return
+  const initMetadata = useCallback(async (ddo: DDO): Promise<void> => {
+    if (!ddo) return
 
-      Logger.log('Init metadata')
-      // Set price & metadata from DDO first
-      setPrice(ddo.price)
-      const { attributes } = ddo.findServiceByType('metadata')
-      setMetadata((attributes as unknown) as MetadataMarket)
-      setTitle(attributes?.main.name)
-      setOwner(ddo.publicKey[0].owner)
-      setIsInPurgatory(ddo.isInPurgatory === 'true')
+    Logger.log('Init metadata')
+    // Set price & metadata from DDO first
+    setPrice(ddo.price)
 
-      await setPurgatory(ddo.id)
-      await refreshPrice()
-    },
-    [refreshPrice, setPurgatory]
-  )
+    setVariables({ datatoken: ddo?.dataToken.toLowerCase() })
+
+    const { attributes } = ddo.findServiceByType('metadata')
+    setMetadata((attributes as unknown) as MetadataMarket)
+    setTitle(attributes?.main.name)
+    setOwner(ddo.publicKey[0].owner)
+    setIsInPurgatory(ddo.isInPurgatory === 'true')
+
+    await setPurgatory(ddo.id)
+  }, [])
 
   useEffect(() => {
     if (!ddo) return
@@ -181,8 +209,7 @@ function AssetProvider({
           isInPurgatory,
           purgatoryData,
           refreshInterval,
-          refreshDdo,
-          refreshPrice
+          refreshDdo
         } as AssetProviderValue
       }
     >
