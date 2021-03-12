@@ -35,13 +35,13 @@ export async function getUserInfo(
   if (!ocean) return { account: null, balance: { eth: '0', ocean: '0' } }
 
   const account = (await ocean.accounts.list())[0]
-  Logger.log('Account ', account)
+  Logger.log('[ocean] Account: ', account)
 
   const balance = {
     eth: await account.getEtherBalance(),
     ocean: await account.getOceanBalance()
   }
-  Logger.log('balance', JSON.stringify(balance))
+  Logger.log('[ocean] Balance: ', JSON.stringify(balance))
 
   return { account, balance }
 }

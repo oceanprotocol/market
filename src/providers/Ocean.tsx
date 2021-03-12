@@ -55,7 +55,7 @@ function OceanProvider({
     async (newConfig?: ConfigHelperConfig | Config) => {
       try {
         const usedConfig = newConfig || config
-        Logger.log('Connecting Ocean...', usedConfig)
+        Logger.log('[ocean] Connecting Ocean...', usedConfig)
 
         usedConfig.web3Provider = web3 || initialConfig.web3Provider
 
@@ -66,10 +66,10 @@ function OceanProvider({
         if (usedConfig.web3Provider) {
           const newOcean = await Ocean.getInstance(usedConfig)
           setOcean(newOcean)
-          Logger.log('Ocean instance created.', newOcean)
+          Logger.log('[ocean] Ocean instance created.', newOcean)
         }
       } catch (error) {
-        Logger.error(error)
+        Logger.error('[ocean] Error: ', error.message)
       }
     },
     [web3, config, initialConfig.web3Provider]
@@ -79,7 +79,6 @@ function OceanProvider({
     if (!ocean || !account || !web3) return
 
     const { balance } = await getUserInfo(ocean)
-    Logger.log('balance', JSON.stringify(balance))
     setBalance(balance)
   }
 
@@ -133,7 +132,7 @@ function OceanProvider({
       try {
         await connect(newConfig)
       } catch (error) {
-        Logger.error(error.message)
+        Logger.error('[ocean] Error: ', error.message)
       }
     }
     reconnect()

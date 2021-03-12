@@ -78,42 +78,56 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
     if (!web3Modal) return
 
     try {
-      Logger.log('Connecting Web3...')
+      Logger.log('[web3] Connecting Web3...')
 
       const provider = await web3Modal?.connect()
       setWeb3Provider(provider)
 
       const web3 = new Web3(provider)
       setWeb3(web3)
-      Logger.log('Web3 created.', web3)
+      Logger.log('[web3] Web3 created.', web3)
 
       const networkId = await web3.eth.net.getId()
       setNetworkId(networkId)
-      Logger.log('network id ', networkId)
+      Logger.log('[web3] network id ', networkId)
 
       const accountId = (await web3.eth.getAccounts())[0]
       setAccountId(accountId)
-      Logger.log('account id', accountId)
+      Logger.log('[web3] account id', accountId)
     } catch (error) {
-      Logger.error(error)
+      Logger.error('[web3] Error: ', error.message)
     }
   }, [web3Modal])
 
   // -----------------------------------
-  // Create iniital Web3Modal instance,
-  // and reconnect automatically for returning users
+  // Create initial Web3Modal instance
   // -----------------------------------
   useEffect(() => {
-    async function init() {
-      if (web3Modal) return
+    if (web3Modal) return
 
-      const web3ModalInstance = new Web3Modal(web3ModalOpts)
+    async function init() {
+      // note: needs artificial await here so the log message is reached and output
+      const web3ModalInstance = await new Web3Modal(web3ModalOpts)
       setWeb3Modal(web3ModalInstance)
-      Logger.log('Web3Modal instance created.', web3ModalInstance)
+      Logger.log('[web3] Web3Modal instance created.', web3ModalInstance)
     }
     init()
+  }, [connect, web3Modal])
 
-    web3Modal?.cachedProvider && connect()
+  // -----------------------------------
+  // Reconnect automatically for returning users
+  // -----------------------------------
+  useEffect(() => {
+    if (!web3Modal?.cachedProvider) return
+
+    async function connectCached() {
+      Logger.log(
+        '[web3] Connecting to cached provider: ',
+        web3Modal.cachedProvider
+      )
+      await connect()
+    }
+    connectCached()
   }, [connect, web3Modal])
 
   async function logout() {
@@ -124,13 +138,13 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
   // Handle change events
   // -----------------------------------
   async function handleNetworkChanged(networkId: string) {
-    Logger.log('Network changed', networkId)
+    Logger.log('[web3] Network changed', networkId)
     // const networkId = Number(chainId.replace('0x', ''))
     setNetworkId(Number(networkId))
   }
 
   async function handleAccountsChanged(accounts: string[]) {
-    Logger.log('Account changed', accounts[0])
+    Logger.log('[web3] Account changed', accounts[0])
     setAccountId(accounts[0])
   }
 
