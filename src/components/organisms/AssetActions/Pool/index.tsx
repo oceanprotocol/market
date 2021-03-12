@@ -61,14 +61,7 @@ export default function Pool(): ReactElement {
   const content = data.content.edges[0].node.childContentJson.pool
 
   const { ocean, accountId, networkId } = useOcean()
-  const {
-    isInPurgatory,
-    ddo,
-    owner,
-    price,
-    refreshInterval,
-    refreshPrice
-  } = useAsset()
+  const { isInPurgatory, ddo, owner, price, refreshInterval } = useAsset()
   const dtSymbol = ddo?.dataTokenInfo.symbol
 
   const [poolTokens, setPoolTokens] = useState<string>()
@@ -209,7 +202,7 @@ export default function Pool(): ReactElement {
 
   const refreshInfo = async () => {
     setRefreshPool(!refreshPool)
-    await refreshPrice()
+    // await refreshPrice()
   }
 
   return (
