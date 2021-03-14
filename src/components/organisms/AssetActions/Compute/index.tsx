@@ -1,10 +1,9 @@
 import React, { useState, ReactElement, ChangeEvent, useEffect } from 'react'
 import { DDO, Logger } from '@oceanprotocol/lib'
-import Loader from '../../atoms/Loader'
-import Web3Feedback from '../../molecules/Wallet/Feedback'
-import Dropzone from '../../atoms/Dropzone'
-import Price from '../../atoms/Price'
-import File from '../../atoms/File'
+import Loader from '../../../atoms/Loader'
+import Web3Feedback from '../../../molecules/Wallet/Feedback'
+import Dropzone from '../../../atoms/Dropzone'
+import Price from '../../../atoms/Price'
 import {
   computeOptions,
   useCompute,
@@ -12,12 +11,19 @@ import {
   useOcean,
   usePricing
 } from '@oceanprotocol/react'
-import styles from './Compute.module.css'
-import Input from '../../atoms/Input'
-import Alert from '../../atoms/Alert'
-import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
-import checkPreviousOrder from '../../../utils/checkPreviousOrder'
-import { useAsset } from '../../../providers/Asset'
+import styles from './index.module.css'
+import Input from '../../../atoms/Input'
+import Alert from '../../../atoms/Alert'
+import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
+import checkPreviousOrder from '../../../../utils/checkPreviousOrder'
+import { useAsset } from '../../../../providers/Asset'
+import Button from '../../../atoms/Button'
+import {
+  validationSchema,
+  getInitialValues
+} from '../../../../models/FormStartComputeDataset'
+import FormStartComputeDataset from './FormComputeDataset'
+import { Formik } from 'formik'
 
 export default function Compute({
   ddo,
@@ -117,9 +123,6 @@ export default function Compute({
   return (
     <>
       <div className={styles.info}>
-        <div className={styles.filewrapper}>
-          <File file={metadataService.attributes.main.files[0]} small />
-        </div>
         <div className={styles.pricewrapper}>
           <Price ddo={ddo} conversion />
           {hasDatatoken && (
@@ -143,33 +146,25 @@ export default function Compute({
           onChange={handleSelectChange}
         />
       ) : (
-        <Input
-          type="select"
-          name="algorithm"
-          label="Select image to run the algorithm"
-          placeholder=""
-          size="small"
-          value={computeType}
-          options={computeOptions.map((x) => x.name)}
-          onChange={handleSelectChange}
-        />
+        <Formik
+          initialValues={[]}
+          validationSchema={validationSchema}
+          onSubmit={async (values, { resetForm }) => {
+            // move user's focus to top of screen
+            window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+            // kick off editing
+            // await handleSubmit(values, resetForm)
+            await startJob()
+          }}
+        >
+          <FormStartComputeDataset></FormStartComputeDataset>
+        </Formik>
       )}
-      <Dropzone multiple={false} handleOnDrop={onDrop} />
-
-      <div className={styles.actions}>
-        {isLoading ? (
-          <Loader message={computeStepText} />
-        ) : (
-          <Alert text="Compute is coming back at a later stage." state="info" />
-          // <Button
-          //   style="primary"
-          //   onClick={() => startJob()}
-          //   disabled={isComputeButtonDisabled}
-          // >
-          //   {hasDatatoken || hasPreviousOrder ? 'Start job' : 'Buy'}
-          // </Button>
-        )}
-      </div>
+      {type === 'algorithm' ? (
+        <Dropzone multiple={false} handleOnDrop={onDrop} />
+      ) : (
+        ''
+      )}
 
       <footer className={styles.feedback}>
         {computeError !== undefined && (

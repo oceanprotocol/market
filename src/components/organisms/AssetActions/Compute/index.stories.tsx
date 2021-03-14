@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
-import Compute from './Compute'
-import ddo from '../../../../tests/unit/__fixtures__/ddo'
+import Compute from '.'
+import ddo from '../../../../../tests/unit/__fixtures__/ddo'
 import { DDO } from '@oceanprotocol/lib'
 
 export default {
