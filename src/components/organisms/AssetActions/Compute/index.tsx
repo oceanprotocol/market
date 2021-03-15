@@ -1,13 +1,12 @@
 import React, { useState, ReactElement, ChangeEvent, useEffect } from 'react'
-import { DDO, Logger } from '@oceanprotocol/lib'
+import { File as FileMetadata, DDO, Logger } from '@oceanprotocol/lib'
 import Loader from '../../../atoms/Loader'
+import File from '../../../atoms/File'
 import Web3Feedback from '../../../molecules/Wallet/Feedback'
-import Dropzone from '../../../atoms/Dropzone'
 import Price from '../../../atoms/Price'
 import {
   computeOptions,
   useCompute,
-  readFileContent,
   useOcean,
   usePricing
 } from '@oceanprotocol/react'
@@ -17,7 +16,6 @@ import Alert from '../../../atoms/Alert'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import checkPreviousOrder from '../../../../utils/checkPreviousOrder'
 import { useAsset } from '../../../../providers/Asset'
-import Button from '../../../atoms/Button'
 import {
   validationSchema,
   getInitialValues
@@ -28,11 +26,13 @@ import { Formik } from 'formik'
 export default function Compute({
   ddo,
   isBalanceSufficient,
-  dtBalance
+  dtBalance,
+  file
 }: {
   ddo: DDO
   isBalanceSufficient: boolean
   dtBalance: string
+  file: FileMetadata
 }): ReactElement {
   const { marketFeeAddress } = useSiteMetadata()
 
@@ -52,7 +52,6 @@ export default function Compute({
   )
   const [algorithmRawCode, setAlgorithmRawCode] = useState('')
   const [isPublished, setIsPublished] = useState(false)
-  const [file, setFile] = useState(null)
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
   const [previousOrderId, setPreviousOrderId] = useState<string>()
   const isComputeButtonDisabled =
@@ -73,12 +72,6 @@ export default function Compute({
     }
     checkPreviousOrders()
   }, [ocean, ddo, accountId])
-
-  const onDrop = async (files: File[]) => {
-    setFile(files[0])
-    const fileText = await readFileContent(files[0])
-    setAlgorithmRawCode(fileText)
-  }
 
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const comType = event.target.value
@@ -111,7 +104,6 @@ export default function Compute({
 
       setHasPreviousOrder(true)
       setIsPublished(true)
-      setFile(null)
     } catch (error) {
       setError('Failed to start job!')
       Logger.error(error.message)
@@ -123,6 +115,9 @@ export default function Compute({
   return (
     <>
       <div className={styles.info}>
+        <div className={styles.filewrapper}>
+          <File file={file} small />
+        </div>
         <div className={styles.pricewrapper}>
           <Price ddo={ddo} conversion />
           {hasDatatoken && (
@@ -159,11 +154,6 @@ export default function Compute({
         >
           <FormStartComputeDataset />
         </Formik>
-      )}
-      {type === 'algorithm' ? (
-        <Dropzone multiple={false} handleOnDrop={onDrop} />
-      ) : (
-        ''
       )}
 
       <footer className={styles.feedback}>
