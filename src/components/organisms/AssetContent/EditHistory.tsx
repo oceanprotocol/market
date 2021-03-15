@@ -10,8 +10,6 @@ import { ReceiptData_datatokens_updates as ReceiptData } from '../../../@types/a
 const getReceipts = gql`
   query ReceiptData($address: ID!) {
     datatokens(where: { id: $address }) {
-      createTime
-      tx
       updates(orderBy: timestamp, orderDirection: desc) {
         id
         tx
@@ -33,8 +31,15 @@ export default function EditHistory(): ReactElement {
 
   useEffect(() => {
     if (!data || data.datatokens.length === 0) return
-    setReceipts(data.datatokens[0].updates)
-    setCreationTx(data.datatokens[0].tx)
+
+    const receiptCollectionLength = data.datatokens[0].updates.length
+    const creationData = data.datatokens[0].updates[receiptCollectionLength - 1]
+    setCreationTx(creationData.tx)
+
+    const receiptCollection = [...data.datatokens[0].updates]
+    receiptCollection.splice(-1, 1)
+
+    setReceipts(receiptCollection)
   }, [data])
 
   return (
