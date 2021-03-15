@@ -1,2 +1,57 @@
 .selection {
+  padding: calc(var(--spacer) / 4);
+  border: 1px solid var(--border-color);
+  background-color: var(--background-highlight);
+  border-radius: var(--border-radius);
+  margin-bottom: calc(var(--spacer) / 2);
+  font-size: var(--font-size-small);
+
+  max-height: 300px;
+  /* smooth overflow scrolling for pre-iOS 13 */
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--border-color);
+  padding-top: calc(var(--spacer) / 4);
+  padding-bottom: calc(var(--spacer) / 4);
+}
+
+.row > div {
+  width: 100%;
+}
+
+.content {
+  display: flex;
+  align-items: baseline;
+  width: 100%;
+}
+
+.input {
+  margin-top: 0;
+  margin-left: 0;
+  margin-right: calc(var(--spacer) / 4);
+}
+
+.title {
+  font-size: var(--font-size-small);
+  margin: 0;
+}
+
+.link {
+  margin-left: calc(var(--spacer) / 4);
+}
+
+.link svg {
+  fill: var(--color-primary);
+  width: 0.7em;
+  height: 0.7em;
+}
+
+.price {
+  display: inline-block;
+  font-size: var(--font-size-small) !important;
 }

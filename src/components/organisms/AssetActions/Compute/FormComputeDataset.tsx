@@ -67,7 +67,7 @@ export default function FromStartCompute({}: {}): ReactElement {
     validateField(field.name)
   }
 
-  //must be moved to a util method used also on edit compute metadata
+  // must be moved to a util method used also on edit compute metadata
   async function getAlgorithms() {
     const query = {
       page: 1,
@@ -120,18 +120,17 @@ export default function FromStartCompute({}: {}): ReactElement {
 
   return (
     <Form className={styles.form}>
-      <div className={styles.fieldRadio}>
-        {content.form.data.map((field: FormFieldProps) => (
-          <Field
-            key={field.name}
-            {...field}
-            component={Input}
-            onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-              handleFieldChange(e, field)
-            }
-          />
-        ))}
-      </div>
+      {content.form.data.map((field: FormFieldProps) => (
+        <Field
+          key={field.name}
+          {...field}
+          component={Input}
+          onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+            handleFieldChange(e, field)
+          }
+        />
+      ))}
+
       <footer className={styles.actions}>
         <div className={styles.actions}>
           {isLoading ? (
