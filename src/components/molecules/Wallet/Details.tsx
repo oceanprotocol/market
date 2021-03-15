@@ -7,7 +7,6 @@ import { getProviderInfo, IProviderInfo } from 'web3modal'
 import Conversion from '../../atoms/Price/Conversion'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../../providers/UserPreferences'
-import Logo from '../../../images/Logo.svg'
 
 export default function Details(): ReactElement {
   const { balance, config, connect, logout, web3Provider } = useOcean()
@@ -37,7 +36,8 @@ export default function Details(): ReactElement {
             address: config.oceanTokenAddress,
             symbol: 'OCEAN',
             decimals: 18,
-            image: Logo
+            image:
+              'https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png'
           }
         },
         id: Math.round(Math.random() * 100000)
