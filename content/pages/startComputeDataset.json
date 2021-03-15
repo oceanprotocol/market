@@ -5,7 +5,7 @@
     "data": [
       {
         "name": "algorithm",
-        "label": "Select an approved algorithm",
+        "label": "Select an algorithm to start a compute job",
         "type": "assetSelection",
         "value": false,
         "options": [],
