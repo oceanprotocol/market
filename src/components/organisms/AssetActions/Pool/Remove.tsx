@@ -19,6 +19,7 @@ import { getMaxPercentRemove } from './utils'
 import { graphql, useStaticQuery } from 'gatsby'
 import debounce from 'lodash.debounce'
 import UserLiquidity from '../../../atoms/UserLiquidity'
+import InputElement from '../../../atoms/Input/InputElement'
 
 const contentQuery = graphql`
   query PoolRemoveQuery {
@@ -63,6 +64,8 @@ export default function Remove({
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childContentJson.pool.remove
 
+  const slippagePresets = ['5', '10', '15', '25', '50']
+
   const { ocean, accountId } = useOcean()
   const [amountPercent, setAmountPercent] = useState('0')
   const [amountMaxPercent, setAmountMaxPercent] = useState('100')
@@ -72,6 +75,9 @@ export default function Remove({
   const [isAdvanced, setIsAdvanced] = useState(false)
   const [isLoading, setIsLoading] = useState<boolean>()
   const [txId, setTxId] = useState<string>()
+  const [oceanAmount, setOceanAmount] = useState<string>('0')
+  const [slippage, setSlippage] = useState<string>('5')
+  const [maxShares, setMaxShares] = useState<string>('0')
 
   async function handleRemoveLiquidity() {
     setIsLoading(true)
@@ -88,7 +94,7 @@ export default function Remove({
               accountId,
               poolAddress,
               amountOcean,
-              amountPoolShares
+              maxShares
             )
 
       setTxId(result?.transactionHash)
@@ -148,22 +154,22 @@ export default function Remove({
   ])
 
   // Set amountPoolShares based on set slider value
-  function handleAmountPercentChange(e: ChangeEvent<HTMLInputElement>) {
-    setAmountPercent(e.target.value)
-    if (!poolTokens) return
+  // function handleAmountPercentChange(e: ChangeEvent<HTMLInputElement>) {
+  //   setAmountPercent(e.target.value)
+  //   if (!poolTokens) return
 
-    const amountPoolShares = (Number(e.target.value) / 100) * Number(poolTokens)
-    setAmountPoolShares(`${amountPoolShares}`)
-  }
+  //   const amountPoolShares = (Number(e.target.value) / 100) * Number(poolTokens)
+  //   setAmountPoolShares(`${amountPoolShares}`)
+  // }
 
-  function handleMaxButton(e: ChangeEvent<HTMLInputElement>) {
-    e.preventDefault()
-    setAmountPercent(amountMaxPercent)
+  // function handleMaxButton(e: ChangeEvent<HTMLInputElement>) {
+  //   e.preventDefault()
+  //   setAmountPercent(amountMaxPercent)
 
-    const amountPoolShares =
-      (Number(amountMaxPercent) / 100) * Number(poolTokens)
-    setAmountPoolShares(`${amountPoolShares}`)
-  }
+  //   const amountPoolShares =
+  //     (Number(amountMaxPercent) / 100) * Number(poolTokens)
+  //   setAmountPoolShares(`${amountPoolShares}`)
+  // }
 
   function handleAdvancedButton(e: FormEvent<HTMLButtonElement>) {
     e.preventDefault()
@@ -178,33 +184,41 @@ export default function Remove({
     }
   }
 
+  async function computePoolSharesNeeded() {
+    const poolShares = await ocean.pool.getPoolSharesRequiredToRemoveOcean(
+      poolAddress,
+      oceanAmount
+    )
+    setAmountPoolShares(poolShares)
+  }
+
+  function handleOceanAmountChange(e: ChangeEvent<HTMLSelectElement>) {
+    setOceanAmount(e.target.value.toString())
+    computePoolSharesNeeded()
+  }
+
+  function handleSlippageChange(e: ChangeEvent<HTMLSelectElement>) {
+    setSlippage(e.target.value.toString())
+    const maximumShares =
+      Number(amountPoolShares) * (100 + Number(e.target.value))
+    setMaxShares(maximumShares.toString())
+  }
+
   return (
     <div className={styles.remove}>
       <Header title={content.title} backAction={() => setShowRemove(false)} />
 
       <form className={styles.removeInput}>
         <UserLiquidity amount={poolTokens} symbol="pool shares" />
-
+        <InputElement
+          name="oceanAmount"
+          type="number"
+          placeholder="0"
+          value={oceanAmount}
+          prefix="OCEAN"
+          onChange={handleOceanAmountChange}
+        />
         <div className={styles.range}>
-          <h3>{amountPercent}%</h3>
-          <div className={styles.slider}>
-            <input
-              type="range"
-              min="0"
-              max={amountMaxPercent}
-              value={amountPercent}
-              onChange={handleAmountPercentChange}
-            />
-            <Button
-              style="text"
-              size="small"
-              className={styles.maximum}
-              onClick={handleMaxButton}
-            >
-              {`${amountMaxPercent}% max`}
-            </Button>
-          </div>
-
           <FormHelp>
             {isAdvanced === true ? content.advanced : content.simple}
           </FormHelp>
@@ -231,6 +245,19 @@ export default function Remove({
             <Token symbol={dtSymbol} balance={amountDatatoken} />
           )}
         </div>
+      </div>
+      <div className={styles.slippage}>
+        <strong>Expected price impact</strong>
+        <InputElement
+          name="slippage"
+          type="select"
+          size="mini"
+          postfix="%"
+          sortOptions={false}
+          options={slippagePresets}
+          value={slippage}
+          onChange={handleSlippageChange}
+        />
       </div>
 
       <Actions
