@@ -7,11 +7,13 @@ import { getProviderInfo, IProviderInfo } from 'web3modal'
 import Conversion from '../../atoms/Price/Conversion'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../../providers/UserPreferences'
+import Logo from '../../../images/Logo.svg'
 
 export default function Details(): ReactElement {
-  const { balance, connect, logout, web3Provider } = useOcean()
+  const { balance, config, connect, logout, web3Provider } = useOcean()
   const { locale } = useUserPreferences()
   const [providerInfo, setProviderInfo] = useState<IProviderInfo>()
+  const provider = window.web3.currentProvider
   // const [portisNetwork, setPortisNetwork] = useState<string>()
 
   // Workaround cause getInjectedProviderName() always returns `MetaMask`
@@ -22,6 +24,33 @@ export default function Details(): ReactElement {
     const providerInfo = getProviderInfo(web3Provider)
     setProviderInfo(providerInfo)
   }, [web3Provider])
+
+  console.log(config.oceanTokenAddress)
+
+  function addOceanToWallet() {
+    provider.sendAsync(
+      {
+        method: 'metamask_watchAsset',
+        params: {
+          type: 'ERC20',
+          options: {
+            address: config.oceanTokenAddress,
+            symbol: 'OCEAN',
+            decimals: 18,
+            image: Logo
+          }
+        },
+        id: Math.round(Math.random() * 100000)
+      },
+      (err: Error, added: boolean) => {
+        if (added) {
+          console.log('Added')
+        } else {
+          console.log('Error:', err)
+        }
+      }
+    )
+  }
 
   // Handle network change for Portis
   // async function handlePortisNetworkChange(e: ChangeEvent<HTMLSelectElement>) {
@@ -47,9 +76,11 @@ export default function Details(): ReactElement {
         ))}
 
         <li className={styles.actions}>
-          <span title="Connected provider">
-            <img className={styles.walletLogo} src={providerInfo?.logo} />
-            {providerInfo?.name}
+          <span title="Connected provider" className={styles.walletInfo}>
+            <div>
+              <img className={styles.walletLogo} src={providerInfo?.logo} />
+              {providerInfo?.name}
+            </div>
             {/* {providerInfo?.name === 'Portis' && (
               <InputElement
                 name="network"
@@ -60,6 +91,17 @@ export default function Details(): ReactElement {
                 onChange={handlePortisNetworkChange}
               />
             )} */}
+            {providerInfo?.name === 'MetaMask' && (
+              <Button
+                style="text"
+                size="small"
+                onClick={() => {
+                  addOceanToWallet()
+                }}
+              >
+                Add Ocean
+              </Button>
+            )}
           </span>
           <p>
             {providerInfo?.name === 'Portis' && (
