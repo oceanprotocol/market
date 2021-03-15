@@ -6,6 +6,9 @@ import FilesInput from '../../molecules/FormFields/FilesInput'
 import Terms from '../../molecules/FormFields/Terms'
 import Datatoken from '../../molecules/FormFields/Datatoken'
 import classNames from 'classnames/bind'
+import AssetSelection, {
+  AssetSelectionAsset
+} from '../../molecules/FormFields/AssetSelection'
 
 const cx = classNames.bind(styles)
 
@@ -89,6 +92,23 @@ export default function InputElement({
               </div>
             ))}
         </div>
+      )
+    case 'assetSelection':
+      return (
+        <AssetSelection
+          assets={options as AssetSelectionAsset[]}
+          {...field}
+          {...props}
+        />
+      )
+    case 'assetSelectionMultiple':
+      return (
+        <AssetSelection
+          assets={options as AssetSelectionAsset[]}
+          multiple
+          {...field}
+          {...props}
+        />
       )
     case 'files':
       return <FilesInput name={name} {...field} {...props} />
