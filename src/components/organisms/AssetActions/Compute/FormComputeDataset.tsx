@@ -63,10 +63,11 @@ export default function FromStartCompute({}: {}): ReactElement {
     e: ChangeEvent<HTMLSelectElement>,
     field: FormFieldProps
   ) {
-    // setFieldValue(field.name, value)
-    // validateField(field.name)
+    setFieldValue(field.name, e.target.value)
+    validateField(field.name)
   }
 
+  //must be moved to a util method used also on edit compute metadata
   async function getAlgorithms() {
     const query = {
       page: 1,
@@ -81,6 +82,7 @@ export default function FromStartCompute({}: {}): ReactElement {
 
     const source = axios.CancelToken.source()
     const didList: string[] = []
+    const priceList: any = {}
     const result = await queryMetadata(
       query as any,
       config.metadataCacheUri,
@@ -92,32 +94,24 @@ export default function FromStartCompute({}: {}): ReactElement {
         .toChecksumAddress(ddo.dataToken)
         .replace('0x', 'did:op:')
       didList.push(did)
+      priceList[did] = ddo.price.value
     })
 
+    console.log('result', result)
     const ddoNames = await getAssetsNames(
       didList,
       config.metadataCacheUri,
       source.token
     )
 
-    const algorithmList: AlgorithmOption[] = []
+    content.form.data[0].options = []
     didList.forEach((did: string) => {
-      algorithmList.push({
+      content.form.data[0].options.push({
         did: did,
-        name: ddoNames[did]
+        name: ddoNames[did],
+        price: priceList[did]
       })
     })
-    console.log('algorithm list', algorithmList)
-    setAlgorithms(algorithmList)
-    const select = document.getElementsByTagName('select')[0]
-    algorithms &&
-      algorithms.forEach((algorithm: AlgorithmOption) => {
-        const option = document.createElement('option')
-        option.text = algorithm.name
-        option.value = algorithm.did
-        select.add(option)
-      })
-    console.log(select)
   }
 
   useEffect(() => {
@@ -126,16 +120,18 @@ export default function FromStartCompute({}: {}): ReactElement {
 
   return (
     <Form className={styles.form}>
-      {content.form.data.map((field: FormFieldProps) => (
-        <Field
-          key={field.name}
-          {...field}
-          component={Input}
-          onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-            handleFieldChange(e, field)
-          }
-        />
-      ))}
+      <div className={styles.fieldRadio}>
+        {content.form.data.map((field: FormFieldProps) => (
+          <Field
+            key={field.name}
+            {...field}
+            component={Input}
+            onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+              handleFieldChange(e, field)
+            }
+          />
+        ))}
+      </div>
       <footer className={styles.actions}>
         <div className={styles.actions}>
           {isLoading ? (
@@ -146,7 +142,7 @@ export default function FromStartCompute({}: {}): ReactElement {
               //   onClick={() => startJob()}
               // disabled={isComputeButtonDisabled}
             >
-              'Start job
+              Start compute job
             </Button>
           )}
         </div>

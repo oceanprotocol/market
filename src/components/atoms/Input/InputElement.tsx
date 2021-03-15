@@ -90,6 +90,33 @@ export default function InputElement({
             ))}
         </div>
       )
+    case 'algorithm':
+      return (
+        <div className={styles.radioGroup}>
+          {options &&
+            options.map((option: any, index: number) => (
+              <div className={styles.radioWrap} key={index}>
+                <input
+                  className={styles[type]}
+                  id={slugify(option.name)}
+                  type="radio"
+                  name={name}
+                  value={option.did}
+                  {...props}
+                />
+                <label
+                  className={styles.radioLabel}
+                  htmlFor={slugify(option.name)}
+                >
+                  <div className={styles.algorithmLabel}>
+                    <div>{option.name}</div>
+                    <div>+{option.price} OCEAN</div>
+                  </div>
+                </label>
+              </div>
+            ))}
+        </div>
+      )
     case 'files':
       return <FilesInput name={name} {...field} {...props} />
     case 'datatoken':

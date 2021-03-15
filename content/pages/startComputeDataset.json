@@ -6,9 +6,8 @@
       {
         "name": "algorithm",
         "label": "Select an approved algorithm",
-        "help": "Choose an an approved algorithm from the list to run on dataset",
-        "type": "select",
-        "multiple": true,
+        "type": "algorithm",
+        "value": false,
         "options": [],
         "sortOptions": false
       }

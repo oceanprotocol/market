@@ -2,7 +2,7 @@ export interface FormFieldProps {
   label: string
   name: string
   type?: string
-  options?: string[]
+  options?: any[]
   sortOptions?: boolean
   required?: boolean
   disabled?: boolean
