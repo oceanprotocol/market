@@ -157,7 +157,7 @@ export default function Compute({
             await startJob()
           }}
         >
-          <FormStartComputeDataset></FormStartComputeDataset>
+          <FormStartComputeDataset />
         </Formik>
       )}
       {type === 'algorithm' ? (

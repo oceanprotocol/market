@@ -6,7 +6,7 @@
       {
         "name": "algorithm",
         "label": "Select an approved algorithm",
-        "type": "algorithm",
+        "type": "assetSelection",
         "value": false,
         "options": [],
         "sortOptions": false

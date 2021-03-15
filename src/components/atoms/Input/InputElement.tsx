@@ -6,6 +6,9 @@ import FilesInput from '../../molecules/FormFields/FilesInput'
 import Terms from '../../molecules/FormFields/Terms'
 import Datatoken from '../../molecules/FormFields/Datatoken'
 import classNames from 'classnames/bind'
+import AssetSelection, {
+  AssetSelectionAsset
+} from '../../molecules/FormFields/AssetSelection'
 
 const cx = classNames.bind(styles)
 
@@ -90,32 +93,22 @@ export default function InputElement({
             ))}
         </div>
       )
-    case 'algorithm':
+    case 'assetSelection':
       return (
-        <div className={styles.radioGroup}>
-          {options &&
-            options.map((option: any, index: number) => (
-              <div className={styles.radioWrap} key={index}>
-                <input
-                  className={styles[type]}
-                  id={slugify(option.name)}
-                  type="radio"
-                  name={name}
-                  value={option.did}
-                  {...props}
-                />
-                <label
-                  className={styles.radioLabel}
-                  htmlFor={slugify(option.name)}
-                >
-                  <div className={styles.algorithmLabel}>
-                    <div>{option.name}</div>
-                    <div>+{option.price} OCEAN</div>
-                  </div>
-                </label>
-              </div>
-            ))}
-        </div>
+        <AssetSelection
+          assets={(options as unknown) as AssetSelectionAsset[]}
+          {...field}
+          {...props}
+        />
+      )
+    case 'assetSelectionMultiple':
+      return (
+        <AssetSelection
+          assets={(options as unknown) as AssetSelectionAsset[]}
+          multiple
+          {...field}
+          {...props}
+        />
       )
     case 'files':
       return <FilesInput name={name} {...field} {...props} />
