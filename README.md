@@ -18,6 +18,7 @@
   - [Ocean Protocol Subgraph](#ocean-protocol-subgraph)
   - [3Box](#3box)
   - [Purgatory](#purgatory)
+  - [Network Metadata](#network-metadata)
 - [🎨 Storybook](#-storybook)
 - [✨ Code Style](#-code-style)
 - [👩‍🔬 Testing](#-testing)
@@ -250,6 +251,23 @@ function Component() {
   const { accountId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
   return isInPurgatory ? <div>{purgatoryData.reason}</div> : null
+}
+```
+
+### Network Metadata
+
+All displayed chain & network metadata is retrieved from `https://chainid.network` on build time and integrated into Gatsby's GraphQL layer. This data source is a community-maintained GitHub repository under [ethereum-lists/chains](https://github.com/ethereum-lists/chains).
+
+Within components this metadata can be queried for under `allNetworksMetadataJson`. The `useWeb3()` hook does this in the background to expose the final `networkDisplayName` for use in components:
+
+```tsx
+export default function NetworkName(): ReactElement {
+  const { networkDisplayName, isTestnet } = useWeb3()
+  return (
+    <>
+      {networkDisplayName} {isTestnet && `(Test)`}
+    </>
+  )
 }
 ```
 

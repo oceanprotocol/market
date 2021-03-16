@@ -13,6 +13,12 @@ import { infuraProjectId as infuraId, portisId } from '../../app.config'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import { Logger } from '@oceanprotocol/lib'
 import { isBrowser } from '../utils'
+import {
+  EthereumListsChain,
+  getNetworkData,
+  getNetworkDisplayName
+} from '../utils/web3'
+import { graphql, useStaticQuery } from 'gatsby'
 
 interface Web3ProviderValue {
   web3: Web3
@@ -20,6 +26,9 @@ interface Web3ProviderValue {
   web3Modal: Web3Modal
   accountId: string
   networkId: number
+  networkDisplayName: string
+  networkData: EthereumListsChain
+  isTestnet: boolean
   connect: () => Promise<void>
   logout: () => Promise<void>
 }
@@ -65,13 +74,40 @@ export const web3ModalOpts = {
   theme: web3ModalTheme
 }
 
+const networksQuery = graphql`
+  query {
+    allNetworksMetadataJson {
+      edges {
+        node {
+          chain
+          network
+          networkId
+          chainId
+          nativeCurrency {
+            name
+            symbol
+            decimals
+          }
+        }
+      }
+    }
+  }
+`
+
 const Web3Context = createContext({} as Web3ProviderValue)
 
-function OceanProvider({ children }: { children: ReactNode }): ReactElement {
+function Web3Provider({ children }: { children: ReactNode }): ReactElement {
+  const data = useStaticQuery(networksQuery)
+  const networksList: { node: EthereumListsChain }[] =
+    data.allNetworksMetadataJson.edges
+
   const [web3, setWeb3] = useState<Web3>()
   const [web3Provider, setWeb3Provider] = useState<any>()
   const [web3Modal, setWeb3Modal] = useState<Web3Modal>()
   const [networkId, setNetworkId] = useState<number>()
+  const [networkDisplayName, setNetworkDisplayName] = useState<string>()
+  const [networkData, setNetworkData] = useState<EthereumListsChain>()
+  const [isTestnet, setIsTestnet] = useState<boolean>()
   const [accountId, setAccountId] = useState<string>()
 
   const connect = useCallback(async () => {
@@ -130,6 +166,29 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
     connectCached()
   }, [connect, web3Modal])
 
+  // -----------------------------------
+  // Get and set network metadata
+  // -----------------------------------
+  useEffect(() => {
+    if (!networkId) return
+
+    const networkData = getNetworkData(networksList, networkId)
+    setNetworkData(networkData)
+    Logger.log('[web3] Network metadata found.', networkData)
+
+    // Construct network display name
+    const networkDisplayName = getNetworkDisplayName(networkData, networkId)
+    setNetworkDisplayName(networkDisplayName)
+
+    // Figure out if we're on a chain's testnet, or not
+    setIsTestnet(networkData.network !== 'mainnet')
+
+    Logger.log(`[web3] Network display name set to: ${networkDisplayName}`)
+  }, [networkId, networksList])
+
+  // -----------------------------------
+  // Logout helper
+  // -----------------------------------
   async function logout() {
     web3Modal?.clearCachedProvider()
   }
@@ -175,6 +234,9 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
         web3Modal,
         accountId,
         networkId,
+        networkDisplayName,
+        networkData,
+        isTestnet,
         connect,
         logout
       }}
@@ -187,5 +249,5 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
 // Helper hook to access the provider values
 const useWeb3 = (): Web3ProviderValue => useContext(Web3Context)
 
-export { OceanProvider, useWeb3, Web3ProviderValue, Web3Context }
-export default OceanProvider
+export { Web3Provider, useWeb3, Web3ProviderValue, Web3Context }
+export default Web3Provider
