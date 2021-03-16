@@ -8,11 +8,14 @@ import Conversion from '../../atoms/Price/Conversion'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 
-export default function Details(): ReactElement {
+export default function Details({
+  networkName
+}: {
+  networkName: string
+}): ReactElement {
   const { balance, config, connect, logout, web3Provider } = useOcean()
   const { locale } = useUserPreferences()
   const [providerInfo, setProviderInfo] = useState<IProviderInfo>()
-  const provider = window.web3.currentProvider
   // const [portisNetwork, setPortisNetwork] = useState<string>()
 
   // Workaround cause getInjectedProviderName() always returns `MetaMask`
@@ -24,32 +27,26 @@ export default function Details(): ReactElement {
     setProviderInfo(providerInfo)
   }, [web3Provider])
 
-  console.log(config.oceanTokenAddress)
-
-  function addOceanToWallet() {
-    provider.sendAsync(
-      {
-        method: 'metamask_watchAsset',
-        params: {
-          type: 'ERC20',
-          options: {
-            address: config.oceanTokenAddress,
-            symbol: 'OCEAN',
-            decimals: 18,
-            image:
-              'https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png'
-          }
-        },
-        id: Math.round(Math.random() * 100000)
-      },
-      (err: Error, added: boolean) => {
-        if (added) {
-          console.log('Added')
-        } else {
-          console.log('Error:', err)
+  async function addOceanToWallet() {
+    const wasAdded = await web3Provider.sendAsync({
+      method: 'metamask_watchAsset',
+      params: {
+        type: 'ERC20',
+        options: {
+          address: config.oceanTokenAddress,
+          symbol: networkName.localeCompare('Matic') === 1 ? 'mOCEAN' : 'OCEAN',
+          decimals: 18,
+          image:
+            'https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png'
         }
-      }
-    )
+      },
+      id: Math.round(Math.random() * 100000)
+    })
+    if (wasAdded) {
+      console.log('Added')
+    } else {
+      console.log('Error')
+    }
   }
 
   // Handle network change for Portis

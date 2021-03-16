@@ -27,7 +27,13 @@ const networksQuery = graphql`
   }
 `
 
-export default function Network(): ReactElement {
+export default function Network({
+  networkName,
+  setNetworkName
+}: {
+  networkName: string
+  setNetworkName: (name: string) => void
+}): ReactElement {
   const data = useStaticQuery(networksQuery)
   const networksList: { node: EthereumListsChain }[] =
     data.allNetworksMetadataJson.edges
@@ -36,7 +42,6 @@ export default function Network(): ReactElement {
   const networkIdConfig = (config as ConfigHelperConfig).networkId
 
   const [isEthMainnet, setIsEthMainnet] = useState<boolean>()
-  const [networkName, setNetworkName] = useState<string>()
   const [isTestnet, setIsTestnet] = useState<boolean>()
   const [isSupportedNetwork, setIsSupportedNetwork] = useState<boolean>()
 
