@@ -15,7 +15,7 @@ import Button from '../../atoms/Button'
 import Edit from '../AssetActions/Edit'
 import EditComputeDataset from '../AssetActions/Edit/EditComputeDataset'
 import { getAlgorithmsOptions } from '../../../utils/aquarius'
-import { AlgorithmOption } from '../../../@types/ComputeDataset'
+import { AssetSelectionAsset } from '../../molecules/FormFields/AssetSelection'
 import DebugOutput from '../../atoms/DebugOutput'
 import MetaMain from './MetaMain'
 import EditHistory from './EditHistory'
@@ -50,7 +50,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   const [showPricing, setShowPricing] = useState(false)
   const [showEdit, setShowEdit] = useState<boolean>()
   const [showEditCompute, setShowEditCompute] = useState<boolean>()
-  const [algorithms, setAlgorithms] = useState<AlgorithmOption[]>()
+  const [algorithms, setAlgorithms] = useState<AssetSelectionAsset[]>()
   const { ddo, price, metadata } = useAsset()
   const isOwner = accountId === owner
 

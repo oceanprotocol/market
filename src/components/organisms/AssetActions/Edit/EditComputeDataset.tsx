@@ -7,8 +7,6 @@ import {
 } from '../../../../models/FormEditComputeDataset'
 import { useAsset } from '../../../../providers/Asset'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
-import MetadataPreview from '../../../molecules/MetadataPreview'
-import Debug from './Debug'
 import Web3Feedback from '../../../molecules/Wallet/Feedback'
 import FormEditComputeDataset from './FormEditComputeDataset'
 import styles from './index.module.css'
@@ -19,7 +17,7 @@ import {
 } from '@oceanprotocol/lib'
 import MetadataFeedback from '../../../molecules/MetadataFeedback'
 import { graphql, useStaticQuery } from 'gatsby'
-import { AlgorithmOption } from '../../../../@types/ComputeDataset'
+import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 
 const contentQuery = graphql`
   query EditComputeDataQuery {
@@ -75,10 +73,11 @@ export default function EditComputeDataset({
   algorithmOptions
 }: {
   setShowEdit: (show: boolean) => void
-  algorithmOptions: AlgorithmOption[]
+  algorithmOptions: AssetSelectionAsset[]
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
+  content.form.data[2].options = algorithmOptions
 
   const { debug } = useUserPreferences()
   const { ocean, accountId } = useOcean()
@@ -138,6 +137,8 @@ export default function EditComputeDataset({
     }
   }
 
+  console.log(content.form.data)
+
   return (
     <Formik
       initialValues={getInitialValues(
@@ -177,15 +178,7 @@ export default function EditComputeDataset({
                   values={initialValues}
                   algorithmList={algorithmOptions}
                 />
-
-                <aside>
-                  {/*
-                <MetadataPreview values={values} />
-                */}
-                  <Web3Feedback />
-                </aside>
               </>
-              ){/* debug === true && <Debug values={values} ddo={ddo} /> */}
             </article>
           </>
         )

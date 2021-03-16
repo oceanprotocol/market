@@ -7,6 +7,7 @@ import { useOcean } from '@oceanprotocol/react'
 import { FormFieldProps } from '../../../../@types/Form'
 import { ServiceComputePrivacy } from '@oceanprotocol/lib'
 import { AlgorithmOption } from '../../../../@types/ComputeDataset'
+import slugify from 'slugify'
 
 export default function FormEditComputeDataset({
   data,
@@ -29,16 +30,15 @@ export default function FormEditComputeDataset({
   // Manually handle change events instead of using `handleChange` from Formik.
   // Workaround for default `validateOnChange` not kicking in
   function handleFieldChange(
-    e: ChangeEvent<HTMLSelectElement>,
+    e: ChangeEvent<HTMLInputElement>,
     field: FormFieldProps
   ) {
     let value: any
     switch (field.type) {
-      case 'select':
-        value = Array.from(
-          e.target.selectedOptions,
-          (option: HTMLOptionElement) => option.value
-        )
+      case 'assetSelectionMultiple':
+        // value = values.publisherTrustedAlgorithms.push(e.target.value)
+        console.log(JSON.parse(e.target.value))
+        console.log(values.publisherTrustedAlgorithms)
         break
       case 'checkbox':
         value = !JSON.parse(e.target.value)
@@ -46,30 +46,23 @@ export default function FormEditComputeDataset({
       default:
         value = JSON.parse(e.target.value)
     }
+    console.log(value)
     setFieldValue(field.name, value)
     validateField(field.name)
   }
 
   useEffect(() => {
-    const select = document.getElementsByTagName('select')[0]
-    select.autofocus = false
     algorithmList &&
       algorithmList.forEach((algorithm: AlgorithmOption) => {
-        const option = document.createElement('option')
-        option.text = algorithm.name
-        option.value = algorithm.did
+        const checkbox = document.getElementById(slugify(algorithm.name))
         if (values.publisherTrustedAlgorithms) {
           values.publisherTrustedAlgorithms.forEach((publishedAlgorithm) => {
             if (algorithm.did === publishedAlgorithm.did) {
-              option.selected = true
-              console.log(option)
+              checkbox.checked = true
             }
           })
         }
-
-        select.add(option)
       })
-    console.log(select)
   }, [data])
 
   console.log(document.getElementsByTagName('select')[0])

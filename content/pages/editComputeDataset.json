@@ -23,7 +23,7 @@
         "name": "publisherTrustedAlgorithms",
         "label": "Publisher trusted algorithms",
         "help": "Choose a list of algorithms you trust to run on dataset",
-        "type": "select",
+        "type": "assetSelectionMultiple",
         "multiple": true,
         "options": [],
         "sortOptions": false

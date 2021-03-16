@@ -3,7 +3,7 @@ import {
   QueryResult,
   SearchQuery
 } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
-import { AlgorithmOption } from '../@types/ComputeDataset'
+import { AssetSelectionAsset } from '../components/molecules/FormFields/AssetSelection'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import web3 from 'web3'
 
@@ -102,7 +102,7 @@ export async function getAssetsNames(
 
 export async function getAlgorithmsOptions(
   config: any
-): Promise<AlgorithmOption[]> {
+): Promise<AssetSelectionAsset[]> {
   const query = {
     page: 1,
     query: {
@@ -115,6 +115,7 @@ export async function getAlgorithmsOptions(
   }
   const source = axios.CancelToken.source()
   const didList: string[] = []
+  const priceList: any = {}
   const result = await queryMetadata(
     query as any,
     config.metadataCacheUri,
@@ -125,17 +126,19 @@ export async function getAlgorithmsOptions(
       .toChecksumAddress(ddo.dataToken)
       .replace('0x', 'did:op:')
     didList.push(did)
+    priceList[did] = ddo.price.value
   })
   const ddoNames = await getAssetsNames(
     didList,
     config.metadataCacheUri,
     source.token
   )
-  const algorithmList: AlgorithmOption[] = []
+  const algorithmList: AssetSelectionAsset[] = []
   didList.forEach((did: string) => {
     algorithmList.push({
       did: did,
-      name: ddoNames[did]
+      name: ddoNames[did],
+      price: priceList[did]
     })
   })
   return algorithmList
