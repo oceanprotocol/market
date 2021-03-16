@@ -13,7 +13,14 @@ export default function MetaMain(): ReactElement {
   return (
     <aside className={styles.meta}>
       <p>
-        <ExplorerLink networkId={networkId} path={`token/${ddo?.dataToken}`}>
+        <ExplorerLink
+          networkId={networkId}
+          path={
+            networkId === 137
+              ? `tokens/${ddo?.dataToken}`
+              : `token/${ddo?.dataToken}`
+          }
+        >
           {`${ddo?.dataTokenInfo.name} — ${ddo?.dataTokenInfo.symbol}`}
         </ExplorerLink>
       </p>
