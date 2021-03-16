@@ -10,7 +10,7 @@ import { useUserPreferences } from '../../../providers/UserPreferences'
 import { useWeb3 } from '../../../providers/Web3'
 
 export default function Details(): ReactElement {
-  const { web3Provider, connect, logout, networkData } = useWeb3()
+  const { web3Provider, connect, logout, networkData, networkId } = useWeb3()
   const { balance } = useOcean()
   const { locale } = useUserPreferences()
 
@@ -48,7 +48,11 @@ export default function Details(): ReactElement {
         {Object.entries(balance).map(([key, value]) => (
           <li className={styles.balance} key={key}>
             <span className={styles.symbol}>
-              {key === 'eth' ? mainCurrency : key.toUpperCase()}
+              {key === 'eth'
+                ? mainCurrency
+                : key === 'ocean' && networkId === 137
+                ? 'mOCEAN'
+                : key.toUpperCase()}
             </span>{' '}
             {formatCurrency(Number(value), '', locale, false, {
               significantFigures: 4
