@@ -1,12 +1,11 @@
-import { ServiceComputePrivacy } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 
 export const validationSchema = Yup.object().shape({
-  publisherTrustedAlgorithms: Yup.array().required('Required')
+  algorithm: Yup.string().required('Required')
 })
 
-export function getInitialValues(compute: ServiceComputePrivacy) {
+export function getInitialValues() {
   return {
-    publisherTrustedAlgorithms: compute.publisherTrustedAlgorithms
+    algorithm: ''
   }
 }

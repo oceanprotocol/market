@@ -16,7 +16,7 @@ export interface InputProps {
   help?: string
   tag?: string
   type?: string
-  options?: any[]
+  options?: string[]
   sortOptions?: boolean
   additionalComponent?: ReactElement
   value?: string

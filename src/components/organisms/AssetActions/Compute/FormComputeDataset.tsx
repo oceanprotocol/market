@@ -41,12 +41,16 @@ const contentQuery = graphql`
     }
   }
 `
-interface AlgorithmOption {
-  did: string
-  name: string
-}
 
-export default function FromStartCompute({}: {}): ReactElement {
+export default function FromStartCompute({
+  algorithmList,
+  setAlgorithmsList,
+  loading
+}: {
+  algorithmList: DDO[]
+  setAlgorithmsList: React.Dispatch<React.SetStateAction<DDO[]>>
+  loading: boolean
+}): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
 
@@ -54,16 +58,16 @@ export default function FromStartCompute({}: {}): ReactElement {
     isValid,
     validateField,
     setFieldValue
-  }: FormikContextType<ServiceComputePrivacy> = useFormikContext()
-  const { ocean, accountId, config } = useOcean()
-  const { compute, isLoading, computeStepText, computeError } = useCompute()
-  const [algorithms, setAlgorithms] = useState<AlgorithmOption[]>()
+  }: FormikContextType<string> = useFormikContext()
+  const { config } = useOcean()
+  const { computeStepText } = useCompute()
 
   function handleFieldChange(
     e: ChangeEvent<HTMLSelectElement>,
     field: FormFieldProps
   ) {
-    setFieldValue(field.name, e.target.value)
+    // hack there's an issue with value on input type radio
+    setFieldValue(field.name, e.target.id)
     validateField(field.name)
   }
 
@@ -89,6 +93,7 @@ export default function FromStartCompute({}: {}): ReactElement {
       source.token
     )
 
+    setAlgorithmsList(result.results)
     result.results.forEach((ddo: DDO) => {
       const did: string = web3.utils
         .toChecksumAddress(ddo.dataToken)
@@ -133,12 +138,12 @@ export default function FromStartCompute({}: {}): ReactElement {
 
       <footer className={styles.actions}>
         <div className={styles.actions}>
-          {isLoading ? (
+          {loading ? (
             <Loader message={computeStepText} />
           ) : (
             <Button
               style="primary"
-              //   onClick={() => startJob()}
+              type="submit"
               // disabled={isComputeButtonDisabled}
             >
               Start compute job

@@ -1,6 +1,5 @@
 import React, { useState, ReactElement, ChangeEvent, useEffect } from 'react'
 import { File as FileMetadata, DDO, Logger } from '@oceanprotocol/lib'
-import Loader from '../../../atoms/Loader'
 import File from '../../../atoms/File'
 import Web3Feedback from '../../../molecules/Wallet/Feedback'
 import Price from '../../../atoms/Price'
@@ -37,8 +36,8 @@ export default function Compute({
   const { marketFeeAddress } = useSiteMetadata()
 
   const { type } = useAsset()
-  const { ocean, accountId } = useOcean()
-  const { compute, isLoading, computeStepText, computeError } = useCompute()
+  const { ocean, accountId, account } = useOcean()
+  const { compute } = useCompute()
   const { buyDT, dtSymbol } = usePricing(ddo)
 
   const computeService = ddo.findServiceByType('compute')
@@ -51,6 +50,7 @@ export default function Compute({
     computeOptions[0].value
   )
   const [algorithmRawCode, setAlgorithmRawCode] = useState('')
+  const [algorithms, setAlgorithms] = useState<DDO[]>()
   const [isPublished, setIsPublished] = useState(false)
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
   const [previousOrderId, setPreviousOrderId] = useState<string>()
@@ -82,7 +82,15 @@ export default function Compute({
       setComputeContainer(selectedComputeOption.value)
   }
 
-  const startJob = async () => {
+  function getAlgorithmAsset(algorithmId: string): DDO {
+    let assetDdo = null
+    algorithms.forEach((ddo: DDO) => {
+      if (ddo.id === algorithmId) assetDdo = ddo
+    })
+    return assetDdo
+  }
+
+  const startJob = async (algorithmId: string) => {
     try {
       if (!ocean) return
 
@@ -90,17 +98,43 @@ export default function Compute({
       setIsPublished(false)
       setError('')
 
+      console.log('hasPreviousOrder', hasPreviousOrder)
+      console.log('hasDatatoken', hasDatatoken)
       !hasPreviousOrder && !hasDatatoken && (await buyDT('1'))
 
-      await compute(
-        ddo.id,
-        computeService,
-        ddo.dataToken,
-        algorithmRawCode,
-        computeContainer,
-        marketFeeAddress,
-        previousOrderId
+      const algorithmAsset = getAlgorithmAsset(algorithmId)
+      console.log('algorithmAsset', algorithmAsset)
+      console.log('ddo', ddo)
+      const computeService = ddo.findServiceByType('compute')
+      console.log('computeService', computeService)
+      const computeAddress = await ocean.compute.getComputeAddress(ddo.id)
+      console.log('computeAddress', computeAddress)
+      const serviceAlgo = algorithmAsset.findServiceByType('access')
+      const orderalgo = await ocean.compute.orderAlgorithm(
+        algorithmId,
+        serviceAlgo.type,
+        accountId,
+        serviceAlgo.index,
+        null,
+        computeAddress
       )
+      console.log('orderalgo', orderalgo)
+      const output = {}
+      const respone = await ocean.compute.start(
+        ddo.id,
+        previousOrderId,
+        ddo.dataToken,
+        account,
+        algorithmId,
+        undefined,
+        output,
+        computeService.index.toString(),
+        computeService.type,
+        orderalgo,
+        algorithmAsset.dataToken
+      )
+
+      console.log('respone', respone)
 
       setHasPreviousOrder(true)
       setIsPublished(true)
@@ -110,6 +144,14 @@ export default function Compute({
     } finally {
       setIsJobStarting(false)
     }
+  }
+
+  async function handleSubmit(
+    values: any,
+    resetForm: () => void
+  ): Promise<void> {
+    console.log('befire await startJob()', values)
+    await startJob(values.algorithm)
   }
 
   return (
@@ -142,24 +184,24 @@ export default function Compute({
         />
       ) : (
         <Formik
-          initialValues={[]}
+          initialValues={getInitialValues}
           validationSchema={validationSchema}
           onSubmit={async (values, { resetForm }) => {
             // move user's focus to top of screen
             window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
             // kick off editing
-            // await handleSubmit(values, resetForm)
-            await startJob()
+            await handleSubmit(values, resetForm)
           }}
         >
-          <FormStartComputeDataset />
+          <FormStartComputeDataset
+            algorithmList={algorithms}
+            setAlgorithmsList={setAlgorithms}
+            loading={false}
+          />
         </Formik>
       )}
 
       <footer className={styles.feedback}>
-        {computeError !== undefined && (
-          <Alert text={computeError} state="error" />
-        )}
         {isPublished && (
           <Alert
             title="Your job started!"

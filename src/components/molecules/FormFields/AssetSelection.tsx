@@ -24,7 +24,7 @@ export default function AssetSelection({
       {assets.map((asset: AssetSelectionAsset) => (
         <div className={styles.row} key={asset.did}>
           <input
-            id={slugify(asset.name)}
+            id={slugify(asset.did)}
             type={multiple ? 'checkbox' : 'radio'}
             value={asset.did}
             className={styles.input}

@@ -13,5 +13,10 @@ export default {
 }
 
 export const Default = (): ReactElement => (
-  <Compute ddo={ddo as DDO} dtBalance="1" isBalanceSufficient />
+  <Compute
+    ddo={ddo as DDO}
+    dtBalance="1"
+    isBalanceSufficient
+    file={ddo.service[0].attributes.main.files[0]}
+  />
 )
