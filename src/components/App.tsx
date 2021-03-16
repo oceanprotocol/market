@@ -35,7 +35,7 @@ export default function App({
   const data = useStaticQuery(contentQuery)
   const purgatory = data.purgatory.edges[0].node.childContentJson.account
 
-  const { warning } = useSiteMetadata()
+  const { warning, warningPolygon } = useSiteMetadata()
   const { accountId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
   const { networkId } = useWeb3()
@@ -46,11 +46,7 @@ export default function App({
         <Header />
         {(props as PageProps).uri === '/' && (
           <Alert
-            text={
-              (networkId === 137
-                ? 'Polygon/Matic EVM support is in early stages. Use the Matic bridge to [get mOCEAN](https://docs.oceanprotocol.com/tutorials/polygon-bridge/).\\n\\n'
-                : '') + warning
-            }
+            text={(networkId === 137 ? `${warningPolygon}\n\n` : '') + warning}
             state="info"
           />
         )}

@@ -20,6 +20,7 @@ import Alert from '../../atoms/Alert'
 import MetadataFeedback from '../../molecules/MetadataFeedback'
 import { useAccountPurgatory } from '../../../hooks/useAccountPurgatory'
 import { useWeb3 } from '../../../providers/Web3'
+import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 
 const formName = 'ocean-publish-form'
 
@@ -28,6 +29,7 @@ export default function PublishPage({
 }: {
   content: { warning: string; form: FormContent }
 }): ReactElement {
+  const { warningPolygonPublish } = useSiteMetadata()
   const { debug } = useUserPreferences()
   const { accountId, networkId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
@@ -111,15 +113,11 @@ export default function PublishPage({
             />
           ) : (
             <>
-              {networkId === 137 && (
-                <Alert
-                  text="Note: Only republish datatokens from Ethereum mainnet here if there is <1000 OCEAN liquidity in the original pool. Doing otherwise will lead to purgatory"
-                  state="info"
-                  className={styles.alert}
-                />
-              )}
               <Alert
-                text={content.warning}
+                text={
+                  (networkId === 137 ? `${warningPolygonPublish}\n\n` : '') +
+                  content.warning
+                }
                 state="info"
                 className={styles.alert}
               />
