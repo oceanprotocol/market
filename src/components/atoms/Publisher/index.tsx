@@ -89,7 +89,7 @@ export default function Publisher({
             )}
             {showAdd && <Add />}
             <ExplorerLink networkId={networkId} path={`address/${account}`}>
-              View transaction
+              Explorer
             </ExplorerLink>
           </div>
         </>
