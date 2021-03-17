@@ -7,6 +7,7 @@ import { getProviderInfo, IProviderInfo } from 'web3modal'
 import Conversion from '../../atoms/Price/Conversion'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../../providers/UserPreferences'
+import { Logger } from '@oceanprotocol/lib'
 
 export default function Details(): ReactElement {
   const {
@@ -30,24 +31,29 @@ export default function Details(): ReactElement {
   }, [web3Provider])
 
   async function addOceanToWallet() {
+    const tokenMetadata = {
+      type: 'ERC20',
+      options: {
+        address: config.oceanTokenAddress,
+        symbol: networkId === 137 ? 'mOCEAN' : 'OCEAN',
+        decimals: 18,
+        image:
+          'https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png'
+      }
+    }
     const wasAdded = await web3Provider.sendAsync({
       method: 'metamask_watchAsset',
-      params: {
-        type: 'ERC20',
-        options: {
-          address: config.oceanTokenAddress,
-          symbol: networkId === 137 ? 'mOCEAN' : 'OCEAN',
-          decimals: 18,
-          image:
-            'https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png'
-        }
-      },
+      params: tokenMetadata,
       id: Math.round(Math.random() * 100000)
     })
     if (wasAdded) {
-      console.log('Added')
+      Logger.log(
+        `Added ${tokenMetadata.options.symbol} (${tokenMetadata.options.address}) to MetaMask`
+      )
     } else {
-      console.log('Error')
+      Logger.log(
+        `Couldn't add ${tokenMetadata.options.symbol} (${tokenMetadata.options.address}) to MetaMask`
+      )
     }
   }
 
