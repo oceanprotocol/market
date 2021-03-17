@@ -1,7 +1,7 @@
-import { useOcean } from '@oceanprotocol/react'
 import React, { ReactElement } from 'react'
 import { useAsset } from '../../../providers/Asset'
-import EtherscanLink from '../../atoms/EtherscanLink'
+import { useWeb3 } from '../../../providers/Web3'
+import ExplorerLink from '../../atoms/ExplorerLink'
 import Publisher from '../../atoms/Publisher'
 import Time from '../../atoms/Time'
 import styles from './MetaMain.module.css'
@@ -9,16 +9,23 @@ import AssetType from '../../atoms/AssetType'
 
 export default function MetaMain(): ReactElement {
   const { ddo, owner, type } = useAsset()
-  const { networkId } = useOcean()
+  const { networkId } = useWeb3()
   const isCompute = Boolean(ddo?.findServiceByType('compute'))
   const accessType = isCompute ? 'compute' : 'access'
 
   return (
     <aside className={styles.meta}>
       <p>
-        <EtherscanLink networkId={networkId} path={`token/${ddo?.dataToken}`}>
+        <ExplorerLink
+          networkId={networkId}
+          path={
+            networkId === 137
+              ? `tokens/${ddo?.dataToken}`
+              : `token/${ddo?.dataToken}`
+          }
+        >
           {`${ddo?.dataTokenInfo.name} — ${ddo?.dataTokenInfo.symbol}`}
-        </EtherscanLink>
+        </ExplorerLink>
       </p>
       <div>
         Published By <Publisher account={owner} />

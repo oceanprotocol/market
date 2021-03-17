@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react'
 import { Helmet } from 'react-helmet'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
+import { isBrowser } from '../../utils'
 
 export default function Seo({
   title,
@@ -24,7 +25,7 @@ export default function Seo({
     >
       <html lang="en" />
 
-      {typeof window !== 'undefined' &&
+      {isBrowser &&
         window.location &&
         window.location.hostname !== 'oceanprotocol.com' && (
           <meta name="robots" content="noindex,nofollow" />

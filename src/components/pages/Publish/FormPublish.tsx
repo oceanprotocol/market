@@ -1,14 +1,14 @@
 import React, { ReactElement, useEffect, FormEvent, ChangeEvent } from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
-import styles from './FormPublish.module.css'
-import { useOcean } from '@oceanprotocol/react'
 import { useFormikContext, Field, Form, FormikContextType } from 'formik'
 import Input from '../../atoms/Input'
 import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { MetadataPublishFormDataset } from '../../../@types/MetaData'
 import { initialValues as initialValuesDataset } from '../../../models/FormAlgoPublish'
+import { useOcean } from '../../../providers/Ocean'
 import stylesIndex from './index.module.css'
+import styles from './FormPublish.module.css'
 
 const query = graphql`
   query {

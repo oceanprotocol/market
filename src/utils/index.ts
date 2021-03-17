@@ -54,16 +54,8 @@ export async function fetchData(url: string): Promise<AxiosResponse['data']> {
   }
 }
 
-export function isDid(did: string | undefined): boolean {
-  const didMatch = (did as string).match(/^did:op:([a-f0-9]{64})$/i)
-  return !!didMatch
-}
-
-export function formatBytes(a: number, b: number): string {
-  if (a === 0) return '0 Bytes'
-  const c = 1024
-  const d = b || 2
-  const e = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-  const f = Math.floor(Math.log(a) / Math.log(c))
-  return parseFloat((a / Math.pow(c, f)).toFixed(d)) + ' ' + e[f]
+export function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
 }

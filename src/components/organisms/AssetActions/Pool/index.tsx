@@ -1,5 +1,4 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useOcean } from '@oceanprotocol/react'
 import { Logger } from '@oceanprotocol/lib'
 import styles from './index.module.css'
 import stylesActions from './Actions.module.css'
@@ -8,16 +7,18 @@ import Button from '../../../atoms/Button'
 import Add from './Add'
 import Remove from './Remove'
 import Tooltip from '../../../atoms/Tooltip'
-import EtherscanLink from '../../../atoms/EtherscanLink'
+import ExplorerLink from '../../../atoms/ExplorerLink'
 import Token from './Token'
 import TokenList from './TokenList'
 import { graphql, useStaticQuery } from 'gatsby'
-import TokenBalance from '../../../../@types/TokenBalance'
+import { PoolBalance } from '../../../../@types/TokenBalance'
 import Transactions from './Transactions'
 import Graph from './Graph'
 import { useAsset } from '../../../../providers/Asset'
 import { gql, useQuery } from '@apollo/client'
 import { PoolLiquidity } from '../../../../@types/apollo/PoolLiquidity'
+import { useOcean } from '../../../../providers/Ocean'
+import { useWeb3 } from '../../../../providers/Web3'
 
 const contentQuery = graphql`
   query PoolQuery {
@@ -60,20 +61,14 @@ export default function Pool(): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childContentJson.pool
 
-  const { ocean, accountId, networkId } = useOcean()
-  const {
-    isInPurgatory,
-    ddo,
-    owner,
-    price,
-    refreshInterval,
-    refreshPrice
-  } = useAsset()
+  const { accountId, networkId } = useWeb3()
+  const { ocean } = useOcean()
+  const { isInPurgatory, ddo, owner, price, refreshInterval } = useAsset()
   const dtSymbol = ddo?.dataTokenInfo.symbol
 
   const [poolTokens, setPoolTokens] = useState<string>()
   const [totalPoolTokens, setTotalPoolTokens] = useState<string>()
-  const [userLiquidity, setUserLiquidity] = useState<TokenBalance>()
+  const [userLiquidity, setUserLiquidity] = useState<PoolBalance>()
   const [swapFee, setSwapFee] = useState<string>()
   const [weightOcean, setWeightOcean] = useState<string>()
   const [weightDt, setWeightDt] = useState<string>()
@@ -91,7 +86,7 @@ export default function Pool(): ReactElement {
     creatorTotalLiquidityInOcean,
     setCreatorTotalLiquidityInOcean
   ] = useState(0)
-  const [creatorLiquidity, setCreatorLiquidity] = useState<TokenBalance>()
+  const [creatorLiquidity, setCreatorLiquidity] = useState<PoolBalance>()
   const [creatorPoolTokens, setCreatorPoolTokens] = useState<string>()
   const [creatorPoolShare, setCreatorPoolShare] = useState<string>()
 
@@ -209,7 +204,9 @@ export default function Pool(): ReactElement {
 
   const refreshInfo = async () => {
     setRefreshPool(!refreshPool)
-    await refreshPrice()
+
+    // need some form of replacement or something.
+    // await refreshPrice()
   }
 
   return (
@@ -244,18 +241,22 @@ export default function Pool(): ReactElement {
             <PriceUnit price={`${price?.value}`} />
             <Tooltip content={content.tooltips.price} />
             <div className={styles.dataTokenLinks}>
-              <EtherscanLink
+              <ExplorerLink
                 networkId={networkId}
                 path={`address/${price?.address}`}
               >
                 Pool
-              </EtherscanLink>
-              <EtherscanLink
+              </ExplorerLink>
+              <ExplorerLink
                 networkId={networkId}
-                path={`token/${ddo.dataToken}`}
+                path={
+                  networkId === 137
+                    ? `tokens/${ddo.dataToken}`
+                    : `token/${ddo.dataToken}`
+                }
               >
                 Datatoken
-              </EtherscanLink>
+              </ExplorerLink>
             </div>
           </div>
 

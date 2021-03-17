@@ -1,4 +1,5 @@
-import { useOcean } from '@oceanprotocol/react'
+import { useOcean } from '../../../../providers/Ocean'
+import { useWeb3 } from '../../../../providers/Web3'
 import { Formik } from 'formik'
 import React, { ReactElement, useEffect, useState } from 'react'
 import {
@@ -80,7 +81,8 @@ export default function EditComputeDataset({
   content.form.data[2].options = algorithmOptions
 
   const { debug } = useUserPreferences()
-  const { ocean, accountId } = useOcean()
+  const { ocean } = useOcean()
+  const { accountId } = useWeb3()
   const { metadata, ddo, refreshDdo } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()

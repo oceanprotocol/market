@@ -39,7 +39,7 @@ export default function PricesProvider({
 
   const onSuccess = async (data: { [tokenId]: { [key: string]: number } }) => {
     if (!data) return
-    Logger.log(`Got new prices. ${JSON.stringify(data[tokenId])}`)
+    Logger.log('[prices] Got new OCEAN spot prices.', data[tokenId])
     setPrices(data[tokenId])
   }
 

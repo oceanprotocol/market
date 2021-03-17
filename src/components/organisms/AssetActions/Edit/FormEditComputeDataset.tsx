@@ -3,7 +3,8 @@ import styles from './FormEditMetadata.module.css'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import Button from '../../../atoms/Button'
 import Input from '../../../atoms/Input'
-import { useOcean } from '@oceanprotocol/react'
+import { useOcean } from '../../../../providers/Ocean'
+import { useWeb3 } from '../../../../providers/Web3'
 import { FormFieldProps } from '../../../../@types/Form'
 import { ServiceComputePrivacy } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
@@ -20,7 +21,8 @@ export default function FormEditComputeDataset({
   values: ServiceComputePrivacy
   algorithmList: AssetSelectionAsset[]
 }): ReactElement {
-  const { ocean, accountId } = useOcean()
+  const { accountId } = useWeb3()
+  const { ocean } = useOcean()
   const {
     isValid,
     validateField,

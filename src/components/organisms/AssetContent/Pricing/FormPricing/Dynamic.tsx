@@ -1,4 +1,3 @@
-import { useOcean, usePricing } from '@oceanprotocol/react'
 import PriceUnit from '../../../../atoms/Price/PriceUnit'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Alert from '../../../../atoms/Alert'
@@ -14,8 +13,8 @@ import { PriceOptionsMarket } from '../../../../../@types/MetaData'
 import { DDO } from '@oceanprotocol/lib'
 import Price from './Price'
 import Decimal from 'decimal.js'
-
-const refreshInterval = 10000 // 10 sec.
+import { useOcean } from '../../../../../providers/Ocean'
+import { useWeb3 } from '../../../../../providers/Web3'
 
 export default function Dynamic({
   ddo,
@@ -24,7 +23,8 @@ export default function Dynamic({
   ddo: DDO
   content: any
 }): ReactElement {
-  const { account, balance, networkId, refreshBalance } = useOcean()
+  const { networkId } = useWeb3()
+  const { account, balance } = useOcean()
   const [firstPrice, setFirstPrice] = useState<string>()
 
   // Connect with form
@@ -68,18 +68,6 @@ export default function Dynamic({
       setError(undefined)
     }
   }, [price, networkId, account, balance])
-
-  // refetch balance periodically
-  useEffect(() => {
-    if (!account) return
-
-    refreshBalance()
-    const balanceInterval = setInterval(() => refreshBalance(), refreshInterval)
-
-    return () => {
-      clearInterval(balanceInterval)
-    }
-  }, [networkId, account])
 
   return (
     <div className={styles.dynamic}>
