@@ -26,9 +26,9 @@ export default function AssetSelection({
           <input
             id={slugify(asset.name)}
             type={multiple ? 'checkbox' : 'radio'}
-            value={asset.did}
             className={styles.input}
             {...props}
+            value={asset.did}
           />
           <div className={styles.content}>
             <label

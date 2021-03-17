@@ -53,15 +53,15 @@ const contentQuery = graphql`
 `
 
 async function createTrustedAlgorithmList(
-  selectedAlgorithmsDIDs: PublisherTrustedAlgorithm[],
+  selectedAlgorithms: PublisherTrustedAlgorithm[],
   ocean: any
 ) {
   const trustedAlgorithms: PublisherTrustedAlgorithm[] = []
-  for (const selectedAlgorithmDID of selectedAlgorithmsDIDs) {
-    const trustedAlgorithm = selectedAlgorithmDID.did
-      ? selectedAlgorithmDID
+  for (const selectedAlgorithm of selectedAlgorithms) {
+    const trustedAlgorithm = selectedAlgorithm.filesChecksum
+      ? selectedAlgorithm
       : await ocean.compute.createPublisherTrustedAlgorithmfromDID(
-          selectedAlgorithmDID.toString()
+          selectedAlgorithm.did.toString()
         )
     trustedAlgorithms.push(trustedAlgorithm)
   }
@@ -93,18 +93,17 @@ export default function EditComputeDataset({
   ) {
     try {
       let trustedAlgorithms: PublisherTrustedAlgorithm[] = []
-      console.log(values)
 
       trustedAlgorithms = await createTrustedAlgorithmList(
         values.publisherTrustedAlgorithms,
         ocean
       )
+
       const privacy: ServiceComputePrivacy = {
         allowRawAlgorithm: values.allowRawAlgorithm,
         allowNetworkAccess: values.allowNetworkAccess,
         publisherTrustedAlgorithms: trustedAlgorithms
       }
-      console.log(privacy)
 
       const ddoEditedComputePrivacy = await ocean.compute.editComputePrivacy(
         ddo,
@@ -136,8 +135,6 @@ export default function EditComputeDataset({
       setError(error.message)
     }
   }
-
-  console.log(content.form.data)
 
   return (
     <Formik

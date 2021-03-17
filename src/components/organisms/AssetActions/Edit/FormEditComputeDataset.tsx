@@ -6,7 +6,7 @@ import Input from '../../../atoms/Input'
 import { useOcean } from '@oceanprotocol/react'
 import { FormFieldProps } from '../../../../@types/Form'
 import { ServiceComputePrivacy } from '@oceanprotocol/lib'
-import { AlgorithmOption } from '../../../../@types/ComputeDataset'
+import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import slugify from 'slugify'
 
 export default function FormEditComputeDataset({
@@ -18,7 +18,7 @@ export default function FormEditComputeDataset({
   data: FormFieldProps[]
   setShowEdit: (show: boolean) => void
   values: ServiceComputePrivacy
-  algorithmList: AlgorithmOption[]
+  algorithmList: AssetSelectionAsset[]
 }): ReactElement {
   const { ocean, accountId } = useOcean()
   const {
@@ -26,6 +26,24 @@ export default function FormEditComputeDataset({
     validateField,
     setFieldValue
   }: FormikContextType<ServiceComputePrivacy> = useFormikContext()
+
+  function addTrustedAlgorithm(did: string) {
+    values.publisherTrustedAlgorithms.push({
+      did: did,
+      containerSectionChecksum: undefined,
+      filesChecksum: undefined
+    })
+    return values.publisherTrustedAlgorithms
+  }
+
+  function removeTrustedAlgorithm(did: string) {
+    values.publisherTrustedAlgorithms = values.publisherTrustedAlgorithms.filter(
+      (algorithm: any) => {
+        return algorithm.did !== did
+      }
+    )
+    return values.publisherTrustedAlgorithms
+  }
 
   // Manually handle change events instead of using `handleChange` from Formik.
   // Workaround for default `validateOnChange` not kicking in
@@ -36,9 +54,9 @@ export default function FormEditComputeDataset({
     let value: any
     switch (field.type) {
       case 'assetSelectionMultiple':
-        // value = values.publisherTrustedAlgorithms.push(e.target.value)
-        console.log(JSON.parse(e.target.value))
-        console.log(values.publisherTrustedAlgorithms)
+        value = e.target.checked
+          ? addTrustedAlgorithm(e.target.value)
+          : removeTrustedAlgorithm(e.target.value)
         break
       case 'checkbox':
         value = !JSON.parse(e.target.value)
@@ -46,15 +64,16 @@ export default function FormEditComputeDataset({
       default:
         value = JSON.parse(e.target.value)
     }
-    console.log(value)
     setFieldValue(field.name, value)
     validateField(field.name)
   }
 
   useEffect(() => {
     algorithmList &&
-      algorithmList.forEach((algorithm: AlgorithmOption) => {
-        const checkbox = document.getElementById(slugify(algorithm.name))
+      algorithmList.forEach((algorithm: AssetSelectionAsset) => {
+        const checkbox = document.getElementById(
+          slugify(algorithm.name)
+        ) as HTMLInputElement
         if (values.publisherTrustedAlgorithms) {
           values.publisherTrustedAlgorithms.forEach((publishedAlgorithm) => {
             if (algorithm.did === publishedAlgorithm.did) {
@@ -65,8 +84,6 @@ export default function FormEditComputeDataset({
       })
   }, [data])
 
-  console.log(document.getElementsByTagName('select')[0])
-
   return (
     <Form className={styles.form}>
       {data.map((field: FormFieldProps) => (
@@ -74,7 +91,7 @@ export default function FormEditComputeDataset({
           key={field.name}
           {...field}
           component={Input}
-          onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
             handleFieldChange(e, field)
           }
         />
