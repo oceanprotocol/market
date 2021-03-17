@@ -41,20 +41,26 @@ export default function Details(): ReactElement {
           'https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png'
       }
     }
-    const wasAdded = await web3Provider.sendAsync({
-      method: 'metamask_watchAsset',
-      params: tokenMetadata,
-      id: Math.round(Math.random() * 100000)
-    })
-    if (wasAdded) {
-      Logger.log(
-        `Added ${tokenMetadata.options.symbol} (${tokenMetadata.options.address}) to MetaMask`
-      )
-    } else {
-      Logger.error(
-        `Couldn't add ${tokenMetadata.options.symbol} (${tokenMetadata.options.address}) to MetaMask`
-      )
-    }
+    web3Provider.sendAsync(
+      {
+        method: 'wallet_watchAsset',
+        params: tokenMetadata,
+        id: Math.round(Math.random() * 100000)
+      },
+      (err: string, added: any) => {
+        if (err || 'error' in added) {
+          Logger.log(
+            `Counld't add ${tokenMetadata.options.symbol} (${
+              tokenMetadata.options.address
+            }) to MetaMask, error: ${err || added.error}`
+          )
+        } else {
+          Logger.log(
+            `Added ${tokenMetadata.options.symbol} (${tokenMetadata.options.address}) to MetaMask`
+          )
+        }
+      }
+    )
   }
 
   // Handle network change for Portis
