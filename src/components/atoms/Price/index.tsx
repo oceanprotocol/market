@@ -1,25 +1,21 @@
 import React, { ReactElement } from 'react'
 import styles from './index.module.css'
-import { useMetadata } from '@oceanprotocol/react'
-import { DDO } from '@oceanprotocol/lib'
+import { BestPrice } from '@oceanprotocol/lib'
 import Loader from '../Loader'
 import Tooltip from '../Tooltip'
 import PriceUnit from './PriceUnit'
 
 export default function Price({
-  ddo,
+  price,
   className,
   small,
   conversion
 }: {
-  ddo: DDO
+  price: BestPrice
   className?: string
   small?: boolean
   conversion?: boolean
 }): ReactElement {
-  // price is not fetched from the chain anymore , will update one AssetProvider is implemented
-  const { price } = useMetadata(ddo)
-
   return price?.value ? (
     <PriceUnit
       price={`${price.value}`}

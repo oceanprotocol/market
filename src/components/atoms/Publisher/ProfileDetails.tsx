@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import styles from './ProfileDetails.module.css'
 import { Profile } from '../../../models/Profile'
-import EtherscanLink from '../EtherscanLink'
+import ExplorerLink from '../ExplorerLink'
 import PublisherLinks from './PublisherLinks'
 
 export default function ProfileDetails({
@@ -26,9 +26,9 @@ export default function ProfileDetails({
             {profile?.emoji} {profile?.name}
           </h3>
 
-          <EtherscanLink networkId={networkId} path={`address/${account}`}>
+          <ExplorerLink networkId={networkId} path={`address/${account}`}>
             <code>{account}</code>
-          </EtherscanLink>
+          </ExplorerLink>
         </header>
 
         {profile?.description && (

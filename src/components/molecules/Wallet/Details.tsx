@@ -1,27 +1,36 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import Button from '../../atoms/Button'
 import styles from './Details.module.css'
-import { useOcean } from '@oceanprotocol/react'
+import { useOcean } from '../../../providers/Ocean'
 import Web3Feedback from './Feedback'
 import { getProviderInfo, IProviderInfo } from 'web3modal'
 import Conversion from '../../atoms/Price/Conversion'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../../providers/UserPreferences'
+import { useWeb3 } from '../../../providers/Web3'
 
 export default function Details(): ReactElement {
-  const { balance, connect, logout, web3Provider } = useOcean()
+  const { web3Provider, connect, logout, networkData, networkId } = useWeb3()
+  const { balance } = useOcean()
   const { locale } = useUserPreferences()
+
   const [providerInfo, setProviderInfo] = useState<IProviderInfo>()
+  const [mainCurrency, setMainCurrency] = useState<string>()
   // const [portisNetwork, setPortisNetwork] = useState<string>()
 
   // Workaround cause getInjectedProviderName() always returns `MetaMask`
   // https://github.com/oceanprotocol/market/issues/332
   useEffect(() => {
     if (!web3Provider) return
-
     const providerInfo = getProviderInfo(web3Provider)
     setProviderInfo(providerInfo)
   }, [web3Provider])
+
+  useEffect(() => {
+    if (!networkData) return
+
+    setMainCurrency(networkData.nativeCurrency.symbol)
+  }, [networkData])
 
   // Handle network change for Portis
   // async function handlePortisNetworkChange(e: ChangeEvent<HTMLSelectElement>) {
@@ -38,7 +47,13 @@ export default function Details(): ReactElement {
       <ul>
         {Object.entries(balance).map(([key, value]) => (
           <li className={styles.balance} key={key}>
-            <span className={styles.symbol}>{key.toUpperCase()}</span>{' '}
+            <span className={styles.symbol}>
+              {key === 'eth'
+                ? mainCurrency
+                : key === 'ocean' && networkId === 137
+                ? 'mOCEAN'
+                : key.toUpperCase()}
+            </span>{' '}
             {formatCurrency(Number(value), '', locale, false, {
               significantFigures: 4
             })}

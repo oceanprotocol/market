@@ -4,7 +4,7 @@ import { useField } from 'formik'
 import { toast } from 'react-toastify'
 import FileInfo from './Info'
 import FileInput from './Input'
-import { useOcean } from '@oceanprotocol/react'
+import { useOcean } from '../../../../providers/Ocean'
 import { InputProps } from '../../../atoms/Input'
 import { fileinfo } from '../../../../utils/provider'
 

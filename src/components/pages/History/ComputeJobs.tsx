@@ -1,4 +1,3 @@
-import { useOcean } from '@oceanprotocol/react'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Time from '../../atoms/Time'
 import styles from './ComputeJobs.module.css'
@@ -9,6 +8,7 @@ import { Link } from 'gatsby'
 import { Logger } from '@oceanprotocol/lib'
 import Dotdotdot from 'react-dotdotdot'
 import Table from '../../atoms/Table'
+import { useOcean } from '../../../providers/Ocean'
 
 function DetailsButton({ row }: { row: ComputeJobMetaData }): ReactElement {
   const [isDialogOpen, setIsDialogOpen] = useState(false)

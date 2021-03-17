@@ -7,7 +7,7 @@ import React, {
 } from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 import styles from './FormPublish.module.css'
-import { useOcean } from '@oceanprotocol/react'
+import { useOcean } from '../../../providers/Ocean'
 import { useFormikContext, Field, Form, FormikContextType } from 'formik'
 import Input from '../../atoms/Input'
 import Button from '../../atoms/Button'

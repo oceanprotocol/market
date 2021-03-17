@@ -7,7 +7,6 @@ import React, {
   useRef
 } from 'react'
 import styles from './Remove.module.css'
-import { useOcean } from '@oceanprotocol/react'
 import Header from './Header'
 import { toast } from 'react-toastify'
 import Actions from './Actions'
@@ -19,6 +18,8 @@ import { getMaxPercentRemove } from './utils'
 import { graphql, useStaticQuery } from 'gatsby'
 import debounce from 'lodash.debounce'
 import UserLiquidity from '../../../atoms/UserLiquidity'
+import { useOcean } from '../../../../providers/Ocean'
+import { useWeb3 } from '../../../../providers/Web3'
 
 const contentQuery = graphql`
   query PoolRemoveQuery {
@@ -63,7 +64,8 @@ export default function Remove({
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childContentJson.pool.remove
 
-  const { ocean, accountId } = useOcean()
+  const { accountId } = useWeb3()
+  const { ocean } = useOcean()
   const [amountPercent, setAmountPercent] = useState('0')
   const [amountMaxPercent, setAmountMaxPercent] = useState('100')
   const [amountPoolShares, setAmountPoolShares] = useState('0')

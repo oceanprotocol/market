@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react'
-import Time from '../../atoms/Time'
 import MetaItem from './MetaItem'
 import styles from './MetaFull.module.css'
 import Publisher from '../../atoms/Publisher'

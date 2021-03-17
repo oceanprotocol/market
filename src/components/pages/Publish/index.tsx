@@ -1,6 +1,6 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import { Formik, FormikState } from 'formik'
-import { usePublish, useOcean } from '@oceanprotocol/react'
+import { usePublish } from '../../../hooks/usePublish'
 import styles from './index.module.css'
 import FormPublish from './FormPublish'
 import FormAlgoPublish from './FormAlgoPublish'
@@ -31,6 +31,9 @@ import { Persist } from '../../atoms/FormikPersist'
 import Debug from './Debug'
 import Alert from '../../atoms/Alert'
 import MetadataFeedback from '../../molecules/MetadataFeedback'
+import { useAccountPurgatory } from '../../../hooks/useAccountPurgatory'
+import { useWeb3 } from '../../../providers/Web3'
+import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 
 const formNameDatasets = 'ocean-publish-form-datasets'
 const formNameAlgorithms = 'ocean-publish-form-algorithms'
@@ -66,9 +69,11 @@ export default function PublishPage({
 }: {
   content: { warning: string }
 }): ReactElement {
+  const { warningPolygonPublish } = useSiteMetadata()
   const { debug } = useUserPreferences()
+  const { accountId, networkId } = useWeb3()
+  const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
   const { publish, publishError, isLoading, publishStepText } = usePublish()
-  const { isInPurgatory, purgatoryData } = useOcean()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const [title, setTitle] = useState<string>()

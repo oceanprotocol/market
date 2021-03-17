@@ -1,5 +1,4 @@
 import React, { ReactElement, useState, useEffect } from 'react'
-import { useOcean } from '@oceanprotocol/react'
 import Header from '../Header'
 import { toast } from 'react-toastify'
 import Actions from '../Actions'
@@ -9,10 +8,12 @@ import { Formik } from 'formik'
 import FormAdd from './FormAdd'
 import styles from './index.module.css'
 import Alert from '../../../../atoms/Alert'
-import TokenBalance from '../../../../../@types/TokenBalance'
+import { PoolBalance } from '../../../../../@types/TokenBalance'
 import { useUserPreferences } from '../../../../../providers/UserPreferences'
 import Output from './Output'
 import DebugOutput from '../../../../atoms/DebugOutput'
+import { useOcean } from '../../../../../providers/Ocean'
+import { useWeb3 } from '../../../../../providers/Web3'
 
 const contentQuery = graphql`
   query PoolAddQuery {
@@ -56,7 +57,7 @@ export default function Add({
   refreshInfo: () => void
   poolAddress: string
   totalPoolTokens: string
-  totalBalance: TokenBalance
+  totalBalance: PoolBalance
   swapFee: string
   dtSymbol: string
   dtAddress: string
@@ -64,7 +65,8 @@ export default function Add({
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childContentJson.pool.add
 
-  const { ocean, accountId, balance } = useOcean()
+  const { accountId } = useWeb3()
+  const { ocean, balance } = useOcean()
   const { debug } = useUserPreferences()
   const [txId, setTxId] = useState<string>()
   const [coin, setCoin] = useState('OCEAN')

@@ -10,7 +10,7 @@ import { getResults } from './utils'
 import { navigate } from 'gatsby'
 import { updateQueryStringParameter } from '../../../utils'
 import Loader from '../../atoms/Loader'
-import { useOcean } from '@oceanprotocol/react'
+import { useOcean } from '../../../providers/Ocean'
 
 export default function SearchPage({
   location,

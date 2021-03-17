@@ -1,22 +1,18 @@
 import React, { useState, ReactElement, ChangeEvent, useEffect } from 'react'
-import { DDO, Logger } from '@oceanprotocol/lib'
+import { DDO } from '@oceanprotocol/lib'
 import Loader from '../../atoms/Loader'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
-import Dropzone from '../../atoms/Dropzone'
 import Price from '../../atoms/Price'
 import File from '../../atoms/File'
-import {
-  computeOptions,
-  useCompute,
-  readFileContent,
-  useOcean,
-  usePricing
-} from '@oceanprotocol/react'
+import { computeOptions, useCompute } from '../../../hooks/useCompute'
 import styles from './Compute.module.css'
 import Input from '../../atoms/Input'
 import Alert from '../../atoms/Alert'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import checkPreviousOrder from '../../../utils/checkPreviousOrder'
+import { useOcean } from '../../../providers/Ocean'
+import { useWeb3 } from '../../../providers/Web3'
+import { usePricing } from '../../../hooks/usePricing'
 import { useAsset } from '../../../providers/Asset'
 
 export default function Compute({
@@ -29,12 +25,12 @@ export default function Compute({
   dtBalance: string
 }): ReactElement {
   const { marketFeeAddress } = useSiteMetadata()
-
+  const { accountId } = useWeb3()
+  const { ocean } = useOcean()
   const { type } = useAsset()
-  const { ocean, accountId } = useOcean()
   const { compute, isLoading, computeStepText, computeError } = useCompute()
   const { buyDT, dtSymbol } = usePricing(ddo)
-
+  const { price } = useAsset()
   const computeService = ddo.findServiceByType('compute')
   const metadataService = ddo.findServiceByType('metadata')
 
@@ -68,12 +64,6 @@ export default function Compute({
     checkPreviousOrders()
   }, [ocean, ddo, accountId])
 
-  const onDrop = async (files: File[]) => {
-    setFile(files[0])
-    const fileText = await readFileContent(files[0])
-    setAlgorithmRawCode(fileText)
-  }
-
   const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const comType = event.target.value
     setComputeType(comType)
@@ -83,36 +73,36 @@ export default function Compute({
       setComputeContainer(selectedComputeOption.value)
   }
 
-  const startJob = async () => {
-    try {
-      if (!ocean) return
+  // const startJob = async () => {
+  //   try {
+  //     if (!ocean) return
 
-      setIsJobStarting(true)
-      setIsPublished(false)
-      setError('')
+  //     setIsJobStarting(true)
+  //     setIsPublished(false)
+  //     setError('')
 
-      !hasPreviousOrder && !hasDatatoken && (await buyDT('1'))
+  //     !hasPreviousOrder && !hasDatatoken && (await buyDT('1'))
 
-      await compute(
-        ddo.id,
-        computeService,
-        ddo.dataToken,
-        algorithmRawCode,
-        computeContainer,
-        marketFeeAddress,
-        previousOrderId
-      )
+  //     await compute(
+  //       ddo.id,
+  //       computeService,
+  //       ddo.dataToken,
+  //       algorithmRawCode,
+  //       computeContainer,
+  //       marketFeeAddress,
+  //       previousOrderId
+  //     )
 
-      setHasPreviousOrder(true)
-      setIsPublished(true)
-      setFile(null)
-    } catch (error) {
-      setError('Failed to start job!')
-      Logger.error(error.message)
-    } finally {
-      setIsJobStarting(false)
-    }
-  }
+  //     setHasPreviousOrder(true)
+  //     setIsPublished(true)
+  //     setFile(null)
+  //   } catch (error) {
+  //     setError('Failed to start job!')
+  //     Logger.error(error.message)
+  //   } finally {
+  //     setIsJobStarting(false)
+  //   }
+  // }
 
   return (
     <>
@@ -121,7 +111,7 @@ export default function Compute({
           <File file={metadataService.attributes.main.files[0]} small />
         </div>
         <div className={styles.pricewrapper}>
-          <Price ddo={ddo} conversion />
+          <Price price={price} conversion />
           {hasDatatoken && (
             <div className={styles.hasTokens}>
               You own {dtBalance} {dtSymbol} allowing you to use this data set
@@ -154,7 +144,6 @@ export default function Compute({
           onChange={handleSelectChange}
         />
       )}
-      <Dropzone multiple={false} handleOnDrop={onDrop} />
 
       <div className={styles.actions}>
         {isLoading ? (

@@ -1,15 +1,15 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useOcean } from '@oceanprotocol/react'
 import { BestPrice, DDO } from '@oceanprotocol/lib'
 import styles from './Swap.module.css'
 import TradeInput from './TradeInput'
 import Button from '../../../atoms/Button'
 import { ReactComponent as Arrow } from '../../../../images/arrow.svg'
 import { FormikContextType, useFormikContext } from 'formik'
-import TokenBalance from '../../../../@types/TokenBalance'
+import { PoolBalance } from '../../../../@types/TokenBalance'
 import Output from './Output'
 import Slippage from './Slippage'
 import { FormTradeData, TradeItem } from '../../../../models/FormTrade'
+import { useOcean } from '../../../../providers/Ocean'
 
 export default function Swap({
   ddo,
@@ -23,7 +23,7 @@ export default function Swap({
   ddo: DDO
   maxDt: number
   maxOcean: number
-  balance: TokenBalance
+  balance: PoolBalance
   price: BestPrice
   setMaximumDt: (value: number) => void
   setMaximumOcean: (value: number) => void
