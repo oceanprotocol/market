@@ -5,13 +5,13 @@ import Tooltip from '../Tooltip'
 import { Profile } from '../../../models/Profile'
 import { Link } from 'gatsby'
 import get3BoxProfile from '../../../utils/profile'
-import EtherscanLink from '../EtherscanLink'
-import { accountTruncate } from '../../../utils/wallet'
+import ExplorerLink from '../ExplorerLink'
+import { accountTruncate } from '../../../utils/web3'
 import axios from 'axios'
-import { useOcean } from '@oceanprotocol/react'
 import { ReactComponent as Info } from '../../../images/info.svg'
 import ProfileDetails from './ProfileDetails'
 import Add from './Add'
+import { useWeb3 } from '../../../providers/Web3'
 
 const cx = classNames.bind(styles)
 
@@ -24,7 +24,7 @@ export default function Publisher({
   minimal?: boolean
   className?: string
 }): ReactElement {
-  const { networkId, accountId } = useOcean()
+  const { networkId, accountId } = useWeb3()
   const [profile, setProfile] = useState<Profile>()
   const [name, setName] = useState<string>()
 
@@ -88,9 +88,9 @@ export default function Publisher({
               </Tooltip>
             )}
             {showAdd && <Add />}
-            <EtherscanLink networkId={networkId} path={`address/${account}`}>
-              Etherscan
-            </EtherscanLink>
+            <ExplorerLink networkId={networkId} path={`address/${account}`}>
+              Explorer
+            </ExplorerLink>
           </div>
         </>
       )}

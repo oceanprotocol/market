@@ -2,7 +2,7 @@ import { FormikContextType, useFormikContext } from 'formik'
 import { graphql, useStaticQuery } from 'gatsby'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { FormAddLiquidity } from '.'
-import TokenBalance from '../../../../../@types/TokenBalance'
+import { PoolBalance } from '../../../../../@types/TokenBalance'
 import FormHelp from '../../../../atoms/Input/Help'
 import Token from '../Token'
 import styles from './Output.module.css'
@@ -44,7 +44,7 @@ export default function Output({
   swapFee: string
   dtSymbol: string
   totalPoolTokens: string
-  totalBalance: TokenBalance
+  totalBalance: PoolBalance
   coin: string
 }): ReactElement {
   const data = useStaticQuery(contentQuery)

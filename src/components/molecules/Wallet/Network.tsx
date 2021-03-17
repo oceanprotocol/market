@@ -1,43 +1,19 @@
 import React, { useState, useEffect, ReactElement } from 'react'
-import { useOcean } from '@oceanprotocol/react'
+import { useOcean } from '../../../providers/Ocean'
 import Status from '../../atoms/Status'
-import {
-  EthereumListsChain,
-  getNetworkData,
-  getNetworkDisplayName
-} from '../../../utils/wallet'
 import { ConfigHelper } from '@oceanprotocol/lib'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import styles from './Network.module.css'
 import Badge from '../../atoms/Badge'
 import Tooltip from '../../atoms/Tooltip'
-import { graphql, useStaticQuery } from 'gatsby'
-
-const networksQuery = graphql`
-  query NetworksQuery {
-    allNetworksMetadataJson {
-      edges {
-        node {
-          chain
-          network
-          networkId
-        }
-      }
-    }
-  }
-`
+import { useWeb3 } from '../../../providers/Web3'
 
 export default function Network(): ReactElement {
-  const data = useStaticQuery(networksQuery)
-  const networksList: { node: EthereumListsChain }[] =
-    data.allNetworksMetadataJson.edges
-
-  const { config, networkId } = useOcean()
+  const { networkId, networkDisplayName, isTestnet } = useWeb3()
+  const { config } = useOcean()
   const networkIdConfig = (config as ConfigHelperConfig).networkId
 
   const [isEthMainnet, setIsEthMainnet] = useState<boolean>()
-  const [networkName, setNetworkName] = useState<string>()
-  const [isTestnet, setIsTestnet] = useState<boolean>()
   const [isSupportedNetwork, setIsSupportedNetwork] = useState<boolean>()
 
   useEffect(() => {
@@ -51,23 +27,16 @@ export default function Network(): ReactElement {
     // to figure out if network is supported.
     const isSupportedNetwork = Boolean(new ConfigHelper().getConfig(network))
     setIsSupportedNetwork(isSupportedNetwork)
+  }, [networkId, networkIdConfig])
 
-    // Figure out if we're on a chain's testnet, or not
-    const networkData = getNetworkData(networksList, network)
-    setIsTestnet(networkData.network !== 'mainnet')
-
-    const networkName = getNetworkDisplayName(networkData, network)
-    setNetworkName(networkName)
-  }, [networkId, networkIdConfig, networksList])
-
-  return !isEthMainnet && networkName ? (
+  return !isEthMainnet && networkDisplayName ? (
     <div className={styles.network}>
       {!isSupportedNetwork && (
         <Tooltip content="No Ocean Protocol contracts are deployed to this network.">
           <Status state="error" className={styles.warning} />
         </Tooltip>
       )}
-      <span className={styles.name}>{networkName}</span>
+      <span className={styles.name}>{networkDisplayName}</span>
       {isTestnet && <Badge label="Test" className={styles.badge} />}
     </div>
   ) : null

@@ -7,7 +7,6 @@ import styles from './index.module.css'
 import AssetActions from '../AssetActions'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import Pricing from './Pricing'
-import { useOcean } from '@oceanprotocol/react'
 import Bookmark from './Bookmark'
 import { useAsset } from '../../../providers/Asset'
 import Alert from '../../atoms/Alert'
@@ -16,6 +15,7 @@ import Edit from '../AssetActions/Edit'
 import DebugOutput from '../../atoms/DebugOutput'
 import MetaMain from './MetaMain'
 import EditHistory from './EditHistory'
+import { useWeb3 } from '../../../providers/Web3'
 
 export interface AssetContentProps {
   path?: string
@@ -42,7 +42,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.purgatory.edges[0].node.childContentJson.asset
   const { debug } = useUserPreferences()
-  const { accountId } = useOcean()
+  const { accountId } = useWeb3()
   const { owner, isInPurgatory, purgatoryData } = useAsset()
   const [showPricing, setShowPricing] = useState(false)
   const [showEdit, setShowEdit] = useState<boolean>()

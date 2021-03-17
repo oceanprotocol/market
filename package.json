@@ -23,12 +23,11 @@
     "postinstall": "husky install"
   },
   "dependencies": {
-    "@apollo/client": "^3.3.6",
+    "@apollo/client": "^3.3.11",
     "@coingecko/cryptoformat": "^0.4.2",
     "@loadable/component": "^5.14.1",
     "@oceanprotocol/art": "^3.0.0",
     "@oceanprotocol/lib": "^0.11.4",
-    "@oceanprotocol/react": "^0.5.5",
     "@oceanprotocol/typographies": "^0.1.0",
     "@portis/web3": "^3.0.3",
     "@sindresorhus/slugify": "^1.0.0",
@@ -87,7 +86,8 @@
     "slugify": "^1.4.6",
     "swr": "^0.3.11",
     "use-dark-mode": "^2.3.1",
-    "web3": "^1.3.1",
+    "web3": "^1.3.4",
+    "web3modal": "^1.9.3",
     "yup": "^0.32.6"
   },
   "devDependencies": {

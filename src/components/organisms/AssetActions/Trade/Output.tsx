@@ -1,7 +1,7 @@
-import { useOcean } from '@oceanprotocol/react'
 import { FormikContextType, useFormikContext } from 'formik'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { FormTradeData } from '../../../../models/FormTrade'
+import { useOcean } from '../../../../providers/Ocean'
 import Token from '../Pool/Token'
 import styles from './Output.module.css'
 

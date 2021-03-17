@@ -1,4 +1,3 @@
-import { usePricing } from '@oceanprotocol/react'
 import Conversion from '../../../../atoms/Price/Conversion'
 import { useField } from 'formik'
 import React, { ReactElement } from 'react'
@@ -7,6 +6,7 @@ import styles from './Price.module.css'
 import Error from './Error'
 import { DDO } from '@oceanprotocol/lib'
 import PriceUnit from '../../../../atoms/Price/PriceUnit'
+import usePricing from '../../../../../hooks/usePricing'
 
 export default function Price({
   ddo,

@@ -1,19 +1,22 @@
 import { Logger } from '@oceanprotocol/lib'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
-import { useOcean } from '@oceanprotocol/react'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Loader from '../../atoms/Loader'
 import AssetList from '../../organisms/AssetList'
 import axios from 'axios'
 import { queryMetadata } from '../../../utils/aquarius'
+import { useWeb3 } from '../../../providers/Web3'
+import { useOcean } from '../../../providers/Ocean'
 
 export default function PublishedList(): ReactElement {
-  const { accountId } = useOcean()
+  const { accountId } = useWeb3()
+  const { config } = useOcean()
+
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [isLoading, setIsLoading] = useState(false)
-  const { config } = useOcean()
-  const source = axios.CancelToken.source()
   const [page, setPage] = useState<number>(1)
+
+  const source = axios.CancelToken.source()
 
   useEffect(() => {
     async function getPublished() {
