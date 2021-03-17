@@ -196,25 +196,28 @@ export default function Remove({
     setAmountPoolShares(poolShares)
   }
 
+  function computeOutput(slippage: string) {
+    if (isAdvanced === false) {
+      const maximumShares = Number(amountPoolShares) * (100 + Number(slippage))
+      setMaxShares(`${maximumShares}`)
+    } else {
+      const minimumOceanAmount = Number(amountOcean) * (100 - Number(slippage))
+      const minimumDatatokenAmount =
+        Number(amountDatatoken) * (100 - Number(slippage))
+      setMinOceanAmount(`${minimumOceanAmount}`)
+      setMinDatatokenAmount(`${minimumDatatokenAmount}`)
+    }
+  }
+
   function handleOceanAmountChange(e: ChangeEvent<HTMLSelectElement>) {
     setOceanAmount(e.target.value)
     computePoolSharesNeeded()
+    computeOutput(slippage)
   }
 
   function handleSlippageChange(e: ChangeEvent<HTMLSelectElement>) {
     setSlippage(e.target.value)
-    if (isAdvanced === false) {
-      const maximumShares =
-        Number(amountPoolShares) * (100 + Number(e.target.value))
-      setMaxShares(`${maximumShares}`)
-    } else {
-      const minimumOceanAmount =
-        Number(amountOcean) * (100 - Number(e.target.value))
-      const minimumDatatokenAmount =
-        Number(amountDatatoken) * (100 - Number(e.target.value))
-      setMinOceanAmount(`${minimumOceanAmount}`)
-      setMinDatatokenAmount(`${minimumDatatokenAmount}`)
-    }
+    computeOutput(e.target.value)
   }
 
   return (
