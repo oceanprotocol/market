@@ -8,8 +8,9 @@ import React, {
 } from 'react'
 import { Logger } from '@oceanprotocol/lib'
 import { LogLevel } from '@oceanprotocol/lib/dist/node/utils/Logger'
-import { useOcean } from '@oceanprotocol/react'
+import { useOcean } from './Ocean'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
+import { isBrowser } from '../utils'
 
 interface UserPreferencesValue {
   debug: boolean
@@ -30,14 +31,13 @@ const localStorageKey = 'ocean-user-preferences'
 
 function getLocalStorage(): UserPreferencesValue {
   const storageParsed =
-    typeof window !== 'undefined' &&
-    JSON.parse(window.localStorage.getItem(localStorageKey))
+    isBrowser && JSON.parse(window.localStorage.getItem(localStorageKey))
   return storageParsed
 }
 
 function setLocalStorage(values: Partial<UserPreferencesValue>) {
   return (
-    typeof window !== 'undefined' &&
+    isBrowser &&
     window.localStorage.setItem(localStorageKey, JSON.stringify(values))
   )
 }

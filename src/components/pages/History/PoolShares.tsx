@@ -1,4 +1,3 @@
-import { useOcean } from '@oceanprotocol/react'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Table from '../../atoms/Table'
 import Conversion from '../../atoms/Price/Conversion'
@@ -12,6 +11,7 @@ import {
 } from '../../../@types/apollo/PoolShares'
 import web3 from 'web3'
 import Token from '../../organisms/AssetActions/Pool/Token'
+import { useWeb3 } from '../../../providers/Web3'
 
 const poolSharesQuery = gql`
   query PoolShares($user: String) {
@@ -139,7 +139,7 @@ const columns = [
 ]
 
 export default function PoolShares(): ReactElement {
-  const { accountId } = useOcean()
+  const { accountId } = useWeb3()
   const [assets, setAssets] = useState<Asset[]>()
   const { data, loading } = useQuery<PoolSharesList>(poolSharesQuery, {
     variables: {

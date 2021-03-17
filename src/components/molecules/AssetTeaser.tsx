@@ -7,7 +7,6 @@ import { DDO } from '@oceanprotocol/lib'
 import removeMarkdown from 'remove-markdown'
 import Tooltip from '../atoms/Tooltip'
 import Publisher from '../atoms/Publisher'
-import { useMetadata } from '@oceanprotocol/react'
 import Time from '../atoms/Time'
 
 declare type AssetTeaserProps = {
@@ -15,11 +14,11 @@ declare type AssetTeaserProps = {
 }
 
 const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
-  const { owner } = useMetadata(ddo)
   const { attributes } = ddo.findServiceByType('metadata')
   const { name } = attributes.main
   const { dataTokenInfo } = ddo
   const isCompute = Boolean(ddo.findServiceByType('compute'))
+  const { owner } = ddo.publicKey[0]
 
   return (
     <article className={styles.teaser}>
@@ -48,7 +47,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
         </div>
 
         <footer className={styles.foot}>
-          <Price ddo={ddo} small />
+          <Price price={ddo.price} small />
           <p className={styles.date}>
             <Time date={ddo?.created} relative />
           </p>

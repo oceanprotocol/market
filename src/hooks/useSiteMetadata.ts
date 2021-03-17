@@ -14,6 +14,8 @@ const query = graphql`
           link
         }
         warning
+        warningPolygon
+        warningPolygonPublish
         appConfig {
           infuraProjectId
           network

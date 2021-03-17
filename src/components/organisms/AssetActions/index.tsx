@@ -3,16 +3,17 @@ import styles from './index.module.css'
 import Compute from './Compute'
 import Consume from './Consume'
 import { Logger } from '@oceanprotocol/lib'
-import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import Tabs from '../../atoms/Tabs'
-import { useOcean } from '@oceanprotocol/react'
 import compareAsBN from '../../../utils/compareAsBN'
 import Pool from './Pool'
 import Trade from './Trade'
 import { useAsset } from '../../../providers/Asset'
+import { useOcean } from '../../../providers/Ocean'
+import { useWeb3 } from '../../../providers/Web3'
 
 export default function AssetActions(): ReactElement {
-  const { ocean, balance, accountId } = useOcean()
+  const { accountId } = useWeb3()
+  const { ocean, balance, account } = useOcean()
   const { price, ddo, metadata } = useAsset()
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
@@ -40,7 +41,7 @@ export default function AssetActions(): ReactElement {
 
   // Check user balance against price
   useEffect(() => {
-    if (!price?.value || !accountId || !balance?.ocean || !dtBalance) return
+    if (!price?.value || !account || !balance?.ocean || !dtBalance) return
 
     setIsBalanceSufficient(
       compareAsBN(balance.ocean, `${price.value}`) || Number(dtBalance) >= 1
@@ -49,7 +50,7 @@ export default function AssetActions(): ReactElement {
     return () => {
       setIsBalanceSufficient(false)
     }
-  }, [balance, accountId, price, dtBalance])
+  }, [balance, account, price, dtBalance])
 
   const UseContent = isCompute ? (
     <Compute
