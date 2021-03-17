@@ -62,17 +62,10 @@
 }
 
 .slippage {
-  font-size: var(--font-size-small);
+  composes: slippage from '../Trade/Slippage.module.css';
+  border-top: 0px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
-  display: flex;
-  margin-left: -2rem;
-  margin-right: -2rem;
-  margin-bottom: 0rem;
   margin-top: -1rem;
-  padding: calc(var(--spacer) / 4) var(--spacer);
-  text-align: center;
-  color: var(--color-secondary);
-  justify-content: center;
 }
 
 .slippage select {
