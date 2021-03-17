@@ -51,7 +51,7 @@ export default function Details(): ReactElement {
         `Added ${tokenMetadata.options.symbol} (${tokenMetadata.options.address}) to MetaMask`
       )
     } else {
-      Logger.log(
+      Logger.error(
         `Couldn't add ${tokenMetadata.options.symbol} (${tokenMetadata.options.address}) to MetaMask`
       )
     }
