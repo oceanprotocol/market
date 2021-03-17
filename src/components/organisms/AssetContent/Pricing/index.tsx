@@ -2,7 +2,6 @@ import React, { FormEvent, ReactElement, useState } from 'react'
 import { Formik } from 'formik'
 import { initialValues, validationSchema } from '../../../../models/FormPricing'
 import { DDO, Logger } from '@oceanprotocol/lib'
-import { usePricing } from '@oceanprotocol/react'
 import { PriceOptionsMarket } from '../../../../@types/MetaData'
 import Alert from '../../../atoms/Alert'
 import styles from './index.module.css'
@@ -10,6 +9,7 @@ import FormPricing from './FormPricing'
 import { toast } from 'react-toastify'
 import Feedback from './Feedback'
 import { graphql, useStaticQuery } from 'gatsby'
+import { usePricing } from '../../../../hooks/usePricing'
 
 const query = graphql`
   query PricingQuery {

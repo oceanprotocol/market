@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom/extend-expect'
 import * as Gatsby from 'gatsby'
 import siteMetadata from './__fixtures__/siteMetadata.json'
-// import mockReact from './__mocks__/@oceanprotocol/react'
 
 if (typeof window.IntersectionObserver === 'undefined') {
   import('intersection-observer')
@@ -20,7 +19,6 @@ export const globalMock = {
 beforeAll(() => {
   jest.mock('web3')
   jest.mock('@oceanprotocol/lib')
-  jest.mock('@oceanprotocol/react')
 
   // useOcean.mockImplementation(() => mockReact.useOcean())
   useStaticQuery.mockImplementation(() => globalMock)

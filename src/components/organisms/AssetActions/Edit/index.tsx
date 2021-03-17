@@ -1,4 +1,3 @@
-import { useOcean } from '@oceanprotocol/react'
 import { Formik } from 'formik'
 import React, { ReactElement, useState } from 'react'
 import { MetadataEditForm } from '../../../../@types/MetaData'
@@ -17,6 +16,8 @@ import styles from './index.module.css'
 import { Logger } from '@oceanprotocol/lib'
 import MetadataFeedback from '../../../molecules/MetadataFeedback'
 import { graphql, useStaticQuery } from 'gatsby'
+import { useWeb3 } from '../../../../providers/Web3'
+import { useOcean } from '../../../../providers/Ocean'
 
 const contentQuery = graphql`
   query EditMetadataQuery {
@@ -57,7 +58,8 @@ export default function Edit({
   const content = data.content.edges[0].node.childPagesJson
 
   const { debug } = useUserPreferences()
-  const { ocean, accountId } = useOcean()
+  const { accountId } = useWeb3()
+  const { ocean } = useOcean()
   const { metadata, ddo, refreshDdo } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()

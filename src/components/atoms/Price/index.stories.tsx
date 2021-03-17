@@ -7,6 +7,6 @@ export default {
   title: 'Atoms/Price'
 }
 
-export const Normal = () => <Price ddo={ddo as DDO} />
+export const Normal = () => <Price price={(ddo as DDO).price} />
 
-export const Small = () => <Price ddo={ddo as DDO} small />
+export const Small = () => <Price price={(ddo as DDO).price} small />

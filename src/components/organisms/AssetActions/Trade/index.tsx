@@ -1,12 +1,14 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useOcean } from '@oceanprotocol/react'
 import FormTrade from './FormTrade'
-import TokenBalance from '../../../../@types/TokenBalance'
+import { PoolBalance } from '../../../../@types/TokenBalance'
 import { useAsset } from '../../../../providers/Asset'
+import { useOcean } from '../../../../providers/Ocean'
+import { useWeb3 } from '../../../../providers/Web3'
 
 export default function Trade(): ReactElement {
-  const { ocean, balance, accountId } = useOcean()
-  const [tokenBalance, setTokenBalance] = useState<TokenBalance>()
+  const { accountId } = useWeb3()
+  const { ocean, balance } = useOcean()
+  const [tokenBalance, setTokenBalance] = useState<PoolBalance>()
   const { price, ddo } = useAsset()
   const [maxDt, setMaxDt] = useState(0)
   const [maxOcean, setMaxOcean] = useState(0)

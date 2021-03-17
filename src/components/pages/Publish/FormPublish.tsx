@@ -1,11 +1,11 @@
 import React, { ReactElement, useEffect, FormEvent, ChangeEvent } from 'react'
 import styles from './FormPublish.module.css'
-import { useOcean } from '@oceanprotocol/react'
 import { useFormikContext, Field, Form, FormikContextType } from 'formik'
 import Input from '../../atoms/Input'
 import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { MetadataPublishForm } from '../../../@types/MetaData'
+import { useOcean } from '../../../providers/Ocean'
 
 export default function FormPublish({
   content
