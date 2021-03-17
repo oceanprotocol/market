@@ -46,8 +46,8 @@ export default function Details(): ReactElement {
       },
       (err: string, added: any) => {
         if (err || 'error' in added) {
-          Logger.log(
-            `Counld't add ${tokenMetadata.options.symbol} (${
+          Logger.error(
+            `Couldn't add ${tokenMetadata.options.symbol} (${
               tokenMetadata.options.address
             }) to MetaMask, error: ${err || added.error}`
           )
@@ -96,11 +96,11 @@ export default function Details(): ReactElement {
         ))}
 
         <li className={styles.actions}>
-          <span title="Connected provider" className={styles.walletInfo}>
-            <div>
+          <div title="Connected provider" className={styles.walletInfo}>
+            <span>
               <img className={styles.walletLogo} src={providerInfo?.logo} />
               {providerInfo?.name}
-            </div>
+            </span>
             {/* {providerInfo?.name === 'Portis' && (
               <InputElement
                 name="network"
@@ -122,7 +122,7 @@ export default function Details(): ReactElement {
                 Add Ocean
               </Button>
             )}
-          </span>
+          </div>
           <p>
             {providerInfo?.name === 'Portis' && (
               <Button
