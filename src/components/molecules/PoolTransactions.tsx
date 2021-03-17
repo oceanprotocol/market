@@ -1,6 +1,6 @@
-import { useOcean } from '@oceanprotocol/react'
+import { useOcean } from '../../providers/Ocean'
 import React, { ReactElement, useEffect, useState } from 'react'
-import EtherscanLink from '../atoms/EtherscanLink'
+import ExplorerLink from '../atoms/ExplorerLink'
 import Time from '../atoms/Time'
 import Table from '../atoms/Table'
 import AssetTitle from './AssetListTitle'
@@ -15,6 +15,7 @@ import {
 } from '../../@types/apollo/TransactionHistory'
 
 import web3 from 'web3'
+import { useWeb3 } from '../../providers/Web3'
 
 const txHistoryQueryByPool = gql`
   query TransactionHistoryByPool($user: String, $pool: String) {
@@ -129,7 +130,8 @@ async function getTitle(
 }
 
 function Title({ row }: { row: TransactionHistoryPoolTransactions }) {
-  const { ocean, networkId } = useOcean()
+  const { networkId } = useWeb3()
+  const { ocean } = useOcean()
   const [title, setTitle] = useState<string>()
   const { locale } = useUserPreferences()
 
@@ -144,9 +146,9 @@ function Title({ row }: { row: TransactionHistoryPoolTransactions }) {
   }, [ocean, row, locale])
 
   return title ? (
-    <EtherscanLink networkId={networkId} path={`/tx/${row.tx}`}>
+    <ExplorerLink networkId={networkId} path={`/tx/${row.tx}`}>
       <span className={styles.titleText}>{title}</span>
-    </EtherscanLink>
+    </ExplorerLink>
   ) : null
 }
 
@@ -193,7 +195,7 @@ export default function PoolTransactions({
   poolAddress?: string
   minimal?: boolean
 }): ReactElement {
-  const { accountId } = useOcean()
+  const { accountId } = useWeb3()
   const [logs, setLogs] = useState<TransactionHistoryPoolTransactions[]>()
 
   const { data, loading } = useQuery<TransactionHistory>(

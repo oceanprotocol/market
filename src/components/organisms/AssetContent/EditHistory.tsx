@@ -1,17 +1,15 @@
-import { useOcean } from '@oceanprotocol/react'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useAsset } from '../../../providers/Asset'
-import EtherscanLink from '../../atoms/EtherscanLink'
+import ExplorerLink from '../../atoms/ExplorerLink'
 import Time from '../../atoms/Time'
 import styles from './EditHistory.module.css'
 import { gql, useQuery } from '@apollo/client'
 import { ReceiptData_datatokens_updates as ReceiptData } from '../../../@types/apollo/ReceiptData'
+import { useWeb3 } from '../../../providers/Web3'
 
 const getReceipts = gql`
   query ReceiptData($address: ID!) {
     datatokens(where: { id: $address }) {
-      createTime
-      tx
       updates(orderBy: timestamp, orderDirection: desc) {
         id
         tx
@@ -22,7 +20,7 @@ const getReceipts = gql`
 `
 
 export default function EditHistory(): ReactElement {
-  const { networkId } = useOcean()
+  const { networkId } = useWeb3()
   const { ddo } = useAsset()
   const { data } = useQuery(getReceipts, {
     variables: { address: ddo?.dataToken.toLowerCase() }
@@ -33,8 +31,15 @@ export default function EditHistory(): ReactElement {
 
   useEffect(() => {
     if (!data || data.datatokens.length === 0) return
-    setReceipts(data.datatokens[0].updates)
-    setCreationTx(data.datatokens[0].tx)
+
+    const receiptCollectionLength = data.datatokens[0].updates.length
+    const creationData = data.datatokens[0].updates[receiptCollectionLength - 1]
+    setCreationTx(creationData.tx)
+
+    const receiptCollection = [...data.datatokens[0].updates]
+    receiptCollection.splice(-1, 1)
+
+    setReceipts(receiptCollection)
   }, [data])
 
   return (
@@ -43,16 +48,16 @@ export default function EditHistory(): ReactElement {
       <ul className={styles.history}>
         {receipts?.map((receipt) => (
           <li key={receipt.id} className={styles.item}>
-            <EtherscanLink networkId={networkId} path={`/tx/${receipt.tx}`}>
+            <ExplorerLink networkId={networkId} path={`/tx/${receipt.tx}`}>
               edited{' '}
               <Time date={receipt.timestamp.toString()} relative isUnix />
-            </EtherscanLink>
+            </ExplorerLink>
           </li>
         ))}
         <li className={styles.item}>
-          <EtherscanLink networkId={networkId} path={`/tx/${creationTx}`}>
+          <ExplorerLink networkId={networkId} path={`/tx/${creationTx}`}>
             published <Time date={ddo.created} relative />
-          </EtherscanLink>
+          </ExplorerLink>
         </li>
       </ul>
     </>

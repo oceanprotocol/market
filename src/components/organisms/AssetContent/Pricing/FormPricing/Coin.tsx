@@ -1,10 +1,10 @@
-import React, { ChangeEvent, ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 import stylesIndex from './index.module.css'
 import styles from './Coin.module.css'
 import InputElement from '../../../../atoms/Input/InputElement'
 import { ReactComponent as Logo } from '../../../../../images/logo.svg'
 import Conversion from '../../../../atoms/Price/Conversion'
-import { DataTokenOptions } from '@oceanprotocol/react'
+import { DataTokenOptions } from '../../../../../hooks/usePublish'
 import { useField } from 'formik'
 import Error from './Error'
 

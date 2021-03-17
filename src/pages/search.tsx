@@ -3,7 +3,7 @@ import PageSearch from '../components/templates/Search'
 import { PageProps } from 'gatsby'
 import Page from '../components/templates/Page'
 import queryString from 'query-string'
-import { accountTruncate } from '../utils/wallet'
+import { accountTruncate } from '../utils/web3'
 import ethereumAddress from 'ethereum-address'
 
 export default function PageGatsbySearch(props: PageProps): ReactElement {

@@ -3,14 +3,13 @@ import styles from './FormComputeDataset.module.css'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import Button from '../../../atoms/Button'
 import Input from '../../../atoms/Input'
-import Loader from '../../../atoms/Loader'
 import { FormFieldProps } from '../../../../@types/Form'
-import { ServiceComputePrivacy, DDO } from '@oceanprotocol/lib'
-import { useCompute, useOcean } from '@oceanprotocol/react'
+import { useOcean } from '../../../../providers/Ocean'
 import { useStaticQuery, graphql } from 'gatsby'
 import { queryMetadata, getAssetsNames } from '../../../../utils/aquarius'
 import axios from 'axios'
 import web3 from 'web3'
+import { DDO } from '@oceanprotocol/lib'
 
 const contentQuery = graphql`
   query StartComputeDatasetQuery {
@@ -60,7 +59,6 @@ export default function FromStartCompute({
     setFieldValue
   }: FormikContextType<string> = useFormikContext()
   const { config } = useOcean()
-  const { computeStepText } = useCompute()
 
   function handleFieldChange(
     e: ChangeEvent<HTMLSelectElement>,
@@ -138,17 +136,13 @@ export default function FromStartCompute({
 
       <footer className={styles.actions}>
         <div className={styles.actions}>
-          {loading ? (
-            <Loader message={computeStepText} />
-          ) : (
-            <Button
-              style="primary"
-              type="submit"
-              // disabled={isComputeButtonDisabled}
-            >
-              Start compute job
-            </Button>
-          )}
+          <Button
+            style="primary"
+            type="submit"
+            // disabled={isComputeButtonDisabled}
+          >
+            Start compute job
+          </Button>
         </div>
       </footer>
     </Form>

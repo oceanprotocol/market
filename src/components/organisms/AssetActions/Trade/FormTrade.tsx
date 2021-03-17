@@ -1,5 +1,4 @@
 import React, { ReactElement, useState } from 'react'
-import { useOcean } from '@oceanprotocol/react'
 import { BestPrice, DDO, Logger } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 import { Formik } from 'formik'
@@ -8,11 +7,13 @@ import { graphql, useStaticQuery } from 'gatsby'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import { toast } from 'react-toastify'
 import Swap from './Swap'
-import TokenBalance from '../../../../@types/TokenBalance'
+import { PoolBalance } from '../../../../@types/TokenBalance'
 import Alert from '../../../atoms/Alert'
 import styles from './FormTrade.module.css'
 import { FormTradeData, initialValues } from '../../../../models/FormTrade'
 import Decimal from 'decimal.js'
+import { useOcean } from '../../../../providers/Ocean'
+import { useWeb3 } from '../../../../providers/Web3'
 
 const contentQuery = graphql`
   query TradeQuery {
@@ -39,14 +40,15 @@ export default function FormTrade({
   price
 }: {
   ddo: DDO
-  balance: TokenBalance
+  balance: PoolBalance
   maxDt: number
   maxOcean: number
   price: BestPrice
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childContentJson.trade
-  const { ocean, accountId } = useOcean()
+  const { accountId } = useWeb3()
+  const { ocean } = useOcean()
   const { debug } = useUserPreferences()
   const [txId, setTxId] = useState<string>()
 

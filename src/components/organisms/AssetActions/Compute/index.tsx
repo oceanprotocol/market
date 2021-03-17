@@ -1,26 +1,25 @@
 import React, { useState, ReactElement, ChangeEvent, useEffect } from 'react'
-import { File as FileMetadata, DDO, Logger } from '@oceanprotocol/lib'
-import File from '../../../atoms/File'
+import { DDO, File as FileMetadata, Logger } from '@oceanprotocol/lib'
+import Loader from '../../../atoms/Loader'
+import FormStartComputeDataset from './FormComputeDataset'
 import Web3Feedback from '../../../molecules/Wallet/Feedback'
 import Price from '../../../atoms/Price'
-import {
-  computeOptions,
-  useCompute,
-  useOcean,
-  usePricing
-} from '@oceanprotocol/react'
+import File from '../../../atoms/File'
+// import { computeOptions, useCompute } from '../../../../hooks/useCompute'
 import styles from './index.module.css'
 import Input from '../../../atoms/Input'
 import Alert from '../../../atoms/Alert'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import checkPreviousOrder from '../../../../utils/checkPreviousOrder'
+import { useOcean } from '../../../../providers/Ocean'
+import { useWeb3 } from '../../../../providers/Web3'
+import { usePricing } from '../../../../hooks/usePricing'
 import { useAsset } from '../../../../providers/Asset'
-import {
-  validationSchema,
-  getInitialValues
-} from '../../../../models/FormStartComputeDataset'
-import FormStartComputeDataset from './FormComputeDataset'
 import { Formik } from 'formik'
+import {
+  getInitialValues,
+  validationSchema
+} from '../../../../models/FormStartComputeDataset'
 
 export default function Compute({
   ddo,
@@ -34,17 +33,19 @@ export default function Compute({
   file: FileMetadata
 }): ReactElement {
   const { marketFeeAddress } = useSiteMetadata()
-
+  const { accountId } = useWeb3()
+  const { ocean, account } = useOcean()
   const { type } = useAsset()
-  const { ocean, accountId, account } = useOcean()
+
+  // const { compute, isLoading, computeStepText, computeError } = useCompute()
   const { buyDT, dtSymbol } = usePricing(ddo)
 
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [, setError] = useState('')
   const [computeType, setComputeType] = useState('nodejs')
-  const [computeContainer, setComputeContainer] = useState(
-    computeOptions[0].value
-  )
+  // const [computeContainer, setComputeContainer] = useState(
+  //   computeOptions[0].value
+  // )
   const [algorithms, setAlgorithms] = useState<DDO[]>()
   const [isPublished, setIsPublished] = useState(false)
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
@@ -68,14 +69,14 @@ export default function Compute({
     checkPreviousOrders()
   }, [ocean, ddo, accountId])
 
-  const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const comType = event.target.value
-    setComputeType(comType)
+  // const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
+  //   const comType = event.target.value
+  //   setComputeType(comType)
 
-    const selectedComputeOption = computeOptions.find((x) => x.name === comType)
-    if (selectedComputeOption !== undefined)
-      setComputeContainer(selectedComputeOption.value)
-  }
+  //   const selectedComputeOption = computeOptions.find((x) => x.name === comType)
+  //   if (selectedComputeOption !== undefined)
+  //     setComputeContainer(selectedComputeOption.value)
+  // }
 
   function getAlgorithmAsset(algorithmId: string): DDO {
     let assetDdo = null
@@ -93,7 +94,9 @@ export default function Compute({
       setIsPublished(false)
       setError('')
 
-      !hasPreviousOrder && !hasDatatoken && (await buyDT('1'))
+      !hasPreviousOrder &&
+        !hasDatatoken &&
+        (await buyDT('1', (ddo as DDO).price))
 
       const algorithmAsset = getAlgorithmAsset(algorithmId)
       const computeService = ddo.findServiceByType('compute')
@@ -174,7 +177,7 @@ export default function Compute({
           <File file={file} small />
         </div>
         <div className={styles.pricewrapper}>
-          <Price ddo={ddo} conversion />
+          <Price price={(ddo as DDO).price} conversion />
           {hasDatatoken && (
             <div className={styles.hasTokens}>
               You own {dtBalance} {dtSymbol} allowing you to use this data set
@@ -193,7 +196,7 @@ export default function Compute({
           size="small"
           value="dataset-1"
           options={['dataset-1', 'dataset-2', 'dataset-3'].map((x) => x)}
-          onChange={handleSelectChange}
+          // onChange={handleSelectChange}
         />
       ) : (
         <Formik

@@ -1,18 +1,16 @@
 import React, { ChangeEvent, ReactElement } from 'react'
 import styles from './TradeInput.module.css'
-
 import {
   Field,
   FieldInputProps,
   FormikContextType,
   useFormikContext
 } from 'formik'
-
-import { useOcean } from '@oceanprotocol/react'
 import Input from '../../../atoms/Input'
 import Button from '../../../atoms/Button'
 import UserLiquidity from '../../../atoms/UserLiquidity'
 import { FormTradeData, TradeItem } from '../../../../models/FormTrade'
+import { useOcean } from '../../../../providers/Ocean'
 
 export default function TradeInput({
   name,
