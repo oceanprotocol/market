@@ -8,13 +8,12 @@ import styles from './index.module.css'
 
 export default function Wallet(): ReactElement {
   const { accountId } = useOcean()
-  const [networkName, setNetworkName] = useState<string>()
 
   return (
     <div className={styles.wallet}>
-      <Network networkName={networkName} setNetworkName={setNetworkName} />
+      <Network />
       <Tooltip
-        content={<Details networkName={networkName} />}
+        content={<Details />}
         trigger="click focus"
         disabled={!accountId}
       >

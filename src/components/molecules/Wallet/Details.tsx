@@ -8,12 +8,15 @@ import Conversion from '../../atoms/Price/Conversion'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 
-export default function Details({
-  networkName
-}: {
-  networkName: string
-}): ReactElement {
-  const { balance, config, connect, logout, web3Provider } = useOcean()
+export default function Details(): ReactElement {
+  const {
+    balance,
+    config,
+    connect,
+    logout,
+    web3Provider,
+    networkId
+  } = useOcean()
   const { locale } = useUserPreferences()
   const [providerInfo, setProviderInfo] = useState<IProviderInfo>()
   // const [portisNetwork, setPortisNetwork] = useState<string>()
@@ -22,7 +25,6 @@ export default function Details({
   // https://github.com/oceanprotocol/market/issues/332
   useEffect(() => {
     if (!web3Provider) return
-
     const providerInfo = getProviderInfo(web3Provider)
     setProviderInfo(providerInfo)
   }, [web3Provider])
@@ -34,7 +36,7 @@ export default function Details({
         type: 'ERC20',
         options: {
           address: config.oceanTokenAddress,
-          symbol: networkName.localeCompare('Matic') === 1 ? 'mOCEAN' : 'OCEAN',
+          symbol: networkId === 137 ? 'mOCEAN' : 'OCEAN',
           decimals: 18,
           image:
             'https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png'
