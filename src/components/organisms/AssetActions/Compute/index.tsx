@@ -37,11 +37,7 @@ export default function Compute({
 
   const { type } = useAsset()
   const { ocean, accountId, account } = useOcean()
-  const { compute } = useCompute()
   const { buyDT, dtSymbol } = usePricing(ddo)
-
-  const computeService = ddo.findServiceByType('compute')
-  const metadataService = ddo.findServiceByType('metadata')
 
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [, setError] = useState('')
@@ -49,7 +45,6 @@ export default function Compute({
   const [computeContainer, setComputeContainer] = useState(
     computeOptions[0].value
   )
-  const [algorithmRawCode, setAlgorithmRawCode] = useState('')
   const [algorithms, setAlgorithms] = useState<DDO[]>()
   const [isPublished, setIsPublished] = useState(false)
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
@@ -98,42 +93,60 @@ export default function Compute({
       setIsPublished(false)
       setError('')
 
-      console.log('hasPreviousOrder', hasPreviousOrder)
-      console.log('hasDatatoken', hasDatatoken)
       !hasPreviousOrder && !hasDatatoken && (await buyDT('1'))
 
       const algorithmAsset = getAlgorithmAsset(algorithmId)
-      console.log('algorithmAsset', algorithmAsset)
-      console.log('ddo', ddo)
       const computeService = ddo.findServiceByType('compute')
-      console.log('computeService', computeService)
-      const computeAddress = await ocean.compute.getComputeAddress(ddo.id)
-      console.log('computeAddress', computeAddress)
       const serviceAlgo = algorithmAsset.findServiceByType('access')
+      const computeAddress = await ocean.compute.getComputeAddress(
+        ddo.id,
+        computeService.index
+      )
+      console.log('computeAddress', computeAddress)
+
+      const allowed = await ocean.compute.isOrderable(
+        ddo.id,
+        computeService.index,
+        algorithmAsset.id,
+        undefined
+      )
+      console.log('allowed', allowed)
+
+      const order = await ocean.compute.orderAsset(
+        accountId,
+        ddo.id,
+        computeService.index,
+        algorithmAsset.id,
+        undefined,
+        marketFeeAddress,
+        computeAddress
+      )
+      console.log('order', order)
+
       const orderalgo = await ocean.compute.orderAlgorithm(
         algorithmId,
         serviceAlgo.type,
         accountId,
         serviceAlgo.index,
-        null,
+        marketFeeAddress,
         computeAddress
       )
+
       console.log('orderalgo', orderalgo)
       const output = {}
       const respone = await ocean.compute.start(
         ddo.id,
-        previousOrderId,
+        order,
         ddo.dataToken,
         account,
-        algorithmId,
+        algorithmAsset.id,
         undefined,
         output,
-        computeService.index.toString(),
+        `${computeService.index}`,
         computeService.type,
         orderalgo,
         algorithmAsset.dataToken
       )
-
       console.log('respone', respone)
 
       setHasPreviousOrder(true)
