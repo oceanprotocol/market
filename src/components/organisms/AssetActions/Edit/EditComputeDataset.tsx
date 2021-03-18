@@ -12,7 +12,8 @@ import styles from './index.module.css'
 import {
   Logger,
   ServiceComputePrivacy,
-  publisherTrustedAlgorithm as PublisherTrustedAlgorithm
+  publisherTrustedAlgorithm as PublisherTrustedAlgorithm,
+  Ocean
 } from '@oceanprotocol/lib'
 import MetadataFeedback from '../../../molecules/MetadataFeedback'
 import { graphql, useStaticQuery } from 'gatsby'
@@ -28,6 +29,7 @@ const contentQuery = graphql`
           childPagesJson {
             description
             form {
+              title
               success
               successAction
               error
@@ -53,7 +55,7 @@ const contentQuery = graphql`
 
 async function createTrustedAlgorithmList(
   selectedAlgorithms: PublisherTrustedAlgorithm[],
-  ocean: any
+  ocean: Ocean
 ) {
   const trustedAlgorithms: PublisherTrustedAlgorithm[] = []
   for (const selectedAlgorithm of selectedAlgorithms) {
@@ -76,7 +78,9 @@ export default function EditComputeDataset({
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
-  content.form.data[2].options = algorithmOptions
+  content.form.data.find(
+    (data: { name: string }) => data.name === 'publisherTrustedAlgorithms'
+  ).options = algorithmOptions
 
   const { ocean } = useOcean()
   const { accountId } = useWeb3()
@@ -99,7 +103,7 @@ export default function EditComputeDataset({
       )
 
       const privacy: ServiceComputePrivacy = {
-        allowRawAlgorithm: values.allowRawAlgorithm,
+        allowRawAlgorithm: false,
         allowNetworkAccess: values.allowNetworkAccess,
         publisherTrustedAlgorithms: trustedAlgorithms
       }
@@ -169,6 +173,7 @@ export default function EditComputeDataset({
             <article className={styles.grid}>
               <>
                 <FormEditComputeDataset
+                  title={content.form.title}
                   data={content.form.data}
                   setShowEdit={setShowEdit}
                   values={initialValues}

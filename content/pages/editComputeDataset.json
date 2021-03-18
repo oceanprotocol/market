@@ -1,28 +1,22 @@
 {
-  "description": "Update compute settings of this data set. Updating compute will create an on-chain transaction you have to approve in your wallet.",
+  "description": "Only selected algorithms are allowed to run on this data set. Updating these settings will create an on-chain transaction you have to approve in your wallet.",
   "form": {
+    "title": "Set allowed algorithms",
     "success": "🎉 Successfully updated. 🎉",
     "successAction": "Close",
     "error": "Updating DDO failed.",
     "data": [
       {
-        "name": "allowRawAlgorithm",
-        "label": "Raw algorithm",
-        "help": "Enable raw algorithms to run on dataset.",
-        "type": "checkbox",
-        "options": ["Allow raw algorithms"]
-      },
-      {
         "name": "allowNetworkAccess",
-        "label": "Published algorithms",
-        "help": "Enable published algorithms to run on dataset.",
+        "label": "All Algorithms",
+        "help": "Allow any published algorithm to run on this data set.",
         "type": "checkbox",
-        "options": ["Allow all published algorithms"]
+        "options": ["Allow any published algorithm"]
       },
       {
         "name": "publisherTrustedAlgorithms",
-        "label": "Publisher trusted algorithms",
-        "help": "Choose a list of algorithms you trust to run on dataset",
+        "label": "Selected Algorithms",
+        "help": "Choose one or multiple algorithms you trust to allow them to run on this dataset.",
         "type": "assetSelectionMultiple",
         "multiple": true,
         "options": [],

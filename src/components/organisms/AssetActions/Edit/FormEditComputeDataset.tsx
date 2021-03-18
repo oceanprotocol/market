@@ -1,5 +1,4 @@
 import React, { ChangeEvent, ReactElement, useEffect } from 'react'
-import styles from './FormEditMetadata.module.css'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import Button from '../../../atoms/Button'
 import Input from '../../../atoms/Input'
@@ -9,14 +8,18 @@ import { FormFieldProps } from '../../../../@types/Form'
 import { ServiceComputePrivacy } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import slugify from 'slugify'
+import stylesIndex from './index.module.css'
+import styles from './FormEditMetadata.module.css'
 
 export default function FormEditComputeDataset({
   data,
+  title,
   setShowEdit,
   values,
   algorithmList
 }: {
   data: FormFieldProps[]
+  title: string
   setShowEdit: (show: boolean) => void
   values: ServiceComputePrivacy
   algorithmList: AssetSelectionAsset[]
@@ -87,6 +90,7 @@ export default function FormEditComputeDataset({
 
   return (
     <Form className={styles.form}>
+      <h3 className={stylesIndex.title}>{title}</h3>
       {data.map((field: FormFieldProps) => (
         <Field
           key={field.name}
