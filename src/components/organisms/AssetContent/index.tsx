@@ -13,7 +13,7 @@ import Alert from '../../atoms/Alert'
 import Button from '../../atoms/Button'
 import Edit from '../AssetActions/Edit'
 import EditComputeDataset from '../AssetActions/Edit/EditComputeDataset'
-import { getAlgorithmsOptions } from '../../../utils/aquarius'
+import { getAlgorithmsForAssetSelection } from '../../../utils/aquarius'
 import { AssetSelectionAsset } from '../../molecules/FormFields/AssetSelection'
 import DebugOutput from '../../atoms/DebugOutput'
 import MetaMain from './MetaMain'
@@ -73,22 +73,18 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   }
 
   useEffect(() => {
-    getAlgorithmsOptions(config).then((algorithms) => {
+    getAlgorithmsForAssetSelection(config).then((algorithms) => {
       setAlgorithms(algorithms)
     })
   }, [])
 
-  return showEdit || showEditCompute ? (
-    <>
-      {showEdit ? (
-        <Edit setShowEdit={setShowEdit} />
-      ) : (
-        <EditComputeDataset
-          setShowEdit={setShowEditCompute}
-          algorithmOptions={algorithms}
-        />
-      )}
-    </>
+  return showEdit ? (
+    <Edit setShowEdit={setShowEdit} />
+  ) : showEditCompute ? (
+    <EditComputeDataset
+      setShowEdit={setShowEditCompute}
+      algorithmOptions={algorithms}
+    />
   ) : (
     <article className={styles.grid}>
       <div>

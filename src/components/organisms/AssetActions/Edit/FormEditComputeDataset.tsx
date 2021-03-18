@@ -71,19 +71,18 @@ export default function FormEditComputeDataset({
   }
 
   useEffect(() => {
-    algorithmList &&
-      algorithmList.forEach((algorithm: AssetSelectionAsset) => {
-        const checkbox = document.getElementById(
-          slugify(algorithm.name)
-        ) as HTMLInputElement
-        if (values.publisherTrustedAlgorithms) {
-          values.publisherTrustedAlgorithms.forEach((publishedAlgorithm) => {
-            if (algorithm.did === publishedAlgorithm.did) {
-              checkbox.checked = true
-            }
-          })
-        }
-      })
+    algorithmList?.forEach((algorithm: AssetSelectionAsset) => {
+      const checkbox = document.getElementById(
+        slugify(algorithm.name)
+      ) as HTMLInputElement
+      if (values.publisherTrustedAlgorithms) {
+        values.publisherTrustedAlgorithms.forEach((publishedAlgorithm) => {
+          if (algorithm.did === publishedAlgorithm.did) {
+            checkbox.checked = true
+          }
+        })
+      }
+    })
   }, [data])
 
   return (
