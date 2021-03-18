@@ -78,7 +78,6 @@ export function getSearchQuery(
     page: Number(page) || 1,
     offset: Number(offset) || 21,
     query: {
-      nativeSearch: 1,
       query_string: {
         query: `${searchTerm} -isInPurgatory:true`
       }

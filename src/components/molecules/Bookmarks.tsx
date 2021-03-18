@@ -26,7 +26,6 @@ async function getAssetsBookmarked(
     page: 1,
     offset: 100,
     query: {
-      nativeSearch: 1,
       query_string: {
         query: searchDids,
         fields: ['dataToken'],

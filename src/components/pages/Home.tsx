@@ -15,7 +15,6 @@ const queryHighest = {
   page: 1,
   offset: 9,
   query: {
-    nativeSearch: 1,
     query_string: {
       query: `(price.type:pool) -isInPurgatory:true`
     }
@@ -27,7 +26,6 @@ const queryLatest = {
   page: 1,
   offset: 9,
   query: {
-    nativeSearch: 1,
     query_string: {
       query: `-isInPurgatory:true`
     }

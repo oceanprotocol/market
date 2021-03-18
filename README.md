@@ -121,7 +121,6 @@ const queryLatest = {
   page: 1,
   offset: 9,
   query: {
-    nativeSearch: 1,
     // https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html
     query_string: { query: `-isInPurgatory:true` }
   },
