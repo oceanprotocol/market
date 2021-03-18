@@ -165,7 +165,6 @@ export default function Remove({
   }
 
   function computeOutput(slippage: string) {
-    console.log('OCEAN AMOUNT: ', amountOcean)
     if (isAdvanced === false) {
       const maxShares = Number(amountPoolShares) * (100 + Number(slippage))
       setMaxShares(`${maxShares}`)
@@ -272,20 +271,29 @@ export default function Remove({
       </div>
       <div className={styles.output}>
         <div>
-          <p>{content.output.titleIn}</p>
-          <Token symbol="pool shares" balance={amountPoolShares} noIcon />
+          {isAdvanced ? (
+            <>
+              <p>{content.output.titleIn}</p>
+              <Token symbol="pool shares" balance={amountPoolShares} noIcon />
+            </>
+          ) : (
+            <>
+              <p>{content.output.titleIn} maximum</p>
+              <Token symbol="pool shares" balance={maxShares} noIcon />
+            </>
+          )}
         </div>
         <div>
           {isAdvanced === true ? (
             <>
-              <p>You will receive</p>
+              <p>{content.output.titleOut} minimum</p>
               <Token symbol="OCEAN" balance={minOceanAmount} />
               <Token symbol={dtSymbol} balance={minDatatokenAmount} />
             </>
           ) : (
             <>
-              <p>You will spend maximum</p>
-              <Token symbol="pool shares" balance={maxShares} />
+              <p>{content.output.titleOut}</p>
+              <Token symbol="OCEAN" balance={amountOcean} />
             </>
           )}
         </div>
