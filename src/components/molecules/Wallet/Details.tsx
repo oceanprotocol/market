@@ -32,7 +32,7 @@ export default function Details(): ReactElement {
       type: 'ERC20',
       options: {
         address: config.oceanTokenAddress,
-        symbol: networkId === 137 ? 'mOCEAN' : 'OCEAN',
+        symbol: config.oceanTokenSymbol,
         decimals: 18,
         image:
           'https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png'
@@ -82,11 +82,7 @@ export default function Details(): ReactElement {
         {Object.entries(balance).map(([key, value]) => (
           <li className={styles.balance} key={key}>
             <span className={styles.symbol}>
-              {key === 'eth'
-                ? mainCurrency
-                : key === 'ocean' && networkId === 137
-                ? 'mOCEAN'
-                : key.toUpperCase()}
+              {key === 'eth' ? mainCurrency : config.oceanTokenSymbol}
             </span>{' '}
             {formatCurrency(Number(value), '', locale, false, {
               significantFigures: 4
@@ -119,7 +115,7 @@ export default function Details(): ReactElement {
                   addOceanToWallet()
                 }}
               >
-                Add Ocean
+                {`Add ${config.oceanTokenSymbol}`}
               </Button>
             )}
           </div>
