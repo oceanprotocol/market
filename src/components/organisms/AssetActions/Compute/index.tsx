@@ -74,7 +74,7 @@ export default function Compute({
   async function checkPreviousOrders(ddo: DDO, serviceType: ServiceType) {
     const orderId = await checkPreviousOrder(ocean, accountId, ddo, serviceType)
     console.log('orderId ++++ ', orderId)
-    let assetType = ddo.findServiceByType('metadata').attributes.main.type
+    const assetType = ddo.findServiceByType('metadata').attributes.main.type
     console.log('orderId ++++ ', assetType)
     if (assetType === 'algorithm') {
       setPreviousAlgorithmOrderId(orderId)
@@ -170,7 +170,7 @@ export default function Compute({
       //   marketFeeAddress,
       //   computeAddress
       // )
-      //console.log('orderalgo', orderalgo)
+      // console.log('orderalgo', orderalgo)
 
       const output = {}
       const respone = await ocean.compute.start(
