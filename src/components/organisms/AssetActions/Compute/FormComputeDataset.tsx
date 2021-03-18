@@ -74,7 +74,6 @@ export default function FromStartCompute({
     const query = {
       page: 1,
       query: {
-        nativeSearch: 1,
         query_string: {
           query: `(service.attributes.main.type:algorithm) -isInPurgatory:true`
         }
