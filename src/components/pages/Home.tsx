@@ -2,7 +2,10 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import SearchBar from '../molecules/SearchBar'
 import styles from './Home.module.css'
 import AssetList from '../organisms/AssetList'
-import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
+import {
+  QueryResult,
+  SearchQuery
+} from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import Container from '../atoms/Container'
 import Loader from '../atoms/Loader'
 import { useOcean } from '../../providers/Ocean'
@@ -15,7 +18,6 @@ const queryHighest = {
   page: 1,
   offset: 9,
   query: {
-    nativeSearch: 1,
     query_string: {
       query: `(price.type:pool) -isInPurgatory:true`
     }
@@ -27,7 +29,6 @@ const queryLatest = {
   page: 1,
   offset: 9,
   query: {
-    nativeSearch: 1,
     query_string: {
       query: `-isInPurgatory:true`
     }
@@ -49,7 +50,7 @@ function SectionQueryResult({
   action
 }: {
   title: ReactElement | string
-  query: any
+  query: SearchQuery
   action?: ReactElement
 }) {
   const { config } = useOcean()
@@ -62,9 +63,8 @@ function SectionQueryResult({
     const source = axios.CancelToken.source()
 
     async function init() {
-      // TODO: remove any once ocean.js has nativeSearch typings
       const result = await queryMetadata(
-        query as any,
+        query,
         config.metadataCacheUri,
         source.token
       )
