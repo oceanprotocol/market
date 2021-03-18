@@ -1,4 +1,4 @@
-import { DDO, DID, Logger } from '@oceanprotocol/lib/'
+import { Config, DDO, DID, Logger } from '@oceanprotocol/lib/'
 import {
   QueryResult,
   SearchQuery
@@ -6,6 +6,7 @@ import {
 import { AssetSelectionAsset } from '../components/molecules/FormFields/AssetSelection'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import web3 from 'web3'
+import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 
 // TODO: import directly from ocean.js somehow.
 // Transforming Aquarius' direct response is needed for getting actual DDOs
@@ -100,8 +101,8 @@ export async function getAssetsNames(
   }
 }
 
-export async function getAlgorithmsOptions(
-  config: any
+export async function getAlgorithmsForAssetSelection(
+  config: ConfigHelperConfig | Config
 ): Promise<AssetSelectionAsset[]> {
   const query = {
     page: 1,
