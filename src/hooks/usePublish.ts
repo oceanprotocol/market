@@ -145,6 +145,8 @@ function usePublish(): UsePublish {
           providerUri
         )
         .next(setStep)
+
+      await ocean.assets.publishDdo(ddo, account.getId())
       Logger.log('ddo created', ddo)
       await sleep(20000)
       setStep(7)
