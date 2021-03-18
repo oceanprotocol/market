@@ -1,14 +1,12 @@
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
 import { Formik } from 'formik'
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 import {
   validationSchema,
   getInitialValues
 } from '../../../../models/FormEditComputeDataset'
 import { useAsset } from '../../../../providers/Asset'
-import { useUserPreferences } from '../../../../providers/UserPreferences'
-import Web3Feedback from '../../../molecules/Wallet/Feedback'
 import FormEditComputeDataset from './FormEditComputeDataset'
 import styles from './index.module.css'
 import {
@@ -80,10 +78,9 @@ export default function EditComputeDataset({
   const content = data.content.edges[0].node.childPagesJson
   content.form.data[2].options = algorithmOptions
 
-  const { debug } = useUserPreferences()
   const { ocean } = useOcean()
   const { accountId } = useWeb3()
-  const { metadata, ddo, refreshDdo } = useAsset()
+  const { ddo, refreshDdo } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
 
@@ -151,7 +148,7 @@ export default function EditComputeDataset({
         await handleSubmit(values, resetForm)
       }}
     >
-      {({ isSubmitting, values, initialValues }) =>
+      {({ isSubmitting, initialValues }) =>
         isSubmitting || hasFeedback ? (
           <MetadataFeedback
             title="Updating Data Set"
