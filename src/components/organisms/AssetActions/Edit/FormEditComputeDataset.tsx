@@ -73,7 +73,7 @@ export default function FormEditComputeDataset({
   useEffect(() => {
     algorithmList?.forEach((algorithm: AssetSelectionAsset) => {
       const checkbox = document.getElementById(
-        slugify(algorithm.name)
+        slugify(algorithm.did)
       ) as HTMLInputElement
       if (values.publisherTrustedAlgorithms) {
         values.publisherTrustedAlgorithms.forEach((publishedAlgorithm) => {
