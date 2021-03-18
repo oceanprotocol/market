@@ -105,7 +105,6 @@ export function getSearchQuery(
     page: Number(page) || 1,
     offset: Number(offset) || 21,
     query: {
-      nativeSearch: 1,
       query_string: {
         query: `${searchTerm} -isInPurgatory:true`
       }
@@ -125,7 +124,7 @@ export function getSearchQuery(
 
     // And the next hack,
     // nativeSearch is not implmeneted on ocean.js typings
-  } as any
+  }
 }
 
 export async function getResults(

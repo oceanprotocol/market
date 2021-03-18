@@ -25,7 +25,6 @@ export default function PublishedList(): ReactElement {
         page: page,
         offset: 9,
         query: {
-          nativeSearch: 1,
           query_string: {
             query: `(publicKey.owner:${accountId})`
           }
@@ -35,7 +34,7 @@ export default function PublishedList(): ReactElement {
       try {
         queryResult || setIsLoading(true)
         const result = await queryMetadata(
-          queryPublishedAssets as any,
+          queryPublishedAssets,
           config.metadataCacheUri,
           source.token
         )
