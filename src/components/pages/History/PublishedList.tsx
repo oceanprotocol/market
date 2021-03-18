@@ -34,7 +34,7 @@ export default function PublishedList(): ReactElement {
       try {
         queryResult || setIsLoading(true)
         const result = await queryMetadata(
-          queryPublishedAssets as any,
+          queryPublishedAssets,
           config.metadataCacheUri,
           source.token
         )

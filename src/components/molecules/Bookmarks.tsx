@@ -33,7 +33,7 @@ async function getAssetsBookmarked(
       }
     },
     sort: { created: -1 }
-  } as any
+  }
 
   try {
     const result = await queryMetadata(

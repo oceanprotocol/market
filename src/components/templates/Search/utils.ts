@@ -97,7 +97,7 @@ export function getSearchQuery(
 
     // And the next hack,
     // nativeSearch is not implmeneted on ocean.js typings
-  } as any
+  }
 }
 
 export async function getResults(
