@@ -1,12 +1,18 @@
 .selection {
-  padding: calc(var(--spacer) / 4);
+  padding: 0;
   border: 1px solid var(--border-color);
   background-color: var(--background-highlight);
   border-radius: var(--border-radius);
   margin-bottom: calc(var(--spacer) / 2);
   font-size: var(--font-size-small);
+}
 
+.scroll {
+  border-top: 1px solid var(--border-color);
+  margin-top: calc(var(--spacer) / 4);
+  min-height: 200px;
   max-height: 300px;
+  position: relative;
   /* smooth overflow scrolling for pre-iOS 13 */
   overflow: auto;
   -webkit-overflow-scrolling: touch;
@@ -16,8 +22,7 @@
   display: flex;
   align-items: flex-start;
   border-bottom: 1px solid var(--border-color);
-  padding-top: calc(var(--spacer) / 4);
-  padding-bottom: calc(var(--spacer) / 4);
+  padding: calc(var(--spacer) / 4);
 }
 
 .row > div {
@@ -28,12 +33,21 @@
   display: flex;
   align-items: baseline;
   width: 100%;
+  margin-top: calc(var(--spacer) / 10);
 }
 
 .input {
   margin-top: 0;
   margin-left: 0;
   margin-right: calc(var(--spacer) / 4);
+}
+
+.radio {
+  composes: radio from '../../atoms/Input/InputElement.module.css';
+}
+
+.checkbox {
+  composes: checkbox from '../../atoms/Input/InputElement.module.css';
 }
 
 .title {
@@ -54,4 +68,9 @@
 .price {
   display: inline-block;
   font-size: var(--font-size-small) !important;
+}
+
+.search {
+  margin: calc(var(--spacer) / 4);
+  width: calc(100% - calc(var(--spacer) / 2));
 }

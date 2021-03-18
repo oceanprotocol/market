@@ -14,13 +14,14 @@ const cx = classNames.bind(styles)
 
 const DefaultInput = ({
   size,
+  className,
   prefix,
   postfix,
   additionalComponent,
   ...props
 }: InputProps) => (
   <input
-    className={cx({ input: true, [size]: size })}
+    className={cx({ input: true, [size]: size, [className]: className })}
     id={props.name}
     {...props}
   />
