@@ -16,7 +16,7 @@
       {
         "name": "publisherTrustedAlgorithms",
         "label": "Selected Algorithms",
-        "help": "Choose one or multiple algorithms you trust to allow them to run on this dataset.",
+        "help": "Choose one or multiple algorithms you trust to allow them to run on this data set.",
         "type": "assetSelectionMultiple",
         "multiple": true,
         "options": [],

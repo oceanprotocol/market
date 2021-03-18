@@ -6,7 +6,9 @@ export const validationSchema = Yup.object().shape({
   publisherTrustedAlgorithms: Yup.array().required('Required')
 })
 
-export function getInitialValues(compute: ServiceComputePrivacy) {
+export function getInitialValues(
+  compute: ServiceComputePrivacy
+): ServiceComputePrivacy {
   return {
     allowRawAlgorithm: false,
     allowNetworkAccess: compute.allowNetworkAccess,
