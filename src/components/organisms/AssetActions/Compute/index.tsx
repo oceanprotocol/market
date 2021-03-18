@@ -1,5 +1,10 @@
 import React, { useState, ReactElement, ChangeEvent, useEffect } from 'react'
-import { DDO, File as FileMetadata, Logger } from '@oceanprotocol/lib'
+import {
+  DDO,
+  File as FileMetadata,
+  Logger,
+  ServiceType
+} from '@oceanprotocol/lib'
 import Loader from '../../../atoms/Loader'
 import FormStartComputeDataset from './FormComputeDataset'
 import Web3Feedback from '../../../molecules/Wallet/Feedback'
@@ -48,8 +53,16 @@ export default function Compute({
   // )
   const [algorithms, setAlgorithms] = useState<DDO[]>()
   const [isPublished, setIsPublished] = useState(false)
-  const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
-  const [previousOrderId, setPreviousOrderId] = useState<string>()
+  const [hasPreviousDatasetOrder, setHasPreviousDatasetOrder] = useState(false)
+  const [previousDatasetOrderId, setPreviousDatasetOrderId] = useState<string>()
+  const [hasPreviousAlgorithmOrder, setHasPreviousAlgorithmOrder] = useState(
+    false
+  )
+  const [
+    previousAlgorithmOrderId,
+    setPreviousAlgorithmOrderId
+  ] = useState<string>()
+
   const isComputeButtonDisabled =
     isJobStarting === true ||
     file === null ||
@@ -58,15 +71,28 @@ export default function Compute({
     !isBalanceSufficient
   const hasDatatoken = Number(dtBalance) >= 1
 
+  async function checkPreviousOrders(ddo: DDO, serviceType: ServiceType) {
+    const orderId = await checkPreviousOrder(ocean, accountId, ddo, serviceType)
+    console.log('orderId ++++ ', orderId)
+    let assetType = ddo.findServiceByType('metadata').attributes.main.type
+    console.log('orderId ++++ ', assetType)
+    if (assetType === 'algorithm') {
+      setPreviousAlgorithmOrderId(orderId)
+      setHasPreviousAlgorithmOrder(!!orderId)
+    } else {
+      setPreviousDatasetOrderId(orderId)
+      setHasPreviousDatasetOrder(!!orderId)
+    }
+  }
   useEffect(() => {
     if (!ocean || !accountId) return
 
-    async function checkPreviousOrders() {
-      const orderId = await checkPreviousOrder(ocean, accountId, ddo, 'compute')
-      setPreviousOrderId(orderId)
-      setHasPreviousOrder(!!orderId)
-    }
-    checkPreviousOrders()
+    // async function checkPreviousOrders() {
+    //   const orderId = await checkPreviousOrder(ocean, accountId, ddo, 'compute')
+    //   setPreviousDatasetOrderId(orderId)
+    //   setHasPreviousDatasetOrder(!!orderId)
+    // }
+    checkPreviousOrders(ddo, 'compute')
   }, [ocean, ddo, accountId])
 
   // const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -94,52 +120,62 @@ export default function Compute({
       setIsPublished(false)
       setError('')
 
-      !hasPreviousOrder &&
+      !hasPreviousDatasetOrder &&
         !hasDatatoken &&
         (await buyDT('1', (ddo as DDO).price))
 
+      console.log('hasPreviousDatasetOrder ++++ ', hasPreviousDatasetOrder)
+      console.log('previousDatasetOrderId', previousDatasetOrderId)
+      console.log('hasDatatoken', hasDatatoken)
+
       const algorithmAsset = getAlgorithmAsset(algorithmId)
+      await checkPreviousOrders(algorithmAsset, 'access')
+
+      !hasPreviousAlgorithmOrder &&
+        (await buyDT('1', (algorithmAsset as DDO).price))
+      console.log('hasPreviousAlgorithmOrder ---- ', hasPreviousAlgorithmOrder)
+      console.log('previousAlgorithmOrderId', previousAlgorithmOrderId)
       const computeService = ddo.findServiceByType('compute')
-      const serviceAlgo = algorithmAsset.findServiceByType('access')
-      const computeAddress = await ocean.compute.getComputeAddress(
-        ddo.id,
-        computeService.index
-      )
-      console.log('computeAddress', computeAddress)
+      // const serviceAlgo = algorithmAsset.findServiceByType('access')
+      // const computeAddress = await ocean.compute.getComputeAddress(
+      //   ddo.id,
+      //   computeService.index
+      // )
+      // console.log('computeAddress', computeAddress)
 
-      const allowed = await ocean.compute.isOrderable(
-        ddo.id,
-        computeService.index,
-        algorithmAsset.id,
-        undefined
-      )
-      console.log('allowed', allowed)
+      // const allowed = await ocean.compute.isOrderable(
+      //   ddo.id,
+      //   computeService.index,
+      //   algorithmAsset.id,
+      //   undefined
+      // )
+      // console.log('allowed', allowed)
 
-      const order = await ocean.compute.orderAsset(
-        accountId,
-        ddo.id,
-        computeService.index,
-        algorithmAsset.id,
-        undefined,
-        marketFeeAddress,
-        computeAddress
-      )
-      console.log('order', order)
+      // const order = await ocean.compute.orderAsset(
+      //   accountId,
+      //   ddo.id,
+      //   computeService.index,
+      //   algorithmAsset.id,
+      //   undefined,
+      //   marketFeeAddress,
+      //   computeAddress
+      // )
+      // console.log('order', order)
 
-      const orderalgo = await ocean.compute.orderAlgorithm(
-        algorithmId,
-        serviceAlgo.type,
-        accountId,
-        serviceAlgo.index,
-        marketFeeAddress,
-        computeAddress
-      )
+      // const orderalgo = await ocean.compute.orderAlgorithm(
+      //   algorithmId,
+      //   serviceAlgo.type,
+      //   accountId,
+      //   serviceAlgo.index,
+      //   marketFeeAddress,
+      //   computeAddress
+      // )
+      //console.log('orderalgo', orderalgo)
 
-      console.log('orderalgo', orderalgo)
       const output = {}
       const respone = await ocean.compute.start(
         ddo.id,
-        order,
+        previousDatasetOrderId,
         ddo.dataToken,
         account,
         algorithmAsset.id,
@@ -147,12 +183,12 @@ export default function Compute({
         output,
         `${computeService.index}`,
         computeService.type,
-        orderalgo,
+        previousAlgorithmOrderId,
         algorithmAsset.dataToken
       )
       console.log('respone', respone)
 
-      setHasPreviousOrder(true)
+      setHasPreviousDatasetOrder(true)
       setIsPublished(true)
     } catch (error) {
       setError('Failed to start job!')
