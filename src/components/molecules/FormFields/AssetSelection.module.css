@@ -20,23 +20,26 @@
 
 .row {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   border-bottom: 1px solid var(--border-color);
-  padding: calc(var(--spacer) / 4);
-}
-
-.row > div {
-  width: 100%;
+  padding: calc(var(--spacer) / 3) calc(var(--spacer) / 4);
 }
 
 .content {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   width: 100%;
   margin-top: calc(var(--spacer) / 10);
 }
 
+.label {
+  display: block;
+  width: 100%;
+}
+
 .input {
+  align-self: flex-start;
+  min-width: 1.2rem;
   margin-top: 0;
   margin-left: 0;
   margin-right: calc(var(--spacer) / 4);
@@ -52,25 +55,43 @@
 
 .title {
   font-size: var(--font-size-small);
-  margin: 0;
+  margin-top: calc(var(--spacer) / 12);
+  margin-bottom: calc(var(--spacer) / 12);
 }
 
 .link {
-  margin-left: calc(var(--spacer) / 4);
+  display: inline-block;
+  margin-left: calc(var(--spacer) / 8);
 }
 
 .link svg {
+  margin: 0;
   fill: var(--color-primary);
   width: 0.7em;
   height: 0.7em;
 }
 
+.footer {
+  display: flex;
+  gap: var(--spacer);
+  justify-content: space-between;
+  margin-top: calc(var(--spacer) / 12);
+}
+
 .price {
-  display: inline-block;
+  white-space: pre;
   font-size: var(--font-size-small) !important;
 }
 
 .search {
   margin: calc(var(--spacer) / 4);
   width: calc(100% - calc(var(--spacer) / 2));
+}
+
+.did {
+  padding: 0;
+  font-size: var(--font-size-mini);
+  display: block;
+  text-align: left;
+  color: var(--color-secondary);
 }

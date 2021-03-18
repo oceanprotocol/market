@@ -63,31 +63,31 @@ export default function AssetSelection({
                 {...props}
                 value={asset.did}
               />
-              <div className={styles.content}>
-                <label
-                  className={styles.label}
-                  htmlFor={slugify(asset.did)}
-                  title={asset.name}
-                >
-                  <Dotdotdot clamp={1} tagName="h3" className={styles.title}>
+              <label
+                className={styles.label}
+                htmlFor={slugify(asset.did)}
+                title={asset.name}
+              >
+                <h3 className={styles.title}>
+                  <Dotdotdot clamp={1} tagName="span">
                     {asset.name}
                   </Dotdotdot>
-                  <PriceUnit
-                    price={asset.price}
-                    small
-                    className={styles.price}
-                  />
-                </label>
+                  <a
+                    className={styles.link}
+                    href={`/asset/${asset.did}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <External />
+                  </a>
+                </h3>
 
-                <a
-                  className={styles.link}
-                  href={`/asset/${asset.did}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <External />
-                </a>
-              </div>
+                <Dotdotdot clamp={1} tagName="code" className={styles.did}>
+                  {asset.did}
+                </Dotdotdot>
+              </label>
+
+              <PriceUnit price={asset.price} small className={styles.price} />
             </div>
           ))}
       </div>
