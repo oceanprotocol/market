@@ -42,16 +42,17 @@ const contentQuery = graphql`
 `
 
 export default function FromStartCompute({
-  algorithmList,
-  setAlgorithmsList,
+  selectedAlgorithm,
+  setselectedAlgorithm,
   loading
 }: {
-  algorithmList: DDO[]
-  setAlgorithmsList: React.Dispatch<React.SetStateAction<DDO[]>>
+  selectedAlgorithm: DDO
+  setselectedAlgorithm: React.Dispatch<React.SetStateAction<DDO>>
   loading: boolean
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
+  const [algorithms, setAlgorithms] = useState<DDO[]>()
 
   const {
     isValid,
@@ -60,6 +61,14 @@ export default function FromStartCompute({
   }: FormikContextType<string> = useFormikContext()
   const { config } = useOcean()
 
+  function getAlgorithmAsset(algorithmId: string): DDO {
+    let assetDdo = null
+    algorithms.forEach((ddo: DDO) => {
+      if (ddo.id === algorithmId) assetDdo = ddo
+    })
+    return assetDdo
+  }
+
   function handleFieldChange(
     e: ChangeEvent<HTMLSelectElement>,
     field: FormFieldProps
@@ -67,6 +76,7 @@ export default function FromStartCompute({
     // hack there's an issue with value on input type radio
     setFieldValue(field.name, e.target.id)
     validateField(field.name)
+    setselectedAlgorithm(getAlgorithmAsset(e.target.id))
   }
 
   // must be moved to a util method used also on edit compute metadata
@@ -90,7 +100,7 @@ export default function FromStartCompute({
       source.token
     )
 
-    setAlgorithmsList(result.results)
+    setAlgorithms(result.results)
     result.results.forEach((ddo: DDO) => {
       const did: string = web3.utils
         .toChecksumAddress(ddo.dataToken)

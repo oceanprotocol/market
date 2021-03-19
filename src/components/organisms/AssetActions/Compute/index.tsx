@@ -51,7 +51,9 @@ export default function Compute({
   // const [computeContainer, setComputeContainer] = useState(
   //   computeOptions[0].value
   // )
-  const [algorithms, setAlgorithms] = useState<DDO[]>()
+  const [selectedAlgorithmAsset, setSelectedAlgorithmAsset] = useState<DDO>()
+  // const [buyAlgoDataToken, setBuyAlgoDataToken] = useState()
+  const [hasAlgoAssetDatatoken, setHasAlgoAssetDatatoken] = useState<boolean>()
   const [isPublished, setIsPublished] = useState(false)
   const [hasPreviousDatasetOrder, setHasPreviousDatasetOrder] = useState(false)
   const [previousDatasetOrderId, setPreviousDatasetOrderId] = useState<string>()
@@ -73,9 +75,7 @@ export default function Compute({
 
   async function checkPreviousOrders(ddo: DDO, serviceType: ServiceType) {
     const orderId = await checkPreviousOrder(ocean, accountId, ddo, serviceType)
-    console.log('orderId ++++ ', orderId)
     const assetType = ddo.findServiceByType('metadata').attributes.main.type
-    console.log('orderId ++++ ', assetType)
     if (assetType === 'algorithm') {
       setPreviousAlgorithmOrderId(orderId)
       setHasPreviousAlgorithmOrder(!!orderId)
@@ -84,16 +84,27 @@ export default function Compute({
       setHasPreviousDatasetOrder(!!orderId)
     }
   }
+
+  async function checkAssetDTBalance(asset: DDO) {
+    const AssetDtBalance = await ocean.datatokens.balance(
+      asset.dataToken,
+      accountId
+    )
+    setHasAlgoAssetDatatoken(Number(AssetDtBalance) >= 1)
+  }
+
   useEffect(() => {
     if (!ocean || !accountId) return
-
-    // async function checkPreviousOrders() {
-    //   const orderId = await checkPreviousOrder(ocean, accountId, ddo, 'compute')
-    //   setPreviousDatasetOrderId(orderId)
-    //   setHasPreviousDatasetOrder(!!orderId)
-    // }
     checkPreviousOrders(ddo, 'compute')
   }, [ocean, ddo, accountId])
+
+  useEffect(() => {
+    if (!ocean || !accountId || !selectedAlgorithmAsset) return
+    checkPreviousOrders(selectedAlgorithmAsset, 'access')
+    checkAssetDTBalance(selectedAlgorithmAsset)
+    // const algoDTBuy = usePricing(selectedAlgorithmAsset)
+    // setBuyAlgoDataToken(algoDTBuy)
+  }, [selectedAlgorithmAsset])
 
   // const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
   //   const comType = event.target.value
@@ -104,14 +115,6 @@ export default function Compute({
   //     setComputeContainer(selectedComputeOption.value)
   // }
 
-  function getAlgorithmAsset(algorithmId: string): DDO {
-    let assetDdo = null
-    algorithms.forEach((ddo: DDO) => {
-      if (ddo.id === algorithmId) assetDdo = ddo
-    })
-    return assetDdo
-  }
-
   const startJob = async (algorithmId: string) => {
     try {
       if (!ocean) return
@@ -120,71 +123,53 @@ export default function Compute({
       setIsPublished(false)
       setError('')
 
+      const computeService = ddo.findServiceByType('compute')
+      const serviceAlgo = selectedAlgorithmAsset.findServiceByType('access')
+
       !hasPreviousDatasetOrder &&
         !hasDatatoken &&
         (await buyDT('1', (ddo as DDO).price))
 
-      console.log('hasPreviousDatasetOrder ++++ ', hasPreviousDatasetOrder)
-      console.log('previousDatasetOrderId', previousDatasetOrderId)
-      console.log('hasDatatoken', hasDatatoken)
+      // !hasPreviousAlgorithmOrder &&
+      //   !hasAlgoAssetDatatoken &&
+      //   (await buyAlgoDataToken('1', (selectedAlgorithmAsset as DDO).price))
 
-      const algorithmAsset = getAlgorithmAsset(algorithmId)
-      await checkPreviousOrders(algorithmAsset, 'access')
+      const allowed = await ocean.compute.isOrderable(
+        ddo.id,
+        computeService.index
+      )
 
-      !hasPreviousAlgorithmOrder &&
-        (await buyDT('1', (algorithmAsset as DDO).price))
-      console.log('hasPreviousAlgorithmOrder ---- ', hasPreviousAlgorithmOrder)
-      console.log('previousAlgorithmOrderId', previousAlgorithmOrderId)
-      const computeService = ddo.findServiceByType('compute')
-      // const serviceAlgo = algorithmAsset.findServiceByType('access')
-      // const computeAddress = await ocean.compute.getComputeAddress(
-      //   ddo.id,
-      //   computeService.index
-      // )
-      // console.log('computeAddress', computeAddress)
+      console.log('is dataset orderable ?', allowed)
+      const assetOrderId = hasPreviousDatasetOrder
+        ? previousDatasetOrderId
+        : await ocean.compute.orderAsset(
+            accountId,
+            ddo.id,
+            computeService.index
+          )
 
-      // const allowed = await ocean.compute.isOrderable(
-      //   ddo.id,
-      //   computeService.index,
-      //   algorithmAsset.id,
-      //   undefined
-      // )
-      // console.log('allowed', allowed)
-
-      // const order = await ocean.compute.orderAsset(
-      //   accountId,
-      //   ddo.id,
-      //   computeService.index,
-      //   algorithmAsset.id,
-      //   undefined,
-      //   marketFeeAddress,
-      //   computeAddress
-      // )
-      // console.log('order', order)
-
-      // const orderalgo = await ocean.compute.orderAlgorithm(
-      //   algorithmId,
-      //   serviceAlgo.type,
-      //   accountId,
-      //   serviceAlgo.index,
-      //   marketFeeAddress,
-      //   computeAddress
-      // )
-      // console.log('orderalgo', orderalgo)
+      const algorithmAssetOrderId = hasPreviousAlgorithmOrder
+        ? previousAlgorithmOrderId
+        : await ocean.compute.orderAlgorithm(
+            algorithmId,
+            serviceAlgo.type,
+            accountId,
+            serviceAlgo.index
+          )
 
       const output = {}
       const respone = await ocean.compute.start(
         ddo.id,
-        previousDatasetOrderId,
+        assetOrderId,
         ddo.dataToken,
         account,
-        algorithmAsset.id,
+        algorithmId,
         undefined,
         output,
         `${computeService.index}`,
         computeService.type,
-        previousAlgorithmOrderId,
-        algorithmAsset.dataToken
+        algorithmAssetOrderId,
+        selectedAlgorithmAsset.dataToken
       )
       console.log('respone', respone)
 
@@ -202,7 +187,6 @@ export default function Compute({
     values: any,
     resetForm: () => void
   ): Promise<void> {
-    console.log('befire await startJob()', values)
     await startJob(values.algorithm)
   }
 
@@ -246,8 +230,8 @@ export default function Compute({
           }}
         >
           <FormStartComputeDataset
-            algorithmList={algorithms}
-            setAlgorithmsList={setAlgorithms}
+            selectedAlgorithm={selectedAlgorithmAsset}
+            setselectedAlgorithm={setSelectedAlgorithmAsset}
             loading={false}
           />
         </Formik>
