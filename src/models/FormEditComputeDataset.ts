@@ -15,6 +15,6 @@ export function getInitialValues(
   return {
     allowRawAlgorithm: compute.allowRawAlgorithm,
     allowNetworkAccess: compute.allowNetworkAccess,
-    publisherTrustedAlgorithms: compute.publisherTrustedAlgorithms
+    publisherTrustedAlgorithms: compute.publisherTrustedAlgorithms || []
   }
 }
