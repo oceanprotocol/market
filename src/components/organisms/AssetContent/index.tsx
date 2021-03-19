@@ -52,7 +52,9 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   const [showPricing, setShowPricing] = useState(false)
   const [showEdit, setShowEdit] = useState<boolean>()
   const [showEditCompute, setShowEditCompute] = useState<boolean>()
-  const [algorithms, setAlgorithms] = useState<AssetSelectionAsset[]>()
+  const [trustedAlgorithms, setTrustedAlgorithms] = useState<
+    AssetSelectionAsset[]
+  >()
   const { ddo, price, metadata } = useAsset()
   const { publisherTrustedAlgorithms } = ddo?.findServiceByType(
     'compute'
@@ -80,7 +82,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
       config.metadataCacheUri,
       publisherTrustedAlgorithms
     ).then((algorithms) => {
-      setAlgorithms(algorithms)
+      setTrustedAlgorithms(algorithms)
     })
   }, [config.metadataCacheUri, publisherTrustedAlgorithms])
 
@@ -88,9 +90,10 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
     <Edit setShowEdit={setShowEdit} />
   ) : showEditCompute ? (
     <EditComputeDataset
+      showEdit={showEditCompute}
       setShowEdit={setShowEditCompute}
-      algorithms={algorithms}
-      setAlgorithms={setAlgorithms}
+      trustedAlgorithms={trustedAlgorithms}
+      setTrustedAlgorithms={setTrustedAlgorithms}
     />
   ) : (
     <article className={styles.grid}>
@@ -128,6 +131,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
                         style="text"
                         size="small"
                         onClick={handleEditComputeButton}
+                        disabled={!trustedAlgorithms}
                       >
                         Edit Compute Settings
                       </Button>

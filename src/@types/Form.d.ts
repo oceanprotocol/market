@@ -1,8 +1,10 @@
+import { AssetSelectionAsset } from '../../molecules/FormFields/AssetSelection'
+
 export interface FormFieldProps {
   label: string
   name: string
   type?: string
-  options?: string[]
+  options?: string[] | AssetSelectionAsset[]
   sortOptions?: boolean
   required?: boolean
   multiple?: boolean

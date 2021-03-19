@@ -1,4 +1,4 @@
-import React, { ChangeEvent, ReactElement } from 'react'
+import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import Button from '../../../atoms/Button'
 import Input from '../../../atoms/Input'
@@ -16,18 +16,21 @@ import styles from './FormEditMetadata.module.css'
 export default function FormEditComputeDataset({
   data,
   title,
+  showEdit,
   setShowEdit,
-  algorithms,
-  setAlgorithms
+  trustedAlgorithms
 }: {
   data: FormFieldProps[]
   title: string
+  showEdit: boolean
   setShowEdit: (show: boolean) => void
-  algorithms: AssetSelectionAsset[]
-  setAlgorithms: (algorithms: AssetSelectionAsset[]) => void
+  trustedAlgorithms: AssetSelectionAsset[]
 }): ReactElement {
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
+  const [algorithmOptions, setAlgorithmOptions] = useState<
+    AssetSelectionAsset[]
+  >(JSON.parse(JSON.stringify(trustedAlgorithms)))
   const {
     isValid,
     validateField,
@@ -36,22 +39,11 @@ export default function FormEditComputeDataset({
   }: FormikContextType<ServiceComputePrivacy> = useFormikContext()
 
   function updateAlgorithmCheckedValue(did: string, newValue: boolean) {
-    const index = algorithms.findIndex((algorithm) => algorithm.did === did)
-    algorithms[index].checked = newValue
-    if (newValue) {
-      algorithms = algorithms.sort(function (
-        a: AssetSelectionAsset,
-        b: AssetSelectionAsset
-      ) {
-        const keyA = a.checked
-        const keyB = b.checked
-        // Compare the 2 dates
-        if (keyA < keyB) return 1
-        if (keyA > keyB) return -1
-        return 0
-      })
-    }
-    setAlgorithms(algorithms)
+    const index = algorithmOptions.findIndex(
+      (algorithm) => algorithm.did === did
+    )
+    algorithmOptions[index].checked = newValue
+    setAlgorithmOptions(algorithmOptions)
   }
 
   function addTrustedAlgorithm(did: string) {
@@ -96,6 +88,18 @@ export default function FormEditComputeDataset({
     setFieldValue(field.name, value)
     validateField(field.name)
   }
+
+  useEffect(() => {
+    setAlgorithmOptions(JSON.parse(JSON.stringify(trustedAlgorithms)))
+  }, [showEdit])
+
+  useEffect(() => {
+    if (algorithmOptions) {
+      data.find(
+        (data: { name: string }) => data.name === 'publisherTrustedAlgorithms'
+      ).options = algorithmOptions
+    }
+  }, [algorithmOptions])
 
   return (
     <Form className={styles.form}>

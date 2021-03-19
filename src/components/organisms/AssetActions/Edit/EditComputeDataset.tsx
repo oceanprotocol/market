@@ -72,19 +72,18 @@ async function createTrustedAlgorithmList(
 }
 
 export default function EditComputeDataset({
+  showEdit,
   setShowEdit,
-  algorithms,
-  setAlgorithms
+  trustedAlgorithms,
+  setTrustedAlgorithms
 }: {
+  showEdit: boolean
   setShowEdit: (show: boolean) => void
-  algorithms: AssetSelectionAsset[]
-  setAlgorithms: (algorithmOptions: AssetSelectionAsset[]) => void
+  trustedAlgorithms: AssetSelectionAsset[]
+  setTrustedAlgorithms: (trustedAlgorithms: AssetSelectionAsset[]) => void
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
-  content.form.data.find(
-    (data: { name: string }) => data.name === 'publisherTrustedAlgorithms'
-  ).options = algorithms
 
   const { debug } = useUserPreferences()
   const { ocean } = useOcean()
@@ -135,6 +134,21 @@ export default function EditComputeDataset({
         return
       } else {
         // Edit succeeded
+        let algorithmList = content.form.data.find(
+          (data: { name: string }) => data.name === 'publisherTrustedAlgorithms'
+        ).options
+        algorithmList = algorithmList.sort(function (
+          a: AssetSelectionAsset,
+          b: AssetSelectionAsset
+        ) {
+          const keyA = a.checked
+          const keyB = b.checked
+          // Compare the 2 dates
+          if (keyA < keyB) return 1
+          if (keyA > keyB) return -1
+          return 0
+        })
+        setTrustedAlgorithms(algorithmList)
         setSuccess(content.form.success)
         resetForm()
       }
@@ -176,13 +190,15 @@ export default function EditComputeDataset({
           <>
             <p className={styles.description}>{content.description}</p>
             <article className={styles.grid}>
-              <FormEditComputeDataset
-                title={content.form.title}
-                data={content.form.data}
-                setShowEdit={setShowEdit}
-                algorithms={algorithms}
-                setAlgorithms={setAlgorithms}
-              />
+              <>
+                <FormEditComputeDataset
+                  title={content.form.title}
+                  data={content.form.data}
+                  showEdit={showEdit}
+                  setShowEdit={setShowEdit}
+                  trustedAlgorithms={trustedAlgorithms}
+                />
+              </>
             </article>
 
             {debug === true && (
