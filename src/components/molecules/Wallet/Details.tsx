@@ -11,7 +11,7 @@ import { useWeb3 } from '../../../providers/Web3'
 import { Logger } from '@oceanprotocol/lib'
 
 export default function Details(): ReactElement {
-  const { web3Provider, connect, logout, networkData, networkId } = useWeb3()
+  const { web3Provider, connect, logout, networkData } = useWeb3()
   const { balance, config } = useOcean()
   const { locale } = useUserPreferences()
 
