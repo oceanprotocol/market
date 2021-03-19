@@ -108,7 +108,7 @@ export async function getAssetsNames(
 }
 
 export async function getAlgorithmsForAssetSelection(
-  config: ConfigHelperConfig | Config,
+  metadataCacheUri: string,
   selectedAlgorithms?: PublisherTrustedAlgorithm[]
 ): Promise<AssetSelectionAsset[]> {
   const query = {
@@ -125,25 +125,21 @@ export async function getAlgorithmsForAssetSelection(
   const priceList: any = {}
   const result = await queryMetadata(
     query as any,
-    config.metadataCacheUri,
+    metadataCacheUri,
     source.token
   )
-  result.results.forEach((ddo: DDO) => {
+  result?.results?.forEach((ddo: DDO) => {
     const did: string = web3.utils
       .toChecksumAddress(ddo.dataToken)
       .replace('0x', 'did:op:')
     didList.push(did)
     priceList[did] = ddo.price.value
   })
-  const ddoNames = await getAssetsNames(
-    didList,
-    config.metadataCacheUri,
-    source.token
-  )
+  const ddoNames = await getAssetsNames(didList, metadataCacheUri, source.token)
   const algorithmList: AssetSelectionAsset[] = []
-  didList.forEach((did: string) => {
+  didList?.forEach((did: string) => {
     let selected = false
-    selectedAlgorithms.forEach((algorithm: PublisherTrustedAlgorithm) => {
+    selectedAlgorithms?.forEach((algorithm: PublisherTrustedAlgorithm) => {
       if (algorithm.did === did) {
         selected = true
       }

@@ -54,6 +54,9 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   const [showEditCompute, setShowEditCompute] = useState<boolean>()
   const [algorithms, setAlgorithms] = useState<AssetSelectionAsset[]>()
   const { ddo, price, metadata } = useAsset()
+  const { publisherTrustedAlgorithms } = ddo?.findServiceByType(
+    'compute'
+  ).attributes.main.privacy
   const isOwner = accountId === owner
 
   useEffect(() => {
@@ -74,13 +77,12 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
 
   useEffect(() => {
     getAlgorithmsForAssetSelection(
-      config,
-      ddo.findServiceByType('compute').attributes.main.privacy
-        .publisherTrustedAlgorithms
+      config.metadataCacheUri,
+      publisherTrustedAlgorithms
     ).then((algorithms) => {
       setAlgorithms(algorithms)
     })
-  }, [])
+  }, [config.metadataCacheUri, publisherTrustedAlgorithms])
 
   return showEdit ? (
     <Edit setShowEdit={setShowEdit} />
