@@ -1,4 +1,10 @@
-import { Config, DDO, DID, Logger } from '@oceanprotocol/lib/'
+import {
+  Config,
+  DDO,
+  DID,
+  Logger,
+  publisherTrustedAlgorithm as PublisherTrustedAlgorithm
+} from '@oceanprotocol/lib/'
 import {
   QueryResult,
   SearchQuery
@@ -102,7 +108,8 @@ export async function getAssetsNames(
 }
 
 export async function getAlgorithmsForAssetSelection(
-  config: ConfigHelperConfig | Config
+  config: ConfigHelperConfig | Config,
+  selectedAlgorithms?: PublisherTrustedAlgorithm[]
 ): Promise<AssetSelectionAsset[]> {
   const query = {
     page: 1,
@@ -135,11 +142,25 @@ export async function getAlgorithmsForAssetSelection(
   )
   const algorithmList: AssetSelectionAsset[] = []
   didList.forEach((did: string) => {
-    algorithmList.push({
-      did: did,
-      name: ddoNames[did],
-      price: priceList[did]
+    let selected = false
+    selectedAlgorithms.forEach((algorithm: PublisherTrustedAlgorithm) => {
+      if (algorithm.did === did) {
+        selected = true
+      }
     })
+    selected
+      ? algorithmList.unshift({
+          did: did,
+          name: ddoNames[did],
+          price: priceList[did],
+          checked: selected
+        })
+      : algorithmList.push({
+          did: did,
+          name: ddoNames[did],
+          price: priceList[did],
+          checked: selected
+        })
   })
   return algorithmList
 }

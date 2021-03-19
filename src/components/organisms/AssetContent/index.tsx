@@ -73,7 +73,11 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   }
 
   useEffect(() => {
-    getAlgorithmsForAssetSelection(config).then((algorithms) => {
+    getAlgorithmsForAssetSelection(
+      config,
+      ddo.findServiceByType('compute').attributes.main.privacy
+        .publisherTrustedAlgorithms
+    ).then((algorithms) => {
       setAlgorithms(algorithms)
     })
   }, [])
@@ -84,6 +88,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
     <EditComputeDataset
       setShowEdit={setShowEditCompute}
       algorithmOptions={algorithms}
+      setAlgorithmsOptions={setAlgorithms}
     />
   ) : (
     <article className={styles.grid}>

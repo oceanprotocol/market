@@ -71,10 +71,12 @@ async function createTrustedAlgorithmList(
 
 export default function EditComputeDataset({
   setShowEdit,
-  algorithmOptions
+  algorithmOptions,
+  setAlgorithmsOptions
 }: {
   setShowEdit: (show: boolean) => void
   algorithmOptions: AssetSelectionAsset[]
+  setAlgorithmsOptions: (algorithmOptions: AssetSelectionAsset[]) => void
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
@@ -177,6 +179,7 @@ export default function EditComputeDataset({
                   data={content.form.data}
                   setShowEdit={setShowEdit}
                   algorithmList={algorithmOptions}
+                  setAlgorithmsOptions={setAlgorithmsOptions}
                 />
               </>
             </article>

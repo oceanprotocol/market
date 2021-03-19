@@ -18,12 +18,14 @@ export default function FormEditComputeDataset({
   data,
   title,
   setShowEdit,
-  algorithmList
+  algorithmList,
+  setAlgorithmsOptions
 }: {
   data: FormFieldProps[]
   title: string
   setShowEdit: (show: boolean) => void
   algorithmList: AssetSelectionAsset[]
+  setAlgorithmsOptions: (algorithmOptions: AssetSelectionAsset[]) => void
 }): ReactElement {
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
@@ -34,7 +36,14 @@ export default function FormEditComputeDataset({
     values
   }: FormikContextType<ServiceComputePrivacy> = useFormikContext()
 
+  function updateAlgorithmCheckedValue(did: string, newValue: boolean) {
+    const index = algorithmList.findIndex((algorithm) => algorithm.did === did)
+    algorithmList[index].checked = newValue
+    setAlgorithmsOptions(algorithmList)
+  }
+
   function addTrustedAlgorithm(did: string) {
+    updateAlgorithmCheckedValue(did, true)
     const selectedAlgorithm: PublisherTrustedAlgorithm = {
       did: did,
       containerSectionChecksum: undefined,
@@ -44,6 +53,7 @@ export default function FormEditComputeDataset({
   }
 
   function removeTrustedAlgorithm(did: string) {
+    updateAlgorithmCheckedValue(did, false)
     const newValues = values.publisherTrustedAlgorithms.filter(
       (algorithm: any) => {
         return algorithm.did !== did
@@ -74,21 +84,6 @@ export default function FormEditComputeDataset({
     setFieldValue(field.name, value)
     validateField(field.name)
   }
-
-  useEffect(() => {
-    algorithmList?.forEach((algorithm: AssetSelectionAsset) => {
-      const checkbox = document.getElementById(
-        slugify(algorithm.did)
-      ) as HTMLInputElement
-      if (values.publisherTrustedAlgorithms) {
-        values.publisherTrustedAlgorithms.forEach((publishedAlgorithm) => {
-          if (algorithm.did === publishedAlgorithm.did) {
-            checkbox.checked = true
-          }
-        })
-      }
-    })
-  }, [data])
 
   return (
     <Form className={styles.form}>

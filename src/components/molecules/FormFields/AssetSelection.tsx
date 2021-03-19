@@ -13,6 +13,7 @@ export interface AssetSelectionAsset {
   did: string
   name: string
   price: string
+  checked: boolean
 }
 
 export default function AssetSelection({
@@ -60,6 +61,7 @@ export default function AssetSelection({
                 id={slugify(asset.did)}
                 type={multiple ? 'checkbox' : 'radio'}
                 className={styleClassesInput}
+                checked={asset.checked}
                 {...props}
                 value={asset.did}
               />
