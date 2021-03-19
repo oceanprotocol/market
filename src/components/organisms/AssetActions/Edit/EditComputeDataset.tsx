@@ -8,7 +8,6 @@ import {
 } from '../../../../models/FormEditComputeDataset'
 import { useAsset } from '../../../../providers/Asset'
 import FormEditComputeDataset from './FormEditComputeDataset'
-import styles from './index.module.css'
 import {
   Logger,
   ServiceComputePrivacy,
@@ -18,6 +17,9 @@ import {
 import MetadataFeedback from '../../../molecules/MetadataFeedback'
 import { graphql, useStaticQuery } from 'gatsby'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
+import { useUserPreferences } from '../../../../providers/UserPreferences'
+import DebugOutput from '../../../atoms/DebugOutput'
+import styles from './index.module.css'
 
 const contentQuery = graphql`
   query EditComputeDataQuery {
@@ -71,19 +73,20 @@ async function createTrustedAlgorithmList(
 
 export default function EditComputeDataset({
   setShowEdit,
-  algorithmOptions,
-  setAlgorithmsOptions
+  algorithms,
+  setAlgorithms
 }: {
   setShowEdit: (show: boolean) => void
-  algorithmOptions: AssetSelectionAsset[]
-  setAlgorithmsOptions: (algorithmOptions: AssetSelectionAsset[]) => void
+  algorithms: AssetSelectionAsset[]
+  setAlgorithms: (algorithmOptions: AssetSelectionAsset[]) => void
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
   content.form.data.find(
     (data: { name: string }) => data.name === 'publisherTrustedAlgorithms'
-  ).options = algorithmOptions
+  ).options = algorithms
 
+  const { debug } = useUserPreferences()
   const { ocean } = useOcean()
   const { accountId } = useWeb3()
   const { ddo, refreshDdo } = useAsset()
@@ -154,7 +157,7 @@ export default function EditComputeDataset({
         await handleSubmit(values, resetForm)
       }}
     >
-      {({ isSubmitting }) =>
+      {({ values, isSubmitting }) =>
         isSubmitting || hasFeedback ? (
           <MetadataFeedback
             title="Updating Data Set"
@@ -173,16 +176,18 @@ export default function EditComputeDataset({
           <>
             <p className={styles.description}>{content.description}</p>
             <article className={styles.grid}>
-              <>
-                <FormEditComputeDataset
-                  title={content.form.title}
-                  data={content.form.data}
-                  setShowEdit={setShowEdit}
-                  algorithmList={algorithmOptions}
-                  setAlgorithmsOptions={setAlgorithmsOptions}
-                />
-              </>
+              <FormEditComputeDataset
+                title={content.form.title}
+                data={content.form.data}
+                setShowEdit={setShowEdit}
+                algorithms={algorithms}
+                setAlgorithms={setAlgorithms}
+              />
             </article>
+
+            {debug === true && (
+              <DebugOutput title="Collected Form Values" output={values} />
+            )}
           </>
         )
       }

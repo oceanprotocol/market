@@ -1,4 +1,4 @@
-import React, { ChangeEvent, ReactElement, useEffect } from 'react'
+import React, { ChangeEvent, ReactElement } from 'react'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import Button from '../../../atoms/Button'
 import Input from '../../../atoms/Input'
@@ -10,7 +10,6 @@ import {
   publisherTrustedAlgorithm as PublisherTrustedAlgorithm
 } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
-import slugify from 'slugify'
 import stylesIndex from './index.module.css'
 import styles from './FormEditMetadata.module.css'
 
@@ -18,14 +17,14 @@ export default function FormEditComputeDataset({
   data,
   title,
   setShowEdit,
-  algorithmList,
-  setAlgorithmsOptions
+  algorithms,
+  setAlgorithms
 }: {
   data: FormFieldProps[]
   title: string
   setShowEdit: (show: boolean) => void
-  algorithmList: AssetSelectionAsset[]
-  setAlgorithmsOptions: (algorithmOptions: AssetSelectionAsset[]) => void
+  algorithms: AssetSelectionAsset[]
+  setAlgorithms: (algorithms: AssetSelectionAsset[]) => void
 }): ReactElement {
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
@@ -37,10 +36,10 @@ export default function FormEditComputeDataset({
   }: FormikContextType<ServiceComputePrivacy> = useFormikContext()
 
   function updateAlgorithmCheckedValue(did: string, newValue: boolean) {
-    const index = algorithmList.findIndex((algorithm) => algorithm.did === did)
-    algorithmList[index].checked = newValue
+    const index = algorithms.findIndex((algorithm) => algorithm.did === did)
+    algorithms[index].checked = newValue
     if (newValue) {
-      algorithmList = algorithmList.sort(function (
+      algorithms = algorithms.sort(function (
         a: AssetSelectionAsset,
         b: AssetSelectionAsset
       ) {
@@ -52,7 +51,7 @@ export default function FormEditComputeDataset({
         return 0
       })
     }
-    setAlgorithmsOptions(algorithmList)
+    setAlgorithms(algorithms)
   }
 
   function addTrustedAlgorithm(did: string) {

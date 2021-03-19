@@ -89,8 +89,8 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   ) : showEditCompute ? (
     <EditComputeDataset
       setShowEdit={setShowEditCompute}
-      algorithmOptions={algorithms}
-      setAlgorithmsOptions={setAlgorithms}
+      algorithms={algorithms}
+      setAlgorithms={setAlgorithms}
     />
   ) : (
     <article className={styles.grid}>
