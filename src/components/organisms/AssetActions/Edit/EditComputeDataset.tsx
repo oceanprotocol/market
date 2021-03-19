@@ -152,7 +152,7 @@ export default function EditComputeDataset({
         await handleSubmit(values, resetForm)
       }}
     >
-      {({ isSubmitting, initialValues }) =>
+      {({ isSubmitting }) =>
         isSubmitting || hasFeedback ? (
           <MetadataFeedback
             title="Updating Data Set"
@@ -176,7 +176,6 @@ export default function EditComputeDataset({
                   title={content.form.title}
                   data={content.form.data}
                   setShowEdit={setShowEdit}
-                  values={initialValues}
                   algorithmList={algorithmOptions}
                 />
               </>

@@ -5,7 +5,10 @@ import Input from '../../../atoms/Input'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
 import { FormFieldProps } from '../../../../@types/Form'
-import { ServiceComputePrivacy } from '@oceanprotocol/lib'
+import {
+  ServiceComputePrivacy,
+  publisherTrustedAlgorithm as PublisherTrustedAlgorithm
+} from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import slugify from 'slugify'
 import stylesIndex from './index.module.css'
@@ -15,13 +18,11 @@ export default function FormEditComputeDataset({
   data,
   title,
   setShowEdit,
-  values,
   algorithmList
 }: {
   data: FormFieldProps[]
   title: string
   setShowEdit: (show: boolean) => void
-  values: ServiceComputePrivacy
   algorithmList: AssetSelectionAsset[]
 }): ReactElement {
   const { accountId } = useWeb3()
@@ -29,25 +30,26 @@ export default function FormEditComputeDataset({
   const {
     isValid,
     validateField,
-    setFieldValue
+    setFieldValue,
+    values
   }: FormikContextType<ServiceComputePrivacy> = useFormikContext()
 
   function addTrustedAlgorithm(did: string) {
-    values.publisherTrustedAlgorithms.push({
+    const selectedAlgorithm: PublisherTrustedAlgorithm = {
       did: did,
       containerSectionChecksum: undefined,
       filesChecksum: undefined
-    })
-    return values.publisherTrustedAlgorithms
+    }
+    return [...values.publisherTrustedAlgorithms, selectedAlgorithm]
   }
 
   function removeTrustedAlgorithm(did: string) {
-    values.publisherTrustedAlgorithms = values.publisherTrustedAlgorithms.filter(
+    const newValues = values.publisherTrustedAlgorithms.filter(
       (algorithm: any) => {
         return algorithm.did !== did
       }
     )
-    return values.publisherTrustedAlgorithms
+    return newValues
   }
 
   // Manually handle change events instead of using `handleChange` from Formik.
