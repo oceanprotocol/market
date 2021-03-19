@@ -39,6 +39,19 @@ export default function FormEditComputeDataset({
   function updateAlgorithmCheckedValue(did: string, newValue: boolean) {
     const index = algorithmList.findIndex((algorithm) => algorithm.did === did)
     algorithmList[index].checked = newValue
+    if (newValue) {
+      algorithmList = algorithmList.sort(function (
+        a: AssetSelectionAsset,
+        b: AssetSelectionAsset
+      ) {
+        const keyA = a.checked
+        const keyB = b.checked
+        // Compare the 2 dates
+        if (keyA < keyB) return 1
+        if (keyA > keyB) return -1
+        return 0
+      })
+    }
     setAlgorithmsOptions(algorithmList)
   }
 
