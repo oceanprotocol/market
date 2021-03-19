@@ -156,7 +156,7 @@ export default function Remove({
     totalPoolTokens
   ])
 
-  async function computeOceansRemoved() {
+  async function computeOceansRemoved(amountPoolShares: string) {
     const oceanAmount = await ocean.pool.getOceanRemovedforPoolShares(
       poolAddress,
       amountPoolShares
@@ -164,18 +164,24 @@ export default function Remove({
     setAmountOcean(oceanAmount)
   }
 
-  function computeOutput(slippage: string) {
-    if (isAdvanced === false) {
-      const maxShares = Number(amountPoolShares) * (100 + Number(slippage))
+  function computeOutput() {
+    if (!isAdvanced) {
+      const maxShares =
+        (Number(amountPoolShares) * (100 + Number(slippage))) / 100
       setMaxShares(`${maxShares}`)
     } else {
-      const minOceanAmount = Number(amountOcean) * (100 - Number(slippage))
+      const minOceanAmount =
+        (Number(amountOcean) * (100 - Number(slippage))) / 100
       const minDatatokenAmount =
-        Number(amountDatatoken) * (100 - Number(slippage))
+        (Number(amountDatatoken) * (100 - Number(slippage))) / 100
       setMinOceanAmount(`${minOceanAmount}`)
       setMinDatatokenAmount(`${minDatatokenAmount}`)
     }
   }
+
+  useEffect(() => {
+    computeOutput()
+  }, [slippage, amountPoolShares, amountOcean, amountDatatoken])
 
   // Set amountPoolShares based on set slider value
   function handleAmountPercentChange(e: ChangeEvent<HTMLInputElement>) {
@@ -184,8 +190,7 @@ export default function Remove({
 
     const amountPoolShares = (Number(e.target.value) / 100) * Number(poolTokens)
     setAmountPoolShares(`${amountPoolShares}`)
-    computeOceansRemoved()
-    computeOutput(slippage)
+    computeOceansRemoved(`${amountPoolShares}`)
   }
 
   function handleMaxButton(e: ChangeEvent<HTMLInputElement>) {
@@ -195,8 +200,7 @@ export default function Remove({
     const amountPoolShares =
       (Number(amountMaxPercent) / 100) * Number(poolTokens)
     setAmountPoolShares(`${amountPoolShares}`)
-    computeOceansRemoved()
-    computeOutput(slippage)
+    computeOceansRemoved(`${amountPoolShares}`)
   }
 
   function handleAdvancedButton(e: FormEvent<HTMLButtonElement>) {
@@ -206,6 +210,9 @@ export default function Remove({
     setAmountPoolShares('0')
     setAmountPercent('0')
     setAmountOcean('0')
+    setSlippage('5')
+    setMinOceanAmount('0')
+    setMinDatatokenAmount('0')
 
     if (isAdvanced === true) {
       setAmountDatatoken('0')
@@ -214,7 +221,6 @@ export default function Remove({
 
   function handleSlippageChange(e: ChangeEvent<HTMLSelectElement>) {
     setSlippage(e.target.value)
-    computeOutput(e.target.value)
   }
 
   return (
