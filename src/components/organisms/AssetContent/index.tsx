@@ -108,7 +108,6 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
                         style="text"
                         size="small"
                         onClick={handleEditComputeButton}
-                        disabled={!trustedAlgorithms}
                       >
                         Edit Compute Settings
                       </Button>

@@ -15,12 +15,10 @@ import { ComputePrivacyForm } from '../../../../models/FormEditComputeDataset'
 export default function FormEditComputeDataset({
   data,
   title,
-  showEdit,
   setShowEdit
 }: {
   data: FormFieldProps[]
   title: string
-  showEdit: boolean
   setShowEdit: (show: boolean) => void
 }): ReactElement {
   const { accountId } = useWeb3()
@@ -39,8 +37,6 @@ export default function FormEditComputeDataset({
       publisherTrustedAlgorithms
     ).then((algorithms) => {
       setAllAlgorithms(algorithms)
-        (data: { name: string }) => data.name === 'publisherTrustedAlgorithms'
-      ).options = algorithmOptions
     })
   }, [config.metadataCacheUri, publisherTrustedAlgorithms])
 

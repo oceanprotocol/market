@@ -52,10 +52,8 @@ const contentQuery = graphql`
 `
 
 export default function EditComputeDataset({
-  showEdit,
   setShowEdit
 }: {
-  showEdit: boolean
   setShowEdit: (show: boolean) => void
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
@@ -76,8 +74,7 @@ export default function EditComputeDataset({
   ) {
     try {
       const privacy = await transformComputeFormToServiceComputePrivacy(
-        // TODO: ocean.js needs allowAllAlgoritms setting
-        values.publisherTrustedAlgorithms,
+        values,
         ddo,
         ocean
       )
@@ -104,21 +101,6 @@ export default function EditComputeDataset({
         return
       } else {
         // Edit succeeded
-        let algorithmList = content.form.data.find(
-          (data: { name: string }) => data.name === 'publisherTrustedAlgorithms'
-        ).options
-        algorithmList = algorithmList.sort(function (
-          a: AssetSelectionAsset,
-          b: AssetSelectionAsset
-        ) {
-          const keyA = a.checked
-          const keyB = b.checked
-          // Compare the 2 dates
-          if (keyA < keyB) return 1
-          if (keyA > keyB) return -1
-          return 0
-        })
-        setTrustedAlgorithms(algorithmList)
         setSuccess(content.form.success)
         resetForm()
       }
@@ -160,12 +142,11 @@ export default function EditComputeDataset({
           <>
             <p className={styles.description}>{content.description}</p>
             <article className={styles.grid}>
-=              <FormEditComputeDataset
-                  title={content.form.title}
-                  data={content.form.data}
-                  showEdit={showEdit}
-                  setShowEdit={setShowEdit}
-               />
+              <FormEditComputeDataset
+                title={content.form.title}
+                data={content.form.data}
+                setShowEdit={setShowEdit}
+              />
             </article>
 
             {debug === true && (
