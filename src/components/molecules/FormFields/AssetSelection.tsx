@@ -6,6 +6,7 @@ import PriceUnit from '../../atoms/Price/PriceUnit'
 import { ReactComponent as External } from '../../../images/external.svg'
 import styles from './AssetSelection.module.css'
 import InputElement from '../../atoms/Input/InputElement'
+import Loader from '../../atoms/Loader'
 
 const cx = classNames.bind(styles)
 
@@ -51,51 +52,55 @@ export default function AssetSelection({
         disabled={disabled}
       />
       <div className={styles.scroll}>
-        {assets
-          ?.filter((asset: AssetSelectionAsset) =>
-            searchValue !== ''
-              ? asset.name.toLowerCase().includes(searchValue) ||
-                asset.did.includes(searchValue)
-              : asset
-          )
-          .map((asset: AssetSelectionAsset) => (
-            <div className={styles.row} key={asset.did}>
-              <input
-                id={slugify(asset.did)}
-                type={multiple ? 'checkbox' : 'radio'}
-                className={styleClassesInput}
-                defaultChecked={asset.checked}
-                {...props}
-                disabled={disabled}
-                value={asset.did}
-              />
-              <label
-                className={styles.label}
-                htmlFor={slugify(asset.did)}
-                title={asset.name}
-              >
-                <h3 className={styles.title}>
-                  <Dotdotdot clamp={1} tagName="span">
-                    {asset.name}
+        {assets ? (
+          assets
+            .filter((asset: AssetSelectionAsset) =>
+              searchValue !== ''
+                ? asset.name.toLowerCase().includes(searchValue) ||
+                  asset.did.includes(searchValue)
+                : asset
+            )
+            .map((asset: AssetSelectionAsset) => (
+              <div className={styles.row} key={asset.did}>
+                <input
+                  id={slugify(asset.did)}
+                  type={multiple ? 'checkbox' : 'radio'}
+                  className={styleClassesInput}
+                  defaultChecked={asset.checked}
+                  {...props}
+                  disabled={disabled}
+                  value={asset.did}
+                />
+                <label
+                  className={styles.label}
+                  htmlFor={slugify(asset.did)}
+                  title={asset.name}
+                >
+                  <h3 className={styles.title}>
+                    <Dotdotdot clamp={1} tagName="span">
+                      {asset.name}
+                    </Dotdotdot>
+                    <a
+                      className={styles.link}
+                      href={`/asset/${asset.did}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <External />
+                    </a>
+                  </h3>
+
+                  <Dotdotdot clamp={1} tagName="code" className={styles.did}>
+                    {asset.did}
                   </Dotdotdot>
-                  <a
-                    className={styles.link}
-                    href={`/asset/${asset.did}`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <External />
-                  </a>
-                </h3>
+                </label>
 
-                <Dotdotdot clamp={1} tagName="code" className={styles.did}>
-                  {asset.did}
-                </Dotdotdot>
-              </label>
-
-              <PriceUnit price={asset.price} small className={styles.price} />
-            </div>
-          ))}
+                <PriceUnit price={asset.price} small className={styles.price} />
+              </div>
+            ))
+        ) : (
+          <Loader />
+        )}
       </div>
     </div>
   )
