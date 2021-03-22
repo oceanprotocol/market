@@ -1,20 +1,29 @@
 import { ServiceComputePrivacy } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 
-export const validationSchema: Yup.SchemaOf<ServiceComputePrivacy> = Yup.object().shape(
+export interface ComputePrivacyForm {
+  allowAllAlgorithms: boolean
+  publisherTrustedAlgorithms: string[]
+}
+
+export const validationSchema: Yup.SchemaOf<ComputePrivacyForm> = Yup.object().shape(
   {
-    allowRawAlgorithm: Yup.boolean(),
-    allowNetworkAccess: Yup.boolean().nullable(),
-    publisherTrustedAlgorithms: Yup.array()
+    allowAllAlgorithms: Yup.boolean().nullable(),
+    publisherTrustedAlgorithms: Yup.array().nullable()
   }
 )
 
 export function getInitialValues(
   compute: ServiceComputePrivacy
-): ServiceComputePrivacy {
+): ComputePrivacyForm {
+  const { allowAllAlgorithms, publisherTrustedAlgorithms } = compute
+
+  const publisherTrustedAlgorithmsForForm = (
+    publisherTrustedAlgorithms || []
+  ).map((algo) => algo.did)
+
   return {
-    allowRawAlgorithm: compute.allowRawAlgorithm,
-    allowNetworkAccess: compute.allowNetworkAccess,
-    publisherTrustedAlgorithms: compute.publisherTrustedAlgorithms || []
+    allowAllAlgorithms,
+    publisherTrustedAlgorithms: publisherTrustedAlgorithmsForForm
   }
 }

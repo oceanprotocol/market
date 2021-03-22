@@ -4,22 +4,18 @@ import { Formik } from 'formik'
 import React, { ReactElement, useState } from 'react'
 import {
   validationSchema,
-  getInitialValues
+  getInitialValues,
+  ComputePrivacyForm
 } from '../../../../models/FormEditComputeDataset'
 import { useAsset } from '../../../../providers/Asset'
 import FormEditComputeDataset from './FormEditComputeDataset'
-import {
-  Logger,
-  ServiceComputePrivacy,
-  publisherTrustedAlgorithm as PublisherTrustedAlgorithm,
-  Ocean
-} from '@oceanprotocol/lib'
+import { Logger, ServiceComputePrivacy } from '@oceanprotocol/lib'
 import MetadataFeedback from '../../../molecules/MetadataFeedback'
 import { graphql, useStaticQuery } from 'gatsby'
-import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import DebugOutput from '../../../atoms/DebugOutput'
 import styles from './index.module.css'
+import { transformComputeFormToServiceComputePrivacy } from '../../../../utils/compute'
 
 const contentQuery = graphql`
   query EditComputeDataQuery {
@@ -55,36 +51,13 @@ const contentQuery = graphql`
   }
 `
 
-async function createTrustedAlgorithmList(
-  selectedAlgorithms: PublisherTrustedAlgorithm[],
-  ocean: Ocean
-) {
-  const trustedAlgorithms: PublisherTrustedAlgorithm[] = []
-  for (const selectedAlgorithm of selectedAlgorithms) {
-    const trustedAlgorithm = selectedAlgorithm.filesChecksum
-      ? selectedAlgorithm
-      : await ocean.compute.createPublisherTrustedAlgorithmfromDID(
-          selectedAlgorithm.did.toString()
-        )
-    trustedAlgorithms.push(trustedAlgorithm)
-  }
-  return trustedAlgorithms
-}
-
 export default function EditComputeDataset({
-  setShowEdit,
-  algorithms,
-  setAlgorithms
+  setShowEdit
 }: {
   setShowEdit: (show: boolean) => void
-  algorithms: AssetSelectionAsset[]
-  setAlgorithms: (algorithmOptions: AssetSelectionAsset[]) => void
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
-  content.form.data.find(
-    (data: { name: string }) => data.name === 'publisherTrustedAlgorithms'
-  ).options = algorithms
 
   const { debug } = useUserPreferences()
   const { ocean } = useOcean()
@@ -96,27 +69,21 @@ export default function EditComputeDataset({
   const hasFeedback = error || success
 
   async function handleSubmit(
-    values: ServiceComputePrivacy,
+    values: ComputePrivacyForm,
     resetForm: () => void
   ) {
     try {
-      let trustedAlgorithms: PublisherTrustedAlgorithm[] = []
-
-      trustedAlgorithms = await createTrustedAlgorithmList(
+      const privacy = await transformComputeFormToServiceComputePrivacy(
+        // TODO: ocean.js needs allowAllAlgoritms setting
         values.publisherTrustedAlgorithms,
+        ddo,
         ocean
       )
-
-      const privacy: ServiceComputePrivacy = {
-        allowRawAlgorithm: false,
-        allowNetworkAccess: values.allowNetworkAccess,
-        publisherTrustedAlgorithms: trustedAlgorithms
-      }
 
       const ddoEditedComputePrivacy = await ocean.compute.editComputePrivacy(
         ddo,
         1,
-        privacy
+        privacy as ServiceComputePrivacy
       )
 
       if (!ddoEditedComputePrivacy) {
@@ -180,13 +147,21 @@ export default function EditComputeDataset({
                 title={content.form.title}
                 data={content.form.data}
                 setShowEdit={setShowEdit}
-                algorithms={algorithms}
-                setAlgorithms={setAlgorithms}
               />
             </article>
 
             {debug === true && (
-              <DebugOutput title="Collected Form Values" output={values} />
+              <div className={styles.grid}>
+                <DebugOutput title="Collected Form Values" output={values} />
+                <DebugOutput
+                  title="Transformed Form Values"
+                  output={transformComputeFormToServiceComputePrivacy(
+                    values,
+                    ddo,
+                    ocean
+                  )}
+                />
+              </div>
             )}
           </>
         )

@@ -13,7 +13,6 @@ export interface AssetSelectionAsset {
   did: string
   name: string
   price: string
-  checked: boolean
 }
 
 export default function AssetSelection({
@@ -49,7 +48,7 @@ export default function AssetSelection({
       />
       <div className={styles.scroll}>
         {assets
-          .filter((asset: AssetSelectionAsset) =>
+          ?.filter((asset: AssetSelectionAsset) =>
             searchValue !== ''
               ? asset.name.toLowerCase().includes(searchValue) ||
                 asset.did.includes(searchValue)
@@ -61,7 +60,6 @@ export default function AssetSelection({
                 id={slugify(asset.did)}
                 type={multiple ? 'checkbox' : 'radio'}
                 className={styleClassesInput}
-                checked={asset.checked}
                 {...props}
                 value={asset.did}
               />

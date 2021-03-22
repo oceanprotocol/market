@@ -3,7 +3,6 @@ import { graphql, useStaticQuery } from 'gatsby'
 import Markdown from '../../atoms/Markdown'
 import MetaFull from './MetaFull'
 import MetaSecondary from './MetaSecondary'
-import styles from './index.module.css'
 import AssetActions from '../AssetActions'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import Pricing from './Pricing'
@@ -13,13 +12,11 @@ import Alert from '../../atoms/Alert'
 import Button from '../../atoms/Button'
 import Edit from '../AssetActions/Edit'
 import EditComputeDataset from '../AssetActions/Edit/EditComputeDataset'
-import { getAlgorithmsForAssetSelection } from '../../../utils/aquarius'
-import { AssetSelectionAsset } from '../../molecules/FormFields/AssetSelection'
 import DebugOutput from '../../atoms/DebugOutput'
 import MetaMain from './MetaMain'
 import EditHistory from './EditHistory'
 import { useWeb3 } from '../../../providers/Web3'
-import { useOcean } from '../../../providers/Ocean'
+import styles from './index.module.css'
 
 export interface AssetContentProps {
   path?: string
@@ -46,17 +43,13 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.purgatory.edges[0].node.childContentJson.asset
   const { debug } = useUserPreferences()
-  const { config } = useOcean()
   const { accountId } = useWeb3()
   const { owner, isInPurgatory, purgatoryData } = useAsset()
   const [showPricing, setShowPricing] = useState(false)
   const [showEdit, setShowEdit] = useState<boolean>()
   const [showEditCompute, setShowEditCompute] = useState<boolean>()
-  const [algorithms, setAlgorithms] = useState<AssetSelectionAsset[]>()
   const { ddo, price, metadata } = useAsset()
-  const { publisherTrustedAlgorithms } = ddo?.findServiceByType(
-    'compute'
-  ).attributes.main.privacy
+
   const isOwner = accountId === owner
 
   useEffect(() => {
@@ -75,23 +68,10 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
     setShowEditCompute(true)
   }
 
-  useEffect(() => {
-    getAlgorithmsForAssetSelection(
-      config.metadataCacheUri,
-      publisherTrustedAlgorithms
-    ).then((algorithms) => {
-      setAlgorithms(algorithms)
-    })
-  }, [config.metadataCacheUri, publisherTrustedAlgorithms])
-
   return showEdit ? (
     <Edit setShowEdit={setShowEdit} />
   ) : showEditCompute ? (
-    <EditComputeDataset
-      setShowEdit={setShowEditCompute}
-      algorithms={algorithms}
-      setAlgorithms={setAlgorithms}
-    />
+    <EditComputeDataset setShowEdit={setShowEditCompute} />
   ) : (
     <article className={styles.grid}>
       <div>
