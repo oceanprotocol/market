@@ -13,7 +13,7 @@ import { Logger, ServiceComputePrivacy } from '@oceanprotocol/lib'
 import MetadataFeedback from '../../../molecules/MetadataFeedback'
 import { graphql, useStaticQuery } from 'gatsby'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
-import DebugOutput from '../../../atoms/DebugOutput'
+import DebugEditCompute from './DebugEditCompute'
 import styles from './index.module.css'
 import { transformComputeFormToServiceComputePrivacy } from '../../../../utils/compute'
 
@@ -170,15 +170,7 @@ export default function EditComputeDataset({
 
             {debug === true && (
               <div className={styles.grid}>
-                <DebugOutput title="Collected Form Values" output={values} />
-                <DebugOutput
-                  title="Transformed Form Values"
-                  output={transformComputeFormToServiceComputePrivacy(
-                    values,
-                    ddo,
-                    ocean
-                  )}
-                />
+                <DebugEditCompute values={values} ddo={ddo} />
               </div>
             )}
           </>
