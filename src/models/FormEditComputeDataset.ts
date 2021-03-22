@@ -16,6 +16,7 @@ export const validationSchema: Yup.SchemaOf<ComputePrivacyForm> = Yup.object().s
 export function getInitialValues(
   compute: ServiceComputePrivacy
 ): ComputePrivacyForm {
+  // TODO: ocean.js needs allowAllAlgoritms setting
   const { allowAllAlgorithms, publisherTrustedAlgorithms } = compute
 
   const publisherTrustedAlgorithmsForForm = (

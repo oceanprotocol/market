@@ -74,8 +74,7 @@ export default function EditComputeDataset({
   ) {
     try {
       const privacy = await transformComputeFormToServiceComputePrivacy(
-        // TODO: ocean.js needs allowAllAlgoritms setting
-        values.publisherTrustedAlgorithms,
+        values,
         ddo,
         ocean
       )
