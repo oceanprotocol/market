@@ -31,10 +31,9 @@ export async function transformComputeFormToServiceComputePrivacy(
     'compute'
   ).attributes.main.privacy
 
-  const publisherTrustedAlgorithms = await createTrustedAlgorithmList(
-    values.publisherTrustedAlgorithms,
-    ocean
-  )
+  const publisherTrustedAlgorithms = values.allowAllAlgorithms
+    ? []
+    : await createTrustedAlgorithmList(values.publisherTrustedAlgorithms, ocean)
 
   const privacy: ServiceComputePrivacy = {
     allowNetworkAccess,

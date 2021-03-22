@@ -7,6 +7,10 @@
   font-size: var(--font-size-small);
 }
 
+.disabled {
+  opacity: 0.5;
+}
+
 .scroll {
   border-top: 1px solid var(--border-color);
   margin-top: calc(var(--spacer) / 4);

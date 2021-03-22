@@ -38,6 +38,7 @@ export default function InputElement({
   field,
   label,
   multiple,
+  disabled,
   help,
   form,
   additionalComponent,
@@ -112,6 +113,7 @@ export default function InputElement({
         <AssetSelection
           assets={(options as unknown) as AssetSelectionAsset[]}
           multiple
+          disabled={disabled}
           {...field}
           {...props}
         />
@@ -132,6 +134,7 @@ export default function InputElement({
             name={name}
             type={type || 'text'}
             size={size}
+            disabled={disabled}
             {...props}
           />
           {postfix && (
@@ -143,6 +146,7 @@ export default function InputElement({
           name={name}
           type={type || 'text'}
           size={size}
+          disabled={disabled}
           {...props}
         />
       )

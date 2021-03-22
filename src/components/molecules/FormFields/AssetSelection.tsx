@@ -19,10 +19,12 @@ export interface AssetSelectionAsset {
 export default function AssetSelection({
   assets,
   multiple,
+  disabled,
   ...props
 }: {
   assets: AssetSelectionAsset[]
   multiple?: boolean
+  disabled?: boolean
 }): JSX.Element {
   const [searchValue, setSearchValue] = useState('')
 
@@ -37,7 +39,7 @@ export default function AssetSelection({
   }
 
   return (
-    <div className={styles.selection}>
+    <div className={`${styles.selection} ${disabled ? styles.disabled : ''}`}>
       <InputElement
         type="search"
         name="search"
@@ -46,6 +48,7 @@ export default function AssetSelection({
         value={searchValue}
         onChange={handleSearchInput}
         className={styles.search}
+        disabled={disabled}
       />
       <div className={styles.scroll}>
         {assets
@@ -63,6 +66,7 @@ export default function AssetSelection({
                 className={styleClassesInput}
                 defaultChecked={asset.checked}
                 {...props}
+                disabled={disabled}
                 value={asset.did}
               />
               <label

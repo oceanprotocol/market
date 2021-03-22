@@ -24,7 +24,10 @@ export default function FormEditComputeDataset({
   const { accountId } = useWeb3()
   const { ocean, config } = useOcean()
   const { ddo } = useAsset()
-  const { isValid }: FormikContextType<ComputePrivacyForm> = useFormikContext()
+  const {
+    isValid,
+    values
+  }: FormikContextType<ComputePrivacyForm> = useFormikContext()
   const [allAlgorithms, setAllAlgorithms] = useState<AssetSelectionAsset[]>()
 
   const { publisherTrustedAlgorithms } = ddo?.findServiceByType(
@@ -51,6 +54,11 @@ export default function FormEditComputeDataset({
             field.name === 'publisherTrustedAlgorithms'
               ? allAlgorithms
               : field.options
+          }
+          disabled={
+            field.name === 'publisherTrustedAlgorithms'
+              ? values.allowAllAlgorithms
+              : false
           }
           component={Input}
         />
