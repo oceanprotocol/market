@@ -43,7 +43,17 @@ export default function Compute({
   const { type } = useAsset()
 
   // const { compute, isLoading, computeStepText, computeError } = useCompute()
-  const { buyDT, dtSymbol } = usePricing(ddo)
+  const { buyDT, getDTSymbol } = usePricing()
+  const [dtSymbol, setDtSymbol] = useState<string>()
+
+  useEffect(() => {
+    if (!ddo) return
+    async function setDatatokenSymbol(ddo: DDO) {
+      const dtSymbol = await getDTSymbol(ddo)
+      setDtSymbol(dtSymbol)
+    }
+    setDatatokenSymbol(ddo)
+  }, [])
 
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [, setError] = useState('')
@@ -52,7 +62,6 @@ export default function Compute({
   //   computeOptions[0].value
   // )
   const [selectedAlgorithmAsset, setSelectedAlgorithmAsset] = useState<DDO>()
-  // const [buyAlgoDataToken, setBuyAlgoDataToken] = useState()
   const [hasAlgoAssetDatatoken, setHasAlgoAssetDatatoken] = useState<boolean>()
   const [isPublished, setIsPublished] = useState(false)
   const [hasPreviousDatasetOrder, setHasPreviousDatasetOrder] = useState(false)
@@ -102,8 +111,6 @@ export default function Compute({
     if (!ocean || !accountId || !selectedAlgorithmAsset) return
     checkPreviousOrders(selectedAlgorithmAsset, 'access')
     checkAssetDTBalance(selectedAlgorithmAsset)
-    // const algoDTBuy = usePricing(selectedAlgorithmAsset)
-    // setBuyAlgoDataToken(algoDTBuy)
   }, [selectedAlgorithmAsset])
 
   // const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -128,11 +135,15 @@ export default function Compute({
 
       !hasPreviousDatasetOrder &&
         !hasDatatoken &&
-        (await buyDT('1', (ddo as DDO).price))
+        (await buyDT('1', (ddo as DDO).price, ddo))
 
-      // !hasPreviousAlgorithmOrder &&
-      //   !hasAlgoAssetDatatoken &&
-      //   (await buyAlgoDataToken('1', (selectedAlgorithmAsset as DDO).price))
+      !hasPreviousAlgorithmOrder &&
+        !hasAlgoAssetDatatoken &&
+        (await buyDT(
+          '1',
+          (selectedAlgorithmAsset as DDO).price,
+          selectedAlgorithmAsset
+        ))
 
       const allowed = await ocean.compute.isOrderable(
         ddo.id,

@@ -69,9 +69,12 @@ export default function Consume({
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
   const [previousOrderId, setPreviousOrderId] = useState<string>()
   const { isInPurgatory, price, type } = useAsset()
-  const { buyDT, pricingStepText, pricingError, pricingIsLoading } = usePricing(
-    ddo
-  )
+  const {
+    buyDT,
+    pricingStepText,
+    pricingError,
+    pricingIsLoading
+  } = usePricing()
   const { consumeStepText, consume, consumeError } = useConsume()
   const [isDisabled, setIsDisabled] = useState(true)
   const [hasDatatoken, setHasDatatoken] = useState(false)
@@ -144,7 +147,7 @@ export default function Consume({
   ])
 
   async function handleConsume() {
-    !hasPreviousOrder && !hasDatatoken && (await buyDT('1', price))
+    !hasPreviousOrder && !hasDatatoken && (await buyDT('1', price, ddo))
     await consume(
       ddo.id,
       ddo.dataToken,
