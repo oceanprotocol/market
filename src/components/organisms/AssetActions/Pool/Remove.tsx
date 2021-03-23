@@ -156,7 +156,7 @@ export default function Remove({
     totalPoolTokens
   ])
 
-  async function computeOceansRemoved(amountPoolShares: string) {
+  async function calculateAmountOfOceansRemoved(amountPoolShares: string) {
     const oceanAmount = await ocean.pool.getOceanRemovedforPoolShares(
       poolAddress,
       amountPoolShares
@@ -164,7 +164,7 @@ export default function Remove({
     setAmountOcean(oceanAmount)
   }
 
-  function computeOutput() {
+  useEffect(() => {
     if (!isAdvanced) {
       const maxShares =
         (Number(amountPoolShares) * (100 + Number(slippage))) / 100
@@ -177,11 +177,7 @@ export default function Remove({
       setMinOceanAmount(`${minOceanAmount}`)
       setMinDatatokenAmount(`${minDatatokenAmount}`)
     }
-  }
-
-  useEffect(() => {
-    computeOutput()
-  }, [slippage, amountPoolShares, amountOcean, amountDatatoken])
+  }, [slippage, amountPoolShares, amountOcean, amountDatatoken, isAdvanced])
 
   // Set amountPoolShares based on set slider value
   function handleAmountPercentChange(e: ChangeEvent<HTMLInputElement>) {
@@ -190,7 +186,7 @@ export default function Remove({
 
     const amountPoolShares = (Number(e.target.value) / 100) * Number(poolTokens)
     setAmountPoolShares(`${amountPoolShares}`)
-    computeOceansRemoved(`${amountPoolShares}`)
+    calculateAmountOfOceansRemoved(`${amountPoolShares}`)
   }
 
   function handleMaxButton(e: ChangeEvent<HTMLInputElement>) {
@@ -200,7 +196,7 @@ export default function Remove({
     const amountPoolShares =
       (Number(amountMaxPercent) / 100) * Number(poolTokens)
     setAmountPoolShares(`${amountPoolShares}`)
-    computeOceansRemoved(`${amountPoolShares}`)
+    calculateAmountOfOceansRemoved(`${amountPoolShares}`)
   }
 
   function handleAdvancedButton(e: FormEvent<HTMLButtonElement>) {
@@ -262,6 +258,27 @@ export default function Remove({
           </Button>
         </div>
       </form>
+      <div className={styles.output}>
+        <div>
+          <p>{content.output.titleIn}</p>
+          {isAdvanced ? (
+            <Token symbol="pool shares" balance={amountPoolShares} noIcon />
+          ) : (
+            <Token symbol="pool shares" balance={maxShares} noIcon />
+          )}
+        </div>
+        <div>
+          <p>{content.output.titleOut} minimum</p>
+          {isAdvanced === true ? (
+            <>
+              <Token symbol="OCEAN" balance={minOceanAmount} />
+              <Token symbol={dtSymbol} balance={minDatatokenAmount} />
+            </>
+          ) : (
+            <Token symbol="OCEAN" balance={amountOcean} />
+          )}
+        </div>
+      </div>
       <div className={styles.slippage}>
         <strong>Expected price impact</strong>
         <InputElement
@@ -274,35 +291,6 @@ export default function Remove({
           value={slippage}
           onChange={handleSlippageChange}
         />
-      </div>
-      <div className={styles.output}>
-        <div>
-          {isAdvanced ? (
-            <>
-              <p>{content.output.titleIn}</p>
-              <Token symbol="pool shares" balance={amountPoolShares} noIcon />
-            </>
-          ) : (
-            <>
-              <p>{content.output.titleIn} maximum</p>
-              <Token symbol="pool shares" balance={maxShares} noIcon />
-            </>
-          )}
-        </div>
-        <div>
-          {isAdvanced === true ? (
-            <>
-              <p>{content.output.titleOut} minimum</p>
-              <Token symbol="OCEAN" balance={minOceanAmount} />
-              <Token symbol={dtSymbol} balance={minDatatokenAmount} />
-            </>
-          ) : (
-            <>
-              <p>{content.output.titleOut}</p>
-              <Token symbol="OCEAN" balance={amountOcean} />
-            </>
-          )}
-        </div>
       </div>
       <Actions
         isLoading={isLoading}

@@ -47,7 +47,6 @@
 
 .output {
   composes: output from './Add/Output.module.css';
-  padding-top: calc(var(--spacer) / 2);
 }
 
 .output [class*='token'] {
@@ -64,9 +63,6 @@
 
 .slippage {
   composes: slippage from '../Trade/Slippage.module.css';
-  border-top: none;
-  border-bottom: 1px solid var(--border-color);
-  margin-top: -1rem;
 }
 
 .slippage select {
