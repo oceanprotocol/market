@@ -93,11 +93,11 @@ export default function Remove({
               minDatatokenAmount,
               minOceanAmount
             )
-          : await ocean.pool.removeOceanLiquidity(
+          : await ocean.pool.removeOceanLiquidityWithMinimum(
               accountId,
               poolAddress,
-              amountOcean,
-              maxShares
+              amountPoolShares,
+              minOceanAmount
             )
 
       setTxId(result?.transactionHash)
@@ -165,19 +165,13 @@ export default function Remove({
   }
 
   useEffect(() => {
-    if (!isAdvanced) {
-      const maxShares =
-        (Number(amountPoolShares) * (100 + Number(slippage))) / 100
-      setMaxShares(`${maxShares}`)
-    } else {
-      const minOceanAmount =
-        (Number(amountOcean) * (100 - Number(slippage))) / 100
-      const minDatatokenAmount =
-        (Number(amountDatatoken) * (100 - Number(slippage))) / 100
-      setMinOceanAmount(`${minOceanAmount}`)
-      setMinDatatokenAmount(`${minDatatokenAmount}`)
-    }
-  }, [slippage, amountPoolShares, amountOcean, amountDatatoken, isAdvanced])
+    const minOceanAmount =
+      (Number(amountOcean) * (100 - Number(slippage))) / 100
+    const minDatatokenAmount =
+      (Number(amountDatatoken) * (100 - Number(slippage))) / 100
+    setMinOceanAmount(`${minOceanAmount}`)
+    setMinDatatokenAmount(`${minDatatokenAmount}`)
+  }, [slippage, amountOcean, amountDatatoken, isAdvanced])
 
   // Set amountPoolShares based on set slider value
   function handleAmountPercentChange(e: ChangeEvent<HTMLInputElement>) {
@@ -264,7 +258,7 @@ export default function Remove({
           {isAdvanced ? (
             <Token symbol="pool shares" balance={amountPoolShares} noIcon />
           ) : (
-            <Token symbol="pool shares" balance={maxShares} noIcon />
+            <Token symbol="pool shares" balance={amountPoolShares} noIcon />
           )}
         </div>
         <div>
@@ -275,7 +269,7 @@ export default function Remove({
               <Token symbol={dtSymbol} balance={minDatatokenAmount} />
             </>
           ) : (
-            <Token symbol="OCEAN" balance={amountOcean} />
+            <Token symbol="OCEAN" balance={minOceanAmount} />
           )}
         </div>
       </div>
