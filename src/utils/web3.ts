@@ -1,3 +1,5 @@
+import { Logger } from '@oceanprotocol/lib'
+
 export interface EthereumListsChain {
   name: string
   chainId: number
@@ -9,6 +11,12 @@ export interface EthereumListsChain {
   rpc: string[]
   faucets: string[]
   infoURL: string
+}
+
+export interface NetworkObject {
+  chainId: number
+  name: string
+  urlList: string[]
 }
 
 export function accountTruncate(account: string): string {
@@ -39,4 +47,33 @@ export function getNetworkData(
     ({ node }: { node: EthereumListsChain }) => node.networkId === networkId
   )[0]
   return networkData.node
+}
+
+export function addCustomNetwork(
+  web3Provider: any,
+  network: NetworkObject
+): void {
+  const newNewtworkData = {
+    chainId: `0x${network.chainId.toString(16)}`,
+    rpcUrls: network.urlList
+  }
+  web3Provider.request(
+    {
+      method: 'wallet_addEthereumChain',
+      params: [newNewtworkData]
+    },
+    (err: string, added: any) => {
+      if (err || 'error' in added) {
+        Logger.error(
+          `Couldn't add ${network.name} (0x${
+            network.chainId
+          }) netowrk to MetaMask, error: ${err || added.error}`
+        )
+      } else {
+        Logger.log(
+          `Added ${network.name} (0x${network.chainId}) network to MetaMask`
+        )
+      }
+    }
+  )
 }

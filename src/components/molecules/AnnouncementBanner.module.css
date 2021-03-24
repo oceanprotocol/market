@@ -29,4 +29,9 @@
   font-weight: var(--font-weight-bold);
   margin-left: calc(var(--spacer) / 6);
   text-transform: uppercase;
+  cursor: pointer;
+}
+.button:focus {
+  outline: none;
+  box-shadow: none;
 }
