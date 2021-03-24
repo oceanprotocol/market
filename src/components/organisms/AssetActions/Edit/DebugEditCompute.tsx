@@ -24,7 +24,6 @@ export default function DebugEditCompute({
     async function transformValues() {
       const privacy = await transformComputeFormToServiceComputePrivacy(
         values,
-        ddo,
         ocean
       )
       setFormTransformed(privacy)
