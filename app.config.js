@@ -38,5 +38,10 @@ module.exports = {
   },
 
   // Wallets
-  portisId: process.env.GATSBY_PORTIS_ID || 'xxx'
+  portisId: process.env.GATSBY_PORTIS_ID || 'xxx',
+
+  // Used to show or hide the fixed and dynamic price options
+  // tab to publishers during the price creation.
+  allowFixedPricing: process.env.GATSBY_ALLOW_FIXED_PRICING || 'true',
+  allowDynamicPricing: process.env.GATSBY_ALLOW_DYNAMIC_PRICING || 'true'
 }
