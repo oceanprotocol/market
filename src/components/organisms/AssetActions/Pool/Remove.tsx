@@ -77,7 +77,6 @@ export default function Remove({
   const [isLoading, setIsLoading] = useState<boolean>()
   const [txId, setTxId] = useState<string>()
   const [slippage, setSlippage] = useState<string>('5')
-  const [maxShares, setMaxShares] = useState<string>('0')
   const [minOceanAmount, setMinOceanAmount] = useState<string>('0')
   const [minDatatokenAmount, setMinDatatokenAmount] = useState<string>('0')
 
