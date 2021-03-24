@@ -75,7 +75,6 @@ export default function EditComputeDataset({
     try {
       const privacy = await transformComputeFormToServiceComputePrivacy(
         values,
-        ddo,
         ocean
       )
 

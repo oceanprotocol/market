@@ -23,23 +23,16 @@ export async function createTrustedAlgorithmList(
 
 export async function transformComputeFormToServiceComputePrivacy(
   values: ComputePrivacyForm,
-  ddo: DDO,
   ocean: Ocean
 ): Promise<ServiceComputePrivacy> {
-  // pass through allowRawAlgorithm & allowNetworkAccess from DDO
-  const { allowRawAlgorithm, allowNetworkAccess } = ddo.findServiceByType(
-    'compute'
-  ).attributes.main.privacy
   const { allowAllPublishedAlgorithms } = values
-
   const publisherTrustedAlgorithms = values.allowAllPublishedAlgorithms
     ? []
     : await createTrustedAlgorithmList(values.publisherTrustedAlgorithms, ocean)
 
   const privacy: ServiceComputePrivacy = {
-    allowNetworkAccess,
-    allowRawAlgorithm,
-    // TODO: ocean.js needs allowAllAlgoritms setting
+    allowNetworkAccess: false,
+    allowRawAlgorithm: false,
     allowAllPublishedAlgorithms,
     publisherTrustedAlgorithms
   }
