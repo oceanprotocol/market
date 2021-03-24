@@ -9,7 +9,11 @@ import { useStaticQuery, graphql } from 'gatsby'
 import { queryMetadata, getAssetsNames } from '../../../../utils/aquarius'
 import axios from 'axios'
 import web3 from 'web3'
-import { DDO } from '@oceanprotocol/lib'
+import {
+  DDO,
+  ServiceComputePrivacy,
+  publisherTrustedAlgorithm
+} from '@oceanprotocol/lib'
 
 const contentQuery = graphql`
   query StartComputeDatasetQuery {
@@ -42,10 +46,12 @@ const contentQuery = graphql`
 `
 
 export default function FromStartCompute({
+  ddo,
   selectedAlgorithm,
   setselectedAlgorithm,
   loading
 }: {
+  ddo: DDO
   selectedAlgorithm: DDO
   setselectedAlgorithm: React.Dispatch<React.SetStateAction<DDO>>
   loading: boolean
@@ -79,13 +85,34 @@ export default function FromStartCompute({
     setselectedAlgorithm(getAlgorithmAsset(e.target.id))
   }
 
+  function getQuerryString(
+    trustedAlgorithmList: publisherTrustedAlgorithm[]
+  ): string {
+    let algoQuerry = ''
+    trustedAlgorithmList.forEach((trusteAlgo) => {
+      algoQuerry += `id:"${trusteAlgo.did}" OR `
+    })
+    if (trustedAlgorithmList.length > 1) {
+      algoQuerry = algoQuerry.substring(0, algoQuerry.length - 3)
+    }
+    const algorithmQuery =
+      trustedAlgorithmList.length > 0
+        ? // ? `id:[${computeService.attributes.main.privacy.publisherTrustedAlgorithms}] AND`
+          `(${algoQuerry}) AND`
+        : ``
+    return algorithmQuery
+  }
   // must be moved to a util method used also on edit compute metadata
   async function getAlgorithms() {
+    const computeService = ddo.findServiceByType('compute')
+    const algoQuery = getQuerryString(
+      computeService.attributes.main.privacy.publisherTrustedAlgorithms
+    )
     const query = {
       page: 1,
       query: {
         query_string: {
-          query: `service.attributes.main.type:algorithm AND price.type:exchange -isInPurgatory:true`
+          query: `${algoQuery} service.attributes.main.type:algorithm AND price.type:exchange -isInPurgatory:true`
         }
       },
       sort: { 'price.value': -1 }

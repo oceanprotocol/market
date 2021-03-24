@@ -4,7 +4,6 @@ import {
 } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { MetadataCache, Logger } from '@oceanprotocol/lib'
 import queryString from 'query-string'
-import { TypeOf } from 'yup'
 
 export const SortTermOptions = {
   Liquidity: 'liquidity',

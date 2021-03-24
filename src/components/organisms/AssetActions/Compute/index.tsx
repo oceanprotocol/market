@@ -241,6 +241,7 @@ export default function Compute({
           }}
         >
           <FormStartComputeDataset
+            ddo={ddo}
             selectedAlgorithm={selectedAlgorithmAsset}
             setselectedAlgorithm={setSelectedAlgorithmAsset}
             loading={false}

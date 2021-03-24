@@ -113,6 +113,7 @@ function usePublish(): UsePublish {
             servers
           )
           const origComputePrivacy: ServiceComputePrivacy = {
+            allowAllPublishedAlgorithms: false,
             allowRawAlgorithm: true,
             allowNetworkAccess: false,
             publisherTrustedAlgorithms: []
