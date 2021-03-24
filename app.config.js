@@ -40,7 +40,8 @@ module.exports = {
   // Wallets
   portisId: process.env.GATSBY_PORTIS_ID || 'xxx',
 
-  // Toggle pricing option
-  allowFREPricing: process.env.GATSBY_ALLOW_FRE_PRICING || 'true',
+  // Used to show or hide the fixed and dynamic price options
+  // tab to publishers during the price creation.
+  allowFixedPricing: process.env.GATSBY_ALLOW_FIXED_PRICING || 'true',
   allowDynamicPricing: process.env.GATSBY_ALLOW_DYNAMIC_PRICING || 'true'
 }

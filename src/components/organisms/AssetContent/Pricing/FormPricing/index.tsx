@@ -9,7 +9,7 @@ import { PriceOptionsMarket } from '../../../../../@types/MetaData'
 import Button from '../../../../atoms/Button'
 import { DDO } from '@oceanprotocol/lib'
 import FormHelp from '../../../../atoms/Input/Help'
-import appConfig from '../../../../../../app.config'
+import { useSiteMetadata } from '../../../../../hooks/useSiteMetadata'
 
 export default function FormPricing({
   ddo,
@@ -21,6 +21,7 @@ export default function FormPricing({
   content: any
 }): ReactElement {
   const { debug } = useUserPreferences()
+  const { appConfig } = useSiteMetadata()
 
   // Connect with form
   const { values, setFieldValue, submitForm } = useFormikContext()
@@ -50,7 +51,7 @@ export default function FormPricing({
   }, [price, oceanAmount, weightOnOcean, weightOnDataToken, type])
 
   const tabs = [
-    appConfig.allowFREPricing === 'true'
+    appConfig.allowFixedPricing === 'true'
       ? {
           title: content.fixed.title,
           content: <Fixed content={content.fixed} ddo={ddo} />
