@@ -85,10 +85,10 @@ export default function FromStartCompute({
       page: 1,
       query: {
         query_string: {
-          query: `(service.attributes.main.type:algorithm) -isInPurgatory:true`
+          query: `service.attributes.main.type:algorithm AND price.type:exchange -isInPurgatory:true`
         }
       },
-      sort: { created: -1 }
+      sort: { 'price.value': -1 }
     }
 
     const source = axios.CancelToken.source()
