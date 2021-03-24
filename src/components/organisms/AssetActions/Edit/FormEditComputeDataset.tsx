@@ -57,7 +57,7 @@ export default function FormEditComputeDataset({
           }
           disabled={
             field.name === 'publisherTrustedAlgorithms'
-              ? values.allowAllAlgorithms
+              ? values.allowAllPublishedAlgorithms
               : false
           }
           component={Input}

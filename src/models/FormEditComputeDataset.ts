@@ -2,13 +2,13 @@ import { ServiceComputePrivacy } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 
 export interface ComputePrivacyForm {
-  allowAllAlgorithms: boolean
+  allowAllPublishedAlgorithms: boolean
   publisherTrustedAlgorithms: string[]
 }
 
 export const validationSchema: Yup.SchemaOf<ComputePrivacyForm> = Yup.object().shape(
   {
-    allowAllAlgorithms: Yup.boolean().nullable(),
+    allowAllPublishedAlgorithms: Yup.boolean().nullable(),
     publisherTrustedAlgorithms: Yup.array().nullable()
   }
 )
@@ -17,14 +17,14 @@ export function getInitialValues(
   compute: ServiceComputePrivacy
 ): ComputePrivacyForm {
   // TODO: ocean.js needs allowAllAlgoritms setting
-  const { allowAllAlgorithms, publisherTrustedAlgorithms } = compute
+  const { allowAllPublishedAlgorithms, publisherTrustedAlgorithms } = compute
 
   const publisherTrustedAlgorithmsForForm = (
     publisherTrustedAlgorithms || []
   ).map((algo) => algo.did)
 
   return {
-    allowAllAlgorithms,
+    allowAllPublishedAlgorithms,
     publisherTrustedAlgorithms: publisherTrustedAlgorithmsForForm
   }
 }

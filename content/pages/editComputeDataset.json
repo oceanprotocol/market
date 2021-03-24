@@ -7,7 +7,7 @@
     "error": "Updating DDO failed.",
     "data": [
       {
-        "name": "allowAllAlgorithms",
+        "name": "allowAllPublishedAlgorithms",
         "label": "All Algorithms",
         "help": "Allow any published algorithm to run on this data set.",
         "type": "checkbox",
