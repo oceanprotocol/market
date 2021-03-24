@@ -8,7 +8,6 @@ import Alert from './atoms/Alert'
 import { graphql, PageProps, useStaticQuery } from 'gatsby'
 import { useAccountPurgatory } from '../hooks/useAccountPurgatory'
 import { useWeb3 } from '../providers/Web3'
-import CustomNetwork from './molecules/CustomNetwork'
 
 const contentQuery = graphql`
   query AppQuery {
@@ -59,7 +58,6 @@ export default function App({
             state="error"
           />
         )}
-        <CustomNetwork />
         <main className={styles.main}>{children}</main>
         <Footer />
       </div>

@@ -1,0 +1,32 @@
+.banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: calc(var(--spacer) / 6);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.text {
+  color: var(--font-color-heading);
+  font-size: var(--font-size-small);
+  margin: 0;
+}
+
+.text a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.text p:last-child {
+  margin-bottom: 0;
+}
+
+.button {
+  border: 0;
+  background-color: white;
+  color: var(--brand-pink);
+  font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
+  margin-left: calc(var(--spacer) / 6);
+  text-transform: uppercase;
+}
