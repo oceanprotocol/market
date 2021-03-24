@@ -39,22 +39,6 @@ export default function FormPricing({
     type === 'fixed' && setFieldValue('dtAmount', 1000)
   }
 
-  // Return the allowed pricing option tab
-  function getAllowedPricingOption() {
-    const tabs = []
-    if (appConfig.allowFREPricing === 'true')
-      tabs.push({
-        title: content.fixed.title,
-        content: <Fixed content={content.fixed} ddo={ddo} />
-      })
-    if (appConfig.allowDynamicPricing === 'true')
-      tabs.push({
-        title: content.dynamic.title,
-        content: <Dynamic content={content.dynamic} ddo={ddo} />
-      })
-    return tabs
-  }
-
   // Always update everything when price value changes
   useEffect(() => {
     if (type === 'fixed') return
@@ -65,7 +49,20 @@ export default function FormPricing({
     setFieldValue('dtAmount', dtAmount)
   }, [price, oceanAmount, weightOnOcean, weightOnDataToken, type])
 
-  const tabs = getAllowedPricingOption()
+  const tabs = [
+    appConfig.allowFREPricing === 'true'
+      ? {
+          title: content.fixed.title,
+          content: <Fixed content={content.fixed} ddo={ddo} />
+        }
+      : undefined,
+    appConfig.allowDynamicPricing === 'true'
+      ? {
+          title: content.dynamic.title,
+          content: <Dynamic content={content.dynamic} ddo={ddo} />
+        }
+      : undefined
+  ].filter((tab) => tab !== undefined)
 
   return (
     <>
