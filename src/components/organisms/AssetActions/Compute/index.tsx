@@ -204,18 +204,8 @@ export default function Compute({
   return (
     <>
       <div className={styles.info}>
-        <div className={styles.filewrapper}>
-          <File file={file} small />
-        </div>
-        <div className={styles.pricewrapper}>
-          <Price price={(ddo as DDO).price} conversion />
-          {hasDatatoken && (
-            <div className={styles.hasTokens}>
-              You own {dtBalance} {dtSymbol} allowing you to use this data set
-              without paying again.
-            </div>
-          )}
-        </div>
+        <File file={file} small />
+        <Price price={(ddo as DDO).price} conversion />
       </div>
 
       {type === 'algorithm' ? (
@@ -250,6 +240,16 @@ export default function Compute({
       )}
 
       <footer className={styles.feedback}>
+        {/* 
+          TODO: the following should be replaced with same logic 
+          as getHelpText() from Consume.tsx, ideally the same method.
+        */}
+        {hasDatatoken && (
+          <div className={styles.help}>
+            You own {dtBalance} {dtSymbol} allowing you to use this data set
+            without paying again.
+          </div>
+        )}
         {isPublished && (
           <Alert
             title="Your job started!"

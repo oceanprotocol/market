@@ -13,11 +13,6 @@
   padding: 0;
 }
 
-.form [class*='AssetSelection-module--selection'] > div {
-  padding-left: calc(var(--spacer) / 1.15);
-  padding-right: calc(var(--spacer) / 1.15);
-}
-
 .actions {
   margin-left: -2rem;
   margin-right: -2rem;

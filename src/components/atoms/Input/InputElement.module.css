@@ -146,16 +146,17 @@
   opacity: 1;
 }
 
-.radio {
+.radio,
+.radio::after {
   border-radius: 50%;
 }
 
 .radio::after {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
+  width: 8px;
+  height: 8px;
+  top: 4px;
+  left: 4px;
   background: var(--brand-white);
-  transform: scale(0.7);
 }
 
 .checkbox::after {

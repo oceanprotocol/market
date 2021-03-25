@@ -30,7 +30,7 @@ div [class*='loaderWrap'] {
   display: flex;
   align-items: center;
   border-bottom: 1px solid var(--border-color);
-  padding: calc(var(--spacer) / 3) calc(var(--spacer) / 4);
+  padding: calc(var(--spacer) / 3) calc(var(--spacer) / 2);
 }
 
 .content {
@@ -46,11 +46,10 @@ div [class*='loaderWrap'] {
 }
 
 .input {
-  align-self: flex-start;
   min-width: 1.2rem;
   margin-top: 0;
   margin-left: 0;
-  margin-right: calc(var(--spacer) / 4);
+  margin-right: calc(var(--spacer) / 3);
 }
 
 .radio {
@@ -64,7 +63,7 @@ div [class*='loaderWrap'] {
 .title {
   font-size: var(--font-size-small);
   margin-top: calc(var(--spacer) / 12);
-  margin-bottom: calc(var(--spacer) / 12);
+  margin-bottom: 0;
 }
 
 .link {
@@ -89,11 +88,12 @@ div [class*='loaderWrap'] {
 .price {
   white-space: pre;
   font-size: var(--font-size-small) !important;
+  padding-left: calc(var(--spacer) / 4);
 }
 
 .search {
-  margin: calc(var(--spacer) / 4);
-  width: calc(100% - calc(var(--spacer) / 2));
+  margin: calc(var(--spacer) / 4) calc(var(--spacer) / 2);
+  width: calc(100% - var(--spacer));
 }
 
 .did {
@@ -102,4 +102,8 @@ div [class*='loaderWrap'] {
   display: block;
   text-align: left;
   color: var(--color-secondary);
+  /* makes sure DotDotDot will kick in */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-all;
 }
