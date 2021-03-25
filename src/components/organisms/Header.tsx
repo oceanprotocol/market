@@ -18,7 +18,7 @@ export default function Header(): ReactElement {
   const { web3Provider, networkId } = useWeb3()
   const [providerInfo, setProviderInfo] = useState<IProviderInfo>()
   const { config } = useOcean()
-  const { warningPolygon, warningPolygonNetwork } = useSiteMetadata()
+  const { warningPolygon, warningPolygonNetwork, warning } = useSiteMetadata()
 
   const network: NetworkObject = {
     chainId: 137,
@@ -28,35 +28,46 @@ export default function Header(): ReactElement {
       'https://rpc-mainnet.maticvigil.com/'
     ]
   }
-  const [text, setText] = useState<string>()
+  const [text, setText] = useState<string>(warning)
   const [action, setAction] = useState<AnnouncementAction>()
-
-  useEffect(() => {
-    if (!web3Provider) return
-    console.log(web3Provider)
-    const providerInfo = getProviderInfo(web3Provider)
-    setProviderInfo(providerInfo)
-  }, [web3Provider])
 
   function setBannerForMatic() {
     setText(warningPolygon)
     setAction({
-      name: 'Add MOcean',
+      name: `Add ${config.oceanTokenSymbol}`,
       handleAction: () => addOceanToWallet(config, web3Provider)
     })
   }
 
   useEffect(() => {
-    console.log(networkId)
-    console.log(warningPolygonNetwork)
+    if (!web3Provider) return
+    const providerInfo = getProviderInfo(web3Provider)
+    setProviderInfo(providerInfo)
+  }, [web3Provider])
+
+  useEffect(() => {
+    if (!networkId) return
     networkId === 137 ? setBannerForMatic() : setText(warningPolygonNetwork)
     providerInfo?.name === 'MetaMask' &&
       networkId !== 137 &&
+      !window.location.pathname.includes('/asset/did') &&
       setAction({
         name: 'Add custom network',
         handleAction: () => addCustomNetwork(web3Provider, network)
       })
   }, [networkId])
+
+  useEffect(() => {
+    if (networkId === 137) return
+    window.location.pathname.includes('/asset/did')
+      ? setAction(undefined)
+      : action
+      ? console.log()
+      : setAction({
+          name: 'Add custom network',
+          handleAction: () => addCustomNetwork(web3Provider, network)
+        })
+  }, [window.location.pathname])
 
   return (
     <header className={styles.header}>

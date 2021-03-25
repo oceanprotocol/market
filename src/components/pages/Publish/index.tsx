@@ -20,7 +20,6 @@ import Alert from '../../atoms/Alert'
 import MetadataFeedback from '../../molecules/MetadataFeedback'
 import { useAccountPurgatory } from '../../../hooks/useAccountPurgatory'
 import { useWeb3 } from '../../../providers/Web3'
-import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 
 const formName = 'ocean-publish-form'
 

@@ -10,6 +10,7 @@
   color: var(--font-color-heading);
   font-size: var(--font-size-small);
   margin: 0;
+  text-align: center;
 }
 
 .text a {
