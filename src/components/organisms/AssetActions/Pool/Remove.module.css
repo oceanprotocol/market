@@ -61,6 +61,10 @@
   display: none;
 }
 
+.output p {
+  font-size: var(--font-size-small);
+}
+
 .slippage {
   composes: slippage from '../Trade/Slippage.module.css';
 }
