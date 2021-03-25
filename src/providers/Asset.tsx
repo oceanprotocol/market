@@ -44,6 +44,7 @@ const freQuery = gql`
   query FrePrice($datatoken: String) {
     fixedRateExchanges(orderBy: id, where: { datatoken: $datatoken }) {
       rate
+      id
     }
   }
 `
@@ -77,7 +78,7 @@ function AssetProvider({
     data: frePrice
   } = useQuery<FrePrice>(freQuery, {
     variables,
-    skip: true
+    skip: false
   })
   const {
     refetch: refetchPool,
@@ -85,30 +86,39 @@ function AssetProvider({
     data: poolPrice
   } = useQuery<PoolPrice>(poolQuery, {
     variables,
-    skip: true
+    skip: false
   })
 
-  useEffect(() => {
-    if (!ddo || !variables) return
-    if (ddo.price.type === 'exchange') {
-      refetchFre(variables)
-      startPollingFre(refreshInterval)
-    } else {
-      refetchPool(variables)
-      startPollingPool(refreshInterval)
-    }
-  }, [ddo, variables])
+  // this is not working as expected, thus we need to fetch both pool and fre
+  // useEffect(() => {
+  //   if (!ddo || !variables || variables === '') return
+
+  //   if (ddo.price.type === 'exchange') {
+  //     refetchFre(variables)
+  //     startPollingFre(refreshInterval)
+  //   } else {
+  //     refetchPool(variables)
+  //     startPollingPool(refreshInterval)
+  //   }
+  // }, [ddo, variables])
 
   useEffect(() => {
-    if (!frePrice || frePrice.fixedRateExchanges.length === 0) return
+    if (
+      !frePrice ||
+      frePrice.fixedRateExchanges.length === 0 ||
+      price.type !== 'exchange'
+    )
+      return
     price.value = frePrice.fixedRateExchanges[0].rate
+    price.address = frePrice.fixedRateExchanges[0].id
+    console.log(price)
     setPrice(price)
   }, [frePrice])
 
   useEffect(() => {
-    if (!poolPrice || poolPrice.pools.length === 0) return
+    if (!poolPrice || poolPrice.pools.length === 0 || price.type !== 'pool')
+      return
     price.value = poolPrice.pools[0].spotPrice
-    price.value = 3222222
     setPrice(price)
   }, [poolPrice])
 
