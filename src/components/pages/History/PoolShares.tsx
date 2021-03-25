@@ -26,9 +26,7 @@ const poolSharesQuery = gql`
         datatokenAddress
         valueLocked
         tokens {
-          tokenId {
-            symbol
-          }
+          symbol
         }
         oceanReserve
         datatokenReserve
@@ -56,13 +54,9 @@ function calculateUserLiquidity(poolShare: PoolShare) {
   return totalLiquidity
 }
 
-function findValidToken(tokens: PoolSharePoolIdTokens[]) {
-  const symbol = tokens.find((token) => token.tokenId !== null)
-  return symbol.tokenId.symbol
-}
-
-function Symbol({ tokens }: { tokens: PoolSharePoolIdTokens[] }) {
-  return <>{findValidToken(tokens)}</>
+function getDatatokenInfo(tokens: PoolSharePoolIdTokens[]) {
+  const datatoken = tokens.find((token) => token.isDatatoken === true)
+  return datatoken
 }
 
 function Liquidity({ row, type }: { row: Asset; type: string }) {
@@ -97,7 +91,7 @@ function Liquidity({ row, type }: { row: Asset; type: string }) {
       />
       <Token symbol="OCEAN" balance={oceanTokenBalance} noIcon />
       <Token
-        symbol={findValidToken(row.poolShare.poolId.tokens)}
+        symbol={getDatatokenInfo(row.poolShare.poolId.tokens).symbol}
         balance={dataTokenBalance}
         noIcon
       />
@@ -119,7 +113,7 @@ const columns = [
   {
     name: 'Datatoken',
     selector: function getSymbol(row: Asset) {
-      return <Symbol tokens={row.poolShare.poolId.tokens} />
+      return <>{getDatatokenInfo(row.poolShare.poolId.tokens).symbol}</>
     }
   },
   {
