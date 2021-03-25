@@ -14,6 +14,7 @@ import {
   ServiceComputePrivacy,
   publisherTrustedAlgorithm
 } from '@oceanprotocol/lib'
+import { exportDefaultSpecifier } from '@babel/types'
 
 const contentQuery = graphql`
   query StartComputeDatasetQuery {
@@ -96,61 +97,70 @@ export default function FromStartCompute({
       algoQuerry = algoQuerry.substring(0, algoQuerry.length - 3)
     }
     const algorithmQuery =
-      trustedAlgorithmList.length > 0
-        ? // ? `id:[${computeService.attributes.main.privacy.publisherTrustedAlgorithms}] AND`
-          `(${algoQuerry}) AND`
-        : ``
+      trustedAlgorithmList.length > 0 ? `(${algoQuerry}) AND` : ``
     return algorithmQuery
   }
+
   // must be moved to a util method used also on edit compute metadata
   async function getAlgorithms() {
     const computeService = ddo.findServiceByType('compute')
-    const algoQuery = getQuerryString(
+
+    if (
       computeService.attributes.main.privacy.publisherTrustedAlgorithms
-    )
-    const query = {
-      page: 1,
-      query: {
-        query_string: {
-          query: `${algoQuery} service.attributes.main.type:algorithm AND price.type:exchange -isInPurgatory:true`
-        }
-      },
-      sort: { 'price.value': -1 }
-    }
+        .length === 0 &&
+      !computeService.attributes.main.privacy.allowAllPublishedAlgorithms
+    ) {
+      setAlgorithms([])
+    } else {
+      const algoQuery = computeService.attributes.main.privacy
+        .allowAllPublishedAlgorithms
+        ? ''
+        : getQuerryString(
+            computeService.attributes.main.privacy.publisherTrustedAlgorithms
+          )
+      const query = {
+        page: 1,
+        query: {
+          query_string: {
+            query: `${algoQuery} service.attributes.main.type:algorithm AND price.type:exchange -isInPurgatory:true`
+          }
+        },
+        sort: { 'price.value': -1 }
+      }
 
-    const source = axios.CancelToken.source()
-    const didList: string[] = []
-    const priceList: any = {}
-    const result = await queryMetadata(
-      query as any,
-      config.metadataCacheUri,
-      source.token
-    )
+      const source = axios.CancelToken.source()
+      const didList: string[] = []
+      const priceList: any = {}
+      const result = await queryMetadata(
+        query as any,
+        config.metadataCacheUri,
+        source.token
+      )
 
-    setAlgorithms(result.results)
-    result.results.forEach((ddo: DDO) => {
-      const did: string = web3.utils
-        .toChecksumAddress(ddo.dataToken)
-        .replace('0x', 'did:op:')
-      didList.push(did)
-      priceList[did] = ddo.price.value
-    })
-
-    console.log('result', result)
-    const ddoNames = await getAssetsNames(
-      didList,
-      config.metadataCacheUri,
-      source.token
-    )
-
-    content.form.data[0].options = []
-    didList.forEach((did: string) => {
-      content.form.data[0].options.push({
-        did: did,
-        name: ddoNames[did],
-        price: priceList[did]
+      setAlgorithms(result.results)
+      result.results.forEach((ddo: DDO) => {
+        const did: string = web3.utils
+          .toChecksumAddress(ddo.dataToken)
+          .replace('0x', 'did:op:')
+        didList.push(did)
+        priceList[did] = ddo.price.value
       })
-    })
+
+      const ddoNames = await getAssetsNames(
+        didList,
+        config.metadataCacheUri,
+        source.token
+      )
+
+      content.form.data[0].options = []
+      didList.forEach((did: string) => {
+        content.form.data[0].options.push({
+          did: did,
+          name: ddoNames[did],
+          price: priceList[did]
+        })
+      })
+    }
   }
 
   useEffect(() => {
