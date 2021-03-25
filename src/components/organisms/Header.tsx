@@ -53,13 +53,18 @@ export default function Header(): ReactElement {
   }
 
   useEffect(() => {
-    if (!web3Provider) {
-      setAction(switchToPolygonAction)
+    if (!web3Provider && config.networkId) {
+      if (config.networkId !== 137) {
+        setAction(switchToPolygonAction)
+      } else {
+        setText(warningPolygon)
+        setAction(undefined)
+      }
       return
     }
     const providerInfo = getProviderInfo(web3Provider)
     setProviderInfo(providerInfo)
-  }, [web3Provider])
+  }, [web3Provider, config])
 
   useEffect(() => {
     if (!networkId || providerInfo?.name !== 'MetaMask' || !web3Provider) return
