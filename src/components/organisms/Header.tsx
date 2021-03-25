@@ -30,13 +30,18 @@ export default function Header(): ReactElement {
   }
   const [text, setText] = useState<string>(warning)
   const [action, setAction] = useState<AnnouncementAction>()
+  const addCustomNetworkAction = {
+    name: 'Add custom network',
+    handleAction: () => addCustomNetwork(web3Provider, network)
+  }
+  const addCustomTokenAction = {
+    name: `Add ${config.oceanTokenSymbol}`,
+    handleAction: () => addOceanToWallet(config, web3Provider)
+  }
 
   function setBannerForMatic() {
     setText(warningPolygon)
-    setAction({
-      name: `Add ${config.oceanTokenSymbol}`,
-      handleAction: () => addOceanToWallet(config, web3Provider)
-    })
+    setAction(addCustomTokenAction)
   }
 
   useEffect(() => {
@@ -46,27 +51,21 @@ export default function Header(): ReactElement {
   }, [web3Provider])
 
   useEffect(() => {
-    if (!networkId) return
-    networkId === 137 ? setBannerForMatic() : setText(warningPolygonNetwork)
-    providerInfo?.name === 'MetaMask' &&
-      networkId !== 137 &&
-      !window.location.pathname.includes('/asset/did') &&
-      setAction({
-        name: 'Add custom network',
-        handleAction: () => addCustomNetwork(web3Provider, network)
-      })
-  }, [networkId])
+    if (!networkId || providerInfo?.name !== 'MetaMask') return
+    if (networkId === 137) {
+      setBannerForMatic()
+      return
+    }
+    setText(warningPolygonNetwork)
+    !window.location.pathname.includes('/asset/did') &&
+      setAction(addCustomNetworkAction)
+  }, [config])
 
   useEffect(() => {
     if (networkId === 137) return
     window.location.pathname.includes('/asset/did')
       ? setAction(undefined)
-      : action
-      ? console.log()
-      : setAction({
-          name: 'Add custom network',
-          handleAction: () => addCustomNetwork(web3Provider, network)
-        })
+      : !action && setAction(addCustomNetworkAction)
   }, [window.location.pathname])
 
   return (
