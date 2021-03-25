@@ -12,13 +12,13 @@ export default function AnnouncementBanner({
   text,
   action
 }: {
-  text: string
+  text?: string
   action?: AnnouncementAction
 }): ReactElement {
   return (
     <div className={styles.container}>
       <div className={styles.banner}>
-        <Markdown className={styles.text} text={text} />
+        {text && <Markdown className={styles.text} text={text} />}
         {action && (
           <button className={styles.button} onClick={action.handleAction}>
             {action.name}
