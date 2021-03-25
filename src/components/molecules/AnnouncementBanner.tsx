@@ -1,11 +1,11 @@
-import React, { ReactElement, FormEvent } from 'react'
+import React, { ReactElement } from 'react'
 import styles from './AnnouncementBanner.module.css'
 import Markdown from '../atoms/Markdown'
 
 export interface AnnouncementAction {
   name: string
   style?: 'text' | 'primary' | 'ghost'
-  handleAction: (e: FormEvent<HTMLButtonElement>) => void
+  handleAction: () => void
 }
 
 export default function AnnouncementBanner({
