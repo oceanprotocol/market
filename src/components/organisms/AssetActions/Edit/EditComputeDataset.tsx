@@ -1,32 +1,33 @@
+import { useOcean } from '../../../../providers/Ocean'
+import { useWeb3 } from '../../../../providers/Web3'
 import { Formik } from 'formik'
 import React, { ReactElement, useState } from 'react'
-import { MetadataEditForm } from '../../../../@types/MetaData'
 import {
   validationSchema,
-  getInitialValues
-} from '../../../../models/FormEditMetadata'
+  getInitialValues,
+  ComputePrivacyForm
+} from '../../../../models/FormEditComputeDataset'
 import { useAsset } from '../../../../providers/Asset'
-import { useUserPreferences } from '../../../../providers/UserPreferences'
-import { MetadataPreview } from '../../../molecules/MetadataPreview'
-import Debug from './DebugEditMetadata'
-import Web3Feedback from '../../../molecules/Wallet/Feedback'
-import FormEditMetadata from './FormEditMetadata'
-import { mapTimeoutStringToSeconds } from '../../../../utils/metadata'
-import styles from './index.module.css'
-import { Logger } from '@oceanprotocol/lib'
+import FormEditComputeDataset from './FormEditComputeDataset'
+import { Logger, ServiceComputePrivacy } from '@oceanprotocol/lib'
 import MetadataFeedback from '../../../molecules/MetadataFeedback'
 import { graphql, useStaticQuery } from 'gatsby'
-import { useWeb3 } from '../../../../providers/Web3'
-import { useOcean } from '../../../../providers/Ocean'
+import { useUserPreferences } from '../../../../providers/UserPreferences'
+import DebugEditCompute from './DebugEditCompute'
+import styles from './index.module.css'
+import { transformComputeFormToServiceComputePrivacy } from '../../../../utils/compute'
 
 const contentQuery = graphql`
-  query EditMetadataQuery {
-    content: allFile(filter: { relativePath: { eq: "pages/edit.json" } }) {
+  query EditComputeDataQuery {
+    content: allFile(
+      filter: { relativePath: { eq: "pages/editComputeDataset.json" } }
+    ) {
       edges {
         node {
           childPagesJson {
             description
             form {
+              title
               success
               successAction
               error
@@ -39,6 +40,7 @@ const contentQuery = graphql`
                 required
                 sortOptions
                 options
+                multiple
                 rows
               }
             }
@@ -49,7 +51,7 @@ const contentQuery = graphql`
   }
 `
 
-export default function Edit({
+export default function EditComputeDataset({
   setShowEdit
 }: {
   setShowEdit: (show: boolean) => void
@@ -58,54 +60,38 @@ export default function Edit({
   const content = data.content.edges[0].node.childPagesJson
 
   const { debug } = useUserPreferences()
-  const { accountId } = useWeb3()
   const { ocean } = useOcean()
-  const { metadata, ddo, refreshDdo } = useAsset()
+  const { accountId } = useWeb3()
+  const { ddo, refreshDdo } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
-  const [timeoutStringValue, setTimeoutStringValue] = useState<string>()
-  const timeout = ddo.findServiceByType('access')
-    ? ddo.findServiceByType('access').attributes.main.timeout
-    : ddo.findServiceByType('compute').attributes.main.timeout
 
   const hasFeedback = error || success
 
   async function handleSubmit(
-    values: Partial<MetadataEditForm>,
+    values: ComputePrivacyForm,
     resetForm: () => void
   ) {
     try {
-      // Construct new DDO with new values
-      const ddoEditedMetdata = await ocean.assets.editMetadata(ddo, {
-        title: values.name,
-        description: values.description,
-        links: typeof values.links !== 'string' ? values.links : []
-      })
+      const privacy = await transformComputeFormToServiceComputePrivacy(
+        values,
+        ocean
+      )
 
-      if (!ddoEditedMetdata) {
-        setError(content.form.error)
-        Logger.error(content.form.error)
-        return
-      }
-      let ddoEditedTimeout = ddoEditedMetdata
-      if (timeoutStringValue !== values.timeout) {
-        const service = ddoEditedMetdata.findServiceByType('access')
-        const timeout = mapTimeoutStringToSeconds(values.timeout)
-        ddoEditedTimeout = await ocean.assets.editServiceTimeout(
-          ddoEditedMetdata,
-          service.index,
-          timeout
-        )
-      }
+      const ddoEditedComputePrivacy = await ocean.compute.editComputePrivacy(
+        ddo,
+        1,
+        privacy as ServiceComputePrivacy
+      )
 
-      if (!ddoEditedTimeout) {
+      if (!ddoEditedComputePrivacy) {
         setError(content.form.error)
         Logger.error(content.form.error)
         return
       }
 
       const storedddo = await ocean.assets.updateMetadata(
-        ddoEditedTimeout,
+        ddoEditedComputePrivacy,
         accountId
       )
       if (!storedddo) {
@@ -125,7 +111,9 @@ export default function Edit({
 
   return (
     <Formik
-      initialValues={getInitialValues(metadata, timeout)}
+      initialValues={getInitialValues(
+        ddo.findServiceByType('compute').attributes.main.privacy
+      )}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
         // move user's focus to top of screen
@@ -134,7 +122,7 @@ export default function Edit({
         await handleSubmit(values, resetForm)
       }}
     >
-      {({ isSubmitting, values, initialValues }) =>
+      {({ values, isSubmitting }) =>
         isSubmitting || hasFeedback ? (
           <MetadataFeedback
             title="Updating Data Set"
@@ -153,20 +141,18 @@ export default function Edit({
           <>
             <p className={styles.description}>{content.description}</p>
             <article className={styles.grid}>
-              <FormEditMetadata
+              <FormEditComputeDataset
+                title={content.form.title}
                 data={content.form.data}
                 setShowEdit={setShowEdit}
-                setTimeoutStringValue={setTimeoutStringValue}
-                values={initialValues}
               />
-
-              <aside>
-                <MetadataPreview values={values} />
-                <Web3Feedback />
-              </aside>
-
-              {debug === true && <Debug values={values} ddo={ddo} />}
             </article>
+
+            {debug === true && (
+              <div className={styles.grid}>
+                <DebugEditCompute values={values} ddo={ddo} />
+              </div>
+            )}
           </>
         )
       }
