@@ -83,7 +83,7 @@ export function addCustomNetwork(
 export function addOceanToWallet(
   config: ConfigHelperConfig,
   web3Provider: any
-) {
+): void {
   const tokenMetadata = {
     type: 'ERC20',
     options: {
