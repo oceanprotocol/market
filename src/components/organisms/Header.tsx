@@ -10,6 +10,7 @@ import {
   addOceanToWallet,
   NetworkObject
 } from '../../utils/web3'
+import { getOceanConfig } from '../../utils/ocean'
 import { getProviderInfo, IProviderInfo } from 'web3modal'
 import { useOcean } from '../../providers/Ocean'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
@@ -17,8 +18,8 @@ import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 export default function Header(): ReactElement {
   const { web3Provider, networkId } = useWeb3()
   const [providerInfo, setProviderInfo] = useState<IProviderInfo>()
-  const { config } = useOcean()
-  const { warningPolygon, warningPolygonNetwork, warning } = useSiteMetadata()
+  const { config, connect } = useOcean()
+  const { warningPolygon, warningPolygonNetwork } = useSiteMetadata()
 
   const network: NetworkObject = {
     chainId: 137,
@@ -28,7 +29,7 @@ export default function Header(): ReactElement {
       'https://rpc-mainnet.maticvigil.com/'
     ]
   }
-  const [text, setText] = useState<string>(warning)
+  const [text, setText] = useState<string>(warningPolygonNetwork)
   const [action, setAction] = useState<AnnouncementAction>()
   const addCustomNetworkAction = {
     name: 'Add custom network',
@@ -38,6 +39,13 @@ export default function Header(): ReactElement {
     name: `Add ${config.oceanTokenSymbol}`,
     handleAction: () => addOceanToWallet(config, web3Provider)
   }
+  const switchToPolygonAction = {
+    name: 'Switch to Polygon',
+    handleAction: async () => {
+      const config = getOceanConfig('polygon')
+      await connect(config)
+    }
+  }
 
   function setBannerForMatic() {
     setText(warningPolygon)
@@ -45,13 +53,16 @@ export default function Header(): ReactElement {
   }
 
   useEffect(() => {
-    if (!web3Provider) return
+    if (!web3Provider) {
+      setAction(switchToPolygonAction)
+      return
+    }
     const providerInfo = getProviderInfo(web3Provider)
     setProviderInfo(providerInfo)
   }, [web3Provider])
 
   useEffect(() => {
-    if (!networkId || providerInfo?.name !== 'MetaMask') return
+    if (!networkId || providerInfo?.name !== 'MetaMask' || !web3Provider) return
     if (networkId === 137) {
       setBannerForMatic()
       return
@@ -62,7 +73,7 @@ export default function Header(): ReactElement {
   }, [config])
 
   useEffect(() => {
-    if (networkId === 137) return
+    if (networkId === 137 || !web3Provider) return
     window.location.pathname.includes('/asset/did')
       ? setAction(undefined)
       : !action && setAction(addCustomNetworkAction)
