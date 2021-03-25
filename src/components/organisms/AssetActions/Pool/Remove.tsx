@@ -18,6 +18,7 @@ import { getMaxPercentRemove } from './utils'
 import { graphql, useStaticQuery } from 'gatsby'
 import debounce from 'lodash.debounce'
 import UserLiquidity from '../../../atoms/UserLiquidity'
+import InputElement from '../../../atoms/Input/InputElement'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
 
@@ -64,6 +65,7 @@ export default function Remove({
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childContentJson.pool.remove
 
+  const slippagePresets = ['5', '10', '15', '25', '50']
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
   const [amountPercent, setAmountPercent] = useState('0')
@@ -74,23 +76,27 @@ export default function Remove({
   const [isAdvanced, setIsAdvanced] = useState(false)
   const [isLoading, setIsLoading] = useState<boolean>()
   const [txId, setTxId] = useState<string>()
+  const [slippage, setSlippage] = useState<string>('5')
+  const [minOceanAmount, setMinOceanAmount] = useState<string>('0')
+  const [minDatatokenAmount, setMinDatatokenAmount] = useState<string>('0')
 
   async function handleRemoveLiquidity() {
     setIsLoading(true)
-
     try {
       const result =
         isAdvanced === true
           ? await ocean.pool.removePoolLiquidity(
               accountId,
               poolAddress,
-              amountPoolShares
+              amountPoolShares,
+              minDatatokenAmount,
+              minOceanAmount
             )
-          : await ocean.pool.removeOceanLiquidity(
+          : await ocean.pool.removeOceanLiquidityWithMinimum(
               accountId,
               poolAddress,
-              amountOcean,
-              amountPoolShares
+              amountPoolShares,
+              minOceanAmount
             )
 
       setTxId(result?.transactionHash)
@@ -149,6 +155,23 @@ export default function Remove({
     totalPoolTokens
   ])
 
+  async function calculateAmountOfOceansRemoved(amountPoolShares: string) {
+    const oceanAmount = await ocean.pool.getOceanRemovedforPoolShares(
+      poolAddress,
+      amountPoolShares
+    )
+    setAmountOcean(oceanAmount)
+  }
+
+  useEffect(() => {
+    const minOceanAmount =
+      (Number(amountOcean) * (100 - Number(slippage))) / 100
+    const minDatatokenAmount =
+      (Number(amountDatatoken) * (100 - Number(slippage))) / 100
+    setMinOceanAmount(`${minOceanAmount}`)
+    setMinDatatokenAmount(`${minDatatokenAmount}`)
+  }, [slippage, amountOcean, amountDatatoken, isAdvanced])
+
   // Set amountPoolShares based on set slider value
   function handleAmountPercentChange(e: ChangeEvent<HTMLInputElement>) {
     setAmountPercent(e.target.value)
@@ -156,6 +179,7 @@ export default function Remove({
 
     const amountPoolShares = (Number(e.target.value) / 100) * Number(poolTokens)
     setAmountPoolShares(`${amountPoolShares}`)
+    calculateAmountOfOceansRemoved(`${amountPoolShares}`)
   }
 
   function handleMaxButton(e: ChangeEvent<HTMLInputElement>) {
@@ -165,6 +189,7 @@ export default function Remove({
     const amountPoolShares =
       (Number(amountMaxPercent) / 100) * Number(poolTokens)
     setAmountPoolShares(`${amountPoolShares}`)
+    calculateAmountOfOceansRemoved(`${amountPoolShares}`)
   }
 
   function handleAdvancedButton(e: FormEvent<HTMLButtonElement>) {
@@ -174,10 +199,17 @@ export default function Remove({
     setAmountPoolShares('0')
     setAmountPercent('0')
     setAmountOcean('0')
+    setSlippage('5')
+    setMinOceanAmount('0')
+    setMinDatatokenAmount('0')
 
     if (isAdvanced === true) {
       setAmountDatatoken('0')
     }
+  }
+
+  function handleSlippageChange(e: ChangeEvent<HTMLSelectElement>) {
+    setSlippage(e.target.value)
   }
 
   return (
@@ -186,7 +218,6 @@ export default function Remove({
 
       <form className={styles.removeInput}>
         <UserLiquidity amount={poolTokens} symbol="pool shares" />
-
         <div className={styles.range}>
           <h3>{amountPercent}%</h3>
           <div className={styles.slider}>
@@ -220,21 +251,36 @@ export default function Remove({
           </Button>
         </div>
       </form>
-
       <div className={styles.output}>
         <div>
           <p>{content.output.titleIn}</p>
           <Token symbol="pool shares" balance={amountPoolShares} noIcon />
         </div>
         <div>
-          <p>{content.output.titleOut}</p>
-          <Token symbol="OCEAN" balance={amountOcean} />
-          {isAdvanced === true && (
-            <Token symbol={dtSymbol} balance={amountDatatoken} />
+          <p>{content.output.titleOut} minimum</p>
+          {isAdvanced === true ? (
+            <>
+              <Token symbol="OCEAN" balance={minOceanAmount} />
+              <Token symbol={dtSymbol} balance={minDatatokenAmount} />
+            </>
+          ) : (
+            <Token symbol="OCEAN" balance={minOceanAmount} />
           )}
         </div>
       </div>
-
+      <div className={styles.slippage}>
+        <strong>Expected price impact</strong>
+        <InputElement
+          name="slippage"
+          type="select"
+          size="mini"
+          postfix="%"
+          sortOptions={false}
+          options={slippagePresets}
+          value={slippage}
+          onChange={handleSlippageChange}
+        />
+      </div>
       <Actions
         isLoading={isLoading}
         loaderMessage="Removing Liquidity..."
