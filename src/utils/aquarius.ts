@@ -5,6 +5,7 @@ import {
   Logger,
   publisherTrustedAlgorithm as PublisherTrustedAlgorithm
 } from '@oceanprotocol/lib/'
+
 import {
   QueryResult,
   SearchQuery
@@ -107,56 +108,15 @@ export async function getAssetsNames(
   }
 }
 
-export async function getAlgorithmsForAssetSelection(
-  metadataCacheUri: string,
-  selectedAlgorithms?: PublisherTrustedAlgorithm[]
-): Promise<AssetSelectionAsset[]> {
-  const query = {
-    page: 1,
-    query: {
-      query_string: {
-        query: `(service.attributes.main.type:algorithm) -isInPurgatory:true`
-      }
-    },
-    sort: { created: -1 }
-  }
+export async function getAlgorithms(
+  query: SearchQuery,
+  metadataCacheUri: string
+): Promise<DDO[]> {
   const source = axios.CancelToken.source()
-  const didList: string[] = []
-  const priceList: any = {}
   const result = await queryMetadata(
     query as any,
     metadataCacheUri,
     source.token
   )
-  result?.results?.forEach((ddo: DDO) => {
-    const did: string = web3.utils
-      .toChecksumAddress(ddo.dataToken)
-      .replace('0x', 'did:op:')
-    didList.push(did)
-    priceList[did] = ddo.price.value
-  })
-  const ddoNames = await getAssetsNames(didList, metadataCacheUri, source.token)
-  const algorithmList: AssetSelectionAsset[] = []
-  didList?.forEach((did: string) => {
-    let selected = false
-    selectedAlgorithms?.forEach((algorithm: PublisherTrustedAlgorithm) => {
-      if (algorithm.did === did) {
-        selected = true
-      }
-    })
-    selected
-      ? algorithmList.unshift({
-          did: did,
-          name: ddoNames[did],
-          price: priceList[did],
-          checked: selected
-        })
-      : algorithmList.push({
-          did: did,
-          name: ddoNames[did],
-          price: priceList[did],
-          checked: selected
-        })
-  })
-  return algorithmList
+  return result?.results
 }

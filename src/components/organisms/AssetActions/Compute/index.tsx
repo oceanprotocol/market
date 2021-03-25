@@ -3,7 +3,8 @@ import {
   DDO,
   File as FileMetadata,
   Logger,
-  ServiceType
+  ServiceType,
+  publisherTrustedAlgorithm
 } from '@oceanprotocol/lib'
 import Loader from '../../../atoms/Loader'
 import FormStartComputeDataset from './FormComputeDataset'
@@ -20,11 +21,15 @@ import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
 import { usePricing } from '../../../../hooks/usePricing'
 import { useAsset } from '../../../../providers/Asset'
+import { getAlgorithms } from '../../../../utils/aquarius'
 import { Formik } from 'formik'
 import {
   getInitialValues,
   validationSchema
 } from '../../../../models/FormStartComputeDataset'
+import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
+import { SearchQuery } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
+import { transformDDOToAssetSelection } from '../../../../utils/compute'
 
 export default function Compute({
   ddo,
@@ -39,28 +44,16 @@ export default function Compute({
 }): ReactElement {
   const { marketFeeAddress } = useSiteMetadata()
   const { accountId } = useWeb3()
-  const { ocean, account } = useOcean()
+  const { ocean, account, config } = useOcean()
   const { type } = useAsset()
-
-  // const { compute, isLoading, computeStepText, computeError } = useCompute()
   const { buyDT, getDTSymbol } = usePricing()
   const [dtSymbol, setDtSymbol] = useState<string>()
-
-  useEffect(() => {
-    if (!ddo) return
-    async function setDatatokenSymbol(ddo: DDO) {
-      const dtSymbol = await getDTSymbol(ddo)
-      setDtSymbol(dtSymbol)
-    }
-    setDatatokenSymbol(ddo)
-  }, [])
-
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [, setError] = useState('')
   const [computeType, setComputeType] = useState('nodejs')
-  // const [computeContainer, setComputeContainer] = useState(
-  //   computeOptions[0].value
-  // )
+
+  const [algorithmList, setAlgorithmList] = useState<AssetSelectionAsset[]>()
+  const [ddoAlgorithmList, setDdoAlgorithmList] = useState<DDO[]>()
   const [selectedAlgorithmAsset, setSelectedAlgorithmAsset] = useState<DDO>()
   const [hasAlgoAssetDatatoken, setHasAlgoAssetDatatoken] = useState<boolean>()
   const [isPublished, setIsPublished] = useState(false)
@@ -74,6 +67,10 @@ export default function Compute({
     setPreviousAlgorithmOrderId
   ] = useState<string>()
 
+  // const { compute, isLoading, computeStepText, computeError } = useCompute()
+  // const [computeContainer, setComputeContainer] = useState(
+  //   computeOptions[0].value
+  // )
   const isComputeButtonDisabled =
     isJobStarting === true ||
     file === null ||
@@ -102,6 +99,69 @@ export default function Compute({
     setHasAlgoAssetDatatoken(Number(AssetDtBalance) >= 1)
   }
 
+  function getQuerryString(
+    trustedAlgorithmList: publisherTrustedAlgorithm[]
+  ): SearchQuery {
+    let algoQuerry = ''
+    trustedAlgorithmList.forEach((trusteAlgo) => {
+      algoQuerry += `id:"${trusteAlgo.did}" OR `
+    })
+    if (trustedAlgorithmList.length > 1) {
+      algoQuerry = algoQuerry.substring(0, algoQuerry.length - 3)
+    }
+    const algorithmQuery =
+      trustedAlgorithmList.length > 0 ? `(${algoQuerry}) AND` : ``
+    const query = {
+      page: 1,
+      query: {
+        query_string: {
+          query: `${algorithmQuery} service.attributes.main.type:algorithm AND price.type:exchange -isInPurgatory:true`
+        }
+      },
+      sort: { created: -1 }
+    }
+    return query
+  }
+
+  // must be moved to a util method used also on edit compute metadata
+  async function getAlgorithmList(): Promise<AssetSelectionAsset[]> {
+    const computeService = ddo.findServiceByType('compute')
+    let algorithmSelectionList: AssetSelectionAsset[]
+    if (
+      computeService.attributes.main.privacy.publisherTrustedAlgorithms
+        .length === 0 &&
+      !computeService.attributes.main.privacy.allowAllPublishedAlgorithms
+    ) {
+      algorithmSelectionList = []
+    } else {
+      const algorithmDDOList = await getAlgorithms(
+        getQuerryString(
+          computeService.attributes.main.privacy.publisherTrustedAlgorithms
+        ),
+        config.metadataCacheUri
+      )
+      setDdoAlgorithmList(algorithmDDOList)
+      algorithmSelectionList = await transformDDOToAssetSelection(
+        algorithmDDOList,
+        config.metadataCacheUri,
+        []
+      )
+    }
+    return algorithmSelectionList
+  }
+
+  useEffect(() => {
+    if (!ddo) return
+    async function setDatatokenSymbol(ddo: DDO) {
+      const dtSymbol = await getDTSymbol(ddo)
+      setDtSymbol(dtSymbol)
+    }
+    setDatatokenSymbol(ddo)
+    getAlgorithmList().then((algorithms) => {
+      setAlgorithmList(algorithms)
+    })
+  }, [])
+
   useEffect(() => {
     if (!ocean || !accountId) return
     checkPreviousOrders(ddo, 'compute')
@@ -112,15 +172,6 @@ export default function Compute({
     checkPreviousOrders(selectedAlgorithmAsset, 'access')
     checkAssetDTBalance(selectedAlgorithmAsset)
   }, [selectedAlgorithmAsset])
-
-  // const handleSelectChange = (event: ChangeEvent<HTMLSelectElement>) => {
-  //   const comType = event.target.value
-  //   setComputeType(comType)
-
-  //   const selectedComputeOption = computeOptions.find((x) => x.name === comType)
-  //   if (selectedComputeOption !== undefined)
-  //     setComputeContainer(selectedComputeOption.value)
-  // }
 
   const startJob = async (algorithmId: string) => {
     try {
@@ -187,6 +238,7 @@ export default function Compute({
       setHasPreviousDatasetOrder(true)
       setIsPublished(true)
     } catch (error) {
+      console.log('error found')
       setError('Failed to start job!')
       Logger.error(error.message)
     } finally {
@@ -231,7 +283,8 @@ export default function Compute({
           }}
         >
           <FormStartComputeDataset
-            ddo={ddo}
+            algorithms={algorithmList}
+            ddoListAlgorithms={ddoAlgorithmList}
             selectedAlgorithm={selectedAlgorithmAsset}
             setselectedAlgorithm={setSelectedAlgorithmAsset}
             loading={false}

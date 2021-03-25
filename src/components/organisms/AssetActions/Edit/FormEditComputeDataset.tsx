@@ -8,9 +8,11 @@ import { FormFieldProps } from '../../../../@types/Form'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import stylesIndex from './index.module.css'
 import styles from './FormEditMetadata.module.css'
-import { getAlgorithmsForAssetSelection } from '../../../../utils/aquarius'
+import { getAlgorithms } from '../../../../utils/aquarius'
+import { transformDDOToAssetSelection } from '../../../../utils/compute'
 import { useAsset } from '../../../../providers/Asset'
 import { ComputePrivacyForm } from '../../../../models/FormEditComputeDataset'
+import { publisherTrustedAlgorithm as PublisherTrustedAlgorithm } from '@oceanprotocol/lib'
 
 export default function FormEditComputeDataset({
   data,
@@ -34,11 +36,29 @@ export default function FormEditComputeDataset({
     'compute'
   ).attributes.main.privacy
 
-  useEffect(() => {
-    getAlgorithmsForAssetSelection(
+  async function getAlgorithmList(
+    publisherTrustedAlgorithms: PublisherTrustedAlgorithm[]
+  ): Promise<AssetSelectionAsset[]> {
+    const query = {
+      page: 1,
+      query: {
+        query_string: {
+          query: `service.attributes.main.type:algorithm AND price.type:exchange -isInPurgatory:true`
+        }
+      },
+      sort: { created: -1 }
+    }
+    const algorithmDDOList = await getAlgorithms(query, config.metadataCacheUri)
+    const algorithmSelectionList = await transformDDOToAssetSelection(
+      algorithmDDOList,
       config.metadataCacheUri,
       publisherTrustedAlgorithms
-    ).then((algorithms) => {
+    )
+    return algorithmSelectionList
+  }
+
+  useEffect(() => {
+    getAlgorithmList(publisherTrustedAlgorithms).then((algorithms) => {
       setAllAlgorithms(algorithms)
     })
   }, [config.metadataCacheUri, publisherTrustedAlgorithms])
