@@ -17,7 +17,8 @@
       }
     ],
     "warning": "We are in beta. Please familiarize yourself with [the market](https://oceanprotocol.com/technology/marketplaces), [the risks](https://blog.oceanprotocol.com/on-staking-on-data-in-ocean-market-3d8e09eb0a13), and the [Terms of Use](/terms).",
-    "warningPolygon": "Polygon/Matic EVM support is in early stages. Use the Matic bridge to [get mOCEAN](https://docs.oceanprotocol.com/tutorials/polygon-bridge/).",
+    "warningPolygon": "Polygon/Matic EVM support is in early stages.",
+    "warningPolygonNetwork": "Ocean Market is [available on Polygon](https://oceanprotocol.com/technology/marketplaces).",
     "warningPolygonPublish": "Only republish data sets with a pool from ETH Mainnet into Polygon/Matic if the liquidity is **less than or equal to 1000 OCEAN in the original pool**. Doing otherwise will lead to [purgatory](https://github.com/oceanprotocol/list-purgatory) for the data set in Polygon/Matic."
   }
 }

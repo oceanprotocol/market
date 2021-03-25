@@ -29,9 +29,8 @@ export default function PublishPage({
 }: {
   content: { warning: string; form: FormContent }
 }): ReactElement {
-  const { warningPolygonPublish } = useSiteMetadata()
   const { debug } = useUserPreferences()
-  const { accountId, networkId } = useWeb3()
+  const { accountId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
   const { publish, publishError, isLoading, publishStepText } = usePublish()
   const [success, setSuccess] = useState<string>()
@@ -114,10 +113,7 @@ export default function PublishPage({
           ) : (
             <>
               <Alert
-                text={
-                  (networkId === 137 ? `${warningPolygonPublish}\n\n` : '') +
-                  content.warning
-                }
+                text={content.warning}
                 state="info"
                 className={styles.alert}
               />

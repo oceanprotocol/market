@@ -12,11 +12,13 @@ import {
 } from '../../utils/web3'
 import { getProviderInfo, IProviderInfo } from 'web3modal'
 import { useOcean } from '../../providers/Ocean'
+import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 
 export default function Header(): ReactElement {
   const { web3Provider, networkId } = useWeb3()
   const [providerInfo, setProviderInfo] = useState<IProviderInfo>()
-  const { config } = useOcean
+  const { config } = useOcean()
+  const { warningPolygon, warningPolygonNetwork } = useSiteMetadata()
 
   const network: NetworkObject = {
     chainId: 137,
@@ -37,7 +39,7 @@ export default function Header(): ReactElement {
   }, [web3Provider])
 
   function setBannerForMatic() {
-    setText('Polygon/Matic EVM support is in early stages.')
+    setText(warningPolygon)
     setAction({
       name: 'Add MOcean',
       handleAction: () => addOceanToWallet(config, web3Provider)
@@ -46,11 +48,8 @@ export default function Header(): ReactElement {
 
   useEffect(() => {
     console.log(networkId)
-    networkId === 137
-      ? setBannerForMatic()
-      : setText(
-          'Ocean Market is [available on Polygon](https://oceanprotocol.com/technology/marketplaces).'
-        )
+    console.log(warningPolygonNetwork)
+    networkId === 137 ? setBannerForMatic() : setText(warningPolygonNetwork)
     providerInfo?.name === 'MetaMask' &&
       networkId !== 137 &&
       setAction({
