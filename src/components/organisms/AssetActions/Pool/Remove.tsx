@@ -254,11 +254,7 @@ export default function Remove({
       <div className={styles.output}>
         <div>
           <p>{content.output.titleIn}</p>
-          {isAdvanced ? (
-            <Token symbol="pool shares" balance={amountPoolShares} noIcon />
-          ) : (
-            <Token symbol="pool shares" balance={amountPoolShares} noIcon />
-          )}
+          <Token symbol="pool shares" balance={amountPoolShares} noIcon />
         </div>
         <div>
           <p>{content.output.titleOut} minimum</p>
