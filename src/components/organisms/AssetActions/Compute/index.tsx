@@ -267,7 +267,7 @@ export default function Compute({
       ) : (
         <Formik
           initialValues={getInitialValues()}
-          isInitialValid={false}
+          validateOnMount
           validationSchema={validationSchema}
           onSubmit={async (values, { resetForm }) => {
             await handleSubmit(values, resetForm)
