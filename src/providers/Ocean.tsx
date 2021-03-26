@@ -21,7 +21,7 @@ const refreshInterval = 20000 // 20 sec.
 
 interface OceanProviderValue {
   ocean: Ocean
-  config: ConfigHelperConfig | Config
+  config: ConfigHelperConfig
   account: Account
   balance: UserBalance
   connect: (config?: Config) => Promise<void>
