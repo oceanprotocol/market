@@ -1,12 +1,10 @@
-import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react'
+import React, { ChangeEvent, ReactElement } from 'react'
 import styles from './FormComputeDataset.module.css'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
-import Button from '../../../atoms/Button'
 import Input from '../../../atoms/Input'
 import { FormFieldProps } from '../../../../@types/Form'
-import { useOcean } from '../../../../providers/Ocean'
 import { useStaticQuery, graphql } from 'gatsby'
-import { DDO, publisherTrustedAlgorithm } from '@oceanprotocol/lib'
+import { DDO } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import ButtonBuy from '../../../atoms/ButtonBuy'
 
@@ -105,7 +103,7 @@ export default function FormStartCompute({
 
       <ButtonBuy
         action="compute"
-        disabled={isComputeButtonDisabled}
+        disabled={isComputeButtonDisabled || !isValid}
         hasPreviousOrder={hasPreviousOrder}
         hasDatatoken={hasDatatoken}
         dtSymbol={dtSymbol}

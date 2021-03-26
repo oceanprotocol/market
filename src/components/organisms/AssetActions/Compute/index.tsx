@@ -1,4 +1,4 @@
-import React, { useState, ReactElement, ChangeEvent, useEffect } from 'react'
+import React, { useState, ReactElement, useEffect } from 'react'
 import {
   DDO,
   File as FileMetadata,
@@ -6,12 +6,11 @@ import {
   ServiceType,
   publisherTrustedAlgorithm
 } from '@oceanprotocol/lib'
-import Loader from '../../../atoms/Loader'
+import { toast } from 'react-toastify'
 import FormStartComputeDataset from './FormComputeDataset'
 import Web3Feedback from '../../../molecules/Wallet/Feedback'
 import Price from '../../../atoms/Price'
 import File from '../../../atoms/File'
-// import { computeOptions, useCompute } from '../../../../hooks/useCompute'
 import styles from './index.module.css'
 import Input from '../../../atoms/Input'
 import Alert from '../../../atoms/Alert'
@@ -51,7 +50,7 @@ export default function Compute({
   const { type } = useAsset()
   const { buyDT } = usePricing()
   const [isJobStarting, setIsJobStarting] = useState(false)
-  const [, setError] = useState('')
+  const [error, setError] = useState<string>()
 
   const [algorithmList, setAlgorithmList] = useState<AssetSelectionAsset[]>()
   const [ddoAlgorithmList, setDdoAlgorithmList] = useState<DDO[]>()
@@ -162,13 +161,19 @@ export default function Compute({
     checkAssetDTBalance(selectedAlgorithmAsset)
   }, [selectedAlgorithmAsset, ocean, accountId])
 
+  // Output errors in toast UI
+  useEffect(() => {
+    if (!error) return
+    toast.error(error)
+  }, [error])
+
   const startJob = async (algorithmId: string) => {
     try {
       if (!ocean) return
 
       setIsJobStarting(true)
       setIsPublished(false)
-      setError('')
+      setError(undefined)
 
       const computeService = ddo.findServiceByType('compute')
       const serviceAlgo = selectedAlgorithmAsset.findServiceByType('access')
@@ -227,7 +232,6 @@ export default function Compute({
       setHasPreviousDatasetOrder(true)
       setIsPublished(true)
     } catch (error) {
-      console.log('error found')
       setError('Failed to start job!')
       Logger.error(error.message)
     } finally {
