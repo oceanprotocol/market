@@ -1,4 +1,4 @@
-import React, { ChangeEvent, ReactElement } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import styles from './FormComputeDataset.module.css'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import Input from '../../../atoms/Input'
@@ -66,9 +66,8 @@ export default function FormStartCompute({
 
   const {
     isValid,
-    validateField,
-    setFieldValue
-  }: FormikContextType<string> = useFormikContext()
+    values
+  }: FormikContextType<{ algorithm: string }> = useFormikContext()
 
   function getAlgorithmAsset(algorithmId: string): DDO {
     let assetDdo = null
@@ -78,14 +77,10 @@ export default function FormStartCompute({
     return assetDdo
   }
 
-  function handleFieldChange(
-    e: ChangeEvent<HTMLSelectElement>,
-    field: FormFieldProps
-  ) {
-    setFieldValue(field.name, e.target.id)
-    validateField(field.name)
-    setSelectedAlgorithm(getAlgorithmAsset(e.target.id))
-  }
+  useEffect(() => {
+    if (!values.algorithm) return
+    setSelectedAlgorithm(getAlgorithmAsset(values.algorithm))
+  }, [values.algorithm])
 
   return (
     <Form className={styles.form}>
@@ -95,9 +90,6 @@ export default function FormStartCompute({
           {...field}
           options={algorithms}
           component={Input}
-          onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-            handleFieldChange(e, field)
-          }
         />
       ))}
 

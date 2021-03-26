@@ -7,13 +7,11 @@ import {
   publisherTrustedAlgorithm
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
-import FormStartComputeDataset from './FormComputeDataset'
-import Web3Feedback from '../../../molecules/Wallet/Feedback'
 import Price from '../../../atoms/Price'
 import File from '../../../atoms/File'
-import styles from './index.module.css'
 import Input from '../../../atoms/Input'
 import Alert from '../../../atoms/Alert'
+import Web3Feedback from '../../../molecules/Wallet/Feedback'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import checkPreviousOrder from '../../../../utils/checkPreviousOrder'
 import { useOcean } from '../../../../providers/Ocean'
@@ -32,6 +30,8 @@ import {
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import { SearchQuery } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import axios from 'axios'
+import FormStartComputeDataset from './FormComputeDataset'
+import styles from './index.module.css'
 
 export default function Compute({
   ddo,
@@ -266,7 +266,8 @@ export default function Compute({
         />
       ) : (
         <Formik
-          initialValues={getInitialValues}
+          initialValues={getInitialValues()}
+          isInitialValid={false}
           validationSchema={validationSchema}
           onSubmit={async (values, { resetForm }) => {
             await handleSubmit(values, resetForm)
