@@ -109,17 +109,20 @@ function AssetProvider({
       price.type !== 'exchange'
     )
       return
-    price.value = frePrice.fixedRateExchanges[0].rate
-    price.address = frePrice.fixedRateExchanges[0].id
-    console.log(price)
-    setPrice(price)
+    setPrice((prevState) => ({
+      ...prevState,
+      value: frePrice.fixedRateExchanges[0].rate,
+      address: frePrice.fixedRateExchanges[0].id
+    }))
   }, [frePrice])
 
   useEffect(() => {
     if (!poolPrice || poolPrice.pools.length === 0 || price.type !== 'pool')
       return
-    price.value = poolPrice.pools[0].spotPrice
-    setPrice(price)
+    setPrice((prevState) => ({
+      ...prevState,
+      value: poolPrice.pools[0].spotPrice
+    }))
   }, [poolPrice])
 
   const fetchDdo = async (token?: CancelToken) => {
