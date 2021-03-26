@@ -7,6 +7,7 @@ import { useSiteMetadata } from '../hooks/useSiteMetadata'
 import Alert from './atoms/Alert'
 import { graphql, PageProps, useStaticQuery } from 'gatsby'
 import { useAccountPurgatory } from '../hooks/useAccountPurgatory'
+import AnnouncementBanner from './molecules/AnnouncementBanner'
 import { useWeb3 } from '../providers/Web3'
 
 const contentQuery = graphql`
@@ -42,6 +43,7 @@ export default function App({
   return (
     <Styles>
       <div className={styles.app}>
+        <AnnouncementBanner />
         <Header />
         {(props as PageProps).uri === '/' && (
           <Alert text={warning.main} state="info" />

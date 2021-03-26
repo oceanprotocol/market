@@ -10,6 +10,7 @@
   color: var(--font-color-heading);
   font-size: var(--font-size-small);
   margin: 0;
+  margin-right: calc(var(--spacer) / 4);
   text-align: center;
 }
 
@@ -20,19 +21,4 @@
 
 .text p:last-child {
   margin-bottom: 0;
-}
-
-.button {
-  border: 0;
-  background-color: white;
-  color: var(--brand-pink);
-  font-size: var(--font-size-small);
-  font-weight: var(--font-weight-bold);
-  margin-left: calc(var(--spacer) / 6);
-  text-transform: uppercase;
-  cursor: pointer;
-}
-.button:focus {
-  outline: none;
-  box-shadow: none;
 }
