@@ -75,3 +75,12 @@
   margin-top: calc(var(--spacer) / 4);
   min-width: 6rem;
 }
+
+.walletInfo{
+  display: flex;
+  flex-direction: column;
+}
+
+.walletInfo button{
+  margin-top: calc(var(--spacer) / 5) !important;
+}

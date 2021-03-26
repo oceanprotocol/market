@@ -8,6 +8,7 @@
 .output p {
   font-weight: var(--font-weight-bold);
   margin-bottom: calc(var(--spacer) / 8);
+  font-size: var(--font-size-small);
 }
 
 .output div:first-child [class*='token'] {
