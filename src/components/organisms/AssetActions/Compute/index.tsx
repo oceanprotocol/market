@@ -48,7 +48,7 @@ export default function Compute({
   const { accountId } = useWeb3()
   const { ocean, account, config } = useOcean()
   const { type } = useAsset()
-  const { buyDT } = usePricing()
+  const { buyDT, pricingError, pricingStepText } = usePricing()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
 
@@ -163,11 +163,11 @@ export default function Compute({
 
   // Output errors in toast UI
   useEffect(() => {
-    if (!error) return
-    toast.error(error)
-  }, [error])
+    if (!error || !pricingError) return
+    toast.error(error || pricingError)
+  }, [error, pricingError])
 
-  const startJob = async (algorithmId: string) => {
+  async function startJob(algorithmId: string) {
     try {
       if (!ocean) return
 
@@ -178,24 +178,39 @@ export default function Compute({
       const computeService = ddo.findServiceByType('compute')
       const serviceAlgo = selectedAlgorithmAsset.findServiceByType('access')
 
-      !hasPreviousDatasetOrder &&
-        !hasDatatoken &&
-        (await buyDT('1', (ddo as DDO).price, ddo))
-
-      !hasPreviousAlgorithmOrder &&
-        !hasAlgoAssetDatatoken &&
-        (await buyDT(
-          '1',
-          (selectedAlgorithmAsset as DDO).price,
-          selectedAlgorithmAsset
-        ))
-
       const allowed = await ocean.compute.isOrderable(
         ddo.id,
         computeService.index
       )
+      Logger.log('[compute] Is dataset orderable?', allowed)
 
-      console.log('is dataset orderable ?', allowed)
+      if (!hasPreviousDatasetOrder && !hasDatatoken) {
+        const tx = await buyDT('1', (ddo as DDO).price, ddo)
+        if (!tx) {
+          setError('Error buying datatoken.')
+          return
+        }
+      }
+
+      if (!hasPreviousAlgorithmOrder && !hasAlgoAssetDatatoken) {
+        const tx = await buyDT(
+          '1',
+          (selectedAlgorithmAsset as DDO).price,
+          selectedAlgorithmAsset
+        )
+        if (!tx) {
+          setError('Error buying datatoken.')
+          return
+        }
+      }
+
+      // TODO: pricingError is always undefined even upon errors during buyDT for whatever reason.
+      // So manually drop out above, but ideally could be replaced with this alone.
+      if (pricingError) {
+        setError(pricingError)
+        return
+      }
+
       const assetOrderId = hasPreviousDatasetOrder
         ? previousDatasetOrderId
         : await ocean.compute.orderAsset(
@@ -213,6 +228,11 @@ export default function Compute({
             serviceAlgo.index
           )
 
+      if (!assetOrderId || !algorithmAssetOrderId) {
+        setError('Error ordering assets.')
+        return
+      }
+
       const output = {}
       const respone = await ocean.compute.start(
         ddo.id,
@@ -227,23 +247,16 @@ export default function Compute({
         algorithmAssetOrderId,
         selectedAlgorithmAsset.dataToken
       )
-      console.log('respone', respone)
+      Logger.log('[compute] Start compute response: ', respone)
 
       setHasPreviousDatasetOrder(true)
       setIsPublished(true)
     } catch (error) {
       setError('Failed to start job!')
-      Logger.error(error.message)
+      Logger.error(`[compute] ${error.message}`)
     } finally {
       setIsJobStarting(false)
     }
-  }
-
-  async function handleSubmit(
-    values: any,
-    resetForm: () => void
-  ): Promise<void> {
-    await startJob(values.algorithm)
   }
 
   return (
@@ -269,9 +282,7 @@ export default function Compute({
           initialValues={getInitialValues()}
           validateOnMount
           validationSchema={validationSchema}
-          onSubmit={async (values, { resetForm }) => {
-            await handleSubmit(values, resetForm)
-          }}
+          onSubmit={async (values) => await startJob(values.algorithm)}
         >
           <FormStartComputeDataset
             algorithms={algorithmList}
@@ -285,7 +296,7 @@ export default function Compute({
             hasDatatoken={hasDatatoken}
             dtSymbol={ddo.dataTokenInfo?.symbol}
             dtBalance={dtBalance}
-            stepText="Starting Compute Job..."
+            stepText={pricingStepText || 'Starting Compute Job...'}
           />
         </Formik>
       )}
