@@ -8,6 +8,7 @@ import { useOcean } from '../../../../providers/Ocean'
 import { useStaticQuery, graphql } from 'gatsby'
 import { DDO, publisherTrustedAlgorithm } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
+import ButtonBuy from '../../../atoms/ButtonBuy'
 
 const contentQuery = graphql`
   query StartComputeDatasetQuery {
@@ -39,18 +40,28 @@ const contentQuery = graphql`
   }
 `
 
-export default function FromStartCompute({
+export default function FormStartCompute({
   algorithms,
   ddoListAlgorithms,
-  selectedAlgorithm,
-  setselectedAlgorithm,
-  loading
+  setSelectedAlgorithm,
+  isLoading,
+  isComputeButtonDisabled,
+  hasPreviousOrder,
+  hasDatatoken,
+  dtSymbol,
+  dtBalance,
+  stepText
 }: {
   algorithms: AssetSelectionAsset[]
   ddoListAlgorithms: DDO[]
-  selectedAlgorithm: DDO
-  setselectedAlgorithm: React.Dispatch<React.SetStateAction<DDO>>
-  loading: boolean
+  setSelectedAlgorithm: React.Dispatch<React.SetStateAction<DDO>>
+  isLoading: boolean
+  isComputeButtonDisabled: boolean
+  hasPreviousOrder: boolean
+  hasDatatoken: boolean
+  dtSymbol: string
+  dtBalance: string
+  stepText: string
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
@@ -75,7 +86,7 @@ export default function FromStartCompute({
   ) {
     setFieldValue(field.name, e.target.id)
     validateField(field.name)
-    setselectedAlgorithm(getAlgorithmAsset(e.target.id))
+    setSelectedAlgorithm(getAlgorithmAsset(e.target.id))
   }
 
   return (
@@ -92,17 +103,17 @@ export default function FromStartCompute({
         />
       ))}
 
-      <footer className={styles.actions}>
-        <div className={styles.actions}>
-          <Button
-            style="primary"
-            type="submit"
-            // disabled={isComputeButtonDisabled}
-          >
-            Start compute job
-          </Button>
-        </div>
-      </footer>
+      <ButtonBuy
+        action="compute"
+        disabled={isComputeButtonDisabled}
+        hasPreviousOrder={hasPreviousOrder}
+        hasDatatoken={hasDatatoken}
+        dtSymbol={dtSymbol}
+        dtBalance={dtBalance}
+        stepText={stepText}
+        isLoading={isLoading}
+        type="submit"
+      />
     </Form>
   )
 }

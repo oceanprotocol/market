@@ -4,9 +4,3 @@
   margin: auto;
   padding: 0;
 }
-
-.help {
-  font-size: var(--font-size-mini);
-  color: var(--color-secondary);
-  margin-top: calc(var(--spacer) / 3);
-}

@@ -271,24 +271,21 @@ export default function Compute({
           <FormStartComputeDataset
             algorithms={algorithmList}
             ddoListAlgorithms={ddoAlgorithmList}
-            selectedAlgorithm={selectedAlgorithmAsset}
-            setselectedAlgorithm={setSelectedAlgorithmAsset}
-            loading={false}
+            setSelectedAlgorithm={setSelectedAlgorithmAsset}
+            isLoading={isJobStarting}
+            isComputeButtonDisabled={isComputeButtonDisabled}
+            hasPreviousOrder={
+              hasPreviousDatasetOrder || hasPreviousAlgorithmOrder
+            }
+            hasDatatoken={hasDatatoken}
+            dtSymbol={ddo.dataTokenInfo?.symbol}
+            dtBalance={dtBalance}
+            stepText="Starting Compute Job..."
           />
         </Formik>
       )}
 
       <footer className={styles.feedback}>
-        {/* 
-          TODO: the following should be replaced with same logic 
-          as getHelpText() from Consume.tsx, ideally the same method.
-        */}
-        {hasDatatoken && (
-          <div className={styles.help}>
-            You own {dtBalance} {ddo.dataTokenInfo.symbol} allowing you to use
-            this data set without paying again.
-          </div>
-        )}
         {isPublished && (
           <Alert
             title="Your job started!"
