@@ -13,10 +13,14 @@ const query = graphql`
           name
           link
         }
-        warning
-        warningPolygon
-        warningPolygonNetwork
-        warningPolygonPublish
+        warning {
+          main
+          polygonPublish
+        }
+        announcement {
+          main
+          polygon
+        }
         appConfig {
           infuraProjectId
           network

@@ -44,7 +44,7 @@ export default function App({
       <div className={styles.app}>
         <Header />
         {(props as PageProps).uri === '/' && (
-          <Alert text={warning} state="info" />
+          <Alert text={warning.main} state="info" />
         )}
         {isInPurgatory && (
           <Alert

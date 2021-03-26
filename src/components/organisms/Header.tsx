@@ -19,7 +19,7 @@ export default function Header(): ReactElement {
   const { web3Provider, networkId } = useWeb3()
   const [providerInfo, setProviderInfo] = useState<IProviderInfo>()
   const { config, connect } = useOcean()
-  const { warningPolygon, warningPolygonNetwork } = useSiteMetadata()
+  const { warning, announcement } = useSiteMetadata()
 
   const network: NetworkObject = {
     chainId: 137,
@@ -29,7 +29,7 @@ export default function Header(): ReactElement {
       'https://rpc-mainnet.maticvigil.com/'
     ]
   }
-  const [text, setText] = useState<string>(warningPolygonNetwork)
+  const [text, setText] = useState<string>(announcement.main)
   const [action, setAction] = useState<AnnouncementAction>()
   const addCustomNetworkAction = {
     name: 'Add custom network',
@@ -48,17 +48,17 @@ export default function Header(): ReactElement {
   }
 
   function setBannerForMatic() {
-    setText(warningPolygon)
+    setText(announcement.polygon)
     setAction(addCustomTokenAction)
   }
 
   useEffect(() => {
     if (!web3Provider && config.networkId) {
       if (config.networkId !== 137) {
-        setText(warningPolygonNetwork)
+        setText(announcement.main)
         setAction(switchToPolygonAction)
       } else {
-        setText(warningPolygon)
+        setText(announcement.polygon)
         setAction(undefined)
       }
       return
@@ -73,7 +73,7 @@ export default function Header(): ReactElement {
       setBannerForMatic()
       return
     }
-    setText(warningPolygonNetwork)
+    setText(announcement.main)
     !window.location.pathname.includes('/asset/did') &&
       setAction(addCustomNetworkAction)
   }, [config])
