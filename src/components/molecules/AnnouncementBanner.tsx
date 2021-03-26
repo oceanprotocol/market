@@ -21,7 +21,7 @@ export interface AnnouncementAction {
 
 export default function AnnouncementBanner(): ReactElement {
   const { web3Provider, networkId } = useWeb3()
-  const [providerInfo, setProviderInfo] = useState<IProviderInfo>()
+  // const [providerInfo, setProviderInfo] = useState<IProviderInfo>()
   const { config, connect } = useOcean()
   const { announcement } = useSiteMetadata()
 
@@ -63,7 +63,7 @@ export default function AnnouncementBanner(): ReactElement {
     setAction(addCustomTokenAction)
   }
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (!web3Provider && config.networkId) {
       if (config.networkId !== 137) {
         setText(announcement.main)
@@ -87,7 +87,40 @@ export default function AnnouncementBanner(): ReactElement {
     setText(announcement.main)
     !window.location.pathname.includes('/asset/did') &&
       setAction(addCustomNetworkAction)
-  }, [config])
+  }, [config]) */
+
+  useEffect(() => {
+    if (!web3Provider && !config) return
+    const providerInfo = getProviderInfo(web3Provider)
+    switch (providerInfo?.name) {
+      case 'Web3':
+        if (config.networkId !== 137) {
+          setText(announcement.main)
+          setAction(switchToPolygonAction)
+        } else {
+          setText(announcement.polygon)
+          setAction(switchToEthAction)
+        }
+        break
+      case 'MetaMask':
+        if (networkId === 137) {
+          setBannerForMatic()
+        } else {
+          setText(announcement.main)
+          window.location.pathname.includes('/asset/did')
+            ? setAction(undefined)
+            : setAction(addCustomNetworkAction)
+        }
+        break
+      default:
+        if (networkId === 137) {
+          setBannerForMatic()
+        } else {
+          setText(announcement.main)
+          setAction(undefined)
+        }
+    }
+  }, [web3Provider, config])
 
   useEffect(() => {
     if (networkId === 137 || !web3Provider) return
