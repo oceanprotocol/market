@@ -44,6 +44,7 @@ const freQuery = gql`
   query FrePrice($datatoken: String) {
     fixedRateExchanges(orderBy: id, where: { datatoken: $datatoken }) {
       rate
+      id
     }
   }
 `
@@ -77,7 +78,7 @@ function AssetProvider({
     data: frePrice
   } = useQuery<FrePrice>(freQuery, {
     variables,
-    skip: true
+    skip: false
   })
   const {
     refetch: refetchPool,
@@ -85,31 +86,43 @@ function AssetProvider({
     data: poolPrice
   } = useQuery<PoolPrice>(poolQuery, {
     variables,
-    skip: true
+    skip: false
   })
 
-  useEffect(() => {
-    if (!ddo || !variables) return
-    if (ddo.price.type === 'exchange') {
-      refetchFre(variables)
-      startPollingFre(refreshInterval)
-    } else {
-      refetchPool(variables)
-      startPollingPool(refreshInterval)
-    }
-  }, [ddo, variables])
+  // this is not working as expected, thus we need to fetch both pool and fre
+  // useEffect(() => {
+  //   if (!ddo || !variables || variables === '') return
+
+  //   if (ddo.price.type === 'exchange') {
+  //     refetchFre(variables)
+  //     startPollingFre(refreshInterval)
+  //   } else {
+  //     refetchPool(variables)
+  //     startPollingPool(refreshInterval)
+  //   }
+  // }, [ddo, variables])
 
   useEffect(() => {
-    if (!frePrice || frePrice.fixedRateExchanges.length === 0) return
-    price.value = frePrice.fixedRateExchanges[0].rate
-    setPrice(price)
+    if (
+      !frePrice ||
+      frePrice.fixedRateExchanges.length === 0 ||
+      price.type !== 'exchange'
+    )
+      return
+    setPrice((prevState) => ({
+      ...prevState,
+      value: frePrice.fixedRateExchanges[0].rate,
+      address: frePrice.fixedRateExchanges[0].id
+    }))
   }, [frePrice])
 
   useEffect(() => {
-    if (!poolPrice || poolPrice.pools.length === 0) return
-    price.value = poolPrice.pools[0].spotPrice
-    price.value = 3222222
-    setPrice(price)
+    if (!poolPrice || poolPrice.pools.length === 0 || price.type !== 'pool')
+      return
+    setPrice((prevState) => ({
+      ...prevState,
+      value: poolPrice.pools[0].spotPrice
+    }))
   }, [poolPrice])
 
   const fetchDdo = async (token?: CancelToken) => {
