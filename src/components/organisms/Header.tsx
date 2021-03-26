@@ -55,6 +55,7 @@ export default function Header(): ReactElement {
   useEffect(() => {
     if (!web3Provider && config.networkId) {
       if (config.networkId !== 137) {
+        setText(warningPolygonNetwork)
         setAction(switchToPolygonAction)
       } else {
         setText(warningPolygon)
