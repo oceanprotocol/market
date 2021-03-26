@@ -149,7 +149,7 @@ export default function Compute({
     getAlgorithmList().then((algorithms) => {
       setAlgorithmList(algorithms)
     })
-  }, [])
+  }, [ddo])
 
   useEffect(() => {
     if (!ocean || !accountId) return
@@ -160,7 +160,7 @@ export default function Compute({
     if (!ocean || !accountId || !selectedAlgorithmAsset) return
     checkPreviousOrders(selectedAlgorithmAsset, 'access')
     checkAssetDTBalance(selectedAlgorithmAsset)
-  }, [selectedAlgorithmAsset])
+  }, [selectedAlgorithmAsset, ocean, accountId])
 
   const startJob = async (algorithmId: string) => {
     try {
