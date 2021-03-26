@@ -78,17 +78,13 @@ export default function FromStartCompute({
     setselectedAlgorithm(getAlgorithmAsset(e.target.id))
   }
 
-  useEffect(() => {
-    if (!algorithms) return
-    content.form.data[0].options = algorithms
-  }, [algorithms])
-
   return (
     <Form className={styles.form}>
       {content.form.data.map((field: FormFieldProps) => (
         <Field
           key={field.name}
           {...field}
+          options={algorithms}
           component={Input}
           onChange={(e: ChangeEvent<HTMLSelectElement>) =>
             handleFieldChange(e, field)

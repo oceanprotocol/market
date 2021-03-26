@@ -21,7 +21,10 @@ import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
 import { usePricing } from '../../../../hooks/usePricing'
 import { useAsset } from '../../../../providers/Asset'
-import { getAlgorithms } from '../../../../utils/aquarius'
+import {
+  queryMetadata,
+  transformDDOToAssetSelection
+} from '../../../../utils/aquarius'
 import { Formik } from 'formik'
 import {
   getInitialValues,
@@ -29,7 +32,7 @@ import {
 } from '../../../../models/FormStartComputeDataset'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import { SearchQuery } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
-import { transformDDOToAssetSelection } from '../../../../utils/compute'
+import axios from 'axios'
 
 export default function Compute({
   ddo,
@@ -46,11 +49,9 @@ export default function Compute({
   const { accountId } = useWeb3()
   const { ocean, account, config } = useOcean()
   const { type } = useAsset()
-  const { buyDT, getDTSymbol } = usePricing()
-  const [dtSymbol, setDtSymbol] = useState<string>()
+  const { buyDT } = usePricing()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [, setError] = useState('')
-  const [computeType, setComputeType] = useState('nodejs')
 
   const [algorithmList, setAlgorithmList] = useState<AssetSelectionAsset[]>()
   const [ddoAlgorithmList, setDdoAlgorithmList] = useState<DDO[]>()
@@ -67,16 +68,8 @@ export default function Compute({
     setPreviousAlgorithmOrderId
   ] = useState<string>()
 
-  // const { compute, isLoading, computeStepText, computeError } = useCompute()
-  // const [computeContainer, setComputeContainer] = useState(
-  //   computeOptions[0].value
-  // )
   const isComputeButtonDisabled =
-    isJobStarting === true ||
-    file === null ||
-    computeType === '' ||
-    !ocean ||
-    !isBalanceSufficient
+    isJobStarting === true || file === null || !ocean || !isBalanceSufficient
   const hasDatatoken = Number(dtBalance) >= 1
 
   async function checkPreviousOrders(ddo: DDO, serviceType: ServiceType) {
@@ -123,8 +116,8 @@ export default function Compute({
     return query
   }
 
-  // must be moved to a util method used also on edit compute metadata
   async function getAlgorithmList(): Promise<AssetSelectionAsset[]> {
+    const source = axios.CancelToken.source()
     const computeService = ddo.findServiceByType('compute')
     let algorithmSelectionList: AssetSelectionAsset[]
     if (
@@ -134,15 +127,16 @@ export default function Compute({
     ) {
       algorithmSelectionList = []
     } else {
-      const algorithmDDOList = await getAlgorithms(
+      const gueryResults = await queryMetadata(
         getQuerryString(
           computeService.attributes.main.privacy.publisherTrustedAlgorithms
         ),
-        config.metadataCacheUri
+        config.metadataCacheUri,
+        source.token
       )
-      setDdoAlgorithmList(algorithmDDOList)
+      setDdoAlgorithmList(gueryResults.results)
       algorithmSelectionList = await transformDDOToAssetSelection(
-        algorithmDDOList,
+        gueryResults.results,
         config.metadataCacheUri,
         []
       )
@@ -152,11 +146,6 @@ export default function Compute({
 
   useEffect(() => {
     if (!ddo) return
-    async function setDatatokenSymbol(ddo: DDO) {
-      const dtSymbol = await getDTSymbol(ddo)
-      setDtSymbol(dtSymbol)
-    }
-    setDatatokenSymbol(ddo)
     getAlgorithmList().then((algorithms) => {
       setAlgorithmList(algorithms)
     })
@@ -276,9 +265,6 @@ export default function Compute({
           initialValues={getInitialValues}
           validationSchema={validationSchema}
           onSubmit={async (values, { resetForm }) => {
-            // move user's focus to top of screen
-            window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-            // kick off editing
             await handleSubmit(values, resetForm)
           }}
         >
@@ -299,8 +285,8 @@ export default function Compute({
         */}
         {hasDatatoken && (
           <div className={styles.help}>
-            You own {dtBalance} {dtSymbol} allowing you to use this data set
-            without paying again.
+            You own {dtBalance} {ddo.dataTokenInfo.symbol} allowing you to use
+            this data set without paying again.
           </div>
         )}
         {isPublished && (

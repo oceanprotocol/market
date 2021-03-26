@@ -8,11 +8,14 @@ import { FormFieldProps } from '../../../../@types/Form'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import stylesIndex from './index.module.css'
 import styles from './FormEditMetadata.module.css'
-import { getAlgorithms } from '../../../../utils/aquarius'
-import { transformDDOToAssetSelection } from '../../../../utils/compute'
+import {
+  queryMetadata,
+  transformDDOToAssetSelection
+} from '../../../../utils/aquarius'
 import { useAsset } from '../../../../providers/Asset'
 import { ComputePrivacyForm } from '../../../../models/FormEditComputeDataset'
 import { publisherTrustedAlgorithm as PublisherTrustedAlgorithm } from '@oceanprotocol/lib'
+import axios from 'axios'
 
 export default function FormEditComputeDataset({
   data,
@@ -39,6 +42,7 @@ export default function FormEditComputeDataset({
   async function getAlgorithmList(
     publisherTrustedAlgorithms: PublisherTrustedAlgorithm[]
   ): Promise<AssetSelectionAsset[]> {
+    const source = axios.CancelToken.source()
     const query = {
       page: 1,
       query: {
@@ -48,9 +52,13 @@ export default function FormEditComputeDataset({
       },
       sort: { created: -1 }
     }
-    const algorithmDDOList = await getAlgorithms(query, config.metadataCacheUri)
+    const querryResult = await queryMetadata(
+      query,
+      config.metadataCacheUri,
+      source.token
+    )
     const algorithmSelectionList = await transformDDOToAssetSelection(
-      algorithmDDOList,
+      querryResult.results,
       config.metadataCacheUri,
       publisherTrustedAlgorithms
     )

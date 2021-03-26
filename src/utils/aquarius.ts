@@ -1,5 +1,4 @@
 import {
-  Config,
   DDO,
   DID,
   Logger,
@@ -13,7 +12,6 @@ import {
 import { AssetSelectionAsset } from '../components/molecules/FormFields/AssetSelection'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import web3 from 'web3'
-import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 
 // TODO: import directly from ocean.js somehow.
 // Transforming Aquarius' direct response is needed for getting actual DDOs
@@ -108,15 +106,40 @@ export async function getAssetsNames(
   }
 }
 
-export async function getAlgorithms(
-  query: SearchQuery,
-  metadataCacheUri: string
-): Promise<DDO[]> {
+export async function transformDDOToAssetSelection(
+  ddoList: DDO[],
+  metadataCacheUri: string,
+  selectedAlgorithms?: PublisherTrustedAlgorithm[]
+): Promise<AssetSelectionAsset[]> {
   const source = axios.CancelToken.source()
-  const result = await queryMetadata(
-    query as any,
-    metadataCacheUri,
-    source.token
-  )
-  return result?.results
+  const didList: string[] = []
+  const priceList: any = {}
+  ddoList.forEach((ddo: DDO) => {
+    didList.push(ddo.id)
+    priceList[ddo.id] = ddo.price.value
+  })
+  const ddoNames = await getAssetsNames(didList, metadataCacheUri, source.token)
+  const algorithmList: AssetSelectionAsset[] = []
+  didList?.forEach((did: string) => {
+    let selected = false
+    selectedAlgorithms?.forEach((algorithm: PublisherTrustedAlgorithm) => {
+      if (algorithm.did === did) {
+        selected = true
+      }
+    })
+    selected
+      ? algorithmList.unshift({
+          did: did,
+          name: ddoNames[did],
+          price: priceList[did],
+          checked: selected
+        })
+      : algorithmList.push({
+          did: did,
+          name: ddoNames[did],
+          price: priceList[did],
+          checked: selected
+        })
+  })
+  return algorithmList
 }
