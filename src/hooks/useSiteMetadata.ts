@@ -23,6 +23,8 @@ const query = graphql`
           marketFeeAddress
           currencies
           portisId
+          allowFixedPricing
+          allowDynamicPricing
         }
       }
     }
