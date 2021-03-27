@@ -32,6 +32,9 @@ import { SearchQuery } from '@oceanprotocol/lib/dist/node/metadatacache/Metadata
 import axios from 'axios'
 import FormStartComputeDataset from './FormComputeDataset'
 import styles from './index.module.css'
+import SuccessConfetti from '../../../atoms/SuccessConfetti'
+import { useLocation } from '@reach/router'
+import { Link } from 'gatsby'
 
 export default function Compute({
   ddo,
@@ -44,6 +47,7 @@ export default function Compute({
   dtBalance: string
   file: FileMetadata
 }): ReactElement {
+  const location = useLocation()
   const { marketFeeAddress } = useSiteMetadata()
   const { accountId } = useWeb3()
   const { ocean, account, config } = useOcean()
@@ -120,9 +124,11 @@ export default function Compute({
     const computeService = ddo.findServiceByType('compute')
     let algorithmSelectionList: AssetSelectionAsset[]
     if (
-      computeService.attributes.main.privacy.publisherTrustedAlgorithms
+      !computeService.attributes.main.privacy ||
+      !computeService.attributes.main.privacy.publisherTrustedAlgorithms ||
+      (computeService.attributes.main.privacy.publisherTrustedAlgorithms
         .length === 0 &&
-      !computeService.attributes.main.privacy.allowAllPublishedAlgorithms
+        !computeService.attributes.main.privacy.allowAllPublishedAlgorithms)
     ) {
       algorithmSelectionList = []
     } else {
@@ -216,7 +222,10 @@ export default function Compute({
         : await ocean.compute.orderAsset(
             accountId,
             ddo.id,
-            computeService.index
+            computeService.index,
+            undefined,
+            undefined,
+            marketFeeAddress
           )
 
       const algorithmAssetOrderId = hasPreviousAlgorithmOrder
@@ -225,7 +234,8 @@ export default function Compute({
             algorithmId,
             serviceAlgo.type,
             accountId,
-            serviceAlgo.index
+            serviceAlgo.index,
+            marketFeeAddress
           )
 
       if (!assetOrderId || !algorithmAssetOrderId) {
@@ -259,6 +269,12 @@ export default function Compute({
     }
   }
 
+  const SuccessAction = () => (
+    <Link to={`${location.origin}/history`}>
+      Watch the progress in the history page.
+    </Link>
+  )
+
   return (
     <>
       <div className={styles.info}>
@@ -267,15 +283,9 @@ export default function Compute({
       </div>
 
       {type === 'algorithm' ? (
-        <Input
-          type="select"
-          name="data"
-          label="Select dataset for the algorithm"
-          placeholder=""
-          size="small"
-          value="dataset-1"
-          options={['dataset-1', 'dataset-2', 'dataset-3'].map((x) => x)}
-          // onChange={handleSelectChange}
+        <Alert
+          text="Compute on algorithms is coming back at a later stage. You can run compute job on dataset though!"
+          state="info"
         />
       ) : (
         <Formik
@@ -303,10 +313,9 @@ export default function Compute({
 
       <footer className={styles.feedback}>
         {isPublished && (
-          <Alert
-            title="Your job started!"
-            text="Watch the progress in the history page."
-            state="success"
+          <SuccessConfetti
+            success="Your job started!"
+            action={<SuccessAction />}
           />
         )}
         <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
