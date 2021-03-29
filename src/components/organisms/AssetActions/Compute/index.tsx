@@ -166,7 +166,18 @@ export default function Compute({
 
   useEffect(() => {
     if (!ocean || !accountId || !selectedAlgorithmAsset) return
-    checkPreviousOrders(selectedAlgorithmAsset, 'access')
+    if (selectedAlgorithmAsset.findServiceByType('access')) {
+      checkPreviousOrders(selectedAlgorithmAsset, 'access').then(() => {
+        if (
+          !hasPreviousAlgorithmOrder &&
+          selectedAlgorithmAsset.findServiceByType('compute')
+        ) {
+          checkPreviousOrders(selectedAlgorithmAsset, 'compute')
+        }
+      })
+    } else if (selectedAlgorithmAsset.findServiceByType('compute')) {
+      checkPreviousOrders(selectedAlgorithmAsset, 'compute')
+    }
     checkAssetDTBalance(selectedAlgorithmAsset)
   }, [selectedAlgorithmAsset, ocean, accountId])
 
@@ -186,6 +197,8 @@ export default function Compute({
 
       const computeService = ddo.findServiceByType('compute')
       const serviceAlgo = selectedAlgorithmAsset.findServiceByType('access')
+        ? selectedAlgorithmAsset.findServiceByType('access')
+        : selectedAlgorithmAsset.findServiceByType('compute')
 
       const allowed = await ocean.compute.isOrderable(
         ddo.id,
