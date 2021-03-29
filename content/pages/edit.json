@@ -35,6 +35,13 @@
         "options": ["Forever", "1 day", "1 week", "1 month", "1 year"],
         "sortOptions": false,
         "required": true
+      },
+      {
+        "name": "isDatasetConsumable",
+        "label": "Disable Consumption",
+        "help": "Disable dataset being consume when dataset undergoing maintenance",
+        "type": "checkbox",
+        "options": ["Disable"]
       }
     ]
   }

@@ -124,7 +124,8 @@ export default function Edit({
     <Formik
       initialValues={getInitialValues(
         metadata,
-        ddo.findServiceByType('access').attributes.main.timeout
+        ddo.findServiceByType('access').attributes.main.timeout,
+        false // TODO : Get it from DDO.isDatasetConsumable
       )}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {

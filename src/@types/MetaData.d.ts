@@ -30,6 +30,7 @@ export interface MetadataEditForm {
   description: string
   timeout: string
   links?: string | EditableMetadataLinks[]
+  isDatasetConsumable: boolean
 }
 
 export interface MetadataPublishForm {
