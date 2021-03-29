@@ -12,7 +12,7 @@
 }
 
 .typeAndDate {
-  margin-bottom: calc(var(--spacer) / 12);
+  margin-top: calc(var(--spacer) / 12);
   display: flex;
 }
 
