@@ -39,10 +39,6 @@ export default function AnnouncementBanner(): ReactElement {
     name: 'Add custom network',
     handleAction: () => addCustomNetwork(web3Provider, network)
   }
-  const addCustomTokenAction = {
-    name: `Add ${config.oceanTokenSymbol}`,
-    handleAction: () => addOceanToWallet(config, web3Provider)
-  }
   const switchToPolygonAction = {
     name: 'Switch to Polygon',
     handleAction: async () => {
@@ -60,7 +56,7 @@ export default function AnnouncementBanner(): ReactElement {
 
   function setBannerForMatic() {
     setText(announcement.polygon)
-    setAction(addCustomTokenAction)
+    setAction(undefined)
   }
 
   /* useEffect(() => {
