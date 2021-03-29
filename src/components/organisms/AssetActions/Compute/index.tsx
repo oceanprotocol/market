@@ -114,7 +114,7 @@ export default function Compute({
       page: 1,
       query: {
         query_string: {
-          query: `${algorithmQuery} service.attributes.main.type:algorithm AND price.type:exchange -isInPurgatory:true`
+          query: `${algorithmQuery} service.attributes.main.type:algorithm -isInPurgatory:true`
         }
       },
       sort: { created: -1 }
