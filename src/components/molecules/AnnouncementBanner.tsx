@@ -2,13 +2,9 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './AnnouncementBanner.module.css'
 import Markdown from '../atoms/Markdown'
 import { useWeb3 } from '../../providers/Web3'
-import {
-  addCustomNetwork,
-  addOceanToWallet,
-  NetworkObject
-} from '../../utils/web3'
+import { addCustomNetwork, NetworkObject } from '../../utils/web3'
 import { getOceanConfig } from '../../utils/ocean'
-import { getProviderInfo, IProviderInfo } from 'web3modal'
+import { getProviderInfo } from 'web3modal'
 import { useOcean } from '../../providers/Ocean'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import Button from '../atoms/Button'
@@ -21,7 +17,6 @@ export interface AnnouncementAction {
 
 export default function AnnouncementBanner(): ReactElement {
   const { web3Provider, networkId } = useWeb3()
-  // const [providerInfo, setProviderInfo] = useState<IProviderInfo>()
   const { config, connect } = useOcean()
   const { announcement } = useSiteMetadata()
 
@@ -59,32 +54,6 @@ export default function AnnouncementBanner(): ReactElement {
     setAction(undefined)
   }
 
-  /* useEffect(() => {
-    if (!web3Provider && config.networkId) {
-      if (config.networkId !== 137) {
-        setText(announcement.main)
-        setAction(switchToPolygonAction)
-      } else {
-        setText(announcement.polygon)
-        setAction(switchToEthAction)
-      }
-      return
-    }
-    const providerInfo = getProviderInfo(web3Provider)
-    setProviderInfo(providerInfo)
-  }, [web3Provider, config])
-
-  useEffect(() => {
-    if (!networkId || providerInfo?.name !== 'MetaMask' || !web3Provider) return
-    if (networkId === 137) {
-      setBannerForMatic()
-      return
-    }
-    setText(announcement.main)
-    !window.location.pathname.includes('/asset/did') &&
-      setAction(addCustomNetworkAction)
-  }, [config]) */
-
   useEffect(() => {
     if (!web3Provider && !config) return
     const providerInfo = getProviderInfo(web3Provider)
@@ -103,9 +72,7 @@ export default function AnnouncementBanner(): ReactElement {
           setBannerForMatic()
         } else {
           setText(announcement.main)
-          window.location.pathname.includes('/asset/did')
-            ? setAction(undefined)
-            : setAction(addCustomNetworkAction)
+          setAction(addCustomNetworkAction)
         }
         break
       default:
@@ -117,13 +84,6 @@ export default function AnnouncementBanner(): ReactElement {
         }
     }
   }, [web3Provider, config])
-
-  useEffect(() => {
-    if (networkId === 137 || !web3Provider) return
-    window.location.pathname.includes('/asset/did')
-      ? setAction(undefined)
-      : !action && setAction(addCustomNetworkAction)
-  }, [window.location.pathname])
 
   return (
     <div className={styles.container}>

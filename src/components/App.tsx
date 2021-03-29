@@ -43,7 +43,7 @@ export default function App({
   return (
     <Styles>
       <div className={styles.app}>
-        <AnnouncementBanner />
+        {!location.pathname.includes('/asset/did') && <AnnouncementBanner />}
         <Header />
         {(props as PageProps).uri === '/' && (
           <Alert text={warning.main} state="info" />
