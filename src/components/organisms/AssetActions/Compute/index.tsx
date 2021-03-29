@@ -288,6 +288,12 @@ export default function Compute({
         algorithmAssetOrderId,
         selectedAlgorithmAsset.dataToken
       )
+
+      if (!respone) {
+        setError('Error starting compute job.')
+        return
+      }
+
       Logger.log('[compute] Starting compute job response: ', respone)
 
       setHasPreviousDatasetOrder(true)
