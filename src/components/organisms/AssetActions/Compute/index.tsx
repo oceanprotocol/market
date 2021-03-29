@@ -275,7 +275,7 @@ export default function Compute({
       Logger.log('[compute] Starting compute job.')
 
       const output = {}
-      const respone = await ocean.compute.start(
+      const response = await ocean.compute.start(
         ddo.id,
         assetOrderId,
         ddo.dataToken,
@@ -289,12 +289,16 @@ export default function Compute({
         selectedAlgorithmAsset.dataToken
       )
 
-      if (!respone) {
+      if (
+        !response ||
+        response.status !== 10 ||
+        response.statusText !== 'Job started'
+      ) {
         setError('Error starting compute job.')
         return
       }
 
-      Logger.log('[compute] Starting compute job response: ', respone)
+      Logger.log('[compute] Starting compute job response: ', response)
 
       setHasPreviousDatasetOrder(true)
       setIsPublished(true)
