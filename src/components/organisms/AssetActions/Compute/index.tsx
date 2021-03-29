@@ -9,7 +9,6 @@ import {
 import { toast } from 'react-toastify'
 import Price from '../../../atoms/Price'
 import File from '../../../atoms/File'
-import Input from '../../../atoms/Input'
 import Alert from '../../../atoms/Alert'
 import Web3Feedback from '../../../molecules/Wallet/Feedback'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
@@ -33,8 +32,13 @@ import axios from 'axios'
 import FormStartComputeDataset from './FormComputeDataset'
 import styles from './index.module.css'
 import SuccessConfetti from '../../../atoms/SuccessConfetti'
-import { useLocation } from '@reach/router'
-import { Link } from 'gatsby'
+import Button from '../../../atoms/Button'
+
+const SuccessAction = () => (
+  <Button style="text" to="/history" size="small">
+    Go to history →
+  </Button>
+)
 
 export default function Compute({
   ddo,
@@ -47,7 +51,6 @@ export default function Compute({
   dtBalance: string
   file: FileMetadata
 }): ReactElement {
-  const location = useLocation()
   const { marketFeeAddress } = useSiteMetadata()
   const { accountId } = useWeb3()
   const { ocean, account, config } = useOcean()
@@ -284,12 +287,6 @@ export default function Compute({
     }
   }
 
-  const SuccessAction = () => (
-    <Link to={`${location.origin}/history`}>
-      Watch the progress in the history page.
-    </Link>
-  )
-
   return (
     <>
       <div className={styles.info}>
@@ -299,7 +296,7 @@ export default function Compute({
 
       {type === 'algorithm' ? (
         <Alert
-          text="Compute on algorithms is coming back at a later stage. You can run compute job on dataset though!"
+          text="Running compute jobs on algorithms is coming back at a later stage. You can run compute jobs on any data set though!"
           state="info"
         />
       ) : (
@@ -329,7 +326,7 @@ export default function Compute({
       <footer className={styles.feedback}>
         {isPublished && (
           <SuccessConfetti
-            success="Your job started!"
+            success="Your job started successfully! Watch the progress on the history page."
             action={<SuccessAction />}
           />
         )}
