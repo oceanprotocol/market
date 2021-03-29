@@ -188,12 +188,13 @@ export default function Compute({
         ddo.id,
         computeService.index
       )
-      Logger.log('[compute] Is dataset orderable?', allowed)
+      Logger.log('[compute] Is data set orderable?', allowed)
 
       if (!hasPreviousDatasetOrder && !hasDatatoken) {
         const tx = await buyDT('1', (ddo as DDO).price, ddo)
         if (!tx) {
           setError('Error buying datatoken.')
+          Logger.error('[compute] Error buying datatoken for data set ', ddo.id)
           return
         }
       }
@@ -206,6 +207,10 @@ export default function Compute({
         )
         if (!tx) {
           setError('Error buying datatoken.')
+          Logger.error(
+            '[compute] Error buying datatoken for algorithm ',
+            selectedAlgorithmAsset.id
+          )
           return
         }
       }
@@ -228,6 +233,8 @@ export default function Compute({
             marketFeeAddress
           )
 
+      assetOrderId && Logger.log('[compute] Got assetOrderId ', assetOrderId)
+
       const algorithmAssetOrderId = hasPreviousAlgorithmOrder
         ? previousAlgorithmOrderId
         : await ocean.compute.orderAlgorithm(
@@ -238,10 +245,18 @@ export default function Compute({
             marketFeeAddress
           )
 
+      algorithmAssetOrderId &&
+        Logger.log(
+          '[compute] Got algorithmAssetOrderId ',
+          algorithmAssetOrderId
+        )
+
       if (!assetOrderId || !algorithmAssetOrderId) {
         setError('Error ordering assets.')
         return
       }
+
+      Logger.log('[compute] Starting compute job.')
 
       const output = {}
       const respone = await ocean.compute.start(
@@ -257,13 +272,13 @@ export default function Compute({
         algorithmAssetOrderId,
         selectedAlgorithmAsset.dataToken
       )
-      Logger.log('[compute] Start compute response: ', respone)
+      Logger.log('[compute] Starting compute job response: ', respone)
 
       setHasPreviousDatasetOrder(true)
       setIsPublished(true)
     } catch (error) {
       setError('Failed to start job!')
-      Logger.error(`[compute] ${error.message}`)
+      Logger.error('[compute] Failed to start job!', error.message)
     } finally {
       setIsJobStarting(false)
     }
