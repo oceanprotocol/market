@@ -27,9 +27,7 @@ export default function MetaMain(): ReactElement {
           {`${ddo?.dataTokenInfo.name} — ${ddo?.dataTokenInfo.symbol}`}
         </ExplorerLink>
       </p>
-      <p>
-        Published By <Publisher account={owner} />
-      </p>
+      Published By <Publisher account={owner} />
       <div className={styles.typeAndDate}>
         <AssetType
           type={type}
