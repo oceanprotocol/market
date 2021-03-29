@@ -4,7 +4,6 @@ import styles from './ComputeJobs.module.css'
 import Button from '../../atoms/Button'
 import ComputeDetails from './ComputeDetails'
 import { ComputeJobMetaData } from '../../../@types/ComputeJobMetaData'
-import { OrdersData_tokenOrders as OrdersDataTokenOrders } from '../../../@types/apollo/OrdersData'
 import { Link } from 'gatsby'
 import { Logger } from '@oceanprotocol/lib'
 import Dotdotdot from 'react-dotdotdot'
@@ -12,9 +11,10 @@ import Table from '../../atoms/Table'
 import { useOcean } from '../../../providers/Ocean'
 import { gql, useQuery } from '@apollo/client'
 import web3 from 'web3'
+import { useWeb3 } from '../../../providers/Web3'
 
 const getComputeOrders = gql`
-  query ComputeOrders($user: String!) {
+  query PoolsQuery($user: String!) {
     tokenOrders(
       orderBy: timestamp
       orderDirection: desc
@@ -93,77 +93,62 @@ const columns = [
 
 export default function ComputeJobs(): ReactElement {
   const { ocean, account } = useOcean()
+  const { accountId } = useWeb3()
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>()
   const [isLoading, setIsLoading] = useState(false)
-  const [computeOrderHistory, setComputeOrderHistory] = useState<
-    OrdersDataTokenOrders[]
-  >()
   const { data } = useQuery(getComputeOrders, {
     variables: {
-      user: '0x4D156A2ef69ffdDC55838176C6712C90f60a2285'.toLowerCase()
-      // -------------------------------------------------------------
+      user: accountId?.toLowerCase()
     }
   })
 
-  console.log('ACCOUNT: ', account)
-
   useEffect(() => {
     if (data === undefined) return
-    console.log('DATA: ', data.tokenOrders)
-    // setComputeOrderHistory(data.tokenOrders)
 
-    async function getTitle(did: string) {
+    async function getAssetDetails(did: string) {
       const newDid = web3.utils.toChecksumAddress(did).replace('0x', 'did:op:')
       const ddo = await ocean.metadataCache.retrieveDDO(newDid)
       const metadata = ddo.findServiceByType('metadata')
-      return metadata.attributes.main.name
+      return {
+        did: newDid,
+        ddo: ddo,
+        assetName: metadata.attributes.main.name,
+        type: ddo.service[1].type
+      }
     }
 
     async function getJobs() {
       if (!ocean || !account) return
       setIsLoading(true)
       try {
-        const orderHistory = await ocean.assets.getOrderHistory(
-          account,
-          'compute',
-          100
-        )
-        console.log('ORDER HISTORY: ', data.tokenOrders)
         const jobs: ComputeJobMetaData[] = []
 
-        console.log('BEFORE FOR: ', data.tokenOrders.length)
         for (let i = 0; i < data.tokenOrders.length; i++) {
-          console.log('DATA[i]: ', data.tokenOrders[i])
-          // const assetName = await getTitle(orderHistory[i].did)
-          const assetName = await getTitle(
+          const { did, assetName, type } = await getAssetDetails(
             data.tokenOrders[i].datatokenId.address
           )
-          console.log('ASSET NAME: ', assetName)
-          const computeJob = await ocean.compute.status(
-            account,
-            // orderHistory[i].did,
-            data.tokenOrders[i].datatokenId.address,
-            undefined,
-            // orderHistory[i].transactionHash,
-            data.tokenOrders[i].tx,
-            false
-          )
-          console.log('COMPUTE JOB: ', computeJob)
-          computeJob.forEach((item) => {
-            jobs.push({
-              did: orderHistory[i].did,
-              // did: data.tokenOrders[i].datatokenId.id,
-              jobId: item.jobId,
-              dateCreated: item.dateCreated,
-              dateFinished: item.dateFinished,
-              assetName: assetName,
-              status: item.status,
-              statusText: item.statusText,
-              algorithmLogUrl: '',
-              resultsUrls: []
+          if (type === 'compute') {
+            const computeJob = await ocean.compute.status(
+              account,
+              did,
+              undefined,
+              data.tokenOrders[i].tx,
+              false
+            )
+            computeJob.forEach((item) => {
+              jobs.push({
+                did: did,
+                jobId: item.jobId,
+                dateCreated: item.dateCreated,
+                dateFinished: item.dateFinished,
+                assetName: assetName,
+                status: item.status,
+                statusText: item.statusText,
+                algorithmLogUrl: '',
+                resultsUrls: []
+              })
             })
-          })
-          console.log('JOBS: ', jobs)
+          }
         }
         const jobsSorted = jobs.sort((a, b) => {
           if (a.dateCreated > b.dateCreated) return -1
