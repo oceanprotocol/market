@@ -1,6 +1,17 @@
 .form {
   padding: 0;
   border: none;
+  margin-top: -0.8rem;
+}
+
+.form > div > label,
+[class*='ButtonBuy-module--actions'] {
+  text-align: center;
+}
+
+.form > div > label {
+  margin-bottom: calc(var(--spacer) / 2);
+  margin-left: -1rem;
 }
 
 .form [class*='AssetSelection-module--selection'] {
@@ -14,8 +25,6 @@
 }
 
 .actions {
-  margin-left: -2rem;
-  margin-right: -2rem;
   display: flex;
   justify-content: center;
   max-height: 100%;

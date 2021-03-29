@@ -166,6 +166,7 @@ export default function Compute({
 
   useEffect(() => {
     if (!ocean || !accountId || !selectedAlgorithmAsset) return
+
     if (selectedAlgorithmAsset.findServiceByType('access')) {
       checkPreviousOrders(selectedAlgorithmAsset, 'access').then(() => {
         if (
@@ -179,12 +180,13 @@ export default function Compute({
       checkPreviousOrders(selectedAlgorithmAsset, 'compute')
     }
     checkAssetDTBalance(selectedAlgorithmAsset)
-  }, [selectedAlgorithmAsset, ocean, accountId])
+  }, [selectedAlgorithmAsset, ocean, accountId, hasPreviousAlgorithmOrder])
 
   // Output errors in toast UI
   useEffect(() => {
-    if (!error || !pricingError) return
-    toast.error(error || pricingError)
+    const newError = error || pricingError
+    if (!newError) return
+    toast.error(newError)
   }, [error, pricingError])
 
   async function startJob(algorithmId: string) {
