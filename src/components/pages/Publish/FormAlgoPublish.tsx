@@ -72,13 +72,13 @@ export default function FormPublish(): ReactElement {
 
   function handleImageSelectChange(imageSelected: string) {
     switch (imageSelected) {
-      case 'node:pre-defined': {
+      case 'node:latest': {
         setFieldValue('image', 'node')
-        setFieldValue('containerTag', '10')
+        setFieldValue('containerTag', 'latest')
         setFieldValue('entrypoint', 'node $ALGO')
         break
       }
-      case 'python:pre-defined': {
+      case 'python:latest': {
         setFieldValue('image', 'oceanprotocol/algo_dockers')
         setFieldValue('containerTag', 'python-panda')
         setFieldValue('entrypoint', 'python $ALGO')
