@@ -58,6 +58,7 @@
       "label": "Algorithm Privacy",
       "type": "checkbox",
       "options": ["Keep my algorithm private"],
+      "help": "By default, your algorithm can be downloaded for a fixed or dynamic price in addition to running in compute jobs. Enabling this option will prevent downloading, so your algorithm can only be run as part of a compute jon on a data set.",
       "required": false
     },
     {

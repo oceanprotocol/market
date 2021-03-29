@@ -296,7 +296,7 @@ export default function Compute({
 
       {type === 'algorithm' ? (
         <Alert
-          text="Running compute jobs on algorithms is coming back at a later stage. You can run compute jobs on any data set though!"
+          text="This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
           state="info"
         />
       ) : (
