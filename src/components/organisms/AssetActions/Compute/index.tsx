@@ -1,10 +1,11 @@
-import React, { useState, ReactElement, useEffect } from 'react'
+import React, { useState, ReactElement, useEffect, useCallback } from 'react'
 import {
   DDO,
   File as FileMetadata,
   Logger,
   ServiceType,
-  publisherTrustedAlgorithm
+  publisherTrustedAlgorithm,
+  BestPrice
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '../../../atoms/Price'
@@ -33,12 +34,31 @@ import FormStartComputeDataset from './FormComputeDataset'
 import styles from './index.module.css'
 import SuccessConfetti from '../../../atoms/SuccessConfetti'
 import Button from '../../../atoms/Button'
+import { gql, useQuery } from '@apollo/client'
+import { FrePrice } from '../../../../@types/apollo/FrePrice'
+import { PoolPrice } from '../../../../@types/apollo/PoolPrice'
 
 const SuccessAction = () => (
   <Button style="text" to="/history" size="small">
     Go to history →
   </Button>
 )
+
+const freQuery = gql`
+  query AlgorithmFrePrice($datatoken: String) {
+    fixedRateExchanges(orderBy: id, where: { datatoken: $datatoken }) {
+      rate
+      id
+    }
+  }
+`
+const poolQuery = gql`
+  query AlgorithmPoolPrice($datatoken: String) {
+    pools(where: { datatokenAddress: $datatoken }) {
+      spotPrice
+    }
+  }
+`
 
 export default function Compute({
   ddo,
@@ -54,7 +74,7 @@ export default function Compute({
   const { marketFeeAddress } = useSiteMetadata()
   const { accountId } = useWeb3()
   const { ocean, account, config } = useOcean()
-  const { type } = useAsset()
+  const { price, type } = useAsset()
   const { buyDT, pricingError, pricingStepText } = usePricing()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
@@ -69,10 +89,29 @@ export default function Compute({
   const [hasPreviousAlgorithmOrder, setHasPreviousAlgorithmOrder] = useState(
     false
   )
+  const [algorithmPrice, setAlgorithmPrice] = useState<BestPrice>()
+  const [variables, setVariables] = useState({})
   const [
     previousAlgorithmOrderId,
     setPreviousAlgorithmOrderId
   ] = useState<string>()
+
+  const {
+    refetch: refetchFre,
+    startPolling: startPollingFre,
+    data: frePrice
+  } = useQuery<FrePrice>(freQuery, {
+    variables,
+    skip: false
+  })
+  const {
+    refetch: refetchPool,
+    startPolling: startPollingPool,
+    data: poolPrice
+  } = useQuery<PoolPrice>(poolQuery, {
+    variables,
+    skip: false
+  })
 
   const isComputeButtonDisabled =
     isJobStarting === true || file === null || !ocean || !isBalanceSufficient
@@ -153,6 +192,39 @@ export default function Compute({
   }
 
   useEffect(() => {
+    if (
+      !frePrice ||
+      frePrice.fixedRateExchanges.length === 0 ||
+      algorithmPrice.type !== 'exchange'
+    )
+      return
+    setAlgorithmPrice((prevState) => ({
+      ...prevState,
+      value: frePrice.fixedRateExchanges[0].rate,
+      address: frePrice.fixedRateExchanges[0].id
+    }))
+  }, [frePrice])
+
+  useEffect(() => {
+    if (
+      !poolPrice ||
+      poolPrice.pools.length === 0 ||
+      algorithmPrice.type !== 'pool'
+    )
+      return
+    setAlgorithmPrice((prevState) => ({
+      ...prevState,
+      value: poolPrice.pools[0].spotPrice
+    }))
+  }, [poolPrice])
+
+  const initMetadata = useCallback(async (ddo: DDO): Promise<void> => {
+    if (!ddo) return
+    setAlgorithmPrice(ddo.price)
+    setVariables({ datatoken: ddo?.dataToken.toLowerCase() })
+  }, [])
+
+  useEffect(() => {
     if (!ddo) return
     getAlgorithmList().then((algorithms) => {
       setAlgorithmList(algorithms)
@@ -180,6 +252,7 @@ export default function Compute({
       checkPreviousOrders(selectedAlgorithmAsset, 'compute')
     }
     checkAssetDTBalance(selectedAlgorithmAsset)
+    initMetadata(selectedAlgorithmAsset)
   }, [selectedAlgorithmAsset, ocean, accountId, hasPreviousAlgorithmOrder])
 
   // Output errors in toast UI
@@ -209,7 +282,7 @@ export default function Compute({
       Logger.log('[compute] Is data set orderable?', allowed)
 
       if (!hasPreviousDatasetOrder && !hasDatatoken) {
-        const tx = await buyDT('1', (ddo as DDO).price, ddo)
+        const tx = await buyDT('1', price, ddo)
         if (!tx) {
           setError('Error buying datatoken.')
           Logger.error('[compute] Error buying datatoken for data set ', ddo.id)
@@ -218,11 +291,7 @@ export default function Compute({
       }
 
       if (!hasPreviousAlgorithmOrder && !hasAlgoAssetDatatoken) {
-        const tx = await buyDT(
-          '1',
-          (selectedAlgorithmAsset as DDO).price,
-          selectedAlgorithmAsset
-        )
+        const tx = await buyDT('1', algorithmPrice, selectedAlgorithmAsset)
         if (!tx) {
           setError('Error buying datatoken.')
           Logger.error(
