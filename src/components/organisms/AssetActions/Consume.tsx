@@ -37,14 +37,14 @@ function getHelpText(
     dtBalance: string
     dtSymbol: string
   },
-  isDatasetConsumable: boolean,
+  isConsumeDisable: boolean,
   hasDatatoken: boolean,
   hasPreviousOrder: boolean,
   timeout: string
 ) {
   const { dtBalance, dtSymbol } = token
   const assetTimeout = timeout === 'Forever' ? '' : ` for ${timeout}`
-  const text = !isDatasetConsumable
+  const text = isConsumeDisable
     ? `The data set owner has set this data set to be temporary unavailable for consume.`
     : hasPreviousOrder
     ? `You bought this data set already allowing you to download it without paying again${assetTimeout}.`
@@ -80,7 +80,7 @@ export default function Consume({
   const [hasDatatoken, setHasDatatoken] = useState(false)
   const [isConsumable, setIsConsumable] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
-  const [isDatasetConsumable, setIsDatasetConsumable] = useState(true)
+  const [isConsumeDisable, setIsConsumeDisable] = useState(false)
 
   const { data } = useQuery<OrdersData>(previousOrderQuery, {
     variables: {
@@ -113,7 +113,7 @@ export default function Consume({
   useEffect(() => {
     const { timeout } = ddo.findServiceByType('access').attributes.main
     setAssetTimeout(secondsToString(timeout))
-    if (ddo.isDatasetConsumable === false) setIsDatasetConsumable(false)
+    if (ddo.isConsumeDisable === true) setIsConsumeDisable(true)
   }, [ddo])
 
   useEffect(() => {
@@ -137,7 +137,7 @@ export default function Consume({
         !isConsumable) &&
         !hasPreviousOrder &&
         !hasDatatoken) ||
-        !isDatasetConsumable
+        isConsumeDisable
     )
   }, [
     ocean,
@@ -146,7 +146,7 @@ export default function Consume({
     consumeStepText,
     pricingIsLoading,
     isConsumable,
-    isDatasetConsumable,
+    isConsumeDisable,
     hasDatatoken
   ])
 
@@ -184,7 +184,7 @@ export default function Consume({
           <div className={styles.help}>
             {getHelpText(
               { dtBalance, dtSymbol: ddo.dataTokenInfo.symbol },
-              isDatasetConsumable,
+              isConsumeDisable,
               hasDatatoken,
               hasPreviousOrder,
               assetTimeout
