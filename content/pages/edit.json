@@ -39,7 +39,7 @@
       {
         "name": "isDatasetConsumable",
         "label": "Disable Consumption",
-        "help": "Disable dataset being consume when dataset undergoing maintenance",
+        "help": "Disable dataset being consume when dataset undergoing maintenance.",
         "type": "checkbox",
         "options": ["Disable"]
       }
