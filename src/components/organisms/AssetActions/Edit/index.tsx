@@ -125,7 +125,7 @@ export default function Edit({
       initialValues={getInitialValues(
         metadata,
         ddo.findServiceByType('access').attributes.main.timeout,
-        false // TODO : Get it from DDO.isDatasetConsumable
+        ddo.isDatasetConsumable === undefined ? true : ddo.isDatasetConsumable
       )}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {

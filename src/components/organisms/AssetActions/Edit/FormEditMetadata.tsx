@@ -69,7 +69,9 @@ export default function FormEditMetadata({
     field: FormFieldProps
   ) {
     validateField(field.name)
-    setFieldValue(field.name, e.target.value)
+    if (e.target.type === 'checkbox')
+      setFieldValue(field.name, e.target.checked)
+    else setFieldValue(field.name, e.target.value)
   }
 
   // This component is handled by Formik so it's not rendered like a "normal" react component,
