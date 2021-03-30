@@ -1,6 +1,6 @@
-import { useOcean } from '@oceanprotocol/react'
+import { useOcean } from '../../providers/Ocean'
 import React, { ReactElement, useEffect, useState } from 'react'
-import EtherscanLink from '../atoms/EtherscanLink'
+import ExplorerLink from '../atoms/ExplorerLink'
 import Time from '../atoms/Time'
 import Table from '../atoms/Table'
 import AssetTitle from './AssetListTitle'
@@ -15,6 +15,7 @@ import {
 } from '../../@types/apollo/TransactionHistory'
 
 import web3 from 'web3'
+import { useWeb3 } from '../../providers/Web3'
 
 const txHistoryQueryByPool = gql`
   query TransactionHistoryByPool($user: String, $pool: String) {
@@ -129,7 +130,8 @@ async function getTitle(
 }
 
 function Title({ row }: { row: TransactionHistoryPoolTransactions }) {
-  const { ocean, networkId } = useOcean()
+  const { networkId } = useWeb3()
+  const { ocean } = useOcean()
   const [title, setTitle] = useState<string>()
   const { locale } = useUserPreferences()
 
@@ -144,47 +146,47 @@ function Title({ row }: { row: TransactionHistoryPoolTransactions }) {
   }, [ocean, row, locale])
 
   return title ? (
-    <EtherscanLink networkId={networkId} path={`/tx/${row.tx}`}>
+    <ExplorerLink networkId={networkId} path={`/tx/${row.tx}`}>
       <span className={styles.titleText}>{title}</span>
-    </EtherscanLink>
+    </ExplorerLink>
   ) : null
 }
 
-function getColumns(minimal?: boolean) {
-  return [
-    {
-      name: 'Title',
-      selector: function getTitleRow(row: TransactionHistoryPoolTransactions) {
-        return <Title row={row} />
-      }
-    },
-    {
-      name: 'Data Set',
-      selector: function getAssetRow(row: TransactionHistoryPoolTransactions) {
-        const did = web3.utils
-          .toChecksumAddress(row.poolAddress.datatokenAddress)
-          .replace('0x', 'did:op:')
-
-        return <AssetTitle did={did} />
-      },
-      omit: minimal
-    },
-    {
-      name: 'Time',
-      selector: function getTimeRow(row: TransactionHistoryPoolTransactions) {
-        return (
-          <Time
-            className={styles.time}
-            date={row.timestamp.toString()}
-            relative
-            isUnix
-          />
-        )
-      },
-      maxWidth: '10rem'
+const columns = [
+  {
+    name: 'Title',
+    selector: function getTitleRow(row: TransactionHistoryPoolTransactions) {
+      return <Title row={row} />
     }
-  ]
-}
+  },
+  {
+    name: 'Data Set',
+    selector: function getAssetRow(row: TransactionHistoryPoolTransactions) {
+      const did = web3.utils
+        .toChecksumAddress(row.poolAddress.datatokenAddress)
+        .replace('0x', 'did:op:')
+
+      return <AssetTitle did={did} />
+    }
+  },
+  {
+    name: 'Time',
+    selector: function getTimeRow(row: TransactionHistoryPoolTransactions) {
+      return (
+        <Time
+          className={styles.time}
+          date={row.timestamp.toString()}
+          relative
+          isUnix
+        />
+      )
+    },
+    maxWidth: '10rem'
+  }
+]
+
+// hack! if we use a function to omit one field this will display a strange refresh to the enduser for each row
+const columnsMinimal = [columns[0], columns[2]]
 
 export default function PoolTransactions({
   poolAddress,
@@ -193,7 +195,7 @@ export default function PoolTransactions({
   poolAddress?: string
   minimal?: boolean
 }): ReactElement {
-  const { accountId } = useOcean()
+  const { accountId } = useWeb3()
   const [logs, setLogs] = useState<TransactionHistoryPoolTransactions[]>()
 
   const { data, loading } = useQuery<TransactionHistory>(
@@ -214,7 +216,7 @@ export default function PoolTransactions({
 
   return (
     <Table
-      columns={getColumns(minimal)}
+      columns={minimal ? columnsMinimal : columns}
       data={logs}
       isLoading={loading}
       noTableHead={minimal}

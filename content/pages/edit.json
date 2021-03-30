@@ -28,6 +28,13 @@
         "required": true
       },
       {
+        "name": "links",
+        "label": "Sample file",
+        "placeholder": "e.g. https://file.com/samplefile.json",
+        "help": "Please provide a URL to a sample of your data set file. This file should reveal the data structure of your data set, e.g. by including the header and one line of a CSV file. This file URL will be publicly available after publishing.",
+        "type": "files"
+      },
+      {
         "name": "timeout",
         "label": "Timeout",
         "help": "Define how long buyers should be able to download the data set again after the initial purchase.",

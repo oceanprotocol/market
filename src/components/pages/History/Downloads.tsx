@@ -1,11 +1,11 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useOcean } from '@oceanprotocol/react'
 import Table from '../../atoms/Table'
 import { gql, useQuery } from '@apollo/client'
 import Time from '../../atoms/Time'
 import { OrdersData_tokenOrders as OrdersDataTokenOrders } from '../../../@types/apollo/OrdersData'
 import web3 from 'web3'
 import AssetTitle from '../../molecules/AssetListTitle'
+import { useWeb3 } from '../../../providers/Web3'
 
 const getTokenOrders = gql`
   query OrdersData($user: String!) {
@@ -50,7 +50,7 @@ const columns = [
 ]
 
 export default function ComputeDownloads(): ReactElement {
-  const { accountId } = useOcean()
+  const { accountId } = useWeb3()
   const [orders, setOrders] = useState<OrdersDataTokenOrders[]>()
   const { data } = useQuery(getTokenOrders, {
     variables: { user: accountId?.toLowerCase() }

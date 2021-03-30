@@ -24,7 +24,7 @@
 }
 
 .symbol {
-  width: 20%;
+  width: 22%;
   text-align: right;
   font-weight: var(--font-weight-base);
   font-size: var(--font-size-small);
@@ -74,4 +74,13 @@
 .actions select {
   margin-top: calc(var(--spacer) / 4);
   min-width: 6rem;
+}
+
+.walletInfo{
+  display: flex;
+  flex-direction: column;
+}
+
+.walletInfo button{
+  margin-top: calc(var(--spacer) / 5) !important;
 }

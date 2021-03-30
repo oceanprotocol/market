@@ -1,6 +1,6 @@
-import TokenBalance from '../@types/TokenBalance'
+import { PoolBalance } from '../@types/TokenBalance'
 
-export interface FormTradeData extends TokenBalance {
+export interface FormTradeData extends PoolBalance {
   // in reference to datatoken, buy = swap from ocean to dt ( buy dt) , sell = swap from dt to ocean (sell dt)
   type: 'buy' | 'sell'
   slippage: string

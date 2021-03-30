@@ -2,7 +2,7 @@ import { useUserPreferences } from '../../providers/UserPreferences'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Table from '../atoms/Table'
 import { DDO, Logger } from '@oceanprotocol/lib'
-import { useOcean } from '@oceanprotocol/react'
+import { useOcean } from '../../providers/Ocean'
 import Price from '../atoms/Price'
 import Tooltip from '../atoms/Tooltip'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
@@ -26,7 +26,6 @@ async function getAssetsBookmarked(
     page: 1,
     offset: 100,
     query: {
-      nativeSearch: 1,
       query_string: {
         query: searchDids,
         fields: ['dataToken'],
@@ -34,7 +33,7 @@ async function getAssetsBookmarked(
       }
     },
     sort: { created: -1 }
-  } as any
+  }
 
   try {
     const result = await queryMetadata(
@@ -73,7 +72,7 @@ const columns = [
   {
     name: 'Price',
     selector: function getAssetRow(row: DDO) {
-      return <Price ddo={row} small />
+      return <Price price={row.price} small />
     },
     right: true
   }

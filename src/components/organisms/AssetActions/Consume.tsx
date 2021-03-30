@@ -7,11 +7,30 @@ import Price from '../../atoms/Price'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
 import styles from './Consume.module.css'
 import Loader from '../../atoms/Loader'
-import { useOcean, useConsume, usePricing } from '@oceanprotocol/react'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
-import checkPreviousOrder from '../../../utils/checkPreviousOrder'
 import { useAsset } from '../../../providers/Asset'
 import { secondsToString } from '../../../utils/metadata'
+import { gql, useQuery } from '@apollo/client'
+import { OrdersData } from '../../../@types/apollo/OrdersData'
+import BigNumber from 'bignumber.js'
+import { useOcean } from '../../../providers/Ocean'
+import { useWeb3 } from '../../../providers/Web3'
+import { usePricing } from '../../../hooks/usePricing'
+import { useConsume } from '../../../hooks/useConsume'
+
+const previousOrderQuery = gql`
+  query PreviousOrder($id: String!, $account: String!) {
+    tokenOrders(
+      first: 1
+      where: { datatokenId: $id, payer: $account }
+      orderBy: timestamp
+      orderDirection: desc
+    ) {
+      timestamp
+      tx
+    }
+  }
+`
 
 function getHelpText(
   token: {
@@ -44,7 +63,8 @@ export default function Consume({
   isBalanceSufficient: boolean
   dtBalance: string
 }): ReactElement {
-  const { ocean, accountId } = useOcean()
+  const { accountId } = useWeb3()
+  const { ocean } = useOcean()
   const { marketFeeAddress } = useSiteMetadata()
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
   const [previousOrderId, setPreviousOrderId] = useState<string>()
@@ -57,6 +77,34 @@ export default function Consume({
   const [hasDatatoken, setHasDatatoken] = useState(false)
   const [isConsumable, setIsConsumable] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
+
+  const { data } = useQuery<OrdersData>(previousOrderQuery, {
+    variables: {
+      id: ddo.dataToken?.toLowerCase(),
+      account: accountId?.toLowerCase()
+    },
+    pollInterval: 5000
+  })
+
+  useEffect(() => {
+    if (!data || !assetTimeout || data.tokenOrders.length === 0) return
+
+    const lastOrder = data.tokenOrders[0]
+
+    if (assetTimeout === 'Forever') {
+      setPreviousOrderId(lastOrder.tx)
+      setHasPreviousOrder(true)
+    } else {
+      const expiry = new BigNumber(lastOrder.timestamp).plus(assetTimeout)
+      const unixTime = new BigNumber(Math.floor(Date.now() / 1000))
+      if (unixTime.isLessThan(expiry)) {
+        setPreviousOrderId(lastOrder.tx)
+        setHasPreviousOrder(true)
+      } else {
+        setHasPreviousOrder(false)
+      }
+    }
+  }, [data, assetTimeout])
 
   useEffect(() => {
     const { timeout } = ddo.findServiceByType('access').attributes.main
@@ -95,20 +143,8 @@ export default function Consume({
     hasDatatoken
   ])
 
-  useEffect(() => {
-    if (!ocean || !accountId) return
-
-    async function checkOrders() {
-      // HEADS UP! checkPreviousOrder() also checks for expiration of possible set timeout.
-      const orderId = await checkPreviousOrder(ocean, accountId, ddo, 'access')
-      setPreviousOrderId(orderId)
-      setHasPreviousOrder(!!orderId)
-    }
-    checkOrders()
-  }, [ocean, ddo, accountId])
-
   async function handleConsume() {
-    !hasPreviousOrder && !hasDatatoken && (await buyDT('1'))
+    !hasPreviousOrder && !hasDatatoken && (await buyDT('1', price))
     await consume(
       ddo.id,
       ddo.dataToken,
@@ -158,13 +194,7 @@ export default function Consume({
           <File file={file} />
         </div>
         <div className={styles.pricewrapper}>
-          {isConsumable ? (
-            <Price ddo={ddo} conversion />
-          ) : (
-            <div className={styles.help}>
-              There is not enough liquidity in the pool to buy this data set.
-            </div>
-          )}
+          <Price price={price} conversion />
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>

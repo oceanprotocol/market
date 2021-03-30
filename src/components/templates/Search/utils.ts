@@ -33,9 +33,9 @@ type FilterByPriceOptions = typeof FilterByPriceOptions[keyof typeof FilterByPri
 
 function addPriceFilterToQuerry(sortTerm: string, priceFilter: string): string {
   sortTerm = priceFilter
-    ? sortTerm === ''
-      ? `price.type:${priceFilter}`
-      : `${sortTerm} AND price.type:${priceFilter}`
+    ? /\S/.test(sortTerm)
+      ? `${sortTerm} AND price.type:${priceFilter}`
+      : `price.type:${priceFilter}`
     : sortTerm
   return sortTerm
 }
@@ -78,7 +78,6 @@ export function getSearchQuery(
     page: Number(page) || 1,
     offset: Number(offset) || 21,
     query: {
-      nativeSearch: 1,
       query_string: {
         query: `${searchTerm} -isInPurgatory:true`
       }
@@ -98,7 +97,7 @@ export function getSearchQuery(
 
     // And the next hack,
     // nativeSearch is not implmeneted on ocean.js typings
-  } as any
+  }
 }
 
 export async function getResults(

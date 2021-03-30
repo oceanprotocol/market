@@ -1,4 +1,3 @@
-const path = require('path')
 const createFields = require('./gatsby/createFields')
 const createMarkdownPages = require('./gatsby/createMarkdownPages')
 const execSync = require('child_process').execSync
@@ -10,6 +9,14 @@ execSync(`node ./scripts/write-repo-metadata > repo-metadata.json`, {
 
 // Generate Apollo typings
 execSync(`npm run apollo:codegen`, { stdio: 'inherit' })
+
+// Fetch EVM networks metadata
+execSync(
+  `node ./scripts/write-networks-metadata > content/networks-metadata.json`,
+  {
+    stdio: 'inherit'
+  }
+)
 
 exports.onCreateNode = ({ node, actions, getNode }) => {
   createFields(node, actions, getNode)
@@ -40,14 +47,6 @@ exports.onCreateWebpackConfig = ({ actions }) => {
       fs: 'empty'
     },
     // fix for 'got'/'swarm-js' dependency
-    externals: ['got'],
-
-    // fix for being able to use `npm link` with @oceanprotocol/react
-    // see https://github.com/facebook/react/issues/13991
-    resolve: {
-      alias: {
-        react: path.resolve('./node_modules/react')
-      }
-    }
+    externals: ['got']
   })
 }

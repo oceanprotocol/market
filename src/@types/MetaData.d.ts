@@ -4,7 +4,8 @@ import {
   AdditionalInformation,
   ServiceMetadata
 } from '@oceanprotocol/lib'
-import { DataTokenOptions, PriceOptions } from '@oceanprotocol/react'
+import { DataTokenOptions } from '../hooks/usePublish'
+import { PriceOptions } from '../hooks/usePricing'
 
 export interface AdditionalInformationMarket extends AdditionalInformation {
   links?: File[]
@@ -22,6 +23,13 @@ export interface PriceOptionsMarket extends PriceOptions {
   weightOnOcean: string
   // easier to keep this as number for Yup input validation
   swapFee: number
+}
+
+export interface MetadataEditForm {
+  name: string
+  description: string
+  timeout: string
+  links?: string | EditableMetadataLinks[]
 }
 
 export interface MetadataPublishForm {

@@ -1,25 +1,21 @@
 import React, { ReactElement } from 'react'
 import styles from './index.module.css'
-import { useMetadata } from '@oceanprotocol/react'
-import { DDO } from '@oceanprotocol/lib'
+import { BestPrice } from '@oceanprotocol/lib'
 import Loader from '../Loader'
 import Tooltip from '../Tooltip'
 import PriceUnit from './PriceUnit'
-import { useAsset } from '../../../providers/Asset'
 
 export default function Price({
-  ddo,
+  price,
   className,
   small,
   conversion
 }: {
-  ddo: DDO
+  price: BestPrice
   className?: string
   small?: boolean
   conversion?: boolean
 }): ReactElement {
-  // price is not fetched from the chain anymore , will update one AssetProvider is implemented
-  const { price } = useMetadata(ddo)
   return price?.value ? (
     <PriceUnit
       price={`${price.value}`}
@@ -28,10 +24,15 @@ export default function Price({
       conversion={conversion}
       type={price.type}
     />
-  ) : !price || price?.value === 0 ? (
+  ) : !price || !price.address || price.address === '' ? (
     <div className={styles.empty}>
-      No price found{' '}
-      <Tooltip content="We could not find a pool for this data set, which can have multiple reasons. Is your wallet connected to the correct network?" />
+      No price set{' '}
+      <Tooltip content="No pricing mechanism has been set on this asset yet." />
+    </div>
+  ) : price.isConsumable !== 'true' ? (
+    <div className={styles.empty}>
+      Low liquidity{' '}
+      <Tooltip content="This pool does not have enough liquidity for using this data set." />
     </div>
   ) : (
     <Loader message="Retrieving price..." />

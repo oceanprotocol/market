@@ -1,27 +1,70 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import Button from '../../atoms/Button'
 import styles from './Details.module.css'
-import { useOcean } from '@oceanprotocol/react'
+import { useOcean } from '../../../providers/Ocean'
 import Web3Feedback from './Feedback'
 import { getProviderInfo, IProviderInfo } from 'web3modal'
 import Conversion from '../../atoms/Price/Conversion'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../../providers/UserPreferences'
+import { useWeb3 } from '../../../providers/Web3'
+import { Logger } from '@oceanprotocol/lib'
 
 export default function Details(): ReactElement {
-  const { balance, connect, logout, web3Provider } = useOcean()
+  const { web3Provider, connect, logout, networkData } = useWeb3()
+  const { balance, config } = useOcean()
   const { locale } = useUserPreferences()
+
   const [providerInfo, setProviderInfo] = useState<IProviderInfo>()
+  const [mainCurrency, setMainCurrency] = useState<string>()
   // const [portisNetwork, setPortisNetwork] = useState<string>()
 
   // Workaround cause getInjectedProviderName() always returns `MetaMask`
   // https://github.com/oceanprotocol/market/issues/332
   useEffect(() => {
     if (!web3Provider) return
-
     const providerInfo = getProviderInfo(web3Provider)
     setProviderInfo(providerInfo)
   }, [web3Provider])
+
+  async function addOceanToWallet() {
+    const tokenMetadata = {
+      type: 'ERC20',
+      options: {
+        address: config.oceanTokenAddress,
+        symbol: config.oceanTokenSymbol,
+        decimals: 18,
+        image:
+          'https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png'
+      }
+    }
+    web3Provider.sendAsync(
+      {
+        method: 'wallet_watchAsset',
+        params: tokenMetadata,
+        id: Math.round(Math.random() * 100000)
+      },
+      (err: string, added: any) => {
+        if (err || 'error' in added) {
+          Logger.error(
+            `Couldn't add ${tokenMetadata.options.symbol} (${
+              tokenMetadata.options.address
+            }) to MetaMask, error: ${err || added.error}`
+          )
+        } else {
+          Logger.log(
+            `Added ${tokenMetadata.options.symbol} (${tokenMetadata.options.address}) to MetaMask`
+          )
+        }
+      }
+    )
+  }
+
+  useEffect(() => {
+    if (!networkData) return
+
+    setMainCurrency(networkData.nativeCurrency.symbol)
+  }, [networkData])
 
   // Handle network change for Portis
   // async function handlePortisNetworkChange(e: ChangeEvent<HTMLSelectElement>) {
@@ -38,7 +81,9 @@ export default function Details(): ReactElement {
       <ul>
         {Object.entries(balance).map(([key, value]) => (
           <li className={styles.balance} key={key}>
-            <span className={styles.symbol}>{key.toUpperCase()}</span>{' '}
+            <span className={styles.symbol}>
+              {key === 'eth' ? mainCurrency : config.oceanTokenSymbol}
+            </span>{' '}
             {formatCurrency(Number(value), '', locale, false, {
               significantFigures: 4
             })}
@@ -47,9 +92,11 @@ export default function Details(): ReactElement {
         ))}
 
         <li className={styles.actions}>
-          <span title="Connected provider">
-            <img className={styles.walletLogo} src={providerInfo?.logo} />
-            {providerInfo?.name}
+          <div title="Connected provider" className={styles.walletInfo}>
+            <span>
+              <img className={styles.walletLogo} src={providerInfo?.logo} />
+              {providerInfo?.name}
+            </span>
             {/* {providerInfo?.name === 'Portis' && (
               <InputElement
                 name="network"
@@ -60,7 +107,18 @@ export default function Details(): ReactElement {
                 onChange={handlePortisNetworkChange}
               />
             )} */}
-          </span>
+            {providerInfo?.name === 'MetaMask' && (
+              <Button
+                style="text"
+                size="small"
+                onClick={() => {
+                  addOceanToWallet()
+                }}
+              >
+                {`Add ${config.oceanTokenSymbol}`}
+              </Button>
+            )}
+          </div>
           <p>
             {providerInfo?.name === 'Portis' && (
               <Button

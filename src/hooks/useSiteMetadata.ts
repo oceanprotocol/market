@@ -14,12 +14,16 @@ const query = graphql`
           link
         }
         warning
+        warningPolygon
+        warningPolygonPublish
         appConfig {
           infuraProjectId
           network
           marketFeeAddress
           currencies
           portisId
+          allowFixedPricing
+          allowDynamicPricing
         }
       }
     }
