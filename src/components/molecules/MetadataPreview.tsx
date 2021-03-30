@@ -61,7 +61,11 @@ function MetaFull({ values }: { values: Partial<MetadataPublishForm> }) {
             )
         )
         .map(([key, value]) => (
-          <MetaItem key={key} title={key} content={value} />
+          <MetaItem
+            key={key}
+            title={key}
+            content={key === 'isConsumeDisable' ? value.toString() : value}
+          />
         ))}
     </div>
   )
