@@ -29,7 +29,7 @@ export interface MetadataEditForm {
   name: string
   description: string
   timeout: string
-  price: number
+  price?: number
   links?: string | EditableMetadataLinks[]
 }
 
@@ -40,7 +40,7 @@ export interface MetadataPublishForm {
   files: string | File[]
   author: string
   timeout: string
-  price: number
+  price?: number
   dataTokenOptions: DataTokenOptions
   access: 'Download' | 'Compute' | string
   termsAndConditions: boolean
