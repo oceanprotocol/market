@@ -1,14 +1,21 @@
 .banner {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: calc(var(--spacer) / 6);
+  text-align: center;
+  padding: calc(var(--spacer) / 5) calc(var(--spacer) / 2);
   border-bottom: 1px solid var(--border-color);
+  background-color: var(--background-content);
+}
+
+.banner > div {
+  display: inline-block;
+}
+
+.banner button {
+  font-size: calc(var(--font-size-small) / 1.1);
 }
 
 .text {
-  color: var(--font-color-heading);
   font-size: var(--font-size-small);
+  font-weight: var(--font-weight-bold);
   margin: 0;
   margin-right: calc(var(--spacer) / 4);
   text-align: center;

@@ -15,21 +15,23 @@ export interface AnnouncementAction {
   handleAction: () => void
 }
 
+const network: NetworkObject = {
+  chainId: 137,
+  name: 'Matic Network',
+  urlList: [
+    'https://rpc-mainnet.matic.network',
+    'https://rpc-mainnet.maticvigil.com/'
+  ]
+}
+
 export default function AnnouncementBanner(): ReactElement {
-  const { web3Provider, networkId } = useWeb3()
+  const { web3Provider } = useWeb3()
   const { config, connect } = useOcean()
   const { announcement } = useSiteMetadata()
 
-  const network: NetworkObject = {
-    chainId: 137,
-    name: 'Matic Network',
-    urlList: [
-      'https://rpc-mainnet.matic.network',
-      'https://rpc-mainnet.maticvigil.com/'
-    ]
-  }
   const [text, setText] = useState<string>(announcement.main)
   const [action, setAction] = useState<AnnouncementAction>()
+
   const addCustomNetworkAction = {
     name: 'Add custom network',
     handleAction: () => addCustomNetwork(web3Provider, network)
@@ -56,6 +58,7 @@ export default function AnnouncementBanner(): ReactElement {
 
   useEffect(() => {
     if (!web3Provider && !config) return
+
     const providerInfo = getProviderInfo(web3Provider)
     switch (providerInfo?.name) {
       case 'Web3':
@@ -68,7 +71,7 @@ export default function AnnouncementBanner(): ReactElement {
         }
         break
       case 'MetaMask':
-        if (networkId === 137) {
+        if (config.networkId === 137) {
           setBannerForMatic()
         } else {
           setText(announcement.main)
@@ -76,14 +79,14 @@ export default function AnnouncementBanner(): ReactElement {
         }
         break
       default:
-        if (networkId === 137) {
+        if (config.networkId === 137) {
           setBannerForMatic()
         } else {
           setText(announcement.main)
           setAction(undefined)
         }
     }
-  }, [web3Provider, config])
+  }, [web3Provider, config, announcement])
 
   return (
     <div className={styles.container}>
