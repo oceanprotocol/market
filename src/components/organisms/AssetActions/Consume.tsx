@@ -37,13 +37,16 @@ function getHelpText(
     dtBalance: string
     dtSymbol: string
   },
+  isDatasetConsumable: boolean,
   hasDatatoken: boolean,
   hasPreviousOrder: boolean,
   timeout: string
 ) {
   const { dtBalance, dtSymbol } = token
   const assetTimeout = timeout === 'Forever' ? '' : ` for ${timeout}`
-  const text = hasPreviousOrder
+  const text = !isDatasetConsumable
+    ? `The data set owner has set this data set to be temporary unavailable for consume.`
+    : hasPreviousOrder
     ? `You bought this data set already allowing you to download it without paying again${assetTimeout}.`
     : hasDatatoken
     ? `You own ${dtBalance} ${dtSymbol} allowing you to use this data set by spending 1 ${dtSymbol}, but without paying OCEAN again.`
@@ -77,6 +80,7 @@ export default function Consume({
   const [hasDatatoken, setHasDatatoken] = useState(false)
   const [isConsumable, setIsConsumable] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
+  const [isDatasetConsumable, setIsDatasetConsumable] = useState(true)
 
   const { data } = useQuery<OrdersData>(previousOrderQuery, {
     variables: {
@@ -109,6 +113,7 @@ export default function Consume({
   useEffect(() => {
     const { timeout } = ddo.findServiceByType('access').attributes.main
     setAssetTimeout(secondsToString(timeout))
+    if (ddo.isDatasetConsumable === false) setIsDatasetConsumable(false)
   }, [ddo])
 
   useEffect(() => {
@@ -125,13 +130,14 @@ export default function Consume({
 
   useEffect(() => {
     setIsDisabled(
-      (!ocean ||
+      ((!ocean ||
         !isBalanceSufficient ||
         typeof consumeStepText !== 'undefined' ||
         pricingIsLoading ||
         !isConsumable) &&
         !hasPreviousOrder &&
-        !hasDatatoken
+        !hasDatatoken) ||
+        !isDatasetConsumable
     )
   }, [
     ocean,
@@ -140,6 +146,7 @@ export default function Consume({
     consumeStepText,
     pricingIsLoading,
     isConsumable,
+    isDatasetConsumable,
     hasDatatoken
   ])
 
@@ -177,6 +184,7 @@ export default function Consume({
           <div className={styles.help}>
             {getHelpText(
               { dtBalance, dtSymbol: ddo.dataTokenInfo.symbol },
+              isDatasetConsumable,
               hasDatatoken,
               hasPreviousOrder,
               assetTimeout

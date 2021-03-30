@@ -10,7 +10,7 @@ export const validationSchema = Yup.object().shape({
   description: Yup.string().required('Required').min(10),
   links: Yup.array<EditableMetadataLinks[]>().nullable(),
   timeout: Yup.string().required('Required'),
-  isDatasetConsumable: Yup.boolean().nullable()
+  isDatasetConsumable: Yup.boolean()
 })
 
 export function getInitialValues(
@@ -23,6 +23,6 @@ export function getInitialValues(
     description: metadata.additionalInformation.description,
     links: metadata.additionalInformation.links,
     timeout: secondsToString(timeout),
-    isDatasetConsumable: isDatasetConsumable
+    isDatasetConsumable: !isDatasetConsumable
   }
 }
