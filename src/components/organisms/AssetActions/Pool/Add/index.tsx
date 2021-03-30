@@ -174,7 +174,7 @@ export default function Add({
               ) : (
                 <Alert
                   className={styles.warning}
-                  text={content.warning}
+                  text={content.warning.main}
                   state="info"
                   action={{
                     name: 'I understand',
