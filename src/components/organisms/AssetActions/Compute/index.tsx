@@ -277,9 +277,20 @@ export default function Compute({
 
       const allowed = await ocean.compute.isOrderable(
         ddo.id,
-        computeService.index
+        computeService.index,
+        selectedAlgorithmAsset.id
       )
       Logger.log('[compute] Is data set orderable?', allowed)
+
+      if (!allowed) {
+        setError(
+          'Data set is not orderable in combination with selected algorithm.'
+        )
+        Logger.error(
+          '[compute] Error starting compute job dataset is not orderable in combination with selected algorithm.'
+        )
+        return
+      }
 
       if (!hasPreviousDatasetOrder && !hasDatatoken) {
         const tx = await buyDT('1', price, ddo)
