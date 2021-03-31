@@ -105,7 +105,8 @@ async function getAssetDetails(
     query: {
       query_string: {
         query: queryDtList,
-        fields: ['dataToken']
+        fields: ['dataToken'],
+        default_operator: 'OR'
       }
     }
   }
@@ -160,31 +161,32 @@ export default function ComputeJobs(): ReactElement {
           source.token
         )
 
-        for (let i = 0; i < assets.length; i++) {
-          if (assets[i].type !== 'compute') return
+        assets.forEach(async (asset, index) => {
+          if (asset.type !== 'compute') return
 
           const computeJob = await ocean.compute.status(
             account,
-            assets[i].did,
+            asset.did,
             undefined,
-            data.tokenOrders[i].tx,
+            data.tokenOrders[index].tx,
             false
           )
 
-          computeJob.forEach((item) => {
+          computeJob.forEach((job) => {
             jobs.push({
-              did: assets[i].did,
-              jobId: item.jobId,
-              dateCreated: item.dateCreated,
-              dateFinished: item.dateFinished,
-              assetName: assets[i].assetName,
-              status: item.status,
-              statusText: item.statusText,
+              did: asset.did,
+              jobId: job.jobId,
+              dateCreated: job.dateCreated,
+              dateFinished: job.dateFinished,
+              assetName: assets[index].assetName,
+              status: job.status,
+              statusText: job.statusText,
               algorithmLogUrl: '',
               resultsUrls: []
             })
           })
-        }
+        })
+
         const jobsSorted = jobs.sort((a, b) => {
           if (a.dateCreated > b.dateCreated) return -1
           if (a.dateCreated < b.dateCreated) return 1
