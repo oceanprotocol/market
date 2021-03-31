@@ -5,6 +5,7 @@ import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import { Link } from 'gatsby'
 import MarketStats from '../molecules/MarketStats'
 import BuildId from '../atoms/BuildId'
+import SyncStatus from '../molecules/SyncStatus'
 
 export default function Footer(): ReactElement {
   const { copyright } = useSiteMetadata()
@@ -23,6 +24,7 @@ export default function Footer(): ReactElement {
           <a href="https://oceanprotocol.com/privacy">Privacy</a>
         </div>
       </div>
+      <SyncStatus />
     </footer>
   )
 }
