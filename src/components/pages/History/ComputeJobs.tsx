@@ -22,15 +22,11 @@ const getComputeOrders = gql`
       where: { payer: $user }
     ) {
       id
-      amount
       datatokenId {
         address
       }
-      serviceId
-      consumer {
-        id
-      }
       tx
+      timestamp
     }
   }
 `
@@ -95,7 +91,8 @@ const columns = [
 async function getAssetDetails(
   queryDtList: string,
   metadataCacheUri: string,
-  cancelToken: CancelToken
+  cancelToken: CancelToken,
+  timestamps: string[]
 ) {
   const assetList = []
 
@@ -117,10 +114,18 @@ async function getAssetDetails(
     assetList.push({
       did: result.results[i].id,
       assetName: result.results[i].service[0].attributes.main.name,
-      type: result.results[i].service[1].type
+      type: result.results[i].service[1].type,
+      timestamp: timestamps[i]
     })
   }
   return assetList
+}
+
+interface ComputeAsset extends ComputeJobMetaData {
+  did: string
+  assetName: string
+  timestamp: string
+  type: string
 }
 
 export default function ComputeJobs(): ReactElement {
@@ -128,10 +133,11 @@ export default function ComputeJobs(): ReactElement {
   const { accountId } = useWeb3()
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>()
   const [isLoading, setIsLoading] = useState(false)
+  const [assets, setAssets] = useState<ComputeAsset[]>()
 
   const { data } = useQuery(getComputeOrders, {
     variables: {
-      user: accountId.toLowerCase()
+      user: '0x4D156A2ef69ffdDC55838176C6712C90f60a2285'.toLowerCase()
     }
   })
 
@@ -144,8 +150,10 @@ export default function ComputeJobs(): ReactElement {
       setIsLoading(true)
 
       const dtList = []
+      const dtTimestamps = []
       for (let i = 0; i < data.tokenOrders.length; i++) {
         dtList.push(data.tokenOrders[i].datatokenId.address)
+        dtTimestamps.push(data.tokenOrders[i].timestamp)
       }
       const queryDtList = JSON.stringify(dtList)
         .replace(/,/g, ' ')
@@ -154,13 +162,13 @@ export default function ComputeJobs(): ReactElement {
 
       try {
         const source = axios.CancelToken.source()
-        const jobs: ComputeJobMetaData[] = []
+        const jobs: ComputeAsset[] = []
         const assets = await getAssetDetails(
           queryDtList,
           config.metadataCacheUri,
-          source.token
+          source.token,
+          dtTimestamps
         )
-
         assets.forEach(async (asset, index) => {
           if (asset.type !== 'compute') return
 
@@ -171,7 +179,6 @@ export default function ComputeJobs(): ReactElement {
             data.tokenOrders[index].tx,
             false
           )
-
           computeJob.forEach((job) => {
             jobs.push({
               did: asset.did,
@@ -182,9 +189,12 @@ export default function ComputeJobs(): ReactElement {
               status: job.status,
               statusText: job.statusText,
               algorithmLogUrl: '',
-              resultsUrls: []
+              resultsUrls: [],
+              timestamp: asset.timestamp,
+              type: asset.type
             })
           })
+          setAssets(jobs)
         })
 
         const jobsSorted = jobs.sort((a, b) => {
