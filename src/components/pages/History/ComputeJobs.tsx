@@ -5,15 +5,14 @@ import Button from '../../atoms/Button'
 import ComputeDetails from './ComputeDetails'
 import { ComputeJobMetaData } from '../../../@types/ComputeJobMetaData'
 import { Link } from 'gatsby'
-import { DDO, Logger } from '@oceanprotocol/lib'
+import { Logger } from '@oceanprotocol/lib'
 import Dotdotdot from 'react-dotdotdot'
 import Table from '../../atoms/Table'
 import { useOcean } from '../../../providers/Ocean'
 import { gql, useQuery } from '@apollo/client'
-import web3 from 'web3'
 import { useWeb3 } from '../../../providers/Web3'
 import { queryMetadata } from '../../../utils/aquarius'
-import axios from 'axios'
+import axios, { CancelToken } from 'axios'
 
 const getComputeOrders = gql`
   query PoolsQuery($user: String!) {
@@ -93,6 +92,36 @@ const columns = [
   }
 ]
 
+async function getAssetDetails(
+  queryDtList: string,
+  metadataCacheUri: string,
+  cancelToken: CancelToken
+) {
+  const assetList = []
+
+  const queryDid = {
+    page: 1,
+    offset: 100,
+    query: {
+      query_string: {
+        query: queryDtList,
+        fields: ['dataToken']
+      }
+    }
+  }
+
+  const result = await queryMetadata(queryDid, metadataCacheUri, cancelToken)
+
+  for (let i = 0; i < result.results.length; i++) {
+    assetList.push({
+      did: result.results[i].id,
+      assetName: result.results[i].service[0].attributes.main.name,
+      type: result.results[i].service[1].type
+    })
+  }
+  return assetList
+}
+
 export default function ComputeJobs(): ReactElement {
   const { ocean, account, config } = useOcean()
   const { accountId } = useWeb3()
@@ -107,78 +136,54 @@ export default function ComputeJobs(): ReactElement {
 
   useEffect(() => {
     if (data === undefined || !config?.metadataCacheUri) return
-    const source = axios.CancelToken.source()
-
-    const didList = []
-    for (let i = 0; i < data.tokenOrders.length; i++) {
-      const newDid = web3.utils
-        .toChecksumAddress(data.tokenOrders[i].datatokenId.address)
-        .replace('0x', 'did:op:')
-      didList.push(newDid)
-    }
-    const queryDidList = JSON.stringify(didList)
-      .replace(/,/g, ' ')
-      .replace(/"/g, '')
-      .replace(/(\[|\])/g, '')
-      .replace(/(did:op:)/g, '0x')
-
-    const queryDid = {
-      page: 1,
-      offset: 100,
-      query: {
-        query_string: {
-          query: queryDidList,
-          fields: ['dataToken']
-        }
-      }
-    }
-
-    async function getAssetDetails() {
-      const assetList = []
-      const result = await queryMetadata(
-        queryDid,
-        config.metadataCacheUri,
-        source.token
-      )
-      for (let i = 0; i < result.results.length; i++) {
-        assetList.push({
-          did: result.results[i].id,
-          assetName: result.results[i].service[0].attributes.main.name,
-          type: result.results[i].service[1].type
-        })
-      }
-      return assetList
-    }
 
     async function getJobs() {
       if (!ocean || !account) return
+
       setIsLoading(true)
+
+      const dtList = []
+      for (let i = 0; i < data.tokenOrders.length; i++) {
+        dtList.push(data.tokenOrders[i].datatokenId.address)
+      }
+      const queryDtList = JSON.stringify(dtList)
+        .replace(/,/g, ' ')
+        .replace(/"/g, '')
+        .replace(/(\[|\])/g, '')
+
       try {
+        const source = axios.CancelToken.source()
         const jobs: ComputeJobMetaData[] = []
-        const assets = await getAssetDetails()
+        const assets = await getAssetDetails(
+          queryDtList,
+          config.metadataCacheUri,
+          source.token
+        )
+
         for (let i = 0; i < assets.length; i++) {
-          if (assets[i].type === 'compute') {
-            const computeJob = await ocean.compute.status(
-              account,
-              assets[i].did,
-              undefined,
-              data.tokenOrders[i].tx,
-              false
-            )
-            computeJob.forEach((item) => {
-              jobs.push({
-                did: assets[i].did,
-                jobId: item.jobId,
-                dateCreated: item.dateCreated,
-                dateFinished: item.dateFinished,
-                assetName: assets[i].assetName,
-                status: item.status,
-                statusText: item.statusText,
-                algorithmLogUrl: '',
-                resultsUrls: []
-              })
+          if (assets[i].type !== 'compute') return
+
+          const computeJob = await ocean.compute.status(
+            account,
+            assets[i].did,
+            undefined,
+            data.tokenOrders[i].tx,
+            false
+          )
+
+          computeJob.forEach((item) => {
+            jobs.push({
+              did: assets[i].did,
+              jobId: item.jobId,
+              dateCreated: item.dateCreated,
+              dateFinished: item.dateFinished,
+              assetName: assets[i].assetName,
+              status: item.status,
+              statusText: item.statusText,
+              algorithmLogUrl: '',
+              resultsUrls: []
             })
-          }
+          })
         }
         const jobsSorted = jobs.sort((a, b) => {
           if (a.dateCreated > b.dateCreated) return -1
