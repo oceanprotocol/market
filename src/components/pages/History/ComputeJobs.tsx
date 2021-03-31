@@ -5,13 +5,16 @@ import Button from '../../atoms/Button'
 import ComputeDetails from './ComputeDetails'
 import { ComputeJobMetaData } from '../../../@types/ComputeJobMetaData'
 import { Link } from 'gatsby'
-import { Logger } from '@oceanprotocol/lib'
+import { DDO, Logger } from '@oceanprotocol/lib'
 import Dotdotdot from 'react-dotdotdot'
 import Table from '../../atoms/Table'
 import { useOcean } from '../../../providers/Ocean'
 import { gql, useQuery } from '@apollo/client'
 import web3 from 'web3'
 import { useWeb3 } from '../../../providers/Web3'
+import { queryMetadata } from '../../../utils/aquarius'
+import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
+import axios, { CancelToken } from 'axios'
 
 const getComputeOrders = gql`
   query PoolsQuery($user: String!) {
@@ -91,26 +94,102 @@ const columns = [
   }
 ]
 
+async function getAssetsDIDs(
+  didList: string[],
+  metadataCacheUri: string,
+  cancelToken: CancelToken
+) {
+  const queryDidList = JSON.stringify(didList)
+    .replace(/,/g, ' ')
+    .replace(/"/g, '')
+    .replace(/(\[|\])/g, '')
+    .replace(/(did:op:)/g, '0x')
+
+  const queryDid = {
+    page: 1,
+    offset: 100,
+    query: {
+      query_string: {
+        query: queryDidList,
+        fields: ['dataToken']
+      }
+    }
+  }
+  try {
+    const result = await queryMetadata(queryDid, metadataCacheUri, cancelToken)
+    return result
+  } catch (error) {
+    Logger.error(error.message)
+  }
+}
+
 export default function ComputeJobs(): ReactElement {
-  const { ocean, account } = useOcean()
+  const { ocean, account, config } = useOcean()
   const { accountId } = useWeb3()
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>()
   const [isLoading, setIsLoading] = useState(false)
+  const [result, setResult] = useState<DDO[]>()
+
   const { data } = useQuery(getComputeOrders, {
     variables: {
-      user: accountId?.toLowerCase()
+      user: '0x4D156A2ef69ffdDC55838176C6712C90f60a2285'.toLowerCase()
+      // -------------------------------------------------------------
     }
   })
 
   useEffect(() => {
-    if (data === undefined) return
+    if (data === undefined || !config?.metadataCacheUri) return
+    const source = axios.CancelToken.source()
 
-    async function getAssetDetails(did: string) {
-      const newDid = web3.utils.toChecksumAddress(did).replace('0x', 'did:op:')
-      const ddo = await ocean.metadataCache.retrieveDDO(newDid)
+    const didList: string[] = []
+    for (let i = 0; i < data.tokenOrders.length; i++) {
+      const newDid = web3.utils
+        .toChecksumAddress(data.tokenOrders[i].datatokenId.address)
+        .replace('0x', 'did:op:')
+      didList.push(newDid)
+    }
+    // const queryDidList = JSON.stringify(didList)
+    //   .replace(/,/g, ' ')
+    //   .replace(/"/g, '')
+    //   .replace(/(\[|\])/g, '')
+    //   .replace(/(did:op:)/g, '0x')
+
+    // const queryDid = {
+    //   page: 1,
+    //   offset: 100,
+    //   query: {
+    //     query_string: {
+    //       query: queryDidList,
+    //       fields: ['dataToken']
+    //     }
+    //   }
+    // }
+
+    // async function init() {
+    //   const result = await queryMetadata(
+    //     queryDid,
+    //     config.metadataCacheUri,
+    //     source.token
+    //   )
+    //   setResult(result.results)
+    // }
+
+    // async function init() {
+    //   try {
+    //     const result = await getAssetsDIDs(
+    //       didList,
+    //       config.metadataCacheUri,
+    //       source.token
+    //     )
+    //   } catch (error) {
+    //     Logger.error(error.message)
+    //   }
+    // }
+
+    async function getAssetDetails(ddo: DDO) {
       const metadata = ddo.findServiceByType('metadata')
       return {
-        did: newDid,
+        did: ddo.id,
         ddo: ddo,
         assetName: metadata.attributes.main.name,
         type: ddo.service[1].type
@@ -122,10 +201,17 @@ export default function ComputeJobs(): ReactElement {
       setIsLoading(true)
       try {
         const jobs: ComputeJobMetaData[] = []
+        const result = await getAssetsDIDs(
+          didList,
+          config.metadataCacheUri,
+          source.token
+        )
+        setResult(result.results)
+        console.log('RESULT: ', result)
 
-        for (let i = 0; i < data.tokenOrders.length; i++) {
+        for (let i = 0; i < result.results.length; i++) {
           const { did, assetName, type } = await getAssetDetails(
-            data.tokenOrders[i].datatokenId.address
+            result.results[i]
           )
           if (type === 'compute') {
             const computeJob = await ocean.compute.status(
@@ -163,7 +249,7 @@ export default function ComputeJobs(): ReactElement {
       }
     }
     getJobs()
-  }, [ocean, account, data])
+  }, [ocean, account, data, config?.metadataCacheUri, result])
 
   return (
     <Table
