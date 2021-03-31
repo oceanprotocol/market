@@ -21,7 +21,17 @@ export async function fileinfo(
       return
     }
     if (!response.data[0] || !response.data[0].valid) {
-      toast.error('Could not fetch file info. Please check URL and try again')
+      toast.error(
+        'The data file URL you entered apears to be invalid. Please check URL and try again',
+        {
+          autoClose: false,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined
+        }
+      )
       return
     }
 
