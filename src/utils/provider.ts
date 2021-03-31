@@ -33,6 +33,17 @@ export async function fileinfo(
         }
       )
       return
+    } else {
+      toast.dismiss() // Remove any existing error message
+      toast.success('Great! That dataset looks good 🐳', {
+        position: 'bottom-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined
+      })
     }
 
     const { contentLength, contentType } = response.data[0]
