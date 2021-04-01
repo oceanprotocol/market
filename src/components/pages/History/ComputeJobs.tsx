@@ -13,9 +13,11 @@ import { gql, useQuery } from '@apollo/client'
 import { useWeb3 } from '../../../providers/Web3'
 import { queryMetadata } from '../../../utils/aquarius'
 import axios, { CancelToken } from 'axios'
-
+import { ComputeOrders } from '../../../@types/apollo/ComputeOrders'
+import web3 from 'web3'
+import AssetTitle from '../../molecules/AssetListTitle'
 const getComputeOrders = gql`
-  query PoolsQuery($user: String!) {
+  query ComputeOrders($user: String!) {
     tokenOrders(
       orderBy: timestamp
       orderDirection: desc
@@ -55,17 +57,13 @@ const columns = [
   {
     name: 'Data Set',
     selector: function getAssetRow(row: ComputeAsset) {
-      return (
-        <Dotdotdot clamp={2}>
-          <Link to={`/asset/${row.did}`}>{row.assetName}</Link>
-        </Dotdotdot>
-      )
+      return <AssetTitle did={row.did} />
     }
   },
   {
     name: 'Created',
     selector: function getTimeRow(row: ComputeAsset) {
-      return <Time date={row.timestamp} isUnix relative />
+      return <Time date={row.timestamp.toString()} isUnix relative />
     }
   },
   {
@@ -92,7 +90,7 @@ async function getAssetMetadata(
   queryDtList: string,
   metadataCacheUri: string,
   cancelToken: CancelToken,
-  timestamps: string[]
+  timestamps: number[]
 ): Promise<ComputeAsset[]> {
   const assetList = []
 
@@ -131,7 +129,7 @@ async function getAssetMetadata(
 interface ComputeAsset extends ComputeJobMetaData {
   did: string
   assetName: string
-  timestamp: string
+  timestamp: number
   type: string
 }
 
@@ -140,8 +138,8 @@ export default function ComputeJobs(): ReactElement {
   const { accountId } = useWeb3()
   const [isLoading, setIsLoading] = useState(false)
   const [assets, setAssets] = useState<ComputeAsset[]>()
-
-  const { data } = useQuery(getComputeOrders, {
+  const [jobs, setJobs] = useState<ComputeAsset[]>([])
+  const { data } = useQuery<ComputeOrders>(getComputeOrders, {
     variables: {
       user: accountId.toLowerCase()
     }
@@ -161,6 +159,7 @@ export default function ComputeJobs(): ReactElement {
         dtList.push(data.tokenOrders[i].datatokenId.address)
         dtTimestamps.push(data.tokenOrders[i].timestamp)
       }
+      console.log('order', data)
       const queryDtList = JSON.stringify(dtList)
         .replace(/,/g, ' ')
         .replace(/"/g, '')
@@ -169,41 +168,76 @@ export default function ComputeJobs(): ReactElement {
       try {
         const source = axios.CancelToken.source()
         const jobs: ComputeAsset[] = []
-        const assets = await getAssetMetadata(
-          queryDtList,
-          config.metadataCacheUri,
-          source.token,
-          dtTimestamps
-        )
-        setAssets(assets)
+        // const assets = await getAssetMetadata(
+        //   queryDtList,
+        //   config.metadataCacheUri,
+        //   source.token,
+        //   dtTimestamps
+        // )
+        // setAssets(assets)
 
-        assets.forEach(async (asset, index) => {
-          if (asset.type !== 'compute') return
+        for (let i = 0; i < data.tokenOrders.length; i++) {
+          try {
+            const did = web3.utils
+              .toChecksumAddress(data.tokenOrders[i].datatokenId.address)
+              .replace('0x', 'did:op:')
+            console.log('status for', did, data.tokenOrders[i].tx)
+            const computeJob = await ocean.compute.status(
+              account,
+              did,
+              undefined,
+              data.tokenOrders[i].tx,
+              false
+            )
+            console.log('status returned', computeJob)
 
-          const computeJob = await ocean.compute.status(
-            account,
-            asset.did,
-            undefined,
-            data.tokenOrders[index].tx,
-            false
-          )
-
-          computeJob.forEach((job) => {
-            jobs.push({
-              did: asset.did,
-              jobId: job.jobId,
-              dateCreated: job.dateCreated,
-              dateFinished: job.dateFinished,
-              assetName: assets[index].assetName,
-              status: job.status,
-              statusText: job.statusText,
-              algorithmLogUrl: '',
-              resultsUrls: [],
-              timestamp: asset.timestamp,
-              type: asset.type
+            computeJob.forEach((job) => {
+              jobs.push({
+                did: did,
+                jobId: job.jobId,
+                dateCreated: job.dateCreated,
+                dateFinished: job.dateFinished,
+                assetName: '',
+                status: job.status,
+                statusText: job.statusText,
+                algorithmLogUrl: '',
+                resultsUrls: [],
+                timestamp: data.tokenOrders[i].timestamp,
+                type: ''
+              })
             })
-          })
-        })
+            // eslint-disable-next-line no-empty
+          } catch {}
+        }
+        console.log('jobs', jobs)
+        setJobs(jobs)
+        // assets.forEach(async (asset, index) => {
+        //   if (asset.type !== 'compute') return
+
+        //   const computeJob = await ocean.compute.status(
+        //     account,
+        //     asset.did,
+        //     undefined,
+        //     data.tokenOrders[index].tx,
+        //     false
+        //   )
+
+        //   computeJob.forEach((job) => {
+        //     jobs.push({
+        //       did: asset.did,
+        //       jobId: job.jobId,
+        //       dateCreated: job.dateCreated,
+        //       dateFinished: job.dateFinished,
+        //       assetName: assets[index].assetName,
+        //       status: job.status,
+        //       statusText: job.statusText,
+        //       algorithmLogUrl: '',
+        //       resultsUrls: [],
+        //       timestamp: asset.timestamp,
+        //       type: asset.type
+        //     })
+        //   })
+        // })
 
         // TODO: merge object data in jobs array with object data in assets array
         // setAssets((prevState) => {
@@ -220,7 +254,7 @@ export default function ComputeJobs(): ReactElement {
   return (
     <Table
       columns={columns}
-      data={assets}
+      data={jobs}
       isLoading={isLoading}
       defaultSortField="row.dateCreated"
       defaultSortAsc={false}
