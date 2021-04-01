@@ -144,7 +144,9 @@ export default function ComputeJobs(): ReactElement {
       user: accountId.toLowerCase()
     }
   })
-
+  useEffect(() => {
+    console.log('jobs', jobs)
+  }, [jobs])
   useEffect(() => {
     if (data === undefined || !config?.metadataCacheUri) return
 
@@ -192,7 +194,20 @@ export default function ComputeJobs(): ReactElement {
             console.log('status returned', computeJob)
 
             computeJob.forEach((job) => {
-              jobs.push({
+              // jobs.push({
+              //   did: did,
+              //   jobId: job.jobId,
+              //   dateCreated: job.dateCreated,
+              //   dateFinished: job.dateFinished,
+              //   assetName: '',
+              //   status: job.status,
+              //   statusText: job.statusText,
+              //   algorithmLogUrl: '',
+              //   resultsUrls: [],
+              //   timestamp: data.tokenOrders[i].timestamp,
+              //   type: ''
+              // })
+              const compJob = {
                 did: did,
                 jobId: job.jobId,
                 dateCreated: job.dateCreated,
@@ -204,13 +219,17 @@ export default function ComputeJobs(): ReactElement {
                 resultsUrls: [],
                 timestamp: data.tokenOrders[i].timestamp,
                 type: ''
-              })
+              } as ComputeAsset
+
+              setJobs((jobs) => [...jobs, compJob])
+              setIsLoading(false)
             })
+
             // eslint-disable-next-line no-empty
           } catch {}
         }
         console.log('jobs', jobs)
-        setJobs(jobs)
+        // setJobs(jobs)
         // assets.forEach(async (asset, index) => {
         //   if (asset.type !== 'compute') return
 
