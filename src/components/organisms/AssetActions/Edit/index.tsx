@@ -89,7 +89,9 @@ export default function Edit({
       }
       let ddoEditedTimeout = ddoEditedMetdata
       if (timeoutStringValue !== values.timeout) {
-        const service = ddoEditedMetdata.findServiceByType('access')
+        const service =
+          ddoEditedMetdata.findServiceByType('access') ||
+          ddoEditedMetdata.findServiceByType('compute')
         const timeout = mapTimeoutStringToSeconds(values.timeout)
         ddoEditedTimeout = await ocean.assets.editServiceTimeout(
           ddoEditedMetdata,
