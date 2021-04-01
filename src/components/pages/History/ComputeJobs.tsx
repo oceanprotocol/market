@@ -88,7 +88,7 @@ const columns = [
   }
 ]
 
-async function getAssetDetails(
+async function getAssetMetadata(
   queryDtList: string,
   metadataCacheUri: string,
   cancelToken: CancelToken,
@@ -101,9 +101,8 @@ async function getAssetDetails(
     offset: 100,
     query: {
       query_string: {
-        query: queryDtList,
-        fields: ['dataToken'],
-        default_operator: 'OR'
+        query: `(${queryDtList}) AND service.attributes.main.type:dataset AND service.type:compute`,
+        fields: ['dataToken']
       }
     }
   }
@@ -170,7 +169,7 @@ export default function ComputeJobs(): ReactElement {
       try {
         const source = axios.CancelToken.source()
         const jobs: ComputeAsset[] = []
-        const assets = await getAssetDetails(
+        const assets = await getAssetMetadata(
           queryDtList,
           config.metadataCacheUri,
           source.token,
