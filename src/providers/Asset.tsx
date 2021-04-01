@@ -74,6 +74,7 @@ function AssetProvider({
   const [type, setType] = useState<MetadataMain['type']>()
   const [variables, setVariables] = useState({})
 
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   const {
     refetch: refetchFre,
     startPolling: startPollingFre,
@@ -90,6 +91,7 @@ function AssetProvider({
     variables,
     skip: false
   })
+  /* eslint-enable @typescript-eslint/no-unused-vars */
 
   // this is not working as expected, thus we need to fetch both pool and fre
   // useEffect(() => {

@@ -17,6 +17,10 @@ export interface AssetSelectionAsset {
   checked: boolean
 }
 
+function Empty() {
+  return <div className={styles.empty}>No assets found.</div>
+}
+
 export default function AssetSelection({
   assets,
   multiple,
@@ -52,7 +56,11 @@ export default function AssetSelection({
         disabled={disabled}
       />
       <div className={styles.scroll}>
-        {assets ? (
+        {!assets ? (
+          <Loader />
+        ) : assets && !assets.length ? (
+          <Empty />
+        ) : (
           assets
             .filter((asset: AssetSelectionAsset) =>
               searchValue !== ''
@@ -98,8 +106,6 @@ export default function AssetSelection({
                 <PriceUnit price={asset.price} small className={styles.price} />
               </div>
             ))
-        ) : (
-          <Loader />
         )}
       </div>
     </div>

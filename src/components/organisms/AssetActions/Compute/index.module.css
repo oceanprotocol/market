@@ -21,8 +21,9 @@
 
 .feedback {
   width: 100%;
+  margin-top: calc(var(--spacer) / 2);
 }
 
 .help {
-  composes: help from './index.module.css';
+  composes: help from '../index.module.css';
 }

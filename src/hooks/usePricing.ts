@@ -1,5 +1,5 @@
 import { DDO, Logger, BestPrice } from '@oceanprotocol/lib'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { TransactionReceipt } from 'web3-core'
 import { Decimal } from 'decimal.js'
 import { getFirstPoolPrice } from '../utils/dtUtils'
@@ -24,16 +24,21 @@ interface PriceOptions {
 }
 
 interface UsePricing {
-  dtSymbol?: string
-  dtName?: string
+  getDTSymbol: (ddo: DDO) => Promise<string>
+  getDTName: (ddo: DDO) => Promise<string>
   createPricing: (
-    priceOptions: PriceOptions
+    priceOptions: PriceOptions,
+    ddo: DDO
   ) => Promise<TransactionReceipt | string | void>
-  sellDT: (dtAmount: number | string) => Promise<TransactionReceipt | void>
-  mint: (tokensToMint: string) => Promise<TransactionReceipt | void>
+  sellDT: (
+    dtAmount: number | string,
+    ddo: DDO
+  ) => Promise<TransactionReceipt | void>
+  mint: (tokensToMint: string, ddo: DDO) => Promise<TransactionReceipt | void>
   buyDT: (
     dtAmount: number | string,
-    price: BestPrice
+    price: BestPrice,
+    ddo: DDO
   ) => Promise<TransactionReceipt | void>
   pricingStep?: number
   pricingStepText?: string
@@ -41,38 +46,37 @@ interface UsePricing {
   pricingIsLoading: boolean
 }
 
-function usePricing(ddo: DDO): UsePricing {
+function usePricing(): UsePricing {
   const { accountId } = useWeb3()
   const { ocean, config } = useOcean()
   const [pricingIsLoading, setPricingIsLoading] = useState(false)
   const [pricingStep, setPricingStep] = useState<number>()
   const [pricingStepText, setPricingStepText] = useState<string>()
   const [pricingError, setPricingError] = useState<string>()
-  const [dtSymbol, setDtSymbol] = useState<string>()
-  const [dtName, setDtName] = useState<string>()
 
-  const { dataToken, dataTokenInfo } = ddo
+  async function getDTSymbol(ddo: DDO): Promise<string> {
+    if (!ocean || !accountId) return
+    const { dataToken, dataTokenInfo } = ddo
+    return dataTokenInfo
+      ? dataTokenInfo.symbol
+      : await ocean?.datatokens.getSymbol(dataToken)
+  }
 
-  // Get Datatoken info, from DDO first, then from chain
-  useEffect(() => {
-    if (!dataToken) return
-
-    async function init() {
-      const dtSymbol = dataTokenInfo
-        ? dataTokenInfo.symbol
-        : await ocean?.datatokens.getSymbol(dataToken)
-      setDtSymbol(dtSymbol)
-
-      const dtName = dataTokenInfo
-        ? dataTokenInfo.name
-        : await ocean?.datatokens.getName(dataToken)
-      setDtName(dtName)
-    }
-    init()
-  }, [ocean, dataToken, dataTokenInfo])
+  async function getDTName(ddo: DDO): Promise<string> {
+    if (!ocean || !accountId) return
+    const { dataToken, dataTokenInfo } = ddo
+    return dataTokenInfo
+      ? dataTokenInfo.name
+      : await ocean?.datatokens.getName(dataToken)
+  }
 
   // Helper for setting steps & feedback for all flows
-  function setStep(index: number, type: 'pool' | 'exchange' | 'buy' | 'sell') {
+  async function setStep(
+    index: number,
+    type: 'pool' | 'exchange' | 'buy' | 'sell',
+    ddo: DDO
+  ) {
+    const dtSymbol = await getDTSymbol(ddo)
     setPricingStep(index)
     if (!dtSymbol) return
 
@@ -97,8 +101,10 @@ function usePricing(ddo: DDO): UsePricing {
   }
 
   async function mint(
-    tokensToMint: string
+    tokensToMint: string,
+    ddo: DDO
   ): Promise<TransactionReceipt | void> {
+    const { dataToken } = ddo
     Logger.log('mint function', dataToken, accountId)
     const balance = new Decimal(
       await ocean.datatokens.balance(dataToken, accountId)
@@ -117,7 +123,8 @@ function usePricing(ddo: DDO): UsePricing {
 
   async function buyDT(
     dtAmount: number | string,
-    price: BestPrice
+    price: BestPrice,
+    ddo: DDO
   ): Promise<TransactionReceipt | void> {
     if (!ocean || !accountId) return
 
@@ -126,14 +133,14 @@ function usePricing(ddo: DDO): UsePricing {
     try {
       setPricingIsLoading(true)
       setPricingError(undefined)
-      setStep(1, 'buy')
+      setStep(1, 'buy', ddo)
 
       Logger.log('Price found for buying', price)
       switch (price?.type) {
         case 'pool': {
           const oceanAmmount = new Decimal(price.value).times(1.05).toString()
           const maxPrice = new Decimal(price.value).times(2).toString()
-          setStep(2, 'buy')
+          setStep(2, 'buy', ddo)
           Logger.log('Buying token from pool', price, accountId, price)
           tx = await ocean.pool.buyDT(
             accountId,
@@ -142,7 +149,7 @@ function usePricing(ddo: DDO): UsePricing {
             oceanAmmount,
             maxPrice
           )
-          setStep(3, 'buy')
+          setStep(3, 'buy', ddo)
           Logger.log('DT buy response', tx)
           break
         }
@@ -162,13 +169,13 @@ function usePricing(ddo: DDO): UsePricing {
             `${price.value}`,
             accountId
           )
-          setStep(2, 'buy')
+          setStep(2, 'buy', ddo)
           tx = await ocean.fixedRateExchange.buyDT(
             price.address,
             `${dtAmount}`,
             accountId
           )
-          setStep(3, 'buy')
+          setStep(3, 'buy', ddo)
           Logger.log('DT exchange buy response', tx)
           break
         }
@@ -177,7 +184,7 @@ function usePricing(ddo: DDO): UsePricing {
       setPricingError(error.message)
       Logger.error(error)
     } finally {
-      setStep(0, 'buy')
+      setStep(0, 'buy', ddo)
       setPricingStepText(undefined)
       setPricingIsLoading(false)
     }
@@ -186,7 +193,8 @@ function usePricing(ddo: DDO): UsePricing {
   }
 
   async function sellDT(
-    dtAmount: number | string
+    dtAmount: number | string,
+    ddo: DDO
   ): Promise<TransactionReceipt | void> {
     if (!ocean || !accountId) return
 
@@ -196,13 +204,14 @@ function usePricing(ddo: DDO): UsePricing {
     }
 
     try {
+      const { dataToken } = ddo
       setPricingIsLoading(true)
       setPricingError(undefined)
-      setStep(1, 'sell')
+      setStep(1, 'sell', ddo)
       const pool = await getFirstPoolPrice(ocean, dataToken)
       if (!pool || pool.value === 0) return
       const price = new Decimal(pool.value).times(0.95).toString()
-      setStep(2, 'sell')
+      setStep(2, 'sell', ddo)
       Logger.log('Selling token to pool', pool, accountId, price)
       const tx = await ocean.pool.sellDT(
         accountId,
@@ -210,22 +219,26 @@ function usePricing(ddo: DDO): UsePricing {
         `${dtAmount}`,
         price
       )
-      setStep(3, 'sell')
+      setStep(3, 'sell', ddo)
       Logger.log('DT sell response', tx)
       return tx
     } catch (error) {
       setPricingError(error.message)
       Logger.error(error)
     } finally {
-      setStep(0, 'sell')
+      setStep(0, 'sell', ddo)
       setPricingStepText(undefined)
       setPricingIsLoading(false)
     }
   }
 
   async function createPricing(
-    priceOptions: PriceOptions
+    priceOptions: PriceOptions,
+    ddo: DDO
   ): Promise<TransactionReceipt | void> {
+    const { dataToken } = ddo
+    const dtSymbol = await getDTSymbol(ddo)
+
     if (!ocean || !accountId || !dtSymbol) return
 
     const {
@@ -247,12 +260,12 @@ function usePricing(ddo: DDO): UsePricing {
     setPricingIsLoading(true)
     setPricingError(undefined)
 
-    setStep(99, 'pool')
+    setStep(99, 'pool', ddo)
 
     try {
       // if fixedPrice set dt to max amount
       if (!isPool) dtAmount = 1000
-      await mint(`${dtAmount}`)
+      await mint(`${dtAmount}`, ddo)
 
       // dtAmount for fixed price is set to max
       const tx = isPool
@@ -265,10 +278,10 @@ function usePricing(ddo: DDO): UsePricing {
               `${oceanAmount}`,
               swapFee
             )
-            .next((step: number) => setStep(step, 'pool'))
+            .next((step: number) => setStep(step, 'pool', ddo))
         : await ocean.fixedRateExchange
             .create(dataToken, `${price}`, accountId, `${dtAmount}`)
-            .next((step: number) => setStep(step, 'exchange'))
+            .next((step: number) => setStep(step, 'exchange', ddo))
       await sleep(20000)
       return tx
     } catch (error) {
@@ -282,8 +295,8 @@ function usePricing(ddo: DDO): UsePricing {
   }
 
   return {
-    dtSymbol,
-    dtName,
+    getDTSymbol,
+    getDTName,
     createPricing,
     buyDT,
     sellDT,

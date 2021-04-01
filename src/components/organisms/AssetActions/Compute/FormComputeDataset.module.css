@@ -1,0 +1,37 @@
+.form {
+  padding: 0;
+  border: none;
+  margin-top: -0.8rem;
+}
+
+.form > div > label,
+[class*='ButtonBuy-module--actions'] {
+  text-align: center;
+}
+
+.form > div > label {
+  margin-bottom: calc(var(--spacer) / 2);
+  margin-left: -1rem;
+}
+
+.form [class*='AssetSelection-module--selection'] {
+  margin-left: -2rem;
+  margin-right: -2rem;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-left: 0;
+  border-right: 0;
+  padding: 0;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  max-height: 100%;
+}
+
+.actions a,
+.actions button {
+  margin-left: calc(var(--spacer) / 2);
+  margin-right: calc(var(--spacer) / 2);
+}
