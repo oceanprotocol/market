@@ -11,8 +11,8 @@ interface ButtonBuyProps {
   dtSymbol: string
   dtBalance: string
   isLoading: boolean
+  assetTimeout: string
   onClick?: (e: FormEvent<HTMLButtonElement>) => void
-  assetTimeout?: string
   stepText?: string
   type?: 'submit'
 }
@@ -57,7 +57,9 @@ export default function ButtonBuy({
         : `Buy ${assetTimeout === 'Forever' ? '' : ` for ${assetTimeout}`}`
       : hasPreviousOrder
       ? 'Start Compute Job'
-      : 'Buy Compute Job'
+      : `Buy Compute Job ${
+          assetTimeout === 'Forever' ? '' : ` for ${assetTimeout}`
+        }`
 
   return (
     <div className={styles.actions}>

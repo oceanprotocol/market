@@ -37,6 +37,7 @@ import Button from '../../../atoms/Button'
 import { gql, useQuery } from '@apollo/client'
 import { FrePrice } from '../../../../@types/apollo/FrePrice'
 import { PoolPrice } from '../../../../@types/apollo/PoolPrice'
+import { secondsToString } from '../../../../utils/metadata'
 
 const SuccessAction = () => (
   <Button style="text" to="/history" size="small">
@@ -95,6 +96,7 @@ export default function Compute({
     previousAlgorithmOrderId,
     setPreviousAlgorithmOrderId
   ] = useState<string>()
+  const [datasetTimeout, setDatasetTimeout] = useState<string>()
 
   /* eslint-disable @typescript-eslint/no-unused-vars */
   const {
@@ -192,6 +194,13 @@ export default function Compute({
     }
     return algorithmSelectionList
   }
+
+  useEffect(() => {
+    const { timeout } = (
+      ddo.findServiceByType('access') || ddo.findServiceByType('compute')
+    ).attributes.main
+    setDatasetTimeout(secondsToString(timeout))
+  }, [ddo])
 
   useEffect(() => {
     if (
@@ -434,6 +443,7 @@ export default function Compute({
             dtSymbol={ddo.dataTokenInfo?.symbol}
             dtBalance={dtBalance}
             stepText={pricingStepText || 'Starting Compute Job...'}
+            datasetTimeout={datasetTimeout}
           />
         </Formik>
       )}

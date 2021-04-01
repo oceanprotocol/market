@@ -48,7 +48,8 @@ export default function FormStartCompute({
   hasDatatoken,
   dtSymbol,
   dtBalance,
-  stepText
+  stepText,
+  datasetTimeout
 }: {
   algorithms: AssetSelectionAsset[]
   ddoListAlgorithms: DDO[]
@@ -60,6 +61,7 @@ export default function FormStartCompute({
   dtSymbol: string
   dtBalance: string
   stepText: string
+  datasetTimeout: string
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
@@ -103,6 +105,7 @@ export default function FormStartCompute({
         stepText={stepText}
         isLoading={isLoading}
         type="submit"
+        assetTimeout={datasetTimeout}
       />
     </Form>
   )
