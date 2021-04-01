@@ -287,7 +287,7 @@ export default function Compute({
           'Data set is not orderable in combination with selected algorithm.'
         )
         Logger.error(
-          '[compute] Error starting compute job dataset is not orderable in combination with selected algorithm.'
+          '[compute] Error starting compute job. Dataset is not orderable in combination with selected algorithm.'
         )
         return
       }
@@ -331,7 +331,13 @@ export default function Compute({
             marketFeeAddress
           )
 
-      assetOrderId && Logger.log('[compute] Got assetOrderId ', assetOrderId)
+      assetOrderId &&
+        Logger.log(
+          `[compute] Got ${
+            hasPreviousDatasetOrder ? 'existing' : 'new'
+          } order ID for dataset: `,
+          assetOrderId
+        )
 
       const algorithmAssetOrderId = hasPreviousAlgorithmOrder
         ? previousAlgorithmOrderId
@@ -345,7 +351,9 @@ export default function Compute({
 
       algorithmAssetOrderId &&
         Logger.log(
-          '[compute] Got algorithmAssetOrderId ',
+          `[compute] Got ${
+            hasPreviousAlgorithmOrder ? 'existing' : 'new'
+          } order ID for algorithm: `,
           algorithmAssetOrderId
         )
 
@@ -386,7 +394,7 @@ export default function Compute({
       setIsPublished(true)
     } catch (error) {
       setError('Failed to start job!')
-      Logger.error('[compute] Failed to start job!', error.message)
+      Logger.error('[compute] Failed to start job: ', error.message)
     } finally {
       setIsJobStarting(false)
     }
