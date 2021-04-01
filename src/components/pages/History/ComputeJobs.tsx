@@ -54,7 +54,7 @@ export function Status({ children }: { children: string }): ReactElement {
 const columns = [
   {
     name: 'Data Set',
-    selector: function getAssetRow(row: ComputeJobMetaData) {
+    selector: function getAssetRow(row: ComputeAsset) {
       return (
         <Dotdotdot clamp={2}>
           <Link to={`/asset/${row.did}`}>{row.assetName}</Link>
@@ -64,25 +64,25 @@ const columns = [
   },
   {
     name: 'Created',
-    selector: function getTimeRow(row: ComputeJobMetaData) {
-      return <Time date={row.dateCreated} isUnix relative />
+    selector: function getTimeRow(row: ComputeAsset) {
+      return <Time date={row.timestamp} isUnix relative />
     }
   },
   {
     name: 'Finished',
-    selector: function getTimeRow(row: ComputeJobMetaData) {
+    selector: function getTimeRow(row: ComputeAsset) {
       return <Time date={row.dateFinished} isUnix relative />
     }
   },
   {
     name: 'Status',
-    selector: function getStatus(row: ComputeJobMetaData) {
+    selector: function getStatus(row: ComputeAsset) {
       return <Status>{row.statusText}</Status>
     }
   },
   {
     name: 'Actions',
-    selector: function getActions(row: ComputeJobMetaData) {
+    selector: function getActions(row: ComputeAsset) {
       return <DetailsButton row={row} />
     }
   }
@@ -93,7 +93,7 @@ async function getAssetDetails(
   metadataCacheUri: string,
   cancelToken: CancelToken,
   timestamps: string[]
-) {
+): Promise<ComputeAsset[]> {
   const assetList = []
 
   const queryDid = {
@@ -115,9 +115,17 @@ async function getAssetDetails(
       did: result.results[i].id,
       assetName: result.results[i].service[0].attributes.main.name,
       type: result.results[i].service[1].type,
-      timestamp: timestamps[i]
+      timestamp: timestamps[i],
+      jobId: undefined,
+      dateCreated: undefined,
+      dateFinished: undefined,
+      status: undefined,
+      statusText: undefined,
+      algorithmLogUrl: undefined,
+      resultsUrls: undefined
     })
   }
+
   return assetList
 }
 
@@ -131,7 +139,6 @@ interface ComputeAsset extends ComputeJobMetaData {
 export default function ComputeJobs(): ReactElement {
   const { ocean, account, config } = useOcean()
   const { accountId } = useWeb3()
-  const [jobs, setJobs] = useState<ComputeJobMetaData[]>()
   const [isLoading, setIsLoading] = useState(false)
   const [assets, setAssets] = useState<ComputeAsset[]>()
 
@@ -169,6 +176,8 @@ export default function ComputeJobs(): ReactElement {
           source.token,
           dtTimestamps
         )
+        setAssets(assets)
+
         assets.forEach(async (asset, index) => {
           if (asset.type !== 'compute') return
 
@@ -179,6 +188,7 @@ export default function ComputeJobs(): ReactElement {
             data.tokenOrders[index].tx,
             false
           )
+
           computeJob.forEach((job) => {
             jobs.push({
               did: asset.did,
@@ -194,15 +204,11 @@ export default function ComputeJobs(): ReactElement {
               type: asset.type
             })
           })
-          setAssets(jobs)
         })
 
-        const jobsSorted = jobs.sort((a, b) => {
-          if (a.dateCreated > b.dateCreated) return -1
-          if (a.dateCreated < b.dateCreated) return 1
-          return 0
-        })
-        setJobs(jobsSorted)
+        // TODO: merge object data in jobs array with object data in assets array
+        // setAssets((prevState) => {
+        // })
       } catch (error) {
         Logger.log(error.message)
       } finally {
