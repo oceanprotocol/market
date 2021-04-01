@@ -137,7 +137,7 @@ export default function ComputeJobs(): ReactElement {
 
   const { data } = useQuery(getComputeOrders, {
     variables: {
-      user: '0x4D156A2ef69ffdDC55838176C6712C90f60a2285'.toLowerCase()
+      user: accountId.toLowerCase()
     }
   })
 
@@ -215,7 +215,7 @@ export default function ComputeJobs(): ReactElement {
   return (
     <Table
       columns={columns}
-      data={jobs}
+      data={assets}
       isLoading={isLoading}
       defaultSortField="row.dateCreated"
       defaultSortAsc={false}
