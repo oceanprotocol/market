@@ -115,7 +115,7 @@ export default function StatsPage(): ReactElement {
       }
 
       const response = await fetch(
-        `${process.env.MARKET_STATS_ENDPOINT}/page-views`,
+        `https://market-stats-git-netlify-api-oceanprotocol.vercel.app/page-views`,
         options
       )
       const pageViewsData = await response.json()
@@ -148,7 +148,7 @@ export default function StatsPage(): ReactElement {
       }
 
       const response = await fetch(
-        `${process.env.MARKET_STATS_ENDPOINT}/visitors`,
+        `https://market-stats-git-netlify-api-oceanprotocol.vercel.app/visitors`,
         options
       )
       const uniqueVisitorsData = await response.json()
