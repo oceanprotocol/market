@@ -129,7 +129,7 @@ export default function FormTrade({
           ) : (
             <div className={styles.alertWrap}>
               <Alert
-                text={content.warning}
+                text={content.warning.main}
                 state="info"
                 action={{
                   name: 'I understand',
