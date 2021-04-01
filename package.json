@@ -66,6 +66,7 @@
     "jwt-decode": "^3.1.2",
     "lodash.debounce": "^4.0.8",
     "lodash.omit": "^4.5.0",
+    "moment": "^2.29.1",
     "query-string": "^6.13.8",
     "react": "^17.0.1",
     "react-chartjs-2": "^2.11.1",
