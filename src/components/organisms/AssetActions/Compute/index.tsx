@@ -96,6 +96,7 @@ export default function Compute({
     setPreviousAlgorithmOrderId
   ] = useState<string>()
 
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   const {
     refetch: refetchFre,
     startPolling: startPollingFre,
@@ -112,6 +113,7 @@ export default function Compute({
     variables,
     skip: false
   })
+  /* eslint-enable @typescript-eslint/no-unused-vars */
 
   const isComputeButtonDisabled =
     isJobStarting === true || file === null || !ocean || !isBalanceSufficient
