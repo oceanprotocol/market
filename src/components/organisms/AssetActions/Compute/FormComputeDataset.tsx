@@ -76,7 +76,9 @@ export default function FormStartCompute({
     isValid,
     values
   }: FormikContextType<{ algorithm: string }> = useFormikContext()
-  const [totalPrice, setTotalPrice] = useState<string>(ddoPrice?.value)
+  const [totalPrice, setTotalPrice] = useState<string>(
+    ddoPrice?.value.toString()
+  )
 
   function getAlgorithmAsset(algorithmId: string): DDO {
     let assetDdo = null
@@ -111,13 +113,17 @@ export default function FormStartCompute({
       ))}
       <div className={styles.priceComponent}>
         <div>
-          <div className={styles.sign}></div>
-          <PriceUnit price={ddoPrice?.value} small className={styles.price} />
+          <div className={styles.sign} />
+          <PriceUnit
+            price={ddoPrice?.value.toString()}
+            small
+            className={styles.price}
+          />
         </div>
         <div className={styles.priceRow}>
           <div className={styles.sign}>+</div>
           <PriceUnit
-            price={algorithmPrice?.value}
+            price={algorithmPrice?.value.toString()}
             small
             className={styles.price}
           />
