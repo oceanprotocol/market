@@ -35,3 +35,28 @@
   margin-left: calc(var(--spacer) / 2);
   margin-right: calc(var(--spacer) / 2);
 }
+
+.priceComponent {
+  text-align: center;
+  width: 40%;
+  margin: auto;
+}
+
+.price {
+  width: 95%;
+  text-align: end;
+  margin-right: 0;
+}
+
+.priceRow {
+  width: 100%;
+  border-bottom-style: solid;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.sign {
+  display: inline-block;
+  width: 5%;
+  text-align: left;
+  margin-left: 0;
+}

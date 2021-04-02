@@ -109,10 +109,23 @@ export default function FormStartCompute({
           component={Input}
         />
       ))}
-      <div>
-        <PriceUnit price={ddoPrice?.value} small />
-        <PriceUnit price={algorithmPrice?.value} small />
-        <PriceUnit price={totalPrice} small />
+      <div className={styles.priceComponent}>
+        <div>
+          <div className={styles.sign}></div>
+          <PriceUnit price={ddoPrice?.value} small className={styles.price} />
+        </div>
+        <div className={styles.priceRow}>
+          <div className={styles.sign}>+</div>
+          <PriceUnit
+            price={algorithmPrice?.value}
+            small
+            className={styles.price}
+          />
+        </div>
+        <div>
+          <div className={styles.sign}>=</div>
+          <PriceUnit price={totalPrice} small className={styles.price} />
+        </div>
       </div>
       <ButtonBuy
         action="compute"
