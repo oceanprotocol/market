@@ -124,15 +124,20 @@ export default function Consume({
   }, [dtBalance])
 
   useEffect(() => {
-    setIsDisabled(
-      (!ocean ||
-        !isBalanceSufficient ||
-        typeof consumeStepText !== 'undefined' ||
-        pricingIsLoading ||
-        !isConsumable) &&
-        !hasPreviousOrder &&
-        !hasDatatoken
-    )
+    async function validateAsset() {
+      const isFileValid = await ocean.provider.fileinfo(ddo.id)
+      setIsDisabled(
+        (!ocean ||
+          !isBalanceSufficient ||
+          typeof consumeStepText !== 'undefined' ||
+          pricingIsLoading ||
+          !isConsumable) &&
+          !hasPreviousOrder &&
+          !hasDatatoken &&
+          !isFileValid
+      )
+    }
+    validateAsset()
   }, [
     ocean,
     hasPreviousOrder,
@@ -140,10 +145,12 @@ export default function Consume({
     consumeStepText,
     pricingIsLoading,
     isConsumable,
-    hasDatatoken
+    hasDatatoken,
+    ddo.id
   ])
 
   async function handleConsume() {
+    // TODO : check fileinfo
     !hasPreviousOrder && !hasDatatoken && (await buyDT('1', price))
     await consume(
       ddo.id,
