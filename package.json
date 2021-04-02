@@ -135,7 +135,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/oceanprotocol/market"
+    "url": "git+https://github.com/oceanprotocol/market.git"
   },
   "engines": {
     "node": ">=12"
@@ -145,5 +145,14 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "bugs": {
+    "url": "https://github.com/oceanprotocol/market/issues"
+  },
+  "main": "apollo.config.js",
+  "directories": {
+    "test": "tests"
+  },
+  "keywords": [],
+  "author": ""
 }

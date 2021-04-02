@@ -5,11 +5,11 @@ import { useSiteMetadata } from '../hooks/useSiteMetadata'
 import Page from '../components/templates/Page'
 
 export default function PageGatsbyHome(props: PageProps): ReactElement {
-  const { siteTitle, siteTagline } = useSiteMetadata()
+  const { siteTagline } = useSiteMetadata() //siteTitle
 
   return (
     <Page
-      title={siteTitle}
+      title="deltaDAO Market" //{siteTitle}
       description={siteTagline}
       uri={props.uri}
       headerCenter
