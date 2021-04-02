@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { File as FileMetadata, DDO } from '@oceanprotocol/lib'
+import { File as FileMetadata, DDO, DID, Logger } from '@oceanprotocol/lib'
 import Button from '../../atoms/Button'
 import File from '../../atoms/File'
 import Price from '../../atoms/Price'
@@ -125,7 +125,16 @@ export default function Consume({
 
   useEffect(() => {
     async function validateAsset() {
-      const isFileValid = await ocean.provider.fileinfo(ddo.id)
+      let isFileValid: boolean
+      try {
+        const did = DID.parse(ddo.id)
+        const file = (await ocean.provider.fileinfo(did)) as any
+        isFileValid = file[0].valid
+      } catch (error) {
+        Logger.error(error)
+        isFileValid = false
+      }
+
       setIsDisabled(
         (!ocean ||
           !isBalanceSufficient ||
