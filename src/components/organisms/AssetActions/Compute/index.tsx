@@ -444,6 +444,8 @@ export default function Compute({
             dtBalance={dtBalance}
             stepText={pricingStepText || 'Starting Compute Job...'}
             datasetTimeout={datasetTimeout}
+            algorithmPrice={algorithmPrice}
+            ddoPrice={price}
           />
         </Formik>
       )}

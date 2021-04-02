@@ -1,12 +1,14 @@
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './FormComputeDataset.module.css'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import Input from '../../../atoms/Input'
 import { FormFieldProps } from '../../../../@types/Form'
 import { useStaticQuery, graphql } from 'gatsby'
-import { DDO } from '@oceanprotocol/lib'
+import { DDO, BestPrice } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import ButtonBuy from '../../../atoms/ButtonBuy'
+import Decimal from 'decimal.js'
+import PriceUnit from '../../../atoms/Price/PriceUnit'
 
 const contentQuery = graphql`
   query StartComputeDatasetQuery {
@@ -49,7 +51,9 @@ export default function FormStartCompute({
   dtSymbol,
   dtBalance,
   stepText,
-  datasetTimeout
+  datasetTimeout,
+  algorithmPrice,
+  ddoPrice
 }: {
   algorithms: AssetSelectionAsset[]
   ddoListAlgorithms: DDO[]
@@ -62,6 +66,8 @@ export default function FormStartCompute({
   dtBalance: string
   stepText: string
   datasetTimeout: string
+  algorithmPrice: BestPrice
+  ddoPrice: BestPrice
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
@@ -70,6 +76,7 @@ export default function FormStartCompute({
     isValid,
     values
   }: FormikContextType<{ algorithm: string }> = useFormikContext()
+  const [totalPrice, setTotalPrice] = useState<string>(ddoPrice?.value)
 
   function getAlgorithmAsset(algorithmId: string): DDO {
     let assetDdo = null
@@ -84,6 +91,14 @@ export default function FormStartCompute({
     setSelectedAlgorithm(getAlgorithmAsset(values.algorithm))
   }, [values.algorithm])
 
+  useEffect(() => {
+    if (!ddoPrice || !algorithmPrice) return
+    const totalValue = new Decimal(ddoPrice.value).add(
+      new Decimal(algorithmPrice.value)
+    )
+    setTotalPrice(totalValue.toString())
+  }, [ddoPrice, algorithmPrice])
+
   return (
     <Form className={styles.form}>
       {content.form.data.map((field: FormFieldProps) => (
@@ -94,7 +109,11 @@ export default function FormStartCompute({
           component={Input}
         />
       ))}
-
+      <div>
+        <PriceUnit price={ddoPrice?.value} small />
+        <PriceUnit price={algorithmPrice?.value} small />
+        <PriceUnit price={totalPrice} small />
+      </div>
       <ButtonBuy
         action="compute"
         disabled={isComputeButtonDisabled || !isValid}
