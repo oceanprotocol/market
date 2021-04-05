@@ -136,14 +136,14 @@ export default function Consume({
       }
 
       setIsDisabled(
-        (!ocean ||
-          !isBalanceSufficient ||
-          typeof consumeStepText !== 'undefined' ||
-          pricingIsLoading ||
-          !isConsumable) &&
-          !hasPreviousOrder &&
-          !hasDatatoken &&
-          !isFileValid
+        !isFileValid ||
+          ((!ocean ||
+            !isBalanceSufficient ||
+            typeof consumeStepText !== 'undefined' ||
+            pricingIsLoading ||
+            !isConsumable) &&
+            !hasPreviousOrder &&
+            !hasDatatoken)
       )
     }
     validateAsset()
@@ -159,16 +159,30 @@ export default function Consume({
   ])
 
   async function handleConsume() {
-    // TODO : check fileinfo
-    !hasPreviousOrder && !hasDatatoken && (await buyDT('1', price))
-    await consume(
-      ddo.id,
-      ddo.dataToken,
-      'access',
-      marketFeeAddress,
-      previousOrderId
-    )
-    setHasPreviousOrder(true)
+    let isFileValid: boolean
+    try {
+      const did = DID.parse(ddo.id)
+      const file = (await ocean.provider.fileinfo(did)) as any
+      isFileValid = file[0].valid
+    } catch (error) {
+      Logger.error(error)
+      isFileValid = false
+    }
+
+    if (isFileValid) {
+      !hasPreviousOrder && !hasDatatoken && (await buyDT('1', price))
+      await consume(
+        ddo.id,
+        ddo.dataToken,
+        'access',
+        marketFeeAddress,
+        previousOrderId
+      )
+      setHasPreviousOrder(true)
+    } else {
+      setIsDisabled(true)
+      toast.error('Dataset file endpoints is unavailable for consume.')
+    }
   }
 
   // Output errors in UI
