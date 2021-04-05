@@ -90,6 +90,7 @@ export default function Compute({
   const [hasPreviousAlgorithmOrder, setHasPreviousAlgorithmOrder] = useState(
     false
   )
+  const [algorithmDTBalance, setalgorithmDTBalance] = useState<string>()
   const [algorithmPrice, setAlgorithmPrice] = useState<BestPrice>()
   const [variables, setVariables] = useState({})
   const [
@@ -97,6 +98,7 @@ export default function Compute({
     setPreviousAlgorithmOrderId
   ] = useState<string>()
   const [datasetTimeout, setDatasetTimeout] = useState<string>()
+  const [algorithmTimeout, setAlgorithmTimeout] = useState<string>()
 
   /* eslint-disable @typescript-eslint/no-unused-vars */
   const {
@@ -138,6 +140,7 @@ export default function Compute({
       asset.dataToken,
       accountId
     )
+    setalgorithmDTBalance(AssetDtBalance)
     setHasAlgoAssetDatatoken(Number(AssetDtBalance) >= 1)
   }
 
@@ -264,6 +267,10 @@ export default function Compute({
     }
     checkAssetDTBalance(selectedAlgorithmAsset)
     initMetadata(selectedAlgorithmAsset)
+    const { timeout } = (
+      ddo.findServiceByType('access') || ddo.findServiceByType('compute')
+    ).attributes.main
+    setAlgorithmTimeout(secondsToString(timeout))
   }, [selectedAlgorithmAsset, ocean, accountId, hasPreviousAlgorithmOrder])
 
   // Output errors in toast UI
@@ -436,14 +443,21 @@ export default function Compute({
             setSelectedAlgorithm={setSelectedAlgorithmAsset}
             isLoading={isJobStarting}
             isComputeButtonDisabled={isComputeButtonDisabled}
-            hasPreviousOrder={
-              hasPreviousDatasetOrder || hasPreviousAlgorithmOrder
-            }
+            hasPreviousOrder={hasPreviousDatasetOrder}
             hasDatatoken={hasDatatoken}
             dtSymbol={ddo.dataTokenInfo?.symbol}
             dtBalance={dtBalance}
+            assetType={type}
+            assetTimeout={datasetTimeout}
+            hasPreviousOrderSelectedComputeAsset={hasPreviousAlgorithmOrder}
+            hasDatatokenSelectedComputeAsset={hasAlgoAssetDatatoken}
+            dtSymbolSelectedComputeAsset={
+              selectedAlgorithmAsset?.dataTokenInfo?.symbol
+            }
+            dtBalanceSelectedComputeAsset={algorithmDTBalance}
+            selectedComputeAssetType="algorithm"
+            selectedComputeAssetTimeout={algorithmTimeout}
             stepText={pricingStepText || 'Starting Compute Job...'}
-            datasetTimeout={datasetTimeout}
             algorithmPrice={algorithmPrice}
             ddoPrice={price}
           />

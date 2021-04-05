@@ -9,6 +9,7 @@ import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelectio
 import ButtonBuy from '../../../atoms/ButtonBuy'
 import Decimal from 'decimal.js'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
+import ddo from '../../../../../tests/unit/__fixtures__/ddo'
 
 const contentQuery = graphql`
   query StartComputeDatasetQuery {
@@ -50,8 +51,15 @@ export default function FormStartCompute({
   hasDatatoken,
   dtSymbol,
   dtBalance,
+  assetType,
+  assetTimeout,
+  hasPreviousOrderSelectedComputeAsset,
+  hasDatatokenSelectedComputeAsset,
+  dtSymbolSelectedComputeAsset,
+  dtBalanceSelectedComputeAsset,
+  selectedComputeAssetType,
+  selectedComputeAssetTimeout,
   stepText,
-  datasetTimeout,
   algorithmPrice,
   ddoPrice
 }: {
@@ -64,8 +72,15 @@ export default function FormStartCompute({
   hasDatatoken: boolean
   dtSymbol: string
   dtBalance: string
+  assetType: string
+  assetTimeout: string
+  hasPreviousOrderSelectedComputeAsset?: boolean
+  hasDatatokenSelectedComputeAsset?: boolean
+  dtSymbolSelectedComputeAsset?: string
+  dtBalanceSelectedComputeAsset?: string
+  selectedComputeAssetType?: string
+  selectedComputeAssetTimeout?: string
   stepText: string
-  datasetTimeout: string
   algorithmPrice: BestPrice
   ddoPrice: BestPrice
 }): ReactElement {
@@ -140,10 +155,19 @@ export default function FormStartCompute({
         hasDatatoken={hasDatatoken}
         dtSymbol={dtSymbol}
         dtBalance={dtBalance}
+        assetTimeout={assetTimeout}
+        assetType={assetType}
+        hasPreviousOrderSelectedComputeAsset={
+          hasPreviousOrderSelectedComputeAsset
+        }
+        hasDatatokenSelectedComputeAsset={hasDatatokenSelectedComputeAsset}
+        dtSymbolSelectedComputeAsset={dtSymbolSelectedComputeAsset}
+        dtBalanceSelectedComputeAsset={dtBalanceSelectedComputeAsset}
+        selectedComputeAssetType={selectedComputeAssetType}
+        selectedComputeAssetTimeout={selectedComputeAssetTimeout}
         stepText={stepText}
         isLoading={isLoading}
         type="submit"
-        assetTimeout={datasetTimeout}
       />
     </Form>
   )

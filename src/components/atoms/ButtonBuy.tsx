@@ -10,31 +10,74 @@ interface ButtonBuyProps {
   hasDatatoken: boolean
   dtSymbol: string
   dtBalance: string
-  isLoading: boolean
+  assetType: string
   assetTimeout: string
+  hasPreviousOrderSelectedComputeAsset?: boolean
+  hasDatatokenSelectedComputeAsset?: boolean
+  dtSymbolSelectedComputeAsset?: string
+  dtBalanceSelectedComputeAsset?: string
+  selectedComputeAssetType?: string
+  selectedComputeAssetTimeout?: string
+  isLoading: boolean
   onClick?: (e: FormEvent<HTMLButtonElement>) => void
   stepText?: string
   type?: 'submit'
 }
 
-function getHelpText(
-  token: {
-    dtBalance: string
-    dtSymbol: string
-  },
+function getConsumeHelpText(
+  dtBalance: string,
+  dtSymbol: string,
   hasDatatoken: boolean,
   hasPreviousOrder: boolean,
-  timeout: string
+  timeout: string,
+  assetType: string
 ) {
-  const { dtBalance, dtSymbol } = token
   const assetTimeout = timeout === 'Forever' ? '' : ` for ${timeout}`
   const text = hasPreviousOrder
-    ? `You bought this data set already allowing you to use it without paying again${assetTimeout}.`
+    ? `You bought this ${assetType} already allowing you to use it without paying again${assetTimeout}.`
     : hasDatatoken
     ? `You own ${dtBalance} ${dtSymbol} allowing you to use this data set by spending 1 ${dtSymbol}, but without paying OCEAN again.`
-    : `For using this data set, you will buy 1 ${dtSymbol} and immediately spend it back to the publisher and pool.`
+    : `For using this ${assetType}, you will buy 1 ${dtSymbol} and immediately spend it back to the publisher and pool.`
 
   return text
+}
+
+function getComputeAssetHelpText(
+  hasPreviousOrder: boolean,
+  hasDatatoken: boolean,
+  dtSymbol: string,
+  dtBalance: string,
+  assetType: string,
+  assetTimeout: string,
+  hasPreviousOrderSelectedComputeAsset?: boolean,
+  hasDatatokenSelectedComputeAsset?: boolean,
+  dtSymbolSelectedComputeAsset?: string,
+  dtBalanceSelectedComputeAsset?: string,
+  selectedComputeAssetType?: string,
+  selectedComputeAssetTimeout?: string
+) {
+  const computeAssetHelpText = getConsumeHelpText(
+    dtBalance,
+    dtSymbol,
+    hasDatatoken,
+    hasPreviousOrder,
+    assetTimeout,
+    assetType
+  )
+  const timeout =
+    selectedComputeAssetTimeout === 'Forever'
+      ? ''
+      : ` for ${selectedComputeAssetTimeout}`
+  const text =
+    !dtSymbolSelectedComputeAsset && !dtBalanceSelectedComputeAsset
+      ? 'Please choose an algorithm to run you compute job'
+      : hasPreviousOrderSelectedComputeAsset
+      ? `You also bought the selected ${selectedComputeAssetType} already allowing you to use it without paying again${timeout}.`
+      : hasDatatokenSelectedComputeAsset
+      ? `You also own ${dtBalanceSelectedComputeAsset} ${dtSymbolSelectedComputeAsset} allowing you to use the selected ${selectedComputeAssetType} by spending 1 ${dtSymbolSelectedComputeAsset}, but without paying OCEAN again.`
+      : `To be able to start compute using this ${selectedComputeAssetType}, you will buy 1 ${dtSymbolSelectedComputeAsset} and immediately spend it back to the publisher and pool.`
+
+  return `${computeAssetHelpText} ${text}`
 }
 
 export default function ButtonBuy({
@@ -44,8 +87,15 @@ export default function ButtonBuy({
   hasDatatoken,
   dtSymbol,
   dtBalance,
-  onClick,
+  assetType,
   assetTimeout,
+  hasPreviousOrderSelectedComputeAsset,
+  hasDatatokenSelectedComputeAsset,
+  dtSymbolSelectedComputeAsset,
+  dtBalanceSelectedComputeAsset,
+  selectedComputeAssetType,
+  selectedComputeAssetTimeout,
+  onClick,
   stepText,
   isLoading,
   type
@@ -55,7 +105,7 @@ export default function ButtonBuy({
       ? hasPreviousOrder
         ? 'Download'
         : `Buy ${assetTimeout === 'Forever' ? '' : ` for ${assetTimeout}`}`
-      : hasPreviousOrder
+      : hasPreviousOrder && hasPreviousOrderSelectedComputeAsset
       ? 'Start Compute Job'
       : `Buy Compute Job ${
           assetTimeout === 'Forever' ? '' : ` for ${assetTimeout}`
@@ -76,12 +126,29 @@ export default function ButtonBuy({
             {buttonText}
           </Button>
           <div className={styles.help}>
-            {getHelpText(
-              { dtBalance, dtSymbol },
-              hasDatatoken,
-              hasPreviousOrder,
-              assetTimeout
-            )}
+            {action === 'download'
+              ? getConsumeHelpText(
+                  dtBalance,
+                  dtSymbol,
+                  hasDatatoken,
+                  hasPreviousOrder,
+                  assetTimeout,
+                  assetType
+                )
+              : getComputeAssetHelpText(
+                  hasPreviousOrder,
+                  hasDatatoken,
+                  dtSymbol,
+                  dtBalance,
+                  assetType,
+                  assetTimeout,
+                  hasPreviousOrderSelectedComputeAsset,
+                  hasDatatokenSelectedComputeAsset,
+                  dtSymbolSelectedComputeAsset,
+                  dtBalanceSelectedComputeAsset,
+                  selectedComputeAssetType,
+                  selectedComputeAssetTimeout
+                )}
           </div>
         </>
       )}
