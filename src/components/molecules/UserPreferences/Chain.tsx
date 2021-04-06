@@ -1,4 +1,4 @@
-import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
+import { ConfigHelperConfig } from '@oceanprotocol/lib'
 import React, { ReactElement } from 'react'
 import { useOcean } from '../../../providers/Ocean'
 import { useWeb3 } from '../../../providers/Web3'
