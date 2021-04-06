@@ -1,0 +1,11 @@
+:root {
+  --brand-pink: #00aeef;
+  --brand-purple: #1c75bc;
+  --brand-violet: #1485ca;
+
+  --brand-black: #000022;
+
+  --color-primary: #00aeef;
+
+  --brand-gradient: linear-gradient(to right bottom, #1c75bc, #00aeef);
+}
