@@ -15,6 +15,7 @@ export interface AssetSelectionAsset {
   name: string
   price: string
   checked: boolean
+  symbol: string
 }
 
 function Empty() {
@@ -99,7 +100,7 @@ export default function AssetSelection({
                   </h3>
 
                   <Dotdotdot clamp={1} tagName="code" className={styles.did}>
-                    {asset.did}
+                    {asset.symbol} | {asset.did}
                   </Dotdotdot>
                 </label>
 
