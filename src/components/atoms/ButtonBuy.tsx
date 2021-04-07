@@ -68,14 +68,15 @@ function getComputeAssetHelpText(
     selectedComputeAssetTimeout === 'Forever'
       ? ''
       : ` for ${selectedComputeAssetTimeout}`
+
   const text =
     !dtSymbolSelectedComputeAsset && !dtBalanceSelectedComputeAsset
-      ? 'Please choose an algorithm to run you compute job'
+      ? ''
       : hasPreviousOrderSelectedComputeAsset
-      ? `You also bought the selected ${selectedComputeAssetType} already allowing you to use it without paying again${timeout}.`
+      ? `You already bought the selected ${selectedComputeAssetType}, allowing you to use it without paying again${timeout}.`
       : hasDatatokenSelectedComputeAsset
       ? `You also own ${dtBalanceSelectedComputeAsset} ${dtSymbolSelectedComputeAsset} allowing you to use the selected ${selectedComputeAssetType} by spending 1 ${dtSymbolSelectedComputeAsset}, but without paying OCEAN again.`
-      : `To be able to start compute using this ${selectedComputeAssetType}, you will buy 1 ${dtSymbolSelectedComputeAsset} and immediately spend it back to the publisher and pool.`
+      : `Additionally, you will buy 1 ${dtSymbolSelectedComputeAsset} for the ${selectedComputeAssetType} and immediately spend it back to the publisher and pool.`
 
   return `${computeAssetHelpText} ${text}`
 }
