@@ -5,7 +5,7 @@ import Button from '../../atoms/Button'
 import ComputeDetails from './ComputeDetails'
 import { ComputeJobMetaData } from '../../../@types/ComputeJobMetaData'
 import { Link } from 'gatsby'
-import { Logger } from '@oceanprotocol/lib'
+import { DDO, Logger, ServiceCompute } from '@oceanprotocol/lib'
 import Dotdotdot from 'react-dotdotdot'
 import Table from '../../atoms/Table'
 import { useOcean } from '../../../providers/Ocean'
@@ -24,6 +24,7 @@ const getComputeOrders = gql`
       where: { payer: $user }
     ) {
       id
+      serviceId
       datatokenId {
         address
       }
@@ -57,7 +58,11 @@ const columns = [
   {
     name: 'Data Set',
     selector: function getAssetRow(row: ComputeAsset) {
-      return <AssetTitle did={row.did} />
+      return (
+        <Dotdotdot clamp={2}>
+          <Link to={`/asset/${row.did}`}>{row.assetName}</Link>
+        </Dotdotdot>
+      )
     }
   },
   {
@@ -91,9 +96,7 @@ async function getAssetMetadata(
   metadataCacheUri: string,
   cancelToken: CancelToken,
   timestamps: number[]
-): Promise<ComputeAsset[]> {
-  const assetList = []
-
+): Promise<DDO[]> {
   const queryDid = {
     page: 1,
     offset: 100,
@@ -107,23 +110,7 @@ async function getAssetMetadata(
 
   const result = await queryMetadata(queryDid, metadataCacheUri, cancelToken)
 
-  for (let i = 0; i < result.results.length; i++) {
-    assetList.push({
-      did: result.results[i].id,
-      assetName: result.results[i].service[0].attributes.main.name,
-      type: result.results[i].service[1].type,
-      timestamp: timestamps[i],
-      jobId: undefined,
-      dateCreated: undefined,
-      dateFinished: undefined,
-      status: undefined,
-      statusText: undefined,
-      algorithmLogUrl: undefined,
-      resultsUrls: undefined
-    })
-  }
-
-  return assetList
+  return result.results
 }
 
 interface ComputeAsset extends ComputeJobMetaData {
@@ -155,6 +142,7 @@ export default function ComputeJobs(): ReactElement {
 
       setIsLoading(true)
 
+      console.time('TOTAL')
       const dtList = []
       const dtTimestamps = []
       for (let i = 0; i < data.tokenOrders.length; i++) {
@@ -170,49 +158,68 @@ export default function ComputeJobs(): ReactElement {
       try {
         const source = axios.CancelToken.source()
         const jobs: ComputeAsset[] = []
-        // const assets = await getAssetMetadata(
-        //   queryDtList,
-        //   config.metadataCacheUri,
-        //   source.token,
-        //   dtTimestamps
-        // )
-        // setAssets(assets)
+        const assets = await getAssetMetadata(
+          queryDtList,
+          config.metadataCacheUri,
+          source.token,
+          dtTimestamps
+        )
+        const providers: string[] = []
 
+        // let providers = [...new Set(assets.map((item) => item.pro))]
         for (let i = 0; i < data.tokenOrders.length; i++) {
           try {
             const did = web3.utils
               .toChecksumAddress(data.tokenOrders[i].datatokenId.address)
               .replace('0x', 'did:op:')
+
+            const ddo = assets.filter((x) => x.id === did)[0]
+
+            if (!ddo) continue
+            console.log('did', did, ddo)
+            const service = ddo.service.filter(
+              (x) => x.index === data.tokenOrders[i].serviceId
+            )[0]
+
+            if (!service || service.type !== 'compute') continue
+            const { serviceEndpoint } = service
+            const wasProviderQueried =
+              providers.filter((x) => x === serviceEndpoint).length > 0
+            console.log('was provider', providers, wasProviderQueried)
+            if (wasProviderQueried) continue
             console.log('status for', did, data.tokenOrders[i].tx)
+            console.time('marketCStatus')
+            // const computeJob = await ocean.compute.status(
+            //   account,
+            //   did,
+            //   undefined,
+            //   service as ServiceCompute,
+            //   undefined,
+            //   data.tokenOrders[i].tx,
+            //   false
+            // )
             const computeJob = await ocean.compute.status(
               account,
-              did,
               undefined,
-              data.tokenOrders[i].tx,
+              undefined,
+              undefined,
+              undefined,
+              undefined,
               false
             )
+            console.timeLog('marketCStatus', computeJob)
             console.log('status returned', computeJob)
 
+            const serviceMetadata = ddo.service.filter(
+              (x: any) => x.type === 'metadata'
+            )[0]
             computeJob.forEach((job) => {
-              // jobs.push({
-              //   did: did,
-              //   jobId: job.jobId,
-              //   dateCreated: job.dateCreated,
-              //   dateFinished: job.dateFinished,
-              //   assetName: '',
-              //   status: job.status,
-              //   statusText: job.statusText,
-              //   algorithmLogUrl: '',
-              //   resultsUrls: [],
-              //   timestamp: data.tokenOrders[i].timestamp,
-              //   type: ''
-              // })
               const compJob = {
                 did: did,
                 jobId: job.jobId,
                 dateCreated: job.dateCreated,
                 dateFinished: job.dateFinished,
-                assetName: '',
+                assetName: serviceMetadata.attributes.main.name,
                 status: job.status,
                 statusText: job.statusText,
                 algorithmLogUrl: '',
@@ -225,10 +232,16 @@ export default function ComputeJobs(): ReactElement {
               setIsLoading(false)
             })
 
+            providers.push(serviceEndpoint)
             // eslint-disable-next-line no-empty
-          } catch {}
+          } catch (err) {
+            console.log(err)
+          } finally {
+            console.timeEnd('marketCStatus')
+          }
         }
         console.log('jobs', jobs)
+        console.timeEnd('TOTAL')
         // setJobs(jobs)
         // assets.forEach(async (asset, index) => {
         //   if (asset.type !== 'compute') return
