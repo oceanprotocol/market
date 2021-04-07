@@ -1,7 +1,6 @@
 .form {
   padding: 0;
   border: none;
-  margin-top: -0.8rem;
 }
 
 .form > div > label,
@@ -29,11 +28,12 @@
   display: grid;
   gap: var(--spacer);
   grid-template-columns: 1fr 1fr;
-  margin-top: -1.25rem;
+  margin-top: -1rem;
+  margin-bottom: calc(var(--spacer) / 1.5);
   padding-left: calc(var(--spacer) * 1.5);
   padding-right: calc(var(--spacer) / 4);
   border-bottom: 1px solid var(--border-color);
-  padding-bottom: calc(var(--spacer) / 2.25);
+  padding-bottom: calc(var(--spacer) / 2);
 }
 
 .priceComponent h3 {

@@ -76,7 +76,7 @@ function getComputeAssetHelpText(
       ? `You already bought the selected ${selectedComputeAssetType}, allowing you to use it without paying again${timeout}.`
       : hasDatatokenSelectedComputeAsset
       ? `You also own ${dtBalanceSelectedComputeAsset} ${dtSymbolSelectedComputeAsset} allowing you to use the selected ${selectedComputeAssetType} by spending 1 ${dtSymbolSelectedComputeAsset}, but without paying OCEAN again.`
-      : `Additionally, you will buy 1 ${dtSymbolSelectedComputeAsset} for the ${selectedComputeAssetType} and immediately spend it back to the publisher and pool.`
+      : `Additionally, you will buy 1 ${dtSymbolSelectedComputeAsset} for the ${selectedComputeAssetType} and immediately spend it back to its publisher and pool.`
 
   return `${computeAssetHelpText} ${text}`
 }
