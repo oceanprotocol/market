@@ -50,7 +50,7 @@ export default function AssetSelection({
         type="search"
         name="search"
         size="small"
-        placeholder="Search by title or DID..."
+        placeholder="Search by title, datatoken, or DID..."
         value={searchValue}
         onChange={handleSearchInput}
         className={styles.search}
@@ -66,7 +66,8 @@ export default function AssetSelection({
             .filter((asset: AssetSelectionAsset) =>
               searchValue !== ''
                 ? asset.name.toLowerCase().includes(searchValue) ||
-                  asset.did.includes(searchValue)
+                  asset.did.includes(searchValue) ||
+                  asset.symbol.includes(searchValue)
                 : asset
             )
             .map((asset: AssetSelectionAsset) => (
