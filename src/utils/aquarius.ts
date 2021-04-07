@@ -114,9 +114,11 @@ export async function transformDDOToAssetSelection(
   const source = axios.CancelToken.source()
   const didList: string[] = []
   const priceList: any = {}
+  const symbolList: any = {}
   ddoList.forEach((ddo: DDO) => {
     didList.push(ddo.id)
     priceList[ddo.id] = ddo.price.value
+    symbolList[ddo.id] = ddo.dataTokenInfo.symbol
   })
   const ddoNames = await getAssetsNames(didList, metadataCacheUri, source.token)
   const algorithmList: AssetSelectionAsset[] = []
@@ -132,13 +134,15 @@ export async function transformDDOToAssetSelection(
           did: did,
           name: ddoNames[did],
           price: priceList[did],
-          checked: selected
+          checked: selected,
+          symbol: symbolList[did]
         })
       : algorithmList.push({
           did: did,
           name: ddoNames[did],
           price: priceList[did],
-          checked: selected
+          checked: selected,
+          symbol: symbolList[did]
         })
   })
   return algorithmList
