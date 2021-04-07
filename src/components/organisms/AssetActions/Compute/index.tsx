@@ -422,7 +422,7 @@ export default function Compute({
     <>
       <div className={styles.info}>
         <File file={file} small />
-        <Price price={(ddo as DDO).price} conversion />
+        <Price price={price} conversion />
       </div>
 
       {type === 'algorithm' ? (

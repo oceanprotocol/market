@@ -108,9 +108,7 @@ export default function ButtonBuy({
         : `Buy ${assetTimeout === 'Forever' ? '' : ` for ${assetTimeout}`}`
       : hasPreviousOrder && hasPreviousOrderSelectedComputeAsset
       ? 'Start Compute Job'
-      : `Buy Compute Job ${
-          assetTimeout === 'Forever' ? '' : ` for ${assetTimeout}`
-        }`
+      : `Buy Compute Job`
 
   return (
     <div className={styles.actions}>
