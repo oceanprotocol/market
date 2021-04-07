@@ -48,6 +48,7 @@
 }
 
 .price {
+  white-space: pre;
   width: 95%;
   text-align: end;
   margin-right: 0;

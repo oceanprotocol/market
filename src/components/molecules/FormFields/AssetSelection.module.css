@@ -92,8 +92,12 @@ div [class*='loaderWrap'] {
 
 .price {
   white-space: pre;
-  font-size: var(--font-size-small) !important;
+  font-size: calc(var(--font-size-small) / 1.1) !important;
   padding-left: calc(var(--spacer) / 4);
+}
+
+.price [class*='symbol'] {
+  font-size: calc(var(--font-size-small) / 1.2) !important;
 }
 
 .search {
