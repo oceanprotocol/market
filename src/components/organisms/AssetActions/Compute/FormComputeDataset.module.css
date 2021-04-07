@@ -5,7 +5,7 @@
 }
 
 .form > div > label,
-[class*='ButtonBuy-module--actions'] {
+.form [class*='ButtonBuy-module--actions'] {
   text-align: center;
 }
 

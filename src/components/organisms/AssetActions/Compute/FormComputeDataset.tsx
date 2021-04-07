@@ -9,7 +9,6 @@ import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelectio
 import ButtonBuy from '../../../atoms/ButtonBuy'
 import Decimal from 'decimal.js'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
-import ddo from '../../../../../tests/unit/__fixtures__/ddo'
 
 const contentQuery = graphql`
   query StartComputeDatasetQuery {
