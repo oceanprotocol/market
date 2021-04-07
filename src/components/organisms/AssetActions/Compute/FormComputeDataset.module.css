@@ -14,7 +14,8 @@
   margin-left: -1rem;
 }
 
-.form [class*='AssetSelection-module--selection'] {
+.form [class*='AssetSelection-module--selection'],
+.priceComponent {
   margin-left: -2rem;
   margin-right: -2rem;
   border-top-left-radius: 0;
@@ -25,21 +26,37 @@
 }
 
 .priceComponent {
-  text-align: center;
-  width: 40%;
-  margin: auto;
+  display: grid;
+  gap: var(--spacer);
+  grid-template-columns: 1fr 1fr;
+  margin-top: -1.25rem;
+  padding-left: calc(var(--spacer) * 1.5);
+  padding-right: calc(var(--spacer) / 4);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: calc(var(--spacer) / 2.25);
+}
+
+.priceComponent h3 {
+  font-size: var(--font-size-base);
+  margin: 0;
+  align-self: flex-end;
+  color: var(--color-secondary);
+}
+
+.calculation {
+  line-height: 1.4;
 }
 
 .price {
   width: 95%;
   text-align: end;
   margin-right: 0;
+  font-size: var(--font-size-small) !important;
 }
 
 .priceRow {
   width: 100%;
-  border-bottom-style: solid;
-  border-bottom: 2px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .sign {
@@ -47,4 +64,5 @@
   width: 5%;
   text-align: left;
   margin-left: 0;
+  color: var(--color-secondary);
 }

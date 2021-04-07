@@ -4,7 +4,7 @@ import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import Input from '../../../atoms/Input'
 import { FormFieldProps } from '../../../../@types/Form'
 import { useStaticQuery, graphql } from 'gatsby'
-import { DDO, BestPrice } from '@oceanprotocol/lib'
+import { DDO, BestPrice, Logger } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import ButtonBuy from '../../../atoms/ButtonBuy'
 import Decimal from 'decimal.js'
@@ -126,25 +126,28 @@ export default function FormStartCompute({
         />
       ))}
       <div className={styles.priceComponent}>
-        <div>
-          <div className={styles.sign} />
-          <PriceUnit
-            price={ddoPrice?.value.toString()}
-            small
-            className={styles.price}
-          />
-        </div>
-        <div className={styles.priceRow}>
-          <div className={styles.sign}>+</div>
-          <PriceUnit
-            price={algorithmPrice?.value.toString()}
-            small
-            className={styles.price}
-          />
-        </div>
-        <div>
-          <div className={styles.sign}>=</div>
-          <PriceUnit price={totalPrice} small className={styles.price} />
+        <h3>You will pay</h3>
+        <div className={styles.calculation}>
+          {/* <div>
+            <div className={styles.sign} />
+            <PriceUnit
+              price={ddoPrice?.value.toString()}
+              small
+              className={styles.price}
+            />
+          </div>
+          <div className={styles.priceRow}>
+            <div className={styles.sign}>+</div>
+            <PriceUnit
+              price={algorithmPrice?.value.toString()}
+              small
+              className={styles.price}
+            />
+          </div> */}
+          <div>
+            {/* <div className={styles.sign}>=</div> */}
+            <PriceUnit price={totalPrice} small className={styles.price} />
+          </div>
         </div>
       </div>
       <ButtonBuy
