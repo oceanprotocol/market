@@ -24,18 +24,6 @@
   padding: 0;
 }
 
-.actions {
-  display: flex;
-  justify-content: center;
-  max-height: 100%;
-}
-
-.actions a,
-.actions button {
-  margin-left: calc(var(--spacer) / 2);
-  margin-right: calc(var(--spacer) / 2);
-}
-
 .priceComponent {
   text-align: center;
   width: 40%;

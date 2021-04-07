@@ -10,20 +10,7 @@
   padding: 0 var(--spacer) calc(var(--spacer) / 2) var(--spacer);
 }
 
-.filewrapper {
-  flex-shrink: 0;
-}
-
-.actions {
-  margin-top: var(--spacer);
-  text-align: center;
-}
-
 .feedback {
   width: 100%;
   margin-top: calc(var(--spacer) / 2);
-}
-
-.help {
-  composes: help from '../index.module.css';
 }
