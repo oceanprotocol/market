@@ -65,9 +65,11 @@ export default function AssetSelection({
           assets
             .filter((asset: AssetSelectionAsset) =>
               searchValue !== ''
-                ? asset.name.toLowerCase().includes(searchValue) ||
-                  asset.did.includes(searchValue) ||
-                  asset.symbol.includes(searchValue)
+                ? asset.name
+                    .toLowerCase()
+                    .includes(searchValue.toLowerCase()) ||
+                  asset.did.toLowerCase().includes(searchValue.toLowerCase()) ||
+                  asset.symbol.toLowerCase().includes(searchValue.toLowerCase())
                 : asset
             )
             .map((asset: AssetSelectionAsset) => (
