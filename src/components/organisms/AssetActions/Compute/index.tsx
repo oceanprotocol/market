@@ -62,12 +62,10 @@ const poolQuery = gql`
 `
 
 export default function Compute({
-  ddo,
   isBalanceSufficient,
   dtBalance,
   file
 }: {
-  ddo: DDO
   isBalanceSufficient: boolean
   dtBalance: string
   file: FileMetadata
@@ -75,7 +73,7 @@ export default function Compute({
   const { marketFeeAddress } = useSiteMetadata()
   const { accountId } = useWeb3()
   const { ocean, account, config } = useOcean()
-  const { price, type } = useAsset()
+  const { price, type, ddo } = useAsset()
   const { buyDT, pricingError, pricingStepText } = usePricing()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
@@ -445,7 +443,6 @@ export default function Compute({
             isComputeButtonDisabled={isComputeButtonDisabled}
             hasPreviousOrder={hasPreviousDatasetOrder}
             hasDatatoken={hasDatatoken}
-            dtSymbol={ddo.dataTokenInfo?.symbol}
             dtBalance={dtBalance}
             assetType={type}
             assetTimeout={datasetTimeout}
@@ -459,7 +456,6 @@ export default function Compute({
             selectedComputeAssetTimeout={algorithmTimeout}
             stepText={pricingStepText || 'Starting Compute Job...'}
             algorithmPrice={algorithmPrice}
-            ddoPrice={price}
           />
         </Formik>
       )}

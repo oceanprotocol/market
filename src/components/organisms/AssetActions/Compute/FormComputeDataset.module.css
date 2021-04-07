@@ -13,8 +13,7 @@
   margin-left: -1rem;
 }
 
-.form [class*='AssetSelection-module--selection'],
-.priceComponent {
+.form [class*='AssetSelection-module--selection'] {
   margin-left: -2rem;
   margin-right: -2rem;
   border-top-left-radius: 0;
@@ -22,65 +21,4 @@
   border-left: 0;
   border-right: 0;
   padding: 0;
-}
-
-.priceComponent {
-  display: grid;
-  gap: var(--spacer);
-  grid-template-columns: 1fr 1.6fr;
-  margin-top: -1rem;
-  margin-bottom: calc(var(--spacer) / 1.5);
-  padding-left: calc(var(--spacer) * 1.5);
-  padding-right: calc(var(--spacer) / 2);
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: calc(var(--spacer) / 3);
-}
-
-.priceComponent h3 {
-  font-size: var(--font-size-base);
-  margin: 0;
-  margin-top: calc(var(--spacer) / 5);
-  color: var(--color-secondary);
-}
-
-.calculation {
-  line-height: 1.3;
-}
-
-.timeout {
-  display: block;
-  text-align: right;
-  font-size: var(--font-size-mini);
-  color: var(--color-secondary);
-}
-
-.price {
-  white-space: pre;
-  width: 95%;
-  text-align: end;
-  margin-right: 0;
-}
-
-.price:not(.priceRow:last-child .price) {
-  font-size: var(--font-size-small) !important;
-}
-
-.priceRow {
-  width: 100%;
-  border-bottom: 1px solid var(--border-color);
-  padding-top: calc(var(--spacer) / 7);
-  padding-bottom: calc(var(--spacer) / 7);
-  display: flex;
-  justify-content: space-between;
-}
-
-.priceRow:last-child {
-  border-bottom: none;
-}
-
-.sign {
-  display: inline-block;
-  width: 5%;
-  text-align: left;
-  color: var(--color-secondary);
 }

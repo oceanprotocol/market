@@ -4,11 +4,11 @@ import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import Input from '../../../atoms/Input'
 import { FormFieldProps } from '../../../../@types/Form'
 import { useStaticQuery, graphql } from 'gatsby'
-import { DDO, BestPrice, Logger } from '@oceanprotocol/lib'
+import { DDO, BestPrice } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import ButtonBuy from '../../../atoms/ButtonBuy'
-import Decimal from 'decimal.js'
-import PriceUnit from '../../../atoms/Price/PriceUnit'
+import PriceOutput from './PriceOutput'
+import { useAsset } from '../../../../providers/Asset'
 
 const contentQuery = graphql`
   query StartComputeDatasetQuery {
@@ -48,7 +48,6 @@ export default function FormStartCompute({
   isComputeButtonDisabled,
   hasPreviousOrder,
   hasDatatoken,
-  dtSymbol,
   dtBalance,
   assetType,
   assetTimeout,
@@ -59,8 +58,7 @@ export default function FormStartCompute({
   selectedComputeAssetType,
   selectedComputeAssetTimeout,
   stepText,
-  algorithmPrice,
-  ddoPrice
+  algorithmPrice
 }: {
   algorithms: AssetSelectionAsset[]
   ddoListAlgorithms: DDO[]
@@ -69,7 +67,6 @@ export default function FormStartCompute({
   isComputeButtonDisabled: boolean
   hasPreviousOrder: boolean
   hasDatatoken: boolean
-  dtSymbol: string
   dtBalance: string
   assetType: string
   assetTimeout: string
@@ -81,7 +78,6 @@ export default function FormStartCompute({
   selectedComputeAssetTimeout?: string
   stepText: string
   algorithmPrice: BestPrice
-  ddoPrice: BestPrice
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
@@ -90,9 +86,8 @@ export default function FormStartCompute({
     isValid,
     values
   }: FormikContextType<{ algorithm: string }> = useFormikContext()
-  const [totalPrice, setTotalPrice] = useState<string>(
-    ddoPrice?.value.toString()
-  )
+  const { price, ddo } = useAsset()
+  const [totalPrice, setTotalPrice] = useState(price?.value)
 
   function getAlgorithmAsset(algorithmId: string): DDO {
     let assetDdo = null
@@ -111,16 +106,16 @@ export default function FormStartCompute({
   // Set price for calculation output
   //
   useEffect(() => {
-    if (!ddoPrice || !algorithmPrice) return
+    if (!price || !algorithmPrice) return
 
-    const priceDataset = hasPreviousOrder ? 0 : Number(ddoPrice.value)
+    const priceDataset = hasPreviousOrder ? 0 : Number(price.value)
     const priceAlgo = hasPreviousOrderSelectedComputeAsset
       ? 0
       : Number(algorithmPrice.value)
 
-    setTotalPrice(`${priceDataset + priceAlgo}`)
+    setTotalPrice(priceDataset + priceAlgo)
   }, [
-    ddoPrice,
+    price,
     algorithmPrice,
     hasPreviousOrder,
     hasPreviousOrderSelectedComputeAsset
@@ -136,55 +131,24 @@ export default function FormStartCompute({
           component={Input}
         />
       ))}
-      <div className={styles.priceComponent}>
-        <h3>You will pay</h3>
-        <div className={styles.calculation}>
-          <div className={styles.priceRow}>
-            <div />
-            <div>
-              <PriceUnit
-                price={hasPreviousOrder ? '0' : `${ddoPrice?.value}`}
-                small
-                className={styles.price}
-              />
-              <span className={styles.timeout}>
-                {assetTimeout !== 'Forever' &&
-                  !hasPreviousOrder &&
-                  `for ${assetTimeout}`}
-              </span>
-            </div>
-          </div>
-          <div className={styles.priceRow}>
-            <div className={styles.sign}>+</div>
-            <div>
-              <PriceUnit
-                price={
-                  hasPreviousOrderSelectedComputeAsset
-                    ? '0'
-                    : `${algorithmPrice?.value}`
-                }
-                small
-                className={styles.price}
-              />
-              <span className={styles.timeout}>
-                {selectedComputeAssetTimeout !== 'Forever' &&
-                  !hasPreviousOrderSelectedComputeAsset &&
-                  `for ${selectedComputeAssetTimeout}`}
-              </span>
-            </div>
-          </div>
-          <div className={styles.priceRow}>
-            <div className={styles.sign}>=</div>
-            <PriceUnit price={totalPrice} className={styles.price} small />
-          </div>
-        </div>
-      </div>
+
+      <PriceOutput
+        hasPreviousOrder={hasPreviousOrder}
+        assetTimeout={assetTimeout}
+        hasPreviousOrderSelectedComputeAsset={
+          hasPreviousOrderSelectedComputeAsset
+        }
+        selectedComputeAssetTimeout={selectedComputeAssetTimeout}
+        algorithmPrice={algorithmPrice}
+        totalPrice={totalPrice}
+      />
+
       <ButtonBuy
         action="compute"
         disabled={isComputeButtonDisabled || !isValid}
         hasPreviousOrder={hasPreviousOrder}
         hasDatatoken={hasDatatoken}
-        dtSymbol={dtSymbol}
+        dtSymbol={ddo.dataTokenInfo.symbol}
         dtBalance={dtBalance}
         assetTimeout={assetTimeout}
         assetType={assetType}
