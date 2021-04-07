@@ -17,7 +17,6 @@ interface ButtonBuyProps {
   dtSymbolSelectedComputeAsset?: string
   dtBalanceSelectedComputeAsset?: string
   selectedComputeAssetType?: string
-  selectedComputeAssetTimeout?: string
   isLoading: boolean
   onClick?: (e: FormEvent<HTMLButtonElement>) => void
   stepText?: string
@@ -29,12 +28,10 @@ function getConsumeHelpText(
   dtSymbol: string,
   hasDatatoken: boolean,
   hasPreviousOrder: boolean,
-  timeout: string,
   assetType: string
 ) {
-  const assetTimeout = timeout === 'Forever' ? '' : ` for ${timeout}`
   const text = hasPreviousOrder
-    ? `You bought this ${assetType} already allowing you to use it without paying again${assetTimeout}.`
+    ? `You bought this ${assetType} already allowing you to use it without paying again.`
     : hasDatatoken
     ? `You own ${dtBalance} ${dtSymbol} allowing you to use this data set by spending 1 ${dtSymbol}, but without paying OCEAN again.`
     : `For using this ${assetType}, you will buy 1 ${dtSymbol} and immediately spend it back to the publisher and pool.`
@@ -48,32 +45,24 @@ function getComputeAssetHelpText(
   dtSymbol: string,
   dtBalance: string,
   assetType: string,
-  assetTimeout: string,
   hasPreviousOrderSelectedComputeAsset?: boolean,
   hasDatatokenSelectedComputeAsset?: boolean,
   dtSymbolSelectedComputeAsset?: string,
   dtBalanceSelectedComputeAsset?: string,
-  selectedComputeAssetType?: string,
-  selectedComputeAssetTimeout?: string
+  selectedComputeAssetType?: string
 ) {
   const computeAssetHelpText = getConsumeHelpText(
     dtBalance,
     dtSymbol,
     hasDatatoken,
     hasPreviousOrder,
-    assetTimeout,
     assetType
   )
-  const timeout =
-    selectedComputeAssetTimeout === 'Forever'
-      ? ''
-      : ` for ${selectedComputeAssetTimeout}`
-
   const text =
     !dtSymbolSelectedComputeAsset && !dtBalanceSelectedComputeAsset
       ? ''
       : hasPreviousOrderSelectedComputeAsset
-      ? `You already bought the selected ${selectedComputeAssetType}, allowing you to use it without paying again${timeout}.`
+      ? `You already bought the selected ${selectedComputeAssetType}, allowing you to use it without paying again.`
       : hasDatatokenSelectedComputeAsset
       ? `You own ${dtBalanceSelectedComputeAsset} ${dtSymbolSelectedComputeAsset} allowing you to use the selected ${selectedComputeAssetType} by spending 1 ${dtSymbolSelectedComputeAsset}, but without paying OCEAN again.`
       : `Additionally, you will buy 1 ${dtSymbolSelectedComputeAsset} for the ${selectedComputeAssetType} and spend it back to its publisher and pool.`
@@ -95,7 +84,6 @@ export default function ButtonBuy({
   dtSymbolSelectedComputeAsset,
   dtBalanceSelectedComputeAsset,
   selectedComputeAssetType,
-  selectedComputeAssetTimeout,
   onClick,
   stepText,
   isLoading,
@@ -131,7 +119,6 @@ export default function ButtonBuy({
                   dtSymbol,
                   hasDatatoken,
                   hasPreviousOrder,
-                  assetTimeout,
                   assetType
                 )
               : getComputeAssetHelpText(
@@ -140,13 +127,11 @@ export default function ButtonBuy({
                   dtSymbol,
                   dtBalance,
                   assetType,
-                  assetTimeout,
                   hasPreviousOrderSelectedComputeAsset,
                   hasDatatokenSelectedComputeAsset,
                   dtSymbolSelectedComputeAsset,
                   dtBalanceSelectedComputeAsset,
-                  selectedComputeAssetType,
-                  selectedComputeAssetTimeout
+                  selectedComputeAssetType
                 )}
           </div>
         </>

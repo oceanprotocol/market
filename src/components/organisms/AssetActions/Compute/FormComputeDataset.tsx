@@ -107,13 +107,24 @@ export default function FormStartCompute({
     setSelectedAlgorithm(getAlgorithmAsset(values.algorithm))
   }, [values.algorithm])
 
+  //
+  // Set price for calculation output
+  //
   useEffect(() => {
     if (!ddoPrice || !algorithmPrice) return
-    const totalValue = new Decimal(ddoPrice.value).add(
-      new Decimal(algorithmPrice.value)
-    )
-    setTotalPrice(totalValue.toString())
-  }, [ddoPrice, algorithmPrice])
+
+    const priceDataset = hasPreviousOrder ? 0 : Number(ddoPrice.value)
+    const priceAlgo = hasPreviousOrderSelectedComputeAsset
+      ? 0
+      : Number(algorithmPrice.value)
+
+    setTotalPrice(`${priceDataset + priceAlgo}`)
+  }, [
+    ddoPrice,
+    algorithmPrice,
+    hasPreviousOrder,
+    hasPreviousOrderSelectedComputeAsset
+  ])
 
   return (
     <Form className={styles.form}>
@@ -128,25 +139,43 @@ export default function FormStartCompute({
       <div className={styles.priceComponent}>
         <h3>You will pay</h3>
         <div className={styles.calculation}>
-          {/* <div>
-            <div className={styles.sign} />
-            <PriceUnit
-              price={ddoPrice?.value.toString()}
-              small
-              className={styles.price}
-            />
+          <div className={styles.priceRow}>
+            <div />
+            <div>
+              <PriceUnit
+                price={hasPreviousOrder ? '0' : `${ddoPrice?.value}`}
+                small
+                className={styles.price}
+              />
+              <span className={styles.timeout}>
+                {assetTimeout !== 'Forever' &&
+                  !hasPreviousOrder &&
+                  `for ${assetTimeout}`}
+              </span>
+            </div>
           </div>
           <div className={styles.priceRow}>
             <div className={styles.sign}>+</div>
-            <PriceUnit
-              price={algorithmPrice?.value.toString()}
-              small
-              className={styles.price}
-            />
-          </div> */}
-          <div>
-            {/* <div className={styles.sign}>=</div> */}
-            <PriceUnit price={totalPrice} small className={styles.price} />
+            <div>
+              <PriceUnit
+                price={
+                  hasPreviousOrderSelectedComputeAsset
+                    ? '0'
+                    : `${algorithmPrice?.value}`
+                }
+                small
+                className={styles.price}
+              />
+              <span className={styles.timeout}>
+                {selectedComputeAssetTimeout !== 'Forever' &&
+                  !hasPreviousOrderSelectedComputeAsset &&
+                  `for ${selectedComputeAssetTimeout}`}
+              </span>
+            </div>
+          </div>
+          <div className={styles.priceRow}>
+            <div className={styles.sign}>=</div>
+            <PriceUnit price={totalPrice} className={styles.price} small />
           </div>
         </div>
       </div>
@@ -166,7 +195,6 @@ export default function FormStartCompute({
         dtSymbolSelectedComputeAsset={dtSymbolSelectedComputeAsset}
         dtBalanceSelectedComputeAsset={dtBalanceSelectedComputeAsset}
         selectedComputeAssetType={selectedComputeAssetType}
-        selectedComputeAssetTimeout={selectedComputeAssetTimeout}
         stepText={stepText}
         isLoading={isLoading}
         type="submit"
