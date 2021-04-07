@@ -16,6 +16,10 @@ import styles from './index.module.css'
 import moment from 'moment'
 import fetch from 'cross-fetch'
 
+import { fetchData } from './../../../utils'
+import useSWR, { mutate } from 'swr'
+import axios from 'axios'
+
 // Chart.js global defaults
 defaults.global.defaultFontFamily = `'Sharp Sans', -apple-system, BlinkMacSystemFont,
 'Segoe UI', Helvetica, Arial, sans-serif`
@@ -99,31 +103,30 @@ export default function StatsPage(): ReactElement {
 
   const to = Date.now() // Current date and time in milliseconds
   const from = to - 2592000000 // The date and time (30 days ago) in milliseconds
+  const resolution = 'day'
 
-  useEffect(() => {
-    async function fetchPageViewsAnalytics() {
-      const options = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          from: from,
-          to: to,
-          resolution: 'day'
-        })
-      }
+  const refreshInterval = 600000 // 10 min
 
-      const response = await fetch(
-        `https://market-stats-git-netlify-api-oceanprotocol.vercel.app/page-views`,
-        options
-      )
-      const pageViewsData = await response.json()
+  const pageViewsUrl = `https://market-stats-git-netlify-api-oceanprotocol.vercel.app/page-views?from=${from}&to=${to}&resolution=${resolution}`
+  const visitorsUrl = `https://market-stats-git-netlify-api-oceanprotocol.vercel.app/visitors?from=${from}&to=${to}&resolution=${resolution}`
 
+  const onSuccess = async (analyticsData, key: string, config) => {
+    if (key.indexOf('page-views') < 0) {
+      let dates: Array<string> = []
+      let visitors: Array<number> = []
+
+      analyticsData.data.forEach((stat: Array<number>) => {
+        dates.push(moment(stat[0]).format('LL'))
+        visitors.push(stat[1])
+      })
+
+      setUniqueVisitorsDate(dates)
+      setUniqueVisitors(visitors)
+    } else {
       let dates: Array<string> = []
       let views: Array<number> = []
 
-      pageViewsData.data.forEach((stat: Array<number>) => {
+      analyticsData.data.forEach((stat: Array<number>) => {
         dates.push(moment(stat[0]).format('LL'))
         views.push(stat[1])
       })
@@ -131,42 +134,17 @@ export default function StatsPage(): ReactElement {
       setPageViewsDate(dates)
       setPageViews(views)
     }
+  }
 
-    fetchPageViewsAnalytics()
+  useSWR(pageViewsUrl, fetchData, {
+    refreshInterval,
+    onSuccess
+  })
 
-    async function fetchVisitorsAnalytics() {
-      const options = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          from: from,
-          to: to,
-          resolution: 'day'
-        })
-      }
-
-      const response = await fetch(
-        `https://market-stats-git-netlify-api-oceanprotocol.vercel.app/visitors`,
-        options
-      )
-      const uniqueVisitorsData = await response.json()
-
-      let dates: Array<string> = []
-      let visitors: Array<number> = []
-
-      uniqueVisitorsData.data.forEach((stat: Array<number>) => {
-        dates.push(moment(stat[0]).format('LL'))
-        visitors.push(stat[1])
-      })
-
-      setUniqueVisitorsDate(dates)
-      setUniqueVisitors(visitors)
-    }
-
-    fetchVisitorsAnalytics()
-  }, [])
+  useSWR(visitorsUrl, fetchData, {
+    refreshInterval,
+    onSuccess
+  })
 
   useEffect(() => {
     const options = getOptions(locale, darkMode.value)
@@ -187,10 +165,6 @@ export default function StatsPage(): ReactElement {
     ]
   }
 
-  useEffect(() => {
-    setPageViewsStatData(pageViewsStatData)
-  }, [pageViews])
-
   const uniqueVisitorsChartData: ChartData = {
     labels: uniqueVisitorsDate,
     datasets: [
@@ -204,10 +178,6 @@ export default function StatsPage(): ReactElement {
       }
     ]
   }
-
-  useEffect(() => {
-    setVisitorsStatData(visitorsStatData)
-  }, [uniqueVisitors])
 
   return (
     <div>
