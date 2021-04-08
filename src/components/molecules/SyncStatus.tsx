@@ -6,6 +6,7 @@ import Web3 from 'web3'
 import useSWR from 'swr'
 import { useOcean } from '../../providers/Ocean'
 import fetch from 'cross-fetch'
+import Loader from '../atoms/Loader'
 const refreshInterval = 12000
 const blockDifferenceThreshold = 30
 const ethGraphUrl = `https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks`
@@ -37,6 +38,7 @@ export default function SyncStatus({
   const [state, setState] = useState<string>('success')
   const [blockNumber, setBlockNumber] = useState<number>()
   const [graphBlockNumber, setGraphBlockNumber] = useState<number>()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   function getBlockFromPolygon() {
     console.log('Polygon')
@@ -66,12 +68,17 @@ export default function SyncStatus({
 
   useEffect(() => {
     if (!config) return
+    const timer1 = setTimeout(() => setIsLoading(true), 1000)
     getBlockFromGraph()
     web3
       ? getBlockFromWeb3()
       : config.network === 'mainnet'
       ? getBlockFromETH()
       : getBlockFromPolygon()
+    return () => {
+      setIsLoading(false)
+      clearTimeout(timer1)
+    }
   }, [web3, config])
 
   useEffect(() => {
@@ -107,8 +114,14 @@ export default function SyncStatus({
 
   return (
     <div className={styles.sync}>
-      <span className={styles.text}>{blockNumber}</span>
-      <Status state={state} />
+      {isLoading ? (
+        <>
+          <span className={styles.text}>{blockNumber}</span>
+          <Status state={state} />
+        </>
+      ) : (
+        <Loader />
+      )}
     </div>
   )
 }
