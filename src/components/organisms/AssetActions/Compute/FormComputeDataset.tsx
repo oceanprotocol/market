@@ -1,12 +1,14 @@
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './FormComputeDataset.module.css'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import Input from '../../../atoms/Input'
 import { FormFieldProps } from '../../../../@types/Form'
 import { useStaticQuery, graphql } from 'gatsby'
-import { DDO } from '@oceanprotocol/lib'
+import { DDO, BestPrice } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import ButtonBuy from '../../../atoms/ButtonBuy'
+import PriceOutput from './PriceOutput'
+import { useAsset } from '../../../../providers/Asset'
 
 const contentQuery = graphql`
   query StartComputeDatasetQuery {
@@ -46,10 +48,17 @@ export default function FormStartCompute({
   isComputeButtonDisabled,
   hasPreviousOrder,
   hasDatatoken,
-  dtSymbol,
   dtBalance,
+  assetType,
+  assetTimeout,
+  hasPreviousOrderSelectedComputeAsset,
+  hasDatatokenSelectedComputeAsset,
+  dtSymbolSelectedComputeAsset,
+  dtBalanceSelectedComputeAsset,
+  selectedComputeAssetType,
+  selectedComputeAssetTimeout,
   stepText,
-  datasetTimeout
+  algorithmPrice
 }: {
   algorithms: AssetSelectionAsset[]
   ddoListAlgorithms: DDO[]
@@ -58,10 +67,17 @@ export default function FormStartCompute({
   isComputeButtonDisabled: boolean
   hasPreviousOrder: boolean
   hasDatatoken: boolean
-  dtSymbol: string
   dtBalance: string
+  assetType: string
+  assetTimeout: string
+  hasPreviousOrderSelectedComputeAsset?: boolean
+  hasDatatokenSelectedComputeAsset?: boolean
+  dtSymbolSelectedComputeAsset?: string
+  dtBalanceSelectedComputeAsset?: string
+  selectedComputeAssetType?: string
+  selectedComputeAssetTimeout?: string
   stepText: string
-  datasetTimeout: string
+  algorithmPrice: BestPrice
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
@@ -70,6 +86,8 @@ export default function FormStartCompute({
     isValid,
     values
   }: FormikContextType<{ algorithm: string }> = useFormikContext()
+  const { price, ddo } = useAsset()
+  const [totalPrice, setTotalPrice] = useState(price?.value)
 
   function getAlgorithmAsset(algorithmId: string): DDO {
     let assetDdo = null
@@ -84,6 +102,25 @@ export default function FormStartCompute({
     setSelectedAlgorithm(getAlgorithmAsset(values.algorithm))
   }, [values.algorithm])
 
+  //
+  // Set price for calculation output
+  //
+  useEffect(() => {
+    if (!price || !algorithmPrice) return
+
+    const priceDataset = hasPreviousOrder ? 0 : Number(price.value)
+    const priceAlgo = hasPreviousOrderSelectedComputeAsset
+      ? 0
+      : Number(algorithmPrice.value)
+
+    setTotalPrice(priceDataset + priceAlgo)
+  }, [
+    price,
+    algorithmPrice,
+    hasPreviousOrder,
+    hasPreviousOrderSelectedComputeAsset
+  ])
+
   return (
     <Form className={styles.form}>
       {content.form.data.map((field: FormFieldProps) => (
@@ -95,17 +132,36 @@ export default function FormStartCompute({
         />
       ))}
 
+      <PriceOutput
+        hasPreviousOrder={hasPreviousOrder}
+        assetTimeout={assetTimeout}
+        hasPreviousOrderSelectedComputeAsset={
+          hasPreviousOrderSelectedComputeAsset
+        }
+        selectedComputeAssetTimeout={selectedComputeAssetTimeout}
+        algorithmPrice={algorithmPrice}
+        totalPrice={totalPrice}
+      />
+
       <ButtonBuy
         action="compute"
         disabled={isComputeButtonDisabled || !isValid}
         hasPreviousOrder={hasPreviousOrder}
         hasDatatoken={hasDatatoken}
-        dtSymbol={dtSymbol}
+        dtSymbol={ddo.dataTokenInfo.symbol}
         dtBalance={dtBalance}
+        assetTimeout={assetTimeout}
+        assetType={assetType}
+        hasPreviousOrderSelectedComputeAsset={
+          hasPreviousOrderSelectedComputeAsset
+        }
+        hasDatatokenSelectedComputeAsset={hasDatatokenSelectedComputeAsset}
+        dtSymbolSelectedComputeAsset={dtSymbolSelectedComputeAsset}
+        dtBalanceSelectedComputeAsset={dtBalanceSelectedComputeAsset}
+        selectedComputeAssetType={selectedComputeAssetType}
         stepText={stepText}
         isLoading={isLoading}
         type="submit"
-        assetTimeout={datasetTimeout}
       />
     </Form>
   )

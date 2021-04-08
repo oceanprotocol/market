@@ -47,7 +47,7 @@ export default function Consume({
   const { marketFeeAddress } = useSiteMetadata()
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
   const [previousOrderId, setPreviousOrderId] = useState<string>()
-  const { isInPurgatory, price } = useAsset()
+  const { isInPurgatory, price, type } = useAsset()
   const {
     buyDT,
     pricingStepText,
@@ -153,6 +153,7 @@ export default function Consume({
       dtBalance={dtBalance}
       onClick={handleConsume}
       assetTimeout={assetTimeout}
+      assetType={type}
       stepText={consumeStepText || pricingStepText}
       isLoading={pricingIsLoading}
     />

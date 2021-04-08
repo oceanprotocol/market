@@ -1,7 +1,6 @@
 import React, { ReactElement } from 'react'
 import Compute from '.'
 import ddo from '../../../../../tests/unit/__fixtures__/ddo'
-import { DDO } from '@oceanprotocol/lib'
 
 export default {
   title: 'Organisms/Compute',
@@ -14,7 +13,6 @@ export default {
 
 export const Default = (): ReactElement => (
   <Compute
-    ddo={ddo as DDO}
     dtBalance="1"
     isBalanceSufficient
     file={ddo.service[0].attributes.main.files[0]}

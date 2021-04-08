@@ -62,12 +62,10 @@ const poolQuery = gql`
 `
 
 export default function Compute({
-  ddo,
   isBalanceSufficient,
   dtBalance,
   file
 }: {
-  ddo: DDO
   isBalanceSufficient: boolean
   dtBalance: string
   file: FileMetadata
@@ -75,7 +73,7 @@ export default function Compute({
   const { marketFeeAddress } = useSiteMetadata()
   const { accountId } = useWeb3()
   const { ocean, account, config } = useOcean()
-  const { price, type } = useAsset()
+  const { price, type, ddo } = useAsset()
   const { buyDT, pricingError, pricingStepText } = usePricing()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
@@ -90,6 +88,7 @@ export default function Compute({
   const [hasPreviousAlgorithmOrder, setHasPreviousAlgorithmOrder] = useState(
     false
   )
+  const [algorithmDTBalance, setalgorithmDTBalance] = useState<string>()
   const [algorithmPrice, setAlgorithmPrice] = useState<BestPrice>()
   const [variables, setVariables] = useState({})
   const [
@@ -97,6 +96,7 @@ export default function Compute({
     setPreviousAlgorithmOrderId
   ] = useState<string>()
   const [datasetTimeout, setDatasetTimeout] = useState<string>()
+  const [algorithmTimeout, setAlgorithmTimeout] = useState<string>()
 
   /* eslint-disable @typescript-eslint/no-unused-vars */
   const {
@@ -138,6 +138,7 @@ export default function Compute({
       asset.dataToken,
       accountId
     )
+    setalgorithmDTBalance(AssetDtBalance)
     setHasAlgoAssetDatatoken(Number(AssetDtBalance) >= 1)
   }
 
@@ -264,6 +265,10 @@ export default function Compute({
     }
     checkAssetDTBalance(selectedAlgorithmAsset)
     initMetadata(selectedAlgorithmAsset)
+    const { timeout } = (
+      ddo.findServiceByType('access') || ddo.findServiceByType('compute')
+    ).attributes.main
+    setAlgorithmTimeout(secondsToString(timeout))
   }, [selectedAlgorithmAsset, ocean, accountId, hasPreviousAlgorithmOrder])
 
   // Output errors in toast UI
@@ -415,7 +420,7 @@ export default function Compute({
     <>
       <div className={styles.info}>
         <File file={file} small />
-        <Price price={(ddo as DDO).price} conversion />
+        <Price price={price} conversion />
       </div>
 
       {type === 'algorithm' ? (
@@ -436,14 +441,21 @@ export default function Compute({
             setSelectedAlgorithm={setSelectedAlgorithmAsset}
             isLoading={isJobStarting}
             isComputeButtonDisabled={isComputeButtonDisabled}
-            hasPreviousOrder={
-              hasPreviousDatasetOrder || hasPreviousAlgorithmOrder
-            }
+            hasPreviousOrder={hasPreviousDatasetOrder}
             hasDatatoken={hasDatatoken}
-            dtSymbol={ddo.dataTokenInfo?.symbol}
             dtBalance={dtBalance}
+            assetType={type}
+            assetTimeout={datasetTimeout}
+            hasPreviousOrderSelectedComputeAsset={hasPreviousAlgorithmOrder}
+            hasDatatokenSelectedComputeAsset={hasAlgoAssetDatatoken}
+            dtSymbolSelectedComputeAsset={
+              selectedAlgorithmAsset?.dataTokenInfo?.symbol
+            }
+            dtBalanceSelectedComputeAsset={algorithmDTBalance}
+            selectedComputeAssetType="algorithm"
+            selectedComputeAssetTimeout={algorithmTimeout}
             stepText={pricingStepText || 'Starting Compute Job...'}
-            datasetTimeout={datasetTimeout}
+            algorithmPrice={algorithmPrice}
           />
         </Formik>
       )}
