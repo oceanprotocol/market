@@ -129,6 +129,7 @@ export default function Consume({
       try {
         const did = DID.parse(ddo.id)
         const file = (await ocean.provider.fileinfo(did)) as any
+        if (!file) isFileValid = false
         isFileValid = file[0].valid
       } catch (error) {
         Logger.error(error)
@@ -163,6 +164,7 @@ export default function Consume({
     try {
       const did = DID.parse(ddo.id)
       const file = (await ocean.provider.fileinfo(did)) as any
+      if (!file) isFileValid = false
       isFileValid = file[0].valid
     } catch (error) {
       Logger.error(error)
