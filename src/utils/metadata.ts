@@ -190,7 +190,6 @@ export function transformPublishAlgorithmFormToMetadata(
     name,
     author,
     description,
-    timeout,
     tags,
     dockerImage,
     image,
