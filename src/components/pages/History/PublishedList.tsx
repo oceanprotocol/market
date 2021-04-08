@@ -29,7 +29,7 @@ export default function PublishedList(): ReactElement {
             query: `(publicKey.owner:${accountId})`
           }
         },
-        sort: { 'price.ocean': -1 }
+        sort: { created: -1 }
       }
       try {
         queryResult || setIsLoading(true)
