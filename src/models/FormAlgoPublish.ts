@@ -10,6 +10,7 @@ export const validationSchema: Yup.SchemaOf<MetadataPublishFormAlgorithm> = Yup.
       .required('Required'),
     description: Yup.string().min(10).required('Required'),
     files: Yup.array<FileMetadata>().required('Required').nullable(),
+    timeout: Yup.string().required('Required'),
     dockerImage: Yup.string()
       .matches(/node:latest|python:latest|custom image/g, {
         excludeEmptyString: true
@@ -38,5 +39,6 @@ export const initialValues: Partial<MetadataPublishFormAlgorithm> = {
   description: '',
   algorithmPrivacy: false,
   termsAndConditions: false,
-  tags: ''
+  tags: '',
+  timeout: 'Forever'
 }

@@ -47,6 +47,16 @@
       "required": false
     },
     {
+      "name": "timeout",
+      "label": "Timeout",
+      "help": "Define how long buyers should be able to download the algorithm again after the initial purchase.",
+      "placeholder": "Forever",
+      "type": "select",
+      "options": ["Forever", "1 day", "1 week", "1 month", "1 year"],
+      "sortOptions": false,
+      "required": true
+    },
+    {
       "name": "entrypoint",
       "label": "Entrypoint",
       "placeholder": "e.g. python $ALGO",

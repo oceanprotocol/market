@@ -159,6 +159,7 @@ export default function PublishPage({
     ) => void
   ): Promise<void> {
     const metadata = transformPublishAlgorithmFormToMetadata(values)
+    const timeout = mapTimeoutStringToSeconds(values.timeout)
     const validDockerImage =
       values.dockerImage === 'custom image'
         ? await validateDockerImage(values.image, values.containerTag)
@@ -169,7 +170,9 @@ export default function PublishPage({
 
         const ddo = await publish(
           (metadata as unknown) as Metadata,
-          values.algorithmPrivacy === true ? 'compute' : 'access'
+          values.algorithmPrivacy === true ? 'compute' : 'access',
+          undefined,
+          timeout
         )
 
         // Publish failed
