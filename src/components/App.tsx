@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState } from 'react'
 import Footer from './organisms/Footer'
 import Header from './organisms/Header'
 import Styles from '../global/Styles'
@@ -39,11 +39,14 @@ export default function App({
   const { warning } = useSiteMetadata()
   const { accountId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
+  const [graphSynched, setGraphSynched] = useState<boolean>(false)
 
   return (
     <Styles>
       <div className={styles.app}>
-        {!location.pathname.includes('/asset/did') && <AnnouncementBanner />}
+        {!location.pathname.includes('/asset/did') && (
+          <AnnouncementBanner graphSynched={graphSynched} />
+        )}
         <Header />
         {(props as PageProps).uri === '/' && (
           <Alert text={warning.main} state="info" />
@@ -57,7 +60,7 @@ export default function App({
           />
         )}
         <main className={styles.main}>{children}</main>
-        <Footer />
+        <Footer setGraphSynched={setGraphSynched} />
       </div>
     </Styles>
   )

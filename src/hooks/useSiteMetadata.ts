@@ -16,6 +16,7 @@ const query = graphql`
         warning {
           main
           polygonPublish
+          graphNotSynched
         }
         announcement {
           main

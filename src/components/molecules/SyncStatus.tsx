@@ -27,7 +27,11 @@ async function fetchGraph(url: string, queryBody: string): Promise<Response> {
   }
 }
 
-export default function SyncStatus(): ReactElement {
+export default function SyncStatus({
+  setGraphSynched
+}: {
+  setGraphSynched: React.Dispatch<React.SetStateAction<boolean>>
+}): ReactElement {
   const { config } = useOcean()
   const { web3 } = useWeb3()
   const [state, setState] = useState<string>('success')
@@ -74,9 +78,13 @@ export default function SyncStatus(): ReactElement {
     if (!blockNumber && !graphBlockNumber) return
     const difference = blockNumber - graphBlockNumber
     console.log(difference)
-    difference > blockDifferenceThreshold
-      ? setState('warning')
-      : setState('success')
+    if (difference > blockDifferenceThreshold) {
+      setState('warning')
+      setGraphSynched(false)
+      return
+    }
+    setState('success')
+    setGraphSynched(true)
   }, [blockNumber, graphBlockNumber])
 
   console.log(blockNumber)

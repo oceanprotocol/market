@@ -24,12 +24,17 @@ const network: NetworkObject = {
   ]
 }
 
-export default function AnnouncementBanner(): ReactElement {
+export default function AnnouncementBanner({
+  graphSynched
+}: {
+  graphSynched: boolean
+}): ReactElement {
   const { web3Provider } = useWeb3()
   const { config, connect } = useOcean()
-  const { announcement } = useSiteMetadata()
+  const { announcement, warning } = useSiteMetadata()
 
   const [text, setText] = useState<string>(announcement.main)
+  const [secondaryText, setSecondaryText] = useState<string>()
   const [action, setAction] = useState<AnnouncementAction>()
 
   const addCustomNetworkAction = {
@@ -55,6 +60,12 @@ export default function AnnouncementBanner(): ReactElement {
     setText(announcement.polygon)
     setAction(undefined)
   }
+
+  useEffect(() => {
+    graphSynched
+      ? setSecondaryText(undefined)
+      : setSecondaryText(warning.graphNotSynched)
+  }, [graphSynched])
 
   useEffect(() => {
     if (!web3Provider && !config) return
@@ -91,7 +102,12 @@ export default function AnnouncementBanner(): ReactElement {
   return (
     <div className={styles.container}>
       <div className={styles.banner}>
-        {text && <Markdown className={styles.text} text={text} />}
+        {text && (
+          <Markdown
+            className={styles.text}
+            text={secondaryText ? secondaryText + ' ' + text : text}
+          />
+        )}
         {action && (
           <Button style="text" size="small" onClick={action.handleAction}>
             {action.name}

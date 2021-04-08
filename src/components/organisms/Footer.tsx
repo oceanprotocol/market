@@ -7,7 +7,11 @@ import MarketStats from '../molecules/MarketStats'
 import BuildId from '../atoms/BuildId'
 import SyncStatus from '../molecules/SyncStatus'
 
-export default function Footer(): ReactElement {
+export default function Footer({
+  setGraphSynched
+}: {
+  setGraphSynched: React.Dispatch<React.SetStateAction<boolean>>
+}): ReactElement {
   const { copyright } = useSiteMetadata()
   const year = new Date().getFullYear()
 
@@ -24,7 +28,7 @@ export default function Footer(): ReactElement {
           <a href="https://oceanprotocol.com/privacy">Privacy</a>
         </div>
       </div>
-      <SyncStatus />
+      <SyncStatus setGraphSynched={setGraphSynched} />
     </footer>
   )
 }
