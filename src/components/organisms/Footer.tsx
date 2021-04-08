@@ -19,8 +19,8 @@ export default function Footer({
     <footer className={styles.footer}>
       <div className={styles.content}>
         <BuildId />
+        <SyncStatus setGraphSynched={setGraphSynched} />
         <MarketStats />
-
         <div className={styles.copyright}>
           © {year} <Markdown text={copyright} /> —{' '}
           <Link to="/terms">Terms</Link>
@@ -28,7 +28,6 @@ export default function Footer({
           <a href="https://oceanprotocol.com/privacy">Privacy</a>
         </div>
       </div>
-      <SyncStatus setGraphSynched={setGraphSynched} />
     </footer>
   )
 }
