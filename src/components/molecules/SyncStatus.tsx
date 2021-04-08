@@ -7,7 +7,7 @@ import useSWR from 'swr'
 import { useOcean } from '../../providers/Ocean'
 import fetch from 'cross-fetch'
 const refreshInterval = 12000
-const blockDifferenceTreshold = 30
+const blockDifferenceThreshold = 30
 const ethGraphUrl = `https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks`
 const ethGraphQuery =
   '{"query":"  query Blocks{   blocks(first: 1, skip: 0, orderBy: number, orderDirection: desc, where: {number_gt: 9300000}) { id number timestamp  author  difficulty  gasUsed  gasLimit } }","variables":{},"operationName":"Blocks"}'
@@ -74,7 +74,7 @@ export default function SyncStatus(): ReactElement {
     if (!blockNumber && !graphBlockNumber) return
     const difference = blockNumber - graphBlockNumber
     console.log(difference)
-    difference > blockDifferenceTreshold
+    difference > blockDifferenceThreshold
       ? setState('warning')
       : setState('success')
   }, [blockNumber, graphBlockNumber])
