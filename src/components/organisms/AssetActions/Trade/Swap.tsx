@@ -28,10 +28,10 @@ export default function Swap({
   setMaximumDt: (value: number) => void
   setMaximumOcean: (value: number) => void
 }): ReactElement {
-  const { ocean } = useOcean()
+  const { ocean, config } = useOcean()
   const [oceanItem, setOceanItem] = useState<TradeItem>({
     amount: 0,
-    token: 'OCEAN',
+    token: config.oceanTokenSymbol,
     maxAmount: 0
   })
   const [dtItem, setDtItem] = useState<TradeItem>({
@@ -137,7 +137,11 @@ export default function Swap({
         handleValueChange={handleValueChange}
       />
 
-      <Output dtSymbol={dtItem.token} poolAddress={price?.address} />
+      <Output
+        dtSymbol={dtItem.token}
+        oceanSymbol={oceanItem.token}
+        poolAddress={price?.address}
+      />
 
       <Slippage />
     </div>
