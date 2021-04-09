@@ -46,6 +46,8 @@ const poolLiquidityQuery = gql`
       swapFee
       tokens {
         address
+        symbol
+        isDatatoken
         balance
         denormWeight
       }
@@ -64,7 +66,8 @@ export default function Pool(): ReactElement {
   const { accountId, networkId } = useWeb3()
   const { ocean } = useOcean()
   const { isInPurgatory, ddo, owner, price, refreshInterval } = useAsset()
-  const dtSymbol = ddo?.dataTokenInfo.symbol
+  const [dtSymbol, setDtSymbol] = useState<string>()
+  const [oceanSymbol, setOceanSymbol] = useState<string>()
 
   const [poolTokens, setPoolTokens] = useState<string>()
   const [totalPoolTokens, setTotalPoolTokens] = useState<string>()
@@ -104,6 +107,12 @@ export default function Pool(): ReactElement {
     async function init() {
       if (!dataLiquidity || !dataLiquidity.pool) return
 
+      // Set symbols
+      dataLiquidity.pool.tokens.forEach((token) => {
+        token.isDatatoken
+          ? setDtSymbol(token.symbol)
+          : setOceanSymbol(token.symbol)
+      })
       // Total pool shares
       const totalPoolTokens = dataLiquidity.pool.totalShares
       setTotalPoolTokens(totalPoolTokens)
@@ -273,6 +282,7 @@ export default function Pool(): ReactElement {
               </>
             }
             ocean={`${userLiquidity?.ocean}`}
+            oceanSymbol={oceanSymbol}
             dt={`${userLiquidity?.datatoken}`}
             dtSymbol={dtSymbol}
             poolShares={poolTokens}
@@ -285,6 +295,7 @@ export default function Pool(): ReactElement {
           <TokenList
             title="Pool Creator Liquidity"
             ocean={`${creatorLiquidity?.ocean}`}
+            oceanSymbol={oceanSymbol}
             dt={`${creatorLiquidity?.datatoken}`}
             dtSymbol={dtSymbol}
             poolShares={creatorPoolTokens}
@@ -309,6 +320,7 @@ export default function Pool(): ReactElement {
               </>
             }
             ocean={`${price?.ocean}`}
+            oceanSymbol={oceanSymbol}
             dt={`${price?.datatoken}`}
             dtSymbol={dtSymbol}
             poolShares={totalPoolTokens}
