@@ -149,7 +149,7 @@ export default function ComputeJobs(): ReactElement {
         dtList.push(data.tokenOrders[i].datatokenId.address)
         dtTimestamps.push(data.tokenOrders[i].timestamp)
       }
-      console.log('order', data)
+
       const queryDtList = JSON.stringify(dtList)
         .replace(/,/g, ' ')
         .replace(/"/g, '')
@@ -164,9 +164,8 @@ export default function ComputeJobs(): ReactElement {
           source.token,
           dtTimestamps
         )
-        const providers: string[] = []
+        const providers: any[] = []
 
-        // let providers = [...new Set(assets.map((item) => item.pro))]
         for (let i = 0; i < data.tokenOrders.length; i++) {
           try {
             const did = web3.utils
@@ -176,9 +175,9 @@ export default function ComputeJobs(): ReactElement {
             const ddo = assets.filter((x) => x.id === did)[0]
 
             if (!ddo) continue
-            console.log('did', did, ddo)
+
             const service = ddo.service.filter(
-              (x) => x.index === data.tokenOrders[i].serviceId
+              (x: any) => x.index === data.tokenOrders[i].serviceId
             )[0]
 
             if (!service || service.type !== 'compute') continue
@@ -187,59 +186,52 @@ export default function ComputeJobs(): ReactElement {
               providers.filter((x) => x === serviceEndpoint).length > 0
             console.log('was provider', providers, wasProviderQueried)
             if (wasProviderQueried) continue
-            console.log('status for', did, data.tokenOrders[i].tx)
-            console.time('marketCStatus')
-            // const computeJob = await ocean.compute.status(
-            //   account,
-            //   did,
-            //   undefined,
-            //   service as ServiceCompute,
-            //   undefined,
-            //   data.tokenOrders[i].tx,
-            //   false
-            // )
-            const computeJob = await ocean.compute.status(
-              account,
-              undefined,
-              undefined,
-              undefined,
-              undefined,
-              undefined,
-              false
-            )
-            console.timeLog('marketCStatus', computeJob)
-            console.log('status returned', computeJob)
-
-            const serviceMetadata = ddo.service.filter(
-              (x: any) => x.type === 'metadata'
-            )[0]
-            computeJob.forEach((job) => {
-              const compJob = {
-                did: did,
-                jobId: job.jobId,
-                dateCreated: job.dateCreated,
-                dateFinished: job.dateFinished,
-                assetName: serviceMetadata.attributes.main.name,
-                status: job.status,
-                statusText: job.statusText,
-                algorithmLogUrl: '',
-                resultsUrls: [],
-                timestamp: data.tokenOrders[i].timestamp,
-                type: ''
-              } as ComputeAsset
-
-              setJobs((jobs) => [...jobs, compJob])
-              setIsLoading(false)
-            })
-
-            providers.push(serviceEndpoint)
+            providers.push(service)
             // eslint-disable-next-line no-empty
           } catch (err) {
             console.log(err)
-          } finally {
-            console.timeEnd('marketCStatus')
           }
         }
+
+        for (let i = 0; i < providers.length; i++) {
+          const computeJob = await ocean.compute.status(
+            account,
+            undefined,
+            undefined,
+            providers[0],
+            undefined,
+            undefined,
+            false
+          )
+          for (let j = 0; j < computeJob.length; j++) {
+            const job = computeJob[j]
+            const did = ''
+
+            const ddo = assets.filter((x) => x.id === did)[0]
+
+            if (!ddo) continue
+            const serviceMetadata = ddo.service.filter(
+              (x: any) => x.type === 'metadata'
+            )[0]
+
+            const compJob = {
+              did: did,
+              jobId: job.jobId,
+              dateCreated: job.dateCreated,
+              dateFinished: job.dateFinished,
+              assetName: serviceMetadata.attributes.main.name,
+              status: job.status,
+              statusText: job.statusText,
+              algorithmLogUrl: '',
+              resultsUrls: [],
+              timestamp: data.tokenOrders[i].timestamp,
+              type: ''
+            } as ComputeAsset
+
+            setJobs((jobs) => [...jobs, compJob])
+          }
+        }
+
         console.log('jobs', jobs)
         console.timeEnd('TOTAL')
         // setJobs(jobs)
