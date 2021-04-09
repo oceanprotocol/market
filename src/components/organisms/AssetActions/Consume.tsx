@@ -128,9 +128,10 @@ export default function Consume({
       let isFileValid: boolean
       try {
         const did = DID.parse(ddo.id)
-        const file = (await ocean.provider.fileinfo(did)) as any
-        if (!file) isFileValid = false
-        isFileValid = file[0].valid
+        isFileValid = await ocean.provider.isFileConsumable(
+          did,
+          ddo.findServiceByType('access').index
+        )
       } catch (error) {
         Logger.error(error)
         isFileValid = false
@@ -163,9 +164,10 @@ export default function Consume({
     let isFileValid: boolean
     try {
       const did = DID.parse(ddo.id)
-      const file = (await ocean.provider.fileinfo(did)) as any
-      if (!file) isFileValid = false
-      isFileValid = file[0].valid
+      isFileValid = await ocean.provider.isFileConsumable(
+        did,
+        ddo.findServiceByType('access').index
+      )
     } catch (error) {
       Logger.error(error)
       isFileValid = false
