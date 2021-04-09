@@ -45,7 +45,7 @@ const poolLiquidityQuery = gql`
       totalShares
       swapFee
       tokens {
-        tokenAddress
+        address
         balance
         denormWeight
       }

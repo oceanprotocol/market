@@ -3,7 +3,7 @@ module.exports = {
     service: {
       name: 'ocean',
       url:
-        'https://subgraph.rinkeby.oceanprotocol.com/subgraphs/name/oceanprotocol/ocean-subgraph',
+        'https://subgraph2.rinkeby.oceanprotocol.com/subgraphs/name/oceanprotocol/ocean-subgraph',
       // optional disable SSL validation check
       skipSSLValidation: true
     }

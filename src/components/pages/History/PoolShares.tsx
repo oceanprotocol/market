@@ -26,9 +26,9 @@ const poolSharesQuery = gql`
         datatokenAddress
         valueLocked
         tokens {
-          tokenId {
-            symbol
-          }
+          id
+          isDatatoken
+          symbol
         }
         oceanReserve
         datatokenReserve
@@ -56,13 +56,17 @@ function calculateUserLiquidity(poolShare: PoolShare) {
   return totalLiquidity
 }
 
-function findValidToken(tokens: PoolSharePoolIdTokens[]) {
-  const symbol = tokens.find((token) => token.tokenId !== null)
-  return symbol.tokenId.symbol
+function findTokenByType(tokens: PoolSharePoolIdTokens[], type: string) {
+  const { symbol } = tokens.find((token) =>
+    type === 'datatoken'
+      ? token.isDatatoken === true
+      : token.isDatatoken === false
+  )
+  return symbol
 }
 
 function Symbol({ tokens }: { tokens: PoolSharePoolIdTokens[] }) {
-  return <>{findValidToken(tokens)}</>
+  return <>{findTokenByType(tokens, 'datatoken')}</>
 }
 
 function Liquidity({ row, type }: { row: Asset; type: string }) {
@@ -95,9 +99,13 @@ function Liquidity({ row, type }: { row: Asset; type: string }) {
         className={styles.totalLiquidity}
         hideApproximateSymbol
       />
-      <Token symbol="OCEAN" balance={oceanTokenBalance} noIcon />
       <Token
-        symbol={findValidToken(row.poolShare.poolId.tokens)}
+        symbol={findTokenByType(row.poolShare.poolId.tokens, 'ocean')}
+        balance={oceanTokenBalance}
+        noIcon
+      />
+      <Token
+        symbol={findTokenByType(row.poolShare.poolId.tokens, 'datatoken')}
         balance={dataTokenBalance}
         noIcon
       />
@@ -143,7 +151,7 @@ export default function PoolShares(): ReactElement {
   const [assets, setAssets] = useState<Asset[]>()
   const { data, loading } = useQuery<PoolSharesList>(poolSharesQuery, {
     variables: {
-      user: accountId?.toLowerCase()
+      user: '0x4d156a2ef69ffddc55838176c6712c90f60a2285'.toLowerCase()
     },
     pollInterval: 20000
   })
