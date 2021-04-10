@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
-import Web3 from 'web3'
 import fetch from 'cross-fetch'
 import { useOcean } from '../providers/Ocean'
 import { useWeb3 } from '../providers/Web3'
+import { Logger } from '@oceanprotocol/lib'
+import Web3 from 'web3'
+import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 
 const refreshInterval = 12000
 const blockDifferenceThreshold = 30
@@ -12,6 +14,12 @@ const ethGraphQuery =
 const graphQuery =
   '{"query":"  query Meta {   _meta {      block {        hash       number     }      deployment      hasIndexingErrors    }  }","variables":{},"operationName":"Meta"}'
 
+export interface UseGraphSyncStatus {
+  isGraphSynced: boolean
+  blockHead: number
+  blockGraph: number
+}
+
 async function fetchGraph(url: string, queryBody: string): Promise<Response> {
   try {
     const response = await fetch(url, {
@@ -19,84 +27,77 @@ async function fetchGraph(url: string, queryBody: string): Promise<Response> {
       body: queryBody
     })
 
-    return response.json()
+    return await response.json()
   } catch (error) {
     console.error('Error parsing json: ' + error.message)
   }
 }
 
-export function useGraphSyncStatus(): {
-  isGraphSynced: boolean
-  blockNumber: number
-  graphBlockNumber: number
-  state: 'success' | 'warning'
-} {
+async function getBlockHead(config: ConfigHelperConfig) {
+  // for ETH main, get block from graph fetch
+  if (config.network === 'mainnet') {
+    const response: any = await fetchGraph(ethGraphUrl, ethGraphQuery)
+    return Number(response.data.blocks[0].number)
+  }
+
+  // for everything else, create new web3 instance with infura
+  const web3 = new Web3(config.nodeUri)
+  const blockHead = await web3.eth.getBlockNumber()
+  return blockHead
+}
+
+async function getBlockSubgraph(subgraphUri: string) {
+  const response: any = await fetchGraph(
+    `${subgraphUri}/subgraphs/name/oceanprotocol/ocean-subgraph`,
+    graphQuery
+  )
+  const blockNumberGraph = Number(response.data._meta.block.number)
+  return blockNumberGraph
+}
+
+export function useGraphSyncStatus(): UseGraphSyncStatus {
   const { config } = useOcean()
-  const { web3 } = useWeb3()
-  const [state, setState] = useState<'success' | 'warning'>()
-  const [blockNumber, setBlockNumber] = useState<number>()
-  const [graphBlockNumber, setGraphBlockNumber] = useState<number>()
+  const { block } = useWeb3()
+  const [blockGraph, setBlockGraph] = useState<number>()
+  const [blockHead, setBlockHead] = useState<number>()
   const [isGraphSynced, setIsGraphSynced] = useState(true)
 
-  async function getBlockFromPolygon() {
-    console.log('Polygon')
-    const web3Polygon = new Web3(config.nodeUri)
-    const blockNumber = await web3Polygon.eth.getBlockNumber()
-    setBlockNumber(blockNumber)
-  }
-
-  async function getBlockFromWeb3() {
-    console.log('withProvider')
-    const blockNumber = await web3.eth.getBlockNumber()
-    setBlockNumber(blockNumber)
-  }
-
-  async function getBlockFromETH() {
-    const response: any = await fetchGraph(ethGraphUrl, ethGraphQuery)
-    setBlockNumber(response.data.blocks[0].number)
-  }
-
-  async function getBlockFromGraph() {
-    const response: any = await fetchGraph(
-      `${config.subgraphUri}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-      graphQuery
-    )
-    setGraphBlockNumber(response.data._meta.block.number)
-  }
-
+  // Get and set head block
   useEffect(() => {
-    if (!config) return
+    if (!config || !config.nodeUri) return
 
-    getBlockFromGraph()
-    const timer = setInterval(() => getBlockFromGraph(), refreshInterval)
-
-    web3
-      ? getBlockFromWeb3()
-      : config.network === 'mainnet'
-      ? getBlockFromETH()
-      : getBlockFromPolygon()
-
-    return () => {
-      clearInterval(timer)
+    async function initBlockHead() {
+      const blockHead = block || (await getBlockHead(config))
+      setBlockHead(blockHead)
+      Logger.log('[GraphStatus] Head block: ', blockHead)
     }
-  }, [web3, config])
+    initBlockHead()
+  }, [block, config.nodeUri])
 
+  // Get and set subgraph block
   useEffect(() => {
-    if (!blockNumber && !graphBlockNumber) return
-    const difference = blockNumber - graphBlockNumber
-    console.log(difference)
+    if (!config || !config.subgraphUri) return
+
+    async function initBlockSubgraph() {
+      const blockGraph = await getBlockSubgraph(config.subgraphUri)
+      setBlockGraph(blockGraph)
+      Logger.log('[GraphStatus] Latest block from subgraph: ', blockGraph)
+    }
+    initBlockSubgraph()
+  }, [config.subgraphUri])
+
+  // Set sync status
+  useEffect(() => {
+    if (!blockGraph && !blockHead) return
+
+    const difference = blockHead - blockGraph
 
     if (difference > blockDifferenceThreshold) {
-      setState('warning')
       setIsGraphSynced(false)
       return
     }
-    setState('success')
     setIsGraphSynced(true)
-  }, [blockNumber, graphBlockNumber])
-
-  console.log(blockNumber)
-  console.log(graphBlockNumber)
+  }, [blockGraph, blockHead])
 
   /* useSWR(config.subgraphUri, fetchData, {
     onSuccess: (data) => {
@@ -113,5 +114,5 @@ export function useGraphSyncStatus(): {
   })
   */
 
-  return { blockNumber, graphBlockNumber, state, isGraphSynced }
+  return { blockHead, blockGraph, isGraphSynced }
 }

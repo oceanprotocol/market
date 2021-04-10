@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement } from 'react'
 import { graphql, PageProps, useStaticQuery } from 'gatsby'
 import Alert from './atoms/Alert'
 import Footer from './organisms/Footer'
@@ -41,14 +41,14 @@ export default function App({
   const { warning } = useSiteMetadata()
   const { accountId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
-  const { isGraphSynced, blockNumber, graphBlockNumber } = useGraphSyncStatus()
+  const { isGraphSynced, blockHead, blockGraph } = useGraphSyncStatus()
 
   return (
     <Styles>
       <div className={styles.app}>
         {!isGraphSynced && (
           <AnnouncementBanner
-            text={`The data for this network has only synced to Ethereum block ${graphBlockNumber} (out of ${blockNumber}). Please check back soon.`}
+            text={`The data for this network has only synced to Ethereum block ${blockGraph} (out of ${blockHead}). Please check back soon.`}
             state="error"
           />
         )}

@@ -10,6 +10,16 @@
   color: var(--brand-white);
 }
 
+.banner.warning {
+  background-color: var(--brand-alert-yellow);
+  color: var(--brand-white);
+}
+
+.banner.success {
+  background-color: var(--brand-alert-green);
+  color: var(--brand-white);
+}
+
 .banner > div {
   display: inline-block;
 }

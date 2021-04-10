@@ -5,15 +5,18 @@ import { useGraphSyncStatus } from '../../hooks/useGraphSyncStatus'
 import styles from './SyncStatus.module.css'
 
 export default function SyncStatus(): ReactElement {
-  const { blockNumber, graphBlockNumber, state } = useGraphSyncStatus()
+  const { isGraphSynced, blockGraph, blockHead } = useGraphSyncStatus()
 
   return (
     <div className={styles.sync}>
       <Tooltip
-        content={`Synced to Ethereum block ${graphBlockNumber} (out of ${blockNumber})`}
+        content={`Synced to Ethereum block ${blockGraph} (out of ${blockHead})`}
       >
-        <Status className={styles.status} state={state} />
-        <span className={styles.text}>{blockNumber}</span>
+        <Status
+          className={styles.status}
+          state={isGraphSynced ? 'success' : 'error'}
+        />
+        <span className={styles.text}>{blockGraph}</span>
       </Tooltip>
     </div>
   )

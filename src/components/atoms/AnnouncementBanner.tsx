@@ -20,12 +20,14 @@ export default function AnnouncementBanner({
 }: {
   text: string
   action?: AnnouncementAction
-  state?: 'error'
+  state?: 'success' | 'warning' | 'error'
   className?: string
 }): ReactElement {
   const styleClasses = cx({
     banner: true,
     error: state === 'error',
+    warning: state === 'warning',
+    success: state === 'success',
     [className]: className
   })
 
