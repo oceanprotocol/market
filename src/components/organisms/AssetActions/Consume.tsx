@@ -69,6 +69,7 @@ export default function Consume({
   })
 
   useEffect(() => {
+    console.log('data', data)
     if (!data || !assetTimeout || data.tokenOrders.length === 0) return
 
     const lastOrder = data.tokenOrders[0]

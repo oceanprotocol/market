@@ -1,8 +1,7 @@
-import { gql, DocumentNode } from '@apollo/client'
-import { FrePrice } from '../@types/apollo/FrePrice'
-import { PoolPrice } from '../@types/apollo/PoolPrice'
+import { gql, DocumentNode, ApolloQueryResult } from '@apollo/client'
 import { DDO } from '@oceanprotocol/lib'
 import { getApolloClientInstance } from '../providers/ApolloClientProvider'
+import BigNumber from 'bignumber.js'
 
 const freQuery = gql`
   query AssetFrePrice($datatoken_in: [String!]) {
@@ -27,10 +26,24 @@ const poolQuery = gql`
   }
 `
 
+const previousOrderQuery = gql`
+  query AssetPreviousOrder($id: String!, $account: String!) {
+    tokenOrders(
+      first: 1
+      where: { datatokenId: $id, payer: $account }
+      orderBy: timestamp
+      orderDirection: desc
+    ) {
+      timestamp
+      tx
+    }
+  }
+`
+
 async function fetchData(
   query: DocumentNode,
   variables: any
-): Promise<ApolloQueryResult> {
+): Promise<ApolloQueryResult<any>> {
   try {
     const client = getApolloClientInstance()
     const response = await client.query({
@@ -39,7 +52,36 @@ async function fetchData(
     })
     return response
   } catch (error) {
-    console.error('Error parsing json: ', error)
+    console.error('Error fetchData: ', error.message)
+  }
+}
+
+export async function getPreviousOrders(
+  id: string,
+  account: string,
+  assetTimeout: string
+): Promise<string> {
+  const variables = {
+    id: id,
+    account: account
+  }
+  const fatchedPreviousOrders: any = await fetchData(
+    previousOrderQuery,
+    variables
+  )
+  if (fatchedPreviousOrders.data?.tokenOrders?.length === 0) return null
+  if (assetTimeout === 'Forever') {
+    return fatchedPreviousOrders?.data?.tokenOrders[0]?.tx
+  } else {
+    const expiry = new BigNumber(
+      fatchedPreviousOrders?.data?.tokenOrders[0]?.timestamp
+    ).plus(assetTimeout)
+    const unixTime = new BigNumber(Math.floor(Date.now() / 1000))
+    if (unixTime.isLessThan(expiry)) {
+      return fatchedPreviousOrders?.data?.tokenOrders[0]?.tx
+    } else {
+      return null
+    }
   }
 }
 
@@ -49,13 +91,15 @@ export async function getAssetPrice(assets: DDO[]): Promise<any> {
   const poolDTadressDID: any = {}
   const frePriceAssets: string[] = []
   const freDTadressDID: any = {}
-  for (const ddo: DDO of assets) {
+  for (const ddo of assets) {
     if (ddo.price?.type === 'pool') {
       poolDTadressDID[ddo?.dataToken.toLowerCase()] = ddo.id
       poolPriceAssets.push(ddo?.dataToken.toLowerCase())
     } else if (ddo.price?.type === 'exchange') {
       freDTadressDID[ddo?.dataToken.toLowerCase()] = ddo.id
       frePriceAssets.push(ddo?.dataToken.toLowerCase())
+    } else {
+      priceList[ddo.id] = 'none'
     }
   }
   const freVariables = {
@@ -65,12 +109,10 @@ export async function getAssetPrice(assets: DDO[]): Promise<any> {
     datatokenAddress_in: poolPriceAssets
   }
   const poolPriceResponse: any = await fetchData(poolQuery, poolVariables)
-  console.log('poolPriceResponse', poolPriceResponse)
   for (const poolPirce of poolPriceResponse.data?.pools) {
     priceList[poolDTadressDID[poolPirce.datatokenAddress]] = poolPirce.spotPrice
   }
   const frePriceResponse: any = await fetchData(freQuery, freVariables)
-  console.log('frePriceResponse', frePriceResponse)
   for (const frePrice of frePriceResponse.data?.fixedRateExchanges) {
     priceList[freDTadressDID[frePrice.datatoken?.address]] = frePrice.rate
   }

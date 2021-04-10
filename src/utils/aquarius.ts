@@ -114,18 +114,15 @@ export async function transformDDOToAssetSelection(
   const source = axios.CancelToken.source()
   const didList: string[] = []
   const priceList: any = await getAssetPrice(ddoList)
-  console.log(priceList)
   const symbolList: any = {}
-  for (const ddo: DDO of ddoList) {
+  for (const ddo of ddoList) {
     didList.push(ddo.id)
     symbolList[ddo.id] = ddo.dataTokenInfo.symbol
   }
   const ddoNames = await getAssetsNames(didList, metadataCacheUri, source.token)
   const algorithmList: AssetSelectionAsset[] = []
   didList?.forEach((did: string) => {
-    console.log(did)
-    console.log(priceList[did])
-    if (priceList[did] != '') {
+    if (priceList[did] !== 'none') {
       let selected = false
       selectedAlgorithms?.forEach((algorithm: PublisherTrustedAlgorithm) => {
         if (algorithm.did === did) {

@@ -38,6 +38,7 @@ import { gql, useQuery } from '@apollo/client'
 import { FrePrice } from '../../../../@types/apollo/FrePrice'
 import { PoolPrice } from '../../../../@types/apollo/PoolPrice'
 import { secondsToString } from '../../../../utils/metadata'
+import { getPreviousOrders } from '../../../../utils/subgraph'
 
 const SuccessAction = () => (
   <Button style="text" to="/history" size="small">
@@ -122,7 +123,14 @@ export default function Compute({
   const hasDatatoken = Number(dtBalance) >= 1
 
   async function checkPreviousOrders(ddo: DDO, serviceType: ServiceType) {
-    const orderId = await checkPreviousOrder(ocean, accountId, ddo, serviceType)
+    const { timeout } = (
+      ddo.findServiceByType('access') || ddo.findServiceByType('compute')
+    ).attributes.main
+    const orderId = await getPreviousOrders(
+      ddo.dataToken?.toLowerCase(),
+      accountId?.toLowerCase(),
+      secondsToString(timeout)
+    )
     const assetType = ddo.findServiceByType('metadata').attributes.main.type
     if (assetType === 'algorithm') {
       setPreviousAlgorithmOrderId(orderId)
