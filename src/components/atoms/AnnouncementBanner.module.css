@@ -5,6 +5,11 @@
   background-color: var(--background-content);
 }
 
+.banner.error {
+  background-color: var(--brand-alert-red);
+  color: var(--brand-white);
+}
+
 .banner > div {
   display: inline-block;
 }

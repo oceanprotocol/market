@@ -1,9 +1,13 @@
 .sync {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: inline-block;
+  font-size: var(--font-size-mini);
 }
 
 .text {
-  margin-right: calc(var(--spacer) / 6);
+  margin-left: calc(var(--spacer) / 12);
+}
+
+.status {
+  transform: scale(0.7);
+  transform-origin: bottom;
 }

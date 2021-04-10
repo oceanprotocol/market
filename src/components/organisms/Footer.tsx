@@ -7,19 +7,14 @@ import MarketStats from '../molecules/MarketStats'
 import BuildId from '../atoms/BuildId'
 import SyncStatus from '../molecules/SyncStatus'
 
-export default function Footer({
-  setGraphSynched
-}: {
-  setGraphSynched: React.Dispatch<React.SetStateAction<boolean>>
-}): ReactElement {
+export default function Footer(): ReactElement {
   const { copyright } = useSiteMetadata()
   const year = new Date().getFullYear()
 
   return (
     <footer className={styles.footer}>
       <div className={styles.content}>
-        <BuildId />
-        <SyncStatus setGraphSynched={setGraphSynched} />
+        <SyncStatus /> | <BuildId />
         <MarketStats />
         <div className={styles.copyright}>
           © {year} <Markdown text={copyright} /> —{' '}

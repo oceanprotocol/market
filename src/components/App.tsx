@@ -1,14 +1,16 @@
 import React, { ReactElement, useState } from 'react'
+import { graphql, PageProps, useStaticQuery } from 'gatsby'
+import Alert from './atoms/Alert'
 import Footer from './organisms/Footer'
 import Header from './organisms/Header'
 import Styles from '../global/Styles'
-import styles from './App.module.css'
-import { useSiteMetadata } from '../hooks/useSiteMetadata'
-import Alert from './atoms/Alert'
-import { graphql, PageProps, useStaticQuery } from 'gatsby'
-import { useAccountPurgatory } from '../hooks/useAccountPurgatory'
-import AnnouncementBanner from './molecules/AnnouncementBanner'
 import { useWeb3 } from '../providers/Web3'
+import { useSiteMetadata } from '../hooks/useSiteMetadata'
+import { useAccountPurgatory } from '../hooks/useAccountPurgatory'
+import NetworkBanner from './molecules/NetworkBanner'
+import styles from './App.module.css'
+import AnnouncementBanner from './atoms/AnnouncementBanner'
+import { useGraphSyncStatus } from '../hooks/useGraphSyncStatus'
 
 const contentQuery = graphql`
   query AppQuery {
@@ -39,18 +41,25 @@ export default function App({
   const { warning } = useSiteMetadata()
   const { accountId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
-  const [graphSynched, setGraphSynched] = useState<boolean>(false)
+  const { isGraphSynced, blockNumber, graphBlockNumber } = useGraphSyncStatus()
 
   return (
     <Styles>
       <div className={styles.app}>
-        {!location.pathname.includes('/asset/did') && (
-          <AnnouncementBanner graphSynched={graphSynched} />
+        {!isGraphSynced && (
+          <AnnouncementBanner
+            text={`The data for this network has only synced to Ethereum block ${graphBlockNumber} (out of ${blockNumber}). Please check back soon.`}
+            state="error"
+          />
         )}
+        {!location.pathname.includes('/asset/did') && <NetworkBanner />}
+
         <Header />
+
         {(props as PageProps).uri === '/' && (
           <Alert text={warning.main} state="info" />
         )}
+
         {isInPurgatory && (
           <Alert
             title={purgatory.title}
@@ -60,7 +69,7 @@ export default function App({
           />
         )}
         <main className={styles.main}>{children}</main>
-        <Footer setGraphSynched={setGraphSynched} />
+        <Footer />
       </div>
     </Styles>
   )
