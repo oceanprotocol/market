@@ -403,11 +403,7 @@ export default function Compute({
         selectedAlgorithmAsset.dataToken
       )
 
-      if (
-        !response ||
-        response.status !== 10 ||
-        response.statusText !== 'Job started'
-      ) {
+      if (!response) {
         setError('Error starting compute job.')
         return
       }

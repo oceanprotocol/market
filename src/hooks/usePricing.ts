@@ -136,12 +136,21 @@ function usePricing(): UsePricing {
       setStep(1, 'buy', ddo)
 
       Logger.log('Price found for buying', price)
+      Decimal.set({ precision: 18 })
+
       switch (price?.type) {
         case 'pool': {
           const oceanAmmount = new Decimal(price.value).times(1.05).toString()
           const maxPrice = new Decimal(price.value).times(2).toString()
+
           setStep(2, 'buy', ddo)
-          Logger.log('Buying token from pool', price, accountId, price)
+          Logger.log(
+            'Buying token from pool',
+            price,
+            accountId,
+            oceanAmmount,
+            maxPrice
+          )
           tx = await ocean.pool.buyDT(
             accountId,
             price.address,
@@ -198,6 +207,7 @@ function usePricing(): UsePricing {
   ): Promise<TransactionReceipt | void> {
     if (!ocean || !accountId) return
 
+    Decimal.set({ precision: 18 })
     if (!config.oceanTokenAddress) {
       Logger.error(`'oceanTokenAddress' not set in config`)
       return
