@@ -30,6 +30,7 @@ interface Web3ProviderValue {
   networkData: EthereumListsChain
   block: number
   isTestnet: boolean
+  web3Loading: boolean
   connect: () => Promise<void>
   logout: () => Promise<void>
 }
@@ -111,11 +112,13 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   const [block, setBlock] = useState<number>()
   const [isTestnet, setIsTestnet] = useState<boolean>()
   const [accountId, setAccountId] = useState<string>()
+  const [web3Loading, setWeb3Loading] = useState<boolean>()
 
   const connect = useCallback(async () => {
     if (!web3Modal) return
 
     try {
+      setWeb3Loading(true)
       Logger.log('[web3] Connecting Web3...')
 
       const provider = await web3Modal?.connect()
@@ -134,6 +137,8 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
       Logger.log('[web3] account id', accountId)
     } catch (error) {
       Logger.error('[web3] Error: ', error.message)
+    } finally {
+      setWeb3Loading(false)
     }
   }, [web3Modal])
 
@@ -200,7 +205,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
       Logger.log('[web3] Head block: ', block)
     }
     getBlock()
-  }, [web3])
+  }, [web3, networkId])
 
   // -----------------------------------
   // Logout helper
@@ -254,6 +259,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
         networkData,
         block,
         isTestnet,
+        web3Loading,
         connect,
         logout
       }}

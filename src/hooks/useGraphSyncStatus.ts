@@ -41,8 +41,8 @@ async function getBlockHead(config: ConfigHelperConfig) {
   }
 
   // for everything else, create new web3 instance with infura
-  const web3 = new Web3(config.nodeUri)
-  const blockHead = await web3.eth.getBlockNumber()
+  const web3Instance = new Web3(config.nodeUri)
+  const blockHead = await web3Instance.eth.getBlockNumber()
   return blockHead
 }
 
@@ -57,14 +57,14 @@ async function getBlockSubgraph(subgraphUri: string) {
 
 export function useGraphSyncStatus(): UseGraphSyncStatus {
   const { config } = useOcean()
-  const { block } = useWeb3()
+  const { block, web3Loading } = useWeb3()
   const [blockGraph, setBlockGraph] = useState<number>()
   const [blockHead, setBlockHead] = useState<number>()
   const [isGraphSynced, setIsGraphSynced] = useState(true)
 
   // Get and set head block
   useEffect(() => {
-    if (!config || !config.nodeUri) return
+    if (!config || !config.nodeUri || web3Loading) return
 
     async function initBlockHead() {
       const blockHead = block || (await getBlockHead(config))
@@ -72,7 +72,7 @@ export function useGraphSyncStatus(): UseGraphSyncStatus {
       Logger.log('[GraphStatus] Head block: ', blockHead)
     }
     initBlockHead()
-  }, [block, config.nodeUri])
+  }, [web3Loading, block, config.nodeUri])
 
   // Get and set subgraph block
   useEffect(() => {
@@ -88,7 +88,7 @@ export function useGraphSyncStatus(): UseGraphSyncStatus {
 
   // Set sync status
   useEffect(() => {
-    if (!blockGraph && !blockHead) return
+    if ((!blockGraph && !blockHead) || web3Loading) return
 
     const difference = blockHead - blockGraph
 
