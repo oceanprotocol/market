@@ -13,7 +13,9 @@ export function getOceanConfig(
 ): ConfigHelperConfig {
   return new ConfigHelper().getConfig(
     network,
-    network !== 'polygon' && process.env.GATSBY_INFURA_PROJECT_ID
+    network === 'polygon' || network === 137
+      ? undefined
+      : process.env.GATSBY_INFURA_PROJECT_ID
   ) as ConfigHelperConfig
 }
 
