@@ -65,20 +65,20 @@ export async function getPreviousOrders(
     id: id,
     account: account
   }
-  const fatchedPreviousOrders: any = await fetchData(
+  const fetchedPreviousOrders: any = await fetchData(
     previousOrderQuery,
     variables
   )
-  if (fatchedPreviousOrders.data?.tokenOrders?.length === 0) return null
-  if (assetTimeout === 'Forever') {
-    return fatchedPreviousOrders?.data?.tokenOrders[0]?.tx
+  if (fetchedPreviousOrders.data?.tokenOrders?.length === 0) return null
+  if (assetTimeout === '0') {
+    return fetchedPreviousOrders?.data?.tokenOrders[0]?.tx
   } else {
     const expiry = new BigNumber(
-      fatchedPreviousOrders?.data?.tokenOrders[0]?.timestamp
+      fetchedPreviousOrders?.data?.tokenOrders[0]?.timestamp
     ).plus(assetTimeout)
     const unixTime = new BigNumber(Math.floor(Date.now() / 1000))
     if (unixTime.isLessThan(expiry)) {
-      return fatchedPreviousOrders?.data?.tokenOrders[0]?.tx
+      return fetchedPreviousOrders?.data?.tokenOrders[0]?.tx
     } else {
       return null
     }

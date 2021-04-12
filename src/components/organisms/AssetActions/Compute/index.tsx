@@ -122,14 +122,14 @@ export default function Compute({
     isJobStarting === true || file === null || !ocean || !isBalanceSufficient
   const hasDatatoken = Number(dtBalance) >= 1
 
-  async function checkPreviousOrders(ddo: DDO, serviceType: ServiceType) {
+  async function checkPreviousOrders(ddo: DDO) {
     const { timeout } = (
       ddo.findServiceByType('access') || ddo.findServiceByType('compute')
     ).attributes.main
     const orderId = await getPreviousOrders(
       ddo.dataToken?.toLowerCase(),
       accountId?.toLowerCase(),
-      secondsToString(timeout)
+      timeout.toString()
     )
     const assetType = ddo.findServiceByType('metadata').attributes.main.type
     if (assetType === 'algorithm') {
@@ -253,23 +253,23 @@ export default function Compute({
 
   useEffect(() => {
     if (!ocean || !accountId) return
-    checkPreviousOrders(ddo, 'compute')
+    checkPreviousOrders(ddo)
   }, [ocean, ddo, accountId])
 
   useEffect(() => {
     if (!ocean || !accountId || !selectedAlgorithmAsset) return
 
     if (selectedAlgorithmAsset.findServiceByType('access')) {
-      checkPreviousOrders(selectedAlgorithmAsset, 'access').then(() => {
+      checkPreviousOrders(selectedAlgorithmAsset).then(() => {
         if (
           !hasPreviousAlgorithmOrder &&
           selectedAlgorithmAsset.findServiceByType('compute')
         ) {
-          checkPreviousOrders(selectedAlgorithmAsset, 'compute')
+          checkPreviousOrders(selectedAlgorithmAsset)
         }
       })
     } else if (selectedAlgorithmAsset.findServiceByType('compute')) {
-      checkPreviousOrders(selectedAlgorithmAsset, 'compute')
+      checkPreviousOrders(selectedAlgorithmAsset)
     }
     checkAssetDTBalance(selectedAlgorithmAsset)
     initMetadata(selectedAlgorithmAsset)
