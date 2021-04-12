@@ -61,6 +61,7 @@ export function useGraphSyncStatus(): UseGraphSyncStatus {
   const [blockGraph, setBlockGraph] = useState<number>()
   const [blockHead, setBlockHead] = useState<number>()
   const [isGraphSynced, setIsGraphSynced] = useState(true)
+  const [subgraphLoading, setSubgraphLoading] = useState(false)
 
   // Get and set head block
   useEffect(() => {
@@ -77,10 +78,11 @@ export function useGraphSyncStatus(): UseGraphSyncStatus {
   // Get and set subgraph block
   useEffect(() => {
     if (!config || !config.subgraphUri) return
-
     async function initBlockSubgraph() {
+      setSubgraphLoading(true)
       const blockGraph = await getBlockSubgraph(config.subgraphUri)
       setBlockGraph(blockGraph)
+      setSubgraphLoading(false)
       Logger.log('[GraphStatus] Latest block from subgraph: ', blockGraph)
     }
     initBlockSubgraph()
@@ -88,7 +90,7 @@ export function useGraphSyncStatus(): UseGraphSyncStatus {
 
   // Set sync status
   useEffect(() => {
-    if ((!blockGraph && !blockHead) || web3Loading) return
+    if ((!blockGraph && !blockHead) || web3Loading || subgraphLoading) return
 
     const difference = blockHead - blockGraph
 
