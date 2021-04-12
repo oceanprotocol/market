@@ -6,7 +6,6 @@ import { Logger } from '@oceanprotocol/lib'
 import Web3 from 'web3'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 
-const refreshInterval = 12000
 const blockDifferenceThreshold = 30
 const ethGraphUrl = `https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks`
 const ethGraphQuery =
@@ -100,21 +99,6 @@ export function useGraphSyncStatus(): UseGraphSyncStatus {
     }
     setIsGraphSynced(true)
   }, [blockGraph, blockHead])
-
-  /* useSWR(config.subgraphUri, fetchData, {
-    onSuccess: (data) => {
-      console.log('Graph',data)
-      setGraphBlockNumber(data.data._meta.block.number)
-    }
-  })
-
-  useSWR(ethGraphUrl, fetchETH, {
-    onSuccess: (data: any) => {
-      console.log('ETH',data)
-      setBlockNumber(data.data.blocks[0].number)
-    }
-  })
-  */
 
   return { blockHead, blockGraph, isGraphSynced }
 }
