@@ -125,17 +125,11 @@ export default function Consume({
 
   useEffect(() => {
     async function validateAsset() {
-      let isFileValid: boolean
-      try {
-        const did = DID.parse(ddo.id)
-        isFileValid = await ocean.provider.isFileConsumable(
-          did,
-          ddo.findServiceByType('access').index
-        )
-      } catch (error) {
-        Logger.error(error)
-        isFileValid = false
-      }
+      const did = DID.parse(ddo.id)
+      const isFileValid = await ocean.provider.isFileConsumable(
+        did,
+        ddo.findServiceByType('access').index
+      )
 
       setIsDisabled(
         !isFileValid ||
@@ -161,17 +155,11 @@ export default function Consume({
   ])
 
   async function handleConsume() {
-    let isFileValid: boolean
-    try {
-      const did = DID.parse(ddo.id)
-      isFileValid = await ocean.provider.isFileConsumable(
-        did,
-        ddo.findServiceByType('access').index
-      )
-    } catch (error) {
-      Logger.error(error)
-      isFileValid = false
-    }
+    const did = DID.parse(ddo.id)
+    const isFileValid = await ocean.provider.isFileConsumable(
+      did,
+      ddo.findServiceByType('access').index
+    )
 
     if (isFileValid) {
       !hasPreviousOrder && !hasDatatoken && (await buyDT('1', price))
