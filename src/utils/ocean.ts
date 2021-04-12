@@ -11,10 +11,9 @@ import { UserBalance } from '../@types/TokenBalance'
 export function getOceanConfig(
   network: ConfigHelperNetworkName | ConfigHelperNetworkId
 ): ConfigHelperConfig {
-  console.log(process.env.GATSBY_INFURA_PROJECT_ID)
   return new ConfigHelper().getConfig(
     network,
-    process.env.GATSBY_INFURA_PROJECT_ID
+    network !== 'polygon' && process.env.GATSBY_INFURA_PROJECT_ID
   ) as ConfigHelperConfig
 }
 
