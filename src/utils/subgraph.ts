@@ -85,7 +85,7 @@ export async function getPreviousOrders(
   }
 }
 
-export async function getAssetPrice(assets: DDO[]): Promise<any> {
+export async function getAssetPrices(assets: DDO[]): Promise<any> {
   const priceList: any = {}
   const poolPriceAssets: string[] = []
   const poolDTadressDID: any = {}
@@ -109,8 +109,8 @@ export async function getAssetPrice(assets: DDO[]): Promise<any> {
     datatokenAddress_in: poolPriceAssets
   }
   const poolPriceResponse: any = await fetchData(poolQuery, poolVariables)
-  for (const poolPirce of poolPriceResponse.data?.pools) {
-    priceList[poolDTadressDID[poolPirce.datatokenAddress]] = poolPirce.spotPrice
+  for (const poolPrice of poolPriceResponse.data?.pools) {
+    priceList[poolDTadressDID[poolPrice.datatokenAddress]] = poolPrice.spotPrice
   }
   const frePriceResponse: any = await fetchData(freQuery, freVariables)
   for (const frePrice of frePriceResponse.data?.fixedRateExchanges) {
