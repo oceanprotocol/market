@@ -33,6 +33,8 @@ export default function ComputeDetailsModal({
         const job = await ocean.compute.status(
           account,
           computeJob.did,
+          undefined,
+          undefined,
           computeJob.jobId
         )
         if (job?.length > 0) {

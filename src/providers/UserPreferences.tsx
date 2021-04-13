@@ -6,10 +6,8 @@ import React, {
   useState,
   useEffect
 } from 'react'
-import { Logger } from '@oceanprotocol/lib'
-import { LogLevel } from '@oceanprotocol/lib/dist/node/utils/Logger'
+import { Logger, LogLevel, ConfigHelperConfig } from '@oceanprotocol/lib'
 import { useOcean } from './Ocean'
-import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import { isBrowser } from '../utils'
 
 interface UserPreferencesValue {
