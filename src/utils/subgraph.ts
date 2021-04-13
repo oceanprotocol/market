@@ -87,34 +87,26 @@ export async function getPreviousOrders(
 
 export async function getAssetPrices(assets: DDO[]): Promise<any> {
   const priceList: any = {}
-  const poolPriceAssets: string[] = []
-  const poolDTadressDID: any = {}
-  const frePriceAssets: string[] = []
-  const freDTadressDID: any = {}
+  const didDTMap: any = {}
+  const dataTokenList: string[] = []
+
   for (const ddo of assets) {
-    if (ddo.price?.type === 'pool') {
-      poolDTadressDID[ddo?.dataToken.toLowerCase()] = ddo.id
-      poolPriceAssets.push(ddo?.dataToken.toLowerCase())
-    } else if (ddo.price?.type === 'exchange') {
-      freDTadressDID[ddo?.dataToken.toLowerCase()] = ddo.id
-      frePriceAssets.push(ddo?.dataToken.toLowerCase())
-    } else {
-      priceList[ddo.id] = 'none'
-    }
+    didDTMap[ddo?.dataToken.toLowerCase()] = ddo.id
+    dataTokenList.push(ddo?.dataToken.toLowerCase())
   }
   const freVariables = {
-    datatoken_in: frePriceAssets
+    datatoken_in: dataTokenList
   }
   const poolVariables = {
-    datatokenAddress_in: poolPriceAssets
+    datatokenAddress_in: dataTokenList
   }
   const poolPriceResponse: any = await fetchData(poolQuery, poolVariables)
   for (const poolPrice of poolPriceResponse.data?.pools) {
-    priceList[poolDTadressDID[poolPrice.datatokenAddress]] = poolPrice.spotPrice
+    priceList[didDTMap[poolPrice.datatokenAddress]] = poolPrice.spotPrice
   }
   const frePriceResponse: any = await fetchData(freQuery, freVariables)
   for (const frePrice of frePriceResponse.data?.fixedRateExchanges) {
-    priceList[freDTadressDID[frePrice.datatoken?.address]] = frePrice.rate
+    priceList[didDTMap[frePrice.datatoken?.address]] = frePrice.rate
   }
   return priceList
 }

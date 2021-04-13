@@ -122,7 +122,7 @@ export async function transformDDOToAssetSelection(
   const ddoNames = await getAssetsNames(didList, metadataCacheUri, source.token)
   const algorithmList: AssetSelectionAsset[] = []
   didList?.forEach((did: string) => {
-    if (priceList[did] !== 'none') {
+    if (priceList[did]) {
       let selected = false
       selectedAlgorithms?.forEach((algorithm: PublisherTrustedAlgorithm) => {
         if (algorithm.did === did) {
