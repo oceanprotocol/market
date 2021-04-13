@@ -5,6 +5,7 @@ import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import { Link } from 'gatsby'
 import MarketStats from '../molecules/MarketStats'
 import BuildId from '../atoms/BuildId'
+import SyncStatus from '../molecules/SyncStatus'
 
 export default function Footer(): ReactElement {
   const { copyright } = useSiteMetadata()
@@ -13,9 +14,8 @@ export default function Footer(): ReactElement {
   return (
     <footer className={styles.footer}>
       <div className={styles.content}>
-        <BuildId />
+        <SyncStatus /> | <BuildId />
         <MarketStats />
-
         <div className={styles.copyright}>
           © {year} <Markdown text={copyright} /> —{' '}
           <Link to="/terms">Terms</Link>
