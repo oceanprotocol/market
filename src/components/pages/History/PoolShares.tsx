@@ -151,7 +151,7 @@ export default function PoolShares(): ReactElement {
   const [assets, setAssets] = useState<Asset[]>()
   const { data, loading } = useQuery<PoolSharesList>(poolSharesQuery, {
     variables: {
-      user: '0x4d156a2ef69ffddc55838176c6712c90f60a2285'.toLowerCase()
+      user: accountId.toLowerCase()
     },
     pollInterval: 20000
   })

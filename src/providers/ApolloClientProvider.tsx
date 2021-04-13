@@ -14,7 +14,7 @@ import React, { useState, useEffect, ReactNode, ReactElement } from 'react'
 function createClient(subgraphUri: string) {
   const client = new ApolloClient({
     link: new HttpLink({
-      uri: `https://subgraph2.polygon.oceanprotocol.com/subgraphs/name/oceanprotocol/ocean-subgraph`,
+      uri: `${subgraphUri}/subgraphs/name/oceanprotocol/ocean-subgraph`,
       fetch
     }),
     cache: new InMemoryCache()
