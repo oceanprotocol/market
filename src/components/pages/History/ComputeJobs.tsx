@@ -188,7 +188,7 @@ export default function ComputeJobs(): ReactElement {
             console.log(err)
           }
         }
-
+        console.log('found providers', providers)
         for (let i = 0; i < providers.length; i++) {
           const computeJob = await ocean.compute.status(
             account,
@@ -199,6 +199,7 @@ export default function ComputeJobs(): ReactElement {
             undefined,
             false
           )
+          console.log('found jobs for provider ' + providers[i], computeJob)
           for (let j = 0; j < computeJob.length; j++) {
             const job = computeJob[j]
             const did = job.inputDID[0]
