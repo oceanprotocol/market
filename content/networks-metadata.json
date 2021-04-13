@@ -18,6 +18,13 @@
       "https://cloudflare-eth.com"
     ],
     "faucets": [],
+    "explorers": [
+      {
+        "name": "etherscan",
+        "url": "https://etherscan.io",
+        "standard": "EIP3091"
+      }
+    ],
     "infoURL": "https://ethereum.org"
   },
   {
@@ -34,6 +41,7 @@
     },
     "rpc": ["https://mainnet.optimism.io/"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://optimism.io"
   },
   {
@@ -58,6 +66,7 @@
       "ws://xdai.poanetwork.dev:8546"
     ],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://forum.poa.network/c/xdai-chain"
   },
   {
@@ -74,6 +83,7 @@
     },
     "rpc": ["https://node-api.klaytnapi.com/v1/klaytn"],
     "faucets": ["https://baobab.wallet.klaytn.com/access?next=faucet"],
+    "explorers": [],
     "infoURL": "https://www.klaytn.com/"
   },
   {
@@ -90,6 +100,7 @@
     },
     "rpc": ["https://rpc1.newchain.newtonproject.org"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://www.newtonproject.org/"
   },
   {
@@ -106,6 +117,7 @@
     },
     "rpc": ["https://api.einc.io/jsonrpc/mainnet"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://einc.io"
   },
   {
@@ -122,6 +134,7 @@
     },
     "rpc": ["https://meta.evrice.com"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://evrice.com"
   },
   {
@@ -138,6 +151,7 @@
     },
     "rpc": ["https://global.rpc.mainnet.newtonproject.org"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://www.newtonproject.org/"
   },
   {
@@ -154,6 +168,7 @@
     },
     "rpc": ["https://substrate.org.cn"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://web3games.blockspaper.com/en/"
   },
   {
@@ -170,6 +185,7 @@
     },
     "rpc": [],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://clover.finance"
   },
   {
@@ -186,6 +202,7 @@
     },
     "rpc": [],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://clover.finance"
   },
   {
@@ -202,6 +219,7 @@
     },
     "rpc": ["https://mainnet-rpc.thundercore.com"],
     "faucets": ["https://faucet.thundercore.com"],
+    "explorers": [],
     "infoURL": "https://thundercore.com"
   },
   {
@@ -218,6 +236,7 @@
     },
     "rpc": ["https://api.metadium.com/prod"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://metadium.com"
   },
   {
@@ -234,6 +253,7 @@
     },
     "rpc": ["https://rpc.iposlab.com", "https://rpc2.iposlab.com"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://iposlab.com"
   },
   {
@@ -250,6 +270,7 @@
     },
     "rpc": [],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://mathchain.org"
   },
   {
@@ -266,6 +287,7 @@
     },
     "rpc": ["https://galois-hk.maiziqianbao.net/rpc"],
     "faucets": ["https://scan.boka.network/#/Galois/faucet"],
+    "explorers": [],
     "infoURL": "https://mathchain.org"
   },
   {
@@ -282,6 +304,7 @@
     },
     "rpc": ["https://api.metadium.com/dev"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://metadium.com"
   },
   {
@@ -298,6 +321,7 @@
     },
     "rpc": ["https://rpc.fuse.io"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://fuse.io/"
   },
   {
@@ -317,6 +341,7 @@
       "wss://ws-mainnet.hecochain.com"
     ],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://hecoinfo.com"
   },
   {
@@ -333,6 +358,7 @@
     },
     "rpc": [],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://moonbeam.network/networks/moonbeam/"
   },
   {
@@ -349,6 +375,7 @@
     },
     "rpc": [],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://moonbeam.network/networks/moonriver/"
   },
   {
@@ -365,6 +392,7 @@
     },
     "rpc": [],
     "faucets": [],
+    "explorers": [],
     "infoURL": ""
   },
   {
@@ -384,6 +412,7 @@
       "wss://wss.testnet.moonbeam.network"
     ],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://docs.moonbeam.network/networks/testnet/"
   },
   {
@@ -400,6 +429,7 @@
     },
     "rpc": ["https://staging.diode.io:8443/", "wss://staging.diode.io:8443/ws"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://diode.io/staging"
   },
   {
@@ -416,6 +446,7 @@
     },
     "rpc": ["https://rpc.ether1.org"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://ether1.org"
   },
   {
@@ -432,6 +463,7 @@
     },
     "rpc": [],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://near.org/"
   },
   {
@@ -448,6 +480,7 @@
     },
     "rpc": [],
     "faucets": ["https://wallet.testnet.near.org"],
+    "explorers": [],
     "infoURL": "https://near.org/"
   },
   {
@@ -464,6 +497,7 @@
     },
     "rpc": [],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://near.org/"
   },
   {
@@ -480,6 +514,7 @@
     },
     "rpc": ["https://rpc.xerom.org"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://xerom.org"
   },
   {
@@ -496,6 +531,7 @@
     },
     "rpc": ["https://churchill-rpc.pepchain.io"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://pepchain.io"
   },
   {
@@ -515,6 +551,7 @@
       "wss://ws-mainnet.matic.network"
     ],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://matic.network/"
   },
   {
@@ -531,6 +568,7 @@
     },
     "rpc": [],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://flare.xyz"
   },
   {
@@ -547,6 +585,7 @@
     },
     "rpc": ["https://prenet.diode.io:8443/", "wss://prenet.diode.io:8443/ws"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://diode.io/prenet"
   },
   {
@@ -563,6 +602,7 @@
     },
     "rpc": [],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://github.com/flare-eng/coston"
   },
   {
@@ -579,6 +619,7 @@
     },
     "rpc": ["https://node.sirius.lightstreams.io"],
     "faucets": ["https://discuss.lightstreams.network/t/request-test-tokens"],
+    "explorers": [],
     "infoURL": "https://explorer.sirius.lightstreams.io"
   },
   {
@@ -595,6 +636,7 @@
     },
     "rpc": ["https://wallet.atheios.com:8797"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://atheios.com"
   },
   {
@@ -611,6 +653,7 @@
     },
     "rpc": ["https://node.mainnet.lightstreams.io"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://explorer.lightstreams.io"
   },
   {
@@ -627,6 +670,7 @@
     },
     "rpc": ["https://api.harmony.one"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://www.harmony.one/"
   },
   {
@@ -643,6 +687,7 @@
     },
     "rpc": ["https://s1.api.harmony.one"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://www.harmony.one/"
   },
   {
@@ -659,6 +704,7 @@
     },
     "rpc": ["https://s2.api.harmony.one"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://www.harmony.one/"
   },
   {
@@ -675,6 +721,7 @@
     },
     "rpc": ["https://s3.api.harmony.one"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://www.harmony.one/"
   },
   {
@@ -691,6 +738,7 @@
     },
     "rpc": ["https://api.s0.b.hmny.io"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://www.harmony.one/"
   },
   {
@@ -707,6 +755,7 @@
     },
     "rpc": ["https://api.s1.b.hmny.io"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://www.harmony.one/"
   },
   {
@@ -723,6 +772,7 @@
     },
     "rpc": ["https://api.s2.b.hmny.io"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://www.harmony.one/"
   },
   {
@@ -739,6 +789,7 @@
     },
     "rpc": ["https://api.s3.b.hmny.io"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://www.harmony.one/"
   },
   {
@@ -755,6 +806,7 @@
     },
     "rpc": ["https://rpc.thaifi.com"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://exp.thaifi.com"
   },
   {
@@ -771,6 +823,7 @@
     },
     "rpc": ["https://testnet-rpc.thundercore.com"],
     "faucets": ["https://faucet-testnet.thundercore.com"],
+    "explorers": [],
     "infoURL": "https://thundercore.com"
   },
   {
@@ -787,6 +840,7 @@
     },
     "rpc": ["https://net.iolite.io"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://iolite.io"
   },
   {
@@ -803,6 +857,7 @@
     },
     "rpc": ["https://tsfapi.europool.me"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://teslafunds.io"
   },
   {
@@ -819,6 +874,7 @@
     },
     "rpc": ["https://jsonrpc.egem.io/custom"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://egem.io"
   },
   {
@@ -835,6 +891,7 @@
     },
     "rpc": ["https://node.expanse.tech"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://expanse.tech"
   },
   {
@@ -851,6 +908,7 @@
     },
     "rpc": ["https://mainrpc.elaeth.io"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://www.elastos.org/"
   },
   {
@@ -867,6 +925,7 @@
     },
     "rpc": ["https://remote.akroma.io"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://akroma.io"
   },
   {
@@ -883,6 +942,7 @@
     },
     "rpc": [],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://420integrated.com"
   },
   {
@@ -899,6 +959,7 @@
     },
     "rpc": ["https://mainnet1.edgewa.re"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "http://edgewa.re"
   },
   {
@@ -915,6 +976,7 @@
     },
     "rpc": ["https://beresheet1.edgewa.re"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "http://edgewa.re"
   },
   {
@@ -931,6 +993,7 @@
     },
     "rpc": ["https://rpc.elaeth.io"],
     "faucets": ["https://faucet.elaeth.io/"],
+    "explorers": [],
     "infoURL": "https://elaeth.io/"
   },
   {
@@ -950,6 +1013,7 @@
       "https://app.freighttrust.net/ftn/${API_KEY}"
     ],
     "faucets": ["http://faucet.freight.sh"],
+    "explorers": [],
     "infoURL": "https://freighttrust.com"
   },
   {
@@ -966,6 +1030,7 @@
     },
     "rpc": ["https://node1.webchain.network"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://webchain.network"
   },
   {
@@ -982,6 +1047,7 @@
     },
     "rpc": ["https://rpc.energyweb.org", "wss://rpc.energyweb.org/ws"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://energyweb.org"
   },
   {
@@ -998,6 +1064,7 @@
     },
     "rpc": ["https://rpc.sigma1.artis.network"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://artis.eco"
   },
   {
@@ -1014,6 +1081,7 @@
     },
     "rpc": ["https://rpc.tau1.artis.network"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://artis.network"
   },
   {
@@ -1030,6 +1098,7 @@
     },
     "rpc": ["https://rpc.fantom.network", "https://fantomscan.io/rpc"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://fantom.foundation"
   },
   {
@@ -1049,6 +1118,7 @@
       "wss://ws-testnet.hecochain.com"
     ],
     "faucets": ["https://scan-testnet.hecochain.com/faucet"],
+    "explorers": [],
     "infoURL": "https://testnet.hecoinfo.com"
   },
   {
@@ -1065,6 +1135,7 @@
     },
     "rpc": ["https://node.hpb.blue"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://hpb.io"
   },
   {
@@ -1081,6 +1152,7 @@
     },
     "rpc": ["https://rpc.auxilium.global"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://auxilium.global"
   },
   {
@@ -1100,6 +1172,7 @@
       "wss://ropsten.infura.io/ws/v3/${INFURA_API_KEY}"
     ],
     "faucets": ["https://faucet.ropsten.be?${ADDRESS}"],
+    "explorers": [],
     "infoURL": "https://github.com/ethereum/ropsten"
   },
   {
@@ -1116,6 +1189,7 @@
     },
     "rpc": ["https://public-node.rsk.co", "https://mycrypto.rsk.co"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://rsk.co"
   },
   {
@@ -1135,6 +1209,7 @@
       "https://mycrypto.testnet.rsk.co"
     ],
     "faucets": ["https://faucet.testnet.rsk.co"],
+    "explorers": [],
     "infoURL": "https://rsk.co"
   },
   {
@@ -1151,6 +1226,7 @@
     },
     "rpc": ["https://api.esn.gonspool.com"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://ethersocial.org"
   },
   {
@@ -1167,6 +1243,7 @@
     },
     "rpc": ["https://wallrpc.pirl.io"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://pirl.io"
   },
   {
@@ -1183,6 +1260,7 @@
     },
     "rpc": ["https://mainnet.anyswap.exchange", "https://fsn.dev/api"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://www.fusion.org/"
   },
   {
@@ -1199,6 +1277,7 @@
     },
     "rpc": ["https://rpc.goodata.io"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://www.goodata.org"
   },
   {
@@ -1215,6 +1294,7 @@
     },
     "rpc": ["https://rpc.tbwg.io"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://tbwg.io"
   },
   {
@@ -1231,6 +1311,7 @@
     },
     "rpc": ["https://node.joys.digital"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://joys.digital"
   },
   {
@@ -1247,6 +1328,7 @@
     },
     "rpc": ["https://rpc.valorbit.com/v2"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://valorbit.com"
   },
   {
@@ -1263,6 +1345,7 @@
     },
     "rpc": ["https://rpc-bitfalls1.lisinski.online"],
     "faucets": ["https://pipa.lisinski.online"],
+    "explorers": [],
     "infoURL": "https://lisinski.online"
   },
   {
@@ -1279,6 +1362,7 @@
     },
     "rpc": ["https://nodeapi.gen3.energi.network"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://www.energi.world/"
   },
   {
@@ -1298,6 +1382,7 @@
       "wss://rinkeby.infura.io/ws/v3/${INFURA_API_KEY}"
     ],
     "faucets": ["https://faucet.rinkeby.io"],
+    "explorers": [],
     "infoURL": "https://www.rinkeby.io"
   },
   {
@@ -1314,6 +1399,7 @@
     },
     "rpc": ["https://mainnet.telos.net/evm"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://telos.net"
   },
   {
@@ -1330,6 +1416,7 @@
     },
     "rpc": ["https://testnet.telos.net/evm"],
     "faucets": ["https://app.telos.net/testnet/developers"],
+    "explorers": [],
     "infoURL": "https://telos.net"
   },
   {
@@ -1355,6 +1442,7 @@
       "https://faucet.kovan.network",
       "https://gitter.im/kovan-testnet/faucet"
     ],
+    "explorers": [],
     "infoURL": "https://kovan-testnet.github.io/website"
   },
   {
@@ -1371,6 +1459,7 @@
     },
     "rpc": ["https://goerli.optimism.io/"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://optimism.io"
   },
   {
@@ -1387,6 +1476,7 @@
     },
     "rpc": [],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://teampeggle.com"
   },
   {
@@ -1403,6 +1493,7 @@
     },
     "rpc": ["https://forno.celo.org", "wss://forno.celo.org/ws"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://docs.celo.org/"
   },
   {
@@ -1419,6 +1510,7 @@
     },
     "rpc": [],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://darwinia.network/"
   },
   {
@@ -1435,6 +1527,7 @@
     },
     "rpc": ["https://ava.network:21015/ext/evm/rpc"],
     "faucets": ["http://athfaucet.ava.network//?address=${ADDRESS}"],
+    "explorers": [],
     "infoURL": "https://athereum.ava.network"
   },
   {
@@ -1451,6 +1544,7 @@
     },
     "rpc": ["https://api.avax-test.network/ext/bc/C/rpc"],
     "faucets": ["https://faucet.avax-test.network/"],
+    "explorers": [],
     "infoURL": "https://cchain.explorer.avax-test.network"
   },
   {
@@ -1467,6 +1561,7 @@
     },
     "rpc": ["https://api.avax.network/ext/bc/C/rpc"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://cchain.explorer.avax.network/"
   },
   {
@@ -1489,6 +1584,7 @@
       "https://celo.org/developers/faucet",
       "https://cauldron.pretoriaresearchlab.io/alfajores-faucet"
     ],
+    "explorers": [],
     "infoURL": "https://docs.celo.org/"
   },
   {
@@ -1505,6 +1601,7 @@
     },
     "rpc": ["https://babel-api.mainnet.iotex.one"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://iotex.io"
   },
   {
@@ -1521,6 +1618,7 @@
     },
     "rpc": ["https://babel-api.testnet.iotex.one"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://iotex.io"
   },
   {
@@ -1537,6 +1635,7 @@
     },
     "rpc": ["https://nodeapi.test3.energi.network"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://www.energi.world/"
   },
   {
@@ -1553,6 +1652,7 @@
     },
     "rpc": [],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://www.rupx.io"
   },
   {
@@ -1576,6 +1676,7 @@
       "https://goerli-faucet.slock.it/?address=${ADDRESS}",
       "https://faucet.goerli.mudit.blog"
     ],
+    "explorers": [],
     "infoURL": "https://goerli.net/#about"
   },
   {
@@ -1592,6 +1693,7 @@
     },
     "rpc": ["https://rpc.xinfin.network"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://xinfin.org"
   },
   {
@@ -1608,6 +1710,7 @@
     },
     "rpc": ["https://rpc.apothem.network"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://xinfin.org"
   },
   {
@@ -1624,6 +1727,7 @@
     },
     "rpc": ["https://rpc-mainnet.coinex.net"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "http://www.coinex.org/"
   },
   {
@@ -1640,6 +1744,7 @@
     },
     "rpc": ["https://rpc-testnet.coinex.net"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "http://www.coinex.org/"
   },
   {
@@ -1661,6 +1766,7 @@
       "wss://rpc.tao.network"
     ],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://tao.network"
   },
   {
@@ -1691,6 +1797,7 @@
       "wss://bsc-ws-node.nariox.org"
     ],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://www.binance.org"
   },
   {
@@ -1707,6 +1814,7 @@
     },
     "rpc": ["https://proxy.wegochain.io", "http://wallet.wegochain.io:7764"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "http://wegochain.io"
   },
   {
@@ -1723,6 +1831,7 @@
     },
     "rpc": [],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://acala.network"
   },
   {
@@ -1739,6 +1848,7 @@
     },
     "rpc": [],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://explorer.jade.builders/?network=kotti"
   },
   {
@@ -1755,6 +1865,7 @@
     },
     "rpc": ["https://rpc.gochain.io"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://gochain.io"
   },
   {
@@ -1771,6 +1882,7 @@
     },
     "rpc": ["https://ethereumclassic.network"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://ethereumclassic.org"
   },
   {
@@ -1787,6 +1899,7 @@
     },
     "rpc": ["https://c.onical.org", "https://tx.aquacha.in/api"],
     "faucets": ["https://aquacha.in/faucet"],
+    "explorers": [],
     "infoURL": "https://aquachain.github.io"
   },
   {
@@ -1803,6 +1916,7 @@
     },
     "rpc": [],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://ethereumclassic.org"
   },
   {
@@ -1822,6 +1936,7 @@
       "https://docs.google.com/forms/d/e/1FAIpQLSdfr1BwUTYepVmmvfVUDRCwALejZ-TUva2YujNpvrEmPAX2pg/viewform",
       "https://cauldron.pretoriaresearchlab.io/baklava-faucet"
     ],
+    "explorers": [],
     "infoURL": "https://docs.celo.org/"
   },
   {
@@ -1838,6 +1953,7 @@
     },
     "rpc": [],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://github.com/eth-classic/mordor/"
   },
   {
@@ -1854,6 +1970,7 @@
     },
     "rpc": ["https://jsonrpc.ellaism.org"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://ellaism.org"
   },
   {
@@ -1870,6 +1987,7 @@
     },
     "rpc": ["https://exchaintest.okexcn.com"],
     "faucets": ["https://www.okex.com/drawdex"],
+    "explorers": [],
     "infoURL": "https://www.okex.com/okexchain"
   },
   {
@@ -1886,6 +2004,7 @@
     },
     "rpc": ["https://exchain.okexcn.com"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://www.okex.com/okexchain"
   },
   {
@@ -1902,6 +2021,7 @@
     },
     "rpc": ["http://test-rpc.dbmbp.com"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "http://test.dbmbp.com"
   },
   {
@@ -1918,6 +2038,7 @@
     },
     "rpc": ["https://rpc.soter.one"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://www.soterone.com"
   },
   {
@@ -1934,6 +2055,7 @@
     },
     "rpc": [],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://karura.network"
   },
   {
@@ -1950,6 +2072,7 @@
     },
     "rpc": ["https://kovan.optimism.io/"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://optimism.io"
   },
   {
@@ -1966,6 +2089,7 @@
     },
     "rpc": ["https://rpc.dome.cloud"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://thaichain.io"
   },
   {
@@ -1985,6 +2109,7 @@
       "wss://volta-rpc.energyweb.org/ws"
     ],
     "faucets": ["https://voltafaucet.energyweb.org"],
+    "explorers": [],
     "infoURL": "https://energyweb.org"
   },
   {
@@ -2001,6 +2126,7 @@
     },
     "rpc": ["https://rpc2.mix-blockchain.org:8647"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://mix-blockchain.org"
   },
   {
@@ -2021,6 +2147,7 @@
       "ws://sokol.poa.network:8546"
     ],
     "faucets": ["https://faucet-sokol.herokuapp.com"],
+    "explorers": [],
     "infoURL": "https://poa.network"
   },
   {
@@ -2037,6 +2164,7 @@
     },
     "rpc": ["https://mewapi.musicoin.tw"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://musicoin.tw"
   },
   {
@@ -2053,6 +2181,7 @@
     },
     "rpc": ["http://54.210.246.165:8545"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://docs.ethermint.zone"
   },
   {
@@ -2069,6 +2198,7 @@
     },
     "rpc": ["https://ethnode.primusmoney.com/mainnet"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://primusmoney.com"
   },
   {
@@ -2085,6 +2215,7 @@
     },
     "rpc": ["https://ethnode.primusmoney.com/firenze"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://primusmoney.com"
   },
   {
@@ -2101,6 +2232,7 @@
     },
     "rpc": [],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://acala.network"
   },
   {
@@ -2117,6 +2249,7 @@
     },
     "rpc": ["https://rpc.octano.dev", "https://pyrus2.ubiqscan.io"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://ubiqsmart.com"
   },
   {
@@ -2133,6 +2266,7 @@
     },
     "rpc": ["https://rpc-mumbai.matic.today", "wss://ws-mumbai.matic.today"],
     "faucets": ["https://faucet.matic.network/"],
+    "explorers": [],
     "infoURL": "https://matic.network/"
   },
   {
@@ -2149,6 +2283,7 @@
     },
     "rpc": ["https://rpc.meter.io"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://www.meter.io"
   },
   {
@@ -2165,6 +2300,7 @@
     },
     "rpc": ["https://clo-geth.0xinfra.com"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://callisto.network"
   },
   {
@@ -2181,6 +2317,7 @@
     },
     "rpc": [],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://callisto.network"
   },
   {
@@ -2197,6 +2334,7 @@
     },
     "rpc": ["https://node-api.klaytnapi.com/v1/klaytn"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://www.klaytn.com/"
   },
   {
@@ -2213,6 +2351,7 @@
     },
     "rpc": ["https://rpc.tomochain.com"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://tomocoin.io"
   },
   {
@@ -2229,6 +2368,7 @@
     },
     "rpc": ["https://gwan-ssl.wandevs.org:56891/"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://www.wanscan.org"
   },
   {
@@ -2245,6 +2385,7 @@
     },
     "rpc": ["https://core.bloxberg.org"],
     "faucets": ["https://faucet.bloxberg.org/"],
+    "explorers": [],
     "infoURL": "https://bloxberg.org"
   },
   {
@@ -2261,6 +2402,7 @@
     },
     "rpc": [],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://ethersocial.org"
   },
   {
@@ -2284,6 +2426,7 @@
       "https://data-seed-prebsc-2-s3.binance.org:8545"
     ],
     "faucets": ["https://testnet.binance.org/faucet-smart"],
+    "explorers": [],
     "infoURL": "https://testnet.binance.org/"
   },
   {
@@ -2303,6 +2446,7 @@
       "https://api.nepalblockchain.network"
     ],
     "faucets": ["https://faucet.nepalblockchain.network"],
+    "explorers": [],
     "infoURL": "https://nepalblockchain.network"
   },
   {
@@ -2324,6 +2468,7 @@
       "ws://core.poanetwork.dev:8546"
     ],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://poa.network"
   },
   {
@@ -2340,6 +2485,7 @@
     },
     "rpc": ["https://toys.joys.cash/"],
     "faucets": ["https://faucet.joys.digital/"],
+    "explorers": [],
     "infoURL": "https://joys.digital"
   },
   {
@@ -2356,6 +2502,7 @@
     },
     "rpc": ["https://gwan-ssl.wandevs.org:46891/"],
     "faucets": [],
+    "explorers": [],
     "infoURL": "https://testnet.wanscan.org"
   }
 ]

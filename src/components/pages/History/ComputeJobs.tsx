@@ -124,16 +124,13 @@ export default function ComputeJobs(): ReactElement {
   const { ocean, account, config } = useOcean()
   const { accountId } = useWeb3()
   const [isLoading, setIsLoading] = useState(false)
-  const [assets, setAssets] = useState<ComputeAsset[]>()
   const [jobs, setJobs] = useState<ComputeAsset[]>([])
   const { data } = useQuery<ComputeOrders>(getComputeOrders, {
     variables: {
       user: accountId.toLowerCase()
     }
   })
-  useEffect(() => {
-    console.log('jobs', jobs)
-  }, [jobs])
+
   useEffect(() => {
     if (data === undefined || !config?.metadataCacheUri) return
 
@@ -142,7 +139,6 @@ export default function ComputeJobs(): ReactElement {
 
       setIsLoading(true)
 
-      console.time('TOTAL')
       const dtList = []
       const dtTimestamps = []
       for (let i = 0; i < data.tokenOrders.length; i++) {
@@ -157,7 +153,6 @@ export default function ComputeJobs(): ReactElement {
 
       try {
         const source = axios.CancelToken.source()
-        const jobs: ComputeAsset[] = []
         const assets = await getAssetMetadata(
           queryDtList,
           config.metadataCacheUri,
@@ -184,7 +179,7 @@ export default function ComputeJobs(): ReactElement {
             const { serviceEndpoint } = service
             const wasProviderQueried =
               providers.filter((x) => x === serviceEndpoint).length > 0
-            console.log('was provider', providers, wasProviderQueried)
+
             if (wasProviderQueried) continue
             providers.push(service)
             // eslint-disable-next-line no-empty
@@ -203,9 +198,10 @@ export default function ComputeJobs(): ReactElement {
             undefined,
             false
           )
+          console.log('compute jobs ' + i, computeJob)
           for (let j = 0; j < computeJob.length; j++) {
             const job = computeJob[j]
-            const did = ''
+            const did = job.inputDID[0]
 
             const ddo = assets.filter((x) => x.id === did)[0]
 
@@ -231,41 +227,6 @@ export default function ComputeJobs(): ReactElement {
             setJobs((jobs) => [...jobs, compJob])
           }
         }
-
-        console.log('jobs', jobs)
-        console.timeEnd('TOTAL')
-        // setJobs(jobs)
-        // assets.forEach(async (asset, index) => {
-        //   if (asset.type !== 'compute') return
-
-        //   const computeJob = await ocean.compute.status(
-        //     account,
-        //     asset.did,
-        //     undefined,
-        //     data.tokenOrders[index].tx,
-        //     false
-        //   )
-
-        //   computeJob.forEach((job) => {
-        //     jobs.push({
-        //       did: asset.did,
-        //       jobId: job.jobId,
-        //       dateCreated: job.dateCreated,
-        //       dateFinished: job.dateFinished,
-        //       assetName: assets[index].assetName,
-        //       status: job.status,
-        //       statusText: job.statusText,
-        //       algorithmLogUrl: '',
-        //       resultsUrls: [],
-        //       timestamp: asset.timestamp,
-        //       type: asset.type
-        //     })
-        //   })
-        // })
-
-        // TODO: merge object data in jobs array with object data in assets array
-        // setAssets((prevState) => {
-        // })
       } catch (error) {
         Logger.log(error.message)
       } finally {
