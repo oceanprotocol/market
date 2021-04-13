@@ -12,7 +12,7 @@
   opacity: 0.5;
 }
 
-div [class*='loaderWrap'] {
+.selection [class*='loaderWrap'] {
   margin: calc(var(--spacer) / 3);
 }
 

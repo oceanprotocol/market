@@ -1,21 +1,15 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import styles from './AnnouncementBanner.module.css'
-import Markdown from '../atoms/Markdown'
 import { useWeb3 } from '../../providers/Web3'
 import { addCustomNetwork, NetworkObject } from '../../utils/web3'
 import { getOceanConfig } from '../../utils/ocean'
 import { getProviderInfo } from 'web3modal'
 import { useOcean } from '../../providers/Ocean'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
-import Button from '../atoms/Button'
+import AnnouncementBanner, {
+  AnnouncementAction
+} from '../atoms/AnnouncementBanner'
 
-export interface AnnouncementAction {
-  name: string
-  style?: string
-  handleAction: () => void
-}
-
-const network: NetworkObject = {
+const networkMatic: NetworkObject = {
   chainId: 137,
   name: 'Matic Network',
   urlList: [
@@ -24,7 +18,7 @@ const network: NetworkObject = {
   ]
 }
 
-export default function AnnouncementBanner(): ReactElement {
+export default function NetworkBanner(): ReactElement {
   const { web3Provider } = useWeb3()
   const { config, connect } = useOcean()
   const { announcement } = useSiteMetadata()
@@ -34,7 +28,7 @@ export default function AnnouncementBanner(): ReactElement {
 
   const addCustomNetworkAction = {
     name: 'Add custom network',
-    handleAction: () => addCustomNetwork(web3Provider, network)
+    handleAction: () => addCustomNetwork(web3Provider, networkMatic)
   }
   const switchToPolygonAction = {
     name: 'Switch to Polygon',
@@ -88,16 +82,5 @@ export default function AnnouncementBanner(): ReactElement {
     }
   }, [web3Provider, config, announcement])
 
-  return (
-    <div className={styles.container}>
-      <div className={styles.banner}>
-        {text && <Markdown className={styles.text} text={text} />}
-        {action && (
-          <Button style="text" size="small" onClick={action.handleAction}>
-            {action.name}
-          </Button>
-        )}
-      </div>
-    </div>
-  )
+  return <AnnouncementBanner text={text} action={action} />
 }
