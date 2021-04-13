@@ -193,7 +193,7 @@ export default function ComputeJobs(): ReactElement {
             account,
             undefined,
             undefined,
-            providers[0],
+            providers[i],
             undefined,
             undefined,
             false

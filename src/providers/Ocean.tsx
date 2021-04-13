@@ -7,8 +7,14 @@ import React, {
   ReactNode,
   useEffect
 } from 'react'
-import { Ocean, Logger, Account, Config } from '@oceanprotocol/lib'
-import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
+import {
+  Ocean,
+  Logger,
+  Account,
+  Config,
+  ConfigHelperConfig
+} from '@oceanprotocol/lib'
+
 import { useWeb3 } from './Web3'
 import {
   getDevelopmentConfig,
