@@ -55,6 +55,7 @@ export function addCustomNetwork(
 ): void {
   const newNewtworkData = {
     chainId: `0x${network.chainId.toString(16)}`,
+    chainName: network.name,
     rpcUrls: network.urlList
   }
   web3Provider.request(
