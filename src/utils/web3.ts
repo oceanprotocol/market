@@ -1,5 +1,4 @@
-import { Logger } from '@oceanprotocol/lib'
-import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
+import { Logger, ConfigHelperConfig } from '@oceanprotocol/lib'
 
 export interface EthereumListsChain {
   name: string
