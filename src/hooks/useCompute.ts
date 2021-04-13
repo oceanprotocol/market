@@ -1,7 +1,10 @@
 import { useState } from 'react'
 import { Logger, ServiceCompute } from '@oceanprotocol/lib'
 import { MetadataAlgorithm } from '@oceanprotocol/lib/dist/node/ddo/interfaces/MetadataAlgorithm'
-import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/ComputeJob'
+import {
+  ComputeJob,
+  ComputeAlgorithm
+} from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
 import { computeFeedback } from '../utils/feedback'
 import { useOcean } from '../providers/Ocean'
 import { useWeb3 } from '../providers/Web3'
@@ -97,6 +100,9 @@ function useCompute(): UseCompute {
       setStep(0)
       rawAlgorithmMeta.container = computeContainer
       rawAlgorithmMeta.rawcode = algorithmRawCode
+      const computeAlgorithm: ComputeAlgorithm = {
+        meta: rawAlgorithmMeta
+      }
       const output = {}
       if (!orderId) {
         const userOwnedTokens = await ocean.accounts.getTokenBalance(
@@ -118,8 +124,7 @@ function useCompute(): UseCompute {
             accountId,
             did,
             computeService.index,
-            undefined,
-            rawAlgorithmMeta,
+            computeAlgorithm,
             marketFeeAddress
           )
           setStep(1)
@@ -132,8 +137,7 @@ function useCompute(): UseCompute {
           orderId,
           dataTokenAddress,
           account,
-          undefined,
-          rawAlgorithmMeta,
+          computeAlgorithm,
           output,
           `${computeService.index}`,
           computeService.type
