@@ -127,7 +127,7 @@ export default function ComputeJobs(): ReactElement {
   const [jobs, setJobs] = useState<ComputeAsset[]>([])
   const { data } = useQuery<ComputeOrders>(getComputeOrders, {
     variables: {
-      user: accountId.toLowerCase()
+      user: accountId?.toLowerCase()
     }
   })
 
