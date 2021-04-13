@@ -1,11 +1,14 @@
-import { Account, Logger, Ocean } from '@oceanprotocol/lib'
-import contractAddresses from '@oceanprotocol/contracts/artifacts/address.json'
 import {
+  Account,
+  Logger,
+  Ocean,
   ConfigHelper,
   ConfigHelperConfig,
   ConfigHelperNetworkId,
   ConfigHelperNetworkName
-} from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
+} from '@oceanprotocol/lib'
+import contractAddresses from '@oceanprotocol/contracts/artifacts/address.json'
+
 import { UserBalance } from '../@types/TokenBalance'
 
 export function getOceanConfig(
@@ -13,7 +16,9 @@ export function getOceanConfig(
 ): ConfigHelperConfig {
   return new ConfigHelper().getConfig(
     network,
-    process.env.GATSBY_INFURA_PROJECT_ID
+    network === 'polygon' || network === 137
+      ? undefined
+      : process.env.GATSBY_INFURA_PROJECT_ID
   ) as ConfigHelperConfig
 }
 
