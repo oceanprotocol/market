@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react'
-import validUrlUtf8 from 'valid-url-utf8'
 import Button from '../../../atoms/Button'
 import { FieldInputProps, useField } from 'formik'
 import Loader from '../../../atoms/Loader'
@@ -23,7 +22,7 @@ export default function FileInput({
       <Button
         size="small"
         onClick={(e: React.SyntheticEvent) => handleButtonClick(e, field.value)}
-        disabled={!field.value || !validUrlUtf8(field.value)}
+        disabled={!field.value}
       >
         {isLoading ? <Loader /> : 'Add File'}
       </Button>
