@@ -33,7 +33,6 @@ import Alert from '../../atoms/Alert'
 import MetadataFeedback from '../../molecules/MetadataFeedback'
 import { useAccountPurgatory } from '../../../hooks/useAccountPurgatory'
 import { useWeb3 } from '../../../providers/Web3'
-import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 
 const formNameDatasets = 'ocean-publish-form-datasets'
 const formNameAlgorithms = 'ocean-publish-form-algorithms'
@@ -69,9 +68,8 @@ export default function PublishPage({
 }: {
   content: { warning: string }
 }): ReactElement {
-  const { warningPolygonPublish } = useSiteMetadata()
   const { debug } = useUserPreferences()
-  const { accountId, networkId } = useWeb3()
+  const { accountId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
   const { publish, publishError, isLoading, publishStepText } = usePublish()
   const [success, setSuccess] = useState<string>()
@@ -161,6 +159,7 @@ export default function PublishPage({
     ) => void
   ): Promise<void> {
     const metadata = transformPublishAlgorithmFormToMetadata(values)
+    const timeout = mapTimeoutStringToSeconds(values.timeout)
     const validDockerImage =
       values.dockerImage === 'custom image'
         ? await validateDockerImage(values.image, values.containerTag)
@@ -171,7 +170,9 @@ export default function PublishPage({
 
         const ddo = await publish(
           (metadata as unknown) as Metadata,
-          values.algorithmPrivacy === true ? 'compute' : 'access'
+          values.algorithmPrivacy === true ? 'compute' : 'access',
+          undefined,
+          timeout
         )
 
         // Publish failed

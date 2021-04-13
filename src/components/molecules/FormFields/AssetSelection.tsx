@@ -15,6 +15,11 @@ export interface AssetSelectionAsset {
   name: string
   price: string
   checked: boolean
+  symbol: string
+}
+
+function Empty() {
+  return <div className={styles.empty}>No assets found.</div>
 }
 
 export default function AssetSelection({
@@ -45,19 +50,26 @@ export default function AssetSelection({
         type="search"
         name="search"
         size="small"
-        placeholder="Search by title or DID..."
+        placeholder="Search by title, datatoken, or DID..."
         value={searchValue}
         onChange={handleSearchInput}
         className={styles.search}
         disabled={disabled}
       />
       <div className={styles.scroll}>
-        {assets ? (
+        {!assets ? (
+          <Loader />
+        ) : assets && !assets.length ? (
+          <Empty />
+        ) : (
           assets
             .filter((asset: AssetSelectionAsset) =>
               searchValue !== ''
-                ? asset.name.toLowerCase().includes(searchValue) ||
-                  asset.did.includes(searchValue)
+                ? asset.name
+                    .toLowerCase()
+                    .includes(searchValue.toLowerCase()) ||
+                  asset.did.toLowerCase().includes(searchValue.toLowerCase()) ||
+                  asset.symbol.toLowerCase().includes(searchValue.toLowerCase())
                 : asset
             )
             .map((asset: AssetSelectionAsset) => (
@@ -91,15 +103,13 @@ export default function AssetSelection({
                   </h3>
 
                   <Dotdotdot clamp={1} tagName="code" className={styles.did}>
-                    {asset.did}
+                    {asset.symbol} | {asset.did}
                   </Dotdotdot>
                 </label>
 
                 <PriceUnit price={asset.price} small className={styles.price} />
               </div>
             ))
-        ) : (
-          <Loader />
         )}
       </div>
     </div>

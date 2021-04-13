@@ -72,13 +72,13 @@ export default function FormPublish(): ReactElement {
 
   function handleImageSelectChange(imageSelected: string) {
     switch (imageSelected) {
-      case 'node:pre-defined': {
+      case 'node:latest': {
         setFieldValue('image', 'node')
-        setFieldValue('containerTag', '10')
+        setFieldValue('containerTag', 'latest')
         setFieldValue('entrypoint', 'node $ALGO')
         break
       }
-      case 'python:pre-defined': {
+      case 'python:latest': {
         setFieldValue('image', 'oceanprotocol/algo_dockers')
         setFieldValue('containerTag', 'python-panda')
         setFieldValue('entrypoint', 'python $ALGO')
@@ -100,7 +100,9 @@ export default function FormPublish(): ReactElement {
     field: FormFieldProps
   ) {
     const value =
-      field.type === 'checkbox' ? !JSON.parse(e.target.value) : e.target.value
+      field.type === 'checkbox' || field.type === 'terms'
+        ? !JSON.parse(e.target.value)
+        : e.target.value
     if (field.name === 'dockerImage') {
       setSelectedDockerImage(e.target.value)
       handleImageSelectChange(e.target.value)

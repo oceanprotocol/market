@@ -103,7 +103,6 @@ export default function FormTrade({
       toast.error(error.message)
     }
   }
-
   return (
     <Formik
       initialValues={initialValues}

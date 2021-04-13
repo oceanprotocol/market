@@ -1,3 +1,6 @@
+import { Logger } from '@oceanprotocol/lib'
+import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
+
 export interface EthereumListsChain {
   name: string
   chainId: number
@@ -9,6 +12,12 @@ export interface EthereumListsChain {
   rpc: string[]
   faucets: string[]
   infoURL: string
+}
+
+export interface NetworkObject {
+  chainId: number
+  name: string
+  urlList: string[]
 }
 
 export function accountTruncate(account: string): string {
@@ -39,4 +48,69 @@ export function getNetworkData(
     ({ node }: { node: EthereumListsChain }) => node.networkId === networkId
   )[0]
   return networkData.node
+}
+
+export function addCustomNetwork(
+  web3Provider: any,
+  network: NetworkObject
+): void {
+  const newNewtworkData = {
+    chainId: `0x${network.chainId.toString(16)}`,
+    rpcUrls: network.urlList
+  }
+  web3Provider.request(
+    {
+      method: 'wallet_addEthereumChain',
+      params: [newNewtworkData]
+    },
+    (err: string, added: any) => {
+      if (err || 'error' in added) {
+        Logger.error(
+          `Couldn't add ${network.name} (0x${
+            network.chainId
+          }) netowrk to MetaMask, error: ${err || added.error}`
+        )
+      } else {
+        Logger.log(
+          `Added ${network.name} (0x${network.chainId}) network to MetaMask`
+        )
+      }
+    }
+  )
+}
+
+export function addOceanToWallet(
+  config: ConfigHelperConfig,
+  web3Provider: any
+): void {
+  const tokenMetadata = {
+    type: 'ERC20',
+    options: {
+      address: config.oceanTokenAddress,
+      symbol: config.oceanTokenSymbol,
+      decimals: 18,
+      image:
+        'https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png'
+    }
+  }
+  web3Provider.sendAsync(
+    {
+      method: 'wallet_watchAsset',
+      params: tokenMetadata,
+      id: Math.round(Math.random() * 100000)
+    },
+    (err: string, added: any) => {
+      if (err || 'error' in added) {
+        Logger.error(
+          `Couldn't add ${tokenMetadata.options.symbol} (${
+            tokenMetadata.options.address
+          }) to MetaMask, error: ${err || added.error}`
+        )
+      } else {
+        Logger.log(
+          `Added ${tokenMetadata.options.symbol} (${tokenMetadata.options.address}) to MetaMask`
+        )
+      }
+    }
+  )
 }
