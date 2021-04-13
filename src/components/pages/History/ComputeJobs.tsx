@@ -141,6 +141,7 @@ export default function ComputeJobs(): ReactElement {
 
       const dtList = []
       const dtTimestamps = []
+      const computeJobs: ComputeAsset[] = []
       for (let i = 0; i < data.tokenOrders.length; i++) {
         dtList.push(data.tokenOrders[i].datatokenId.address)
         dtTimestamps.push(data.tokenOrders[i].timestamp)
@@ -198,13 +199,12 @@ export default function ComputeJobs(): ReactElement {
             undefined,
             false
           )
-          console.log('compute jobs ' + i, computeJob)
           for (let j = 0; j < computeJob.length; j++) {
             const job = computeJob[j]
             const did = job.inputDID[0]
 
             const ddo = assets.filter((x) => x.id === did)[0]
-
+            console.log('job for did', did, ddo)
             if (!ddo) continue
             const serviceMetadata = ddo.service.filter(
               (x: any) => x.type === 'metadata'
@@ -223,10 +223,10 @@ export default function ComputeJobs(): ReactElement {
               timestamp: data.tokenOrders[i].timestamp,
               type: ''
             } as ComputeAsset
-
-            setJobs((jobs) => [...jobs, compJob])
+            computeJobs.push(compJob)
           }
         }
+        setJobs(computeJobs)
       } catch (error) {
         Logger.log(error.message)
       } finally {
