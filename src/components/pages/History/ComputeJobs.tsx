@@ -5,7 +5,7 @@ import Button from '../../atoms/Button'
 import ComputeDetails from './ComputeDetails'
 import { ComputeJobMetaData } from '../../../@types/ComputeJobMetaData'
 import { Link } from 'gatsby'
-import { DDO, Logger, ServiceCompute } from '@oceanprotocol/lib'
+import { DDO, Logger, ServiceCommon, ServiceCompute } from '@oceanprotocol/lib'
 import Dotdotdot from 'react-dotdotdot'
 import Table from '../../atoms/Table'
 import { useOcean } from '../../../providers/Ocean'
@@ -160,7 +160,7 @@ export default function ComputeJobs(): ReactElement {
           source.token,
           dtTimestamps
         )
-        const providers: any[] = []
+        const providers: ServiceCompute[] = []
 
         for (let i = 0; i < data.tokenOrders.length; i++) {
           try {
@@ -173,22 +173,25 @@ export default function ComputeJobs(): ReactElement {
             if (!ddo) continue
 
             const service = ddo.service.filter(
-              (x: any) => x.index === data.tokenOrders[i].serviceId
+              (x: ServiceCommon) => x.index === data.tokenOrders[i].serviceId
             )[0]
 
             if (!service || service.type !== 'compute') continue
             const { serviceEndpoint } = service
+
             const wasProviderQueried =
-              providers.filter((x) => x === serviceEndpoint).length > 0
+              providers.filter((x) => x.serviceEndpoint === serviceEndpoint)
+                .length > 0
 
             if (wasProviderQueried) continue
-            providers.push(service)
+
+            providers.push(service as ServiceCompute)
             // eslint-disable-next-line no-empty
           } catch (err) {
             console.log(err)
           }
         }
-        console.log('found providers', providers)
+
         for (let i = 0; i < providers.length; i++) {
           const computeJob = await ocean.compute.status(
             account,
@@ -199,13 +202,13 @@ export default function ComputeJobs(): ReactElement {
             undefined,
             false
           )
-          console.log('found jobs for provider ' + providers[i], computeJob)
+
           for (let j = 0; j < computeJob.length; j++) {
             const job = computeJob[j]
             const did = job.inputDID[0]
 
             const ddo = assets.filter((x) => x.id === did)[0]
-            console.log('job for did', did, ddo)
+
             if (!ddo) continue
             const serviceMetadata = ddo.service.filter(
               (x: any) => x.type === 'metadata'
