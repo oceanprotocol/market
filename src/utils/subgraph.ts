@@ -3,6 +3,10 @@ import { DDO } from '@oceanprotocol/lib'
 import { getApolloClientInstance } from '../providers/ApolloClientProvider'
 import BigNumber from 'bignumber.js'
 
+export interface PriceList {
+  [key: string]: string
+}
+
 const freQuery = gql`
   query AssetFrePrice($datatoken_in: [String!]) {
     fixedRateExchanges(orderBy: id, where: { datatoken_in: $datatoken_in }) {
@@ -85,8 +89,8 @@ export async function getPreviousOrders(
   }
 }
 
-export async function getAssetPrices(assets: DDO[]): Promise<any> {
-  const priceList: any = {}
+export async function getAssetPrices(assets: DDO[]): Promise<PriceList> {
+  const priceList: PriceList = {}
   const didDTMap: any = {}
   const dataTokenList: string[] = []
 
