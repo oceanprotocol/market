@@ -16,11 +16,13 @@ export interface BoxSelectionValues {
 export default function BoxSelection({
   values,
   multiple,
+  fieldsName,
   disabled,
   ...props
 }: {
   values: BoxSelectionValues[]
   multiple?: boolean
+  fieldsName?: string
   disabled?: boolean
 }): JSX.Element {
   const styleClassesInput = cx({
@@ -30,45 +32,46 @@ export default function BoxSelection({
   })
 
   return (
-    <div className={`${styles.selection} ${disabled ? styles.disabled : ''}`}>
-      <div className={styles.scroll}>
-        {!values ? (
-          <Loader />
-        ) : (
-          values.map((value: BoxSelectionValues, key: number) => (
-            <div className={styles.row} key={key}>
-              <input
-                id={value.name}
-                type={multiple ? 'checkbox' : 'radio'}
-                className={styleClassesInput}
-                defaultChecked={value.checked}
-                {...props}
-                disabled={disabled}
-                value={value.name}
-              />
-              <label
-                className={styles.label}
-                htmlFor={value.name}
-                title={value.name}
-              >
-                <h3 className={styles.title}>
-                  <Dotdotdot clamp={1} tagName="span">
-                    {value.name}
-                  </Dotdotdot>
-                  <a
-                    className={styles.link}
-                    href={`/asset/${value.name}`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <External />
-                  </a>
-                </h3>
-              </label>
-            </div>
-          ))
-        )}
-      </div>
+    <div
+      className={`${styles.boxSelectionsWrapper} ${
+        disabled ? styles.disabled : ''
+      }`}
+    >
+      {!values ? (
+        <Loader />
+      ) : (
+        values.map((value: BoxSelectionValues, key: number) => (
+          <div
+            className={`${styles.boxSelection} ${
+              value.checked ? styles.selected : ''
+            }`}
+            key={key}
+          >
+            <input
+              id={multiple ? value.name : fieldsName}
+              name={multiple ? value.name : fieldsName}
+              type={multiple ? 'checkbox' : 'radio'}
+              className={styleClassesInput}
+              defaultChecked={value.checked}
+              {...props}
+              disabled={disabled}
+              value={value.name}
+            />
+            <label
+              className={styles.label}
+              htmlFor={multiple ? value.name : fieldsName}
+              title={multiple ? value.name : fieldsName}
+            >
+              {value.icon}
+              <h3 className={styles.title}>
+                <Dotdotdot clamp={1} tagName="span">
+                  {value.name}
+                </Dotdotdot>
+              </h3>
+            </label>
+          </div>
+        ))
+      )}
     </div>
   )
 }
