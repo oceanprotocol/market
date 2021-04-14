@@ -107,6 +107,7 @@ export async function getAssetsNames(
 }
 
 export async function transformDDOToAssetSelection(
+  datasetProviderEndpoint: string,
   ddoList: DDO[],
   metadataCacheUri: string,
   selectedAlgorithms?: PublisherTrustedAlgorithm[]
@@ -115,14 +116,22 @@ export async function transformDDOToAssetSelection(
   const didList: string[] = []
   const priceList: PriceList = await getAssetPrices(ddoList)
   const symbolList: any = {}
+  const didProviderEndpointMap: any = {}
   for (const ddo of ddoList) {
     didList.push(ddo.id)
     symbolList[ddo.id] = ddo.dataTokenInfo.symbol
+    const algoComputeService = ddo.findServiceByType('compute')
+    algoComputeService?.serviceEndpoint &&
+      (didProviderEndpointMap[ddo.id] = algoComputeService?.serviceEndpoint)
   }
   const ddoNames = await getAssetsNames(didList, metadataCacheUri, source.token)
   const algorithmList: AssetSelectionAsset[] = []
   didList?.forEach((did: string) => {
-    if (priceList[did]) {
+    if (
+      priceList[did] &&
+      (!didProviderEndpointMap[did] ||
+        didProviderEndpointMap[did] === datasetProviderEndpoint)
+    ) {
       let selected = false
       selectedAlgorithms?.forEach((algorithm: PublisherTrustedAlgorithm) => {
         if (algorithm.did === did) {
