@@ -13,7 +13,6 @@ import File from '../../../atoms/File'
 import Alert from '../../../atoms/Alert'
 import Web3Feedback from '../../../molecules/Wallet/Feedback'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
-import checkPreviousOrder from '../../../../utils/checkPreviousOrder'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
 import { usePricing } from '../../../../hooks/usePricing'
@@ -27,6 +26,7 @@ import {
   getInitialValues,
   validationSchema
 } from '../../../../models/FormStartComputeDataset'
+import { ComputeAlgorithm } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import { SearchQuery } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import axios from 'axios'
@@ -299,10 +299,15 @@ export default function Compute({
         ? selectedAlgorithmAsset.findServiceByType('access')
         : selectedAlgorithmAsset.findServiceByType('compute')
 
+      const computeAlgorithm: ComputeAlgorithm = {
+        did: selectedAlgorithmAsset.id,
+        serviceIndex: serviceAlgo.index,
+        dataToken: selectedAlgorithmAsset.dataToken
+      }
       const allowed = await ocean.compute.isOrderable(
         ddo.id,
         computeService.index,
-        selectedAlgorithmAsset.id
+        computeAlgorithm
       )
       Logger.log('[compute] Is data set orderable?', allowed)
 
@@ -350,8 +355,7 @@ export default function Compute({
             accountId,
             ddo.id,
             computeService.index,
-            undefined,
-            undefined,
+            computeAlgorithm,
             marketFeeAddress
           )
 
@@ -386,6 +390,7 @@ export default function Compute({
         return
       }
 
+      computeAlgorithm.transferTxId = algorithmAssetOrderId
       Logger.log('[compute] Starting compute job.')
 
       const output = {}
@@ -394,13 +399,10 @@ export default function Compute({
         assetOrderId,
         ddo.dataToken,
         account,
-        algorithmId,
-        undefined,
+        computeAlgorithm,
         output,
         `${computeService.index}`,
-        computeService.type,
-        algorithmAssetOrderId,
-        selectedAlgorithmAsset.dataToken
+        computeService.type
       )
 
       if (!response) {
