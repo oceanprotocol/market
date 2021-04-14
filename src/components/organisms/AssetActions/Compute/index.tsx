@@ -38,6 +38,7 @@ import { gql, useQuery } from '@apollo/client'
 import { FrePrice } from '../../../../@types/apollo/FrePrice'
 import { PoolPrice } from '../../../../@types/apollo/PoolPrice'
 import { secondsToString } from '../../../../utils/metadata'
+import { ComputeAlgorithm } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
 
 const SuccessAction = () => (
   <Button style="text" to="/history" size="small">
@@ -291,10 +292,15 @@ export default function Compute({
         ? selectedAlgorithmAsset.findServiceByType('access')
         : selectedAlgorithmAsset.findServiceByType('compute')
 
+      const computeAlgorithm: ComputeAlgorithm = {
+        did: selectedAlgorithmAsset.id,
+        serviceIndex: serviceAlgo.index,
+        dataToken: selectedAlgorithmAsset.dataToken
+      }
       const allowed = await ocean.compute.isOrderable(
         ddo.id,
         computeService.index,
-        selectedAlgorithmAsset.id
+        computeAlgorithm
       )
       Logger.log('[compute] Is data set orderable?', allowed)
 
@@ -342,8 +348,7 @@ export default function Compute({
             accountId,
             ddo.id,
             computeService.index,
-            undefined,
-            undefined,
+            computeAlgorithm,
             marketFeeAddress
           )
 
@@ -378,6 +383,7 @@ export default function Compute({
         return
       }
 
+      computeAlgorithm.transferTxId = algorithmAssetOrderId
       Logger.log('[compute] Starting compute job.')
 
       const output = {}
@@ -386,13 +392,10 @@ export default function Compute({
         assetOrderId,
         ddo.dataToken,
         account,
-        algorithmId,
-        undefined,
+        computeAlgorithm,
         output,
         `${computeService.index}`,
-        computeService.type,
-        algorithmAssetOrderId,
-        selectedAlgorithmAsset.dataToken
+        computeService.type
       )
 
       if (!response) {
