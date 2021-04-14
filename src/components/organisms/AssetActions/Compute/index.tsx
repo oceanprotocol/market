@@ -13,7 +13,6 @@ import File from '../../../atoms/File'
 import Alert from '../../../atoms/Alert'
 import Web3Feedback from '../../../molecules/Wallet/Feedback'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
-import checkPreviousOrder from '../../../../utils/checkPreviousOrder'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
 import { usePricing } from '../../../../hooks/usePricing'
@@ -27,6 +26,7 @@ import {
   getInitialValues,
   validationSchema
 } from '../../../../models/FormStartComputeDataset'
+import { ComputeAlgorithm } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import { SearchQuery } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import axios from 'axios'
@@ -38,7 +38,7 @@ import { gql, useQuery } from '@apollo/client'
 import { FrePrice } from '../../../../@types/apollo/FrePrice'
 import { PoolPrice } from '../../../../@types/apollo/PoolPrice'
 import { secondsToString } from '../../../../utils/metadata'
-import { ComputeAlgorithm } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
+import { getPreviousOrders } from '../../../../utils/subgraph'
 
 const SuccessAction = () => (
   <Button style="text" to="/history" size="small">
@@ -122,8 +122,15 @@ export default function Compute({
     isJobStarting === true || file === null || !ocean || !isBalanceSufficient
   const hasDatatoken = Number(dtBalance) >= 1
 
-  async function checkPreviousOrders(ddo: DDO, serviceType: ServiceType) {
-    const orderId = await checkPreviousOrder(ocean, accountId, ddo, serviceType)
+  async function checkPreviousOrders(ddo: DDO) {
+    const { timeout } = (
+      ddo.findServiceByType('access') || ddo.findServiceByType('compute')
+    ).attributes.main
+    const orderId = await getPreviousOrders(
+      ddo.dataToken?.toLowerCase(),
+      accountId?.toLowerCase(),
+      timeout.toString()
+    )
     const assetType = ddo.findServiceByType('metadata').attributes.main.type
     if (assetType === 'algorithm') {
       setPreviousAlgorithmOrderId(orderId)
@@ -246,23 +253,23 @@ export default function Compute({
 
   useEffect(() => {
     if (!ocean || !accountId) return
-    checkPreviousOrders(ddo, 'compute')
+    checkPreviousOrders(ddo)
   }, [ocean, ddo, accountId])
 
   useEffect(() => {
     if (!ocean || !accountId || !selectedAlgorithmAsset) return
 
     if (selectedAlgorithmAsset.findServiceByType('access')) {
-      checkPreviousOrders(selectedAlgorithmAsset, 'access').then(() => {
+      checkPreviousOrders(selectedAlgorithmAsset).then(() => {
         if (
           !hasPreviousAlgorithmOrder &&
           selectedAlgorithmAsset.findServiceByType('compute')
         ) {
-          checkPreviousOrders(selectedAlgorithmAsset, 'compute')
+          checkPreviousOrders(selectedAlgorithmAsset)
         }
       })
     } else if (selectedAlgorithmAsset.findServiceByType('compute')) {
-      checkPreviousOrders(selectedAlgorithmAsset, 'compute')
+      checkPreviousOrders(selectedAlgorithmAsset)
     }
     checkAssetDTBalance(selectedAlgorithmAsset)
     initMetadata(selectedAlgorithmAsset)

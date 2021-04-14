@@ -10,8 +10,8 @@ import {
   SearchQuery
 } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { AssetSelectionAsset } from '../components/molecules/FormFields/AssetSelection'
+import { PriceList, getAssetPrices } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
-import web3 from 'web3'
 
 // TODO: import directly from ocean.js somehow.
 // Transforming Aquarius' direct response is needed for getting actual DDOs
@@ -113,37 +113,38 @@ export async function transformDDOToAssetSelection(
 ): Promise<AssetSelectionAsset[]> {
   const source = axios.CancelToken.source()
   const didList: string[] = []
-  const priceList: any = {}
+  const priceList: PriceList = await getAssetPrices(ddoList)
   const symbolList: any = {}
-  ddoList.forEach((ddo: DDO) => {
+  for (const ddo of ddoList) {
     didList.push(ddo.id)
-    priceList[ddo.id] = ddo.price.value
     symbolList[ddo.id] = ddo.dataTokenInfo.symbol
-  })
+  }
   const ddoNames = await getAssetsNames(didList, metadataCacheUri, source.token)
   const algorithmList: AssetSelectionAsset[] = []
   didList?.forEach((did: string) => {
-    let selected = false
-    selectedAlgorithms?.forEach((algorithm: PublisherTrustedAlgorithm) => {
-      if (algorithm.did === did) {
-        selected = true
-      }
-    })
-    selected
-      ? algorithmList.unshift({
-          did: did,
-          name: ddoNames[did],
-          price: priceList[did],
-          checked: selected,
-          symbol: symbolList[did]
-        })
-      : algorithmList.push({
-          did: did,
-          name: ddoNames[did],
-          price: priceList[did],
-          checked: selected,
-          symbol: symbolList[did]
-        })
+    if (priceList[did]) {
+      let selected = false
+      selectedAlgorithms?.forEach((algorithm: PublisherTrustedAlgorithm) => {
+        if (algorithm.did === did) {
+          selected = true
+        }
+      })
+      selected
+        ? algorithmList.unshift({
+            did: did,
+            name: ddoNames[did],
+            price: priceList[did],
+            checked: selected,
+            symbol: symbolList[did]
+          })
+        : algorithmList.push({
+            did: did,
+            name: ddoNames[did],
+            price: priceList[did],
+            checked: selected,
+            symbol: symbolList[did]
+          })
+    }
   })
   return algorithmList
 }
