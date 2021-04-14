@@ -19,7 +19,7 @@ import web3 from 'web3'
 
 const getHighestLiquidityAssets = gql`
   query HighestLiquidiyAssets {
-    pools(orderBy: consumePrice, orderDirection: desc, first: 9) {
+    pools(orderBy: consumePrice, orderDirection: desc, first: 10) {
       id
       consumePrice
       spotPrice
@@ -30,6 +30,12 @@ const getHighestLiquidityAssets = gql`
     }
   }
 `
+interface GraphResult {
+  results?: DDO[]
+  page?: number
+  totalPages?: number
+  totalResults?: number
+}
 
 const queryHighest = {
   page: 1,
@@ -68,37 +74,51 @@ function SectionQueryResult({
   action
 }: {
   title: ReactElement | string
-  query: SearchQuery
+  query?: SearchQuery
   queryType?: string
   action?: ReactElement
 }) {
   const { config } = useOcean()
   const [result, setResult] = useState<QueryResult>()
   const [loading, setLoading] = useState(true)
-
   const { data } = useQuery(getHighestLiquidityAssets)
 
   useEffect(() => {
     if (!config?.metadataCacheUri || !data) return
     const source = axios.CancelToken.source()
-    const ddoList: DDO[] = []
-
-    data.pools.forEach(async (pool: { datatokenAddress: string }) => {
-      const did = web3.utils
-        .toChecksumAddress(pool.datatokenAddress)
-        .replace('0x', 'did:op:')
-      const ddo = await retrieveDDO(did, config?.metadataCacheUri, source.token)
-      console.log('DDO: ', ddo)
-      ddoList.push(ddo)
-    })
 
     async function init() {
-      const result = await queryMetadata(
-        query,
-        config.metadataCacheUri,
-        source.token
-      )
-      setResult(result)
+      if (queryType && queryType === 'graph') {
+        const ddoList: DDO[] = []
+
+        console.log('IS GRAPH')
+        data.pools.forEach(async (pool: { datatokenAddress: string }) => {
+          const did = web3.utils
+            .toChecksumAddress(pool.datatokenAddress)
+            .replace('0x', 'did:op:')
+          const ddo = await retrieveDDO(
+            did,
+            config?.metadataCacheUri,
+            source.token
+          )
+          if (ddo !== undefined) {
+            ddoList.push(ddo)
+          }
+        })
+        console.log('DDO LIST', ddoList)
+        const result: QueryResult = { results: ddoList }
+        console.log('RESULTS: ', result.results)
+        setResult(result)
+      } else {
+        console.log('NOT GRAPH')
+        const result = await queryMetadata(
+          query,
+          config.metadataCacheUri,
+          source.token
+        )
+        setResult(result)
+      }
+      console.log('FINAL RESULT: ', result)
       setLoading(false)
     }
     init()
@@ -106,7 +126,7 @@ function SectionQueryResult({
     return () => {
       source.cancel()
     }
-  }, [config?.metadataCacheUri, query, data])
+  }, [config?.metadataCacheUri, data])
 
   return (
     <section className={styles.section}>
@@ -133,18 +153,7 @@ export default function HomePage(): ReactElement {
         <Bookmarks />
       </section>
 
-      <SectionQueryResult
-        title="Highest Liquidity"
-        query={queryHighest}
-        action={
-          <Button
-            style="text"
-            to="/search?priceType=pool&sort=liquidity&sortOrder=desc"
-          >
-            All data sets with pool →
-          </Button>
-        }
-      />
+      <SectionQueryResult title="Highest Liquidity" queryType="graph" />
 
       <SectionQueryResult
         title="Recently Published"
