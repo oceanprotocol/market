@@ -19,7 +19,7 @@
       "name": "files",
       "label": "File",
       "placeholder": "e.g. https://file.com/file.json",
-      "help": "Please provide a URL to your data set file. This URL will be stored encrypted after publishing.",
+      "help": "Please enter the URL to your data set file and click \"ADD FILE\" to validate the data. This URL will be stored encrypted after publishing.",
       "type": "files",
       "required": true
     },
@@ -27,7 +27,7 @@
       "name": "links",
       "label": "Sample file",
       "placeholder": "e.g. https://file.com/samplefile.json",
-      "help": "Please provide a URL to a sample of your data set file. This file should reveal the data structure of your data set, e.g. by including the header and one line of a CSV file. This file URL will be publicly available after publishing.",
+      "help": "Please enter the URL to a sample of your data set file and click \"ADD FILE\" to validate the data. This file should reveal the data structure of your data set, e.g. by including the header and one line of a CSV file. This file URL will be publicly available after publishing.",
       "type": "files"
     },
     {

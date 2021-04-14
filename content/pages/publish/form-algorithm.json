@@ -19,7 +19,7 @@
       "name": "files",
       "label": "File",
       "placeholder": "e.g. https://file.com/file.json",
-      "help": "Please provide a URL to your algorithm file. This URL will be stored encrypted after publishing.",
+      "help": "Please enter the URL to your algorithm file and click \"ADD FILE\" to validate the data. This URL will be stored encrypted after publishing.",
       "type": "files",
       "required": true
     },
