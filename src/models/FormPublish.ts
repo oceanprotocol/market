@@ -15,7 +15,9 @@ export const validationSchema: Yup.SchemaOf<MetadataPublishFormDataset> = Yup.ob
         symbol: Yup.string()
       })
       .required('Required'),
-    files: Yup.array<FileMetadata>().required('Required').nullable(),
+    files: Yup.array<FileMetadata>()
+      .required('Enter a valid URL and click "ADD FILE"')
+      .nullable(),
     description: Yup.string().min(10).required('Required'),
     timeout: Yup.string().required('Required'),
     access: Yup.string()
