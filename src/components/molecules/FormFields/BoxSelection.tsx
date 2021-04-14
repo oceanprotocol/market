@@ -10,7 +10,7 @@ const cx = classNames.bind(styles)
 export interface BoxSelectionValues {
   name: string
   checked: boolean
-  icon: string
+  icon: JSX.Element
 }
 
 export default function BoxSelection({
@@ -48,7 +48,7 @@ export default function BoxSelection({
             key={key}
           >
             <input
-              id={multiple ? value.name : fieldsName}
+              id={value.name}
               name={multiple ? value.name : fieldsName}
               type={multiple ? 'checkbox' : 'radio'}
               className={styleClassesInput}
@@ -59,15 +59,15 @@ export default function BoxSelection({
             />
             <label
               className={styles.label}
-              htmlFor={multiple ? value.name : fieldsName}
+              htmlFor={value.name}
               title={multiple ? value.name : fieldsName}
             >
               {value.icon}
-              <h3 className={styles.title}>
+              <span className={styles.title}>
                 <Dotdotdot clamp={1} tagName="span">
                   {value.name}
                 </Dotdotdot>
-              </h3>
+              </span>
             </label>
           </div>
         ))
