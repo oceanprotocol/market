@@ -68,7 +68,7 @@ const columns = [
   {
     name: 'Created',
     selector: function getTimeRow(row: ComputeAsset) {
-      return <Time date={row.timestamp.toString()} isUnix relative />
+      return <Time date={row.dateCreated} isUnix relative />
     }
   },
   {
@@ -202,7 +202,15 @@ export default function ComputeJobs(): ReactElement {
             undefined,
             false
           )
-
+          computeJob.sort((a, b) => {
+            if (a.dateCreated > b.dateCreated) {
+              return -1
+            }
+            if (a.dateCreated < b.dateCreated) {
+              return 1
+            }
+            return 0
+          })
           for (let j = 0; j < computeJob.length; j++) {
             const job = computeJob[j]
             const did = job.inputDID[0]
