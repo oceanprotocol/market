@@ -12,7 +12,24 @@ import { useOcean } from '../../providers/Ocean'
 import Button from '../atoms/Button'
 import Bookmarks from '../molecules/Bookmarks'
 import axios from 'axios'
-import { queryMetadata } from '../../utils/aquarius'
+import { queryMetadata, retrieveDDO } from '../../utils/aquarius'
+import { gql, useQuery } from '@apollo/client'
+import { DDO, DID } from '@oceanprotocol/lib'
+import web3 from 'web3'
+
+const getHighestLiquidityAssets = gql`
+  query HighestLiquidiyAssets {
+    pools(orderBy: consumePrice, orderDirection: desc, first: 9) {
+      id
+      consumePrice
+      spotPrice
+      tx
+      symbol
+      name
+      datatokenAddress
+    }
+  }
+`
 
 const queryHighest = {
   page: 1,
@@ -47,20 +64,33 @@ function LoaderArea() {
 function SectionQueryResult({
   title,
   query,
+  queryType,
   action
 }: {
   title: ReactElement | string
   query: SearchQuery
+  queryType?: string
   action?: ReactElement
 }) {
   const { config } = useOcean()
   const [result, setResult] = useState<QueryResult>()
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    if (!config?.metadataCacheUri) return
+  const { data } = useQuery(getHighestLiquidityAssets)
 
+  useEffect(() => {
+    if (!config?.metadataCacheUri || !data) return
     const source = axios.CancelToken.source()
+    const ddoList: DDO[] = []
+
+    data.pools.forEach(async (pool: { datatokenAddress: string }) => {
+      const did = web3.utils
+        .toChecksumAddress(pool.datatokenAddress)
+        .replace('0x', 'did:op:')
+      const ddo = await retrieveDDO(did, config?.metadataCacheUri, source.token)
+      console.log('DDO: ', ddo)
+      ddoList.push(ddo)
+    })
 
     async function init() {
       const result = await queryMetadata(
@@ -76,7 +106,7 @@ function SectionQueryResult({
     return () => {
       source.cancel()
     }
-  }, [config?.metadataCacheUri, query])
+  }, [config?.metadataCacheUri, query, data])
 
   return (
     <section className={styles.section}>
