@@ -6,6 +6,9 @@ import { OrdersData_tokenOrders as OrdersDataTokenOrders } from '../../../@types
 import web3 from 'web3'
 import AssetTitle from '../../molecules/AssetListTitle'
 import { useWeb3 } from '../../../providers/Web3'
+import axios from 'axios'
+import { useOcean } from '../../../providers/Ocean'
+import { retrieveDDO } from '../../../utils/aquarius'
 
 const getTokenOrders = gql`
   query OrdersData($user: String!) {
@@ -55,11 +58,31 @@ export default function ComputeDownloads(): ReactElement {
   const { data } = useQuery(getTokenOrders, {
     variables: { user: accountId?.toLowerCase() }
   })
+  const { config } = useOcean()
 
   useEffect(() => {
-    if (!data) return
-    setOrders(data.tokenOrders)
-  }, [data])
+    if (!config.metadataCacheUri || !data) return
+    const source = axios.CancelToken.source()
+
+    async function filterAssets() {
+      const filteredOrders: OrdersDataTokenOrders[] = []
+      for (let i = 0; i < data.tokenOrders.length; i++) {
+        const did = web3.utils
+          .toChecksumAddress(data.tokenOrders[i].datatokenId.address)
+          .replace('0x', 'did:op:')
+        const ddo = await retrieveDDO(
+          did,
+          config?.metadataCacheUri,
+          source.token
+        )
+        if (ddo.service[1].type === 'access') {
+          filteredOrders.push(data.tokenOrders[i])
+        }
+      }
+      setOrders(filteredOrders)
+    }
+    filterAssets()
+  }, [config?.metadataCacheUri, data])
 
   return (
     <Table
