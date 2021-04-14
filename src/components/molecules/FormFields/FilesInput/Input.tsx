@@ -26,6 +26,7 @@ export default function FileInput({
       />
 
       <Button
+        style="primary"
         size="small"
         onClick={(e: React.SyntheticEvent) => handleButtonClick(e, field.value)}
         disabled={
