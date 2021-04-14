@@ -2,7 +2,7 @@ import { useUserPreferences } from '../../../providers/UserPreferences'
 import React, { ReactElement } from 'react'
 import styles from './Bookmark.module.css'
 import { ReactComponent as BookmarkIcon } from '../../../images/bookmark.svg'
-import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
+import { ConfigHelperConfig } from '@oceanprotocol/lib'
 import { useOcean } from '../../../providers/Ocean'
 
 export default function Bookmark({ did }: { did: string }): ReactElement {

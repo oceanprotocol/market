@@ -19,7 +19,7 @@ export default function MarketStats(): ReactElement {
   const [totalValueLocked, setTotalValueLocked] = useState<string>()
   const [totalOceanLiquidity, setTotalOceanLiquidity] = useState<string>()
   const [poolCount, setPoolCount] = useState<number>()
-  const { data } = useQuery(getTotalPoolsValues)
+  const { data } = useQuery(getTotalPoolsValues, { pollInterval: 20000 })
 
   useEffect(() => {
     if (!data || !data.poolFactories || data.poolFactories.length === 0) return
