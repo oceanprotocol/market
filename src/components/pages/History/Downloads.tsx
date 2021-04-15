@@ -71,9 +71,8 @@ export default function ComputeDownloads(): ReactElement {
       const source = axios.CancelToken.source()
 
       setIsLoading(true)
-
-      for (let i = 0; i < data.tokenOrders.length; i++) {
-        try {
+      try {
+        for (let i = 0; i < data.tokenOrders.length; i++) {
           const did = web3.utils
             .toChecksumAddress(data.tokenOrders[i].datatokenId.address)
             .replace('0x', 'did:op:')
@@ -89,13 +88,13 @@ export default function ComputeDownloads(): ReactElement {
               timestamp: data.tokenOrders[i].timestamp
             })
           }
-        } catch (err) {
-          Logger.log(err.message)
-        } finally {
-          setIsLoading(false)
         }
+        setOrders(filteredOrders)
+      } catch (err) {
+        Logger.log(err.message)
+      } finally {
+        setIsLoading(false)
       }
-      setOrders(filteredOrders)
     }
 
     filterAssets()
