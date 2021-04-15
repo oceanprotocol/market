@@ -14,26 +14,6 @@ export default function FilesInput(props: InputProps): ReactElement {
   const [fileUrl, setFileUrl] = useState<string>()
   const { config } = useOcean()
 
-  useEffect(() => {
-    loadFileInfo()
-  }, [fileUrl, config.providerUri])
-
-  async function handleButtonClick(e: React.SyntheticEvent, url: string) {
-    // hack so the onBlur-triggered validation does not show,
-    // like when this field is required
-    helpers.setTouched(false)
-
-    // File example 'https://oceanprotocol.com/tech-whitepaper.pdf'
-    e.preventDefault()
-
-    // In the case when the user re-add the same URL after it was removed (by accident or intentionally)
-    if (fileUrl === url) {
-      loadFileInfo()
-    }
-
-    setFileUrl(url)
-  }
-
   function loadFileInfo() {
     const source = axios.CancelToken.source()
 
@@ -59,6 +39,26 @@ export default function FilesInput(props: InputProps): ReactElement {
     return () => {
       source.cancel()
     }
+  }
+
+  useEffect(() => {
+    loadFileInfo()
+  }, [fileUrl, config.providerUri])
+
+  async function handleButtonClick(e: React.SyntheticEvent, url: string) {
+    // hack so the onBlur-triggered validation does not show,
+    // like when this field is required
+    helpers.setTouched(false)
+
+    // File example 'https://oceanprotocol.com/tech-whitepaper.pdf'
+    e.preventDefault()
+
+    // In the case when the user re-add the same URL after it was removed (by accident or intentionally)
+    if (fileUrl === url) {
+      loadFileInfo()
+    }
+
+    setFileUrl(url)
   }
 
   return (
