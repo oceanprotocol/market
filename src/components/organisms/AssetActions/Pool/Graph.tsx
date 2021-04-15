@@ -77,6 +77,10 @@ function getOptions(locale: string, isDarkMode: boolean): ChartOptions {
     legend: {
       display: false
     },
+    hover: {
+      intersect: false,
+      animationDuration: 0
+    },
     scales: {
       yAxes: [
         {
