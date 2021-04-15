@@ -77,7 +77,7 @@ export default function Edit({
         title: values.name,
         description: values.description,
         links: typeof values.links !== 'string' ? values.links : [],
-        isConsumeDisable: values.isConsumeDisable
+        isDisable: values.isDisable
       })
 
       if (!ddoEditedMetdata) {
@@ -126,7 +126,7 @@ export default function Edit({
       initialValues={getInitialValues(
         metadata,
         ddo.findServiceByType('access').attributes.main.timeout,
-        ddo.isConsumeDisable === undefined ? false : ddo.isConsumeDisable
+        ddo.isDisable === undefined ? false : ddo.isDisable
       )}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {

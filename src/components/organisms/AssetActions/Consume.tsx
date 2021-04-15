@@ -37,14 +37,14 @@ function getHelpText(
     dtBalance: string
     dtSymbol: string
   },
-  isConsumeDisable: boolean,
+  isDisable: boolean,
   hasDatatoken: boolean,
   hasPreviousOrder: boolean,
   timeout: string
 ) {
   const { dtBalance, dtSymbol } = token
   const assetTimeout = timeout === 'Forever' ? '' : ` for ${timeout}`
-  const text = isConsumeDisable
+  const text = isDisable
     ? `The data set owner has set this data set to be temporary unavailable for consume.`
     : hasPreviousOrder
     ? `You bought this data set already allowing you to download it without paying again${assetTimeout}.`
@@ -80,7 +80,6 @@ export default function Consume({
   const [hasDatatoken, setHasDatatoken] = useState(false)
   const [isConsumable, setIsConsumable] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
-  const [isConsumeDisable, setIsConsumeDisable] = useState(false)
 
   const { data } = useQuery<OrdersData>(previousOrderQuery, {
     variables: {
@@ -113,7 +112,6 @@ export default function Consume({
   useEffect(() => {
     const { timeout } = ddo.findServiceByType('access').attributes.main
     setAssetTimeout(secondsToString(timeout))
-    if (ddo.isConsumeDisable === true) setIsConsumeDisable(true)
   }, [ddo])
 
   useEffect(() => {
@@ -137,7 +135,7 @@ export default function Consume({
         !isConsumable) &&
         !hasPreviousOrder &&
         !hasDatatoken) ||
-        isConsumeDisable
+        ddo.isDisable
     )
   }, [
     ocean,
@@ -146,7 +144,7 @@ export default function Consume({
     consumeStepText,
     pricingIsLoading,
     isConsumable,
-    isConsumeDisable,
+    ddo.isDisable,
     hasDatatoken
   ])
 
@@ -184,7 +182,7 @@ export default function Consume({
           <div className={styles.help}>
             {getHelpText(
               { dtBalance, dtSymbol: ddo.dataTokenInfo.symbol },
-              isConsumeDisable,
+              ddo.isDisable,
               hasDatatoken,
               hasPreviousOrder,
               assetTimeout

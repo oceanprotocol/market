@@ -64,7 +64,7 @@ function MetaFull({ values }: { values: Partial<MetadataPublishForm> }) {
           <MetaItem
             key={key}
             title={key}
-            content={key === 'isConsumeDisable' ? value.toString() : value}
+            content={key === 'isDisable' ? value.toString() : value}
           />
         ))}
     </div>

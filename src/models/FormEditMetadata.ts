@@ -10,19 +10,19 @@ export const validationSchema = Yup.object().shape({
   description: Yup.string().required('Required').min(10),
   links: Yup.array<EditableMetadataLinks[]>().nullable(),
   timeout: Yup.string().required('Required'),
-  isConsumeDisable: Yup.boolean()
+  isDisable: Yup.boolean()
 })
 
 export function getInitialValues(
   metadata: MetadataMarket,
   timeout: number,
-  isConsumeDisable: boolean
+  isDisable: boolean
 ): Partial<MetadataEditForm> {
   return {
     name: metadata.main.name,
     description: metadata.additionalInformation.description,
     links: metadata.additionalInformation.links,
     timeout: secondsToString(timeout),
-    isConsumeDisable: isConsumeDisable
+    isDisable: isDisable
   }
 }
