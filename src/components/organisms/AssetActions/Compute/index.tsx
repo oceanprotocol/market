@@ -197,7 +197,7 @@ export default function Compute({
       setDdoAlgorithmList(gueryResults.results)
       const datasetComputeService = ddo.findServiceByType('compute')
       algorithmSelectionList = await transformDDOToAssetSelection(
-        datasetComputeService.serviceEndpoint,
+        datasetComputeService?.serviceEndpoint,
         gueryResults.results,
         config.metadataCacheUri,
         []
