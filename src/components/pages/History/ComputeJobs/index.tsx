@@ -1,21 +1,20 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import Time from '../../atoms/Time'
-import styles from './ComputeJobs.module.css'
-import Button from '../../atoms/Button'
-import ComputeDetails from './ComputeDetails'
-import { ComputeJobMetaData } from '../../../@types/ComputeJobMetaData'
+import Time from '../../../atoms/Time'
+import { ComputeJobMetaData } from '../../../../@types/ComputeJobMetaData'
 import { Link } from 'gatsby'
 import { DDO, Logger, ServiceCommon, ServiceCompute } from '@oceanprotocol/lib'
 import Dotdotdot from 'react-dotdotdot'
-import Table from '../../atoms/Table'
-import { useOcean } from '../../../providers/Ocean'
+import Table from '../../../atoms/Table'
+import { useOcean } from '../../../../providers/Ocean'
 import { gql, useQuery } from '@apollo/client'
-import { useWeb3 } from '../../../providers/Web3'
-import { queryMetadata } from '../../../utils/aquarius'
+import { useWeb3 } from '../../../../providers/Web3'
+import { queryMetadata } from '../../../../utils/aquarius'
 import axios, { CancelToken } from 'axios'
-import { ComputeOrders } from '../../../@types/apollo/ComputeOrders'
+import { ComputeOrders } from '../../../../@types/apollo/ComputeOrders'
 import web3 from 'web3'
-import AssetTitle from '../../molecules/AssetListTitle'
+import Details from './Details'
+import styles from './index.module.css'
+
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
     tokenOrders(
@@ -33,22 +32,6 @@ const getComputeOrders = gql`
     }
   }
 `
-function DetailsButton({ row }: { row: ComputeJobMetaData }): ReactElement {
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-
-  return (
-    <>
-      <Button style="text" size="small" onClick={() => setIsDialogOpen(true)}>
-        Show Details
-      </Button>
-      <ComputeDetails
-        computeJob={row}
-        isOpen={isDialogOpen}
-        onToggleModal={() => setIsDialogOpen(false)}
-      />
-    </>
-  )
-}
 
 export function Status({ children }: { children: string }): ReactElement {
   return <div className={styles.status}>{children}</div>
@@ -86,7 +69,7 @@ const columns = [
   {
     name: 'Actions',
     selector: function getActions(row: ComputeAsset) {
-      return <DetailsButton row={row} />
+      return <Details row={row} />
     }
   }
 ]
