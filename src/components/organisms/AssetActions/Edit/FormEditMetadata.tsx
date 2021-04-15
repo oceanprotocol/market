@@ -47,12 +47,14 @@ export default function FormEditMetadata({
   data,
   setShowEdit,
   setTimeoutStringValue,
-  values
+  values,
+  priceDisabled
 }: {
   data: FormFieldProps[]
   setShowEdit: (show: boolean) => void
   setTimeoutStringValue: (value: string) => void
   values: Partial<MetadataPublishForm>
+  priceDisabled: boolean
 }): ReactElement {
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
@@ -84,6 +86,7 @@ export default function FormEditMetadata({
           key={field.name}
           {...field}
           component={Input}
+          disabled={field.name === 'price' && priceDisabled}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             handleFieldChange(e, field)
           }

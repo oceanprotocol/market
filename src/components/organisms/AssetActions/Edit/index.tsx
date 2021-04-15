@@ -67,6 +67,22 @@ export default function Edit({
 
   const hasFeedback = error || success
 
+  async function updateFixedPrice(newPrice: number) {
+    const exchanges = await ocean.fixedRateExchange.searchforDT(
+      ddo.dataToken,
+      '1'
+    )
+    const setPriceResp = await ocean.fixedRateExchange.setRate(
+      exchanges[0].exchangeID,
+      newPrice,
+      accountId
+    )
+    if (!setPriceResp) {
+      setError(content.form.error)
+      Logger.error(content.form.error)
+    }
+  }
+
   async function handleSubmit(
     values: Partial<MetadataEditForm>,
     resetForm: () => void
@@ -79,21 +95,7 @@ export default function Edit({
         links: typeof values.links !== 'string' ? values.links : []
       })
 
-      const exchanges = await ocean.fixedRateExchange.searchforDT(
-        ddo.dataToken,
-        '1'
-      )
-      const setPriceResp = await ocean.fixedRateExchange.setRate(
-        exchanges[0].exchangeID,
-        values.price,
-        accountId
-      )
-
-      if (!setPriceResp) {
-        setError(content.form.error)
-        Logger.error(content.form.error)
-        return
-      }
+      ddo.price.type === 'pool' || (await updateFixedPrice(values.price))
 
       if (!ddoEditedMetdata) {
         setError(content.form.error)
@@ -175,6 +177,7 @@ export default function Edit({
                 setShowEdit={setShowEdit}
                 setTimeoutStringValue={setTimeoutStringValue}
                 values={initialValues}
+                priceDisabled={ddo.price.type === 'pool'}
               />
 
               <aside>
