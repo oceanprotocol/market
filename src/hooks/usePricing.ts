@@ -2,12 +2,10 @@ import { DDO, Logger, BestPrice } from '@oceanprotocol/lib'
 import { useEffect, useState } from 'react'
 import { TransactionReceipt } from 'web3-core'
 import { Decimal } from 'decimal.js'
-import { getFirstPoolPrice } from '../utils/dtUtils'
 import {
   getCreatePricingPoolFeedback,
   getCreatePricingExchangeFeedback,
-  getBuyDTFeedback,
-  getSellDTFeedback
+  getBuyDTFeedback
 } from '../utils/feedback'
 import { sleep } from '../utils'
 
@@ -29,7 +27,6 @@ interface UsePricing {
   createPricing: (
     priceOptions: PriceOptions
   ) => Promise<TransactionReceipt | string | void>
-  sellDT: (dtAmount: number | string) => Promise<TransactionReceipt | void>
   mint: (tokensToMint: string) => Promise<TransactionReceipt | void>
   buyDT: (
     dtAmount: number | string,
@@ -72,7 +69,7 @@ function usePricing(ddo: DDO): UsePricing {
   }, [ocean, dataToken, dataTokenInfo])
 
   // Helper for setting steps & feedback for all flows
-  function setStep(index: number, type: 'pool' | 'exchange' | 'buy' | 'sell') {
+  function setStep(index: number, type: 'pool' | 'exchange' | 'buy') {
     setPricingStep(index)
     if (!dtSymbol) return
 
@@ -87,9 +84,6 @@ function usePricing(ddo: DDO): UsePricing {
         break
       case 'buy':
         messages = getBuyDTFeedback(dtSymbol)
-        break
-      case 'sell':
-        messages = getSellDTFeedback(dtSymbol)
         break
     }
 
@@ -193,45 +187,6 @@ function usePricing(ddo: DDO): UsePricing {
     return tx
   }
 
-  async function sellDT(
-    dtAmount: number | string
-  ): Promise<TransactionReceipt | void> {
-    if (!ocean || !accountId) return
-
-    Decimal.set({ precision: 18 })
-    if (!config.oceanTokenAddress) {
-      Logger.error(`'oceanTokenAddress' not set in config`)
-      return
-    }
-
-    try {
-      setPricingIsLoading(true)
-      setPricingError(undefined)
-      setStep(1, 'sell')
-      const pool = await getFirstPoolPrice(ocean, dataToken)
-      if (!pool || pool.value === 0) return
-      const price = new Decimal(pool.value).times(0.95).toString()
-      setStep(2, 'sell')
-      Logger.log('Selling token to pool', pool, accountId, price)
-      const tx = await ocean.pool.sellDT(
-        accountId,
-        pool.address,
-        `${dtAmount}`,
-        price
-      )
-      setStep(3, 'sell')
-      Logger.log('DT sell response', tx)
-      return tx
-    } catch (error) {
-      setPricingError(error.message)
-      Logger.error(error)
-    } finally {
-      setStep(0, 'sell')
-      setPricingStepText(undefined)
-      setPricingIsLoading(false)
-    }
-  }
-
   async function createPricing(
     priceOptions: PriceOptions
   ): Promise<TransactionReceipt | void> {
@@ -295,7 +250,6 @@ function usePricing(ddo: DDO): UsePricing {
     dtName,
     createPricing,
     buyDT,
-    sellDT,
     mint,
     pricingStep,
     pricingStepText,
