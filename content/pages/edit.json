@@ -37,7 +37,7 @@
         "required": true
       },
       {
-        "name": "isConsumeDisable",
+        "name": "isDisable",
         "label": "Disable Consumption",
         "help": "Disable dataset being consume when dataset undergoing maintenance.",
         "type": "checkbox",
