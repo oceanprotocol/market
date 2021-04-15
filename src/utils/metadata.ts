@@ -1,4 +1,4 @@
-import axios, { CancelToken, AxiosResponse } from 'axios'
+import axios from 'axios'
 import { toast } from 'react-toastify'
 import isUrl from 'is-url-superb'
 import {
