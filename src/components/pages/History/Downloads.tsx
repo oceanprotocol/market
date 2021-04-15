@@ -2,14 +2,13 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import Table from '../../atoms/Table'
 import { gql, useQuery } from '@apollo/client'
 import Time from '../../atoms/Time'
-import { OrdersData_tokenOrders as OrdersDataTokenOrders } from '../../../@types/apollo/OrdersData'
 import web3 from 'web3'
 import AssetTitle from '../../molecules/AssetListTitle'
 import { useWeb3 } from '../../../providers/Web3'
 import axios from 'axios'
 import { useOcean } from '../../../providers/Ocean'
 import { retrieveDDO } from '../../../utils/aquarius'
-import { DID } from '@oceanprotocol/lib'
+import { Logger } from '@oceanprotocol/lib'
 
 const getTokenOrders = gql`
   query OrdersData($user: String!) {
@@ -57,6 +56,7 @@ const columns = [
 
 export default function ComputeDownloads(): ReactElement {
   const { accountId } = useWeb3()
+  const [isLoading, setIsLoading] = useState(false)
   const [orders, setOrders] = useState<DownloadedAssets[]>()
   const { data } = useQuery(getTokenOrders, {
     variables: { user: accountId?.toLowerCase() }
@@ -69,6 +69,8 @@ export default function ComputeDownloads(): ReactElement {
     async function filterAssets() {
       const filteredOrders: DownloadedAssets[] = []
       const source = axios.CancelToken.source()
+
+      setIsLoading(true)
 
       for (let i = 0; i < data.tokenOrders.length; i++) {
         try {
@@ -88,7 +90,9 @@ export default function ComputeDownloads(): ReactElement {
             })
           }
         } catch (err) {
-          console.log(err)
+          Logger.log(err.message)
+        } finally {
+          setIsLoading(false)
         }
       }
       setOrders(filteredOrders)
@@ -102,6 +106,7 @@ export default function ComputeDownloads(): ReactElement {
       columns={columns}
       data={orders}
       paginationPerPage={10}
+      isLoading={isLoading}
       emptyMessage="Your downloads will show up here"
     />
   )
