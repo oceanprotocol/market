@@ -2,7 +2,6 @@ import { Logger } from '@oceanprotocol/lib'
 import React, { ReactElement, useState } from 'react'
 import Loader from '../../../atoms/Loader'
 import { ComputeJobMetaData } from '../../../../@types/ComputeJobMetaData'
-import shortid from 'shortid'
 import { ListItem } from '../../../atoms/Lists'
 import Button from '../../../atoms/Button'
 import { useOcean } from '../../../../providers/Ocean'
@@ -56,17 +55,19 @@ export default function Results({
             )}
           </ListItem>
 
-          {job.resultsUrl?.map((url, i) =>
-            url ? (
-              <ListItem key={shortid.generate()}>
-                <a href={url} target="_blank" rel="noreferrer">
-                  View Result {i}
-                </a>
-              </ListItem>
-            ) : (
-              <ListItem>No results found.</ListItem>
-            )
-          )}
+          {job.resultsUrl &&
+            Array.isArray(job.resultsUrl) &&
+            job.resultsUrl.map((url, i) =>
+              url ? (
+                <ListItem key={job.jobId}>
+                  <a href={url} target="_blank" rel="noreferrer">
+                    View Result {i + 1}
+                  </a>
+                </ListItem>
+              ) : (
+                <ListItem>No results found.</ListItem>
+              )
+            )}
         </ul>
       ) : (
         <Button
