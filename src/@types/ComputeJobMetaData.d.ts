@@ -1,11 +1,8 @@
-export interface ComputeJobMetaData {
-  jobId: string
-  did: string
-  dateCreated: string
-  dateFinished: string
+import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
+
+export interface ComputeJobMetaData extends ComputeJob {
   assetName: string
-  status: number
-  statusText: string
-  algorithmLogUrl: string
-  resultsUrls: string[]
+  algoName: string
+  timestamp: number
+  type: string
 }

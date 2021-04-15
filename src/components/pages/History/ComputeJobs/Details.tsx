@@ -1,19 +1,21 @@
 import React, { ReactElement, useState } from 'react'
+import { ComputeJobMetaData } from '../../../../@types/ComputeJobMetaData'
 import Time from '../../../atoms/Time'
 import Button from '../../../atoms/Button'
-import { ComputeJobMetaData } from '../../../../@types/ComputeJobMetaData'
 import Modal from '../../../atoms/Modal'
-import ComputeResults from './Results'
+import MetaItem from '../../../organisms/AssetContent/MetaItem'
+import { ReactComponent as External } from '../../../../images/external.svg'
+import Results from './Results'
 import { Status } from '.'
 import styles from './Details.module.css'
 
 export default function Details({
-  row
+  job
 }: {
-  row: ComputeJobMetaData
+  job: ComputeJobMetaData
 }): ReactElement {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const isFinished = row.dateFinished !== null
+  const isFinished = job.dateFinished !== null
 
   return (
     <>
@@ -21,22 +23,61 @@ export default function Details({
         Show Details
       </Button>
       <Modal
-        title="Compute job details"
+        title="Job Details"
         isOpen={isDialogOpen}
         onToggleModal={() => setIsDialogOpen(false)}
       >
-        <h3 className={styles.title}>{row.assetName}</h3>
-        <p>
-          Created <Time date={row.dateCreated} isUnix relative />
-          {row.dateFinished && (
-            <>
-              <br />
-              Finished <Time date={row.dateFinished} isUnix relative />
-            </>
+        <div className={styles.main}>
+          <Status>{job.statusText}</Status>
+          {isFinished && <Results job={job} />}
+        </div>
+
+        <div className={styles.asset}>
+          <h3 className={styles.title}>
+            {job.assetName}{' '}
+            <a
+              className={styles.link}
+              href={`/asset/${job.did}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <External />
+            </a>
+          </h3>
+          <p>
+            <code>{job.did}</code>
+          </p>
+        </div>
+
+        <div className={styles.asset}>
+          <h3 className={styles.title}>
+            {job.algoName}{' '}
+            <a
+              className={styles.link}
+              href={`/asset/${job.algoDID}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <External />
+            </a>
+          </h3>
+          <p>
+            <code>{job.algoDID}</code>
+          </p>
+        </div>
+
+        <div className={styles.meta}>
+          <MetaItem
+            title="Created"
+            content={<Time date={job.dateCreated} isUnix relative />}
+          />
+          {job.dateFinished && (
+            <MetaItem
+              title="Finished"
+              content={<Time date={job.dateFinished} isUnix relative />}
+            />
           )}
-        </p>
-        <Status>{row.statusText}</Status>
-        {isFinished && <ComputeResults computeJob={row} />}
+        </div>
       </Modal>
     </>
   )

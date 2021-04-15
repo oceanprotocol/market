@@ -1,2 +1,47 @@
+.main {
+  margin-bottom: var(--spacer);
+}
+
+.main > div:first-child {
+  margin-bottom: calc(var(--spacer) / 2);
+}
+
+.asset {
+  composes: box from '../../../atoms/Box.module.css';
+  padding: calc(var(--spacer) / 2);
+  margin-bottom: calc(var(--spacer) / 2);
+}
+
+.asset p {
+  margin: 0;
+}
+
+.asset code {
+  padding: 0;
+  color: var(--color-secondary);
+  font-size: var(--font-size-small);
+}
+
 .title {
+  margin-bottom: 0;
+  font-size: var(--font-size-base);
+}
+
+.link {
+  display: inline-block;
+  margin-left: calc(var(--spacer) / 8);
+}
+
+.link svg {
+  margin: 0;
+  fill: var(--color-primary);
+  width: 0.6em;
+  height: 0.6em;
+}
+
+.meta {
+  display: grid;
+  gap: var(--spacer);
+  grid-template-columns: 1fr 1fr;
+  margin-top: var(--spacer);
 }
