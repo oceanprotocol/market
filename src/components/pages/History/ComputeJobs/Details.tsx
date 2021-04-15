@@ -8,17 +8,25 @@ import { ReactComponent as External } from '../../../../images/external.svg'
 import Results from './Results'
 import { Status } from '.'
 import styles from './Details.module.css'
-import { getAssetsNames } from '../../../../utils/aquarius'
+import { retrieveDDO } from '../../../../utils/aquarius'
 import { useOcean } from '../../../../providers/Ocean'
 import axios from 'axios'
 
-function Asset({ title, did }: { title: string; did: string }) {
+function Asset({
+  title,
+  symbol,
+  did
+}: {
+  title: string
+  symbol: string
+  did: string
+}) {
   return (
     <div className={styles.asset}>
-      <h3 className={styles.title}>
+      <h3 className={styles.assetTitle}>
         {title}{' '}
         <a
-          className={styles.link}
+          className={styles.assetLink}
           href={`/asset/${did}`}
           target="_blank"
           rel="noreferrer"
@@ -26,8 +34,8 @@ function Asset({ title, did }: { title: string; did: string }) {
           <External />
         </a>
       </h3>
-      <p>
-        <code>{did}</code>
+      <p className={styles.assetMeta}>
+        {symbol} | <code>{did}</code>
       </p>
     </div>
   )
@@ -36,25 +44,33 @@ function Asset({ title, did }: { title: string; did: string }) {
 function DetailsAssets({ job }: { job: ComputeJobMetaData }) {
   const { config } = useOcean()
   const [algoName, setAlgoName] = useState<string>()
+  const [algoDtSymbol, setAlgoDtSymbol] = useState<string>()
 
   useEffect(() => {
-    async function getAlgoTitle() {
+    async function getAlgoMetadata() {
       const source = axios.CancelToken.source()
 
-      const name = await getAssetsNames(
-        [job.algoDID],
+      const ddo = await retrieveDDO(
+        job.algoDID,
         config.metadataCacheUri,
         source.token
       )
-      setAlgoName(name[job.algoDID])
+      setAlgoDtSymbol(ddo.dataTokenInfo.symbol)
+
+      const { attributes } = ddo.findServiceByType('metadata')
+      setAlgoName(attributes?.main.name)
     }
-    getAlgoTitle()
+    getAlgoMetadata()
   }, [config?.metadataCacheUri, job.algoDID])
 
   return (
     <>
-      <Asset title={job.assetName} did={job.inputDID[0]} />
-      <Asset title={algoName} did={job.algoDID} />
+      <Asset
+        title={job.assetName}
+        symbol={job.assetDtSymbol}
+        did={job.inputDID[0]}
+      />
+      <Asset title={algoName} symbol={algoDtSymbol} did={job.algoDID} />
     </>
   )
 }

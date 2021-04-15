@@ -1,22 +1,14 @@
 .main {
   margin-bottom: var(--spacer);
-  padding-bottom: var(--spacer);
-  border-bottom: 1px solid var(--border-color);
 }
 
 .main > div:first-child {
   margin-bottom: calc(var(--spacer) / 2);
 }
 
-.meta {
-  display: grid;
-  gap: var(--spacer);
-  grid-template-columns: 1fr 1fr;
-  margin-bottom: var(--spacer);
-}
-
 .asset {
   composes: box from '../../../atoms/Box.module.css';
+  box-shadow: none;
   padding: calc(var(--spacer) / 2);
   margin-bottom: calc(var(--spacer) / 2);
 }
@@ -45,27 +37,39 @@
 
 .asset code {
   padding: 0;
-  color: var(--color-secondary);
-  font-size: var(--font-size-small);
 }
 
 .asset:last-child {
   margin-bottom: 0;
 }
 
-.title {
+.assetTitle {
   margin-bottom: 0;
   font-size: var(--font-size-base);
+  color: var(--font-color-text);
 }
 
-.link {
+.assetLink {
   display: inline-block;
   margin-left: calc(var(--spacer) / 8);
 }
 
-.link svg {
+.assetLink svg {
   margin: 0;
   fill: var(--color-primary);
   width: 0.6em;
   height: 0.6em;
+}
+
+.assetMeta,
+.assetMeta code {
+  color: var(--color-secondary);
+  font-size: var(--font-size-small);
+}
+
+.meta {
+  display: grid;
+  gap: var(--spacer);
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: var(--spacer);
 }

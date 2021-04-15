@@ -195,7 +195,8 @@ export default function ComputeJobs(): ReactElement {
 
             const compJob: ComputeJobMetaData = {
               ...job,
-              assetName: serviceMetadata.attributes.main.name
+              assetName: serviceMetadata.attributes.main.name,
+              assetDtSymbol: ddo.dataTokenInfo.symbol
             }
             computeJobs.push(compJob)
           }
