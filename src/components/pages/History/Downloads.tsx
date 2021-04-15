@@ -9,6 +9,7 @@ import { useWeb3 } from '../../../providers/Web3'
 import axios from 'axios'
 import { useOcean } from '../../../providers/Ocean'
 import { retrieveDDO } from '../../../utils/aquarius'
+import { DID } from '@oceanprotocol/lib'
 
 const getTokenOrders = gql`
   query OrdersData($user: String!) {
@@ -27,26 +28,28 @@ const getTokenOrders = gql`
   }
 `
 
+interface DownloadedAssets {
+  did: string
+  dtSymbol: string
+  timestamp: string
+}
+
 const columns = [
   {
     name: 'Data Set',
-    selector: function getAssetRow(row: OrdersDataTokenOrders) {
-      const did = web3.utils
-        .toChecksumAddress(row.datatokenId.address)
-        .replace('0x', 'did:op:')
-
-      return <AssetTitle did={did} />
+    selector: function getAssetRow(row: DownloadedAssets) {
+      return <AssetTitle did={row.did} />
     }
   },
   {
     name: 'Datatoken',
-    selector: function getTitleRow(row: OrdersDataTokenOrders) {
-      return row.datatokenId.symbol
+    selector: function getTitleRow(row: DownloadedAssets) {
+      return row.dtSymbol
     }
   },
   {
     name: 'Time',
-    selector: function getTimeRow(row: OrdersDataTokenOrders) {
+    selector: function getTimeRow(row: DownloadedAssets) {
       return <Time date={row.timestamp.toString()} relative isUnix />
     }
   }
@@ -54,7 +57,7 @@ const columns = [
 
 export default function ComputeDownloads(): ReactElement {
   const { accountId } = useWeb3()
-  const [orders, setOrders] = useState<OrdersDataTokenOrders[]>()
+  const [orders, setOrders] = useState<DownloadedAssets[]>()
   const { data } = useQuery(getTokenOrders, {
     variables: { user: accountId?.toLowerCase() }
   })
@@ -62,25 +65,35 @@ export default function ComputeDownloads(): ReactElement {
 
   useEffect(() => {
     if (!config.metadataCacheUri || !data) return
-    const source = axios.CancelToken.source()
 
     async function filterAssets() {
-      const filteredOrders: OrdersDataTokenOrders[] = []
+      const filteredOrders: DownloadedAssets[] = []
+      const source = axios.CancelToken.source()
+
       for (let i = 0; i < data.tokenOrders.length; i++) {
-        const did = web3.utils
-          .toChecksumAddress(data.tokenOrders[i].datatokenId.address)
-          .replace('0x', 'did:op:')
-        const ddo = await retrieveDDO(
-          did,
-          config?.metadataCacheUri,
-          source.token
-        )
-        if (ddo.service[1].type === 'access') {
-          filteredOrders.push(data.tokenOrders[i])
+        try {
+          const did = web3.utils
+            .toChecksumAddress(data.tokenOrders[i].datatokenId.address)
+            .replace('0x', 'did:op:')
+          const ddo = await retrieveDDO(
+            did,
+            config?.metadataCacheUri,
+            source.token
+          )
+          if (ddo.service[1].type === 'access') {
+            filteredOrders.push({
+              did: did,
+              dtSymbol: data.tokenOrders[i].datatokenId.symbol,
+              timestamp: data.tokenOrders[i].timestamp
+            })
+          }
+        } catch (err) {
+          console.log(err)
         }
       }
       setOrders(filteredOrders)
     }
+
     filterAssets()
   }, [config?.metadataCacheUri, data])
 
