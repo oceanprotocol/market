@@ -16,6 +16,7 @@
 .asset + .asset {
   margin-left: var(--spacer);
   border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
   position: relative;
   overflow: visible;
 }
@@ -37,10 +38,6 @@
 
 .asset code {
   padding: 0;
-}
-
-.asset:last-child {
-  margin-bottom: 0;
 }
 
 .assetTitle {
@@ -71,5 +68,5 @@
   display: grid;
   gap: var(--spacer);
   grid-template-columns: 1fr 1fr;
-  margin-bottom: var(--spacer);
+  margin-top: calc(var(--spacer) * 1.5);
 }

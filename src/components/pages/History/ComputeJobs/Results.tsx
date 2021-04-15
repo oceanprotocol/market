@@ -16,6 +16,7 @@ export default function Results({
   const { ocean, account } = useOcean()
   const [isLoading, setIsLoading] = useState(false)
   const [hasFetched, setHasFetched] = useState(false)
+  const isFinished = job.dateFinished !== null
 
   async function getResults() {
     if (!account || !ocean || !job) return
@@ -41,38 +42,48 @@ export default function Results({
     }
   }
 
-  return hasFetched ? (
-    <ul className={styles.results}>
-      <ListItem>
-        {job.algorithmLogUrl ? (
-          <a href={job.algorithmLogUrl} target="_blank" rel="noreferrer">
-            View Log
-          </a>
-        ) : (
-          'No logs found.'
-        )}
-      </ListItem>
-
-      {job.resultsUrl?.map((url, i) =>
-        url ? (
-          <ListItem key={shortid.generate()}>
-            <a href={url} target="_blank" rel="noreferrer">
-              View Result {i}
-            </a>
+  return (
+    <div className={styles.results}>
+      {hasFetched ? (
+        <ul>
+          <ListItem>
+            {job.algorithmLogUrl ? (
+              <a href={job.algorithmLogUrl} target="_blank" rel="noreferrer">
+                View Log
+              </a>
+            ) : (
+              'No logs found.'
+            )}
           </ListItem>
-        ) : (
-          <ListItem>No results found.</ListItem>
-        )
+
+          {job.resultsUrl?.map((url, i) =>
+            url ? (
+              <ListItem key={shortid.generate()}>
+                <a href={url} target="_blank" rel="noreferrer">
+                  View Result {i}
+                </a>
+              </ListItem>
+            ) : (
+              <ListItem>No results found.</ListItem>
+            )
+          )}
+        </ul>
+      ) : (
+        <Button
+          style="primary"
+          size="small"
+          onClick={() => getResults()}
+          disabled={isLoading || !isFinished}
+        >
+          {isLoading ? (
+            <Loader />
+          ) : !isFinished ? (
+            'Waiting for results...'
+          ) : (
+            'Get Results'
+          )}
+        </Button>
       )}
-    </ul>
-  ) : (
-    <Button
-      style="primary"
-      size="small"
-      onClick={() => getResults()}
-      disabled={isLoading}
-    >
-      {isLoading ? <Loader /> : 'Get Results'}
-    </Button>
+    </div>
   )
 }

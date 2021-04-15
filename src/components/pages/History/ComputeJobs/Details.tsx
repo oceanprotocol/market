@@ -1,16 +1,15 @@
 import React, { ReactElement, useEffect, useState } from 'react'
+import axios from 'axios'
 import { ComputeJobMetaData } from '../../../../@types/ComputeJobMetaData'
 import Time from '../../../atoms/Time'
 import Button from '../../../atoms/Button'
 import Modal from '../../../atoms/Modal'
 import MetaItem from '../../../organisms/AssetContent/MetaItem'
 import { ReactComponent as External } from '../../../../images/external.svg'
-import Results from './Results'
-import { Status } from '.'
-import styles from './Details.module.css'
 import { retrieveDDO } from '../../../../utils/aquarius'
 import { useOcean } from '../../../../providers/Ocean'
-import axios from 'axios'
+import Results from './Results'
+import styles from './Details.module.css'
 
 function Asset({
   title,
@@ -82,22 +81,18 @@ export default function Details({
 }): ReactElement {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-  const isFinished = job.dateFinished !== null
-
   return (
     <>
       <Button style="text" size="small" onClick={() => setIsDialogOpen(true)}>
         Show Details
       </Button>
       <Modal
-        title="Job Details"
+        title={job.statusText}
         isOpen={isDialogOpen}
         onToggleModal={() => setIsDialogOpen(false)}
       >
-        <div className={styles.main}>
-          <Status>{job.statusText}</Status>
-          {isFinished && <Results job={job} />}
-        </div>
+        <DetailsAssets job={job} />
+        <Results job={job} />
 
         <div className={styles.meta}>
           <MetaItem
@@ -110,9 +105,14 @@ export default function Details({
               content={<Time date={job.dateFinished} isUnix relative />}
             />
           )}
+          <MetaItem title="Job ID" content={<code>{job.jobId}</code>} />
+          {job.resultsDid && (
+            <MetaItem
+              title="Published Results DID"
+              content={<code>{job.resultsDid}</code>}
+            />
+          )}
         </div>
-
-        <DetailsAssets job={job} />
       </Modal>
     </>
   )
