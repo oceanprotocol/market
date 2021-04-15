@@ -1,15 +1,42 @@
 .main {
   margin-bottom: var(--spacer);
+  padding-bottom: var(--spacer);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .main > div:first-child {
   margin-bottom: calc(var(--spacer) / 2);
 }
 
+.meta {
+  display: grid;
+  gap: var(--spacer);
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: var(--spacer);
+}
+
 .asset {
   composes: box from '../../../atoms/Box.module.css';
   padding: calc(var(--spacer) / 2);
   margin-bottom: calc(var(--spacer) / 2);
+}
+
+.asset + .asset {
+  margin-left: var(--spacer);
+  border-top-left-radius: 0;
+  position: relative;
+  overflow: visible;
+}
+
+.asset + .asset:before {
+  content: '';
+  display: block;
+  position: absolute;
+  left: -1px;
+  top: -1.15rem;
+  bottom: 3px;
+  width: 1px;
+  background-color: var(--border-color);
 }
 
 .asset p {
@@ -20,6 +47,10 @@
   padding: 0;
   color: var(--color-secondary);
   font-size: var(--font-size-small);
+}
+
+.asset:last-child {
+  margin-bottom: 0;
 }
 
 .title {
@@ -37,11 +68,4 @@
   fill: var(--color-primary);
   width: 0.6em;
   height: 0.6em;
-}
-
-.meta {
-  display: grid;
-  gap: var(--spacer);
-  grid-template-columns: 1fr 1fr;
-  margin-top: var(--spacer);
 }

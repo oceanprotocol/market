@@ -17,7 +17,7 @@ export default function Results({
   const [isLoading, setIsLoading] = useState(false)
   const [hasFetched, setHasFetched] = useState(false)
 
-  async function getDetails() {
+  async function getResults() {
     if (!account || !ocean || !job) return
 
     try {
@@ -31,11 +31,7 @@ export default function Results({
       )
       if (jobStatus?.length > 0) {
         job.algorithmLogUrl = jobStatus[0].algorithmLogUrl
-        // TODO: hack because ComputeJob returns resultsUrl instead of resultsUrls, issue created already
-        job.resultsUrl =
-          (jobStatus[0] as any).resultsUrl !== ''
-            ? (jobStatus[0] as any).resultsUrl
-            : []
+        job.resultsUrl = jobStatus[0].resultsUrl
       }
     } catch (error) {
       Logger.error(error.message)
@@ -73,7 +69,7 @@ export default function Results({
     <Button
       style="primary"
       size="small"
-      onClick={() => getDetails()}
+      onClick={() => getResults()}
       disabled={isLoading}
     >
       {isLoading ? <Loader /> : 'Get Results'}

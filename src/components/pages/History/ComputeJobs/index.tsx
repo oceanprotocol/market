@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import web3 from 'web3'
 import Time from '../../../atoms/Time'
 import { Link } from 'gatsby'
-import { DDO, Logger, ServiceCommon, ServiceCompute } from '@oceanprotocol/lib'
+import { DDO, Logger, Service, ServiceCompute } from '@oceanprotocol/lib'
 import { ComputeJobMetaData } from '../../../../@types/ComputeJobMetaData'
 import Dotdotdot from 'react-dotdotdot'
 import Table from '../../../atoms/Table'
@@ -43,7 +43,7 @@ const columns = [
     selector: function getAssetRow(row: ComputeJobMetaData) {
       return (
         <Dotdotdot clamp={2}>
-          <Link to={`/asset/${row.did}`}>{row.assetName}</Link>
+          <Link to={`/asset/${row.inputDID[0]}`}>{row.assetName}</Link>
         </Dotdotdot>
       )
     }
@@ -77,8 +77,7 @@ const columns = [
 async function getAssetMetadata(
   queryDtList: string,
   metadataCacheUri: string,
-  cancelToken: CancelToken,
-  timestamps: number[]
+  cancelToken: CancelToken
 ): Promise<DDO[]> {
   const queryDid = {
     page: 1,
@@ -116,11 +115,9 @@ export default function ComputeJobs(): ReactElement {
       setIsLoading(true)
 
       const dtList = []
-      const dtTimestamps = []
       const computeJobs: ComputeJobMetaData[] = []
       for (let i = 0; i < data.tokenOrders.length; i++) {
         dtList.push(data.tokenOrders[i].datatokenId.address)
-        dtTimestamps.push(data.tokenOrders[i].timestamp)
       }
 
       const queryDtList = JSON.stringify(dtList)
@@ -133,8 +130,7 @@ export default function ComputeJobs(): ReactElement {
         const assets = await getAssetMetadata(
           queryDtList,
           config.metadataCacheUri,
-          source.token,
-          dtTimestamps
+          source.token
         )
         const providers: ServiceCompute[] = []
 
@@ -149,7 +145,7 @@ export default function ComputeJobs(): ReactElement {
             if (!ddo) continue
 
             const service = ddo.service.filter(
-              (x: ServiceCommon) => x.index === data.tokenOrders[i].serviceId
+              (x: Service) => x.index === data.tokenOrders[i].serviceId
             )[0]
 
             if (!service || service.type !== 'compute') continue
@@ -189,32 +185,24 @@ export default function ComputeJobs(): ReactElement {
           })
           for (let j = 0; j < computeJob.length; j++) {
             const job = computeJob[j]
-            const did = job.inputDID[0]
 
-            const ddo = assets.filter((x) => x.id === did)[0]
+            const ddo = assets.filter((x) => x.id === job.inputDID[0])[0]
 
             if (!ddo) continue
             const serviceMetadata = ddo.service.filter(
-              (x: any) => x.type === 'metadata'
+              (x: Service) => x.type === 'metadata'
             )[0]
 
             const compJob: ComputeJobMetaData = {
               ...job,
-              did: did,
-              assetName: serviceMetadata.attributes.main.name,
-              // TODO: figure out if we can get algoName here
-              algoName: '',
-              algorithmLogUrl: '',
-              resultsUrl: [],
-              timestamp: data.tokenOrders[i].timestamp,
-              type: ''
+              assetName: serviceMetadata.attributes.main.name
             }
             computeJobs.push(compJob)
           }
         }
         setJobs(computeJobs)
       } catch (error) {
-        Logger.log(error.message)
+        Logger.error(error.message)
       } finally {
         setIsLoading(false)
       }
