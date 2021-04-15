@@ -112,11 +112,13 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   const [block, setBlock] = useState<number>()
   const [isTestnet, setIsTestnet] = useState<boolean>()
   const [accountId, setAccountId] = useState<string>()
-  const [web3Loading, setWeb3Loading] = useState<boolean>()
+  const [web3Loading, setWeb3Loading] = useState<boolean>(true)
 
   const connect = useCallback(async () => {
-    if (!web3Modal) return
-
+    if (!web3Modal) {
+      setWeb3Loading(false)
+      return
+    }
     try {
       setWeb3Loading(true)
       Logger.log('[web3] Connecting Web3...')
