@@ -69,7 +69,7 @@ function usePricing(ddo: DDO): UsePricing {
   }, [ocean, dataToken, dataTokenInfo])
 
   // Helper for setting steps & feedback for all flows
-  function setStep(index: number, type: 'pool' | 'exchange' | 'buy' | 'sell') {
+  function setStep(index: number, type: 'pool' | 'exchange' | 'buy') {
     setPricingStep(index)
     if (!dtSymbol) return
 
