@@ -1,0 +1,4 @@
+.results {
+  composes: asset from './Details.module.css';
+  border-bottom-left-radius: var(--border-radius) !important;
+}
