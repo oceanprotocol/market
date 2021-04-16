@@ -62,13 +62,15 @@ export default function FormPublish(): ReactElement {
   const [selectedDockerImage, setSelectedDockerImage] = useState<string>(
     initialValues.dockerImage
   )
+
   // reset form validation on every mount
   useEffect(() => {
     setErrors({})
     setTouched({})
-
+    const dataTokenOptions = ocean.datatokens.generateDtName()
+    initialValuesAlgorithm.dataTokenOptions = dataTokenOptions
     // setSubmitting(false)
-  }, [setErrors, setTouched])
+  }, [setErrors, setTouched, ocean.datatokens])
 
   function handleImageSelectChange(imageSelected: string) {
     switch (imageSelected) {
