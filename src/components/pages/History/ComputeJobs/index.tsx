@@ -158,7 +158,7 @@ export default function ComputeJobs(): ReactElement {
             if (wasProviderQueried) continue
             serviceEndpoints.push(serviceEndpoint)
           } catch (err) {
-            console.log(err)
+            Logger.error(err)
           }
         }
 
@@ -179,7 +179,7 @@ export default function ComputeJobs(): ReactElement {
             if (!hasSameCompute) providers.push(provider)
           }
         } catch (err) {
-          console.error(err)
+          Logger.error(err)
         }
         for (let i = 0; i < providers.length; i++) {
           const providerComputeJobs = (await providers[i].computeStatus(
@@ -201,7 +201,7 @@ export default function ComputeJobs(): ReactElement {
             }
             return 0
           })
-          console.log('jobs for provider', providers[i], providerComputeJobs)
+
           for (let j = 0; j < providerComputeJobs.length; j++) {
             const job = providerComputeJobs[j]
             const did = job.inputDID[0]
