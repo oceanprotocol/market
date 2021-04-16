@@ -108,17 +108,21 @@ export default function FormStartCompute({
   useEffect(() => {
     if (!price || !algorithmPrice) return
 
-    const priceDataset = hasPreviousOrder ? 0 : Number(price.value)
-    const priceAlgo = hasPreviousOrderSelectedComputeAsset
-      ? 0
-      : Number(algorithmPrice.value)
+    const priceDataset =
+      hasPreviousOrder || hasDatatoken ? 0 : Number(price.value)
+    const priceAlgo =
+      hasPreviousOrderSelectedComputeAsset || hasDatatokenSelectedComputeAsset
+        ? 0
+        : Number(algorithmPrice.value)
 
     setTotalPrice(priceDataset + priceAlgo)
   }, [
     price,
     algorithmPrice,
     hasPreviousOrder,
-    hasPreviousOrderSelectedComputeAsset
+    hasDatatoken,
+    hasPreviousOrderSelectedComputeAsset,
+    hasDatatokenSelectedComputeAsset
   ])
 
   return (
@@ -138,7 +142,9 @@ export default function FormStartCompute({
         hasPreviousOrderSelectedComputeAsset={
           hasPreviousOrderSelectedComputeAsset
         }
+        hasDatatoken={hasDatatoken}
         selectedComputeAssetTimeout={selectedComputeAssetTimeout}
+        hasDatatokenSelectedComputeAsset={hasDatatokenSelectedComputeAsset}
         algorithmPrice={algorithmPrice}
         totalPrice={totalPrice}
       />
