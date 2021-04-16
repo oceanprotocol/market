@@ -178,7 +178,7 @@ export default function Edit({
                 setShowEdit={setShowEdit}
                 setTimeoutStringValue={setTimeoutStringValue}
                 values={initialValues}
-                showPrice={ddo.price.type !== 'pool'}
+                showPrice={ddo.price.type === 'exchange'}
               />
 
               <aside>
