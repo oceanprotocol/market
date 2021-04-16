@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import web3 from 'web3'
 import Time from '../../../atoms/Time'
 import { Link } from 'gatsby'
-import { DDO, Logger, Service } from '@oceanprotocol/lib'
+import { DDO, Logger, Service, Provider } from '@oceanprotocol/lib'
 import { ComputeJobMetaData } from '../../../../@types/ComputeJobMetaData'
 import Dotdotdot from 'react-dotdotdot'
 import Table from '../../../atoms/Table'
@@ -15,7 +15,6 @@ import { ComputeOrders } from '../../../../@types/apollo/ComputeOrders'
 import Details from './Details'
 import styles from './index.module.css'
 import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
-import { Provider } from '@oceanprotocol/lib/dist/node/provider/Provider'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
