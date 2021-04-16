@@ -1,21 +1,20 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import Time from '../../atoms/Time'
-import styles from './ComputeJobs.module.css'
-import Button from '../../atoms/Button'
-import ComputeDetails from './ComputeDetails'
-import { ComputeJobMetaData } from '../../../@types/ComputeJobMetaData'
-import { Link } from 'gatsby'
-import { DDO, Logger, ServiceCommon, ServiceCompute } from '@oceanprotocol/lib'
-import Dotdotdot from 'react-dotdotdot'
-import Table from '../../atoms/Table'
-import { useOcean } from '../../../providers/Ocean'
-import { gql, useQuery } from '@apollo/client'
-import { useWeb3 } from '../../../providers/Web3'
-import { queryMetadata } from '../../../utils/aquarius'
-import axios, { CancelToken } from 'axios'
-import { ComputeOrders } from '../../../@types/apollo/ComputeOrders'
 import web3 from 'web3'
-import AssetTitle from '../../molecules/AssetListTitle'
+import Time from '../../../atoms/Time'
+import { Link } from 'gatsby'
+import { DDO, Logger, Service, ServiceCompute } from '@oceanprotocol/lib'
+import { ComputeJobMetaData } from '../../../../@types/ComputeJobMetaData'
+import Dotdotdot from 'react-dotdotdot'
+import Table from '../../../atoms/Table'
+import { useOcean } from '../../../../providers/Ocean'
+import { gql, useQuery } from '@apollo/client'
+import { useWeb3 } from '../../../../providers/Web3'
+import { queryMetadata } from '../../../../utils/aquarius'
+import axios, { CancelToken } from 'axios'
+import { ComputeOrders } from '../../../../@types/apollo/ComputeOrders'
+import Details from './Details'
+import styles from './index.module.css'
+
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
     tokenOrders(
@@ -33,22 +32,6 @@ const getComputeOrders = gql`
     }
   }
 `
-function DetailsButton({ row }: { row: ComputeJobMetaData }): ReactElement {
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-
-  return (
-    <>
-      <Button style="text" size="small" onClick={() => setIsDialogOpen(true)}>
-        Show Details
-      </Button>
-      <ComputeDetails
-        computeJob={row}
-        isOpen={isDialogOpen}
-        onToggleModal={() => setIsDialogOpen(false)}
-      />
-    </>
-  )
-}
 
 export function Status({ children }: { children: string }): ReactElement {
   return <div className={styles.status}>{children}</div>
@@ -57,36 +40,36 @@ export function Status({ children }: { children: string }): ReactElement {
 const columns = [
   {
     name: 'Data Set',
-    selector: function getAssetRow(row: ComputeAsset) {
+    selector: function getAssetRow(row: ComputeJobMetaData) {
       return (
         <Dotdotdot clamp={2}>
-          <Link to={`/asset/${row.did}`}>{row.assetName}</Link>
+          <Link to={`/asset/${row.inputDID[0]}`}>{row.assetName}</Link>
         </Dotdotdot>
       )
     }
   },
   {
     name: 'Created',
-    selector: function getTimeRow(row: ComputeAsset) {
+    selector: function getTimeRow(row: ComputeJobMetaData) {
       return <Time date={row.dateCreated} isUnix relative />
     }
   },
   {
     name: 'Finished',
-    selector: function getTimeRow(row: ComputeAsset) {
+    selector: function getTimeRow(row: ComputeJobMetaData) {
       return <Time date={row.dateFinished} isUnix relative />
     }
   },
   {
     name: 'Status',
-    selector: function getStatus(row: ComputeAsset) {
+    selector: function getStatus(row: ComputeJobMetaData) {
       return <Status>{row.statusText}</Status>
     }
   },
   {
     name: 'Actions',
-    selector: function getActions(row: ComputeAsset) {
-      return <DetailsButton row={row} />
+    selector: function getActions(row: ComputeJobMetaData) {
+      return <Details job={row} />
     }
   }
 ]
@@ -94,8 +77,7 @@ const columns = [
 async function getAssetMetadata(
   queryDtList: string,
   metadataCacheUri: string,
-  cancelToken: CancelToken,
-  timestamps: number[]
+  cancelToken: CancelToken
 ): Promise<DDO[]> {
   const queryDid = {
     page: 1,
@@ -113,18 +95,11 @@ async function getAssetMetadata(
   return result.results
 }
 
-interface ComputeAsset extends ComputeJobMetaData {
-  did: string
-  assetName: string
-  timestamp: number
-  type: string
-}
-
 export default function ComputeJobs(): ReactElement {
   const { ocean, account, config } = useOcean()
   const { accountId } = useWeb3()
   const [isLoading, setIsLoading] = useState(false)
-  const [jobs, setJobs] = useState<ComputeAsset[]>([])
+  const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
   const { data } = useQuery<ComputeOrders>(getComputeOrders, {
     variables: {
       user: accountId?.toLowerCase()
@@ -140,11 +115,9 @@ export default function ComputeJobs(): ReactElement {
       setIsLoading(true)
 
       const dtList = []
-      const dtTimestamps = []
-      const computeJobs: ComputeAsset[] = []
+      const computeJobs: ComputeJobMetaData[] = []
       for (let i = 0; i < data.tokenOrders.length; i++) {
         dtList.push(data.tokenOrders[i].datatokenId.address)
-        dtTimestamps.push(data.tokenOrders[i].timestamp)
       }
 
       const queryDtList = JSON.stringify(dtList)
@@ -157,8 +130,7 @@ export default function ComputeJobs(): ReactElement {
         const assets = await getAssetMetadata(
           queryDtList,
           config.metadataCacheUri,
-          source.token,
-          dtTimestamps
+          source.token
         )
         const providers: ServiceCompute[] = []
 
@@ -173,7 +145,7 @@ export default function ComputeJobs(): ReactElement {
             if (!ddo) continue
 
             const service = ddo.service.filter(
-              (x: ServiceCommon) => x.index === data.tokenOrders[i].serviceId
+              (x: Service) => x.index === data.tokenOrders[i].serviceId
             )[0]
 
             if (!service || service.type !== 'compute') continue
@@ -188,7 +160,7 @@ export default function ComputeJobs(): ReactElement {
             providers.push(service as ServiceCompute)
             // eslint-disable-next-line no-empty
           } catch (err) {
-            console.log(err)
+            Logger.error(err.message)
           }
         }
 
@@ -213,34 +185,25 @@ export default function ComputeJobs(): ReactElement {
           })
           for (let j = 0; j < computeJob.length; j++) {
             const job = computeJob[j]
-            const did = job.inputDID[0]
 
-            const ddo = assets.filter((x) => x.id === did)[0]
+            const ddo = assets.filter((x) => x.id === job.inputDID[0])[0]
 
             if (!ddo) continue
             const serviceMetadata = ddo.service.filter(
-              (x: any) => x.type === 'metadata'
+              (x: Service) => x.type === 'metadata'
             )[0]
 
-            const compJob = {
-              did: did,
-              jobId: job.jobId,
-              dateCreated: job.dateCreated,
-              dateFinished: job.dateFinished,
+            const compJob: ComputeJobMetaData = {
+              ...job,
               assetName: serviceMetadata.attributes.main.name,
-              status: job.status,
-              statusText: job.statusText,
-              algorithmLogUrl: '',
-              resultsUrls: [],
-              timestamp: data.tokenOrders[i].timestamp,
-              type: ''
-            } as ComputeAsset
+              assetDtSymbol: ddo.dataTokenInfo.symbol
+            }
             computeJobs.push(compJob)
           }
         }
         setJobs(computeJobs)
       } catch (error) {
-        Logger.log(error.message)
+        Logger.error(error.message)
       } finally {
         setIsLoading(false)
       }
