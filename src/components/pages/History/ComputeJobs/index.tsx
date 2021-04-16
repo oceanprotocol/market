@@ -181,42 +181,46 @@ export default function ComputeJobs(): ReactElement {
           Logger.error(err)
         }
         for (let i = 0; i < providers.length; i++) {
-          const providerComputeJobs = (await providers[i].computeStatus(
-            '',
-            account,
-            undefined,
-            undefined,
-            false
-          )) as ComputeJob[]
+          try {
+            const providerComputeJobs = (await providers[i].computeStatus(
+              '',
+              account,
+              undefined,
+              undefined,
+              false
+            )) as ComputeJob[]
 
-          // means the provider uri is not good, so we ignore it and move on
-          if (!providerComputeJobs) continue
-          providerComputeJobs.sort((a, b) => {
-            if (a.dateCreated > b.dateCreated) {
-              return -1
+            // means the provider uri is not good, so we ignore it and move on
+            if (!providerComputeJobs) continue
+            providerComputeJobs.sort((a, b) => {
+              if (a.dateCreated > b.dateCreated) {
+                return -1
+              }
+              if (a.dateCreated < b.dateCreated) {
+                return 1
+              }
+              return 0
+            })
+
+            for (let j = 0; j < providerComputeJobs.length; j++) {
+              const job = providerComputeJobs[j]
+              const did = job.inputDID[0]
+              const ddo = assets.filter((x) => x.id === did)[0]
+
+              if (!ddo) continue
+              const serviceMetadata = ddo.service.filter(
+                (x: Service) => x.type === 'metadata'
+              )[0]
+
+              const compJob: ComputeJobMetaData = {
+                ...job,
+                assetName: serviceMetadata.attributes.main.name,
+                assetDtSymbol: ddo.dataTokenInfo.symbol
+              }
+              computeJobs.push(compJob)
             }
-            if (a.dateCreated < b.dateCreated) {
-              return 1
-            }
-            return 0
-          })
-
-          for (let j = 0; j < providerComputeJobs.length; j++) {
-            const job = providerComputeJobs[j]
-            const did = job.inputDID[0]
-            const ddo = assets.filter((x) => x.id === did)[0]
-
-            if (!ddo) continue
-            const serviceMetadata = ddo.service.filter(
-              (x: Service) => x.type === 'metadata'
-            )[0]
-
-            const compJob: ComputeJobMetaData = {
-              ...job,
-              assetName: serviceMetadata.attributes.main.name,
-              assetDtSymbol: ddo.dataTokenInfo.symbol
-            }
-            computeJobs.push(compJob)
+          } catch (err) {
+            Logger.error(err)
           }
         }
         setJobs(computeJobs)
