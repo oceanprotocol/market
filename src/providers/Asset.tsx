@@ -197,7 +197,8 @@ function AssetProvider({
     if (!ddo) return
 
     // Set price & metadata from DDO first
-    setPrice(ddo.price)
+    // TODO Hacky hack, temporary™: set isConsumable to true by default since Aquarius can't be trusted.
+    setPrice({ ...ddo.price, isConsumable: 'true' })
     setVariables({ datatoken: ddo?.dataToken.toLowerCase() })
 
     // Get metadata from DDO
