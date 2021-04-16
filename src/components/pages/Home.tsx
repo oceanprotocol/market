@@ -30,13 +30,6 @@ const getHighestLiquidityAssets = gql`
     }
   }
 `
-interface GraphResult {
-  results?: DDO[]
-  page?: number
-  totalPages?: number
-  totalResults?: number
-}
-
 const queryHighest = {
   page: 1,
   offset: 9,
@@ -88,38 +81,45 @@ function SectionQueryResult({
     const source = axios.CancelToken.source()
 
     async function init() {
+      setLoading(true)
       if (queryType && queryType === 'graph') {
         const ddoList: DDO[] = []
-
-        console.log('IS GRAPH')
-        data.pools.forEach(async (pool: { datatokenAddress: string }) => {
-          const did = web3.utils
-            .toChecksumAddress(pool.datatokenAddress)
-            .replace('0x', 'did:op:')
-          const ddo = await retrieveDDO(
-            did,
-            config?.metadataCacheUri,
+        try {
+          data.pools.forEach(async (pool: { datatokenAddress: string }) => {
+            const did = web3.utils
+              .toChecksumAddress(pool.datatokenAddress)
+              .replace('0x', 'did:op:')
+            console.log('DID: ', did)
+            const ddo = await retrieveDDO(
+              did,
+              config?.metadataCacheUri,
+              source.token
+            )
+            if (ddo !== undefined) {
+              ddoList.push(ddo)
+            }
+          })
+          const result: QueryResult = { results: ddoList }
+          setResult(result)
+        } catch (error) {
+          console.log(error.message)
+        } finally {
+          setLoading(false)
+        }
+      } else {
+        try {
+          const result = await queryMetadata(
+            query,
+            config.metadataCacheUri,
             source.token
           )
-          if (ddo !== undefined) {
-            ddoList.push(ddo)
-          }
-        })
-        console.log('DDO LIST', ddoList)
-        const result: QueryResult = { results: ddoList }
-        console.log('RESULTS: ', result.results)
-        setResult(result)
-      } else {
-        console.log('NOT GRAPH')
-        const result = await queryMetadata(
-          query,
-          config.metadataCacheUri,
-          source.token
-        )
-        setResult(result)
+          setResult(result)
+        } catch (error) {
+          console.log(error.message)
+        } finally {
+          setLoading(false)
+        }
       }
-      console.log('FINAL RESULT: ', result)
-      setLoading(false)
     }
     init()
 
