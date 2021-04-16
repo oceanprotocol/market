@@ -57,7 +57,7 @@ export default function FormEditMetadata({
   showPrice: boolean
 }): ReactElement {
   const { accountId } = useWeb3()
-  const { ocean } = useOcean()
+  const { ocean, config } = useOcean()
   const {
     isValid,
     validateField,
@@ -88,6 +88,7 @@ export default function FormEditMetadata({
               key={field.name}
               {...field}
               component={Input}
+              prefix={field.name === 'price' && config.oceanTokenSymbol}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 handleFieldChange(e, field)
               }

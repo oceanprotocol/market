@@ -36,6 +36,7 @@ const contentQuery = graphql`
                 label
                 help
                 type
+                min
                 required
                 sortOptions
                 options
