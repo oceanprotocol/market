@@ -8,8 +8,10 @@ import styles from './PriceOutput.module.css'
 interface PriceOutputProps {
   totalPrice: number
   hasPreviousOrder: boolean
+  hasDatatoken: boolean
   assetTimeout: string
   hasPreviousOrderSelectedComputeAsset: boolean
+  hasDatatokenSelectedComputeAsset: boolean
   algorithmPrice: BestPrice
   selectedComputeAssetTimeout: string
 }
@@ -17,11 +19,13 @@ interface PriceOutputProps {
 function Row({
   price,
   hasPreviousOrder,
+  hasDatatoken,
   timeout,
   sign
 }: {
   price: number
   hasPreviousOrder?: boolean
+  hasDatatoken?: boolean
   timeout?: string
   sign?: string
 }) {
@@ -30,7 +34,7 @@ function Row({
       <div className={styles.sign}>{sign}</div>
       <div>
         <PriceUnit
-          price={hasPreviousOrder ? '0' : `${price}`}
+          price={hasPreviousOrder || hasDatatoken ? '0' : `${price}`}
           small
           className={styles.price}
         />
@@ -48,8 +52,10 @@ function Row({
 export default function PriceOutput({
   totalPrice,
   hasPreviousOrder,
+  hasDatatoken,
   assetTimeout,
   hasPreviousOrderSelectedComputeAsset,
+  hasDatatokenSelectedComputeAsset,
   algorithmPrice,
   selectedComputeAssetTimeout
 }: PriceOutputProps): ReactElement {
@@ -63,11 +69,13 @@ export default function PriceOutput({
           <div className={styles.calculation}>
             <Row
               hasPreviousOrder={hasPreviousOrder}
+              hasDatatoken={hasDatatoken}
               price={price?.value}
               timeout={assetTimeout}
             />
             <Row
               hasPreviousOrder={hasPreviousOrderSelectedComputeAsset}
+              hasDatatoken={hasDatatokenSelectedComputeAsset}
               price={algorithmPrice?.value}
               timeout={selectedComputeAssetTimeout}
               sign="+"
