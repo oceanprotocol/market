@@ -49,6 +49,7 @@ export interface MetadataPublishFormAlgorithm {
   dockerImage: string
   algorithmPrivacy: boolean
   timeout: string
+  dataTokenOptions: DataTokenOptions
   termsAndConditions: boolean
   // ---- optional fields ----
   image: string

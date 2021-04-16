@@ -57,6 +57,13 @@
       "required": true
     },
     {
+      "name": "dataTokenOptions",
+      "label": "Datatoken Name & Symbol",
+      "type": "datatoken",
+      "help": "The datatoken for this algorithm will be created with this name & symbol.",
+      "required": true
+    },
+    {
       "name": "entrypoint",
       "label": "Entrypoint",
       "placeholder": "e.g. python $ALGO",
