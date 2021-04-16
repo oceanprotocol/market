@@ -16,6 +16,8 @@ import axios, { CancelToken } from 'axios'
 import { ComputeOrders } from '../../../@types/apollo/ComputeOrders'
 import web3 from 'web3'
 import AssetTitle from '../../molecules/AssetListTitle'
+import { Provider } from '@oceanprotocol/lib/dist/node/provider/Provider'
+import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
     tokenOrders(
@@ -160,8 +162,8 @@ export default function ComputeJobs(): ReactElement {
           source.token,
           dtTimestamps
         )
-        const providers: ServiceCompute[] = []
-
+        const providers: Provider[] = []
+        const serviceEndpoints: string[] = []
         for (let i = 0; i < data.tokenOrders.length; i++) {
           try {
             const did = web3.utils
@@ -180,29 +182,48 @@ export default function ComputeJobs(): ReactElement {
             const { serviceEndpoint } = service
 
             const wasProviderQueried =
-              providers.filter((x) => x.serviceEndpoint === serviceEndpoint)
-                .length > 0
+              serviceEndpoints.filter((x) => x === serviceEndpoint).length > 0
 
             if (wasProviderQueried) continue
+            serviceEndpoints.push(serviceEndpoint)
 
-            providers.push(service as ServiceCompute)
             // eslint-disable-next-line no-empty
           } catch (err) {
             console.log(err)
           }
         }
 
+        try {
+          for (let i = 0; i < serviceEndpoints.length; i++) {
+            const instanceConfig = {
+              config,
+              web3: config.web3Provider,
+              logger: Logger,
+              ocean: ocean
+            }
+            const provider = await Provider.getInstance(instanceConfig)
+            await provider.setBaseUrl(serviceEndpoints[i])
+            const hasSameCompute =
+              providers.filter(
+                (x) => x.computeAddress === provider.computeAddress
+              ).length > 0
+            if (!hasSameCompute) providers.push(provider)
+          }
+        } catch (err) {
+          console.error(err)
+        }
         for (let i = 0; i < providers.length; i++) {
-          const computeJob = await ocean.compute.status(
+          const providerComputeJobs = (await providers[i].computeStatus(
+            '',
             account,
             undefined,
             undefined,
-            providers[i],
-            undefined,
-            undefined,
             false
-          )
-          computeJob.sort((a, b) => {
+          )) as ComputeJob[]
+
+          // means the provider uri is not good, so we ignore it and move on
+          if (!providerComputeJobs) continue
+          providerComputeJobs.sort((a, b) => {
             if (a.dateCreated > b.dateCreated) {
               return -1
             }
@@ -211,10 +232,10 @@ export default function ComputeJobs(): ReactElement {
             }
             return 0
           })
-          for (let j = 0; j < computeJob.length; j++) {
-            const job = computeJob[j]
+          console.log('jobs for provider', providers[i], providerComputeJobs)
+          for (let j = 0; j < providerComputeJobs.length; j++) {
+            const job = providerComputeJobs[j]
             const did = job.inputDID[0]
-
             const ddo = assets.filter((x) => x.id === did)[0]
 
             if (!ddo) continue
