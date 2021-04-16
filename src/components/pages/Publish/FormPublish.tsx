@@ -33,6 +33,17 @@ export default function FormPublish({
     // setSubmitting(false)
   }, [setErrors, setTouched])
 
+  const accesTypeOptions = [
+    {
+      name: 'Compute',
+      checked: false
+    },
+    {
+      name: 'Download',
+      checked: true
+    }
+  ]
+
   // Manually handle change events instead of using `handleChange` from Formik.
   // Workaround for default `validateOnChange` not kicking in
   function handleFieldChange(
@@ -59,6 +70,9 @@ export default function FormPublish({
         <Field
           key={field.name}
           {...field}
+          options={
+            field.type === 'boxSelection' ? accesTypeOptions : field.options
+          }
           component={Input}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             handleFieldChange(e, field)

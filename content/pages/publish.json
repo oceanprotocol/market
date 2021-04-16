@@ -35,11 +35,11 @@
         "type": "files"
       },
       {
-        "name": "access",
+        "name": "boxSelection",
         "label": "Access Type",
         "help": "Choose how you want your files to be accessible for the specified price.",
-        "type": "select",
-        "options": ["Download"],
+        "type": "boxSelection",
+        "options": ["Download", "Compute"],
         "required": true
       },
       {

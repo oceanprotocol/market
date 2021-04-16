@@ -7,20 +7,22 @@ import Loader from '../../atoms/Loader'
 
 const cx = classNames.bind(styles)
 
-export interface BoxSelectionValues {
+export interface BoxSelectionOption {
   name: string
   checked: boolean
-  icon: JSX.Element
+  icon?: JSX.Element
 }
 
 export default function BoxSelection({
-  values,
+  name,
+  options,
   multiple,
   fieldsName,
   disabled,
   ...props
 }: {
-  values: BoxSelectionValues[]
+  name: string
+  options: BoxSelectionOption[]
   multiple?: boolean
   fieldsName?: string
   disabled?: boolean
@@ -37,19 +39,18 @@ export default function BoxSelection({
         disabled ? styles.disabled : ''
       }`}
     >
-      {!values ? (
+      {!options ? (
         <Loader />
       ) : (
-        values.map((value: BoxSelectionValues, key: number) => (
+        options.map((value: BoxSelectionOption, key: number) => (
           <div
             className={`${styles.boxSelection} ${
-              value.checked ? styles.selected : ''
+              props.checked ? styles.selected : ''
             }`}
             key={key}
           >
             <input
               id={value.name}
-              name={multiple ? value.name : fieldsName}
               type={multiple ? 'checkbox' : 'radio'}
               className={styleClassesInput}
               defaultChecked={value.checked}

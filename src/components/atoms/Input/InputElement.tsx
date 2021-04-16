@@ -4,6 +4,9 @@ import styles from './InputElement.module.css'
 import { InputProps } from '.'
 import FilesInput from '../../molecules/FormFields/FilesInput'
 import Terms from '../../molecules/FormFields/Terms'
+import BoxSelection, {
+  BoxSelectionOption
+} from '../../molecules/FormFields/BoxSelection'
 import Datatoken from '../../molecules/FormFields/Datatoken'
 import classNames from 'classnames/bind'
 
@@ -96,6 +99,15 @@ export default function InputElement({
       return <Datatoken name={name} {...field} {...props} />
     case 'terms':
       return <Terms name={name} options={options} {...field} {...props} />
+    case 'boxSelection':
+      return (
+        <BoxSelection
+          name={name}
+          options={(options as unknown) as BoxSelectionOption[]}
+          {...field}
+          {...props}
+        />
+      )
     default:
       return prefix || postfix ? (
         <div className={`${prefix ? styles.prefixGroup : styles.postfixGroup}`}>
