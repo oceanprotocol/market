@@ -19,7 +19,7 @@ import web3 from 'web3'
 
 const getHighestLiquidityAssets = gql`
   query HighestLiquidiyAssets {
-    pools(orderBy: consumePrice, orderDirection: desc, first: 10) {
+    pools(orderBy: consumePrice, orderDirection: desc, first: 20) {
       id
       consumePrice
       spotPrice
@@ -30,17 +30,6 @@ const getHighestLiquidityAssets = gql`
     }
   }
 `
-const queryHighest = {
-  page: 1,
-  offset: 9,
-  query: {
-    query_string: {
-      query: `(price.type:pool) -isInPurgatory:true`
-    }
-  },
-  sort: { 'price.ocean': -1 }
-}
-
 const queryLatest = {
   page: 1,
   offset: 9,
@@ -81,25 +70,29 @@ function SectionQueryResult({
     const source = axios.CancelToken.source()
 
     async function init() {
-      setLoading(true)
       if (queryType && queryType === 'graph') {
         const ddoList: DDO[] = []
+        setLoading(true)
         try {
-          data.pools.forEach(async (pool: { datatokenAddress: string }) => {
+          for (let i = 0; i < data.pools.length; i++) {
             const did = web3.utils
-              .toChecksumAddress(pool.datatokenAddress)
+              .toChecksumAddress(data.pools[i].datatokenAddress)
               .replace('0x', 'did:op:')
-            console.log('DID: ', did)
             const ddo = await retrieveDDO(
               did,
               config?.metadataCacheUri,
               source.token
             )
-            if (ddo !== undefined) {
+            if (ddo !== undefined && ddoList.length < 9) {
               ddoList.push(ddo)
             }
-          })
-          const result: QueryResult = { results: ddoList }
+          }
+          const result: QueryResult = {
+            results: ddoList,
+            page: 1,
+            totalPages: 1,
+            totalResults: 9
+          }
           setResult(result)
         } catch (error) {
           console.log(error.message)
@@ -107,6 +100,7 @@ function SectionQueryResult({
           setLoading(false)
         }
       } else {
+        setLoading(true)
         try {
           const result = await queryMetadata(
             query,
@@ -126,7 +120,7 @@ function SectionQueryResult({
     return () => {
       source.cancel()
     }
-  }, [config?.metadataCacheUri, data])
+  }, [config?.metadataCacheUri, queryType, query, data])
 
   return (
     <section className={styles.section}>
