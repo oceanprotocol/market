@@ -11,7 +11,7 @@ interface UseConsume {
     serviceType: ServiceType,
     marketFeeAddress: string,
     orderId?: string
-  ) => Promise<void>
+  ) => Promise<string>
   consumeStep?: number
   consumeStepText?: string
   consumeError?: string
@@ -37,7 +37,7 @@ function useConsume(): UseConsume {
     serviceType: ServiceType = 'access',
     marketFeeAddress: string,
     orderId?: string
-  ): Promise<void> {
+  ): Promise<string> {
     if (!ocean || !account || !accountId) return
 
     setIsLoading(true)
@@ -53,6 +53,7 @@ function useConsume(): UseConsume {
         )
         if (parseFloat(userOwnedTokens) < 1) {
           setConsumeError('Not enough datatokens')
+          return 'Not enough datatokens'
         } else {
           setStep(1)
           orderId = await ocean.assets.order(
@@ -81,13 +82,14 @@ function useConsume(): UseConsume {
     } catch (error) {
       setConsumeError(error.message)
       Logger.error(error)
+      return error.message
     } finally {
       setConsumeStep(undefined)
       setConsumeStepText(undefined)
       setIsLoading(false)
     }
+    return undefined
   }
-
   return { consume, consumeStep, consumeStepText, consumeError, isLoading }
 }
 

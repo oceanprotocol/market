@@ -145,15 +145,17 @@ export default function Consume({
 
   async function handleConsume() {
     !hasPreviousOrder && !hasDatatoken && (await buyDT('1', price))
-    await consume(
+    const error = await consume(
       ddo.id,
       ddo.dataToken,
       'access',
       marketFeeAddress,
       previousOrderId
     )
-    setHasPreviousOrder(true)
+    error || setHasPreviousOrder(true)
   }
+
+  console.log(consumeError)
 
   // Output errors in UI
   useEffect(() => {
