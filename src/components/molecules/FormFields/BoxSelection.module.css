@@ -5,12 +5,16 @@
 
 .boxSelection {
   display: block;
-  flex: 0 0 48%;
+  flex: 1 1 0px;
   padding: calc(var(--spacer) / 3) calc(var(--spacer) / 2)
     calc(var(--spacer) / 4) calc(var(--spacer) / 2) !important;
   border-radius: var(--border-radius);
   border: 1px solid var(--border-color);
   color: var(--color-secondary);
+  cursor: pointer;
+}
+
+.boxSelection .disabled {
 }
 
 .boxSelectionsWrapper input[type='radio'] {

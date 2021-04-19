@@ -1,7 +1,6 @@
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent } from 'react'
 import Dotdotdot from 'react-dotdotdot'
 import classNames from 'classnames/bind'
-import { ReactComponent as External } from '../../../images/external.svg'
 import styles from './BoxSelection.module.css'
 import Loader from '../../atoms/Loader'
 
@@ -16,21 +15,18 @@ export interface BoxSelectionOption {
 export default function BoxSelection({
   name,
   options,
-  multiple,
-  fieldsName,
   disabled,
+  handleChange,
   ...props
 }: {
   name: string
   options: BoxSelectionOption[]
-  multiple?: boolean
-  fieldsName?: string
   disabled?: boolean
+  handleChange?: (event: ChangeEvent<HTMLInputElement>) => void
 }): JSX.Element {
   const styleClassesInput = cx({
     input: true,
-    [styles.checkbox]: multiple,
-    [styles.radio]: !multiple
+    [styles.radio]: true
   })
 
   return (
@@ -42,22 +38,23 @@ export default function BoxSelection({
       {!options ? (
         <Loader />
       ) : (
-        options.map((value: BoxSelectionOption, key: number) => (
+        options.map((value: BoxSelectionOption) => (
           <>
             <input
               id={value.name}
-              type={multiple ? 'checkbox' : 'radio'}
+              type="radio"
               className={styleClassesInput}
               defaultChecked={value.checked}
+              onChange={(event) => handleChange(event)}
               {...props}
               disabled={disabled}
               value={value.name}
-              name="test"
+              name={name}
             />
             <label
               className={`${styles.boxSelection} ${styles.label}`}
               htmlFor={value.name}
-              title={multiple ? value.name : fieldsName}
+              title={value.name}
             >
               {value.icon}
               <span className={styles.title}>
