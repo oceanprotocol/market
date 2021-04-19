@@ -155,8 +155,6 @@ export default function Consume({
     error || setHasPreviousOrder(true)
   }
 
-  console.log(consumeError)
-
   // Output errors in UI
   useEffect(() => {
     consumeError && toast.error(consumeError)

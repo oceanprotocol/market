@@ -90,6 +90,7 @@ function useConsume(): UseConsume {
     }
     return undefined
   }
+
   return { consume, consumeStep, consumeStepText, consumeError, isLoading }
 }
 
