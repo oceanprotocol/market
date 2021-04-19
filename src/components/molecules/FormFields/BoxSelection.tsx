@@ -43,12 +43,7 @@ export default function BoxSelection({
         <Loader />
       ) : (
         options.map((value: BoxSelectionOption, key: number) => (
-          <div
-            className={`${styles.boxSelection} ${
-              props.checked ? styles.selected : ''
-            }`}
-            key={key}
-          >
+          <>
             <input
               id={value.name}
               type={multiple ? 'checkbox' : 'radio'}
@@ -57,9 +52,10 @@ export default function BoxSelection({
               {...props}
               disabled={disabled}
               value={value.name}
+              name="test"
             />
             <label
-              className={styles.label}
+              className={`${styles.boxSelection} ${styles.label}`}
               htmlFor={value.name}
               title={multiple ? value.name : fieldsName}
             >
@@ -70,7 +66,7 @@ export default function BoxSelection({
                 </Dotdotdot>
               </span>
             </label>
-          </div>
+          </>
         ))
       )}
     </div>

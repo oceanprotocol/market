@@ -13,10 +13,13 @@
   color: var(--color-secondary);
 }
 
-.boxSelection input[type='radio'] {
+.boxSelectionsWrapper input[type='radio'] {
+  position: fixed;
+  opacity: 0;
+  pointer-events: none;
 }
 
-.boxSelection.selected {
+input[type='radio']:checked + label {
   color: var(--font-color-text);
   border-color: var(--color-secondary);
 }
@@ -28,7 +31,7 @@
   margin-bottom: calc(var(--spacer) / 5);
 }
 
-.boxSelection label {
+.boxSelectionsWrapper label {
   display: flex;
   flex-direction: column;
   align-items: center;
