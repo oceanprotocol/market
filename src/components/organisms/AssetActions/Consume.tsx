@@ -158,8 +158,11 @@ export default function Consume({
   // Output errors in UI
   useEffect(() => {
     consumeError && toast.error(consumeError)
+  }, [consumeError])
+
+  useEffect(() => {
     pricingError && toast.error(pricingError)
-  }, [consumeError, pricingError])
+  }, [pricingError])
 
   const PurchaseButton = () => (
     <div className={styles.actions}>
