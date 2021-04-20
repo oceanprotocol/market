@@ -84,7 +84,13 @@ function SectionQueryResult({
               config?.metadataCacheUri,
               source.token
             )
-            if (ddo !== undefined && ddoList.length < 9) {
+
+            if (
+              ddo !== undefined &&
+              ddo.isInPurgatory === 'false' &&
+              ddoList.length < 9
+            ) {
+              console.log('DDO: ', ddo)
               ddoList.push(ddo)
             }
           }
