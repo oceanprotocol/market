@@ -88,9 +88,9 @@ function SectionQueryResult({
             if (
               ddo !== undefined &&
               ddo.isInPurgatory === 'false' &&
+              ddo.price.isConsumable === 'true' &&
               ddoList.length < 9
             ) {
-              console.log('DDO: ', ddo)
               ddoList.push(ddo)
             }
           }
