@@ -25,7 +25,7 @@
         "label": "New Price",
         "type": "number",
         "min": "1",
-        "placeholder": "e.g. Shapes of Desert Plants",
+        "placeholder": "0",
         "help": "Enter a new price.",
         "required": true
       },

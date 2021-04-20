@@ -61,7 +61,7 @@ export default function Edit({
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
-  const { metadata, ddo, refreshDdo } = useAsset()
+  const { metadata, ddo, refreshDdo, price } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const [timeoutStringValue, setTimeoutStringValue] = useState<string>()
@@ -96,7 +96,9 @@ export default function Edit({
         links: typeof values.links !== 'string' ? values.links : []
       })
 
-      ddo.price.type === 'pool' || (await updateFixedPrice(values.price))
+      price.type === 'exchange' &&
+        values.price !== price.value &&
+        (await updateFixedPrice(values.price))
 
       if (!ddoEditedMetdata) {
         setError(content.form.error)
@@ -144,7 +146,7 @@ export default function Edit({
       initialValues={getInitialValues(
         metadata,
         ddo.findServiceByType('access').attributes.main.timeout,
-        ddo.price.value
+        price.value
       )}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
@@ -178,7 +180,7 @@ export default function Edit({
                 setShowEdit={setShowEdit}
                 setTimeoutStringValue={setTimeoutStringValue}
                 values={initialValues}
-                showPrice={ddo.price.type === 'exchange'}
+                showPrice={price.type === 'exchange'}
               />
 
               <aside>
