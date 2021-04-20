@@ -14,12 +14,12 @@ import Bookmarks from '../molecules/Bookmarks'
 import axios from 'axios'
 import { queryMetadata, retrieveDDO } from '../../utils/aquarius'
 import { gql, useQuery } from '@apollo/client'
-import { DDO, DID } from '@oceanprotocol/lib'
+import { DDO, Logger } from '@oceanprotocol/lib'
 import web3 from 'web3'
 
 const getHighestLiquidityAssets = gql`
   query HighestLiquidiyAssets {
-    pools(orderBy: consumePrice, orderDirection: desc, first: 20) {
+    pools(orderBy: valueLocked, orderDirection: desc, first: 20) {
       id
       consumePrice
       spotPrice
@@ -27,6 +27,7 @@ const getHighestLiquidityAssets = gql`
       symbol
       name
       datatokenAddress
+      valueLocked
     }
   }
 `
@@ -70,10 +71,10 @@ function SectionQueryResult({
     const source = axios.CancelToken.source()
 
     async function init() {
-      if (queryType && queryType === 'graph') {
-        const ddoList: DDO[] = []
-        setLoading(true)
-        try {
+      setLoading(true)
+      try {
+        if (queryType && queryType === 'graph') {
+          const ddoList: DDO[] = []
           for (let i = 0; i < data.pools.length; i++) {
             const did = web3.utils
               .toChecksumAddress(data.pools[i].datatokenAddress)
@@ -94,25 +95,18 @@ function SectionQueryResult({
             totalResults: 9
           }
           setResult(result)
-        } catch (error) {
-          console.log(error.message)
-        } finally {
-          setLoading(false)
-        }
-      } else {
-        setLoading(true)
-        try {
+        } else {
           const result = await queryMetadata(
             query,
             config.metadataCacheUri,
             source.token
           )
           setResult(result)
-        } catch (error) {
-          console.log(error.message)
-        } finally {
-          setLoading(false)
         }
+      } catch (error) {
+        Logger.log(error.message)
+      } finally {
+        setLoading(false)
       }
     }
     init()
