@@ -1,6 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { File as FileMetadata, DDO, DID, Logger } from '@oceanprotocol/lib'
+import axios from 'axios'
 import Button from '../../atoms/Button'
 import File from '../../atoms/File'
 import Price from '../../atoms/Price'
@@ -17,6 +18,7 @@ import { useOcean } from '../../../providers/Ocean'
 import { useWeb3 } from '../../../providers/Web3'
 import { usePricing } from '../../../hooks/usePricing'
 import { useConsume } from '../../../hooks/useConsume'
+import { isFileValid } from '../../../utils/provider'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {
@@ -37,13 +39,16 @@ function getHelpText(
     dtBalance: string
     dtSymbol: string
   },
+  isFileConsumable: boolean,
   hasDatatoken: boolean,
   hasPreviousOrder: boolean,
   timeout: string
 ) {
   const { dtBalance, dtSymbol } = token
   const assetTimeout = timeout === 'Forever' ? '' : ` for ${timeout}`
-  const text = hasPreviousOrder
+  const text = !isFileConsumable
+    ? `This data set provider is currently not available for consume.`
+    : hasPreviousOrder
     ? `You bought this data set already allowing you to download it without paying again${assetTimeout}.`
     : hasDatatoken
     ? `You own ${dtBalance} ${dtSymbol} allowing you to use this data set by spending 1 ${dtSymbol}, but without paying OCEAN again.`
@@ -77,6 +82,7 @@ export default function Consume({
   const [hasDatatoken, setHasDatatoken] = useState(false)
   const [isConsumable, setIsConsumable] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
+  const [isFileConsumable, setIsFileConsumable] = useState(false)
 
   const { data } = useQuery<OrdersData>(previousOrderQuery, {
     variables: {
@@ -126,13 +132,15 @@ export default function Consume({
   useEffect(() => {
     async function validateAsset() {
       const did = DID.parse(ddo.id)
-      const isFileValid = await ocean.provider.isFileConsumable(
+      const fileValid = await isFileValid(
         did,
-        ddo.findServiceByType('access').index
+        ddo.findServiceByType('access').serviceEndpoint,
+        axios.CancelToken.source().token
       )
+      setIsFileConsumable(fileValid)
 
       setIsDisabled(
-        !isFileValid ||
+        !fileValid ||
           ((!ocean ||
             !isBalanceSufficient ||
             typeof consumeStepText !== 'undefined' ||
@@ -156,12 +164,13 @@ export default function Consume({
 
   async function handleConsume() {
     const did = DID.parse(ddo.id)
-    const isFileValid = await ocean.provider.isFileConsumable(
+    const fileValid = await isFileValid(
       did,
-      ddo.findServiceByType('access').index
+      ddo.findServiceByType('access').serviceEndpoint,
+      axios.CancelToken.source().token
     )
 
-    if (isFileValid) {
+    if (fileValid) {
       !hasPreviousOrder && !hasDatatoken && (await buyDT('1', price))
       await consume(
         ddo.id,
@@ -172,8 +181,8 @@ export default function Consume({
       )
       setHasPreviousOrder(true)
     } else {
+      setIsFileConsumable(false)
       setIsDisabled(true)
-      toast.error('Dataset file endpoints is unavailable for consume.')
     }
   }
 
@@ -199,6 +208,7 @@ export default function Consume({
           <div className={styles.help}>
             {getHelpText(
               { dtBalance, dtSymbol: ddo.dataTokenInfo.symbol },
+              isFileConsumable,
               hasDatatoken,
               hasPreviousOrder,
               assetTimeout
