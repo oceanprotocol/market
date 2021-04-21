@@ -8,7 +8,6 @@ const testFormData: MetadataPublishForm = {
     symbol: ''
   },
   name: '',
-  price: 0,
   timeout: '',
   description: 'description',
   termsAndConditions: true,

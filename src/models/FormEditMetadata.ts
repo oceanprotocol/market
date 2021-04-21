@@ -1,4 +1,4 @@
-import { MetadataMarket, MetadataPublishForm } from '../@types/MetaData'
+import { MetadataMarket, MetadataEditForm } from '../@types/MetaData'
 import { secondsToString } from '../utils/metadata'
 import { EditableMetadataLinks } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
@@ -17,7 +17,7 @@ export function getInitialValues(
   metadata: MetadataMarket,
   timeout: number,
   price: number
-): Partial<MetadataPublishForm> {
+): Partial<MetadataEditForm> {
   return {
     name: metadata.main.name,
     description: metadata.additionalInformation.description,

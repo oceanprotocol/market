@@ -69,12 +69,8 @@ export default function Edit({
   const hasFeedback = error || success
 
   async function updateFixedPrice(newPrice: number) {
-    const exchanges = await ocean.fixedRateExchange.searchforDT(
-      ddo.dataToken,
-      '1'
-    )
     const setPriceResp = await ocean.fixedRateExchange.setRate(
-      exchanges[0].exchangeID,
+      price.address,
       newPrice,
       accountId
     )
