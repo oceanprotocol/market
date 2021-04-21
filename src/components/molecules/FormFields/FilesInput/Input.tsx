@@ -27,7 +27,7 @@ export default function FileInput({
       <Button
         style="primary"
         size="small"
-        onClick={(e: React.SyntheticEvent) => handleButtonClick(e, field.value)}
+        onClick={(e: React.SyntheticEvent) => e.preventDefault()}
         disabled={!field.value}
       >
         {isLoading ? <Loader /> : 'Add File'}
