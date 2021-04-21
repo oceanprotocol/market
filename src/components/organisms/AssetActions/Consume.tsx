@@ -130,12 +130,13 @@ export default function Consume({
   }, [dtBalance])
 
   useEffect(() => {
+    const source = axios.CancelToken.source()
     async function validateAsset() {
       const did = DID.parse(ddo.id)
       const fileValid = await isFileValid(
         did,
         ddo.findServiceByType('access').serviceEndpoint,
-        axios.CancelToken.source().token
+        source.token
       )
       setIsFileConsumable(fileValid)
 
@@ -151,6 +152,10 @@ export default function Consume({
       )
     }
     validateAsset()
+
+    return () => {
+      source.cancel()
+    }
   }, [
     ocean,
     hasPreviousOrder,
@@ -163,12 +168,14 @@ export default function Consume({
   ])
 
   async function handleConsume() {
+    const source = axios.CancelToken.source()
     const did = DID.parse(ddo.id)
     const fileValid = await isFileValid(
       did,
       ddo.findServiceByType('access').serviceEndpoint,
-      axios.CancelToken.source().token
+      source.token
     )
+    source.cancel()
 
     if (fileValid) {
       !hasPreviousOrder && !hasDatatoken && (await buyDT('1', price))
