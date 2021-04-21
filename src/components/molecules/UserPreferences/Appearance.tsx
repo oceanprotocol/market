@@ -2,7 +2,6 @@ import React, { ReactElement, ChangeEvent } from 'react'
 import { DarkMode } from 'use-dark-mode'
 import FormHelp from '../../atoms/Input/Help'
 import Label from '../../atoms/Input/Label'
-import styles from './Appearance.module.css'
 import { ReactComponent as Moon } from '../../../images/moon.svg'
 import { ReactComponent as Sun } from '../../../images/sun.svg'
 import BoxSelection from '../FormFields/BoxSelection'
@@ -13,8 +12,8 @@ export default function Appearance({
   darkMode: DarkMode
 }): ReactElement {
   const options = [
-    { name: 'Light', checked: !darkMode.value, icon: <Sun /> },
-    { name: 'Dark', checked: darkMode.value, icon: <Moon /> }
+    { name: 'Light', checked: !darkMode.value, tag: <Sun /> },
+    { name: 'Dark', checked: darkMode.value, tag: <Moon /> }
   ]
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {

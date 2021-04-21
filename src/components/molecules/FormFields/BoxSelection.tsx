@@ -9,7 +9,7 @@ const cx = classNames.bind(styles)
 export interface BoxSelectionOption {
   name: string
   checked: boolean
-  icon?: JSX.Element
+  tag?: JSX.Element | string
 }
 
 export default function BoxSelection({
@@ -56,8 +56,14 @@ export default function BoxSelection({
               htmlFor={value.name}
               title={value.name}
             >
-              {value.icon}
-              <span className={styles.title}>
+              {typeof value.tag === 'string' ? (
+                <Dotdotdot clamp={1} tagName="span">
+                  {value.tag}
+                </Dotdotdot>
+              ) : (
+                value.tag
+              )}
+              <span className={typeof value.tag === 'string' && styles.title}>
                 <Dotdotdot clamp={1} tagName="span">
                   {value.name}
                 </Dotdotdot>

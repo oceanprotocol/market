@@ -1,25 +1,32 @@
 import { ConfigHelperConfig } from '@oceanprotocol/lib'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, ChangeEvent } from 'react'
 import { useOcean } from '../../../providers/Ocean'
 import { useWeb3 } from '../../../providers/Web3'
 import { getOceanConfig } from '../../../utils/ocean'
-import Button from '../../atoms/Button'
 import FormHelp from '../../atoms/Input/Help'
 import Label from '../../atoms/Input/Label'
-import styles from './Chain.module.css'
+import BoxSelection from '../FormFields/BoxSelection'
 
 export default function Chain(): ReactElement {
   const { web3 } = useWeb3()
   const { config, connect } = useOcean()
 
-  async function connectOcean(networkName: string) {
-    const config = getOceanConfig(networkName)
+  async function connectOcean(event: ChangeEvent<HTMLInputElement>) {
+    const config = getOceanConfig(event.target.value)
     await connect(config)
   }
 
-  const chains = [
-    { name: 'ETH', oceanConfig: 'mainnet' },
-    { name: 'Polygon/Matic', oceanConfig: 'polygon' }
+  function isNetworkSelected(oceanConfig: string) {
+    return (config as ConfigHelperConfig).network === oceanConfig
+  }
+
+  const options = [
+    { name: 'mainnet', checked: isNetworkSelected('mainnet'), tag: 'ETH' },
+    {
+      name: 'polygon',
+      checked: isNetworkSelected('polygon'),
+      tag: 'Polygon/Matic'
+    }
   ]
 
   // TODO: to fully solve https://github.com/oceanprotocol/market/issues/432
@@ -28,25 +35,11 @@ export default function Chain(): ReactElement {
   return !web3 ? (
     <li>
       <Label htmlFor="">Chain</Label>
-      <div className={styles.buttons}>
-        {chains.map((button) => {
-          const selected =
-            (config as ConfigHelperConfig).network === button.oceanConfig
-
-          return (
-            <Button
-              key={button.name}
-              className={`${styles.button} ${selected ? styles.selected : ''}`}
-              size="small"
-              style="text"
-              onClick={() => connectOcean(button.oceanConfig)}
-            >
-              {button.name}
-              <span>Mainnet</span>
-            </Button>
-          )
-        })}
-      </div>
+      <BoxSelection
+        options={options}
+        name="chain"
+        handleChange={connectOcean}
+      />
       <FormHelp>Switch the data source for the interface.</FormHelp>
     </li>
   ) : null
