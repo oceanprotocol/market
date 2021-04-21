@@ -47,7 +47,7 @@ function getHelpText(
   const { dtBalance, dtSymbol } = token
   const assetTimeout = timeout === 'Forever' ? '' : ` for ${timeout}`
   const text = !isFileConsumable
-    ? `This data set provider is currently not available for consume.`
+    ? `This data set is not reachable at the moment, please try again later.`
     : hasPreviousOrder
     ? `You bought this data set already allowing you to download it without paying again${assetTimeout}.`
     : hasDatatoken
