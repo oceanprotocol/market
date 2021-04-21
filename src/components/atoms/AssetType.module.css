@@ -1,9 +1,9 @@
 .icon {
-  fill: var(--brand-grey-light);
-  width: 1.1em;
-  height: 1.1em;
+  fill: currentColor;
+  width: 1em;
+  height: 1em;
   vertical-align: baseline;
-  margin-bottom: -0.2em;
+  margin-bottom: -0.1em;
   display: inline-block;
 }
 

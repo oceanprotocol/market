@@ -15,22 +15,7 @@ export default function MetaMain(): ReactElement {
 
   return (
     <aside className={styles.meta}>
-      <div className={styles.typeAndDate}>
-        <AssetType
-          type={type}
-          accessType={accessType}
-          className={styles.typeDetails}
-        />
-        <p className={styles.date}>
-          <Time date={ddo?.created} relative />
-          {ddo?.created !== ddo?.updated && (
-            <>
-              {' — '}
-              updated <Time date={ddo?.updated} relative />
-            </>
-          )}
-        </p>
-      </div>
+      <AssetType type={type} accessType={accessType} />
       <p>
         <ExplorerLink
           networkId={networkId}
@@ -43,7 +28,21 @@ export default function MetaMain(): ReactElement {
           {`${ddo?.dataTokenInfo.name} — ${ddo?.dataTokenInfo.symbol}`}
         </ExplorerLink>
       </p>
-      Published By <Publisher account={owner} />
+
+      <div className={styles.published}>
+        Published By <Publisher account={owner} />
+        <p>
+          <Time date={ddo?.created} relative />
+          {ddo?.created !== ddo?.updated && (
+            <>
+              {' — '}
+              <span className={styles.updated}>
+                updated <Time date={ddo?.updated} relative />
+              </span>
+            </>
+          )}
+        </p>
+      </div>
     </aside>
   )
 }
