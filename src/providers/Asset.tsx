@@ -36,6 +36,7 @@ const poolQuery = gql`
   query PoolPrice($datatoken: String) {
     pools(where: { datatokenAddress: $datatoken }) {
       spotPrice
+      consumePrice
       datatokenReserve
       oceanReserve
     }
@@ -123,9 +124,13 @@ function AssetProvider({
       return
     setPrice((prevState) => ({
       ...prevState,
-      value: poolPrice.pools[0].spotPrice,
+      value:
+        poolPrice.pools[0].consumePrice === '-1'
+          ? poolPrice.pools[0].spotPrice
+          : poolPrice.pools[0].consumePrice,
       ocean: poolPrice.pools[0].oceanReserve,
-      datatoken: poolPrice.pools[0].datatokenReserve
+      datatoken: poolPrice.pools[0].datatokenReserve,
+      isConsumable: poolPrice.pools[0].consumePrice === '-1' ? 'false' : 'true'
     }))
   }, [poolPrice])
 
