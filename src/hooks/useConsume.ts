@@ -65,6 +65,12 @@ function useConsume(): UseConsume {
             undefined,
             false
           )
+          if (!orderId) {
+            setConsumeError(
+              'MetaMask Tx Signature: User denied transaction signature'
+            )
+            return 'MetaMask Tx Signature: User denied transaction signature'
+          }
           Logger.log('order created', orderId)
           setStep(2)
         }
