@@ -1,17 +1,13 @@
 .buttons {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  display: grid;
+  gap: calc(var(--spacer) / 4);
+  grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
   padding-bottom: calc(var(--spacer) / 8);
-  margin-top: -0.5rem !important;
 }
 
 .button {
-  display: block;
-  flex: 0 0 48%;
-  margin-top: calc(var(--spacer) / 4);
-  padding: calc(var(--spacer) / 3) calc(var(--spacer) / 4)
-    calc(var(--spacer) / 4) calc(var(--spacer) / 4) !important;
+  width: auto;
+  padding: calc(var(--spacer) / 3) calc(var(--spacer) / 4) !important;
   border-radius: var(--border-radius);
   text-transform: none;
 }
