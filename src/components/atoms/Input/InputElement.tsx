@@ -91,6 +91,7 @@ export default function InputElement({
                   id={slugify(option)}
                   type={type}
                   name={name}
+                  checked={props.defaultChecked}
                   {...props}
                 />
                 <label className={styles.radioLabel} htmlFor={slugify(option)}>
