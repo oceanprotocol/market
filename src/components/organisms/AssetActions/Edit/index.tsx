@@ -144,12 +144,7 @@ export default function Edit({
 
   return (
     <Formik
-      initialValues={getInitialValues(
-        metadata,
-        (ddo.findServiceByType('access') || ddo.findServiceByType('compute'))
-          .attributes.main.timeout,
-        price.value
-      )}
+      initialValues={getInitialValues(metadata, timeout, price.value)}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
         // move user's focus to top of screen
