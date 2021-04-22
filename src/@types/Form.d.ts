@@ -1,10 +1,8 @@
-import { BoxSelectionOption } from '../components/molecules/FormFields/BoxSelection'
-
 export interface FormFieldProps {
   label: string
   name: string
   type?: string
-  options?: string[] | BoxSelectionOption
+  options?: string[]
   sortOptions?: boolean
   required?: boolean
   help?: string
