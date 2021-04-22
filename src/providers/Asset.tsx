@@ -117,13 +117,8 @@ function AssetProvider({
   const initMetadata = useCallback(async (ddo: DDO): Promise<void> => {
     if (!ddo) return
 
-    // Set price & metadata from DDO first
-    // TODO Hacky hack, temporary™: set isConsumable to true by default since Aquarius can't be trusted.
-    // setPrice({ ...ddo.price, isConsumable: 'true' })
-
     const returnedPrice = await getPrice(ddo)
-    console.log('returnedPrice', returnedPrice)
-    setPrice({ ...returnedPrice, isConsumable: 'true' })
+    setPrice({ ...returnedPrice })
 
     // Get metadata from DDO
     const { attributes } = ddo.findServiceByType('metadata')
