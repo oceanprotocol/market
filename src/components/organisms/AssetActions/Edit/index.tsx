@@ -36,6 +36,7 @@ const contentQuery = graphql`
                 label
                 help
                 type
+                min
                 required
                 sortOptions
                 options
@@ -60,12 +61,24 @@ export default function Edit({
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
-  const { metadata, ddo, refreshDdo } = useAsset()
+  const { metadata, ddo, refreshDdo, price } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const [timeoutStringValue, setTimeoutStringValue] = useState<string>()
 
   const hasFeedback = error || success
+
+  async function updateFixedPrice(newPrice: number) {
+    const setPriceResp = await ocean.fixedRateExchange.setRate(
+      price.address,
+      newPrice,
+      accountId
+    )
+    if (!setPriceResp) {
+      setError(content.form.error)
+      Logger.error(content.form.error)
+    }
+  }
 
   async function handleSubmit(
     values: Partial<MetadataEditForm>,
@@ -78,6 +91,10 @@ export default function Edit({
         description: values.description,
         links: typeof values.links !== 'string' ? values.links : []
       })
+
+      price.type === 'exchange' &&
+        values.price !== price.value &&
+        (await updateFixedPrice(values.price))
 
       if (!ddoEditedMetdata) {
         setError(content.form.error)
@@ -124,7 +141,8 @@ export default function Edit({
     <Formik
       initialValues={getInitialValues(
         metadata,
-        ddo.findServiceByType('access').attributes.main.timeout
+        ddo.findServiceByType('access').attributes.main.timeout,
+        price.value
       )}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
@@ -158,6 +176,7 @@ export default function Edit({
                 setShowEdit={setShowEdit}
                 setTimeoutStringValue={setTimeoutStringValue}
                 values={initialValues}
+                showPrice={price.type === 'exchange'}
               />
 
               <aside>
