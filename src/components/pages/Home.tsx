@@ -109,7 +109,7 @@ export default function HomePage(): ReactElement {
         action={
           <Button
             style="text"
-            to="/search?priceType=pool&sort=liquidity&sortOrder=desc"
+            to="/search?priceType=pool&sort=liquidity&sortOrder=desc&text=%20"
           >
             All data sets with pool →
           </Button>
