@@ -19,7 +19,7 @@
 }
 
 .boxSelection .title {
-  font-weight: normal;
+  font-weight: var(--font-weight-bold);
 }
 
 .boxSelectionsWrapper input[type='radio'] {
@@ -46,5 +46,5 @@ input[type='radio']:checked + label {
   align-items: center;
   justify-content: space-around;
   color: var(--color-secondary);
-  font-weight: var(--font-weight-bold);
+  font-weight: normal;
 }

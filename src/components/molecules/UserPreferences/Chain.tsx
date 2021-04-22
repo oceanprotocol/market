@@ -5,7 +5,8 @@ import { useWeb3 } from '../../../providers/Web3'
 import { getOceanConfig } from '../../../utils/ocean'
 import FormHelp from '../../atoms/Input/Help'
 import Label from '../../atoms/Input/Label'
-import BoxSelection from '../FormFields/BoxSelection'
+import BoxSelection, { BoxSelectionOption } from '../FormFields/BoxSelection'
+import Dotdotdot from 'react-dotdotdot'
 
 export default function Chain(): ReactElement {
   const { web3 } = useWeb3()
@@ -20,12 +21,34 @@ export default function Chain(): ReactElement {
     return (config as ConfigHelperConfig).network === oceanConfig
   }
 
-  const options = [
-    { name: 'mainnet', checked: isNetworkSelected('mainnet'), tag: 'ETH' },
+  const options: BoxSelectionOption[] = [
+    {
+      name: 'mainnet',
+      checked: isNetworkSelected('mainnet'),
+      title: (
+        <Dotdotdot clamp={1} tagName="span">
+          ETH
+        </Dotdotdot>
+      ),
+      text: (
+        <Dotdotdot clamp={1} tagName="span">
+          Mainnet
+        </Dotdotdot>
+      )
+    },
     {
       name: 'polygon',
       checked: isNetworkSelected('polygon'),
-      tag: 'Polygon/Matic'
+      title: (
+        <Dotdotdot clamp={1} tagName="span">
+          Polygon/Matic
+        </Dotdotdot>
+      ),
+      text: (
+        <Dotdotdot clamp={1} tagName="span">
+          Mainnet
+        </Dotdotdot>
+      )
     }
   ]
 

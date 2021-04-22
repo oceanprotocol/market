@@ -1,5 +1,4 @@
 import React, { ChangeEvent } from 'react'
-import Dotdotdot from 'react-dotdotdot'
 import classNames from 'classnames/bind'
 import styles from './BoxSelection.module.css'
 import Loader from '../../atoms/Loader'
@@ -9,7 +8,9 @@ const cx = classNames.bind(styles)
 export interface BoxSelectionOption {
   name: string
   checked: boolean
-  tag?: JSX.Element | string
+  title: JSX.Element
+  icon?: JSX.Element
+  text?: JSX.Element
 }
 
 export default function BoxSelection({
@@ -56,18 +57,9 @@ export default function BoxSelection({
               htmlFor={value.name}
               title={value.name}
             >
-              {typeof value.tag === 'string' ? (
-                <Dotdotdot clamp={1} tagName="span">
-                  {value.tag}
-                </Dotdotdot>
-              ) : (
-                value.tag
-              )}
-              <span className={typeof value.tag === 'string' && styles.title}>
-                <Dotdotdot clamp={1} tagName="span">
-                  {value.name}
-                </Dotdotdot>
-              </span>
+              {value.icon}
+              <span className={value.text && styles.title}>{value.title}</span>
+              {value.text}
             </label>
           </>
         ))

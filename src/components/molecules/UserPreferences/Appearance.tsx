@@ -4,16 +4,35 @@ import FormHelp from '../../atoms/Input/Help'
 import Label from '../../atoms/Input/Label'
 import { ReactComponent as Moon } from '../../../images/moon.svg'
 import { ReactComponent as Sun } from '../../../images/sun.svg'
-import BoxSelection from '../FormFields/BoxSelection'
+import BoxSelection, { BoxSelectionOption } from '../FormFields/BoxSelection'
+import Dotdotdot from 'react-dotdotdot'
 
 export default function Appearance({
   darkMode
 }: {
   darkMode: DarkMode
 }): ReactElement {
-  const options = [
-    { name: 'Light', checked: !darkMode.value, tag: <Sun /> },
-    { name: 'Dark', checked: darkMode.value, tag: <Moon /> }
+  const options: BoxSelectionOption[] = [
+    {
+      name: 'Light',
+      checked: !darkMode.value,
+      title: (
+        <Dotdotdot clamp={1} tagName="span">
+          Light
+        </Dotdotdot>
+      ),
+      icon: <Sun />
+    },
+    {
+      name: 'Dark',
+      checked: darkMode.value,
+      title: (
+        <Dotdotdot clamp={1} tagName="span">
+          Dark
+        </Dotdotdot>
+      ),
+      icon: <Moon />
+    }
   ]
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
