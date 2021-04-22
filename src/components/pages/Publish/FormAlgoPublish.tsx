@@ -67,10 +67,7 @@ export default function FormPublish(): ReactElement {
   useEffect(() => {
     setErrors({})
     setTouched({})
-    const dataTokenOptions = ocean.datatokens.generateDtName()
-    initialValuesAlgorithm.dataTokenOptions = dataTokenOptions
-    // setSubmitting(false)
-  }, [setErrors, setTouched, ocean.datatokens])
+  }, [setErrors, setTouched])
 
   function handleImageSelectChange(imageSelected: string) {
     switch (imageSelected) {
