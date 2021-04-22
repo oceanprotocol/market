@@ -146,7 +146,8 @@ export default function Edit({
     <Formik
       initialValues={getInitialValues(
         metadata,
-        ddo.findServiceByType('access').attributes.main.timeout,
+        (ddo.findServiceByType('access') || ddo.findServiceByType('compute'))
+          .attributes.main.timeout,
         price.value
       )}
       validationSchema={validationSchema}
