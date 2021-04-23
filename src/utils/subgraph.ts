@@ -24,6 +24,7 @@ const poolQuery = gql`
   query AssetPoolPrice($datatokenAddress_in: [String!]) {
     pools(where: { datatokenAddress_in: $datatokenAddress_in }) {
       spotPrice
+      consumePrice
       id
       datatokenAddress
     }
@@ -106,7 +107,10 @@ export async function getAssetPrices(assets: DDO[]): Promise<PriceList> {
   }
   const poolPriceResponse: any = await fetchData(poolQuery, poolVariables)
   for (const poolPrice of poolPriceResponse.data?.pools) {
-    priceList[didDTMap[poolPrice.datatokenAddress]] = poolPrice.spotPrice
+    priceList[didDTMap[poolPrice.datatokenAddress]] =
+      poolPrice.consumePrice === '-1'
+        ? poolPrice.spotPrice
+        : poolPrice.consumePrice
   }
   const frePriceResponse: any = await fetchData(freQuery, freVariables)
   for (const frePrice of frePriceResponse.data?.fixedRateExchanges) {
