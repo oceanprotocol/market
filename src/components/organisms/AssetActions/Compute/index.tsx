@@ -58,6 +58,7 @@ const poolQuery = gql`
   query AlgorithmPoolPrice($datatoken: String) {
     pools(where: { datatokenAddress: $datatoken }) {
       spotPrice
+      consumePrice
     }
   }
 `
@@ -234,7 +235,10 @@ export default function Compute({
       return
     setAlgorithmPrice((prevState) => ({
       ...prevState,
-      value: poolPrice.pools[0].spotPrice
+      value:
+        poolPrice.pools[0].consumePrice === '-1'
+          ? poolPrice.pools[0].spotPrice
+          : poolPrice.pools[0].consumePrice
     }))
   }, [poolPrice])
 
