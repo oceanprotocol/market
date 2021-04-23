@@ -187,6 +187,16 @@ export async function getPrice(asset: DDO): Promise<BestPrice> {
     }
     return price
   } else {
-    return null
+    const price: BestPrice = {
+      type: '',
+      value: 0,
+      address: '',
+      exchange_id: '',
+      ocean: 0,
+      datatoken: 0,
+      pools: [],
+      isConsumable: 'false'
+    }
+    return price
   }
 }
