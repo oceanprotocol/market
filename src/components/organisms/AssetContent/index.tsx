@@ -48,14 +48,16 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   const [showPricing, setShowPricing] = useState(false)
   const [showEdit, setShowEdit] = useState<boolean>()
   const [showEditCompute, setShowEditCompute] = useState<boolean>()
+  const [isOwner, setIsOwner] = useState(false)
   const { ddo, price, metadata } = useAsset()
 
-  const isOwner = accountId === owner
-
   useEffect(() => {
-    if (!price) return
+    if (!accountId || !owner) return
+
+    const isOwner = accountId.toLowerCase() === owner.toLowerCase()
+    setIsOwner(isOwner)
     setShowPricing(isOwner && price.type === '')
-  }, [isOwner, price])
+  }, [accountId, price, owner])
 
   function handleEditButton() {
     // move user's focus to top of screen
