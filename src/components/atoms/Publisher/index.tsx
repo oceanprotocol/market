@@ -6,12 +6,15 @@ import { Profile } from '../../../models/Profile'
 import { Link } from 'gatsby'
 import get3BoxProfile from '../../../utils/profile'
 import ExplorerLink from '../ExplorerLink'
-import { accountTruncate } from '../../../utils/web3'
+import { accountTruncate, addOceanToWallet } from '../../../utils/web3'
 import axios from 'axios'
 import { ReactComponent as Info } from '../../../images/info.svg'
 import ProfileDetails from './ProfileDetails'
 import Add from './Add'
 import { useWeb3 } from '../../../providers/Web3'
+import Button from '../../atoms/Button'
+import { IProviderInfo } from 'web3modal'
+import { useOcean } from '../../../providers/Ocean'
 
 const cx = classNames.bind(styles)
 
@@ -29,6 +32,8 @@ export default function Publisher({
   const [name, setName] = useState<string>()
 
   const showAdd = account === accountId && !profile
+  const { web3Provider } = useWeb3()
+  const { config } = useOcean()
 
   useEffect(() => {
     if (!account) return
@@ -68,7 +73,6 @@ export default function Publisher({
           >
             {name}
           </Link>
-
           <div className={styles.links}>
             {' — '}
             {profile && (
@@ -91,6 +95,16 @@ export default function Publisher({
             <ExplorerLink networkId={networkId} path={`address/${account}`}>
               Explorer
             </ExplorerLink>
+
+            <Button
+              style="text"
+              size="small"
+              onClick={() => {
+                addOceanToWallet(config, web3Provider)
+              }}
+            >
+              {`Add ${config.oceanTokenSymbol}`}
+            </Button>
           </div>
         </>
       )}
