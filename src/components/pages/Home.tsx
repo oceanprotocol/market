@@ -109,7 +109,11 @@ export default function HomePage(): ReactElement {
         action={
           <Button
             style="text"
-            to="/search?priceType=pool&sort=liquidity&sortOrder=desc&text=%20"
+            to={
+              screen.width > 480
+                ? '/search?priceType=pool&sort=liquidity&sortOrder=desc&text=%20'
+                : '/search?priceType=pool&sort=liquidity&sortOrder=desc'
+            }
           >
             All data sets with pool →
           </Button>
@@ -122,7 +126,11 @@ export default function HomePage(): ReactElement {
         action={
           <Button
             style="text"
-            to="/search?sort=created&sortOrder=desc&text=%20"
+            to={
+              screen.width > 480
+                ? '/search?priceType=pool&sort=liquidity&sortOrder=desc&text=%20'
+                : '/search?priceType=pool&sort=liquidity&sortOrder=desc'
+            }
           >
             All data sets →
           </Button>
