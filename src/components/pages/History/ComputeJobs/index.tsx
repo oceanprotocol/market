@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState, useRef } from 'react'
 import web3 from 'web3'
 import Time from '../../../atoms/Time'
 import { Link } from 'gatsby'
@@ -101,12 +101,12 @@ export default function ComputeJobs(): ReactElement {
   const { accountId } = useWeb3()
   const [isLoading, setIsLoading] = useState(false)
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
-  const { data, loading } = useQuery<ComputeOrders>(getComputeOrders, {
+  const { data } = useQuery<ComputeOrders>(getComputeOrders, {
     variables: {
       user: accountId?.toLowerCase()
     }
   })
-  var intervalId
+  const intervalIdRef = useRef(undefined)
 
   useEffect(() => {
     if (data === undefined || !config?.metadataCacheUri) return
@@ -232,19 +232,20 @@ export default function ComputeJobs(): ReactElement {
       }
       return true
     }
+    let intervalId = intervalIdRef.current
     getJobs()
-    if(data.tokenOrders.length===0){
+    if (data.tokenOrders.length === 0) {
       intervalId && clearInterval(intervalId)
       return
     }
-    if(intervalId) return
+    if (intervalId) return
     intervalId = window.setInterval(function () {
       getJobs()
-    }, 60000) 
+    }, 60000)
     return () => {
       clearInterval(intervalId)
     }
-  }, [ocean, account, data, config?.metadataCacheUri])
+  }, [ocean, account, data, config?.metadataCacheUri, config])
 
   return (
     <Table
