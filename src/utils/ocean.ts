@@ -14,12 +14,44 @@ import { UserBalance } from '../@types/TokenBalance'
 export function getOceanConfig(
   network: ConfigHelperNetworkName | ConfigHelperNetworkId
 ): ConfigHelperConfig {
-  return new ConfigHelper().getConfig(
+  const config = new ConfigHelper().getConfig(
     network,
     network === 'polygon' || network === 137
       ? undefined
       : process.env.GATSBY_INFURA_PROJECT_ID
   ) as ConfigHelperConfig
+
+  switch (network) {
+    case 'polygon':
+    case 137: {
+      config.metadataCacheUri = 'https://aquarius.polygon.oceanprotocol.io'
+      config.providerAddress = 'https://provider.polygon.oceanprotocol.io'
+      config.subgraphUri = 'https://subgraph.polygon.oceanprotocol.io'
+      break
+    }
+    case 'mainnet':
+    case 1: {
+      config.metadataCacheUri = 'https://aquarius.mainnet.oceanprotocol.io'
+      config.providerAddress = 'https://provider.mainnet.oceanprotocol.io'
+      config.subgraphUri = 'https://subgraph.mainnet.oceanprotocol.io'
+      break
+    }
+    case 'rinkeby':
+    case 4: {
+      config.metadataCacheUri = 'https://aquarius.rinkeby.oceanprotocol.io'
+      config.providerAddress = 'https://provider.rinkeby.oceanprotocol.io'
+      config.subgraphUri = 'https://subgraph.rinkeby.oceanprotocol.io'
+      break
+    }
+    case 'ropsten':
+    case 3: {
+      config.metadataCacheUri = 'https://aquarius.ropsten.oceanprotocol.io'
+      config.providerAddress = 'https://provider.ropsten.oceanprotocol.io'
+      config.subgraphUri = 'https://subgraph.ropsten.oceanprotocol.io'
+      break
+    }
+  }
+  return config
 }
 
 export function getDevelopmentConfig(): Partial<ConfigHelperConfig> {
