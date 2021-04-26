@@ -43,7 +43,7 @@ export default function SearchPage({
     }
     initSearch()
   }, [
-    text,
+    'text', // text,
     owner,
     tags,
     sort,

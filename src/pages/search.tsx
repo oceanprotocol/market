@@ -16,7 +16,6 @@ export default function PageGatsbySearch(props: PageProps): ReactElement {
     (isETHAddress ? accountTruncate(text as string) : text) ||
     tags ||
     categories
-  console.log('searchValue', searchValue)
   const title = owner
     ? `Published by ${accountTruncate(owner as string)}`
     : `${
