@@ -120,7 +120,10 @@ export default function HomePage(): ReactElement {
         title="Recently Published"
         query={queryLatest}
         action={
-          <Button style="text" to="/search?sort=created&sortOrder=desc">
+          <Button
+            style="text"
+            to="/search?sort=created&sortOrder=desc&text=%20"
+          >
             All data sets →
           </Button>
         }
