@@ -104,22 +104,11 @@ export default function ComputeJobs(): ReactElement {
   const { data, loading } = useQuery<ComputeOrders>(getComputeOrders, {
     variables: {
       user: accountId?.toLowerCase()
-    },
-    pollInterval: 30000
-  })
-  const intervalId = 0
-
-  useEffect(() => {
-    return () => {
-      clearInterval(intervalId)
     }
-  }, [])
-
-  console.log(data)
-  console.log(loading)
+  })
+  var intervalId
 
   useEffect(() => {
-    console.log(data)
     if (data === undefined || !config?.metadataCacheUri) return
 
     async function getJobs() {
@@ -202,8 +191,6 @@ export default function ComputeJobs(): ReactElement {
               false
             )) as ComputeJob[]
 
-            console.log('herrrreee')
-
             // means the provider uri is not good, so we ignore it and move on
             if (!providerComputeJobs) continue
             providerComputeJobs.sort((a, b) => {
@@ -246,9 +233,17 @@ export default function ComputeJobs(): ReactElement {
       return true
     }
     getJobs()
-    /* intervalId = window.setInterval(function () {
+    if(data.tokenOrders.length===0){
+      intervalId && clearInterval(intervalId)
+      return
+    }
+    if(intervalId) return
+    intervalId = window.setInterval(function () {
       getJobs()
-    }, 50000) */
+    }, 60000) 
+    return () => {
+      clearInterval(intervalId)
+    }
   }, [ocean, account, data, config?.metadataCacheUri])
 
   return (
