@@ -233,12 +233,12 @@ export default function ComputeJobs(): ReactElement {
       return true
     }
     let intervalId = intervalIdRef.current
-    getJobs()
     if (data.tokenOrders.length === 0) {
       intervalId && clearInterval(intervalId)
       return
     }
     if (intervalId) return
+    getJobs()
     intervalId = window.setInterval(function () {
       getJobs()
     }, 60000)
