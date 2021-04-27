@@ -95,8 +95,21 @@ export default function PublishPage({
   const [publishType, setPublishType] = useState<MetadataMain['type']>(
     'dataset'
   )
-
   const hasFeedback = isLoading || error || success
+
+  const emptyAlgoDT = Object.values(algoInitialValues.dataTokenOptions).every(
+    (value) => value === ''
+  )
+  const emptyDatasetDT = Object.values(
+    datasetInitialValues.dataTokenOptions
+  ).every((value) => value === '')
+
+  if (emptyAlgoDT) {
+    algoInitialValues.dataTokenOptions = datasetInitialValues.dataTokenOptions
+  } else {
+    if (emptyDatasetDT)
+      datasetInitialValues.dataTokenOptions = algoInitialValues.dataTokenOptions
+  }
 
   useEffect(() => {
     publishType === 'dataset'
@@ -166,12 +179,12 @@ export default function PublishPage({
         : true
     try {
       if (validDockerImage) {
-        Logger.log('Publish Algorithm with ', metadata)
+        Logger.log('Publish algorithm with ', metadata, values.dataTokenOptions)
 
         const ddo = await publish(
           (metadata as unknown) as Metadata,
           values.algorithmPrivacy === true ? 'compute' : 'access',
-          undefined,
+          values.dataTokenOptions,
           timeout
         )
 
