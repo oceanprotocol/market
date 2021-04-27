@@ -74,6 +74,13 @@ export function getSearchQuery(
     : text || ''
   searchTerm = addPriceFilterToQuerry(searchTerm, priceType)
 
+  // HACK if we don't use AND instead of '-' to separate words in query's
+  // search term, the results aren't fetched correctly
+  if (searchTerm.includes('-')) {
+    const searchRegExp = /-/g
+    searchTerm = searchTerm.replace(searchRegExp, ' AND ')
+  }
+
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
