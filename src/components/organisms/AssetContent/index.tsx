@@ -49,7 +49,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   const [showEdit, setShowEdit] = useState<boolean>()
   const [showEditCompute, setShowEditCompute] = useState<boolean>()
   const [isOwner, setIsOwner] = useState(false)
-  const { ddo, price, metadata } = useAsset()
+  const { ddo, price, metadata, type } = useAsset()
 
   useEffect(() => {
     if (!accountId || !owner) return
@@ -103,7 +103,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
                   <Button style="text" size="small" onClick={handleEditButton}>
                     Edit Metadata
                   </Button>
-                  {ddo.findServiceByType('compute') && (
+                  {ddo.findServiceByType('compute') && type === 'dataset' && (
                     <>
                       <span className={styles.separator}>|</span>
                       <Button
