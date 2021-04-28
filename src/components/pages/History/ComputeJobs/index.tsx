@@ -232,13 +232,16 @@ export default function ComputeJobs(): ReactElement {
   }
 
   useEffect(() => {
-    if (data === undefined || !config?.metadataCacheUri) return
+    if (data === undefined || !config?.metadataCacheUri) {
+      setIsLoading(false)
+      return
+    }
     getJobs()
   }, [ocean, account, data, config?.metadataCacheUri])
 
   return (
     <div className={styles.computeTableContainer}>
-      {isLoading || (
+      {!isLoading && jobs.length > 0 && (
         <Button
           className={styles.refresh}
           style="text"
