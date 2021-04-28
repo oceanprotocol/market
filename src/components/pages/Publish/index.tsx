@@ -261,7 +261,9 @@ export default function PublishPage({
                 loading={publishStepText}
                 setError={setError}
                 successAction={{
-                  name: 'Go to data set →',
+                  name: `Go to ${
+                    publishType === 'dataset' ? 'data set' : 'algorithm'
+                  } →`,
                   to: `/asset/${did}`
                 }}
               />
