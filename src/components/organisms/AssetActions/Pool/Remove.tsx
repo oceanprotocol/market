@@ -21,6 +21,7 @@ import UserLiquidity from '../../../atoms/UserLiquidity'
 import InputElement from '../../../atoms/Input/InputElement'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
+import BigNumber from 'bignumber.js'
 
 const contentQuery = graphql`
   query PoolRemoveQuery {
@@ -186,8 +187,10 @@ export default function Remove({
     e.preventDefault()
     setAmountPercent(amountMaxPercent)
 
-    const amountPoolShares =
-      (Number(amountMaxPercent) / 100) * Number(poolTokens)
+    const amountPoolShares = new BigNumber(amountMaxPercent)
+      .dividedBy(100)
+      .multipliedBy(new BigNumber(poolTokens))
+
     setAmountPoolShares(`${amountPoolShares}`)
     calculateAmountOfOceansRemoved(`${amountPoolShares}`)
   }
