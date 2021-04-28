@@ -173,10 +173,14 @@ export default function PublishPage({
   ): Promise<void> {
     const metadata = transformPublishAlgorithmFormToMetadata(values)
     const timeout = mapTimeoutStringToSeconds(values.timeout)
-    const validDockerImage =
-      values.dockerImage === 'custom image'
-        ? await validateDockerImage(values.image, values.containerTag)
-        : true
+
+    // TODO: put back check once #572 is resolved
+    // https://github.com/oceanprotocol/market/issues/572
+    const validDockerImage = true
+    // const validDockerImage =
+    //   values.dockerImage === 'custom image'
+    //     ? await validateDockerImage(values.image, values.containerTag)
+    //     : true
     try {
       if (validDockerImage) {
         Logger.log('Publish algorithm with ', metadata, values.dataTokenOptions)
