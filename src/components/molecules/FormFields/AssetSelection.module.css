@@ -107,7 +107,9 @@
 
 .did {
   padding: 0;
-  font-size: var(--font-size-mini);
+  /* font-size: var(--font-size-mini); */
+  /* hack to make DotDotDot clamp work in Safari*/
+  font-size: 0.63rem;
   display: block;
   text-align: left;
   color: var(--color-secondary);

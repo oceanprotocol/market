@@ -261,26 +261,30 @@ export default function Compute({
   }, [ocean, ddo, accountId])
 
   useEffect(() => {
-    if (!ocean || !accountId || !selectedAlgorithmAsset) return
+    if (!selectedAlgorithmAsset) return
 
-    if (selectedAlgorithmAsset.findServiceByType('access')) {
-      checkPreviousOrders(selectedAlgorithmAsset).then(() => {
-        if (
-          !hasPreviousAlgorithmOrder &&
-          selectedAlgorithmAsset.findServiceByType('compute')
-        ) {
-          checkPreviousOrders(selectedAlgorithmAsset)
-        }
-      })
-    } else if (selectedAlgorithmAsset.findServiceByType('compute')) {
-      checkPreviousOrders(selectedAlgorithmAsset)
-    }
-    checkAssetDTBalance(selectedAlgorithmAsset)
     initMetadata(selectedAlgorithmAsset)
+
     const { timeout } = (
       ddo.findServiceByType('access') || ddo.findServiceByType('compute')
     ).attributes.main
     setAlgorithmTimeout(secondsToString(timeout))
+
+    if (accountId) {
+      if (selectedAlgorithmAsset.findServiceByType('access')) {
+        checkPreviousOrders(selectedAlgorithmAsset).then(() => {
+          if (
+            !hasPreviousAlgorithmOrder &&
+            selectedAlgorithmAsset.findServiceByType('compute')
+          ) {
+            checkPreviousOrders(selectedAlgorithmAsset)
+          }
+        })
+      } else if (selectedAlgorithmAsset.findServiceByType('compute')) {
+        checkPreviousOrders(selectedAlgorithmAsset)
+      }
+    }
+    ocean && checkAssetDTBalance(selectedAlgorithmAsset)
   }, [selectedAlgorithmAsset, ocean, accountId, hasPreviousAlgorithmOrder])
 
   // Output errors in toast UI
