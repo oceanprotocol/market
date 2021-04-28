@@ -26,7 +26,10 @@ import {
   getInitialValues,
   validationSchema
 } from '../../../../models/FormStartComputeDataset'
-import { ComputeAlgorithm } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
+import {
+  ComputeAlgorithm,
+  ComputeOutput
+} from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import { SearchQuery } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import axios from 'axios'
@@ -405,7 +408,10 @@ export default function Compute({
       computeAlgorithm.transferTxId = algorithmAssetOrderId
       Logger.log('[compute] Starting compute job.')
 
-      const output = {}
+      const output: ComputeOutput = {
+        publishAlgorithmLog: true,
+        publishOutput: true
+      }
       const response = await ocean.compute.start(
         ddo.id,
         assetOrderId,
