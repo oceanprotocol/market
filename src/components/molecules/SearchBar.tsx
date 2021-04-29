@@ -22,7 +22,6 @@ export default function SearchBar({
   async function startSearch(e: FormEvent<HTMLButtonElement>) {
     e.preventDefault()
     const urlEncodedValue = encodeURIComponent(value)
-    console.log('urlEncodedValue', urlEncodedValue)
     const url = await addExistingParamsToUrl(location, 'text')
     navigate(`${url}&text=${urlEncodedValue}`)
   }
@@ -30,7 +29,6 @@ export default function SearchBar({
   async function emptySearch(e: ChangeEvent<HTMLInputElement>) {
     const searchParams = new URLSearchParams(window.location.href)
     const text = searchParams.get('text')
-    console.log('text', text)
     if (text !== ('' || undefined || null)) {
       const url = await addExistingParamsToUrl(location, 'text')
       navigate(`${url}&text=${e.target.value}`)
