@@ -19,23 +19,28 @@ export default function SearchBar({
 }): ReactElement {
   const [value, setValue] = useState(initialValue || '')
 
-  function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    setValue(e.target.value)
-  }
-
   async function startSearch(e: FormEvent<HTMLButtonElement>) {
     e.preventDefault()
     const urlEncodedValue = encodeURIComponent(value)
+    console.log('urlEncodedValue', urlEncodedValue)
     const url = await addExistingParamsToUrl(location, 'text')
     navigate(`${url}&text=${urlEncodedValue}`)
   }
 
-  async function emptySearch(e: FormEvent<HTMLButtonElement>) {
+  async function emptySearch(e: ChangeEvent<HTMLInputElement>) {
     const searchParams = new URLSearchParams(window.location.href)
     const text = searchParams.get('text')
     console.log('text', text)
-    if (value === '' && text !== ('' || undefined || null)) {
-      startSearch(e)
+    if (text !== ('' || undefined || null)) {
+      const url = await addExistingParamsToUrl(location, 'text')
+      navigate(`${url}&text=${e.target.value}`)
+    }
+  }
+
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    setValue(e.target.value)
+    if (e.target.value === '') {
+      emptySearch(e)
     }
   }
 
@@ -48,7 +53,6 @@ export default function SearchBar({
           placeholder={placeholder || 'What are you looking for?'}
           value={value}
           onChange={handleChange}
-          onBlur={emptySearch}
           required
           size={size}
         />
