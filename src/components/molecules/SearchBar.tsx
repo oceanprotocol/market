@@ -30,6 +30,15 @@ export default function SearchBar({
     navigate(`${url}&text=${urlEncodedValue}`)
   }
 
+  async function emptySearch(e: FormEvent<HTMLButtonElement>) {
+    const searchParams = new URLSearchParams(window.location.href)
+    const text = searchParams.get('text')
+    console.log('text', text)
+    if (value === '' && text !== ('' || undefined || null)) {
+      startSearch(e)
+    }
+  }
+
   return (
     <form className={styles.form}>
       <InputGroup>
@@ -39,6 +48,7 @@ export default function SearchBar({
           placeholder={placeholder || 'What are you looking for?'}
           value={value}
           onChange={handleChange}
+          onBlur={emptySearch}
           required
           size={size}
         />
