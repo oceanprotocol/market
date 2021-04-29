@@ -12,5 +12,5 @@ public/storybook
 .artifacts
 .vercel
 repo-metadata.json
-networks-metadata.json
+content/networks-metadata.json
 src/@types/apollo

@@ -7,8 +7,8 @@ import {
 } from '../../../../models/FormEditMetadata'
 import { useAsset } from '../../../../providers/Asset'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
-import MetadataPreview from '../../../molecules/MetadataPreview'
-import Debug from './Debug'
+import { MetadataPreview } from '../../../molecules/MetadataPreview'
+import Debug from './DebugEditMetadata'
 import Web3Feedback from '../../../molecules/Wallet/Feedback'
 import FormEditMetadata from './FormEditMetadata'
 import { mapTimeoutStringToSeconds } from '../../../../utils/metadata'
@@ -65,6 +65,9 @@ export default function Edit({
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const [timeoutStringValue, setTimeoutStringValue] = useState<string>()
+  const timeout = ddo.findServiceByType('access')
+    ? ddo.findServiceByType('access').attributes.main.timeout
+    : ddo.findServiceByType('compute').attributes.main.timeout
 
   const hasFeedback = error || success
 
@@ -103,7 +106,9 @@ export default function Edit({
       }
       let ddoEditedTimeout = ddoEditedMetdata
       if (timeoutStringValue !== values.timeout) {
-        const service = ddoEditedMetdata.findServiceByType('access')
+        const service =
+          ddoEditedMetdata.findServiceByType('access') ||
+          ddoEditedMetdata.findServiceByType('compute')
         const timeout = mapTimeoutStringToSeconds(values.timeout)
         ddoEditedTimeout = await ocean.assets.editServiceTimeout(
           ddoEditedMetdata,
@@ -139,11 +144,7 @@ export default function Edit({
 
   return (
     <Formik
-      initialValues={getInitialValues(
-        metadata,
-        ddo.findServiceByType('access').attributes.main.timeout,
-        price.value
-      )}
+      initialValues={getInitialValues(metadata, timeout, price.value)}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
         // move user's focus to top of screen
