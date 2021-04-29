@@ -6,7 +6,7 @@ import { Profile } from '../../../models/Profile'
 import { Link } from 'gatsby'
 import get3BoxProfile from '../../../utils/profile'
 import ExplorerLink from '../ExplorerLink'
-import { accountTruncate, addOceanToWallet } from '../../../utils/web3'
+import { accountTruncate } from '../../../utils/web3'
 import axios from 'axios'
 import { ReactComponent as Info } from '../../../images/info.svg'
 import ProfileDetails from './ProfileDetails'
@@ -95,16 +95,6 @@ export default function Publisher({
             <ExplorerLink networkId={networkId} path={`address/${account}`}>
               Explorer
             </ExplorerLink>
-
-            <Button
-              style="text"
-              size="small"
-              onClick={() => {
-                addOceanToWallet(config, web3Provider)
-              }}
-            >
-              {`Add ${config.oceanTokenSymbol}`}
-            </Button>
           </div>
         </>
       )}
