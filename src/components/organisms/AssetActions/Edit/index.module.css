@@ -8,3 +8,14 @@
   margin-top: -1.5rem;
   max-width: 50rem;
 }
+
+.title {
+  font-size: var(--font-size-large);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: calc(var(--spacer) / 2);
+  margin-top: -1rem;
+  margin-left: -2rem;
+  margin-right: -2rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}

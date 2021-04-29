@@ -1,0 +1,16 @@
+{
+  "form": {
+    "success": "🎉 Your Compute job started. 🎉",
+    "error": "Compute job could not be started.",
+    "data": [
+      {
+        "name": "algorithm",
+        "label": "Select an algorithm to start a compute job",
+        "type": "assetSelection",
+        "value": false,
+        "options": [],
+        "sortOptions": false
+      }
+    ]
+  }
+}

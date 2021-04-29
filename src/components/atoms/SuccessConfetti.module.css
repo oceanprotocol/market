@@ -1,4 +1,5 @@
 .action {
   text-align: center;
   display: block;
+  margin-top: calc(var(--spacer) / 2);
 }

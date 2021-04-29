@@ -4,14 +4,14 @@ import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import Button from '../../../atoms/Button'
 import Input from '../../../atoms/Input'
 import { FormFieldProps } from '../../../../@types/Form'
-import { MetadataPublishForm } from '../../../../@types/MetaData'
+import { MetadataPublishFormDataset } from '../../../../@types/MetaData'
 import { checkIfTimeoutInPredefinedValues } from '../../../../utils/metadata'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
 
 function handleTimeoutCustomOption(
   data: FormFieldProps[],
-  values: Partial<MetadataPublishForm>
+  values: Partial<MetadataPublishFormDataset>
 ) {
   const timeoutFieldContent = data.filter(
     (field) => field.name === 'timeout'
@@ -53,7 +53,7 @@ export default function FormEditMetadata({
   data: FormFieldProps[]
   setShowEdit: (show: boolean) => void
   setTimeoutStringValue: (value: string) => void
-  values: Partial<MetadataPublishForm>
+  values: Partial<MetadataPublishFormDataset>
   showPrice: boolean
 }): ReactElement {
   const { accountId } = useWeb3()
@@ -62,7 +62,7 @@ export default function FormEditMetadata({
     isValid,
     validateField,
     setFieldValue
-  }: FormikContextType<Partial<MetadataPublishForm>> = useFormikContext()
+  }: FormikContextType<Partial<MetadataPublishFormDataset>> = useFormikContext()
 
   // Manually handle change events instead of using `handleChange` from Formik.
   // Workaround for default `validateOnChange` not kicking in

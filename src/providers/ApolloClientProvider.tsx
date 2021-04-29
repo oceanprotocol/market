@@ -9,6 +9,7 @@ import { Logger, ConfigHelperConfig } from '@oceanprotocol/lib'
 import { useOcean } from './Ocean'
 import fetch from 'cross-fetch'
 import React, { useState, useEffect, ReactNode, ReactElement } from 'react'
+let apolloClient: ApolloClient<NormalizedCacheObject>
 
 function createClient(subgraphUri: string) {
   const client = new ApolloClient({
@@ -20,6 +21,10 @@ function createClient(subgraphUri: string) {
   })
 
   return client
+}
+
+export function getApolloClientInstance(): ApolloClient<NormalizedCacheObject> {
+  return apolloClient
 }
 
 export default function ApolloClientProvider({
@@ -39,6 +44,7 @@ export default function ApolloClientProvider({
     }
 
     const newClient = createClient((config as ConfigHelperConfig).subgraphUri)
+    apolloClient = newClient
     setClient(newClient)
   }, [config])
 
