@@ -180,7 +180,6 @@ export default function Remove({
 
     const amountPoolShares = (Number(e.target.value) / 100) * Number(poolTokens)
     setAmountPoolShares(`${amountPoolShares}`)
-    calculateAmountOfOceansRemoved(`${amountPoolShares}`)
   }
 
   function handleMaxButton(e: ChangeEvent<HTMLInputElement>) {
