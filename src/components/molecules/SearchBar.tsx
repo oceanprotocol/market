@@ -26,19 +26,19 @@ export default function SearchBar({
     navigate(`${url}&text=${urlEncodedValue}`)
   }
 
-  async function emptySearch(e: ChangeEvent<HTMLInputElement>) {
+  async function emptySearch() {
     const searchParams = new URLSearchParams(window.location.href)
     const text = searchParams.get('text')
     if (text !== ('' || undefined || null)) {
       const url = await addExistingParamsToUrl(location, 'text')
-      navigate(`${url}&text=${e.target.value}`)
+      navigate(`${url}&text=%20`)
     }
   }
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     setValue(e.target.value)
     if (e.target.value === '') {
-      emptySearch(e)
+      emptySearch()
     }
   }
 
