@@ -1,4 +1,4 @@
-import { Logger, ConfigHelperConfig } from '@oceanprotocol/lib'
+import { Logger, ConfigHelperConfig, DDO } from '@oceanprotocol/lib'
 
 export interface EthereumListsChain {
   name: string
@@ -115,15 +115,13 @@ export function addOceanToWallet(
   )
 }
 
-export function addDatatokenToWallet(
-  config: ConfigHelperConfig,
-  web3Provider: any
-): void {
+export function addDatatokenToWallet(ddo: DDO, web3Provider: any): void {
+  console.log('Add datatoken to wallet')
   const tokenMetadata = {
     type: 'ERC20',
     options: {
-      address: config.oceanTokenAddress,
-      symbol: config.oceanTokenSymbol,
+      address: ddo.dataTokenInfo.address,
+      symbol: ddo.dataTokenInfo.symbol,
       decimals: 18,
       image:
         'https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png'

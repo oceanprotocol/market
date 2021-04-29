@@ -1,28 +1,34 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { DDO } from '@oceanprotocol/lib'
 import Button from '../atoms/Button'
 import { addDatatokenToWallet } from '../../utils/web3'
-import { useOcean } from '../../providers/Ocean'
 import { useWeb3 } from '../../providers/Web3'
-
-// const cx = classNames.bind(styles)
+import { getProviderInfo, IProviderInfo } from 'web3modal'
 
 export default function AddToken({ ddo }: { ddo: DDO }): ReactElement {
   const { web3Provider } = useWeb3()
-  const { config } = useOcean()
-  console.log('Add token')
+  const [providerInfo, setProviderInfo] = useState<IProviderInfo>()
+
+  useEffect(() => {
+    if (!web3Provider) return
+    const providerInfo = getProviderInfo(web3Provider)
+    setProviderInfo(providerInfo)
+  }, [web3Provider])
 
   return (
     <div>
-      <Button
-        style="text"
-        size="small"
-        onClick={() => {
-          addDatatokenToWallet(config, web3Provider)
-        }}
-      >
-        {`Add ${ddo.dataTokenInfo.symbol} to wallet`}
-      </Button>
+      {providerInfo?.name === 'MetaMask' && (
+        <Button
+          style="text"
+          size="small"
+          onClick={() => {
+            console.log('Add datatoken to wallet 1')
+            addDatatokenToWallet(ddo, web3Provider)
+          }}
+        >
+          {`Add ${ddo.dataTokenInfo.symbol} to wallet`}
+        </Button>
+      )}
     </div>
   )
 }
