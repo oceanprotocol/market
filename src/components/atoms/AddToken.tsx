@@ -1,35 +1,27 @@
 import React, { ReactElement } from 'react'
+import { DDO } from '@oceanprotocol/lib'
 import Button from '../atoms/Button'
-import styles from './index.module.css'
-import classNames from 'classnames/bind'
-import { addOceanToWallet } from '../../utils/web3'
+import { addDatatokenToWallet } from '../../utils/web3'
 import { useOcean } from '../../providers/Ocean'
 import { useWeb3 } from '../../providers/Web3'
 
-const cx = classNames.bind(styles)
+// const cx = classNames.bind(styles)
 
-export default function AddToken({
-  className
-}: {
-  className?: string
-}): ReactElement {
-  const styleClasses = cx({
-    publisher: true,
-    [className]: className
-  })
+export default function AddToken({ ddo }: { ddo: DDO }): ReactElement {
   const { web3Provider } = useWeb3()
   const { config } = useOcean()
+  console.log('Add token')
 
   return (
-    <div className={styleClasses}>
+    <div>
       <Button
         style="text"
         size="small"
         onClick={() => {
-          addOceanToWallet(config, web3Provider)
+          addDatatokenToWallet(config, web3Provider)
         }}
       >
-        {`Add ${config.oceanTokenSymbol}`}
+        {`Add ${ddo.dataTokenInfo.symbol} to wallet`}
       </Button>
     </div>
   )

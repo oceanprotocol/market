@@ -12,8 +12,6 @@ import { ReactComponent as Info } from '../../../images/info.svg'
 import ProfileDetails from './ProfileDetails'
 import Add from './Add'
 import { useWeb3 } from '../../../providers/Web3'
-import Button from '../../atoms/Button'
-import { IProviderInfo } from 'web3modal'
 import { useOcean } from '../../../providers/Ocean'
 
 const cx = classNames.bind(styles)

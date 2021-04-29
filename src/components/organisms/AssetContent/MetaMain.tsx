@@ -3,6 +3,7 @@ import { useAsset } from '../../../providers/Asset'
 import { useWeb3 } from '../../../providers/Web3'
 import ExplorerLink from '../../atoms/ExplorerLink'
 import Publisher from '../../atoms/Publisher'
+import AddToken from '../../atoms/AddToken'
 import Time from '../../atoms/Time'
 import styles from './MetaMain.module.css'
 
@@ -26,6 +27,9 @@ export default function MetaMain(): ReactElement {
       </p>
       <div>
         Published By <Publisher account={owner} />
+      </div>
+      <div>
+        <AddToken ddo={ddo} />
       </div>
       <p className={styles.date}>
         <Time date={ddo?.created} relative />
