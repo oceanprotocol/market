@@ -3,7 +3,7 @@ import { useAsset } from '../../../providers/Asset'
 import { useWeb3 } from '../../../providers/Web3'
 import ExplorerLink from '../../atoms/ExplorerLink'
 import Publisher from '../../atoms/Publisher'
-import AddToken from '../../atoms/AddToken'
+import AddToken from '../../atoms/AddDatatoken'
 import Time from '../../atoms/Time'
 import styles from './MetaMain.module.css'
 

@@ -116,12 +116,11 @@ export function addOceanToWallet(
 }
 
 export function addDatatokenToWallet(ddo: DDO, web3Provider: any): void {
-  console.log('Add datatoken to wallet')
   const tokenMetadata = {
     type: 'ERC20',
     options: {
       address: ddo.dataTokenInfo.address,
-      symbol: ddo.dataTokenInfo.symbol,
+      symbol: ddo.dataTokenInfo.symbol.substring(0, 6),
       decimals: 18,
       image:
         'https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png'
