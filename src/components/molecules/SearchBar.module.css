@@ -11,3 +11,7 @@
 .form label {
   display: none;
 }
+
+.form input {
+  background-color: var(--background-content);
+}

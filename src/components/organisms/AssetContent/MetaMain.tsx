@@ -5,14 +5,22 @@ import ExplorerLink from '../../atoms/ExplorerLink'
 import Publisher from '../../atoms/Publisher'
 import Time from '../../atoms/Time'
 import styles from './MetaMain.module.css'
+import AssetType from '../../atoms/AssetType'
 
 export default function MetaMain(): ReactElement {
-  const { ddo, owner } = useAsset()
+  const { ddo, owner, type } = useAsset()
   const { networkId } = useWeb3()
+  const isCompute = Boolean(ddo?.findServiceByType('compute'))
+  const accessType = isCompute ? 'compute' : 'access'
 
   return (
     <aside className={styles.meta}>
-      <p>
+      <header className={styles.asset}>
+        <AssetType
+          type={type}
+          accessType={accessType}
+          className={styles.assetType}
+        />
         <ExplorerLink
           networkId={networkId}
           path={
@@ -23,19 +31,22 @@ export default function MetaMain(): ReactElement {
         >
           {`${ddo?.dataTokenInfo.name} — ${ddo?.dataTokenInfo.symbol}`}
         </ExplorerLink>
-      </p>
-      <div>
+      </header>
+
+      <div className={styles.byline}>
         Published By <Publisher account={owner} />
+        <p>
+          <Time date={ddo?.created} relative />
+          {ddo?.created !== ddo?.updated && (
+            <>
+              {' — '}
+              <span className={styles.updated}>
+                updated <Time date={ddo?.updated} relative />
+              </span>
+            </>
+          )}
+        </p>
       </div>
-      <p className={styles.date}>
-        <Time date={ddo?.created} relative />
-        {ddo?.created !== ddo?.updated && (
-          <>
-            {' — '}
-            updated <Time date={ddo?.updated} relative />
-          </>
-        )}
-      </p>
     </aside>
   )
 }

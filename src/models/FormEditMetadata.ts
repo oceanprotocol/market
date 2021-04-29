@@ -21,7 +21,7 @@ export function getInitialValues(
   return {
     name: metadata.main.name,
     description: metadata.additionalInformation.description,
-    price: price,
+    price,
     links: metadata.additionalInformation.links,
     timeout: secondsToString(timeout)
   }
