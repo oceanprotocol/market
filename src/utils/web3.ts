@@ -79,20 +79,7 @@ export function addCustomNetwork(
   )
 }
 
-export function addOceanToWallet(
-  config: ConfigHelperConfig,
-  web3Provider: any
-): void {
-  const tokenMetadata = {
-    type: 'ERC20',
-    options: {
-      address: config.oceanTokenAddress,
-      symbol: config.oceanTokenSymbol,
-      decimals: 18,
-      image:
-        'https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png'
-    }
-  }
+function addTokenToWallet(web3Provider: any, tokenMetadata: any) {
   web3Provider.sendAsync(
     {
       method: 'wallet_watchAsset',
@@ -115,6 +102,23 @@ export function addOceanToWallet(
   )
 }
 
+export function addOceanToWallet(
+  config: ConfigHelperConfig,
+  web3Provider: any
+): void {
+  const tokenMetadata = {
+    type: 'ERC20',
+    options: {
+      address: config.oceanTokenAddress,
+      symbol: config.oceanTokenSymbol,
+      decimals: 18,
+      image:
+        'https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png'
+    }
+  }
+  addTokenToWallet(web3Provider, tokenMetadata)
+}
+
 export function addDatatokenToWallet(ddo: DDO, web3Provider: any): void {
   const tokenMetadata = {
     type: 'ERC20',
@@ -126,24 +130,5 @@ export function addDatatokenToWallet(ddo: DDO, web3Provider: any): void {
         'https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png'
     }
   }
-  web3Provider.sendAsync(
-    {
-      method: 'wallet_watchAsset',
-      params: tokenMetadata,
-      id: Math.round(Math.random() * 100000)
-    },
-    (err: string, added: any) => {
-      if (err || 'error' in added) {
-        Logger.error(
-          `Couldn't add ${tokenMetadata.options.symbol} (${
-            tokenMetadata.options.address
-          }) to MetaMask, error: ${err || added.error}`
-        )
-      } else {
-        Logger.log(
-          `Added ${tokenMetadata.options.symbol} (${tokenMetadata.options.address}) to MetaMask`
-        )
-      }
-    }
-  )
+  addTokenToWallet(web3Provider, tokenMetadata)
 }
