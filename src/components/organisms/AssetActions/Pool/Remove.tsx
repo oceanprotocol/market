@@ -156,14 +156,6 @@ export default function Remove({
     totalPoolTokens
   ])
 
-  async function calculateAmountOfOceansRemoved(amountPoolShares: string) {
-    const oceanAmount = await ocean.pool.getOceanRemovedforPoolShares(
-      poolAddress,
-      amountPoolShares
-    )
-    setAmountOcean(oceanAmount)
-  }
-
   useEffect(() => {
     const minOceanAmount =
       (Number(amountOcean) * (100 - Number(slippage))) / 100
@@ -179,6 +171,10 @@ export default function Remove({
     if (!poolTokens) return
 
     const amountPoolShares = (Number(e.target.value) / 100) * Number(poolTokens)
+    console.log(
+      'handleAmountPercentChange | amountPoolShares = ',
+      amountPoolShares
+    )
     setAmountPoolShares(`${amountPoolShares}`)
   }
 
@@ -190,8 +186,12 @@ export default function Remove({
       .dividedBy(100)
       .multipliedBy(new BigNumber(poolTokens))
 
+    console.log(
+      'handleMaxButton | amountPoolShares = ',
+      amountPoolShares.toString()
+    )
+
     setAmountPoolShares(`${amountPoolShares}`)
-    calculateAmountOfOceansRemoved(`${amountPoolShares}`)
   }
 
   function handleAdvancedButton(e: FormEvent<HTMLButtonElement>) {
