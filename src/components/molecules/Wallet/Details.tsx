@@ -8,7 +8,7 @@ import Conversion from '../../atoms/Price/Conversion'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import { useWeb3 } from '../../../providers/Web3'
-import { addOceanToWallet } from '../../../utils/web3'
+import { addTokenToWallet } from '../../../utils/web3'
 import { Logger } from '@oceanprotocol/lib'
 
 export default function Details(): ReactElement {
@@ -80,7 +80,11 @@ export default function Details(): ReactElement {
                 style="text"
                 size="small"
                 onClick={() => {
-                  addOceanToWallet(config, web3Provider)
+                  addTokenToWallet(
+                    config.oceanTokenAddress,
+                    config.oceanTokenSymbol,
+                    web3Provider
+                  )
                 }}
               >
                 {`Add ${config.oceanTokenSymbol}`}
