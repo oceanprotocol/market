@@ -1,7 +1,7 @@
 .bookmark {
   position: absolute;
   top: -10px;
-  right: calc(var(--spacer) / 4);
+  right: calc(var(--spacer) / 8);
   appearance: none;
   background: none;
   border: none;

@@ -5,9 +5,9 @@ import Price from '../atoms/Price'
 import styles from './AssetTeaser.module.css'
 import { DDO } from '@oceanprotocol/lib'
 import removeMarkdown from 'remove-markdown'
-import Tooltip from '../atoms/Tooltip'
 import Publisher from '../atoms/Publisher'
 import Time from '../atoms/Time'
+import AssetType from '../atoms/AssetType'
 
 declare type AssetTeaserProps = {
   ddo: DDO
@@ -15,28 +15,28 @@ declare type AssetTeaserProps = {
 
 const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
   const { attributes } = ddo.findServiceByType('metadata')
-  const { name } = attributes.main
+  const { name, type } = attributes.main
   const { dataTokenInfo } = ddo
-  const isCompute = Boolean(ddo.findServiceByType('compute'))
+  const isCompute = Boolean(ddo?.findServiceByType('compute'))
+  const accessType = isCompute ? 'compute' : 'access'
   const { owner } = ddo.publicKey[0]
 
   return (
-    <article className={styles.teaser}>
+    <article className={`${styles.teaser} ${styles[type]}`}>
       <Link to={`/asset/${ddo.id}`} className={styles.link}>
         <header className={styles.header}>
-          <Tooltip
-            placement="left"
-            content={dataTokenInfo?.name}
-            className={styles.symbol}
-          >
-            {dataTokenInfo?.symbol}
-          </Tooltip>
+          <div className={styles.symbol}>{dataTokenInfo?.symbol}</div>
           <Dotdotdot clamp={3}>
             <h1 className={styles.title}>{name}</h1>
           </Dotdotdot>
           <Publisher account={owner} minimal className={styles.publisher} />
         </header>
-        {isCompute && <div className={styles.accessLabel}>Compute</div>}
+
+        <AssetType
+          type={type}
+          accessType={accessType}
+          className={styles.typeDetails}
+        />
 
         <div className={styles.content}>
           <Dotdotdot tagName="p" clamp={3}>

@@ -111,7 +111,7 @@ export default function HomePage(): ReactElement {
             style="text"
             to="/search?priceType=pool&sort=liquidity&sortOrder=desc"
           >
-            All data sets with pool →
+            Data sets and algorithms with pool →
           </Button>
         }
       />
@@ -121,7 +121,7 @@ export default function HomePage(): ReactElement {
         query={queryLatest}
         action={
           <Button style="text" to="/search?sort=created&sortOrder=desc">
-            All data sets →
+            All data sets and algorithms →
           </Button>
         }
       />
