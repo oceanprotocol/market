@@ -21,7 +21,7 @@ import UserLiquidity from '../../../atoms/UserLiquidity'
 import InputElement from '../../../atoms/Input/InputElement'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
-import BigNumber from 'bignumber.js'
+import Decimal from 'decimal.js'
 
 const contentQuery = graphql`
   query PoolRemoveQuery {
@@ -170,11 +170,11 @@ export default function Remove({
     setAmountPercent(e.target.value)
     if (!poolTokens) return
 
-    const amountPoolShares = (Number(e.target.value) / 100) * Number(poolTokens)
-    console.log(
-      'handleAmountPercentChange | amountPoolShares = ',
-      amountPoolShares
-    )
+    const amountPoolShares = new Decimal(e.target.value)
+      .dividedBy(100)
+      .mul(new Decimal(poolTokens))
+      .toPrecision(18) // in some cases the returned value contain more than 18 digits which break conversion to wei
+
     setAmountPoolShares(`${amountPoolShares}`)
   }
 
@@ -182,14 +182,10 @@ export default function Remove({
     e.preventDefault()
     setAmountPercent(amountMaxPercent)
 
-    const amountPoolShares = new BigNumber(amountMaxPercent)
+    const amountPoolShares = new Decimal(amountMaxPercent)
       .dividedBy(100)
-      .multipliedBy(new BigNumber(poolTokens))
-
-    console.log(
-      'handleMaxButton | amountPoolShares = ',
-      amountPoolShares.toString()
-    )
+      .mul(new Decimal(poolTokens))
+      .toPrecision(18)
 
     setAmountPoolShares(`${amountPoolShares}`)
   }
