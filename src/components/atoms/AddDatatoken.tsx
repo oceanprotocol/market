@@ -1,5 +1,4 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { DDO } from '@oceanprotocol/lib'
 import Button from './Button'
 import { addTokenToWallet } from '../../utils/web3'
 import { useWeb3 } from '../../providers/Web3'
