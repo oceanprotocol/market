@@ -49,7 +49,10 @@ export default function MetaMain(): ReactElement {
         </p>
       </div>
       <div>
-        <AddToken ddo={ddo} />
+        <AddToken
+          tokenAddress={ddo.dataTokenInfo.address}
+          tokenSymbol={ddo.dataTokenInfo.symbol}
+        />
       </div>
     </aside>
   )
