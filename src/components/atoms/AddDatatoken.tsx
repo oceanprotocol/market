@@ -23,7 +23,11 @@ export default function AddToken({ ddo }: { ddo: DDO }): ReactElement {
           size="small"
           onClick={() => {
             console.log('Add datatoken to wallet 1')
-            addDatatokenToWallet(ddo, web3Provider)
+            addDatatokenToWallet(
+              ddo.dataTokenInfo.address,
+              ddo.dataTokenInfo.symbol,
+              web3Provider
+            )
           }}
         >
           {`Add ${ddo.dataTokenInfo.symbol} to wallet`}
