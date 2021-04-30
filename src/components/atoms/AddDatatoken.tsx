@@ -15,18 +15,20 @@ export default function AddToken({ ddo }: { ddo: DDO }): ReactElement {
     setProviderInfo(providerInfo)
   }, [web3Provider])
 
-  if (providerInfo?.name === 'MetaMask') {
-    return (
-      <Button
-        style="text"
-        size="small"
-        onClick={() => {
-          console.log('Add datatoken to wallet 1')
-          addDatatokenToWallet(ddo, web3Provider)
-        }}
-      >
-        {`Add ${ddo.dataTokenInfo.symbol} to wallet`}
-      </Button>
-    )
-  }
+  return (
+    <>
+      {providerInfo?.name === 'MetaMask' && (
+        <Button
+          style="text"
+          size="small"
+          onClick={() => {
+            console.log('Add datatoken to wallet 1')
+            addDatatokenToWallet(ddo, web3Provider)
+          }}
+        >
+          {`Add ${ddo.dataTokenInfo.symbol} to wallet`}
+        </Button>
+      )}
+    </>
+  )
 }
