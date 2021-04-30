@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { DDO } from '@oceanprotocol/lib'
 import Button from './Button'
-import { addDatatokenToWallet } from '../../utils/web3'
+import { addTokenToWallet } from '../../utils/web3'
 import { useWeb3 } from '../../providers/Web3'
 import { getProviderInfo, IProviderInfo } from 'web3modal'
 
@@ -23,7 +23,7 @@ export default function AddToken({ ddo }: { ddo: DDO }): ReactElement {
           size="small"
           onClick={() => {
             console.log('Add datatoken to wallet 1')
-            addDatatokenToWallet(
+            addTokenToWallet(
               ddo.dataTokenInfo.address,
               ddo.dataTokenInfo.symbol,
               web3Provider
