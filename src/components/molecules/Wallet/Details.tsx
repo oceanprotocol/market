@@ -1,13 +1,13 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import Button from '../../atoms/Button'
-import styles from './Details.module.css'
 import { useOcean } from '../../../providers/Ocean'
 import Web3Feedback from './Feedback'
 import Conversion from '../../atoms/Price/Conversion'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import { useWeb3 } from '../../../providers/Web3'
-import { addTokenToWallet } from '../../../utils/web3'
+import AddToken from '../../atoms/AddToken'
+import styles from './Details.module.css'
 
 export default function Details(): ReactElement {
   const {
@@ -28,14 +28,6 @@ export default function Details(): ReactElement {
 
     setMainCurrency(networkData.nativeCurrency.symbol)
   }, [networkData])
-
-  async function handleAddToken() {
-    await addTokenToWallet(
-      web3Provider,
-      config.oceanTokenAddress,
-      config.oceanTokenSymbol
-    )
-  }
 
   // Handle network change for Portis
   // async function handlePortisNetworkChange(e: ChangeEvent<HTMLSelectElement>) {
@@ -64,7 +56,7 @@ export default function Details(): ReactElement {
 
         <li className={styles.actions}>
           <div title="Connected provider" className={styles.walletInfo}>
-            <span>
+            <span className={styles.walletLogoWrap}>
               <img className={styles.walletLogo} src={web3ProviderInfo?.logo} />
               {web3ProviderInfo?.name}
             </span>
@@ -79,9 +71,12 @@ export default function Details(): ReactElement {
               />
             )} */}
             {web3ProviderInfo?.name === 'MetaMask' && (
-              <Button style="text" size="small" onClick={handleAddToken}>
-                {`Add ${config.oceanTokenSymbol}`}
-              </Button>
+              <AddToken
+                address={config.oceanTokenAddress}
+                symbol={config.oceanTokenSymbol}
+                logo="https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png"
+                className={styles.addToken}
+              />
             )}
           </div>
           <p>

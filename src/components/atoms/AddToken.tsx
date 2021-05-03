@@ -1,0 +1,59 @@
+import React, { ReactElement } from 'react'
+import Button from './Button'
+import { addTokenToWallet } from '../../utils/web3'
+import { useWeb3 } from '../../providers/Web3'
+import classNames from 'classnames/bind'
+import styles from './AddToken.module.css'
+
+const cx = classNames.bind(styles)
+
+export default function AddToken({
+  address,
+  symbol,
+  logo,
+  text,
+  className,
+  minimal
+}: {
+  address: string
+  symbol: string
+  logo: string // needs to be a remote image
+  text?: string
+  className?: string
+  minimal?: boolean
+}): ReactElement {
+  const { web3Provider } = useWeb3()
+
+  const styleClasses = cx({
+    button: true,
+    minimal: minimal,
+    [className]: className
+  })
+
+  async function handleAddToken() {
+    if (!web3Provider) return
+
+    await addTokenToWallet(
+      web3Provider,
+      address,
+      // TODO: figure out how to add full symbol
+      symbol.substring(0, 6),
+      logo
+    )
+  }
+
+  return (
+    <Button
+      className={styleClasses}
+      style="text"
+      size="small"
+      onClick={handleAddToken}
+    >
+      <span className={styles.logoWrap}>
+        <img src={logo} className={styles.logo} width="16" height="16" />
+      </span>
+
+      <span className={styles.text}>{text || `Add ${symbol}`}</span>
+    </Button>
+  )
+}

@@ -1,0 +1,65 @@
+.button {
+  display: inline-block;
+}
+
+.button:hover,
+.button:focus {
+  transform: none;
+}
+
+.logoWrap {
+  position: relative;
+  display: inline-block;
+  z-index: 1;
+}
+
+.logoWrap::before {
+  content: '+';
+  color: var(--color-secondary);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-base);
+  font-size: 1.25em;
+  position: absolute;
+  right: 0.05em;
+  top: 0.05em;
+  line-height: 0;
+}
+
+.logo {
+  width: 1.6em;
+  height: 1.6em;
+  display: inline-block;
+  margin-bottom: -0.35em;
+  border-radius: 50%;
+  border: 0.065rem solid var(--color-secondary);
+  margin-right: calc(var(--spacer) / 10);
+  transition: 0.2s ease-out;
+}
+
+.button:hover .logo,
+.button:focus .logo {
+  border-color: var(--color-primary);
+}
+
+.button:hover .logoWrap::before,
+.button:focus .logoWrap::before {
+  color: var(--color-primary);
+}
+
+.text {
+  display: inline-block;
+  position: relative;
+}
+
+.minimal .text {
+  opacity: 0;
+  transform: translate3d(-1rem, 0, 0);
+  transition: 0.2s ease-out;
+  z-index: 0;
+}
+
+.minimal:hover .text,
+.minimal:focus .text {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}

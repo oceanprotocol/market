@@ -50,9 +50,9 @@ export default function NetworkBanner(): ReactElement {
   }
 
   useEffect(() => {
-    if (!web3Provider && !config) return
+    if (!web3ProviderInfo || (!web3Provider && !config)) return
 
-    switch (web3ProviderInfo?.name) {
+    switch (web3ProviderInfo.name) {
       case 'Web3':
         if (config.networkId !== 137) {
           setText(announcement.main)
