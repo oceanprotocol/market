@@ -1,8 +1,8 @@
 import React, { ReactElement } from 'react'
-import Button from './Button'
+import classNames from 'classnames/bind'
 import { addTokenToWallet } from '../../utils/web3'
 import { useWeb3 } from '../../providers/Web3'
-import classNames from 'classnames/bind'
+import Button from './Button'
 import styles from './AddToken.module.css'
 
 const cx = classNames.bind(styles)

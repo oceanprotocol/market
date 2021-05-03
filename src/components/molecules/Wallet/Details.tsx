@@ -1,12 +1,13 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import Button from '../../atoms/Button'
-import { useOcean } from '../../../providers/Ocean'
-import Web3Feedback from './Feedback'
-import Conversion from '../../atoms/Price/Conversion'
 import { formatCurrency } from '@coingecko/cryptoformat'
+import { useOcean } from '../../../providers/Ocean'
 import { useUserPreferences } from '../../../providers/UserPreferences'
-import { useWeb3 } from '../../../providers/Web3'
+import Button from '../../atoms/Button'
 import AddToken from '../../atoms/AddToken'
+import Conversion from '../../atoms/Price/Conversion'
+import { useWeb3 } from '../../../providers/Web3'
+
+import Web3Feedback from './Feedback'
 import styles from './Details.module.css'
 
 export default function Details(): ReactElement {

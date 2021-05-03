@@ -12,7 +12,6 @@ import { ReactComponent as Info } from '../../../images/info.svg'
 import ProfileDetails from './ProfileDetails'
 import Add from './Add'
 import { useWeb3 } from '../../../providers/Web3'
-import { useOcean } from '../../../providers/Ocean'
 
 const cx = classNames.bind(styles)
 
@@ -30,8 +29,6 @@ export default function Publisher({
   const [name, setName] = useState<string>()
 
   const showAdd = account === accountId && !profile
-  const { web3Provider } = useWeb3()
-  const { config } = useOcean()
 
   useEffect(() => {
     if (!account) return
