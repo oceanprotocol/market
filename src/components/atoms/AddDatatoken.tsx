@@ -1,39 +1,30 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement } from 'react'
 import Button from './Button'
 import { addTokenToWallet } from '../../utils/web3'
 import { useWeb3 } from '../../providers/Web3'
-import { getProviderInfo, IProviderInfo } from 'web3modal'
 
 export default function AddToken({
-  tokenAddress,
-  tokenSymbol
+  address,
+  symbol
 }: {
-  tokenAddress: string
-  tokenSymbol: string
+  address: string
+  symbol: string
 }): ReactElement {
   const { web3Provider } = useWeb3()
-  const [providerInfo, setProviderInfo] = useState<IProviderInfo>()
 
-  useEffect(() => {
-    if (!web3Provider) return
-    const providerInfo = getProviderInfo(web3Provider)
-    setProviderInfo(providerInfo)
-  }, [web3Provider])
+  async function handleAddToken() {
+    await addTokenToWallet(
+      web3Provider,
+      address,
+      // TODO: figure out how to add full symbol
+      symbol.substring(0, 6),
+      'https://raw.githubusercontent.com/oceanprotocol/art/main/logo/datatoken.png'
+    )
+  }
 
   return (
-    <>
-      {providerInfo?.name === 'MetaMask' && (
-        <Button
-          style="text"
-          size="small"
-          onClick={() => {
-            console.log('Add datatoken to wallet 1')
-            addTokenToWallet(tokenAddress, tokenSymbol, web3Provider)
-          }}
-        >
-          {`Add ${tokenSymbol} to wallet`}
-        </Button>
-      )}
-    </>
+    <Button style="text" size="small" onClick={handleAddToken}>
+      {`Add ${symbol} to wallet`}
+    </Button>
   )
 }

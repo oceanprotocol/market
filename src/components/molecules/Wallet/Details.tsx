@@ -3,36 +3,39 @@ import Button from '../../atoms/Button'
 import styles from './Details.module.css'
 import { useOcean } from '../../../providers/Ocean'
 import Web3Feedback from './Feedback'
-import { getProviderInfo, IProviderInfo } from 'web3modal'
 import Conversion from '../../atoms/Price/Conversion'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import { useWeb3 } from '../../../providers/Web3'
 import { addTokenToWallet } from '../../../utils/web3'
-import { Logger } from '@oceanprotocol/lib'
 
 export default function Details(): ReactElement {
-  const { web3Provider, connect, logout, networkData } = useWeb3()
+  const {
+    web3Provider,
+    web3ProviderInfo,
+    connect,
+    logout,
+    networkData
+  } = useWeb3()
   const { balance, config } = useOcean()
   const { locale } = useUserPreferences()
 
-  const [providerInfo, setProviderInfo] = useState<IProviderInfo>()
   const [mainCurrency, setMainCurrency] = useState<string>()
   // const [portisNetwork, setPortisNetwork] = useState<string>()
-
-  // Workaround cause getInjectedProviderName() always returns `MetaMask`
-  // https://github.com/oceanprotocol/market/issues/332
-  useEffect(() => {
-    if (!web3Provider) return
-    const providerInfo = getProviderInfo(web3Provider)
-    setProviderInfo(providerInfo)
-  }, [web3Provider])
 
   useEffect(() => {
     if (!networkData) return
 
     setMainCurrency(networkData.nativeCurrency.symbol)
   }, [networkData])
+
+  async function handleAddToken() {
+    await addTokenToWallet(
+      web3Provider,
+      config.oceanTokenAddress,
+      config.oceanTokenSymbol
+    )
+  }
 
   // Handle network change for Portis
   // async function handlePortisNetworkChange(e: ChangeEvent<HTMLSelectElement>) {
@@ -62,10 +65,10 @@ export default function Details(): ReactElement {
         <li className={styles.actions}>
           <div title="Connected provider" className={styles.walletInfo}>
             <span>
-              <img className={styles.walletLogo} src={providerInfo?.logo} />
-              {providerInfo?.name}
+              <img className={styles.walletLogo} src={web3ProviderInfo?.logo} />
+              {web3ProviderInfo?.name}
             </span>
-            {/* {providerInfo?.name === 'Portis' && (
+            {/* {web3ProviderInfo?.name === 'Portis' && (
               <InputElement
                 name="network"
                 type="select"
@@ -75,24 +78,14 @@ export default function Details(): ReactElement {
                 onChange={handlePortisNetworkChange}
               />
             )} */}
-            {providerInfo?.name === 'MetaMask' && (
-              <Button
-                style="text"
-                size="small"
-                onClick={() => {
-                  addTokenToWallet(
-                    config.oceanTokenAddress,
-                    config.oceanTokenSymbol,
-                    web3Provider
-                  )
-                }}
-              >
+            {web3ProviderInfo?.name === 'MetaMask' && (
+              <Button style="text" size="small" onClick={handleAddToken}>
                 {`Add ${config.oceanTokenSymbol}`}
               </Button>
             )}
           </div>
           <p>
-            {providerInfo?.name === 'Portis' && (
+            {web3ProviderInfo?.name === 'Portis' && (
               <Button
                 style="text"
                 size="small"

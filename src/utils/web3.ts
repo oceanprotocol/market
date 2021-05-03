@@ -1,4 +1,4 @@
-import { Logger, ConfigHelperConfig, DDO } from '@oceanprotocol/lib'
+import { Logger } from '@oceanprotocol/lib'
 
 export interface EthereumListsChain {
   name: string
@@ -79,21 +79,21 @@ export function addCustomNetwork(
   )
 }
 
-export function addTokenToWallet(
-  tokenAddress: string,
-  tokenSymbol: string,
-  web3Provider: any
-): void {
+export async function addTokenToWallet(
+  web3Provider: any,
+  address: string,
+  symbol: string,
+  logo?: string
+): Promise<void> {
+  const image =
+    logo ||
+    'https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png'
+
   const tokenMetadata = {
     type: 'ERC20',
-    options: {
-      address: tokenAddress,
-      symbol: tokenSymbol.substring(0, 6),
-      decimals: 18,
-      image:
-        'https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png'
-    }
+    options: { address, symbol, image, decimals: 18 }
   }
+
   web3Provider.sendAsync(
     {
       method: 'wallet_watchAsset',

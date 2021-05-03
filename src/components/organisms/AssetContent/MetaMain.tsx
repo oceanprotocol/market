@@ -5,12 +5,12 @@ import ExplorerLink from '../../atoms/ExplorerLink'
 import Publisher from '../../atoms/Publisher'
 import AddToken from '../../atoms/AddDatatoken'
 import Time from '../../atoms/Time'
-import styles from './MetaMain.module.css'
 import AssetType from '../../atoms/AssetType'
+import styles from './MetaMain.module.css'
 
 export default function MetaMain(): ReactElement {
   const { ddo, owner, type } = useAsset()
-  const { networkId } = useWeb3()
+  const { networkId, web3ProviderInfo } = useWeb3()
   const isCompute = Boolean(ddo?.findServiceByType('compute'))
   const accessType = isCompute ? 'compute' : 'access'
 
@@ -48,12 +48,12 @@ export default function MetaMain(): ReactElement {
           )}
         </p>
       </div>
-      <div>
+      {web3ProviderInfo?.name === 'MetaMask' && (
         <AddToken
-          tokenAddress={ddo.dataTokenInfo.address}
-          tokenSymbol={ddo.dataTokenInfo.symbol}
+          address={ddo?.dataTokenInfo.address}
+          symbol={ddo?.dataTokenInfo.symbol}
         />
-      </div>
+      )}
     </aside>
   )
 }
