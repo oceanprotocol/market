@@ -17,7 +17,7 @@ export default function AddToken({
       web3Provider,
       address,
       // TODO: figure out how to add full symbol
-      symbol.substring(0, 6),
+      symbol,
       'https://raw.githubusercontent.com/oceanprotocol/art/main/logo/datatoken.png'
     )
   }
