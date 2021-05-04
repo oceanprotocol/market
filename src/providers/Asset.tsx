@@ -7,7 +7,7 @@ import React, {
   useCallback,
   ReactNode
 } from 'react'
-import { Logger, DDO, BestPrice } from '@oceanprotocol/lib'
+import { Logger, DDO, BestPrice, MetadataMain } from '@oceanprotocol/lib'
 import { PurgatoryData } from '@oceanprotocol/lib/dist/node/ddo/interfaces/PurgatoryData'
 import getAssetPurgatoryData from '../utils/purgatory'
 import axios, { CancelToken } from 'axios'
@@ -27,6 +27,7 @@ interface AssetProviderValue {
   title: string | undefined
   owner: string | undefined
   price: BestPrice | undefined
+  type: MetadataMain['type'] | undefined
   error?: string
   refreshInterval: number
   refreshDdo: (token?: CancelToken) => Promise<void>
@@ -73,8 +74,10 @@ function AssetProvider({
   const [price, setPrice] = useState<BestPrice>()
   const [owner, setOwner] = useState<string>()
   const [error, setError] = useState<string>()
+  const [type, setType] = useState<MetadataMain['type']>()
   const [variables, setVariables] = useState({})
 
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   const {
     refetch: refetchFre,
     startPolling: startPollingFre,
@@ -91,6 +94,7 @@ function AssetProvider({
     variables,
     skip: false
   })
+  /* eslint-enable @typescript-eslint/no-unused-vars */
 
   // this is not working as expected, thus we need to fetch both pool and fre
   // useEffect(() => {
@@ -206,6 +210,7 @@ function AssetProvider({
     const { attributes } = ddo.findServiceByType('metadata')
     setMetadata((attributes as unknown) as MetadataMarket)
     setTitle(attributes?.main.name)
+    setType(attributes.main.type)
     setOwner(ddo.publicKey[0].owner)
     Logger.log('[asset] Got Metadata from DDO', attributes)
 
@@ -228,6 +233,7 @@ function AssetProvider({
           title,
           owner,
           price,
+          type,
           error,
           isInPurgatory,
           purgatoryData,

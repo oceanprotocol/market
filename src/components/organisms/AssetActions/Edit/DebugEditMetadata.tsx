@@ -1,6 +1,6 @@
 import { DDO } from '@oceanprotocol/lib'
 import React, { ReactElement } from 'react'
-import { MetadataPublishForm } from '../../../../@types/MetaData'
+import { MetadataPublishFormDataset } from '../../../../@types/MetaData'
 import { transformPublishFormToMetadata } from '../../../../utils/metadata'
 import DebugOutput from '../../../atoms/DebugOutput'
 
@@ -8,7 +8,7 @@ export default function Debug({
   values,
   ddo
 }: {
-  values: Partial<MetadataPublishForm>
+  values: Partial<MetadataPublishFormDataset>
   ddo: DDO
 }): ReactElement {
   const newDdo = {

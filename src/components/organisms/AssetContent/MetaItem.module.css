@@ -10,3 +10,8 @@
   color: var(--color-secondary);
   text-transform: uppercase;
 }
+
+.content {
+  word-wrap: break-word;
+  white-space: normal;
+}
