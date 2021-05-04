@@ -16,6 +16,12 @@ import { useWeb3 } from '../../../providers/Web3'
 import { usePricing } from '../../../hooks/usePricing'
 import { useConsume } from '../../../hooks/useConsume'
 import ButtonBuy from '../../atoms/ButtonBuy'
+import axios from 'axios'
+import AssetSelection from '../../molecules/FormFields/AssetSelection'
+import {
+  queryMetadata,
+  transformDDOToAssetSelection
+} from '../../../utils/aquarius'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {
@@ -43,7 +49,7 @@ export default function Consume({
   dtBalance: string
 }): ReactElement {
   const { accountId } = useWeb3()
-  const { ocean } = useOcean()
+  const { ocean, config } = useOcean()
   const { marketFeeAddress } = useSiteMetadata()
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
   const [previousOrderId, setPreviousOrderId] = useState<string>()
@@ -59,6 +65,34 @@ export default function Consume({
   const [hasDatatoken, setHasDatatoken] = useState(false)
   const [isConsumable, setIsConsumable] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
+  const [datasetsForCompute, setDatasetsForCompute] = useState()
+  const query = {
+    offset: 9,
+    query: {
+      query_string: {
+        query: `service.attributes.main.type:dataset AND service.type:compute AND service.attributes.main.privacy.publisherTrustedAlgorithms.did:${ddo.id}`
+      }
+    },
+    sort: { created: -1 }
+  }
+
+  useEffect(() => {
+    async function get() {
+      const source = axios.CancelToken.source()
+      const gueryResults = await queryMetadata(
+        query,
+        config.metadataCacheUri,
+        source.token
+      )
+      const datasets = await transformDDOToAssetSelection(
+        gueryResults.results,
+        config.metadataCacheUri,
+        []
+      )
+      setDatasetsForCompute(datasets)
+    }
+    get()
+  }, [])
 
   const { data } = useQuery<OrdersData>(previousOrderQuery, {
     variables: {
@@ -170,6 +204,14 @@ export default function Consume({
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>
+      {type === 'algorithm' && (
+        <div className={styles.datasetsContainer}>
+          <span className={styles.text}>
+            Datasets algorithm is allowed to run on
+          </span>
+          <AssetSelection assets={datasetsForCompute} hideRadio />
+        </div>
+      )}
       <footer className={styles.feedback}>
         <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
       </footer>

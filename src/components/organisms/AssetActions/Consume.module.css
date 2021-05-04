@@ -15,3 +15,17 @@
 .feedback {
   width: 100%;
 }
+
+.datasetsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: -2rem;
+  margin-right: -2rem;
+}
+
+.datasetsContainer .text {
+  margin-bottom: calc(var(--spacer) / 2);
+  margin-top: calc(var(--spacer) / 2);
+  text-align: center;
+}

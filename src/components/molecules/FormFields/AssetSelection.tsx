@@ -26,11 +26,13 @@ export default function AssetSelection({
   assets,
   multiple,
   disabled,
+  hideRadio,
   ...props
 }: {
   assets: AssetSelectionAsset[]
   multiple?: boolean
   disabled?: boolean
+  hideRadio?: boolean
 }): JSX.Element {
   const [searchValue, setSearchValue] = useState('')
 
@@ -77,7 +79,9 @@ export default function AssetSelection({
                 <input
                   id={slugify(asset.did)}
                   type={multiple ? 'checkbox' : 'radio'}
-                  className={styleClassesInput}
+                  className={`styleClassesInput ${
+                    hideRadio && styles.hideRadio
+                  }`}
                   defaultChecked={asset.checked}
                   {...props}
                   disabled={disabled}

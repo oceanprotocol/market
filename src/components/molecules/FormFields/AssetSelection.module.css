@@ -124,3 +124,9 @@
   text-align: center;
   color: var(--color-secondary);
 }
+
+.hideRadio {
+  position: fixed;
+  opacity: 0;
+  pointer-events: none;
+}
