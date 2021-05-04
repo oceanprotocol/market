@@ -33,13 +33,7 @@ export default function AddToken({
   async function handleAddToken() {
     if (!web3Provider) return
 
-    await addTokenToWallet(
-      web3Provider,
-      address,
-      // TODO: figure out how to add full symbol
-      symbol.substring(0, 6),
-      logo
-    )
+    await addTokenToWallet(web3Provider, address, symbol, logo)
   }
 
   return (

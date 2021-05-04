@@ -100,12 +100,12 @@ export async function addTokenToWallet(
       params: tokenMetadata,
       id: Math.round(Math.random() * 100000)
     },
-    (err: string, added: any) => {
+    (err: { code: number; message: string }, added: any) => {
       if (err || 'error' in added) {
         Logger.error(
           `Couldn't add ${tokenMetadata.options.symbol} (${
             tokenMetadata.options.address
-          }) to MetaMask, error: ${err || added.error}`
+          }) to MetaMask, error: ${err.message || added.error}`
         )
       } else {
         Logger.log(
