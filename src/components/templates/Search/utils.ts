@@ -100,19 +100,19 @@ export function getSearchQuery(
   searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
   searchTerm = addPriceFilterToQuery(searchTerm, priceType)
 
-  // HACK if we don't use AND instead of '-' to separate words in query's
-  // search term, the results aren't fetched correctly
-  if (searchTerm.includes('-')) {
-    const searchRegExp = /-/g
-    searchTerm = searchTerm.replace(searchRegExp, ' AND ')
-  }
-
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
     query: {
       query_string: {
-        query: `${searchTerm} -isInPurgatory:true`
+        query: `*${searchTerm}* -isInPurgatory:true`,
+        fields: [
+          'dataTokenInfo.name',
+          'dataTokenInfo.symbol',
+          'dataTokenInfo.address',
+          'service.attributes.main.name'
+        ],
+        default_operator: 'AND'
       }
       // ...(owner && { 'publicKey.owner': [owner] }),
       // ...(tags && { tags: [tags] }),
