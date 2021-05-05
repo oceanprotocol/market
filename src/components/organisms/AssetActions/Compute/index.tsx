@@ -30,7 +30,6 @@ import {
   ComputeAlgorithm,
   ComputeOutput
 } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
-import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import { SearchQuery } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import axios from 'axios'
 import FormStartComputeDataset from './FormComputeDataset'
@@ -42,6 +41,9 @@ import { FrePrice } from '../../../../@types/apollo/FrePrice'
 import { PoolPrice } from '../../../../@types/apollo/PoolPrice'
 import { secondsToString } from '../../../../utils/metadata'
 import { getPreviousOrders } from '../../../../utils/subgraph'
+import AssetSelection, {
+  AssetSelectionAsset
+} from '../../../molecules/FormFields/AssetSelection'
 
 const SuccessAction = () => (
   <Button style="text" to="/history" size="small">
@@ -102,6 +104,17 @@ export default function Compute({
   ] = useState<string>()
   const [datasetTimeout, setDatasetTimeout] = useState<string>()
   const [algorithmTimeout, setAlgorithmTimeout] = useState<string>()
+  const [datasetsForCompute, setDatasetsForCompute] = useState<
+    AssetSelectionAsset[]
+  >()
+  const query = {
+    query: {
+      query_string: {
+        query: `service.attributes.main.privacy.publisherTrustedAlgorithms.did:${ddo.id}`
+      }
+    },
+    sort: { created: -1 }
+  }
 
   /* eslint-disable @typescript-eslint/no-unused-vars */
   const {
@@ -214,6 +227,37 @@ export default function Compute({
     ).attributes.main
     setDatasetTimeout(secondsToString(timeout))
   }, [ddo])
+
+  useEffect(() => {
+    async function getDatasetsAllowedForCompute() {
+      const source = axios.CancelToken.source()
+      const computeDatasets = await queryMetadata(
+        query,
+        config.metadataCacheUri,
+        source.token
+      )
+      const computeDatasetsForCurrentAlgorithm: DDO[] = []
+      computeDatasets.results.forEach((data: DDO) => {
+        const algorithm = data
+          .findServiceByType('compute')
+          .attributes.main.privacy.publisherTrustedAlgorithms.find(
+            (algo) => algo.did === ddo.id
+          )
+        algorithm && computeDatasetsForCurrentAlgorithm.push(data)
+      })
+      if (computeDatasetsForCurrentAlgorithm.length === 0) {
+        setDatasetsForCompute([])
+        return
+      }
+      const datasets = await transformDDOToAssetSelection(
+        computeDatasetsForCurrentAlgorithm,
+        config.metadataCacheUri,
+        []
+      )
+      setDatasetsForCompute(datasets)
+    }
+    type === 'algorithm' && getDatasetsAllowedForCompute()
+  }, [type])
 
   useEffect(() => {
     if (
@@ -448,10 +492,12 @@ export default function Compute({
       </div>
 
       {type === 'algorithm' ? (
-        <Alert
-          text="This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
-          state="info"
-        />
+        <div className={styles.datasetsContainer}>
+          <span className={styles.text}>
+            Datasets algorithm is allowed to run on
+          </span>
+          <AssetSelection assets={datasetsForCompute} hideRadio />
+        </div>
       ) : (
         <Formik
           initialValues={getInitialValues()}

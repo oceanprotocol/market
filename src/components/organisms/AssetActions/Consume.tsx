@@ -17,7 +17,9 @@ import { usePricing } from '../../../hooks/usePricing'
 import { useConsume } from '../../../hooks/useConsume'
 import ButtonBuy from '../../atoms/ButtonBuy'
 import axios from 'axios'
-import AssetSelection from '../../molecules/FormFields/AssetSelection'
+import AssetSelection, {
+  AssetSelectionAsset
+} from '../../molecules/FormFields/AssetSelection'
 import {
   queryMetadata,
   transformDDOToAssetSelection
@@ -65,34 +67,48 @@ export default function Consume({
   const [hasDatatoken, setHasDatatoken] = useState(false)
   const [isConsumable, setIsConsumable] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
-  const [datasetsForCompute, setDatasetsForCompute] = useState()
+  const [datasetsForCompute, setDatasetsForCompute] = useState<
+    AssetSelectionAsset[]
+  >()
   const query = {
-    offset: 9,
     query: {
       query_string: {
-        query: `service.attributes.main.type:dataset AND service.type:compute AND service.attributes.main.privacy.publisherTrustedAlgorithms.did:${ddo.id}`
+        query: `service.attributes.main.privacy.publisherTrustedAlgorithms.did:${ddo.id}`
       }
     },
     sort: { created: -1 }
   }
 
   useEffect(() => {
-    async function get() {
+    async function getDatasetsAllowedForCompute() {
       const source = axios.CancelToken.source()
-      const gueryResults = await queryMetadata(
+      const computeDatasets = await queryMetadata(
         query,
         config.metadataCacheUri,
         source.token
       )
+      const computeDatasetsForCurrentAlgorithm: DDO[] = []
+      computeDatasets.results.forEach((data: DDO) => {
+        const algorithm = data
+          .findServiceByType('compute')
+          .attributes.main.privacy.publisherTrustedAlgorithms.find(
+            (algo) => algo.did === ddo.id
+          )
+        algorithm && computeDatasetsForCurrentAlgorithm.push(data)
+      })
+      if (computeDatasetsForCurrentAlgorithm.length === 0) {
+        setDatasetsForCompute([])
+        return
+      }
       const datasets = await transformDDOToAssetSelection(
-        gueryResults.results,
+        computeDatasetsForCurrentAlgorithm,
         config.metadataCacheUri,
         []
       )
       setDatasetsForCompute(datasets)
     }
-    get()
-  }, [])
+    type === 'algorithm' && getDatasetsAllowedForCompute()
+  }, [type])
 
   const { data } = useQuery<OrdersData>(previousOrderQuery, {
     variables: {
