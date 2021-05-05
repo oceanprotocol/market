@@ -27,6 +27,11 @@
   margin-right: calc(var(--spacer) / 4);
 }
 
+.datatoken {
+  white-space: pre;
+  margin-right: calc(var(--spacer) / 3);
+}
+
 .byline {
   font-size: var(--font-size-small);
 }
@@ -36,9 +41,9 @@
 }
 
 .addWrap {
-  margin-left: calc(var(--spacer) / 3);
   padding-left: calc(var(--spacer) / 5);
   border-left: 1px solid var(--border-color);
+  display: inline-block;
 }
 
 .add {

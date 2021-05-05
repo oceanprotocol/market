@@ -23,6 +23,7 @@ export default function MetaMain(): ReactElement {
           className={styles.assetType}
         />
         <ExplorerLink
+          className={styles.datatoken}
           networkId={networkId}
           path={
             networkId === 137 || networkId === 1287
@@ -39,7 +40,7 @@ export default function MetaMain(): ReactElement {
               address={ddo?.dataTokenInfo.address}
               symbol={ddo?.dataTokenInfo.symbol}
               logo="https://raw.githubusercontent.com/oceanprotocol/art/main/logo/datatoken.png"
-              text="Add to wallet"
+              text={`Add ${ddo?.dataTokenInfo.symbol} to wallet`}
               className={styles.add}
               minimal
             />

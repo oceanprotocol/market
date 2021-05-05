@@ -1,5 +1,7 @@
 .button {
   display: inline-block;
+  position: relative;
+  min-width: auto;
 }
 
 .button:hover,
@@ -56,6 +58,10 @@
   transform: translate3d(-1rem, 0, 0);
   transition: 0.2s ease-out;
   z-index: 0;
+  white-space: pre;
+  position: absolute;
+  left: 100%;
+  top: 0.15rem;
 }
 
 .minimal:hover .text,
