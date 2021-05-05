@@ -194,7 +194,7 @@ export default function Consume({
   )
 
   return (
-    <aside className={styles.consume}>
+    <div className={styles.consume}>
       <div className={styles.info}>
         <div className={styles.filewrapper}>
           <File file={file} />
@@ -215,6 +215,6 @@ export default function Consume({
       <footer className={styles.feedback}>
         <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
       </footer>
-    </aside>
+    </div>
   )
 }
