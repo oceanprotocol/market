@@ -175,9 +175,6 @@ export default function Remove({
       .mul(new Decimal(poolTokens))
       .toFixed(18, Decimal.ROUND_DOWN) // in some cases the returned value contain more than 18 digits which break conversion to wei
 
-      console.log('amountPoolShares = ', amountPoolShares)
-      console.log('amountPoolShares.toString = ', amountPoolShares.toString())
-
     setAmountPoolShares(`${amountPoolShares}`)
   }
 
@@ -189,8 +186,6 @@ export default function Remove({
       .dividedBy(100)
       .mul(new Decimal(poolTokens))
       .toFixed(18, Decimal.ROUND_DOWN)
-
-    console.log('amountPoolShares = ', amountPoolShares)
 
     setAmountPoolShares(`${amountPoolShares}`)
   }
