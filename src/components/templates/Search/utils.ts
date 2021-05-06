@@ -100,6 +100,9 @@ export function getSearchQuery(
   searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
   searchTerm = addPriceFilterToQuery(searchTerm, priceType)
 
+  // HACK: resolves the case sensitivity related to dataTokenInfo.symbol
+  searchTerm = searchTerm.toUpperCase()
+
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
@@ -109,7 +112,6 @@ export function getSearchQuery(
         fields: [
           'dataTokenInfo.name',
           'dataTokenInfo.symbol',
-          'dataTokenInfo.address',
           'service.attributes.main.name'
         ],
         default_operator: 'AND'
