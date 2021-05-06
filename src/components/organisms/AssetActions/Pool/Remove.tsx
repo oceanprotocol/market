@@ -173,7 +173,10 @@ export default function Remove({
     const amountPoolShares = new Decimal(e.target.value)
       .dividedBy(100)
       .mul(new Decimal(poolTokens))
-      .toFixed(18) // in some cases the returned value contain more than 18 digits which break conversion to wei
+      .toFixed(18, Decimal.ROUND_DOWN) // in some cases the returned value contain more than 18 digits which break conversion to wei
+
+      console.log('amountPoolShares = ', amountPoolShares)
+      console.log('amountPoolShares.toString = ', amountPoolShares.toString())
 
     setAmountPoolShares(`${amountPoolShares}`)
   }
@@ -185,7 +188,9 @@ export default function Remove({
     const amountPoolShares = new Decimal(amountMaxPercent)
       .dividedBy(100)
       .mul(new Decimal(poolTokens))
-      .toFixed(18)
+      .toFixed(18, Decimal.ROUND_DOWN)
+
+    console.log('amountPoolShares = ', amountPoolShares)
 
     setAmountPoolShares(`${amountPoolShares}`)
   }
