@@ -102,6 +102,7 @@ export default function Compute({
   ] = useState<string>()
   const [datasetTimeout, setDatasetTimeout] = useState<string>()
   const [algorithmTimeout, setAlgorithmTimeout] = useState<string>()
+  const [isComputeService, setIsComputeService] = useState<boolean>(false)
 
   /* eslint-disable @typescript-eslint/no-unused-vars */
   const {
@@ -213,6 +214,7 @@ export default function Compute({
       ddo.findServiceByType('access') || ddo.findServiceByType('compute')
     ).attributes.main
     setDatasetTimeout(secondsToString(timeout))
+    setIsComputeService(Boolean(ddo.findServiceByType('compute')))
   }, [ddo])
 
   useEffect(() => {
@@ -491,7 +493,7 @@ export default function Compute({
             action={<SuccessAction />}
           />
         )}
-        {ddo.service[1].attributes.main.privacy.allowNetworkAccess && (
+        {!(type === 'algorithm' && isComputeService) && (
           <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
         )}
       </footer>
