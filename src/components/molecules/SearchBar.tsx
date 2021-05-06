@@ -38,9 +38,7 @@ export default function SearchBar({
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     setValue(e.target.value)
-    if (e.target.value === '') {
-      emptySearch()
-    }
+    e.target.value === '' && emptySearch()
   }
 
   return (
