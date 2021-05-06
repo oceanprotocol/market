@@ -39,7 +39,8 @@ export default function AssetSelection({
   const styleClassesInput = cx({
     input: true,
     [styles.checkbox]: multiple,
-    [styles.radio]: !multiple
+    [styles.radio]: !multiple,
+    [styles.hideRadio]: hideRadio
   })
 
   function handleSearchInput(e: ChangeEvent<HTMLInputElement>) {
@@ -79,9 +80,7 @@ export default function AssetSelection({
                 <input
                   id={slugify(asset.did)}
                   type={multiple ? 'checkbox' : 'radio'}
-                  className={`styleClassesInput ${
-                    hideRadio && styles.hideRadio
-                  }`}
+                  className={styleClassesInput}
                   defaultChecked={asset.checked}
                   {...props}
                   disabled={disabled}
