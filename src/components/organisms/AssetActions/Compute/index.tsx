@@ -491,7 +491,9 @@ export default function Compute({
             action={<SuccessAction />}
           />
         )}
-        <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
+        {ddo.service[1].attributes.main.privacy.allowNetworkAccess && (
+          <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
+        )}
       </footer>
     </>
   )
