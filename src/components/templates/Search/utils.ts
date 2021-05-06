@@ -112,7 +112,9 @@ export function getSearchQuery(
         fields: [
           'dataTokenInfo.name',
           'dataTokenInfo.symbol',
-          'service.attributes.main.name'
+          'service.attributes.main.name',
+          'service.attributes.main.author',
+          'service.attributes.additionalInformation.description'
         ],
         default_operator: 'AND'
       }
