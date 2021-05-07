@@ -49,6 +49,20 @@ export default function Chain(): ReactElement {
           Mainnet
         </Dotdotdot>
       )
+    },
+    {
+      name: 'moonbeamalpha',
+      checked: isNetworkSelected('moonbeamalpha'),
+      title: (
+        <Dotdotdot clamp={1} tagName="span">
+          Moonbase Alpha
+        </Dotdotdot>
+      ),
+      text: (
+        <Dotdotdot clamp={1} tagName="span">
+          Testnet
+        </Dotdotdot>
+      )
     }
   ]
 

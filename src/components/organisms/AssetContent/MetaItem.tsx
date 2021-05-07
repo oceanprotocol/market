@@ -11,7 +11,7 @@ export default function MetaItem({
   return (
     <div className={styles.metaItem}>
       <h3 className={styles.title}>{title}</h3>
-      {content}
+      <div className={styles.content}>{content}</div>
     </div>
   )
 }

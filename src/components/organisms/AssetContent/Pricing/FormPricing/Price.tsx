@@ -1,6 +1,6 @@
 import Conversion from '../../../../atoms/Price/Conversion'
 import { useField } from 'formik'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState, useEffect } from 'react'
 import Input from '../../../../atoms/Input'
 import styles from './Price.module.css'
 import Error from './Error'
@@ -16,7 +16,23 @@ export default function Price({
   firstPrice?: string
 }): ReactElement {
   const [field, meta] = useField('price')
-  const { dtName, dtSymbol } = usePricing(ddo)
+  const { getDTName, getDTSymbol } = usePricing()
+  const [dtSymbol, setDtSymbol] = useState<string>()
+  const [dtName, setDtName] = useState<string>()
+
+  useEffect(() => {
+    if (!ddo) return
+    async function setDatatokenSymbol(ddo: DDO) {
+      const dtSymbol = await getDTSymbol(ddo)
+      setDtSymbol(dtSymbol)
+    }
+    async function setDatatokenName(ddo: DDO) {
+      const dtName = await getDTName(ddo)
+      setDtName(dtName)
+    }
+    setDatatokenSymbol(ddo)
+    setDatatokenName(ddo)
+  }, [])
 
   return (
     <div className={styles.price}>

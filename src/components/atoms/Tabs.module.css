@@ -13,6 +13,7 @@
   text-transform: uppercase;
   cursor: pointer;
   color: var(--color-secondary);
+  background-color: var(--background-body);
   border: 1px solid var(--border-color);
   margin-right: -1px;
   min-width: 100px;
@@ -29,7 +30,7 @@
 }
 
 .tab[aria-selected='true'] {
-  background: var(--font-color-heading);
+  background-color: var(--font-color-heading);
   color: var(--background-body);
   border-color: var(--font-color-heading);
 }
