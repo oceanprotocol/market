@@ -136,6 +136,7 @@ export default function Compute({
       timeout.toString()
     )
     const assetType = ddo.findServiceByType('metadata').attributes.main.type
+    console.log('checkPreviousOrders  asset ' + assetType + ' id= ', orderId)
     if (assetType === 'algorithm') {
       setPreviousAlgorithmOrderId(orderId)
       setHasPreviousAlgorithmOrder(!!orderId)
@@ -430,7 +431,10 @@ export default function Compute({
 
       Logger.log('[compute] Starting compute job response: ', response)
 
-      setHasPreviousDatasetOrder(true)
+      // setHasPreviousDatasetOrder(true)
+      // setHasPreviousAlgorithmOrder(true)
+      checkPreviousOrders(selectedAlgorithmAsset)
+      checkPreviousOrders(ddo)
       setIsPublished(true)
     } catch (error) {
       setError('Failed to start job!')

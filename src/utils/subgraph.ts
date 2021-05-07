@@ -75,14 +75,18 @@ export async function getPreviousOrders(
     variables
   )
   if (fetchedPreviousOrders.data?.tokenOrders?.length === 0) return null
+  console.log('order fetchedPreviousOrders', fetchedPreviousOrders?.data)
   if (assetTimeout === '0') {
     return fetchedPreviousOrders?.data?.tokenOrders[0]?.tx
   } else {
-    const expiry = new BigNumber(
+    console.log(
+      'order timestamp',
       fetchedPreviousOrders?.data?.tokenOrders[0]?.timestamp
-    ).plus(assetTimeout)
-    const unixTime = new BigNumber(Math.floor(Date.now() / 1000))
-    if (unixTime.isLessThan(expiry)) {
+    )
+    const expiry =
+      fetchedPreviousOrders?.data?.tokenOrders[0]?.timestamp * 1000 +
+      Number(assetTimeout) * 1000
+    if (Date.now() <= expiry) {
       return fetchedPreviousOrders?.data?.tokenOrders[0]?.tx
     } else {
       return null
