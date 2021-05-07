@@ -5,6 +5,7 @@ import Label from '../../atoms/Input/Label'
 import { ReactComponent as Moon } from '../../../images/moon.svg'
 import { ReactComponent as Sun } from '../../../images/sun.svg'
 import BoxSelection, { BoxSelectionOption } from '../FormFields/BoxSelection'
+import styles from './Appearance.module.css'
 import Dotdotdot from 'react-dotdotdot'
 
 export default function Appearance({
@@ -40,7 +41,7 @@ export default function Appearance({
   }
 
   return (
-    <li>
+    <li className={styles.appearances}>
       <Label htmlFor="">Appearance</Label>
       <BoxSelection
         options={options}

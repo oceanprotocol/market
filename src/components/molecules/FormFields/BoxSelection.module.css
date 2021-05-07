@@ -1,7 +1,7 @@
 .boxSelectionsWrapper {
   display: flex;
   justify-content: space-between;
-  gap: 0 4%;
+  gap: 0 calc(var(--spacer) / 4);
 }
 
 .boxSelection {
@@ -20,6 +20,7 @@
 
 .boxSelection .title {
   font-weight: var(--font-weight-bold);
+  text-align: center;
 }
 
 .boxSelectionsWrapper input[type='radio'] {

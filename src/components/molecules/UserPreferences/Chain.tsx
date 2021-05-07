@@ -7,12 +7,14 @@ import FormHelp from '../../atoms/Input/Help'
 import Label from '../../atoms/Input/Label'
 import BoxSelection, { BoxSelectionOption } from '../FormFields/BoxSelection'
 import Dotdotdot from 'react-dotdotdot'
+import styles from './Chain.module.css'
 
 export default function Chain(): ReactElement {
   const { web3 } = useWeb3()
   const { config, connect } = useOcean()
 
   async function connectOcean(event: ChangeEvent<HTMLInputElement>) {
+    console.log(event.target.value)
     const config = getOceanConfig(event.target.value)
     await connect(config)
   }
@@ -70,7 +72,7 @@ export default function Chain(): ReactElement {
   // there are more considerations for users with a wallet connected (wallet network vs. setting network).
   // For now, only show the setting for non-wallet users.
   return !web3 ? (
-    <li>
+    <li className={styles.chains}>
       <Label htmlFor="">Chain</Label>
       <BoxSelection
         options={options}

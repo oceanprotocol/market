@@ -58,7 +58,7 @@ export default function BoxSelection({
               title={value.name}
             >
               {value.icon}
-              <span className={value.text && styles.title}>{value.title}</span>
+              <span className={styles.title}>{value.title}</span>
               {value.text}
             </label>
           </>
