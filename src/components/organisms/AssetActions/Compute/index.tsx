@@ -491,7 +491,9 @@ export default function Compute({
             action={<SuccessAction />}
           />
         )}
-        <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
+        {type !== 'algorithm' && (
+          <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
+        )}
       </footer>
     </>
   )
