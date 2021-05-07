@@ -5,7 +5,10 @@ import Tags from '../atoms/Tags'
 import MetaItem from '../organisms/AssetContent/MetaItem'
 import styles from './MetadataPreview.module.css'
 import File from '../atoms/File'
-import { MetadataPublishForm } from '../../@types/MetaData'
+import {
+  MetadataPublishFormDataset,
+  MetadataPublishFormAlgorithm
+} from '../../@types/MetaData'
 import Button from '../atoms/Button'
 import { transformTags } from '../../utils/metadata'
 
@@ -42,7 +45,7 @@ function Description({ description }: { description: string }) {
   )
 }
 
-function MetaFull({ values }: { values: Partial<MetadataPublishForm> }) {
+function MetaFull({ values }: { values: Partial<MetadataPublishFormDataset> }) {
   return (
     <div className={styles.metaFull}>
       {Object.entries(values)
@@ -56,6 +59,8 @@ function MetaFull({ values }: { values: Partial<MetadataPublishForm> }) {
               key.includes('links') ||
               key.includes('termsAndConditions') ||
               key.includes('dataTokenOptions') ||
+              key.includes('dockerImage') ||
+              key.includes('algorithmPrivacy') ||
               value === undefined ||
               value === ''
             )
@@ -86,10 +91,10 @@ function Sample({ url }: { url: string }) {
   )
 }
 
-export default function MetadataPreview({
+export function MetadataPreview({
   values
 }: {
-  values: Partial<MetadataPublishForm>
+  values: Partial<MetadataPublishFormDataset>
 }): ReactElement {
   return (
     <div className={styles.preview}>
@@ -119,6 +124,55 @@ export default function MetadataPreview({
         {values.tags && <Tags items={transformTags(values.tags)} />}
       </header>
 
+      <MetaFull values={values} />
+    </div>
+  )
+}
+
+export function MetadataAlgorithmPreview({
+  values
+}: {
+  values: Partial<MetadataPublishFormAlgorithm>
+}): ReactElement {
+  return (
+    <div className={styles.preview}>
+      <h2 className={styles.previewTitle}>Preview</h2>
+      <header>
+        {values.name && <h3 className={styles.title}>{values.name}</h3>}
+        {values.dataTokenOptions?.name && (
+          <p
+            className={styles.datatoken}
+          >{`${values.dataTokenOptions.name} — ${values.dataTokenOptions.symbol}`}</p>
+        )}
+        {values.description && <Description description={values.description} />}
+
+        <div className={styles.asset}>
+          {values.files?.length > 0 && typeof values.files !== 'string' && (
+            <File
+              file={values.files[0] as FileMetadata}
+              className={styles.file}
+              small
+            />
+          )}
+        </div>
+        {values.tags && <Tags items={transformTags(values.tags)} />}
+      </header>
+      <div className={styles.metaAlgorithm}>
+        {values.dockerImage && (
+          <MetaItem
+            key="dockerImage"
+            title="Docker Image"
+            content={values.dockerImage}
+          />
+        )}
+        {values.algorithmPrivacy && (
+          <MetaItem
+            key="privateAlgorithm"
+            title="Private Algorithm"
+            content="Yes"
+          />
+        )}
+      </div>
       <MetaFull values={values} />
     </div>
   )

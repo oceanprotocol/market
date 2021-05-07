@@ -1,12 +1,10 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { File as FileMetadata, DDO } from '@oceanprotocol/lib'
-import Button from '../../atoms/Button'
 import File from '../../atoms/File'
 import Price from '../../atoms/Price'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
 import styles from './Consume.module.css'
-import Loader from '../../atoms/Loader'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { useAsset } from '../../../providers/Asset'
 import { secondsToString } from '../../../utils/metadata'
@@ -17,6 +15,7 @@ import { useOcean } from '../../../providers/Ocean'
 import { useWeb3 } from '../../../providers/Web3'
 import { usePricing } from '../../../hooks/usePricing'
 import { useConsume } from '../../../hooks/useConsume'
+import ButtonBuy from '../../atoms/ButtonBuy'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {
@@ -31,29 +30,6 @@ const previousOrderQuery = gql`
     }
   }
 `
-
-function getHelpText(
-  token: {
-    dtBalance: string
-    dtSymbol: string
-  },
-  isDisable: boolean,
-  hasDatatoken: boolean,
-  hasPreviousOrder: boolean,
-  timeout: string
-) {
-  const { dtBalance, dtSymbol } = token
-  const assetTimeout = timeout === 'Forever' ? '' : ` for ${timeout}`
-  const text = isDisable
-    ? `The data set owner has set this data set to be temporary unavailable for consume.`
-    : hasPreviousOrder
-    ? `You bought this data set already allowing you to download it without paying again${assetTimeout}.`
-    : hasDatatoken
-    ? `You own ${dtBalance} ${dtSymbol} allowing you to use this data set by spending 1 ${dtSymbol}, but without paying OCEAN again.`
-    : `For using this data set, you will buy 1 ${dtSymbol} and immediately spend it back to the publisher and pool.`
-
-  return text
-}
 
 export default function Consume({
   ddo,
@@ -71,10 +47,13 @@ export default function Consume({
   const { marketFeeAddress } = useSiteMetadata()
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
   const [previousOrderId, setPreviousOrderId] = useState<string>()
-  const { isInPurgatory, price } = useAsset()
-  const { buyDT, pricingStepText, pricingError, pricingIsLoading } = usePricing(
-    ddo
-  )
+  const { isInPurgatory, price, type } = useAsset()
+  const {
+    buyDT,
+    pricingStepText,
+    pricingError,
+    pricingIsLoading
+  } = usePricing()
   const { consumeStepText, consume, consumeError } = useConsume()
   const [isDisabled, setIsDisabled] = useState(true)
   const [hasDatatoken, setHasDatatoken] = useState(false)
@@ -149,7 +128,7 @@ export default function Consume({
   ])
 
   async function handleConsume() {
-    !hasPreviousOrder && !hasDatatoken && (await buyDT('1', price))
+    !hasPreviousOrder && !hasDatatoken && (await buyDT('1', price, ddo))
     await consume(
       ddo.id,
       ddo.dataToken,
@@ -167,30 +146,19 @@ export default function Consume({
   }, [consumeError, pricingError])
 
   const PurchaseButton = () => (
-    <div className={styles.actions}>
-      {consumeStepText || pricingIsLoading ? (
-        <Loader message={consumeStepText || pricingStepText} />
-      ) : (
-        <>
-          <Button style="primary" onClick={handleConsume} disabled={isDisabled}>
-            {hasPreviousOrder
-              ? 'Download'
-              : `Buy ${
-                  assetTimeout === 'Forever' ? '' : ` for ${assetTimeout}`
-                }`}
-          </Button>
-          <div className={styles.help}>
-            {getHelpText(
-              { dtBalance, dtSymbol: ddo.dataTokenInfo.symbol },
-              ddo.isDisable,
-              hasDatatoken,
-              hasPreviousOrder,
-              assetTimeout
-            )}
-          </div>
-        </>
-      )}
-    </div>
+    <ButtonBuy
+      action="download"
+      disabled={isDisabled}
+      hasPreviousOrder={hasPreviousOrder}
+      hasDatatoken={hasDatatoken}
+      dtSymbol={ddo.dataTokenInfo?.symbol}
+      dtBalance={dtBalance}
+      onClick={handleConsume}
+      assetTimeout={assetTimeout}
+      assetType={type}
+      stepText={consumeStepText || pricingStepText}
+      isLoading={pricingIsLoading}
+    />
   )
 
   return (
@@ -204,7 +172,6 @@ export default function Consume({
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>
-
       <footer className={styles.feedback}>
         <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
       </footer>

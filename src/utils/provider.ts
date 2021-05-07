@@ -35,7 +35,7 @@ export async function fileinfo(
       return
     } else {
       toast.dismiss() // Remove any existing error message
-      toast.success('Great! That dataset looks good 🐳', {
+      toast.success('Great! That file looks good. 🐳', {
         position: 'bottom-right',
         autoClose: 5000,
         hideProgressBar: false,

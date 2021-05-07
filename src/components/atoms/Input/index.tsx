@@ -41,6 +41,7 @@ export interface InputProps {
   step?: string
   defaultChecked?: boolean
   size?: 'mini' | 'small' | 'large' | 'default'
+  className?: string
 }
 
 export default function Input(props: Partial<InputProps>): ReactElement {

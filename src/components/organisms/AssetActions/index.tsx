@@ -54,9 +54,9 @@ export default function AssetActions(): ReactElement {
 
   const UseContent = isCompute ? (
     <Compute
-      ddo={ddo}
       dtBalance={dtBalance}
       isBalanceSufficient={isBalanceSufficient}
+      file={metadata?.main.files[0]}
     />
   ) : (
     <Consume

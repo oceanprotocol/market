@@ -1,4 +1,7 @@
 {
   "title": "History",
-  "description": "Find the data sets and jobs that you previously accessed."
+  "description": "Find the data sets and jobs that you previously accessed.",
+  "compute": {
+    "storage": "Results are stored for 30 days."
+  }
 }

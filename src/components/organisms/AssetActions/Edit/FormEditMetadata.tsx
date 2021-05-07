@@ -4,14 +4,14 @@ import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import Button from '../../../atoms/Button'
 import Input from '../../../atoms/Input'
 import { FormFieldProps } from '../../../../@types/Form'
-import { MetadataEditForm } from '../../../../@types/MetaData'
+import { MetadataPublishFormDataset } from '../../../../@types/MetaData'
 import { checkIfTimeoutInPredefinedValues } from '../../../../utils/metadata'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
 
 function handleTimeoutCustomOption(
   data: FormFieldProps[],
-  values: Partial<MetadataEditForm>
+  values: Partial<MetadataPublishFormDataset>
 ) {
   const timeoutFieldContent = data.filter(
     (field) => field.name === 'timeout'
@@ -47,20 +47,22 @@ export default function FormEditMetadata({
   data,
   setShowEdit,
   setTimeoutStringValue,
-  values
+  values,
+  showPrice
 }: {
   data: FormFieldProps[]
   setShowEdit: (show: boolean) => void
   setTimeoutStringValue: (value: string) => void
-  values: Partial<MetadataEditForm>
+  values: Partial<MetadataPublishFormDataset>
+  showPrice: boolean
 }): ReactElement {
   const { accountId } = useWeb3()
-  const { ocean } = useOcean()
+  const { ocean, config } = useOcean()
   const {
     isValid,
     validateField,
     setFieldValue
-  }: FormikContextType<Partial<MetadataEditForm>> = useFormikContext()
+  }: FormikContextType<Partial<MetadataPublishFormDataset>> = useFormikContext()
 
   // Manually handle change events instead of using `handleChange` from Formik.
   // Workaround for default `validateOnChange` not kicking in
@@ -81,16 +83,20 @@ export default function FormEditMetadata({
 
   return (
     <Form className={styles.form}>
-      {data.map((field: FormFieldProps) => (
-        <Field
-          key={field.name}
-          {...field}
-          component={Input}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            handleFieldChange(e, field)
-          }
-        />
-      ))}
+      {data.map(
+        (field: FormFieldProps) =>
+          (!showPrice && field.name === 'price') || (
+            <Field
+              key={field.name}
+              {...field}
+              component={Input}
+              prefix={field.name === 'price' && config.oceanTokenSymbol}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                handleFieldChange(e, field)
+              }
+            />
+          )
+      )}
 
       <footer className={styles.actions}>
         <Button

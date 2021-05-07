@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react'
-import isUrl from 'is-url-superb'
 import Button from '../../../atoms/Button'
 import { FieldInputProps, useField } from 'formik'
 import Loader from '../../../atoms/Loader'
@@ -28,12 +27,8 @@ export default function FileInput({
       <Button
         style="primary"
         size="small"
-        onClick={(e: React.SyntheticEvent) => handleButtonClick(e, field.value)}
-        disabled={
-          !field.value ||
-          // weird static page build fix so is-url-superb won't error
-          !isUrl(typeof field.value === 'string' ? field.value : '')
-        }
+        onClick={(e: React.SyntheticEvent) => e.preventDefault()}
+        disabled={!field.value}
       >
         {isLoading ? <Loader /> : 'Add File'}
       </Button>
