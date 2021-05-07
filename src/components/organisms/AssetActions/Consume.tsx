@@ -2,7 +2,6 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { File as FileMetadata, DDO, DID } from '@oceanprotocol/lib'
 import axios from 'axios'
-
 import File from '../../atoms/File'
 import Price from '../../atoms/Price'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
