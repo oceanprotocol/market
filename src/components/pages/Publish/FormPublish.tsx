@@ -7,7 +7,6 @@ import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { MetadataPublishFormDataset } from '../../../@types/MetaData'
 import { initialValues as initialValuesDataset } from '../../../models/FormAlgoPublish'
 import { useOcean } from '../../../providers/Ocean'
-import Dotdotdot from 'react-dotdotdot'
 import stylesIndex from './index.module.css'
 import styles from './FormPublish.module.css'
 
@@ -65,20 +64,12 @@ export default function FormPublish(): ReactElement {
   const accesTypeOptions = [
     {
       name: 'Compute',
-      title: (
-        <Dotdotdot clamp={1} tagName="span">
-          Compute
-        </Dotdotdot>
-      ),
+      title: 'Compute',
       checked: false
     },
     {
       name: 'Download',
-      title: (
-        <Dotdotdot clamp={1} tagName="span">
-          Download
-        </Dotdotdot>
-      ),
+      title: 'Download',
       checked: true
     }
   ]

@@ -8,9 +8,9 @@ const cx = classNames.bind(styles)
 export interface BoxSelectionOption {
   name: string
   checked: boolean
-  title: JSX.Element
+  title: JSX.Element | string
   icon?: JSX.Element
-  text?: JSX.Element
+  text?: JSX.Element | string
 }
 
 export default function BoxSelection({

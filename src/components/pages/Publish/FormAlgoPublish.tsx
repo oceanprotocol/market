@@ -14,7 +14,6 @@ import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { MetadataPublishFormAlgorithm } from '../../../@types/MetaData'
 import { initialValues as initialValuesAlgorithm } from '../../../models/FormAlgoPublish'
-import Dotdotdot from 'react-dotdotdot'
 
 import stylesIndex from './index.module.css'
 
@@ -67,29 +66,17 @@ export default function FormPublish(): ReactElement {
   const dockerImageOptions = [
     {
       name: 'node:latest',
-      title: (
-        <Dotdotdot clamp={1} tagName="span">
-          node:latest
-        </Dotdotdot>
-      ),
+      title: 'node:latest',
       checked: true
     },
     {
       name: 'python:latest',
-      title: (
-        <Dotdotdot clamp={1} tagName="span">
-          python:latest
-        </Dotdotdot>
-      ),
+      title: 'python:latest',
       checked: false
     },
     {
       name: 'custom image',
-      title: (
-        <Dotdotdot clamp={1} tagName="span">
-          custom image
-        </Dotdotdot>
-      ),
+      title: 'custom image',
       checked: false
     }
   ]

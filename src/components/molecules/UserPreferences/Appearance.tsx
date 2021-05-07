@@ -6,7 +6,6 @@ import { ReactComponent as Moon } from '../../../images/moon.svg'
 import { ReactComponent as Sun } from '../../../images/sun.svg'
 import BoxSelection, { BoxSelectionOption } from '../FormFields/BoxSelection'
 import styles from './Appearance.module.css'
-import Dotdotdot from 'react-dotdotdot'
 
 export default function Appearance({
   darkMode
@@ -17,21 +16,13 @@ export default function Appearance({
     {
       name: 'Light',
       checked: !darkMode.value,
-      title: (
-        <Dotdotdot clamp={1} tagName="span">
-          Light
-        </Dotdotdot>
-      ),
+      title: 'Light',
       icon: <Sun />
     },
     {
       name: 'Dark',
       checked: darkMode.value,
-      title: (
-        <Dotdotdot clamp={1} tagName="span">
-          Dark
-        </Dotdotdot>
-      ),
+      title: 'Dark',
       icon: <Moon />
     }
   ]

@@ -6,7 +6,6 @@ import { getOceanConfig } from '../../../utils/ocean'
 import FormHelp from '../../atoms/Input/Help'
 import Label from '../../atoms/Input/Label'
 import BoxSelection, { BoxSelectionOption } from '../FormFields/BoxSelection'
-import Dotdotdot from 'react-dotdotdot'
 import styles from './Chain.module.css'
 
 export default function Chain(): ReactElement {
@@ -14,7 +13,6 @@ export default function Chain(): ReactElement {
   const { config, connect } = useOcean()
 
   async function connectOcean(event: ChangeEvent<HTMLInputElement>) {
-    console.log(event.target.value)
     const config = getOceanConfig(event.target.value)
     await connect(config)
   }
@@ -27,44 +25,20 @@ export default function Chain(): ReactElement {
     {
       name: 'mainnet',
       checked: isNetworkSelected('mainnet'),
-      title: (
-        <Dotdotdot clamp={1} tagName="span">
-          ETH
-        </Dotdotdot>
-      ),
-      text: (
-        <Dotdotdot clamp={1} tagName="span">
-          Mainnet
-        </Dotdotdot>
-      )
+      title: 'ETH',
+      text: 'Mainnet'
     },
     {
       name: 'polygon',
       checked: isNetworkSelected('polygon'),
-      title: (
-        <Dotdotdot clamp={1} tagName="span">
-          Polygon/Matic
-        </Dotdotdot>
-      ),
-      text: (
-        <Dotdotdot clamp={1} tagName="span">
-          Mainnet
-        </Dotdotdot>
-      )
+      title: 'Polygon/Matic',
+      text: 'Mainnet'
     },
     {
       name: 'moonbeamalpha',
       checked: isNetworkSelected('moonbeamalpha'),
-      title: (
-        <Dotdotdot clamp={1} tagName="span">
-          Moonbase Alpha
-        </Dotdotdot>
-      ),
-      text: (
-        <Dotdotdot clamp={1} tagName="span">
-          Testnet
-        </Dotdotdot>
-      )
+      title: 'Moonbase Alpha',
+      text: 'Testnet'
     }
   ]
 
