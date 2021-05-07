@@ -14,6 +14,7 @@ import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { MetadataPublishFormAlgorithm } from '../../../@types/MetaData'
 import { initialValues as initialValuesAlgorithm } from '../../../models/FormAlgoPublish'
+import Dotdotdot from 'react-dotdotdot'
 
 import stylesIndex from './index.module.css'
 
@@ -62,6 +63,36 @@ export default function FormPublish(): ReactElement {
   const [selectedDockerImage, setSelectedDockerImage] = useState<string>(
     initialValues.dockerImage
   )
+
+  const dockerImageOptions = [
+    {
+      name: 'node:latest',
+      title: (
+        <Dotdotdot clamp={1} tagName="span">
+          node:latest
+        </Dotdotdot>
+      ),
+      checked: true
+    },
+    {
+      name: 'python:latest',
+      title: (
+        <Dotdotdot clamp={1} tagName="span">
+          python:latest
+        </Dotdotdot>
+      ),
+      checked: false
+    },
+    {
+      name: 'custom image',
+      title: (
+        <Dotdotdot clamp={1} tagName="span">
+          custom image
+        </Dotdotdot>
+      ),
+      checked: false
+    }
+  ]
 
   // reset form validation on every mount
   useEffect(() => {
@@ -135,6 +166,11 @@ export default function FormPublish(): ReactElement {
             <Field
               key={field.name}
               {...field}
+              options={
+                field.type === 'boxSelection'
+                  ? dockerImageOptions
+                  : field.options
+              }
               component={Input}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 handleFieldChange(e, field)
