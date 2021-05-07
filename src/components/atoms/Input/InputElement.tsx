@@ -6,18 +6,22 @@ import FilesInput from '../../molecules/FormFields/FilesInput'
 import Terms from '../../molecules/FormFields/Terms'
 import Datatoken from '../../molecules/FormFields/Datatoken'
 import classNames from 'classnames/bind'
+import AssetSelection, {
+  AssetSelectionAsset
+} from '../../molecules/FormFields/AssetSelection'
 
 const cx = classNames.bind(styles)
 
 const DefaultInput = ({
   size,
+  className,
   prefix,
   postfix,
   additionalComponent,
   ...props
 }: InputProps) => (
   <input
-    className={cx({ input: true, [size]: size })}
+    className={cx({ input: true, [size]: size, [className]: className })}
     id={props.name}
     {...props}
   />
@@ -33,13 +37,14 @@ export default function InputElement({
   size,
   field,
   label,
+  multiple,
+  disabled,
   help,
   form,
   additionalComponent,
   ...props
 }: InputProps): ReactElement {
   const styleClasses = cx({ select: true, [size]: size })
-
   switch (type) {
     case 'select': {
       const sortedOptions =
@@ -47,7 +52,12 @@ export default function InputElement({
           ? options
           : options.sort((a: string, b: string) => a.localeCompare(b))
       return (
-        <select id={name} className={styleClasses} {...props}>
+        <select
+          id={name}
+          className={styleClasses}
+          {...props}
+          multiple={multiple}
+        >
           {field !== undefined && field.value === '' && (
             <option value="">---</option>
           )}
@@ -81,6 +91,7 @@ export default function InputElement({
                   id={slugify(option)}
                   type={type}
                   name={name}
+                  checked={props.defaultChecked}
                   {...props}
                 />
                 <label className={styles.radioLabel} htmlFor={slugify(option)}>
@@ -89,6 +100,24 @@ export default function InputElement({
               </div>
             ))}
         </div>
+      )
+    case 'assetSelection':
+      return (
+        <AssetSelection
+          assets={(options as unknown) as AssetSelectionAsset[]}
+          {...field}
+          {...props}
+        />
+      )
+    case 'assetSelectionMultiple':
+      return (
+        <AssetSelection
+          assets={(options as unknown) as AssetSelectionAsset[]}
+          multiple
+          disabled={disabled}
+          {...field}
+          {...props}
+        />
       )
     case 'files':
       return <FilesInput name={name} {...field} {...props} />
@@ -106,6 +135,7 @@ export default function InputElement({
             name={name}
             type={type || 'text'}
             size={size}
+            disabled={disabled}
             {...props}
           />
           {postfix && (
@@ -117,6 +147,7 @@ export default function InputElement({
           name={name}
           type={type || 'text'}
           size={size}
+          disabled={disabled}
           {...props}
         />
       )

@@ -18,11 +18,7 @@
 
 .content {
   margin-top: var(--spacer);
-  background-color: var(--background-content) !important;
-}
-
-.tabs div[class*='tabs'] {
-  background-color: var(--background-content);
+  background-color: var(--background-body);
 }
 
 .tabs ul[class*='tabList'] {

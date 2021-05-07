@@ -44,6 +44,7 @@ const poolLiquidityQuery = gql`
       id
       totalShares
       swapFee
+      spotPrice
       tokens {
         tokenAddress
         balance
@@ -141,7 +142,8 @@ export default function Pool(): ReactElement {
       setCreatorLiquidity(creatorLiquidity)
 
       const totalCreatorLiquidityInOcean =
-        creatorLiquidity?.ocean + creatorLiquidity?.datatoken * price?.value
+        creatorLiquidity?.ocean +
+        creatorLiquidity?.datatoken * dataLiquidity.pool.spotPrice
       setCreatorTotalLiquidityInOcean(totalCreatorLiquidityInOcean)
       const creatorPoolShare =
         price?.ocean &&
@@ -250,7 +252,7 @@ export default function Pool(): ReactElement {
               <ExplorerLink
                 networkId={networkId}
                 path={
-                  networkId === 137
+                  networkId === 137 || networkId === 1287
                     ? `tokens/${ddo.dataToken}`
                     : `token/${ddo.dataToken}`
                 }

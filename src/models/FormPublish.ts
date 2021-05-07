@@ -1,8 +1,8 @@
-import { MetadataPublishForm } from '../@types/MetaData'
+import { MetadataPublishFormDataset } from '../@types/MetaData'
 import { File as FileMetadata } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 
-export const validationSchema: Yup.SchemaOf<MetadataPublishForm> = Yup.object()
+export const validationSchema: Yup.SchemaOf<MetadataPublishFormDataset> = Yup.object()
   .shape({
     // ---- required fields ----
     name: Yup.string()
@@ -15,7 +15,9 @@ export const validationSchema: Yup.SchemaOf<MetadataPublishForm> = Yup.object()
         symbol: Yup.string()
       })
       .required('Required'),
-    files: Yup.array<FileMetadata>().required('Required').nullable(),
+    files: Yup.array<FileMetadata>()
+      .required('Enter a valid URL and click "ADD FILE"')
+      .nullable(),
     description: Yup.string().min(10).required('Required'),
     timeout: Yup.string().required('Required'),
     access: Yup.string()
@@ -29,7 +31,7 @@ export const validationSchema: Yup.SchemaOf<MetadataPublishForm> = Yup.object()
   })
   .defined()
 
-export const initialValues: Partial<MetadataPublishForm> = {
+export const initialValues: Partial<MetadataPublishFormDataset> = {
   name: '',
   author: '',
   dataTokenOptions: {

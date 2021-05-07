@@ -1,4 +1,4 @@
-import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
+import { ConfigHelperConfig } from '@oceanprotocol/lib'
 import React, { ReactElement } from 'react'
 import { useOcean } from '../../../providers/Ocean'
 import { useWeb3 } from '../../../providers/Web3'
@@ -18,8 +18,9 @@ export default function Chain(): ReactElement {
   }
 
   const chains = [
-    { name: 'ETH', oceanConfig: 'mainnet' },
-    { name: 'Polygon/Matic', oceanConfig: 'polygon' }
+    { name: 'ETH', oceanConfig: 'mainnet', label: 'Mainnet' },
+    { name: 'Polygon/Matic', oceanConfig: 'polygon', label: 'Mainnet' },
+    { name: 'Moonbase Alpha', oceanConfig: 'moonbeamalpha', label: 'Testnet' }
   ]
 
   // TODO: to fully solve https://github.com/oceanprotocol/market/issues/432
@@ -42,7 +43,7 @@ export default function Chain(): ReactElement {
               onClick={() => connectOcean(button.oceanConfig)}
             >
               {button.name}
-              <span>Mainnet</span>
+              <span>{button.label}</span>
             </Button>
           )
         })}

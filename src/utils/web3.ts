@@ -1,5 +1,4 @@
-import { Logger } from '@oceanprotocol/lib'
-import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
+import { Logger, ConfigHelperConfig } from '@oceanprotocol/lib'
 
 export interface EthereumListsChain {
   name: string
@@ -56,6 +55,7 @@ export function addCustomNetwork(
 ): void {
   const newNewtworkData = {
     chainId: `0x${network.chainId.toString(16)}`,
+    chainName: network.name,
     rpcUrls: network.urlList
   }
   web3Provider.request(

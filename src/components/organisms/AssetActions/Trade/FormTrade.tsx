@@ -103,7 +103,6 @@ export default function FormTrade({
       toast.error(error.message)
     }
   }
-
   return (
     <Formik
       initialValues={initialValues}
@@ -129,7 +128,7 @@ export default function FormTrade({
           ) : (
             <div className={styles.alertWrap}>
               <Alert
-                text={content.warning.main}
+                text={content.warning}
                 state="info"
                 action={{
                   name: 'I understand',

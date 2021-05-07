@@ -28,7 +28,9 @@ interface Web3ProviderValue {
   networkId: number
   networkDisplayName: string
   networkData: EthereumListsChain
+  block: number
   isTestnet: boolean
+  web3Loading: boolean
   connect: () => Promise<void>
   logout: () => Promise<void>
 }
@@ -107,13 +109,18 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   const [networkId, setNetworkId] = useState<number>()
   const [networkDisplayName, setNetworkDisplayName] = useState<string>()
   const [networkData, setNetworkData] = useState<EthereumListsChain>()
+  const [block, setBlock] = useState<number>()
   const [isTestnet, setIsTestnet] = useState<boolean>()
   const [accountId, setAccountId] = useState<string>()
+  const [web3Loading, setWeb3Loading] = useState<boolean>(true)
 
   const connect = useCallback(async () => {
-    if (!web3Modal) return
-
+    if (!web3Modal) {
+      setWeb3Loading(false)
+      return
+    }
     try {
+      setWeb3Loading(true)
       Logger.log('[web3] Connecting Web3...')
 
       const provider = await web3Modal?.connect()
@@ -132,6 +139,8 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
       Logger.log('[web3] account id', accountId)
     } catch (error) {
       Logger.error('[web3] Error: ', error.message)
+    } finally {
+      setWeb3Loading(false)
     }
   }, [web3Modal])
 
@@ -187,6 +196,20 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   }, [networkId, networksList])
 
   // -----------------------------------
+  // Get and set latest head block
+  // -----------------------------------
+  useEffect(() => {
+    if (!web3) return
+
+    async function getBlock() {
+      const block = await web3.eth.getBlockNumber()
+      setBlock(block)
+      Logger.log('[web3] Head block: ', block)
+    }
+    getBlock()
+  }, [web3, networkId])
+
+  // -----------------------------------
   // Logout helper
   // -----------------------------------
   async function logout() {
@@ -236,7 +259,9 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
         networkId,
         networkDisplayName,
         networkData,
+        block,
         isTestnet,
+        web3Loading,
         connect,
         logout
       }}
