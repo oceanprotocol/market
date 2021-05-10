@@ -20,7 +20,7 @@ export default function PageGatsbySearch(props: PageProps): ReactElement {
     ? `Published by ${accountTruncate(owner as string)}`
     : `${
         totalResults !== undefined
-          ? searchValue
+          ? searchValue && searchValue !== ' '
             ? totalResults === 0
               ? 'No results'
               : totalResults +
