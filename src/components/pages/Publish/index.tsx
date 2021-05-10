@@ -95,8 +95,21 @@ export default function PublishPage({
   const [publishType, setPublishType] = useState<MetadataMain['type']>(
     'dataset'
   )
-
   const hasFeedback = isLoading || error || success
+
+  const emptyAlgoDT = Object.values(algoInitialValues.dataTokenOptions).every(
+    (value) => value === ''
+  )
+  const emptyDatasetDT = Object.values(
+    datasetInitialValues.dataTokenOptions
+  ).every((value) => value === '')
+
+  if (emptyAlgoDT) {
+    algoInitialValues.dataTokenOptions = datasetInitialValues.dataTokenOptions
+  } else {
+    if (emptyDatasetDT)
+      datasetInitialValues.dataTokenOptions = algoInitialValues.dataTokenOptions
+  }
 
   useEffect(() => {
     publishType === 'dataset'
@@ -160,18 +173,22 @@ export default function PublishPage({
   ): Promise<void> {
     const metadata = transformPublishAlgorithmFormToMetadata(values)
     const timeout = mapTimeoutStringToSeconds(values.timeout)
-    const validDockerImage =
-      values.dockerImage === 'custom image'
-        ? await validateDockerImage(values.image, values.containerTag)
-        : true
+
+    // TODO: put back check once #572 is resolved
+    // https://github.com/oceanprotocol/market/issues/572
+    const validDockerImage = true
+    // const validDockerImage =
+    //   values.dockerImage === 'custom image'
+    //     ? await validateDockerImage(values.image, values.containerTag)
+    //     : true
     try {
       if (validDockerImage) {
-        Logger.log('Publish Algorithm with ', metadata)
+        Logger.log('Publish algorithm with ', metadata, values.dataTokenOptions)
 
         const ddo = await publish(
           (metadata as unknown) as Metadata,
           values.algorithmPrivacy === true ? 'compute' : 'access',
-          undefined,
+          values.dataTokenOptions,
           timeout
         )
 
@@ -248,7 +265,9 @@ export default function PublishPage({
                 loading={publishStepText}
                 setError={setError}
                 successAction={{
-                  name: 'Go to data set →',
+                  name: `Go to ${
+                    publishType === 'dataset' ? 'data set' : 'algorithm'
+                  } →`,
                   to: `/asset/${did}`
                 }}
               />

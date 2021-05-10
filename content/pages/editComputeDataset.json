@@ -7,13 +7,6 @@
     "error": "Updating DDO failed.",
     "data": [
       {
-        "name": "allowAllPublishedAlgorithms",
-        "label": "All Algorithms",
-        "help": "Allow any published algorithm to run on this data set.",
-        "type": "checkbox",
-        "options": ["Allow any published algorithm"]
-      },
-      {
         "name": "publisherTrustedAlgorithms",
         "label": "Selected Algorithms",
         "help": "Choose one or multiple algorithms you trust to allow them to run on this data set.",
@@ -21,6 +14,13 @@
         "multiple": true,
         "options": [],
         "sortOptions": false
+      },
+      {
+        "name": "allowAllPublishedAlgorithms",
+        "label": "All Algorithms",
+        "help": "Allow any published algorithm to run on this data set.",
+        "type": "checkbox",
+        "options": ["Allow any published algorithm"]
       }
     ]
   }

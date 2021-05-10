@@ -14,7 +14,7 @@ export default function FilesInput(props: InputProps): ReactElement {
   const [fileUrl, setFileUrl] = useState<string>()
   const { config } = useOcean()
 
-  useEffect(() => {
+  function loadFileInfo() {
     const source = axios.CancelToken.source()
 
     async function validateUrl() {
@@ -33,11 +33,16 @@ export default function FilesInput(props: InputProps): ReactElement {
         setIsLoading(false)
       }
     }
+
     fileUrl && validateUrl()
 
     return () => {
       source.cancel()
     }
+  }
+
+  useEffect(() => {
+    loadFileInfo()
   }, [fileUrl, config.providerUri])
 
   async function handleButtonClick(e: React.SyntheticEvent, url: string) {
@@ -47,6 +52,11 @@ export default function FilesInput(props: InputProps): ReactElement {
 
     // File example 'https://oceanprotocol.com/tech-whitepaper.pdf'
     e.preventDefault()
+
+    // In the case when the user re-add the same URL after it was removed (by accident or intentionally)
+    if (fileUrl === url) {
+      loadFileInfo()
+    }
 
     setFileUrl(url)
   }

@@ -67,8 +67,11 @@ export default function FormPublish(): ReactElement {
     e: ChangeEvent<HTMLInputElement>,
     field: FormFieldProps
   ) {
+    const value =
+      field.type === 'terms' ? !JSON.parse(e.target.value) : e.target.value
+
     validateField(field.name)
-    setFieldValue(field.name, e.target.value)
+    setFieldValue(field.name, value)
   }
 
   const resetFormAndClearStorage = (e: FormEvent<Element>) => {

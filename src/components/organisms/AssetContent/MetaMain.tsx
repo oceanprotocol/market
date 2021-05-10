@@ -15,21 +15,25 @@ export default function MetaMain(): ReactElement {
 
   return (
     <aside className={styles.meta}>
-      <AssetType type={type} accessType={accessType} />
-      <p>
+      <header className={styles.asset}>
+        <AssetType
+          type={type}
+          accessType={accessType}
+          className={styles.assetType}
+        />
         <ExplorerLink
           networkId={networkId}
           path={
-            networkId === 137
+            networkId === 137 || networkId === 1287
               ? `tokens/${ddo?.dataToken}`
               : `token/${ddo?.dataToken}`
           }
         >
           {`${ddo?.dataTokenInfo.name} — ${ddo?.dataTokenInfo.symbol}`}
         </ExplorerLink>
-      </p>
+      </header>
 
-      <div className={styles.published}>
+      <div className={styles.byline}>
         Published By <Publisher account={owner} />
         <p>
           <Time date={ddo?.created} relative />

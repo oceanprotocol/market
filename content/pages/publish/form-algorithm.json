@@ -19,7 +19,7 @@
       "name": "files",
       "label": "File",
       "placeholder": "e.g. https://file.com/file.json",
-      "help": "Please enter the URL to your algorithm file and click \"ADD FILE\" to validate the data. This URL will be stored encrypted after publishing.",
+      "help": "Please enter the URL to your algorithm file and click \"ADD FILE\" to validate the data. This URL will be stored encrypted after publishing. Some restrictions apply:\n\n- max. running time: 1 min.\n- [Writing Algorithms for Compute to Data](https://docs.oceanprotocol.com/tutorials/compute-to-data-algorithms/)",
       "type": "files",
       "required": true
     },
@@ -54,6 +54,13 @@
       "type": "select",
       "options": ["Forever", "1 day", "1 week", "1 month", "1 year"],
       "sortOptions": false,
+      "required": true
+    },
+    {
+      "name": "dataTokenOptions",
+      "label": "Datatoken Name & Symbol",
+      "type": "datatoken",
+      "help": "The datatoken for this algorithm will be created with this name & symbol.",
       "required": true
     },
     {

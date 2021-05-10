@@ -25,7 +25,10 @@ import {
   getInitialValues,
   validationSchema
 } from '../../../../models/FormStartComputeDataset'
-import { ComputeAlgorithm } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
+import {
+  ComputeAlgorithm,
+  ComputeOutput
+} from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import { SearchQuery } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import axios from 'axios'
@@ -190,26 +193,30 @@ export default function Compute({
   }, [ocean, ddo, accountId])
 
   useEffect(() => {
-    if (!ocean || !accountId || !selectedAlgorithmAsset) return
+    if (!selectedAlgorithmAsset) return
 
-    if (selectedAlgorithmAsset.findServiceByType('access')) {
-      checkPreviousOrders(selectedAlgorithmAsset).then(() => {
-        if (
-          !hasPreviousAlgorithmOrder &&
-          selectedAlgorithmAsset.findServiceByType('compute')
-        ) {
-          checkPreviousOrders(selectedAlgorithmAsset)
-        }
-      })
-    } else if (selectedAlgorithmAsset.findServiceByType('compute')) {
-      checkPreviousOrders(selectedAlgorithmAsset)
-    }
-    checkAssetDTBalance(selectedAlgorithmAsset)
     initMetadata(selectedAlgorithmAsset)
+
     const { timeout } = (
       ddo.findServiceByType('access') || ddo.findServiceByType('compute')
     ).attributes.main
     setAlgorithmTimeout(secondsToString(timeout))
+
+    if (accountId) {
+      if (selectedAlgorithmAsset.findServiceByType('access')) {
+        checkPreviousOrders(selectedAlgorithmAsset).then(() => {
+          if (
+            !hasPreviousAlgorithmOrder &&
+            selectedAlgorithmAsset.findServiceByType('compute')
+          ) {
+            checkPreviousOrders(selectedAlgorithmAsset)
+          }
+        })
+      } else if (selectedAlgorithmAsset.findServiceByType('compute')) {
+        checkPreviousOrders(selectedAlgorithmAsset)
+      }
+    }
+    ocean && checkAssetDTBalance(selectedAlgorithmAsset)
   }, [selectedAlgorithmAsset, ocean, accountId, hasPreviousAlgorithmOrder])
 
   // Output errors in toast UI
@@ -330,7 +337,10 @@ export default function Compute({
       computeAlgorithm.transferTxId = algorithmAssetOrderId
       Logger.log('[compute] Starting compute job.')
 
-      const output = {}
+      const output: ComputeOutput = {
+        publishAlgorithmLog: true,
+        publishOutput: true
+      }
       const response = await ocean.compute.start(
         ddo.id,
         assetOrderId,
@@ -410,7 +420,9 @@ export default function Compute({
             action={<SuccessAction />}
           />
         )}
-        <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
+        {type !== 'algorithm' && (
+          <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
+        )}
       </footer>
     </>
   )

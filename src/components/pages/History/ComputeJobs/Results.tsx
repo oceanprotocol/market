@@ -6,12 +6,33 @@ import { ListItem } from '../../../atoms/Lists'
 import Button from '../../../atoms/Button'
 import { useOcean } from '../../../../providers/Ocean'
 import styles from './Results.module.css'
+import FormHelp from '../../../atoms/Input/Help'
+import { graphql, useStaticQuery } from 'gatsby'
+
+export const contentQuery = graphql`
+  query HistoryPageComputeResultsQuery {
+    content: allFile(filter: { relativePath: { eq: "pages/history.json" } }) {
+      edges {
+        node {
+          childPagesJson {
+            compute {
+              storage
+            }
+          }
+        }
+      }
+    }
+  }
+`
 
 export default function Results({
   job
 }: {
   job: ComputeJobMetaData
 }): ReactElement {
+  const data = useStaticQuery(contentQuery)
+  const content = data.content.edges[0].node.childPagesJson
+
   const { ocean, account } = useOcean()
   const [isLoading, setIsLoading] = useState(false)
   const [hasFetched, setHasFetched] = useState(false)
@@ -85,6 +106,7 @@ export default function Results({
           )}
         </Button>
       )}
+      <FormHelp className={styles.help}>{content.compute.storage}</FormHelp>
     </div>
   )
 }
