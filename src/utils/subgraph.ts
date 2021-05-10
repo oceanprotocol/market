@@ -53,7 +53,8 @@ async function fetchData(
     const client = getApolloClientInstance()
     const response = await client.query({
       query: query,
-      variables: variables
+      variables: variables,
+      fetchPolicy: 'no-cache'
     })
     return response
   } catch (error) {
@@ -75,14 +76,9 @@ export async function getPreviousOrders(
     variables
   )
   if (fetchedPreviousOrders.data?.tokenOrders?.length === 0) return null
-  console.log('order fetchedPreviousOrders', fetchedPreviousOrders?.data)
   if (assetTimeout === '0') {
     return fetchedPreviousOrders?.data?.tokenOrders[0]?.tx
   } else {
-    console.log(
-      'order timestamp',
-      fetchedPreviousOrders?.data?.tokenOrders[0]?.timestamp
-    )
     const expiry =
       fetchedPreviousOrders?.data?.tokenOrders[0]?.timestamp * 1000 +
       Number(assetTimeout) * 1000
