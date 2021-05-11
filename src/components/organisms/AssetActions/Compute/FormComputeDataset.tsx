@@ -46,6 +46,7 @@ export default function FormStartCompute({
   setSelectedAlgorithm,
   isLoading,
   isComputeButtonDisabled,
+  fileConnectivity,
   hasPreviousOrder,
   hasDatatoken,
   dtBalance,
@@ -65,6 +66,7 @@ export default function FormStartCompute({
   setSelectedAlgorithm: React.Dispatch<React.SetStateAction<DDO>>
   isLoading: boolean
   isComputeButtonDisabled: boolean
+  fileConnectivity: boolean
   hasPreviousOrder: boolean
   hasDatatoken: boolean
   dtBalance: string
@@ -151,7 +153,8 @@ export default function FormStartCompute({
 
       <ButtonBuy
         action="compute"
-        disabled={isComputeButtonDisabled || !isValid}
+        disabled={isComputeButtonDisabled || !isValid || !fileConnectivity}
+        fileConnectivity={fileConnectivity}
         hasPreviousOrder={hasPreviousOrder}
         hasDatatoken={hasDatatoken}
         dtSymbol={ddo.dataTokenInfo.symbol}

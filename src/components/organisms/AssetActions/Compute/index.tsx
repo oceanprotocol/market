@@ -5,7 +5,8 @@ import {
   Logger,
   ServiceType,
   publisherTrustedAlgorithm,
-  BestPrice
+  BestPrice,
+  DID
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '../../../atoms/Price'
@@ -42,6 +43,7 @@ import { FrePrice } from '../../../../@types/apollo/FrePrice'
 import { PoolPrice } from '../../../../@types/apollo/PoolPrice'
 import { secondsToString } from '../../../../utils/metadata'
 import { getPreviousOrders } from '../../../../utils/subgraph'
+import { isFileValid } from '../../../../utils/provider'
 
 const SuccessAction = () => (
   <Button style="text" to="/history" size="small">
@@ -102,6 +104,7 @@ export default function Compute({
   ] = useState<string>()
   const [datasetTimeout, setDatasetTimeout] = useState<string>()
   const [algorithmTimeout, setAlgorithmTimeout] = useState<string>()
+  const [fileConnectivity, setFileConnectivity] = useState(false)
 
   /* eslint-disable @typescript-eslint/no-unused-vars */
   const {
@@ -209,6 +212,24 @@ export default function Compute({
   }
 
   useEffect(() => {
+    const source = axios.CancelToken.source()
+    async function validateAsset() {
+      const did = DID.parse(ddo.id)
+      const fileValid = await isFileValid(
+        did,
+        ddo.findServiceByType('compute').serviceEndpoint,
+        source.token
+      )
+      setFileConnectivity(fileValid)
+    }
+    validateAsset()
+
+    return () => {
+      source.cancel()
+    }
+  }, [ddo])
+
+  useEffect(() => {
     const { timeout } = (
       ddo.findServiceByType('access') || ddo.findServiceByType('compute')
     ).attributes.main
@@ -299,6 +320,19 @@ export default function Compute({
 
   async function startJob(algorithmId: string) {
     try {
+      const source = axios.CancelToken.source()
+      const did = DID.parse(ddo.id)
+      const fileValid = await isFileValid(
+        did,
+        ddo.findServiceByType('access').serviceEndpoint,
+        source.token
+      )
+      source.cancel()
+
+      if (!fileValid) {
+        setFileConnectivity(false)
+        return
+      }
       if (!ocean) return
 
       setIsJobStarting(true)
@@ -465,6 +499,7 @@ export default function Compute({
             setSelectedAlgorithm={setSelectedAlgorithmAsset}
             isLoading={isJobStarting}
             isComputeButtonDisabled={isComputeButtonDisabled}
+            fileConnectivity={fileConnectivity}
             hasPreviousOrder={hasPreviousDatasetOrder}
             hasDatatoken={hasDatatoken}
             dtBalance={dtBalance}
