@@ -170,10 +170,12 @@ export default function Remove({
     setAmountPercent(e.target.value)
     if (!poolTokens) return
 
+    Decimal.set({ toExpPos: 2 })
+
     const amountPoolShares = new Decimal(e.target.value)
       .dividedBy(100)
       .mul(new Decimal(poolTokens))
-      .toFixed(18, Decimal.ROUND_DOWN) // in some cases the returned value contain more than 18 digits which break conversion to wei
+      .toString()
 
     setAmountPoolShares(`${amountPoolShares}`)
   }
@@ -182,10 +184,12 @@ export default function Remove({
     e.preventDefault()
     setAmountPercent(amountMaxPercent)
 
+    Decimal.set({ toExpPos: 2 })
+
     const amountPoolShares = new Decimal(amountMaxPercent)
       .dividedBy(100)
       .mul(new Decimal(poolTokens))
-      .toFixed(18, Decimal.ROUND_DOWN)
+      .toString()
 
     setAmountPoolShares(`${amountPoolShares}`)
   }
