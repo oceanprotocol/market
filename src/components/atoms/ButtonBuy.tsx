@@ -33,23 +33,21 @@ function getConnectivityHelpText(
   algorithmFileConnectivity: boolean,
   dtSymbolSelectedComputeAsset: string
 ) {
-  let offlineAsset: string
+  let offlineAsset = 'Dataset'
 
   if (fileConnectivity === undefined)
     return <Loader message="Checking dataset connectivity" />
 
-  if (action === 'download' && !fileConnectivity) {
-    offlineAsset = 'Dataset'
-  } else if (action === 'compute') {
+  if (action === 'compute') {
     if (!dtSymbolSelectedComputeAsset && fileConnectivity) return
     if (dtSymbolSelectedComputeAsset && algorithmFileConnectivity === undefined)
       return <Loader message="Checking selected algorithm connectivity" />
     offlineAsset = `${
       !fileConnectivity && algorithmFileConnectivity === false
-        ? 'Dataset and Algorithm'
-        : !fileConnectivity
-        ? `Dataset`
-        : `Algorithm`
+        ? offlineAsset + ' and Algorithm'
+        : algorithmFileConnectivity === false
+        ? `Algorithm`
+        : offlineAsset
     }`
   }
 
