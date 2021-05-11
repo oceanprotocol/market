@@ -61,7 +61,7 @@ export default function Consume({
   const [hasDatatoken, setHasDatatoken] = useState(false)
   const [isConsumable, setIsConsumable] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
-  const [fileConnectivity, setFileConnectivity] = useState(false)
+  const [fileConnectivity, setFileConnectivity] = useState<boolean>()
 
   const { data } = useQuery<OrdersData>(previousOrderQuery, {
     variables: {

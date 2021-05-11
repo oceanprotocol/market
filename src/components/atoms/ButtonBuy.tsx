@@ -9,6 +9,7 @@ interface ButtonBuyProps {
   action: 'download' | 'compute'
   disabled: boolean
   fileConnectivity: boolean
+  algorithmFileConnectivity?: boolean
   hasPreviousOrder: boolean
   hasDatatoken: boolean
   dtSymbol: string
@@ -26,14 +27,45 @@ interface ButtonBuyProps {
   type?: 'submit'
 }
 
-function getConnectivityHelpText() {
-  return (
+function getConnectivityHelpText(
+  action: string,
+  fileConnectivity: boolean,
+  algorithmFileConnectivity: boolean,
+  dtSymbolSelectedComputeAsset: string
+) {
+  let offlineAsset: string
+
+  if (action === 'download') {
+    if (fileConnectivity === undefined) {
+      return <Loader message="Checking dataset connectivity" />
+    } else if (!fileConnectivity) {
+      offlineAsset = 'Dataset'
+    }
+  } else if (action === 'compute') {
+    if (fileConnectivity === undefined)
+      return <Loader message="Checking dataset connectivity" />
+    if (dtSymbolSelectedComputeAsset && algorithmFileConnectivity === undefined)
+      return <Loader message="Checking selected algorithm connectivity" />
+    offlineAsset = `${
+      !fileConnectivity && !algorithmFileConnectivity
+        ? 'Dataset and Algorithm'
+        : !algorithmFileConnectivity
+        ? `Algorithm`
+        : `Dataset`
+    }`
+  }
+
+  return action === 'compute' && !dtSymbolSelectedComputeAsset ? (
+    <></>
+  ) : (
     <div className={styles.connectivitywrapper}>
-      <Tooltip content="The dataset file endpoint appears to be offline, please come back and try again later">
+      <Tooltip
+        content={`${offlineAsset} file endpoint appears to be offline, please come back and try again later`}
+      >
         <Status className={styles.status} state="error" />
-        <span className={styles.text}>
-          Dataset is offline and unavailable for consume
-        </span>
+        <span
+          className={styles.text}
+        >{`${offlineAsset} is offline and unavailable for consume`}</span>
       </Tooltip>
     </div>
   )
@@ -90,6 +122,7 @@ export default function ButtonBuy({
   action,
   disabled,
   fileConnectivity,
+  algorithmFileConnectivity,
   hasPreviousOrder,
   hasDatatoken,
   dtSymbol,
@@ -130,8 +163,14 @@ export default function ButtonBuy({
             {buttonText}
           </Button>
           <div className={styles.help}>
-            {!fileConnectivity
-              ? getConnectivityHelpText()
+            {!fileConnectivity ||
+            (!algorithmFileConnectivity && action === 'compute')
+              ? getConnectivityHelpText(
+                  action,
+                  fileConnectivity,
+                  algorithmFileConnectivity,
+                  dtSymbolSelectedComputeAsset
+                )
               : action === 'download'
               ? getConsumeHelpText(
                   dtBalance,

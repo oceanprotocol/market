@@ -104,7 +104,11 @@ export default function Compute({
   ] = useState<string>()
   const [datasetTimeout, setDatasetTimeout] = useState<string>()
   const [algorithmTimeout, setAlgorithmTimeout] = useState<string>()
-  const [fileConnectivity, setFileConnectivity] = useState(false)
+  const [fileConnectivity, setFileConnectivity] = useState<boolean>()
+  const [
+    algorithmFileConnectivity,
+    setAlgorithmFileConnectivity
+  ] = useState<boolean>()
 
   /* eslint-disable @typescript-eslint/no-unused-vars */
   const {
@@ -288,6 +292,19 @@ export default function Compute({
     if (!selectedAlgorithmAsset) return
 
     initMetadata(selectedAlgorithmAsset)
+    const source = axios.CancelToken.source()
+
+    async function validateAsset() {
+      const did = DID.parse(selectedAlgorithmAsset.id)
+      const fileValid = await isFileValid(
+        did,
+        selectedAlgorithmAsset.findServiceByType('access')?.serviceEndpoint ||
+          selectedAlgorithmAsset.findServiceByType('compute')?.serviceEndpoint,
+        source.token
+      )
+      setAlgorithmFileConnectivity(fileValid)
+    }
+    validateAsset()
 
     const { timeout } = (
       ddo.findServiceByType('access') || ddo.findServiceByType('compute')
@@ -309,7 +326,17 @@ export default function Compute({
       }
     }
     ocean && checkAssetDTBalance(selectedAlgorithmAsset)
-  }, [selectedAlgorithmAsset, ocean, accountId, hasPreviousAlgorithmOrder])
+
+    return () => {
+      source.cancel()
+    }
+  }, [
+    selectedAlgorithmAsset,
+    ocean,
+    accountId,
+    hasPreviousAlgorithmOrder,
+    algorithmFileConnectivity
+  ])
 
   // Output errors in toast UI
   useEffect(() => {
@@ -500,6 +527,7 @@ export default function Compute({
             isLoading={isJobStarting}
             isComputeButtonDisabled={isComputeButtonDisabled}
             fileConnectivity={fileConnectivity}
+            algorithmFileConnectivity={algorithmFileConnectivity}
             hasPreviousOrder={hasPreviousDatasetOrder}
             hasDatatoken={hasDatatoken}
             dtBalance={dtBalance}

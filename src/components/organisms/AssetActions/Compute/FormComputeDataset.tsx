@@ -47,6 +47,7 @@ export default function FormStartCompute({
   isLoading,
   isComputeButtonDisabled,
   fileConnectivity,
+  algorithmFileConnectivity,
   hasPreviousOrder,
   hasDatatoken,
   dtBalance,
@@ -67,6 +68,7 @@ export default function FormStartCompute({
   isLoading: boolean
   isComputeButtonDisabled: boolean
   fileConnectivity: boolean
+  algorithmFileConnectivity: boolean
   hasPreviousOrder: boolean
   hasDatatoken: boolean
   dtBalance: string
@@ -153,8 +155,14 @@ export default function FormStartCompute({
 
       <ButtonBuy
         action="compute"
-        disabled={isComputeButtonDisabled || !isValid || !fileConnectivity}
+        disabled={
+          isComputeButtonDisabled ||
+          !isValid ||
+          !fileConnectivity ||
+          !algorithmFileConnectivity
+        }
         fileConnectivity={fileConnectivity}
+        algorithmFileConnectivity={algorithmFileConnectivity}
         hasPreviousOrder={hasPreviousOrder}
         hasDatatoken={hasDatatoken}
         dtSymbol={ddo.dataTokenInfo.symbol}
