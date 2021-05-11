@@ -143,7 +143,6 @@ export async function getAssetPrices(assets: DDO[]): Promise<PriceList> {
 }
 
 export async function getPrice(asset: DDO): Promise<BestPrice> {
-  console.log('get price', asset)
   const freVariables = {
     datatoken: asset?.dataToken.toLowerCase()
   }
