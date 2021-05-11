@@ -4,6 +4,7 @@ import {
 } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { MetadataCache, Logger } from '@oceanprotocol/lib'
 import queryString from 'query-string'
+import { getPoolAssets } from '../../../utils/subgraph'
 
 export const SortTermOptions = {
   Liquidity: 'liquidity',
@@ -39,6 +40,7 @@ export const FilterByTypeOptions = {
 type FilterByTypeOptions = typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
 
 function addPriceFilterToQuery(sortTerm: string, priceFilter: string): string {
+  console.log('FILTER PRICE ADDED')
   if (priceFilter === FilterByPriceOptions.All) {
     sortTerm = priceFilter
       ? sortTerm === ''
@@ -52,6 +54,7 @@ function addPriceFilterToQuery(sortTerm: string, priceFilter: string): string {
         : `${sortTerm} AND price.type:${priceFilter}`
       : sortTerm
   }
+  console.log('SORT TERM: ', sortTerm)
   return sortTerm
 }
 
@@ -98,7 +101,10 @@ export function getSearchQuery(
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
     : text || ''
   searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
-  searchTerm = addPriceFilterToQuery(searchTerm, priceType)
+  console.log('PRICE TYPE: ', priceType)
+  if (priceType !== undefined) {
+    searchTerm = addPriceFilterToQuery(searchTerm, priceType)
+  }
 
   return {
     page: Number(page) || 1,
@@ -166,8 +172,14 @@ export async function getResults(
     priceType,
     serviceType
   )
-  const queryResult = await metadataCache.queryMetadata(searchQuery)
+  if (searchQuery.query.query_string.query.toString().includes('price.type')) {
+    console.log('PRICE Query')
+    const pools = await getPoolAssets()
+    console.log('POOLS: ', pools)
+  }
 
+  const queryResult = await metadataCache.queryMetadata(searchQuery)
+  console.log('QUERY RESULT: ', queryResult)
   return queryResult
 }
 

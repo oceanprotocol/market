@@ -44,10 +44,19 @@ const previousOrderQuery = gql`
     }
   }
 `
+const poolAssetsQuery = gql`
+  query PoolAssets {
+    pools(orderBy: spotPrice, orderDirection: asc) {
+      spotPrice
+      id
+      datatokenAddress
+    }
+  }
+`
 
 async function fetchData(
   query: DocumentNode,
-  variables: any
+  variables?: any
 ): Promise<ApolloQueryResult<any>> {
   try {
     const client = getApolloClientInstance()
@@ -117,4 +126,12 @@ export async function getAssetPrices(assets: DDO[]): Promise<PriceList> {
     priceList[didDTMap[frePrice.datatoken?.address]] = frePrice.rate
   }
   return priceList
+}
+
+export async function getPoolAssets(): Promise<DDO[]> {
+  const fetchedPoolAssets: any = await fetchData(poolAssetsQuery)
+
+  if (fetchedPoolAssets.data?.pools?.length === 0) return null
+  console.log('POOLS: ', fetchedPoolAssets.data?.pools)
+  return fetchedPoolAssets.data?.pools
 }
