@@ -14,15 +14,14 @@
 }
 
 .connectivitywrapper {
-  display: inline-block;
   font-size: var(--font-size-mini);
-  cursor: help;
 }
 
 .status {
   transform: scale(0.7);
   transform-origin: bottom;
 }
+
 .text {
   margin-left: calc(var(--spacer) / 12);
 }

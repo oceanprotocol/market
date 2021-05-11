@@ -3,7 +3,6 @@ import Button from './Button'
 import styles from './ButtonBuy.module.css'
 import Loader from './Loader'
 import Status from './Status'
-import Tooltip from './Tooltip'
 
 interface ButtonBuyProps {
   action: 'download' | 'compute'
@@ -53,14 +52,10 @@ function getConnectivityHelpText(
 
   return (
     <div className={styles.connectivitywrapper}>
-      <Tooltip
-        content={`${offlineAsset} file endpoint appears to be offline, please come back and try again later`}
-      >
-        <Status className={styles.status} state="error" />
-        <span
-          className={styles.text}
-        >{`${offlineAsset} is offline and unavailable for consume`}</span>
-      </Tooltip>
+      <Status className={styles.status} state="error" />
+      <span
+        className={styles.text}
+      >{`${offlineAsset} is offline, please try again later.`}</span>
     </div>
   )
 }
