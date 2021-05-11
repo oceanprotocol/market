@@ -61,7 +61,7 @@ export default function Consume({
   const [hasDatatoken, setHasDatatoken] = useState(false)
   const [isConsumable, setIsConsumable] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
-  const [isFileConsumable, setIsFileConsumable] = useState(false)
+  const [fileConnectivity, setFileConnectivity] = useState(false)
 
   const { data } = useQuery<OrdersData>(previousOrderQuery, {
     variables: {
@@ -117,7 +117,7 @@ export default function Consume({
         ddo.findServiceByType('access').serviceEndpoint,
         source.token
       )
-      setIsFileConsumable(fileValid)
+      setFileConnectivity(fileValid)
 
       setIsDisabled(
         !fileValid ||
@@ -167,7 +167,7 @@ export default function Consume({
       )
       setHasPreviousOrder(true)
     } else {
-      setIsFileConsumable(false)
+      setFileConnectivity(false)
       setIsDisabled(true)
     }
   }
@@ -182,6 +182,7 @@ export default function Consume({
     <ButtonBuy
       action="download"
       disabled={isDisabled}
+      fileConnectivity={fileConnectivity}
       hasPreviousOrder={hasPreviousOrder}
       hasDatatoken={hasDatatoken}
       dtSymbol={ddo.dataTokenInfo?.symbol}

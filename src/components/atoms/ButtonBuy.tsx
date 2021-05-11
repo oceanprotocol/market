@@ -2,10 +2,13 @@ import React, { FormEvent, ReactElement } from 'react'
 import Button from './Button'
 import styles from './ButtonBuy.module.css'
 import Loader from './Loader'
+import Status from './Status'
+import Tooltip from './Tooltip'
 
 interface ButtonBuyProps {
   action: 'download' | 'compute'
   disabled: boolean
+  fileConnectivity: boolean
   hasPreviousOrder: boolean
   hasDatatoken: boolean
   dtSymbol: string
@@ -21,6 +24,19 @@ interface ButtonBuyProps {
   onClick?: (e: FormEvent<HTMLButtonElement>) => void
   stepText?: string
   type?: 'submit'
+}
+
+function getConnectivityHelpText() {
+  return (
+    <div className={styles.connectivitywrapper}>
+      <Tooltip content="The dataset file endpoint appears to be offline, please come back and try again later">
+        <Status className={styles.status} state="error" />
+        <span className={styles.text}>
+          Dataset is offline and unavailable for consume
+        </span>
+      </Tooltip>
+    </div>
+  )
 }
 
 function getConsumeHelpText(
@@ -73,6 +89,7 @@ function getComputeAssetHelpText(
 export default function ButtonBuy({
   action,
   disabled,
+  fileConnectivity,
   hasPreviousOrder,
   hasDatatoken,
   dtSymbol,
@@ -113,7 +130,9 @@ export default function ButtonBuy({
             {buttonText}
           </Button>
           <div className={styles.help}>
-            {action === 'download'
+            {!fileConnectivity
+              ? getConnectivityHelpText()
+              : action === 'download'
               ? getConsumeHelpText(
                   dtBalance,
                   dtSymbol,
