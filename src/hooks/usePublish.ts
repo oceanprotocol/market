@@ -82,36 +82,7 @@ function usePublish(): UsePublish {
         }
         case 'compute': {
           if (!timeout) timeout = 3600
-          const cluster = ocean.compute.createClusterAttributes(
-            'Kubernetes',
-            'http://10.0.0.17/xxx'
-          )
-          const servers = [
-            ocean.compute.createServerAttributes(
-              '1',
-              'xlsize',
-              '50',
-              '16',
-              '0',
-              '128gb',
-              '160gb',
-              timeout
-            )
-          ]
-          const containers = [
-            ocean.compute.createContainerAttributes(
-              'tensorflow/tensorflow',
-              'latest',
-              'sha256:cb57ecfa6ebbefd8ffc7f75c0f00e57a7fa739578a429b6f72a0df19315deadc'
-            )
-          ]
-          const provider = ocean.compute.createProviderAttributes(
-            'Azure',
-            'Compute service with 16gb ram for each node.',
-            cluster,
-            containers,
-            servers
-          )
+          const provider = {}
           const origComputePrivacy: ServiceComputePrivacy = {
             allowRawAlgorithm: false,
             allowNetworkAccess: false,

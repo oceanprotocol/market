@@ -5,10 +5,6 @@
   list-style-position: inside;
 }
 
-.item span {
-  color: var(--brand-grey-dark);
-}
-
 .ulItem {
   list-style-type: square;
 }
