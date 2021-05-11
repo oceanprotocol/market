@@ -44,20 +44,19 @@ function getConnectivityHelpText(
   } else if (action === 'compute') {
     if (fileConnectivity === undefined)
       return <Loader message="Checking dataset connectivity" />
+    if (!dtSymbolSelectedComputeAsset && fileConnectivity) return
     if (dtSymbolSelectedComputeAsset && algorithmFileConnectivity === undefined)
       return <Loader message="Checking selected algorithm connectivity" />
     offlineAsset = `${
-      !fileConnectivity && !algorithmFileConnectivity
+      !fileConnectivity && algorithmFileConnectivity === false
         ? 'Dataset and Algorithm'
-        : !algorithmFileConnectivity
-        ? `Algorithm`
-        : `Dataset`
+        : !fileConnectivity
+        ? `Dataset`
+        : `Algorithm`
     }`
   }
 
-  return action === 'compute' && !dtSymbolSelectedComputeAsset ? (
-    <></>
-  ) : (
+  return (
     <div className={styles.connectivitywrapper}>
       <Tooltip
         content={`${offlineAsset} file endpoint appears to be offline, please come back and try again later`}
