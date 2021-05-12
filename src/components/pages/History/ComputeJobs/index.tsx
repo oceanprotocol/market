@@ -16,7 +16,6 @@ import Details from './Details'
 import styles from './index.module.css'
 import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
 import Button from '../../../atoms/Button'
-import { ReactComponent as Refresh } from '../../../../images/refresh.svg'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -243,12 +242,12 @@ export default function ComputeJobs(): ReactElement {
     <div className={styles.computeTableContainer}>
       {!isLoading && jobs.length > 0 && (
         <Button
-          className={styles.refresh}
-          style="text"
+          style="primary"
+          size="small"
           title="Refetch compute jobs"
           onClick={() => getJobs()}
         >
-          <Refresh />
+          Refetch
         </Button>
       )}
       <Table

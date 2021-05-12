@@ -7,11 +7,5 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-end;
-}
-
-.refresh svg {
-  fill: var(--brand-pink);
-  width: var(--font-size-mini);
-  height: var(--font-size-mini);
+  align-items: center;
 }
