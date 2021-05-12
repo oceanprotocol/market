@@ -48,14 +48,16 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   const [showPricing, setShowPricing] = useState(false)
   const [showEdit, setShowEdit] = useState<boolean>()
   const [showEditCompute, setShowEditCompute] = useState<boolean>()
-  const { ddo, price, metadata } = useAsset()
-
-  const isOwner = accountId === owner
+  const [isOwner, setIsOwner] = useState(false)
+  const { ddo, price, metadata, type } = useAsset()
 
   useEffect(() => {
-    if (!price) return
+    if (!accountId || !owner) return
+
+    const isOwner = accountId.toLowerCase() === owner.toLowerCase()
+    setIsOwner(isOwner)
     setShowPricing(isOwner && price.type === '')
-  }, [isOwner, price])
+  }, [accountId, price, owner])
 
   function handleEditButton() {
     // move user's focus to top of screen
@@ -101,7 +103,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
                   <Button style="text" size="small" onClick={handleEditButton}>
                     Edit Metadata
                   </Button>
-                  {ddo.findServiceByType('compute') && (
+                  {ddo.findServiceByType('compute') && type === 'dataset' && (
                     <>
                       <span className={styles.separator}>|</span>
                       <Button

@@ -21,6 +21,7 @@ import UserLiquidity from '../../../atoms/UserLiquidity'
 import InputElement from '../../../atoms/Input/InputElement'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
+import Decimal from 'decimal.js'
 
 const contentQuery = graphql`
   query PoolRemoveQuery {
@@ -155,14 +156,6 @@ export default function Remove({
     totalPoolTokens
   ])
 
-  async function calculateAmountOfOceansRemoved(amountPoolShares: string) {
-    const oceanAmount = await ocean.pool.getOceanRemovedforPoolShares(
-      poolAddress,
-      amountPoolShares
-    )
-    setAmountOcean(oceanAmount)
-  }
-
   useEffect(() => {
     const minOceanAmount =
       (Number(amountOcean) * (100 - Number(slippage))) / 100
@@ -177,19 +170,24 @@ export default function Remove({
     setAmountPercent(e.target.value)
     if (!poolTokens) return
 
-    const amountPoolShares = (Number(e.target.value) / 100) * Number(poolTokens)
+    const amountPoolShares = new Decimal(e.target.value)
+      .dividedBy(100)
+      .mul(new Decimal(poolTokens))
+      .toPrecision(18) // in some cases the returned value contain more than 18 digits which break conversion to wei
+
     setAmountPoolShares(`${amountPoolShares}`)
-    calculateAmountOfOceansRemoved(`${amountPoolShares}`)
   }
 
   function handleMaxButton(e: ChangeEvent<HTMLInputElement>) {
     e.preventDefault()
     setAmountPercent(amountMaxPercent)
 
-    const amountPoolShares =
-      (Number(amountMaxPercent) / 100) * Number(poolTokens)
+    const amountPoolShares = new Decimal(amountMaxPercent)
+      .dividedBy(100)
+      .mul(new Decimal(poolTokens))
+      .toPrecision(18)
+
     setAmountPoolShares(`${amountPoolShares}`)
-    calculateAmountOfOceansRemoved(`${amountPoolShares}`)
   }
 
   function handleAdvancedButton(e: FormEvent<HTMLButtonElement>) {
