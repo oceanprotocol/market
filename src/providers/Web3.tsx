@@ -235,7 +235,10 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   // Logout helper
   // -----------------------------------
   async function logout() {
-    web3Modal?.clearCachedProvider()
+    if (web3 && web3.currentProvider && (web3.currentProvider as any).close) {
+      await (web3.currentProvider as any).close()
+    }
+    web3Modal.clearCachedProvider()
   }
 
   // -----------------------------------

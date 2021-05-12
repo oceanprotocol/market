@@ -95,8 +95,8 @@ export default function Details(): ReactElement {
             <Button
               style="text"
               size="small"
-              onClick={() => {
-                logout()
+              onClick={async () => {
+                await web3Modal?.clearCachedProvider()
                 connect()
               }}
             >
