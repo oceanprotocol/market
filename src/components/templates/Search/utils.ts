@@ -5,6 +5,8 @@ import {
 import { MetadataCache, Logger } from '@oceanprotocol/lib'
 import queryString from 'query-string'
 import { getPoolAssets } from '../../../utils/subgraph'
+import { retrieveDDO } from '../../../utils/aquarius'
+import axios from 'axios'
 
 export const SortTermOptions = {
   Liquidity: 'liquidity',
@@ -160,6 +162,8 @@ export async function getResults(
     serviceType
   } = params
   const metadataCache = new MetadataCache(metadataCacheUri, Logger)
+  const source = axios.CancelToken.source()
+
   const searchQuery = getSearchQuery(
     text,
     owner,
@@ -172,10 +176,10 @@ export async function getResults(
     priceType,
     serviceType
   )
+  console.log('SEARCH QUERy: ', searchQuery)
   if (searchQuery.query.query_string.query.toString().includes('price.type')) {
-    console.log('PRICE Query')
-    const pools = await getPoolAssets()
-    console.log('POOLS: ', pools)
+    const poolDDOs = await getPoolAssets(metadataCacheUri, source.token)
+    console.log('DDO LIST: ', poolDDOs)
   }
 
   const queryResult = await metadataCache.queryMetadata(searchQuery)

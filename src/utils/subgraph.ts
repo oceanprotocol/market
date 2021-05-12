@@ -2,6 +2,9 @@ import { gql, DocumentNode, ApolloQueryResult } from '@apollo/client'
 import { DDO } from '@oceanprotocol/lib'
 import { getApolloClientInstance } from '../providers/ApolloClientProvider'
 import BigNumber from 'bignumber.js'
+import web3 from 'web3'
+import { CancelToken } from 'axios'
+import { retrieveDDO } from './aquarius'
 
 export interface PriceList {
   [key: string]: string
@@ -46,7 +49,7 @@ const previousOrderQuery = gql`
 `
 const poolAssetsQuery = gql`
   query PoolAssets {
-    pools(orderBy: spotPrice, orderDirection: asc) {
+    pools {
       spotPrice
       id
       datatokenAddress
@@ -128,10 +131,23 @@ export async function getAssetPrices(assets: DDO[]): Promise<PriceList> {
   return priceList
 }
 
-export async function getPoolAssets(): Promise<DDO[]> {
+export async function getPoolAssets(
+  metadataCacheUri: string,
+  sourceToken: CancelToken
+): Promise<DDO[]> {
   const fetchedPoolAssets: any = await fetchData(poolAssetsQuery)
-
-  if (fetchedPoolAssets.data?.pools?.length === 0) return null
-  console.log('POOLS: ', fetchedPoolAssets.data?.pools)
-  return fetchedPoolAssets.data?.pools
+  const ddoList: DDO[] = []
+  if (!fetchedPoolAssets.data.pools) return null
+  for (let i = 0; i < fetchedPoolAssets.data.pools.length; i++) {
+    if (fetchedPoolAssets.data.pools[i].datatokenAddress !== '') {
+      const did = web3.utils
+        .toChecksumAddress(fetchedPoolAssets.data.pools[i].datatokenAddress)
+        .replace('0x', 'did:op:')
+      const ddo = await retrieveDDO(did, metadataCacheUri, sourceToken)
+      if (ddo !== undefined) {
+        ddoList.push(ddo)
+      }
+    }
+  }
+  return ddoList
 }
