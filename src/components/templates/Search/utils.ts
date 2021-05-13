@@ -97,18 +97,18 @@ export function getSearchQuery(
     ? // eslint-disable-next-line no-useless-escape
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
     : text || ''
-  searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
-  searchTerm = addPriceFilterToQuery(searchTerm, priceType)
 
   // HACK: resolves the case sensitivity related to dataTokenInfo.symbol
-  searchTerm = searchTerm.toUpperCase()
+  searchTerm = '*' + searchTerm.toUpperCase() + '*'
+  searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
+  searchTerm = addPriceFilterToQuery(searchTerm, priceType)
 
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
     query: {
       query_string: {
-        query: `*${searchTerm}* -isInPurgatory:true`,
+        query: `${searchTerm} -isInPurgatory:true`,
         fields: [
           'dataTokenInfo.name',
           'dataTokenInfo.symbol',
