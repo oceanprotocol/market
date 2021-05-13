@@ -7,6 +7,11 @@ export interface PriceList {
   [key: string]: string
 }
 
+export interface AssetListPrices {
+  datatokenAddress: string
+  price: BestPrice
+}
+
 const FreQuery = gql`
   query AssetsFrePrice($datatoken_in: [String!]) {
     fixedRateExchanges(orderBy: id, where: { datatoken_in: $datatoken_in }) {
@@ -36,6 +41,8 @@ const PoolQuery = gql`
       spotPrice
       consumePrice
       datatokenAddress
+      datatokenReserve
+      oceanReserve
     }
   }
 `
@@ -113,6 +120,50 @@ export async function getPreviousOrders(
   }
 }
 
+function transformPriceToBestPrice(frePrice: any, poolPrice: any) {
+  if (poolPrice?.length > 0) {
+    const price: BestPrice = {
+      type: 'pool',
+      address: poolPrice[0]?.id,
+      value:
+        poolPrice[0]?.consumePrice === '-1'
+          ? poolPrice[0]?.spotPrice
+          : poolPrice[0]?.consumePrice,
+      ocean: poolPrice[0]?.oceanReserve,
+      datatoken: poolPrice[0]?.datatokenReserve,
+      pools: [poolPrice[0]?.id],
+      isConsumable: poolPrice[0]?.consumePrice === '-1' ? 'false' : 'true'
+    }
+    return price
+  } else if (frePrice?.length > 0) {
+    // TODO Hacky hack, temporary™: set isConsumable to true for fre assets.
+    // isConsumable: 'true'
+    const price: BestPrice = {
+      type: 'exchange',
+      value: frePrice[0]?.rate,
+      address: frePrice[0]?.id,
+      exchange_id: frePrice[0]?.id,
+      ocean: 0,
+      datatoken: 0,
+      pools: [],
+      isConsumable: 'true'
+    }
+    return price
+  } else {
+    const price: BestPrice = {
+      type: '',
+      value: 0,
+      address: '',
+      exchange_id: '',
+      ocean: 0,
+      datatoken: 0,
+      pools: [],
+      isConsumable: 'false'
+    }
+    return price
+  }
+}
+
 export async function getAssetPrices(assets: DDO[]): Promise<PriceList> {
   const priceList: PriceList = {}
   const didDTMap: any = {}
@@ -156,48 +207,53 @@ export async function getPrice(asset: DDO): Promise<BestPrice> {
     poolVariables
   )
   const frePriceResponse: any = await fetchData(AssetFreQuery, freVariables)
-  if (poolPriceResponse.data?.pools.length > 0) {
-    const price: BestPrice = {
-      type: 'pool',
-      address: poolPriceResponse.data?.pools[0]?.id,
-      value:
-        poolPriceResponse.data?.pools[0]?.consumePrice === '-1'
-          ? poolPriceResponse.data?.pools[0]?.spotPrice
-          : poolPriceResponse.data?.pools[0]?.consumePrice,
-      ocean: poolPriceResponse.data?.pools[0]?.oceanReserve,
-      datatoken: poolPriceResponse.data?.pools[0]?.datatokenReserve,
-      pools: [poolPriceResponse.data?.pools[0]?.id],
-      isConsumable:
-        poolPriceResponse.data?.pools[0]?.consumePrice === '-1'
-          ? 'false'
-          : 'true'
-    }
-    return price
-  } else if (frePriceResponse.data?.fixedRateExchanges.length > 0) {
-    // TODO Hacky hack, temporary™: set isConsumable to true for fre assets.
-    // isConsumable: 'true'
-    const price: BestPrice = {
-      type: 'exchange',
-      value: frePriceResponse.data?.fixedRateExchanges[0]?.rate,
-      address: frePriceResponse.data?.fixedRateExchanges[0]?.id,
-      exchange_id: frePriceResponse.data?.fixedRateExchanges[0]?.id,
-      ocean: 0,
-      datatoken: 0,
-      pools: [],
-      isConsumable: 'true'
-    }
-    return price
-  } else {
-    const price: BestPrice = {
-      type: '',
-      value: 0,
-      address: '',
-      exchange_id: '',
-      ocean: 0,
-      datatoken: 0,
-      pools: [],
-      isConsumable: 'false'
-    }
-    return price
+
+  const bestPrice: BestPrice = transformPriceToBestPrice(
+    frePriceResponse.data.fixedRateExchanges,
+    poolPriceResponse.data.pools
+  )
+
+  return bestPrice
+}
+
+export async function getAssetsPrices(
+  assets: DDO[]
+): Promise<AssetListPrices[]> {
+  const pricesList: AssetListPrices[] = []
+  const didDTMap: any = {}
+  const dataTokenList: string[] = []
+
+  for (const ddo of assets) {
+    didDTMap[ddo?.dataToken.toLowerCase()] = ddo.id
+    dataTokenList.push(ddo?.dataToken.toLowerCase())
   }
+  const freVariables = {
+    datatoken_in: dataTokenList
+  }
+  const poolVariables = {
+    datatokenAddress_in: dataTokenList
+  }
+
+  const poolPriceResponse: any = await fetchData(PoolQuery, poolVariables)
+  const frePriceResponse: any = await fetchData(FreQuery, freVariables)
+
+  for (const dataToken of dataTokenList) {
+    const poolPrice: any[] = []
+    const frePrice: any[] = []
+    const pool = poolPriceResponse.data?.pools.find(
+      (pool: any) => pool.datatokenAddress === dataToken
+    )
+    pool && poolPrice.push(pool)
+    const fre = frePriceResponse.data?.fixedRateExchanges.find(
+      (fre: any) => fre.datatoken.address === dataToken
+    )
+    fre && frePrice.push(fre)
+    const bestPrice = transformPriceToBestPrice(frePrice, poolPrice)
+    pricesList.push({
+      datatokenAddress: dataToken,
+      price: bestPrice
+    })
+  }
+
+  return pricesList
 }

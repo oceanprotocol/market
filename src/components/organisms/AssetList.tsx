@@ -1,9 +1,10 @@
 import AssetTeaser from '../molecules/AssetTeaser'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Pagination from '../molecules/Pagination'
 import styles from './AssetList.module.css'
 import { DDO } from '@oceanprotocol/lib'
 import classNames from 'classnames/bind'
+import { getAssetsPrices, AssetListPrices } from '../../utils/subgraph'
 
 const cx = classNames.bind(styles)
 
@@ -24,6 +25,15 @@ const AssetList: React.FC<AssetListProps> = ({
   onPageChange,
   className
 }) => {
+  const [assetPrices, setAssetPrices] = useState<AssetListPrices[]>()
+
+  useEffect(() => {
+    if (!assets || assets.length === 0) return
+    getAssetsPrices(assets).then((prices) => {
+      setAssetPrices(prices)
+    })
+  }, [assets])
+
   // // This changes the page field inside the query
   function handlePageChange(selected: number) {
     onPageChange(selected + 1)
@@ -37,8 +47,19 @@ const AssetList: React.FC<AssetListProps> = ({
   return (
     <>
       <div className={styleClasses}>
-        {assets.length > 0 ? (
-          assets.map((ddo) => <AssetTeaser ddo={ddo} key={ddo.id} />)
+        {assets.length > 0 && assetPrices?.length > 0 ? (
+          assets.map((ddo) => (
+            <AssetTeaser
+              ddo={ddo}
+              price={
+                assetPrices.find(
+                  (assetPrice: AssetListPrices) =>
+                    assetPrice.datatokenAddress === ddo.dataToken.toLowerCase()
+                )?.price
+              }
+              key={ddo.id}
+            />
+          ))
         ) : (
           <div className={styles.empty}>No results found.</div>
         )}
