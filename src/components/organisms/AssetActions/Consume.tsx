@@ -167,7 +167,11 @@ export default function Consume({
         </div>
         <div className={styles.pricewrapper}>
           <Price price={price} conversion />
-          {!isInPurgatory && <PurchaseButton />}
+          {parseInt(file?.contentLength) === 0 ? (
+            <p>This asset is currently unavailable for purchase.</p>
+          ) : (
+            !isInPurgatory && <PurchaseButton />
+          )}
         </div>
       </div>
       <footer className={styles.feedback}>
