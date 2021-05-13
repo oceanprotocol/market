@@ -81,6 +81,8 @@ export default function Remove({
   const [minOceanAmount, setMinOceanAmount] = useState<string>('0')
   const [minDatatokenAmount, setMinDatatokenAmount] = useState<string>('0')
 
+  Decimal.set({ toExpNeg: -18, precision: 16, rounding: 1 })
+
   async function handleRemoveLiquidity() {
     setIsLoading(true)
     try {
@@ -170,12 +172,12 @@ export default function Remove({
     setAmountPercent(e.target.value)
     if (!poolTokens) return
 
-    Decimal.set({ toExpPos: 2 })
-
     const amountPoolShares = new Decimal(e.target.value)
       .dividedBy(100)
       .mul(new Decimal(poolTokens))
       .toString()
+
+    console.log('shares slider', Decimal.precision, amountPoolShares)
 
     setAmountPoolShares(`${amountPoolShares}`)
   }
@@ -183,8 +185,6 @@ export default function Remove({
   function handleMaxButton(e: ChangeEvent<HTMLInputElement>) {
     e.preventDefault()
     setAmountPercent(amountMaxPercent)
-
-    Decimal.set({ toExpPos: 2 })
 
     const amountPoolShares = new Decimal(amountMaxPercent)
       .dividedBy(100)
