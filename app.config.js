@@ -43,5 +43,6 @@ module.exports = {
   // Used to show or hide the fixed and dynamic price options
   // tab to publishers during the price creation.
   allowFixedPricing: process.env.GATSBY_ALLOW_FIXED_PRICING || 'true',
-  allowDynamicPricing: process.env.GATSBY_ALLOW_DYNAMIC_PRICING || 'true'
+  allowDynamicPricing: process.env.GATSBY_ALLOW_DYNAMIC_PRICING || 'true',
+  rbacUrl: process.env.RBAC_URL
 }
