@@ -55,7 +55,9 @@ const AssetList: React.FC<AssetListProps> = ({
     [className]: className
   })
 
-  return assetPrices && assets && !isLoading ? (
+  return assetPrices &&
+    assets &&
+    (isLoading === undefined || isLoading === false) ? (
     <>
       <div className={styleClasses}>
         {assets.length > 0 ? (
