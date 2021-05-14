@@ -97,19 +97,13 @@ export default function SearchPage({
         </div>
       </div>
       <div className={styles.results}>
-        {loading ? (
-          <Loader />
-        ) : queryResult ? (
-          <AssetList
-            assets={queryResult.results}
-            showPagination
-            page={queryResult.page}
-            totalPages={queryResult.totalPages}
-            onPageChange={setPage}
-          />
-        ) : (
-          ''
-        )}
+        <AssetList
+          assets={queryResult?.results}
+          showPagination
+          page={queryResult?.page}
+          totalPages={queryResult?.totalPages}
+          onPageChange={setPage}
+        />
       </div>
     </>
   )

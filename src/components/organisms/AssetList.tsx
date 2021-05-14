@@ -5,14 +5,24 @@ import styles from './AssetList.module.css'
 import { DDO } from '@oceanprotocol/lib'
 import classNames from 'classnames/bind'
 import { getAssetsPrices, AssetListPrices } from '../../utils/subgraph'
+import Loader from '../atoms/Loader'
 
 const cx = classNames.bind(styles)
+
+function LoaderArea() {
+  return (
+    <div className={styles.loaderWrap}>
+      <Loader />
+    </div>
+  )
+}
 
 declare type AssetListProps = {
   assets: DDO[]
   showPagination: boolean
   page?: number
   totalPages?: number
+  isLoading?: boolean
   onPageChange?: React.Dispatch<React.SetStateAction<number>>
   className?: string
 }
@@ -22,6 +32,7 @@ const AssetList: React.FC<AssetListProps> = ({
   showPagination,
   page,
   totalPages,
+  isLoading,
   onPageChange,
   className
 }) => {
@@ -44,10 +55,10 @@ const AssetList: React.FC<AssetListProps> = ({
     [className]: className
   })
 
-  return (
+  return assetPrices?.length > 0 && assets && !isLoading ? (
     <>
       <div className={styleClasses}>
-        {assets.length > 0 && assetPrices?.length > 0 ? (
+        {assets.length > 0 ? (
           assets.map((ddo) => (
             <AssetTeaser
               ddo={ddo}
@@ -73,6 +84,8 @@ const AssetList: React.FC<AssetListProps> = ({
         />
       )}
     </>
+  ) : (
+    <LoaderArea />
   )
 }
 
