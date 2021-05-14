@@ -1,6 +1,15 @@
 import { gql, DocumentNode, ApolloQueryResult } from '@apollo/client'
 import { DDO, BestPrice } from '@oceanprotocol/lib'
 import { getApolloClientInstance } from '../providers/ApolloClientProvider'
+import {
+  AssetsPoolPrice,
+  AssetsPoolPrice_pools as AssetsPoolPricePools
+} from '../@types/apollo/AssetsPoolPrice'
+import {
+  AssetsFrePrice,
+  AssetsFrePrice_fixedRateExchanges as AssetsFrePriceFixedRateExchanges
+} from '../@types/apollo/AssetsFrePrice'
+import { AssetPreviousOrder } from '../@types/apollo/AssetPreviousOrder'
 import BigNumber from 'bignumber.js'
 
 export interface PriceList {
@@ -100,7 +109,7 @@ export async function getPreviousOrders(
     id: id,
     account: account
   }
-  const fetchedPreviousOrders: any = await fetchData(
+  const fetchedPreviousOrders: ApolloQueryResult<AssetPreviousOrder> = await fetchData(
     PreviousOrderQuery,
     variables
   )
@@ -120,7 +129,10 @@ export async function getPreviousOrders(
   }
 }
 
-function transformPriceToBestPrice(frePrice: any, poolPrice: any) {
+function transformPriceToBestPrice(
+  frePrice: AssetsFrePriceFixedRateExchanges[],
+  poolPrice: AssetsPoolPricePools[]
+) {
   if (poolPrice?.length > 0) {
     const price: BestPrice = {
       type: 'pool',
@@ -166,7 +178,7 @@ function transformPriceToBestPrice(frePrice: any, poolPrice: any) {
 
 export async function getAssetPrices(assets: DDO[]): Promise<PriceList> {
   const priceList: PriceList = {}
-  const didDTMap: any = {}
+  const didDTMap: { [name: string]: string } = {}
   const dataTokenList: string[] = []
 
   for (const ddo of assets) {
@@ -179,14 +191,20 @@ export async function getAssetPrices(assets: DDO[]): Promise<PriceList> {
   const poolVariables = {
     datatokenAddress_in: dataTokenList
   }
-  const poolPriceResponse: any = await fetchData(PoolQuery, poolVariables)
+  const poolPriceResponse: ApolloQueryResult<AssetsPoolPrice> = await fetchData(
+    PoolQuery,
+    poolVariables
+  )
   for (const poolPrice of poolPriceResponse.data?.pools) {
     priceList[didDTMap[poolPrice.datatokenAddress]] =
       poolPrice.consumePrice === '-1'
         ? poolPrice.spotPrice
         : poolPrice.consumePrice
   }
-  const frePriceResponse: any = await fetchData(FreQuery, freVariables)
+  const frePriceResponse: ApolloQueryResult<AssetsFrePrice> = await fetchData(
+    FreQuery,
+    freVariables
+  )
   for (const frePrice of frePriceResponse.data?.fixedRateExchanges) {
     priceList[didDTMap[frePrice.datatoken?.address]] = frePrice.rate
   }
@@ -202,11 +220,14 @@ export async function getPrice(asset: DDO): Promise<BestPrice> {
     datatokenAddress: asset?.dataToken.toLowerCase()
   }
 
-  const poolPriceResponse: any = await fetchData(
+  const poolPriceResponse: ApolloQueryResult<AssetsPoolPrice> = await fetchData(
     AssetPoolPriceQuerry,
     poolVariables
   )
-  const frePriceResponse: any = await fetchData(AssetFreQuery, freVariables)
+  const frePriceResponse: ApolloQueryResult<AssetsFrePrice> = await fetchData(
+    AssetFreQuery,
+    freVariables
+  )
 
   const bestPrice: BestPrice = transformPriceToBestPrice(
     frePriceResponse.data.fixedRateExchanges,
@@ -220,7 +241,7 @@ export async function getAssetsPrices(
   assets: DDO[]
 ): Promise<AssetListPrices[]> {
   const pricesList: AssetListPrices[] = []
-  const didDTMap: any = {}
+  const didDTMap: { [name: string]: string } = {}
   const dataTokenList: string[] = []
 
   for (const ddo of assets) {
@@ -234,12 +255,18 @@ export async function getAssetsPrices(
     datatokenAddress_in: dataTokenList
   }
 
-  const poolPriceResponse: any = await fetchData(PoolQuery, poolVariables)
-  const frePriceResponse: any = await fetchData(FreQuery, freVariables)
+  const poolPriceResponse: ApolloQueryResult<AssetsPoolPrice> = await fetchData(
+    PoolQuery,
+    poolVariables
+  )
+  const frePriceResponse: ApolloQueryResult<AssetsFrePrice> = await fetchData(
+    FreQuery,
+    freVariables
+  )
 
   for (const dataToken of dataTokenList) {
-    const poolPrice: any[] = []
-    const frePrice: any[] = []
+    const poolPrice: AssetsPoolPricePools[] = []
+    const frePrice: AssetsFrePriceFixedRateExchanges[] = []
     const pool = poolPriceResponse.data?.pools.find(
       (pool: any) => pool.datatokenAddress === dataToken
     )
