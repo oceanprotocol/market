@@ -80,18 +80,12 @@ export default function SearchPage({
           <SearchBar initialValue={(text || owner) as string} />
         )}
         <div className={styles.row}>
-          <PriceFilter
-            priceType={price}
-            serviceType={service}
-            setPriceType={setPriceType}
-            setServiceType={setServiceType}
-          />
+          <PriceFilter serviceType={service} setServiceType={setServiceType} />
           <Sort
             sortType={sortType}
             sortDirection={sortDirection}
             setSortType={setSortType}
             setSortDirection={setSortDirection}
-            setPriceType={setPriceType}
             setServiceType={setServiceType}
           />
         </div>

@@ -7,8 +7,6 @@ import queryString from 'query-string'
 import axios from 'axios'
 
 export const SortTermOptions = {
-  Liquidity: 'liquidity',
-  Price: 'price',
   Created: 'created'
 } as const
 type SortTermOptions = typeof SortTermOptions[keyof typeof SortTermOptions]

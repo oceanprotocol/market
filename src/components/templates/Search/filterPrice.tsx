@@ -2,11 +2,7 @@ import React, { ReactElement, useState } from 'react'
 import { useNavigate } from '@reach/router'
 import styles from './filterPrice.module.css'
 import classNames from 'classnames/bind'
-import {
-  addExistingParamsToUrl,
-  FilterByPriceOptions,
-  FilterByTypeOptions
-} from './utils'
+import { addExistingParamsToUrl, FilterByTypeOptions } from './utils'
 import Button from '../../atoms/Button'
 
 const cx = classNames.bind(styles)
