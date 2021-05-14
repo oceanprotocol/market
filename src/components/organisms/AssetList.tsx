@@ -36,12 +36,15 @@ const AssetList: React.FC<AssetListProps> = ({
   onPageChange,
   className
 }) => {
-  const [assetPrices, setAssetPrices] = useState<AssetListPrices[]>()
+  const [assetsWithPrices, setAssetWithPrices] = useState<AssetListPrices[]>()
+  const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
     if (!assets) return
-    getAssetsPrices(assets).then((prices) => {
-      setAssetPrices(prices)
+    isLoading && setLoading(true)
+    getAssetsPrices(assets).then((asset) => {
+      setAssetWithPrices(asset)
+      setLoading(false)
     })
   }, [assets])
 
@@ -55,22 +58,17 @@ const AssetList: React.FC<AssetListProps> = ({
     [className]: className
   })
 
-  return assetPrices &&
-    assets &&
+  return assetsWithPrices &&
+    !loading &&
     (isLoading === undefined || isLoading === false) ? (
     <>
       <div className={styleClasses}>
-        {assets.length > 0 ? (
-          assets.map((ddo) => (
+        {assetsWithPrices.length > 0 ? (
+          assetsWithPrices.map((assetWithPrice) => (
             <AssetTeaser
-              ddo={ddo}
-              price={
-                assetPrices.find(
-                  (assetPrice: AssetListPrices) =>
-                    assetPrice.datatokenAddress === ddo.dataToken.toLowerCase()
-                )?.price
-              }
-              key={ddo.id}
+              ddo={assetWithPrice.ddo}
+              price={assetWithPrice.price}
+              key={assetWithPrice.ddo.id}
             />
           ))
         ) : (
