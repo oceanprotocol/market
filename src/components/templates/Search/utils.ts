@@ -4,6 +4,7 @@ import {
 } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { MetadataCache, Logger } from '@oceanprotocol/lib'
 import queryString from 'query-string'
+import axios from 'axios'
 
 export const SortTermOptions = {
   Liquidity: 'liquidity',
@@ -25,35 +26,11 @@ export const SortValueOptions = {
 } as const
 type SortValueOptions = typeof SortValueOptions[keyof typeof SortValueOptions]
 
-export const FilterByPriceOptions = {
-  Fixed: 'exchange',
-  Dynamic: 'pool',
-  All: 'all'
-} as const
-type FilterByPriceOptions = typeof FilterByPriceOptions[keyof typeof FilterByPriceOptions]
-
 export const FilterByTypeOptions = {
   Data: 'dataset',
   Algorithm: 'algorithm'
 } as const
 type FilterByTypeOptions = typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
-
-function addPriceFilterToQuery(sortTerm: string, priceFilter: string): string {
-  if (priceFilter === FilterByPriceOptions.All) {
-    sortTerm = priceFilter
-      ? sortTerm === ''
-        ? `(price.type:${FilterByPriceOptions.Fixed} OR price.type:${FilterByPriceOptions.Dynamic})`
-        : `${sortTerm} AND (price.type:${FilterByPriceOptions.Dynamic} OR price.type:${FilterByPriceOptions.Fixed})`
-      : sortTerm
-  } else {
-    sortTerm = priceFilter
-      ? sortTerm === ''
-        ? `price.type:${priceFilter}`
-        : `${sortTerm} AND price.type:${priceFilter}`
-      : sortTerm
-  }
-  return sortTerm
-}
 
 function addTypeFilterToQuery(sortTerm: string, typeFilter: string): string {
   sortTerm = typeFilter
@@ -65,12 +42,7 @@ function addTypeFilterToQuery(sortTerm: string, typeFilter: string): string {
 }
 
 function getSortType(sortParam: string): string {
-  const sortTerm =
-    sortParam === SortTermOptions.Liquidity
-      ? SortElasticTerm.Liquidity
-      : sortParam === SortTermOptions.Price
-      ? SortElasticTerm.Price
-      : SortTermOptions.Created
+  const sortTerm = SortTermOptions.Created
   return sortTerm
 }
 
@@ -98,7 +70,6 @@ export function getSearchQuery(
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
     : text || ''
   searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
-  searchTerm = addPriceFilterToQuery(searchTerm, priceType)
 
   return {
     page: Number(page) || 1,
@@ -154,6 +125,8 @@ export async function getResults(
     serviceType
   } = params
   const metadataCache = new MetadataCache(metadataCacheUri, Logger)
+  const source = axios.CancelToken.source()
+
   const searchQuery = getSearchQuery(
     text,
     owner,
@@ -166,8 +139,8 @@ export async function getResults(
     priceType,
     serviceType
   )
-  const queryResult = await metadataCache.queryMetadata(searchQuery)
 
+  const queryResult = await metadataCache.queryMetadata(searchQuery)
   return queryResult
 }
 
