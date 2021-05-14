@@ -188,7 +188,7 @@ export default function Remove({
       .mul(new Decimal(poolTokens))
       .toString()
 
-    setAmountPoolShares(`${amountPoolShares}`)
+    setAmountPoolShares(`${amountPoolShares.slice(0, 18)}`)
   }
 
   function handleAdvancedButton(e: FormEvent<HTMLButtonElement>) {
