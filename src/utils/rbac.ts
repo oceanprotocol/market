@@ -1,6 +1,6 @@
 import fetch from 'cross-fetch'
 
-export async function rebacRequest(
+export async function rbacRequest(
   component: string,
   eventType: string,
   token: string
