@@ -163,8 +163,8 @@ export default function Remove({
       (Number(amountOcean) * (100 - Number(slippage))) / 100
     const minDatatokenAmount =
       (Number(amountDatatoken) * (100 - Number(slippage))) / 100
-    setMinOceanAmount(`${minOceanAmount}`)
-    setMinDatatokenAmount(`${minDatatokenAmount}`)
+    setMinOceanAmount(minOceanAmount.toString().slice(0, 18))
+    setMinDatatokenAmount(minDatatokenAmount.toString().slice(0, 18))
   }, [slippage, amountOcean, amountDatatoken, isAdvanced])
 
   // Set amountPoolShares based on set slider value
@@ -176,6 +176,7 @@ export default function Remove({
       .dividedBy(100)
       .mul(new Decimal(poolTokens))
       .toString()
+
     setAmountPoolShares(`${amountPoolShares.slice(0, 18)}`)
   }
 
