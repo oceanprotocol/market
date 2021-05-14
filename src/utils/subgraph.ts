@@ -47,7 +47,7 @@ const previousOrderQuery = gql`
 
 async function fetchData(
   query: DocumentNode,
-  variables?: any
+  variables: any
 ): Promise<ApolloQueryResult<any>> {
   try {
     const client = getApolloClientInstance()
