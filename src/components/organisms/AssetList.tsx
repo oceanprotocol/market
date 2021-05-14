@@ -39,7 +39,7 @@ const AssetList: React.FC<AssetListProps> = ({
   const [assetPrices, setAssetPrices] = useState<AssetListPrices[]>()
 
   useEffect(() => {
-    if (!assets || assets.length === 0) return
+    if (!assets) return
     getAssetsPrices(assets).then((prices) => {
       setAssetPrices(prices)
     })
@@ -55,7 +55,7 @@ const AssetList: React.FC<AssetListProps> = ({
     [className]: className
   })
 
-  return assetPrices?.length > 0 && assets && !isLoading ? (
+  return assetPrices && assets && !isLoading ? (
     <>
       <div className={styleClasses}>
         {assets.length > 0 ? (
