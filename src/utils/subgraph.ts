@@ -21,6 +21,10 @@ export interface AssetListPrices {
   price: BestPrice
 }
 
+interface DidAndDatatokenMap {
+  [name: string]: string
+}
+
 const FreQuery = gql`
   query AssetsFrePrice($datatoken_in: [String!]) {
     fixedRateExchanges(orderBy: id, where: { datatoken_in: $datatoken_in }) {
@@ -176,9 +180,16 @@ function transformPriceToBestPrice(
   }
 }
 
-export async function getAssetPrices(assets: DDO[]): Promise<PriceList> {
-  const priceList: PriceList = {}
-  const didDTMap: { [name: string]: string } = {}
+async function getAssetsPoolsExchangesAndDatatokenMap(
+  assets: DDO[]
+): Promise<
+  [
+    ApolloQueryResult<AssetsPoolPrice>,
+    ApolloQueryResult<AssetsFrePrice>,
+    DidAndDatatokenMap
+  ]
+> {
+  const didDTMap: DidAndDatatokenMap = {}
   const dataTokenList: string[] = []
 
   for (const ddo of assets) {
@@ -191,20 +202,37 @@ export async function getAssetPrices(assets: DDO[]): Promise<PriceList> {
   const poolVariables = {
     datatokenAddress_in: dataTokenList
   }
+
   const poolPriceResponse: ApolloQueryResult<AssetsPoolPrice> = await fetchData(
     PoolQuery,
     poolVariables
   )
+  const frePriceResponse: ApolloQueryResult<AssetsFrePrice> = await fetchData(
+    FreQuery,
+    freVariables
+  )
+
+  return [poolPriceResponse, frePriceResponse, didDTMap]
+}
+
+export async function getAssetsPriceList(assets: DDO[]): Promise<PriceList> {
+  const priceList: PriceList = {}
+
+  const values: [
+    ApolloQueryResult<AssetsPoolPrice>,
+    ApolloQueryResult<AssetsFrePrice>,
+    DidAndDatatokenMap
+  ] = await getAssetsPoolsExchangesAndDatatokenMap(assets)
+  const poolPriceResponse = values[0]
+  const frePriceResponse = values[1]
+  const didDTMap: DidAndDatatokenMap = values[2]
+
   for (const poolPrice of poolPriceResponse.data?.pools) {
     priceList[didDTMap[poolPrice.datatokenAddress]] =
       poolPrice.consumePrice === '-1'
         ? poolPrice.spotPrice
         : poolPrice.consumePrice
   }
-  const frePriceResponse: ApolloQueryResult<AssetsFrePrice> = await fetchData(
-    FreQuery,
-    freVariables
-  )
   for (const frePrice of frePriceResponse.data?.fixedRateExchanges) {
     priceList[didDTMap[frePrice.datatoken?.address]] = frePrice.rate
   }
@@ -237,32 +265,18 @@ export async function getPrice(asset: DDO): Promise<BestPrice> {
   return bestPrice
 }
 
-export async function getAssetsPrices(
+export async function getAssetsBestPrices(
   assets: DDO[]
 ): Promise<AssetListPrices[]> {
   const assetsWithPrice: AssetListPrices[] = []
-  const didDTMap: { [name: string]: string } = {}
-  const dataTokenList: string[] = []
 
-  for (const ddo of assets) {
-    didDTMap[ddo?.dataToken.toLowerCase()] = ddo.id
-    dataTokenList.push(ddo?.dataToken.toLowerCase())
-  }
-  const freVariables = {
-    datatoken_in: dataTokenList
-  }
-  const poolVariables = {
-    datatokenAddress_in: dataTokenList
-  }
-
-  const poolPriceResponse: ApolloQueryResult<AssetsPoolPrice> = await fetchData(
-    PoolQuery,
-    poolVariables
-  )
-  const frePriceResponse: ApolloQueryResult<AssetsFrePrice> = await fetchData(
-    FreQuery,
-    freVariables
-  )
+  const values: [
+    ApolloQueryResult<AssetsPoolPrice>,
+    ApolloQueryResult<AssetsFrePrice>,
+    DidAndDatatokenMap
+  ] = await getAssetsPoolsExchangesAndDatatokenMap(assets)
+  const poolPriceResponse = values[0]
+  const frePriceResponse = values[1]
 
   for (const ddo of assets) {
     const dataToken = ddo.dataToken.toLowerCase()

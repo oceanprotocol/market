@@ -4,7 +4,7 @@ import Pagination from '../molecules/Pagination'
 import styles from './AssetList.module.css'
 import { DDO } from '@oceanprotocol/lib'
 import classNames from 'classnames/bind'
-import { getAssetsPrices, AssetListPrices } from '../../utils/subgraph'
+import { getAssetsBestPrices, AssetListPrices } from '../../utils/subgraph'
 import Loader from '../atoms/Loader'
 
 const cx = classNames.bind(styles)
@@ -42,7 +42,7 @@ const AssetList: React.FC<AssetListProps> = ({
   useEffect(() => {
     if (!assets) return
     isLoading && setLoading(true)
-    getAssetsPrices(assets).then((asset) => {
+    getAssetsBestPrices(assets).then((asset) => {
       setAssetWithPrices(asset)
       setLoading(false)
     })
