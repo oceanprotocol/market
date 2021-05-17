@@ -3,7 +3,6 @@ import {
   DDO,
   File as FileMetadata,
   Logger,
-  ServiceType,
   publisherTrustedAlgorithm,
   BestPrice,
   DID
@@ -38,11 +37,8 @@ import FormStartComputeDataset from './FormComputeDataset'
 import styles from './index.module.css'
 import SuccessConfetti from '../../../atoms/SuccessConfetti'
 import Button from '../../../atoms/Button'
-import { gql, useQuery } from '@apollo/client'
-import { FrePrice } from '../../../../@types/apollo/FrePrice'
-import { PoolPrice } from '../../../../@types/apollo/PoolPrice'
 import { secondsToString } from '../../../../utils/metadata'
-import { getPreviousOrders } from '../../../../utils/subgraph'
+import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
 import { isFileValid } from '../../../../utils/provider'
 
 const SuccessAction = () => (
@@ -50,23 +46,6 @@ const SuccessAction = () => (
     Go to history →
   </Button>
 )
-
-const freQuery = gql`
-  query AlgorithmFrePrice($datatoken: String) {
-    fixedRateExchanges(orderBy: id, where: { datatoken: $datatoken }) {
-      rate
-      id
-    }
-  }
-`
-const poolQuery = gql`
-  query AlgorithmPoolPrice($datatoken: String) {
-    pools(where: { datatokenAddress: $datatoken }) {
-      spotPrice
-      consumePrice
-    }
-  }
-`
 
 export default function Compute({
   isBalanceSufficient,
@@ -97,7 +76,6 @@ export default function Compute({
   )
   const [algorithmDTBalance, setalgorithmDTBalance] = useState<string>()
   const [algorithmPrice, setAlgorithmPrice] = useState<BestPrice>()
-  const [variables, setVariables] = useState({})
   const [
     previousAlgorithmOrderId,
     setPreviousAlgorithmOrderId
@@ -109,25 +87,6 @@ export default function Compute({
     algorithmFileConnectivity,
     setAlgorithmFileConnectivity
   ] = useState<boolean>()
-
-  /* eslint-disable @typescript-eslint/no-unused-vars */
-  const {
-    refetch: refetchFre,
-    startPolling: startPollingFre,
-    data: frePrice
-  } = useQuery<FrePrice>(freQuery, {
-    variables,
-    skip: false
-  })
-  const {
-    refetch: refetchPool,
-    startPolling: startPollingPool,
-    data: poolPrice
-  } = useQuery<PoolPrice>(poolQuery, {
-    variables,
-    skip: false
-  })
-  /* eslint-enable @typescript-eslint/no-unused-vars */
 
   const isComputeButtonDisabled =
     isJobStarting === true || file === null || !ocean || !isBalanceSufficient
@@ -240,40 +199,10 @@ export default function Compute({
     setDatasetTimeout(secondsToString(timeout))
   }, [ddo])
 
-  useEffect(() => {
-    if (
-      !frePrice ||
-      frePrice.fixedRateExchanges.length === 0 ||
-      algorithmPrice.type !== 'exchange'
-    )
-      return
-    setAlgorithmPrice((prevState) => ({
-      ...prevState,
-      value: frePrice.fixedRateExchanges[0].rate,
-      address: frePrice.fixedRateExchanges[0].id
-    }))
-  }, [frePrice])
-
-  useEffect(() => {
-    if (
-      !poolPrice ||
-      poolPrice.pools.length === 0 ||
-      algorithmPrice.type !== 'pool'
-    )
-      return
-    setAlgorithmPrice((prevState) => ({
-      ...prevState,
-      value:
-        poolPrice.pools[0].consumePrice === '-1'
-          ? poolPrice.pools[0].spotPrice
-          : poolPrice.pools[0].consumePrice
-    }))
-  }, [poolPrice])
-
   const initMetadata = useCallback(async (ddo: DDO): Promise<void> => {
     if (!ddo) return
-    setAlgorithmPrice(ddo.price)
-    setVariables({ datatoken: ddo?.dataToken.toLowerCase() })
+    const price = await getPrice(ddo)
+    setAlgorithmPrice(price)
   }, [])
 
   useEffect(() => {
