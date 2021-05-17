@@ -11,6 +11,9 @@ import {
 } from '../@types/apollo/AssetsFrePrice'
 import { AssetPreviousOrder } from '../@types/apollo/AssetPreviousOrder'
 import BigNumber from 'bignumber.js'
+import web3 from 'web3'
+import { CancelToken } from 'axios'
+import { retrieveDDO } from '../utils/aquarius'
 
 export interface PriceList {
   [key: string]: string
@@ -83,6 +86,20 @@ const PreviousOrderQuery = gql`
     ) {
       timestamp
       tx
+    }
+  }
+`
+const HighestLiquidityAssets = gql`
+  query HighestLiquidiyAssets {
+    pools(orderBy: valueLocked, orderDirection: desc, first: 20) {
+      id
+      consumePrice
+      spotPrice
+      tx
+      symbol
+      name
+      datatokenAddress
+      valueLocked
     }
   }
 `
@@ -298,4 +315,30 @@ export async function getAssetsBestPrices(
   }
 
   return assetsWithPrice
+}
+
+export async function getHighestLiquidityAssets(
+  metadataCacheUri: string,
+  sourceToken: CancelToken
+): Promise<DDO[]> {
+  const ddoList: DDO[] = []
+  const fetchedPools = await fetchData(HighestLiquidityAssets, null)
+
+  if (fetchedPools.data?.pools?.length === 0) return null
+
+  for (let i = 0; i < fetchedPools.data.pools.length; i++) {
+    const did = web3.utils
+      .toChecksumAddress(fetchedPools.data.pools[i].datatokenAddress)
+      .replace('0x', 'did:op:')
+    const ddo = await retrieveDDO(did, metadataCacheUri, sourceToken)
+    if (
+      ddo !== undefined &&
+      ddo.isInPurgatory === 'false' &&
+      ddo.price.isConsumable === 'true' &&
+      ddoList.length < 9
+    ) {
+      ddoList.push(ddo)
+    }
+  }
+  return ddoList
 }

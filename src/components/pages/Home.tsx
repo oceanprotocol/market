@@ -11,25 +11,10 @@ import { useOcean } from '../../providers/Ocean'
 import Button from '../atoms/Button'
 import Bookmarks from '../molecules/Bookmarks'
 import axios from 'axios'
-import { queryMetadata, retrieveDDO } from '../../utils/aquarius'
-import { gql, useQuery } from '@apollo/client'
+import { queryMetadata } from '../../utils/aquarius'
+import { getHighestLiquidityAssets } from '../../utils/subgraph'
 import { DDO, Logger } from '@oceanprotocol/lib'
-import web3 from 'web3'
 
-const getHighestLiquidityAssets = gql`
-  query HighestLiquidiyAssets {
-    pools(orderBy: valueLocked, orderDirection: desc, first: 20) {
-      id
-      consumePrice
-      spotPrice
-      tx
-      symbol
-      name
-      datatokenAddress
-      valueLocked
-    }
-  }
-`
 const queryLatest = {
   page: 1,
   offset: 9,
@@ -55,36 +40,19 @@ function SectionQueryResult({
   const { config } = useOcean()
   const [result, setResult] = useState<QueryResult>()
   const [loading, setLoading] = useState(true)
-  const { data } = useQuery(getHighestLiquidityAssets)
 
   useEffect(() => {
-    if (!config?.metadataCacheUri || !data) return
+    if (!config?.metadataCacheUri) return
     const source = axios.CancelToken.source()
 
     async function init() {
       setLoading(true)
       try {
         if (queryType && queryType === 'graph') {
-          const ddoList: DDO[] = []
-          for (let i = 0; i < data.pools.length; i++) {
-            const did = web3.utils
-              .toChecksumAddress(data.pools[i].datatokenAddress)
-              .replace('0x', 'did:op:')
-            const ddo = await retrieveDDO(
-              did,
-              config?.metadataCacheUri,
-              source.token
-            )
-
-            if (
-              ddo !== undefined &&
-              ddo.isInPurgatory === 'false' &&
-              ddo.price.isConsumable === 'true' &&
-              ddoList.length < 9
-            ) {
-              ddoList.push(ddo)
-            }
-          }
+          const ddoList: DDO[] = await getHighestLiquidityAssets(
+            config.metadataCacheUri,
+            source.token
+          )
           const result: QueryResult = {
             results: ddoList,
             page: 1,
@@ -111,7 +79,7 @@ function SectionQueryResult({
     return () => {
       source.cancel()
     }
-  }, [config?.metadataCacheUri, queryType, query, data])
+  }, [config?.metadataCacheUri, queryType, query])
 
   return (
     <section className={styles.section}>
