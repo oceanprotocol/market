@@ -6,6 +6,7 @@ import { DDO, Logger, Service, Provider } from '@oceanprotocol/lib'
 import { ComputeJobMetaData } from '../../../../@types/ComputeJobMetaData'
 import Dotdotdot from 'react-dotdotdot'
 import Table from '../../../atoms/Table'
+import Button from '../../../atoms/Button'
 import { useOcean } from '../../../../providers/Ocean'
 import { gql, useQuery } from '@apollo/client'
 import { useWeb3 } from '../../../../providers/Web3'
@@ -13,9 +14,9 @@ import { queryMetadata } from '../../../../utils/aquarius'
 import axios, { CancelToken } from 'axios'
 import { ComputeOrders } from '../../../../@types/apollo/ComputeOrders'
 import Details from './Details'
-import styles from './index.module.css'
 import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
-import Button from '../../../atoms/Button'
+import { ReactComponent as Refresh } from '../../../../images/refresh.svg'
+import styles from './index.module.css'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -239,15 +240,18 @@ export default function ComputeJobs(): ReactElement {
   }, [ocean, account, data, config?.metadataCacheUri])
 
   return (
-    <div className={styles.computeTableContainer}>
-      {!isLoading && jobs.length > 0 && (
+    <>
+      {jobs.length > 0 && (
         <Button
-          style="primary"
+          style="text"
           size="small"
-          title="Refetch compute jobs"
+          title="Refresh compute jobs"
           onClick={() => getJobs()}
+          disabled={isLoading}
+          className={styles.refresh}
         >
-          Refetch
+          <Refresh />
+          Refresh
         </Button>
       )}
       <Table
@@ -257,6 +261,6 @@ export default function ComputeJobs(): ReactElement {
         defaultSortField="row.dateCreated"
         defaultSortAsc={false}
       />
-    </div>
+    </>
   )
 }

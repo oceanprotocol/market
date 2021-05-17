@@ -5,7 +5,22 @@
 
 .computeTableContainer {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
+}
+
+.refresh,
+.refresh:first-child {
+  margin-bottom: calc(var(--spacer) / 2);
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+.refresh svg {
+  display: inline-block;
+  fill: currentColor;
+  width: 1em;
+  height: 1em;
+  margin-right: calc(var(--spacer) / 6);
+  margin-bottom: -0.1rem;
 }
