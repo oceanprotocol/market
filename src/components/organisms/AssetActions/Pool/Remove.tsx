@@ -86,6 +86,12 @@ export default function Remove({
   async function handleRemoveLiquidity() {
     setIsLoading(true)
     try {
+      console.log(
+        'remove liquidity with',
+        amountPoolShares,
+        minDatatokenAmount,
+        minOceanAmount
+      )
       const result =
         isAdvanced === true
           ? await ocean.pool.removePoolLiquidity(
