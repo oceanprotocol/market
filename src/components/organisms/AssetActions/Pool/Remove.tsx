@@ -86,12 +86,6 @@ export default function Remove({
   async function handleRemoveLiquidity() {
     setIsLoading(true)
     try {
-      console.log(
-        'remove liquidity with',
-        amountPoolShares,
-        minDatatokenAmount,
-        minOceanAmount
-      )
       const result =
         isAdvanced === true
           ? await ocean.pool.removePoolLiquidity(
@@ -165,12 +159,18 @@ export default function Remove({
   ])
 
   useEffect(() => {
-    const minOceanAmount =
-      (Number(amountOcean) * (100 - Number(slippage))) / 100
-    const minDatatokenAmount =
-      (Number(amountDatatoken) * (100 - Number(slippage))) / 100
-    setMinOceanAmount(minOceanAmount.toString().slice(0, 18))
-    setMinDatatokenAmount(minDatatokenAmount.toString().slice(0, 18))
+    const minOceanAmount = new Decimal(amountOcean)
+      .mul(new Decimal(100).minus(new Decimal(slippage)))
+      .dividedBy(100)
+      .toString()
+
+    const minDatatokenAmount = new Decimal(amountDatatoken)
+      .mul(new Decimal(100).minus(new Decimal(slippage)))
+      .dividedBy(100)
+      .toString()
+
+    setMinOceanAmount(minOceanAmount.slice(0, 18))
+    setMinDatatokenAmount(minDatatokenAmount.slice(0, 18))
   }, [slippage, amountOcean, amountDatatoken, isAdvanced])
 
   // Set amountPoolShares based on set slider value
