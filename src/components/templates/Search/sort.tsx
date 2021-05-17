@@ -17,14 +17,12 @@ export default function Sort({
   sortType,
   setSortType,
   sortDirection,
-  setSortDirection,
-  setServiceType
+  setSortDirection
 }: {
   sortType: string
   setSortType: React.Dispatch<React.SetStateAction<string>>
   sortDirection: string
   setSortDirection: React.Dispatch<React.SetStateAction<string>>
-  setServiceType: React.Dispatch<React.SetStateAction<string>>
 }): ReactElement {
   const navigate = useNavigate()
   const directionArrow = String.fromCharCode(

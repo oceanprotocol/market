@@ -21,16 +21,7 @@ export default function SearchPage({
 }): ReactElement {
   const { config } = useOcean()
   const parsed = queryString.parse(location.search)
-  const {
-    text,
-    owner,
-    tags,
-    page,
-    sort,
-    sortOrder,
-    priceType,
-    serviceType
-  } = parsed
+  const { text, owner, tags, page, sort, sortOrder, serviceType } = parsed
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [loading, setLoading] = useState<boolean>()
   const [service, setServiceType] = useState<string>(serviceType as string)
@@ -57,7 +48,6 @@ export default function SearchPage({
     tags,
     sort,
     page,
-    priceType,
     serviceType,
     sortOrder,
     config.metadataCacheUri
@@ -88,7 +78,6 @@ export default function SearchPage({
             sortDirection={sortDirection}
             setSortType={setSortType}
             setSortDirection={setSortDirection}
-            setServiceType={setServiceType}
           />
         </div>
       </div>
