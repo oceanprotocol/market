@@ -1,6 +1,6 @@
 import React, { ReactElement, useState } from 'react'
 import { useNavigate } from '@reach/router'
-import styles from './filterPrice.module.css'
+import styles from './filterService.module.css'
 import classNames from 'classnames/bind'
 import { addExistingParamsToUrl, FilterByTypeOptions } from './utils'
 import Button from '../../atoms/Button'
@@ -55,11 +55,7 @@ export default function FilterPrice({
   }
 
   async function applyClearFilter() {
-    let urlLocation = await addExistingParamsToUrl(
-      location,
-      'priceType',
-      'serviceType'
-    )
+    let urlLocation = await addExistingParamsToUrl(location, 'serviceType')
 
     urlLocation = `${urlLocation}`
 

@@ -53,7 +53,6 @@ export function getSearchQuery(
   offset?: string,
   sort?: string,
   sortOrder?: string,
-  priceType?: string,
   serviceType?: string
 ): SearchQuery {
   const sortTerm = getSortType(sort)
@@ -105,7 +104,6 @@ export async function getResults(
     offset?: string
     sort?: string
     sortOrder?: string
-    priceType?: string
     serviceType?: string
   },
   metadataCacheUri: string
@@ -119,7 +117,6 @@ export async function getResults(
     categories,
     sort,
     sortOrder,
-    priceType,
     serviceType
   } = params
   const metadataCache = new MetadataCache(metadataCacheUri, Logger)
@@ -134,7 +131,6 @@ export async function getResults(
     offset,
     sort,
     sortOrder,
-    priceType,
     serviceType
   )
 

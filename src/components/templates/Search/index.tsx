@@ -4,7 +4,7 @@ import SearchBar from '../../molecules/SearchBar'
 import AssetList from '../../organisms/AssetList'
 import styles from './index.module.css'
 import queryString from 'query-string'
-import PriceFilter from './filterPrice'
+import ServiceFilter from './filterService'
 import Sort from './sort'
 import { getResults } from './utils'
 import { navigate } from 'gatsby'
@@ -80,7 +80,10 @@ export default function SearchPage({
           <SearchBar initialValue={(text || owner) as string} />
         )}
         <div className={styles.row}>
-          <PriceFilter serviceType={service} setServiceType={setServiceType} />
+          <ServiceFilter
+            serviceType={service}
+            setServiceType={setServiceType}
+          />
           <Sort
             sortType={sortType}
             sortDirection={sortDirection}
