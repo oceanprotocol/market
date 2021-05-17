@@ -4,7 +4,6 @@ import {
 } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { MetadataCache, Logger } from '@oceanprotocol/lib'
 import queryString from 'query-string'
-import axios from 'axios'
 
 export const SortTermOptions = {
   Created: 'created'
@@ -39,7 +38,7 @@ function addTypeFilterToQuery(sortTerm: string, typeFilter: string): string {
   return sortTerm
 }
 
-function getSortType(sortParam: string): string {
+function getSortType(): string {
   const sortTerm = SortTermOptions.Created
   return sortTerm
 }
@@ -55,7 +54,7 @@ export function getSearchQuery(
   sortOrder?: string,
   serviceType?: string
 ): SearchQuery {
-  const sortTerm = getSortType(sort)
+  const sortTerm = getSortType()
   const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
   let searchTerm = owner
     ? `(publicKey.owner:${owner})`
@@ -120,7 +119,6 @@ export async function getResults(
     serviceType
   } = params
   const metadataCache = new MetadataCache(metadataCacheUri, Logger)
-  const source = axios.CancelToken.source()
 
   const searchQuery = getSearchQuery(
     text,
