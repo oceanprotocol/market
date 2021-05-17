@@ -3,7 +3,7 @@ import { Link } from 'gatsby'
 import Dotdotdot from 'react-dotdotdot'
 import Price from '../atoms/Price'
 import styles from './AssetTeaser.module.css'
-import { DDO } from '@oceanprotocol/lib'
+import { DDO, BestPrice } from '@oceanprotocol/lib'
 import removeMarkdown from 'remove-markdown'
 import Publisher from '../atoms/Publisher'
 import Time from '../atoms/Time'
@@ -11,9 +11,13 @@ import AssetType from '../atoms/AssetType'
 
 declare type AssetTeaserProps = {
   ddo: DDO
+  price: BestPrice
 }
 
-const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
+const AssetTeaser: React.FC<AssetTeaserProps> = ({
+  ddo,
+  price
+}: AssetTeaserProps) => {
   const { attributes } = ddo.findServiceByType('metadata')
   const { name, type } = attributes.main
   const { dataTokenInfo } = ddo
@@ -47,7 +51,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({ ddo }: AssetTeaserProps) => {
         </div>
 
         <footer className={styles.foot}>
-          <Price price={ddo.price} small />
+          <Price price={price} small />
           <p className={styles.date}>
             <Time date={ddo?.created} relative />
           </p>

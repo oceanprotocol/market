@@ -1,7 +1,6 @@
 import { Logger } from '@oceanprotocol/lib'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import React, { ReactElement, useEffect, useState } from 'react'
-import Loader from '../../atoms/Loader'
 import AssetList from '../../organisms/AssetList'
 import axios from 'axios'
 import { queryMetadata } from '../../../utils/aquarius'
@@ -48,14 +47,13 @@ export default function PublishedList(): ReactElement {
     getPublished()
   }, [accountId, page, config.metadataCacheUri])
 
-  return isLoading ? (
-    <Loader />
-  ) : accountId && queryResult ? (
+  return accountId ? (
     <AssetList
-      assets={queryResult.results}
+      assets={queryResult?.results}
+      isLoading={isLoading}
       showPagination
-      page={queryResult.page}
-      totalPages={queryResult.totalPages}
+      page={queryResult?.page}
+      totalPages={queryResult?.totalPages}
       onPageChange={(newPage) => {
         setPage(newPage)
       }}
