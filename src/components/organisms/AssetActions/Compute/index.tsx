@@ -83,10 +83,6 @@ export default function Compute({
   const [datasetTimeout, setDatasetTimeout] = useState<string>()
   const [algorithmTimeout, setAlgorithmTimeout] = useState<string>()
   const [fileConnectivity, setFileConnectivity] = useState<boolean>()
-  const [
-    algorithmFileConnectivity,
-    setAlgorithmFileConnectivity
-  ] = useState<boolean>()
 
   const isComputeButtonDisabled =
     isJobStarting === true || file === null || !ocean || !isBalanceSufficient
@@ -221,19 +217,6 @@ export default function Compute({
     if (!selectedAlgorithmAsset) return
 
     initMetadata(selectedAlgorithmAsset)
-    const source = axios.CancelToken.source()
-
-    async function validateAsset() {
-      const did = DID.parse(selectedAlgorithmAsset.id)
-      const fileValid = await isFileValid(
-        did,
-        selectedAlgorithmAsset.findServiceByType('access')?.serviceEndpoint ||
-          selectedAlgorithmAsset.findServiceByType('compute')?.serviceEndpoint,
-        source.token
-      )
-      setAlgorithmFileConnectivity(fileValid)
-    }
-    validateAsset()
 
     const { timeout } = (
       ddo.findServiceByType('access') || ddo.findServiceByType('compute')
@@ -255,17 +238,7 @@ export default function Compute({
       }
     }
     ocean && checkAssetDTBalance(selectedAlgorithmAsset)
-
-    return () => {
-      source.cancel()
-    }
-  }, [
-    selectedAlgorithmAsset,
-    ocean,
-    accountId,
-    hasPreviousAlgorithmOrder,
-    algorithmFileConnectivity
-  ])
+  }, [selectedAlgorithmAsset, ocean, accountId, hasPreviousAlgorithmOrder])
 
   // Output errors in toast UI
   useEffect(() => {
@@ -456,7 +429,6 @@ export default function Compute({
             isLoading={isJobStarting}
             isComputeButtonDisabled={isComputeButtonDisabled}
             fileConnectivity={fileConnectivity}
-            algorithmFileConnectivity={algorithmFileConnectivity}
             hasPreviousOrder={hasPreviousDatasetOrder}
             hasDatatoken={hasDatatoken}
             dtBalance={dtBalance}
