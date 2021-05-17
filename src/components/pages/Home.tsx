@@ -7,7 +7,6 @@ import {
   SearchQuery
 } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import Container from '../atoms/Container'
-import Loader from '../atoms/Loader'
 import { useOcean } from '../../providers/Ocean'
 import Button from '../atoms/Button'
 import Bookmarks from '../molecules/Bookmarks'
@@ -40,14 +39,6 @@ const queryLatest = {
     }
   },
   sort: { created: -1 }
-}
-
-function LoaderArea() {
-  return (
-    <div className={styles.loaderWrap}>
-      <Loader />
-    </div>
-  )
 }
 
 function SectionQueryResult({
@@ -125,11 +116,7 @@ function SectionQueryResult({
   return (
     <section className={styles.section}>
       <h3>{title}</h3>
-      {loading ? (
-        <LoaderArea />
-      ) : (
-        result && <AssetList assets={result.results} showPagination={false} />
-      )}
+      <AssetList assets={result?.results} showPagination={false} />
       {action && action}
     </section>
   )

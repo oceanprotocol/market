@@ -1,17 +1,28 @@
 import AssetTeaser from '../molecules/AssetTeaser'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Pagination from '../molecules/Pagination'
 import styles from './AssetList.module.css'
 import { DDO } from '@oceanprotocol/lib'
 import classNames from 'classnames/bind'
+import { getAssetsBestPrices, AssetListPrices } from '../../utils/subgraph'
+import Loader from '../atoms/Loader'
 
 const cx = classNames.bind(styles)
+
+function LoaderArea() {
+  return (
+    <div className={styles.loaderWrap}>
+      <Loader />
+    </div>
+  )
+}
 
 declare type AssetListProps = {
   assets: DDO[]
   showPagination: boolean
   page?: number
   totalPages?: number
+  isLoading?: boolean
   onPageChange?: React.Dispatch<React.SetStateAction<number>>
   className?: string
 }
@@ -21,9 +32,22 @@ const AssetList: React.FC<AssetListProps> = ({
   showPagination,
   page,
   totalPages,
+  isLoading,
   onPageChange,
   className
 }) => {
+  const [assetsWithPrices, setAssetWithPrices] = useState<AssetListPrices[]>()
+  const [loading, setLoading] = useState<boolean>(true)
+
+  useEffect(() => {
+    if (!assets) return
+    isLoading && setLoading(true)
+    getAssetsBestPrices(assets).then((asset) => {
+      setAssetWithPrices(asset)
+      setLoading(false)
+    })
+  }, [assets])
+
   // // This changes the page field inside the query
   function handlePageChange(selected: number) {
     onPageChange(selected + 1)
@@ -34,11 +58,19 @@ const AssetList: React.FC<AssetListProps> = ({
     [className]: className
   })
 
-  return (
+  return assetsWithPrices &&
+    !loading &&
+    (isLoading === undefined || isLoading === false) ? (
     <>
       <div className={styleClasses}>
-        {assets.length > 0 ? (
-          assets.map((ddo) => <AssetTeaser ddo={ddo} key={ddo.id} />)
+        {assetsWithPrices.length > 0 ? (
+          assetsWithPrices.map((assetWithPrice) => (
+            <AssetTeaser
+              ddo={assetWithPrice.ddo}
+              price={assetWithPrice.price}
+              key={assetWithPrice.ddo.id}
+            />
+          ))
         ) : (
           <div className={styles.empty}>No results found.</div>
         )}
@@ -52,6 +84,8 @@ const AssetList: React.FC<AssetListProps> = ({
         />
       )}
     </>
+  ) : (
+    <LoaderArea />
   )
 }
 

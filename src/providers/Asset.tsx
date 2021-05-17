@@ -12,11 +12,9 @@ import { PurgatoryData } from '@oceanprotocol/lib/dist/node/ddo/interfaces/Purga
 import getAssetPurgatoryData from '../utils/purgatory'
 import axios, { CancelToken } from 'axios'
 import { retrieveDDO } from '../utils/aquarius'
+import { getPrice } from '../utils/subgraph'
 import { MetadataMarket } from '../@types/MetaData'
 import { useOcean } from './Ocean'
-import { gql, useQuery } from '@apollo/client'
-import { PoolPrice } from '../@types/apollo/PoolPrice'
-import { FrePrice } from '../@types/apollo/FrePrice'
 
 interface AssetProviderValue {
   isInPurgatory: boolean
@@ -32,26 +30,6 @@ interface AssetProviderValue {
   refreshInterval: number
   refreshDdo: (token?: CancelToken) => Promise<void>
 }
-
-const poolQuery = gql`
-  query PoolPrice($datatoken: String) {
-    pools(where: { datatokenAddress: $datatoken }) {
-      spotPrice
-      consumePrice
-      datatokenReserve
-      oceanReserve
-    }
-  }
-`
-
-const freQuery = gql`
-  query FrePrice($datatoken: String) {
-    fixedRateExchanges(orderBy: id, where: { datatoken: $datatoken }) {
-      rate
-      id
-    }
-  }
-`
 
 const AssetContext = createContext({} as AssetProviderValue)
 
@@ -75,68 +53,6 @@ function AssetProvider({
   const [owner, setOwner] = useState<string>()
   const [error, setError] = useState<string>()
   const [type, setType] = useState<MetadataMain['type']>()
-  const [variables, setVariables] = useState({})
-
-  /* eslint-disable @typescript-eslint/no-unused-vars */
-  const {
-    refetch: refetchFre,
-    startPolling: startPollingFre,
-    data: frePrice
-  } = useQuery<FrePrice>(freQuery, {
-    variables,
-    skip: false
-  })
-  const {
-    refetch: refetchPool,
-    startPolling: startPollingPool,
-    data: poolPrice
-  } = useQuery<PoolPrice>(poolQuery, {
-    variables,
-    skip: false
-  })
-  /* eslint-enable @typescript-eslint/no-unused-vars */
-
-  // this is not working as expected, thus we need to fetch both pool and fre
-  // useEffect(() => {
-  //   if (!ddo || !variables || variables === '') return
-
-  //   if (ddo.price.type === 'exchange') {
-  //     refetchFre(variables)
-  //     startPollingFre(refreshInterval)
-  //   } else {
-  //     refetchPool(variables)
-  //     startPollingPool(refreshInterval)
-  //   }
-  // }, [ddo, variables])
-
-  useEffect(() => {
-    if (
-      !frePrice ||
-      frePrice.fixedRateExchanges.length === 0 ||
-      price.type !== 'exchange'
-    )
-      return
-    setPrice((prevState) => ({
-      ...prevState,
-      value: frePrice.fixedRateExchanges[0].rate,
-      address: frePrice.fixedRateExchanges[0].id
-    }))
-  }, [frePrice])
-
-  useEffect(() => {
-    if (!poolPrice || poolPrice.pools.length === 0 || price.type !== 'pool')
-      return
-    setPrice((prevState) => ({
-      ...prevState,
-      value:
-        poolPrice.pools[0].consumePrice === '-1'
-          ? poolPrice.pools[0].spotPrice
-          : poolPrice.pools[0].consumePrice,
-      ocean: poolPrice.pools[0].oceanReserve,
-      datatoken: poolPrice.pools[0].datatokenReserve,
-      isConsumable: poolPrice.pools[0].consumePrice === '-1' ? 'false' : 'true'
-    }))
-  }, [poolPrice])
 
   const fetchDdo = async (token?: CancelToken) => {
     Logger.log('[asset] Init asset, get DDO')
@@ -201,10 +117,8 @@ function AssetProvider({
   const initMetadata = useCallback(async (ddo: DDO): Promise<void> => {
     if (!ddo) return
 
-    // Set price & metadata from DDO first
-    // TODO Hacky hack, temporary™: set isConsumable to true by default since Aquarius can't be trusted.
-    setPrice({ ...ddo.price, isConsumable: 'true' })
-    setVariables({ datatoken: ddo?.dataToken.toLowerCase() })
+    const returnedPrice = await getPrice(ddo)
+    setPrice({ ...returnedPrice })
 
     // Get metadata from DDO
     const { attributes } = ddo.findServiceByType('metadata')
