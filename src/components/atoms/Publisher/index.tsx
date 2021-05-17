@@ -68,7 +68,6 @@ export default function Publisher({
           >
             {name}
           </Link>
-
           <div className={styles.links}>
             {' — '}
             {profile && (
