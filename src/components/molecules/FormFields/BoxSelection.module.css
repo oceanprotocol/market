@@ -4,6 +4,10 @@
   gap: 0 calc(var(--spacer) / 4);
 }
 
+.boxSelectionsWrapper > div {
+  width: 100%;
+}
+
 .boxSelection {
   display: block;
   flex: 1 1 0px;
@@ -15,10 +19,12 @@
   cursor: pointer;
 }
 
-.boxSelection .disabled {
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
 }
 
-.boxSelection .title {
+.title {
   font-weight: var(--font-weight-bold);
   text-align: center;
 }
