@@ -359,7 +359,8 @@ export default function Compute({
 
       Logger.log('[compute] Starting compute job response: ', response)
 
-      setHasPreviousDatasetOrder(true)
+      await checkPreviousOrders(selectedAlgorithmAsset)
+      await checkPreviousOrders(ddo)
       setIsPublished(true)
     } catch (error) {
       setError('Failed to start job!')
