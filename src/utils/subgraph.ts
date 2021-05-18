@@ -1,5 +1,5 @@
 import { gql, DocumentNode, ApolloQueryResult } from '@apollo/client'
-import { DDO, BestPrice } from '@oceanprotocol/lib'
+import { DDO, DID, BestPrice, Logger } from '@oceanprotocol/lib'
 import { getApolloClientInstance } from '../providers/ApolloClientProvider'
 import {
   AssetsPoolPrice,
@@ -13,7 +13,8 @@ import { AssetPreviousOrder } from '../@types/apollo/AssetPreviousOrder'
 import BigNumber from 'bignumber.js'
 import web3 from 'web3'
 import { CancelToken } from 'axios'
-import { retrieveDDO } from '../utils/aquarius'
+import { retrieveDDO, queryMetadata } from '../utils/aquarius'
+import { resultKeyNameFromField } from '@apollo/client/utilities'
 
 export interface PriceList {
   [key: string]: string
@@ -91,7 +92,7 @@ const PreviousOrderQuery = gql`
 `
 const HighestLiquidityAssets = gql`
   query HighestLiquidiyAssets {
-    pools(orderBy: valueLocked, orderDirection: desc, first: 20) {
+    pools(orderBy: valueLocked, orderDirection: desc, first: 11) {
       id
       consumePrice
       spotPrice
@@ -316,11 +317,9 @@ export async function getAssetsBestPrices(
   return assetsWithPrice
 }
 
-export async function getHighestLiquidityAssets(
-  metadataCacheUri: string,
-  sourceToken: CancelToken
-): Promise<DDO[]> {
-  const ddoList: DDO[] = []
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export async function getHighestLiquidityDIDs() {
+  const didList: string[] = []
   const fetchedPools = await fetchData(HighestLiquidityAssets, null)
 
   if (fetchedPools.data?.pools?.length === 0) return null
@@ -329,15 +328,14 @@ export async function getHighestLiquidityAssets(
     const did = web3.utils
       .toChecksumAddress(fetchedPools.data.pools[i].datatokenAddress)
       .replace('0x', 'did:op:')
-    const ddo = await retrieveDDO(did, metadataCacheUri, sourceToken)
-    if (
-      ddo !== undefined &&
-      ddo.isInPurgatory === 'false' &&
-      ddo.price.isConsumable === 'true' &&
-      ddoList.length < 9
-    ) {
-      ddoList.push(ddo)
-    }
+    didList.push(did)
+    console.log(did)
   }
-  return ddoList
+  const searchDids = JSON.stringify(didList)
+    .replace(/,/g, ' ')
+    .replace(/"/g, '')
+    .replace(/(\[|\])/g, '')
+    .replace(/(did:op:)/g, '0x')
+
+  return searchDids
 }

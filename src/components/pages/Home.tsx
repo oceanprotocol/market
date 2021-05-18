@@ -12,8 +12,8 @@ import Button from '../atoms/Button'
 import Bookmarks from '../molecules/Bookmarks'
 import axios from 'axios'
 import { queryMetadata } from '../../utils/aquarius'
-import { getHighestLiquidityAssets } from '../../utils/subgraph'
-import { DDO, Logger } from '@oceanprotocol/lib'
+import { getHighestLiquidityDIDs } from '../../utils/subgraph'
+import { Logger } from '@oceanprotocol/lib'
 
 const queryLatest = {
   page: 1,
@@ -29,49 +29,29 @@ const queryLatest = {
 function SectionQueryResult({
   title,
   query,
-  queryType,
   action
 }: {
   title: ReactElement | string
-  query?: SearchQuery
-  queryType?: string
+  query: SearchQuery
   action?: ReactElement
 }) {
   const { config } = useOcean()
   const [result, setResult] = useState<QueryResult>()
-  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (!config?.metadataCacheUri) return
     const source = axios.CancelToken.source()
 
     async function init() {
-      setLoading(true)
       try {
-        if (queryType && queryType === 'graph') {
-          const ddoList: DDO[] = await getHighestLiquidityAssets(
-            config.metadataCacheUri,
-            source.token
-          )
-          const result: QueryResult = {
-            results: ddoList,
-            page: 1,
-            totalPages: 1,
-            totalResults: 9
-          }
-          setResult(result)
-        } else {
-          const result = await queryMetadata(
-            query,
-            config.metadataCacheUri,
-            source.token
-          )
-          setResult(result)
-        }
+        const result = await queryMetadata(
+          query,
+          config.metadataCacheUri,
+          source.token
+        )
+        setResult(result)
       } catch (error) {
         Logger.log(error.message)
-      } finally {
-        setLoading(false)
       }
     }
     init()
@@ -79,7 +59,7 @@ function SectionQueryResult({
     return () => {
       source.cancel()
     }
-  }, [config?.metadataCacheUri, queryType, query])
+  }, [config?.metadataCacheUri, query])
 
   return (
     <section className={styles.section}>
@@ -91,6 +71,25 @@ function SectionQueryResult({
 }
 
 export default function HomePage(): ReactElement {
+  const [searchDids, setSearchDIDs] = useState<string>()
+
+  useEffect(() => {
+    getHighestLiquidityDIDs().then((results) => {
+      setSearchDIDs(results)
+    })
+  })
+  const queryHighest = {
+    page: 1,
+    offset: 9,
+    query: {
+      query_string: {
+        query: searchDids,
+        fields: ['dataToken'],
+        default_operator: 'OR'
+      }
+    }
+  }
+
   return (
     <>
       <Container narrow className={styles.searchWrap}>
@@ -102,7 +101,9 @@ export default function HomePage(): ReactElement {
         <Bookmarks />
       </section>
 
-      <SectionQueryResult title="Highest Liquidity" queryType="graph" />
+      {searchDids && (
+        <SectionQueryResult title="Highest Liquidity" query={queryHighest} />
+      )}
 
       <SectionQueryResult
         title="Recently Published"
