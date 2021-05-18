@@ -81,6 +81,8 @@ export default function Remove({
   const [minOceanAmount, setMinOceanAmount] = useState<string>('0')
   const [minDatatokenAmount, setMinDatatokenAmount] = useState<string>('0')
 
+  Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
+
   async function handleRemoveLiquidity() {
     setIsLoading(true)
     try {
@@ -157,12 +159,18 @@ export default function Remove({
   ])
 
   useEffect(() => {
-    const minOceanAmount =
-      (Number(amountOcean) * (100 - Number(slippage))) / 100
-    const minDatatokenAmount =
-      (Number(amountDatatoken) * (100 - Number(slippage))) / 100
-    setMinOceanAmount(`${minOceanAmount}`)
-    setMinDatatokenAmount(`${minDatatokenAmount}`)
+    const minOceanAmount = new Decimal(amountOcean)
+      .mul(new Decimal(100).minus(new Decimal(slippage)))
+      .dividedBy(100)
+      .toString()
+
+    const minDatatokenAmount = new Decimal(amountDatatoken)
+      .mul(new Decimal(100).minus(new Decimal(slippage)))
+      .dividedBy(100)
+      .toString()
+
+    setMinOceanAmount(minOceanAmount.slice(0, 18))
+    setMinDatatokenAmount(minDatatokenAmount.slice(0, 18))
   }, [slippage, amountOcean, amountDatatoken, isAdvanced])
 
   // Set amountPoolShares based on set slider value
@@ -173,9 +181,9 @@ export default function Remove({
     const amountPoolShares = new Decimal(e.target.value)
       .dividedBy(100)
       .mul(new Decimal(poolTokens))
-      .toPrecision(18) // in some cases the returned value contain more than 18 digits which break conversion to wei
+      .toString()
 
-    setAmountPoolShares(`${amountPoolShares}`)
+    setAmountPoolShares(`${amountPoolShares.slice(0, 18)}`)
   }
 
   function handleMaxButton(e: ChangeEvent<HTMLInputElement>) {
@@ -185,9 +193,9 @@ export default function Remove({
     const amountPoolShares = new Decimal(amountMaxPercent)
       .dividedBy(100)
       .mul(new Decimal(poolTokens))
-      .toPrecision(18)
+      .toString()
 
-    setAmountPoolShares(`${amountPoolShares}`)
+    setAmountPoolShares(`${amountPoolShares.slice(0, 18)}`)
   }
 
   function handleAdvancedButton(e: FormEvent<HTMLButtonElement>) {
