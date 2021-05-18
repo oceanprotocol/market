@@ -150,7 +150,10 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   // Create initial Web3Modal instance
   // -----------------------------------
   useEffect(() => {
-    if (web3Modal) return
+    if (web3Modal) {
+      setWeb3Loading(false)
+      return
+    }
 
     async function init() {
       // note: needs artificial await here so the log message is reached and output
