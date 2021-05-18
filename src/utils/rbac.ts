@@ -12,10 +12,8 @@ export async function rbacRequest(
       token
     }
   }
-  console.log('data', data)
   console.log('process.env.RBAC_URL', process.env.RBAC_URL)
   try {
-    console.log('Start fetch')
     const response = await fetch('http://localhost:3000', {
       method: 'POST',
       headers: {
@@ -23,8 +21,6 @@ export async function rbacRequest(
       },
       body: JSON.stringify(data)
     })
-    console.log('Start fetch')
-    console.log('response', response)
     return await response.json()
   } catch (error) {
     console.error('Error parsing json: ' + error.message)
