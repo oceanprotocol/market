@@ -138,6 +138,10 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
       setNetworkId(networkId)
       Logger.log('[web3] network id ', networkId)
 
+      const chainId = await web3.eth.getChainId()
+      setChainId(chainId)
+      Logger.log('[web3] chain id ', chainId)
+
       const accountId = (await web3.eth.getAccounts())[0]
       setAccountId(accountId)
       Logger.log('[web3] account id', accountId)
