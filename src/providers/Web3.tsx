@@ -268,9 +268,9 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     web3Provider.on('accountsChanged', handleAccountsChanged)
 
     return () => {
-      web3Provider.removeListener('chainChanged')
-      web3Provider.removeListener('networkChanged')
-      web3Provider.removeListener('accountsChanged')
+      web3Provider.removeListener('chainChanged', handleChainChanged)
+      web3Provider.removeListener('networkChanged', handleNetworkChanged)
+      web3Provider.removeListener('accountsChanged', handleAccountsChanged)
     }
   }, [web3Provider, web3])
 
