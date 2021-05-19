@@ -12,6 +12,7 @@ import Button from '../atoms/Button'
 import Bookmarks from '../molecules/Bookmarks'
 import axios from 'axios'
 import { queryMetadata } from '../../utils/aquarius'
+import { useWeb3 } from '../../providers/Web3'
 
 const queryHighest = {
   page: 1,
@@ -46,10 +47,10 @@ function SectionQueryResult({
 }) {
   const { config } = useOcean()
   const [result, setResult] = useState<QueryResult>()
+  const { web3Loading } = useWeb3()
 
   useEffect(() => {
-    if (!config?.metadataCacheUri) return
-
+    if (!config?.metadataCacheUri || web3Loading) return
     const source = axios.CancelToken.source()
 
     async function init() {
@@ -65,7 +66,7 @@ function SectionQueryResult({
     return () => {
       source.cancel()
     }
-  }, [config?.metadataCacheUri, query])
+  }, [config?.metadataCacheUri, query, web3Loading])
 
   return (
     <section className={styles.section}>
