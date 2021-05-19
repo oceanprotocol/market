@@ -42,9 +42,17 @@ exports.onCreatePage = async ({ page, actions }) => {
 
 exports.onCreateWebpackConfig = ({ actions }) => {
   actions.setWebpackConfig({
-    node: {
-      // 'fs' fix for squid.js
-      fs: 'empty'
+    resolve: {
+      fallback: {
+        // polyfill fixes for ocean.js
+        fs: false,
+        crypto: require.resolve('crypto-browserify'),
+        stream: require.resolve('stream-browserify'),
+        http: require.resolve('stream-http'),
+        https: require.resolve('https-browserify'),
+        os: require.resolve('os-browserify/browser'),
+        zlib: require.resolve('browserify-zlib')
+      }
     },
     // fix for 'got'/'swarm-js' dependency
     externals: ['got']
