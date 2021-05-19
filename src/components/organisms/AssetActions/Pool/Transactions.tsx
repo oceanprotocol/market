@@ -7,7 +7,7 @@ import { useAsset } from '../../../../providers/Asset'
 
 export default function Transactions(): ReactElement {
   const [open, setOpen] = useState(false)
-  const { ddo } = useAsset()
+  const { price } = useAsset()
   function handleClick() {
     setOpen(!open)
   }
@@ -29,7 +29,7 @@ export default function Transactions(): ReactElement {
         </Button>
       </h3>
       {open === true && (
-        <PoolTransactions poolAddress={ddo.price?.address} minimal />
+        <PoolTransactions poolAddress={price?.address} minimal />
       )}
     </div>
   )
