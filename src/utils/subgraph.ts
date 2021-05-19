@@ -1,5 +1,5 @@
 import { gql, DocumentNode, ApolloQueryResult } from '@apollo/client'
-import { DDO, DID, BestPrice, Logger } from '@oceanprotocol/lib'
+import { DDO, BestPrice } from '@oceanprotocol/lib'
 import { getApolloClientInstance } from '../providers/ApolloClientProvider'
 import {
   AssetsPoolPrice,
@@ -10,11 +10,7 @@ import {
   AssetsFrePrice_fixedRateExchanges as AssetsFrePriceFixedRateExchanges
 } from '../@types/apollo/AssetsFrePrice'
 import { AssetPreviousOrder } from '../@types/apollo/AssetPreviousOrder'
-import BigNumber from 'bignumber.js'
 import web3 from 'web3'
-import { CancelToken } from 'axios'
-import { retrieveDDO, queryMetadata } from '../utils/aquarius'
-import { resultKeyNameFromField } from '@apollo/client/utilities'
 
 export interface PriceList {
   [key: string]: string
@@ -317,8 +313,7 @@ export async function getAssetsBestPrices(
   return assetsWithPrice
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export async function getHighestLiquidityDIDs() {
+export async function getHighestLiquidityDIDs(): Promise<string> {
   const didList: string[] = []
   const fetchedPools = await fetchData(HighestLiquidityAssets, null)
 
@@ -329,7 +324,6 @@ export async function getHighestLiquidityDIDs() {
       .toChecksumAddress(fetchedPools.data.pools[i].datatokenAddress)
       .replace('0x', 'did:op:')
     didList.push(did)
-    console.log(did)
   }
   const searchDids = JSON.stringify(didList)
     .replace(/,/g, ' ')

@@ -101,9 +101,7 @@ export default function HomePage(): ReactElement {
         <Bookmarks />
       </section>
 
-      {searchDids && (
-        <SectionQueryResult title="Highest Liquidity" query={queryHighest} />
-      )}
+      <SectionQueryResult title="Highest Liquidity" query={queryHighest} />
 
       <SectionQueryResult
         title="Recently Published"
