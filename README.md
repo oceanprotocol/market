@@ -369,6 +369,8 @@ We encourage you to fork this repository and create your own data marketplace. W
 
 Additionally, we would also advise that your retain the text saying "Powered by Ocean Protocol" on your forked version of the marketplace in order to give credit for the development work done by the Ocean Protocol team.
 
+Everything else is made open according to the apache2 license. We look forward to seeing your data marketplace!
+
 ## 🏛 License
 
 ```text
