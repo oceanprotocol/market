@@ -6,7 +6,7 @@ import React, {
   FormEvent,
   useRef
 } from 'react'
-import styles from './Remove.module.css'
+import * as styles from './Remove.module.css'
 import Header from './Header'
 import { toast } from 'react-toastify'
 import Actions from './Actions'
@@ -219,7 +219,7 @@ export default function Remove({
   }
 
   return (
-    <div className={styles.remove}>
+    <>
       <Header title={content.title} backAction={() => setShowRemove(false)} />
 
       <form className={styles.removeInput}>
@@ -295,6 +295,6 @@ export default function Remove({
         successMessage="Successfully removed liquidity."
         txId={txId}
       />
-    </div>
+    </>
   )
 }

@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import styles from './PublisherLinks.module.css'
+import * as styles from './PublisherLinks.module.css'
 import { ProfileLink } from '../../../models/Profile'
 import { ReactComponent as External } from '../../../images/external.svg'
 

@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import ReactMarkdown from 'react-markdown'
-import styles from './Markdown.module.css'
+import * as styles from './Markdown.module.css'
 
 const Markdown = ({
   text,

@@ -1,7 +1,7 @@
 import Conversion from '../../../atoms/Price/Conversion'
 import React, { ReactElement, ReactNode } from 'react'
 import Token from './Token'
-import styles from './TokenList.module.css'
+import * as styles from './TokenList.module.css'
 
 export default function TokenList({
   title,

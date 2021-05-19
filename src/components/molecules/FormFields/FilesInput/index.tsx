@@ -2,10 +2,10 @@ import React, { ReactElement, useState, useEffect } from 'react'
 import axios from 'axios'
 import { useField } from 'formik'
 import { toast } from 'react-toastify'
+import { InputProps } from '../../../atoms/Input'
 import FileInfo from './Info'
 import FileInput from './Input'
 import { useOcean } from '../../../../providers/Ocean'
-import { InputProps } from '../../../atoms/Input'
 import { fileinfo } from '../../../../utils/provider'
 
 export default function FilesInput(props: InputProps): ReactElement {

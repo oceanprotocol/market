@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'gatsby'
 import shortid from 'shortid'
-import styles from './Tags.module.css'
+import * as styles from './Tags.module.css'
 
 declare type TagsProps = {
   items: string[]

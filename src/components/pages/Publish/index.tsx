@@ -1,11 +1,16 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import { Formik, FormikState } from 'formik'
 import { usePublish } from '../../../hooks/usePublish'
-import styles from './index.module.css'
-import FormPublish from './FormPublish'
-import FormAlgoPublish from './FormAlgoPublish'
-import Web3Feedback from '../../molecules/Wallet/Feedback'
+import Alert from '../../atoms/Alert'
 import Tabs from '../../atoms/Tabs'
+import { Persist } from '../../atoms/FormikPersist'
+import Web3Feedback from '../../molecules/Wallet/Feedback'
+import {
+  MetadataPreview,
+  MetadataAlgorithmPreview
+} from '../../molecules/MetadataPreview'
+import MetadataFeedback from '../../molecules/MetadataFeedback'
+
 import { initialValues, validationSchema } from '../../../models/FormPublish'
 import {
   initialValues as initialValuesAlgorithm,
@@ -18,21 +23,17 @@ import {
   validateDockerImage
 } from '../../../utils/metadata'
 import {
-  MetadataPreview,
-  MetadataAlgorithmPreview
-} from '../../molecules/MetadataPreview'
-import {
   MetadataPublishFormDataset,
   MetadataPublishFormAlgorithm
 } from '../../../@types/MetaData'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import { Logger, Metadata, MetadataMain } from '@oceanprotocol/lib'
-import { Persist } from '../../atoms/FormikPersist'
+import FormPublish from './FormPublish'
+import FormAlgoPublish from './FormAlgoPublish'
 import Debug from './Debug'
-import Alert from '../../atoms/Alert'
-import MetadataFeedback from '../../molecules/MetadataFeedback'
 import { useAccountPurgatory } from '../../../hooks/useAccountPurgatory'
 import { useWeb3 } from '../../../providers/Web3'
+import { tabs as tabsStyle, alert, grid, sticky } from './index.module.css'
 
 const formNameDatasets = 'ocean-publish-form-datasets'
 const formNameAlgorithms = 'ocean-publish-form-algorithms'
@@ -45,11 +46,11 @@ function TabContent({
   values: Partial<MetadataPublishFormAlgorithm | MetadataPublishFormDataset>
 }) {
   return (
-    <article className={styles.grid}>
+    <article className={grid}>
       {publishType === 'dataset' ? <FormPublish /> : <FormAlgoPublish />}
 
       <aside>
-        <div className={styles.sticky}>
+        <div className={sticky}>
           {publishType === 'dataset' ? (
             <MetadataPreview values={values} />
           ) : (
@@ -272,14 +273,10 @@ export default function PublishPage({
               />
             ) : (
               <>
-                <Alert
-                  text={content.warning}
-                  state="info"
-                  className={styles.alert}
-                />
+                <Alert text={content.warning} state="info" className={alert} />
 
                 <Tabs
-                  className={styles.tabs}
+                  className={tabsStyle}
                   items={tabs}
                   handleTabChange={(title) => {
                     setPublishType(title.toLowerCase().replace(' ', '') as any)

@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { BestPrice, DDO } from '@oceanprotocol/lib'
-import styles from './Swap.module.css'
+import * as styles from './Swap.module.css'
 import TradeInput from './TradeInput'
 import Button from '../../../atoms/Button'
 import { ReactComponent as Arrow } from '../../../../images/arrow.svg'

@@ -1,6 +1,6 @@
 import React, { ReactElement, ReactNode } from 'react'
 import classNames from 'classnames/bind'
-import styles from './Container.module.css'
+import * as styles from './Container.module.css'
 
 const cx = classNames.bind(styles)
 

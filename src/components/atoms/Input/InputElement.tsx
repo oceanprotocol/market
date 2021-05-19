@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react'
 import slugify from '@sindresorhus/slugify'
-import styles from './InputElement.module.css'
 import { InputProps } from '.'
 import FilesInput from '../../molecules/FormFields/FilesInput'
 import Terms from '../../molecules/FormFields/Terms'
@@ -12,6 +11,7 @@ import classNames from 'classnames/bind'
 import AssetSelection, {
   AssetSelectionAsset
 } from '../../molecules/FormFields/AssetSelection'
+import * as styles from './InputElement.module.css'
 
 const cx = classNames.bind(styles)
 

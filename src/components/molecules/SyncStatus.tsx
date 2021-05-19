@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import Tooltip from '../atoms/Tooltip'
 import Status from '../atoms/Status'
 import { useGraphSyncStatus } from '../../hooks/useGraphSyncStatus'
-import styles from './SyncStatus.module.css'
+import * as styles from './SyncStatus.module.css'
 
 export default function SyncStatus(): ReactElement {
   const { isGraphSynced, blockGraph, blockHead } = useGraphSyncStatus()

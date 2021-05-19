@@ -5,7 +5,7 @@ import { ComputeJobMetaData } from '../../../../@types/ComputeJobMetaData'
 import { ListItem } from '../../../atoms/Lists'
 import Button from '../../../atoms/Button'
 import { useOcean } from '../../../../providers/Ocean'
-import styles from './Results.module.css'
+import * as styles from './Results.module.css'
 import FormHelp from '../../../atoms/Input/Help'
 import { graphql, useStaticQuery } from 'gatsby'
 

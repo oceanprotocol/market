@@ -1,5 +1,5 @@
 import React, { useEffect, useState, ReactElement } from 'react'
-import styles from './Conversion.module.css'
+import * as styles from './Conversion.module.css'
 import classNames from 'classnames/bind'
 import { formatCurrency, isCrypto } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../../providers/UserPreferences'

@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react'
-import MetaItem from './MetaItem'
-import styles from './MetaSecondary.module.css'
 import Tags from '../../atoms/Tags'
 import Button from '../../atoms/Button'
 import { useAsset } from '../../../providers/Asset'
+import MetaItem from './MetaItem'
+import * as styles from './MetaSecondary.module.css'
 
 const SampleButton = ({ url }: { url: string }) => (
   <Button

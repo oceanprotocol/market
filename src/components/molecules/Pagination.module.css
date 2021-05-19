@@ -49,7 +49,7 @@ li:last-child .number {
 .current,
 .prev,
 .next,
-.break {
+.breakLink {
   composes: number;
 }
 

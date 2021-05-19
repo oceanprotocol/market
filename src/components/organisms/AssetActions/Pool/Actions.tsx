@@ -1,11 +1,11 @@
 import React, { ReactElement } from 'react'
 import Loader from '../../../atoms/Loader'
 import Button from '../../../atoms/Button'
-import styles from './Actions.module.css'
 import ExplorerLink from '../../../atoms/ExplorerLink'
 import SuccessConfetti from '../../../atoms/SuccessConfetti'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
+import * as styles from './Actions.module.css'
 
 export default function Actions({
   isLoading,

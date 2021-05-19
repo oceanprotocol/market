@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import styles from './RefreshName.module.css'
+import * as styles from './RefreshName.module.css'
 import Button from '../../../atoms/Button'
 import { ReactComponent as Refresh } from '../../../../images/refresh.svg'
 

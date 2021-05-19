@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import { MetadataPublishFormDataset } from '../../../@types/MetaData'
 import DebugOutput from '../../atoms/DebugOutput'
-import styles from './index.module.css'
+import * as styles from './index.module.css'
 import { transformPublishFormToMetadata } from '../../../utils/metadata'
 
 export default function Debug({

@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react'
 import Tooltip from '../../../../atoms/Tooltip'
-import styles from './Fees.module.css'
-import { useField, useFormikContext } from 'formik'
+import { useField } from 'formik'
 import Input from '../../../../atoms/Input'
 import Error from './Error'
+import * as styles from './Fees.module.css'
 
 const Default = ({
   title,

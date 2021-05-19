@@ -1,7 +1,17 @@
 import React, { useState, useEffect, ReactElement } from 'react'
 import ReactPaginate from 'react-paginate'
-import styles from './Pagination.module.css'
 import { ReactComponent as Arrow } from '../../images/arrow.svg'
+import {
+  arrow,
+  previous,
+  pagination,
+  number,
+  current,
+  prev,
+  next,
+  prevNextDisabled,
+  breakLink
+} from './Pagination.module.css'
 
 interface PaginationProps {
   totalPages?: number
@@ -64,16 +74,16 @@ export default function Pagination({
       pageRangeDisplayed={smallViewport ? 3 : 6}
       onPageChange={(data) => onPageChange(data.selected)}
       disableInitialCallback
-      previousLabel={<Arrow className={`${styles.arrow} ${styles.previous}`} />}
-      nextLabel={<Arrow className={styles.arrow} />}
+      previousLabel={<Arrow className={`${arrow} ${previous}`} />}
+      nextLabel={<Arrow className={arrow} />}
       breakLabel="..."
-      containerClassName={styles.pagination}
-      pageLinkClassName={styles.number}
-      activeLinkClassName={styles.current}
-      previousLinkClassName={styles.prev}
-      nextLinkClassName={styles.next}
-      disabledClassName={styles.prevNextDisabled}
-      breakLinkClassName={styles.break}
+      containerClassName={pagination}
+      pageLinkClassName={number}
+      activeLinkClassName={current}
+      previousLinkClassName={prev}
+      nextLinkClassName={next}
+      disabledClassName={prevNextDisabled}
+      breakLinkClassName={breakLink}
     />
   ) : null
 }

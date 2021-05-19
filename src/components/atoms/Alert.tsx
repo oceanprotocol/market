@@ -1,11 +1,16 @@
 import React, { ReactElement, FormEvent } from 'react'
-import classNames from 'classnames/bind'
-import styles from './Alert.module.css'
+import classNames from 'classnames'
 import Button from './Button'
 import Markdown from './Markdown'
 import Badge from './Badge'
-
-const cx = classNames.bind(styles)
+import {
+  alert,
+  title as titleStyle,
+  badge as badgeStyle,
+  text as textStyle,
+  action as actionStyle,
+  close as closeStyle
+} from './Alert.module.css'
 
 export default function Alert({
   title,
@@ -28,8 +33,8 @@ export default function Alert({
   onDismiss?: () => void
   className?: string
 }): ReactElement {
-  const styleClasses = cx({
-    alert: true,
+  const styleClasses = classNames({
+    [alert]: true,
     [state]: state,
     [className]: className
   })
@@ -37,14 +42,14 @@ export default function Alert({
   return (
     <div className={styleClasses}>
       {title && (
-        <h3 className={styles.title}>
-          {title} {badge && <Badge className={styles.badge} label={badge} />}
+        <h3 className={titleStyle}>
+          {title} {badge && <Badge className={badgeStyle} label={badge} />}
         </h3>
       )}
-      <Markdown className={styles.text} text={text} />
+      <Markdown className={textStyle} text={text} />
       {action && (
         <Button
-          className={styles.action}
+          className={actionStyle}
           size="small"
           style={action.style || 'primary'}
           onClick={action.handleAction}
@@ -53,7 +58,7 @@ export default function Alert({
         </Button>
       )}
       {onDismiss && (
-        <button className={styles.close} onClick={onDismiss}>
+        <button className={closeStyle} onClick={onDismiss}>
           &times;
         </button>
       )}

@@ -1,22 +1,22 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { graphql, useStaticQuery } from 'gatsby'
-import Markdown from '../../atoms/Markdown'
-import MetaFull from './MetaFull'
-import MetaSecondary from './MetaSecondary'
-import AssetActions from '../AssetActions'
-import { useUserPreferences } from '../../../providers/UserPreferences'
-import Pricing from './Pricing'
-import Bookmark from './Bookmark'
 import { useAsset } from '../../../providers/Asset'
+import { useWeb3 } from '../../../providers/Web3'
+import { useUserPreferences } from '../../../providers/UserPreferences'
 import Alert from '../../atoms/Alert'
 import Button from '../../atoms/Button'
+import Markdown from '../../atoms/Markdown'
+import DebugOutput from '../../atoms/DebugOutput'
+import AssetActions from '../AssetActions'
 import Edit from '../AssetActions/Edit'
 import EditComputeDataset from '../AssetActions/Edit/EditComputeDataset'
-import DebugOutput from '../../atoms/DebugOutput'
+import Pricing from './Pricing'
+import Bookmark from './Bookmark'
 import MetaMain from './MetaMain'
 import EditHistory from './EditHistory'
-import { useWeb3 } from '../../../providers/Web3'
-import styles from './index.module.css'
+import MetaFull from './MetaFull'
+import MetaSecondary from './MetaSecondary'
+import * as styles from './index.module.css'
 
 export interface AssetContentProps {
   path?: string
@@ -92,7 +92,6 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
           ) : (
             <>
               <Markdown
-                className={styles.description}
                 text={metadata?.additionalInformation?.description || ''}
               />
 

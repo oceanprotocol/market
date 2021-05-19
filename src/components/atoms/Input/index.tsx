@@ -2,7 +2,7 @@ import React, { FormEvent, ChangeEvent, ReactElement, ReactNode } from 'react'
 import InputElement from './InputElement'
 import Help from './Help'
 import Label from './Label'
-import styles from './index.module.css'
+import * as styles from './index.module.css'
 import { ErrorMessage, FieldInputProps } from 'formik'
 import classNames from 'classnames/bind'
 

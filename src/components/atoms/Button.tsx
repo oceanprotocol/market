@@ -1,7 +1,7 @@
 import React, { ReactNode, FormEvent, ReactElement } from 'react'
 import { Link } from 'gatsby'
 import classNames from 'classnames/bind'
-import styles from './Button.module.css'
+import * as styles from './Button.module.css'
 
 const cx = classNames.bind(styles)
 

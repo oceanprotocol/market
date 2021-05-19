@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import repoMetadata from '../../../repo-metadata.json'
-import styles from './BuildId.module.css'
+import * as styles from './BuildId.module.css'
 
 export default function BuildId(): ReactElement {
   const commitBranch = repoMetadata.branch

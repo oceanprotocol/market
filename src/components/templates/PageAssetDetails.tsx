@@ -1,10 +1,10 @@
 import React, { useState, useEffect, ReactElement } from 'react'
 import { Router } from '@reach/router'
-import AssetContent from '../organisms/AssetContent'
-import Page from './Page'
+import { useAsset } from '../../providers/Asset'
 import Alert from '../atoms/Alert'
 import Loader from '../atoms/Loader'
-import { useAsset } from '../../providers/Asset'
+import AssetContent from '../organisms/AssetContent'
+import Page from './Page'
 
 export default function PageTemplateAssetDetails({
   uri

@@ -1,10 +1,10 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { File as FileMetadata, DDO } from '@oceanprotocol/lib'
+import ButtonBuy from '../../atoms/ButtonBuy'
 import File from '../../atoms/File'
 import Price from '../../atoms/Price'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
-import styles from './Consume.module.css'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { useAsset } from '../../../providers/Asset'
 import { secondsToString } from '../../../utils/metadata'
@@ -15,7 +15,12 @@ import { useOcean } from '../../../providers/Ocean'
 import { useWeb3 } from '../../../providers/Web3'
 import { usePricing } from '../../../hooks/usePricing'
 import { useConsume } from '../../../hooks/useConsume'
-import ButtonBuy from '../../atoms/ButtonBuy'
+import {
+  consume as consumeStyle,
+  info,
+  filewrapper,
+  feedback
+} from './Consume.module.css'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {
@@ -156,17 +161,17 @@ export default function Consume({
   )
 
   return (
-    <aside className={styles.consume}>
-      <div className={styles.info}>
-        <div className={styles.filewrapper}>
+    <aside className={consumeStyle}>
+      <div className={info}>
+        <div className={filewrapper}>
           <File file={file} />
         </div>
-        <div className={styles.pricewrapper}>
+        <div>
           <Price price={price} conversion />
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>
-      <footer className={styles.feedback}>
+      <footer className={feedback}>
         <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
       </footer>
     </aside>

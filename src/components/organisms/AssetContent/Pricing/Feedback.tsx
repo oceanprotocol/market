@@ -1,8 +1,8 @@
 import Loader from '../../../atoms/Loader'
 import SuccessConfetti from '../../../atoms/SuccessConfetti'
 import React, { ReactElement } from 'react'
-import styles from './Feedback.module.css'
 import Button from '../../../atoms/Button'
+import * as styles from './Feedback.module.css'
 
 export default function Feedback({
   success,
@@ -15,7 +15,6 @@ export default function Feedback({
     <Button
       style="primary"
       size="small"
-      className={styles.action}
       onClick={() => window?.location.reload()}
     >
       Reload Page

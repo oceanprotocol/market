@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react'
-import styles from './AssetType.module.css'
 import classNames from 'classnames/bind'
 import { ReactComponent as Compute } from '../../images/compute.svg'
 import { ReactComponent as Download } from '../../images/download.svg'
 import { ReactComponent as Lock } from '../../images/lock.svg'
+import * as styles from './AssetType.module.css'
 
 const cx = classNames.bind(styles)
 

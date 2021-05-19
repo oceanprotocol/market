@@ -1,11 +1,14 @@
 import React, { ReactElement } from 'react'
-import classNames from 'classnames/bind'
 import { addTokenToWallet } from '../../utils/web3'
 import { useWeb3 } from '../../providers/Web3'
 import Button from './Button'
-import styles from './AddToken.module.css'
-
-const cx = classNames.bind(styles)
+import {
+  logoWrap,
+  logo as styleLogo,
+  text as styleText,
+  minimal as styleMinimal,
+  button
+} from './AddToken.module.css'
 
 export default function AddToken({
   address,
@@ -24,11 +27,7 @@ export default function AddToken({
 }): ReactElement {
   const { web3Provider } = useWeb3()
 
-  const styleClasses = cx({
-    button: true,
-    minimal: minimal,
-    [className]: className
-  })
+  const styleClasses = `${button} ${minimal && styleMinimal} ${className}`
 
   async function handleAddToken() {
     if (!web3Provider) return
@@ -43,11 +42,11 @@ export default function AddToken({
       size="small"
       onClick={handleAddToken}
     >
-      <span className={styles.logoWrap}>
-        <img src={logo} className={styles.logo} width="16" height="16" />
+      <span className={logoWrap}>
+        <img src={logo} className={styleLogo} width="16" height="16" />
       </span>
 
-      <span className={styles.text}>{text || `Add ${symbol}`}</span>
+      <span className={styleText}>{text || `Add ${symbol}`}</span>
     </Button>
   )
 }

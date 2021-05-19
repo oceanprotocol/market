@@ -5,7 +5,7 @@ import { FormAddLiquidity } from '.'
 import { PoolBalance } from '../../../../../@types/TokenBalance'
 import FormHelp from '../../../../atoms/Input/Help'
 import Token from '../Token'
-import styles from './Output.module.css'
+import * as styles from './Output.module.css'
 import Decimal from 'decimal.js'
 
 const contentQuery = graphql`

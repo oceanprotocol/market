@@ -16,7 +16,7 @@ import { ComputeOrders } from '../../../../@types/apollo/ComputeOrders'
 import Details from './Details'
 import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
 import { ReactComponent as Refresh } from '../../../../images/refresh.svg'
-import styles from './index.module.css'
+import * as styles from './index.module.css'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {

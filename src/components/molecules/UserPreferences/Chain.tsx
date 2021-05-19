@@ -6,7 +6,7 @@ import { getOceanConfig } from '../../../utils/ocean'
 import FormHelp from '../../atoms/Input/Help'
 import Label from '../../atoms/Input/Label'
 import BoxSelection, { BoxSelectionOption } from '../FormFields/BoxSelection'
-import styles from './Chain.module.css'
+import * as styles from './Chain.module.css'
 
 export default function Chain(): ReactElement {
   const { web3 } = useWeb3()

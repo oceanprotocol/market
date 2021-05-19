@@ -1,8 +1,10 @@
 import React, { ReactElement } from 'react'
-import classNames from 'classnames/bind'
-import styles from './PageHeader.module.css'
-
-const cx = classNames.bind(styles)
+import {
+  header,
+  center as centerStyle,
+  title as titleStyle,
+  description as descriptionStyle
+} from './PageHeader.module.css'
 
 export default function PageHeader({
   title,
@@ -13,15 +15,10 @@ export default function PageHeader({
   description?: string
   center?: boolean
 }): ReactElement {
-  const styleClasses = cx({
-    header: true,
-    center: center
-  })
-
   return (
-    <header className={styleClasses}>
-      <h1 className={styles.title}>{title}</h1>
-      {description && <p className={styles.description}>{description}</p>}
+    <header className={`${header} ${center && centerStyle}`}>
+      <h1 className={titleStyle}>{title}</h1>
+      {description && <p className={descriptionStyle}>{description}</p>}
     </header>
   )
 }

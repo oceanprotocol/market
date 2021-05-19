@@ -1,5 +1,5 @@
 import React, { ChangeEvent, ReactElement, useEffect } from 'react'
-import styles from './FormAdd.module.css'
+import * as styles from './FormAdd.module.css'
 import Input from '../../../../atoms/Input'
 import {
   Field,

@@ -1,15 +1,15 @@
 import React, { ReactElement, useState, useEffect } from 'react'
-import styles from './index.module.css'
-import Compute from './Compute'
-import Consume from './Consume'
 import { Logger } from '@oceanprotocol/lib'
 import Tabs from '../../atoms/Tabs'
 import compareAsBN from '../../../utils/compareAsBN'
-import Pool from './Pool'
-import Trade from './Trade'
 import { useAsset } from '../../../providers/Asset'
 import { useOcean } from '../../../providers/Ocean'
 import { useWeb3 } from '../../../providers/Web3'
+import Pool from './Pool'
+import Trade from './Trade'
+import Compute from './Compute'
+import Consume from './Consume'
+import { actions } from './index.module.css'
 
 export default function AssetActions(): ReactElement {
   const { accountId } = useWeb3()
@@ -85,5 +85,5 @@ export default function AssetActions(): ReactElement {
       }
     )
 
-  return <Tabs items={tabs} className={styles.actions} />
+  return <Tabs items={tabs} className={actions} />
 }

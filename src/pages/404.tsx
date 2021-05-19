@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react'
 import { PageProps, graphql } from 'gatsby'
+import Button from '../components/atoms/Button'
 import Page from '../components/templates/Page'
 import fishfail from '../images/fishfail.gif'
 import { Helmet } from 'react-helmet'
-import Button from '../components/atoms/Button'
 
 export default function PageGatsby404(props: PageProps): ReactElement {
   const { title, description, actions } = (props.data as any).content.edges[0]

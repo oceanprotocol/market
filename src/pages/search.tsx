@@ -1,10 +1,10 @@
 import React, { ReactElement, useState } from 'react'
-import PageSearch from '../components/templates/Search'
 import { PageProps } from 'gatsby'
-import Page from '../components/templates/Page'
+import ethereumAddress from 'ethereum-address'
 import queryString from 'query-string'
 import { accountTruncate } from '../utils/web3'
-import ethereumAddress from 'ethereum-address'
+import Page from '../components/templates/Page'
+import PageSearch from '../components/templates/Search'
 
 export default function PageGatsbySearch(props: PageProps): ReactElement {
   const parsed = queryString.parse(props.location.search)

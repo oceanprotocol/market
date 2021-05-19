@@ -1,6 +1,6 @@
 import React from 'react'
 
-import styles from './SearchFilterSection.module.css'
+import * as styles from './SearchFilterSection.module.css'
 
 const SearchFilterSection = ({
   title,

@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react'
-import stylesIndex from './index.module.css'
-import styles from './Fixed.module.css'
 import FormHelp from '../../../../atoms/Input/Help'
 import { DDO } from '@oceanprotocol/lib'
 import Price from './Price'
+import { help } from './index.module.css'
+import { fixed } from './Fixed.module.css'
 
 export default function Fixed({
   ddo,
@@ -13,8 +13,8 @@ export default function Fixed({
   content: any
 }): ReactElement {
   return (
-    <div className={styles.fixed}>
-      <FormHelp className={stylesIndex.help}>{content.info}</FormHelp>
+    <div className={fixed}>
+      <FormHelp className={help}>{content.info}</FormHelp>
       <Price ddo={ddo} />
     </div>
   )

@@ -3,7 +3,7 @@ import { File as FileMetadata } from '@oceanprotocol/lib/dist/node/ddo/interface
 import Markdown from '../atoms/Markdown'
 import Tags from '../atoms/Tags'
 import MetaItem from '../organisms/AssetContent/MetaItem'
-import styles from './MetadataPreview.module.css'
+import * as styles from './MetadataPreview.module.css'
 import File from '../atoms/File'
 import {
   MetadataPublishFormDataset,
@@ -106,11 +106,7 @@ export function MetadataPreview({
 
         <div className={styles.asset}>
           {values.files?.length > 0 && typeof values.files !== 'string' && (
-            <File
-              file={values.files[0] as FileMetadata}
-              className={styles.file}
-              small
-            />
+            <File file={values.files[0] as FileMetadata} small />
           )}
         </div>
 
@@ -144,11 +140,7 @@ export function MetadataAlgorithmPreview({
 
         <div className={styles.asset}>
           {values.files?.length > 0 && typeof values.files !== 'string' && (
-            <File
-              file={values.files[0] as FileMetadata}
-              className={styles.file}
-              small
-            />
+            <File file={values.files[0] as FileMetadata} small />
           )}
         </div>
         {values.tags && <Tags items={transformTags(values.tags)} />}

@@ -1,18 +1,18 @@
 import React, { ReactElement, useEffect, useState } from 'react'
+import Button from '../atoms/Button'
+import Container from '../atoms/Container'
 import SearchBar from '../molecules/SearchBar'
-import styles from './Home.module.css'
+import Bookmarks from '../molecules/Bookmarks'
 import AssetList from '../organisms/AssetList'
 import {
   QueryResult,
   SearchQuery
 } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
-import Container from '../atoms/Container'
 import { useOcean } from '../../providers/Ocean'
-import Button from '../atoms/Button'
-import Bookmarks from '../molecules/Bookmarks'
 import axios from 'axios'
 import { queryMetadata } from '../../utils/aquarius'
 import { useWeb3 } from '../../providers/Web3'
+import { section, searchWrap } from './Home.module.css'
 
 const queryHighest = {
   page: 1,
@@ -69,7 +69,7 @@ function SectionQueryResult({
   }, [config?.metadataCacheUri, query, web3Loading])
 
   return (
-    <section className={styles.section}>
+    <section className={section}>
       <h3>{title}</h3>
       <AssetList assets={result?.results} showPagination={false} />
       {action && action}
@@ -80,11 +80,11 @@ function SectionQueryResult({
 export default function HomePage(): ReactElement {
   return (
     <>
-      <Container narrow className={styles.searchWrap}>
+      <Container narrow className={searchWrap}>
         <SearchBar size="large" />
       </Container>
 
-      <section className={styles.section}>
+      <section className={section}>
         <h3>Bookmarks</h3>
         <Bookmarks />
       </section>

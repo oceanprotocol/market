@@ -1,12 +1,12 @@
 import React, { ReactElement } from 'react'
-import stylesIndex from './index.module.css'
-import styles from './Coin.module.css'
 import InputElement from '../../../../atoms/Input/InputElement'
 import { ReactComponent as Logo } from '../../../../../images/logo.svg'
 import Conversion from '../../../../atoms/Price/Conversion'
 import { DataTokenOptions } from '../../../../../hooks/usePublish'
 import { useField } from 'formik'
 import Error from './Error'
+import { conversion } from './index.module.css'
+import * as styles from './Coin.module.css'
 
 export default function Coin({
   datatokenOptions,
@@ -46,7 +46,7 @@ export default function Coin({
           {...field}
         />
         {datatokenOptions?.symbol === 'OCEAN' && (
-          <Conversion price={field.value} className={stylesIndex.conversion} />
+          <Conversion price={field.value} className={conversion} />
         )}
         <Error meta={meta} />
       </div>

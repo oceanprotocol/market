@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import { InputProps } from '../../atoms/Input'
 import InputElement from '../../atoms/Input/InputElement'
-import styles from './Terms.module.css'
+import * as styles from './Terms.module.css'
 import { graphql, useStaticQuery } from 'gatsby'
 
 const query = graphql`

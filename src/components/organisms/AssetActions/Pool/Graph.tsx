@@ -8,7 +8,7 @@ import {
   ChartTooltipItem,
   ChartTooltipOptions
 } from 'chart.js'
-import styles from './Graph.module.css'
+import * as styles from './Graph.module.css'
 import Loader from '../../../atoms/Loader'
 import { formatPrice } from '../../../atoms/Price/PriceUnit'
 import { useUserPreferences } from '../../../../providers/UserPreferences'

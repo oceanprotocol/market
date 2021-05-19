@@ -2,11 +2,11 @@ import React, { ReactElement } from 'react'
 import { useAsset } from '../../../providers/Asset'
 import { useWeb3 } from '../../../providers/Web3'
 import ExplorerLink from '../../atoms/ExplorerLink'
+import AssetType from '../../atoms/AssetType'
 import Publisher from '../../atoms/Publisher'
 import AddToken from '../../atoms/AddToken'
 import Time from '../../atoms/Time'
-import AssetType from '../../atoms/AssetType'
-import styles from './MetaMain.module.css'
+import * as styles from './MetaMain.module.css'
 
 export default function MetaMain(): ReactElement {
   const { ddo, owner, type } = useAsset()

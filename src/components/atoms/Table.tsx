@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import DataTable, { IDataTableProps } from 'react-data-table-component'
 import Loader from './Loader'
 import Pagination from '../molecules/Pagination'
-import styles from './Table.module.css'
+import * as styles from './Table.module.css'
 
 interface TableProps extends IDataTableProps {
   isLoading?: boolean

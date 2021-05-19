@@ -9,9 +9,9 @@ import {
   QueryResult,
   SearchQuery
 } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
+import axios, { CancelToken, AxiosResponse } from 'axios'
 import { AssetSelectionAsset } from '../components/molecules/FormFields/AssetSelection'
 import { PriceList, getAssetsPriceList } from './subgraph'
-import axios, { CancelToken, AxiosResponse } from 'axios'
 
 // TODO: import directly from ocean.js somehow.
 // Transforming Aquarius' direct response is needed for getting actual DDOs

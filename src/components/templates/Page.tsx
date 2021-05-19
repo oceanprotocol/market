@@ -1,7 +1,7 @@
 import React, { ReactNode, ReactElement } from 'react'
-import PageHeader from '../molecules/PageHeader'
 import Seo from '../atoms/Seo'
 import Container from '../atoms/Container'
+import PageHeader from '../molecules/PageHeader'
 
 export interface PageProps {
   children: ReactNode
@@ -10,6 +10,7 @@ export interface PageProps {
   description?: string
   noPageHeader?: boolean
   headerCenter?: boolean
+  narrow?: boolean
 }
 
 export default function Page({
@@ -18,13 +19,14 @@ export default function Page({
   uri,
   description,
   noPageHeader,
-  headerCenter
+  headerCenter,
+  narrow
 }: PageProps): ReactElement {
   return (
     <>
       <Seo title={title} description={description} uri={uri} />
 
-      <Container>
+      <Container narrow={narrow}>
         {title && !noPageHeader && (
           <PageHeader
             title={title}

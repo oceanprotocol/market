@@ -3,7 +3,7 @@ import { File as FileMetadata } from '@oceanprotocol/lib'
 import filesize from 'filesize'
 import classNames from 'classnames/bind'
 import cleanupContentType from '../../utils/cleanupContentType'
-import styles from './File.module.css'
+import * as styles from './File.module.css'
 
 const cx = classNames.bind(styles)
 

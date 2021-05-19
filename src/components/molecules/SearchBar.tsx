@@ -1,10 +1,10 @@
 import React, { useState, ChangeEvent, FormEvent, ReactElement } from 'react'
 import { navigate } from 'gatsby'
-import styles from './SearchBar.module.css'
 import Button from '../atoms/Button'
-import Input from '../atoms/Input'
 import InputGroup from '../atoms/Input/InputGroup'
+import Input from '../atoms/Input'
 import { addExistingParamsToUrl } from '../templates/Search/utils'
+import { form } from './SearchBar.module.css'
 
 export default function SearchBar({
   placeholder,
@@ -42,7 +42,7 @@ export default function SearchBar({
   }
 
   return (
-    <form className={styles.form}>
+    <form className={form}>
       <InputGroup>
         <Input
           type="search"
@@ -62,7 +62,7 @@ export default function SearchBar({
         </Button>
       </InputGroup>
 
-      {filters && <fieldset className={styles.filters}>Type, Price</fieldset>}
+      {filters && <fieldset>Type, Price</fieldset>}
     </form>
   )
 }

@@ -9,8 +9,8 @@ import { initialValues as initialValuesDataset } from '../../../models/FormAlgoP
 import { useOcean } from '../../../providers/Ocean'
 import { ReactComponent as Download } from '../../../images/download.svg'
 import { ReactComponent as Compute } from '../../../images/compute.svg'
-import stylesIndex from './index.module.css'
-import styles from './FormPublish.module.css'
+import * as stylesIndex from './index.module.css'
+import * as styles from './FormPublish.module.css'
 
 const query = graphql`
   query {

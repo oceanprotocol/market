@@ -1,5 +1,5 @@
 import React, { ReactElement, ReactNode } from 'react'
-import styles from './MetaItem.module.css'
+import * as styles from './MetaItem.module.css'
 
 export default function MetaItem({
   title,

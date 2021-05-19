@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import styles from './CoinSelect.module.css'
+import * as styles from './CoinSelect.module.css'
 
 export default function CoinSelect({
   dtSymbol,

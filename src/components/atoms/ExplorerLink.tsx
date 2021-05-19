@@ -3,7 +3,7 @@ import { ReactComponent as External } from '../../images/external.svg'
 import classNames from 'classnames/bind'
 import { ConfigHelperConfig } from '@oceanprotocol/lib'
 import { useOcean } from '../../providers/Ocean'
-import styles from './ExplorerLink.module.css'
+import * as styles from './ExplorerLink.module.css'
 
 const cx = classNames.bind(styles)
 

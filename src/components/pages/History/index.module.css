@@ -1,27 +1,9 @@
-.grid {
-  display: grid;
-  gap: calc(var(--spacer) * 1.5);
-  position: relative;
-}
-
-@media (min-width: 55rem) {
-  .grid {
-    /* lazy golden ratio */
-    grid-template-columns: 1.618fr 1fr;
-  }
-
-  .sticky {
-    position: sticky;
-    top: var(--spacer);
-  }
-}
-
 .content {
   margin-top: var(--spacer);
   background-color: var(--background-body);
 }
 
-.tabs ul[class*='tabList'] {
+.content ul[class*='tabList'] {
   background-color: var(--background-content);
   border: 1px solid var(--border-color);
   border-bottom: 0;
@@ -32,11 +14,11 @@
   overflow-x: auto;
 }
 
-.tabs div[class*='tabContent'] {
+.content div[class*='tabContent'] {
   border: 1px solid var(--border-color);
   padding-bottom: 0;
 }
 
-.tabs div[class*='tab-panel--selected'] {
+.content div[class*='tab-panel--selected'] {
   margin-bottom: var(--spacer);
 }

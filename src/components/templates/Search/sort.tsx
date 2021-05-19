@@ -1,13 +1,13 @@
 import React, { ReactElement } from 'react'
 import { useNavigate } from '@reach/router'
+import classNames from 'classnames/bind'
 import {
   addExistingParamsToUrl,
   SortTermOptions,
   SortValueOptions
 } from './utils'
 import Button from '../../atoms/Button'
-import styles from './sort.module.css'
-import classNames from 'classnames/bind'
+import * as styles from './sort.module.css'
 
 const cx = classNames.bind(styles)
 

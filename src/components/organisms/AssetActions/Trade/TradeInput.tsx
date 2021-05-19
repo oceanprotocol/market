@@ -1,5 +1,5 @@
 import React, { ChangeEvent, ReactElement } from 'react'
-import styles from './TradeInput.module.css'
+import * as styles from './TradeInput.module.css'
 import {
   Field,
   FieldInputProps,

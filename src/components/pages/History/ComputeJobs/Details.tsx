@@ -9,7 +9,7 @@ import { ReactComponent as External } from '../../../../images/external.svg'
 import { retrieveDDO } from '../../../../utils/aquarius'
 import { useOcean } from '../../../../providers/Ocean'
 import Results from './Results'
-import styles from './Details.module.css'
+import * as styles from './Details.module.css'
 
 function Asset({
   title,

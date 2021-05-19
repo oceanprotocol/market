@@ -6,9 +6,8 @@ import Button from '../../atoms/Button'
 import AddToken from '../../atoms/AddToken'
 import Conversion from '../../atoms/Price/Conversion'
 import { useWeb3 } from '../../../providers/Web3'
-
 import Web3Feedback from './Feedback'
-import styles from './Details.module.css'
+import * as styles from './Details.module.css'
 
 export default function Details(): ReactElement {
   const { web3Provider, web3ProviderInfo, connect, logout, networkData } =

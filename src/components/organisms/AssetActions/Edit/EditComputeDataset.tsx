@@ -14,7 +14,7 @@ import MetadataFeedback from '../../../molecules/MetadataFeedback'
 import { graphql, useStaticQuery } from 'gatsby'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import DebugEditCompute from './DebugEditCompute'
-import styles from './index.module.css'
+import * as styles from './index.module.css'
 import { transformComputeFormToServiceComputePrivacy } from '../../../../utils/compute'
 
 const contentQuery = graphql`

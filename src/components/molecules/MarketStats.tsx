@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import styles from './MarketStats.module.css'
+import * as styles from './MarketStats.module.css'
 import { gql, useQuery } from '@apollo/client'
 import Conversion from '../atoms/Price/Conversion'
 import PriceUnit from '../atoms/Price/PriceUnit'

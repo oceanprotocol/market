@@ -2,9 +2,9 @@ import React, { ReactElement } from 'react'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import classNames from 'classnames/bind'
 import Conversion from './Conversion'
-import styles from './PriceUnit.module.css'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import Badge from '../Badge'
+import * as styles from './PriceUnit.module.css'
 
 const cx = classNames.bind(styles)
 

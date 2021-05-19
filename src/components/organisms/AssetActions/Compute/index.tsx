@@ -33,7 +33,7 @@ import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelectio
 import { SearchQuery } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import axios from 'axios'
 import FormStartComputeDataset from './FormComputeDataset'
-import styles from './index.module.css'
+import * as styles from './index.module.css'
 import SuccessConfetti from '../../../atoms/SuccessConfetti'
 import Button from '../../../atoms/Button'
 import { secondsToString } from '../../../../utils/metadata'

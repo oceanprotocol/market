@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { PageProps } from 'gatsby'
-import PageTemplateAssetDetails from '../../components/templates/PageAssetDetails'
 import AssetProvider from '../../providers/Asset'
+import PageTemplateAssetDetails from '../../components/templates/PageAssetDetails'
 
 export default function PageGatsbyAssetDetails(props: PageProps): ReactElement {
   const [did, setDid] = useState<string>()

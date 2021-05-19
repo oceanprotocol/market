@@ -1,5 +1,5 @@
 import React, { ReactElement, ReactNode } from 'react'
-import styles from './Label.module.css'
+import * as styles from './Label.module.css'
 
 const Label = ({
   required,

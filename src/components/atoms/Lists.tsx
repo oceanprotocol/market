@@ -1,5 +1,5 @@
 import React, { ReactElement, ReactNode } from 'react'
-import styles from './Lists.module.css'
+import * as styles from './Lists.module.css'
 
 export function ListItem({
   children,

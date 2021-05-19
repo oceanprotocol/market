@@ -3,7 +3,7 @@ import React, { ReactElement } from 'react'
 import { useAsset } from '../../../../providers/Asset'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
 import Tooltip from '../../../atoms/Tooltip'
-import styles from './PriceOutput.module.css'
+import * as styles from './PriceOutput.module.css'
 
 interface PriceOutputProps {
   totalPrice: number

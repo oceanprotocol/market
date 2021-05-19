@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import Button from '../../../atoms/Button'
 import { FieldInputProps, useField } from 'formik'
 import Loader from '../../../atoms/Loader'
-import styles from './Input.module.css'
+import * as styles from './Input.module.css'
 import InputGroup from '../../../atoms/Input/InputGroup'
 
 export default function FileInput({

@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "module": "commonjs",
-    "lib": ["dom", "es2017"],
+    "target": "es5",
+    "module": "esnext",
+    "lib": ["dom", "dom.iterable", "esnext"],
     "resolveJsonModule": true,
-    "moduleResolution": "Node",
-    "jsx": "react",
+    "isolatedModules": true,
+    "moduleResolution": "node",
+    "jsx": "preserve",
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
@@ -13,8 +14,9 @@
     "sourceMap": true,
     "noImplicitAny": true,
     "skipLibCheck": true,
-    "allowJs": true
-    //"baseUrl": "./src"
+    "allowJs": true,
+    //"baseUrl": "./src",
+    "plugins": [{ "name": "typescript-plugin-css-modules" }]
   },
   "exclude": ["node_modules", "public", ".cache", "*.js"],
   "include": ["./src/**/*", "./tests/**/*", "./app.config.js"]

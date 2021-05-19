@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
-import styles from './Badge.module.css'
 import classNames from 'classnames/bind'
+import * as styles from './Badge.module.css'
 
 const cx = classNames.bind(styles)
 

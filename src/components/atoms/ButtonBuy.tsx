@@ -1,7 +1,7 @@
 import React, { FormEvent, ReactElement } from 'react'
 import Button from './Button'
-import styles from './ButtonBuy.module.css'
 import Loader from './Loader'
+import * as styles from './ButtonBuy.module.css'
 
 interface ButtonBuyProps {
   action: 'download' | 'compute'

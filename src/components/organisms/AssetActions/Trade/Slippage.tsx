@@ -2,7 +2,7 @@ import { FormikContextType, useFormikContext } from 'formik'
 import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react'
 import { FormTradeData, slippagePresets } from '../../../../models/FormTrade'
 import InputElement from '../../../atoms/Input/InputElement'
-import styles from './Slippage.module.css'
+import * as styles from './Slippage.module.css'
 
 export default function Slippage(): ReactElement {
   // Connect with form

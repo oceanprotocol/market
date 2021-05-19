@@ -1,7 +1,7 @@
 import React, { ReactElement, useState } from 'react'
 import Button from '../../../atoms/Button'
 import PoolTransactions from '../../../molecules/PoolTransactions'
-import styles from './Transactions.module.css'
+import * as styles from './Transactions.module.css'
 import { ReactComponent as Caret } from '../../../../images/caret.svg'
 import { useAsset } from '../../../../providers/Asset'
 

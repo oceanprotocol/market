@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import { useOcean } from '../../../providers/Ocean'
 import Status from '../../atoms/Status'
-import styles from './Feedback.module.css'
+import * as styles from './Feedback.module.css'
 
 export declare type Web3Error = {
   status: 'error' | 'warning' | 'success'

@@ -1,16 +1,15 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
+import { navigate } from 'gatsby'
+import queryString from 'query-string'
+import { useOcean } from '../../../providers/Ocean'
+import { updateQueryStringParameter } from '../../../utils'
 import SearchBar from '../../molecules/SearchBar'
 import AssetList from '../../organisms/AssetList'
-import styles from './index.module.css'
-import queryString from 'query-string'
 import ServiceFilter from './filterService'
 import Sort from './sort'
 import { getResults } from './utils'
-import { navigate } from 'gatsby'
-import { updateQueryStringParameter } from '../../../utils'
-import Loader from '../../atoms/Loader'
-import { useOcean } from '../../../providers/Ocean'
+import { row } from './index.module.css'
 
 export default function SearchPage({
   location,
@@ -64,33 +63,26 @@ export default function SearchPage({
 
   return (
     <>
-      <div className={styles.search}>
-        {(text || owner) && (
-          <SearchBar initialValue={(text || owner) as string} />
-        )}
-        <div className={styles.row}>
-          <ServiceFilter
-            serviceType={service}
-            setServiceType={setServiceType}
-          />
-          <Sort
-            sortType={sortType}
-            sortDirection={sortDirection}
-            setSortType={setSortType}
-            setSortDirection={setSortDirection}
-          />
-        </div>
-      </div>
-      <div className={styles.results}>
-        <AssetList
-          assets={queryResult?.results}
-          showPagination
-          isLoading={loading}
-          page={queryResult?.page}
-          totalPages={queryResult?.totalPages}
-          onPageChange={setPage}
+      {(text || owner) && (
+        <SearchBar initialValue={(text || owner) as string} />
+      )}
+      <div className={row}>
+        <ServiceFilter serviceType={service} setServiceType={setServiceType} />
+        <Sort
+          sortType={sortType}
+          sortDirection={sortDirection}
+          setSortType={setSortType}
+          setSortDirection={setSortDirection}
         />
       </div>
+      <AssetList
+        assets={queryResult?.results}
+        showPagination
+        isLoading={loading}
+        page={queryResult?.page}
+        totalPages={queryResult?.totalPages}
+        onPageChange={setPage}
+      />
     </>
   )
 }

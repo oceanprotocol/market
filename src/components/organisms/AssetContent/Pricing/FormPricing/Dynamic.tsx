@@ -4,17 +4,17 @@ import Alert from '../../../../atoms/Alert'
 import FormHelp from '../../../../atoms/Input/Help'
 import Tooltip from '../../../../atoms/Tooltip'
 import Wallet from '../../../../molecules/Wallet'
-import Coin from './Coin'
-import styles from './Dynamic.module.css'
-import Fees from './Fees'
-import stylesIndex from './index.module.css'
 import { FormikContextType, useFormikContext } from 'formik'
 import { PriceOptionsMarket } from '../../../../../@types/MetaData'
 import { DDO } from '@oceanprotocol/lib'
-import Price from './Price'
 import Decimal from 'decimal.js'
 import { useOcean } from '../../../../../providers/Ocean'
 import { useWeb3 } from '../../../../../providers/Web3'
+import Price from './Price'
+import Coin from './Coin'
+import Fees from './Fees'
+import { help } from './index.module.css'
+import * as styles from './Dynamic.module.css'
 
 export default function Dynamic({
   ddo,
@@ -71,7 +71,7 @@ export default function Dynamic({
 
   return (
     <div className={styles.dynamic}>
-      <FormHelp className={stylesIndex.help}>{content.info}</FormHelp>
+      <FormHelp className={help}>{content.info}</FormHelp>
 
       <aside className={styles.wallet}>
         {balance?.ocean && (

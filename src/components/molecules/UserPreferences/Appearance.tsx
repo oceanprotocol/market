@@ -5,7 +5,7 @@ import Label from '../../atoms/Input/Label'
 import { ReactComponent as Moon } from '../../../images/moon.svg'
 import { ReactComponent as Sun } from '../../../images/sun.svg'
 import BoxSelection, { BoxSelectionOption } from '../FormFields/BoxSelection'
-import styles from './Appearance.module.css'
+import * as styles from './Appearance.module.css'
 
 export default function Appearance({
   darkMode

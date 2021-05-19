@@ -1,6 +1,6 @@
 import React, { ReactElement, ReactNode } from 'react'
 import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs'
-import styles from './Tabs.module.css'
+import { tabList, tab, tabContent } from './Tabs.module.css'
 
 interface TabsItem {
   title: string
@@ -23,10 +23,10 @@ export default function Tabs({
       className={`${className && className}`}
       defaultIndex={defaultIndex}
     >
-      <TabList className={styles.tabList}>
+      <TabList className={tabList}>
         {items.map((item) => (
           <Tab
-            className={styles.tab}
+            className={tab}
             key={item.title}
             onClick={handleTabChange ? () => handleTabChange(item.title) : null}
           >
@@ -34,7 +34,7 @@ export default function Tabs({
           </Tab>
         ))}
       </TabList>
-      <div className={styles.tabContent}>
+      <div className={tabContent}>
         {items.map((item) => (
           <TabPanel key={item.title}>{item.content}</TabPanel>
         ))}

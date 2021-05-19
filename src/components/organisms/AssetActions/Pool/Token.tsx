@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import styles from './Token.module.css'
+import * as styles from './Token.module.css'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
 import Logo from '../../../atoms/Logo'
 

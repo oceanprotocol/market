@@ -3,7 +3,7 @@ import { useOcean } from '../../providers/Ocean'
 import { Link } from 'gatsby'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { getAssetsNames } from '../../utils/aquarius'
-import styles from './AssetListTitle.module.css'
+import * as styles from './AssetListTitle.module.css'
 import axios from 'axios'
 
 export default function AssetListTitle({

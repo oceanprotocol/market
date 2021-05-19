@@ -2,7 +2,7 @@ import Alert from '../atoms/Alert'
 import Button from '../atoms/Button'
 import Loader from '../atoms/Loader'
 import React, { ReactElement } from 'react'
-import styles from './MetadataFeedback.module.css'
+import * as styles from './MetadataFeedback.module.css'
 import SuccessConfetti from '../atoms/SuccessConfetti'
 
 interface Action {

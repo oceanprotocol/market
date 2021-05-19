@@ -2,12 +2,22 @@ import React from 'react'
 import { Link } from 'gatsby'
 import Dotdotdot from 'react-dotdotdot'
 import Price from '../atoms/Price'
-import styles from './AssetTeaser.module.css'
 import { DDO, BestPrice } from '@oceanprotocol/lib'
 import removeMarkdown from 'remove-markdown'
+import AssetType from '../atoms/AssetType'
 import Publisher from '../atoms/Publisher'
 import Time from '../atoms/Time'
-import AssetType from '../atoms/AssetType'
+import {
+  teaser,
+  link,
+  symbol,
+  title,
+  publisher,
+  typeDetails,
+  foot,
+  content,
+  date
+} from './AssetTeaser.module.css'
 
 declare type AssetTeaserProps = {
   ddo: DDO
@@ -26,23 +36,23 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
   const { owner } = ddo.publicKey[0]
 
   return (
-    <article className={`${styles.teaser} ${styles[type]}`}>
-      <Link to={`/asset/${ddo.id}`} className={styles.link}>
-        <header className={styles.header}>
-          <div className={styles.symbol}>{dataTokenInfo?.symbol}</div>
+    <article className={`${teaser} ${[type]}`}>
+      <Link to={`/asset/${ddo.id}`} className={link}>
+        <header>
+          <div className={symbol}>{dataTokenInfo?.symbol}</div>
           <Dotdotdot clamp={3}>
-            <h1 className={styles.title}>{name}</h1>
+            <h1 className={title}>{name}</h1>
           </Dotdotdot>
-          <Publisher account={owner} minimal className={styles.publisher} />
+          <Publisher account={owner} minimal className={publisher} />
         </header>
 
         <AssetType
           type={type}
           accessType={accessType}
-          className={styles.typeDetails}
+          className={typeDetails}
         />
 
-        <div className={styles.content}>
+        <div className={content}>
           <Dotdotdot tagName="p" clamp={3}>
             {removeMarkdown(
               attributes?.additionalInformation?.description || ''
@@ -50,9 +60,9 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
           </Dotdotdot>
         </div>
 
-        <footer className={styles.foot}>
+        <footer className={foot}>
           <Price price={price} small />
-          <p className={styles.date}>
+          <p className={date}>
             <Time date={ddo?.created} relative />
           </p>
         </footer>

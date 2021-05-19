@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import styles from './ProfileDetails.module.css'
+import * as styles from './ProfileDetails.module.css'
 import { Profile } from '../../../models/Profile'
 import ExplorerLink from '../ExplorerLink'
 import PublisherLinks from './PublisherLinks'

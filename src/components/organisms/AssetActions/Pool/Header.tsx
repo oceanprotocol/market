@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import styles from './Header.module.css'
+import * as styles from './Header.module.css'
 import Button from '../../../atoms/Button'
 
 export default function Header({

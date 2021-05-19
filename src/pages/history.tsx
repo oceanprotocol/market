@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
-import PageHistory from '../components/pages/History'
-import Page from '../components/templates/Page'
 import { graphql, PageProps } from 'gatsby'
+import Page from '../components/templates/Page'
+import PageHistory from '../components/pages/History'
 
 export default function PageGatsbyHistory(props: PageProps): ReactElement {
   const content = (props.data as any).content.edges[0].node.childPagesJson

@@ -1,11 +1,11 @@
-import AssetTeaser from '../molecules/AssetTeaser'
 import React, { useEffect, useState } from 'react'
+import Loader from '../atoms/Loader'
 import Pagination from '../molecules/Pagination'
-import styles from './AssetList.module.css'
+import AssetTeaser from '../molecules/AssetTeaser'
 import { DDO } from '@oceanprotocol/lib'
 import classNames from 'classnames/bind'
 import { getAssetsBestPrices, AssetListPrices } from '../../utils/subgraph'
-import Loader from '../atoms/Loader'
+import * as styles from './AssetList.module.css'
 
 const cx = classNames.bind(styles)
 

@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import classNames from 'classnames/bind'
 import Markdown from '../atoms/Markdown'
 import Button from '../atoms/Button'
-import styles from './AnnouncementBanner.module.css'
+import * as styles from './AnnouncementBanner.module.css'
 
 const cx = classNames.bind(styles)
 

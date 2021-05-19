@@ -6,7 +6,7 @@ import React, {
   ChangeEvent
 } from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
-import styles from './FormPublish.module.css'
+import * as styles from './FormPublish.module.css'
 import { useOcean } from '../../../providers/Ocean'
 import { useFormikContext, Field, Form, FormikContextType } from 'formik'
 import Input from '../../atoms/Input'
@@ -14,7 +14,7 @@ import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { MetadataPublishFormAlgorithm } from '../../../@types/MetaData'
 import { initialValues as initialValuesAlgorithm } from '../../../models/FormAlgoPublish'
-import stylesIndex from './index.module.css'
+import * as stylesIndex from './index.module.css'
 
 const query = graphql`
   query {

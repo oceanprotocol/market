@@ -1,5 +1,4 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import styles from './index.module.css'
 import classNames from 'classnames/bind'
 import Tooltip from '../Tooltip'
 import { Profile } from '../../../models/Profile'
@@ -12,6 +11,7 @@ import { ReactComponent as Info } from '../../../images/info.svg'
 import ProfileDetails from './ProfileDetails'
 import Add from './Add'
 import { useWeb3 } from '../../../providers/Web3'
+import * as styles from './index.module.css'
 
 const cx = classNames.bind(styles)
 

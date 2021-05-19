@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import styles from './Help.module.css'
+import * as styles from './Help.module.css'
 import Markdown from '../Markdown'
 import classNames from 'classnames/bind'
 

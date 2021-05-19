@@ -6,8 +6,8 @@ import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
 import { FormFieldProps } from '../../../../@types/Form'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
-import stylesIndex from './index.module.css'
-import styles from './FormEditMetadata.module.css'
+import * as stylesIndex from './index.module.css'
+import * as styles from './FormEditMetadata.module.css'
 import {
   queryMetadata,
   transformDDOToAssetSelection

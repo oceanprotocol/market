@@ -2,7 +2,7 @@ import { useField } from 'formik'
 import { InputProps } from '../../../atoms/Input'
 import { useOcean } from '../../../../providers/Ocean'
 import React, { ReactElement, useEffect } from 'react'
-import styles from './index.module.css'
+import * as styles from './index.module.css'
 
 import RefreshName from './RefreshName'
 

@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import PriceUnit from './Price/PriceUnit'
-import styles from './UserLiquidity.module.css'
+import * as styles from './UserLiquidity.module.css'
 
 function UserLiquidityLine({
   title,

@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
-import PagePublish from '../components/pages/Publish'
-import Page from '../components/templates/Page'
 import { graphql, PageProps } from 'gatsby'
+import Page from '../components/templates/Page'
+import PagePublish from '../components/pages/Publish'
 
 export default function PageGatsbyPublish(props: PageProps): ReactElement {
   const content = (props.data as any).content.edges[0].node.childPublishJson

@@ -1,8 +1,8 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import Table from '../../atoms/Table'
 import Conversion from '../../atoms/Price/Conversion'
-import styles from './PoolShares.module.css'
 import AssetTitle from '../../molecules/AssetListTitle'
+import Token from '../../organisms/AssetActions/Pool/Token'
 import { gql, useQuery } from '@apollo/client'
 import {
   PoolShares as PoolSharesList,
@@ -10,8 +10,12 @@ import {
   PoolShares_poolShares_poolId_tokens as PoolSharePoolIdTokens
 } from '../../../@types/apollo/PoolShares'
 import web3 from 'web3'
-import Token from '../../organisms/AssetActions/Pool/Token'
 import { useWeb3 } from '../../../providers/Web3'
+import {
+  yourLiquidity,
+  totalLiquidity,
+  poolSharesTable
+} from './PoolShares.module.css'
 
 const poolSharesQuery = gql`
   query PoolShares($user: String) {
@@ -89,10 +93,10 @@ function Liquidity({ row, type }: { row: Asset; type: string }) {
     dataTokenBalance = row.poolShare.poolId.datatokenReserve.toString()
   }
   return (
-    <div className={styles.yourLiquidity}>
+    <div className={yourLiquidity}>
       <Conversion
         price={price}
-        className={styles.totalLiquidity}
+        className={totalLiquidity}
         hideApproximateSymbol
       />
       <Token symbol="OCEAN" balance={oceanTokenBalance} noIcon />
@@ -164,7 +168,7 @@ export default function PoolShares(): ReactElement {
   return (
     <Table
       columns={columns}
-      className={styles.poolSharesTable}
+      className={poolSharesTable}
       data={assets}
       pagination
       paginationPerPage={5}

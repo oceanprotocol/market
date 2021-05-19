@@ -1,8 +1,5 @@
 import React, { ReactElement, useEffect } from 'react'
-import styles from './index.module.css'
 import Tabs from '../../../../atoms/Tabs'
-import Fixed from './Fixed'
-import Dynamic from './Dynamic'
 import { useFormikContext } from 'formik'
 import { useUserPreferences } from '../../../../../providers/UserPreferences'
 import { PriceOptionsMarket } from '../../../../../@types/MetaData'
@@ -10,6 +7,9 @@ import Button from '../../../../atoms/Button'
 import { DDO } from '@oceanprotocol/lib'
 import FormHelp from '../../../../atoms/Input/Help'
 import { useSiteMetadata } from '../../../../../hooks/useSiteMetadata'
+import Fixed from './Fixed'
+import Dynamic from './Dynamic'
+import * as styles from './index.module.css'
 
 export default function FormPricing({
   ddo,

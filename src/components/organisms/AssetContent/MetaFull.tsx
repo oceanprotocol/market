@@ -1,8 +1,8 @@
 import React, { ReactElement } from 'react'
-import MetaItem from './MetaItem'
-import styles from './MetaFull.module.css'
 import Publisher from '../../atoms/Publisher'
 import { useAsset } from '../../../providers/Asset'
+import MetaItem from './MetaItem'
+import * as styles from './MetaFull.module.css'
 
 export default function MetaFull(): ReactElement {
   const { ddo, metadata, isInPurgatory, type } = useAsset()

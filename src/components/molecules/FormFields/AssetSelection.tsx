@@ -6,7 +6,7 @@ import PriceUnit from '../../atoms/Price/PriceUnit'
 import { ReactComponent as External } from '../../../images/external.svg'
 import InputElement from '../../atoms/Input/InputElement'
 import Loader from '../../atoms/Loader'
-import styles from './AssetSelection.module.css'
+import * as styles from './AssetSelection.module.css'
 
 const cx = classNames.bind(styles)
 

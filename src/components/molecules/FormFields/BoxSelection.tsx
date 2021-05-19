@@ -1,7 +1,7 @@
 import React, { ChangeEvent } from 'react'
 import classNames from 'classnames/bind'
 import Loader from '../../atoms/Loader'
-import styles from './BoxSelection.module.css'
+import * as styles from './BoxSelection.module.css'
 
 const cx = classNames.bind(styles)
 
@@ -54,7 +54,7 @@ export default function BoxSelection({
               name={name}
             />
             <label
-              className={`${styles.boxSelection} ${styles.label}`}
+              className={styles.boxSelection}
               htmlFor={value.name}
               title={value.name}
             >

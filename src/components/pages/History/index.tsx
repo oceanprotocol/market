@@ -1,11 +1,11 @@
 import React, { ReactElement } from 'react'
 import Tabs from '../../atoms/Tabs'
-import PoolShares from './PoolShares'
 import PoolTransactions from '../../molecules/PoolTransactions'
 import PublishedList from './PublishedList'
 import Downloads from './Downloads'
 import ComputeJobs from './ComputeJobs'
-import styles from './index.module.css'
+import PoolShares from './PoolShares'
+import { content, tabs as tabsStyle } from './index.module.css'
 
 const tabs = [
   {
@@ -32,8 +32,8 @@ const tabs = [
 
 export default function HistoryPage(): ReactElement {
   return (
-    <article className={styles.content}>
-      <Tabs items={tabs} className={styles.tabs} />
+    <article className={content}>
+      <Tabs items={tabs} className={tabsStyle} />
     </article>
   )
 }

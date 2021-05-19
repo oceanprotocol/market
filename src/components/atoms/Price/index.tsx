@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react'
-import styles from './index.module.css'
 import { BestPrice } from '@oceanprotocol/lib'
 import Loader from '../Loader'
 import Tooltip from '../Tooltip'
 import PriceUnit from './PriceUnit'
+import { empty } from './index.module.css'
 
 export default function Price({
   price,
@@ -25,7 +25,7 @@ export default function Price({
       type={price.type}
     />
   ) : !price || price?.type === '' ? (
-    <div className={styles.empty}>
+    <div className={empty}>
       No price set{' '}
       <Tooltip content="No pricing mechanism has been set on this asset yet." />
     </div>

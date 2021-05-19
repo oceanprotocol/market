@@ -1,7 +1,7 @@
 import Alert from './Alert'
 import React, { ReactElement, ReactNode, useEffect } from 'react'
 import { confetti } from 'dom-confetti'
-import styles from './SuccessConfetti.module.css'
+import * as styles from './SuccessConfetti.module.css'
 
 const confettiConfig = {
   angle: 90,
