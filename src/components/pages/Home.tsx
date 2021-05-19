@@ -13,7 +13,7 @@ import Bookmarks from '../molecules/Bookmarks'
 import axios from 'axios'
 import { queryMetadata } from '../../utils/aquarius'
 import { getHighestLiquidityDIDs } from '../../utils/subgraph'
-import { Logger } from '@oceanprotocol/lib'
+import { DDO, Logger } from '@oceanprotocol/lib'
 
 const queryLatest = {
   page: 1,
@@ -24,6 +24,13 @@ const queryLatest = {
     }
   },
   sort: { created: -1 }
+}
+
+function sortElements(items: DDO[], sorted: string) {
+  items.sort(function (a, b) {
+    return sorted.indexOf(a.dataToken) - sorted.indexOf(b.dataToken)
+  })
+  return items
 }
 
 function SectionQueryResult({
@@ -37,10 +44,14 @@ function SectionQueryResult({
 }) {
   const { config } = useOcean()
   const [result, setResult] = useState<QueryResult>()
+  const [dids, setDIDs] = useState<string>()
 
   useEffect(() => {
     if (!config?.metadataCacheUri) return
     const source = axios.CancelToken.source()
+    getHighestLiquidityDIDs().then((results) => {
+      setDIDs(results)
+    })
 
     async function init() {
       try {
@@ -49,6 +60,11 @@ function SectionQueryResult({
           config.metadataCacheUri,
           source.token
         )
+        if (result.totalResults < 15) {
+          console.log('DIDS: ', dids)
+          // const searchDids = JSON.parse(dids)
+          result.results = sortElements(result.results, dids)
+        }
         setResult(result)
       } catch (error) {
         Logger.log(error.message)
@@ -59,7 +75,7 @@ function SectionQueryResult({
     return () => {
       source.cancel()
     }
-  }, [config?.metadataCacheUri, query])
+  }, [config?.metadataCacheUri, query, dids])
 
   return (
     <section className={styles.section}>
@@ -83,7 +99,7 @@ export default function HomePage(): ReactElement {
     offset: 9,
     query: {
       query_string: {
-        query: searchDids,
+        query: `${searchDids} -isInPurgatory:true`,
         fields: ['dataToken'],
         default_operator: 'OR'
       }
