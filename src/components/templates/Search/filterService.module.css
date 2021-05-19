@@ -47,10 +47,14 @@ button.filter,
   margin-bottom: calc(var(--spacer) / 6);
 }
 
+.showClear:hover{
+  display: inline-flex;
+  color: var(--color-primary) !important;
+}
 .showClear {
   display: inline-flex;
   text-transform: capitalize;
-  color: var(--color-secondary);
+  color: var(--color-secondary) !important;
   font-weight: var(--font-weight-base);
   margin-left: calc(var(--spacer) / 6);
 }
