@@ -50,9 +50,8 @@ function OceanProvider({
     eth: undefined,
     ocean: undefined
   })
-  const [config, setConfig] = useState<ConfigHelperConfig | Config>(
-    initialConfig
-  )
+  const [config, setConfig] =
+    useState<ConfigHelperConfig | Config>(initialConfig)
 
   // -----------------------------------
   // Create Ocean instance

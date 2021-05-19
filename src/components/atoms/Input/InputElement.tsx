@@ -107,7 +107,7 @@ export default function InputElement({
     case 'assetSelection':
       return (
         <AssetSelection
-          assets={(options as unknown) as AssetSelectionAsset[]}
+          assets={options as unknown as AssetSelectionAsset[]}
           {...field}
           {...props}
         />
@@ -115,7 +115,7 @@ export default function InputElement({
     case 'assetSelectionMultiple':
       return (
         <AssetSelection
-          assets={(options as unknown) as AssetSelectionAsset[]}
+          assets={options as unknown as AssetSelectionAsset[]}
           multiple
           disabled={disabled}
           {...field}
@@ -132,7 +132,7 @@ export default function InputElement({
       return (
         <BoxSelection
           name={name}
-          options={(options as unknown) as BoxSelectionOption[]}
+          options={options as unknown as BoxSelectionOption[]}
           {...field}
           {...props}
         />
