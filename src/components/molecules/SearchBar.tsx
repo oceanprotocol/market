@@ -17,7 +17,7 @@ export default function SearchBar({
   filters?: boolean
   size?: 'small' | 'large'
 }): ReactElement {
-  let [value, setValue] = useState(initialValue || '')
+  const [value, setValue] = useState(initialValue || '')
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     setValue(e.target.value)
@@ -25,7 +25,7 @@ export default function SearchBar({
 
   async function startSearch(e: FormEvent<HTMLButtonElement>) {
     e.preventDefault()
-    if (value === '') value = ' '
+    if (value === '') setValue(' ')
     const urlEncodedValue = encodeURIComponent(value)
     const url = await addExistingParamsToUrl(location, 'text')
     navigate(`${url}&text=${urlEncodedValue}`)
