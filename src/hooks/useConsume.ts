@@ -56,23 +56,22 @@ function useConsume(): UseConsume {
           return 'Not enough datatokens'
         } else {
           setStep(1)
-          orderId = await ocean.assets.order(
-            did as string,
-            serviceType,
-            accountId,
-            undefined,
-            marketFeeAddress,
-            undefined,
-            false
-          )
-          if (!orderId) {
-            setConsumeError(
-              'MetaMask Tx Signature: User denied transaction signature'
+          try {
+            orderId = await ocean.assets.order(
+              did as string,
+              serviceType,
+              accountId,
+              undefined,
+              marketFeeAddress,
+              undefined,
+              false
             )
-            return 'MetaMask Tx Signature: User denied transaction signature'
+            Logger.log('order created', orderId)
+            setStep(2)
+          } catch (error) {
+            setConsumeError(error.message)
+            return error.message
           }
-          Logger.log('order created', orderId)
-          setStep(2)
         }
       }
       setStep(3)
