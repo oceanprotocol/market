@@ -1,4 +1,5 @@
 import React, { ReactNode, ReactElement } from 'react'
+import Permission from '../organisms/Permission'
 import PageHeader from '../molecules/PageHeader'
 import Seo from '../atoms/Seo'
 import Container from '../atoms/Container'
@@ -21,19 +22,21 @@ export default function Page({
   headerCenter
 }: PageProps): ReactElement {
   return (
-    <>
-      <Seo title={title} description={description} uri={uri} />
+    <Permission eventType="browse">
+      <>
+        <Seo title={title} description={description} uri={uri} />
 
-      <Container>
-        {title && !noPageHeader && (
-          <PageHeader
-            title={title}
-            description={description}
-            center={headerCenter}
-          />
-        )}
-        {children}
-      </Container>
-    </>
+        <Container>
+          {title && !noPageHeader && (
+            <PageHeader
+              title={title}
+              description={description}
+              center={headerCenter}
+            />
+          )}
+          {children}
+        </Container>
+      </>
+    </Permission>
   )
 }

@@ -1,4 +1,5 @@
 import React, { ReactElement, useState, useEffect } from 'react'
+import Permission from '../Permission'
 import styles from './index.module.css'
 import Compute from './Compute'
 import Consume from './Consume'
@@ -89,5 +90,9 @@ export default function AssetActions(): ReactElement {
       }
     )
 
-  return <Tabs items={tabs} className={styles.actions} />
+  return (
+    <Permission eventType="purchase">
+      <Tabs items={tabs} className={styles.actions} />
+    </Permission>
+  )
 }
