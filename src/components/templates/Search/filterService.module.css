@@ -60,5 +60,5 @@ button.filter,
 }
 
 .hideClear {
-  display: none;
+  display: none !important;
 }
