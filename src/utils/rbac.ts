@@ -1,5 +1,5 @@
 import fetch from 'cross-fetch'
-import { rbacUrl, network } from '../../app.config'
+import appConfig from '../../app.config'
 
 export async function rbacRequest(
   component: string,
@@ -13,8 +13,8 @@ export async function rbacRequest(
       token
     }
   }
-  console.log('rbacUrl', rbacUrl)
-  console.log('network', network)
+  console.log('appConfig', appConfig)
+  console.log('appConfig rbacUrl', appConfig.rbacUrl)
   try {
     const response = await fetch('http://localhost:3000', {
       method: 'POST',
