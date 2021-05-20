@@ -42,6 +42,9 @@ export default function FilterPrice({
         setServiceSelections([otherValue])
       } else {
         await applyServiceFilter(undefined)
+        if (serviceSelections.includes(value)) {
+          serviceSelections.pop()
+        }
       }
     } else {
       if (serviceSelections.length) {
