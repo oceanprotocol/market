@@ -1,7 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { File as FileMetadata, DDO, DID } from '@oceanprotocol/lib'
-import axios from 'axios'
+import { File as FileMetadata, DDO } from '@oceanprotocol/lib'
 import File from '../../atoms/File'
 import Price from '../../atoms/Price'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
@@ -16,8 +15,8 @@ import { useOcean } from '../../../providers/Ocean'
 import { useWeb3 } from '../../../providers/Web3'
 import { usePricing } from '../../../hooks/usePricing'
 import { useConsume } from '../../../hooks/useConsume'
-import { isFileValid } from '../../../utils/provider'
 import ButtonBuy from '../../atoms/ButtonBuy'
+import AssetConnectivityBanner from '../../molecules/AssetConnectivityBanner'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {
@@ -61,7 +60,6 @@ export default function Consume({
   const [hasDatatoken, setHasDatatoken] = useState(false)
   const [isConsumable, setIsConsumable] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
-  const [fileConnectivity, setFileConnectivity] = useState<boolean>()
 
   const { data } = useQuery<OrdersData>(previousOrderQuery, {
     variables: {
@@ -109,32 +107,15 @@ export default function Consume({
   }, [dtBalance])
 
   useEffect(() => {
-    const source = axios.CancelToken.source()
-    async function validateAsset() {
-      const did = DID.parse(ddo.id)
-      const fileValid = await isFileValid(
-        did,
-        ddo.findServiceByType('access').serviceEndpoint,
-        source.token
-      )
-      setFileConnectivity(fileValid)
-
-      setIsDisabled(
-        !fileValid ||
-          ((!ocean ||
-            !isBalanceSufficient ||
-            typeof consumeStepText !== 'undefined' ||
-            pricingIsLoading ||
-            !isConsumable) &&
-            !hasPreviousOrder &&
-            !hasDatatoken)
-      )
-    }
-    validateAsset()
-
-    return () => {
-      source.cancel()
-    }
+    setIsDisabled(
+      (!ocean ||
+        !isBalanceSufficient ||
+        typeof consumeStepText !== 'undefined' ||
+        pricingIsLoading ||
+        !isConsumable) &&
+        !hasPreviousOrder &&
+        !hasDatatoken
+    )
   }, [
     ocean,
     hasPreviousOrder,
@@ -147,29 +128,15 @@ export default function Consume({
   ])
 
   async function handleConsume() {
-    const source = axios.CancelToken.source()
-    const did = DID.parse(ddo.id)
-    const fileValid = await isFileValid(
-      did,
-      ddo.findServiceByType('access').serviceEndpoint,
-      source.token
+    !hasPreviousOrder && !hasDatatoken && (await buyDT('1', price, ddo))
+    await consume(
+      ddo.id,
+      ddo.dataToken,
+      'access',
+      marketFeeAddress,
+      previousOrderId
     )
-    source.cancel()
-
-    if (fileValid) {
-      !hasPreviousOrder && !hasDatatoken && (await buyDT('1', price, ddo))
-      await consume(
-        ddo.id,
-        ddo.dataToken,
-        'access',
-        marketFeeAddress,
-        previousOrderId
-      )
-      setHasPreviousOrder(true)
-    } else {
-      setFileConnectivity(false)
-      setIsDisabled(true)
-    }
+    setHasPreviousOrder(true)
   }
 
   // Output errors in UI
@@ -182,7 +149,6 @@ export default function Consume({
     <ButtonBuy
       action="download"
       disabled={isDisabled}
-      fileConnectivity={fileConnectivity}
       hasPreviousOrder={hasPreviousOrder}
       hasDatatoken={hasDatatoken}
       dtSymbol={ddo.dataTokenInfo?.symbol}
@@ -196,19 +162,22 @@ export default function Consume({
   )
 
   return (
-    <aside className={styles.consume}>
-      <div className={styles.info}>
-        <div className={styles.filewrapper}>
-          <File file={file} />
+    <>
+      <aside className={styles.consume}>
+        <div className={styles.info}>
+          <div className={styles.filewrapper}>
+            <File file={file} />
+          </div>
+          <div className={styles.pricewrapper}>
+            <Price price={price} conversion />
+            {!isInPurgatory && <PurchaseButton />}
+          </div>
         </div>
-        <div className={styles.pricewrapper}>
-          <Price price={price} conversion />
-          {!isInPurgatory && <PurchaseButton />}
-        </div>
-      </div>
-      <footer className={styles.feedback}>
-        <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
-      </footer>
-    </aside>
+        <footer className={styles.feedback}>
+          <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
+        </footer>
+      </aside>
+      <AssetConnectivityBanner ddo={ddo} />
+    </>
   )
 }

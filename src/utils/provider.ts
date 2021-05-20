@@ -86,5 +86,7 @@ export async function isFileValid(
 
   if (!response.data[0] || !response.data[0].valid) return false
 
+  if (response.data[0].contentLength === '0') return false
+
   return response.data[0].valid
 }

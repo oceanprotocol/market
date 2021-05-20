@@ -4,13 +4,11 @@ import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import Input from '../../../atoms/Input'
 import { FormFieldProps } from '../../../../@types/Form'
 import { useStaticQuery, graphql } from 'gatsby'
-import { DDO, BestPrice, DID } from '@oceanprotocol/lib'
+import { DDO, BestPrice } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import ButtonBuy from '../../../atoms/ButtonBuy'
 import PriceOutput from './PriceOutput'
 import { useAsset } from '../../../../providers/Asset'
-import axios from 'axios'
-import { isFileValid } from '../../../../utils/provider'
 
 const contentQuery = graphql`
   query StartComputeDatasetQuery {
@@ -48,7 +46,6 @@ export default function FormStartCompute({
   setSelectedAlgorithm,
   isLoading,
   isComputeButtonDisabled,
-  fileConnectivity,
   hasPreviousOrder,
   hasDatatoken,
   dtBalance,
@@ -68,7 +65,6 @@ export default function FormStartCompute({
   setSelectedAlgorithm: React.Dispatch<React.SetStateAction<DDO>>
   isLoading: boolean
   isComputeButtonDisabled: boolean
-  fileConnectivity: boolean
   hasPreviousOrder: boolean
   hasDatatoken: boolean
   dtBalance: string
@@ -85,10 +81,6 @@ export default function FormStartCompute({
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
-  const [
-    algorithmFileConnectivity,
-    setAlgorithmFileConnectivity
-  ] = useState<boolean>()
 
   const {
     isValid,
@@ -107,27 +99,7 @@ export default function FormStartCompute({
 
   useEffect(() => {
     if (!values.algorithm) return
-    const selectedAlgorithm = getAlgorithmAsset(values.algorithm)
-    setSelectedAlgorithm(selectedAlgorithm)
-
-    const source = axios.CancelToken.source()
-
-    async function validateAsset() {
-      const did = DID.parse(selectedAlgorithm.id)
-      const fileValid = await isFileValid(
-        did,
-        selectedAlgorithm.findServiceByType('access')?.serviceEndpoint ||
-          selectedAlgorithm.findServiceByType('compute')?.serviceEndpoint,
-        source.token
-      )
-      setAlgorithmFileConnectivity(fileValid)
-    }
-    setAlgorithmFileConnectivity(undefined)
-    validateAsset()
-
-    return () => {
-      source.cancel()
-    }
+    setSelectedAlgorithm(getAlgorithmAsset(values.algorithm))
   }, [values.algorithm])
 
   //
@@ -179,14 +151,7 @@ export default function FormStartCompute({
 
       <ButtonBuy
         action="compute"
-        disabled={
-          isComputeButtonDisabled ||
-          !isValid ||
-          !fileConnectivity ||
-          !algorithmFileConnectivity
-        }
-        fileConnectivity={fileConnectivity}
-        algorithmFileConnectivity={algorithmFileConnectivity}
+        disabled={isComputeButtonDisabled || !isValid}
         hasPreviousOrder={hasPreviousOrder}
         hasDatatoken={hasDatatoken}
         dtSymbol={ddo.dataTokenInfo.symbol}

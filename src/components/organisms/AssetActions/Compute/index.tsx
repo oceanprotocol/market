@@ -4,8 +4,7 @@ import {
   File as FileMetadata,
   Logger,
   publisherTrustedAlgorithm,
-  BestPrice,
-  DID
+  BestPrice
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '../../../atoms/Price'
@@ -39,7 +38,7 @@ import SuccessConfetti from '../../../atoms/SuccessConfetti'
 import Button from '../../../atoms/Button'
 import { secondsToString } from '../../../../utils/metadata'
 import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
-import { isFileValid } from '../../../../utils/provider'
+import AssetConnectivityBanner from '../../../molecules/AssetConnectivityBanner'
 
 const SuccessAction = () => (
   <Button style="text" to="/history" size="small">
@@ -82,7 +81,6 @@ export default function Compute({
   ] = useState<string>()
   const [datasetTimeout, setDatasetTimeout] = useState<string>()
   const [algorithmTimeout, setAlgorithmTimeout] = useState<string>()
-  const [fileConnectivity, setFileConnectivity] = useState<boolean>()
 
   const isComputeButtonDisabled =
     isJobStarting === true || file === null || !ocean || !isBalanceSufficient
@@ -171,24 +169,6 @@ export default function Compute({
   }
 
   useEffect(() => {
-    const source = axios.CancelToken.source()
-    async function validateAsset() {
-      const did = DID.parse(ddo.id)
-      const fileValid = await isFileValid(
-        did,
-        ddo.findServiceByType('compute').serviceEndpoint,
-        source.token
-      )
-      setFileConnectivity(fileValid)
-    }
-    validateAsset()
-
-    return () => {
-      source.cancel()
-    }
-  }, [ddo])
-
-  useEffect(() => {
     const { timeout } = (
       ddo.findServiceByType('access') || ddo.findServiceByType('compute')
     ).attributes.main
@@ -249,19 +229,6 @@ export default function Compute({
 
   async function startJob(algorithmId: string) {
     try {
-      const source = axios.CancelToken.source()
-      const did = DID.parse(ddo.id)
-      const fileValid = await isFileValid(
-        did,
-        ddo.findServiceByType('access').serviceEndpoint,
-        source.token
-      )
-      source.cancel()
-
-      if (!fileValid) {
-        setFileConnectivity(false)
-        return
-      }
       if (!ocean) return
 
       setIsJobStarting(true)
@@ -428,7 +395,6 @@ export default function Compute({
             setSelectedAlgorithm={setSelectedAlgorithmAsset}
             isLoading={isJobStarting}
             isComputeButtonDisabled={isComputeButtonDisabled}
-            fileConnectivity={fileConnectivity}
             hasPreviousOrder={hasPreviousDatasetOrder}
             hasDatatoken={hasDatatoken}
             dtBalance={dtBalance}
@@ -447,7 +413,10 @@ export default function Compute({
           />
         </Formik>
       )}
-
+      <AssetConnectivityBanner
+        ddo={ddo}
+        selectedAlgorithmDDO={selectedAlgorithmAsset}
+      />
       <footer className={styles.feedback}>
         {isPublished && (
           <SuccessConfetti

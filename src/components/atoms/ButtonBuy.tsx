@@ -2,13 +2,10 @@ import React, { FormEvent, ReactElement } from 'react'
 import Button from './Button'
 import styles from './ButtonBuy.module.css'
 import Loader from './Loader'
-import Status from './Status'
 
 interface ButtonBuyProps {
   action: 'download' | 'compute'
   disabled: boolean
-  fileConnectivity: boolean
-  algorithmFileConnectivity?: boolean
   hasPreviousOrder: boolean
   hasDatatoken: boolean
   dtSymbol: string
@@ -24,40 +21,6 @@ interface ButtonBuyProps {
   onClick?: (e: FormEvent<HTMLButtonElement>) => void
   stepText?: string
   type?: 'submit'
-}
-
-function getConnectivityHelpText(
-  action: string,
-  fileConnectivity: boolean,
-  algorithmFileConnectivity: boolean,
-  dtSymbolSelectedComputeAsset: string
-) {
-  let offlineAsset = 'Dataset'
-
-  if (fileConnectivity === undefined)
-    return <Loader message="Checking dataset connectivity" />
-
-  if (action === 'compute') {
-    if (!dtSymbolSelectedComputeAsset && fileConnectivity) return
-    if (dtSymbolSelectedComputeAsset && algorithmFileConnectivity === undefined)
-      return <Loader message="Checking selected algorithm connectivity" />
-    offlineAsset = `${
-      !fileConnectivity && algorithmFileConnectivity === false
-        ? offlineAsset + ' and Algorithm'
-        : algorithmFileConnectivity === false
-        ? `Algorithm`
-        : offlineAsset
-    }`
-  }
-
-  return (
-    <div className={styles.connectivitywrapper}>
-      <Status className={styles.status} state="error" />
-      <span
-        className={styles.text}
-      >{`${offlineAsset} is offline, please try again later.`}</span>
-    </div>
-  )
 }
 
 function getConsumeHelpText(
@@ -110,8 +73,6 @@ function getComputeAssetHelpText(
 export default function ButtonBuy({
   action,
   disabled,
-  fileConnectivity,
-  algorithmFileConnectivity,
   hasPreviousOrder,
   hasDatatoken,
   dtSymbol,
@@ -152,15 +113,7 @@ export default function ButtonBuy({
             {buttonText}
           </Button>
           <div className={styles.help}>
-            {!fileConnectivity ||
-            (!algorithmFileConnectivity && action === 'compute')
-              ? getConnectivityHelpText(
-                  action,
-                  fileConnectivity,
-                  algorithmFileConnectivity,
-                  dtSymbolSelectedComputeAsset
-                )
-              : action === 'download'
+            {action === 'download'
               ? getConsumeHelpText(
                   dtBalance,
                   dtSymbol,

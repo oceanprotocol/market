@@ -12,16 +12,3 @@
 .help:not(:empty) {
   margin-top: calc(var(--spacer) / 2);
 }
-
-.connectivitywrapper {
-  font-size: var(--font-size-mini);
-}
-
-.status {
-  transform: scale(0.7);
-  transform-origin: bottom;
-}
-
-.text {
-  margin-left: calc(var(--spacer) / 12);
-}
