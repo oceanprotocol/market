@@ -50,18 +50,19 @@ export default function AssetConnectivityBanner({
     }
   }, [selectedAlgorithmDDO])
 
-  let offlineAsset
+  function getBannerText(
+    fileConnectivity: boolean,
+    algorithmFileConnectivity: boolean
+  ) {
+    const text = ' might be empty/offline, consume at your own risk.'
+    if (!fileConnectivity && algorithmFileConnectivity === false)
+      return 'Dataset and selected Algorithm' + text
+    else if (!fileConnectivity) return 'Dataset' + text
+    else if (algorithmFileConnectivity === false) return 'Algorithm' + text
+    else return ''
+  }
 
-  if (!fileConnectivity && algorithmFileConnectivity === false)
-    offlineAsset = 'Dataset and selected Algorithm'
-  else if (!fileConnectivity) offlineAsset = 'Dataset'
-  else if (algorithmFileConnectivity === false) offlineAsset = 'Algorithm'
-  else return null
+  const bannerText = getBannerText(fileConnectivity, algorithmFileConnectivity)
 
-  return (
-    <AnnouncementBanner
-      text={`${offlineAsset} might be empty/offline, consume at your own risk.`}
-      state="error"
-    />
-  )
+  return bannerText && <AnnouncementBanner text={bannerText} state="error" />
 }
