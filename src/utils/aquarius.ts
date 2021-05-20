@@ -10,7 +10,7 @@ import {
   SearchQuery
 } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { AssetSelectionAsset } from '../components/molecules/FormFields/AssetSelection'
-import { PriceList, getAssetPrices } from './subgraph'
+import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 
 function getQueryForAlgorithmDatasets(algorithmDid: string) {
@@ -124,7 +124,7 @@ export async function transformDDOToAssetSelection(
 ): Promise<AssetSelectionAsset[]> {
   const source = axios.CancelToken.source()
   const didList: string[] = []
-  const priceList: PriceList = await getAssetPrices(ddoList)
+  const priceList: PriceList = await getAssetsPriceList(ddoList)
   const symbolList: any = {}
   for (const ddo of ddoList) {
     didList.push(ddo.id)

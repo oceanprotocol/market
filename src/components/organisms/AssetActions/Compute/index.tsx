@@ -35,36 +35,16 @@ import FormStartComputeDataset from './FormComputeDataset'
 import styles from './index.module.css'
 import SuccessConfetti from '../../../atoms/SuccessConfetti'
 import Button from '../../../atoms/Button'
-import { gql, useQuery } from '@apollo/client'
-import { FrePrice } from '../../../../@types/apollo/FrePrice'
-import { PoolPrice } from '../../../../@types/apollo/PoolPrice'
 import { secondsToString } from '../../../../utils/metadata'
-import { getPreviousOrders } from '../../../../utils/subgraph'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import AlgorithmDatasetsListForCompute from '../../AssetContent/AlgorithmDatasetsListForCompute'
+import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
 
 const SuccessAction = () => (
   <Button style="text" to="/history" size="small">
     Go to history →
   </Button>
 )
-
-const freQuery = gql`
-  query AlgorithmFrePrice($datatoken: String) {
-    fixedRateExchanges(orderBy: id, where: { datatoken: $datatoken }) {
-      rate
-      id
-    }
-  }
-`
-const poolQuery = gql`
-  query AlgorithmPoolPrice($datatoken: String) {
-    pools(where: { datatokenAddress: $datatoken }) {
-      spotPrice
-      consumePrice
-    }
-  }
-`
 
 export default function Compute({
   isBalanceSufficient,
@@ -95,32 +75,12 @@ export default function Compute({
   )
   const [algorithmDTBalance, setalgorithmDTBalance] = useState<string>()
   const [algorithmPrice, setAlgorithmPrice] = useState<BestPrice>()
-  const [variables, setVariables] = useState({})
   const [
     previousAlgorithmOrderId,
     setPreviousAlgorithmOrderId
   ] = useState<string>()
   const [datasetTimeout, setDatasetTimeout] = useState<string>()
   const [algorithmTimeout, setAlgorithmTimeout] = useState<string>()
-
-  /* eslint-disable @typescript-eslint/no-unused-vars */
-  const {
-    refetch: refetchFre,
-    startPolling: startPollingFre,
-    data: frePrice
-  } = useQuery<FrePrice>(freQuery, {
-    variables,
-    skip: false
-  })
-  const {
-    refetch: refetchPool,
-    startPolling: startPollingPool,
-    data: poolPrice
-  } = useQuery<PoolPrice>(poolQuery, {
-    variables,
-    skip: false
-  })
-  /* eslint-enable @typescript-eslint/no-unused-vars */
 
   const isComputeButtonDisabled =
     isJobStarting === true || file === null || !ocean || !isBalanceSufficient
@@ -215,40 +175,10 @@ export default function Compute({
     setDatasetTimeout(secondsToString(timeout))
   }, [ddo])
 
-  useEffect(() => {
-    if (
-      !frePrice ||
-      frePrice.fixedRateExchanges.length === 0 ||
-      algorithmPrice.type !== 'exchange'
-    )
-      return
-    setAlgorithmPrice((prevState) => ({
-      ...prevState,
-      value: frePrice.fixedRateExchanges[0].rate,
-      address: frePrice.fixedRateExchanges[0].id
-    }))
-  }, [frePrice])
-
-  useEffect(() => {
-    if (
-      !poolPrice ||
-      poolPrice.pools.length === 0 ||
-      algorithmPrice.type !== 'pool'
-    )
-      return
-    setAlgorithmPrice((prevState) => ({
-      ...prevState,
-      value:
-        poolPrice.pools[0].consumePrice === '-1'
-          ? poolPrice.pools[0].spotPrice
-          : poolPrice.pools[0].consumePrice
-    }))
-  }, [poolPrice])
-
   const initMetadata = useCallback(async (ddo: DDO): Promise<void> => {
     if (!ddo) return
-    setAlgorithmPrice(ddo.price)
-    setVariables({ datatoken: ddo?.dataToken.toLowerCase() })
+    const price = await getPrice(ddo)
+    setAlgorithmPrice(price)
   }, [])
 
   useEffect(() => {
@@ -430,7 +360,8 @@ export default function Compute({
 
       Logger.log('[compute] Starting compute job response: ', response)
 
-      setHasPreviousDatasetOrder(true)
+      await checkPreviousOrders(selectedAlgorithmAsset)
+      await checkPreviousOrders(ddo)
       setIsPublished(true)
     } catch (error) {
       setError('Failed to start job!')
@@ -494,7 +425,9 @@ export default function Compute({
             action={<SuccessAction />}
           />
         )}
-        <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
+        {type !== 'algorithm' && (
+          <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
+        )}
       </footer>
     </>
   )
