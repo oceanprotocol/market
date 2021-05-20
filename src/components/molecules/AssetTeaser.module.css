@@ -14,6 +14,10 @@
   flex-direction: column;
 }
 
+.algorithm .link {
+  background-color: var(--background-body);
+}
+
 .content {
   margin-top: calc(var(--spacer) / 2);
   overflow-wrap: break-word;
@@ -49,18 +53,6 @@
   margin: 0;
 }
 
-.accessLabel {
-  font-size: var(--font-size-mini);
-  width: auto;
-  position: absolute;
-  top: 0;
-  right: 0;
-  color: var(--brand-black);
-  background: var(--brand-grey-lighter);
-  padding: 0.2rem 0.5rem;
-  border-bottom-left-radius: var(--border-radius);
-}
-
 .symbol {
   display: block;
 }
@@ -68,4 +60,12 @@
 .date {
   font-size: var(--font-size-mini);
   margin-top: calc(var(--spacer) / 2);
+}
+
+.typeDetails {
+  position: absolute;
+  top: calc(var(--spacer) / 3);
+  right: calc(var(--spacer) / 3);
+  width: auto;
+  font-size: var(--font-size-mini);
 }

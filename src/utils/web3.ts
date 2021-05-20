@@ -1,4 +1,4 @@
-import { Logger, ConfigHelperConfig } from '@oceanprotocol/lib'
+import { Logger } from '@oceanprotocol/lib'
 
 export interface EthereumListsChain {
   name: string
@@ -79,32 +79,33 @@ export function addCustomNetwork(
   )
 }
 
-export function addOceanToWallet(
-  config: ConfigHelperConfig,
-  web3Provider: any
-): void {
+export async function addTokenToWallet(
+  web3Provider: any,
+  address: string,
+  symbol: string,
+  logo?: string
+): Promise<void> {
+  const image =
+    logo ||
+    'https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png'
+
   const tokenMetadata = {
     type: 'ERC20',
-    options: {
-      address: config.oceanTokenAddress,
-      symbol: config.oceanTokenSymbol,
-      decimals: 18,
-      image:
-        'https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png'
-    }
+    options: { address, symbol, image, decimals: 18 }
   }
+
   web3Provider.sendAsync(
     {
       method: 'wallet_watchAsset',
       params: tokenMetadata,
       id: Math.round(Math.random() * 100000)
     },
-    (err: string, added: any) => {
+    (err: { code: number; message: string }, added: any) => {
       if (err || 'error' in added) {
         Logger.error(
           `Couldn't add ${tokenMetadata.options.symbol} (${
             tokenMetadata.options.address
-          }) to MetaMask, error: ${err || added.error}`
+          }) to MetaMask, error: ${err.message || added.error}`
         )
       } else {
         Logger.log(

@@ -42,7 +42,7 @@
   justify-content: space-between;
 }
 
-.actions span {
+.walletLogoWrap {
   display: block;
 }
 
@@ -76,11 +76,15 @@
   min-width: 6rem;
 }
 
-.walletInfo{
+.walletInfo {
   display: flex;
   flex-direction: column;
 }
 
-.walletInfo button{
+.walletInfo button {
   margin-top: calc(var(--spacer) / 5) !important;
+}
+
+.addToken {
+  margin-left: 0.3rem;
 }

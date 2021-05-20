@@ -1,14 +1,13 @@
 .buttons {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  gap: calc(var(--spacer) / 4);
+  grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
   padding-bottom: calc(var(--spacer) / 8);
 }
 
 .button {
-  display: block;
-  flex: 0 0 48%;
-  padding: calc(var(--spacer) / 3) calc(var(--spacer) / 2)
-    calc(var(--spacer) / 4) calc(var(--spacer) / 2) !important;
+  width: auto;
+  padding: calc(var(--spacer) / 3) calc(var(--spacer) / 4) !important;
   border-radius: var(--border-radius);
   text-transform: none;
 }
@@ -30,4 +29,8 @@
 .button.selected {
   color: var(--font-color-text);
   border-color: var(--color-secondary);
+}
+
+.appearances div[class*='boxSelectionsWrapper'] {
+  padding-bottom: calc(var(--spacer) / 8);
 }

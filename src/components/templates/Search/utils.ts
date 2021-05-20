@@ -6,8 +6,6 @@ import { MetadataCache, Logger } from '@oceanprotocol/lib'
 import queryString from 'query-string'
 
 export const SortTermOptions = {
-  Liquidity: 'liquidity',
-  Price: 'price',
   Created: 'created'
 } as const
 type SortTermOptions = typeof SortTermOptions[keyof typeof SortTermOptions]
@@ -25,28 +23,23 @@ export const SortValueOptions = {
 } as const
 type SortValueOptions = typeof SortValueOptions[keyof typeof SortValueOptions]
 
-export const FilterByPriceOptions = {
-  Fixed: 'exchange',
-  Dynamic: 'pool'
+export const FilterByTypeOptions = {
+  Data: 'dataset',
+  Algorithm: 'algorithm'
 } as const
-type FilterByPriceOptions = typeof FilterByPriceOptions[keyof typeof FilterByPriceOptions]
+type FilterByTypeOptions = typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
 
-function addPriceFilterToQuerry(sortTerm: string, priceFilter: string): string {
-  sortTerm = priceFilter
-    ? /\S/.test(sortTerm)
-      ? `${sortTerm} AND price.type:${priceFilter}`
-      : `price.type:${priceFilter}`
+function addTypeFilterToQuery(sortTerm: string, typeFilter: string): string {
+  sortTerm = typeFilter
+    ? sortTerm === ''
+      ? `service.attributes.main.type:${typeFilter}`
+      : `${sortTerm} AND service.attributes.main.type:${typeFilter}`
     : sortTerm
   return sortTerm
 }
 
-function getSortType(sortParam: string): string {
-  const sortTerm =
-    sortParam === SortTermOptions.Liquidity
-      ? SortElasticTerm.Liquidity
-      : sortParam === SortTermOptions.Price
-      ? SortElasticTerm.Price
-      : SortTermOptions.Created
+function getSortType(): string {
+  const sortTerm = SortTermOptions.Created
   return sortTerm
 }
 
@@ -59,9 +52,9 @@ export function getSearchQuery(
   offset?: string,
   sort?: string,
   sortOrder?: string,
-  priceType?: string
+  serviceType?: string
 ): SearchQuery {
-  const sortTerm = getSortType(sort)
+  const sortTerm = getSortType()
   const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
   let searchTerm = owner
     ? `(publicKey.owner:${owner})`
@@ -72,7 +65,7 @@ export function getSearchQuery(
     ? // eslint-disable-next-line no-useless-escape
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
     : text || ''
-  searchTerm = addPriceFilterToQuerry(searchTerm, priceType)
+  searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
 
   return {
     page: Number(page) || 1,
@@ -110,7 +103,7 @@ export async function getResults(
     offset?: string
     sort?: string
     sortOrder?: string
-    priceType?: string
+    serviceType?: string
   },
   metadataCacheUri: string
 ): Promise<QueryResult> {
@@ -123,9 +116,10 @@ export async function getResults(
     categories,
     sort,
     sortOrder,
-    priceType
+    serviceType
   } = params
   const metadataCache = new MetadataCache(metadataCacheUri, Logger)
+
   const searchQuery = getSearchQuery(
     text,
     owner,
@@ -135,10 +129,10 @@ export async function getResults(
     offset,
     sort,
     sortOrder,
-    priceType
+    serviceType
   )
-  const queryResult = await metadataCache.queryMetadata(searchQuery)
 
+  const queryResult = await metadataCache.queryMetadata(searchQuery)
   return queryResult
 }
 

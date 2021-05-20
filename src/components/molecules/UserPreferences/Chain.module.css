@@ -17,3 +17,14 @@
 .selected {
   composes: selected from './Appearance.module.css';
 }
+
+.chains div[class*='boxSelectionsWrapper'] {
+  display: grid;
+  gap: calc(var(--spacer) / 4);
+  grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+  padding-bottom: calc(var(--spacer) / 8);
+}
+
+.chains label[class*='boxSelection'] {
+  padding: calc(var(--spacer) / 3) calc(var(--spacer) / 4) !important;
+}

@@ -62,7 +62,7 @@ export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
     pricingIsLoading,
     pricingError,
     pricingStepText
-  } = usePricing(ddo)
+  } = usePricing()
 
   const hasFeedback = pricingIsLoading || typeof success !== 'undefined'
 
@@ -74,7 +74,7 @@ export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
         swapFee: `${values.swapFee / 100}`
       }
 
-      const tx = await createPricing(priceOptions)
+      const tx = await createPricing(priceOptions, ddo)
 
       // Pricing failed
       if (!tx || pricingError) {

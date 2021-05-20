@@ -1,17 +1,47 @@
 import React, { ReactElement, useEffect, FormEvent, ChangeEvent } from 'react'
-import styles from './FormPublish.module.css'
+import { useStaticQuery, graphql } from 'gatsby'
 import { useFormikContext, Field, Form, FormikContextType } from 'formik'
 import Input from '../../atoms/Input'
 import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
-import { MetadataPublishForm } from '../../../@types/MetaData'
+import { MetadataPublishFormDataset } from '../../../@types/MetaData'
+import { initialValues as initialValuesDataset } from '../../../models/FormAlgoPublish'
 import { useOcean } from '../../../providers/Ocean'
+import { ReactComponent as Download } from '../../../images/download.svg'
+import { ReactComponent as Compute } from '../../../images/compute.svg'
+import stylesIndex from './index.module.css'
+import styles from './FormPublish.module.css'
 
-export default function FormPublish({
-  content
-}: {
-  content: FormContent
-}): ReactElement {
+const query = graphql`
+  query {
+    content: allFile(
+      filter: { relativePath: { eq: "pages/publish/form-dataset.json" } }
+    ) {
+      edges {
+        node {
+          childPublishJson {
+            title
+            data {
+              name
+              placeholder
+              label
+              help
+              type
+              required
+              sortOptions
+              options
+            }
+            warning
+          }
+        }
+      }
+    }
+  }
+`
+
+export default function FormPublish(): ReactElement {
+  const data = useStaticQuery(query)
+  const content: FormContent = data.content.edges[0].node.childPublishJson
   const { ocean, account } = useOcean()
   const {
     status,
@@ -23,7 +53,7 @@ export default function FormPublish({
     initialValues,
     validateField,
     setFieldValue
-  }: FormikContextType<MetadataPublishForm> = useFormikContext()
+  }: FormikContextType<MetadataPublishFormDataset> = useFormikContext()
 
   // reset form validation on every mount
   useEffect(() => {
@@ -33,19 +63,38 @@ export default function FormPublish({
     // setSubmitting(false)
   }, [setErrors, setTouched])
 
+  const accessTypeOptions = [
+    {
+      name: 'Download',
+      title: 'Download',
+      icon: <Download />
+    },
+    {
+      name: 'Compute',
+      title: 'Compute',
+      icon: <Compute />
+    }
+  ]
+
   // Manually handle change events instead of using `handleChange` from Formik.
   // Workaround for default `validateOnChange` not kicking in
   function handleFieldChange(
     e: ChangeEvent<HTMLInputElement>,
     field: FormFieldProps
   ) {
+    const value =
+      field.type === 'terms' ? !JSON.parse(e.target.value) : e.target.value
+
     validateField(field.name)
-    setFieldValue(field.name, e.target.value)
+    setFieldValue(field.name, value)
   }
 
   const resetFormAndClearStorage = (e: FormEvent<Element>) => {
     e.preventDefault()
-    resetForm({ values: initialValues, status: 'empty' })
+    resetForm({
+      values: initialValuesDataset as MetadataPublishFormDataset,
+      status: 'empty'
+    })
     setStatus('empty')
   }
 
@@ -55,10 +104,14 @@ export default function FormPublish({
       // do we need this?
       onChange={() => status === 'empty' && setStatus(null)}
     >
+      <h2 className={stylesIndex.formTitle}>{content.title}</h2>
       {content.data.map((field: FormFieldProps) => (
         <Field
           key={field.name}
           {...field}
+          options={
+            field.type === 'boxSelection' ? accessTypeOptions : field.options
+          }
           component={Input}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             handleFieldChange(e, field)
