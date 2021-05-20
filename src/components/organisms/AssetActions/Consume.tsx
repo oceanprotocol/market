@@ -123,8 +123,7 @@ export default function Consume({
     consumeStepText,
     pricingIsLoading,
     isConsumable,
-    hasDatatoken,
-    ddo.id
+    hasDatatoken
   ])
 
   async function handleConsume() {
