@@ -126,7 +126,7 @@ export default function Compute({
     const algorithmQuery =
       trustedAlgorithmList.length > 0 ? `(${algoQuerry}) AND` : ``
     const query = {
-      page: 1,
+      offset: 200,
       query: {
         query_string: {
           query: `${algorithmQuery} service.attributes.main.type:algorithm -isInPurgatory:true`
