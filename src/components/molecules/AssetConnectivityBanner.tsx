@@ -35,20 +35,12 @@ export default function AssetConnectivityBanner({
 
   useEffect(() => {
     const source = axios.CancelToken.source()
-    validateAsset(ddo, source)
+    if (selectedAlgorithmDDO) validateAsset(selectedAlgorithmDDO, source, true)
+    else validateAsset(ddo, source)
     return () => {
       source.cancel()
     }
-  }, [ddo])
-
-  useEffect(() => {
-    if (!selectedAlgorithmDDO) return
-    const source = axios.CancelToken.source()
-    validateAsset(selectedAlgorithmDDO, source, true)
-    return () => {
-      source.cancel()
-    }
-  }, [selectedAlgorithmDDO])
+  }, [ddo, selectedAlgorithmDDO])
 
   let offlineAsset
 
