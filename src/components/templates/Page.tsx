@@ -22,21 +22,18 @@ export default function Page({
   headerCenter
 }: PageProps): ReactElement {
   return (
-    <Permission eventType="browse">
-      <>
-        <Seo title={title} description={description} uri={uri} />
-
-        <Container>
-          {title && !noPageHeader && (
-            <PageHeader
-              title={title}
-              description={description}
-              center={headerCenter}
-            />
-          )}
-          {children}
-        </Container>
-      </>
-    </Permission>
+    <>
+      <Seo title={title} description={description} uri={uri} />
+      <Container>
+        {title && !noPageHeader && (
+          <PageHeader
+            title={title}
+            description={description}
+            center={headerCenter}
+          />
+        )}
+        {children}
+      </Container>
+    </>
   )
 }

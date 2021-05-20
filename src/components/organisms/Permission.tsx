@@ -1,5 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import rbacRequest from '../../utils/rbac'
+import Alert from '../atoms/Alert'
 
 export default function Permission({
   eventType,
@@ -11,14 +12,15 @@ export default function Permission({
   const [data, updateData] = useState<boolean>()
   useEffect(() => {
     const getData = async () => {
-      const data = await rbacRequest('browse')
+      const data = await rbacRequest(eventType)
       updateData(data)
     }
     getData()
   }, [])
-
+  console.log('eventType', eventType)
   if (data === false) {
-    return <b>Sorry you do not have permission to {eventType}</b>
+    const message = `Sorry, you don't have permission to  ${eventType}. Please make sure you are logged in.`
+    return <Alert title="Permission denied" text={message} state="error" />
   } else {
     return <>{children}</>
   }
