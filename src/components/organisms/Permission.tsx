@@ -16,7 +16,7 @@ export default function Permission({
       updateData(data)
     }
     getData()
-  }, [])
+  }, [eventType])
   console.log('eventType', eventType)
   if (data === false) {
     const message = `Sorry, you don't have permission to  ${eventType}. Please make sure you are logged in.`
