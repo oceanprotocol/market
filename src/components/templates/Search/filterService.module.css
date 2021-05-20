@@ -49,16 +49,16 @@ button.filter,
 
 .showClear:hover{
   display: inline-flex;
-  color: var(--color-primary) !important;
+  color: var(--color-primary);
 }
 .showClear {
   display: inline-flex;
   text-transform: capitalize;
-  color: var(--color-secondary) !important;
+  color: var(--color-secondary);
   font-weight: var(--font-weight-base);
   margin-left: calc(var(--spacer) / 6);
 }
 
 .hideClear {
-  display: none !important;
+  display: none;
 }
