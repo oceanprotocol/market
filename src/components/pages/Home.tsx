@@ -94,8 +94,8 @@ function SectionQueryResult({
 
 export default function HomePage(): ReactElement {
   return (
-    <>
-      <Permission eventType="browse">
+    <Permission eventType="browse">
+      <>
         <Container narrow className={styles.searchWrap}>
           <SearchBar size="large" />
         </Container>
@@ -127,7 +127,7 @@ export default function HomePage(): ReactElement {
             </Button>
           }
         />
-      </Permission>
-    </>
+      </>
+    </Permission>
   )
 }

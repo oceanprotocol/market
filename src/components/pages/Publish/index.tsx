@@ -1,4 +1,5 @@
 import React, { ReactElement, useState, useEffect } from 'react'
+import Permission from '../../organisms/Permission'
 import { Formik, FormikState } from 'formik'
 import { usePublish } from '../../../hooks/usePublish'
 import styles from './index.module.css'
@@ -216,86 +217,92 @@ export default function PublishPage({
   }
 
   return isInPurgatory && purgatoryData ? null : (
-    <Formik
-      initialValues={
-        publishType === 'dataset' ? datasetInitialValues : algoInitialValues
-      }
-      initialStatus="empty"
-      validationSchema={
-        publishType === 'dataset' ? validationSchema : validationSchemaAlgorithm
-      }
-      onSubmit={async (values, { resetForm }) => {
-        // move user's focus to top of screen
-        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-        // kick off publishing
-        publishType === 'dataset'
-          ? await handleSubmit(values, resetForm)
-          : await handleAlgorithmSubmit(values, resetForm)
-      }}
-      enableReinitialize
-    >
-      {({ values }) => {
-        const tabs = [
-          {
-            title: 'Data Set',
-            content: <TabContent values={values} publishType={publishType} />
-          },
-          {
-            title: 'Algorithm',
-            content: <TabContent values={values} publishType={publishType} />
-          }
-        ]
+    <Permission eventType="publish">
+      <Formik
+        initialValues={
+          publishType === 'dataset' ? datasetInitialValues : algoInitialValues
+        }
+        initialStatus="empty"
+        validationSchema={
+          publishType === 'dataset'
+            ? validationSchema
+            : validationSchemaAlgorithm
+        }
+        onSubmit={async (values, { resetForm }) => {
+          // move user's focus to top of screen
+          window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+          // kick off publishing
+          publishType === 'dataset'
+            ? await handleSubmit(values, resetForm)
+            : await handleAlgorithmSubmit(values, resetForm)
+        }}
+        enableReinitialize
+      >
+        {({ values }) => {
+          const tabs = [
+            {
+              title: 'Data Set',
+              content: <TabContent values={values} publishType={publishType} />
+            },
+            {
+              title: 'Algorithm',
+              content: <TabContent values={values} publishType={publishType} />
+            }
+          ]
 
-        return (
-          <>
-            <Persist
-              name={
-                publishType === 'dataset'
-                  ? formNameDatasets
-                  : formNameAlgorithms
-              }
-              ignoreFields={['isSubmitting']}
-            />
-
-            {hasFeedback ? (
-              <MetadataFeedback
-                title={title}
-                error={error}
-                success={success}
-                loading={publishStepText}
-                setError={setError}
-                successAction={{
-                  name: `Go to ${
-                    publishType === 'dataset' ? 'data set' : 'algorithm'
-                  } →`,
-                  to: `/asset/${did}`
-                }}
+          return (
+            <>
+              <Persist
+                name={
+                  publishType === 'dataset'
+                    ? formNameDatasets
+                    : formNameAlgorithms
+                }
+                ignoreFields={['isSubmitting']}
               />
-            ) : (
-              <>
-                <Alert
-                  text={content.warning}
-                  state="info"
-                  className={styles.alert}
-                />
 
-                <Tabs
-                  className={styles.tabs}
-                  items={tabs}
-                  handleTabChange={(title) => {
-                    setPublishType(title.toLowerCase().replace(' ', '') as any)
-                    title === 'Algorithm'
-                      ? setdatasetInitialValues(values)
-                      : setAlgoInitialValues(values)
+              {hasFeedback ? (
+                <MetadataFeedback
+                  title={title}
+                  error={error}
+                  success={success}
+                  loading={publishStepText}
+                  setError={setError}
+                  successAction={{
+                    name: `Go to ${
+                      publishType === 'dataset' ? 'data set' : 'algorithm'
+                    } →`,
+                    to: `/asset/${did}`
                   }}
                 />
-              </>
-            )}
+              ) : (
+                <>
+                  <Alert
+                    text={content.warning}
+                    state="info"
+                    className={styles.alert}
+                  />
 
-            {debug === true && <Debug values={values} />}
-          </>
-        )
-      }}
-    </Formik>
+                  <Tabs
+                    className={styles.tabs}
+                    items={tabs}
+                    handleTabChange={(title) => {
+                      setPublishType(
+                        title.toLowerCase().replace(' ', '') as any
+                      )
+                      title === 'Algorithm'
+                        ? setdatasetInitialValues(values)
+                        : setAlgoInitialValues(values)
+                    }}
+                  />
+                </>
+              )}
+
+              {debug === true && <Debug values={values} />}
+            </>
+          )
+        }}
+      </Formik>
+    </Permission>
   )
 }
