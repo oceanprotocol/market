@@ -34,7 +34,7 @@ export default function AlgorithmDatasetsListForCompute({
       <span className={styles.text}>
         Datasets algorithm is allowed to run on
       </span>
-      <AssetSelection assets={datasetsForCompute} hideRadio />
+      <AssetSelection assets={datasetsForCompute} hideRadio useInternalLink />
     </div>
   )
 }
