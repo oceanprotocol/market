@@ -1,4 +1,4 @@
-import React, { Children, ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import rbacRequest from '../../utils/rbac'
 
 export default function Permission({

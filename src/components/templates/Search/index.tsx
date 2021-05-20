@@ -1,4 +1,5 @@
 import React, { ReactElement, useState, useEffect } from 'react'
+import Permission from '../../organisms/Permission'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import SearchBar from '../../molecules/SearchBar'
 import AssetList from '../../organisms/AssetList'
@@ -74,43 +75,45 @@ export default function SearchPage({
   }
 
   return (
-    <>
-      <div className={styles.search}>
-        {(text || owner) && (
-          <SearchBar initialValue={(text || owner) as string} />
-        )}
-        <div className={styles.row}>
-          <PriceFilter
-            priceType={price}
-            serviceType={service}
-            setPriceType={setPriceType}
-            setServiceType={setServiceType}
-          />
-          <Sort
-            sortType={sortType}
-            sortDirection={sortDirection}
-            setSortType={setSortType}
-            setSortDirection={setSortDirection}
-            setPriceType={setPriceType}
-            setServiceType={setServiceType}
-          />
+    <Permission eventType="browse">
+      <>
+        <div className={styles.search}>
+          {(text || owner) && (
+            <SearchBar initialValue={(text || owner) as string} />
+          )}
+          <div className={styles.row}>
+            <PriceFilter
+              priceType={price}
+              serviceType={service}
+              setPriceType={setPriceType}
+              setServiceType={setServiceType}
+            />
+            <Sort
+              sortType={sortType}
+              sortDirection={sortDirection}
+              setSortType={setSortType}
+              setSortDirection={setSortDirection}
+              setPriceType={setPriceType}
+              setServiceType={setServiceType}
+            />
+          </div>
         </div>
-      </div>
-      <div className={styles.results}>
-        {loading ? (
-          <Loader />
-        ) : queryResult ? (
-          <AssetList
-            assets={queryResult.results}
-            showPagination
-            page={queryResult.page}
-            totalPages={queryResult.totalPages}
-            onPageChange={setPage}
-          />
-        ) : (
-          ''
-        )}
-      </div>
-    </>
+        <div className={styles.results}>
+          {loading ? (
+            <Loader />
+          ) : queryResult ? (
+            <AssetList
+              assets={queryResult.results}
+              showPagination
+              page={queryResult.page}
+              totalPages={queryResult.totalPages}
+              onPageChange={setPage}
+            />
+          ) : (
+            ''
+          )}
+        </div>
+      </>
+    </Permission>
   )
 }
