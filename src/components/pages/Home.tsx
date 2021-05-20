@@ -26,7 +26,7 @@ const queryLatest = {
   sort: { created: -1 }
 }
 
-function sortElements(items: DDO[], sorted: string) {
+function sortElements(items: DDO[], sorted: string[]) {
   items.sort(function (a, b) {
     return sorted.indexOf(a.dataToken) - sorted.indexOf(b.dataToken)
   })
@@ -61,9 +61,8 @@ function SectionQueryResult({
           source.token
         )
         if (result.totalResults < 15) {
-          console.log('DIDS: ', dids)
-          // const searchDids = JSON.parse(dids)
-          result.results = sortElements(result.results, dids)
+          const searchDIDs = dids.split(' ')
+          result.results = sortElements(result.results, searchDIDs)
         }
         setResult(result)
       } catch (error) {
@@ -99,7 +98,7 @@ export default function HomePage(): ReactElement {
     offset: 9,
     query: {
       query_string: {
-        query: `${searchDids} -isInPurgatory:true`,
+        query: `(${searchDids}) AND -isInPurgatory:true AND price.isConsumable:true`,
         fields: ['dataToken'],
         default_operator: 'OR'
       }
