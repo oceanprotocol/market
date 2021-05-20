@@ -22,9 +22,8 @@ export default function AssetConnectivityBanner({
     source: CancelTokenSource,
     isAlgorithm?: boolean
   ) {
-    const did = DID.parse(ddo.id)
     const fileValid = await isFileValid(
-      did,
+      DID.parse(ddo.id),
       ddo.findServiceByType('access')?.serviceEndpoint ||
         ddo.findServiceByType('compute')?.serviceEndpoint,
       source.token
@@ -61,7 +60,7 @@ export default function AssetConnectivityBanner({
 
   return (
     <AnnouncementBanner
-      text={`${offlineAsset} is offline, consume at your own risk.`}
+      text={`${offlineAsset} might be empty/offline, consume at your own risk.`}
       state="error"
     />
   )

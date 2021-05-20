@@ -161,22 +161,20 @@ export default function Consume({
   )
 
   return (
-    <>
-      <aside className={styles.consume}>
-        <div className={styles.info}>
-          <div className={styles.filewrapper}>
-            <File file={file} />
-          </div>
-          <div className={styles.pricewrapper}>
-            <Price price={price} conversion />
-            {!isInPurgatory && <PurchaseButton />}
-          </div>
+    <aside className={styles.consume}>
+      <div className={styles.info}>
+        <div className={styles.filewrapper}>
+          <File file={file} />
         </div>
-        <footer className={styles.feedback}>
-          <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
-        </footer>
-      </aside>
+        <div className={styles.pricewrapper}>
+          <Price price={price} conversion />
+          {!isInPurgatory && <PurchaseButton />}
+        </div>
+      </div>
+      <footer className={styles.feedback}>
+        <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
+      </footer>
       <AssetConnectivityBanner ddo={ddo} />
-    </>
+    </aside>
   )
 }
