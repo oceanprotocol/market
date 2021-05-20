@@ -95,38 +95,39 @@ function SectionQueryResult({
 export default function HomePage(): ReactElement {
   return (
     <>
-      <Permission eventType="browse" />
-      <Container narrow className={styles.searchWrap}>
-        <SearchBar size="large" />
-      </Container>
+      <Permission eventType="browse">
+        <Container narrow className={styles.searchWrap}>
+          <SearchBar size="large" />
+        </Container>
 
-      <section className={styles.section}>
-        <h3>Bookmarks</h3>
-        <Bookmarks />
-      </section>
+        <section className={styles.section}>
+          <h3>Bookmarks</h3>
+          <Bookmarks />
+        </section>
 
-      <SectionQueryResult
-        title="Highest Liquidity"
-        query={queryHighest}
-        action={
-          <Button
-            style="text"
-            to="/search?priceType=pool&sort=liquidity&sortOrder=desc"
-          >
-            Data sets and algorithms with pool →
-          </Button>
-        }
-      />
+        <SectionQueryResult
+          title="Highest Liquidity"
+          query={queryHighest}
+          action={
+            <Button
+              style="text"
+              to="/search?priceType=pool&sort=liquidity&sortOrder=desc"
+            >
+              Data sets and algorithms with pool →
+            </Button>
+          }
+        />
 
-      <SectionQueryResult
-        title="Recently Published"
-        query={queryLatest}
-        action={
-          <Button style="text" to="/search?sort=created&sortOrder=desc">
-            All data sets and algorithms →
-          </Button>
-        }
-      />
+        <SectionQueryResult
+          title="Recently Published"
+          query={queryLatest}
+          action={
+            <Button style="text" to="/search?sort=created&sortOrder=desc">
+              All data sets and algorithms →
+            </Button>
+          }
+        />
+      </Permission>
     </>
   )
 }

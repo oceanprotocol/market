@@ -1,10 +1,12 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { Children, ReactElement, useEffect, useState } from 'react'
 import rbacRequest from '../../utils/rbac'
 
 export default function Permission({
-  eventType
+  eventType,
+  children
 }: {
   eventType: string
+  children: ReactElement
 }): ReactElement {
   const [data, updateData] = useState<boolean>()
   useEffect(() => {
@@ -16,8 +18,8 @@ export default function Permission({
   }, [])
 
   if (data === false) {
-    return <div>Sorry you do not have permission to {eventType}</div>
+    return <b>Sorry you do not have permission to {eventType}</b>
   } else {
-    return <div>permission</div>
+    return <>{children}</>
   }
 }
