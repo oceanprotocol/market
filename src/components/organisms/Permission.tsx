@@ -1,4 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react'
+import { useWeb3 } from '../../providers/Web3'
 import rbacRequest from '../../utils/rbac'
 import Alert from '../atoms/Alert'
 
@@ -10,13 +11,14 @@ export default function Permission({
   children: ReactElement
 }): ReactElement {
   const [data, updateData] = useState<boolean>()
+  const { accountId } = useWeb3()
   useEffect(() => {
     const getData = async () => {
-      const data = await rbacRequest(eventType)
+      const data = await rbacRequest(eventType, accountId)
       updateData(data)
     }
     getData()
-  }, [eventType])
+  }, [eventType, accountId])
   console.log('eventType', eventType)
   if (data === false) {
     const message = `Sorry, you don't have permission to  ${eventType}. Please make sure you are logged in.`

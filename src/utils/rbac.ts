@@ -1,9 +1,12 @@
 import fetch from 'cross-fetch'
 import appConfig from '../../app.config'
 
-export default async function rbacRequest(eventType: string): Promise<boolean> {
+export default async function rbacRequest(
+  eventType: string,
+  address: string
+): Promise<boolean> {
   const url = appConfig.rbacUrl
-
+  console.log('address', address)
   if (url === 'false') {
     return true
   } else {
