@@ -1,5 +1,4 @@
 import React, { ReactNode, ReactElement } from 'react'
-import Permission from '../organisms/Permission'
 import PageHeader from '../molecules/PageHeader'
 import Seo from '../atoms/Seo'
 import Container from '../atoms/Container'
