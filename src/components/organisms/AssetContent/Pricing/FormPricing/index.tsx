@@ -36,11 +36,13 @@ export default function FormPricing({
   } = values as PriceOptionsMarket
 
   const [isFreeAgree, setIsFreeAgree] = useState(false)
+  const [isFreeTab, setIsFreeTab] = useState(false)
   // Switch type value upon tab change
   function handleTabChange(tabName: string) {
     const type = tabName.toLowerCase()
     setFieldValue('type', type)
     type === 'fixed' && setFieldValue('dtAmount', 1000)
+    type === 'free' ? setIsFreeTab(true) : setIsFreeTab(false)
   }
 
   // Always update everything when price value changes
@@ -82,22 +84,24 @@ export default function FormPricing({
         defaultIndex={type === 'fixed' ? 0 : 1}
       />
 
-      <div className={styles.free}>
-        <WarnCheckbox
-          name="agree"
-          checked={isFreeAgree}
-          onChange={(e) => {
-            setIsFreeAgree(e.target.checked)
-          }}
-        >
-          {content.free.warning}
-        </WarnCheckbox>
-      </div>
+      {isFreeTab && (
+        <div className={styles.free}>
+          <WarnCheckbox
+            name="agree"
+            checked={isFreeAgree}
+            onChange={(e) => {
+              setIsFreeAgree(e.target.checked)
+            }}
+          >
+            {content.free.warning}
+          </WarnCheckbox>
+        </div>
+      )}
       <div className={styles.actions}>
         <Button
           style="primary"
           onClick={() => submitForm()}
-          disabled={!isFreeAgree}
+          disabled={isFreeTab && !isFreeAgree}
         >
           {content.empty.action.name}
         </Button>
