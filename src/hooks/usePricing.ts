@@ -229,7 +229,7 @@ function usePricing(): UsePricing {
 
     try {
       if (type === 'free') {
-        setStep(1, 'free', ddo)
+        setStep(99, 'free', ddo)
         await ocean.OceanDispenser.activate(dataToken, '1', '1', accountId)
       } else {
         // if fixedPrice set dt to max amount
