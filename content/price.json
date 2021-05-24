@@ -21,6 +21,11 @@
         "communityFee": "Explain community fee...",
         "marketplaceFee": "Explain marketplace fee..."
       }
+    },
+    "free": {
+      "title": "Free",
+      "info": "Set your data set as free. The datatoken for this data set will be given for free.",
+      "warning": "I agree that this asset will be purchased at no cost"
     }
   },
   "pool": {

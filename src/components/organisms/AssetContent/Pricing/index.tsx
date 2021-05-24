@@ -40,6 +40,11 @@ const query = graphql`
                   marketplaceFee
                 }
               }
+              free {
+                title
+                info
+                warning
+              }
             }
           }
         }

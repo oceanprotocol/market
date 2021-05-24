@@ -1,8 +1,9 @@
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './index.module.css'
 import Tabs from '../../../../atoms/Tabs'
 import Fixed from './Fixed'
 import Dynamic from './Dynamic'
+import Free from './Free'
 import { useFormikContext } from 'formik'
 import { useUserPreferences } from '../../../../../providers/UserPreferences'
 import { PriceOptionsMarket } from '../../../../../@types/MetaData'
@@ -10,6 +11,7 @@ import Button from '../../../../atoms/Button'
 import { DDO } from '@oceanprotocol/lib'
 import FormHelp from '../../../../atoms/Input/Help'
 import { useSiteMetadata } from '../../../../../hooks/useSiteMetadata'
+import WarnCheckbox from '../../../../molecules/FormFields/WarnCheckbox'
 
 export default function FormPricing({
   ddo,
@@ -33,6 +35,7 @@ export default function FormPricing({
     type
   } = values as PriceOptionsMarket
 
+  const [isFreeAgree, setIsFreeAgree] = useState(false)
   // Switch type value upon tab change
   function handleTabChange(tabName: string) {
     const type = tabName.toLowerCase()
@@ -62,6 +65,12 @@ export default function FormPricing({
           title: content.dynamic.title,
           content: <Dynamic content={content.dynamic} ddo={ddo} />
         }
+      : undefined,
+    appConfig.allowFreePricing === 'true'
+      ? {
+          title: content.free.title,
+          content: <Free content={content.free} />
+        }
       : undefined
   ].filter((tab) => tab !== undefined)
 
@@ -73,8 +82,23 @@ export default function FormPricing({
         defaultIndex={type === 'fixed' ? 0 : 1}
       />
 
+      <div className={styles.free}>
+        <WarnCheckbox
+          name="agree"
+          checked={isFreeAgree}
+          onChange={(e) => {
+            setIsFreeAgree(e.target.checked)
+          }}
+        >
+          {content.free.warning}
+        </WarnCheckbox>
+      </div>
       <div className={styles.actions}>
-        <Button style="primary" onClick={() => submitForm()}>
+        <Button
+          style="primary"
+          onClick={() => submitForm()}
+          disabled={!isFreeAgree}
+        >
           {content.empty.action.name}
         </Button>
         <Button style="text" size="small" onClick={() => setShowPricing(false)}>

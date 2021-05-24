@@ -29,6 +29,7 @@ const query = graphql`
           portisId
           allowFixedPricing
           allowDynamicPricing
+          allowFreePricing
         }
       }
     }

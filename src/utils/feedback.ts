@@ -52,6 +52,17 @@ export function getCreatePricingExchangeFeedback(
   }
 }
 
+export function getCreateFreePricingFeedback(
+  dtSymbol: string
+): { [key: number]: string } {
+  return {
+    99: 'Creating dispenser...',
+    0: `Proposing ${dtSymbol} minter...`,
+    1: 'Dispenser approving minter...',
+    2: 'Dispenser created.'
+  }
+}
+
 export function getBuyDTFeedback(dtSymbol: string): { [key: number]: string } {
   return {
     1: '1/3 Approving OCEAN ...',

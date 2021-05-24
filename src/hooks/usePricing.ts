@@ -5,7 +5,8 @@ import { Decimal } from 'decimal.js'
 import {
   getCreatePricingPoolFeedback,
   getCreatePricingExchangeFeedback,
-  getBuyDTFeedback
+  getBuyDTFeedback,
+  getCreateFreePricingFeedback
 } from '../utils/feedback'
 import { sleep } from '../utils'
 
@@ -16,7 +17,7 @@ interface PriceOptions {
   price: number
   dtAmount: number
   oceanAmount: number
-  type: 'fixed' | 'dynamic' | string
+  type: 'fixed' | 'dynamic' | 'free' | string
   weightOnDataToken: string
   swapFee: string
 }
@@ -68,7 +69,7 @@ function usePricing(): UsePricing {
   // Helper for setting steps & feedback for all flows
   async function setStep(
     index: number,
-    type: 'pool' | 'exchange' | 'buy',
+    type: 'pool' | 'exchange' | 'free' | 'buy',
     ddo: DDO
   ) {
     const dtSymbol = await getDTSymbol(ddo)
@@ -83,6 +84,9 @@ function usePricing(): UsePricing {
         break
       case 'exchange':
         messages = getCreatePricingExchangeFeedback(dtSymbol)
+        break
+      case 'free':
+        messages = getCreateFreePricingFeedback(dtSymbol)
         break
       case 'buy':
         messages = getBuyDTFeedback(dtSymbol)
@@ -224,9 +228,14 @@ function usePricing(): UsePricing {
     setStep(99, 'pool', ddo)
 
     try {
-      // if fixedPrice set dt to max amount
-      if (!isPool) dtAmount = 1000
-      await mint(`${dtAmount}`, ddo)
+      if (type === 'free') {
+        setStep(1, 'free', ddo)
+        await ocean.OceanDispenser.activate(dataToken, '1', '1', accountId)
+      } else {
+        // if fixedPrice set dt to max amount
+        if (!isPool) dtAmount = 1000
+        await mint(`${dtAmount}`, ddo)
+      }
 
       // dtAmount for fixed price is set to max
       const tx = isPool
@@ -240,9 +249,14 @@ function usePricing(): UsePricing {
               swapFee
             )
             .next((step: number) => setStep(step, 'pool', ddo))
-        : await ocean.fixedRateExchange
+        : type === 'fixed'
+        ? await ocean.fixedRateExchange
             .create(dataToken, `${price}`, accountId, `${dtAmount}`)
             .next((step: number) => setStep(step, 'exchange', ddo))
+        : await ocean.OceanDispenser.makeMinter(
+            dataToken,
+            accountId
+          ).next((step: number) => setStep(step, 'free', ddo))
       await sleep(20000)
       return tx
     } catch (error) {
