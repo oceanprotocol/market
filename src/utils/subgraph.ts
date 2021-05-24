@@ -88,7 +88,7 @@ const PreviousOrderQuery = gql`
 `
 const HighestLiquidityAssets = gql`
   query HighestLiquidiyAssets {
-    pools(orderBy: valueLocked, orderDirection: desc, first: 12) {
+    pools(orderBy: valueLocked, orderDirection: desc, first: 15) {
       id
       consumePrice
       spotPrice

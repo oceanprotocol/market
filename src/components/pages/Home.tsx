@@ -60,9 +60,15 @@ function SectionQueryResult({
           config.metadataCacheUri,
           source.token
         )
-        if (result.totalResults < 15) {
+        if (result.totalResults <= 15) {
           const searchDIDs = dids.split(' ')
-          result.results = sortElements(result.results, searchDIDs)
+          const sortedAssets = sortElements(result.results, searchDIDs)
+          // We take more assets than we need from the subgraph (to make sure
+          // all the 9 assets with highest liquidity we need are in OceanDB)
+          // so we need to get rid of the surplus
+          const overflow = sortedAssets.length - 9
+          sortedAssets.splice(sortedAssets.length - overflow, overflow)
+          result.results = sortedAssets
         }
         setResult(result)
       } catch (error) {
@@ -87,20 +93,21 @@ function SectionQueryResult({
 
 export default function HomePage(): ReactElement {
   const [searchDids, setSearchDIDs] = useState<string>()
+  const { config } = useOcean()
 
   useEffect(() => {
     getHighestLiquidityDIDs().then((results) => {
       setSearchDIDs(results)
     })
-  })
+  }, [config?.metadataCacheUri, searchDids])
+
   const queryHighest = {
     page: 1,
-    offset: 9,
+    offset: 15,
     query: {
       query_string: {
         query: `(${searchDids}) AND -isInPurgatory:true AND price.isConsumable:true`,
-        fields: ['dataToken'],
-        default_operator: 'OR'
+        fields: ['dataToken']
       }
     }
   }
