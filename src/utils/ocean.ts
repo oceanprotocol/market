@@ -14,7 +14,7 @@ import { UserBalance } from '../@types/TokenBalance'
 export function getOceanConfig(
   network: ConfigHelperNetworkName | ConfigHelperNetworkId
 ): ConfigHelperConfig {
-  return new ConfigHelper().getConfig(
+  const config = new ConfigHelper().getConfig(
     network,
     network === 'polygon' ||
       network === 137 ||
@@ -23,6 +23,30 @@ export function getOceanConfig(
       ? undefined
       : process.env.GATSBY_INFURA_PROJECT_ID
   ) as ConfigHelperConfig
+
+  switch (network) {
+    case 'polygon':
+    case 137: {
+      config.metadataCacheUri = 'https://stableaqua.polygon.oceanprotocol.com'
+      break
+    }
+    case 'mainnet':
+    case 1: {
+      config.metadataCacheUri = 'https://stableaqua.mainnet.oceanprotocol.com'
+      break
+    }
+    case 'rinkeby':
+    case 4: {
+      config.metadataCacheUri = 'https://stableaqua.rinkeby.oceanprotocol.com'
+      break
+    }
+    case 'ropsten':
+    case 3: {
+      config.metadataCacheUri = 'https://stableaqua.ropsten.oceanprotocol.com'
+      break
+    }
+  }
+  return config
 }
 
 export function getDevelopmentConfig(): Partial<ConfigHelperConfig> {
