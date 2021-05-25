@@ -3,7 +3,7 @@ import React, { ReactElement } from 'react'
 import { ReactComponent as BookmarkIcon } from '../../../images/bookmark.svg'
 import { ConfigHelperConfig } from '@oceanprotocol/lib'
 import { useOcean } from '../../../providers/Ocean'
-import * as styles from './Bookmark.module.css'
+import { bookmark, active } from './Bookmark.module.css'
 
 export default function Bookmark({ did }: { did: string }): ReactElement {
   const { config } = useOcean()
@@ -19,7 +19,7 @@ export default function Bookmark({ did }: { did: string }): ReactElement {
   return (
     <button
       onClick={handleBookmark}
-      className={`${styles.bookmark} ${isBookmarked ? styles.active : ''} `}
+      className={`${bookmark} ${isBookmarked ? active : ''} `}
       title={isBookmarked ? 'Remove Bookmark' : 'Add Bookmark'}
     >
       <BookmarkIcon />

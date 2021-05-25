@@ -2,7 +2,7 @@ import Loader from '../../../atoms/Loader'
 import SuccessConfetti from '../../../atoms/SuccessConfetti'
 import React, { ReactElement } from 'react'
 import Button from '../../../atoms/Button'
-import * as styles from './Feedback.module.css'
+import { feedback } from './Feedback.module.css'
 
 export default function Feedback({
   success,
@@ -22,7 +22,7 @@ export default function Feedback({
   )
 
   return (
-    <div className={styles.feedback}>
+    <div className={feedback}>
       {success ? (
         <SuccessConfetti success={success} action={<SuccessAction />} />
       ) : (

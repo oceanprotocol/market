@@ -1,11 +1,12 @@
 import React, { ReactElement } from 'react'
 import { File as FileMetadata } from '@oceanprotocol/lib'
 import filesize from 'filesize'
-import classNames from 'classnames/bind'
 import cleanupContentType from '../../utils/cleanupContentType'
-import * as styles from './File.module.css'
-
-const cx = classNames.bind(styles)
+import {
+  file as fileStyle,
+  small as smallStyle,
+  empty
+} from './File.module.css'
 
 export default function File({
   file,
@@ -18,14 +19,8 @@ export default function File({
 }): ReactElement {
   if (!file) return null
 
-  const styleClasses = cx({
-    file: true,
-    small: small,
-    [className]: className
-  })
-
   return (
-    <ul className={styleClasses}>
+    <ul className={`${fileStyle} ${small && smallStyle} ${className}`}>
       {file.contentType || file.contentLength ? (
         <>
           <li>{cleanupContentType(file.contentType)}</li>
@@ -36,7 +31,7 @@ export default function File({
           </li>
         </>
       ) : (
-        <li className={styles.empty}>No file info available</li>
+        <li className={empty}>No file info available</li>
       )}
     </ul>
   )

@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import DataTable, { IDataTableProps } from 'react-data-table-component'
 import Loader from './Loader'
 import Pagination from '../molecules/Pagination'
-import * as styles from './Table.module.css'
+import { table, empty } from './Table.module.css'
 
 interface TableProps extends IDataTableProps {
   isLoading?: boolean
@@ -13,7 +13,7 @@ interface TableProps extends IDataTableProps {
 }
 
 function Empty({ message }: { message?: string }): ReactElement {
-  return <div className={styles.empty}>{message || 'No results found'}</div>
+  return <div className={empty}>{message || 'No results found'}</div>
 }
 
 export default function Table({
@@ -32,7 +32,7 @@ export default function Table({
     <DataTable
       columns={columns}
       data={data}
-      className={className ? styles.table + ` ${className}` : styles.table}
+      className={className ? table + ` ${className}` : table}
       noHeader
       pagination={pagination || data?.length >= 9}
       paginationPerPage={paginationPerPage || 10}

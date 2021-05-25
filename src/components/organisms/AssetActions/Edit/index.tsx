@@ -1,5 +1,7 @@
 import { Formik } from 'formik'
 import React, { ReactElement, useState } from 'react'
+import { useWeb3 } from '../../../../providers/Web3'
+import { useOcean } from '../../../../providers/Ocean'
 import { MetadataEditForm } from '../../../../@types/MetaData'
 import {
   validationSchema,
@@ -12,12 +14,10 @@ import Debug from './DebugEditMetadata'
 import Web3Feedback from '../../../molecules/Wallet/Feedback'
 import FormEditMetadata from './FormEditMetadata'
 import { mapTimeoutStringToSeconds } from '../../../../utils/metadata'
-import * as styles from './index.module.css'
 import { Logger } from '@oceanprotocol/lib'
 import MetadataFeedback from '../../../molecules/MetadataFeedback'
 import { graphql, useStaticQuery } from 'gatsby'
-import { useWeb3 } from '../../../../providers/Web3'
-import { useOcean } from '../../../../providers/Ocean'
+import { description, grid } from './index.module.css'
 
 const contentQuery = graphql`
   query EditMetadataQuery {
@@ -170,8 +170,8 @@ export default function Edit({
           />
         ) : (
           <>
-            <p className={styles.description}>{content.description}</p>
-            <article className={styles.grid}>
+            <p className={description}>{content.description}</p>
+            <article className={grid}>
               <FormEditMetadata
                 data={content.form.data}
                 setShowEdit={setShowEdit}

@@ -10,7 +10,6 @@ import {
   AssetsFrePrice_fixedRateExchanges as AssetsFrePriceFixedRateExchanges
 } from '../@types/apollo/AssetsFrePrice'
 import { AssetPreviousOrder } from '../@types/apollo/AssetPreviousOrder'
-import BigNumber from 'bignumber.js'
 
 export interface PriceList {
   [key: string]: string

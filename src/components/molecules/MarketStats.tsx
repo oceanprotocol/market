@@ -1,9 +1,9 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import * as styles from './MarketStats.module.css'
 import { gql, useQuery } from '@apollo/client'
 import Conversion from '../atoms/Price/Conversion'
 import PriceUnit from '../atoms/Price/PriceUnit'
 import Tooltip from '../atoms/Tooltip'
+import { stats, total, info } from './MarketStats.module.css'
 
 const getTotalPoolsValues = gql`
   query PoolsData {
@@ -29,14 +29,14 @@ export default function MarketStats(): ReactElement {
   }, [data])
 
   return (
-    <div className={styles.stats}>
+    <div className={stats}>
       <Conversion price={`${totalValueLocked}`} hideApproximateSymbol />{' '}
       <abbr title="Total Value Locked">TVL</abbr> across{' '}
       <strong>{poolCount}</strong> data set pools that contain{' '}
-      <PriceUnit price={totalOceanLiquidity} small className={styles.total} />,
-      plus datatokens for each pool.
+      <PriceUnit price={totalOceanLiquidity} small className={total} />, plus
+      datatokens for each pool.
       <Tooltip
-        className={styles.info}
+        className={info}
         content="Counted on-chain from our pool factory. Does not filter out data sets in "
         reference="list-purgatory"
         link="https://github.com/oceanprotocol/list-purgatory"

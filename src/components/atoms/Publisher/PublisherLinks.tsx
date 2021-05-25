@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import * as styles from './PublisherLinks.module.css'
+import { links as linksStyle, linksExternal } from './PublisherLinks.module.css'
 import { ProfileLink } from '../../../models/Profile'
 import { ReactComponent as External } from '../../../images/external.svg'
 
@@ -9,7 +9,7 @@ export default function PublisherLinks({
   links: ProfileLink[]
 }): ReactElement {
   return (
-    <div className={styles.links}>
+    <div className={linksStyle}>
       {' — '}
       {links?.map((link: ProfileLink) => {
         const href =
@@ -23,7 +23,7 @@ export default function PublisherLinks({
 
         return (
           <a href={href} key={link.name} target="_blank" rel="noreferrer">
-            {link.name} <External className={styles.linksExternal} />
+            {link.name} <External className={linksExternal} />
           </a>
         )
       })}

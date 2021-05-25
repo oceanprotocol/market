@@ -1,7 +1,7 @@
 import Alert from './Alert'
 import React, { ReactElement, ReactNode, useEffect } from 'react'
 import { confetti } from 'dom-confetti'
-import * as styles from './SuccessConfetti.module.css'
+import { action as actionStyle } from './SuccessConfetti.module.css'
 
 const confettiConfig = {
   angle: 90,
@@ -45,7 +45,7 @@ export default function SuccessConfetti({
   return (
     <div className={className || null}>
       <Alert text={success} state="success" />
-      <span className={styles.action} data-confetti>
+      <span className={actionStyle} data-confetti>
         {action}
       </span>
     </div>

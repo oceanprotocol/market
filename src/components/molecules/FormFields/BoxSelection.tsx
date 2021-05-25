@@ -1,9 +1,12 @@
 import React, { ChangeEvent } from 'react'
-import classNames from 'classnames/bind'
 import Loader from '../../atoms/Loader'
-import * as styles from './BoxSelection.module.css'
-
-const cx = classNames.bind(styles)
+import {
+  radio,
+  boxSelectionsWrapper,
+  boxSelection,
+  title,
+  disabled as disabledStyle
+} from './BoxSelection.module.css'
 
 export interface BoxSelectionOption {
   name: string
@@ -25,18 +28,8 @@ export default function BoxSelection({
   disabled?: boolean
   handleChange?: (event: ChangeEvent<HTMLInputElement>) => void
 }): JSX.Element {
-  const styleClassesWrapper = cx({
-    boxSelectionsWrapper: true,
-    [styles.disabled]: disabled
-  })
-
-  const styleClassesInput = cx({
-    input: true,
-    radio: true
-  })
-
   return (
-    <div className={styleClassesWrapper}>
+    <div className={`${boxSelectionsWrapper} ${disabled && disabledStyle}`}>
       {!options ? (
         <Loader />
       ) : (
@@ -45,7 +38,7 @@ export default function BoxSelection({
             <input
               id={value.name}
               type="radio"
-              className={styleClassesInput}
+              className={radio}
               defaultChecked={value.checked}
               onChange={(event) => handleChange(event)}
               {...props}
@@ -54,12 +47,12 @@ export default function BoxSelection({
               name={name}
             />
             <label
-              className={styles.boxSelection}
+              className={boxSelection}
               htmlFor={value.name}
               title={value.name}
             >
               {value.icon}
-              <span className={styles.title}>{value.title}</span>
+              <span className={title}>{value.title}</span>
               {value.text}
             </label>
           </div>

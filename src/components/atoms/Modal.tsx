@@ -1,6 +1,12 @@
 import React, { ReactElement, ReactNode } from 'react'
 import ReactModal from 'react-modal'
-import * as styles from './Modal.module.css'
+import {
+  modal,
+  modalOverlay,
+  close,
+  header,
+  title as titleStyle
+} from './Modal.module.css'
 
 if (process.env.NODE_ENV !== 'test') ReactModal.setAppElement('#___gatsby')
 
@@ -19,20 +25,20 @@ export default function Modal({
   return (
     <ReactModal
       contentLabel={title}
-      className={styles.modal}
-      overlayClassName={styles.modalOverlay}
+      className={modal}
+      overlayClassName={modalOverlay}
       {...props}
     >
       <button
-        className={styles.close}
+        className={close}
         onClick={onToggleModal}
         data-testid="closeModal"
       >
         &times;
       </button>
 
-      <header className={styles.header}>
-        <h2 className={styles.title}>{title}</h2>
+      <header className={header}>
+        <h2 className={titleStyle}>{title}</h2>
       </header>
 
       {children}

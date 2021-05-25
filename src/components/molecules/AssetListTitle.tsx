@@ -3,7 +3,7 @@ import { useOcean } from '../../providers/Ocean'
 import { Link } from 'gatsby'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { getAssetsNames } from '../../utils/aquarius'
-import * as styles from './AssetListTitle.module.css'
+import { title as titleStyle } from './AssetListTitle.module.css'
 import axios from 'axios'
 
 export default function AssetListTitle({
@@ -45,7 +45,7 @@ export default function AssetListTitle({
   }, [assetTitle, config?.metadataCacheUri, ddo, did, title])
 
   return (
-    <h3 className={styles.title}>
+    <h3 className={titleStyle}>
       <Link to={`/asset/${did || ddo.id}`}>{assetTitle}</Link>
     </h3>
   )

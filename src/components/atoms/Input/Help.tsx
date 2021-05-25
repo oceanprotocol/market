@@ -1,9 +1,6 @@
 import React, { ReactElement } from 'react'
-import * as styles from './Help.module.css'
 import Markdown from '../Markdown'
-import classNames from 'classnames/bind'
-
-const cx = classNames.bind(styles)
+import { help } from './Help.module.css'
 
 const FormHelp = ({
   children,
@@ -11,13 +8,8 @@ const FormHelp = ({
 }: {
   children: string
   className?: string
-}): ReactElement => {
-  const styleClasses = cx({
-    help: true,
-    [className]: className
-  })
-
-  return <Markdown className={styleClasses} text={children} />
-}
+}): ReactElement => (
+  <Markdown className={`${help} ${className}`} text={children} />
+)
 
 export default FormHelp

@@ -1,14 +1,26 @@
 import React, { ChangeEvent, useState } from 'react'
 import Dotdotdot from 'react-dotdotdot'
 import slugify from 'slugify'
-import classNames from 'classnames/bind'
 import PriceUnit from '../../atoms/Price/PriceUnit'
 import { ReactComponent as External } from '../../../images/external.svg'
 import InputElement from '../../atoms/Input/InputElement'
 import Loader from '../../atoms/Loader'
-import * as styles from './AssetSelection.module.css'
-
-const cx = classNames.bind(styles)
+import {
+  input,
+  checkbox,
+  radio,
+  empty,
+  selection,
+  disabled as disabledStyle,
+  search,
+  scroll,
+  row,
+  label,
+  title,
+  link,
+  did,
+  price
+} from './AssetSelection.module.css'
 
 export interface AssetSelectionAsset {
   did: string
@@ -19,7 +31,7 @@ export interface AssetSelectionAsset {
 }
 
 function Empty() {
-  return <div className={styles.empty}>No assets found.</div>
+  return <div className={empty}>No assets found.</div>
 }
 
 export default function AssetSelection({
@@ -34,18 +46,14 @@ export default function AssetSelection({
 }): JSX.Element {
   const [searchValue, setSearchValue] = useState('')
 
-  const styleClassesInput = cx({
-    input: true,
-    [styles.checkbox]: multiple,
-    [styles.radio]: !multiple
-  })
+  const styleClassesInput = `${input} ${multiple ? checkbox : radio}`
 
   function handleSearchInput(e: ChangeEvent<HTMLInputElement>) {
     setSearchValue(e.target.value)
   }
 
   return (
-    <div className={`${styles.selection} ${disabled ? styles.disabled : ''}`}>
+    <div className={`${selection} ${disabled ? disabledStyle : ''}`}>
       <InputElement
         type="search"
         name="search"
@@ -53,10 +61,10 @@ export default function AssetSelection({
         placeholder="Search by title, datatoken, or DID..."
         value={searchValue}
         onChange={handleSearchInput}
-        className={styles.search}
+        className={search}
         disabled={disabled}
       />
-      <div className={styles.scroll}>
+      <div className={scroll}>
         {!assets ? (
           <Loader />
         ) : assets && !assets.length ? (
@@ -73,7 +81,7 @@ export default function AssetSelection({
                 : asset
             )
             .map((asset: AssetSelectionAsset) => (
-              <div className={styles.row} key={asset.did}>
+              <div className={row} key={asset.did}>
                 <input
                   id={slugify(asset.did)}
                   type={multiple ? 'checkbox' : 'radio'}
@@ -84,16 +92,16 @@ export default function AssetSelection({
                   value={asset.did}
                 />
                 <label
-                  className={styles.label}
+                  className={label}
                   htmlFor={slugify(asset.did)}
                   title={asset.name}
                 >
-                  <h3 className={styles.title}>
+                  <h3 className={title}>
                     <Dotdotdot clamp={1} tagName="span">
                       {asset.name}
                     </Dotdotdot>
                     <a
-                      className={styles.link}
+                      className={link}
                       href={`/asset/${asset.did}`}
                       target="_blank"
                       rel="noreferrer"
@@ -102,12 +110,12 @@ export default function AssetSelection({
                     </a>
                   </h3>
 
-                  <Dotdotdot clamp={1} tagName="code" className={styles.did}>
+                  <Dotdotdot clamp={1} tagName="code" className={did}>
                     {asset.symbol} | {asset.did}
                   </Dotdotdot>
                 </label>
 
-                <PriceUnit price={asset.price} small className={styles.price} />
+                <PriceUnit price={asset.price} small className={price} />
               </div>
             ))
         )}

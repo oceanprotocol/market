@@ -46,17 +46,17 @@ export default function App({
   return (
     <Styles>
       <div className={app}>
-        {!isGraphSynced && (
+        {/* {!isGraphSynced && (
           <AnnouncementBanner
             text={`The data for this network has only synced to Ethereum block ${blockGraph} (out of ${blockHead}). Please check back soon.`}
             state="error"
           />
         )}
-        {!location.pathname.includes('/asset/did') && <NetworkBanner />}
+        {!location.pathname.includes('/asset/did') && <NetworkBanner />} */}
 
-        <Header />
+        {/* <Header /> */}
 
-        {(props as PageProps).uri === '/' && (
+        {/* {(props as PageProps).uri === '/' && (
           <Alert text={warning.main} state="info" />
         )}
 
@@ -67,9 +67,9 @@ export default function App({
             text={purgatory.description}
             state="error"
           />
-        )}
+        )} */}
         <main className={main}>{children}</main>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </Styles>
   )

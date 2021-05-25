@@ -1,5 +1,9 @@
 import React, { ReactElement } from 'react'
-import * as styles from './Loader.module.css'
+import {
+  loaderWrap,
+  loader,
+  message as messageStyle
+} from './Loader.module.css'
 
 export default function Loader({
   message
@@ -7,9 +11,9 @@ export default function Loader({
   message?: string
 }): ReactElement {
   return (
-    <div className={styles.loaderWrap}>
-      <span className={styles.loader} />
-      {message && <span className={styles.message}>{message}</span>}
+    <div className={loaderWrap}>
+      <span className={loader} />
+      {message && <span className={messageStyle}>{message}</span>}
     </div>
   )
 }

@@ -1,5 +1,4 @@
 import React, { ReactElement, FormEvent } from 'react'
-import classNames from 'classnames'
 import Button from './Button'
 import Markdown from './Markdown'
 import Badge from './Badge'
@@ -33,14 +32,8 @@ export default function Alert({
   onDismiss?: () => void
   className?: string
 }): ReactElement {
-  const styleClasses = classNames({
-    [alert]: true,
-    [state]: state,
-    [className]: className
-  })
-
   return (
-    <div className={styleClasses}>
+    <div className={`${alert} ${[state]} ${className}`}>
       {title && (
         <h3 className={titleStyle}>
           {title} {badge && <Badge className={badgeStyle} label={badge} />}

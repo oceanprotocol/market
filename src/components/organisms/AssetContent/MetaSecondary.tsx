@@ -3,7 +3,7 @@ import Tags from '../../atoms/Tags'
 import Button from '../../atoms/Button'
 import { useAsset } from '../../../providers/Asset'
 import MetaItem from './MetaItem'
-import * as styles from './MetaSecondary.module.css'
+import { metaSecondary, samples } from './MetaSecondary.module.css'
 
 const SampleButton = ({ url }: { url: string }) => (
   <Button
@@ -22,9 +22,9 @@ export default function MetaSecondary(): ReactElement {
   const { metadata } = useAsset()
 
   return (
-    <aside className={styles.metaSecondary}>
+    <aside className={metaSecondary}>
       {metadata?.additionalInformation?.links?.length > 0 && (
-        <div className={styles.samples}>
+        <div className={samples}>
           <MetaItem
             title="Sample Data"
             content={

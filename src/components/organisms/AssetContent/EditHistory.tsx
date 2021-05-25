@@ -2,10 +2,10 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import { useAsset } from '../../../providers/Asset'
 import ExplorerLink from '../../atoms/ExplorerLink'
 import Time from '../../atoms/Time'
-import * as styles from './EditHistory.module.css'
 import { gql, useQuery } from '@apollo/client'
 import { ReceiptData_datatokens_updates as ReceiptData } from '../../../@types/apollo/ReceiptData'
 import { useWeb3 } from '../../../providers/Web3'
+import { title, history, item } from './EditHistory.module.css'
 
 const getReceipts = gql`
   query ReceiptData($address: ID!) {
@@ -44,17 +44,17 @@ export default function EditHistory(): ReactElement {
 
   return (
     <>
-      <h3 className={styles.title}>Metadata History</h3>
-      <ul className={styles.history}>
+      <h3 className={title}>Metadata History</h3>
+      <ul className={history}>
         {receipts?.map((receipt) => (
-          <li key={receipt.id} className={styles.item}>
+          <li key={receipt.id} className={item}>
             <ExplorerLink networkId={networkId} path={`/tx/${receipt.tx}`}>
               edited{' '}
               <Time date={receipt.timestamp.toString()} relative isUnix />
             </ExplorerLink>
           </li>
         ))}
-        <li className={styles.item}>
+        <li className={item}>
           <ExplorerLink networkId={networkId} path={`/tx/${creationTx}`}>
             published <Time date={ddo.created} relative />
           </ExplorerLink>

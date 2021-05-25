@@ -1,11 +1,8 @@
 import React, { useEffect, useState, ReactElement } from 'react'
-import * as styles from './Conversion.module.css'
-import classNames from 'classnames/bind'
 import { formatCurrency, isCrypto } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import { usePrices } from '../../../providers/Prices'
-
-const cx = classNames.bind(styles)
+import { conversion } from './Conversion.module.css'
 
 export default function Conversion({
   price,
@@ -24,11 +21,6 @@ export default function Conversion({
   const isFiat = !isCrypto(currency)
   // isCrypto() only checks for BTC & ETH & unknown but seems sufficient for now
   // const isFiat = /(EUR|USD|CAD|SGD|HKD|CNY|JPY|GBP|INR|RUB)/g.test(currency)
-
-  const styleClasses = cx({
-    conversion: true,
-    [className]: className
-  })
 
   useEffect(() => {
     if (!prices || !price || price === '0') {
@@ -58,7 +50,7 @@ export default function Conversion({
 
   return (
     <span
-      className={styleClasses}
+      className={`${conversion} ${className}`}
       title="Approximation based on current OCEAN spot price on Coingecko"
     >
       {!hideApproximateSymbol && '≈ '}

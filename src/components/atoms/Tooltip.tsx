@@ -1,12 +1,14 @@
 import React, { ReactElement, ReactNode } from 'react'
-import classNames from 'classnames/bind'
 import loadable from '@loadable/component'
 import { useSpring, animated } from 'react-spring'
-import * as styles from './Tooltip.module.css'
 import { ReactComponent as Info } from '../../images/info.svg'
 import { Placement } from 'tippy.js'
-
-const cx = classNames.bind(styles)
+import {
+  icon,
+  tooltip,
+  content as contentStyle,
+  arrow
+} from './Tooltip.module.css'
 
 const Tippy = loadable(() => import('@tippyjs/react/headless'))
 
@@ -19,7 +21,7 @@ const animation = {
 // Forward ref for Tippy.js
 // eslint-disable-next-line
 const DefaultTrigger = React.forwardRef((props, ref: any) => {
-  return <Info className={styles.icon} ref={ref} />
+  return <Info className={icon} ref={ref} />
 })
 
 export default function Tooltip({
@@ -59,10 +61,7 @@ export default function Tooltip({
     })
   }
 
-  const styleClasses = cx({
-    tooltip: true,
-    [className]: className
-  })
+  const styleClasses = `${tooltip} ${className}`
 
   return (
     <Tippy
@@ -74,10 +73,10 @@ export default function Tooltip({
       placement={placement || 'auto'}
       render={(attrs: any) => (
         <animated.div style={props}>
-          <div className={styles.content} {...attrs}>
+          <div className={contentStyle} {...attrs}>
             {content}
             {link && <a href={link}>{reference}</a>}
-            <div className={styles.arrow} data-popper-arrow />
+            <div className={arrow} data-popper-arrow />
           </div>
         </animated.div>
       )}

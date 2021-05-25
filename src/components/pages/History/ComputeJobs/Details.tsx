@@ -1,15 +1,21 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import axios from 'axios'
 import { ComputeJobMetaData } from '../../../../@types/ComputeJobMetaData'
+import { retrieveDDO } from '../../../../utils/aquarius'
+import { useOcean } from '../../../../providers/Ocean'
 import Time from '../../../atoms/Time'
 import Button from '../../../atoms/Button'
 import Modal from '../../../atoms/Modal'
 import MetaItem from '../../../organisms/AssetContent/MetaItem'
 import { ReactComponent as External } from '../../../../images/external.svg'
-import { retrieveDDO } from '../../../../utils/aquarius'
-import { useOcean } from '../../../../providers/Ocean'
 import Results from './Results'
-import * as styles from './Details.module.css'
+import {
+  asset,
+  assetTitle,
+  assetLink,
+  assetMeta,
+  meta
+} from './Details.module.css'
 
 function Asset({
   title,
@@ -21,11 +27,11 @@ function Asset({
   did: string
 }) {
   return (
-    <div className={styles.asset}>
-      <h3 className={styles.assetTitle}>
+    <div className={asset}>
+      <h3 className={assetTitle}>
         {title}{' '}
         <a
-          className={styles.assetLink}
+          className={assetLink}
           href={`/asset/${did}`}
           target="_blank"
           rel="noreferrer"
@@ -33,7 +39,7 @@ function Asset({
           <External />
         </a>
       </h3>
-      <p className={styles.assetMeta}>
+      <p className={assetMeta}>
         {symbol} | <code>{did}</code>
       </p>
     </div>
@@ -94,7 +100,7 @@ export default function Details({
         <DetailsAssets job={job} />
         <Results job={job} />
 
-        <div className={styles.meta}>
+        <div className={meta}>
           <MetaItem
             title="Created"
             content={<Time date={job.dateCreated} isUnix relative />}

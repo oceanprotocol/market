@@ -5,7 +5,7 @@ import PublishedList from './PublishedList'
 import Downloads from './Downloads'
 import ComputeJobs from './ComputeJobs'
 import PoolShares from './PoolShares'
-import { content, tabs as tabsStyle } from './index.module.css'
+import { content } from './index.module.css'
 
 const tabs = [
   {
@@ -33,7 +33,7 @@ const tabs = [
 export default function HistoryPage(): ReactElement {
   return (
     <article className={content}>
-      <Tabs items={tabs} className={tabsStyle} />
+      <Tabs items={tabs} />
     </article>
   )
 }

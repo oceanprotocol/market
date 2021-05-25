@@ -1,13 +1,13 @@
-import { Logger } from '@oceanprotocol/lib'
 import React, { ReactElement, useState } from 'react'
+import { graphql, useStaticQuery } from 'gatsby'
+import { Logger } from '@oceanprotocol/lib'
+import Button from '../../../atoms/Button'
 import Loader from '../../../atoms/Loader'
 import { ComputeJobMetaData } from '../../../../@types/ComputeJobMetaData'
 import { ListItem } from '../../../atoms/Lists'
-import Button from '../../../atoms/Button'
-import { useOcean } from '../../../../providers/Ocean'
-import * as styles from './Results.module.css'
 import FormHelp from '../../../atoms/Input/Help'
-import { graphql, useStaticQuery } from 'gatsby'
+import { useOcean } from '../../../../providers/Ocean'
+import { results, help } from './Results.module.css'
 
 export const contentQuery = graphql`
   query HistoryPageComputeResultsQuery {
@@ -63,7 +63,7 @@ export default function Results({
   }
 
   return (
-    <div className={styles.results}>
+    <div className={results}>
       {hasFetched ? (
         <ul>
           <ListItem>
@@ -106,7 +106,7 @@ export default function Results({
           )}
         </Button>
       )}
-      <FormHelp className={styles.help}>{content.compute.storage}</FormHelp>
+      <FormHelp className={help}>{content.compute.storage}</FormHelp>
     </div>
   )
 }

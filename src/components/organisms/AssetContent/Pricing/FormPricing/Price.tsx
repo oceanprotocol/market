@@ -6,7 +6,13 @@ import { DDO } from '@oceanprotocol/lib'
 import PriceUnit from '../../../../atoms/Price/PriceUnit'
 import usePricing from '../../../../../hooks/usePricing'
 import Error from './Error'
-import * as styles from './Price.module.css'
+import {
+  price,
+  grid,
+  form,
+  datatoken,
+  firstPrice as firstPriceStyle
+} from './Price.module.css'
 
 export default function Price({
   ddo,
@@ -35,9 +41,9 @@ export default function Price({
   }, [])
 
   return (
-    <div className={styles.price}>
-      <div className={styles.grid}>
-        <div className={styles.form}>
+    <div className={price}>
+      <div className={grid}>
+        <div className={form}>
           <Input
             value={field.value}
             name="price"
@@ -49,14 +55,14 @@ export default function Price({
           />
           <Error meta={meta} />
         </div>
-        <div className={styles.datatoken}>
+        <div className={datatoken}>
           <h4>
             = <strong>1</strong> {dtName} — {dtSymbol}
           </h4>
         </div>
       </div>
       {firstPrice && (
-        <aside className={styles.firstPrice}>
+        <aside className={firstPriceStyle}>
           Expected first price:{' '}
           <PriceUnit
             price={Number(firstPrice) > 0 ? firstPrice : '-'}

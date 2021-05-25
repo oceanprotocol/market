@@ -1,5 +1,5 @@
 import React, { ReactElement, ReactNode } from 'react'
-import * as styles from './Lists.module.css'
+import { item, olItem, ulItem } from './Lists.module.css'
 
 export function ListItem({
   children,
@@ -8,9 +8,7 @@ export function ListItem({
   children: ReactNode
   ol?: boolean
 }): ReactElement {
-  const classes = ol
-    ? `${styles.item} ${styles.olItem}`
-    : `${styles.item} ${styles.ulItem}`
+  const classes = ol ? `${item} ${olItem}` : `${item} ${ulItem}`
 
   return (
     <li className={classes}>

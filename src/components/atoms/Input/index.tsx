@@ -1,12 +1,13 @@
 import React, { FormEvent, ChangeEvent, ReactElement, ReactNode } from 'react'
+import { ErrorMessage, FieldInputProps } from 'formik'
 import InputElement from './InputElement'
 import Help from './Help'
 import Label from './Label'
-import * as styles from './index.module.css'
-import { ErrorMessage, FieldInputProps } from 'formik'
-import classNames from 'classnames/bind'
-
-const cx = classNames.bind(styles)
+import {
+  error,
+  field as fieldStyle,
+  hasError as hasErrorStyle
+} from './index.module.css'
 
 export interface InputProps {
   name: string
@@ -50,14 +51,9 @@ export default function Input(props: Partial<InputProps>): ReactElement {
   const hasError =
     props.form?.touched[field.name] && props.form?.errors[field.name]
 
-  const styleClasses = cx({
-    field: true,
-    hasError: hasError
-  })
-
   return (
     <div
-      className={styleClasses}
+      className={`${fieldStyle} ${hasError && hasErrorStyle}`}
       data-is-submitting={props.form?.isSubmitting ? true : null}
     >
       <Label htmlFor={props.name} required={props.required}>
@@ -66,7 +62,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
       <InputElement size={size} {...field} {...props} />
 
       {field && hasError && (
-        <div className={styles.error}>
+        <div className={error}>
           <ErrorMessage name={field.name} />
         </div>
       )}

@@ -1,8 +1,8 @@
 import React, { ReactElement } from 'react'
-import Publisher from '../../atoms/Publisher'
 import { useAsset } from '../../../providers/Asset'
+import Publisher from '../../atoms/Publisher'
 import MetaItem from './MetaItem'
-import * as styles from './MetaFull.module.css'
+import { metaFull } from './MetaFull.module.css'
 
 export default function MetaFull(): ReactElement {
   const { ddo, metadata, isInPurgatory, type } = useAsset()
@@ -16,7 +16,7 @@ export default function MetaFull(): ReactElement {
   }
 
   return (
-    <div className={styles.metaFull}>
+    <div className={metaFull}>
       {!isInPurgatory && (
         <MetaItem title="Data Author" content={metadata?.main.author} />
       )}

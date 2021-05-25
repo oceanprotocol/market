@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import PriceUnit from './Price/PriceUnit'
-import * as styles from './UserLiquidity.module.css'
+import { userLiquidity } from './UserLiquidity.module.css'
 
 function UserLiquidityLine({
   title,
@@ -33,7 +33,7 @@ export default function UserLiquidity({
   amountMax?: string
 }): ReactElement {
   return (
-    <div className={styles.userLiquidity}>
+    <div className={userLiquidity}>
       <UserLiquidityLine
         title={titleAvailable}
         amount={amount}

@@ -1,9 +1,6 @@
 import React, { ReactNode, FormEvent, ReactElement } from 'react'
 import { Link } from 'gatsby'
-import classNames from 'classnames/bind'
-import * as styles from './Button.module.css'
-
-const cx = classNames.bind(styles)
+import { button, primary, ghost, text, small } from './Button.module.css'
 
 interface ButtonProps {
   children: ReactNode
@@ -31,14 +28,16 @@ export default function Button({
   style,
   ...props
 }: ButtonProps): ReactElement {
-  const styleClasses = cx({
-    button: true,
-    primary: style === 'primary',
-    ghost: style === 'ghost',
-    text: style === 'text',
-    small: size === 'small',
-    [className]: className
-  })
+  const variants =
+    style === 'primary'
+      ? primary
+      : style === 'ghost'
+      ? ghost
+      : style === 'text'
+      ? text
+      : null
+  const sizes = size === 'small' ? small : null
+  const styleClasses = `${button} ${variants} ${sizes} ${className}`
 
   return to ? (
     <Link to={to} className={styleClasses} {...props}>

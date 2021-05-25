@@ -1,6 +1,5 @@
-import React from 'react'
-
-import * as styles from './SearchFilterSection.module.css'
+import React, { ReactElement } from 'react'
+import { filterSection } from './SearchFilterSection.module.css'
 
 const SearchFilterSection = ({
   title,
@@ -8,9 +7,9 @@ const SearchFilterSection = ({
 }: {
   title?: string
   children: React.ReactNode
-}) => {
+}): ReactElement => {
   return (
-    <div className={styles.filterSection}>
+    <div className={filterSection}>
       {title ? <h4>{title}</h4> : null}
       {children}
     </div>

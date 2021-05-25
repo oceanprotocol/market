@@ -4,7 +4,6 @@
     "module": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "resolveJsonModule": true,
-    "isolatedModules": true,
     "moduleResolution": "node",
     "jsx": "preserve",
     "esModuleInterop": true,

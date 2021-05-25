@@ -1,11 +1,8 @@
 import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
 import { ReactComponent as External } from '../../images/external.svg'
-import classNames from 'classnames/bind'
 import { ConfigHelperConfig } from '@oceanprotocol/lib'
 import { useOcean } from '../../providers/Ocean'
-import * as styles from './ExplorerLink.module.css'
-
-const cx = classNames.bind(styles)
+import { link } from './ExplorerLink.module.css'
 
 export default function ExplorerLink({
   path,
@@ -20,11 +17,6 @@ export default function ExplorerLink({
   const { config } = useOcean()
   const [url, setUrl] = useState<string>()
 
-  const styleClasses = cx({
-    link: true,
-    [className]: className
-  })
-
   useEffect(() => {
     setUrl((config as ConfigHelperConfig).explorerUri)
   }, [config])
@@ -35,7 +27,7 @@ export default function ExplorerLink({
       title={`View on ${(config as ConfigHelperConfig).explorerUri}`}
       target="_blank"
       rel="noreferrer"
-      className={styleClasses}
+      className={`${link} ${className}`}
     >
       {children} <External />
     </a>

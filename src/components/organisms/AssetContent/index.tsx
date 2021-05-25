@@ -3,8 +3,8 @@ import { graphql, useStaticQuery } from 'gatsby'
 import { useAsset } from '../../../providers/Asset'
 import { useWeb3 } from '../../../providers/Web3'
 import { useUserPreferences } from '../../../providers/UserPreferences'
-import Alert from '../../atoms/Alert'
 import Button from '../../atoms/Button'
+import Alert from '../../atoms/Alert'
 import Markdown from '../../atoms/Markdown'
 import DebugOutput from '../../atoms/DebugOutput'
 import AssetActions from '../AssetActions'
@@ -16,7 +16,13 @@ import MetaMain from './MetaMain'
 import EditHistory from './EditHistory'
 import MetaFull from './MetaFull'
 import MetaSecondary from './MetaSecondary'
-import * as styles from './index.module.css'
+import {
+  grid,
+  content as contentStyle,
+  ownerActions,
+  separator,
+  actions
+} from './index.module.css'
 
 export interface AssetContentProps {
   path?: string
@@ -75,10 +81,10 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   ) : showEditCompute ? (
     <EditComputeDataset setShowEdit={setShowEditCompute} />
   ) : (
-    <article className={styles.grid}>
+    <article className={grid}>
       <div>
         {showPricing && <Pricing ddo={ddo} />}
-        <div className={styles.content}>
+        <div className={contentStyle}>
           <MetaMain />
           <Bookmark did={ddo.id} />
 
@@ -98,13 +104,13 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
               <MetaSecondary />
 
               {isOwner && (
-                <div className={styles.ownerActions}>
+                <div className={ownerActions}>
                   <Button style="text" size="small" onClick={handleEditButton}>
                     Edit Metadata
                   </Button>
                   {ddo.findServiceByType('compute') && type === 'dataset' && (
                     <>
-                      <span className={styles.separator}>|</span>
+                      <span className={separator}>|</span>
                       <Button
                         style="text"
                         size="small"
@@ -125,7 +131,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
         </div>
       </div>
 
-      <div className={styles.actions}>
+      <div className={actions}>
         <AssetActions />
       </div>
     </article>

@@ -1,10 +1,13 @@
 import React, { ReactElement } from 'react'
-import classNames from 'classnames/bind'
 import Markdown from '../atoms/Markdown'
 import Button from '../atoms/Button'
-import * as styles from './AnnouncementBanner.module.css'
-
-const cx = classNames.bind(styles)
+import {
+  text as textStyle,
+  banner,
+  error,
+  warning,
+  success
+} from './AnnouncementBanner.module.css'
 
 export interface AnnouncementAction {
   name: string
@@ -23,17 +26,14 @@ export default function AnnouncementBanner({
   state?: 'success' | 'warning' | 'error'
   className?: string
 }): ReactElement {
-  const styleClasses = cx({
-    banner: true,
-    error: state === 'error',
-    warning: state === 'warning',
-    success: state === 'success',
-    [className]: className
-  })
+  const stateStyle =
+    state &&
+    (state === 'error' ? error : state === 'warning' ? warning : success)
+  const styleClasses = `${banner} ${stateStyle} ${className}`
 
   return (
     <div className={styleClasses}>
-      {text && <Markdown className={styles.text} text={text} />}
+      {text && <Markdown className={textStyle} text={text} />}
       {action && (
         <Button style="text" size="small" onClick={action.handleAction}>
           {action.name}

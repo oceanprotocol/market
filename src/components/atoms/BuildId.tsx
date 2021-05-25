@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import repoMetadata from '../../../repo-metadata.json'
-import * as styles from './BuildId.module.css'
+import { buildId } from './BuildId.module.css'
 
 export default function BuildId(): ReactElement {
   const commitBranch = repoMetadata.branch
@@ -9,7 +9,7 @@ export default function BuildId(): ReactElement {
 
   return (
     <a
-      className={styles.buildId}
+      className={buildId}
       href={`https://github.com/oceanprotocol/market/tree/${
         isMainBranch ? commitId : commitBranch
       }`}

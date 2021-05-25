@@ -1,22 +1,22 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import web3 from 'web3'
-import Time from '../../../atoms/Time'
 import { Link } from 'gatsby'
-import { DDO, Logger, Service, Provider } from '@oceanprotocol/lib'
-import { ComputeJobMetaData } from '../../../../@types/ComputeJobMetaData'
+import web3 from 'web3'
 import Dotdotdot from 'react-dotdotdot'
+import { DDO, Logger, Service, Provider } from '@oceanprotocol/lib'
+import Time from '../../../atoms/Time'
 import Table from '../../../atoms/Table'
 import Button from '../../../atoms/Button'
-import { useOcean } from '../../../../providers/Ocean'
-import { gql, useQuery } from '@apollo/client'
+import { ComputeJobMetaData } from '../../../../@types/ComputeJobMetaData'
 import { useWeb3 } from '../../../../providers/Web3'
+import { useOcean } from '../../../../providers/Ocean'
 import { queryMetadata } from '../../../../utils/aquarius'
+import { gql, useQuery } from '@apollo/client'
 import axios, { CancelToken } from 'axios'
 import { ComputeOrders } from '../../../../@types/apollo/ComputeOrders'
-import Details from './Details'
 import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
 import { ReactComponent as Refresh } from '../../../../images/refresh.svg'
-import * as styles from './index.module.css'
+import Details from './Details'
+import { refresh, status } from './index.module.css'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -37,7 +37,7 @@ const getComputeOrders = gql`
 `
 
 export function Status({ children }: { children: string }): ReactElement {
-  return <div className={styles.status}>{children}</div>
+  return <div className={status}>{children}</div>
 }
 
 const columns = [
@@ -248,7 +248,7 @@ export default function ComputeJobs(): ReactElement {
           title="Refresh compute jobs"
           onClick={() => getJobs()}
           disabled={isLoading}
-          className={styles.refresh}
+          className={refresh}
         >
           <Refresh />
           Refresh

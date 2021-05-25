@@ -9,7 +9,7 @@ import {
 } from 'formik'
 import Button from '../../../../atoms/Button'
 import CoinSelect from '../CoinSelect'
-import { FormAddLiquidity } from '.'
+import { FormAddLiquidity } from './index'
 import { PoolBalance } from '../../../../../@types/TokenBalance'
 import UserLiquidity from '../../../../atoms/UserLiquidity'
 import { useOcean } from '../../../../../providers/Ocean'

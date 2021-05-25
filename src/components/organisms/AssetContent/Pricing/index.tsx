@@ -9,7 +9,7 @@ import FormPricing from './FormPricing'
 import Feedback from './Feedback'
 import { graphql, useStaticQuery } from 'gatsby'
 import { usePricing } from '../../../../hooks/usePricing'
-import * as styles from './index.module.css'
+import { pricing } from './index.module.css'
 
 const query = graphql`
   query PricingQuery {
@@ -96,7 +96,7 @@ export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
   }
 
   return (
-    <div className={styles.pricing}>
+    <div className={pricing}>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}

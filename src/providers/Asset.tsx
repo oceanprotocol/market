@@ -11,10 +11,10 @@ import { Logger, DDO, BestPrice, MetadataMain } from '@oceanprotocol/lib'
 import { PurgatoryData } from '@oceanprotocol/lib/dist/node/ddo/interfaces/PurgatoryData'
 import getAssetPurgatoryData from '../utils/purgatory'
 import axios, { CancelToken } from 'axios'
+import { useOcean } from './Ocean'
 import { retrieveDDO } from '../utils/aquarius'
 import { getPrice } from '../utils/subgraph'
 import { MetadataMarket } from '../@types/MetaData'
-import { useOcean } from './Ocean'
 
 interface AssetProviderValue {
   isInPurgatory: boolean

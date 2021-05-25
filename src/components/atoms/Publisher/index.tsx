@@ -1,6 +1,4 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import classNames from 'classnames/bind'
-import Tooltip from '../Tooltip'
 import { Profile } from '../../../models/Profile'
 import { Link } from 'gatsby'
 import get3BoxProfile from '../../../utils/profile'
@@ -8,12 +6,16 @@ import ExplorerLink from '../ExplorerLink'
 import { accountTruncate } from '../../../utils/web3'
 import axios from 'axios'
 import { ReactComponent as Info } from '../../../images/info.svg'
+import Tooltip from '../Tooltip'
 import ProfileDetails from './ProfileDetails'
 import Add from './Add'
 import { useWeb3 } from '../../../providers/Web3'
-import * as styles from './index.module.css'
-
-const cx = classNames.bind(styles)
+import {
+  publisher,
+  links,
+  detailsTrigger,
+  linksExternal
+} from './index.module.css'
 
 export default function Publisher({
   account,
@@ -51,13 +53,8 @@ export default function Publisher({
     }
   }, [account])
 
-  const styleClasses = cx({
-    publisher: true,
-    [className]: className
-  })
-
   return (
-    <div className={styleClasses}>
+    <div className={`${publisher} ${className}`}>
       {minimal ? (
         name
       ) : (
@@ -68,7 +65,7 @@ export default function Publisher({
           >
             {name}
           </Link>
-          <div className={styles.links}>
+          <div className={links}>
             {' — '}
             {profile && (
               <Tooltip
@@ -81,8 +78,8 @@ export default function Publisher({
                   />
                 }
               >
-                <span className={styles.detailsTrigger}>
-                  Profile <Info className={styles.linksExternal} />
+                <span className={detailsTrigger}>
+                  Profile <Info className={linksExternal} />
                 </span>
               </Tooltip>
             )}

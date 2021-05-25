@@ -1,11 +1,11 @@
+import axios from 'axios'
 import { Logger } from '@oceanprotocol/lib'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import React, { ReactElement, useEffect, useState } from 'react'
-import AssetList from '../../organisms/AssetList'
-import axios from 'axios'
-import { queryMetadata } from '../../../utils/aquarius'
 import { useWeb3 } from '../../../providers/Web3'
 import { useOcean } from '../../../providers/Ocean'
+import { queryMetadata } from '../../../utils/aquarius'
+import AssetList from '../../organisms/AssetList'
 
 export default function PublishedList(): ReactElement {
   const { accountId } = useWeb3()

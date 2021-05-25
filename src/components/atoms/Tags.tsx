@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'gatsby'
 import shortid from 'shortid'
-import * as styles from './Tags.module.css'
+import { tag as tagStyle, tags as tagsStyle, more } from './Tags.module.css'
 
 declare type TagsProps = {
   items: string[]
@@ -14,11 +14,11 @@ declare type TagsProps = {
 const Tag = ({ tag, noLinks }: { tag: string; noLinks?: boolean }) => {
   const urlEncodedTag = encodeURIComponent(tag)
   return noLinks ? (
-    <span className={styles.tag}>{tag}</span>
+    <span className={tagStyle}>{tag}</span>
   ) : (
     <Link
       to={`/search?tags=${urlEncodedTag}&sort=created&sortOrder=desc`}
-      className={styles.tag}
+      className={tagStyle}
       title={tag}
     >
       {tag}
@@ -38,7 +38,7 @@ const Tags: React.FC<TagsProps> = ({
   // filter out empty array items, and restrict to `max`
   const tags = items.filter((tag) => tag !== '').slice(0, max)
   const shouldShowMore = showMore && remainder > 0
-  const classes = className ? `${styles.tags} ${className}` : styles.tags
+  const classes = className ? `${tagsStyle} ${className}` : tagsStyle
 
   return (
     <div className={classes}>
@@ -46,7 +46,7 @@ const Tags: React.FC<TagsProps> = ({
         <Tag tag={tag} noLinks={noLinks} key={shortid.generate()} />
       ))}
       {shouldShowMore && (
-        <span className={styles.more}>{`+ ${items.length - max} more`}</span>
+        <span className={more}>{`+ ${items.length - max} more`}</span>
       )}
     </div>
   )

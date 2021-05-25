@@ -1,7 +1,7 @@
 import React, { FormEvent, ReactElement } from 'react'
 import Button from './Button'
 import Loader from './Loader'
-import * as styles from './ButtonBuy.module.css'
+import { actions, help } from './ButtonBuy.module.css'
 
 interface ButtonBuyProps {
   action: 'download' | 'compute'
@@ -99,7 +99,7 @@ export default function ButtonBuy({
       : `Buy Compute Job`
 
   return (
-    <div className={styles.actions}>
+    <div className={actions}>
       {isLoading ? (
         <Loader message={stepText} />
       ) : (
@@ -112,7 +112,7 @@ export default function ButtonBuy({
           >
             {buttonText}
           </Button>
-          <div className={styles.help}>
+          <div className={help}>
             {action === 'download'
               ? getConsumeHelpText(
                   dtBalance,

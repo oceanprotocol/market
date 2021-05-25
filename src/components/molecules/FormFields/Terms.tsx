@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import { InputProps } from '../../atoms/Input'
 import InputElement from '../../atoms/Input/InputElement'
-import * as styles from './Terms.module.css'
+import { terms } from './Terms.module.css'
 import { graphql, useStaticQuery } from 'gatsby'
 
 const query = graphql`
@@ -22,7 +22,7 @@ export default function Terms(props: InputProps): ReactElement {
   return (
     <>
       <div
-        className={styles.terms}
+        className={terms}
         dangerouslySetInnerHTML={{ __html: data.terms.html }}
       />
       <InputElement {...termsProps} type="checkbox" />

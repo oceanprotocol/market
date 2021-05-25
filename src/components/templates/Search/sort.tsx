@@ -1,15 +1,18 @@
 import React, { ReactElement } from 'react'
 import { useNavigate } from '@reach/router'
-import classNames from 'classnames/bind'
 import {
   addExistingParamsToUrl,
   SortTermOptions,
   SortValueOptions
 } from './utils'
 import Button from '../../atoms/Button'
-import * as styles from './sort.module.css'
-
-const cx = classNames.bind(styles)
+import {
+  sorted,
+  selected,
+  sortList,
+  sortLabel,
+  direction
+} from './sort.module.css'
 
 const sortItems = [{ display: 'Published', value: SortTermOptions.Created }]
 
@@ -52,29 +55,23 @@ export default function Sort({
     }
   }
   return (
-    <div className={styles.sortList}>
-      <label className={styles.sortLabel}>Sort</label>
-      {sortItems.map((e, index) => {
-        const sorted = cx({
-          [styles.selected]: e.value === sortType,
-          [styles.sorted]: true
-        })
-        return (
-          <Button
-            key={index}
-            className={sorted}
-            size="small"
-            onClick={() => {
-              handleSortButtonClick(e.value)
-            }}
-          >
-            {e.display}
-            {e.value === sortType ? (
-              <span className={styles.direction}>{directionArrow}</span>
-            ) : null}
-          </Button>
-        )
-      })}
+    <div className={sortList}>
+      <label className={sortLabel}>Sort</label>
+      {sortItems.map((e, index) => (
+        <Button
+          key={index}
+          className={`${sorted} ${e.value === sortType && selected}`}
+          size="small"
+          onClick={() => {
+            handleSortButtonClick(e.value)
+          }}
+        >
+          {e.display}
+          {e.value === sortType ? (
+            <span className={direction}>{directionArrow}</span>
+          ) : null}
+        </Button>
+      ))}
     </div>
   )
 }

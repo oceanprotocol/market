@@ -29,15 +29,10 @@
   text-align: center;
 }
 
-.boxSelectionsWrapper input[type='radio'] {
+.radio {
   position: fixed;
   opacity: 0;
   pointer-events: none;
-}
-
-input[type='radio']:checked + label {
-  color: var(--font-color-text);
-  border-color: var(--color-secondary);
 }
 
 .boxSelection svg {
@@ -47,11 +42,16 @@ input[type='radio']:checked + label {
   margin-bottom: calc(var(--spacer) / 5);
 }
 
-.boxSelectionsWrapper label {
+.boxSelection {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
   color: var(--color-secondary);
   font-weight: normal;
+}
+
+.radio:checked + .boxSelection {
+  color: var(--font-color-text);
+  border-color: var(--color-secondary);
 }

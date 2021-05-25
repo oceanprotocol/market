@@ -1,17 +1,17 @@
 import React, { ReactElement, useEffect, useState } from 'react'
+import {
+  QueryResult,
+  SearchQuery
+} from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
+import { useWeb3 } from '../../providers/Web3'
+import { queryMetadata } from '../../utils/aquarius'
 import Button from '../atoms/Button'
 import Container from '../atoms/Container'
 import SearchBar from '../molecules/SearchBar'
 import Bookmarks from '../molecules/Bookmarks'
 import AssetList from '../organisms/AssetList'
-import {
-  QueryResult,
-  SearchQuery
-} from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { useOcean } from '../../providers/Ocean'
 import axios from 'axios'
-import { queryMetadata } from '../../utils/aquarius'
-import { useWeb3 } from '../../providers/Web3'
 import { section, searchWrap } from './Home.module.css'
 
 const queryHighest = {

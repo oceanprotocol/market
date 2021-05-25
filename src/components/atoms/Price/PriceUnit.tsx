@@ -1,12 +1,14 @@
 import React, { ReactElement } from 'react'
 import { formatCurrency } from '@coingecko/cryptoformat'
-import classNames from 'classnames/bind'
 import Conversion from './Conversion'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import Badge from '../Badge'
-import * as styles from './PriceUnit.module.css'
-
-const cx = classNames.bind(styles)
+import {
+  price as priceStyle,
+  symbol as symbolStyle,
+  badge,
+  small as smallStyle
+} from './PriceUnit.module.css'
 
 export function formatPrice(price: string, locale: string): string {
   return formatCurrency(Number(price), '', locale, false, {
@@ -34,20 +36,12 @@ export default function PriceUnit({
 }): ReactElement {
   const { locale } = useUserPreferences()
 
-  const styleClasses = cx({
-    price: true,
-    small: small,
-    [className]: className
-  })
-
   return (
-    <div className={styleClasses}>
+    <div className={`${priceStyle} ${small && smallStyle} ${className}`}>
       <div>
         {Number.isNaN(Number(price)) ? '-' : formatPrice(price, locale)}{' '}
-        <span className={styles.symbol}>{symbol || 'OCEAN'}</span>
-        {type && type === 'pool' && (
-          <Badge label="pool" className={styles.badge} />
-        )}
+        <span className={symbolStyle}>{symbol || 'OCEAN'}</span>
+        {type && type === 'pool' && <Badge label="pool" className={badge} />}
       </div>
 
       {conversion && <Conversion price={price} />}

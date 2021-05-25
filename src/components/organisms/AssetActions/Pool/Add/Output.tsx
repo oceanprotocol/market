@@ -1,7 +1,7 @@
 import { FormikContextType, useFormikContext } from 'formik'
 import { graphql, useStaticQuery } from 'gatsby'
 import React, { ReactElement, useEffect, useState } from 'react'
-import { FormAddLiquidity } from '.'
+import { FormAddLiquidity } from './index'
 import { PoolBalance } from '../../../../../@types/TokenBalance'
 import FormHelp from '../../../../atoms/Input/Help'
 import Token from '../Token'

@@ -1,14 +1,14 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import Table from '../../atoms/Table'
 import { gql, useQuery } from '@apollo/client'
-import Time from '../../atoms/Time'
-import web3 from 'web3'
-import AssetTitle from '../../molecules/AssetListTitle'
-import { useWeb3 } from '../../../providers/Web3'
 import axios from 'axios'
+import web3 from 'web3'
+import { Logger } from '@oceanprotocol/lib'
+import { useWeb3 } from '../../../providers/Web3'
 import { useOcean } from '../../../providers/Ocean'
 import { retrieveDDO } from '../../../utils/aquarius'
-import { Logger } from '@oceanprotocol/lib'
+import Table from '../../atoms/Table'
+import Time from '../../atoms/Time'
+import AssetTitle from '../../molecules/AssetListTitle'
 
 const getTokenOrders = gql`
   query OrdersData($user: String!) {

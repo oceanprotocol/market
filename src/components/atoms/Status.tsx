@@ -1,8 +1,5 @@
 import React, { ReactElement } from 'react'
-import classNames from 'classnames/bind'
-import * as styles from './Status.module.css'
-
-const cx = classNames.bind(styles)
+import { status, warning, error } from './Status.module.css'
 
 export default function Status({
   state,
@@ -11,12 +8,9 @@ export default function Status({
   state?: string
   className?: string
 }): ReactElement {
-  const styleClasses = cx({
-    status: true,
-    warning: state === 'warning',
-    error: state === 'error',
-    [className]: className
-  })
+  const styleClasses = `${status} ${state === 'warning' && warning} ${
+    state === 'error' && error
+  } ${className}`
 
   return <i className={styleClasses} />
 }

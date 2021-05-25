@@ -8,7 +8,6 @@ import {
   ConfigHelperNetworkName
 } from '@oceanprotocol/lib'
 import contractAddresses from '@oceanprotocol/contracts/artifacts/address.json'
-
 import { UserBalance } from '../@types/TokenBalance'
 
 export function getOceanConfig(

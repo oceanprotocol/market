@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react'
+import { getAssetsBestPrices, AssetListPrices } from '../../utils/subgraph'
 import Loader from '../atoms/Loader'
 import Pagination from '../molecules/Pagination'
 import AssetTeaser from '../molecules/AssetTeaser'
 import { DDO } from '@oceanprotocol/lib'
-import classNames from 'classnames/bind'
-import { getAssetsBestPrices, AssetListPrices } from '../../utils/subgraph'
-import * as styles from './AssetList.module.css'
-
-const cx = classNames.bind(styles)
+import { assetList, loaderWrap, empty } from './AssetList.module.css'
 
 function LoaderArea() {
   return (
-    <div className={styles.loaderWrap}>
+    <div className={loaderWrap}>
       <Loader />
     </div>
   )
@@ -53,16 +50,11 @@ const AssetList: React.FC<AssetListProps> = ({
     onPageChange(selected + 1)
   }
 
-  const styleClasses = cx({
-    assetList: true,
-    [className]: className
-  })
-
   return assetsWithPrices &&
     !loading &&
     (isLoading === undefined || isLoading === false) ? (
     <>
-      <div className={styleClasses}>
+      <div className={`${assetList} ${className}`}>
         {assetsWithPrices.length > 0 ? (
           assetsWithPrices.map((assetWithPrice) => (
             <AssetTeaser
@@ -72,7 +64,7 @@ const AssetList: React.FC<AssetListProps> = ({
             />
           ))
         ) : (
-          <div className={styles.empty}>No results found.</div>
+          <div className={empty}>No results found.</div>
         )}
       </div>
 

@@ -2,12 +2,19 @@ import React, { ReactElement } from 'react'
 import { Link } from 'gatsby'
 import { useLocation } from '@reach/router'
 import loadable from '@loadable/component'
-import * as styles from './Menu.module.css'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import Container from '../atoms/Container'
-import UserPreferences from './UserPreferences'
 import Badge from '../atoms/Badge'
 import Logo from '../atoms/Logo'
+import UserPreferences from './UserPreferences'
+import {
+  link as linkStyle,
+  active,
+  menu as menuStyle,
+  logoUnit,
+  title,
+  navigation
+} from './Menu.module.css'
 
 const Wallet = loadable(() => import('./Wallet'))
 
@@ -20,9 +27,7 @@ function MenuLink({ item }: { item: MenuItem }) {
   const location = useLocation()
 
   const classes =
-    location?.pathname === item.link
-      ? `${styles.link} ${styles.active}`
-      : styles.link
+    location?.pathname === item.link ? `${linkStyle} ${active}` : linkStyle
 
   return (
     <Link key={item.name} to={item.link} className={classes}>
@@ -35,16 +40,16 @@ export default function Menu(): ReactElement {
   const { menu, siteTitle } = useSiteMetadata()
 
   return (
-    <nav className={styles.menu}>
+    <nav className={menuStyle}>
       <Container>
-        <Link to="/" className={styles.logoUnit}>
+        <Link to="/" className={logoUnit}>
           <Logo />
-          <h1 className={styles.title}>
+          <h1 className={title}>
             {siteTitle} <Badge label="beta" />
           </h1>
         </Link>
 
-        <ul className={styles.navigation}>
+        <ul className={navigation}>
           {menu.map((item: MenuItem) => (
             <li key={item.name}>
               <MenuLink item={item} />

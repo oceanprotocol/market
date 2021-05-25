@@ -9,7 +9,7 @@ import FormHelp from '../../../../atoms/Input/Help'
 import { useSiteMetadata } from '../../../../../hooks/useSiteMetadata'
 import Fixed from './Fixed'
 import Dynamic from './Dynamic'
-import * as styles from './index.module.css'
+import { actions, actionsHelp } from './index.module.css'
 
 export default function FormPricing({
   ddo,
@@ -68,16 +68,14 @@ export default function FormPricing({
         defaultIndex={type === 'fixed' ? 0 : 1}
       />
 
-      <div className={styles.actions}>
+      <div className={actions}>
         <Button style="primary" onClick={() => submitForm()}>
           {content.empty.action.name}
         </Button>
         <Button style="text" size="small" onClick={() => setShowPricing(false)}>
           Cancel
         </Button>
-        <FormHelp className={styles.actionsHelp}>
-          {content.empty.action.help}
-        </FormHelp>
+        <FormHelp className={actionsHelp}>{content.empty.action.help}</FormHelp>
       </div>
 
       {debug === true && (

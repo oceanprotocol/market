@@ -6,7 +6,13 @@ import { DataTokenOptions } from '../../../../../hooks/usePublish'
 import { useField } from 'formik'
 import Error from './Error'
 import { conversion } from './index.module.css'
-import * as styles from './Coin.module.css'
+import {
+  coin,
+  icon,
+  tokenName,
+  weight as weightStyle,
+  data
+} from './Coin.module.css'
 
 export default function Coin({
   datatokenOptions,
@@ -22,20 +28,18 @@ export default function Coin({
   const [field, meta] = useField(name)
 
   return (
-    <div className={styles.coin}>
-      <figure className={styles.icon}>
+    <div className={coin}>
+      <figure className={icon}>
         <Logo />
       </figure>
 
-      <h4 className={styles.tokenName}>
-        {datatokenOptions?.name || 'Data Token'}
-      </h4>
+      <h4 className={tokenName}>{datatokenOptions?.name || 'Data Token'}</h4>
 
-      <div className={styles.weight}>
+      <div className={weightStyle}>
         Weight <strong>{weight}</strong>
       </div>
 
-      <div className={styles.data}>
+      <div className={data}>
         <InputElement
           type="number"
           readOnly={readOnly}

@@ -1,5 +1,9 @@
 import React, { ReactElement, ReactNode } from 'react'
-import * as styles from './MetaItem.module.css'
+import {
+  metaItem,
+  title as titleStyle,
+  content as contentStyle
+} from './MetaItem.module.css'
 
 export default function MetaItem({
   title,
@@ -9,9 +13,9 @@ export default function MetaItem({
   content: ReactNode
 }): ReactElement {
   return (
-    <div className={styles.metaItem}>
-      <h3 className={styles.title}>{title}</h3>
-      <div className={styles.content}>{content}</div>
+    <div className={metaItem}>
+      <h3 className={titleStyle}>{title}</h3>
+      <div className={contentStyle}>{content}</div>
     </div>
   )
 }

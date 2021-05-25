@@ -1,19 +1,27 @@
 import React, { ReactElement } from 'react'
 import slugify from '@sindresorhus/slugify'
-import { InputProps } from '.'
+import { InputProps } from './index'
 import FilesInput from '../../molecules/FormFields/FilesInput'
 import Terms from '../../molecules/FormFields/Terms'
 import BoxSelection, {
   BoxSelectionOption
 } from '../../molecules/FormFields/BoxSelection'
 import Datatoken from '../../molecules/FormFields/Datatoken'
-import classNames from 'classnames/bind'
 import AssetSelection, {
   AssetSelectionAsset
 } from '../../molecules/FormFields/AssetSelection'
-import * as styles from './InputElement.module.css'
-
-const cx = classNames.bind(styles)
+import {
+  input,
+  select,
+  textarea,
+  radioGroup,
+  radioWrap,
+  radioLabel,
+  prefixGroup,
+  postfixGroup,
+  prefix as prefixStyle,
+  postfix as postfixStyle
+} from './InputElement.module.css'
 
 const DefaultInput = ({
   size,
@@ -24,7 +32,7 @@ const DefaultInput = ({
   ...props
 }: InputProps) => (
   <input
-    className={cx({ input: true, [size]: size, [className]: className })}
+    className={`${input} ${size} ${className}`}
     id={props.name}
     {...props}
   />
@@ -47,17 +55,17 @@ export default function InputElement({
   additionalComponent,
   ...props
 }: InputProps): ReactElement {
-  const styleClasses = cx({ select: true, [size]: size })
   switch (type) {
     case 'select': {
       const sortedOptions =
         !sortOptions && sortOptions === false
           ? options
           : options.sort((a: string, b: string) => a.localeCompare(b))
+
       return (
         <select
           id={name}
-          className={styleClasses}
+          className={`${select} ${size}`}
           {...props}
           multiple={multiple}
         >
@@ -74,30 +82,23 @@ export default function InputElement({
       )
     }
     case 'textarea':
-      return (
-        <textarea
-          name={name}
-          id={name}
-          className={styles.textarea}
-          {...props}
-        />
-      )
+      return <textarea name={name} id={name} className={textarea} {...props} />
     case 'radio':
     case 'checkbox':
       return (
-        <div className={styles.radioGroup}>
+        <div className={radioGroup}>
           {options &&
             options.map((option: string, index: number) => (
-              <div className={styles.radioWrap} key={index}>
+              <div className={radioWrap} key={index}>
                 <input
-                  className={styles[type]}
+                  className={`${type}`}
                   id={slugify(option)}
                   type={type}
                   name={name}
                   defaultChecked={props.defaultChecked}
                   {...props}
                 />
-                <label className={styles.radioLabel} htmlFor={slugify(option)}>
+                <label className={radioLabel} htmlFor={slugify(option)}>
                   {option}
                 </label>
               </div>
@@ -139,10 +140,8 @@ export default function InputElement({
       )
     default:
       return prefix || postfix ? (
-        <div className={`${prefix ? styles.prefixGroup : styles.postfixGroup}`}>
-          {prefix && (
-            <div className={cx({ prefix: true, [size]: size })}>{prefix}</div>
-          )}
+        <div className={`${prefix ? prefixGroup : postfixGroup}`}>
+          {prefix && <div className={`${prefixStyle} ${size}`}>{prefix}</div>}
           <DefaultInput
             name={name}
             type={type || 'text'}
@@ -151,7 +150,7 @@ export default function InputElement({
             {...props}
           />
           {postfix && (
-            <div className={cx({ postfix: true, [size]: size })}>{postfix}</div>
+            <div className={`${postfixStyle} ${size}`}>{postfix}</div>
           )}
         </div>
       ) : (

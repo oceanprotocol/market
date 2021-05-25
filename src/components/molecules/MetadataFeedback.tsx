@@ -2,7 +2,11 @@ import Alert from '../atoms/Alert'
 import Button from '../atoms/Button'
 import Loader from '../atoms/Loader'
 import React, { ReactElement } from 'react'
-import * as styles from './MetadataFeedback.module.css'
+import {
+  action as actionStyle,
+  feedback,
+  box
+} from './MetadataFeedback.module.css'
 import SuccessConfetti from '../atoms/SuccessConfetti'
 
 interface Action {
@@ -20,7 +24,7 @@ function ActionSuccess({ action }: { action: Action }) {
       size="small"
       onClick={onClick || null}
       to={to || null}
-      className={styles.action}
+      className={actionStyle}
     >
       {name}
     </Button>
@@ -32,7 +36,7 @@ function ActionError({ setError }: { setError: (error: string) => void }) {
     <Button
       style="primary"
       size="small"
-      className={styles.action}
+      className={actionStyle}
       onClick={() => setError(undefined)}
     >
       Try Again
@@ -56,8 +60,8 @@ export default function MetadataFeedback({
   setError: (error: string) => void
 }): ReactElement {
   return (
-    <div className={styles.feedback}>
-      <div className={styles.box}>
+    <div className={feedback}>
+      <div className={box}>
         <h3>{title}</h3>
         {error ? (
           <>

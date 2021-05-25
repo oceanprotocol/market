@@ -1,11 +1,14 @@
 import React, { ReactElement, useState } from 'react'
 import { useNavigate } from '@reach/router'
-import classNames from 'classnames/bind'
-import { addExistingParamsToUrl, FilterByTypeOptions } from './utils'
 import Button from '../../atoms/Button'
-import * as styles from './filterService.module.css'
-
-const cx = classNames.bind(styles)
+import { addExistingParamsToUrl, FilterByTypeOptions } from './utils'
+import {
+  showClear as showClearStyles,
+  hideClear as hideClearStyles,
+  filter as filterStyle,
+  filterList,
+  selected
+} from './filterService.module.css'
 
 const clearFilters = [{ display: 'Clear', value: '' }]
 
@@ -69,20 +72,16 @@ export default function FilterPrice({
   }
 
   return (
-    <div className={styles.filterList}>
+    <div className={filterList}>
       {serviceFilterItems.map((e, index) => {
         const isServiceSelected =
           e.value === serviceType || serviceSelections.includes(e.value)
-        const selectFilter = cx({
-          [styles.selected]: isServiceSelected,
-          [styles.filter]: true
-        })
         return (
           <Button
             size="small"
             style="text"
             key={index}
-            className={selectFilter}
+            className={`${filterStyle} ${isServiceSelected && selected}`}
             onClick={async () => {
               handleSelectedFilter(isServiceSelected, e.value)
             }}
@@ -98,7 +97,7 @@ export default function FilterPrice({
             size="small"
             style="text"
             key={index}
-            className={showClear ? styles.showClear : styles.hideClear}
+            className={showClear ? showClearStyles : hideClearStyles}
             onClick={async () => {
               applyClearFilter()
             }}

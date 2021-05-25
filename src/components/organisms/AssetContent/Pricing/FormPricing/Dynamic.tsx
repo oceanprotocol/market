@@ -14,7 +14,15 @@ import Price from './Price'
 import Coin from './Coin'
 import Fees from './Fees'
 import { help } from './index.module.css'
-import * as styles from './Dynamic.module.css'
+import {
+  dynamic,
+  wallet,
+  balance as balanceStyle,
+  title,
+  tokens,
+  summary,
+  alertArea
+} from './Dynamic.module.css'
 
 export default function Dynamic({
   ddo,
@@ -70,13 +78,13 @@ export default function Dynamic({
   }, [price, networkId, account, balance])
 
   return (
-    <div className={styles.dynamic}>
+    <div className={dynamic}>
       <FormHelp className={help}>{content.info}</FormHelp>
 
-      <aside className={styles.wallet}>
+      <aside className={wallet}>
         {balance?.ocean && (
           <PriceUnit
-            className={styles.balance}
+            className={balanceStyle}
             price={balance.ocean}
             symbol="OCEAN"
             small
@@ -85,17 +93,17 @@ export default function Dynamic({
         <Wallet />
       </aside>
 
-      <h4 className={styles.title}>
+      <h4 className={title}>
         Price <Tooltip content={content.tooltips.poolInfo} />
       </h4>
 
       <Price ddo={ddo} firstPrice={firstPrice} />
 
-      <h4 className={styles.title}>
+      <h4 className={title}>
         Datatoken Liquidity Pool <Tooltip content={content.tooltips.poolInfo} />
       </h4>
 
-      <div className={styles.tokens}>
+      <div className={tokens}>
         <Coin
           name="oceanAmount"
           datatokenOptions={{ symbol: 'OCEAN', name: 'Ocean Token' }}
@@ -114,13 +122,13 @@ export default function Dynamic({
 
       <Fees tooltips={content.tooltips} />
 
-      <footer className={styles.summary}>
+      <footer className={summary}>
         You will get: <br />
         100% share of pool
       </footer>
 
       {error && (
-        <div className={styles.alertArea}>
+        <div className={alertArea}>
           <Alert text={error} state="error" />
         </div>
       )}

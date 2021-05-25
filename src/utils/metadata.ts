@@ -6,7 +6,7 @@ import {
   MetadataPublishFormDataset,
   MetadataPublishFormAlgorithm
 } from '../@types/MetaData'
-import { toStringNoMS } from '.'
+import { toStringNoMS } from './index'
 import AssetModel from '../models/Asset'
 import slugify from '@sindresorhus/slugify'
 import { DDO, MetadataAlgorithm, Logger } from '@oceanprotocol/lib'

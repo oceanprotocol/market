@@ -1,5 +1,5 @@
 import React, { ReactElement, ReactNode } from 'react'
-import * as styles from './Label.module.css'
+import { label, required as requiredStyle } from './Label.module.css'
 
 const Label = ({
   required,
@@ -11,7 +11,7 @@ const Label = ({
   htmlFor: string
 }): ReactElement => (
   <label
-    className={`${styles.label} ${required && styles.required}`}
+    className={`${label} ${required && requiredStyle}`}
     title={required ? 'Required' : ''}
     {...props}
   >
