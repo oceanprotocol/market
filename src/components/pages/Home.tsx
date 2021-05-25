@@ -58,7 +58,7 @@ function SectionQueryResult({
           config.metadataCacheUri,
           source.token
         )
-        if (result.totalResults < 20) {
+        if (result.totalResults <= 15) {
           const searchDIDs = queryData.split(' ')
           const sortedAssets = sortElements(result.results, searchDIDs)
           // We take more assets than we need from the subgraph (to make sure
@@ -96,20 +96,20 @@ export default function HomePage(): ReactElement {
 
   useEffect(() => {
     getHighestLiquidityDIDs().then((results) => {
+      setSearchDIDs(results)
       const queryHighest = {
         page: 1,
         offset: 15,
         query: {
           query_string: {
-            query: `(${results}) AND -isInPurgatory:true AND price.isConsumable:true`,
+            query: `(${searchDIDs}) AND -isInPurgatory:true AND price.isConsumable:true`,
             fields: ['dataToken']
           }
         }
       }
-      setSearchDIDs(results)
       setQueryHighestAssets(queryHighest)
     })
-  }, [config?.subgraphUri])
+  }, [config.subgraphUri, searchDIDs, queryHighestAssets])
 
   return (
     <>
