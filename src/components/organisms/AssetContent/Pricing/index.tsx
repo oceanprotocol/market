@@ -43,7 +43,6 @@ const query = graphql`
               free {
                 title
                 info
-                warning
               }
             }
           }
