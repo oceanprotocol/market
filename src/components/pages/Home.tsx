@@ -36,22 +36,20 @@ function sortElements(items: DDO[], sorted: string[]) {
 function SectionQueryResult({
   title,
   query,
-  action
+  action,
+  queryData
 }: {
   title: ReactElement | string
   query: SearchQuery
   action?: ReactElement
+  queryData?: string
 }) {
   const { config } = useOcean()
   const [result, setResult] = useState<QueryResult>()
-  const [dids, setDIDs] = useState<string>()
 
   useEffect(() => {
     if (!config?.metadataCacheUri) return
     const source = axios.CancelToken.source()
-    getHighestLiquidityDIDs().then((results) => {
-      setDIDs(results)
-    })
 
     async function init() {
       try {
@@ -60,8 +58,8 @@ function SectionQueryResult({
           config.metadataCacheUri,
           source.token
         )
-        if (result.totalResults <= 15) {
-          const searchDIDs = dids.split(' ')
+        if (result.totalResults < 20) {
+          const searchDIDs = queryData.split(' ')
           const sortedAssets = sortElements(result.results, searchDIDs)
           // We take more assets than we need from the subgraph (to make sure
           // all the 9 assets with highest liquidity we need are in OceanDB)
@@ -80,7 +78,7 @@ function SectionQueryResult({
     return () => {
       source.cancel()
     }
-  }, [config?.metadataCacheUri, query, dids])
+  }, [config?.metadataCacheUri, query, queryData])
 
   return (
     <section className={styles.section}>
@@ -92,25 +90,26 @@ function SectionQueryResult({
 }
 
 export default function HomePage(): ReactElement {
-  const [searchDids, setSearchDIDs] = useState<string>()
   const { config } = useOcean()
+  const [queryHighestAssets, setQueryHighestAssets] = useState<SearchQuery>()
+  const [searchDIDs, setSearchDIDs] = useState<string>()
 
   useEffect(() => {
     getHighestLiquidityDIDs().then((results) => {
-      setSearchDIDs(results)
-    })
-  }, [config?.metadataCacheUri, searchDids])
-
-  const queryHighest = {
-    page: 1,
-    offset: 15,
-    query: {
-      query_string: {
-        query: `(${searchDids}) AND -isInPurgatory:true AND price.isConsumable:true`,
-        fields: ['dataToken']
+      const queryHighest = {
+        page: 1,
+        offset: 15,
+        query: {
+          query_string: {
+            query: `(${results}) AND -isInPurgatory:true AND price.isConsumable:true`,
+            fields: ['dataToken']
+          }
+        }
       }
-    }
-  }
+      setSearchDIDs(results)
+      setQueryHighestAssets(queryHighest)
+    })
+  }, [config?.subgraphUri])
 
   return (
     <>
@@ -123,7 +122,11 @@ export default function HomePage(): ReactElement {
         <Bookmarks />
       </section>
 
-      <SectionQueryResult title="Highest Liquidity" query={queryHighest} />
+      <SectionQueryResult
+        title="Highest Liquidity"
+        query={queryHighestAssets}
+        queryData={searchDIDs}
+      />
 
       <SectionQueryResult
         title="Recently Published"
