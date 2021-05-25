@@ -2,7 +2,6 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import { useWeb3 } from '../../providers/Web3'
 import { addCustomNetwork, NetworkObject } from '../../utils/web3'
 import { getOceanConfig } from '../../utils/ocean'
-import { getProviderInfo } from 'web3modal'
 import { useOcean } from '../../providers/Ocean'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import AnnouncementBanner, {
@@ -19,7 +18,7 @@ const networkMatic: NetworkObject = {
 }
 
 export default function NetworkBanner(): ReactElement {
-  const { web3Provider } = useWeb3()
+  const { web3Provider, web3ProviderInfo } = useWeb3()
   const { config, connect } = useOcean()
   const { announcement } = useSiteMetadata()
 
@@ -51,10 +50,9 @@ export default function NetworkBanner(): ReactElement {
   }
 
   useEffect(() => {
-    if (!web3Provider && !config) return
+    if (!web3ProviderInfo || (!web3Provider && !config)) return
 
-    const providerInfo = getProviderInfo(web3Provider)
-    switch (providerInfo?.name) {
+    switch (web3ProviderInfo.name) {
       case 'Web3':
         if (config.networkId !== 137) {
           setText(announcement.main)
@@ -80,7 +78,7 @@ export default function NetworkBanner(): ReactElement {
           setAction(undefined)
         }
     }
-  }, [web3Provider, config, announcement])
+  }, [web3Provider, web3ProviderInfo, config, announcement])
 
   return <AnnouncementBanner text={text} action={action} />
 }

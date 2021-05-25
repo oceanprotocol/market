@@ -30,3 +30,7 @@
   color: var(--font-color-text);
   border-color: var(--color-secondary);
 }
+
+.appearances div[class*='boxSelectionsWrapper'] {
+  padding-bottom: calc(var(--spacer) / 8);
+}
