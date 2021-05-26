@@ -16,3 +16,9 @@
   font-size: var(--font-size-small);
   font-style: italic;
 }
+
+.loaderWrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

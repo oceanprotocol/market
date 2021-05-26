@@ -7,13 +7,13 @@ import {
   SearchQuery
 } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import Container from '../atoms/Container'
-import Loader from '../atoms/Loader'
 import { useOcean } from '../../providers/Ocean'
 import Button from '../atoms/Button'
 import Bookmarks from '../molecules/Bookmarks'
 import axios from 'axios'
 import { queryMetadata } from '../../utils/aquarius'
 import Permission from '../organisms/Permission'
+import { useWeb3 } from '../../providers/Web3'
 
 const queryHighest = {
   page: 1,
@@ -37,14 +37,6 @@ const queryLatest = {
   sort: { created: -1 }
 }
 
-function LoaderArea() {
-  return (
-    <div className={styles.loaderWrap}>
-      <Loader />
-    </div>
-  )
-}
-
 function SectionQueryResult({
   title,
   query,
@@ -56,11 +48,10 @@ function SectionQueryResult({
 }) {
   const { config } = useOcean()
   const [result, setResult] = useState<QueryResult>()
-  const [loading, setLoading] = useState(true)
+  const { web3Loading } = useWeb3()
 
   useEffect(() => {
-    if (!config?.metadataCacheUri) return
-
+    if (!config?.metadataCacheUri || web3Loading) return
     const source = axios.CancelToken.source()
 
     async function init() {
@@ -70,23 +61,18 @@ function SectionQueryResult({
         source.token
       )
       setResult(result)
-      setLoading(false)
     }
     init()
 
     return () => {
       source.cancel()
     }
-  }, [config?.metadataCacheUri, query])
+  }, [config?.metadataCacheUri, query, web3Loading])
 
   return (
     <section className={styles.section}>
       <h3>{title}</h3>
-      {loading ? (
-        <LoaderArea />
-      ) : (
-        result && <AssetList assets={result.results} showPagination={false} />
-      )}
+      <AssetList assets={result?.results} showPagination={false} />
       {action && action}
     </section>
   )

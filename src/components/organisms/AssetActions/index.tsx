@@ -19,7 +19,6 @@ export default function AssetActions(): ReactElement {
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
   const [dtBalance, setDtBalance] = useState<string>()
-
   const isCompute = Boolean(ddo?.findServiceByType('compute'))
 
   // Get and set user DT balance
@@ -75,10 +74,7 @@ export default function AssetActions(): ReactElement {
     }
   ]
 
-  // Check from metadata, cause that is available earlier
-  const hasPool = ddo?.price?.type === 'pool'
-
-  hasPool &&
+  price?.type === 'pool' &&
     tabs.push(
       {
         title: 'Pool',
