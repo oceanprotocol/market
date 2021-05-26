@@ -65,6 +65,9 @@ export function getSearchQuery(
     ? // eslint-disable-next-line no-useless-escape
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
     : text || ''
+
+  // HACK: resolves the case sensitivity related to dataTokenInfo.symbol
+  searchTerm = '*' + searchTerm.toUpperCase() + '*'
   searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
 
   return {
@@ -72,7 +75,15 @@ export function getSearchQuery(
     offset: Number(offset) || 21,
     query: {
       query_string: {
-        query: `${searchTerm} -isInPurgatory:true`
+        query: `${searchTerm} -isInPurgatory:true`,
+        fields: [
+          'dataTokenInfo.name',
+          'dataTokenInfo.symbol',
+          'service.attributes.main.name',
+          'service.attributes.main.author',
+          'service.attributes.additionalInformation.description'
+        ],
+        default_operator: 'AND'
       }
       // ...(owner && { 'publicKey.owner': [owner] }),
       // ...(tags && { tags: [tags] }),

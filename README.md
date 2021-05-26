@@ -25,6 +25,7 @@
 - [🛳 Production](#-production)
 - [⬆️ Deployment](#️-deployment)
 - [💖 Contributing](#-contributing)
+- [🍴 Forking](#-forking)
 - [🏛 License](#-license)
 
 ## 🏄 Get Started
@@ -357,6 +358,18 @@ We welcome contributions in form of bug reports, feature requests, code changes,
 - [**Ways to Contribute →**](https://docs.oceanprotocol.com/concepts/contributing/)
 - [Code of Conduct →](https://docs.oceanprotocol.com/concepts/code-of-conduct/)
 - [Reporting Vulnerabilities →](https://docs.oceanprotocol.com/concepts/vulnerabilities/)
+
+## 🍴 Forking
+
+We encourage you to fork this repository and create your own data marketplace. When you publish your forked version of this market there are a few elements that you are required to change for copyright reasons:
+
+- The typeface is copyright protected and needs to be changed unless you purchase a license for it.
+- The Ocean Protocol logo is a trademark of the Ocean Protocol Foundation and must be removed from forked versions of the market.
+- The name "Ocean Market" is also copyright protected and should be changed to the name of your market.
+
+Additionally, we would also advise that your retain the text saying "Powered by Ocean Protocol" on your forked version of the marketplace in order to give credit for the development work done by the Ocean Protocol team.
+
+Everything else is made open according to the apache2 license. We look forward to seeing your data marketplace!
 
 ## 🏛 License
 
