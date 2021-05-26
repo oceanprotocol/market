@@ -71,6 +71,7 @@ function SectionQueryResult({
           sortedAssets.splice(sortedAssets.length - overflow, overflow)
           result.results = sortedAssets
         }
+        if (result.results.length === 0) return
         setResult(result)
         setLoading(false)
       } catch (error) {
@@ -83,6 +84,7 @@ function SectionQueryResult({
       source.cancel()
     }
   }, [query, config?.metadataCacheUri])
+
   return (
     <section className={styles.section}>
       <h3>{title}</h3>
@@ -116,7 +118,7 @@ export default function HomePage(): ReactElement {
       }
       setQueryAndDids([queryHighest, results])
     })
-  }, [config, loading, web3Loading])
+  }, [config.subgraphUri, loading, web3Loading])
 
   return (
     <>

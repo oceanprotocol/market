@@ -316,9 +316,9 @@ export async function getAssetsBestPrices(
 export async function getHighestLiquidityDIDs(): Promise<string> {
   const didList: string[] = []
   const fetchedPools = await fetchData(HighestLiquidityAssets, null)
-
   if (fetchedPools.data?.pools?.length === 0) return null
   for (let i = 0; i < fetchedPools.data.pools.length; i++) {
+    if (!fetchedPools.data.pools[i].datatokenAddress) continue
     const did = web3.utils
       .toChecksumAddress(fetchedPools.data.pools[i].datatokenAddress)
       .replace('0x', 'did:op:')
@@ -329,6 +329,5 @@ export async function getHighestLiquidityDIDs(): Promise<string> {
     .replace(/"/g, '')
     .replace(/(\[|\])/g, '')
     .replace(/(did:op:)/g, '0x')
-
   return searchDids
 }
