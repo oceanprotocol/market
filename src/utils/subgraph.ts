@@ -318,7 +318,6 @@ export async function getHighestLiquidityDIDs(): Promise<string> {
   const fetchedPools = await fetchData(HighestLiquidityAssets, null)
 
   if (fetchedPools.data?.pools?.length === 0) return null
-
   for (let i = 0; i < fetchedPools.data.pools.length; i++) {
     const did = web3.utils
       .toChecksumAddress(fetchedPools.data.pools[i].datatokenAddress)

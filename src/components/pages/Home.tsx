@@ -14,6 +14,7 @@ import axios from 'axios'
 import { queryMetadata } from '../../utils/aquarius'
 import { getHighestLiquidityDIDs } from '../../utils/subgraph'
 import { DDO, Logger } from '@oceanprotocol/lib'
+import { useWeb3 } from '../../providers/Web3'
 
 const queryLatest = {
   page: 1,
@@ -46,7 +47,7 @@ function SectionQueryResult({
 }) {
   const { config } = useOcean()
   const [result, setResult] = useState<QueryResult>()
-  const { web3Loading } = useWeb3()
+  const [loading, setLoading] = useState<boolean>()
 
   useEffect(() => {
     if (!config?.metadataCacheUri) return
@@ -54,6 +55,7 @@ function SectionQueryResult({
 
     async function init() {
       try {
+        setLoading(true)
         const result = await queryMetadata(
           query,
           config.metadataCacheUri,
@@ -70,6 +72,7 @@ function SectionQueryResult({
           result.results = sortedAssets
         }
         setResult(result)
+        setLoading(false)
       } catch (error) {
         Logger.log(error.message)
       }
@@ -79,27 +82,27 @@ function SectionQueryResult({
     return () => {
       source.cancel()
     }
-  }, [
-    config?.metadataCacheUri,
-    query,
-    queryData
-    // query?.query?.query_string?.query
-  ])
+  }, [query, config?.metadataCacheUri])
   return (
     <section className={styles.section}>
       <h3>{title}</h3>
-      <AssetList assets={result?.results} showPagination={false} />
+      <AssetList
+        assets={result?.results}
+        showPagination={false}
+        isLoading={loading}
+      />
       {action && action}
     </section>
   )
 }
 
 export default function HomePage(): ReactElement {
-  const { config } = useOcean()
-  const [queryHighestAssets, setQueryHighestAssets] = useState<SearchQuery>()
-  const [searchDIDs, setSearchDIDs] = useState<string>()
+  const { config, loading } = useOcean()
+  const [queryAndDids, setQueryAndDids] = useState<[SearchQuery, string]>()
+  const { web3Loading, web3Provider } = useWeb3()
 
   useEffect(() => {
+    if (loading || (web3Loading && web3Provider)) return
     getHighestLiquidityDIDs().then((results) => {
       const queryHighest = {
         page: 1,
@@ -111,10 +114,9 @@ export default function HomePage(): ReactElement {
           }
         }
       }
-      setSearchDIDs(results)
-      setQueryHighestAssets(queryHighest)
+      setQueryAndDids([queryHighest, results])
     })
-  }, [config.subgraphUri])
+  }, [config, loading, web3Loading])
 
   return (
     <>
@@ -127,11 +129,13 @@ export default function HomePage(): ReactElement {
         <Bookmarks />
       </section>
 
-      <SectionQueryResult
-        title="Highest Liquidity"
-        query={queryHighestAssets}
-        queryData={searchDIDs}
-      />
+      {queryAndDids && (
+        <SectionQueryResult
+          title="Highest Liquidity"
+          query={queryAndDids[0]}
+          queryData={queryAndDids[1]}
+        />
+      )}
 
       <SectionQueryResult
         title="Recently Published"
