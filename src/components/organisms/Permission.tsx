@@ -20,10 +20,10 @@ export default function Permission({
     getData()
   }, [eventType, accountId])
   console.log('eventType', eventType)
-  if (data === false) {
+  if (data === true) {
+    return <>{children}</>
+  } else {
     const message = `Sorry, you don't have permission to  ${eventType}. Please make sure you are logged in.`
     return <Alert title="Permission denied" text={message} state="error" />
-  } else {
-    return <>{children}</>
   }
 }
