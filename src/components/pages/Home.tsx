@@ -46,6 +46,7 @@ function SectionQueryResult({
 }) {
   const { config } = useOcean()
   const [result, setResult] = useState<QueryResult>()
+  const { web3Loading } = useWeb3()
 
   useEffect(() => {
     if (!config?.metadataCacheUri) return
