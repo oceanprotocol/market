@@ -78,8 +78,12 @@ function SectionQueryResult({
     return () => {
       source.cancel()
     }
-  }, [config?.metadataCacheUri, query, queryData])
-
+  }, [
+    config?.metadataCacheUri,
+    query,
+    queryData
+    // query?.query?.query_string?.query
+  ])
   return (
     <section className={styles.section}>
       <h3>{title}</h3>
@@ -96,20 +100,20 @@ export default function HomePage(): ReactElement {
 
   useEffect(() => {
     getHighestLiquidityDIDs().then((results) => {
-      setSearchDIDs(results)
       const queryHighest = {
         page: 1,
         offset: 15,
         query: {
           query_string: {
-            query: `(${searchDIDs}) AND -isInPurgatory:true AND price.isConsumable:true`,
+            query: `(${results}) AND -isInPurgatory:true AND price.isConsumable:true`,
             fields: ['dataToken']
           }
         }
       }
+      setSearchDIDs(results)
       setQueryHighestAssets(queryHighest)
     })
-  }, [config.subgraphUri, searchDIDs, queryHighestAssets])
+  }, [config.subgraphUri])
 
   return (
     <>
