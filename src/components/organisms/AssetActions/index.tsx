@@ -91,7 +91,7 @@ export default function AssetActions(): ReactElement {
     )
 
   return (
-    <Permission eventType="purchase">
+    <Permission eventType="consume">
       <Tabs items={tabs} className={styles.actions} />
     </Permission>
   )
