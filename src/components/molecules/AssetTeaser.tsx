@@ -6,8 +6,9 @@ import styles from './AssetTeaser.module.css'
 import { DDO, BestPrice } from '@oceanprotocol/lib'
 import removeMarkdown from 'remove-markdown'
 import Publisher from '../atoms/Publisher'
-import Time from '../atoms/Time'
 import AssetType from '../atoms/AssetType'
+import Network from '../atoms/Network'
+import { useOcean } from '../../providers/Ocean'
 
 declare type AssetTeaserProps = {
   ddo: DDO
@@ -18,6 +19,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
   ddo,
   price
 }: AssetTeaserProps) => {
+  const { config } = useOcean()
   const { attributes } = ddo.findServiceByType('metadata')
   const { name, type } = attributes.main
   const { dataTokenInfo } = ddo
@@ -52,9 +54,10 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
 
         <footer className={styles.foot}>
           <Price price={price} small />
-          <p className={styles.date}>
-            <Time date={ddo?.created} relative />
-          </p>
+          {/* TODO: networkId needs to come from the multinetwork DDO for each asset */}
+          {config?.networkId && (
+            <Network networkId={config.networkId} className={styles.network} />
+          )}
         </footer>
       </Link>
     </article>

@@ -12,8 +12,6 @@
 
 .name {
   font-size: var(--font-size-small);
-  display: inline-block;
-  text-transform: capitalize;
 }
 
 .badge {
