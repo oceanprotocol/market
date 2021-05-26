@@ -73,7 +73,6 @@
 
 .link {
   display: inline-block;
-  margin-left: calc(var(--spacer) / 8);
 }
 
 .link svg {
