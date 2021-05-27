@@ -122,7 +122,7 @@ export default function Consume({
         !isBalanceSufficient ||
         typeof consumeStepText !== 'undefined' ||
         pricingIsLoading ||
-        (!hasDatatoken && !(maxDt >= 1)) ||
+        (!hasPreviousOrder && !hasDatatoken && !(maxDt >= 1)) ||
         !isConsumable) &&
         !hasPreviousOrder &&
         !hasDatatoken

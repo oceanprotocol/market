@@ -90,8 +90,8 @@ export default function Compute({
     file === null ||
     !ocean ||
     !isBalanceSufficient ||
-    (!hasDatatoken && !(datasetMaxDT >= 1)) ||
-    (!hasAlgoAssetDatatoken && !(algoMaxDT >= 1))
+    (!hasPreviousDatasetOrder && !hasDatatoken && !(datasetMaxDT >= 1)) ||
+    (!hasPreviousAlgorithmOrder && !hasAlgoAssetDatatoken && !(algoMaxDT >= 1))
 
   async function checkPreviousOrders(ddo: DDO) {
     const { timeout } = (
