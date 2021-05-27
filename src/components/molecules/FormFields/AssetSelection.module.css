@@ -73,6 +73,7 @@
 
 .link {
   display: inline-block;
+  margin-left: calc(var(--spacer) / 4);
 }
 
 .link svg {
@@ -122,10 +123,4 @@
   padding: var(--spacer) calc(var(--spacer) / 2);
   text-align: center;
   color: var(--color-secondary);
-}
-
-.hideRadio {
-  position: fixed;
-  opacity: 0;
-  pointer-events: none;
 }

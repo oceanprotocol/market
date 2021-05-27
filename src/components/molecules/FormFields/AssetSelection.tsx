@@ -1,6 +1,5 @@
 import React, { ChangeEvent, useState } from 'react'
 import Dotdotdot from 'react-dotdotdot'
-import { Link } from 'gatsby'
 import slugify from 'slugify'
 import classNames from 'classnames/bind'
 import PriceUnit from '../../atoms/Price/PriceUnit'
@@ -27,21 +26,18 @@ export default function AssetSelection({
   assets,
   multiple,
   disabled,
-  hideRadio,
   ...props
 }: {
   assets: AssetSelectionAsset[]
   multiple?: boolean
   disabled?: boolean
-  hideRadio?: boolean
 }): JSX.Element {
   const [searchValue, setSearchValue] = useState('')
 
   const styleClassesInput = cx({
     input: true,
     [styles.checkbox]: multiple,
-    [styles.radio]: !multiple,
-    [styles.hideRadio]: hideRadio
+    [styles.radio]: !multiple
   })
 
   function handleSearchInput(e: ChangeEvent<HTMLInputElement>) {
@@ -105,6 +101,7 @@ export default function AssetSelection({
                       <External />
                     </a>
                   </h3>
+
                   <Dotdotdot clamp={1} tagName="code" className={styles.did}>
                     {asset.symbol} | {asset.did}
                   </Dotdotdot>
