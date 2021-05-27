@@ -5,7 +5,7 @@ import { ConfigHelper, ConfigHelperConfig } from '@oceanprotocol/lib'
 import Badge from '../../atoms/Badge'
 import Tooltip from '../../atoms/Tooltip'
 import { useWeb3 } from '../../../providers/Web3'
-import NetworkName from '../../atoms/Network'
+import NetworkName from '../../atoms/NetworkName'
 import styles from './Network.module.css'
 
 export default function Network(): ReactElement {

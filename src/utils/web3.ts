@@ -30,11 +30,26 @@ export function getNetworkDisplayName(
   data: EthereumListsChain,
   networkId: number
 ): string {
-  const displayName = data
-    ? `${data.chain} ${data.network === 'mainnet' ? '' : data.network}`
-    : networkId === 8996
-    ? 'Development'
-    : 'Unknown'
+  if (!data) return 'Unknown'
+
+  let displayName
+
+  switch (networkId) {
+    case 1287:
+      displayName = 'Moonbase Alpha'
+      break
+    case 137:
+      displayName = 'Polygon'
+      break
+    case 8996:
+      displayName = 'Development'
+      break
+    default:
+      displayName = `${data.chain} ${
+        data.network === 'mainnet' ? '' : data.network
+      }`
+      break
+  }
 
   return displayName
 }

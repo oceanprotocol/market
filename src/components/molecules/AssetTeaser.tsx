@@ -2,13 +2,13 @@ import React from 'react'
 import { Link } from 'gatsby'
 import Dotdotdot from 'react-dotdotdot'
 import Price from '../atoms/Price'
-import styles from './AssetTeaser.module.css'
 import { DDO, BestPrice } from '@oceanprotocol/lib'
 import removeMarkdown from 'remove-markdown'
 import Publisher from '../atoms/Publisher'
 import AssetType from '../atoms/AssetType'
-import Network from '../atoms/Network'
+import NetworkName from '../atoms/NetworkName'
 import { useOcean } from '../../providers/Ocean'
+import styles from './AssetTeaser.module.css'
 
 declare type AssetTeaserProps = {
   ddo: DDO
@@ -54,10 +54,6 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
 
         <footer className={styles.foot}>
           <Price price={price} small />
-          {/* TODO: networkId needs to come from the multinetwork DDO for each asset */}
-          {config?.networkId && (
-            <Network networkId={config.networkId} className={styles.network} />
-          )}
         </footer>
       </Link>
     </article>
