@@ -4,7 +4,7 @@ import { usePublish } from '../../../hooks/usePublish'
 import styles from './index.module.css'
 import FormPublish from './FormPublish'
 import FormAlgoPublish from './FormAlgoPublish'
-import Web3Feedback from '../../molecules/Wallet/Feedback'
+import Web3Feedback from '../../molecules/Web3Feedback'
 import Tabs from '../../atoms/Tabs'
 import { initialValues, validationSchema } from '../../../models/FormPublish'
 import {

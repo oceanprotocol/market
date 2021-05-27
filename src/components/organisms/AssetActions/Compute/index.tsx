@@ -10,7 +10,6 @@ import { toast } from 'react-toastify'
 import Price from '../../../atoms/Price'
 import File from '../../../atoms/File'
 import Alert from '../../../atoms/Alert'
-import Web3Feedback from '../../../molecules/Wallet/Feedback'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
@@ -57,7 +56,7 @@ export default function Compute({
   const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
   const { ocean, account, config } = useOcean()
-  const { price, type, ddo } = useAsset()
+  const { price, type, ddo, isAssetNetwork } = useAsset()
   const { buyDT, pricingError, pricingStepText } = usePricing()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
@@ -417,9 +416,6 @@ export default function Compute({
             success="Your job started successfully! Watch the progress on the history page."
             action={<SuccessAction />}
           />
-        )}
-        {type !== 'algorithm' && (
-          <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
         )}
       </footer>
     </>

@@ -84,7 +84,7 @@ export default function FormStartCompute({
 
   const { isValid, values }: FormikContextType<{ algorithm: string }> =
     useFormikContext()
-  const { price, ddo } = useAsset()
+  const { price, ddo, isAssetNetwork } = useAsset()
   const [totalPrice, setTotalPrice] = useState(price?.value)
 
   function getAlgorithmAsset(algorithmId: string): DDO {
@@ -149,7 +149,7 @@ export default function FormStartCompute({
 
       <ButtonBuy
         action="compute"
-        disabled={isComputeButtonDisabled || !isValid}
+        disabled={isComputeButtonDisabled || !isValid || !isAssetNetwork}
         hasPreviousOrder={hasPreviousOrder}
         hasDatatoken={hasDatatoken}
         dtSymbol={ddo.dataTokenInfo.symbol}

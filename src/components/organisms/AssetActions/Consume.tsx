@@ -3,7 +3,6 @@ import { toast } from 'react-toastify'
 import { File as FileMetadata, DDO } from '@oceanprotocol/lib'
 import File from '../../atoms/File'
 import Price from '../../atoms/Price'
-import Web3Feedback from '../../molecules/Wallet/Feedback'
 import styles from './Consume.module.css'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { useAsset } from '../../../providers/Asset'
@@ -47,7 +46,7 @@ export default function Consume({
   const { appConfig } = useSiteMetadata()
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
   const [previousOrderId, setPreviousOrderId] = useState<string>()
-  const { isInPurgatory, price, type } = useAsset()
+  const { isInPurgatory, price, type, isAssetNetwork } = useAsset()
   const { buyDT, pricingStepText, pricingError, pricingIsLoading } =
     usePricing()
   const { consumeStepText, consume, consumeError } = useConsume()
@@ -105,6 +104,7 @@ export default function Consume({
     setIsDisabled(
       (!ocean ||
         !isBalanceSufficient ||
+        !isAssetNetwork ||
         typeof consumeStepText !== 'undefined' ||
         pricingIsLoading ||
         !isConsumable) &&
@@ -115,6 +115,7 @@ export default function Consume({
     ocean,
     hasPreviousOrder,
     isBalanceSufficient,
+    isAssetNetwork,
     consumeStepText,
     pricingIsLoading,
     isConsumable,
@@ -166,9 +167,6 @@ export default function Consume({
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>
-      <footer className={styles.feedback}>
-        <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
-      </footer>
     </aside>
   )
 }

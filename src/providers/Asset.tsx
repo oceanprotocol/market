@@ -15,6 +15,7 @@ import { retrieveDDO } from '../utils/aquarius'
 import { getPrice } from '../utils/subgraph'
 import { MetadataMarket } from '../@types/MetaData'
 import { useOcean } from './Ocean'
+import { useWeb3 } from './Web3'
 
 interface AssetProviderValue {
   isInPurgatory: boolean
@@ -28,6 +29,7 @@ interface AssetProviderValue {
   type: MetadataMain['type'] | undefined
   error?: string
   refreshInterval: number
+  isAssetNetwork: boolean
   refreshDdo: (token?: CancelToken) => Promise<void>
 }
 
@@ -42,6 +44,7 @@ function AssetProvider({
   asset: string | DDO
   children: ReactNode
 }): ReactElement {
+  const { networkId } = useWeb3()
   const { config } = useOcean()
   const [isInPurgatory, setIsInPurgatory] = useState(false)
   const [purgatoryData, setPurgatoryData] = useState<PurgatoryData>()
@@ -53,6 +56,7 @@ function AssetProvider({
   const [owner, setOwner] = useState<string>()
   const [error, setError] = useState<string>()
   const [type, setType] = useState<MetadataMain['type']>()
+  const [isAssetNetwork, setIsAssetNetwork] = useState<boolean>()
 
   const fetchDdo = async (token?: CancelToken) => {
     Logger.log('[asset] Init asset, get DDO')
@@ -137,6 +141,16 @@ function AssetProvider({
     initMetadata(ddo)
   }, [ddo, initMetadata])
 
+  // Check user network against asset network
+  useEffect(() => {
+    if (!networkId || !ddo) return
+
+    // TODO: replace with actual check against multinetwork DDO
+    // const isAssetNetwork = networkId === ddo.networkId
+    const isAssetNetwork = true
+    setIsAssetNetwork(isAssetNetwork)
+  }, [networkId, ddo])
+
   return (
     <AssetContext.Provider
       value={
@@ -152,7 +166,8 @@ function AssetProvider({
           isInPurgatory,
           purgatoryData,
           refreshInterval,
-          refreshDdo
+          refreshDdo,
+          isAssetNetwork
         } as AssetProviderValue
       }
     >

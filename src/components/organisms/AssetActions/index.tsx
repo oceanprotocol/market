@@ -10,11 +10,12 @@ import Trade from './Trade'
 import { useAsset } from '../../../providers/Asset'
 import { useOcean } from '../../../providers/Ocean'
 import { useWeb3 } from '../../../providers/Web3'
+import Web3Feedback from '../../molecules/Web3Feedback'
 
 export default function AssetActions(): ReactElement {
   const { accountId } = useWeb3()
   const { ocean, balance, account } = useOcean()
-  const { price, ddo, metadata } = useAsset()
+  const { price, ddo, metadata, type, isAssetNetwork } = useAsset()
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
   const [dtBalance, setDtBalance] = useState<string>()
@@ -85,5 +86,15 @@ export default function AssetActions(): ReactElement {
       }
     )
 
-  return <Tabs items={tabs} className={styles.actions} />
+  return (
+    <>
+      <Tabs items={tabs} className={styles.actions} />
+      {type !== 'algorithm' && (
+        <Web3Feedback
+          isBalanceSufficient={isBalanceSufficient}
+          isAssetNetwork={isAssetNetwork}
+        />
+      )}
+    </>
+  )
 }
