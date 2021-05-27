@@ -28,14 +28,12 @@ export default function AssetSelection({
   multiple,
   disabled,
   hideRadio,
-  useInternalLink,
   ...props
 }: {
   assets: AssetSelectionAsset[]
   multiple?: boolean
   disabled?: boolean
   hideRadio?: boolean
-  useInternalLink?: boolean
 }): JSX.Element {
   const [searchValue, setSearchValue] = useState('')
 
@@ -45,26 +43,6 @@ export default function AssetSelection({
     [styles.radio]: !multiple,
     [styles.hideRadio]: hideRadio
   })
-
-  function AssetTitle({ asset }: { asset: AssetSelectionAsset }) {
-    return (
-      <h3 className={styles.title}>
-        <Dotdotdot clamp={1} tagName="span">
-          {asset.name}
-        </Dotdotdot>
-        {useInternalLink || (
-          <a
-            className={styles.link}
-            href={`/asset/${asset.did}`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <External />
-          </a>
-        )}
-      </h3>
-    )
-  }
 
   function handleSearchInput(e: ChangeEvent<HTMLInputElement>) {
     setSearchValue(e.target.value)
@@ -114,14 +92,19 @@ export default function AssetSelection({
                   htmlFor={slugify(asset.did)}
                   title={asset.name}
                 >
-                  {useInternalLink ? (
-                    <Link to={`/asset/${asset.did}`} className={styles.link}>
-                      <AssetTitle asset={asset} />
-                    </Link>
-                  ) : (
-                    <AssetTitle asset={asset} />
-                  )}
-
+                  <h3 className={styles.title}>
+                    <Dotdotdot clamp={1} tagName="span">
+                      {asset.name}
+                    </Dotdotdot>
+                    <a
+                      className={styles.link}
+                      href={`/asset/${asset.did}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <External />
+                    </a>
+                  </h3>
                   <Dotdotdot clamp={1} tagName="code" className={styles.did}>
                     {asset.symbol} | {asset.did}
                   </Dotdotdot>

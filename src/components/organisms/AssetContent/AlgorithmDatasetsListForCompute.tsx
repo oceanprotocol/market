@@ -1,9 +1,8 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './AlgorithmDatasetsListForCompute.module.css'
 import { getAlgorithmDatasetsForCompute } from '../../../utils/aquarius'
-import AssetSelection, {
-  AssetSelectionAsset
-} from '../../molecules/FormFields/AssetSelection'
+import { AssetSelectionAsset } from '../../molecules/FormFields/AssetSelection'
+import AssetComputeList from '../../molecules/AssetComputeList'
 import { useOcean } from '../../../providers/Ocean'
 import { useAsset } from '../../../providers/Asset'
 
@@ -32,7 +31,7 @@ export default function AlgorithmDatasetsListForCompute({
   return (
     <div className={styles.datasetsContainer}>
       <h3 className={styles.text}>Datasets algorithm is allowed to run on</h3>
-      <AssetSelection assets={datasetsForCompute} hideRadio useInternalLink />
+      <AssetComputeList assets={datasetsForCompute} />
     </div>
   )
 }
