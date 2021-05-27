@@ -38,7 +38,7 @@ import SuccessConfetti from '../../../atoms/SuccessConfetti'
 import Button from '../../../atoms/Button'
 import { secondsToString } from '../../../../utils/metadata'
 import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
-import AssetConnectivityBanner from '../../../molecules/AssetConnectivityBanner'
+import AssetStatus from '../../../molecules/AssetStatus'
 
 const SuccessAction = () => (
   <Button style="text" to="/history" size="small">
@@ -374,7 +374,11 @@ export default function Compute({
     <>
       <div className={styles.info}>
         <File file={file} small />
-        <Price price={price} conversion />
+        <div>
+          <Price price={price} conversion />
+          <br />
+          <AssetStatus ddo={ddo} />
+        </div>
       </div>
 
       {type === 'algorithm' ? (
@@ -413,10 +417,6 @@ export default function Compute({
           />
         </Formik>
       )}
-      <AssetConnectivityBanner
-        ddo={ddo}
-        selectedAlgorithmDDO={selectedAlgorithmAsset}
-      />
       <footer className={styles.feedback}>
         {isPublished && (
           <SuccessConfetti

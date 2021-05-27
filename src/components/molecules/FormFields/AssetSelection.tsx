@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, FormEvent, SyntheticEvent, useState } from 'react'
 import Dotdotdot from 'react-dotdotdot'
 import slugify from 'slugify'
 import classNames from 'classnames/bind'
@@ -7,6 +7,8 @@ import { ReactComponent as External } from '../../../images/external.svg'
 import InputElement from '../../atoms/Input/InputElement'
 import Loader from '../../atoms/Loader'
 import styles from './AssetSelection.module.css'
+import AssetStatus from '../AssetStatus'
+import { DID } from '@oceanprotocol/lib'
 
 const cx = classNames.bind(styles)
 
@@ -82,6 +84,9 @@ export default function AssetSelection({
                   {...props}
                   disabled={disabled}
                   value={asset.did}
+                  onClick={(e: any) => {
+                    asset.checked = e.target.checked
+                  }}
                 />
                 <label
                   className={styles.label}
@@ -105,6 +110,7 @@ export default function AssetSelection({
                   <Dotdotdot clamp={1} tagName="code" className={styles.did}>
                     {asset.symbol} | {asset.did}
                   </Dotdotdot>
+                  {asset.checked && <AssetStatus ddo={DID.parse(asset.did)} />}
                 </label>
 
                 <PriceUnit price={asset.price} small className={styles.price} />

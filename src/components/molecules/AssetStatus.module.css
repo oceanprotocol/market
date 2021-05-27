@@ -1,0 +1,15 @@
+.wrapper {
+  display: inline-block;
+  font-size: var(--font-size-mini);
+  cursor: help;
+}
+
+.text {
+  margin-left: calc(var(--spacer) / 12);
+  color: var(--brand-alert-red);
+}
+
+.status {
+  transform: scale(0.7);
+  transform-origin: bottom;
+}

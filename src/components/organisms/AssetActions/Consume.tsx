@@ -16,7 +16,7 @@ import { useWeb3 } from '../../../providers/Web3'
 import { usePricing } from '../../../hooks/usePricing'
 import { useConsume } from '../../../hooks/useConsume'
 import ButtonBuy from '../../atoms/ButtonBuy'
-import AssetConnectivityBanner from '../../molecules/AssetConnectivityBanner'
+import AssetStatus from '../../molecules/AssetStatus'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {
@@ -165,6 +165,7 @@ export default function Consume({
       <div className={styles.info}>
         <div className={styles.filewrapper}>
           <File file={file} />
+          <AssetStatus ddo={ddo} />
         </div>
         <div className={styles.pricewrapper}>
           <Price price={price} conversion />
@@ -174,7 +175,6 @@ export default function Consume({
       <footer className={styles.feedback}>
         <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
       </footer>
-      <AssetConnectivityBanner ddo={ddo} />
     </aside>
   )
 }
