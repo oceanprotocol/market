@@ -5,11 +5,12 @@ interface UseSiteMetadata {
   siteTagline: string
   siteUrl: string
   siteIcon: string
+  siteImage: { childImageSharp: { original: { src: string } } }
   copyright: string
   menu: {
     name: string
     link: string
-  }
+  }[]
   warning: {
     main: string
     polygonPublish: string
@@ -20,12 +21,12 @@ interface UseSiteMetadata {
   }
   appConfig: {
     infuraProjectId: string
-    chainIds: number[]
+    network: string
     marketFeeAddress: string
     currencies: string[]
     portisId: string
-    allowFixedPricing: boolean
-    allowDynamicPricing: boolean
+    allowFixedPricing: string
+    allowDynamicPricing: string
   }
 }
 
