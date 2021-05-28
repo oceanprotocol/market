@@ -44,7 +44,7 @@ export default function Consume({
 }): ReactElement {
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
-  const { marketFeeAddress } = useSiteMetadata()
+  const { appConfig } = useSiteMetadata()
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
   const [previousOrderId, setPreviousOrderId] = useState<string>()
   const { isInPurgatory, price, type } = useAsset()
@@ -131,7 +131,7 @@ export default function Consume({
       ddo.id,
       ddo.dataToken,
       'access',
-      marketFeeAddress,
+      appConfig.marketFeeAddress,
       previousOrderId
     )
     setHasPreviousOrder(true)

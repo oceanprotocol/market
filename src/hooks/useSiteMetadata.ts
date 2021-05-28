@@ -1,5 +1,34 @@
 import { useStaticQuery, graphql } from 'gatsby'
 
+interface UseSiteMetadata {
+  siteTitle: string
+  siteTagline: string
+  siteUrl: string
+  siteIcon: string
+  copyright: string
+  menu: {
+    name: string
+    link: string
+  }
+  warning: {
+    main: string
+    polygonPublish: string
+  }
+  announcement: {
+    main: string
+    polygon: string
+  }
+  appConfig: {
+    infuraProjectId: string
+    chainIds: number[]
+    marketFeeAddress: string
+    currencies: string[]
+    portisId: string
+    allowFixedPricing: boolean
+    allowDynamicPricing: boolean
+  }
+}
+
 const query = graphql`
   query {
     site {
@@ -53,10 +82,10 @@ const query = graphql`
   }
 `
 
-export function useSiteMetadata() {
+export function useSiteMetadata(): UseSiteMetadata {
   const data = useStaticQuery(query)
 
-  const siteMeta = {
+  const siteMeta: UseSiteMetadata = {
     ...data.siteImage.edges[0].node.childContentJson.site,
     ...data.site.siteMetadata
   }
