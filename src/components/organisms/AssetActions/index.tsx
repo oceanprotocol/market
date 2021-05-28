@@ -2,7 +2,7 @@ import React, { ReactElement, useState, useEffect } from 'react'
 import styles from './index.module.css'
 import Compute from './Compute'
 import Consume from './Consume'
-import { Logger } from '@oceanprotocol/lib'
+import { Logger, File as FileMetadata, DID } from '@oceanprotocol/lib'
 import Tabs from '../../atoms/Tabs'
 import compareAsBN from '../../../utils/compareAsBN'
 import Pool from './Pool'
@@ -10,19 +10,24 @@ import Trade from './Trade'
 import { useAsset } from '../../../providers/Asset'
 import { useOcean } from '../../../providers/Ocean'
 import { useWeb3 } from '../../../providers/Web3'
+import { fileinfo, getFileInfo } from '../../../utils/provider'
+import axios from 'axios'
 
 export default function AssetActions(): ReactElement {
   const { accountId } = useWeb3()
-  const { ocean, balance, account } = useOcean()
-  const { price, ddo, metadata } = useAsset()
+  const { config, ocean, balance, account } = useOcean()
+  const { price, ddo } = useAsset()
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
   const [dtBalance, setDtBalance] = useState<string>()
+  const [fileMetadata, setFileMetadata] = useState<FileMetadata>()
   const isCompute = Boolean(ddo?.findServiceByType('compute'))
 
   // Get and set user DT balance
+
   useEffect(() => {
-    if (!ocean || !accountId) return
+    if (!ocean || !accountId || !config) return
+    const source = axios.CancelToken.source()
 
     async function init() {
       try {
@@ -31,12 +36,28 @@ export default function AssetActions(): ReactElement {
           accountId
         )
         setDtBalance(dtBalance)
+
+        // const assetUrl =
+        //   ddo.service[0].attributes.additionalInformation.links !== undefined
+        //     ? ddo.service[0].attributes.additionalInformation.links[0].url
+        //     : DID.parse(`${ddo.id}`)
+
+        const fileInfo = await getFileInfo(
+          DID.parse(`${ddo.id}`),
+          config.providerUri,
+          source.token
+        )
+        console.log('FILE INFO: ', fileInfo)
+        console.log('DDO: ', ddo)
+        if (fileInfo.data) {
+          setFileMetadata(fileInfo.data[0])
+        }
       } catch (e) {
         Logger.error(e.message)
       }
     }
     init()
-  }, [ocean, accountId, ddo.dataToken])
+  }, [ocean, accountId, ddo.dataToken, config.providerUri, ddo])
 
   // Check user balance against price
   useEffect(() => {
@@ -55,14 +76,14 @@ export default function AssetActions(): ReactElement {
     <Compute
       dtBalance={dtBalance}
       isBalanceSufficient={isBalanceSufficient}
-      file={metadata?.main.files[0]}
+      file={fileMetadata}
     />
   ) : (
     <Consume
       ddo={ddo}
       dtBalance={dtBalance}
       isBalanceSufficient={isBalanceSufficient}
-      file={metadata?.main.files[0]}
+      file={fileMetadata}
     />
   )
 
