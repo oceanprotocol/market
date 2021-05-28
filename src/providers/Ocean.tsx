@@ -22,10 +22,13 @@ import {
   getUserInfo
 } from '../utils/ocean'
 import { UserBalance } from '../@types/TokenBalance'
+import { useSiteMetadata } from '../hooks/useSiteMetadata'
 
 const refreshInterval = 20000 // 20 sec.
 
 interface OceanProviderValue {
+  oceanConfigs: ConfigHelperConfig[]
+  metadataCacheUri: string
   ocean: Ocean
   config: ConfigHelperConfig
   account: Account
@@ -37,128 +40,131 @@ interface OceanProviderValue {
 
 const OceanContext = createContext({} as OceanProviderValue)
 
-function OceanProvider({
-  initialConfig,
-  children
-}: {
-  initialConfig: Config | ConfigHelperConfig
-  children: ReactNode
-}): ReactElement {
+function OceanProvider({ children }: { children: ReactNode }): ReactElement {
+  const { appConfig } = useSiteMetadata()
   const { web3, accountId, networkId } = useWeb3()
+
+  const [oceanConfigs, setOceanConfigs] = useState<ConfigHelperConfig[]>()
+  const [metadataCacheUri, setMetadataCacheUri] = useState<string>()
   const [ocean, setOcean] = useState<Ocean>()
   const [account, setAccount] = useState<Account>()
   const [balance, setBalance] = useState<UserBalance>({
     eth: undefined,
     ocean: undefined
   })
-  const [config, setConfig] =
-    useState<ConfigHelperConfig | Config>(initialConfig)
-  const [loading, setLoading] = useState<boolean>()
+  const [config, setConfig] = useState<ConfigHelperConfig | Config>()
+
+  // -----------------------------------
+  // Initially get all supported configs
+  // from ocean.js ConfigHelper
+  // -----------------------------------
+  useEffect(() => {
+    const allConfigs = appConfig.chainIds.map((chainId: number) =>
+      getOceanConfig(chainId)
+    )
+    setOceanConfigs(allConfigs)
+    setMetadataCacheUri(allConfigs[0].metadataCacheUri)
+  }, [])
+
+  // -----------------------------------
+  // Set active config
+  // -----------------------------------
+  // useEffect(() => {
+  //   const config = {
+  //     ...getOceanConfig(networkId || 'mainnet'),
+
+  //     // add local dev values
+  //     ...(networkId === 8996 && {
+  //       ...getDevelopmentConfig()
+  //     })
+  //   }
+  //   setConfig(config)
+  //   // Sync config.metadataCacheUri with metadataCacheUri
+  //   setMetadataCacheUri(config.metadataCacheUri)
+  // }, [networkId])
 
   // -----------------------------------
   // Create Ocean instance
   // -----------------------------------
   const connect = useCallback(
-    async (newConfig?: ConfigHelperConfig | Config) => {
-      setLoading(true)
+    async (config: ConfigHelperConfig | Config) => {
+      if (!web3) return
+
       try {
-        const usedConfig = newConfig || config
-        Logger.log('[ocean] Connecting Ocean...', usedConfig)
-        usedConfig.web3Provider = web3 || initialConfig.web3Provider
+        Logger.log('[ocean] Connecting Ocean...', config)
 
-        if (newConfig) {
-          await setConfig(usedConfig)
-        }
+        config.web3Provider = web3
+        setConfig(config)
 
-        if (usedConfig.web3Provider) {
-          const newOcean = await Ocean.getInstance(usedConfig)
-          await setOcean(newOcean)
-          Logger.log('[ocean] Ocean instance created.', newOcean)
-        }
-        setLoading(false)
+        const newOcean = await Ocean.getInstance(config)
+        setOcean(newOcean)
+        Logger.log('[ocean] Ocean instance created.', newOcean)
       } catch (error) {
         Logger.error('[ocean] Error: ', error.message)
       }
     },
-    [web3, config, initialConfig.web3Provider]
+    [web3]
   )
 
-  async function refreshBalance() {
-    if (!ocean || !account || !web3) return
+  // async function refreshBalance() {
+  //   if (!ocean || !account || !web3) return
 
-    const { balance } = await getUserInfo(ocean)
-    setBalance(balance)
-  }
+  //   const { balance } = await getUserInfo(ocean)
+  //   setBalance(balance)
+  // }
 
   // -----------------------------------
   // Initial connection
   // -----------------------------------
   useEffect(() => {
+    const config = {
+      ...getOceanConfig('mainnet'),
+
+      // add local dev values
+      ...(networkId === 8996 && {
+        ...getDevelopmentConfig()
+      })
+    }
+
     async function init() {
-      await connect()
+      await connect(config)
     }
     init()
 
     // init periodic refresh of wallet balance
-    const balanceInterval = setInterval(() => refreshBalance(), refreshInterval)
+    // const balanceInterval = setInterval(() => refreshBalance(), refreshInterval)
 
-    return () => {
-      clearInterval(balanceInterval)
-    }
-  }, [])
+    // return () => {
+    //   clearInterval(balanceInterval)
+    // }
+  }, [connect, networkId])
 
   // -----------------------------------
   // Get user info, handle account change from web3
   // -----------------------------------
-  useEffect(() => {
-    if (!ocean || !accountId || !web3) return
+  // useEffect(() => {
+  //   if (!ocean || !accountId || !web3) return
 
-    async function getInfo() {
-      const { account, balance } = await getUserInfo(ocean)
-      setAccount(account)
-      setBalance(balance)
-    }
-    getInfo()
-  }, [ocean, accountId, web3])
-
-  // -----------------------------------
-  // Handle network change from web3
-  // -----------------------------------
-  useEffect(() => {
-    if (!networkId) return
-
-    async function reconnect() {
-      const newConfig = {
-        ...getOceanConfig(networkId),
-
-        // add local dev values
-        ...(networkId === 8996 && {
-          ...getDevelopmentConfig()
-        })
-      }
-
-      try {
-        setLoading(true)
-        await connect(newConfig)
-        setLoading(false)
-      } catch (error) {
-        Logger.error('[ocean] Error: ', error.message)
-      }
-    }
-    reconnect()
-  }, [networkId])
+  //   async function getInfo() {
+  //     const { account, balance } = await getUserInfo(ocean)
+  //     setAccount(account)
+  //     setBalance(balance)
+  //   }
+  //   getInfo()
+  // }, [ocean, accountId, web3])
 
   return (
     <OceanContext.Provider
       value={
         {
+          oceanConfigs,
+          metadataCacheUri,
           ocean,
           account,
           balance,
           config,
-          loading,
-          connect,
-          refreshBalance
+          connect
+          // refreshBalance
         } as OceanProviderValue
       }
     >

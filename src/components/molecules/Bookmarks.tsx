@@ -78,7 +78,7 @@ const columns = [
 ]
 
 export default function Bookmarks(): ReactElement {
-  const { config } = useOcean()
+  const { metadataCacheUri } = useOcean()
   const { bookmarks } = useUserPreferences()
 
   const [pinned, setPinned] = useState<DDO[]>()
@@ -87,7 +87,7 @@ export default function Bookmarks(): ReactElement {
   const networkName = (config as ConfigHelperConfig)?.network
 
   useEffect(() => {
-    if (!config?.metadataCacheUri || !networkName || bookmarks === {}) return
+    if (!metadataCacheUri || !networkName || bookmarks === {}) return
 
     const source = axios.CancelToken.source()
 
@@ -102,7 +102,7 @@ export default function Bookmarks(): ReactElement {
       try {
         const resultPinned = await getAssetsBookmarked(
           bookmarks[networkName],
-          config.metadataCacheUri,
+          metadataCacheUri,
           source.token
         )
         setPinned(resultPinned?.results)
@@ -117,7 +117,7 @@ export default function Bookmarks(): ReactElement {
     return () => {
       source.cancel()
     }
-  }, [bookmarks, config.metadataCacheUri, networkName])
+  }, [bookmarks, metadataCacheUri, networkName])
 
   return (
     <Table

@@ -12,8 +12,8 @@ import styles from './Details.module.css'
 
 export default function Details(): ReactElement {
   const { web3Provider, web3ProviderInfo, connect, logout, networkData } =
-    useWeb3()
-  const { balance, config } = useOcean()
+  } = useWeb3()
+  // const { balance, config } = useOcean()
   const { locale } = useUserPreferences()
 
   const [mainCurrency, setMainCurrency] = useState<string>()
@@ -38,7 +38,7 @@ export default function Details(): ReactElement {
   return (
     <div className={styles.details}>
       <ul>
-        {Object.entries(balance).map(([key, value]) => (
+        {/* {Object.entries(balance).map(([key, value]) => (
           <li className={styles.balance} key={key}>
             <span className={styles.symbol}>
               {key === 'eth' ? mainCurrency : config.oceanTokenSymbol}
@@ -48,7 +48,7 @@ export default function Details(): ReactElement {
             })}
             {key === 'ocean' && <Conversion price={value} />}
           </li>
-        ))}
+        ))} */}
 
         <li className={styles.actions}>
           <div title="Connected provider" className={styles.walletInfo}>
@@ -66,14 +66,14 @@ export default function Details(): ReactElement {
                 onChange={handlePortisNetworkChange}
               />
             )} */}
-            {web3ProviderInfo?.name === 'MetaMask' && (
+            {/* {web3ProviderInfo?.name === 'MetaMask' && (
               <AddToken
                 address={config.oceanTokenAddress}
                 symbol={config.oceanTokenSymbol}
                 logo="https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png"
                 className={styles.addToken}
               />
-            )}
+            )} */}
           </div>
           <p>
             {web3ProviderInfo?.name === 'Portis' && (

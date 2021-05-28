@@ -45,7 +45,7 @@ function AssetProvider({
   children: ReactNode
 }): ReactElement {
   const { networkId } = useWeb3()
-  const { config } = useOcean()
+  const { metadataCacheUri } = useOcean()
   const [isInPurgatory, setIsInPurgatory] = useState(false)
   const [purgatoryData, setPurgatoryData] = useState<PurgatoryData>()
   const [ddo, setDDO] = useState<DDO>()
@@ -60,11 +60,7 @@ function AssetProvider({
 
   const fetchDdo = async (token?: CancelToken) => {
     Logger.log('[asset] Init asset, get DDO')
-    const ddo = await retrieveDDO(
-      asset as string,
-      config.metadataCacheUri,
-      token
-    )
+    const ddo = await retrieveDDO(asset as string, metadataCacheUri, token)
 
     if (!ddo) {
       setError(
@@ -86,7 +82,7 @@ function AssetProvider({
   // Get and set DDO based on passed DDO or DID
   //
   useEffect(() => {
-    if (!asset || !config?.metadataCacheUri) return
+    if (!asset || !metadataCacheUri) return
 
     const source = axios.CancelToken.source()
     let isMounted = true
@@ -103,7 +99,7 @@ function AssetProvider({
       isMounted = false
       source.cancel()
     }
-  }, [asset, config?.metadataCacheUri])
+  }, [asset, metadataCacheUri])
 
   const setPurgatory = useCallback(async (did: string): Promise<void> => {
     if (!did) return

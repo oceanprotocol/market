@@ -10,21 +10,18 @@ import styles from './Network.module.css'
 
 export default function Network(): ReactElement {
   const { networkId, isTestnet } = useWeb3()
-  const { config } = useOcean()
-  const networkIdConfig = (config as ConfigHelperConfig).networkId
 
   const [isSupportedNetwork, setIsSupportedNetwork] = useState<boolean>()
 
   useEffect(() => {
-    // take network from user when present,
-    // otherwise use the default configured one of app
-    const network = networkId || networkIdConfig
+    // take network from user when present
+    const network = networkId || 1
 
     // Check networkId against ocean.js ConfigHelper configs
     // to figure out if network is supported.
     const isSupportedNetwork = Boolean(new ConfigHelper().getConfig(network))
     setIsSupportedNetwork(isSupportedNetwork)
-  }, [networkId, networkIdConfig])
+  }, [networkId])
 
   return networkId ? (
     <div className={styles.network}>

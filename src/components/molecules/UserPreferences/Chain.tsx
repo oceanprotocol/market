@@ -1,7 +1,6 @@
 import { ConfigHelperConfig } from '@oceanprotocol/lib'
 import React, { ReactElement, ChangeEvent } from 'react'
 import { useOcean } from '../../../providers/Ocean'
-import { useWeb3 } from '../../../providers/Web3'
 import { getOceanConfig } from '../../../utils/ocean'
 import FormHelp from '../../atoms/Input/Help'
 import Label from '../../atoms/Input/Label'
@@ -12,7 +11,6 @@ import { ReactComponent as MoonbeamIcon } from '../../../images/moonbeam.svg'
 import styles from './Chain.module.css'
 
 export default function Chain(): ReactElement {
-  const { web3 } = useWeb3()
   const { config, connect } = useOcean()
 
   async function connectOcean(event: ChangeEvent<HTMLInputElement>) {
@@ -48,10 +46,7 @@ export default function Chain(): ReactElement {
     }
   ]
 
-  // TODO: to fully solve https://github.com/oceanprotocol/market/issues/432
-  // there are more considerations for users with a wallet connected (wallet network vs. setting network).
-  // For now, only show the setting for non-wallet users.
-  return !web3 ? (
+  return (
     <li className={styles.chains}>
       <Label htmlFor="">Chain</Label>
       <BoxSelection
@@ -61,5 +56,5 @@ export default function Chain(): ReactElement {
       />
       <FormHelp>Switch the data source for the interface.</FormHelp>
     </li>
-  ) : null
+  )
 }

@@ -27,7 +27,7 @@ export default function FormEditComputeDataset({
   setShowEdit: (show: boolean) => void
 }): ReactElement {
   const { accountId } = useWeb3()
-  const { ocean, config } = useOcean()
+  const { ocean, metadataCacheUri } = useOcean()
   const { ddo } = useAsset()
   const { isValid, values }: FormikContextType<ComputePrivacyForm> =
     useFormikContext()
@@ -51,12 +51,12 @@ export default function FormEditComputeDataset({
     }
     const querryResult = await queryMetadata(
       query,
-      config.metadataCacheUri,
+      metadataCacheUri,
       source.token
     )
     const algorithmSelectionList = await transformDDOToAssetSelection(
       querryResult.results,
-      config.metadataCacheUri,
+      metadataCacheUri,
       publisherTrustedAlgorithms
     )
     return algorithmSelectionList
@@ -66,7 +66,7 @@ export default function FormEditComputeDataset({
     getAlgorithmList(publisherTrustedAlgorithms).then((algorithms) => {
       setAllAlgorithms(algorithms)
     })
-  }, [config.metadataCacheUri, publisherTrustedAlgorithms])
+  }, [metadataCacheUri, publisherTrustedAlgorithms])
 
   return (
     <Form className={styles.form}>

@@ -19,7 +19,7 @@ export default function SearchPage({
   location: Location
   setTotalResults: (totalResults: number) => void
 }): ReactElement {
-  const { config } = useOcean()
+  const { metadataCacheUri } = useOcean()
   const parsed = queryString.parse(location.search)
   const { text, owner, tags, page, sort, sortOrder, serviceType } = parsed
   const [queryResult, setQueryResult] = useState<QueryResult>()
@@ -31,27 +31,18 @@ export default function SearchPage({
   )
 
   useEffect(() => {
-    if (!config?.metadataCacheUri) return
+    if (!metadataCacheUri) return
 
     async function initSearch() {
       setLoading(true)
       setTotalResults(undefined)
-      const queryResult = await getResults(parsed, config.metadataCacheUri)
+      const queryResult = await getResults(parsed, metadataCacheUri)
       setQueryResult(queryResult)
       setTotalResults(queryResult.totalResults)
       setLoading(false)
     }
     initSearch()
-  }, [
-    text,
-    owner,
-    tags,
-    sort,
-    page,
-    serviceType,
-    sortOrder,
-    config.metadataCacheUri
-  ])
+  }, [text, owner, tags, sort, page, serviceType, sortOrder, metadataCacheUri])
 
   function setPage(page: number) {
     const newUrl = updateQueryStringParameter(

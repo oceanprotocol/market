@@ -24,13 +24,11 @@ export default function PageTemplateAssetDetails({
   }, [ddo, error, isInPurgatory, title])
 
   return ddo && pageTitle ? (
-    <>
-      <Page title={pageTitle} uri={uri}>
-        <Router basepath="/asset">
-          <AssetContent path=":did" />
-        </Router>
-      </Page>
-    </>
+    <Page title={pageTitle} uri={uri}>
+      <Router basepath="/asset">
+        <AssetContent path=":did" />
+      </Router>
+    </Page>
   ) : error ? (
     <Page title={pageTitle} noPageHeader uri={uri}>
       <Alert title={pageTitle} text={error} state="error" />

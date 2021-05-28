@@ -45,12 +45,12 @@ function SectionQueryResult({
   action?: ReactElement
   queryData?: string
 }) {
-  const { config } = useOcean()
+  const { metadataCacheUri } = useOcean()
   const [result, setResult] = useState<QueryResult>()
   const [loading, setLoading] = useState<boolean>()
 
   useEffect(() => {
-    if (!config?.metadataCacheUri) return
+    if (!metadataCacheUri) return
     const source = axios.CancelToken.source()
 
     async function init() {
@@ -58,7 +58,7 @@ function SectionQueryResult({
         setLoading(true)
         const result = await queryMetadata(
           query,
-          config.metadataCacheUri,
+          metadataCacheUri,
           source.token
         )
         if (result.totalResults <= 15) {
@@ -83,7 +83,7 @@ function SectionQueryResult({
     return () => {
       source.cancel()
     }
-  }, [query, config?.metadataCacheUri])
+  }, [metadataCacheUri, query])
 
   return (
     <section className={styles.section}>
@@ -128,7 +128,7 @@ export default function HomePage(): ReactElement {
 
       <section className={styles.section}>
         <h3>Bookmarks</h3>
-        <Bookmarks />
+        {/* <Bookmarks /> */}
       </section>
 
       {queryAndDids && (

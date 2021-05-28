@@ -21,7 +21,7 @@ interface UseSiteMetadata {
   }
   appConfig: {
     infuraProjectId: string
-    network: string
+    chainIds: number[]
     marketFeeAddress: string
     currencies: string[]
     portisId: string
@@ -53,7 +53,7 @@ const query = graphql`
         }
         appConfig {
           infuraProjectId
-          network
+          chainIds
           marketFeeAddress
           currencies
           portisId

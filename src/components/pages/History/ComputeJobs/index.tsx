@@ -99,7 +99,7 @@ async function getAssetMetadata(
 }
 
 export default function ComputeJobs(): ReactElement {
-  const { ocean, account, config } = useOcean()
+  const { ocean, account, metadataCacheUri, config } = useOcean()
   const { accountId } = useWeb3()
   const [isLoading, setIsLoading] = useState(true)
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
@@ -128,7 +128,7 @@ export default function ComputeJobs(): ReactElement {
       const source = axios.CancelToken.source()
       const assets = await getAssetMetadata(
         queryDtList,
-        config.metadataCacheUri,
+        metadataCacheUri,
         source.token
       )
       const providers: Provider[] = []
@@ -232,12 +232,12 @@ export default function ComputeJobs(): ReactElement {
   }
 
   useEffect(() => {
-    if (data === undefined || !config?.metadataCacheUri) {
+    if (data === undefined || !metadataCacheUri) {
       setIsLoading(false)
       return
     }
     getJobs()
-  }, [ocean, account, data, config?.metadataCacheUri])
+  }, [ocean, account, data, metadataCacheUri])
 
   return (
     <>

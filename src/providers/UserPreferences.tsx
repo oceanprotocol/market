@@ -45,8 +45,8 @@ function UserPreferencesProvider({
 }: {
   children: ReactNode
 }): ReactElement {
-  const { config } = useOcean()
-  const networkName = (config as ConfigHelperConfig).network
+  // const { config } = useOcean()
+  // const networkName = (config as ConfigHelperConfig).network
   const localStorage = getLocalStorage()
 
   // Set default values from localStorage
@@ -75,23 +75,23 @@ function UserPreferencesProvider({
     setLocale(window.navigator.language)
   }, [])
 
-  function addBookmark(didToAdd: string): void {
-    const newPinned = {
-      ...bookmarks,
-      [networkName]: [didToAdd].concat(bookmarks[networkName])
-    }
-    setBookmarks(newPinned)
-  }
+  // function addBookmark(didToAdd: string): void {
+  //   const newPinned = {
+  //     ...bookmarks,
+  //     [networkName]: [didToAdd].concat(bookmarks[networkName])
+  //   }
+  //   setBookmarks(newPinned)
+  // }
 
-  function removeBookmark(didToAdd: string): void {
-    const newPinned = {
-      ...bookmarks,
-      [networkName]: bookmarks[networkName].filter(
-        (did: string) => did !== didToAdd
-      )
-    }
-    setBookmarks(newPinned)
-  }
+  // function removeBookmark(didToAdd: string): void {
+  //   const newPinned = {
+  //     ...bookmarks,
+  //     [networkName]: bookmarks[networkName].filter(
+  //       (did: string) => did !== didToAdd
+  //     )
+  //   }
+  //   setBookmarks(newPinned)
+  // }
 
   // Bookmarks old data structure migration
   useEffect(() => {
@@ -109,9 +109,9 @@ function UserPreferencesProvider({
           locale,
           bookmarks,
           setDebug,
-          setCurrency,
-          addBookmark,
-          removeBookmark
+          setCurrency
+          // addBookmark,
+          // removeBookmark
         } as UserPreferencesValue
       }
     >

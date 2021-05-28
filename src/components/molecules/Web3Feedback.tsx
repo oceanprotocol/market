@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import { useOcean } from '../../providers/Ocean'
+import { useWeb3 } from '../../providers/Web3'
 import Status from '../atoms/Status'
 import styles from './Web3Feedback.module.css'
 
@@ -16,36 +16,36 @@ export default function Web3Feedback({
   isBalanceSufficient?: boolean
   isAssetNetwork?: boolean
 }): ReactElement {
-  const { account, ocean } = useOcean()
+  const { accountId } = useWeb3()
   const showFeedback =
-    !account ||
-    !ocean ||
+    !accountId ||
+    // !ocean ||
     isBalanceSufficient === false ||
     isAssetNetwork === false
 
-  const state = !account
+  const state = !accountId
     ? 'error'
-    : account && isBalanceSufficient && isAssetNetwork
+    : accountId && isBalanceSufficient && isAssetNetwork
     ? 'success'
     : 'warning'
 
-  const title = !account
+  const title = !accountId
     ? 'No account connected'
-    : !ocean
-    ? 'Error connecting to Ocean'
-    : account && isAssetNetwork === false
+    : // : !ocean
+    // ? 'Error connecting to Ocean'
+    accountId && isAssetNetwork === false
     ? 'Wrong network'
-    : account
+    : accountId
     ? isBalanceSufficient === false
       ? 'Insufficient balance'
       : 'Connected to Ocean'
     : 'Something went wrong'
 
-  const message = !account
+  const message = !accountId
     ? 'Please connect your Web3 wallet.'
-    : !ocean
-    ? 'Please try again.'
-    : isBalanceSufficient === false
+    : // : !ocean
+    // ? 'Please try again.'
+    isBalanceSufficient === false
     ? 'You do not have enough OCEAN in your wallet to purchase this asset.'
     : isAssetNetwork === false
     ? 'Connect to the asset network.'

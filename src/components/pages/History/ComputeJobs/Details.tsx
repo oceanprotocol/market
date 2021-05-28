@@ -41,7 +41,7 @@ function Asset({
 }
 
 function DetailsAssets({ job }: { job: ComputeJobMetaData }) {
-  const { config } = useOcean()
+  const { metadataCacheUri } = useOcean()
   const [algoName, setAlgoName] = useState<string>()
   const [algoDtSymbol, setAlgoDtSymbol] = useState<string>()
 
@@ -49,18 +49,14 @@ function DetailsAssets({ job }: { job: ComputeJobMetaData }) {
     async function getAlgoMetadata() {
       const source = axios.CancelToken.source()
 
-      const ddo = await retrieveDDO(
-        job.algoDID,
-        config.metadataCacheUri,
-        source.token
-      )
+      const ddo = await retrieveDDO(job.algoDID, metadataCacheUri, source.token)
       setAlgoDtSymbol(ddo.dataTokenInfo.symbol)
 
       const { attributes } = ddo.findServiceByType('metadata')
       setAlgoName(attributes?.main.name)
     }
     getAlgoMetadata()
-  }, [config?.metadataCacheUri, job.algoDID])
+  }, [metadataCacheUri, job.algoDID])
 
   return (
     <>

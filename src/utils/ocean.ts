@@ -14,7 +14,7 @@ import { UserBalance } from '../@types/TokenBalance'
 export function getOceanConfig(
   network: ConfigHelperNetworkName | ConfigHelperNetworkId
 ): ConfigHelperConfig {
-  return new ConfigHelper().getConfig(
+  const config = new ConfigHelper().getConfig(
     network,
     network === 'polygon' ||
       network === 137 ||
@@ -22,7 +22,13 @@ export function getOceanConfig(
       network === 1287
       ? undefined
       : process.env.GATSBY_INFURA_PROJECT_ID
-  ) as ConfigHelperConfig
+  )
+
+  return {
+    ...config,
+    // TODO: remove faking one Aquarius for all networks
+    metadataCacheUri: 'https://aquarius.mainnet.oceanprotocol.com'
+  } as ConfigHelperConfig
 }
 
 export function getDevelopmentConfig(): Partial<ConfigHelperConfig> {

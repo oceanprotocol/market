@@ -1,9 +1,7 @@
 module.exports = {
-  // The default network and its associated config the app should connect to
-  // on start. App will automatically switch network configs when user switches
-  // networks in their wallet.
-  // Ocean Protocol contracts are deployed for: 'mainnet', 'rinkeby', 'development'
-  network: process.env.GATSBY_NETWORK || 'mainnet',
+  // List of supported chainIds which metadata cache queries
+  // will return by default
+  chainIds: [1, 3, 4, 137, 1287],
 
   infuraProjectId: process.env.GATSBY_INFURA_PROJECT_ID || 'xxx',
 

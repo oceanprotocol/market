@@ -9,7 +9,7 @@ import { useOcean } from '../../../providers/Ocean'
 
 export default function PublishedList(): ReactElement {
   const { accountId } = useWeb3()
-  const { config } = useOcean()
+  const { metadataCacheUri } = useOcean()
 
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [isLoading, setIsLoading] = useState(false)
@@ -34,7 +34,7 @@ export default function PublishedList(): ReactElement {
         queryResult || setIsLoading(true)
         const result = await queryMetadata(
           queryPublishedAssets,
-          config.metadataCacheUri,
+          metadataCacheUri,
           source.token
         )
         setQueryResult(result)
@@ -45,7 +45,7 @@ export default function PublishedList(): ReactElement {
       }
     }
     getPublished()
-  }, [accountId, page, config.metadataCacheUri])
+  }, [accountId, page, metadataCacheUri])
 
   return accountId ? (
     <AssetList

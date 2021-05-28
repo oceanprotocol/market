@@ -132,19 +132,15 @@ const queryLatest = {
 }
 
 function Component() {
-  const { config } = useOcean()
+  const { metadataCacheUri } = useOcean()
   const [result, setResult] = useState<QueryResult>()
 
   useEffect(() => {
-    if (!config?.metadataCacheUri) return
+    if (!metadataCacheUri) return
     const source = axios.CancelToken.source()
 
     async function init() {
-      const result = await queryMetadata(
-        query,
-        config.metadataCacheUri,
-        source.token
-      )
+      const result = await queryMetadata(query, metadataCacheUri, source.token)
       setResult(result)
     }
     init()
@@ -152,7 +148,7 @@ function Component() {
     return () => {
       source.cancel()
     }
-  }, [config?.metadataCacheUri, query])
+  }, [metadataCacheUri, query])
 
   return <div>{result}</div>
 }

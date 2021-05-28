@@ -55,7 +55,7 @@ export default function Compute({
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
-  const { ocean, account, config } = useOcean()
+  const { ocean, account, metadataCacheUri } = useOcean()
   const { price, type, ddo, isAssetNetwork } = useAsset()
   const { buyDT, pricingError, pricingStepText } = usePricing()
   const [isJobStarting, setIsJobStarting] = useState(false)
@@ -150,13 +150,13 @@ export default function Compute({
         getQuerryString(
           computeService.attributes.main.privacy.publisherTrustedAlgorithms
         ),
-        config.metadataCacheUri,
+        metadataCacheUri,
         source.token
       )
       setDdoAlgorithmList(gueryResults.results)
       algorithmSelectionList = await transformDDOToAssetSelection(
         gueryResults.results,
-        config.metadataCacheUri,
+        metadataCacheUri,
         []
       )
     }
