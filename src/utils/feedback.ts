@@ -56,10 +56,10 @@ export function getCreateFreePricingFeedback(
   dtSymbol: string
 ): { [key: number]: string } {
   return {
-    99: 'Creating dispenser...',
-    0: `Proposing ${dtSymbol} minter...`,
-    1: 'Dispenser approving minter...',
-    2: 'Dispenser created.'
+    99: `Creating ${dtSymbol} faucet...`,
+    0: 'Setting faucet as minter ...',
+    1: 'Approving minter...',
+    2: 'Faucet created.'
   }
 }
 
