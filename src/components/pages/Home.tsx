@@ -93,11 +93,8 @@ export default function HomePage(): ReactElement {
         title="Highest Liquidity"
         query={queryHighest}
         action={
-          <Button
-            style="text"
-            to="/search?priceType=pool&sort=liquidity&sortOrder=desc"
-          >
-            Data sets and algorithms with pool →
+          <Button style="text" to="/search?sort=created&sortOrder=desc">
+            All data sets and algorithms →
           </Button>
         }
       />
