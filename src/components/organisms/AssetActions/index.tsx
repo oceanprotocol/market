@@ -12,7 +12,6 @@ import { useOcean } from '../../../providers/Ocean'
 import { useWeb3 } from '../../../providers/Web3'
 import { getFileInfo } from '../../../utils/provider'
 import axios from 'axios'
-import { initialValues } from '../../../models/FormTrade'
 
 export default function AssetActions(): ReactElement {
   const { accountId } = useWeb3()
