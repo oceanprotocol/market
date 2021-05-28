@@ -17,7 +17,6 @@ export default function File({
   small?: boolean
 }): ReactElement {
   if (!file) return null
-  console.log('FILE DATA: ', file)
 
   const styleClasses = cx({
     file: true,

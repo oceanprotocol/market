@@ -10,8 +10,9 @@ import Trade from './Trade'
 import { useAsset } from '../../../providers/Asset'
 import { useOcean } from '../../../providers/Ocean'
 import { useWeb3 } from '../../../providers/Web3'
-import { fileinfo, getFileInfo } from '../../../utils/provider'
+import { getFileInfo } from '../../../utils/provider'
 import axios from 'axios'
+import { initialValues } from '../../../models/FormTrade'
 
 export default function AssetActions(): ReactElement {
   const { accountId } = useWeb3()
@@ -26,9 +27,25 @@ export default function AssetActions(): ReactElement {
   // Get and set user DT balance
 
   useEffect(() => {
-    if (!ocean || !accountId || !config) return
+    if (!config) return
     const source = axios.CancelToken.source()
+    async function initFileInfo() {
+      try {
+        const fileInfo = await getFileInfo(
+          DID.parse(`${ddo.id}`),
+          config.providerUri,
+          source.token
+        )
+        setFileMetadata(fileInfo.data[0])
+      } catch (error) {
+        Logger.error(error.message)
+      }
+    }
+    initFileInfo()
+  }, [config, ddo])
 
+  useEffect(() => {
+    if (!ocean || !accountId) return
     async function init() {
       try {
         const dtBalance = await ocean.datatokens.balance(
@@ -36,28 +53,12 @@ export default function AssetActions(): ReactElement {
           accountId
         )
         setDtBalance(dtBalance)
-
-        // const assetUrl =
-        //   ddo.service[0].attributes.additionalInformation.links !== undefined
-        //     ? ddo.service[0].attributes.additionalInformation.links[0].url
-        //     : DID.parse(`${ddo.id}`)
-
-        const fileInfo = await getFileInfo(
-          DID.parse(`${ddo.id}`),
-          config.providerUri,
-          source.token
-        )
-        console.log('FILE INFO: ', fileInfo)
-        console.log('DDO: ', ddo)
-        if (fileInfo.data) {
-          setFileMetadata(fileInfo.data[0])
-        }
       } catch (e) {
         Logger.error(e.message)
       }
     }
     init()
-  }, [ocean, accountId, ddo.dataToken, config.providerUri, ddo])
+  }, [ocean, accountId, ddo.dataToken])
 
   // Check user balance against price
   useEffect(() => {
