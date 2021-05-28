@@ -44,5 +44,5 @@ module.exports = {
   // tab to publishers during the price creation.
   allowFixedPricing: process.env.GATSBY_ALLOW_FIXED_PRICING || 'true',
   allowDynamicPricing: process.env.GATSBY_ALLOW_DYNAMIC_PRICING || 'true',
-  allowFreePricing: process.env.GATSBY_ALLOW_FREE_PRICING || 'false'
+  allowFreePricing: process.env.GATSBY_ALLOW_FREE_PRICING || 'true'
 }
