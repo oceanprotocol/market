@@ -21,14 +21,14 @@ export default function AssetActions(): ReactElement {
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
   const [dtBalance, setDtBalance] = useState<string>()
   const [fileMetadata, setFileMetadata] = useState<FileMetadata>()
+  const [fileIsLoading, setFileIsLoading] = useState<boolean>(false)
   const isCompute = Boolean(ddo?.findServiceByType('compute'))
-
-  // Get and set user DT balance
 
   useEffect(() => {
     if (!config) return
     const source = axios.CancelToken.source()
     async function initFileInfo() {
+      setFileIsLoading(true)
       try {
         const fileInfo = await getFileInfo(
           DID.parse(`${ddo.id}`),
@@ -38,11 +38,14 @@ export default function AssetActions(): ReactElement {
         setFileMetadata(fileInfo.data[0])
       } catch (error) {
         Logger.error(error.message)
+      } finally {
+        setFileIsLoading(false)
       }
     }
     initFileInfo()
-  }, [config, ddo])
+  }, [config, ddo.id])
 
+  // Get and set user DT balance
   useEffect(() => {
     if (!ocean || !accountId) return
     async function init() {
@@ -77,6 +80,7 @@ export default function AssetActions(): ReactElement {
       dtBalance={dtBalance}
       isBalanceSufficient={isBalanceSufficient}
       file={fileMetadata}
+      fileIsLoading={fileIsLoading}
     />
   ) : (
     <Consume
@@ -84,6 +88,7 @@ export default function AssetActions(): ReactElement {
       dtBalance={dtBalance}
       isBalanceSufficient={isBalanceSufficient}
       file={fileMetadata}
+      fileIsLoading={fileIsLoading}
     />
   )
 
