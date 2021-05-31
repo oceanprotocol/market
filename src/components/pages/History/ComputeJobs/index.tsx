@@ -17,6 +17,7 @@ import Details from './Details'
 import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
 import { ReactComponent as Refresh } from '../../../../images/refresh.svg'
 import styles from './index.module.css'
+import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -99,7 +100,8 @@ async function getAssetMetadata(
 }
 
 export default function ComputeJobs(): ReactElement {
-  const { ocean, account, metadataCacheUri, config } = useOcean()
+  const { appConfig } = useSiteMetadata()
+  const { ocean, account } = useOcean()
   const { accountId } = useWeb3()
   const [isLoading, setIsLoading] = useState(true)
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
@@ -128,7 +130,7 @@ export default function ComputeJobs(): ReactElement {
       const source = axios.CancelToken.source()
       const assets = await getAssetMetadata(
         queryDtList,
-        metadataCacheUri,
+        appConfig.metadataCacheUri,
         source.token
       )
       const providers: Provider[] = []
@@ -232,12 +234,12 @@ export default function ComputeJobs(): ReactElement {
   }
 
   useEffect(() => {
-    if (data === undefined || !metadataCacheUri) {
+    if (data === undefined || !appConfig.metadataCacheUri) {
       setIsLoading(false)
       return
     }
     getJobs()
-  }, [ocean, account, data, metadataCacheUri])
+  }, [ocean, account, data, appConfig.metadataCacheUri])
 
   return (
     <>

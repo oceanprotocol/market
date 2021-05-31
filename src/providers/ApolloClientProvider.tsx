@@ -5,10 +5,11 @@ import {
   InMemoryCache,
   NormalizedCacheObject
 } from '@apollo/client'
-import { Logger, ConfigHelperConfig } from '@oceanprotocol/lib'
-import { useOcean } from './Ocean'
+import { Logger } from '@oceanprotocol/lib'
 import fetch from 'cross-fetch'
 import React, { useState, useEffect, ReactNode, ReactElement } from 'react'
+import { useWeb3 } from './Web3'
+import { getOceanConfig } from '../utils/ocean'
 let apolloClient: ApolloClient<NormalizedCacheObject>
 
 function createClient(subgraphUri: string) {
@@ -32,21 +33,23 @@ export default function ApolloClientProvider({
 }: {
   children: ReactNode
 }): ReactElement {
-  const { config } = useOcean()
+  const { networkId } = useWeb3()
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>()
 
   useEffect(() => {
-    if (!(config as ConfigHelperConfig)?.subgraphUri) {
+    const { subgraphUri } = getOceanConfig(networkId || 1)
+
+    if (!subgraphUri) {
       Logger.error(
         'No subgraphUri defined, preventing ApolloProvider from initialization.'
       )
       return
     }
 
-    const newClient = createClient((config as ConfigHelperConfig).subgraphUri)
+    const newClient = createClient(subgraphUri)
     apolloClient = newClient
     setClient(newClient)
-  }, [config])
+  }, [networkId])
 
   return client ? (
     <ApolloProvider client={client}>{children}</ApolloProvider>

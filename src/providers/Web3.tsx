@@ -19,6 +19,8 @@ import {
   getNetworkDisplayName
 } from '../utils/web3'
 import { graphql, useStaticQuery } from 'gatsby'
+import { UserBalance } from '../@types/TokenBalance'
+import { getOceanBalance } from '../utils/ocean'
 
 interface Web3ProviderValue {
   web3: Web3
@@ -26,6 +28,7 @@ interface Web3ProviderValue {
   web3Modal: Web3Modal
   web3ProviderInfo: IProviderInfo
   accountId: string
+  balance: UserBalance
   networkId: number
   networkDisplayName: string
   networkData: EthereumListsChain
@@ -77,6 +80,8 @@ export const web3ModalOpts = {
   theme: web3ModalTheme
 }
 
+const refreshInterval = 20000 // 20 sec.
+
 const networksQuery = graphql`
   query {
     allNetworksMetadataJson {
@@ -115,7 +120,14 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   const [isTestnet, setIsTestnet] = useState<boolean>()
   const [accountId, setAccountId] = useState<string>()
   const [web3Loading, setWeb3Loading] = useState<boolean>(true)
+  const [balance, setBalance] = useState<UserBalance>({
+    eth: '0',
+    ocean: '0'
+  })
 
+  // -----------------------------------
+  // Helper: connect to web3
+  // -----------------------------------
   const connect = useCallback(async () => {
     if (!web3Modal) {
       setWeb3Loading(false)
@@ -145,6 +157,24 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
       setWeb3Loading(false)
     }
   }, [web3Modal])
+
+  // -----------------------------------
+  // Helper: Get user balance
+  // -----------------------------------
+  const getUserBalance = useCallback(async () => {
+    if (!accountId || !networkId || !web3) return
+
+    try {
+      const balance = {
+        eth: web3.utils.fromWei(await web3.eth.getBalance(accountId, 'latest')),
+        ocean: await getOceanBalance(accountId, networkId, web3)
+      }
+      setBalance(balance)
+      Logger.log('[web3] Balance: ', balance)
+    } catch (error) {
+      Logger.error('[web3] Error: ', error.message)
+    }
+  }, [accountId, networkId, web3])
 
   // -----------------------------------
   // Create initial Web3Modal instance
@@ -179,6 +209,20 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     }
     connectCached()
   }, [connect, web3Modal])
+
+  // -----------------------------------
+  // Get and set user balance
+  // -----------------------------------
+  useEffect(() => {
+    getUserBalance()
+
+    // init periodic refresh of wallet balance
+    const balanceInterval = setInterval(() => getUserBalance(), refreshInterval)
+
+    return () => {
+      clearInterval(balanceInterval)
+    }
+  }, [getUserBalance])
 
   // -----------------------------------
   // Get and set network metadata
@@ -274,6 +318,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
         web3Modal,
         web3ProviderInfo,
         accountId,
+        balance,
         networkId,
         networkDisplayName,
         networkData,
@@ -294,3 +339,6 @@ const useWeb3 = (): Web3ProviderValue => useContext(Web3Context)
 
 export { Web3Provider, useWeb3, Web3ProviderValue, Web3Context }
 export default Web3Provider
+function getTokenBalance() {
+  throw new Error('Function not implemented.')
+}

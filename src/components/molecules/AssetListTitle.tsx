@@ -5,6 +5,7 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import { getAssetsNames } from '../../utils/aquarius'
 import styles from './AssetListTitle.module.css'
 import axios from 'axios'
+import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 
 export default function AssetListTitle({
   ddo,
@@ -15,11 +16,11 @@ export default function AssetListTitle({
   did?: string
   title?: string
 }): ReactElement {
-  const { metadataCacheUri } = useOcean()
+  const { appConfig } = useSiteMetadata()
   const [assetTitle, setAssetTitle] = useState<string>(title)
 
   useEffect(() => {
-    if (title || !metadataCacheUri) return
+    if (title || !appConfig.metadataCacheUri) return
     if (ddo) {
       const { attributes } = ddo.findServiceByType('metadata')
       setAssetTitle(attributes.main.name)
@@ -29,7 +30,11 @@ export default function AssetListTitle({
     const source = axios.CancelToken.source()
 
     async function getAssetName() {
-      const title = await getAssetsNames([did], metadataCacheUri, source.token)
+      const title = await getAssetsNames(
+        [did],
+        appConfig.metadataCacheUri,
+        source.token
+      )
       setAssetTitle(title[did])
     }
 
@@ -38,7 +43,7 @@ export default function AssetListTitle({
     return () => {
       source.cancel()
     }
-  }, [assetTitle, metadataCacheUri, ddo, did, title])
+  }, [assetTitle, appConfig.metadataCacheUri, ddo, did, title])
 
   return (
     <h3 className={styles.title}>

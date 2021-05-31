@@ -15,22 +15,41 @@ import { queryMetadata } from '../../utils/aquarius'
 import { getHighestLiquidityDIDs } from '../../utils/subgraph'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import { useWeb3 } from '../../providers/Web3'
+import { useSiteMetadata } from '../../hooks/useSiteMetadata'
+import { getOceanConfig } from '../../utils/ocean'
 
-const queryLatest = {
-  page: 1,
-  offset: 9,
-  query: {
-    query_string: {
-      query: `-isInPurgatory:true`
-    }
-  },
-  sort: { created: -1 }
+// TODO: these queries need to adapt to chainIds
+function getQueryHighest(chainIds: number[]) {
+  return {
+    page: 1,
+    offset: 9,
+    query: {
+      query_string: {
+        query: `(price.type:pool) -isInPurgatory:true`
+      }
+    },
+    sort: { 'price.ocean': -1 }
+  }
 }
 
 function sortElements(items: DDO[], sorted: string[]) {
   items.sort(function (a, b) {
     return sorted.indexOf(a.dataToken) - sorted.indexOf(b.dataToken)
   })
+  return items
+}
+
+function getQueryLatest(chainIds: number[]) {
+  return {
+    page: 1,
+    offset: 9,
+    query: {
+      query_string: {
+        query: `-isInPurgatory:true`
+      }
+    },
+    sort: { created: -1 }
+  }
   return items
 }
 
@@ -45,12 +64,12 @@ function SectionQueryResult({
   action?: ReactElement
   queryData?: string
 }) {
-  const { metadataCacheUri } = useOcean()
+  const { appConfig } = useSiteMetadata()
   const [result, setResult] = useState<QueryResult>()
   const [loading, setLoading] = useState<boolean>()
 
   useEffect(() => {
-    if (!metadataCacheUri) return
+    if (!appConfig.metadataCacheUri) return
     const source = axios.CancelToken.source()
 
     async function init() {
@@ -58,7 +77,7 @@ function SectionQueryResult({
         setLoading(true)
         const result = await queryMetadata(
           query,
-          metadataCacheUri,
+          appConfig.metadataCacheUri,
           source.token
         )
         if (result.totalResults <= 15) {
@@ -83,7 +102,7 @@ function SectionQueryResult({
     return () => {
       source.cancel()
     }
-  }, [metadataCacheUri, query])
+  }, [appConfig.metadataCacheUri, query])
 
   return (
     <section className={styles.section}>
@@ -99,8 +118,9 @@ function SectionQueryResult({
 }
 
 export default function HomePage(): ReactElement {
-  const { config, loading } = useOcean()
+  // TODO: appConfig.chainIds needs to come from UserPreferences instead
   const [queryAndDids, setQueryAndDids] = useState<[SearchQuery, string]>()
+  const { appConfig } = useSiteMetadata()
   const { web3Loading, web3Provider } = useWeb3()
 
   useEffect(() => {
@@ -135,13 +155,14 @@ export default function HomePage(): ReactElement {
         <SectionQueryResult
           title="Highest Liquidity"
           query={queryAndDids[0]}
+          // query={getQueryHighest(appConfig.chainIds)}
           queryData={queryAndDids[1]}
         />
       )}
 
       <SectionQueryResult
         title="Recently Published"
-        query={queryLatest}
+        query={getQueryLatest(appConfig.chainIds)}
         action={
           <Button style="text" to="/search?sort=created&sortOrder=desc">
             All data sets and algorithms →

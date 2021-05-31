@@ -9,8 +9,7 @@ import Sort from './sort'
 import { getResults } from './utils'
 import { navigate } from 'gatsby'
 import { updateQueryStringParameter } from '../../../utils'
-import Loader from '../../atoms/Loader'
-import { useOcean } from '../../../providers/Ocean'
+import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 
 export default function SearchPage({
   location,
@@ -19,7 +18,7 @@ export default function SearchPage({
   location: Location
   setTotalResults: (totalResults: number) => void
 }): ReactElement {
-  const { metadataCacheUri } = useOcean()
+  const { appConfig } = useSiteMetadata()
   const parsed = queryString.parse(location.search)
   const { text, owner, tags, page, sort, sortOrder, serviceType } = parsed
   const [queryResult, setQueryResult] = useState<QueryResult>()
@@ -31,18 +30,27 @@ export default function SearchPage({
   )
 
   useEffect(() => {
-    if (!metadataCacheUri) return
+    if (!appConfig.metadataCacheUri) return
 
     async function initSearch() {
       setLoading(true)
       setTotalResults(undefined)
-      const queryResult = await getResults(parsed, metadataCacheUri)
+      const queryResult = await getResults(parsed, appConfig.metadataCacheUri)
       setQueryResult(queryResult)
       setTotalResults(queryResult.totalResults)
       setLoading(false)
     }
     initSearch()
-  }, [text, owner, tags, sort, page, serviceType, sortOrder, metadataCacheUri])
+  }, [
+    text,
+    owner,
+    tags,
+    sort,
+    page,
+    serviceType,
+    sortOrder,
+    appConfig.metadataCacheUri
+  ])
 
   function setPage(page: number) {
     const newUrl = updateQueryStringParameter(

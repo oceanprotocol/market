@@ -9,21 +9,37 @@ import { useWeb3 } from '../../../providers/Web3'
 
 import Web3Feedback from '../Web3Feedback'
 import styles from './Details.module.css'
+import { getOceanTokenData } from '../../../utils/ocean'
 
 export default function Details(): ReactElement {
-  const { web3Provider, web3ProviderInfo, connect, logout, networkData } =
+  const {
+    web3Provider,
+    web3ProviderInfo,
+    connect,
+    logout,
+    networkData,
+    networkId,
+    balance
   } = useWeb3()
-  // const { balance, config } = useOcean()
+  const { oceanConfigs } = useOcean()
   const { locale } = useUserPreferences()
 
   const [mainCurrency, setMainCurrency] = useState<string>()
+  const [oceanTokenMetadata, setOceanTokenMetadata] =
+    useState<{
+      address: string
+      symbol: string
+    }>()
   // const [portisNetwork, setPortisNetwork] = useState<string>()
 
   useEffect(() => {
     if (!networkData) return
 
     setMainCurrency(networkData.nativeCurrency.symbol)
-  }, [networkData])
+
+    oceanConfigs &&
+      setOceanTokenMetadata(getOceanTokenData(networkId || 1, oceanConfigs))
+  }, [networkData, networkId, oceanConfigs])
 
   // Handle network change for Portis
   // async function handlePortisNetworkChange(e: ChangeEvent<HTMLSelectElement>) {
@@ -38,17 +54,17 @@ export default function Details(): ReactElement {
   return (
     <div className={styles.details}>
       <ul>
-        {/* {Object.entries(balance).map(([key, value]) => (
+        {Object.entries(balance).map(([key, value]) => (
           <li className={styles.balance} key={key}>
             <span className={styles.symbol}>
-              {key === 'eth' ? mainCurrency : config.oceanTokenSymbol}
+              {key === 'eth' ? mainCurrency : oceanTokenMetadata?.symbol}
             </span>{' '}
             {formatCurrency(Number(value), '', locale, false, {
               significantFigures: 4
             })}
             {key === 'ocean' && <Conversion price={value} />}
           </li>
-        ))} */}
+        ))}
 
         <li className={styles.actions}>
           <div title="Connected provider" className={styles.walletInfo}>
@@ -66,14 +82,14 @@ export default function Details(): ReactElement {
                 onChange={handlePortisNetworkChange}
               />
             )} */}
-            {/* {web3ProviderInfo?.name === 'MetaMask' && (
+            {web3ProviderInfo?.name === 'MetaMask' && (
               <AddToken
-                address={config.oceanTokenAddress}
-                symbol={config.oceanTokenSymbol}
+                address={oceanTokenMetadata?.address}
+                symbol={oceanTokenMetadata?.symbol}
                 logo="https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png"
                 className={styles.addToken}
               />
-            )} */}
+            )}
           </div>
           <p>
             {web3ProviderInfo?.name === 'Portis' && (

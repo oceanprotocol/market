@@ -12,13 +12,13 @@ export default function wrapRootElement({
 }): ReactElement {
   return (
     <Web3Provider>
-      <OceanProvider>
-        <ApolloClientProvider>
-          <UserPreferencesProvider>
-            <PricesProvider>{element}</PricesProvider>
-          </UserPreferencesProvider>
-        </ApolloClientProvider>
-      </OceanProvider>
+      {/* <OceanProvider> */}
+      <ApolloClientProvider>
+        <UserPreferencesProvider>
+          <PricesProvider>{element}</PricesProvider>
+        </UserPreferencesProvider>
+      </ApolloClientProvider>
+      {/* </OceanProvider> */}
     </Web3Provider>
   )
 }

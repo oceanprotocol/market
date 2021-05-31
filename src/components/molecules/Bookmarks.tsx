@@ -8,6 +8,7 @@ import Tooltip from '../atoms/Tooltip'
 import AssetTitle from './AssetListTitle'
 import { queryMetadata } from '../../utils/aquarius'
 import axios, { CancelToken } from 'axios'
+import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 
 async function getAssetsBookmarked(
   bookmarks: string[],
@@ -78,7 +79,7 @@ const columns = [
 ]
 
 export default function Bookmarks(): ReactElement {
-  const { metadataCacheUri } = useOcean()
+  const { appConfig } = useSiteMetadata()
   const { bookmarks } = useUserPreferences()
 
   const [pinned, setPinned] = useState<DDO[]>()
@@ -87,7 +88,7 @@ export default function Bookmarks(): ReactElement {
   const networkName = (config as ConfigHelperConfig)?.network
 
   useEffect(() => {
-    if (!metadataCacheUri || !networkName || bookmarks === {}) return
+    if (!appConfig.metadataCacheUri || !networkName || bookmarks === {}) return
 
     const source = axios.CancelToken.source()
 
@@ -102,7 +103,7 @@ export default function Bookmarks(): ReactElement {
       try {
         const resultPinned = await getAssetsBookmarked(
           bookmarks[networkName],
-          metadataCacheUri,
+          appConfig.metadataCacheUri,
           source.token
         )
         setPinned(resultPinned?.results)
@@ -117,7 +118,7 @@ export default function Bookmarks(): ReactElement {
     return () => {
       source.cancel()
     }
-  }, [bookmarks, metadataCacheUri, networkName])
+  }, [bookmarks, appConfig.metadataCacheUri, networkName])
 
   return (
     <Table

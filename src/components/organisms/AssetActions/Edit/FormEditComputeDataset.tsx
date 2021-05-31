@@ -16,6 +16,7 @@ import { useAsset } from '../../../../providers/Asset'
 import { ComputePrivacyForm } from '../../../../models/FormEditComputeDataset'
 import { publisherTrustedAlgorithm as PublisherTrustedAlgorithm } from '@oceanprotocol/lib'
 import axios from 'axios'
+import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 
 export default function FormEditComputeDataset({
   data,
@@ -26,8 +27,9 @@ export default function FormEditComputeDataset({
   title: string
   setShowEdit: (show: boolean) => void
 }): ReactElement {
+  const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
-  const { ocean, metadataCacheUri } = useOcean()
+  const { ocean } = useOcean()
   const { ddo } = useAsset()
   const { isValid, values }: FormikContextType<ComputePrivacyForm> =
     useFormikContext()
@@ -51,12 +53,12 @@ export default function FormEditComputeDataset({
     }
     const querryResult = await queryMetadata(
       query,
-      metadataCacheUri,
+      appConfig.metadataCacheUri,
       source.token
     )
     const algorithmSelectionList = await transformDDOToAssetSelection(
       querryResult.results,
-      metadataCacheUri,
+      appConfig.metadataCacheUri,
       publisherTrustedAlgorithms
     )
     return algorithmSelectionList
@@ -66,7 +68,7 @@ export default function FormEditComputeDataset({
     getAlgorithmList(publisherTrustedAlgorithms).then((algorithms) => {
       setAllAlgorithms(algorithms)
     })
-  }, [metadataCacheUri, publisherTrustedAlgorithms])
+  }, [appConfig.metadataCacheUri, publisherTrustedAlgorithms])
 
   return (
     <Form className={styles.form}>

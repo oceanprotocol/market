@@ -10,6 +10,7 @@ import { retrieveDDO } from '../../../../utils/aquarius'
 import { useOcean } from '../../../../providers/Ocean'
 import Results from './Results'
 import styles from './Details.module.css'
+import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 
 function Asset({
   title,
@@ -41,7 +42,7 @@ function Asset({
 }
 
 function DetailsAssets({ job }: { job: ComputeJobMetaData }) {
-  const { metadataCacheUri } = useOcean()
+  const { appConfig } = useSiteMetadata()
   const [algoName, setAlgoName] = useState<string>()
   const [algoDtSymbol, setAlgoDtSymbol] = useState<string>()
 
@@ -49,14 +50,18 @@ function DetailsAssets({ job }: { job: ComputeJobMetaData }) {
     async function getAlgoMetadata() {
       const source = axios.CancelToken.source()
 
-      const ddo = await retrieveDDO(job.algoDID, metadataCacheUri, source.token)
+      const ddo = await retrieveDDO(
+        job.algoDID,
+        appConfig.metadataCacheUri,
+        source.token
+      )
       setAlgoDtSymbol(ddo.dataTokenInfo.symbol)
 
       const { attributes } = ddo.findServiceByType('metadata')
       setAlgoName(attributes?.main.name)
     }
     getAlgoMetadata()
-  }, [metadataCacheUri, job.algoDID])
+  }, [appConfig.metadataCacheUri, job.algoDID])
 
   return (
     <>

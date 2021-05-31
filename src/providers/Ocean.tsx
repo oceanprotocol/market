@@ -16,112 +16,59 @@ import {
 } from '@oceanprotocol/lib'
 
 import { useWeb3 } from './Web3'
-import {
-  getDevelopmentConfig,
-  getOceanConfig,
-  getUserInfo
-} from '../utils/ocean'
-import { UserBalance } from '../@types/TokenBalance'
-import { useSiteMetadata } from '../hooks/useSiteMetadata'
-
-const refreshInterval = 20000 // 20 sec.
+import { getDevelopmentConfig, getOceanConfig } from '../utils/ocean'
+import { useAsset } from './Asset'
 
 interface OceanProviderValue {
-  oceanConfigs: ConfigHelperConfig[]
-  metadataCacheUri: string
   ocean: Ocean
-  config: ConfigHelperConfig
   account: Account
-  balance: UserBalance
-  loading: boolean
-  connect: (config?: Config) => Promise<void>
-  refreshBalance: () => Promise<void>
+  connect: (config: Config) => Promise<void>
 }
 
 const OceanContext = createContext({} as OceanProviderValue)
 
 function OceanProvider({ children }: { children: ReactNode }): ReactElement {
-  const { appConfig } = useSiteMetadata()
-  const { web3, accountId, networkId } = useWeb3()
+  const { web3, accountId } = useWeb3()
+  const { ddo } = useAsset()
 
-  const [oceanConfigs, setOceanConfigs] = useState<ConfigHelperConfig[]>()
-  const [metadataCacheUri, setMetadataCacheUri] = useState<string>()
   const [ocean, setOcean] = useState<Ocean>()
   const [account, setAccount] = useState<Account>()
-  const [balance, setBalance] = useState<UserBalance>({
-    eth: undefined,
-    ocean: undefined
-  })
-  const [config, setConfig] = useState<ConfigHelperConfig | Config>()
 
   // -----------------------------------
-  // Initially get all supported configs
-  // from ocean.js ConfigHelper
-  // -----------------------------------
-  useEffect(() => {
-    const allConfigs = appConfig.chainIds.map((chainId: number) =>
-      getOceanConfig(chainId)
-    )
-    setOceanConfigs(allConfigs)
-    setMetadataCacheUri(allConfigs[0].metadataCacheUri)
-  }, [])
-
-  // -----------------------------------
-  // Set active config
-  // -----------------------------------
-  // useEffect(() => {
-  //   const config = {
-  //     ...getOceanConfig(networkId || 'mainnet'),
-
-  //     // add local dev values
-  //     ...(networkId === 8996 && {
-  //       ...getDevelopmentConfig()
-  //     })
-  //   }
-  //   setConfig(config)
-  //   // Sync config.metadataCacheUri with metadataCacheUri
-  //   setMetadataCacheUri(config.metadataCacheUri)
-  // }, [networkId])
-
-  // -----------------------------------
-  // Create Ocean instance
+  // Helper: Create Ocean instance
   // -----------------------------------
   const connect = useCallback(
     async (config: ConfigHelperConfig | Config) => {
-      if (!web3) return
+      if (!web3 || !ddo) return
+
+      const newConfig: Config = {
+        ...config,
+        web3Provider: web3
+      }
 
       try {
-        Logger.log('[ocean] Connecting Ocean...', config)
-
-        config.web3Provider = web3
-        setConfig(config)
-
-        const newOcean = await Ocean.getInstance(config)
+        Logger.log('[ocean] Connecting Ocean...', newConfig)
+        const newOcean = await Ocean.getInstance(newConfig)
         setOcean(newOcean)
         Logger.log('[ocean] Ocean instance created.', newOcean)
       } catch (error) {
         Logger.error('[ocean] Error: ', error.message)
       }
     },
-    [web3]
+    [web3, ddo]
   )
-
-  // async function refreshBalance() {
-  //   if (!ocean || !account || !web3) return
-
-  //   const { balance } = await getUserInfo(ocean)
-  //   setBalance(balance)
-  // }
 
   // -----------------------------------
   // Initial connection
   // -----------------------------------
   useEffect(() => {
+    if (!ddo?.chainId) return
+
     const config = {
-      ...getOceanConfig('mainnet'),
+      ...getOceanConfig(ddo.chainId),
 
       // add local dev values
-      ...(networkId === 8996 && {
+      ...(ddo.chainId === 8996 && {
         ...getDevelopmentConfig()
       })
     }
@@ -130,39 +77,28 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
       await connect(config)
     }
     init()
-
-    // init periodic refresh of wallet balance
-    // const balanceInterval = setInterval(() => refreshBalance(), refreshInterval)
-
-    // return () => {
-    //   clearInterval(balanceInterval)
-    // }
-  }, [connect, networkId])
+  }, [connect, ddo?.chainId])
 
   // -----------------------------------
   // Get user info, handle account change from web3
   // -----------------------------------
-  // useEffect(() => {
-  //   if (!ocean || !accountId || !web3) return
+  useEffect(() => {
+    if (!ocean || !accountId || !web3) return
 
-  //   async function getInfo() {
-  //     const { account, balance } = await getUserInfo(ocean)
-  //     setAccount(account)
-  //     setBalance(balance)
-  //   }
-  //   getInfo()
-  // }, [ocean, accountId, web3])
+    async function getInfo() {
+      const account = (await ocean.accounts.list())[0]
+      Logger.log('[ocean] Account: ', account)
+      setAccount(account)
+    }
+    getInfo()
+  }, [ocean, accountId, web3])
 
   return (
     <OceanContext.Provider
       value={
         {
-          oceanConfigs,
-          metadataCacheUri,
           ocean,
           account,
-          balance,
-          config,
           connect
           // refreshBalance
         } as OceanProviderValue
