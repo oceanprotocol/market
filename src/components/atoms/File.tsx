@@ -31,7 +31,7 @@ export default function File({
 
   useEffect(() => {
     isLoading && setLoading(true)
-  }, [])
+  }, [isLoading])
 
   if (!file) return null
   console.log(isLoading, loading)

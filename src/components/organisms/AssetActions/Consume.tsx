@@ -42,7 +42,7 @@ export default function Consume({
   file: FileMetadata
   isBalanceSufficient: boolean
   dtBalance: string
-  fileIsLoading: boolean
+  fileIsLoading?: boolean
 }): ReactElement {
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
