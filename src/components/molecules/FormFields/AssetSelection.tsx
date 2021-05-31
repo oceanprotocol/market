@@ -33,6 +33,7 @@ export default function AssetSelection({
   assets: AssetSelectionAsset[]
   multiple?: boolean
   disabled?: boolean
+  value?: string
 }): JSX.Element {
   const [searchValue, setSearchValue] = useState('')
 
@@ -84,9 +85,6 @@ export default function AssetSelection({
                   {...props}
                   disabled={disabled}
                   value={asset.did}
-                  onClick={(e: any) => {
-                    asset.checked = e.target.checked
-                  }}
                 />
                 <label
                   className={styles.label}
@@ -110,7 +108,9 @@ export default function AssetSelection({
                   <Dotdotdot clamp={1} tagName="code" className={styles.did}>
                     {asset.symbol} | {asset.did}
                   </Dotdotdot>
-                  {asset.checked && <AssetStatus ddo={DID.parse(asset.did)} />}
+                  {props.value === asset.did && (
+                    <AssetStatus ddo={DID.parse(asset.did)} />
+                  )}
                 </label>
 
                 <PriceUnit price={asset.price} small className={styles.price} />

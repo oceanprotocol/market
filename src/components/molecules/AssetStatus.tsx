@@ -12,8 +12,8 @@ export default function AssetStatus({ ddo }: { ddo: DDO | DID }): ReactElement {
   const [isFileValid, setFileValid] = useState<boolean>(true)
 
   useEffect(() => {
+    if (!ddo) return
     async function validateAsset(ddo: DDO | DID, source: CancelTokenSource) {
-      if (!ddo) return
       if (ddo instanceof DID) ddo = await ocean.metadataCache.retrieveDDO(ddo)
 
       const fileValid = await checkFile(
