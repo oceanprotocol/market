@@ -75,7 +75,7 @@ export async function fileinfo(
   }
 }
 
-export async function isFileValid(
+export async function checkFile(
   url: string | DID,
   providerUri: string,
   cancelToken: CancelToken

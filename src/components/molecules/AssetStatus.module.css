@@ -1,7 +1,6 @@
 .wrapper {
   display: inline-block;
   font-size: var(--font-size-mini);
-  cursor: help;
 }
 
 .text {
@@ -9,7 +8,12 @@
   color: var(--brand-alert-red);
 }
 
-.status {
+.status,
+.info {
   transform: scale(0.7);
   transform-origin: bottom;
+}
+
+.info svg {
+  margin-left: calc(var(--spacer) / 12);
 }
