@@ -417,6 +417,7 @@ export default function Compute({
           />
         </Formik>
       )}
+
       <footer className={styles.feedback}>
         {isPublished && (
           <SuccessConfetti
