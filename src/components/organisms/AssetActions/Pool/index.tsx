@@ -95,8 +95,8 @@ export default function Pool(): ReactElement {
   const [refreshPool, setRefreshPool] = useState(false)
   const { data: dataLiquidity } = useQuery<PoolLiquidity>(poolLiquidityQuery, {
     variables: {
-      id: ddo.price.address.toLowerCase(),
-      shareId: `${ddo.price.address.toLowerCase()}-${ddo.publicKey[0].owner.toLowerCase()}`
+      id: price.address.toLowerCase(),
+      shareId: `${price.address.toLowerCase()}-${ddo.publicKey[0].owner.toLowerCase()}`
     },
     pollInterval: 5000
   })
@@ -170,7 +170,8 @@ export default function Pool(): ReactElement {
     const totalUserLiquidityInOcean =
       userLiquidity?.ocean + userLiquidity?.datatoken * price?.value
     setTotalUserLiquidityInOcean(totalUserLiquidityInOcean)
-    const totalLiquidityInOcean = price?.ocean + price?.datatoken * price?.value
+    const totalLiquidityInOcean =
+      Number(price?.ocean) + Number(price?.datatoken) * Number(price?.value)
     setTotalLiquidityInOcean(totalLiquidityInOcean)
   }, [userLiquidity, price, poolTokens, totalPoolTokens])
 
