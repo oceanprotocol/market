@@ -27,6 +27,7 @@ interface UseSiteMetadata {
     portisId: string
     allowFixedPricing: string
     allowDynamicPricing: string
+    allowFreePricing: string
   }
 }
 
