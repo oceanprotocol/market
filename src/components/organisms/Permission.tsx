@@ -15,12 +15,13 @@ export default function Permission({
   const { accountId } = useWeb3()
   useEffect(() => {
     const getData = async () => {
-      const data = await rbacRequest(eventType, accountId)
-      updateData(data)
+      if (accountId !== undefined) {
+        const data = await rbacRequest(eventType, accountId)
+        updateData(data)
+      }
     }
     getData()
   }, [eventType, accountId])
-  console.log('eventType', eventType)
   if (data === true) {
     return <>{children}</>
   } else if (data === false) {
