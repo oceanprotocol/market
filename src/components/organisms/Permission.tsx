@@ -2,6 +2,7 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import { useWeb3 } from '../../providers/Web3'
 import rbacRequest from '../../utils/rbac'
 import Alert from '../atoms/Alert'
+import Loader from '../atoms/Loader'
 
 export default function Permission({
   eventType,
@@ -22,8 +23,10 @@ export default function Permission({
   console.log('eventType', eventType)
   if (data === true) {
     return <>{children}</>
-  } else {
+  } else if (data === false) {
     const message = `Sorry, you don't have permission to  ${eventType}. Please make sure you are logged in.`
     return <Alert title="Permission denied" text={message} state="error" />
+  } else {
+    return <Loader />
   }
 }
