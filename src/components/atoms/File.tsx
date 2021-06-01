@@ -27,14 +27,7 @@ export default function File({
   small?: boolean
   isLoading?: boolean
 }): ReactElement {
-  const [loading, setLoading] = useState<boolean>(true)
-
-  useEffect(() => {
-    isLoading && setLoading(true)
-  }, [isLoading])
-
   if (!file) return null
-  console.log(isLoading, loading)
 
   const styleClasses = cx({
     file: true,
@@ -42,22 +35,26 @@ export default function File({
     [className]: className
   })
 
-  return !loading && (isLoading === undefined || isLoading === false) ? (
+  return (
     <ul className={styleClasses}>
-      {file.contentType || file.contentLength ? (
+      {isLoading === false || isLoading === undefined ? (
         <>
-          <li>{cleanupContentType(file.contentType)}</li>
-          <li>
-            {file.contentLength && file.contentLength !== '0'
-              ? filesize(Number(file.contentLength))
-              : ''}
-          </li>
+          {file.contentType || file.contentLength ? (
+            <>
+              <li>{cleanupContentType(file.contentType)}</li>
+              <li>
+                {file.contentLength && file.contentLength !== '0'
+                  ? filesize(Number(file.contentLength))
+                  : ''}
+              </li>
+            </>
+          ) : (
+            <li className={styles.empty}>No file info available</li>
+          )}
         </>
       ) : (
-        <li className={styles.empty}>No file info available</li>
+        <LoaderArea />
       )}
     </ul>
-  ) : (
-    <LoaderArea />
   )
 }
