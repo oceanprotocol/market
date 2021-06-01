@@ -20,7 +20,7 @@ export default function AssetActions(): ReactElement {
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
   const [dtBalance, setDtBalance] = useState<string>()
-  const [fileMetadata, setFileMetadata] = useState<FileMetadata>()
+  const [fileMetadata, setFileMetadata] = useState<Partial<FileMetadata>>({})
   const [fileIsLoading, setFileIsLoading] = useState<boolean>(false)
   const isCompute = Boolean(ddo?.findServiceByType('compute'))
 
