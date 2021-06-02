@@ -10,7 +10,7 @@ describe('Publish', () => {
       mnemonic: {
         phrase: bip39.generateMnemonic()
       },
-      providerOrUrl: 'http://localhost:8545'
+      providerOrUrl: 'http://localhost:7545'
     })
 
     window.web3 = new Web3(provider)
@@ -37,7 +37,7 @@ describe('Publish', () => {
     cy.get('#links').type('https://oceanprotocol.com/tech-whitepaper.pdf')
     cy.get('#links + button').click()
     // Access
-    cy.get('#access').select('Download')
+    cy.get('#Download').check({ force: true })
     // Author
     cy.get('#author').type('Jelly McJellyfish')
     // Tags
