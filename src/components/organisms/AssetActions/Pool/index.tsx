@@ -19,6 +19,7 @@ import { gql, useQuery } from '@apollo/client'
 import { PoolLiquidity } from '../../../../@types/apollo/PoolLiquidity'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
+import TokenApproval from '../../../molecules/TokenApproval'
 
 const contentQuery = graphql`
   query PoolQuery {
@@ -212,6 +213,17 @@ export default function Pool(): ReactElement {
     // await refreshPrice()
   }
 
+  const approveButton = (
+    <Button
+      style="primary"
+      size="small"
+      onClick={() => setShowAdd(true)}
+      disabled={isInPurgatory}
+    >
+      Add Liquidity
+    </Button>
+  )
+
   return (
     <>
       {showAdd ? (
@@ -327,16 +339,7 @@ export default function Pool(): ReactElement {
           )}
 
           <div className={stylesActions.actions}>
-            {!isInPurgatory && (
-              <Button
-                style="primary"
-                size="small"
-                onClick={() => setShowAdd(true)}
-                disabled={isInPurgatory}
-              >
-                Add Liquidity
-              </Button>
-            )}
+            {!isInPurgatory && <TokenApproval actionButton={approveButton} />}
 
             {hasAddedLiquidity && !isRemoveDisabled && (
               <Button size="small" onClick={() => setShowRemove(true)}>
