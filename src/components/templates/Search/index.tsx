@@ -9,7 +9,6 @@ import Sort from './sort'
 import { getResults } from './utils'
 import { navigate } from 'gatsby'
 import { updateQueryStringParameter } from '../../../utils'
-import Loader from '../../atoms/Loader'
 import { useOcean } from '../../../providers/Ocean'
 
 export default function SearchPage({
@@ -32,10 +31,12 @@ export default function SearchPage({
 
   useEffect(() => {
     if (!config?.metadataCacheUri) return
+    console.log('INIT')
 
     async function initSearch() {
       setLoading(true)
       setTotalResults(undefined)
+      console.log('INIT SEARCH')
       const queryResult = await getResults(parsed, config.metadataCacheUri)
       setQueryResult(queryResult)
       setTotalResults(queryResult.totalResults)

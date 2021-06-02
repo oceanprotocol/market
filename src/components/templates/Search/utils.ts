@@ -67,9 +67,9 @@ export function getSearchQuery(
     : text || ''
 
   // HACK: resolves the case sensitivity related to dataTokenInfo.symbol
-  searchTerm = '*' + searchTerm.toUpperCase() + '*'
+  searchTerm = '*' + searchTerm + '*'
   searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
-
+  console.log('SEARCH TERM: ', searchTerm)
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
@@ -77,6 +77,8 @@ export function getSearchQuery(
       query_string: {
         query: `${searchTerm} -isInPurgatory:true`,
         fields: [
+          'publicKey.owner',
+          'dataTokenInfo.address',
           'dataTokenInfo.name',
           'dataTokenInfo.symbol',
           'service.attributes.main.name',
@@ -142,7 +144,7 @@ export async function getResults(
     sortOrder,
     serviceType
   )
-
+  console.log('QUERY STRING: ', searchQuery.query.query_string)
   const queryResult = await metadataCache.queryMetadata(searchQuery)
   return queryResult
 }
