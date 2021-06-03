@@ -66,44 +66,58 @@ export function getSearchQuery(
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
     : text || ''
 
+  if (searchTerm.startsWith('did:op:')) {
+    searchTerm = searchTerm.substring(7)
+  }
   // HACK: resolves the case sensitivity related to dataTokenInfo.symbol
-  searchTerm = '*' + searchTerm + '*'
+  searchTerm = '*' + searchTerm.toUpperCase() + '*'
   searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
     query: {
-      query_string: {
-        query: `${searchTerm} -isInPurgatory:true`,
-        fields: [
-          'id',
-          'publicKey.owner',
-          'dataTokenInfo.address',
-          'dataTokenInfo.name',
-          'dataTokenInfo.symbol',
-          'service.attributes.main.name',
-          'service.attributes.main.author',
-          'service.attributes.additionalInformation.description'
-        ],
-        default_operator: 'AND'
+      bool: {
+        must: [
+          {
+            query_string: {
+              query: `${searchTerm}`,
+              fields: [
+                'id',
+                'publicKey.owner',
+                'dataToken',
+                'dataTokenInfo.name',
+                'dataTokenInfo.symbol',
+                'service.attributes.main.name^10',
+                'service.attributes.main.author',
+                'service.attributes.additionalInformation.description',
+                'service.attributes.additionalInformation.tags'
+              ],
+              default_operator: 'AND',
+              minimum_should_match: '2<75%',
+              phrase_slop: 2
+            }
+          },
+          {
+            term: {
+              isInPurgatory: false
+            }
+          }
+        ]
       }
-      // ...(owner && { 'publicKey.owner': [owner] }),
-      // ...(tags && { tags: [tags] }),
-      // ...(categories && { categories: [categories] })
     },
     sort: {
       [sortTerm]: sortValue
     }
-
-    // Something in ocean.js is weird when using 'tags: [tag]'
-    // which is the only way the query actually returns desired results.
-    // But it doesn't follow 'SearchQuery' interface so we have to assign
-    // it here.
-    // } as SearchQuery
-
-    // And the next hack,
-    // nativeSearch is not implmeneted on ocean.js typings
   }
+
+  // Something in ocean.js is weird when using 'tags: [tag]'
+  // which is the only way the query actually returns desired results.
+  // But it doesn't follow 'SearchQuery' interface so we have to assign
+  // it here.
+  // } as SearchQuery
+
+  // And the next hack,
+  // nativeSearch is not implmeneted on ocean.js typings
 }
 
 export async function getResults(
