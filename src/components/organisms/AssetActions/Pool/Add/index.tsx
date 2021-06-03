@@ -72,6 +72,7 @@ export default function Add({
   const [coin, setCoin] = useState('OCEAN')
   const [dtBalance, setDtBalance] = useState<string>()
   const [amountMax, setAmountMax] = useState<string>()
+  const [amount, setAmount] = useState<string>('0')
   const [newPoolTokens, setNewPoolTokens] = useState('0')
   const [newPoolShare, setNewPoolShare] = useState('0')
   const [isWarningAccepted, setIsWarningAccepted] = useState(false)
@@ -165,6 +166,7 @@ export default function Add({
                   dtSymbol={dtSymbol}
                   amountMax={amountMax}
                   setCoin={setCoin}
+                  setAmount={setAmount}
                   totalPoolTokens={totalPoolTokens}
                   totalBalance={totalBalance}
                   poolAddress={poolAddress}
@@ -202,6 +204,7 @@ export default function Add({
               successMessage="Successfully added liquidity."
               actionName={content.action}
               action={submitForm}
+              amount={amount}
               txId={txId}
             />
             {debug && <DebugOutput title="Collected values" output={values} />}

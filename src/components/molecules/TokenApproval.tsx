@@ -8,18 +8,18 @@ import { useAsset } from '../../providers/Asset'
 
 export default function TokenApproval({
   actionButton,
-  price
+  disabled,
+  amount
 }: {
   actionButton: JSX.Element
-  price: BestPrice
+  disabled: boolean
+  amount: string
 }): ReactElement {
   const { accountId } = useWeb3()
   const { ddo, owner } = useAsset()
   const [approveToken, setApproveToken] = useState(false)
   const [tokenApproved, setTokenApproved] = useState(false)
-  const { ocean } = useOcean()
-
-  console.log(approveToken)
+  const { ocean, config } = useOcean()
 
   useEffect(() => {
     ocean.datatokens
@@ -29,18 +29,27 @@ export default function TokenApproval({
         accountId // marketplace address,
       )
       .then((allowance) => {
-        console.log(allowance !== '0')
+        console.log(allowance)
         setTokenApproved(allowance !== '0')
       })
   }, [])
 
-  // ocean.datatokens.approve(
+  async function approveTokens() {
+    const tsx = await ocean.datatokens.approve(
+      config.oceanTokenAddress,
+      config.fixedRateExchangeAddress,
+      amount,
+      accountId
+    )
+    console.log(tsx)
+  }
+
+  console.log(tokenApproved)
 
   return (
     <div className={styles.sync}>
       {approveToken === false ? (
         <>
-          {actionButton}
           {tokenApproved || (
             <Button
               style="primary"
@@ -48,11 +57,12 @@ export default function TokenApproval({
               onClick={() => {
                 setApproveToken(true)
               }}
-              disabled={false}
+              disabled={disabled}
             >
               Approve TOKEN
             </Button>
           )}
+          {actionButton}
         </>
       ) : (
         <>
@@ -60,17 +70,17 @@ export default function TokenApproval({
             style="primary"
             size="small"
             onClick={() => {
-              setApproveToken(false)
+              approveTokens()
             }}
             disabled={false}
           >
-            {price.datatoken} TOKEN
+            {amount} TOKEN
           </Button>
           <Button
             style="primary"
             size="small"
             onClick={() => {
-              setApproveToken(false)
+              approveTokens()
             }}
             disabled={false}
           >

@@ -14,6 +14,7 @@ export default function Actions({
   successMessage,
   txId,
   actionName,
+  amount,
   action,
   isDisabled
 }: {
@@ -22,6 +23,7 @@ export default function Actions({
   successMessage: string
   txId: string
   actionName: string
+  amount?: string
   action: () => void
   isDisabled?: boolean
 }): ReactElement {
@@ -45,7 +47,11 @@ export default function Actions({
         {isLoading ? (
           <Loader message={loaderMessage} />
         ) : (
-          <TokenApproval actionButton={actionButton} />
+          <TokenApproval
+            actionButton={actionButton}
+            amount={amount}
+            disabled={!ocean || isDisabled}
+          />
         )}
       </div>
       {txId && (
