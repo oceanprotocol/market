@@ -77,6 +77,7 @@ export function getSearchQuery(
       query_string: {
         query: `${searchTerm} -isInPurgatory:true`,
         fields: [
+          'id',
           'publicKey.owner',
           'dataTokenInfo.address',
           'dataTokenInfo.name',
