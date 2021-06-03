@@ -49,11 +49,13 @@ const SuccessAction = () => (
 export default function Compute({
   isBalanceSufficient,
   dtBalance,
-  file
+  file,
+  fileIsLoading
 }: {
   isBalanceSufficient: boolean
   dtBalance: string
   file: FileMetadata
+  fileIsLoading?: boolean
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
@@ -378,7 +380,7 @@ export default function Compute({
         <div>
           <Price price={price} conversion />
           <br />
-          <AssetStatus ddo={ddo} />
+          <AssetStatus did={file.valid} />
         </div>
       </div>
 

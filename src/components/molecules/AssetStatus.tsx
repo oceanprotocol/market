@@ -1,4 +1,4 @@
-import { DDO, DID } from '@oceanprotocol/lib'
+import { DID } from '@oceanprotocol/lib'
 import axios, { CancelTokenSource } from 'axios'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useOcean } from '../../providers/Ocean'
@@ -7,14 +7,18 @@ import Status from '../atoms/Status'
 import Tooltip from '../atoms/Tooltip'
 import styles from './AssetStatus.module.css'
 
-export default function AssetStatus({ ddo }: { ddo: DDO | DID }): ReactElement {
+export default function AssetStatus({
+  did
+}: {
+  did: DID | boolean
+}): ReactElement {
   const { ocean } = useOcean()
-  const [isFileValid, setFileValid] = useState<boolean>(true)
+  const [isFileValid, setFileValid] = useState<boolean>()
 
   useEffect(() => {
-    if (!ddo) return
-    async function validateAsset(ddo: DDO | DID, source: CancelTokenSource) {
-      if (ddo instanceof DID) ddo = await ocean.metadataCache.retrieveDDO(ddo)
+    async function validateAsset(did: DID, source: CancelTokenSource) {
+      const ddo = await ocean.metadataCache.retrieveDDO(did)
+      if (!ddo) return
 
       const fileValid = await checkFile(
         DID.parse(ddo.id),
@@ -26,16 +30,15 @@ export default function AssetStatus({ ddo }: { ddo: DDO | DID }): ReactElement {
     }
 
     const source = axios.CancelToken.source()
-    validateAsset(ddo, source)
+    if (did instanceof DID) validateAsset(did, source)
+    else if (did === false) setFileValid(did)
 
     return () => {
       source.cancel()
     }
-  }, [ddo])
+  }, [did])
 
-  if (isFileValid) return null
-
-  return (
+  return isFileValid === false ? (
     <div className={styles.wrapper}>
       <Status className={styles.status} state="error" />
       <span className={styles.text}>Unavailable</span>
@@ -44,5 +47,5 @@ export default function AssetStatus({ ddo }: { ddo: DDO | DID }): ReactElement {
         content="This dataset might be empty/offline, consume at your own risk."
       />
     </div>
-  )
+  ) : null
 }
