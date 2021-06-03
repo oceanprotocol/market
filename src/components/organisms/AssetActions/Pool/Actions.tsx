@@ -15,6 +15,7 @@ export default function Actions({
   txId,
   actionName,
   amount,
+  coin,
   action,
   isDisabled
 }: {
@@ -24,6 +25,7 @@ export default function Actions({
   txId: string
   actionName: string
   amount?: string
+  coin?: string
   action: () => void
   isDisabled?: boolean
 }): ReactElement {
@@ -50,6 +52,7 @@ export default function Actions({
           <TokenApproval
             actionButton={actionButton}
             amount={amount}
+            coin={coin}
             disabled={!ocean || isDisabled}
           />
         )}

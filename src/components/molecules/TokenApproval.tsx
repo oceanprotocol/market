@@ -2,53 +2,75 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './SyncStatus.module.css'
 import Button from '../atoms/Button'
 import { useOcean } from '../../providers/Ocean'
-import { BestPrice } from '@oceanprotocol/lib'
 import { useWeb3 } from '../../providers/Web3'
 import { useAsset } from '../../providers/Asset'
+import Loader from '../atoms/Loader'
+
+function LoaderArea() {
+  return (
+    <div className={styles.loaderWrap}>
+      <Loader />
+    </div>
+  )
+}
 
 export default function TokenApproval({
   actionButton,
   disabled,
-  amount
+  amount,
+  coin
 }: {
   actionButton: JSX.Element
   disabled: boolean
   amount: string
+  coin: string
 }): ReactElement {
   const { accountId } = useWeb3()
-  const { ddo, owner } = useAsset()
+  const { ddo, owner, price } = useAsset()
   const [approveToken, setApproveToken] = useState(false)
   const [tokenApproved, setTokenApproved] = useState(false)
+  const [loading, setLoading] = useState(false)
   const { ocean, config } = useOcean()
 
-  useEffect(() => {
-    ocean.datatokens
-      .allowance(
-        ddo.dataToken,
-        owner,
-        accountId // marketplace address,
-      )
-      .then((allowance) => {
-        console.log(allowance)
-        setTokenApproved(allowance !== '0')
-      })
-  }, [])
+  const tokenAddress =
+    coin === 'OCEAN' ? config.oceanTokenAddress : ddo.dataTokenInfo.address
+  const spender =
+    coin === 'OCEAN' ? ocean.pool.oceanAddress : ocean.pool.dtAddress
 
-  async function approveTokens() {
-    const tsx = await ocean.datatokens.approve(
-      config.oceanTokenAddress,
-      config.fixedRateExchangeAddress,
-      amount,
-      accountId
+  async function checkTokenApproval() {
+    setLoading(true)
+    const allowance = await ocean.datatokens.allowance(
+      tokenAddress,
+      owner,
+      spender // marketplace address,
     )
-    console.log(tsx)
+    setTokenApproved(allowance !== '0')
+    setLoading(false)
   }
 
-  console.log(tokenApproved)
+  useEffect(() => {
+    checkTokenApproval()
+  }, [coin])
+
+  async function approveTokens() {
+    setLoading(true)
+    console.log(coin)
+    const tsx = await ocean.datatokens.approve(
+      tokenAddress,
+      spender,
+      amount,
+      owner
+    )
+    console.log(tsx)
+    await checkTokenApproval()
+    setLoading(false)
+  }
 
   return (
     <div className={styles.sync}>
-      {approveToken === false ? (
+      {loading ? (
+        <LoaderArea />
+      ) : approveToken === false ? (
         <>
           {tokenApproved || (
             <Button

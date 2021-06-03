@@ -205,6 +205,7 @@ export default function Add({
               actionName={content.action}
               action={submitForm}
               amount={amount}
+              coin={coin}
               txId={txId}
             />
             {debug && <DebugOutput title="Collected values" output={values} />}
