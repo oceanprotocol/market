@@ -339,7 +339,9 @@ export default function Pool(): ReactElement {
           )}
 
           <div className={stylesActions.actions}>
-            {!isInPurgatory && <TokenApproval actionButton={approveButton} />}
+            {!isInPurgatory && (
+              <TokenApproval actionButton={approveButton} price={price} />
+            )}
 
             {hasAddedLiquidity && !isRemoveDisabled && (
               <Button size="small" onClick={() => setShowRemove(true)}>
