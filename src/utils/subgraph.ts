@@ -14,6 +14,7 @@ import {
   AssetsFreePrice,
   AssetsFreePrice_dispensers as AssetFreePriceDispenser
 } from '../@types/apollo/AssetsFreePrice'
+import web3 from 'web3'
 
 export interface PriceList {
   [key: string]: string
@@ -116,6 +117,20 @@ const PreviousOrderQuery = gql`
     ) {
       timestamp
       tx
+    }
+  }
+`
+const HighestLiquidityAssets = gql`
+  query HighestLiquidiyAssets {
+    pools(orderBy: valueLocked, orderDirection: desc, first: 15) {
+      id
+      consumePrice
+      spotPrice
+      tx
+      symbol
+      name
+      datatokenAddress
+      valueLocked
     }
   }
 `
@@ -374,4 +389,23 @@ export async function getAssetsBestPrices(
   }
 
   return assetsWithPrice
+}
+
+export async function getHighestLiquidityDIDs(): Promise<string> {
+  const didList: string[] = []
+  const fetchedPools = await fetchData(HighestLiquidityAssets, null)
+  if (fetchedPools.data?.pools?.length === 0) return null
+  for (let i = 0; i < fetchedPools.data.pools.length; i++) {
+    if (!fetchedPools.data.pools[i].datatokenAddress) continue
+    const did = web3.utils
+      .toChecksumAddress(fetchedPools.data.pools[i].datatokenAddress)
+      .replace('0x', 'did:op:')
+    didList.push(did)
+  }
+  const searchDids = JSON.stringify(didList)
+    .replace(/,/g, ' ')
+    .replace(/"/g, '')
+    .replace(/(\[|\])/g, '')
+    .replace(/(did:op:)/g, '0x')
+  return searchDids
 }
