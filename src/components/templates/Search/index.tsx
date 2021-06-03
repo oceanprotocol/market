@@ -31,12 +31,9 @@ export default function SearchPage({
 
   useEffect(() => {
     if (!config?.metadataCacheUri) return
-    console.log('INIT')
-
     async function initSearch() {
       setLoading(true)
       setTotalResults(undefined)
-      console.log('INIT SEARCH')
       const queryResult = await getResults(parsed, config.metadataCacheUri)
       setQueryResult(queryResult)
       setTotalResults(queryResult.totalResults)

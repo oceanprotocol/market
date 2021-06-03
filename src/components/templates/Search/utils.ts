@@ -69,7 +69,6 @@ export function getSearchQuery(
   // HACK: resolves the case sensitivity related to dataTokenInfo.symbol
   searchTerm = '*' + searchTerm + '*'
   searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
-  console.log('SEARCH TERM: ', searchTerm)
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
@@ -145,7 +144,6 @@ export async function getResults(
     sortOrder,
     serviceType
   )
-  console.log('QUERY STRING: ', searchQuery.query.query_string)
   const queryResult = await metadataCache.queryMetadata(searchQuery)
   return queryResult
 }
