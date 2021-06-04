@@ -1,0 +1,17 @@
+{
+  "description": "Update credential of this data set. Updating metadata will create an on-chain transaction you have to approve in your wallet.",
+  "form": {
+    "success": "🎉 Successfully updated. 🎉",
+    "successAction": "Close",
+    "error": "Updating DDO failed.",
+    "data": [
+      {
+        "name": "allow",
+        "label": "Wallet Address",
+        "placeholder": "e.g. 0x12345678901234567890abcd",
+        "help": "Enter wallet address and click ADD button to append the list",
+        "type": "credential"
+      }
+    ]
+  }
+}

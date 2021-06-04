@@ -17,6 +17,7 @@ import MetaMain from './MetaMain'
 import EditHistory from './EditHistory'
 import { useWeb3 } from '../../../providers/Web3'
 import styles from './index.module.css'
+import EditAdvanceSettings from '../AssetActions/Edit/EditAdvanceSettings'
 
 export interface AssetContentProps {
   path?: string
@@ -48,6 +49,10 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   const [showPricing, setShowPricing] = useState(false)
   const [showEdit, setShowEdit] = useState<boolean>()
   const [showEditCompute, setShowEditCompute] = useState<boolean>()
+  const [
+    showEditAdvanceSettings,
+    setShowEditAdvanceSettings
+  ] = useState<boolean>()
   const [isOwner, setIsOwner] = useState(false)
   const { ddo, price, metadata, type } = useAsset()
 
@@ -70,10 +75,17 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
     setShowEditCompute(true)
   }
 
+  function handleEditAdvanceSettingsButton() {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    setShowEditAdvanceSettings(true)
+  }
+
   return showEdit ? (
     <Edit setShowEdit={setShowEdit} />
   ) : showEditCompute ? (
     <EditComputeDataset setShowEdit={setShowEditCompute} />
+  ) : showEditAdvanceSettings ? (
+    <EditAdvanceSettings setShowEdit={setShowEditCompute} />
   ) : (
     <article className={styles.grid}>
       <div>
@@ -102,6 +114,14 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
                 <div className={styles.ownerActions}>
                   <Button style="text" size="small" onClick={handleEditButton}>
                     Edit Metadata
+                  </Button>
+                  <span className={styles.separator}>|</span>
+                  <Button
+                    style="text"
+                    size="small"
+                    onClick={handleEditAdvanceSettingsButton}
+                  >
+                    Edit Advanced Settings
                   </Button>
                   {ddo.findServiceByType('compute') && type === 'dataset' && (
                     <>
