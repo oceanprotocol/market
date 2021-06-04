@@ -3,6 +3,7 @@ import { useWeb3 } from '../../providers/Web3'
 import rbacRequest from '../../utils/rbac'
 import Alert from '../atoms/Alert'
 import Loader from '../atoms/Loader'
+import appConfig from '../../../app.config'
 
 export default function Permission({
   eventType,
@@ -11,9 +12,11 @@ export default function Permission({
   eventType: string
   children: ReactElement
 }): ReactElement {
+  const url = appConfig.rbacUrl
   const [data, updateData] = useState<boolean>()
   const { accountId } = useWeb3()
   useEffect(() => {
+    if (url === undefined) return
     const getData = async () => {
       if (accountId !== undefined) {
         const data = await rbacRequest(eventType, accountId)
@@ -21,8 +24,8 @@ export default function Permission({
       }
     }
     getData()
-  }, [eventType, accountId])
-  if (data === true) {
+  }, [eventType, accountId, url])
+  if (url === undefined || data === true) {
     return <>{children}</>
   } else if (data === false) {
     const message = `Sorry, you don't have permission to  ${eventType}. Please make sure you have connected your registered address.`
