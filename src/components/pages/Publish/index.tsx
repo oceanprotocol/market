@@ -93,9 +93,8 @@ export default function PublishPage({
         .initialValues as MetadataPublishFormDataset)) ||
       initialValues
   )
-  const [publishType, setPublishType] = useState<MetadataMain['type']>(
-    'dataset'
-  )
+  const [publishType, setPublishType] =
+    useState<MetadataMain['type']>('dataset')
   const hasFeedback = isLoading || error || success
 
   const emptyAlgoDT = Object.values(algoInitialValues.dataTokenOptions).every(
@@ -138,7 +137,7 @@ export default function PublishPage({
       )
 
       const ddo = await publish(
-        (metadata as unknown) as Metadata,
+        metadata as unknown as Metadata,
         serviceType,
         values.dataTokenOptions,
         timeout
@@ -187,7 +186,7 @@ export default function PublishPage({
         Logger.log('Publish algorithm with ', metadata, values.dataTokenOptions)
 
         const ddo = await publish(
-          (metadata as unknown) as Metadata,
+          metadata as unknown as Metadata,
           values.algorithmPrivacy === true ? 'compute' : 'access',
           values.dataTokenOptions,
           timeout

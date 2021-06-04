@@ -15,9 +15,8 @@ export default function Permission({
   const url = appConfig.rbacUrl
   const [data, updateData] = useState<boolean | 'ERROR'>()
   const [errorMessage, updateError] = useState<string>()
-  const [messageState, updateMessageState] = useState<
-    'error' | 'warning' | 'info' | 'success'
-  >()
+  const [messageState, updateMessageState] =
+    useState<'error' | 'warning' | 'info' | 'success'>()
   const { accountId } = useWeb3()
   useEffect(() => {
     if (url === undefined) return

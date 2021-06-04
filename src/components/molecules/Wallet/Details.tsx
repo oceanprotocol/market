@@ -11,13 +11,8 @@ import Web3Feedback from './Feedback'
 import styles from './Details.module.css'
 
 export default function Details(): ReactElement {
-  const {
-    web3Provider,
-    web3ProviderInfo,
-    connect,
-    logout,
-    networkData
-  } = useWeb3()
+  const { web3Provider, web3ProviderInfo, connect, logout, networkData } =
+    useWeb3()
   const { balance, config } = useOcean()
   const { locale } = useUserPreferences()
 
