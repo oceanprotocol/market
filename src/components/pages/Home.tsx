@@ -18,28 +18,28 @@ import { useWeb3 } from '../../providers/Web3'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import { getOceanConfig } from '../../utils/ocean'
 
-// TODO: these queries need to adapt to chainIds
-function getQueryHighest(chainIds: number[]) {
-  return {
+async function getQueryHighest(
+  chainIds: number[]
+): Promise<[SearchQuery, string]> {
+  const dids = await getHighestLiquidityDIDs()
+
+  // TODO: this query needs to adapt to chainIds
+  const queryHighest = {
     page: 1,
-    offset: 9,
+    offset: 15,
     query: {
       query_string: {
-        query: `(price.type:pool) -isInPurgatory:true`
+        query: `(${dids}) AND -isInPurgatory:true`,
+        fields: ['dataToken']
       }
-    },
-    sort: { 'price.ocean': -1 }
+    }
   }
+
+  return [queryHighest, dids]
 }
 
-function sortElements(items: DDO[], sorted: string[]) {
-  items.sort(function (a, b) {
-    return sorted.indexOf(a.dataToken) - sorted.indexOf(b.dataToken)
-  })
-  return items
-}
-
-function getQueryLatest(chainIds: number[]) {
+function getQueryLatest(chainIds: number[]): SearchQuery {
+  // TODO: this query needs to adapt to chainIds
   return {
     page: 1,
     offset: 9,
@@ -50,6 +50,12 @@ function getQueryLatest(chainIds: number[]) {
     },
     sort: { created: -1 }
   }
+}
+
+function sortElements(items: DDO[], sorted: string[]) {
+  items.sort(function (a, b) {
+    return sorted.indexOf(a.dataToken) - sorted.indexOf(b.dataToken)
+  })
   return items
 }
 
@@ -102,7 +108,7 @@ function SectionQueryResult({
     return () => {
       source.cancel()
     }
-  }, [appConfig.metadataCacheUri, query])
+  }, [appConfig.metadataCacheUri, query, queryData])
 
   return (
     <section className={styles.section}>
@@ -118,27 +124,15 @@ function SectionQueryResult({
 }
 
 export default function HomePage(): ReactElement {
-  // TODO: appConfig.chainIds needs to come from UserPreferences instead
   const [queryAndDids, setQueryAndDids] = useState<[SearchQuery, string]>()
+  // TODO: appConfig.chainIds needs to come from UserPreferences instead
   const { appConfig } = useSiteMetadata()
-  const { web3Loading, web3Provider } = useWeb3()
 
   useEffect(() => {
-    if (loading || (web3Loading && web3Provider)) return
-    getHighestLiquidityDIDs().then((results) => {
-      const queryHighest = {
-        page: 1,
-        offset: 15,
-        query: {
-          query_string: {
-            query: `(${results}) AND -isInPurgatory:true`,
-            fields: ['dataToken']
-          }
-        }
-      }
-      setQueryAndDids([queryHighest, results])
+    getQueryHighest(appConfig.chainIds).then((results) => {
+      setQueryAndDids(results)
     })
-  }, [config.subgraphUri, loading, web3Loading])
+  }, [appConfig.chainIds])
 
   return (
     <>
@@ -155,7 +149,6 @@ export default function HomePage(): ReactElement {
         <SectionQueryResult
           title="Highest Liquidity"
           query={queryAndDids[0]}
-          // query={getQueryHighest(appConfig.chainIds)}
           queryData={queryAndDids[1]}
         />
       )}
