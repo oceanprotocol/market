@@ -23,7 +23,6 @@ export default function Permission({
     if (url === undefined) return
     const getData = async () => {
       if (accountId === undefined) {
-        console.log('accountId', accountId)
         updateError('Please make sure your wallet is connected to proceed.')
         updateMessageState('info')
       } else {
