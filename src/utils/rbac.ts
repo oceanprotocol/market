@@ -6,7 +6,7 @@ export default async function rbacRequest(
   address: string
 ): Promise<boolean> {
   const url = appConfig.rbacUrl
-  if (url === 'false') {
+  if (url === undefined) {
     return true
   } else {
     const data = {
