@@ -111,7 +111,7 @@ export default function HomePage(): ReactElement {
         offset: 15,
         query: {
           query_string: {
-            query: `(${results}) AND -isInPurgatory:true AND price.isConsumable:true`,
+            query: `(${results}) AND -isInPurgatory:true`,
             fields: ['dataToken']
           }
         }
