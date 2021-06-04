@@ -25,9 +25,18 @@ export default function Permission({
   if (data === true) {
     return <>{children}</>
   } else if (data === false) {
-    const message = `Sorry, you don't have permission to  ${eventType}. Please make sure you are logged in.`
+    const message = `Sorry, you don't have permission to  ${eventType}. Please make sure you have connected your registered address.`
     return <Alert title="Permission denied" text={message} state="error" />
   } else {
-    return <Loader />
+    return (
+      <>
+        <Alert
+          text="Please make sure your wallet is connected to proceed."
+          state="info"
+        />
+        <br />
+        <Loader />
+      </>
+    )
   }
 }
