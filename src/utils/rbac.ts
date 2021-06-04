@@ -4,7 +4,7 @@ import appConfig from '../../app.config'
 export default async function rbacRequest(
   eventType: string,
   address: string
-): Promise<boolean> {
+): Promise<boolean | 'ERROR'> {
   const url = appConfig.rbacUrl
   if (url === undefined) {
     return true
@@ -28,6 +28,7 @@ export default async function rbacRequest(
       return await response.json()
     } catch (error) {
       console.error('Error parsing json: ' + error.message)
+      return 'ERROR'
     }
   }
 }
