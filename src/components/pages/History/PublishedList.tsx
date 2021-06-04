@@ -6,10 +6,11 @@ import axios from 'axios'
 import { queryMetadata } from '../../../utils/aquarius'
 import { useWeb3 } from '../../../providers/Web3'
 import { useOcean } from '../../../providers/Ocean'
+import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 
 export default function PublishedList(): ReactElement {
   const { accountId } = useWeb3()
-  const { metadataCacheUri } = useOcean()
+  const { appConfig } = useSiteMetadata()
 
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [isLoading, setIsLoading] = useState(false)
@@ -20,6 +21,8 @@ export default function PublishedList(): ReactElement {
   useEffect(() => {
     async function getPublished() {
       if (!accountId) return
+
+      // TODO: this query needs to adapt to chainIds
       const queryPublishedAssets = {
         page: page,
         offset: 9,
@@ -34,7 +37,7 @@ export default function PublishedList(): ReactElement {
         queryResult || setIsLoading(true)
         const result = await queryMetadata(
           queryPublishedAssets,
-          metadataCacheUri,
+          appConfig.metadataCacheUri,
           source.token
         )
         setQueryResult(result)
@@ -45,7 +48,7 @@ export default function PublishedList(): ReactElement {
       }
     }
     getPublished()
-  }, [accountId, page, metadataCacheUri])
+  }, [accountId, page, appConfig.metadataCacheUri])
 
   return accountId ? (
     <AssetList

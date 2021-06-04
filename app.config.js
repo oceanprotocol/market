@@ -1,5 +1,8 @@
 module.exports = {
-  metadataCacheUri: 'https://aquarius.mainnet.oceanprotocol.com',
+  metadataCacheUri:
+    process.env.METADATACACHE_URI ||
+    'https://aquarius.mainnet.oceanprotocol.com',
+
   // List of supported chainIds which metadata cache queries
   // will return by default
   chainIds: [1, 3, 4, 137, 1287],

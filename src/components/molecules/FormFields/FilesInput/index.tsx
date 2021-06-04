@@ -4,7 +4,6 @@ import { useField } from 'formik'
 import { toast } from 'react-toastify'
 import FileInfo from './Info'
 import FileInput from './Input'
-import { useOcean } from '../../../../providers/Ocean'
 import { InputProps } from '../../../atoms/Input'
 import { fileinfo } from '../../../../utils/provider'
 
@@ -12,19 +11,17 @@ export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
   const [isLoading, setIsLoading] = useState(false)
   const [fileUrl, setFileUrl] = useState<string>()
-  const { config } = useOcean()
 
   function loadFileInfo() {
     const source = axios.CancelToken.source()
 
     async function validateUrl() {
+      // TODO: get the providerUri
+      const providerUri = ''
+
       try {
         setIsLoading(true)
-        const checkedFile = await fileinfo(
-          fileUrl,
-          config.providerUri,
-          source.token
-        )
+        const checkedFile = await fileinfo(fileUrl, providerUri, source.token)
         checkedFile && helpers.setValue([checkedFile])
       } catch (error) {
         toast.error('Could not fetch file info. Please check URL and try again')
@@ -43,7 +40,7 @@ export default function FilesInput(props: InputProps): ReactElement {
 
   useEffect(() => {
     loadFileInfo()
-  }, [fileUrl, config.providerUri])
+  }, [fileUrl])
 
   async function handleButtonClick(e: React.SyntheticEvent, url: string) {
     // hack so the onBlur-triggered validation does not show,

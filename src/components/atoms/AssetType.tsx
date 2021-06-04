@@ -37,9 +37,9 @@ export default function AssetType({
         {type === 'dataset' ? 'data set' : 'algorithm'}
       </div>
       {/* TODO: networkId needs to come from the multinetwork DDO for each asset */}
-      {config?.networkId && (
+      {(config?.networkId || 1) && (
         <NetworkName
-          networkId={config.networkId}
+          networkId={config?.networkId || 1}
           className={styles.network}
           minimal
         />

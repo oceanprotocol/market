@@ -7,16 +7,13 @@ import {
   SearchQuery
 } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import Container from '../atoms/Container'
-import { useOcean } from '../../providers/Ocean'
 import Button from '../atoms/Button'
 import Bookmarks from '../molecules/Bookmarks'
 import axios from 'axios'
 import { queryMetadata } from '../../utils/aquarius'
 import { getHighestLiquidityDIDs } from '../../utils/subgraph'
 import { DDO, Logger } from '@oceanprotocol/lib'
-import { useWeb3 } from '../../providers/Web3'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
-import { getOceanConfig } from '../../utils/ocean'
 
 async function getQueryHighest(
   chainIds: number[]

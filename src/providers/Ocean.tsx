@@ -22,6 +22,7 @@ import { useAsset } from './Asset'
 interface OceanProviderValue {
   ocean: Ocean
   account: Account
+  config: Config
   connect: (config: Config) => Promise<void>
 }
 
@@ -33,6 +34,7 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
 
   const [ocean, setOcean] = useState<Ocean>()
   const [account, setAccount] = useState<Account>()
+  const [config, setConfig] = useState<Config>()
 
   // -----------------------------------
   // Helper: Create Ocean instance
@@ -50,6 +52,7 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
         Logger.log('[ocean] Connecting Ocean...', newConfig)
         const newOcean = await Ocean.getInstance(newConfig)
         setOcean(newOcean)
+        setConfig(newConfig)
         Logger.log('[ocean] Ocean instance created.', newOcean)
       } catch (error) {
         Logger.error('[ocean] Error: ', error.message)
@@ -99,7 +102,8 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
         {
           ocean,
           account,
-          connect
+          connect,
+          config
           // refreshBalance
         } as OceanProviderValue
       }

@@ -26,13 +26,13 @@ export default function ExplorerLink({
   })
 
   useEffect(() => {
-    setUrl((config as ConfigHelperConfig).explorerUri)
+    setUrl((config as ConfigHelperConfig)?.explorerUri)
   }, [config])
 
   return (
     <a
       href={`${url}/${path}`}
-      title={`View on ${(config as ConfigHelperConfig).explorerUri}`}
+      title={`View on ${(config as ConfigHelperConfig)?.explorerUri}`}
       target="_blank"
       rel="noreferrer"
       className={styleClasses}

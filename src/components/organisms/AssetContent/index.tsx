@@ -80,7 +80,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
         {showPricing && <Pricing ddo={ddo} />}
         <div className={styles.content}>
           <MetaMain />
-          <Bookmark did={ddo.id} />
+          {/* <Bookmark did={ddo.id} /> */}
 
           {isInPurgatory ? (
             <Alert
