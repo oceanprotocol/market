@@ -2,7 +2,6 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './SyncStatus.module.css'
 import Button from '../atoms/Button'
 import { useOcean } from '../../providers/Ocean'
-import { useWeb3 } from '../../providers/Web3'
 import { useAsset } from '../../providers/Asset'
 import Loader from '../atoms/Loader'
 
@@ -25,8 +24,7 @@ export default function TokenApproval({
   amount: string
   coin: string
 }): ReactElement {
-  const { accountId } = useWeb3()
-  const { ddo, owner, price } = useAsset()
+  const { ddo, owner } = useAsset()
   const [approveToken, setApproveToken] = useState(false)
   const [tokenApproved, setTokenApproved] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -44,13 +42,13 @@ export default function TokenApproval({
       owner,
       spender // marketplace address,
     )
-    setTokenApproved(allowance !== '0')
+    setTokenApproved(allowance > amount)
     setLoading(false)
   }
 
   useEffect(() => {
     checkTokenApproval()
-  }, [coin])
+  }, [coin, amount])
 
   useEffect(() => {
     checkTokenApproval()
