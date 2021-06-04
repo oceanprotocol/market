@@ -56,12 +56,7 @@ export default function TokenApproval({
 
   async function approveTokens() {
     setLoading(true)
-    const tsx = await ocean.datatokens.approve(
-      tokenAddress,
-      spender,
-      amount,
-      owner
-    )
+    await ocean.datatokens.approve(tokenAddress, spender, amount, owner)
     await checkTokenApproval()
     setLoading(false)
   }
@@ -84,7 +79,7 @@ export default function TokenApproval({
               Approve TOKEN
             </Button>
           )}
-          {actionButton}
+          {tokenApproved && actionButton}
         </>
       ) : (
         <>

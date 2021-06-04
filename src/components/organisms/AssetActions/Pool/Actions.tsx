@@ -43,8 +43,6 @@ export default function Actions({
     </Button>
   )
 
-  console.log(actionName)
-
   return (
     <>
       <div className={styles.actions}>
