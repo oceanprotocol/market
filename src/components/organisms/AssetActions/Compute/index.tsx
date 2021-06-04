@@ -54,7 +54,7 @@ export default function Compute({
   dtBalance: string
   file: FileMetadata
 }): ReactElement {
-  const { marketFeeAddress } = useSiteMetadata()
+  const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
   const { ocean, account, config } = useOcean()
   const { price, type, ddo } = useAsset()
@@ -296,7 +296,7 @@ export default function Compute({
             ddo.id,
             computeService.index,
             computeAlgorithm,
-            marketFeeAddress,
+            appConfig.marketFeeAddress,
             undefined,
             false
           )
@@ -316,7 +316,7 @@ export default function Compute({
             serviceAlgo.type,
             accountId,
             serviceAlgo.index,
-            marketFeeAddress,
+            appConfig.marketFeeAddress,
             undefined,
             false
           )
