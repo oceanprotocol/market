@@ -18,7 +18,9 @@ export default function Swap({
   balance,
   price,
   setMaximumDt,
-  setMaximumOcean
+  setMaximumOcean,
+  setCoin,
+  setAmount
 }: {
   ddo: DDO
   maxDt: number
@@ -27,6 +29,8 @@ export default function Swap({
   price: BestPrice
   setMaximumDt: (value: number) => void
   setMaximumOcean: (value: number) => void
+  setCoin: (value: string) => void
+  setAmount: (value: string) => void
 }): ReactElement {
   const { ocean } = useOcean()
   const [oceanItem, setOceanItem] = useState<TradeItem>({
@@ -115,6 +119,13 @@ export default function Swap({
         ? await ocean.pool.getOceanReceived(price.address, value.toString())
         : await ocean.pool.getOceanNeeded(price.address, value.toString())
 
+    setCoin(values.type === 'sell' ? 'OCEAN' : 'DATATOKEN')
+
+    setAmount(
+      values.type === 'sell'
+        ? values.ocean.toString()
+        : values.datatoken.toString()
+    )
     setFieldValue(name === 'ocean' ? 'datatoken' : 'ocean', newValue)
     validateForm()
   }

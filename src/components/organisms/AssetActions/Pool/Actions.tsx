@@ -43,18 +43,22 @@ export default function Actions({
     </Button>
   )
 
+  console.log(actionName)
+
   return (
     <>
       <div className={styles.actions}>
         {isLoading ? (
           <Loader message={loaderMessage} />
-        ) : (
+        ) : actionName === 'Supply' || actionName === 'Swap' ? (
           <TokenApproval
             actionButton={actionButton}
             amount={amount}
             coin={coin}
             disabled={!ocean || isDisabled}
           />
+        ) : (
+          actionButton
         )}
       </div>
       {txId && (

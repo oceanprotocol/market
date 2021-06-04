@@ -51,6 +51,8 @@ export default function FormTrade({
   const { ocean } = useOcean()
   const { debug } = useUserPreferences()
   const [txId, setTxId] = useState<string>()
+  const [coin, setCoin] = useState<string>('OCEAN')
+  const [amount, setAmount] = useState<string>('0')
 
   const [maximumOcean, setMaximumOcean] = useState(maxOcean)
   const [maximumDt, setMaximumDt] = useState(maxDt)
@@ -103,6 +105,7 @@ export default function FormTrade({
       toast.error(error.message)
     }
   }
+
   return (
     <Formik
       initialValues={initialValues}
@@ -122,8 +125,10 @@ export default function FormTrade({
               maxDt={maxDt}
               maxOcean={maxOcean}
               price={price}
+              setCoin={setCoin}
               setMaximumOcean={setMaximumOcean}
               setMaximumDt={setMaximumDt}
+              setAmount={setAmount}
             />
           ) : (
             <div className={styles.alertWrap}>
@@ -144,7 +149,9 @@ export default function FormTrade({
             loaderMessage="Swapping tokens..."
             successMessage="Successfully swapped tokens."
             actionName={content.action}
+            amount={amount}
             action={submitForm}
+            coin={coin}
             txId={txId}
           />
 

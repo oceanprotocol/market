@@ -52,16 +52,18 @@ export default function TokenApproval({
     checkTokenApproval()
   }, [coin])
 
+  useEffect(() => {
+    checkTokenApproval()
+  }, [])
+
   async function approveTokens() {
     setLoading(true)
-    console.log(coin)
     const tsx = await ocean.datatokens.approve(
       tokenAddress,
       spender,
       amount,
       owner
     )
-    console.log(tsx)
     await checkTokenApproval()
     setLoading(false)
   }
