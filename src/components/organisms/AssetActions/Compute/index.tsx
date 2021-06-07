@@ -377,7 +377,7 @@ export default function Compute({
         <div>
           <Price price={price} conversion />
           <br />
-          <AssetStatus did={file.valid} />
+          <AssetStatus isValid={file.valid} />
         </div>
       </div>
 

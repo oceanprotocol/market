@@ -109,7 +109,7 @@ export default function AssetSelection({
                     {asset.symbol} | {asset.did}
                   </Dotdotdot>
                   {props.value === asset.did && (
-                    <AssetStatus did={DID.parse(asset.did)} />
+                    <AssetStatus asset={DID.parse(asset.did)} />
                   )}
                 </label>
 

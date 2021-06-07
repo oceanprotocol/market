@@ -163,7 +163,7 @@ export default function Consume({
       <div className={styles.info}>
         <div className={styles.filewrapper}>
           <File file={file} />
-          <AssetStatus did={file.valid} />
+          <AssetStatus isValid={file.valid} />
         </div>
         <div className={styles.pricewrapper}>
           <Price price={price} conversion />
