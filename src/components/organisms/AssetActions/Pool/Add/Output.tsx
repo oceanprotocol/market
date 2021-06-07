@@ -48,11 +48,8 @@ export default function Output({
   coin: string
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
-  const {
-    help,
-    titleIn,
-    titleOut
-  } = data.content.edges[0].node.childContentJson.pool.add.output
+  const { help, titleIn, titleOut } =
+    data.content.edges[0].node.childContentJson.pool.add.output
 
   // Connect with form
   const { values }: FormikContextType<FormAddLiquidity> = useFormikContext()

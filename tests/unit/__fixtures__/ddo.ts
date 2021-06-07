@@ -5,8 +5,7 @@ const ddo: Partial<DDO> = {
   id: 'did:op:7b4e90b05ec243dbaaca2a503fdde119706577f9645b45b9ab65cf2c3970f757',
   publicKey: [
     {
-      id:
-        'did:op:7b4e90b05ec243dbaaca2a503fdde119706577f9645b45b9ab65cf2c3970f757',
+      id: 'did:op:7b4e90b05ec243dbaaca2a503fdde119706577f9645b45b9ab65cf2c3970f757',
       type: 'EthereumECDSAKey',
       owner: '0x4D156A2ef69ffdDC55838176C6712C90f60a2285'
     }
