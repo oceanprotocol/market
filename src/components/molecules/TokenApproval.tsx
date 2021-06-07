@@ -43,6 +43,7 @@ export default function TokenApproval({
       spender // marketplace address,
     )
     setTokenApproved(allowance > amount)
+    allowance > amount && setApproveToken(false)
     setLoading(false)
   }
 
@@ -54,7 +55,7 @@ export default function TokenApproval({
     checkTokenApproval()
   }, [])
 
-  async function approveTokens() {
+  async function approveTokens(amount: string) {
     setLoading(true)
     try {
       await ocean.datatokens.approve(tokenAddress, spender, amount, owner)
@@ -91,17 +92,19 @@ export default function TokenApproval({
             style="primary"
             size="small"
             onClick={() => {
-              approveTokens()
+              approveTokens(amount)
             }}
             disabled={false}
           >
-            {amount} TOKEN
+            {`${amount} TOKEN${amount > '1' ? 'S' : ''}`}
           </Button>
           <Button
             style="primary"
             size="small"
             onClick={() => {
-              approveTokens()
+              const largeAmount = (2 ** 53 - 1).toString()
+              console.log(largeAmount)
+              approveTokens(largeAmount)
             }}
             disabled={false}
           >
