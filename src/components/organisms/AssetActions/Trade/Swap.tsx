@@ -112,7 +112,7 @@ export default function Swap({
 
   const handleValueChange = async (name: string, value: number) => {
     const impact = new Decimal(100 - Number(values.slippage)).div(100)
-    const precision = 15
+    const precision = 2
     const newValue =
       name === 'ocean'
         ? values.type === 'sell'
@@ -123,12 +123,15 @@ export default function Swap({
         : await ocean.pool.getOceanNeeded(price.address, value.toString())
 
     setCoin(values.type === 'sell' ? 'OCEAN' : 'DATATOKEN')
+    await setFieldValue(name === 'ocean' ? 'datatoken' : 'ocean', newValue)
     setAmount(
       values.type === 'sell'
-        ? new Decimal(values.ocean).mul(impact).toFixed(2).toString()
-        : new Decimal(values.datatoken).mul(impact).toFixed(2).toString()
+        ? new Decimal(values.ocean).mul(impact).toFixed(precision).toString()
+        : new Decimal(values.datatoken)
+            .mul(impact)
+            .toFixed(precision)
+            .toString()
     )
-    setFieldValue(name === 'ocean' ? 'datatoken' : 'ocean', newValue)
     validateForm()
   }
 
