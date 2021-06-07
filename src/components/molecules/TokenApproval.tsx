@@ -4,6 +4,7 @@ import Button from '../atoms/Button'
 import { useOcean } from '../../providers/Ocean'
 import { useAsset } from '../../providers/Asset'
 import Loader from '../atoms/Loader'
+import { useWeb3 } from '../../providers/Web3'
 
 function LoaderArea() {
   return (
@@ -29,6 +30,7 @@ export default function TokenApproval({
   const [tokenApproved, setTokenApproved] = useState(false)
   const [loading, setLoading] = useState(false)
   const { ocean, config } = useOcean()
+  const { accountId } = useWeb3()
 
   const tokenAddress =
     coin === 'OCEAN' ? config.oceanTokenAddress : ddo.dataTokenInfo.address
@@ -39,10 +41,10 @@ export default function TokenApproval({
     setLoading(true)
     const allowance = await ocean.datatokens.allowance(
       tokenAddress,
-      owner,
+      accountId,
       spender // marketplace address,
     )
-    setTokenApproved(allowance > amount)
+    setTokenApproved(allowance >= amount)
     allowance > amount && setApproveToken(false)
     setLoading(false)
   }
@@ -58,10 +60,11 @@ export default function TokenApproval({
   async function approveTokens(amount: string) {
     setLoading(true)
     try {
-      await ocean.datatokens.approve(tokenAddress, spender, amount, owner)
+      await ocean.datatokens.approve(tokenAddress, spender, amount, accountId)
     } catch (error) {
       setLoading(false)
     }
+    setApproveToken(false)
     await checkTokenApproval()
     setLoading(false)
   }
@@ -103,7 +106,6 @@ export default function TokenApproval({
             size="small"
             onClick={() => {
               const largeAmount = (2 ** 53 - 1).toString()
-              console.log(largeAmount)
               approveTokens(largeAmount)
             }}
             disabled={false}

@@ -147,7 +147,6 @@ export default function Add({
   return (
     <>
       <Header title={content.title} backAction={() => setShowAdd(false)} />
-
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -174,16 +173,18 @@ export default function Add({
                   setNewPoolShare={setNewPoolShare}
                 />
               ) : (
-                <Alert
-                  className={styles.warning}
-                  text={content.warning}
-                  state="info"
-                  action={{
-                    name: 'I understand',
-                    style: 'text',
-                    handleAction: () => setIsWarningAccepted(true)
-                  }}
-                />
+                content.warning && (
+                  <Alert
+                    className={styles.warning}
+                    text={content.warning.toString()}
+                    state="info"
+                    action={{
+                      name: 'I understand',
+                      style: 'text',
+                      handleAction: () => setIsWarningAccepted(true)
+                    }}
+                  />
+                )
               )}
             </div>
 

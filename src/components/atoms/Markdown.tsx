@@ -14,7 +14,7 @@ const Markdown = ({
   const textCleaned = text?.replace(/\\n/g, '\n ')
   return (
     <ReactMarkdown
-      source={textCleaned}
+      children={textCleaned}
       className={`${styles.markdown} ${className}`}
     />
   )

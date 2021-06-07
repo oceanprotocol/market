@@ -123,7 +123,6 @@ export default function Swap({
         : await ocean.pool.getOceanNeeded(price.address, value.toString())
 
     setCoin(values.type === 'sell' ? 'OCEAN' : 'DATATOKEN')
-    console.log(values)
     setAmount(
       values.type === 'sell'
         ? new Decimal(values.ocean).mul(impact).toFixed(2).toString()
