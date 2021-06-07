@@ -36,8 +36,9 @@ export default function FilterPrice({
   async function handleSelectedFilter(isSelected: boolean, value: string) {
     if (isSelected) {
       if (serviceSelections.length > 1) {
-        const otherValue = serviceFilterItems.find((p) => p.value !== value)
-          .value
+        const otherValue = serviceFilterItems.find(
+          (p) => p.value !== value
+        ).value
         await applyServiceFilter(otherValue)
         setServiceSelections([otherValue])
       } else {

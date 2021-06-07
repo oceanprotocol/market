@@ -61,12 +61,8 @@ export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
   const [showPricing, setShowPricing] = useState(false)
   const [success, setSuccess] = useState<string>()
 
-  const {
-    createPricing,
-    pricingIsLoading,
-    pricingError,
-    pricingStepText
-  } = usePricing()
+  const { createPricing, pricingIsLoading, pricingError, pricingStepText } =
+    usePricing()
 
   const hasFeedback = pricingIsLoading || typeof success !== 'undefined'
 

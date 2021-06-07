@@ -206,13 +206,8 @@ function usePricing(): UsePricing {
 
     if (!ocean || !accountId || !dtSymbol) return
 
-    const {
-      type,
-      oceanAmount,
-      price,
-      weightOnDataToken,
-      swapFee
-    } = priceOptions
+    const { type, oceanAmount, price, weightOnDataToken, swapFee } =
+      priceOptions
 
     let { dtAmount } = priceOptions
     const isPool = type === 'dynamic'
@@ -253,10 +248,9 @@ function usePricing(): UsePricing {
         ? await ocean.fixedRateExchange
             .create(dataToken, `${price}`, accountId, `${dtAmount}`)
             .next((step: number) => setStep(step, 'exchange', ddo))
-        : await ocean.OceanDispenser.makeMinter(
-            dataToken,
-            accountId
-          ).next((step: number) => setStep(step, 'free', ddo))
+        : await ocean.OceanDispenser.makeMinter(dataToken, accountId).next(
+            (step: number) => setStep(step, 'free', ddo)
+          )
       await sleep(20000)
       return tx
     } catch (error) {

@@ -1,8 +1,8 @@
 import { PriceOptionsMarket } from '../@types/MetaData'
 import * as Yup from 'yup'
 
-export const validationSchema: Yup.SchemaOf<PriceOptionsMarket> = Yup.object().shape(
-  {
+export const validationSchema: Yup.SchemaOf<PriceOptionsMarket> =
+  Yup.object().shape({
     price: Yup.number()
       .min(1, (param) => `Must be more or equal to ${param.min}`)
       .required('Required'),
@@ -22,8 +22,7 @@ export const validationSchema: Yup.SchemaOf<PriceOptionsMarket> = Yup.object().s
       .max(10, 'Maximum is 10%')
       .required('Required')
       .nullable()
-  }
-)
+  })
 
 export const initialValues: PriceOptionsMarket = {
   price: 1,
