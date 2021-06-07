@@ -11,7 +11,7 @@
     "jest": "NODE_ENV=test jest -c tests/unit/jest.config.js",
     "test": "npm run apollo:codegen && npm run lint && npm run jest",
     "test:watch": "npm run lint && npm run jest -- --watch",
-    "lint": "npm run write:repoMetadata && eslint --ignore-path .gitignore --ext .js --ext .ts --ext .tsx . && npm run type-check",
+    "lint": "npm run write:repoMetadata && eslint --ignore-path .gitignore --ext .js --ext .ts --ext .tsx . && npm run type-check && eslint --fix",
     "format": "prettier --ignore-path .gitignore './**/*.{css,yml,js,ts,tsx,json}' --write",
     "type-check": "tsc --noEmit",
     "analyze": "npm run build && source-map-explorer 'public/*.js'",
