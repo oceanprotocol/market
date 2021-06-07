@@ -72,15 +72,12 @@ export default function Compute({
   const [isPublished, setIsPublished] = useState(false)
   const [hasPreviousDatasetOrder, setHasPreviousDatasetOrder] = useState(false)
   const [previousDatasetOrderId, setPreviousDatasetOrderId] = useState<string>()
-  const [hasPreviousAlgorithmOrder, setHasPreviousAlgorithmOrder] = useState(
-    false
-  )
+  const [hasPreviousAlgorithmOrder, setHasPreviousAlgorithmOrder] =
+    useState(false)
   const [algorithmDTBalance, setalgorithmDTBalance] = useState<string>()
   const [algorithmPrice, setAlgorithmPrice] = useState<BestPrice>()
-  const [
-    previousAlgorithmOrderId,
-    setPreviousAlgorithmOrderId
-  ] = useState<string>()
+  const [previousAlgorithmOrderId, setPreviousAlgorithmOrderId] =
+    useState<string>()
   const [datasetTimeout, setDatasetTimeout] = useState<string>()
   const [algorithmTimeout, setAlgorithmTimeout] = useState<string>()
 

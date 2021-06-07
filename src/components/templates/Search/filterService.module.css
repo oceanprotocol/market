@@ -47,7 +47,7 @@ button.filter,
   margin-bottom: calc(var(--spacer) / 6);
 }
 
-.showClear:hover{
+.showClear:hover {
   display: inline-flex;
   color: var(--color-primary);
 }
