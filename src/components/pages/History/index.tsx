@@ -29,14 +29,15 @@ const tabs = [
     content: <ComputeJobs />
   }
 ]
-export default function HistoryPage({
-  selected
-}: {
-  selected?: number
-}): ReactElement {
+
+export default function HistoryPage(): ReactElement {
+  const url = new URL(window.location.href)
+  const defaultTab = url.searchParams.get('defaultTab')
+  let selectedTab = 0
+  defaultTab === 'ComputeJobs' ? (selectedTab = 4) : (selectedTab = 0)
   return (
     <article className={styles.content}>
-      <Tabs items={tabs} className={styles.tabs} selected={selected} />
+      <Tabs items={tabs} className={styles.tabs} selected={selectedTab} />
     </article>
   )
 }
