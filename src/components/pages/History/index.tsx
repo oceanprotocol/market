@@ -33,11 +33,15 @@ const tabs = [
 export default function HistoryPage(): ReactElement {
   const url = new URL(window.location.href)
   const defaultTab = url.searchParams.get('defaultTab')
-  let selectedTab = 0
-  defaultTab === 'ComputeJobs' ? (selectedTab = 4) : (selectedTab = 0)
+  let defaultTabIndex = 0
+  defaultTab === 'ComputeJobs' ? (defaultTabIndex = 4) : (defaultTabIndex = 0)
   return (
     <article className={styles.content}>
-      <Tabs items={tabs} className={styles.tabs} selected={selectedTab} />
+      <Tabs
+        items={tabs}
+        className={styles.tabs}
+        defaultIndex={defaultTabIndex}
+      />
     </article>
   )
 }

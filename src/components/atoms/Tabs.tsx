@@ -11,20 +11,17 @@ export default function Tabs({
   items,
   className,
   handleTabChange,
-  defaultIndex,
-  selected
+  defaultIndex
 }: {
   items: TabsItem[]
   className?: string
   handleTabChange?: (tabName: string) => void
   defaultIndex?: number
-  selected?: number
 }): ReactElement {
   return (
     <ReactTabs
       className={`${className && className}`}
       defaultIndex={defaultIndex}
-      selectedIndex={selected}
     >
       <TabList className={styles.tabList}>
         {items.map((item) => (
