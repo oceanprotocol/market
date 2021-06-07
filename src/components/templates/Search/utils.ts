@@ -79,22 +79,36 @@ export function getSearchQuery(
       bool: {
         must: [
           {
-            query_string: {
-              query: `${searchTerm}`,
-              fields: [
-                'id',
-                'publicKey.owner',
-                'dataToken',
-                'dataTokenInfo.name',
-                'dataTokenInfo.symbol',
-                'service.attributes.main.name^10',
-                'service.attributes.main.author',
-                'service.attributes.additionalInformation.description',
-                'service.attributes.additionalInformation.tags'
-              ],
-              default_operator: 'AND',
-              minimum_should_match: '2<75%',
-              phrase_slop: 2
+            bool: {
+              should: [
+                {
+                  query_string: {
+                    query: `${searchTerm}`,
+                    fields: [
+                      'id',
+                      'publicKey.owner',
+                      'dataToken',
+                      'dataTokenInfo.name',
+                      'dataTokenInfo.symbol',
+                      'service.attributes.main.name^10',
+                      'service.attributes.main.author',
+                      'service.attributes.additionalInformation.description',
+                      'service.attributes.additionalInformation.tags'
+                    ],
+                    default_operator: 'AND',
+                    minimum_should_match: '2<75%',
+                    phrase_slop: 2
+                  }
+                },
+                {
+                  match_phrase: {
+                    content: {
+                      query: `${searchTerm}`,
+                      boost: 4
+                    }
+                  }
+                }
+              ]
             }
           },
           {
