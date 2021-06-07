@@ -56,7 +56,11 @@ export default function TokenApproval({
 
   async function approveTokens() {
     setLoading(true)
-    await ocean.datatokens.approve(tokenAddress, spender, amount, owner)
+    try {
+      await ocean.datatokens.approve(tokenAddress, spender, amount, owner)
+    } catch (error) {
+      setLoading(false)
+    }
     await checkTokenApproval()
     setLoading(false)
   }

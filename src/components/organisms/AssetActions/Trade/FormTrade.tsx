@@ -79,6 +79,12 @@ export default function FormTrade({
     try {
       const impact = new Decimal(100 - Number(values.slippage)).div(100)
       const precision = 15
+      console.log(
+        new Decimal(values.datatoken).mul(impact).toFixed(precision).toString()
+      )
+      console.log(
+        new Decimal(values.ocean).mul(impact).toFixed(precision).toString()
+      )
       const tx =
         values.type === 'buy'
           ? await ocean.pool.buyDTWithExactOcean(
@@ -105,6 +111,8 @@ export default function FormTrade({
       toast.error(error.message)
     }
   }
+
+  console.log(content.warning)
 
   return (
     <Formik

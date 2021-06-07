@@ -10,6 +10,7 @@ import Output from './Output'
 import Slippage from './Slippage'
 import { FormTradeData, TradeItem } from '../../../../models/FormTrade'
 import { useOcean } from '../../../../providers/Ocean'
+import Decimal from 'decimal.js'
 
 export default function Swap({
   ddo,
@@ -110,6 +111,8 @@ export default function Swap({
   }
 
   const handleValueChange = async (name: string, value: number) => {
+    const impact = new Decimal(100 - Number(values.slippage)).div(100)
+    const precision = 15
     const newValue =
       name === 'ocean'
         ? values.type === 'sell'
@@ -120,11 +123,13 @@ export default function Swap({
         : await ocean.pool.getOceanNeeded(price.address, value.toString())
 
     setCoin(values.type === 'sell' ? 'OCEAN' : 'DATATOKEN')
-
     setAmount(
       values.type === 'sell'
-        ? values.ocean.toString()
-        : values.datatoken.toString()
+        ? new Decimal(values.ocean).mul(impact).toFixed(precision).toString()
+        : new Decimal(values.datatoken)
+            .mul(impact)
+            .toFixed(precision)
+            .toString()
     )
     setFieldValue(name === 'ocean' ? 'datatoken' : 'ocean', newValue)
     validateForm()
