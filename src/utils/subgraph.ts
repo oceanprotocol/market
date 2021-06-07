@@ -88,13 +88,13 @@ const PreviousOrderQuery = gql`
 `
 const HighestLiquidityAssets = gql`
   query HighestLiquidiyAssets {
-    pools(orderBy: valueLocked, orderDirection: desc, first: 15) {
+    pools(
+      where: { datatokenReserve_gte: 1 }
+      orderBy: valueLocked
+      orderDirection: desc
+      first: 15
+    ) {
       id
-      consumePrice
-      spotPrice
-      tx
-      symbol
-      name
       datatokenAddress
       valueLocked
     }
