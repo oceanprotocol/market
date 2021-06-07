@@ -66,11 +66,10 @@ export function getSearchQuery(
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
     : text || ''
 
-  if (searchTerm.startsWith('did:op:')) {
-    searchTerm = searchTerm.substring(7)
-  }
+  const modifiedSearchTerm = searchTerm.split(' ').join(' OR ').toUpperCase()
+
   // HACK: resolves the case sensitivity related to dataTokenInfo.symbol
-  searchTerm = '*' + searchTerm.toUpperCase() + '*'
+
   searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
   return {
     page: Number(page) || 1,
@@ -83,7 +82,7 @@ export function getSearchQuery(
               should: [
                 {
                   query_string: {
-                    query: `${searchTerm}`,
+                    query: `${modifiedSearchTerm}`,
                     fields: [
                       'id',
                       'publicKey.owner',
@@ -95,7 +94,7 @@ export function getSearchQuery(
                       'service.attributes.additionalInformation.description',
                       'service.attributes.additionalInformation.tags'
                     ],
-                    default_operator: 'AND',
+                    default_operator: 'OR',
                     minimum_should_match: '2<75%',
                     phrase_slop: 2
                   }
