@@ -15,7 +15,7 @@ import axios from 'axios'
 
 export default function AssetActions(): ReactElement {
   const { accountId } = useWeb3()
-  const { config, ocean, balance, account } = useOcean()
+  const { ocean, balance, account } = useOcean()
   const { price, ddo } = useAsset()
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
@@ -25,14 +25,14 @@ export default function AssetActions(): ReactElement {
   const isCompute = Boolean(ddo?.findServiceByType('compute'))
 
   useEffect(() => {
-    if (!config) return
     const source = axios.CancelToken.source()
     async function initFileInfo() {
       setFileIsLoading(true)
       try {
         const fileInfo = await getFileInfo(
           DID.parse(`${ddo.id}`),
-          config.providerUri,
+          ddo.findServiceByType('access')?.serviceEndpoint ||
+            ddo.findServiceByType('compute')?.serviceEndpoint,
           source.token
         )
         setFileMetadata(fileInfo.data[0])
@@ -43,7 +43,7 @@ export default function AssetActions(): ReactElement {
       }
     }
     initFileInfo()
-  }, [config, ddo.id])
+  }, [ddo.id])
 
   // Get and set user DT balance
   useEffect(() => {
