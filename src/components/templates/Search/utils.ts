@@ -65,8 +65,10 @@ export function getSearchQuery(
     ? // eslint-disable-next-line no-useless-escape
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
     : text || ''
-
-  const modifiedSearchTerm = searchTerm.split(' ').join(' OR ').toUpperCase()
+  let modifiedSearchTerm = searchTerm
+  if (!searchTerm.startsWith('did:op:')) {
+    modifiedSearchTerm = searchTerm.split(' ').join(' OR ').toUpperCase()
+  }
 
   // HACK: resolves the case sensitivity related to dataTokenInfo.symbol
 
