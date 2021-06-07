@@ -1,12 +1,11 @@
 {
+  "parser": "babel-eslint",
   "extends": ["eslint:recommended", "prettier"],
-  "parserOptions": {
-    "sourceType": "module",
-    "ecmaFeatures": { "jsx": true }
-  },
-  "env": { "browser": true, "node": true, "es2020": true, "jest": true },
+  "env": { "es6": true, "browser": true, "node": true, "jest": true },
   "settings": {
-    "react": { "version": "detect" }
+    "react": {
+      "version": "detect"
+    }
   },
   "overrides": [
     {
@@ -21,6 +20,9 @@
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:prettier/recommended",
+        "prettier/react",
+        "prettier/standard",
+        "prettier/@typescript-eslint",
         "plugin:react-hooks/recommended"
       ],
       "plugins": ["@typescript-eslint", "prettier"],

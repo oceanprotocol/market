@@ -43,7 +43,7 @@ exports.onCreatePage = async ({ page, actions }) => {
 exports.onCreateWebpackConfig = ({ actions }) => {
   actions.setWebpackConfig({
     node: {
-      // 'fs' fix for ocean.js
+      // 'fs' fix for squid.js
       fs: 'empty'
     },
     // fix for 'got'/'swarm-js' dependency

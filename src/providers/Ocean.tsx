@@ -30,7 +30,6 @@ interface OceanProviderValue {
   config: ConfigHelperConfig
   account: Account
   balance: UserBalance
-  loading: boolean
   connect: (config?: Config) => Promise<void>
   refreshBalance: () => Promise<void>
 }
@@ -54,29 +53,27 @@ function OceanProvider({
   const [config, setConfig] = useState<ConfigHelperConfig | Config>(
     initialConfig
   )
-  const [loading, setLoading] = useState<boolean>()
 
   // -----------------------------------
   // Create Ocean instance
   // -----------------------------------
   const connect = useCallback(
     async (newConfig?: ConfigHelperConfig | Config) => {
-      setLoading(true)
       try {
         const usedConfig = newConfig || config
         Logger.log('[ocean] Connecting Ocean...', usedConfig)
+
         usedConfig.web3Provider = web3 || initialConfig.web3Provider
 
         if (newConfig) {
-          await setConfig(usedConfig)
+          setConfig(usedConfig)
         }
 
         if (usedConfig.web3Provider) {
           const newOcean = await Ocean.getInstance(usedConfig)
-          await setOcean(newOcean)
+          setOcean(newOcean)
           Logger.log('[ocean] Ocean instance created.', newOcean)
         }
-        setLoading(false)
       } catch (error) {
         Logger.error('[ocean] Error: ', error.message)
       }
@@ -139,9 +136,7 @@ function OceanProvider({
       }
 
       try {
-        setLoading(true)
         await connect(newConfig)
-        setLoading(false)
       } catch (error) {
         Logger.error('[ocean] Error: ', error.message)
       }
@@ -157,7 +152,6 @@ function OceanProvider({
           account,
           balance,
           config,
-          loading,
           connect,
           refreshBalance
         } as OceanProviderValue

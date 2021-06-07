@@ -10,7 +10,7 @@ import {
   AssetsFrePrice_fixedRateExchanges as AssetsFrePriceFixedRateExchanges
 } from '../@types/apollo/AssetsFrePrice'
 import { AssetPreviousOrder } from '../@types/apollo/AssetPreviousOrder'
-import web3 from 'web3'
+import BigNumber from 'bignumber.js'
 
 export interface PriceList {
   [key: string]: string
@@ -83,20 +83,6 @@ const PreviousOrderQuery = gql`
     ) {
       timestamp
       tx
-    }
-  }
-`
-const HighestLiquidityAssets = gql`
-  query HighestLiquidiyAssets {
-    pools(
-      where: { datatokenReserve_gte: 1 }
-      orderBy: valueLocked
-      orderDirection: desc
-      first: 15
-    ) {
-      id
-      datatokenAddress
-      valueLocked
     }
   }
 `
@@ -311,23 +297,4 @@ export async function getAssetsBestPrices(
   }
 
   return assetsWithPrice
-}
-
-export async function getHighestLiquidityDIDs(): Promise<string> {
-  const didList: string[] = []
-  const fetchedPools = await fetchData(HighestLiquidityAssets, null)
-  if (fetchedPools.data?.pools?.length === 0) return null
-  for (let i = 0; i < fetchedPools.data.pools.length; i++) {
-    if (!fetchedPools.data.pools[i].datatokenAddress) continue
-    const did = web3.utils
-      .toChecksumAddress(fetchedPools.data.pools[i].datatokenAddress)
-      .replace('0x', 'did:op:')
-    didList.push(did)
-  }
-  const searchDids = JSON.stringify(didList)
-    .replace(/,/g, ' ')
-    .replace(/"/g, '')
-    .replace(/(\[|\])/g, '')
-    .replace(/(did:op:)/g, '0x')
-  return searchDids
 }
