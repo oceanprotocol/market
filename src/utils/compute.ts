@@ -13,9 +13,10 @@ export async function createTrustedAlgorithmList(
   const trustedAlgorithms = []
 
   for (const selectedAlgorithm of selectedAlgorithms) {
-    const trustedAlgorithm = await ocean.compute.createPublisherTrustedAlgorithmfromDID(
-      selectedAlgorithm
-    )
+    const trustedAlgorithm =
+      await ocean.compute.createPublisherTrustedAlgorithmfromDID(
+        selectedAlgorithm
+      )
     trustedAlgorithms.push(trustedAlgorithm)
   }
   return trustedAlgorithms
