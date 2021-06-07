@@ -29,11 +29,14 @@ const tabs = [
     content: <ComputeJobs />
   }
 ]
-
-export default function HistoryPage(): ReactElement {
+export default function HistoryPage({
+  selected
+}: {
+  selected?: number
+}): ReactElement {
   return (
     <article className={styles.content}>
-      <Tabs items={tabs} className={styles.tabs} />
+      <Tabs items={tabs} className={styles.tabs} selected={selected} />
     </article>
   )
 }
