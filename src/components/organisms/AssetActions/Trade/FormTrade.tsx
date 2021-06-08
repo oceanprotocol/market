@@ -75,7 +75,9 @@ export default function FormTrade({
 
   async function handleTrade(values: FormTradeData) {
     try {
-      const impact = new Decimal(100 - Number(values.slippage)).div(100)
+      const impact = new Decimal(
+        new Decimal(100).sub(new Decimal(values.slippage))
+      ).div(100)
       const precision = 15
       const tx =
         values.type === 'buy'
