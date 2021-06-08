@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 
 export default function Credential(props: InputProps) {
   const [field, meta, helpers] = useField(props.name)
-  const [arrayInput, setArrayInput] = useState<string[]>(field.value)
+  const [arrayInput, setArrayInput] = useState<string[]>(field.value || [])
   const [value, setValue] = useState('')
 
   useEffect(() => {
@@ -60,12 +60,14 @@ export default function Credential(props: InputProps) {
         arrayInput.map((value) => {
           return (
             <div className={styles.chip} key={value}>
-              {/* <Chip
-                label={value}
-                onDelete={(even) => handleDeleteChip(value)}
-                variant="outlined"
-              /> */}
-              value
+              {value}
+              <Button
+                className={styles.crossButton}
+                style="text"
+                onClick={(even) => handleDeleteChip(value)}
+              >
+                X
+              </Button>
             </div>
           )
         })}
