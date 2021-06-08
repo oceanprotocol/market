@@ -99,7 +99,7 @@ export default function TokenApproval({
             }}
             disabled={false}
           >
-            {`${amount} TOKEN${(amount = '1' ? 'S' : '')}`}
+            {`${amount} TOKEN${amount === '1' ? 'S' : ''}`}
           </Button>
           <Button
             style="primary"
