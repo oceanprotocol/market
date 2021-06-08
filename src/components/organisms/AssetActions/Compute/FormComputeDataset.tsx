@@ -86,10 +86,8 @@ export default function FormStartCompute({
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
 
-  const {
-    isValid,
-    values
-  }: FormikContextType<{ algorithm: string }> = useFormikContext()
+  const { isValid, values }: FormikContextType<{ algorithm: string }> =
+    useFormikContext()
   const { price, ddo } = useAsset()
   const [totalPrice, setTotalPrice] = useState(price?.value)
 
