@@ -1,5 +1,5 @@
 import React, { ChangeEvent, ReactElement } from 'react'
-import styles from './FormEditMetadata.module.css' //TODO
+import styles from './FormEditMetadata.module.css' // TODO
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import Button from '../../../atoms/Button'
 import Input from '../../../atoms/Input'
@@ -10,12 +10,10 @@ import { AdvanceSettingsForm } from '../../../../models/FormEditCredential'
 
 export default function FormAdvanceSettings({
   data,
-  setShowEdit,
-  values
+  setShowEdit
 }: {
   data: FormFieldProps[]
   setShowEdit: (show: boolean) => void
-  values: Partial<AdvanceSettingsForm>
 }): ReactElement {
   const { accountId } = useWeb3()
   const { ocean, config } = useOcean()
@@ -40,7 +38,6 @@ export default function FormAdvanceSettings({
           key={field.name}
           {...field}
           component={Input}
-          prefix={field.name === 'price' && config.oceanTokenSymbol}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             handleFieldChange(e, field)
           }
@@ -48,6 +45,9 @@ export default function FormAdvanceSettings({
       ))}
 
       <footer className={styles.actions}>
+        <Button style="primary" disabled={!ocean || !accountId || !isValid}>
+          Submit
+        </Button>
         <Button style="text" onClick={() => setShowEdit(false)}>
           Cancel
         </Button>

@@ -3,7 +3,7 @@ import React, { ReactElement, useState } from 'react'
 import { useAsset } from '../../../../providers/Asset'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import styles from './index.module.css'
-import { DDO, Logger } from '@oceanprotocol/lib'
+import { Logger, CredentialType } from '@oceanprotocol/lib'
 import MetadataFeedback from '../../../molecules/MetadataFeedback'
 import { graphql, useStaticQuery } from 'gatsby'
 import { useWeb3 } from '../../../../providers/Web3'
@@ -15,7 +15,7 @@ import {
   validationSchema
 } from '../../../../models/FormEditCredential'
 import DebugEditAdvanceSettings from './DebugEditAdvanceSettings'
-import { CredentialType } from '@oceanprotocol/lib/dist/node/ddo/interfaces/Credentials'
+import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 
 const contentQuery = graphql`
   query EditAvanceSettingsQuery {
@@ -59,24 +59,38 @@ export default function EditAdvanceSettings({
   const { metadata, ddo, refreshDdo, price } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
+  const { appConfig } = useSiteMetadata()
 
   const hasFeedback = error || success
-  // TODO : get from env
-  //const credentialType = CredentialType.address
+
+  let credentialType: CredentialType
+  switch (appConfig.credentialType) {
+    case 'address':
+      credentialType = CredentialType.address
+      break
+    case 'credential3Box':
+      credentialType = CredentialType.credential3Box
+      break
+    default:
+      credentialType = CredentialType.address
+  }
 
   async function handleSubmit(
     values: Partial<AdvanceSettingsForm>,
     resetForm: () => void
   ) {
     try {
-      // const ddoEditedCredential = await ocean.assets.updateCredentials(
-      //   ddo,
-      //   credentialType,
-      //   values.allowCredentail,
-      //   []
-      // )
+      const ddoEditedCredential = await ocean.assets.updateCredentials(
+        ddo,
+        credentialType,
+        values.allowCredentail,
+        [] // TODO: denyCredential
+      )
 
-      const storedddo = await ocean.assets.updateMetadata(ddo, accountId)
+      const storedddo = await ocean.assets.updateMetadata(
+        ddoEditedCredential,
+        accountId
+      )
 
       if (!storedddo) {
         setError(content.form.error)
@@ -94,8 +108,7 @@ export default function EditAdvanceSettings({
 
   return (
     <Formik
-      // TODO: get credential from DDO
-      initialValues={getInitialValues([])}
+      initialValues={getInitialValues(ddo, credentialType)}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
         window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
@@ -124,13 +137,16 @@ export default function EditAdvanceSettings({
               <FormAdvanceSettings
                 data={content.form.data}
                 setShowEdit={setShowEdit}
-                values={initialValues}
               />
             </article>
 
             {debug === true && (
               <div className={styles.grid}>
-                <DebugEditAdvanceSettings values={values} ddo={ddo} />
+                <DebugEditAdvanceSettings
+                  values={values}
+                  ddo={ddo}
+                  credentialType={credentialType}
+                />
               </div>
             )}
           </>

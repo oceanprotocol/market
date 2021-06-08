@@ -18,6 +18,7 @@ import EditHistory from './EditHistory'
 import { useWeb3 } from '../../../providers/Web3'
 import styles from './index.module.css'
 import EditAdvanceSettings from '../AssetActions/Edit/EditAdvanceSettings'
+import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 
 export interface AssetContentProps {
   path?: string
@@ -55,6 +56,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   ] = useState<boolean>()
   const [isOwner, setIsOwner] = useState(false)
   const { ddo, price, metadata, type } = useAsset()
+  const { appConfig } = useSiteMetadata()
 
   useEffect(() => {
     if (!accountId || !owner) return
@@ -85,7 +87,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   ) : showEditCompute ? (
     <EditComputeDataset setShowEdit={setShowEditCompute} />
   ) : showEditAdvanceSettings ? (
-    <EditAdvanceSettings setShowEdit={setShowEditCompute} />
+    <EditAdvanceSettings setShowEdit={setShowEditAdvanceSettings} />
   ) : (
     <article className={styles.grid}>
       <div>
@@ -115,14 +117,18 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
                   <Button style="text" size="small" onClick={handleEditButton}>
                     Edit Metadata
                   </Button>
-                  <span className={styles.separator}>|</span>
-                  <Button
-                    style="text"
-                    size="small"
-                    onClick={handleEditAdvanceSettingsButton}
-                  >
-                    Edit Advanced Settings
-                  </Button>
+                  {appConfig.allowAdvanceSettings === 'true' && (
+                    <>
+                      <span className={styles.separator}>|</span>
+                      <Button
+                        style="text"
+                        size="small"
+                        onClick={handleEditAdvanceSettingsButton}
+                      >
+                        Edit Advanced Settings
+                      </Button>
+                    </>
+                  )}
                   {ddo.findServiceByType('compute') && type === 'dataset' && (
                     <>
                       <span className={styles.separator}>|</span>

@@ -43,5 +43,9 @@ module.exports = {
   // Used to show or hide the fixed and dynamic price options
   // tab to publishers during the price creation.
   allowFixedPricing: process.env.GATSBY_ALLOW_FIXED_PRICING || 'true',
-  allowDynamicPricing: process.env.GATSBY_ALLOW_DYNAMIC_PRICING || 'true'
+  allowDynamicPricing: process.env.GATSBY_ALLOW_DYNAMIC_PRICING || 'true',
+
+  // Used to show or hide advance settings button in asset details page
+  allowAdvanceSettings: process.env.GATSBY_ALLOW_ADVANCE_SETTINGS || 'false',
+  credentialType: process.env.GATSBY_CREDENTIAL_TYPE || 'address'
 }
