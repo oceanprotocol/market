@@ -52,6 +52,17 @@ export function getCreatePricingExchangeFeedback(dtSymbol: string): {
   }
 }
 
+export function getCreateFreePricingFeedback(dtSymbol: string): {
+  [key: number]: string
+} {
+  return {
+    99: `Creating ${dtSymbol} faucet...`,
+    0: 'Setting faucet as minter ...',
+    1: 'Approving minter...',
+    2: 'Faucet created.'
+  }
+}
+
 export function getBuyDTFeedback(dtSymbol: string): { [key: number]: string } {
   return {
     1: '1/3 Approving OCEAN ...',
