@@ -19,6 +19,9 @@ import { gql, useQuery } from '@apollo/client'
 import { PoolLiquidity } from '../../../../@types/apollo/PoolLiquidity'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
+import Decimal from 'decimal.js'
+
+Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
 const contentQuery = graphql`
   query PoolQuery {
@@ -80,11 +83,15 @@ export default function Pool(): ReactElement {
 
   const [hasAddedLiquidity, setHasAddedLiquidity] = useState(false)
   const [poolShare, setPoolShare] = useState<string>()
-  const [totalUserLiquidityInOcean, setTotalUserLiquidityInOcean] = useState(0)
-  const [totalLiquidityInOcean, setTotalLiquidityInOcean] = useState(0)
+  const [totalUserLiquidityInOcean, setTotalUserLiquidityInOcean] = useState(
+    new Decimal(0)
+  )
+  const [totalLiquidityInOcean, setTotalLiquidityInOcean] = useState(
+    new Decimal(0)
+  )
 
   const [creatorTotalLiquidityInOcean, setCreatorTotalLiquidityInOcean] =
-    useState(0)
+    useState(new Decimal(0))
   const [creatorLiquidity, setCreatorLiquidity] = useState<PoolBalance>()
   const [creatorPoolTokens, setCreatorPoolTokens] = useState<string>()
   const [creatorPoolShare, setCreatorPoolShare] = useState<string>()
@@ -126,12 +133,15 @@ export default function Pool(): ReactElement {
       const creatorPoolTokens = dataLiquidity.pool.shares[0].balance
       setCreatorPoolTokens(creatorPoolTokens)
 
-      // Calculate creator's provided liquidity based on pool tokens
-      const creatorOceanBalance =
-        (Number(creatorPoolTokens) / Number(totalPoolTokens)) * price.ocean
+      const creatorOceanBalance = new Decimal(creatorPoolTokens)
+        .dividedBy(new Decimal(totalPoolTokens))
+        .mul(price.ocean)
+        .toString()
 
-      const creatorDtBalance =
-        (Number(creatorPoolTokens) / Number(totalPoolTokens)) * price.datatoken
+      const creatorDtBalance = new Decimal(creatorPoolTokens)
+        .dividedBy(new Decimal(totalPoolTokens))
+        .mul(price.datatoken)
+        .toString()
 
       const creatorLiquidity = {
         ocean: creatorOceanBalance,
@@ -139,15 +149,23 @@ export default function Pool(): ReactElement {
       }
       setCreatorLiquidity(creatorLiquidity)
 
-      const totalCreatorLiquidityInOcean =
-        creatorLiquidity?.ocean +
-        creatorLiquidity?.datatoken * dataLiquidity.pool.spotPrice
+      const totalCreatorLiquidityInOcean = new Decimal(
+        creatorLiquidity?.ocean
+      ).add(
+        new Decimal(creatorLiquidity?.datatoken).mul(
+          new Decimal(dataLiquidity.pool.spotPrice)
+        )
+      )
+
       setCreatorTotalLiquidityInOcean(totalCreatorLiquidityInOcean)
       const creatorPoolShare =
         price?.ocean &&
         price?.datatoken &&
         creatorLiquidity &&
-        ((Number(creatorPoolTokens) / Number(totalPoolTokens)) * 100).toFixed(2)
+        new Decimal(creatorPoolTokens)
+          .dividedBy(new Decimal(totalPoolTokens))
+          .mul(100)
+          .toFixed(2)
       setCreatorPoolShare(creatorPoolShare)
     }
     init()
@@ -161,15 +179,21 @@ export default function Pool(): ReactElement {
     const poolShare =
       price?.ocean &&
       price?.datatoken &&
-      ((Number(poolTokens) / Number(totalPoolTokens)) * 100).toFixed(5)
+      new Decimal(poolTokens)
+        .dividedBy(new Decimal(totalPoolTokens))
+        .mul(100)
+        .toFixed(5)
     setPoolShare(poolShare)
     setHasAddedLiquidity(Number(poolShare) > 0)
 
-    const totalUserLiquidityInOcean =
-      userLiquidity?.ocean + userLiquidity?.datatoken * price?.value
+    const totalUserLiquidityInOcean = new Decimal(userLiquidity?.ocean).add(
+      new Decimal(userLiquidity?.datatoken).mul(price?.value)
+    )
     setTotalUserLiquidityInOcean(totalUserLiquidityInOcean)
-    const totalLiquidityInOcean =
-      Number(price?.ocean) + Number(price?.datatoken) * Number(price?.value)
+
+    const totalLiquidityInOcean = new Decimal(price?.ocean).add(
+      new Decimal(price?.datatoken).mul(price?.value)
+    )
     setTotalLiquidityInOcean(totalLiquidityInOcean)
   }, [userLiquidity, price, poolTokens, totalPoolTokens])
 
@@ -186,10 +210,15 @@ export default function Pool(): ReactElement {
         )
         setPoolTokens(poolTokens)
         // calculate user's provided liquidity based on pool tokens
-        const userOceanBalance =
-          (Number(poolTokens) / Number(totalPoolTokens)) * price.ocean
-        const userDtBalance =
-          (Number(poolTokens) / Number(totalPoolTokens)) * price.datatoken
+        const userOceanBalance = new Decimal(poolTokens)
+          .dividedBy(new Decimal(totalPoolTokens))
+          .mul(price.ocean)
+          .toString()
+        const userDtBalance = new Decimal(poolTokens)
+          .dividedBy(new Decimal(totalPoolTokens))
+          .mul(price.datatoken)
+          .toString()
+
         const userLiquidity = {
           ocean: userOceanBalance,
           datatoken: userDtBalance
@@ -219,8 +248,8 @@ export default function Pool(): ReactElement {
           poolAddress={price.address}
           totalPoolTokens={totalPoolTokens}
           totalBalance={{
-            ocean: price.ocean,
-            datatoken: price.datatoken
+            ocean: new Decimal(price.ocean).toString(),
+            datatoken: new Decimal(price.datatoken).toString()
           }}
           swapFee={swapFee}
           dtSymbol={dtSymbol}
