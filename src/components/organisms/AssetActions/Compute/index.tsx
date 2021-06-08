@@ -40,7 +40,7 @@ import { secondsToString } from '../../../../utils/metadata'
 import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
 
 const SuccessAction = () => (
-  <Button style="text" to="/history" size="small">
+  <Button style="text" to="/history?defaultTab=ComputeJobs" size="small">
     Go to history →
   </Button>
 )
@@ -71,15 +71,12 @@ export default function Compute({
   const [isPublished, setIsPublished] = useState(false)
   const [hasPreviousDatasetOrder, setHasPreviousDatasetOrder] = useState(false)
   const [previousDatasetOrderId, setPreviousDatasetOrderId] = useState<string>()
-  const [hasPreviousAlgorithmOrder, setHasPreviousAlgorithmOrder] = useState(
-    false
-  )
+  const [hasPreviousAlgorithmOrder, setHasPreviousAlgorithmOrder] =
+    useState(false)
   const [algorithmDTBalance, setalgorithmDTBalance] = useState<string>()
   const [algorithmPrice, setAlgorithmPrice] = useState<BestPrice>()
-  const [
-    previousAlgorithmOrderId,
-    setPreviousAlgorithmOrderId
-  ] = useState<string>()
+  const [previousAlgorithmOrderId, setPreviousAlgorithmOrderId] =
+    useState<string>()
   const [datasetTimeout, setDatasetTimeout] = useState<string>()
   const [algorithmTimeout, setAlgorithmTimeout] = useState<string>()
 
