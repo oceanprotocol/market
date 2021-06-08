@@ -6,17 +6,20 @@ import React, {
   useState,
   useEffect
 } from 'react'
-import { Logger, LogLevel, ConfigHelperConfig } from '@oceanprotocol/lib'
-import { useOcean } from './Ocean'
+import { Logger, LogLevel } from '@oceanprotocol/lib'
 import { isBrowser } from '../utils'
+import { useSiteMetadata } from '../hooks/useSiteMetadata'
 
 interface UserPreferencesValue {
   debug: boolean
   currency: string
   locale: string
+  chainIds: number[]
   bookmarks: {
     [network: string]: string[]
   }
+  addChainId: (chain: number) => void
+  removeChainId: (chain: number) => void
   setDebug: (value: boolean) => void
   setCurrency: (value: string) => void
   addBookmark: (did: string) => void
@@ -45,8 +48,7 @@ function UserPreferencesProvider({
 }: {
   children: ReactNode
 }): ReactElement {
-  // const { config } = useOcean()
-  // const networkName = (config as ConfigHelperConfig).network
+  const { appConfig } = useSiteMetadata()
   const localStorage = getLocalStorage()
 
   // Set default values from localStorage
@@ -55,12 +57,13 @@ function UserPreferencesProvider({
     localStorage?.currency || 'EUR'
   )
   const [locale, setLocale] = useState<string>()
+  const [chainIds, setChainIds] = useState(appConfig.chainIds)
   const [bookmarks, setBookmarks] = useState(localStorage?.bookmarks || {})
 
   // Write values to localStorage on change
   useEffect(() => {
-    setLocalStorage({ debug, currency, bookmarks })
-  }, [debug, currency, bookmarks])
+    setLocalStorage({ chainIds, debug, currency, bookmarks })
+  }, [chainIds, debug, currency, bookmarks])
 
   // Set ocean.js log levels, default: Error
   useEffect(() => {
@@ -74,6 +77,16 @@ function UserPreferencesProvider({
     if (!window) return
     setLocale(window.navigator.language)
   }, [])
+
+  function addChainId(chain: number): void {
+    const newChainIds = [...chainIds, chain]
+    setChainIds(newChainIds)
+  }
+
+  function removeChainId(chain: number): void {
+    const newChainIds = chainIds.filter((chainId) => chainId !== chain)
+    setChainIds(newChainIds)
+  }
 
   // function addBookmark(didToAdd: string): void {
   //   const newPinned = {
@@ -107,7 +120,10 @@ function UserPreferencesProvider({
           debug,
           currency,
           locale,
+          chainIds,
           bookmarks,
+          addChainId,
+          removeChainId,
           setDebug,
           setCurrency
           // addBookmark,
