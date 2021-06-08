@@ -83,10 +83,8 @@ export default function Pool(): ReactElement {
   const [totalUserLiquidityInOcean, setTotalUserLiquidityInOcean] = useState(0)
   const [totalLiquidityInOcean, setTotalLiquidityInOcean] = useState(0)
 
-  const [
-    creatorTotalLiquidityInOcean,
-    setCreatorTotalLiquidityInOcean
-  ] = useState(0)
+  const [creatorTotalLiquidityInOcean, setCreatorTotalLiquidityInOcean] =
+    useState(0)
   const [creatorLiquidity, setCreatorLiquidity] = useState<PoolBalance>()
   const [creatorPoolTokens, setCreatorPoolTokens] = useState<string>()
   const [creatorPoolShare, setCreatorPoolShare] = useState<string>()
