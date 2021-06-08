@@ -42,7 +42,7 @@ export default function TokenApproval({
     const allowance = await ocean.datatokens.allowance(
       tokenAddress,
       accountId,
-      spender // marketplace address,
+      spender
     )
     setTokenApproved(allowance >= amount)
     allowance > amount && setApproveToken(false)
@@ -99,7 +99,7 @@ export default function TokenApproval({
             }}
             disabled={false}
           >
-            {`${amount} TOKEN${amount > '1' ? 'S' : ''}`}
+            {`${amount} TOKEN${(amount = '1' ? 'S' : '')}`}
           </Button>
           <Button
             style="primary"
