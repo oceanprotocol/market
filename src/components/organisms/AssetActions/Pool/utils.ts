@@ -9,10 +9,11 @@ export async function getMaxPercentRemove(
     poolAddress
   )
 
-  const amountMaxPoolShares = await ocean.pool.getPoolSharesRequiredToRemoveOcean(
-    poolAddress,
-    amountMaxOcean
-  )
+  const amountMaxPoolShares =
+    await ocean.pool.getPoolSharesRequiredToRemoveOcean(
+      poolAddress,
+      amountMaxOcean
+    )
 
   let amountMaxPercent = `${Math.floor(
     (Number(amountMaxPoolShares) / Number(poolTokens)) * 100

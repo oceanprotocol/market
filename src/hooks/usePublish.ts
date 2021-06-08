@@ -69,13 +69,14 @@ function usePublish(): UsePublish {
       switch (serviceType) {
         case 'access': {
           if (!timeout) timeout = 0
-          const accessService = await ocean.assets.createAccessServiceAttributes(
-            account,
-            price,
-            publishedDate,
-            timeout,
-            providerUri
-          )
+          const accessService =
+            await ocean.assets.createAccessServiceAttributes(
+              account,
+              price,
+              publishedDate,
+              timeout,
+              providerUri
+            )
           Logger.log('access service created', accessService)
           services.push(accessService)
           break

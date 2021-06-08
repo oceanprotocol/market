@@ -48,12 +48,8 @@ export default function Consume({
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
   const [previousOrderId, setPreviousOrderId] = useState<string>()
   const { isInPurgatory, price, type } = useAsset()
-  const {
-    buyDT,
-    pricingStepText,
-    pricingError,
-    pricingIsLoading
-  } = usePricing()
+  const { buyDT, pricingStepText, pricingError, pricingIsLoading } =
+    usePricing()
   const { consumeStepText, consume, consumeError } = useConsume()
   const [isDisabled, setIsDisabled] = useState(true)
   const [hasDatatoken, setHasDatatoken] = useState(false)

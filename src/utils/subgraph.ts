@@ -127,10 +127,8 @@ export async function getPreviousOrders(
     id: id,
     account: account
   }
-  const fetchedPreviousOrders: ApolloQueryResult<AssetPreviousOrder> = await fetchData(
-    PreviousOrderQuery,
-    variables
-  )
+  const fetchedPreviousOrders: ApolloQueryResult<AssetPreviousOrder> =
+    await fetchData(PreviousOrderQuery, variables)
   if (fetchedPreviousOrders.data?.tokenOrders?.length === 0) return null
   if (assetTimeout === '0') {
     return fetchedPreviousOrders?.data?.tokenOrders[0]?.tx
