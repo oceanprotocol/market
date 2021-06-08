@@ -126,11 +126,8 @@ export default function Swap({
     await setFieldValue(name === 'ocean' ? 'datatoken' : 'ocean', newValue)
     setAmount(
       values.type === 'sell'
-        ? new Decimal(values.ocean).mul(impact).toFixed(precision).toString()
-        : new Decimal(values.datatoken)
-            .mul(impact)
-            .toFixed(precision)
-            .toString()
+        ? new Decimal(newValue).mul(impact).toFixed(precision).toString()
+        : new Decimal(newValue).mul(impact).toFixed(precision).toString()
     )
     validateForm()
   }
