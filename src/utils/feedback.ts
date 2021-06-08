@@ -28,9 +28,7 @@ export const computeFeedback: { [key in number]: string } = {
   2: '3/3 Access granted. Starting job...'
 }
 
-export function getCreatePricingPoolFeedback(
-  dtSymbol: string
-): {
+export function getCreatePricingPoolFeedback(dtSymbol: string): {
   [key: number]: string
 } {
   return {
@@ -43,9 +41,7 @@ export function getCreatePricingPoolFeedback(
   }
 }
 
-export function getCreatePricingExchangeFeedback(
-  dtSymbol: string
-): {
+export function getCreatePricingExchangeFeedback(dtSymbol: string): {
   [key: number]: string
 } {
   return {

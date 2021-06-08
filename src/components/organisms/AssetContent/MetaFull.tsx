@@ -8,8 +8,8 @@ export default function MetaFull(): ReactElement {
   const { ddo, metadata, isInPurgatory, type } = useAsset()
 
   function DockerImage() {
-    const algorithmContainer = ddo.findServiceByType('metadata').attributes.main
-      .algorithm.container
+    const algorithmContainer =
+      ddo.findServiceByType('metadata').attributes.main.algorithm.container
     const { image } = algorithmContainer
     const { tag } = algorithmContainer
     return <span>{`${image}:${tag}`}</span>
