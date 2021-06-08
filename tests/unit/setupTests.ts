@@ -2,10 +2,6 @@ import '@testing-library/jest-dom/extend-expect'
 import * as Gatsby from 'gatsby'
 import siteMetadata from './__fixtures__/siteMetadata.json'
 
-if (typeof window.IntersectionObserver === 'undefined') {
-  import('intersection-observer')
-}
-
 import('./__mocks__/matchMedia')
 
 const useStaticQuery = jest.spyOn(Gatsby, 'useStaticQuery')

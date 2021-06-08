@@ -90,7 +90,7 @@ export default function FormAdd({
     amountMax,
     coin,
     poolAddress,
-    ocean.pool,
+    ocean?.pool,
     setNewPoolTokens,
     setNewPoolShare
   ])
