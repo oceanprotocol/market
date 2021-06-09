@@ -112,7 +112,7 @@ export default function Swap({
 
   const handleValueChange = async (name: string, value: number) => {
     const impact = new Decimal(100 - Number(values.slippage)).div(100)
-    const precision = 2
+    const precision = 3
     const newValue =
       name === 'ocean'
         ? values.type === 'sell'
@@ -122,7 +122,7 @@ export default function Swap({
         ? await ocean.pool.getOceanReceived(price.address, value.toString())
         : await ocean.pool.getOceanNeeded(price.address, value.toString())
 
-    setCoin(values.type === 'sell' ? 'OCEAN' : 'DATATOKEN')
+    setCoin(values.type === 'sell' ? 'OCEAN' : ddo.dataTokenInfo.symbol)
     await setFieldValue(name === 'ocean' ? 'datatoken' : 'ocean', newValue)
     setAmount(
       values.type === 'sell'
