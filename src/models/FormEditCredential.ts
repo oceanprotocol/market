@@ -12,13 +12,12 @@ export interface AdvanceSettingsForm {
   isOrderDisabled: boolean
 }
 
-export const validationSchema: Yup.SchemaOf<AdvanceSettingsForm> = Yup.object().shape(
-  {
+export const validationSchema: Yup.SchemaOf<AdvanceSettingsForm> =
+  Yup.object().shape({
     allow: Yup.array().nullable(),
     deny: Yup.array().nullable(),
     isOrderDisabled: Yup.boolean().nullable()
-  }
-)
+  })
 
 function getAssetCredentials(
   credentials: Credentials,

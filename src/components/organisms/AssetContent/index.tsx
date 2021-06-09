@@ -50,10 +50,8 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   const [showPricing, setShowPricing] = useState(false)
   const [showEdit, setShowEdit] = useState<boolean>()
   const [showEditCompute, setShowEditCompute] = useState<boolean>()
-  const [
-    showEditAdvanceSettings,
-    setShowEditAdvanceSettings
-  ] = useState<boolean>()
+  const [showEditAdvanceSettings, setShowEditAdvanceSettings] =
+    useState<boolean>()
   const [isOwner, setIsOwner] = useState(false)
   const { ddo, price, metadata, type } = useAsset()
   const { appConfig } = useSiteMetadata()
