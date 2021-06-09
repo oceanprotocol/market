@@ -1,3 +1,10 @@
+.titleGroup {
+  font-size: var(--font-size-small);
+  margin-bottom: calc(var(--spacer) / 6);
+  margin-top: calc(var(--spacer) / 2);
+  color: var(--color-secondary);
+}
+
 .chains {
   composes: box from '../../atoms/Box.module.css';
   box-shadow: none;

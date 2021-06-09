@@ -54,7 +54,7 @@ export function getNetworkDisplayName(
   return displayName
 }
 
-export function getNetworkData(
+export function getNetworkDataById(
   data: { node: EthereumListsChain }[],
   networkId: number
 ): EthereumListsChain {

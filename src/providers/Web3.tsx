@@ -15,7 +15,7 @@ import { Logger } from '@oceanprotocol/lib'
 import { isBrowser } from '../utils'
 import {
   EthereumListsChain,
-  getNetworkData,
+  getNetworkDataById,
   getNetworkDisplayName
 } from '../utils/web3'
 import { graphql, useStaticQuery } from 'gatsby'
@@ -230,7 +230,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   useEffect(() => {
     if (!networkId) return
 
-    const networkData = getNetworkData(networksList, networkId)
+    const networkData = getNetworkDataById(networksList, networkId)
     setNetworkData(networkData)
     Logger.log('[web3] Network metadata found.', networkData)
 
@@ -339,6 +339,3 @@ const useWeb3 = (): Web3ProviderValue => useContext(Web3Context)
 
 export { Web3Provider, useWeb3, Web3ProviderValue, Web3Context }
 export default Web3Provider
-function getTokenBalance() {
-  throw new Error('Function not implemented.')
-}

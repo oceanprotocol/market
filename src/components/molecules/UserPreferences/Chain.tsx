@@ -6,8 +6,56 @@ import NetworkName from '../../atoms/NetworkName'
 import { removeItemFromArray } from '../../../utils'
 import FormHelp from '../../atoms/Input/Help'
 import styles from './Chain.module.css'
+import { useStaticQuery, graphql } from 'gatsby'
+import { EthereumListsChain, getNetworkDataById } from '../../../utils/web3'
+
+const networksQuery = graphql`
+  query {
+    allNetworksMetadataJson {
+      edges {
+        node {
+          chain
+          network
+          networkId
+          chainId
+        }
+      }
+    }
+  }
+`
+
+function ChainItem({
+  isDefaultChecked,
+  chainId,
+  handleChainChanged
+}: {
+  isDefaultChecked: boolean
+  chainId: number
+  handleChainChanged: (e: ChangeEvent<HTMLInputElement>) => void
+}) {
+  return (
+    <div className={styles.radioWrap} key={chainId}>
+      <label className={styles.radioLabel} htmlFor={`opt-${chainId}`}>
+        <input
+          className={styles.input}
+          id={`opt-${chainId}`}
+          type="checkbox"
+          name="chainIds"
+          value={chainId}
+          onChange={handleChainChanged}
+          defaultChecked={isDefaultChecked}
+        />
+        <NetworkName key={chainId} networkId={chainId} />
+      </label>
+    </div>
+  )
+}
 
 export default function Chain(): ReactElement {
+  const data = useStaticQuery(networksQuery)
+  const networksList: { node: EthereumListsChain }[] =
+    data.allNetworksMetadataJson.edges
+
   const { appConfig } = useSiteMetadata()
   const { chainIds, setChainIds } = useUserPreferences()
 
@@ -23,27 +71,42 @@ export default function Chain(): ReactElement {
     setChainIds(newChainIds)
   }
 
+  const chainsMain = appConfig.chainIdsSupported
+    .filter((chainId: number) => {
+      const networkData = getNetworkDataById(networksList, chainId)
+      return networkData.network === 'mainnet'
+    })
+    .map((chainId) => (
+      <ChainItem
+        key={chainId}
+        chainId={chainId}
+        isDefaultChecked={chainIds.includes(chainId)}
+        handleChainChanged={handleChainChanged}
+      />
+    ))
+
+  const chainsTest = appConfig.chainIdsSupported
+    .filter((chainId: number) => {
+      const networkData = getNetworkDataById(networksList, chainId)
+      return networkData.network !== 'mainnet'
+    })
+    .map((chainId) => (
+      <ChainItem
+        key={chainId}
+        chainId={chainId}
+        isDefaultChecked={chainIds.includes(chainId)}
+        handleChainChanged={handleChainChanged}
+      />
+    ))
+
   return (
     <li>
       <Label htmlFor="chains">Chains</Label>
-      <div className={styles.chains}>
-        {appConfig.chainIdsSupported.map((chainId) => (
-          <div className={styles.radioWrap} key={chainId}>
-            <label className={styles.radioLabel} htmlFor={`opt-${chainId}`}>
-              <input
-                className={styles.input}
-                id={`opt-${chainId}`}
-                type="checkbox"
-                name="chainIds"
-                value={chainId}
-                onChange={handleChainChanged}
-                defaultChecked={chainIds.includes(chainId)}
-              />
-              <NetworkName key={chainId} networkId={chainId} />
-            </label>
-          </div>
-        ))}
-      </div>
+
+      <h4 className={styles.titleGroup}>Main</h4>
+      <div className={styles.chains}>{chainsMain}</div>
+      <h4 className={styles.titleGroup}>Test</h4>
+      <div className={styles.chains}>{chainsTest}</div>
 
       <FormHelp>Switch the data source for the interface.</FormHelp>
     </li>

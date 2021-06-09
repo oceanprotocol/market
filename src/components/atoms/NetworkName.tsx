@@ -5,7 +5,7 @@ import { ReactComponent as PolygonIcon } from '../../images/polygon.svg'
 import { ReactComponent as MoonbeamIcon } from '../../images/moonbeam.svg'
 import {
   EthereumListsChain,
-  getNetworkData,
+  getNetworkDataById,
   getNetworkDisplayName
 } from '../../utils/web3'
 import styles from './NetworkName.module.css'
@@ -53,7 +53,7 @@ export default function NetworkName({
   const data = useStaticQuery(networksQuery)
   const networksList: { node: EthereumListsChain }[] =
     data.allNetworksMetadataJson.edges
-  const networkData = getNetworkData(networksList, networkId)
+  const networkData = getNetworkDataById(networksList, networkId)
   const networkName = getNetworkDisplayName(networkData, networkId)
 
   return (
