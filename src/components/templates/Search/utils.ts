@@ -66,8 +66,8 @@ export function getSearchQuery(
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
     : text || ''
   searchTerm = searchTerm.trim()
-  const modifiedSearchTerm = searchTerm.split(' ').join(' OR ').trim()
-
+  let modifiedSearchTerm = searchTerm.split(' ').join(' OR ').trim()
+  modifiedSearchTerm = addTypeFilterToQuery(modifiedSearchTerm, serviceType)
   searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
   return {
     page: Number(page) || 1,
