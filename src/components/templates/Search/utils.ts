@@ -27,7 +27,8 @@ export const FilterByTypeOptions = {
   Data: 'dataset',
   Algorithm: 'algorithm'
 } as const
-type FilterByTypeOptions = typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
+type FilterByTypeOptions =
+  typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
 
 function addTypeFilterToQuery(sortTerm: string, typeFilter: string): string {
   sortTerm = typeFilter
@@ -53,7 +54,7 @@ export function getSearchQuery(
   sort?: string,
   sortOrder?: string,
   serviceType?: string
-): SearchQuery {
+): any {
   const sortTerm = getSortType()
   const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
   let searchTerm = owner
@@ -92,7 +93,6 @@ export function getSearchQuery(
                       'service.attributes.additionalInformation.description',
                       'service.attributes.additionalInformation.tags'
                     ],
-                    default_operator: 'OR',
                     minimum_should_match: '2<75%',
                     phrase_slop: 2
                   }
