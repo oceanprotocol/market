@@ -51,11 +51,11 @@ export default function App({
             state="error"
           />
         )} */}
-        <Header />
 
         {(props as PageProps).uri === '/' && (
-          <Alert text={warning.main} state="info" />
+          <AnnouncementBanner text={warning.main} />
         )}
+        <Header />
 
         {isInPurgatory && (
           <Alert
