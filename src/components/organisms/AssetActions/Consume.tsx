@@ -50,12 +50,11 @@ export default function Consume({
   const { isInPurgatory, price, type } = useAsset()
   const { buyDT, pricingStepText, pricingError, pricingIsLoading } =
     usePricing()
-  const { consumeStepText, consume, consumeError } = useConsume()
+  const { consumeStepText, consume, consumeError, isLoading } = useConsume()
   const [isDisabled, setIsDisabled] = useState(true)
   const [hasDatatoken, setHasDatatoken] = useState(false)
   const [isConsumable, setIsConsumable] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
-
   const { data } = useQuery<OrdersData>(previousOrderQuery, {
     variables: {
       id: ddo.dataToken?.toLowerCase(),
@@ -157,7 +156,7 @@ export default function Consume({
       assetTimeout={assetTimeout}
       assetType={type}
       stepText={consumeStepText || pricingStepText}
-      isLoading={pricingIsLoading}
+      isLoading={pricingIsLoading || isLoading}
     />
   )
 
