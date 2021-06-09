@@ -25,8 +25,7 @@ export const FilterByTypeOptions = {
   Data: 'dataset',
   Algorithm: 'algorithm'
 } as const
-type FilterByTypeOptions =
-  typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
+type FilterByTypeOptions = typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
 
 function addTypeFilterToQuery(sortTerm: string, typeFilter: string): string {
   sortTerm = typeFilter
@@ -66,8 +65,8 @@ export function getSearchQuery(
     ? // eslint-disable-next-line no-useless-escape
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
     : text || ''
-
-  const modifiedSearchTerm = searchTerm.split(' ').join(' OR ')
+  searchTerm = searchTerm.trim()
+  const modifiedSearchTerm = searchTerm.split(' ').join(' OR ').trim()
 
   searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
   return {
