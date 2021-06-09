@@ -27,18 +27,24 @@ export default function Credential(props: InputProps) {
     helpers.setValue(newInput)
   }
 
-  function handleAddValue(e: FormEvent<HTMLButtonElement>) {
-    e.preventDefault()
+  function isCredentialValid(): boolean {
     if (!isAddress(value)) {
       toast.error('Wallet address is invalid')
-      return
+      return false
     }
     if (arrayInput.includes(value)) {
       toast.error('Wallet address already added into list')
-      return
+      return false
     }
-    setArrayInput((arrayInput) => [...arrayInput, value])
-    setValue('')
+    return true
+  }
+
+  function handleAddValue(e: FormEvent<HTMLButtonElement>) {
+    e.preventDefault()
+    if (isCredentialValid()) {
+      setArrayInput((arrayInput) => [...arrayInput, value])
+      setValue('')
+    }
   }
 
   return (
