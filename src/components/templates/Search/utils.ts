@@ -1,7 +1,4 @@
-import {
-  SearchQuery,
-  QueryResult
-} from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
+import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { MetadataCache, Logger } from '@oceanprotocol/lib'
 import queryString from 'query-string'
 
@@ -58,6 +55,8 @@ export function getSearchQuery(
 ): any {
   const sortTerm = sort
   const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
+
+  // not sure if we need this anymore
   let searchTerm = owner
     ? `(publicKey.owner:${owner})`
     : tags
@@ -67,8 +66,8 @@ export function getSearchQuery(
     ? // eslint-disable-next-line no-useless-escape
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
     : text || ''
+
   const modifiedSearchTerm = searchTerm.split(' ').join(' OR ')
-  // HACK: resolves the case sensitivity related to dataTokenInfo.symbol
 
   searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
   return {
@@ -103,7 +102,7 @@ export function getSearchQuery(
                   match_phrase: {
                     content: {
                       query: `${searchTerm}`,
-                      boost: 10000
+                      boost: 10
                     }
                   }
                 },
@@ -139,15 +138,6 @@ export function getSearchQuery(
       [sortTerm]: sortValue
     }
   }
-
-  // Something in ocean.js is weird when using 'tags: [tag]'
-  // which is the only way the query actually returns desired results.
-  // But it doesn't follow 'SearchQuery' interface so we have to assign
-  // it here.
-  // } as SearchQuery
-
-  // And the next hack,
-  // nativeSearch is not implmeneted on ocean.js typings
 }
 
 export async function getResults(
