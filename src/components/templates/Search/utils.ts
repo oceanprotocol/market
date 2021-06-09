@@ -56,19 +56,20 @@ export function getSearchQuery(
   const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
 
   // not sure if we need this anymore
-  let searchTerm = owner
-    ? `(publicKey.owner:${owner})`
-    : tags
-    ? // eslint-disable-next-line no-useless-escape
-      `(service.attributes.additionalInformation.tags:\"${tags}\")`
-    : categories
-    ? // eslint-disable-next-line no-useless-escape
-      `(service.attributes.additionalInformation.categories:\"${categories}\")`
-    : text || ''
+  let searchTerm = text || ''
+
+  const emptySearchTerm = text === undefined || text === ''
   searchTerm = searchTerm.trim()
   let modifiedSearchTerm = searchTerm.split(' ').join(' OR ').trim()
   modifiedSearchTerm = addTypeFilterToQuery(modifiedSearchTerm, serviceType)
   searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
+  const prefixedSearchTerm =
+    emptySearchTerm && searchTerm
+      ? searchTerm
+      : !emptySearchTerm && searchTerm
+      ? '*' + searchTerm + '*'
+      : '**'
+
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
@@ -107,7 +108,7 @@ export function getSearchQuery(
                 },
                 {
                   query_string: {
-                    query: `*${searchTerm}*`,
+                    query: `${prefixedSearchTerm}`,
                     fields: [
                       'id',
                       'publicKey.owner',
