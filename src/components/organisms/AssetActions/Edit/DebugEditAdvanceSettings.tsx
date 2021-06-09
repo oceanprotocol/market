@@ -23,7 +23,7 @@ export default function DebugEditCredential({
       const newDdo = await ocean.assets.updateCredentials(
         ddo,
         credentialType,
-        values.allowCredentail,
+        values.allow,
         [] // TODO: denyCredential
       )
       setCredential(newDdo.credentials)

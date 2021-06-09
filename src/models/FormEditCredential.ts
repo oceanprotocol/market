@@ -7,12 +7,12 @@ import {
 import * as Yup from 'yup'
 
 export interface AdvanceSettingsForm {
-  allowCredentail: string[]
+  allow: string[]
 }
 
 export const validationSchema: Yup.SchemaOf<AdvanceSettingsForm> = Yup.object().shape(
   {
-    allowCredentail: Yup.array().nullable()
+    allow: Yup.array().nullable()
   }
 )
 
@@ -49,5 +49,5 @@ export function getInitialValues(
     credentailType,
     'allow'
   )
-  return { allowCredentail: allowCrendtail }
+  return { allow: allowCrendtail }
 }

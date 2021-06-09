@@ -83,7 +83,7 @@ export default function EditAdvanceSettings({
       const ddoEditedCredential = await ocean.assets.updateCredentials(
         ddo,
         credentialType,
-        values.allowCredentail,
+        values.allow,
         [] // TODO: denyCredential
       )
 

@@ -6,6 +6,7 @@ import Button from '../../../atoms/Button'
 import styles from './Credential.module.css'
 import { isAddress } from 'web3-utils'
 import { toast } from 'react-toastify'
+import { ReactComponent as Cross } from '../../../../images/cross.svg'
 
 export default function Credential(props: InputProps) {
   const [field, meta, helpers] = useField(props.name)
@@ -66,7 +67,7 @@ export default function Credential(props: InputProps) {
                 style="text"
                 onClick={(even) => handleDeleteChip(value)}
               >
-                X
+                <Cross />
               </Button>
             </div>
           )
