@@ -123,7 +123,7 @@ export default function EditAdvanceSettings({
       {({ isSubmitting, values, initialValues }) =>
         isSubmitting || hasFeedback ? (
           <MetadataFeedback
-            title="Updating Advance Settings"
+            title="Updating Data Set"
             error={error}
             success={success}
             setError={setError}
