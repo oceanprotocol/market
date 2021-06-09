@@ -63,13 +63,15 @@ export default function Credential(props: InputProps) {
             return (
               <div className={styles.chip} key={value}>
                 {value}
-                <Button
-                  className={styles.crossButton}
-                  style="text"
-                  onClick={(even) => handleDeleteChip(value)}
-                >
-                  <Cross />
-                </Button>
+                <span className={styles.buttonWrapper}>
+                  <Button
+                    className={styles.crossButton}
+                    style="text"
+                    onClick={(even) => handleDeleteChip(value)}
+                  >
+                    <Cross />
+                  </Button>
+                </span>
               </div>
             )
           })}
