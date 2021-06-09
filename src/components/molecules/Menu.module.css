@@ -1,13 +1,9 @@
 .menu {
   width: 100%;
-}
-
-.menu > div {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: calc(var(--spacer) / 2);
-  padding-bottom: calc(var(--spacer) / 2);
+  padding: calc(var(--spacer) / 2) var(--spacer);
 }
 
 .logoUnit {
