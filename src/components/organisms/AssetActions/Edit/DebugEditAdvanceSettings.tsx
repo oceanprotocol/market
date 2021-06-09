@@ -4,6 +4,11 @@ import { AdvanceSettingsForm } from '../../../../models/FormEditCredential'
 import { useOcean } from '../../../../providers/Ocean'
 import DebugOutput from '../../../atoms/DebugOutput'
 
+export interface AdvanceSettings {
+  credentail: Credentials
+  isOrderDisabled: boolean
+}
+
 export default function DebugEditCredential({
   values,
   ddo,
@@ -14,7 +19,7 @@ export default function DebugEditCredential({
   credentialType: CredentialType
 }): ReactElement {
   const { ocean } = useOcean()
-  const [credential, setCredential] = useState<Credentials>()
+  const [advanceSettings, setAdvanceSettings] = useState<AdvanceSettings>()
 
   useEffect(() => {
     if (!ocean) return
@@ -24,9 +29,12 @@ export default function DebugEditCredential({
         ddo,
         credentialType,
         values.allow,
-        [] // TODO: denyCredential
+        values.deny
       )
-      setCredential(newDdo.credentials)
+      setAdvanceSettings({
+        credentail: newDdo.credentials,
+        isOrderDisabled: values.isOrderDisabled
+      })
     }
     transformValues()
   }, [values, ddo, ocean])
@@ -34,7 +42,7 @@ export default function DebugEditCredential({
   return (
     <>
       <DebugOutput title="Collected Form Values" output={values} />
-      <DebugOutput title="Transformed Form Values" output={ddo.credentials} />
+      <DebugOutput title="Transformed Form Values" output={advanceSettings} />
     </>
   )
 }

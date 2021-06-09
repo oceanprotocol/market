@@ -28,7 +28,9 @@ export default function FormAdvanceSettings({
     field: FormFieldProps
   ) {
     validateField(field.name)
-    setFieldValue(field.name, e.target.value)
+    if (e.target.type === 'checkbox')
+      setFieldValue(field.name, e.target.checked)
+    else setFieldValue(field.name, e.target.value)
   }
 
   return (

@@ -3,7 +3,7 @@ import React, { ReactElement, useState } from 'react'
 import { useAsset } from '../../../../providers/Asset'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import styles from './index.module.css'
-import { Logger, CredentialType } from '@oceanprotocol/lib'
+import { Logger, CredentialType, DDO } from '@oceanprotocol/lib'
 import MetadataFeedback from '../../../molecules/MetadataFeedback'
 import { graphql, useStaticQuery } from 'gatsby'
 import { useWeb3 } from '../../../../providers/Web3'
@@ -36,6 +36,7 @@ const contentQuery = graphql`
                 label
                 help
                 type
+                options
               }
             }
           }
@@ -80,17 +81,21 @@ export default function EditAdvanceSettings({
     resetForm: () => void
   ) {
     try {
-      const ddoEditedCredential = await ocean.assets.updateCredentials(
+      let newDdo: DDO
+      newDdo = await ocean.assets.updateCredentials(
         ddo,
         credentialType,
         values.allow,
-        [] // TODO: denyCredential
+        values.deny
       )
 
-      const storedddo = await ocean.assets.updateMetadata(
-        ddoEditedCredential,
-        accountId
-      )
+      newDdo = await ocean.assets.editMetadata(newDdo, {
+        status: {
+          isOrderDisabled: values.isOrderDisabled
+        }
+      })
+
+      const storedddo = await ocean.assets.updateMetadata(newDdo, accountId)
 
       if (!storedddo) {
         setError(content.form.error)

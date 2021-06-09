@@ -8,11 +8,15 @@ import * as Yup from 'yup'
 
 export interface AdvanceSettingsForm {
   allow: string[]
+  deny: string[]
+  isOrderDisabled: boolean
 }
 
 export const validationSchema: Yup.SchemaOf<AdvanceSettingsForm> = Yup.object().shape(
   {
-    allow: Yup.array().nullable()
+    allow: Yup.array().nullable(),
+    deny: Yup.array().nullable(),
+    isOrderDisabled: Yup.boolean().nullable()
   }
 )
 
@@ -49,5 +53,15 @@ export function getInitialValues(
     credentailType,
     'allow'
   )
-  return { allow: allowCrendtail }
+  const denyCrendtail = getAssetCredentials(
+    ddo.credentials,
+    credentailType,
+    'deny'
+  )
+  const metadata = ddo.findServiceByType('metadata')
+  return {
+    allow: allowCrendtail,
+    deny: denyCrendtail,
+    isOrderDisabled: metadata.attributes?.status?.isOrderDisabled || false
+  }
 }

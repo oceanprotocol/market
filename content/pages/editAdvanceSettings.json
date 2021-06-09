@@ -7,10 +7,24 @@
     "data": [
       {
         "name": "allow",
-        "label": "Wallet Address",
+        "label": "Allow Credential",
         "placeholder": "e.g. 0x12345678901234567890abcd",
         "help": "Enter wallet address and click ADD button to append the list",
         "type": "credential"
+      },
+      {
+        "name": "deny",
+        "label": "Deny Credential",
+        "placeholder": "e.g. 0x12345678901234567890abcd",
+        "help": "Enter wallet address and click ADD button to append the list",
+        "type": "credential"
+      },
+      {
+        "name": "isDisable",
+        "label": "Disable Consumption",
+        "help": "Disable dataset being consume when dataset undergoing maintenance.",
+        "type": "checkbox",
+        "options": ["Disable"]
       }
     ]
   }

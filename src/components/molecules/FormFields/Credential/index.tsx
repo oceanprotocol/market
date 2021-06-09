@@ -42,7 +42,7 @@ export default function Credential(props: InputProps) {
   }
 
   return (
-    <div>
+    <div className={styles.credential}>
       <InputGroup>
         <input
           className={styles.input}
@@ -57,21 +57,23 @@ export default function Credential(props: InputProps) {
           Add
         </Button>
       </InputGroup>
-      {arrayInput &&
-        arrayInput.map((value) => {
-          return (
-            <div className={styles.chip} key={value}>
-              {value}
-              <Button
-                className={styles.crossButton}
-                style="text"
-                onClick={(even) => handleDeleteChip(value)}
-              >
-                <Cross />
-              </Button>
-            </div>
-          )
-        })}
+      <div className={styles.scroll}>
+        {arrayInput &&
+          arrayInput.map((value) => {
+            return (
+              <div className={styles.chip} key={value}>
+                {value}
+                <Button
+                  className={styles.crossButton}
+                  style="text"
+                  onClick={(even) => handleDeleteChip(value)}
+                >
+                  <Cross />
+                </Button>
+              </div>
+            )
+          })}
+      </div>
     </div>
   )
 }
