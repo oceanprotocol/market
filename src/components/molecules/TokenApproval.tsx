@@ -25,7 +25,7 @@ export default function TokenApproval({
   amount: string
   coin: string
 }): ReactElement {
-  const { ddo, owner } = useAsset()
+  const { ddo } = useAsset()
   const [approveToken, setApproveToken] = useState(false)
   const [tokenApproved, setTokenApproved] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -34,10 +34,17 @@ export default function TokenApproval({
 
   const tokenAddress =
     coin === 'OCEAN' ? config.oceanTokenAddress : ddo.dataTokenInfo.address
-  const spender =
-    coin === 'OCEAN' ? ocean.pool.oceanAddress : ocean.pool.dtAddress
+  const spender = ocean
+    ? coin === 'OCEAN'
+      ? ocean.pool.oceanAddress
+      : ocean.pool.dtAddress
+    : undefined
 
   async function checkTokenApproval() {
+    if (!ocean) {
+      setApproveToken(false)
+      return
+    }
     setLoading(true)
     const allowance = await ocean.datatokens.allowance(
       tokenAddress,
@@ -51,11 +58,11 @@ export default function TokenApproval({
 
   useEffect(() => {
     checkTokenApproval()
-  }, [coin, amount])
+  }, [])
 
   useEffect(() => {
     checkTokenApproval()
-  }, [])
+  }, [coin, amount])
 
   async function approveTokens(amount: string) {
     setLoading(true)
@@ -75,7 +82,7 @@ export default function TokenApproval({
         <LoaderArea />
       ) : approveToken === false ? (
         <>
-          {tokenApproved || (
+          {tokenApproved || !ocean || (
             <Button
               style="primary"
               size="small"
@@ -87,7 +94,7 @@ export default function TokenApproval({
               Approve TOKEN
             </Button>
           )}
-          {tokenApproved && actionButton}
+          {tokenApproved || !ocean ? actionButton : ''}
         </>
       ) : (
         <>
