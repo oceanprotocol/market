@@ -23,6 +23,7 @@ interface UseSiteMetadata {
     metadataCacheUri: string
     infuraProjectId: string
     chainIds: number[]
+    chainIdsSupported: number[]
     marketFeeAddress: string
     currencies: string[]
     portisId: string
@@ -56,6 +57,7 @@ const query = graphql`
           metadataCacheUri
           infuraProjectId
           chainIds
+          chainIdsSupported
           marketFeeAddress
           currencies
           portisId

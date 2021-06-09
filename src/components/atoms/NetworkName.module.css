@@ -9,6 +9,6 @@
   display: inline-block;
   width: 1.2em;
   height: 1.2em;
-  fill: var(--color-secondary);
-  margin-right: calc(var(--spacer) / 12);
+  fill: currentColor;
+  margin-right: calc(var(--spacer) / 8);
 }

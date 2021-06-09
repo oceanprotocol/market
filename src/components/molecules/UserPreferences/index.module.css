@@ -40,16 +40,16 @@
   max-width: 20rem;
 }
 
-.preferencesDetails li > div,
-.preferencesDetails li p {
-  margin: 0;
+.preferencesDetails > li > div,
+.preferencesDetails p:last-child {
+  margin-bottom: 0;
 }
 
 .preferencesDetails li p {
   margin-top: calc(var(--spacer) / 8);
 }
 
-.preferencesDetails li {
+.preferencesDetails > li {
   padding-top: calc(var(--spacer) / 3);
   padding-bottom: calc(var(--spacer) / 3);
 }

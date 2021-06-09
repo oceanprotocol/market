@@ -1,59 +1,50 @@
-import { ConfigHelperConfig } from '@oceanprotocol/lib'
-import React, { ReactElement, ChangeEvent } from 'react'
-import { useOcean } from '../../../providers/Ocean'
-import { getOceanConfig } from '../../../utils/ocean'
-import FormHelp from '../../atoms/Input/Help'
+import React, { ChangeEvent, ReactElement } from 'react'
 import Label from '../../atoms/Input/Label'
-import BoxSelection, { BoxSelectionOption } from '../FormFields/BoxSelection'
-import { ReactComponent as EthIcon } from '../../../images/eth.svg'
-import { ReactComponent as PolygonIcon } from '../../../images/polygon.svg'
-import { ReactComponent as MoonbeamIcon } from '../../../images/moonbeam.svg'
+import { useUserPreferences } from '../../../providers/UserPreferences'
+import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
+import NetworkName from '../../atoms/NetworkName'
+import { removeItemFromArray } from '../../../utils'
+import FormHelp from '../../atoms/Input/Help'
 import styles from './Chain.module.css'
 
 export default function Chain(): ReactElement {
-  const { config, connect } = useOcean()
+  const { appConfig } = useSiteMetadata()
+  const { chainIds, setChainIds } = useUserPreferences()
 
-  async function connectOcean(event: ChangeEvent<HTMLInputElement>) {
-    const config = getOceanConfig(event.target.value)
-    await connect(config)
+  function handleChainChanged(e: ChangeEvent<HTMLInputElement>) {
+    const { value } = e.target
+
+    // storing all chainId everywhere as a number so convert from here
+    const valueAsNumber = Number(value)
+
+    const newChainIds = chainIds.includes(valueAsNumber)
+      ? [...removeItemFromArray(chainIds, valueAsNumber)]
+      : [...chainIds, valueAsNumber]
+    setChainIds(newChainIds)
   }
-
-  function isNetworkSelected(oceanConfig: string) {
-    return (config as ConfigHelperConfig).network === oceanConfig
-  }
-
-  const options: BoxSelectionOption[] = [
-    {
-      name: 'mainnet',
-      checked: isNetworkSelected('mainnet'),
-      title: 'ETH',
-      text: 'Mainnet',
-      icon: <EthIcon />
-    },
-    {
-      name: 'polygon',
-      checked: isNetworkSelected('polygon'),
-      title: 'Polygon',
-      text: 'Mainnet',
-      icon: <PolygonIcon />
-    },
-    {
-      name: 'moonbeamalpha',
-      checked: isNetworkSelected('moonbeamalpha'),
-      title: 'Moonbase Alpha',
-      text: 'Testnet',
-      icon: <MoonbeamIcon />
-    }
-  ]
 
   return (
-    <li className={styles.chains}>
-      <Label htmlFor="">Chain</Label>
-      <BoxSelection
-        options={options}
-        name="chain"
-        handleChange={connectOcean}
-      />
+    <li>
+      <Label htmlFor="chains">Chains</Label>
+      <div className={styles.chains}>
+        {appConfig.chainIdsSupported.map((chainId) => (
+          <div className={styles.radioWrap} key={chainId}>
+            <label className={styles.radioLabel} htmlFor={`opt-${chainId}`}>
+              <input
+                className={styles.input}
+                id={`opt-${chainId}`}
+                type="checkbox"
+                name="chainIds"
+                value={chainId}
+                onChange={handleChainChanged}
+                defaultChecked={chainIds.includes(chainId)}
+              />
+              <NetworkName key={chainId} networkId={chainId} />
+            </label>
+          </div>
+        ))}
+      </div>
+
       <FormHelp>Switch the data source for the interface.</FormHelp>
     </li>
   )

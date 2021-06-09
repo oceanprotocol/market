@@ -11,16 +11,16 @@ import { darkModeConfig } from '../../../../app.config'
 import Chain from './Chain'
 
 export default function UserPreferences(): ReactElement {
-  // Calling this here because <Theme /> is not mounted on first load
+  // Calling this here because <Style /> is not mounted on first load
   const darkMode = useDarkMode(false, darkModeConfig)
 
   return (
     <Tooltip
       content={
         <ul className={styles.preferencesDetails}>
+          <Chain />
           <Currency />
           <Appearance darkMode={darkMode} />
-          {/* <Chain /> */}
           <Debug />
         </ul>
       }

@@ -18,8 +18,7 @@ interface UserPreferencesValue {
   bookmarks: {
     [network: string]: string[]
   }
-  addChainId: (chain: number) => void
-  removeChainId: (chain: number) => void
+  setChainIds: (chainIds: number[]) => void
   setDebug: (value: boolean) => void
   setCurrency: (value: string) => void
   addBookmark: (did: string) => void
@@ -57,8 +56,10 @@ function UserPreferencesProvider({
     localStorage?.currency || 'EUR'
   )
   const [locale, setLocale] = useState<string>()
-  const [chainIds, setChainIds] = useState(appConfig.chainIds)
   const [bookmarks, setBookmarks] = useState(localStorage?.bookmarks || {})
+  const [chainIds, setChainIds] = useState(
+    localStorage?.chainIds || appConfig.chainIds
+  )
 
   // Write values to localStorage on change
   useEffect(() => {
@@ -77,16 +78,6 @@ function UserPreferencesProvider({
     if (!window) return
     setLocale(window.navigator.language)
   }, [])
-
-  function addChainId(chain: number): void {
-    const newChainIds = [...chainIds, chain]
-    setChainIds(newChainIds)
-  }
-
-  function removeChainId(chain: number): void {
-    const newChainIds = chainIds.filter((chainId) => chainId !== chain)
-    setChainIds(newChainIds)
-  }
 
   // function addBookmark(didToAdd: string): void {
   //   const newPinned = {
@@ -122,8 +113,7 @@ function UserPreferencesProvider({
           locale,
           chainIds,
           bookmarks,
-          addChainId,
-          removeChainId,
+          setChainIds,
           setDebug,
           setCurrency
           // addBookmark,

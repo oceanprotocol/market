@@ -1,30 +1,37 @@
-.buttons {
-  composes: buttons from './Appearance.module.css';
+.chains {
+  composes: box from '../../atoms/Box.module.css';
+  box-shadow: none;
+  padding: 0;
 }
 
-.button {
-  composes: button from './Appearance.module.css';
+.radioWrap {
+  composes: radioWrap from '../../atoms/Input/InputElement.module.css';
+  padding: calc(var(--spacer) / 6) calc(var(--spacer) / 3);
+  border-bottom: 1px solid var(--border-color);
 }
 
-.button span {
-  display: block;
-  font-size: var(--font-size-small);
-  font-family: var(--font-family-base);
+.radioWrap:last-child {
+  border-bottom: none;
+}
+
+.input {
+  composes: checkbox from '../../atoms/Input/InputElement.module.css';
+  vertical-align: baseline;
+  margin-right: calc(var(--spacer) / 3);
+  margin-top: 0;
+}
+
+.radioLabel {
+  composes: radioLabel from '../../atoms/Input/InputElement.module.css';
   font-weight: var(--font-weight-base);
-  margin-top: calc(var(--spacer) / 10);
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  width: 100%;
 }
 
-.selected {
-  composes: selected from './Appearance.module.css';
-}
-
-.chains div[class*='boxSelectionsWrapper'] {
-  display: grid;
-  gap: calc(var(--spacer) / 4);
-  grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
-  padding-bottom: calc(var(--spacer) / 8);
-}
-
-.chains label[class*='boxSelection'] {
-  padding: calc(var(--spacer) / 3) calc(var(--spacer) / 4) !important;
+.input:checked + span {
+  color: var(--font-color-text);
+  font-weight: var(--font-weight-bold);
 }

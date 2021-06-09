@@ -14,6 +14,7 @@ import { queryMetadata } from '../../utils/aquarius'
 import { getHighestLiquidityDIDs } from '../../utils/subgraph'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
+import { useUserPreferences } from '../../providers/UserPreferences'
 
 async function getQueryHighest(
   chainIds: number[]
@@ -122,14 +123,13 @@ function SectionQueryResult({
 
 export default function HomePage(): ReactElement {
   const [queryAndDids, setQueryAndDids] = useState<[SearchQuery, string]>()
-  // TODO: appConfig.chainIds needs to come from UserPreferences instead
-  const { appConfig } = useSiteMetadata()
+  const { chainIds } = useUserPreferences()
 
   useEffect(() => {
-    getQueryHighest(appConfig.chainIds).then((results) => {
+    getQueryHighest(chainIds).then((results) => {
       setQueryAndDids(results)
     })
-  }, [appConfig.chainIds])
+  }, [chainIds])
 
   return (
     <>
@@ -152,7 +152,7 @@ export default function HomePage(): ReactElement {
 
       <SectionQueryResult
         title="Recently Published"
-        query={getQueryLatest(appConfig.chainIds)}
+        query={getQueryLatest(chainIds)}
         action={
           <Button style="text" to="/search?sort=created&sortOrder=desc">
             All data sets and algorithms →

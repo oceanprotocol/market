@@ -5,18 +5,17 @@ import AssetList from '../../organisms/AssetList'
 import axios from 'axios'
 import { queryMetadata } from '../../../utils/aquarius'
 import { useWeb3 } from '../../../providers/Web3'
-import { useOcean } from '../../../providers/Ocean'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
+import { useUserPreferences } from '../../../providers/UserPreferences'
 
 export default function PublishedList(): ReactElement {
   const { accountId } = useWeb3()
   const { appConfig } = useSiteMetadata()
+  const { chainIds } = useUserPreferences()
 
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [isLoading, setIsLoading] = useState(false)
   const [page, setPage] = useState<number>(1)
-
-  const source = axios.CancelToken.source()
 
   useEffect(() => {
     async function getPublished() {
@@ -34,6 +33,8 @@ export default function PublishedList(): ReactElement {
         sort: { created: -1 }
       }
       try {
+        const source = axios.CancelToken.source()
+
         queryResult || setIsLoading(true)
         const result = await queryMetadata(
           queryPublishedAssets,
@@ -48,7 +49,7 @@ export default function PublishedList(): ReactElement {
       }
     }
     getPublished()
-  }, [accountId, page, appConfig.metadataCacheUri])
+  }, [accountId, page, appConfig.metadataCacheUri, chainIds])
 
   return accountId ? (
     <AssetList
