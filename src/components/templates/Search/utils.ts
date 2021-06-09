@@ -6,7 +6,8 @@ import { MetadataCache, Logger } from '@oceanprotocol/lib'
 import queryString from 'query-string'
 
 export const SortTermOptions = {
-  Created: 'created'
+  Created: 'created',
+  Relevance: '_score'
 } as const
 type SortTermOptions = typeof SortTermOptions[keyof typeof SortTermOptions]
 
@@ -39,10 +40,10 @@ function addTypeFilterToQuery(sortTerm: string, typeFilter: string): string {
   return sortTerm
 }
 
-function getSortType(): string {
-  const sortTerm = SortTermOptions.Created
-  return sortTerm
-}
+// function getSortType(sort: string): string {
+//   const sortTerm = SortTermOptions.f
+//   return sortTerm
+// }
 
 export function getSearchQuery(
   text?: string,
@@ -55,7 +56,7 @@ export function getSearchQuery(
   sortOrder?: string,
   serviceType?: string
 ): any {
-  const sortTerm = getSortType()
+  const sortTerm = sort
   const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
   let searchTerm = owner
     ? `(publicKey.owner:${owner})`
@@ -66,7 +67,7 @@ export function getSearchQuery(
     ? // eslint-disable-next-line no-useless-escape
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
     : text || ''
-  const modifiedSearchTerm = searchTerm.split(' ').join(' OR ').toUpperCase()
+  const modifiedSearchTerm = searchTerm.split(' ').join(' OR ')
   // HACK: resolves the case sensitivity related to dataTokenInfo.symbol
 
   searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
@@ -94,15 +95,33 @@ export function getSearchQuery(
                       'service.attributes.additionalInformation.tags'
                     ],
                     minimum_should_match: '2<75%',
-                    phrase_slop: 2
+                    phrase_slop: 2,
+                    boost: 5
                   }
                 },
                 {
                   match_phrase: {
                     content: {
                       query: `${searchTerm}`,
-                      boost: 4
+                      boost: 10000
                     }
+                  }
+                },
+                {
+                  query_string: {
+                    query: `*${searchTerm}*`,
+                    fields: [
+                      'id',
+                      'publicKey.owner',
+                      'dataToken',
+                      'dataTokenInfo.name',
+                      'dataTokenInfo.symbol',
+                      'service.attributes.main.name',
+                      'service.attributes.main.author',
+                      'service.attributes.additionalInformation.description',
+                      'service.attributes.additionalInformation.tags'
+                    ],
+                    default_operator: 'AND'
                   }
                 }
               ]
@@ -195,7 +214,9 @@ export async function addExistingParamsToUrl(
       }
     }
   } else {
-    urlLocation = `${urlLocation}sort=${SortTermOptions.Created}&sortOrder=${SortValueOptions.Descending}&`
+    urlLocation = `${urlLocation}sort=${encodeURIComponent(
+      SortTermOptions.Relevance
+    )}&sortOrder=${SortValueOptions.Descending}&`
   }
   urlLocation = urlLocation.slice(0, -1)
   return urlLocation

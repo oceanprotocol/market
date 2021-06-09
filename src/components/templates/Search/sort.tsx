@@ -11,7 +11,10 @@ import classNames from 'classnames/bind'
 
 const cx = classNames.bind(styles)
 
-const sortItems = [{ display: 'Published', value: SortTermOptions.Created }]
+const sortItems = [
+  { display: 'Relevance', value: SortTermOptions.Relevance },
+  { display: 'Published', value: SortTermOptions.Created }
+]
 
 export default function Sort({
   sortType,

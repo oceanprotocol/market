@@ -34,6 +34,7 @@ export default function SearchPage({
     async function initSearch() {
       setLoading(true)
       setTotalResults(undefined)
+      console.log('serch parms', parsed)
       const queryResult = await getResults(parsed, config.metadataCacheUri)
       setQueryResult(queryResult)
       setTotalResults(queryResult.totalResults)
