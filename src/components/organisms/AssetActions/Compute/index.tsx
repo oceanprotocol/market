@@ -48,11 +48,13 @@ const SuccessAction = () => (
 export default function Compute({
   isBalanceSufficient,
   dtBalance,
-  file
+  file,
+  isDispensable
 }: {
   isBalanceSufficient: boolean
   dtBalance: string
   file: FileMetadata
+  isDispensable?: boolean
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
@@ -79,7 +81,10 @@ export default function Compute({
   const [algorithmTimeout, setAlgorithmTimeout] = useState<string>()
 
   const isComputeButtonDisabled =
-    isJobStarting === true || file === null || !ocean || !isBalanceSufficient
+    isJobStarting === true ||
+    file === null ||
+    !ocean ||
+    (!isBalanceSufficient && !isDispensable)
   const hasDatatoken = Number(dtBalance) >= 1
 
   async function checkPreviousOrders(ddo: DDO) {

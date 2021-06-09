@@ -6,7 +6,8 @@ import {
   getCreatePricingPoolFeedback,
   getCreatePricingExchangeFeedback,
   getBuyDTFeedback,
-  getCreateFreePricingFeedback
+  getCreateFreePricingFeedback,
+  getDispenseFeedback
 } from '../utils/feedback'
 import { sleep } from '../utils'
 
@@ -69,7 +70,7 @@ function usePricing(): UsePricing {
   // Helper for setting steps & feedback for all flows
   async function setStep(
     index: number,
-    type: 'pool' | 'exchange' | 'free' | 'buy',
+    type: 'pool' | 'exchange' | 'free' | 'buy' | 'dispense',
     ddo: DDO
   ) {
     const dtSymbol = await getDTSymbol(ddo)
@@ -90,6 +91,9 @@ function usePricing(): UsePricing {
         break
       case 'buy':
         messages = getBuyDTFeedback(dtSymbol)
+        break
+      case 'dispense':
+        messages = getDispenseFeedback(dtSymbol)
         break
     }
 
@@ -182,6 +186,17 @@ function usePricing(): UsePricing {
           )
           setStep(3, 'buy', ddo)
           Logger.log('DT exchange buy response', tx)
+          break
+        }
+        case 'free': {
+          setStep(1, 'dispense', ddo)
+          tx = await ocean.OceanDispenser.dispense(
+            ddo.dataToken,
+            accountId,
+            '1'
+          )
+          setStep(2, 'dispense', ddo)
+          Logger.log('DT dispense response', tx)
           break
         }
       }

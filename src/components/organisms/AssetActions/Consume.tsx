@@ -35,12 +35,14 @@ export default function Consume({
   ddo,
   file,
   isBalanceSufficient,
-  dtBalance
+  dtBalance,
+  isDispensable
 }: {
   ddo: DDO
   file: FileMetadata
   isBalanceSufficient: boolean
   dtBalance: string
+  isDispensable?: boolean
 }): ReactElement {
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
@@ -104,7 +106,7 @@ export default function Consume({
   useEffect(() => {
     setIsDisabled(
       (!ocean ||
-        !isBalanceSufficient ||
+        (!isBalanceSufficient && !isDispensable) ||
         typeof consumeStepText !== 'undefined' ||
         pricingIsLoading ||
         !isConsumable) &&
@@ -115,6 +117,7 @@ export default function Consume({
     ocean,
     hasPreviousOrder,
     isBalanceSufficient,
+    isDispensable,
     consumeStepText,
     pricingIsLoading,
     isConsumable,

@@ -78,3 +78,12 @@ export function getSellDTFeedback(dtSymbol: string): { [key: number]: string } {
     3: `3/3 ${dtSymbol} sold.`
   }
 }
+
+export function getDispenseFeedback(dtSymbol: string): {
+  [key: number]: string
+} {
+  return {
+    1: `1/2 Requesting ${dtSymbol}...`,
+    2: `2/2 Received ${dtSymbol}.`
+  }
+}
