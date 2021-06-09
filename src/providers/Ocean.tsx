@@ -7,13 +7,7 @@ import React, {
   ReactNode,
   useEffect
 } from 'react'
-import {
-  Ocean,
-  Logger,
-  Account,
-  Config,
-  ConfigHelperConfig
-} from '@oceanprotocol/lib'
+import { Ocean, Logger, Account, ConfigHelperConfig } from '@oceanprotocol/lib'
 
 import { useWeb3 } from './Web3'
 import { getDevelopmentConfig, getOceanConfig } from '../utils/ocean'
@@ -22,8 +16,8 @@ import { useAsset } from './Asset'
 interface OceanProviderValue {
   ocean: Ocean
   account: Account
-  config: Config
-  connect: (config: Config) => Promise<void>
+  config: ConfigHelperConfig
+  connect: (config: ConfigHelperConfig) => Promise<void>
 }
 
 const OceanContext = createContext({} as OceanProviderValue)
@@ -34,16 +28,16 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
 
   const [ocean, setOcean] = useState<Ocean>()
   const [account, setAccount] = useState<Account>()
-  const [config, setConfig] = useState<Config>()
+  const [config, setConfig] = useState<ConfigHelperConfig>()
 
   // -----------------------------------
   // Helper: Create Ocean instance
   // -----------------------------------
   const connect = useCallback(
-    async (config: ConfigHelperConfig | Config) => {
+    async (config: ConfigHelperConfig) => {
       if (!web3 || !ddo) return
 
-      const newConfig: Config = {
+      const newConfig: ConfigHelperConfig = {
         ...config,
         web3Provider: web3
       }
@@ -65,13 +59,13 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
   // Initial connection
   // -----------------------------------
   useEffect(() => {
-    if (!ddo?.chainId) return
+    // if (!ddo?.chainId) return
 
     const config = {
-      ...getOceanConfig(ddo.chainId),
+      ...getOceanConfig(ddo?.chainId || 1),
 
       // add local dev values
-      ...(ddo.chainId === 8996 && {
+      ...(ddo?.chainId === 8996 && {
         ...getDevelopmentConfig()
       })
     }
