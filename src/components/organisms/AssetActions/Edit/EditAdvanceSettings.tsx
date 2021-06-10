@@ -68,7 +68,7 @@ export default function EditAdvanceSettings({
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
-  const { metadata, ddo, refreshDdo, price } = useAsset()
+  const { metadata, ddo, refreshDdo } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const { appConfig } = useSiteMetadata()
@@ -121,7 +121,7 @@ export default function EditAdvanceSettings({
         await handleSubmit(values, resetForm)
       }}
     >
-      {({ isSubmitting, values, initialValues }) =>
+      {({ isSubmitting, values }) =>
         isSubmitting || hasFeedback ? (
           <MetadataFeedback
             title="Updating Data Set"

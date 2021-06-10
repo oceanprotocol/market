@@ -17,10 +17,6 @@ export default function Credential(props: InputProps) {
     helpers.setValue(arrayInput)
   }, [arrayInput])
 
-  function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    setValue(e.target.value)
-  }
-
   function handleDeleteChip(value: string) {
     const newInput = arrayInput.filter((input) => input !== value)
     setArrayInput(newInput)
@@ -48,7 +44,9 @@ export default function Credential(props: InputProps) {
           className={styles.input}
           placeholder={props.placeholder}
           name="search"
-          onChange={handleChange}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setValue(e.target.value)
+          }
           value={value}
         />
         <Button
