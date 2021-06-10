@@ -35,8 +35,8 @@ export default function Menu(): ReactElement {
 
   return (
     <nav className={styles.menu}>
-      <Link to="/" className={styles.logoUnit}>
-        <Logo />
+      <Link to="/" className={styles.logo}>
+        <Logo noWordmark />
         <h1 className={styles.title}>
           {siteTitle} <Badge label="beta" />
         </h1>
@@ -48,13 +48,12 @@ export default function Menu(): ReactElement {
             <MenuLink item={item} />
           </li>
         ))}
-        <li>
-          <Wallet />
-        </li>
-        <li>
-          <UserPreferences />
-        </li>
       </ul>
+
+      <div className={styles.actions}>
+        <Wallet />
+        <UserPreferences />
+      </div>
     </nav>
   )
 }

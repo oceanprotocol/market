@@ -5,14 +5,15 @@
   text-transform: uppercase;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-  padding: calc(var(--spacer) / 4);
+  padding: calc(var(--spacer) / 4) calc(var(--spacer) / 3);
   white-space: nowrap;
   background: var(--background-content);
   margin: 0;
   transition: border 0.2s ease-out;
   cursor: pointer;
-  min-width: 190px;
   height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .button,
@@ -37,13 +38,23 @@
   overflow: hidden;
   display: inline-block;
   vertical-align: middle;
-  margin-right: calc(var(--spacer) / 6);
 }
 
 .address {
+  display: none;
   text-transform: none;
   border-right: 1px solid var(--border-color);
   padding-right: calc(var(--spacer) / 3);
+}
+
+@media screen and (min-width: 50rem) {
+  .address {
+    display: inline-block;
+  }
+
+  .blockies {
+    margin-right: calc(var(--spacer) / 6);
+  }
 }
 
 .button svg {

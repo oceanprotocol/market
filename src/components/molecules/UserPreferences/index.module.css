@@ -1,7 +1,11 @@
 .preferences {
-  padding: calc(var(--spacer) / 5) calc(var(--spacer) / 4)
-    calc(var(--spacer) / 5) 0;
+  padding: calc(var(--spacer) / 5) calc(var(--spacer) / 3)
+    calc(var(--spacer) / 5) calc(var(--spacer) / 3);
   cursor: pointer;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  margin-left: calc(var(--spacer) / 3);
+  background-color: var(--background-content);
 }
 
 .preferences svg {
@@ -14,8 +18,8 @@
 }
 
 .preferences svg:last-child {
-  width: 1em;
-  height: 1em;
+  width: var(--font-size-small);
+  height: var(--font-size-small);
   fill: var(--border-color);
   margin-left: calc(var(--spacer) / 4);
   transition: transform 0.2s ease-out;
@@ -24,8 +28,8 @@
 .icon {
   fill: var(--brand-grey-light);
   transition: 0.2s ease-out;
-  width: 1.2em;
-  height: 1.2em;
+  width: 1em;
+  height: 1em;
 }
 
 .preferences:hover .icon,
