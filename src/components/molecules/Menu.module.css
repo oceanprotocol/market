@@ -1,8 +1,13 @@
 .menu {
   width: 100%;
   padding: calc(var(--spacer) / 2);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+}
+
+.main {
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
 }
 
@@ -14,13 +19,11 @@
 
 .navigation {
   order: 3;
-  width: 100%;
 }
 
 .actions {
   display: flex;
-  align-self: center;
-  justify-content: space-between;
+  align-self: flex-start;
   margin-left: auto;
   order: 2;
 }
@@ -35,10 +38,7 @@
 
 @media screen and (min-width: 50rem) {
   .menu {
-    padding: calc(var(--spacer) / 2) var(--spacer);
-    align-items: center;
-    justify-content: flex-start;
-    flex-wrap: nowrap;
+    padding: var(--spacer);
   }
 
   .logo {
@@ -47,7 +47,6 @@
 
   .navigation {
     order: 1;
-    width: auto;
   }
 
   .title {
@@ -79,7 +78,7 @@
 
 .link {
   display: block;
-  padding: calc(var(--spacer) / 2);
+  padding: calc(var(--spacer) / 4) calc(var(--spacer) / 2);
   text-transform: uppercase;
   color: var(--color-secondary);
   font-weight: var(--font-weight-bold);
