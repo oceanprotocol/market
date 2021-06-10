@@ -12,8 +12,10 @@ import Button from '../atoms/Button'
 import Bookmarks from '../molecules/Bookmarks'
 import axios from 'axios'
 import { queryMetadata } from '../../utils/aquarius'
+import Permission from '../organisms/Permission'
 import { getHighestLiquidityDIDs } from '../../utils/subgraph'
 import { DDO, Logger } from '@oceanprotocol/lib'
+
 import { useWeb3 } from '../../providers/Web3'
 
 const queryLatest = {
@@ -121,33 +123,35 @@ export default function HomePage(): ReactElement {
   }, [config.subgraphUri, loading, web3Loading])
 
   return (
-    <>
-      <Container narrow className={styles.searchWrap}>
-        <SearchBar size="large" />
-      </Container>
+    <Permission eventType="browse">
+      <>
+        <Container narrow className={styles.searchWrap}>
+          <SearchBar size="large" />
+        </Container>
 
-      <section className={styles.section}>
-        <h3>Bookmarks</h3>
-        <Bookmarks />
-      </section>
+        <section className={styles.section}>
+          <h3>Bookmarks</h3>
+          <Bookmarks />
+        </section>
 
-      {queryAndDids && (
+        {queryAndDids && (
+          <SectionQueryResult
+            title="Highest Liquidity"
+            query={queryAndDids[0]}
+            queryData={queryAndDids[1]}
+          />
+        )}
+
         <SectionQueryResult
-          title="Highest Liquidity"
-          query={queryAndDids[0]}
-          queryData={queryAndDids[1]}
+          title="Recently Published"
+          query={queryLatest}
+          action={
+            <Button style="text" to="/search?sort=created&sortOrder=desc">
+              All data sets and algorithms →
+            </Button>
+          }
         />
-      )}
-
-      <SectionQueryResult
-        title="Recently Published"
-        query={queryLatest}
-        action={
-          <Button style="text" to="/search?sort=created&sortOrder=desc">
-            All data sets and algorithms →
-          </Button>
-        }
-      />
-    </>
+      </>
+    </Permission>
   )
 }
