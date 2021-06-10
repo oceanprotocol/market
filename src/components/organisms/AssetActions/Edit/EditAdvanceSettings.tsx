@@ -46,6 +46,17 @@ const contentQuery = graphql`
   }
 `
 
+function getDefaultCredentialType(credentialType: string): CredentialType {
+  switch (credentialType) {
+    case 'address':
+      return CredentialType.address
+    case 'credential3Box':
+      return CredentialType.credential3Box
+    default:
+      return CredentialType.address
+  }
+}
+
 export default function EditAdvanceSettings({
   setShowEdit
 }: {
@@ -64,17 +75,7 @@ export default function EditAdvanceSettings({
 
   const hasFeedback = error || success
 
-  let credentialType: CredentialType
-  switch (appConfig.credentialType) {
-    case 'address':
-      credentialType = CredentialType.address
-      break
-    case 'credential3Box':
-      credentialType = CredentialType.credential3Box
-      break
-    default:
-      credentialType = CredentialType.address
-  }
+  const credentialType = getDefaultCredentialType(appConfig.credentialType)
 
   async function handleSubmit(
     values: Partial<AdvanceSettingsForm>,
