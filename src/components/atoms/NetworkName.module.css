@@ -12,3 +12,17 @@
   fill: currentColor;
   margin-right: calc(var(--spacer) / 8);
 }
+
+.minimal {
+  position: relative;
+}
+
+.minimal .name {
+  opacity: 0;
+  width: 0;
+}
+
+.minimal:hover .name {
+  width: auto;
+  opacity: 1;
+}

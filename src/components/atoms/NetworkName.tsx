@@ -58,10 +58,13 @@ export default function NetworkName({
 
   return (
     <span
-      className={`${styles.network} ${className || ''}`}
-      title={minimal ? networkName : null}
+      className={`${styles.network} ${minimal ? styles.minimal : null} ${
+        className || ''
+      }`}
+      title={networkName}
     >
-      <NetworkIcon name={networkName} /> {!minimal && networkName}
+      <NetworkIcon name={networkName} />{' '}
+      <span className={styles.name}>{networkName}</span>
     </span>
   )
 }

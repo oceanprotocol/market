@@ -32,7 +32,7 @@ export default function Network(): ReactElement {
           <Status state="error" className={styles.warning} />
         </Tooltip>
       )}
-      <NetworkName className={styles.name} networkId={networkId} />
+      <NetworkName className={styles.name} networkId={networkId} minimal />
       {isTestnet && <Badge label="Test" className={styles.badge} />}
     </div>
   ) : null
