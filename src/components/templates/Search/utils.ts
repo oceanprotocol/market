@@ -152,24 +152,11 @@ export async function getResults(
   },
   metadataCacheUri: string
 ): Promise<QueryResult> {
-  const {
-    text,
-    owner,
-    tags,
-    page,
-    offset,
-    categories,
-    sort,
-    sortOrder,
-    serviceType
-  } = params
+  const { text, page, offset, sort, sortOrder, serviceType } = params
   const metadataCache = new MetadataCache(metadataCacheUri, Logger)
 
   const searchQuery = getSearchQuery(
     text,
-    owner,
-    tags,
-    categories,
     page,
     offset,
     sort,
