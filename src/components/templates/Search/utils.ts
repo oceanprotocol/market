@@ -36,29 +36,27 @@ function addTypeFilterToQuery(sortTerm: string, typeFilter: string): string {
   return sortTerm
 }
 
-// function getSortType(sort: string): string {
-//   const sortTerm = SortTermOptions.f
-//   return sortTerm
-// }
+function getSortType(sortParam: string): string {
+  const sortTerm =
+    sortParam === SortTermOptions.Created
+      ? SortTermOptions.Created
+      : SortTermOptions.Relevance
+  return sortTerm
+}
 
 export function getSearchQuery(
   text?: string,
-  owner?: string,
-  tags?: string,
-  categories?: string,
   page?: string,
   offset?: string,
   sort?: string,
   sortOrder?: string,
   serviceType?: string
 ): any {
-  const sortTerm = sort
+  const sortTerm = getSortType(sort)
   const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
-
-  // not sure if we need this anymore
   let searchTerm = text || ''
-
   const emptySearchTerm = text === undefined || text === ''
+
   searchTerm = searchTerm.trim()
   let modifiedSearchTerm = searchTerm.split(' ').join(' OR ').trim()
   modifiedSearchTerm = addTypeFilterToQuery(modifiedSearchTerm, serviceType)
