@@ -1,6 +1,6 @@
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { toast } from 'react-toastify'
-import { File as FileMetadata, Logger, DID } from '@oceanprotocol/lib'
+import { DID, File as FileMetadata, Logger } from '@oceanprotocol/lib'
 
 export async function getFileInfo(
   url: string | DID,

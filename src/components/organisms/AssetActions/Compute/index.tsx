@@ -41,7 +41,7 @@ import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
 import AssetStatus from '../../../molecules/AssetStatus'
 
 const SuccessAction = () => (
-  <Button style="text" to="/history" size="small">
+  <Button style="text" to="/history?defaultTab=ComputeJobs" size="small">
     Go to history →
   </Button>
 )
@@ -373,7 +373,7 @@ export default function Compute({
   return (
     <>
       <div className={styles.info}>
-        <File file={file} small />
+        <File file={file} isLoading={fileIsLoading} small />
         <div>
           <Price price={price} conversion />
           <br />

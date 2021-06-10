@@ -1,4 +1,5 @@
 import React, { ReactElement, useState, useEffect } from 'react'
+import Permission from '../Permission'
 import styles from './index.module.css'
 import Compute from './Compute'
 import Consume from './Consume'
@@ -15,7 +16,7 @@ import axios from 'axios'
 
 export default function AssetActions(): ReactElement {
   const { accountId } = useWeb3()
-  const { ocean, balance, account } = useOcean()
+  const { config, ocean, balance, account } = useOcean()
   const { price, ddo } = useAsset()
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
@@ -25,6 +26,7 @@ export default function AssetActions(): ReactElement {
   const isCompute = Boolean(ddo?.findServiceByType('compute'))
 
   useEffect(() => {
+    if (!config) return
     const source = axios.CancelToken.source()
     async function initFileInfo() {
       setFileIsLoading(true)
@@ -43,7 +45,7 @@ export default function AssetActions(): ReactElement {
       }
     }
     initFileInfo()
-  }, [ddo.id])
+  }, [config, ddo.id])
 
   // Get and set user DT balance
   useEffect(() => {
@@ -111,5 +113,9 @@ export default function AssetActions(): ReactElement {
       }
     )
 
-  return <Tabs items={tabs} className={styles.actions} />
+  return (
+    <Permission eventType="consume">
+      <Tabs items={tabs} className={styles.actions} />
+    </Permission>
+  )
 }

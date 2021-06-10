@@ -162,7 +162,7 @@ export default function Consume({
     <aside className={styles.consume}>
       <div className={styles.info}>
         <div className={styles.filewrapper}>
-          <File file={file} />
+          <File file={file} isLoading={fileIsLoading} />
           <AssetStatus isValid={file.valid} />
         </div>
         <div className={styles.pricewrapper}>

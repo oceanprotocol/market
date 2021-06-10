@@ -23,7 +23,6 @@ export default function Page({
   return (
     <>
       <Seo title={title} description={description} uri={uri} />
-
       <Container>
         {title && !noPageHeader && (
           <PageHeader
