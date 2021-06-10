@@ -1,5 +1,6 @@
 import {
   CredentialAction,
+  Credential,
   Credentials,
   CredentialType,
   DDO
@@ -19,48 +20,53 @@ export const validationSchema: Yup.SchemaOf<AdvanceSettingsForm> =
     isOrderDisabled: Yup.boolean().nullable()
   })
 
+function getCredentialList(
+  credential: Credential[],
+  credentialType: CredentialType
+): string[] {
+  const credentialByType = credential.find(
+    (credential) => credential.type === credentialType
+  )
+  return credentialByType.value && credentialByType.value.length > 0
+    ? credentialByType.value
+    : []
+}
+
 function getAssetCredentials(
   credentials: Credentials,
   credentialType: CredentialType,
   credentialAction: CredentialAction
 ): string[] {
-  let values: string[] = []
+  if (!credentials) return []
+
   if (credentialAction === 'allow') {
-    if (credentials && credentials.allow) {
-      const allowList = credentials.allow.find(
-        (credential) => credential.type === credentialType
-      )
-      values = allowList && allowList.value.length > 0 ? allowList.value : []
-    }
-  } else {
-    if (credentials && credentials.deny) {
-      const dennyList = credentials.deny.find(
-        (credential) => credential.type === credentialType
-      )
-      values = dennyList && dennyList.value.length > 0 ? dennyList.value : []
-    }
+    return credentials.allow
+      ? getCredentialList(credentials.allow, credentialType)
+      : []
   }
-  return values
+  return credentials.deny
+    ? getCredentialList(credentials.deny, credentialType)
+    : []
 }
 
 export function getInitialValues(
   ddo: DDO,
   credentailType: CredentialType
 ): AdvanceSettingsForm {
-  const allowCrendtail = getAssetCredentials(
+  const allowCredential = getAssetCredentials(
     ddo.credentials,
     credentailType,
     'allow'
   )
-  const denyCrendtail = getAssetCredentials(
+  const denyCredential = getAssetCredentials(
     ddo.credentials,
     credentailType,
     'deny'
   )
   const metadata = ddo.findServiceByType('metadata')
   return {
-    allow: allowCrendtail,
-    deny: denyCrendtail,
+    allow: allowCredential,
+    deny: denyCredential,
     isOrderDisabled: metadata.attributes?.status?.isOrderDisabled || false
   }
 }
