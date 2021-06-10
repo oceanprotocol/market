@@ -15,9 +15,7 @@ interface UserPreferencesValue {
   currency: string
   locale: string
   chainIds: number[]
-  bookmarks: {
-    [network: string]: string[]
-  }
+  bookmarks: string[]
   setChainIds: (chainIds: number[]) => void
   setDebug: (value: boolean) => void
   setCurrency: (value: string) => void
@@ -56,7 +54,7 @@ function UserPreferencesProvider({
     localStorage?.currency || 'EUR'
   )
   const [locale, setLocale] = useState<string>()
-  const [bookmarks, setBookmarks] = useState(localStorage?.bookmarks || {})
+  const [bookmarks, setBookmarks] = useState(localStorage?.bookmarks || [])
   const [chainIds, setChainIds] = useState(
     localStorage?.chainIds || appConfig.chainIds
   )
@@ -79,28 +77,21 @@ function UserPreferencesProvider({
     setLocale(window.navigator.language)
   }, [])
 
-  // function addBookmark(didToAdd: string): void {
-  //   const newPinned = {
-  //     ...bookmarks,
-  //     [networkName]: [didToAdd].concat(bookmarks[networkName])
-  //   }
-  //   setBookmarks(newPinned)
-  // }
+  function addBookmark(didToAdd: string): void {
+    const newPinned = bookmarks
+    newPinned.push(didToAdd)
+    setBookmarks(newPinned)
+  }
 
-  // function removeBookmark(didToAdd: string): void {
-  //   const newPinned = {
-  //     ...bookmarks,
-  //     [networkName]: bookmarks[networkName].filter(
-  //       (did: string) => did !== didToAdd
-  //     )
-  //   }
-  //   setBookmarks(newPinned)
-  // }
+  function removeBookmark(didToAdd: string): void {
+    const newPinned = bookmarks.filter((did: string) => did !== didToAdd)
+    setBookmarks(newPinned)
+  }
 
   // Bookmarks old data structure migration
   useEffect(() => {
     if (!bookmarks.length) return
-    const newPinned = { mainnet: bookmarks as any }
+    const newPinned = bookmarks
     setBookmarks(newPinned)
   }, [bookmarks])
 
@@ -115,9 +106,9 @@ function UserPreferencesProvider({
           bookmarks,
           setChainIds,
           setDebug,
-          setCurrency
-          // addBookmark,
-          // removeBookmark
+          setCurrency,
+          addBookmark,
+          removeBookmark
         } as UserPreferencesValue
       }
     >
