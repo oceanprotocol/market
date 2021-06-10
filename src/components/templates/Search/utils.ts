@@ -54,9 +54,9 @@ export function getSearchQuery(
 ): any {
   const sortTerm = getSortType(sort)
   const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
-  let searchTerm = text || ''
   const emptySearchTerm = text === undefined || text === ''
 
+  let searchTerm = text || ''
   searchTerm = searchTerm.trim()
   let modifiedSearchTerm = searchTerm.split(' ').join(' OR ').trim()
   modifiedSearchTerm = addTypeFilterToQuery(modifiedSearchTerm, serviceType)
@@ -141,9 +141,6 @@ export function getSearchQuery(
 export async function getResults(
   params: {
     text?: string
-    owner?: string
-    tags?: string
-    categories?: string
     page?: string
     offset?: string
     sort?: string
