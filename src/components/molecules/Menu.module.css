@@ -1,17 +1,13 @@
 .menu {
   width: 100%;
   padding: calc(var(--spacer) / 2);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
 }
 
-.main {
-  display: flex;
-  flex-wrap: wrap;
-}
-
 .logo {
+  white-space: nowrap;
   display: flex;
   align-items: center;
   order: 1;
@@ -19,6 +15,9 @@
 
 .navigation {
   order: 3;
+  width: 100%;
+  margin-top: calc(var(--spacer) / 2);
+  margin-left: -1.5rem;
 }
 
 .actions {
@@ -28,12 +27,17 @@
   order: 2;
 }
 
-.logo svg {
-  margin-right: calc(var(--spacer) / 3);
-}
-
 .title {
   display: none;
+}
+
+@media screen and (min-width: 40rem) {
+  .navigation {
+    order: 2;
+    width: auto;
+    margin-top: 0;
+    margin-left: 0;
+  }
 }
 
 @media screen and (min-width: 50rem) {
@@ -41,17 +45,9 @@
     padding: var(--spacer);
   }
 
-  .logo {
-    white-space: nowrap;
-  }
-
-  .navigation {
-    order: 1;
-  }
-
   .title {
     margin: 0;
-    margin-right: calc(var(--spacer) * 2);
+    margin-right: var(--spacer);
     display: block;
     color: var(--color-secondary);
     font-size: var(--font-size-h4);
@@ -63,6 +59,7 @@
   overflow-y: hidden;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: none;
 }
 
 .navigation::-webkit-scrollbar,
@@ -73,7 +70,8 @@
 .navigation li {
   display: inline-block;
   vertical-align: middle;
-  margin-right: var(--spacer);
+  margin-right: calc(var(--spacer) / 3);
+  margin-left: calc(var(--spacer) / 3);
 }
 
 .link {
@@ -102,6 +100,10 @@
 
 .link:last-child {
   padding-right: 0;
+}
+
+.logo svg {
+  margin-right: calc(var(--spacer) / 3);
 }
 
 .actions button {

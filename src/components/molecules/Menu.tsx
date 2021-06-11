@@ -35,22 +35,20 @@ export default function Menu(): ReactElement {
 
   return (
     <nav className={styles.menu}>
-      <div className={styles.main}>
-        <Link to="/" className={styles.logo}>
-          <Logo noWordmark />
-          <h1 className={styles.title}>
-            {siteTitle} <Badge label="beta" />
-          </h1>
-        </Link>
+      <Link to="/" className={styles.logo}>
+        <Logo noWordmark />
+        <h1 className={styles.title}>
+          {siteTitle} <Badge label="beta" />
+        </h1>
+      </Link>
 
-        <ul className={styles.navigation}>
-          {menu.map((item: MenuItem) => (
-            <li key={item.name}>
-              <MenuLink item={item} />
-            </li>
-          ))}
-        </ul>
-      </div>
+      <ul className={styles.navigation}>
+        {menu.map((item: MenuItem) => (
+          <li key={item.name}>
+            <MenuLink item={item} />
+          </li>
+        ))}
+      </ul>
 
       <div className={styles.actions}>
         <Wallet />
