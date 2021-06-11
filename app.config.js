@@ -10,6 +10,8 @@ module.exports = {
   // List of all supported chainIds. Used to populate the Chains user preferences list.
   chainIdsSupported: [1, 3, 4, 137, 1287],
 
+  rbacUrl: process.env.GATSBY_RBAC_URL,
+
   infuraProjectId: process.env.GATSBY_INFURA_PROJECT_ID || 'xxx',
 
   // The ETH address the marketplace fee will be sent to.

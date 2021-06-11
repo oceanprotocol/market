@@ -1,8 +1,9 @@
 import React, { ReactElement, useState, useEffect } from 'react'
+import Permission from '../Permission'
 import styles from './index.module.css'
 import Compute from './Compute'
 import Consume from './Consume'
-import { Logger } from '@oceanprotocol/lib'
+import { Logger, File as FileMetadata, DID } from '@oceanprotocol/lib'
 import Tabs from '../../atoms/Tabs'
 import compareAsBN from '../../../utils/compareAsBN'
 import Pool from './Pool'
@@ -11,6 +12,8 @@ import { useAsset } from '../../../providers/Asset'
 import { useOcean } from '../../../providers/Ocean'
 import { useWeb3 } from '../../../providers/Web3'
 import Web3Feedback from '../../molecules/Web3Feedback'
+import { getFileInfo } from '../../../utils/provider'
+import axios from 'axios'
 
 export default function AssetActions(): ReactElement {
   const { accountId } = useWeb3()
@@ -19,7 +22,30 @@ export default function AssetActions(): ReactElement {
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
   const [dtBalance, setDtBalance] = useState<string>()
+  const [fileMetadata, setFileMetadata] = useState<FileMetadata>(Object)
+  const [fileIsLoading, setFileIsLoading] = useState<boolean>(false)
   const isCompute = Boolean(ddo?.findServiceByType('compute'))
+
+  useEffect(() => {
+    if (!config) return
+    const source = axios.CancelToken.source()
+    async function initFileInfo() {
+      setFileIsLoading(true)
+      try {
+        const fileInfo = await getFileInfo(
+          DID.parse(`${ddo.id}`),
+          config.providerUri,
+          source.token
+        )
+        setFileMetadata(fileInfo.data[0])
+      } catch (error) {
+        Logger.error(error.message)
+      } finally {
+        setFileIsLoading(false)
+      }
+    }
+    initFileInfo()
+  }, [config, ddo.id])
 
   // Get and set user DT balance
   useEffect(() => {
@@ -56,14 +82,16 @@ export default function AssetActions(): ReactElement {
     <Compute
       dtBalance={dtBalance}
       isBalanceSufficient={isBalanceSufficient}
-      file={metadata?.main.files[0]}
+      file={fileMetadata}
+      fileIsLoading={fileIsLoading}
     />
   ) : (
     <Consume
       ddo={ddo}
       dtBalance={dtBalance}
       isBalanceSufficient={isBalanceSufficient}
-      file={metadata?.main.files[0]}
+      file={fileMetadata}
+      fileIsLoading={fileIsLoading}
     />
   )
 
@@ -88,7 +116,9 @@ export default function AssetActions(): ReactElement {
 
   return (
     <>
-      <Tabs items={tabs} className={styles.actions} />
+      <Permission eventType="consume">
+        <Tabs items={tabs} className={styles.actions} />
+      </Permission>
       {type !== 'algorithm' && (
         <Web3Feedback
           isBalanceSufficient={isBalanceSufficient}
