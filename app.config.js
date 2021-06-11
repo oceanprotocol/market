@@ -4,6 +4,7 @@ module.exports = {
   // networks in their wallet.
   // Ocean Protocol contracts are deployed for: 'mainnet', 'rinkeby', 'development'
   network: process.env.GATSBY_NETWORK || 'mainnet',
+  rbacUrl: process.env.GATSBY_RBAC_URL,
 
   infuraProjectId: process.env.GATSBY_INFURA_PROJECT_ID || 'xxx',
 

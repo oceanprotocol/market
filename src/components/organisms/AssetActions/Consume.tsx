@@ -35,12 +35,14 @@ export default function Consume({
   ddo,
   file,
   isBalanceSufficient,
-  dtBalance
+  dtBalance,
+  fileIsLoading
 }: {
   ddo: DDO
   file: FileMetadata
   isBalanceSufficient: boolean
   dtBalance: string
+  fileIsLoading?: boolean
 }): ReactElement {
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
@@ -160,7 +162,7 @@ export default function Consume({
     <aside className={styles.consume}>
       <div className={styles.info}>
         <div className={styles.filewrapper}>
-          <File file={file} />
+          <File file={file} isLoading={fileIsLoading} />
         </div>
         <div className={styles.pricewrapper}>
           <Price price={price} conversion />
