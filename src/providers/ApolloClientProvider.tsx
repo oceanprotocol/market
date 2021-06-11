@@ -10,6 +10,7 @@ import fetch from 'cross-fetch'
 import React, { useState, useEffect, ReactNode, ReactElement } from 'react'
 import { useWeb3 } from './Web3'
 import { getOceanConfig } from '../utils/ocean'
+
 let apolloClient: ApolloClient<NormalizedCacheObject>
 
 function createClient(subgraphUri: string) {
@@ -37,18 +38,19 @@ export default function ApolloClientProvider({
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>()
 
   useEffect(() => {
-    const { subgraphUri } = getOceanConfig(networkId || 1)
+    const oceanConfig = getOceanConfig(networkId || 1)
 
-    if (!subgraphUri) {
+    if (!oceanConfig?.subgraphUri) {
       Logger.error(
         'No subgraphUri defined, preventing ApolloProvider from initialization.'
       )
       return
     }
 
-    const newClient = createClient(subgraphUri)
+    const newClient = createClient(oceanConfig.subgraphUri)
     apolloClient = newClient
     setClient(newClient)
+    Logger.log(`[apollo] Client connected to ${oceanConfig.subgraphUri}`)
   }, [networkId])
 
   return client ? (

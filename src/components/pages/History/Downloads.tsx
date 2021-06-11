@@ -6,9 +6,9 @@ import web3 from 'web3'
 import AssetTitle from '../../molecules/AssetListTitle'
 import { useWeb3 } from '../../../providers/Web3'
 import axios from 'axios'
-import { useOcean } from '../../../providers/Ocean'
 import { retrieveDDO } from '../../../utils/aquarius'
 import { Logger } from '@oceanprotocol/lib'
+import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 
 const getTokenOrders = gql`
   query OrdersData($user: String!) {
@@ -61,10 +61,10 @@ export default function ComputeDownloads(): ReactElement {
   const { data } = useQuery(getTokenOrders, {
     variables: { user: accountId?.toLowerCase() }
   })
-  const { metadataCacheUri } = useOcean()
+  const { appConfig } = useSiteMetadata()
 
   useEffect(() => {
-    if (!metadataCacheUri || !data) return
+    if (!appConfig.metadataCacheUri || !data) return
 
     async function filterAssets() {
       const filteredOrders: DownloadedAssets[] = []
@@ -76,7 +76,11 @@ export default function ComputeDownloads(): ReactElement {
           const did = web3.utils
             .toChecksumAddress(data.tokenOrders[i].datatokenId.address)
             .replace('0x', 'did:op:')
-          const ddo = await retrieveDDO(did, metadataCacheUri, source.token)
+          const ddo = await retrieveDDO(
+            did,
+            appConfig.metadataCacheUri,
+            source.token
+          )
           if (ddo.service[1].type === 'access') {
             filteredOrders.push({
               did: did,
@@ -94,7 +98,7 @@ export default function ComputeDownloads(): ReactElement {
     }
 
     filterAssets()
-  }, [metadataCacheUri, data])
+  }, [appConfig.metadataCacheUri, data])
 
   return (
     <Table

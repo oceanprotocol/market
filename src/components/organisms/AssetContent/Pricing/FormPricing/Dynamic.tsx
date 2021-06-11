@@ -23,8 +23,8 @@ export default function Dynamic({
   ddo: DDO
   content: any
 }): ReactElement {
-  const { networkId } = useWeb3()
-  const { account, balance } = useOcean()
+  const { networkId, balance } = useWeb3()
+  const { account } = useOcean()
   const [firstPrice, setFirstPrice] = useState<string>()
 
   // Connect with form

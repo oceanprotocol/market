@@ -11,6 +11,7 @@ import Button from '../atoms/Button'
 import Bookmarks from '../molecules/Bookmarks'
 import axios from 'axios'
 import { queryMetadata } from '../../utils/aquarius'
+import Permission from '../organisms/Permission'
 import { getHighestLiquidityDIDs } from '../../utils/subgraph'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
@@ -132,33 +133,35 @@ export default function HomePage(): ReactElement {
   }, [chainIds])
 
   return (
-    <>
-      <Container narrow className={styles.searchWrap}>
-        <SearchBar size="large" />
-      </Container>
+    <Permission eventType="browse">
+      <>
+        <Container narrow className={styles.searchWrap}>
+          <SearchBar size="large" />
+        </Container>
 
       <section className={styles.section}>
         <h3>Bookmarks</h3>
         <Bookmarks />
       </section>
 
-      {queryAndDids && (
-        <SectionQueryResult
-          title="Highest Liquidity"
-          query={queryAndDids[0]}
-          queryData={queryAndDids[1]}
-        />
-      )}
+        {queryAndDids && (
+          <SectionQueryResult
+            title="Highest Liquidity"
+            query={queryAndDids[0]}
+            queryData={queryAndDids[1]}
+          />
+        )}
 
-      <SectionQueryResult
-        title="Recently Published"
-        query={getQueryLatest(chainIds)}
-        action={
-          <Button style="text" to="/search?sort=created&sortOrder=desc">
-            All data sets and algorithms →
-          </Button>
-        }
-      />
-    </>
+        <SectionQueryResult
+          title="Recently Published"
+          query={getQueryLatest(chainIds)}
+          action={
+            <Button style="text" to="/search?sort=created&sortOrder=desc">
+              All data sets and algorithms →
+            </Button>
+          }
+        />
+      </>
+    </Permission>
   )
 }
