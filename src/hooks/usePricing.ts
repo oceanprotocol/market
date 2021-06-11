@@ -190,6 +190,17 @@ function usePricing(): UsePricing {
         }
         case 'free': {
           setStep(1, 'dispense', ddo)
+          const isDispensable = await ocean.OceanDispenser.isDispensable(
+            ddo.dataToken,
+            accountId,
+            '1'
+          )
+
+          if (!isDispensable) {
+            Logger.error(`Dispenser for ${ddo.dataToken} failed to dispense`)
+            return
+          }
+
           tx = await ocean.OceanDispenser.dispense(
             ddo.dataToken,
             accountId,

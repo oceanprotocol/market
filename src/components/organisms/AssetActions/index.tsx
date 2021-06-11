@@ -17,7 +17,6 @@ export default function AssetActions(): ReactElement {
   const { price, ddo, metadata } = useAsset()
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
-  const [isDispensable, setIsDispensable] = useState<boolean>()
   const [dtBalance, setDtBalance] = useState<string>()
   const isCompute = Boolean(ddo?.findServiceByType('compute'))
 
@@ -41,6 +40,7 @@ export default function AssetActions(): ReactElement {
 
   // Check user balance against price
   useEffect(() => {
+    if (price?.type === 'free') setIsBalanceSufficient(true)
     if (!price?.value || !account || !balance?.ocean || !dtBalance) return
 
     setIsBalanceSufficient(
@@ -52,26 +52,11 @@ export default function AssetActions(): ReactElement {
     }
   }, [balance, account, price, dtBalance])
 
-  // check free pricing dispenser
-  useEffect(() => {
-    if (!price || !ddo || !accountId) return
-    async function checkDispensable() {
-      const dispensable = await ocean.OceanDispenser.isDispensable(
-        ddo.dataToken,
-        accountId,
-        '1'
-      )
-      setIsDispensable(!!dispensable)
-    }
-    if (price.type === 'free') checkDispensable()
-  }, [ddo, accountId, price])
-
   const UseContent = isCompute ? (
     <Compute
       dtBalance={dtBalance}
       isBalanceSufficient={isBalanceSufficient}
       file={metadata?.main.files[0]}
-      isDispensable={isDispensable}
     />
   ) : (
     <Consume
@@ -79,7 +64,6 @@ export default function AssetActions(): ReactElement {
       dtBalance={dtBalance}
       isBalanceSufficient={isBalanceSufficient}
       file={metadata?.main.files[0]}
-      isDispensable={isDispensable}
     />
   )
 
