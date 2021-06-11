@@ -8,7 +8,7 @@ import { isAddress } from 'web3-utils'
 import { toast } from 'react-toastify'
 import { ReactComponent as Cross } from '../../../../images/cross.svg'
 
-export default function Credential(props: InputProps) {
+export default function Credentials(props: InputProps) {
   const [field, meta, helpers] = useField(props.name)
   const [arrayInput, setArrayInput] = useState<string[]>(field.value || [])
   const [value, setValue] = useState('')

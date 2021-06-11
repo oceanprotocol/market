@@ -1,5 +1,5 @@
 {
-  "description": "Update credential of this data set. Updating metadata will create an on-chain transaction you have to approve in your wallet.",
+  "description": "Update advanced settings of this data set. Updating these settings will create an on-chain transaction you have to approve in your wallet.",
   "form": {
     "success": "🎉 Successfully updated. 🎉",
     "successAction": "Close",
@@ -7,22 +7,22 @@
     "data": [
       {
         "name": "allow",
-        "label": "Allow Credential",
+        "label": "Allow ETH Address",
         "placeholder": "e.g. 0x12345678901234567890abcd",
-        "help": "Enter wallet address and click ADD button to append the list",
-        "type": "credential"
+        "help": "Enter ETH address and click ADD button to append the list. Only ETH address in allow list can consume this asset. If the list is empty means anyone can download or compute this asset",
+        "type": "credentials"
       },
       {
         "name": "deny",
-        "label": "Deny Credential",
+        "label": "Deny ETH Address",
         "placeholder": "e.g. 0x12345678901234567890abcd",
-        "help": "Enter wallet address and click ADD button to append the list",
-        "type": "credential"
+        "help": "Enter ETH address and click ADD button to append the list. If ETH address is fall under deny list, download or compute of this asset is denied",
+        "type": "credentials"
       },
       {
         "name": "isOrderDisabled",
         "label": "Disable Consumption",
-        "help": "Disable dataset being consume when dataset undergoing maintenance.",
+        "help": "Disable dataset being download or compute when dataset undergoing maintenance.",
         "type": "checkbox",
         "options": ["Disable"]
       }
