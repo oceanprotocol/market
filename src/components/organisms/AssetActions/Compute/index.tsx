@@ -77,6 +77,7 @@ export default function Compute({
     useState<string>()
   const [datasetTimeout, setDatasetTimeout] = useState<string>()
   const [algorithmTimeout, setAlgorithmTimeout] = useState<string>()
+
   const isComputeButtonDisabled =
     isJobStarting === true || file === null || !ocean || !isBalanceSufficient
   const hasDatatoken = Number(dtBalance) >= 1
