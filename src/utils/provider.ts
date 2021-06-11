@@ -1,6 +1,6 @@
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { toast } from 'react-toastify'
-import { File as FileMetadata, Logger } from '@oceanprotocol/lib'
+import { DID, File as FileMetadata, Logger } from '@oceanprotocol/lib'
 
 export async function fileinfo(
   url: string,
@@ -53,6 +53,29 @@ export async function fileinfo(
       contentType: contentType || '', // need to do that cause lib-js File interface requires contentType
       url
     }
+  } catch (error) {
+    Logger.error(error.message)
+  }
+}
+
+export async function getFileInfo(
+  url: string | DID,
+  providerUri: string,
+  cancelToken: CancelToken
+): Promise<AxiosResponse> {
+  let postBody
+  try {
+    if (url instanceof DID)
+      postBody = {
+        did: url.getDid(),
+        cancelToken
+      }
+    else
+      postBody = {
+        url,
+        cancelToken
+      }
+    return await axios.post(`${providerUri}/api/v1/services/fileinfo`, postBody)
   } catch (error) {
     Logger.error(error.message)
   }
