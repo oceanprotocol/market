@@ -91,15 +91,13 @@ function UserPreferencesProvider({
   // Bookmarks old data structure migration
   useEffect(() => {
     if (bookmarks.length !== undefined) return
-    console.log(bookmarks.length)
     const newPinned: string[] = []
     for (const network in bookmarks) {
-      bookmarks[network].forEach((did) => {
+      ;(bookmarks[network] as unknown as string[]).forEach((did: string) => {
         console.log(did)
         did !== null && newPinned.push(did)
       })
     }
-    console.log(newPinned)
     setBookmarks(newPinned)
   }, [bookmarks])
 
