@@ -95,7 +95,8 @@ function UserPreferencesProvider({
     const newPinned: string[] = []
     for (const network in bookmarks) {
       bookmarks[network].forEach((did) => {
-        newPinned.push(did)
+        console.log(did)
+        did !== null && newPinned.push(did)
       })
     }
     console.log(newPinned)
