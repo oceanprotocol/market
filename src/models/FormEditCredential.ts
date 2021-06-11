@@ -7,13 +7,13 @@ import {
 } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 
-export interface AdvanceSettingsForm {
+export interface AdvancedSettingsForm {
   allow: string[]
   deny: string[]
   isOrderDisabled: boolean
 }
 
-export const validationSchema: Yup.SchemaOf<AdvanceSettingsForm> =
+export const validationSchema: Yup.SchemaOf<AdvancedSettingsForm> =
   Yup.object().shape({
     allow: Yup.array().nullable(),
     deny: Yup.array().nullable(),
@@ -52,7 +52,7 @@ function getAssetCredentials(
 export function getInitialValues(
   ddo: DDO,
   credentailType: CredentialType
-): AdvanceSettingsForm {
+): AdvancedSettingsForm {
   const allowCredential = getAssetCredentials(
     ddo.credentials,
     credentailType,

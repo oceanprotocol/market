@@ -1,10 +1,10 @@
 import { DDO, Credentials, CredentialType } from '@oceanprotocol/lib'
 import React, { ReactElement, useEffect, useState } from 'react'
-import { AdvanceSettingsForm } from '../../../../models/FormEditCredential'
+import { AdvancedSettingsForm } from '../../../../models/FormEditCredential'
 import { useOcean } from '../../../../providers/Ocean'
 import DebugOutput from '../../../atoms/DebugOutput'
 
-export interface AdvanceSettings {
+export interface AdvancedSettings {
   credentail: Credentials
   isOrderDisabled: boolean
 }
@@ -14,12 +14,12 @@ export default function DebugEditCredential({
   ddo,
   credentialType
 }: {
-  values: AdvanceSettingsForm
+  values: AdvancedSettingsForm
   ddo: DDO
   credentialType: CredentialType
 }): ReactElement {
   const { ocean } = useOcean()
-  const [advanceSettings, setAdvanceSettings] = useState<AdvanceSettings>()
+  const [advancedSettings, setAdvancedSettings] = useState<AdvancedSettings>()
 
   useEffect(() => {
     if (!ocean) return
@@ -31,7 +31,7 @@ export default function DebugEditCredential({
         values.allow,
         values.deny
       )
-      setAdvanceSettings({
+      setAdvancedSettings({
         credentail: newDdo.credentials,
         isOrderDisabled: values.isOrderDisabled
       })
@@ -42,7 +42,7 @@ export default function DebugEditCredential({
   return (
     <>
       <DebugOutput title="Collected Form Values" output={values} />
-      <DebugOutput title="Transformed Form Values" output={advanceSettings} />
+      <DebugOutput title="Transformed Form Values" output={advancedSettings} />
     </>
   )
 }

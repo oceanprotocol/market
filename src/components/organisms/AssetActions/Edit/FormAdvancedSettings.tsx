@@ -6,9 +6,9 @@ import Input from '../../../atoms/Input'
 import { FormFieldProps } from '../../../../@types/Form'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
-import { AdvanceSettingsForm } from '../../../../models/FormEditCredential'
+import { AdvancedSettingsForm } from '../../../../models/FormEditCredential'
 
-export default function FormAdvanceSettings({
+export default function FormAdvancedSettings({
   data,
   setShowEdit
 }: {
@@ -21,7 +21,7 @@ export default function FormAdvanceSettings({
     isValid,
     validateField,
     setFieldValue
-  }: FormikContextType<Partial<AdvanceSettingsForm>> = useFormikContext()
+  }: FormikContextType<Partial<AdvancedSettingsForm>> = useFormikContext()
 
   function handleFieldChange(
     e: ChangeEvent<HTMLInputElement>,

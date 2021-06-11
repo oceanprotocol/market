@@ -8,19 +8,19 @@ import MetadataFeedback from '../../../molecules/MetadataFeedback'
 import { graphql, useStaticQuery } from 'gatsby'
 import { useWeb3 } from '../../../../providers/Web3'
 import { useOcean } from '../../../../providers/Ocean'
-import FormAdvanceSettings from './FormAdvanceSettings'
+import FormAdvancedSettings from './FormAdvancedSettings'
 import {
-  AdvanceSettingsForm,
+  AdvancedSettingsForm,
   getInitialValues,
   validationSchema
 } from '../../../../models/FormEditCredential'
-import DebugEditAdvanceSettings from './DebugEditAdvanceSettings'
+import DebugEditCredential from './DebugEditAdvancedSettings'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 
 const contentQuery = graphql`
   query EditAvanceSettingsQuery {
     content: allFile(
-      filter: { relativePath: { eq: "pages/editAdvanceSettings.json" } }
+      filter: { relativePath: { eq: "pages/editAdvancedSettings.json" } }
     ) {
       edges {
         node {
@@ -57,7 +57,7 @@ function getDefaultCredentialType(credentialType: string): CredentialType {
   }
 }
 
-export default function EditAdvanceSettings({
+export default function EditAdvancedSettings({
   setShowEdit
 }: {
   setShowEdit: (show: boolean) => void
@@ -78,7 +78,7 @@ export default function EditAdvanceSettings({
   const credentialType = getDefaultCredentialType(appConfig.credentialType)
 
   async function handleSubmit(
-    values: Partial<AdvanceSettingsForm>,
+    values: Partial<AdvancedSettingsForm>,
     resetForm: () => void
   ) {
     try {
@@ -140,7 +140,7 @@ export default function EditAdvanceSettings({
           <>
             <p className={styles.description}>{content.description}</p>
             <article className={styles.grid}>
-              <FormAdvanceSettings
+              <FormAdvancedSettings
                 data={content.form.data}
                 setShowEdit={setShowEdit}
               />
@@ -148,7 +148,7 @@ export default function EditAdvanceSettings({
 
             {debug === true && (
               <div className={styles.grid}>
-                <DebugEditAdvanceSettings
+                <DebugEditCredential
                   values={values}
                   ddo={ddo}
                   credentialType={credentialType}
