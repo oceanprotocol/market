@@ -139,10 +139,10 @@ export default function HomePage(): ReactElement {
           <SearchBar size="large" />
         </Container>
 
-      <section className={styles.section}>
-        <h3>Bookmarks</h3>
-        <Bookmarks />
-      </section>
+        <section className={styles.section}>
+          <h3>Bookmarks</h3>
+          <Bookmarks />
+        </section>
 
         {queryAndDids && (
           <SectionQueryResult
