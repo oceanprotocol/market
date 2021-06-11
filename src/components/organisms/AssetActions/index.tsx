@@ -16,8 +16,8 @@ import { getFileInfo } from '../../../utils/provider'
 import axios from 'axios'
 
 export default function AssetActions(): ReactElement {
-  const { accountId } = useWeb3()
-  const { ocean, balance, account } = useOcean()
+  const { accountId, balance } = useWeb3()
+  const { ocean, config, account } = useOcean()
   const { price, ddo, metadata, type, isAssetNetwork } = useAsset()
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
@@ -28,6 +28,7 @@ export default function AssetActions(): ReactElement {
 
   useEffect(() => {
     if (!config) return
+
     const source = axios.CancelToken.source()
     async function initFileInfo() {
       setFileIsLoading(true)
@@ -45,6 +46,10 @@ export default function AssetActions(): ReactElement {
       }
     }
     initFileInfo()
+
+    return () => {
+      source.cancel()
+    }
   }, [config, ddo.id])
 
   // Get and set user DT balance
