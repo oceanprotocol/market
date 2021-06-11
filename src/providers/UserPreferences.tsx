@@ -61,6 +61,7 @@ function UserPreferencesProvider({
 
   // Write values to localStorage on change
   useEffect(() => {
+    console.log(bookmarks)
     setLocalStorage({ chainIds, debug, currency, bookmarks })
   }, [chainIds, debug, currency, bookmarks])
 
@@ -78,8 +79,7 @@ function UserPreferencesProvider({
   }, [])
 
   function addBookmark(didToAdd: string): void {
-    const newPinned = bookmarks
-    newPinned.push(didToAdd)
+    const newPinned = [...bookmarks, didToAdd]
     setBookmarks(newPinned)
   }
 
@@ -90,8 +90,15 @@ function UserPreferencesProvider({
 
   // Bookmarks old data structure migration
   useEffect(() => {
-    if (!bookmarks.length) return
-    const newPinned = bookmarks
+    if (bookmarks.length !== undefined) return
+    console.log(bookmarks.length)
+    const newPinned: string[] = []
+    for (const network in bookmarks) {
+      bookmarks[network].forEach((did) => {
+        newPinned.push(did)
+      })
+    }
+    console.log(newPinned)
     setBookmarks(newPinned)
   }, [bookmarks])
 
