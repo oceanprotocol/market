@@ -61,7 +61,6 @@ function UserPreferencesProvider({
 
   // Write values to localStorage on change
   useEffect(() => {
-    console.log(bookmarks)
     setLocalStorage({ chainIds, debug, currency, bookmarks })
   }, [chainIds, debug, currency, bookmarks])
 
@@ -94,7 +93,6 @@ function UserPreferencesProvider({
     const newPinned: string[] = []
     for (const network in bookmarks) {
       ;(bookmarks[network] as unknown as string[]).forEach((did: string) => {
-        console.log(did)
         did !== null && newPinned.push(did)
       })
     }
