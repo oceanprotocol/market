@@ -7,6 +7,7 @@ import styles from './Credential.module.css'
 import { isAddress } from 'web3-utils'
 import { toast } from 'react-toastify'
 import { ReactComponent as Cross } from '../../../../images/cross.svg'
+import InputElement from '../../../atoms/Input/InputElement'
 
 export default function Credentials(props: InputProps) {
   const [field, meta, helpers] = useField(props.name)
@@ -40,14 +41,15 @@ export default function Credentials(props: InputProps) {
   return (
     <div className={styles.credential}>
       <InputGroup>
-        <input
-          className={styles.input}
+        <InputElement
+          type="text"
+          name="address"
+          size="default"
           placeholder={props.placeholder}
-          name="search"
+          value={value}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             setValue(e.target.value)
           }
-          value={value}
         />
         <Button
           onClick={(e: FormEvent<HTMLButtonElement>) => handleAddValue(e)}
@@ -60,7 +62,7 @@ export default function Credentials(props: InputProps) {
           arrayInput.map((value) => {
             return (
               <div className={styles.chip} key={value}>
-                {value}
+                <code>{value}</code>
                 <span className={styles.buttonWrapper}>
                   <Button
                     className={styles.crossButton}
