@@ -29,7 +29,7 @@ interface OceanProviderValue {
 const OceanContext = createContext({} as OceanProviderValue)
 
 // TODO: remove temporary typing once ddo.chainId is present in ocean.js
-interface DDO_TEMPORARY extends DDO {
+export interface DDO_TEMPORARY extends DDO {
   chainId: number
 }
 
