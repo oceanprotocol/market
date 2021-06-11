@@ -41,11 +41,10 @@ export default function TokenApproval({
     : undefined
 
   async function checkTokenApproval() {
-    if (!ocean) {
-      setApproveToken(false)
+    if (!ocean || !tokenAddress || !spender) {
+      if (!ocean) setApproveToken(false)
       return
     }
-    setLoading(true)
     const allowance = await ocean.datatokens.allowance(
       tokenAddress,
       accountId,
@@ -53,7 +52,6 @@ export default function TokenApproval({
     )
     setTokenApproved(allowance >= amount)
     allowance > amount && setApproveToken(false)
-    setLoading(false)
   }
 
   useEffect(() => {
@@ -62,7 +60,7 @@ export default function TokenApproval({
 
   useEffect(() => {
     checkTokenApproval()
-  }, [coin, amount])
+  }, [coin, amount, spender])
 
   async function approveTokens(amount: string) {
     setLoading(true)

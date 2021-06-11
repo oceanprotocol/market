@@ -51,7 +51,7 @@ export default function FormTrade({
   const { ocean } = useOcean()
   const { debug } = useUserPreferences()
   const [txId, setTxId] = useState<string>()
-  const [coin, setCoin] = useState<string>('OCEAN')
+  const [coin, setCoin] = useState<string>(ddo.dataTokenInfo.symbol)
   const [amount, setAmount] = useState<string>('0')
 
   const [maximumOcean, setMaximumOcean] = useState(maxOcean)
