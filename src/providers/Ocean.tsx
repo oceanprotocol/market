@@ -7,7 +7,13 @@ import React, {
   ReactNode,
   useEffect
 } from 'react'
-import { Ocean, Logger, Account, ConfigHelperConfig } from '@oceanprotocol/lib'
+import {
+  Ocean,
+  Logger,
+  Account,
+  ConfigHelperConfig,
+  DDO
+} from '@oceanprotocol/lib'
 
 import { useWeb3 } from './Web3'
 import { getDevelopmentConfig, getOceanConfig } from '../utils/ocean'
@@ -21,6 +27,11 @@ interface OceanProviderValue {
 }
 
 const OceanContext = createContext({} as OceanProviderValue)
+
+// TODO: remove temporary typing once ddo.chainId is present in ocean.js
+interface DDO_TEMPORARY extends DDO {
+  chainId: number
+}
 
 function OceanProvider({ children }: { children: ReactNode }): ReactElement {
   const { web3, accountId } = useWeb3()
@@ -62,10 +73,10 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
     // if (!ddo?.chainId) return
 
     const config = {
-      ...getOceanConfig(ddo?.chainId || 1),
+      ...getOceanConfig((ddo as DDO_TEMPORARY)?.chainId || 1),
 
       // add local dev values
-      ...(ddo?.chainId === 8996 && {
+      ...((ddo as DDO_TEMPORARY)?.chainId === 8996 && {
         ...getDevelopmentConfig()
       })
     }
@@ -74,7 +85,7 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
       await connect(config)
     }
     init()
-  }, [connect, ddo?.chainId])
+  }, [connect, ddo])
 
   // -----------------------------------
   // Get user info, handle account change from web3
