@@ -5,9 +5,13 @@ import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import NetworkName from '../../atoms/NetworkName'
 import { removeItemFromArray } from '../../../utils'
 import FormHelp from '../../atoms/Input/Help'
-import styles from './Chain.module.css'
 import { useStaticQuery, graphql } from 'gatsby'
 import { EthereumListsChain, getNetworkDataById } from '../../../utils/web3'
+import Tooltip from '../../atoms/Tooltip'
+import { ReactComponent as Caret } from '../../../images/caret.svg'
+import { ReactComponent as Network } from '../../../images/network.svg'
+import stylesIndex from './index.module.css'
+import styles from './Chain.module.css'
 
 const networksQuery = graphql`
   query {
@@ -100,15 +104,25 @@ export default function Chain(): ReactElement {
     ))
 
   return (
-    <li>
-      <Label htmlFor="chains">Chains</Label>
+    <Tooltip
+      content={
+        <ul className={stylesIndex.preferencesDetails}>
+          <li>
+            <Label htmlFor="chains">Chains</Label>
+            <FormHelp>Switch the data source for the interface.</FormHelp>
 
-      <h4 className={styles.titleGroup}>Main</h4>
-      <div className={styles.chains}>{chainsMain}</div>
-      <h4 className={styles.titleGroup}>Test</h4>
-      <div className={styles.chains}>{chainsTest}</div>
-
-      <FormHelp>Switch the data source for the interface.</FormHelp>
-    </li>
+            <h4 className={styles.titleGroup}>Main</h4>
+            <div className={styles.chains}>{chainsMain}</div>
+            <h4 className={styles.titleGroup}>Test</h4>
+            <div className={styles.chains}>{chainsTest}</div>
+          </li>
+        </ul>
+      }
+      trigger="click focus"
+      className={`${stylesIndex.preferences} ${styles.chain}`}
+    >
+      <Network aria-label="Chain" className={stylesIndex.icon} />
+      <Caret aria-hidden="true" />
+    </Tooltip>
   )
 }

@@ -1,3 +1,7 @@
+.chain {
+  margin-right: calc(var(--spacer) / 3);
+}
+
 .titleGroup {
   font-size: var(--font-size-small);
   margin-bottom: calc(var(--spacer) / 6);
