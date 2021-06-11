@@ -40,7 +40,7 @@ import { secondsToString } from '../../../../utils/metadata'
 import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
 
 const SuccessAction = () => (
-  <Button style="text" to="/history" size="small">
+  <Button style="text" to="/history?defaultTab=ComputeJobs" size="small">
     Go to history →
   </Button>
 )
@@ -48,11 +48,13 @@ const SuccessAction = () => (
 export default function Compute({
   isBalanceSufficient,
   dtBalance,
-  file
+  file,
+  fileIsLoading
 }: {
   isBalanceSufficient: boolean
   dtBalance: string
   file: FileMetadata
+  fileIsLoading?: boolean
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
@@ -370,7 +372,7 @@ export default function Compute({
   return (
     <>
       <div className={styles.info}>
-        <File file={file} small />
+        <File file={file} isLoading={fileIsLoading} small />
         <Price price={price} conversion />
       </div>
 
