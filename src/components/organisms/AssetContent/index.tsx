@@ -41,6 +41,10 @@ const contentQuery = graphql`
   }
 `
 
+function Separator() {
+  return <span className={styles.separator}>|</span>
+}
+
 export default function AssetContent(props: AssetContentProps): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.purgatory.edges[0].node.childContentJson.asset
@@ -117,7 +121,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
                   </Button>
                   {appConfig.allowAdvancedSettings === 'true' && (
                     <>
-                      <span className={styles.separator}>|</span>
+                      <Separator />
                       <Button
                         style="text"
                         size="small"
@@ -129,7 +133,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
                   )}
                   {ddo.findServiceByType('compute') && type === 'dataset' && (
                     <>
-                      <span className={styles.separator}>|</span>
+                      <Separator />
                       <Button
                         style="text"
                         size="small"
