@@ -27,5 +27,5 @@
 }
 
 .loaderWrap {
-  margin-right: calc(var(--spacer)/6);
+  margin-right: calc(var(--spacer) / 6);
 }

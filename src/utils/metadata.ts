@@ -136,10 +136,18 @@ async function isDockerHubImageValid(
   tag: string
 ): Promise<boolean> {
   try {
-    const response = await axios.get(
-      `https://hub.docker.com/v2/repositories/${image}/tags/${tag}`
+    const response = await axios.post(
+      `https://dockerhub-proxy.oceanprotocol.com`,
+      {
+        image,
+        tag
+      }
     )
-    if (!response || response.status !== 200 || !response.data) {
+    if (
+      !response ||
+      response.status !== 200 ||
+      response.data.status !== 'success'
+    ) {
       toast.error(
         'Could not fetch docker hub image info. Please check image name and tag and try again'
       )
