@@ -14,7 +14,6 @@ import { usePricing } from '../../../hooks/usePricing'
 import { useConsume } from '../../../hooks/useConsume'
 import ButtonBuy from '../../atoms/ButtonBuy'
 import AlgorithmDatasetsListForCompute from '../AssetContent/AlgorithmDatasetsListForCompute'
-import Web3Feedback from '../../molecules/Web3Feedback'
 import styles from './Consume.module.css'
 
 const previousOrderQuery = gql`
@@ -178,9 +177,6 @@ export default function Consume({
       {type === 'algorithm' && (
         <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} />
       )}
-      <footer className={styles.feedback}>
-        <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
-      </footer>
     </aside>
   )
 }
