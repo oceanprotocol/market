@@ -7,7 +7,7 @@ import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import UserPreferences from './UserPreferences'
 import Badge from '../atoms/Badge'
 import Logo from '../atoms/Logo'
-import Chains from './UserPreferences/Chains'
+import Networks from './UserPreferences/Networks'
 
 const Wallet = loadable(() => import('./Wallet'))
 
@@ -52,7 +52,7 @@ export default function Menu(): ReactElement {
       </ul>
 
       <div className={styles.actions}>
-        <Chains />
+        <Networks />
         <Wallet />
         <UserPreferences />
       </div>

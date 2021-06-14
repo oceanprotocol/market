@@ -2,12 +2,16 @@ import React, { ChangeEvent, ReactElement } from 'react'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import { removeItemFromArray } from '../../../../utils'
 import NetworkName from '../../../atoms/NetworkName'
-import styles from './ChainItem.module.css'
+import styles from './NetworkItem.module.css'
 
-export function ChainItem({ chainId }: { chainId: number }): ReactElement {
+export default function NetworkItem({
+  chainId
+}: {
+  chainId: number
+}): ReactElement {
   const { chainIds, setChainIds } = useUserPreferences()
 
-  function handleChainChanged(e: ChangeEvent<HTMLInputElement>) {
+  function handleNetworkChanged(e: ChangeEvent<HTMLInputElement>) {
     const { value } = e.target
 
     // storing all chainId everywhere as a number so convert from here
@@ -28,7 +32,7 @@ export function ChainItem({ chainId }: { chainId: number }): ReactElement {
           type="checkbox"
           name="chainIds"
           value={chainId}
-          onChange={handleChainChanged}
+          onChange={handleNetworkChanged}
           defaultChecked={chainIds.includes(chainId)}
         />
         <NetworkName key={chainId} networkId={chainId} />

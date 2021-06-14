@@ -5,7 +5,7 @@
   color: var(--color-secondary);
 }
 
-.chains {
+.networks {
   composes: box from '../../../atoms/Box.module.css';
   box-shadow: none;
   padding: 0;

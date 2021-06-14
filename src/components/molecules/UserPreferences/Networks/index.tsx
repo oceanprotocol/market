@@ -7,7 +7,7 @@ import { EthereumListsChain, getNetworkDataById } from '../../../../utils/web3'
 import Tooltip from '../../../atoms/Tooltip'
 import { ReactComponent as Caret } from '../../../../images/caret.svg'
 import { ReactComponent as Network } from '../../../../images/network.svg'
-import ChainsList from './ChainsList'
+import NetworksList from './NetworksList'
 import stylesIndex from '../index.module.css'
 import styles from './index.module.css'
 
@@ -26,12 +26,12 @@ const networksQuery = graphql`
   }
 `
 
-function filterChainsByType(
+function filterNetworksByType(
   type: 'mainnet' | 'testnet',
   chainIds: number[],
   networksList: { node: EthereumListsChain }[]
 ) {
-  const finalChains = chainIds.filter((chainId: number) => {
+  const finalNetworks = chainIds.filter((chainId: number) => {
     const networkData = getNetworkDataById(networksList, chainId)
 
     // HEADS UP! Only networkData.network === 'mainnet' is consistent
@@ -41,46 +41,45 @@ function filterChainsByType(
       ? networkData.network === type
       : networkData.network !== 'mainnet'
   })
-  return finalChains
+  return finalNetworks
 }
 
-export default function Chain(): ReactElement {
+export default function Networks(): ReactElement {
   const data = useStaticQuery(networksQuery)
   const networksList: { node: EthereumListsChain }[] =
     data.allNetworksMetadataJson.edges
 
   const { appConfig } = useSiteMetadata()
 
-  const chainsMain = filterChainsByType(
+  const networksMain = filterNetworksByType(
     'mainnet',
     appConfig.chainIdsSupported,
     networksList
   )
 
-  const chainsTest = filterChainsByType(
+  const networksTest = filterNetworksByType(
     'testnet',
     appConfig.chainIdsSupported,
     networksList
   )
-  console.log(chainsTest)
 
   return (
     <Tooltip
       content={
         <ul className={stylesIndex.preferencesDetails}>
           <li>
-            <Label htmlFor="chains">Chains</Label>
+            <Label htmlFor="chains">Networks</Label>
             <FormHelp>Switch the data source for the interface.</FormHelp>
 
-            <ChainsList title="Main" chains={chainsMain} />
-            <ChainsList title="Test" chains={chainsTest} />
+            <NetworksList title="Main" networks={networksMain} />
+            <NetworksList title="Test" networks={networksTest} />
           </li>
         </ul>
       }
       trigger="click focus"
-      className={`${stylesIndex.preferences} ${styles.chain}`}
+      className={`${stylesIndex.preferences} ${styles.network}`}
     >
-      <Network aria-label="Chain" className={stylesIndex.icon} />
+      <Network aria-label="Networks" className={stylesIndex.icon} />
       <Caret aria-hidden="true" />
     </Tooltip>
   )
