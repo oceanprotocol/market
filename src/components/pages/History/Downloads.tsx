@@ -9,6 +9,8 @@ import axios from 'axios'
 import { retrieveDDO } from '../../../utils/aquarius'
 import { Logger } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
+import { useUserPreferences } from '../../../providers/UserPreferences'
+import { useOcean } from '../../../providers/Ocean'
 
 const getTokenOrders = gql`
   query OrdersData($user: String!) {
@@ -56,10 +58,30 @@ const columns = [
 
 export default function ComputeDownloads(): ReactElement {
   const { accountId } = useWeb3()
+  // const { config } = useOcean()
   const [isLoading, setIsLoading] = useState(false)
   const [orders, setOrders] = useState<DownloadedAssets[]>()
+  const { chainIds } = useUserPreferences()
+  console.log('CHAIN IDS: ', chainIds)
+
+  const queryMultiple = () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const res = useQuery(getTokenOrders, {
+      variables: { user: accountId?.toLowerCase() },
+      context: { clientName: 'rinkeby' }
+    })
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const res2 = useQuery(getTokenOrders, {
+      context: { clientName: 'mainnet' }
+    })
+    return [res, res2]
+  }
+
+  const unifiedData = queryMultiple()
+  console.log('UNIFIED DATA: ', unifiedData)
   const { data } = useQuery(getTokenOrders, {
-    variables: { user: accountId?.toLowerCase() }
+    variables: { user: accountId?.toLowerCase() },
+    context: {}
   })
   const { appConfig } = useSiteMetadata()
 
@@ -98,7 +120,7 @@ export default function ComputeDownloads(): ReactElement {
     }
 
     filterAssets()
-  }, [appConfig.metadataCacheUri, data])
+  }, [appConfig.metadataCacheUri, data, chainIds])
 
   return (
     <Table

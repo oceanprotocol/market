@@ -12,6 +12,7 @@ import {
 import web3 from 'web3'
 import Token from '../../organisms/AssetActions/Pool/Token'
 import { useWeb3 } from '../../../providers/Web3'
+import { useUserPreferences } from '../../../providers/UserPreferences'
 
 const poolSharesQuery = gql`
   query PoolShares($user: String) {
@@ -140,6 +141,7 @@ const columns = [
 
 export default function PoolShares(): ReactElement {
   const { accountId } = useWeb3()
+  const { chainIds } = useUserPreferences()
   const [assets, setAssets] = useState<Asset[]>()
   const { data, loading } = useQuery<PoolSharesList>(poolSharesQuery, {
     variables: {
@@ -159,7 +161,7 @@ export default function PoolShares(): ReactElement {
       })
     })
     setAssets(assetList)
-  }, [data, loading])
+  }, [data, loading, chainIds])
 
   return (
     <Table

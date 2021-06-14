@@ -18,6 +18,7 @@ import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Comput
 import { ReactComponent as Refresh } from '../../../../images/refresh.svg'
 import styles from './index.module.css'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
+import { useUserPreferences } from '../../../../providers/UserPreferences'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -102,6 +103,7 @@ async function getAssetMetadata(
 export default function ComputeJobs(): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { ocean, account, config } = useOcean()
+  const { chainIds } = useUserPreferences()
   const { accountId } = useWeb3()
   const [isLoading, setIsLoading] = useState(true)
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
@@ -239,7 +241,7 @@ export default function ComputeJobs(): ReactElement {
       return
     }
     getJobs()
-  }, [ocean, account, data, appConfig.metadataCacheUri])
+  }, [ocean, account, data, appConfig.metadataCacheUri, chainIds])
 
   return (
     <>
