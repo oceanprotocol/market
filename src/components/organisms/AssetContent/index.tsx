@@ -17,6 +17,7 @@ import MetaMain from './MetaMain'
 import EditHistory from './EditHistory'
 import { useWeb3 } from '../../../providers/Web3'
 import styles from './index.module.css'
+import WalletNetworkSwitcher from '../../molecules/WalletNetworkSwither'
 
 export interface AssetContentProps {
   path?: string
@@ -50,6 +51,9 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   const [showEditCompute, setShowEditCompute] = useState<boolean>()
   const [isOwner, setIsOwner] = useState(false)
   const { ddo, price, metadata, type } = useAsset()
+  const { networkId, web3Provider } = useWeb3()
+
+  console.log(web3Provider, networkId)
 
   useEffect(() => {
     if (!accountId || !owner) return
@@ -127,6 +131,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
       </div>
 
       <div className={styles.actions}>
+        {web3Provider && networkId !== 1 && <WalletNetworkSwitcher />}
         <AssetActions />
       </div>
     </article>

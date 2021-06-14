@@ -1,0 +1,18 @@
+.box {
+  composes: box from '../atoms/Box.module.css';
+  max-width: 35rem;
+  margin: auto;
+  padding: calc(var(--spacer));
+  margin-bottom: calc(var(--spacer) / 2);
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.image {
+  height: 50px;
+  margin-right: calc(var(--spacer));
+}
