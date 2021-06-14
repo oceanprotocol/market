@@ -25,3 +25,7 @@
   width: 4.5rem;
   padding: calc(var(--spacer) / 2) calc(var(--spacer) / 4);
 }
+
+.loaderWrap {
+  margin-right: calc(var(--spacer) / 6);
+}
