@@ -25,8 +25,7 @@ export const FilterByTypeOptions = {
   Data: 'dataset',
   Algorithm: 'algorithm'
 } as const
-type FilterByTypeOptions =
-  typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
+type FilterByTypeOptions = typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
 
 function addTypeFilterToQuery(sortTerm: string, typeFilter: string): string {
   sortTerm = typeFilter
@@ -37,39 +36,38 @@ function addTypeFilterToQuery(sortTerm: string, typeFilter: string): string {
   return sortTerm
 }
 
-// function getSortType(sort: string): string {
-//   const sortTerm = SortTermOptions.f
-//   return sortTerm
-// }
+function getSortType(sortParam: string): string {
+  const sortTerm =
+    sortParam === SortTermOptions.Created
+      ? SortTermOptions.Created
+      : SortTermOptions.Relevance
+  return sortTerm
+}
 
 export function getSearchQuery(
   text?: string,
-  owner?: string,
-  tags?: string,
-  categories?: string,
   page?: string,
   offset?: string,
   sort?: string,
   sortOrder?: string,
   serviceType?: string
 ): any {
-  const sortTerm = sort
+  const sortTerm = getSortType(sort)
   const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
+  const emptySearchTerm = text === undefined || text === ''
 
-  // not sure if we need this anymore
-  let searchTerm = owner
-    ? `(publicKey.owner:${owner})`
-    : tags
-    ? // eslint-disable-next-line no-useless-escape
-      `(service.attributes.additionalInformation.tags:\"${tags}\")`
-    : categories
-    ? // eslint-disable-next-line no-useless-escape
-      `(service.attributes.additionalInformation.categories:\"${categories}\")`
-    : text || ''
-
-  const modifiedSearchTerm = searchTerm.split(' ').join(' OR ')
-
+  let searchTerm = text || ''
+  searchTerm = searchTerm.trim()
+  let modifiedSearchTerm = searchTerm.split(' ').join(' OR ').trim()
+  modifiedSearchTerm = addTypeFilterToQuery(modifiedSearchTerm, serviceType)
   searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
+  const prefixedSearchTerm =
+    emptySearchTerm && searchTerm
+      ? searchTerm
+      : !emptySearchTerm && searchTerm
+      ? '*' + searchTerm + '*'
+      : '**'
+
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
@@ -108,7 +106,7 @@ export function getSearchQuery(
                 },
                 {
                   query_string: {
-                    query: `*${searchTerm}*`,
+                    query: `${prefixedSearchTerm}`,
                     fields: [
                       'id',
                       'publicKey.owner',
@@ -143,9 +141,6 @@ export function getSearchQuery(
 export async function getResults(
   params: {
     text?: string
-    owner?: string
-    tags?: string
-    categories?: string
     page?: string
     offset?: string
     sort?: string
@@ -154,24 +149,11 @@ export async function getResults(
   },
   metadataCacheUri: string
 ): Promise<QueryResult> {
-  const {
-    text,
-    owner,
-    tags,
-    page,
-    offset,
-    categories,
-    sort,
-    sortOrder,
-    serviceType
-  } = params
+  const { text, page, offset, sort, sortOrder, serviceType } = params
   const metadataCache = new MetadataCache(metadataCacheUri, Logger)
 
   const searchQuery = getSearchQuery(
     text,
-    owner,
-    tags,
-    categories,
     page,
     offset,
     sort,
