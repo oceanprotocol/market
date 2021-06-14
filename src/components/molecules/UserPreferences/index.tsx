@@ -8,7 +8,6 @@ import { ReactComponent as Caret } from '../../../images/caret.svg'
 import useDarkMode from 'use-dark-mode'
 import Appearance from './Appearance'
 import { darkModeConfig } from '../../../../app.config'
-import Chain from './Chain'
 
 export default function UserPreferences(): ReactElement {
   // Calling this here because <Style /> is not mounted on first load
@@ -18,7 +17,6 @@ export default function UserPreferences(): ReactElement {
     <Tooltip
       content={
         <ul className={styles.preferencesDetails}>
-          <Chain />
           <Currency />
           <Appearance darkMode={darkMode} />
           <Debug />
