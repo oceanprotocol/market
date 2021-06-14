@@ -38,6 +38,7 @@ import SuccessConfetti from '../../../atoms/SuccessConfetti'
 import Button from '../../../atoms/Button'
 import { secondsToString } from '../../../../utils/metadata'
 import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
+import AssetStatus from '../../../molecules/AssetStatus'
 
 const SuccessAction = () => (
   <Button style="text" to="/history?defaultTab=ComputeJobs" size="small">
@@ -373,7 +374,11 @@ export default function Compute({
     <>
       <div className={styles.info}>
         <File file={file} isLoading={fileIsLoading} small />
-        <Price price={price} conversion />
+        <div>
+          <Price price={price} conversion />
+          <br />
+          <AssetStatus isValid={file.valid} />
+        </div>
       </div>
 
       {type === 'algorithm' ? (

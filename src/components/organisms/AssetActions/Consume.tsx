@@ -16,6 +16,7 @@ import { useWeb3 } from '../../../providers/Web3'
 import { usePricing } from '../../../hooks/usePricing'
 import { useConsume } from '../../../hooks/useConsume'
 import ButtonBuy from '../../atoms/ButtonBuy'
+import AssetStatus from '../../molecules/AssetStatus'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {
@@ -162,6 +163,7 @@ export default function Consume({
       <div className={styles.info}>
         <div className={styles.filewrapper}>
           <File file={file} isLoading={fileIsLoading} />
+          <AssetStatus isValid={file.valid} />
         </div>
         <div className={styles.pricewrapper}>
           <Price price={price} conversion />

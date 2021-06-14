@@ -7,6 +7,8 @@ import { ReactComponent as External } from '../../../images/external.svg'
 import InputElement from '../../atoms/Input/InputElement'
 import Loader from '../../atoms/Loader'
 import styles from './AssetSelection.module.css'
+import AssetStatus from '../AssetStatus'
+import { DID } from '@oceanprotocol/lib'
 
 const cx = classNames.bind(styles)
 
@@ -16,6 +18,7 @@ export interface AssetSelectionAsset {
   price: string
   checked: boolean
   symbol: string
+  serviceEndpoint?: string
 }
 
 function Empty() {
@@ -31,6 +34,7 @@ export default function AssetSelection({
   assets: AssetSelectionAsset[]
   multiple?: boolean
   disabled?: boolean
+  value?: string
 }): JSX.Element {
   const [searchValue, setSearchValue] = useState('')
 
@@ -105,6 +109,12 @@ export default function AssetSelection({
                   <Dotdotdot clamp={1} tagName="code" className={styles.did}>
                     {asset.symbol} | {asset.did}
                   </Dotdotdot>
+                  {props.value === asset.did && (
+                    <AssetStatus
+                      did={DID.parse(asset.did)}
+                      serviceEndpoint={asset.serviceEndpoint}
+                    />
+                  )}
                 </label>
 
                 <PriceUnit price={asset.price} small className={styles.price} />

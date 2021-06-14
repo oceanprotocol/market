@@ -33,7 +33,8 @@ export default function AssetActions(): ReactElement {
       try {
         const fileInfo = await getFileInfo(
           DID.parse(`${ddo.id}`),
-          config.providerUri,
+          ddo.findServiceByType('access')?.serviceEndpoint ||
+            ddo.findServiceByType('compute')?.serviceEndpoint,
           source.token
         )
         setFileMetadata(fileInfo.data[0])
