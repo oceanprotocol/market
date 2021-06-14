@@ -18,6 +18,10 @@ import MetadataFeedback from '../../../molecules/MetadataFeedback'
 import { graphql, useStaticQuery } from 'gatsby'
 import { useWeb3 } from '../../../../providers/Web3'
 import { useOcean } from '../../../../providers/Ocean'
+import {
+  setMinterToDispenser,
+  setMinterToPublisher
+} from '../../../../utils/freePrice'
 
 const contentQuery = graphql`
   query EditMetadataQuery {
@@ -89,16 +93,13 @@ export default function Edit({
   ) {
     try {
       if (price.type === 'free') {
-        // free pricing v3 workaround part1
-        const response = await ocean.OceanDispenser.cancelMinter(
+        const tx = await setMinterToPublisher(
+          ocean,
           ddo.dataToken,
-          accountId
+          accountId,
+          setError
         )
-        if (!response) {
-          setError('Updating DDO failed at CancelMinter.')
-          Logger.error('Failed at cancelMinter')
-          return
-        }
+        if (!tx) return
       }
       // Construct new DDO with new values
       const ddoEditedMetdata = await ocean.assets.editMetadata(ddo, {
@@ -145,16 +146,13 @@ export default function Edit({
         return
       } else {
         if (price.type === 'free') {
-          // free pricing v3 workaround part2
-          const response = await ocean.OceanDispenser.makeMinter(
+          const tx = await setMinterToDispenser(
+            ocean,
             ddo.dataToken,
-            accountId
+            accountId,
+            setError
           )
-          if (!response) {
-            setError('Updating DDO failed at makeMinter.')
-            Logger.error('Failed at makeMinter')
-            return
-          }
+          if (!tx) return
         }
         // Edit succeeded
         setSuccess(content.form.success)
