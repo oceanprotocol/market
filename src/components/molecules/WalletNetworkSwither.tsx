@@ -1,17 +1,20 @@
 import React, { ReactElement } from 'react'
 import { useWeb3 } from '../../providers/Web3'
+import { addCustomNetwork, getNetworkConfigForMetamask } from '../../utils/web3'
 import Button from '../atoms/Button'
 import styles from './WalletNetworkSwitcher.module.css'
 import NetworkName from '../atoms/NetworkName'
 
 export default function WalletNetworkSwitcher(): ReactElement {
-  const { networkId } = useWeb3()
+  const { networkId, web3Provider } = useWeb3()
 
   const ddoNetworkName = <NetworkName networkId={1} />
   const walletNetworkName = <NetworkName networkId={networkId} />
 
-  function switchWalletNetwork() {
-    console.log('switched')
+  async function switchWalletNetwork() {
+    const network = getNetworkConfigForMetamask(1)
+    console.log(network)
+    // addCustomNetwork(web3Provider, network)
   }
 
   return (
