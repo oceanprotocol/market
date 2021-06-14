@@ -1,10 +1,14 @@
 import React, { ReactElement } from 'react'
+import { useWeb3 } from '../../providers/Web3'
 import Button from '../atoms/Button'
 import styles from './WalletNetworkSwitcher.module.css'
+import NetworkName from '../atoms/NetworkName'
 
 export default function WalletNetworkSwitcher(): ReactElement {
-  const ddoNetworkName = 'ETH'
-  const walletNetworkName = 'Polygon'
+  const { networkId } = useWeb3()
+
+  const ddoNetworkName = <NetworkName networkId={1} />
+  const walletNetworkName = <NetworkName networkId={networkId} />
 
   function switchWalletNetwork() {
     console.log('switched')
@@ -19,7 +23,8 @@ export default function WalletNetworkSwitcher(): ReactElement {
         />
         <div>
           <p>
-            {`You are watching OCEAN on ${ddoNetworkName} but your wallet is connected to ${walletNetworkName}.`}
+            You are watching OCEAN on {ddoNetworkName}
+            but your wallet is connected to {walletNetworkName}
           </p>
           <Button
             style="primary"
@@ -27,7 +32,7 @@ export default function WalletNetworkSwitcher(): ReactElement {
             onClick={() => switchWalletNetwork()}
             className={styles.toggle}
           >
-            {`Switch to ${ddoNetworkName}`}
+            Switch to {ddoNetworkName}
           </Button>
         </div>
       </div>
