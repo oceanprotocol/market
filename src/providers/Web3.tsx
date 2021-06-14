@@ -18,9 +18,10 @@ import {
   getNetworkDataById,
   getNetworkDisplayName
 } from '../utils/web3'
-import { graphql, useStaticQuery } from 'gatsby'
+import { graphql } from 'gatsby'
 import { UserBalance } from '../@types/TokenBalance'
 import { getOceanBalance } from '../utils/ocean'
+import useNetworkMetadata from '../hooks/useNetworkMetadata'
 
 interface Web3ProviderValue {
   web3: Web3
@@ -105,9 +106,7 @@ const networksQuery = graphql`
 const Web3Context = createContext({} as Web3ProviderValue)
 
 function Web3Provider({ children }: { children: ReactNode }): ReactElement {
-  const data = useStaticQuery(networksQuery)
-  const networksList: { node: EthereumListsChain }[] =
-    data.allNetworksMetadataJson.edges
+  const { networksList } = useNetworkMetadata()
 
   const [web3, setWeb3] = useState<Web3>()
   const [web3Provider, setWeb3Provider] = useState<any>()

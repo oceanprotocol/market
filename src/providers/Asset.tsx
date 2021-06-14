@@ -14,21 +14,20 @@ import axios, { CancelToken } from 'axios'
 import { retrieveDDO } from '../utils/aquarius'
 import { getPrice } from '../utils/subgraph'
 import { MetadataMarket } from '../@types/MetaData'
-import { DDO_TEMPORARY, useOcean } from './Ocean'
+import { DDO_TEMPORARY } from './Ocean'
 import { useWeb3 } from './Web3'
-import { getOceanConfig } from '../utils/ocean'
 import { useSiteMetadata } from '../hooks/useSiteMetadata'
 
 interface AssetProviderValue {
   isInPurgatory: boolean
   purgatoryData: PurgatoryData
-  ddo: DDO | undefined
-  did: string | undefined
-  metadata: MetadataMarket | undefined
-  title: string | undefined
-  owner: string | undefined
-  price: BestPrice | undefined
-  type: MetadataMain['type'] | undefined
+  ddo: DDO
+  did: string
+  metadata: MetadataMarket
+  title: string
+  owner: string
+  price: BestPrice
+  type: MetadataMain['type']
   error?: string
   refreshInterval: number
   isAssetNetwork: boolean
@@ -60,7 +59,7 @@ function AssetProvider({
   const [owner, setOwner] = useState<string>()
   const [error, setError] = useState<string>()
   const [type, setType] = useState<MetadataMain['type']>()
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState(false)
   const [isAssetNetwork, setIsAssetNetwork] = useState<boolean>()
 
   const fetchDdo = async (token?: CancelToken) => {
