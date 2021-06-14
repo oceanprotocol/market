@@ -18,6 +18,7 @@ export interface AssetSelectionAsset {
   price: string
   checked: boolean
   symbol: string
+  serviceEndpoint?: string
 }
 
 function Empty() {
@@ -109,7 +110,10 @@ export default function AssetSelection({
                     {asset.symbol} | {asset.did}
                   </Dotdotdot>
                   {props.value === asset.did && (
-                    <AssetStatus asset={DID.parse(asset.did)} />
+                    <AssetStatus
+                      did={DID.parse(asset.did)}
+                      serviceEndpoint={asset.serviceEndpoint}
+                    />
                   )}
                 </label>
 

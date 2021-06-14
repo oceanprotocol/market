@@ -1,21 +1,20 @@
-import { DDO, DID } from '@oceanprotocol/lib'
+import { DID } from '@oceanprotocol/lib'
 import axios, { CancelTokenSource } from 'axios'
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useOcean } from '../../providers/Ocean'
-import { retrieveDDO } from '../../utils/aquarius'
 import { checkFile } from '../../utils/provider'
 import Status from '../atoms/Status'
 import Tooltip from '../atoms/Tooltip'
 import styles from './AssetStatus.module.css'
 
 export default function AssetStatus({
-  asset,
+  did,
+  serviceEndpoint,
   isValid
 }: {
-  asset?: DDO | DID
+  did?: string | DID
+  serviceEndpoint?: string
   isValid?: boolean
 }): ReactElement {
-  const { config } = useOcean()
   const [isFileValid, setFileValid] = useState<boolean>()
 
   useEffect(() => {
@@ -23,33 +22,22 @@ export default function AssetStatus({
   }, [isValid])
 
   useEffect(() => {
-    if (!asset || isValid !== undefined) return
-    async function validateAsset(asset: DDO | DID, source: CancelTokenSource) {
-      const ddo =
-        asset instanceof DID
-          ? await retrieveDDO(
-              asset.getDid(),
-              config?.metadataCacheUri,
-              source.token
-            )
-          : asset
-      if (!ddo) return
-
+    if (!did || !serviceEndpoint || isValid !== undefined) return
+    async function validateAsset(did: string | DID, source: CancelTokenSource) {
       const fileValid = await checkFile(
-        DID.parse(ddo.id),
-        ddo.findServiceByType('access')?.serviceEndpoint ||
-          ddo.findServiceByType('compute')?.serviceEndpoint,
+        did instanceof DID ? did : DID.parse(did),
+        serviceEndpoint,
         source.token
       )
       setFileValid(fileValid)
     }
 
     const source = axios.CancelToken.source()
-    validateAsset(asset, source)
+    validateAsset(did, source)
     return () => {
       source.cancel()
     }
-  }, [asset])
+  }, [did, serviceEndpoint])
 
   return isFileValid === false ? (
     <div className={styles.wrapper}>
