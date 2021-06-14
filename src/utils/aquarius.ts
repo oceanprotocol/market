@@ -12,6 +12,7 @@ import {
 import { AssetSelectionAsset } from '../components/molecules/FormFields/AssetSelection'
 import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
+import { DDO_TEMPORARY } from '../providers/Ocean'
 
 // TODO: import directly from ocean.js somehow.
 // Transforming Aquarius' direct response is needed for getting actual DDOs
@@ -64,7 +65,7 @@ export async function retrieveDDO(
   did: string | DID,
   metadataCacheUri: string,
   cancelToken: CancelToken
-): Promise<DDO> {
+): Promise<DDO_TEMPORARY> {
   try {
     const response: AxiosResponse<DDO> = await axios.get(
       `${metadataCacheUri}/api/v1/aquarius/assets/ddo/${did}`,
@@ -72,7 +73,9 @@ export async function retrieveDDO(
     )
     if (!response || response.status !== 200 || !response.data) return
 
-    return new DDO(response.data)
+    // TODO: remove hacking in chainId in DDO response once Aquarius gives us that
+    const data = { ...response.data, chainId: 1 }
+    return new DDO(data) as DDO_TEMPORARY
   } catch (error) {
     if (axios.isCancel(error)) {
       Logger.log(error.message)
