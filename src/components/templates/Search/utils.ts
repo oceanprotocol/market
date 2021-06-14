@@ -204,8 +204,9 @@ export async function addExistingParamsToUrl(
       }
     }
   } else {
+    // sort should be relevance when fixed in aqua
     urlLocation = `${urlLocation}sort=${encodeURIComponent(
-      SortTermOptions.Relevance
+      SortTermOptions.Created
     )}&sortOrder=${SortValueOptions.Descending}&`
   }
   urlLocation = urlLocation.slice(0, -1)
