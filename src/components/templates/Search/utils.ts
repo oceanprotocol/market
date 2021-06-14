@@ -25,8 +25,7 @@ export const FilterByTypeOptions = {
   Data: 'dataset',
   Algorithm: 'algorithm'
 } as const
-type FilterByTypeOptions =
-  typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
+type FilterByTypeOptions = typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
 
 function addTypeFilterToQuery(sortTerm: string, typeFilter: string): string {
   sortTerm = typeFilter
@@ -47,6 +46,9 @@ function getSortType(sortParam: string): string {
 
 export function getSearchQuery(
   text?: string,
+  owner?: string,
+  tags?: string,
+  categories?: string,
   page?: string,
   offset?: string,
   sort?: string,
@@ -57,7 +59,16 @@ export function getSearchQuery(
   const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
   const emptySearchTerm = text === undefined || text === ''
 
-  let searchTerm = text || ''
+  let searchTerm = owner
+    ? `(publicKey.owner:${owner})`
+    : tags
+    ? // eslint-disable-next-line no-useless-escape
+      `(service.attributes.additionalInformation.tags:\"${tags}\")`
+    : categories
+    ? // eslint-disable-next-line no-useless-escape
+      `(service.attributes.additionalInformation.categories:\"${categories}\")`
+    : text || ''
+
   searchTerm = searchTerm.trim()
   let modifiedSearchTerm = searchTerm.split(' ').join(' OR ').trim()
   modifiedSearchTerm = addTypeFilterToQuery(modifiedSearchTerm, serviceType)
@@ -142,6 +153,9 @@ export function getSearchQuery(
 export async function getResults(
   params: {
     text?: string
+    owner?: string
+    tags?: string
+    categories?: string
     page?: string
     offset?: string
     sort?: string
@@ -150,11 +164,24 @@ export async function getResults(
   },
   metadataCacheUri: string
 ): Promise<QueryResult> {
-  const { text, page, offset, sort, sortOrder, serviceType } = params
+  const {
+    text,
+    owner,
+    tags,
+    categories,
+    page,
+    offset,
+    sort,
+    sortOrder,
+    serviceType
+  } = params
   const metadataCache = new MetadataCache(metadataCacheUri, Logger)
 
   const searchQuery = getSearchQuery(
     text,
+    owner,
+    tags,
+    categories,
     page,
     offset,
     sort,
