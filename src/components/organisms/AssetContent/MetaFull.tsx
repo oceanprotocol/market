@@ -26,7 +26,7 @@ export default function MetaFull(): ReactElement {
       />
 
       {type === 'algorithm' && (
-        <MetaItem title="Docker Image" content={algorithm && <DockerImage />} />
+        <MetaItem title="Docker Image" content={<DockerImage />} />
       )}
       <MetaItem title="DID" content={<code>{ddo?.id}</code>} />
     </div>
