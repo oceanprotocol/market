@@ -12,6 +12,7 @@ import classNames from 'classnames/bind'
 import AssetSelection, {
   AssetSelectionAsset
 } from '../../molecules/FormFields/AssetSelection'
+import Credentials from '../../molecules/FormFields/Credential'
 
 const cx = classNames.bind(styles)
 
@@ -107,7 +108,7 @@ export default function InputElement({
     case 'assetSelection':
       return (
         <AssetSelection
-          assets={(options as unknown) as AssetSelectionAsset[]}
+          assets={options as unknown as AssetSelectionAsset[]}
           {...field}
           {...props}
         />
@@ -115,7 +116,7 @@ export default function InputElement({
     case 'assetSelectionMultiple':
       return (
         <AssetSelection
-          assets={(options as unknown) as AssetSelectionAsset[]}
+          assets={options as unknown as AssetSelectionAsset[]}
           multiple
           disabled={disabled}
           {...field}
@@ -132,11 +133,13 @@ export default function InputElement({
       return (
         <BoxSelection
           name={name}
-          options={(options as unknown) as BoxSelectionOption[]}
+          options={options as unknown as BoxSelectionOption[]}
           {...field}
           {...props}
         />
       )
+    case 'credentials':
+      return <Credentials name={name} {...field} {...props} />
     default:
       return prefix || postfix ? (
         <div className={`${prefix ? styles.prefixGroup : styles.postfixGroup}`}>

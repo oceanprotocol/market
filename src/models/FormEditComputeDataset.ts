@@ -6,12 +6,11 @@ export interface ComputePrivacyForm {
   publisherTrustedAlgorithms: string[]
 }
 
-export const validationSchema: Yup.SchemaOf<ComputePrivacyForm> = Yup.object().shape(
-  {
+export const validationSchema: Yup.SchemaOf<ComputePrivacyForm> =
+  Yup.object().shape({
     allowAllPublishedAlgorithms: Yup.boolean().nullable(),
     publisherTrustedAlgorithms: Yup.array().nullable()
-  }
-)
+  })
 
 export function getInitialValues(
   compute: ServiceComputePrivacy

@@ -51,9 +51,8 @@ function OceanProvider({
     eth: undefined,
     ocean: undefined
   })
-  const [config, setConfig] = useState<ConfigHelperConfig | Config>(
-    initialConfig
-  )
+  const [config, setConfig] =
+    useState<ConfigHelperConfig | Config>(initialConfig)
   const [loading, setLoading] = useState<boolean>()
 
   // -----------------------------------
