@@ -53,15 +53,10 @@ const networks = [
 ]
 
 export function getNetworkConfigForMetamask(networkId: number): NetworkObject {
-  networks.forEach((network) => {
-    console.log(network.chainId)
-    console.log(networkId)
-    if (network.chainId === networkId) {
-      console.log(network)
-      return network
-    }
-  })
-  return undefined
+  const networkConfig = networks.find(
+    (network) => network.chainId === networkId
+  )
+  return networkConfig
 }
 
 export function accountTruncate(account: string): string {

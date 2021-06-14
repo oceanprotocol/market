@@ -13,8 +13,7 @@ export default function WalletNetworkSwitcher(): ReactElement {
 
   async function switchWalletNetwork() {
     const network = getNetworkConfigForMetamask(1)
-    console.log(network)
-    // addCustomNetwork(web3Provider, network)
+    addCustomNetwork(web3Provider, network)
   }
 
   return (
