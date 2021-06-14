@@ -14,7 +14,7 @@ import axios, { CancelToken } from 'axios'
 import { retrieveDDO } from '../utils/aquarius'
 import { getPrice } from '../utils/subgraph'
 import { MetadataMarket } from '../@types/MetaData'
-import { useOcean } from './Ocean'
+import { DDO_TEMPORARY, useOcean } from './Ocean'
 import { useWeb3 } from './Web3'
 import { getOceanConfig } from '../utils/ocean'
 import { useSiteMetadata } from '../hooks/useSiteMetadata'
@@ -155,9 +155,8 @@ function AssetProvider({
   useEffect(() => {
     if (!networkId || !ddo) return
 
-    // TODO: replace with actual check against multinetwork DDO
-    // const isAssetNetwork = networkId === ddo.networkId
-    const isAssetNetwork = true
+    // TODO: remove typing once present in ocean.js' DDO typing
+    const isAssetNetwork = networkId === (ddo as DDO_TEMPORARY).chainId
     setIsAssetNetwork(isAssetNetwork)
   }, [networkId, ddo])
 
