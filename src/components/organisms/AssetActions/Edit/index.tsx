@@ -88,6 +88,18 @@ export default function Edit({
     resetForm: () => void
   ) {
     try {
+      if (price.type === 'free') {
+        // free pricing v3 workaround part1
+        const response = await ocean.OceanDispenser.cancelMinter(
+          ddo.dataToken,
+          accountId
+        )
+        if (!response) {
+          setError('Updating DDO failed at CancelMinter.')
+          Logger.error('Failed at cancelMinter')
+          return
+        }
+      }
       // Construct new DDO with new values
       const ddoEditedMetdata = await ocean.assets.editMetadata(ddo, {
         title: values.name,
@@ -132,6 +144,18 @@ export default function Edit({
         Logger.error(content.form.error)
         return
       } else {
+        if (price.type === 'free') {
+          // free pricing v3 workaround part2
+          const response = await ocean.OceanDispenser.makeMinter(
+            ddo.dataToken,
+            accountId
+          )
+          if (!response) {
+            setError('Updating DDO failed at makeMinter.')
+            Logger.error('Failed at makeMinter')
+            return
+          }
+        }
         // Edit succeeded
         setSuccess(content.form.success)
         resetForm()
