@@ -13,9 +13,8 @@ export default function AlgorithmDatasetsListForCompute({
 }): ReactElement {
   const { config } = useOcean()
   const { type } = useAsset()
-  const [datasetsForCompute, setDatasetsForCompute] = useState<
-    AssetSelectionAsset[]
-  >()
+  const [datasetsForCompute, setDatasetsForCompute] =
+    useState<AssetSelectionAsset[]>()
 
   useEffect(() => {
     async function getDatasetsAllowedForCompute() {
