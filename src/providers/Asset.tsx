@@ -32,6 +32,7 @@ interface AssetProviderValue {
   error?: string
   refreshInterval: number
   isAssetNetwork: boolean
+  loading: boolean
   refreshDdo: (token?: CancelToken) => Promise<void>
 }
 
@@ -59,10 +60,12 @@ function AssetProvider({
   const [owner, setOwner] = useState<string>()
   const [error, setError] = useState<string>()
   const [type, setType] = useState<MetadataMain['type']>()
+  const [loading, setLoading] = useState<boolean>(false)
   const [isAssetNetwork, setIsAssetNetwork] = useState<boolean>()
 
   const fetchDdo = async (token?: CancelToken) => {
     Logger.log('[asset] Init asset, get DDO')
+    setLoading(true)
     const ddo = await retrieveDDO(
       asset as string,
       appConfig.metadataCacheUri,
@@ -76,13 +79,16 @@ function AssetProvider({
     } else {
       setError(undefined)
     }
+    setLoading(false)
     return ddo
   }
 
   const refreshDdo = async (token?: CancelToken) => {
+    setLoading(true)
     const ddo = await fetchDdo(token)
     Logger.debug('[asset] Got DDO', ddo)
     setDDO(ddo)
+    setLoading(false)
   }
 
   //
@@ -123,7 +129,7 @@ function AssetProvider({
 
   const initMetadata = useCallback(async (ddo: DDO): Promise<void> => {
     if (!ddo) return
-
+    setLoading(true)
     const returnedPrice = await getPrice(ddo)
     setPrice({ ...returnedPrice })
 
@@ -137,6 +143,7 @@ function AssetProvider({
 
     setIsInPurgatory(ddo.isInPurgatory === 'true')
     await setPurgatory(ddo.id)
+    setLoading(false)
   }, [])
 
   useEffect(() => {
@@ -169,6 +176,7 @@ function AssetProvider({
           isInPurgatory,
           purgatoryData,
           refreshInterval,
+          loading,
           refreshDdo,
           isAssetNetwork
         } as AssetProviderValue
