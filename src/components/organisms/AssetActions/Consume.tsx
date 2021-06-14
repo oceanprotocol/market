@@ -16,6 +16,7 @@ import { useWeb3 } from '../../../providers/Web3'
 import { usePricing } from '../../../hooks/usePricing'
 import { useConsume } from '../../../hooks/useConsume'
 import ButtonBuy from '../../atoms/ButtonBuy'
+import AlgorithmDatasetsListForCompute from '../AssetContent/AlgorithmDatasetsListForCompute'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {
@@ -168,6 +169,9 @@ export default function Consume({
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>
+      {type === 'algorithm' && (
+        <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} />
+      )}
       <footer className={styles.feedback}>
         <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
       </footer>
