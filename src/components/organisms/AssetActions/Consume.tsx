@@ -36,25 +36,23 @@ export default function Consume({
   ddo,
   file,
   isBalanceSufficient,
-  dtBalance
+  dtBalance,
+  fileIsLoading
 }: {
   ddo: DDO
   file: FileMetadata
   isBalanceSufficient: boolean
   dtBalance: string
+  fileIsLoading?: boolean
 }): ReactElement {
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
-  const { marketFeeAddress } = useSiteMetadata()
+  const { appConfig } = useSiteMetadata()
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
   const [previousOrderId, setPreviousOrderId] = useState<string>()
   const { isInPurgatory, price, type } = useAsset()
-  const {
-    buyDT,
-    pricingStepText,
-    pricingError,
-    pricingIsLoading
-  } = usePricing()
+  const { buyDT, pricingStepText, pricingError, pricingIsLoading } =
+    usePricing()
   const { consumeStepText, consume, consumeError } = useConsume()
   const [isDisabled, setIsDisabled] = useState(true)
   const [hasDatatoken, setHasDatatoken] = useState(false)
@@ -132,7 +130,7 @@ export default function Consume({
       ddo.id,
       ddo.dataToken,
       'access',
-      marketFeeAddress,
+      appConfig.marketFeeAddress,
       previousOrderId
     )
     setHasPreviousOrder(true)
@@ -164,7 +162,7 @@ export default function Consume({
     <aside className={styles.consume}>
       <div className={styles.info}>
         <div className={styles.filewrapper}>
-          <File file={file} />
+          <File file={file} isLoading={fileIsLoading} />
         </div>
         <div className={styles.pricewrapper}>
           <Price price={price} conversion />

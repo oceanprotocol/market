@@ -23,7 +23,7 @@ export default function PageTemplateAssetDetails({
     setPageTitle(isInPurgatory ? '' : title)
   }, [ddo, error, isInPurgatory, title])
 
-  return ddo && pageTitle && !loading ? (
+  return ddo && pageTitle !== undefined && !loading ? (
     <>
       <Page title={pageTitle} uri={uri}>
         <Router basepath="/asset">

@@ -128,7 +128,7 @@ function AssetProvider({
 
     // Get metadata from DDO
     const { attributes } = ddo.findServiceByType('metadata')
-    setMetadata((attributes as unknown) as MetadataMarket)
+    setMetadata(attributes as unknown as MetadataMarket)
     setTitle(attributes?.main.name)
     setType(attributes.main.type)
     setOwner(ddo.publicKey[0].owner)

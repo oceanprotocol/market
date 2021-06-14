@@ -41,7 +41,7 @@ import AlgorithmDatasetsListForCompute from '../../AssetContent/AlgorithmDataset
 import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
 
 const SuccessAction = () => (
-  <Button style="text" to="/history" size="small">
+  <Button style="text" to="/history?defaultTab=ComputeJobs" size="small">
     Go to history →
   </Button>
 )
@@ -49,13 +49,15 @@ const SuccessAction = () => (
 export default function Compute({
   isBalanceSufficient,
   dtBalance,
-  file
+  file,
+  fileIsLoading
 }: {
   isBalanceSufficient: boolean
   dtBalance: string
   file: FileMetadata
+  fileIsLoading?: boolean
 }): ReactElement {
-  const { marketFeeAddress } = useSiteMetadata()
+  const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
   const { ocean, account, config } = useOcean()
   const { price, type, ddo } = useAsset()
@@ -70,15 +72,12 @@ export default function Compute({
   const [isPublished, setIsPublished] = useState(false)
   const [hasPreviousDatasetOrder, setHasPreviousDatasetOrder] = useState(false)
   const [previousDatasetOrderId, setPreviousDatasetOrderId] = useState<string>()
-  const [hasPreviousAlgorithmOrder, setHasPreviousAlgorithmOrder] = useState(
-    false
-  )
+  const [hasPreviousAlgorithmOrder, setHasPreviousAlgorithmOrder] =
+    useState(false)
   const [algorithmDTBalance, setalgorithmDTBalance] = useState<string>()
   const [algorithmPrice, setAlgorithmPrice] = useState<BestPrice>()
-  const [
-    previousAlgorithmOrderId,
-    setPreviousAlgorithmOrderId
-  ] = useState<string>()
+  const [previousAlgorithmOrderId, setPreviousAlgorithmOrderId] =
+    useState<string>()
   const [datasetTimeout, setDatasetTimeout] = useState<string>()
   const [algorithmTimeout, setAlgorithmTimeout] = useState<string>()
 
@@ -297,7 +296,7 @@ export default function Compute({
             ddo.id,
             computeService.index,
             computeAlgorithm,
-            marketFeeAddress,
+            appConfig.marketFeeAddress,
             undefined,
             false
           )
@@ -317,7 +316,7 @@ export default function Compute({
             serviceAlgo.type,
             accountId,
             serviceAlgo.index,
-            marketFeeAddress,
+            appConfig.marketFeeAddress,
             undefined,
             false
           )
@@ -374,7 +373,7 @@ export default function Compute({
   return (
     <>
       <div className={styles.info}>
-        <File file={file} small />
+        <File file={file} isLoading={fileIsLoading} small />
         <Price price={price} conversion />
       </div>
 

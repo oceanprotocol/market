@@ -6,10 +6,10 @@ import { useAsset } from '../../../providers/Asset'
 
 export default function MetaFull(): ReactElement {
   const { ddo, metadata, isInPurgatory, type } = useAsset()
-  const { algorithm } = ddo.findServiceByType('metadata').attributes.main
 
   function DockerImage() {
-    const algorithmContainer = algorithm.container
+    const algorithmContainer =
+      ddo.findServiceByType('metadata').attributes.main.algorithm.container
     const { image } = algorithmContainer
     const { tag } = algorithmContainer
     return <span>{`${image}:${tag}`}</span>

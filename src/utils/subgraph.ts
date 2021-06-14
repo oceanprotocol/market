@@ -10,7 +10,7 @@ import {
   AssetsFrePrice_fixedRateExchanges as AssetsFrePriceFixedRateExchanges
 } from '../@types/apollo/AssetsFrePrice'
 import { AssetPreviousOrder } from '../@types/apollo/AssetPreviousOrder'
-import BigNumber from 'bignumber.js'
+import web3 from 'web3'
 
 export interface PriceList {
   [key: string]: string
@@ -86,6 +86,20 @@ const PreviousOrderQuery = gql`
     }
   }
 `
+const HighestLiquidityAssets = gql`
+  query HighestLiquidiyAssets {
+    pools(
+      where: { datatokenReserve_gte: 1 }
+      orderBy: valueLocked
+      orderDirection: desc
+      first: 15
+    ) {
+      id
+      datatokenAddress
+      valueLocked
+    }
+  }
+`
 
 async function fetchData(
   query: DocumentNode,
@@ -113,10 +127,8 @@ export async function getPreviousOrders(
     id: id,
     account: account
   }
-  const fetchedPreviousOrders: ApolloQueryResult<AssetPreviousOrder> = await fetchData(
-    PreviousOrderQuery,
-    variables
-  )
+  const fetchedPreviousOrders: ApolloQueryResult<AssetPreviousOrder> =
+    await fetchData(PreviousOrderQuery, variables)
   if (fetchedPreviousOrders.data?.tokenOrders?.length === 0) return null
   if (assetTimeout === '0') {
     return fetchedPreviousOrders?.data?.tokenOrders[0]?.tx
@@ -297,4 +309,23 @@ export async function getAssetsBestPrices(
   }
 
   return assetsWithPrice
+}
+
+export async function getHighestLiquidityDIDs(): Promise<string> {
+  const didList: string[] = []
+  const fetchedPools = await fetchData(HighestLiquidityAssets, null)
+  if (fetchedPools.data?.pools?.length === 0) return null
+  for (let i = 0; i < fetchedPools.data.pools.length; i++) {
+    if (!fetchedPools.data.pools[i].datatokenAddress) continue
+    const did = web3.utils
+      .toChecksumAddress(fetchedPools.data.pools[i].datatokenAddress)
+      .replace('0x', 'did:op:')
+    didList.push(did)
+  }
+  const searchDids = JSON.stringify(didList)
+    .replace(/,/g, ' ')
+    .replace(/"/g, '')
+    .replace(/(\[|\])/g, '')
+    .replace(/(did:op:)/g, '0x')
+  return searchDids
 }
