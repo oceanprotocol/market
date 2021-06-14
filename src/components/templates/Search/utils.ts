@@ -25,7 +25,8 @@ export const FilterByTypeOptions = {
   Data: 'dataset',
   Algorithm: 'algorithm'
 } as const
-type FilterByTypeOptions = typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
+type FilterByTypeOptions =
+  typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
 
 function addTypeFilterToQuery(sortTerm: string, typeFilter: string): string {
   sortTerm = typeFilter
