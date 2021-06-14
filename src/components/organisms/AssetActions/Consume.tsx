@@ -85,7 +85,7 @@ export default function Consume({
 
   useEffect(() => {
     const { timeout } = ddo.findServiceByType('access').attributes.main
-    setAssetTimeout(secondsToString(timeout))
+    setAssetTimeout(timeout.toString())
   }, [ddo])
 
   useEffect(() => {
