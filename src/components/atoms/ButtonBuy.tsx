@@ -66,7 +66,7 @@ function getComputeAssetHelpText(
     lowPoolLiquidity,
     assetType
   )
-  const text =
+  const computeAlgoHelpText =
     !dtSymbolSelectedComputeAsset && !dtBalanceSelectedComputeAsset
       ? ''
       : hasPreviousOrderSelectedComputeAsset
@@ -76,8 +76,12 @@ function getComputeAssetHelpText(
       : selectedComputeAssettLowPoolLiquidity
       ? `There are not enought ${dtSymbolSelectedComputeAsset} available in the pool for the transaction to take place`
       : `Additionally, you will buy 1 ${dtSymbolSelectedComputeAsset} for the ${selectedComputeAssetType} and spend it back to its publisher and pool.`
-
-  return `${computeAssetHelpText} ${text}`
+  const computeHelpText = selectedComputeAssettLowPoolLiquidity
+    ? computeAlgoHelpText
+    : lowPoolLiquidity
+    ? computeAssetHelpText
+    : `${computeAssetHelpText} ${computeAlgoHelpText}`
+  return computeHelpText
 }
 
 export default function ButtonBuy({
