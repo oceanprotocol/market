@@ -12,6 +12,18 @@ import {
 import { AssetSelectionAsset } from '../components/molecules/FormFields/AssetSelection'
 import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
+import { DDO_TEMPORARY } from '../providers/Ocean'
+
+function getQueryForAlgorithmDatasets(algorithmDid: string) {
+  return {
+    query: {
+      query_string: {
+        query: `service.attributes.main.privacy.publisherTrustedAlgorithms.did:${algorithmDid}`
+      }
+    },
+    sort: { created: -1 }
+  }
+}
 
 // TODO: import directly from ocean.js somehow.
 // Transforming Aquarius' direct response is needed for getting actual DDOs
@@ -64,7 +76,7 @@ export async function retrieveDDO(
   did: string | DID,
   metadataCacheUri: string,
   cancelToken: CancelToken
-): Promise<DDO> {
+): Promise<DDO_TEMPORARY> {
   try {
     const response: AxiosResponse<DDO> = await axios.get(
       `${metadataCacheUri}/api/v1/aquarius/assets/ddo/${did}`,
@@ -72,7 +84,9 @@ export async function retrieveDDO(
     )
     if (!response || response.status !== 200 || !response.data) return
 
-    return new DDO(response.data)
+    // TODO: remove hacking in chainId in DDO response once Aquarius gives us that
+    const data = { ...response.data, chainId: 1 }
+    return new DDO(data) as DDO_TEMPORARY
   } catch (error) {
     if (axios.isCancel(error)) {
       Logger.log(error.message)
@@ -147,4 +161,34 @@ export async function transformDDOToAssetSelection(
     }
   })
   return algorithmList
+}
+
+export async function getAlgorithmDatasetsForCompute(
+  algorithmId: string,
+  metadataCacheUri: string
+): Promise<AssetSelectionAsset[]> {
+  const source = axios.CancelToken.source()
+  const computeDatasets = await queryMetadata(
+    getQueryForAlgorithmDatasets(algorithmId),
+    metadataCacheUri,
+    source.token
+  )
+  const computeDatasetsForCurrentAlgorithm: DDO[] = []
+  computeDatasets.results.forEach((data: DDO) => {
+    const algorithm = data
+      .findServiceByType('compute')
+      .attributes.main.privacy.publisherTrustedAlgorithms.find(
+        (algo) => algo.did === algorithmId
+      )
+    algorithm && computeDatasetsForCurrentAlgorithm.push(data)
+  })
+  if (computeDatasetsForCurrentAlgorithm.length === 0) {
+    return []
+  }
+  const datasets = await transformDDOToAssetSelection(
+    computeDatasetsForCurrentAlgorithm,
+    metadataCacheUri,
+    []
+  )
+  return datasets
 }

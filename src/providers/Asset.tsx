@@ -14,7 +14,7 @@ import axios, { CancelToken } from 'axios'
 import { retrieveDDO } from '../utils/aquarius'
 import { getPrice } from '../utils/subgraph'
 import { MetadataMarket } from '../@types/MetaData'
-import { useOcean } from './Ocean'
+import { DDO_TEMPORARY, useOcean } from './Ocean'
 import { useWeb3 } from './Web3'
 import { getOceanConfig } from '../utils/ocean'
 import { useSiteMetadata } from '../hooks/useSiteMetadata'
@@ -32,6 +32,7 @@ interface AssetProviderValue {
   error?: string
   refreshInterval: number
   isAssetNetwork: boolean
+  loading: boolean
   refreshDdo: (token?: CancelToken) => Promise<void>
 }
 
@@ -59,10 +60,12 @@ function AssetProvider({
   const [owner, setOwner] = useState<string>()
   const [error, setError] = useState<string>()
   const [type, setType] = useState<MetadataMain['type']>()
+  const [loading, setLoading] = useState<boolean>(false)
   const [isAssetNetwork, setIsAssetNetwork] = useState<boolean>()
 
   const fetchDdo = async (token?: CancelToken) => {
     Logger.log('[asset] Init asset, get DDO')
+    setLoading(true)
     const ddo = await retrieveDDO(
       asset as string,
       appConfig.metadataCacheUri,
@@ -76,13 +79,16 @@ function AssetProvider({
     } else {
       setError(undefined)
     }
+    setLoading(false)
     return ddo
   }
 
   const refreshDdo = async (token?: CancelToken) => {
+    setLoading(true)
     const ddo = await fetchDdo(token)
     Logger.debug('[asset] Got DDO', ddo)
     setDDO(ddo)
+    setLoading(false)
   }
 
   //
@@ -123,7 +129,7 @@ function AssetProvider({
 
   const initMetadata = useCallback(async (ddo: DDO): Promise<void> => {
     if (!ddo) return
-
+    setLoading(true)
     const returnedPrice = await getPrice(ddo)
     setPrice({ ...returnedPrice })
 
@@ -137,6 +143,7 @@ function AssetProvider({
 
     setIsInPurgatory(ddo.isInPurgatory === 'true')
     await setPurgatory(ddo.id)
+    setLoading(false)
   }, [])
 
   useEffect(() => {
@@ -148,9 +155,8 @@ function AssetProvider({
   useEffect(() => {
     if (!networkId || !ddo) return
 
-    // TODO: replace with actual check against multinetwork DDO
-    // const isAssetNetwork = networkId === ddo.networkId
-    const isAssetNetwork = true
+    // TODO: remove typing once present in ocean.js' DDO typing
+    const isAssetNetwork = networkId === (ddo as DDO_TEMPORARY).chainId
     setIsAssetNetwork(isAssetNetwork)
   }, [networkId, ddo])
 
@@ -169,6 +175,7 @@ function AssetProvider({
           isInPurgatory,
           purgatoryData,
           refreshInterval,
+          loading,
           refreshDdo,
           isAssetNetwork
         } as AssetProviderValue

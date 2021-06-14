@@ -1,28 +1,59 @@
 .menu {
   width: 100%;
+  padding: calc(var(--spacer) / 2);
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: calc(var(--spacer) / 2) var(--spacer);
-}
-
-.logoUnit {
-  display: flex;
+  flex-wrap: wrap;
   align-items: center;
 }
 
-.logoUnit svg {
-  margin-left: -0.5rem;
-  margin-right: 0.5rem;
+.logo {
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  order: 1;
+}
+
+.navigation {
+  order: 3;
+  width: 100%;
+  margin-top: calc(var(--spacer) / 2);
+  text-align: center;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  margin-left: -1rem;
+  margin-right: -1rem;
+  width: calc(100% + 2rem);
+}
+
+.actions {
+  display: flex;
+  align-self: flex-start;
+  margin-left: auto;
+  order: 2;
 }
 
 .title {
   display: none;
 }
 
-@media screen and (min-width: 40rem) {
+@media screen and (min-width: 42rem) {
+  .navigation {
+    order: 2;
+    width: auto;
+    margin: 0;
+    text-align: left;
+    border: none;
+  }
+}
+
+@media screen and (min-width: 55rem) {
+  .menu {
+    padding: var(--spacer);
+  }
+
   .title {
     margin: 0;
+    margin-right: var(--spacer);
     display: block;
     color: var(--color-secondary);
     font-size: var(--font-size-h4);
@@ -34,6 +65,7 @@
   overflow-y: hidden;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: none;
 }
 
 .navigation::-webkit-scrollbar,
@@ -44,19 +76,13 @@
 .navigation li {
   display: inline-block;
   vertical-align: middle;
-  margin-left: var(--spacer);
+  margin-right: calc(var(--spacer) / 3);
+  margin-left: calc(var(--spacer) / 3);
 }
 
-@media screen and (min-width: 60rem) {
-  .navigation li {
-    margin-left: calc(var(--spacer) * 2);
-  }
-}
-
-.navigation button,
 .link {
   display: block;
-  padding: calc(var(--spacer) / 2);
+  padding: calc(var(--spacer) / 4) calc(var(--spacer) / 2);
   text-transform: uppercase;
   color: var(--color-secondary);
   font-weight: var(--font-weight-bold);
@@ -65,12 +91,7 @@
   z-index: 1;
 }
 
-.navigation button {
-  text-transform: none;
-  padding-top: calc(var(--spacer) / 4);
-  padding-bottom: calc(var(--spacer) / 4);
-}
-
+.actions,
 .link:hover,
 .link:focus,
 .link:active {
@@ -85,4 +106,12 @@
 
 .link:last-child {
   padding-right: 0;
+}
+
+.logo svg {
+  margin-right: calc(var(--spacer) / 3);
+}
+
+.actions button {
+  text-transform: none;
 }

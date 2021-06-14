@@ -78,13 +78,3 @@ export async function getOceanBalance(
     Logger.error(`ERROR: Failed to get the balance: ${e.message}`)
   }
 }
-
-export function getOceanTokenData(
-  networkId: number,
-  configs: ConfigHelperConfig[]
-): { address: string; symbol: string } {
-  const { oceanTokenSymbol, oceanTokenAddress } = configs.filter(
-    (config) => config.networkId === networkId
-  )[0]
-  return { address: oceanTokenAddress, symbol: oceanTokenSymbol }
-}
