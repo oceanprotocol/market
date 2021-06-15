@@ -29,7 +29,6 @@ import {
   ComputeAlgorithm,
   ComputeOutput
 } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
-import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import { SearchQuery } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import axios from 'axios'
 import FormStartComputeDataset from './FormComputeDataset'
@@ -37,6 +36,8 @@ import styles from './index.module.css'
 import SuccessConfetti from '../../../atoms/SuccessConfetti'
 import Button from '../../../atoms/Button'
 import { secondsToString } from '../../../../utils/metadata'
+import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
+import AlgorithmDatasetsListForCompute from '../../AssetContent/AlgorithmDatasetsListForCompute'
 import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
 
 const SuccessAction = () => (
@@ -362,6 +363,8 @@ export default function Compute({
       await checkPreviousOrders(ddo)
       setIsPublished(true)
     } catch (error) {
+      await checkPreviousOrders(selectedAlgorithmAsset)
+      await checkPreviousOrders(ddo)
       setError('Failed to start job!')
       Logger.error('[compute] Failed to start job: ', error.message)
     } finally {
@@ -377,10 +380,13 @@ export default function Compute({
       </div>
 
       {type === 'algorithm' ? (
-        <Alert
-          text="This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
-          state="info"
-        />
+        <>
+          <Alert
+            text="This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
+            state="info"
+          />
+          <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} />
+        </>
       ) : (
         <Formik
           initialValues={getInitialValues()}

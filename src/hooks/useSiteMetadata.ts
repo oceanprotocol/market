@@ -28,6 +28,8 @@ interface UseSiteMetadata {
     allowFixedPricing: string
     allowDynamicPricing: string
     allowFreePricing: string
+    allowAdvancedSettings: string
+    credentialType: string
   }
 }
 
@@ -61,6 +63,8 @@ const query = graphql`
           allowFixedPricing
           allowDynamicPricing
           allowFreePricing
+          allowAdvancedSettings
+          credentialType
         }
       }
     }

@@ -11,7 +11,7 @@ export default function PageTemplateAssetDetails({
 }: {
   uri: string
 }): ReactElement {
-  const { ddo, title, error, isInPurgatory } = useAsset()
+  const { ddo, title, error, isInPurgatory, loading } = useAsset()
   const [pageTitle, setPageTitle] = useState<string>()
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export default function PageTemplateAssetDetails({
     setPageTitle(isInPurgatory ? '' : title)
   }, [ddo, error, isInPurgatory, title])
 
-  return ddo && pageTitle !== undefined ? (
+  return ddo && pageTitle !== undefined && !loading ? (
     <>
       <Page title={pageTitle} uri={uri}>
         <Router basepath="/asset">

@@ -16,6 +16,7 @@ import { useWeb3 } from '../../../providers/Web3'
 import { usePricing } from '../../../hooks/usePricing'
 import { useConsume } from '../../../hooks/useConsume'
 import ButtonBuy from '../../atoms/ButtonBuy'
+import AlgorithmDatasetsListForCompute from '../AssetContent/AlgorithmDatasetsListForCompute'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {
@@ -52,12 +53,11 @@ export default function Consume({
   const { isInPurgatory, price, type } = useAsset()
   const { buyDT, pricingStepText, pricingError, pricingIsLoading } =
     usePricing()
-  const { consumeStepText, consume, consumeError } = useConsume()
+  const { consumeStepText, consume, consumeError, isLoading } = useConsume()
   const [isDisabled, setIsDisabled] = useState(true)
   const [hasDatatoken, setHasDatatoken] = useState(false)
   const [isConsumable, setIsConsumable] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
-
   const { data } = useQuery<OrdersData>(previousOrderQuery, {
     variables: {
       id: ddo.dataToken?.toLowerCase(),
@@ -88,7 +88,7 @@ export default function Consume({
 
   useEffect(() => {
     const { timeout } = ddo.findServiceByType('access').attributes.main
-    setAssetTimeout(secondsToString(timeout))
+    setAssetTimeout(timeout.toString())
   }, [ddo])
 
   useEffect(() => {
@@ -124,22 +124,28 @@ export default function Consume({
   ])
 
   async function handleConsume() {
-    !hasPreviousOrder && !hasDatatoken && (await buyDT('1', price, ddo))
-    await consume(
+    if (!hasPreviousOrder && !hasDatatoken) {
+      const tx = await buyDT('1', price, ddo)
+      if (tx === undefined) return
+    }
+    const error = await consume(
       ddo.id,
       ddo.dataToken,
       'access',
       appConfig.marketFeeAddress,
       previousOrderId
     )
-    setHasPreviousOrder(true)
+    error || setHasPreviousOrder(true)
   }
 
   // Output errors in UI
   useEffect(() => {
     consumeError && toast.error(consumeError)
+  }, [consumeError])
+
+  useEffect(() => {
     pricingError && toast.error(pricingError)
-  }, [consumeError, pricingError])
+  }, [pricingError])
 
   const PurchaseButton = () => (
     <ButtonBuy
@@ -153,7 +159,7 @@ export default function Consume({
       assetTimeout={assetTimeout}
       assetType={type}
       stepText={consumeStepText || pricingStepText}
-      isLoading={pricingIsLoading}
+      isLoading={pricingIsLoading || isLoading}
       priceType={price?.type}
     />
   )
@@ -169,6 +175,9 @@ export default function Consume({
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>
+      {type === 'algorithm' && (
+        <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} />
+      )}
       <footer className={styles.feedback}>
         <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
       </footer>
