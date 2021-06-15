@@ -1,9 +1,8 @@
 .box {
   composes: box from '../atoms/Box.module.css';
   max-width: 35rem;
-  margin: auto;
+  margin: calc(var(--spacer) / 2) auto;
   padding: calc(var(--spacer));
-  margin-bottom: calc(var(--spacer) / 2);
 }
 
 .content {
@@ -13,6 +12,11 @@
 }
 
 .image {
-  height: 20px;
+  height: 30px;
   margin-right: calc(var(--spacer));
+}
+
+.title {
+  font-size: var(--font-size-base);
+  margin-bottom: calc(var(--spacer) / 4);
 }

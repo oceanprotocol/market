@@ -8,8 +8,8 @@ import NetworkName from '../atoms/NetworkName'
 export default function WalletNetworkSwitcher(): ReactElement {
   const { networkId, web3Provider } = useWeb3()
 
-  const ddoNetworkName = <NetworkName networkId={1} />
-  const walletNetworkName = <NetworkName networkId={networkId} />
+  const ddoNetworkName = <NetworkName networkId={1} textOnly />
+  const walletNetworkName = <NetworkName networkId={networkId} textOnly />
 
   async function switchWalletNetwork() {
     const network = getNetworkConfigForMetamask(1)
@@ -23,10 +23,10 @@ export default function WalletNetworkSwitcher(): ReactElement {
         className={styles.image}
       />
       <div>
-        <p>
-          You are watching OCEAN on {ddoNetworkName}
-          but your wallet is connected to {walletNetworkName}
-        </p>
+        <h3 className={styles.title}>
+          You are watching OCEAN on {ddoNetworkName} but your wallet is
+          connected to {walletNetworkName}
+        </h3>
         <Button
           style="primary"
           size="small"

@@ -125,7 +125,6 @@ export default function AssetActions(): ReactElement {
       <Permission eventType="consume">
         <Tabs items={tabs} className={styles.actions} />
       </Permission>
-      {web3Provider && networkId !== 1 && <WalletNetworkSwitcher />}
       {type !== 'algorithm' && (
         <Web3Feedback
           isBalanceSufficient={isBalanceSufficient}

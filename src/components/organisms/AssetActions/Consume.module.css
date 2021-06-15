@@ -14,4 +14,5 @@
 
 .feedback {
   width: 100%;
+  margin-top: calc(var(--spacer));
 }

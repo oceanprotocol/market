@@ -15,6 +15,8 @@ import { useWeb3 } from '../../../providers/Web3'
 import { usePricing } from '../../../hooks/usePricing'
 import { useConsume } from '../../../hooks/useConsume'
 import ButtonBuy from '../../atoms/ButtonBuy'
+import Web3Feedback from '../../molecules/Web3Feedback'
+import WalletNetworkSwitcher from '../../molecules/WalletNetworkSwither'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {
@@ -43,7 +45,7 @@ export default function Consume({
   dtBalance: string
   fileIsLoading?: boolean
 }): ReactElement {
-  const { accountId } = useWeb3()
+  const { accountId, networkId, web3Provider } = useWeb3()
   const { ocean } = useOcean()
   const { appConfig } = useSiteMetadata()
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
@@ -169,6 +171,9 @@ export default function Consume({
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>
+      <footer className={styles.feedback}>
+        {web3Provider && networkId !== 1 && <WalletNetworkSwitcher />}
+      </footer>
     </aside>
   )
 }

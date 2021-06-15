@@ -30,7 +30,7 @@ const networks = [
     name: 'Ethereum Mainnet',
     symbol: 'ETH',
     chainId: 1,
-    urlList: []
+    urlList: ['https://rpc.testnet.moonbeam.network']
   },
   {
     name: 'Ropsten Test Network',
