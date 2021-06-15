@@ -30,7 +30,7 @@ const networks = [
     name: 'Ethereum Mainnet',
     symbol: 'ETH',
     chainId: 1,
-    urlList: ['https://rpc-mainnet.maticvigil.com/']
+    urlList: []
   },
   {
     name: 'Ropsten Test Network',

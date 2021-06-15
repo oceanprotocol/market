@@ -17,7 +17,6 @@ import MetaMain from './MetaMain'
 import EditHistory from './EditHistory'
 import { useWeb3 } from '../../../providers/Web3'
 import styles from './index.module.css'
-import WalletNetworkSwitcher from '../../molecules/WalletNetworkSwither'
 
 export interface AssetContentProps {
   path?: string
@@ -131,7 +130,6 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
       </div>
 
       <div className={styles.actions}>
-        {web3Provider && networkId !== 1 && <WalletNetworkSwitcher />}
         <AssetActions />
       </div>
     </article>
