@@ -4,11 +4,15 @@ import styles from './InputElement.module.css'
 import { InputProps } from '.'
 import FilesInput from '../../molecules/FormFields/FilesInput'
 import Terms from '../../molecules/FormFields/Terms'
+import BoxSelection, {
+  BoxSelectionOption
+} from '../../molecules/FormFields/BoxSelection'
 import Datatoken from '../../molecules/FormFields/Datatoken'
 import classNames from 'classnames/bind'
 import AssetSelection, {
   AssetSelectionAsset
 } from '../../molecules/FormFields/AssetSelection'
+import Credentials from '../../molecules/FormFields/Credential'
 
 const cx = classNames.bind(styles)
 
@@ -91,7 +95,7 @@ export default function InputElement({
                   id={slugify(option)}
                   type={type}
                   name={name}
-                  checked={props.defaultChecked}
+                  defaultChecked={props.defaultChecked}
                   {...props}
                 />
                 <label className={styles.radioLabel} htmlFor={slugify(option)}>
@@ -104,7 +108,7 @@ export default function InputElement({
     case 'assetSelection':
       return (
         <AssetSelection
-          assets={(options as unknown) as AssetSelectionAsset[]}
+          assets={options as unknown as AssetSelectionAsset[]}
           {...field}
           {...props}
         />
@@ -112,7 +116,7 @@ export default function InputElement({
     case 'assetSelectionMultiple':
       return (
         <AssetSelection
-          assets={(options as unknown) as AssetSelectionAsset[]}
+          assets={options as unknown as AssetSelectionAsset[]}
           multiple
           disabled={disabled}
           {...field}
@@ -125,6 +129,17 @@ export default function InputElement({
       return <Datatoken name={name} {...field} {...props} />
     case 'terms':
       return <Terms name={name} options={options} {...field} {...props} />
+    case 'boxSelection':
+      return (
+        <BoxSelection
+          name={name}
+          options={options as unknown as BoxSelectionOption[]}
+          {...field}
+          {...props}
+        />
+      )
+    case 'credentials':
+      return <Credentials name={name} {...field} {...props} />
     default:
       return prefix || postfix ? (
         <div className={`${prefix ? styles.prefixGroup : styles.postfixGroup}`}>

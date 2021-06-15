@@ -6,8 +6,6 @@ import { MetadataCache, Logger } from '@oceanprotocol/lib'
 import queryString from 'query-string'
 
 export const SortTermOptions = {
-  Liquidity: 'liquidity',
-  Price: 'price',
   Created: 'created'
 } as const
 type SortTermOptions = typeof SortTermOptions[keyof typeof SortTermOptions]
@@ -25,35 +23,12 @@ export const SortValueOptions = {
 } as const
 type SortValueOptions = typeof SortValueOptions[keyof typeof SortValueOptions]
 
-export const FilterByPriceOptions = {
-  Fixed: 'exchange',
-  Dynamic: 'pool',
-  All: 'all'
-} as const
-type FilterByPriceOptions = typeof FilterByPriceOptions[keyof typeof FilterByPriceOptions]
-
 export const FilterByTypeOptions = {
   Data: 'dataset',
   Algorithm: 'algorithm'
 } as const
-type FilterByTypeOptions = typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
-
-function addPriceFilterToQuery(sortTerm: string, priceFilter: string): string {
-  if (priceFilter === FilterByPriceOptions.All) {
-    sortTerm = priceFilter
-      ? sortTerm === ''
-        ? `(price.type:${FilterByPriceOptions.Fixed} OR price.type:${FilterByPriceOptions.Dynamic})`
-        : `${sortTerm} AND (price.type:${FilterByPriceOptions.Dynamic} OR price.type:${FilterByPriceOptions.Fixed})`
-      : sortTerm
-  } else {
-    sortTerm = priceFilter
-      ? sortTerm === ''
-        ? `price.type:${priceFilter}`
-        : `${sortTerm} AND price.type:${priceFilter}`
-      : sortTerm
-  }
-  return sortTerm
-}
+type FilterByTypeOptions =
+  typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
 
 function addTypeFilterToQuery(sortTerm: string, typeFilter: string): string {
   sortTerm = typeFilter
@@ -64,13 +39,8 @@ function addTypeFilterToQuery(sortTerm: string, typeFilter: string): string {
   return sortTerm
 }
 
-function getSortType(sortParam: string): string {
-  const sortTerm =
-    sortParam === SortTermOptions.Liquidity
-      ? SortElasticTerm.Liquidity
-      : sortParam === SortTermOptions.Price
-      ? SortElasticTerm.Price
-      : SortTermOptions.Created
+function getSortType(): string {
+  const sortTerm = SortTermOptions.Created
   return sortTerm
 }
 
@@ -83,10 +53,9 @@ export function getSearchQuery(
   offset?: string,
   sort?: string,
   sortOrder?: string,
-  priceType?: string,
   serviceType?: string
 ): SearchQuery {
-  const sortTerm = getSortType(sort)
+  const sortTerm = getSortType()
   const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
   let searchTerm = owner
     ? `(publicKey.owner:${owner})`
@@ -97,15 +66,25 @@ export function getSearchQuery(
     ? // eslint-disable-next-line no-useless-escape
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
     : text || ''
+
+  // HACK: resolves the case sensitivity related to dataTokenInfo.symbol
+  searchTerm = '*' + searchTerm.toUpperCase() + '*'
   searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
-  searchTerm = addPriceFilterToQuery(searchTerm, priceType)
 
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
     query: {
       query_string: {
-        query: `${searchTerm} -isInPurgatory:true`
+        query: `${searchTerm} -isInPurgatory:true`,
+        fields: [
+          'dataTokenInfo.name',
+          'dataTokenInfo.symbol',
+          'service.attributes.main.name',
+          'service.attributes.main.author',
+          'service.attributes.additionalInformation.description'
+        ],
+        default_operator: 'AND'
       }
       // ...(owner && { 'publicKey.owner': [owner] }),
       // ...(tags && { tags: [tags] }),
@@ -136,7 +115,6 @@ export async function getResults(
     offset?: string
     sort?: string
     sortOrder?: string
-    priceType?: string
     serviceType?: string
   },
   metadataCacheUri: string
@@ -150,10 +128,10 @@ export async function getResults(
     categories,
     sort,
     sortOrder,
-    priceType,
     serviceType
   } = params
   const metadataCache = new MetadataCache(metadataCacheUri, Logger)
+
   const searchQuery = getSearchQuery(
     text,
     owner,
@@ -163,11 +141,10 @@ export async function getResults(
     offset,
     sort,
     sortOrder,
-    priceType,
     serviceType
   )
-  const queryResult = await metadataCache.queryMetadata(searchQuery)
 
+  const queryResult = await metadataCache.queryMetadata(searchQuery)
   return queryResult
 }
 

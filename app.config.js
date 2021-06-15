@@ -4,6 +4,7 @@ module.exports = {
   // networks in their wallet.
   // Ocean Protocol contracts are deployed for: 'mainnet', 'rinkeby', 'development'
   network: process.env.GATSBY_NETWORK || 'mainnet',
+  rbacUrl: process.env.GATSBY_RBAC_URL,
 
   infuraProjectId: process.env.GATSBY_INFURA_PROJECT_ID || 'xxx',
 
@@ -43,5 +44,9 @@ module.exports = {
   // Used to show or hide the fixed and dynamic price options
   // tab to publishers during the price creation.
   allowFixedPricing: process.env.GATSBY_ALLOW_FIXED_PRICING || 'true',
-  allowDynamicPricing: process.env.GATSBY_ALLOW_DYNAMIC_PRICING || 'true'
+  allowDynamicPricing: process.env.GATSBY_ALLOW_DYNAMIC_PRICING || 'true',
+
+  // Used to show or hide advanced settings button in asset details page
+  allowAdvancedSettings: process.env.GATSBY_ALLOW_ADVANCED_SETTINGS || 'false',
+  credentialType: process.env.GATSBY_CREDENTIAL_TYPE || 'address'
 }

@@ -25,13 +25,8 @@ export default function FormPricing({
 
   // Connect with form
   const { values, setFieldValue, submitForm } = useFormikContext()
-  const {
-    price,
-    oceanAmount,
-    weightOnOcean,
-    weightOnDataToken,
-    type
-  } = values as PriceOptionsMarket
+  const { price, oceanAmount, weightOnOcean, weightOnDataToken, type } =
+    values as PriceOptionsMarket
 
   // Switch type value upon tab change
   function handleTabChange(tabName: string) {

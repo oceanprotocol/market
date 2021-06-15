@@ -1,10 +1,11 @@
 import React, { ReactElement, useState, useEffect } from 'react'
+import Permission from '../../organisms/Permission'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import SearchBar from '../../molecules/SearchBar'
 import AssetList from '../../organisms/AssetList'
 import styles from './index.module.css'
 import queryString from 'query-string'
-import PriceFilter from './filterPrice'
+import ServiceFilter from './filterService'
 import Sort from './sort'
 import { getResults } from './utils'
 import { navigate } from 'gatsby'
@@ -21,19 +22,9 @@ export default function SearchPage({
 }): ReactElement {
   const { config } = useOcean()
   const parsed = queryString.parse(location.search)
-  const {
-    text,
-    owner,
-    tags,
-    page,
-    sort,
-    sortOrder,
-    priceType,
-    serviceType
-  } = parsed
+  const { text, owner, tags, page, sort, sortOrder, serviceType } = parsed
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [loading, setLoading] = useState<boolean>()
-  const [price, setPriceType] = useState<string>(priceType as string)
   const [service, setServiceType] = useState<string>(serviceType as string)
   const [sortType, setSortType] = useState<string>(sort as string)
   const [sortDirection, setSortDirection] = useState<string>(
@@ -58,7 +49,6 @@ export default function SearchPage({
     tags,
     sort,
     page,
-    priceType,
     serviceType,
     sortOrder,
     config.metadataCacheUri
@@ -74,43 +64,36 @@ export default function SearchPage({
   }
 
   return (
-    <>
-      <div className={styles.search}>
-        {(text || owner) && (
-          <SearchBar initialValue={(text || owner) as string} />
-        )}
-        <div className={styles.row}>
-          <PriceFilter
-            priceType={price}
-            serviceType={service}
-            setPriceType={setPriceType}
-            setServiceType={setServiceType}
-          />
-          <Sort
-            sortType={sortType}
-            sortDirection={sortDirection}
-            setSortType={setSortType}
-            setSortDirection={setSortDirection}
-            setPriceType={setPriceType}
-            setServiceType={setServiceType}
-          />
+    <Permission eventType="browse">
+      <>
+        <div className={styles.search}>
+          {(text || owner) && (
+            <SearchBar initialValue={(text || owner) as string} />
+          )}
+          <div className={styles.row}>
+            <ServiceFilter
+              serviceType={service}
+              setServiceType={setServiceType}
+            />
+            <Sort
+              sortType={sortType}
+              sortDirection={sortDirection}
+              setSortType={setSortType}
+              setSortDirection={setSortDirection}
+            />
+          </div>
         </div>
-      </div>
-      <div className={styles.results}>
-        {loading ? (
-          <Loader />
-        ) : queryResult ? (
+        <div className={styles.results}>
           <AssetList
-            assets={queryResult.results}
+            assets={queryResult?.results}
             showPagination
-            page={queryResult.page}
-            totalPages={queryResult.totalPages}
+            isLoading={loading}
+            page={queryResult?.page}
+            totalPages={queryResult?.totalPages}
             onPageChange={setPage}
           />
-        ) : (
-          ''
-        )}
-      </div>
-    </>
+        </div>
+      </>
+    </Permission>
   )
 }

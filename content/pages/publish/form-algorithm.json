@@ -28,8 +28,8 @@
       "label": "Docker Image",
       "placeholder": "e.g. python3.7",
       "help": "Please select an image to run your algorithm.",
-      "type": "select",
-      "options": ["node:latest", "python:latest", "custom image"],
+      "type": "boxSelection",
+      "options": [],
       "required": true
     },
     {
