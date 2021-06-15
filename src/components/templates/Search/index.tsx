@@ -35,7 +35,6 @@ export default function SearchPage({
     async function initSearch() {
       setLoading(true)
       setTotalResults(undefined)
-      console.log('serch parms', parsed)
       const queryResult = await getResults(parsed, config.metadataCacheUri)
       setQueryResult(queryResult)
       setTotalResults(queryResult.totalResults)
@@ -66,7 +65,7 @@ export default function SearchPage({
     <Permission eventType="browse">
       <>
         <div className={styles.search}>
-          {(text || owner) && (
+          {(text || owner || tags) && (
             <SearchBar initialValue={(text || owner) as string} />
           )}
           <div className={styles.row}>

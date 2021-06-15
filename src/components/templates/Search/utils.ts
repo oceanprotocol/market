@@ -195,18 +195,14 @@ export async function getResults(
 
 export async function addExistingParamsToUrl(
   location: Location,
-  excludedParam: string,
-  secondExcludedParam?: string
+  excludedParams: string[]
 ): Promise<string> {
   const parsed = queryString.parse(location.search)
   let urlLocation = '/search?'
   if (Object.keys(parsed).length > 0) {
     for (const querryParam in parsed) {
-      if (
-        querryParam !== excludedParam &&
-        querryParam !== secondExcludedParam
-      ) {
-        if (querryParam === 'page' && excludedParam === 'text') {
+      if (!excludedParams.includes(querryParam)) {
+        if (querryParam === 'page' && excludedParams.includes('text')) {
           Logger.log('remove page when starting a new search')
         } else {
           const value = parsed[querryParam]
