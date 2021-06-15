@@ -23,7 +23,11 @@ export default function SearchBar({
     e.preventDefault()
     if (value === '') value = ' '
     const urlEncodedValue = encodeURIComponent(value)
-    const url = await addExistingParamsToUrl(location, 'text')
+    const url = await addExistingParamsToUrl(location, [
+      'text',
+      'owner',
+      'tags'
+    ])
     navigate(`${url}&text=${urlEncodedValue}`)
   }
 
@@ -31,7 +35,11 @@ export default function SearchBar({
     const searchParams = new URLSearchParams(window.location.href)
     const text = searchParams.get('text')
     if (text !== ('' || undefined || null)) {
-      const url = await addExistingParamsToUrl(location, 'text')
+      const url = await addExistingParamsToUrl(location, [
+        'text',
+        'owner',
+        'tags'
+      ])
       navigate(`${url}&text=%20`)
     }
   }
