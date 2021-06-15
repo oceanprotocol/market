@@ -154,6 +154,7 @@ export default function Consume({
       assetType={type}
       stepText={consumeStepText || pricingStepText}
       isLoading={pricingIsLoading}
+      priceType={price?.type}
     />
   )
 

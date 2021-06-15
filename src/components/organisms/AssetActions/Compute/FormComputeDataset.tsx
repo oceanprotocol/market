@@ -166,6 +166,8 @@ export default function FormStartCompute({
         stepText={stepText}
         isLoading={isLoading}
         type="submit"
+        priceType={price?.type}
+        algorithmPriceType={algorithmPrice?.type}
       />
     </Form>
   )

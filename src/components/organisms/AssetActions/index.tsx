@@ -65,6 +65,7 @@ export default function AssetActions(): ReactElement {
 
   // Check user balance against price
   useEffect(() => {
+    if (price?.type === 'free') setIsBalanceSufficient(true)
     if (!price?.value || !account || !balance?.ocean || !dtBalance) return
 
     setIsBalanceSufficient(

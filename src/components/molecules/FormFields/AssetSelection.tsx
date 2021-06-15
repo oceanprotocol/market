@@ -107,7 +107,12 @@ export default function AssetSelection({
                   </Dotdotdot>
                 </label>
 
-                <PriceUnit price={asset.price} small className={styles.price} />
+                <PriceUnit
+                  price={asset.price}
+                  type={asset.price === '0' ? 'free' : undefined}
+                  small
+                  className={styles.price}
+                />
               </div>
             ))
         )}
