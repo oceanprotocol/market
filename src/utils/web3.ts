@@ -19,39 +19,6 @@ export interface NetworkObject {
   urlList: string[]
 }
 
-const networks = [
-  {
-    name: 'Polygon Mainnet',
-    symbol: 'MATIC',
-    chainId: 137,
-    urlList: ['https://rpc-mainnet.maticvigil.com/']
-  },
-  {
-    name: 'Ethereum Mainnet',
-    symbol: 'ETH',
-    chainId: 1,
-    urlList: ['https://rpc.testnet.moonbeam.network']
-  },
-  {
-    name: 'Ropsten Test Network',
-    symbol: 'ETH',
-    chainId: 2,
-    urlList: ['https://rpc-mainnet.maticvigil.com/']
-  },
-  {
-    name: 'Rinkeby Test Network',
-    symbol: 'ETH',
-    chainId: 3,
-    urlList: ['https://rpc-mainnet.maticvigil.com/']
-  },
-  {
-    name: 'Moonbean Alpha',
-    symbol: 'DEV',
-    chainId: 1287,
-    urlList: ['https://rpc.testnet.moonbeam.network']
-  }
-]
-
 export function getNetworkConfigObject(node: any): NetworkObject {
   console.log(node)
   const networkConfig = {

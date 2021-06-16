@@ -5,31 +5,26 @@ import Button from '../atoms/Button'
 import styles from './WalletNetworkSwitcher.module.css'
 import useNetworkMetadata from '../../hooks/useNetworkMetadata'
 import NetworkName from '../atoms/NetworkName'
-import { useOcean } from '../../providers/Ocean'
+import { getOceanConfig } from '../../utils/ocean'
 
 export default function WalletNetworkSwitcher(): ReactElement {
   const { networkId, web3Provider } = useWeb3()
   const { networksList } = useNetworkMetadata()
-  const { config } = useOcean()
+  const DEFOULT_ETH_CHAIN_IDS = [1, 3, 4]
+  const assetChainId = 137
+  const showButton = !DEFOULT_ETH_CHAIN_IDS.includes(assetChainId)
+  const oceanConfig = getOceanConfig(assetChainId)
 
-  const ddoNetworkName = <NetworkName networkId={1} textOnly />
+  const ddoNetworkName = <NetworkName networkId={assetChainId} textOnly />
   const walletNetworkName = <NetworkName networkId={networkId} textOnly />
 
   async function switchWalletNetwork() {
     const networkNode = networksList.find(
-      (data) => data.node.chainId === 1
+      (data) => data.node.chainId === assetChainId
     ).node
-    console.log(networkNode)
-    const network = { ...networkNode, providerUri: config.providerUri }
-    console.log(network)
-    // const networkConfig = getNetworkConfigObject(networkNode)
-    // console.log(networkConfig)
-    addCustomNetwork(web3Provider, {
-      name: networkNode.chain,
-      symbol: networkNode.nativeCurrency.symbol,
-      chainId: networkNode.chainId,
-      urlList: [config.providerUri]
-    })
+    const network = { ...networkNode, providerUri: oceanConfig.providerUri }
+    const networkConfig = getNetworkConfigObject(network)
+    addCustomNetwork(web3Provider, networkConfig)
   }
 
   return (
@@ -43,14 +38,20 @@ export default function WalletNetworkSwitcher(): ReactElement {
           You are watching OCEAN on {ddoNetworkName} but your wallet is
           connected to {walletNetworkName}
         </h3>
-        <Button
-          style="primary"
-          size="small"
-          onClick={() => switchWalletNetwork()}
-          className={styles.toggle}
-        >
-          Switch to {ddoNetworkName}
-        </Button>
+        {showButton ? (
+          <Button
+            style="primary"
+            size="small"
+            onClick={() => switchWalletNetwork()}
+            className={styles.toggle}
+          >
+            Switch to {ddoNetworkName}
+          </Button>
+        ) : (
+          <h3 className={styles.title}>
+            You must manually switch to {ddoNetworkName} on your wallet provider
+          </h3>
+        )}
       </div>
     </div>
   )
