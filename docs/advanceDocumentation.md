@@ -5,7 +5,6 @@
 - [Role based Access Control](#-rbac-settings)
 - [Allow and Deny lists](#-allow-deny-list-settings)
 - [Free Pricing](#-free-pricing-settings)
-- [Free Pricing](#-free-pricing-settings)
 
 ## RBAC settings
 
@@ -21,4 +20,4 @@
 ## Free Pricing Settings
 
 - To allow publishers to set pricing as "Free" you need to add the following environmental variable to your .env file: `GATSBY_ALLOW_FREE_PRICING="true"`
-- This allocates the datatokens to a [dispenser](https://github.com/oceanprotocol/contracts/blob/main/contracts/dispenser/Dispenser.sol) which dispenses data tokens to users for free. Publishers in your market will now be able to offer their datasets to users for free (excluding gas costs).
+- This allocates the datatokens to the [dispenser contract](https://github.com/oceanprotocol/contracts/blob/main/contracts/dispenser/Dispenser.sol) which dispenses data tokens to users for free. Publishers in your market will now be able to offer their datasets to users for free (excluding gas costs).
