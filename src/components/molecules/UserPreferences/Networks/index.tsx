@@ -2,7 +2,6 @@ import React, { ReactElement } from 'react'
 import Label from '../../../atoms/Input/Label'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import FormHelp from '../../../atoms/Input/Help'
-import { useStaticQuery, graphql } from 'gatsby'
 import { EthereumListsChain, getNetworkDataById } from '../../../../utils/web3'
 import Tooltip from '../../../atoms/Tooltip'
 import { ReactComponent as Caret } from '../../../../images/caret.svg'
@@ -10,21 +9,7 @@ import { ReactComponent as Network } from '../../../../images/network.svg'
 import NetworksList from './NetworksList'
 import stylesIndex from '../index.module.css'
 import styles from './index.module.css'
-
-const networksQuery = graphql`
-  query {
-    allNetworksMetadataJson {
-      edges {
-        node {
-          chain
-          network
-          networkId
-          chainId
-        }
-      }
-    }
-  }
-`
+import useNetworkMetadata from '../../../../hooks/useNetworkMetadata'
 
 function filterNetworksByType(
   type: 'mainnet' | 'testnet',
@@ -45,10 +30,7 @@ function filterNetworksByType(
 }
 
 export default function Networks(): ReactElement {
-  const data = useStaticQuery(networksQuery)
-  const networksList: { node: EthereumListsChain }[] =
-    data.allNetworksMetadataJson.edges
-
+  const { networksList } = useNetworkMetadata()
   const { appConfig } = useSiteMetadata()
 
   const networksMain = filterNetworksByType(

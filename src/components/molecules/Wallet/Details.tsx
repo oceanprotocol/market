@@ -33,7 +33,7 @@ export default function Details(): ReactElement {
   useEffect(() => {
     if (!networkData) return
 
-    setMainCurrency(networkData.nativeCurrency.symbol)
+    setMainCurrency(networkData.nativeCurrency?.symbol)
 
     const oceanConfig = getOceanConfig(networkId)
 

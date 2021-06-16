@@ -5,7 +5,10 @@
 
 .info {
   display: flex;
-  width: 100%;
+  width: auto;
+  margin-left: -2rem;
+  margin-right: -2rem;
+  padding: 0 calc(var(--spacer)) 0 calc(var(--spacer));
 }
 
 .filewrapper {
