@@ -45,7 +45,7 @@ export default function Consume({
   dtBalance: string
   fileIsLoading?: boolean
 }): ReactElement {
-  const { accountId, networkId, web3Provider } = useWeb3()
+  const { accountId } = useWeb3()
   const { ocean } = useOcean()
   const { appConfig } = useSiteMetadata()
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
@@ -177,7 +177,7 @@ export default function Consume({
         </div>
       </div>
       <footer className={styles.feedback}>
-        {web3Provider && networkId !== 1 && <WalletNetworkSwitcher />}
+        {!isAssetNetwork && <WalletNetworkSwitcher />}
       </footer>
       {type === 'algorithm' && (
         <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} />

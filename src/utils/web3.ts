@@ -52,10 +52,15 @@ const networks = [
   }
 ]
 
-export function getNetworkConfigForMetamask(networkId: number): NetworkObject {
-  const networkConfig = networks.find(
-    (network) => network.chainId === networkId
-  )
+export function getNetworkConfigObject(node: any): NetworkObject {
+  console.log(node)
+  const networkConfig = {
+    name: node.chain,
+    symbol: node.nativeCurrency.symbol,
+    chainId: node.chainId,
+    urlList: [node.providerUri]
+  }
+  console.log(networkConfig)
   return networkConfig
 }
 

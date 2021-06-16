@@ -34,6 +34,8 @@ import Alert from '../../atoms/Alert'
 import MetadataFeedback from '../../molecules/MetadataFeedback'
 import { useAccountPurgatory } from '../../../hooks/useAccountPurgatory'
 import { useWeb3 } from '../../../providers/Web3'
+import WalletNetworkSwitcher from '../../molecules/WalletNetworkSwither'
+import { useAsset } from '../../../providers/Asset'
 
 const formNameDatasets = 'ocean-publish-form-datasets'
 const formNameAlgorithms = 'ocean-publish-form-algorithms'
@@ -45,6 +47,8 @@ function TabContent({
   publishType: MetadataMain['type']
   values: Partial<MetadataPublishFormAlgorithm | MetadataPublishFormDataset>
 }) {
+  const { isAssetNetwork } = useAsset()
+
   return (
     <article className={styles.grid}>
       {publishType === 'dataset' ? <FormPublish /> : <FormAlgoPublish />}
@@ -56,7 +60,7 @@ function TabContent({
           ) : (
             <MetadataAlgorithmPreview values={values} />
           )}
-
+          {!isAssetNetwork && <WalletNetworkSwitcher />}
           <Web3Feedback />
         </div>
       </aside>

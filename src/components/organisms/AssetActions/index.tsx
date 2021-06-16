@@ -14,10 +14,9 @@ import { useWeb3 } from '../../../providers/Web3'
 import Web3Feedback from '../../molecules/Web3Feedback'
 import { getFileInfo } from '../../../utils/provider'
 import axios from 'axios'
-import WalletNetworkSwitcher from '../../molecules/WalletNetworkSwither'
 
 export default function AssetActions(): ReactElement {
-  const { accountId, balance, web3Provider, networkId } = useWeb3()
+  const { accountId, balance } = useWeb3()
   const { ocean, config, account } = useOcean()
   const { price, ddo, metadata, type, isAssetNetwork } = useAsset()
 
