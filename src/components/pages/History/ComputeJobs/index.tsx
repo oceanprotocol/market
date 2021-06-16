@@ -18,6 +18,7 @@ import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Comput
 import { ReactComponent as Refresh } from '../../../../images/refresh.svg'
 import styles from './index.module.css'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
+import { useUserPreferences } from '../../../../providers/UserPreferences'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -81,8 +82,10 @@ const columns = [
 async function getAssetMetadata(
   queryDtList: string,
   metadataCacheUri: string,
-  cancelToken: CancelToken
+  cancelToken: CancelToken,
+  chainIds: number[]
 ): Promise<DDO[]> {
+  // TODO: add chainIds into the query
   const queryDid = {
     page: 1,
     offset: 100,
@@ -103,8 +106,10 @@ export default function ComputeJobs(): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { ocean, account, config } = useOcean()
   const { accountId } = useWeb3()
+  const { chainIds } = useUserPreferences()
   const [isLoading, setIsLoading] = useState(true)
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
+  // TODO: query multiple sg according to chainIds
   const { data } = useQuery<ComputeOrders>(getComputeOrders, {
     variables: {
       user: accountId?.toLowerCase()
@@ -131,7 +136,8 @@ export default function ComputeJobs(): ReactElement {
       const assets = await getAssetMetadata(
         queryDtList,
         appConfig.metadataCacheUri,
-        source.token
+        source.token,
+        chainIds
       )
       const providers: Provider[] = []
       const serviceEndpoints: string[] = []
@@ -239,7 +245,7 @@ export default function ComputeJobs(): ReactElement {
       return
     }
     getJobs()
-  }, [ocean, account, data, appConfig.metadataCacheUri])
+  }, [ocean, account, data, appConfig.metadataCacheUri, chainIds])
 
   return (
     <>

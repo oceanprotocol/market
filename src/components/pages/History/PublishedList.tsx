@@ -20,7 +20,6 @@ export default function PublishedList(): ReactElement {
   useEffect(() => {
     async function getPublished() {
       if (!accountId) return
-
       // TODO: this query needs to adapt to chainIds
       const queryPublishedAssets = {
         page: page,

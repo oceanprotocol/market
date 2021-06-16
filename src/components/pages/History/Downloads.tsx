@@ -9,6 +9,8 @@ import axios from 'axios'
 import { retrieveDDO } from '../../../utils/aquarius'
 import { Logger } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
+import { useUserPreferences } from '../../../providers/UserPreferences'
+import { mapChainIdsToNetworkNames } from '../../../utils/metadata'
 
 const getTokenOrders = gql`
   query OrdersData($user: String!) {
@@ -58,8 +60,26 @@ export default function ComputeDownloads(): ReactElement {
   const { accountId } = useWeb3()
   const [isLoading, setIsLoading] = useState(false)
   const [orders, setOrders] = useState<DownloadedAssets[]>()
+  const { chainIds } = useUserPreferences()
+
+  // TODO: query multiple sg according to chainIds
+  const queryMultiple = () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const res = useQuery(getTokenOrders, {
+      variables: { user: accountId?.toLowerCase() },
+      context: { clientName: 'rinkeby' }
+    })
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const res2 = useQuery(getTokenOrders, {
+      variables: { user: accountId?.toLowerCase() },
+      context: { clientName: 'mainnet' }
+    })
+    return [res, res2]
+  }
+
   const { data } = useQuery(getTokenOrders, {
-    variables: { user: accountId?.toLowerCase() }
+    variables: { user: accountId?.toLowerCase() },
+    context: {}
   })
   const { appConfig } = useSiteMetadata()
 
@@ -98,7 +118,7 @@ export default function ComputeDownloads(): ReactElement {
     }
 
     filterAssets()
-  }, [appConfig.metadataCacheUri, data])
+  }, [appConfig.metadataCacheUri, data, chainIds])
 
   return (
     <Table
