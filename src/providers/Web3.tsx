@@ -228,7 +228,6 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   // -----------------------------------
   useEffect(() => {
     if (!networkId) return
-
     const networkData = getNetworkDataById(networksList, networkId)
     setNetworkData(networkData)
     Logger.log('[web3] Network metadata found.', networkData)
