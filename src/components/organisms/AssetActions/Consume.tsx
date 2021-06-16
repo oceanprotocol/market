@@ -105,14 +105,13 @@ export default function Consume({
 
   useEffect(() => {
     setIsDisabled(
-      ((!ocean ||
+      (!ocean ||
         !isBalanceSufficient ||
         typeof consumeStepText !== 'undefined' ||
         pricingIsLoading ||
         !isConsumable) &&
         !hasPreviousOrder &&
-        !hasDatatoken) ||
-        ddo.isDisable
+        !hasDatatoken
     )
   }, [
     ocean,
@@ -121,7 +120,6 @@ export default function Consume({
     consumeStepText,
     pricingIsLoading,
     isConsumable,
-    ddo.isDisable,
     hasDatatoken
   ])
 

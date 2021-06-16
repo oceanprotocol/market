@@ -92,8 +92,7 @@ export default function Edit({
       const ddoEditedMetdata = await ocean.assets.editMetadata(ddo, {
         title: values.name,
         description: values.description,
-        links: typeof values.links !== 'string' ? values.links : [],
-        isDisable: values.isDisable
+        links: typeof values.links !== 'string' ? values.links : []
       })
 
       price.type === 'exchange' &&
@@ -145,12 +144,7 @@ export default function Edit({
 
   return (
     <Formik
-      initialValues={getInitialValues(
-        metadata,
-        ddo.findServiceByType('access').attributes.main.timeout,
-        ddo.isDisable === undefined ? false : ddo.isDisable, 
-        price.value
-      )}
+      initialValues={getInitialValues(metadata, timeout, price.value)}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
         // move user's focus to top of screen

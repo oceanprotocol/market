@@ -38,7 +38,6 @@ export interface MetadataPublishFormDataset {
   // ---- optional fields ----
   tags?: string
   links?: string | EditableMetadataLinks[]
-  isDisable: boolean
 }
 
 export interface MetadataPublishFormAlgorithm {
