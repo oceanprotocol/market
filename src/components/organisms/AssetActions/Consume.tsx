@@ -156,10 +156,11 @@ export default function Consume({
       dtSymbol={ddo.dataTokenInfo?.symbol}
       dtBalance={dtBalance}
       onClick={handleConsume}
-      assetTimeout={assetTimeout}
+      assetTimeout={secondsToString(parseInt(assetTimeout))}
       assetType={type}
       stepText={consumeStepText || pricingStepText}
       isLoading={pricingIsLoading || isLoading}
+      priceType={price?.type}
     />
   )
 

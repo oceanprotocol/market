@@ -25,7 +25,7 @@ export default function FilterPrice({
   const [serviceSelections, setServiceSelections] = useState<string[]>([])
 
   async function applyServiceFilter(filterBy: string) {
-    let urlLocation = await addExistingParamsToUrl(location, 'serviceType')
+    let urlLocation = await addExistingParamsToUrl(location, ['serviceType'])
     if (filterBy && location.search.indexOf('&serviceType') === -1) {
       urlLocation = `${urlLocation}&serviceType=${filterBy}`
     }
@@ -59,7 +59,7 @@ export default function FilterPrice({
   }
 
   async function applyClearFilter() {
-    let urlLocation = await addExistingParamsToUrl(location, 'serviceType')
+    let urlLocation = await addExistingParamsToUrl(location, ['serviceType'])
 
     urlLocation = `${urlLocation}`
 

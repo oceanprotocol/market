@@ -45,3 +45,8 @@
   padding-left: var(--spacer);
   padding-right: var(--spacer);
 }
+
+.free {
+  text-align: center;
+  margin-bottom: calc(var(--spacer) / 1.5);
+}
