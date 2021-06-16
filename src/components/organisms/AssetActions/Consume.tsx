@@ -17,6 +17,8 @@ import { usePricing } from '../../../hooks/usePricing'
 import { useConsume } from '../../../hooks/useConsume'
 import ButtonBuy from '../../atoms/ButtonBuy'
 import AlgorithmDatasetsListForCompute from '../AssetContent/AlgorithmDatasetsListForCompute'
+import AssetStatus from '../../molecules/AssetStatus'
+import { Consumable } from '@oceanprotocol/lib/dist/node/ddo/interfaces/Consumable'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {
@@ -65,6 +67,7 @@ export default function Consume({
     },
     pollInterval: 5000
   })
+  const [consumable, setConsumable] = useState<Consumable>()
 
   useEffect(() => {
     if (!data || !assetTimeout || data.tokenOrders.length === 0) return
@@ -102,6 +105,14 @@ export default function Consume({
   useEffect(() => {
     setHasDatatoken(Number(dtBalance) >= 1)
   }, [dtBalance])
+
+  useEffect(() => {
+    async function checkConsumable() {
+      const consumable = await ocean.assets.isConsumable(ddo, accountId)
+      setConsumable(consumable)
+    }
+    checkConsumable()
+  }, [ddo, accountId])
 
   useEffect(() => {
     setIsDisabled(
@@ -169,6 +180,7 @@ export default function Consume({
       <div className={styles.info}>
         <div className={styles.filewrapper}>
           <File file={file} isLoading={fileIsLoading} />
+          <AssetStatus consumable={consumable} />
         </div>
         <div className={styles.pricewrapper}>
           <Price price={price} conversion />
