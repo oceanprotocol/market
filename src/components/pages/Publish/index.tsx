@@ -34,6 +34,7 @@ import Alert from '../../atoms/Alert'
 import MetadataFeedback from '../../molecules/MetadataFeedback'
 import { useAccountPurgatory } from '../../../hooks/useAccountPurgatory'
 import { useWeb3 } from '../../../providers/Web3'
+import { useOcean } from '../../../providers/Ocean'
 
 const formNameDatasets = 'ocean-publish-form-datasets'
 const formNameAlgorithms = 'ocean-publish-form-algorithms'
@@ -77,6 +78,7 @@ export default function PublishPage({
   const [error, setError] = useState<string>()
   const [title, setTitle] = useState<string>()
   const [did, setDid] = useState<string>()
+  const { config } = useOcean()
   const [algoInitialValues, setAlgoInitialValues] = useState<
     Partial<MetadataPublishFormAlgorithm>
   >(
@@ -140,7 +142,8 @@ export default function PublishPage({
         metadata as unknown as Metadata,
         serviceType,
         values.dataTokenOptions,
-        timeout
+        timeout,
+        config.metadataCacheUri
       )
 
       // Publish failed
@@ -187,7 +190,8 @@ export default function PublishPage({
           metadata as unknown as Metadata,
           values.algorithmPrivacy === true ? 'compute' : 'access',
           values.dataTokenOptions,
-          timeout
+          timeout,
+          config.metadataCacheUri
         )
 
         // Publish failed

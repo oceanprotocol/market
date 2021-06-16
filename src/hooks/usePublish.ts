@@ -59,6 +59,7 @@ function usePublish(): UsePublish {
     setIsLoading(true)
     setPublishError(undefined)
     setStep(0)
+    console.log(providerUri)
 
     try {
       const publishedDate =
