@@ -60,7 +60,7 @@ function TabContent({
           ) : (
             <MetadataAlgorithmPreview values={values} />
           )}
-          {!isAssetNetwork && <WalletNetworkSwitcher />}
+          {isAssetNetwork === false && <WalletNetworkSwitcher />}
           <Web3Feedback />
         </div>
       </aside>

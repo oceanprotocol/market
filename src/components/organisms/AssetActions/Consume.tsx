@@ -177,7 +177,7 @@ export default function Consume({
         </div>
       </div>
       <footer className={styles.feedback}>
-        {!isAssetNetwork && <WalletNetworkSwitcher />}
+        {isAssetNetwork === false && <WalletNetworkSwitcher />}
       </footer>
       {type === 'algorithm' && (
         <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} />
