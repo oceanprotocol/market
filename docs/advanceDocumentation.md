@@ -9,8 +9,9 @@
 ## RBAC settings
 
 - Setup and host the Ocean role based access control (RBAC) server. Follow the instructions in the RBAC repository: https://github.com/oceanprotocol/RBAC-Server
+- The RBAC server can store roles in [Keycloak](https://www.keycloak.org/) or a json file.
 - Create an environmental variable in the .env file called `GATSBY_RBAC_URL`. The value should by the URL of the Ocean RBAC server that you have hosted, e.g. `GATSBY_RBAC_URL= "http://localhost:3000"`
-- Users of your marketplace will now require the correct role ("user", "comsumer", "publisher") access features in your marketplace.
+- Users of your marketplace will now require the correct role ("user", "comsumer", "publisher") to access features in your marketplace.
 
 ## Allow Deny List Settings
 
