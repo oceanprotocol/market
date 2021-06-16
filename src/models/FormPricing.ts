@@ -13,7 +13,7 @@ export const validationSchema: Yup.SchemaOf<PriceOptionsMarket> =
       .min(21, (param) => `Must be more or equal to ${param.min}`)
       .required('Required'),
     type: Yup.string()
-      .matches(/fixed|dynamic/g, { excludeEmptyString: true })
+      .matches(/fixed|dynamic|free/g, { excludeEmptyString: true })
       .required('Required'),
     weightOnDataToken: Yup.string().required('Required'),
     weightOnOcean: Yup.string().required('Required'),
