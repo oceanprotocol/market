@@ -105,6 +105,7 @@ async function getAssetMetadata(
 export default function ComputeJobs(): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { ocean, account, config } = useOcean()
+  const { chainIds } = useUserPreferences()
   const { accountId } = useWeb3()
   const { chainIds } = useUserPreferences()
   const [isLoading, setIsLoading] = useState(true)

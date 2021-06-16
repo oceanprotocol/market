@@ -58,6 +58,7 @@ const columns = [
 
 export default function ComputeDownloads(): ReactElement {
   const { accountId } = useWeb3()
+  // const { config } = useOcean()
   const [isLoading, setIsLoading] = useState(false)
   const [orders, setOrders] = useState<DownloadedAssets[]>()
   const { chainIds } = useUserPreferences()

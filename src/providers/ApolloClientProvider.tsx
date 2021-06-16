@@ -14,6 +14,8 @@ import { getOceanConfig } from '../utils/ocean'
 let apolloClient: ApolloClient<NormalizedCacheObject>
 
 function createClient(subgraphUri: string) {
+  console.log(' SG URI: ', subgraphUri)
+
   const client = new ApolloClient({
     link: new HttpLink({
       uri: `${subgraphUri}/subgraphs/name/oceanprotocol/ocean-subgraph`,
