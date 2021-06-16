@@ -1,12 +1,10 @@
-import {
-  SearchQuery,
-  QueryResult
-} from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
+import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { MetadataCache, Logger } from '@oceanprotocol/lib'
 import queryString from 'query-string'
 
 export const SortTermOptions = {
-  Created: 'created'
+  Created: 'created',
+  Relevance: '_score'
 } as const
 type SortTermOptions = typeof SortTermOptions[keyof typeof SortTermOptions]
 
@@ -27,7 +25,8 @@ export const FilterByTypeOptions = {
   Data: 'dataset',
   Algorithm: 'algorithm'
 } as const
-type FilterByTypeOptions = typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
+type FilterByTypeOptions =
+  typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
 
 function addTypeFilterToQuery(sortTerm: string, typeFilter: string): string {
   sortTerm = typeFilter
@@ -38,8 +37,11 @@ function addTypeFilterToQuery(sortTerm: string, typeFilter: string): string {
   return sortTerm
 }
 
-function getSortType(): string {
-  const sortTerm = SortTermOptions.Created
+function getSortType(sortParam: string): string {
+  const sortTerm =
+    sortParam === SortTermOptions.Created
+      ? SortTermOptions.Created
+      : SortTermOptions.Relevance
   return sortTerm
 }
 
@@ -53,9 +55,11 @@ export function getSearchQuery(
   sort?: string,
   sortOrder?: string,
   serviceType?: string
-): SearchQuery {
-  const sortTerm = getSortType()
+): any {
+  const sortTerm = getSortType(sort)
   const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
+  const emptySearchTerm = text === undefined || text === ''
+
   let searchTerm = owner
     ? `(publicKey.owner:${owner})`
     : tags
@@ -66,41 +70,84 @@ export function getSearchQuery(
       `(service.attributes.additionalInformation.categories:\"${categories}\")`
     : text || ''
 
-  // HACK: resolves the case sensitivity related to dataTokenInfo.symbol
-  searchTerm = '*' + searchTerm.toUpperCase() + '*'
+  searchTerm = searchTerm.trim()
+  let modifiedSearchTerm = searchTerm.split(' ').join(' OR ').trim()
+  modifiedSearchTerm = addTypeFilterToQuery(modifiedSearchTerm, serviceType)
   searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
+  const prefixedSearchTerm =
+    emptySearchTerm && searchTerm
+      ? searchTerm
+      : !emptySearchTerm && searchTerm
+      ? '*' + searchTerm + '*'
+      : '**'
 
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
     query: {
-      query_string: {
-        query: `${searchTerm} -isInPurgatory:true`,
-        fields: [
-          'dataTokenInfo.name',
-          'dataTokenInfo.symbol',
-          'service.attributes.main.name',
-          'service.attributes.main.author',
-          'service.attributes.additionalInformation.description'
-        ],
-        default_operator: 'AND'
+      bool: {
+        must: [
+          {
+            bool: {
+              should: [
+                {
+                  query_string: {
+                    query: `${modifiedSearchTerm}`,
+                    fields: [
+                      'id',
+                      'publicKey.owner',
+                      'dataToken',
+                      'dataTokenInfo.name',
+                      'dataTokenInfo.symbol',
+                      'service.attributes.main.name^10',
+                      'service.attributes.main.author',
+                      'service.attributes.additionalInformation.description',
+                      'service.attributes.additionalInformation.tags'
+                    ],
+                    minimum_should_match: '2<75%',
+                    phrase_slop: 2,
+                    boost: 5
+                  }
+                },
+                {
+                  match_phrase: {
+                    content: {
+                      query: `${searchTerm}`,
+                      boost: 10
+                    }
+                  }
+                },
+                {
+                  query_string: {
+                    query: `${prefixedSearchTerm}`,
+                    fields: [
+                      'id',
+                      'publicKey.owner',
+                      'dataToken',
+                      'dataTokenInfo.name',
+                      'dataTokenInfo.symbol',
+                      'service.attributes.main.name',
+                      'service.attributes.main.author',
+                      'service.attributes.additionalInformation.description',
+                      'service.attributes.additionalInformation.tags'
+                    ],
+                    default_operator: 'AND'
+                  }
+                }
+              ]
+            }
+          },
+          {
+            term: {
+              isInPurgatory: false
+            }
+          }
+        ]
       }
-      // ...(owner && { 'publicKey.owner': [owner] }),
-      // ...(tags && { tags: [tags] }),
-      // ...(categories && { categories: [categories] })
     },
     sort: {
       [sortTerm]: sortValue
     }
-
-    // Something in ocean.js is weird when using 'tags: [tag]'
-    // which is the only way the query actually returns desired results.
-    // But it doesn't follow 'SearchQuery' interface so we have to assign
-    // it here.
-    // } as SearchQuery
-
-    // And the next hack,
-    // nativeSearch is not implmeneted on ocean.js typings
   }
 }
 
@@ -122,9 +169,9 @@ export async function getResults(
     text,
     owner,
     tags,
+    categories,
     page,
     offset,
-    categories,
     sort,
     sortOrder,
     serviceType
@@ -142,25 +189,20 @@ export async function getResults(
     sortOrder,
     serviceType
   )
-
   const queryResult = await metadataCache.queryMetadata(searchQuery)
   return queryResult
 }
 
 export async function addExistingParamsToUrl(
   location: Location,
-  excludedParam: string,
-  secondExcludedParam?: string
+  excludedParams: string[]
 ): Promise<string> {
   const parsed = queryString.parse(location.search)
   let urlLocation = '/search?'
   if (Object.keys(parsed).length > 0) {
     for (const querryParam in parsed) {
-      if (
-        querryParam !== excludedParam &&
-        querryParam !== secondExcludedParam
-      ) {
-        if (querryParam === 'page' && excludedParam === 'text') {
+      if (!excludedParams.includes(querryParam)) {
+        if (querryParam === 'page' && excludedParams.includes('text')) {
           Logger.log('remove page when starting a new search')
         } else {
           const value = parsed[querryParam]
@@ -169,7 +211,10 @@ export async function addExistingParamsToUrl(
       }
     }
   } else {
-    urlLocation = `${urlLocation}sort=${SortTermOptions.Created}&sortOrder=${SortValueOptions.Descending}&`
+    // sort should be relevance when fixed in aqua
+    urlLocation = `${urlLocation}sort=${encodeURIComponent(
+      SortTermOptions.Created
+    )}&sortOrder=${SortValueOptions.Descending}&`
   }
   urlLocation = urlLocation.slice(0, -1)
   return urlLocation

@@ -1,4 +1,5 @@
 import React, { ReactElement, useState, useEffect } from 'react'
+import Permission from '../../organisms/Permission'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import SearchBar from '../../molecules/SearchBar'
 import AssetList from '../../organisms/AssetList'
@@ -9,7 +10,6 @@ import Sort from './sort'
 import { getResults } from './utils'
 import { navigate } from 'gatsby'
 import { updateQueryStringParameter } from '../../../utils'
-import Loader from '../../atoms/Loader'
 import { useOcean } from '../../../providers/Ocean'
 
 export default function SearchPage({
@@ -32,7 +32,6 @@ export default function SearchPage({
 
   useEffect(() => {
     if (!config?.metadataCacheUri) return
-
     async function initSearch() {
       setLoading(true)
       setTotalResults(undefined)
@@ -63,34 +62,36 @@ export default function SearchPage({
   }
 
   return (
-    <>
-      <div className={styles.search}>
-        {(text || owner) && (
-          <SearchBar initialValue={(text || owner) as string} />
-        )}
-        <div className={styles.row}>
-          <ServiceFilter
-            serviceType={service}
-            setServiceType={setServiceType}
-          />
-          <Sort
-            sortType={sortType}
-            sortDirection={sortDirection}
-            setSortType={setSortType}
-            setSortDirection={setSortDirection}
+    <Permission eventType="browse">
+      <>
+        <div className={styles.search}>
+          {(text || owner || tags) && (
+            <SearchBar initialValue={(text || owner) as string} />
+          )}
+          <div className={styles.row}>
+            <ServiceFilter
+              serviceType={service}
+              setServiceType={setServiceType}
+            />
+            <Sort
+              sortType={sortType}
+              sortDirection={sortDirection}
+              setSortType={setSortType}
+              setSortDirection={setSortDirection}
+            />
+          </div>
+        </div>
+        <div className={styles.results}>
+          <AssetList
+            assets={queryResult?.results}
+            showPagination
+            isLoading={loading}
+            page={queryResult?.page}
+            totalPages={queryResult?.totalPages}
+            onPageChange={setPage}
           />
         </div>
-      </div>
-      <div className={styles.results}>
-        <AssetList
-          assets={queryResult?.results}
-          showPagination
-          isLoading={loading}
-          page={queryResult?.page}
-          totalPages={queryResult?.totalPages}
-          onPageChange={setPage}
-        />
-      </div>
-    </>
+      </>
+    </Permission>
   )
 }

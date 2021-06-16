@@ -29,7 +29,6 @@ import {
   ComputeAlgorithm,
   ComputeOutput
 } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
-import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import { SearchQuery } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import axios from 'axios'
 import FormStartComputeDataset from './FormComputeDataset'
@@ -37,10 +36,12 @@ import styles from './index.module.css'
 import SuccessConfetti from '../../../atoms/SuccessConfetti'
 import Button from '../../../atoms/Button'
 import { secondsToString } from '../../../../utils/metadata'
+import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
+import AlgorithmDatasetsListForCompute from '../../AssetContent/AlgorithmDatasetsListForCompute'
 import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
 
 const SuccessAction = () => (
-  <Button style="text" to="/history" size="small">
+  <Button style="text" to="/history?defaultTab=ComputeJobs" size="small">
     Go to history →
   </Button>
 )
@@ -48,13 +49,15 @@ const SuccessAction = () => (
 export default function Compute({
   isBalanceSufficient,
   dtBalance,
-  file
+  file,
+  fileIsLoading
 }: {
   isBalanceSufficient: boolean
   dtBalance: string
   file: FileMetadata
+  fileIsLoading?: boolean
 }): ReactElement {
-  const { marketFeeAddress } = useSiteMetadata()
+  const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
   const { ocean, account, config } = useOcean()
   const { price, type, ddo } = useAsset()
@@ -69,15 +72,12 @@ export default function Compute({
   const [isPublished, setIsPublished] = useState(false)
   const [hasPreviousDatasetOrder, setHasPreviousDatasetOrder] = useState(false)
   const [previousDatasetOrderId, setPreviousDatasetOrderId] = useState<string>()
-  const [hasPreviousAlgorithmOrder, setHasPreviousAlgorithmOrder] = useState(
-    false
-  )
+  const [hasPreviousAlgorithmOrder, setHasPreviousAlgorithmOrder] =
+    useState(false)
   const [algorithmDTBalance, setalgorithmDTBalance] = useState<string>()
   const [algorithmPrice, setAlgorithmPrice] = useState<BestPrice>()
-  const [
-    previousAlgorithmOrderId,
-    setPreviousAlgorithmOrderId
-  ] = useState<string>()
+  const [previousAlgorithmOrderId, setPreviousAlgorithmOrderId] =
+    useState<string>()
   const [datasetTimeout, setDatasetTimeout] = useState<string>()
   const [algorithmTimeout, setAlgorithmTimeout] = useState<string>()
 
@@ -126,7 +126,7 @@ export default function Compute({
     const algorithmQuery =
       trustedAlgorithmList.length > 0 ? `(${algoQuerry}) AND` : ``
     const query = {
-      page: 1,
+      offset: 500,
       query: {
         query_string: {
           query: `${algorithmQuery} service.attributes.main.type:algorithm -isInPurgatory:true`
@@ -296,7 +296,7 @@ export default function Compute({
             ddo.id,
             computeService.index,
             computeAlgorithm,
-            marketFeeAddress,
+            appConfig.marketFeeAddress,
             undefined,
             false
           )
@@ -316,7 +316,7 @@ export default function Compute({
             serviceAlgo.type,
             accountId,
             serviceAlgo.index,
-            marketFeeAddress,
+            appConfig.marketFeeAddress,
             undefined,
             false
           )
@@ -363,6 +363,8 @@ export default function Compute({
       await checkPreviousOrders(ddo)
       setIsPublished(true)
     } catch (error) {
+      await checkPreviousOrders(selectedAlgorithmAsset)
+      await checkPreviousOrders(ddo)
       setError('Failed to start job!')
       Logger.error('[compute] Failed to start job: ', error.message)
     } finally {
@@ -373,15 +375,18 @@ export default function Compute({
   return (
     <>
       <div className={styles.info}>
-        <File file={file} small />
+        <File file={file} isLoading={fileIsLoading} small />
         <Price price={price} conversion />
       </div>
 
       {type === 'algorithm' ? (
-        <Alert
-          text="This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
-          state="info"
-        />
+        <>
+          <Alert
+            text="This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
+            state="info"
+          />
+          <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} />
+        </>
       ) : (
         <Formik
           initialValues={getInitialValues()}

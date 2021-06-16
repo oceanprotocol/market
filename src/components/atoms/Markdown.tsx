@@ -13,10 +13,9 @@ const Markdown = ({
   // https://github.com/rexxars/react-markdown/issues/105#issuecomment-351585313
   const textCleaned = text?.replace(/\\n/g, '\n ')
   return (
-    <ReactMarkdown
-      source={textCleaned}
-      className={`${styles.markdown} ${className}`}
-    />
+    <ReactMarkdown className={`${styles.markdown} ${className}`}>
+      {textCleaned}
+    </ReactMarkdown>
   )
 }
 

@@ -28,9 +28,9 @@ export const computeFeedback: { [key in number]: string } = {
   2: '3/3 Access granted. Starting job...'
 }
 
-export function getCreatePricingPoolFeedback(
-  dtSymbol: string
-): { [key: number]: string } {
+export function getCreatePricingPoolFeedback(dtSymbol: string): {
+  [key: number]: string
+} {
   return {
     99: `Minting ${dtSymbol} ...`,
     0: 'Creating pool ...',
@@ -41,14 +41,25 @@ export function getCreatePricingPoolFeedback(
   }
 }
 
-export function getCreatePricingExchangeFeedback(
-  dtSymbol: string
-): { [key: number]: string } {
+export function getCreatePricingExchangeFeedback(dtSymbol: string): {
+  [key: number]: string
+} {
   return {
     99: `Minting ${dtSymbol} ...`,
     0: 'Creating exchange ...',
     1: `Approving ${dtSymbol} ...`,
     2: 'Fixed exchange created.'
+  }
+}
+
+export function getCreateFreePricingFeedback(dtSymbol: string): {
+  [key: number]: string
+} {
+  return {
+    99: `Creating ${dtSymbol} faucet...`,
+    0: 'Setting faucet as minter ...',
+    1: 'Approving minter...',
+    2: 'Faucet created.'
   }
 }
 
@@ -65,5 +76,14 @@ export function getSellDTFeedback(dtSymbol: string): { [key: number]: string } {
     1: '1/3 Approving OCEAN ...',
     2: `2/3 Selling ${dtSymbol} ...`,
     3: `3/3 ${dtSymbol} sold.`
+  }
+}
+
+export function getDispenseFeedback(dtSymbol: string): {
+  [key: number]: string
+} {
+  return {
+    1: `1/2 Requesting ${dtSymbol}...`,
+    2: `2/2 Received ${dtSymbol}.`
   }
 }
