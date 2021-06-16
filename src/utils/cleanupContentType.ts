@@ -1,6 +1,8 @@
 const cleanupContentType = (contentType: string): string => {
+  // strip away the `charset=utf-8`
+  const contentSplit = contentType.split(';')[0]
   // strip away the 'application/' part
-  const contentTypeSplit = contentType.split('/')[1]
+  const contentTypeSplit = contentSplit.split('/')[1]
 
   if (!contentTypeSplit) return contentType
 
