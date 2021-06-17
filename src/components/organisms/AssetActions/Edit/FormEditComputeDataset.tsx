@@ -30,7 +30,7 @@ export default function FormEditComputeDataset({
   const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
-  const { ddo } = useAsset()
+  const { ddo, isAssetNetwork } = useAsset()
   const { isValid, values }: FormikContextType<ComputePrivacyForm> =
     useFormikContext()
   const [allAlgorithms, setAllAlgorithms] = useState<AssetSelectionAsset[]>()
@@ -91,7 +91,10 @@ export default function FormEditComputeDataset({
         />
       ))}
       <footer className={styles.actions}>
-        <Button style="primary" disabled={!ocean || !accountId || !isValid}>
+        <Button
+          style="primary"
+          disabled={!ocean || !accountId || !isValid || !isAssetNetwork}
+        >
           Submit
         </Button>
         <Button style="text" onClick={() => setShowEdit(false)}>
