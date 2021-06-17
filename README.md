@@ -377,13 +377,13 @@ Everything else is made open according to the apache2 license. We look forward t
 
 ## Advanced Features
 
-Ocean Market also includes a number of advance features that are suitable for an enterprise data market, such as:
+Ocean Market also includes a number of advanced features that are suitable for an enterprise data market, such as:
 
 - Role based access control
 - Allow and deny lists
 - Free pricing
 
-[See our seperate guide on advance features](docs/advanceDocumentation.md)
+[See our seperate guide on advanced features](docs/advancedSettings.md)
 
 ## 🏛 License
 
