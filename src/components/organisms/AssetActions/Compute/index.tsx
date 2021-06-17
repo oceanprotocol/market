@@ -38,6 +38,7 @@ import { secondsToString } from '../../../../utils/metadata'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import AlgorithmDatasetsListForCompute from '../../AssetContent/AlgorithmDatasetsListForCompute'
 import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
+import WalletNetworkSwitcher from '../../../molecules/WalletNetworkSwither'
 
 const SuccessAction = () => (
   <Button style="text" to="/history?defaultTab=ComputeJobs" size="small">
@@ -419,6 +420,7 @@ export default function Compute({
       )}
 
       <footer className={styles.feedback}>
+        {isAssetNetwork === false && <WalletNetworkSwitcher />}
         {isPublished && (
           <SuccessConfetti
             success="Your job started successfully! Watch the progress on the history page."
