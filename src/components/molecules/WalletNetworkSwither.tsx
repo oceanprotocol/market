@@ -35,12 +35,12 @@ export default function WalletNetworkSwitcher(): ReactElement {
   }, [])
 
   return (
-    <div className={styles.content}>
+    <div className={styles.switcher}>
       <img
         src="https://raw.githubusercontent.com/oceanprotocol/art/main/logo/datatoken.png"
         className={styles.image}
       />
-      <div>
+      <div className={styles.content}>
         <h3 className={styles.title}>
           You are watching OCEAN on {ddoNetworkName} but your wallet is
           connected to {walletNetworkName}

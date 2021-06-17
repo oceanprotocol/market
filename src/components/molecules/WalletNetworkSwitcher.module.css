@@ -5,18 +5,23 @@
   padding: calc(var(--spacer));
 }
 
-.content {
+.switcher {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 
 .image {
   height: 30px;
+  margin-left: 0;
   margin-right: calc(var(--spacer));
 }
 
 .title {
   font-size: var(--font-size-base);
   margin-bottom: calc(var(--spacer) / 4);
+}
+
+div.content:last-child {
+  margin-bottom: 0 !important;
 }

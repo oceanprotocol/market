@@ -17,6 +17,7 @@ import { ComputePrivacyForm } from '../../../../models/FormEditComputeDataset'
 import { publisherTrustedAlgorithm as PublisherTrustedAlgorithm } from '@oceanprotocol/lib'
 import axios from 'axios'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
+import WalletNetworkSwitcher from '../../../molecules/WalletNetworkSwither'
 
 export default function FormEditComputeDataset({
   data,
@@ -90,6 +91,7 @@ export default function FormEditComputeDataset({
           component={Input}
         />
       ))}
+      {isAssetNetwork === false && <WalletNetworkSwitcher />}
       <footer className={styles.actions}>
         <Button
           style="primary"

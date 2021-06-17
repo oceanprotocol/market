@@ -16,7 +16,6 @@ import { useUserPreferences } from '../../../../providers/UserPreferences'
 import DebugEditCompute from './DebugEditCompute'
 import styles from './index.module.css'
 import { transformComputeFormToServiceComputePrivacy } from '../../../../utils/compute'
-import WalletNetworkSwitcher from '../../../molecules/WalletNetworkSwither'
 
 const contentQuery = graphql`
   query EditComputeDataQuery {
@@ -63,7 +62,7 @@ export default function EditComputeDataset({
   const { debug } = useUserPreferences()
   const { ocean } = useOcean()
   const { accountId } = useWeb3()
-  const { ddo, refreshDdo } = useAsset()
+  const { ddo, isAssetNetwork, refreshDdo } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
 
@@ -147,9 +146,6 @@ export default function EditComputeDataset({
                 data={content.form.data}
                 setShowEdit={setShowEdit}
               />
-              <aside>
-                <WalletNetworkSwitcher />
-              </aside>
             </article>
 
             {debug === true && (

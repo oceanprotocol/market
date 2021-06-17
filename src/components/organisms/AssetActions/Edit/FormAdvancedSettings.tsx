@@ -7,6 +7,8 @@ import { FormFieldProps } from '../../../../@types/Form'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
 import { AdvancedSettingsForm } from '../../../../models/FormEditCredential'
+import { useAsset } from '../../../../providers/Asset'
+import WalletNetworkSwitcher from '../../../molecules/WalletNetworkSwither'
 
 export default function FormAdvancedSettings({
   data,
@@ -16,6 +18,7 @@ export default function FormAdvancedSettings({
   setShowEdit: (show: boolean) => void
 }): ReactElement {
   const { accountId } = useWeb3()
+  const { isAssetNetwork } = useAsset()
   const { ocean, config } = useOcean()
   const {
     isValid,
@@ -45,9 +48,12 @@ export default function FormAdvancedSettings({
           }
         />
       ))}
-
+      {isAssetNetwork === false && <WalletNetworkSwitcher />}
       <footer className={styles.actions}>
-        <Button style="primary" disabled={!ocean || !accountId || !isValid}>
+        <Button
+          style="primary"
+          disabled={!ocean || !accountId || !isValid || !isAssetNetwork}
+        >
           Submit
         </Button>
         <Button style="text" onClick={() => setShowEdit(false)}>
