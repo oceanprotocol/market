@@ -375,7 +375,7 @@ Additionally, we would also advise that your retain the text saying "Powered by 
 
 Everything else is made open according to the apache2 license. We look forward to seeing your data marketplace!
 
-## Advanced Features
+## 💻 Advanced Features
 
 Ocean Market also includes a number of advanced features that are suitable for an enterprise data market, such as:
 

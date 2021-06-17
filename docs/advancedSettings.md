@@ -2,9 +2,9 @@
 
 **Table of Contents**
 
-- [Role based Access Control](#-rbac-settings)
-- [Allow and Deny lists](#-allow--and-deny-list-settings)
-- [Free Pricing](#-free-pricing-settings)
+- [Role based Access Control](#rbac-settings)
+- [Allow and Deny lists](#allow-and-deny-list-settings)
+- [Free Pricing](#free-pricing-settings)
 
 ## RBAC settings
 
