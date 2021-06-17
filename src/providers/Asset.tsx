@@ -21,7 +21,7 @@ import { useSiteMetadata } from '../hooks/useSiteMetadata'
 interface AssetProviderValue {
   isInPurgatory: boolean
   purgatoryData: PurgatoryData
-  ddo: DDO
+  ddo: DDO_TEMPORARY
   did: string
   metadata: MetadataMarket
   title: string
@@ -51,7 +51,7 @@ function AssetProvider({
   const { networkId } = useWeb3()
   const [isInPurgatory, setIsInPurgatory] = useState(false)
   const [purgatoryData, setPurgatoryData] = useState<PurgatoryData>()
-  const [ddo, setDDO] = useState<DDO>()
+  const [ddo, setDDO] = useState<DDO_TEMPORARY>()
   const [did, setDID] = useState<string>()
   const [metadata, setMetadata] = useState<MetadataMarket>()
   const [title, setTitle] = useState<string>()
@@ -86,7 +86,7 @@ function AssetProvider({
     setLoading(true)
     const ddo = await fetchDdo(token)
     Logger.debug('[asset] Got DDO', ddo)
-    setDDO(ddo)
+    setDDO(ddo as DDO_TEMPORARY)
     setLoading(false)
   }
 
@@ -103,7 +103,7 @@ function AssetProvider({
       const ddo = await fetchDdo(source.token)
       if (!isMounted) return
       Logger.debug('[asset] Got DDO', ddo)
-      setDDO(ddo)
+      setDDO(ddo as DDO_TEMPORARY)
       setDID(asset as string)
     }
     init()

@@ -13,7 +13,7 @@ export default function WalletNetworkSwitcher(): ReactElement {
   const { networksList } = useNetworkMetadata()
   const { ddo } = useAsset()
   const DEFOULT_ETH_CHAIN_IDS = [1, 3, 4]
-  const [assetChainId, setAssetChainId] = useState()
+  const [assetChainId, setAssetChainId] = useState<number>()
   const showButton = !DEFOULT_ETH_CHAIN_IDS.includes(assetChainId)
   const oceanConfig = getOceanConfig(assetChainId)
 
@@ -30,8 +30,8 @@ export default function WalletNetworkSwitcher(): ReactElement {
   }
 
   useEffect(() => {
-    if (!ddo.chainId) return
-    setAssetChainId(ddo.chainId)
+    if (!ddo?.chainId) return
+    setAssetChainId(ddo?.chainId)
   }, [])
 
   return (
