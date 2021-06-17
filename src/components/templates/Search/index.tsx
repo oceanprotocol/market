@@ -66,9 +66,6 @@ export default function SearchPage({
     <Permission eventType="browse">
       <>
         <div className={styles.search}>
-          {(text || owner) && (
-            <SearchBar initialValue={(text || owner) as string} />
-          )}
           <div className={styles.row}>
             <ServiceFilter
               serviceType={service}

@@ -1,9 +1,11 @@
 .form {
-  margin-bottom: var(--spacer);
   width: 100%;
-  max-width: 30rem;
 }
 
+.searchIcon {
+  fill: var(--brand-grey-light);
+  transition: 0.2s ease-out;
+}
 .form > div > div {
   margin: 0;
 }

@@ -1,10 +1,18 @@
-import React, { useState, ChangeEvent, FormEvent, ReactElement } from 'react'
+import React, {
+  useState,
+  useEffect,
+  ChangeEvent,
+  FormEvent,
+  ReactElement
+} from 'react'
 import { navigate } from 'gatsby'
+import queryString from 'query-string'
 import styles from './SearchBar.module.css'
 import Button from '../atoms/Button'
 import Input from '../atoms/Input'
 import InputGroup from '../atoms/Input/InputGroup'
 import { addExistingParamsToUrl } from '../templates/Search/utils'
+import { ReactComponent as SearchIcon } from '../../images/search.svg'
 
 export default function SearchBar({
   placeholder,
@@ -18,7 +26,12 @@ export default function SearchBar({
   size?: 'small' | 'large'
 }): ReactElement {
   let [value, setValue] = useState(initialValue || '')
+  const parsed = queryString.parse(location.search)
+  const { text, owner } = parsed
 
+  useEffect(() => {
+    ;(text || owner) && setValue((text || owner) as string)
+  }, [text, owner])
   async function startSearch(e: FormEvent<HTMLButtonElement>) {
     e.preventDefault()
     if (value === '') value = ' '
@@ -57,8 +70,11 @@ export default function SearchBar({
           onClick={async (e: FormEvent<HTMLButtonElement>) =>
             await startSearch(e)
           }
+          style="text"
+          size="small"
+          className={styles.button}
         >
-          Search
+          <SearchIcon className={styles.searchIcon} />
         </Button>
       </InputGroup>
 

@@ -8,6 +8,7 @@ import UserPreferences from './UserPreferences'
 import Badge from '../atoms/Badge'
 import Logo from '../atoms/Logo'
 import Networks from './UserPreferences/Networks'
+import SearchBar from './SearchBar'
 
 const Wallet = loadable(() => import('./Wallet'))
 
@@ -50,6 +51,9 @@ export default function Menu(): ReactElement {
           </li>
         ))}
       </ul>
+      <div className={styles.search}>
+        <SearchBar />
+      </div>
 
       <div className={styles.actions}>
         <Networks />

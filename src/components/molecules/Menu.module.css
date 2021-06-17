@@ -15,14 +15,21 @@
 
 .navigation {
   order: 3;
-  width: 100%;
+  width: 50%;
   margin-top: calc(var(--spacer) / 2);
   text-align: center;
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
   margin-left: -1rem;
   margin-right: -1rem;
-  width: calc(100% + 2rem);
+  width: calc(50% + 2rem);
+}
+.search {
+  order: 2;
+  margin-top: calc(var(--spacer) / 2);
+  text-align: center;
+  margin-left: 10rem;
+  margin-right: 10rem;
 }
 
 .actions {
