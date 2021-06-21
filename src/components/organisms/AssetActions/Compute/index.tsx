@@ -39,6 +39,7 @@ import { secondsToString } from '../../../../utils/metadata'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import AlgorithmDatasetsListForCompute from '../../AssetContent/AlgorithmDatasetsListForCompute'
 import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
+import AssetStatus from '../../../molecules/AssetStatus'
 
 const SuccessAction = () => (
   <Button style="text" to="/history?defaultTab=ComputeJobs" size="small">
@@ -84,6 +85,7 @@ export default function Compute({
   const isComputeButtonDisabled =
     isJobStarting === true || file === null || !ocean || !isBalanceSufficient
   const hasDatatoken = Number(dtBalance) >= 1
+  const [isOrderDisabled, setIsOrderDisabled] = useState<boolean>()
 
   async function checkPreviousOrders(ddo: DDO) {
     const { timeout } = (
@@ -225,6 +227,14 @@ export default function Compute({
     if (!newError) return
     toast.error(newError)
   }, [error, pricingError])
+
+  useEffect(() => {
+    async function checkConsumable() {
+      const consumable = await ocean.assets.isConsumable(ddo, accountId)
+      setIsOrderDisabled(consumable.status === 1)
+    }
+    checkConsumable()
+  }, [ddo, accountId])
 
   async function startJob(algorithmId: string) {
     try {
@@ -376,7 +386,11 @@ export default function Compute({
     <>
       <div className={styles.info}>
         <File file={file} isLoading={fileIsLoading} small />
-        <Price price={price} conversion />
+        <div>
+          <Price price={price} conversion />
+          <br />
+          <AssetStatus isOrderDisabled={isOrderDisabled} />
+        </div>
       </div>
 
       {type === 'algorithm' ? (

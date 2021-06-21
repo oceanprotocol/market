@@ -7,6 +7,7 @@ import { ReactComponent as External } from '../../../images/external.svg'
 import InputElement from '../../atoms/Input/InputElement'
 import Loader from '../../atoms/Loader'
 import styles from './AssetSelection.module.css'
+import AssetStatus from '../AssetStatus'
 
 const cx = classNames.bind(styles)
 
@@ -16,6 +17,7 @@ export interface AssetSelectionAsset {
   price: string
   checked: boolean
   symbol: string
+  isOrderDisabled?: boolean
 }
 
 function Empty() {
@@ -31,6 +33,7 @@ export default function AssetSelection({
   assets: AssetSelectionAsset[]
   multiple?: boolean
   disabled?: boolean
+  isOrderDisabled?: boolean
 }): JSX.Element {
   const [searchValue, setSearchValue] = useState('')
 
@@ -105,6 +108,7 @@ export default function AssetSelection({
                   <Dotdotdot clamp={1} tagName="code" className={styles.did}>
                     {asset.symbol} | {asset.did}
                   </Dotdotdot>
+                  <AssetStatus isOrderDisabled={asset.isOrderDisabled} />
                 </label>
 
                 <PriceUnit

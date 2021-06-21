@@ -1,19 +1,21 @@
-import { Consumable } from '@oceanprotocol/lib/dist/node/ddo/interfaces/Consumable'
 import React, { ReactElement } from 'react'
 import Status from '../atoms/Status'
 import Tooltip from '../atoms/Tooltip'
 import styles from './AssetStatus.module.css'
 
 export default function AssetStatus({
-  consumable
+  isOrderDisabled
 }: {
-  consumable: Consumable
+  isOrderDisabled: boolean
 }): ReactElement {
-  return consumable?.status > 0 ? (
+  return isOrderDisabled === true ? (
     <div className={styles.wrapper}>
       <Status className={styles.status} state="error" />
       <span className={styles.text}>Disabled</span>
-      <Tooltip className={styles.info} content={consumable.message} />
+      <Tooltip
+        className={styles.info}
+        content="This dataset is disabled by the publisher, consume at your own risk"
+      />
     </div>
   ) : null
 }

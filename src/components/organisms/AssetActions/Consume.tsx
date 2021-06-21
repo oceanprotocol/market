@@ -67,7 +67,7 @@ export default function Consume({
     },
     pollInterval: 5000
   })
-  const [consumable, setConsumable] = useState<Consumable>()
+  const [isOrderDisabled, setIsOrderDisabled] = useState<boolean>()
 
   useEffect(() => {
     if (!data || !assetTimeout || data.tokenOrders.length === 0) return
@@ -109,7 +109,7 @@ export default function Consume({
   useEffect(() => {
     async function checkConsumable() {
       const consumable = await ocean.assets.isConsumable(ddo, accountId)
-      setConsumable(consumable)
+      setIsOrderDisabled(consumable.status === 1)
     }
     checkConsumable()
   }, [ddo, accountId])
@@ -180,7 +180,7 @@ export default function Consume({
       <div className={styles.info}>
         <div className={styles.filewrapper}>
           <File file={file} isLoading={fileIsLoading} />
-          <AssetStatus consumable={consumable} />
+          <AssetStatus isOrderDisabled={isOrderDisabled} />
         </div>
         <div className={styles.pricewrapper}>
           <Price price={price} conversion />
