@@ -229,6 +229,7 @@ export default function Compute({
   }, [error, pricingError])
 
   useEffect(() => {
+    if (!ocean) return
     async function checkConsumable() {
       const consumable = await ocean.assets.isConsumable(ddo, accountId)
       setIsOrderDisabled(consumable.status === 1)

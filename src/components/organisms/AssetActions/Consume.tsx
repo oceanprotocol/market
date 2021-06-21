@@ -107,6 +107,7 @@ export default function Consume({
   }, [dtBalance])
 
   useEffect(() => {
+    if (!ocean) return
     async function checkConsumable() {
       const consumable = await ocean.assets.isConsumable(ddo, accountId)
       setIsOrderDisabled(consumable.status === 1)
