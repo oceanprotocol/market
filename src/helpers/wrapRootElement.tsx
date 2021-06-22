@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import Web3Provider from '../providers/Web3'
 import { UserPreferencesProvider } from '../providers/UserPreferences'
 import PricesProvider from '../providers/Prices'
-import ApolloClientProvider from '../providers/ApolloClientProvider'
+import UrqlProvider from '../providers/UrqlProvider'
 
 export default function wrapRootElement({
   element
@@ -11,11 +11,11 @@ export default function wrapRootElement({
 }): ReactElement {
   return (
     <Web3Provider>
-      <ApolloClientProvider>
+      <UrqlProvider>
         <UserPreferencesProvider>
           <PricesProvider>{element}</PricesProvider>
         </UserPreferencesProvider>
-      </ApolloClientProvider>
+      </UrqlProvider>
     </Web3Provider>
   )
 }

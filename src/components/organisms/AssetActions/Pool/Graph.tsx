@@ -17,7 +17,7 @@ import { darkModeConfig } from '../../../../../app.config'
 import Button from '../../../atoms/Button'
 import { Logger } from '@oceanprotocol/lib'
 import { useAsset } from '../../../../providers/Asset'
-import { gql, useQuery } from '@apollo/client'
+import { gql, useQuery } from 'urql'
 import { PoolHistory } from '../../../../@types/apollo/PoolHistory'
 
 declare type GraphType = 'liquidity' | 'price'
@@ -131,13 +131,15 @@ export default function Graph(): ReactElement {
   const [isLoading, setIsLoading] = useState(true)
   const [graphData, setGraphData] = useState<ChartData>()
 
-  const { data, refetch, error } = useQuery<PoolHistory>(poolHistory, {
+  const [result, refetch] = useQuery<PoolHistory>({
+    query: poolHistory,
     variables: {
       id: price.address.toLowerCase(),
       block: lastBlock
-    },
-    pollInterval: 20000
+    }
+    // pollInterval: 20000
   })
+  const { data, error } = result
 
   useEffect(() => {
     Logger.log('Fired GraphOptions!')
