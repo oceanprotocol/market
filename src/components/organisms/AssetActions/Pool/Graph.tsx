@@ -146,11 +146,10 @@ export default function Graph(): ReactElement {
   }, [locale, darkMode.value])
 
   useEffect(() => {
-    if (!data) return
+    if (!data || data.poolTransactions.length === 0) return
     Logger.log('Fired GraphData!')
 
     const latestTimestamps = [
-      ...timestamps,
       ...data.poolTransactions.map((item) => {
         const date = new Date(item.timestamp * 1000)
         return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
@@ -160,27 +159,24 @@ export default function Graph(): ReactElement {
     setTimestamps(latestTimestamps)
 
     const latestLiquidtyHistory = [
-      ...liquidityHistory,
       ...data.poolTransactions.map((item) => item.oceanReserve)
     ]
 
     setLiquidityHistory(latestLiquidtyHistory)
 
     const latestPriceHistory = [
-      ...priceHistory,
       ...data.poolTransactions.map((item) => item.spotPrice)
     ]
     setPriceHistory(latestPriceHistory)
 
-    if (data.poolTransactions.length > 0) {
+    if (data.poolTransactions.length < 0) {
       setLastBlock(
         data.poolTransactions[data.poolTransactions.length - 1].block
       )
       refetch()
     } else {
-      setIsLoading(false)
       setGraphData({
-        labels: timestamps.slice(0),
+        labels: latestTimestamps.slice(0),
         datasets: [
           {
             ...lineStyle,
@@ -194,6 +190,7 @@ export default function Graph(): ReactElement {
           }
         ]
       })
+      setIsLoading(false)
     }
   }, [data, graphType])
 
