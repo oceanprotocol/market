@@ -47,11 +47,11 @@ const AccountTeaser: React.FC<AccountTeaserProps> = ({ account }) => {
         <header className={styles.header}>
           <Dotdotdot clamp={3}>{profile && <h3> {profile.name}</h3>}</Dotdotdot>
           <div className={styles.details}>
-            <Blockies account={accountId} />
+            {profile.emoji || <Blockies account={accountId} />}
             <p>{accountId}</p>
           </div>
         </header>
-        {profile && <div className={styles.content}>{profile.description}</div>}
+        <div className={styles.content}>{profile?.description || ''}</div>
         <footer className={styles.footer}>
           {/* <div>add more account details</div> */}
         </footer>
