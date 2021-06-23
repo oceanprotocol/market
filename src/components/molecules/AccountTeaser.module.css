@@ -1,0 +1,45 @@
+.blockies {
+  width: var(--font-size-large);
+  height: var(--font-size-large);
+  border-radius: 50%;
+  margin-left: 0;
+  margin-right: calc(var(--spacer) / 8);
+}
+
+.teaser {
+  max-width: 40rem;
+  height: 100%;
+  background-color: var(--background-content);
+  padding: var(--spacer);
+  border: 1px solid var(--border-color);
+}
+
+.link {
+  color: var(--color-secondary);
+}
+
+.details {
+  display: flex;
+  align-items: flex-start;
+  margin-top: -2rem;
+}
+
+.details p {
+  font-size: smaller;
+}
+
+.content {
+  margin-top: calc(var(--spacer) / 2);
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-all;
+  font-size: small;
+  color: var(--color-secondary);
+}
+
+.footer {
+  margin-top: calc(var(--spacer) / 2);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
