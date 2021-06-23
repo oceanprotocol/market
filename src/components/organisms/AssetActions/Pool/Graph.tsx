@@ -124,10 +124,6 @@ export default function Graph(): ReactElement {
   const { price } = useAsset()
 
   const [lastBlock, setLastBlock] = useState(0)
-  const [priceHistory, setPriceHistory] = useState([])
-  const [liquidityHistory, setLiquidityHistory] = useState([])
-  const [timestamps, setTimestamps] = useState([])
-
   const [isLoading, setIsLoading] = useState(true)
   const [graphData, setGraphData] = useState<ChartData>()
 
@@ -156,18 +152,13 @@ export default function Graph(): ReactElement {
       })
     ]
 
-    setTimestamps(latestTimestamps)
-
     const latestLiquidtyHistory = [
       ...data.poolTransactions.map((item) => item.oceanReserve)
     ]
 
-    setLiquidityHistory(latestLiquidtyHistory)
-
     const latestPriceHistory = [
       ...data.poolTransactions.map((item) => item.spotPrice)
     ]
-    setPriceHistory(latestPriceHistory)
 
     if (data.poolTransactions.length < 0) {
       setLastBlock(
