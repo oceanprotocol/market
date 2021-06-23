@@ -15,6 +15,9 @@ import UserLiquidity from '../../../../atoms/UserLiquidity'
 import { useOcean } from '../../../../../providers/Ocean'
 import { useWeb3 } from '../../../../../providers/Web3'
 
+import { isValidNumber } from './../../../../../utils/numberValidations'
+import Decimal from 'decimal.js'
+
 export default function FormAdd({
   coin,
   dtBalance,
@@ -74,15 +77,20 @@ export default function FormAdd({
         coin === 'OCEAN' ? ocean.pool.oceanAddress : ocean.pool.dtAddress,
         `${values.amount}`
       )
+      //
       setNewPoolTokens(poolTokens)
-      totalBalance &&
-        setNewPoolShare(
-          `${
-            (Number(poolTokens) /
-              (Number(totalPoolTokens) + Number(poolTokens))) *
-            100
-          }`
-        )
+
+      const newPoolShareDecimal =
+        isValidNumber(poolTokens) && isValidNumber(totalPoolTokens)
+          ? new Decimal(poolTokens)
+              .dividedBy(
+                new Decimal(totalPoolTokens).plus(new Decimal(poolTokens))
+              )
+              .mul(100)
+              .toString()
+          : '0'
+
+      totalBalance && setNewPoolShare(newPoolShareDecimal)
     }
     calculatePoolShares()
   }, [
