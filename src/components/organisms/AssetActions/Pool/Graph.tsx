@@ -123,7 +123,10 @@ export default function Graph(): ReactElement {
 
   const { price } = useAsset()
 
-  const [lastBlock, setLastBlock] = useState(0)
+  const [lastBlock, setLastBlock] = useState<number>(0)
+  const [priceHistory, setPriceHistory] = useState([])
+  const [liquidityHistory, setLiquidityHistory] = useState([])
+  const [timestamps, setTimestamps] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [graphData, setGraphData] = useState<ChartData>()
 
@@ -142,25 +145,36 @@ export default function Graph(): ReactElement {
   }, [locale, darkMode.value])
 
   useEffect(() => {
-    if (!data || data.poolTransactions.length === 0) return
+    if (!data) return
     Logger.log('Fired GraphData!')
 
     const latestTimestamps = [
+      ...timestamps,
       ...data.poolTransactions.map((item) => {
         const date = new Date(item.timestamp * 1000)
         return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
       })
     ]
+    setTimestamps(latestTimestamps)
 
     const latestLiquidtyHistory = [
+      ...liquidityHistory,
       ...data.poolTransactions.map((item) => item.oceanReserve)
     ]
 
+    setLiquidityHistory(latestLiquidtyHistory)
+
     const latestPriceHistory = [
+      ...priceHistory,
       ...data.poolTransactions.map((item) => item.spotPrice)
     ]
 
-    if (data.poolTransactions.length < 0) {
+    setPriceHistory(latestPriceHistory)
+
+    if (data.poolTransactions.length > 0) {
+      const newBlock =
+        data.poolTransactions[data.poolTransactions.length - 1].block
+      if (newBlock === lastBlock) return
       setLastBlock(
         data.poolTransactions[data.poolTransactions.length - 1].block
       )
