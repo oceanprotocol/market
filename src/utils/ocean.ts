@@ -12,12 +12,12 @@ import { UserBalance } from '../@types/TokenBalance'
 export function getOceanConfig(network: string | number): ConfigHelperConfig {
   return new ConfigHelper().getConfig(
     network,
-    network === 'polygon' ||
-      network === 137 ||
-      network === 'moonbeamalpha' ||
+    network === 'moonbeamalpha' ||
       network === 1287 ||
       network === 'bsc' ||
-      network === 56
+      network === 56 ||
+      network === 'gaiaxtestnet' ||
+      network === 2021000
       ? undefined
       : process.env.GATSBY_INFURA_PROJECT_ID
   ) as ConfigHelperConfig
