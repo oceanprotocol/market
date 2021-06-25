@@ -116,8 +116,6 @@ export default function ComputeJobs(): ReactElement {
   async function getJobs() {
     if (!ocean || !account) return
 
-    console.log('get jobs')
-
     setIsLoading(true)
 
     await refetch()
