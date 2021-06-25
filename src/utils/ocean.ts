@@ -3,23 +3,21 @@ import {
   Logger,
   Ocean,
   ConfigHelper,
-  ConfigHelperConfig,
-  ConfigHelperNetworkId,
-  ConfigHelperNetworkName
+  ConfigHelperConfig
 } from '@oceanprotocol/lib'
 import contractAddresses from '@oceanprotocol/contracts/artifacts/address.json'
 
 import { UserBalance } from '../@types/TokenBalance'
 
-export function getOceanConfig(
-  network: ConfigHelperNetworkName | ConfigHelperNetworkId
-): ConfigHelperConfig {
+export function getOceanConfig(network: string | number): ConfigHelperConfig {
   return new ConfigHelper().getConfig(
     network,
     network === 'polygon' ||
       network === 137 ||
       network === 'moonbeamalpha' ||
-      network === 1287
+      network === 1287 ||
+      network === 'bsc' ||
+      network === 56
       ? undefined
       : process.env.GATSBY_INFURA_PROJECT_ID
   ) as ConfigHelperConfig
