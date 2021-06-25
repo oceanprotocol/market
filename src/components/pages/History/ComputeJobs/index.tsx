@@ -109,14 +109,12 @@ export default function ComputeJobs(): ReactElement {
     }
   })
 
-  console.log(data)
-
   async function getJobs() {
     if (!ocean || !account) return
 
     setIsLoading(true)
 
-    // await refetch()
+    await refetch()
     const dtList = []
     const computeJobs: ComputeJobMetaData[] = []
     for (let i = 0; i < data.tokenOrders.length; i++) {
