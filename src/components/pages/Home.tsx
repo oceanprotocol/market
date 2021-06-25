@@ -63,7 +63,7 @@ function SectionQueryResult({
           config.metadataCacheUri,
           source.token
         )
-        if (result.totalResults <= 15) {
+        if (result.totalResults > 0 && result.totalResults <= 15) {
           const searchDIDs = queryData.split(' ')
           const sortedAssets = sortElements(result.results, searchDIDs)
           // We take more assets than we need from the subgraph (to make sure
@@ -73,7 +73,6 @@ function SectionQueryResult({
           sortedAssets.splice(sortedAssets.length - overflow, overflow)
           result.results = sortedAssets
         }
-        if (result.results.length === 0) return
         setResult(result)
         setLoading(false)
       } catch (error) {
@@ -85,7 +84,7 @@ function SectionQueryResult({
     return () => {
       source.cancel()
     }
-  }, [query, config?.metadataCacheUri])
+  }, [query, config?.metadataCacheUri, queryData])
 
   return (
     <section className={styles.section}>
@@ -120,7 +119,7 @@ export default function HomePage(): ReactElement {
       }
       setQueryAndDids([queryHighest, results])
     })
-  }, [config.subgraphUri, loading, web3Loading])
+  }, [config.subgraphUri, loading, web3Loading, web3Provider])
 
   return (
     <Permission eventType="browse">
