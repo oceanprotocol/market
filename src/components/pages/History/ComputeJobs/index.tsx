@@ -103,17 +103,20 @@ export default function ComputeJobs(): ReactElement {
   const { accountId } = useWeb3()
   const [isLoading, setIsLoading] = useState(true)
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
-  const { data } = useQuery<ComputeOrders>(getComputeOrders, {
+  const { data, refetch } = useQuery<ComputeOrders>(getComputeOrders, {
     variables: {
       user: accountId?.toLowerCase()
     }
   })
+
+  console.log(data)
 
   async function getJobs() {
     if (!ocean || !account) return
 
     setIsLoading(true)
 
+    // await refetch()
     const dtList = []
     const computeJobs: ComputeJobMetaData[] = []
     for (let i = 0; i < data.tokenOrders.length; i++) {
