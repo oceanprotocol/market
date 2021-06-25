@@ -60,7 +60,11 @@ const columns = [
   {
     name: 'Finished',
     selector: function getTimeRow(row: ComputeJobMetaData) {
-      return <Time date={row.dateFinished} isUnix relative />
+      return row.dateFinished ? (
+        <Time date={row.dateFinished} isUnix relative />
+      ) : (
+        ''
+      )
     }
   },
   {
@@ -111,6 +115,8 @@ export default function ComputeJobs(): ReactElement {
 
   async function getJobs() {
     if (!ocean || !account) return
+
+    console.log('get jobs')
 
     setIsLoading(true)
 
