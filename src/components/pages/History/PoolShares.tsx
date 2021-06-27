@@ -3,7 +3,7 @@ import Table from '../../atoms/Table'
 import Conversion from '../../atoms/Price/Conversion'
 import styles from './PoolShares.module.css'
 import AssetTitle from '../../molecules/AssetListTitle'
-import { gql, useQuery } from '@apollo/client'
+import { gql, useQuery } from 'urql'
 import {
   PoolShares as PoolSharesList,
   PoolShares_poolShares as PoolShare,
@@ -144,12 +144,15 @@ export default function PoolShares(): ReactElement {
   const { chainIds } = useUserPreferences()
   const [assets, setAssets] = useState<Asset[]>()
   // TODO: query multiple sg according to chainIds
-  const { data, loading } = useQuery<PoolSharesList>(poolSharesQuery, {
+  const [result] = useQuery<PoolSharesList>({
+    query: poolSharesQuery,
     variables: {
       user: accountId?.toLowerCase()
-    },
-    pollInterval: 20000
+    }
+    // pollInterval: 20000
   })
+
+  const { data, fetching } = result
 
   useEffect(() => {
     if (!data) return
@@ -162,7 +165,7 @@ export default function PoolShares(): ReactElement {
       })
     })
     setAssets(assetList)
-  }, [data, loading, chainIds])
+  }, [data, fetching])
 
   return (
     <Table
@@ -171,7 +174,7 @@ export default function PoolShares(): ReactElement {
       data={assets}
       pagination
       paginationPerPage={5}
-      isLoading={loading}
+      isLoading={fetching}
       sortField="userLiquidity"
       sortAsc={false}
     />

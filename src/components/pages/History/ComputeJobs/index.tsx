@@ -8,7 +8,7 @@ import Dotdotdot from 'react-dotdotdot'
 import Table from '../../../atoms/Table'
 import Button from '../../../atoms/Button'
 import { useOcean } from '../../../../providers/Ocean'
-import { gql, useQuery } from '@apollo/client'
+import { gql, useQuery } from 'urql'
 import { useWeb3 } from '../../../../providers/Web3'
 import { queryMetadata } from '../../../../utils/aquarius'
 import axios, { CancelToken } from 'axios'
@@ -110,11 +110,14 @@ export default function ComputeJobs(): ReactElement {
   const [isLoading, setIsLoading] = useState(true)
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
   // TODO: query multiple sg according to chainIds
-  const { data } = useQuery<ComputeOrders>(getComputeOrders, {
+  const [result] = useQuery<ComputeOrders>({
+    query: getComputeOrders,
     variables: {
       user: accountId?.toLowerCase()
     }
   })
+
+  const { data } = result
 
   async function getJobs() {
     if (!ocean || !account) return
