@@ -16,7 +16,7 @@ export default function Price({
   small?: boolean
   conversion?: boolean
 }): ReactElement {
-  return price?.value ? (
+  return price?.value || price?.type === 'free' ? (
     <PriceUnit
       price={`${price.value}`}
       className={className}
@@ -24,17 +24,18 @@ export default function Price({
       conversion={conversion}
       type={price.type}
     />
-  ) : !price || !price.address || price.address === '' ? (
+  ) : !price || price?.type === '' ? (
     <div className={styles.empty}>
       No price set{' '}
       <Tooltip content="No pricing mechanism has been set on this asset yet." />
     </div>
-  ) : price.isConsumable !== 'true' ? (
-    <div className={styles.empty}>
-      Low liquidity{' '}
-      <Tooltip content="This pool does not have enough liquidity for using this data set." />
-    </div>
   ) : (
+    // TODO: Hacky hack, put back some check for low liquidity
+    // ) : price.isConsumable !== 'true' ? (
+    //   <div className={styles.empty}>
+    //     Low liquidity{' '}
+    //     <Tooltip content="This pool does not have enough liquidity for using this data set." />
+    //   </div>
     <Loader message="Retrieving price..." />
   )
 }

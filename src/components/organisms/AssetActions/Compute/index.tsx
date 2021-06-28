@@ -3,7 +3,6 @@ import {
   DDO,
   File as FileMetadata,
   Logger,
-  ServiceType,
   publisherTrustedAlgorithm,
   BestPrice
 } from '@oceanprotocol/lib'
@@ -26,52 +25,39 @@ import {
   getInitialValues,
   validationSchema
 } from '../../../../models/FormStartComputeDataset'
-import { ComputeAlgorithm } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
-import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
+import {
+  ComputeAlgorithm,
+  ComputeOutput
+} from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
 import { SearchQuery } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import axios from 'axios'
 import FormStartComputeDataset from './FormComputeDataset'
 import styles from './index.module.css'
 import SuccessConfetti from '../../../atoms/SuccessConfetti'
 import Button from '../../../atoms/Button'
-import { gql, useQuery } from '@apollo/client'
-import { FrePrice } from '../../../../@types/apollo/FrePrice'
-import { PoolPrice } from '../../../../@types/apollo/PoolPrice'
 import { secondsToString } from '../../../../utils/metadata'
-import { getPreviousOrders } from '../../../../utils/subgraph'
+import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
+import AlgorithmDatasetsListForCompute from '../../AssetContent/AlgorithmDatasetsListForCompute'
+import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
 
 const SuccessAction = () => (
-  <Button style="text" to="/history" size="small">
+  <Button style="text" to="/history?defaultTab=ComputeJobs" size="small">
     Go to history →
   </Button>
 )
 
-const freQuery = gql`
-  query AlgorithmFrePrice($datatoken: String) {
-    fixedRateExchanges(orderBy: id, where: { datatoken: $datatoken }) {
-      rate
-      id
-    }
-  }
-`
-const poolQuery = gql`
-  query AlgorithmPoolPrice($datatoken: String) {
-    pools(where: { datatokenAddress: $datatoken }) {
-      spotPrice
-    }
-  }
-`
-
 export default function Compute({
   isBalanceSufficient,
   dtBalance,
-  file
+  file,
+  fileIsLoading
 }: {
   isBalanceSufficient: boolean
   dtBalance: string
   file: FileMetadata
+  fileIsLoading?: boolean
 }): ReactElement {
-  const { marketFeeAddress } = useSiteMetadata()
+  const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
   const { ocean, account, config } = useOcean()
   const { price, type, ddo } = useAsset()
@@ -86,37 +72,14 @@ export default function Compute({
   const [isPublished, setIsPublished] = useState(false)
   const [hasPreviousDatasetOrder, setHasPreviousDatasetOrder] = useState(false)
   const [previousDatasetOrderId, setPreviousDatasetOrderId] = useState<string>()
-  const [hasPreviousAlgorithmOrder, setHasPreviousAlgorithmOrder] = useState(
-    false
-  )
+  const [hasPreviousAlgorithmOrder, setHasPreviousAlgorithmOrder] =
+    useState(false)
   const [algorithmDTBalance, setalgorithmDTBalance] = useState<string>()
   const [algorithmPrice, setAlgorithmPrice] = useState<BestPrice>()
-  const [variables, setVariables] = useState({})
-  const [
-    previousAlgorithmOrderId,
-    setPreviousAlgorithmOrderId
-  ] = useState<string>()
+  const [previousAlgorithmOrderId, setPreviousAlgorithmOrderId] =
+    useState<string>()
   const [datasetTimeout, setDatasetTimeout] = useState<string>()
   const [algorithmTimeout, setAlgorithmTimeout] = useState<string>()
-
-  /* eslint-disable @typescript-eslint/no-unused-vars */
-  const {
-    refetch: refetchFre,
-    startPolling: startPollingFre,
-    data: frePrice
-  } = useQuery<FrePrice>(freQuery, {
-    variables,
-    skip: false
-  })
-  const {
-    refetch: refetchPool,
-    startPolling: startPollingPool,
-    data: poolPrice
-  } = useQuery<PoolPrice>(poolQuery, {
-    variables,
-    skip: false
-  })
-  /* eslint-enable @typescript-eslint/no-unused-vars */
 
   const isComputeButtonDisabled =
     isJobStarting === true || file === null || !ocean || !isBalanceSufficient
@@ -163,7 +126,7 @@ export default function Compute({
     const algorithmQuery =
       trustedAlgorithmList.length > 0 ? `(${algoQuerry}) AND` : ``
     const query = {
-      page: 1,
+      offset: 500,
       query: {
         query_string: {
           query: `${algorithmQuery} service.attributes.main.type:algorithm -isInPurgatory:true`
@@ -213,37 +176,10 @@ export default function Compute({
     setDatasetTimeout(secondsToString(timeout))
   }, [ddo])
 
-  useEffect(() => {
-    if (
-      !frePrice ||
-      frePrice.fixedRateExchanges.length === 0 ||
-      algorithmPrice.type !== 'exchange'
-    )
-      return
-    setAlgorithmPrice((prevState) => ({
-      ...prevState,
-      value: frePrice.fixedRateExchanges[0].rate,
-      address: frePrice.fixedRateExchanges[0].id
-    }))
-  }, [frePrice])
-
-  useEffect(() => {
-    if (
-      !poolPrice ||
-      poolPrice.pools.length === 0 ||
-      algorithmPrice.type !== 'pool'
-    )
-      return
-    setAlgorithmPrice((prevState) => ({
-      ...prevState,
-      value: poolPrice.pools[0].spotPrice
-    }))
-  }, [poolPrice])
-
   const initMetadata = useCallback(async (ddo: DDO): Promise<void> => {
     if (!ddo) return
-    setAlgorithmPrice(ddo.price)
-    setVariables({ datatoken: ddo?.dataToken.toLowerCase() })
+    const price = await getPrice(ddo)
+    setAlgorithmPrice(price)
   }, [])
 
   useEffect(() => {
@@ -259,26 +195,30 @@ export default function Compute({
   }, [ocean, ddo, accountId])
 
   useEffect(() => {
-    if (!ocean || !accountId || !selectedAlgorithmAsset) return
+    if (!selectedAlgorithmAsset) return
 
-    if (selectedAlgorithmAsset.findServiceByType('access')) {
-      checkPreviousOrders(selectedAlgorithmAsset).then(() => {
-        if (
-          !hasPreviousAlgorithmOrder &&
-          selectedAlgorithmAsset.findServiceByType('compute')
-        ) {
-          checkPreviousOrders(selectedAlgorithmAsset)
-        }
-      })
-    } else if (selectedAlgorithmAsset.findServiceByType('compute')) {
-      checkPreviousOrders(selectedAlgorithmAsset)
-    }
-    checkAssetDTBalance(selectedAlgorithmAsset)
     initMetadata(selectedAlgorithmAsset)
+
     const { timeout } = (
       ddo.findServiceByType('access') || ddo.findServiceByType('compute')
     ).attributes.main
     setAlgorithmTimeout(secondsToString(timeout))
+
+    if (accountId) {
+      if (selectedAlgorithmAsset.findServiceByType('access')) {
+        checkPreviousOrders(selectedAlgorithmAsset).then(() => {
+          if (
+            !hasPreviousAlgorithmOrder &&
+            selectedAlgorithmAsset.findServiceByType('compute')
+          ) {
+            checkPreviousOrders(selectedAlgorithmAsset)
+          }
+        })
+      } else if (selectedAlgorithmAsset.findServiceByType('compute')) {
+        checkPreviousOrders(selectedAlgorithmAsset)
+      }
+    }
+    ocean && checkAssetDTBalance(selectedAlgorithmAsset)
   }, [selectedAlgorithmAsset, ocean, accountId, hasPreviousAlgorithmOrder])
 
   // Output errors in toast UI
@@ -358,7 +298,9 @@ export default function Compute({
             ddo.id,
             computeService.index,
             computeAlgorithm,
-            marketFeeAddress
+            appConfig.marketFeeAddress,
+            undefined,
+            false
           )
 
       assetOrderId &&
@@ -376,7 +318,9 @@ export default function Compute({
             serviceAlgo.type,
             accountId,
             serviceAlgo.index,
-            marketFeeAddress
+            appConfig.marketFeeAddress,
+            undefined,
+            false
           )
 
       algorithmAssetOrderId &&
@@ -395,7 +339,10 @@ export default function Compute({
       computeAlgorithm.transferTxId = algorithmAssetOrderId
       Logger.log('[compute] Starting compute job.')
 
-      const output = {}
+      const output: ComputeOutput = {
+        publishAlgorithmLog: true,
+        publishOutput: true
+      }
       const response = await ocean.compute.start(
         ddo.id,
         assetOrderId,
@@ -414,9 +361,12 @@ export default function Compute({
 
       Logger.log('[compute] Starting compute job response: ', response)
 
-      setHasPreviousDatasetOrder(true)
+      await checkPreviousOrders(selectedAlgorithmAsset)
+      await checkPreviousOrders(ddo)
       setIsPublished(true)
     } catch (error) {
+      await checkPreviousOrders(selectedAlgorithmAsset)
+      await checkPreviousOrders(ddo)
       setError('Failed to start job!')
       Logger.error('[compute] Failed to start job: ', error.message)
     } finally {
@@ -427,15 +377,18 @@ export default function Compute({
   return (
     <>
       <div className={styles.info}>
-        <File file={file} small />
+        <File file={file} isLoading={fileIsLoading} small />
         <Price price={price} conversion />
       </div>
 
       {type === 'algorithm' ? (
-        <Alert
-          text="This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
-          state="info"
-        />
+        <>
+          <Alert
+            text="This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
+            state="info"
+          />
+          <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} />
+        </>
       ) : (
         <Formik
           initialValues={getInitialValues()}
@@ -475,7 +428,9 @@ export default function Compute({
             action={<SuccessAction />}
           />
         )}
-        <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
+        {type !== 'algorithm' && (
+          <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
+        )}
       </footer>
     </>
   )

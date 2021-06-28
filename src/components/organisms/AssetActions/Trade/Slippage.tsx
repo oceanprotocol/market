@@ -6,10 +6,8 @@ import styles from './Slippage.module.css'
 
 export default function Slippage(): ReactElement {
   // Connect with form
-  const {
-    setFieldValue,
-    values
-  }: FormikContextType<FormTradeData> = useFormikContext()
+  const { setFieldValue, values }: FormikContextType<FormTradeData> =
+    useFormikContext()
 
   function handleChange(e: ChangeEvent<HTMLSelectElement>) {
     setFieldValue('slippage', e.target.value)

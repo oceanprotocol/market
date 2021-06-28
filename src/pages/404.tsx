@@ -6,11 +6,8 @@ import { Helmet } from 'react-helmet'
 import Button from '../components/atoms/Button'
 
 export default function PageGatsby404(props: PageProps): ReactElement {
-  const {
-    title,
-    description,
-    actions
-  } = (props.data as any).content.edges[0].node.childPagesJson
+  const { title, description, actions } = (props.data as any).content.edges[0]
+    .node.childPagesJson
 
   return (
     <>

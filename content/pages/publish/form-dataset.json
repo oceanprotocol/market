@@ -19,7 +19,7 @@
       "name": "files",
       "label": "File",
       "placeholder": "e.g. https://file.com/file.json",
-      "help": "Please enter the URL to your data set file and click \"ADD FILE\" to validate the data. This URL will be stored encrypted after publishing.",
+      "help": "Please enter the URL to your data set file and click \"ADD FILE\" to validate the data. This URL will be stored encrypted after publishing. For a compute data set, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size.",
       "type": "files",
       "required": true
     },
@@ -34,7 +34,7 @@
       "name": "access",
       "label": "Access Type",
       "help": "Choose how you want your files to be accessible for the specified price.",
-      "type": "select",
+      "type": "boxSelection",
       "options": ["Download", "Compute"],
       "required": true
     },

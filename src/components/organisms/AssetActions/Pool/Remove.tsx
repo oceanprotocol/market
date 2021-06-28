@@ -21,6 +21,7 @@ import UserLiquidity from '../../../atoms/UserLiquidity'
 import InputElement from '../../../atoms/Input/InputElement'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
+import Decimal from 'decimal.js'
 
 const contentQuery = graphql`
   query PoolRemoveQuery {
@@ -79,6 +80,8 @@ export default function Remove({
   const [slippage, setSlippage] = useState<string>('5')
   const [minOceanAmount, setMinOceanAmount] = useState<string>('0')
   const [minDatatokenAmount, setMinDatatokenAmount] = useState<string>('0')
+
+  Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
   async function handleRemoveLiquidity() {
     setIsLoading(true)
@@ -155,21 +158,19 @@ export default function Remove({
     totalPoolTokens
   ])
 
-  async function calculateAmountOfOceansRemoved(amountPoolShares: string) {
-    const oceanAmount = await ocean.pool.getOceanRemovedforPoolShares(
-      poolAddress,
-      amountPoolShares
-    )
-    setAmountOcean(oceanAmount)
-  }
-
   useEffect(() => {
-    const minOceanAmount =
-      (Number(amountOcean) * (100 - Number(slippage))) / 100
-    const minDatatokenAmount =
-      (Number(amountDatatoken) * (100 - Number(slippage))) / 100
-    setMinOceanAmount(`${minOceanAmount}`)
-    setMinDatatokenAmount(`${minDatatokenAmount}`)
+    const minOceanAmount = new Decimal(amountOcean)
+      .mul(new Decimal(100).minus(new Decimal(slippage)))
+      .dividedBy(100)
+      .toString()
+
+    const minDatatokenAmount = new Decimal(amountDatatoken)
+      .mul(new Decimal(100).minus(new Decimal(slippage)))
+      .dividedBy(100)
+      .toString()
+
+    setMinOceanAmount(minOceanAmount.slice(0, 18))
+    setMinDatatokenAmount(minDatatokenAmount.slice(0, 18))
   }, [slippage, amountOcean, amountDatatoken, isAdvanced])
 
   // Set amountPoolShares based on set slider value
@@ -177,19 +178,24 @@ export default function Remove({
     setAmountPercent(e.target.value)
     if (!poolTokens) return
 
-    const amountPoolShares = (Number(e.target.value) / 100) * Number(poolTokens)
-    setAmountPoolShares(`${amountPoolShares}`)
-    calculateAmountOfOceansRemoved(`${amountPoolShares}`)
+    const amountPoolShares = new Decimal(e.target.value)
+      .dividedBy(100)
+      .mul(new Decimal(poolTokens))
+      .toString()
+
+    setAmountPoolShares(`${amountPoolShares.slice(0, 18)}`)
   }
 
   function handleMaxButton(e: ChangeEvent<HTMLInputElement>) {
     e.preventDefault()
     setAmountPercent(amountMaxPercent)
 
-    const amountPoolShares =
-      (Number(amountMaxPercent) / 100) * Number(poolTokens)
-    setAmountPoolShares(`${amountPoolShares}`)
-    calculateAmountOfOceansRemoved(`${amountPoolShares}`)
+    const amountPoolShares = new Decimal(amountMaxPercent)
+      .dividedBy(100)
+      .mul(new Decimal(poolTokens))
+      .toString()
+
+    setAmountPoolShares(`${amountPoolShares.slice(0, 18)}`)
   }
 
   function handleAdvancedButton(e: FormEvent<HTMLButtonElement>) {

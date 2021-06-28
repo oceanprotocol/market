@@ -7,6 +7,8 @@ import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { MetadataPublishFormDataset } from '../../../@types/MetaData'
 import { initialValues as initialValuesDataset } from '../../../models/FormAlgoPublish'
 import { useOcean } from '../../../providers/Ocean'
+import { ReactComponent as Download } from '../../../images/download.svg'
+import { ReactComponent as Compute } from '../../../images/compute.svg'
 import stylesIndex from './index.module.css'
 import styles from './FormPublish.module.css'
 
@@ -61,14 +63,30 @@ export default function FormPublish(): ReactElement {
     // setSubmitting(false)
   }, [setErrors, setTouched])
 
+  const accessTypeOptions = [
+    {
+      name: 'Download',
+      title: 'Download',
+      icon: <Download />
+    },
+    {
+      name: 'Compute',
+      title: 'Compute',
+      icon: <Compute />
+    }
+  ]
+
   // Manually handle change events instead of using `handleChange` from Formik.
   // Workaround for default `validateOnChange` not kicking in
   function handleFieldChange(
     e: ChangeEvent<HTMLInputElement>,
     field: FormFieldProps
   ) {
+    const value =
+      field.type === 'terms' ? !JSON.parse(e.target.value) : e.target.value
+
     validateField(field.name)
-    setFieldValue(field.name, e.target.value)
+    setFieldValue(field.name, value)
   }
 
   const resetFormAndClearStorage = (e: FormEvent<Element>) => {
@@ -91,6 +109,9 @@ export default function FormPublish(): ReactElement {
         <Field
           key={field.name}
           {...field}
+          options={
+            field.type === 'boxSelection' ? accessTypeOptions : field.options
+          }
           component={Input}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             handleFieldChange(e, field)

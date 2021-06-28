@@ -1,11 +1,11 @@
 import React, { ReactElement } from 'react'
-import ComputeJobs from './ComputeJobs'
-import styles from './index.module.css'
+import Tabs from '../../atoms/Tabs'
 import PoolShares from './PoolShares'
 import PoolTransactions from '../../molecules/PoolTransactions'
 import PublishedList from './PublishedList'
 import Downloads from './Downloads'
-import Tabs from '../../atoms/Tabs'
+import ComputeJobs from './ComputeJobs'
+import styles from './index.module.css'
 
 const tabs = [
   {
@@ -31,9 +31,17 @@ const tabs = [
 ]
 
 export default function HistoryPage(): ReactElement {
+  const url = new URL(window.location.href)
+  const defaultTab = url.searchParams.get('defaultTab')
+  let defaultTabIndex = 0
+  defaultTab === 'ComputeJobs' ? (defaultTabIndex = 4) : (defaultTabIndex = 0)
   return (
     <article className={styles.content}>
-      <Tabs items={tabs} className={styles.tabs} />
+      <Tabs
+        items={tabs}
+        className={styles.tabs}
+        defaultIndex={defaultTabIndex}
+      />
     </article>
   )
 }

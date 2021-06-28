@@ -1,0 +1,29 @@
+.datasetsContainer {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  width: auto;
+  margin-left: -2rem;
+  margin-right: -2rem;
+  border-top: 1px solid var(--border-color);
+  margin-top: calc(var(--spacer) / 2);
+}
+
+.datasetsContainer div[class*='AssetSelection-module--selection'] {
+  width: 100%;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-left: 0;
+  border-right: 0;
+  padding: 0;
+}
+
+.datasetsContainer .text {
+  margin-bottom: calc(var(--spacer) / 2);
+  margin-top: calc(var(--spacer) / 2);
+  text-align: center;
+  color: var(--font-color-text);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-heading);
+}

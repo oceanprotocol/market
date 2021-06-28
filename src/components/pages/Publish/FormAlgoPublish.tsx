@@ -14,7 +14,6 @@ import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { MetadataPublishFormAlgorithm } from '../../../@types/MetaData'
 import { initialValues as initialValuesAlgorithm } from '../../../models/FormAlgoPublish'
-
 import stylesIndex from './index.module.css'
 
 const query = graphql`
@@ -62,12 +61,29 @@ export default function FormPublish(): ReactElement {
   const [selectedDockerImage, setSelectedDockerImage] = useState<string>(
     initialValues.dockerImage
   )
+
+  const dockerImageOptions = [
+    {
+      name: 'node:latest',
+      title: 'node:latest',
+      checked: true
+    },
+    {
+      name: 'python:latest',
+      title: 'python:latest',
+      checked: false
+    },
+    {
+      name: 'custom image',
+      title: 'custom image',
+      checked: false
+    }
+  ]
+
   // reset form validation on every mount
   useEffect(() => {
     setErrors({})
     setTouched({})
-
-    // setSubmitting(false)
   }, [setErrors, setTouched])
 
   function handleImageSelectChange(imageSelected: string) {
@@ -136,6 +152,11 @@ export default function FormPublish(): ReactElement {
             <Field
               key={field.name}
               {...field}
+              options={
+                field.type === 'boxSelection'
+                  ? dockerImageOptions
+                  : field.options
+              }
               component={Input}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 handleFieldChange(e, field)

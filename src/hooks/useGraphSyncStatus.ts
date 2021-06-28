@@ -77,6 +77,7 @@ export function useGraphSyncStatus(): UseGraphSyncStatus {
   // Get and set subgraph block
   useEffect(() => {
     if (!config || !config.subgraphUri) return
+
     async function initBlockSubgraph() {
       setSubgraphLoading(true)
       const blockGraph = await getBlockSubgraph(config.subgraphUri)
@@ -98,7 +99,7 @@ export function useGraphSyncStatus(): UseGraphSyncStatus {
       return
     }
     setIsGraphSynced(true)
-  }, [blockGraph, blockHead])
+  }, [blockGraph, blockHead, web3Loading, subgraphLoading])
 
   return { blockHead, blockGraph, isGraphSynced }
 }

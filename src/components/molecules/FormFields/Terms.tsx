@@ -14,6 +14,10 @@ const query = graphql`
 
 export default function Terms(props: InputProps): ReactElement {
   const data = useStaticQuery(query)
+  const termsProps: InputProps = {
+    ...props,
+    defaultChecked: props.value.toString() === 'true'
+  }
 
   return (
     <>
@@ -21,7 +25,7 @@ export default function Terms(props: InputProps): ReactElement {
         className={styles.terms}
         dangerouslySetInnerHTML={{ __html: data.terms.html }}
       />
-      <InputElement {...props} type="checkbox" />
+      <InputElement {...termsProps} type="checkbox" />
     </>
   )
 }

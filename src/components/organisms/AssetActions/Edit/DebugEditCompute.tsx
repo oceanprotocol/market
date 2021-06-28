@@ -13,10 +13,8 @@ export default function DebugEditCompute({
   ddo: DDO
 }): ReactElement {
   const { ocean } = useOcean()
-  const [
-    formTransformed,
-    setFormTransformed
-  ] = useState<ServiceComputePrivacy>()
+  const [formTransformed, setFormTransformed] =
+    useState<ServiceComputePrivacy>()
 
   useEffect(() => {
     if (!ocean) return

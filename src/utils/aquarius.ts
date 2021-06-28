@@ -10,8 +10,19 @@ import {
   SearchQuery
 } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { AssetSelectionAsset } from '../components/molecules/FormFields/AssetSelection'
-import { PriceList, getAssetPrices } from './subgraph'
+import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
+
+function getQueryForAlgorithmDatasets(algorithmDid: string) {
+  return {
+    query: {
+      query_string: {
+        query: `service.attributes.main.privacy.publisherTrustedAlgorithms.did:${algorithmDid}`
+      }
+    },
+    sort: { created: -1 }
+  }
+}
 
 // TODO: import directly from ocean.js somehow.
 // Transforming Aquarius' direct response is needed for getting actual DDOs
@@ -114,7 +125,7 @@ export async function transformDDOToAssetSelection(
 ): Promise<AssetSelectionAsset[]> {
   const source = axios.CancelToken.source()
   const didList: string[] = []
-  const priceList: PriceList = await getAssetPrices(ddoList)
+  const priceList: PriceList = await getAssetsPriceList(ddoList)
   const symbolList: any = {}
   const didProviderEndpointMap: any = {}
   for (const ddo of ddoList) {
@@ -156,4 +167,34 @@ export async function transformDDOToAssetSelection(
     }
   })
   return algorithmList
+}
+
+export async function getAlgorithmDatasetsForCompute(
+  algorithmId: string,
+  metadataCacheUri: string
+): Promise<AssetSelectionAsset[]> {
+  const source = axios.CancelToken.source()
+  const computeDatasets = await queryMetadata(
+    getQueryForAlgorithmDatasets(algorithmId),
+    metadataCacheUri,
+    source.token
+  )
+  const computeDatasetsForCurrentAlgorithm: DDO[] = []
+  computeDatasets.results.forEach((data: DDO) => {
+    const algorithm = data
+      .findServiceByType('compute')
+      .attributes.main.privacy.publisherTrustedAlgorithms.find(
+        (algo) => algo.did === algorithmId
+      )
+    algorithm && computeDatasetsForCurrentAlgorithm.push(data)
+  })
+  if (computeDatasetsForCurrentAlgorithm.length === 0) {
+    return []
+  }
+  const datasets = await transformDDOToAssetSelection(
+    computeDatasetsForCurrentAlgorithm,
+    metadataCacheUri,
+    []
+  )
+  return datasets
 }

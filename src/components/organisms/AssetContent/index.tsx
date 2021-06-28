@@ -17,6 +17,8 @@ import MetaMain from './MetaMain'
 import EditHistory from './EditHistory'
 import { useWeb3 } from '../../../providers/Web3'
 import styles from './index.module.css'
+import EditAdvancedSettings from '../AssetActions/Edit/EditAdvancedSettings'
+import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 
 export interface AssetContentProps {
   path?: string
@@ -48,14 +50,19 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   const [showPricing, setShowPricing] = useState(false)
   const [showEdit, setShowEdit] = useState<boolean>()
   const [showEditCompute, setShowEditCompute] = useState<boolean>()
-  const { ddo, price, metadata } = useAsset()
-
-  const isOwner = accountId === owner
+  const [showEditAdvancedSettings, setShowEditAdvancedSettings] =
+    useState<boolean>()
+  const [isOwner, setIsOwner] = useState(false)
+  const { ddo, price, metadata, type } = useAsset()
+  const { appConfig } = useSiteMetadata()
 
   useEffect(() => {
-    if (!price) return
+    if (!accountId || !owner) return
+
+    const isOwner = accountId.toLowerCase() === owner.toLowerCase()
+    setIsOwner(isOwner)
     setShowPricing(isOwner && price.type === '')
-  }, [isOwner, price])
+  }, [accountId, price, owner])
 
   function handleEditButton() {
     // move user's focus to top of screen
@@ -68,10 +75,17 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
     setShowEditCompute(true)
   }
 
+  function handleEditAdvancedSettingsButton() {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    setShowEditAdvancedSettings(true)
+  }
+
   return showEdit ? (
     <Edit setShowEdit={setShowEdit} />
   ) : showEditCompute ? (
     <EditComputeDataset setShowEdit={setShowEditCompute} />
+  ) : showEditAdvancedSettings ? (
+    <EditAdvancedSettings setShowEdit={setShowEditAdvancedSettings} />
   ) : (
     <article className={styles.grid}>
       <div>
@@ -101,7 +115,19 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
                   <Button style="text" size="small" onClick={handleEditButton}>
                     Edit Metadata
                   </Button>
-                  {ddo.findServiceByType('compute') && (
+                  {appConfig.allowAdvancedSettings === 'true' && (
+                    <>
+                      <span className={styles.separator}>|</span>
+                      <Button
+                        style="text"
+                        size="small"
+                        onClick={handleEditAdvancedSettingsButton}
+                      >
+                        Edit Advanced Settings
+                      </Button>
+                    </>
+                  )}
+                  {ddo.findServiceByType('compute') && type === 'dataset' && (
                     <>
                       <span className={styles.separator}>|</span>
                       <Button

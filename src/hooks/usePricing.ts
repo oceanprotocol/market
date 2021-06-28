@@ -2,12 +2,12 @@ import { DDO, Logger, BestPrice } from '@oceanprotocol/lib'
 import { useState } from 'react'
 import { TransactionReceipt } from 'web3-core'
 import { Decimal } from 'decimal.js'
-import { getFirstPoolPrice } from '../utils/dtUtils'
 import {
   getCreatePricingPoolFeedback,
   getCreatePricingExchangeFeedback,
   getBuyDTFeedback,
-  getSellDTFeedback
+  getCreateFreePricingFeedback,
+  getDispenseFeedback
 } from '../utils/feedback'
 import { sleep } from '../utils'
 
@@ -18,7 +18,7 @@ interface PriceOptions {
   price: number
   dtAmount: number
   oceanAmount: number
-  type: 'fixed' | 'dynamic' | string
+  type: 'fixed' | 'dynamic' | 'free' | string
   weightOnDataToken: string
   swapFee: string
 }
@@ -30,10 +30,6 @@ interface UsePricing {
     priceOptions: PriceOptions,
     ddo: DDO
   ) => Promise<TransactionReceipt | string | void>
-  sellDT: (
-    dtAmount: number | string,
-    ddo: DDO
-  ) => Promise<TransactionReceipt | void>
   mint: (tokensToMint: string, ddo: DDO) => Promise<TransactionReceipt | void>
   buyDT: (
     dtAmount: number | string,
@@ -56,6 +52,7 @@ function usePricing(): UsePricing {
 
   async function getDTSymbol(ddo: DDO): Promise<string> {
     if (!ocean || !accountId) return
+
     const { dataToken, dataTokenInfo } = ddo
     return dataTokenInfo
       ? dataTokenInfo.symbol
@@ -73,7 +70,7 @@ function usePricing(): UsePricing {
   // Helper for setting steps & feedback for all flows
   async function setStep(
     index: number,
-    type: 'pool' | 'exchange' | 'buy' | 'sell',
+    type: 'pool' | 'exchange' | 'free' | 'buy' | 'dispense',
     ddo: DDO
   ) {
     const dtSymbol = await getDTSymbol(ddo)
@@ -89,11 +86,14 @@ function usePricing(): UsePricing {
       case 'exchange':
         messages = getCreatePricingExchangeFeedback(dtSymbol)
         break
+      case 'free':
+        messages = getCreateFreePricingFeedback(dtSymbol)
+        break
       case 'buy':
         messages = getBuyDTFeedback(dtSymbol)
         break
-      case 'sell':
-        messages = getSellDTFeedback(dtSymbol)
+      case 'dispense':
+        messages = getDispenseFeedback(dtSymbol)
         break
     }
 
@@ -188,6 +188,28 @@ function usePricing(): UsePricing {
           Logger.log('DT exchange buy response', tx)
           break
         }
+        case 'free': {
+          setStep(1, 'dispense', ddo)
+          const isDispensable = await ocean.OceanDispenser.isDispensable(
+            ddo.dataToken,
+            accountId,
+            '1'
+          )
+
+          if (!isDispensable) {
+            Logger.error(`Dispenser for ${ddo.dataToken} failed to dispense`)
+            return
+          }
+
+          tx = await ocean.OceanDispenser.dispense(
+            ddo.dataToken,
+            accountId,
+            '1'
+          )
+          setStep(2, 'dispense', ddo)
+          Logger.log('DT dispense response', tx)
+          break
+        }
       }
     } catch (error) {
       setPricingError(error.message)
@@ -201,47 +223,6 @@ function usePricing(): UsePricing {
     return tx
   }
 
-  async function sellDT(
-    dtAmount: number | string,
-    ddo: DDO
-  ): Promise<TransactionReceipt | void> {
-    if (!ocean || !accountId) return
-
-    Decimal.set({ precision: 18 })
-    if (!config.oceanTokenAddress) {
-      Logger.error(`'oceanTokenAddress' not set in config`)
-      return
-    }
-
-    try {
-      const { dataToken } = ddo
-      setPricingIsLoading(true)
-      setPricingError(undefined)
-      setStep(1, 'sell', ddo)
-      const pool = await getFirstPoolPrice(ocean, dataToken)
-      if (!pool || pool.value === 0) return
-      const price = new Decimal(pool.value).times(0.95).toString()
-      setStep(2, 'sell', ddo)
-      Logger.log('Selling token to pool', pool, accountId, price)
-      const tx = await ocean.pool.sellDT(
-        accountId,
-        pool.address,
-        `${dtAmount}`,
-        price
-      )
-      setStep(3, 'sell', ddo)
-      Logger.log('DT sell response', tx)
-      return tx
-    } catch (error) {
-      setPricingError(error.message)
-      Logger.error(error)
-    } finally {
-      setStep(0, 'sell', ddo)
-      setPricingStepText(undefined)
-      setPricingIsLoading(false)
-    }
-  }
-
   async function createPricing(
     priceOptions: PriceOptions,
     ddo: DDO
@@ -251,13 +232,8 @@ function usePricing(): UsePricing {
 
     if (!ocean || !accountId || !dtSymbol) return
 
-    const {
-      type,
-      oceanAmount,
-      price,
-      weightOnDataToken,
-      swapFee
-    } = priceOptions
+    const { type, oceanAmount, price, weightOnDataToken, swapFee } =
+      priceOptions
 
     let { dtAmount } = priceOptions
     const isPool = type === 'dynamic'
@@ -273,9 +249,14 @@ function usePricing(): UsePricing {
     setStep(99, 'pool', ddo)
 
     try {
-      // if fixedPrice set dt to max amount
-      if (!isPool) dtAmount = 1000
-      await mint(`${dtAmount}`, ddo)
+      if (type === 'free') {
+        setStep(99, 'free', ddo)
+        await ocean.OceanDispenser.activate(dataToken, '1', '1', accountId)
+      } else {
+        // if fixedPrice set dt to max amount
+        if (!isPool) dtAmount = 1000
+        await mint(`${dtAmount}`, ddo)
+      }
 
       // dtAmount for fixed price is set to max
       const tx = isPool
@@ -289,9 +270,13 @@ function usePricing(): UsePricing {
               swapFee
             )
             .next((step: number) => setStep(step, 'pool', ddo))
-        : await ocean.fixedRateExchange
+        : type === 'fixed'
+        ? await ocean.fixedRateExchange
             .create(dataToken, `${price}`, accountId, `${dtAmount}`)
             .next((step: number) => setStep(step, 'exchange', ddo))
+        : await ocean.OceanDispenser.makeMinter(dataToken, accountId).next(
+            (step: number) => setStep(step, 'free', ddo)
+          )
       await sleep(20000)
       return tx
     } catch (error) {
@@ -309,7 +294,6 @@ function usePricing(): UsePricing {
     getDTName,
     createPricing,
     buyDT,
-    sellDT,
     mint,
     pricingStep,
     pricingStepText,

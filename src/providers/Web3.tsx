@@ -8,7 +8,7 @@ import React, {
   useCallback
 } from 'react'
 import Web3 from 'web3'
-import Web3Modal from 'web3modal'
+import Web3Modal, { getProviderInfo, IProviderInfo } from 'web3modal'
 import { infuraProjectId as infuraId, portisId } from '../../app.config'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import { Logger } from '@oceanprotocol/lib'
@@ -24,6 +24,7 @@ interface Web3ProviderValue {
   web3: Web3
   web3Provider: any
   web3Modal: Web3Modal
+  web3ProviderInfo: IProviderInfo
   accountId: string
   networkId: number
   networkDisplayName: string
@@ -106,17 +107,20 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   const [web3, setWeb3] = useState<Web3>()
   const [web3Provider, setWeb3Provider] = useState<any>()
   const [web3Modal, setWeb3Modal] = useState<Web3Modal>()
+  const [web3ProviderInfo, setWeb3ProviderInfo] = useState<IProviderInfo>()
   const [networkId, setNetworkId] = useState<number>()
   const [networkDisplayName, setNetworkDisplayName] = useState<string>()
   const [networkData, setNetworkData] = useState<EthereumListsChain>()
   const [block, setBlock] = useState<number>()
   const [isTestnet, setIsTestnet] = useState<boolean>()
   const [accountId, setAccountId] = useState<string>()
-  const [web3Loading, setWeb3Loading] = useState<boolean>()
+  const [web3Loading, setWeb3Loading] = useState<boolean>(true)
 
   const connect = useCallback(async () => {
-    if (!web3Modal) return
-
+    if (!web3Modal) {
+      setWeb3Loading(false)
+      return
+    }
     try {
       setWeb3Loading(true)
       Logger.log('[web3] Connecting Web3...')
@@ -146,7 +150,10 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   // Create initial Web3Modal instance
   // -----------------------------------
   useEffect(() => {
-    if (web3Modal) return
+    if (web3Modal) {
+      setWeb3Loading(false)
+      return
+    }
 
     async function init() {
       // note: needs artificial await here so the log message is reached and output
@@ -208,6 +215,18 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   }, [web3, networkId])
 
   // -----------------------------------
+  // Get and set web3 provider info
+  // -----------------------------------
+  // Workaround cause getInjectedProviderName() always returns `MetaMask`
+  // https://github.com/oceanprotocol/market/issues/332
+  useEffect(() => {
+    if (!web3Provider) return
+
+    const providerInfo = getProviderInfo(web3Provider)
+    setWeb3ProviderInfo(providerInfo)
+  }, [web3Provider])
+
+  // -----------------------------------
   // Logout helper
   // -----------------------------------
   async function logout() {
@@ -253,6 +272,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
         web3,
         web3Provider,
         web3Modal,
+        web3ProviderInfo,
         accountId,
         networkId,
         networkDisplayName,

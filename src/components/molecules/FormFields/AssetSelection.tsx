@@ -4,9 +4,9 @@ import slugify from 'slugify'
 import classNames from 'classnames/bind'
 import PriceUnit from '../../atoms/Price/PriceUnit'
 import { ReactComponent as External } from '../../../images/external.svg'
-import styles from './AssetSelection.module.css'
 import InputElement from '../../atoms/Input/InputElement'
 import Loader from '../../atoms/Loader'
+import styles from './AssetSelection.module.css'
 
 const cx = classNames.bind(styles)
 
@@ -107,7 +107,12 @@ export default function AssetSelection({
                   </Dotdotdot>
                 </label>
 
-                <PriceUnit price={asset.price} small className={styles.price} />
+                <PriceUnit
+                  price={asset.price}
+                  type={asset.price === '0' ? 'free' : undefined}
+                  small
+                  className={styles.price}
+                />
               </div>
             ))
         )}

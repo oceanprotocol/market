@@ -82,10 +82,8 @@ export default function FormStartCompute({
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
 
-  const {
-    isValid,
-    values
-  }: FormikContextType<{ algorithm: string }> = useFormikContext()
+  const { isValid, values }: FormikContextType<{ algorithm: string }> =
+    useFormikContext()
   const { price, ddo } = useAsset()
   const [totalPrice, setTotalPrice] = useState(price?.value)
 
@@ -108,17 +106,21 @@ export default function FormStartCompute({
   useEffect(() => {
     if (!price || !algorithmPrice) return
 
-    const priceDataset = hasPreviousOrder ? 0 : Number(price.value)
-    const priceAlgo = hasPreviousOrderSelectedComputeAsset
-      ? 0
-      : Number(algorithmPrice.value)
+    const priceDataset =
+      hasPreviousOrder || hasDatatoken ? 0 : Number(price.value)
+    const priceAlgo =
+      hasPreviousOrderSelectedComputeAsset || hasDatatokenSelectedComputeAsset
+        ? 0
+        : Number(algorithmPrice.value)
 
     setTotalPrice(priceDataset + priceAlgo)
   }, [
     price,
     algorithmPrice,
     hasPreviousOrder,
-    hasPreviousOrderSelectedComputeAsset
+    hasDatatoken,
+    hasPreviousOrderSelectedComputeAsset,
+    hasDatatokenSelectedComputeAsset
   ])
 
   return (
@@ -138,7 +140,9 @@ export default function FormStartCompute({
         hasPreviousOrderSelectedComputeAsset={
           hasPreviousOrderSelectedComputeAsset
         }
+        hasDatatoken={hasDatatoken}
         selectedComputeAssetTimeout={selectedComputeAssetTimeout}
+        hasDatatokenSelectedComputeAsset={hasDatatokenSelectedComputeAsset}
         algorithmPrice={algorithmPrice}
         totalPrice={totalPrice}
       />
@@ -162,6 +166,8 @@ export default function FormStartCompute({
         stepText={stepText}
         isLoading={isLoading}
         type="submit"
+        priceType={price?.type}
+        algorithmPriceType={algorithmPrice?.type}
       />
     </Form>
   )

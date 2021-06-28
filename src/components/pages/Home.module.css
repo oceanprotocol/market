@@ -16,9 +16,3 @@
 .section [class*='button'] {
   margin-top: var(--spacer);
 }
-
-.loaderWrap {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}

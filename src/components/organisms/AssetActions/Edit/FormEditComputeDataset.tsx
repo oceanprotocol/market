@@ -29,22 +29,19 @@ export default function FormEditComputeDataset({
   const { accountId } = useWeb3()
   const { ocean, config } = useOcean()
   const { ddo } = useAsset()
-  const {
-    isValid,
-    values
-  }: FormikContextType<ComputePrivacyForm> = useFormikContext()
+  const { isValid, values }: FormikContextType<ComputePrivacyForm> =
+    useFormikContext()
   const [allAlgorithms, setAllAlgorithms] = useState<AssetSelectionAsset[]>()
 
-  const { publisherTrustedAlgorithms } = ddo?.findServiceByType(
-    'compute'
-  ).attributes.main.privacy
+  const { publisherTrustedAlgorithms } =
+    ddo?.findServiceByType('compute').attributes.main.privacy
 
   async function getAlgorithmList(
     publisherTrustedAlgorithms: PublisherTrustedAlgorithm[]
   ): Promise<AssetSelectionAsset[]> {
     const source = axios.CancelToken.source()
     const query = {
-      page: 1,
+      offset: 500,
       query: {
         query_string: {
           query: `service.attributes.main.type:algorithm -isInPurgatory:true`

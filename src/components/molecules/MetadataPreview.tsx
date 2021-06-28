@@ -135,6 +135,11 @@ export function MetadataAlgorithmPreview({
       <h2 className={styles.previewTitle}>Preview</h2>
       <header>
         {values.name && <h3 className={styles.title}>{values.name}</h3>}
+        {values.dataTokenOptions?.name && (
+          <p
+            className={styles.datatoken}
+          >{`${values.dataTokenOptions.name} — ${values.dataTokenOptions.symbol}`}</p>
+        )}
         {values.description && <Description description={values.description} />}
 
         <div className={styles.asset}>
