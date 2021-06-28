@@ -126,12 +126,9 @@ export async function transformDDOToAssetSelection(
   const didList: string[] = []
   const priceList: PriceList = await getAssetsPriceList(ddoList)
   const symbolList: any = {}
-  const isOrderDisabledList: any = {}
   for (const ddo of ddoList) {
     didList.push(ddo.id)
     symbolList[ddo.id] = ddo.dataTokenInfo.symbol
-    isOrderDisabledList[ddo.id] =
-      ddo.findServiceByType('metadata').attributes.status?.isOrderDisabled
   }
   const ddoNames = await getAssetsNames(didList, metadataCacheUri, source.token)
   const algorithmList: AssetSelectionAsset[] = []
@@ -149,16 +146,14 @@ export async function transformDDOToAssetSelection(
             name: ddoNames[did],
             price: priceList[did],
             checked: selected,
-            symbol: symbolList[did],
-            isOrderDisabled: isOrderDisabledList[did]
+            symbol: symbolList[did]
           })
         : algorithmList.push({
             did: did,
             name: ddoNames[did],
             price: priceList[did],
             checked: selected,
-            symbol: symbolList[did],
-            isOrderDisabled: isOrderDisabledList[did]
+            symbol: symbolList[did]
           })
     }
   })

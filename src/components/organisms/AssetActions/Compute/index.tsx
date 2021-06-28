@@ -39,7 +39,6 @@ import { secondsToString } from '../../../../utils/metadata'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import AlgorithmDatasetsListForCompute from '../../AssetContent/AlgorithmDatasetsListForCompute'
 import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
-import AssetStatus from '../../../molecules/AssetStatus'
 
 const SuccessAction = () => (
   <Button style="text" to="/history?defaultTab=ComputeJobs" size="small">
@@ -51,12 +50,16 @@ export default function Compute({
   isBalanceSufficient,
   dtBalance,
   file,
-  fileIsLoading
+  fileIsLoading,
+  isConsumable,
+  consumableFeedback
 }: {
   isBalanceSufficient: boolean
   dtBalance: string
   file: FileMetadata
   fileIsLoading?: boolean
+  isConsumable?: boolean
+  consumableFeedback?: string
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
@@ -83,9 +86,12 @@ export default function Compute({
   const [algorithmTimeout, setAlgorithmTimeout] = useState<string>()
 
   const isComputeButtonDisabled =
-    isJobStarting === true || file === null || !ocean || !isBalanceSufficient
+    isJobStarting === true ||
+    file === null ||
+    !ocean ||
+    !isBalanceSufficient ||
+    !isConsumable
   const hasDatatoken = Number(dtBalance) >= 1
-  const [isOrderDisabled, setIsOrderDisabled] = useState<boolean>()
 
   async function checkPreviousOrders(ddo: DDO) {
     const { timeout } = (
@@ -227,15 +233,6 @@ export default function Compute({
     if (!newError) return
     toast.error(newError)
   }, [error, pricingError])
-
-  useEffect(() => {
-    if (!ocean) return
-    async function checkConsumable() {
-      const consumable = await ocean.assets.isConsumable(ddo, accountId)
-      setIsOrderDisabled(consumable.status === 1)
-    }
-    checkConsumable()
-  }, [ddo, accountId])
 
   async function startJob(algorithmId: string) {
     try {
@@ -387,11 +384,7 @@ export default function Compute({
     <>
       <div className={styles.info}>
         <File file={file} isLoading={fileIsLoading} small />
-        <div>
-          <Price price={price} conversion />
-          <br />
-          <AssetStatus isOrderDisabled={isOrderDisabled} />
-        </div>
+        <Price price={price} conversion />
       </div>
 
       {type === 'algorithm' ? (
@@ -430,6 +423,8 @@ export default function Compute({
             selectedComputeAssetTimeout={algorithmTimeout}
             stepText={pricingStepText || 'Starting Compute Job...'}
             algorithmPrice={algorithmPrice}
+            isConsumable={isConsumable}
+            consumableFeedback={consumableFeedback}
           />
         </Formik>
       )}

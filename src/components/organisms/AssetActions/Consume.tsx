@@ -17,8 +17,6 @@ import { usePricing } from '../../../hooks/usePricing'
 import { useConsume } from '../../../hooks/useConsume'
 import ButtonBuy from '../../atoms/ButtonBuy'
 import AlgorithmDatasetsListForCompute from '../AssetContent/AlgorithmDatasetsListForCompute'
-import AssetStatus from '../../molecules/AssetStatus'
-import { Consumable } from '@oceanprotocol/lib/dist/node/ddo/interfaces/Consumable'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {
@@ -39,13 +37,17 @@ export default function Consume({
   file,
   isBalanceSufficient,
   dtBalance,
-  fileIsLoading
+  fileIsLoading,
+  isConsumable,
+  consumableFeedback
 }: {
   ddo: DDO
   file: FileMetadata
   isBalanceSufficient: boolean
   dtBalance: string
   fileIsLoading?: boolean
+  isConsumable?: boolean
+  consumableFeedback?: string
 }): ReactElement {
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
@@ -58,7 +60,7 @@ export default function Consume({
   const { consumeStepText, consume, consumeError, isLoading } = useConsume()
   const [isDisabled, setIsDisabled] = useState(true)
   const [hasDatatoken, setHasDatatoken] = useState(false)
-  const [isConsumable, setIsConsumable] = useState(true)
+  const [isConsumablePrice, setIsConsumablePrice] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
   const { data } = useQuery<OrdersData>(previousOrderQuery, {
     variables: {
@@ -67,7 +69,6 @@ export default function Consume({
     },
     pollInterval: 5000
   })
-  const [isOrderDisabled, setIsOrderDisabled] = useState<boolean>()
 
   useEffect(() => {
     if (!data || !assetTimeout || data.tokenOrders.length === 0) return
@@ -97,7 +98,7 @@ export default function Consume({
   useEffect(() => {
     if (!price) return
 
-    setIsConsumable(
+    setIsConsumablePrice(
       price.isConsumable !== undefined ? price.isConsumable === 'true' : true
     )
   }, [price])
@@ -107,23 +108,15 @@ export default function Consume({
   }, [dtBalance])
 
   useEffect(() => {
-    if (!ocean) return
-    async function checkConsumable() {
-      const consumable = await ocean.assets.isConsumable(ddo, accountId)
-      setIsOrderDisabled(consumable.status === 1)
-    }
-    checkConsumable()
-  }, [ddo, accountId])
-
-  useEffect(() => {
     setIsDisabled(
-      (!ocean ||
-        !isBalanceSufficient ||
-        typeof consumeStepText !== 'undefined' ||
-        pricingIsLoading ||
-        !isConsumable) &&
-        !hasPreviousOrder &&
-        !hasDatatoken
+      !isConsumable ||
+        ((!ocean ||
+          !isBalanceSufficient ||
+          typeof consumeStepText !== 'undefined' ||
+          pricingIsLoading ||
+          !isConsumablePrice) &&
+          !hasPreviousOrder &&
+          !hasDatatoken)
     )
   }, [
     ocean,
@@ -131,8 +124,9 @@ export default function Consume({
     isBalanceSufficient,
     consumeStepText,
     pricingIsLoading,
-    isConsumable,
-    hasDatatoken
+    isConsumablePrice,
+    hasDatatoken,
+    isConsumable
   ])
 
   async function handleConsume() {
@@ -173,6 +167,8 @@ export default function Consume({
       stepText={consumeStepText || pricingStepText}
       isLoading={pricingIsLoading || isLoading}
       priceType={price?.type}
+      isConsumable={isConsumable}
+      consumableFeedback={consumableFeedback}
     />
   )
 
@@ -181,7 +177,6 @@ export default function Consume({
       <div className={styles.info}>
         <div className={styles.filewrapper}>
           <File file={file} isLoading={fileIsLoading} />
-          <AssetStatus isOrderDisabled={isOrderDisabled} />
         </div>
         <div className={styles.pricewrapper}>
           <Price price={price} conversion />

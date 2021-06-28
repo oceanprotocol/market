@@ -23,6 +23,9 @@ interface ButtonBuyProps {
   type?: 'submit'
   priceType?: string
   algorithmPriceType?: string
+  isConsumable?: boolean
+  consumableFeedback?: string
+  algorithmConsumableStatus?: number
 }
 
 function getConsumeHelpText(
@@ -30,9 +33,13 @@ function getConsumeHelpText(
   dtSymbol: string,
   hasDatatoken: boolean,
   hasPreviousOrder: boolean,
-  assetType: string
+  assetType: string,
+  isConsumable: boolean,
+  consumableFeedback: string
 ) {
-  const text = hasPreviousOrder
+  const text = !isConsumable
+    ? consumableFeedback
+    : hasPreviousOrder
     ? `You bought this ${assetType} already allowing you to use it without paying again.`
     : hasDatatoken
     ? `You own ${dtBalance} ${dtSymbol} allowing you to use this data set by spending 1 ${dtSymbol}, but without paying OCEAN again.`
@@ -51,18 +58,30 @@ function getComputeAssetHelpText(
   hasDatatokenSelectedComputeAsset?: boolean,
   dtSymbolSelectedComputeAsset?: string,
   dtBalanceSelectedComputeAsset?: string,
-  selectedComputeAssetType?: string
+  selectedComputeAssetType?: string,
+  isConsumable?: boolean,
+  consumableFeedback?: string,
+  algorithmConsumableStatus?: number
 ) {
   const computeAssetHelpText = getConsumeHelpText(
     dtBalance,
     dtSymbol,
     hasDatatoken,
     hasPreviousOrder,
-    assetType
+    assetType,
+    isConsumable,
+    consumableFeedback
   )
   const text =
-    !dtSymbolSelectedComputeAsset && !dtBalanceSelectedComputeAsset
+    (!dtSymbolSelectedComputeAsset && !dtBalanceSelectedComputeAsset) ||
+    !isConsumable
       ? ''
+      : algorithmConsumableStatus === 1
+      ? 'The selected algorithm has been temporarily disabled by the publisher, please try again later.'
+      : algorithmConsumableStatus === 2
+      ? 'Access denied, your wallet address is not found on the selected algorithm allow list.'
+      : algorithmConsumableStatus === 3
+      ? 'Access denied, your wallet address is found on the selected algorithm deny list.'
       : hasPreviousOrderSelectedComputeAsset
       ? `You already bought the selected ${selectedComputeAssetType}, allowing you to use it without paying again.`
       : hasDatatokenSelectedComputeAsset
@@ -91,7 +110,10 @@ export default function ButtonBuy({
   isLoading,
   type,
   priceType,
-  algorithmPriceType
+  algorithmPriceType,
+  isConsumable,
+  consumableFeedback,
+  algorithmConsumableStatus
 }: ButtonBuyProps): ReactElement {
   const buttonText =
     action === 'download'
@@ -127,7 +149,9 @@ export default function ButtonBuy({
                   dtSymbol,
                   hasDatatoken,
                   hasPreviousOrder,
-                  assetType
+                  assetType,
+                  isConsumable,
+                  consumableFeedback
                 )
               : getComputeAssetHelpText(
                   hasPreviousOrder,
@@ -139,7 +163,10 @@ export default function ButtonBuy({
                   hasDatatokenSelectedComputeAsset,
                   dtSymbolSelectedComputeAsset,
                   dtBalanceSelectedComputeAsset,
-                  selectedComputeAssetType
+                  selectedComputeAssetType,
+                  isConsumable,
+                  consumableFeedback,
+                  algorithmConsumableStatus
                 )}
           </div>
         </>
