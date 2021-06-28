@@ -29,10 +29,10 @@ export interface InputProps {
   ): void
   onKeyPress?(
     e:
-      | FormEvent<HTMLInputElement>
-      | ChangeEvent<HTMLInputElement>
-      | ChangeEvent<HTMLSelectElement>
-      | ChangeEvent<HTMLTextAreaElement>
+      | React.KeyboardEvent<HTMLInputElement>
+      | React.KeyboardEvent<HTMLInputElement>
+      | React.KeyboardEvent<HTMLSelectElement>
+      | React.KeyboardEvent<HTMLTextAreaElement>
   ): void
   rows?: number
   multiple?: boolean
