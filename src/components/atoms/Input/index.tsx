@@ -27,6 +27,13 @@ export interface InputProps {
       | ChangeEvent<HTMLSelectElement>
       | ChangeEvent<HTMLTextAreaElement>
   ): void
+  onKeyPress?(
+    e:
+      | FormEvent<HTMLInputElement>
+      | ChangeEvent<HTMLInputElement>
+      | ChangeEvent<HTMLSelectElement>
+      | ChangeEvent<HTMLTextAreaElement>
+  ): void
   rows?: number
   multiple?: boolean
   pattern?: string

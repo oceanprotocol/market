@@ -64,6 +64,11 @@ export default function SearchBar({
         size="small"
         divClassName={styles.searchInput}
         className={styles.input}
+        onKeyPress={async (e: React.KeyboardEvent<HTMLInputElement>) => {
+          if (e.key === 'Enter') {
+            await startSearch(e)
+          }
+        }}
       />
       <Button
         onClick={async (e: FormEvent<HTMLButtonElement>) =>
