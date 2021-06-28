@@ -31,7 +31,10 @@ export default function AssetActions(): ReactElement {
   useEffect(() => {
     if (!ddo || !accountId) return
     async function checkIsConsumable() {
-      const consumable = await ocean.assets.isConsumable(ddo, accountId)
+      const consumable = await ocean.assets.isConsumable(
+        ddo,
+        accountId.toLowerCase()
+      )
       if (consumable) {
         setIsConsumable(consumable.result)
         setConsumableFeedback(consumable.message)

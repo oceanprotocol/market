@@ -114,7 +114,7 @@ export default function FormStartCompute({
     async function checkIsConsumable() {
       const consumable = await ocean.assets.isConsumable(
         algorithmDDO,
-        accountId
+        accountId.toLowerCase()
       )
       if (consumable) setAlgorithmConsumableStatus(consumable.status)
     }
