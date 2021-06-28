@@ -51,10 +51,10 @@ export default function Menu(): ReactElement {
           </li>
         ))}
       </ul>
+
       <div className={styles.search}>
         <SearchBar />
       </div>
-
       <div className={styles.actions}>
         <Networks />
         <Wallet />

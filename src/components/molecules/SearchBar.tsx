@@ -17,12 +17,10 @@ import { ReactComponent as SearchIcon } from '../../images/search.svg'
 export default function SearchBar({
   placeholder,
   initialValue,
-  filters,
   size
 }: {
   placeholder?: string
   initialValue?: string
-  filters?: boolean
   size?: 'small' | 'large'
 }): ReactElement {
   let [value, setValue] = useState(initialValue || '')
@@ -55,30 +53,28 @@ export default function SearchBar({
   }
 
   return (
-    <form className={styles.form}>
-      <InputGroup>
-        <Input
-          type="search"
-          name="search"
-          placeholder={placeholder || 'What are you looking for?'}
-          value={value}
-          onChange={handleChange}
-          required
-          size={size}
-        />
-        <Button
-          onClick={async (e: FormEvent<HTMLButtonElement>) =>
-            await startSearch(e)
-          }
-          style="text"
-          size="small"
-          className={styles.button}
-        >
-          <SearchIcon className={styles.searchIcon} />
-        </Button>
-      </InputGroup>
-
-      {filters && <fieldset className={styles.filters}>Type, Price</fieldset>}
+    <form className={styles.search}>
+      <Input
+        type="search"
+        name="search"
+        placeholder={placeholder || 'What are you looking for?'}
+        value={value}
+        onChange={handleChange}
+        required
+        size="small"
+        divClassName={styles.searchInput}
+        className={styles.input}
+      />
+      <Button
+        onClick={async (e: FormEvent<HTMLButtonElement>) =>
+          await startSearch(e)
+        }
+        style="text"
+        size="small"
+        className={styles.button}
+      >
+        <SearchIcon className={styles.searchIcon} />
+      </Button>
     </form>
   )
 }
