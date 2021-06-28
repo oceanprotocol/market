@@ -54,13 +54,13 @@ function getComputeAssetHelpText(
   dtSymbol: string,
   dtBalance: string,
   assetType: string,
+  isConsumable: boolean,
+  consumableFeedback: string,
   hasPreviousOrderSelectedComputeAsset?: boolean,
   hasDatatokenSelectedComputeAsset?: boolean,
   dtSymbolSelectedComputeAsset?: string,
   dtBalanceSelectedComputeAsset?: string,
   selectedComputeAssetType?: string,
-  isConsumable?: boolean,
-  consumableFeedback?: string,
   algorithmConsumableStatus?: number
 ) {
   const computeAssetHelpText = getConsumeHelpText(

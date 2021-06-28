@@ -26,7 +26,7 @@ export default function AssetActions(): ReactElement {
   const isCompute = Boolean(ddo?.findServiceByType('compute'))
 
   const [isConsumable, setIsConsumable] = useState<boolean>(true)
-  const [consumableFeedback, setConsumableFeedback] = useState<string>()
+  const [consumableFeedback, setConsumableFeedback] = useState<string>('')
 
   useEffect(() => {
     if (!ddo || !accountId) return
