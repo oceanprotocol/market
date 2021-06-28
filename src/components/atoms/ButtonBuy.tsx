@@ -23,8 +23,8 @@ interface ButtonBuyProps {
   type?: 'submit'
   priceType?: string
   algorithmPriceType?: string
-  isConsumable?: boolean
-  consumableFeedback?: string
+  isConsumable: boolean
+  consumableFeedback: string
   algorithmConsumableStatus?: number
 }
 

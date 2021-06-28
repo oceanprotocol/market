@@ -58,8 +58,8 @@ export default function Compute({
   dtBalance: string
   file: FileMetadata
   fileIsLoading?: boolean
-  isConsumable?: boolean
-  consumableFeedback?: string
+  isConsumable: boolean
+  consumableFeedback: string
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
