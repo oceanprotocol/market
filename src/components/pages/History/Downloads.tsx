@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import Table from '../../atoms/Table'
-import { gql, useQuery } from 'urql'
+import { gql, useQuery, OperationContext, OperationResult } from 'urql'
 import Time from '../../atoms/Time'
 import web3 from 'web3'
 import AssetTitle from '../../molecules/AssetListTitle'
@@ -10,6 +10,9 @@ import { retrieveDDO } from '../../../utils/aquarius'
 import { Logger } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../providers/UserPreferences'
+import { getOceanConfig } from '../../../utils/ocean'
+import { getUrqlClientInstance } from '../../../providers/UrqlProvider'
+import { useOcean } from '../../../providers/Ocean'
 
 const getTokenOrders = gql`
   query OrdersData($user: String!) {
@@ -55,19 +58,34 @@ const columns = [
   }
 ]
 
+function getSubgrahUri(chainId: number): string {
+  const config = getOceanConfig(chainId)
+  console.log('CONFIG SG: ', config)
+  return config.subgraphUri
+}
+
 export default function ComputeDownloads(): ReactElement {
   const { accountId } = useWeb3()
   // const { config } = useOcean()
+  const { appConfig } = useSiteMetadata()
   const [isLoading, setIsLoading] = useState(false)
   const [orders, setOrders] = useState<DownloadedAssets[]>()
   const { chainIds } = useUserPreferences()
+  const queryContext: OperationContext = {
+    url: `${getSubgrahUri(1)}/subgraphs/name/oceanprotocol/ocean-subgraph`,
+    requestPolicy: 'network-only'
+  }
+
+  const client = getUrqlClientInstance()
 
   const [result] = useQuery({
     query: getTokenOrders,
-    variables: { user: accountId?.toLowerCase() }
+    variables: { user: accountId?.toLowerCase() },
+    context: queryContext
   })
+
+  console.log('RESULT: ', result)
   const { data } = result
-  const { appConfig } = useSiteMetadata()
 
   useEffect(() => {
     if (!appConfig.metadataCacheUri || !data) return
@@ -104,7 +122,7 @@ export default function ComputeDownloads(): ReactElement {
     }
 
     filterAssets()
-  }, [appConfig.metadataCacheUri, data, chainIds])
+  }, [appConfig.metadataCacheUri, result, chainIds])
 
   return (
     <Table

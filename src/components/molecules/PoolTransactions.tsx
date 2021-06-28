@@ -8,7 +8,7 @@ import styles from './PoolTransactions.module.css'
 import { useUserPreferences } from '../../providers/UserPreferences'
 import { Ocean } from '@oceanprotocol/lib'
 import { formatPrice } from '../atoms/Price/PriceUnit'
-import { gql, useQuery } from '@apollo/client'
+import { gql, useQuery } from 'urql'
 import {
   TransactionHistory,
   TransactionHistory_poolTransactions as TransactionHistoryPoolTransactions
@@ -198,27 +198,26 @@ export default function PoolTransactions({
   const { accountId } = useWeb3()
   const [logs, setLogs] = useState<TransactionHistoryPoolTransactions[]>()
 
-  const { data, loading } = useQuery<TransactionHistory>(
-    poolAddress ? txHistoryQueryByPool : txHistoryQuery,
-    {
-      variables: {
-        user: accountId?.toLowerCase(),
-        pool: poolAddress?.toLowerCase()
-      },
-      pollInterval: 20000
+  const [result] = useQuery<TransactionHistory>({
+    query: poolAddress ? txHistoryQueryByPool : txHistoryQuery,
+    variables: {
+      user: accountId?.toLowerCase(),
+      pool: poolAddress?.toLowerCase()
     }
-  )
+    // pollInterval: 20000
+  })
+  const { data, fetching } = result
 
   useEffect(() => {
     if (!data) return
     setLogs(data.poolTransactions)
-  }, [data, loading])
+  }, [data, fetching])
 
   return (
     <Table
       columns={minimal ? columnsMinimal : columns}
       data={logs}
-      isLoading={loading}
+      isLoading={fetching}
       noTableHead={minimal}
       dense={minimal}
       pagination={minimal ? logs?.length >= 4 : logs?.length >= 9}
