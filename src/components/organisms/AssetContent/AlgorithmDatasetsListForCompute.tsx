@@ -5,11 +5,14 @@ import { AssetSelectionAsset } from '../../molecules/FormFields/AssetSelection'
 import AssetComputeList from '../../molecules/AssetComputeList'
 import { useOcean } from '../../../providers/Ocean'
 import { useAsset } from '../../../providers/Asset'
+import { DDO } from '@oceanprotocol/lib'
 
 export default function AlgorithmDatasetsListForCompute({
-  algorithmDid
+  algorithmDid,
+  dataset
 }: {
   algorithmDid: string
+  dataset: DDO
 }): ReactElement {
   const { config } = useOcean()
   const { type } = useAsset()
@@ -18,8 +21,11 @@ export default function AlgorithmDatasetsListForCompute({
 
   useEffect(() => {
     async function getDatasetsAllowedForCompute() {
+      const datasetComputeService = dataset.findServiceByType('compute')
+      datasetComputeService
       const datasets = await getAlgorithmDatasetsForCompute(
         algorithmDid,
+        datasetComputeService?.serviceEndpoint,
         config.metadataCacheUri
       )
       setDatasetsForCompute(datasets)

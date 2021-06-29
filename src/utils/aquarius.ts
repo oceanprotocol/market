@@ -171,6 +171,7 @@ export async function transformDDOToAssetSelection(
 
 export async function getAlgorithmDatasetsForCompute(
   algorithmId: string,
+  datasetProviderUri: string,
   metadataCacheUri: string
 ): Promise<AssetSelectionAsset[]> {
   const source = axios.CancelToken.source()
@@ -192,6 +193,7 @@ export async function getAlgorithmDatasetsForCompute(
     return []
   }
   const datasets = await transformDDOToAssetSelection(
+    datasetProviderUri,
     computeDatasetsForCurrentAlgorithm,
     metadataCacheUri,
     []
