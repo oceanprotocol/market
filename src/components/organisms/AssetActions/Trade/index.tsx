@@ -15,8 +15,8 @@ export default function Trade(): ReactElement {
   const { ocean, balance } = useOcean()
   const [tokenBalance, setTokenBalance] = useState<PoolBalance>()
   const { price, ddo } = useAsset()
-  const [maxDt, setMaxDt] = useState(0)
-  const [maxOcean, setMaxOcean] = useState(0)
+  const [maxDt, setMaxDt] = useState('0')
+  const [maxOcean, setMaxOcean] = useState('0')
 
   // Get datatoken balance, and combine with OCEAN balance from hooks into one object
   useEffect(() => {
@@ -40,12 +40,20 @@ export default function Trade(): ReactElement {
       const maxTokensInPool = await ocean.pool.getDTMaxBuyQuantity(
         price.address
       )
-      setMaxDt(Number(maxTokensInPool))
+      setMaxDt(
+        isValidNumber(maxTokensInPool)
+          ? new Decimal(maxTokensInPool).toString()
+          : '0'
+      )
 
       const maxOceanInPool = await ocean.pool.getOceanMaxBuyQuantity(
         price.address
       )
-      setMaxOcean(Number(maxOceanInPool))
+      setMaxOcean(
+        isValidNumber(maxOceanInPool)
+          ? new Decimal(maxOceanInPool).toString()
+          : '0'
+      )
     }
     getMaximum()
   }, [ocean, balance.ocean, price])
