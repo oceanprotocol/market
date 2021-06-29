@@ -22,7 +22,6 @@ export default function AlgorithmDatasetsListForCompute({
   useEffect(() => {
     async function getDatasetsAllowedForCompute() {
       const datasetComputeService = dataset.findServiceByType('compute')
-      datasetComputeService
       const datasets = await getAlgorithmDatasetsForCompute(
         algorithmDid,
         datasetComputeService?.serviceEndpoint,
