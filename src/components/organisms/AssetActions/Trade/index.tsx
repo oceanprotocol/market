@@ -5,6 +5,11 @@ import { useAsset } from '../../../../providers/Asset'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
 
+import { isValidNumber } from './../../../../utils/numberValidations'
+import Decimal from 'decimal.js'
+
+Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
+
 export default function Trade(): ReactElement {
   const { accountId, balance } = useWeb3()
   const { ocean } = useOcean()
@@ -20,8 +25,8 @@ export default function Trade(): ReactElement {
     async function getTokenBalance() {
       const dtBalance = await ocean.datatokens.balance(ddo.dataToken, accountId)
       setTokenBalance({
-        ocean: Number(balance.ocean),
-        datatoken: Number(dtBalance)
+        ocean: new Decimal(balance.ocean).toString(),
+        datatoken: new Decimal(dtBalance).toString()
       })
     }
     getTokenBalance()
