@@ -13,6 +13,11 @@ import web3 from 'web3'
 import Token from '../../organisms/AssetActions/Pool/Token'
 import { useWeb3 } from '../../../providers/Web3'
 
+import { isValidNumber } from './../../../utils/numberValidations'
+import Decimal from 'decimal.js'
+
+Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
+
 const poolSharesQuery = gql`
   query PoolShares($user: String) {
     poolShares(where: { userAddress: $user, balance_gt: 0.001 }, first: 1000) {
@@ -80,11 +85,16 @@ function Liquidity({ row, type }: { row: Asset; type: string }) {
     ).toString()
   }
   if (type === 'pool') {
-    price = `${
-      Number(row.poolShare.poolId.oceanReserve) +
-      Number(row.poolShare.poolId.datatokenReserve) *
-        row.poolShare.poolId.consumePrice
-    }`
+    price =
+      isValidNumber(row.poolShare.poolId.oceanReserve) &&
+      isValidNumber(row.poolShare.poolId.datatokenReserve) &&
+      isValidNumber(row.poolShare.poolId.consumePrice)
+        ? new Decimal(row.poolShare.poolId.datatokenReserve)
+            .mul(new Decimal(row.poolShare.poolId.consumePrice))
+            .plus(row.poolShare.poolId.oceanReserve)
+            .toString()
+        : '0'
+
     oceanTokenBalance = row.poolShare.poolId.oceanReserve.toString()
     dataTokenBalance = row.poolShare.poolId.datatokenReserve.toString()
   }

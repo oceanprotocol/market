@@ -11,6 +11,11 @@ import { DDO } from '@oceanprotocol/lib'
 import FormHelp from '../../../../atoms/Input/Help'
 import { useSiteMetadata } from '../../../../../hooks/useSiteMetadata'
 
+import { isValidNumber } from './../../../../../utils/numberValidations'
+import Decimal from 'decimal.js'
+
+Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
+
 export default function FormPricing({
   ddo,
   setShowPricing,
@@ -39,8 +44,15 @@ export default function FormPricing({
   useEffect(() => {
     if (type === 'fixed') return
     const dtAmount =
-      (Number(oceanAmount) / Number(weightOnOcean) / price) *
-      Number(weightOnDataToken)
+      isValidNumber(oceanAmount) &&
+      isValidNumber(weightOnOcean) &&
+      isValidNumber(price) &&
+      isValidNumber(weightOnDataToken)
+        ? new Decimal(oceanAmount)
+            .dividedBy(new Decimal(weightOnOcean))
+            .dividedBy(new Decimal(price))
+            .mul(new Decimal(weightOnDataToken))
+        : 0
 
     setFieldValue('dtAmount', dtAmount)
   }, [price, oceanAmount, weightOnOcean, weightOnDataToken, type])
