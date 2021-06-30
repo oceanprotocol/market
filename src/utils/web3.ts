@@ -32,6 +32,8 @@ export function getNetworkDisplayName(
 ): string {
   const displayName = data
     ? `${data.chain} ${data.network === 'mainnet' ? '' : data.network}`
+    : networkId === 2021000
+    ? 'GAIA-X'
     : networkId === 8996
     ? 'Development'
     : 'Unknown'
