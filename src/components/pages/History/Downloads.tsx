@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import Table from '../../atoms/Table'
-import { gql, useQuery, OperationContext, OperationResult } from 'urql'
+import { gql, useQuery, OperationContext } from 'urql'
 import Time from '../../atoms/Time'
 import web3 from 'web3'
 import AssetTitle from '../../molecules/AssetListTitle'
@@ -11,8 +11,6 @@ import { Logger } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import { getOceanConfig } from '../../../utils/ocean'
-import { getUrqlClientInstance } from '../../../providers/UrqlProvider'
-import { useOcean } from '../../../providers/Ocean'
 
 const getTokenOrders = gql`
   query OrdersData($user: String!) {
@@ -71,12 +69,13 @@ export default function ComputeDownloads(): ReactElement {
   const [isLoading, setIsLoading] = useState(false)
   const [orders, setOrders] = useState<DownloadedAssets[]>()
   const { chainIds } = useUserPreferences()
+
   const queryContext: OperationContext = {
-    url: `${getSubgrahUri(1)}/subgraphs/name/oceanprotocol/ocean-subgraph`,
+    url: `${getSubgrahUri(
+      chainIds[0]
+    )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
     requestPolicy: 'network-only'
   }
-
-  const client = getUrqlClientInstance()
 
   const [result] = useQuery({
     query: getTokenOrders,
@@ -84,8 +83,8 @@ export default function ComputeDownloads(): ReactElement {
     context: queryContext
   })
 
-  console.log('RESULT: ', result)
-  const { data } = result
+  const data = result?.data
+  console.log('DATA: ', data?.tokenOrders)
 
   useEffect(() => {
     if (!appConfig.metadataCacheUri || !data) return
@@ -122,7 +121,7 @@ export default function ComputeDownloads(): ReactElement {
     }
 
     filterAssets()
-  }, [appConfig.metadataCacheUri, result, chainIds])
+  }, [appConfig.metadataCacheUri, chainIds, data])
 
   return (
     <Table

@@ -1,6 +1,4 @@
-import { gql, ApolloQueryResult, TypedDocumentNode } from '@apollo/client'
 import { DDO, BestPrice } from '@oceanprotocol/lib'
-import { getApolloClientInstance } from '../providers/ApolloClientProvider'
 import {
   AssetsPoolPrice,
   AssetsPoolPrice_pools as AssetsPoolPricePools
@@ -11,7 +9,7 @@ import {
 } from '../@types/apollo/AssetsFrePrice'
 import { AssetPreviousOrder } from '../@types/apollo/AssetPreviousOrder'
 import web3 from 'web3'
-import { OperationContext, OperationResult } from 'urql'
+import { gql, OperationResult, TypedDocumentNode } from 'urql'
 import { getOceanConfig } from './ocean'
 import { getUrqlClientInstance } from '../providers/UrqlProvider'
 

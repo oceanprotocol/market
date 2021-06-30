@@ -8,7 +8,7 @@ import Dotdotdot from 'react-dotdotdot'
 import Table from '../../../atoms/Table'
 import Button from '../../../atoms/Button'
 import { useOcean } from '../../../../providers/Ocean'
-import { gql, useQuery } from 'urql'
+import { gql, OperationContext, useQuery } from 'urql'
 import { useWeb3 } from '../../../../providers/Web3'
 import { queryMetadata } from '../../../../utils/aquarius'
 import axios, { CancelToken } from 'axios'
@@ -19,6 +19,7 @@ import { ReactComponent as Refresh } from '../../../../images/refresh.svg'
 import styles from './index.module.css'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
+import { getOceanConfig } from '../../../../utils/ocean'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -79,6 +80,12 @@ const columns = [
   }
 ]
 
+function getSubgrahUri(chainId: number): string {
+  const config = getOceanConfig(chainId)
+  console.log('CONFIG SG: ', config)
+  return config.subgraphUri
+}
+
 async function getAssetMetadata(
   queryDtList: string,
   metadataCacheUri: string,
@@ -109,18 +116,25 @@ export default function ComputeJobs(): ReactElement {
   const { chainIds } = useUserPreferences()
   const [isLoading, setIsLoading] = useState(true)
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
-  // TODO: query multiple sg according to chainIds
+
+  const queryContext: OperationContext = {
+    url: `${getSubgrahUri(1)}/subgraphs/name/oceanprotocol/ocean-subgraph`,
+    requestPolicy: 'network-only'
+  }
   const [result] = useQuery<ComputeOrders>({
     query: getComputeOrders,
     variables: {
       user: accountId?.toLowerCase()
-    }
+    },
+    context: queryContext
   })
 
   const { data } = result
 
   async function getJobs() {
-    if (!ocean || !account) return
+    if (!ocean || !account || data === undefined) {
+      return
+    }
 
     setIsLoading(true)
 

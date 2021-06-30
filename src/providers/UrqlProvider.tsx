@@ -38,7 +38,7 @@ export default function UrqlClientProvider({
     const newClient = createUrqlClient(oceanConfig.subgraphUri)
     urqlClient = newClient
     setClient(newClient)
-    Logger.log(`[apollo] Client connected to ${oceanConfig.subgraphUri}`)
+    Logger.log(`[urql] Client connected to ${oceanConfig.subgraphUri}`)
   }, [networkId])
   return client ? <Provider value={client}>{children}</Provider> : <></>
 }

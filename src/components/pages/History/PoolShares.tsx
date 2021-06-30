@@ -3,7 +3,7 @@ import Table from '../../atoms/Table'
 import Conversion from '../../atoms/Price/Conversion'
 import styles from './PoolShares.module.css'
 import AssetTitle from '../../molecules/AssetListTitle'
-import { gql, useQuery } from 'urql'
+import { gql, OperationContext, useQuery } from 'urql'
 import {
   PoolShares as PoolSharesList,
   PoolShares_poolShares as PoolShare,
@@ -13,6 +13,7 @@ import web3 from 'web3'
 import Token from '../../organisms/AssetActions/Pool/Token'
 import { useWeb3 } from '../../../providers/Web3'
 import { useUserPreferences } from '../../../providers/UserPreferences'
+import { getOceanConfig } from '../../../utils/ocean'
 
 const poolSharesQuery = gql`
   query PoolShares($user: String) {
@@ -106,6 +107,11 @@ function Liquidity({ row, type }: { row: Asset; type: string }) {
   )
 }
 
+function getSubgrahUri(chainId: number): string {
+  const config = getOceanConfig(chainId)
+  return config.subgraphUri
+}
+
 const columns = [
   {
     name: 'Data Set',
@@ -141,14 +147,18 @@ const columns = [
 
 export default function PoolShares(): ReactElement {
   const { accountId } = useWeb3()
-  const { chainIds } = useUserPreferences()
   const [assets, setAssets] = useState<Asset[]>()
-  // TODO: query multiple sg according to chainIds
+
+  const queryContext: OperationContext = {
+    url: `${getSubgrahUri(1)}/subgraphs/name/oceanprotocol/ocean-subgraph`,
+    requestPolicy: 'network-only'
+  }
   const [result] = useQuery<PoolSharesList>({
     query: poolSharesQuery,
     variables: {
       user: accountId?.toLowerCase()
-    }
+    },
+    context: queryContext
     // pollInterval: 20000
   })
 

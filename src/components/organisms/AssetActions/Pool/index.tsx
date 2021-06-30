@@ -15,7 +15,7 @@ import { PoolBalance } from '../../../../@types/TokenBalance'
 import Transactions from './Transactions'
 import Graph from './Graph'
 import { useAsset } from '../../../../providers/Asset'
-import { gql, useQuery } from '@apollo/client'
+import { gql, useQuery } from 'urql'
 import { PoolLiquidity } from '../../../../@types/apollo/PoolLiquidity'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
@@ -91,13 +91,16 @@ export default function Pool(): ReactElement {
 
   // the purpose of the value is just to trigger the effect
   const [refreshPool, setRefreshPool] = useState(false)
-  const { data: dataLiquidity } = useQuery<PoolLiquidity>(poolLiquidityQuery, {
+  const [result] = useQuery<PoolLiquidity>({
+    query: poolLiquidityQuery,
     variables: {
       id: price.address.toLowerCase(),
       shareId: `${price.address.toLowerCase()}-${ddo.publicKey[0].owner.toLowerCase()}`
-    },
-    pollInterval: 5000
+    }
+    // pollInterval: 5000
   })
+
+  const { data: dataLiquidity } = result
 
   useEffect(() => {
     async function init() {
