@@ -9,7 +9,7 @@ import {
 } from '../@types/apollo/AssetsFrePrice'
 import { AssetPreviousOrder } from '../@types/apollo/AssetPreviousOrder'
 import web3 from 'web3'
-import { gql, OperationResult, TypedDocumentNode } from 'urql'
+import { gql, OperationContext, OperationResult, TypedDocumentNode } from 'urql'
 import { getOceanConfig } from './ocean'
 import { getUrqlClientInstance } from '../providers/UrqlProvider'
 
