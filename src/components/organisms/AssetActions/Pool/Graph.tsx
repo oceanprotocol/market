@@ -123,11 +123,10 @@ export default function Graph(): ReactElement {
 
   const { price } = useAsset()
 
-  const [lastBlock, setLastBlock] = useState(0)
+  const [lastBlock, setLastBlock] = useState<number>(0)
   const [priceHistory, setPriceHistory] = useState([])
   const [liquidityHistory, setLiquidityHistory] = useState([])
   const [timestamps, setTimestamps] = useState([])
-
   const [isLoading, setIsLoading] = useState(true)
   const [graphData, setGraphData] = useState<ChartData>()
 
@@ -156,7 +155,6 @@ export default function Graph(): ReactElement {
         return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
       })
     ]
-
     setTimestamps(latestTimestamps)
 
     const latestLiquidtyHistory = [
@@ -170,17 +168,20 @@ export default function Graph(): ReactElement {
       ...priceHistory,
       ...data.poolTransactions.map((item) => item.spotPrice)
     ]
+
     setPriceHistory(latestPriceHistory)
 
     if (data.poolTransactions.length > 0) {
+      const newBlock =
+        data.poolTransactions[data.poolTransactions.length - 1].block
+      if (newBlock === lastBlock) return
       setLastBlock(
         data.poolTransactions[data.poolTransactions.length - 1].block
       )
       refetch()
     } else {
-      setIsLoading(false)
       setGraphData({
-        labels: timestamps.slice(0),
+        labels: latestTimestamps.slice(0),
         datasets: [
           {
             ...lineStyle,
@@ -194,6 +195,7 @@ export default function Graph(): ReactElement {
           }
         ]
       })
+      setIsLoading(false)
     }
   }, [data, graphType])
 

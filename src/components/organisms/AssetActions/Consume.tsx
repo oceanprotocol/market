@@ -13,6 +13,7 @@ import { useWeb3 } from '../../../providers/Web3'
 import { usePricing } from '../../../hooks/usePricing'
 import { useConsume } from '../../../hooks/useConsume'
 import ButtonBuy from '../../atoms/ButtonBuy'
+import { secondsToString } from '../../../utils/metadata'
 import AlgorithmDatasetsListForCompute from '../AssetContent/AlgorithmDatasetsListForCompute'
 import styles from './Consume.module.css'
 
@@ -156,10 +157,11 @@ export default function Consume({
       dtSymbol={ddo.dataTokenInfo?.symbol}
       dtBalance={dtBalance}
       onClick={handleConsume}
-      assetTimeout={assetTimeout}
+      assetTimeout={secondsToString(parseInt(assetTimeout))}
       assetType={type}
       stepText={consumeStepText || pricingStepText}
       isLoading={pricingIsLoading || isLoading}
+      priceType={price?.type}
     />
   )
 

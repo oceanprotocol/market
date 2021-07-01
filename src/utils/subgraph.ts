@@ -10,6 +10,10 @@ import {
   AssetsFrePrice_fixedRateExchanges as AssetsFrePriceFixedRateExchanges
 } from '../@types/apollo/AssetsFrePrice'
 import { AssetPreviousOrder } from '../@types/apollo/AssetPreviousOrder'
+import {
+  AssetsFreePrice,
+  AssetsFreePrice_dispensers as AssetFreePriceDispenser
+} from '../@types/apollo/AssetsFreePrice'
 import web3 from 'web3'
 
 export interface PriceList {
@@ -24,6 +28,36 @@ export interface AssetListPrices {
 interface DidAndDatatokenMap {
   [name: string]: string
 }
+
+const FreeQuery = gql`
+  query AssetsFreePrice($datatoken_in: [String!]) {
+    dispensers(orderBy: id, where: { datatoken_in: $datatoken_in }) {
+      datatoken {
+        id
+        address
+      }
+    }
+  }
+`
+
+const AssetFreeQuery = gql`
+  query AssetFreePrice($datatoken: String) {
+    dispensers(orderBy: id, where: { datatoken: $datatoken }) {
+      active
+      owner {
+        id
+      }
+      minterApproved
+      isTrueMinter
+      maxTokens
+      maxBalance
+      balance
+      datatoken {
+        id
+      }
+    }
+  }
+`
 
 const FreQuery = gql`
   query AssetsFrePrice($datatoken_in: [String!]) {
@@ -146,7 +180,8 @@ export async function getPreviousOrders(
 
 function transformPriceToBestPrice(
   frePrice: AssetsFrePriceFixedRateExchanges[],
-  poolPrice: AssetsPoolPricePools[]
+  poolPrice: AssetsPoolPricePools[],
+  freePrice: AssetFreePriceDispenser[]
 ) {
   if (poolPrice?.length > 0) {
     const price: BestPrice = {
@@ -176,6 +211,18 @@ function transformPriceToBestPrice(
       isConsumable: 'true'
     }
     return price
+  } else if (freePrice?.length > 0) {
+    const price: BestPrice = {
+      type: 'free',
+      value: 0,
+      address: freePrice[0]?.datatoken.id,
+      exchange_id: '',
+      ocean: 0,
+      datatoken: 0,
+      pools: [],
+      isConsumable: 'true'
+    }
+    return price
   } else {
     const price: BestPrice = {
       type: '',
@@ -197,6 +244,7 @@ async function getAssetsPoolsExchangesAndDatatokenMap(
   [
     ApolloQueryResult<AssetsPoolPrice>,
     ApolloQueryResult<AssetsFrePrice>,
+    ApolloQueryResult<AssetsFreePrice>,
     DidAndDatatokenMap
   ]
 > {
@@ -214,6 +262,10 @@ async function getAssetsPoolsExchangesAndDatatokenMap(
     datatokenAddress_in: dataTokenList
   }
 
+  const freeVariables = {
+    datatoken_in: dataTokenList
+  }
+
   const poolPriceResponse: ApolloQueryResult<AssetsPoolPrice> = await fetchData(
     PoolQuery,
     poolVariables
@@ -223,7 +275,12 @@ async function getAssetsPoolsExchangesAndDatatokenMap(
     freVariables
   )
 
-  return [poolPriceResponse, frePriceResponse, didDTMap]
+  const freePriceResponse: ApolloQueryResult<AssetsFreePrice> = await fetchData(
+    FreeQuery,
+    freeVariables
+  )
+
+  return [poolPriceResponse, frePriceResponse, freePriceResponse, didDTMap]
 }
 
 export async function getAssetsPriceList(assets: DDO[]): Promise<PriceList> {
@@ -232,11 +289,13 @@ export async function getAssetsPriceList(assets: DDO[]): Promise<PriceList> {
   const values: [
     ApolloQueryResult<AssetsPoolPrice>,
     ApolloQueryResult<AssetsFrePrice>,
+    ApolloQueryResult<AssetsFreePrice>,
     DidAndDatatokenMap
   ] = await getAssetsPoolsExchangesAndDatatokenMap(assets)
   const poolPriceResponse = values[0]
   const frePriceResponse = values[1]
-  const didDTMap: DidAndDatatokenMap = values[2]
+  const freePriceResponse = values[2]
+  const didDTMap: DidAndDatatokenMap = values[3]
 
   for (const poolPrice of poolPriceResponse.data?.pools) {
     priceList[didDTMap[poolPrice.datatokenAddress]] =
@@ -246,6 +305,9 @@ export async function getAssetsPriceList(assets: DDO[]): Promise<PriceList> {
   }
   for (const frePrice of frePriceResponse.data?.fixedRateExchanges) {
     priceList[didDTMap[frePrice.datatoken?.address]] = frePrice.rate
+  }
+  for (const freePrice of freePriceResponse.data?.dispensers) {
+    priceList[didDTMap[freePrice.datatoken?.address]] = '0'
   }
   return priceList
 }
@@ -259,6 +321,10 @@ export async function getPrice(asset: DDO): Promise<BestPrice> {
     datatokenAddress: asset?.dataToken.toLowerCase()
   }
 
+  const freeVariables = {
+    datatoken: asset?.dataToken.toLowerCase()
+  }
+
   const poolPriceResponse: ApolloQueryResult<AssetsPoolPrice> = await fetchData(
     AssetPoolPriceQuerry,
     poolVariables
@@ -267,10 +333,15 @@ export async function getPrice(asset: DDO): Promise<BestPrice> {
     AssetFreQuery,
     freVariables
   )
+  const freePriceResponse: ApolloQueryResult<AssetsFreePrice> = await fetchData(
+    AssetFreeQuery,
+    freeVariables
+  )
 
   const bestPrice: BestPrice = transformPriceToBestPrice(
     frePriceResponse.data.fixedRateExchanges,
-    poolPriceResponse.data.pools
+    poolPriceResponse.data.pools,
+    freePriceResponse.data.dispensers
   )
 
   return bestPrice
@@ -284,15 +355,18 @@ export async function getAssetsBestPrices(
   const values: [
     ApolloQueryResult<AssetsPoolPrice>,
     ApolloQueryResult<AssetsFrePrice>,
+    ApolloQueryResult<AssetsFreePrice>,
     DidAndDatatokenMap
   ] = await getAssetsPoolsExchangesAndDatatokenMap(assets)
   const poolPriceResponse = values[0]
   const frePriceResponse = values[1]
+  const freePriceResponse = values[2]
 
   for (const ddo of assets) {
     const dataToken = ddo.dataToken.toLowerCase()
     const poolPrice: AssetsPoolPricePools[] = []
     const frePrice: AssetsFrePriceFixedRateExchanges[] = []
+    const freePrice: AssetFreePriceDispenser[] = []
     const pool = poolPriceResponse.data?.pools.find(
       (pool: any) => pool.datatokenAddress === dataToken
     )
@@ -301,7 +375,11 @@ export async function getAssetsBestPrices(
       (fre: any) => fre.datatoken.address === dataToken
     )
     fre && frePrice.push(fre)
-    const bestPrice = transformPriceToBestPrice(frePrice, poolPrice)
+    const free = freePriceResponse.data?.dispensers.find(
+      (free: any) => free.datatoken.address === dataToken
+    )
+    free && freePrice.push(free)
+    const bestPrice = transformPriceToBestPrice(frePrice, poolPrice, freePrice)
     assetsWithPrice.push({
       ddo: ddo,
       price: bestPrice
