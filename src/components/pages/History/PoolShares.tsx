@@ -14,6 +14,7 @@ import Token from '../../organisms/AssetActions/Pool/Token'
 import { useWeb3 } from '../../../providers/Web3'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import { getOceanConfig } from '../../../utils/ocean'
+import { getUrqlClientInstance } from '../../../providers/UrqlProvider'
 
 const poolSharesQuery = gql`
   query PoolShares($user: String) {
@@ -148,34 +149,46 @@ const columns = [
 export default function PoolShares(): ReactElement {
   const { accountId } = useWeb3()
   const [assets, setAssets] = useState<Asset[]>()
-
-  const queryContext: OperationContext = {
-    url: `${getSubgrahUri(1)}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-    requestPolicy: 'network-only'
-  }
-  const [result] = useQuery<PoolSharesList>({
-    query: poolSharesQuery,
-    variables: {
-      user: accountId?.toLowerCase()
-    },
-    context: queryContext
-    // pollInterval: 20000
-  })
-
-  const { data, fetching } = result
+  const [loading, setLoading] = useState<boolean>(false)
+  const { chainIds } = useUserPreferences()
 
   useEffect(() => {
-    if (!data) return
-    const assetList: Asset[] = []
-    data.poolShares.forEach((poolShare) => {
-      const userLiquidity = calculateUserLiquidity(poolShare)
-      assetList.push({
-        poolShare: poolShare,
-        userLiquidity: userLiquidity
-      })
-    })
-    setAssets(assetList)
-  }, [data, fetching])
+    const queryContext: OperationContext = {
+      url: `${getSubgrahUri(
+        chainIds[0]
+      )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
+      requestPolicy: 'network-only'
+    }
+    const variables = { user: accountId?.toLowerCase() }
+    const client = getUrqlClientInstance()
+
+    async function getShares() {
+      const assetList: Asset[] = []
+      try {
+        setLoading(true)
+        const result = await client
+          .query(poolSharesQuery, variables, queryContext)
+          .toPromise()
+        const { data } = result
+        console.log('SHARED DATA: ', data.poolShares)
+        if (!data) return
+        data.poolShares.forEach((poolShare: PoolShare) => {
+          const userLiquidity = calculateUserLiquidity(poolShare)
+          assetList.push({
+            poolShare: poolShare,
+            userLiquidity: userLiquidity
+          })
+        })
+        setAssets(assetList)
+      } catch (error) {
+        console.error('Error fetching pool shares: ', error.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    getShares()
+  }, [accountId, chainIds])
 
   return (
     <Table
@@ -184,7 +197,7 @@ export default function PoolShares(): ReactElement {
       data={assets}
       pagination
       paginationPerPage={5}
-      isLoading={fetching}
+      isLoading={loading}
       sortField="userLiquidity"
       sortAsc={false}
     />

@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import Table from '../../atoms/Table'
-import { gql, useQuery, OperationContext } from 'urql'
+import { gql, OperationContext } from 'urql'
 import Time from '../../atoms/Time'
 import web3 from 'web3'
 import AssetTitle from '../../molecules/AssetListTitle'
@@ -11,6 +11,7 @@ import { Logger } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import { getOceanConfig } from '../../../utils/ocean'
+import { getUrqlClientInstance } from '../../../providers/UrqlProvider'
 
 const getTokenOrders = gql`
   query OrdersData($user: String!) {
@@ -70,29 +71,28 @@ export default function ComputeDownloads(): ReactElement {
   const [orders, setOrders] = useState<DownloadedAssets[]>()
   const { chainIds } = useUserPreferences()
 
-  const queryContext: OperationContext = {
-    url: `${getSubgrahUri(
-      chainIds[0]
-    )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-    requestPolicy: 'network-only'
-  }
-
-  const [result] = useQuery({
-    query: getTokenOrders,
-    variables: { user: accountId?.toLowerCase() },
-    context: queryContext
-  })
-
-  const data = result?.data
-  console.log('DATA: ', data?.tokenOrders)
-
   useEffect(() => {
-    if (!appConfig.metadataCacheUri || !data) return
+    const queryContext: OperationContext = {
+      url: `${getSubgrahUri(
+        chainIds[0]
+      )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
+      requestPolicy: 'network-only'
+    }
+    const client = getUrqlClientInstance()
+    const variables = { user: accountId?.toLowerCase() }
+
+    if (!appConfig.metadataCacheUri) return
 
     async function filterAssets() {
       const filteredOrders: DownloadedAssets[] = []
       const source = axios.CancelToken.source()
 
+      const response = await client
+        .query(getTokenOrders, variables, queryContext)
+        .toPromise()
+
+      const { data } = response
+      console.log('DOWNLOADS DATA: ', data.tokenOrders)
       setIsLoading(true)
       try {
         for (let i = 0; i < data.tokenOrders.length; i++) {
@@ -121,7 +121,7 @@ export default function ComputeDownloads(): ReactElement {
     }
 
     filterAssets()
-  }, [appConfig.metadataCacheUri, chainIds, data])
+  }, [accountId, appConfig.metadataCacheUri, chainIds])
 
   return (
     <Table

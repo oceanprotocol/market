@@ -20,6 +20,8 @@ import styles from './index.module.css'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import { getOceanConfig } from '../../../../utils/ocean'
+import { getUrqlClientInstance } from '../../../../providers/UrqlProvider'
+import { getNetworkDataById } from '../../../../utils/web3'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -117,27 +119,27 @@ export default function ComputeJobs(): ReactElement {
   const [isLoading, setIsLoading] = useState(true)
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
 
-  const queryContext: OperationContext = {
-    url: `${getSubgrahUri(1)}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-    requestPolicy: 'network-only'
-  }
-  const [result] = useQuery<ComputeOrders>({
-    query: getComputeOrders,
-    variables: {
-      user: accountId?.toLowerCase()
-    },
-    context: queryContext
-  })
-
-  const { data } = result
-
   async function getJobs() {
-    if (!ocean || !account || data === undefined) {
+    const queryContext: OperationContext = {
+      url: `${getSubgrahUri(1)}/subgraphs/name/oceanprotocol/ocean-subgraph`,
+      requestPolicy: 'network-only'
+    }
+    const client = getUrqlClientInstance()
+    const variables = { user: accountId?.toLowerCase() }
+
+    const result = await client
+      .query(getComputeOrders, variables, queryContext)
+      .toPromise()
+
+    const { data } = result
+    console.log('COMPUTE DATA: ', data)
+
+    if (!ocean || !account || !data) {
+      setIsLoading(false)
       return
     }
 
     setIsLoading(true)
-
     const dtList = []
     const computeJobs: ComputeJobMetaData[] = []
     for (let i = 0; i < data.tokenOrders.length; i++) {
@@ -257,12 +259,12 @@ export default function ComputeJobs(): ReactElement {
   }
 
   useEffect(() => {
-    if (data === undefined || !appConfig.metadataCacheUri) {
+    if (!appConfig.metadataCacheUri) {
       setIsLoading(false)
       return
     }
     getJobs()
-  }, [ocean, account, data, appConfig.metadataCacheUri, chainIds])
+  }, [ocean, account, appConfig.metadataCacheUri, chainIds])
 
   return (
     <>
