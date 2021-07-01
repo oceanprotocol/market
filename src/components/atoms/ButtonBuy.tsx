@@ -12,6 +12,8 @@ interface ButtonBuyProps {
   dtBalance: string
   assetType: string
   assetTimeout: string
+  isConsumable: boolean
+  consumableFeedback: string
   hasPreviousOrderSelectedComputeAsset?: boolean
   hasDatatokenSelectedComputeAsset?: boolean
   dtSymbolSelectedComputeAsset?: string
@@ -23,8 +25,6 @@ interface ButtonBuyProps {
   type?: 'submit'
   priceType?: string
   algorithmPriceType?: string
-  isConsumable: boolean
-  consumableFeedback: string
   algorithmConsumableStatus?: number
 }
 
@@ -37,13 +37,14 @@ function getConsumeHelpText(
   isConsumable: boolean,
   consumableFeedback: string
 ) {
-  const text = !isConsumable
-    ? consumableFeedback
-    : hasPreviousOrder
-    ? `You bought this ${assetType} already allowing you to use it without paying again.`
-    : hasDatatoken
-    ? `You own ${dtBalance} ${dtSymbol} allowing you to use this data set by spending 1 ${dtSymbol}, but without paying OCEAN again.`
-    : `For using this ${assetType}, you will buy 1 ${dtSymbol} and immediately spend it back to the publisher and pool.`
+  const text =
+    isConsumable === false
+      ? consumableFeedback
+      : hasPreviousOrder
+      ? `You bought this ${assetType} already allowing you to use it without paying again.`
+      : hasDatatoken
+      ? `You own ${dtBalance} ${dtSymbol} allowing you to use this data set by spending 1 ${dtSymbol}, but without paying OCEAN again.`
+      : `For using this ${assetType}, you will buy 1 ${dtSymbol} and immediately spend it back to the publisher and pool.`
 
   return text
 }
@@ -74,7 +75,7 @@ function getComputeAssetHelpText(
   )
   const text =
     (!dtSymbolSelectedComputeAsset && !dtBalanceSelectedComputeAsset) ||
-    !isConsumable
+    isConsumable === false
       ? ''
       : algorithmConsumableStatus === 1
       ? 'The selected algorithm has been temporarily disabled by the publisher, please try again later.'
@@ -100,6 +101,8 @@ export default function ButtonBuy({
   dtBalance,
   assetType,
   assetTimeout,
+  isConsumable,
+  consumableFeedback,
   hasPreviousOrderSelectedComputeAsset,
   hasDatatokenSelectedComputeAsset,
   dtSymbolSelectedComputeAsset,
@@ -111,8 +114,6 @@ export default function ButtonBuy({
   type,
   priceType,
   algorithmPriceType,
-  isConsumable,
-  consumableFeedback,
   algorithmConsumableStatus
 }: ButtonBuyProps): ReactElement {
   const buttonText =
@@ -159,13 +160,13 @@ export default function ButtonBuy({
                   dtSymbol,
                   dtBalance,
                   assetType,
+                  isConsumable,
+                  consumableFeedback,
                   hasPreviousOrderSelectedComputeAsset,
                   hasDatatokenSelectedComputeAsset,
                   dtSymbolSelectedComputeAsset,
                   dtBalanceSelectedComputeAsset,
                   selectedComputeAssetType,
-                  isConsumable,
-                  consumableFeedback,
                   algorithmConsumableStatus
                 )}
           </div>

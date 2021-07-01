@@ -46,8 +46,8 @@ export default function Consume({
   isBalanceSufficient: boolean
   dtBalance: string
   fileIsLoading?: boolean
-  isConsumable: boolean
-  consumableFeedback: string
+  isConsumable?: boolean
+  consumableFeedback?: string
 }): ReactElement {
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
