@@ -16,6 +16,10 @@ import {
 } from '../../../../models/FormEditCredential'
 import DebugEditCredential from './DebugEditAdvancedSettings'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
+import {
+  setMinterToDispenser,
+  setMinterToPublisher
+} from '../../../../utils/freePrice'
 
 const contentQuery = graphql`
   query EditAvanceSettingsQuery {
@@ -68,7 +72,7 @@ export default function EditAdvancedSettings({
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
-  const { metadata, ddo, refreshDdo } = useAsset()
+  const { metadata, ddo, refreshDdo, price } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const { appConfig } = useSiteMetadata()
@@ -82,6 +86,16 @@ export default function EditAdvancedSettings({
     resetForm: () => void
   ) {
     try {
+      if (price.type === 'free') {
+        const tx = await setMinterToPublisher(
+          ocean,
+          ddo.dataToken,
+          accountId,
+          setError
+        )
+        if (!tx) return
+      }
+
       let newDdo: DDO
       newDdo = await ocean.assets.updateCredentials(
         ddo,
@@ -103,6 +117,15 @@ export default function EditAdvancedSettings({
         Logger.error(content.form.error)
         return
       } else {
+        if (price.type === 'free') {
+          const tx = await setMinterToDispenser(
+            ocean,
+            ddo.dataToken,
+            accountId,
+            setError
+          )
+          if (!tx) return
+        }
         setSuccess(content.form.success)
         resetForm()
       }
