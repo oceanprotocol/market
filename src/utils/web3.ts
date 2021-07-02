@@ -44,6 +44,9 @@ export function getNetworkDisplayName(
     case 8996:
       displayName = 'Development'
       break
+    case 2021000:
+      displayName = 'GAIA-X'
+      break
     default:
       displayName = `${data.chain} ${
         data.network === 'mainnet' ? '' : data.network

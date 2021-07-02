@@ -1,7 +1,6 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import Permission from '../../organisms/Permission'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
-import SearchBar from '../../molecules/SearchBar'
 import AssetList from '../../organisms/AssetList'
 import styles from './index.module.css'
 import queryString from 'query-string'
@@ -32,7 +31,6 @@ export default function SearchPage({
 
   useEffect(() => {
     if (!appConfig.metadataCacheUri) return
-
     async function initSearch() {
       setLoading(true)
       setTotalResults(undefined)
