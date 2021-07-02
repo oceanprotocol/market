@@ -1,23 +1,18 @@
-import {
-  ConfigHelper,
-  ConfigHelperConfig,
-  ConfigHelperNetworkId,
-  ConfigHelperNetworkName,
-  Logger
-} from '@oceanprotocol/lib'
+import { ConfigHelper, ConfigHelperConfig, Logger } from '@oceanprotocol/lib'
 import contractAddresses from '@oceanprotocol/contracts/artifacts/address.json'
 import { AbiItem } from 'web3-utils/types'
 import Web3 from 'web3'
 
-export function getOceanConfig(
-  network: ConfigHelperNetworkName | ConfigHelperNetworkId
-): ConfigHelperConfig {
+export function getOceanConfig(network: string | number): ConfigHelperConfig {
   const config = new ConfigHelper().getConfig(
     network,
     network === 'polygon' ||
-      network === 137 ||
       network === 'moonbeamalpha' ||
-      network === 1287
+      network === 1287 ||
+      network === 'bsc' ||
+      network === 56 ||
+      network === 'gaiaxtestnet' ||
+      network === 2021000
       ? undefined
       : process.env.GATSBY_INFURA_PROJECT_ID
   )
@@ -77,14 +72,4 @@ export async function getOceanBalance(
   } catch (e) {
     Logger.error(`ERROR: Failed to get the balance: ${e.message}`)
   }
-}
-
-export function getOceanTokenData(
-  networkId: number,
-  configs: ConfigHelperConfig[]
-): { address: string; symbol: string } {
-  const { oceanTokenSymbol, oceanTokenAddress } = configs.filter(
-    (config) => config.networkId === networkId
-  )[0]
-  return { address: oceanTokenAddress, symbol: oceanTokenSymbol }
 }

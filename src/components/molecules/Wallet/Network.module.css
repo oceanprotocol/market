@@ -3,7 +3,7 @@
   border-right: none;
   border-top-left-radius: var(--border-radius);
   border-bottom-left-radius: var(--border-radius);
-  padding: calc(var(--spacer) / 4) calc(var(--spacer) / 2);
+  padding: calc(var(--spacer) / 6) calc(var(--spacer) / 3);
   white-space: nowrap;
   margin-right: -3px;
   display: inline-flex;

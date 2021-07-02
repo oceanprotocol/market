@@ -1,6 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { formatCurrency } from '@coingecko/cryptoformat'
-import { useOcean } from '../../../providers/Ocean'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import Button from '../../atoms/Button'
 import AddToken from '../../atoms/AddToken'
@@ -9,7 +8,7 @@ import { useWeb3 } from '../../../providers/Web3'
 
 import Web3Feedback from '../Web3Feedback'
 import styles from './Details.module.css'
-import { getOceanTokenData } from '../../../utils/ocean'
+import { getOceanConfig } from '../../../utils/ocean'
 
 export default function Details(): ReactElement {
   const {
@@ -21,7 +20,6 @@ export default function Details(): ReactElement {
     networkId,
     balance
   } = useWeb3()
-  const { oceanConfigs } = useOcean()
   const { locale } = useUserPreferences()
 
   const [mainCurrency, setMainCurrency] = useState<string>()
@@ -35,11 +33,16 @@ export default function Details(): ReactElement {
   useEffect(() => {
     if (!networkData) return
 
-    setMainCurrency(networkData.nativeCurrency.symbol)
+    setMainCurrency(networkData.nativeCurrency?.symbol)
 
-    oceanConfigs &&
-      setOceanTokenMetadata(getOceanTokenData(networkId || 1, oceanConfigs))
-  }, [networkData, networkId, oceanConfigs])
+    const oceanConfig = getOceanConfig(networkId)
+
+    oceanConfig &&
+      setOceanTokenMetadata({
+        address: oceanConfig.oceanTokenAddress,
+        symbol: oceanConfig.oceanTokenSymbol
+      })
+  }, [networkData, networkId])
 
   // Handle network change for Portis
   // async function handlePortisNetworkChange(e: ChangeEvent<HTMLSelectElement>) {

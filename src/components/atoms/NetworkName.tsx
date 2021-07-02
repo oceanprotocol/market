@@ -1,42 +1,22 @@
-import { graphql, useStaticQuery } from 'gatsby'
-import React, { FunctionComponent, ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 import { ReactComponent as EthIcon } from '../../images/eth.svg'
 import { ReactComponent as PolygonIcon } from '../../images/polygon.svg'
 import { ReactComponent as MoonbeamIcon } from '../../images/moonbeam.svg'
-import {
-  EthereumListsChain,
-  getNetworkDataById,
-  getNetworkDisplayName
-} from '../../utils/web3'
+import { ReactComponent as BscIcon } from '../../images/bsc.svg'
+import { getNetworkDataById, getNetworkDisplayName } from '../../utils/web3'
 import styles from './NetworkName.module.css'
-
-const networksQuery = graphql`
-  query {
-    allNetworksMetadataJson {
-      edges {
-        node {
-          chain
-          network
-          networkId
-          chainId
-        }
-      }
-    }
-  }
-`
-
-const icons: {
-  [key: string]: FunctionComponent<React.SVGProps<SVGSVGElement>>
-} = { ETH: EthIcon, Polygon: PolygonIcon, Moonbeam: MoonbeamIcon }
+import useNetworkMetadata from '../../hooks/useNetworkMetadata'
 
 export function NetworkIcon({ name }: { name: string }): ReactElement {
   const IconMapped = name.includes('ETH')
-    ? icons.ETH
+    ? EthIcon
     : name.includes('Polygon')
-    ? icons.Polygon
+    ? PolygonIcon
     : name.includes('Moon')
-    ? icons.Moonbeam
-    : icons[name.trim()]
+    ? MoonbeamIcon
+    : name.includes('BSC')
+    ? BscIcon
+    : EthIcon // ETH icon as fallback
 
   return IconMapped ? <IconMapped className={styles.icon} /> : null
 }
@@ -50,18 +30,19 @@ export default function NetworkName({
   minimal?: boolean
   className?: string
 }): ReactElement {
-  const data = useStaticQuery(networksQuery)
-  const networksList: { node: EthereumListsChain }[] =
-    data.allNetworksMetadataJson.edges
+  const { networksList } = useNetworkMetadata()
   const networkData = getNetworkDataById(networksList, networkId)
   const networkName = getNetworkDisplayName(networkData, networkId)
 
   return (
     <span
-      className={`${styles.network} ${className || ''}`}
-      title={minimal ? networkName : null}
+      className={`${styles.network} ${minimal ? styles.minimal : null} ${
+        className || ''
+      }`}
+      title={networkName}
     >
-      <NetworkIcon name={networkName} /> {!minimal && networkName}
+      <NetworkIcon name={networkName} />{' '}
+      <span className={styles.name}>{networkName}</span>
     </span>
   )
 }

@@ -85,15 +85,13 @@ export default function Bookmarks(): ReactElement {
   const [pinned, setPinned] = useState<DDO[]>()
   const [isLoading, setIsLoading] = useState<boolean>()
 
-  const networkName = (config as ConfigHelperConfig)?.network
-
   useEffect(() => {
-    if (!appConfig.metadataCacheUri || !networkName || bookmarks === {}) return
+    if (!appConfig.metadataCacheUri || bookmarks === []) return
 
     const source = axios.CancelToken.source()
 
     async function init() {
-      if (!bookmarks[networkName]?.length) {
+      if (!bookmarks?.length) {
         setPinned([])
         return
       }
@@ -102,7 +100,7 @@ export default function Bookmarks(): ReactElement {
 
       try {
         const resultPinned = await getAssetsBookmarked(
-          bookmarks[networkName],
+          bookmarks,
           appConfig.metadataCacheUri,
           source.token
         )
@@ -118,7 +116,7 @@ export default function Bookmarks(): ReactElement {
     return () => {
       source.cancel()
     }
-  }, [bookmarks, appConfig.metadataCacheUri, networkName])
+  }, [bookmarks, appConfig.metadataCacheUri])
 
   return (
     <Table

@@ -3,10 +3,8 @@ import { toast } from 'react-toastify'
 import { File as FileMetadata, DDO } from '@oceanprotocol/lib'
 import File from '../../atoms/File'
 import Price from '../../atoms/Price'
-import styles from './Consume.module.css'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { useAsset } from '../../../providers/Asset'
-import { secondsToString } from '../../../utils/metadata'
 import { gql, useQuery } from '@apollo/client'
 import { OrdersData } from '../../../@types/apollo/OrdersData'
 import BigNumber from 'bignumber.js'
@@ -15,6 +13,9 @@ import { useWeb3 } from '../../../providers/Web3'
 import { usePricing } from '../../../hooks/usePricing'
 import { useConsume } from '../../../hooks/useConsume'
 import ButtonBuy from '../../atoms/ButtonBuy'
+import { secondsToString } from '../../../utils/metadata'
+import AlgorithmDatasetsListForCompute from '../AssetContent/AlgorithmDatasetsListForCompute'
+import styles from './Consume.module.css'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {
@@ -34,12 +35,14 @@ export default function Consume({
   ddo,
   file,
   isBalanceSufficient,
-  dtBalance
+  dtBalance,
+  fileIsLoading
 }: {
   ddo: DDO
   file: FileMetadata
   isBalanceSufficient: boolean
   dtBalance: string
+  fileIsLoading?: boolean
 }): ReactElement {
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
@@ -49,12 +52,11 @@ export default function Consume({
   const { isInPurgatory, price, type, isAssetNetwork } = useAsset()
   const { buyDT, pricingStepText, pricingError, pricingIsLoading } =
     usePricing()
-  const { consumeStepText, consume, consumeError } = useConsume()
+  const { consumeStepText, consume, consumeError, isLoading } = useConsume()
   const [isDisabled, setIsDisabled] = useState(true)
   const [hasDatatoken, setHasDatatoken] = useState(false)
   const [isConsumable, setIsConsumable] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
-
   const { data } = useQuery<OrdersData>(previousOrderQuery, {
     variables: {
       id: ddo.dataToken?.toLowerCase(),
@@ -85,7 +87,7 @@ export default function Consume({
 
   useEffect(() => {
     const { timeout } = ddo.findServiceByType('access').attributes.main
-    setAssetTimeout(secondsToString(timeout))
+    setAssetTimeout(timeout.toString())
   }, [ddo])
 
   useEffect(() => {
@@ -123,22 +125,28 @@ export default function Consume({
   ])
 
   async function handleConsume() {
-    !hasPreviousOrder && !hasDatatoken && (await buyDT('1', price, ddo))
-    await consume(
+    if (!hasPreviousOrder && !hasDatatoken) {
+      const tx = await buyDT('1', price, ddo)
+      if (tx === undefined) return
+    }
+    const error = await consume(
       ddo.id,
       ddo.dataToken,
       'access',
       appConfig.marketFeeAddress,
       previousOrderId
     )
-    setHasPreviousOrder(true)
+    error || setHasPreviousOrder(true)
   }
 
   // Output errors in UI
   useEffect(() => {
     consumeError && toast.error(consumeError)
+  }, [consumeError])
+
+  useEffect(() => {
     pricingError && toast.error(pricingError)
-  }, [consumeError, pricingError])
+  }, [pricingError])
 
   const PurchaseButton = () => (
     <ButtonBuy
@@ -149,10 +157,11 @@ export default function Consume({
       dtSymbol={ddo.dataTokenInfo?.symbol}
       dtBalance={dtBalance}
       onClick={handleConsume}
-      assetTimeout={assetTimeout}
+      assetTimeout={secondsToString(parseInt(assetTimeout))}
       assetType={type}
       stepText={consumeStepText || pricingStepText}
-      isLoading={pricingIsLoading}
+      isLoading={pricingIsLoading || isLoading}
+      priceType={price?.type}
     />
   )
 
@@ -160,13 +169,16 @@ export default function Consume({
     <aside className={styles.consume}>
       <div className={styles.info}>
         <div className={styles.filewrapper}>
-          <File file={file} />
+          <File file={file} isLoading={fileIsLoading} />
         </div>
         <div className={styles.pricewrapper}>
           <Price price={price} conversion />
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>
+      {type === 'algorithm' && (
+        <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} dataset={ddo} />
+      )}
     </aside>
   )
 }

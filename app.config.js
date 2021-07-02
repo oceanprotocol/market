@@ -8,7 +8,9 @@ module.exports = {
   chainIds: [1, 137],
 
   // List of all supported chainIds. Used to populate the Chains user preferences list.
-  chainIdsSupported: [1, 3, 4, 137, 1287],
+  chainIdsSupported: [1, 3, 4, 137, 1287, 56],
+
+  rbacUrl: process.env.GATSBY_RBAC_URL,
 
   infuraProjectId: process.env.GATSBY_INFURA_PROJECT_ID || 'xxx',
 
@@ -45,8 +47,13 @@ module.exports = {
   // Wallets
   portisId: process.env.GATSBY_PORTIS_ID || 'xxx',
 
-  // Used to show or hide the fixed and dynamic price options
+  // Used to show or hide the fixed, dynamic or free price options
   // tab to publishers during the price creation.
   allowFixedPricing: process.env.GATSBY_ALLOW_FIXED_PRICING || 'true',
-  allowDynamicPricing: process.env.GATSBY_ALLOW_DYNAMIC_PRICING || 'true'
+  allowDynamicPricing: process.env.GATSBY_ALLOW_DYNAMIC_PRICING || 'true',
+  allowFreePricing: process.env.GATSBY_ALLOW_FREE_PRICING || 'false',
+
+  // Used to show or hide advanced settings button in asset details page
+  allowAdvancedSettings: process.env.GATSBY_ALLOW_ADVANCED_SETTINGS || 'false',
+  credentialType: process.env.GATSBY_CREDENTIAL_TYPE || 'address'
 }
