@@ -1,17 +1,9 @@
 import { gql, OperationResult, TypedDocumentNode, OperationContext } from 'urql'
 import { DDO, BestPrice } from '@oceanprotocol/lib'
 import { getUrqlClientInstance } from '../providers/UrqlProvider'
-import {
-  AssetsPoolPrice,
-  AssetsPoolPrice_pools as AssetsPoolPricePools
-} from '../@types/apollo/AssetsPoolPrice'
-import {
-  AssetsFrePrice,
-  AssetsFrePrice_fixedRateExchanges as AssetsFrePriceFixedRateExchanges
-} from '../@types/apollo/AssetsFrePrice'
-import { AssetPreviousOrder } from '../@types/apollo/AssetPreviousOrder'
 import { getOceanConfig } from './ocean'
 import web3 from 'web3'
+import schema from '../../src/@types/schema.json'
 
 export interface PriceList {
   [key: string]: string
@@ -227,7 +219,7 @@ async function getAssetsPoolsExchangesAndDatatokenMap(
       datatokenAddress_in: chainAssetLists[chainKey]
     }
 
-    //  harcoded until we have chainId on assets
+    //    harcoded until we have chainId on assets
     const queryContext: OperationContext = {
       url: `${getSubgrahUri(1)}/subgraphs/name/oceanprotocol/ocean-subgraph`,
       requestPolicy: 'network-only'

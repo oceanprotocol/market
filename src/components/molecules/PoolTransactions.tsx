@@ -9,10 +9,6 @@ import { useUserPreferences } from '../../providers/UserPreferences'
 import { Ocean } from '@oceanprotocol/lib'
 import { formatPrice } from '../atoms/Price/PriceUnit'
 import { gql, useQuery } from 'urql'
-import {
-  TransactionHistory,
-  TransactionHistory_poolTransactions as TransactionHistoryPoolTransactions
-} from '../../@types/apollo/TransactionHistory'
 
 import web3 from 'web3'
 import { useWeb3 } from '../../providers/Web3'
