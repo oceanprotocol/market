@@ -177,7 +177,7 @@ export default function Consume({
         </div>
       </div>
       {type === 'algorithm' && (
-        <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} />
+        <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} dataset={ddo} />
       )}
     </aside>
   )

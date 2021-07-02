@@ -56,7 +56,9 @@ export default function FormEditComputeDataset({
       appConfig.metadataCacheUri,
       source.token
     )
+    const datasetComputeService = ddo.findServiceByType('compute')
     const algorithmSelectionList = await transformDDOToAssetSelection(
+      datasetComputeService?.serviceEndpoint,
       querryResult.results,
       appConfig.metadataCacheUri,
       publisherTrustedAlgorithms
