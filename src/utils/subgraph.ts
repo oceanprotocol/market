@@ -7,7 +7,6 @@ import {
   AssetsFrePrice,
   AssetsFrePrice_fixedRateExchanges as AssetsFrePriceFixedRateExchanges
 } from '../@types/apollo/AssetsFrePrice'
-import { AssetPreviousOrder } from '../@types/apollo/AssetPreviousOrder'
 import web3 from 'web3'
 import { gql, OperationContext, OperationResult, TypedDocumentNode } from 'urql'
 import { getOceanConfig } from './ocean'
@@ -102,7 +101,7 @@ const HighestLiquidityAssets = gql`
   }
 `
 
-function getSubgrahUri(chainId: number): string {
+export function getSubgrahUri(chainId: number): string {
   const config = getOceanConfig(chainId)
   return config.subgraphUri
 }
@@ -111,14 +110,39 @@ async function fetchData(
   query: TypedDocumentNode,
   variables: any,
   context: OperationContext
-): Promise<OperationResult<any>> {
+): Promise<any[]> {
   try {
     const client = getUrqlClientInstance()
     const response = await client.query(query, variables, context).toPromise()
-    return response
+    return response.data.tokenOrders
   } catch (error) {
     console.error('Error fetchData: ', error.message)
   }
+}
+
+export async function fetchDataForMultipleChains(
+  query: TypedDocumentNode,
+  variables: any,
+  chainIds: number[]
+): Promise<any[]> {
+  let datas: any[] = []
+  console.log(chainIds)
+  for (const chainId of chainIds) {
+    console.log(chainId)
+    const context: OperationContext = {
+      url: `${getSubgrahUri(
+        chainId
+      )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
+      requestPolicy: 'network-only'
+    }
+    try {
+      const response = await fetchData(query, variables, context)
+      datas = [...datas, ...response]
+    } catch (error) {
+      console.error('Error fetchData: ', error.message)
+    }
+  }
+  return datas
 }
 
 export async function getPreviousOrders(
@@ -130,8 +154,11 @@ export async function getPreviousOrders(
     id: id,
     account: account
   }
-  const fetchedPreviousOrders: OperationResult<AssetPreviousOrder> =
-    await fetchData(PreviousOrderQuery, variables, null)
+  const fetchedPreviousOrders: any[] = await fetchData(
+    PreviousOrderQuery,
+    variables,
+    null
+  )
   if (fetchedPreviousOrders.data?.tokenOrders?.length === 0) return null
   if (assetTimeout === '0') {
     return fetchedPreviousOrders?.data?.tokenOrders[0]?.tx
@@ -288,13 +315,13 @@ export async function getPrice(asset: DDO): Promise<BestPrice> {
     requestPolicy: 'network-only'
   }
 
-  const poolPriceResponse: OperationResult<AssetsPoolPrice> = await fetchData(
+  const poolPriceResponse: any[] = await fetchData(
     AssetPoolPriceQuerry,
     poolVariables,
     queryContext
   )
 
-  const frePriceResponse: OperationResult<AssetsFrePrice> = await fetchData(
+  const frePriceResponse: any[] = await fetchData(
     AssetFreQuery,
     freVariables,
     queryContext

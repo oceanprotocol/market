@@ -6,7 +6,7 @@ import { getOceanConfig } from '../utils/ocean'
 
 let urqlClient: Client
 
-function createUrqlClient(subgraphUri: string) {
+export function createUrqlClient(subgraphUri: string) {
   const client = createClient({
     url: `${subgraphUri}/subgraphs/name/oceanprotocol/ocean-subgraph`
   })

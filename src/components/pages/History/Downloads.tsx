@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import Table from '../../atoms/Table'
-import { gql, OperationContext } from 'urql'
+import { gql, OperationContext, useQuery } from 'urql'
 import Time from '../../atoms/Time'
 import web3 from 'web3'
 import AssetTitle from '../../molecules/AssetListTitle'
@@ -11,7 +11,10 @@ import { Logger } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import { getOceanConfig } from '../../../utils/ocean'
-import { getUrqlClientInstance } from '../../../providers/UrqlProvider'
+import {
+  fetchDataForMultipleChains,
+  getSubgrahUri
+} from '../../../utils/subgraph'
 
 const getTokenOrders = gql`
   query OrdersData($user: String!) {
@@ -57,12 +60,6 @@ const columns = [
   }
 ]
 
-function getSubgrahUri(chainId: number): string {
-  const config = getOceanConfig(chainId)
-  console.log('CONFIG SG: ', config)
-  return config.subgraphUri
-}
-
 export default function ComputeDownloads(): ReactElement {
   const { accountId } = useWeb3()
   // const { config } = useOcean()
@@ -71,14 +68,28 @@ export default function ComputeDownloads(): ReactElement {
   const [orders, setOrders] = useState<DownloadedAssets[]>()
   const { chainIds } = useUserPreferences()
 
+  /* const variables = { user: accountId?.toLowerCase() }
+
+  const queryContext: OperationContext = {
+    url: `${getSubgrahUri(
+      chainIds[2]
+    )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
+    requestPolicy: 'network-only'
+  }
+
+  const [result] = useQuery({
+    query: getTokenOrders,
+    variables: variables,
+    context: React.useMemo(function () {
+      return queryContext
+    }, [])
+  }) 
+
+  const { data, fetching, error } = result
+  console.log(data)
+  */
+
   useEffect(() => {
-    const queryContext: OperationContext = {
-      url: `${getSubgrahUri(
-        chainIds[0]
-      )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-      requestPolicy: 'network-only'
-    }
-    const client = getUrqlClientInstance()
     const variables = { user: accountId?.toLowerCase() }
 
     if (!appConfig.metadataCacheUri) return
@@ -87,17 +98,19 @@ export default function ComputeDownloads(): ReactElement {
       const filteredOrders: DownloadedAssets[] = []
       const source = axios.CancelToken.source()
 
-      const response = await client
-        .query(getTokenOrders, variables, queryContext)
-        .toPromise()
+      const response = await fetchDataForMultipleChains(
+        getTokenOrders,
+        variables,
+        chainIds
+      )
 
-      const { data } = response
-      console.log('DOWNLOADS DATA: ', data.tokenOrders)
+      const data = response
+      console.log('DOWNLOADS DATA: ', data)
       setIsLoading(true)
       try {
-        for (let i = 0; i < data.tokenOrders.length; i++) {
+        for (let i = 0; i < data.length; i++) {
           const did = web3.utils
-            .toChecksumAddress(data.tokenOrders[i].datatokenId.address)
+            .toChecksumAddress(data[i].datatokenId.address)
             .replace('0x', 'did:op:')
           const ddo = await retrieveDDO(
             did,
@@ -107,8 +120,8 @@ export default function ComputeDownloads(): ReactElement {
           if (ddo.service[1].type === 'access') {
             filteredOrders.push({
               did: did,
-              dtSymbol: data.tokenOrders[i].datatokenId.symbol,
-              timestamp: data.tokenOrders[i].timestamp
+              dtSymbol: data[i].datatokenId.symbol,
+              timestamp: data[i].timestamp
             })
           }
         }
