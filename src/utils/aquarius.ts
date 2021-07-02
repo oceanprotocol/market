@@ -13,6 +13,8 @@ import { AssetSelectionAsset } from '../components/molecules/FormFields/AssetSel
 import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { DDO_TEMPORARY } from '../providers/Ocean'
+import { useUserPreferences } from '../providers/UserPreferences'
+import { getOceanConfig } from './ocean'
 
 function getQueryForAlgorithmDatasets(algorithmDid: string) {
   return {
@@ -52,34 +54,59 @@ export function transformQueryResult(
 
 export async function queryMetadata(
   query: SearchQuery,
-  metadataCacheUri: string,
-  cancelToken: CancelToken
+  cancelToken: CancelToken,
+  chainIds: number[],
+  metadataCacheUri?: string
 ): Promise<QueryResult> {
-  try {
-    const response: AxiosResponse<QueryResult> = await axios.post(
-      `${metadataCacheUri}/api/v1/aquarius/assets/ddo/query`,
-      { ...query, cancelToken }
-    )
-    if (!response || response.status !== 200 || !response.data) return
+  const datas: QueryResult = {
+    results: [],
+    page: 0,
+    totalPages: 0,
+    totalResults: 0
+  }
+  for (const chainId of chainIds) {
+    const uri = getOceanConfig(chainId).metadataCacheUri
+    try {
+      const response: AxiosResponse<QueryResult> = await axios.post(
+        `${uri}/api/v1/aquarius/assets/ddo/query`,
+        { ...query, cancelToken }
+      )
+      if (!response || response.status !== 200 || !response.data) return
 
-    return transformQueryResult(response.data)
-  } catch (error) {
-    if (axios.isCancel(error)) {
-      Logger.log(error.message)
-    } else {
-      Logger.error(error.message)
+      console.log(response.data)
+
+      datas.results = [...datas.results, ...response.data.results]
+      datas.page = response.data.page
+      datas.totalPages += response.data.total_pages
+      datas.totalResults += response.data.total_results
+    } catch (error) {
+      if (axios.isCancel(error)) {
+        Logger.log(error.message)
+      } else {
+        Logger.error(error.message)
+      }
     }
   }
+  datas.results.sort((ddo1, ddo2) => {
+    if (ddo1.created < ddo2.created) return 1
+    if (ddo1.created > ddo2.created) return -1
+    return 0
+  })
+  datas.results = datas.results.slice(0, 9)
+  console.log(datas)
+  return transformQueryResult(datas)
 }
 
 export async function retrieveDDO(
   did: string | DID,
-  metadataCacheUri: string,
-  cancelToken: CancelToken
+  chainId: number,
+  cancelToken: CancelToken,
+  metadataCacheUri?: string
 ): Promise<DDO_TEMPORARY> {
   try {
+    const uri = getOceanConfig(chainId).providerUri
     const response: AxiosResponse<DDO> = await axios.get(
-      `${metadataCacheUri}/api/v1/aquarius/assets/ddo/${did}`,
+      `${uri}/api/v1/aquarius/assets/ddo/${did}`,
       { cancelToken }
     )
     if (!response || response.status !== 200 || !response.data) return
@@ -98,8 +125,9 @@ export async function retrieveDDO(
 
 export async function getAssetsNames(
   didList: string[] | DID[],
-  metadataCacheUri: string,
-  cancelToken: CancelToken
+  chainList: number[],
+  cancelToken: CancelToken,
+  metadataCacheUri: string
 ): Promise<Record<string, string>> {
   try {
     const response: AxiosResponse<Record<string, string>> = await axios.post(

@@ -76,11 +76,7 @@ export default function ComputeDownloads(): ReactElement {
           const did = web3.utils
             .toChecksumAddress(data.tokenOrders[i].datatokenId.address)
             .replace('0x', 'did:op:')
-          const ddo = await retrieveDDO(
-            did,
-            appConfig.metadataCacheUri,
-            source.token
-          )
+          const ddo = await retrieveDDO(did, 1, source.token)
           if (ddo.service[1].type === 'access') {
             filteredOrders.push({
               did: did,

@@ -16,6 +16,7 @@ import { getHighestLiquidityDIDs } from '../../utils/subgraph'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../providers/UserPreferences'
+import { chainIds, metadataCacheUri } from '../../../app.config'
 
 async function getQueryHighest(
   chainIds: number[]
@@ -37,7 +38,7 @@ async function getQueryHighest(
   return [queryHighest, dids]
 }
 
-function getQueryLatest(chainIds: number[]): SearchQuery {
+function getQueryLatest(): SearchQuery {
   // TODO: this query needs to adapt to chainIds
   return {
     page: 1,
@@ -72,6 +73,7 @@ function SectionQueryResult({
   const { appConfig } = useSiteMetadata()
   const [result, setResult] = useState<QueryResult>()
   const [loading, setLoading] = useState<boolean>()
+  const { chainIds } = useUserPreferences()
 
   useEffect(() => {
     if (!appConfig.metadataCacheUri) return
@@ -82,8 +84,9 @@ function SectionQueryResult({
         setLoading(true)
         const result = await queryMetadata(
           query,
-          appConfig.metadataCacheUri,
-          source.token
+          source.token,
+          chainIds,
+          metadataCacheUri
         )
         if (queryData && result.totalResults > 0 && result.totalResults <= 15) {
           const searchDIDs = queryData.split(' ')
@@ -153,7 +156,7 @@ export default function HomePage(): ReactElement {
 
         <SectionQueryResult
           title="Recently Published"
-          query={getQueryLatest(chainIds)}
+          query={getQueryLatest()}
           action={
             <Button style="text" to="/search?sort=created&sortOrder=desc">
               All data sets and algorithms →
