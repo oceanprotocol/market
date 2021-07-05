@@ -1,6 +1,4 @@
 import { createClient, Provider, Client } from 'urql'
-import { getIntrospectionQuery } from 'graphql'
-import axios from 'axios'
 import React, { useState, useEffect, ReactNode, ReactElement } from 'react'
 import { useWeb3 } from './Web3'
 import { Logger } from '@oceanprotocol/lib'
@@ -12,22 +10,11 @@ function createUrqlClient(subgraphUri: string) {
   const client = createClient({
     url: `${subgraphUri}/subgraphs/name/oceanprotocol/ocean-subgraph`
   })
-  generateGraphSchema(subgraphUri)
   return client
 }
 
 export function getUrqlClientInstance(): Client {
   return urqlClient
-}
-
-async function generateGraphSchema(subgraphUri: string) {
-  const query = JSON.stringify({
-    query: getIntrospectionQuery({ descriptions: false })
-  })
-  const response = await axios.post(
-    `${subgraphUri}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-    query
-  )
 }
 
 export default function UrqlClientProvider({

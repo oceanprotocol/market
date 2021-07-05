@@ -5,7 +5,7 @@ import { getOceanConfig } from './ocean'
 import web3 from 'web3'
 import { AssetsFreePrice } from '../@types/apollo/AssetsFreePrice'
 import { AssetPreviousOrder } from '../@types/apollo/AssetPreviousOrder'
-// import {AssetsFreePrice} from '../@types/graph.types'
+// import {AssetPreviousOrder} from '../@types/graph.types'
 
 export interface PriceList {
   [key: string]: string
