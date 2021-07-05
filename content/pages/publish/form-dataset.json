@@ -39,6 +39,14 @@
       "required": true
     },
     {
+      "name": "provider",
+      "label": "Provider",
+      "help": "Choose either the default Ocean Protocol provider (recomended for most users) or a custom provider.",
+      "type": "boxSelection",
+      "options": ["Default Provider", "Custom"],
+      "required": true
+    },
+    {
       "name": "timeout",
       "label": "Timeout",
       "help": "Define how long buyers should be able to download the data set again after the initial purchase.",

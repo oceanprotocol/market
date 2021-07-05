@@ -38,6 +38,23 @@ const query = graphql`
     }
   }
 `
+const dockerImageOptions = [
+  {
+    name: 'node:latest',
+    title: 'node:latest',
+    checked: true
+  },
+  {
+    name: 'python:latest',
+    title: 'python:latest',
+    checked: false
+  },
+  {
+    name: 'custom image',
+    title: 'custom image',
+    checked: false
+  }
+]
 
 export default function FormPublish(): ReactElement {
   const data = useStaticQuery(query)
@@ -75,6 +92,18 @@ export default function FormPublish(): ReactElement {
       icon: <Compute />
     }
   ]
+  const providerTypeOptions = [
+    {
+      name: 'Default',
+      title: 'Default Provider',
+      checked: true
+    },
+    {
+      name: 'Custom',
+      title: 'Custom Provider',
+      checked: false
+    }
+  ]
 
   // Manually handle change events instead of using `handleChange` from Formik.
   // Workaround for default `validateOnChange` not kicking in
@@ -110,7 +139,11 @@ export default function FormPublish(): ReactElement {
           key={field.name}
           {...field}
           options={
-            field.type === 'boxSelection' ? accessTypeOptions : field.options
+            field.name === 'access'
+              ? accessTypeOptions
+              : field.name === 'provider'
+              ? providerTypeOptions
+              : field.options
           }
           component={Input}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -118,7 +151,6 @@ export default function FormPublish(): ReactElement {
           }
         />
       ))}
-
       <footer className={styles.actions}>
         <Button
           style="primary"
