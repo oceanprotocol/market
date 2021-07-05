@@ -30,7 +30,7 @@ async function getQueryHighest(
     query: {
       query_string: {
         query: `(${dids}) AND -isInPurgatory:true`,
-        fields: ['dataToken']
+        fields: ['dataToken', 'chainId']
       }
     }
   }
@@ -45,7 +45,7 @@ function getQueryLatest(): SearchQuery {
     offset: 9,
     query: {
       query_string: {
-        query: `-isInPurgatory:true`
+        query: `-isInPurgatory:true `
       }
     },
     sort: { created: -1 }

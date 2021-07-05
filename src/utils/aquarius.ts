@@ -13,8 +13,6 @@ import { AssetSelectionAsset } from '../components/molecules/FormFields/AssetSel
 import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { DDO_TEMPORARY } from '../providers/Ocean'
-import { useUserPreferences } from '../providers/UserPreferences'
-import { getOceanConfig } from './ocean'
 import { chainIds } from '../../app.config'
 
 function getQueryForAlgorithmDatasets(algorithmDid: string) {

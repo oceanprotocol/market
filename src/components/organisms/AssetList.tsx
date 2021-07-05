@@ -40,6 +40,7 @@ const AssetList: React.FC<AssetListProps> = ({
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
+    console.log(assets)
     if (!assets) return
     isLoading && setLoading(true)
     getAssetsBestPrices(assets).then((asset) => {
