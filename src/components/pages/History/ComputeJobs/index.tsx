@@ -99,7 +99,7 @@ async function getAssetMetadata(
     }
   }
 
-  const result = await queryMetadata(queryDid, cancelToken, chainIds)
+  const result = await queryMetadata(queryDid, cancelToken)
 
   return result.results
 }

@@ -154,8 +154,7 @@ export default function Compute({
         getQuerryString(
           computeService.attributes.main.privacy.publisherTrustedAlgorithms
         ),
-        source.token,
-        chainIds
+        source.token
       )
       setDdoAlgorithmList(gueryResults.results)
       const datasetComputeService = ddo.findServiceByType('compute')

@@ -9,7 +9,6 @@ import AssetTitle from './AssetListTitle'
 import { queryMetadata } from '../../utils/aquarius'
 import axios, { CancelToken } from 'axios'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
-import { chainIds } from '../../../app.config'
 
 async function getAssetsBookmarked(
   bookmarks: string[],
@@ -37,7 +36,7 @@ async function getAssetsBookmarked(
   }
 
   try {
-    const result = await queryMetadata(queryBookmarks, cancelToken, chainIds)
+    const result = await queryMetadata(queryBookmarks, cancelToken)
 
     return result
   } catch (error) {

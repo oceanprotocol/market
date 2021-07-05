@@ -196,7 +196,7 @@ export async function getResults(
   )
   const source = axios.CancelToken.source()
   // const queryResult = await metadataCache.queryMetadata(searchQuery)
-  const queryResult = await queryMetadata(searchQuery, source.token, chainIds)
+  const queryResult = await queryMetadata(searchQuery, source.token)
   console.log(queryResult)
   return queryResult
 }

@@ -13,7 +13,6 @@ import { AssetSelectionAsset } from '../components/molecules/FormFields/AssetSel
 import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { DDO_TEMPORARY } from '../providers/Ocean'
-import { chainIds } from '../../app.config'
 
 function getQueryForAlgorithmDatasets(algorithmDid: string) {
   return {
@@ -49,6 +48,15 @@ export function transformQueryResult(
     totalPages,
     totalResults
   }
+}
+
+export function transformChainIdsListToQuery(chainIds: number[]) {
+  let chainQuery = ''
+  chainIds.forEach((chainId) => {
+    chainQuery += `chainId:${chainId} OR `
+  })
+  chainQuery = chainQuery.slice(0, chainQuery.length - 3)
+  return chainQuery
 }
 
 export async function queryMetadata(
@@ -194,8 +202,7 @@ export async function getAlgorithmDatasetsForCompute(
   const source = axios.CancelToken.source()
   const computeDatasets = await queryMetadata(
     getQueryForAlgorithmDatasets(algorithmId),
-    source.token,
-    chainIds
+    source.token
   )
   const computeDatasetsForCurrentAlgorithm: DDO[] = []
   computeDatasets.results.forEach((data: DDO) => {

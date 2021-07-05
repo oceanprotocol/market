@@ -36,11 +36,7 @@ export default function PublishedList(): ReactElement {
         const source = axios.CancelToken.source()
 
         queryResult || setIsLoading(true)
-        const result = await queryMetadata(
-          queryPublishedAssets,
-          source.token,
-          chainIds
-        )
+        const result = await queryMetadata(queryPublishedAssets, source.token)
         setQueryResult(result)
       } catch (error) {
         Logger.error(error.message)

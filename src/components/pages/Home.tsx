@@ -10,13 +10,15 @@ import Container from '../atoms/Container'
 import Button from '../atoms/Button'
 import Bookmarks from '../molecules/Bookmarks'
 import axios from 'axios'
-import { queryMetadata } from '../../utils/aquarius'
+import {
+  queryMetadata,
+  transformChainIdsListToQuery
+} from '../../utils/aquarius'
 import Permission from '../organisms/Permission'
 import { getHighestLiquidityDIDs } from '../../utils/subgraph'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../providers/UserPreferences'
-import { chainIds, metadataCacheUri } from '../../../app.config'
 
 async function getQueryHighest(
   chainIds: number[]
@@ -29,8 +31,10 @@ async function getQueryHighest(
     offset: 15,
     query: {
       query_string: {
-        query: `(${dids}) AND -isInPurgatory:true`,
-        fields: ['dataToken', 'chainId']
+        query: `(${dids}) AND ${transformChainIdsListToQuery(
+          chainIds
+        )} AND -isInPurgatory:true`,
+        fields: ['dataToken']
       }
     }
   }
@@ -38,14 +42,16 @@ async function getQueryHighest(
   return [queryHighest, dids]
 }
 
-function getQueryLatest(): SearchQuery {
+function getQueryLatest(chainIds: number[]): SearchQuery {
   // TODO: this query needs to adapt to chainIds
   return {
     page: 1,
     offset: 9,
     query: {
       query_string: {
-        query: `-isInPurgatory:true `
+        query: `${transformChainIdsListToQuery(
+          chainIds
+        )} AND -isInPurgatory:true `
       }
     },
     sort: { created: -1 }
@@ -82,12 +88,7 @@ function SectionQueryResult({
     async function init() {
       try {
         setLoading(true)
-        const result = await queryMetadata(
-          query,
-          source.token,
-          chainIds,
-          metadataCacheUri
-        )
+        const result = await queryMetadata(query, source.token)
         if (queryData && result.totalResults > 0 && result.totalResults <= 15) {
           const searchDIDs = queryData.split(' ')
           const sortedAssets = sortElements(result.results, searchDIDs)
@@ -156,7 +157,7 @@ export default function HomePage(): ReactElement {
 
         <SectionQueryResult
           title="Recently Published"
-          query={getQueryLatest()}
+          query={getQueryLatest(chainIds)}
           action={
             <Button style="text" to="/search?sort=created&sortOrder=desc">
               All data sets and algorithms →
