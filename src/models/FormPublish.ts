@@ -31,7 +31,8 @@ export const validationSchema: Yup.SchemaOf<MetadataPublishFormDataset> =
 
       // ---- optional fields ----
       tags: Yup.string().nullable(),
-      links: Yup.array<FileMetadata[]>().nullable()
+      links: Yup.array<FileMetadata[]>().nullable(),
+      customProvider: Yup.string().url().nullable()
     })
     .defined()
 
