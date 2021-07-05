@@ -61,7 +61,8 @@ export default function FormEditComputeDataset({
       datasetComputeService?.serviceEndpoint,
       querryResult.results,
       appConfig.metadataCacheUri,
-      publisherTrustedAlgorithms
+      publisherTrustedAlgorithms,
+      ddo?.chainId
     )
     return algorithmSelectionList
   }

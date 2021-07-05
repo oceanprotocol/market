@@ -162,7 +162,8 @@ export default function Compute({
         datasetComputeService?.serviceEndpoint,
         gueryResults.results,
         appConfig.metadataCacheUri,
-        []
+        [],
+        ddo?.chainId
       )
     }
     return algorithmSelectionList

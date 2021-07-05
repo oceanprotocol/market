@@ -124,16 +124,20 @@ export async function transformDDOToAssetSelection(
   datasetProviderEndpoint: string,
   ddoList: DDO[],
   metadataCacheUri: string,
-  selectedAlgorithms?: PublisherTrustedAlgorithm[]
+  selectedAlgorithms?: PublisherTrustedAlgorithm[],
+  ddoChainId?: number
 ): Promise<AssetSelectionAsset[]> {
   const source = axios.CancelToken.source()
   const didList: string[] = []
   const priceList: PriceList = await getAssetsPriceList(ddoList)
   const symbolList: any = {}
   const didProviderEndpointMap: any = {}
+  const didChainIdMap: any = {}
   for (const ddo of ddoList) {
     didList.push(ddo.id)
     symbolList[ddo.id] = ddo.dataTokenInfo.symbol
+    didChainIdMap[ddo.id] = ddo.chainId
+    // didChainIdMap[ddo.id] = 1
     const algoComputeService = ddo.findServiceByType('compute')
     algoComputeService?.serviceEndpoint &&
       (didProviderEndpointMap[ddo.id] = algoComputeService?.serviceEndpoint)
@@ -144,7 +148,8 @@ export async function transformDDOToAssetSelection(
     if (
       priceList[did] &&
       (!didProviderEndpointMap[did] ||
-        didProviderEndpointMap[did] === datasetProviderEndpoint)
+        didProviderEndpointMap[did] === datasetProviderEndpoint) &&
+      didProviderEndpointMap[did] === ddo.chainId
     ) {
       let selected = false
       selectedAlgorithms?.forEach((algorithm: PublisherTrustedAlgorithm) => {
@@ -175,7 +180,8 @@ export async function transformDDOToAssetSelection(
 export async function getAlgorithmDatasetsForCompute(
   algorithmId: string,
   datasetProviderUri: string,
-  metadataCacheUri: string
+  metadataCacheUri: string,
+  datasetChainId?: number
 ): Promise<AssetSelectionAsset[]> {
   const source = axios.CancelToken.source()
   const computeDatasets = await queryMetadata(
@@ -199,7 +205,8 @@ export async function getAlgorithmDatasetsForCompute(
     datasetProviderUri,
     computeDatasetsForCurrentAlgorithm,
     metadataCacheUri,
-    []
+    [],
+    datasetChainId
   )
   return datasets
 }

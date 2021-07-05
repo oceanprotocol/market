@@ -25,7 +25,8 @@ export default function AlgorithmDatasetsListForCompute({
       const datasets = await getAlgorithmDatasetsForCompute(
         algorithmDid,
         datasetComputeService?.serviceEndpoint,
-        config.metadataCacheUri
+        config.metadataCacheUri,
+        dataset?.chainId
       )
       setDatasetsForCompute(datasets)
     }
