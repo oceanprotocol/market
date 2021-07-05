@@ -38,23 +38,6 @@ const query = graphql`
     }
   }
 `
-const dockerImageOptions = [
-  {
-    name: 'node:latest',
-    title: 'node:latest',
-    checked: true
-  },
-  {
-    name: 'python:latest',
-    title: 'python:latest',
-    checked: false
-  },
-  {
-    name: 'custom image',
-    title: 'custom image',
-    checked: false
-  }
-]
 
 export default function FormPublish(): ReactElement {
   const data = useStaticQuery(query)

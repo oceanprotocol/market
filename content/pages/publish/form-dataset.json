@@ -43,7 +43,7 @@
       "label": "Provider",
       "help": "Choose either the default Ocean Protocol provider (recomended for most users) or a custom provider.",
       "type": "boxSelection",
-      "options": ["Default Provider", "Custom"],
+      "options": ["Default", "Custom"],
       "required": true
     },
     {

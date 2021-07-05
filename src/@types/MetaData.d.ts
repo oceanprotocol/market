@@ -34,6 +34,7 @@ export interface MetadataPublishFormDataset {
   timeout: string
   dataTokenOptions: DataTokenOptions
   access: 'Download' | 'Compute' | string
+  provider: 'Default' | 'Custom' | string
   termsAndConditions: boolean
   // ---- optional fields ----
   tags?: string
