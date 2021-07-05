@@ -21,6 +21,8 @@ interface ButtonBuyProps {
   onClick?: (e: FormEvent<HTMLButtonElement>) => void
   stepText?: string
   type?: 'submit'
+  priceType?: string
+  algorithmPriceType?: string
 }
 
 function getConsumeHelpText(
@@ -87,15 +89,21 @@ export default function ButtonBuy({
   onClick,
   stepText,
   isLoading,
-  type
+  type,
+  priceType,
+  algorithmPriceType
 }: ButtonBuyProps): ReactElement {
   const buttonText =
     action === 'download'
       ? hasPreviousOrder
         ? 'Download'
+        : priceType === 'free'
+        ? 'Get'
         : `Buy ${assetTimeout === 'Forever' ? '' : ` for ${assetTimeout}`}`
       : hasPreviousOrder && hasPreviousOrderSelectedComputeAsset
       ? 'Start Compute Job'
+      : priceType === 'free' && algorithmPriceType === 'free'
+      ? 'Order Compute Job'
       : `Buy Compute Job`
 
   return (

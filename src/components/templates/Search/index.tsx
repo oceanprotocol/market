@@ -32,7 +32,6 @@ export default function SearchPage({
 
   useEffect(() => {
     if (!appConfig.metadataCacheUri) return
-
     async function initSearch() {
       setLoading(true)
       setTotalResults(undefined)
@@ -66,7 +65,7 @@ export default function SearchPage({
     <Permission eventType="browse">
       <>
         <div className={styles.search}>
-          {(text || owner) && (
+          {(text || owner || tags) && (
             <SearchBar initialValue={(text || owner) as string} />
           )}
           <div className={styles.row}>

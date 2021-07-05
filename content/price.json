@@ -21,6 +21,10 @@
         "communityFee": "Explain community fee...",
         "marketplaceFee": "Explain marketplace fee..."
       }
+    },
+    "free": {
+      "title": "Free",
+      "info": "Set your data set as free. The datatoken for this data set will be given for free via creating a faucet."
     }
   },
   "pool": {
