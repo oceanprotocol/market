@@ -21,7 +21,7 @@ import { useSiteMetadata } from '../hooks/useSiteMetadata'
 interface AssetProviderValue {
   isInPurgatory: boolean
   purgatoryData: PurgatoryData
-  ddo: DDO
+  ddo: any
   did: string
   metadata: MetadataMarket
   title: string
@@ -67,7 +67,6 @@ function AssetProvider({
     setLoading(true)
     const ddo = await retrieveDDO(
       asset as string,
-      appConfig.metadataCacheUri,
       token
     )
 

@@ -55,7 +55,7 @@ export function transformChainIdsListToQuery(chainIds: number[]) {
   chainIds.forEach((chainId) => {
     chainQuery += `chainId:${chainId} OR `
   })
-  chainQuery = chainQuery.slice(0, chainQuery.length - 3)
+  chainQuery = chainQuery.slice(0, chainQuery.length - 4)
   return chainQuery
 }
 
