@@ -31,9 +31,9 @@ async function getQueryHighest(
     offset: 15,
     query: {
       query_string: {
-        query: `(${dids}) AND ${transformChainIdsListToQuery(
+        query: `(${dids}) AND (${transformChainIdsListToQuery(
           chainIds
-        )} AND -isInPurgatory:true`,
+        )}) AND -isInPurgatory:true`,
         fields: ['dataToken']
       }
     }
@@ -49,9 +49,9 @@ function getQueryLatest(chainIds: number[]): SearchQuery {
     offset: 9,
     query: {
       query_string: {
-        query: `${transformChainIdsListToQuery(
+        query: `(${transformChainIdsListToQuery(
           chainIds
-        )} AND -isInPurgatory:true `
+        )}) AND -isInPurgatory:true `
       }
     },
     sort: { created: -1 }
