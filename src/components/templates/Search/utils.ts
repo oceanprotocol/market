@@ -1,6 +1,8 @@
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { MetadataCache, Logger } from '@oceanprotocol/lib'
+import { queryMetadata } from '../../../utils/aquarius'
 import queryString from 'query-string'
+import axios from 'axios'
 
 export const SortTermOptions = {
   Created: 'created',
@@ -192,7 +194,10 @@ export async function getResults(
     sortOrder,
     serviceType
   )
-  const queryResult = await metadataCache.queryMetadata(searchQuery)
+  const source = axios.CancelToken.source()
+  // const queryResult = await metadataCache.queryMetadata(searchQuery)
+  const queryResult = await queryMetadata(searchQuery, source.token, chainIds)
+  console.log(queryResult)
   return queryResult
 }
 

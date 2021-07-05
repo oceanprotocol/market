@@ -18,6 +18,7 @@ import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Comput
 import { ReactComponent as Refresh } from '../../../../images/refresh.svg'
 import styles from './index.module.css'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
+import { chainIds } from '../../../../../app.config'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -98,7 +99,7 @@ async function getAssetMetadata(
     }
   }
 
-  const result = await queryMetadata(queryDid, metadataCacheUri, cancelToken)
+  const result = await queryMetadata(queryDid, cancelToken, chainIds)
 
   return result.results
 }

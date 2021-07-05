@@ -15,6 +15,7 @@ import axios, { CancelToken, AxiosResponse } from 'axios'
 import { DDO_TEMPORARY } from '../providers/Ocean'
 import { useUserPreferences } from '../providers/UserPreferences'
 import { getOceanConfig } from './ocean'
+import { chainIds } from '../../app.config'
 
 function getQueryForAlgorithmDatasets(algorithmDid: string) {
   return {
@@ -57,28 +58,28 @@ export async function queryMetadata(
   cancelToken: CancelToken,
   chainIds: number[],
   metadataCacheUri?: string
-): Promise<QueryResult> {
-  const datas: QueryResult = {
+): Promise<any> {
+  const datas: any = {
     results: [],
     page: 0,
-    totalPages: 0,
-    totalResults: 0
+    total_pages: 0,
+    total_results: 0
   }
   for (const chainId of chainIds) {
     const uri = getOceanConfig(chainId).metadataCacheUri
     try {
-      const response: AxiosResponse<QueryResult> = await axios.post(
+      const response: AxiosResponse<any> = await axios.post(
         `${uri}/api/v1/aquarius/assets/ddo/query`,
         { ...query, cancelToken }
       )
       if (!response || response.status !== 200 || !response.data) return
 
-      console.log(response.data)
+      console.log(response.data.total_pages)
 
       datas.results = [...datas.results, ...response.data.results]
       datas.page = response.data.page
-      datas.totalPages += response.data.total_pages
-      datas.totalResults += response.data.total_results
+      datas.total_pages += response.data.total_pages
+      datas.total_results += response.data.total_results
     } catch (error) {
       if (axios.isCancel(error)) {
         Logger.log(error.message)
@@ -87,15 +88,20 @@ export async function queryMetadata(
       }
     }
   }
+  datas.results = datas.results.slice(0, 9)
+  console.log(datas)
+  return transformQueryResult(datas)
+}
+
+/*
+  --for sorting results
   datas.results.sort((ddo1, ddo2) => {
     if (ddo1.created < ddo2.created) return 1
     if (ddo1.created > ddo2.created) return -1
     return 0
   })
   datas.results = datas.results.slice(0, 9)
-  console.log(datas)
-  return transformQueryResult(datas)
-}
+*/
 
 export async function retrieveDDO(
   did: string | DID,
@@ -208,8 +214,8 @@ export async function getAlgorithmDatasetsForCompute(
   const source = axios.CancelToken.source()
   const computeDatasets = await queryMetadata(
     getQueryForAlgorithmDatasets(algorithmId),
-    metadataCacheUri,
-    source.token
+    source.token,
+    chainIds
   )
   const computeDatasetsForCurrentAlgorithm: DDO[] = []
   computeDatasets.results.forEach((data: DDO) => {
