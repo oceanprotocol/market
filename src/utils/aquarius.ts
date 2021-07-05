@@ -55,42 +55,23 @@ export function transformQueryResult(
 
 export async function queryMetadata(
   query: SearchQuery,
-  cancelToken: CancelToken,
-  chainIds: number[],
-  metadataCacheUri?: string
+  cancelToken: CancelToken
 ): Promise<any> {
-  const datas: any = {
-    results: [],
-    page: 0,
-    total_pages: 0,
-    total_results: 0
-  }
-  for (const chainId of chainIds) {
-    const uri = getOceanConfig(chainId).metadataCacheUri
-    try {
-      const response: AxiosResponse<any> = await axios.post(
-        `${uri}/api/v1/aquarius/assets/ddo/query`,
-        { ...query, cancelToken }
-      )
-      if (!response || response.status !== 200 || !response.data) return
-
-      console.log(response.data.total_pages)
-
-      datas.results = [...datas.results, ...response.data.results]
-      datas.page = response.data.page
-      datas.total_pages += response.data.total_pages
-      datas.total_results += response.data.total_results
-    } catch (error) {
-      if (axios.isCancel(error)) {
-        Logger.log(error.message)
-      } else {
-        Logger.error(error.message)
-      }
+  try {
+    const response: AxiosResponse<any> = await axios.post(
+      `https://multiaqua.oceanprotocol.com/api/v1/aquarius/assets/ddo/query`,
+      { ...query, cancelToken }
+    )
+    if (!response || response.status !== 200 || !response.data) return
+    console.log(response.data)
+    return transformQueryResult(response.data)
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      Logger.log(error.message)
+    } else {
+      Logger.error(error.message)
     }
   }
-  datas.results = datas.results.slice(0, 9)
-  console.log(datas)
-  return transformQueryResult(datas)
 }
 
 /*
@@ -110,9 +91,8 @@ export async function retrieveDDO(
   metadataCacheUri?: string
 ): Promise<DDO_TEMPORARY> {
   try {
-    const uri = getOceanConfig(chainId).providerUri
     const response: AxiosResponse<DDO> = await axios.get(
-      `${uri}/api/v1/aquarius/assets/ddo/${did}`,
+      `https://multiaqua.oceanprotocol.com/api/v1/aquarius/assets/ddo/${did}`,
       { cancelToken }
     )
     if (!response || response.status !== 200 || !response.data) return
@@ -132,18 +112,20 @@ export async function retrieveDDO(
 export async function getAssetsNames(
   didList: string[] | DID[],
   chainList: number[],
-  cancelToken: CancelToken,
-  metadataCacheUri: string
+  cancelToken: CancelToken
 ): Promise<Record<string, string>> {
   try {
     const response: AxiosResponse<Record<string, string>> = await axios.post(
-      `${metadataCacheUri}/api/v1/aquarius/assets/names`,
+      `https://multiaqua.oceanprotocol.com/api/v1/aquarius/assets/names`,
       {
         didList,
         cancelToken
       }
     )
     if (!response || response.status !== 200 || !response.data) return
+
+    console.log(response.data.total_pages)
+
     return response.data
   } catch (error) {
     if (axios.isCancel(error)) {
