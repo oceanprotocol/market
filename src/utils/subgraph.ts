@@ -110,11 +110,11 @@ async function fetchData(
   query: TypedDocumentNode,
   variables: any,
   context: OperationContext
-): Promise<any[]> {
+): Promise<OperationResult<any>> {
   try {
     const client = getUrqlClientInstance()
     const response = await client.query(query, variables, context).toPromise()
-    return response.data.tokenOrders
+    return response
   } catch (error) {
     console.error('Error fetchData: ', error.message)
   }
@@ -126,7 +126,6 @@ export async function fetchDataForMultipleChains(
   chainIds: number[]
 ): Promise<any[]> {
   let datas: any[] = []
-  console.log(chainIds)
   for (const chainId of chainIds) {
     console.log(chainId)
     const context: OperationContext = {
@@ -137,7 +136,7 @@ export async function fetchDataForMultipleChains(
     }
     try {
       const response = await fetchData(query, variables, context)
-      datas = [...datas, ...response]
+      datas = datas.concat(response.data)
     } catch (error) {
       console.error('Error fetchData: ', error.message)
     }

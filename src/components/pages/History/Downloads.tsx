@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import Table from '../../atoms/Table'
-import { gql, OperationContext, useQuery } from 'urql'
+import { gql } from 'urql'
 import Time from '../../atoms/Time'
 import web3 from 'web3'
 import AssetTitle from '../../molecules/AssetListTitle'
@@ -10,11 +10,8 @@ import { retrieveDDO } from '../../../utils/aquarius'
 import { Logger } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../providers/UserPreferences'
-import { getOceanConfig } from '../../../utils/ocean'
-import {
-  fetchDataForMultipleChains,
-  getSubgrahUri
-} from '../../../utils/subgraph'
+import { fetchDataForMultipleChains } from '../../../utils/subgraph'
+import { OrdersData_tokenOrders as OrdersData } from '../../../@types/apollo/OrdersData'
 
 const getTokenOrders = gql`
   query OrdersData($user: String!) {
@@ -36,7 +33,7 @@ const getTokenOrders = gql`
 interface DownloadedAssets {
   did: string
   dtSymbol: string
-  timestamp: string
+  timestamp: number
 }
 
 const columns = [
@@ -68,27 +65,6 @@ export default function ComputeDownloads(): ReactElement {
   const [orders, setOrders] = useState<DownloadedAssets[]>()
   const { chainIds } = useUserPreferences()
 
-  /* const variables = { user: accountId?.toLowerCase() }
-
-  const queryContext: OperationContext = {
-    url: `${getSubgrahUri(
-      chainIds[2]
-    )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-    requestPolicy: 'network-only'
-  }
-
-  const [result] = useQuery({
-    query: getTokenOrders,
-    variables: variables,
-    context: React.useMemo(function () {
-      return queryContext
-    }, [])
-  }) 
-
-  const { data, fetching, error } = result
-  console.log(data)
-  */
-
   useEffect(() => {
     const variables = { user: accountId?.toLowerCase() }
 
@@ -104,8 +80,12 @@ export default function ComputeDownloads(): ReactElement {
         chainIds
       )
 
-      const data = response
-      console.log('DOWNLOADS DATA: ', data)
+      const data: OrdersData[] = []
+      for (let i = 0; i < response.length; i++) {
+        response[i].tokenOrders.forEach((tokenOrder: OrdersData) => {
+          data.push(tokenOrder)
+        })
+      }
       setIsLoading(true)
       try {
         for (let i = 0; i < data.length; i++) {
@@ -125,6 +105,7 @@ export default function ComputeDownloads(): ReactElement {
             })
           }
         }
+
         setOrders(filteredOrders)
       } catch (err) {
         Logger.log(err.message)

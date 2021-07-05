@@ -14,7 +14,7 @@ import Token from '../../organisms/AssetActions/Pool/Token'
 import { useWeb3 } from '../../../providers/Web3'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import { getOceanConfig } from '../../../utils/ocean'
-import { getUrqlClientInstance } from '../../../providers/UrqlProvider'
+import { fetchDataForMultipleChains } from '../../../utils/subgraph'
 
 const poolSharesQuery = gql`
   query PoolShares($user: String) {
@@ -108,11 +108,6 @@ function Liquidity({ row, type }: { row: Asset; type: string }) {
   )
 }
 
-function getSubgrahUri(chainId: number): string {
-  const config = getOceanConfig(chainId)
-  return config.subgraphUri
-}
-
 const columns = [
   {
     name: 'Data Set',
@@ -153,26 +148,24 @@ export default function PoolShares(): ReactElement {
   const { chainIds } = useUserPreferences()
 
   useEffect(() => {
-    const queryContext: OperationContext = {
-      url: `${getSubgrahUri(
-        chainIds[0]
-      )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-      requestPolicy: 'network-only'
-    }
     const variables = { user: accountId?.toLowerCase() }
-    const client = getUrqlClientInstance()
-
     async function getShares() {
       const assetList: Asset[] = []
+      const data: PoolShare[] = []
       try {
         setLoading(true)
-        const result = await client
-          .query(poolSharesQuery, variables, queryContext)
-          .toPromise()
-        const { data } = result
-        console.log('SHARED DATA: ', data.poolShares)
+        const result = await fetchDataForMultipleChains(
+          poolSharesQuery,
+          variables,
+          chainIds
+        )
+        for (let i = 0; i < result.length; i++) {
+          result[i].poolShares.forEach((poolShare: PoolShare) => {
+            data.push(poolShare)
+          })
+        }
         if (!data) return
-        data.poolShares.forEach((poolShare: PoolShare) => {
+        data.forEach((poolShare: PoolShare) => {
           const userLiquidity = calculateUserLiquidity(poolShare)
           assetList.push({
             poolShare: poolShare,

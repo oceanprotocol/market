@@ -20,8 +20,8 @@ import styles from './index.module.css'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import { getOceanConfig } from '../../../../utils/ocean'
-import { getUrqlClientInstance } from '../../../../providers/UrqlProvider'
-import { getNetworkDataById } from '../../../../utils/web3'
+import { fetchDataForMultipleChains } from '../../../../utils/subgraph'
+import { OrdersData_tokenOrders as OrdersData } from '../../../../@types/apollo/OrdersData'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -82,12 +82,6 @@ const columns = [
   }
 ]
 
-function getSubgrahUri(chainId: number): string {
-  const config = getOceanConfig(chainId)
-  console.log('CONFIG SG: ', config)
-  return config.subgraphUri
-}
-
 async function getAssetMetadata(
   queryDtList: string,
   metadataCacheUri: string,
@@ -120,30 +114,29 @@ export default function ComputeJobs(): ReactElement {
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
 
   async function getJobs() {
-    const queryContext: OperationContext = {
-      url: `${getSubgrahUri(1)}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-      requestPolicy: 'network-only'
-    }
-    const client = getUrqlClientInstance()
     const variables = { user: accountId?.toLowerCase() }
-
-    const result = await client
-      .query(getComputeOrders, variables, queryContext)
-      .toPromise()
-
-    const { data } = result
-    console.log('COMPUTE DATA: ', data)
-
-    if (!ocean || !account || !data) {
-      setIsLoading(false)
-      return
+    const result = await fetchDataForMultipleChains(
+      getComputeOrders,
+      variables,
+      chainIds
+    )
+    const data: OrdersData[] = []
+    for (let i = 0; i < result.length; i++) {
+      result[i].tokenOrders.forEach((tokenOrder: OrdersData) => {
+        data.push(tokenOrder)
+      })
     }
+
+    // if (!ocean || !account || !data) {
+    //   setIsLoading(false)
+    //   return
+    // }
 
     setIsLoading(true)
     const dtList = []
     const computeJobs: ComputeJobMetaData[] = []
-    for (let i = 0; i < data.tokenOrders.length; i++) {
-      dtList.push(data.tokenOrders[i].datatokenId.address)
+    for (let i = 0; i < data.length; i++) {
+      dtList.push(data[i].datatokenId.address)
     }
     const queryDtList = JSON.stringify(dtList)
       .replace(/,/g, ' ')
@@ -160,10 +153,10 @@ export default function ComputeJobs(): ReactElement {
       )
       const providers: Provider[] = []
       const serviceEndpoints: string[] = []
-      for (let i = 0; i < data.tokenOrders.length; i++) {
+      for (let i = 0; i < data.length; i++) {
         try {
           const did = web3.utils
-            .toChecksumAddress(data.tokenOrders[i].datatokenId.address)
+            .toChecksumAddress(data[i].datatokenId.address)
             .replace('0x', 'did:op:')
 
           const ddo = assets.filter((x) => x.id === did)[0]
@@ -171,7 +164,7 @@ export default function ComputeJobs(): ReactElement {
           if (!ddo) continue
 
           const service = ddo.service.filter(
-            (x: Service) => x.index === data.tokenOrders[i].serviceId
+            (x: Service) => x.index === data[i].serviceId
           )[0]
 
           if (!service || service.type !== 'compute') continue
