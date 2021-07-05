@@ -16,6 +16,6 @@ async function generateGraphSchema() {
     'https://subgraph.rinkeby.oceanprotocol.com/subgraphs/name/oceanprotocol/ocean-subgraph',
     query
   )
-  generateTypeScriptTypes(response.data.data, './src/@types/schema.json')
-  // fs.writeFileSync('./src/@types/schema.json', JSON.stringify(response.data))
+  // generateTypeScriptTypes(response.data.data, './src/@types/schema.json')
+  fs.writeFileSync('./src/@types/schema.json', JSON.stringify(response.data))
 }

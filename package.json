@@ -9,7 +9,7 @@
     "build": "gatsby build && cp _redirects public/_redirects",
     "serve": "serve -s public/",
     "jest": "NODE_ENV=test jest -c tests/unit/jest.config.js",
-    "test": "npm run graphql:generateSchema && npm run lint && npm run jest",
+    "test": "npm run graphql:graphTypes && npm run lint && npm run jest",
     "test:watch": "npm run lint && npm run jest -- --watch",
     "lint": "npm run write:repoMetadata && eslint --ignore-path .gitignore --ext .js --ext .ts --ext .tsx . && npm run type-check",
     "format": "prettier --ignore-path .gitignore './**/*.{css,yml,js,ts,tsx,json}' --write",
@@ -19,8 +19,8 @@
     "storybook:build": "build-storybook -c .storybook -o public/storybook",
     "write:repoMetadata": "node ./scripts/write-repo-metadata > repo-metadata.json",
     "deploy:s3": "./scripts/deploy-s3.sh",
-    "graphql:generateSchema": "node ./scripts/generate-graphql-schema",
-    "postinstall": "husky install"
+    "postinstall": "husky install",
+    "graphql:graphTypes": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
     "@coingecko/cryptoformat": "^0.4.2",
@@ -60,6 +60,7 @@
     "gatsby-transformer-remark": "^2.16.1",
     "gatsby-transformer-sharp": "^2.12.1",
     "graphql": "14.7.0",
+    "graphql-schema-typescript": "^1.5.2",
     "is-url-superb": "^6.0.0",
     "jwt-decode": "^3.1.2",
     "lodash.debounce": "^4.0.8",
@@ -88,6 +89,11 @@
     "yup": "^0.32.9"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "1.21.6",
+    "@graphql-codegen/introspection": "1.18.2",
+    "@graphql-codegen/typescript": "1.22.4",
+    "@graphql-codegen/typescript-operations": "1.18.3",
+    "@graphql-codegen/typescript-react-apollo": "2.3.0",
     "@svgr/webpack": "^5.5.0",
     "@testing-library/jest-dom": "^5.12.0",
     "@testing-library/react": "^11.2.7",

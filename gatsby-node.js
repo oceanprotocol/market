@@ -8,7 +8,7 @@ execSync(`node ./scripts/write-repo-metadata > repo-metadata.json`, {
 })
 
 // Generate GraphQl typings for urql
-execSync(`npm run graphql:generateSchema`, { stdio: 'inherit' })
+execSync(`npm run graphql:graphTypes`, { stdio: 'inherit' })
 
 // Fetch EVM networks metadata
 execSync(

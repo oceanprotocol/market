@@ -3,8 +3,9 @@ import { DDO, BestPrice } from '@oceanprotocol/lib'
 import { getUrqlClientInstance } from '../providers/UrqlProvider'
 import { getOceanConfig } from './ocean'
 import web3 from 'web3'
-import schema from '../../src/@types/schema.json'
 import { AssetsFreePrice } from '../@types/apollo/AssetsFreePrice'
+import { AssetPreviousOrder } from '../@types/apollo/AssetPreviousOrder'
+// import {AssetsFreePrice} from '../@types/graph.types'
 
 export interface PriceList {
   [key: string]: string
