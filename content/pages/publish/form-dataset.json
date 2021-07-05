@@ -49,6 +49,7 @@
     {
       "name": "customProvider",
       "label": "Custom Provider URL",
+      "type": "customProvider",
       "help": "Enter the URL for your custom provider.",
       "placeholder": "http://localhost:8000/api/v1/services/consume/"
     },

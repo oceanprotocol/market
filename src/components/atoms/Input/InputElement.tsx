@@ -3,6 +3,7 @@ import slugify from '@sindresorhus/slugify'
 import styles from './InputElement.module.css'
 import { InputProps } from '.'
 import FilesInput from '../../molecules/FormFields/FilesInput'
+import CustomProvider from '../../molecules/FormFields/CustomProviderInput'
 import Terms from '../../molecules/FormFields/Terms'
 import BoxSelection, {
   BoxSelectionOption
@@ -125,6 +126,8 @@ export default function InputElement({
       )
     case 'files':
       return <FilesInput name={name} {...field} {...props} />
+    case 'customProvider':
+      return <CustomProvider name={name} {...field} {...props} />
     case 'datatoken':
       return <Datatoken name={name} {...field} {...props} />
     case 'terms':
