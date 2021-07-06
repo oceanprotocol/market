@@ -65,10 +65,7 @@ function AssetProvider({
   const fetchDdo = async (token?: CancelToken) => {
     Logger.log('[asset] Init asset, get DDO')
     setLoading(true)
-    const ddo = await retrieveDDO(
-      asset as string,
-      token
-    )
+    const ddo = await retrieveDDO(asset as string, token)
 
     if (!ddo) {
       setError(

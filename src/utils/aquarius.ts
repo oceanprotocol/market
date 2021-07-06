@@ -80,21 +80,9 @@ export async function queryMetadata(
   }
 }
 
-/*
-  --for sorting results
-  datas.results.sort((ddo1, ddo2) => {
-    if (ddo1.created < ddo2.created) return 1
-    if (ddo1.created > ddo2.created) return -1
-    return 0
-  })
-  datas.results = datas.results.slice(0, 9)
-*/
-
 export async function retrieveDDO(
   did: string | DID,
-  chainId: number,
-  cancelToken: CancelToken,
-  metadataCacheUri?: string
+  cancelToken: CancelToken
 ): Promise<DDO_TEMPORARY> {
   try {
     const response: AxiosResponse<DDO> = await axios.get(
@@ -117,7 +105,6 @@ export async function retrieveDDO(
 
 export async function getAssetsNames(
   didList: string[] | DID[],
-  chainList: number[],
   cancelToken: CancelToken
 ): Promise<Record<string, string>> {
   try {
@@ -145,7 +132,6 @@ export async function getAssetsNames(
 export async function transformDDOToAssetSelection(
   datasetProviderEndpoint: string,
   ddoList: DDO[],
-  metadataCacheUri: string,
   selectedAlgorithms?: PublisherTrustedAlgorithm[]
 ): Promise<AssetSelectionAsset[]> {
   const source = axios.CancelToken.source()
@@ -160,7 +146,7 @@ export async function transformDDOToAssetSelection(
     algoComputeService?.serviceEndpoint &&
       (didProviderEndpointMap[ddo.id] = algoComputeService?.serviceEndpoint)
   }
-  const ddoNames = await getAssetsNames(didList, metadataCacheUri, source.token)
+  const ddoNames = await getAssetsNames(didList, source.token)
   const algorithmList: AssetSelectionAsset[] = []
   didList?.forEach((did: string) => {
     if (
@@ -219,7 +205,6 @@ export async function getAlgorithmDatasetsForCompute(
   const datasets = await transformDDOToAssetSelection(
     datasetProviderUri,
     computeDatasetsForCurrentAlgorithm,
-    metadataCacheUri,
     []
   )
   return datasets

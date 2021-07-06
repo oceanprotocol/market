@@ -50,11 +50,7 @@ function DetailsAssets({ job }: { job: ComputeJobMetaData }) {
     async function getAlgoMetadata() {
       const source = axios.CancelToken.source()
 
-      const ddo = await retrieveDDO(
-        job.algoDID,
-        appConfig.metadataCacheUri,
-        source.token
-      )
+      const ddo = await retrieveDDO(job.algoDID, source.token)
       setAlgoDtSymbol(ddo.dataTokenInfo.symbol)
 
       const { attributes } = ddo.findServiceByType('metadata')
