@@ -6,13 +6,16 @@ import { useOcean } from '../../providers/Ocean'
 import Price from '../atoms/Price'
 import Tooltip from '../atoms/Tooltip'
 import AssetTitle from './AssetListTitle'
-import { queryMetadata } from '../../utils/aquarius'
+import {
+  queryMetadata,
+  transformChainIdsListToQuery
+} from '../../utils/aquarius'
 import axios, { CancelToken } from 'axios'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 
 async function getAssetsBookmarked(
   bookmarks: string[],
-  metadataCacheUri: string,
+  chainIds: number[],
   cancelToken: CancelToken
 ) {
   const searchDids = JSON.stringify(bookmarks)
@@ -27,7 +30,9 @@ async function getAssetsBookmarked(
     offset: 100,
     query: {
       query_string: {
-        query: searchDids,
+        query: `(${searchDids}) AND (${transformChainIdsListToQuery(
+          chainIds
+        )})`,
         fields: ['dataToken'],
         default_operator: 'OR'
       }
@@ -80,6 +85,7 @@ export default function Bookmarks(): ReactElement {
 
   const [pinned, setPinned] = useState<DDO[]>()
   const [isLoading, setIsLoading] = useState<boolean>()
+  const { chainIds } = useUserPreferences()
 
   useEffect(() => {
     if (!appConfig.metadataCacheUri || bookmarks === []) return
@@ -97,7 +103,7 @@ export default function Bookmarks(): ReactElement {
       try {
         const resultPinned = await getAssetsBookmarked(
           bookmarks,
-          appConfig.metadataCacheUri,
+          chainIds,
           source.token
         )
         setPinned(resultPinned?.results)
@@ -112,7 +118,7 @@ export default function Bookmarks(): ReactElement {
     return () => {
       source.cancel()
     }
-  }, [bookmarks, appConfig.metadataCacheUri])
+  }, [bookmarks, chainIds])
 
   return (
     <Table
