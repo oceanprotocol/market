@@ -12,7 +12,6 @@ import {
 import { AssetSelectionAsset } from '../components/molecules/FormFields/AssetSelection'
 import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
-import { DDO_TEMPORARY } from '../providers/Ocean'
 
 function getQueryForAlgorithmDatasets(algorithmDid: string) {
   return {
@@ -82,7 +81,7 @@ export async function queryMetadata(
 export async function retrieveDDO(
   did: string | DID,
   cancelToken: CancelToken
-): Promise<DDO_TEMPORARY> {
+): Promise<DDO> {
   try {
     const response: AxiosResponse<DDO> = await axios.get(
       `https://multiaqua.oceanprotocol.com/api/v1/aquarius/assets/ddo/${did}`,
@@ -90,9 +89,8 @@ export async function retrieveDDO(
     )
     if (!response || response.status !== 200 || !response.data) return
 
-    // TODO: remove hacking in chainId in DDO response once Aquarius gives us that
-    const data = { ...response.data, chainId: 1 }
-    return new DDO(data) as DDO_TEMPORARY
+    const data = { ...response.data }
+    return new DDO(data)
   } catch (error) {
     if (axios.isCancel(error)) {
       Logger.log(error.message)
