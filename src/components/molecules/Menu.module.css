@@ -21,20 +21,7 @@
   text-align: left;
   border: none;
 }
-/* .navigation {
-  display: flex;
-  flex: 0 0 auto;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  margin-top: calc(var(--spacer) / 2);
-  text-align: center;
-  border-top: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
-  margin-left: -1rem;
-  margin-right: -1rem;
-  width: calc(50% + 2rem);
-} */
+
 .search {
   display: flex;
   flex: 1 0 auto;

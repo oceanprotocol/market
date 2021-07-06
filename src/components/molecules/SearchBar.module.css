@@ -31,27 +31,6 @@
   flex-grow: 2;
   margin-bottom: 0px;
 }
-/* @media screen and (min-width: 600px) {
-  .search input {
-    min-width: 10rem;
-  }
-}
-@media screen and (min-width: 768px) {
-  .search input {
-    min-width: 10rem;
-  }
-}
-
-@media screen and (min-width: 992px) {
-  .search input {
-    min-width: 20rem;
-  }
-}
-@media screen and (min-width: 1200px) {
-  .search input {
-    min-width: 30rem;
-  }
-} */
 
 .searchIcon {
   fill: var(--brand-grey-light);
