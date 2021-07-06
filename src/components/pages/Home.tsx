@@ -134,10 +134,6 @@ export default function HomePage(): ReactElement {
   return (
     <Permission eventType="browse">
       <>
-        <Container narrow className={styles.searchWrap}>
-          <SearchBar size="large" />
-        </Container>
-
         <section className={styles.section}>
           <h3>Bookmarks</h3>
           <Bookmarks />

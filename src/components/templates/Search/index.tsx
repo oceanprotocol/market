@@ -1,7 +1,6 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import Permission from '../../organisms/Permission'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
-import SearchBar from '../../molecules/SearchBar'
 import AssetList from '../../organisms/AssetList'
 import styles from './index.module.css'
 import queryString from 'query-string'
@@ -65,9 +64,6 @@ export default function SearchPage({
     <Permission eventType="browse">
       <>
         <div className={styles.search}>
-          {(text || owner || tags) && (
-            <SearchBar initialValue={(text || owner) as string} />
-          )}
           <div className={styles.row}>
             <ServiceFilter
               serviceType={service}
