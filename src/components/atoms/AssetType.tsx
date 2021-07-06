@@ -5,7 +5,6 @@ import { ReactComponent as Compute } from '../../images/compute.svg'
 import { ReactComponent as Download } from '../../images/download.svg'
 import { ReactComponent as Lock } from '../../images/lock.svg'
 import NetworkName from './NetworkName'
-import { useOcean } from '../../providers/Ocean'
 
 const cx = classNames.bind(styles)
 
