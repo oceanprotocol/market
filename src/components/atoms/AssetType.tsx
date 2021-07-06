@@ -20,10 +20,6 @@ export default function AssetType({
   chainId: number
   className?: string
 }): ReactElement {
-  const { config } = useOcean()
-
-  console.log(chainId)
-
   const styleClasses = cx({
     [className]: className
   })

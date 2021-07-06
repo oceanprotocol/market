@@ -33,7 +33,6 @@ export default function SearchPage({
   )
 
   useEffect(() => {
-    console.log(chainIds)
     if (!appConfig.metadataCacheUri) return
     async function initSearch() {
       setLoading(true)

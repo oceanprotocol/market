@@ -69,7 +69,6 @@ export async function queryMetadata(
       { ...query, cancelToken }
     )
     if (!response || response.status !== 200 || !response.data) return
-    console.log(response.data)
     return transformQueryResult(response.data)
   } catch (error) {
     if (axios.isCancel(error)) {
@@ -116,9 +115,6 @@ export async function getAssetsNames(
       }
     )
     if (!response || response.status !== 200 || !response.data) return
-
-    console.log(response.data.total_pages)
-
     return response.data
   } catch (error) {
     if (axios.isCancel(error)) {

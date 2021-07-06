@@ -57,7 +57,6 @@ export default function FormEditComputeDataset({
     const algorithmSelectionList = await transformDDOToAssetSelection(
       datasetComputeService?.serviceEndpoint,
       querryResult.results,
-      appConfig.metadataCacheUri,
       publisherTrustedAlgorithms
     )
     return algorithmSelectionList
