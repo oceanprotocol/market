@@ -157,7 +157,9 @@ export default function Compute({
         source.token
       )
       setDdoAlgorithmList(gueryResults.results)
+      const datasetComputeService = ddo.findServiceByType('compute')
       algorithmSelectionList = await transformDDOToAssetSelection(
+        datasetComputeService?.serviceEndpoint,
         gueryResults.results,
         appConfig.metadataCacheUri,
         []
@@ -384,7 +386,10 @@ export default function Compute({
             text="This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
             state="info"
           />
-          <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} />
+          <AlgorithmDatasetsListForCompute
+            algorithmDid={ddo.id}
+            dataset={ddo}
+          />
         </>
       ) : (
         <Formik

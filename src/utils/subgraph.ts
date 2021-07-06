@@ -25,6 +25,36 @@ interface DidAndDatatokenMap {
   [name: string]: string
 }
 
+const FreeQuery = gql`
+  query AssetsFreePrice($datatoken_in: [String!]) {
+    dispensers(orderBy: id, where: { datatoken_in: $datatoken_in }) {
+      datatoken {
+        id
+        address
+      }
+    }
+  }
+`
+
+const AssetFreeQuery = gql`
+  query AssetFreePrice($datatoken: String) {
+    dispensers(orderBy: id, where: { datatoken: $datatoken }) {
+      active
+      owner {
+        id
+      }
+      minterApproved
+      isTrueMinter
+      maxTokens
+      maxBalance
+      balance
+      datatoken {
+        id
+      }
+    }
+  }
+`
+
 const FreQuery = gql`
   query AssetsFrePrice($datatoken_in: [String!]) {
     fixedRateExchanges(orderBy: id, where: { datatoken_in: $datatoken_in }) {
@@ -175,7 +205,8 @@ export async function getPreviousOrders(
 
 function transformPriceToBestPrice(
   frePrice: AssetsFrePriceFixedRateExchanges[],
-  poolPrice: AssetsPoolPricePools[]
+  poolPrice: AssetsPoolPricePools[],
+  freePrice: AssetFreePriceDispenser[]
 ) {
   if (poolPrice?.length > 0) {
     const price: BestPrice = {
@@ -199,6 +230,18 @@ function transformPriceToBestPrice(
       value: frePrice[0]?.rate,
       address: frePrice[0]?.id,
       exchange_id: frePrice[0]?.id,
+      ocean: 0,
+      datatoken: 0,
+      pools: [],
+      isConsumable: 'true'
+    }
+    return price
+  } else if (freePrice?.length > 0) {
+    const price: BestPrice = {
+      type: 'free',
+      value: 0,
+      address: freePrice[0]?.datatoken.id,
+      exchange_id: '',
       ocean: 0,
       datatoken: 0,
       pools: [],
@@ -286,7 +329,8 @@ export async function getAssetsPriceList(assets: DDO[]): Promise<PriceList> {
   ] = await getAssetsPoolsExchangesAndDatatokenMap(assets)
   const poolPriceResponse = values[0]
   const frePriceResponse = values[1]
-  const didDTMap: DidAndDatatokenMap = values[2]
+  const freePriceResponse = values[2]
+  const didDTMap: DidAndDatatokenMap = values[3]
 
   for (const poolPrice of poolPriceResponse) {
     priceList[didDTMap[poolPrice.datatokenAddress]] =
@@ -296,6 +340,9 @@ export async function getAssetsPriceList(assets: DDO[]): Promise<PriceList> {
   }
   for (const frePrice of frePriceResponse) {
     priceList[didDTMap[frePrice.datatoken?.address]] = frePrice.rate
+  }
+  for (const freePrice of freePriceResponse.data?.dispensers) {
+    priceList[didDTMap[freePrice.datatoken?.address]] = '0'
   }
   return priceList
 }
@@ -325,10 +372,15 @@ export async function getPrice(asset: DDO): Promise<BestPrice> {
     freVariables,
     queryContext
   )
+  const freePriceResponse: ApolloQueryResult<AssetsFreePrice> = await fetchData(
+    AssetFreeQuery,
+    freeVariables
+  )
 
   const bestPrice: BestPrice = transformPriceToBestPrice(
     frePriceResponse.data.fixedRateExchanges,
-    poolPriceResponse.data.pools
+    poolPriceResponse.data.pools,
+    freePriceResponse.data.dispensers
   )
 
   return bestPrice
@@ -346,6 +398,7 @@ export async function getAssetsBestPrices(
   ] = await getAssetsPoolsExchangesAndDatatokenMap(assets)
   const poolPriceResponse = values[0]
   const frePriceResponse = values[1]
+  const freePriceResponse = values[2]
 
   for (const ddo of assets) {
     const dataToken = ddo.dataToken.toLowerCase()
@@ -359,7 +412,11 @@ export async function getAssetsBestPrices(
       (fre: any) => fre.datatoken.address === dataToken
     )
     fre && frePrice.push(fre)
-    const bestPrice = transformPriceToBestPrice(frePrice, poolPrice)
+    const free = freePriceResponse.data?.dispensers.find(
+      (free: any) => free.datatoken.address === dataToken
+    )
+    free && freePrice.push(free)
+    const bestPrice = transformPriceToBestPrice(frePrice, poolPrice, freePrice)
     assetsWithPrice.push({
       ddo: ddo,
       price: bestPrice

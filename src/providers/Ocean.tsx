@@ -70,10 +70,11 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
   // Initial connection
   // -----------------------------------
   useEffect(() => {
-    // if (!ddo?.chainId) return
+    // TODO: remove DDO typing once ocean.js has it
+    if (!(ddo as DDO_TEMPORARY)?.chainId) return
 
     const config = {
-      ...getOceanConfig((ddo as DDO_TEMPORARY)?.chainId || 1),
+      ...getOceanConfig((ddo as DDO_TEMPORARY)?.chainId),
 
       // add local dev values
       ...((ddo as DDO_TEMPORARY)?.chainId === 8996 && {

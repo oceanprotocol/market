@@ -29,6 +29,7 @@ interface UseSiteMetadata {
     portisId: string
     allowFixedPricing: string
     allowDynamicPricing: string
+    allowFreePricing: string
     allowAdvancedSettings: string
     credentialType: string
   }
@@ -65,6 +66,7 @@ const query = graphql`
           portisId
           allowFixedPricing
           allowDynamicPricing
+          allowFreePricing
           allowAdvancedSettings
           credentialType
         }

@@ -85,7 +85,7 @@ function SectionQueryResult({
           appConfig.metadataCacheUri,
           source.token
         )
-        if (result.totalResults <= 15) {
+        if (queryData && result.totalResults > 0 && result.totalResults <= 15) {
           const searchDIDs = queryData.split(' ')
           const sortedAssets = sortElements(result.results, searchDIDs)
           // We take more assets than we need from the subgraph (to make sure
@@ -95,7 +95,6 @@ function SectionQueryResult({
           sortedAssets.splice(sortedAssets.length - overflow, overflow)
           result.results = sortedAssets
         }
-        if (result.results.length === 0) return
         setResult(result)
         setLoading(false)
       } catch (error) {
