@@ -38,6 +38,7 @@ import { secondsToString } from '../../../../utils/metadata'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import AlgorithmDatasetsListForCompute from '../../AssetContent/AlgorithmDatasetsListForCompute'
 import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
+import { chainIds } from '../../../../../app.config'
 
 const SuccessAction = () => (
   <Button style="text" to="/history?defaultTab=ComputeJobs" size="small">
@@ -153,7 +154,6 @@ export default function Compute({
         getQuerryString(
           computeService.attributes.main.privacy.publisherTrustedAlgorithms
         ),
-        appConfig.metadataCacheUri,
         source.token
       )
       setDdoAlgorithmList(gueryResults.results)
@@ -161,7 +161,6 @@ export default function Compute({
       algorithmSelectionList = await transformDDOToAssetSelection(
         datasetComputeService?.serviceEndpoint,
         gueryResults.results,
-        appConfig.metadataCacheUri,
         []
       )
     }

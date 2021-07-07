@@ -10,6 +10,7 @@ import { getResults } from './utils'
 import { navigate } from 'gatsby'
 import { updateQueryStringParameter } from '../../../utils'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
+import { useUserPreferences } from '../../../providers/UserPreferences'
 
 export default function SearchPage({
   location,
@@ -21,6 +22,7 @@ export default function SearchPage({
   const { appConfig } = useSiteMetadata()
   const parsed = queryString.parse(location.search)
   const { text, owner, tags, page, sort, sortOrder, serviceType } = parsed
+  const { chainIds } = useUserPreferences()
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [loading, setLoading] = useState<boolean>()
   const [service, setServiceType] = useState<string>(serviceType as string)
@@ -34,7 +36,11 @@ export default function SearchPage({
     async function initSearch() {
       setLoading(true)
       setTotalResults(undefined)
-      const queryResult = await getResults(parsed, appConfig.metadataCacheUri)
+      const queryResult = await getResults(
+        parsed,
+        appConfig.metadataCacheUri,
+        chainIds
+      )
       setQueryResult(queryResult)
       setTotalResults(queryResult.totalResults)
       setLoading(false)
@@ -48,7 +54,8 @@ export default function SearchPage({
     page,
     serviceType,
     sortOrder,
-    appConfig.metadataCacheUri
+    appConfig.metadataCacheUri,
+    chainIds
   ])
 
   function setPage(page: number) {

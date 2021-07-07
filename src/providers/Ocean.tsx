@@ -28,11 +28,6 @@ interface OceanProviderValue {
 
 const OceanContext = createContext({} as OceanProviderValue)
 
-// TODO: remove temporary typing once ddo.chainId is present in ocean.js
-export interface DDO_TEMPORARY extends DDO {
-  chainId: number
-}
-
 function OceanProvider({ children }: { children: ReactNode }): ReactElement {
   const { web3, accountId } = useWeb3()
   const { ddo } = useAsset()
@@ -71,13 +66,13 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
   // -----------------------------------
   useEffect(() => {
     // TODO: remove DDO typing once ocean.js has it
-    if (!(ddo as DDO_TEMPORARY)?.chainId) return
+    if (!ddo?.chainId) return
 
     const config = {
-      ...getOceanConfig((ddo as DDO_TEMPORARY)?.chainId),
+      ...getOceanConfig(ddo?.chainId),
 
       // add local dev values
-      ...((ddo as DDO_TEMPORARY)?.chainId === 8996 && {
+      ...(ddo?.chainId === 8996 && {
         ...getDevelopmentConfig()
       })
     }

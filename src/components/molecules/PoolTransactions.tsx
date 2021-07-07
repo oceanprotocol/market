@@ -16,6 +16,7 @@ import {
 
 import web3 from 'web3'
 import { useWeb3 } from '../../providers/Web3'
+import { getOceanConfig } from '../../utils/ocean'
 
 const txHistoryQueryByPool = gql`
   query TransactionHistoryByPool($user: String, $pool: String) {
