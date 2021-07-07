@@ -10,7 +10,10 @@ import Container from '../atoms/Container'
 import Button from '../atoms/Button'
 import Bookmarks from '../molecules/Bookmarks'
 import axios from 'axios'
-import { queryMetadata } from '../../utils/aquarius'
+import {
+  queryMetadata,
+  transformChainIdsListToQuery
+} from '../../utils/aquarius'
 import Permission from '../organisms/Permission'
 import { getHighestLiquidityDIDs } from '../../utils/subgraph'
 import { DDO, Logger } from '@oceanprotocol/lib'
@@ -28,7 +31,9 @@ async function getQueryHighest(
     offset: 15,
     query: {
       query_string: {
-        query: `(${dids}) AND -isInPurgatory:true`,
+        query: `(${dids}) AND (${transformChainIdsListToQuery(
+          chainIds
+        )}) AND -isInPurgatory:true`,
         fields: ['dataToken']
       }
     }
@@ -44,7 +49,9 @@ function getQueryLatest(chainIds: number[]): SearchQuery {
     offset: 9,
     query: {
       query_string: {
-        query: `-isInPurgatory:true`
+        query: `(${transformChainIdsListToQuery(
+          chainIds
+        )}) AND -isInPurgatory:true `
       }
     },
     sort: { created: -1 }
@@ -72,6 +79,7 @@ function SectionQueryResult({
   const { appConfig } = useSiteMetadata()
   const [result, setResult] = useState<QueryResult>()
   const [loading, setLoading] = useState<boolean>()
+  const { chainIds } = useUserPreferences()
 
   useEffect(() => {
     if (!appConfig.metadataCacheUri) return
@@ -80,11 +88,7 @@ function SectionQueryResult({
     async function init() {
       try {
         setLoading(true)
-        const result = await queryMetadata(
-          query,
-          appConfig.metadataCacheUri,
-          source.token
-        )
+        const result = await queryMetadata(query, source.token)
         if (queryData && result.totalResults > 0 && result.totalResults <= 15) {
           const searchDIDs = queryData.split(' ')
           const sortedAssets = sortElements(result.results, searchDIDs)
@@ -134,10 +138,6 @@ export default function HomePage(): ReactElement {
   return (
     <Permission eventType="browse">
       <>
-        <Container narrow className={styles.searchWrap}>
-          <SearchBar size="large" />
-        </Container>
-
         <section className={styles.section}>
           <h3>Bookmarks</h3>
           <Bookmarks />

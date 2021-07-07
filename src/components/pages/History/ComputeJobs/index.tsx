@@ -10,13 +10,17 @@ import Button from '../../../atoms/Button'
 import { useOcean } from '../../../../providers/Ocean'
 import { gql, useQuery } from 'urql'
 import { useWeb3 } from '../../../../providers/Web3'
-import { queryMetadata } from '../../../../utils/aquarius'
+import {
+  queryMetadata,
+  transformChainIdsListToQuery
+} from '../../../../utils/aquarius'
 import axios, { CancelToken } from 'axios'
 import Details from './Details'
 import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
 import { ReactComponent as Refresh } from '../../../../images/refresh.svg'
 import styles from './index.module.css'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
+import { useUserPreferences } from '../../../../providers/UserPreferences'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -83,31 +87,35 @@ const columns = [
 
 async function getAssetMetadata(
   queryDtList: string,
-  metadataCacheUri: string,
-  cancelToken: CancelToken
+  cancelToken: CancelToken,
+  chainIds: number[]
 ): Promise<DDO[]> {
   const queryDid = {
     page: 1,
     offset: 100,
     query: {
       query_string: {
-        query: `(${queryDtList}) AND service.attributes.main.type:dataset AND service.type:compute`,
+        query: `(${queryDtList}) (${transformChainIdsListToQuery(
+          chainIds
+        )}) AND (${transformChainIdsListToQuery(
+          chainIds
+        )}) AND service.attributes.main.type:dataset AND service.type:compute`,
         fields: ['dataToken']
       }
     }
   }
 
-  const result = await queryMetadata(queryDid, metadataCacheUri, cancelToken)
+  const result = await queryMetadata(queryDid, cancelToken)
 
   return result.results
 }
 
 export default function ComputeJobs(): ReactElement {
-  const { appConfig } = useSiteMetadata()
   const { ocean, account, config } = useOcean()
   const { accountId } = useWeb3()
   const [isLoading, setIsLoading] = useState(true)
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
+  const { chainIds } = useUserPreferences()
   const [result] = useQuery<ComputeOrders>({
     query: getComputeOrders,
     variables: {
@@ -117,8 +125,7 @@ export default function ComputeJobs(): ReactElement {
   const { data } = result
 
   async function getJobs() {
-    if (!ocean || !account) return
-
+    if (!accountId) return
     setIsLoading(true)
 
     // await refetch()
@@ -134,11 +141,7 @@ export default function ComputeJobs(): ReactElement {
 
     try {
       const source = axios.CancelToken.source()
-      const assets = await getAssetMetadata(
-        queryDtList,
-        appConfig.metadataCacheUri,
-        source.token
-      )
+      const assets = await getAssetMetadata(queryDtList, source.token, chainIds)
       const providers: Provider[] = []
       const serviceEndpoints: string[] = []
       for (let i = 0; i < data.tokenOrders.length; i++) {
@@ -240,12 +243,12 @@ export default function ComputeJobs(): ReactElement {
   }
 
   useEffect(() => {
-    if (data === undefined || !appConfig.metadataCacheUri) {
+    if (data === undefined || !chainIds) {
       setIsLoading(false)
       return
     }
     getJobs()
-  }, [ocean, account, data, appConfig.metadataCacheUri])
+  }, [ocean, account, data, chainIds])
 
   return (
     <>

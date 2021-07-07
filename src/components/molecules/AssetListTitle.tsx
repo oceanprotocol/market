@@ -30,11 +30,7 @@ export default function AssetListTitle({
     const source = axios.CancelToken.source()
 
     async function getAssetName() {
-      const title = await getAssetsNames(
-        [did],
-        appConfig.metadataCacheUri,
-        source.token
-      )
+      const title = await getAssetsNames([did], source.token)
       setAssetTitle(title[did])
     }
 

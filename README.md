@@ -127,6 +127,7 @@ const queryLatest = {
   offset: 9,
   query: {
     // https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html
+
     query_string: { query: `-isInPurgatory:true` }
   },
   sort: { created: -1 }
@@ -141,11 +142,7 @@ function Component() {
     const source = axios.CancelToken.source()
 
     async function init() {
-      const result = await queryMetadata(
-        query,
-        appConfig.metadataCacheUri,
-        source.token
-      )
+      const result = await queryMetadata(query, source.token)
       setResult(result)
     }
     init()
