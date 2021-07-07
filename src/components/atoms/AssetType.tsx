@@ -5,21 +5,20 @@ import { ReactComponent as Compute } from '../../images/compute.svg'
 import { ReactComponent as Download } from '../../images/download.svg'
 import { ReactComponent as Lock } from '../../images/lock.svg'
 import NetworkName from './NetworkName'
-import { useOcean } from '../../providers/Ocean'
 
 const cx = classNames.bind(styles)
 
 export default function AssetType({
   type,
   accessType,
-  className
+  className,
+  chainId
 }: {
   type: string
   accessType: string
+  chainId: number
   className?: string
 }): ReactElement {
-  const { config } = useOcean()
-
   const styleClasses = cx({
     [className]: className
   })
@@ -37,12 +36,8 @@ export default function AssetType({
         {type === 'dataset' ? 'data set' : 'algorithm'}
       </div>
       {/* TODO: networkId needs to come from the multinetwork DDO for each asset */}
-      {(config?.networkId || 1) && (
-        <NetworkName
-          networkId={config?.networkId || 1}
-          className={styles.network}
-          minimal
-        />
+      {chainId && (
+        <NetworkName networkId={chainId} className={styles.network} minimal />
       )}
     </div>
   )

@@ -16,6 +16,10 @@ import { useUserPreferences } from '../../../../providers/UserPreferences'
 import DebugEditCompute from './DebugEditCompute'
 import styles from './index.module.css'
 import { transformComputeFormToServiceComputePrivacy } from '../../../../utils/compute'
+import {
+  setMinterToDispenser,
+  setMinterToPublisher
+} from '../../../../utils/freePrice'
 
 const contentQuery = graphql`
   query EditComputeDataQuery {
@@ -62,7 +66,7 @@ export default function EditComputeDataset({
   const { debug } = useUserPreferences()
   const { ocean } = useOcean()
   const { accountId } = useWeb3()
-  const { ddo, isAssetNetwork, refreshDdo } = useAsset()
+  const { ddo, price, refreshDdo } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
 
@@ -73,6 +77,15 @@ export default function EditComputeDataset({
     resetForm: () => void
   ) {
     try {
+      if (price.type === 'free') {
+        const tx = await setMinterToPublisher(
+          ocean,
+          ddo.dataToken,
+          accountId,
+          setError
+        )
+        if (!tx) return
+      }
       const privacy = await transformComputeFormToServiceComputePrivacy(
         values,
         ocean
@@ -99,6 +112,15 @@ export default function EditComputeDataset({
         Logger.error(content.form.error)
         return
       } else {
+        if (price.type === 'free') {
+          const tx = await setMinterToDispenser(
+            ocean,
+            ddo.dataToken,
+            accountId,
+            setError
+          )
+          if (!tx) return
+        }
         // Edit succeeded
         setSuccess(content.form.success)
         resetForm()

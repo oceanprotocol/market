@@ -12,7 +12,6 @@ import {
 import { AssetSelectionAsset } from '../components/molecules/FormFields/AssetSelection'
 import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
-import { DDO_TEMPORARY } from '../providers/Ocean'
 
 function getQueryForAlgorithmDatasets(algorithmDid: string) {
   return {
@@ -50,18 +49,25 @@ export function transformQueryResult(
   }
 }
 
+export function transformChainIdsListToQuery(chainIds: number[]) {
+  let chainQuery = ''
+  chainIds.forEach((chainId) => {
+    chainQuery += `chainId:${chainId} OR `
+  })
+  chainQuery = chainQuery.slice(0, chainQuery.length - 4)
+  return chainQuery
+}
+
 export async function queryMetadata(
   query: SearchQuery,
-  metadataCacheUri: string,
   cancelToken: CancelToken
-): Promise<QueryResult> {
+): Promise<any> {
   try {
-    const response: AxiosResponse<QueryResult> = await axios.post(
-      `${metadataCacheUri}/api/v1/aquarius/assets/ddo/query`,
+    const response: AxiosResponse<any> = await axios.post(
+      `https://multiaqua.oceanprotocol.com/api/v1/aquarius/assets/ddo/query`,
       { ...query, cancelToken }
     )
     if (!response || response.status !== 200 || !response.data) return
-
     return transformQueryResult(response.data)
   } catch (error) {
     if (axios.isCancel(error)) {
@@ -74,19 +80,17 @@ export async function queryMetadata(
 
 export async function retrieveDDO(
   did: string | DID,
-  metadataCacheUri: string,
   cancelToken: CancelToken
-): Promise<DDO_TEMPORARY> {
+): Promise<DDO> {
   try {
     const response: AxiosResponse<DDO> = await axios.get(
-      `${metadataCacheUri}/api/v1/aquarius/assets/ddo/${did}`,
+      `https://multiaqua.oceanprotocol.com/api/v1/aquarius/assets/ddo/${did}`,
       { cancelToken }
     )
     if (!response || response.status !== 200 || !response.data) return
 
-    // TODO: remove hacking in chainId in DDO response once Aquarius gives us that
-    const data = { ...response.data, chainId: 1 }
-    return new DDO(data) as DDO_TEMPORARY
+    const data = { ...response.data }
+    return new DDO(data)
   } catch (error) {
     if (axios.isCancel(error)) {
       Logger.log(error.message)
@@ -98,12 +102,11 @@ export async function retrieveDDO(
 
 export async function getAssetsNames(
   didList: string[] | DID[],
-  metadataCacheUri: string,
   cancelToken: CancelToken
 ): Promise<Record<string, string>> {
   try {
     const response: AxiosResponse<Record<string, string>> = await axios.post(
-      `${metadataCacheUri}/api/v1/aquarius/assets/names`,
+      `https://multiaqua.oceanprotocol.com/api/v1/aquarius/assets/names`,
       {
         didList,
         cancelToken
@@ -121,22 +124,30 @@ export async function getAssetsNames(
 }
 
 export async function transformDDOToAssetSelection(
+  datasetProviderEndpoint: string,
   ddoList: DDO[],
-  metadataCacheUri: string,
   selectedAlgorithms?: PublisherTrustedAlgorithm[]
 ): Promise<AssetSelectionAsset[]> {
   const source = axios.CancelToken.source()
   const didList: string[] = []
   const priceList: PriceList = await getAssetsPriceList(ddoList)
   const symbolList: any = {}
+  const didProviderEndpointMap: any = {}
   for (const ddo of ddoList) {
     didList.push(ddo.id)
     symbolList[ddo.id] = ddo.dataTokenInfo.symbol
+    const algoComputeService = ddo.findServiceByType('compute')
+    algoComputeService?.serviceEndpoint &&
+      (didProviderEndpointMap[ddo.id] = algoComputeService?.serviceEndpoint)
   }
-  const ddoNames = await getAssetsNames(didList, metadataCacheUri, source.token)
+  const ddoNames = await getAssetsNames(didList, source.token)
   const algorithmList: AssetSelectionAsset[] = []
   didList?.forEach((did: string) => {
-    if (priceList[did]) {
+    if (
+      priceList[did] &&
+      (!didProviderEndpointMap[did] ||
+        didProviderEndpointMap[did] === datasetProviderEndpoint)
+    ) {
       let selected = false
       selectedAlgorithms?.forEach((algorithm: PublisherTrustedAlgorithm) => {
         if (algorithm.did === did) {
@@ -165,12 +176,12 @@ export async function transformDDOToAssetSelection(
 
 export async function getAlgorithmDatasetsForCompute(
   algorithmId: string,
+  datasetProviderUri: string,
   metadataCacheUri: string
 ): Promise<AssetSelectionAsset[]> {
   const source = axios.CancelToken.source()
   const computeDatasets = await queryMetadata(
     getQueryForAlgorithmDatasets(algorithmId),
-    metadataCacheUri,
     source.token
   )
   const computeDatasetsForCurrentAlgorithm: DDO[] = []
@@ -186,8 +197,8 @@ export async function getAlgorithmDatasetsForCompute(
     return []
   }
   const datasets = await transformDDOToAssetSelection(
+    datasetProviderUri,
     computeDatasetsForCurrentAlgorithm,
-    metadataCacheUri,
     []
   )
   return datasets

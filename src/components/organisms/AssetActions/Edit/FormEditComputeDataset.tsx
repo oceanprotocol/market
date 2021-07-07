@@ -52,14 +52,11 @@ export default function FormEditComputeDataset({
       },
       sort: { created: -1 }
     }
-    const querryResult = await queryMetadata(
-      query,
-      appConfig.metadataCacheUri,
-      source.token
-    )
+    const querryResult = await queryMetadata(query, source.token)
+    const datasetComputeService = ddo.findServiceByType('compute')
     const algorithmSelectionList = await transformDDOToAssetSelection(
+      datasetComputeService?.serviceEndpoint,
       querryResult.results,
-      appConfig.metadataCacheUri,
       publisherTrustedAlgorithms
     )
     return algorithmSelectionList

@@ -27,6 +27,13 @@ export interface InputProps {
       | ChangeEvent<HTMLSelectElement>
       | ChangeEvent<HTMLTextAreaElement>
   ): void
+  onKeyPress?(
+    e:
+      | React.KeyboardEvent<HTMLInputElement>
+      | React.KeyboardEvent<HTMLInputElement>
+      | React.KeyboardEvent<HTMLSelectElement>
+      | React.KeyboardEvent<HTMLTextAreaElement>
+  ): void
   rows?: number
   multiple?: boolean
   pattern?: string
@@ -42,6 +49,7 @@ export interface InputProps {
   defaultChecked?: boolean
   size?: 'mini' | 'small' | 'large' | 'default'
   className?: string
+  divClassName?: string
 }
 
 export default function Input(props: Partial<InputProps>): ReactElement {
@@ -50,10 +58,13 @@ export default function Input(props: Partial<InputProps>): ReactElement {
   const hasError =
     props.form?.touched[field.name] && props.form?.errors[field.name]
 
-  const styleClasses = cx({
-    field: true,
-    hasError: hasError
-  })
+  const styleClasses = cx(
+    {
+      field: true,
+      hasError: hasError
+    },
+    props.divClassName
+  )
 
   return (
     <div

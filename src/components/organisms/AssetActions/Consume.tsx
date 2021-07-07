@@ -13,8 +13,8 @@ import { useWeb3 } from '../../../providers/Web3'
 import { usePricing } from '../../../hooks/usePricing'
 import { useConsume } from '../../../hooks/useConsume'
 import ButtonBuy from '../../atoms/ButtonBuy'
-import Web3Feedback from '../../molecules/Web3Feedback'
 import WalletNetworkSwitcher from '../../molecules/WalletNetworkSwither'
+import { secondsToString } from '../../../utils/metadata'
 import AlgorithmDatasetsListForCompute from '../AssetContent/AlgorithmDatasetsListForCompute'
 import styles from './Consume.module.css'
 
@@ -37,13 +37,17 @@ export default function Consume({
   file,
   isBalanceSufficient,
   dtBalance,
-  fileIsLoading
+  fileIsLoading,
+  isConsumable,
+  consumableFeedback
 }: {
   ddo: DDO
   file: FileMetadata
   isBalanceSufficient: boolean
   dtBalance: string
   fileIsLoading?: boolean
+  isConsumable?: boolean
+  consumableFeedback?: string
 }): ReactElement {
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
@@ -56,7 +60,7 @@ export default function Consume({
   const { consumeStepText, consume, consumeError, isLoading } = useConsume()
   const [isDisabled, setIsDisabled] = useState(true)
   const [hasDatatoken, setHasDatatoken] = useState(false)
-  const [isConsumable, setIsConsumable] = useState(true)
+  const [isConsumablePrice, setIsConsumablePrice] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
   const { data } = useQuery<OrdersData>(previousOrderQuery, {
     variables: {
@@ -94,7 +98,7 @@ export default function Consume({
   useEffect(() => {
     if (!price) return
 
-    setIsConsumable(
+    setIsConsumablePrice(
       price.isConsumable !== undefined ? price.isConsumable === 'true' : true
     )
   }, [price])
@@ -105,14 +109,15 @@ export default function Consume({
 
   useEffect(() => {
     setIsDisabled(
-      (!ocean ||
-        !isBalanceSufficient ||
-        !isAssetNetwork ||
-        typeof consumeStepText !== 'undefined' ||
-        pricingIsLoading ||
-        !isConsumable) &&
-        !hasPreviousOrder &&
-        !hasDatatoken
+      !isConsumable ||
+        ((!ocean ||
+          !isBalanceSufficient ||
+          !isAssetNetwork ||
+          typeof consumeStepText !== 'undefined' ||
+          pricingIsLoading ||
+          !isConsumablePrice) &&
+          !hasPreviousOrder &&
+          !hasDatatoken)
     )
   }, [
     ocean,
@@ -121,8 +126,9 @@ export default function Consume({
     isAssetNetwork,
     consumeStepText,
     pricingIsLoading,
-    isConsumable,
-    hasDatatoken
+    isConsumablePrice,
+    hasDatatoken,
+    isConsumable
   ])
 
   async function handleConsume() {
@@ -158,10 +164,13 @@ export default function Consume({
       dtSymbol={ddo.dataTokenInfo?.symbol}
       dtBalance={dtBalance}
       onClick={handleConsume}
-      assetTimeout={assetTimeout}
+      assetTimeout={secondsToString(parseInt(assetTimeout))}
       assetType={type}
       stepText={consumeStepText || pricingStepText}
       isLoading={pricingIsLoading || isLoading}
+      priceType={price?.type}
+      isConsumable={isConsumable}
+      consumableFeedback={consumableFeedback}
     />
   )
 
@@ -180,7 +189,7 @@ export default function Consume({
         {isAssetNetwork === false && <WalletNetworkSwitcher />}
       </footer>
       {type === 'algorithm' && (
-        <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} />
+        <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} dataset={ddo} />
       )}
     </aside>
   )

@@ -30,11 +30,11 @@ export default function Credentials(props: InputProps) {
       toast.error('Wallet address is invalid')
       return
     }
-    if (arrayInput.includes(value)) {
+    if (arrayInput.includes(value.toLowerCase())) {
       toast.error('Wallet address already added into list')
       return
     }
-    setArrayInput((arrayInput) => [...arrayInput, value])
+    setArrayInput((arrayInput) => [...arrayInput, value.toLowerCase()])
     setValue('')
   }
 

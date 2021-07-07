@@ -11,7 +11,7 @@ import { useOcean } from '../../providers/Ocean'
 import styles from './AssetTeaser.module.css'
 
 declare type AssetTeaserProps = {
-  ddo: DDO
+  ddo: any
   price: BestPrice
 }
 
@@ -42,6 +42,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
           type={type}
           accessType={accessType}
           className={styles.typeDetails}
+          chainId={ddo.chainId}
         />
 
         <div className={styles.content}>

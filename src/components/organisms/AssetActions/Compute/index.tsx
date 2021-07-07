@@ -39,6 +39,7 @@ import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelectio
 import AlgorithmDatasetsListForCompute from '../../AssetContent/AlgorithmDatasetsListForCompute'
 import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
 import WalletNetworkSwitcher from '../../../molecules/WalletNetworkSwither'
+import { chainIds } from '../../../../../app.config'
 
 const SuccessAction = () => (
   <Button style="text" to="/history?defaultTab=ComputeJobs" size="small">
@@ -50,12 +51,16 @@ export default function Compute({
   isBalanceSufficient,
   dtBalance,
   file,
-  fileIsLoading
+  fileIsLoading,
+  isConsumable,
+  consumableFeedback
 }: {
   isBalanceSufficient: boolean
   dtBalance: string
   file: FileMetadata
   fileIsLoading?: boolean
+  isConsumable?: boolean
+  consumableFeedback?: string
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
@@ -82,7 +87,11 @@ export default function Compute({
   const [algorithmTimeout, setAlgorithmTimeout] = useState<string>()
 
   const isComputeButtonDisabled =
-    isJobStarting === true || file === null || !ocean || !isBalanceSufficient
+    isJobStarting === true ||
+    file === null ||
+    !ocean ||
+    !isBalanceSufficient ||
+    !isConsumable
   const hasDatatoken = Number(dtBalance) >= 1
 
   async function checkPreviousOrders(ddo: DDO) {
@@ -154,13 +163,13 @@ export default function Compute({
         getQuerryString(
           computeService.attributes.main.privacy.publisherTrustedAlgorithms
         ),
-        appConfig.metadataCacheUri,
         source.token
       )
       setDdoAlgorithmList(gueryResults.results)
+      const datasetComputeService = ddo.findServiceByType('compute')
       algorithmSelectionList = await transformDDOToAssetSelection(
+        datasetComputeService?.serviceEndpoint,
         gueryResults.results,
-        appConfig.metadataCacheUri,
         []
       )
     }
@@ -385,7 +394,10 @@ export default function Compute({
             text="This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
             state="info"
           />
-          <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} />
+          <AlgorithmDatasetsListForCompute
+            algorithmDid={ddo.id}
+            dataset={ddo}
+          />
         </>
       ) : (
         <Formik
@@ -415,6 +427,8 @@ export default function Compute({
             selectedComputeAssetTimeout={algorithmTimeout}
             stepText={pricingStepText || 'Starting Compute Job...'}
             algorithmPrice={algorithmPrice}
+            isConsumable={isConsumable}
+            consumableFeedback={consumableFeedback}
           />
         </Formik>
       )}
