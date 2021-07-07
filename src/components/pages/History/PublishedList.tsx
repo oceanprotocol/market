@@ -23,7 +23,6 @@ export default function PublishedList(): ReactElement {
   useEffect(() => {
     async function getPublished() {
       if (!accountId) return
-      // TODO: this query needs to adapt to chainIds
       const queryPublishedAssets = {
         page: page,
         offset: 9,
@@ -41,6 +40,7 @@ export default function PublishedList(): ReactElement {
 
         queryResult || setIsLoading(true)
         const result = await queryMetadata(queryPublishedAssets, source.token)
+        console.log('RESULT: ', result)
         setQueryResult(result)
       } catch (error) {
         Logger.error(error.message)

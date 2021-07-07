@@ -8,7 +8,7 @@ import styles from './PoolTransactions.module.css'
 import { useUserPreferences } from '../../providers/UserPreferences'
 import { Ocean } from '@oceanprotocol/lib'
 import { formatPrice } from '../atoms/Price/PriceUnit'
-import { gql, useQuery } from 'urql'
+import { gql } from 'urql'
 import {
   TransactionHistory,
   TransactionHistory_poolTransactions as TransactionHistoryPoolTransactions
@@ -16,7 +16,7 @@ import {
 
 import web3 from 'web3'
 import { useWeb3 } from '../../providers/Web3'
-import { getOceanConfig } from '../../utils/ocean'
+import { fetchDataForMultipleChains } from '../../utils/subgraph'
 
 const txHistoryQueryByPool = gql`
   query TransactionHistoryByPool($user: String, $pool: String) {
@@ -77,9 +77,10 @@ async function getTitle(
   locale: string
 ) {
   let title = ''
-
+  console.log('TITLE FUNCTION: ')
   switch (row.event) {
     case 'swap': {
+      console.log('SWAP: ')
       const inToken = row.tokens.filter((x) => x.type === 'in')[0]
       const inTokenSymbol = await getSymbol(ocean, inToken.tokenAddress)
       const outToken = row.tokens.filter((x) => x.type === 'out')[0]
@@ -135,12 +136,16 @@ function Title({ row }: { row: TransactionHistoryPoolTransactions }) {
   const { ocean } = useOcean()
   const [title, setTitle] = useState<string>()
   const { locale } = useUserPreferences()
+  console.log('OCEAN: ', ocean)
 
   useEffect(() => {
+    console.log('TITLE')
     if (!ocean || !locale || !row) return
 
     async function init() {
       const title = await getTitle(ocean, row, locale)
+      console.log('TITLE = ', title)
+
       setTitle(title)
     }
     init()
@@ -198,27 +203,43 @@ export default function PoolTransactions({
 }): ReactElement {
   const { accountId } = useWeb3()
   const [logs, setLogs] = useState<TransactionHistoryPoolTransactions[]>()
-
-  const [result] = useQuery<TransactionHistory>({
-    query: poolAddress ? txHistoryQueryByPool : txHistoryQuery,
-    variables: {
-      user: accountId?.toLowerCase(),
-      pool: poolAddress?.toLowerCase()
-    }
-    // pollInterval: 20000
-  })
-  const { data, fetching } = result
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { chainIds } = useUserPreferences()
 
   useEffect(() => {
-    if (!data) return
-    setLogs(data.poolTransactions)
-  }, [data, fetching])
+    const variables = { user: accountId?.toLowerCase() }
+    async function getTransactions() {
+      const data: TransactionHistoryPoolTransactions[] = []
+      try {
+        setIsLoading(true)
+        const result = await fetchDataForMultipleChains(
+          poolAddress ? txHistoryQueryByPool : txHistoryQuery,
+          variables,
+          chainIds
+        )
+        for (let i = 0; i < result.length; i++) {
+          result[i].poolTransactions.forEach(
+            (poolTransaction: TransactionHistoryPoolTransactions) => {
+              data.push(poolTransaction)
+            }
+          )
+        }
+        setLogs(data)
+        console.log('TX RESULT: ', data)
+      } catch (error) {
+        console.error('Error fetching pool transactions: ', error.message)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    getTransactions()
+  }, [accountId, chainIds])
 
   return (
     <Table
       columns={minimal ? columnsMinimal : columns}
       data={logs}
-      isLoading={fetching}
+      isLoading={isLoading}
       noTableHead={minimal}
       dense={minimal}
       pagination={minimal ? logs?.length >= 4 : logs?.length >= 9}

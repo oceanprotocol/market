@@ -66,9 +66,8 @@ export default function ComputeDownloads(): ReactElement {
   const { chainIds } = useUserPreferences()
 
   useEffect(() => {
-    const variables = { user: accountId?.toLowerCase() }
-
     if (!appConfig.metadataCacheUri) return
+    const variables = { user: accountId?.toLowerCase() }
 
     async function filterAssets() {
       const filteredOrders: DownloadedAssets[] = []
@@ -86,6 +85,7 @@ export default function ComputeDownloads(): ReactElement {
           data.push(tokenOrder)
         })
       }
+      console.log('DOWNLOADS: ', data)
       setIsLoading(true)
       try {
         for (let i = 0; i < data.length; i++) {
@@ -93,6 +93,8 @@ export default function ComputeDownloads(): ReactElement {
             .toChecksumAddress(data[i].datatokenId.address)
             .replace('0x', 'did:op:')
           const ddo = await retrieveDDO(did, source.token)
+          console.log('DID DDO: ', did, ddo)
+          if (!ddo) continue
           if (ddo.service[1].type === 'access') {
             filteredOrders.push({
               did: did,

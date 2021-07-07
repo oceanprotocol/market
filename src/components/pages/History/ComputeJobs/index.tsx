@@ -24,7 +24,10 @@ import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import { getOceanConfig } from '../../../../utils/ocean'
 import { fetchDataForMultipleChains } from '../../../../utils/subgraph'
-import { OrdersData_tokenOrders as OrdersData } from '../../../../@types/apollo/OrdersData'
+import {
+  OrdersData_tokenOrders as OrdersData,
+  OrdersData_tokenOrders_datatokenId as OrdersDatatoken
+} from '../../../../@types/apollo/OrdersData'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -43,6 +46,14 @@ const getComputeOrders = gql`
     }
   }
 `
+
+interface TokenOrder {
+  id: string
+  serviceId: number
+  datatokenId: OrdersDatatoken
+  tx: any | null
+  timestamp: number
+}
 
 export function Status({ children }: { children: string }): ReactElement {
   return <div className={styles.status}>{children}</div>
@@ -111,6 +122,7 @@ async function getAssetMetadata(
   }
 
   const result = await queryMetadata(queryDid, cancelToken)
+  console.log('RESULT: ', result)
 
   return result.results
 }
@@ -122,6 +134,7 @@ export default function ComputeJobs(): ReactElement {
   const [isLoading, setIsLoading] = useState(true)
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
 
+  console.log('OCEAN: ', ocean, account, config)
   async function getJobs() {
     const variables = { user: accountId?.toLowerCase() }
     const result = await fetchDataForMultipleChains(
@@ -129,12 +142,14 @@ export default function ComputeJobs(): ReactElement {
       variables,
       chainIds
     )
-    const data: OrdersData[] = []
+    const data: TokenOrder[] = []
     for (let i = 0; i < result.length; i++) {
-      result[i].tokenOrders.forEach((tokenOrder: OrdersData) => {
+      result[i].tokenOrders.forEach((tokenOrder: TokenOrder) => {
         data.push(tokenOrder)
       })
     }
+    console.log('DATA: ', data)
+    console.log('OCEAN: ', ocean)
 
     // if (!ocean || !account || !data) {
     //   setIsLoading(false)
@@ -162,10 +177,10 @@ export default function ComputeJobs(): ReactElement {
           const did = web3.utils
             .toChecksumAddress(data[i].datatokenId.address)
             .replace('0x', 'did:op:')
-
+          console.log('DID: ', did)
           const ddo = assets.filter((x) => x.id === did)[0]
-
-          if (!ddo) continue
+          console.log('DDO: ', ddo)
+          if (ddo === undefined) continue
 
           const service = ddo.service.filter(
             (x: Service) => x.index === data[i].serviceId
@@ -256,12 +271,12 @@ export default function ComputeJobs(): ReactElement {
   }
 
   useEffect(() => {
-    if (data === undefined || !chainIds) {
+    if (!chainIds) {
       setIsLoading(false)
       return
     }
     getJobs()
-  }, [ocean, account, data, chainIds])
+  }, [ocean, account, chainIds])
 
   return (
     <>
