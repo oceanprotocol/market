@@ -38,6 +38,7 @@ import { secondsToString } from '../../../../utils/metadata'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import AlgorithmDatasetsListForCompute from '../../AssetContent/AlgorithmDatasetsListForCompute'
 import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
+import { chainIds } from '../../../../../app.config'
 
 const SuccessAction = () => (
   <Button style="text" to="/history?defaultTab=ComputeJobs" size="small">
@@ -49,12 +50,16 @@ export default function Compute({
   isBalanceSufficient,
   dtBalance,
   file,
-  fileIsLoading
+  fileIsLoading,
+  isConsumable,
+  consumableFeedback
 }: {
   isBalanceSufficient: boolean
   dtBalance: string
   file: FileMetadata
   fileIsLoading?: boolean
+  isConsumable?: boolean
+  consumableFeedback?: string
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
@@ -81,7 +86,11 @@ export default function Compute({
   const [algorithmTimeout, setAlgorithmTimeout] = useState<string>()
 
   const isComputeButtonDisabled =
-    isJobStarting === true || file === null || !ocean || !isBalanceSufficient
+    isJobStarting === true ||
+    file === null ||
+    !ocean ||
+    !isBalanceSufficient ||
+    !isConsumable
   const hasDatatoken = Number(dtBalance) >= 1
 
   async function checkPreviousOrders(ddo: DDO) {
@@ -153,7 +162,6 @@ export default function Compute({
         getQuerryString(
           computeService.attributes.main.privacy.publisherTrustedAlgorithms
         ),
-        appConfig.metadataCacheUri,
         source.token
       )
       setDdoAlgorithmList(gueryResults.results)
@@ -161,7 +169,6 @@ export default function Compute({
       algorithmSelectionList = await transformDDOToAssetSelection(
         datasetComputeService?.serviceEndpoint,
         gueryResults.results,
-        appConfig.metadataCacheUri,
         []
       )
     }
@@ -419,6 +426,8 @@ export default function Compute({
             selectedComputeAssetTimeout={algorithmTimeout}
             stepText={pricingStepText || 'Starting Compute Job...'}
             algorithmPrice={algorithmPrice}
+            isConsumable={isConsumable}
+            consumableFeedback={consumableFeedback}
           />
         </Formik>
       )}

@@ -10,7 +10,10 @@ import Button from '../../../atoms/Button'
 import { useOcean } from '../../../../providers/Ocean'
 import { gql, OperationContext, useQuery } from 'urql'
 import { useWeb3 } from '../../../../providers/Web3'
-import { queryMetadata } from '../../../../utils/aquarius'
+import {
+  queryMetadata,
+  transformChainIdsListToQuery
+} from '../../../../utils/aquarius'
 import axios, { CancelToken } from 'axios'
 import { ComputeOrders } from '../../../../@types/apollo/ComputeOrders'
 import Details from './Details'
@@ -88,7 +91,6 @@ const columns = [
 
 async function getAssetMetadata(
   queryDtList: string,
-  metadataCacheUri: string,
   cancelToken: CancelToken,
   chainIds: number[]
 ): Promise<DDO[]> {
@@ -98,19 +100,22 @@ async function getAssetMetadata(
     offset: 100,
     query: {
       query_string: {
-        query: `(${queryDtList}) AND service.attributes.main.type:dataset AND service.type:compute`,
+        query: `(${queryDtList}) (${transformChainIdsListToQuery(
+          chainIds
+        )}) AND (${transformChainIdsListToQuery(
+          chainIds
+        )}) AND service.attributes.main.type:dataset AND service.type:compute`,
         fields: ['dataToken']
       }
     }
   }
 
-  const result = await queryMetadata(queryDid, metadataCacheUri, cancelToken)
+  const result = await queryMetadata(queryDid, cancelToken)
 
   return result.results
 }
 
 export default function ComputeJobs(): ReactElement {
-  const { appConfig } = useSiteMetadata()
   const { ocean, account, config } = useOcean()
   const { accountId } = useWeb3()
   const { chainIds } = useUserPreferences()
@@ -149,12 +154,7 @@ export default function ComputeJobs(): ReactElement {
 
     try {
       const source = axios.CancelToken.source()
-      const assets = await getAssetMetadata(
-        queryDtList,
-        appConfig.metadataCacheUri,
-        source.token,
-        chainIds
-      )
+      const assets = await getAssetMetadata(queryDtList, source.token, chainIds)
       const providers: Provider[] = []
       const serviceEndpoints: string[] = []
       for (let i = 0; i < data.length; i++) {
@@ -256,12 +256,12 @@ export default function ComputeJobs(): ReactElement {
   }
 
   useEffect(() => {
-    if (!appConfig.metadataCacheUri) {
+    if (data === undefined || !chainIds) {
       setIsLoading(false)
       return
     }
     getJobs()
-  }, [ocean, account, appConfig.metadataCacheUri, chainIds])
+  }, [ocean, account, data, chainIds])
 
   return (
     <>

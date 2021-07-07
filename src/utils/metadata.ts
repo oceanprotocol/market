@@ -116,6 +116,7 @@ export function transformPublishFormToMetadata(
       name,
       author,
       dateCreated: ddo ? ddo.created : currentTime,
+      datePublished: '',
       files: typeof files !== 'string' && files,
       license: 'https://market.oceanprotocol.com/terms'
     },
