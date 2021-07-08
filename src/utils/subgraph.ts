@@ -1,16 +1,12 @@
+import { gql, OperationResult, TypedDocumentNode, OperationContext } from 'urql'
 import { DDO, BestPrice } from '@oceanprotocol/lib'
-import {
-  AssetsPoolPrice,
-  AssetsPoolPrice_pools as AssetsPoolPricePools
-} from '../@types/apollo/AssetsPoolPrice'
-import {
-  AssetsFrePrice,
-  AssetsFrePrice_fixedRateExchanges as AssetsFrePriceFixedRateExchanges
-} from '../@types/apollo/AssetsFrePrice'
-import web3 from 'web3'
-import { gql, OperationContext, OperationResult, TypedDocumentNode } from 'urql'
-import { getOceanConfig } from './ocean'
 import { getUrqlClientInstance } from '../providers/UrqlProvider'
+import { getOceanConfig } from './ocean'
+import web3 from 'web3'
+import { AssetsFreePrice } from '../@types/apollo/AssetsFreePrice'
+import { AssetPreviousOrder } from '../@types/apollo/AssetPreviousOrder'
+// import {AssetPreviousOrder} from '../@types/graph.types'
+// import { AssetFree } from '../@types/graph.types'
 
 export interface PriceList {
   [key: string]: string
@@ -140,7 +136,7 @@ async function fetchData(
   query: TypedDocumentNode,
   variables: any,
   context: OperationContext
-): Promise<OperationResult<any>> {
+): Promise<OperationResult> {
   try {
     const client = getUrqlClientInstance()
     const response = await client.query(query, variables, context).toPromise()
@@ -183,11 +179,8 @@ export async function getPreviousOrders(
     id: id,
     account: account
   }
-  const fetchedPreviousOrders: any[] = await fetchData(
-    PreviousOrderQuery,
-    variables,
-    null
-  )
+  const fetchedPreviousOrders: OperationResult<AssetPreviousOrder> =
+    await fetchData(PreviousOrderQuery, variables, null)
   if (fetchedPreviousOrders.data?.tokenOrders?.length === 0) return null
   if (assetTimeout === '0') {
     return fetchedPreviousOrders?.data?.tokenOrders[0]?.tx
@@ -267,8 +260,9 @@ async function getAssetsPoolsExchangesAndDatatokenMap(
   assets: DDO[]
 ): Promise<
   [
-    AssetsPoolPricePools[],
-    AssetsFrePriceFixedRateExchanges[],
+    ApolloQueryResult<AssetsPoolPrice>,
+    ApolloQueryResult<AssetsFrePrice>,
+    ApolloQueryResult<AssetsFreePrice>,
     DidAndDatatokenMap
   ]
 > {
@@ -278,16 +272,16 @@ async function getAssetsPoolsExchangesAndDatatokenMap(
   for (const ddo of assets) {
     didDTMap[ddo?.dataToken.toLowerCase()] = ddo.id
     //  harcoded until we have chainId on assets
-    if (chainAssetLists[1]) {
-      chainAssetLists[1].push(ddo?.dataToken.toLowerCase())
+    if (chainAssetLists[ddo.chainId]) {
+      chainAssetLists[ddo.chainId].push(ddo?.dataToken.toLowerCase())
     } else {
-      chainAssetLists[1] = []
-      chainAssetLists[1].push(ddo?.dataToken.toLowerCase())
+      chainAssetLists[ddo.chainId] = []
+      chainAssetLists[ddo.chainId].push(ddo?.dataToken.toLowerCase())
     }
   }
-
   let poolPriceResponse: AssetsPoolPricePools[] = []
   let frePriceResponse: AssetsFrePriceFixedRateExchanges[] = []
+  let freePriceResponse: AssetFreePriceDispenser[] = []
 
   for (const chainKey in chainAssetLists) {
     const freVariables = {
@@ -296,10 +290,14 @@ async function getAssetsPoolsExchangesAndDatatokenMap(
     const poolVariables = {
       datatokenAddress_in: chainAssetLists[chainKey]
     }
+    const freeVariables = {
+      datatoken_in: chainAssetLists[chainKey]
+    }
 
-    //  harcoded until we have chainId on assets
     const queryContext: OperationContext = {
-      url: `${getSubgrahUri(1)}/subgraphs/name/oceanprotocol/ocean-subgraph`,
+      url: `${getSubgrahUri(
+        Number(chainKey)
+      )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
       requestPolicy: 'network-only'
     }
 
@@ -311,20 +309,28 @@ async function getAssetsPoolsExchangesAndDatatokenMap(
     )
     const chainFrePriceResponse: OperationResult<AssetsFrePrice> =
       await fetchData(FreQuery, freVariables, queryContext)
+
     frePriceResponse = frePriceResponse.concat(
       chainFrePriceResponse.data.fixedRateExchanges
     )
-  }
 
-  return [poolPriceResponse, frePriceResponse, didDTMap]
+    const chainFreePriceResponse: OperationResult<AssetsFreePrice> =
+      await fetchData(FreeQuery, freeVariables, queryContext)
+
+    freePriceResponse = freePriceResponse.concat(
+      chainFreePriceResponse.data.dispensers
+    )
+  }
+  return [poolPriceResponse, frePriceResponse, freePriceResponse, didDTMap]
 }
 
 export async function getAssetsPriceList(assets: DDO[]): Promise<PriceList> {
   const priceList: PriceList = {}
 
   const values: [
-    AssetsPoolPricePools[],
-    AssetsFrePriceFixedRateExchanges[],
+    ApolloQueryResult<AssetsPoolPrice>,
+    ApolloQueryResult<AssetsFrePrice>,
+    ApolloQueryResult<AssetsFreePrice>,
     DidAndDatatokenMap
   ] = await getAssetsPoolsExchangesAndDatatokenMap(assets)
   const poolPriceResponse = values[0]
@@ -341,7 +347,7 @@ export async function getAssetsPriceList(assets: DDO[]): Promise<PriceList> {
   for (const frePrice of frePriceResponse) {
     priceList[didDTMap[frePrice.datatoken?.address]] = frePrice.rate
   }
-  for (const freePrice of freePriceResponse.data?.dispensers) {
+  for (const freePrice of freePriceResponse) {
     priceList[didDTMap[freePrice.datatoken?.address]] = '0'
   }
   return priceList
@@ -351,30 +357,33 @@ export async function getPrice(asset: DDO): Promise<BestPrice> {
   const freVariables = {
     datatoken: asset?.dataToken.toLowerCase()
   }
-
+  const freeVariables = {
+    datatoken: asset?.dataToken.toLowerCase()
+  }
   const poolVariables = {
     datatokenAddress: asset?.dataToken.toLowerCase()
   }
 
   const queryContext: OperationContext = {
-    url: `${getSubgrahUri(1)}/subgraphs/name/oceanprotocol/ocean-subgraph`,
+    url: `${getSubgrahUri(
+      asset.chainId
+    )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
     requestPolicy: 'network-only'
   }
-
-  const poolPriceResponse: any[] = await fetchData(
+  const poolPriceResponse: OperationResult<AssetsPoolPrice> = await fetchData(
     AssetPoolPriceQuerry,
     poolVariables,
     queryContext
   )
-
-  const frePriceResponse: any[] = await fetchData(
+  const frePriceResponse: OperationResult<AssetsFrePrice> = await fetchData(
     AssetFreQuery,
     freVariables,
     queryContext
   )
   const freePriceResponse: ApolloQueryResult<AssetsFreePrice> = await fetchData(
     AssetFreeQuery,
-    freeVariables
+    freeVariables,
+    queryContext
   )
 
   const bestPrice: BestPrice = transformPriceToBestPrice(
@@ -392,18 +401,20 @@ export async function getAssetsBestPrices(
   const assetsWithPrice: AssetListPrices[] = []
 
   const values: [
-    AssetsPoolPricePools[],
-    AssetsFrePriceFixedRateExchanges[],
+    ApolloQueryResult<AssetsPoolPrice>,
+    ApolloQueryResult<AssetsFrePrice>,
+    ApolloQueryResult<AssetsFreePrice>,
     DidAndDatatokenMap
   ] = await getAssetsPoolsExchangesAndDatatokenMap(assets)
+
   const poolPriceResponse = values[0]
   const frePriceResponse = values[1]
   const freePriceResponse = values[2]
-
   for (const ddo of assets) {
     const dataToken = ddo.dataToken.toLowerCase()
     const poolPrice: AssetsPoolPricePools[] = []
     const frePrice: AssetsFrePriceFixedRateExchanges[] = []
+    const freePrice: AssetFreePriceDispenser[] = []
     const pool = poolPriceResponse.find(
       (pool: any) => pool.datatokenAddress === dataToken
     )
@@ -412,7 +423,7 @@ export async function getAssetsBestPrices(
       (fre: any) => fre.datatoken.address === dataToken
     )
     fre && frePrice.push(fre)
-    const free = freePriceResponse.data?.dispensers.find(
+    const free = freePriceResponse.find(
       (free: any) => free.datatoken.address === dataToken
     )
     free && freePrice.push(free)
@@ -426,25 +437,30 @@ export async function getAssetsBestPrices(
   return assetsWithPrice
 }
 
-export async function getHighestLiquidityDIDs(): Promise<string> {
+export async function getHighestLiquidityDIDs(
+  chainIds: number[]
+): Promise<string> {
   const didList: string[] = []
-  const queryContext: OperationContext = {
-    url: `${getSubgrahUri(1)}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-    requestPolicy: 'network-only'
-  }
-
-  const fetchedPools = await fetchData(
-    HighestLiquidityAssets,
-    null,
-    queryContext
-  )
-  if (fetchedPools.data?.pools?.length === 0) return null
-  for (let i = 0; i < fetchedPools.data.pools.length; i++) {
-    if (!fetchedPools.data.pools[i].datatokenAddress) continue
-    const did = web3.utils
-      .toChecksumAddress(fetchedPools.data.pools[i].datatokenAddress)
-      .replace('0x', 'did:op:')
-    didList.push(did)
+  for (const chain of chainIds) {
+    const queryContext: OperationContext = {
+      url: `${getSubgrahUri(
+        Number(chain)
+      )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
+      requestPolicy: 'network-only'
+    }
+    const fetchedPools = await fetchData(
+      HighestLiquidityAssets,
+      null,
+      queryContext
+    )
+    if (fetchedPools.data?.pools?.length === 0) return null
+    for (let i = 0; i < fetchedPools.data.pools.length; i++) {
+      if (!fetchedPools.data.pools[i].datatokenAddress) continue
+      const did = web3.utils
+        .toChecksumAddress(fetchedPools.data.pools[i].datatokenAddress)
+        .replace('0x', 'did:op:')
+      didList.push(did)
+    }
   }
   const searchDids = JSON.stringify(didList)
     .replace(/,/g, ' ')

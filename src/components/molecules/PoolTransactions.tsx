@@ -1,4 +1,3 @@
-import { useOcean } from '../../providers/Ocean'
 import React, { ReactElement, useEffect, useState } from 'react'
 import ExplorerLink from '../atoms/ExplorerLink'
 import Time from '../atoms/Time'
@@ -6,7 +5,7 @@ import Table from '../atoms/Table'
 import AssetTitle from './AssetListTitle'
 import styles from './PoolTransactions.module.css'
 import { useUserPreferences } from '../../providers/UserPreferences'
-import { Ocean } from '@oceanprotocol/lib'
+import { DDO, Ocean } from '@oceanprotocol/lib'
 import { formatPrice } from '../atoms/Price/PriceUnit'
 import { gql } from 'urql'
 import {
@@ -17,6 +16,11 @@ import {
 import web3 from 'web3'
 import { useWeb3 } from '../../providers/Web3'
 import { fetchDataForMultipleChains } from '../../utils/subgraph'
+
+import { getOceanConfig } from '../../utils/ocean'
+import { useSiteMetadata } from '../../hooks/useSiteMetadata'
+import { retrieveDDO } from '../../utils/aquarius'
+import axios from 'axios'
 
 const txHistoryQueryByPool = gql`
   query TransactionHistoryByPool($user: String, $pool: String) {
@@ -62,29 +66,37 @@ const txHistoryQuery = gql`
     }
   }
 `
-async function getSymbol(ocean: Ocean, tokenAddress: string) {
+
+async function getSymbol(ddo: DDO, tokenAddress: string) {
   const symbol =
-    ocean.pool.oceanAddress.toLowerCase() === tokenAddress.toLowerCase()
+    ddo.dataTokenInfo.address.toLowerCase() !== tokenAddress.toLowerCase()
       ? 'OCEAN'
-      : await ocean.datatokens.getSymbol(tokenAddress)
+      : ddo.dataTokenInfo.symbol
 
   return symbol
 }
 
 async function getTitle(
-  ocean: Ocean,
   row: TransactionHistoryPoolTransactions,
   locale: string
 ) {
+  const source = axios.CancelToken.source()
+
+  const did = web3.utils
+    .toChecksumAddress(row.poolAddress.datatokenAddress)
+    .replace('0x', 'did:op:')
+  const ddo = await retrieveDDO(did, source.token)
+  // const config = getOceanConfig(ddo.chainId)
+  // const newOcean = await Ocean.getInstance(config)
+
   let title = ''
-  console.log('TITLE FUNCTION: ')
   switch (row.event) {
     case 'swap': {
-      console.log('SWAP: ')
       const inToken = row.tokens.filter((x) => x.type === 'in')[0]
-      const inTokenSymbol = await getSymbol(ocean, inToken.tokenAddress)
+      // in addr == dt addr => dt altfel, ocean
+      const inTokenSymbol = await getSymbol(ddo, inToken.tokenAddress)
       const outToken = row.tokens.filter((x) => x.type === 'out')[0]
-      const outTokenSymbol = await getSymbol(ocean, outToken.tokenAddress)
+      const outTokenSymbol = await getSymbol(ddo, outToken.tokenAddress)
       title += `Swap ${formatPrice(
         Math.abs(inToken.value).toString(),
         locale
@@ -97,14 +109,16 @@ async function getTitle(
     case 'setup': {
       const firstToken = row.tokens.filter(
         (x) =>
-          x.tokenAddress.toLowerCase() === ocean.pool.oceanAddress.toLowerCase()
+          x.tokenAddress.toLowerCase() !==
+          ddo.dataTokenInfo.address.toLowerCase()
       )[0]
-      const firstTokenSymbol = await getSymbol(ocean, firstToken.tokenAddress)
+      const firstTokenSymbol = await getSymbol(ddo, firstToken.tokenAddress)
       const secondToken = row.tokens.filter(
         (x) =>
-          x.tokenAddress.toLowerCase() !== ocean.pool.oceanAddress.toLowerCase()
+          x.tokenAddress.toLowerCase() ===
+          ddo.dataTokenInfo.address.toLowerCase()
       )[0]
-      const secondTokenSymbol = await getSymbol(ocean, secondToken.tokenAddress)
+      const secondTokenSymbol = await getSymbol(ddo, secondToken.tokenAddress)
       title += `Create pool with ${formatPrice(
         Math.abs(firstToken.value).toString(),
         locale
@@ -117,7 +131,7 @@ async function getTitle(
     case 'join':
     case 'exit': {
       for (let i = 0; i < row.tokens.length; i++) {
-        const tokenSymbol = await getSymbol(ocean, row.tokens[i].tokenAddress)
+        const tokenSymbol = await getSymbol(ddo, row.tokens[i].tokenAddress)
         if (i > 0) title += '\n'
         title += `${row.event === 'join' ? 'Add' : 'Remove'} ${formatPrice(
           Math.abs(row.tokens[i].value).toString(),
@@ -133,23 +147,18 @@ async function getTitle(
 
 function Title({ row }: { row: TransactionHistoryPoolTransactions }) {
   const { networkId } = useWeb3()
-  const { ocean } = useOcean()
   const [title, setTitle] = useState<string>()
   const { locale } = useUserPreferences()
-  console.log('OCEAN: ', ocean)
 
   useEffect(() => {
-    console.log('TITLE')
-    if (!ocean || !locale || !row) return
-
+    const config = getOceanConfig(4)
+    if (!config || !locale || !row) return
     async function init() {
-      const title = await getTitle(ocean, row, locale)
-      console.log('TITLE = ', title)
-
+      const title = await getTitle(row, locale)
       setTitle(title)
     }
     init()
-  }, [ocean, row, locale])
+  }, [row, locale])
 
   return title ? (
     <ExplorerLink networkId={networkId} path={`/tx/${row.tx}`}>
@@ -205,8 +214,10 @@ export default function PoolTransactions({
   const [logs, setLogs] = useState<TransactionHistoryPoolTransactions[]>()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { chainIds } = useUserPreferences()
+  const { appConfig } = useSiteMetadata()
 
   useEffect(() => {
+    if (!appConfig.metadataCacheUri) return
     const variables = { user: accountId?.toLowerCase() }
     async function getTransactions() {
       const data: TransactionHistoryPoolTransactions[] = []
@@ -225,7 +236,6 @@ export default function PoolTransactions({
           )
         }
         setLogs(data)
-        console.log('TX RESULT: ', data)
       } catch (error) {
         console.error('Error fetching pool transactions: ', error.message)
       } finally {
@@ -233,7 +243,7 @@ export default function PoolTransactions({
       }
     }
     getTransactions()
-  }, [accountId, chainIds])
+  }, [accountId, chainIds, appConfig.metadataCacheUri])
 
   return (
     <Table
