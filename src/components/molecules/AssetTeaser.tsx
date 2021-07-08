@@ -11,7 +11,7 @@ import { useOcean } from '../../providers/Ocean'
 import styles from './AssetTeaser.module.css'
 
 declare type AssetTeaserProps = {
-  ddo: any
+  ddo: DDO
   price: BestPrice
 }
 
