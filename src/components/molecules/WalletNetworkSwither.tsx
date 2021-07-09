@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect } from 'react'
+import React, { ReactElement } from 'react'
 import { useWeb3 } from '../../providers/Web3'
 import { addCustomNetwork, getNetworkConfigObject } from '../../utils/web3'
 import Button from '../atoms/Button'
@@ -7,38 +7,45 @@ import useNetworkMetadata from '../../hooks/useNetworkMetadata'
 import NetworkName from '../atoms/NetworkName'
 import { getOceanConfig } from '../../utils/ocean'
 import { useAsset } from '../../providers/Asset'
+import { useUserPreferences } from '../../providers/UserPreferences'
 
 export default function WalletNetworkSwitcher(): ReactElement {
   const { networkId, web3Provider } = useWeb3()
   const { networksList } = useNetworkMetadata()
   const { ddo } = useAsset()
-  const DEFOULT_ETH_CHAIN_IDS = [1, 3, 4]
-  const [assetChainId, setAssetChainId] = useState<number>()
-  const showButton = !DEFOULT_ETH_CHAIN_IDS.includes(assetChainId)
-  const oceanConfig = getOceanConfig(assetChainId)
+  const { chainIds } = useUserPreferences()
+  const showButton = !chainIds.includes(ddo.chainId)
+  const oceanConfig = getOceanConfig(ddo.chainId)
 
-  const ddoNetworkName = <NetworkName networkId={assetChainId} textOnly />
-  const walletNetworkName = <NetworkName networkId={networkId} textOnly />
+  const ddoNetworkName = (
+    <NetworkName
+      networkId={ddo.chainId}
+      textOnly
+      className={styles.networkName}
+    />
+  )
+  const walletNetworkName = (
+    <NetworkName
+      networkId={networkId}
+      textOnly
+      className={styles.networkName}
+    />
+  )
 
   async function switchWalletNetwork() {
     const networkNode = networksList.find(
-      (data) => data.node.chainId === assetChainId
+      (data) => data.node.chainId === ddo.chainId
     ).node
     const network = { ...networkNode, providerUri: oceanConfig.providerUri }
     const networkConfig = getNetworkConfigObject(network)
     addCustomNetwork(web3Provider, networkConfig)
   }
 
-  useEffect(() => {
-    if (!ddo?.chainId) return
-    setAssetChainId(ddo?.chainId)
-  }, [])
-
   return (
     <div className={styles.switcher}>
       <div className={styles.content}>
         <h3 className={styles.title}>
-          The current asset on {ddoNetworkName} but your wallet is connected to
+          The current asset on {ddoNetworkName} but your wallet is connected to{' '}
           {walletNetworkName}
         </h3>
         {showButton ? (

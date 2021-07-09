@@ -9,18 +9,17 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-}
-
-.image {
-  height: 30px;
-  margin-left: 0;
-  margin-right: calc(var(--spacer));
+  margin: calc(var(--spacer) / 4) auto;
 }
 
 .title {
   font-size: var(--font-size-small);
   color: var(--color-secondary);
-  margin-bottom: calc(var(--spacer) / 4);
+  margin-bottom: calc(var(--spacer) / 8);
+}
+
+.networkName {
+  color: var(--font-color-text);
 }
 
 div.content:last-child {
