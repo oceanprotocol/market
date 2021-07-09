@@ -30,6 +30,13 @@ const txHistoryQueryByPool = gql`
       where: { userAddress: $user, poolAddress: $pool }
       first: 1000
     ) {
+      tokens {
+        poolToken {
+          tokenId {
+            symbol
+          }
+        }
+      }
       tx
       event
       timestamp
@@ -52,6 +59,13 @@ const txHistoryQuery = gql`
       where: { userAddress: $user }
       first: 1000
     ) {
+      tokens {
+        poolToken {
+          tokenId {
+            symbol
+          }
+        }
+      }
       tx
       event
       timestamp
@@ -67,11 +81,12 @@ const txHistoryQuery = gql`
   }
 `
 
-async function getSymbol(ddo: DDO, tokenAddress: string) {
-  const symbol =
-    ddo.dataTokenInfo.address.toLowerCase() !== tokenAddress.toLowerCase()
-      ? 'OCEAN'
-      : ddo.dataTokenInfo.symbol
+interface Datatoken {
+  symbol: string
+}
+
+function getSymbol(tokenId: Datatoken) {
+  const symbol = tokenId === null ? 'OCEAN' : tokenId.symbol
 
   return symbol
 }
@@ -93,10 +108,9 @@ async function getTitle(
   switch (row.event) {
     case 'swap': {
       const inToken = row.tokens.filter((x) => x.type === 'in')[0]
-      // in addr == dt addr => dt altfel, ocean
-      const inTokenSymbol = await getSymbol(ddo, inToken.tokenAddress)
+      const inTokenSymbol = getSymbol(inToken.poolToken.tokenId)
       const outToken = row.tokens.filter((x) => x.type === 'out')[0]
-      const outTokenSymbol = await getSymbol(ddo, outToken.tokenAddress)
+      const outTokenSymbol = getSymbol(row.tokens[0].poolToken.tokenId)
       title += `Swap ${formatPrice(
         Math.abs(inToken.value).toString(),
         locale
@@ -112,13 +126,13 @@ async function getTitle(
           x.tokenAddress.toLowerCase() !==
           ddo.dataTokenInfo.address.toLowerCase()
       )[0]
-      const firstTokenSymbol = await getSymbol(ddo, firstToken.tokenAddress)
+      const firstTokenSymbol = await getSymbol(firstToken.poolToken.tokenId)
       const secondToken = row.tokens.filter(
         (x) =>
           x.tokenAddress.toLowerCase() ===
           ddo.dataTokenInfo.address.toLowerCase()
       )[0]
-      const secondTokenSymbol = await getSymbol(ddo, secondToken.tokenAddress)
+      const secondTokenSymbol = await getSymbol(secondToken.poolToken.tokenId)
       title += `Create pool with ${formatPrice(
         Math.abs(firstToken.value).toString(),
         locale
@@ -131,7 +145,7 @@ async function getTitle(
     case 'join':
     case 'exit': {
       for (let i = 0; i < row.tokens.length; i++) {
-        const tokenSymbol = await getSymbol(ddo, row.tokens[i].tokenAddress)
+        const tokenSymbol = await getSymbol(row.tokens[i].poolToken.tokenId)
         if (i > 0) title += '\n'
         title += `${row.event === 'join' ? 'Add' : 'Remove'} ${formatPrice(
           Math.abs(row.tokens[i].value).toString(),
