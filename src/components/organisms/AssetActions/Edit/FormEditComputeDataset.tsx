@@ -17,6 +17,7 @@ import { ComputePrivacyForm } from '../../../../models/FormEditComputeDataset'
 import { publisherTrustedAlgorithm as PublisherTrustedAlgorithm } from '@oceanprotocol/lib'
 import axios from 'axios'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
+import { chainIds } from '../../../../../app.config'
 
 export default function FormEditComputeDataset({
   data,
@@ -51,11 +52,7 @@ export default function FormEditComputeDataset({
       },
       sort: { created: -1 }
     }
-    const querryResult = await queryMetadata(
-      query,
-      appConfig.metadataCacheUri,
-      source.token
-    )
+    const querryResult = await queryMetadata(query, source.token)
     const datasetComputeService = ddo.findServiceByType('compute')
     const algorithmSelectionList = await transformDDOToAssetSelection(
       datasetComputeService?.serviceEndpoint,

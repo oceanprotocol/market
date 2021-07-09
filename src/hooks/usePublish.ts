@@ -65,6 +65,7 @@ function usePublish(): UsePublish {
         new Date(Date.now()).toISOString().split('.')[0] + 'Z'
       const services: Service[] = []
       const price = '1'
+      asset.main.dateCreated = asset.main.datePublished = publishedDate
 
       switch (serviceType) {
         case 'access': {
@@ -118,9 +119,9 @@ function usePublish(): UsePublish {
           providerUri
         )
         .next(setStep)
-
-      await ocean.assets.publishDdo(ddo, account.getId())
       Logger.log('ddo created', ddo)
+      await ocean.assets.publishDdo(ddo, account.getId())
+      Logger.log('ddo published')
       await sleep(20000)
       setStep(7)
       return ddo

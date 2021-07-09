@@ -26,6 +26,24 @@ export default function AssetActions(): ReactElement {
   const [fileIsLoading, setFileIsLoading] = useState<boolean>(false)
   const isCompute = Boolean(ddo?.findServiceByType('compute'))
 
+  const [isConsumable, setIsConsumable] = useState<boolean>(true)
+  const [consumableFeedback, setConsumableFeedback] = useState<string>('')
+
+  useEffect(() => {
+    if (!ddo || !accountId) return
+    async function checkIsConsumable() {
+      const consumable: any = await ocean.assets.isConsumable(
+        ddo,
+        accountId.toLowerCase()
+      )
+      if (consumable) {
+        setIsConsumable(consumable.result)
+        setConsumableFeedback(consumable.message)
+      }
+    }
+    checkIsConsumable()
+  }, [accountId, ddo])
+
   useEffect(() => {
     const { attributes } = ddo.findServiceByType('metadata')
     setFileMetadata(attributes.main.files[0])
@@ -88,6 +106,8 @@ export default function AssetActions(): ReactElement {
       isBalanceSufficient={isBalanceSufficient}
       file={fileMetadata}
       fileIsLoading={fileIsLoading}
+      isConsumable={isConsumable}
+      consumableFeedback={consumableFeedback}
     />
   ) : (
     <Consume
@@ -96,6 +116,8 @@ export default function AssetActions(): ReactElement {
       isBalanceSufficient={isBalanceSufficient}
       file={fileMetadata}
       fileIsLoading={fileIsLoading}
+      isConsumable={isConsumable}
+      consumableFeedback={consumableFeedback}
     />
   )
 

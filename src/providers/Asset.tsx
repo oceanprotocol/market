@@ -14,14 +14,13 @@ import axios, { CancelToken } from 'axios'
 import { retrieveDDO } from '../utils/aquarius'
 import { getPrice } from '../utils/subgraph'
 import { MetadataMarket } from '../@types/MetaData'
-import { DDO_TEMPORARY } from './Ocean'
 import { useWeb3 } from './Web3'
 import { useSiteMetadata } from '../hooks/useSiteMetadata'
 
 interface AssetProviderValue {
   isInPurgatory: boolean
   purgatoryData: PurgatoryData
-  ddo: DDO
+  ddo: any
   did: string
   metadata: MetadataMarket
   title: string
@@ -51,7 +50,7 @@ function AssetProvider({
   const { networkId } = useWeb3()
   const [isInPurgatory, setIsInPurgatory] = useState(false)
   const [purgatoryData, setPurgatoryData] = useState<PurgatoryData>()
-  const [ddo, setDDO] = useState<DDO>()
+  const [ddo, setDDO] = useState<any>()
   const [did, setDID] = useState<string>()
   const [metadata, setMetadata] = useState<MetadataMarket>()
   const [title, setTitle] = useState<string>()
@@ -65,11 +64,7 @@ function AssetProvider({
   const fetchDdo = async (token?: CancelToken) => {
     Logger.log('[asset] Init asset, get DDO')
     setLoading(true)
-    const ddo = await retrieveDDO(
-      asset as string,
-      appConfig.metadataCacheUri,
-      token
-    )
+    const ddo = await retrieveDDO(asset as string, token)
 
     if (!ddo) {
       setError(
@@ -126,7 +121,7 @@ function AssetProvider({
     }
   }, [])
 
-  const initMetadata = useCallback(async (ddo: DDO): Promise<void> => {
+  const initMetadata = useCallback(async (ddo: any): Promise<void> => {
     if (!ddo) return
     setLoading(true)
     const returnedPrice = await getPrice(ddo)
@@ -155,7 +150,7 @@ function AssetProvider({
     if (!networkId || !ddo) return
 
     // TODO: remove typing once present in ocean.js' DDO typing
-    const isAssetNetwork = networkId === (ddo as DDO_TEMPORARY).chainId
+    const isAssetNetwork = networkId === ddo?.chainId
     setIsAssetNetwork(isAssetNetwork)
   }, [networkId, ddo])
 
