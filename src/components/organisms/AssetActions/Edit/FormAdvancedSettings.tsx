@@ -8,7 +8,6 @@ import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
 import { AdvancedSettingsForm } from '../../../../models/FormEditCredential'
 import { useAsset } from '../../../../providers/Asset'
-import Web3Feedback from '../../../molecules/Web3Feedback'
 
 export default function FormAdvancedSettings({
   data,
@@ -48,7 +47,6 @@ export default function FormAdvancedSettings({
           }
         />
       ))}
-      <Web3Feedback isAssetNetwork={isAssetNetwork} />
       <footer className={styles.actions}>
         <Button
           style="primary"

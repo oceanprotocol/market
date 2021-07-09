@@ -17,7 +17,6 @@ import { ComputePrivacyForm } from '../../../../models/FormEditComputeDataset'
 import { publisherTrustedAlgorithm as PublisherTrustedAlgorithm } from '@oceanprotocol/lib'
 import axios from 'axios'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
-import Web3Feedback from '../../../molecules/Web3Feedback'
 
 export default function FormEditComputeDataset({
   data,
@@ -88,7 +87,6 @@ export default function FormEditComputeDataset({
           component={Input}
         />
       ))}
-      {isAssetNetwork === false && <Web3Feedback isAssetNetwork={isAssetNetwork}/>}
       <footer className={styles.actions}>
         <Button
           style="primary"

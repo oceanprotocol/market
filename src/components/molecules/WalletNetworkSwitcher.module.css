@@ -12,6 +12,10 @@
   margin: calc(var(--spacer) / 4) auto;
 }
 
+.switchButton {
+  margin-top: calc(var(--spacer) / 6);
+}
+
 .title {
   font-size: var(--font-size-small);
   color: var(--color-secondary);

@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState, useEffect } from 'react'
 import { useWeb3 } from '../../providers/Web3'
 import { addCustomNetwork, getNetworkConfigObject } from '../../utils/web3'
 import Button from '../atoms/Button'
@@ -7,14 +7,13 @@ import useNetworkMetadata from '../../hooks/useNetworkMetadata'
 import NetworkName from '../atoms/NetworkName'
 import { getOceanConfig } from '../../utils/ocean'
 import { useAsset } from '../../providers/Asset'
-import { useUserPreferences } from '../../providers/UserPreferences'
 
 export default function WalletNetworkSwitcher(): ReactElement {
   const { networkId, web3Provider } = useWeb3()
   const { networksList } = useNetworkMetadata()
   const { ddo } = useAsset()
-  const { chainIds } = useUserPreferences()
-  const showButton = !chainIds.includes(ddo.chainId)
+  const DEFAULT_ETH_CHAIN_IDS = [1, 3, 4]
+  const showButton = !DEFAULT_ETH_CHAIN_IDS.includes(ddo.chainId)
   const oceanConfig = getOceanConfig(ddo.chainId)
 
   const ddoNetworkName = (
@@ -53,7 +52,7 @@ export default function WalletNetworkSwitcher(): ReactElement {
             style="primary"
             size="small"
             onClick={() => switchWalletNetwork()}
-            className={styles.toggle}
+            className={styles.switchButton}
           >
             Switch to {ddoNetworkName}
           </Button>
