@@ -28,6 +28,7 @@ import {
   OrdersData_tokenOrders as OrdersData,
   OrdersData_tokenOrders_datatokenId as OrdersDatatoken
 } from '../../../../@types/apollo/OrdersData'
+import { setLocale } from 'yup'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -120,8 +121,6 @@ async function getAssetMetadata(
   }
 
   const result = await queryMetadata(queryDid, cancelToken)
-  console.log('RESULT: ', result)
-
   return result.results
 }
 
@@ -131,8 +130,6 @@ export default function ComputeJobs(): ReactElement {
   const { chainIds } = useUserPreferences()
   const [isLoading, setIsLoading] = useState(true)
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
-
-  console.log('OCEAN: ', ocean, account, config)
 
   useEffect(() => {
     async function initOcean() {
@@ -145,6 +142,7 @@ export default function ComputeJobs(): ReactElement {
   }, [ocean])
 
   async function getJobs() {
+    setIsLoading(true)
     const variables = { user: accountId?.toLowerCase() }
     const result = await fetchDataForMultipleChains(
       getComputeOrders,
@@ -157,15 +155,12 @@ export default function ComputeJobs(): ReactElement {
         data.push(tokenOrder)
       })
     }
-    console.log('DATA: ', data)
-    console.log('OCEAN: ', ocean)
 
-    // if (!ocean || !account || !data) {
-    //   setIsLoading(false)
-    //   return
-    // }
+    if (!ocean || !account || !data) {
+      setIsLoading(false)
+      return
+    }
 
-    setIsLoading(true)
     const dtList = []
     const computeJobs: ComputeJobMetaData[] = []
     for (let i = 0; i < data.length; i++) {
@@ -175,7 +170,11 @@ export default function ComputeJobs(): ReactElement {
       .replace(/,/g, ' ')
       .replace(/"/g, '')
       .replace(/(\[|\])/g, '')
-
+    if (queryDtList === '') {
+      setJobs([])
+      setIsLoading(false)
+      return
+    }
     try {
       const source = axios.CancelToken.source()
       const assets = await getAssetMetadata(queryDtList, source.token, chainIds)
@@ -186,9 +185,7 @@ export default function ComputeJobs(): ReactElement {
           const did = web3.utils
             .toChecksumAddress(data[i].datatokenId.address)
             .replace('0x', 'did:op:')
-          console.log('DID: ', did)
           const ddo = assets.filter((x) => x.id === did)[0]
-          console.log('DDO: ', ddo)
           if (ddo === undefined) continue
 
           const service = ddo.service.filter(

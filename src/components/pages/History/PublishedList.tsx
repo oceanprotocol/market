@@ -40,7 +40,6 @@ export default function PublishedList(): ReactElement {
 
         queryResult || setIsLoading(true)
         const result = await queryMetadata(queryPublishedAssets, source.token)
-        console.log('RESULT: ', result)
         setQueryResult(result)
       } catch (error) {
         Logger.error(error.message)

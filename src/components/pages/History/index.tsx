@@ -38,7 +38,6 @@ const tabs = [
 
 export default function HistoryPage(): ReactElement {
   const { chainIds } = useUserPreferences()
-  console.log('CHAIN IDS: ', chainIds)
   const url = new URL(window.location.href)
   const defaultTab = url.searchParams.get('defaultTab')
   let defaultTabIndex = 0
