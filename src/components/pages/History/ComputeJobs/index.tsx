@@ -111,9 +111,7 @@ async function getAssetMetadata(
     offset: 100,
     query: {
       query_string: {
-        query: `(${queryDtList}) (${transformChainIdsListToQuery(
-          chainIds
-        )}) AND (${transformChainIdsListToQuery(
+        query: `(${queryDtList}) AND (${transformChainIdsListToQuery(
           chainIds
         )}) AND service.attributes.main.type:dataset AND service.type:compute`,
         fields: ['dataToken']
@@ -128,13 +126,24 @@ async function getAssetMetadata(
 }
 
 export default function ComputeJobs(): ReactElement {
-  const { ocean, account, config } = useOcean()
-  const { accountId } = useWeb3()
+  const { ocean, account, config, connect } = useOcean()
+  const { accountId, networkId } = useWeb3()
   const { chainIds } = useUserPreferences()
   const [isLoading, setIsLoading] = useState(true)
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
 
   console.log('OCEAN: ', ocean, account, config)
+
+  useEffect(() => {
+    async function initOcean() {
+      const oceanInitialConfig = getOceanConfig(networkId)
+      await connect(oceanInitialConfig)
+    }
+    if (ocean === undefined) {
+      initOcean()
+    }
+  }, [ocean])
+
   async function getJobs() {
     const variables = { user: accountId?.toLowerCase() }
     const result = await fetchDataForMultipleChains(
@@ -280,19 +289,18 @@ export default function ComputeJobs(): ReactElement {
 
   return (
     <>
-      {jobs.length > 0 && (
-        <Button
-          style="text"
-          size="small"
-          title="Refresh compute jobs"
-          onClick={() => getJobs()}
-          disabled={isLoading}
-          className={styles.refresh}
-        >
-          <Refresh />
-          Refresh
-        </Button>
-      )}
+      <Button
+        style="text"
+        size="small"
+        title="Refresh compute jobs"
+        onClick={() => getJobs()}
+        disabled={isLoading}
+        className={styles.refresh}
+      >
+        <Refresh />
+        Refresh
+      </Button>
+
       <Table
         columns={columns}
         data={jobs}

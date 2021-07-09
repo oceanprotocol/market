@@ -7,6 +7,7 @@ import Downloads from './Downloads'
 import ComputeJobs from './ComputeJobs'
 import styles from './index.module.css'
 import { useUserPreferences } from '../../../providers/UserPreferences'
+import OceanProvider from '../../../providers/Ocean'
 
 const tabs = [
   {
@@ -27,7 +28,11 @@ const tabs = [
   },
   {
     title: 'Compute Jobs',
-    content: <ComputeJobs />
+    content: (
+      <OceanProvider>
+        <ComputeJobs />
+      </OceanProvider>
+    )
   }
 ]
 
