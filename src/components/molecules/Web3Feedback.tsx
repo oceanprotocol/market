@@ -42,23 +42,23 @@ export default function Web3Feedback({
       : 'Connected to Ocean'
     : 'Something went wrong'
 
-  const message = !accountId ? (
-    'Please connect your Web3 wallet.'
-  ) : // : !ocean
-  // ? 'Please try again.'
-  isBalanceSufficient === false ? (
-    'You do not have enough OCEAN in your wallet to purchase this asset.'
-  ) : isAssetNetwork === false ? (
-    <WalletNetworkSwitcher />
-  ) : (
-    'Something went wrong.'
-  )
+  const message = !accountId
+    ? 'Please connect your Web3 wallet.'
+    : // : !ocean
+    // ? 'Please try again.'
+    isBalanceSufficient === false
+    ? 'You do not have enough OCEAN in your wallet to purchase this asset.'
+    : 'Something went wrong.'
 
   return showFeedback ? (
     <section className={styles.feedback}>
       <Status state={state} aria-hidden />
       <h3 className={styles.title}>{title}</h3>
-      {message && <p className={styles.error}>{message}</p>}
+      {isAssetNetwork === false ? (
+        <WalletNetworkSwitcher />
+      ) : (
+        message && <p className={styles.error}>{message}</p>
+      )}
     </section>
   ) : null
 }

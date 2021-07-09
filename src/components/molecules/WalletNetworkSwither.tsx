@@ -43,10 +43,10 @@ export default function WalletNetworkSwitcher(): ReactElement {
   return (
     <div className={styles.switcher}>
       <div className={styles.content}>
-        <h3 className={styles.title}>
+        <p className={styles.title}>
           The current asset is on {ddoNetworkName} but your wallet is connected
           to {walletNetworkName}
-        </h3>
+        </p>
         {showButton ? (
           <Button
             style="primary"
@@ -57,9 +57,9 @@ export default function WalletNetworkSwitcher(): ReactElement {
             Switch to {ddoNetworkName}
           </Button>
         ) : (
-          <h3 className={styles.title}>
+          <p className={styles.title}>
             You must manually switch to {ddoNetworkName} on your wallet provider
-          </h3>
+          </p>
         )}
       </div>
     </div>
