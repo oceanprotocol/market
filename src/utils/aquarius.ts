@@ -140,7 +140,6 @@ export async function transformDDOToAssetSelection(
     didList.push(ddo.id)
     symbolList[ddo.id] = ddo.dataTokenInfo.symbol
     didChainIdMap[ddo.id] = ddo.chainId
-    // didChainIdMap[ddo.id] = 1
     const algoComputeService = ddo.findServiceByType('compute')
     algoComputeService?.serviceEndpoint &&
       (didProviderEndpointMap[ddo.id] = algoComputeService?.serviceEndpoint)
@@ -152,7 +151,7 @@ export async function transformDDOToAssetSelection(
       priceList[did] &&
       (!didProviderEndpointMap[did] ||
         didProviderEndpointMap[did] === datasetProviderEndpoint) &&
-      didProviderEndpointMap[did] === ddo.chainId
+      didChainIdMap[did] === ddoChainId
     ) {
       let selected = false
       selectedAlgorithms?.forEach((algorithm: PublisherTrustedAlgorithm) => {

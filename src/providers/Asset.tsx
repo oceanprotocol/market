@@ -20,7 +20,7 @@ import { useSiteMetadata } from '../hooks/useSiteMetadata'
 interface AssetProviderValue {
   isInPurgatory: boolean
   purgatoryData: PurgatoryData
-  ddo: any
+  ddo: DDO
   did: string
   metadata: MetadataMarket
   title: string
@@ -121,7 +121,7 @@ function AssetProvider({
     }
   }, [])
 
-  const initMetadata = useCallback(async (ddo: any): Promise<void> => {
+  const initMetadata = useCallback(async (ddo: DDO): Promise<void> => {
     if (!ddo) return
     setLoading(true)
     const returnedPrice = await getPrice(ddo)
