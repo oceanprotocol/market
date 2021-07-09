@@ -59,41 +59,38 @@ const columns = [
 
 export default function ComputeDownloads(): ReactElement {
   const { accountId } = useWeb3()
-  // const { config } = useOcean()
   const { appConfig } = useSiteMetadata()
   const [isLoading, setIsLoading] = useState(false)
   const [orders, setOrders] = useState<DownloadedAssets[]>()
   const { chainIds } = useUserPreferences()
 
   useEffect(() => {
-    if (!appConfig.metadataCacheUri) return
+    // if (!appConfig.metadataCacheUri) return
     const variables = { user: accountId?.toLowerCase() }
 
     async function filterAssets() {
       const filteredOrders: DownloadedAssets[] = []
       const source = axios.CancelToken.source()
-
-      const response = await fetchDataForMultipleChains(
-        getTokenOrders,
-        variables,
-        chainIds
-      )
-
-      const data: OrdersData[] = []
-      for (let i = 0; i < response.length; i++) {
-        response[i].tokenOrders.forEach((tokenOrder: OrdersData) => {
-          data.push(tokenOrder)
-        })
-      }
-      console.log('DOWNLOADS: ', data)
-      setIsLoading(true)
       try {
+        setIsLoading(true)
+        const response = await fetchDataForMultipleChains(
+          getTokenOrders,
+          variables,
+          chainIds
+        )
+
+        const data: OrdersData[] = []
+        for (let i = 0; i < response.length; i++) {
+          response[i].tokenOrders.forEach((tokenOrder: OrdersData) => {
+            data.push(tokenOrder)
+          })
+        }
+
         for (let i = 0; i < data.length; i++) {
           const did = web3.utils
             .toChecksumAddress(data[i].datatokenId.address)
             .replace('0x', 'did:op:')
           const ddo = await retrieveDDO(did, source.token)
-          console.log('DID DDO: ', did, ddo)
           if (!ddo) continue
           if (ddo.service[1].type === 'access') {
             filteredOrders.push({
