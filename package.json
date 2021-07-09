@@ -9,7 +9,8 @@
     "build": "gatsby build && cp _redirects public/_redirects",
     "serve": "serve -s public/",
     "jest": "NODE_ENV=test jest -c tests/unit/jest.config.js",
-    "test": "npm run graphql:graphTypes && npm run lint && npm run jest",
+    "test-graphql": "npm run graphql:graphTypes && npm run lint && npm run jest",
+    "test": "npm run apollo:codegen && npm run lint && npm run jest",
     "test:watch": "npm run lint && npm run jest -- --watch",
     "lint": "npm run write:repoMetadata && eslint --ignore-path .gitignore --ext .js --ext .ts --ext .tsx . && npm run type-check",
     "format": "prettier --ignore-path .gitignore './**/*.{css,yml,js,ts,tsx,json}' --write",
@@ -20,6 +21,7 @@
     "write:repoMetadata": "node ./scripts/write-repo-metadata > repo-metadata.json",
     "deploy:s3": "./scripts/deploy-s3.sh",
     "postinstall": "husky install",
+    "apollo:codegen": "apollo client:codegen --target typescript --tsFileExtension=d.ts --outputFlat src/@types/apollo/",
     "graphql:graphTypes": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
@@ -114,6 +116,7 @@
     "@types/yup": "^0.29.11",
     "@typescript-eslint/eslint-plugin": "^4.26.0",
     "@typescript-eslint/parser": "^4.26.0",
+    "apollo": "^2.33.4",
     "eslint": "^7.27.0",
     "eslint-config-oceanprotocol": "^1.5.0",
     "eslint-config-prettier": "^8.3.0",

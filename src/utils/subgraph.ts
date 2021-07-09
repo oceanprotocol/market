@@ -3,10 +3,19 @@ import { DDO, BestPrice } from '@oceanprotocol/lib'
 import { getUrqlClientInstance } from '../providers/UrqlProvider'
 import { getOceanConfig } from './ocean'
 import web3 from 'web3'
-import { AssetsFreePrice } from '../@types/apollo/AssetsFreePrice'
+import {
+  AssetsPoolPrice,
+  AssetsPoolPrice_pools as AssetsPoolPricePools
+} from '../@types/apollo/AssetsPoolPrice'
+import {
+  AssetsFrePrice,
+  AssetsFrePrice_fixedRateExchanges as AssetsFrePriceFixedRateExchanges
+} from '../@types/apollo/AssetsFrePrice'
+import {
+  AssetsFreePrice,
+  AssetsFreePrice_dispensers as AssetFreePriceDispenser
+} from '../@types/apollo/AssetsFreePrice'
 import { AssetPreviousOrder } from '../@types/apollo/AssetPreviousOrder'
-// import {AssetPreviousOrder} from '../@types/graph.types'
-// import { AssetFree } from '../@types/graph.types'
 
 export interface PriceList {
   [key: string]: string
@@ -236,9 +245,9 @@ async function getAssetsPoolsExchangesAndDatatokenMap(
   assets: DDO[]
 ): Promise<
   [
-    ApolloQueryResult<AssetsPoolPrice>,
-    ApolloQueryResult<AssetsFrePrice>,
-    ApolloQueryResult<AssetsFreePrice>,
+    AssetsPoolPricePools[],
+    AssetsFrePriceFixedRateExchanges[],
+    AssetFreePriceDispenser[],
     DidAndDatatokenMap
   ]
 > {
@@ -304,9 +313,9 @@ export async function getAssetsPriceList(assets: DDO[]): Promise<PriceList> {
   const priceList: PriceList = {}
 
   const values: [
-    ApolloQueryResult<AssetsPoolPrice>,
-    ApolloQueryResult<AssetsFrePrice>,
-    ApolloQueryResult<AssetsFreePrice>,
+    AssetsPoolPricePools[],
+    AssetsFrePriceFixedRateExchanges[],
+    AssetFreePriceDispenser[],
     DidAndDatatokenMap
   ] = await getAssetsPoolsExchangesAndDatatokenMap(assets)
   const poolPriceResponse = values[0]
@@ -356,7 +365,7 @@ export async function getPrice(asset: DDO): Promise<BestPrice> {
     freVariables,
     queryContext
   )
-  const freePriceResponse: ApolloQueryResult<AssetsFreePrice> = await fetchData(
+  const freePriceResponse: OperationResult<AssetsFreePrice> = await fetchData(
     AssetFreeQuery,
     freeVariables,
     queryContext
@@ -377,9 +386,9 @@ export async function getAssetsBestPrices(
   const assetsWithPrice: AssetListPrices[] = []
 
   const values: [
-    ApolloQueryResult<AssetsPoolPrice>,
-    ApolloQueryResult<AssetsFrePrice>,
-    ApolloQueryResult<AssetsFreePrice>,
+    AssetsPoolPricePools[],
+    AssetsFrePriceFixedRateExchanges[],
+    AssetFreePriceDispenser[],
     DidAndDatatokenMap
   ] = await getAssetsPoolsExchangesAndDatatokenMap(assets)
 

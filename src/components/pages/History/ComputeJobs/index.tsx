@@ -9,6 +9,7 @@ import Table from '../../../atoms/Table'
 import Button from '../../../atoms/Button'
 import { useOcean } from '../../../../providers/Ocean'
 import { gql, useQuery } from 'urql'
+import { ComputeOrders } from '../../../../@types/apollo/ComputeOrders'
 import { useWeb3 } from '../../../../providers/Web3'
 import {
   queryMetadata,
