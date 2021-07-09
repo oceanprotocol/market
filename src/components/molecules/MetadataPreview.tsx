@@ -129,7 +129,9 @@ export function MetadataPreview({
       </header>
 
       <MetaFull values={values} />
-      {isAssetNetwork === false && <Web3Feedback isAssetNetwork={isAssetNetwork}/>}
+      {isAssetNetwork === false && (
+        <Web3Feedback isAssetNetwork={isAssetNetwork} />
+      )}
     </div>
   )
 }
