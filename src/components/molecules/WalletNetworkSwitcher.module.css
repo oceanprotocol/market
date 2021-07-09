@@ -18,7 +18,8 @@
 }
 
 .title {
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-small);
+  color: var(--color-secondary);
   margin-bottom: calc(var(--spacer) / 4);
 }
 

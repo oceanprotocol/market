@@ -34,7 +34,6 @@ import Alert from '../../atoms/Alert'
 import MetadataFeedback from '../../molecules/MetadataFeedback'
 import { useAccountPurgatory } from '../../../hooks/useAccountPurgatory'
 import { useWeb3 } from '../../../providers/Web3'
-import WalletNetworkSwitcher from '../../molecules/WalletNetworkSwither'
 import { useAsset } from '../../../providers/Asset'
 
 const formNameDatasets = 'ocean-publish-form-datasets'
@@ -60,7 +59,6 @@ function TabContent({
           ) : (
             <MetadataAlgorithmPreview values={values} />
           )}
-          {isAssetNetwork === false && <WalletNetworkSwitcher />}
           <Web3Feedback />
         </div>
       </aside>

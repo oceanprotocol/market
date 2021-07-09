@@ -185,9 +185,6 @@ export default function Consume({
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>
-      <footer className={styles.feedback}>
-        {isAssetNetwork === false && <WalletNetworkSwitcher />}
-      </footer>
       {type === 'algorithm' && (
         <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} dataset={ddo} />
       )}

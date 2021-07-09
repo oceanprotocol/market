@@ -13,7 +13,7 @@ import { transformTags } from '../../utils/metadata'
 import NetworkName from '../atoms/NetworkName'
 import { useWeb3 } from '../../providers/Web3'
 import styles from './MetadataPreview.module.css'
-import WalletNetworkSwitcher from './WalletNetworkSwither'
+import Web3Feedback from './Web3Feedback'
 import { useAsset } from '../../providers/Asset'
 
 function Description({ description }: { description: string }) {
@@ -129,7 +129,7 @@ export function MetadataPreview({
       </header>
 
       <MetaFull values={values} />
-      {isAssetNetwork === false && <WalletNetworkSwitcher />}
+      {isAssetNetwork === false && <Web3Feedback isAssetNetwork={isAssetNetwork}/>}
     </div>
   )
 }
