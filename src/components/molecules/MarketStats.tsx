@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './MarketStats.module.css'
-import { gql, useQuery } from '@apollo/client'
+import { gql, useQuery } from 'urql'
 import Conversion from '../atoms/Price/Conversion'
 import PriceUnit from '../atoms/Price/PriceUnit'
 import Tooltip from '../atoms/Tooltip'
@@ -19,7 +19,11 @@ export default function MarketStats(): ReactElement {
   const [totalValueLocked, setTotalValueLocked] = useState<string>()
   const [totalOceanLiquidity, setTotalOceanLiquidity] = useState<string>()
   const [poolCount, setPoolCount] = useState<number>()
-  const { data } = useQuery(getTotalPoolsValues, { pollInterval: 20000 })
+  const [result] = useQuery({
+    query: getTotalPoolsValues
+    // pollInterval: 20000
+  })
+  const { data } = result
 
   useEffect(() => {
     if (!data || !data.poolFactories || data.poolFactories.length === 0) return

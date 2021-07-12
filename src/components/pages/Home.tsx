@@ -23,12 +23,12 @@ import { useUserPreferences } from '../../providers/UserPreferences'
 async function getQueryHighest(
   chainIds: number[]
 ): Promise<[SearchQuery, string]> {
-  const dids = await getHighestLiquidityDIDs()
+  const dids = await getHighestLiquidityDIDs(chainIds)
 
   // TODO: this query needs to adapt to chainIds
   const queryHighest = {
     page: 1,
-    offset: 15,
+    offset: 9,
     query: {
       query_string: {
         query: `(${dids}) AND (${transformChainIdsListToQuery(

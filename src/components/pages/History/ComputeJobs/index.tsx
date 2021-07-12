@@ -8,14 +8,14 @@ import Dotdotdot from 'react-dotdotdot'
 import Table from '../../../atoms/Table'
 import Button from '../../../atoms/Button'
 import { useOcean } from '../../../../providers/Ocean'
-import { gql, useQuery } from '@apollo/client'
+import { gql, useQuery } from 'urql'
+import { ComputeOrders } from '../../../../@types/apollo/ComputeOrders'
 import { useWeb3 } from '../../../../providers/Web3'
 import {
   queryMetadata,
   transformChainIdsListToQuery
 } from '../../../../utils/aquarius'
 import axios, { CancelToken } from 'axios'
-import { ComputeOrders } from '../../../../@types/apollo/ComputeOrders'
 import Details from './Details'
 import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
 import { ReactComponent as Refresh } from '../../../../images/refresh.svg'
@@ -117,17 +117,19 @@ export default function ComputeJobs(): ReactElement {
   const [isLoading, setIsLoading] = useState(true)
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
   const { chainIds } = useUserPreferences()
-  const { data, refetch } = useQuery<ComputeOrders>(getComputeOrders, {
+  const [result] = useQuery<ComputeOrders>({
+    query: getComputeOrders,
     variables: {
       user: accountId?.toLowerCase()
     }
   })
+  const { data } = result
 
   async function getJobs() {
     if (!accountId) return
     setIsLoading(true)
 
-    await refetch()
+    // await refetch()
     const dtList = []
     const computeJobs: ComputeJobMetaData[] = []
     for (let i = 0; i < data.tokenOrders.length; i++) {
