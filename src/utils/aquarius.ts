@@ -126,7 +126,6 @@ export async function getAssetsNames(
 export async function transformDDOToAssetSelection(
   datasetProviderEndpoint: string,
   ddoList: DDO[],
-  metadataCacheUri: string,
   selectedAlgorithms?: PublisherTrustedAlgorithm[],
   ddoChainId?: number
 ): Promise<AssetSelectionAsset[]> {
@@ -182,7 +181,6 @@ export async function transformDDOToAssetSelection(
 export async function getAlgorithmDatasetsForCompute(
   algorithmId: string,
   datasetProviderUri: string,
-  metadataCacheUri: string,
   datasetChainId?: number
 ): Promise<AssetSelectionAsset[]> {
   const source = axios.CancelToken.source()
@@ -205,7 +203,6 @@ export async function getAlgorithmDatasetsForCompute(
   const datasets = await transformDDOToAssetSelection(
     datasetProviderUri,
     computeDatasetsForCurrentAlgorithm,
-    metadataCacheUri,
     [],
     datasetChainId
   )

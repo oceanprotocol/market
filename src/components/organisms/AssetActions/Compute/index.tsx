@@ -169,7 +169,6 @@ export default function Compute({
       algorithmSelectionList = await transformDDOToAssetSelection(
         datasetComputeService?.serviceEndpoint,
         gueryResults.results,
-        appConfig.metadataCacheUri,
         [],
         ddo?.chainId
       )
