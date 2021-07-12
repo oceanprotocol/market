@@ -8,7 +8,7 @@ import Dotdotdot from 'react-dotdotdot'
 import Table from '../../../atoms/Table'
 import Button from '../../../atoms/Button'
 import { useOcean } from '../../../../providers/Ocean'
-import { gql, OperationContext, useQuery } from 'urql'
+import { gql } from 'urql'
 import { useWeb3 } from '../../../../providers/Web3'
 import {
   queryMetadata,
@@ -19,7 +19,6 @@ import Details from './Details'
 import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
 import { ReactComponent as Refresh } from '../../../../images/refresh.svg'
 import styles from './index.module.css'
-import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import { getOceanConfig } from '../../../../utils/ocean'
 import { fetchDataForMultipleChains } from '../../../../utils/subgraph'
@@ -27,7 +26,6 @@ import {
   OrdersData_tokenOrders as OrdersData,
   OrdersData_tokenOrders_datatokenId as OrdersDatatoken
 } from '../../../../@types/apollo/OrdersData'
-import { setLocale } from 'yup'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -105,7 +103,6 @@ async function getAssetMetadata(
   cancelToken: CancelToken,
   chainIds: number[]
 ): Promise<DDO[]> {
-  // TODO: add chainIds into the query
   const queryDid = {
     page: 1,
     offset: 100,
@@ -175,6 +172,7 @@ export default function ComputeJobs(): ReactElement {
       return
     }
     try {
+      setIsLoading(true)
       const source = axios.CancelToken.source()
       const assets = await getAssetMetadata(queryDtList, source.token, chainIds)
       const providers: Provider[] = []
@@ -205,6 +203,7 @@ export default function ComputeJobs(): ReactElement {
       }
 
       try {
+        setIsLoading(true)
         for (let i = 0; i < serviceEndpoints.length; i++) {
           const instanceConfig = {
             config,

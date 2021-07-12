@@ -65,7 +65,6 @@ export default function ComputeDownloads(): ReactElement {
   const { chainIds } = useUserPreferences()
 
   useEffect(() => {
-    // if (!appConfig.metadataCacheUri) return
     const variables = { user: accountId?.toLowerCase() }
 
     async function filterAssets() {

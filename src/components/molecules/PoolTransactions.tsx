@@ -5,9 +5,8 @@ import Table from '../atoms/Table'
 import AssetTitle from './AssetListTitle'
 import styles from './PoolTransactions.module.css'
 import { useUserPreferences } from '../../providers/UserPreferences'
-import { DDO, Ocean } from '@oceanprotocol/lib'
 import { formatPrice } from '../atoms/Price/PriceUnit'
-import { gql, useQuery } from 'urql'
+import { gql } from 'urql'
 import {
   TransactionHistory,
   TransactionHistory_poolTransactions as TransactionHistoryPoolTransactions
@@ -101,8 +100,6 @@ async function getTitle(
     .toChecksumAddress(row.poolAddress.datatokenAddress)
     .replace('0x', 'did:op:')
   const ddo = await retrieveDDO(did, source.token)
-  // const config = getOceanConfig(ddo.chainId)
-  // const newOcean = await Ocean.getInstance(config)
 
   let title = ''
   switch (row.event) {

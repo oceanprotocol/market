@@ -3,7 +3,7 @@ import Table from '../../atoms/Table'
 import Conversion from '../../atoms/Price/Conversion'
 import styles from './PoolShares.module.css'
 import AssetTitle from '../../molecules/AssetListTitle'
-import { gql, OperationContext, useQuery } from 'urql'
+import { gql } from 'urql'
 import {
   PoolShares as PoolSharesList,
   PoolShares_poolShares as PoolShare,
@@ -13,7 +13,6 @@ import web3 from 'web3'
 import Token from '../../organisms/AssetActions/Pool/Token'
 import { useWeb3 } from '../../../providers/Web3'
 import { useUserPreferences } from '../../../providers/UserPreferences'
-import { getOceanConfig } from '../../../utils/ocean'
 import { fetchDataForMultipleChains } from '../../../utils/subgraph'
 
 const poolSharesQuery = gql`
@@ -190,7 +189,7 @@ export default function PoolShares(): ReactElement {
       data={assets}
       pagination
       paginationPerPage={5}
-      isLoading={fetching}
+      isLoading={loading}
       sortField="userLiquidity"
       sortAsc={false}
     />
