@@ -11,15 +11,10 @@ import {
   TransactionHistory,
   TransactionHistory_poolTransactions as TransactionHistoryPoolTransactions
 } from '../../@types/apollo/TransactionHistory'
-
 import web3 from 'web3'
 import { useWeb3 } from '../../providers/Web3'
 import { fetchDataForMultipleChains } from '../../utils/subgraph'
-
-import { getOceanConfig } from '../../utils/ocean'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
-import { retrieveDDO } from '../../utils/aquarius'
-import axios from 'axios'
 
 const txHistoryQueryByPool = gql`
   query TransactionHistoryByPool($user: String, $pool: String) {
@@ -86,7 +81,6 @@ interface Datatoken {
 
 function getSymbol(tokenId: Datatoken) {
   const symbol = tokenId === null ? 'OCEAN' : tokenId.symbol
-
   return symbol
 }
 
@@ -100,7 +94,7 @@ async function getTitle(
       const inToken = row.tokens.filter((x) => x.type === 'in')[0]
       const inTokenSymbol = getSymbol(inToken.poolToken.tokenId)
       const outToken = row.tokens.filter((x) => x.type === 'out')[0]
-      const outTokenSymbol = getSymbol(row.tokens[0].poolToken.tokenId)
+      const outTokenSymbol = getSymbol(outToken.poolToken.tokenId)
       title += `Swap ${formatPrice(
         Math.abs(inToken.value).toString(),
         locale
@@ -108,6 +102,7 @@ async function getTitle(
         Math.abs(outToken.value).toString(),
         locale
       )}${outTokenSymbol}`
+
       break
     }
     case 'setup': {
