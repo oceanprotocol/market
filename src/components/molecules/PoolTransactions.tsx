@@ -94,13 +94,6 @@ async function getTitle(
   row: TransactionHistoryPoolTransactions,
   locale: string
 ) {
-  const source = axios.CancelToken.source()
-
-  const did = web3.utils
-    .toChecksumAddress(row.poolAddress.datatokenAddress)
-    .replace('0x', 'did:op:')
-  const ddo = await retrieveDDO(did, source.token)
-
   let title = ''
   switch (row.event) {
     case 'swap': {
@@ -121,13 +114,13 @@ async function getTitle(
       const firstToken = row.tokens.filter(
         (x) =>
           x.tokenAddress.toLowerCase() !==
-          ddo.dataTokenInfo.address.toLowerCase()
+          row.poolAddress.datatokenAddress.toLowerCase()
       )[0]
       const firstTokenSymbol = await getSymbol(firstToken.poolToken.tokenId)
       const secondToken = row.tokens.filter(
         (x) =>
           x.tokenAddress.toLowerCase() ===
-          ddo.dataTokenInfo.address.toLowerCase()
+          row.poolAddress.datatokenAddress.toLowerCase()
       )[0]
       const secondTokenSymbol = await getSymbol(secondToken.poolToken.tokenId)
       title += `Create pool with ${formatPrice(
@@ -162,8 +155,7 @@ function Title({ row }: { row: TransactionHistoryPoolTransactions }) {
   const { locale } = useUserPreferences()
 
   useEffect(() => {
-    const config = getOceanConfig(4)
-    if (!config || !locale || !row) return
+    if (!locale || !row) return
     async function init() {
       const title = await getTitle(row, locale)
       setTitle(title)
