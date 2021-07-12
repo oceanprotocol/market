@@ -153,7 +153,6 @@ export default function ComputeJobs(): ReactElement {
     }
 
     if (!ocean || !account || !data) {
-      setIsLoading(false)
       return
     }
 
