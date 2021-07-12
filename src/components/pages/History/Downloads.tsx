@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import Table from '../../atoms/Table'
-import { gql, useQuery } from '@apollo/client'
+import { gql, useQuery } from 'urql'
 import Time from '../../atoms/Time'
 import web3 from 'web3'
 import AssetTitle from '../../molecules/AssetListTitle'
@@ -58,9 +58,11 @@ export default function ComputeDownloads(): ReactElement {
   const { accountId } = useWeb3()
   const [isLoading, setIsLoading] = useState(false)
   const [orders, setOrders] = useState<DownloadedAssets[]>()
-  const { data } = useQuery(getTokenOrders, {
+  const [result] = useQuery({
+    query: getTokenOrders,
     variables: { user: accountId?.toLowerCase() }
   })
+  const { data } = result
   const { appConfig } = useSiteMetadata()
 
   useEffect(() => {
