@@ -7,7 +7,7 @@ import styles from './PoolTransactions.module.css'
 import { useUserPreferences } from '../../providers/UserPreferences'
 import { DDO, Ocean } from '@oceanprotocol/lib'
 import { formatPrice } from '../atoms/Price/PriceUnit'
-import { gql } from 'urql'
+import { gql, useQuery } from 'urql'
 import {
   TransactionHistory,
   TransactionHistory_poolTransactions as TransactionHistoryPoolTransactions

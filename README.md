@@ -171,10 +171,10 @@ function Component() {
 
 Most financial data in the market is retrieved with GraphQL from [our own subgraph](https://github.com/oceanprotocol/ocean-subgraph), rendered on top of the initial data coming from Aquarius.
 
-The app has [Apollo Client](https://www.apollographql.com/docs/react/) setup to query the respective subgraph based on network. In any component this client can be used like so:
+The app has [Urql Client](https://formidable.com/open-source/urql/docs/basics/react-preact/) setup to query the respective subgraph based on network. In any component this client can be used like so:
 
 ```tsx
-import { gql, useQuery } from '@apollo/client'
+import { gql, useQuery } from 'urql'
 
 const query = gql`
   query PoolLiquidity($id: ID!, $shareId: ID) {

@@ -138,6 +138,7 @@ export default function Graph(): ReactElement {
     }
     // pollInterval: 20000
   })
+  const { data, error } = result
 
   const { data, error } = result
   useEffect(() => {

@@ -190,7 +190,7 @@ export default function PoolShares(): ReactElement {
       data={assets}
       pagination
       paginationPerPage={5}
-      isLoading={loading}
+      isLoading={fetching}
       sortField="userLiquidity"
       sortAsc={false}
     />

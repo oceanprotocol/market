@@ -15,7 +15,6 @@ import {
   transformChainIdsListToQuery
 } from '../../../../utils/aquarius'
 import axios, { CancelToken } from 'axios'
-import { ComputeOrders } from '../../../../@types/apollo/ComputeOrders'
 import Details from './Details'
 import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
 import { ReactComponent as Refresh } from '../../../../images/refresh.svg'
