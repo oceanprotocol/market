@@ -162,7 +162,6 @@ export async function fetchDataForMultipleChains(
 ): Promise<any[]> {
   let datas: any[] = []
   for (const chainId of chainIds) {
-    console.log(chainId)
     const context: OperationContext = {
       url: `${getSubgrahUri(
         chainId
