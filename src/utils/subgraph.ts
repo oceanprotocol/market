@@ -16,6 +16,10 @@ import {
   AssetsFreePrice_dispensers as AssetFreePriceDispenser
 } from '../@types/apollo/AssetsFreePrice'
 import { AssetPreviousOrder } from '../@types/apollo/AssetPreviousOrder'
+import {
+  HighestLiquidiyAssets_pools,
+  HighestLiquidiyAssets
+} from '../@types/apollo/HighestLiquidiyAssets'
 
 export interface PriceList {
   [key: string]: string
@@ -426,6 +430,7 @@ export async function getHighestLiquidityDIDs(
   chainIds: number[]
 ): Promise<string> {
   const didList: string[] = []
+  let highestLiquidiyAssets: HighestLiquidiyAssets_pools[] = []
   for (const chain of chainIds) {
     const queryContext: OperationContext = {
       url: `${getSubgrahUri(
@@ -433,19 +438,19 @@ export async function getHighestLiquidityDIDs(
       )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
       requestPolicy: 'network-only'
     }
-    const fetchedPools = await fetchData(
-      HighestLiquidityAssets,
-      null,
-      queryContext
+    const fetchedPools: OperationResult<HighestLiquidiyAssets, any> =
+      await fetchData(HighestLiquidityAssets, null, queryContext)
+    highestLiquidiyAssets = highestLiquidiyAssets.concat(
+      fetchedPools.data.pools
     )
-    if (fetchedPools.data?.pools?.length === 0) return null
-    for (let i = 0; i < fetchedPools.data.pools.length; i++) {
-      if (!fetchedPools.data.pools[i].datatokenAddress) continue
-      const did = web3.utils
-        .toChecksumAddress(fetchedPools.data.pools[i].datatokenAddress)
-        .replace('0x', 'did:op:')
-      didList.push(did)
-    }
+  }
+  highestLiquidiyAssets.sort((a, b) => a.valueLocked - b.valueLocked).reverse()
+  for (let i = 0; i < highestLiquidiyAssets.length; i++) {
+    if (!highestLiquidiyAssets[i].datatokenAddress) continue
+    const did = web3.utils
+      .toChecksumAddress(highestLiquidiyAssets[i].datatokenAddress)
+      .replace('0x', 'did:op:')
+    didList.push(did)
   }
   const searchDids = JSON.stringify(didList)
     .replace(/,/g, ' ')

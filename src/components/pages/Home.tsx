@@ -24,7 +24,6 @@ async function getQueryHighest(
   chainIds: number[]
 ): Promise<[SearchQuery, string]> {
   const dids = await getHighestLiquidityDIDs(chainIds)
-
   // TODO: this query needs to adapt to chainIds
   const queryHighest = {
     page: 1,
@@ -89,7 +88,7 @@ function SectionQueryResult({
       try {
         setLoading(true)
         const result = await queryMetadata(query, source.token)
-        if (queryData && result.totalResults > 0 && result.totalResults <= 15) {
+        if (queryData && result.totalResults > 0) {
           const searchDIDs = queryData.split(' ')
           const sortedAssets = sortElements(result.results, searchDIDs)
           // We take more assets than we need from the subgraph (to make sure
