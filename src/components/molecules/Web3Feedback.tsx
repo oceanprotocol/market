@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import { useWeb3 } from '../../providers/Web3'
 import Status from '../atoms/Status'
 import styles from './Web3Feedback.module.css'
-import WalletNetworkSwitcher from '../molecules/WalletNetworkSwither'
+import WalletNetworkSwitcher from './WalletNetworkSwitcher'
 
 export declare type Web3Error = {
   status: 'error' | 'warning' | 'success'
