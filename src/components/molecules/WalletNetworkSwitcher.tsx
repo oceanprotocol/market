@@ -15,8 +15,6 @@ import { useAsset } from '../../providers/Asset'
 export default function WalletNetworkSwitcher(): ReactElement {
   const { networkId, web3Provider } = useWeb3()
   const { ddo } = useAsset()
-  const DEFAULT_ETH_CHAIN_IDS = [1, 3, 4]
-  const showButton = !DEFAULT_ETH_CHAIN_IDS.includes(ddo.chainId)
   const oceanConfig = getOceanConfig(ddo.chainId)
   const { networksList } = useNetworkMetadata()
   const ddoNetworkData = getNetworkDataById(networksList, ddo.chainId)
@@ -49,20 +47,14 @@ export default function WalletNetworkSwitcher(): ReactElement {
           The current asset is on {ddoNetworkName} but your wallet is connected
           to {walletNetworkName}
         </p>
-        {showButton ? (
-          <Button
-            style="primary"
-            size="small"
-            onClick={() => switchWalletNetwork()}
-            className={styles.switchButton}
-          >
-            Switch to {ddoNetworkName}
-          </Button>
-        ) : (
-          <p className={styles.title}>
-            You must manually switch to {ddoNetworkName} on your wallet provider
-          </p>
-        )}
+        <Button
+          style="primary"
+          size="small"
+          onClick={() => switchWalletNetwork()}
+          className={styles.switchButton}
+        >
+          Switch to {ddoNetworkName}
+        </Button>
       </div>
     </div>
   )

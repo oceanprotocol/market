@@ -55,9 +55,6 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   const [isOwner, setIsOwner] = useState(false)
   const { ddo, price, metadata, type } = useAsset()
   const { appConfig } = useSiteMetadata()
-  const { networkId, web3Provider } = useWeb3()
-
-  console.log(web3Provider, networkId)
 
   useEffect(() => {
     if (!accountId || !owner) return
