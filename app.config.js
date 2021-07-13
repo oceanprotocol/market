@@ -1,7 +1,7 @@
 module.exports = {
   metadataCacheUri:
     process.env.METADATACACHE_URI ||
-    'https://aquarius.rinkeby.oceanprotocol.com',
+    'https://aquarius.mainnet.oceanprotocol.com',
 
   // List of chainIds which metadata cache queries will return by default.
   // This preselects the Chains user preferences.
