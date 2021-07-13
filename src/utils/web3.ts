@@ -47,8 +47,9 @@ export function getNetworkData(
 ): EthereumListsChain {
   const networkData = data.filter(
     ({ node }: { node: EthereumListsChain }) => node.chainId === networkId
-  )[0]
-  return networkData.node
+  )
+
+  return networkData[0]?.node
 }
 
 export function addCustomNetwork(
