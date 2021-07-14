@@ -1,13 +1,17 @@
 import React, { ReactElement, useState } from 'react'
 import Button from '../../../atoms/Button'
-import PoolTransactions from '../../../molecules/PoolTransactions'
 import styles from './Transactions.module.css'
 import { ReactComponent as Caret } from '../../../../images/caret.svg'
-import { useAsset } from '../../../../providers/Asset'
+import { ReactNode } from 'react-markdown'
 
-export default function Transactions(): ReactElement {
+export default function Transactions({
+  title,
+  children
+}: {
+  title: string
+  children: ReactNode
+}): ReactElement {
   const [open, setOpen] = useState(false)
-  const { price } = useAsset()
   function handleClick() {
     setOpen(!open)
   }
@@ -18,7 +22,7 @@ export default function Transactions(): ReactElement {
     >
       {/* TODO: onClick on h3 is nasty but we're in a hurry */}
       <h3 className={styles.title} onClick={handleClick}>
-        Your Pool Transactions{' '}
+        {`${title} `}
         <Button
           style="text"
           size="small"
@@ -28,9 +32,7 @@ export default function Transactions(): ReactElement {
           {open ? 'Hide' : 'Show'} <Caret />
         </Button>
       </h3>
-      {open === true && (
-        <PoolTransactions poolAddress={price?.address} minimal />
-      )}
+      {open === true && children}
     </div>
   )
 }

@@ -19,6 +19,7 @@ import { gql, useQuery } from '@apollo/client'
 import { PoolLiquidity } from '../../../../@types/apollo/PoolLiquidity'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
+import PoolTransactions from '../../../molecules/PoolTransactions'
 
 const contentQuery = graphql`
   query PoolQuery {
@@ -343,7 +344,11 @@ export default function Pool(): ReactElement {
             )}
           </div>
 
-          {accountId && <Transactions />}
+          {accountId && (
+            <Transactions title="Pool transactions">
+              <PoolTransactions poolAddress={price?.address} minimal />
+            </Transactions>
+          )}
         </>
       )}
     </>

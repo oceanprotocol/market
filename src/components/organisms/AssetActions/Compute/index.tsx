@@ -39,6 +39,9 @@ import { secondsToString } from '../../../../utils/metadata'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import AlgorithmDatasetsListForCompute from '../../AssetContent/AlgorithmDatasetsListForCompute'
 import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
+import Transactions from '../Pool/Transactions'
+import PoolTransactions from '../../../molecules/PoolTransactions'
+import ComputeJobs from '../../../pages/History/ComputeJobs'
 
 const SuccessAction = () => (
   <Button style="text" to="/history?defaultTab=ComputeJobs" size="small">
@@ -445,6 +448,11 @@ export default function Compute({
           <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
         )}
       </footer>
+      {accountId && (
+        <Transactions title="Compute jobs">
+          <ComputeJobs minimal />
+        </Transactions>
+      )}
     </>
   )
 }

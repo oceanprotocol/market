@@ -102,7 +102,13 @@ async function getAssetMetadata(
   return result.results
 }
 
-export default function ComputeJobs(): ReactElement {
+export default function ComputeJobs({
+  minimal,
+  assetAddress
+}: {
+  minimal?: boolean
+  assetAddress?: string
+}): ReactElement {
   const { ocean, account, config } = useOcean()
   const { accountId } = useWeb3()
   const [isLoading, setIsLoading] = useState(true)
@@ -112,6 +118,8 @@ export default function ComputeJobs(): ReactElement {
       user: accountId?.toLowerCase()
     }
   })
+
+  const columnsMinimal = [columns[3], columns[2]]
 
   async function getJobs() {
     if (!ocean || !account) return
@@ -246,7 +254,7 @@ export default function ComputeJobs(): ReactElement {
 
   return (
     <>
-      {jobs.length > 0 && (
+      {jobs.length <= 0 || minimal || (
         <Button
           style="text"
           size="small"
@@ -260,7 +268,7 @@ export default function ComputeJobs(): ReactElement {
         </Button>
       )}
       <Table
-        columns={columns}
+        columns={minimal ? columnsMinimal : columns}
         data={jobs}
         isLoading={isLoading}
         defaultSortField="row.dateCreated"
