@@ -12,7 +12,7 @@ import { useAsset } from '../../../providers/Asset'
 import { useOcean } from '../../../providers/Ocean'
 import { useWeb3 } from '../../../providers/Web3'
 import Web3Feedback from '../../molecules/Web3Feedback'
-import { fileinfo, getFileInfo } from '../../../utils/provider'
+import { getFileInfo } from '../../../utils/provider'
 import axios from 'axios'
 
 export default function AssetActions(): ReactElement {
@@ -45,28 +45,30 @@ export default function AssetActions(): ReactElement {
   }, [accountId, ddo])
 
   useEffect(() => {
-    const { attributes } = ddo.findServiceByType('metadata')
-    setFileMetadata(attributes.main.files[0])
-    // !!!!!  do not remove this, we will enable this again after fileInfo endpoint is fixed !!!
-    // if (!config) return
-    // const source = axios.CancelToken.source()
-    // async function initFileInfo() {
-    //   setFileIsLoading(true)
-    //   try {
-    //     const fileInfo = await getFileInfo(
-    //       DID.parse(`${ddo.id}`),
-    //       config.providerUri,
-    //       source.token
-    //     )
-    //     setFileMetadata(fileInfo.data[0])
-    //   } catch (error) {
-    //     Logger.error(error.message)
-    //   } finally {
-    //     setFileIsLoading(false)
-    //   }
-    // }
-    // initFileInfo()
-  }, [config, ddo.id])
+    if (!config) return
+    const source = axios.CancelToken.source()
+    async function initFileInfo() {
+      setFileIsLoading(true)
+      try {
+        const fileInfo = await getFileInfo(
+          DID.parse(`${ddo.id}`),
+          config.providerUri,
+          source.token
+        )
+
+        setFileMetadata(fileInfo.data[0])
+      } catch (error) {
+        Logger.error(error.message)
+      } finally {
+        // this triggers a memory leak warrning, no idea how to fix
+        setFileIsLoading(false)
+      }
+    }
+    initFileInfo()
+    return () => {
+      source.cancel()
+    }
+  }, [config, ddo])
 
   // Get and set user DT balance
   useEffect(() => {
