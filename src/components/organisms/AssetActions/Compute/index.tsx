@@ -40,7 +40,6 @@ import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelectio
 import AlgorithmDatasetsListForCompute from '../../AssetContent/AlgorithmDatasetsListForCompute'
 import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
 import Transactions from '../Pool/Transactions'
-import PoolTransactions from '../../../molecules/PoolTransactions'
 import ComputeJobs from '../../../pages/History/ComputeJobs'
 
 const SuccessAction = () => (
@@ -450,7 +449,7 @@ export default function Compute({
       </footer>
       {accountId && (
         <Transactions title="Compute jobs">
-          <ComputeJobs minimal />
+          <ComputeJobs minimal assetAddress={ddo.dataTokenInfo.address} />
         </Transactions>
       )}
     </>

@@ -36,6 +36,24 @@ const getComputeOrders = gql`
   }
 `
 
+const getComputeOrdersByDatatokenAddress = gql`
+  query ComputeOrders($user: String!, $datatokenAddress: String!) {
+    tokenOrders(
+      orderBy: timestamp
+      orderDirection: desc
+      where: { payer: $user, datatokenId: $datatokenAddress }
+    ) {
+      id
+      serviceId
+      datatokenId {
+        address
+      }
+      tx
+      timestamp
+    }
+  }
+`
+
 export function Status({ children }: { children: string }): ReactElement {
   return <div className={styles.status}>{children}</div>
 }
@@ -104,22 +122,30 @@ async function getAssetMetadata(
 
 export default function ComputeJobs({
   minimal,
-  assetAddress
+  assetDTAddress
 }: {
   minimal?: boolean
-  assetAddress?: string
+  assetDTAddress?: string
 }): ReactElement {
   const { ocean, account, config } = useOcean()
   const { accountId } = useWeb3()
   const [isLoading, setIsLoading] = useState(true)
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
-  const { data, refetch } = useQuery<ComputeOrders>(getComputeOrders, {
-    variables: {
-      user: accountId?.toLowerCase()
+  const { data, refetch } = useQuery<ComputeOrders>(
+    assetDTAddress ? getComputeOrdersByDatatokenAddress : getComputeOrders,
+    {
+      variables: assetDTAddress
+        ? {
+            user: accountId?.toLowerCase(),
+            datatokenAddress: assetDTAddress.toLowerCase()
+          }
+        : {
+            user: accountId?.toLowerCase()
+          }
     }
-  })
+  )
 
-  const columnsMinimal = [columns[3], columns[2]]
+  const columnsMinimal = [columns[3], columns[4]]
 
   async function getJobs() {
     if (!ocean || !account) return
