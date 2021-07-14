@@ -129,13 +129,14 @@ const HighestLiquidityAssets = gql`
   query HighestLiquidityAssets {
     pools(
       where: { datatokenReserve_gte: 1 }
-      orderBy: valueLocked
+      orderBy: oceanReserve
       orderDirection: desc
       first: 15
     ) {
       id
       datatokenAddress
       valueLocked
+      oceanReserve
     }
   }
 `
@@ -444,7 +445,9 @@ export async function getHighestLiquidityDIDs(
       fetchedPools.data.pools
     )
   }
-  highestLiquidiyAssets.sort((a, b) => a.valueLocked - b.valueLocked).reverse()
+  highestLiquidiyAssets
+    .sort((a, b) => a.oceanReserve - b.oceanReserve)
+    .reverse()
   for (let i = 0; i < highestLiquidiyAssets.length; i++) {
     if (!highestLiquidiyAssets[i].datatokenAddress) continue
     const did = web3.utils
