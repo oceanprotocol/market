@@ -14,17 +14,23 @@ export default function CustomProvider(props: InputProps): ReactElement {
 
   function loadProvider() {
     async function validateProvider() {
+      let valid: boolean
       try {
         setIsLoading(true)
         const ocean: Ocean = await Ocean.getInstance(config)
-        const valid = await ocean.provider.isValidProvider(providerUrl)
+        console.log('ocean', ocean)
+        valid = await ocean.provider.isValidProvider(providerUrl)
         console.log('valid', valid)
       } catch (error) {
-        toast.error(
-          'Could not validate provider. Please check URL and try again'
-        )
+        valid = false
         console.error(error.message)
       } finally {
+        valid
+          ? toast.success('Perfect! That provider URL looks good 🐳')
+          : toast.error(
+              'Could not validate provider. Please check URL and try again'
+            )
+
         setIsLoading(false)
       }
     }
