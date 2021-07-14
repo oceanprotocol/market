@@ -25,6 +25,7 @@ export const contentQuery = graphql`
             title
             description
             warning
+            tooltipNetwork
           }
         }
       }

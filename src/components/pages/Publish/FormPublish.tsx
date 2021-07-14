@@ -42,6 +42,7 @@ const query = graphql`
 export default function FormPublish(): ReactElement {
   const data = useStaticQuery(query)
   const content: FormContent = data.content.edges[0].node.childPublishJson
+
   const { ocean, account } = useOcean()
   const {
     status,

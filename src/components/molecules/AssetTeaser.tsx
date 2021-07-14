@@ -19,7 +19,6 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
   ddo,
   price
 }: AssetTeaserProps) => {
-  const { config } = useOcean()
   const { attributes } = ddo.findServiceByType('metadata')
   const { name, type } = attributes.main
   const { dataTokenInfo } = ddo
@@ -42,7 +41,6 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
           type={type}
           accessType={accessType}
           className={styles.typeDetails}
-          chainId={ddo.chainId}
         />
 
         <div className={styles.content}>
@@ -55,6 +53,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
 
         <footer className={styles.foot}>
           <Price price={price} small />
+          <NetworkName networkId={ddo.chainId} className={styles.network} />
         </footer>
       </Link>
     </article>

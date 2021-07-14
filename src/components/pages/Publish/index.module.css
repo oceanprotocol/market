@@ -43,3 +43,22 @@ div.alert {
 .formTitle {
   font-size: var(--font-size-h4);
 }
+
+.network {
+  color: var(--color-secondary);
+  display: inline-flex;
+  font-size: var(--font-size-small);
+  margin-bottom: -1px;
+  margin-left: calc(var(--spacer) / 1.75);
+  background: var(--background-content);
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  border-bottom: 0;
+  padding: calc(var(--spacer) / 10) calc(var(--spacer) / 3);
+}
+
+.networkText {
+  display: inline-block;
+  margin-right: calc(var(--spacer) / 6);
+}
