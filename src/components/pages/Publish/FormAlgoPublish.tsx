@@ -148,7 +148,8 @@ export default function FormPublish(): ReactElement {
           ((field.name !== 'entrypoint' &&
             field.name !== 'image' &&
             field.name !== 'containerTag') ||
-            selectedDockerImage === 'custom image') && (
+            selectedDockerImage === 'custom image') &&
+          console.log('select') && (
             <Field
               key={field.name}
               {...field}

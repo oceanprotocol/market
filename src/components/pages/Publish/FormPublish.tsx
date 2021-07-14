@@ -1,4 +1,10 @@
-import React, { ReactElement, useEffect, FormEvent, ChangeEvent } from 'react'
+import React, {
+  ReactElement,
+  useState,
+  useEffect,
+  FormEvent,
+  ChangeEvent
+} from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 import { useFormikContext, Field, Form, FormikContextType } from 'formik'
 import Input from '../../atoms/Input'
@@ -54,6 +60,9 @@ export default function FormPublish(): ReactElement {
     validateField,
     setFieldValue
   }: FormikContextType<MetadataPublishFormDataset> = useFormikContext()
+  const [selectedProviderType, setProviderType] = useState<string>(
+    initialValues.provider
+  )
 
   // reset form validation on every mount
   useEffect(() => {
@@ -96,7 +105,10 @@ export default function FormPublish(): ReactElement {
   ) {
     const value =
       field.type === 'terms' ? !JSON.parse(e.target.value) : e.target.value
-
+    if (field.name === 'provider') {
+      setProviderType(e.target.value)
+      console.log('selectedProviderType', selectedProviderType)
+    }
     validateField(field.name)
     setFieldValue(field.name, value)
   }
@@ -117,23 +129,28 @@ export default function FormPublish(): ReactElement {
       onChange={() => status === 'empty' && setStatus(null)}
     >
       <h2 className={stylesIndex.formTitle}>{content.title}</h2>
-      {content.data.map((field: FormFieldProps) => (
-        <Field
-          key={field.name}
-          {...field}
-          options={
-            field.name === 'access'
-              ? accessTypeOptions
-              : field.name === 'provider'
-              ? providerTypeOptions
-              : field.options
-          }
-          component={Input}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            handleFieldChange(e, field)
-          }
-        />
-      ))}
+      {content.data.map(
+        (field: FormFieldProps) =>
+          (field.name !== 'customProvider' ||
+            (field.name === 'customProvider' &&
+              selectedProviderType === 'Custom')) && (
+            <Field
+              key={field.name}
+              {...field}
+              options={
+                field.name === 'access'
+                  ? accessTypeOptions
+                  : field.name === 'provider'
+                  ? providerTypeOptions
+                  : field.options
+              }
+              component={Input}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                handleFieldChange(e, field)
+              }
+            />
+          )
+      )}
       <footer className={styles.actions}>
         <Button
           style="primary"

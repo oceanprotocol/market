@@ -13,6 +13,7 @@ export default function CustomProvider(props: InputProps): ReactElement {
   const { config } = useOcean()
 
   function loadProvider() {
+    if (!providerUrl) return
     async function validateProvider() {
       let valid: boolean
       try {
