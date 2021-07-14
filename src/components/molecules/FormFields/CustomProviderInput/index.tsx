@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 import ProviderInput from './Input'
 import { useOcean } from '../../../../providers/Ocean'
 import { InputProps } from '../../../atoms/Input'
-import { Provider } from '@oceanprotocol/lib'
+import { Provider, Ocean } from '@oceanprotocol/lib'
 
 export default function CustomProvider(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
@@ -16,8 +16,8 @@ export default function CustomProvider(props: InputProps): ReactElement {
     async function validateProvider() {
       try {
         setIsLoading(true)
-        const instance = new Provider()
-        const valid = await instance.setBaseUrl('test')
+        const ocean: Ocean = await Ocean.getInstance(config)
+        const valid = await ocean.provider.isValidProvider(providerUrl)
         console.log('valid', valid)
       } catch (error) {
         toast.error(
