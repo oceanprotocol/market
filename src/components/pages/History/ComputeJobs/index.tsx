@@ -37,7 +37,10 @@ const getComputeOrders = gql`
 `
 
 const getComputeOrdersByDatatokenAddress = gql`
-  query ComputeOrders($user: String!, $datatokenAddress: String!) {
+  query ComputeOrdersByDatatokenAddress(
+    $user: String!
+    $datatokenAddress: String!
+  ) {
     tokenOrders(
       orderBy: timestamp
       orderDirection: desc
