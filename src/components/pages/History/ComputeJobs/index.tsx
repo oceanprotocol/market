@@ -135,9 +135,10 @@ export default function ComputeJobs(): ReactElement {
     if (ocean === undefined) {
       initOcean()
     }
-  }, [ocean])
+  }, [networkId, ocean])
 
   async function getJobs() {
+    if (!accountId) return
     setIsLoading(true)
     const variables = { user: accountId?.toLowerCase() }
     const result = await fetchDataForMultipleChains(
@@ -147,15 +148,14 @@ export default function ComputeJobs(): ReactElement {
     )
     const data: TokenOrder[] = []
     for (let i = 0; i < result.length; i++) {
+      if (!result[i].tokenOrders) continue
       result[i].tokenOrders.forEach((tokenOrder: TokenOrder) => {
         data.push(tokenOrder)
       })
     }
-
     if (!ocean || !account || !data) {
       return
     }
-
     const dtList = []
     const computeJobs: ComputeJobMetaData[] = []
     for (let i = 0; i < data.length; i++) {
@@ -170,6 +170,7 @@ export default function ComputeJobs(): ReactElement {
       setIsLoading(false)
       return
     }
+
     try {
       setIsLoading(true)
       const source = axios.CancelToken.source()
@@ -274,12 +275,12 @@ export default function ComputeJobs(): ReactElement {
   }
 
   useEffect(() => {
-    if (!chainIds) {
+    if (!chainIds || !accountId) {
       setIsLoading(false)
       return
     }
     getJobs()
-  }, [ocean, account, chainIds])
+  }, [ocean, account, chainIds, accountId])
 
   return (
     <>
