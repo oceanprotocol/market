@@ -25,6 +25,24 @@ export default function AssetActions(): ReactElement {
   const [fileIsLoading, setFileIsLoading] = useState<boolean>(false)
   const isCompute = Boolean(ddo?.findServiceByType('compute'))
 
+  const [isConsumable, setIsConsumable] = useState<boolean>(true)
+  const [consumableFeedback, setConsumableFeedback] = useState<string>('')
+
+  useEffect(() => {
+    if (!ddo || !accountId) return
+    async function checkIsConsumable() {
+      const consumable = await ocean.assets.isConsumable(
+        ddo,
+        accountId.toLowerCase()
+      )
+      if (consumable) {
+        setIsConsumable(consumable.result)
+        setConsumableFeedback(consumable.message)
+      }
+    }
+    checkIsConsumable()
+  }, [accountId, ddo])
+
   useEffect(() => {
     if (!config) return
     const source = axios.CancelToken.source()
@@ -36,15 +54,20 @@ export default function AssetActions(): ReactElement {
           config.providerUri,
           source.token
         )
+
         setFileMetadata(fileInfo.data[0])
       } catch (error) {
         Logger.error(error.message)
       } finally {
+        // this triggers a memory leak warrning, no idea how to fix
         setFileIsLoading(false)
       }
     }
     initFileInfo()
-  }, [config, ddo.id])
+    return () => {
+      source.cancel()
+    }
+  }, [config, ddo])
 
   // Get and set user DT balance
   useEffect(() => {
@@ -83,6 +106,8 @@ export default function AssetActions(): ReactElement {
       isBalanceSufficient={isBalanceSufficient}
       file={fileMetadata}
       fileIsLoading={fileIsLoading}
+      isConsumable={isConsumable}
+      consumableFeedback={consumableFeedback}
     />
   ) : (
     <Consume
@@ -91,6 +116,8 @@ export default function AssetActions(): ReactElement {
       isBalanceSufficient={isBalanceSufficient}
       file={fileMetadata}
       fileIsLoading={fileIsLoading}
+      isConsumable={isConsumable}
+      consumableFeedback={consumableFeedback}
     />
   )
 

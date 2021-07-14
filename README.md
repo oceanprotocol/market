@@ -26,6 +26,7 @@
 - [⬆️ Deployment](#️-deployment)
 - [💖 Contributing](#-contributing)
 - [🍴 Forking](#-forking)
+- [💻 Advanced Features](#-advanced-features)
 - [🏛 License](#-license)
 
 ## 🏄 Get Started
@@ -373,6 +374,16 @@ We encourage you to fork this repository and create your own data marketplace. W
 Additionally, we would also advise that your retain the text saying "Powered by Ocean Protocol" on your forked version of the marketplace in order to give credit for the development work done by the Ocean Protocol team.
 
 Everything else is made open according to the apache2 license. We look forward to seeing your data marketplace!
+
+## 💻 Advanced Features
+
+Ocean Market also includes a number of advanced features that are suitable for an enterprise data market, such as:
+
+- Role based access control
+- Allow and deny lists
+- Free pricing
+
+[See our seperate guide on advanced features](docs/advancedSettings.md)
 
 ## 🏛 License
 
