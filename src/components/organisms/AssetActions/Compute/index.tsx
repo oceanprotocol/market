@@ -449,7 +449,7 @@ export default function Compute({
       </footer>
       {accountId && (
         <Transactions title="Compute jobs">
-          <ComputeJobs minimal assetAddress={ddo.dataTokenInfo.address} />
+          <ComputeJobs minimal assetDTAddress={ddo.dataTokenInfo.address} />
         </Transactions>
       )}
     </>
