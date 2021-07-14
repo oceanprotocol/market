@@ -35,8 +35,6 @@ export default function Details(): ReactElement {
       networkId === 2021000 ? 'GX' : networkData?.nativeCurrency.symbol
     setMainCurrency(symbol)
 
-    setMainCurrency(networkData.nativeCurrency?.symbol)
-
     const oceanConfig = getOceanConfig(networkId)
 
     oceanConfig &&
