@@ -282,7 +282,7 @@ export default function ComputeJobs(): ReactElement {
     getJobs()
   }, [ocean, account, chainIds, accountId])
 
-  return (
+  return accountId ? (
     <>
       <Button
         style="text"
@@ -304,5 +304,7 @@ export default function ComputeJobs(): ReactElement {
         defaultSortAsc={false}
       />
     </>
+  ) : (
+    <div>Please connect your Web3 wallet.</div>
   )
 }

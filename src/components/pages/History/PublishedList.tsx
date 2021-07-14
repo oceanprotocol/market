@@ -62,6 +62,6 @@ export default function PublishedList(): ReactElement {
       }}
     />
   ) : (
-    <div>Connect your wallet to see your published data sets.</div>
+    <div>Please connect your Web3 wallet.</div>
   )
 }

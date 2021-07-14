@@ -182,7 +182,7 @@ export default function PoolShares(): ReactElement {
     getShares()
   }, [accountId, chainIds])
 
-  return (
+  return accountId ? (
     <Table
       columns={columns}
       className={styles.poolSharesTable}
@@ -193,5 +193,7 @@ export default function PoolShares(): ReactElement {
       sortField="userLiquidity"
       sortAsc={false}
     />
+  ) : (
+    <div>Please connect your Web3 wallet.</div>
   )
 }

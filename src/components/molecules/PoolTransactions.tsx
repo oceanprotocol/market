@@ -243,7 +243,7 @@ export default function PoolTransactions({
     getTransactions()
   }, [accountId, chainIds, appConfig.metadataCacheUri])
 
-  return (
+  return accountId ? (
     <Table
       columns={minimal ? columnsMinimal : columns}
       data={logs}
@@ -252,7 +252,8 @@ export default function PoolTransactions({
       dense={minimal}
       pagination={minimal ? logs?.length >= 4 : logs?.length >= 9}
       paginationPerPage={minimal ? 5 : 10}
-      emptyMessage="Your pool transactions will show up here"
     />
+  ) : (
+    <div>Please connect your Web3 wallet.</div>
   )
 }

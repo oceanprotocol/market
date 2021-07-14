@@ -111,13 +111,14 @@ export default function ComputeDownloads(): ReactElement {
     filterAssets()
   }, [accountId, appConfig.metadataCacheUri, chainIds])
 
-  return (
+  return accountId ? (
     <Table
       columns={columns}
       data={orders}
       paginationPerPage={10}
       isLoading={isLoading}
-      emptyMessage="Your downloads will show up here"
     />
+  ) : (
+    <div>Please connect your Web3 wallet.</div>
   )
 }
