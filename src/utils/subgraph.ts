@@ -17,9 +17,9 @@ import {
 } from '../@types/apollo/AssetsFreePrice'
 import { AssetPreviousOrder } from '../@types/apollo/AssetPreviousOrder'
 import {
-  HighestLiquidiyAssets_pools as HighestLiquidiyAssetsPools,
-  HighestLiquidiyAssets
-} from '../@types/apollo/HighestLiquidiyAssets'
+  HighestLiquidityAssets_pools as HighestLiquidityAssetsPools,
+  HighestLiquidityAssets as HighestLiquidityGraphAssets
+} from '../@types/apollo/HighestLiquidityAssets'
 
 export interface PriceList {
   [key: string]: string
@@ -126,7 +126,7 @@ const PreviousOrderQuery = gql`
   }
 `
 const HighestLiquidityAssets = gql`
-  query HighestLiquidiyAssets {
+  query HighestLiquidityAssets {
     pools(
       where: { datatokenReserve_gte: 1 }
       orderBy: valueLocked
@@ -430,7 +430,7 @@ export async function getHighestLiquidityDIDs(
   chainIds: number[]
 ): Promise<string> {
   const didList: string[] = []
-  let highestLiquidiyAssets: HighestLiquidiyAssetsPools[] = []
+  let highestLiquidiyAssets: HighestLiquidityAssetsPools[] = []
   for (const chain of chainIds) {
     const queryContext: OperationContext = {
       url: `${getSubgrahUri(
@@ -438,7 +438,7 @@ export async function getHighestLiquidityDIDs(
       )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
       requestPolicy: 'network-only'
     }
-    const fetchedPools: OperationResult<HighestLiquidiyAssets, any> =
+    const fetchedPools: OperationResult<HighestLiquidityGraphAssets, any> =
       await fetchData(HighestLiquidityAssets, null, queryContext)
     highestLiquidiyAssets = highestLiquidiyAssets.concat(
       fetchedPools.data.pools

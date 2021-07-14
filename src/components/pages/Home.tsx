@@ -91,9 +91,6 @@ function SectionQueryResult({
         if (queryData && result.totalResults > 0) {
           const searchDIDs = queryData.split(' ')
           const sortedAssets = sortElements(result.results, searchDIDs)
-          // We take more assets than we need from the subgraph (to make sure
-          // all the 9 assets with highest liquidity we need are in OceanDB)
-          // so we need to get rid of the surplus
           const overflow = sortedAssets.length - 9
           sortedAssets.splice(sortedAssets.length - overflow, overflow)
           result.results = sortedAssets
