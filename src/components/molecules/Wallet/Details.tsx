@@ -18,7 +18,6 @@ export default function Details(): ReactElement {
     logout,
     networkData,
     networkId,
-    networkData,
     balance
   } = useWeb3()
   const { locale } = useUserPreferences()
