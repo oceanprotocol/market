@@ -17,7 +17,7 @@ import {
 } from '../@types/apollo/AssetsFreePrice'
 import { AssetPreviousOrder } from '../@types/apollo/AssetPreviousOrder'
 import {
-  HighestLiquidiyAssets_pools,
+  HighestLiquidiyAssets_pools as HighestLiquidiyAssetsPools,
   HighestLiquidiyAssets
 } from '../@types/apollo/HighestLiquidiyAssets'
 
@@ -430,7 +430,7 @@ export async function getHighestLiquidityDIDs(
   chainIds: number[]
 ): Promise<string> {
   const didList: string[] = []
-  let highestLiquidiyAssets: HighestLiquidiyAssets_pools[] = []
+  let highestLiquidiyAssets: HighestLiquidiyAssetsPools[] = []
   for (const chain of chainIds) {
     const queryContext: OperationContext = {
       url: `${getSubgrahUri(
