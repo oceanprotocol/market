@@ -67,7 +67,7 @@ export default function FilesInput(props: InputProps): ReactElement {
         <FileInfo name={props.name} file={field.value[0]} />
       ) : (
         <CustomInput
-          submitMessage="Add File"
+          submitText="Add File"
           {...props}
           {...field}
           isLoading={isLoading}
