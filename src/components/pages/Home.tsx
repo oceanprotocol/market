@@ -24,7 +24,6 @@ async function getQueryHighest(
   chainIds: number[]
 ): Promise<[SearchQuery, string]> {
   const dids = await getHighestLiquidityDIDs(chainIds)
-  // TODO: this query needs to adapt to chainIds
   const queryHighest = {
     page: 1,
     offset: dids.length,
@@ -42,7 +41,6 @@ async function getQueryHighest(
 }
 
 function getQueryLatest(chainIds: number[]): SearchQuery {
-  // TODO: this query needs to adapt to chainIds
   return {
     page: 1,
     offset: 9,
