@@ -21,14 +21,10 @@ export default function WalletNetworkSwitcher(): ReactElement {
   const walletNetworkData = getNetworkDataById(networksList, networkId)
 
   const ddoNetworkName = (
-    <span className={styles.networkName}>
-      {getNetworkDisplayName(ddoNetworkData, ddo.chainId)}
-    </span>
+    <strong>{getNetworkDisplayName(ddoNetworkData, ddo.chainId)}</strong>
   )
   const walletNetworkName = (
-    <span className={styles.networkName}>
-      {getNetworkDisplayName(walletNetworkData, networkId)}
-    </span>
+    <strong>{getNetworkDisplayName(walletNetworkData, networkId)}</strong>
   )
 
   async function switchWalletNetwork() {
@@ -41,21 +37,15 @@ export default function WalletNetworkSwitcher(): ReactElement {
   }
 
   return (
-    <div className={styles.switcher}>
-      <div className={styles.content}>
-        <p className={styles.title}>
-          This asset is published on {ddoNetworkName} but your wallet is
-          connected to {walletNetworkName}. Connect to {ddoNetworkName} to
-          interact with this asset.
-        </p>
-        <Button
-          size="small"
-          onClick={() => switchWalletNetwork()}
-          className={styles.switchButton}
-        >
-          Switch to {ddoNetworkName}
-        </Button>
-      </div>
-    </div>
+    <>
+      <p className={styles.text}>
+        This asset is published on {ddoNetworkName} but your wallet is connected
+        to {walletNetworkName}. Connect to {ddoNetworkName} to interact with
+        this asset.
+      </p>
+      <Button size="small" onClick={() => switchWalletNetwork()}>
+        Switch to {ddoNetworkName}
+      </Button>
+    </>
   )
 }

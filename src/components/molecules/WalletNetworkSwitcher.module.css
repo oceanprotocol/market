@@ -1,31 +1,5 @@
-.box {
-  composes: box from '../atoms/Box.module.css';
-  max-width: 35rem;
-  margin: calc(var(--spacer) / 2) auto;
-  padding: calc(var(--spacer));
-}
-
-.switcher {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  margin: calc(var(--spacer) / 4) auto;
-}
-
-.switchButton {
-  margin-top: calc(var(--spacer) / 3);
-}
-
-.title {
-  font-size: var(--font-size-small);
+.text {
   color: var(--color-secondary);
-  margin-bottom: calc(var(--spacer) / 8);
-}
-
-.networkName {
-  font-weight: var(--font-weight-bold);
-}
-
-div.content:last-child {
-  margin-bottom: 0 !important;
+  margin-top: calc(var(--spacer) / 4);
+  margin-bottom: calc(var(--spacer) / 2);
 }
