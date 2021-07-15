@@ -74,7 +74,7 @@ export default function Consume({
     if (!data || !assetTimeout || data.tokenOrders.length === 0) return
 
     const lastOrder = data.tokenOrders[0]
-    if (assetTimeout === 'Forever' || assetTimeout === '0') {
+    if (assetTimeout === '0') {
       setPreviousOrderId(lastOrder.tx)
       setHasPreviousOrder(true)
     } else {
