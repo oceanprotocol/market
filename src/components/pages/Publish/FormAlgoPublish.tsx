@@ -6,7 +6,6 @@ import React, {
   ChangeEvent
 } from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
-import styles from './FormPublish.module.css'
 import { useOcean } from '../../../providers/Ocean'
 import { useFormikContext, Field, Form, FormikContextType } from 'formik'
 import Input from '../../atoms/Input'
@@ -14,7 +13,8 @@ import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { MetadataPublishFormAlgorithm } from '../../../@types/MetaData'
 import { initialValues as initialValuesAlgorithm } from '../../../models/FormAlgoPublish'
-import stylesIndex from './index.module.css'
+import FormTitle from './FormTitle'
+import styles from './FormPublish.module.css'
 
 const query = graphql`
   query {
@@ -46,6 +46,7 @@ const query = graphql`
 export default function FormPublish(): ReactElement {
   const data = useStaticQuery(query)
   const content: FormContent = data.content.edges[0].node.childPublishJson
+
   const { ocean, account } = useOcean()
   const {
     status,
@@ -142,7 +143,7 @@ export default function FormPublish(): ReactElement {
       // do we need this?
       onChange={() => status === 'empty' && setStatus(null)}
     >
-      <h2 className={stylesIndex.formTitle}>{content.title}</h2>
+      <FormTitle title={content.title} />
       {content.data.map(
         (field: FormFieldProps) =>
           ((field.name !== 'entrypoint' &&

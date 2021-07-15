@@ -34,8 +34,6 @@ import Alert from '../../atoms/Alert'
 import MetadataFeedback from '../../molecules/MetadataFeedback'
 import { useAccountPurgatory } from '../../../hooks/useAccountPurgatory'
 import { useWeb3 } from '../../../providers/Web3'
-import NetworkName from '../../atoms/NetworkName'
-import Tooltip from '../../atoms/Tooltip'
 
 const formNameDatasets = 'ocean-publish-form-datasets'
 const formNameAlgorithms = 'ocean-publish-form-algorithms'
@@ -68,10 +66,10 @@ function TabContent({
 export default function PublishPage({
   content
 }: {
-  content: { warning: string; tooltipNetwork: string }
+  content: { warning: string }
 }): ReactElement {
   const { debug } = useUserPreferences()
-  const { accountId, networkId } = useWeb3()
+  const { accountId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
   const { publish, publishError, isLoading, publishStepText } = usePublish()
   const [success, setSuccess] = useState<string>()
@@ -282,12 +280,6 @@ export default function PublishPage({
                     state="info"
                     className={styles.alert}
                   />
-
-                  <div className={styles.network}>
-                    <span className={styles.networkText}>Publishing into</span>
-                    <NetworkName networkId={networkId} />
-                    <Tooltip content={content.tooltipNetwork} />
-                  </div>
 
                   <Tabs
                     className={styles.tabs}

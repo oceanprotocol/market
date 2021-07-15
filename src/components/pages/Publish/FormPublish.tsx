@@ -9,8 +9,9 @@ import { initialValues as initialValuesDataset } from '../../../models/FormAlgoP
 import { useOcean } from '../../../providers/Ocean'
 import { ReactComponent as Download } from '../../../images/download.svg'
 import { ReactComponent as Compute } from '../../../images/compute.svg'
-import stylesIndex from './index.module.css'
+import FormTitle from './FormTitle'
 import styles from './FormPublish.module.css'
+import { useWeb3 } from '../../../providers/Web3'
 
 const query = graphql`
   query {
@@ -51,7 +52,6 @@ export default function FormPublish(): ReactElement {
     setErrors,
     setTouched,
     resetForm,
-    initialValues,
     validateField,
     setFieldValue
   }: FormikContextType<MetadataPublishFormDataset> = useFormikContext()
@@ -105,7 +105,7 @@ export default function FormPublish(): ReactElement {
       // do we need this?
       onChange={() => status === 'empty' && setStatus(null)}
     >
-      <h2 className={stylesIndex.formTitle}>{content.title}</h2>
+      <FormTitle title={content.title} />
       {content.data.map((field: FormFieldProps) => (
         <Field
           key={field.name}
