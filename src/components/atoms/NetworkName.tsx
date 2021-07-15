@@ -24,12 +24,10 @@ export function NetworkIcon({ name }: { name: string }): ReactElement {
 export default function NetworkName({
   networkId,
   minimal,
-  textOnly,
   className
 }: {
   networkId: number
   minimal?: boolean
-  textOnly?: boolean
   className?: string
 }): ReactElement {
   const { networksList } = useNetworkMetadata()
@@ -43,7 +41,7 @@ export default function NetworkName({
       }`}
       title={networkName}
     >
-      {textOnly || <NetworkIcon name={networkName} />}{' '}
+      <NetworkIcon name={networkName} />{' '}
       <span className={styles.name}>{networkName}</span>
     </span>
   )

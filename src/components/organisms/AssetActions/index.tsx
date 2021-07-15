@@ -145,12 +145,10 @@ export default function AssetActions(): ReactElement {
       <Permission eventType="consume">
         <Tabs items={tabs} className={styles.actions} />
       </Permission>
-      {type !== 'algorithm' && (
-        <Web3Feedback
-          isBalanceSufficient={isBalanceSufficient}
-          isAssetNetwork={isAssetNetwork}
-        />
-      )}
+      <Web3Feedback
+        isBalanceSufficient={isBalanceSufficient}
+        isAssetNetwork={isAssetNetwork}
+      />
     </>
   )
 }

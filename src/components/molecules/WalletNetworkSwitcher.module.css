@@ -13,7 +13,7 @@
 }
 
 .switchButton {
-  margin-top: calc(var(--spacer) / 6);
+  margin-top: calc(var(--spacer) / 3);
 }
 
 .title {
@@ -23,7 +23,7 @@
 }
 
 .networkName {
-  color: var(--font-color-text);
+  font-weight: var(--font-weight-bold);
 }
 
 div.content:last-child {

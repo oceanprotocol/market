@@ -35,7 +35,7 @@ export default function Web3Feedback({
     : // : !ocean
     // ? 'Error connecting to Ocean'
     accountId && isAssetNetwork === false
-    ? 'Wrong network'
+    ? 'Not connected to asset network'
     : accountId
     ? isBalanceSufficient === false
       ? 'Insufficient balance'
