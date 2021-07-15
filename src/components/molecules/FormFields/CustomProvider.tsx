@@ -58,7 +58,7 @@ export default function CustomProvider(props: InputProps): ReactElement {
 
   return (
     <CustomInput
-      submitMessage="Validate"
+      submitText="Validate"
       {...props}
       {...field}
       isLoading={isLoading}

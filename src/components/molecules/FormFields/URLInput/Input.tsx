@@ -6,12 +6,12 @@ import styles from './Input.module.css'
 import InputGroup from '../../../atoms/Input/InputGroup'
 
 export default function URLInput({
-  submitMessage,
+  submitText,
   handleButtonClick,
   isLoading,
   ...props
 }: {
-  submitMessage: string
+  submitText: string
   handleButtonClick(e: React.SyntheticEvent, data: string): void
   isLoading: boolean
 }): ReactElement {
@@ -32,7 +32,7 @@ export default function URLInput({
         onClick={(e: React.SyntheticEvent) => e.preventDefault()}
         disabled={!field.value}
       >
-        {isLoading ? <Loader /> : `${submitMessage}`}
+        {isLoading ? <Loader /> : `${submitText}`}
       </Button>
     </InputGroup>
   )
