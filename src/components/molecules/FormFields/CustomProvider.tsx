@@ -19,9 +19,7 @@ export default function CustomProvider(props: InputProps): ReactElement {
       try {
         setIsLoading(true)
         const ocean: Ocean = await Ocean.getInstance(config)
-        console.log('ocean', ocean)
         valid = await ocean.provider.isValidProvider(providerUrl)
-        console.log('valid', valid)
       } catch (error) {
         valid = false
         console.error(error.message)

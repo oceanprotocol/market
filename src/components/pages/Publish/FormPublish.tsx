@@ -107,7 +107,6 @@ export default function FormPublish(): ReactElement {
       field.type === 'terms' ? !JSON.parse(e.target.value) : e.target.value
     if (field.name === 'provider') {
       setProviderType(e.target.value)
-      console.log('selectedProviderType', selectedProviderType)
     }
     validateField(field.name)
     setFieldValue(field.name, value)
