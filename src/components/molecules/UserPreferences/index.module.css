@@ -17,7 +17,7 @@
   transform: rotate(180deg);
 }
 
-.preferences svg:last-child {
+.caret {
   width: var(--font-size-small);
   height: var(--font-size-small);
   fill: var(--border-color);
