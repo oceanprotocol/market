@@ -133,14 +133,16 @@ export default function PublishPage({
         'Publish with ',
         metadata,
         serviceType,
-        values.dataTokenOptions
+        values.dataTokenOptions,
+        values.provider === 'Custom' ? values.customProvider : null
       )
 
       const ddo = await publish(
         metadata as unknown as Metadata,
         serviceType,
         values.dataTokenOptions,
-        timeout
+        timeout,
+        values.provider === 'Custom' ? values.customProvider : null
       )
 
       // Publish failed
