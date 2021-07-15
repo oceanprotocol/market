@@ -2,7 +2,6 @@ import React, { ReactElement, useEffect, FormEvent, ChangeEvent } from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 import { useFormikContext, Field, Form, FormikContextType } from 'formik'
 import Input from '../../atoms/Input'
-import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { MetadataPublishFormDataset } from '../../../@types/MetaData'
 import { initialValues as initialValuesDataset } from '../../../models/FormAlgoPublish'
@@ -10,8 +9,8 @@ import { useOcean } from '../../../providers/Ocean'
 import { ReactComponent as Download } from '../../../images/download.svg'
 import { ReactComponent as Compute } from '../../../images/compute.svg'
 import FormTitle from './FormTitle'
+import FormActions from './FormActions'
 import styles from './FormPublish.module.css'
-import { useWeb3 } from '../../../providers/Web3'
 
 const query = graphql`
   query {
@@ -106,6 +105,7 @@ export default function FormPublish(): ReactElement {
       onChange={() => status === 'empty' && setStatus(null)}
     >
       <FormTitle title={content.title} />
+
       {content.data.map((field: FormFieldProps) => (
         <Field
           key={field.name}
@@ -120,21 +120,10 @@ export default function FormPublish(): ReactElement {
         />
       ))}
 
-      <footer className={styles.actions}>
-        <Button
-          style="primary"
-          type="submit"
-          disabled={!ocean || !account || !isValid || status === 'empty'}
-        >
-          Submit
-        </Button>
-
-        {status !== 'empty' && (
-          <Button style="text" size="small" onClick={resetFormAndClearStorage}>
-            Reset Form
-          </Button>
-        )}
-      </footer>
+      <FormActions
+        isValid={isValid}
+        resetFormAndClearStorage={resetFormAndClearStorage}
+      />
     </Form>
   )
 }
