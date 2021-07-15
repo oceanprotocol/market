@@ -6,8 +6,6 @@
 .info {
   display: flex;
   width: auto;
-  margin-left: -2rem;
-  margin-right: -2rem;
   padding: 0 calc(var(--spacer)) 0 calc(var(--spacer));
 }
 

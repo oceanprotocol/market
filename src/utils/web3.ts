@@ -51,6 +51,9 @@ export function getNetworkDisplayName(
     case 137:
       displayName = 'Polygon'
       break
+    case 80001:
+      displayName = 'Polygon Mumbai'
+      break
     case 8996:
       displayName = 'Development'
       break
@@ -74,8 +77,9 @@ export function getNetworkDataById(
   if (!networkId) return
   const networkData = data.filter(
     ({ node }: { node: EthereumListsChain }) => node.chainId === networkId
-  )[0]
-  return networkData.node
+  )
+
+  return networkData[0]?.node
 }
 
 export async function addCustomNetwork(
