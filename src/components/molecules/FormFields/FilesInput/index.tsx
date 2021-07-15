@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useField } from 'formik'
 import { toast } from 'react-toastify'
 import FileInfo from './Info'
-import FileInput from './Input'
+import CustomInput from '../URLInput/Input'
 import { useOcean } from '../../../../providers/Ocean'
 import { InputProps } from '../../../atoms/Input'
 import { fileinfo } from '../../../../utils/provider'
@@ -66,7 +66,8 @@ export default function FilesInput(props: InputProps): ReactElement {
       {field?.value && field.value[0] && typeof field.value === 'object' ? (
         <FileInfo name={props.name} file={field.value[0]} />
       ) : (
-        <FileInput
+        <CustomInput
+          submitMessage="Add File"
           {...props}
           {...field}
           isLoading={isLoading}

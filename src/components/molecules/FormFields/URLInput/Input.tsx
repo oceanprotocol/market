@@ -5,11 +5,13 @@ import Loader from '../../../atoms/Loader'
 import styles from './Input.module.css'
 import InputGroup from '../../../atoms/Input/InputGroup'
 
-export default function ProviderInput({
+export default function URLInput({
+  submitMessage,
   handleButtonClick,
   isLoading,
   ...props
 }: {
+  submitMessage: string
   handleButtonClick(e: React.SyntheticEvent, data: string): void
   isLoading: boolean
 }): ReactElement {
@@ -30,7 +32,7 @@ export default function ProviderInput({
         onClick={(e: React.SyntheticEvent) => e.preventDefault()}
         disabled={!field.value}
       >
-        {isLoading ? <Loader /> : 'Validate'}
+        {isLoading ? <Loader /> : `${submitMessage}`}
       </Button>
     </InputGroup>
   )

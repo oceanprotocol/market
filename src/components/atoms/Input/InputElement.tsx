@@ -3,7 +3,7 @@ import slugify from '@sindresorhus/slugify'
 import styles from './InputElement.module.css'
 import { InputProps } from '.'
 import FilesInput from '../../molecules/FormFields/FilesInput'
-import CustomProvider from '../../molecules/FormFields/CustomProviderInput'
+import CustomProvider from '../../molecules/FormFields/CustomProvider'
 import Terms from '../../molecules/FormFields/Terms'
 import BoxSelection, {
   BoxSelectionOption

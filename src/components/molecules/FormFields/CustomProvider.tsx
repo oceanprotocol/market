@@ -1,10 +1,10 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import { useField } from 'formik'
 import { toast } from 'react-toastify'
-import ProviderInput from './Input'
-import { useOcean } from '../../../../providers/Ocean'
-import { InputProps } from '../../../atoms/Input'
-import { Provider, Ocean } from '@oceanprotocol/lib'
+import CustomInput from './URLInput/Input'
+import { useOcean } from '../../../providers/Ocean'
+import { InputProps } from '../../atoms/Input'
+import { Ocean } from '@oceanprotocol/lib'
 
 export default function CustomProvider(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
@@ -59,7 +59,8 @@ export default function CustomProvider(props: InputProps): ReactElement {
   }
 
   return (
-    <ProviderInput
+    <CustomInput
+      submitMessage="Validate"
       {...props}
       {...field}
       isLoading={isLoading}
