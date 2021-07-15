@@ -7,7 +7,6 @@ import AddToken from '../../atoms/AddToken'
 import Time from '../../atoms/Time'
 import AssetType from '../../atoms/AssetType'
 import styles from './MetaMain.module.css'
-import NetworkName from '../../atoms/NetworkName'
 
 export default function MetaMain(): ReactElement {
   const { ddo, owner, type, isAssetNetwork } = useAsset()
@@ -18,8 +17,6 @@ export default function MetaMain(): ReactElement {
   return (
     <aside className={styles.meta}>
       <header className={styles.asset}>
-        <NetworkName networkId={ddo.chainId} className={styles.network} />
-
         <AssetType
           type={type}
           accessType={accessType}

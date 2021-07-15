@@ -19,6 +19,7 @@ import { useWeb3 } from '../../../providers/Web3'
 import styles from './index.module.css'
 import EditAdvancedSettings from '../AssetActions/Edit/EditAdvancedSettings'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
+import NetworkName from '../../atoms/NetworkName'
 
 export interface AssetContentProps {
   path?: string
@@ -87,72 +88,82 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   ) : showEditAdvancedSettings ? (
     <EditAdvancedSettings setShowEdit={setShowEditAdvancedSettings} />
   ) : (
-    <article className={styles.grid}>
-      <div>
-        {showPricing && <Pricing ddo={ddo} />}
-        <div className={styles.content}>
-          <MetaMain />
-          <Bookmark did={ddo.id} />
+    <>
+      <div className={styles.networkWrap}>
+        <NetworkName networkId={ddo.chainId} className={styles.network} />
+      </div>
 
-          {isInPurgatory ? (
-            <Alert
-              title={content.title}
-              badge={`Reason: ${purgatoryData?.reason}`}
-              text={content.description}
-              state="error"
-            />
-          ) : (
-            <>
-              <Markdown
-                className={styles.description}
-                text={metadata?.additionalInformation?.description || ''}
+      <article className={styles.grid}>
+        <div>
+          {showPricing && <Pricing ddo={ddo} />}
+          <div className={styles.content}>
+            <MetaMain />
+            <Bookmark did={ddo.id} />
+
+            {isInPurgatory ? (
+              <Alert
+                title={content.title}
+                badge={`Reason: ${purgatoryData?.reason}`}
+                text={content.description}
+                state="error"
               />
+            ) : (
+              <>
+                <Markdown
+                  className={styles.description}
+                  text={metadata?.additionalInformation?.description || ''}
+                />
 
-              <MetaSecondary />
+                <MetaSecondary />
 
               {isOwner && isAssetNetwork && (
                 <div className={styles.ownerActions}>
-                  <Button style="text" size="small" onClick={handleEditButton}>
-                    Edit Metadata
-                  </Button>
-                  {appConfig.allowAdvancedSettings === 'true' && (
-                    <>
-                      <span className={styles.separator}>|</span>
-                      <Button
-                        style="text"
-                        size="small"
-                        onClick={handleEditAdvancedSettingsButton}
-                      >
-                        Edit Advanced Settings
-                      </Button>
-                    </>
-                  )}
-                  {ddo.findServiceByType('compute') && type === 'dataset' && (
-                    <>
-                      <span className={styles.separator}>|</span>
-                      <Button
-                        style="text"
-                        size="small"
-                        onClick={handleEditComputeButton}
-                      >
-                        Edit Compute Settings
-                      </Button>
-                    </>
-                  )}
-                </div>
-              )}
-            </>
-          )}
+                    <Button
+                      style="text"
+                      size="small"
+                      onClick={handleEditButton}
+                    >
+                      Edit Metadata
+                    </Button>
+                    {appConfig.allowAdvancedSettings === 'true' && (
+                      <>
+                        <span className={styles.separator}>|</span>
+                        <Button
+                          style="text"
+                          size="small"
+                          onClick={handleEditAdvancedSettingsButton}
+                        >
+                          Edit Advanced Settings
+                        </Button>
+                      </>
+                    )}
+                    {ddo.findServiceByType('compute') && type === 'dataset' && (
+                      <>
+                        <span className={styles.separator}>|</span>
+                        <Button
+                          style="text"
+                          size="small"
+                          onClick={handleEditComputeButton}
+                        >
+                          Edit Compute Settings
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                )}
+              </>
+            )}
 
-          <MetaFull />
-          <EditHistory />
-          {debug === true && <DebugOutput title="DDO" output={ddo} />}
+            <MetaFull />
+            <EditHistory />
+            {debug === true && <DebugOutput title="DDO" output={ddo} />}
+          </div>
         </div>
-      </div>
 
-      <div className={styles.actions}>
-        <AssetActions />
-      </div>
-    </article>
+        <div className={styles.actions}>
+          <AssetActions />
+        </div>
+      </article>
+    </>
   )
 }
