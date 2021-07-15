@@ -287,7 +287,7 @@ export default function Pool(): ReactElement {
           </TokenList>
 
           <TokenList
-            title="Pool Creator Liquidity"
+            title="Pool Creator Statistics"
             ocean={`${creatorLiquidity?.ocean}`}
             dt={`${creatorLiquidity?.datatoken}`}
             dtSymbol={dtSymbol}
@@ -317,6 +317,7 @@ export default function Pool(): ReactElement {
             dtSymbol={dtSymbol}
             poolShares={totalPoolTokens}
             conversion={totalLiquidityInOcean}
+            showTVLLabel
           >
             <Token symbol="% swap fee" balance={swapFee} noIcon />
           </TokenList>
