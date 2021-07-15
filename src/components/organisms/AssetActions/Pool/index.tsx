@@ -12,7 +12,7 @@ import Token from './Token'
 import TokenList from './TokenList'
 import { graphql, useStaticQuery } from 'gatsby'
 import { PoolBalance } from '../../../../@types/TokenBalance'
-import Transactions from './Transactions'
+import AssetActionHistoryTable from '../../AssetActionHistoryTable'
 import Graph from './Graph'
 import { useAsset } from '../../../../providers/Asset'
 import { gql, useQuery } from '@apollo/client'
@@ -345,9 +345,9 @@ export default function Pool(): ReactElement {
           </div>
 
           {accountId && (
-            <Transactions title="Pool transactions">
+            <AssetActionHistoryTable title="Pool transactions">
               <PoolTransactions poolAddress={price?.address} minimal />
-            </Transactions>
+            </AssetActionHistoryTable>
           )}
         </>
       )}

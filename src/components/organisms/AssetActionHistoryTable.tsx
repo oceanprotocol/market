@@ -1,10 +1,10 @@
 import React, { ReactElement, useState } from 'react'
-import Button from '../../../atoms/Button'
-import styles from './Transactions.module.css'
-import { ReactComponent as Caret } from '../../../../images/caret.svg'
+import Button from '../atoms/Button'
+import styles from './AssetActionHistoryTable.module.css'
+import { ReactComponent as Caret } from '../../images/caret.svg'
 import { ReactNode } from 'react-markdown'
 
-export default function Transactions({
+export default function AssetActionHistoryTable({
   title,
   children
 }: {
@@ -17,9 +17,7 @@ export default function Transactions({
   }
 
   return (
-    <div
-      className={`${styles.transactions} ${open === true ? styles.open : ''}`}
-    >
+    <div className={`${styles.actions} ${open === true ? styles.open : ''}`}>
       {/* TODO: onClick on h3 is nasty but we're in a hurry */}
       <h3 className={styles.title} onClick={handleClick}>
         {`${title} `}

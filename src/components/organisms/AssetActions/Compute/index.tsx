@@ -39,7 +39,7 @@ import { secondsToString } from '../../../../utils/metadata'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import AlgorithmDatasetsListForCompute from '../../AssetContent/AlgorithmDatasetsListForCompute'
 import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
-import Transactions from '../Pool/Transactions'
+import AssetActionHistoryTable from '../../AssetActionHistoryTable'
 import ComputeJobs from '../../../pages/History/ComputeJobs'
 
 const SuccessAction = () => (
@@ -448,9 +448,9 @@ export default function Compute({
         )}
       </footer>
       {accountId && (
-        <Transactions title="Compute jobs">
+        <AssetActionHistoryTable title="Compute jobs">
           <ComputeJobs minimal assetDTAddress={ddo.dataTokenInfo.address} />
-        </Transactions>
+        </AssetActionHistoryTable>
       )}
     </>
   )
