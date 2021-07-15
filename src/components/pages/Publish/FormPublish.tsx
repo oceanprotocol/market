@@ -88,7 +88,7 @@ export default function FormPublish(): ReactElement {
     {
       name: 'Default',
       title: 'Default Provider',
-      checked: true
+      checked: false
     },
     {
       name: 'Custom',
