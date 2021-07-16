@@ -17,6 +17,7 @@ import { ReactComponent as Download } from '../../../images/download.svg'
 import { ReactComponent as Compute } from '../../../images/compute.svg'
 import stylesIndex from './index.module.css'
 import styles from './FormPublish.module.css'
+import appConfig from '../../../../app.config'
 
 const query = graphql`
   query {
@@ -135,14 +136,16 @@ export default function FormPublish(): ReactElement {
             />
           )
       )}
-      <Button
-        className={styles.advancedBtn}
-        style="text"
-        size="small"
-        onClick={toggleAdvancedSettings}
-      >
-        Advanced Settings
-      </Button>
+      {appConfig.allowAdvancedPublishSettings === 'true' && (
+        <Button
+          className={styles.advancedBtn}
+          style="text"
+          size="small"
+          onClick={toggleAdvancedSettings}
+        >
+          Advanced Settings
+        </Button>
+      )}
       {content.data.map(
         (field: FormFieldProps) =>
           advancedSettings === true &&

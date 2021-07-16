@@ -49,5 +49,7 @@ module.exports = {
 
   // Used to show or hide advanced settings button in asset details page
   allowAdvancedSettings: process.env.GATSBY_ALLOW_ADVANCED_SETTINGS || 'false',
+  allowAdvancedPublishSettings:
+    process.env.GATSBY_ALLOW_ADVANCED_PUBLISH_SETTINGS || 'true',
   credentialType: process.env.GATSBY_CREDENTIAL_TYPE || 'address'
 }
