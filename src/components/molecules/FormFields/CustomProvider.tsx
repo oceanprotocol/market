@@ -4,14 +4,12 @@ import { toast } from 'react-toastify'
 import CustomInput from './URLInput/Input'
 import { useOcean } from '../../../providers/Ocean'
 import { InputProps } from '../../atoms/Input'
-import { Ocean } from '@oceanprotocol/lib'
-import Button from '../../atoms/Button'
 
 export default function CustomProvider(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
   const [isLoading, setIsLoading] = useState(false)
   const [providerUrl, setProviderUrl] = useState<string>()
-  const { config } = useOcean()
+  const { ocean, config } = useOcean()
 
   function loadProvider() {
     if (!providerUrl) return
@@ -19,7 +17,6 @@ export default function CustomProvider(props: InputProps): ReactElement {
       let valid: boolean
       try {
         setIsLoading(true)
-        const ocean: Ocean = await Ocean.getInstance(config)
         valid = await ocean.provider.isValidProvider(providerUrl)
       } catch (error) {
         valid = false
@@ -42,14 +39,8 @@ export default function CustomProvider(props: InputProps): ReactElement {
   }, [providerUrl, config.providerUri])
 
   async function handleButtonClick(e: React.SyntheticEvent, url: string) {
-    // hack so the onBlur-triggered validation does not show,
-    // like when this field is required
     helpers.setTouched(false)
-
-    // File example 'https://oceanprotocol.com/tech-whitepaper.pdf'
     e.preventDefault()
-
-    // In the case when the user re-add the same URL after it was removed (by accident or intentionally)
     if (providerUrl === url) {
       loadProvider()
     }
