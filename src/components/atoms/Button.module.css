@@ -78,6 +78,7 @@
   color: var(--brand-pink);
   box-shadow: none;
   cursor: pointer;
+  min-width: auto;
 }
 
 /* Size Modifiers */

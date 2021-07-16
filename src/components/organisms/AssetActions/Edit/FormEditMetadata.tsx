@@ -8,6 +8,7 @@ import { MetadataPublishFormDataset } from '../../../../@types/MetaData'
 import { checkIfTimeoutInPredefinedValues } from '../../../../utils/metadata'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
+import { useAsset } from '../../../../providers/Asset'
 
 function handleTimeoutCustomOption(
   data: FormFieldProps[],
@@ -58,6 +59,7 @@ export default function FormEditMetadata({
 }): ReactElement {
   const { accountId } = useWeb3()
   const { ocean, config } = useOcean()
+  const { isAssetNetwork } = useAsset()
   const {
     isValid,
     validateField,
@@ -99,7 +101,7 @@ export default function FormEditMetadata({
       <footer className={styles.actions}>
         <Button
           style="primary"
-          disabled={!ocean || !accountId || !isValid}
+          disabled={!ocean || !accountId || !isValid || !isAssetNetwork}
           onClick={() => setTimeoutStringValue(values.timeout)}
         >
           Submit

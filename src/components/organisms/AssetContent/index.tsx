@@ -46,7 +46,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   const content = data.purgatory.edges[0].node.childContentJson.asset
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
-  const { owner, isInPurgatory, purgatoryData } = useAsset()
+  const { owner, isInPurgatory, purgatoryData, isAssetNetwork } = useAsset()
   const [showPricing, setShowPricing] = useState(false)
   const [showEdit, setShowEdit] = useState<boolean>()
   const [showEditCompute, setShowEditCompute] = useState<boolean>()
@@ -110,7 +110,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
 
               <MetaSecondary />
 
-              {isOwner && (
+              {isOwner && isAssetNetwork && (
                 <div className={styles.ownerActions}>
                   <Button style="text" size="small" onClick={handleEditButton}>
                     Edit Metadata

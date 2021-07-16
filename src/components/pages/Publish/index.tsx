@@ -56,7 +56,6 @@ function TabContent({
           ) : (
             <MetadataAlgorithmPreview values={values} />
           )}
-
           <Web3Feedback />
         </div>
       </aside>
