@@ -131,17 +131,22 @@ export default function FormPublish(): ReactElement {
       onChange={() => status === 'empty' && setStatus(null)}
     >
       <h2 className={stylesIndex.formTitle}>{content.title}</h2>
-      {content.data.map((field: FormFieldProps) => (
-        <Field
-          key={field.name}
-          {...field}
-          options={field.name === 'access' ? accessTypeOptions : field.options}
-          component={Input}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            handleFieldChange(e, field)
-          }
-        />
-      ))}
+      {content.data.map(
+        (field: FormFieldProps) =>
+          field.advanced !== true && (
+            <Field
+              key={field.name}
+              {...field}
+              options={
+                field.name === 'access' ? accessTypeOptions : field.options
+              }
+              component={Input}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                handleFieldChange(e, field)
+              }
+            />
+          )
+      )}
       <Button style="text" size="small" onClick={toggleAdvancedSettings}>
         Advanced Settings
       </Button>
