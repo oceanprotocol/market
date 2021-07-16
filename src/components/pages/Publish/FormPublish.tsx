@@ -83,18 +83,6 @@ export default function FormPublish(): ReactElement {
       icon: <Compute />
     }
   ]
-  const providerTypeOptions = [
-    {
-      name: 'Default',
-      title: 'Default Provider',
-      checked: false
-    },
-    {
-      name: 'Custom',
-      title: 'Custom Provider',
-      checked: false
-    }
-  ]
 
   // Manually handle change events instead of using `handleChange` from Formik.
   // Workaround for default `validateOnChange` not kicking in

@@ -9,7 +9,6 @@ const testFormData: MetadataPublishFormDataset = {
   },
   name: '',
   timeout: '',
-  provider: 'Default',
   description: 'description',
   termsAndConditions: true,
   access: 'Download'
