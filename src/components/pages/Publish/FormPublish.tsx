@@ -62,9 +62,6 @@ export default function FormPublish(): ReactElement {
     setFieldValue
   }: FormikContextType<MetadataPublishFormDataset> = useFormikContext()
   const [advancedSettings, setAdvancedSettings] = useState<boolean>(false)
-  const [selectedProviderType, setProviderType] = useState<string>(
-    initialValues.provider
-  )
 
   // reset form validation on every mount
   useEffect(() => {
@@ -107,9 +104,6 @@ export default function FormPublish(): ReactElement {
   ) {
     const value =
       field.type === 'terms' ? !JSON.parse(e.target.value) : e.target.value
-    if (field.name === 'provider') {
-      setProviderType(e.target.value)
-    }
     validateField(field.name)
     setFieldValue(field.name, value)
   }
