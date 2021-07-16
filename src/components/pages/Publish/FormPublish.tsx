@@ -147,7 +147,12 @@ export default function FormPublish(): ReactElement {
             />
           )
       )}
-      <Button style="text" size="small" onClick={toggleAdvancedSettings}>
+      <Button
+        className={styles.advancedBtn}
+        style="text"
+        size="small"
+        onClick={toggleAdvancedSettings}
+      >
         Advanced Settings
       </Button>
       {content.data.map(
