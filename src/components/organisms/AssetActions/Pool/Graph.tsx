@@ -17,8 +17,10 @@ import { darkModeConfig } from '../../../../../app.config'
 import Button from '../../../atoms/Button'
 import { Logger } from '@oceanprotocol/lib'
 import { useAsset } from '../../../../providers/Asset'
-import { gql, useQuery } from 'urql'
+import { gql, OperationContext, OperationResult } from 'urql'
 import { PoolHistory } from '../../../../@types/apollo/PoolHistory'
+import { getSubgrahUri, fetchData } from '../../../../utils/subgraph'
+let error: Error = null
 
 declare type GraphType = 'liquidity' | 'price'
 
@@ -121,7 +123,7 @@ export default function Graph(): ReactElement {
   const [options, setOptions] = useState<ChartOptions>()
   const [graphType, setGraphType] = useState<GraphType>('liquidity')
 
-  const { price } = useAsset()
+  const { price, ddo } = useAsset()
 
   const [lastBlock, setLastBlock] = useState<number>(0)
   const [priceHistory, setPriceHistory] = useState([])
@@ -130,16 +132,6 @@ export default function Graph(): ReactElement {
   const [isLoading, setIsLoading] = useState(true)
   const [graphData, setGraphData] = useState<ChartData>()
 
-  const [result, refetch] = useQuery<PoolHistory>({
-    query: poolHistory,
-    variables: {
-      id: price.address.toLowerCase(),
-      block: lastBlock
-    }
-    // pollInterval: 20000
-  })
-  const { data, error } = result
-
   useEffect(() => {
     Logger.log('Fired GraphOptions!')
     const options = getOptions(locale, darkMode.value)
@@ -147,59 +139,80 @@ export default function Graph(): ReactElement {
   }, [locale, darkMode.value])
 
   useEffect(() => {
-    if (!data) return
-    Logger.log('Fired GraphData!')
+    async function init() {
+      const queryContext: OperationContext = {
+        url: `${getSubgrahUri(
+          Number(ddo.chainId)
+        )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
+        requestPolicy: 'network-only'
+      }
+      const queryVariables = {
+        id: price.address.toLowerCase(),
+        block: lastBlock
+      }
 
-    const latestTimestamps = [
-      ...timestamps,
-      ...data.poolTransactions.map((item) => {
-        const date = new Date(item.timestamp * 1000)
-        return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
-      })
-    ]
-    setTimestamps(latestTimestamps)
-
-    const latestLiquidtyHistory = [
-      ...liquidityHistory,
-      ...data.poolTransactions.map((item) => item.oceanReserve)
-    ]
-
-    setLiquidityHistory(latestLiquidtyHistory)
-
-    const latestPriceHistory = [
-      ...priceHistory,
-      ...data.poolTransactions.map((item) => item.spotPrice)
-    ]
-
-    setPriceHistory(latestPriceHistory)
-
-    if (data.poolTransactions.length > 0) {
-      const newBlock =
-        data.poolTransactions[data.poolTransactions.length - 1].block
-      if (newBlock === lastBlock) return
-      setLastBlock(
-        data.poolTransactions[data.poolTransactions.length - 1].block
+      const queryResult: OperationResult<PoolHistory> = await fetchData(
+        poolHistory,
+        queryVariables,
+        queryContext
       )
-      refetch()
-    } else {
-      setGraphData({
-        labels: latestTimestamps.slice(0),
-        datasets: [
-          {
-            ...lineStyle,
-            label: 'Liquidity (OCEAN)',
-            data:
-              graphType === 'liquidity'
-                ? latestLiquidtyHistory.slice(0)
-                : latestPriceHistory.slice(0),
-            borderColor: `#8b98a9`,
-            pointBackgroundColor: `#8b98a9`
-          }
-        ]
-      })
-      setIsLoading(false)
+
+      const data: PoolHistory = queryResult.data
+      if (!data) return
+      Logger.log('Fired GraphData!')
+
+      const latestTimestamps = [
+        ...timestamps,
+        ...data.poolTransactions.map((item) => {
+          const date = new Date(item.timestamp * 1000)
+          return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+        })
+      ]
+      setTimestamps(latestTimestamps)
+
+      const latestLiquidtyHistory = [
+        ...liquidityHistory,
+        ...data.poolTransactions.map((item) => item.oceanReserve)
+      ]
+
+      setLiquidityHistory(latestLiquidtyHistory)
+
+      const latestPriceHistory = [
+        ...priceHistory,
+        ...data.poolTransactions.map((item) => item.spotPrice)
+      ]
+
+      setPriceHistory(latestPriceHistory)
+
+      if (data.poolTransactions.length > 0) {
+        const newBlock =
+          data.poolTransactions[data.poolTransactions.length - 1].block
+        if (newBlock === lastBlock) return
+        setLastBlock(
+          data.poolTransactions[data.poolTransactions.length - 1].block
+        )
+        // refetch()
+      } else {
+        setGraphData({
+          labels: latestTimestamps.slice(0),
+          datasets: [
+            {
+              ...lineStyle,
+              label: 'Liquidity (OCEAN)',
+              data:
+                graphType === 'liquidity'
+                  ? latestLiquidtyHistory.slice(0)
+                  : latestPriceHistory.slice(0),
+              borderColor: `#8b98a9`,
+              pointBackgroundColor: `#8b98a9`
+            }
+          ]
+        })
+        setIsLoading(false)
+      }
     }
-  }, [data, graphType])
+    init()
+  }, [graphType])
 
   function handleGraphTypeSwitch(e: ChangeEvent<HTMLButtonElement>) {
     e.preventDefault()

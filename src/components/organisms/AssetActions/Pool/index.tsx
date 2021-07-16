@@ -15,10 +15,11 @@ import { PoolBalance } from '../../../../@types/TokenBalance'
 import Transactions from './Transactions'
 import Graph from './Graph'
 import { useAsset } from '../../../../providers/Asset'
-import { gql, useQuery } from 'urql'
+import { gql, useQuery, OperationResult, OperationContext } from 'urql'
 import { PoolLiquidity } from '../../../../@types/apollo/PoolLiquidity'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
+import { getSubgrahUri, fetchData } from '../../../../utils/subgraph'
 
 const contentQuery = graphql`
   query PoolQuery {
@@ -91,19 +92,60 @@ export default function Pool(): ReactElement {
 
   // the purpose of the value is just to trigger the effect
   const [refreshPool, setRefreshPool] = useState(false)
-  const [result] = useQuery<PoolLiquidity>({
-    query: poolLiquidityQuery,
-    variables: {
+
+  let dataLiquidity: PoolLiquidity
+  async function getDataliquidity() {
+    const queryContext: OperationContext = {
+      url: `${getSubgrahUri(
+        Number(ddo.chainId)
+      )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
+      requestPolicy: 'network-only'
+    }
+    const queryVariables = {
       id: price.address.toLowerCase(),
       shareId: `${price.address.toLowerCase()}-${ddo.publicKey[0].owner.toLowerCase()}`
     }
-    // pollInterval: 5000
-  })
 
-  const { data: dataLiquidity } = result
+    const queryResult: OperationResult<PoolLiquidity> = await fetchData(
+      poolLiquidityQuery,
+      queryVariables,
+      queryContext
+    )
+
+    const dataLiquidity = queryResult?.data
+  }
+
+  // const [result] = useQuery<PoolLiquidity>({
+  //   query: poolLiquidityQuery,
+  //   variables: {
+  //     id: price.address.toLowerCase(),
+  //     shareId: `${price.address.toLowerCase()}-${ddo.publicKey[0].owner.toLowerCase()}`
+  //   },
+  //   context: queryContext
+  //   // pollInterval: 5000
+  // })
+  // const { data: dataLiquidity } = result
 
   useEffect(() => {
     async function init() {
+      const queryContext: OperationContext = {
+        url: `${getSubgrahUri(
+          Number(ddo.chainId)
+        )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
+        requestPolicy: 'network-only'
+      }
+      const queryVariables = {
+        id: price.address.toLowerCase(),
+        shareId: `${price.address.toLowerCase()}-${ddo.publicKey[0].owner.toLowerCase()}`
+      }
+
+      const queryResult: OperationResult<PoolLiquidity> = await fetchData(
+        poolLiquidityQuery,
+        queryVariables,
+        queryContext
+      )
+
+      const dataLiquidity = queryResult?.data
       if (!dataLiquidity || !dataLiquidity.pool) return
 
       // Total pool shares

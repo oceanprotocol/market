@@ -136,12 +136,12 @@ const HighestLiquidityAssets = gql`
   }
 `
 
-function getSubgrahUri(chainId: number): string {
+export function getSubgrahUri(chainId: number): string {
   const config = getOceanConfig(chainId)
   return config.subgraphUri
 }
 
-async function fetchData(
+export async function fetchData(
   query: TypedDocumentNode,
   variables: any,
   context: OperationContext
