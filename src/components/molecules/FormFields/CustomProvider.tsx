@@ -5,6 +5,7 @@ import CustomInput from './URLInput/Input'
 import { useOcean } from '../../../providers/Ocean'
 import { InputProps } from '../../atoms/Input'
 import { Ocean } from '@oceanprotocol/lib'
+import Button from '../../atoms/Button'
 
 export default function CustomProvider(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)

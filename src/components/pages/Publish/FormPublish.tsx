@@ -36,6 +36,7 @@ const query = graphql`
               required
               sortOptions
               options
+              advanced
             }
             warning
           }
@@ -60,6 +61,7 @@ export default function FormPublish(): ReactElement {
     validateField,
     setFieldValue
   }: FormikContextType<MetadataPublishFormDataset> = useFormikContext()
+  const [advancedSettings, setAdvancedSettings] = useState<boolean>(false)
   const [selectedProviderType, setProviderType] = useState<string>(
     initialValues.provider
   )
@@ -111,6 +113,13 @@ export default function FormPublish(): ReactElement {
     validateField(field.name)
     setFieldValue(field.name, value)
   }
+  function toggleAdvancedSettings(e: FormEvent<Element>) {
+    e.preventDefault()
+    advancedSettings === true
+      ? setAdvancedSettings(false)
+      : setAdvancedSettings(true)
+    console.log('advancedSettings', advancedSettings)
+  }
 
   const resetFormAndClearStorage = (e: FormEvent<Element>) => {
     e.preventDefault()
@@ -128,21 +137,28 @@ export default function FormPublish(): ReactElement {
       onChange={() => status === 'empty' && setStatus(null)}
     >
       <h2 className={stylesIndex.formTitle}>{content.title}</h2>
+      {content.data.map((field: FormFieldProps) => (
+        <Field
+          key={field.name}
+          {...field}
+          options={field.name === 'access' ? accessTypeOptions : field.options}
+          component={Input}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            handleFieldChange(e, field)
+          }
+        />
+      ))}
+      <Button style="text" size="small" onClick={toggleAdvancedSettings}>
+        Advanced Settings
+      </Button>
       {content.data.map(
         (field: FormFieldProps) =>
-          (field.name !== 'customProvider' ||
-            (field.name === 'customProvider' &&
-              selectedProviderType === 'Custom')) && (
+          advancedSettings === true &&
+          field.advanced === true && (
             <Field
               key={field.name}
               {...field}
-              options={
-                field.name === 'access'
-                  ? accessTypeOptions
-                  : field.name === 'provider'
-                  ? providerTypeOptions
-                  : field.options
-              }
+              options={field.options}
               component={Input}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 handleFieldChange(e, field)
