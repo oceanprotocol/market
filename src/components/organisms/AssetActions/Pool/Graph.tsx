@@ -20,7 +20,7 @@ import { useAsset } from '../../../../providers/Asset'
 import { gql, OperationContext, OperationResult } from 'urql'
 import { PoolHistory } from '../../../../@types/apollo/PoolHistory'
 import { getSubgrahUri, fetchData } from '../../../../utils/subgraph'
-let error: Error = null
+const error: Error = null
 
 declare type GraphType = 'liquidity' | 'price'
 
@@ -157,7 +157,7 @@ export default function Graph(): ReactElement {
         queryContext
       )
 
-      const data: PoolHistory = queryResult.data
+      const data: PoolHistory = queryResult?.data
       if (!data) return
       Logger.log('Fired GraphData!')
 
