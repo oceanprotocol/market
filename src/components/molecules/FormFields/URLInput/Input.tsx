@@ -32,7 +32,7 @@ export default function URLInput({
         onClick={(e: React.SyntheticEvent) => e.preventDefault()}
         disabled={!field.value}
       >
-        {isLoading ? <Loader /> : `${submitText}`}
+        {isLoading ? <Loader /> : submitText}
       </Button>
     </InputGroup>
   )
