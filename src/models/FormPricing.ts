@@ -4,7 +4,7 @@ import * as Yup from 'yup'
 export const validationSchema: Yup.SchemaOf<PriceOptionsMarket> =
   Yup.object().shape({
     price: Yup.number()
-      .min(1, (param) => `Must be more or equal to ${param.min}`)
+      .min(0.01, (param) => `Must be more or equal to ${param.min}`)
       .required('Required'),
     dtAmount: Yup.number()
       .min(9, (param) => `Must be more or equal to ${param.min}`)
@@ -19,7 +19,7 @@ export const validationSchema: Yup.SchemaOf<PriceOptionsMarket> =
     weightOnOcean: Yup.string().required('Required'),
     swapFee: Yup.number()
       .min(0.1, (param) => `Must be more or equal to ${param.min}`)
-      .max(10, 'Maximum is 10%')
+      .max(10, (param) => `Maximum is ${param.max}%`)
       .required('Required')
       .nullable()
   })
