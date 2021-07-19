@@ -122,7 +122,8 @@ export default function Compute({
   }
 
   function getQuerryString(
-    trustedAlgorithmList: publisherTrustedAlgorithm[]
+    trustedAlgorithmList: publisherTrustedAlgorithm[],
+    chainId?: number
   ): SearchQuery {
     let algoQuerry = ''
     trustedAlgorithmList.forEach((trusteAlgo) => {
@@ -137,7 +138,7 @@ export default function Compute({
       offset: 500,
       query: {
         query_string: {
-          query: `${algorithmQuery} service.attributes.main.type:algorithm -isInPurgatory:true`
+          query: `${algorithmQuery} service.attributes.main.type:algorithm AND chainId:${chainId} -isInPurgatory:true`
         }
       },
       sort: { created: -1 }
@@ -160,7 +161,8 @@ export default function Compute({
     } else {
       const gueryResults = await queryMetadata(
         getQuerryString(
-          computeService.attributes.main.privacy.publisherTrustedAlgorithms
+          computeService.attributes.main.privacy.publisherTrustedAlgorithms,
+          ddo.chainId
         ),
         source.token
       )
@@ -169,8 +171,7 @@ export default function Compute({
       algorithmSelectionList = await transformDDOToAssetSelection(
         datasetComputeService?.serviceEndpoint,
         gueryResults.results,
-        [],
-        ddo?.chainId
+        []
       )
     }
     return algorithmSelectionList

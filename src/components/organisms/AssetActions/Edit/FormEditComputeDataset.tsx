@@ -46,7 +46,7 @@ export default function FormEditComputeDataset({
       offset: 500,
       query: {
         query_string: {
-          query: `service.attributes.main.type:algorithm -isInPurgatory:true`
+          query: `service.attributes.main.type:algorithm AND chainId:${ddo.chainId} -isInPurgatory:true`
         }
       },
       sort: { created: -1 }
@@ -56,8 +56,7 @@ export default function FormEditComputeDataset({
     const algorithmSelectionList = await transformDDOToAssetSelection(
       datasetComputeService?.serviceEndpoint,
       querryResult.results,
-      publisherTrustedAlgorithms,
-      ddo?.chainId
+      publisherTrustedAlgorithms
     )
     return algorithmSelectionList
   }
