@@ -21,6 +21,8 @@ import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
 import { getSubgrahUri, fetchData } from '../../../../utils/subgraph'
 
+const REFETCH_INTERVAL = 5000
+
 const contentQuery = graphql`
   query PoolQuery {
     content: allFile(filter: { relativePath: { eq: "price.json" } }) {
@@ -90,11 +92,14 @@ export default function Pool(): ReactElement {
   const [creatorLiquidity, setCreatorLiquidity] = useState<PoolBalance>()
   const [creatorPoolTokens, setCreatorPoolTokens] = useState<string>()
   const [creatorPoolShare, setCreatorPoolShare] = useState<string>()
+  const [dataLiquidity, setdataLiquidity] = useState<PoolLiquidity>()
+  const [liquidityFetchInterval, setLiquidityFetchInterval] =
+    useState<NodeJS.Timeout>()
 
   // the purpose of the value is just to trigger the effect
   const [refreshPool, setRefreshPool] = useState(false)
 
-  async function getPoolliquidity(): Promise<PoolLiquidity> {
+  async function getPoolLiquidity() {
     const queryContext: OperationContext = {
       url: `${getSubgrahUri(
         Number(ddo.chainId)
@@ -111,25 +116,24 @@ export default function Pool(): ReactElement {
       queryVariables,
       queryContext
     )
-
-    return queryResult?.data
+    setdataLiquidity(queryResult?.data)
   }
 
-  // const [result] = useQuery<PoolLiquidity>({
-  //   query: poolLiquidityQuery,
-  //   variables: {
-  //     id: price.address.toLowerCase(),
-  //     shareId: `${price.address.toLowerCase()}-${ddo.publicKey[0].owner.toLowerCase()}`
-  //   },
-  //   context: queryContext
-  //   // pollInterval: 5000
-  // })
-  // const { data: dataLiquidity } = result
+  function refetchLiquidity() {
+    if (!liquidityFetchInterval) {
+      const interval = setInterval(function () {
+        getPoolLiquidity()
+      }, REFETCH_INTERVAL)
+      setLiquidityFetchInterval(interval)
+    }
+  }
 
   useEffect(() => {
     async function init() {
-      const dataLiquidity: PoolLiquidity = await getPoolliquidity()
-      if (!dataLiquidity || !dataLiquidity.pool) return
+      if (!dataLiquidity || !dataLiquidity.pool) {
+        await getPoolLiquidity()
+        return
+      }
 
       // Total pool shares
       const totalPoolTokens = dataLiquidity.pool.totalShares
@@ -177,9 +181,10 @@ export default function Pool(): ReactElement {
         creatorLiquidity &&
         ((Number(creatorPoolTokens) / Number(totalPoolTokens)) * 100).toFixed(2)
       setCreatorPoolShare(creatorPoolShare)
+      refetchLiquidity()
     }
     init()
-  }, [ddo.dataToken, price.datatoken, price.ocean, price?.value])
+  }, [dataLiquidity, ddo.dataToken, price.datatoken, price.ocean, price?.value])
 
   useEffect(() => {
     setIsRemoveDisabled(isInPurgatory && owner === accountId)

@@ -28,7 +28,7 @@ defaults.global.defaultFontFamily = `'Sharp Sans', -apple-system, BlinkMacSystem
 'Segoe UI', Helvetica, Arial, sans-serif`
 defaults.global.animation = { easing: 'easeInOutQuart', duration: 1000 }
 
-const REFATCH_INTERVAL = 10000
+const REFETCH_INTERVAL = 10000
 
 const lineStyle: Partial<ChartDataSets> = {
   fill: false,
@@ -161,11 +161,11 @@ export default function Graph(): ReactElement {
     }
   }
 
-  function refatchGraph() {
+  function refetchGraph() {
     if (!graphFetchInterval) {
       const interval = setInterval(function () {
         getPoolHistory()
-      }, REFATCH_INTERVAL)
+      }, REFETCH_INTERVAL)
       setGraphFetchInterval(interval)
     }
   }
@@ -236,7 +236,7 @@ export default function Graph(): ReactElement {
           ]
         })
         setIsLoading(false)
-        refatchGraph()
+        refetchGraph()
       }
     }
     init()
