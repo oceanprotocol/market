@@ -14,6 +14,9 @@ import Token from '../../organisms/AssetActions/Pool/Token'
 import { useWeb3 } from '../../../providers/Web3'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import { fetchDataForMultipleChains } from '../../../utils/subgraph'
+import NetworkName from '../../atoms/NetworkName'
+import axios from 'axios'
+import { retrieveDDO } from '../../../utils/aquarius'
 
 const poolSharesQuery = gql`
   query PoolShares($user: String) {
@@ -45,6 +48,7 @@ const poolSharesQuery = gql`
 interface Asset {
   userLiquidity: number
   poolShare: PoolShare
+  networkId: number
 }
 
 function calculateUserLiquidity(poolShare: PoolShare) {
@@ -119,6 +123,12 @@ const columns = [
     grow: 2
   },
   {
+    name: 'Network',
+    selector: function getNetwork(row: Asset) {
+      return <NetworkName networkId={row.networkId} />
+    }
+  },
+  {
     name: 'Datatoken',
     selector: function getSymbol(row: Asset) {
       return <Symbol tokens={row.poolShare.poolId.tokens} />
@@ -148,9 +158,12 @@ export default function PoolShares(): ReactElement {
 
   useEffect(() => {
     const variables = { user: accountId?.toLowerCase() }
+
     async function getShares() {
       const assetList: Asset[] = []
       const data: PoolShare[] = []
+      const source = axios.CancelToken.source()
+
       try {
         setLoading(true)
         const result = await fetchDataForMultipleChains(
@@ -164,13 +177,19 @@ export default function PoolShares(): ReactElement {
           })
         }
         if (!data) return
-        data.forEach((poolShare: PoolShare) => {
-          const userLiquidity = calculateUserLiquidity(poolShare)
+        for (let i = 0; i < data.length; i++) {
+          const did = web3.utils
+            .toChecksumAddress(data[i].poolId.datatokenAddress)
+            .replace('0x', 'did:op:')
+          const ddo = await retrieveDDO(did, source.token)
+          console.log('DDO: ', ddo.chainId)
+          const userLiquidity = calculateUserLiquidity(data[i])
           assetList.push({
-            poolShare: poolShare,
-            userLiquidity: userLiquidity
+            poolShare: data[i],
+            userLiquidity: userLiquidity,
+            networkId: ddo.chainId
           })
-        })
+        }
         setAssets(assetList)
       } catch (error) {
         console.error('Error fetching pool shares: ', error.message)

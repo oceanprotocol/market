@@ -12,6 +12,7 @@ import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import { fetchDataForMultipleChains } from '../../../utils/subgraph'
 import { OrdersData_tokenOrders as OrdersData } from '../../../@types/apollo/OrdersData'
+import NetworkName from '../../atoms/NetworkName'
 
 const getTokenOrders = gql`
   query OrdersData($user: String!) {
@@ -34,6 +35,7 @@ interface DownloadedAssets {
   did: string
   dtSymbol: string
   timestamp: number
+  networkId: number
 }
 
 const columns = [
@@ -41,6 +43,12 @@ const columns = [
     name: 'Data Set',
     selector: function getAssetRow(row: DownloadedAssets) {
       return <AssetTitle did={row.did} />
+    }
+  },
+  {
+    name: 'Network',
+    selector: function getNetwork(row: DownloadedAssets) {
+      return <NetworkName networkId={row.networkId} />
     }
   },
   {
@@ -94,6 +102,7 @@ export default function ComputeDownloads(): ReactElement {
           if (ddo.service[1].type === 'access') {
             filteredOrders.push({
               did: did,
+              networkId: ddo.chainId,
               dtSymbol: data[i].datatokenId.symbol,
               timestamp: data[i].timestamp
             })

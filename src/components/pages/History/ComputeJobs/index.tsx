@@ -26,6 +26,7 @@ import {
   OrdersData_tokenOrders as OrdersData,
   OrdersData_tokenOrders_datatokenId as OrdersDatatoken
 } from '../../../../@types/apollo/OrdersData'
+import NetworkName from '../../../atoms/NetworkName'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -66,6 +67,12 @@ const columns = [
           <Link to={`/asset/${row.inputDID[0]}`}>{row.assetName}</Link>
         </Dotdotdot>
       )
+    }
+  },
+  {
+    name: 'Network',
+    selector: function getNetwork(row: ComputeJobMetaData) {
+      return <NetworkName networkId={row.networkId} />
     }
   },
   {
@@ -257,7 +264,8 @@ export default function ComputeJobs(): ReactElement {
             const compJob: ComputeJobMetaData = {
               ...job,
               assetName: serviceMetadata.attributes.main.name,
-              assetDtSymbol: ddo.dataTokenInfo.symbol
+              assetDtSymbol: ddo.dataTokenInfo.symbol,
+              networkId: ddo.chainId
             }
             computeJobs.push(compJob)
           }
