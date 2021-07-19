@@ -20,7 +20,6 @@ import { useAsset } from '../../../../providers/Asset'
 import { gql, OperationContext, OperationResult } from 'urql'
 import { PoolHistory } from '../../../../@types/apollo/PoolHistory'
 import { getSubgrahUri, fetchData } from '../../../../utils/subgraph'
-const error: Error = null
 
 declare type GraphType = 'liquidity' | 'price'
 
@@ -28,6 +27,8 @@ declare type GraphType = 'liquidity' | 'price'
 defaults.global.defaultFontFamily = `'Sharp Sans', -apple-system, BlinkMacSystemFont,
 'Segoe UI', Helvetica, Arial, sans-serif`
 defaults.global.animation = { easing: 'easeInOutQuart', duration: 1000 }
+
+const REFATCH_INTERVAL = 10000
 
 const lineStyle: Partial<ChartDataSets> = {
   fill: false,
@@ -127,30 +128,46 @@ export default function Graph(): ReactElement {
 
   const [lastBlock, setLastBlock] = useState<number>(0)
   const [priceHistory, setPriceHistory] = useState([])
+  const [error, setError] = useState<Error>()
   const [liquidityHistory, setLiquidityHistory] = useState([])
   const [timestamps, setTimestamps] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [dataHistory, setDataHistory] = useState<PoolHistory>()
   const [graphData, setGraphData] = useState<ChartData>()
+  const [graphFetchInterval, setGraphFetchInterval] = useState<NodeJS.Timeout>()
 
   async function getPoolHistory() {
-    const queryContext: OperationContext = {
-      url: `${getSubgrahUri(
-        Number(ddo.chainId)
-      )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-      requestPolicy: 'network-only'
-    }
-    const queryVariables = {
-      id: price.address.toLowerCase(),
-      block: lastBlock
-    }
+    try {
+      const queryContext: OperationContext = {
+        url: `${getSubgrahUri(
+          Number(ddo.chainId)
+        )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
+        requestPolicy: 'network-only'
+      }
+      const queryVariables = {
+        id: price.address.toLowerCase(),
+        block: lastBlock
+      }
 
-    const queryResult: OperationResult<PoolHistory> = await fetchData(
-      poolHistory,
-      queryVariables,
-      queryContext
-    )
-    setDataHistory(queryResult?.data)
+      const queryResult: OperationResult<PoolHistory> = await fetchData(
+        poolHistory,
+        queryVariables,
+        queryContext
+      )
+      setDataHistory(queryResult?.data)
+    } catch (error) {
+      console.error('Error fetchData: ', error.message)
+      setError(error)
+    }
+  }
+
+  function refatchGraph() {
+    if (!graphFetchInterval) {
+      const interval = setInterval(function () {
+        getPoolHistory()
+      }, REFATCH_INTERVAL)
+      setGraphFetchInterval(interval)
+    }
   }
 
   useEffect(() => {
@@ -219,6 +236,7 @@ export default function Graph(): ReactElement {
           ]
         })
         setIsLoading(false)
+        refatchGraph()
       }
     }
     init()

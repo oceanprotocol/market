@@ -157,6 +157,7 @@ export async function fetchData(
     return response
   } catch (error) {
     console.error('Error fetchData: ', error.message)
+    throw Error(error.message)
   }
 }
 
