@@ -1,10 +1,4 @@
-import React, {
-  ReactElement,
-  useState,
-  useEffect,
-  FormEvent,
-  ChangeEvent
-} from 'react'
+import React, { ReactElement, useEffect, FormEvent, ChangeEvent } from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 import { useFormikContext, Field, Form, FormikContextType } from 'formik'
 import Input from '../../atoms/Input'
@@ -17,7 +11,7 @@ import { ReactComponent as Download } from '../../../images/download.svg'
 import { ReactComponent as Compute } from '../../../images/compute.svg'
 import stylesIndex from './index.module.css'
 import styles from './FormPublish.module.css'
-import appConfig from '../../../../app.config'
+import AdvancedSettings from '../../molecules/FormFields/advancedSettings'
 
 const query = graphql`
   query {
@@ -62,7 +56,6 @@ export default function FormPublish(): ReactElement {
     validateField,
     setFieldValue
   }: FormikContextType<MetadataPublishFormDataset> = useFormikContext()
-  const [advancedSettings, setAdvancedSettings] = useState<boolean>(false)
 
   // reset form validation on every mount
   useEffect(() => {
@@ -95,13 +88,6 @@ export default function FormPublish(): ReactElement {
       field.type === 'terms' ? !JSON.parse(e.target.value) : e.target.value
     validateField(field.name)
     setFieldValue(field.name, value)
-  }
-  function toggleAdvancedSettings(e: FormEvent<Element>) {
-    e.preventDefault()
-    advancedSettings === true
-      ? setAdvancedSettings(false)
-      : setAdvancedSettings(true)
-    console.log('advancedSettings', advancedSettings)
   }
 
   const resetFormAndClearStorage = (e: FormEvent<Element>) => {
@@ -136,31 +122,10 @@ export default function FormPublish(): ReactElement {
             />
           )
       )}
-      {appConfig.allowAdvancedPublishSettings === 'true' && (
-        <Button
-          className={styles.advancedBtn}
-          style="text"
-          size="small"
-          onClick={toggleAdvancedSettings}
-        >
-          Advanced Settings
-        </Button>
-      )}
-      {content.data.map(
-        (field: FormFieldProps) =>
-          advancedSettings === true &&
-          field.advanced === true && (
-            <Field
-              key={field.name}
-              {...field}
-              options={field.options}
-              component={Input}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                handleFieldChange(e, field)
-              }
-            />
-          )
-      )}
+      <AdvancedSettings
+        content={content}
+        handleFieldChange={handleFieldChange}
+      />
       <footer className={styles.actions}>
         <Button
           style="primary"

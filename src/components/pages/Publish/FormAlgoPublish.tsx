@@ -15,7 +15,7 @@ import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { MetadataPublishFormAlgorithm } from '../../../@types/MetaData'
 import { initialValues as initialValuesAlgorithm } from '../../../models/FormAlgoPublish'
 import stylesIndex from './index.module.css'
-import appConfig from '../../../../app.config'
+import AdvancedSettings from '../../molecules/FormFields/advancedSettings'
 
 const query = graphql`
   query {
@@ -35,6 +35,7 @@ const query = graphql`
               required
               sortOptions
               options
+              advanced
             }
             warning
           }
@@ -173,31 +174,10 @@ export default function FormPublish(): ReactElement {
             />
           )
       )}
-      {appConfig.allowAdvancedPublishSettings === 'true' && (
-        <Button
-          className={styles.advancedBtn}
-          style="text"
-          size="small"
-          onClick={toggleAdvancedSettings}
-        >
-          Advanced Settings
-        </Button>
-      )}
-      {content.data.map(
-        (field: FormFieldProps) =>
-          advancedSettings === true &&
-          field.advanced === true && (
-            <Field
-              key={field.name}
-              {...field}
-              options={field.options}
-              component={Input}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                handleFieldChange(e, field)
-              }
-            />
-          )
-      )}
+      <AdvancedSettings
+        content={content}
+        handleFieldChange={handleFieldChange}
+      />
       <footer className={styles.actions}>
         <Button
           style="primary"
