@@ -50,17 +50,11 @@ export default function Web3Feedback({
 
   const message = !accountId
     ? 'Please connect your Web3 wallet.'
-    : // : !ocean
-    // ? 'Please try again.'
-    isBalanceSufficient === false
+    : isBalanceSufficient === false
     ? 'You do not have enough OCEAN in your wallet to purchase this asset.'
     : isGraphSynced === false
-    ? 'Due to innacurate data transactions may fail, thus loosing gas fees!'
+    ? 'Due to innacurate data, transactions may fail, thus loosing gas fees!'
     : 'Something went wrong.'
-
-  useEffect(() => {
-    console.log('is syunc', isGraphSynced)
-  }, [isGraphSynced])
 
   return showFeedback ? (
     <section className={styles.feedback}>
