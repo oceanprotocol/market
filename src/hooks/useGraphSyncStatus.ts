@@ -59,7 +59,7 @@ export function useGraphSyncStatus(): UseGraphSyncStatus {
   const { block, web3Loading } = useWeb3()
   const [blockGraph, setBlockGraph] = useState<number>()
   const [blockHead, setBlockHead] = useState<number>()
-  const [isGraphSynced, setIsGraphSynced] = useState(true)
+  const [isGraphSynced, setIsGraphSynced] = useState(false)
   const [subgraphLoading, setSubgraphLoading] = useState(false)
 
   // Get and set head block
@@ -98,7 +98,7 @@ export function useGraphSyncStatus(): UseGraphSyncStatus {
       setIsGraphSynced(false)
       return
     }
-    setIsGraphSynced(true)
+    setIsGraphSynced(false)
   }, [blockGraph, blockHead, web3Loading, subgraphLoading])
 
   return { blockHead, blockGraph, isGraphSynced }

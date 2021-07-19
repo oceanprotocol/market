@@ -40,17 +40,17 @@ export default function App({
   const { warning } = useSiteMetadata()
   const { accountId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
-  const { isGraphSynced, blockHead, blockGraph } = useGraphSyncStatus()
+  // const { isGraphSynced, blockHead, blockGraph } = useGraphSyncStatus()
 
   return (
     <Styles>
       <div className={styles.app}>
-        {(props as PageProps).uri.includes('/asset') && !isGraphSynced && (
+        {/* {(props as PageProps).uri.includes('/asset') && !isGraphSynced && (
           <AnnouncementBanner
             text={`The data for this network has only synced to Ethereum block ${blockGraph} (out of ${blockHead}). Please check back soon.`}
             state="error"
           />
-        )}
+        )} */}
 
         {(props as PageProps).uri === '/' && (
           <AnnouncementBanner text={warning.main} />

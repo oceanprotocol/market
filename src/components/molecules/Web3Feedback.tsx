@@ -1,8 +1,9 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import { useWeb3 } from '../../providers/Web3'
 import Status from '../atoms/Status'
 import styles from './Web3Feedback.module.css'
 import WalletNetworkSwitcher from './WalletNetworkSwitcher'
+import { useGraphSyncStatus } from '../../hooks/useGraphSyncStatus'
 
 export declare type Web3Error = {
   status: 'error' | 'warning' | 'success'
@@ -18,17 +19,20 @@ export default function Web3Feedback({
   isAssetNetwork?: boolean
 }): ReactElement {
   const { accountId } = useWeb3()
+  const { isGraphSynced, blockGraph, blockHead } = useGraphSyncStatus()
   const showFeedback =
     !accountId ||
     // !ocean ||
     isBalanceSufficient === false ||
-    isAssetNetwork === false
+    isAssetNetwork === false ||
+    isGraphSynced === false
 
-  const state = !accountId
-    ? 'error'
-    : accountId && isBalanceSufficient && isAssetNetwork
-    ? 'success'
-    : 'warning'
+  const state =
+    !accountId || !isGraphSynced
+      ? 'error'
+      : accountId && isBalanceSufficient && isAssetNetwork
+      ? 'success'
+      : 'warning'
 
   const title = !accountId
     ? 'No account connected'
@@ -36,6 +40,8 @@ export default function Web3Feedback({
     // ? 'Error connecting to Ocean'
     accountId && isAssetNetwork === false
     ? 'Not connected to asset network'
+    : isGraphSynced === false
+    ? `The data for this network has only synced to Ethereum block ${blockGraph} (out of ${blockHead}). Please check back soon.`
     : accountId
     ? isBalanceSufficient === false
       ? 'Insufficient balance'
@@ -48,7 +54,13 @@ export default function Web3Feedback({
     // ? 'Please try again.'
     isBalanceSufficient === false
     ? 'You do not have enough OCEAN in your wallet to purchase this asset.'
+    : isGraphSynced === false
+    ? 'Due to innacurate data transactions may fail, thus loosing gas fees!'
     : 'Something went wrong.'
+
+  useEffect(() => {
+    console.log('is syunc', isGraphSynced)
+  }, [isGraphSynced])
 
   return showFeedback ? (
     <section className={styles.feedback}>
