@@ -94,8 +94,7 @@ export default function Pool(): ReactElement {
   // the purpose of the value is just to trigger the effect
   const [refreshPool, setRefreshPool] = useState(false)
 
-  let dataLiquidity: PoolLiquidity
-  async function getDataliquidity() {
+  async function getPoolliquidity(): Promise<PoolLiquidity> {
     const queryContext: OperationContext = {
       url: `${getSubgrahUri(
         Number(ddo.chainId)
@@ -113,7 +112,7 @@ export default function Pool(): ReactElement {
       queryContext
     )
 
-    const dataLiquidity = queryResult?.data
+    return queryResult?.data
   }
 
   // const [result] = useQuery<PoolLiquidity>({
@@ -129,24 +128,7 @@ export default function Pool(): ReactElement {
 
   useEffect(() => {
     async function init() {
-      const queryContext: OperationContext = {
-        url: `${getSubgrahUri(
-          Number(ddo.chainId)
-        )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-        requestPolicy: 'network-only'
-      }
-      const queryVariables = {
-        id: price.address.toLowerCase(),
-        shareId: `${price.address.toLowerCase()}-${ddo.publicKey[0].owner.toLowerCase()}`
-      }
-
-      const queryResult: OperationResult<PoolLiquidity> = await fetchData(
-        poolLiquidityQuery,
-        queryVariables,
-        queryContext
-      )
-
-      const dataLiquidity = queryResult?.data
+      const dataLiquidity: PoolLiquidity = await getPoolliquidity()
       if (!dataLiquidity || !dataLiquidity.pool) return
 
       // Total pool shares
@@ -197,7 +179,7 @@ export default function Pool(): ReactElement {
       setCreatorPoolShare(creatorPoolShare)
     }
     init()
-  }, [dataLiquidity, ddo.dataToken, price.datatoken, price.ocean, price?.value])
+  }, [ddo.dataToken, price.datatoken, price.ocean, price?.value])
 
   useEffect(() => {
     setIsRemoveDisabled(isInPurgatory && owner === accountId)

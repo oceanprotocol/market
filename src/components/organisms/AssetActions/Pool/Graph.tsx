@@ -130,7 +130,28 @@ export default function Graph(): ReactElement {
   const [liquidityHistory, setLiquidityHistory] = useState([])
   const [timestamps, setTimestamps] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const [dataHistory, setDataHistory] = useState<PoolHistory>()
   const [graphData, setGraphData] = useState<ChartData>()
+
+  async function getPoolHistory() {
+    const queryContext: OperationContext = {
+      url: `${getSubgrahUri(
+        Number(ddo.chainId)
+      )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
+      requestPolicy: 'network-only'
+    }
+    const queryVariables = {
+      id: price.address.toLowerCase(),
+      block: lastBlock
+    }
+
+    const queryResult: OperationResult<PoolHistory> = await fetchData(
+      poolHistory,
+      queryVariables,
+      queryContext
+    )
+    setDataHistory(queryResult?.data)
+  }
 
   useEffect(() => {
     Logger.log('Fired GraphOptions!')
@@ -139,26 +160,16 @@ export default function Graph(): ReactElement {
   }, [locale, darkMode.value])
 
   useEffect(() => {
+    getPoolHistory()
+  }, [lastBlock])
+
+  useEffect(() => {
     async function init() {
-      const queryContext: OperationContext = {
-        url: `${getSubgrahUri(
-          Number(ddo.chainId)
-        )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-        requestPolicy: 'network-only'
+      const data: PoolHistory = dataHistory
+      if (!data) {
+        await getPoolHistory()
+        return
       }
-      const queryVariables = {
-        id: price.address.toLowerCase(),
-        block: lastBlock
-      }
-
-      const queryResult: OperationResult<PoolHistory> = await fetchData(
-        poolHistory,
-        queryVariables,
-        queryContext
-      )
-
-      const data: PoolHistory = queryResult?.data
-      if (!data) return
       Logger.log('Fired GraphData!')
 
       const latestTimestamps = [
@@ -191,7 +202,6 @@ export default function Graph(): ReactElement {
         setLastBlock(
           data.poolTransactions[data.poolTransactions.length - 1].block
         )
-        // refetch()
       } else {
         setGraphData({
           labels: latestTimestamps.slice(0),
@@ -212,7 +222,7 @@ export default function Graph(): ReactElement {
       }
     }
     init()
-  }, [graphType])
+  }, [dataHistory, graphType])
 
   function handleGraphTypeSwitch(e: ChangeEvent<HTMLButtonElement>) {
     e.preventDefault()
