@@ -15,6 +15,7 @@ import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { MetadataPublishFormAlgorithm } from '../../../@types/MetaData'
 import { initialValues as initialValuesAlgorithm } from '../../../models/FormAlgoPublish'
 import stylesIndex from './index.module.css'
+import appConfig from '../../../../app.config'
 
 const query = graphql`
   query {
@@ -61,6 +62,7 @@ export default function FormPublish(): ReactElement {
   const [selectedDockerImage, setSelectedDockerImage] = useState<string>(
     initialValues.dockerImage
   )
+  const [advancedSettings, setAdvancedSettings] = useState<boolean>(false)
 
   const dockerImageOptions = [
     {
@@ -126,6 +128,13 @@ export default function FormPublish(): ReactElement {
     validateField(field.name)
     setFieldValue(field.name, value)
   }
+  function toggleAdvancedSettings(e: FormEvent<Element>) {
+    e.preventDefault()
+    advancedSettings === true
+      ? setAdvancedSettings(false)
+      : setAdvancedSettings(true)
+    console.log('advancedSettings', advancedSettings)
+  }
 
   const resetFormAndClearStorage = (e: FormEvent<Element>) => {
     e.preventDefault()
@@ -164,7 +173,31 @@ export default function FormPublish(): ReactElement {
             />
           )
       )}
-
+      {appConfig.allowAdvancedPublishSettings === 'true' && (
+        <Button
+          className={styles.advancedBtn}
+          style="text"
+          size="small"
+          onClick={toggleAdvancedSettings}
+        >
+          Advanced Settings
+        </Button>
+      )}
+      {content.data.map(
+        (field: FormFieldProps) =>
+          advancedSettings === true &&
+          field.advanced === true && (
+            <Field
+              key={field.name}
+              {...field}
+              options={field.options}
+              component={Input}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                handleFieldChange(e, field)
+              }
+            />
+          )
+      )}
       <footer className={styles.actions}>
         <Button
           style="primary"
