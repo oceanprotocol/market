@@ -7,14 +7,14 @@ import styles from './PoolTransactions.module.css'
 import { useUserPreferences } from '../../providers/UserPreferences'
 import { formatPrice } from '../atoms/Price/PriceUnit'
 import { gql } from 'urql'
-import {
-  TransactionHistory,
-  TransactionHistory_poolTransactions as TransactionHistoryPoolTransactions
-} from '../../@types/apollo/TransactionHistory'
+import { TransactionHistory_poolTransactions as TransactionHistoryPoolTransactions } from '../../@types/apollo/TransactionHistory'
 import web3 from 'web3'
 import { useWeb3 } from '../../providers/Web3'
 import { fetchDataForMultipleChains } from '../../utils/subgraph'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
+import NetworkName from '../atoms/NetworkName'
+import { retrieveDDO } from '../../utils/aquarius'
+import axios from 'axios'
 
 const txHistoryQueryByPool = gql`
   query TransactionHistoryByPool($user: String, $pool: String) {
@@ -79,15 +79,16 @@ interface Datatoken {
   symbol: string
 }
 
+interface PoolTransaction extends TransactionHistoryPoolTransactions {
+  networkId: number
+}
+
 function getSymbol(tokenId: Datatoken) {
   const symbol = tokenId === null ? 'OCEAN' : tokenId.symbol
   return symbol
 }
 
-async function getTitle(
-  row: TransactionHistoryPoolTransactions,
-  locale: string
-) {
+async function getTitle(row: PoolTransaction, locale: string) {
   let title = ''
   switch (row.event) {
     case 'swap': {
@@ -144,7 +145,7 @@ async function getTitle(
   return title
 }
 
-function Title({ row }: { row: TransactionHistoryPoolTransactions }) {
+function Title({ row }: { row: PoolTransaction }) {
   const { networkId } = useWeb3()
   const [title, setTitle] = useState<string>()
   const { locale } = useUserPreferences()
@@ -168,13 +169,13 @@ function Title({ row }: { row: TransactionHistoryPoolTransactions }) {
 const columns = [
   {
     name: 'Title',
-    selector: function getTitleRow(row: TransactionHistoryPoolTransactions) {
+    selector: function getTitleRow(row: PoolTransaction) {
       return <Title row={row} />
     }
   },
   {
     name: 'Data Set',
-    selector: function getAssetRow(row: TransactionHistoryPoolTransactions) {
+    selector: function getAssetRow(row: PoolTransaction) {
       const did = web3.utils
         .toChecksumAddress(row.poolAddress.datatokenAddress)
         .replace('0x', 'did:op:')
@@ -183,8 +184,15 @@ const columns = [
     }
   },
   {
+    name: 'Network',
+    selector: function getNetwork(row: PoolTransaction) {
+      return <NetworkName networkId={row.networkId} />
+    },
+    maxWidth: '12rem'
+  },
+  {
     name: 'Time',
-    selector: function getTimeRow(row: TransactionHistoryPoolTransactions) {
+    selector: function getTimeRow(row: PoolTransaction) {
       return (
         <Time
           className={styles.time}
@@ -199,7 +207,7 @@ const columns = [
 ]
 
 // hack! if we use a function to omit one field this will display a strange refresh to the enduser for each row
-const columnsMinimal = [columns[0], columns[2]]
+const columnsMinimal = [columns[0], columns[3]]
 
 export default function PoolTransactions({
   poolAddress,
@@ -209,16 +217,19 @@ export default function PoolTransactions({
   minimal?: boolean
 }): ReactElement {
   const { accountId } = useWeb3()
-  const [logs, setLogs] = useState<TransactionHistoryPoolTransactions[]>()
+  const [logs, setLogs] = useState<PoolTransaction[]>()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { chainIds } = useUserPreferences()
   const { appConfig } = useSiteMetadata()
 
   useEffect(() => {
     if (!appConfig.metadataCacheUri) return
-    const variables = { user: accountId?.toLowerCase() }
     async function getTransactions() {
-      const data: TransactionHistoryPoolTransactions[] = []
+      const data: PoolTransaction[] = []
+      const poolTransactions: PoolTransaction[] = []
+      const source = axios.CancelToken.source()
+      const variables = { user: accountId?.toLowerCase() }
+
       try {
         setIsLoading(true)
         const result = await fetchDataForMultipleChains(
@@ -228,12 +239,21 @@ export default function PoolTransactions({
         )
         for (let i = 0; i < result.length; i++) {
           result[i].poolTransactions.forEach(
-            (poolTransaction: TransactionHistoryPoolTransactions) => {
+            (poolTransaction: PoolTransaction) => {
               data.push(poolTransaction)
             }
           )
         }
-        setLogs(data)
+        if (!data) return
+        for (let i = 0; i < data.length; i++) {
+          const did = web3.utils
+            .toChecksumAddress(data[i].poolAddress.datatokenAddress)
+            .replace('0x', 'did:op:')
+          const ddo = await retrieveDDO(did, source.token)
+          data[i].networkId = ddo.chainId
+          poolTransactions.push(data[i])
+        }
+        setLogs(poolTransactions)
       } catch (error) {
         console.error('Error fetching pool transactions: ', error.message)
       } finally {
@@ -241,7 +261,7 @@ export default function PoolTransactions({
       }
     }
     getTransactions()
-  }, [accountId, chainIds, appConfig.metadataCacheUri])
+  }, [accountId, chainIds, appConfig.metadataCacheUri, poolAddress])
 
   return accountId ? (
     <Table
