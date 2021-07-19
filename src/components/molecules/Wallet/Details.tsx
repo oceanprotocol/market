@@ -31,9 +31,9 @@ export default function Details(): ReactElement {
   // const [portisNetwork, setPortisNetwork] = useState<string>()
 
   useEffect(() => {
-    if (!networkData) return
-
-    setMainCurrency(networkData.nativeCurrency?.symbol)
+    const symbol =
+      networkId === 2021000 ? 'GX' : networkData?.nativeCurrency.symbol
+    setMainCurrency(symbol)
 
     const oceanConfig = getOceanConfig(networkId)
 

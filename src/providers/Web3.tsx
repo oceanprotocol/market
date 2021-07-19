@@ -228,17 +228,21 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   // -----------------------------------
   useEffect(() => {
     if (!networkId) return
-
     const networkData = getNetworkDataById(networksList, networkId)
     setNetworkData(networkData)
-    Logger.log('[web3] Network metadata found.', networkData)
+    Logger.log(
+      networkData
+        ? `[web3] Network metadata found.`
+        : `[web3] No network metadata found.`,
+      networkData
+    )
 
     // Construct network display name
     const networkDisplayName = getNetworkDisplayName(networkData, networkId)
     setNetworkDisplayName(networkDisplayName)
 
     // Figure out if we're on a chain's testnet, or not
-    setIsTestnet(networkData.network !== 'mainnet')
+    setIsTestnet(networkData?.network !== 'mainnet')
 
     Logger.log(`[web3] Network display name set to: ${networkDisplayName}`)
   }, [networkId, networksList])

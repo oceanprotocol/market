@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react'
 import { useWeb3 } from '../../providers/Web3'
 import Status from '../atoms/Status'
 import styles from './Web3Feedback.module.css'
+import WalletNetworkSwitcher from './WalletNetworkSwitcher'
 
 export declare type Web3Error = {
   status: 'error' | 'warning' | 'success'
@@ -34,7 +35,7 @@ export default function Web3Feedback({
     : // : !ocean
     // ? 'Error connecting to Ocean'
     accountId && isAssetNetwork === false
-    ? 'Wrong network'
+    ? 'Not connected to asset network'
     : accountId
     ? isBalanceSufficient === false
       ? 'Insufficient balance'
@@ -47,15 +48,17 @@ export default function Web3Feedback({
     // ? 'Please try again.'
     isBalanceSufficient === false
     ? 'You do not have enough OCEAN in your wallet to purchase this asset.'
-    : isAssetNetwork === false
-    ? 'Connect to the asset network.'
     : 'Something went wrong.'
 
   return showFeedback ? (
     <section className={styles.feedback}>
       <Status state={state} aria-hidden />
       <h3 className={styles.title}>{title}</h3>
-      {message && <p className={styles.error}>{message}</p>}
+      {isAssetNetwork === false ? (
+        <WalletNetworkSwitcher />
+      ) : (
+        message && <p className={styles.error}>{message}</p>
+      )}
     </section>
   ) : null
 }
