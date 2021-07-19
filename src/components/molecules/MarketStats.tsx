@@ -65,11 +65,11 @@ export default function MarketStats(): ReactElement {
 
   return (
     !loading && (
-      <>
+      <ul>
         {chainIds.map((chainId, key) => (
-          <div key={key} className={styles.stats}>
+          <li key={key}>
             <NetworkName networkId={chainId} />
-            <div>
+            <div className={styles.stats}>
               <Conversion
                 price={`${totalValueLocked[chainId]}`}
                 hideApproximateSymbol
@@ -89,9 +89,9 @@ export default function MarketStats(): ReactElement {
                 link="https://github.com/oceanprotocol/list-purgatory"
               />
             </div>
-          </div>
+          </li>
         ))}
-      </>
+      </ul>
     )
   )
 }
