@@ -5,7 +5,6 @@ import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { Field } from 'formik'
 import appConfig from '../../../../app.config'
 import styles from './advancedSettings.module.css'
-import { IntrinsicElements } from 'react-markdown/src/ast-to-react'
 
 export default function AdvancedSettings(prop: {
   content: FormContent

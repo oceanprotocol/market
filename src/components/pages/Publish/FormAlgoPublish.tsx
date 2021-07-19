@@ -63,7 +63,6 @@ export default function FormPublish(): ReactElement {
   const [selectedDockerImage, setSelectedDockerImage] = useState<string>(
     initialValues.dockerImage
   )
-  const [advancedSettings, setAdvancedSettings] = useState<boolean>(false)
 
   const dockerImageOptions = [
     {
@@ -128,13 +127,6 @@ export default function FormPublish(): ReactElement {
     }
     validateField(field.name)
     setFieldValue(field.name, value)
-  }
-  function toggleAdvancedSettings(e: FormEvent<Element>) {
-    e.preventDefault()
-    advancedSettings === true
-      ? setAdvancedSettings(false)
-      : setAdvancedSettings(true)
-    console.log('advancedSettings', advancedSettings)
   }
 
   const resetFormAndClearStorage = (e: FormEvent<Element>) => {
