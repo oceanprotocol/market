@@ -9,6 +9,7 @@ import { fetchData, getSubgrahUri } from '../../utils/subgraph'
 import { filterNetworksByType } from './UserPreferences/Networks/index'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import useNetworkMetadata from '../../hooks/useNetworkMetadata'
+import Loader from '../atoms/Loader'
 
 const getTotalPoolsValues = gql`
   query PoolsData {
@@ -120,24 +121,28 @@ export default function MarketStats(): ReactElement {
   )
 
   return (
-    !loading && (
-      <div className={styles.stats}>
-        <Conversion price={`${totalValueLockedSum}`} hideApproximateSymbol />{' '}
-        <abbr title="Total Value Locked">TVL</abbr> across{' '}
-        <strong>{poolCountSum}</strong> data set pools that contain{' '}
-        <PriceUnit
-          price={totalOceanLiquiditySum}
-          small
-          className={styles.total}
-        />
-        , plus datatokens for each pool.
-        <Tooltip
-          className={styles.info}
-          content={tooltipContent}
-          reference="list-purgatory"
-          link="https://github.com/oceanprotocol/list-purgatory"
-        />
-      </div>
-    )
+    <div className={styles.stats}>
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          <Conversion price={`${totalValueLockedSum}`} hideApproximateSymbol />{' '}
+          <abbr title="Total Value Locked">TVL</abbr> across{' '}
+          <strong>{poolCountSum}</strong> data set pools that contain{' '}
+          <PriceUnit
+            price={totalOceanLiquiditySum}
+            small
+            className={styles.total}
+          />
+          , plus datatokens for each pool.
+          <Tooltip
+            className={styles.info}
+            content={tooltipContent}
+            reference="list-purgatory"
+            link="https://github.com/oceanprotocol/list-purgatory"
+          />
+        </>
+      )}
+    </div>
   )
 }
