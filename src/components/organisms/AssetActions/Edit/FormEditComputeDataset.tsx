@@ -46,7 +46,7 @@ export default function FormEditComputeDataset({
       offset: 500,
       query: {
         query_string: {
-          query: `service.attributes.main.type:algorithm -isInPurgatory:true`
+          query: `service.attributes.main.type:algorithm AND chainId:${ddo.chainId} -isInPurgatory:true`
         }
       },
       sort: { created: -1 }
