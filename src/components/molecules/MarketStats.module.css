@@ -1,11 +1,21 @@
 .stats {
-  margin-bottom: calc(var(--spacer) / 2);
+  margin-bottom: calc(var(--spacer) * 2);
   font-size: var(--font-size-small);
   line-height: 2;
 }
 
-li:last-child {
-  margin-bottom: calc(var(--spacer) * 2);
+.statsList li {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.tooltipStats {
+  margin-bottom: calc(var(--spacer) / 2);
+  font-size: var(--font-size-small);
+  text-align: center;
+  line-height: 2;
 }
 
 .stats > div > div {
