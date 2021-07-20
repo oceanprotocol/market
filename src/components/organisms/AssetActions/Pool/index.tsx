@@ -15,7 +15,7 @@ import { PoolBalance } from '../../../../@types/TokenBalance'
 import Transactions from './Transactions'
 import Graph from './Graph'
 import { useAsset } from '../../../../providers/Asset'
-import { gql, useQuery, OperationResult, OperationContext } from 'urql'
+import { gql, OperationResult, OperationContext } from 'urql'
 import { PoolLiquidity } from '../../../../@types/apollo/PoolLiquidity'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
@@ -121,12 +121,19 @@ export default function Pool(): ReactElement {
 
   function refetchLiquidity() {
     if (!liquidityFetchInterval) {
-      const interval = setInterval(function () {
-        getPoolLiquidity()
-      }, REFETCH_INTERVAL)
-      setLiquidityFetchInterval(interval)
+      setLiquidityFetchInterval(
+        setInterval(function () {
+          getPoolLiquidity()
+        }, REFETCH_INTERVAL)
+      )
     }
   }
+
+  useEffect(() => {
+    return () => {
+      clearInterval(liquidityFetchInterval)
+    }
+  }, [liquidityFetchInterval])
 
   useEffect(() => {
     async function init() {

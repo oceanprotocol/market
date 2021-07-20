@@ -163,12 +163,19 @@ export default function Graph(): ReactElement {
 
   function refetchGraph() {
     if (!graphFetchInterval) {
-      const interval = setInterval(function () {
-        getPoolHistory()
-      }, REFETCH_INTERVAL)
-      setGraphFetchInterval(interval)
+      setGraphFetchInterval(
+        setInterval(function () {
+          getPoolHistory()
+        }, REFETCH_INTERVAL)
+      )
     }
   }
+
+  useEffect(() => {
+    return () => {
+      clearInterval(graphFetchInterval)
+    }
+  }, [graphFetchInterval])
 
   useEffect(() => {
     Logger.log('Fired GraphOptions!')
