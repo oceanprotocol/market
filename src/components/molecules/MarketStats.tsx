@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './MarketStats.module.css'
-import { gql, OperationContext, useQuery } from 'urql'
+import { gql, OperationContext } from 'urql'
 import Conversion from '../atoms/Price/Conversion'
 import PriceUnit from '../atoms/Price/PriceUnit'
 import Tooltip from '../atoms/Tooltip'
@@ -26,9 +26,9 @@ export default function MarketStats(): ReactElement {
   const [totalOceanLiquidity, setTotalOceanLiquidity] =
     useState<{ [chainId: number]: string }>()
   const [poolCount, setPoolCount] = useState<{ [chainId: number]: string }>()
-  const [sumTotalValueLocked, setSumTotalValueLocked] = useState<string>()
-  const [sumTotalOceanLiquidity, setSumTotalOceanLiquidity] = useState<string>()
-  const [sumPoolCount, setSumPoolCount] = useState<string>()
+  const [totalValueLockedSum, setTotalValueLockedSum] = useState<string>()
+  const [totalOceanLiquiditySum, setTotalOceanLiquiditySum] = useState<string>()
+  const [poolCountSum, setPoolCountSum] = useState<string>()
   const [mainChainIds, setMainChainIds] = useState<number[]>()
   const [loading, setLoading] = useState(true)
   const { appConfig } = useSiteMetadata()
@@ -41,11 +41,10 @@ export default function MarketStats(): ReactElement {
       networksList
     )
     setMainChainIds(mainChainIdsList)
-    let newSumTotalValueLocked = 0
-    let newSumTotalOceanLiquidity = 0
-    let newSumPoolCount = 0
+    let newTotalValueLockedSum = 0
+    let newTotalOceanLiquiditySum = 0
+    let newPoolCountSum = 0
     for (const chainId of mainChainIdsList) {
-      console.log(chainId)
       const context: OperationContext = {
         url: `${getSubgrahUri(
           chainId
@@ -67,22 +66,22 @@ export default function MarketStats(): ReactElement {
           ...prevState,
           [chainId]: response.data?.poolFactories[0].finalizedPoolCount
         }))
-        newSumTotalValueLocked += parseInt(
+        newTotalValueLockedSum += parseInt(
           response.data?.poolFactories[0].totalValueLocked
         )
-        newSumTotalOceanLiquidity += parseInt(
+        newTotalOceanLiquiditySum += parseInt(
           response.data?.poolFactories[0].totalOceanLiquidity
         )
-        newSumPoolCount += parseInt(
+        newPoolCountSum += parseInt(
           response.data?.poolFactories[0].finalizedPoolCount
         )
       } catch (error) {
         console.error('Error fetchData: ', error.message)
       }
     }
-    setSumTotalValueLocked(newSumTotalValueLocked.toString())
-    setSumTotalOceanLiquidity(newSumTotalOceanLiquidity.toString())
-    setSumPoolCount(newSumPoolCount.toString())
+    setTotalValueLockedSum(newTotalValueLockedSum.toString())
+    setTotalOceanLiquiditySum(newTotalOceanLiquiditySum.toString())
+    setPoolCountSum(newPoolCountSum.toString())
     setLoading(false)
   }
 
@@ -92,37 +91,42 @@ export default function MarketStats(): ReactElement {
   }, [])
 
   const tooltipContent = !loading && (
-    <ul className={styles.statsList}>
-      {mainChainIds.map((chainId, key) => (
-        <li key={key}>
-          <NetworkName networkId={chainId} />
-          <div className={styles.tooltipStats}>
-            <Conversion
-              price={`${totalValueLocked[chainId]}`}
-              hideApproximateSymbol
-            />{' '}
-            <abbr title="Total Value Locked">TVL</abbr> across{' '}
-            <strong>{poolCount[chainId]}</strong> data set pools that contain{' '}
-            <PriceUnit
-              price={totalOceanLiquidity[chainId]}
-              small
-              className={styles.total}
-            />
-            , plus datatokens for each pool.
-          </div>
-        </li>
-      ))}
-    </ul>
+    <>
+      <ul className={styles.statsList}>
+        {mainChainIds.map((chainId, key) => (
+          <li key={key}>
+            <NetworkName networkId={chainId} />
+            <div className={styles.tooltipStats}>
+              <Conversion
+                price={`${totalValueLocked[chainId]}`}
+                hideApproximateSymbol
+              />{' '}
+              <abbr title="Total Value Locked">TVL</abbr> across{' '}
+              <strong>{poolCount[chainId]}</strong> data set pools that contain{' '}
+              <PriceUnit
+                price={totalOceanLiquidity[chainId]}
+                small
+                className={styles.total}
+              />
+              , plus datatokens for each pool.
+            </div>
+          </li>
+        ))}
+      </ul>
+      {
+        'Content on-chain from out pool factory. Does not filter our data sets in '
+      }
+    </>
   )
 
   return (
     !loading && (
       <div className={styles.stats}>
-        <Conversion price={`${sumTotalValueLocked}`} hideApproximateSymbol />{' '}
+        <Conversion price={`${totalValueLockedSum}`} hideApproximateSymbol />{' '}
         <abbr title="Total Value Locked">TVL</abbr> across{' '}
-        <strong>{sumPoolCount}</strong> data set pools that contain{' '}
+        <strong>{poolCountSum}</strong> data set pools that contain{' '}
         <PriceUnit
-          price={sumTotalOceanLiquidity}
+          price={totalOceanLiquiditySum}
           small
           className={styles.total}
         />

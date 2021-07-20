@@ -12,7 +12,7 @@
 }
 
 .tooltipStats {
-  margin-bottom: calc(var(--spacer) / 2);
+  margin-bottom: calc(var(--spacer));
   font-size: var(--font-size-small);
   text-align: center;
   line-height: 2;
