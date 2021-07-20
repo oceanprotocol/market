@@ -21,6 +21,26 @@ const getTotalPoolsValues = gql`
   }
 `
 
+function MarketNetworkStats({
+  totalValueLocked,
+  poolCount,
+  totalOceanLiquidity
+}: {
+  totalValueLocked: string
+  poolCount: string
+  totalOceanLiquidity: string
+}): ReactElement {
+  return (
+    <>
+      <Conversion price={`${totalValueLocked}`} hideApproximateSymbol />{' '}
+      <abbr title="Total Value Locked">TVL</abbr> across{' '}
+      <strong>{poolCount}</strong> data set pools that contain{' '}
+      <PriceUnit price={totalOceanLiquidity} small className={styles.total} />,
+      plus datatokens for each pool.
+    </>
+  )
+}
+
 export default function MarketStats(): ReactElement {
   const [totalValueLocked, setTotalValueLocked] =
     useState<{ [chainId: number]: string }>()
@@ -98,18 +118,11 @@ export default function MarketStats(): ReactElement {
           <li key={key}>
             <NetworkName networkId={chainId} />
             <div className={styles.tooltipStats}>
-              <Conversion
-                price={`${totalValueLocked[chainId]}`}
-                hideApproximateSymbol
-              />{' '}
-              <abbr title="Total Value Locked">TVL</abbr> across{' '}
-              <strong>{poolCount[chainId]}</strong> data set pools that contain{' '}
-              <PriceUnit
-                price={totalOceanLiquidity[chainId]}
-                small
-                className={styles.total}
+              <MarketNetworkStats
+                totalValueLocked={totalValueLocked[chainId]}
+                totalOceanLiquidity={totalOceanLiquidity[chainId]}
+                poolCount={poolCount[chainId]}
               />
-              , plus datatokens for each pool.
             </div>
           </li>
         ))}
@@ -126,15 +139,11 @@ export default function MarketStats(): ReactElement {
         <Loader />
       ) : (
         <>
-          <Conversion price={`${totalValueLockedSum}`} hideApproximateSymbol />{' '}
-          <abbr title="Total Value Locked">TVL</abbr> across{' '}
-          <strong>{poolCountSum}</strong> data set pools that contain{' '}
-          <PriceUnit
-            price={totalOceanLiquiditySum}
-            small
-            className={styles.total}
+          <MarketNetworkStats
+            totalValueLocked={totalValueLockedSum}
+            totalOceanLiquidity={totalOceanLiquiditySum}
+            poolCount={poolCountSum}
           />
-          , plus datatokens for each pool.
           <Tooltip
             className={styles.info}
             content={tooltipContent}
