@@ -27,7 +27,9 @@ function getCredentialList(
   const credentialByType = credential.find(
     (credential) => credential.type === credentialType
   )
-  return credentialByType.value && credentialByType.value.length > 0
+  return credentialByType &&
+    credentialByType.value &&
+    credentialByType.value.length > 0
     ? credentialByType.value
     : []
 }

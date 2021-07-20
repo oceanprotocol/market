@@ -16,7 +16,7 @@ export default function Price({
   small?: boolean
   conversion?: boolean
 }): ReactElement {
-  return price?.value ? (
+  return price?.value || price?.type === 'free' ? (
     <PriceUnit
       price={`${price.value}`}
       className={className}

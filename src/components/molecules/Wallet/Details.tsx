@@ -11,8 +11,14 @@ import Web3Feedback from './Feedback'
 import styles from './Details.module.css'
 
 export default function Details(): ReactElement {
-  const { web3Provider, web3ProviderInfo, connect, logout, networkData } =
-    useWeb3()
+  const {
+    web3Provider,
+    web3ProviderInfo,
+    connect,
+    logout,
+    networkId,
+    networkData
+  } = useWeb3()
   const { balance, config } = useOcean()
   const { locale } = useUserPreferences()
 
@@ -20,10 +26,11 @@ export default function Details(): ReactElement {
   // const [portisNetwork, setPortisNetwork] = useState<string>()
 
   useEffect(() => {
-    if (!networkData) return
+    const symbol =
+      networkId === 2021000 ? 'GX' : networkData?.nativeCurrency.symbol
 
-    setMainCurrency(networkData.nativeCurrency.symbol)
-  }, [networkData])
+    setMainCurrency(symbol)
+  }, [networkData, networkId])
 
   // Handle network change for Portis
   // async function handlePortisNetworkChange(e: ChangeEvent<HTMLSelectElement>) {

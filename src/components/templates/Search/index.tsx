@@ -10,7 +10,6 @@ import Sort from './sort'
 import { getResults } from './utils'
 import { navigate } from 'gatsby'
 import { updateQueryStringParameter } from '../../../utils'
-import Loader from '../../atoms/Loader'
 import { useOcean } from '../../../providers/Ocean'
 
 export default function SearchPage({
@@ -33,7 +32,6 @@ export default function SearchPage({
 
   useEffect(() => {
     if (!config?.metadataCacheUri) return
-
     async function initSearch() {
       setLoading(true)
       setTotalResults(undefined)
@@ -67,7 +65,7 @@ export default function SearchPage({
     <Permission eventType="browse">
       <>
         <div className={styles.search}>
-          {(text || owner) && (
+          {(text || owner || tags) && (
             <SearchBar initialValue={(text || owner) as string} />
           )}
           <div className={styles.row}>

@@ -29,7 +29,6 @@ import {
   ComputeAlgorithm,
   ComputeOutput
 } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
-import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import { SearchQuery } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import axios from 'axios'
 import FormStartComputeDataset from './FormComputeDataset'
@@ -37,6 +36,8 @@ import styles from './index.module.css'
 import SuccessConfetti from '../../../atoms/SuccessConfetti'
 import Button from '../../../atoms/Button'
 import { secondsToString } from '../../../../utils/metadata'
+import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
+import AlgorithmDatasetsListForCompute from '../../AssetContent/AlgorithmDatasetsListForCompute'
 import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
 
 const SuccessAction = () => (
@@ -49,12 +50,16 @@ export default function Compute({
   isBalanceSufficient,
   dtBalance,
   file,
-  fileIsLoading
+  fileIsLoading,
+  isConsumable,
+  consumableFeedback
 }: {
   isBalanceSufficient: boolean
   dtBalance: string
   file: FileMetadata
   fileIsLoading?: boolean
+  isConsumable?: boolean
+  consumableFeedback?: string
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
@@ -181,7 +186,9 @@ export default function Compute({
         source.token
       )
       setDdoAlgorithmList(gueryResults.results)
+      const datasetComputeService = ddo.findServiceByType('compute')
       algorithmSelectionList = await transformDDOToAssetSelection(
+        datasetComputeService?.serviceEndpoint,
         gueryResults.results,
         config.metadataCacheUri,
         []
@@ -395,6 +402,8 @@ export default function Compute({
       await checkPreviousOrders(ddo)
       setIsPublished(true)
     } catch (error) {
+      await checkPreviousOrders(selectedAlgorithmAsset)
+      await checkPreviousOrders(ddo)
       setError('Failed to start job!')
       Logger.error('[compute] Failed to start job: ', error.message)
     } finally {
@@ -410,10 +419,16 @@ export default function Compute({
       </div>
 
       {type === 'algorithm' ? (
-        <Alert
-          text="This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
-          state="info"
-        />
+        <>
+          <Alert
+            text="This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
+            state="info"
+          />
+          <AlgorithmDatasetsListForCompute
+            algorithmDid={ddo.id}
+            dataset={ddo}
+          />
+        </>
       ) : (
         <Formik
           initialValues={getInitialValues()}
@@ -444,6 +459,8 @@ export default function Compute({
             selectedComputeAssetTimeout={algorithmTimeout}
             stepText={pricingStepText || 'Starting Compute Job...'}
             algorithmPrice={algorithmPrice}
+            isConsumable={isConsumable}
+            consumableFeedback={consumableFeedback}
           />
         </Formik>
       )}

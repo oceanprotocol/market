@@ -5,7 +5,8 @@
 
 .info {
   display: flex;
-  width: 100%;
+  width: auto;
+  padding: 0 calc(var(--spacer)) 0 calc(var(--spacer));
 }
 
 .filewrapper {

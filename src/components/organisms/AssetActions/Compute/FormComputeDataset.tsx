@@ -9,6 +9,8 @@ import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelectio
 import ButtonBuy from '../../../atoms/ButtonBuy'
 import PriceOutput from './PriceOutput'
 import { useAsset } from '../../../../providers/Asset'
+import { useOcean } from '../../../../providers/Ocean'
+import { useWeb3 } from '../../../../providers/Web3'
 
 const contentQuery = graphql`
   query StartComputeDatasetQuery {
@@ -60,7 +62,9 @@ export default function FormStartCompute({
   selectedComputeAssetType,
   selectedComputeAssetTimeout,
   stepText,
-  algorithmPrice
+  algorithmPrice,
+  isConsumable,
+  consumableFeedback
 }: {
   algorithms: AssetSelectionAsset[]
   ddoListAlgorithms: DDO[]
@@ -82,6 +86,8 @@ export default function FormStartCompute({
   selectedComputeAssetTimeout?: string
   stepText: string
   algorithmPrice: BestPrice
+  isConsumable: boolean
+  consumableFeedback: string
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
@@ -90,6 +96,10 @@ export default function FormStartCompute({
     useFormikContext()
   const { price, ddo } = useAsset()
   const [totalPrice, setTotalPrice] = useState(price?.value)
+  const { accountId } = useWeb3()
+  const { ocean } = useOcean()
+  const [algorithmConsumableStatus, setAlgorithmConsumableStatus] =
+    useState<number>()
 
   function getAlgorithmAsset(algorithmId: string): DDO {
     let assetDdo = null
@@ -101,8 +111,19 @@ export default function FormStartCompute({
 
   useEffect(() => {
     if (!values.algorithm) return
-    setSelectedAlgorithm(getAlgorithmAsset(values.algorithm))
-  }, [values.algorithm])
+    const algorithmDDO = getAlgorithmAsset(values.algorithm)
+    setSelectedAlgorithm(algorithmDDO)
+
+    if (!accountId || !isConsumable) return
+    async function checkIsConsumable() {
+      const consumable = await ocean.assets.isConsumable(
+        algorithmDDO,
+        accountId.toLowerCase()
+      )
+      if (consumable) setAlgorithmConsumableStatus(consumable.status)
+    }
+    checkIsConsumable()
+  }, [values.algorithm, accountId, isConsumable])
 
   //
   // Set price for calculation output
@@ -153,7 +174,9 @@ export default function FormStartCompute({
 
       <ButtonBuy
         action="compute"
-        disabled={isComputeButtonDisabled || !isValid}
+        disabled={
+          isComputeButtonDisabled || !isValid || algorithmConsumableStatus > 0
+        }
         hasPreviousOrder={hasPreviousOrder}
         hasDatatoken={hasDatatoken}
         dtSymbol={ddo.dataTokenInfo.symbol}
@@ -174,6 +197,11 @@ export default function FormStartCompute({
         stepText={stepText}
         isLoading={isLoading}
         type="submit"
+        priceType={price?.type}
+        algorithmPriceType={algorithmPrice?.type}
+        isConsumable={isConsumable}
+        consumableFeedback={consumableFeedback}
+        algorithmConsumableStatus={algorithmConsumableStatus}
       />
     </Form>
   )
