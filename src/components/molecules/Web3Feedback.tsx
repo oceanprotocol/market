@@ -41,7 +41,7 @@ export default function Web3Feedback({
     accountId && isAssetNetwork === false
     ? 'Not connected to asset network'
     : isGraphSynced === false
-    ? `The data for this network has only synced to Ethereum block ${blockGraph} (out of ${blockHead}). Please check back soon.`
+    ? `Data out of sync`
     : accountId
     ? isBalanceSufficient === false
       ? 'Insufficient balance'
@@ -53,7 +53,7 @@ export default function Web3Feedback({
     : isBalanceSufficient === false
     ? 'You do not have enough OCEAN in your wallet to purchase this asset.'
     : isGraphSynced === false
-    ? 'Due to innacurate data, transactions may fail, thus loosing gas fees!'
+    ? `The data for this network has only synced to Ethereum block ${blockGraph} (out of ${blockHead}). Transactions may fail! Please check back soon`
     : 'Something went wrong.'
 
   return showFeedback ? (
