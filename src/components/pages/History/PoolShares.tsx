@@ -40,6 +40,7 @@ const poolSharesQuery = gql`
         totalShares
         consumePrice
         spotPrice
+        createTime
       }
     }
   }
@@ -49,6 +50,7 @@ interface Asset {
   userLiquidity: number
   poolShare: PoolShare
   networkId: number
+  createTime: number
 }
 
 function calculateUserLiquidity(poolShare: PoolShare) {
@@ -187,10 +189,14 @@ export default function PoolShares(): ReactElement {
           assetList.push({
             poolShare: data[i],
             userLiquidity: userLiquidity,
-            networkId: ddo.chainId
+            networkId: ddo.chainId,
+            createTime: data[i].poolId.createTime
           })
         }
-        setAssets(assetList)
+        const orderedAssets = assetList.sort(
+          (a, b) => b.createTime - a.createTime
+        )
+        setAssets(orderedAssets)
       } catch (error) {
         console.error('Error fetching pool shares: ', error.message)
       } finally {

@@ -153,7 +153,7 @@ export default function ComputeJobs(): ReactElement {
       variables,
       chainIds
     )
-    const data: TokenOrder[] = []
+    let data: TokenOrder[] = []
     for (let i = 0; i < result.length; i++) {
       if (!result[i].tokenOrders) continue
       result[i].tokenOrders.forEach((tokenOrder: TokenOrder) => {
@@ -163,6 +163,7 @@ export default function ComputeJobs(): ReactElement {
     if (!ocean || !account || !data) {
       return
     }
+    data = data.sort((a, b) => b.timestamp - a.timestamp)
     const dtList = []
     const computeJobs: ComputeJobMetaData[] = []
     for (let i = 0; i < data.length; i++) {
