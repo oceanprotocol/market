@@ -146,7 +146,6 @@ async function getTitle(row: PoolTransaction, locale: string) {
 }
 
 function Title({ row }: { row: PoolTransaction }) {
-  const { networkId } = useWeb3()
   const [title, setTitle] = useState<string>()
   const { locale } = useUserPreferences()
 
@@ -160,7 +159,7 @@ function Title({ row }: { row: PoolTransaction }) {
   }, [row, locale])
 
   return title ? (
-    <ExplorerLink networkId={networkId} path={`/tx/${row.tx}`}>
+    <ExplorerLink networkId={row.networkId} path={`/tx/${row.tx}`}>
       <span className={styles.titleText}>{title}</span>
     </ExplorerLink>
   ) : null
