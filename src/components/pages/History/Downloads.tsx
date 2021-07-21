@@ -108,8 +108,10 @@ export default function ComputeDownloads(): ReactElement {
             })
           }
         }
-
-        setOrders(filteredOrders)
+        const sortedOrders = filteredOrders.sort(
+          (a, b) => b.timestamp - a.timestamp
+        )
+        setOrders(sortedOrders)
       } catch (err) {
         Logger.log(err.message)
       } finally {

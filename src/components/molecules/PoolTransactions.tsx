@@ -253,7 +253,10 @@ export default function PoolTransactions({
           data[i].networkId = ddo.chainId
           poolTransactions.push(data[i])
         }
-        setLogs(poolTransactions)
+        const sortedTransactions = poolTransactions.sort(
+          (a, b) => b.timestamp - a.timestamp
+        )
+        setLogs(sortedTransactions)
       } catch (error) {
         console.error('Error fetching pool transactions: ', error.message)
       } finally {
