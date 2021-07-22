@@ -116,8 +116,8 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
 
                 <MetaSecondary />
 
-              {isOwner && isAssetNetwork && (
-                <div className={styles.ownerActions}>
+                {isOwner && isAssetNetwork && (
+                  <div className={styles.ownerActions}>
                     <Button
                       style="text"
                       size="small"
