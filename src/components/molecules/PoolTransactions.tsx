@@ -16,6 +16,8 @@ import NetworkName from '../atoms/NetworkName'
 import { retrieveDDO } from '../../utils/aquarius'
 import axios from 'axios'
 
+const REFETCH_INTERVAL = 20000
+
 const txHistoryQueryByPool = gql`
   query TransactionHistoryByPool($user: String, $pool: String) {
     poolTransactions(
@@ -220,30 +222,53 @@ export default function PoolTransactions({
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { chainIds } = useUserPreferences()
   const { appConfig } = useSiteMetadata()
+  const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
+  const [data, setData] = useState<PoolTransaction[]>()
+
+  async function fetchPoolTransactionData() {
+    const variables = { user: accountId?.toLowerCase() }
+    const transactions: PoolTransaction[] = []
+    const result = await fetchDataForMultipleChains(
+      poolAddress ? txHistoryQueryByPool : txHistoryQuery,
+      variables,
+      chainIds
+    )
+    for (let i = 0; i < result.length; i++) {
+      result[i].poolTransactions.forEach((poolTransaction: PoolTransaction) => {
+        transactions.push(poolTransaction)
+      })
+    }
+    setData(transactions)
+  }
+
+  function refetchPoolTransactions() {
+    if (!dataFetchInterval) {
+      setDataFetchInterval(
+        setInterval(function () {
+          fetchPoolTransactionData()
+        }, REFETCH_INTERVAL)
+      )
+    }
+  }
+
+  useEffect(() => {
+    return () => {
+      clearInterval(dataFetchInterval)
+    }
+  }, [dataFetchInterval])
 
   useEffect(() => {
     if (!appConfig.metadataCacheUri) return
     async function getTransactions() {
-      const data: PoolTransaction[] = []
       const poolTransactions: PoolTransaction[] = []
       const source = axios.CancelToken.source()
-      const variables = { user: accountId?.toLowerCase() }
-
       try {
         setIsLoading(true)
-        const result = await fetchDataForMultipleChains(
-          poolAddress ? txHistoryQueryByPool : txHistoryQuery,
-          variables,
-          chainIds
-        )
-        for (let i = 0; i < result.length; i++) {
-          result[i].poolTransactions.forEach(
-            (poolTransaction: PoolTransaction) => {
-              data.push(poolTransaction)
-            }
-          )
+
+        if (!data) {
+          await fetchPoolTransactionData()
+          return
         }
-        if (!data) return
         for (let i = 0; i < data.length; i++) {
           const did = web3.utils
             .toChecksumAddress(data[i].poolAddress.datatokenAddress)
@@ -256,6 +281,7 @@ export default function PoolTransactions({
           (a, b) => b.timestamp - a.timestamp
         )
         setLogs(sortedTransactions)
+        refetchPoolTransactions()
       } catch (error) {
         console.error('Error fetching pool transactions: ', error.message)
       } finally {
@@ -263,7 +289,7 @@ export default function PoolTransactions({
       }
     }
     getTransactions()
-  }, [accountId, chainIds, appConfig.metadataCacheUri, poolAddress])
+  }, [accountId, chainIds, appConfig.metadataCacheUri, poolAddress, data])
 
   return accountId ? (
     <Table
