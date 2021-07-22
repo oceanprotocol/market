@@ -18,7 +18,7 @@ import axios from 'axios'
 export default function AssetActions(): ReactElement {
   const { accountId, balance } = useWeb3()
   const { ocean, config, account } = useOcean()
-  const { price, ddo, metadata, type, isAssetNetwork } = useAsset()
+  const { price, ddo, isAssetNetwork } = useAsset()
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
   const [dtBalance, setDtBalance] = useState<string>()
@@ -86,7 +86,7 @@ export default function AssetActions(): ReactElement {
       }
     }
     init()
-  }, [ocean, accountId, ddo.dataToken])
+  }, [ocean, accountId, ddo.dataToken, isAssetNetwork])
 
   // Check user balance against price
   useEffect(() => {

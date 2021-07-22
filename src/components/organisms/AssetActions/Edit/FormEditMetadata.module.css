@@ -2,27 +2,6 @@
   composes: box from '../../../atoms/Box.module.css';
 }
 
-.actions {
-  margin-left: -2rem;
-  margin-right: -2rem;
-  border-top: 1px solid var(--border-color);
-  padding: calc(var(--spacer) / 2) var(--spacer) 0;
-  display: flex;
-  justify-content: center;
-}
-
-@media (min-width: 40rem) {
-  .actions {
-    padding-top: var(--spacer);
-  }
-}
-
-.actions a,
-.actions button {
-  margin-left: calc(var(--spacer) / 2);
-  margin-right: calc(var(--spacer) / 2);
-}
-
-select[multiple] {
+.form select[multiple] {
   height: 130px;
 }

@@ -1,9 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
-import Button from '../../../atoms/Button'
 import Input from '../../../atoms/Input'
-import { useOcean } from '../../../../providers/Ocean'
-import { useWeb3 } from '../../../../providers/Web3'
 import { FormFieldProps } from '../../../../@types/Form'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import stylesIndex from './index.module.css'
@@ -17,6 +14,7 @@ import { ComputePrivacyForm } from '../../../../models/FormEditComputeDataset'
 import { publisherTrustedAlgorithm as PublisherTrustedAlgorithm } from '@oceanprotocol/lib'
 import axios from 'axios'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
+import FormActions from './FormActions'
 
 export default function FormEditComputeDataset({
   data,
@@ -28,11 +26,8 @@ export default function FormEditComputeDataset({
   setShowEdit: (show: boolean) => void
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
-  const { accountId } = useWeb3()
-  const { ocean } = useOcean()
-  const { ddo, isAssetNetwork } = useAsset()
-  const { isValid, values }: FormikContextType<ComputePrivacyForm> =
-    useFormikContext()
+  const { ddo } = useAsset()
+  const { values }: FormikContextType<ComputePrivacyForm> = useFormikContext()
   const [allAlgorithms, setAllAlgorithms] = useState<AssetSelectionAsset[]>()
 
   const { publisherTrustedAlgorithms } =
@@ -87,17 +82,8 @@ export default function FormEditComputeDataset({
           component={Input}
         />
       ))}
-      <footer className={styles.actions}>
-        <Button
-          style="primary"
-          disabled={!ocean || !accountId || !isValid || !isAssetNetwork}
-        >
-          Submit
-        </Button>
-        <Button style="text" onClick={() => setShowEdit(false)}>
-          Cancel
-        </Button>
-      </footer>
+
+      <FormActions setShowEdit={setShowEdit} />
     </Form>
   )
 }
