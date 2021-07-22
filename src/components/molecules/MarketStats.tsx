@@ -1,5 +1,4 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import styles from './MarketStats.module.css'
 import { gql, OperationContext } from 'urql'
 import Conversion from '../atoms/Price/Conversion'
 import PriceUnit from '../atoms/Price/PriceUnit'
@@ -9,7 +8,8 @@ import { fetchData, getSubgrahUri } from '../../utils/subgraph'
 import { filterNetworksByType } from './UserPreferences/Networks/index'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import useNetworkMetadata from '../../hooks/useNetworkMetadata'
-import Loader from '../atoms/Loader'
+import { Logger } from '@oceanprotocol/lib'
+import styles from './MarketStats.module.css'
 
 const getTotalPoolsValues = gql`
   query PoolsData {
@@ -32,7 +32,7 @@ function MarketNetworkStats({
 }): ReactElement {
   return (
     <>
-      <Conversion price={`${totalValueLocked}`} hideApproximateSymbol />{' '}
+      <Conversion price={totalValueLocked} hideApproximateSymbol />{' '}
       <abbr title="Total Value Locked">TVL</abbr> across{' '}
       <strong>{poolCount}</strong> data set pools that contain{' '}
       <PriceUnit price={totalOceanLiquidity} small className={styles.total} />,
@@ -51,7 +51,6 @@ export default function MarketStats(): ReactElement {
   const [totalOceanLiquiditySum, setTotalOceanLiquiditySum] = useState<string>()
   const [poolCountSum, setPoolCountSum] = useState<string>()
   const [mainChainIds, setMainChainIds] = useState<number[]>()
-  const [loading, setLoading] = useState(true)
   const { appConfig } = useSiteMetadata()
   const { networksList } = useNetworkMetadata()
 
@@ -62,9 +61,11 @@ export default function MarketStats(): ReactElement {
       networksList
     )
     setMainChainIds(mainChainIdsList)
+
     let newTotalValueLockedSum = 0
     let newTotalOceanLiquiditySum = 0
     let newPoolCountSum = 0
+
     for (const chainId of mainChainIdsList) {
       const context: OperationContext = {
         url: `${getSubgrahUri(
@@ -72,86 +73,79 @@ export default function MarketStats(): ReactElement {
         )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
         requestPolicy: 'network-only'
       }
+
       try {
         const response = await fetchData(getTotalPoolsValues, null, context)
         if (!response) continue
+
+        const { totalValueLocked, totalOceanLiquidity, finalizedPoolCount } =
+          response?.data?.poolFactories[0]
+
         await setTotalValueLocked((prevState) => ({
           ...prevState,
-          [chainId]: response.data?.poolFactories[0].totalValueLocked
+          [chainId]: totalValueLocked
         }))
         await setTotalOceanLiquidity((prevState) => ({
           ...prevState,
-          [chainId]: response.data?.poolFactories[0].totalOceanLiquidity
+          [chainId]: totalOceanLiquidity
         }))
         await setPoolCount((prevState) => ({
           ...prevState,
-          [chainId]: response.data?.poolFactories[0].finalizedPoolCount
+          [chainId]: finalizedPoolCount
         }))
-        newTotalValueLockedSum += parseInt(
-          response.data?.poolFactories[0].totalValueLocked
-        )
-        newTotalOceanLiquiditySum += parseInt(
-          response.data?.poolFactories[0].totalOceanLiquidity
-        )
-        newPoolCountSum += parseInt(
-          response.data?.poolFactories[0].finalizedPoolCount
-        )
+
+        newTotalValueLockedSum += parseInt(totalValueLocked)
+        newTotalOceanLiquiditySum += parseInt(totalOceanLiquidity)
+        newPoolCountSum += parseInt(finalizedPoolCount)
       } catch (error) {
-        console.error('Error fetchData: ', error.message)
+        Logger.error('Error fetchData: ', error.message)
       }
     }
-    setTotalValueLockedSum(newTotalValueLockedSum.toString())
-    setTotalOceanLiquiditySum(newTotalOceanLiquiditySum.toString())
-    setPoolCountSum(newPoolCountSum.toString())
-    setLoading(false)
+    setTotalValueLockedSum(`${newTotalValueLockedSum}`)
+    setTotalOceanLiquiditySum(`${newTotalOceanLiquiditySum}`)
+    setPoolCountSum(`${newPoolCountSum}`)
   }
 
   useEffect(() => {
-    setLoading(true)
     getMarketStats()
   }, [])
 
-  const tooltipContent = !loading && (
+  const tooltipContent = (
     <>
       <ul className={styles.statsList}>
-        {mainChainIds.map((chainId, key) => (
-          <li key={key}>
-            <NetworkName networkId={chainId} />
-            <div className={styles.tooltipStats}>
-              <MarketNetworkStats
-                totalValueLocked={totalValueLocked[chainId]}
-                totalOceanLiquidity={totalOceanLiquidity[chainId]}
-                poolCount={poolCount[chainId]}
-              />
-            </div>
-          </li>
-        ))}
+        {totalValueLocked &&
+          totalOceanLiquidity &&
+          poolCount &&
+          mainChainIds?.map((chainId, key) => (
+            <li key={key}>
+              <NetworkName networkId={chainId} />
+              <div className={styles.tooltipStats}>
+                <MarketNetworkStats
+                  totalValueLocked={totalValueLocked[chainId] || '0'}
+                  totalOceanLiquidity={totalOceanLiquidity[chainId] || '0'}
+                  poolCount={poolCount[chainId] || '0'}
+                />
+              </div>
+            </li>
+          ))}
       </ul>
-      {
-        'Content on-chain from out pool factory. Does not filter our data sets in '
-      }
+      Counted on-chain from our pool factory. Does not filter our data sets in{' '}
+      <a href="https://github.com/oceanprotocol/list-purgatory">
+        list-purgatory
+      </a>
     </>
   )
 
   return (
     <div className={styles.stats}>
-      {loading ? (
-        <Loader />
-      ) : (
-        <>
-          <MarketNetworkStats
-            totalValueLocked={totalValueLockedSum}
-            totalOceanLiquidity={totalOceanLiquiditySum}
-            poolCount={poolCountSum}
-          />
-          <Tooltip
-            className={styles.info}
-            content={tooltipContent}
-            reference="list-purgatory"
-            link="https://github.com/oceanprotocol/list-purgatory"
-          />
-        </>
-      )}
+      <>
+        <MarketNetworkStats
+          totalValueLocked={totalValueLockedSum || '0'}
+          totalOceanLiquidity={totalOceanLiquiditySum || '0'}
+          poolCount={poolCountSum || '0'}
+        />
+        <Tooltip className={styles.info} content={tooltipContent} />
+      </>
     </div>
   )
 }
