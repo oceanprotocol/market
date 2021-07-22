@@ -45,13 +45,6 @@ export default function App({
   return (
     <Styles>
       <div className={styles.app}>
-        {/* {(props as PageProps).uri.includes('/asset') && !isGraphSynced && (
-          <AnnouncementBanner
-            text={`The data for this network has only synced to Ethereum block ${blockGraph} (out of ${blockHead}). Please check back soon.`}
-            state="error"
-          />
-        )} */}
-
         {(props as PageProps).uri === '/' && (
           <AnnouncementBanner text={warning.main} />
         )}
