@@ -1,13 +1,10 @@
 import React, { ChangeEvent, ReactElement } from 'react'
 import styles from './FormEditMetadata.module.css'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
-import Button from '../../../atoms/Button'
 import Input from '../../../atoms/Input'
 import { FormFieldProps } from '../../../../@types/Form'
-import { useOcean } from '../../../../providers/Ocean'
-import { useWeb3 } from '../../../../providers/Web3'
 import { AdvancedSettingsForm } from '../../../../models/FormEditCredential'
-import { useAsset } from '../../../../providers/Asset'
+import FormActions from './FormActions'
 
 export default function FormAdvancedSettings({
   data,
@@ -16,11 +13,7 @@ export default function FormAdvancedSettings({
   data: FormFieldProps[]
   setShowEdit: (show: boolean) => void
 }): ReactElement {
-  const { accountId } = useWeb3()
-  const { isAssetNetwork } = useAsset()
-  const { ocean, config } = useOcean()
   const {
-    isValid,
     validateField,
     setFieldValue
   }: FormikContextType<Partial<AdvancedSettingsForm>> = useFormikContext()
@@ -47,17 +40,8 @@ export default function FormAdvancedSettings({
           }
         />
       ))}
-      <footer className={styles.actions}>
-        <Button
-          style="primary"
-          disabled={!ocean || !accountId || !isValid || !isAssetNetwork}
-        >
-          Submit
-        </Button>
-        <Button style="text" onClick={() => setShowEdit(false)}>
-          Cancel
-        </Button>
-      </footer>
+
+      <FormActions setShowEdit={setShowEdit} />
     </Form>
   )
 }
