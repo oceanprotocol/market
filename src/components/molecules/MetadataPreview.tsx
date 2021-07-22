@@ -13,6 +13,8 @@ import { transformTags } from '../../utils/metadata'
 import NetworkName from '../atoms/NetworkName'
 import { useWeb3 } from '../../providers/Web3'
 import styles from './MetadataPreview.module.css'
+import Web3Feedback from './Web3Feedback'
+import { useAsset } from '../../providers/Asset'
 
 function Description({ description }: { description: string }) {
   const [fullDescription, setFullDescription] = useState<boolean>(false)
@@ -95,6 +97,7 @@ export function MetadataPreview({
   values: Partial<MetadataPublishFormDataset>
 }): ReactElement {
   const { networkId } = useWeb3()
+  const { isAssetNetwork } = useAsset()
 
   return (
     <div className={styles.preview}>
@@ -126,6 +129,9 @@ export function MetadataPreview({
       </header>
 
       <MetaFull values={values} />
+      {isAssetNetwork === false && (
+        <Web3Feedback isAssetNetwork={isAssetNetwork} />
+      )}
     </div>
   )
 }

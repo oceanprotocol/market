@@ -64,7 +64,8 @@ export default function Pool(): ReactElement {
 
   const { accountId, networkId } = useWeb3()
   const { ocean } = useOcean()
-  const { isInPurgatory, ddo, owner, price, refreshInterval } = useAsset()
+  const { isInPurgatory, ddo, owner, price, refreshInterval, isAssetNetwork } =
+    useAsset()
   const dtSymbol = ddo?.dataTokenInfo.symbol
 
   const [poolTokens, setPoolTokens] = useState<string>()
@@ -287,7 +288,7 @@ export default function Pool(): ReactElement {
           </TokenList>
 
           <TokenList
-            title="Pool Creator Liquidity"
+            title="Pool Creator Statistics"
             ocean={`${creatorLiquidity?.ocean}`}
             dt={`${creatorLiquidity?.datatoken}`}
             dtSymbol={dtSymbol}
@@ -317,6 +318,7 @@ export default function Pool(): ReactElement {
             dtSymbol={dtSymbol}
             poolShares={totalPoolTokens}
             conversion={totalLiquidityInOcean}
+            showTVLLabel
           >
             <Token symbol="% swap fee" balance={swapFee} noIcon />
           </TokenList>
@@ -333,14 +335,18 @@ export default function Pool(): ReactElement {
                 style="primary"
                 size="small"
                 onClick={() => setShowAdd(true)}
-                disabled={isInPurgatory}
+                disabled={isInPurgatory || !isAssetNetwork}
               >
                 Add Liquidity
               </Button>
             )}
 
             {hasAddedLiquidity && !isRemoveDisabled && (
-              <Button size="small" onClick={() => setShowRemove(true)}>
+              <Button
+                size="small"
+                onClick={() => setShowRemove(true)}
+                disabled={!isAssetNetwork}
+              >
                 Remove
               </Button>
             )}

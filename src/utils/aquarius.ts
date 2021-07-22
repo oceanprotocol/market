@@ -13,11 +13,11 @@ import { AssetSelectionAsset } from '../components/molecules/FormFields/AssetSel
 import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 
-function getQueryForAlgorithmDatasets(algorithmDid: string) {
+function getQueryForAlgorithmDatasets(algorithmDid: string, chainId?: number) {
   return {
     query: {
       query_string: {
-        query: `service.attributes.main.privacy.publisherTrustedAlgorithms.did:${algorithmDid}`
+        query: `service.attributes.main.privacy.publisherTrustedAlgorithms.did:${algorithmDid} AND chainId:${chainId}`
       }
     },
     sort: { created: -1 }
@@ -177,11 +177,11 @@ export async function transformDDOToAssetSelection(
 export async function getAlgorithmDatasetsForCompute(
   algorithmId: string,
   datasetProviderUri: string,
-  metadataCacheUri: string
+  datasetChainId?: number
 ): Promise<AssetSelectionAsset[]> {
   const source = axios.CancelToken.source()
   const computeDatasets = await queryMetadata(
-    getQueryForAlgorithmDatasets(algorithmId),
+    getQueryForAlgorithmDatasets(algorithmId, datasetChainId),
     source.token
   )
   const computeDatasetsForCurrentAlgorithm: DDO[] = []
