@@ -51,12 +51,14 @@ export default function FormStartCompute({
   hasPreviousOrder,
   hasDatatoken,
   dtBalance,
+  datasetLowPoolLiquidity,
   assetType,
   assetTimeout,
   hasPreviousOrderSelectedComputeAsset,
   hasDatatokenSelectedComputeAsset,
   dtSymbolSelectedComputeAsset,
   dtBalanceSelectedComputeAsset,
+  selectedComputeAssetLowPoolLiquidity,
   selectedComputeAssetType,
   selectedComputeAssetTimeout,
   stepText,
@@ -72,12 +74,14 @@ export default function FormStartCompute({
   hasPreviousOrder: boolean
   hasDatatoken: boolean
   dtBalance: string
+  datasetLowPoolLiquidity: boolean
   assetType: string
   assetTimeout: string
   hasPreviousOrderSelectedComputeAsset?: boolean
   hasDatatokenSelectedComputeAsset?: boolean
   dtSymbolSelectedComputeAsset?: string
   dtBalanceSelectedComputeAsset?: string
+  selectedComputeAssetLowPoolLiquidity?: boolean
   selectedComputeAssetType?: string
   selectedComputeAssetTimeout?: string
   stepText: string
@@ -180,6 +184,7 @@ export default function FormStartCompute({
         hasDatatoken={hasDatatoken}
         dtSymbol={ddo.dataTokenInfo.symbol}
         dtBalance={dtBalance}
+        datasetLowPoolLiquidity={datasetLowPoolLiquidity}
         assetTimeout={assetTimeout}
         assetType={assetType}
         hasPreviousOrderSelectedComputeAsset={
@@ -188,6 +193,9 @@ export default function FormStartCompute({
         hasDatatokenSelectedComputeAsset={hasDatatokenSelectedComputeAsset}
         dtSymbolSelectedComputeAsset={dtSymbolSelectedComputeAsset}
         dtBalanceSelectedComputeAsset={dtBalanceSelectedComputeAsset}
+        selectedComputeAssetLowPoolLiquidity={
+          selectedComputeAssetLowPoolLiquidity
+        }
         selectedComputeAssetType={selectedComputeAssetType}
         stepText={stepText}
         isLoading={isLoading}

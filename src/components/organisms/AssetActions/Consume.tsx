@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { File as FileMetadata, DDO } from '@oceanprotocol/lib'
+import { File as FileMetadata, DDO, BestPrice } from '@oceanprotocol/lib'
 import File from '../../atoms/File'
 import Price from '../../atoms/Price'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
@@ -59,6 +59,7 @@ export default function Consume({
   const { consumeStepText, consume, consumeError, isLoading } = useConsume()
   const [isDisabled, setIsDisabled] = useState(true)
   const [hasDatatoken, setHasDatatoken] = useState(false)
+  const [maxDt, setMaxDT] = useState<number>(1)
   const [isConsumablePrice, setIsConsumablePrice] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
   const [result] = useQuery<OrdersData>({
@@ -71,12 +72,20 @@ export default function Consume({
   })
   const { data } = result
 
+  async function checkMaxAvaialableTokens(price: BestPrice) {
+    if (!ocean || !price) return
+    const maxTokensInPool =
+      price.type === 'pool'
+        ? await ocean.pool.getDTMaxBuyQuantity(price.address)
+        : 1
+    setMaxDT(Number(maxTokensInPool))
+  }
+
   useEffect(() => {
     if (!data || !assetTimeout || data.tokenOrders.length === 0) return
 
     const lastOrder = data.tokenOrders[0]
-
-    if (assetTimeout === 'Forever') {
+    if (assetTimeout === '0') {
       setPreviousOrderId(lastOrder.tx)
       setHasPreviousOrder(true)
     } else {
@@ -102,6 +111,7 @@ export default function Consume({
     setIsConsumablePrice(
       price.isConsumable !== undefined ? price.isConsumable === 'true' : true
     )
+    checkMaxAvaialableTokens(price)
   }, [price])
 
   useEffect(() => {
@@ -116,6 +126,7 @@ export default function Consume({
           !isAssetNetwork ||
           typeof consumeStepText !== 'undefined' ||
           pricingIsLoading ||
+          (!hasPreviousOrder && !hasDatatoken && !(maxDt >= 1)) ||
           !isConsumablePrice) &&
           !hasPreviousOrder &&
           !hasDatatoken)
@@ -164,6 +175,7 @@ export default function Consume({
       hasDatatoken={hasDatatoken}
       dtSymbol={ddo.dataTokenInfo?.symbol}
       dtBalance={dtBalance}
+      datasetLowPoolLiquidity={!(maxDt >= 1)}
       onClick={handleConsume}
       assetTimeout={secondsToString(parseInt(assetTimeout))}
       assetType={type}
