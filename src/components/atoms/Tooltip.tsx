@@ -28,9 +28,7 @@ export default function Tooltip({
   trigger,
   disabled,
   className,
-  placement,
-  link,
-  reference
+  placement
 }: {
   content: ReactNode
   children?: ReactNode
@@ -38,8 +36,6 @@ export default function Tooltip({
   disabled?: boolean
   className?: string
   placement?: Placement
-  link?: string
-  reference?: string
 }): ReactElement {
   const [props, setSpring] = useSpring(() => animation.from)
 
@@ -76,7 +72,6 @@ export default function Tooltip({
         <animated.div style={props}>
           <div className={styles.content} {...attrs}>
             {content}
-            {link && <a href={link}>{reference}</a>}
             <div className={styles.arrow} data-popper-arrow />
           </div>
         </animated.div>

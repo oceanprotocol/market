@@ -11,7 +11,7 @@ import stylesIndex from '../index.module.css'
 import styles from './index.module.css'
 import useNetworkMetadata from '../../../../hooks/useNetworkMetadata'
 
-function filterNetworksByType(
+export function filterNetworksByType(
   type: 'mainnet' | 'testnet',
   chainIds: number[],
   networksList: { node: EthereumListsChain }[]
