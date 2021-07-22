@@ -18,6 +18,8 @@ import NetworkName from '../../atoms/NetworkName'
 import axios from 'axios'
 import { retrieveDDO } from '../../../utils/aquarius'
 
+const REFETCH_INTERVAL = 20000
+
 const poolSharesQuery = gql`
   query PoolShares($user: String) {
     poolShares(where: { userAddress: $user, balance_gt: 0.001 }, first: 1000) {
@@ -156,35 +158,58 @@ export default function PoolShares(): ReactElement {
   const { accountId } = useWeb3()
   const [assets, setAssets] = useState<Asset[]>()
   const [loading, setLoading] = useState<boolean>(false)
+  const [data, setData] = useState<PoolShare[]>()
+  const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
   const { chainIds } = useUserPreferences()
 
-  useEffect(() => {
+  async function fetchPoolSharesData() {
     const variables = { user: accountId?.toLowerCase() }
+    const shares: PoolShare[] = []
+    const result = await fetchDataForMultipleChains(
+      poolSharesQuery,
+      variables,
+      chainIds
+    )
+    for (let i = 0; i < result.length; i++) {
+      result[i].poolShares.forEach((poolShare: PoolShare) => {
+        shares.push(poolShare)
+      })
+    }
+    setData(shares)
+  }
 
+  function refetchPoolShares() {
+    if (!dataFetchInterval) {
+      setDataFetchInterval(
+        setInterval(function () {
+          fetchPoolSharesData()
+        }, REFETCH_INTERVAL)
+      )
+    }
+  }
+
+  useEffect(() => {
+    return () => {
+      clearInterval(dataFetchInterval)
+    }
+  }, [dataFetchInterval])
+
+  useEffect(() => {
     async function getShares() {
       const assetList: Asset[] = []
-      const data: PoolShare[] = []
       const source = axios.CancelToken.source()
 
       try {
         setLoading(true)
-        const result = await fetchDataForMultipleChains(
-          poolSharesQuery,
-          variables,
-          chainIds
-        )
-        for (let i = 0; i < result.length; i++) {
-          result[i].poolShares.forEach((poolShare: PoolShare) => {
-            data.push(poolShare)
-          })
+        if (!data) {
+          await fetchPoolSharesData()
+          return
         }
-        if (!data) return
         for (let i = 0; i < data.length; i++) {
           const did = web3.utils
             .toChecksumAddress(data[i].poolId.datatokenAddress)
             .replace('0x', 'did:op:')
           const ddo = await retrieveDDO(did, source.token)
-          console.log('DDO: ', ddo.chainId)
           const userLiquidity = calculateUserLiquidity(data[i])
           assetList.push({
             poolShare: data[i],
@@ -197,6 +222,7 @@ export default function PoolShares(): ReactElement {
           (a, b) => b.createTime - a.createTime
         )
         setAssets(orderedAssets)
+        refetchPoolShares()
       } catch (error) {
         console.error('Error fetching pool shares: ', error.message)
       } finally {
@@ -205,7 +231,7 @@ export default function PoolShares(): ReactElement {
     }
 
     getShares()
-  }, [accountId, chainIds])
+  }, [accountId, chainIds, data])
 
   return accountId ? (
     <Table
