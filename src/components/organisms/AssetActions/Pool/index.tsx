@@ -15,11 +15,11 @@ import { PoolBalance } from '../../../../@types/TokenBalance'
 import Transactions from './Transactions'
 import Graph from './Graph'
 import { useAsset } from '../../../../providers/Asset'
-import { gql, OperationResult, OperationContext } from 'urql'
+import { gql, OperationResult } from 'urql'
 import { PoolLiquidity } from '../../../../@types/apollo/PoolLiquidity'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
-import { getSubgrahUri, fetchData } from '../../../../utils/subgraph'
+import { fetchData, getQueryContext } from '../../../../utils/subgraph'
 
 const REFETCH_INTERVAL = 5000
 
@@ -100,12 +100,7 @@ export default function Pool(): ReactElement {
   const [refreshPool, setRefreshPool] = useState(false)
 
   async function getPoolLiquidity() {
-    const queryContext: OperationContext = {
-      url: `${getSubgrahUri(
-        Number(ddo.chainId)
-      )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-      requestPolicy: 'network-only'
-    }
+    const queryContext = getQueryContext(ddo.chainId)
     const queryVariables = {
       id: price.address.toLowerCase(),
       shareId: `${price.address.toLowerCase()}-${ddo.publicKey[0].owner.toLowerCase()}`

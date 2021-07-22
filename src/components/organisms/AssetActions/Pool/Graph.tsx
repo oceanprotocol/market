@@ -8,7 +8,6 @@ import {
   ChartTooltipItem,
   ChartTooltipOptions
 } from 'chart.js'
-import styles from './Graph.module.css'
 import Loader from '../../../atoms/Loader'
 import { formatPrice } from '../../../atoms/Price/PriceUnit'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
@@ -17,9 +16,10 @@ import { darkModeConfig } from '../../../../../app.config'
 import Button from '../../../atoms/Button'
 import { Logger } from '@oceanprotocol/lib'
 import { useAsset } from '../../../../providers/Asset'
-import { gql, OperationContext, OperationResult } from 'urql'
+import { gql, OperationResult } from 'urql'
 import { PoolHistory } from '../../../../@types/apollo/PoolHistory'
-import { getSubgrahUri, fetchData } from '../../../../utils/subgraph'
+import { fetchData, getQueryContext } from '../../../../utils/subgraph'
+import styles from './Graph.module.css'
 
 declare type GraphType = 'liquidity' | 'price'
 
@@ -138,12 +138,7 @@ export default function Graph(): ReactElement {
 
   async function getPoolHistory() {
     try {
-      const queryContext: OperationContext = {
-        url: `${getSubgrahUri(
-          Number(ddo.chainId)
-        )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-        requestPolicy: 'network-only'
-      }
+      const queryContext = getQueryContext(ddo.chainId)
       const queryVariables = {
         id: price.address.toLowerCase(),
         block: lastBlock

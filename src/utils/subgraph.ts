@@ -146,6 +146,17 @@ export function getSubgrahUri(chainId: number): string {
   return config.subgraphUri
 }
 
+export function getQueryContext(chainId: number): OperationContext {
+  const queryContext: OperationContext = {
+    url: `${getSubgrahUri(
+      Number(chainId)
+    )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
+    requestPolicy: 'network-only'
+  }
+
+  return queryContext
+}
+
 export async function fetchData(
   query: TypedDocumentNode,
   variables: any,
@@ -285,12 +296,7 @@ async function getAssetsPoolsExchangesAndDatatokenMap(
       datatoken_in: chainAssetLists[chainKey]
     }
 
-    const queryContext: OperationContext = {
-      url: `${getSubgrahUri(
-        Number(chainKey)
-      )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-      requestPolicy: 'network-only'
-    }
+    const queryContext = getQueryContext(Number(chainKey))
 
     const chainPoolPriceResponse: OperationResult<AssetsPoolPrice> =
       await fetchData(PoolQuery, poolVariables, queryContext)
@@ -354,13 +360,8 @@ export async function getPrice(asset: DDO): Promise<BestPrice> {
   const poolVariables = {
     datatokenAddress: asset?.dataToken.toLowerCase()
   }
+  const queryContext = getQueryContext(Number(asset.chainId))
 
-  const queryContext: OperationContext = {
-    url: `${getSubgrahUri(
-      asset.chainId
-    )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-    requestPolicy: 'network-only'
-  }
   const poolPriceResponse: OperationResult<AssetsPoolPrice> = await fetchData(
     AssetPoolPriceQuerry,
     poolVariables,
@@ -434,12 +435,7 @@ export async function getHighestLiquidityDIDs(
   const didList: string[] = []
   let highestLiquidiyAssets: HighestLiquidityAssetsPools[] = []
   for (const chain of chainIds) {
-    const queryContext: OperationContext = {
-      url: `${getSubgrahUri(
-        Number(chain)
-      )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-      requestPolicy: 'network-only'
-    }
+    const queryContext = getQueryContext(Number(chain))
     const fetchedPools: OperationResult<HighestLiquidityGraphAssets, any> =
       await fetchData(HighestLiquidityAssets, null, queryContext)
     highestLiquidiyAssets = highestLiquidiyAssets.concat(
