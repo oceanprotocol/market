@@ -1,4 +1,10 @@
-import React, { ReactElement, useEffect, FormEvent, ChangeEvent } from 'react'
+import React, {
+  ReactElement,
+  useEffect,
+  FormEvent,
+  ChangeEvent,
+  useState
+} from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 import { useFormikContext, Field, Form, FormikContextType } from 'formik'
 import Input from '../../atoms/Input'
@@ -43,6 +49,7 @@ export default function FormPublish(): ReactElement {
   const data = useStaticQuery(query)
   const content: FormContent = data.content.edges[0].node.childPublishJson
   const { ocean, account } = useOcean()
+  const [computeTypeSelected, setComputeTypeSelected] = useState<boolean>(false)
   const {
     status,
     setStatus,
@@ -76,6 +83,8 @@ export default function FormPublish(): ReactElement {
     }
   ]
 
+  const computeTypeOptions = ['1 day', '1 week', '1 month', '1 year']
+
   // Manually handle change events instead of using `handleChange` from Formik.
   // Workaround for default `validateOnChange` not kicking in
   function handleFieldChange(
@@ -84,6 +93,14 @@ export default function FormPublish(): ReactElement {
   ) {
     const value =
       field.type === 'terms' ? !JSON.parse(e.target.value) : e.target.value
+
+    if (field.name === 'access' && value === 'Compute') {
+      setComputeTypeSelected(true)
+    } else {
+      if (field.name === 'access' && value === 'Download') {
+        setComputeTypeSelected(false)
+      }
+    }
 
     validateField(field.name)
     setFieldValue(field.name, value)
@@ -110,7 +127,11 @@ export default function FormPublish(): ReactElement {
           key={field.name}
           {...field}
           options={
-            field.type === 'boxSelection' ? accessTypeOptions : field.options
+            field.type === 'boxSelection'
+              ? accessTypeOptions
+              : field.name === 'timeout' && computeTypeSelected === true
+              ? computeTypeOptions
+              : field.options
           }
           component={Input}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
