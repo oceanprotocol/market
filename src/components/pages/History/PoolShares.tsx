@@ -175,7 +175,9 @@ export default function PoolShares(): ReactElement {
         shares.push(poolShare)
       })
     }
-    setData(shares)
+    if (JSON.stringify(data) !== JSON.stringify(shares)) {
+      setData(shares)
+    }
   }
 
   function refetchPoolShares() {

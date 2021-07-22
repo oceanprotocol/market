@@ -238,7 +238,10 @@ export default function PoolTransactions({
         transactions.push(poolTransaction)
       })
     }
-    setData(transactions)
+
+    if (JSON.stringify(data) !== JSON.stringify(transactions)) {
+      setData(transactions)
+    }
   }
 
   function refetchPoolTransactions() {
@@ -269,13 +272,17 @@ export default function PoolTransactions({
           await fetchPoolTransactionData()
           return
         }
-        for (let i = 0; i < data.length; i++) {
+        const poolTransactionsData = data.map((obj) => ({ ...obj }))
+
+        for (let i = 0; i < poolTransactionsData.length; i++) {
           const did = web3.utils
-            .toChecksumAddress(data[i].poolAddress.datatokenAddress)
+            .toChecksumAddress(
+              poolTransactionsData[i].poolAddress.datatokenAddress
+            )
             .replace('0x', 'did:op:')
           const ddo = await retrieveDDO(did, source.token)
-          data[i].networkId = ddo.chainId
-          poolTransactions.push(data[i])
+          poolTransactionsData[i].networkId = ddo.chainId
+          poolTransactions.push(poolTransactionsData[i])
         }
         const sortedTransactions = poolTransactions.sort(
           (a, b) => b.timestamp - a.timestamp
