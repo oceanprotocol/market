@@ -21,6 +21,10 @@ const getTotalPoolsValues = gql`
   }
 `
 
+interface Value {
+  [chainId: number]: string
+}
+
 function MarketNetworkStats({
   totalValueLocked,
   poolCount,
@@ -34,19 +38,60 @@ function MarketNetworkStats({
     <>
       <Conversion price={totalValueLocked} hideApproximateSymbol />{' '}
       <abbr title="Total Value Locked">TVL</abbr> across{' '}
-      <strong>{poolCount}</strong> data set pools that contain{' '}
+      <strong>{poolCount}</strong> asset pools that contain{' '}
       <PriceUnit price={totalOceanLiquidity} small className={styles.total} />,
       plus datatokens for each pool.
     </>
   )
 }
 
+function MarketNetworkStatsTooltip({
+  totalValueLocked,
+  poolCount,
+  totalOceanLiquidity,
+  mainChainIds
+}: {
+  totalValueLocked: Value
+  poolCount: Value
+  totalOceanLiquidity: Value
+  mainChainIds: number[]
+}): ReactElement {
+  return (
+    <>
+      <ul className={styles.statsList}>
+        {totalValueLocked &&
+          totalOceanLiquidity &&
+          poolCount &&
+          mainChainIds?.map((chainId, key) => (
+            <li className={styles.tooltipStats} key={key}>
+              <NetworkName networkId={chainId} className={styles.network} />
+              <br />
+              <Conversion
+                price={totalValueLocked[chainId] || '0'}
+                hideApproximateSymbol
+              />{' '}
+              <abbr title="Total Value Locked">TVL</abbr>
+              {' | '}
+              <strong>{poolCount[chainId] || '0'}</strong> pools
+              {' | '}
+              <PriceUnit price={totalOceanLiquidity[chainId] || '0'} small />
+            </li>
+          ))}
+      </ul>
+      <p className={styles.note}>
+        Counted on-chain from our pool factory. Does not filter out assets in{' '}
+        <a href="https://github.com/oceanprotocol/list-purgatory">
+          list-purgatory
+        </a>
+      </p>
+    </>
+  )
+}
+
 export default function MarketStats(): ReactElement {
-  const [totalValueLocked, setTotalValueLocked] =
-    useState<{ [chainId: number]: string }>()
-  const [totalOceanLiquidity, setTotalOceanLiquidity] =
-    useState<{ [chainId: number]: string }>()
-  const [poolCount, setPoolCount] = useState<{ [chainId: number]: string }>()
+  const [totalValueLocked, setTotalValueLocked] = useState<Value>()
+  const [totalOceanLiquidity, setTotalOceanLiquidity] = useState<Value>()
+  const [poolCount, setPoolCount] = useState<Value>()
   const [totalValueLockedSum, setTotalValueLockedSum] = useState<string>()
   const [totalOceanLiquiditySum, setTotalOceanLiquiditySum] = useState<string>()
   const [poolCountSum, setPoolCountSum] = useState<string>()
@@ -110,32 +155,6 @@ export default function MarketStats(): ReactElement {
     getMarketStats()
   }, [])
 
-  const tooltipContent = (
-    <>
-      <ul className={styles.statsList}>
-        {totalValueLocked &&
-          totalOceanLiquidity &&
-          poolCount &&
-          mainChainIds?.map((chainId, key) => (
-            <li key={key}>
-              <NetworkName networkId={chainId} />
-              <div className={styles.tooltipStats}>
-                <MarketNetworkStats
-                  totalValueLocked={totalValueLocked[chainId] || '0'}
-                  totalOceanLiquidity={totalOceanLiquidity[chainId] || '0'}
-                  poolCount={poolCount[chainId] || '0'}
-                />
-              </div>
-            </li>
-          ))}
-      </ul>
-      Counted on-chain from our pool factory. Does not filter our data sets in{' '}
-      <a href="https://github.com/oceanprotocol/list-purgatory">
-        list-purgatory
-      </a>
-    </>
-  )
-
   return (
     <div className={styles.stats}>
       <>
@@ -143,8 +162,18 @@ export default function MarketStats(): ReactElement {
           totalValueLocked={totalValueLockedSum || '0'}
           totalOceanLiquidity={totalOceanLiquiditySum || '0'}
           poolCount={poolCountSum || '0'}
+        />{' '}
+        <Tooltip
+          className={styles.info}
+          content={
+            <MarketNetworkStatsTooltip
+              totalValueLocked={totalValueLocked}
+              poolCount={poolCount}
+              totalOceanLiquidity={totalOceanLiquidity}
+              mainChainIds={mainChainIds}
+            />
+          }
         />
-        <Tooltip className={styles.info} content={tooltipContent} />
       </>
     </div>
   )

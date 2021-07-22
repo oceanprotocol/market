@@ -1,32 +1,42 @@
 .stats {
   margin-bottom: calc(var(--spacer) * 2);
-  font-size: var(--font-size-small);
-  line-height: 2;
 }
 
-.statsList li {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+/* specificity sledgehammer override without !important */
+.stats,
+.stats *,
+.statsList * {
+  font-size: var(--font-size-small);
+  color: var(--color-secondary);
+  margin-left: 0;
 }
 
 .tooltipStats {
-  margin-bottom: calc(var(--spacer));
-  font-size: var(--font-size-small);
-  text-align: center;
-  line-height: 2;
+  margin-bottom: calc(var(--spacer) / 3);
+  padding-bottom: calc(var(--spacer) / 3);
+  border-bottom: 1px solid var(--border-color);
 }
 
-.stats > div > div {
-  display: inline-block;
-}
-
-.total {
-  color: var(--color-secondary) !important;
-  font-size: var(--font-size-small) !important;
+.network {
+  font-weight: var(--font-weight-bold);
 }
 
 .info {
   width: 0.85rem;
+}
+
+.statsList,
+.note {
+  padding: calc(var(--spacer) / 4);
+}
+
+.statsList {
+  padding-bottom: 0;
+}
+
+.note {
+  margin-bottom: 0;
+  padding-top: 0;
+  font-size: var(--font-size-mini);
+  color: var(--color-secondary);
 }
