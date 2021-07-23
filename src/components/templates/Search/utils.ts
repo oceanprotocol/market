@@ -80,6 +80,17 @@ export function getSearchQuery(
       : !emptySearchTerm && searchTerm
       ? '*' + searchTerm + '*'
       : '**'
+  const searchFields = [
+    'id',
+    'publicKey.owner',
+    'dataToken',
+    'dataTokenInfo.name',
+    'dataTokenInfo.symbol',
+    'service.attributes.main.name^10',
+    'service.attributes.main.author',
+    'service.attributes.additionalInformation.description',
+    'service.attributes.additionalInformation.tags'
+  ]
 
   return {
     page: Number(page) || 1,
@@ -93,17 +104,7 @@ export function getSearchQuery(
                 {
                   query_string: {
                     query: `${modifiedSearchTerm}`,
-                    fields: [
-                      'id',
-                      'publicKey.owner',
-                      'dataToken',
-                      'dataTokenInfo.name',
-                      'dataTokenInfo.symbol',
-                      'service.attributes.main.name^10',
-                      'service.attributes.main.author',
-                      'service.attributes.additionalInformation.description',
-                      'service.attributes.additionalInformation.tags'
-                    ],
+                    fields: searchFields,
                     minimum_should_match: '2<75%',
                     phrase_slop: 2,
                     boost: 5
@@ -120,17 +121,7 @@ export function getSearchQuery(
                 {
                   query_string: {
                     query: `${prefixedSearchTerm}`,
-                    fields: [
-                      'id',
-                      'publicKey.owner',
-                      'dataToken',
-                      'dataTokenInfo.name',
-                      'dataTokenInfo.symbol',
-                      'service.attributes.main.name',
-                      'service.attributes.main.author',
-                      'service.attributes.additionalInformation.description',
-                      'service.attributes.additionalInformation.tags'
-                    ],
+                    fields: searchFields,
                     default_operator: 'AND'
                   }
                 }
