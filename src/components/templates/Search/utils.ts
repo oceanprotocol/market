@@ -72,7 +72,9 @@ export function getSearchQuery(
 
   searchTerm = searchTerm.trim()
   let modifiedSearchTerm = searchTerm.split(' ').join(' OR ').trim()
+  const noSpaceSearchTerm = searchTerm.split(' ').join('').trim()
   modifiedSearchTerm = addTypeFilterToQuery(modifiedSearchTerm, serviceType)
+
   searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
   const prefixedSearchTerm =
     emptySearchTerm && searchTerm
@@ -107,6 +109,14 @@ export function getSearchQuery(
                     fields: searchFields,
                     minimum_should_match: '2<75%',
                     phrase_slop: 2,
+                    boost: 5
+                  }
+                },
+                {
+                  query_string: {
+                    query: `${noSpaceSearchTerm}`,
+                    fields: searchFields,
+                    fuzziness: 10,
                     boost: 5
                   }
                 },
