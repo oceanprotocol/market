@@ -113,11 +113,11 @@ export function getSearchQuery(
                   }
                 },
                 {
-                  query_string: {
-                    query: `${noSpaceSearchTerm}`,
+                  simple_query_string: {
+                    query: `${noSpaceSearchTerm}*`,
                     fields: searchFields,
-                    fuzziness: 10,
-                    boost: 5
+                    boost: 5,
+                    lenient: true
                   }
                 },
                 {
