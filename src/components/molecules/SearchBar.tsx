@@ -67,6 +67,7 @@ export default function SearchBar({
   }
 
   async function handleButtonClick(e: FormEvent<HTMLButtonElement>) {
+    e.preventDefault()
     await startSearch(e)
   }
 

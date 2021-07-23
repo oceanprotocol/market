@@ -1,38 +1,52 @@
 .search {
   display: flex;
-  width: 100%;
+  position: relative;
 }
 
 .button {
   color: var(--color-secondary);
-  padding: calc(var(--spacer) / 4) calc(var(--spacer) / 3);
   cursor: pointer;
-  border: 1px solid var(--border-color);
-  border-top-right-radius: var(--border-radius);
-  border-bottom-right-radius: var(--border-radius);
-  background-color: transparent;
-  border-left: none;
-  white-space: nowrap;
-  transition: border 0.2s ease-out;
+  background: var(--background-content);
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  position: absolute;
+  padding: calc(var(--spacer) / 4);
+  right: 1px;
+  left: 1px;
+  top: 1px;
+  bottom: 1px;
+  z-index: -1;
 }
 
 .button:hover,
 .button:focus {
-  color: var(--brand-white);
+  color: var(--font-color-text);
 }
 
 .input {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  border-right: 0;
   background-color: transparent;
   height: auto !important;
   padding-top: calc(var(--spacer) / 3.5);
   padding-bottom: calc(var(--spacer) / 3.5);
+  padding-right: var(--spacer);
+  width: 0;
+  transition: 0.2 ease-out;
+}
+
+.input:focus {
+  width: auto;
+  background-color: var(--background-content);
 }
 
 .input:focus + .button {
-  border-color: var(--font-color-text);
+  z-index: 1;
+  left: auto;
+}
+
+.input::-webkit-search-decoration,
+.input::-webkit-search-cancel-button {
+  display: none;
 }
 
 .searchIcon {
@@ -40,4 +54,5 @@
   transition: 0.2s ease-out;
   width: var(--font-size-h5);
   height: var(--font-size-h5);
+  transition: 0.2s ease-out;
 }

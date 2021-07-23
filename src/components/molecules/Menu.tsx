@@ -52,10 +52,8 @@ export default function Menu(): ReactElement {
         ))}
       </ul>
 
-      <div className={styles.search}>
-        <SearchBar />
-      </div>
       <div className={styles.actions}>
+        <SearchBar />
         <Networks />
         <Wallet />
         <UserPreferences />
