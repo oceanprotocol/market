@@ -54,6 +54,7 @@ export default function FormPublish(): ReactElement {
     status,
     setStatus,
     isValid,
+    values,
     setErrors,
     setTouched,
     resetForm,
@@ -96,6 +97,7 @@ export default function FormPublish(): ReactElement {
 
     if (field.name === 'access' && value === 'Compute') {
       setComputeTypeSelected(true)
+      if (values.timeout === 'Forever') setFieldValue('timeout', '1 day')
     } else {
       if (field.name === 'access' && value === 'Download') {
         setComputeTypeSelected(false)
