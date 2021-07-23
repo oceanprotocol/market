@@ -172,6 +172,29 @@ export async function fetchData(
   }
 }
 
+export async function fetchDataForMultipleChains(
+  query: TypedDocumentNode,
+  variables: any,
+  chainIds: number[]
+): Promise<any[]> {
+  let datas: any[] = []
+  for (const chainId of chainIds) {
+    const context: OperationContext = {
+      url: `${getSubgrahUri(
+        chainId
+      )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
+      requestPolicy: 'network-only'
+    }
+    try {
+      const response = await fetchData(query, variables, context)
+      datas = datas.concat(response.data)
+    } catch (error) {
+      console.error('Error fetchData: ', error.message)
+    }
+  }
+  return datas
+}
+
 export async function getPreviousOrders(
   id: string,
   account: string,

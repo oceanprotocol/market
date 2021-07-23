@@ -23,8 +23,6 @@ export default function PublishedList(): ReactElement {
   useEffect(() => {
     async function getPublished() {
       if (!accountId) return
-
-      // TODO: this query needs to adapt to chainIds
       const queryPublishedAssets = {
         page: page,
         offset: 9,
@@ -64,6 +62,6 @@ export default function PublishedList(): ReactElement {
       }}
     />
   ) : (
-    <div>Connect your wallet to see your published data sets.</div>
+    <div>Please connect your Web3 wallet.</div>
   )
 }

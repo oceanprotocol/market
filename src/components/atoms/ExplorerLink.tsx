@@ -4,10 +4,12 @@ import classNames from 'classnames/bind'
 import { ConfigHelperConfig } from '@oceanprotocol/lib'
 import { useOcean } from '../../providers/Ocean'
 import styles from './ExplorerLink.module.css'
+import { getOceanConfig } from '../../utils/ocean'
 
 const cx = classNames.bind(styles)
 
 export default function ExplorerLink({
+  networkId,
   path,
   children,
   className
@@ -17,22 +19,29 @@ export default function ExplorerLink({
   children: ReactNode
   className?: string
 }): ReactElement {
-  const { config } = useOcean()
+  const { config, ocean } = useOcean()
   const [url, setUrl] = useState<string>()
-
+  const [oceanConfig, setOceanConfig] = useState<ConfigHelperConfig>()
   const styleClasses = cx({
     link: true,
     [className]: className
   })
 
   useEffect(() => {
-    setUrl((config as ConfigHelperConfig)?.explorerUri)
-  }, [config])
+    async function initOcean() {
+      const oceanInitialConfig = getOceanConfig(networkId)
+      setOceanConfig(oceanInitialConfig)
+      setUrl(oceanInitialConfig?.explorerUri)
+    }
+    if (ocean === undefined) {
+      initOcean()
+    }
+  }, [config, networkId, ocean])
 
   return (
     <a
       href={`${url}/${path}`}
-      title={`View on ${(config as ConfigHelperConfig)?.explorerUri}`}
+      title={`View on ${oceanConfig?.explorerUri}`}
       target="_blank"
       rel="noreferrer"
       className={styleClasses}

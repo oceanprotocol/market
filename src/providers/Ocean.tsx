@@ -41,7 +41,7 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
   // -----------------------------------
   const connect = useCallback(
     async (config: ConfigHelperConfig) => {
-      if (!web3 || !ddo) return
+      if (!web3) return
 
       const newConfig: ConfigHelperConfig = {
         ...config,
@@ -58,7 +58,7 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
         Logger.error('[ocean] Error: ', error.message)
       }
     },
-    [web3, ddo]
+    [web3]
   )
 
   // -----------------------------------

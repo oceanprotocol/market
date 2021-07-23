@@ -1,4 +1,3 @@
-import { useOcean } from '../../providers/Ocean'
 import React, { ReactElement, useEffect, useState } from 'react'
 import ExplorerLink from '../atoms/ExplorerLink'
 import Time from '../atoms/Time'
@@ -6,16 +5,18 @@ import Table from '../atoms/Table'
 import AssetTitle from './AssetListTitle'
 import styles from './PoolTransactions.module.css'
 import { useUserPreferences } from '../../providers/UserPreferences'
-import { Ocean } from '@oceanprotocol/lib'
 import { formatPrice } from '../atoms/Price/PriceUnit'
-import { gql, useQuery } from 'urql'
-import {
-  TransactionHistory,
-  TransactionHistory_poolTransactions as TransactionHistoryPoolTransactions
-} from '../../@types/apollo/TransactionHistory'
-
+import { gql } from 'urql'
+import { TransactionHistory_poolTransactions as TransactionHistoryPoolTransactions } from '../../@types/apollo/TransactionHistory'
 import web3 from 'web3'
 import { useWeb3 } from '../../providers/Web3'
+import { fetchDataForMultipleChains } from '../../utils/subgraph'
+import { useSiteMetadata } from '../../hooks/useSiteMetadata'
+import NetworkName from '../atoms/NetworkName'
+import { retrieveDDO } from '../../utils/aquarius'
+import axios from 'axios'
+
+const REFETCH_INTERVAL = 20000
 
 const txHistoryQueryByPool = gql`
   query TransactionHistoryByPool($user: String, $pool: String) {
@@ -25,6 +26,13 @@ const txHistoryQueryByPool = gql`
       where: { userAddress: $user, poolAddress: $pool }
       first: 1000
     ) {
+      tokens {
+        poolToken {
+          tokenId {
+            symbol
+          }
+        }
+      }
       tx
       event
       timestamp
@@ -47,6 +55,13 @@ const txHistoryQuery = gql`
       where: { userAddress: $user }
       first: 1000
     ) {
+      tokens {
+        poolToken {
+          tokenId {
+            symbol
+          }
+        }
+      }
       tx
       event
       timestamp
@@ -61,28 +76,28 @@ const txHistoryQuery = gql`
     }
   }
 `
-async function getSymbol(ocean: Ocean, tokenAddress: string) {
-  const symbol =
-    ocean.pool.oceanAddress.toLowerCase() === tokenAddress.toLowerCase()
-      ? 'OCEAN'
-      : await ocean.datatokens.getSymbol(tokenAddress)
 
+interface Datatoken {
+  symbol: string
+}
+
+interface PoolTransaction extends TransactionHistoryPoolTransactions {
+  networkId: number
+}
+
+function getSymbol(tokenId: Datatoken) {
+  const symbol = tokenId === null ? 'OCEAN' : tokenId.symbol
   return symbol
 }
 
-async function getTitle(
-  ocean: Ocean,
-  row: TransactionHistoryPoolTransactions,
-  locale: string
-) {
+async function getTitle(row: PoolTransaction, locale: string) {
   let title = ''
-
   switch (row.event) {
     case 'swap': {
       const inToken = row.tokens.filter((x) => x.type === 'in')[0]
-      const inTokenSymbol = await getSymbol(ocean, inToken.tokenAddress)
+      const inTokenSymbol = getSymbol(inToken.poolToken.tokenId)
       const outToken = row.tokens.filter((x) => x.type === 'out')[0]
-      const outTokenSymbol = await getSymbol(ocean, outToken.tokenAddress)
+      const outTokenSymbol = getSymbol(outToken.poolToken.tokenId)
       title += `Swap ${formatPrice(
         Math.abs(inToken.value).toString(),
         locale
@@ -90,19 +105,22 @@ async function getTitle(
         Math.abs(outToken.value).toString(),
         locale
       )}${outTokenSymbol}`
+
       break
     }
     case 'setup': {
       const firstToken = row.tokens.filter(
         (x) =>
-          x.tokenAddress.toLowerCase() === ocean.pool.oceanAddress.toLowerCase()
+          x.tokenAddress.toLowerCase() !==
+          row.poolAddress.datatokenAddress.toLowerCase()
       )[0]
-      const firstTokenSymbol = await getSymbol(ocean, firstToken.tokenAddress)
+      const firstTokenSymbol = await getSymbol(firstToken.poolToken.tokenId)
       const secondToken = row.tokens.filter(
         (x) =>
-          x.tokenAddress.toLowerCase() !== ocean.pool.oceanAddress.toLowerCase()
+          x.tokenAddress.toLowerCase() ===
+          row.poolAddress.datatokenAddress.toLowerCase()
       )[0]
-      const secondTokenSymbol = await getSymbol(ocean, secondToken.tokenAddress)
+      const secondTokenSymbol = await getSymbol(secondToken.poolToken.tokenId)
       title += `Create pool with ${formatPrice(
         Math.abs(firstToken.value).toString(),
         locale
@@ -115,7 +133,7 @@ async function getTitle(
     case 'join':
     case 'exit': {
       for (let i = 0; i < row.tokens.length; i++) {
-        const tokenSymbol = await getSymbol(ocean, row.tokens[i].tokenAddress)
+        const tokenSymbol = await getSymbol(row.tokens[i].poolToken.tokenId)
         if (i > 0) title += '\n'
         title += `${row.event === 'join' ? 'Add' : 'Remove'} ${formatPrice(
           Math.abs(row.tokens[i].value).toString(),
@@ -129,24 +147,21 @@ async function getTitle(
   return title
 }
 
-function Title({ row }: { row: TransactionHistoryPoolTransactions }) {
-  const { networkId } = useWeb3()
-  const { ocean } = useOcean()
+function Title({ row }: { row: PoolTransaction }) {
   const [title, setTitle] = useState<string>()
   const { locale } = useUserPreferences()
 
   useEffect(() => {
-    if (!ocean || !locale || !row) return
-
+    if (!locale || !row) return
     async function init() {
-      const title = await getTitle(ocean, row, locale)
+      const title = await getTitle(row, locale)
       setTitle(title)
     }
     init()
-  }, [ocean, row, locale])
+  }, [row, locale])
 
   return title ? (
-    <ExplorerLink networkId={networkId} path={`/tx/${row.tx}`}>
+    <ExplorerLink networkId={row.networkId} path={`/tx/${row.tx}`}>
       <span className={styles.titleText}>{title}</span>
     </ExplorerLink>
   ) : null
@@ -155,13 +170,13 @@ function Title({ row }: { row: TransactionHistoryPoolTransactions }) {
 const columns = [
   {
     name: 'Title',
-    selector: function getTitleRow(row: TransactionHistoryPoolTransactions) {
+    selector: function getTitleRow(row: PoolTransaction) {
       return <Title row={row} />
     }
   },
   {
     name: 'Data Set',
-    selector: function getAssetRow(row: TransactionHistoryPoolTransactions) {
+    selector: function getAssetRow(row: PoolTransaction) {
       const did = web3.utils
         .toChecksumAddress(row.poolAddress.datatokenAddress)
         .replace('0x', 'did:op:')
@@ -170,8 +185,15 @@ const columns = [
     }
   },
   {
+    name: 'Network',
+    selector: function getNetwork(row: PoolTransaction) {
+      return <NetworkName networkId={row.networkId} />
+    },
+    maxWidth: '12rem'
+  },
+  {
     name: 'Time',
-    selector: function getTimeRow(row: TransactionHistoryPoolTransactions) {
+    selector: function getTimeRow(row: PoolTransaction) {
       return (
         <Time
           className={styles.time}
@@ -186,7 +208,7 @@ const columns = [
 ]
 
 // hack! if we use a function to omit one field this will display a strange refresh to the enduser for each row
-const columnsMinimal = [columns[0], columns[2]]
+const columnsMinimal = [columns[0], columns[3]]
 
 export default function PoolTransactions({
   poolAddress,
@@ -196,33 +218,97 @@ export default function PoolTransactions({
   minimal?: boolean
 }): ReactElement {
   const { accountId } = useWeb3()
-  const [logs, setLogs] = useState<TransactionHistoryPoolTransactions[]>()
+  const [logs, setLogs] = useState<PoolTransaction[]>()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const { chainIds } = useUserPreferences()
+  const { appConfig } = useSiteMetadata()
+  const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
+  const [data, setData] = useState<PoolTransaction[]>()
 
-  const [result] = useQuery<TransactionHistory>({
-    query: poolAddress ? txHistoryQueryByPool : txHistoryQuery,
-    variables: {
-      user: accountId?.toLowerCase(),
-      pool: poolAddress?.toLowerCase()
+  async function fetchPoolTransactionData() {
+    const variables = { user: accountId?.toLowerCase() }
+    const transactions: PoolTransaction[] = []
+    const result = await fetchDataForMultipleChains(
+      poolAddress ? txHistoryQueryByPool : txHistoryQuery,
+      variables,
+      chainIds
+    )
+    for (let i = 0; i < result.length; i++) {
+      result[i].poolTransactions.forEach((poolTransaction: PoolTransaction) => {
+        transactions.push(poolTransaction)
+      })
     }
-    // pollInterval: 20000
-  })
-  const { data, fetching } = result
+
+    if (JSON.stringify(data) !== JSON.stringify(transactions)) {
+      setData(transactions)
+    }
+  }
+
+  function refetchPoolTransactions() {
+    if (!dataFetchInterval) {
+      setDataFetchInterval(
+        setInterval(function () {
+          fetchPoolTransactionData()
+        }, REFETCH_INTERVAL)
+      )
+    }
+  }
 
   useEffect(() => {
-    if (!data) return
-    setLogs(data.poolTransactions)
-  }, [data, fetching])
+    return () => {
+      clearInterval(dataFetchInterval)
+    }
+  }, [dataFetchInterval])
 
-  return (
+  useEffect(() => {
+    if (!appConfig.metadataCacheUri) return
+    async function getTransactions() {
+      const poolTransactions: PoolTransaction[] = []
+      const source = axios.CancelToken.source()
+      try {
+        setIsLoading(true)
+
+        if (!data) {
+          await fetchPoolTransactionData()
+          return
+        }
+        const poolTransactionsData = data.map((obj) => ({ ...obj }))
+
+        for (let i = 0; i < poolTransactionsData.length; i++) {
+          const did = web3.utils
+            .toChecksumAddress(
+              poolTransactionsData[i].poolAddress.datatokenAddress
+            )
+            .replace('0x', 'did:op:')
+          const ddo = await retrieveDDO(did, source.token)
+          poolTransactionsData[i].networkId = ddo.chainId
+          poolTransactions.push(poolTransactionsData[i])
+        }
+        const sortedTransactions = poolTransactions.sort(
+          (a, b) => b.timestamp - a.timestamp
+        )
+        setLogs(sortedTransactions)
+        refetchPoolTransactions()
+      } catch (error) {
+        console.error('Error fetching pool transactions: ', error.message)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    getTransactions()
+  }, [accountId, chainIds, appConfig.metadataCacheUri, poolAddress, data])
+
+  return accountId ? (
     <Table
       columns={minimal ? columnsMinimal : columns}
       data={logs}
-      isLoading={fetching}
+      isLoading={isLoading}
       noTableHead={minimal}
       dense={minimal}
       pagination={minimal ? logs?.length >= 4 : logs?.length >= 9}
       paginationPerPage={minimal ? 5 : 10}
-      emptyMessage="Your pool transactions will show up here"
     />
+  ) : (
+    <div>Please connect your Web3 wallet.</div>
   )
 }
