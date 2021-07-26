@@ -60,7 +60,11 @@ const columns = [
   {
     name: 'Finished',
     selector: function getTimeRow(row: ComputeJobMetaData) {
-      return <Time date={row.dateFinished} isUnix relative />
+      return row.dateFinished ? (
+        <Time date={row.dateFinished} isUnix relative />
+      ) : (
+        ''
+      )
     }
   },
   {
@@ -103,7 +107,7 @@ export default function ComputeJobs(): ReactElement {
   const { accountId } = useWeb3()
   const [isLoading, setIsLoading] = useState(true)
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
-  const { data } = useQuery<ComputeOrders>(getComputeOrders, {
+  const { data, refetch } = useQuery<ComputeOrders>(getComputeOrders, {
     variables: {
       user: accountId?.toLowerCase()
     }
@@ -114,6 +118,7 @@ export default function ComputeJobs(): ReactElement {
 
     setIsLoading(true)
 
+    await refetch()
     const dtList = []
     const computeJobs: ComputeJobMetaData[] = []
     for (let i = 0; i < data.tokenOrders.length; i++) {

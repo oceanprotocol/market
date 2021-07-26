@@ -32,6 +32,8 @@ export function getNetworkDisplayName(
 ): string {
   const displayName = data
     ? `${data.chain} ${data.network === 'mainnet' ? '' : data.network}`
+    : networkId === 2021000
+    ? 'GAIA-X'
     : networkId === 8996
     ? 'Development'
     : 'Unknown'
@@ -44,9 +46,10 @@ export function getNetworkData(
   networkId: number
 ): EthereumListsChain {
   const networkData = data.filter(
-    ({ node }: { node: EthereumListsChain }) => node.networkId === networkId
-  )[0]
-  return networkData.node
+    ({ node }: { node: EthereumListsChain }) => node.chainId === networkId
+  )
+
+  return networkData[0]?.node
 }
 
 export function addCustomNetwork(

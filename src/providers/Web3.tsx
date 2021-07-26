@@ -27,6 +27,7 @@ interface Web3ProviderValue {
   web3ProviderInfo: IProviderInfo
   accountId: string
   networkId: number
+  chainId: number
   networkDisplayName: string
   networkData: EthereumListsChain
   block: number
@@ -109,6 +110,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   const [web3Modal, setWeb3Modal] = useState<Web3Modal>()
   const [web3ProviderInfo, setWeb3ProviderInfo] = useState<IProviderInfo>()
   const [networkId, setNetworkId] = useState<number>()
+  const [chainId, setChainId] = useState<number>()
   const [networkDisplayName, setNetworkDisplayName] = useState<string>()
   const [networkData, setNetworkData] = useState<EthereumListsChain>()
   const [block, setBlock] = useState<number>()
@@ -135,6 +137,10 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
       const networkId = await web3.eth.net.getId()
       setNetworkId(networkId)
       Logger.log('[web3] network id ', networkId)
+
+      const chainId = await web3.eth.getChainId()
+      setChainId(chainId)
+      Logger.log('[web3] chain id ', chainId)
 
       const accountId = (await web3.eth.getAccounts())[0]
       setAccountId(accountId)
@@ -188,14 +194,19 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
 
     const networkData = getNetworkData(networksList, networkId)
     setNetworkData(networkData)
-    Logger.log('[web3] Network metadata found.', networkData)
+    Logger.log(
+      networkData
+        ? `[web3] Network metadata found.`
+        : `[web3] No network metadata found.`,
+      networkData
+    )
 
     // Construct network display name
     const networkDisplayName = getNetworkDisplayName(networkData, networkId)
     setNetworkDisplayName(networkDisplayName)
 
     // Figure out if we're on a chain's testnet, or not
-    setIsTestnet(networkData.network !== 'mainnet')
+    setIsTestnet(networkData?.network !== 'mainnet')
 
     Logger.log(`[web3] Network display name set to: ${networkDisplayName}`)
   }, [networkId, networksList])
@@ -230,16 +241,27 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   // Logout helper
   // -----------------------------------
   async function logout() {
-    web3Modal?.clearCachedProvider()
+    if (web3 && web3.currentProvider && (web3.currentProvider as any).close) {
+      await (web3.currentProvider as any).close()
+    }
+    await web3Modal.clearCachedProvider()
   }
 
   // -----------------------------------
   // Handle change events
   // -----------------------------------
+  async function handleChainChanged(chainId: string) {
+    Logger.log('[web3] Chain changed', chainId)
+    const networkId = await web3.eth.net.getId()
+    setChainId(Number(chainId))
+    setNetworkId(Number(networkId))
+  }
+
   async function handleNetworkChanged(networkId: string) {
     Logger.log('[web3] Network changed', networkId)
-    // const networkId = Number(chainId.replace('0x', ''))
+    const chainId = await web3.eth.getChainId()
     setNetworkId(Number(networkId))
+    setChainId(Number(chainId))
   }
 
   async function handleAccountsChanged(accounts: string[]) {
@@ -250,19 +272,14 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   useEffect(() => {
     if (!web3Provider || !web3) return
 
-    //
-    // HEADS UP! We should rather listen to `chainChanged` exposing the `chainId`
-    // but for whatever reason the exposed `chainId` is wildly different from
-    // what is shown on https://chainid.network, in turn breaking our network/config
-    // mapping. The networkChanged is deprecated but works as expected for our case.
-    // See: https://eips.ethereum.org/EIPS/eip-1193#chainchanged
-    //
+    web3Provider.on('chainChanged', handleChainChanged)
     web3Provider.on('networkChanged', handleNetworkChanged)
     web3Provider.on('accountsChanged', handleAccountsChanged)
 
     return () => {
-      web3Provider.removeListener('networkChanged')
-      web3Provider.removeListener('accountsChanged')
+      web3Provider.removeListener('chainChanged', handleChainChanged)
+      web3Provider.removeListener('networkChanged', handleNetworkChanged)
+      web3Provider.removeListener('accountsChanged', handleAccountsChanged)
     }
   }, [web3Provider, web3])
 
@@ -275,6 +292,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
         web3ProviderInfo,
         accountId,
         networkId,
+        chainId,
         networkDisplayName,
         networkData,
         block,

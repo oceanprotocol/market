@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { File as FileMetadata, DDO } from '@oceanprotocol/lib'
+import { File as FileMetadata, DDO, BestPrice } from '@oceanprotocol/lib'
 import File from '../../atoms/File'
 import Price from '../../atoms/Price'
 import Web3Feedback from '../../molecules/Wallet/Feedback'
@@ -37,13 +37,17 @@ export default function Consume({
   file,
   isBalanceSufficient,
   dtBalance,
-  fileIsLoading
+  fileIsLoading,
+  isConsumable,
+  consumableFeedback
 }: {
   ddo: DDO
   file: FileMetadata
   isBalanceSufficient: boolean
   dtBalance: string
   fileIsLoading?: boolean
+  isConsumable?: boolean
+  consumableFeedback?: string
 }): ReactElement {
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
@@ -56,7 +60,8 @@ export default function Consume({
   const { consumeStepText, consume, consumeError, isLoading } = useConsume()
   const [isDisabled, setIsDisabled] = useState(true)
   const [hasDatatoken, setHasDatatoken] = useState(false)
-  const [isConsumable, setIsConsumable] = useState(true)
+  const [maxDt, setMaxDT] = useState<number>(1)
+  const [isConsumablePrice, setIsConsumablePrice] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
   const { data } = useQuery<OrdersData>(previousOrderQuery, {
     variables: {
@@ -66,12 +71,20 @@ export default function Consume({
     pollInterval: 5000
   })
 
+  async function checkMaxAvaialableTokens(price: BestPrice) {
+    if (!ocean || !price) return
+    const maxTokensInPool =
+      price.type === 'pool'
+        ? await ocean.pool.getDTMaxBuyQuantity(price.address)
+        : 1
+    setMaxDT(Number(maxTokensInPool))
+  }
+
   useEffect(() => {
     if (!data || !assetTimeout || data.tokenOrders.length === 0) return
 
     const lastOrder = data.tokenOrders[0]
-
-    if (assetTimeout === 'Forever') {
+    if (assetTimeout === '0') {
       setPreviousOrderId(lastOrder.tx)
       setHasPreviousOrder(true)
     } else {
@@ -94,9 +107,10 @@ export default function Consume({
   useEffect(() => {
     if (!price) return
 
-    setIsConsumable(
+    setIsConsumablePrice(
       price.isConsumable !== undefined ? price.isConsumable === 'true' : true
     )
+    checkMaxAvaialableTokens(price)
   }, [price])
 
   useEffect(() => {
@@ -105,13 +119,15 @@ export default function Consume({
 
   useEffect(() => {
     setIsDisabled(
-      (!ocean ||
-        !isBalanceSufficient ||
-        typeof consumeStepText !== 'undefined' ||
-        pricingIsLoading ||
-        !isConsumable) &&
-        !hasPreviousOrder &&
-        !hasDatatoken
+      !isConsumable ||
+        ((!ocean ||
+          !isBalanceSufficient ||
+          typeof consumeStepText !== 'undefined' ||
+          pricingIsLoading ||
+          (!hasPreviousOrder && !hasDatatoken && !(maxDt >= 1)) ||
+          !isConsumablePrice) &&
+          !hasPreviousOrder &&
+          !hasDatatoken)
     )
   }, [
     ocean,
@@ -119,8 +135,9 @@ export default function Consume({
     isBalanceSufficient,
     consumeStepText,
     pricingIsLoading,
-    isConsumable,
-    hasDatatoken
+    isConsumablePrice,
+    hasDatatoken,
+    isConsumable
   ])
 
   async function handleConsume() {
@@ -155,12 +172,15 @@ export default function Consume({
       hasDatatoken={hasDatatoken}
       dtSymbol={ddo.dataTokenInfo?.symbol}
       dtBalance={dtBalance}
+      datasetLowPoolLiquidity={!(maxDt >= 1)}
       onClick={handleConsume}
       assetTimeout={secondsToString(parseInt(assetTimeout))}
       assetType={type}
       stepText={consumeStepText || pricingStepText}
       isLoading={pricingIsLoading || isLoading}
       priceType={price?.type}
+      isConsumable={isConsumable}
+      consumableFeedback={consumableFeedback}
     />
   )
 
@@ -176,7 +196,7 @@ export default function Consume({
         </div>
       </div>
       {type === 'algorithm' && (
-        <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} />
+        <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} dataset={ddo} />
       )}
       <footer className={styles.feedback}>
         <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
