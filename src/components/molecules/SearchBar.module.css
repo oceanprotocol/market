@@ -31,17 +31,35 @@
   padding-bottom: calc(var(--spacer) / 3.5);
   padding-right: var(--spacer);
   width: 0;
-  transition: 0.2 ease-out;
+  transition: none;
 }
 
 .input:focus {
-  width: auto;
+  width: calc(100% - var(--spacer));
   background-color: var(--background-content);
+  position: fixed;
+  left: calc(var(--spacer) / 2);
+  right: 0;
+  z-index: 2;
 }
 
-.input:focus + .button {
-  z-index: 1;
-  left: auto;
+@media screen and (min-width: 78rem) {
+  .input,
+  .input:focus {
+    width: auto;
+    position: relative;
+    left: initial;
+    right: initial;
+  }
+
+  .button {
+    left: auto;
+    background: none;
+  }
+
+  .input:focus + .button {
+    z-index: 3;
+  }
 }
 
 .input::-webkit-search-decoration,
