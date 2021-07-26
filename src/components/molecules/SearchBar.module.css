@@ -12,6 +12,7 @@
   padding: 0;
   position: absolute;
   padding: calc(var(--spacer) / 4);
+  width: 100%;
   right: 1px;
   left: 1px;
   top: 1px;
@@ -53,6 +54,7 @@
   }
 
   .button {
+    width: auto;
     left: auto;
     background: none;
   }
@@ -67,5 +69,4 @@
   transition: 0.2s ease-out;
   width: var(--font-size-h5);
   height: var(--font-size-h5);
-  transition: 0.2s ease-out;
 }
