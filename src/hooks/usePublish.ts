@@ -83,7 +83,7 @@ function usePublish(): UsePublish {
           break
         }
         case 'compute': {
-          if (!timeout) timeout = 0
+          if (!timeout) timeout = 3600
           const provider = {}
           const origComputePrivacy: ServiceComputePrivacy = {
             allowRawAlgorithm: false,
