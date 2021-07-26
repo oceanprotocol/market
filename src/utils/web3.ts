@@ -40,8 +40,6 @@ export function getNetworkDisplayName(
   data: EthereumListsChain,
   networkId: number
 ): string {
-  if (!data) return 'Unknown'
-
   let displayName
 
   switch (networkId) {
@@ -61,9 +59,9 @@ export function getNetworkDisplayName(
       displayName = 'GAIA-X'
       break
     default:
-      displayName = `${data.chain} ${
-        data.network === 'mainnet' ? '' : data.network
-      }`
+      displayName = data
+        ? `${data.chain} ${data.network === 'mainnet' ? '' : data.network}`
+        : 'Unknown'
       break
   }
 
