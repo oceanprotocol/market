@@ -6,22 +6,27 @@ import FileInfo from './Info'
 import FileInput from './Input'
 import { InputProps } from '../../../atoms/Input'
 import { fileinfo } from '../../../../utils/provider'
+import { useWeb3 } from '../../../../providers/Web3'
+import { getOceanConfig } from '../../../../utils/ocean'
 
 export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
   const [isLoading, setIsLoading] = useState(false)
   const [fileUrl, setFileUrl] = useState<string>()
+  const { chainId } = useWeb3()
 
   function loadFileInfo() {
     const source = axios.CancelToken.source()
+    const config = getOceanConfig(chainId || 1)
 
     async function validateUrl() {
-      // TODO: #756 get the providerUri
-      const providerUri = ''
-
       try {
         setIsLoading(true)
-        const checkedFile = await fileinfo(fileUrl, providerUri, source.token)
+        const checkedFile = await fileinfo(
+          fileUrl,
+          config?.providerUri,
+          source.token
+        )
         checkedFile && helpers.setValue([checkedFile])
       } catch (error) {
         toast.error('Could not fetch file info. Please check URL and try again')
