@@ -50,7 +50,7 @@ function AssetProvider({
   const { networkId } = useWeb3()
   const [isInPurgatory, setIsInPurgatory] = useState(false)
   const [purgatoryData, setPurgatoryData] = useState<PurgatoryData>()
-  const [ddo, setDDO] = useState<any>()
+  const [ddo, setDDO] = useState<DDO>()
   const [did, setDID] = useState<string>()
   const [metadata, setMetadata] = useState<MetadataMarket>()
   const [title, setTitle] = useState<string>()
@@ -149,7 +149,6 @@ function AssetProvider({
   useEffect(() => {
     if (!networkId || !ddo) return
 
-    // TODO: remove typing once present in ocean.js' DDO typing
     const isAssetNetwork = networkId === ddo?.chainId
     setIsAssetNetwork(isAssetNetwork)
   }, [networkId, ddo])

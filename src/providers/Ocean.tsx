@@ -7,13 +7,7 @@ import React, {
   ReactNode,
   useEffect
 } from 'react'
-import {
-  Ocean,
-  Logger,
-  Account,
-  ConfigHelperConfig,
-  DDO
-} from '@oceanprotocol/lib'
+import { Ocean, Logger, Account, ConfigHelperConfig } from '@oceanprotocol/lib'
 
 import { useWeb3 } from './Web3'
 import { getDevelopmentConfig, getOceanConfig } from '../utils/ocean'
@@ -65,7 +59,6 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
   // Initial connection
   // -----------------------------------
   useEffect(() => {
-    // TODO: remove DDO typing once ocean.js has it
     if (!ddo?.chainId) return
 
     const config = {
