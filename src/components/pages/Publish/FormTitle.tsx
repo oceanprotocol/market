@@ -33,8 +33,7 @@ export default function FormTitle({ title }: { title: string }): ReactElement {
       {title}{' '}
       {networkId && (
         <>
-          into
-          <NetworkName networkId={networkId} className={styles.network} />
+          into <NetworkName networkId={networkId} className={styles.network} />
           <Tooltip content={contentTooltip} className={styles.tooltip} />
         </>
       )}

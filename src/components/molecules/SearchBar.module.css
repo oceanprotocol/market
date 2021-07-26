@@ -62,11 +62,6 @@
   }
 }
 
-.input::-webkit-search-decoration,
-.input::-webkit-search-cancel-button {
-  display: none;
-}
-
 .searchIcon {
   fill: currentColor;
   transition: 0.2s ease-out;
