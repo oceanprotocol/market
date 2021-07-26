@@ -12,6 +12,7 @@ import {
 import { AssetSelectionAsset } from '../components/molecules/FormFields/AssetSelection'
 import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
+import { metadataCacheUri } from '../../app.config'
 
 function getQueryForAlgorithmDatasets(algorithmDid: string, chainId?: number) {
   return {
@@ -49,7 +50,7 @@ export function transformQueryResult(
   }
 }
 
-export function transformChainIdsListToQuery(chainIds: number[]) {
+export function transformChainIdsListToQuery(chainIds: number[]): string {
   let chainQuery = ''
   chainIds.forEach((chainId) => {
     chainQuery += `chainId:${chainId} OR `
@@ -61,10 +62,10 @@ export function transformChainIdsListToQuery(chainIds: number[]) {
 export async function queryMetadata(
   query: SearchQuery,
   cancelToken: CancelToken
-): Promise<any> {
+): Promise<QueryResult> {
   try {
     const response: AxiosResponse<any> = await axios.post(
-      `https://multiaqua.oceanprotocol.com/api/v1/aquarius/assets/ddo/query`,
+      `${metadataCacheUri}/api/v1/aquarius/assets/ddo/query`,
       { ...query, cancelToken }
     )
     if (!response || response.status !== 200 || !response.data) return
@@ -84,7 +85,7 @@ export async function retrieveDDO(
 ): Promise<DDO> {
   try {
     const response: AxiosResponse<DDO> = await axios.get(
-      `https://multiaqua.oceanprotocol.com/api/v1/aquarius/assets/ddo/${did}`,
+      `${metadataCacheUri}/api/v1/aquarius/assets/ddo/${did}`,
       { cancelToken }
     )
     if (!response || response.status !== 200 || !response.data) return
@@ -106,7 +107,7 @@ export async function getAssetsNames(
 ): Promise<Record<string, string>> {
   try {
     const response: AxiosResponse<Record<string, string>> = await axios.post(
-      `https://multiaqua.oceanprotocol.com/api/v1/aquarius/assets/names`,
+      `${metadataCacheUri}/api/v1/aquarius/assets/names`,
       {
         didList,
         cancelToken
