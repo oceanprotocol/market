@@ -20,7 +20,6 @@ export default function MetaMain(): ReactElement {
         <AssetType
           type={type}
           accessType={accessType}
-          chainId={ddo.chainId}
           className={styles.assetType}
         />
         <ExplorerLink

@@ -26,7 +26,7 @@ export default function UserPreferences(): ReactElement {
       className={styles.preferences}
     >
       <Cog aria-label="Preferences" className={styles.icon} />
-      <Caret aria-hidden="true" />
+      <Caret aria-hidden="true" className={styles.caret} />
     </Tooltip>
   )
 }

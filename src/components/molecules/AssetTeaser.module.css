@@ -70,5 +70,4 @@
   position: absolute;
   right: calc(var(--spacer) / 3);
   bottom: calc(var(--spacer) / 3);
-  text-transform: uppercase !important;
 }
