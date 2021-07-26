@@ -27,9 +27,9 @@
 
 .input {
   background-color: transparent;
-  height: auto !important;
-  padding-top: calc(var(--spacer) / 3.5);
-  padding-bottom: calc(var(--spacer) / 3.5);
+  height: 36px;
+  margin: 0;
+  outline: 0;
   padding-right: var(--spacer);
   width: 0;
   transition: none;
