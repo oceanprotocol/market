@@ -147,6 +147,7 @@ export default function FormPublish(): ReactElement {
       <h2 className={stylesIndex.formTitle}>{content.title}</h2>
       {content.data.map(
         (field: FormFieldProps) =>
+          field.advanced !== true &&
           ((field.name !== 'entrypoint' &&
             field.name !== 'image' &&
             field.name !== 'containerTag') ||
