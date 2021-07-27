@@ -31,7 +31,7 @@
 
 ## 🏄 Get Started
 
-The app is a React app built with [Gatsby.js](https://www.gatsbyjs.org) + TypeScript + CSS modules and will connect to Ocean components in Rinkeby by default.
+The app is a React app built with [Gatsby.js](https://www.gatsbyjs.org) + TypeScript + CSS modules and will connect to Ocean remote components by default.
 
 To start local development:
 
@@ -73,7 +73,7 @@ Barge will deploy contracts to the local Ganache node which will take some time.
 Finally, set environment variables to use this local connection in `.env` in the app:
 
 ```bash
-# modify env variables, setting GATSBY_NETWORK="development"
+# modify env variables
 cp .env.example .env
 
 npm start
@@ -111,7 +111,7 @@ All this data then comes from multiple sources:
 
 ### Aquarius
 
-All initial data sets and their metadata (DDO) is retrieved client-side on run-time from the [Aquarius](https://github.com/oceanprotocol/aquarius) instance for each network. All app calls to Aquarius are done with 2 internal methods which mimic the same methods in ocean.js, but allow us:
+All initial data sets and their metadata (DDO) is retrieved client-side on run-time from the [Aquarius](https://github.com/oceanprotocol/aquarius) instance, defined in `app.config.js`. All app calls to Aquarius are done with 2 internal methods which mimic the same methods in ocean.js, but allow us:
 
 - to cancel requests when components get unmounted in combination with [axios](https://github.com/axios/axios)
 - hit Aquarius as early as possible without relying on any ocean.js initialization
@@ -263,10 +263,14 @@ Within components this metadata can be queried for under `allNetworksMetadataJso
 
 ```tsx
 export default function NetworkName(): ReactElement {
-  const { networkDisplayName, isTestnet } = useWeb3()
+  const { networkId, isTestnet } = useWeb3()
+  const { networksList } = useNetworkMetadata()
+  const networkData = getNetworkDataById(networksList, networkId)
+  const networkName = getNetworkDisplayName(networkData, networkId)
+
   return (
     <>
-      {networkDisplayName} {isTestnet && `(Test)`}
+      {networkName} {isTestnet && `(Test)`}
     </>
   )
 }
