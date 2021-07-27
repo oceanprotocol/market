@@ -30,31 +30,35 @@ const Default = ({
 )
 
 export default function Fees({
-  tooltips
+  tooltips,
+  pricingType
 }: {
   tooltips: { [key: string]: string }
+  pricingType: 'dynamic' | 'fixed'
 }): ReactElement {
   const [field, meta] = useField('swapFee')
 
   return (
     <>
       <div className={styles.fees}>
-        <Input
-          label={
-            <>
-              Swap Fee
-              <Tooltip content={tooltips.swapFee} />
-            </>
-          }
-          type="number"
-          postfix="%"
-          min="0.1"
-          max="10"
-          step="0.1"
-          size="small"
-          {...field}
-          additionalComponent={<Error meta={meta} />}
-        />
+        {pricingType === 'dynamic' && (
+          <Input
+            label={
+              <>
+                Swap Fee
+                <Tooltip content={tooltips.swapFee} />
+              </>
+            }
+            type="number"
+            postfix="%"
+            min="0.1"
+            max="10"
+            step="0.1"
+            size="small"
+            {...field}
+            additionalComponent={<Error meta={meta} />}
+          />
+        )}
 
         <Default
           title="Community Fee"
