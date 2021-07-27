@@ -57,6 +57,7 @@ export interface MetadataPublishFormAlgorithm {
   containerTag: string
   entrypoint: string
   tags?: string
+  customProvider?: string
 }
 
 export interface MetadataEditForm {
