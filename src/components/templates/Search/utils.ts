@@ -34,6 +34,7 @@ function addTypeFilterToQuery(sortTerm: string, typeFilter: string): string {
       ? `service.attributes.main.type:${typeFilter}`
       : `${sortTerm} AND service.attributes.main.type:${typeFilter}`
     : sortTerm
+  console.log('console.log(sortTerm)', sortTerm)
   return sortTerm
 }
 
@@ -72,7 +73,8 @@ export function getSearchQuery(
 
   searchTerm = searchTerm.trim()
   let modifiedSearchTerm = searchTerm.split(' ').join(' OR ').trim()
-  const noSpaceSearchTerm = searchTerm.split(' ').join('').trim()
+  let noSpaceSearchTerm = searchTerm.split(' ').join('').trim()
+  noSpaceSearchTerm = addTypeFilterToQuery(noSpaceSearchTerm, serviceType)
   modifiedSearchTerm = addTypeFilterToQuery(modifiedSearchTerm, serviceType)
 
   searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
@@ -113,7 +115,7 @@ export function getSearchQuery(
                   }
                 },
                 {
-                  simple_query_string: {
+                  query_string: {
                     query: `${noSpaceSearchTerm}*`,
                     fields: searchFields,
                     boost: 5,
