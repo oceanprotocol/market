@@ -28,16 +28,6 @@ export const FilterByTypeOptions = {
 type FilterByTypeOptions =
   typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
 
-function addTypeFilterToQuery(sortTerm: string, typeFilter: string): string {
-  sortTerm = typeFilter
-    ? sortTerm === ''
-      ? `service.attributes.main.type:${typeFilter}`
-      : `${sortTerm} AND service.attributes.main.type:${typeFilter}`
-    : sortTerm
-  console.log('sortTerm', sortTerm)
-  return sortTerm
-}
-
 function getSortType(sortParam: string): string {
   const sortTerm =
     sortParam === SortTermOptions.Created
@@ -74,11 +64,7 @@ export function getSearchQuery(
   searchTerm = searchTerm.trim()
   const modifiedSearchTerm = searchTerm.split(' ').join(' OR ').trim()
   const noSpaceSearchTerm = searchTerm.split(' ').join('').trim()
-  console.log('serviceType 2', serviceType)
-  // noSpaceSearchTerm = addTypeFilterToQuery(noSpaceSearchTerm, serviceType)
-  // modifiedSearchTerm = addTypeFilterToQuery(modifiedSearchTerm, serviceType)
 
-  searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
   const prefixedSearchTerm =
     emptySearchTerm && searchTerm
       ? searchTerm
