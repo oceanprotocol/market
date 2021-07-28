@@ -46,7 +46,8 @@ export default function FormPricing({
 
     setFieldValue('dtAmount', dtAmount)
   }, [price, oceanAmount, weightOnOcean, weightOnDataToken, type])
-
+  console.log('content.fixed', content.fixed)
+  console.log('content.dynamic', content.dynamic)
   const tabs = [
     appConfig.allowFixedPricing === 'true'
       ? {

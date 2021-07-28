@@ -29,6 +29,10 @@ const query = graphql`
               fixed {
                 title
                 info
+                tooltips {
+                  communityFee
+                  marketplaceFee
+                }
               }
               dynamic {
                 title
