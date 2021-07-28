@@ -20,7 +20,6 @@ export default function AdvancedSettings(prop: {
     advancedSettings === true
       ? setAdvancedSettings(false)
       : setAdvancedSettings(true)
-    console.log('advancedSettings', advancedSettings)
   }
   return (
     <>
