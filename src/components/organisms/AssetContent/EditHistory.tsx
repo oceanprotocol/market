@@ -50,14 +50,14 @@ export default function EditHistory(): ReactElement {
       <ul className={styles.history}>
         {receipts?.map((receipt) => (
           <li key={receipt.id} className={styles.item}>
-            <ExplorerLink networkId={networkId} path={`/tx/${receipt.tx}`}>
+            <ExplorerLink networkId={ddo.chainId} path={`/tx/${receipt.tx}`}>
               edited{' '}
               <Time date={receipt.timestamp.toString()} relative isUnix />
             </ExplorerLink>
           </li>
         ))}
         <li className={styles.item}>
-          <ExplorerLink networkId={networkId} path={`/tx/${creationTx}`}>
+          <ExplorerLink networkId={ddo.chainId} path={`/tx/${creationTx}`}>
             published <Time date={ddo.created} relative />
           </ExplorerLink>
         </li>

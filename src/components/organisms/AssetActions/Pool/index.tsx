@@ -65,7 +65,7 @@ export default function Pool(): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childContentJson.pool
 
-  const { accountId, networkId } = useWeb3()
+  const { accountId } = useWeb3()
   const { ocean } = useOcean()
   const { isInPurgatory, ddo, owner, price, refreshInterval, isAssetNetwork } =
     useAsset()
@@ -278,15 +278,15 @@ export default function Pool(): ReactElement {
             <Tooltip content={content.tooltips.price} />
             <div className={styles.dataTokenLinks}>
               <ExplorerLink
-                networkId={networkId}
+                networkId={ddo.chainId}
                 path={`address/${price?.address}`}
               >
                 Pool
               </ExplorerLink>
               <ExplorerLink
-                networkId={networkId}
+                networkId={ddo.chainId}
                 path={
-                  networkId === 137 || networkId === 1287
+                  ddo.chainId === 2021000 || ddo.chainId === 1287
                     ? `tokens/${ddo.dataToken}`
                     : `token/${ddo.dataToken}`
                 }
