@@ -285,7 +285,11 @@ export default function Pool(): ReactElement {
               </ExplorerLink>
               <ExplorerLink
                 networkId={ddo.chainId}
-                path={`token/${ddo.dataToken}`}
+                path={
+                  ddo.chainId === 2021000
+                    ? `tokens/${ddo.dataToken}`
+                    : `token/${ddo.dataToken}`
+                }
               >
                 Datatoken
               </ExplorerLink>
