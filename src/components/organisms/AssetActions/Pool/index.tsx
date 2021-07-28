@@ -277,14 +277,12 @@ export default function Pool(): ReactElement {
             <PriceUnit price={`${price?.value}`} />
             <Tooltip content={content.tooltips.price} />
             <div className={styles.dataTokenLinks}>
-              {ddo && (
-                <ExplorerLink
-                  networkId={ddo.chainId}
-                  path={`address/${price?.address}`}
-                >
-                  Pool
-                </ExplorerLink>
-              )}
+              <ExplorerLink
+                networkId={ddo.chainId}
+                path={`address/${price?.address}`}
+              >
+                Pool
+              </ExplorerLink>
               <ExplorerLink
                 networkId={ddo.chainId}
                 path={
