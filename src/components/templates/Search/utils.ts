@@ -50,7 +50,6 @@ export function getSearchQuery(
   const sortTerm = getSortType(sort)
   const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
   const emptySearchTerm = text === undefined || text === ''
-  console.log('serviceType 1', serviceType)
   let searchTerm = owner
     ? `(publicKey.owner:${owner})`
     : tags
@@ -82,7 +81,6 @@ export function getSearchQuery(
     'service.attributes.additionalInformation.description',
     'service.attributes.additionalInformation.tags'
   ]
-  console.log('serviceType 3', serviceType)
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
