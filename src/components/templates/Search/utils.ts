@@ -34,7 +34,7 @@ function addTypeFilterToQuery(sortTerm: string, typeFilter: string): string {
       ? `service.attributes.main.type:${typeFilter}`
       : `${sortTerm} AND service.attributes.main.type:${typeFilter}`
     : sortTerm
-  console.log('console.log(sortTerm)', sortTerm)
+  console.log('sortTerm', sortTerm)
   return sortTerm
 }
 
@@ -60,7 +60,7 @@ export function getSearchQuery(
   const sortTerm = getSortType(sort)
   const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
   const emptySearchTerm = text === undefined || text === ''
-
+  console.log('serviceType 1', serviceType)
   let searchTerm = owner
     ? `(publicKey.owner:${owner})`
     : tags
@@ -72,10 +72,11 @@ export function getSearchQuery(
     : text || ''
 
   searchTerm = searchTerm.trim()
-  let modifiedSearchTerm = searchTerm.split(' ').join(' OR ').trim()
-  let noSpaceSearchTerm = searchTerm.split(' ').join('').trim()
-  noSpaceSearchTerm = addTypeFilterToQuery(noSpaceSearchTerm, serviceType)
-  modifiedSearchTerm = addTypeFilterToQuery(modifiedSearchTerm, serviceType)
+  const modifiedSearchTerm = searchTerm.split(' ').join(' OR ').trim()
+  const noSpaceSearchTerm = searchTerm.split(' ').join('').trim()
+  console.log('serviceType 2', serviceType)
+  // noSpaceSearchTerm = addTypeFilterToQuery(noSpaceSearchTerm, serviceType)
+  // modifiedSearchTerm = addTypeFilterToQuery(modifiedSearchTerm, serviceType)
 
   searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
   const prefixedSearchTerm =
@@ -95,7 +96,7 @@ export function getSearchQuery(
     'service.attributes.additionalInformation.description',
     'service.attributes.additionalInformation.tags'
   ]
-
+  console.log('serviceType 3', serviceType)
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
@@ -138,6 +139,14 @@ export function getSearchQuery(
                   }
                 }
               ]
+            }
+          },
+          {
+            match: {
+              'service.attributes.main.type':
+                serviceType === undefined
+                  ? 'dataset OR algorithm'
+                  : `${serviceType}`
             }
           },
           {
