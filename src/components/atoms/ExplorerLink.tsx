@@ -33,7 +33,7 @@ export default function ExplorerLink({
       setOceanConfig(oceanInitialConfig)
       setUrl(oceanInitialConfig?.explorerUri)
     }
-    if (ocean === undefined) {
+    if (oceanConfig === undefined) {
       initOcean()
     }
   }, [config, networkId, ocean])
