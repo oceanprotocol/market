@@ -8,7 +8,7 @@
   padding: var(--spacer) var(--spacer) calc(var(--spacer) / 2) var(--spacer);
 
   justify-content: center;
-  text-align: center;
+  text-align: left;
   border-bottom: 1px solid var(--border-color);
   background: var(--background-highlight);
 }
