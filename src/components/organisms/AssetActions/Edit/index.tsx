@@ -105,7 +105,8 @@ export default function Edit({
       const ddoEditedMetdata = await ocean.assets.editMetadata(ddo, {
         title: values.name,
         description: values.description,
-        links: typeof values.links !== 'string' ? values.links : []
+        links: typeof values.links !== 'string' ? values.links : [],
+        author: values.author
       })
 
       price.type === 'exchange' &&
