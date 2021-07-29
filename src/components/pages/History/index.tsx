@@ -6,6 +6,8 @@ import PublishedList from './PublishedList'
 import Downloads from './Downloads'
 import ComputeJobs from './ComputeJobs'
 import styles from './index.module.css'
+import { useUserPreferences } from '../../../providers/UserPreferences'
+import OceanProvider from '../../../providers/Ocean'
 
 const tabs = [
   {
@@ -26,11 +28,16 @@ const tabs = [
   },
   {
     title: 'Compute Jobs',
-    content: <ComputeJobs />
+    content: (
+      <OceanProvider>
+        <ComputeJobs />
+      </OceanProvider>
+    )
   }
 ]
 
 export default function HistoryPage(): ReactElement {
+  const { chainIds } = useUserPreferences()
   const url = new URL(window.location.href)
   const defaultTab = url.searchParams.get('defaultTab')
   let defaultTabIndex = 0

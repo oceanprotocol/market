@@ -31,7 +31,7 @@
 
 ## 🏄 Get Started
 
-The app is a React app built with [Gatsby.js](https://www.gatsbyjs.org) + TypeScript + CSS modules and will connect to Ocean components in Rinkeby by default.
+The app is a React app built with [Gatsby.js](https://www.gatsbyjs.org) + TypeScript + CSS modules and will connect to Ocean remote components by default.
 
 To start local development:
 
@@ -73,7 +73,7 @@ Barge will deploy contracts to the local Ganache node which will take some time.
 Finally, set environment variables to use this local connection in `.env` in the app:
 
 ```bash
-# modify env variables, setting GATSBY_NETWORK="development"
+# modify env variables
 cp .env.example .env
 
 npm start
@@ -111,7 +111,7 @@ All this data then comes from multiple sources:
 
 ### Aquarius
 
-All initial data sets and their metadata (DDO) is retrieved client-side on run-time from the [Aquarius](https://github.com/oceanprotocol/aquarius) instance for each network. All app calls to Aquarius are done with 2 internal methods which mimic the same methods in ocean.js, but allow us:
+All initial data sets and their metadata (DDO) is retrieved client-side on run-time from the [Aquarius](https://github.com/oceanprotocol/aquarius) instance, defined in `app.config.js`. All app calls to Aquarius are done with 2 internal methods which mimic the same methods in ocean.js, but allow us:
 
 - to cancel requests when components get unmounted in combination with [axios](https://github.com/axios/axios)
 - hit Aquarius as early as possible without relying on any ocean.js initialization
@@ -127,25 +127,22 @@ const queryLatest = {
   offset: 9,
   query: {
     // https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html
+
     query_string: { query: `-isInPurgatory:true` }
   },
   sort: { created: -1 }
 }
 
 function Component() {
-  const { config } = useOcean()
+  const { appConfig } = useSiteMetadata()
   const [result, setResult] = useState<QueryResult>()
 
   useEffect(() => {
-    if (!config?.metadataCacheUri) return
+    if (!appConfig.metadataCacheUri) return
     const source = axios.CancelToken.source()
 
     async function init() {
-      const result = await queryMetadata(
-        query,
-        config.metadataCacheUri,
-        source.token
-      )
+      const result = await queryMetadata(query, source.token)
       setResult(result)
     }
     init()
@@ -153,7 +150,7 @@ function Component() {
     return () => {
       source.cancel()
     }
-  }, [config?.metadataCacheUri, query])
+  }, [appConfig.metadataCacheUri, query])
 
   return <div>{result}</div>
 }
@@ -174,10 +171,10 @@ function Component() {
 
 Most financial data in the market is retrieved with GraphQL from [our own subgraph](https://github.com/oceanprotocol/ocean-subgraph), rendered on top of the initial data coming from Aquarius.
 
-The app has [Apollo Client](https://www.apollographql.com/docs/react/) setup to query the respective subgraph based on network. In any component this client can be used like so:
+The app has [Urql Client](https://formidable.com/open-source/urql/docs/basics/react-preact/) setup to query the respective subgraph based on network. In any component this client can be used like so:
 
 ```tsx
-import { gql, useQuery } from '@apollo/client'
+import { gql, useQuery } from 'urql'
 
 const query = gql`
   query PoolLiquidity($id: ID!, $shareId: ID) {
@@ -266,10 +263,14 @@ Within components this metadata can be queried for under `allNetworksMetadataJso
 
 ```tsx
 export default function NetworkName(): ReactElement {
-  const { networkDisplayName, isTestnet } = useWeb3()
+  const { networkId, isTestnet } = useWeb3()
+  const { networksList } = useNetworkMetadata()
+  const networkData = getNetworkDataById(networksList, networkId)
+  const networkName = getNetworkDisplayName(networkData, networkId)
+
   return (
     <>
-      {networkDisplayName} {isTestnet && `(Test)`}
+      {networkName} {isTestnet && `(Test)`}
     </>
   )
 }

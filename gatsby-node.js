@@ -7,6 +7,9 @@ execSync(`node ./scripts/write-repo-metadata > repo-metadata.json`, {
   stdio: 'inherit'
 })
 
+// Generate GraphQl typings for urql
+// execSync(`npm run graphql:graphTypes`, { stdio: 'inherit' })
+
 // Generate Apollo typings
 execSync(`npm run apollo:codegen`, { stdio: 'inherit' })
 

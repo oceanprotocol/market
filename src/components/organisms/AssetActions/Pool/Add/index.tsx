@@ -65,8 +65,8 @@ export default function Add({
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childContentJson.pool.add
 
-  const { accountId } = useWeb3()
-  const { ocean, balance } = useOcean()
+  const { accountId, balance } = useWeb3()
+  const { ocean } = useOcean()
   const { debug } = useUserPreferences()
   const [txId, setTxId] = useState<string>()
   const [coin, setCoin] = useState('OCEAN')

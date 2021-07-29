@@ -10,7 +10,6 @@ import { toast } from 'react-toastify'
 import Price from '../../../atoms/Price'
 import File from '../../../atoms/File'
 import Alert from '../../../atoms/Alert'
-import Web3Feedback from '../../../molecules/Wallet/Feedback'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
@@ -39,6 +38,7 @@ import { secondsToString } from '../../../../utils/metadata'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import AlgorithmDatasetsListForCompute from '../../AssetContent/AlgorithmDatasetsListForCompute'
 import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
+import { chainIds } from '../../../../../app.config'
 
 const SuccessAction = () => (
   <Button style="text" to="/history?defaultTab=ComputeJobs" size="small">
@@ -63,8 +63,8 @@ export default function Compute({
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
-  const { ocean, account, config } = useOcean()
-  const { price, type, ddo } = useAsset()
+  const { ocean, account } = useOcean()
+  const { price, type, ddo, isAssetNetwork } = useAsset()
   const { buyDT, pricingError, pricingStepText } = usePricing()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
@@ -142,7 +142,8 @@ export default function Compute({
   }
 
   function getQuerryString(
-    trustedAlgorithmList: publisherTrustedAlgorithm[]
+    trustedAlgorithmList: publisherTrustedAlgorithm[],
+    chainId?: number
   ): SearchQuery {
     let algoQuerry = ''
     trustedAlgorithmList.forEach((trusteAlgo) => {
@@ -157,7 +158,7 @@ export default function Compute({
       offset: 500,
       query: {
         query_string: {
-          query: `${algorithmQuery} service.attributes.main.type:algorithm -isInPurgatory:true`
+          query: `${algorithmQuery} service.attributes.main.type:algorithm AND chainId:${chainId} -isInPurgatory:true`
         }
       },
       sort: { created: -1 }
@@ -180,9 +181,9 @@ export default function Compute({
     } else {
       const gueryResults = await queryMetadata(
         getQuerryString(
-          computeService.attributes.main.privacy.publisherTrustedAlgorithms
+          computeService.attributes.main.privacy.publisherTrustedAlgorithms,
+          ddo.chainId
         ),
-        config.metadataCacheUri,
         source.token
       )
       setDdoAlgorithmList(gueryResults.results)
@@ -190,7 +191,6 @@ export default function Compute({
       algorithmSelectionList = await transformDDOToAssetSelection(
         datasetComputeService?.serviceEndpoint,
         gueryResults.results,
-        config.metadataCacheUri,
         []
       )
     }
@@ -471,9 +471,6 @@ export default function Compute({
             success="Your job started successfully! Watch the progress on the history page."
             action={<SuccessAction />}
           />
-        )}
-        {type !== 'algorithm' && (
-          <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
         )}
       </footer>
     </>
