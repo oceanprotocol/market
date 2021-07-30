@@ -4,7 +4,11 @@ import { FormTradeData, slippagePresets } from '../../../../models/FormTrade'
 import InputElement from '../../../atoms/Input/InputElement'
 import styles from './Slippage.module.css'
 
-export default function Slippage(): ReactElement {
+export default function Slippage({
+  priceImpact
+}: {
+  priceImpact: string
+}): ReactElement {
   // Connect with form
   const { setFieldValue, values }: FormikContextType<FormTradeData> =
     useFormikContext()
@@ -16,7 +20,11 @@ export default function Slippage(): ReactElement {
   return (
     <>
       <div className={styles.slippage}>
-        <strong>Expected price impact</strong>
+        <div>
+          <strong>Expected price impact</strong>
+          <strong>{` ${priceImpact}%`}</strong>
+        </div>
+        <strong>Slippage Tolerance</strong>
         <InputElement
           name="slippage"
           type="select"

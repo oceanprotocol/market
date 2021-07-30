@@ -8,8 +8,17 @@ import { FormikContextType, useFormikContext } from 'formik'
 import { PoolBalance } from '../../../../@types/TokenBalance'
 import Output from './Output'
 import Slippage from './Slippage'
+import { getPrice } from '../../../../utils/subgraph'
 import { FormTradeData, TradeItem } from '../../../../models/FormTrade'
 import { useOcean } from '../../../../providers/Ocean'
+import { usePrices } from '../../../../providers/Prices'
+
+function getPriceImpact(inputValue: number, outputValue: number) {
+  console.log(inputValue, outputValue)
+  const percent = 100 - outputValue / inputValue
+  console.log(percent)
+  return percent.toString()
+}
 
 export default function Swap({
   ddo,
@@ -29,6 +38,7 @@ export default function Swap({
   setMaximumOcean: (value: number) => void
 }): ReactElement {
   const { ocean } = useOcean()
+  const { prices } = usePrices()
   const [oceanItem, setOceanItem] = useState<TradeItem>({
     amount: 0,
     token: 'OCEAN',
@@ -39,6 +49,7 @@ export default function Swap({
     token: ddo.dataTokenInfo.symbol,
     maxAmount: 0
   })
+  const [priceImpact, setPriceImpact] = useState<string>('0')
 
   const {
     setFieldValue,
@@ -49,6 +60,10 @@ export default function Swap({
 
   useEffect(() => {
     if (!ddo || !balance || !values || !price) return
+
+    getPrice(ddo).then((bPrice) => {
+      console.log(bPrice)
+    })
 
     async function calculateMaximum() {
       const dtAmount = values.type === 'buy' ? maxDt : balance.datatoken
@@ -115,7 +130,17 @@ export default function Swap({
         ? await ocean.pool.getOceanReceived(price.address, value.toString())
         : await ocean.pool.getOceanNeeded(price.address, value.toString())
 
-    setFieldValue(name === 'ocean' ? 'datatoken' : 'ocean', newValue)
+    await setFieldValue(name === 'ocean' ? 'datatoken' : 'ocean', newValue)
+
+    const dtFiatValue = values.datatoken
+    const onceanFiatValue = (prices as any).eur * Number(values.ocean)
+    console.log((prices as any).eur)
+
+    const newPriceImpact = getPriceImpact(
+      values.type === 'sell' ? dtFiatValue : onceanFiatValue,
+      values.type === 'sell' ? onceanFiatValue : dtFiatValue
+    )
+    setPriceImpact(newPriceImpact)
     validateForm()
   }
 
@@ -139,7 +164,7 @@ export default function Swap({
 
       <Output dtSymbol={dtItem.token} poolAddress={price?.address} />
 
-      <Slippage />
+      <Slippage priceImpact={priceImpact} />
     </div>
   )
 }
