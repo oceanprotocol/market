@@ -8,7 +8,6 @@ import React, {
   useEffect
 } from 'react'
 import { Ocean, Logger, Account, ConfigHelperConfig } from '@oceanprotocol/lib'
-
 import { useWeb3 } from './Web3'
 import { getDevelopmentConfig, getOceanConfig } from '../utils/ocean'
 import { useAsset } from './Asset'
@@ -56,7 +55,7 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
   )
 
   // -----------------------------------
-  // Initial connection
+  // Initial asset details connection
   // -----------------------------------
   useEffect(() => {
     if (!ddo?.chainId) return
