@@ -13,11 +13,59 @@ import { FormTradeData, TradeItem } from '../../../../models/FormTrade'
 import { useOcean } from '../../../../providers/Ocean'
 import { usePrices } from '../../../../providers/Prices'
 
-function getPriceImpact(inputValue: number, outputValue: number) {
+interface FiatPrices {
+  oceanFiatValue: number
+  datatokenFiatValue: number
+}
+
+function calculatePriceImpact(inputValue: number, outputValue: number) {
   console.log(inputValue, outputValue)
-  const percent = 100 - outputValue / inputValue
+  const difference = outputValue - inputValue
+  const avg = (outputValue + inputValue) / 2
+  const ration = difference / avg
+  const percent = ration * 100
   console.log(percent)
   return percent.toString()
+}
+
+async function getFiatValues(
+  oceanTokenAmount: number,
+  dataTokenAmount: number,
+  ddo: DDO,
+  fiatPrice: number
+) {
+  const fiatPrices: FiatPrices = {
+    oceanFiatValue: 0,
+    datatokenFiatValue: 0
+  }
+  const bestPrice: BestPrice = await getPrice(ddo)
+  fiatPrices.datatokenFiatValue =
+    fiatPrice * (bestPrice.value * dataTokenAmount)
+  fiatPrices.oceanFiatValue = fiatPrice * oceanTokenAmount
+
+  return fiatPrices
+}
+
+async function getPriceImpact(
+  ddo: DDO,
+  oceanTokenAmount: number,
+  dataTokenAmount: number,
+  sell: boolean,
+  fiatPrice: number
+) {
+  const fiatPrices: FiatPrices = await getFiatValues(
+    oceanTokenAmount,
+    dataTokenAmount,
+    ddo,
+    fiatPrice
+  )
+  const priceImpact = await calculatePriceImpact(
+    sell ? fiatPrices.datatokenFiatValue : fiatPrices.oceanFiatValue,
+    sell ? fiatPrices.oceanFiatValue : fiatPrices.datatokenFiatValue
+  )
+
+  console.log(priceImpact)
+  return priceImpact
 }
 
 export default function Swap({
@@ -59,11 +107,23 @@ export default function Swap({
   }: FormikContextType<FormTradeData> = useFormikContext()
 
   useEffect(() => {
-    if (!ddo || !balance || !values || !price) return
+    console.log(values)
 
-    getPrice(ddo).then((bPrice) => {
-      console.log(bPrice)
+    if (!values.ocean && !values.datatoken) return
+
+    getPriceImpact(
+      ddo,
+      values.ocean,
+      values.datatoken,
+      values.type === 'sell',
+      (prices as any).eur
+    ).then((newPriceImpact) => {
+      setPriceImpact(newPriceImpact)
     })
+  }, [values.ocean, values.datatoken])
+
+  useEffect(() => {
+    if (!ddo || !balance || !values || !price) return
 
     async function calculateMaximum() {
       const dtAmount = values.type === 'buy' ? maxDt : balance.datatoken
@@ -132,15 +192,6 @@ export default function Swap({
 
     await setFieldValue(name === 'ocean' ? 'datatoken' : 'ocean', newValue)
 
-    const dtFiatValue = values.datatoken
-    const onceanFiatValue = (prices as any).eur * Number(values.ocean)
-    console.log((prices as any).eur)
-
-    const newPriceImpact = getPriceImpact(
-      values.type === 'sell' ? dtFiatValue : onceanFiatValue,
-      values.type === 'sell' ? onceanFiatValue : dtFiatValue
-    )
-    setPriceImpact(newPriceImpact)
     validateForm()
   }
 
