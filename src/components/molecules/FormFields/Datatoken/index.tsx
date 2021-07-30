@@ -1,6 +1,6 @@
 import { useField } from 'formik'
 import React, { ReactElement, useEffect } from 'react'
-import { generateDatatokenName } from '@oceanprotocol/lib/dist/node/utils'
+import { utils } from '@oceanprotocol/lib'
 import { InputProps } from '../../../atoms/Input'
 import RefreshName from './RefreshName'
 import styles from './index.module.css'
@@ -9,7 +9,7 @@ export default function Datatoken(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
 
   async function generateName() {
-    const dataTokenOptions = generateDatatokenName()
+    const dataTokenOptions = utils.generateDatatokenName()
     helpers.setValue({ ...dataTokenOptions })
   }
 
