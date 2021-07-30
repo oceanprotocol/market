@@ -1,5 +1,5 @@
 import React, { FormEvent, ReactElement } from 'react'
-import { useWeb3 } from '../../../providers/Web3'
+import { useOcean } from '../../../providers/Ocean'
 import Button from '../../atoms/Button'
 import styles from './FormActions.module.css'
 
@@ -10,14 +10,14 @@ export default function FormActions({
   isValid: boolean
   resetFormAndClearStorage: (e: FormEvent<Element>) => void
 }): ReactElement {
-  const { accountId } = useWeb3()
+  const { ocean, account } = useOcean()
 
   return (
     <footer className={styles.actions}>
       <Button
         style="primary"
         type="submit"
-        disabled={!accountId || !isValid || status === 'empty'}
+        disabled={!ocean || !account || !isValid || status === 'empty'}
       >
         Submit
       </Button>
