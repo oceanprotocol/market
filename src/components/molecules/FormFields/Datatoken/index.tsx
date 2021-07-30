@@ -1,26 +1,22 @@
 import { useField } from 'formik'
-import { InputProps } from '../../../atoms/Input'
-import { useOcean } from '../../../../providers/Ocean'
 import React, { ReactElement, useEffect } from 'react'
+import { generateDatatokenName } from '@oceanprotocol/lib/dist/node/utils'
+import { InputProps } from '../../../atoms/Input'
+import RefreshName from './RefreshName'
 import styles from './index.module.css'
 
-import RefreshName from './RefreshName'
-
 export default function Datatoken(props: InputProps): ReactElement {
-  const { ocean } = useOcean()
   const [field, meta, helpers] = useField(props.name)
 
-  function generateName() {
-    if (!ocean) return
-    const dataTokenOptions = ocean.datatokens.generateDtName()
+  async function generateName() {
+    const dataTokenOptions = generateDatatokenName()
     helpers.setValue({ ...dataTokenOptions })
   }
 
-  // Generate new DT name & symbol
+  // Generate new DT name & symbol on first mount
   useEffect(() => {
-    if (!ocean) return
     generateName()
-  }, [ocean])
+  }, [])
 
   return (
     <div className={styles.datatoken}>
