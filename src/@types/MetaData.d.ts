@@ -38,7 +38,7 @@ export interface MetadataPublishFormDataset {
   // ---- optional fields ----
   tags?: string
   links?: string | EditableMetadataLinks[]
-  customProvider?: string
+  providerUri?: string
 }
 
 export interface MetadataPublishFormAlgorithm {
@@ -57,7 +57,7 @@ export interface MetadataPublishFormAlgorithm {
   containerTag: string
   entrypoint: string
   tags?: string
-  customProvider?: string
+  providerUri?: string
 }
 
 export interface MetadataEditForm {

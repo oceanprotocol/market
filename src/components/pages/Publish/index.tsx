@@ -134,7 +134,7 @@ export default function PublishPage({
         metadata,
         serviceType,
         values.dataTokenOptions,
-        values.customProvider
+        values.providerUri
       )
 
       const ddo = await publish(
@@ -142,7 +142,7 @@ export default function PublishPage({
         serviceType,
         values.dataTokenOptions,
         timeout,
-        values.customProvider
+        values.providerUri
       )
 
       // Publish failed
