@@ -10,11 +10,13 @@ const cx = classNames.bind(styles)
 export default function Conversion({
   price,
   className,
-  hideApproximateSymbol
+  hideApproximateSymbol,
+  showTVLLabel
 }: {
   price: string // expects price in OCEAN, not wei
   className?: string
   hideApproximateSymbol?: boolean
+  showTVLLabel?: boolean
 }): ReactElement {
   const { prices } = usePrices()
   const { currency, locale } = useUserPreferences()
@@ -27,6 +29,7 @@ export default function Conversion({
 
   const styleClasses = cx({
     conversion: true,
+    removeTvlPadding: showTVLLabel,
     [className]: className
   })
 
@@ -61,6 +64,7 @@ export default function Conversion({
       className={styleClasses}
       title="Approximation based on current OCEAN spot price on Coingecko"
     >
+      {showTVLLabel && 'TVL'}
       {!hideApproximateSymbol && '≈ '}
       <strong dangerouslySetInnerHTML={{ __html: priceConverted }} />{' '}
       {!isFiat && currency}

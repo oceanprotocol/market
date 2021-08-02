@@ -1,32 +1,66 @@
 .menu {
   width: 100%;
-}
-
-.menu > div {
+  padding: calc(var(--spacer) / 2);
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  padding-top: calc(var(--spacer) / 2);
-  padding-bottom: calc(var(--spacer) / 2);
+  flex-wrap: wrap;
 }
 
-.logoUnit {
+.logo {
+  order: 1;
+  white-space: nowrap;
   display: flex;
   align-items: center;
 }
 
-.logoUnit svg {
-  margin-left: -0.5rem;
-  margin-right: 0.5rem;
+.navigation {
+  order: 3;
+  margin-top: calc(var(--spacer) / 2);
+  text-align: center;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  margin-left: -1rem;
+  margin-right: -1rem;
+  width: calc(100% + 2rem);
+}
+
+.actions {
+  order: 2;
+  display: flex;
 }
 
 .title {
   display: none;
 }
 
-@media screen and (min-width: 40rem) {
+@media screen and (min-width: 42rem) {
+  .menu {
+    justify-content: start;
+  }
+
+  .navigation {
+    order: 2;
+    width: auto;
+    margin: 0;
+    text-align: left;
+    border: none;
+  }
+
+  .actions {
+    order: 3;
+    margin-left: auto;
+  }
+}
+
+@media screen and (min-width: 55rem) {
+  .menu {
+    padding: var(--spacer);
+  }
+
   .title {
     margin: 0;
+    margin-right: var(--spacer);
     display: block;
     color: var(--color-secondary);
     font-size: var(--font-size-h4);
@@ -38,6 +72,7 @@
   overflow-y: hidden;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: none;
 }
 
 .navigation::-webkit-scrollbar,
@@ -48,19 +83,13 @@
 .navigation li {
   display: inline-block;
   vertical-align: middle;
-  margin-left: var(--spacer);
+  margin-right: calc(var(--spacer) / 3);
+  margin-left: calc(var(--spacer) / 3);
 }
 
-@media screen and (min-width: 60rem) {
-  .navigation li {
-    margin-left: calc(var(--spacer) * 2);
-  }
-}
-
-.navigation button,
 .link {
   display: block;
-  padding: calc(var(--spacer) / 2);
+  padding: calc(var(--spacer) / 4) calc(var(--spacer) / 2);
   text-transform: uppercase;
   color: var(--color-secondary);
   font-weight: var(--font-weight-bold);
@@ -69,16 +98,11 @@
   z-index: 1;
 }
 
-.navigation button {
-  text-transform: none;
-  padding-top: calc(var(--spacer) / 4);
-  padding-bottom: calc(var(--spacer) / 4);
-}
-
+.actions,
 .link:hover,
 .link:focus,
 .link:active {
-  color: var(--brand-grey);
+  color: var(--font-color-text);
 }
 
 .link[aria-current],
@@ -89,4 +113,12 @@
 
 .link:last-child {
   padding-right: 0;
+}
+
+.logo svg {
+  margin-right: calc(var(--spacer) / 3);
+}
+
+.actions button {
+  text-transform: none;
 }

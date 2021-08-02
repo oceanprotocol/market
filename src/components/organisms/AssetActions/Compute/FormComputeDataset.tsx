@@ -94,7 +94,7 @@ export default function FormStartCompute({
 
   const { isValid, values }: FormikContextType<{ algorithm: string }> =
     useFormikContext()
-  const { price, ddo } = useAsset()
+  const { price, ddo, isAssetNetwork } = useAsset()
   const [totalPrice, setTotalPrice] = useState(price?.value)
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
@@ -175,7 +175,10 @@ export default function FormStartCompute({
       <ButtonBuy
         action="compute"
         disabled={
-          isComputeButtonDisabled || !isValid || algorithmConsumableStatus > 0
+          isComputeButtonDisabled ||
+          !isValid ||
+          !isAssetNetwork ||
+          algorithmConsumableStatus > 0
         }
         hasPreviousOrder={hasPreviousOrder}
         hasDatatoken={hasDatatoken}

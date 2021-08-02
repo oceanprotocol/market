@@ -14,20 +14,22 @@ import axios, { CancelToken } from 'axios'
 import { retrieveDDO } from '../utils/aquarius'
 import { getPrice } from '../utils/subgraph'
 import { MetadataMarket } from '../@types/MetaData'
-import { useOcean } from './Ocean'
+import { useWeb3 } from './Web3'
+import { useSiteMetadata } from '../hooks/useSiteMetadata'
 
 interface AssetProviderValue {
   isInPurgatory: boolean
   purgatoryData: PurgatoryData
-  ddo: DDO | undefined
-  did: string | undefined
-  metadata: MetadataMarket | undefined
-  title: string | undefined
-  owner: string | undefined
-  price: BestPrice | undefined
-  type: MetadataMain['type'] | undefined
+  ddo: DDO
+  did: string
+  metadata: MetadataMarket
+  title: string
+  owner: string
+  price: BestPrice
+  type: MetadataMain['type']
   error?: string
   refreshInterval: number
+  isAssetNetwork: boolean
   loading: boolean
   refreshDdo: (token?: CancelToken) => Promise<void>
 }
@@ -43,7 +45,9 @@ function AssetProvider({
   asset: string | DDO
   children: ReactNode
 }): ReactElement {
-  const { config } = useOcean()
+  const { appConfig } = useSiteMetadata()
+
+  const { networkId } = useWeb3()
   const [isInPurgatory, setIsInPurgatory] = useState(false)
   const [purgatoryData, setPurgatoryData] = useState<PurgatoryData>()
   const [ddo, setDDO] = useState<DDO>()
@@ -54,16 +58,13 @@ function AssetProvider({
   const [owner, setOwner] = useState<string>()
   const [error, setError] = useState<string>()
   const [type, setType] = useState<MetadataMain['type']>()
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState(false)
+  const [isAssetNetwork, setIsAssetNetwork] = useState<boolean>()
 
   const fetchDdo = async (token?: CancelToken) => {
     Logger.log('[asset] Init asset, get DDO')
     setLoading(true)
-    const ddo = await retrieveDDO(
-      asset as string,
-      config.metadataCacheUri,
-      token
-    )
+    const ddo = await retrieveDDO(asset as string, token)
 
     if (!ddo) {
       setError(
@@ -88,7 +89,7 @@ function AssetProvider({
   // Get and set DDO based on passed DDO or DID
   //
   useEffect(() => {
-    if (!asset || !config?.metadataCacheUri) return
+    if (!asset || !appConfig.metadataCacheUri) return
 
     const source = axios.CancelToken.source()
     let isMounted = true
@@ -105,7 +106,7 @@ function AssetProvider({
       isMounted = false
       source.cancel()
     }
-  }, [asset, config?.metadataCacheUri])
+  }, [asset, appConfig.metadataCacheUri])
 
   const setPurgatory = useCallback(async (did: string): Promise<void> => {
     if (!did) return
@@ -144,6 +145,14 @@ function AssetProvider({
     initMetadata(ddo)
   }, [ddo, initMetadata])
 
+  // Check user network against asset network
+  useEffect(() => {
+    if (!networkId || !ddo) return
+
+    const isAssetNetwork = networkId === ddo?.chainId
+    setIsAssetNetwork(isAssetNetwork)
+  }, [networkId, ddo])
+
   return (
     <AssetContext.Provider
       value={
@@ -160,7 +169,8 @@ function AssetProvider({
           purgatoryData,
           refreshInterval,
           loading,
-          refreshDdo
+          refreshDdo,
+          isAssetNetwork
         } as AssetProviderValue
       }
     >

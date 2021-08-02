@@ -2,17 +2,13 @@
   position: relative;
 }
 
-@media (min-width: 55rem) {
-  .form {
-    max-width: 12rem;
-    margin-left: auto;
-  }
+.form * {
+  margin-bottom: 0;
 }
 
 .price {
   margin-left: -2rem;
   margin-right: -2rem;
-  padding-top: var(--spacer);
   background: var(--background-highlight);
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
@@ -20,9 +16,13 @@
 
 .grid {
   display: grid;
-  gap: var(--spacer);
+  gap: calc(var(--spacer) / 2);
   grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-  justify-content: center;
+  padding: var(--spacer);
+  max-width: 30rem;
+  margin-left: auto;
+  margin-right: auto;
+  align-items: center;
 }
 
 .fixed label {
@@ -30,7 +30,6 @@
 }
 
 .datatoken {
-  margin-top: calc(var(--spacer) / 2);
   color: var(--color-secondary);
   font-size: var(--font-size-small);
   font-weight: var(--font-weight-bold);
@@ -50,7 +49,6 @@
   font-size: var(--font-size-small);
   color: var(--color-secondary);
   text-align: center;
-  margin-top: -1rem;
   padding-top: calc(var(--spacer) / 3);
   padding-bottom: calc(var(--spacer) / 3);
   border-top: 1px solid var(--border-color);
@@ -58,4 +56,8 @@
 
 .firstPrice div {
   display: inline-block;
+}
+
+.conversion strong {
+  color: var(--color-secondary);
 }

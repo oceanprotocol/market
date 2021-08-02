@@ -6,8 +6,8 @@ import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
 
 export default function Trade(): ReactElement {
-  const { accountId } = useWeb3()
-  const { ocean, balance } = useOcean()
+  const { accountId, balance } = useWeb3()
+  const { ocean } = useOcean()
   const [tokenBalance, setTokenBalance] = useState<PoolBalance>()
   const { price, ddo } = useAsset()
   const [maxDt, setMaxDt] = useState(0)

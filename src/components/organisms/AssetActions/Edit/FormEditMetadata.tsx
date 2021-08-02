@@ -1,13 +1,12 @@
 import React, { ChangeEvent, ReactElement } from 'react'
-import styles from './FormEditMetadata.module.css'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
-import Button from '../../../atoms/Button'
+import { useOcean } from '../../../../providers/Ocean'
 import Input from '../../../atoms/Input'
 import { FormFieldProps } from '../../../../@types/Form'
 import { MetadataPublishFormDataset } from '../../../../@types/MetaData'
 import { checkIfTimeoutInPredefinedValues } from '../../../../utils/metadata'
-import { useOcean } from '../../../../providers/Ocean'
-import { useWeb3 } from '../../../../providers/Web3'
+import FormActions from './FormActions'
+import styles from './FormEditMetadata.module.css'
 
 function handleTimeoutCustomOption(
   data: FormFieldProps[],
@@ -56,10 +55,8 @@ export default function FormEditMetadata({
   values: Partial<MetadataPublishFormDataset>
   showPrice: boolean
 }): ReactElement {
-  const { accountId } = useWeb3()
-  const { ocean, config } = useOcean()
+  const { config } = useOcean()
   const {
-    isValid,
     validateField,
     setFieldValue
   }: FormikContextType<Partial<MetadataPublishFormDataset>> = useFormikContext()
@@ -96,18 +93,10 @@ export default function FormEditMetadata({
           )
       )}
 
-      <footer className={styles.actions}>
-        <Button
-          style="primary"
-          disabled={!ocean || !accountId || !isValid}
-          onClick={() => setTimeoutStringValue(values.timeout)}
-        >
-          Submit
-        </Button>
-        <Button style="text" onClick={() => setShowEdit(false)}>
-          Cancel
-        </Button>
-      </footer>
+      <FormActions
+        setShowEdit={setShowEdit}
+        handleClick={() => setTimeoutStringValue(values.timeout)}
+      />
     </Form>
   )
 }
