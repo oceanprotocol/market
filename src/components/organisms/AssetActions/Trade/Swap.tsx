@@ -8,10 +8,11 @@ import { FormikContextType, useFormikContext } from 'formik'
 import { PoolBalance } from '../../../../@types/TokenBalance'
 import Output from './Output'
 import Slippage from './Slippage'
-import { getPrice } from '../../../../utils/subgraph'
+import { getSpotPrice } from '../../../../utils/subgraph'
 import { FormTradeData, TradeItem } from '../../../../models/FormTrade'
 import { useOcean } from '../../../../providers/Ocean'
 import { usePrices } from '../../../../providers/Prices'
+import Decimal from 'decimal.js'
 
 interface FiatPrices {
   oceanFiatValue: number
@@ -20,11 +21,10 @@ interface FiatPrices {
 
 function calculatePriceImpact(inputValue: number, outputValue: number) {
   console.log(inputValue, outputValue)
-  const difference = outputValue - inputValue
-  const avg = (outputValue + inputValue) / 2
-  const ration = difference / avg
-  const percent = ration * 100
-  console.log(percent)
+  const difference = new Decimal(outputValue - inputValue)
+  // const avg = (outputValue + inputValue) / 2
+  const ration = difference.div(inputValue)
+  const percent = ration.abs().mul(100).toFixed(2).toString()
   return percent.toString()
 }
 
@@ -38,9 +38,8 @@ async function getFiatValues(
     oceanFiatValue: 0,
     datatokenFiatValue: 0
   }
-  const bestPrice: BestPrice = await getPrice(ddo)
-  fiatPrices.datatokenFiatValue =
-    fiatPrice * (bestPrice.value * dataTokenAmount)
+  const spotPrice: number = await getSpotPrice(ddo)
+  fiatPrices.datatokenFiatValue = fiatPrice * (spotPrice * dataTokenAmount)
   fiatPrices.oceanFiatValue = fiatPrice * oceanTokenAmount
 
   return fiatPrices

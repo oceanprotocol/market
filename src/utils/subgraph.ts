@@ -410,6 +410,21 @@ export async function getPrice(asset: DDO): Promise<BestPrice> {
   return bestPrice
 }
 
+export async function getSpotPrice(asset: DDO): Promise<number> {
+  const poolVariables = {
+    datatokenAddress: asset?.dataToken.toLowerCase()
+  }
+  const queryContext = getQueryContext(Number(asset.chainId))
+
+  const poolPriceResponse: OperationResult<AssetsPoolPrice> = await fetchData(
+    AssetPoolPriceQuerry,
+    poolVariables,
+    queryContext
+  )
+
+  return poolPriceResponse.data.pools[0].spotPrice
+}
+
 export async function getAssetsBestPrices(
   assets: DDO[]
 ): Promise<AssetListPrices[]> {
