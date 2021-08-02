@@ -52,5 +52,5 @@ export const initialValues: Partial<MetadataPublishFormAlgorithm> = {
   termsAndConditions: false,
   tags: '',
   timeout: 'Forever',
-  customProvider: ''
+  providerUri: ''
 }

@@ -28,7 +28,7 @@ export const validationSchema: Yup.SchemaOf<MetadataPublishFormDataset> =
       // ---- optional fields ----
       tags: Yup.string().nullable(),
       links: Yup.array<FileMetadata[]>().nullable(),
-      customProvider: Yup.string().url().nullable()
+      providerUri: Yup.string().url().nullable()
     })
     .defined()
 
@@ -45,5 +45,5 @@ export const initialValues: Partial<MetadataPublishFormDataset> = {
   access: '',
   termsAndConditions: false,
   tags: '',
-  customProvider: ''
+  providerUri: ''
 }

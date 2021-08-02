@@ -92,9 +92,9 @@
       "help": "Separate tags with comma."
     },
     {
-      "name": "customProvider",
+      "name": "providerUri",
       "label": "Custom Provider URL",
-      "type": "customProvider",
+      "type": "providerUri",
       "help": "Enter the URL for your custom provider or leave blank to use the default provider. [Learn more](https://github.com/oceanprotocol/provider/).",
       "placeholder": "https://provider.polygon.oceanprotocol.com/",
       "advanced": true

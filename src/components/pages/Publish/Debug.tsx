@@ -23,7 +23,7 @@ export default function Debug({
       {
         index: 1,
         type: values.access,
-        serviceEndpoint: values.customProvider,
+        serviceEndpoint: values.providerUri,
         attributes: {}
       }
     ]
