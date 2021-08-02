@@ -1,0 +1,21 @@
+.title {
+  font-size: var(--font-size-h4);
+  display: inline-flex;
+}
+
+.network {
+  color: var(--font-color-heading);
+  margin-left: calc(var(--spacer) / 8);
+}
+
+.network svg {
+  width: 1em;
+  height: 1em;
+  margin-top: -0.25em;
+  fill: var(--color-secondary);
+}
+
+.tooltip {
+  width: 0.75em;
+  height: 0.75em;
+}

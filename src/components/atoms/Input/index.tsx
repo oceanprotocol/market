@@ -27,6 +27,13 @@ export interface InputProps {
       | ChangeEvent<HTMLSelectElement>
       | ChangeEvent<HTMLTextAreaElement>
   ): void
+  onKeyPress?(
+    e:
+      | React.KeyboardEvent<HTMLInputElement>
+      | React.KeyboardEvent<HTMLInputElement>
+      | React.KeyboardEvent<HTMLSelectElement>
+      | React.KeyboardEvent<HTMLTextAreaElement>
+  ): void
   rows?: number
   multiple?: boolean
   pattern?: string

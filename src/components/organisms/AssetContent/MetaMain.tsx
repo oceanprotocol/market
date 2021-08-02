@@ -9,7 +9,7 @@ import AssetType from '../../atoms/AssetType'
 import styles from './MetaMain.module.css'
 
 export default function MetaMain(): ReactElement {
-  const { ddo, owner, type } = useAsset()
+  const { ddo, owner, type, isAssetNetwork } = useAsset()
   const { networkId, web3ProviderInfo } = useWeb3()
   const isCompute = Boolean(ddo?.findServiceByType('compute'))
   const accessType = isCompute ? 'compute' : 'access'
@@ -34,7 +34,7 @@ export default function MetaMain(): ReactElement {
           {`${ddo?.dataTokenInfo.name} — ${ddo?.dataTokenInfo.symbol}`}
         </ExplorerLink>
 
-        {web3ProviderInfo?.name === 'MetaMask' && (
+        {web3ProviderInfo?.name === 'MetaMask' && isAssetNetwork && (
           <span className={styles.addWrap}>
             <AddToken
               address={ddo?.dataTokenInfo.address}

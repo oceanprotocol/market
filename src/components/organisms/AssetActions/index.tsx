@@ -11,13 +11,14 @@ import Trade from './Trade'
 import { useAsset } from '../../../providers/Asset'
 import { useOcean } from '../../../providers/Ocean'
 import { useWeb3 } from '../../../providers/Web3'
+import Web3Feedback from '../../molecules/Web3Feedback'
 import { getFileInfo } from '../../../utils/provider'
 import axios from 'axios'
 
 export default function AssetActions(): ReactElement {
-  const { accountId } = useWeb3()
-  const { config, ocean, balance, account } = useOcean()
-  const { price, ddo } = useAsset()
+  const { accountId, balance } = useWeb3()
+  const { ocean, config, account } = useOcean()
+  const { price, ddo, isAssetNetwork } = useAsset()
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
   const [dtBalance, setDtBalance] = useState<string>()
@@ -31,7 +32,7 @@ export default function AssetActions(): ReactElement {
   useEffect(() => {
     if (!ddo || !accountId) return
     async function checkIsConsumable() {
-      const consumable = await ocean.assets.isConsumable(
+      const consumable: any = await ocean.assets.isConsumable(
         ddo,
         accountId.toLowerCase()
       )
@@ -72,6 +73,7 @@ export default function AssetActions(): ReactElement {
   // Get and set user DT balance
   useEffect(() => {
     if (!ocean || !accountId) return
+
     async function init() {
       try {
         const dtBalance = await ocean.datatokens.balance(
@@ -84,7 +86,7 @@ export default function AssetActions(): ReactElement {
       }
     }
     init()
-  }, [ocean, accountId, ddo.dataToken])
+  }, [ocean, accountId, ddo.dataToken, isAssetNetwork])
 
   // Check user balance against price
   useEffect(() => {
@@ -141,8 +143,14 @@ export default function AssetActions(): ReactElement {
     )
 
   return (
-    <Permission eventType="consume">
-      <Tabs items={tabs} className={styles.actions} />
-    </Permission>
+    <>
+      <Permission eventType="consume">
+        <Tabs items={tabs} className={styles.actions} />
+      </Permission>
+      <Web3Feedback
+        isBalanceSufficient={isBalanceSufficient}
+        isAssetNetwork={isAssetNetwork}
+      />
+    </>
   )
 }

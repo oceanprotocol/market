@@ -15,10 +15,13 @@ import { Logger } from '@oceanprotocol/lib'
 import { isBrowser } from '../utils'
 import {
   EthereumListsChain,
-  getNetworkData,
+  getNetworkDataById,
   getNetworkDisplayName
 } from '../utils/web3'
-import { graphql, useStaticQuery } from 'gatsby'
+import { graphql } from 'gatsby'
+import { UserBalance } from '../@types/TokenBalance'
+import { getOceanBalance } from '../utils/ocean'
+import useNetworkMetadata from '../hooks/useNetworkMetadata'
 
 interface Web3ProviderValue {
   web3: Web3
@@ -26,6 +29,7 @@ interface Web3ProviderValue {
   web3Modal: Web3Modal
   web3ProviderInfo: IProviderInfo
   accountId: string
+  balance: UserBalance
   networkId: number
   chainId: number
   networkDisplayName: string
@@ -78,6 +82,8 @@ export const web3ModalOpts = {
   theme: web3ModalTheme
 }
 
+const refreshInterval = 20000 // 20 sec.
+
 const networksQuery = graphql`
   query {
     allNetworksMetadataJson {
@@ -101,9 +107,7 @@ const networksQuery = graphql`
 const Web3Context = createContext({} as Web3ProviderValue)
 
 function Web3Provider({ children }: { children: ReactNode }): ReactElement {
-  const data = useStaticQuery(networksQuery)
-  const networksList: { node: EthereumListsChain }[] =
-    data.allNetworksMetadataJson.edges
+  const { networksList } = useNetworkMetadata()
 
   const [web3, setWeb3] = useState<Web3>()
   const [web3Provider, setWeb3Provider] = useState<any>()
@@ -117,7 +121,14 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   const [isTestnet, setIsTestnet] = useState<boolean>()
   const [accountId, setAccountId] = useState<string>()
   const [web3Loading, setWeb3Loading] = useState<boolean>(true)
+  const [balance, setBalance] = useState<UserBalance>({
+    eth: '0',
+    ocean: '0'
+  })
 
+  // -----------------------------------
+  // Helper: connect to web3
+  // -----------------------------------
   const connect = useCallback(async () => {
     if (!web3Modal) {
       setWeb3Loading(false)
@@ -151,6 +162,24 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
       setWeb3Loading(false)
     }
   }, [web3Modal])
+
+  // -----------------------------------
+  // Helper: Get user balance
+  // -----------------------------------
+  const getUserBalance = useCallback(async () => {
+    if (!accountId || !networkId || !web3) return
+
+    try {
+      const balance = {
+        eth: web3.utils.fromWei(await web3.eth.getBalance(accountId, 'latest')),
+        ocean: await getOceanBalance(accountId, networkId, web3)
+      }
+      setBalance(balance)
+      Logger.log('[web3] Balance: ', balance)
+    } catch (error) {
+      Logger.error('[web3] Error: ', error.message)
+    }
+  }, [accountId, networkId, web3])
 
   // -----------------------------------
   // Create initial Web3Modal instance
@@ -187,12 +216,25 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   }, [connect, web3Modal])
 
   // -----------------------------------
+  // Get and set user balance
+  // -----------------------------------
+  useEffect(() => {
+    getUserBalance()
+
+    // init periodic refresh of wallet balance
+    const balanceInterval = setInterval(() => getUserBalance(), refreshInterval)
+
+    return () => {
+      clearInterval(balanceInterval)
+    }
+  }, [getUserBalance])
+
+  // -----------------------------------
   // Get and set network metadata
   // -----------------------------------
   useEffect(() => {
     if (!networkId) return
-
-    const networkData = getNetworkData(networksList, networkId)
+    const networkData = getNetworkDataById(networksList, networkId)
     setNetworkData(networkData)
     Logger.log(
       networkData
@@ -291,6 +333,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
         web3Modal,
         web3ProviderInfo,
         accountId,
+        balance,
         networkId,
         chainId,
         networkDisplayName,

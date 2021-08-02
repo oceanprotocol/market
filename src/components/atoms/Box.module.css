@@ -4,7 +4,6 @@
   border-radius: var(--border-radius);
   border: 1px solid var(--border-color);
   box-shadow: 0 6px 17px 0 var(--box-shadow-color);
-  overflow: hidden;
   padding: calc(var(--spacer) / 1.5);
 }
 
