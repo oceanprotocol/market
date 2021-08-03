@@ -150,10 +150,12 @@ async function getAssetMetadata(
 
 export default function ComputeJobs({
   minimal,
-  assetDTAddress
+  assetDTAddress,
+  chainId
 }: {
   minimal?: boolean
   assetDTAddress?: string
+  chainId?: number
 }): ReactElement {
   const { ocean, account, config, connect } = useOcean()
   const { accountId, networkId } = useWeb3()
@@ -187,7 +189,7 @@ export default function ComputeJobs({
     const result = await fetchDataForMultipleChains(
       assetDTAddress ? getComputeOrdersByDatatokenAddress : getComputeOrders,
       variables,
-      chainIds
+      assetDTAddress ? [chainId] : chainIds
     )
     let data: TokenOrder[] = []
     for (let i = 0; i < result.length; i++) {
