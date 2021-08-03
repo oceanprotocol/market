@@ -8,65 +8,9 @@ import { FormikContextType, useFormikContext } from 'formik'
 import { PoolBalance } from '../../../../@types/TokenBalance'
 import Output from './Output'
 import Slippage from './Slippage'
-import { getSpotPrice } from '../../../../utils/subgraph'
 import { FormTradeData, TradeItem } from '../../../../models/FormTrade'
 import { useOcean } from '../../../../providers/Ocean'
-import { usePrices } from '../../../../providers/Prices'
-import Decimal from 'decimal.js'
-
-interface FiatPrices {
-  oceanFiatValue: number
-  datatokenFiatValue: number
-}
-
-function calculatePriceImpact(inputValue: number, outputValue: number) {
-  console.log('inputFiatValue=', inputValue)
-  console.log('outputFiatValue', outputValue)
-  const difference = new Decimal(outputValue - inputValue)
-  // const avg = (outputValue + inputValue) / 2
-  const ration = difference.div(inputValue)
-  const percent = ration.abs().mul(100).toFixed(2).toString()
-  return percent.toString()
-}
-
-async function getFiatValues(
-  oceanTokenAmount: number,
-  dataTokenAmount: number,
-  ddo: DDO,
-  fiatPrice: number
-) {
-  console.log('dataTokenAmount=', dataTokenAmount)
-  console.log('oceanTokenAmount=', oceanTokenAmount)
-  const fiatPrices: FiatPrices = {
-    oceanFiatValue: 0,
-    datatokenFiatValue: 0
-  }
-  const spotPrice: number = await getSpotPrice(ddo)
-  fiatPrices.datatokenFiatValue = fiatPrice * (spotPrice * dataTokenAmount)
-  fiatPrices.oceanFiatValue = fiatPrice * oceanTokenAmount
-
-  return fiatPrices
-}
-
-async function getPriceImpact(
-  ddo: DDO,
-  oceanTokenAmount: number,
-  dataTokenAmount: number,
-  sell: boolean,
-  fiatPrice: number
-) {
-  const fiatPrices: FiatPrices = await getFiatValues(
-    oceanTokenAmount,
-    dataTokenAmount,
-    ddo,
-    fiatPrice
-  )
-  const priceImpact = await calculatePriceImpact(
-    sell ? fiatPrices.datatokenFiatValue : fiatPrices.oceanFiatValue,
-    sell ? fiatPrices.oceanFiatValue : fiatPrices.datatokenFiatValue
-  )
-  return priceImpact
-}
+import PriceImpact from './PriceImpact'
 
 export default function Swap({
   ddo,
@@ -86,7 +30,6 @@ export default function Swap({
   setMaximumOcean: (value: number) => void
 }): ReactElement {
   const { ocean } = useOcean()
-  const { prices } = usePrices()
   const [oceanItem, setOceanItem] = useState<TradeItem>({
     amount: 0,
     token: 'OCEAN',
@@ -97,7 +40,6 @@ export default function Swap({
     token: ddo.dataTokenInfo.symbol,
     maxAmount: 0
   })
-  const [priceImpact, setPriceImpact] = useState<string>('0')
 
   const {
     setFieldValue,
@@ -105,24 +47,6 @@ export default function Swap({
     setErrors,
     validateForm
   }: FormikContextType<FormTradeData> = useFormikContext()
-
-  useEffect(() => {
-    console.log(values.ocean)
-    if (!values.ocean || !values.datatoken) {
-      setPriceImpact('0')
-      return
-    }
-
-    getPriceImpact(
-      ddo,
-      values.ocean,
-      values.datatoken,
-      values.type === 'sell',
-      (prices as any).eur
-    ).then((newPriceImpact) => {
-      setPriceImpact(newPriceImpact)
-    })
-  }, [values.ocean, values.datatoken])
 
   useEffect(() => {
     if (!ddo || !balance || !values || !price) return
@@ -217,7 +141,13 @@ export default function Swap({
 
       <Output dtSymbol={dtItem.token} poolAddress={price?.address} />
 
-      <Slippage priceImpact={priceImpact} />
+      <PriceImpact
+        ddo={ddo}
+        oceanAmount={values.ocean}
+        datatokenAmount={values.datatoken}
+        tradeType={values.type}
+      />
+      <Slippage />
     </div>
   )
 }
