@@ -3,13 +3,7 @@ import styles from './PriceImpact.module.css'
 import { getSpotPrice } from '../../../../utils/subgraph'
 import Decimal from 'decimal.js'
 import { DDO } from '@oceanprotocol/lib'
-import { usePrices } from '../../../../providers/Prices'
 import Tooltip from '../../../atoms/Tooltip'
-
-interface FiatPrices {
-  oceanFiatValue: number
-  datatokenFiatValue: number
-}
 
 export default function PriceImpact({
   ddo,
@@ -23,53 +17,37 @@ export default function PriceImpact({
   tradeType: string
 }): ReactElement {
   const [priceImpact, setPriceImpact] = useState<string>('0')
-  const { prices } = usePrices()
 
   function calculatePriceImpact(inputValue: number, outputValue: number) {
-    console.log('inputFiatValue=', inputValue)
-    console.log('outputFiatValue', outputValue)
-    const difference = new Decimal(outputValue - inputValue)
-    // const avg = (outputValue + inputValue) / 2
-    const ration = difference.div(inputValue)
-    const percent = ration.abs().mul(100).toFixed(2).toString()
+    console.log('inputOceanValue=', inputValue)
+    console.log('outputOceanValue', outputValue)
+    const bestPrice = (outputValue + inputValue) / 2
+    const difference = outputValue - bestPrice
+    const ration = difference / inputValue
+    const percent = new Decimal(ration).abs().mul(100).toFixed(2).toString()
     return percent.toString()
   }
 
-  async function getFiatValues(
-    oceanTokenAmount: number,
-    dataTokenAmount: number,
-    ddo: DDO,
-    fiatPrice: number
-  ) {
+  async function getDatatokenOceanValue(dataTokenAmount: number, ddo: DDO) {
     console.log('dataTokenAmount=', dataTokenAmount)
-    console.log('oceanTokenAmount=', oceanTokenAmount)
-    const fiatPrices: FiatPrices = {
-      oceanFiatValue: 0,
-      datatokenFiatValue: 0
-    }
     const spotPrice: number = await getSpotPrice(ddo)
-    fiatPrices.datatokenFiatValue = fiatPrice * (spotPrice * dataTokenAmount)
-    fiatPrices.oceanFiatValue = fiatPrice * oceanTokenAmount
-
-    return fiatPrices
+    const datatokenOceanValue = spotPrice * dataTokenAmount
+    return datatokenOceanValue
   }
 
   async function getPriceImpact(
     ddo: DDO,
     oceanTokenAmount: number,
     dataTokenAmount: number,
-    sell: boolean,
-    fiatPrice: number
+    sell: boolean
   ) {
-    const fiatPrices: FiatPrices = await getFiatValues(
-      oceanTokenAmount,
+    const datatokenOceanValue: number = await getDatatokenOceanValue(
       dataTokenAmount,
-      ddo,
-      fiatPrice
+      ddo
     )
     const priceImpact = await calculatePriceImpact(
-      sell ? fiatPrices.datatokenFiatValue : fiatPrices.oceanFiatValue,
-      sell ? fiatPrices.oceanFiatValue : fiatPrices.datatokenFiatValue
+      sell ? datatokenOceanValue : oceanTokenAmount,
+      sell ? oceanTokenAmount : datatokenOceanValue
     )
     return priceImpact
   }
@@ -84,12 +62,11 @@ export default function PriceImpact({
       ddo,
       oceanAmount,
       datatokenAmount,
-      tradeType === 'sell',
-      (prices as any).eur
+      tradeType === 'sell'
     ).then((newPriceImpact) => {
       setPriceImpact(newPriceImpact)
     })
-  }, [oceanAmount, datatokenAmount, prices, ddo, tradeType])
+  }, [oceanAmount, datatokenAmount, ddo, tradeType])
 
   return (
     <div className={styles.priceImpact}>
