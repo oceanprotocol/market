@@ -106,7 +106,7 @@ export default function Edit({
         title: values.name,
         description: values.description,
         links: typeof values.links !== 'string' ? values.links : [],
-        author: values.author
+        author: values.author === '' ? ' ' : values.author
       })
 
       price.type === 'exchange' &&

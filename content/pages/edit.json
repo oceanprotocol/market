@@ -50,7 +50,7 @@
         "label": "New Author",
         "placeholder": "e.g. Mrs McJellyfish",
         "help": "Give proper attribution for your data set.",
-        "required": true
+        "required": false
       }
     ]
   }
