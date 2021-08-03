@@ -10,6 +10,7 @@ interface ButtonBuyProps {
   hasDatatoken: boolean
   dtSymbol: string
   dtBalance: string
+  datasetLowPoolLiquidity: boolean
   assetType: string
   assetTimeout: string
   isConsumable: boolean
@@ -18,6 +19,7 @@ interface ButtonBuyProps {
   hasDatatokenSelectedComputeAsset?: boolean
   dtSymbolSelectedComputeAsset?: string
   dtBalanceSelectedComputeAsset?: string
+  selectedComputeAssetLowPoolLiquidity?: boolean
   selectedComputeAssetType?: string
   isLoading: boolean
   onClick?: (e: FormEvent<HTMLButtonElement>) => void
@@ -33,6 +35,7 @@ function getConsumeHelpText(
   dtSymbol: string,
   hasDatatoken: boolean,
   hasPreviousOrder: boolean,
+  lowPoolLiquidity: boolean,
   assetType: string,
   isConsumable: boolean,
   consumableFeedback: string
@@ -44,8 +47,9 @@ function getConsumeHelpText(
       ? `You bought this ${assetType} already allowing you to use it without paying again.`
       : hasDatatoken
       ? `You own ${dtBalance} ${dtSymbol} allowing you to use this data set by spending 1 ${dtSymbol}, but without paying OCEAN again.`
+      : lowPoolLiquidity
+      ? `There are not enought ${dtSymbol} available in the pool for the transaction to take place`
       : `For using this ${assetType}, you will buy 1 ${dtSymbol} and immediately spend it back to the publisher and pool.`
-
   return text
 }
 
@@ -54,6 +58,7 @@ function getComputeAssetHelpText(
   hasDatatoken: boolean,
   dtSymbol: string,
   dtBalance: string,
+  lowPoolLiquidity: boolean,
   assetType: string,
   isConsumable: boolean,
   consumableFeedback: string,
@@ -61,6 +66,7 @@ function getComputeAssetHelpText(
   hasDatatokenSelectedComputeAsset?: boolean,
   dtSymbolSelectedComputeAsset?: string,
   dtBalanceSelectedComputeAsset?: string,
+  selectedComputeAssettLowPoolLiquidity?: boolean,
   selectedComputeAssetType?: string,
   algorithmConsumableStatus?: number
 ) {
@@ -69,11 +75,12 @@ function getComputeAssetHelpText(
     dtSymbol,
     hasDatatoken,
     hasPreviousOrder,
+    lowPoolLiquidity,
     assetType,
     isConsumable,
     consumableFeedback
   )
-  const text =
+  const computeAlgoHelpText =
     (!dtSymbolSelectedComputeAsset && !dtBalanceSelectedComputeAsset) ||
     isConsumable === false
       ? ''
@@ -87,9 +94,15 @@ function getComputeAssetHelpText(
       ? `You already bought the selected ${selectedComputeAssetType}, allowing you to use it without paying again.`
       : hasDatatokenSelectedComputeAsset
       ? `You own ${dtBalanceSelectedComputeAsset} ${dtSymbolSelectedComputeAsset} allowing you to use the selected ${selectedComputeAssetType} by spending 1 ${dtSymbolSelectedComputeAsset}, but without paying OCEAN again.`
+      : selectedComputeAssettLowPoolLiquidity
+      ? `There are not enought ${dtSymbolSelectedComputeAsset} available in the pool for the transaction to take place`
       : `Additionally, you will buy 1 ${dtSymbolSelectedComputeAsset} for the ${selectedComputeAssetType} and spend it back to its publisher and pool.`
-
-  return `${computeAssetHelpText} ${text}`
+  const computeHelpText = selectedComputeAssettLowPoolLiquidity
+    ? computeAlgoHelpText
+    : lowPoolLiquidity
+    ? computeAssetHelpText
+    : `${computeAssetHelpText} ${computeAlgoHelpText}`
+  return computeHelpText
 }
 
 export default function ButtonBuy({
@@ -99,6 +112,7 @@ export default function ButtonBuy({
   hasDatatoken,
   dtSymbol,
   dtBalance,
+  datasetLowPoolLiquidity,
   assetType,
   assetTimeout,
   isConsumable,
@@ -107,6 +121,7 @@ export default function ButtonBuy({
   hasDatatokenSelectedComputeAsset,
   dtSymbolSelectedComputeAsset,
   dtBalanceSelectedComputeAsset,
+  selectedComputeAssetLowPoolLiquidity,
   selectedComputeAssetType,
   onClick,
   stepText,
@@ -150,6 +165,7 @@ export default function ButtonBuy({
                   dtSymbol,
                   hasDatatoken,
                   hasPreviousOrder,
+                  datasetLowPoolLiquidity,
                   assetType,
                   isConsumable,
                   consumableFeedback
@@ -159,6 +175,7 @@ export default function ButtonBuy({
                   hasDatatoken,
                   dtSymbol,
                   dtBalance,
+                  datasetLowPoolLiquidity,
                   assetType,
                   isConsumable,
                   consumableFeedback,
@@ -166,6 +183,7 @@ export default function ButtonBuy({
                   hasDatatokenSelectedComputeAsset,
                   dtSymbolSelectedComputeAsset,
                   dtBalanceSelectedComputeAsset,
+                  selectedComputeAssetLowPoolLiquidity,
                   selectedComputeAssetType,
                   algorithmConsumableStatus
                 )}

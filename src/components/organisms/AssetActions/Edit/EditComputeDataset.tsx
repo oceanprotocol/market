@@ -20,6 +20,7 @@ import {
   setMinterToDispenser,
   setMinterToPublisher
 } from '../../../../utils/freePrice'
+import Web3Feedback from '../../../molecules/Web3Feedback'
 
 const contentQuery = graphql`
   query EditComputeDataQuery {
@@ -66,7 +67,7 @@ export default function EditComputeDataset({
   const { debug } = useUserPreferences()
   const { ocean } = useOcean()
   const { accountId } = useWeb3()
-  const { ddo, refreshDdo, price } = useAsset()
+  const { ddo, price, isAssetNetwork, refreshDdo } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
 
@@ -169,7 +170,7 @@ export default function EditComputeDataset({
                 setShowEdit={setShowEdit}
               />
             </article>
-
+            <Web3Feedback isAssetNetwork={isAssetNetwork} />
             {debug === true && (
               <div className={styles.grid}>
                 <DebugEditCompute values={values} ddo={ddo} />

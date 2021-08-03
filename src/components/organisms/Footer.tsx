@@ -14,7 +14,8 @@ export default function Footer(): ReactElement {
   return (
     <footer className={styles.footer}>
       <div className={styles.content}>
-        <SyncStatus /> | <BuildId />
+        {/* <SyncStatus /> |  */}
+        <BuildId />
         <MarketStats />
         <div className={styles.copyright}>
           © {year} <Markdown text={copyright} /> —{' '}

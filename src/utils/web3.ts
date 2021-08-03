@@ -19,6 +19,16 @@ export interface NetworkObject {
   urlList: string[]
 }
 
+export function getNetworkConfigObject(node: any): NetworkObject {
+  const networkConfig = {
+    name: node.chain,
+    symbol: node.nativeCurrency.symbol,
+    chainId: node.chainId,
+    urlList: [node.providerUri]
+  }
+  return networkConfig
+}
+
 export function accountTruncate(account: string): string {
   if (!account) return
   const middle = account.substring(6, 38)
@@ -30,21 +40,39 @@ export function getNetworkDisplayName(
   data: EthereumListsChain,
   networkId: number
 ): string {
-  const displayName = data
-    ? `${data.chain} ${data.network === 'mainnet' ? '' : data.network}`
-    : networkId === 2021000
-    ? 'GAIA-X'
-    : networkId === 8996
-    ? 'Development'
-    : 'Unknown'
+  let displayName
+
+  switch (networkId) {
+    case 1287:
+      displayName = 'Moonbase Alpha'
+      break
+    case 137:
+      displayName = 'Polygon'
+      break
+    case 80001:
+      displayName = 'Polygon Mumbai'
+      break
+    case 8996:
+      displayName = 'Development'
+      break
+    case 2021000:
+      displayName = 'GAIA-X'
+      break
+    default:
+      displayName = data
+        ? `${data.chain} ${data.network === 'mainnet' ? '' : data.network}`
+        : 'Unknown'
+      break
+  }
 
   return displayName
 }
 
-export function getNetworkData(
+export function getNetworkDataById(
   data: { node: EthereumListsChain }[],
   networkId: number
 ): EthereumListsChain {
+  if (!networkId) return
   const networkData = data.filter(
     ({ node }: { node: EthereumListsChain }) => node.chainId === networkId
   )
@@ -52,34 +80,48 @@ export function getNetworkData(
   return networkData[0]?.node
 }
 
-export function addCustomNetwork(
+export async function addCustomNetwork(
   web3Provider: any,
   network: NetworkObject
-): void {
+): Promise<void> {
   const newNewtworkData = {
     chainId: `0x${network.chainId.toString(16)}`,
     chainName: network.name,
     rpcUrls: network.urlList
   }
-  web3Provider.request(
-    {
-      method: 'wallet_addEthereumChain',
-      params: [newNewtworkData]
-    },
-    (err: string, added: any) => {
-      if (err || 'error' in added) {
-        Logger.error(
-          `Couldn't add ${network.name} (0x${
-            network.chainId
-          }) netowrk to MetaMask, error: ${err || added.error}`
-        )
-      } else {
-        Logger.log(
-          `Added ${network.name} (0x${network.chainId}) network to MetaMask`
-        )
-      }
+  try {
+    await web3Provider.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: newNewtworkData.chainId }]
+    })
+  } catch (switchError) {
+    if (switchError.code === 4902) {
+      web3Provider.request(
+        {
+          method: 'wallet_addEthereumChain',
+          params: [newNewtworkData]
+        },
+        (err: string, added: any) => {
+          if (err || 'error' in added) {
+            Logger.error(
+              `Couldn't add ${network.name} (0x${
+                network.chainId
+              }) netowrk to MetaMask, error: ${err || added.error}`
+            )
+          } else {
+            Logger.log(
+              `Added ${network.name} (0x${network.chainId}) network to MetaMask`
+            )
+          }
+        }
+      )
+    } else {
+      Logger.error(
+        `Couldn't add ${network.name} (0x${network.chainId}) netowrk to MetaMask, error: ${switchError}`
+      )
     }
-  )
+  }
+  Logger.log(`Added ${network.name} (0x${network.chainId}) network to MetaMask`)
 }
 
 export async function addTokenToWallet(

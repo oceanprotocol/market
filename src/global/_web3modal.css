@@ -81,12 +81,41 @@ div.walletconnect-modal__base {
   box-shadow: 0 6px 17px 0 var(--box-shadow-color);
 }
 
+div.walletconnect-modal__mobile__toggle {
+  width: 95%;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: var(--background-body);
+  border: 1px solid var(--border-color);
+}
+
+div.walletconnect-modal__mobile__toggle a {
+  color: var(--color-secondary);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-small);
+  padding: calc(var(--spacer) / 12) var(--spacer);
+  white-space: nowrap;
+}
+
+div.walletconnect-modal__mobile__toggle_selector {
+  background: var(--font-color-heading);
+  color: var(--background-body);
+  border-color: var(--font-color-heading);
+  height: calc(100% - calc(var(--spacer) / 12));
+  top: calc(var(--spacer) / 24);
+}
+
 div.walletconnect-modal__header p {
   color: var(--font-color-heading);
 }
 
 p.walletconnect-qrcode__text {
   color: var(--color-secondary);
+}
+
+h3.walletconnect-modal__base__row__h3 {
+  font-size: var(--font-size-base);
+  color: var(--font-color-text);
 }
 
 svg.walletconnect-qrcode__image path:first-child {
