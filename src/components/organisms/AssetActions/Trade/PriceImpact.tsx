@@ -1,9 +1,10 @@
-import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './PriceImpact.module.css'
 import { getSpotPrice } from '../../../../utils/subgraph'
 import Decimal from 'decimal.js'
 import { DDO } from '@oceanprotocol/lib'
 import { usePrices } from '../../../../providers/Prices'
+import Tooltip from '../../../atoms/Tooltip'
 
 interface FiatPrices {
   oceanFiatValue: number
@@ -88,7 +89,7 @@ export default function PriceImpact({
     ).then((newPriceImpact) => {
       setPriceImpact(newPriceImpact)
     })
-  }, [oceanAmount, datatokenAmount])
+  }, [oceanAmount, datatokenAmount, prices, ddo, tradeType])
 
   return (
     <div className={styles.priceImpact}>
@@ -96,6 +97,7 @@ export default function PriceImpact({
       <strong
         className={parseInt(priceImpact) > 5 && styles.alert}
       >{` ${priceImpact}%`}</strong>
+      <Tooltip content="The difference between the market price and estimated price due to trade size." />
     </div>
   )
 }
