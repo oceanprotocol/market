@@ -20,8 +20,10 @@ interface UseSiteMetadata {
     polygon: string
   }
   appConfig: {
+    metadataCacheUri: string
     infuraProjectId: string
-    network: string
+    chainIds: number[]
+    chainIdsSupported: number[]
     marketFeeAddress: string
     currencies: string[]
     portisId: string
@@ -55,8 +57,10 @@ const query = graphql`
           polygon
         }
         appConfig {
+          metadataCacheUri
           infuraProjectId
-          network
+          chainIds
+          chainIdsSupported
           marketFeeAddress
           currencies
           portisId

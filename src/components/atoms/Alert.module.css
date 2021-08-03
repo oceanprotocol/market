@@ -45,7 +45,8 @@
   margin-bottom: 0;
 }
 
-.action {
+.action,
+button.action {
   margin-top: calc(var(--spacer) / 2);
 }
 

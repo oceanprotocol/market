@@ -20,6 +20,7 @@ import {
   setMinterToDispenser,
   setMinterToPublisher
 } from '../../../../utils/freePrice'
+import Web3Feedback from '../../../molecules/Web3Feedback'
 
 const contentQuery = graphql`
   query EditAvanceSettingsQuery {
@@ -72,7 +73,7 @@ export default function EditAdvancedSettings({
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
-  const { metadata, ddo, refreshDdo, price } = useAsset()
+  const { isAssetNetwork, ddo, refreshDdo, price } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const { appConfig } = useSiteMetadata()
@@ -168,7 +169,7 @@ export default function EditAdvancedSettings({
                 setShowEdit={setShowEdit}
               />
             </article>
-
+            <Web3Feedback isAssetNetwork={isAssetNetwork} />
             {debug === true && (
               <div className={styles.grid}>
                 <DebugEditCredential

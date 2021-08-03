@@ -8,15 +8,25 @@ import Dotdotdot from 'react-dotdotdot'
 import Table from '../../../atoms/Table'
 import Button from '../../../atoms/Button'
 import { useOcean } from '../../../../providers/Ocean'
-import { gql, useQuery } from '@apollo/client'
+import { gql } from 'urql'
 import { useWeb3 } from '../../../../providers/Web3'
-import { queryMetadata } from '../../../../utils/aquarius'
+import {
+  queryMetadata,
+  transformChainIdsListToQuery
+} from '../../../../utils/aquarius'
 import axios, { CancelToken } from 'axios'
-import { ComputeOrders } from '../../../../@types/apollo/ComputeOrders'
 import Details from './Details'
 import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
 import { ReactComponent as Refresh } from '../../../../images/refresh.svg'
 import styles from './index.module.css'
+import { useUserPreferences } from '../../../../providers/UserPreferences'
+import { getOceanConfig } from '../../../../utils/ocean'
+import { fetchDataForMultipleChains } from '../../../../utils/subgraph'
+import {
+  OrdersData_tokenOrders as OrdersData,
+  OrdersData_tokenOrders_datatokenId as OrdersDatatoken
+} from '../../../../@types/apollo/OrdersData'
+import NetworkName from '../../../atoms/NetworkName'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -57,6 +67,14 @@ const getComputeOrdersByDatatokenAddress = gql`
   }
 `
 
+interface TokenOrder {
+  id: string
+  serviceId: number
+  datatokenId: OrdersDatatoken
+  tx: any | null
+  timestamp: number
+}
+
 export function Status({ children }: { children: string }): ReactElement {
   return <div className={styles.status}>{children}</div>
 }
@@ -70,6 +88,12 @@ const columns = [
           <Link to={`/asset/${row.inputDID[0]}`}>{row.assetName}</Link>
         </Dotdotdot>
       )
+    }
+  },
+  {
+    name: 'Network',
+    selector: function getNetwork(row: ComputeJobMetaData) {
+      return <NetworkName networkId={row.networkId} />
     }
   },
   {
@@ -104,22 +128,23 @@ const columns = [
 
 async function getAssetMetadata(
   queryDtList: string,
-  metadataCacheUri: string,
-  cancelToken: CancelToken
+  cancelToken: CancelToken,
+  chainIds: number[]
 ): Promise<DDO[]> {
   const queryDid = {
     page: 1,
     offset: 100,
     query: {
       query_string: {
-        query: `(${queryDtList}) AND service.attributes.main.type:dataset AND service.type:compute`,
+        query: `(${queryDtList}) AND (${transformChainIdsListToQuery(
+          chainIds
+        )}) AND service.attributes.main.type:dataset AND service.type:compute`,
         fields: ['dataToken']
       }
     }
   }
 
-  const result = await queryMetadata(queryDid, metadataCacheUri, cancelToken)
-
+  const result = await queryMetadata(queryDid, cancelToken)
   return result.results
 }
 
@@ -130,63 +155,82 @@ export default function ComputeJobs({
   minimal?: boolean
   assetDTAddress?: string
 }): ReactElement {
-  const { ocean, account, config } = useOcean()
-  const { accountId } = useWeb3()
+  const { ocean, account, config, connect } = useOcean()
+  const { accountId, networkId } = useWeb3()
   const [isLoading, setIsLoading] = useState(true)
+  const { chainIds } = useUserPreferences()
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
-  const { data, refetch } = useQuery<ComputeOrders>(
-    assetDTAddress ? getComputeOrdersByDatatokenAddress : getComputeOrders,
-    {
-      variables: assetDTAddress
-        ? {
-            user: accountId?.toLowerCase(),
-            datatokenAddress: assetDTAddress.toLowerCase()
-          }
-        : {
-            user: accountId?.toLowerCase()
-          }
-    }
-  )
 
   const columnsMinimal = [columns[3], columns[4]]
 
+  useEffect(() => {
+    async function initOcean() {
+      const oceanInitialConfig = getOceanConfig(networkId)
+      await connect(oceanInitialConfig)
+    }
+    if (ocean === undefined) {
+      initOcean()
+    }
+  }, [networkId, ocean])
+
   async function getJobs() {
-    if (!ocean || !account) return
-
+    if (!accountId) return
     setIsLoading(true)
-
-    await refetch()
+    const variables = assetDTAddress
+      ? {
+          user: accountId?.toLowerCase(),
+          datatokenAddress: assetDTAddress.toLowerCase()
+        }
+      : {
+          user: accountId?.toLowerCase()
+        }
+    const result = await fetchDataForMultipleChains(
+      assetDTAddress ? getComputeOrdersByDatatokenAddress : getComputeOrders,
+      variables,
+      chainIds
+    )
+    let data: TokenOrder[] = []
+    for (let i = 0; i < result.length; i++) {
+      if (!result[i].tokenOrders) continue
+      result[i].tokenOrders.forEach((tokenOrder: TokenOrder) => {
+        data.push(tokenOrder)
+      })
+    }
+    if (!ocean || !account || !data) {
+      return
+    }
+    data = data.sort((a, b) => b.timestamp - a.timestamp)
     const dtList = []
     const computeJobs: ComputeJobMetaData[] = []
-    for (let i = 0; i < data.tokenOrders.length; i++) {
-      dtList.push(data.tokenOrders[i].datatokenId.address)
+    for (let i = 0; i < data.length; i++) {
+      dtList.push(data[i].datatokenId.address)
     }
     const queryDtList = JSON.stringify(dtList)
       .replace(/,/g, ' ')
       .replace(/"/g, '')
       .replace(/(\[|\])/g, '')
+    if (queryDtList === '') {
+      setJobs([])
+      setIsLoading(false)
+      return
+    }
 
     try {
+      setIsLoading(true)
       const source = axios.CancelToken.source()
-      const assets = await getAssetMetadata(
-        queryDtList,
-        config.metadataCacheUri,
-        source.token
-      )
+      const assets = await getAssetMetadata(queryDtList, source.token, chainIds)
       const providers: Provider[] = []
       const serviceEndpoints: string[] = []
-      for (let i = 0; i < data.tokenOrders.length; i++) {
+      for (let i = 0; i < data.length; i++) {
         try {
           const did = web3.utils
-            .toChecksumAddress(data.tokenOrders[i].datatokenId.address)
+            .toChecksumAddress(data[i].datatokenId.address)
             .replace('0x', 'did:op:')
-
           const ddo = assets.filter((x) => x.id === did)[0]
-
-          if (!ddo) continue
+          if (ddo === undefined) continue
 
           const service = ddo.service.filter(
-            (x: Service) => x.index === data.tokenOrders[i].serviceId
+            (x: Service) => x.index === data[i].serviceId
           )[0]
 
           if (!service || service.type !== 'compute') continue
@@ -203,6 +247,7 @@ export default function ComputeJobs({
       }
 
       try {
+        setIsLoading(true)
         for (let i = 0; i < serviceEndpoints.length; i++) {
           const instanceConfig = {
             config,
@@ -256,7 +301,8 @@ export default function ComputeJobs({
             const compJob: ComputeJobMetaData = {
               ...job,
               assetName: serviceMetadata.attributes.main.name,
-              assetDtSymbol: ddo.dataTokenInfo.symbol
+              assetDtSymbol: ddo.dataTokenInfo.symbol,
+              networkId: ddo.chainId
             }
             computeJobs.push(compJob)
           }
@@ -274,14 +320,14 @@ export default function ComputeJobs({
   }
 
   useEffect(() => {
-    if (data === undefined || !config?.metadataCacheUri) {
+    if (!chainIds || !accountId) {
       setIsLoading(false)
       return
     }
     getJobs()
-  }, [ocean, account, data, config?.metadataCacheUri])
+  }, [ocean, account, chainIds, accountId])
 
-  return (
+  return accountId ? (
     <>
       {jobs.length <= 0 || minimal || (
         <Button
@@ -304,5 +350,7 @@ export default function ComputeJobs({
         defaultSortAsc={false}
       />
     </>
+  ) : (
+    <div>Please connect your Web3 wallet.</div>
   )
 }

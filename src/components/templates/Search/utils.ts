@@ -1,6 +1,11 @@
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { MetadataCache, Logger } from '@oceanprotocol/lib'
+import {
+  queryMetadata,
+  transformChainIdsListToQuery
+} from '../../../utils/aquarius'
 import queryString from 'query-string'
+import axios from 'axios'
 
 export const SortTermOptions = {
   Created: 'created',
@@ -28,15 +33,6 @@ export const FilterByTypeOptions = {
 type FilterByTypeOptions =
   typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
 
-function addTypeFilterToQuery(sortTerm: string, typeFilter: string): string {
-  sortTerm = typeFilter
-    ? sortTerm === ''
-      ? `service.attributes.main.type:${typeFilter}`
-      : `${sortTerm} AND service.attributes.main.type:${typeFilter}`
-    : sortTerm
-  return sortTerm
-}
-
 function getSortType(sortParam: string): string {
   const sortTerm =
     sortParam === SortTermOptions.Created
@@ -46,6 +42,7 @@ function getSortType(sortParam: string): string {
 }
 
 export function getSearchQuery(
+  chainIds: number[],
   text?: string,
   owner?: string,
   tags?: string,
@@ -59,7 +56,6 @@ export function getSearchQuery(
   const sortTerm = getSortType(sort)
   const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
   const emptySearchTerm = text === undefined || text === ''
-
   let searchTerm = owner
     ? `(publicKey.owner:${owner})`
     : tags
@@ -71,16 +67,26 @@ export function getSearchQuery(
     : text || ''
 
   searchTerm = searchTerm.trim()
-  let modifiedSearchTerm = searchTerm.split(' ').join(' OR ').trim()
-  modifiedSearchTerm = addTypeFilterToQuery(modifiedSearchTerm, serviceType)
-  searchTerm = addTypeFilterToQuery(searchTerm, serviceType)
+  const modifiedSearchTerm = searchTerm.split(' ').join(' OR ').trim()
+  const noSpaceSearchTerm = searchTerm.split(' ').join('').trim()
+
   const prefixedSearchTerm =
     emptySearchTerm && searchTerm
       ? searchTerm
       : !emptySearchTerm && searchTerm
       ? '*' + searchTerm + '*'
       : '**'
-
+  const searchFields = [
+    'id',
+    'publicKey.owner',
+    'dataToken',
+    'dataTokenInfo.name',
+    'dataTokenInfo.symbol',
+    'service.attributes.main.name^10',
+    'service.attributes.main.author',
+    'service.attributes.additionalInformation.description',
+    'service.attributes.additionalInformation.tags'
+  ]
   return {
     page: Number(page) || 1,
     offset: Number(offset) || 21,
@@ -93,20 +99,18 @@ export function getSearchQuery(
                 {
                   query_string: {
                     query: `${modifiedSearchTerm}`,
-                    fields: [
-                      'id',
-                      'publicKey.owner',
-                      'dataToken',
-                      'dataTokenInfo.name',
-                      'dataTokenInfo.symbol',
-                      'service.attributes.main.name^10',
-                      'service.attributes.main.author',
-                      'service.attributes.additionalInformation.description',
-                      'service.attributes.additionalInformation.tags'
-                    ],
+                    fields: searchFields,
                     minimum_should_match: '2<75%',
                     phrase_slop: 2,
                     boost: 5
+                  }
+                },
+                {
+                  query_string: {
+                    query: `${noSpaceSearchTerm}*`,
+                    fields: searchFields,
+                    boost: 5,
+                    lenient: true
                   }
                 },
                 {
@@ -120,21 +124,24 @@ export function getSearchQuery(
                 {
                   query_string: {
                     query: `${prefixedSearchTerm}`,
-                    fields: [
-                      'id',
-                      'publicKey.owner',
-                      'dataToken',
-                      'dataTokenInfo.name',
-                      'dataTokenInfo.symbol',
-                      'service.attributes.main.name',
-                      'service.attributes.main.author',
-                      'service.attributes.additionalInformation.description',
-                      'service.attributes.additionalInformation.tags'
-                    ],
+                    fields: searchFields,
                     default_operator: 'AND'
                   }
                 }
               ]
+            }
+          },
+          {
+            match: {
+              'service.attributes.main.type':
+                serviceType === undefined
+                  ? 'dataset OR algorithm'
+                  : `${serviceType}`
+            }
+          },
+          {
+            query_string: {
+              query: `${transformChainIdsListToQuery(chainIds)}`
             }
           },
           {
@@ -163,7 +170,8 @@ export async function getResults(
     sortOrder?: string
     serviceType?: string
   },
-  metadataCacheUri: string
+  metadataCacheUri: string,
+  chainIds: number[]
 ): Promise<QueryResult> {
   const {
     text,
@@ -176,9 +184,9 @@ export async function getResults(
     sortOrder,
     serviceType
   } = params
-  const metadataCache = new MetadataCache(metadataCacheUri, Logger)
 
   const searchQuery = getSearchQuery(
+    chainIds,
     text,
     owner,
     tags,
@@ -189,7 +197,9 @@ export async function getResults(
     sortOrder,
     serviceType
   )
-  const queryResult = await metadataCache.queryMetadata(searchQuery)
+  const source = axios.CancelToken.source()
+  // const queryResult = await metadataCache.queryMetadata(searchQuery)
+  const queryResult = await queryMetadata(searchQuery, source.token)
   return queryResult
 }
 
