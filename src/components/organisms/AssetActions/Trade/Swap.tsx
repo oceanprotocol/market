@@ -20,7 +20,8 @@ interface FiatPrices {
 }
 
 function calculatePriceImpact(inputValue: number, outputValue: number) {
-  console.log(inputValue, outputValue)
+  console.log('inputFiatValue=', inputValue)
+  console.log('outputFiatValue', outputValue)
   const difference = new Decimal(outputValue - inputValue)
   // const avg = (outputValue + inputValue) / 2
   const ration = difference.div(inputValue)
@@ -34,6 +35,8 @@ async function getFiatValues(
   ddo: DDO,
   fiatPrice: number
 ) {
+  console.log('dataTokenAmount=', dataTokenAmount)
+  console.log('oceanTokenAmount=', oceanTokenAmount)
   const fiatPrices: FiatPrices = {
     oceanFiatValue: 0,
     datatokenFiatValue: 0
@@ -62,8 +65,6 @@ async function getPriceImpact(
     sell ? fiatPrices.datatokenFiatValue : fiatPrices.oceanFiatValue,
     sell ? fiatPrices.oceanFiatValue : fiatPrices.datatokenFiatValue
   )
-
-  console.log(priceImpact)
   return priceImpact
 }
 
@@ -106,9 +107,11 @@ export default function Swap({
   }: FormikContextType<FormTradeData> = useFormikContext()
 
   useEffect(() => {
-    console.log(values)
-
-    if (!values.ocean && !values.datatoken) return
+    console.log(values.ocean)
+    if (!values.ocean || !values.datatoken) {
+      setPriceImpact('0')
+      return
+    }
 
     getPriceImpact(
       ddo,
