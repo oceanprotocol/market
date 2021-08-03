@@ -91,11 +91,11 @@ export default function PriceImpact({
   }, [oceanAmount, datatokenAmount])
 
   return (
-    <>
-      <div className={styles.priceImpact}>
-        <strong>Expected price impact</strong>
-        <strong>{` ${priceImpact}%`}</strong>
-      </div>
-    </>
+    <div className={styles.priceImpact}>
+      <strong>Expected price impact</strong>
+      <strong
+        className={parseInt(priceImpact) > 5 && styles.alert}
+      >{` ${priceImpact}%`}</strong>
+    </div>
   )
 }
