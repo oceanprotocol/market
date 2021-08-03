@@ -13,6 +13,7 @@ import { FormAddLiquidity } from '.'
 import { PoolBalance } from '../../../../../@types/TokenBalance'
 import UserLiquidity from '../../../../atoms/UserLiquidity'
 import { useOcean } from '../../../../../providers/Ocean'
+import { useWeb3 } from '../../../../../providers/Web3'
 
 export default function FormAdd({
   coin,
@@ -39,7 +40,8 @@ export default function FormAdd({
   setNewPoolTokens: (value: string) => void
   setNewPoolShare: (value: string) => void
 }): ReactElement {
-  const { ocean, balance } = useOcean()
+  const { balance } = useWeb3()
+  const { ocean } = useOcean()
 
   // Connect with form
   const {

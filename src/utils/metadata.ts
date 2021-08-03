@@ -116,6 +116,7 @@ export function transformPublishFormToMetadata(
       name,
       author,
       dateCreated: ddo ? ddo.created : currentTime,
+      datePublished: '',
       files: typeof files !== 'string' && files,
       license: 'https://market.oceanprotocol.com/terms'
     },
@@ -136,10 +137,18 @@ async function isDockerHubImageValid(
   tag: string
 ): Promise<boolean> {
   try {
-    const response = await axios.get(
-      `https://hub.docker.com/v2/repositories/${image}/tags/${tag}`
+    const response = await axios.post(
+      `https://dockerhub-proxy.oceanprotocol.com`,
+      {
+        image,
+        tag
+      }
     )
-    if (!response || response.status !== 200 || !response.data) {
+    if (
+      !response ||
+      response.status !== 200 ||
+      response.data.status !== 'success'
+    ) {
       toast.error(
         'Could not fetch docker hub image info. Please check image name and tag and try again'
       )
@@ -229,4 +238,30 @@ export function transformPublishAlgorithmFormToMetadata(
   }
 
   return metadata
+}
+
+function idToName(id: number): string {
+  switch (id) {
+    case 1:
+      return 'eth'
+    case 137:
+      return 'polygon'
+    case 3:
+      return 'ropsten'
+    case 4:
+      return 'rinkeby'
+    case 1287:
+      return 'moonbase'
+    default:
+      return 'eth'
+  }
+}
+
+export function mapChainIdsToNetworkNames(chainIds: number[]): string[] {
+  const networkNames: string[] = []
+  for (let i = 0; i < chainIds.length; i++) {
+    const networkName = idToName(chainIds[i])
+    networkNames.push(networkName)
+  }
+  return networkNames
 }

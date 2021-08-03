@@ -1,3 +1,4 @@
 .wallet {
   display: flex;
+  align-self: stretch;
 }

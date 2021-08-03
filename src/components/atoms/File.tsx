@@ -4,17 +4,28 @@ import filesize from 'filesize'
 import classNames from 'classnames/bind'
 import cleanupContentType from '../../utils/cleanupContentType'
 import styles from './File.module.css'
+import Loader from '../atoms/Loader'
 
 const cx = classNames.bind(styles)
+
+function LoaderArea() {
+  return (
+    <div className={styles.loaderWrap}>
+      <Loader />
+    </div>
+  )
+}
 
 export default function File({
   file,
   className,
-  small
+  small,
+  isLoading
 }: {
   file: FileMetadata
   className?: string
   small?: boolean
+  isLoading?: boolean
 }): ReactElement {
   if (!file) return null
 
@@ -26,17 +37,23 @@ export default function File({
 
   return (
     <ul className={styleClasses}>
-      {file.contentType || file.contentLength ? (
+      {isLoading === false || isLoading === undefined ? (
         <>
-          <li>{cleanupContentType(file.contentType)}</li>
-          <li>
-            {file.contentLength && file.contentLength !== '0'
-              ? filesize(Number(file.contentLength))
-              : ''}
-          </li>
+          {file.contentType || file.contentLength ? (
+            <>
+              <li>{cleanupContentType(file.contentType)}</li>
+              <li>
+                {file.contentLength && file.contentLength !== '0'
+                  ? filesize(Number(file.contentLength))
+                  : ''}
+              </li>
+            </>
+          ) : (
+            <li className={styles.empty}>No file info available</li>
+          )}
         </>
       ) : (
-        <li className={styles.empty}>No file info available</li>
+        <LoaderArea />
       )}
     </ul>
   )

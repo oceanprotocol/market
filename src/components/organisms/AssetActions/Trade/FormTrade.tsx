@@ -14,6 +14,7 @@ import { FormTradeData, initialValues } from '../../../../models/FormTrade'
 import Decimal from 'decimal.js'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
+import { useAsset } from '../../../../providers/Asset'
 
 const contentQuery = graphql`
   query TradeQuery {
@@ -49,6 +50,7 @@ export default function FormTrade({
   const content = data.content.edges[0].node.childContentJson.trade
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
+  const { isAssetNetwork } = useAsset()
   const { debug } = useUserPreferences()
   const [txId, setTxId] = useState<string>()
   const [coin, setCoin] = useState<string>(ddo.dataTokenInfo.symbol)
@@ -144,7 +146,7 @@ export default function FormTrade({
             </div>
           )}
           <Actions
-            isDisabled={!isWarningAccepted}
+            isDisabled={!isWarningAccepted || !isAssetNetwork}
             isLoading={isSubmitting}
             loaderMessage="Swapping tokens..."
             successMessage="Successfully swapped tokens."

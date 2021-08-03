@@ -16,6 +16,11 @@ import { useUserPreferences } from '../../../../providers/UserPreferences'
 import DebugEditCompute from './DebugEditCompute'
 import styles from './index.module.css'
 import { transformComputeFormToServiceComputePrivacy } from '../../../../utils/compute'
+import {
+  setMinterToDispenser,
+  setMinterToPublisher
+} from '../../../../utils/freePrice'
+import Web3Feedback from '../../../molecules/Web3Feedback'
 
 const contentQuery = graphql`
   query EditComputeDataQuery {
@@ -62,7 +67,7 @@ export default function EditComputeDataset({
   const { debug } = useUserPreferences()
   const { ocean } = useOcean()
   const { accountId } = useWeb3()
-  const { ddo, refreshDdo } = useAsset()
+  const { ddo, price, isAssetNetwork, refreshDdo } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
 
@@ -73,6 +78,15 @@ export default function EditComputeDataset({
     resetForm: () => void
   ) {
     try {
+      if (price.type === 'free') {
+        const tx = await setMinterToPublisher(
+          ocean,
+          ddo.dataToken,
+          accountId,
+          setError
+        )
+        if (!tx) return
+      }
       const privacy = await transformComputeFormToServiceComputePrivacy(
         values,
         ocean
@@ -99,6 +113,15 @@ export default function EditComputeDataset({
         Logger.error(content.form.error)
         return
       } else {
+        if (price.type === 'free') {
+          const tx = await setMinterToDispenser(
+            ocean,
+            ddo.dataToken,
+            accountId,
+            setError
+          )
+          if (!tx) return
+        }
         // Edit succeeded
         setSuccess(content.form.success)
         resetForm()
@@ -147,7 +170,7 @@ export default function EditComputeDataset({
                 setShowEdit={setShowEdit}
               />
             </article>
-
+            <Web3Feedback isAssetNetwork={isAssetNetwork} />
             {debug === true && (
               <div className={styles.grid}>
                 <DebugEditCompute values={values} ddo={ddo} />

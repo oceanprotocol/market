@@ -9,7 +9,7 @@ import { useAsset } from '../../../../providers/Asset'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import { MetadataPreview } from '../../../molecules/MetadataPreview'
 import Debug from './DebugEditMetadata'
-import Web3Feedback from '../../../molecules/Wallet/Feedback'
+import Web3Feedback from '../../../molecules/Web3Feedback'
 import FormEditMetadata from './FormEditMetadata'
 import { mapTimeoutStringToSeconds } from '../../../../utils/metadata'
 import styles from './index.module.css'
@@ -18,6 +18,10 @@ import MetadataFeedback from '../../../molecules/MetadataFeedback'
 import { graphql, useStaticQuery } from 'gatsby'
 import { useWeb3 } from '../../../../providers/Web3'
 import { useOcean } from '../../../../providers/Ocean'
+import {
+  setMinterToDispenser,
+  setMinterToPublisher
+} from '../../../../utils/freePrice'
 
 const contentQuery = graphql`
   query EditMetadataQuery {
@@ -88,6 +92,15 @@ export default function Edit({
     resetForm: () => void
   ) {
     try {
+      if (price.type === 'free') {
+        const tx = await setMinterToPublisher(
+          ocean,
+          ddo.dataToken,
+          accountId,
+          setError
+        )
+        if (!tx) return
+      }
       // Construct new DDO with new values
       const ddoEditedMetdata = await ocean.assets.editMetadata(ddo, {
         title: values.name,
@@ -132,6 +145,15 @@ export default function Edit({
         Logger.error(content.form.error)
         return
       } else {
+        if (price.type === 'free') {
+          const tx = await setMinterToDispenser(
+            ocean,
+            ddo.dataToken,
+            accountId,
+            setError
+          )
+          if (!tx) return
+        }
         // Edit succeeded
         setSuccess(content.form.success)
         resetForm()

@@ -33,7 +33,6 @@
 }
 
 .datatoken {
-  margin-top: calc(var(--spacer) / 8);
   margin-bottom: 0;
   color: var(--color-secondary);
 }
