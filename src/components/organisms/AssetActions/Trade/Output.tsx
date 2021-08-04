@@ -30,8 +30,12 @@ export default function Output({
 
     async function getSwapFee() {
       const swapFee = await ocean.pool.getSwapFee(poolAddress)
+
       // swapFee is tricky: to get 0.1% you need to convert from 0.001
-      setSwapFee(`${Number(swapFee) * 100}`)
+      setSwapFee(
+        isValidNumber(swapFee) ? new Decimal(swapFee).mul(100).toString() : '0'
+      )
+
       const value =
         values.type === 'buy'
           ? isValidNumber(swapFee) && isValidNumber(values.ocean)
