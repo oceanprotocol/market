@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement } from 'react'
 import { useWeb3 } from '../../providers/Web3'
 import Status from '../atoms/Status'
 import styles from './Web3Feedback.module.css'
@@ -22,7 +22,6 @@ export default function Web3Feedback({
   const { isGraphSynced, blockGraph, blockHead } = useGraphSyncStatus()
   const showFeedback =
     !accountId ||
-    // !ocean ||
     isBalanceSufficient === false ||
     isAssetNetwork === false ||
     isGraphSynced === false
@@ -36,9 +35,7 @@ export default function Web3Feedback({
 
   const title = !accountId
     ? 'No account connected'
-    : // : !ocean
-    // ? 'Error connecting to Ocean'
-    accountId && isAssetNetwork === false
+    : accountId && isAssetNetwork === false
     ? 'Not connected to asset network'
     : isGraphSynced === false
     ? `Data out of sync`

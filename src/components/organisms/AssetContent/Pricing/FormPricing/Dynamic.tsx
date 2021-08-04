@@ -112,7 +112,7 @@ export default function Dynamic({
         />
       </div>
 
-      <Fees tooltips={content.tooltips} />
+      <Fees tooltips={content.tooltips} pricingType="dynamic" />
 
       <footer className={styles.summary}>
         You will get: <br />
