@@ -20,7 +20,7 @@
       "title": "Dynamic",
       "info": "Let's create a decentralized, automated market for your data set. The datatoken for this data set will be worth the entered amount of OCEAN. Additionally, you will provide liquidity into a Datatoken/OCEAN liquidity pool with Balancer.",
       "tooltips": {
-        "poolInfo": "Explain what is going on here...",
+        "poolInfo": "The liquidity pool provides the funds for traders to trade against. The price of the asset is determined by the ration of OCEAN to datatokens.",
         "swapFee": "This transaction fee is shared among the Liquidity Providers when datatokens are purchased. The fee is set by the creator of the pool and is used to incentivize Liquidity Providers to join the pool.",
         "communityFee": "This fees go to [OceanDAO](https://oceanprotocol.com/dao) for teams to improve the tools, build apps, do outreach, and more. A small fraction also goes to burning OCEAN. These fees are collected in the action of consuming a data asset.",
         "marketplaceFee": "This fee goes to the marketplace that is providing the consume-side functionality. In Ocean Market, these fees are collected in the action of consuming a data asset and are treated as Network Revenue that goes to the Ocean Community."
