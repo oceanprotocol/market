@@ -12,8 +12,8 @@
       "title": "Fixed",
       "info": "Set your price for accessing this data set. The datatoken for this data set will be worth the entered amount of OCEAN.",
       "tooltips": {
-        "communityFee": "Explain community fee...",
-        "marketplaceFee": "Explain marketplace fee..."
+        "communityFee": "This fees go to [OceanDAO](https://oceanprotocol.com/dao) for teams to improve the tools, build apps, do outreach, and more. A small fraction also goes to burning OCEAN. These fees are collected in the action of consuming a data asset.",
+        "marketplaceFee": "This fee goes to the marketplace that is providing the consume-side functionality. In Ocean Market, these fees are collected in the action of consuming a data asset and are treated as Network Revenue that goes to the Ocean Community."
       }
     },
     "dynamic": {
