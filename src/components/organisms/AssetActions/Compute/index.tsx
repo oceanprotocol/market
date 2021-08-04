@@ -475,7 +475,7 @@ export default function Compute({
         )}
       </footer>
       {accountId && (
-        <AssetActionHistoryTable title="Compute jobs">
+        <AssetActionHistoryTable title="Your Compute Jobs">
           <ComputeJobs
             minimal
             assetDTAddress={ddo.dataTokenInfo.address}

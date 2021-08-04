@@ -385,7 +385,7 @@ export default function Pool(): ReactElement {
           </div>
 
           {accountId && (
-            <AssetActionHistoryTable title="Pool transactions">
+            <AssetActionHistoryTable title="Your Pool Transactions">
               <PoolTransactions poolAddress={price?.address} minimal />
             </AssetActionHistoryTable>
           )}
