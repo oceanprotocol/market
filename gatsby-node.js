@@ -36,13 +36,12 @@ exports.onCreatePage = async ({ page, actions }) => {
   const handleClientSideOnlyAsset = page.path.match(/^\/asset/)
   const handleClientSideOnlyAccount = page.path.match(/^\/account/)
 
-  if (handleClientSideOnlyAsset || handleClientSideOnlyAccount) {
-    page.matchPath = handleClientSideOnlyAsset
-      ? '/asset/*'
-      : handleClientSideOnlyAsset
-      ? '/account/*'
-      : '/'
+  if (handleClientSideOnlyAsset) {
+    page.matchPath = '/asset/*'
     // Update the page.
+    createPage(page)
+  } else if (handleClientSideOnlyAccount) {
+    page.matchPath = '/account/*'
     createPage(page)
   }
 }
