@@ -199,7 +199,7 @@ export default function Add({
             />
 
             <Actions
-              isDisabled={!isWarningAccepted}
+              isDisabled={!isWarningAccepted || amount === '' || amount === '0'}
               isLoading={isSubmitting}
               loaderMessage="Adding Liquidity..."
               successMessage="Successfully added liquidity."
