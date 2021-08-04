@@ -38,7 +38,8 @@ import { secondsToString } from '../../../../utils/metadata'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import AlgorithmDatasetsListForCompute from '../../AssetContent/AlgorithmDatasetsListForCompute'
 import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
-import { chainIds } from '../../../../../app.config'
+import AssetActionHistoryTable from '../../AssetActionHistoryTable'
+import ComputeJobs from '../../../pages/History/ComputeJobs'
 
 const SuccessAction = () => (
   <Button style="text" to="/history?defaultTab=ComputeJobs" size="small">
@@ -473,6 +474,15 @@ export default function Compute({
           />
         )}
       </footer>
+      {accountId && (
+        <AssetActionHistoryTable title="Your Compute Jobs">
+          <ComputeJobs
+            minimal
+            assetDTAddress={ddo.dataTokenInfo.address}
+            chainId={ddo.chainId}
+          />
+        </AssetActionHistoryTable>
+      )}
     </>
   )
 }
