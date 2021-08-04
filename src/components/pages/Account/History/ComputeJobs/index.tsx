@@ -46,6 +46,27 @@ const getComputeOrders = gql`
   }
 `
 
+const getComputeOrdersByDatatokenAddress = gql`
+  query ComputeOrdersByDatatokenAddress(
+    $user: String!
+    $datatokenAddress: String!
+  ) {
+    tokenOrders(
+      orderBy: timestamp
+      orderDirection: desc
+      where: { payer: $user, datatokenId: $datatokenAddress }
+    ) {
+      id
+      serviceId
+      datatokenId {
+        address
+      }
+      tx
+      timestamp
+    }
+  }
+`
+
 interface TokenOrder {
   id: string
   serviceId: number
@@ -127,12 +148,22 @@ async function getAssetMetadata(
   return result.results
 }
 
-export default function ComputeJobs(): ReactElement {
+export default function ComputeJobs({
+  minimal,
+  assetDTAddress,
+  chainId
+}: {
+  minimal?: boolean
+  assetDTAddress?: string
+  chainId?: number
+}): ReactElement {
   const { ocean, account, config, connect } = useOcean()
   const { accountId, networkId } = useWeb3()
-  const { chainIds } = useUserPreferences()
   const [isLoading, setIsLoading] = useState(true)
+  const { chainIds } = useUserPreferences()
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
+
+  const columnsMinimal = [columns[4], columns[5], columns[3]]
 
   useEffect(() => {
     async function initOcean() {
@@ -147,11 +178,18 @@ export default function ComputeJobs(): ReactElement {
   async function getJobs() {
     if (!accountId) return
     setIsLoading(true)
-    const variables = { user: accountId?.toLowerCase() }
+    const variables = assetDTAddress
+      ? {
+          user: accountId?.toLowerCase(),
+          datatokenAddress: assetDTAddress.toLowerCase()
+        }
+      : {
+          user: accountId?.toLowerCase()
+        }
     const result = await fetchDataForMultipleChains(
-      getComputeOrders,
+      assetDTAddress ? getComputeOrdersByDatatokenAddress : getComputeOrders,
       variables,
-      chainIds
+      assetDTAddress ? [chainId] : chainIds
     )
     let data: TokenOrder[] = []
     for (let i = 0; i < result.length; i++) {
@@ -293,20 +331,21 @@ export default function ComputeJobs(): ReactElement {
 
   return accountId ? (
     <>
-      <Button
-        style="text"
-        size="small"
-        title="Refresh compute jobs"
-        onClick={() => getJobs()}
-        disabled={isLoading}
-        className={styles.refresh}
-      >
-        <Refresh />
-        Refresh
-      </Button>
-
+      {jobs.length <= 0 || minimal || (
+        <Button
+          style="text"
+          size="small"
+          title="Refresh compute jobs"
+          onClick={() => getJobs()}
+          disabled={isLoading}
+          className={styles.refresh}
+        >
+          <Refresh />
+          Refresh
+        </Button>
+      )}
       <Table
-        columns={columns}
+        columns={minimal ? columnsMinimal : columns}
         data={jobs}
         isLoading={isLoading}
         defaultSortField="row.dateCreated"

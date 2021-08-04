@@ -1,5 +1,5 @@
-.transactions {
-  composes: container from './index.module.css';
+.actions {
+  composes: container from './AssetActions/Pool/index.module.css';
   border-top: 1px solid var(--border-color);
   margin-top: calc(var(--spacer) / 1.5);
   padding: calc(var(--spacer) / 1.5);
@@ -7,12 +7,12 @@
   margin-bottom: -2rem;
 }
 
-.transactions [class*='rdt_Pagination'] {
+.actions [class*='rdt_Pagination'] {
   margin-bottom: -1rem;
 }
 
 .title {
-  composes: title from './index.module.css';
+  composes: title from './AssetActions/Pool/index.module.css';
   margin-bottom: 0;
   display: flex;
   align-items: center;
@@ -44,7 +44,7 @@
   transform: rotate(180deg);
 }
 
-.transactions [class*='Table-module--table'] {
+.actions [class*='Table-module--table'] {
   /* 
     react-data-table-component sets a default width: 100% 
     which often leads to unneccessary overflows. Following lines make
@@ -52,6 +52,9 @@
     when enough space is available. But it also destroys overflow table on narrow
     viewports.
   */
-  width: fit-content !important;
-  min-width: 100%;
+  width: 100%;
+}
+
+.actions [class*='TableCell'] {
+  width: 140px;
 }
