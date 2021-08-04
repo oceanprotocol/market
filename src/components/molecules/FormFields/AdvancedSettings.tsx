@@ -1,9 +1,9 @@
 import React, { ReactElement, useState, FormEvent, ChangeEvent } from 'react'
+import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import Input from '../../atoms/Input'
 import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { Field } from 'formik'
-import appConfig from '../../../../app.config'
 import styles from './AdvancedSettings.module.css'
 
 export default function AdvancedSettings(prop: {
@@ -13,6 +13,7 @@ export default function AdvancedSettings(prop: {
     field: FormFieldProps
   ) => void
 }): ReactElement {
+  const { appConfig } = useSiteMetadata()
   const [advancedSettings, setAdvancedSettings] = useState<boolean>(false)
 
   function toggleAdvancedSettings(e: FormEvent<Element>) {

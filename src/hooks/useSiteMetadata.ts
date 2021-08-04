@@ -32,6 +32,7 @@ interface UseSiteMetadata {
     allowFreePricing: string
     allowAdvancedSettings: string
     credentialType: string
+    allowAdvancedPublishSettings: string
   }
 }
 
