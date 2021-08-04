@@ -15,24 +15,23 @@ interface HistoryTab {
   content: JSX.Element
 }
 
-function getTabs(accountIdentifier: string): HistoryTab[] {
-  const { accountId } = useWeb3()
+function getTabs(accountId: string, userAccountId: string): HistoryTab[] {
   const defaultTabs: HistoryTab[] = [
     {
       title: 'Published',
-      content: <PublishedList accountId={accountIdentifier} />
+      content: <PublishedList accountId={accountId} />
     },
     {
       title: 'Pool Shares',
-      content: <PoolShares accountId={accountIdentifier} />
+      content: <PoolShares accountId={accountId} />
     },
     {
       title: 'Pool Transactions',
-      content: <PoolTransactions accountId={accountIdentifier} />
+      content: <PoolTransactions accountId={accountId} />
     },
     {
       title: 'Downloads',
-      content: <Downloads accountId={accountIdentifier} />
+      content: <Downloads accountId={accountId} />
     }
   ]
   const computeTab: HistoryTab = {
@@ -43,21 +42,22 @@ function getTabs(accountIdentifier: string): HistoryTab[] {
       </OceanProvider>
     )
   }
-  if (accountIdentifier === accountId) {
+  if (accountId === userAccountId) {
     defaultTabs.push(computeTab)
   }
   return defaultTabs
 }
 
 export default function HistoryPage({
-  accountId
+  accountIdentifier
 }: {
-  accountId: string
+  accountIdentifier: string
 }): ReactElement {
   const { chainIds } = useUserPreferences()
+  const { accountId } = useWeb3()
   const url = new URL(window.location.href)
   const defaultTab = url.searchParams.get('defaultTab')
-  const tabs = getTabs(accountId)
+  const tabs = getTabs(accountIdentifier, accountId)
   let defaultTabIndex = 0
   defaultTab === 'ComputeJobs' ? (defaultTabIndex = 4) : (defaultTabIndex = 0)
   return (

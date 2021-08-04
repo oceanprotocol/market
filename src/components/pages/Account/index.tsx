@@ -17,7 +17,7 @@ export default function AccountPage({
       ) : (
         <p>Please connect your Web3 wallet.</p>
       )}
-      <HistoryPage accountId={accountIdentifier} />
+      <HistoryPage accountIdentifier={accountIdentifier} />
     </article>
   )
 }
