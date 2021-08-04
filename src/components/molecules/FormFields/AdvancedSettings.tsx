@@ -15,7 +15,6 @@ export default function AdvancedSettings(prop: {
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const [advancedSettings, setAdvancedSettings] = useState<boolean>(false)
-
   function toggleAdvancedSettings(e: FormEvent<Element>) {
     e.preventDefault()
     advancedSettings === true

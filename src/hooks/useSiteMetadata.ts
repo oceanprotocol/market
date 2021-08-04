@@ -69,6 +69,7 @@ const query = graphql`
           allowDynamicPricing
           allowFreePricing
           allowAdvancedSettings
+          allowAdvancedPublishSettings
           credentialType
         }
       }
