@@ -54,3 +54,7 @@
   */
   width: 100%;
 }
+
+.actions [class*='TableCell'] {
+  width: 140px;
+}
