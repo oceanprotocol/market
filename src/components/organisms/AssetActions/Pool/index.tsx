@@ -22,10 +22,11 @@ import { useWeb3 } from '../../../../providers/Web3'
 import PoolTransactions from '../../../molecules/PoolTransactions'
 import { fetchData, getQueryContext } from '../../../../utils/subgraph'
 
-const REFETCH_INTERVAL = 5000
 import { isValidNumber } from './../../../../utils/numberValidations'
 import Decimal from 'decimal.js'
 import { constants } from 'node:buffer'
+
+const REFETCH_INTERVAL = 5000
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
