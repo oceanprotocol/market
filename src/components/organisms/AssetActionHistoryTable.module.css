@@ -52,6 +52,5 @@
     when enough space is available. But it also destroys overflow table on narrow
     viewports.
   */
-  width: fit-content !important;
-  min-width: 100%;
+  width: 100%;
 }

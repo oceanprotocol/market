@@ -163,7 +163,7 @@ export default function ComputeJobs({
   const { chainIds } = useUserPreferences()
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
 
-  const columnsMinimal = [columns[3], columns[4]]
+  const columnsMinimal = [columns[4], columns[5], columns[3]]
 
   useEffect(() => {
     async function initOcean() {
