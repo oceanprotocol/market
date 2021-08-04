@@ -7,7 +7,7 @@
 }
 
 .asset {
-  composes: box from '../../../atoms/Box.module.css';
+  composes: box from '../../../../atoms/Box.module.css';
   box-shadow: none;
   padding: calc(var(--spacer) / 2);
   margin-bottom: calc(var(--spacer) / 2);

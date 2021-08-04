@@ -1,22 +1,22 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import Table from '../../atoms/Table'
-import Conversion from '../../atoms/Price/Conversion'
+import Table from '../../../atoms/Table'
+import Conversion from '../../../atoms/Price/Conversion'
 import styles from './PoolShares.module.css'
-import AssetTitle from '../../molecules/AssetListTitle'
+import AssetTitle from '../../../molecules/AssetListTitle'
 import { gql } from 'urql'
 import {
   PoolShares as PoolSharesList,
   PoolShares_poolShares as PoolShare,
   PoolShares_poolShares_poolId_tokens as PoolSharePoolIdTokens
-} from '../../../@types/apollo/PoolShares'
+} from '../../../../@types/apollo/PoolShares'
 import web3 from 'web3'
-import Token from '../../organisms/AssetActions/Pool/Token'
-import { useWeb3 } from '../../../providers/Web3'
-import { useUserPreferences } from '../../../providers/UserPreferences'
-import { fetchDataForMultipleChains } from '../../../utils/subgraph'
-import NetworkName from '../../atoms/NetworkName'
+import Token from '../../../organisms/AssetActions/Pool/Token'
+import { useWeb3 } from '../../../../providers/Web3'
+import { useUserPreferences } from '../../../../providers/UserPreferences'
+import { fetchDataForMultipleChains } from '../../../../utils/subgraph'
+import NetworkName from '../../../atoms/NetworkName'
 import axios from 'axios'
-import { retrieveDDO } from '../../../utils/aquarius'
+import { retrieveDDO } from '../../../../utils/aquarius'
 
 const REFETCH_INTERVAL = 20000
 

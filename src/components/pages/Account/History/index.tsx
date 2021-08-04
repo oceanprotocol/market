@@ -1,13 +1,13 @@
 import React, { ReactElement } from 'react'
-import Tabs from '../../atoms/Tabs'
+import Tabs from '../../../atoms/Tabs'
 import PoolShares from './PoolShares'
-import PoolTransactions from '../../molecules/PoolTransactions'
+import PoolTransactions from '../../../molecules/PoolTransactions'
 import PublishedList from './PublishedList'
 import Downloads from './Downloads'
 import ComputeJobs from './ComputeJobs'
 import styles from './index.module.css'
-import { useUserPreferences } from '../../../providers/UserPreferences'
-import OceanProvider from '../../../providers/Ocean'
+import { useUserPreferences } from '../../../../providers/UserPreferences'
+import OceanProvider from '../../../../providers/Ocean'
 
 const tabs = [
   {

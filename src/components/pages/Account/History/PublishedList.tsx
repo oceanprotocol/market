@@ -1,15 +1,15 @@
 import { Logger } from '@oceanprotocol/lib'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import React, { ReactElement, useEffect, useState } from 'react'
-import AssetList from '../../organisms/AssetList'
+import AssetList from '../../../organisms/AssetList'
 import axios from 'axios'
 import {
   queryMetadata,
   transformChainIdsListToQuery
-} from '../../../utils/aquarius'
-import { useWeb3 } from '../../../providers/Web3'
-import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
-import { useUserPreferences } from '../../../providers/UserPreferences'
+} from '../../../../utils/aquarius'
+import { useWeb3 } from '../../../../providers/Web3'
+import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
+import { useUserPreferences } from '../../../../providers/UserPreferences'
 
 export default function PublishedList(): ReactElement {
   const { accountId } = useWeb3()
