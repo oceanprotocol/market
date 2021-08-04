@@ -18,9 +18,6 @@ import { useWeb3 } from '../../../../../providers/Web3'
 import { isValidNumber } from './../../../../../utils/numberValidations'
 import Decimal from 'decimal.js'
 
-import { isValidNumber } from './../../../../../utils/numberValidations'
-import Decimal from 'decimal.js'
-
 export default function FormAdd({
   coin,
   dtBalance,

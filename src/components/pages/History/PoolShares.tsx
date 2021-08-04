@@ -17,18 +17,12 @@ import { fetchDataForMultipleChains } from '../../../utils/subgraph'
 import NetworkName from '../../atoms/NetworkName'
 import axios from 'axios'
 import { retrieveDDO } from '../../../utils/aquarius'
+import { isValidNumber } from './../../../utils/numberValidations'
+import Decimal from 'decimal.js'
+
+Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
 const REFETCH_INTERVAL = 20000
-
-import { isValidNumber } from './../../../utils/numberValidations'
-import Decimal from 'decimal.js'
-
-Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
-
-import { isValidNumber } from './../../../utils/numberValidations'
-import Decimal from 'decimal.js'
-
-Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
 const poolSharesQuery = gql`
   query PoolShares($user: String) {
