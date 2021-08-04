@@ -1,9 +1,20 @@
 module.exports = {
-  // The default network and its associated config the app should connect to
-  // on start. App will automatically switch network configs when user switches
-  // networks in their wallet.
-  // Ocean Protocol contracts are deployed for: 'mainnet', 'rinkeby', 'development'
-  network: process.env.GATSBY_NETWORK || 'mainnet',
+  // URI of single metadata cache instance for all networks.
+  // While ocean.js includes this value for each network as part of its ConfigHelper,
+  // it is assumed to be the same for all networks.
+  // In components can be accessed with the useSiteMetadata hook:
+  // const { appConfig } = useSiteMetadata()
+  // return appConfig.metadataCacheUri
+  metadataCacheUri:
+    process.env.METADATACACHE_URI || 'https://aquarius.oceanprotocol.com',
+
+  // List of chainIds which metadata cache queries will return by default.
+  // This preselects the Chains user preferences.
+  chainIds: [1, 137, 56],
+
+  // List of all supported chainIds. Used to populate the Chains user preferences list.
+  chainIdsSupported: [1, 3, 4, 137, 80001, 1287, 56],
+
   rbacUrl: process.env.GATSBY_RBAC_URL,
 
   infuraProjectId: process.env.GATSBY_INFURA_PROJECT_ID || 'xxx',

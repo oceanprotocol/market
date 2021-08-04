@@ -2,14 +2,14 @@ import React, { ReactElement, useEffect, FormEvent, ChangeEvent } from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 import { useFormikContext, Field, Form, FormikContextType } from 'formik'
 import Input from '../../atoms/Input'
-import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { MetadataPublishFormDataset } from '../../../@types/MetaData'
 import { initialValues as initialValuesDataset } from '../../../models/FormAlgoPublish'
 import { useOcean } from '../../../providers/Ocean'
 import { ReactComponent as Download } from '../../../images/download.svg'
 import { ReactComponent as Compute } from '../../../images/compute.svg'
-import stylesIndex from './index.module.css'
+import FormTitle from './FormTitle'
+import FormActions from './FormActions'
 import styles from './FormPublish.module.css'
 import AdvancedSettings from '../../molecules/FormFields/advancedSettings'
 
@@ -44,7 +44,7 @@ const query = graphql`
 export default function FormPublish(): ReactElement {
   const data = useStaticQuery(query)
   const content: FormContent = data.content.edges[0].node.childPublishJson
-  const { ocean, account } = useOcean()
+
   const {
     status,
     setStatus,
@@ -52,7 +52,6 @@ export default function FormPublish(): ReactElement {
     setErrors,
     setTouched,
     resetForm,
-    initialValues,
     validateField,
     setFieldValue
   }: FormikContextType<MetadataPublishFormDataset> = useFormikContext()
@@ -105,7 +104,7 @@ export default function FormPublish(): ReactElement {
       // do we need this?
       onChange={() => status === 'empty' && setStatus(null)}
     >
-      <h2 className={stylesIndex.formTitle}>{content.title}</h2>
+      <FormTitle title={content.title} />
       {content.data.map(
         (field: FormFieldProps) =>
           field.advanced !== true && (
@@ -126,21 +125,11 @@ export default function FormPublish(): ReactElement {
         content={content}
         handleFieldChange={handleFieldChange}
       />
-      <footer className={styles.actions}>
-        <Button
-          style="primary"
-          type="submit"
-          disabled={!ocean || !account || !isValid || status === 'empty'}
-        >
-          Submit
-        </Button>
 
-        {status !== 'empty' && (
-          <Button style="text" size="small" onClick={resetFormAndClearStorage}>
-            Reset Form
-          </Button>
-        )}
-      </footer>
+      <FormActions
+        isValid={isValid}
+        resetFormAndClearStorage={resetFormAndClearStorage}
+      />
     </Form>
   )
 }

@@ -10,5 +10,3 @@ export default {
 export const Normal = () => <SearchBar />
 
 export const WithInitialValue = () => <SearchBar initialValue="Water" />
-
-export const WithFilters = () => <SearchBar filters />

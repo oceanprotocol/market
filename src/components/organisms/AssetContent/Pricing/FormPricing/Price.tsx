@@ -2,11 +2,11 @@ import Conversion from '../../../../atoms/Price/Conversion'
 import { useField } from 'formik'
 import React, { ReactElement, useState, useEffect } from 'react'
 import Input from '../../../../atoms/Input'
-import styles from './Price.module.css'
 import Error from './Error'
 import { DDO } from '@oceanprotocol/lib'
 import PriceUnit from '../../../../atoms/Price/PriceUnit'
 import usePricing from '../../../../../hooks/usePricing'
+import styles from './Price.module.css'
 
 export default function Price({
   ddo,
@@ -56,16 +56,14 @@ export default function Price({
               prefix="OCEAN"
               min="1"
               {...field}
-              additionalComponent={
-                <Conversion price={field.value} className={styles.conversion} />
-              }
             />
           )}
           <Error meta={meta} />
         </div>
         <div className={styles.datatoken}>
           <h4>
-            = <strong>1</strong> {dtName} — {dtSymbol}
+            = <strong>1</strong> {dtSymbol}{' '}
+            <Conversion price={field.value} className={styles.conversion} />
           </h4>
         </div>
       </div>

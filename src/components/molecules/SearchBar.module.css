@@ -1,17 +1,72 @@
-.form {
-  margin-bottom: var(--spacer);
+.search {
+  display: flex;
+  position: relative;
+}
+
+.button {
+  color: var(--color-secondary);
+  cursor: pointer;
+  background: var(--background-content);
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  position: absolute;
+  padding: calc(var(--spacer) / 4);
   width: 100%;
-  max-width: 30rem;
+  right: 1px;
+  left: 1px;
+  top: 1px;
+  bottom: 1px;
+  z-index: -1;
 }
 
-.form > div > div {
+.button:hover,
+.button:focus {
+  color: var(--font-color-text);
+}
+
+.input {
+  background-color: transparent;
+  height: 36px;
   margin: 0;
+  outline: 0;
+  padding-right: var(--spacer);
+  width: 0;
+  transition: none;
 }
 
-.form label {
-  display: none;
-}
-
-.form input {
+.input:focus {
+  width: calc(100% - var(--spacer));
   background-color: var(--background-content);
+  position: fixed;
+  left: calc(var(--spacer) / 2);
+  right: 0;
+  z-index: 2;
+}
+
+@media screen and (min-width: 78rem) {
+  .input,
+  .input:focus {
+    width: auto;
+    position: relative;
+    left: initial;
+    right: initial;
+  }
+
+  .button {
+    width: auto;
+    left: auto;
+    background: none;
+  }
+
+  .input:focus + .button {
+    z-index: 3;
+  }
+}
+
+.searchIcon {
+  fill: currentColor;
+  transition: 0.2s ease-out;
+  width: var(--font-size-h5);
+  height: var(--font-size-h5);
 }

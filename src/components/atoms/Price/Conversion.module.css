@@ -6,6 +6,9 @@
   font-weight: var(--font-weight-base);
 }
 
+.removeTvlPadding {
+  padding-left: 0 !important;
+}
 /* fiat currency symbol */
 .conversion strong span {
   font-weight: var(--font-weight-base);

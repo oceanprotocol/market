@@ -66,6 +66,7 @@ export interface MetadataEditForm {
   timeout: string
   price?: number
   links?: string | EditableMetadataLinks[]
+  author?: string
 }
 
 export interface ServiceMetadataMarket extends ServiceMetadata {

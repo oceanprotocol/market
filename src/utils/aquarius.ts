@@ -12,12 +12,13 @@ import {
 import { AssetSelectionAsset } from '../components/molecules/FormFields/AssetSelection'
 import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
+import { metadataCacheUri } from '../../app.config'
 
-function getQueryForAlgorithmDatasets(algorithmDid: string) {
+function getQueryForAlgorithmDatasets(algorithmDid: string, chainId?: number) {
   return {
     query: {
       query_string: {
-        query: `service.attributes.main.privacy.publisherTrustedAlgorithms.did:${algorithmDid}`
+        query: `service.attributes.main.privacy.publisherTrustedAlgorithms.did:${algorithmDid} AND chainId:${chainId}`
       }
     },
     sort: { created: -1 }
@@ -49,18 +50,25 @@ export function transformQueryResult(
   }
 }
 
+export function transformChainIdsListToQuery(chainIds: number[]): string {
+  let chainQuery = ''
+  chainIds.forEach((chainId) => {
+    chainQuery += `chainId:${chainId} OR `
+  })
+  chainQuery = chainQuery.slice(0, chainQuery.length - 4)
+  return chainQuery
+}
+
 export async function queryMetadata(
   query: SearchQuery,
-  metadataCacheUri: string,
   cancelToken: CancelToken
 ): Promise<QueryResult> {
   try {
-    const response: AxiosResponse<QueryResult> = await axios.post(
+    const response: AxiosResponse<any> = await axios.post(
       `${metadataCacheUri}/api/v1/aquarius/assets/ddo/query`,
       { ...query, cancelToken }
     )
     if (!response || response.status !== 200 || !response.data) return
-
     return transformQueryResult(response.data)
   } catch (error) {
     if (axios.isCancel(error)) {
@@ -73,7 +81,6 @@ export async function queryMetadata(
 
 export async function retrieveDDO(
   did: string | DID,
-  metadataCacheUri: string,
   cancelToken: CancelToken
 ): Promise<DDO> {
   try {
@@ -83,7 +90,8 @@ export async function retrieveDDO(
     )
     if (!response || response.status !== 200 || !response.data) return
 
-    return new DDO(response.data)
+    const data = { ...response.data }
+    return new DDO(data)
   } catch (error) {
     if (axios.isCancel(error)) {
       Logger.log(error.message)
@@ -95,7 +103,6 @@ export async function retrieveDDO(
 
 export async function getAssetsNames(
   didList: string[] | DID[],
-  metadataCacheUri: string,
   cancelToken: CancelToken
 ): Promise<Record<string, string>> {
   try {
@@ -120,7 +127,6 @@ export async function getAssetsNames(
 export async function transformDDOToAssetSelection(
   datasetProviderEndpoint: string,
   ddoList: DDO[],
-  metadataCacheUri: string,
   selectedAlgorithms?: PublisherTrustedAlgorithm[]
 ): Promise<AssetSelectionAsset[]> {
   const source = axios.CancelToken.source()
@@ -135,7 +141,7 @@ export async function transformDDOToAssetSelection(
     algoComputeService?.serviceEndpoint &&
       (didProviderEndpointMap[ddo.id] = algoComputeService?.serviceEndpoint)
   }
-  const ddoNames = await getAssetsNames(didList, metadataCacheUri, source.token)
+  const ddoNames = await getAssetsNames(didList, source.token)
   const algorithmList: AssetSelectionAsset[] = []
   didList?.forEach((did: string) => {
     if (
@@ -172,12 +178,11 @@ export async function transformDDOToAssetSelection(
 export async function getAlgorithmDatasetsForCompute(
   algorithmId: string,
   datasetProviderUri: string,
-  metadataCacheUri: string
+  datasetChainId?: number
 ): Promise<AssetSelectionAsset[]> {
   const source = axios.CancelToken.source()
   const computeDatasets = await queryMetadata(
-    getQueryForAlgorithmDatasets(algorithmId),
-    metadataCacheUri,
+    getQueryForAlgorithmDatasets(algorithmId, datasetChainId),
     source.token
   )
   const computeDatasetsForCurrentAlgorithm: DDO[] = []
@@ -195,7 +200,6 @@ export async function getAlgorithmDatasetsForCompute(
   const datasets = await transformDDOToAssetSelection(
     datasetProviderUri,
     computeDatasetsForCurrentAlgorithm,
-    metadataCacheUri,
     []
   )
   return datasets

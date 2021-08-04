@@ -9,7 +9,7 @@ import { useAsset } from '../../../../providers/Asset'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import { MetadataPreview } from '../../../molecules/MetadataPreview'
 import Debug from './DebugEditMetadata'
-import Web3Feedback from '../../../molecules/Wallet/Feedback'
+import Web3Feedback from '../../../molecules/Web3Feedback'
 import FormEditMetadata from './FormEditMetadata'
 import { mapTimeoutStringToSeconds } from '../../../../utils/metadata'
 import styles from './index.module.css'
@@ -105,7 +105,8 @@ export default function Edit({
       const ddoEditedMetdata = await ocean.assets.editMetadata(ddo, {
         title: values.name,
         description: values.description,
-        links: typeof values.links !== 'string' ? values.links : []
+        links: typeof values.links !== 'string' ? values.links : [],
+        author: values.author === '' ? ' ' : values.author
       })
 
       price.type === 'exchange' &&

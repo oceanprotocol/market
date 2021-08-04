@@ -2,8 +2,7 @@
   font-size: var(--font-size-small);
   padding-left: var(--spacer);
   padding-top: calc(var(--spacer) / 1.5);
-  margin-top: var(--spacer);
-  border-top: 1px solid var(--border-color);
+  margin-top: calc(var(--spacer) / 2);
   position: relative;
   width: 100%;
 }
@@ -11,7 +10,7 @@
 .feedback i {
   position: absolute;
   left: 0;
-  top: calc(var(--spacer) / 1.5);
+  top: calc(var(--spacer) / 1.45);
 }
 
 .title {
