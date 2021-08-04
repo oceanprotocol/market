@@ -8,25 +8,34 @@ import ComputeJobs from './ComputeJobs'
 import styles from './index.module.css'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import OceanProvider from '../../../../providers/Ocean'
+import { useWeb3 } from '../../../../providers/Web3'
 
-const tabs = [
-  {
-    title: 'Published',
-    content: <PublishedList />
-  },
-  {
-    title: 'Pool Shares',
-    content: <PoolShares />
-  },
-  {
-    title: 'Pool Transactions',
-    content: <PoolTransactions />
-  },
-  {
-    title: 'Downloads',
-    content: <Downloads />
-  },
-  {
+interface HistoryTab {
+  title: string
+  content: JSX.Element
+}
+
+function getTabs(accountIdentifier: string): HistoryTab[] {
+  const { accountId } = useWeb3()
+  const defaultTabs: HistoryTab[] = [
+    {
+      title: 'Published',
+      content: <PublishedList accountId={accountIdentifier} />
+    },
+    {
+      title: 'Pool Shares',
+      content: <PoolShares accountId={accountIdentifier} />
+    },
+    {
+      title: 'Pool Transactions',
+      content: <PoolTransactions accountId={accountIdentifier} />
+    },
+    {
+      title: 'Downloads',
+      content: <Downloads accountId={accountIdentifier} />
+    }
+  ]
+  const computeTab: HistoryTab = {
     title: 'Compute Jobs',
     content: (
       <OceanProvider>
@@ -34,12 +43,21 @@ const tabs = [
       </OceanProvider>
     )
   }
-]
+  if (accountIdentifier === accountId) {
+    defaultTabs.push(computeTab)
+  }
+  return defaultTabs
+}
 
-export default function HistoryPage(): ReactElement {
+export default function HistoryPage({
+  accountId
+}: {
+  accountId: string
+}): ReactElement {
   const { chainIds } = useUserPreferences()
   const url = new URL(window.location.href)
   const defaultTab = url.searchParams.get('defaultTab')
+  const tabs = getTabs(accountId)
   let defaultTabIndex = 0
   defaultTab === 'ComputeJobs' ? (defaultTabIndex = 4) : (defaultTabIndex = 0)
   return (

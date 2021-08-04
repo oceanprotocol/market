@@ -11,8 +11,11 @@ import { useWeb3 } from '../../../../providers/Web3'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 
-export default function PublishedList(): ReactElement {
-  const { accountId } = useWeb3()
+export default function PublishedList({
+  accountId
+}: {
+  accountId: string
+}): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { chainIds } = useUserPreferences()
 

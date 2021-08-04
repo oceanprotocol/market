@@ -65,8 +65,11 @@ const columns = [
   }
 ]
 
-export default function ComputeDownloads(): ReactElement {
-  const { accountId } = useWeb3()
+export default function ComputeDownloads({
+  accountId
+}: {
+  accountId: string
+}): ReactElement {
   const { appConfig } = useSiteMetadata()
   const [isLoading, setIsLoading] = useState(false)
   const [orders, setOrders] = useState<DownloadedAssets[]>()

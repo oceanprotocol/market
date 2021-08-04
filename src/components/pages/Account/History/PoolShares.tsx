@@ -154,8 +154,11 @@ const columns = [
   }
 ]
 
-export default function PoolShares(): ReactElement {
-  const { accountId } = useWeb3()
+export default function PoolShares({
+  accountId
+}: {
+  accountId: string
+}): ReactElement {
   const [assets, setAssets] = useState<Asset[]>()
   const [loading, setLoading] = useState<boolean>(false)
   const [data, setData] = useState<PoolShare[]>()
