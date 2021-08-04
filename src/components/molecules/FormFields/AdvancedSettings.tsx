@@ -4,7 +4,7 @@ import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { Field } from 'formik'
 import appConfig from '../../../../app.config'
-import styles from './advancedSettings.module.css'
+import styles from './AdvancedSettings.module.css'
 
 export default function AdvancedSettings(prop: {
   content: FormContent

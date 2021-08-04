@@ -11,7 +11,7 @@ import { ReactComponent as Compute } from '../../../images/compute.svg'
 import FormTitle from './FormTitle'
 import FormActions from './FormActions'
 import styles from './FormPublish.module.css'
-import AdvancedSettings from '../../molecules/FormFields/advancedSettings'
+import AdvancedSettings from '../../molecules/FormFields/AdvancedSettings'
 
 const query = graphql`
   query {
