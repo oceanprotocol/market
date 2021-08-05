@@ -5,10 +5,11 @@ import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import { Link } from 'gatsby'
 import MarketStats from '../molecules/MarketStats'
 import BuildId from '../atoms/BuildId'
-import SyncStatus from '../molecules/SyncStatus'
+import { useUserPreferences } from '../../providers/UserPreferences'
 
 export default function Footer(): ReactElement {
   const { copyright } = useSiteMetadata()
+  const { privacyPolicySlug } = useUserPreferences()
   const year = new Date().getFullYear()
 
   return (
@@ -18,10 +19,11 @@ export default function Footer(): ReactElement {
         <BuildId />
         <MarketStats />
         <div className={styles.copyright}>
-          © {year} <Markdown text={copyright} /> —{' '}
+          © {year} <Markdown text={copyright} />
+          {' - '}
           <Link to="/terms">Terms</Link>
           {' — '}
-          <a href="https://oceanprotocol.com/privacy">Privacy</a>
+          <Link to={privacyPolicySlug}>Privacy</Link>
         </div>
       </div>
     </footer>
