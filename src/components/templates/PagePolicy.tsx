@@ -48,26 +48,28 @@ export default function PageTemplatePolicy(props: PageProps): ReactElement {
   return (
     <Page title={title} description={description} uri={props.uri} headerCenter>
       <Container narrow>
-        <Input
-          name="policyLanguage"
-          label={params?.languageLabel || 'Language'}
-          help={params?.languageHelp || 'The language of the privacy policy'}
-          type="select"
-          options={languageOptions.map((langnode) => {
-            return langnode.node.frontmatter.language
-          })}
-          value={language}
-          onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-            const slug =
-              languageOptions.find(
-                (langnode) =>
-                  langnode.node.frontmatter.language === e.target.value
-              )?.node.fields.slug || props.path
-            setPrivacyPolicySlug(slug)
-            navigate(slug)
-          }}
-          size="small"
-        />
+        {languageOptions.length > 1 && (
+          <Input
+            name="policyLanguage"
+            label={params?.languageLabel || 'Language'}
+            help={params?.languageHelp || 'The language of the privacy policy'}
+            type="select"
+            options={languageOptions.map((langnode) => {
+              return langnode.node.frontmatter.language
+            })}
+            value={language}
+            onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+              const slug =
+                languageOptions.find(
+                  (langnode) =>
+                    langnode.node.frontmatter.language === e.target.value
+                )?.node.fields.slug || props.path
+              setPrivacyPolicySlug(slug)
+              navigate(slug)
+            }}
+            size="small"
+          />
+        )}
         <PrivacyPolicy {...privacyPolicy} />
       </Container>
     </Page>
