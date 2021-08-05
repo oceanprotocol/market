@@ -119,3 +119,17 @@
 .content :global([id]:hover .anchor) {
   opacity: 1;
 }
+
+.toTopBtn {
+  position: fixed;
+  right: var(--spacer);
+  bottom: var(--spacer);
+  min-width: auto;
+  padding: 0 calc(var(--spacer) / 2);
+  opacity: 0;
+  transition: all 0.2s ease-in-out;
+}
+
+.toTopBtn.visible {
+  opacity: 1;
+}
