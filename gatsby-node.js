@@ -1,5 +1,6 @@
 const createFields = require('./gatsby/createFields')
 const createMarkdownPages = require('./gatsby/createMarkdownPages')
+const createPolicyPages = require('./gatsby/createPolicyPages')
 const execSync = require('child_process').execSync
 
 // Write out repo metadata
@@ -27,6 +28,7 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
 
 exports.createPages = async ({ graphql, actions }) => {
   await createMarkdownPages(graphql, actions)
+  await createPolicyPages(graphql, actions)
 }
 
 exports.onCreatePage = async ({ page, actions }) => {
