@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom/extend-expect'
 import * as Gatsby from 'gatsby'
 import siteMetadata from './__fixtures__/siteMetadata.json'
+import gdprMetadata from './__fixtures__/gdprMetadata.json'
 
 import('./__mocks__/matchMedia')
 
@@ -9,7 +10,8 @@ const useStaticQuery = jest.spyOn(Gatsby, 'useStaticQuery')
 // const useOcean = jest.spyOn(oceanReact, 'useOcean')
 
 export const globalMock = {
-  ...siteMetadata
+  ...siteMetadata,
+  ...gdprMetadata
 }
 
 beforeAll(() => {
