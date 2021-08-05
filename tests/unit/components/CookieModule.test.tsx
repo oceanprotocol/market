@@ -1,15 +1,22 @@
 import React from 'react'
-import { render } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import CookieModule, {
   CookieModuleProps
 } from '../../../src/components/molecules/CookieModule'
-import CookieConsent from '../../../src/providers/CookieConsent'
+import CookieConsent, {
+  ConsentContext,
+  ConsentProviderValue,
+  CookieConsentStatus
+} from '../../../src/providers/CookieConsent'
+import { useGdprMetadata } from '../../../src/hooks/useGdprMetadata'
 
 const cookieProps: CookieModuleProps = {
   title: 'Title',
   desc: 'Description',
   cookieName: 'CookieName'
 }
+
+jest.resetModules()
 
 describe('CookieModule', () => {
   it('renders correctly without crashing', () => {
@@ -28,5 +35,26 @@ describe('CookieModule', () => {
     expect(moduleHeader).toBeInTheDocument()
     expect(moduleSwitch).toBeInTheDocument()
     expect(moduleDesc).toBeInTheDocument()
+  })
+
+  const cookieConsentStatusApproved = {
+    [cookieProps.cookieName]: CookieConsentStatus.APPROVED
+  }
+  const testValue: ConsentProviderValue = {
+    cookies: useGdprMetadata(),
+    cookieConsentStatus: cookieConsentStatusApproved,
+    setConsentStatus: jest.fn(),
+    resetConsentStatus: jest.fn()
+  }
+
+  it('initializes switch correctly', () => {
+    // CookieConsentStatus not available
+    const { container } = render(
+      <ConsentContext.Provider value={testValue}>
+        <CookieModule {...cookieProps} />
+      </ConsentContext.Provider>
+    )
+    const switchInput = container.querySelector('input')
+    expect(switchInput).toHaveProperty('checked', true)
   })
 })

@@ -155,5 +155,5 @@ function ConsentProvider({ children }: { children: ReactNode }): ReactElement {
 
 const useConsent = (): ConsentProviderValue => useContext(ConsentContext)
 
-export { ConsentProvider, useConsent, ConsentProviderValue }
+export { ConsentProvider, useConsent, ConsentProviderValue, ConsentContext }
 export default ConsentProvider
