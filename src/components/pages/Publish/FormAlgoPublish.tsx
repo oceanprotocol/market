@@ -33,6 +33,8 @@ const query = graphql`
               required
               sortOptions
               options
+              disclaimer
+              disclaimerValues
             }
             warning
           }
