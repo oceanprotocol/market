@@ -11,18 +11,20 @@ export default function ScrollButton({
   scrollToId,
   calculateShowScrollButton,
   children,
-  style
+  style,
+  delay
 }: {
   scrollToId: string
   calculateShowScrollButton: (offset: number) => boolean
   children: ReactNode
   style?: ButtonProps['style']
+  delay?: number
 }): ReactElement {
   const [offset, setOffset] = useState(0)
   const [showScrollButton, setShowScrollButton] = useState(false)
   const debouncedCalc = debounce((offset: number) => {
     setShowScrollButton(calculateShowScrollButton(offset))
-  }, 100)
+  }, delay || 100)
 
   const refDebounced = useRef(debouncedCalc)
 
