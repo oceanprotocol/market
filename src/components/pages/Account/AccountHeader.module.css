@@ -1,0 +1,66 @@
+.gridContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 20px;
+  background: var(--background-content);
+}
+
+.gridContainer > div {
+  overflow: hidden;
+}
+
+.profileInfoGrid {
+  display: grid;
+  grid-template-columns: 0.2fr 1.8fr;
+  grid-gap: 10px;
+}
+
+.statisticsOverviewGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 5px;
+  margin-top: calc(var(--spacer) / 2);
+}
+
+.statisticsGrid {
+  display: grid;
+  grid-template-columns: 0.4fr 0.6fr;
+  grid-gap: 2px;
+}
+
+.image {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: inline-block;
+  margin-bottom: calc(var(--spacer) / 4);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 6px 17px 0 var(--box-shadow-color);
+}
+
+.name {
+  font-size: var(--font-size-large);
+  margin-bottom: calc(var(--spacer) / 8);
+}
+
+.statisticsValues {
+  font-size: var(--font-size-large);
+  margin-bottom: 0;
+  color: var(--font-color-heading);
+  font-weight: var(--font-weight-bold);
+}
+
+.statisticsImages {
+  width: 40px;
+  height: 40px;
+}
+
+.profileInfoGrid code {
+  padding: 0;
+  color: var(--color-secondary);
+  font-size: var(--font-size-small);
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}

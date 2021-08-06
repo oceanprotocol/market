@@ -1,4 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react'
+import styles from './AccountHeader.module.css'
 import get3BoxProfile from '../../../utils/profile'
 import { Profile, ProfileLink } from '../../../models/Profile'
 import axios from 'axios'
@@ -16,6 +17,9 @@ import {
   getAccountLiquidityInOwnAssets
 } from '../../../utils/subgraph'
 import Conversion from '../../atoms/Price/Conversion'
+import { ReactComponent as Published } from '../../../images/published.svg'
+import { ReactComponent as Sold } from '../../../images/sold.svg'
+import { ReactComponent as Tvl } from '../../../images/tvl.svg'
 
 export default function AccountHeader({
   accountId
@@ -112,18 +116,40 @@ export default function AccountHeader({
   return (
     <div>
       {accountId ? (
-        <div>
+        <div className={styles.gridContainer}>
           <div>
-            <img src={image} width="48" height="48" />
-            <p>{name}</p>
-            <ExplorerLink networkId={1} path={`address/${accountId}`}>
-              <code>{accountId}</code>
-            </ExplorerLink>
-            <p>Published: {numberOfAssets}</p>
-            <p>Sold: {sold}</p>
-            <div>
-              <p>TVL</p>
-              <Conversion price={tvl} hideApproximateSymbol />
+            <div className={styles.profileInfoGrid}>
+              <img
+                src={image}
+                className={styles.image}
+                width="48"
+                height="48"
+              />
+              <div>
+                <h3 className={styles.name}>{name}</h3>
+                <ExplorerLink networkId={1} path={`address/${accountId}`}>
+                  <code>{accountId}</code>
+                </ExplorerLink>
+              </div>
+            </div>
+            <div className={styles.statisticsOverviewGrid}>
+              <div className={styles.statisticsGrid}>
+                <Published className={styles.statisticsImages} />
+                <p className={styles.statisticsValues}>{numberOfAssets}</p>
+              </div>
+              {/* <p>Published</p> */}
+              <div className={styles.statisticsGrid}>
+                <Sold className={styles.statisticsImages} />
+                <p className={styles.statisticsValues}>{sold}</p>
+              </div>
+              <div className={styles.statisticsGrid}>
+                <Tvl className={styles.statisticsImages} />
+                <Conversion
+                  price={tvl}
+                  className={styles.statisticsValues}
+                  hideApproximateSymbol
+                />
+              </div>
             </div>
           </div>
           <div>
