@@ -1,10 +1,7 @@
-import classNames from 'classnames/bind'
-import React, { ReactElement, useEffect, useState } from 'react'
-import Button from '../atoms/Button'
+import React, { ReactElement } from 'react'
 import Time from '../atoms/Time'
+import ScrollButton from '../atoms/ScrollButton'
 import styles from '../templates/PageMarkdown.module.css'
-
-const cx = classNames.bind(styles)
 
 export interface PrivacyPolicyParams {
   languageLabel: string
@@ -27,20 +24,13 @@ export default function PrivacyPolicy({
 }): ReactElement {
   const policyId = 'PrivacyPolicy'
 
-  const [offset, setOffset] = useState(0)
-  const [showToTop, setShowToTop] = useState(0)
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      window.onscroll = () => {
-        setOffset(window.pageYOffset)
-      }
-      setShowToTop(
-        document.getElementById(policyId).getBoundingClientRect().top -
-          document.body.getBoundingClientRect().top
-      )
-    }
-  }, [])
+  const calcToTopVisible = (scrollOffset: number) => {
+    const policyOffset = Math.ceil(
+      document.getElementById(policyId).getBoundingClientRect().top -
+        document.body.getBoundingClientRect().top
+    )
+    return scrollOffset > policyOffset
+  }
 
   return (
     <div id={policyId}>
@@ -59,15 +49,12 @@ export default function PrivacyPolicy({
         className={styles.content}
         dangerouslySetInnerHTML={{ __html: html }}
       />
-      {showToTop > 0 && (
-        <Button
-          className={cx({ toTopBtn: true, visible: offset > showToTop })}
-          to={`#${policyId}`}
-          style="primary"
-        >
-          &#8593;
-        </Button>
-      )}
+      <ScrollButton
+        scrollToId={policyId}
+        calculateShowScrollButton={calcToTopVisible}
+      >
+        &#8593;
+      </ScrollButton>
     </div>
   )
 }
