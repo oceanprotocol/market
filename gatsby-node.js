@@ -21,6 +21,18 @@ execSync(
   }
 )
 
+//Extend PublishJsonData to support optional fields for disclaimers
+exports.sourceNodes = ({ actions }) => {
+  const { createTypes } = actions
+  const typeDefs = `
+    type PublishJsonData implements Node {
+      disclaimer: String
+      disclaimerValues: [String!]
+    }
+  `
+  createTypes(typeDefs)
+}
+
 exports.onCreateNode = ({ node, actions, getNode }) => {
   createFields(node, actions, getNode)
 }
