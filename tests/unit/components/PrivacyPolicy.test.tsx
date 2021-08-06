@@ -1,7 +1,6 @@
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import PrivacyPolicy from '../../../src/components/molecules/PrivacyPolicy'
-import slugify from 'slugify'
 
 const privacyPolicy = {
   tableOfContents: 'toc',
