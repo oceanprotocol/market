@@ -30,7 +30,7 @@ export default function AccountHeader({
   const [publishedAssets, setPublishedAssets] = useState<DDO[]>()
   const [numberOfAssets, setNumberOfAssets] = useState<number>()
   const [sold, setSold] = useState<number>()
-  const [tvl, setTvl] = useState<number>()
+  const [tvl, setTvl] = useState<string>()
 
   useEffect(() => {
     if (!accountId) return
@@ -101,7 +101,7 @@ export default function AccountHeader({
           chainIds,
           accountPoolAdresses
         )
-        setTvl(userTvl)
+        setTvl(userTvl.toString())
       } catch (error) {
         Logger.error(error.message)
       }
@@ -123,7 +123,7 @@ export default function AccountHeader({
             <p>Sold: {sold}</p>
             <div>
               <p>TVL</p>
-              <Conversion price={tvl.toString()} hideApproximateSymbol />
+              <Conversion price={tvl} hideApproximateSymbol />
             </div>
           </div>
           <div>
