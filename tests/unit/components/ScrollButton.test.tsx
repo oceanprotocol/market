@@ -22,7 +22,7 @@ describe('ScrollButton', () => {
     )
 
     expect(container.firstChild).toBeInTheDocument()
-    expect(container.textContent).toContain(children)
+    expect(container).toHaveTextContent(children)
     expect(getByText(container, children)).toHaveAttribute(
       'href',
       `#${scrollToId}`
