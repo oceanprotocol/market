@@ -20,6 +20,10 @@ import {
   HighestLiquidityAssets_pools as HighestLiquidityAssetsPools,
   HighestLiquidityAssets as HighestLiquidityGraphAssets
 } from '../@types/apollo/HighestLiquidityAssets'
+import {
+  PoolShares as PoolSharesList,
+  PoolShares_poolShares as PoolShare
+} from '../@types/apollo/PoolShares'
 
 export interface PriceList {
   [key: string]: string
@@ -141,6 +145,43 @@ const HighestLiquidityAssets = gql`
   }
 `
 
+const TotalAccountOrders = gql`
+  query TotalAccountOrders($payer: String) {
+    tokenOrders(orderBy: id, where: { payer: $payer }) {
+      id
+      payer {
+        id
+      }
+    }
+  }
+`
+const UserSharesQuery = gql`
+  query UserSharesQuery($user: String, $pools: [String!]) {
+    poolShares(where: { userAddress: $user, poolId_in: $pools }) {
+      id
+      balance
+      userAddress {
+        id
+      }
+      poolId {
+        id
+        datatokenAddress
+        valueLocked
+        tokens {
+          tokenId {
+            symbol
+          }
+        }
+        oceanReserve
+        datatokenReserve
+        totalShares
+        consumePrice
+        spotPrice
+        createTime
+      }
+    }
+  }
+`
 export function getSubgrahUri(chainId: number): string {
   const config = getOceanConfig(chainId)
   return config.subgraphUri
@@ -481,4 +522,58 @@ export async function getHighestLiquidityDIDs(
     .replace(/(\[|\])/g, '')
     .replace(/(did:op:)/g, '0x')
   return searchDids
+}
+
+export async function getAccountNumberOfOrders(
+  accountId: string,
+  chainIds: number[]
+): Promise<number> {
+  const queryVariables = {
+    payer: accountId.toLowerCase()
+  }
+  const results = await fetchDataForMultipleChains(
+    TotalAccountOrders,
+    queryVariables,
+    chainIds
+  )
+  let numberOfOrders = 0
+  for (const result of results) {
+    numberOfOrders += result.tokenOrders.length
+  }
+  return numberOfOrders
+}
+
+export function calculateUserLiquidity(poolShare: PoolShare) {
+  const ocean =
+    (poolShare.balance / poolShare.poolId.totalShares) *
+    poolShare.poolId.oceanReserve
+  const datatokens =
+    (poolShare.balance / poolShare.poolId.totalShares) *
+    poolShare.poolId.datatokenReserve
+  const totalLiquidity = ocean + datatokens * poolShare.poolId.consumePrice
+  return totalLiquidity
+}
+
+export async function getAccountLiquidityInOwnAssets(
+  accountId: string,
+  chainIds: number[],
+  pools: string[]
+): Promise<number> {
+  const queryVariables = {
+    user: accountId.toLowerCase(),
+    pools: pools
+  }
+  const results: PoolSharesList[] = await fetchDataForMultipleChains(
+    UserSharesQuery,
+    queryVariables,
+    chainIds
+  )
+  let totalLiquidity = 0
+  for (const result of results) {
+    for (const poolshare of result.poolShares) {
+      const poolLiquidity = calculateUserLiquidity(poolshare)
+      totalLiquidity += poolLiquidity
+    }
+  }
+  return totalLiquidity
 }
