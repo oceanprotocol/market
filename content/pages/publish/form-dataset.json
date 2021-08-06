@@ -36,7 +36,9 @@
       "help": "Choose how you want your files to be accessible for the specified price.",
       "type": "boxSelection",
       "options": ["Download", "Compute"],
-      "required": true
+      "required": true,
+      "disclaimer": "Please do not provide downloadable personal data without the consent of the data subjects.",
+      "disclaimerValues": ["Download"]
     },
     {
       "name": "timeout",
