@@ -72,5 +72,5 @@ module.exports = {
   // is used to create and shoe a privacy preference center / cookie banner
   // To learn more about how to configure and use this, please refer to the readme
   // https://github.com/deltaDAO/Ocean-Market/tree/main#-gdpr-compliance
-  privacyPreferenceCenter: true
+  privacyPreferenceCenter: false
 }
