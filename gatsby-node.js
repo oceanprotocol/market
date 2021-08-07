@@ -23,6 +23,7 @@ execSync(
 )
 
 //Extend ContentJson to support optional field "optionalCookies" in gdpr.json
+//Extend PublishJsonData to support optional fields for disclaimers
 exports.sourceNodes = ({ actions }) => {
   const { createTypes } = actions
   const typeDefs = `
@@ -36,6 +37,10 @@ exports.sourceNodes = ({ actions }) => {
       title: String!
       desc: String!
       cookieName: String!
+    }
+    type PublishJsonData implements Node {
+      disclaimer: String
+      disclaimerValues: [String!]
     }
   `
   createTypes(typeDefs)

@@ -1,10 +1,18 @@
-import React, { FormEvent, ChangeEvent, ReactElement, ReactNode } from 'react'
+import React, {
+  FormEvent,
+  ChangeEvent,
+  ReactElement,
+  ReactNode,
+  useEffect,
+  useState
+} from 'react'
 import InputElement from './InputElement'
 import Help from './Help'
 import Label from './Label'
 import styles from './index.module.css'
 import { ErrorMessage, FieldInputProps } from 'formik'
 import classNames from 'classnames/bind'
+import Disclaimer from './Disclaimer'
 
 const cx = classNames.bind(styles)
 
@@ -49,10 +57,20 @@ export interface InputProps {
   defaultChecked?: boolean
   size?: 'mini' | 'small' | 'large' | 'default'
   className?: string
+  disclaimer?: string
+  disclaimerValues?: string[]
 }
 
 export default function Input(props: Partial<InputProps>): ReactElement {
-  const { label, help, additionalComponent, size, field } = props
+  const {
+    label,
+    help,
+    additionalComponent,
+    size,
+    field,
+    disclaimer,
+    disclaimerValues
+  } = props
 
   const hasError =
     props.form?.touched[field.name] && props.form?.errors[field.name]
@@ -61,6 +79,16 @@ export default function Input(props: Partial<InputProps>): ReactElement {
     field: true,
     hasError: hasError
   })
+
+  const [disclaimerVisible, setDisclaimerVisible] = useState(true)
+
+  useEffect(() => {
+    if (disclaimer && disclaimerValues) {
+      setDisclaimerVisible(
+        disclaimerValues.includes(props.form?.values[field.name])
+      )
+    }
+  }, [props.form?.values[field.name]])
 
   return (
     <div
@@ -79,6 +107,10 @@ export default function Input(props: Partial<InputProps>): ReactElement {
       )}
 
       {help && <Help>{help}</Help>}
+
+      {disclaimer && (
+        <Disclaimer visible={disclaimerVisible}>{disclaimer}</Disclaimer>
+      )}
       {additionalComponent && additionalComponent}
     </div>
   )
