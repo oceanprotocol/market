@@ -27,6 +27,8 @@ export default function Footer(): ReactElement {
         <div className={styles.copyright}>
           © {year} <Markdown text={copyright} />
           <br />
+          <Link to="/imprint">Imprint</Link>
+          {' — '}
           <Link to="/terms">Terms</Link>
           {' — '}
           <Link to={privacyPolicySlug}>Privacy</Link>
