@@ -46,6 +46,8 @@ export default function InputElement({
   help,
   form,
   additionalComponent,
+  disclaimer,
+  disclaimerValues,
   ...props
 }: InputProps): ReactElement {
   const styleClasses = cx({ select: true, [size]: size })
