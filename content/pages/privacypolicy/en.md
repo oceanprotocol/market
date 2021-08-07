@@ -176,6 +176,7 @@ Our legitimate interest is to answer your inquiries.
 **Retention period:**
 
 OPF deletes your personal data as soon as we no longer require them for processing your inquiry, except OPF is obliged to comply with legal retention periods or in case of legal disputes.
+<br/><i id="cookies"></i>
 
 # 5. Cookies and web storage
 

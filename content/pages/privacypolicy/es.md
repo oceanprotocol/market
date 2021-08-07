@@ -177,6 +177,7 @@ Nuestro interés legítimo es responder a sus consultas.
 **Período de conservación:**
 
 Ocean Protocol elimina sus datos personales tan pronto como ya no los necesitemos para procesar su consulta, exceptuando el caso en el que Ocean Protocol esté obligada a cumplir con los períodos de retención legales o en caso de disputas legales.
+<br/><i id="cookies"></i>
 
 # 5. Cookies y almacenamiento web
 

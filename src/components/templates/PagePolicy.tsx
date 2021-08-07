@@ -39,10 +39,8 @@ export default function PageTemplatePolicy(props: PageProps): ReactElement {
   const privacyPolicy = { html, tableOfContents, ...frontmatter }
 
   useEffect(() => {
-    // Redirect to user selected language
-    if (props.uri !== privacyPolicySlug) {
-      navigate(privacyPolicySlug)
-    }
+    if (props.uri !== privacyPolicySlug)
+      navigate(`${privacyPolicySlug}${window.location.hash}`)
   }, [])
 
   return (

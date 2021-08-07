@@ -177,6 +177,7 @@ Notre intérêt légitime est de répondre à vos demandes.
 **Période de conservation :**
 
 Ocean supprime vos données personnelles dès que nous n&#39;en avons plus besoin pour traiter votre demande, sauf si Ocean est tenu de respecter les délais de conservation légaux ou en cas de litiges juridiques.
+<br/><i id="cookies"></i>
 
 # 5. Cookies et stockage web
 

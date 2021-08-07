@@ -177,6 +177,7 @@ Unser berechtigtes Interresse ist es deine Anfragen zu beantworten.
 **Aufbewahrungsdauer:**
 
 OPF löscht deine personenbezogenen Daten, sobald wir sie für die Bearbeitung deiner Anfrage nicht mehr benötigen, es sei den wir sind zur Einhaltunggesetzlicher Aufbewahrungsfristen verpflichtet oder im Falle eines Rechtsstreits.
+<br/><i id="cookies"></i>
 
 # 5. Cookies und Web Storage
 
