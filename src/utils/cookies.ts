@@ -15,7 +15,8 @@ export function getLegacyCookieName(cookieName: string): string {
   return `${cookieName}-legacy`
 }
 
-// Cookie legacy system adopted from react-cookie-consent, SEE: https://github.com/Mastermindzh/react-cookie-consent
+// Cookie legacy system adopted from react-cookie-consent
+// SEE: https://github.com/Mastermindzh/react-cookie-consent
 export function getCookieValue(cookieName: string): string {
   let cookieValue = Cookies.get(cookieName)
 
@@ -28,14 +29,15 @@ export function getCookieValue(cookieName: string): string {
 
 export function setCookie(
   cookieName: string,
-  cookieValue: boolean,
+  cookieValue: string | boolean,
   cookieOptions = DEFAULT_COOKIE_OPTIONS
 ): void {
   const cookieSecurity = location ? location.protocol === 'https:' : true
 
   const options = { ...cookieOptions, security: cookieSecurity }
 
-  // Fallback for older browsers where can not set SameSite=None, SEE: https://web.dev/samesite-cookie-recipes/#handling-incompatible-clients
+  // Fallback for older browsers where can not set SameSite=None
+  // SEE: https://web.dev/samesite-cookie-recipes/#handling-incompatible-clients
   if (cookieOptions.sameSite === SAME_SITE_OPTIONS.NONE)
     Cookies.set(getLegacyCookieName(cookieName), cookieValue.toString(), {
       ...options,
