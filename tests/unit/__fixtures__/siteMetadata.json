@@ -1,32 +1,73 @@
 {
-  "siteMetadata": {
+  "site": {
+    "siteMetadata": {
+      "siteTitle": "Ocean Market",
+      "siteTagline": "A marketplace to find, publish and trade data sets in the Ocean Network.",
+      "siteUrl": "https://market.oceanprotocol.com",
+      "siteIcon": "node_modules/@oceanprotocol/art/logo/favicon-white.png",
+      "copyright": "All Rights Reserved. Powered by [Ocean Protocol](https://oceanprotocol.com)",
+      "menu": [
+        {
+          "name": "Publish",
+          "link": "/publish"
+        },
+        {
+          "name": "History",
+          "link": "/history"
+        }
+      ],
+      "warning": {
+        "main": "We are in beta. Please familiarize yourself with [the market](https://oceanprotocol.com/technology/marketplaces), [the risks](https://blog.oceanprotocol.com/on-staking-on-data-in-ocean-market-3d8e09eb0a13), and the [Terms of Use](/terms).",
+        "polygonPublish": "Only republish data sets with a pool from ETH Mainnet into Polygon/Matic if the liquidity is **less than or equal to 1000 OCEAN in the original pool**. Doing otherwise will lead to [purgatory](https://github.com/oceanprotocol/list-purgatory) for the data set in Polygon/Matic."
+      },
+      "announcement": {
+        "main": "Ocean Market is [available on Polygon](https://blog.oceanprotocol.com/ocean-on-polygon-network-8abad19cbf47).",
+        "polygon": "Polygon/Matic EVM support is in early stages. [Use the Polygon Bridge](https://docs.oceanprotocol.com/tutorials/polygon-bridge/) to get mOCEAN."
+      },
+      "appConfig": {
+        "metadataCacheUri": "https://aquarius.oceanprotocol.com",
+        "infuraProjectId": "xxx",
+        "chainIds": [1, 137, 56],
+        "chainIdsSupported": [1, 3, 4, 137, 80001, 1287, 56],
+        "marketFeeAddress": "0x903322C7E45A60d7c8C3EA236c5beA9Af86310c7",
+        "currencies": [
+          "EUR",
+          "USD",
+          "CAD",
+          "GBP",
+          "SGD",
+          "HKD",
+          "CNY",
+          "JPY",
+          "INR",
+          "RUB",
+          "ETH",
+          "BTC",
+          "LINK"
+        ],
+        "portisId": "xxx",
+        "allowFixedPricing": "true",
+        "allowDynamicPricing": "true",
+        "allowFreePricing": "false",
+        "allowAdvancedSettings": "false",
+        "credentialType": "address",
+        "privacyPreferenceCenter": true
+      }
+    }
+  },
+  "siteImage": {
     "edges": [
       {
         "node": {
           "childContentJson": {
             "site": {
-              "siteTitle": "Ocean Market",
-              "siteTagline": "A marketplace to find and publish open data sets in the Ocean Network.",
-              "siteUrl": "https://market.oceanprotocol.now.sh/",
-              "siteIcon": "node_modules/@oceanprotocol/art/logo/favicon-white.png",
               "siteImage": {
                 "childImageSharp": {
                   "original": {
                     "src": "/static/share-5558ae2d9f99864a95f6f99172be9768.png"
                   }
                 }
-              },
-              "copyright": "All Rights Reserved. Powered by [Ocean Protocol](https://oceanprotocol.com)",
-              "menu": [
-                {
-                  "name": "Publish",
-                  "link": "/publish"
-                },
-                {
-                  "name": "History",
-                  "link": "/history"
-                }
-              ]
+              }
             }
           }
         }

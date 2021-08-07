@@ -1,0 +1,16 @@
+.wrapper {
+  display: block;
+  margin: var(--spacer) 0;
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: calc(var(--spacer) / 3);
+}
+
+.description {
+  font-size: var(--font-size-small);
+}

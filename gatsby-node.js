@@ -22,6 +22,25 @@ execSync(
   }
 )
 
+//Extend ContentJson to support optional field "optionalCookies" in gdpr.json
+exports.sourceNodes = ({ actions }) => {
+  const { createTypes } = actions
+  const typeDefs = `
+    type ContentJson implements Node {
+      accept: String
+      reject: String
+      placeholder: String
+      optionalCookies: [Cookie!]
+    }
+    type Cookie {
+      title: String!
+      desc: String!
+      cookieName: String!
+    }
+  `
+  createTypes(typeDefs)
+}
+
 exports.onCreateNode = ({ node, actions, getNode }) => {
   createFields(node, actions, getNode)
 }

@@ -17,12 +17,14 @@ interface UserPreferencesValue {
   chainIds: number[]
   bookmarks: string[]
   privacyPolicySlug: string
+  showPPC: boolean
   setChainIds: (chainIds: number[]) => void
   setDebug: (value: boolean) => void
   setCurrency: (value: string) => void
   addBookmark: (did: string) => void
   removeBookmark: (did: string) => void
   setPrivacyPolicySlug: (slug: string) => void
+  setShowPPC: (value: boolean) => void
 }
 
 const UserPreferencesContext = createContext(null)
@@ -61,14 +63,26 @@ function UserPreferencesProvider({
     localStorage?.chainIds || appConfig.chainIds
   )
   const { defaultPrivacyPolicySlug } = useSiteMetadata().appConfig
+
   const [privacyPolicySlug, setPrivacyPolicySlug] = useState<string>(
     localStorage?.privacyPolicySlug || defaultPrivacyPolicySlug
   )
 
+  const [showPPC, setShowPPC] = useState<boolean>(
+    localStorage?.showPPC !== false
+  )
+
   // Write values to localStorage on change
   useEffect(() => {
-    setLocalStorage({ chainIds, debug, currency, bookmarks, privacyPolicySlug })
-  }, [chainIds, debug, currency, bookmarks, privacyPolicySlug])
+    setLocalStorage({
+      chainIds,
+      debug,
+      currency,
+      bookmarks,
+      privacyPolicySlug,
+      showPPC
+    })
+  }, [chainIds, debug, currency, bookmarks, privacyPolicySlug, showPPC])
 
   // Set ocean.js log levels, default: Error
   useEffect(() => {
@@ -115,12 +129,14 @@ function UserPreferencesProvider({
           chainIds,
           bookmarks,
           privacyPolicySlug,
+          showPPC,
           setChainIds,
           setDebug,
           setCurrency,
           addBookmark,
           removeBookmark,
-          setPrivacyPolicySlug
+          setPrivacyPolicySlug,
+          setShowPPC
         } as UserPreferencesValue
       }
     >

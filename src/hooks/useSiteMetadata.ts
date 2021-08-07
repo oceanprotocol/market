@@ -33,6 +33,7 @@ interface UseSiteMetadata {
     allowAdvancedSettings: string
     credentialType: string
     defaultPrivacyPolicySlug: string
+    privacyPreferenceCenter: boolean
   }
 }
 
@@ -71,6 +72,7 @@ const query = graphql`
           allowAdvancedSettings
           credentialType
           defaultPrivacyPolicySlug
+          privacyPreferenceCenter
         }
       }
     }

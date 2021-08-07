@@ -15,12 +15,21 @@
   display: inline;
 }
 
-.content a {
+.content button {
+  text-transform: none;
+  transform: none !important;
+  font-weight: var(--font-weight-normal);
+}
+
+.content a,
+.content button {
   color: inherit;
 }
 
 .content a:hover,
-.content a:focus {
+.content a:focus,
+.content button:hover,
+.content button:focus {
   color: var(--color-primary);
 }
 
