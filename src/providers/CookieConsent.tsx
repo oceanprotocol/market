@@ -21,7 +21,7 @@ export interface ConsentStatus {
 }
 
 interface ConsentProviderValue {
-  cookies: UseGdprMetadata
+  cookies: UseGdprMetadata['optionalCookies']
   cookieConsentStatus: ConsentStatus
   setConsentStatus: (cookieName: string, status: CookieConsentStatus) => void
   resetConsentStatus: (status?: CookieConsentStatus) => void
@@ -138,7 +138,7 @@ function ConsentProvider({ children }: { children: ReactNode }): ReactElement {
     <ConsentContext.Provider
       value={
         {
-          cookies,
+          cookies: cookies.optionalCookies || [],
           cookieConsentStatus: consentStatus,
           setConsentStatus: setCookieConsentStatus,
           resetConsentStatus
