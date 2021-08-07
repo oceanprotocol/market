@@ -27,7 +27,7 @@
 - [💖 Contributing](#-contributing)
 - [🍴 Forking](#-forking)
 - [💻 Advanced Features](#-advanced-features)
-- [☑️ GDPR Compliance](#-gdpr-compliance)
+- [✅ GDPR Compliance](#-gdpr-compliance)
   - [Multi-Language Privacy Policies](#multi-language-privacy-policies)
   - [Privacy Preference Center](#privacy-preference-center)
 - [🏛 License](#-license)
@@ -389,7 +389,7 @@ Ocean Market also includes a number of advanced features that are suitable for a
 
 [See our seperate guide on advanced features](docs/advancedSettings.md)
 
-## ☑️ GDPR Compliance
+## ✅ GDPR Compliance
 
 Ocean Market comes with prebuilt components for you to customize to cover GDPR requirements. Find additional information on how to use them below.
 
