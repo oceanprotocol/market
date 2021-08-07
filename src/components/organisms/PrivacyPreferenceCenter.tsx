@@ -38,7 +38,7 @@ export default function CookieBanner(): ReactElement {
                     handleAllCookies(true)
                   }}
                 >
-                  {cookies.accept}
+                  {cookies.accept || 'Accept all'}
                 </Button>
                 <Button
                   size="small"
@@ -46,7 +46,7 @@ export default function CookieBanner(): ReactElement {
                     handleAllCookies(false)
                   }}
                 >
-                  {cookies.reject}
+                  {cookies.reject || 'Reject all'}
                 </Button>
               </div>
               <div className={styles.optionals}>
@@ -65,7 +65,7 @@ export default function CookieBanner(): ReactElement {
           }}
           className={styles.closeButton}
         >
-          {cookies.close}
+          {cookies.close || 'Save and close'}
         </Button>
       </div>
     </div>
