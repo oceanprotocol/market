@@ -6,11 +6,7 @@ import React, {
   ReactNode,
   ReactElement
 } from 'react'
-import {
-  deleteConsentCookies,
-  getConsentCookieValue,
-  setConsentCookies
-} from '../utils/cookies'
+import { deleteCookie, getCookieValue, setCookie } from '../utils/cookies'
 import { UseGdprMetadata, useGdprMetadata } from '../hooks/useGdprMetadata'
 import { useSiteMetadata } from '../hooks/useSiteMetadata'
 
@@ -38,25 +34,26 @@ function ConsentProvider({ children }: { children: ReactNode }): ReactElement {
 
   const { privacyPreferenceCenter } = useSiteMetadata().appConfig
 
-  const [cookieConsentStatus, setCookieConsentStatus] = useState(
-    {} as ConsentStatus
-  )
+  const [consentStatus, setConsentStatus] = useState({} as ConsentStatus)
 
   function resetConsentStatus(status = CookieConsentStatus.NOT_AVAILABLE) {
     const resetCookieConsent = {} as ConsentStatus
     cookies.optionalCookies?.map((cookie) => {
-      deleteConsentCookies(cookie.cookieName)
+      deleteCookie(cookie.cookieName)
       resetCookieConsent[cookie.cookieName] = status
     })
-    setCookieConsentStatus(resetCookieConsent)
+    setConsentStatus(resetCookieConsent)
   }
 
-  function setConsentStatus(cookieName: string, status: CookieConsentStatus) {
-    setCookieConsentStatus({ ...cookieConsentStatus, [cookieName]: status })
+  function setCookieConsentStatus(
+    cookieName: string,
+    status: CookieConsentStatus
+  ) {
+    setConsentStatus({ ...consentStatus, [cookieName]: status })
   }
 
   function handleAccept(cookieName: string) {
-    setConsentCookies(cookieName, true)
+    setCookie(cookieName, true)
     switch (cookieName) {
       case 'AnalyticsCookieConsent':
         break
@@ -72,7 +69,7 @@ function ConsentProvider({ children }: { children: ReactNode }): ReactElement {
   }
 
   function handleReject(cookieName: string) {
-    setConsentCookies(cookieName, false)
+    setCookie(cookieName, false)
     switch (cookieName) {
       case 'AnalyticsCookieConsent':
         break
@@ -87,7 +84,7 @@ function ConsentProvider({ children }: { children: ReactNode }): ReactElement {
 
     const initialValues = {} as ConsentStatus
     cookies.optionalCookies?.map((cookie) => {
-      const cookieVal = getConsentCookieValue(cookie.cookieName)
+      const cookieVal = getCookieValue(cookie.cookieName)
 
       console.log(
         `Looking for cookie ${cookie.cookieName}... Found value:`,
@@ -106,7 +103,7 @@ function ConsentProvider({ children }: { children: ReactNode }): ReactElement {
       }
     })
 
-    setCookieConsentStatus(initialValues)
+    setConsentStatus(initialValues)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -125,8 +122,8 @@ function ConsentProvider({ children }: { children: ReactNode }): ReactElement {
   }, [])
 
   useEffect(() => {
-    Object.keys(cookieConsentStatus).map((cookieName) => {
-      switch (cookieConsentStatus[cookieName]) {
+    Object.keys(consentStatus).map((cookieName) => {
+      switch (consentStatus[cookieName]) {
         case CookieConsentStatus.APPROVED:
           handleAccept(cookieName)
           break
@@ -135,15 +132,15 @@ function ConsentProvider({ children }: { children: ReactNode }): ReactElement {
           break
       }
     })
-  }, [cookieConsentStatus])
+  }, [consentStatus])
 
   return (
     <ConsentContext.Provider
       value={
         {
           cookies,
-          cookieConsentStatus,
-          setConsentStatus,
+          cookieConsentStatus: consentStatus,
+          setConsentStatus: setCookieConsentStatus,
           resetConsentStatus
         } as ConsentProviderValue
       }

@@ -11,27 +11,12 @@ export const DEFAULT_COOKIE_OPTIONS = {
   sameSite: SAME_SITE_OPTIONS.STRICT
 }
 
-function deleteCookies(cookies: string[]) {
-  cookies.forEach((cookie) => {
-    Cookies.remove(cookie)
-  })
-}
-
-function deleteGACookies() {
-  const gaCookies = ['_gat', '_gid', '_ga']
-  deleteCookies(gaCookies)
-}
-
-export function deleteAllExternalCookies(): void {
-  deleteGACookies()
-}
-
 export function getLegacyCookieName(cookieName: string): string {
   return `${cookieName}-legacy`
 }
 
-// Consent-Cookie system adopted from react-cookie-consent, SEE: https://github.com/Mastermindzh/react-cookie-consent
-export function getConsentCookieValue(cookieName: string): string {
+// Cookie legacy system adopted from react-cookie-consent, SEE: https://github.com/Mastermindzh/react-cookie-consent
+export function getCookieValue(cookieName: string): string {
   let cookieValue = Cookies.get(cookieName)
 
   // if the cookieValue is undefined check for the legacy cookie
@@ -41,7 +26,7 @@ export function getConsentCookieValue(cookieName: string): string {
   return cookieValue
 }
 
-export function setConsentCookies(
+export function setCookie(
   cookieName: string,
   cookieValue: boolean,
   cookieOptions = DEFAULT_COOKIE_OPTIONS
@@ -61,10 +46,10 @@ export function setConsentCookies(
   Cookies.set(cookieName, cookieValue.toString(), options)
 }
 
-export function deleteConsentCookies(cookieName: string): void {
-  const cookieBannerCookies = [cookieName, getLegacyCookieName(cookieName)]
+export function deleteCookie(cookieName: string): void {
+  const cookiesWithLegacy = [cookieName, getLegacyCookieName(cookieName)]
 
-  cookieBannerCookies.forEach((cookie) => {
+  cookiesWithLegacy.forEach((cookie) => {
     Cookies.remove(cookie)
   })
 }
