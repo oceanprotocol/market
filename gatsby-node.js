@@ -30,7 +30,7 @@ exports.sourceNodes = ({ actions }) => {
     type ContentJson implements Node {
       accept: String
       reject: String
-      placeholder: String
+      close: String
       optionalCookies: [Cookie!]
     }
     type Cookie {

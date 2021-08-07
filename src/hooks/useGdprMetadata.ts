@@ -25,7 +25,6 @@ const query = graphql`
             accept
             reject
             close
-            placeholder
             optionalCookies {
               title
               desc
