@@ -1,7 +1,8 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './AccountHeader.module.css'
 import get3BoxProfile from '../../../utils/profile'
-import { Profile, ProfileLink } from '../../../models/Profile'
+import { ProfileLink } from '../../../models/Profile'
+import { accountTruncate } from '../../../utils/web3'
 import axios from 'axios'
 import ExplorerLink from '../../atoms/ExplorerLink'
 import PublisherLinks from '../../atoms/Publisher/PublisherLinks'
@@ -17,6 +18,7 @@ import {
   getAccountLiquidityInOwnAssets
 } from '../../../utils/subgraph'
 import Conversion from '../../atoms/Price/Conversion'
+import { ReactComponent as Info } from '../../../images/info.svg'
 import { ReactComponent as Published } from '../../../images/published.svg'
 import { ReactComponent as Sold } from '../../../images/sold.svg'
 import { ReactComponent as Tvl } from '../../../images/tvl.svg'
@@ -126,7 +128,9 @@ export default function AccountHeader({
                 height="48"
               />
               <div>
-                <h3 className={styles.name}>{name}</h3>
+                <h3 className={styles.name}>
+                  {name ? name : accountTruncate(accountId)}
+                </h3>
                 <ExplorerLink networkId={1} path={`address/${accountId}`}>
                   <code>{accountId}</code>
                 </ExplorerLink>
@@ -162,7 +166,9 @@ export default function AccountHeader({
           </div>
           <div>
             <p className={styles.descriptionLabel}>About</p>
-            <p className={styles.description}>{description}</p>
+            <p className={styles.description}>
+              {description ? description : 'No description found.'}
+            </p>
             <PublisherLinks links={links} />
           </div>
         </div>

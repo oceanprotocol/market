@@ -56,9 +56,7 @@
 }
 
 .statisticsImages {
-  width: 40px;
-  height: 40px;
-  color: var(--font-color-heading);
+  width: 30px;
   margin: auto;
   margin-left: 0px;
 }
