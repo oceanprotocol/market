@@ -25,8 +25,8 @@
 
 .statisticsGrid {
   display: grid;
-  grid-template-columns: 0.3fr 0.7fr;
-  grid-gap: 5px;
+  grid-template-columns: 0.4fr 0.6fr;
+  grid-gap: 2px;
   align-content: center;
   grid-auto-flow: column;
 }
@@ -40,6 +40,14 @@
   margin-bottom: calc(var(--spacer) / 4);
   border: 1px solid var(--border-color);
   box-shadow: 0 6px 17px 0 var(--box-shadow-color);
+}
+
+.image path {
+  fill: var(--font-color-heading);
+}
+
+.infoSection {
+  border-right: 1px solid var(--border-color);
 }
 
 .name {

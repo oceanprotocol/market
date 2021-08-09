@@ -18,7 +18,7 @@ import {
   getAccountLiquidityInOwnAssets
 } from '../../../utils/subgraph'
 import Conversion from '../../atoms/Price/Conversion'
-import { ReactComponent as Info } from '../../../images/info.svg'
+import { ReactComponent as Avatar } from '../../../images/logo.svg'
 import { ReactComponent as Published } from '../../../images/published.svg'
 import { ReactComponent as Sold } from '../../../images/sold.svg'
 import { ReactComponent as Tvl } from '../../../images/tvl.svg'
@@ -47,7 +47,7 @@ export default function AccountHeader({
       const profile = await get3BoxProfile(accountId, source.token)
       if (!profile) return
 
-      const { name, emoji, did, description, image, links } = profile
+      const { name, emoji, description, image, links } = profile
       name && setName(`${emoji || ''} ${name}`)
       description && setDescription(description)
       image && setImage(image)
@@ -119,14 +119,18 @@ export default function AccountHeader({
     <div>
       {accountId ? (
         <div className={styles.gridContainer}>
-          <div>
+          <div className={styles.infoSection}>
             <div className={styles.profileInfoGrid}>
-              <img
-                src={image}
-                className={styles.image}
-                width="48"
-                height="48"
-              />
+              {image ? (
+                <img
+                  src={image}
+                  className={styles.image}
+                  width="48"
+                  height="48"
+                />
+              ) : (
+                <Avatar className={styles.image} />
+              )}
               <div>
                 <h3 className={styles.name}>
                   {name ? name : accountTruncate(accountId)}
