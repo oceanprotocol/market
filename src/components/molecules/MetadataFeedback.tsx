@@ -70,7 +70,12 @@ export default function MetadataFeedback({
           <>
             <p>Sorry, something went wrong. Please try again.</p>
             {moreInfo && <Alert text={error} state="error" />}
-            <Button style="text" size="small" onClick={toggleMoreInfo}>
+            <Button
+              style="text"
+              size="small"
+              onClick={toggleMoreInfo}
+              className={styles.moreInfo}
+            >
               {moreInfo === false ? 'More Info' : 'Hide error'}
             </Button>
             <ActionError setError={setError} />
