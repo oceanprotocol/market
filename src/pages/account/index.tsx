@@ -13,7 +13,7 @@ export default function PageGatsbyAccount(props: PageProps): ReactElement {
   }, [props.location.pathname])
 
   return (
-    <Page title={title} uri={props.uri}>
+    <Page uri={props.uri}>
       <AccountPage accountIdentifier={accountId} />
     </Page>
   )
