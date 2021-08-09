@@ -133,28 +133,36 @@ export default function AccountHeader({
               </div>
             </div>
             <div className={styles.statisticsOverviewGrid}>
-              <div className={styles.statisticsGrid}>
-                <Published className={styles.statisticsImages} />
-                <p className={styles.statisticsValues}>{numberOfAssets}</p>
+              <div>
+                <div className={styles.statisticsGrid}>
+                  <Published className={styles.statisticsImages} />
+                  <p className={styles.statisticsValues}>{numberOfAssets}</p>
+                </div>
+                <p className={styles.statiscsLabel}>Published</p>
               </div>
-              {/* <p>Published</p> */}
-              <div className={styles.statisticsGrid}>
-                <Sold className={styles.statisticsImages} />
-                <p className={styles.statisticsValues}>{sold}</p>
+              <div>
+                <div className={styles.statisticsGrid}>
+                  <Sold className={styles.statisticsImages} />
+                  <p className={styles.statisticsValues}>{sold}</p>
+                </div>
+                <p className={styles.statiscsLabel}>Sold</p>
               </div>
-              <div className={styles.statisticsGrid}>
-                <Tvl className={styles.statisticsImages} />
-                <Conversion
-                  price={tvl}
-                  className={styles.statisticsValues}
-                  hideApproximateSymbol
-                />
+              <div>
+                <div className={styles.statisticsGrid}>
+                  <Tvl className={styles.statisticsImages} />
+                  <Conversion
+                    price={tvl}
+                    className={styles.statisticsValues}
+                    hideApproximateSymbol
+                  />
+                </div>
+                <p className={styles.statiscsLabel}>TVL</p>
               </div>
             </div>
           </div>
           <div>
-            <p>About</p>
-            <p>{description}</p>
+            <p className={styles.descriptionLabel}>About</p>
+            <p className={styles.description}>{description}</p>
             <PublisherLinks links={links} />
           </div>
         </div>
