@@ -12,7 +12,7 @@
       "title": "Fixed",
       "info": "Set your price for accessing this data set. The datatoken for this data set will be worth the entered amount of OCEAN.",
       "tooltips": {
-        "communityFee": "This fees go to Ocean DAO for teams to improve the tools, build apps, do outreach, and more. A small fraction also goes to burning OCEAN. These fees are collected in the action of consuming a data asset.",
+        "communityFee": "Goes to Ocean DAO for teams to improve the tools, build apps, do outreach, and more. A small fraction is used to burn OCEAN. This fee is collected when downloading or using an asset in a compute job.",
         "marketplaceFee": "Goes to the marketplace owner that is hosting and providing the marketplace and is collected when downloading or using an asset in a compute job. In Ocean Market, it is treated as network revenue that goes to the Ocean community."
       }
     },
@@ -22,7 +22,7 @@
       "tooltips": {
         "poolInfo": "The liquidity pool provides the funds for traders to trade against. The price of the asset is determined by the ratio of OCEAN to datatokens.",
         "swapFee": "Liquidity providers earn this fee on all pool trades, proportionally to their share of the pool. The fee is set by the creator of the pool and is used to incentivize liquidity providers to join the pool.",
-        "communityFee": "This fees go to Ocean DAO for teams to improve the tools, build apps, do outreach, and more. A small fraction also goes to burning OCEAN. These fees are collected in the action of consuming a data asset.",
+        "communityFee": "Goes to Ocean DAO for teams to improve the tools, build apps, do outreach, and more. A small fraction is used to burn OCEAN. This fee is collected when downloading or using an asset in a compute job.",
         "marketplaceFee": "This fee goes to the marketplace that is providing the consume-side functionality. In Ocean Market, these fees are collected in the action of consuming a data asset and are treated as Network Revenue that goes to the Ocean Community."
       }
     },
