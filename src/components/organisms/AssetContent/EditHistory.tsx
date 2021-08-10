@@ -5,7 +5,6 @@ import Time from '../../atoms/Time'
 import styles from './EditHistory.module.css'
 import { gql, useQuery } from 'urql'
 import { ReceiptData_datatokens_updates as ReceiptData } from '../../../@types/apollo/ReceiptData'
-import { useWeb3 } from '../../../providers/Web3'
 
 const getReceipts = gql`
   query ReceiptData($address: ID!) {
