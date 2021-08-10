@@ -44,32 +44,21 @@ function ButtonApprove({
 
   const { infiniteApproval } = useUserPreferences()
 
-  return infiniteApproval ? (
+  return isLoading ? (
+    <Loader message={`Approving ${coin}...`} />
+  ) : infiniteApproval ? (
     <Button
       style="primary"
       size="small"
       onClick={() => approveTokens(`${2 ** 53 - 1}`)}
     >
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <>
-          Approve {coin}{' '}
-          <Tooltip content={content.approveInfinite.replace('COIN', coin)} />
-        </>
-      )}
+      Approve {coin}{' '}
+      <Tooltip content={content.approveInfinite.replace('COIN', coin)} />
     </Button>
   ) : (
     <Button style="primary" size="small" onClick={() => approveTokens(amount)}>
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <>
-          Approve {amount} {coin}
-          {amount === '1' ? 'S' : ''}
-          <Tooltip content={content.approveSpecific.replace('COIN', coin)} />
-        </>
-      )}
+      Approve {amount} {coin}
+      <Tooltip content={content.approveSpecific.replace('COIN', coin)} />)
     </Button>
   )
 }
@@ -109,7 +98,7 @@ export default function TokenApproval({
       accountId,
       spender
     )
-    setTokenApproved(allowance >= amount)
+    amount && Number(amount) > 0 && setTokenApproved(allowance >= amount)
     // allowance > amount && setApproveToken(false)
   }
 
