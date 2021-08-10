@@ -20,7 +20,6 @@ const getReceipts = gql`
 `
 
 export default function EditHistory(): ReactElement {
-  const { networkId } = useWeb3()
   const { ddo } = useAsset()
   const [result] = useQuery({
     query: getReceipts,
