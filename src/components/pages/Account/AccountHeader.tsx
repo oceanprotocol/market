@@ -133,7 +133,7 @@ export default function AccountHeader({
               )}
               <div>
                 <h3 className={styles.name}>
-                  {name ? name : accountTruncate(accountId)}
+                  {name || accountTruncate(accountId)}
                 </h3>
                 <ExplorerLink networkId={1} path={`address/${accountId}`}>
                   <code>{accountId}</code>
@@ -171,7 +171,7 @@ export default function AccountHeader({
           <div>
             <p className={styles.descriptionLabel}>About</p>
             <p className={styles.description}>
-              {description ? description : 'No description found.'}
+              {description || 'No description found.'}
             </p>
             <PublisherLinks links={links} />
           </div>
