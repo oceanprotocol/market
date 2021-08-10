@@ -27,14 +27,9 @@ export default function EditHistory(): ReactElement {
   const { data } = result
 
   const [receipts, setReceipts] = useState<ReceiptData[]>()
-  const [creationTx, setCreationTx] = useState<string>()
 
   useEffect(() => {
     if (!data || data.datatokens.length === 0) return
-
-    const receiptCollectionLength = data.datatokens[0].updates.length
-    const creationData = data.datatokens[0].updates[receiptCollectionLength - 1]
-    setCreationTx(creationData.tx)
 
     const receiptCollection = [...data.datatokens[0].updates]
     receiptCollection.splice(-1, 1)
@@ -55,7 +50,7 @@ export default function EditHistory(): ReactElement {
           </li>
         ))}
         <li className={styles.item}>
-          <ExplorerLink networkId={ddo.chainId} path={`/tx/${creationTx}`}>
+          <ExplorerLink networkId={ddo.chainId} path={`/tx/${ddo.event.txid}`}>
             published <Time date={ddo.created} relative />
           </ExplorerLink>
         </li>
