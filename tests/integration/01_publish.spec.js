@@ -3,25 +3,21 @@
 
 /// <reference types="Cypress" />
 
-import PrivateKeyProvider from 'truffle-privatekey-provider'
+import WalletConnectProvider from '@walletconnect/web3-provider'
 
-const HDWalletProvider = require('@truffle/hdwallet-provider')
 const Web3 = require('web3')
 const bip39 = require('bip39')
 
 describe('Publish', () => {
   beforeEach(() => {
-    cy.on('window:before:load', (win) => {
-      const provider = new HDWalletProvider({
-        privateKeys: [
-          '0xd631de5b7e9cf451135896c833187c8b4dc230bf47756a9a2ca4ffccc161175e'
-        ],
-        chainId: 4,
-        providerOrUrl: 'http://127.0.0.1:8545'
+    cy.on('window:before:load', async (window) => {
+      const provider = new WalletConnectProvider({
+        rpc: {
+          0: 'http://0.0.0.0:8545'
+        }
       })
-
-      win.ethereum = provider
-      win.localStorage.setItem('WEB3_CONNECT_CACHED_PROVIDER', 'injected')
+      window.ethereum = provider
+      window.localStorage.setItem('WEB3_CONNECT_CACHED_PROVIDER', '"injected"')
     })
 
     cy.visit('/publish')
@@ -30,10 +26,6 @@ describe('Publish', () => {
       'contain',
       'Highlight the important features'
     )
-
-    cy.contains('Connect Wallet').click()
-
-    cy.get('#WEB3_CONNECT_MODAL_ID > div > div > div > div').first().click()
   })
 
   it('should publish a data set with all fields', () => {
