@@ -34,7 +34,9 @@
   "pool": {
     "tooltips": {
       "price": "Explain how this price is determined...",
-      "liquidity": "Providing liquidity will earn you SWAPFEE% on every transaction in this pool, proportionally to your share of the pool."
+      "liquidity": "Providing liquidity will earn you SWAPFEE% on every transaction in this pool, proportionally to your share of the pool.",
+      "approveSpecific": "Give the smart contract permission to spend your COIN which has to be done for each transaction. You can optionally set this to infinite in your user preferences.",
+      "approveInfinite": "Give the smart contract permission to spend infinte amounts of your COIN so you have to do this only once. You can disable allowing infinite amounts in your user preferences."
     },
     "add": {
       "title": "Add Liquidity",

@@ -6,6 +6,26 @@ import Loader from '../atoms/Loader'
 import { useWeb3 } from '../../providers/Web3'
 import { useUserPreferences } from '../../providers/UserPreferences'
 import Tooltip from '../atoms/Tooltip'
+import { graphql, useStaticQuery } from 'gatsby'
+
+const query = graphql`
+  query {
+    content: allFile(filter: { relativePath: { eq: "price.json" } }) {
+      edges {
+        node {
+          childContentJson {
+            pool {
+              tooltips {
+                approveSpecific
+                approveInfinite
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
 
 function ButtonApprove({
   amount,
@@ -18,10 +38,11 @@ function ButtonApprove({
   approveTokens: (amount: string) => void
   isLoading: boolean
 }) {
-  const { infiniteApproval } = useUserPreferences()
+  // Get content
+  const data = useStaticQuery(query)
+  const content = data.content.edges[0].node.childContentJson.pool.tooltips
 
-  const tooltipSpecific = `Give the smart contract permission to spend your ${coin} which has to be done for each transaction. You can optionally set this to infinite in your user preferences.`
-  const tooltipInfinite = `Give the smart contract permission to spend infinte amounts of your ${coin} so you have to do this only once. You can disable allowing infinite amounts in your user preferences.`
+  const { infiniteApproval } = useUserPreferences()
 
   return infiniteApproval ? (
     <Button
@@ -33,7 +54,8 @@ function ButtonApprove({
         <Loader />
       ) : (
         <>
-          Approve {coin} <Tooltip content={tooltipInfinite} />
+          Approve {coin}{' '}
+          <Tooltip content={content.approveInfinite.replace('COIN', coin)} />
         </>
       )}
     </Button>
@@ -45,7 +67,7 @@ function ButtonApprove({
         <>
           Approve {amount} {coin}
           {amount === '1' ? 'S' : ''}
-          <Tooltip content={tooltipSpecific} />
+          <Tooltip content={content.approveSpecific.replace('COIN', coin)} />
         </>
       )}
     </Button>
