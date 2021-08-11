@@ -129,9 +129,11 @@ const columnsMinimal = [columns[0], columns[3]]
 
 export default function PoolTransactions({
   poolAddress,
+  poolChainId,
   minimal
 }: {
   poolAddress?: string
+  poolChainId?: number[]
   minimal?: boolean
 }): ReactElement {
   const { accountId } = useWeb3()
@@ -143,13 +145,17 @@ export default function PoolTransactions({
   const [data, setData] = useState<PoolTransaction[]>()
 
   async function fetchPoolTransactionData() {
-    const variables = { user: accountId?.toLowerCase() }
+    const variables = {
+      user: accountId?.toLowerCase(),
+      pool: poolAddress?.toLowerCase()
+    }
     const transactions: PoolTransaction[] = []
     const result = await fetchDataForMultipleChains(
       poolAddress ? txHistoryQueryByPool : txHistoryQuery,
       variables,
-      chainIds
+      poolAddress ? poolChainId : chainIds
     )
+
     for (let i = 0; i < result.length; i++) {
       result[i].poolTransactions.forEach((poolTransaction: PoolTransaction) => {
         transactions.push(poolTransaction)
