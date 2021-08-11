@@ -18,13 +18,15 @@ export function getUrqlClientInstance(): Client {
 }
 
 export default function UrqlClientProvider({
+  chainId,
   children
 }: {
+  chainId: number
   children: ReactNode
 }): ReactElement {
   const { networkId } = useWeb3()
   const [client, setClient] = useState<Client>()
-
+  console.log('chainId', chainId)
   useEffect(() => {
     const oceanConfig = getOceanConfig(networkId || 1)
 
