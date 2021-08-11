@@ -5,7 +5,7 @@ documents:
   - './src/components/pages/History/PoolShares.tsx'
   - './src/components/pages/History/Downloads.tsx'
   - './src/components/pages/History/ComputeJobs/index.tsx'
-  - './src/ //Users/bogdanfazakas/Sites/ocean-market/src/components/organisms/AssetContent/EditHistory.tsx'
+  - './src/components/organisms/AssetContent/EditHistory.tsx'
   # - './src/components/organisms/AssetActions/Pool/index.tsx'
   - './src/components/organisms/AssetActions/Pool/Graph.tsx'
   - './src/components/organisms/AssetActions/Consume.tsx'
