@@ -25,6 +25,11 @@ import {
   PoolShares_poolShares as PoolShare
 } from '../@types/apollo/PoolShares'
 
+export interface UserTVL {
+  price: string
+  oceanBalance: string
+}
+
 export interface PriceList {
   [key: string]: string
 }
@@ -558,7 +563,7 @@ export async function getAccountLiquidityInOwnAssets(
   accountId: string,
   chainIds: number[],
   pools: string[]
-): Promise<number> {
+): Promise<UserTVL> {
   const queryVariables = {
     user: accountId.toLowerCase(),
     pools: pools
@@ -569,11 +574,18 @@ export async function getAccountLiquidityInOwnAssets(
     chainIds
   )
   let totalLiquidity = 0
+  let totalOceanLiquidity = 0
   for (const result of results) {
-    for (const poolshare of result.poolShares) {
-      const poolLiquidity = calculateUserLiquidity(poolshare)
+    for (const poolShare of result.poolShares) {
+      const userShare = poolShare.balance / poolShare.poolId.totalShares
+      const userBalance = userShare * poolShare.poolId.oceanReserve
+      totalOceanLiquidity += userBalance
+      const poolLiquidity = calculateUserLiquidity(poolShare)
       totalLiquidity += poolLiquidity
     }
   }
-  return totalLiquidity
+  return {
+    price: totalLiquidity.toString(),
+    oceanBalance: totalOceanLiquidity.toString()
+  }
 }

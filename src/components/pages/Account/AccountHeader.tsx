@@ -15,13 +15,15 @@ import { Logger, DDO } from '@oceanprotocol/lib'
 import {
   getAccountNumberOfOrders,
   getAssetsBestPrices,
-  getAccountLiquidityInOwnAssets
+  getAccountLiquidityInOwnAssets,
+  UserTVL
 } from '../../../utils/subgraph'
 import Conversion from '../../atoms/Price/Conversion'
 import { ReactComponent as Avatar } from '../../../images/logo.svg'
 import { ReactComponent as Published } from '../../../images/published.svg'
 import { ReactComponent as Sold } from '../../../images/sold.svg'
 import { ReactComponent as Tvl } from '../../../images/tvl.svg'
+import Token from '../../organisms/AssetActions/Pool/Token'
 
 export default function AccountHeader({
   accountId
@@ -36,7 +38,7 @@ export default function AccountHeader({
   const [publishedAssets, setPublishedAssets] = useState<DDO[]>()
   const [numberOfAssets, setNumberOfAssets] = useState<number>()
   const [sold, setSold] = useState<number>()
-  const [tvl, setTvl] = useState<string>()
+  const [tvl, setTvl] = useState<UserTVL>()
 
   useEffect(() => {
     if (!accountId) return
@@ -102,12 +104,12 @@ export default function AccountHeader({
             accountPoolAdresses.push(priceInfo.price.address.toLowerCase())
           }
         }
-        const userTvl = await getAccountLiquidityInOwnAssets(
+        const userTvl: UserTVL = await getAccountLiquidityInOwnAssets(
           accountId,
           chainIds,
           accountPoolAdresses
         )
-        setTvl(userTvl.toString())
+        setTvl(userTvl)
       } catch (error) {
         Logger.error(error.message)
       }
@@ -158,11 +160,14 @@ export default function AccountHeader({
               <div>
                 <div className={styles.statisticsGrid}>
                   <Tvl className={styles.statisticsImages} />
-                  <Conversion
-                    price={tvl}
-                    className={styles.statisticsValues}
-                    hideApproximateSymbol
-                  />
+                  <div className={styles.liquidity}>
+                    <Conversion
+                      price={tvl?.price}
+                      className={styles.statisticsValues}
+                      hideApproximateSymbol
+                    />
+                    <Token symbol="OCEAN" balance={tvl?.oceanBalance} noIcon />
+                  </div>
                 </div>
                 <p className={styles.statiscsLabel}>TVL</p>
               </div>
