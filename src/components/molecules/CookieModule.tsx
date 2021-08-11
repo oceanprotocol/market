@@ -22,13 +22,7 @@ export default function CookieModule(props: CookieModuleProps): ReactElement {
   }
 
   const handleChange = (checked: boolean) => {
-    switch (checked) {
-      case true:
-        handleAccept()
-        break
-      default:
-        handleReject()
-    }
+    checked ? handleAccept() : handleReject()
   }
 
   return (
