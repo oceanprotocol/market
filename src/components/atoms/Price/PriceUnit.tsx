@@ -51,7 +51,7 @@ export default function PriceUnit({
           <div>
             {Number.isNaN(Number(price)) ? '-' : formatPrice(price, locale)}{' '}
             <span className={styles.symbol}>
-              {symbol || config.oceanTokenSymbol}
+              {symbol || config?.oceanTokenSymbol}
             </span>
             {type && type === 'pool' && (
               <Badge label="pool" className={styles.badge} />

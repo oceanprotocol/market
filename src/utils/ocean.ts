@@ -16,7 +16,8 @@ export function getOceanConfig(network: string | number): ConfigHelperConfig {
       ? undefined
       : process.env.GATSBY_INFURA_PROJECT_ID
   )
-
+  if ((config as ConfigHelperConfig).networkId === 137)
+    (config as ConfigHelperConfig).subgraphUri = 'http://localhost:8000'
   return config as ConfigHelperConfig
 }
 

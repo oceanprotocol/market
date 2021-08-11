@@ -141,6 +141,7 @@ export default function Pool(): ReactElement {
         return
       }
 
+      console.log(dataLiquidity.pool.tokens)
       // Set symbols
       dataLiquidity.pool.tokens.forEach((token) => {
         token.isDatatoken
