@@ -69,7 +69,7 @@ module.exports = {
   // This enables / disables the use of a GDPR compliant
   // privacy preference center to manage cookies on the market
   // If set to true a gdpr.json file inside the content directory
-  // is used to create and shoe a privacy preference center / cookie banner
+  // is used to create and show a privacy preference center / cookie banner
   // To learn more about how to configure and use this, please refer to the readme
   // https://github.com/deltaDAO/Ocean-Market/tree/main#-gdpr-compliance
   privacyPreferenceCenter: false
