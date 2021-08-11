@@ -104,6 +104,7 @@ export default function Swap({
 
   const switchTokens = () => {
     setFieldValue('type', values.type === 'buy' ? 'sell' : 'buy')
+    setCoin(values.type === 'sell' ? 'OCEAN' : ddo.dataTokenInfo.symbol)
     // don't reset form because we don't want to reset type
     setFieldValue('datatoken', 0)
     setFieldValue('ocean', 0)
@@ -122,7 +123,6 @@ export default function Swap({
         ? await ocean.pool.getOceanReceived(price.address, value.toString())
         : await ocean.pool.getOceanNeeded(price.address, value.toString())
 
-    setCoin(values.type === 'sell' ? 'OCEAN' : ddo.dataTokenInfo.symbol)
     await setFieldValue(name === 'ocean' ? 'datatoken' : 'ocean', newValue)
     setAmount(
       values.type === 'sell'

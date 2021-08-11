@@ -53,7 +53,7 @@ export default function FormTrade({
   const { isAssetNetwork } = useAsset()
   const { debug } = useUserPreferences()
   const [txId, setTxId] = useState<string>()
-  const [coin, setCoin] = useState<string>(ddo.dataTokenInfo.symbol)
+  const [coinFrom, setCoinFrom] = useState<string>('OCEAN')
   const [amount, setAmount] = useState<string>('0')
 
   const [maximumOcean, setMaximumOcean] = useState(maxOcean)
@@ -127,7 +127,7 @@ export default function FormTrade({
               maxDt={maxDt}
               maxOcean={maxOcean}
               price={price}
-              setCoin={setCoin}
+              setCoin={setCoinFrom}
               setMaximumOcean={setMaximumOcean}
               setMaximumDt={setMaximumDt}
               setAmount={setAmount}
@@ -146,14 +146,21 @@ export default function FormTrade({
             </div>
           )}
           <Actions
-            isDisabled={!isWarningAccepted || !isAssetNetwork}
+            isDisabled={
+              !isWarningAccepted ||
+              !isAssetNetwork ||
+              amount === '' ||
+              amount === '0'
+            }
             isLoading={isSubmitting}
             loaderMessage="Swapping tokens..."
             successMessage="Successfully swapped tokens."
             actionName={content.action}
-            amount={amount}
+            amount={`${
+              values.type === 'sell' ? values.datatoken : values.ocean
+            }`}
             action={submitForm}
-            coin={coin}
+            coin={coinFrom}
             txId={txId}
           />
 

@@ -99,8 +99,8 @@ export default function TokenApproval({
       accountId,
       spender
     )
-    // console.log('ALLOWANCE', allowance)
-    // console.log('AMOUNT', amount)
+    console.log('ALLOWANCE', allowance)
+    console.log('AMOUNT', amount)
     amount &&
       Number(amount) > 0 &&
       setTokenApproved(Number(allowance) >= Number(amount))
