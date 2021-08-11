@@ -84,13 +84,9 @@ function ConsentProvider({ children }: { children: ReactNode }): ReactElement {
 
     const initialValues = {} as ConsentStatus
     cookies.optionalCookies?.map((cookie) => {
-      const cookieVal = getCookieValue(cookie.cookieName)
+      const cookieValue = getCookieValue(cookie.cookieName)
 
-      console.log(
-        `Looking for cookie ${cookie.cookieName}... Found value:`,
-        cookieVal
-      )
-      switch (cookieVal) {
+      switch (cookieValue) {
         case 'true':
           initialValues[cookie.cookieName] = CookieConsentStatus.APPROVED
           break
@@ -115,7 +111,7 @@ function ConsentProvider({ children }: { children: ReactNode }): ReactElement {
       (navigator.doNotTrack && navigator.doNotTrack === '1') || // Chrome, Opera, Safari <7.1.3, Blink-based
       (navigator.doNotTrack && navigator.doNotTrack === 'yes') // Firefox
     ) {
-      console.log('donot track')
+      // console.log('donot track')
       resetConsentStatus(CookieConsentStatus.REJECTED)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
