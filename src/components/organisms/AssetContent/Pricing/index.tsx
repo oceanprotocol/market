@@ -4,12 +4,12 @@ import { initialValues, validationSchema } from '../../../../models/FormPricing'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import { PriceOptionsMarket } from '../../../../@types/MetaData'
 import Alert from '../../../atoms/Alert'
-import styles from './index.module.css'
 import FormPricing from './FormPricing'
 import { toast } from 'react-toastify'
 import Feedback from './Feedback'
 import { graphql, useStaticQuery } from 'gatsby'
 import { usePricing } from '../../../../hooks/usePricing'
+import styles from './index.module.css'
 
 const query = graphql`
   query PricingQuery {
@@ -29,6 +29,10 @@ const query = graphql`
               fixed {
                 title
                 info
+                tooltips {
+                  communityFee
+                  marketplaceFee
+                }
               }
               dynamic {
                 title
@@ -39,6 +43,10 @@ const query = graphql`
                   communityFee
                   marketplaceFee
                 }
+              }
+              free {
+                title
+                info
               }
             }
           }
@@ -57,12 +65,8 @@ export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
   const [showPricing, setShowPricing] = useState(false)
   const [success, setSuccess] = useState<string>()
 
-  const {
-    createPricing,
-    pricingIsLoading,
-    pricingError,
-    pricingStepText
-  } = usePricing(ddo)
+  const { createPricing, pricingIsLoading, pricingError, pricingStepText } =
+    usePricing()
 
   const hasFeedback = pricingIsLoading || typeof success !== 'undefined'
 
@@ -74,7 +78,7 @@ export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
         swapFee: `${values.swapFee / 100}`
       }
 
-      const tx = await createPricing(priceOptions)
+      const tx = await createPricing(priceOptions, ddo)
 
       // Pricing failed
       if (!tx || pricingError) {

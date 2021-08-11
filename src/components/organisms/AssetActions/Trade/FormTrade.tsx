@@ -14,6 +14,7 @@ import { FormTradeData, initialValues } from '../../../../models/FormTrade'
 import Decimal from 'decimal.js'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
+import { useAsset } from '../../../../providers/Asset'
 
 const contentQuery = graphql`
   query TradeQuery {
@@ -49,6 +50,7 @@ export default function FormTrade({
   const content = data.content.edges[0].node.childContentJson.trade
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
+  const { isAssetNetwork } = useAsset()
   const { debug } = useUserPreferences()
   const [txId, setTxId] = useState<string>()
 
@@ -64,7 +66,7 @@ export default function FormTrade({
         .required('Required')
         .nullable(),
       datatoken: Yup.number()
-        .max(maxDt, `Must be less or equal than ${maximumDt}`)
+        .max(maximumDt, (param) => `Must be less or equal than ${param.max}`)
         .min(0.00001, (param) => `Must be more or equal to ${param.min}`)
         .required('Required')
         .nullable(),
@@ -139,7 +141,7 @@ export default function FormTrade({
             </div>
           )}
           <Actions
-            isDisabled={!isWarningAccepted}
+            isDisabled={!isWarningAccepted || !isAssetNetwork}
             isLoading={isSubmitting}
             loaderMessage="Swapping tokens..."
             successMessage="Successfully swapped tokens."

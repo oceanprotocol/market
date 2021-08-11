@@ -1,22 +1,21 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { File as FileMetadata, DDO } from '@oceanprotocol/lib'
-import Button from '../../atoms/Button'
+import { File as FileMetadata, DDO, BestPrice } from '@oceanprotocol/lib'
 import File from '../../atoms/File'
 import Price from '../../atoms/Price'
-import Web3Feedback from '../../molecules/Wallet/Feedback'
-import styles from './Consume.module.css'
-import Loader from '../../atoms/Loader'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { useAsset } from '../../../providers/Asset'
-import { secondsToString } from '../../../utils/metadata'
-import { gql, useQuery } from '@apollo/client'
+import { gql, useQuery } from 'urql'
 import { OrdersData } from '../../../@types/apollo/OrdersData'
 import BigNumber from 'bignumber.js'
 import { useOcean } from '../../../providers/Ocean'
 import { useWeb3 } from '../../../providers/Web3'
 import { usePricing } from '../../../hooks/usePricing'
 import { useConsume } from '../../../hooks/useConsume'
+import ButtonBuy from '../../atoms/ButtonBuy'
+import { secondsToString } from '../../../utils/metadata'
+import AlgorithmDatasetsListForCompute from '../AssetContent/AlgorithmDatasetsListForCompute'
+import styles from './Consume.module.css'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {
@@ -32,66 +31,61 @@ const previousOrderQuery = gql`
   }
 `
 
-function getHelpText(
-  token: {
-    dtBalance: string
-    dtSymbol: string
-  },
-  hasDatatoken: boolean,
-  hasPreviousOrder: boolean,
-  timeout: string
-) {
-  const { dtBalance, dtSymbol } = token
-  const assetTimeout = timeout === 'Forever' ? '' : ` for ${timeout}`
-  const text = hasPreviousOrder
-    ? `You bought this data set already allowing you to download it without paying again${assetTimeout}.`
-    : hasDatatoken
-    ? `You own ${dtBalance} ${dtSymbol} allowing you to use this data set by spending 1 ${dtSymbol}, but without paying OCEAN again.`
-    : `For using this data set, you will buy 1 ${dtSymbol} and immediately spend it back to the publisher and pool.`
-
-  return text
-}
-
 export default function Consume({
   ddo,
   file,
   isBalanceSufficient,
-  dtBalance
+  dtBalance,
+  fileIsLoading,
+  isConsumable,
+  consumableFeedback
 }: {
   ddo: DDO
   file: FileMetadata
   isBalanceSufficient: boolean
   dtBalance: string
+  fileIsLoading?: boolean
+  isConsumable?: boolean
+  consumableFeedback?: string
 }): ReactElement {
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
-  const { marketFeeAddress } = useSiteMetadata()
+  const { appConfig } = useSiteMetadata()
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
   const [previousOrderId, setPreviousOrderId] = useState<string>()
-  const { isInPurgatory, price } = useAsset()
-  const { buyDT, pricingStepText, pricingError, pricingIsLoading } = usePricing(
-    ddo
-  )
-  const { consumeStepText, consume, consumeError } = useConsume()
+  const { isInPurgatory, price, type, isAssetNetwork } = useAsset()
+  const { buyDT, pricingStepText, pricingError, pricingIsLoading } =
+    usePricing()
+  const { consumeStepText, consume, consumeError, isLoading } = useConsume()
   const [isDisabled, setIsDisabled] = useState(true)
   const [hasDatatoken, setHasDatatoken] = useState(false)
-  const [isConsumable, setIsConsumable] = useState(true)
+  const [maxDt, setMaxDT] = useState<number>(1)
+  const [isConsumablePrice, setIsConsumablePrice] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
-
-  const { data } = useQuery<OrdersData>(previousOrderQuery, {
+  const [result] = useQuery<OrdersData>({
+    query: previousOrderQuery,
     variables: {
       id: ddo.dataToken?.toLowerCase(),
       account: accountId?.toLowerCase()
-    },
-    pollInterval: 5000
+    }
+    // pollInterval: 5000
   })
+  const { data } = result
+
+  async function checkMaxAvaialableTokens(price: BestPrice) {
+    if (!ocean || !price) return
+    const maxTokensInPool =
+      price.type === 'pool'
+        ? await ocean.pool.getDTMaxBuyQuantity(price.address)
+        : 1
+    setMaxDT(Number(maxTokensInPool))
+  }
 
   useEffect(() => {
     if (!data || !assetTimeout || data.tokenOrders.length === 0) return
 
     const lastOrder = data.tokenOrders[0]
-
-    if (assetTimeout === 'Forever') {
+    if (assetTimeout === '0') {
       setPreviousOrderId(lastOrder.tx)
       setHasPreviousOrder(true)
     } else {
@@ -108,15 +102,16 @@ export default function Consume({
 
   useEffect(() => {
     const { timeout } = ddo.findServiceByType('access').attributes.main
-    setAssetTimeout(secondsToString(timeout))
+    setAssetTimeout(timeout.toString())
   }, [ddo])
 
   useEffect(() => {
     if (!price) return
 
-    setIsConsumable(
+    setIsConsumablePrice(
       price.isConsumable !== undefined ? price.isConsumable === 'true' : true
     )
+    checkMaxAvaialableTokens(price)
   }, [price])
 
   useEffect(() => {
@@ -125,83 +120,87 @@ export default function Consume({
 
   useEffect(() => {
     setIsDisabled(
-      (!ocean ||
-        !isBalanceSufficient ||
-        typeof consumeStepText !== 'undefined' ||
-        pricingIsLoading ||
-        !isConsumable) &&
-        !hasPreviousOrder &&
-        !hasDatatoken
+      !isConsumable ||
+        ((!ocean ||
+          !isBalanceSufficient ||
+          !isAssetNetwork ||
+          typeof consumeStepText !== 'undefined' ||
+          pricingIsLoading ||
+          (!hasPreviousOrder && !hasDatatoken && !(maxDt >= 1)) ||
+          !isConsumablePrice) &&
+          !hasPreviousOrder &&
+          !hasDatatoken)
     )
   }, [
     ocean,
     hasPreviousOrder,
     isBalanceSufficient,
+    isAssetNetwork,
     consumeStepText,
     pricingIsLoading,
-    isConsumable,
-    hasDatatoken
+    isConsumablePrice,
+    hasDatatoken,
+    isConsumable
   ])
 
   async function handleConsume() {
-    !hasPreviousOrder && !hasDatatoken && (await buyDT('1', price))
-    await consume(
+    if (!hasPreviousOrder && !hasDatatoken) {
+      const tx = await buyDT('1', price, ddo)
+      if (tx === undefined) return
+    }
+    const error = await consume(
       ddo.id,
       ddo.dataToken,
       'access',
-      marketFeeAddress,
+      appConfig.marketFeeAddress,
       previousOrderId
     )
-    setHasPreviousOrder(true)
+    error || setHasPreviousOrder(true)
   }
 
   // Output errors in UI
   useEffect(() => {
     consumeError && toast.error(consumeError)
+  }, [consumeError])
+
+  useEffect(() => {
     pricingError && toast.error(pricingError)
-  }, [consumeError, pricingError])
+  }, [pricingError])
 
   const PurchaseButton = () => (
-    <div className={styles.actions}>
-      {consumeStepText || pricingIsLoading ? (
-        <Loader message={consumeStepText || pricingStepText} />
-      ) : (
-        <>
-          <Button style="primary" onClick={handleConsume} disabled={isDisabled}>
-            {hasPreviousOrder
-              ? 'Download'
-              : `Buy ${
-                  assetTimeout === 'Forever' ? '' : ` for ${assetTimeout}`
-                }`}
-          </Button>
-          <div className={styles.help}>
-            {getHelpText(
-              { dtBalance, dtSymbol: ddo.dataTokenInfo.symbol },
-              hasDatatoken,
-              hasPreviousOrder,
-              assetTimeout
-            )}
-          </div>
-        </>
-      )}
-    </div>
+    <ButtonBuy
+      action="download"
+      disabled={isDisabled}
+      hasPreviousOrder={hasPreviousOrder}
+      hasDatatoken={hasDatatoken}
+      dtSymbol={ddo.dataTokenInfo?.symbol}
+      dtBalance={dtBalance}
+      datasetLowPoolLiquidity={!(maxDt >= 1)}
+      onClick={handleConsume}
+      assetTimeout={secondsToString(parseInt(assetTimeout))}
+      assetType={type}
+      stepText={consumeStepText || pricingStepText}
+      isLoading={pricingIsLoading || isLoading}
+      priceType={price?.type}
+      isConsumable={isConsumable}
+      consumableFeedback={consumableFeedback}
+    />
   )
 
   return (
     <aside className={styles.consume}>
       <div className={styles.info}>
         <div className={styles.filewrapper}>
-          <File file={file} />
+          <File file={file} isLoading={fileIsLoading} />
         </div>
         <div className={styles.pricewrapper}>
           <Price price={price} conversion />
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>
-
-      <footer className={styles.feedback}>
-        <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
-      </footer>
+      {type === 'algorithm' && (
+        <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} dataset={ddo} />
+      )}
     </aside>
   )
 }

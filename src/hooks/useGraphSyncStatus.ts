@@ -64,7 +64,7 @@ export function useGraphSyncStatus(): UseGraphSyncStatus {
 
   // Get and set head block
   useEffect(() => {
-    if (!config || !config.nodeUri || web3Loading) return
+    if (!config?.nodeUri || web3Loading) return
 
     async function initBlockHead() {
       const blockHead = block || (await getBlockHead(config))
@@ -72,11 +72,12 @@ export function useGraphSyncStatus(): UseGraphSyncStatus {
       Logger.log('[GraphStatus] Head block: ', blockHead)
     }
     initBlockHead()
-  }, [web3Loading, block, config.nodeUri])
+  }, [web3Loading, block, config])
 
   // Get and set subgraph block
   useEffect(() => {
-    if (!config || !config.subgraphUri) return
+    if (!config?.subgraphUri) return
+
     async function initBlockSubgraph() {
       setSubgraphLoading(true)
       const blockGraph = await getBlockSubgraph(config.subgraphUri)
@@ -85,7 +86,7 @@ export function useGraphSyncStatus(): UseGraphSyncStatus {
       Logger.log('[GraphStatus] Latest block from subgraph: ', blockGraph)
     }
     initBlockSubgraph()
-  }, [config.subgraphUri])
+  }, [config])
 
   // Set sync status
   useEffect(() => {
@@ -98,7 +99,7 @@ export function useGraphSyncStatus(): UseGraphSyncStatus {
       return
     }
     setIsGraphSynced(true)
-  }, [blockGraph, blockHead])
+  }, [blockGraph, blockHead, web3Loading, subgraphLoading])
 
   return { blockHead, blockGraph, isGraphSynced }
 }

@@ -8,24 +8,30 @@ import React, {
   useCallback
 } from 'react'
 import Web3 from 'web3'
-import Web3Modal from 'web3modal'
+import Web3Modal, { getProviderInfo, IProviderInfo } from 'web3modal'
 import { infuraProjectId as infuraId, portisId } from '../../app.config'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import { Logger } from '@oceanprotocol/lib'
 import { isBrowser } from '../utils'
 import {
   EthereumListsChain,
-  getNetworkData,
+  getNetworkDataById,
   getNetworkDisplayName
 } from '../utils/web3'
-import { graphql, useStaticQuery } from 'gatsby'
+import { graphql } from 'gatsby'
+import { UserBalance } from '../@types/TokenBalance'
+import { getOceanBalance } from '../utils/ocean'
+import useNetworkMetadata from '../hooks/useNetworkMetadata'
 
 interface Web3ProviderValue {
   web3: Web3
   web3Provider: any
   web3Modal: Web3Modal
+  web3ProviderInfo: IProviderInfo
   accountId: string
+  balance: UserBalance
   networkId: number
+  chainId: number
   networkDisplayName: string
   networkData: EthereumListsChain
   block: number
@@ -76,6 +82,8 @@ export const web3ModalOpts = {
   theme: web3ModalTheme
 }
 
+const refreshInterval = 20000 // 20 sec.
+
 const networksQuery = graphql`
   query {
     allNetworksMetadataJson {
@@ -99,24 +107,33 @@ const networksQuery = graphql`
 const Web3Context = createContext({} as Web3ProviderValue)
 
 function Web3Provider({ children }: { children: ReactNode }): ReactElement {
-  const data = useStaticQuery(networksQuery)
-  const networksList: { node: EthereumListsChain }[] =
-    data.allNetworksMetadataJson.edges
+  const { networksList } = useNetworkMetadata()
 
   const [web3, setWeb3] = useState<Web3>()
   const [web3Provider, setWeb3Provider] = useState<any>()
   const [web3Modal, setWeb3Modal] = useState<Web3Modal>()
+  const [web3ProviderInfo, setWeb3ProviderInfo] = useState<IProviderInfo>()
   const [networkId, setNetworkId] = useState<number>()
+  const [chainId, setChainId] = useState<number>()
   const [networkDisplayName, setNetworkDisplayName] = useState<string>()
   const [networkData, setNetworkData] = useState<EthereumListsChain>()
   const [block, setBlock] = useState<number>()
   const [isTestnet, setIsTestnet] = useState<boolean>()
   const [accountId, setAccountId] = useState<string>()
-  const [web3Loading, setWeb3Loading] = useState<boolean>()
+  const [web3Loading, setWeb3Loading] = useState<boolean>(true)
+  const [balance, setBalance] = useState<UserBalance>({
+    eth: '0',
+    ocean: '0'
+  })
 
+  // -----------------------------------
+  // Helper: connect to web3
+  // -----------------------------------
   const connect = useCallback(async () => {
-    if (!web3Modal) return
-
+    if (!web3Modal) {
+      setWeb3Loading(false)
+      return
+    }
     try {
       setWeb3Loading(true)
       Logger.log('[web3] Connecting Web3...')
@@ -132,6 +149,10 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
       setNetworkId(networkId)
       Logger.log('[web3] network id ', networkId)
 
+      const chainId = await web3.eth.getChainId()
+      setChainId(chainId)
+      Logger.log('[web3] chain id ', chainId)
+
       const accountId = (await web3.eth.getAccounts())[0]
       setAccountId(accountId)
       Logger.log('[web3] account id', accountId)
@@ -143,10 +164,31 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   }, [web3Modal])
 
   // -----------------------------------
+  // Helper: Get user balance
+  // -----------------------------------
+  const getUserBalance = useCallback(async () => {
+    if (!accountId || !networkId || !web3) return
+
+    try {
+      const balance = {
+        eth: web3.utils.fromWei(await web3.eth.getBalance(accountId, 'latest')),
+        ocean: await getOceanBalance(accountId, networkId, web3)
+      }
+      setBalance(balance)
+      Logger.log('[web3] Balance: ', balance)
+    } catch (error) {
+      Logger.error('[web3] Error: ', error.message)
+    }
+  }, [accountId, networkId, web3])
+
+  // -----------------------------------
   // Create initial Web3Modal instance
   // -----------------------------------
   useEffect(() => {
-    if (web3Modal) return
+    if (web3Modal) {
+      setWeb3Loading(false)
+      return
+    }
 
     async function init() {
       // note: needs artificial await here so the log message is reached and output
@@ -174,21 +216,39 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   }, [connect, web3Modal])
 
   // -----------------------------------
+  // Get and set user balance
+  // -----------------------------------
+  useEffect(() => {
+    getUserBalance()
+
+    // init periodic refresh of wallet balance
+    const balanceInterval = setInterval(() => getUserBalance(), refreshInterval)
+
+    return () => {
+      clearInterval(balanceInterval)
+    }
+  }, [getUserBalance])
+
+  // -----------------------------------
   // Get and set network metadata
   // -----------------------------------
   useEffect(() => {
     if (!networkId) return
-
-    const networkData = getNetworkData(networksList, networkId)
+    const networkData = getNetworkDataById(networksList, networkId)
     setNetworkData(networkData)
-    Logger.log('[web3] Network metadata found.', networkData)
+    Logger.log(
+      networkData
+        ? `[web3] Network metadata found.`
+        : `[web3] No network metadata found.`,
+      networkData
+    )
 
     // Construct network display name
     const networkDisplayName = getNetworkDisplayName(networkData, networkId)
     setNetworkDisplayName(networkDisplayName)
 
     // Figure out if we're on a chain's testnet, or not
-    setIsTestnet(networkData.network !== 'mainnet')
+    setIsTestnet(networkData?.network !== 'mainnet')
 
     Logger.log(`[web3] Network display name set to: ${networkDisplayName}`)
   }, [networkId, networksList])
@@ -208,19 +268,42 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   }, [web3, networkId])
 
   // -----------------------------------
+  // Get and set web3 provider info
+  // -----------------------------------
+  // Workaround cause getInjectedProviderName() always returns `MetaMask`
+  // https://github.com/oceanprotocol/market/issues/332
+  useEffect(() => {
+    if (!web3Provider) return
+
+    const providerInfo = getProviderInfo(web3Provider)
+    setWeb3ProviderInfo(providerInfo)
+  }, [web3Provider])
+
+  // -----------------------------------
   // Logout helper
   // -----------------------------------
   async function logout() {
-    web3Modal?.clearCachedProvider()
+    if (web3 && web3.currentProvider && (web3.currentProvider as any).close) {
+      await (web3.currentProvider as any).close()
+    }
+    await web3Modal.clearCachedProvider()
   }
 
   // -----------------------------------
   // Handle change events
   // -----------------------------------
+  async function handleChainChanged(chainId: string) {
+    Logger.log('[web3] Chain changed', chainId)
+    const networkId = await web3.eth.net.getId()
+    setChainId(Number(chainId))
+    setNetworkId(Number(networkId))
+  }
+
   async function handleNetworkChanged(networkId: string) {
     Logger.log('[web3] Network changed', networkId)
-    // const networkId = Number(chainId.replace('0x', ''))
+    const chainId = await web3.eth.getChainId()
     setNetworkId(Number(networkId))
+    setChainId(Number(chainId))
   }
 
   async function handleAccountsChanged(accounts: string[]) {
@@ -231,19 +314,14 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   useEffect(() => {
     if (!web3Provider || !web3) return
 
-    //
-    // HEADS UP! We should rather listen to `chainChanged` exposing the `chainId`
-    // but for whatever reason the exposed `chainId` is wildly different from
-    // what is shown on https://chainid.network, in turn breaking our network/config
-    // mapping. The networkChanged is deprecated but works as expected for our case.
-    // See: https://eips.ethereum.org/EIPS/eip-1193#chainchanged
-    //
+    web3Provider.on('chainChanged', handleChainChanged)
     web3Provider.on('networkChanged', handleNetworkChanged)
     web3Provider.on('accountsChanged', handleAccountsChanged)
 
     return () => {
-      web3Provider.removeListener('networkChanged')
-      web3Provider.removeListener('accountsChanged')
+      web3Provider.removeListener('chainChanged', handleChainChanged)
+      web3Provider.removeListener('networkChanged', handleNetworkChanged)
+      web3Provider.removeListener('accountsChanged', handleAccountsChanged)
     }
   }, [web3Provider, web3])
 
@@ -253,8 +331,11 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
         web3,
         web3Provider,
         web3Modal,
+        web3ProviderInfo,
         accountId,
+        balance,
         networkId,
+        chainId,
         networkDisplayName,
         networkData,
         block,

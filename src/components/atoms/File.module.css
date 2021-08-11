@@ -21,6 +21,11 @@
 
 .file.small {
   font-size: var(--font-size-mini);
-  height: 5.75rem;
+  height: 5.5rem;
   width: 4.5rem;
+  padding: calc(var(--spacer) / 2) calc(var(--spacer) / 4);
+}
+
+.loaderWrap {
+  margin-right: calc(var(--spacer) / 6);
 }

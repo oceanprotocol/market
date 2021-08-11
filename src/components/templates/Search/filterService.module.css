@@ -1,0 +1,64 @@
+.filterList,
+div.filterList {
+  white-space: normal;
+  margin-bottom: 0;
+}
+
+.filter {
+  display: inline-block;
+}
+
+.filter,
+button.filter,
+.filter:hover,
+.filter:active,
+.filter:focus {
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  margin-right: calc(var(--spacer) / 6);
+  margin-bottom: calc(var(--spacer) / 6);
+  color: var(--color-secondary);
+  background: var(--background-content);
+
+  /* the only thing not possible to overwrite button style="text" with more specifity of selectors, so sledgehammer */
+  padding: calc(var(--spacer) / 6) !important;
+}
+
+.filter:hover,
+.filter:focus {
+  color: var(--font-color-text);
+  background: inherit;
+  transform: none;
+}
+
+.filter.selected {
+  color: var(--background-body);
+  background: var(--font-color-text);
+  border-color: var(--background-body);
+}
+
+.filter.selected::after {
+  content: '✕';
+  margin-left: calc(var(--spacer) / 6);
+  color: var(--background-body);
+}
+
+.filterList:first-of-type {
+  margin-bottom: calc(var(--spacer) / 6);
+}
+
+.showClear:hover {
+  display: inline-flex;
+  color: var(--color-primary);
+}
+.showClear {
+  display: inline-flex;
+  text-transform: capitalize;
+  color: var(--color-secondary);
+  font-weight: var(--font-weight-base);
+  margin-left: calc(var(--spacer) / 6);
+}
+
+.hideClear {
+  display: none !important;
+}

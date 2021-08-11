@@ -7,10 +7,9 @@ import Styles from '../global/Styles'
 import { useWeb3 } from '../providers/Web3'
 import { useSiteMetadata } from '../hooks/useSiteMetadata'
 import { useAccountPurgatory } from '../hooks/useAccountPurgatory'
-import NetworkBanner from './molecules/NetworkBanner'
-import styles from './App.module.css'
 import AnnouncementBanner from './atoms/AnnouncementBanner'
 import { useGraphSyncStatus } from '../hooks/useGraphSyncStatus'
+import styles from './App.module.css'
 
 const contentQuery = graphql`
   query AppQuery {
@@ -41,24 +40,15 @@ export default function App({
   const { warning } = useSiteMetadata()
   const { accountId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
-  const { isGraphSynced, blockHead, blockGraph } = useGraphSyncStatus()
+  // const { isGraphSynced, blockHead, blockGraph } = useGraphSyncStatus()
 
   return (
     <Styles>
       <div className={styles.app}>
-        {!isGraphSynced && (
-          <AnnouncementBanner
-            text={`The data for this network has only synced to Ethereum block ${blockGraph} (out of ${blockHead}). Please check back soon.`}
-            state="error"
-          />
-        )}
-        {!location.pathname.includes('/asset/did') && <NetworkBanner />}
-
-        <Header />
-
         {(props as PageProps).uri === '/' && (
-          <Alert text={warning.main} state="info" />
+          <AnnouncementBanner text={warning.main} />
         )}
+        <Header />
 
         {isInPurgatory && (
           <Alert

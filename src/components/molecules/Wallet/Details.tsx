@@ -1,38 +1,51 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import Button from '../../atoms/Button'
-import styles from './Details.module.css'
-import { useOcean } from '../../../providers/Ocean'
-import Web3Feedback from './Feedback'
-import { getProviderInfo, IProviderInfo } from 'web3modal'
-import Conversion from '../../atoms/Price/Conversion'
 import { formatCurrency } from '@coingecko/cryptoformat'
 import { useUserPreferences } from '../../../providers/UserPreferences'
+import Button from '../../atoms/Button'
+import AddToken from '../../atoms/AddToken'
+import Conversion from '../../atoms/Price/Conversion'
 import { useWeb3 } from '../../../providers/Web3'
-import { addOceanToWallet } from '../../../utils/web3'
-import { Logger } from '@oceanprotocol/lib'
+
+import Web3Feedback from '../Web3Feedback'
+import styles from './Details.module.css'
+import { getOceanConfig } from '../../../utils/ocean'
 
 export default function Details(): ReactElement {
-  const { web3Provider, connect, logout, networkData } = useWeb3()
-  const { balance, config } = useOcean()
+  const {
+    web3Provider,
+    web3ProviderInfo,
+    web3Modal,
+    connect,
+    logout,
+    networkData,
+    networkId,
+    balance
+  } = useWeb3()
   const { locale } = useUserPreferences()
 
-  const [providerInfo, setProviderInfo] = useState<IProviderInfo>()
   const [mainCurrency, setMainCurrency] = useState<string>()
+  const [oceanTokenMetadata, setOceanTokenMetadata] =
+    useState<{
+      address: string
+      symbol: string
+    }>()
   // const [portisNetwork, setPortisNetwork] = useState<string>()
 
-  // Workaround cause getInjectedProviderName() always returns `MetaMask`
-  // https://github.com/oceanprotocol/market/issues/332
   useEffect(() => {
-    if (!web3Provider) return
-    const providerInfo = getProviderInfo(web3Provider)
-    setProviderInfo(providerInfo)
-  }, [web3Provider])
+    if (!networkId) return
 
-  useEffect(() => {
-    if (!networkData) return
+    const symbol =
+      networkId === 2021000 ? 'GX' : networkData?.nativeCurrency.symbol
+    setMainCurrency(symbol)
 
-    setMainCurrency(networkData.nativeCurrency.symbol)
-  }, [networkData])
+    const oceanConfig = getOceanConfig(networkId)
+
+    oceanConfig &&
+      setOceanTokenMetadata({
+        address: oceanConfig.oceanTokenAddress,
+        symbol: oceanConfig.oceanTokenSymbol
+      })
+  }, [networkData, networkId])
 
   // Handle network change for Portis
   // async function handlePortisNetworkChange(e: ChangeEvent<HTMLSelectElement>) {
@@ -50,7 +63,7 @@ export default function Details(): ReactElement {
         {Object.entries(balance).map(([key, value]) => (
           <li className={styles.balance} key={key}>
             <span className={styles.symbol}>
-              {key === 'eth' ? mainCurrency : config.oceanTokenSymbol}
+              {key === 'eth' ? mainCurrency : oceanTokenMetadata?.symbol}
             </span>{' '}
             {formatCurrency(Number(value), '', locale, false, {
               significantFigures: 4
@@ -61,11 +74,11 @@ export default function Details(): ReactElement {
 
         <li className={styles.actions}>
           <div title="Connected provider" className={styles.walletInfo}>
-            <span>
-              <img className={styles.walletLogo} src={providerInfo?.logo} />
-              {providerInfo?.name}
+            <span className={styles.walletLogoWrap}>
+              <img className={styles.walletLogo} src={web3ProviderInfo?.logo} />
+              {web3ProviderInfo?.name}
             </span>
-            {/* {providerInfo?.name === 'Portis' && (
+            {/* {web3ProviderInfo?.name === 'Portis' && (
               <InputElement
                 name="network"
                 type="select"
@@ -75,20 +88,17 @@ export default function Details(): ReactElement {
                 onChange={handlePortisNetworkChange}
               />
             )} */}
-            {providerInfo?.name === 'MetaMask' && (
-              <Button
-                style="text"
-                size="small"
-                onClick={() => {
-                  addOceanToWallet(config, web3Provider)
-                }}
-              >
-                {`Add ${config.oceanTokenSymbol}`}
-              </Button>
+            {web3ProviderInfo?.name === 'MetaMask' && (
+              <AddToken
+                address={oceanTokenMetadata?.address}
+                symbol={oceanTokenMetadata?.symbol}
+                logo="https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png"
+                className={styles.addToken}
+              />
             )}
           </div>
           <p>
-            {providerInfo?.name === 'Portis' && (
+            {web3ProviderInfo?.name === 'Portis' && (
               <Button
                 style="text"
                 size="small"
@@ -100,8 +110,8 @@ export default function Details(): ReactElement {
             <Button
               style="text"
               size="small"
-              onClick={() => {
-                logout()
+              onClick={async () => {
+                await web3Modal?.clearCachedProvider()
                 connect()
               }}
             >

@@ -23,8 +23,8 @@ export default function Dynamic({
   ddo: DDO
   content: any
 }): ReactElement {
-  const { networkId } = useWeb3()
-  const { account, balance } = useOcean()
+  const { networkId, balance } = useWeb3()
+  const { account } = useOcean()
   const [firstPrice, setFirstPrice] = useState<string>()
 
   // Connect with form
@@ -112,7 +112,7 @@ export default function Dynamic({
         />
       </div>
 
-      <Fees tooltips={content.tooltips} />
+      <Fees tooltips={content.tooltips} pricingType="dynamic" />
 
       <footer className={styles.summary}>
         You will get: <br />

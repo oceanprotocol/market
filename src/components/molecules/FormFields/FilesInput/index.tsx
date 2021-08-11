@@ -4,25 +4,27 @@ import { useField } from 'formik'
 import { toast } from 'react-toastify'
 import FileInfo from './Info'
 import FileInput from './Input'
-import { useOcean } from '../../../../providers/Ocean'
 import { InputProps } from '../../../atoms/Input'
 import { fileinfo } from '../../../../utils/provider'
+import { useWeb3 } from '../../../../providers/Web3'
+import { getOceanConfig } from '../../../../utils/ocean'
 
 export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
   const [isLoading, setIsLoading] = useState(false)
   const [fileUrl, setFileUrl] = useState<string>()
-  const { config } = useOcean()
+  const { chainId } = useWeb3()
 
-  useEffect(() => {
+  function loadFileInfo() {
     const source = axios.CancelToken.source()
+    const config = getOceanConfig(chainId || 1)
 
     async function validateUrl() {
       try {
         setIsLoading(true)
         const checkedFile = await fileinfo(
           fileUrl,
-          config.providerUri,
+          config?.providerUri,
           source.token
         )
         checkedFile && helpers.setValue([checkedFile])
@@ -33,12 +35,17 @@ export default function FilesInput(props: InputProps): ReactElement {
         setIsLoading(false)
       }
     }
+
     fileUrl && validateUrl()
 
     return () => {
       source.cancel()
     }
-  }, [fileUrl, config.providerUri])
+  }
+
+  useEffect(() => {
+    loadFileInfo()
+  }, [fileUrl])
 
   async function handleButtonClick(e: React.SyntheticEvent, url: string) {
     // hack so the onBlur-triggered validation does not show,
@@ -47,6 +54,11 @@ export default function FilesInput(props: InputProps): ReactElement {
 
     // File example 'https://oceanprotocol.com/tech-whitepaper.pdf'
     e.preventDefault()
+
+    // In the case when the user re-add the same URL after it was removed (by accident or intentionally)
+    if (fileUrl === url) {
+      loadFileInfo()
+    }
 
     setFileUrl(url)
   }

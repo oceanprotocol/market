@@ -7,6 +7,9 @@ execSync(`node ./scripts/write-repo-metadata > repo-metadata.json`, {
   stdio: 'inherit'
 })
 
+// Generate GraphQl typings for urql
+// execSync(`npm run graphql:graphTypes`, { stdio: 'inherit' })
+
 // Generate Apollo typings
 execSync(`npm run apollo:codegen`, { stdio: 'inherit' })
 
@@ -43,7 +46,7 @@ exports.onCreatePage = async ({ page, actions }) => {
 exports.onCreateWebpackConfig = ({ actions }) => {
   actions.setWebpackConfig({
     node: {
-      // 'fs' fix for squid.js
+      // 'fs' fix for ocean.js
       fs: 'empty'
     },
     // fix for 'got'/'swarm-js' dependency

@@ -3,7 +3,7 @@ import { useAsset } from '../../../providers/Asset'
 import ExplorerLink from '../../atoms/ExplorerLink'
 import Time from '../../atoms/Time'
 import styles from './EditHistory.module.css'
-import { gql, useQuery } from '@apollo/client'
+import { gql, useQuery } from 'urql'
 import { ReceiptData_datatokens_updates as ReceiptData } from '../../../@types/apollo/ReceiptData'
 import { useWeb3 } from '../../../providers/Web3'
 
@@ -22,9 +22,11 @@ const getReceipts = gql`
 export default function EditHistory(): ReactElement {
   const { networkId } = useWeb3()
   const { ddo } = useAsset()
-  const { data } = useQuery(getReceipts, {
+  const [result] = useQuery({
+    query: getReceipts,
     variables: { address: ddo?.dataToken.toLowerCase() }
   })
+  const { data } = result
 
   const [receipts, setReceipts] = useState<ReceiptData[]>()
   const [creationTx, setCreationTx] = useState<string>()
@@ -48,14 +50,14 @@ export default function EditHistory(): ReactElement {
       <ul className={styles.history}>
         {receipts?.map((receipt) => (
           <li key={receipt.id} className={styles.item}>
-            <ExplorerLink networkId={networkId} path={`/tx/${receipt.tx}`}>
+            <ExplorerLink networkId={ddo.chainId} path={`/tx/${receipt.tx}`}>
               edited{' '}
               <Time date={receipt.timestamp.toString()} relative isUnix />
             </ExplorerLink>
           </li>
         ))}
         <li className={styles.item}>
-          <ExplorerLink networkId={networkId} path={`/tx/${creationTx}`}>
+          <ExplorerLink networkId={ddo.chainId} path={`/tx/${creationTx}`}>
             published <Time date={ddo.created} relative />
           </ExplorerLink>
         </li>

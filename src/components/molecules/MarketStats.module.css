@@ -1,18 +1,42 @@
 .stats {
   margin-bottom: calc(var(--spacer) * 2);
+}
+
+/* specificity sledgehammer override without !important */
+.stats,
+.stats *,
+.statsList * {
   font-size: var(--font-size-small);
-  line-height: 2;
+  color: var(--color-secondary);
+  margin-left: 0;
 }
 
-.stats > div > div {
-  display: inline-block;
+.tooltipStats {
+  margin-bottom: calc(var(--spacer) / 3);
+  padding-bottom: calc(var(--spacer) / 3);
+  border-bottom: 1px solid var(--border-color);
 }
 
-.total {
-  color: var(--color-secondary) !important;
-  font-size: var(--font-size-small) !important;
+.network {
+  font-weight: var(--font-weight-bold);
 }
 
 .info {
-  width: .85rem
+  width: 0.85rem;
+}
+
+.statsList,
+.note {
+  padding: calc(var(--spacer) / 4);
+}
+
+.statsList {
+  padding-bottom: 0;
+}
+
+.note {
+  margin-bottom: 0;
+  padding-top: 0;
+  font-size: var(--font-size-mini);
+  color: var(--color-secondary);
 }

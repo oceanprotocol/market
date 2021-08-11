@@ -3,20 +3,19 @@ import { render } from '@testing-library/react'
 import { transformPublishFormToMetadata } from '../../../src/utils/metadata'
 import {
   MetadataMarket,
-  MetadataPublishForm
+  MetadataPublishFormDataset
 } from '../../../src/@types/MetaData'
 import PublishForm from '../../../src/components/pages/Publish/FormPublish'
 import publishFormData from '../__fixtures__/testFormData'
-import content from '../../../content/pages/publish.json'
 
 describe('PublishForm', () => {
   it('renders without crashing', async () => {
-    const { container } = render(<PublishForm content={content.form} />)
+    const { container } = render(<PublishForm />)
     expect(container.firstChild).toBeInTheDocument()
   })
 
   // it('Form data is correctly transformed to asset Metadata', () => {
-  //   const data: MetadataPublishForm = publishFormData
+  //   const data: MetadataPublishFormDataset = publishFormData
   //   let metadata: MetadataMarket = transformPublishFormToMetadata(data)
 
   //   expect(metadata.additionalInformation).toBeDefined()

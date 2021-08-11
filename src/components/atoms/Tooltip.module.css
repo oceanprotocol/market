@@ -5,17 +5,16 @@
 .content {
   composes: box from './Box.module.css';
   padding: calc(var(--spacer) / 4);
-  width: calc(100% - var(--spacer) / 3);
   max-width: 25rem;
   font-size: var(--font-size-small);
 }
 
 .icon {
-  width: 1rem;
-  height: 1rem;
+  width: 1em;
+  height: 1em;
   cursor: help;
   display: inline-block;
-  margin-bottom: -0.1rem;
+  margin-bottom: -0.1em;
   margin-left: calc(var(--spacer) / 6);
   fill: var(--color-secondary);
 }

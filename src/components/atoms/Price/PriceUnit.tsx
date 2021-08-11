@@ -44,17 +44,22 @@ export default function PriceUnit({
 
   return (
     <div className={styleClasses}>
-      <div>
-        {Number.isNaN(Number(price)) ? '-' : formatPrice(price, locale)}{' '}
-        <span className={styles.symbol}>
-          {symbol || config.oceanTokenSymbol}
-        </span>
-        {type && type === 'pool' && (
-          <Badge label="pool" className={styles.badge} />
-        )}
-      </div>
-
-      {conversion && <Conversion price={price} />}
+      {type && type === 'free' ? (
+        <div> Free </div>
+      ) : (
+        <>
+          <div>
+            {Number.isNaN(Number(price)) ? '-' : formatPrice(price, locale)}{' '}
+            <span className={styles.symbol}>
+              {symbol || config.oceanTokenSymbol}
+            </span>
+            {type && type === 'pool' && (
+              <Badge label="pool" className={styles.badge} />
+            )}
+          </div>
+          {conversion && <Conversion price={price} />}
+        </>
+      )}
     </div>
   )
 }

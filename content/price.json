@@ -10,7 +10,11 @@
     },
     "fixed": {
       "title": "Fixed",
-      "info": "Set your price for accessing this data set. The datatoken for this data set will be worth the entered amount of OCEAN."
+      "info": "Set your price for accessing this data set. The datatoken for this data set will be worth the entered amount of OCEAN.",
+      "tooltips": {
+        "communityFee": "Explain community fee...",
+        "marketplaceFee": "Explain marketplace fee..."
+      }
     },
     "dynamic": {
       "title": "Dynamic",
@@ -21,6 +25,10 @@
         "communityFee": "Explain community fee...",
         "marketplaceFee": "Explain marketplace fee..."
       }
+    },
+    "free": {
+      "title": "Free",
+      "info": "Set your data set as free. The datatoken for this data set will be given for free via creating a faucet."
     }
   },
   "pool": {

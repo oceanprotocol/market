@@ -1,5 +1,4 @@
 import { Logger } from '@oceanprotocol/lib'
-import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 
 export interface EthereumListsChain {
   name: string
@@ -20,6 +19,16 @@ export interface NetworkObject {
   urlList: string[]
 }
 
+export function getNetworkConfigObject(node: any): NetworkObject {
+  const networkConfig = {
+    name: node.chain,
+    symbol: node.nativeCurrency.symbol,
+    chainId: node.chainId,
+    urlList: [node.providerUri]
+  }
+  return networkConfig
+}
+
 export function accountTruncate(account: string): string {
   if (!account) return
   const middle = account.substring(6, 38)
@@ -31,81 +40,117 @@ export function getNetworkDisplayName(
   data: EthereumListsChain,
   networkId: number
 ): string {
-  const displayName = data
-    ? `${data.chain} ${data.network === 'mainnet' ? '' : data.network}`
-    : networkId === 8996
-    ? 'Development'
-    : 'Unknown'
+  let displayName
+
+  switch (networkId) {
+    case 1287:
+      displayName = 'Moonbase Alpha'
+      break
+    case 137:
+      displayName = 'Polygon'
+      break
+    case 80001:
+      displayName = 'Polygon Mumbai'
+      break
+    case 8996:
+      displayName = 'Development'
+      break
+    case 2021000:
+      displayName = 'GAIA-X'
+      break
+    default:
+      displayName = data
+        ? `${data.chain} ${data.network === 'mainnet' ? '' : data.network}`
+        : 'Unknown'
+      break
+  }
 
   return displayName
 }
 
-export function getNetworkData(
+export function getNetworkDataById(
   data: { node: EthereumListsChain }[],
   networkId: number
 ): EthereumListsChain {
+  if (!networkId) return
   const networkData = data.filter(
-    ({ node }: { node: EthereumListsChain }) => node.networkId === networkId
-  )[0]
-  return networkData.node
+    ({ node }: { node: EthereumListsChain }) => node.chainId === networkId
+  )
+
+  return networkData[0]?.node
 }
 
-export function addCustomNetwork(
+export async function addCustomNetwork(
   web3Provider: any,
   network: NetworkObject
-): void {
+): Promise<void> {
   const newNewtworkData = {
     chainId: `0x${network.chainId.toString(16)}`,
     chainName: network.name,
     rpcUrls: network.urlList
   }
-  web3Provider.request(
-    {
-      method: 'wallet_addEthereumChain',
-      params: [newNewtworkData]
-    },
-    (err: string, added: any) => {
-      if (err || 'error' in added) {
-        Logger.error(
-          `Couldn't add ${network.name} (0x${
-            network.chainId
-          }) netowrk to MetaMask, error: ${err || added.error}`
-        )
-      } else {
-        Logger.log(
-          `Added ${network.name} (0x${network.chainId}) network to MetaMask`
-        )
-      }
-    }
-  )
-}
-
-export function addOceanToWallet(
-  config: ConfigHelperConfig,
-  web3Provider: any
-): void {
-  const tokenMetadata = {
-    type: 'ERC20',
-    options: {
-      address: config.oceanTokenAddress,
-      symbol: config.oceanTokenSymbol,
-      decimals: 18,
-      image:
-        'https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png'
+  try {
+    await web3Provider.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: newNewtworkData.chainId }]
+    })
+  } catch (switchError) {
+    if (switchError.code === 4902) {
+      web3Provider.request(
+        {
+          method: 'wallet_addEthereumChain',
+          params: [newNewtworkData]
+        },
+        (err: string, added: any) => {
+          if (err || 'error' in added) {
+            Logger.error(
+              `Couldn't add ${network.name} (0x${
+                network.chainId
+              }) netowrk to MetaMask, error: ${err || added.error}`
+            )
+          } else {
+            Logger.log(
+              `Added ${network.name} (0x${network.chainId}) network to MetaMask`
+            )
+          }
+        }
+      )
+    } else {
+      Logger.error(
+        `Couldn't add ${network.name} (0x${network.chainId}) netowrk to MetaMask, error: ${switchError}`
+      )
     }
   }
+  Logger.log(`Added ${network.name} (0x${network.chainId}) network to MetaMask`)
+}
+
+export async function addTokenToWallet(
+  web3Provider: any,
+  address: string,
+  symbol: string,
+  logo?: string
+): Promise<void> {
+  const image =
+    logo ||
+    'https://raw.githubusercontent.com/oceanprotocol/art/main/logo/token.png'
+
+  const tokenMetadata = {
+    type: 'ERC20',
+    options: { address, symbol, image, decimals: 18 }
+  }
+
   web3Provider.sendAsync(
     {
       method: 'wallet_watchAsset',
       params: tokenMetadata,
       id: Math.round(Math.random() * 100000)
     },
-    (err: string, added: any) => {
+    (err: { code: number; message: string }, added: any) => {
       if (err || 'error' in added) {
         Logger.error(
           `Couldn't add ${tokenMetadata.options.symbol} (${
             tokenMetadata.options.address
-          }) to MetaMask, error: ${err || added.error}`
+          }) to MetaMask, error: ${err.message || added.error}`
         )
       } else {
         Logger.log(

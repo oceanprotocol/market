@@ -12,7 +12,8 @@ export default function TokenList({
   dtSymbol,
   poolShares,
   conversion,
-  highlight
+  highlight,
+  showTVLLabel
 }: {
   title: string | ReactNode
   children: ReactNode
@@ -23,6 +24,7 @@ export default function TokenList({
   poolShares: string
   conversion: number
   highlight?: boolean
+  showTVLLabel?: boolean
 }): ReactElement {
   return (
     <div className={`${styles.tokenlist} ${highlight ? styles.highlight : ''}`}>
@@ -35,6 +37,7 @@ export default function TokenList({
             <Conversion
               price={`${conversion}`}
               className={styles.totalLiquidity}
+              showTVLLabel={showTVLLabel}
             />
           )}
         </div>
