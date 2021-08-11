@@ -143,34 +143,22 @@ export default function AccountHeader({
               </div>
             </div>
             <div className={styles.statisticsOverviewGrid}>
-              <div>
-                <div className={styles.statisticsGrid}>
-                  <Published className={styles.statisticsImages} />
-                  <p className={styles.statisticsValues}>{numberOfAssets}</p>
-                </div>
-                <p className={styles.statiscsLabel}>Published</p>
+              <Published className={styles.statisticsImages} />
+              <p className={styles.statisticsValues}>{numberOfAssets}</p>
+              <Sold className={styles.statisticsImages} />
+              <p className={styles.statisticsValues}>{sold}</p>
+              <Tvl className={styles.statisticsImages} />
+              <div className={styles.liquidity}>
+                <Conversion
+                  price={tvl?.price}
+                  className={styles.statisticsValues}
+                  hideApproximateSymbol
+                />
+                <Token symbol="OCEAN" balance={tvl?.oceanBalance} noIcon />
               </div>
-              <div>
-                <div className={styles.statisticsGrid}>
-                  <Sold className={styles.statisticsImages} />
-                  <p className={styles.statisticsValues}>{sold}</p>
-                </div>
-                <p className={styles.statiscsLabel}>Sold</p>
-              </div>
-              <div>
-                <div className={styles.statisticsGrid}>
-                  <Tvl className={styles.statisticsImages} />
-                  <div className={styles.liquidity}>
-                    <Conversion
-                      price={tvl?.price}
-                      className={styles.statisticsValues}
-                      hideApproximateSymbol
-                    />
-                    <Token symbol="OCEAN" balance={tvl?.oceanBalance} noIcon />
-                  </div>
-                </div>
-                <p className={styles.statiscsLabel}>TVL</p>
-              </div>
+              <p className={styles.statiscsLabel}>Published</p>
+              <p className={styles.statiscsLabel}>Sold</p>
+              <p className={styles.statiscsLabel}>TVL</p>
             </div>
           </div>
           <div>

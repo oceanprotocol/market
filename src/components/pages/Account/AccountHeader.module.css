@@ -17,18 +17,12 @@
 
 .statisticsOverviewGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 3px;
+  grid-template-columns: repeat(3, auto 1fr);
+  grid-template-rows: auto auto;
+  grid-column-gap: 10px;
   margin-top: calc(var(--spacer) / 2);
   width: 90%;
-}
-
-.statisticsGrid {
-  display: grid;
-  grid-template-columns: 0.4fr 0.6fr;
-  grid-gap: 2px;
-  align-content: center;
-  grid-auto-flow: column;
+  align-items: center;
 }
 
 .image {
@@ -59,10 +53,11 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  position: relative;
+  left: -22px;
 }
 
 .liquidity [class*='Conversion-module--'] {
-  margin-bottom: calc(var(--spacer) / 8);
   margin: auto;
 }
 
@@ -70,21 +65,29 @@
   font-size: var(--font-size-large);
   color: var(--font-color-heading);
   font-weight: var(--font-weight-bold);
-  margin: auto;
-  margin-left: 0px;
+  margin-bottom: 0;
 }
 
 .statisticsImages {
   width: 30px;
   max-width: unset;
-  margin: auto;
-  margin-left: 0px;
+  margin: 0;
 }
 
 .statiscsLabel {
-  margin-left: 0px;
-  margin-top: calc(var(--spacer) / 4);
   color: var(--color-secondary);
+}
+
+.statiscsLabel:nth-child(7) {
+  grid-column: 1 / span 2;
+}
+
+.statiscsLabel:nth-child(8) {
+  grid-column: 3 / span 2;
+}
+
+.statiscsLabel:nth-child(9) {
+  grid-column: 5 / span 2;
 }
 
 .descriptionLabel {
