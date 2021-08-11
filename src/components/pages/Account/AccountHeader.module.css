@@ -1,8 +1,24 @@
+@media (min-width: 50rem) {
+  .gridContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+    background: var(--background-body);
+  }
+}
+
 .gridContainer {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr auto;
   grid-gap: 20px;
   background: var(--background-body);
+}
+
+.truncate code {
+  max-width: calc(100% - 1.5rem);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .gridContainer > div {
@@ -27,7 +43,7 @@
 
 .image {
   width: 48px;
-  height: 48px;
+  max-width: unset;
   border-radius: 50%;
   overflow: hidden;
   display: inline-block;

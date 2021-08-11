@@ -142,7 +142,11 @@ export default function AccountHeader({
                 <h3 className={styles.name}>
                   {name || accountTruncate(accountId)}
                 </h3>
-                <ExplorerLink networkId={1} path={`address/${accountId}`}>
+                <ExplorerLink
+                  className={styles.truncate}
+                  networkId={1}
+                  path={`address/${accountId}`}
+                >
                   <code>{accountId}</code>
                 </ExplorerLink>
               </div>
