@@ -24,11 +24,10 @@ export default function UrqlClientProvider({
   chainId: number
   children: ReactNode
 }): ReactElement {
-  const { networkId } = useWeb3()
   const [client, setClient] = useState<Client>()
   console.log('chainId', chainId)
   useEffect(() => {
-    const oceanConfig = getOceanConfig(networkId || 1)
+    const oceanConfig = getOceanConfig(chainId)
 
     if (!oceanConfig?.subgraphUri) {
       Logger.error(
@@ -41,7 +40,7 @@ export default function UrqlClientProvider({
     urqlClient = newClient
     setClient(newClient)
     Logger.log(`[URQL] Client connected to ${oceanConfig.subgraphUri}`)
-  }, [networkId])
+  }, [chainId])
 
   return client ? <Provider value={client}>{children}</Provider> : <></>
 }
