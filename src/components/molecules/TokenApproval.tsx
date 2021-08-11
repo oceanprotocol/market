@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import Button from '../atoms/Button'
 import { useOcean } from '../../providers/Ocean'
 import { useAsset } from '../../providers/Asset'
@@ -58,13 +58,14 @@ function ButtonApprove({
   ) : (
     <Button style="primary" size="small" onClick={() => approveTokens(amount)}>
       Approve {amount} {coin}
-      <Tooltip content={content.approveSpecific.replace('COIN', coin)} />)
+      <Tooltip content={content.approveSpecific.replace('COIN', coin)} />
     </Button>
   )
 }
 
 export default function TokenApproval({
   actionButton,
+  disabled,
   amount,
   coin
 }: {
@@ -88,7 +89,7 @@ export default function TokenApproval({
       : ocean.pool.dtAddress
     : undefined
 
-  async function checkTokenApproval() {
+  const checkTokenApproval = useCallback(async () => {
     if (!ocean || !tokenAddress || !spender) {
       // if (!ocean) setApproveToken(false)
       return
@@ -98,17 +99,19 @@ export default function TokenApproval({
       accountId,
       spender
     )
-    amount && Number(amount) > 0 && setTokenApproved(allowance >= amount)
+    // console.log('ALLOWANCE', allowance)
+    // console.log('AMOUNT', amount)
+    amount &&
+      Number(amount) > 0 &&
+      setTokenApproved(Number(allowance) >= Number(amount))
     // allowance > amount && setApproveToken(false)
-  }
 
-  // useEffect(() => {
-  //   checkTokenApproval()
-  // }, [])
+    // console.log(tokenApproved)
+  }, [ocean, tokenAddress, spender, accountId, amount])
 
   useEffect(() => {
     checkTokenApproval()
-  }, [coin, amount, spender])
+  }, [checkTokenApproval])
 
   async function approveTokens(amount: string) {
     setLoading(true)
@@ -124,7 +127,7 @@ export default function TokenApproval({
 
   return (
     <>
-      {tokenApproved ? (
+      {tokenApproved || disabled ? (
         actionButton
       ) : (
         <ButtonApprove
