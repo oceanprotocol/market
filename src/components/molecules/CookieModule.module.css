@@ -1,6 +1,5 @@
-.wrapper {
-  display: block;
-  margin: var(--spacer) 0;
+.description {
+  font-size: var(--font-size-small);
 }
 
 .header {
@@ -11,6 +10,7 @@
   margin-bottom: calc(var(--spacer) / 3);
 }
 
-.description {
-  font-size: var(--font-size-small);
+.wrapper {
+  display: block;
+  margin: var(--spacer) 0;
 }

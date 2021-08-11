@@ -1,9 +1,3 @@
-.footer {
-  color: var(--brand-grey-light);
-  font-size: var(--font-size-small);
-  text-align: center;
-}
-
 .content {
   padding: var(--spacer) calc(var(--spacer) / 2);
   margin-left: auto;
@@ -11,19 +5,15 @@
   max-width: var(--layout-max-width);
 }
 
-.content p {
-  display: inline;
+.content a,
+.content button {
+  color: inherit;
 }
 
 .content button {
   text-transform: none;
   transform: none !important;
   font-weight: var(--font-weight-normal);
-}
-
-.content a,
-.content button {
-  color: inherit;
 }
 
 .content a:hover,
@@ -33,6 +23,16 @@
   color: var(--color-primary);
 }
 
+.content p {
+  display: inline;
+}
+
 .copyright div {
   display: inline-block;
+}
+
+.footer {
+  color: var(--brand-grey-light);
+  font-size: var(--font-size-small);
+  text-align: center;
 }
