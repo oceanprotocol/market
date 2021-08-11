@@ -47,13 +47,18 @@ export default function AccountHeader({
 
     async function getInfoFrom3Box() {
       const profile = await get3BoxProfile(accountId, source.token)
-      if (!profile) return
-
-      const { name, emoji, description, image, links } = profile
-      name && setName(`${emoji || ''} ${name}`)
-      description && setDescription(description)
-      image && setImage(image)
-      image && setLinks(links)
+      if (profile) {
+        const { name, emoji, description, image, links } = profile
+        setName(`${emoji || ''} ${name || accountTruncate(accountId)}`)
+        setDescription(description || null)
+        setImage(image || null)
+        setLinks(links || [])
+      } else {
+        setName(accountTruncate(accountId))
+        setDescription(null)
+        setImage(null)
+        setLinks([])
+      }
     }
     getInfoFrom3Box()
 
