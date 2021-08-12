@@ -44,6 +44,13 @@
         "options": ["Forever", "1 day", "1 week", "1 month", "1 year"],
         "sortOptions": false,
         "required": true
+      },
+      {
+        "name": "author",
+        "label": "New Author",
+        "placeholder": "e.g. Mrs McJellyfish",
+        "help": "Give proper attribution for your data set.",
+        "required": false
       }
     ]
   }

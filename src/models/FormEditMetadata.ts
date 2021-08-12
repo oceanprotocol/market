@@ -10,7 +10,8 @@ export const validationSchema = Yup.object().shape({
   description: Yup.string().required('Required').min(10),
   price: Yup.number().required('Required'),
   links: Yup.array<EditableMetadataLinks[]>().nullable(),
-  timeout: Yup.string().required('Required')
+  timeout: Yup.string().required('Required'),
+  author: Yup.string().nullable()
 })
 
 export function getInitialValues(
@@ -23,6 +24,7 @@ export function getInitialValues(
     description: metadata.additionalInformation.description,
     price,
     links: metadata.additionalInformation.links,
-    timeout: secondsToString(timeout)
+    timeout: secondsToString(timeout),
+    author: metadata.main.author
   }
 }
