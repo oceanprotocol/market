@@ -12,6 +12,8 @@ function handleTimeoutCustomOption(
   data: FormFieldProps[],
   values: Partial<MetadataPublishFormDataset>
 ) {
+  console.log('DATA: ', data)
+  console.log('VALUES: ', values)
   const timeoutFieldContent = data.filter(
     (field) => field.name === 'timeout'
   )[0]
@@ -42,25 +44,29 @@ function handleTimeoutCustomOption(
   }
 }
 
+const computeDatasetTimeout = ['1 day', '1 week', '1 month', '1 year']
+
 export default function FormEditMetadata({
   data,
   setShowEdit,
   setTimeoutStringValue,
   values,
-  showPrice
+  showPrice,
+  isComputeDataset
 }: {
   data: FormFieldProps[]
   setShowEdit: (show: boolean) => void
   setTimeoutStringValue: (value: string) => void
   values: Partial<MetadataPublishFormDataset>
   showPrice: boolean
+  isComputeDataset: boolean
 }): ReactElement {
   const { config } = useOcean()
   const {
     validateField,
     setFieldValue
   }: FormikContextType<Partial<MetadataPublishFormDataset>> = useFormikContext()
-
+  console.log('DATA: ', data)
   // Manually handle change events instead of using `handleChange` from Formik.
   // Workaround for default `validateOnChange` not kicking in
   function handleFieldChange(
@@ -84,6 +90,11 @@ export default function FormEditMetadata({
             <Field
               key={field.name}
               {...field}
+              options={
+                field.name === 'timeout' && isComputeDataset
+                  ? computeDatasetTimeout
+                  : field.options
+              }
               component={Input}
               prefix={field.name === 'price' && config.oceanTokenSymbol}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
