@@ -156,9 +156,14 @@ export default function Pool(): ReactElement {
       // swapFee is tricky: to get 0.1% you need to convert from 0.001
       setSwapFee(`${Number(dataLiquidity.pool.swapFee) * 100}`)
 
+      console.log(
+        'tokens',
+        dataLiquidity.pool.tokens,
+        ddo.dataToken.toLowerCase()
+      )
       // Get weights
       const weightDt = dataLiquidity.pool.tokens.filter(
-        (token: any) => token.tokenAddress === ddo.dataToken.toLowerCase()
+        (token: any) => token.address === ddo.dataToken.toLowerCase()
       )[0].denormWeight
 
       setWeightDt(`${Number(weightDt) * 10}`)
@@ -285,7 +290,7 @@ export default function Pool(): ReactElement {
         <>
           <div className={styles.dataToken}>
             <PriceUnit price="1" symbol={dtSymbol} /> ={' '}
-            <PriceUnit price={`${price?.value}`} />
+            <PriceUnit price={`${price?.value}`} symbol={oceanSymbol} />
             <Tooltip content={content.tooltips.price} />
             <div className={styles.dataTokenLinks}>
               <ExplorerLink

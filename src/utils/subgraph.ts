@@ -1,5 +1,5 @@
 import { gql, OperationResult, TypedDocumentNode, OperationContext } from 'urql'
-import { DDO, BestPrice } from '@oceanprotocol/lib'
+import { DDO } from '@oceanprotocol/lib'
 import { getUrqlClientInstance } from '../providers/UrqlProvider'
 import { getOceanConfig } from './ocean'
 import web3 from 'web3'
@@ -20,6 +20,7 @@ import {
   HighestLiquidityAssets_pools as HighestLiquidityAssetsPools,
   HighestLiquidityAssets as HighestLiquidityGraphAssets
 } from '../@types/apollo/HighestLiquidityAssets'
+import { BestPrice } from '../models/BestPrice'
 
 export interface PriceList {
   [key: string]: string
@@ -247,7 +248,7 @@ function transformPriceToBestPrice(
       type: 'exchange',
       value: frePrice[0]?.rate,
       address: frePrice[0]?.id,
-      exchange_id: frePrice[0]?.id,
+      exchangeId: frePrice[0]?.id,
       ocean: 0,
       datatoken: 0,
       pools: [],
@@ -259,7 +260,7 @@ function transformPriceToBestPrice(
       type: 'free',
       value: 0,
       address: freePrice[0]?.datatoken.id,
-      exchange_id: '',
+      exchangeId: '',
       ocean: 0,
       datatoken: 0,
       pools: [],
@@ -271,7 +272,7 @@ function transformPriceToBestPrice(
       type: '',
       value: 0,
       address: '',
-      exchange_id: '',
+      exchangeId: '',
       ocean: 0,
       datatoken: 0,
       pools: [],

@@ -34,7 +34,6 @@ export default function PriceUnit({
   symbol?: string
 }): ReactElement {
   const { locale } = useUserPreferences()
-  const { config } = useOcean()
 
   const styleClasses = cx({
     price: true,
@@ -50,9 +49,8 @@ export default function PriceUnit({
         <>
           <div>
             {Number.isNaN(Number(price)) ? '-' : formatPrice(price, locale)}{' '}
-            <span className={styles.symbol}>
-              {symbol || config?.oceanTokenSymbol}
-            </span>
+            {/* do we want a default symbol? */}
+            <span className={styles.symbol}>{symbol}</span>
             {type && type === 'pool' && (
               <Badge label="pool" className={styles.badge} />
             )}

@@ -15,9 +15,10 @@ export function getOceanConfig(network: string | number): ConfigHelperConfig {
       network === 2021000
       ? undefined
       : process.env.GATSBY_INFURA_PROJECT_ID
-  )
-  if ((config as ConfigHelperConfig).networkId === 137)
-    (config as ConfigHelperConfig).subgraphUri = 'http://localhost:8000'
+  ) as ConfigHelperConfig
+  config.subgraphUri = config.subgraphUri.replace('subgraph', 'subgraph2')
+
+  console.log('config', config)
   return config as ConfigHelperConfig
 }
 
