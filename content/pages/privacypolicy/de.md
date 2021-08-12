@@ -104,7 +104,7 @@ OPF legt deine Wallet Addresse offen, indem diese an einen Smart Contract überm
 
 ## 4.3 Publish-Funktionalität
 
-Wenn du ein Data Asset veröffentlichst, erheben, wir deine Wallet Addresse und deinen Autornamen und transferieren diese zu einem Smart Contract, der auf der Blockchain gespeichert ist.
+Wenn du ein Data Asset veröffentlichst, erheben, wir deine Wallet Addresse und deinen Autornamen und transferieren diese zu einem Smart Contract, der auf der Blockchain gespeichert ist. Bitte beachte, dass deine Wallet Addresse mit deinem angegebenen Namen verknüpft wird. Bitte beachte außerdem, dass du ein Pseudonym als Autornamen benutzen kannst.
 
 **Zweck:**
 
