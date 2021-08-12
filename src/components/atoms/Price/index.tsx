@@ -19,6 +19,7 @@ export default function Price({
   return price?.value || price?.type === 'free' ? (
     <PriceUnit
       price={`${price.value}`}
+      symbol={price.oceanSymbol}
       className={className}
       small={small}
       conversion={conversion}

@@ -96,6 +96,10 @@ const PoolQuery = gql`
       datatokenAddress
       datatokenReserve
       oceanReserve
+      tokens(where: { isDatatoken: false }) {
+        isDatatoken
+        symbol
+      }
     }
   }
 `
@@ -228,6 +232,7 @@ function transformPriceToBestPrice(
   freePrice: AssetFreePriceDispenser[]
 ) {
   if (poolPrice?.length > 0) {
+    console.log('fetch pool price', poolPrice[0]?.tokens[0])
     const price: BestPrice = {
       type: 'pool',
       address: poolPrice[0]?.id,
@@ -236,6 +241,7 @@ function transformPriceToBestPrice(
           ? poolPrice[0]?.spotPrice
           : poolPrice[0]?.consumePrice,
       ocean: poolPrice[0]?.oceanReserve,
+      oceanSymbol: poolPrice[0]?.tokens[0]?.symbol,
       datatoken: poolPrice[0]?.datatokenReserve,
       pools: [poolPrice[0]?.id],
       isConsumable: poolPrice[0]?.consumePrice === '-1' ? 'false' : 'true'
