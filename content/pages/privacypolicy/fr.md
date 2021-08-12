@@ -104,7 +104,7 @@ Ocean divulgue votre adresse de votre portefeuille en la transmettant à un cont
 
 ## 4.3 Fonctionnalité de publication
 
-Lorsque vous publiez un set de données, nous collectons votre adresse de votre portefeuille et votre nom d&#39;auteur et les divulguons en les transmettant à un contrat intelligent (smart contract) stocké sur la Blockchain. Notez que vous pouvez utiliser un pseudonyme comme nom d&#39;auteur.
+Lorsque vous publiez un set de données, nous collectons votre adresse de votre portefeuille et votre nom d&#39;auteur et les divulguons en les transmettant à un contrat intelligent (smart contract) stocké sur la Blockchain. Notez que l'adresse de votre portefeuille sera liée au nom que vous avez fourni. Notez également que vous pouvez utiliser un pseudonyme comme nom d&#39;auteur.
 
 **Fins:**
 
