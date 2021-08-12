@@ -104,7 +104,7 @@ Ocean Protocol divulga su dirección de cartera transmitiéndola a un contrato i
 
 ## 4.3 Funcionalidad de publicación
 
-Cuando publica un activo de datos, recopilamos su dirección de cartera y nombre de autor y los divulgamos transmitiéndolos a un contrato inteligente almacenado en la blockchain. Tenga en cuenta que puede utilizar un seudónimo como nombre de autor.
+Cuando publica un activo de datos, recopilamos su dirección de cartera y nombre de autor y los divulgamos transmitiéndolos a un contrato inteligente almacenado en la blockchain. Tenga en cuenta que la dirección de su cartera estará vinculada a su nombre. Tenga en cuenta también que puede utilizar un seudónimo como nombre de autor.
 
 **Propósito:**
 
