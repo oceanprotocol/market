@@ -1,72 +1,55 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './PriceImpact.module.css'
-import { getSpotPrice } from '../../../../utils/subgraph'
 import Decimal from 'decimal.js'
-import { DDO } from '@oceanprotocol/lib'
 import Tooltip from '../../../atoms/Tooltip'
 
 export default function PriceImpact({
-  ddo,
-  oceanAmount,
-  datatokenAmount,
-  tradeType
+  totalValue,
+  tokenAmmount,
+  spotPrice
 }: {
-  ddo: DDO
-  oceanAmount: number
-  datatokenAmount: number
-  tradeType: string
+  /// how much the user actually pays (doesn't matter witch token it is)
+  totalValue: string
+  /// how many tokens the user trades (doesn't matter witch token it is)
+  tokenAmmount: string
+  /// the spot price of the traded token (doesn't matter witch token it is))
+  spotPrice: string
 }): ReactElement {
   const [priceImpact, setPriceImpact] = useState<string>('0')
 
-  function calculatePriceImpact(inputValue: number, outputValue: number) {
-    console.log('inputOceanValue=', inputValue)
-    console.log('outputOceanValue', outputValue)
-    const bestPrice = (outputValue + inputValue) / 2
-    const difference = outputValue - bestPrice
-    const ration = difference / inputValue
-    const percent = new Decimal(ration).abs().mul(100).toFixed(2).toString()
-    return percent.toString()
-  }
-
-  async function getDatatokenOceanValue(dataTokenAmount: number, ddo: DDO) {
-    console.log('dataTokenAmount=', dataTokenAmount)
-    const spotPrice: number = await getSpotPrice(ddo)
-    const datatokenOceanValue = spotPrice * dataTokenAmount
-    return datatokenOceanValue
-  }
-
   async function getPriceImpact(
-    ddo: DDO,
-    oceanTokenAmount: number,
-    dataTokenAmount: number,
-    sell: boolean
+    totalValue: string,
+    tokenAmmount: string,
+    spotPrice: string
   ) {
-    const datatokenOceanValue: number = await getDatatokenOceanValue(
-      dataTokenAmount,
-      ddo
-    )
-    const priceImpact = await calculatePriceImpact(
-      sell ? datatokenOceanValue : oceanTokenAmount,
-      sell ? oceanTokenAmount : datatokenOceanValue
-    )
-    return priceImpact
+    const dtotalValue = new Decimal(totalValue)
+    const dTokenAmmount = new Decimal(tokenAmmount)
+    const dSpotPrice = new Decimal(spotPrice)
+    let priceImpact = Decimal.abs(
+      dtotalValue.div(dTokenAmmount.times(dSpotPrice)).minus(1)
+    ).mul(100)
+    if (priceImpact.isNaN()) priceImpact = new Decimal(0)
+    return priceImpact.toDecimalPlaces(2, Decimal.ROUND_DOWN)
   }
 
   useEffect(() => {
-    if (!oceanAmount || !datatokenAmount) {
+    if (!totalValue || !tokenAmmount || !spotPrice) {
       setPriceImpact('0')
       return
     }
 
-    getPriceImpact(
-      ddo,
-      oceanAmount,
-      datatokenAmount,
-      tradeType === 'sell'
-    ).then((newPriceImpact) => {
-      setPriceImpact(newPriceImpact)
-    })
-  }, [oceanAmount, datatokenAmount, ddo, tradeType])
+    async function init() {
+      const newPriceImpact = await getPriceImpact(
+        totalValue,
+        tokenAmmount,
+        spotPrice
+      )
+
+      setPriceImpact(newPriceImpact.toString())
+    }
+
+    init()
+  }, [totalValue, tokenAmmount, spotPrice])
 
   return (
     <div className={styles.priceImpact}>

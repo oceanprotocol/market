@@ -48,6 +48,11 @@ export default function Swap({
     validateForm
   }: FormikContextType<FormTradeData> = useFormikContext()
 
+  /// Values used for calculation of price impact
+  const [spotPrice, setSpotPrice] = useState<string>()
+  const [totalValue, setTotalValue] = useState<string>()
+  const [tokenAmmount, setTokenAmmount] = useState<string>()
+  ///
   useEffect(() => {
     if (!ddo || !balance || !values || !price) return
 
@@ -107,17 +112,63 @@ export default function Swap({
   }
 
   const handleValueChange = async (name: string, value: number) => {
-    const newValue =
-      name === 'ocean'
-        ? values.type === 'sell'
-          ? await ocean.pool.getDTNeeded(price.address, value.toString())
-          : await ocean.pool.getDTReceived(price.address, value.toString())
-        : values.type === 'sell'
-        ? await ocean.pool.getOceanReceived(price.address, value.toString())
-        : await ocean.pool.getOceanNeeded(price.address, value.toString())
+    let tokenIn = ''
+    let tokenOut = ''
+    let newValue
+
+    if (name === 'ocean') {
+      if (values.type === 'sell') {
+        newValue = await ocean.pool.getDTNeeded(price.address, value.toString())
+
+        setTotalValue(newValue)
+        setTokenAmmount(value.toString())
+
+        tokenIn = ddo.dataToken
+        tokenOut = ocean.pool.oceanAddress
+      } else {
+        newValue = await ocean.pool.getDTReceived(
+          price.address,
+          value.toString()
+        )
+
+        setTotalValue(value.toString())
+        setTokenAmmount(newValue)
+        tokenIn = ocean.pool.oceanAddress
+        tokenOut = ddo.dataToken
+      }
+    } else {
+      if (values.type === 'sell') {
+        newValue = await ocean.pool.getOceanReceived(
+          price.address,
+          value.toString()
+        )
+
+        setTotalValue(value.toString())
+        setTokenAmmount(newValue)
+        tokenIn = ddo.dataToken
+        tokenOut = ocean.pool.oceanAddress
+      } else {
+        newValue = await ocean.pool.getOceanNeeded(
+          price.address,
+          value.toString()
+        )
+
+        setTotalValue(newValue)
+        setTokenAmmount(value.toString())
+        tokenIn = ocean.pool.oceanAddress
+        tokenOut = ddo.dataToken
+      }
+    }
 
     await setFieldValue(name === 'ocean' ? 'datatoken' : 'ocean', newValue)
 
+    const spotPrice = await ocean.pool.getSpotPrice(
+      price.address,
+      tokenIn,
+      tokenOut
+    )
+
+    setSpotPrice(spotPrice)
     validateForm()
   }
 
@@ -142,10 +193,9 @@ export default function Swap({
       <Output dtSymbol={dtItem.token} poolAddress={price?.address} />
 
       <PriceImpact
-        ddo={ddo}
-        oceanAmount={values.ocean}
-        datatokenAmount={values.datatoken}
-        tradeType={values.type}
+        totalValue={totalValue}
+        tokenAmmount={tokenAmmount}
+        spotPrice={spotPrice}
       />
       <Slippage />
     </div>
