@@ -103,7 +103,7 @@ OPF discloses your wallet address by transmitting it to a smart contract stored 
 
 ## 4.3 Publish functionality
 
-When you publish a data asset, we collect your wallet address and author name and disclose it by transmitting it to a smart contract stored on the blockchain. Note that you can use a pseudonym as the author&#39;s name.
+When you publish a data asset, we collect your wallet address and author name and disclose it by transmitting it to a smart contract stored on the blockchain. Please note that your wallet address will be linked to your given name. Please also note that you can use a pseudonym as the author&#39;s name.
 
 **Purpose:**
 
