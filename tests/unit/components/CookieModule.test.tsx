@@ -41,7 +41,7 @@ describe('CookieModule', () => {
     [cookieProps.cookieName]: CookieConsentStatus.APPROVED
   }
   const testValue: ConsentProviderValue = {
-    cookies: useGdprMetadata(),
+    cookies: useGdprMetadata().optionalCookies,
     cookieConsentStatus: cookieConsentStatusApproved,
     setConsentStatus: jest.fn(),
     resetConsentStatus: jest.fn()
