@@ -1,5 +1,5 @@
 import { MetadataMarket, MetadataEditForm } from '../@types/MetaData'
-import { secondsToString } from '../utils/metadata'
+import { mapTimeoutSecondsToString } from '../utils/metadata'
 import { EditableMetadataLinks } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 
@@ -24,7 +24,7 @@ export function getInitialValues(
     description: metadata.additionalInformation.description,
     price,
     links: metadata.additionalInformation.links,
-    timeout: secondsToString(timeout),
+    timeout: mapTimeoutSecondsToString(timeout),
     author: metadata.main.author
   }
 }
