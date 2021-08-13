@@ -79,11 +79,6 @@ export default function FormTrade({
     try {
       const impact = new Decimal(100 - Number(values.slippage)).div(100)
       const precision = 15
-      console.log(impact)
-      console.log(
-        new Decimal(values.datatoken).mul(impact).toFixed(precision).toString()
-      )
-      console.log(values.datatoken)
       const tx =
         values.type === 'buy'
           ? await ocean.pool.buyDTWithExactOcean(
