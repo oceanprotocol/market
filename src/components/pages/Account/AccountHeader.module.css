@@ -2,8 +2,12 @@
   .gridContainer {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-gap: 20px;
+    grid-gap: 5px;
     background: var(--background-body);
+  }
+
+  .shortDescription {
+    -webkit-line-clamp: 4 !important;
   }
 }
 
@@ -115,6 +119,21 @@
 .description {
   color: var(--color-secondary);
   font-size: var(--font-size-small);
+  margin-bottom: unset;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+
+.shortDescription {
+  -webkit-line-clamp: 2;
+}
+
+.more {
+  font-size: var(--font-size-mini);
+  margin-left: calc(var(--spacer) / 8);
+  cursor: pointer;
 }
 
 .profileInfoGrid code {

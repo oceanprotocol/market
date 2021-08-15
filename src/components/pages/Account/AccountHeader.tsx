@@ -24,6 +24,7 @@ import { ReactComponent as Published } from '../../../images/published.svg'
 import { ReactComponent as Sold } from '../../../images/sold.svg'
 import { ReactComponent as Tvl } from '../../../images/tvl.svg'
 import Token from '../../organisms/AssetActions/Pool/Token'
+import { getOceanConfig } from '../../../utils/ocean'
 
 export default function AccountHeader({
   accountId
@@ -39,6 +40,16 @@ export default function AccountHeader({
   const [numberOfAssets, setNumberOfAssets] = useState<number>()
   const [sold, setSold] = useState<number>()
   const [tvl, setTvl] = useState<UserTVL>()
+  const [isReadMore, setIsReadMore] = useState(true)
+  const [isShowMore, setIsShowMore] = useState(false)
+
+  const toggleReadMore = () => {
+    setIsReadMore(!isReadMore)
+  }
+
+  const toogleShowMore = () => {
+    setIsShowMore(!isShowMore)
+  }
 
   useEffect(() => {
     if (!accountId) return
@@ -142,13 +153,27 @@ export default function AccountHeader({
                 <h3 className={styles.name}>
                   {name || accountTruncate(accountId)}
                 </h3>
-                <ExplorerLink
-                  className={styles.truncate}
-                  networkId={1}
-                  path={`address/${accountId}`}
-                >
-                  <code>{accountId}</code>
-                </ExplorerLink>
+                {chainIds.map((value, index) => {
+                  const oceanConfig = getOceanConfig(value)
+                  if (!isShowMore && index > 0) return
+                  return (
+                    <ExplorerLink
+                      className={styles.truncate}
+                      networkId={value}
+                      path={`address/${accountId}`}
+                    >
+                      <code>
+                        {accountTruncate(accountId)} on{' '}
+                        {oceanConfig?.explorerUri}
+                      </code>
+                    </ExplorerLink>
+                  )
+                })}
+                <span className={styles.more} onClick={toogleShowMore}>
+                  {!isShowMore
+                    ? `Show ${chainIds.length - 1} more`
+                    : 'Show less'}
+                </span>
               </div>
             </div>
             <div className={styles.statisticsOverviewGrid}>
@@ -172,9 +197,18 @@ export default function AccountHeader({
           </div>
           <div>
             <p className={styles.descriptionLabel}>About</p>
-            <p className={styles.description}>
-              {description || 'No description found.'}
-            </p>
+            <div>
+              <p
+                className={`${styles.description} ${
+                  isReadMore ? `${styles.shortDescription}` : ''
+                }`}
+              >
+                {description || 'No description found.'}
+              </p>
+              <span className={styles.more} onClick={toggleReadMore}>
+                {isReadMore ? 'Read more' : 'Show less'}
+              </span>
+            </div>
             <PublisherLinks links={links} />
           </div>
         </div>
