@@ -51,6 +51,11 @@ export default function AccountHeader({
     setIsShowMore(!isShowMore)
   }
 
+  const isDescriptionTextClamped = () => {
+    const el = document.getElementById('description')
+    if (el) return el.scrollHeight > el.clientHeight
+  }
+
   useEffect(() => {
     if (!accountId) return
 
@@ -161,6 +166,7 @@ export default function AccountHeader({
                       className={styles.truncate}
                       networkId={value}
                       path={`address/${accountId}`}
+                      key={value}
                     >
                       <code>
                         {accountTruncate(accountId)} on{' '}
@@ -169,11 +175,15 @@ export default function AccountHeader({
                     </ExplorerLink>
                   )
                 })}
-                <span className={styles.more} onClick={toogleShowMore}>
-                  {!isShowMore
-                    ? `Show ${chainIds.length - 1} more`
-                    : 'Show less'}
-                </span>
+                {chainIds.length > 1 ? (
+                  <span className={styles.more} onClick={toogleShowMore}>
+                    {!isShowMore
+                      ? `Show ${chainIds.length - 1} more`
+                      : 'Show less'}
+                  </span>
+                ) : (
+                  ''
+                )}
               </div>
             </div>
             <div className={styles.statisticsOverviewGrid}>
@@ -199,15 +209,20 @@ export default function AccountHeader({
             <p className={styles.descriptionLabel}>About</p>
             <div>
               <p
+                id="description"
                 className={`${styles.description} ${
                   isReadMore ? `${styles.shortDescription}` : ''
                 }`}
               >
                 {description || 'No description found.'}
               </p>
-              <span className={styles.more} onClick={toggleReadMore}>
-                {isReadMore ? 'Read more' : 'Show less'}
-              </span>
+              {isDescriptionTextClamped() ? (
+                <span className={styles.more} onClick={toggleReadMore}>
+                  {isReadMore ? 'Read more' : 'Show less'}
+                </span>
+              ) : (
+                ''
+              )}
             </div>
             <PublisherLinks links={links} />
           </div>
