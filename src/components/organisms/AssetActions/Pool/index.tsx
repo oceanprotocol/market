@@ -141,7 +141,6 @@ export default function Pool(): ReactElement {
         return
       }
 
-      console.log(dataLiquidity.pool.tokens)
       // Set symbols
       dataLiquidity.pool.tokens.forEach((token) => {
         token.isDatatoken
@@ -156,11 +155,6 @@ export default function Pool(): ReactElement {
       // swapFee is tricky: to get 0.1% you need to convert from 0.001
       setSwapFee(`${Number(dataLiquidity.pool.swapFee) * 100}`)
 
-      console.log(
-        'tokens',
-        dataLiquidity.pool.tokens,
-        ddo.dataToken.toLowerCase()
-      )
       // Get weights
       const weightDt = dataLiquidity.pool.tokens.filter(
         (token: any) => token.address === ddo.dataToken.toLowerCase()

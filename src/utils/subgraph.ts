@@ -232,7 +232,6 @@ function transformPriceToBestPrice(
   freePrice: AssetFreePriceDispenser[]
 ) {
   if (poolPrice?.length > 0) {
-    console.log('fetch pool price', poolPrice[0]?.tokens[0])
     const price: BestPrice = {
       type: 'pool',
       address: poolPrice[0]?.id,
