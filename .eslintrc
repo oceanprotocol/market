@@ -4,7 +4,13 @@
     "sourceType": "module",
     "ecmaFeatures": { "jsx": true }
   },
-  "env": { "browser": true, "node": true, "es2020": true, "jest": true },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2020": true,
+    "jest": true,
+    "cypress/globals": true
+  },
   "settings": {
     "react": { "version": "detect" }
   },
@@ -21,9 +27,10 @@
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:prettier/recommended",
-        "plugin:react-hooks/recommended"
+        "plugin:react-hooks/recommended",
+        "plugin:cypress/recommended"
       ],
-      "plugins": ["@typescript-eslint", "prettier"],
+      "plugins": ["@typescript-eslint", "prettier", "cypress"],
       "rules": {
         "react/prop-types": "off",
         "react/no-unused-prop-types": "off",
