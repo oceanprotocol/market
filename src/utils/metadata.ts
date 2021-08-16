@@ -34,23 +34,6 @@ export function mapTimeoutStringToSeconds(timeout: string): number {
   }
 }
 
-export function mapTimeoutSecondsToString(timeout: number): string {
-  switch (timeout) {
-    case 0:
-      return 'Forever'
-    case 86400:
-      return '1 day'
-    case 604800:
-      return '1 week'
-    case 2630000:
-      return '1 month'
-    case 31556952:
-      return '1 year'
-    default:
-      return 'Forever'
-  }
-}
-
 function numberEnding(number: number): string {
   return number > 1 ? 's' : ''
 }
@@ -59,6 +42,7 @@ export function secondsToString(numberOfSeconds: number): string {
   if (numberOfSeconds === 0) return 'Forever'
 
   const years = Math.floor(numberOfSeconds / 31536000)
+  const months = Math.floor((numberOfSeconds %= 31536000) / 2630000)
   const weeks = Math.floor((numberOfSeconds %= 31536000) / 604800)
   const days = Math.floor((numberOfSeconds %= 604800) / 86400)
   const hours = Math.floor((numberOfSeconds %= 86400) / 3600)
@@ -67,6 +51,8 @@ export function secondsToString(numberOfSeconds: number): string {
 
   return years
     ? `${years} year${numberEnding(years)}`
+    : months
+    ? `${months} month${numberEnding(months)}`
     : weeks
     ? `${weeks} week${numberEnding(weeks)}`
     : days
