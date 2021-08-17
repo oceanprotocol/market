@@ -19,6 +19,7 @@ export default function FileInput({
     <InputGroup>
       <input
         className={styles.input}
+        id={field.name}
         {...props}
         type="url"
         onBlur={(e: React.SyntheticEvent) => handleButtonClick(e, field.value)}
