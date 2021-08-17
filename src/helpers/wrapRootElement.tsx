@@ -11,7 +11,7 @@ export default function wrapRootElement({
 }): ReactElement {
   return (
     <Web3Provider>
-      <UrqlProvider chainId={1}>
+      <UrqlProvider>
         <UserPreferencesProvider>
           <PricesProvider>{element}</PricesProvider>
         </UserPreferencesProvider>

@@ -16,7 +16,6 @@ import { getPrice } from '../utils/subgraph'
 import { MetadataMarket } from '../@types/MetaData'
 import { useWeb3 } from './Web3'
 import { useSiteMetadata } from '../hooks/useSiteMetadata'
-import UrqlProvider from '../providers/UrqlProvider'
 
 interface AssetProviderValue {
   isInPurgatory: boolean
@@ -175,7 +174,7 @@ function AssetProvider({
         } as AssetProviderValue
       }
     >
-      <UrqlProvider chainId={ddo ? ddo.chainId : 1}>{children}</UrqlProvider>
+      {children}
     </AssetContext.Provider>
   )
 }
