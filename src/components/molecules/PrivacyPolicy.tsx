@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react'
 import Time from '../atoms/Time'
-import ScrollButton from '../atoms/ScrollButton'
 import styles from '../templates/PageMarkdown.module.css'
 
 export interface PrivacyPolicyParams {
@@ -23,14 +22,6 @@ export default function PrivacyPolicy({
 }): ReactElement {
   const policyId = 'PrivacyPolicy'
 
-  const calcToTopVisible = (scrollOffset: number) => {
-    const policyOffset = Math.ceil(
-      document.getElementById(policyId).getBoundingClientRect().top -
-        document.body.getBoundingClientRect().top
-    )
-    return scrollOffset > policyOffset
-  }
-
   return (
     <div id={policyId}>
       <p>
@@ -48,12 +39,6 @@ export default function PrivacyPolicy({
         className={styles.content}
         dangerouslySetInnerHTML={{ __html: html }}
       />
-      <ScrollButton
-        scrollToId={policyId}
-        calculateShowScrollButton={calcToTopVisible}
-      >
-        &#8593;
-      </ScrollButton>
     </div>
   )
 }
