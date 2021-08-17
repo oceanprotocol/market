@@ -1,8 +1,8 @@
-import React, { ReactElement } from 'react'
+import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react'
 import { CookieConsentStatus, useConsent } from '../../providers/CookieConsent'
+import InputElement from '../atoms/Input/InputElement'
 import Markdown from '../atoms/Markdown'
 import styles from './CookieModule.module.css'
-import Switch from '../atoms/Switch'
 
 export interface CookieModuleProps {
   title: string
@@ -13,29 +13,30 @@ export interface CookieModuleProps {
 export default function CookieModule(props: CookieModuleProps): ReactElement {
   const { cookieConsentStatus, setConsentStatus } = useConsent()
   const { title, desc, cookieName } = props
+  const [checked, setChecked] = useState<boolean>()
 
-  function handleAccept() {
-    setConsentStatus(cookieName, CookieConsentStatus.APPROVED)
-  }
-  function handleReject() {
-    setConsentStatus(cookieName, CookieConsentStatus.REJECTED)
-  }
-
-  const handleChange = (checked: boolean) => {
-    checked ? handleAccept() : handleReject()
-  }
+  useEffect(() => {
+    console.log('setting consent', checked)
+    setConsentStatus(
+      cookieName,
+      checked ? CookieConsentStatus.APPROVED : CookieConsentStatus.REJECTED
+    )
+  }, [checked])
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.header}>
-        <Markdown text={title} />
-        <Switch
+        <InputElement
+          type="checkbox"
           name={cookieName}
-          onChange={handleChange}
-          isChecked={
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
+            setChecked(e.target.checked)
+          }}
+          checked={
             cookieConsentStatus[cookieName] === CookieConsentStatus.APPROVED
           }
-          size="small"
+          options={[title]}
+          size="large"
         />
       </div>
       <Markdown text={desc} className={styles.description} />

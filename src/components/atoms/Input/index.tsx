@@ -57,6 +57,7 @@ export interface InputProps {
   defaultChecked?: boolean
   size?: 'mini' | 'small' | 'large' | 'default'
   className?: string
+  checked?: boolean
   disclaimer?: string
   disclaimerValues?: string[]
 }

@@ -10,6 +10,17 @@
   margin-bottom: calc(var(--spacer) / 3);
 }
 
+.header div[class*='radioGroup'] {
+  width: 100%;
+  text-align: right;
+}
+
+.header label {
+  position: absolute;
+  left: 0;
+  padding: 0;
+}
+
 .wrapper {
   display: block;
   margin: var(--spacer) 0;
