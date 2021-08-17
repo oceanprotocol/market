@@ -104,20 +104,6 @@ function ConsentProvider({ children }: { children: ReactNode }): ReactElement {
   }, [])
 
   useEffect(() => {
-    if (!privacyPreferenceCenter || !window || !navigator) return
-
-    if (
-      (window.doNotTrack && window.doNotTrack === '1') || // Safari >7.1.3, Edge
-      (navigator.doNotTrack && navigator.doNotTrack === '1') || // Chrome, Opera, Safari <7.1.3, Blink-based
-      (navigator.doNotTrack && navigator.doNotTrack === 'yes') // Firefox
-    ) {
-      // console.log('donot track')
-      resetConsentStatus(CookieConsentStatus.REJECTED)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(() => {
     Object.keys(consentStatus).map((cookieName) => {
       switch (consentStatus[cookieName]) {
         case CookieConsentStatus.APPROVED:
