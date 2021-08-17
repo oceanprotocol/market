@@ -1,6 +1,7 @@
 ---
 title: Wallets
 chapter: 2
+youtubeUrl: 'www.youtube.com'
 ---
 
 The only thing you need to connect to the world of distributed ledgers is a wallet.

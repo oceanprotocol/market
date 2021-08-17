@@ -8,11 +8,13 @@ import slugify from 'slugify'
 import classNames from 'classnames/bind'
 import Permission from '../organisms/Permission'
 import { SectionQueryResult } from './Home'
+import Wallet from '../molecules/Wallet'
 
 interface TutorialChapterNode {
   node: {
     frontmatter: {
       title: string
+      youtubeUrl?: string
     }
     rawMarkdownBody: string
     id: string
@@ -24,6 +26,7 @@ interface TutorialChapterProps {
   title: string
   markdown: string
   titlePrefix?: string
+  youtubeUrl?: string
 }
 
 const cx = classNames.bind(styles)
@@ -35,6 +38,7 @@ const query = graphql`
         node {
           frontmatter {
             title
+            youtubeUrl
           }
           rawMarkdownBody
           id
@@ -56,12 +60,29 @@ const queryDemonstrators = {
   sort: { created: -1 }
 }
 
+const interactivity = [
+  {
+    chapter: 2,
+    component: (
+      <>
+        <Wallet />
+      </>
+    )
+  }
+]
+
+function Test(props): ReactElement {
+  return <div>{props.children}</div>
+}
+
 export function TutorialChapter({
   chapter,
-  pageProgress
+  pageProgress,
+  interactiveComponent
 }: {
   chapter: TutorialChapterProps
   pageProgress: number
+  interactiveComponent: ReactElement
 }): ReactElement {
   const chapterRef = useRef<HTMLElement>()
   const [progress, setProgress] = useState(0)
@@ -94,8 +115,10 @@ export function TutorialChapter({
         <h3 className={styles.chapter_title}>
           {chapter.titlePrefix && `${chapter.titlePrefix} `}
           {chapter.title}
+          {chapter.youtubeUrl}
         </h3>
         <Markdown text={chapter.markdown} />
+        <Test>{interactiveComponent}</Test>
       </section>
     </>
   )
@@ -108,7 +131,8 @@ export default function PageTutorial(): ReactElement {
     title: edge.node.frontmatter.title,
     markdown: edge.node.rawMarkdownBody,
     id: slugify(edge.node.frontmatter.title),
-    titlePrefix: `Chapter ${i + 1}:`
+    titlePrefix: `Chapter ${i + 1}:`,
+    youtubeUrl: edge.node.frontmatter?.youtubeUrl
   }))
 
   const [scrollPosition, setScrollPosition] = useState(0)
@@ -138,6 +162,7 @@ export default function PageTutorial(): ReactElement {
                   chapter={chapter}
                   key={i}
                   pageProgress={scrollPosition}
+                  interactiveComponent={<Wallet />}
                 />
               )
             )
