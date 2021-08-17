@@ -8,7 +8,6 @@ const privacyPolicy = {
   date: '2021-08-01',
   params: {
     languageLabel: 'Language',
-    languageHelp: 'Help',
     tocHeader: 'Header',
     updated: 'Updated',
     dateFormat: 'dd-MM-yyy'

@@ -5,7 +5,6 @@ import styles from '../templates/PageMarkdown.module.css'
 
 export interface PrivacyPolicyParams {
   languageLabel: string
-  languageHelp: string
   tocHeader: string
   updated: string
   dateFormat: string

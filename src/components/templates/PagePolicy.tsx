@@ -1,8 +1,8 @@
-import React, { ReactElement, ChangeEvent, useEffect } from 'react'
-import { graphql, PageProps, navigate } from 'gatsby'
+import React, { ReactElement, useEffect } from 'react'
+import { graphql, PageProps, navigate, Link } from 'gatsby'
 import Page from './Page'
+import styles from './PagePolicy.module.css'
 import Container from '../atoms/Container'
-import Input from '../atoms/Input'
 import { useUserPreferences } from '../../providers/UserPreferences'
 import PrivacyPolicy, { PrivacyPolicyParams } from '../molecules/PrivacyPolicy'
 
@@ -33,8 +33,7 @@ export default function PageTemplatePolicy(props: PageProps): ReactElement {
 
   const { html, tableOfContents, frontmatter } = (props.data as any)
     .markdownRemark
-  const { title, description, language, params } =
-    frontmatter as PolicyPageFrontmatter
+  const { title, description, params } = frontmatter as PolicyPageFrontmatter
 
   const privacyPolicy = { html, tableOfContents, ...frontmatter }
 
@@ -46,28 +45,30 @@ export default function PageTemplatePolicy(props: PageProps): ReactElement {
   return (
     <Page title={title} description={description} uri={props.uri} headerCenter>
       <Container narrow>
-        {languageOptions.length > 1 && (
-          <Input
-            name="policyLanguage"
-            label={params?.languageLabel || 'Language'}
-            help={params?.languageHelp || 'The language of the privacy policy'}
-            type="select"
-            options={languageOptions.map((langnode) => {
-              return langnode.node.frontmatter.language
+        <div className={styles.langSelect}>
+          <span className={styles.langLabel}>
+            {params?.languageLabel || 'Language'}
+          </span>
+          <div className={styles.langOptions}>
+            {languageOptions.map((langNode, i) => {
+              const { slug } = langNode.node.fields
+              return (
+                <>
+                  {i > 0 && ' - '}
+                  <Link
+                    to={slug}
+                    key={slug}
+                    onClick={() => {
+                      setPrivacyPolicySlug(slug)
+                    }}
+                  >
+                    {langNode.node.frontmatter.language}
+                  </Link>
+                </>
+              )
             })}
-            value={language}
-            onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-              const slug =
-                languageOptions.find(
-                  (langnode) =>
-                    langnode.node.frontmatter.language === e.target.value
-                )?.node.fields.slug || props.path
-              setPrivacyPolicySlug(slug)
-              navigate(slug)
-            }}
-            size="small"
-          />
-        )}
+          </div>
+        </div>
         <PrivacyPolicy {...privacyPolicy} />
       </Container>
     </Page>
@@ -86,7 +87,6 @@ export const pageQuery = graphql`
         date
         params {
           languageLabel
-          languageHelp
           tocHeader
           updated
           dateFormat
