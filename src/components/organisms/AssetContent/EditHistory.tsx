@@ -2,11 +2,10 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import { useAsset } from '../../../providers/Asset'
 import ExplorerLink from '../../atoms/ExplorerLink'
 import Time from '../../atoms/Time'
-import styles from './EditHistory.module.css'
 import { gql, OperationContext, useQuery } from 'urql'
 import { ReceiptData_datatokens_updates as ReceiptData } from '../../../@types/apollo/ReceiptData'
-import { useWeb3 } from '../../../providers/Web3'
 import { getQueryContext } from '../../../utils/subgraph'
+import styles from './EditHistory.module.css'
 
 const getReceipts = gql`
   query ReceiptData($address: ID!) {
