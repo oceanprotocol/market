@@ -75,7 +75,6 @@ export default function TokenApproval({
   coin: string
 }): ReactElement {
   const { ddo } = useAsset()
-  // const [approveToken, setApproveToken] = useState(false)
   const [tokenApproved, setTokenApproved] = useState(false)
   const [loading, setLoading] = useState(false)
   const { ocean, config } = useOcean()
@@ -90,23 +89,17 @@ export default function TokenApproval({
     : undefined
 
   const checkTokenApproval = useCallback(async () => {
-    if (!ocean || !tokenAddress || !spender) {
-      // if (!ocean) setApproveToken(false)
-      return
-    }
+    if (!ocean || !tokenAddress || !spender) return
+
     const allowance = await ocean.datatokens.allowance(
       tokenAddress,
       accountId,
       spender
     )
-    console.log('ALLOWANCE', allowance)
-    console.log('AMOUNT', amount)
+
     amount &&
       Number(amount) > 0 &&
       setTokenApproved(Number(allowance) >= Number(amount))
-    // allowance > amount && setApproveToken(false)
-
-    // console.log(tokenApproved)
   }, [ocean, tokenAddress, spender, accountId, amount])
 
   useEffect(() => {
@@ -115,12 +108,13 @@ export default function TokenApproval({
 
   async function approveTokens(amount: string) {
     setLoading(true)
+
     try {
       await ocean.datatokens.approve(tokenAddress, spender, amount, accountId)
     } catch (error) {
       setLoading(false)
     }
-    // setApproveToken(false)
+
     await checkTokenApproval()
     setLoading(false)
   }
