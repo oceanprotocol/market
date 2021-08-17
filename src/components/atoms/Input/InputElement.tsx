@@ -100,7 +100,10 @@ export default function InputElement({
                   defaultChecked={props.defaultChecked}
                   {...props}
                 />
-                <label className={styles.radioLabel} htmlFor={slugify(option)}>
+                <label
+                  className={cx({ [styles.radioLabel]: true, [size]: size })}
+                  htmlFor={slugify(option)}
+                >
                   {option}
                 </label>
               </div>
