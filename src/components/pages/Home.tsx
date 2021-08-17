@@ -1,4 +1,9 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, {
+  ReactElement,
+  useEffect,
+  useState,
+  ReactSVGElement
+} from 'react'
 import SearchBar from '../molecules/SearchBar'
 import styles from './Home.module.css'
 import AssetList from '../organisms/AssetList'
@@ -62,17 +67,19 @@ function sortElements(items: DDO[], sorted: string[]) {
   return items
 }
 
-function SectionQueryResult({
+export function SectionQueryResult({
   title,
   query,
   action,
-  queryData
+  queryData,
+  className
 }: {
   title: ReactElement | string
   query: SearchQuery
   action?: ReactElement
   queryData?: string
-}) {
+  className?: string
+}): ReactElement {
   const { appConfig } = useSiteMetadata()
   const [result, setResult] = useState<QueryResult>()
   const [loading, setLoading] = useState<boolean>()
