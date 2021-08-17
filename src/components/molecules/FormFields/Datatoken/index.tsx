@@ -10,7 +10,7 @@ export default function Datatoken(props: InputProps): ReactElement {
 
   async function generateName() {
     const dataTokenOptions = utils.generateDatatokenName()
-    helpers.setValue({ ...dataTokenOptions })
+    helpers.setValue({ ...field.value, ...dataTokenOptions })
   }
 
   // Generate new DT name & symbol on first mount

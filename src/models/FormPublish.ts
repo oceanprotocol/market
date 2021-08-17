@@ -13,7 +13,8 @@ export const validationSchema: Yup.SchemaOf<MetadataPublishFormDataset> =
       dataTokenOptions: Yup.object()
         .shape({
           name: Yup.string(),
-          symbol: Yup.string()
+          symbol: Yup.string(),
+          cap: Yup.string()
         })
         .required('Required'),
       files: Yup.array<FileMetadata>()
@@ -37,7 +38,8 @@ export const initialValues: Partial<MetadataPublishFormDataset> = {
   author: '',
   dataTokenOptions: {
     name: '',
-    symbol: ''
+    symbol: '',
+    cap: '250000'
   },
   files: '',
   description: '',

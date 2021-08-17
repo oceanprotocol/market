@@ -15,7 +15,8 @@ export const validationSchema: Yup.SchemaOf<MetadataPublishFormAlgorithm> =
       dataTokenOptions: Yup.object()
         .shape({
           name: Yup.string(),
-          symbol: Yup.string()
+          symbol: Yup.string(),
+          cap: Yup.string()
         })
         .required('Required'),
       dockerImage: Yup.string()
@@ -40,7 +41,8 @@ export const initialValues: Partial<MetadataPublishFormAlgorithm> = {
   author: '',
   dataTokenOptions: {
     name: '',
-    symbol: ''
+    symbol: '',
+    cap: '250000'
   },
   dockerImage: 'node:latest',
   image: 'node',
