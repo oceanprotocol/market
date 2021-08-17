@@ -141,14 +141,14 @@ const HighestLiquidityAssets = gql`
   }
 `
 
-export function getSubgrahUri(chainId: number): string {
+export function getSubgraphUri(chainId: number): string {
   const config = getOceanConfig(chainId)
   return config.subgraphUri
 }
 
 export function getQueryContext(chainId: number): OperationContext {
   const queryContext: OperationContext = {
-    url: `${getSubgrahUri(
+    url: `${getSubgraphUri(
       Number(chainId)
     )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
     requestPolicy: 'network-only'
@@ -180,7 +180,7 @@ export async function fetchDataForMultipleChains(
   let datas: any[] = []
   for (const chainId of chainIds) {
     const context: OperationContext = {
-      url: `${getSubgrahUri(
+      url: `${getSubgraphUri(
         chainId
       )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
       requestPolicy: 'network-only'
