@@ -1,12 +1,9 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import SearchBar from '../molecules/SearchBar'
-import styles from './Home.module.css'
 import AssetList from '../organisms/AssetList'
 import {
   QueryResult,
   SearchQuery
 } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
-import Container from '../atoms/Container'
 import Button from '../atoms/Button'
 import Bookmarks from '../molecules/Bookmarks'
 import axios from 'axios'
@@ -19,6 +16,7 @@ import { getHighestLiquidityDIDs } from '../../utils/subgraph'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../providers/UserPreferences'
+import styles from './Home.module.css'
 
 async function getQueryHighest(
   chainIds: number[]
@@ -76,7 +74,6 @@ function SectionQueryResult({
   const { appConfig } = useSiteMetadata()
   const [result, setResult] = useState<QueryResult>()
   const [loading, setLoading] = useState<boolean>()
-  const { chainIds } = useUserPreferences()
 
   useEffect(() => {
     if (!appConfig.metadataCacheUri) return
