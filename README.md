@@ -395,7 +395,7 @@ Ocean Market comes with prebuilt components for you to customize to cover GDPR r
 
 ### Multi-Language Privacy Policies
 
-Feel free to adopt our provided privacy policies to your needs. Per default we cover four different languages: English, German, Spanish and French. Please be advised, that you will need to adjust some paragraphs in the policies depending on your market setup (e.g. the use of cookies). You can easily add or remove policies by providing your own markdown files in the `content/pages/privacypolicy` directory. For guidelines on how to format your markdown files refer to our provided policies. The pre-linked content tables for these files are automatically generated.
+Feel free to adopt our provided privacy policies to your needs. Per default we cover four different languages: English, German, Spanish and French. Please be advised, that you will need to adjust some paragraphs in the policies depending on your market setup (e.g. the use of cookies). You can easily add or remove policies by providing your own markdown files in the `content/pages/privacy` directory. For guidelines on how to format your markdown files refer to our provided policies. The pre-linked content tables for these files are automatically generated.
 
 ### Privacy Preference Center
 

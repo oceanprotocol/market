@@ -94,7 +94,7 @@ export const pageQuery = graphql`
       }
     }
     allMarkdownRemark(
-      filter: { fileAbsolutePath: { regex: "//content/pages/privacypolicy//" } }
+      filter: { fileAbsolutePath: { regex: "//content/pages/privacy//" } }
     ) {
       edges {
         node {

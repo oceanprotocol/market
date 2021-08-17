@@ -64,7 +64,7 @@ module.exports = {
 
   // Set the default privacy policy to initially display
   // this should be the slug of your default policy markdown file
-  defaultPrivacyPolicySlug: '/privacypolicy/en',
+  defaultPrivacyPolicySlug: '/privacy/en',
 
   // This enables / disables the use of a GDPR compliant
   // privacy preference center to manage cookies on the market

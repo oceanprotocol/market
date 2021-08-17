@@ -7,14 +7,12 @@ async function createPolicyPages(graphql, actions) {
     './src/components/templates/PagePolicy.tsx'
   )
 
-  // Grab all policy files within "content/pages/privacypolicy/"
+  // Grab all policy files within "content/pages/privacy/"
   const policiesResult = await graphql(
     `
       {
         allMarkdownRemark(
-          filter: {
-            fileAbsolutePath: { regex: "//content/pages/privacypolicy//" }
-          }
+          filter: { fileAbsolutePath: { regex: "//content/pages/privacy//" } }
         ) {
           edges {
             node {
