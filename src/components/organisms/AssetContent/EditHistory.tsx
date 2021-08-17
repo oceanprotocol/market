@@ -23,10 +23,16 @@ const getReceipts = gql`
 export default function EditHistory(): ReactElement {
   const { ddo } = useAsset()
 
+  //
+  // 1. Construct subgraph query based on DDO.
+  // Need to wait for it to avoid infinite rerender loop with useQuery.
+  //
   const [queryContext, setQueryContext] = useState<OperationContext>()
 
   useEffect(() => {
-    const queryContext = getQueryContext(ddo?.chainId)
+    if (!ddo) return
+
+    const queryContext = getQueryContext(ddo.chainId)
     setQueryContext(queryContext)
   }, [ddo])
 
@@ -38,6 +44,9 @@ export default function EditHistory(): ReactElement {
   })
   const { data } = result
 
+  //
+  // 2. Construct display data based on fetched data.
+  //
   const [receipts, setReceipts] = useState<ReceiptData[]>()
   const [creationTx, setCreationTx] = useState<string>()
 

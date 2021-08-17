@@ -21,6 +21,12 @@ export default function UrqlClientProvider({
 }: {
   children: ReactNode
 }): ReactElement {
+  //
+  // Set a default client here based on ETH Mainnet, as that's required for
+  // urql to work.
+  // Throughout code base this client is then used and altered by passing
+  // a new queryContext holding different subgraph URLs.
+  //
   const [client, setClient] = useState<Client>()
 
   useEffect(() => {
