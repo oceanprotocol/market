@@ -1,6 +1,6 @@
 ---
 title: Politique de confidentialité
-description: Cette politique de confidentialité vous informe sur la façon dont Ocean Protocol Foundation traite vos données personnelles lorsque vous visitez le Ocean Market sur https://market.oceanprotocol.com et lorsque vous utilisez l'une de nos fonctionnalités de marché. De plus, cette politique de confidentialité vous informe de vos droits.
+description: Cette politique de confidentialité vous informe sur la façon dont Ocean Protocol Foundation traite vos données personnelles lorsque vous visitez le Ocean Market et lorsque vous utilisez l'une de nos fonctionnalités de marché. De plus, cette politique de confidentialité vous informe de vos droits.
 language: Français
 date: 2021-08-02
 params:
@@ -207,7 +207,7 @@ Vous avez le droit d&#39;obtenir sans retard injustifié la rectification de don
 
 Si vous avez publié un set de données, veuillez noter que vous pouvez modifier les métadonnées que vous avez fournies (comme le nom de l&#39;auteur) à tout moment en procédant comme suit.
 
-- Visitez votre actif publié sur Ocean Market (https://market.oceanprotocol.com/).
+- Visitez votre actif publié sur Ocean Market ([market.oceanprotocol.com](https://market.oceanprotocol.com)).
 - Validez votre identité avec votre clé privée.
 - Cliquez sur « EDIT METADATA » et apportez vos modifications.
 - Enregistrez vos modifications en cliquant sur « SUBMIT ».
@@ -246,7 +246,7 @@ Vous avez le droit de recevoir vos données personnelles dans un format structur
 
 Vous pouvez faire usage de votre droit à la portabilité des données en nous contactant ou en procédant comme suit.
 
-- Visitez l&#39;historique sur le marché Ocean (https://market.oceanprotocol.com/history).
+- Visitez l&#39;historique sur le marché Ocean ([market.oceanprotocol.com/history](https://market.oceanprotocol.com/history)).
 - Validez votre identité avec votre clé privée.
 - Cliquez sur le bouton de téléchargement pour chaque table d&#39;intérêt.
 

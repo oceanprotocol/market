@@ -1,6 +1,6 @@
 ---
 title: Datenschutzerklärung
-description: Diese Datenschutzerklärung erläutert wie Ocean Protocol Foundation Ltd. (OPF) deine personenbezogenen Daten verarbeitet wenn du Ocean Market auf https://market.oceanprotocol.com besuchst und wenn du eine unserer Ocean Market Funktionen nutzt. Darüberhinaus informiert dich diese Datenschutzerklärung über deine Rechte.
+description: Diese Datenschutzerklärung erläutert wie Ocean Protocol Foundation Ltd. (OPF) deine personenbezogenen Daten verarbeitet wenn du Ocean Market besuchst und wenn du eine unserer Ocean Market Funktionen nutzt. Darüberhinaus informiert dich diese Datenschutzerklärung über deine Rechte.
 language: Deutsch
 date: 2021-07-31
 params:
@@ -207,7 +207,7 @@ Du hast das Recht, die Berichtigung dich betreffender unrichtiger personenbezoge
 
 Wenn du ein Data Asset veröffentlicht hast, kannst du deine bereitgestellten Metadaten (wie dein Autorname) jederzeit bearbeiten. Folgende Schritte werden dafür benötigt.
 
-- Rufe dein dein Data Asset auf Ocean Market ([https://market.oceanprotocol.com/](https://market.oceanprotocol.com/)) auf.
+- Rufe dein dein Data Asset auf Ocean Market ([market.oceanprotocol.com/](https://market.oceanprotocol.com/)) auf.
 - Validiere deine Identität mit deinem Private Key.
 - Klicke &quot;EDIT METADATA&quot; und nehme deine Änderungen vor.
 - Speichere deine Änderungen indem du &quot;SUBMIT&quot; klickst.
@@ -246,7 +246,7 @@ Du hast das Recht, deine personenbezogenen Daten in einem strukturierten, gängi
 
 Sie können von Ihrem Recht auf Datenübertragbarkeit Gebrauch machen, indem Sie sich mit uns in Verbindung setzen oder die folgenden Schritte durchführen.
 
-- Besuche die History Table auf Ocean Market ([https://market.oceanprotocol.com/history](https://market.oceanprotocol.com/history)).
+- Besuche die History Table auf Ocean Market ([market.oceanprotocol.com/history](https://market.oceanprotocol.com/history)).
 - Validiere deine Identität mit deinem Private Key.
 - Klicke den Download Button für jede Tabelle, die relevant für dich ist.
 

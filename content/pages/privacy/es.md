@@ -1,6 +1,6 @@
 ---
 title: Política de privacidad
-description: Esta política de privacidad le informa sobre cómo Ocean Protocol Foundation Ltd. procesa sus datos personales cuando visita Ocean Market en https://market.oceanprotocol.com y cuando utiliza una de nuestras funcionalidades de mercado. Además, esta política de privacidad le informa sobre sus derechos.
+description: Esta política de privacidad le informa sobre cómo Ocean Protocol Foundation Ltd. procesa sus datos personales cuando visita Ocean Market y cuando utiliza una de nuestras funcionalidades de mercado. Además, esta política de privacidad le informa sobre sus derechos.
 language: Español
 date: 2021-08-02
 params:
@@ -207,7 +207,7 @@ Tiene derecho a obtener sin dilación indebida la rectificación de los datos pe
 
 Si publicó un activo de datos, tenga en cuenta que puede modificar los metadatos proporcionados (como el nombre de autor) en cualquier momento mediante la realización de los siguientes pasos:
 
-- Visite su activo publicado en Ocean Market (https://market.oceanprotocol.com/).
+- Visite su activo publicado en Ocean Market ([market.oceanprotocol.com](https://market.oceanprotocol.com)).
 - Valide su identidad.
 - Haga clic en &quot;EDIT METADATA&quot; y realice los cambios.
 - Guarde sus cambios haciendo clic en &quot;SUBMIT&quot;.
@@ -246,7 +246,7 @@ Tiene derecho a recibir sus datos personales en formato estructurado, de uso com
 
 Puede hacer uso de su derecho a la portabilidad de los datos comunicándose con nosotros o realizando los siguientes pasos:
 
-- Visite la tabla de historial en Ocean Market (https://market.oceanprotocol.com/history).
+- Visite la tabla de historial en Ocean Market ([market.oceanprotocol.com/history](https://market.oceanprotocol.com/history)).
 - Valide su identidad.
 - Haga clic en el botón de descarga para cada tabla de interés.
 

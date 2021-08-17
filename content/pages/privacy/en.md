@@ -1,6 +1,6 @@
 ---
 title: Privacy Policy
-description: This privacy policy informs you about how Ocean Protocol Foundation Ltd. (OPF) processes your personal data when you visit Ocean Market on https://market.oceanprotocol.com and when you use one of our market functionalities. Moreover, this privacy policy informs you about your rights.
+description: This privacy policy informs you about how Ocean Protocol Foundation Ltd. (OPF) processes your personal data when you visit Ocean Market and when you use one of our market functionalities. Moreover, this privacy policy informs you about your rights.
 language: English
 date: 2021-07-31
 params:
@@ -206,7 +206,7 @@ You have the right to obtain without undue delay the rectification of inaccurate
 
 If you published a data asset, please note that you can modify your provided metadata (like the author&#39;s name) at any time by conducting the following steps.
 
-- Visit your published asset on Ocean Market (https://market.oceanprotocol.com/).
+- Visit your published asset on Ocean Market ([market.oceanprotocol.com](https://market.oceanprotocol.com)).
 - Validate your identity with your private key.
 - Click &quot;EDIT METADATA&quot; and make your changes.
 - Save your changes by clicking &quot;SUBMIT&quot;.
@@ -245,7 +245,7 @@ You have the right to receive your personal data in a structured, commonly used,
 
 You can make use of your right to data portability either by contacting us or by conducting the following steps.
 
-- Visit the History Table on Ocean Market ([https://market.oceanprotocol.com/history](https://market.oceanprotocol.com/history)).
+- Visit the History Table on Ocean Market ([market.oceanprotocol.com/history](https://market.oceanprotocol.com/history)).
 - Validate your identity with your private key.
 - Click on the download button for each table of interest.
 
