@@ -8,7 +8,6 @@ import { useWeb3 } from '../providers/Web3'
 import { useSiteMetadata } from '../hooks/useSiteMetadata'
 import { useAccountPurgatory } from '../hooks/useAccountPurgatory'
 import AnnouncementBanner from './atoms/AnnouncementBanner'
-import { useGraphSyncStatus } from '../hooks/useGraphSyncStatus'
 import styles from './App.module.css'
 
 const contentQuery = graphql`
@@ -40,7 +39,6 @@ export default function App({
   const { warning } = useSiteMetadata()
   const { accountId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
-  // const { isGraphSynced, blockHead, blockGraph } = useGraphSyncStatus()
 
   return (
     <Styles>
