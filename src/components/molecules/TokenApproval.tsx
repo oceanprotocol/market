@@ -119,9 +119,16 @@ export default function TokenApproval({
     setLoading(false)
   }
 
+  console.log(amount)
+
   return (
     <>
-      {tokenApproved || disabled ? (
+      {tokenApproved ||
+      disabled ||
+      amount === '0' ||
+      amount === '' ||
+      !amount ||
+      typeof amount === 'undefined' ? (
         actionButton
       ) : (
         <ButtonApprove

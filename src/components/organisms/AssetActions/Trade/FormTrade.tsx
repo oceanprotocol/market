@@ -54,7 +54,6 @@ export default function FormTrade({
   const { debug } = useUserPreferences()
   const [txId, setTxId] = useState<string>()
   const [coinFrom, setCoinFrom] = useState<string>('OCEAN')
-  const [amount, setAmount] = useState<string>('0')
 
   const [maximumOcean, setMaximumOcean] = useState(maxOcean)
   const [maximumDt, setMaximumDt] = useState(maxDt)
@@ -130,7 +129,6 @@ export default function FormTrade({
               setCoin={setCoinFrom}
               setMaximumOcean={setMaximumOcean}
               setMaximumDt={setMaximumDt}
-              setAmount={setAmount}
             />
           ) : (
             <div className={styles.alertWrap}>
@@ -146,12 +144,7 @@ export default function FormTrade({
             </div>
           )}
           <Actions
-            isDisabled={
-              !isWarningAccepted ||
-              !isAssetNetwork ||
-              amount === '' ||
-              amount === '0'
-            }
+            isDisabled={!isWarningAccepted || !isAssetNetwork}
             isLoading={isSubmitting}
             loaderMessage="Swapping tokens..."
             successMessage="Successfully swapped tokens."

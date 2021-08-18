@@ -1,17 +1,16 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { BestPrice, DDO } from '@oceanprotocol/lib'
-import styles from './Swap.module.css'
-import TradeInput from './TradeInput'
 import Button from '../../../atoms/Button'
 import { ReactComponent as Arrow } from '../../../../images/arrow.svg'
 import { FormikContextType, useFormikContext } from 'formik'
 import { PoolBalance } from '../../../../@types/TokenBalance'
-import Output from './Output'
-import Slippage from './Slippage'
 import { FormTradeData, TradeItem } from '../../../../models/FormTrade'
 import { useOcean } from '../../../../providers/Ocean'
-import Decimal from 'decimal.js'
+import TradeInput from './TradeInput'
+import Output from './Output'
+import Slippage from './Slippage'
 import PriceImpact from './PriceImpact'
+import styles from './Swap.module.css'
 
 export default function Swap({
   ddo,
@@ -21,8 +20,7 @@ export default function Swap({
   price,
   setMaximumDt,
   setMaximumOcean,
-  setCoin,
-  setAmount
+  setCoin
 }: {
   ddo: DDO
   maxDt: number
@@ -32,7 +30,6 @@ export default function Swap({
   setMaximumDt: (value: number) => void
   setMaximumOcean: (value: number) => void
   setCoin: (value: string) => void
-  setAmount: (value: string) => void
 }): ReactElement {
   const { ocean } = useOcean()
   const [oceanItem, setOceanItem] = useState<TradeItem>({
@@ -53,13 +50,13 @@ export default function Swap({
     validateForm
   }: FormikContextType<FormTradeData> = useFormikContext()
 
-  /// Values used for calculation of price impact
+  // Values used for calculation of price impact
   const [spotPrice, setSpotPrice] = useState<string>()
   const [totalValue, setTotalValue] = useState<string>()
   const [tokenAmount, setTokenAmount] = useState<string>()
-  ///
+
   useEffect(() => {
-    if (!ddo || !balance || !values || !price) return
+    if (!ddo || !balance || !values?.type || !price) return
 
     async function calculateMaximum() {
       const dtAmount = values.type === 'buy' ? maxDt : balance.datatoken
@@ -67,11 +64,11 @@ export default function Swap({
 
       const maxBuyOcean = await ocean.pool.getOceanReceived(
         price.address,
-        dtAmount.toString()
+        `${dtAmount}`
       )
       const maxBuyDt = await ocean.pool.getDTReceived(
         price.address,
-        oceanAmount.toString()
+        `${oceanAmount}`
       )
 
       const maximumDt =
@@ -106,7 +103,17 @@ export default function Swap({
       })
     }
     calculateMaximum()
-  }, [ddo, maxOcean, maxDt, balance, price?.value, values.type])
+  }, [
+    ddo,
+    maxOcean,
+    maxDt,
+    balance,
+    price,
+    values?.type,
+    dtItem,
+    oceanItem,
+    ocean
+  ])
 
   const switchTokens = () => {
     setFieldValue('type', values.type === 'buy' ? 'sell' : 'buy')
@@ -118,8 +125,6 @@ export default function Swap({
   }
 
   const handleValueChange = async (name: string, value: number) => {
-    const impact = new Decimal(100 - Number(values.slippage)).div(100)
-    const precision = 3
     let tokenIn = ''
     let tokenOut = ''
     let newValue
@@ -173,9 +178,7 @@ export default function Swap({
     const spotPrice = await ocean.pool.getSpotPrice(
       price.address,
       tokenIn,
-      values.type === 'sell'
-        ? new Decimal(newValue).mul(impact).toFixed(precision).toString()
-        : new Decimal(newValue).mul(impact).toFixed(precision).toString()
+      tokenOut
     )
 
     setSpotPrice(spotPrice)
