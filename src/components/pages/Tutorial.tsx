@@ -9,6 +9,10 @@ import Wallet from '../molecules/Wallet'
 import TutorialChapter, {
   TutorialChapterProps
 } from '../molecules/TutorialChapter'
+import PageTemplateAssetDetails from '../../components/templates/PageAssetDetails'
+import AssetProvider from '../../providers/Asset'
+import OceanProvider from '../../providers/Ocean'
+import AssetContent from '../organisms/AssetContent'
 
 interface TutorialChapterNode {
   node: {
@@ -63,6 +67,20 @@ const interactivity = [
     component: (
       <>
         <Wallet />
+      </>
+    )
+  },
+  {
+    chapter: 9,
+    component: (
+      <>
+        <Permission eventType="browse">
+          <AssetProvider asset="did:op:7Bce67697eD2858d0683c631DdE7Af823b7eea38">
+            <OceanProvider>
+              <PageTemplateAssetDetails uri="/tutorial/did:op:7Bce67697eD2858d0683c631DdE7Af823b7eea38" />
+            </OceanProvider>
+          </AssetProvider>
+        </Permission>
       </>
     )
   }

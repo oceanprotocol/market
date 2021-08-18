@@ -23,7 +23,6 @@ import NetworkName from '../../atoms/NetworkName'
 
 export interface AssetContentProps {
   path?: string
-  displayActions?: boolean
 }
 
 const contentQuery = graphql`
@@ -57,8 +56,6 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   const [isOwner, setIsOwner] = useState(false)
   const { ddo, price, metadata, type } = useAsset()
   const { appConfig } = useSiteMetadata()
-  const displayActions =
-    props?.displayActions === undefined ? true : props.displayActions
 
   useEffect(() => {
     if (!accountId || !owner) return
@@ -163,11 +160,9 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
           </div>
         </div>
 
-        {displayActions && (
-          <div className={styles.actions}>
-            <AssetActions />
-          </div>
-        )}
+        <div className={styles.actions}>
+          <AssetActions />
+        </div>
       </article>
     </>
   )
