@@ -367,7 +367,7 @@ export default function Pool(): ReactElement {
                 style="primary"
                 size="small"
                 onClick={() => setShowAdd(true)}
-                disabled={isInPurgatory || !isAssetNetwork}
+                disabled={isInPurgatory}
               >
                 Add Liquidity
               </Button>
