@@ -12,8 +12,6 @@ function handleTimeoutCustomOption(
   data: FormFieldProps[],
   values: Partial<MetadataPublishFormDataset>
 ) {
-  console.log('DATA: ', data)
-  console.log('VALUES: ', values)
   const timeoutFieldContent = data.filter(
     (field) => field.name === 'timeout'
   )[0]
@@ -43,9 +41,6 @@ function handleTimeoutCustomOption(
     data[timeoutInputIndex].options[5] = values.timeout
   }
 }
-
-const computeDatasetTimeout = ['1 day', '1 week', '1 month', '1 year']
-
 export default function FormEditMetadata({
   data,
   setShowEdit,
@@ -66,7 +61,7 @@ export default function FormEditMetadata({
     validateField,
     setFieldValue
   }: FormikContextType<Partial<MetadataPublishFormDataset>> = useFormikContext()
-  console.log('DATA: ', data)
+
   // Manually handle change events instead of using `handleChange` from Formik.
   // Workaround for default `validateOnChange` not kicking in
   function handleFieldChange(
@@ -76,11 +71,21 @@ export default function FormEditMetadata({
     validateField(field.name)
     setFieldValue(field.name, e.target.value)
   }
-
   // This component is handled by Formik so it's not rendered like a "normal" react component,
   // so handleTimeoutCustomOption is called only once.
   // https://github.com/oceanprotocol/market/pull/324#discussion_r561132310
   if (data && values) handleTimeoutCustomOption(data, values)
+
+  const timeoutOptionsArray = data.filter(
+    (field) => field.name === 'timeout'
+  )[0].options
+
+  if (isComputeDataset && timeoutOptionsArray.includes('Forever')) {
+    const foreverOptionIndex = timeoutOptionsArray.indexOf('Forever')
+    timeoutOptionsArray.splice(foreverOptionIndex, 1)
+  } else if (!isComputeDataset && !timeoutOptionsArray.includes('Forever')) {
+    timeoutOptionsArray.push('Forever')
+  }
 
   return (
     <Form className={styles.form}>
@@ -89,12 +94,12 @@ export default function FormEditMetadata({
           (!showPrice && field.name === 'price') || (
             <Field
               key={field.name}
-              {...field}
               options={
-                field.name === 'timeout' && isComputeDataset
-                  ? computeDatasetTimeout
+                field.name === 'timeout' && isComputeDataset === true
+                  ? timeoutOptionsArray
                   : field.options
               }
+              {...field}
               component={Input}
               prefix={field.name === 'price' && config.oceanTokenSymbol}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
