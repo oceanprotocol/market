@@ -100,12 +100,22 @@ export default function Swap({
 
       setDtItem((prevState) => ({
         ...prevState,
-        amount: oceanAmount,
-        maxAmount: maximumOcean
+        amount: dtAmount,
+        maxAmount: maximumDt
       }))
     }
     calculateMaximum()
-  }, [ddo, maxOcean, maxDt, balance, price, values?.type, ocean])
+  }, [
+    ddo,
+    maxOcean,
+    maxDt,
+    balance,
+    price,
+    values?.type,
+    ocean,
+    setMaximumDt,
+    setMaximumOcean
+  ])
 
   const switchTokens = () => {
     setFieldValue('type', values.type === 'buy' ? 'sell' : 'buy')

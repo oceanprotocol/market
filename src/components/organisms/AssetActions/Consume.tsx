@@ -68,12 +68,12 @@ export default function Consume({
       id: ddo.dataToken?.toLowerCase(),
       account: accountId?.toLowerCase()
     }
-    // pollInterval: 5000
   })
   const { data } = result
 
-  async function checkMaxAvaialableTokens(price: BestPrice) {
-    if (!ocean || !price) return
+  async function checkMaxAvailableTokens(price: BestPrice) {
+    if (!ocean || !price || !isAssetNetwork) return
+
     const maxTokensInPool =
       price.type === 'pool'
         ? await ocean.pool.getDTMaxBuyQuantity(price.address)
@@ -82,7 +82,13 @@ export default function Consume({
   }
 
   useEffect(() => {
-    if (!data || !assetTimeout || data.tokenOrders.length === 0) return
+    if (
+      !data ||
+      !assetTimeout ||
+      data.tokenOrders.length === 0 ||
+      !isAssetNetwork
+    )
+      return
 
     const lastOrder = data.tokenOrders[0]
     if (assetTimeout === '0') {
@@ -98,11 +104,11 @@ export default function Consume({
         setHasPreviousOrder(false)
       }
     }
-  }, [data, assetTimeout])
+  }, [data, assetTimeout, isAssetNetwork])
 
   useEffect(() => {
     const { timeout } = ddo.findServiceByType('access').attributes.main
-    setAssetTimeout(timeout.toString())
+    setAssetTimeout(`${timeout}`)
   }, [ddo])
 
   useEffect(() => {
@@ -111,7 +117,7 @@ export default function Consume({
     setIsConsumablePrice(
       price.isConsumable !== undefined ? price.isConsumable === 'true' : true
     )
-    checkMaxAvaialableTokens(price)
+    checkMaxAvailableTokens(price)
   }, [price])
 
   useEffect(() => {
@@ -140,7 +146,8 @@ export default function Consume({
     pricingIsLoading,
     isConsumablePrice,
     hasDatatoken,
-    isConsumable
+    isConsumable,
+    maxDt
   ])
 
   async function handleConsume() {
