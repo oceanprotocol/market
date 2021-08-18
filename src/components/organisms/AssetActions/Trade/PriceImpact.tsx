@@ -52,10 +52,14 @@ export default function PriceImpact({
   return (
     <div className={styles.priceImpact}>
       <strong>Price impact</strong>
-      <span
-        className={parseInt(priceImpact) > 5 && styles.alert}
-      >{`${priceImpact}%`}</span>
-      <Tooltip content="The difference between the market price and estimated price due to trade size." />
+      <div>
+        <span
+          className={`${styles.number} ${
+            parseInt(priceImpact) > 5 && styles.alert
+          }`}
+        >{`${priceImpact}%`}</span>
+        <Tooltip content="The difference between the market price and estimated price due to trade size." />
+      </div>
     </div>
   )
 }

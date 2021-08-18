@@ -17,17 +17,19 @@ export default function Slippage(): ReactElement {
   return (
     <div className={styles.slippage}>
       <strong>Slippage Tolerance</strong>
-      <InputElement
-        name="slippage"
-        type="select"
-        size="mini"
-        postfix="%"
-        sortOptions={false}
-        options={slippagePresets}
-        value={values.slippage}
-        onChange={handleChange}
-      />
-      <Tooltip content="Your transaction will revert if the price changes unfavorably by more than this percentage." />
+      <div>
+        <InputElement
+          name="slippage"
+          type="select"
+          size="mini"
+          postfix="%"
+          sortOptions={false}
+          options={slippagePresets}
+          value={values.slippage}
+          onChange={handleChange}
+        />
+        <Tooltip content="Your transaction will revert if the price changes unfavorably by more than this percentage." />
+      </div>
     </div>
   )
 }
