@@ -62,12 +62,12 @@ export default function TutorialChapter({
           {chapter.title}
         </h3>
         <Markdown text={chapter.markdown} />
+        {videoUrl && <VideoPlayer videoUrl={videoUrl} />}
         {interactiveComponent && (
           <InteractiveComponentDisplayer>
             {interactiveComponent}
           </InteractiveComponentDisplayer>
         )}
-        {videoUrl && <VideoPlayer videoUrl={videoUrl} />}
       </section>
     </>
   )
