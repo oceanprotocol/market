@@ -16,7 +16,6 @@ export default function CookieModule(props: CookieModuleProps): ReactElement {
   const [checked, setChecked] = useState<boolean>()
 
   useEffect(() => {
-    console.log('setting consent', checked)
     setConsentStatus(
       cookieName,
       checked ? CookieConsentStatus.APPROVED : CookieConsentStatus.REJECTED
