@@ -51,7 +51,7 @@ export default function Swap({
   /// Values used for calculation of price impact
   const [spotPrice, setSpotPrice] = useState<string>()
   const [totalValue, setTotalValue] = useState<string>()
-  const [tokenAmmount, setTokenAmmount] = useState<string>()
+  const [tokenAmount, setTokenAmount] = useState<string>()
   ///
   useEffect(() => {
     if (!ddo || !balance || !values || !price) return
@@ -121,7 +121,7 @@ export default function Swap({
         newValue = await ocean.pool.getDTNeeded(price.address, value.toString())
 
         setTotalValue(newValue)
-        setTokenAmmount(value.toString())
+        setTokenAmount(value.toString())
 
         tokenIn = ddo.dataToken
         tokenOut = ocean.pool.oceanAddress
@@ -132,7 +132,7 @@ export default function Swap({
         )
 
         setTotalValue(value.toString())
-        setTokenAmmount(newValue)
+        setTokenAmount(newValue)
         tokenIn = ocean.pool.oceanAddress
         tokenOut = ddo.dataToken
       }
@@ -144,7 +144,7 @@ export default function Swap({
         )
 
         setTotalValue(value.toString())
-        setTokenAmmount(newValue)
+        setTokenAmount(newValue)
         tokenIn = ddo.dataToken
         tokenOut = ocean.pool.oceanAddress
       } else {
@@ -154,7 +154,7 @@ export default function Swap({
         )
 
         setTotalValue(newValue)
-        setTokenAmmount(value.toString())
+        setTokenAmount(value.toString())
         tokenIn = ocean.pool.oceanAddress
         tokenOut = ddo.dataToken
       }
@@ -194,7 +194,7 @@ export default function Swap({
 
       <PriceImpact
         totalValue={totalValue}
-        tokenAmmount={tokenAmmount}
+        tokenAmount={tokenAmount}
         spotPrice={spotPrice}
       />
       <Slippage />
