@@ -1,15 +1,14 @@
-import React, { ReactElement, useState, useRef, useEffect } from 'react'
-import ReactPlayer from 'react-player'
+import React, { ReactElement, useState } from 'react'
 import styles from './Tutorial.module.css'
 import { graphql, useStaticQuery } from 'gatsby'
-import Markdown from '../atoms/Markdown'
-import Progressbar from '../atoms/Progressbar'
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
 import slugify from 'slugify'
-import classNames from 'classnames/bind'
 import Permission from '../organisms/Permission'
 import { SectionQueryResult } from './Home'
 import Wallet from '../molecules/Wallet'
+import TutorialChapter, {
+  TutorialChapterProps
+} from '../molecules/TutorialChapter'
 
 interface TutorialChapterNode {
   node: {
@@ -23,21 +22,10 @@ interface TutorialChapterNode {
   }
 }
 
-interface TutorialChapterProps {
-  id: string
-  title: string
-  chapter?: number
-  markdown: string
-  titlePrefix?: string
-  videoUrl?: string
-}
-
 interface Interactivity {
   chapter: number
   component: ReactElement
 }
-
-const cx = classNames.bind(styles)
 
 const query = graphql`
   query {
@@ -80,78 +68,6 @@ const interactivity = [
   }
 ]
 
-export function InteractiveComponentDisplayer({
-  children
-}: {
-  children?: ReactElement
-}): ReactElement {
-  if (!children) return
-  return <div className={styles.interactive}>{children}</div>
-}
-
-export function VideoPlayer({ videoUrl }: { videoUrl: string }): ReactElement {
-  return (
-    <div>
-      <ReactPlayer url={videoUrl} controls />
-    </div>
-  )
-}
-
-export function TutorialChapter({
-  chapter,
-  pageProgress,
-  videoUrl,
-  interactiveComponent
-}: {
-  chapter: TutorialChapterProps
-  pageProgress: number
-  videoUrl?: string
-  interactiveComponent?: ReactElement
-}): ReactElement {
-  const chapterRef = useRef<HTMLElement>()
-  const [progress, setProgress] = useState(0)
-  useEffect(() => {
-    const progress = pageProgress - chapterRef.current.offsetTop
-    if (
-      progress > chapterRef.current.clientHeight ||
-      pageProgress < chapterRef.current.offsetTop
-    )
-      setProgress(0)
-    else setProgress((progress / chapterRef.current.clientHeight) * 100)
-  }, [pageProgress])
-
-  return (
-    <>
-      <section
-        id={slugify(chapter.title)}
-        className={styles.chapter}
-        key={chapter.id}
-        ref={chapterRef}
-      >
-        <Progressbar
-          progress={progress}
-          className={cx({
-            progressbar: true,
-            visible: progress > 0
-          })}
-          id={`${chapter.id}-Progressbar`}
-        />
-        <h3 className={styles.chapter_title}>
-          {chapter.titlePrefix && `${chapter.titlePrefix} `}
-          {chapter.title}
-        </h3>
-        <Markdown text={chapter.markdown} />
-        {interactiveComponent && (
-          <InteractiveComponentDisplayer>
-            {interactiveComponent}
-          </InteractiveComponentDisplayer>
-        )}
-        {videoUrl && <VideoPlayer videoUrl={videoUrl} />}
-      </section>
-    </>
-  )
-}
-
 export default function PageTutorial(): ReactElement {
   const data = useStaticQuery(query)
   const chapterNodes = data.content.edges as TutorialChapterNode[]
@@ -166,9 +82,9 @@ export default function PageTutorial(): ReactElement {
 
   const [scrollPosition, setScrollPosition] = useState(0)
 
-  // useScrollPosition(({ prevPos, currPos }) => {
-  //   prevPos.y !== currPos.y && setScrollPosition(currPos.y * -1)
-  // })
+  useScrollPosition(({ prevPos, currPos }) => {
+    prevPos.y !== currPos.y && setScrollPosition(currPos.y * -1)
+  })
 
   const findInteractiveComponent = (
     arr: Interactivity[],

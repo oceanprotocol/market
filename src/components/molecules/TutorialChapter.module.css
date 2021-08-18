@@ -1,0 +1,25 @@
+.chapter {
+  padding: var(--spacer) 0;
+}
+
+.chapter:first-child {
+  padding-top: 0;
+}
+
+.progressbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  visibility: hidden;
+}
+.progressbar.visible {
+  visibility: visible;
+}
+
+.progressbar.loose {
+  position: relative;
+}
+
+.chapter:first-child {
+  padding-top: 0;
+}
