@@ -37,3 +37,8 @@
 .progressbar.loose {
   position: relative;
 }
+
+.interactive {
+  display: flex;
+  justify-content: center;
+}

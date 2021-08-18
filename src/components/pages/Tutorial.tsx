@@ -1,4 +1,5 @@
 import React, { ReactElement, useState, useRef, useEffect } from 'react'
+import ReactPlayer from 'react-player'
 import styles from './Tutorial.module.css'
 import { graphql, useStaticQuery } from 'gatsby'
 import Markdown from '../atoms/Markdown'
@@ -14,7 +15,8 @@ interface TutorialChapterNode {
   node: {
     frontmatter: {
       title: string
-      youtubeUrl?: string
+      chapter: number
+      videoUrl?: string
     }
     rawMarkdownBody: string
     id: string
@@ -24,9 +26,15 @@ interface TutorialChapterNode {
 interface TutorialChapterProps {
   id: string
   title: string
+  chapter?: number
   markdown: string
   titlePrefix?: string
-  youtubeUrl?: string
+  videoUrl?: string
+}
+
+interface Interactivity {
+  chapter: number
+  component: ReactElement
 }
 
 const cx = classNames.bind(styles)
@@ -38,7 +46,8 @@ const query = graphql`
         node {
           frontmatter {
             title
-            youtubeUrl
+            chapter
+            videoUrl
           }
           rawMarkdownBody
           id
@@ -71,18 +80,33 @@ const interactivity = [
   }
 ]
 
-function Test(props): ReactElement {
-  return <div>{props.children}</div>
+export function InteractiveComponentDisplayer({
+  children
+}: {
+  children?: ReactElement
+}): ReactElement {
+  if (!children) return
+  return <div className={styles.interactive}>{children}</div>
+}
+
+export function VideoPlayer({ videoUrl }: { videoUrl: string }): ReactElement {
+  return (
+    <div>
+      <ReactPlayer url={videoUrl} controls />
+    </div>
+  )
 }
 
 export function TutorialChapter({
   chapter,
   pageProgress,
+  videoUrl,
   interactiveComponent
 }: {
   chapter: TutorialChapterProps
   pageProgress: number
-  interactiveComponent: ReactElement
+  videoUrl?: string
+  interactiveComponent?: ReactElement
 }): ReactElement {
   const chapterRef = useRef<HTMLElement>()
   const [progress, setProgress] = useState(0)
@@ -115,10 +139,14 @@ export function TutorialChapter({
         <h3 className={styles.chapter_title}>
           {chapter.titlePrefix && `${chapter.titlePrefix} `}
           {chapter.title}
-          {chapter.youtubeUrl}
         </h3>
         <Markdown text={chapter.markdown} />
-        <Test>{interactiveComponent}</Test>
+        {interactiveComponent && (
+          <InteractiveComponentDisplayer>
+            {interactiveComponent}
+          </InteractiveComponentDisplayer>
+        )}
+        {videoUrl && <VideoPlayer videoUrl={videoUrl} />}
       </section>
     </>
   )
@@ -130,16 +158,25 @@ export default function PageTutorial(): ReactElement {
   const chapters: TutorialChapterProps[] = chapterNodes.map((edge, i) => ({
     title: edge.node.frontmatter.title,
     markdown: edge.node.rawMarkdownBody,
+    chapter: edge.node.frontmatter?.chapter,
     id: slugify(edge.node.frontmatter.title),
     titlePrefix: `Chapter ${i + 1}:`,
-    youtubeUrl: edge.node.frontmatter?.youtubeUrl
+    videoUrl: edge.node.frontmatter?.videoUrl
   }))
 
   const [scrollPosition, setScrollPosition] = useState(0)
 
-  useScrollPosition(({ prevPos, currPos }) => {
-    prevPos.y !== currPos.y && setScrollPosition(currPos.y * -1)
-  })
+  // useScrollPosition(({ prevPos, currPos }) => {
+  //   prevPos.y !== currPos.y && setScrollPosition(currPos.y * -1)
+  // })
+
+  const findInteractiveComponent = (
+    arr: Interactivity[],
+    chapterNumber: number
+  ) => {
+    if (!chapterNumber) return
+    return arr.find((e) => e.chapter === chapterNumber)?.component
+  }
 
   return (
     <>
@@ -157,14 +194,16 @@ export default function PageTutorial(): ReactElement {
         <div className={styles.tutorial}>
           {chapters.map((chapter, i) => {
             return (
-              i !== 0 && (
-                <TutorialChapter
-                  chapter={chapter}
-                  key={i}
-                  pageProgress={scrollPosition}
-                  interactiveComponent={<Wallet />}
-                />
-              )
+              <TutorialChapter
+                chapter={chapter}
+                key={i}
+                pageProgress={scrollPosition}
+                videoUrl={chapter.videoUrl}
+                interactiveComponent={findInteractiveComponent(
+                  interactivity,
+                  chapter.chapter
+                )}
+              />
             )
           })}
           <Permission eventType="browse">

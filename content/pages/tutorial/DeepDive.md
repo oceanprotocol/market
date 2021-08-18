@@ -1,6 +1,7 @@
 ---
 title: Deep Dive
 chapter: 7
+videoUrl: 'https://www.youtube.com/watch?v=Ys-myY3iwMY'
 ---
 
 It makes it easy to publish data services, provide accurate pricing for the data, discover data, purchase data, and consume data services. Ocean Market supports fixed pricing and automatic price discovery for your assets (datasets and algorithms). We’ll see more on that later.
