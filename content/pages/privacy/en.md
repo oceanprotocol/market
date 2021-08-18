@@ -1,16 +1,6 @@
 ---
 title: Privacy Policy
 description: This privacy policy informs you about how Ocean Protocol Foundation Ltd. (OPF) processes your personal data when you visit Ocean Market and when you use one of our market functionalities. Moreover, this privacy policy informs you about your rights.
-language: English
-date: 2021-07-31
-params:
-  {
-    languageLabel: Language,
-    languageHelp: Language of the privacy policy,
-    tocHeader: Table of contents,
-    updated: Last updated on,
-    dateFormat: MM/dd/yyyy
-  }
 ---
 
 # 1. Controller

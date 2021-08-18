@@ -1,16 +1,6 @@
 ---
 title: Datenschutzerklärung
 description: Diese Datenschutzerklärung erläutert wie Ocean Protocol Foundation Ltd. (OPF) deine personenbezogenen Daten verarbeitet wenn du Ocean Market besuchst und wenn du eine unserer Ocean Market Funktionen nutzt. Darüberhinaus informiert dich diese Datenschutzerklärung über deine Rechte.
-language: Deutsch
-date: 2021-07-31
-params:
-  {
-    languageLabel: Sprache,
-    languageHelp: Die Sprache der Datenschutzerklärung,
-    tocHeader: Inhalt,
-    updated: Letzte Aktualisierung am,
-    dateFormat: dd.MM.yyyy
-  }
 ---
 
 # 1. Verantwortlicher

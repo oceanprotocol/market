@@ -1,16 +1,6 @@
 ---
 title: Politique de confidentialité
 description: Cette politique de confidentialité vous informe sur la façon dont Ocean Protocol Foundation traite vos données personnelles lorsque vous visitez le Ocean Market et lorsque vous utilisez l'une de nos fonctionnalités de marché. De plus, cette politique de confidentialité vous informe de vos droits.
-language: Français
-date: 2021-08-02
-params:
-  {
-    languageLabel: Langue,
-    languageHelp: La langue de la politique de confidentialité,
-    tocHeader: Sommaire,
-    updated: Dernière mise à jour le,
-    dateFormat: dd.MM.yyyy
-  }
 ---
 
 # 1. Contrôleur

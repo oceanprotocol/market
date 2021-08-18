@@ -1,16 +1,6 @@
 ---
 title: Política de privacidad
 description: Esta política de privacidad le informa sobre cómo Ocean Protocol Foundation Ltd. procesa sus datos personales cuando visita Ocean Market y cuando utiliza una de nuestras funcionalidades de mercado. Además, esta política de privacidad le informa sobre sus derechos.
-language: Español
-date: 2021-08-02
-params:
-  {
-    languageLabel: Idioma,
-    languageHelp: El idioma de la política de privacidad,
-    tocHeader: Índice,
-    updated: Última actualización,
-    dateFormat: dd.MM.yyyy
-  }
 ---
 
 # 1. Controlador
