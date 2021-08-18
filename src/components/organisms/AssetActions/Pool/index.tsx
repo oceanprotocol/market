@@ -24,7 +24,6 @@ import { fetchData, getQueryContext } from '../../../../utils/subgraph'
 
 import { isValidNumber } from './../../../../utils/numberValidations'
 import Decimal from 'decimal.js'
-import { constants } from 'node:buffer'
 
 const REFETCH_INTERVAL = 5000
 

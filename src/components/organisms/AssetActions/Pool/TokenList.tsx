@@ -34,7 +34,7 @@ export default function TokenList({
           <Token symbol={dtSymbol} balance={dt} />
           {conversion.greaterThan(0) && (
             <Conversion
-              price={`${conversion.toString()}`}
+              price={conversion.toString()}
               className={styles.totalLiquidity}
               showTVLLabel={showTVLLabel}
             />

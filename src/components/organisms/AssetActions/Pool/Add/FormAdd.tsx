@@ -70,6 +70,7 @@ export default function FormAdd({
         setNewPoolShare('0')
         return
       }
+
       if (Number(values.amount) > Number(amountMax)) return
 
       const poolTokens = await ocean.pool.calcPoolOutGivenSingleIn(
@@ -77,7 +78,7 @@ export default function FormAdd({
         coin === 'OCEAN' ? ocean.pool.oceanAddress : ocean.pool.dtAddress,
         `${values.amount}`
       )
-      //
+
       setNewPoolTokens(poolTokens)
 
       const newPoolShareDecimal =
