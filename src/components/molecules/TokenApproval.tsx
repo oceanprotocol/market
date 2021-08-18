@@ -119,8 +119,6 @@ export default function TokenApproval({
     setLoading(false)
   }
 
-  console.log(amount)
-
   return (
     <>
       {tokenApproved ||
