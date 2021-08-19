@@ -1,22 +1,24 @@
 import { Logger } from '@oceanprotocol/lib'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import React, { ReactElement, useEffect, useState } from 'react'
-import Loader from '../../atoms/Loader'
 import AssetList from '../../organisms/AssetList'
 import axios from 'axios'
-import { queryMetadata } from '../../../utils/aquarius'
+import {
+  queryMetadata,
+  transformChainIdsListToQuery
+} from '../../../utils/aquarius'
 import { useWeb3 } from '../../../providers/Web3'
-import { useOcean } from '../../../providers/Ocean'
+import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
+import { useUserPreferences } from '../../../providers/UserPreferences'
 
 export default function PublishedList(): ReactElement {
   const { accountId } = useWeb3()
-  const { config } = useOcean()
+  const { appConfig } = useSiteMetadata()
+  const { chainIds } = useUserPreferences()
 
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [isLoading, setIsLoading] = useState(false)
   const [page, setPage] = useState<number>(1)
-
-  const source = axios.CancelToken.source()
 
   useEffect(() => {
     async function getPublished() {
@@ -26,18 +28,18 @@ export default function PublishedList(): ReactElement {
         offset: 9,
         query: {
           query_string: {
-            query: `(publicKey.owner:${accountId})`
+            query: `(publicKey.owner:${accountId}) AND (${transformChainIdsListToQuery(
+              chainIds
+            )})`
           }
         },
-        sort: { 'price.ocean': -1 }
+        sort: { created: -1 }
       }
       try {
+        const source = axios.CancelToken.source()
+
         queryResult || setIsLoading(true)
-        const result = await queryMetadata(
-          queryPublishedAssets,
-          config.metadataCacheUri,
-          source.token
-        )
+        const result = await queryMetadata(queryPublishedAssets, source.token)
         setQueryResult(result)
       } catch (error) {
         Logger.error(error.message)
@@ -46,21 +48,20 @@ export default function PublishedList(): ReactElement {
       }
     }
     getPublished()
-  }, [accountId, page, config.metadataCacheUri])
+  }, [accountId, page, appConfig.metadataCacheUri, chainIds])
 
-  return isLoading ? (
-    <Loader />
-  ) : accountId && queryResult ? (
+  return accountId ? (
     <AssetList
-      assets={queryResult.results}
+      assets={queryResult?.results}
+      isLoading={isLoading}
       showPagination
-      page={queryResult.page}
-      totalPages={queryResult.totalPages}
+      page={queryResult?.page}
+      totalPages={queryResult?.totalPages}
       onPageChange={(newPage) => {
         setPage(newPage)
       }}
     />
   ) : (
-    <div>Connect your wallet to see your published data sets.</div>
+    <div>Please connect your Web3 wallet.</div>
   )
 }

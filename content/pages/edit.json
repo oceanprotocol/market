@@ -21,6 +21,15 @@
         "required": true
       },
       {
+        "name": "price",
+        "label": "New Price",
+        "type": "number",
+        "min": "1",
+        "placeholder": "0",
+        "help": "Enter a new price.",
+        "required": true
+      },
+      {
         "name": "links",
         "label": "Sample file",
         "placeholder": "e.g. https://file.com/samplefile.json",
@@ -35,6 +44,13 @@
         "options": ["Forever", "1 day", "1 week", "1 month", "1 year"],
         "sortOptions": false,
         "required": true
+      },
+      {
+        "name": "author",
+        "label": "New Author",
+        "placeholder": "e.g. Mrs McJellyfish",
+        "help": "Give proper attribution for your data set.",
+        "required": false
       }
     ]
   }

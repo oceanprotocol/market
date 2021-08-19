@@ -12,13 +12,17 @@ import Token from './Token'
 import TokenList from './TokenList'
 import { graphql, useStaticQuery } from 'gatsby'
 import { PoolBalance } from '../../../../@types/TokenBalance'
-import Transactions from './Transactions'
+import AssetActionHistoryTable from '../../AssetActionHistoryTable'
 import Graph from './Graph'
 import { useAsset } from '../../../../providers/Asset'
-import { gql, useQuery } from '@apollo/client'
+import { gql, OperationResult } from 'urql'
 import { PoolLiquidity } from '../../../../@types/apollo/PoolLiquidity'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
+import PoolTransactions from '../../../molecules/PoolTransactions'
+import { fetchData, getQueryContext } from '../../../../utils/subgraph'
+
+const REFETCH_INTERVAL = 5000
 
 const contentQuery = graphql`
   query PoolQuery {
@@ -44,6 +48,7 @@ const poolLiquidityQuery = gql`
       id
       totalShares
       swapFee
+      spotPrice
       tokens {
         tokenAddress
         balance
@@ -61,9 +66,10 @@ export default function Pool(): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childContentJson.pool
 
-  const { accountId, networkId } = useWeb3()
+  const { accountId } = useWeb3()
   const { ocean } = useOcean()
-  const { isInPurgatory, ddo, owner, price, refreshInterval } = useAsset()
+  const { isInPurgatory, ddo, owner, price, refreshInterval, isAssetNetwork } =
+    useAsset()
   const dtSymbol = ddo?.dataTokenInfo.symbol
 
   const [poolTokens, setPoolTokens] = useState<string>()
@@ -82,27 +88,55 @@ export default function Pool(): ReactElement {
   const [totalUserLiquidityInOcean, setTotalUserLiquidityInOcean] = useState(0)
   const [totalLiquidityInOcean, setTotalLiquidityInOcean] = useState(0)
 
-  const [
-    creatorTotalLiquidityInOcean,
-    setCreatorTotalLiquidityInOcean
-  ] = useState(0)
+  const [creatorTotalLiquidityInOcean, setCreatorTotalLiquidityInOcean] =
+    useState(0)
   const [creatorLiquidity, setCreatorLiquidity] = useState<PoolBalance>()
   const [creatorPoolTokens, setCreatorPoolTokens] = useState<string>()
   const [creatorPoolShare, setCreatorPoolShare] = useState<string>()
+  const [dataLiquidity, setdataLiquidity] = useState<PoolLiquidity>()
+  const [liquidityFetchInterval, setLiquidityFetchInterval] =
+    useState<NodeJS.Timeout>()
 
   // the purpose of the value is just to trigger the effect
   const [refreshPool, setRefreshPool] = useState(false)
-  const { data: dataLiquidity } = useQuery<PoolLiquidity>(poolLiquidityQuery, {
-    variables: {
-      id: ddo.price.address.toLowerCase(),
-      shareId: `${ddo.price.address.toLowerCase()}-${ddo.publicKey[0].owner.toLowerCase()}`
-    },
-    pollInterval: 5000
-  })
+
+  async function getPoolLiquidity() {
+    const queryContext = getQueryContext(ddo.chainId)
+    const queryVariables = {
+      id: price.address.toLowerCase(),
+      shareId: `${price.address.toLowerCase()}-${ddo.publicKey[0].owner.toLowerCase()}`
+    }
+
+    const queryResult: OperationResult<PoolLiquidity> = await fetchData(
+      poolLiquidityQuery,
+      queryVariables,
+      queryContext
+    )
+    setdataLiquidity(queryResult?.data)
+  }
+
+  function refetchLiquidity() {
+    if (!liquidityFetchInterval) {
+      setLiquidityFetchInterval(
+        setInterval(function () {
+          getPoolLiquidity()
+        }, REFETCH_INTERVAL)
+      )
+    }
+  }
+
+  useEffect(() => {
+    return () => {
+      clearInterval(liquidityFetchInterval)
+    }
+  }, [liquidityFetchInterval])
 
   useEffect(() => {
     async function init() {
-      if (!dataLiquidity || !dataLiquidity.pool) return
+      if (!dataLiquidity || !dataLiquidity.pool) {
+        await getPoolLiquidity()
+        return
+      }
 
       // Total pool shares
       const totalPoolTokens = dataLiquidity.pool.totalShares
@@ -141,7 +175,8 @@ export default function Pool(): ReactElement {
       setCreatorLiquidity(creatorLiquidity)
 
       const totalCreatorLiquidityInOcean =
-        creatorLiquidity?.ocean + creatorLiquidity?.datatoken * price?.value
+        creatorLiquidity?.ocean +
+        creatorLiquidity?.datatoken * dataLiquidity.pool.spotPrice
       setCreatorTotalLiquidityInOcean(totalCreatorLiquidityInOcean)
       const creatorPoolShare =
         price?.ocean &&
@@ -149,6 +184,7 @@ export default function Pool(): ReactElement {
         creatorLiquidity &&
         ((Number(creatorPoolTokens) / Number(totalPoolTokens)) * 100).toFixed(2)
       setCreatorPoolShare(creatorPoolShare)
+      refetchLiquidity()
     }
     init()
   }, [dataLiquidity, ddo.dataToken, price.datatoken, price.ocean, price?.value])
@@ -168,7 +204,8 @@ export default function Pool(): ReactElement {
     const totalUserLiquidityInOcean =
       userLiquidity?.ocean + userLiquidity?.datatoken * price?.value
     setTotalUserLiquidityInOcean(totalUserLiquidityInOcean)
-    const totalLiquidityInOcean = price?.ocean + price?.datatoken * price?.value
+    const totalLiquidityInOcean =
+      Number(price?.ocean) + Number(price?.datatoken) * Number(price?.value)
     setTotalLiquidityInOcean(totalLiquidityInOcean)
   }, [userLiquidity, price, poolTokens, totalPoolTokens])
 
@@ -242,15 +279,15 @@ export default function Pool(): ReactElement {
             <Tooltip content={content.tooltips.price} />
             <div className={styles.dataTokenLinks}>
               <ExplorerLink
-                networkId={networkId}
+                networkId={ddo.chainId}
                 path={`address/${price?.address}`}
               >
                 Pool
               </ExplorerLink>
               <ExplorerLink
-                networkId={networkId}
+                networkId={ddo.chainId}
                 path={
-                  networkId === 137
+                  ddo.chainId === 2021000 || ddo.chainId === 1287
                     ? `tokens/${ddo.dataToken}`
                     : `token/${ddo.dataToken}`
                 }
@@ -283,7 +320,7 @@ export default function Pool(): ReactElement {
           </TokenList>
 
           <TokenList
-            title="Pool Creator Liquidity"
+            title="Pool Creator Statistics"
             ocean={`${creatorLiquidity?.ocean}`}
             dt={`${creatorLiquidity?.datatoken}`}
             dtSymbol={dtSymbol}
@@ -313,6 +350,7 @@ export default function Pool(): ReactElement {
             dtSymbol={dtSymbol}
             poolShares={totalPoolTokens}
             conversion={totalLiquidityInOcean}
+            showTVLLabel
           >
             <Token symbol="% swap fee" balance={swapFee} noIcon />
           </TokenList>
@@ -336,13 +374,25 @@ export default function Pool(): ReactElement {
             )}
 
             {hasAddedLiquidity && !isRemoveDisabled && (
-              <Button size="small" onClick={() => setShowRemove(true)}>
+              <Button
+                size="small"
+                onClick={() => setShowRemove(true)}
+                disabled={!isAssetNetwork}
+              >
                 Remove
               </Button>
             )}
           </div>
 
-          {accountId && <Transactions />}
+          {accountId && (
+            <AssetActionHistoryTable title="Your Pool Transactions">
+              <PoolTransactions
+                poolAddress={price?.address}
+                poolChainId={[ddo.chainId]}
+                minimal
+              />
+            </AssetActionHistoryTable>
+          )}
         </>
       )}
     </>

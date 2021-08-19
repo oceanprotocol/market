@@ -63,12 +63,11 @@ export default function Publisher({
       ) : (
         <>
           <Link
-            to={`/search/?owner=${account}&sort=created&sortOrder=desc`}
+            to={`/search?sort=created&sortOrder=desc&text=${account}`}
             title="Show all data sets created by this account."
           >
             {name}
           </Link>
-
           <div className={styles.links}>
             {' — '}
             {profile && (

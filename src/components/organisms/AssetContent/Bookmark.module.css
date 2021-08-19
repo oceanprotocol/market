@@ -1,7 +1,7 @@
 .bookmark {
   position: absolute;
-  top: -10px;
-  right: calc(var(--spacer) / 4);
+  top: -3px;
+  right: calc(var(--spacer) / 8);
   appearance: none;
   background: none;
   border: none;
@@ -20,7 +20,7 @@
 
 .bookmark:hover,
 .bookmark:focus {
-  transform: translate3d(0, 6px, 0);
+  transform: translate3d(0, -3px, 0);
 }
 
 .bookmark.active svg {

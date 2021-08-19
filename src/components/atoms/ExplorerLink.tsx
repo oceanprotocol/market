@@ -1,31 +1,50 @@
 import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
 import { ReactComponent as External } from '../../images/external.svg'
-import styles from './ExplorerLink.module.css'
-import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
+import classNames from 'classnames/bind'
+import { ConfigHelperConfig } from '@oceanprotocol/lib'
 import { useOcean } from '../../providers/Ocean'
+import styles from './ExplorerLink.module.css'
+import { getOceanConfig } from '../../utils/ocean'
+
+const cx = classNames.bind(styles)
 
 export default function ExplorerLink({
+  networkId,
   path,
-  children
+  children,
+  className
 }: {
   networkId: number
   path: string
   children: ReactNode
+  className?: string
 }): ReactElement {
-  const { config } = useOcean()
+  const { config, ocean } = useOcean()
   const [url, setUrl] = useState<string>()
+  const [oceanConfig, setOceanConfig] = useState<ConfigHelperConfig>()
+  const styleClasses = cx({
+    link: true,
+    [className]: className
+  })
 
   useEffect(() => {
-    setUrl((config as ConfigHelperConfig).explorerUri)
-  }, [config])
+    async function initOcean() {
+      const oceanInitialConfig = getOceanConfig(networkId)
+      setOceanConfig(oceanInitialConfig)
+      setUrl(oceanInitialConfig?.explorerUri)
+    }
+    if (oceanConfig === undefined) {
+      initOcean()
+    }
+  }, [config, networkId, ocean])
 
   return (
     <a
       href={`${url}/${path}`}
-      title={`View on ${(config as ConfigHelperConfig).explorerUri}`}
+      title={`View on ${oceanConfig?.explorerUri}`}
       target="_blank"
       rel="noreferrer"
-      className={styles.link}
+      className={styleClasses}
     >
       {children} <External />
     </a>

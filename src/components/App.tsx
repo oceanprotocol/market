@@ -1,14 +1,14 @@
 import React, { ReactElement } from 'react'
+import { graphql, PageProps, useStaticQuery } from 'gatsby'
+import Alert from './atoms/Alert'
 import Footer from './organisms/Footer'
 import Header from './organisms/Header'
 import Styles from '../global/Styles'
-import styles from './App.module.css'
-import { useSiteMetadata } from '../hooks/useSiteMetadata'
-import Alert from './atoms/Alert'
-import { graphql, PageProps, useStaticQuery } from 'gatsby'
-import { useAccountPurgatory } from '../hooks/useAccountPurgatory'
-import AnnouncementBanner from './molecules/AnnouncementBanner'
 import { useWeb3 } from '../providers/Web3'
+import { useSiteMetadata } from '../hooks/useSiteMetadata'
+import { useAccountPurgatory } from '../hooks/useAccountPurgatory'
+import AnnouncementBanner from './atoms/AnnouncementBanner'
+import styles from './App.module.css'
 
 const contentQuery = graphql`
   query AppQuery {
@@ -43,11 +43,11 @@ export default function App({
   return (
     <Styles>
       <div className={styles.app}>
-        {!location.pathname.includes('/asset/did') && <AnnouncementBanner />}
-        <Header />
         {(props as PageProps).uri === '/' && (
-          <Alert text={warning.main} state="info" />
+          <AnnouncementBanner text={warning.main} />
         )}
+        <Header />
+
         {isInPurgatory && (
           <Alert
             title={purgatory.title}

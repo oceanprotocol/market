@@ -6,19 +6,17 @@ import React, {
   useState,
   useEffect
 } from 'react'
-import { Logger } from '@oceanprotocol/lib'
-import { LogLevel } from '@oceanprotocol/lib/dist/node/utils/Logger'
-import { useOcean } from './Ocean'
-import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
+import { Logger, LogLevel } from '@oceanprotocol/lib'
 import { isBrowser } from '../utils'
+import { useSiteMetadata } from '../hooks/useSiteMetadata'
 
 interface UserPreferencesValue {
   debug: boolean
   currency: string
   locale: string
-  bookmarks: {
-    [network: string]: string[]
-  }
+  chainIds: number[]
+  bookmarks: string[]
+  setChainIds: (chainIds: number[]) => void
   setDebug: (value: boolean) => void
   setCurrency: (value: string) => void
   addBookmark: (did: string) => void
@@ -47,8 +45,7 @@ function UserPreferencesProvider({
 }: {
   children: ReactNode
 }): ReactElement {
-  const { config } = useOcean()
-  const networkName = (config as ConfigHelperConfig).network
+  const { appConfig } = useSiteMetadata()
   const localStorage = getLocalStorage()
 
   // Set default values from localStorage
@@ -57,12 +54,15 @@ function UserPreferencesProvider({
     localStorage?.currency || 'EUR'
   )
   const [locale, setLocale] = useState<string>()
-  const [bookmarks, setBookmarks] = useState(localStorage?.bookmarks || {})
+  const [bookmarks, setBookmarks] = useState(localStorage?.bookmarks || [])
+  const [chainIds, setChainIds] = useState(
+    localStorage?.chainIds || appConfig.chainIds
+  )
 
   // Write values to localStorage on change
   useEffect(() => {
-    setLocalStorage({ debug, currency, bookmarks })
-  }, [debug, currency, bookmarks])
+    setLocalStorage({ chainIds, debug, currency, bookmarks })
+  }, [chainIds, debug, currency, bookmarks])
 
   // Set ocean.js log levels, default: Error
   useEffect(() => {
@@ -78,27 +78,24 @@ function UserPreferencesProvider({
   }, [])
 
   function addBookmark(didToAdd: string): void {
-    const newPinned = {
-      ...bookmarks,
-      [networkName]: [didToAdd].concat(bookmarks[networkName])
-    }
+    const newPinned = [...bookmarks, didToAdd]
     setBookmarks(newPinned)
   }
 
   function removeBookmark(didToAdd: string): void {
-    const newPinned = {
-      ...bookmarks,
-      [networkName]: bookmarks[networkName].filter(
-        (did: string) => did !== didToAdd
-      )
-    }
+    const newPinned = bookmarks.filter((did: string) => did !== didToAdd)
     setBookmarks(newPinned)
   }
 
   // Bookmarks old data structure migration
   useEffect(() => {
-    if (!bookmarks.length) return
-    const newPinned = { mainnet: bookmarks as any }
+    if (bookmarks.length !== undefined) return
+    const newPinned: string[] = []
+    for (const network in bookmarks) {
+      ;(bookmarks[network] as unknown as string[]).forEach((did: string) => {
+        did !== null && newPinned.push(did)
+      })
+    }
     setBookmarks(newPinned)
   }, [bookmarks])
 
@@ -109,7 +106,9 @@ function UserPreferencesProvider({
           debug,
           currency,
           locale,
+          chainIds,
           bookmarks,
+          setChainIds,
           setDebug,
           setCurrency,
           addBookmark,

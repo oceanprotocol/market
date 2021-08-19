@@ -1,29 +1,66 @@
-import React, { ReactElement, useEffect, FormEvent, ChangeEvent } from 'react'
-import styles from './FormPublish.module.css'
+import React, {
+  ReactElement,
+  useEffect,
+  FormEvent,
+  ChangeEvent,
+  useState
+} from 'react'
+import { useStaticQuery, graphql } from 'gatsby'
 import { useFormikContext, Field, Form, FormikContextType } from 'formik'
 import Input from '../../atoms/Input'
-import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
-import { MetadataPublishForm } from '../../../@types/MetaData'
-import { useOcean } from '../../../providers/Ocean'
+import { MetadataPublishFormDataset } from '../../../@types/MetaData'
+import { initialValues as initialValuesDataset } from '../../../models/FormAlgoPublish'
+import { ReactComponent as Download } from '../../../images/download.svg'
+import { ReactComponent as Compute } from '../../../images/compute.svg'
+import FormTitle from './FormTitle'
+import FormActions from './FormActions'
+import styles from './FormPublish.module.css'
 
-export default function FormPublish({
-  content
-}: {
-  content: FormContent
-}): ReactElement {
-  const { ocean, account } = useOcean()
+const query = graphql`
+  query {
+    content: allFile(
+      filter: { relativePath: { eq: "pages/publish/form-dataset.json" } }
+    ) {
+      edges {
+        node {
+          childPublishJson {
+            title
+            data {
+              name
+              placeholder
+              label
+              help
+              type
+              required
+              sortOptions
+              options
+            }
+            warning
+          }
+        }
+      }
+    }
+  }
+`
+
+export default function FormPublish(): ReactElement {
+  const data = useStaticQuery(query)
+  const content: FormContent = data.content.edges[0].node.childPublishJson
+
   const {
     status,
     setStatus,
     isValid,
+    values,
     setErrors,
     setTouched,
     resetForm,
-    initialValues,
     validateField,
     setFieldValue
-  }: FormikContextType<MetadataPublishForm> = useFormikContext()
+  }: FormikContextType<MetadataPublishFormDataset> = useFormikContext()
+
+  const [computeTypeSelected, setComputeTypeSelected] = useState<boolean>(false)
 
   // reset form validation on every mount
   useEffect(() => {
@@ -33,19 +70,50 @@ export default function FormPublish({
     // setSubmitting(false)
   }, [setErrors, setTouched])
 
+  const accessTypeOptions = [
+    {
+      name: 'Download',
+      title: 'Download',
+      icon: <Download />
+    },
+    {
+      name: 'Compute',
+      title: 'Compute',
+      icon: <Compute />
+    }
+  ]
+
+  const computeTypeOptions = ['1 day', '1 week', '1 month', '1 year']
+
   // Manually handle change events instead of using `handleChange` from Formik.
   // Workaround for default `validateOnChange` not kicking in
   function handleFieldChange(
     e: ChangeEvent<HTMLInputElement>,
     field: FormFieldProps
   ) {
+    const value =
+      field.type === 'terms' ? !JSON.parse(e.target.value) : e.target.value
+
+    if (field.name === 'access' && value === 'Compute') {
+      setComputeTypeSelected(true)
+      if (values.timeout === 'Forever')
+        setFieldValue('timeout', computeTypeOptions[0])
+    } else {
+      if (field.name === 'access' && value === 'Download') {
+        setComputeTypeSelected(false)
+      }
+    }
+
     validateField(field.name)
-    setFieldValue(field.name, e.target.value)
+    setFieldValue(field.name, value)
   }
 
   const resetFormAndClearStorage = (e: FormEvent<Element>) => {
     e.preventDefault()
-    resetForm({ values: initialValues, status: 'empty' })
+    resetForm({
+      values: initialValuesDataset as MetadataPublishFormDataset,
+      status: 'empty'
+    })
     setStatus('empty')
   }
 
@@ -55,10 +123,19 @@ export default function FormPublish({
       // do we need this?
       onChange={() => status === 'empty' && setStatus(null)}
     >
+      <FormTitle title={content.title} />
+
       {content.data.map((field: FormFieldProps) => (
         <Field
           key={field.name}
           {...field}
+          options={
+            field.type === 'boxSelection'
+              ? accessTypeOptions
+              : field.name === 'timeout' && computeTypeSelected === true
+              ? computeTypeOptions
+              : field.options
+          }
           component={Input}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
             handleFieldChange(e, field)
@@ -66,21 +143,10 @@ export default function FormPublish({
         />
       ))}
 
-      <footer className={styles.actions}>
-        <Button
-          style="primary"
-          type="submit"
-          disabled={!ocean || !account || !isValid || status === 'empty'}
-        >
-          Submit
-        </Button>
-
-        {status !== 'empty' && (
-          <Button style="text" size="small" onClick={resetFormAndClearStorage}>
-            Reset Form
-          </Button>
-        )}
-      </footer>
+      <FormActions
+        isValid={isValid}
+        resetFormAndClearStorage={resetFormAndClearStorage}
+      />
     </Form>
   )
 }

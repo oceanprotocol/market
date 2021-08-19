@@ -5,26 +5,14 @@
 
 .info {
   display: flex;
-  width: 100%;
+  width: auto;
 }
 
 .filewrapper {
   flex-shrink: 0;
 }
 
-.actions {
-  width: 100%;
-  margin-top: calc(var(--spacer) / 2);
-}
-
-.help {
-  composes: help from './index.module.css';
-}
-
-.help:not(:empty) {
-  margin-top: calc(var(--spacer) / 2);
-}
-
 .feedback {
   width: 100%;
+  margin-top: calc(var(--spacer));
 }
