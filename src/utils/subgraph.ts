@@ -469,7 +469,7 @@ export async function getAssetsBestPrices(
 
 export async function getHighestLiquidityDIDs(
   chainIds: number[]
-): Promise<string> {
+): Promise<[string, number]> {
   const didList: string[] = []
   let highestLiquidiyAssets: HighestLiquidityAssetsPools[] = []
   for (const chain of chainIds) {
@@ -495,5 +495,5 @@ export async function getHighestLiquidityDIDs(
     .replace(/"/g, '')
     .replace(/(\[|\])/g, '')
     .replace(/(did:op:)/g, '0x')
-  return searchDids
+  return [searchDids, didList.length]
 }
