@@ -10,7 +10,6 @@ export default function CustomProvider(props: InputProps): ReactElement {
   const [isLoading, setIsLoading] = useState(false)
   const [providerUrl, setProviderUrl] = useState<string>()
   const { ocean, config } = useOcean()
-  console.log('Custom provider Ocean:', ocean)
 
   function loadProvider() {
     if (!providerUrl) return
