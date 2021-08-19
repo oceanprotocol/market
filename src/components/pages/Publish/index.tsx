@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect } from 'react'
+import React, { ReactElement, useState, useEffect, useRef } from 'react'
 import Permission from '../../organisms/Permission'
 import { Formik, FormikState } from 'formik'
 import { usePublish } from '../../../hooks/usePublish'
@@ -121,6 +121,15 @@ export default function PublishPage({
       : setTitle('Publishing Algorithm')
   }, [publishType])
 
+  const publishRef = useRef(null)
+  const executeScroll = () =>
+    publishRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' })
+  useEffect(() => {
+    if (content.tutorial && isLoading) {
+      executeScroll()
+    }
+  }, [isLoading])
+
   async function handleSubmit(
     values: Partial<MetadataPublishFormDataset>,
     resetForm: (
@@ -153,8 +162,8 @@ export default function PublishPage({
         Logger.error(publishError || 'Publishing DDO failed.')
         return
       }
-      setDdo(ddo)
       // Publish succeeded
+      setDdo(ddo)
       setDid(ddo.id)
       setSuccess(
         '🎉 Successfully published. 🎉 Now create a price on your data set.'
@@ -164,7 +173,9 @@ export default function PublishPage({
         status: 'empty'
       })
       // move user's focus to top of screen
-      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+      if (!content.tutorial) {
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+      }
     } catch (error) {
       setError(error.message)
       Logger.error(error.message)
@@ -254,7 +265,7 @@ export default function PublishPage({
           ]
 
           return (
-            <>
+            <div ref={publishRef}>
               <Persist
                 name={
                   publishType === 'dataset'
@@ -310,7 +321,7 @@ export default function PublishPage({
               )}
 
               {debug === true && <Debug values={values} />}
-            </>
+            </div>
           )
         }}
       </Formik>
