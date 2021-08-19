@@ -65,9 +65,13 @@ function TabContent({
 }
 
 export default function PublishPage({
-  content
+  content,
+  ddo,
+  setDdo
 }: {
   content: { warning: string; datasetOnly?: boolean; tutorial?: boolean }
+  ddo?: DDO
+  setDdo?: (ddo: DDO) => void
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
@@ -76,7 +80,6 @@ export default function PublishPage({
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const [title, setTitle] = useState<string>()
-  const [ddo, setDdo] = useState<DDO>()
   const [did, setDid] = useState<string>()
   const [algoInitialValues, setAlgoInitialValues] = useState<
     Partial<MetadataPublishFormAlgorithm>
