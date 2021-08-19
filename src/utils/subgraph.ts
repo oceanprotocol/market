@@ -151,7 +151,7 @@ export function getQueryContext(chainId: number): OperationContext {
     url: `${getSubgraphUri(
       Number(chainId)
     )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-    requestPolicy: 'cache-first'
+    requestPolicy: 'network-only'
   }
 
   return queryContext

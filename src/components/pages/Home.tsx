@@ -94,8 +94,6 @@ function SectionQueryResult({
         try {
           setLoading(true)
           const result = await queryMetadata(query, source.token)
-          console.log('QUERY: ', query)
-          console.log('RESULT: ', result.results)
           if (queryData && result.totalResults > 0) {
             const searchDIDs = queryData.split(' ')
             const sortedAssets = sortElements(result.results, searchDIDs)
