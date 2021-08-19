@@ -21,10 +21,10 @@ import styles from './Home.module.css'
 async function getQueryHighest(
   chainIds: number[]
 ): Promise<[SearchQuery, string]> {
-  const dids = await getHighestLiquidityDIDs(chainIds)
+  const [dids, didsLength] = await getHighestLiquidityDIDs(chainIds)
   const queryHighest = {
     page: 1,
-    offset: dids.length,
+    offset: didsLength,
     query: {
       query_string: {
         query: `(${dids}) AND (${transformChainIdsListToQuery(
@@ -72,6 +72,7 @@ function SectionQueryResult({
   queryData?: string
 }) {
   const { appConfig } = useSiteMetadata()
+  const { chainIds } = useUserPreferences()
   const [result, setResult] = useState<QueryResult>()
   const [loading, setLoading] = useState<boolean>()
 
@@ -80,20 +81,31 @@ function SectionQueryResult({
     const source = axios.CancelToken.source()
 
     async function init() {
-      try {
-        setLoading(true)
-        const result = await queryMetadata(query, source.token)
-        if (queryData && result.totalResults > 0) {
-          const searchDIDs = queryData.split(' ')
-          const sortedAssets = sortElements(result.results, searchDIDs)
-          const overflow = sortedAssets.length - 9
-          sortedAssets.splice(sortedAssets.length - overflow, overflow)
-          result.results = sortedAssets
+      if (chainIds.length === 0) {
+        const result: QueryResult = {
+          results: [],
+          page: 0,
+          totalPages: 0,
+          totalResults: 0
         }
         setResult(result)
         setLoading(false)
-      } catch (error) {
-        Logger.log(error.message)
+      } else {
+        try {
+          setLoading(true)
+          const result = await queryMetadata(query, source.token)
+          if (queryData && result.totalResults > 0) {
+            const searchDIDs = queryData.split(' ')
+            const sortedAssets = sortElements(result.results, searchDIDs)
+            const overflow = sortedAssets.length - 9
+            sortedAssets.splice(sortedAssets.length - overflow, overflow)
+            result.results = sortedAssets
+          }
+          setResult(result)
+          setLoading(false)
+        } catch (error) {
+          Logger.error(error.message)
+        }
       }
     }
     init()
