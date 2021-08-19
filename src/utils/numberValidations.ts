@@ -1,4 +1,4 @@
-export function isValidNumber(value: any): number {
+export function isValidNumber(value: any): boolean {
   const isUndefinedValue = typeof value === 'undefined'
   const isNullValue = value === null
   const isNaNValue = isNaN(Number(value))
