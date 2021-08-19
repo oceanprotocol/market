@@ -104,7 +104,7 @@ function SectionQueryResult({
           setResult(result)
           setLoading(false)
         } catch (error) {
-          Logger.log(error.message)
+          Logger.error(error.message)
         }
       }
     }
