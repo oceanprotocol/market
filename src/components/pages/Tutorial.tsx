@@ -12,8 +12,8 @@ import TutorialChapter, {
 import PageTemplateAssetDetails from '../../components/templates/PageAssetDetails'
 import AssetProvider from '../../providers/Asset'
 import OceanProvider from '../../providers/Ocean'
-import AssetContent from '../organisms/AssetContent'
-
+import Page from '../templates/Page'
+import PagePublish from './Publish'
 interface TutorialChapterNode {
   node: {
     frontmatter: {
@@ -71,17 +71,30 @@ const interactivity = [
     )
   },
   {
+    chapter: 4,
+    component: (
+      <OceanProvider>
+        <Page title="" description="" uri="/tutorial">
+          <PagePublish
+            content={{
+              warning:
+                'Given the beta status, publishing on Ropsten or Rinkeby first is strongly recommended. Please familiarize yourself with [the market](https://oceanprotocol.com/technology/marketplaces), [the risks](https://blog.oceanprotocol.com/on-staking-on-data-in-ocean-market-3d8e09eb0a13), and the [Terms of Use](/terms).'
+            }}
+          />
+        </Page>
+      </OceanProvider>
+    )
+  },
+  {
     chapter: 9,
     component: (
-      <>
-        <Permission eventType="browse">
-          <AssetProvider asset="did:op:7Bce67697eD2858d0683c631DdE7Af823b7eea38">
-            <OceanProvider>
-              <PageTemplateAssetDetails uri="/tutorial/did:op:7Bce67697eD2858d0683c631DdE7Af823b7eea38" />
-            </OceanProvider>
-          </AssetProvider>
-        </Permission>
-      </>
+      <Permission eventType="browse">
+        <AssetProvider asset="did:op:7Bce67697eD2858d0683c631DdE7Af823b7eea38">
+          <OceanProvider>
+            <PageTemplateAssetDetails uri="/tutorial/did:op:7Bce67697eD2858d0683c631DdE7Af823b7eea38" />
+          </OceanProvider>
+        </AssetProvider>
+      </Permission>
     )
   }
 ]
@@ -99,11 +112,9 @@ export default function PageTutorial(): ReactElement {
   }))
 
   const [scrollPosition, setScrollPosition] = useState(0)
-
   useScrollPosition(({ prevPos, currPos }) => {
     prevPos.y !== currPos.y && setScrollPosition(currPos.y * -1)
   })
-
   const findInteractiveComponent = (
     arr: Interactivity[],
     chapterNumber: number

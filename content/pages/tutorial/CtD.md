@@ -1,6 +1,7 @@
 ---
 title: Compute-to-Data
 chapter: 9
+videoUrl: 'https://www.youtube.com/watch?v=Ys-myY3iwMY'
 ---
 
 **Ocean Compute-to-Data** is the functionality that solves the current tradeoff between the benefits of using private data and the risks of exposing it. It allows data consumers to **run compute jobs on data to train AI models while the data stays on-premise with the data provider**.

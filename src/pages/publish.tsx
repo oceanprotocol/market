@@ -7,7 +7,8 @@ import OceanProvider from '../providers/Ocean'
 export default function PageGatsbyPublish(props: PageProps): ReactElement {
   const content = (props.data as any).content.edges[0].node.childPublishJson
   const { title, description } = content
-
+  console.log(content)
+  console.log(props.uri)
   return (
     <OceanProvider>
       <Page title={title} description={description} uri={props.uri}>
