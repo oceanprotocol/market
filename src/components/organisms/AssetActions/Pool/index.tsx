@@ -12,13 +12,14 @@ import Token from './Token'
 import TokenList from './TokenList'
 import { graphql, useStaticQuery } from 'gatsby'
 import { PoolBalance } from '../../../../@types/TokenBalance'
-import Transactions from './Transactions'
+import AssetActionHistoryTable from '../../AssetActionHistoryTable'
 import Graph from './Graph'
 import { useAsset } from '../../../../providers/Asset'
 import { gql, OperationResult } from 'urql'
 import { PoolLiquidity } from '../../../../@types/apollo/PoolLiquidity'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
+import PoolTransactions from '../../../molecules/PoolTransactions'
 import { fetchData, getQueryContext } from '../../../../utils/subgraph'
 
 const REFETCH_INTERVAL = 5000
@@ -366,7 +367,7 @@ export default function Pool(): ReactElement {
                 style="primary"
                 size="small"
                 onClick={() => setShowAdd(true)}
-                disabled={isInPurgatory || !isAssetNetwork}
+                disabled={isInPurgatory}
               >
                 Add Liquidity
               </Button>
@@ -383,7 +384,15 @@ export default function Pool(): ReactElement {
             )}
           </div>
 
-          {accountId && <Transactions />}
+          {accountId && (
+            <AssetActionHistoryTable title="Your Pool Transactions">
+              <PoolTransactions
+                poolAddress={price?.address}
+                poolChainId={[ddo.chainId]}
+                minimal
+              />
+            </AssetActionHistoryTable>
+          )}
         </>
       )}
     </>

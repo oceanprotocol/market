@@ -141,17 +141,17 @@ const HighestLiquidityAssets = gql`
   }
 `
 
-export function getSubgrahUri(chainId: number): string {
+export function getSubgraphUri(chainId: number): string {
   const config = getOceanConfig(chainId)
   return config.subgraphUri
 }
 
 export function getQueryContext(chainId: number): OperationContext {
   const queryContext: OperationContext = {
-    url: `${getSubgrahUri(
+    url: `${getSubgraphUri(
       Number(chainId)
     )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-    requestPolicy: 'network-only'
+    requestPolicy: 'cache-first'
   }
 
   return queryContext
@@ -180,7 +180,7 @@ export async function fetchDataForMultipleChains(
   let datas: any[] = []
   for (const chainId of chainIds) {
     const context: OperationContext = {
-      url: `${getSubgrahUri(
+      url: `${getSubgraphUri(
         chainId
       )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
       requestPolicy: 'network-only'
@@ -408,6 +408,21 @@ export async function getPrice(asset: DDO): Promise<BestPrice> {
   )
 
   return bestPrice
+}
+
+export async function getSpotPrice(asset: DDO): Promise<number> {
+  const poolVariables = {
+    datatokenAddress: asset?.dataToken.toLowerCase()
+  }
+  const queryContext = getQueryContext(Number(asset.chainId))
+
+  const poolPriceResponse: OperationResult<AssetsPoolPrice> = await fetchData(
+    AssetPoolPriceQuerry,
+    poolVariables,
+    queryContext
+  )
+
+  return poolPriceResponse.data.pools[0].spotPrice
 }
 
 export async function getAssetsBestPrices(
