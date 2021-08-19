@@ -27,13 +27,14 @@ import {
   MetadataPublishFormAlgorithm
 } from '../../../@types/MetaData'
 import { useUserPreferences } from '../../../providers/UserPreferences'
-import { Logger, Metadata, MetadataMain } from '@oceanprotocol/lib'
+import { DDO, Logger, Metadata, MetadataMain } from '@oceanprotocol/lib'
 import { Persist } from '../../atoms/FormikPersist'
 import Debug from './Debug'
 import Alert from '../../atoms/Alert'
 import MetadataFeedback from '../../molecules/MetadataFeedback'
 import { useAccountPurgatory } from '../../../hooks/useAccountPurgatory'
 import { useWeb3 } from '../../../providers/Web3'
+import AssetTeaser from '../../molecules/AssetTeaser'
 
 const formNameDatasets = 'ocean-publish-form-datasets'
 const formNameAlgorithms = 'ocean-publish-form-algorithms'
@@ -66,7 +67,7 @@ function TabContent({
 export default function PublishPage({
   content
 }: {
-  content: { warning: string }
+  content: { warning: string; datasetOnly?: boolean; tutorial?: boolean }
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
@@ -75,6 +76,7 @@ export default function PublishPage({
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const [title, setTitle] = useState<string>()
+  const [ddo, setDdo] = useState<DDO>()
   const [did, setDid] = useState<string>()
   const [algoInitialValues, setAlgoInitialValues] = useState<
     Partial<MetadataPublishFormAlgorithm>
@@ -148,7 +150,7 @@ export default function PublishPage({
         Logger.error(publishError || 'Publishing DDO failed.')
         return
       }
-
+      setDdo(ddo)
       // Publish succeeded
       setDid(ddo.id)
       setSuccess(
@@ -260,19 +262,23 @@ export default function PublishPage({
               />
 
               {hasFeedback ? (
-                <MetadataFeedback
-                  title={title}
-                  error={error}
-                  success={success}
-                  loading={publishStepText}
-                  setError={setError}
-                  successAction={{
-                    name: `Go to ${
-                      publishType === 'dataset' ? 'data set' : 'algorithm'
-                    } →`,
-                    to: `/asset/${did}`
-                  }}
-                />
+                <>
+                  <MetadataFeedback
+                    title={title}
+                    error={error}
+                    success={success}
+                    loading={publishStepText}
+                    setError={setError}
+                    successAction={{
+                      name: `Go to ${
+                        publishType === 'dataset' ? 'data set' : 'algorithm'
+                      } →`,
+                      to: `/asset/${did}`
+                    }}
+                    tutorial={content?.tutorial}
+                    ddo={ddo}
+                  />
+                </>
               ) : (
                 <>
                   <Alert
@@ -283,7 +289,11 @@ export default function PublishPage({
 
                   <Tabs
                     className={styles.tabs}
-                    items={tabs}
+                    items={
+                      !content?.datasetOnly
+                        ? tabs
+                        : tabs.filter((e) => e.title === 'Data Set')
+                    }
                     handleTabChange={(title) => {
                       setPublishType(
                         title.toLowerCase().replace(' ', '') as any

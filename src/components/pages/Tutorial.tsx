@@ -64,11 +64,7 @@ const queryDemonstrators = {
 const interactivity = [
   {
     chapter: 2,
-    component: (
-      <>
-        <Wallet />
-      </>
-    )
+    component: <Wallet />
   },
   {
     chapter: 4,
@@ -78,7 +74,9 @@ const interactivity = [
           <PagePublish
             content={{
               warning:
-                'Given the beta status, publishing on Ropsten or Rinkeby first is strongly recommended. Please familiarize yourself with [the market](https://oceanprotocol.com/technology/marketplaces), [the risks](https://blog.oceanprotocol.com/on-staking-on-data-in-ocean-market-3d8e09eb0a13), and the [Terms of Use](/terms).'
+                'Given the beta status, publishing on Ropsten or Rinkeby first is strongly recommended. Please familiarize yourself with [the market](https://oceanprotocol.com/technology/marketplaces), [the risks](https://blog.oceanprotocol.com/on-staking-on-data-in-ocean-market-3d8e09eb0a13), and the [Terms of Use](/terms).',
+              datasetOnly: true,
+              tutorial: true
             }}
           />
         </Page>

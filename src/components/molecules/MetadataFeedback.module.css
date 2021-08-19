@@ -41,3 +41,8 @@
 .moreInfo {
   padding: calc(var(--spacer) / 4) calc(var(--spacer) / 2) !important;
 }
+
+.teaser {
+  margin-top: calc(var(--spacer) / 1.5);
+  text-align: left;
+}
