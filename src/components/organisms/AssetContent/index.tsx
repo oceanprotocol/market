@@ -23,6 +23,7 @@ import NetworkName from '../../atoms/NetworkName'
 
 export interface AssetContentProps {
   path?: string
+  tutorial?: boolean
 }
 
 const contentQuery = graphql`
@@ -93,7 +94,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
         <NetworkName networkId={ddo.chainId} className={styles.network} />
       </div>
 
-      <article className={styles.grid}>
+      <article className={props.tutorial ? styles.gridTutorial : styles.grid}>
         <div>
           {showPricing && <Pricing ddo={ddo} />}
           <div className={styles.content}>

@@ -1,4 +1,5 @@
 .interactive {
   display: flex;
   justify-content: center;
+  margin-top: calc(var(--spacer) * 2);
 }
