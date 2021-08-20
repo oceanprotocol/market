@@ -75,7 +75,7 @@ export default function SearchPage({
             <ServiceFilter
               serviceType={service}
               setServiceType={setServiceType}
-              isSearch={true}
+              isSearch
             />
             <Sort
               sortType={sortType}
