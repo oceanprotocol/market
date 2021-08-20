@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useEffect, useRef, useState } from 'react'
 import styles from './Tutorial.module.css'
 import { graphql, useStaticQuery } from 'gatsby'
 import { useScrollPosition } from '@n8tb1t/use-scroll-position'
@@ -16,6 +16,10 @@ import Page from '../templates/Page'
 import PagePublish from './Publish'
 import { Spin as Hamburger } from 'hamburger-react'
 import { DDO } from '@oceanprotocol/lib'
+import Pricing from '../organisms/AssetContent/Pricing'
+import SuccessConfetti from '../atoms/SuccessConfetti'
+import AssetTeaser from '../molecules/AssetTeaser'
+import StylesTeaser from '../molecules/MetadataFeedback.module.css'
 interface TutorialChapterNode {
   node: {
     frontmatter: {
@@ -76,11 +80,21 @@ export default function PageTutorial(): ReactElement {
     videoUrl: edge.node.frontmatter?.videoUrl
   }))
   const [ddo, setDdo] = useState<DDO>()
+  const [showPriceTutorial, setShowPriceTutorial] = useState(false)
 
   const [scrollPosition, setScrollPosition] = useState(0)
   useScrollPosition(({ prevPos, currPos }) => {
     prevPos.y !== currPos.y && setScrollPosition(currPos.y * -1)
   })
+
+  const confettiRef = useRef(null)
+  const executeScroll = () =>
+    confettiRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' })
+  useEffect(() => {
+    if (showPriceTutorial) {
+      executeScroll()
+    }
+  }, [showPriceTutorial])
 
   const interactivity = [
     {
@@ -91,28 +105,62 @@ export default function PageTutorial(): ReactElement {
       chapter: 4,
       component: (
         <OceanProvider>
-          <Page title="" description="" uri="/tutorial">
-            <PagePublish
-              content={{
-                warning:
-                  'Given the beta status, publishing on Ropsten or Rinkeby first is strongly recommended. Please familiarize yourself with [the market](https://oceanprotocol.com/technology/marketplaces), [the risks](https://blog.oceanprotocol.com/on-staking-on-data-in-ocean-market-3d8e09eb0a13), and the [Terms of Use](/terms).',
-                datasetOnly: true,
-                tutorial: true
-              }}
-              ddo={ddo}
-              setDdo={setDdo}
-            />
+          <Page
+            title="Publish"
+            description="Highlight the important features of your data set or algorithm to make it more discoverable and catch the interest of data consumers."
+            uri="/tutorial"
+          >
+            {!showPriceTutorial && (
+              <PagePublish
+                content={{
+                  warning:
+                    'Given the beta status, publishing on Ropsten or Rinkeby first is strongly recommended. Please familiarize yourself with [the market](https://oceanprotocol.com/technology/marketplaces), [the risks](https://blog.oceanprotocol.com/on-staking-on-data-in-ocean-market-3d8e09eb0a13), and the [Terms of Use](/terms).',
+                  datasetOnly: true,
+                  tutorial: true
+                }}
+                ddo={ddo}
+                setDdo={setDdo}
+              />
+            )}
+            {ddo && !showPriceTutorial && (
+              <>
+                <h3>Set price</h3>
+                <p>Set a price for your data asset</p>
+                <Pricing
+                  ddo={ddo}
+                  tutorial
+                  setShowPriceTutorial={setShowPriceTutorial}
+                />
+              </>
+            )}
+            {ddo && showPriceTutorial && (
+              <>
+                <div ref={confettiRef} className={StylesTeaser.feedback}>
+                  <div className={StylesTeaser.box}>
+                    <h3>🎉 Congratulations 🎉</h3>
+                    <SuccessConfetti
+                      success="You successfully set the price to your data set."
+                      action={
+                        <div className={StylesTeaser.teaser}>
+                          <AssetTeaser ddo={ddo} price={ddo.price} />
+                        </div>
+                      }
+                    />
+                  </div>
+                </div>
+              </>
+            )}
           </Page>
         </OceanProvider>
       )
     },
     {
       chapter: 9,
-      component: ddo && (
+      component: ddo && showPriceTutorial && (
         <Permission eventType="browse">
-          <AssetProvider asset={ddo?.id}>
+          <AssetProvider asset={ddo.id}>
             <OceanProvider>
-              <PageTemplateAssetDetails uri={`/tutorial/${ddo?.id}`} />
+              <PageTemplateAssetDetails uri={`/tutorial/${ddo.id}`} />
             </OceanProvider>
           </AssetProvider>
         </Permission>

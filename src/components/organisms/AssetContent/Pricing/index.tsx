@@ -1,4 +1,4 @@
-import React, { FormEvent, ReactElement, useState } from 'react'
+import React, { FormEvent, ReactElement, useRef, useState } from 'react'
 import { Formik } from 'formik'
 import { initialValues, validationSchema } from '../../../../models/FormPricing'
 import { DDO, Logger } from '@oceanprotocol/lib'
@@ -56,7 +56,15 @@ const query = graphql`
   }
 `
 
-export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
+export default function Pricing({
+  ddo,
+  tutorial,
+  setShowPriceTutorial
+}: {
+  ddo: DDO
+  tutorial?: boolean
+  setShowPriceTutorial?: (value: boolean) => void
+}): ReactElement {
   // Get content
   const data = useStaticQuery(query)
   const content = data.content.edges[0].node.childContentJson.create
@@ -69,6 +77,10 @@ export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
     usePricing()
 
   const hasFeedback = pricingIsLoading || typeof success !== 'undefined'
+
+  const priceRef = useRef(null)
+  const executeScroll = () =>
+    priceRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' })
 
   async function handleCreatePricing(values: PriceOptionsMarket) {
     try {
@@ -104,23 +116,28 @@ export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
   }
 
   return (
-    <div className={styles.pricing}>
+    <div className={styles.pricing} ref={priceRef}>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
         validateOnChange
         onSubmit={async (values, { setSubmitting }) => {
-          // move user's focus to top of screen
-          window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+          if (tutorial) {
+            executeScroll()
+          } else {
+            // move user's focus to top of screen
+            window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+          }
 
           // Kick off price creation
           await handleCreatePricing(values)
+          setShowPriceTutorial(true)
           setSubmitting(false)
         }}
       >
         {hasFeedback ? (
           <Feedback success={success} pricingStepText={pricingStepText} />
-        ) : showPricing ? (
+        ) : tutorial || showPricing ? (
           <FormPricing
             ddo={ddo}
             setShowPricing={setShowPricing}

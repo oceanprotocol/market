@@ -71,7 +71,7 @@ export default function PublishPage({
 }: {
   content: { warning: string; datasetOnly?: boolean; tutorial?: boolean }
   ddo?: DDO
-  setDdo?: (ddo: DDO) => void
+  setDdo?: (value: DDO) => void
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
