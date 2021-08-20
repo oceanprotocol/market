@@ -4,14 +4,46 @@
 }
 
 .tutorial {
-  margin-left: 20rem;
+  margin-left: 2rem;
   padding-left: var(--spacer);
+}
+.sticky {
+  position: fixed;
+  top: 4rem;
 }
 
 .toc {
-  position: fixed;
-  width: 20rem;
-  margin-bottom: calc(var(--spacer) * 2);
+  background-color: white;
   padding: var(--spacer) 0;
-  border-right: 1px solid var(--brand-grey-light);
+  padding-right: 15px;
+  z-index: 10000000000000;
+}
+.hamburger {
+  margin-bottom: 0;
+}
+
+.toc2 {
+  display: none;
+}
+
+@media screen and (min-width: 40rem) {
+  .toc {
+    display: none;
+  }
+  .hamburger {
+    display: none;
+  }
+  .tutorial {
+    margin-left: 20rem;
+  }
+
+  .toc2 {
+    display: block;
+    position: fixed;
+    background-color: transparent;
+    width: 20rem;
+    margin-bottom: calc(var(--spacer) * 2);
+    padding: var(--spacer) 0;
+    border-right: 1px solid var(--brand-grey-light);
+  }
 }

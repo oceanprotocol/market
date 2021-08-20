@@ -14,6 +14,8 @@ import AssetProvider from '../../providers/Asset'
 import OceanProvider from '../../providers/Ocean'
 import Page from '../templates/Page'
 import PagePublish from './Publish'
+import { Spin as Hamburger } from 'hamburger-react'
+
 interface TutorialChapterNode {
   node: {
     frontmatter: {
@@ -101,6 +103,7 @@ const interactivity = [
 
 export default function PageTutorial(): ReactElement {
   const data = useStaticQuery(query)
+  const [isOpen, setOpen] = useState(false)
   const chapterNodes = data.content.edges as TutorialChapterNode[]
   const chapters: TutorialChapterProps[] = chapterNodes.map((edge, i) => ({
     title: edge.node.frontmatter.title,
@@ -126,7 +129,26 @@ export default function PageTutorial(): ReactElement {
   return (
     <>
       <div className={styles.wrapper}>
-        <div className={styles.toc}>
+        <div className={styles.sticky}>
+          <div className={styles.hamburger}>
+            <Hamburger toggled={isOpen} toggle={setOpen} />
+          </div>
+          <div className={styles.toc}>
+            {isOpen && (
+              <>
+                <h3>Table of contents</h3>
+                <ul>
+                  {chapters.map((chapter, i) => (
+                    <li key={i}>
+                      <a href={`#${chapter.id}`}>{chapter.title}</a>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </div>
+        </div>
+        <div className={styles.toc2}>
           <h3>Table of contents</h3>
           <ul>
             {chapters.map((chapter, i) => (
@@ -136,6 +158,7 @@ export default function PageTutorial(): ReactElement {
             ))}
           </ul>
         </div>
+
         <div className={styles.tutorial}>
           {chapters.map((chapter, i) => {
             return (
