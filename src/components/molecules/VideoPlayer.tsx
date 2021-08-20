@@ -8,7 +8,7 @@ export default function VideoPlayer({
 }): ReactElement {
   return (
     <div>
-      <ReactPlayer url={videoUrl} controls />
+      <ReactPlayer url={videoUrl} controls pip />
     </div>
   )
 }

@@ -15,7 +15,7 @@ import OceanProvider from '../../providers/Ocean'
 import Page from '../templates/Page'
 import PagePublish from './Publish'
 import { Spin as Hamburger } from 'hamburger-react'
-
+import { DDO } from '@oceanprotocol/lib'
 interface TutorialChapterNode {
   node: {
     frontmatter: {
@@ -63,44 +63,6 @@ const queryDemonstrators = {
   sort: { created: -1 }
 }
 
-const interactivity = [
-  {
-    chapter: 2,
-    component: (
-      <>
-        <Wallet />
-      </>
-    )
-  },
-  {
-    chapter: 4,
-    component: (
-      <OceanProvider>
-        <Page title="" description="" uri="/tutorial">
-          <PagePublish
-            content={{
-              warning:
-                'Given the beta status, publishing on Ropsten or Rinkeby first is strongly recommended. Please familiarize yourself with [the market](https://oceanprotocol.com/technology/marketplaces), [the risks](https://blog.oceanprotocol.com/on-staking-on-data-in-ocean-market-3d8e09eb0a13), and the [Terms of Use](/terms).'
-            }}
-          />
-        </Page>
-      </OceanProvider>
-    )
-  },
-  {
-    chapter: 9,
-    component: (
-      <Permission eventType="browse">
-        <AssetProvider asset="did:op:7Bce67697eD2858d0683c631DdE7Af823b7eea38">
-          <OceanProvider>
-            <PageTemplateAssetDetails uri="/tutorial/did:op:7Bce67697eD2858d0683c631DdE7Af823b7eea38" />
-          </OceanProvider>
-        </AssetProvider>
-      </Permission>
-    )
-  }
-]
-
 export default function PageTutorial(): ReactElement {
   const data = useStaticQuery(query)
   const [isOpen, setOpen] = useState(false)
@@ -113,11 +75,51 @@ export default function PageTutorial(): ReactElement {
     titlePrefix: `Chapter ${i + 1}:`,
     videoUrl: edge.node.frontmatter?.videoUrl
   }))
+  const [ddo, setDdo] = useState<DDO>()
 
   const [scrollPosition, setScrollPosition] = useState(0)
   useScrollPosition(({ prevPos, currPos }) => {
     prevPos.y !== currPos.y && setScrollPosition(currPos.y * -1)
   })
+
+  const interactivity = [
+    {
+      chapter: 2,
+      component: <Wallet />
+    },
+    {
+      chapter: 4,
+      component: (
+        <OceanProvider>
+          <Page title="" description="" uri="/tutorial">
+            <PagePublish
+              content={{
+                warning:
+                  'Given the beta status, publishing on Ropsten or Rinkeby first is strongly recommended. Please familiarize yourself with [the market](https://oceanprotocol.com/technology/marketplaces), [the risks](https://blog.oceanprotocol.com/on-staking-on-data-in-ocean-market-3d8e09eb0a13), and the [Terms of Use](/terms).',
+                datasetOnly: true,
+                tutorial: true
+              }}
+              ddo={ddo}
+              setDdo={setDdo}
+            />
+          </Page>
+        </OceanProvider>
+      )
+    },
+    {
+      chapter: 9,
+      component: ddo && (
+        <Permission eventType="browse">
+          <AssetProvider asset={ddo?.id}>
+            <OceanProvider>
+              <PageTemplateAssetDetails uri={`/tutorial/${ddo?.id}`} />
+            </OceanProvider>
+          </AssetProvider>
+        </Permission>
+      )
+    }
+  ]
+
   const findInteractiveComponent = (
     arr: Interactivity[],
     chapterNumber: number

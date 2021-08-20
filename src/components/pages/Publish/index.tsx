@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect } from 'react'
+import React, { ReactElement, useState, useEffect, useRef } from 'react'
 import Permission from '../../organisms/Permission'
 import { Formik, FormikState } from 'formik'
 import { usePublish } from '../../../hooks/usePublish'
@@ -27,13 +27,14 @@ import {
   MetadataPublishFormAlgorithm
 } from '../../../@types/MetaData'
 import { useUserPreferences } from '../../../providers/UserPreferences'
-import { Logger, Metadata, MetadataMain } from '@oceanprotocol/lib'
+import { DDO, Logger, Metadata, MetadataMain } from '@oceanprotocol/lib'
 import { Persist } from '../../atoms/FormikPersist'
 import Debug from './Debug'
 import Alert from '../../atoms/Alert'
 import MetadataFeedback from '../../molecules/MetadataFeedback'
 import { useAccountPurgatory } from '../../../hooks/useAccountPurgatory'
 import { useWeb3 } from '../../../providers/Web3'
+import AssetTeaser from '../../molecules/AssetTeaser'
 
 const formNameDatasets = 'ocean-publish-form-datasets'
 const formNameAlgorithms = 'ocean-publish-form-algorithms'
@@ -64,9 +65,13 @@ function TabContent({
 }
 
 export default function PublishPage({
-  content
+  content,
+  ddo,
+  setDdo
 }: {
-  content: { warning: string }
+  content: { warning: string; datasetOnly?: boolean; tutorial?: boolean }
+  ddo?: DDO
+  setDdo?: (ddo: DDO) => void
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
@@ -116,6 +121,15 @@ export default function PublishPage({
       : setTitle('Publishing Algorithm')
   }, [publishType])
 
+  const publishRef = useRef(null)
+  const executeScroll = () =>
+    publishRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' })
+  useEffect(() => {
+    if (content.tutorial && isLoading) {
+      executeScroll()
+    }
+  }, [isLoading])
+
   async function handleSubmit(
     values: Partial<MetadataPublishFormDataset>,
     resetForm: (
@@ -148,8 +162,8 @@ export default function PublishPage({
         Logger.error(publishError || 'Publishing DDO failed.')
         return
       }
-
       // Publish succeeded
+      setDdo(ddo)
       setDid(ddo.id)
       setSuccess(
         '🎉 Successfully published. 🎉 Now create a price on your data set.'
@@ -159,7 +173,9 @@ export default function PublishPage({
         status: 'empty'
       })
       // move user's focus to top of screen
-      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+      if (!content.tutorial) {
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+      }
     } catch (error) {
       setError(error.message)
       Logger.error(error.message)
@@ -249,7 +265,7 @@ export default function PublishPage({
           ]
 
           return (
-            <>
+            <div ref={publishRef}>
               <Persist
                 name={
                   publishType === 'dataset'
@@ -260,19 +276,23 @@ export default function PublishPage({
               />
 
               {hasFeedback ? (
-                <MetadataFeedback
-                  title={title}
-                  error={error}
-                  success={success}
-                  loading={publishStepText}
-                  setError={setError}
-                  successAction={{
-                    name: `Go to ${
-                      publishType === 'dataset' ? 'data set' : 'algorithm'
-                    } →`,
-                    to: `/asset/${did}`
-                  }}
-                />
+                <>
+                  <MetadataFeedback
+                    title={title}
+                    error={error}
+                    success={success}
+                    loading={publishStepText}
+                    setError={setError}
+                    successAction={{
+                      name: `Go to ${
+                        publishType === 'dataset' ? 'data set' : 'algorithm'
+                      } →`,
+                      to: `/asset/${did}`
+                    }}
+                    tutorial={content?.tutorial}
+                    ddo={ddo}
+                  />
+                </>
               ) : (
                 <>
                   <Alert
@@ -283,7 +303,11 @@ export default function PublishPage({
 
                   <Tabs
                     className={styles.tabs}
-                    items={tabs}
+                    items={
+                      !content?.datasetOnly
+                        ? tabs
+                        : tabs.filter((e) => e.title === 'Data Set')
+                    }
                     handleTabChange={(title) => {
                       setPublishType(
                         title.toLowerCase().replace(' ', '') as any
@@ -297,7 +321,7 @@ export default function PublishPage({
               )}
 
               {debug === true && <Debug values={values} />}
-            </>
+            </div>
           )
         }}
       </Formik>
