@@ -6,9 +6,5 @@ export default function VideoPlayer({
 }: {
   videoUrl: string
 }): ReactElement {
-  return (
-    <div>
-      <ReactPlayer url={videoUrl} controls pip />
-    </div>
-  )
+  return <ReactPlayer url={videoUrl} controls pip width="100%" />
 }
