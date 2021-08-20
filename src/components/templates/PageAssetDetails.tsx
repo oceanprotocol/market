@@ -26,7 +26,7 @@ export default function PageTemplateAssetDetails({
   return ddo && pageTitle !== undefined && !loading ? (
     <Page title={pageTitle} uri={uri}>
       {uri.includes('/tutorial') ? (
-        <AssetContent path=":did" />
+        <AssetContent path=":did" tutorial />
       ) : (
         <Router basepath="/asset">
           <AssetContent path=":did" />
