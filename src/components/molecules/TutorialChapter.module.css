@@ -1,5 +1,6 @@
 .chapter {
   padding: var(--spacer) 0;
+  scroll-margin-top: 80px;
 }
 
 .chapter:first-child {

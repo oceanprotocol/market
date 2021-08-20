@@ -1,25 +1,43 @@
 .wrapper {
-  margin-top: calc(var(--spacer) * 3);
+  margin-top: calc(var(--spacer) * 5);
   position: relative;
 }
 
 .tutorial {
-  margin-left: 2rem;
   padding-left: var(--spacer);
-}
-.sticky {
-  position: fixed;
-  top: 4rem;
 }
 
 .toc {
+  height: calc(100vh-);
+  line-height: 50px;
   background-color: white;
-  padding: var(--spacer) 0;
   padding-right: 15px;
-  z-index: 10000000000000;
+  margin-bottom: calc(var(--spacer) / 2);
+  position: sticky;
+  position: -webkit-sticky;
+  top: 7px;
 }
+
+.toc h3 {
+  text-align: center;
+}
+
 .hamburger {
-  margin-bottom: 0;
+  background-color: var(--background-body);
+  width: 100vw;
+  padding-top: calc(var(--spacer) / 2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: sticky;
+  position: -webkit-sticky;
+  top: 7px;
+  z-index: 99;
+}
+
+.open {
+  height: 100vh;
 }
 
 .toc2 {

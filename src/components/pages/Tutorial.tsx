@@ -128,21 +128,25 @@ export default function PageTutorial(): ReactElement {
     return arr.find((e) => e.chapter === chapterNumber)?.component
   }
 
+  const handleBurgerClose = () => {
+    if (isOpen) setOpen(false)
+  }
+
   return (
     <>
       <div className={styles.wrapper}>
-        <div className={styles.sticky}>
-          <div className={styles.hamburger}>
-            <Hamburger toggled={isOpen} toggle={setOpen} />
-          </div>
-          <div className={styles.toc}>
+        <div className={styles.hamburger}>
+          <Hamburger toggled={isOpen} toggle={setOpen} />
+          <div className={`${styles.toc} ${isOpen && styles.open}`}>
             {isOpen && (
               <>
                 <h3>Table of contents</h3>
                 <ul>
                   {chapters.map((chapter, i) => (
                     <li key={i}>
-                      <a href={`#${chapter.id}`}>{chapter.title}</a>
+                      <a href={`#${chapter.id}`} onClick={handleBurgerClose}>
+                        {chapter.title}
+                      </a>
                     </li>
                   ))}
                 </ul>
@@ -150,6 +154,7 @@ export default function PageTutorial(): ReactElement {
             )}
           </div>
         </div>
+
         <div className={styles.toc2}>
           <h3>Table of contents</h3>
           <ul>
