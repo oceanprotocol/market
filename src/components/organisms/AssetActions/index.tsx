@@ -14,10 +14,11 @@ import { useWeb3 } from '../../../providers/Web3'
 import Web3Feedback from '../../molecules/Web3Feedback'
 import { getFileInfo } from '../../../utils/provider'
 import axios from 'axios'
+import { getOceanConfig } from '../../../utils/ocean'
 
 export default function AssetActions(): ReactElement {
   const { accountId, balance } = useWeb3()
-  const { ocean, config, account } = useOcean()
+  const { ocean, account } = useOcean()
   const { price, ddo, isAssetNetwork } = useAsset()
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
@@ -46,7 +47,8 @@ export default function AssetActions(): ReactElement {
   }, [accountId, isAssetNetwork, ddo, ocean])
 
   useEffect(() => {
-    if (!config) return
+    const oceanConfig = getOceanConfig(ddo.chainId)
+    if (!oceanConfig) return
 
     const source = axios.CancelToken.source()
 
@@ -55,7 +57,7 @@ export default function AssetActions(): ReactElement {
       try {
         const fileInfo = await getFileInfo(
           DID.parse(`${ddo.id}`),
-          config.providerUri,
+          oceanConfig.providerUri,
           source.token
         )
 
@@ -72,7 +74,7 @@ export default function AssetActions(): ReactElement {
     return () => {
       source.cancel()
     }
-  }, [config, ddo])
+  }, [ddo])
 
   // Get and set user DT balance
   useEffect(() => {
