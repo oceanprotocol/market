@@ -23,14 +23,13 @@
   --color-secondary: #8b98a9;
 
   /* Only use these vars for most color referencing for easy light/dark mode */
-  --font-color-text: #41474e;
-  --font-color-heading: #141414;
-  --background-body: #fcfcfc;
-  --background-content: #fff;
+  --font-color-text: var(--brand-grey);
+  --font-color-heading: var(--brand-black);
+  --background-body: var(--brand-white);
+  --background-content: var(--brand-white);
   --background-body-transparent: rgba(255, 255, 255, 0.8);
-  --background-content: #fff;
-  --background-highlight: #f7f7f7;
-  --border-color: #e2e2e2;
+  --background-highlight: var(--brand-grey-dimmed);
+  --border-color: var(--brand-grey-lighter);
   --box-shadow-color: rgba(0, 0, 0, 0.05);
 
   --font-family-base: 'Sharp Sans', -apple-system, BlinkMacSystemFont,
@@ -70,12 +69,12 @@
 }
 
 .dark {
-  --font-color-text: #e2e2e2;
-  --font-color-heading: #f7f7f7;
-  --background-body: rgb(10, 10, 10);
-  --background-body-transparent: rgba(10, 10, 10, 0.9);
-  --background-content: #141414;
-  --background-highlight: #201f1f;
-  --border-color: #303030;
+  --font-color-text: var(--brand-grey-lighter);
+  --font-color-heading: var(--brand-grey-dimmed);
+  --background-content: var(--brand-black);
+  --background-body: var(--brand-black);
+  --background-body-transparent: rgba(20, 20, 20, 0.9);
+  --background-highlight: var(--brand-grey-darker);
+  --border-color: var(--brand-grey-dark);
   --box-shadow-color: rgba(0, 0, 0, 0.2);
 }
