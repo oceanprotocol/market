@@ -13,6 +13,7 @@ export interface FormFieldProps {
   placeholder?: string
   pattern?: string
   min?: string
+  advanced?: boolean
 }
 
 export interface FormContent {
