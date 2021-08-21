@@ -5,7 +5,7 @@
     "siteUrl": "https://market001.delta-dao.com",
     "siteIcon": "node_modules/@oceanprotocol/art/logo/favicon-white.png",
     "siteImage": "../src/images/share.png",
-    "copyright": "All Rights Reserved. Powered by [Ocean Protocol](https://oceanprotocol.com)",
+    "copyright": "All Rights Reserved. Powered by [Ocean Protocol](https://oceanprotocol.com). Customized and hosted by [deltaDAO](https://delta-dao.com).",
     "menu": [
       {
         "name": "Publish",
