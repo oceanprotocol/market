@@ -33,6 +33,7 @@ interface UseSiteMetadata {
     allowAdvancedSettings: string
     credentialType: string
     allowAdvancedPublishSettings: string
+    displayWarning: boolean
   }
 }
 
@@ -71,6 +72,7 @@ const query = graphql`
           allowAdvancedSettings
           allowAdvancedPublishSettings
           credentialType
+          displayWarning
         }
       }
     }

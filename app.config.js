@@ -62,5 +62,7 @@ module.exports = {
   allowAdvancedSettings: process.env.GATSBY_ALLOW_ADVANCED_SETTINGS || 'false',
   allowAdvancedPublishSettings:
     process.env.GATSBY_ALLOW_ADVANCED_PUBLISH_SETTINGS || 'false',
-  credentialType: process.env.GATSBY_CREDENTIAL_TYPE || 'address'
+  credentialType: process.env.GATSBY_CREDENTIAL_TYPE || 'address',
+
+  displayWarning: false
 }
