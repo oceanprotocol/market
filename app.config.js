@@ -64,5 +64,17 @@ module.exports = {
     process.env.GATSBY_ALLOW_ADVANCED_PUBLISH_SETTINGS || 'false',
   credentialType: process.env.GATSBY_CREDENTIAL_TYPE || 'address',
 
+  // Set the default privacy policy to initially display
+  // this should be the slug of your default policy markdown file
+  defaultPrivacyPolicySlug: '/privacy/en',
+
+  // This enables / disables the use of a GDPR compliant
+  // privacy preference center to manage cookies on the market
+  // If set to true a gdpr.json file inside the content directory
+  // is used to create and show a privacy preference center / cookie banner
+  // To learn more about how to configure and use this, please refer to the readme
+  // https://github.com/deltaDAO/Ocean-Market/tree/main#-gdpr-compliance
+  privacyPreferenceCenter: false,
+
   displayWarning: false
 }

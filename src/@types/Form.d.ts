@@ -14,6 +14,8 @@ export interface FormFieldProps {
   pattern?: string
   min?: string
   advanced?: boolean
+  disclaimer?: string
+  disclaimerValues?: string[]
 }
 
 export interface FormContent {
