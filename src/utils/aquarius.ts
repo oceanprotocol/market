@@ -64,10 +64,10 @@ export function transformChainIdsListToQuery(chainIds: number[]): string {
 export function getWhitelistedSearchQuery(query: any): any {
   const { whitelists } = addressConfig
 
-  const whitelistQueryArrays: any[] = Object.keys(whitelists)
-    .filter((field) => whitelists[field].length > 0)
-    .map((field) =>
-      whitelists[field].map((address: string) => {
+  const whitelistQueryArrays = Object.entries(whitelists)
+    .filter(([field, whitelist]) => whitelist.length > 0)
+    .map(([field, whitelist]) =>
+      whitelist.map((address: string) => {
         return { match: { [field]: address } }
       })
     )
