@@ -16,6 +16,7 @@ import { getPrice } from '../utils/subgraph'
 import { MetadataMarket } from '../@types/MetaData'
 import { useWeb3 } from './Web3'
 import { useSiteMetadata } from '../hooks/useSiteMetadata'
+import { useAddressConfig } from '../hooks/useAddressConfig'
 
 interface AssetProviderValue {
   isInPurgatory: boolean
@@ -58,6 +59,7 @@ function AssetProvider({
   const [owner, setOwner] = useState<string>()
   const [error, setError] = useState<string>()
   const [type, setType] = useState<MetadataMain['type']>()
+  const { isDDOWhitelisted } = useAddressConfig()
   const [loading, setLoading] = useState(false)
   const [isAssetNetwork, setIsAssetNetwork] = useState<boolean>()
 
@@ -65,8 +67,8 @@ function AssetProvider({
     Logger.log('[asset] Init asset, get DDO')
     setLoading(true)
     const ddo = await retrieveDDO(asset as string, token)
-
-    if (!ddo) {
+    const isWhitelisted = isDDOWhitelisted(ddo)
+    if (!ddo || !isWhitelisted) {
       setError(
         `[asset] The DDO for ${asset} was not found in MetadataCache. If you just published a new data set, wait some seconds and refresh this page.`
       )
@@ -74,7 +76,7 @@ function AssetProvider({
       setError(undefined)
     }
     setLoading(false)
-    return ddo
+    return isWhitelisted && ddo
   }
 
   const refreshDdo = async (token?: CancelToken) => {

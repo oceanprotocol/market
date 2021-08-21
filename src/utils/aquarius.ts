@@ -13,6 +13,7 @@ import { AssetSelectionAsset } from '../components/molecules/FormFields/AssetSel
 import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { metadataCacheUri } from '../../app.config'
+import addressConfig from '../../address.config'
 
 function getQueryForAlgorithmDatasets(algorithmDid: string, chainId?: number) {
   return {
@@ -59,14 +60,48 @@ export function transformChainIdsListToQuery(chainIds: number[]): string {
   return chainQuery
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getWhitelistedSearchQuery(query: any): any {
+  const { whitelists } = addressConfig
+
+  const whitelistQueryArrays: any[] = Object.keys(whitelists)
+    .filter((field) => whitelists[field].length > 0)
+    .map((field) =>
+      whitelists[field].map((address: string) => {
+        return { match: { [field]: address } }
+      })
+    )
+
+  const whitelistQuery = [].concat(...whitelistQueryArrays)
+
+  return {
+    ...query,
+    query: {
+      bool: {
+        must: [
+          {
+            bool: {
+              should: [...whitelistQuery]
+            }
+          },
+          {
+            ...query.query
+          }
+        ]
+      }
+    }
+  }
+}
+
 export async function queryMetadata(
   query: SearchQuery,
   cancelToken: CancelToken
 ): Promise<QueryResult> {
+  const whitelistedSearchQuery = getWhitelistedSearchQuery(query)
   try {
     const response: AxiosResponse<any> = await axios.post(
       `${metadataCacheUri}/api/v1/aquarius/assets/ddo/query`,
-      { ...query, cancelToken }
+      { ...whitelistedSearchQuery, cancelToken }
     )
     if (!response || response.status !== 200 || !response.data) return
     return transformQueryResult(response.data)

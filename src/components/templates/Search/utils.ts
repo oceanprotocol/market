@@ -1,6 +1,7 @@
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { MetadataCache, Logger } from '@oceanprotocol/lib'
 import {
+  getWhitelistedSearchQuery,
   queryMetadata,
   transformChainIdsListToQuery
 } from '../../../utils/aquarius'
@@ -87,7 +88,7 @@ export function getSearchQuery(
     'service.attributes.additionalInformation.description',
     'service.attributes.additionalInformation.tags'
   ]
-  return {
+  return getWhitelistedSearchQuery({
     page: Number(page) || 1,
     offset: Number(offset) || 21,
     query: {
@@ -155,7 +156,7 @@ export function getSearchQuery(
     sort: {
       [sortTerm]: sortValue
     }
-  }
+  })
 }
 
 export async function getResults(
