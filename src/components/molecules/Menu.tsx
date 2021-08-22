@@ -33,14 +33,14 @@ function MenuLink({ item }: { item: MenuItem }) {
 }
 
 export default function Menu(): ReactElement {
-  const { menu, siteTitle } = useSiteMetadata()
+  const { menu, siteTitle, badge } = useSiteMetadata()
 
   return (
     <nav className={styles.menu}>
       <Link to="/" className={styles.logo}>
         <Logo branding />
         <h1 className={styles.title}>
-          {siteTitle} <Badge label="v3" />
+          {siteTitle} <Badge label={badge} />
         </h1>
       </Link>
 

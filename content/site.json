@@ -23,6 +23,7 @@
     "announcement": {
       "main": "Ocean Market is [available on Polygon](https://blog.oceanprotocol.com/ocean-on-polygon-network-8abad19cbf47).",
       "polygon": "Polygon/Matic EVM support is in early stages. [Use the Polygon Bridge](https://docs.oceanprotocol.com/tutorials/polygon-bridge/) to get mOCEAN."
-    }
+    },
+    "badge": "Powered by Ocean Protocol"
   }
 }

@@ -19,6 +19,7 @@ interface UseSiteMetadata {
     main: string
     polygon: string
   }
+  badge: string
   appConfig: {
     metadataCacheUri: string
     infuraProjectId: string
@@ -60,6 +61,7 @@ const query = graphql`
           main
           polygon
         }
+        badge
         appConfig {
           metadataCacheUri
           infuraProjectId
