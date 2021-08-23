@@ -12,31 +12,10 @@ import {
   transformChainIdsListToQuery
 } from '../../utils/aquarius'
 import Permission from '../organisms/Permission'
-import { getHighestLiquidityDIDs } from '../../utils/subgraph'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../providers/UserPreferences'
 import styles from './Home.module.css'
-
-async function getQueryHighest(
-  chainIds: number[]
-): Promise<[SearchQuery, string]> {
-  const [dids, didsLength] = await getHighestLiquidityDIDs(chainIds)
-  const queryHighest = {
-    page: 1,
-    offset: didsLength,
-    query: {
-      query_string: {
-        query: `(${dids}) AND (${transformChainIdsListToQuery(
-          chainIds
-        )}) AND -isInPurgatory:true`,
-        fields: ['dataToken']
-      }
-    }
-  }
-
-  return [queryHighest, dids]
-}
 
 function getQueryLatest(chainIds: number[]): SearchQuery {
   return {
@@ -129,14 +108,7 @@ function SectionQueryResult({
 }
 
 export default function HomePage(): ReactElement {
-  const [queryAndDids, setQueryAndDids] = useState<[SearchQuery, string]>()
   const { chainIds } = useUserPreferences()
-
-  useEffect(() => {
-    getQueryHighest(chainIds).then((results) => {
-      setQueryAndDids(results)
-    })
-  }, [chainIds])
 
   return (
     <Permission eventType="browse">
@@ -145,14 +117,6 @@ export default function HomePage(): ReactElement {
           <h3>Bookmarks</h3>
           <Bookmarks />
         </section>
-
-        {queryAndDids && (
-          <SectionQueryResult
-            title="Highest Liquidity"
-            query={queryAndDids[0]}
-            queryData={queryAndDids[1]}
-          />
-        )}
 
         <SectionQueryResult
           title="Recently Published"
