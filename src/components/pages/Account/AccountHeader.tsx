@@ -19,12 +19,26 @@ import {
   UserTVL
 } from '../../../utils/subgraph'
 import Conversion from '../../atoms/Price/Conversion'
-import { ReactComponent as Avatar } from '../../../images/logo.svg'
 import { ReactComponent as Published } from '../../../images/published.svg'
 import { ReactComponent as Sold } from '../../../images/sold.svg'
 import { ReactComponent as Tvl } from '../../../images/tvl.svg'
 import Token from '../../organisms/AssetActions/Pool/Token'
 import { getOceanConfig } from '../../../utils/ocean'
+import { toDataUrl } from 'ethereum-blockies'
+
+const Blockies = ({ account }: { account: string | undefined }) => {
+  if (!account) return null
+  const blockies = toDataUrl(account)
+
+  return (
+    <img
+      className={styles.image}
+      src={blockies}
+      alt="Blockies"
+      aria-hidden="true"
+    />
+  )
+}
 
 export default function AccountHeader({
   accountId
@@ -148,7 +162,7 @@ export default function AccountHeader({
                   height="48"
                 />
               ) : (
-                <Avatar className={styles.image} />
+                <Blockies account={accountId} />
               )}
               <div>
                 <h3 className={styles.name}>
@@ -221,9 +235,13 @@ export default function AccountHeader({
                 ''
               )}
             </div>
-            <div className={styles.publisherLinks}>
-              <PublisherLinks links={links} />
-            </div>
+            {links.length > 0 ? (
+              <div className={styles.publisherLinks}>
+                <PublisherLinks links={links} />
+              </div>
+            ) : (
+              ''
+            )}
           </div>
         </div>
       ) : (
