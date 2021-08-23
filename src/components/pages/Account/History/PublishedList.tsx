@@ -44,7 +44,7 @@ export default function PublishedList({
       try {
         const source = axios.CancelToken.source()
 
-        queryResult || setIsLoading(true)
+        setIsLoading(true)
         const result = await queryMetadata(queryPublishedAssets, source.token)
         setQueryResult(result)
       } catch (error) {
