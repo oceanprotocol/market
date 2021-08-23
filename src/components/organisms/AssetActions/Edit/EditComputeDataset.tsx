@@ -1,7 +1,7 @@
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
 import { Formik } from 'formik'
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useRef, useState } from 'react'
 import {
   validationSchema,
   getInitialValues,
@@ -21,6 +21,8 @@ import {
   setMinterToPublisher
 } from '../../../../utils/freePrice'
 import Web3Feedback from '../../../molecules/Web3Feedback'
+import Page from '../../../templates/Page'
+import Loader from '../../../atoms/Loader'
 
 const contentQuery = graphql`
   query EditComputeDataQuery {
@@ -58,12 +60,10 @@ const contentQuery = graphql`
 
 export default function EditComputeDataset({
   setShowEdit,
-  tutorial,
-  setShowComputeTutorial
+  tutorial
 }: {
   setShowEdit: (show: boolean) => void
   tutorial?: boolean
-  setShowComputeTutorial?: (value: boolean) => void
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
@@ -74,7 +74,6 @@ export default function EditComputeDataset({
   const { ddo, price, isAssetNetwork, refreshDdo } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
-
   const hasFeedback = error || success
 
   async function handleSubmit(
@@ -136,7 +135,15 @@ export default function EditComputeDataset({
     }
   }
 
-  return (
+  const computeRef = useRef(null)
+  const executeScroll = () =>
+    computeRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' })
+
+  return !ddo && tutorial ? (
+    <Page title={undefined} uri="/tutorial">
+      <Loader />
+    </Page>
+  ) : (
     <Formik
       initialValues={getInitialValues(
         ddo.findServiceByType('compute').attributes.main.privacy
@@ -146,29 +153,33 @@ export default function EditComputeDataset({
         // move user's focus to top of screen
         if (!tutorial) {
           window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+        } else {
+          executeScroll()
         }
         // kick off editing
         await handleSubmit(values, resetForm)
         if (tutorial) {
-          setShowComputeTutorial(true)
+          setShowEdit(true)
         }
       }}
     >
       {({ values, isSubmitting }) =>
         isSubmitting || hasFeedback ? (
-          <MetadataFeedback
-            title="Updating Data Set"
-            error={error}
-            success={success}
-            setError={setError}
-            successAction={{
-              name: content.form.successAction,
-              onClick: async () => {
-                await refreshDdo()
-                setShowEdit(false)
-              }
-            }}
-          />
+          <div ref={computeRef}>
+            <MetadataFeedback
+              title="Updating Data Set"
+              error={error}
+              success={success}
+              setError={setError}
+              successAction={{
+                name: content.form.successAction,
+                onClick: async () => {
+                  await refreshDdo()
+                  setShowEdit(false)
+                }
+              }}
+            />
+          </div>
         ) : (
           <>
             <p className={styles.description}>{content.description}</p>

@@ -89,13 +89,12 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
     setShowEditAdvancedSettings(true)
   }
 
-  return showEdit ? (
+  return showEdit && !props.tutorial ? (
     <Edit setShowEdit={setShowEdit} />
   ) : showEditCompute ? (
     <EditComputeDataset
       setShowEdit={setShowEditCompute}
       tutorial={props.tutorial}
-      setShowComputeTutorial={props.setShowComputeTutorial}
     />
   ) : showEditAdvancedSettings ? (
     <EditAdvancedSettings setShowEdit={setShowEditAdvancedSettings} />

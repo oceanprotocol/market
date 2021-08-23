@@ -34,7 +34,8 @@ import Alert from '../../atoms/Alert'
 import MetadataFeedback from '../../molecules/MetadataFeedback'
 import { useAccountPurgatory } from '../../../hooks/useAccountPurgatory'
 import { useWeb3 } from '../../../providers/Web3'
-import AssetTeaser from '../../molecules/AssetTeaser'
+import Loader from '../../atoms/Loader'
+import feedbackStyles from '../../molecules/MetadataFeedback.module.css'
 
 const formNameDatasets = 'ocean-publish-form-datasets'
 const formNameAlgorithms = 'ocean-publish-form-algorithms'
@@ -72,12 +73,18 @@ function TabContent({
 
 export default function PublishPage({
   content,
+  datasetOnly,
+  tutorial,
   ddo,
-  setDdo
+  setTutorialDdo,
+  loading
 }: {
-  content: { warning: string; datasetOnly?: boolean; tutorial?: boolean }
+  content: { warning: string }
+  datasetOnly?: boolean
+  tutorial?: boolean
   ddo?: DDO
-  setDdo?: (value: DDO) => void
+  setTutorialDdo?: (value: DDO) => void
+  loading?: boolean
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
@@ -131,7 +138,7 @@ export default function PublishPage({
   const executeScroll = () =>
     publishRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' })
   useEffect(() => {
-    if (content.tutorial && isLoading) {
+    if (tutorial && isLoading) {
       executeScroll()
     }
   }, [isLoading])
@@ -169,7 +176,7 @@ export default function PublishPage({
         return
       }
       // Publish succeeded
-      if (content.tutorial) setDdo(ddo)
+      if (tutorial) setTutorialDdo(ddo)
       setDid(ddo.id)
       setSuccess(
         '🎉 Successfully published. 🎉 Now create a price on your data set.'
@@ -179,7 +186,7 @@ export default function PublishPage({
         status: 'empty'
       })
       // move user's focus to top of screen
-      if (!content.tutorial) {
+      if (!tutorial) {
         window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
       }
     } catch (error) {
@@ -265,7 +272,7 @@ export default function PublishPage({
                 <TabContent
                   values={values}
                   publishType={publishType}
-                  tutorial={content?.tutorial}
+                  tutorial={tutorial}
                 />
               )
             },
@@ -286,7 +293,13 @@ export default function PublishPage({
                 ignoreFields={['isSubmitting']}
               />
 
-              {hasFeedback ? (
+              {hasFeedback && loading ? (
+                <div className={feedbackStyles.feedback}>
+                  <div className={feedbackStyles.box}>
+                    <Loader />
+                  </div>
+                </div>
+              ) : hasFeedback ? (
                 <>
                   <MetadataFeedback
                     title={title}
@@ -300,7 +313,7 @@ export default function PublishPage({
                       } →`,
                       to: `/asset/${did}`
                     }}
-                    tutorial={content?.tutorial}
+                    tutorial={tutorial}
                     ddo={ddo}
                   />
                 </>
@@ -315,7 +328,7 @@ export default function PublishPage({
                   <Tabs
                     className={styles.tabs}
                     items={
-                      !content?.datasetOnly
+                      !datasetOnly
                         ? tabs
                         : tabs.filter((e) => e.title === 'Data Set')
                     }

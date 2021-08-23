@@ -95,7 +95,7 @@ export default function MetadataFeedback({
                   <AssetTeaser ddo={ddo} price={ddo.price} />
                 </div>
               ) : (
-                <ActionSuccess action={successAction} />
+                !tutorial && <ActionSuccess action={successAction} />
               )
             }
           />

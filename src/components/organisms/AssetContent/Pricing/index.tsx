@@ -10,6 +10,7 @@ import Feedback from './Feedback'
 import { graphql, useStaticQuery } from 'gatsby'
 import { usePricing } from '../../../../hooks/usePricing'
 import styles from './index.module.css'
+import { CancelToken } from 'axios'
 
 const query = graphql`
   query PricingQuery {
@@ -59,11 +60,13 @@ const query = graphql`
 export default function Pricing({
   ddo,
   tutorial,
-  setShowPriceTutorial
+  setShowPriceTutorial,
+  refreshDdo
 }: {
   ddo: DDO
   tutorial?: boolean
   setShowPriceTutorial?: (value: boolean) => void
+  refreshDdo?: (token?: CancelToken) => Promise<void>
 }): ReactElement {
   // Get content
   const data = useStaticQuery(query)
@@ -132,6 +135,7 @@ export default function Pricing({
           // Kick off price creation
           await handleCreatePricing(values)
           if (tutorial) {
+            await refreshDdo()
             setShowPriceTutorial(true)
           }
           setSubmitting(false)

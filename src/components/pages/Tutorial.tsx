@@ -10,17 +10,18 @@ import TutorialChapter, {
   TutorialChapterProps
 } from '../molecules/TutorialChapter'
 import PageTemplateAssetDetails from '../../components/templates/PageAssetDetails'
-import AssetProvider from '../../providers/Asset'
-import OceanProvider from '../../providers/Ocean'
+import { useAsset } from '../../providers/Asset'
 import Page from '../templates/Page'
 import PagePublish from './Publish'
 import { Spin as Hamburger } from 'hamburger-react'
-import { BestPrice, DDO } from '@oceanprotocol/lib'
+import { DDO } from '@oceanprotocol/lib'
 import Pricing from '../organisms/AssetContent/Pricing'
 import SuccessConfetti from '../atoms/SuccessConfetti'
 import AssetTeaser from '../molecules/AssetTeaser'
 import StylesTeaser from '../molecules/MetadataFeedback.module.css'
 import AssetActionsWrapper from '../templates/AssetActionsWrapper'
+import EditComputeDataset from '../organisms/AssetActions/Edit/EditComputeDataset'
+import Loader from '../atoms/Loader'
 interface TutorialChapterNode {
   node: {
     frontmatter: {
@@ -68,7 +69,11 @@ const queryDemonstrators = {
   sort: { created: -1 }
 }
 
-export default function PageTutorial(): ReactElement {
+export default function PageTutorial({
+  setTutorialDdo
+}: {
+  setTutorialDdo: (ddo: DDO) => void
+}): ReactElement {
   const data = useStaticQuery(query)
   const [isOpen, setOpen] = useState(false)
   const chapterNodes = data.content.edges as TutorialChapterNode[]
@@ -80,10 +85,9 @@ export default function PageTutorial(): ReactElement {
     titlePrefix: `Chapter ${i + 1}:`,
     videoUrl: edge.node.frontmatter?.videoUrl
   }))
-  const [ddo, setDdo] = useState<DDO>()
-  const [price, setPrice] = useState<BestPrice>()
   const [showPriceTutorial, setShowPriceTutorial] = useState(false)
   const [showComputeTutorial, setShowComputeTutorial] = useState(false)
+  const { ddo, price, refreshDdo, loading } = useAsset()
 
   const [scrollPosition, setScrollPosition] = useState(0)
   useScrollPosition(({ prevPos, currPos }) => {
@@ -94,7 +98,7 @@ export default function PageTutorial(): ReactElement {
   const executeScroll = () =>
     confettiRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' })
   useEffect(() => {
-    if (showPriceTutorial) {
+    if (showPriceTutorial && loading) {
       executeScroll()
     }
   }, [showPriceTutorial])
@@ -107,84 +111,88 @@ export default function PageTutorial(): ReactElement {
     {
       chapter: 4,
       component: (
-        <OceanProvider>
-          <Page
-            title="Publish"
-            description="Highlight the important features of your data set or algorithm to make it more discoverable and catch the interest of data consumers."
-            uri="/tutorial"
-          >
-            {!showPriceTutorial && (
-              <PagePublish
-                content={{
-                  warning:
-                    'Given the beta status, publishing on Ropsten or Rinkeby first is strongly recommended. Please familiarize yourself with [the market](https://oceanprotocol.com/technology/marketplaces), [the risks](https://blog.oceanprotocol.com/on-staking-on-data-in-ocean-market-3d8e09eb0a13), and the [Terms of Use](/terms).',
-                  datasetOnly: true,
-                  tutorial: true
-                }}
+        <Page
+          title="Publish"
+          description="Highlight the important features of your data set or algorithm to make it more discoverable and catch the interest of data consumers."
+          uri="/tutorial"
+        >
+          {!showPriceTutorial && (
+            <PagePublish
+              content={{
+                warning:
+                  'Given the beta status, publishing on Ropsten or Rinkeby first is strongly recommended. Please familiarize yourself with [the market](https://oceanprotocol.com/technology/marketplaces), [the risks](https://blog.oceanprotocol.com/on-staking-on-data-in-ocean-market-3d8e09eb0a13), and the [Terms of Use](/terms).'
+              }}
+              datasetOnly
+              tutorial
+              ddo={ddo}
+              setTutorialDdo={setTutorialDdo}
+              loading={loading}
+            />
+          )}
+          {ddo && !showPriceTutorial && !loading && (
+            <>
+              <h3>Set price</h3>
+              <p>Set a price for your data asset</p>
+              <Pricing
                 ddo={ddo}
-                setDdo={setDdo}
+                tutorial
+                setShowPriceTutorial={setShowPriceTutorial}
+                refreshDdo={refreshDdo}
               />
-            )}
-            {ddo && !showPriceTutorial && (
-              <>
-                <h3>Set price</h3>
-                <p>Set a price for your data asset</p>
-                <Pricing
-                  ddo={ddo}
-                  tutorial
-                  setShowPriceTutorial={setShowPriceTutorial}
-                />
-              </>
-            )}
-            {ddo && showPriceTutorial && (
-              <>
-                <div ref={confettiRef} className={StylesTeaser.feedback}>
-                  <div className={StylesTeaser.box}>
-                    <h3>🎉 Congratulations 🎉</h3>
-                    <SuccessConfetti
-                      success="You successfully set the price to your data set."
-                      action={
-                        <div className={StylesTeaser.teaser}>
-                          <AssetTeaser ddo={ddo} price={price} />
-                        </div>
-                      }
-                    />
-                  </div>
+            </>
+          )}
+          {ddo && showPriceTutorial && loading && (
+            <div className={StylesTeaser.feedback} ref={confettiRef}>
+              <div className={StylesTeaser.box}>
+                <Loader />
+              </div>
+            </div>
+          )}
+          {ddo && showPriceTutorial && !loading && (
+            <>
+              <div className={StylesTeaser.feedback}>
+                <div className={StylesTeaser.box}>
+                  <h3>🎉 Congratulations 🎉</h3>
+                  <SuccessConfetti
+                    success="You successfully set the price to your data set."
+                    action={
+                      <div className={StylesTeaser.teaser}>
+                        <AssetTeaser ddo={ddo} price={price} />
+                      </div>
+                    }
+                  />
                 </div>
-              </>
-            )}
-          </Page>
-        </OceanProvider>
+              </div>
+            </>
+          )}
+        </Page>
       )
     },
     {
       chapter: 9,
       component: ddo && showPriceTutorial && (
-        <Permission eventType="browse">
-          <AssetProvider asset={ddo.id}>
-            <OceanProvider>
-              <PageTemplateAssetDetails
-                uri={`/tutorial/${ddo.id}`}
-                setShowComputeTutorial={setShowComputeTutorial}
+        <>
+          {!showComputeTutorial && (
+            <Page title="" description="" uri="/tutorial">
+              <EditComputeDataset
+                tutorial
+                setShowEdit={setShowComputeTutorial}
               />
-            </OceanProvider>
-          </AssetProvider>
-        </Permission>
+            </Page>
+          )}
+          {showComputeTutorial && (
+            <PageTemplateAssetDetails
+              uri={`/tutorial/${ddo.id}`}
+              setShowComputeTutorial={setShowComputeTutorial}
+            />
+          )}
+        </>
       )
     },
     {
       chapter: 10,
       component: ddo && showPriceTutorial && showComputeTutorial && (
-        <Permission eventType="browse">
-          <AssetProvider asset={ddo.id}>
-            <OceanProvider>
-              <AssetActionsWrapper
-                uri={`/tutorial/${ddo.id}`}
-                setPrice={setPrice}
-              />
-            </OceanProvider>
-          </AssetProvider>
-        </Permission>
+        <AssetActionsWrapper uri={`/tutorial/${ddo.id}`} />
       )
     }
   ]
