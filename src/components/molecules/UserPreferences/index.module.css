@@ -3,7 +3,6 @@
   cursor: pointer;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-  margin-left: calc(var(--spacer) / 3);
   background-color: var(--background-content);
   white-space: nowrap;
 }
