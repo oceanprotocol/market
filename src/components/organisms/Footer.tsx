@@ -3,8 +3,6 @@ import styles from './Footer.module.css'
 import Markdown from '../atoms/Markdown'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import { Link } from 'gatsby'
-import MarketStats from '../molecules/MarketStats'
-import BuildId from '../atoms/BuildId'
 import { useUserPreferences } from '../../providers/UserPreferences'
 import Button from '../atoms/Button'
 import { useGdprMetadata } from '../../hooks/useGdprMetadata'
@@ -21,9 +19,6 @@ export default function Footer(): ReactElement {
   return (
     <footer className={styles.footer}>
       <div className={styles.content}>
-        {/* <SyncStatus /> |  */}
-        <BuildId />
-        <MarketStats />
         <div className={styles.copyright}>
           © {year} <Markdown text={copyright} />
           <br />
