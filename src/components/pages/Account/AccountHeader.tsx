@@ -43,10 +43,6 @@ export default function AccountHeader({
   const [isReadMore, setIsReadMore] = useState(true)
   const [isShowMore, setIsShowMore] = useState(false)
 
-  const toggleReadMore = () => {
-    setIsReadMore(!isReadMore)
-  }
-
   const toogleShowMore = () => {
     setIsShowMore(!isShowMore)
   }
@@ -208,23 +204,26 @@ export default function AccountHeader({
           <div>
             <p className={styles.descriptionLabel}>About</p>
             <div>
-              <p
-                id="description"
-                className={`${styles.description} ${
-                  isReadMore ? `${styles.shortDescription}` : ''
-                }`}
-              >
+              <p id="description" className={styles.description}>
                 {description || 'No description found.'}
               </p>
               {isDescriptionTextClamped() ? (
-                <span className={styles.more} onClick={toggleReadMore}>
-                  {isReadMore ? 'Read more' : 'Show less'}
+                <span className={styles.more} onClick={toogleShowMore}>
+                  <a
+                    href={`https://www.3box.io/${accountId}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Read more
+                  </a>
                 </span>
               ) : (
                 ''
               )}
             </div>
-            <PublisherLinks links={links} />
+            <div className={styles.publisherLinks}>
+              <PublisherLinks links={links} />
+            </div>
           </div>
         </div>
       ) : (

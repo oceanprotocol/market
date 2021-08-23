@@ -6,7 +6,7 @@
     background: var(--background-body);
   }
 
-  .shortDescription {
+  .description {
     -webkit-line-clamp: 4 !important;
   }
 }
@@ -124,10 +124,11 @@
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
-.shortDescription {
-  -webkit-line-clamp: 2;
+.publisherLinks {
+  margin-top: calc(var(--spacer) / 2);
 }
 
 .more {
