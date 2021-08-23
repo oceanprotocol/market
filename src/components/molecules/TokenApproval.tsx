@@ -50,6 +50,7 @@ function ButtonApprove({
     <Button
       style="primary"
       size="small"
+      disabled={parseInt(amount) < 1}
       onClick={() => approveTokens(`${2 ** 53 - 1}`)}
     >
       Approve {coin}{' '}

@@ -117,7 +117,7 @@ export default function FormTrade({
         setSubmitting(false)
       }}
     >
-      {({ isSubmitting, submitForm, values }) => (
+      {({ isSubmitting, submitForm, values, isValid }) => (
         <>
           {isWarningAccepted ? (
             <Swap
@@ -144,7 +144,13 @@ export default function FormTrade({
             </div>
           )}
           <Actions
-            isDisabled={!isWarningAccepted || !isAssetNetwork}
+            isDisabled={
+              !isValid ||
+              !isWarningAccepted ||
+              !isAssetNetwork ||
+              values.datatoken === undefined ||
+              values.ocean === undefined
+            }
             isLoading={isSubmitting}
             loaderMessage="Swapping tokens..."
             successMessage="Successfully swapped tokens."

@@ -155,7 +155,7 @@ export default function Add({
           setSubmitting(false)
         }}
       >
-        {({ isSubmitting, submitForm, values }) => (
+        {({ isSubmitting, submitForm, values, isValid }) => (
           <>
             <div className={styles.addInput}>
               {isWarningAccepted ? (
@@ -199,7 +199,12 @@ export default function Add({
             />
 
             <Actions
-              isDisabled={!isWarningAccepted || amount === '' || amount === '0'}
+              isDisabled={
+                !isValid ||
+                !isWarningAccepted ||
+                amount === '' ||
+                amount === '0'
+              }
               isLoading={isSubmitting}
               loaderMessage="Adding Liquidity..."
               successMessage="Successfully added liquidity."
