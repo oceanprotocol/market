@@ -1,6 +1,6 @@
 import React, { ReactElement, useState, useEffect, useRef } from 'react'
 import Permission from '../../organisms/Permission'
-import { Formik, FormikState } from 'formik'
+import { Field, Formik, FormikState } from 'formik'
 import { usePublish } from '../../../hooks/usePublish'
 import styles from './index.module.css'
 import FormPublish from './FormPublish'
@@ -41,14 +41,20 @@ const formNameAlgorithms = 'ocean-publish-form-algorithms'
 
 function TabContent({
   publishType,
-  values
+  values,
+  tutorial
 }: {
   publishType: MetadataMain['type']
   values: Partial<MetadataPublishFormAlgorithm | MetadataPublishFormDataset>
+  tutorial?: boolean
 }) {
   return (
     <article className={styles.grid}>
-      {publishType === 'dataset' ? <FormPublish /> : <FormAlgoPublish />}
+      {publishType === 'dataset' ? (
+        <FormPublish tutorial={tutorial} />
+      ) : (
+        <FormAlgoPublish />
+      )}
 
       <aside>
         <div className={styles.sticky}>
@@ -163,7 +169,7 @@ export default function PublishPage({
         return
       }
       // Publish succeeded
-      setDdo(ddo)
+      if (content.tutorial) setDdo(ddo)
       setDid(ddo.id)
       setSuccess(
         '🎉 Successfully published. 🎉 Now create a price on your data set.'
@@ -231,7 +237,6 @@ export default function PublishPage({
       Logger.error(error.message)
     }
   }
-
   return isInPurgatory && purgatoryData ? null : (
     <Permission eventType="publish">
       <Formik
@@ -256,7 +261,13 @@ export default function PublishPage({
           const tabs = [
             {
               title: 'Data Set',
-              content: <TabContent values={values} publishType={publishType} />
+              content: (
+                <TabContent
+                  values={values}
+                  publishType={publishType}
+                  tutorial={content?.tutorial}
+                />
+              )
             },
             {
               title: 'Algorithm',

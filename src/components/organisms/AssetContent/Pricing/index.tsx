@@ -1,7 +1,7 @@
 import React, { FormEvent, ReactElement, useRef, useState } from 'react'
 import { Formik } from 'formik'
 import { initialValues, validationSchema } from '../../../../models/FormPricing'
-import { DDO, Logger } from '@oceanprotocol/lib'
+import { BestPrice, DDO, Logger } from '@oceanprotocol/lib'
 import { PriceOptionsMarket } from '../../../../@types/MetaData'
 import Alert from '../../../atoms/Alert'
 import FormPricing from './FormPricing'
@@ -131,7 +131,9 @@ export default function Pricing({
 
           // Kick off price creation
           await handleCreatePricing(values)
-          setShowPriceTutorial(true)
+          if (tutorial) {
+            setShowPriceTutorial(true)
+          }
           setSubmitting(false)
         }}
       >

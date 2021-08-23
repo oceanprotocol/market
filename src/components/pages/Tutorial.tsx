@@ -15,11 +15,12 @@ import OceanProvider from '../../providers/Ocean'
 import Page from '../templates/Page'
 import PagePublish from './Publish'
 import { Spin as Hamburger } from 'hamburger-react'
-import { DDO } from '@oceanprotocol/lib'
+import { BestPrice, DDO } from '@oceanprotocol/lib'
 import Pricing from '../organisms/AssetContent/Pricing'
 import SuccessConfetti from '../atoms/SuccessConfetti'
 import AssetTeaser from '../molecules/AssetTeaser'
 import StylesTeaser from '../molecules/MetadataFeedback.module.css'
+import AssetActionsWrapper from '../templates/AssetActionsWrapper'
 interface TutorialChapterNode {
   node: {
     frontmatter: {
@@ -80,7 +81,9 @@ export default function PageTutorial(): ReactElement {
     videoUrl: edge.node.frontmatter?.videoUrl
   }))
   const [ddo, setDdo] = useState<DDO>()
+  const [price, setPrice] = useState<BestPrice>()
   const [showPriceTutorial, setShowPriceTutorial] = useState(false)
+  const [showComputeTutorial, setShowComputeTutorial] = useState(false)
 
   const [scrollPosition, setScrollPosition] = useState(0)
   useScrollPosition(({ prevPos, currPos }) => {
@@ -142,7 +145,7 @@ export default function PageTutorial(): ReactElement {
                       success="You successfully set the price to your data set."
                       action={
                         <div className={StylesTeaser.teaser}>
-                          <AssetTeaser ddo={ddo} price={ddo.price} />
+                          <AssetTeaser ddo={ddo} price={price} />
                         </div>
                       }
                     />
@@ -160,7 +163,25 @@ export default function PageTutorial(): ReactElement {
         <Permission eventType="browse">
           <AssetProvider asset={ddo.id}>
             <OceanProvider>
-              <PageTemplateAssetDetails uri={`/tutorial/${ddo.id}`} />
+              <PageTemplateAssetDetails
+                uri={`/tutorial/${ddo.id}`}
+                setShowComputeTutorial={setShowComputeTutorial}
+              />
+            </OceanProvider>
+          </AssetProvider>
+        </Permission>
+      )
+    },
+    {
+      chapter: 10,
+      component: ddo && showPriceTutorial && showComputeTutorial && (
+        <Permission eventType="browse">
+          <AssetProvider asset={ddo.id}>
+            <OceanProvider>
+              <AssetActionsWrapper
+                uri={`/tutorial/${ddo.id}`}
+                setPrice={setPrice}
+              />
             </OceanProvider>
           </AssetProvider>
         </Permission>

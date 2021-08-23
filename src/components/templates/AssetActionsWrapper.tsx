@@ -1,19 +1,21 @@
 import React, { useState, useEffect, ReactElement } from 'react'
-import { Router } from '@reach/router'
-import AssetContent from '../organisms/AssetContent'
 import Page from './Page'
 import Alert from '../atoms/Alert'
 import Loader from '../atoms/Loader'
 import { useAsset } from '../../providers/Asset'
+import AssetActions from '../organisms/AssetActions'
+import styles from '../organisms/AssetContent/index.module.css'
+import { BestPrice } from '@oceanprotocol/lib'
 
-export default function PageTemplateAssetDetails({
+export default function AssetActionsWrapper({
   uri,
-  setShowComputeTutorial
+  setPrice
 }: {
   uri: string
-  setShowComputeTutorial?: (value: boolean) => void
+  setPrice?: (value: BestPrice) => void
 }): ReactElement {
-  const { ddo, title, error, isInPurgatory, loading } = useAsset()
+  const { ddo, title, error, isInPurgatory, loading, refreshDdo, price } =
+    useAsset()
   const [pageTitle, setPageTitle] = useState<string>()
 
   useEffect(() => {
@@ -24,20 +26,25 @@ export default function PageTemplateAssetDetails({
 
     setPageTitle(isInPurgatory ? '' : title)
   }, [ddo, error, isInPurgatory, title])
+  console.log(ddo)
+  useEffect(() => {
+    const updateAsset = async () => {
+      await refreshDdo()
+      setPrice(price)
+    }
+    if (
+      !price?.address ||
+      ddo?.service[1].attributes.main.privacy.publisherTrustedAlgorithms
+        .length === 0
+    )
+      updateAsset()
+  }, [price])
 
   return ddo && pageTitle !== undefined && !loading ? (
     <Page title={pageTitle} uri={uri}>
-      {uri.includes('/tutorial') ? (
-        <AssetContent
-          path=":did"
-          tutorial
-          setShowComputeTutorial={setShowComputeTutorial}
-        />
-      ) : (
-        <Router basepath="/asset">
-          <AssetContent path=":did" />
-        </Router>
-      )}
+      <div className={styles.actions}>
+        <AssetActions />
+      </div>
     </Page>
   ) : error ? (
     <Page title={pageTitle} noPageHeader uri={uri}>

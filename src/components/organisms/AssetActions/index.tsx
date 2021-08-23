@@ -19,7 +19,6 @@ export default function AssetActions(): ReactElement {
   const { accountId, balance } = useWeb3()
   const { ocean, config, account } = useOcean()
   const { price, ddo, isAssetNetwork } = useAsset()
-
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
   const [dtBalance, setDtBalance] = useState<string>()
   const [fileMetadata, setFileMetadata] = useState<FileMetadata>(Object)

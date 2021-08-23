@@ -24,6 +24,7 @@ import NetworkName from '../../atoms/NetworkName'
 export interface AssetContentProps {
   path?: string
   tutorial?: boolean
+  setShowComputeTutorial?: (value: boolean) => void
 }
 
 const contentQuery = graphql`
@@ -68,24 +69,34 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
 
   function handleEditButton() {
     // move user's focus to top of screen
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    if (!props.tutorial) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    }
     setShowEdit(true)
   }
 
   function handleEditComputeButton() {
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    if (!props.tutorial) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    }
     setShowEditCompute(true)
   }
 
   function handleEditAdvancedSettingsButton() {
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    if (!props.tutorial) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    }
     setShowEditAdvancedSettings(true)
   }
 
   return showEdit ? (
     <Edit setShowEdit={setShowEdit} />
   ) : showEditCompute ? (
-    <EditComputeDataset setShowEdit={setShowEditCompute} />
+    <EditComputeDataset
+      setShowEdit={setShowEditCompute}
+      tutorial={props.tutorial}
+      setShowComputeTutorial={props.setShowComputeTutorial}
+    />
   ) : showEditAdvancedSettings ? (
     <EditAdvancedSettings setShowEdit={setShowEditAdvancedSettings} />
   ) : (
@@ -161,9 +172,11 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
           </div>
         </div>
 
-        <div className={styles.actions}>
-          <AssetActions />
-        </div>
+        {!props.tutorial && (
+          <div className={styles.actions}>
+            <AssetActions />
+          </div>
+        )}
       </article>
     </>
   )

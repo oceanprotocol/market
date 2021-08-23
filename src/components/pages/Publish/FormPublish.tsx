@@ -39,7 +39,11 @@ const query = graphql`
   }
 `
 
-export default function FormPublish(): ReactElement {
+export default function FormPublish({
+  tutorial
+}: {
+  tutorial?: boolean
+}): ReactElement {
   const data = useStaticQuery(query)
   const content: FormContent = data.content.edges[0].node.childPublishJson
 
@@ -110,7 +114,11 @@ export default function FormPublish(): ReactElement {
           key={field.name}
           {...field}
           options={
-            field.type === 'boxSelection' ? accessTypeOptions : field.options
+            field.type === 'boxSelection' && tutorial
+              ? accessTypeOptions.filter((e) => e.name === 'Compute')
+              : field.type === 'boxSelection'
+              ? accessTypeOptions
+              : field.options
           }
           component={Input}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>

@@ -57,9 +57,13 @@ const contentQuery = graphql`
 `
 
 export default function EditComputeDataset({
-  setShowEdit
+  setShowEdit,
+  tutorial,
+  setShowComputeTutorial
 }: {
   setShowEdit: (show: boolean) => void
+  tutorial?: boolean
+  setShowComputeTutorial?: (value: boolean) => void
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
@@ -140,9 +144,14 @@ export default function EditComputeDataset({
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
         // move user's focus to top of screen
-        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+        if (!tutorial) {
+          window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+        }
         // kick off editing
         await handleSubmit(values, resetForm)
+        if (tutorial) {
+          setShowComputeTutorial(true)
+        }
       }}
     >
       {({ values, isSubmitting }) =>
