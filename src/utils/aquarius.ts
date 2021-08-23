@@ -12,14 +12,20 @@ import {
 import { AssetSelectionAsset } from '../components/molecules/FormFields/AssetSelection'
 import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
-import { metadataCacheUri } from '../../app.config'
+import { metadataCacheUri, allowDynamicPricing } from '../../app.config'
 import addressConfig from '../../address.config'
+
+export function getDynamicPricingQuery(concat = true): string {
+  return allowDynamicPricing === 'true'
+    ? ''
+    : `${concat && 'AND '}-price.type:pool`
+}
 
 function getQueryForAlgorithmDatasets(algorithmDid: string, chainId?: number) {
   return {
     query: {
       query_string: {
-        query: `service.attributes.main.privacy.publisherTrustedAlgorithms.did:${algorithmDid} AND chainId:${chainId}`
+        query: `service.attributes.main.privacy.publisherTrustedAlgorithms.did:${algorithmDid} AND chainId:${chainId} ${getDynamicPricingQuery()}`
       }
     },
     sort: { created: -1 }
@@ -124,6 +130,9 @@ export async function retrieveDDO(
       { cancelToken }
     )
     if (!response || response.status !== 200 || !response.data) return
+
+    if (allowDynamicPricing !== 'true' && response.data.price?.type === 'pool')
+      return
 
     const data = { ...response.data }
     return new DDO(data)

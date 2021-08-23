@@ -28,12 +28,13 @@ export function useAddressConfig(): UseAddressConfig {
 
   const isDDOWhitelisted = function (ddo: DDO) {
     return (
-      isAddressWhitelisted(ddo.dataTokenInfo.address, 'dataToken') ||
-      ddo.publicKey
-        .map((pk) => {
-          return isAddressWhitelisted(pk.owner, 'publicKey.owner')
-        })
-        .some((isWhitelisted) => isWhitelisted === true)
+      ddo &&
+      (isAddressWhitelisted(ddo.dataTokenInfo.address, 'dataToken') ||
+        ddo.publicKey
+          .map((pk) => {
+            return isAddressWhitelisted(pk.owner, 'publicKey.owner')
+          })
+          .some((isWhitelisted) => isWhitelisted === true))
     )
   }
 

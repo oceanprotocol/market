@@ -1,12 +1,14 @@
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { MetadataCache, Logger } from '@oceanprotocol/lib'
 import {
+  getDynamicPricingQuery,
   getWhitelistedSearchQuery,
   queryMetadata,
   transformChainIdsListToQuery
 } from '../../../utils/aquarius'
 import queryString from 'query-string'
 import axios from 'axios'
+import appConfig from '../../../../app.config'
 
 export const SortTermOptions = {
   Created: 'created',
@@ -142,7 +144,9 @@ export function getSearchQuery(
           },
           {
             query_string: {
-              query: `${transformChainIdsListToQuery(chainIds)}`
+              query: `${transformChainIdsListToQuery(
+                chainIds
+              )} ${getDynamicPricingQuery()}`
             }
           },
           {

@@ -11,6 +11,7 @@ import { useOcean } from '../../../../providers/Ocean'
 import { gql } from 'urql'
 import { useWeb3 } from '../../../../providers/Web3'
 import {
+  getDynamicPricingQuery,
   queryMetadata,
   transformChainIdsListToQuery
 } from '../../../../utils/aquarius'
@@ -138,7 +139,7 @@ async function getAssetMetadata(
       query_string: {
         query: `(${queryDtList}) AND (${transformChainIdsListToQuery(
           chainIds
-        )}) AND service.attributes.main.type:dataset AND service.type:compute`,
+        )}) ${getDynamicPricingQuery()} AND service.attributes.main.type:dataset AND service.type:compute`,
         fields: ['dataToken']
       }
     }

@@ -9,7 +9,8 @@ import Bookmarks from '../molecules/Bookmarks'
 import axios from 'axios'
 import {
   queryMetadata,
-  transformChainIdsListToQuery
+  transformChainIdsListToQuery,
+  getDynamicPricingQuery
 } from '../../utils/aquarius'
 import Permission from '../organisms/Permission'
 import { DDO, Logger } from '@oceanprotocol/lib'
@@ -25,7 +26,7 @@ function getQueryLatest(chainIds: number[]): SearchQuery {
       query_string: {
         query: `(${transformChainIdsListToQuery(
           chainIds
-        )}) AND -isInPurgatory:true `
+        )}) ${getDynamicPricingQuery()} AND -isInPurgatory:true `
       }
     },
     sort: { created: -1 }

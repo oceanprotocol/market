@@ -7,7 +7,8 @@ import Tooltip from '../atoms/Tooltip'
 import AssetTitle from './AssetListTitle'
 import {
   queryMetadata,
-  transformChainIdsListToQuery
+  transformChainIdsListToQuery,
+  getDynamicPricingQuery
 } from '../../utils/aquarius'
 import { getAssetsBestPrices, AssetListPrices } from '../../utils/subgraph'
 import axios, { CancelToken } from 'axios'
@@ -32,7 +33,7 @@ async function getAssetsBookmarked(
       query_string: {
         query: `(${searchDids}) AND (${transformChainIdsListToQuery(
           chainIds
-        )})`,
+        )}) ${getDynamicPricingQuery()}`,
         fields: ['dataToken'],
         default_operator: 'OR'
       }
