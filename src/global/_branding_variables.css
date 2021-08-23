@@ -5,6 +5,13 @@
 
   --brand-black: #000022;
 
+  --brand-grey-darker: #00000f;
+  --brand-grey-dark: #30303f;
+  --brand-grey: #41414f;
+  --brand-grey-light: #82828f;
+  --brand-grey-lighter: #e3e3ef;
+  --brand-grey-dimmed: #f6f6ff;
+
   --color-primary: #00aeef;
 
   --brand-gradient: linear-gradient(to right bottom, #1c75bc, #00aeef);
