@@ -235,7 +235,7 @@ export default function AccountHeader({
                 ''
               )}
             </div>
-            {links.length > 0 ? (
+            {links?.length > 0 ? (
               <div className={styles.publisherLinks}>
                 <PublisherLinks links={links} />
               </div>
