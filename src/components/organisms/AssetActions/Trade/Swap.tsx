@@ -97,13 +97,13 @@ export default function Swap({
 
       setOceanItem((prevState) => ({
         ...prevState,
-        amount: oceanAmount.toString(),
+        amount: oceanAmount,
         maxAmount: maximumOcean.toString()
       }))
 
       setDtItem((prevState) => ({
         ...prevState,
-        amount: dtAmount.toString(),
+        amount: dtAmount,
         maxAmount: maximumDt.toString()
       }))
     }
