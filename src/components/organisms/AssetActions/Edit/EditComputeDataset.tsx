@@ -190,6 +190,7 @@ export default function EditComputeDataset({
                 title={content.form.title}
                 data={content.form.data}
                 setShowEdit={setShowEdit}
+                tutorial={tutorial}
               />
             </article>
             <Web3Feedback isAssetNetwork={isAssetNetwork} />

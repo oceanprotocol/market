@@ -22,6 +22,7 @@ import StylesTeaser from '../molecules/MetadataFeedback.module.css'
 import AssetActionsWrapper from '../templates/AssetActionsWrapper'
 import EditComputeDataset from '../organisms/AssetActions/Edit/EditComputeDataset'
 import Loader from '../atoms/Loader'
+import PageHistory from '../pages/History'
 interface TutorialChapterNode {
   node: {
     frontmatter: {
@@ -199,6 +200,18 @@ export default function PageTutorial({
       chapter: 10,
       component: ddo && showPriceTutorial && showComputeTutorial && (
         <AssetActionsWrapper uri={`/tutorial/${ddo.id}`} />
+      )
+    },
+    {
+      chapter: 11,
+      component: (
+        <Page
+          title="History"
+          description="Find the data sets and jobs that you previously accessed."
+          uri="/tutorial"
+        >
+          <PageHistory />
+        </Page>
       )
     }
   ]

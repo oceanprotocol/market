@@ -19,11 +19,13 @@ import FormActions from './FormActions'
 export default function FormEditComputeDataset({
   data,
   title,
-  setShowEdit
+  setShowEdit,
+  tutorial
 }: {
   data: FormFieldProps[]
   title: string
   setShowEdit: (show: boolean) => void
+  tutorial?: boolean
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { ddo } = useAsset()
@@ -80,6 +82,7 @@ export default function FormEditComputeDataset({
               : false
           }
           component={Input}
+          tutorial={tutorial}
         />
       ))}
 
