@@ -34,11 +34,14 @@ export default function Account({
 
   return (
     <div className={styles.account}>
-      {image ? (
-        <img src={image} className={styles.image} width="96" height="96" />
-      ) : (
-        <Blockies account={accountId} />
-      )}
+      <figure className={styles.imageWrap}>
+        {image ? (
+          <img src={image} className={styles.image} width="96" height="96" />
+        ) : (
+          <Blockies account={accountId} />
+        )}
+      </figure>
+
       <div>
         <h3 className={styles.name}>{name || accountTruncate(accountId)}</h3>
 

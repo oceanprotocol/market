@@ -5,24 +5,22 @@
   align-items: center;
 }
 
-.image {
+.imageWrap {
   width: 96px;
   height: 96px;
-  max-width: unset;
   border-radius: 50%;
   overflow: hidden;
-  display: inline-block;
   margin-bottom: calc(var(--spacer) / 4);
   border: 1px solid var(--border-color);
   box-shadow: 0 6px 17px 0 var(--box-shadow-color);
 }
 
-.image path {
-  fill: var(--font-color-heading);
+.image {
+  max-width: unset;
 }
 
 .name {
-  font-size: var(--font-size-title);
+  font-size: var(--font-size-h3);
   margin-bottom: calc(var(--spacer) / 8);
 }
 

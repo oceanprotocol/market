@@ -1,7 +1,7 @@
 .number,
 .number * {
   font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-title);
+  font-size: var(--font-size-h4);
   color: var(--font-color-heading);
 }
 
