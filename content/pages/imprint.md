@@ -3,18 +3,30 @@ title: Imprint
 description: Thanks for using our product and services.
 ---
 
-Ocean Protocol Foundation Ltd.<br/>  
-The Commerze @ Irving<br/>
-1 Irving Place, 08-11<br/>
-369546 Singapore<br/>
-Singapore
+deltaDAO AG<br/>
+Geibelstraße 46b<br/>
+22303 Hamburg<br/>
+Germany<br/>
 
-E-mail: [gdpr@oceanprotocol.com](mailto:gdpr@oceanprotocol.com)<br/>
-Phone: <br/>
+E-Mail: contact@delta-dao.com<br/>
 
-Director: Bruce Pon
+Company registered in Hamburg<br/>
+Register court: Handelsregister Hamburg<br/>
+Commercial Register No.: HRB 170364<br/>
+ 
+## Members of the Board
 
-Company registered in Singapore<br/>
-Company Registration No.: 201729912W<br/>
-Commercial Register No.:<br/>
-VAT ID:<br/>
+**Frederic Schwill**<br/>
+Tech Lead<br/>
+  
+**Kai Meinke**<br/>
+Business Lead<br/>
+
+**Albert Peci**<br/>
+Web3 Development<br/>
+
+  
+## Supervisory Board
+  
+**Dr. Sven Hildebrandt**<br/>
+Chief of the Supervisory Board 
