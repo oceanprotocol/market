@@ -42,7 +42,7 @@ import AssetActionHistoryTable from '../../AssetActionHistoryTable'
 import ComputeJobs from '../../../pages/Profile/History/ComputeJobs'
 
 const SuccessAction = () => (
-  <Button style="text" to="/account?defaultTab=ComputeJobs" size="small">
+  <Button style="text" to="/profile?defaultTab=ComputeJobs" size="small">
     Go to history →
   </Button>
 )
