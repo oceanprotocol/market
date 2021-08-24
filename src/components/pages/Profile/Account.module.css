@@ -1,8 +1,15 @@
 .account {
-  display: grid;
-  grid-template-columns: 0.2fr 1.8fr;
-  gap: calc(var(--spacer) / 2);
-  align-items: center;
+  text-align: center;
+}
+
+@media (min-width: 40rem) {
+  .account {
+    text-align: left;
+    display: grid;
+    grid-template-columns: 0.2fr 1.8fr;
+    gap: calc(var(--spacer) / 2);
+    align-items: center;
+  }
 }
 
 .imageWrap {
@@ -21,19 +28,21 @@
 
 .name {
   font-size: var(--font-size-h3);
-  margin-bottom: calc(var(--spacer) / 8);
+  margin-bottom: 0;
 }
 
 .explorer {
-  font-size: var(--font-size-small);
-  margin-left: calc(var(--spacer) / 2);
-}
-
-.explorer:first-of-type {
-  margin-left: 0;
+  font-size: var(--font-size-mini);
+  margin-right: calc(var(--spacer) / 1.5);
+  display: inline-flex;
+  align-items: center;
 }
 
 .explorer svg:first-child {
-  width: var(--font-size-small);
-  height: var(--font-size-small);
+  width: var(--font-size-mini);
+  height: var(--font-size-mini);
+}
+
+.explorer svg:last-child {
+  margin-left: calc(var(--spacer) / 12);
 }

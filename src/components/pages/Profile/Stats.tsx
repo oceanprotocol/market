@@ -95,7 +95,7 @@ export default function Stats(): ReactElement {
       />
       <NumberUnit label="Sold" value={sold} icon={<Sold />} />
       <NumberUnit
-        label="TVL"
+        label="Total Value Locked"
         value={<Conversion price={tvl?.price} hideApproximateSymbol />}
         icon={<Tvl />}
       />

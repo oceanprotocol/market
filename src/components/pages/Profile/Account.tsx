@@ -45,16 +45,18 @@ export default function Account({
       <div>
         <h3 className={styles.name}>{name || accountTruncate(accountId)}</h3>
 
-        {chainIds.map((value) => (
-          <ExplorerLink
-            className={styles.explorer}
-            networkId={value}
-            path={`address/${accountId}`}
-            key={value}
-          >
-            <NetworkName networkId={value} />
-          </ExplorerLink>
-        ))}
+        <div className={styles.links}>
+          {chainIds.map((value) => (
+            <ExplorerLink
+              className={styles.explorer}
+              networkId={value}
+              path={`address/${accountId}`}
+              key={value}
+            >
+              <NetworkName networkId={value} />
+            </ExplorerLink>
+          ))}
+        </div>
       </div>
     </div>
   )
