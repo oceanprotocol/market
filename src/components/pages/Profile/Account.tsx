@@ -1,10 +1,10 @@
 import { toDataUrl } from 'ethereum-blockies'
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement } from 'react'
 import { useUserPreferences } from '../../../providers/UserPreferences'
-import { useWeb3 } from '../../../providers/Web3'
 import { accountTruncate } from '../../../utils/web3'
 import ExplorerLink from '../../atoms/ExplorerLink'
 import NetworkName from '../../atoms/NetworkName'
+import jellyfish from '@oceanprotocol/art/creatures/jellyfish/jellyfish-grid.svg'
 import styles from './Account.module.css'
 
 const Blockies = ({ account }: { account: string | undefined }) => {
@@ -24,21 +24,29 @@ const Blockies = ({ account }: { account: string | undefined }) => {
 
 export default function Account({
   name,
-  image
+  image,
+  accountId
 }: {
   name: string
   image: string
+  accountId: string
 }): ReactElement {
   const { chainIds } = useUserPreferences()
-  const { accountId } = useWeb3()
 
   return (
     <div className={styles.account}>
       <figure className={styles.imageWrap}>
         {image ? (
           <img src={image} className={styles.image} width="96" height="96" />
-        ) : (
+        ) : accountId ? (
           <Blockies account={accountId} />
+        ) : (
+          <img
+            src={jellyfish}
+            className={styles.image}
+            width="96"
+            height="96"
+          />
         )}
       </figure>
 
@@ -46,16 +54,17 @@ export default function Account({
         <h3 className={styles.name}>{name || accountTruncate(accountId)}</h3>
 
         <div className={styles.links}>
-          {chainIds.map((value) => (
-            <ExplorerLink
-              className={styles.explorer}
-              networkId={value}
-              path={`address/${accountId}`}
-              key={value}
-            >
-              <NetworkName networkId={value} />
-            </ExplorerLink>
-          ))}
+          {accountId &&
+            chainIds.map((value) => (
+              <ExplorerLink
+                className={styles.explorer}
+                networkId={value}
+                path={`address/${accountId}`}
+                key={value}
+              >
+                <NetworkName networkId={value} />
+              </ExplorerLink>
+            ))}
         </div>
       </div>
     </div>

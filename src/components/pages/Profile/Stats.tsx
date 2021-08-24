@@ -2,7 +2,6 @@ import { DDO, Logger } from '@oceanprotocol/lib'
 import React, { useEffect, useState } from 'react'
 import { ReactElement } from 'react-markdown'
 import { useUserPreferences } from '../../../providers/UserPreferences'
-import { useWeb3 } from '../../../providers/Web3'
 import {
   getAccountLiquidityInOwnAssets,
   getAccountNumberOfOrders,
@@ -29,12 +28,17 @@ export default function Stats({
   const { chainIds } = useUserPreferences()
 
   const [publishedAssets, setPublishedAssets] = useState<DDO[]>()
-  const [numberOfAssets, setNumberOfAssets] = useState<number>()
-  const [sold, setSold] = useState<number>()
+  const [numberOfAssets, setNumberOfAssets] = useState(0)
+  const [sold, setSold] = useState(0)
   const [tvl, setTvl] = useState<UserTVL>()
 
   useEffect(() => {
-    if (!accountId) return
+    if (!accountId) {
+      setNumberOfAssets(0)
+      setSold(0)
+      setTvl({ price: '0', oceanBalance: '0' })
+      return
+    }
 
     async function getPublished() {
       const queryPublishedAssets = {
@@ -65,9 +69,9 @@ export default function Stats({
   }, [accountId, chainIds])
 
   useEffect(() => {
-    async function getAccountTVL() {
-      if (!publishedAssets) return
+    if (!publishedAssets) return
 
+    async function getAccountTVL() {
       try {
         const accountPoolAdresses: string[] = []
         const assetsPrices = await getAssetsBestPrices(publishedAssets)

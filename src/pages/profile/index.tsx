@@ -1,11 +1,10 @@
-import React, { ReactElement, useState, useEffect } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import Page from '../../components/templates/Page'
 import { graphql, PageProps } from 'gatsby'
 import ProfilePage from '../../components/pages/Profile'
+import { accountTruncate } from '../../utils/web3'
 
 export default function PageGatsbyProfile(props: PageProps): ReactElement {
-  const content = (props.data as any).content.edges[0].node.childPagesJson
-  const { title } = content
   const [accountId, setAccountId] = useState<string>()
 
   useEffect(() => {
@@ -13,7 +12,7 @@ export default function PageGatsbyProfile(props: PageProps): ReactElement {
   }, [props.location.pathname])
 
   return (
-    <Page uri={props.uri}>
+    <Page uri={props.uri} title={accountTruncate(accountId)} noPageHeader>
       <ProfilePage accountIdentifier={accountId} />
     </Page>
   )

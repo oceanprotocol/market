@@ -3,6 +3,8 @@
   display: grid;
   gap: var(--spacer);
   align-items: center;
+  background: var(--background-body-transparent);
+  backdrop-filter: blur(3px);
 }
 
 @media (min-width: 50rem) {
