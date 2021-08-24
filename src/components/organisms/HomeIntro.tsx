@@ -7,6 +7,7 @@ import styles from './HomeIntro.module.css'
 import { ReactComponent as Globe } from '../../images/network-globe.svg'
 import Permission from '../organisms/Permission'
 import { SectionQueryResult } from '../pages/Home'
+import Markdown from '../atoms/Markdown'
 
 const query = graphql`
 {
@@ -70,7 +71,7 @@ export default function HomeIntro(): ReactElement {
             {paragraphs.map((paragraph) => (
               <div key={paragraph.title} className={styles.paragraph}>
                 <h2>{paragraph.title}</h2>
-                <p>{paragraph.body}</p>
+                <Markdown text={paragraph.body} />
               </div>
             ))}
           </div>
@@ -86,7 +87,7 @@ export default function HomeIntro(): ReactElement {
               />
             </Permission>
             <h2>{teaser.title}</h2>
-            <p>{teaser.text}</p>
+            <Markdown text={teaser.text} />
             <Button style="primary" className={styles.button} to="#">
               {teaser.cta}
             </Button>
