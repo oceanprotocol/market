@@ -41,19 +41,20 @@ function handleTimeoutCustomOption(
     data[timeoutInputIndex].options[5] = values.timeout
   }
 }
-
 export default function FormEditMetadata({
   data,
   setShowEdit,
   setTimeoutStringValue,
   values,
-  showPrice
+  showPrice,
+  isComputeDataset
 }: {
   data: FormFieldProps[]
   setShowEdit: (show: boolean) => void
   setTimeoutStringValue: (value: string) => void
   values: Partial<MetadataPublishFormDataset>
   showPrice: boolean
+  isComputeDataset: boolean
 }): ReactElement {
   const { config } = useOcean()
   const {
@@ -70,11 +71,21 @@ export default function FormEditMetadata({
     validateField(field.name)
     setFieldValue(field.name, e.target.value)
   }
-
   // This component is handled by Formik so it's not rendered like a "normal" react component,
   // so handleTimeoutCustomOption is called only once.
   // https://github.com/oceanprotocol/market/pull/324#discussion_r561132310
   if (data && values) handleTimeoutCustomOption(data, values)
+
+  const timeoutOptionsArray = data.filter(
+    (field) => field.name === 'timeout'
+  )[0].options
+
+  if (isComputeDataset && timeoutOptionsArray.includes('Forever')) {
+    const foreverOptionIndex = timeoutOptionsArray.indexOf('Forever')
+    timeoutOptionsArray.splice(foreverOptionIndex, 1)
+  } else if (!isComputeDataset && !timeoutOptionsArray.includes('Forever')) {
+    timeoutOptionsArray.push('Forever')
+  }
 
   return (
     <Form className={styles.form}>
@@ -83,6 +94,11 @@ export default function FormEditMetadata({
           (!showPrice && field.name === 'price') || (
             <Field
               key={field.name}
+              options={
+                field.name === 'timeout' && isComputeDataset === true
+                  ? timeoutOptionsArray
+                  : field.options
+              }
               {...field}
               component={Input}
               prefix={field.name === 'price' && config.oceanTokenSymbol}

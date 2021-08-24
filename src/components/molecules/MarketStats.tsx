@@ -4,7 +4,7 @@ import Conversion from '../atoms/Price/Conversion'
 import PriceUnit from '../atoms/Price/PriceUnit'
 import Tooltip from '../atoms/Tooltip'
 import NetworkName from '../atoms/NetworkName'
-import { fetchData, getSubgrahUri } from '../../utils/subgraph'
+import { fetchData, getSubgraphUri } from '../../utils/subgraph'
 import { filterNetworksByType } from './UserPreferences/Networks/index'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import useNetworkMetadata from '../../hooks/useNetworkMetadata'
@@ -113,7 +113,7 @@ export default function MarketStats(): ReactElement {
 
     for (const chainId of mainChainIdsList) {
       const context: OperationContext = {
-        url: `${getSubgrahUri(
+        url: `${getSubgraphUri(
           chainId
         )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
         requestPolicy: 'network-only'

@@ -38,3 +38,6 @@
 .action {
   margin-top: calc(var(--spacer) / 1.5);
 }
+.moreInfo {
+  padding: calc(var(--spacer) / 4) calc(var(--spacer) / 2) !important;
+}

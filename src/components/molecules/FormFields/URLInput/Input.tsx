@@ -5,11 +5,13 @@ import Loader from '../../../atoms/Loader'
 import styles from './Input.module.css'
 import InputGroup from '../../../atoms/Input/InputGroup'
 
-export default function FileInput({
+export default function URLInput({
+  submitText,
   handleButtonClick,
   isLoading,
   ...props
 }: {
+  submitText: string
   handleButtonClick(e: React.SyntheticEvent, data: string): void
   isLoading: boolean
 }): ReactElement {
@@ -31,7 +33,7 @@ export default function FileInput({
         onClick={(e: React.SyntheticEvent) => e.preventDefault()}
         disabled={!field.value}
       >
-        {isLoading ? <Loader /> : 'Add File'}
+        {isLoading ? <Loader /> : submitText}
       </Button>
     </InputGroup>
   )
