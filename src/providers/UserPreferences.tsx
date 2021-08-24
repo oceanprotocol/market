@@ -66,8 +66,8 @@ function UserPreferencesProvider({
 
   // Write values to localStorage on change
   useEffect(() => {
-    setLocalStorage({ chainIds, debug, currency, bookmarks })
-  }, [chainIds, debug, currency, bookmarks])
+    setLocalStorage({ chainIds, debug, currency, bookmarks, infiniteApproval })
+  }, [chainIds, debug, currency, bookmarks, infiniteApproval])
 
   // Set ocean.js log levels, default: Error
   useEffect(() => {
