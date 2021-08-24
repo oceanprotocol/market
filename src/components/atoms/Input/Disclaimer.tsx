@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import styles from './Disclaimer.module.css'
-import Markdown from '../Markdown'
 import classNames from 'classnames/bind'
+import Alert from '../Alert'
 
 const cx = classNames.bind(styles)
 
@@ -20,7 +20,11 @@ const FormDisclaimer = ({
     [className]: className
   })
 
-  return <Markdown className={styleClasses} text={children} />
+  return (
+    <div className={styleClasses}>
+      <Alert text={children} state="info" />
+    </div>
+  )
 }
 
 export default FormDisclaimer
