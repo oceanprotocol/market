@@ -10,8 +10,6 @@
     "serve": "serve -s public/",
     "jest": "NODE_ENV=test jest -c tests/unit/jest.config.js",
     "test-graphql": "npm run graphql:graphTypes && npm run lint && npm run jest",
-    "test": "npm run apollo:codegen && npm run lint && npm run jest",
-    "test:watch": "npm run lint && npm run jest -- --watch",
     "test:unit": "npm run apollo:codegen && npm run lint && npm run jest",
     "test:unit:watch": "npm run lint && npm run jest -- --watch",
     "test:integration": "GATSBY_NETWORK=development start-test start http-get://localhost:8000 cypress:run",
