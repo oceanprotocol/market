@@ -21,7 +21,7 @@ a > .logo:hover path {
   fill: var(--color-primary);
 }
 
-@media screen and (min-width: 42rem) {
+@media screen and (min-width: 55rem) {
   .branding {
     width: 7.5rem;
   }
