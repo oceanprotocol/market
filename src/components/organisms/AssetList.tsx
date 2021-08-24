@@ -6,6 +6,7 @@ import { DDO } from '@oceanprotocol/lib'
 import classNames from 'classnames/bind'
 import { getAssetsBestPrices, AssetListPrices } from '../../utils/subgraph'
 import Loader from '../atoms/Loader'
+import { useUserPreferences } from '../../providers/UserPreferences'
 
 const cx = classNames.bind(styles)
 
@@ -36,6 +37,7 @@ const AssetList: React.FC<AssetListProps> = ({
   onPageChange,
   className
 }) => {
+  const { chainIds } = useUserPreferences()
   const [assetsWithPrices, setAssetWithPrices] = useState<AssetListPrices[]>()
   const [loading, setLoading] = useState<boolean>(true)
 
@@ -71,6 +73,8 @@ const AssetList: React.FC<AssetListProps> = ({
               key={assetWithPrice.ddo.id}
             />
           ))
+        ) : chainIds.length === 0 ? (
+          <div className={styles.empty}>No network selected.</div>
         ) : (
           <div className={styles.empty}>No results found.</div>
         )}
