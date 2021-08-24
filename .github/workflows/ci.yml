@@ -11,7 +11,7 @@ on:
       - '**'
 
 jobs:
-  test_dev:
+  build:
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -38,10 +38,9 @@ jobs:
       - run: npm ci
       - run: npm run apollo:codegen
       - run: npm run lint
-      # - run: npm test
       - run: npm run build
 
-  test_integration:
+  integration:
     runs-on: ubuntu-latest
 
     steps:
