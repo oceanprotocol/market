@@ -173,11 +173,17 @@ export default function PageTutorial({
       component: ddo && showPriceTutorial && (
         <>
           {!showComputeTutorial && (
-            <Page title="" description="" uri="/tutorial">
-              <EditComputeDataset
-                tutorial
-                setShowEdit={setShowComputeTutorial}
-              />
+            <Page
+              title="Choose the algorithm here"
+              description="Only selected algorithms are allowed to run on this data set. Updating these settings will create an on-chain transaction you have to approve in your wallet."
+              uri="/tutorial"
+            >
+              <div className={styles.compute}>
+                <EditComputeDataset
+                  tutorial
+                  setShowEdit={setShowComputeTutorial}
+                />
+              </div>
             </Page>
           )}
           {showComputeTutorial && (

@@ -1,6 +1,12 @@
-.grid {
+.grid,
+.gridTutorial {
   composes: grid from '../../AssetContent/index.module.css';
   margin-top: var(--spacer);
+}
+
+.gridTutorial {
+  display: flex;
+  justify-content: center;
 }
 
 .description {

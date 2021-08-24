@@ -44,6 +44,11 @@
   display: none;
 }
 
+.compute {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
 @media screen and (min-width: 40rem) {
   .toc {
     display: none;

@@ -182,8 +182,10 @@ export default function EditComputeDataset({
           </div>
         ) : (
           <>
-            <p className={styles.description}>{content.description}</p>
-            <article className={styles.grid}>
+            {!tutorial && (
+              <p className={styles.description}>{content.description}</p>
+            )}
+            <article className={tutorial ? styles.tutorialGrid : styles.grid}>
               <FormEditComputeDataset
                 title={content.form.title}
                 data={content.form.data}
