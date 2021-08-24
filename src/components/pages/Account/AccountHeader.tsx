@@ -7,24 +7,9 @@ import axios from 'axios'
 import ExplorerLink from '../../atoms/ExplorerLink'
 import PublisherLinks from '../../atoms/Publisher/PublisherLinks'
 import { useUserPreferences } from '../../../providers/UserPreferences'
-import {
-  transformChainIdsListToQuery,
-  queryMetadata
-} from '../../../utils/aquarius'
-import { Logger, DDO } from '@oceanprotocol/lib'
-import {
-  getAccountNumberOfOrders,
-  getAssetsBestPrices,
-  getAccountLiquidityInOwnAssets,
-  UserTVL
-} from '../../../utils/subgraph'
-import Conversion from '../../atoms/Price/Conversion'
-import { ReactComponent as Published } from '../../../images/published.svg'
-import { ReactComponent as Sold } from '../../../images/sold.svg'
-import { ReactComponent as Tvl } from '../../../images/tvl.svg'
-import Token from '../../organisms/AssetActions/Pool/Token'
 import { getOceanConfig } from '../../../utils/ocean'
 import { toDataUrl } from 'ethereum-blockies'
+import Stats from './Stats'
 
 const Blockies = ({ account }: { account: string | undefined }) => {
   if (!account) return null
@@ -50,10 +35,7 @@ export default function AccountHeader({
   const [description, setDescription] = useState<string>()
   const [image, setImage] = useState<string>()
   const [links, setLinks] = useState<ProfileLink[]>()
-  const [publishedAssets, setPublishedAssets] = useState<DDO[]>()
-  const [numberOfAssets, setNumberOfAssets] = useState<number>()
-  const [sold, setSold] = useState<number>()
-  const [tvl, setTvl] = useState<UserTVL>()
+
   const [isReadMore, setIsReadMore] = useState(true)
   const [isShowMore, setIsShowMore] = useState(false)
 
@@ -93,66 +75,11 @@ export default function AccountHeader({
     }
   }, [accountId])
 
-  useEffect(() => {
-    async function getPublished() {
-      if (!accountId) return
-      const queryPublishedAssets = {
-        query: {
-          query_string: {
-            query: `(publicKey.owner:${accountId}) AND (${transformChainIdsListToQuery(
-              chainIds
-            )})`
-          }
-        }
-      }
-      try {
-        const source = axios.CancelToken.source()
-        const result = await queryMetadata(queryPublishedAssets, source.token)
-        setPublishedAssets(result.results)
-        setNumberOfAssets(result.totalResults)
-      } catch (error) {
-        Logger.error(error.message)
-      }
-    }
-    getPublished()
-
-    async function getAccountSoldValue() {
-      if (!accountId) return
-      const nrOrders = await getAccountNumberOfOrders(accountId, chainIds)
-      setSold(nrOrders)
-    }
-    getAccountSoldValue()
-  }, [accountId, chainIds])
-
-  useEffect(() => {
-    async function getAccountTVL() {
-      if (!publishedAssets) return
-      try {
-        const accountPoolAdresses: string[] = []
-        const assetsPrices = await getAssetsBestPrices(publishedAssets)
-        for (const priceInfo of assetsPrices) {
-          if (priceInfo.price.type === 'pool') {
-            accountPoolAdresses.push(priceInfo.price.address.toLowerCase())
-          }
-        }
-        const userTvl: UserTVL = await getAccountLiquidityInOwnAssets(
-          accountId,
-          chainIds,
-          accountPoolAdresses
-        )
-        setTvl(userTvl)
-      } catch (error) {
-        Logger.error(error.message)
-      }
-    }
-    getAccountTVL()
-  }, [publishedAssets])
-
   return (
     <div>
       {accountId ? (
-        <div className={styles.gridContainer}>
-          <div className={styles.infoSection}>
+        <div className={styles.grid}>
+          <div>
             <div className={styles.profileInfoGrid}>
               {image ? (
                 <img
@@ -196,25 +123,10 @@ export default function AccountHeader({
                 )}
               </div>
             </div>
-            <div className={styles.statisticsOverviewGrid}>
-              <Published className={styles.statisticsImages} />
-              <p className={styles.statisticsValues}>{numberOfAssets}</p>
-              <Sold className={styles.statisticsImages} />
-              <p className={styles.statisticsValues}>{sold}</p>
-              <Tvl className={styles.statisticsImages} />
-              <div className={styles.liquidity}>
-                <Conversion
-                  price={tvl?.price}
-                  className={styles.statisticsValues}
-                  hideApproximateSymbol
-                />
-                <Token symbol="OCEAN" balance={tvl?.oceanBalance} noIcon />
-              </div>
-              <p className={styles.statiscsLabel}>Published</p>
-              <p className={styles.statiscsLabel}>Sold</p>
-              <p className={styles.statiscsLabel}>TVL</p>
-            </div>
+
+            <Stats />
           </div>
+
           <div>
             <p className={styles.descriptionLabel}>About</p>
             <div>
@@ -235,12 +147,10 @@ export default function AccountHeader({
                 ''
               )}
             </div>
-            {links?.length > 0 ? (
+            {links?.length > 0 && (
               <div className={styles.publisherLinks}>
                 <PublisherLinks links={links} />
               </div>
-            ) : (
-              ''
             )}
           </div>
         </div>
