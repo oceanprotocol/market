@@ -65,7 +65,7 @@ export default function Compute({
   const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
   const { ocean, account } = useOcean()
-  const { price, type, ddo, isAssetNetwork } = useAsset()
+  const { price, type, ddo } = useAsset()
   const { buyDT, pricingError, pricingStepText } = usePricing()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
@@ -230,7 +230,7 @@ export default function Compute({
       price,
       ddo.findServiceByType('metadata').attributes.main.type
     )
-  }, [ocean, ddo, accountId])
+  }, [ocean, ddo, accountId, price])
 
   useEffect(() => {
     if (!selectedAlgorithmAsset) return

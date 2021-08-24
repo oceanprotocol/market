@@ -24,6 +24,7 @@ export default function FormAdd({
   dtSymbol,
   amountMax,
   setCoin,
+  setAmount,
   totalPoolTokens,
   totalBalance,
   poolAddress,
@@ -35,6 +36,7 @@ export default function FormAdd({
   dtSymbol: string
   amountMax: string
   setCoin: (value: string) => void
+  setAmount: (value: string) => void
   totalPoolTokens: string
   totalBalance: PoolBalance
   poolAddress: string
@@ -56,6 +58,7 @@ export default function FormAdd({
   function handleFieldChange(e: ChangeEvent<HTMLInputElement>) {
     // Workaround so validation kicks in on first touch
     !touched?.amount && setTouched({ amount: true })
+    setAmount(e.target.value)
 
     // Manually handle change events instead of using `handleChange` from Formik.
     // Solves bug where 0.0 can't be typed.

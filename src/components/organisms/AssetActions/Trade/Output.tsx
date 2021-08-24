@@ -1,6 +1,7 @@
 import { FormikContextType, useFormikContext } from 'formik'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { FormTradeData } from '../../../../models/FormTrade'
+import { useAsset } from '../../../../providers/Asset'
 import { useOcean } from '../../../../providers/Ocean'
 import Token from '../Pool/Token'
 import styles from './Output.module.css'
@@ -17,6 +18,7 @@ export default function Output({
   dtSymbol: string
   poolAddress: string
 }): ReactElement {
+  const { isAssetNetwork } = useAsset()
   const { ocean } = useOcean()
   const [maxOutput, setMaxOutput] = useState<string>()
   const [swapFee, setSwapFee] = useState<string>()
@@ -26,7 +28,7 @@ export default function Output({
 
   // Get swap fee
   useEffect(() => {
-    if (!ocean || !poolAddress) return
+    if (!ocean || !poolAddress || !isAssetNetwork) return
 
     async function getSwapFee() {
       const swapFee = await ocean.pool.getSwapFee(poolAddress)
@@ -47,11 +49,11 @@ export default function Output({
       setSwapFeeValue(value.toString())
     }
     getSwapFee()
-  }, [ocean, poolAddress, values])
+  }, [ocean, poolAddress, values, isAssetNetwork])
 
   // Get output values
   useEffect(() => {
-    if (!ocean || !poolAddress) return
+    if (!ocean || !poolAddress || !isAssetNetwork) return
 
     async function getOutput() {
       // Minimum received
@@ -71,7 +73,7 @@ export default function Output({
       setMaxOutput(maxPrice)
     }
     getOutput()
-  }, [ocean, poolAddress, values])
+  }, [ocean, poolAddress, values, isAssetNetwork])
 
   return (
     <div className={styles.output}>

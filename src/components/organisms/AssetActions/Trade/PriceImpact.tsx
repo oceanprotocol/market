@@ -51,7 +51,7 @@ export default function PriceImpact({
 
   return (
     <div className={styles.priceImpact}>
-      <strong>Price impact</strong>
+      <strong>Price Impact</strong>
       <div>
         <span
           className={`${styles.number} ${

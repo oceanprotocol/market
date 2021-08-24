@@ -12,15 +12,17 @@ import { useSiteMetadata } from '../hooks/useSiteMetadata'
 
 interface UserPreferencesValue {
   debug: boolean
-  currency: string
-  locale: string
-  chainIds: number[]
-  bookmarks: string[]
-  setChainIds: (chainIds: number[]) => void
   setDebug: (value: boolean) => void
+  currency: string
   setCurrency: (value: string) => void
+  chainIds: number[]
+  setChainIds: (chainIds: number[]) => void
+  bookmarks: string[]
   addBookmark: (did: string) => void
   removeBookmark: (did: string) => void
+  infiniteApproval: boolean
+  setInfiniteApproval: (value: boolean) => void
+  locale: string
 }
 
 const UserPreferencesContext = createContext(null)
@@ -58,11 +60,14 @@ function UserPreferencesProvider({
   const [chainIds, setChainIds] = useState(
     localStorage?.chainIds || appConfig.chainIds
   )
+  const [infiniteApproval, setInfiniteApproval] = useState(
+    localStorage?.infiniteApproval || false
+  )
 
   // Write values to localStorage on change
   useEffect(() => {
-    setLocalStorage({ chainIds, debug, currency, bookmarks })
-  }, [chainIds, debug, currency, bookmarks])
+    setLocalStorage({ chainIds, debug, currency, bookmarks, infiniteApproval })
+  }, [chainIds, debug, currency, bookmarks, infiniteApproval])
 
   // Set ocean.js log levels, default: Error
   useEffect(() => {
@@ -108,6 +113,8 @@ function UserPreferencesProvider({
           locale,
           chainIds,
           bookmarks,
+          infiniteApproval,
+          setInfiniteApproval,
           setChainIds,
           setDebug,
           setCurrency,

@@ -53,6 +53,7 @@ export default function FormTrade({
   const { isAssetNetwork } = useAsset()
   const { debug } = useUserPreferences()
   const [txId, setTxId] = useState<string>()
+  const [coinFrom, setCoinFrom] = useState<string>('OCEAN')
 
   const [maximumOcean, setMaximumOcean] = useState(maxOcean)
   const [maximumDt, setMaximumDt] = useState(maxDt)
@@ -113,6 +114,7 @@ export default function FormTrade({
       toast.error(error.message)
     }
   }
+
   return (
     <Formik
       initialValues={initialValues}
@@ -123,7 +125,7 @@ export default function FormTrade({
         setSubmitting(false)
       }}
     >
-      {({ isSubmitting, submitForm, values }) => (
+      {({ isSubmitting, submitForm, values, isValid }) => (
         <>
           {isWarningAccepted ? (
             <Swap
@@ -132,6 +134,7 @@ export default function FormTrade({
               maxDt={maxDt}
               maxOcean={maxOcean}
               price={price}
+              setCoin={setCoinFrom}
               setMaximumOcean={setMaximumOcean}
               setMaximumDt={setMaximumDt}
             />
@@ -149,12 +152,22 @@ export default function FormTrade({
             </div>
           )}
           <Actions
-            isDisabled={!isWarningAccepted || !isAssetNetwork}
+            isDisabled={
+              !isValid ||
+              !isWarningAccepted ||
+              !isAssetNetwork ||
+              values.datatoken === undefined ||
+              values.ocean === undefined
+            }
             isLoading={isSubmitting}
             loaderMessage="Swapping tokens..."
             successMessage="Successfully swapped tokens."
             actionName={content.action}
+            amount={`${
+              values.type === 'sell' ? values.datatoken : values.ocean
+            }`}
             action={submitForm}
+            coin={coinFrom}
             txId={txId}
           />
 

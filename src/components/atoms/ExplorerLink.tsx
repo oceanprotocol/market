@@ -28,6 +28,8 @@ export default function ExplorerLink({
   })
 
   useEffect(() => {
+    if (!networkId) return
+
     async function initOcean() {
       const oceanInitialConfig = getOceanConfig(networkId)
       setOceanConfig(oceanInitialConfig)
@@ -36,7 +38,7 @@ export default function ExplorerLink({
     if (oceanConfig === undefined) {
       initOcean()
     }
-  }, [config, networkId, ocean])
+  }, [config, oceanConfig, networkId, ocean])
 
   return (
     <a

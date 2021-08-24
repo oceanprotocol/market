@@ -451,16 +451,14 @@ export default function Pool(): ReactElement {
           )}
 
           <div className={stylesActions.actions}>
-            {!isInPurgatory && (
-              <Button
-                style="primary"
-                size="small"
-                onClick={() => setShowAdd(true)}
-                disabled={isInPurgatory}
-              >
-                Add Liquidity
-              </Button>
-            )}
+            <Button
+              style="primary"
+              size="small"
+              onClick={() => setShowAdd(true)}
+              disabled={isInPurgatory}
+            >
+              Add Liquidity
+            </Button>
 
             {hasAddedLiquidity && !isRemoveDisabled && (
               <Button
