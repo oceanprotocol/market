@@ -26,7 +26,9 @@
 }
 
 .button:hover,
-.button:focus {
+.button:focus,
+.button:hover .address,
+.button:focus .address {
   transform: none;
   outline: 0;
   color: var(--brand-white);
@@ -50,7 +52,8 @@
   z-index: -1;
 }
 
-.button:hover:before {
+.button:hover:before,
+.button:focus:before {
   transform: scaleX(1);
 }
 
@@ -84,7 +87,7 @@
 .address {
   display: none;
   text-transform: none;
-  border-right: 1px solid var(--border-color);
+  border-right: 2px solid var(--border-color-menu);
   padding-right: calc(var(--spacer) / 3);
 }
 
@@ -127,5 +130,11 @@ svg.caret {
   .caret,
   svg.caret {
     display: inline-block;
+    fill: var(--color-primary);
+  }
+
+  .button:hover .caret,
+  .button:focus .caret {
+    fill: var(--brand-white);
   }
 }
