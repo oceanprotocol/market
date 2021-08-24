@@ -39,7 +39,7 @@ import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelectio
 import AlgorithmDatasetsListForCompute from '../../AssetContent/AlgorithmDatasetsListForCompute'
 import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
 import AssetActionHistoryTable from '../../AssetActionHistoryTable'
-import ComputeJobs from '../../../pages/Account/History/ComputeJobs'
+import ComputeJobs from '../../../pages/Profile/History/ComputeJobs'
 
 const SuccessAction = () => (
   <Button style="text" to="/account?defaultTab=ComputeJobs" size="small">

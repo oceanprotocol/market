@@ -1,9 +1,9 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import Page from '../../components/templates/Page'
 import { graphql, PageProps } from 'gatsby'
-import AccountPage from '../../components/pages/Account'
+import ProfilePage from '../../components/pages/Profile'
 
-export default function PageGatsbyAccount(props: PageProps): ReactElement {
+export default function PageGatsbyProfile(props: PageProps): ReactElement {
   const content = (props.data as any).content.edges[0].node.childPagesJson
   const { title } = content
   const [accountId, setAccountId] = useState<string>()
@@ -14,14 +14,14 @@ export default function PageGatsbyAccount(props: PageProps): ReactElement {
 
   return (
     <Page uri={props.uri}>
-      <AccountPage accountIdentifier={accountId} />
+      <ProfilePage accountIdentifier={accountId} />
     </Page>
   )
 }
 
 export const contentQuery = graphql`
-  query AccountPageQuery {
-    content: allFile(filter: { relativePath: { eq: "pages/account.json" } }) {
+  query ProfilePageQuery {
+    content: allFile(filter: { relativePath: { eq: "pages/profile.json" } }) {
       edges {
         node {
           childPagesJson {

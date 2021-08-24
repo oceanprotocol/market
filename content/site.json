@@ -12,8 +12,8 @@
         "link": "/publish"
       },
       {
-        "name": "My Account",
-        "link": "/account"
+        "name": "Profile",
+        "link": "/profile"
       }
     ],
     "warning": {

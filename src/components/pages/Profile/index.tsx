@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import HistoryPage from './History'
-import AccountHeader from './AccountHeader'
+import AccountHeader from './Header'
 import { useWeb3 } from '../../../providers/Web3'
 
 export default function AccountPage({

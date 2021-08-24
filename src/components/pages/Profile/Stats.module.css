@@ -2,5 +2,5 @@
   display: grid;
   gap: var(--spacer);
   grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
-  margin-top: var(--spacer);
+  margin-top: calc(var(--spacer) / 2);
 }

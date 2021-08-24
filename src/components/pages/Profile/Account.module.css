@@ -1,0 +1,41 @@
+.account {
+  display: grid;
+  grid-template-columns: 0.2fr 1.8fr;
+  gap: calc(var(--spacer) / 2);
+  align-items: center;
+}
+
+.image {
+  width: 96px;
+  height: 96px;
+  max-width: unset;
+  border-radius: 50%;
+  overflow: hidden;
+  display: inline-block;
+  margin-bottom: calc(var(--spacer) / 4);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 6px 17px 0 var(--box-shadow-color);
+}
+
+.image path {
+  fill: var(--font-color-heading);
+}
+
+.name {
+  font-size: var(--font-size-title);
+  margin-bottom: calc(var(--spacer) / 8);
+}
+
+.explorer {
+  font-size: var(--font-size-small);
+  margin-left: calc(var(--spacer) / 2);
+}
+
+.explorer:first-of-type {
+  margin-left: 0;
+}
+
+.explorer svg:first-child {
+  width: var(--font-size-small);
+  height: var(--font-size-small);
+}
