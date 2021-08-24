@@ -57,15 +57,17 @@
     display: none;
   }
   .tutorial {
-    margin-left: 20rem;
+    margin-left: 15rem;
   }
 
   .toc2 {
     display: block;
     position: fixed;
+    top: 38vh;
     background-color: transparent;
-    width: 20rem;
+    width: 15rem;
     margin-bottom: calc(var(--spacer) * 2);
+    margin-right: 2rem;
     padding: var(--spacer) 0;
     border-right: 1px solid var(--brand-grey-light);
   }
