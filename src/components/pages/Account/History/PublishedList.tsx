@@ -58,16 +58,11 @@ export default function PublishedList({
 
   return accountId ? (
     <div>
-      {queryResult?.results?.length > 0 ? (
-        <ServiceFilter
-          serviceType={service}
-          setServiceType={setServiceType}
-          isSearch={false}
-        />
-      ) : (
-        ''
-      )}
-
+      <ServiceFilter
+        serviceType={service}
+        setServiceType={setServiceType}
+        isSearch={false}
+      />
       <AssetList
         assets={queryResult?.results}
         isLoading={isLoading}
