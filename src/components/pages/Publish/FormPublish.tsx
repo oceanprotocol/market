@@ -16,6 +16,7 @@ import { ReactComponent as Compute } from '../../../images/compute.svg'
 import FormTitle from './FormTitle'
 import FormActions from './FormActions'
 import styles from './FormPublish.module.css'
+import AdvancedSettings from '../../molecules/FormFields/AdvancedSettings'
 
 const query = graphql`
   query {
@@ -35,6 +36,7 @@ const query = graphql`
               required
               sortOptions
               options
+              advanced
             }
             warning
           }
@@ -125,23 +127,30 @@ export default function FormPublish(): ReactElement {
     >
       <FormTitle title={content.title} />
 
-      {content.data.map((field: FormFieldProps) => (
-        <Field
-          key={field.name}
-          {...field}
-          options={
-            field.type === 'boxSelection'
-              ? accessTypeOptions
-              : field.name === 'timeout' && computeTypeSelected === true
-              ? computeTypeOptions
-              : field.options
-          }
-          component={Input}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            handleFieldChange(e, field)
-          }
-        />
-      ))}
+      {content.data.map(
+        (field: FormFieldProps) =>
+          field.advanced !== true && (
+            <Field
+              key={field.name}
+              {...field}
+              options={
+                field.type === 'boxSelection'
+                  ? accessTypeOptions
+                  : field.name === 'timeout' && computeTypeSelected === true
+                  ? computeTypeOptions
+                  : field.options
+              }
+              component={Input}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                handleFieldChange(e, field)
+              }
+            />
+          )
+      )}
+      <AdvancedSettings
+        content={content}
+        handleFieldChange={handleFieldChange}
+      />
 
       <FormActions
         isValid={isValid}

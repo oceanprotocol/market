@@ -22,7 +22,12 @@ import { useWeb3 } from '../../../../providers/Web3'
 import PoolTransactions from '../../../molecules/PoolTransactions'
 import { fetchData, getQueryContext } from '../../../../utils/subgraph'
 
+import { isValidNumber } from './../../../../utils/numberValidations'
+import Decimal from 'decimal.js'
+
 const REFETCH_INTERVAL = 5000
+
+Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
 const contentQuery = graphql`
   query PoolQuery {
@@ -85,11 +90,15 @@ export default function Pool(): ReactElement {
 
   const [hasAddedLiquidity, setHasAddedLiquidity] = useState(false)
   const [poolShare, setPoolShare] = useState<string>()
-  const [totalUserLiquidityInOcean, setTotalUserLiquidityInOcean] = useState(0)
-  const [totalLiquidityInOcean, setTotalLiquidityInOcean] = useState(0)
+  const [totalUserLiquidityInOcean, setTotalUserLiquidityInOcean] = useState(
+    new Decimal(0)
+  )
+  const [totalLiquidityInOcean, setTotalLiquidityInOcean] = useState(
+    new Decimal(0)
+  )
 
   const [creatorTotalLiquidityInOcean, setCreatorTotalLiquidityInOcean] =
-    useState(0)
+    useState(new Decimal(0))
   const [creatorLiquidity, setCreatorLiquidity] = useState<PoolBalance>()
   const [creatorPoolTokens, setCreatorPoolTokens] = useState<string>()
   const [creatorPoolShare, setCreatorPoolShare] = useState<string>()
@@ -144,15 +153,28 @@ export default function Pool(): ReactElement {
 
       // Get swap fee
       // swapFee is tricky: to get 0.1% you need to convert from 0.001
-      setSwapFee(`${Number(dataLiquidity.pool.swapFee) * 100}`)
+      const swapFee = isValidNumber(dataLiquidity.pool.swapFee)
+        ? new Decimal(dataLiquidity.pool.swapFee).mul(100).toString()
+        : '0'
+
+      setSwapFee(swapFee)
 
       // Get weights
       const weightDt = dataLiquidity.pool.tokens.filter(
         (token: any) => token.tokenAddress === ddo.dataToken.toLowerCase()
       )[0].denormWeight
 
-      setWeightDt(`${Number(weightDt) * 10}`)
-      setWeightOcean(`${100 - Number(weightDt) * 10}`)
+      const weightDtDecimal = isValidNumber(weightDt)
+        ? new Decimal(weightDt).mul(10).toString()
+        : '0'
+
+      setWeightDt(weightDtDecimal)
+
+      const weightOceanDecimal = isValidNumber(weightDt)
+        ? new Decimal(100).minus(new Decimal(weightDt).mul(10)).toString()
+        : '0'
+
+      setWeightOcean(weightOceanDecimal)
 
       //
       // Get everything the creator put into the pool
@@ -161,12 +183,25 @@ export default function Pool(): ReactElement {
       const creatorPoolTokens = dataLiquidity.pool.shares[0].balance
       setCreatorPoolTokens(creatorPoolTokens)
 
-      // Calculate creator's provided liquidity based on pool tokens
       const creatorOceanBalance =
-        (Number(creatorPoolTokens) / Number(totalPoolTokens)) * price.ocean
+        isValidNumber(creatorPoolTokens) &&
+        isValidNumber(totalPoolTokens) &&
+        isValidNumber(price.ocean)
+          ? new Decimal(creatorPoolTokens)
+              .dividedBy(new Decimal(totalPoolTokens))
+              .mul(price.ocean)
+              .toString()
+          : '0'
 
       const creatorDtBalance =
-        (Number(creatorPoolTokens) / Number(totalPoolTokens)) * price.datatoken
+        isValidNumber(creatorPoolTokens) &&
+        isValidNumber(totalPoolTokens) &&
+        isValidNumber(price.datatoken)
+          ? new Decimal(creatorPoolTokens)
+              .dividedBy(new Decimal(totalPoolTokens))
+              .mul(price.datatoken)
+              .toString()
+          : '0'
 
       const creatorLiquidity = {
         ocean: creatorOceanBalance,
@@ -175,14 +210,30 @@ export default function Pool(): ReactElement {
       setCreatorLiquidity(creatorLiquidity)
 
       const totalCreatorLiquidityInOcean =
-        creatorLiquidity?.ocean +
-        creatorLiquidity?.datatoken * dataLiquidity.pool.spotPrice
+        isValidNumber(creatorLiquidity?.ocean) &&
+        isValidNumber(creatorLiquidity?.datatoken) &&
+        isValidNumber(dataLiquidity.pool.spotPrice)
+          ? new Decimal(creatorLiquidity?.ocean).add(
+              new Decimal(creatorLiquidity?.datatoken).mul(
+                new Decimal(dataLiquidity.pool.spotPrice)
+              )
+            )
+          : new Decimal(0)
+
       setCreatorTotalLiquidityInOcean(totalCreatorLiquidityInOcean)
+
       const creatorPoolShare =
         price?.ocean &&
         price?.datatoken &&
         creatorLiquidity &&
-        ((Number(creatorPoolTokens) / Number(totalPoolTokens)) * 100).toFixed(2)
+        isValidNumber(creatorPoolTokens) &&
+        isValidNumber(totalPoolTokens)
+          ? new Decimal(creatorPoolTokens)
+              .dividedBy(new Decimal(totalPoolTokens))
+              .mul(100)
+              .toFixed(2)
+          : '0'
+
       setCreatorPoolShare(creatorPoolShare)
       refetchLiquidity()
     }
@@ -195,17 +246,38 @@ export default function Pool(): ReactElement {
 
   useEffect(() => {
     const poolShare =
+      isValidNumber(poolTokens) &&
+      isValidNumber(totalPoolTokens) &&
       price?.ocean &&
       price?.datatoken &&
-      ((Number(poolTokens) / Number(totalPoolTokens)) * 100).toFixed(5)
+      new Decimal(poolTokens)
+        .dividedBy(new Decimal(totalPoolTokens))
+        .mul(100)
+        .toFixed(5)
+
     setPoolShare(poolShare)
     setHasAddedLiquidity(Number(poolShare) > 0)
 
     const totalUserLiquidityInOcean =
-      userLiquidity?.ocean + userLiquidity?.datatoken * price?.value
+      isValidNumber(userLiquidity?.ocean) &&
+      isValidNumber(userLiquidity?.datatoken) &&
+      isValidNumber(price?.value)
+        ? new Decimal(userLiquidity?.ocean).add(
+            new Decimal(userLiquidity?.datatoken).mul(price?.value)
+          )
+        : new Decimal(0)
+
     setTotalUserLiquidityInOcean(totalUserLiquidityInOcean)
+
     const totalLiquidityInOcean =
-      Number(price?.ocean) + Number(price?.datatoken) * Number(price?.value)
+      isValidNumber(price?.ocean) &&
+      isValidNumber(price?.datatoken) &&
+      isValidNumber(price?.value)
+        ? new Decimal(price?.ocean).add(
+            new Decimal(price?.datatoken).mul(price?.value)
+          )
+        : new Decimal(0)
+
     setTotalLiquidityInOcean(totalLiquidityInOcean)
   }, [userLiquidity, price, poolTokens, totalPoolTokens])
 
@@ -221,11 +293,28 @@ export default function Pool(): ReactElement {
           price.address
         )
         setPoolTokens(poolTokens)
+
         // calculate user's provided liquidity based on pool tokens
         const userOceanBalance =
-          (Number(poolTokens) / Number(totalPoolTokens)) * price.ocean
+          isValidNumber(poolTokens) &&
+          isValidNumber(totalPoolTokens) &&
+          isValidNumber(price.ocean)
+            ? new Decimal(poolTokens)
+                .dividedBy(new Decimal(totalPoolTokens))
+                .mul(price.ocean)
+                .toString()
+            : '0'
+
         const userDtBalance =
-          (Number(poolTokens) / Number(totalPoolTokens)) * price.datatoken
+          isValidNumber(poolTokens) &&
+          isValidNumber(totalPoolTokens) &&
+          isValidNumber(price.datatoken)
+            ? new Decimal(poolTokens)
+                .dividedBy(new Decimal(totalPoolTokens))
+                .mul(price.datatoken)
+                .toString()
+            : '0'
+
         const userLiquidity = {
           ocean: userOceanBalance,
           datatoken: userDtBalance
@@ -255,8 +344,8 @@ export default function Pool(): ReactElement {
           poolAddress={price.address}
           totalPoolTokens={totalPoolTokens}
           totalBalance={{
-            ocean: price.ocean,
-            datatoken: price.datatoken
+            ocean: new Decimal(price.ocean).toString(),
+            datatoken: new Decimal(price.datatoken).toString()
           }}
           swapFee={swapFee}
           dtSymbol={dtSymbol}

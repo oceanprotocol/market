@@ -6,6 +6,11 @@ import { useOcean } from '../../../../providers/Ocean'
 import Token from '../Pool/Token'
 import styles from './Output.module.css'
 
+import { isValidNumber } from './../../../../utils/numberValidations'
+import Decimal from 'decimal.js'
+
+Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
+
 export default function Output({
   dtSymbol,
   poolAddress
@@ -27,12 +32,20 @@ export default function Output({
 
     async function getSwapFee() {
       const swapFee = await ocean.pool.getSwapFee(poolAddress)
+
       // swapFee is tricky: to get 0.1% you need to convert from 0.001
-      setSwapFee(`${Number(swapFee) * 100}`)
+      setSwapFee(
+        isValidNumber(swapFee) ? new Decimal(swapFee).mul(100).toString() : '0'
+      )
+
       const value =
         values.type === 'buy'
-          ? Number(swapFee) * values.ocean
-          : Number(swapFee) * values.datatoken
+          ? isValidNumber(swapFee) && isValidNumber(values.ocean)
+            ? new Decimal(swapFee).mul(new Decimal(values.ocean))
+            : 0
+          : isValidNumber(swapFee) && isValidNumber(values.datatoken)
+          ? new Decimal(swapFee).mul(new Decimal(values.datatoken))
+          : 0
       setSwapFeeValue(value.toString())
     }
     getSwapFee()
@@ -48,8 +61,14 @@ export default function Output({
       const maxImpact = 1 - Number(values.slippage) / 100
       const maxPrice =
         values.type === 'buy'
-          ? (values.datatoken * maxImpact).toString()
-          : (values.ocean * maxImpact).toString()
+          ? isValidNumber(values.datatoken) && isValidNumber(maxImpact)
+            ? new Decimal(values.datatoken)
+                .mul(new Decimal(maxImpact))
+                .toString()
+            : '0'
+          : isValidNumber(values.ocean) && isValidNumber(maxImpact)
+          ? new Decimal(values.ocean).mul(new Decimal(maxImpact)).toString()
+          : '0'
 
       setMaxOutput(maxPrice)
     }

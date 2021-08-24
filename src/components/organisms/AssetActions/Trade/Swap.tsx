@@ -11,6 +11,9 @@ import Output from './Output'
 import Slippage from './Slippage'
 import PriceImpact from './PriceImpact'
 import styles from './Swap.module.css'
+import Decimal from 'decimal.js'
+
+Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
 export default function Swap({
   ddo,
@@ -23,24 +26,24 @@ export default function Swap({
   setCoin
 }: {
   ddo: DDO
-  maxDt: number
-  maxOcean: number
+  maxDt: string
+  maxOcean: string
   balance: PoolBalance
   price: BestPrice
-  setMaximumDt: (value: number) => void
-  setMaximumOcean: (value: number) => void
+  setMaximumDt: (value: string) => void
+  setMaximumOcean: (value: string) => void
   setCoin: (value: string) => void
 }): ReactElement {
   const { ocean } = useOcean()
   const [oceanItem, setOceanItem] = useState<TradeItem>({
-    amount: 0,
+    amount: '0',
     token: 'OCEAN',
-    maxAmount: 0
+    maxAmount: '0'
   })
   const [dtItem, setDtItem] = useState<TradeItem>({
-    amount: 0,
+    amount: '0',
     token: ddo.dataTokenInfo.symbol,
-    maxAmount: 0
+    maxAmount: '0'
   })
 
   const {
@@ -74,34 +77,34 @@ export default function Swap({
       const maximumDt =
         values.type === 'buy'
           ? Number(dtAmount) > Number(maxBuyDt)
-            ? Number(maxBuyDt)
-            : Number(dtAmount)
-          : Number(dtAmount) > balance.datatoken
-          ? balance.datatoken
-          : Number(dtAmount)
+            ? new Decimal(maxBuyDt)
+            : new Decimal(dtAmount)
+          : Number(dtAmount) > Number(balance.datatoken)
+          ? new Decimal(balance.datatoken)
+          : new Decimal(dtAmount)
 
       const maximumOcean =
         values.type === 'sell'
           ? Number(oceanAmount) > Number(maxBuyOcean)
-            ? Number(maxBuyOcean)
-            : Number(oceanAmount)
-          : Number(oceanAmount) > balance.ocean
-          ? balance.ocean
-          : Number(oceanAmount)
+            ? new Decimal(maxBuyOcean)
+            : new Decimal(oceanAmount)
+          : Number(oceanAmount) > Number(balance.ocean)
+          ? new Decimal(balance.ocean)
+          : new Decimal(oceanAmount)
 
-      setMaximumDt(maximumDt)
-      setMaximumOcean(maximumOcean)
+      setMaximumDt(maximumDt.toString())
+      setMaximumOcean(maximumOcean.toString())
 
       setOceanItem((prevState) => ({
         ...prevState,
-        amount: oceanAmount,
-        maxAmount: maximumOcean
+        amount: oceanAmount.toString(),
+        maxAmount: maximumOcean.toString()
       }))
 
       setDtItem((prevState) => ({
         ...prevState,
-        amount: dtAmount,
-        maxAmount: maximumDt
+        amount: dtAmount.toString(),
+        maxAmount: maximumDt.toString()
       }))
     }
     calculateMaximum()
