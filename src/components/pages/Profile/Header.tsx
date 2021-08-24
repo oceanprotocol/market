@@ -3,7 +3,7 @@ import get3BoxProfile from '../../../utils/profile'
 import { ProfileLink } from '../../../models/Profile'
 import { accountTruncate } from '../../../utils/web3'
 import axios from 'axios'
-import PublisherLinks from '../../atoms/Publisher/PublisherLinks'
+import PublisherLinks from './PublisherLinks'
 import Markdown from '../../atoms/Markdown'
 import Stats from './Stats'
 import Account from './Account'
@@ -85,11 +85,7 @@ export default function AccountHeader({
         ) : (
           ''
         )}
-        {links?.length > 0 && (
-          <div className={styles.publisherLinks}>
-            <PublisherLinks links={links} />
-          </div>
-        )}
+        {links?.length > 0 && <PublisherLinks links={links} />}
       </div>
     </div>
   )
