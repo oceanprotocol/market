@@ -1,2 +1,9 @@
-.header {
+.spacer {
+  height: calc(var(--spacer) * 4);
+}
+
+@media screen and (min-width: 42rem) {
+  .spacer {
+    height: calc(var(--spacer) / 1.5 * 4);
+  }
 }

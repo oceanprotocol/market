@@ -68,7 +68,7 @@
   --break-point--huge: 1400px;
 }
 
-.dark {
+/* .dark {
   --font-color-text: var(--brand-grey-lighter);
   --font-color-heading: var(--brand-grey-dimmed);
   --background-content: var(--brand-black);
@@ -77,4 +77,4 @@
   --background-highlight: var(--brand-grey-darker);
   --border-color: var(--brand-grey-dark);
   --box-shadow-color: rgba(0, 0, 0, 0.2);
-}
+} */

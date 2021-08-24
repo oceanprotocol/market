@@ -1,0 +1,19 @@
+{
+  "intro": {
+    "teaser": {
+      "title": "Try it yourself",
+      "text": "Feel free to use the assets listed below to experience what a new european data economy can feel like. If you want to learn more about how to connect to the backend infrastructure in a web3 world you can head to our dedicated [tutorial pages](/tutorial).",
+      "cta": "Try the Tutorial"
+    },
+    "paragraphs": [
+      {
+        "title": "What is a Gaia-X Portal?",
+        "body": "This demonstrator aims to bring to life a minimal viable Gaia-X Portal showing how the next generation of data infrastructure can look and feel like: An open, decentralized, transparent and secure digital ecosystem, where data and services are made available, collated and shared in an environment of trust."
+      },
+      {
+        "title": "How does it work?",
+        "body": "This Gaia-X Portal is built on top of [Ocean Protocol](https://oceanprotocol.com), a trustless, decentralized and privacy preserving data and AI sharing service. Using the built-in Compute-to-Data feature provided by Ocean Protocol, we are able to resolve the tradeoff between the benefits of using private data, and the risks of exposing it. The data is always under the control of it’s owner, never leaving it’s premise, yet 3rd parties are able to compute against it and can utilize computation results to train AI models for example."
+      }
+    ]
+  }
+}

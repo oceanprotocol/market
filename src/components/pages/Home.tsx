@@ -17,6 +17,8 @@ import { DDO, Logger } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../providers/UserPreferences'
 import styles from './Home.module.css'
+import Container from '../atoms/Container'
+import HomeIntro from '../organisms/HomeIntro'
 
 function getQueryLatest(chainIds: number[]): SearchQuery {
   return {
@@ -40,17 +42,21 @@ function sortElements(items: DDO[], sorted: string[]) {
   return items
 }
 
-function SectionQueryResult({
+export function SectionQueryResult({
   title,
   query,
   action,
-  queryData
+  queryData,
+  className,
+  assetListClassName
 }: {
   title: ReactElement | string
   query: SearchQuery
   action?: ReactElement
   queryData?: string
-}) {
+  className?: string
+  assetListClassName?: string
+}): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { chainIds } = useUserPreferences()
   const [result, setResult] = useState<QueryResult>()
@@ -96,12 +102,13 @@ function SectionQueryResult({
   }, [appConfig.metadataCacheUri, query, queryData])
 
   return (
-    <section className={styles.section}>
+    <section className={className || styles.section}>
       <h3>{title}</h3>
       <AssetList
         assets={result?.results}
         showPagination={false}
         isLoading={loading}
+        className={assetListClassName}
       />
       {action && action}
     </section>
@@ -114,20 +121,26 @@ export default function HomePage(): ReactElement {
   return (
     <Permission eventType="browse">
       <>
-        <section className={styles.section}>
-          <h3>Bookmarks</h3>
-          <Bookmarks />
+        <Container>
+          <section className={styles.section}>
+            <h3>Bookmarks</h3>
+            <Bookmarks />
+          </section>
+        </Container>
+        <section className={styles.intro}>
+          <HomeIntro />
         </section>
-
-        <SectionQueryResult
-          title="Recently Published"
-          query={getQueryLatest(chainIds)}
-          action={
-            <Button style="text" to="/search?sort=created&sortOrder=desc">
-              All data sets and algorithms →
-            </Button>
-          }
-        />
+        <Container>
+          <SectionQueryResult
+            title="Recently Published"
+            query={getQueryLatest(chainIds)}
+            action={
+              <Button style="text" to="/search?sort=created&sortOrder=desc">
+                All data sets and algorithms →
+              </Button>
+            }
+          />
+        </Container>
       </>
     </Permission>
   )

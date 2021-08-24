@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react'
 import classNames from 'classnames/bind'
 import styles from './PageHeader.module.css'
+import Badge from '../atoms/Badge'
 
 const cx = classNames.bind(styles)
 

@@ -27,12 +27,14 @@
 
 .input {
   background-color: transparent;
-  height: 36px;
+  height: 38px;
   margin: 0;
   outline: 0;
   padding-right: var(--spacer);
   width: 0;
   transition: none;
+  border: none;
+  cursor: pointer;
 }
 
 .input:focus {
@@ -42,31 +44,18 @@
   left: calc(var(--spacer) / 2);
   right: 0;
   z-index: 2;
-}
-
-@media screen and (min-width: 78rem) {
-  .input,
-  .input:focus {
-    width: auto;
-    position: relative;
-    left: initial;
-    right: initial;
-  }
-
-  .button {
-    width: auto;
-    left: auto;
-    background: none;
-  }
-
-  .input:focus + .button {
-    z-index: 3;
-  }
+  border: 2px solid var(--border-color-menu);
+  border-radius: var(--border-radius-menu);
+  cursor: text;
 }
 
 .searchIcon {
-  fill: currentColor;
+  fill: var(--color-primary);
   transition: 0.2s ease-out;
   width: var(--font-size-h5);
   height: var(--font-size-h5);
+}
+
+.input:hover .searchIcon {
+  fill: var(--color-menu-active);
 }

@@ -6,6 +6,7 @@ export default function Header(): ReactElement {
   return (
     <header className={styles.header}>
       <Menu />
+      <div className={styles.spacer} />
     </header>
   )
 }

@@ -5,10 +5,11 @@ import loadable from '@loadable/component'
 import styles from './Menu.module.css'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import UserPreferences from './UserPreferences'
-import Badge from '../atoms/Badge'
 import Logo from '../atoms/Logo'
 import Networks from './UserPreferences/Networks'
 import SearchBar from './SearchBar'
+import Container from '../atoms/Container'
+import Badge from '../atoms/Badge'
 
 const Wallet = loadable(() => import('./Wallet'))
 
@@ -33,31 +34,32 @@ function MenuLink({ item }: { item: MenuItem }) {
 }
 
 export default function Menu(): ReactElement {
-  const { menu, siteTitle, badge } = useSiteMetadata()
+  const { menu, badge } = useSiteMetadata()
 
   return (
-    <nav className={styles.menu}>
-      <Link to="/" className={styles.logo}>
-        <Logo branding />
-        <h1 className={styles.title}>
-          {siteTitle} <Badge label={badge} />
-        </h1>
-      </Link>
+    <div className={styles.wrapper}>
+      <Container>
+        <nav className={styles.menu}>
+          <Link to="/" className={styles.logo}>
+            <Logo branding />
+          </Link>
 
-      <ul className={styles.navigation}>
-        {menu.map((item: MenuItem) => (
-          <li key={item.name}>
-            <MenuLink item={item} />
-          </li>
-        ))}
-      </ul>
+          <ul className={styles.navigation}>
+            {menu.map((item: MenuItem) => (
+              <li key={item.name}>
+                <MenuLink item={item} />
+              </li>
+            ))}
+          </ul>
 
-      <div className={styles.actions}>
-        <SearchBar />
-        <Networks />
-        <Wallet />
-        <UserPreferences />
-      </div>
-    </nav>
+          <div className={styles.actions}>
+            <SearchBar />
+            <Networks />
+            <Wallet />
+            <UserPreferences />
+          </div>
+        </nav>
+      </Container>
+    </div>
   )
 }

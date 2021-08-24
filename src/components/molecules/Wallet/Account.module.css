@@ -1,11 +1,10 @@
 .button {
+  position: relative;
   font-family: var(--font-family-base);
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-small);
-  text-transform: uppercase;
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  padding: calc(var(--spacer) / 6) calc(var(--spacer) / 3);
+  border: none;
+  padding: calc(var(--spacer) / 6) var(--spacer);
   white-space: nowrap;
   background: var(--background-content);
   margin: 0;
@@ -18,17 +17,49 @@
 
 .button,
 .address {
-  color: var(--font-color-text);
+  color: var(--color-primary);
+  z-index: 1;
+}
+
+.button.initial {
+  color: var(--color-primary);
 }
 
 .button:hover,
 .button:focus {
   transform: none;
   outline: 0;
+  color: var(--brand-white);
 }
 
-.button.initial {
-  color: var(--color-primary);
+.button:before,
+.button:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.button:before {
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  background-color: var(--color-primary);
+  transition: transform 0.2s;
+  z-index: -1;
+}
+
+.button:hover:before {
+  transform: scaleX(1);
+}
+
+.button:after {
+  opacity: 1;
+  z-index: -1;
+  margin: 0;
+  border: 2px solid var(--border-color-menu);
+  border-radius: var(--border-radius-menu);
 }
 
 .button.initial span {

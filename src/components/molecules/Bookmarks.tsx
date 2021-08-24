@@ -129,7 +129,7 @@ export default function Bookmarks(): ReactElement {
       columns={columns}
       data={pinned}
       isLoading={isLoading}
-      emptyMessage="Your bookmarks will appear here."
+      emptyMessage="You can bookmark your favorite assets to pin them here."
       noTableHead
     />
   )
