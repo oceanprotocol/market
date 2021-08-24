@@ -11,6 +11,7 @@ import Input from '../../atoms/Input'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { MetadataPublishFormAlgorithm } from '../../../@types/MetaData'
 import { initialValues as initialValuesAlgorithm } from '../../../models/FormAlgoPublish'
+import AdvancedSettings from '../../molecules/FormFields/AdvancedSettings'
 import FormTitle from './FormTitle'
 import FormActions from './FormActions'
 import styles from './FormPublish.module.css'
@@ -35,6 +36,7 @@ const query = graphql`
               options
               disclaimer
               disclaimerValues
+              advanced
             }
             warning
           }
@@ -147,6 +149,7 @@ export default function FormPublish(): ReactElement {
 
       {content.data.map(
         (field: FormFieldProps) =>
+          field.advanced !== true &&
           ((field.name !== 'entrypoint' &&
             field.name !== 'image' &&
             field.name !== 'containerTag') ||
@@ -166,7 +169,10 @@ export default function FormPublish(): ReactElement {
             />
           )
       )}
-
+      <AdvancedSettings
+        content={content}
+        handleFieldChange={handleFieldChange}
+      />
       <FormActions
         isValid={isValid}
         resetFormAndClearStorage={resetFormAndClearStorage}

@@ -34,6 +34,7 @@ interface UseSiteMetadata {
     credentialType: string
     defaultPrivacyPolicySlug: string
     privacyPreferenceCenter: boolean
+    allowAdvancedPublishSettings: string
   }
 }
 
@@ -70,6 +71,7 @@ const query = graphql`
           allowDynamicPricing
           allowFreePricing
           allowAdvancedSettings
+          allowAdvancedPublishSettings
           credentialType
           defaultPrivacyPolicySlug
           privacyPreferenceCenter

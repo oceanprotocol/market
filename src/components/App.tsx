@@ -40,7 +40,6 @@ export default function App({
   const { warning, appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
-  // const { isGraphSynced, blockHead, blockGraph } = useGraphSyncStatus()
 
   return (
     <Styles>
