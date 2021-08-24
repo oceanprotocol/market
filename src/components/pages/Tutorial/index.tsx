@@ -10,11 +10,11 @@ import TutorialChapter, {
 } from '../../molecules/TutorialChapter'
 import { Spin as Hamburger } from 'hamburger-react'
 import { DDO } from '@oceanprotocol/lib'
-import PageHistory from '../History'
 import Chapter2 from './Chapters/Chapter2'
 import Chapter4 from './Chapters/Chapter4'
 import Chapter9 from './Chapters/Chapter9'
 import Chapter10 from './Chapters/Chapter10'
+import Chapter11 from './Chapters/Chapter11'
 interface TutorialChapterNode {
   node: {
     frontmatter: {
@@ -122,15 +122,7 @@ export default function PageTutorial({
     },
     {
       chapter: 11,
-      component: (
-        <Page
-          title="History"
-          description="Find the data sets and jobs that you previously accessed."
-          uri="/tutorial"
-        >
-          <PageHistory />
-        </Page>
-      )
+      component: <Chapter11 />
     }
   ]
 
