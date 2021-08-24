@@ -28,7 +28,7 @@ export default function PageHeader({
       {description && <p className={styles.description}>{description}</p>}
       {powered && (
         <>
-          <p className={styles.powered}>Powered by</p>
+          <p className={styles.powered}>This demonstrator is powered by</p>
           <a href="https://oceanprotocol.com" target="_blank" rel="noreferrer">
             <Logo />
           </a>

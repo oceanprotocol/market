@@ -42,7 +42,6 @@ export default function Menu(): ReactElement {
         <nav className={styles.menu}>
           <Link to="/" className={styles.logo}>
             <Logo branding />
-            <Badge label="Portal" className={styles.badge} />
           </Link>
 
           <ul className={styles.navigation}>
