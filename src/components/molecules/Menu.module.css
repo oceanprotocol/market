@@ -157,3 +157,7 @@
 .actions button {
   text-transform: none;
 }
+
+.badge {
+  align-self: flex-start;
+}

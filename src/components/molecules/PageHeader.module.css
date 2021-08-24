@@ -15,14 +15,29 @@
   }
 }
 
-.description {
+.description,
+.powered {
   font-size: var(--font-size-large);
   margin-top: calc(var(--spacer) / 4);
   margin-bottom: 0;
+}
+
+.powered {
+  margin-top: calc(var(--spacer) / 2);
 }
 
 .center {
   margin-left: auto;
   margin-right: auto;
   text-align: center;
+}
+
+.header a {
+  display: inline-block;
+  margin: calc(var(--spacer) / 2) auto var(--spacer) auto;
+}
+
+.header svg {
+  width: 7.5rem;
+  height: 7.5rem;
 }
