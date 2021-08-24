@@ -4,10 +4,25 @@
   margin: 0;
 }
 
+.branding {
+  width: 5rem;
+  height: auto;
+}
+
 .logo path {
   fill: var(--font-color-heading);
 }
 
 a > .logo:hover path {
   fill: var(--color-primary);
+}
+
+.branding path {
+  fill: var(--color-primary);
+}
+
+@media screen and (min-width: 42rem) {
+  .branding {
+    width: 7.5rem;
+  }
 }
