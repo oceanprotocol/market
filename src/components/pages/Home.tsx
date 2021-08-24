@@ -121,12 +121,12 @@ export default function HomePage(): ReactElement {
   return (
     <Permission eventType="browse">
       <>
-        <Container>
+        {/* <Container>
           <section className={styles.section}>
             <h3>Bookmarks</h3>
             <Bookmarks />
           </section>
-        </Container>
+        </Container> */}
         <section className={styles.intro}>
           <HomeIntro />
         </section>
