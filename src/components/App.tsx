@@ -60,7 +60,9 @@ export default function App({
         <main className={styles.main}>{children}</main>
         <Footer />
 
-        {appConfig.privacyPreferenceCenter && <PrivacyPreferenceCenter />}
+        {appConfig.privacyPreferenceCenter === 'true' && (
+          <PrivacyPreferenceCenter />
+        )}
       </div>
     </Styles>
   )

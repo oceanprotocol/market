@@ -51,7 +51,7 @@
         "allowFreePricing": "false",
         "allowAdvancedSettings": "false",
         "credentialType": "address",
-        "privacyPreferenceCenter": true
+        "privacyPreferenceCenter": "true"
       }
     }
   },

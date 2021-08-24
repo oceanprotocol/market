@@ -33,7 +33,7 @@ interface UseSiteMetadata {
     allowAdvancedSettings: string
     credentialType: string
     defaultPrivacyPolicySlug: string
-    privacyPreferenceCenter: boolean
+    privacyPreferenceCenter: string
     allowAdvancedPublishSettings: string
   }
 }

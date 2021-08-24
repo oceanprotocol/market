@@ -80,7 +80,7 @@ function ConsentProvider({ children }: { children: ReactNode }): ReactElement {
   }
 
   useEffect(() => {
-    if (!privacyPreferenceCenter) return
+    if (privacyPreferenceCenter !== 'true') return
 
     const initialValues = {} as ConsentStatus
     cookies.optionalCookies?.map((cookie) => {

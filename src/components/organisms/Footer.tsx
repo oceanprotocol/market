@@ -32,7 +32,7 @@ export default function Footer(): ReactElement {
           <Link to="/terms">Terms</Link>
           {' — '}
           <Link to={privacyPolicySlug}>Privacy</Link>
-          {appConfig.privacyPreferenceCenter && (
+          {appConfig.privacyPreferenceCenter === 'true' && (
             <>
               {' — '}
               <Button
