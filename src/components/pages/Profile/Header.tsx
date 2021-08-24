@@ -64,7 +64,7 @@ export default function AccountHeader({
         <div className={styles.grid}>
           <div>
             <Account image={image} name={name} />
-            <Stats />
+            <Stats accountId={accountId} />
           </div>
 
           <div>
@@ -92,10 +92,7 @@ export default function AccountHeader({
           </div>
         </div>
       ) : (
-        <p>
-          Please connect your Web3 wallet or add a valid publisher identifier in
-          the url.
-        </p>
+        ''
       )}
     </div>
   )

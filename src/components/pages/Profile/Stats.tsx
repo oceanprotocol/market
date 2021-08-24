@@ -21,8 +21,11 @@ import {
 } from '../../../utils/aquarius'
 import axios from 'axios'
 
-export default function Stats(): ReactElement {
-  const { accountId } = useWeb3()
+export default function Stats({
+  accountId
+}: {
+  accountId: string
+}): ReactElement {
   const { chainIds } = useUserPreferences()
 
   const [publishedAssets, setPublishedAssets] = useState<DDO[]>()
