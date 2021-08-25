@@ -1,5 +1,5 @@
 ---
-title: Terms and Conditions
+title: Exemplary Terms and Conditions
 description: Thanks for using our product and services.
 ---
 
