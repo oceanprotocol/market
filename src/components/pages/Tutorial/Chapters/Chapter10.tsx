@@ -1,7 +1,10 @@
-import React from 'react'
-import { ReactElement } from 'react-markdown'
+import React, { useState, useEffect, ReactElement } from 'react'
+import Page from '../../../templates/Page'
+import Alert from '../../../atoms/Alert'
+import Loader from '../../../atoms/Loader'
 import { useAsset } from '../../../../providers/Asset'
-import AssetActionsWrapper from '../../../templates/AssetActionsWrapper'
+import AssetActions from '../../../organisms/AssetActions'
+import styles from '../../../organisms/AssetContent/index.module.css'
 
 export default function Chapter10({
   showPriceTutorial,
@@ -10,11 +13,38 @@ export default function Chapter10({
   showPriceTutorial: boolean
   showComputeTutorial: boolean
 }): ReactElement {
-  const { ddo } = useAsset()
+  const { ddo, title, error, isInPurgatory, loading } = useAsset()
+  const [pageTitle, setPageTitle] = useState<string>()
+
+  useEffect(() => {
+    if (!ddo || error) {
+      setPageTitle('Could not retrieve asset')
+      return
+    }
+
+    setPageTitle(isInPurgatory ? '' : title)
+  }, [ddo, error, isInPurgatory, title])
+
   return (
     <>
-      {ddo && showPriceTutorial && showComputeTutorial && (
-        <AssetActionsWrapper uri={`/tutorial/${ddo.id}`} />
+      {showPriceTutorial &&
+      showComputeTutorial &&
+      ddo &&
+      pageTitle !== undefined &&
+      !loading ? (
+        <Page title={pageTitle} uri="/tutorial">
+          <div className={styles.actions}>
+            <AssetActions />
+          </div>
+        </Page>
+      ) : error ? (
+        <Page title={pageTitle} noPageHeader uri="/tutorial">
+          <Alert title={pageTitle} text={error} state="error" />
+        </Page>
+      ) : (
+        <Page title={undefined} uri="/tutorial">
+          <Loader />
+        </Page>
       )}
     </>
   )

@@ -1,5 +1,4 @@
-import React, { ReactElement } from 'react'
-import { Link } from 'gatsby'
+import React from 'react'
 import Dotdotdot from 'react-dotdotdot'
 import Price from '../atoms/Price'
 import { DDO, BestPrice } from '@oceanprotocol/lib'
@@ -9,31 +8,7 @@ import AssetType from '../atoms/AssetType'
 import NetworkName from '../atoms/NetworkName'
 import { useOcean } from '../../providers/Ocean'
 import styles from './AssetTeaser.module.css'
-
-export function LinkOpener({
-  tutorial,
-  ddo,
-  children
-}: {
-  tutorial?: boolean
-  ddo: DDO
-  children?: ReactElement
-}): ReactElement {
-  return tutorial ? (
-    <a
-      href={`/asset/${ddo.id}`}
-      className={styles.link}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      {children}
-    </a>
-  ) : (
-    <Link to={`/asset/${ddo.id}`} className={styles.link}>
-      {children}
-    </Link>
-  )
-}
+import LinkOpener from '../molecules/LinkOpener'
 
 declare type AssetTeaserProps = {
   ddo: DDO
@@ -56,7 +31,11 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
 
   return (
     <article className={`${styles.teaser} ${styles[type]}`}>
-      <LinkOpener ddo={ddo} tutorial={tutorial}>
+      <LinkOpener
+        uri={`/asset/${ddo.id}`}
+        className={styles.link}
+        openNewTab={tutorial}
+      >
         <>
           <header className={styles.header}>
             <div className={styles.symbol}>{dataTokenInfo?.symbol}</div>

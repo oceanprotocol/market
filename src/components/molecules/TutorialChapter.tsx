@@ -5,7 +5,6 @@ import Markdown from '../atoms/Markdown'
 import classNames from 'classnames/bind'
 import styles from './TutorialChapter.module.css'
 import VideoPlayer from './VideoPlayer'
-import InteractiveComponentDisplayer from './InteractiveComponentDisplayer'
 
 export interface TutorialChapterProps {
   id: string
@@ -64,9 +63,7 @@ export default function TutorialChapter({
         <Markdown text={chapter.markdown} />
         {videoUrl && <VideoPlayer videoUrl={videoUrl} />}
         {interactiveComponent && (
-          <InteractiveComponentDisplayer>
-            {interactiveComponent}
-          </InteractiveComponentDisplayer>
+          <div className={styles.interactive}>{interactiveComponent}</div>
         )}
       </section>
     </>

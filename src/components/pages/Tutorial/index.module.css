@@ -36,7 +36,7 @@
   height: 100vh;
 }
 
-.toc2 {
+.tocDesktop {
   display: none;
 }
 
@@ -56,7 +56,7 @@
     width: 75%;
   }
 
-  .toc2 {
+  .tocDesktop {
     display: block;
     position: sticky;
     position: -webkit-sticky;
@@ -68,7 +68,7 @@
     border-right: 1px solid var(--brand-grey-light);
   }
 
-  .toc2 li {
+  .tocDesktop li {
     margin: calc(var(--spacer) / 2);
   }
 

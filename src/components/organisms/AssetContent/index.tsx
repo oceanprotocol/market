@@ -59,6 +59,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   const [isOwner, setIsOwner] = useState(false)
   const { ddo, price, metadata, type } = useAsset()
   const { appConfig } = useSiteMetadata()
+  const { tutorial } = props
 
   useEffect(() => {
     if (!accountId || !owner) return
@@ -71,33 +72,30 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
 
   function handleEditButton() {
     // move user's focus to top of screen
-    if (!props.tutorial) {
+    if (!tutorial) {
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     }
     setShowEdit(true)
   }
 
   function handleEditComputeButton() {
-    if (!props.tutorial) {
+    if (!tutorial) {
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     }
     setShowEditCompute(true)
   }
 
   function handleEditAdvancedSettingsButton() {
-    if (!props.tutorial) {
+    if (!tutorial) {
       window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     }
     setShowEditAdvancedSettings(true)
   }
 
-  return showEdit && !props.tutorial ? (
+  return showEdit && !tutorial ? (
     <Edit setShowEdit={setShowEdit} isComputeType={isComputeType} />
   ) : showEditCompute ? (
-    <EditComputeDataset
-      setShowEdit={setShowEditCompute}
-      tutorial={props.tutorial}
-    />
+    <EditComputeDataset setShowEdit={setShowEditCompute} tutorial={tutorial} />
   ) : showEditAdvancedSettings ? (
     <EditAdvancedSettings setShowEdit={setShowEditAdvancedSettings} />
   ) : (
@@ -106,7 +104,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
         <NetworkName networkId={ddo.chainId} className={styles.network} />
       </div>
 
-      <article className={props.tutorial ? styles.gridTutorial : styles.grid}>
+      <article className={tutorial ? styles.gridTutorial : styles.grid}>
         <div>
           {showPricing && <Pricing ddo={ddo} />}
           <div className={styles.content}>
@@ -173,7 +171,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
           </div>
         </div>
 
-        {!props.tutorial && (
+        {!tutorial && (
           <div className={styles.actions}>
             <AssetActions />
           </div>

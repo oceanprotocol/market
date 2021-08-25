@@ -27,11 +27,6 @@ interface TutorialChapterNode {
   }
 }
 
-interface Interactivity {
-  chapter: number
-  component: ReactElement
-}
-
 const query = graphql`
   query {
     content: allMarkdownRemark(filter: {fileAbsolutePath: {regex: "/.+\/pages\/tutorial\/.+\\.md/"}}, sort: { fields: frontmatter___chapter}) {
@@ -132,7 +127,10 @@ export default function PageTutorial({
   ]
 
   const findInteractiveComponent = (
-    arr: Interactivity[],
+    arr: {
+      chapter: number
+      component: ReactElement
+    }[],
     chapterNumber: number
   ) => {
     if (!chapterNumber) return
@@ -166,7 +164,7 @@ export default function PageTutorial({
           </div>
         </div>
 
-        <div className={styles.toc2}>
+        <div className={styles.tocDesktop}>
           <h3>Table of contents</h3>
           <ul>
             {chapters.map((chapter, i) => (
