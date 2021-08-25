@@ -19,7 +19,9 @@ export function getOceanConfig(network: string | number): ConfigHelperConfig {
   return network === 'gaiaxtestnet' || network === 2021000
     ? {
         ...config,
-        nodeUri: 'https://rpc.gaiaxtestnet.oceanprotocol.com/'
+        nodeUri: 'https://rpc.gaiaxtestnet.oceanprotocol.com/',
+        metadataCacheUri: 'https://aquarius.gaiax.delta-dao.com',
+        providerUri: 'https://provider.gaiaxtestnet.oceanprotocol.com'
       }
     : config
 }
