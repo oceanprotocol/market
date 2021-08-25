@@ -55,7 +55,7 @@ module.exports = {
   // Used to show or hide the fixed, dynamic or free price options
   // tab to publishers during the price creation.
   allowFixedPricing: process.env.GATSBY_ALLOW_FIXED_PRICING || 'true',
-  allowDynamicPricing: process.env.GATSBY_ALLOW_DYNAMIC_PRICING || 'true',
+  allowDynamicPricing: process.env.GATSBY_ALLOW_DYNAMIC_PRICING || 'false',
   allowFreePricing: process.env.GATSBY_ALLOW_FREE_PRICING || 'false',
 
   // Used to show or hide advanced settings button in asset details page

@@ -151,11 +151,13 @@ async function getAssetMetadata(
 export default function ComputeJobs({
   minimal,
   assetDTAddress,
-  chainId
+  chainId,
+  tutorial
 }: {
   minimal?: boolean
   assetDTAddress?: string
   chainId?: number
+  tutorial?: boolean
 }): ReactElement {
   const { ocean, account, config, connect } = useOcean()
   const { accountId, networkId } = useWeb3()
@@ -164,6 +166,7 @@ export default function ComputeJobs({
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
 
   const columnsMinimal = [columns[4], columns[5], columns[3]]
+  const columnsTutorial = [columns[0], columns[2], columns[4], columns[5]]
 
   useEffect(() => {
     async function initOcean() {
@@ -345,7 +348,9 @@ export default function ComputeJobs({
         </Button>
       )}
       <Table
-        columns={minimal ? columnsMinimal : columns}
+        columns={
+          minimal ? columnsMinimal : tutorial ? columnsTutorial : columns
+        }
         data={jobs}
         isLoading={isLoading}
         defaultSortField="row.dateCreated"

@@ -10,7 +10,7 @@ export default function Chapter11(): ReactElement {
       description="Find the data sets and jobs that you previously accessed."
       uri="/tutorial"
     >
-      <PageHistory />
+      <PageHistory tutorial />
     </Page>
   )
 }

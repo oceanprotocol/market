@@ -31,13 +31,17 @@ const tabs = [
     title: 'Compute Jobs',
     content: (
       <OceanProvider>
-        <ComputeJobs />
+        <ComputeJobs tutorial />
       </OceanProvider>
     )
   }
 ]
 
-export default function HistoryPage(): ReactElement {
+export default function HistoryPage({
+  tutorial
+}: {
+  tutorial?: boolean
+}): ReactElement {
   const { chainIds } = useUserPreferences()
   const { appConfig } = useSiteMetadata()
   const { allowDynamicPricing } = appConfig
@@ -50,7 +54,7 @@ export default function HistoryPage(): ReactElement {
       : tabs.filter((e) => !e.title.toLowerCase().includes('pool'))
 
   let defaultTabIndex = 0
-  defaultTab === 'ComputeJobs'
+  defaultTab === 'ComputeJobs' || tutorial
     ? (defaultTabIndex = visualizedTabs.findIndex(
         (e) => e.title === 'Compute Jobs'
       ))
