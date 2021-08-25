@@ -23,8 +23,8 @@
                   "link": "/publish"
                 },
                 {
-                  "name": "Account",
-                  "link": "/account"
+                  "name": "Profile",
+                  "link": "/profile"
                 }
               ]
             }

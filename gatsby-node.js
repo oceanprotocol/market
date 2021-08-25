@@ -34,14 +34,14 @@ exports.onCreatePage = async ({ page, actions }) => {
   // page.matchPath is a special key that's used for matching pages
   // only on the client.
   const handleClientSideOnlyAsset = page.path.match(/^\/asset/)
-  const handleClientSideOnlyAccount = page.path.match(/^\/account/)
+  const handleClientSideOnlyAccount = page.path.match(/^\/profile/)
 
   if (handleClientSideOnlyAsset) {
     page.matchPath = '/asset/*'
     // Update the page.
     createPage(page)
   } else if (handleClientSideOnlyAccount) {
-    page.matchPath = '/account/*'
+    page.matchPath = '/profile/*'
     createPage(page)
   }
 }

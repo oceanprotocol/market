@@ -1,5 +1,6 @@
 import React, { ReactElement } from 'react'
 import HistoryPage from './History'
+import AccountHeader from './Header'
 import { useWeb3 } from '../../../providers/Web3'
 
 export default function AccountPage({
@@ -12,11 +13,7 @@ export default function AccountPage({
 
   return (
     <article>
-      {accountIdentifier ? (
-        <p>WIP Account metadata header for user: {accountIdentifier}</p>
-      ) : (
-        <p>Please connect your Web3 wallet.</p>
-      )}
+      <AccountHeader accountId={accountIdentifier} />
       <HistoryPage accountIdentifier={accountIdentifier} />
     </article>
   )

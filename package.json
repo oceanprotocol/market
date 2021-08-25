@@ -27,7 +27,7 @@
   "dependencies": {
     "@coingecko/cryptoformat": "^0.4.2",
     "@loadable/component": "^5.15.0",
-    "@oceanprotocol/art": "^3.0.0",
+    "@oceanprotocol/art": "^3.2.0",
     "@oceanprotocol/lib": "^0.17.0",
     "@oceanprotocol/typographies": "^0.1.0",
     "@portis/web3": "^4.0.4",

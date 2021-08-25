@@ -1,0 +1,50 @@
+.grid {
+  composes: box from '../../atoms/Box.module.css';
+  display: grid;
+  gap: var(--spacer);
+  align-items: center;
+  background: var(--background-body-transparent);
+  backdrop-filter: blur(3px);
+}
+
+@media (min-width: 50rem) {
+  .grid {
+    /* lazy golden ratio */
+    grid-template-columns: 1.618fr 1fr;
+  }
+
+  .description {
+    -webkit-line-clamp: 7 !important;
+  }
+}
+
+.infoSection {
+  border-right: 1px solid var(--border-color);
+}
+
+.descriptionLabel {
+  color: var(--color-secondary);
+  font-size: var(--font-size-large);
+  font-weight: var(--font-weight-bold);
+}
+
+.description {
+  color: var(--color-secondary);
+  font-size: var(--font-size-small);
+  margin-bottom: unset;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.publisherLinks {
+  margin-top: calc(var(--spacer) / 2);
+}
+
+.more {
+  font-size: var(--font-size-mini);
+  margin-left: calc(var(--spacer) / 8);
+  cursor: pointer;
+}
