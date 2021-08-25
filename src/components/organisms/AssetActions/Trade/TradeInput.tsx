@@ -73,7 +73,7 @@ export default function TradeInput({
           size="small"
           onClick={() => {
             setFieldValue(name, item?.maxAmount)
-            handleValueChange(name, item?.maxAmount)
+            handleValueChange(name, Number(item?.maxAmount))
           }}
         >
           Use Max

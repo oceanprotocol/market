@@ -2,7 +2,7 @@ import { DDO } from '@oceanprotocol/lib'
 import addressConfig from '../../address.config'
 const { whitelists } = addressConfig
 
-interface UseAddressConfig {
+export interface UseAddressConfig {
   whitelists: {
     'publicKey.owner': string[]
     dataToken: string[]

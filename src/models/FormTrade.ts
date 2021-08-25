@@ -7,9 +7,9 @@ export interface FormTradeData extends PoolBalance {
 }
 
 export interface TradeItem {
-  amount: number
+  amount: string
   token: string
-  maxAmount: number
+  maxAmount: string
 }
 
 export const initialValues: FormTradeData = {

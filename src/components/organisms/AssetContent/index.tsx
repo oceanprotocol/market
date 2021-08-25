@@ -127,7 +127,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
                     >
                       Edit Metadata
                     </Button>
-                    {appConfig.allowAdvancedSettings === 'true' && (
+                    {accountId && appConfig.allowAdvancedSettings === 'true' && (
                       <>
                         <span className={styles.separator}>|</span>
                         <Button

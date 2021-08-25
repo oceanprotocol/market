@@ -8,6 +8,7 @@ import ComputeJobs from './ComputeJobs'
 import styles from './index.module.css'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import OceanProvider from '../../../providers/Ocean'
+import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import Button from '../../atoms/Button'
 
 const tabs = [
@@ -39,14 +40,26 @@ const tabs = [
 
 export default function HistoryPage(): ReactElement {
   const { chainIds } = useUserPreferences()
+  const { appConfig } = useSiteMetadata()
+  const { allowDynamicPricing } = appConfig
   const url = new URL(window.location.href)
   const defaultTab = url.searchParams.get('defaultTab')
+
+  const visualizedTabs =
+    allowDynamicPricing === 'true'
+      ? tabs
+      : tabs.filter((e) => !e.title.toLowerCase().includes('pool'))
+
   let defaultTabIndex = 0
-  defaultTab === 'ComputeJobs' ? (defaultTabIndex = 4) : (defaultTabIndex = 0)
+  defaultTab === 'ComputeJobs'
+    ? (defaultTabIndex = visualizedTabs.findIndex(
+        (e) => e.title === 'Compute Jobs'
+      ))
+    : (defaultTabIndex = 0)
   return (
     <article className={styles.content}>
       <Tabs
-        items={tabs}
+        items={visualizedTabs}
         className={styles.tabs}
         defaultIndex={defaultTabIndex}
       />
