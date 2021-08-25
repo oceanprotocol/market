@@ -48,6 +48,11 @@ export default function AccountHeader({
         setDescription(description || null)
         setImage(image || null)
         setLinks(links || [])
+      } else {
+        setName(null)
+        setDescription(null)
+        setImage(null)
+        setLinks([])
       }
     }
     getInfoFrom3Box()
