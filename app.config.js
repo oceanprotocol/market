@@ -6,14 +6,14 @@ module.exports = {
   // const { appConfig } = useSiteMetadata()
   // return appConfig.metadataCacheUri
   metadataCacheUri:
-    process.env.METADATACACHE_URI || 'https://aquarius.gaiax.delta-dao.com',
+    process.env.METADATACACHE_URI || 'https://aquarius.oceanprotocol.com',
 
   // List of chainIds which metadata cache queries will return by default.
   // This preselects the Chains user preferences.
-  chainIds: [2021000],
+  chainIds: [4],
 
   // List of all supported chainIds. Used to populate the Chains user preferences list.
-  chainIdsSupported: [2021000],
+  chainIdsSupported: [4],
 
   rbacUrl: process.env.GATSBY_RBAC_URL,
 
