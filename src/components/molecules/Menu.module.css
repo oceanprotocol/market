@@ -30,6 +30,16 @@
   display: flex;
 }
 
+.actions > * {
+  margin: 0 calc(var(--spacer) / 6);
+}
+.actions > *:last-child() {
+  margin-right: 0;
+}
+.actions > *:first-child() {
+  margin-left: 0;
+}
+
 .title {
   display: none;
 }

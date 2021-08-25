@@ -4,6 +4,7 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import AssetList from '../../organisms/AssetList'
 import axios from 'axios'
 import {
+  getDynamicPricingQuery,
   queryMetadata,
   transformChainIdsListToQuery
 } from '../../../utils/aquarius'
@@ -30,7 +31,7 @@ export default function PublishedList(): ReactElement {
           query_string: {
             query: `(publicKey.owner:${accountId}) AND (${transformChainIdsListToQuery(
               chainIds
-            )})`
+            )}) ${getDynamicPricingQuery()}`
           }
         },
         sort: { created: -1 }

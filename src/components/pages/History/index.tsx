@@ -9,6 +9,7 @@ import styles from './index.module.css'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import OceanProvider from '../../../providers/Ocean'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
+import Button from '../../atoms/Button'
 
 const tabs = [
   {
@@ -62,6 +63,15 @@ export default function HistoryPage(): ReactElement {
         className={styles.tabs}
         defaultIndex={defaultTabIndex}
       />
+      <Button
+        className={styles.printButton}
+        onClick={() => {
+          window.print()
+        }}
+        style="primary"
+      >
+        Print
+      </Button>
     </article>
   )
 }

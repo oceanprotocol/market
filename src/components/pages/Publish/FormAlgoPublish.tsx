@@ -35,6 +35,8 @@ const query = graphql`
               sortOptions
               options
               advanced
+              disclaimer
+              disclaimerValues
             }
             warning
           }

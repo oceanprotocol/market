@@ -19,6 +19,7 @@ interface UseSiteMetadata {
     main: string
     polygon: string
   }
+  badge: string
   appConfig: {
     metadataCacheUri: string
     infuraProjectId: string
@@ -33,6 +34,9 @@ interface UseSiteMetadata {
     allowAdvancedSettings: string
     credentialType: string
     allowAdvancedPublishSettings: string
+    displayWarning: boolean
+    defaultPrivacyPolicySlug: string
+    privacyPreferenceCenter: boolean
   }
 }
 
@@ -57,6 +61,7 @@ const query = graphql`
           main
           polygon
         }
+        badge
         appConfig {
           metadataCacheUri
           infuraProjectId
@@ -71,6 +76,9 @@ const query = graphql`
           allowAdvancedSettings
           allowAdvancedPublishSettings
           credentialType
+          displayWarning
+          defaultPrivacyPolicySlug
+          privacyPreferenceCenter
         }
       }
     }
