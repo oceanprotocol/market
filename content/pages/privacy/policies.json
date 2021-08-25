@@ -11,42 +11,6 @@
         "updated": "Last updated on",
         "dateFormat": "MM/dd/yyyy"
       }
-    },
-    {
-      "policy": "de",
-      "language": "Deutsch",
-      "date": "2021-07-31",
-      "params": {
-        "languageLabel": "Sprache",
-        "languageHelp": "Die Sprache der Datenschutzerklärung",
-        "tocHeader": "Inhalt",
-        "updated": "Letzte Aktualisierung am",
-        "dateFormat": "dd.MM.yyyy"
-      }
-    },
-    {
-      "policy": "es",
-      "language": "Español",
-      "date": "2021-08-02",
-      "params": {
-        "languageLabel": "Idioma",
-        "languageHelp": "El idioma de la política de privacidad",
-        "tocHeader": "Índice",
-        "updated": "Última actualización",
-        "dateFormat": "dd.MM.yyyy"
-      }
-    },
-    {
-      "policy": "fr",
-      "language": "Français",
-      "date": "2021-08-02",
-      "params": {
-        "languageLabel": "Langue",
-        "languageHelp": "La langue de la politique de confidentialité",
-        "tocHeader": "Sommaire",
-        "updated": "Dernière mise à jour le",
-        "dateFormat": "dd.MM.yyyy"
-      }
     }
   ]
 }

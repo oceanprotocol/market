@@ -13,26 +13,28 @@ export default function PrivacyLanguages({
   const { setPrivacyPolicySlug } = useUserPreferences()
 
   return (
-    <div className={styles.langSelect}>
-      <span className={styles.langLabel}>{label || 'Language'}</span>
-      <div className={styles.langOptions}>
-        {policies.map((policy, i) => {
-          const slug = `/privacy/${policy.policy}`
-          return (
-            <React.Fragment key={policy.policy}>
-              {i > 0 && ' — '}
-              <Link
-                to={slug}
-                onClick={() => {
-                  setPrivacyPolicySlug(slug)
-                }}
-              >
-                {policy.language}
-              </Link>
-            </React.Fragment>
-          )
-        })}
+    policies.length > 1 && (
+      <div className={styles.langSelect}>
+        <span className={styles.langLabel}>{label || 'Language'}</span>
+        <div className={styles.langOptions}>
+          {policies.map((policy, i) => {
+            const slug = `/privacy/${policy.policy}`
+            return (
+              <React.Fragment key={policy.policy}>
+                {i > 0 && ' — '}
+                <Link
+                  to={slug}
+                  onClick={() => {
+                    setPrivacyPolicySlug(slug)
+                  }}
+                >
+                  {policy.language}
+                </Link>
+              </React.Fragment>
+            )
+          })}
+        </div>
       </div>
-    </div>
+    )
   )
 }
