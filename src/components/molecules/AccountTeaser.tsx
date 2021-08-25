@@ -6,10 +6,13 @@ import Dotdotdot from 'react-dotdotdot'
 import { Profile } from '../../models/Profile'
 import { useWeb3 } from '../../providers/Web3'
 import get3BoxProfile from '../../utils/profile'
+import ExplorerLink from '../atoms/ExplorerLink'
+import Stats from '../pages/Profile/Stats'
 import styles from './AccountTeaser.module.css'
 
 declare type AccountTeaserProps = {
   account: string
+  large: boolean
 }
 
 const Blockies = ({ account }: { account: string | undefined }) => {
@@ -26,7 +29,7 @@ const Blockies = ({ account }: { account: string | undefined }) => {
   )
 }
 
-const AccountTeaser: React.FC<AccountTeaserProps> = ({ account }) => {
+const AccountTeaser: React.FC<AccountTeaserProps> = ({ account, large }) => {
   const { accountId, networkId } = useWeb3()
   const [profile, setProfile] = useState<Profile>()
 
@@ -45,16 +48,21 @@ const AccountTeaser: React.FC<AccountTeaserProps> = ({ account }) => {
     <article className={styles.teaser}>
       <Link to={`/account/${accountId}`} className={styles.link}>
         <header className={styles.header}>
-          <Dotdotdot clamp={3}>{profile && <h3> {profile.name}</h3>}</Dotdotdot>
-          <div className={styles.details}>
-            {profile.emoji || <Blockies account={accountId} />}
-            <p>{accountId}</p>
+          {profile?.emoji || <Blockies account={accountId} />}
+          <div>
+            <Dotdotdot className={styles.name} clamp={3}>
+              {profile && <h3> {profile.name}</h3>}
+            </Dotdotdot>
+            <div className={styles.account}>
+              <p>{accountId}</p>
+              <ExplorerLink
+                networkId={networkId}
+                path={`address/${accountId}`}
+              />
+            </div>
           </div>
         </header>
-        <div className={styles.content}>{profile?.description || ''}</div>
-        <footer className={styles.footer}>
-          {/* <div>add more account details</div> */}
-        </footer>
+        {large && <Stats accountId={accountId} />}
       </Link>
     </article>
   )
