@@ -25,6 +25,7 @@ export default function AssetActions(): ReactElement {
   const [dtBalance, setDtBalance] = useState<string>()
   const [fileMetadata, setFileMetadata] = useState<FileMetadata>(Object)
   const [fileIsLoading, setFileIsLoading] = useState<boolean>(false)
+  const [selectedTabName, setSelectedTabName] = useState<string>('Use')
   const isCompute = Boolean(ddo?.findServiceByType('compute'))
 
   const [isConsumable, setIsConsumable] = useState<boolean>(true)
@@ -148,14 +149,23 @@ export default function AssetActions(): ReactElement {
       }
     )
 
+  function onTabChange(tabName: string) {
+    setSelectedTabName(tabName)
+  }
+
   return (
     <>
       <Permission eventType="consume">
-        <Tabs items={tabs} className={styles.actions} />
+        <Tabs
+          items={tabs}
+          className={styles.actions}
+          handleTabChange={onTabChange}
+        />
       </Permission>
       <Web3Feedback
         isBalanceSufficient={isBalanceSufficient}
         isAssetNetwork={isAssetNetwork}
+        tabName={selectedTabName}
       />
     </>
   )

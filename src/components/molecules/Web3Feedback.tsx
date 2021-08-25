@@ -13,16 +13,18 @@ export declare type Web3Error = {
 
 export default function Web3Feedback({
   isBalanceSufficient,
-  isAssetNetwork
+  isAssetNetwork,
+  tabName
 }: {
   isBalanceSufficient?: boolean
   isAssetNetwork?: boolean
+  tabName?: string
 }): ReactElement {
   const { accountId } = useWeb3()
   const { isGraphSynced, blockGraph, blockHead } = useGraphSyncStatus()
   const showFeedback =
     !accountId ||
-    isBalanceSufficient === false ||
+    (isBalanceSufficient === false && tabName === 'Use') ||
     isAssetNetwork === false ||
     isGraphSynced === false
 
@@ -40,14 +42,14 @@ export default function Web3Feedback({
     : isGraphSynced === false
     ? `Data out of sync`
     : accountId
-    ? isBalanceSufficient === false
+    ? isBalanceSufficient === false && tabName === 'Use'
       ? 'Insufficient balance'
       : 'Connected to Ocean'
     : 'Something went wrong'
 
   const message = !accountId
     ? 'Please connect your Web3 wallet.'
-    : isBalanceSufficient === false
+    : tabName === 'Use' && isBalanceSufficient === false
     ? 'You do not have enough OCEAN in your wallet to purchase this asset.'
     : isGraphSynced === false
     ? `The data for this network has only synced to Ethereum block ${blockGraph} (out of ${blockHead}). Transactions may fail! Please check back soon`
