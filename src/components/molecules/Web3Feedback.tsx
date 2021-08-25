@@ -28,12 +28,13 @@ export default function Web3Feedback({
     isAssetNetwork === false ||
     isGraphSynced === false
 
-  const state =
-    !accountId || !isGraphSynced
-      ? 'error'
-      : accountId && isBalanceSufficient && isAssetNetwork
-      ? 'success'
-      : 'warning'
+  const state = !isAssetNetwork
+    ? 'warning'
+    : !accountId || !isGraphSynced
+    ? 'error'
+    : accountId && isBalanceSufficient && isAssetNetwork
+    ? 'success'
+    : 'warning'
 
   const title = !accountId
     ? 'No account connected'
