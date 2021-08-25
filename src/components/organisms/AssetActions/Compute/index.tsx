@@ -90,6 +90,9 @@ export default function Compute({
 
   const hasDatatoken = Number(dtBalance) >= 1
 
+  const url = new URL(window.location.href)
+  const tutorial = url.pathname === '/tutorial'
+
   const isComputeButtonDisabled =
     isJobStarting === true ||
     file === null ||
@@ -470,7 +473,7 @@ export default function Compute({
         {isPublished && (
           <SuccessConfetti
             success="Your job started successfully! Watch the progress on the history page."
-            action={<SuccessAction />}
+            action={!tutorial ? <SuccessAction /> : null}
           />
         )}
       </footer>

@@ -1,5 +1,4 @@
 .wrapper {
-  display: flex;
   margin-top: calc(var(--spacer) * 5);
   position: relative;
 }
@@ -71,5 +70,9 @@
 
   .toc2 li {
     margin: calc(var(--spacer) / 2);
+  }
+
+  .wrapper {
+    display: flex;
   }
 }
