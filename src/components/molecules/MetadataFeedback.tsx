@@ -1,7 +1,7 @@
 import Alert from '../atoms/Alert'
 import Button from '../atoms/Button'
 import Loader from '../atoms/Loader'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useState, FormEvent } from 'react'
 import styles from './MetadataFeedback.module.css'
 import SuccessConfetti from '../atoms/SuccessConfetti'
 
@@ -55,13 +55,29 @@ export default function MetadataFeedback({
   successAction: Action
   setError: (error: string) => void
 }): ReactElement {
+  const [moreInfo, setMoreInfo] = useState<boolean>(false)
+
+  function toggleMoreInfo(e: FormEvent<Element>) {
+    e.preventDefault()
+    moreInfo === true ? setMoreInfo(false) : setMoreInfo(true)
+  }
+
   return (
     <div className={styles.feedback}>
       <div className={styles.box}>
         <h3>{title}</h3>
         {error ? (
           <>
-            <Alert text={error} state="error" />
+            <p>Sorry, something went wrong. Please try again.</p>
+            {moreInfo && <Alert text={error} state="error" />}
+            <Button
+              style="text"
+              size="small"
+              onClick={toggleMoreInfo}
+              className={styles.moreInfo}
+            >
+              {moreInfo === false ? 'More Info' : 'Hide error'}
+            </Button>
             <ActionError setError={setError} />
           </>
         ) : success ? (

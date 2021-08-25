@@ -4,6 +4,7 @@ import styles from './Fixed.module.css'
 import FormHelp from '../../../../atoms/Input/Help'
 import { DDO } from '@oceanprotocol/lib'
 import Price from './Price'
+import Fees from './Fees'
 
 export default function Fixed({
   ddo,
@@ -16,6 +17,7 @@ export default function Fixed({
     <div className={styles.fixed}>
       <FormHelp className={stylesIndex.help}>{content.info}</FormHelp>
       <Price ddo={ddo} />
+      <Fees tooltips={content.tooltips} pricingType="fixed" />
     </div>
   )
 }

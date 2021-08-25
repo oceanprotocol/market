@@ -1,5 +1,5 @@
 import React from 'react'
-import Web3Feedback from './Feedback'
+import Web3Feedback from '../Web3Feedback'
 import web3Mock from '../../../../tests/unit/__mocks__/web3'
 import { Center } from '../../../../.storybook/helpers'
 

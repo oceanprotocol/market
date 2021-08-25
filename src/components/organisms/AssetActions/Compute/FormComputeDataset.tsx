@@ -51,12 +51,14 @@ export default function FormStartCompute({
   hasPreviousOrder,
   hasDatatoken,
   dtBalance,
+  datasetLowPoolLiquidity,
   assetType,
   assetTimeout,
   hasPreviousOrderSelectedComputeAsset,
   hasDatatokenSelectedComputeAsset,
   dtSymbolSelectedComputeAsset,
   dtBalanceSelectedComputeAsset,
+  selectedComputeAssetLowPoolLiquidity,
   selectedComputeAssetType,
   selectedComputeAssetTimeout,
   stepText,
@@ -72,12 +74,14 @@ export default function FormStartCompute({
   hasPreviousOrder: boolean
   hasDatatoken: boolean
   dtBalance: string
+  datasetLowPoolLiquidity: boolean
   assetType: string
   assetTimeout: string
   hasPreviousOrderSelectedComputeAsset?: boolean
   hasDatatokenSelectedComputeAsset?: boolean
   dtSymbolSelectedComputeAsset?: string
   dtBalanceSelectedComputeAsset?: string
+  selectedComputeAssetLowPoolLiquidity?: boolean
   selectedComputeAssetType?: string
   selectedComputeAssetTimeout?: string
   stepText: string
@@ -90,7 +94,7 @@ export default function FormStartCompute({
 
   const { isValid, values }: FormikContextType<{ algorithm: string }> =
     useFormikContext()
-  const { price, ddo } = useAsset()
+  const { price, ddo, isAssetNetwork } = useAsset()
   const [totalPrice, setTotalPrice] = useState(price?.value)
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
@@ -171,12 +175,16 @@ export default function FormStartCompute({
       <ButtonBuy
         action="compute"
         disabled={
-          isComputeButtonDisabled || !isValid || algorithmConsumableStatus > 0
+          isComputeButtonDisabled ||
+          !isValid ||
+          !isAssetNetwork ||
+          algorithmConsumableStatus > 0
         }
         hasPreviousOrder={hasPreviousOrder}
         hasDatatoken={hasDatatoken}
         dtSymbol={ddo.dataTokenInfo.symbol}
         dtBalance={dtBalance}
+        datasetLowPoolLiquidity={datasetLowPoolLiquidity}
         assetTimeout={assetTimeout}
         assetType={assetType}
         hasPreviousOrderSelectedComputeAsset={
@@ -185,6 +193,9 @@ export default function FormStartCompute({
         hasDatatokenSelectedComputeAsset={hasDatatokenSelectedComputeAsset}
         dtSymbolSelectedComputeAsset={dtSymbolSelectedComputeAsset}
         dtBalanceSelectedComputeAsset={dtBalanceSelectedComputeAsset}
+        selectedComputeAssetLowPoolLiquidity={
+          selectedComputeAssetLowPoolLiquidity
+        }
         selectedComputeAssetType={selectedComputeAssetType}
         stepText={stepText}
         isLoading={isLoading}

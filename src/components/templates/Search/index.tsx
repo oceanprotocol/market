@@ -1,7 +1,6 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import Permission from '../../organisms/Permission'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
-import SearchBar from '../../molecules/SearchBar'
 import AssetList from '../../organisms/AssetList'
 import styles from './index.module.css'
 import queryString from 'query-string'
@@ -10,7 +9,8 @@ import Sort from './sort'
 import { getResults } from './utils'
 import { navigate } from 'gatsby'
 import { updateQueryStringParameter } from '../../../utils'
-import { useOcean } from '../../../providers/Ocean'
+import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
+import { useUserPreferences } from '../../../providers/UserPreferences'
 
 export default function SearchPage({
   location,
@@ -19,9 +19,10 @@ export default function SearchPage({
   location: Location
   setTotalResults: (totalResults: number) => void
 }): ReactElement {
-  const { config } = useOcean()
+  const { appConfig } = useSiteMetadata()
   const parsed = queryString.parse(location.search)
   const { text, owner, tags, page, sort, sortOrder, serviceType } = parsed
+  const { chainIds } = useUserPreferences()
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [loading, setLoading] = useState<boolean>()
   const [service, setServiceType] = useState<string>(serviceType as string)
@@ -31,11 +32,15 @@ export default function SearchPage({
   )
 
   useEffect(() => {
-    if (!config?.metadataCacheUri) return
+    if (!appConfig.metadataCacheUri) return
     async function initSearch() {
       setLoading(true)
       setTotalResults(undefined)
-      const queryResult = await getResults(parsed, config.metadataCacheUri)
+      const queryResult = await getResults(
+        parsed,
+        appConfig.metadataCacheUri,
+        chainIds
+      )
       setQueryResult(queryResult)
       setTotalResults(queryResult.totalResults)
       setLoading(false)
@@ -49,7 +54,8 @@ export default function SearchPage({
     page,
     serviceType,
     sortOrder,
-    config.metadataCacheUri
+    appConfig.metadataCacheUri,
+    chainIds
   ])
 
   function setPage(page: number) {
@@ -65,9 +71,6 @@ export default function SearchPage({
     <Permission eventType="browse">
       <>
         <div className={styles.search}>
-          {(text || owner || tags) && (
-            <SearchBar initialValue={(text || owner) as string} />
-          )}
           <div className={styles.row}>
             <ServiceFilter
               serviceType={service}

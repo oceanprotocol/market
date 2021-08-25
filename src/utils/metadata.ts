@@ -42,6 +42,7 @@ export function secondsToString(numberOfSeconds: number): string {
   if (numberOfSeconds === 0) return 'Forever'
 
   const years = Math.floor(numberOfSeconds / 31536000)
+  const months = Math.floor((numberOfSeconds %= 31536000) / 2630000)
   const weeks = Math.floor((numberOfSeconds %= 31536000) / 604800)
   const days = Math.floor((numberOfSeconds %= 604800) / 86400)
   const hours = Math.floor((numberOfSeconds %= 86400) / 3600)
@@ -50,6 +51,8 @@ export function secondsToString(numberOfSeconds: number): string {
 
   return years
     ? `${years} year${numberEnding(years)}`
+    : months
+    ? `${months} month${numberEnding(months)}`
     : weeks
     ? `${weeks} week${numberEnding(weeks)}`
     : days
@@ -238,4 +241,30 @@ export function transformPublishAlgorithmFormToMetadata(
   }
 
   return metadata
+}
+
+function idToName(id: number): string {
+  switch (id) {
+    case 1:
+      return 'eth'
+    case 137:
+      return 'polygon'
+    case 3:
+      return 'ropsten'
+    case 4:
+      return 'rinkeby'
+    case 1287:
+      return 'moonbase'
+    default:
+      return 'eth'
+  }
+}
+
+export function mapChainIdsToNetworkNames(chainIds: number[]): string[] {
+  const networkNames: string[] = []
+  for (let i = 0; i < chainIds.length; i++) {
+    const networkName = idToName(chainIds[i])
+    networkNames.push(networkName)
+  }
+  return networkNames
 }

@@ -3,6 +3,7 @@ import Permission from '../../components/organisms/Permission'
 import { PageProps } from 'gatsby'
 import PageTemplateAssetDetails from '../../components/templates/PageAssetDetails'
 import AssetProvider from '../../providers/Asset'
+import OceanProvider from '../../providers/Ocean'
 
 export default function PageGatsbyAssetDetails(props: PageProps): ReactElement {
   const [did, setDid] = useState<string>()
@@ -14,7 +15,9 @@ export default function PageGatsbyAssetDetails(props: PageProps): ReactElement {
   return (
     <Permission eventType="browse">
       <AssetProvider asset={did}>
-        <PageTemplateAssetDetails uri={props.location.pathname} />
+        <OceanProvider>
+          <PageTemplateAssetDetails uri={props.location.pathname} />
+        </OceanProvider>
       </AssetProvider>
     </Permission>
   )

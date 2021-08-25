@@ -9,7 +9,7 @@ import { useAsset } from '../../../../providers/Asset'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import { MetadataPreview } from '../../../molecules/MetadataPreview'
 import Debug from './DebugEditMetadata'
-import Web3Feedback from '../../../molecules/Wallet/Feedback'
+import Web3Feedback from '../../../molecules/Web3Feedback'
 import FormEditMetadata from './FormEditMetadata'
 import { mapTimeoutStringToSeconds } from '../../../../utils/metadata'
 import styles from './index.module.css'
@@ -55,9 +55,11 @@ const contentQuery = graphql`
 `
 
 export default function Edit({
-  setShowEdit
+  setShowEdit,
+  isComputeType
 }: {
   setShowEdit: (show: boolean) => void
+  isComputeType?: boolean
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
@@ -105,7 +107,8 @@ export default function Edit({
       const ddoEditedMetdata = await ocean.assets.editMetadata(ddo, {
         title: values.name,
         description: values.description,
-        links: typeof values.links !== 'string' ? values.links : []
+        links: typeof values.links !== 'string' ? values.links : [],
+        author: values.author === '' ? ' ' : values.author
       })
 
       price.type === 'exchange' &&
@@ -200,6 +203,7 @@ export default function Edit({
                 setTimeoutStringValue={setTimeoutStringValue}
                 values={initialValues}
                 showPrice={price.type === 'exchange'}
+                isComputeDataset={isComputeType}
               />
 
               <aside>

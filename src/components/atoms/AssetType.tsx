@@ -21,9 +21,6 @@ export default function AssetType({
   })
   return (
     <div className={styleClasses}>
-      <div className={styles.typeLabel}>
-        {type === 'dataset' ? 'data set' : 'algorithm'}
-      </div>
       {accessType === 'access' ? (
         <Download role="img" aria-label="Download" className={styles.icon} />
       ) : accessType === 'compute' && type === 'algorithm' ? (
@@ -31,6 +28,10 @@ export default function AssetType({
       ) : (
         <Compute role="img" aria-label="Compute" className={styles.icon} />
       )}
+
+      <div className={styles.typeLabel}>
+        {type === 'dataset' ? 'data set' : 'algorithm'}
+      </div>
     </div>
   )
 }

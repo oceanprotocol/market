@@ -1,0 +1,22 @@
+overwrite: true
+schema: 'https://subgraph.rinkeby.oceanprotocol.com/subgraphs/name/oceanprotocol/ocean-subgraph'
+documents:
+  - './src/utils/subgraph.ts'
+  - './src/components/pages/History/PoolShares.tsx'
+  - './src/components/pages/History/Downloads.tsx'
+  - './src/components/pages/History/ComputeJobs/index.tsx'
+  - './src/components/organisms/AssetContent/EditHistory.tsx'
+  # - './src/components/organisms/AssetActions/Pool/index.tsx'
+  - './src/components/organisms/AssetActions/Pool/Graph.tsx'
+  - './src/components/organisms/AssetActions/Consume.tsx'
+  - './src/components/molecules/PoolTransactions.tsx'
+  - './src/components/molecules/MarketStats.tsx'
+generates:
+  ./src/@types/graph.types.ts:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-react-apollo'
+  ./graphql.schema.json:
+    plugins:
+      - 'introspection'

@@ -1,13 +1,12 @@
 import React, { ChangeEvent, ReactElement } from 'react'
-import styles from './FormEditMetadata.module.css'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
-import Button from '../../../atoms/Button'
+import { useOcean } from '../../../../providers/Ocean'
 import Input from '../../../atoms/Input'
 import { FormFieldProps } from '../../../../@types/Form'
 import { MetadataPublishFormDataset } from '../../../../@types/MetaData'
 import { checkIfTimeoutInPredefinedValues } from '../../../../utils/metadata'
-import { useOcean } from '../../../../providers/Ocean'
-import { useWeb3 } from '../../../../providers/Web3'
+import FormActions from './FormActions'
+import styles from './FormEditMetadata.module.css'
 
 function handleTimeoutCustomOption(
   data: FormFieldProps[],
@@ -42,24 +41,23 @@ function handleTimeoutCustomOption(
     data[timeoutInputIndex].options[5] = values.timeout
   }
 }
-
 export default function FormEditMetadata({
   data,
   setShowEdit,
   setTimeoutStringValue,
   values,
-  showPrice
+  showPrice,
+  isComputeDataset
 }: {
   data: FormFieldProps[]
   setShowEdit: (show: boolean) => void
   setTimeoutStringValue: (value: string) => void
   values: Partial<MetadataPublishFormDataset>
   showPrice: boolean
+  isComputeDataset: boolean
 }): ReactElement {
-  const { accountId } = useWeb3()
-  const { ocean, config } = useOcean()
+  const { config } = useOcean()
   const {
-    isValid,
     validateField,
     setFieldValue
   }: FormikContextType<Partial<MetadataPublishFormDataset>> = useFormikContext()
@@ -73,11 +71,21 @@ export default function FormEditMetadata({
     validateField(field.name)
     setFieldValue(field.name, e.target.value)
   }
-
   // This component is handled by Formik so it's not rendered like a "normal" react component,
   // so handleTimeoutCustomOption is called only once.
   // https://github.com/oceanprotocol/market/pull/324#discussion_r561132310
   if (data && values) handleTimeoutCustomOption(data, values)
+
+  const timeoutOptionsArray = data.filter(
+    (field) => field.name === 'timeout'
+  )[0].options
+
+  if (isComputeDataset && timeoutOptionsArray.includes('Forever')) {
+    const foreverOptionIndex = timeoutOptionsArray.indexOf('Forever')
+    timeoutOptionsArray.splice(foreverOptionIndex, 1)
+  } else if (!isComputeDataset && !timeoutOptionsArray.includes('Forever')) {
+    timeoutOptionsArray.push('Forever')
+  }
 
   return (
     <Form className={styles.form}>
@@ -86,6 +94,11 @@ export default function FormEditMetadata({
           (!showPrice && field.name === 'price') || (
             <Field
               key={field.name}
+              options={
+                field.name === 'timeout' && isComputeDataset === true
+                  ? timeoutOptionsArray
+                  : field.options
+              }
               {...field}
               component={Input}
               prefix={field.name === 'price' && config.oceanTokenSymbol}
@@ -96,18 +109,10 @@ export default function FormEditMetadata({
           )
       )}
 
-      <footer className={styles.actions}>
-        <Button
-          style="primary"
-          disabled={!ocean || !accountId || !isValid}
-          onClick={() => setTimeoutStringValue(values.timeout)}
-        >
-          Submit
-        </Button>
-        <Button style="text" onClick={() => setShowEdit(false)}>
-          Cancel
-        </Button>
-      </footer>
+      <FormActions
+        setShowEdit={setShowEdit}
+        handleClick={() => setTimeoutStringValue(values.timeout)}
+      />
     </Form>
   )
 }
