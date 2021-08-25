@@ -16,21 +16,25 @@ const serviceFilterItems = [
 
 export default function FilterPrice({
   serviceType,
-  setServiceType
+  setServiceType,
+  isSearch
 }: {
   serviceType: string
   setServiceType: React.Dispatch<React.SetStateAction<string>>
+  isSearch: boolean
 }): ReactElement {
   const navigate = useNavigate()
   const [serviceSelections, setServiceSelections] = useState<string[]>([])
 
   async function applyServiceFilter(filterBy: string) {
-    let urlLocation = await addExistingParamsToUrl(location, ['serviceType'])
-    if (filterBy && location.search.indexOf('&serviceType') === -1) {
-      urlLocation = `${urlLocation}&serviceType=${filterBy}`
-    }
     setServiceType(filterBy)
-    navigate(urlLocation)
+    if (isSearch) {
+      let urlLocation = await addExistingParamsToUrl(location, ['serviceType'])
+      if (filterBy && location.search.indexOf('&serviceType') === -1) {
+        urlLocation = `${urlLocation}&serviceType=${filterBy}`
+      }
+      navigate(urlLocation)
+    }
   }
 
   async function handleSelectedFilter(isSelected: boolean, value: string) {
@@ -58,14 +62,14 @@ export default function FilterPrice({
     }
   }
 
-  async function applyClearFilter() {
-    let urlLocation = await addExistingParamsToUrl(location, ['serviceType'])
-
-    urlLocation = `${urlLocation}`
-
+  async function applyClearFilter(isSearch: boolean) {
     setServiceSelections([])
     setServiceType(undefined)
-    navigate(urlLocation)
+    if (isSearch) {
+      let urlLocation = await addExistingParamsToUrl(location, ['serviceType'])
+      urlLocation = `${urlLocation}`
+      navigate(urlLocation)
+    }
   }
 
   return (
@@ -100,7 +104,7 @@ export default function FilterPrice({
             key={index}
             className={showClear ? styles.showClear : styles.hideClear}
             onClick={async () => {
-              applyClearFilter()
+              applyClearFilter(isSearch)
             }}
           >
             {e.display}

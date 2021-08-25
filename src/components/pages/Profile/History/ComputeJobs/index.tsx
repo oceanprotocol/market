@@ -1,32 +1,32 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import web3 from 'web3'
-import Time from '../../../atoms/Time'
+import Time from '../../../../atoms/Time'
 import { Link } from 'gatsby'
 import { DDO, Logger, Service, Provider } from '@oceanprotocol/lib'
-import { ComputeJobMetaData } from '../../../../@types/ComputeJobMetaData'
+import { ComputeJobMetaData } from '../../../../../@types/ComputeJobMetaData'
 import Dotdotdot from 'react-dotdotdot'
-import Table from '../../../atoms/Table'
-import Button from '../../../atoms/Button'
-import { useOcean } from '../../../../providers/Ocean'
+import Table from '../../../../atoms/Table'
+import Button from '../../../../atoms/Button'
+import { useOcean } from '../../../../../providers/Ocean'
 import { gql } from 'urql'
-import { useWeb3 } from '../../../../providers/Web3'
+import { useWeb3 } from '../../../../../providers/Web3'
 import {
   queryMetadata,
   transformChainIdsListToQuery
-} from '../../../../utils/aquarius'
+} from '../../../../../utils/aquarius'
 import axios, { CancelToken } from 'axios'
 import Details from './Details'
 import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
-import { ReactComponent as Refresh } from '../../../../images/refresh.svg'
+import { ReactComponent as Refresh } from '../../../../../images/refresh.svg'
 import styles from './index.module.css'
-import { useUserPreferences } from '../../../../providers/UserPreferences'
-import { getOceanConfig } from '../../../../utils/ocean'
-import { fetchDataForMultipleChains } from '../../../../utils/subgraph'
+import { useUserPreferences } from '../../../../../providers/UserPreferences'
+import { getOceanConfig } from '../../../../../utils/ocean'
+import { fetchDataForMultipleChains } from '../../../../../utils/subgraph'
 import {
   OrdersData_tokenOrders as OrdersData,
   OrdersData_tokenOrders_datatokenId as OrdersDatatoken
-} from '../../../../@types/apollo/OrdersData'
-import NetworkName from '../../../atoms/NetworkName'
+} from '../../../../../@types/apollo/OrdersData'
+import NetworkName from '../../../../atoms/NetworkName'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
