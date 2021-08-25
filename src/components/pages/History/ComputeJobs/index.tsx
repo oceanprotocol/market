@@ -340,8 +340,10 @@ export default function ComputeJobs({
   useEffect(() => {
     if (!tutorial) return
     const timer = setTimeout(() => {
-      const findTutorialAsset = jobRef.current.some((job) =>
-        job.inputDID.find((did) => did === tutorialDID)
+      const findTutorialAsset = jobRef.current.some(
+        (job) =>
+          job.inputDID.find((did) => did === tutorialDID) &&
+          job.statusText === 'Job finished'
       )
       if (findTutorialAsset) return
       console.log('Refreshing history')

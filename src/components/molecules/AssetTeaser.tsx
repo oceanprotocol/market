@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { Link } from 'gatsby'
 import Dotdotdot from 'react-dotdotdot'
 import Price from '../atoms/Price'
@@ -9,6 +9,31 @@ import AssetType from '../atoms/AssetType'
 import NetworkName from '../atoms/NetworkName'
 import { useOcean } from '../../providers/Ocean'
 import styles from './AssetTeaser.module.css'
+
+export function LinkOpener({
+  tutorial,
+  ddo,
+  children
+}: {
+  tutorial?: boolean
+  ddo: DDO
+  children?: ReactElement
+}): ReactElement {
+  return tutorial ? (
+    <a
+      href={`/asset/${ddo.id}`}
+      className={styles.link}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {children}
+    </a>
+  ) : (
+    <Link to={`/asset/${ddo.id}`} className={styles.link}>
+      {children}
+    </Link>
+  )
+}
 
 declare type AssetTeaserProps = {
   ddo: DDO
@@ -26,36 +51,41 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
   const accessType = isCompute ? 'compute' : 'access'
   const { owner } = ddo.publicKey[0]
 
+  const url = new URL(window.location.href)
+  const tutorial = url.pathname === '/tutorial'
+
   return (
     <article className={`${styles.teaser} ${styles[type]}`}>
-      <Link to={`/asset/${ddo.id}`} className={styles.link}>
-        <header className={styles.header}>
-          <div className={styles.symbol}>{dataTokenInfo?.symbol}</div>
-          <Dotdotdot clamp={3}>
-            <h1 className={styles.title}>{name}</h1>
-          </Dotdotdot>
-          <Publisher account={owner} minimal className={styles.publisher} />
-        </header>
+      <LinkOpener ddo={ddo} tutorial={tutorial}>
+        <>
+          <header className={styles.header}>
+            <div className={styles.symbol}>{dataTokenInfo?.symbol}</div>
+            <Dotdotdot clamp={3}>
+              <h1 className={styles.title}>{name}</h1>
+            </Dotdotdot>
+            <Publisher account={owner} minimal className={styles.publisher} />
+          </header>
 
-        <AssetType
-          type={type}
-          accessType={accessType}
-          className={styles.typeDetails}
-        />
+          <AssetType
+            type={type}
+            accessType={accessType}
+            className={styles.typeDetails}
+          />
 
-        <div className={styles.content}>
-          <Dotdotdot tagName="p" clamp={3}>
-            {removeMarkdown(
-              attributes?.additionalInformation?.description || ''
-            )}
-          </Dotdotdot>
-        </div>
+          <div className={styles.content}>
+            <Dotdotdot tagName="p" clamp={3}>
+              {removeMarkdown(
+                attributes?.additionalInformation?.description || ''
+              )}
+            </Dotdotdot>
+          </div>
 
-        <footer className={styles.foot}>
-          <Price price={price} small />
-          <NetworkName networkId={ddo.chainId} className={styles.network} />
-        </footer>
-      </Link>
+          <footer className={styles.foot}>
+            <Price price={price} small />
+            <NetworkName networkId={ddo.chainId} className={styles.network} />
+          </footer>
+        </>
+      </LinkOpener>
     </article>
   )
 }
