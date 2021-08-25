@@ -52,6 +52,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   const { owner, isInPurgatory, purgatoryData, isAssetNetwork } = useAsset()
   const [showPricing, setShowPricing] = useState(false)
   const [showEdit, setShowEdit] = useState<boolean>()
+  const [isComputeType, setIsComputeType] = useState<boolean>(false)
   const [showEditCompute, setShowEditCompute] = useState<boolean>()
   const [showEditAdvancedSettings, setShowEditAdvancedSettings] =
     useState<boolean>()
@@ -65,7 +66,8 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
     const isOwner = accountId.toLowerCase() === owner.toLowerCase()
     setIsOwner(isOwner)
     setShowPricing(isOwner && price.type === '')
-  }, [accountId, price, owner])
+    setIsComputeType(Boolean(ddo.findServiceByType('compute')))
+  }, [accountId, price, owner, ddo])
 
   function handleEditButton() {
     // move user's focus to top of screen
@@ -90,7 +92,7 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   }
 
   return showEdit && !props.tutorial ? (
-    <Edit setShowEdit={setShowEdit} />
+    <Edit setShowEdit={setShowEdit} isComputeType={isComputeType} />
   ) : showEditCompute ? (
     <EditComputeDataset
       setShowEdit={setShowEditCompute}

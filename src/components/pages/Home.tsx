@@ -1,17 +1,10 @@
-import React, {
-  ReactElement,
-  useEffect,
-  useState,
-  ReactSVGElement
-} from 'react'
-import SearchBar from '../molecules/SearchBar'
+import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './Home.module.css'
 import AssetList from '../organisms/AssetList'
 import {
   QueryResult,
   SearchQuery
 } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
-import Container from '../atoms/Container'
 import Button from '../atoms/Button'
 import Bookmarks from '../molecules/Bookmarks'
 import axios from 'axios'
@@ -28,10 +21,10 @@ import { useUserPreferences } from '../../providers/UserPreferences'
 async function getQueryHighest(
   chainIds: number[]
 ): Promise<[SearchQuery, string]> {
-  const dids = await getHighestLiquidityDIDs(chainIds)
+  const [dids, didsLength] = await getHighestLiquidityDIDs(chainIds)
   const queryHighest = {
     page: 1,
-    offset: dids.length,
+    offset: didsLength,
     query: {
       query_string: {
         query: `(${dids}) AND (${transformChainIdsListToQuery(
@@ -81,29 +74,40 @@ export function SectionQueryResult({
   className?: string
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
+  const { chainIds } = useUserPreferences()
   const [result, setResult] = useState<QueryResult>()
   const [loading, setLoading] = useState<boolean>()
-  const { chainIds } = useUserPreferences()
 
   useEffect(() => {
     if (!appConfig.metadataCacheUri) return
     const source = axios.CancelToken.source()
 
     async function init() {
-      try {
-        setLoading(true)
-        const result = await queryMetadata(query, source.token)
-        if (queryData && result.totalResults > 0) {
-          const searchDIDs = queryData.split(' ')
-          const sortedAssets = sortElements(result.results, searchDIDs)
-          const overflow = sortedAssets.length - 9
-          sortedAssets.splice(sortedAssets.length - overflow, overflow)
-          result.results = sortedAssets
+      if (chainIds.length === 0) {
+        const result: QueryResult = {
+          results: [],
+          page: 0,
+          totalPages: 0,
+          totalResults: 0
         }
         setResult(result)
         setLoading(false)
-      } catch (error) {
-        Logger.log(error.message)
+      } else {
+        try {
+          setLoading(true)
+          const result = await queryMetadata(query, source.token)
+          if (queryData && result.totalResults > 0) {
+            const searchDIDs = queryData.split(' ')
+            const sortedAssets = sortElements(result.results, searchDIDs)
+            const overflow = sortedAssets.length - 9
+            sortedAssets.splice(sortedAssets.length - overflow, overflow)
+            result.results = sortedAssets
+          }
+          setResult(result)
+          setLoading(false)
+        } catch (error) {
+          Logger.error(error.message)
+        }
       }
     }
     init()
