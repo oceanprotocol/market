@@ -1,5 +1,6 @@
 import { DDO } from '@oceanprotocol/lib'
 import addressConfig from '../../address.config'
+const { whitelists } = addressConfig
 
 interface UseAddressConfig {
   whitelists: {
@@ -10,13 +11,19 @@ interface UseAddressConfig {
   isDDOWhitelisted: (ddo: DDO) => boolean
 }
 
-export function useAddressConfig(): UseAddressConfig {
-  const { whitelists } = addressConfig
+function isWhitelistEnabled() {
+  return (
+    Object.values(whitelists).filter((whitelist) => whitelist.length > 0)
+      .length > 0
+  )
+}
 
+export function useAddressConfig(): UseAddressConfig {
   const isAddressWhitelisted = function (
     address: string,
     field?: keyof UseAddressConfig['whitelists']
   ) {
+    if (!isWhitelistEnabled()) return true
     return field
       ? whitelists[field].some(
           (whitelistedAddress) => whitelistedAddress === address
@@ -27,8 +34,10 @@ export function useAddressConfig(): UseAddressConfig {
   }
 
   const isDDOWhitelisted = function (ddo: DDO) {
+    if (!isWhitelistEnabled()) return true
     return (
       ddo &&
+      isWhitelistEnabled() &&
       (isAddressWhitelisted(ddo.dataTokenInfo.address, 'dataToken') ||
         ddo.publicKey
           .map((pk) => {
