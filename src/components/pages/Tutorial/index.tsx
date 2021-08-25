@@ -122,7 +122,12 @@ export default function PageTutorial({
     },
     {
       chapter: 11,
-      component: <Chapter11 />
+      component: (
+        <Chapter11
+          showPriceTutorial={showPriceTutorial}
+          showComputeTutorial={showComputeTutorial}
+        />
+      )
     }
   ]
 

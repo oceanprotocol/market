@@ -16,3 +16,4 @@ content/networks-metadata.json
 src/@types/apollo
 graphql.schema.json
 src/@types/graph.types.ts
+node_modules/

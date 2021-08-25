@@ -31,22 +31,19 @@ const tabs = [
     title: 'Compute Jobs',
     content: (
       <OceanProvider>
-        <ComputeJobs tutorial />
+        <ComputeJobs />
       </OceanProvider>
     )
   }
 ]
 
-export default function HistoryPage({
-  tutorial
-}: {
-  tutorial?: boolean
-}): ReactElement {
+export default function HistoryPage(): ReactElement {
   const { chainIds } = useUserPreferences()
   const { appConfig } = useSiteMetadata()
   const { allowDynamicPricing } = appConfig
   const url = new URL(window.location.href)
   const defaultTab = url.searchParams.get('defaultTab')
+  const tutorial = url.pathname === '/tutorial'
 
   const visualizedTabs =
     allowDynamicPricing === 'true'

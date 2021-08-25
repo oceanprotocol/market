@@ -7,8 +7,7 @@ import Pricing from '../../../organisms/AssetContent/Pricing'
 import Page from '../../../templates/Page'
 import PagePublish from '../../Publish'
 import StylesTeaser from '../../../molecules/MetadataFeedback.module.css'
-import { BestPrice, DDO } from '@oceanprotocol/lib'
-import { CancelToken } from 'axios'
+import { DDO } from '@oceanprotocol/lib'
 import { useAsset } from '../../../../providers/Asset'
 
 export default function Chapter4({

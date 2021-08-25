@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useRef, useState } from 'react'
 import web3 from 'web3'
 import Time from '../../../atoms/Time'
 import { Link } from 'gatsby'
@@ -27,6 +27,7 @@ import {
   OrdersData_tokenOrders_datatokenId as OrdersDatatoken
 } from '../../../../@types/apollo/OrdersData'
 import NetworkName from '../../../atoms/NetworkName'
+import { useAsset } from '../../../../providers/Asset'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -151,22 +152,25 @@ async function getAssetMetadata(
 export default function ComputeJobs({
   minimal,
   assetDTAddress,
-  chainId,
-  tutorial
+  chainId
 }: {
   minimal?: boolean
   assetDTAddress?: string
   chainId?: number
-  tutorial?: boolean
 }): ReactElement {
   const { ocean, account, config, connect } = useOcean()
   const { accountId, networkId } = useWeb3()
   const [isLoading, setIsLoading] = useState(true)
   const { chainIds } = useUserPreferences()
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
+  const url = new URL(window.location.href)
+  const tutorial = url.pathname === '/tutorial'
+  const tutorialDID = useAsset().ddo?.id
+  const jobRef = useRef(jobs)
+  jobRef.current = jobs
 
   const columnsMinimal = [columns[4], columns[5], columns[3]]
-  const columnsTutorial = [columns[0], columns[2], columns[4], columns[5]]
+  const columnsTutorial = [columns[0], columns[4], columns[5]]
 
   useEffect(() => {
     async function initOcean() {
@@ -331,6 +335,20 @@ export default function ComputeJobs({
     }
     getJobs()
   }, [ocean, account, chainIds, accountId])
+
+  // refresh history compute tab every 10 seconds for tutorial page
+  useEffect(() => {
+    if (!tutorial) return
+    const timer = setTimeout(() => {
+      const findTutorialAsset = jobRef.current.some((job) =>
+        job.inputDID.find((did) => did === tutorialDID)
+      )
+      if (findTutorialAsset) return
+      console.log('Refreshing history')
+      getJobs()
+    }, 10000)
+    return () => clearTimeout(timer)
+  }, [jobRef.current])
 
   return accountId ? (
     <>

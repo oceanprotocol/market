@@ -3,14 +3,24 @@ import { ReactElement } from 'react-markdown'
 import Page from '../../../templates/Page'
 import PageHistory from '../../History'
 
-export default function Chapter11(): ReactElement {
+export default function Chapter11({
+  showPriceTutorial,
+  showComputeTutorial
+}: {
+  showPriceTutorial: boolean
+  showComputeTutorial: boolean
+}): ReactElement {
   return (
-    <Page
-      title="History"
-      description="Find the data sets and jobs that you previously accessed."
-      uri="/tutorial"
-    >
-      <PageHistory tutorial />
-    </Page>
+    <>
+      {showPriceTutorial && showComputeTutorial && (
+        <Page
+          title="History"
+          description="Find the data sets and jobs that you previously accessed."
+          uri="/tutorial"
+        >
+          <PageHistory />
+        </Page>
+      )}
+    </>
   )
 }
