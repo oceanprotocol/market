@@ -42,6 +42,7 @@ export function secondsToString(numberOfSeconds: number): string {
   if (numberOfSeconds === 0) return 'Forever'
 
   const years = Math.floor(numberOfSeconds / 31536000)
+  const months = Math.floor((numberOfSeconds %= 31536000) / 2630000)
   const weeks = Math.floor((numberOfSeconds %= 31536000) / 604800)
   const days = Math.floor((numberOfSeconds %= 604800) / 86400)
   const hours = Math.floor((numberOfSeconds %= 86400) / 3600)
@@ -50,6 +51,8 @@ export function secondsToString(numberOfSeconds: number): string {
 
   return years
     ? `${years} year${numberEnding(years)}`
+    : months
+    ? `${months} month${numberEnding(months)}`
     : weeks
     ? `${weeks} week${numberEnding(weeks)}`
     : days

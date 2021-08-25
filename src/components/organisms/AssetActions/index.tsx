@@ -14,10 +14,11 @@ import { useWeb3 } from '../../../providers/Web3'
 import Web3Feedback from '../../molecules/Web3Feedback'
 import { getFileInfo } from '../../../utils/provider'
 import axios from 'axios'
+import { getOceanConfig } from '../../../utils/ocean'
 
 export default function AssetActions(): ReactElement {
   const { accountId, balance } = useWeb3()
-  const { ocean, config, account } = useOcean()
+  const { ocean, account } = useOcean()
   const { price, ddo, isAssetNetwork } = useAsset()
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
@@ -30,9 +31,10 @@ export default function AssetActions(): ReactElement {
   const [consumableFeedback, setConsumableFeedback] = useState<string>('')
 
   useEffect(() => {
-    if (!ddo || !accountId) return
+    if (!ddo || !accountId || !ocean || !isAssetNetwork) return
+
     async function checkIsConsumable() {
-      const consumable: any = await ocean.assets.isConsumable(
+      const consumable = await ocean.assets.isConsumable(
         ddo,
         accountId.toLowerCase()
       )
@@ -42,17 +44,20 @@ export default function AssetActions(): ReactElement {
       }
     }
     checkIsConsumable()
-  }, [accountId, ddo])
+  }, [accountId, isAssetNetwork, ddo, ocean])
 
   useEffect(() => {
-    if (!config) return
+    const oceanConfig = getOceanConfig(ddo.chainId)
+    if (!oceanConfig) return
+
     const source = axios.CancelToken.source()
+
     async function initFileInfo() {
       setFileIsLoading(true)
       try {
         const fileInfo = await getFileInfo(
           DID.parse(`${ddo.id}`),
-          config.providerUri,
+          oceanConfig.providerUri,
           source.token
         )
 
@@ -60,15 +65,16 @@ export default function AssetActions(): ReactElement {
       } catch (error) {
         Logger.error(error.message)
       } finally {
-        // this triggers a memory leak warrning, no idea how to fix
+        // this triggers a memory leak warning, no idea how to fix
         setFileIsLoading(false)
       }
     }
     initFileInfo()
+
     return () => {
       source.cancel()
     }
-  }, [config, ddo])
+  }, [ddo])
 
   // Get and set user DT balance
   useEffect(() => {
