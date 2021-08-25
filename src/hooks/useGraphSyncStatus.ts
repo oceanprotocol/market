@@ -98,7 +98,7 @@ export function useGraphSyncStatus(): UseGraphSyncStatus {
       setIsGraphSynced(false)
       return
     }
-    setIsGraphSynced(false)
+    setIsGraphSynced(true)
   }, [blockGraph, blockHead, web3Loading, subgraphLoading])
 
   return { blockHead, blockGraph, isGraphSynced }

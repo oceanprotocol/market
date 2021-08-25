@@ -12,13 +12,9 @@ export declare type Web3Error = {
 }
 
 export default function Web3Feedback({
-  isBalanceSufficient,
-  isAssetNetwork,
-  tabName
+  isAssetNetwork
 }: {
-  isBalanceSufficient?: boolean
   isAssetNetwork?: boolean
-  tabName?: string
 }): ReactElement {
   const { accountId } = useWeb3()
   const { isGraphSynced, blockGraph, blockHead } = useGraphSyncStatus()
@@ -26,10 +22,7 @@ export default function Web3Feedback({
   const [title, setTitle] = useState<string>()
   const [message, setMessage] = useState<string>()
   const showFeedback =
-    !accountId ||
-    (isBalanceSufficient === false && tabName === 'Use') ||
-    isAssetNetwork === false ||
-    isGraphSynced === false
+    !accountId || isAssetNetwork === false || isGraphSynced === false
 
   /* const state = !isAssetNetwork
     ? 'warning'
@@ -68,12 +61,6 @@ export default function Web3Feedback({
       setState('error')
       setTitle('Not connected to asset network')
       setMessage('Please connect your Web3 wallet.')
-    } else if (isBalanceSufficient === false && tabName === 'Use') {
-      setState('error')
-      setTitle('Insufficient balance')
-      setMessage(
-        'You do not have enough OCEAN in your wallet to purchase this asset.'
-      )
     } else if (isGraphSynced === false) {
       setState('warning')
       setTitle('Data out of sync')
@@ -85,7 +72,7 @@ export default function Web3Feedback({
       setTitle('Something went wrong.')
       setMessage('Something went wrong.')
     }
-  }, [accountId, isGraphSynced, isBalanceSufficient, isAssetNetwork, tabName])
+  }, [accountId, isGraphSynced, isAssetNetwork])
 
   return showFeedback ? (
     <section className={styles.feedback}>

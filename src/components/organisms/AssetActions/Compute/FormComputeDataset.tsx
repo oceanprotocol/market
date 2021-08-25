@@ -61,6 +61,7 @@ export default function FormStartCompute({
   selectedComputeAssetLowPoolLiquidity,
   selectedComputeAssetType,
   selectedComputeAssetTimeout,
+  isBalanceSufficient,
   stepText,
   algorithmPrice,
   isConsumable,
@@ -77,6 +78,7 @@ export default function FormStartCompute({
   datasetLowPoolLiquidity: boolean
   assetType: string
   assetTimeout: string
+  isBalanceSufficient: boolean
   hasPreviousOrderSelectedComputeAsset?: boolean
   hasDatatokenSelectedComputeAsset?: boolean
   dtSymbolSelectedComputeAsset?: string
@@ -202,6 +204,7 @@ export default function FormStartCompute({
         type="submit"
         priceType={price?.type}
         algorithmPriceType={algorithmPrice?.type}
+        isBalanceSufficient={isBalanceSufficient}
         isConsumable={isConsumable}
         consumableFeedback={consumableFeedback}
         algorithmConsumableStatus={algorithmConsumableStatus}

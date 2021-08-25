@@ -3,6 +3,7 @@ import { Decimal } from 'decimal.js'
 // Run decimal.js comparison
 // http://mikemcl.github.io/decimal.js/#cmp
 export default function compareAsBN(balance: string, price: string): boolean {
+  console.log(balance, price)
   const aBN = new Decimal(balance)
   const bBN = new Decimal(price)
   const compare = aBN.comparedTo(bBN)

@@ -443,6 +443,7 @@ export default function Compute({
             setSelectedAlgorithm={setSelectedAlgorithmAsset}
             isLoading={isJobStarting}
             isComputeButtonDisabled={isComputeButtonDisabled}
+            isBalanceSufficient={isBalanceSufficient}
             hasPreviousOrder={hasPreviousDatasetOrder}
             hasDatatoken={hasDatatoken}
             dtBalance={dtBalance}
