@@ -1,10 +1,7 @@
 .wrapper {
+  display: flex;
   margin-top: calc(var(--spacer) * 5);
   position: relative;
-}
-
-.tutorial {
-  padding-left: var(--spacer);
 }
 
 .toc {
@@ -57,18 +54,22 @@
     display: none;
   }
   .tutorial {
-    margin-left: 15rem;
+    width: 75%;
   }
 
   .toc2 {
     display: block;
-    position: fixed;
-    top: 38vh;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 4rem;
     background-color: transparent;
-    width: 15rem;
-    margin-bottom: calc(var(--spacer) * 2);
-    margin-right: 2rem;
-    padding: var(--spacer) 0;
+    width: 25%;
+    height: fit-content;
+    margin-right: calc(var(--spacer));
     border-right: 1px solid var(--brand-grey-light);
+  }
+
+  .toc2 li {
+    margin: calc(var(--spacer) / 2);
   }
 }
