@@ -2,10 +2,10 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import { useAsset } from '../../../providers/Asset'
 import ExplorerLink from '../../atoms/ExplorerLink'
 import Time from '../../atoms/Time'
-import styles from './EditHistory.module.css'
-import { gql, useQuery } from 'urql'
+import { gql, OperationContext, useQuery } from 'urql'
 import { ReceiptData_datatokens_updates as ReceiptData } from '../../../@types/apollo/ReceiptData'
-import { useWeb3 } from '../../../providers/Web3'
+import { getQueryContext } from '../../../utils/subgraph'
+import styles from './EditHistory.module.css'
 
 const getReceipts = gql`
   query ReceiptData($address: ID!) {
@@ -20,14 +20,32 @@ const getReceipts = gql`
 `
 
 export default function EditHistory(): ReactElement {
-  const { networkId } = useWeb3()
   const { ddo } = useAsset()
+
+  //
+  // 1. Construct subgraph query based on DDO.
+  // Need to wait for it to avoid infinite rerender loop with useQuery.
+  //
+  const [queryContext, setQueryContext] = useState<OperationContext>()
+
+  useEffect(() => {
+    if (!ddo) return
+
+    const queryContext = getQueryContext(ddo.chainId)
+    setQueryContext(queryContext)
+  }, [ddo])
+
   const [result] = useQuery({
     query: getReceipts,
-    variables: { address: ddo?.dataToken.toLowerCase() }
+    variables: { address: ddo?.dataToken.toLowerCase() },
+    context: queryContext,
+    pause: !ddo || !queryContext
   })
   const { data } = result
 
+  //
+  // 2. Construct display data based on fetched data.
+  //
   const [receipts, setReceipts] = useState<ReceiptData[]>()
   const [creationTx, setCreationTx] = useState<string>()
 
@@ -51,8 +69,7 @@ export default function EditHistory(): ReactElement {
         {receipts?.map((receipt) => (
           <li key={receipt.id} className={styles.item}>
             <ExplorerLink networkId={ddo.chainId} path={`/tx/${receipt.tx}`}>
-              edited{' '}
-              <Time date={receipt.timestamp.toString()} relative isUnix />
+              edited <Time date={`${receipt.timestamp}`} relative isUnix />
             </ExplorerLink>
           </li>
         ))}

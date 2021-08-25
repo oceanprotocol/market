@@ -1,6 +1,5 @@
 import { createClient, Provider, Client } from 'urql'
 import React, { useState, useEffect, ReactNode, ReactElement } from 'react'
-import { useWeb3 } from './Web3'
 import { Logger } from '@oceanprotocol/lib'
 import { getOceanConfig } from '../utils/ocean'
 
@@ -22,11 +21,16 @@ export default function UrqlClientProvider({
 }: {
   children: ReactNode
 }): ReactElement {
-  const { networkId } = useWeb3()
+  //
+  // Set a default client here based on ETH Mainnet, as that's required for
+  // urql to work.
+  // Throughout code base this client is then used and altered by passing
+  // a new queryContext holding different subgraph URLs.
+  //
   const [client, setClient] = useState<Client>()
 
   useEffect(() => {
-    const oceanConfig = getOceanConfig(networkId || 1)
+    const oceanConfig = getOceanConfig(1)
 
     if (!oceanConfig?.subgraphUri) {
       Logger.error(
@@ -39,8 +43,9 @@ export default function UrqlClientProvider({
     urqlClient = newClient
     setClient(newClient)
     Logger.log(`[URQL] Client connected to ${oceanConfig.subgraphUri}`)
-  }, [networkId])
+  }, [])
 
   return client ? <Provider value={client}>{children}</Provider> : <></>
 }
+
 export { UrqlClientProvider }
