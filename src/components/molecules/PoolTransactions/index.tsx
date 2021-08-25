@@ -130,13 +130,14 @@ const columnsMinimal = [columns[0], columns[3]]
 export default function PoolTransactions({
   poolAddress,
   poolChainId,
-  minimal
+  minimal,
+  accountId
 }: {
   poolAddress?: string
   poolChainId?: number[]
   minimal?: boolean
+  accountId: string
 }): ReactElement {
-  const { accountId } = useWeb3()
   const [logs, setLogs] = useState<PoolTransaction[]>()
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const { chainIds } = useUserPreferences()

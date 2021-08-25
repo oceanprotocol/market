@@ -39,10 +39,10 @@ import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelectio
 import AlgorithmDatasetsListForCompute from '../../AssetContent/AlgorithmDatasetsListForCompute'
 import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
 import AssetActionHistoryTable from '../../AssetActionHistoryTable'
-import ComputeJobs from '../../../pages/History/ComputeJobs'
+import ComputeJobs from '../../../pages/Account/History/ComputeJobs'
 
 const SuccessAction = () => (
-  <Button style="text" to="/history?defaultTab=ComputeJobs" size="small">
+  <Button style="text" to="/account?defaultTab=ComputeJobs" size="small">
     Go to history →
   </Button>
 )
