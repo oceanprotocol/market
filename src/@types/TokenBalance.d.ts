@@ -1,6 +1,6 @@
 export interface PoolBalance {
-  ocean: number
-  datatoken: number
+  ocean: string
+  datatoken: string
 }
 
 export interface UserBalance {

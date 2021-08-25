@@ -42,8 +42,8 @@ export default function FormTrade({
 }: {
   ddo: DDO
   balance: PoolBalance
-  maxDt: number
-  maxOcean: number
+  maxDt: string
+  maxOcean: string
   price: BestPrice
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
@@ -61,12 +61,18 @@ export default function FormTrade({
   const validationSchema: Yup.SchemaOf<FormTradeData> = Yup.object()
     .shape({
       ocean: Yup.number()
-        .max(maximumOcean, (param) => `Must be more or equal to ${param.max}`)
+        .max(
+          Number(maximumOcean),
+          (param) => `Must be more or equal to ${param.max}`
+        )
         .min(0.001, (param) => `Must be more or equal to ${param.min}`)
         .required('Required')
         .nullable(),
       datatoken: Yup.number()
-        .max(maximumDt, (param) => `Must be less or equal than ${param.max}`)
+        .max(
+          Number(maximumDt),
+          (param) => `Must be less or equal than ${param.max}`
+        )
         .min(0.00001, (param) => `Must be more or equal to ${param.min}`)
         .required('Required')
         .nullable(),
@@ -77,7 +83,9 @@ export default function FormTrade({
 
   async function handleTrade(values: FormTradeData) {
     try {
-      const impact = new Decimal(100 - Number(values.slippage)).div(100)
+      const impact = new Decimal(
+        new Decimal(100).sub(new Decimal(values.slippage))
+      ).div(100)
       const precision = 15
       const tx =
         values.type === 'buy'
