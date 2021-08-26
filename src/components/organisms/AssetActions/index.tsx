@@ -111,7 +111,6 @@ export default function AssetActions(): ReactElement {
   const UseContent = isCompute ? (
     <Compute
       dtBalance={dtBalance}
-      isBalanceSufficient={isBalanceSufficient}
       file={fileMetadata}
       fileIsLoading={fileIsLoading}
       isConsumable={isConsumable}
