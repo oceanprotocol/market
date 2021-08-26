@@ -24,11 +24,10 @@ export default function Details(): ReactElement {
   const { locale } = useUserPreferences()
 
   const [mainCurrency, setMainCurrency] = useState<string>()
-  const [oceanTokenMetadata, setOceanTokenMetadata] =
-    useState<{
-      address: string
-      symbol: string
-    }>()
+  const [oceanTokenMetadata, setOceanTokenMetadata] = useState<{
+    address: string
+    symbol: string
+  }>()
   // const [portisNetwork, setPortisNetwork] = useState<string>()
 
   useEffect(() => {

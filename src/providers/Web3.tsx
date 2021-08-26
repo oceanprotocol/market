@@ -138,7 +138,11 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
       setWeb3Loading(true)
       Logger.log('[web3] Connecting Web3...')
 
+      console.log('before web3Modal?.connect()')
+      console.log('window.ethereum = ', window.ethereum)
+
       const provider = await web3Modal?.connect()
+      console.log('after web3Modal?.connect()')
       setWeb3Provider(provider)
 
       const web3 = new Web3(provider)

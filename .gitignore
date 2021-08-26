@@ -16,3 +16,10 @@ content/networks-metadata.json
 src/@types/apollo
 graphql.schema.json
 src/@types/graph.types.ts
+
+# cypress
+**/cypress/screenshots
+**/cypress/videos
+**/cypress/downloads
+**/cypress/fixtures/did.txt
+artifacts
