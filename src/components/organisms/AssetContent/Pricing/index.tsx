@@ -10,6 +10,7 @@ import Feedback from './Feedback'
 import { graphql, useStaticQuery } from 'gatsby'
 import { usePricing } from '../../../../hooks/usePricing'
 import styles from './index.module.css'
+import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 
 const query = graphql`
   query PricingQuery {
@@ -61,6 +62,9 @@ export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
   const data = useStaticQuery(query)
   const content = data.content.edges[0].node.childContentJson.create
 
+  // Get configs
+  const { appConfig } = useSiteMetadata()
+
   // View states
   const [showPricing, setShowPricing] = useState(false)
   const [success, setSuccess] = useState<string>()
@@ -106,7 +110,11 @@ export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
   return (
     <div className={styles.pricing}>
       <Formik
-        initialValues={initialValues}
+        initialValues={{
+          ...initialValues,
+          type: appConfig.allowDynamicPricing === 'true' ? 'dynamic' : 'fixed',
+          dtAmount: appConfig.allowDynamicPricing === 'true' ? 9 : 1000
+        }}
         validationSchema={validationSchema}
         validateOnChange
         onSubmit={async (values, { setSubmitting }) => {
