@@ -10,10 +10,10 @@ module.exports = {
 
   // List of chainIds which metadata cache queries will return by default.
   // This preselects the Chains user preferences.
-  chainIds: [4],
+  chainIds: [2021000],
 
   // List of all supported chainIds. Used to populate the Chains user preferences list.
-  chainIdsSupported: [4],
+  chainIdsSupported: [2021000],
 
   rbacUrl: process.env.GATSBY_RBAC_URL,
 
