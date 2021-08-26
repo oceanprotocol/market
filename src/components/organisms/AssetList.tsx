@@ -7,6 +7,7 @@ import classNames from 'classnames/bind'
 import { getAssetsBestPrices, AssetListPrices } from '../../utils/subgraph'
 import Loader from '../atoms/Loader'
 import { useUserPreferences } from '../../providers/UserPreferences'
+import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 
 const cx = classNames.bind(styles)
 
@@ -37,6 +38,7 @@ const AssetList: React.FC<AssetListProps> = ({
   onPageChange,
   className
 }) => {
+  const { appConfig } = useSiteMetadata()
   const { chainIds } = useUserPreferences()
   const [assetsWithPrices, setAssetWithPrices] = useState<AssetListPrices[]>()
   const [loading, setLoading] = useState<boolean>(true)
@@ -44,7 +46,10 @@ const AssetList: React.FC<AssetListProps> = ({
   useEffect(() => {
     if (!assets) return
     isLoading && setLoading(true)
-    getAssetsBestPrices(assets).then((asset) => {
+    getAssetsBestPrices(
+      assets,
+      appConfig.allowDynamicPricing !== 'true' && ['exchange', 'free']
+    ).then((asset) => {
       setAssetWithPrices(asset)
       setLoading(false)
     })

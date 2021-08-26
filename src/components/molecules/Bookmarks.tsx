@@ -108,7 +108,8 @@ export default function Bookmarks(): ReactElement {
           source.token
         )
         const pinnedAssets: AssetListPrices[] = await getAssetsBestPrices(
-          resultPinned?.results
+          resultPinned?.results,
+          appConfig.allowDynamicPricing !== 'true' && ['exchange', 'free']
         )
         setPinned(pinnedAssets)
       } catch (error) {
