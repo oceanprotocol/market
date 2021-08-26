@@ -131,6 +131,17 @@ function AssetProvider({
     if (!ddo) return
     setLoading(true)
     const returnedPrice = await getPrice(ddo)
+    if (
+      appConfig.allowDynamicPricing !== 'true' &&
+      returnedPrice.type === 'pool'
+    ) {
+      setError(
+        `[asset] The asset ${ddo.id} can not be displayed on this market.`
+      )
+      setDDO(undefined)
+      setLoading(false)
+      return
+    }
     setPrice({ ...returnedPrice })
 
     // Get metadata from DDO
