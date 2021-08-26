@@ -346,7 +346,6 @@ export default function ComputeJobs({
           job.statusText === 'Job finished'
       )
       if (findTutorialAsset) return
-      console.log('Refreshing history')
       getJobs()
     }, 10000)
     return () => clearTimeout(timer)

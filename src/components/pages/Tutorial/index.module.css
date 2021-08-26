@@ -4,9 +4,8 @@
 }
 
 .toc {
-  height: calc(100vh-);
   line-height: 50px;
-  background-color: white;
+  background-color: var(--background-body);
   padding-right: 15px;
   margin-bottom: calc(var(--spacer) / 2);
   position: sticky;
