@@ -1,5 +1,5 @@
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
-import { MetadataCache, Logger } from '@oceanprotocol/lib'
+import { Logger } from '@oceanprotocol/lib'
 import {
   queryMetadata,
   transformChainIdsListToQuery
@@ -33,6 +33,14 @@ export const FilterByTypeOptions = {
 type FilterByTypeOptions =
   typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
 
+export const FilterByAccessOptions = {
+  Download: 'access',
+  Compute: 'compute',
+  All: 'all'
+}
+type FilterByAccessOptions =
+  typeof FilterByAccessOptions[keyof typeof FilterByAccessOptions]
+
 function getSortType(sortParam: string): string {
   const sortTerm =
     sortParam === SortTermOptions.Created
@@ -51,11 +59,13 @@ export function getSearchQuery(
   offset?: string,
   sort?: string,
   sortOrder?: string,
-  serviceType?: string
+  serviceType?: string,
+  accessType?: string
 ): any {
   const sortTerm = getSortType(sort)
   const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
   const emptySearchTerm = text === undefined || text === ''
+  console.log('ACESS TYPE: ', accessType)
   let searchTerm = owner
     ? `(publicKey.owner:${owner})`
     : tags
@@ -140,6 +150,12 @@ export function getSearchQuery(
             }
           },
           {
+            match: {
+              'service.type':
+                accessType === undefined ? 'access OR compute' : `${accessType}`
+            }
+          },
+          {
             query_string: {
               query: `${transformChainIdsListToQuery(chainIds)}`
             }
@@ -169,6 +185,7 @@ export async function getResults(
     sort?: string
     sortOrder?: string
     serviceType?: string
+    accessType?: string
   },
   metadataCacheUri: string,
   chainIds: number[]
@@ -182,7 +199,8 @@ export async function getResults(
     offset,
     sort,
     sortOrder,
-    serviceType
+    serviceType,
+    accessType
   } = params
 
   const searchQuery = getSearchQuery(
@@ -195,8 +213,10 @@ export async function getResults(
     offset,
     sort,
     sortOrder,
-    serviceType
+    serviceType,
+    accessType
   )
+  console.log('SEARCH QUERY: ', searchQuery)
   const source = axios.CancelToken.source()
   // const queryResult = await metadataCache.queryMetadata(searchQuery)
   const queryResult = await queryMetadata(searchQuery, source.token)
