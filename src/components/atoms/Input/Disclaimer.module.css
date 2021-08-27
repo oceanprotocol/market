@@ -1,0 +1,12 @@
+.disclaimer {
+  margin-top: calc(var(--spacer) / 3);
+  transition: all 0.3s ease-in;
+  max-height: 100px;
+  max-width: 100%;
+  overflow-y: hidden;
+}
+
+.disclaimer.hidden {
+  max-height: 0;
+  transition: all 0.2s ease-out;
+}

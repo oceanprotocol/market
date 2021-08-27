@@ -5,11 +5,13 @@ export default function Time({
   date,
   relative,
   isUnix,
+  displayFormat,
   className
 }: {
   date: string
   relative?: boolean
   isUnix?: boolean
+  displayFormat?: string
   className?: string
 }): ReactElement {
   const [dateIso, setDateIso] = useState<string>()
@@ -27,13 +29,13 @@ export default function Time({
     <></>
   ) : (
     <time
-      title={format(dateNew, 'PPppp')}
+      title={format(dateNew, displayFormat || 'PPppp')}
       dateTime={dateIso}
       className={className || undefined}
     >
       {relative
         ? formatDistance(dateNew, Date.now(), { addSuffix: true })
-        : format(dateNew, 'PP')}
+        : format(dateNew, displayFormat || 'PP')}
     </time>
   )
 }

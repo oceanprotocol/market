@@ -40,3 +40,28 @@
 .tabs div[class*='tab-panel--selected'] {
   margin-bottom: var(--spacer);
 }
+
+.printButton {
+  display: block;
+  margin: calc(var(--spacer) / 2) auto !important;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .content,
+  .content *:not(.printButton) {
+    visibility: visible;
+  }
+  .content {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  .tabs li[class*='tab--selected'],
+  .tabs ul[class*='pagination'] li[class*='selected'] {
+    font-weight: var(--font-weight-bold);
+    text-decoration: underline;
+  }
+}

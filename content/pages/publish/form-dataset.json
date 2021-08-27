@@ -11,7 +11,7 @@
     {
       "name": "description",
       "label": "Description",
-      "help": "Add a thorough description with as much detail as possible. You can use [Markdown](https://daringfireball.net/projects/markdown/basics).",
+      "help": "Add a thorough description with as much detail as possible. You can use [Markdown](https://daringfireball.net/projects/markdown/basics). You can change the description at any time. If you provide personal data, please note that it will remain in the transaction history. For more information on how personal data is handled within the metadata, please refer to our [privacy policy](/privacy/en).",
       "type": "textarea",
       "required": true
     },
@@ -36,7 +36,9 @@
       "help": "Choose how you want your files to be accessible for the specified price.",
       "type": "boxSelection",
       "options": ["Download", "Compute"],
-      "required": true
+      "required": true,
+      "disclaimer": "Please do not provide downloadable personal data without the consent of the data subjects.",
+      "disclaimerValues": ["Download"]
     },
     {
       "name": "providerUri",
@@ -66,7 +68,7 @@
       "name": "author",
       "label": "Author",
       "placeholder": "e.g. Jelly McJellyfish",
-      "help": "Give proper attribution for your data set.",
+      "help": "Give proper attribution for your data set. You are welcome to use a pseudonym, and you can change your author name at any time. Please note that it will remain in the transaction history. For more information on how personal data is handled within the metadata, please refer to our [privacy policy](/privacy/en).",
       "required": true
     },
     {
