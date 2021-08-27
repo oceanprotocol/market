@@ -111,7 +111,6 @@ export default function AssetActions(): ReactElement {
   const UseContent = isCompute ? (
     <Compute
       dtBalance={dtBalance}
-      isBalanceSufficient={isBalanceSufficient}
       file={fileMetadata}
       fileIsLoading={fileIsLoading}
       isConsumable={isConsumable}
@@ -153,10 +152,7 @@ export default function AssetActions(): ReactElement {
       <Permission eventType="consume">
         <Tabs items={tabs} className={styles.actions} />
       </Permission>
-      <Web3Feedback
-        isBalanceSufficient={isBalanceSufficient}
-        isAssetNetwork={isAssetNetwork}
-      />
+      <Web3Feedback isAssetNetwork={isAssetNetwork} />
     </>
   )
 }
