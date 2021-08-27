@@ -1,4 +1,5 @@
 import { PriceOptionsMarket } from '../@types/MetaData'
+import { allowDynamicPricing, allowFixedPricing } from '../../app.config'
 import * as Yup from 'yup'
 
 export const validationSchema: Yup.SchemaOf<PriceOptionsMarket> =
@@ -26,8 +27,13 @@ export const validationSchema: Yup.SchemaOf<PriceOptionsMarket> =
 
 export const initialValues: PriceOptionsMarket = {
   price: 1,
-  type: 'dynamic',
-  dtAmount: 9,
+  type:
+    allowDynamicPricing === 'true'
+      ? 'dynamic'
+      : allowFixedPricing === 'true'
+      ? 'fixed'
+      : 'free',
+  dtAmount: allowDynamicPricing === 'true' ? 9 : 1000,
   oceanAmount: 21,
   weightOnOcean: '7', // 70% on OCEAN
   weightOnDataToken: '3', // 30% on datatoken
