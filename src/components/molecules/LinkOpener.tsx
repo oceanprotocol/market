@@ -1,5 +1,5 @@
 import { Link } from 'gatsby'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 
 export default function LinkOpener({
   uri,
@@ -10,7 +10,7 @@ export default function LinkOpener({
   uri: string
   className?: string
   openNewTab?: boolean
-  children?: ReactElement
+  children?: ReactNode
 }): ReactElement {
   return openNewTab ? (
     <a
