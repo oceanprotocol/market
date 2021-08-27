@@ -6,8 +6,7 @@ import Web3 from 'web3'
 export function getOceanConfig(network: string | number): ConfigHelperConfig {
   const config = new ConfigHelper().getConfig(
     network,
-    network === 'polygon' ||
-      network === 'moonbeamalpha' ||
+    network === 'moonbeamalpha' ||
       network === 1287 ||
       network === 'bsc' ||
       network === 56 ||
@@ -15,9 +14,16 @@ export function getOceanConfig(network: string | number): ConfigHelperConfig {
       network === 2021000
       ? undefined
       : process.env.GATSBY_INFURA_PROJECT_ID
-  )
+  ) as ConfigHelperConfig
 
-  return config as ConfigHelperConfig
+  return network === 'gaiaxtestnet' || network === 2021000
+    ? {
+        ...config,
+        nodeUri: 'https://rpc.gaiaxtestnet.oceanprotocol.com/',
+        metadataCacheUri: 'https://aquarius.gaiax.delta-dao.com',
+        providerUri: 'https://provider.gaiaxtestnet.oceanprotocol.com'
+      }
+    : config
 }
 
 export function getDevelopmentConfig(): Partial<ConfigHelperConfig> {

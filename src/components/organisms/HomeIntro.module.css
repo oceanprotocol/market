@@ -1,0 +1,83 @@
+.introWrapper {
+  background-color: var(--color-primary);
+  overflow: hidden;
+}
+
+.intro {
+  position: relative;
+  padding: var(--spacer);
+  color: var(--brand-white);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.intro h2 {
+  color: var(--brand-white);
+  margin-top: var(--spacer);
+}
+
+.left,
+.right {
+  padding: var(--spacer);
+}
+
+.left {
+  width: 100%;
+}
+.right {
+  width: 100%;
+}
+.spacer {
+  width: 0;
+}
+
+.globe {
+  position: absolute;
+  right: -20%;
+  bottom: -10%;
+}
+
+.demonstrators {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.demonstrators > * {
+  flex: 1 1 0px;
+}
+
+@media screen and (min-width: 54rem) {
+  .left {
+    width: 40%;
+  }
+  .spacer {
+    width: var(--spacer);
+  }
+  .right {
+    width: calc(60% - var(--spacer));
+  }
+  .button {
+    margin-bottom: var(--spacer);
+  }
+  .intro h2 {
+    margin-top: calc(var(--spacer) * 2);
+  }
+  .globe {
+    bottom: auto;
+    top: -10%;
+    right: -20%;
+  }
+}
+
+.button {
+  position: relative;
+  background: var(--brand-violet);
+  border-radius: var(--border-radius-menu);
+}
+.button:hover,
+.button:focus {
+  background: var(--brand-white);
+  color: var(--brand-violet);
+}

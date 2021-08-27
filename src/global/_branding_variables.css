@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600&display=swap');
+
+:root {
+  --brand-pink: #46daff;
+  --brand-purple: #000071;
+  --brand-violet: #b900ff;
+
+  --brand-black: #000046;
+
+  --color-primary: #000094;
+
+  --color-menu-active: #465aff;
+  --border-color-menu: var(--color-primary);
+  --border-radius-menu: 2px;
+
+  --brand-gradient: linear-gradient(
+    to right bottom,
+    var(--color-primary),
+    var(--brand-pink)
+  );
+  --gradient-pink-violet: linear-gradient(
+    to right bottom,
+    var(--brand-pink),
+    var(--brand-violet)
+  );
+  --gradient-violet-purple: linear-gradient(
+    to right bottom,
+    var(--brand-violet),
+    var(--brand-purple)
+  );
+
+  -brand-grey-darker: #0f183f;
+  --brand-grey-dark: #0c1b5a;
+  --brand-grey: #6c7393;
+  --brand-grey-light: #c6ceef;
+  --brand-grey-lighter: #d4d4e2;
+  --brand-grey-dimmed: #f1f3f8;
+
+  --font-family-base: 'Titillium Web', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Helvetica, Arial, sans-serif;
+  --font-family-heading: 'Titillium Web', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Helvetica, Arial, sans-serif;
+
+  --font-weight-base: 400;
+}

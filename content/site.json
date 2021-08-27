@@ -1,11 +1,11 @@
 {
   "site": {
-    "siteTitle": "Ocean Market",
-    "siteTagline": "A marketplace to find, publish and trade data sets in the Ocean Network.",
-    "siteUrl": "https://market.oceanprotocol.com",
-    "siteIcon": "node_modules/@oceanprotocol/art/logo/favicon-white.png",
+    "siteTitle": "Gaia-X Portal",
+    "siteTagline": "A platform to find, publish and trade data assets in the Gaia-X Network.",
+    "siteUrl": "https://portal.minimal-gaia-x.eu",
+    "siteIcon": "./src/images/siteIcon.png",
     "siteImage": "../src/images/share.png",
-    "copyright": "All Rights Reserved. Powered by [Ocean Protocol](https://oceanprotocol.com)",
+    "copyright": "All Rights Reserved. Powered by [Ocean Protocol](https://oceanprotocol.com). Customized and hosted by [deltaDAO](https://delta-dao.com).",
     "menu": [
       {
         "name": "Publish",
@@ -14,6 +14,10 @@
       {
         "name": "History",
         "link": "/history"
+      },
+      {
+        "name": "Bookmarks",
+        "link": "/bookmarks"
       }
     ],
     "warning": {
@@ -23,6 +27,7 @@
     "announcement": {
       "main": "Ocean Market is [available on Polygon](https://blog.oceanprotocol.com/ocean-on-polygon-network-8abad19cbf47).",
       "polygon": "Polygon/Matic EVM support is in early stages. [Use the Polygon Bridge](https://docs.oceanprotocol.com/tutorials/polygon-bridge/) to get mOCEAN."
-    }
+    },
+    "badge": "Powered by Ocean Protocol"
   }
 }

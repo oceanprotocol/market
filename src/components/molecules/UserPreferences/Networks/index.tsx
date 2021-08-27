@@ -48,29 +48,35 @@ export default function Networks(): ReactElement {
   )
 
   return (
-    <Tooltip
-      content={
-        <ul className={stylesIndex.preferencesDetails}>
-          <li>
-            <Label htmlFor="chains">Networks</Label>
-            <FormHelp>Switch the data source for the interface.</FormHelp>
+    networksMain.concat(networksTest).length > 1 && (
+      <Tooltip
+        content={
+          <ul className={stylesIndex.preferencesDetails}>
+            <li>
+              <Label htmlFor="chains">Networks</Label>
+              <FormHelp>Switch the data source for the interface.</FormHelp>
 
-            <NetworksList title="Main" networks={networksMain} />
-            <NetworksList title="Test" networks={networksTest} />
-          </li>
-        </ul>
-      }
-      trigger="click focus"
-      className={`${stylesIndex.preferences} ${styles.networks}`}
-    >
-      <Network aria-label="Networks" className={stylesIndex.icon} />
-      <Caret aria-hidden="true" className={stylesIndex.caret} />
+              {networksMain.length > 0 && (
+                <NetworksList title="Main" networks={networksMain} />
+              )}
+              {networksTest.length > 0 && (
+                <NetworksList title="Test" networks={networksTest} />
+              )}
+            </li>
+          </ul>
+        }
+        trigger="click focus"
+        className={`${stylesIndex.preferences} ${styles.networks}`}
+      >
+        <Network aria-label="Networks" className={stylesIndex.icon} />
+        <Caret aria-hidden="true" className={stylesIndex.caret} />
 
-      <div className={styles.chainsSelected}>
-        {chainIds.map((chainId) => (
-          <span className={styles.chainsSelectedIndicator} key={chainId} />
-        ))}
-      </div>
-    </Tooltip>
+        <div className={styles.chainsSelected}>
+          {chainIds.map((chainId) => (
+            <span className={styles.chainsSelectedIndicator} key={chainId} />
+          ))}
+        </div>
+      </Tooltip>
+    )
   )
 }

@@ -7,7 +7,8 @@ import Tooltip from '../atoms/Tooltip'
 import AssetTitle from './AssetListTitle'
 import {
   queryMetadata,
-  transformChainIdsListToQuery
+  transformChainIdsListToQuery,
+  getDynamicPricingQuery
 } from '../../utils/aquarius'
 import { getAssetsBestPrices, AssetListPrices } from '../../utils/subgraph'
 import axios, { CancelToken } from 'axios'
@@ -32,7 +33,7 @@ async function getAssetsBookmarked(
       query_string: {
         query: `(${searchDids}) AND (${transformChainIdsListToQuery(
           chainIds
-        )})`,
+        )}) ${getDynamicPricingQuery()}`,
         fields: ['dataToken'],
         default_operator: 'OR'
       }
@@ -107,7 +108,8 @@ export default function Bookmarks(): ReactElement {
           source.token
         )
         const pinnedAssets: AssetListPrices[] = await getAssetsBestPrices(
-          resultPinned?.results
+          resultPinned?.results,
+          appConfig.allowDynamicPricing !== 'true' && ['exchange', 'free']
         )
         setPinned(pinnedAssets)
       } catch (error) {
@@ -128,7 +130,7 @@ export default function Bookmarks(): ReactElement {
       columns={columns}
       data={pinned}
       isLoading={isLoading}
-      emptyMessage="Your bookmarks will appear here."
+      emptyMessage="You can bookmark your favorite assets to pin them here."
       noTableHead
     />
   )

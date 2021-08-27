@@ -1,0 +1,16 @@
+{
+  "policies": [
+    {
+      "policy": "en",
+      "language": "English",
+      "date": "2021-07-31",
+      "params": {
+        "languageLabel": "Language",
+        "languageHelp": "Language of the privacy policy",
+        "tocHeader": "Table of contents",
+        "updated": "Last updated on",
+        "dateFormat": "MM/dd/yyyy"
+      }
+    }
+  ]
+}

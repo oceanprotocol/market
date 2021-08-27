@@ -1,8 +1,8 @@
 .network {
-  border: 1px solid var(--border-color);
+  border: 2px solid var(--border-color-menu);
   border-right: none;
-  border-top-left-radius: var(--border-radius);
-  border-bottom-left-radius: var(--border-radius);
+  border-top-left-radius: var(--border-radius-menu);
+  border-bottom-left-radius: var(--border-radius-menu);
   padding: calc(var(--spacer) / 6) calc(var(--spacer) / 3);
   white-space: nowrap;
   margin-right: -3px;

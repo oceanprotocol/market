@@ -58,7 +58,7 @@ const Account = React.forwardRef((props, ref: any) => {
       // the Tippy to show in this state.
       ref={ref}
     >
-      Connect <span>Wallet</span>
+      Connect&nbsp;<span>Wallet</span>
     </button>
   )
 })

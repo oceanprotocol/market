@@ -30,32 +30,58 @@
   display: flex;
 }
 
+.actions > * {
+  margin: 0 calc(var(--spacer) / 6);
+}
+.actions > *:last-child() {
+  margin-right: 0;
+}
+.actions > *:first-child() {
+  margin-left: 0;
+}
+
 .title {
   display: none;
 }
 
-@media screen and (min-width: 42rem) {
+@media screen and (min-width: 50rem) {
   .menu {
-    justify-content: start;
+    justify-content: end;
   }
 
   .navigation {
     order: 2;
     width: auto;
     margin: 0;
-    text-align: left;
+    text-align: center;
     border: none;
   }
 
   .actions {
     order: 3;
-    margin-left: auto;
   }
+
+  .logo {
+    margin-right: auto;
+  }
+
+  /* .logo {
+    margin-left: 0;
+  }
+
+  .logo svg {
+    transform: none;
+  }
+
+  .logo svg g[class*='logo-gaia-full__text'],
+  .logo svg g[class*='gaia-full__rays'] {
+    opacity: 1;
+  } */
 }
 
 @media screen and (min-width: 55rem) {
   .menu {
-    padding: var(--spacer);
+    padding: calc(var(--spacer) / 1.5);
   }
 
   .title {
@@ -85,38 +111,47 @@
   vertical-align: middle;
   margin-right: calc(var(--spacer) / 3);
   margin-left: calc(var(--spacer) / 3);
+  position: relative;
 }
 
 .link {
   display: block;
-  padding: calc(var(--spacer) / 4) calc(var(--spacer) / 2);
-  text-transform: uppercase;
-  color: var(--color-secondary);
+  padding: calc(var(--spacer) / 4);
+  color: var(--color-primary);
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-base);
   position: relative;
   z-index: 1;
 }
 
+.link:after {
+  content: '';
+  position: absolute;
+  background-color: var(--color-primary);
+  height: 2px;
+  left: 1px;
+  right: 1px;
+  bottom: 0;
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  transition: transform 0.2s;
+}
+
+.link:hover:after {
+  transform: scaleX(1);
+}
+
 .actions,
 .link:hover,
 .link:focus,
 .link:active {
-  color: var(--font-color-text);
+  color: var(--color-menu-active);
 }
 
 .link[aria-current],
 .link[aria-current]:hover,
 .link[aria-current]:focus {
   color: var(--font-color-heading);
-}
-
-.link:last-child {
-  padding-right: 0;
-}
-
-.logo svg {
-  margin-right: calc(var(--spacer) / 3);
 }
 
 .actions button {

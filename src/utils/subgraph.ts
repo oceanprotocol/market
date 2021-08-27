@@ -426,7 +426,8 @@ export async function getSpotPrice(asset: DDO): Promise<number> {
 }
 
 export async function getAssetsBestPrices(
-  assets: DDO[]
+  assets: DDO[],
+  filterByTypes?: BestPrice['type'][]
 ): Promise<AssetListPrices[]> {
   const assetsWithPrice: AssetListPrices[] = []
 
@@ -464,7 +465,11 @@ export async function getAssetsBestPrices(
     })
   }
 
-  return assetsWithPrice
+  return filterByTypes
+    ? assetsWithPrice.filter((asset) =>
+        filterByTypes.includes(asset.price.type)
+      )
+    : assetsWithPrice
 }
 
 export async function getHighestLiquidityDIDs(

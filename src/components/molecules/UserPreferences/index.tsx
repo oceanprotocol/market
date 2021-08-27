@@ -18,12 +18,12 @@ export default function UserPreferences(): ReactElement {
       content={
         <ul className={styles.preferencesDetails}>
           <Currency />
-          <Appearance darkMode={darkMode} />
           <Debug />
         </ul>
       }
       trigger="click focus"
       className={styles.preferences}
+      zIndex={11}
     >
       <Cog aria-label="Preferences" className={styles.icon} />
       <Caret aria-hidden="true" className={styles.caret} />

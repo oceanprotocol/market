@@ -321,12 +321,6 @@ export default function PublishPage({
                 </>
               ) : (
                 <>
-                  <Alert
-                    text={content.warning}
-                    state="info"
-                    className={styles.alert}
-                  />
-
                   <Tabs
                     className={styles.tabs}
                     items={

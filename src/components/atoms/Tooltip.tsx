@@ -28,7 +28,8 @@ export default function Tooltip({
   trigger,
   disabled,
   className,
-  placement
+  placement,
+  zIndex
 }: {
   content: ReactNode
   children?: ReactNode
@@ -36,6 +37,7 @@ export default function Tooltip({
   disabled?: boolean
   className?: string
   placement?: Placement
+  zIndex?: number
 }): ReactElement {
   const [props, setSpring] = useSpring(() => animation.from)
 
@@ -64,7 +66,7 @@ export default function Tooltip({
     <Tippy
       interactive
       interactiveBorder={5}
-      zIndex={1}
+      zIndex={zIndex || 1}
       trigger={trigger || 'mouseenter focus'}
       disabled={disabled || null}
       placement={placement || 'auto'}

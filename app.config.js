@@ -6,14 +6,14 @@ module.exports = {
   // const { appConfig } = useSiteMetadata()
   // return appConfig.metadataCacheUri
   metadataCacheUri:
-    process.env.METADATACACHE_URI || 'https://aquarius.oceanprotocol.com',
+    process.env.METADATACACHE_URI || 'https://aquarius.gaiax.delta-dao.com',
 
   // List of chainIds which metadata cache queries will return by default.
   // This preselects the Chains user preferences.
-  chainIds: [1, 137, 56],
+  chainIds: [2021000],
 
   // List of all supported chainIds. Used to populate the Chains user preferences list.
-  chainIdsSupported: [1, 3, 4, 137, 80001, 1287, 56],
+  chainIdsSupported: [2021000],
 
   rbacUrl: process.env.GATSBY_RBAC_URL,
 
@@ -22,7 +22,7 @@ module.exports = {
   // The ETH address the marketplace fee will be sent to.
   marketFeeAddress:
     process.env.GATSBY_MARKET_FEE_ADDRESS ||
-    '0x903322C7E45A60d7c8C3EA236c5beA9Af86310c7',
+    '0x98E87C0e258eb9BFc2a614A9585BfB5201D105BD',
 
   // Used for conversion display, can be whatever coingecko API supports
   // see: https://api.coingecko.com/api/v3/simple/supported_vs_currencies
@@ -59,8 +59,22 @@ module.exports = {
   allowFreePricing: process.env.GATSBY_ALLOW_FREE_PRICING || 'false',
 
   // Used to show or hide advanced settings button in asset details page
-  allowAdvancedSettings: process.env.GATSBY_ALLOW_ADVANCED_SETTINGS || 'false',
+  allowAdvancedSettings: process.env.GATSBY_ALLOW_ADVANCED_SETTINGS || 'true',
   allowAdvancedPublishSettings:
-    process.env.GATSBY_ALLOW_ADVANCED_PUBLISH_SETTINGS || 'false',
-  credentialType: process.env.GATSBY_CREDENTIAL_TYPE || 'address'
+    process.env.GATSBY_ALLOW_ADVANCED_PUBLISH_SETTINGS || 'true',
+  credentialType: process.env.GATSBY_CREDENTIAL_TYPE || 'address',
+
+  // Set the default privacy policy to initially display
+  // this should be the slug of your default policy markdown file
+  defaultPrivacyPolicySlug: '/privacy/en',
+
+  // This enables / disables the use of a GDPR compliant
+  // privacy preference center to manage cookies on the market
+  // If set to true a gdpr.json file inside the content directory
+  // is used to create and show a privacy preference center / cookie banner
+  // To learn more about how to configure and use this, please refer to the readme
+  // https://github.com/deltaDAO/Ocean-Market/tree/main#-gdpr-compliance
+  privacyPreferenceCenter: false,
+
+  displayWarning: false
 }

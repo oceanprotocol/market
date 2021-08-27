@@ -1,0 +1,19 @@
+.disclaimer {
+  font-size: var(--font-size-text);
+  color: var(--brand-pink);
+  font-weight: var(--font-weight-bold);
+  margin-top: calc(var(--spacer) / 3);
+  transition: max-height 0.3s ease-in;
+  max-height: 100px;
+  overflow-y: hidden;
+  max-width: 100%;
+}
+
+.disclaimer p {
+  margin-bottom: 0;
+}
+
+.disclaimer.hidden {
+  max-height: 0;
+  transition: max-height 0.2s ease-out;
+}

@@ -20,19 +20,24 @@ export default function Page({
   noPageHeader,
   headerCenter
 }: PageProps): ReactElement {
+  const childElements = (
+    <>
+      {title && !noPageHeader && (
+        <PageHeader
+          title={title}
+          description={description}
+          center={headerCenter}
+          powered={uri === '/'}
+        />
+      )}
+      {children}
+    </>
+  )
+
   return (
     <>
       <Seo title={title} description={description} uri={uri} />
-      <Container>
-        {title && !noPageHeader && (
-          <PageHeader
-            title={title}
-            description={description}
-            center={headerCenter}
-          />
-        )}
-        {children}
-      </Container>
+      {uri === '/' ? childElements : <Container>{childElements}</Container>}
     </>
   )
 }

@@ -16,6 +16,7 @@ import { getPrice } from '../utils/subgraph'
 import { MetadataMarket } from '../@types/MetaData'
 import { useWeb3 } from './Web3'
 import { useSiteMetadata } from '../hooks/useSiteMetadata'
+import { useAddressConfig } from '../hooks/useAddressConfig'
 
 interface AssetProviderValue {
   isInPurgatory: boolean
@@ -58,6 +59,7 @@ function AssetProvider({
   const [owner, setOwner] = useState<string>()
   const [error, setError] = useState<string>()
   const [type, setType] = useState<MetadataMain['type']>()
+  const { isDDOWhitelisted } = useAddressConfig()
   const [loading, setLoading] = useState(false)
   const [isAssetNetwork, setIsAssetNetwork] = useState<boolean>()
 
@@ -65,16 +67,20 @@ function AssetProvider({
     Logger.log('[asset] Init asset, get DDO')
     setLoading(true)
     const ddo = await retrieveDDO(asset as string, token)
-
+    const isWhitelisted = isDDOWhitelisted(ddo)
     if (!ddo) {
       setError(
         `[asset] The DDO for ${asset} was not found in MetadataCache. If you just published a new data set, wait some seconds and refresh this page.`
+      )
+    } else if (!isWhitelisted) {
+      setError(
+        `[asset] The DDO for ${asset} can not be retrieved on this portal.`
       )
     } else {
       setError(undefined)
     }
     setLoading(false)
-    return ddo
+    return isWhitelisted && ddo
   }
 
   const refreshDdo = async (token?: CancelToken) => {
@@ -125,6 +131,17 @@ function AssetProvider({
     if (!ddo) return
     setLoading(true)
     const returnedPrice = await getPrice(ddo)
+    if (
+      appConfig.allowDynamicPricing !== 'true' &&
+      returnedPrice.type === 'pool'
+    ) {
+      setError(
+        `[asset] The asset ${ddo.id} can not be displayed on this market.`
+      )
+      setDDO(undefined)
+      setLoading(false)
+      return
+    }
     setPrice({ ...returnedPrice })
 
     // Get metadata from DDO

@@ -5,6 +5,7 @@ import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { Field } from 'formik'
 import styles from './AdvancedSettings.module.css'
+import { useWeb3 } from '../../../providers/Web3'
 
 export default function AdvancedSettings(prop: {
   content: FormContent
@@ -15,6 +16,8 @@ export default function AdvancedSettings(prop: {
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const [advancedSettings, setAdvancedSettings] = useState<boolean>(false)
+  const { accountId } = useWeb3()
+
   function toggleAdvancedSettings(e: FormEvent<Element>) {
     e.preventDefault()
     advancedSettings === true
@@ -23,7 +26,7 @@ export default function AdvancedSettings(prop: {
   }
   return (
     <>
-      {appConfig.allowAdvancedPublishSettings === 'true' && (
+      {accountId && appConfig.allowAdvancedPublishSettings === 'true' && (
         <Button
           className={styles.advancedBtn}
           style="text"
