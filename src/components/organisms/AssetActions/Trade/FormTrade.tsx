@@ -63,7 +63,7 @@ export default function FormTrade({
       ocean: Yup.number()
         .max(
           Number(maximumOcean),
-          (param) => `Must be more or equal to ${param.max}`
+          (param) => `Must be less or equal to ${param.max}`
         )
         .min(0.001, (param) => `Must be more or equal to ${param.min}`)
         .required('Required')
