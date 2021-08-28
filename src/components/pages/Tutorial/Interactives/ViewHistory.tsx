@@ -3,7 +3,7 @@ import { ReactElement } from 'react-markdown'
 import Page from '../../../templates/Page'
 import PageHistory from '../../History'
 
-export default function Chapter11({
+export default function ViewHistory({
   showPriceTutorial,
   showComputeTutorial
 }: {

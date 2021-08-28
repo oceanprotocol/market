@@ -10,7 +10,7 @@ import StylesTeaser from '../../../molecules/MetadataFeedback.module.css'
 import { DDO } from '@oceanprotocol/lib'
 import { useAsset } from '../../../../providers/Asset'
 
-export default function Chapter4({
+export default function PublishMetadata({
   showPriceTutorial,
   setTutorialDdo,
   setShowPriceTutorial

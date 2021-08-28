@@ -28,34 +28,13 @@ export default function TutorialChapter({
   videoUrl?: string
   interactiveComponent?: ReactElement
 }): ReactElement {
-  const chapterRef = useRef<HTMLElement>()
-  const [progress, setProgress] = useState(0)
-  useEffect(() => {
-    const progress = pageProgress - chapterRef.current.offsetTop
-    if (
-      progress > chapterRef.current.clientHeight ||
-      pageProgress < chapterRef.current.offsetTop
-    )
-      setProgress(0)
-    else setProgress((progress / chapterRef.current.clientHeight) * 100)
-  }, [pageProgress])
-
   return (
     <>
       <section
         id={slugify(chapter.title)}
         className={styles.chapter}
         key={chapter.id}
-        ref={chapterRef}
       >
-        <Progressbar
-          progress={progress}
-          className={cx({
-            progressbar: true,
-            visible: progress > 0
-          })}
-          id={`${chapter.id}-Progressbar`}
-        />
         <h3 className={styles.chapter_title}>
           {chapter.titlePrefix && `${chapter.titlePrefix} `}
           {chapter.title}

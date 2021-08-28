@@ -6,7 +6,7 @@ import { useAsset } from '../../../../providers/Asset'
 import AssetActions from '../../../organisms/AssetActions'
 import styles from '../../../organisms/AssetContent/index.module.css'
 
-export default function Chapter10({
+export default function ConsumeData({
   showPriceTutorial,
   showComputeTutorial
 }: {

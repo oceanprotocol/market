@@ -10,11 +10,12 @@ import TutorialChapter, {
 } from '../../molecules/TutorialChapter'
 import { Spin as Hamburger } from 'hamburger-react'
 import { DDO } from '@oceanprotocol/lib'
-import Chapter2 from './Chapters/Chapter2'
-import Chapter4 from './Chapters/Chapter4'
-import Chapter9 from './Chapters/Chapter9'
-import Chapter10 from './Chapters/Chapter10'
-import Chapter11 from './Chapters/Chapter11'
+import ConnectWallet from './Interactives/ConnectWallet'
+import PublishMetadata from './Interactives/PublishMetadata'
+import EditMetadata from './Interactives/EditMetadata'
+import ConsumeData from './Interactives/ConsumeData'
+import ViewHistory from './Interactives/ViewHistory'
+
 interface TutorialChapterNode {
   node: {
     frontmatter: {
@@ -62,6 +63,53 @@ export default function PageTutorial({
 }: {
   setTutorialDdo: (ddo: DDO) => void
 }): ReactElement {
+  const [showPriceTutorial, setShowPriceTutorial] = useState(false)
+  const [showComputeTutorial, setShowComputeTutorial] = useState(false)
+  const interactivity = [
+    {
+      chapter: 2,
+      component: <ConnectWallet />
+    },
+    {
+      chapter: 8,
+      component: (
+        <PublishMetadata
+          showPriceTutorial={showPriceTutorial}
+          setTutorialDdo={setTutorialDdo}
+          setShowPriceTutorial={setShowPriceTutorial}
+        />
+      )
+    },
+    {
+      chapter: 11,
+      component: (
+        <EditMetadata
+          showPriceTutorial={showPriceTutorial}
+          showComputeTutorial={showComputeTutorial}
+          setShowComputeTutorial={setShowComputeTutorial}
+        />
+      )
+    },
+    {
+      chapter: 12,
+      component: (
+        <ConsumeData
+          showPriceTutorial={showPriceTutorial}
+          showComputeTutorial={showComputeTutorial}
+        />
+      )
+    },
+    {
+      chapter: 13,
+      component: (
+        <ViewHistory
+          showPriceTutorial={showPriceTutorial}
+          showComputeTutorial={showComputeTutorial}
+        />
+      )
+    }
+  ]
+
   const data = useStaticQuery(query)
   const [isOpen, setOpen] = useState(false)
   const chapterNodes = data.content.edges as TutorialChapterNode[]
@@ -73,58 +121,11 @@ export default function PageTutorial({
     titlePrefix: `Chapter ${i + 1}:`,
     videoUrl: edge.node.frontmatter?.videoUrl
   }))
-  const [showPriceTutorial, setShowPriceTutorial] = useState(false)
-  const [showComputeTutorial, setShowComputeTutorial] = useState(false)
 
   const [scrollPosition, setScrollPosition] = useState(0)
   useScrollPosition(({ prevPos, currPos }) => {
     prevPos.y !== currPos.y && setScrollPosition(currPos.y * -1)
   })
-
-  const interactivity = [
-    {
-      chapter: 2,
-      component: <Chapter2 />
-    },
-    {
-      chapter: 4,
-      component: (
-        <Chapter4
-          showPriceTutorial={showPriceTutorial}
-          setTutorialDdo={setTutorialDdo}
-          setShowPriceTutorial={setShowPriceTutorial}
-        />
-      )
-    },
-    {
-      chapter: 9,
-      component: (
-        <Chapter9
-          showPriceTutorial={showPriceTutorial}
-          showComputeTutorial={showComputeTutorial}
-          setShowComputeTutorial={setShowComputeTutorial}
-        />
-      )
-    },
-    {
-      chapter: 10,
-      component: (
-        <Chapter10
-          showPriceTutorial={showPriceTutorial}
-          showComputeTutorial={showComputeTutorial}
-        />
-      )
-    },
-    {
-      chapter: 11,
-      component: (
-        <Chapter11
-          showPriceTutorial={showPriceTutorial}
-          showComputeTutorial={showComputeTutorial}
-        />
-      )
-    }
-  ]
 
   const findInteractiveComponent = (
     arr: {
