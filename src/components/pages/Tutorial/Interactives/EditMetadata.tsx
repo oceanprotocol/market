@@ -6,7 +6,7 @@ import Page from '../../../templates/Page'
 import PageTemplateAssetDetails from '../../../templates/PageAssetDetails'
 import { useAsset } from '../../../../providers/Asset'
 
-export default function Chapter9({
+export default function EditMetadata({
   showPriceTutorial,
   showComputeTutorial,
   setShowComputeTutorial
