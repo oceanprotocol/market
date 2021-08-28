@@ -3,7 +3,8 @@
     "teaser": {
       "title": "Try it yourself",
       "text": "Feel free to use the assets listed below to experience what a new european data economy can feel like. If you want to learn more about how to connect to the backend infrastructure in a web3 world you can head to our dedicated [tutorial pages](/tutorial).",
-      "cta": "Try the Tutorial"
+      "cta": "Try the Tutorial",
+      "ctaTo": "/tutorial"
     },
     "paragraphs": [
       {

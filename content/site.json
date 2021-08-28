@@ -1,7 +1,7 @@
 {
   "site": {
-    "siteTitle": "Gaia-X Portal",
-    "siteTagline": "A platform to find, publish and trade data assets in the Gaia-X Network.",
+    "siteTitle": "MVG Portal Demonstrator",
+    "siteTagline": "A platform to find, publish and consume Data Services in the Gaia-X Test Network.",
     "siteUrl": "https://portal.minimal-gaia-x.eu",
     "siteIcon": "./src/images/siteIcon.png",
     "siteImage": "../src/images/share.png",

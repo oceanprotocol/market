@@ -18,6 +18,7 @@ const query = graphql`
             title
             text
             cta
+            ctaTo
           }
           paragraphs {
             title
@@ -49,6 +50,7 @@ interface HomeIntroData {
           title: string
           text: string
           cta: string
+          ctaTo: string
         }
         paragraphs: {
           title: string
@@ -88,7 +90,7 @@ export default function HomeIntro(): ReactElement {
             </Permission>
             <h2>{teaser.title}</h2>
             <Markdown text={teaser.text} />
-            <Button style="primary" className={styles.button} to="#">
+            <Button style="primary" className={styles.button} to={teaser.ctaTo}>
               {teaser.cta}
             </Button>
           </div>
