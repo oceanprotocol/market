@@ -211,13 +211,19 @@ export default function PublishPage({
         : true
     try {
       if (validDockerImage) {
-        Logger.log('Publish algorithm with ', metadata, values.dataTokenOptions)
+        Logger.log(
+          'Publish algorithm with ',
+          metadata,
+          values.dataTokenOptions,
+          values.providerUri
+        )
 
         const ddo = await publish(
           metadata as unknown as Metadata,
           values.algorithmPrivacy === true ? 'compute' : 'access',
           values.dataTokenOptions,
-          timeout
+          timeout,
+          values.providerUri
         )
 
         // Publish failed
