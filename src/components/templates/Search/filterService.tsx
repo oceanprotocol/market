@@ -67,23 +67,20 @@ export default function FilterPrice({
           const otherValue = accessFilterItems.find(
             (p) => p.value !== value
           ).value
-          console.log('VALUE both selected -> select the other one: ', value)
           await applyAccessFilter(otherValue)
           setAccessSelections([otherValue])
         } else {
           // only the current one selected -> deselect it
-          console.log('VALUE both selected -> select the other one: ', value)
           await applyAccessFilter(undefined)
+          setAccessSelections([])
         }
       } else {
-        if (accessSelections.length > 0) {
+        if (accessSelections.length) {
           // one already selected -> both selected
-          console.log('VALUE one already selected -> both selected: ', value)
           await applyAccessFilter(undefined)
           setAccessSelections(accessFilterItems.map((p) => p.value))
         } else {
           // none selected -> select
-          console.log('VALUE none  selected -> select: ', value)
           await applyAccessFilter(value)
           setAccessSelections([value])
         }
@@ -98,6 +95,7 @@ export default function FilterPrice({
           setServiceSelections([otherValue])
         } else {
           await applyServiceFilter(undefined)
+          setServiceSelections([])
         }
       } else {
         if (serviceSelections.length) {
@@ -132,7 +130,6 @@ export default function FilterPrice({
       {serviceFilterItems.map((e, index) => {
         const isServiceSelected =
           e.value === serviceType || serviceSelections.includes(e.value)
-        console.log('IS SELECTED service: ', isServiceSelected)
         const selectFilter = cx({
           [styles.selected]: isServiceSelected,
           [styles.filter]: true
@@ -154,8 +151,6 @@ export default function FilterPrice({
       {accessFilterItems.map((e, index) => {
         const isAccessSelected =
           e.value === accessType || accessSelections.includes(e.value)
-        console.log('IS SELECTED access: ', isAccessSelected, accessSelections)
-
         const selectFilter = cx({
           [styles.selected]: isAccessSelected,
           [styles.filter]: true

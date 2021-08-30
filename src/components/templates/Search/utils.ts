@@ -35,8 +35,7 @@ type FilterByTypeOptions =
 
 export const FilterByAccessOptions = {
   Download: 'access',
-  Compute: 'compute',
-  All: 'all'
+  Compute: 'compute'
 }
 type FilterByAccessOptions =
   typeof FilterByAccessOptions[keyof typeof FilterByAccessOptions]
@@ -65,7 +64,6 @@ export function getSearchQuery(
   const sortTerm = getSortType(sort)
   const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
   const emptySearchTerm = text === undefined || text === ''
-  console.log('ACESS TYPE: ', accessType)
   let searchTerm = owner
     ? `(publicKey.owner:${owner})`
     : tags
@@ -216,7 +214,6 @@ export async function getResults(
     serviceType,
     accessType
   )
-  console.log('SEARCH QUERY: ', searchQuery)
   const source = axios.CancelToken.source()
   // const queryResult = await metadataCache.queryMetadata(searchQuery)
   const queryResult = await queryMetadata(searchQuery, source.token)
