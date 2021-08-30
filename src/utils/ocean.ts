@@ -17,6 +17,9 @@ export function getOceanConfig(network: string | number): ConfigHelperConfig {
       : process.env.GATSBY_INFURA_PROJECT_ID
   )
 
+  config.providerUri = 'https://provider.hackathon.oceanprotocol.com'
+  config.metadataCacheUri = 'https://aquarius.hackathon.oceanprotocol.com/'
+
   return config as ConfigHelperConfig
 }
 
