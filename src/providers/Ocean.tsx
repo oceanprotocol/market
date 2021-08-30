@@ -62,6 +62,7 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
 
     const config = {
       ...getOceanConfig(ddo?.chainId),
+      nodeUri: 'https://rpc.gaiaxtestnet.oceanprotocol.com',
 
       // add local dev values
       ...(ddo?.chainId === 8996 && {
