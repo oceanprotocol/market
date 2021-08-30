@@ -77,6 +77,24 @@ export function getNetworkDataById(
     ({ node }: { node: EthereumListsChain }) => node.chainId === networkId
   )
 
+  if (networkId === 2021000) {
+    return {
+      name: 'Gaia-X',
+      chainId: 2021000,
+      shortName: 'Gaia-X',
+      chain: '',
+      network: 'testnet',
+      networkId: 2021000,
+      nativeCurrency: { name: 'Gaia-X', symbol: 'GX', decimals: 18 },
+      rpc: ['https://rpc.gaiaxtestnet.oceanprotocol.com'],
+      faucets: [
+        'https://faucet.gaiaxtestnet.oceanprotocol.com/',
+        'https://faucet.gx.gaiaxtestnet.oceanprotocol.com/'
+      ],
+      infoURL: ''
+    }
+  }
+
   return networkData[0]?.node
 }
 
