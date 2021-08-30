@@ -19,6 +19,22 @@ export interface NetworkObject {
   urlList: string[]
 }
 
+export const networkDataGaiaX = {
+  name: 'GAIA-X Testnet',
+  chainId: 2021000,
+  shortName: 'GAIA-X',
+  chain: 'GAIA-X',
+  network: 'testnet',
+  networkId: 2021000,
+  nativeCurrency: { name: 'Gaia-X', symbol: 'GX', decimals: 18 },
+  rpc: ['https://rpc.gaiaxtestnet.oceanprotocol.com'],
+  faucets: [
+    'https://faucet.gaiaxtestnet.oceanprotocol.com/',
+    'https://faucet.gx.gaiaxtestnet.oceanprotocol.com/'
+  ],
+  infoURL: 'https://www.gaia-x.eu'
+}
+
 export function getNetworkConfigObject(node: any): NetworkObject {
   const networkConfig = {
     name: node.chain,
@@ -55,9 +71,6 @@ export function getNetworkDisplayName(
     case 8996:
       displayName = 'Development'
       break
-    case 2021000:
-      displayName = 'GAIA-X'
-      break
     default:
       displayName = data
         ? `${data.chain} ${data.network === 'mainnet' ? '' : data.network}`
@@ -77,25 +90,7 @@ export function getNetworkDataById(
     ({ node }: { node: EthereumListsChain }) => node.chainId === networkId
   )
 
-  if (networkId === 2021000) {
-    return {
-      name: 'Gaia-X',
-      chainId: 2021000,
-      shortName: 'Gaia-X',
-      chain: '',
-      network: 'testnet',
-      networkId: 2021000,
-      nativeCurrency: { name: 'Gaia-X', symbol: 'GX', decimals: 18 },
-      rpc: ['https://rpc.gaiaxtestnet.oceanprotocol.com'],
-      faucets: [
-        'https://faucet.gaiaxtestnet.oceanprotocol.com/',
-        'https://faucet.gx.gaiaxtestnet.oceanprotocol.com/'
-      ],
-      infoURL: ''
-    }
-  }
-
-  return networkData[0]?.node
+  return networkId === 2021000 ? networkDataGaiaX : networkData[0]?.node
 }
 
 export async function addCustomNetwork(
