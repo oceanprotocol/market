@@ -137,7 +137,7 @@ function usePublish(): UsePublish {
         )
         .next(setStep)
       Logger.log('ddo created', ddo)
-      await ocean.assets.publishDdo(ddo, account.getId())
+      await ocean.assets.publishDdo(ddo, account.getId(), true)
       Logger.log('ddo published')
       await sleep(20000)
       setStep(7)
