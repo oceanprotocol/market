@@ -309,7 +309,7 @@ export default function Pool(): ReactElement {
         : new Decimal(0)
 
     setTotalLiquidityInOcean(totalLiquidityInOcean)
-  }, [userLiquidity, price, poolTokens, totalPoolTokens, totalLiquidityInOcean])
+  }, [userLiquidity, price, poolTokens, totalPoolTokens])
 
   useEffect(() => {
     if (!accountId || !price) return
