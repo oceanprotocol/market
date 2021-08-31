@@ -68,7 +68,7 @@ const poolLiquidityQuery = gql`
 `
 
 const userPoolShareQuery = gql`
-  query PoolLiquidity($id: ID!, $shareId: ID) {
+  query PoolShare($id: ID!, $shareId: ID) {
     pool(id: $id) {
       id
       shares(where: { id: $shareId }) {
