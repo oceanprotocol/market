@@ -48,14 +48,12 @@ const SuccessAction = () => (
 )
 
 export default function Compute({
-  isBalanceSufficient,
   dtBalance,
   file,
   fileIsLoading,
   isConsumable,
   consumableFeedback
 }: {
-  isBalanceSufficient: boolean
   dtBalance: string
   file: FileMetadata
   fileIsLoading?: boolean
@@ -65,7 +63,7 @@ export default function Compute({
   const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
   const { ocean, account } = useOcean()
-  const { price, type, ddo, isAssetNetwork } = useAsset()
+  const { price, type, ddo } = useAsset()
   const { buyDT, pricingError, pricingStepText } = usePricing()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
@@ -94,7 +92,6 @@ export default function Compute({
     isJobStarting === true ||
     file === null ||
     !ocean ||
-    !isBalanceSufficient ||
     (!hasPreviousDatasetOrder && !hasDatatoken && !(datasetMaxDT >= 1)) ||
     (!hasPreviousAlgorithmOrder && !hasAlgoAssetDatatoken && !(algoMaxDT >= 1))
 
