@@ -272,6 +272,7 @@ export default function Pool(): ReactElement {
   }, [isInPurgatory, owner, accountId])
 
   useEffect(() => {
+    if (!dataLiquidity) return
     const poolShare =
       isValidNumber(poolTokens) &&
       isValidNumber(totalPoolTokens) &&
@@ -288,9 +289,11 @@ export default function Pool(): ReactElement {
     const totalUserLiquidityInOcean =
       isValidNumber(userLiquidity?.ocean) &&
       isValidNumber(userLiquidity?.datatoken) &&
-      isValidNumber(price?.value)
+      isValidNumber(dataLiquidity.pool.spotPrice)
         ? new Decimal(userLiquidity?.ocean).add(
-            new Decimal(userLiquidity?.datatoken).mul(price?.value)
+            new Decimal(userLiquidity?.datatoken).mul(
+              dataLiquidity.pool.spotPrice
+            )
           )
         : new Decimal(0)
 
@@ -299,14 +302,14 @@ export default function Pool(): ReactElement {
     const totalLiquidityInOcean =
       isValidNumber(price?.ocean) &&
       isValidNumber(price?.datatoken) &&
-      isValidNumber(price?.value)
+      isValidNumber(dataLiquidity.pool.spotPrice)
         ? new Decimal(price?.ocean).add(
-            new Decimal(price?.datatoken).mul(price?.value)
+            new Decimal(price?.datatoken).mul(dataLiquidity.pool.spotPrice)
           )
         : new Decimal(0)
 
     setTotalLiquidityInOcean(totalLiquidityInOcean)
-  }, [userLiquidity, price, poolTokens, totalPoolTokens])
+  }, [userLiquidity, price, poolTokens, totalPoolTokens, totalLiquidityInOcean])
 
   useEffect(() => {
     if (!accountId || !price) return
