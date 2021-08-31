@@ -1,4 +1,5 @@
 import { Logger } from '@oceanprotocol/lib'
+import { getOceanConfig } from './ocean'
 
 export interface EthereumListsChain {
   name: string
@@ -19,6 +20,8 @@ export interface NetworkObject {
   urlList: string[]
 }
 
+const configGaiaX = getOceanConfig(2021000)
+
 export const networkDataGaiaX = {
   name: 'GAIA-X Testnet',
   chainId: 2021000,
@@ -27,7 +30,7 @@ export const networkDataGaiaX = {
   network: 'testnet',
   networkId: 2021000,
   nativeCurrency: { name: 'Gaia-X', symbol: 'GX', decimals: 18 },
-  rpc: ['https://rpc.gaiaxtestnet.oceanprotocol.com'],
+  rpc: [configGaiaX.nodeUri],
   faucets: [
     'https://faucet.gaiaxtestnet.oceanprotocol.com/',
     'https://faucet.gx.gaiaxtestnet.oceanprotocol.com/'
@@ -119,7 +122,7 @@ export async function addCustomNetwork(
             Logger.error(
               `Couldn't add ${network.name} (0x${
                 network.chainId
-              }) netowrk to MetaMask, error: ${err || added.error}`
+              }) network to MetaMask, error: ${err || added.error}`
             )
           } else {
             Logger.log(
@@ -130,7 +133,7 @@ export async function addCustomNetwork(
       )
     } else {
       Logger.error(
-        `Couldn't add ${network.name} (0x${network.chainId}) netowrk to MetaMask, error: ${switchError}`
+        `Couldn't add ${network.name} (0x${network.chainId}) network to MetaMask, error: ${switchError}`
       )
     }
   }
