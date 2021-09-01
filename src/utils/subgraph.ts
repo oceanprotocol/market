@@ -113,6 +113,7 @@ const AssetPoolPriceQuerry = gql`
       datatokenAddress
       datatokenReserve
       oceanReserve
+      tokens
     }
   }
 `
@@ -231,6 +232,7 @@ function transformPriceToBestPrice(
   poolPrice: AssetsPoolPricePools[],
   freePrice: AssetFreePriceDispenser[]
 ) {
+  console.log('pool prices', poolPrice)
   if (poolPrice?.length > 0) {
     const price: BestPrice = {
       type: 'pool',
