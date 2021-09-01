@@ -14,10 +14,12 @@ import { useUserPreferences } from '../../../providers/UserPreferences'
 
 export default function SearchPage({
   location,
-  setTotalResults
+  setTotalResults,
+  setTotalPagesNumber
 }: {
   location: Location
   setTotalResults: (totalResults: number) => void
+  setTotalPagesNumber: (totalPagesNumber: number) => void
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const parsed = queryString.parse(location.search)
@@ -43,6 +45,7 @@ export default function SearchPage({
       )
       setQueryResult(queryResult)
       setTotalResults(queryResult.totalResults)
+      setTotalPagesNumber(queryResult.totalPages)
       setLoading(false)
     }
     initSearch()

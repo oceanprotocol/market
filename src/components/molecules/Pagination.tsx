@@ -56,7 +56,7 @@ export default function Pagination({
 
   return totalPageNumbers && totalPageNumbers > 1 ? (
     <ReactPaginate
-      pageCount={totalPageNumbers}
+      pageCount={totalPageNumbers > 476 ? 476 : totalPageNumbers}
       // react-pagination starts counting at 0, we start at 1
       initialPage={currentPage ? currentPage - 1 : 0}
       // adapt based on media query match

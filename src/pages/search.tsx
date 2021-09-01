@@ -10,6 +10,7 @@ export default function PageGatsbySearch(props: PageProps): ReactElement {
   const parsed = queryString.parse(props.location.search)
   const { text, owner, tags, categories } = parsed
   const [totalResults, setTotalResults] = useState<number>()
+  const [totalPagesNumber, setTotalPagesNumber] = useState<number>()
 
   const isETHAddress = ethereumAddress.isAddress(text as string)
   const searchValue =
@@ -32,10 +33,19 @@ export default function PageGatsbySearch(props: PageProps): ReactElement {
       }`
 
   return (
-    <Page title={title} uri={props.uri}>
+    <Page
+      title={title}
+      description={
+        totalPagesNumber &&
+        totalPagesNumber > 476 &&
+        'More than 10k results were found, displaying the first 10k. Please refine your search'
+      }
+      uri={props.uri}
+    >
       <PageSearch
         location={props.location}
         setTotalResults={(totalResults) => setTotalResults(totalResults)}
+        setTotalPagesNumber={(totalPages) => setTotalPagesNumber(totalPages)}
       />
     </Page>
   )
