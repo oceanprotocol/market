@@ -1,4 +1,3 @@
-import { toDataUrl } from 'ethereum-blockies'
 import React, { ReactElement } from 'react'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import { accountTruncate } from '../../../utils/web3'
@@ -7,21 +6,7 @@ import NetworkName from '../../atoms/NetworkName'
 import jellyfish from '@oceanprotocol/art/creatures/jellyfish/jellyfish-grid.svg'
 import styles from './Account.module.css'
 import Copy from '../../atoms/Copy'
-
-const Blockies = ({ account }: { account: string | undefined }) => {
-  if (!account) return null
-
-  const blockies = toDataUrl(account)
-
-  return (
-    <img
-      className={styles.image}
-      src={blockies}
-      alt="Blockies"
-      aria-hidden="true"
-    />
-  )
-}
+import Blockies from '../../atoms/Blockies'
 
 export default function Account({
   name,
@@ -40,7 +25,7 @@ export default function Account({
         {image ? (
           <img src={image} className={styles.image} width="96" height="96" />
         ) : accountId ? (
-          <Blockies account={accountId} />
+          <Blockies accountId={accountId} className={styles.image} />
         ) : (
           <img
             src={jellyfish}

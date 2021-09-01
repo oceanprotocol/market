@@ -1,24 +1,10 @@
-import { toDataUrl } from 'ethereum-blockies'
 import React, { FormEvent } from 'react'
 import { ReactComponent as Caret } from '../../../images/caret.svg'
 import { accountTruncate } from '../../../utils/web3'
 import Loader from '../../atoms/Loader'
 import styles from './Account.module.css'
 import { useWeb3 } from '../../../providers/Web3'
-
-const Blockies = ({ account }: { account: string | undefined }) => {
-  if (!account) return null
-  const blockies = toDataUrl(account)
-
-  return (
-    <img
-      className={styles.blockies}
-      src={blockies}
-      alt="Blockies"
-      aria-hidden="true"
-    />
-  )
-}
+import Blockies from '../../atoms/Blockies'
 
 // Forward ref for Tippy.js
 // eslint-disable-next-line
@@ -44,7 +30,7 @@ const Account = React.forwardRef((props, ref: any) => {
       ref={ref}
       onClick={(e) => e.preventDefault()}
     >
-      <Blockies account={accountId} />
+      <Blockies accountId={accountId} />
       <span className={styles.address} title={accountId}>
         {accountTruncate(accountId)}
       </span>

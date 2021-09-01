@@ -16,9 +16,13 @@
   }
 }
 
-.imageWrap {
+.imageWrap,
+.image {
   width: 96px;
   height: 96px;
+}
+
+.imageWrap {
   border-radius: 50%;
   overflow: hidden;
   margin-bottom: calc(var(--spacer) / 4);
