@@ -55,9 +55,11 @@ const contentQuery = graphql`
 `
 
 export default function Edit({
-  setShowEdit
+  setShowEdit,
+  isComputeType
 }: {
   setShowEdit: (show: boolean) => void
+  isComputeType?: boolean
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
@@ -201,6 +203,7 @@ export default function Edit({
                 setTimeoutStringValue={setTimeoutStringValue}
                 values={initialValues}
                 showPrice={price.type === 'exchange'}
+                isComputeDataset={isComputeType}
               />
 
               <aside>
