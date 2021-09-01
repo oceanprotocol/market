@@ -11,7 +11,7 @@ import { graphql, useStaticQuery } from 'gatsby'
 
 export const contentQuery = graphql`
   query HistoryPageComputeResultsQuery {
-    content: allFile(filter: { relativePath: { eq: "pages/account.json" } }) {
+    content: allFile(filter: { relativePath: { eq: "pages/history.json" } }) {
       edges {
         node {
           childPagesJson {

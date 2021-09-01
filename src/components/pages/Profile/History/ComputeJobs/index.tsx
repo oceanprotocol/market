@@ -13,7 +13,7 @@ import { ReactComponent as Refresh } from '../../../../../images/refresh.svg'
 import { useUserPreferences } from '../../../../../providers/UserPreferences'
 import { getOceanConfig } from '../../../../../utils/ocean'
 import NetworkName from '../../../../atoms/NetworkName'
-import { getComputeJobs } from './utils'
+import { getComputeJobs } from '../../../../../utils/compute'
 import styles from './index.module.css'
 import { useAsset } from '../../../../../providers/Asset'
 
@@ -100,15 +100,7 @@ export default function ComputeJobs({
 
     try {
       setIsLoading(true)
-
-      const jobs = await getComputeJobs(
-        ddo?.dataTokenInfo?.address,
-        chainIds,
-        ddo?.chainId,
-        config,
-        ocean,
-        account
-      )
+      const jobs = await getComputeJobs(chainIds, config, ocean, account, ddo)
       setJobs(jobs)
     } catch (error) {
       Logger.error(error.message)
@@ -123,7 +115,7 @@ export default function ComputeJobs({
 
   return accountId ? (
     <>
-      {(jobs?.length || !minimal) && (
+      {jobs?.length >= 0 && !minimal && (
         <Button
           style="text"
           size="small"
