@@ -89,7 +89,6 @@ async function getAssetMetadata(
 }
 
 export async function getComputeJobs(
-  accountId: string,
   assetDTAddress: string,
   chainIds: number[],
   chainId: number,
@@ -99,12 +98,13 @@ export async function getComputeJobs(
 ): Promise<ComputeJobMetaData[]> {
   const variables = assetDTAddress
     ? {
-        user: accountId?.toLowerCase(),
+        user: account?.getId().toLowerCase(),
         datatokenAddress: assetDTAddress.toLowerCase()
       }
     : {
-        user: accountId?.toLowerCase()
+        user: account?.getId().toLowerCase()
       }
+
   const result = await fetchDataForMultipleChains(
     assetDTAddress ? getComputeOrdersByDatatokenAddress : getComputeOrders,
     variables,
@@ -112,8 +112,8 @@ export async function getComputeJobs(
   )
   let data: TokenOrder[] = []
   for (let i = 0; i < result.length; i++) {
-    if (!result[i].tokenOrders) continue
-    result[i].tokenOrders.forEach((tokenOrder: TokenOrder) => {
+    if (!result[i]?.tokenOrders) continue
+    result[i]?.tokenOrders.forEach((tokenOrder: TokenOrder) => {
       data.push(tokenOrder)
     })
   }

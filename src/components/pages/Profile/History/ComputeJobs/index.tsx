@@ -15,6 +15,7 @@ import { getOceanConfig } from '../../../../../utils/ocean'
 import NetworkName from '../../../../atoms/NetworkName'
 import { getComputeJobs } from './utils'
 import styles from './index.module.css'
+import { useAsset } from '../../../../../providers/Asset'
 
 export function Status({ children }: { children: string }): ReactElement {
   return <div className={styles.status}>{children}</div>
@@ -68,16 +69,13 @@ const columns = [
 ]
 
 export default function ComputeJobs({
-  minimal,
-  assetDTAddress,
-  chainId
+  minimal
 }: {
   minimal?: boolean
-  assetDTAddress?: string
-  chainId?: number
 }): ReactElement {
   const { ocean, account, config, connect } = useOcean()
   const { accountId, networkId } = useWeb3()
+  const { ddo } = useAsset()
   const [isLoading, setIsLoading] = useState(true)
   const { chainIds } = useUserPreferences()
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
@@ -104,10 +102,9 @@ export default function ComputeJobs({
       setIsLoading(true)
 
       const jobs = await getComputeJobs(
-        accountId,
-        assetDTAddress,
+        ddo?.dataTokenInfo?.address,
         chainIds,
-        chainId,
+        ddo?.chainId,
         config,
         ocean,
         account
@@ -118,7 +115,7 @@ export default function ComputeJobs({
     } finally {
       setIsLoading(false)
     }
-  }, [account, accountId, assetDTAddress, chainIds, chainId, config, ocean])
+  }, [account, accountId, chainIds, ddo, config, ocean])
 
   useEffect(() => {
     fetchJobs()
@@ -126,7 +123,7 @@ export default function ComputeJobs({
 
   return accountId ? (
     <>
-      {jobs.length <= 0 || minimal || (
+      {(jobs?.length || !minimal) && (
         <Button
           style="text"
           size="small"
