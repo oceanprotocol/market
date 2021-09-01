@@ -38,9 +38,11 @@ export default function Account({
 
       <div>
         <h3 className={styles.name}>{name || accountTruncate(accountId)}</h3>
-        <code className={styles.accountId}>
-          {accountId} <Copy text={accountId} />
-        </code>
+        {accountId && (
+          <code className={styles.accountId}>
+            {accountId} <Copy text={accountId} />
+          </code>
+        )}
         <p>
           {accountId &&
             chainIds.map((value) => (

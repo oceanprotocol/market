@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import get3BoxProfile from '../../../utils/profile'
-import { ProfileLink } from '../../../models/Profile'
+import { Profile } from '../../../models/Profile'
 import { accountTruncate } from '../../../utils/web3'
 import axios from 'axios'
 import PublisherLinks from './PublisherLinks'
@@ -14,15 +14,36 @@ const isDescriptionTextClamped = () => {
   if (el) return el.scrollHeight > el.clientHeight
 }
 
+const clearedProfile: Profile = {
+  name: null,
+  image: null,
+  description: null,
+  links: null
+}
+
+const Link3Box = ({ accountId, text }: { accountId: string; text: string }) => {
+  return (
+    <a
+      href={`https://www.3box.io/${accountId}`}
+      target="_blank"
+      rel="noreferrer"
+    >
+      {text}
+    </a>
+  )
+}
+
 export default function AccountHeader({
   accountId
 }: {
   accountId: string
 }): ReactElement {
-  const [image, setImage] = useState<string>()
-  const [name, setName] = useState(accountTruncate(accountId))
-  const [description, setDescription] = useState<string>()
-  const [links, setLinks] = useState<ProfileLink[]>()
+  const [profile, setProfile] = useState<Profile>({
+    name: accountTruncate(accountId),
+    image: null,
+    description: null,
+    links: null
+  })
   const [isShowMore, setIsShowMore] = useState(false)
 
   const toogleShowMore = () => {
@@ -31,28 +52,26 @@ export default function AccountHeader({
 
   useEffect(() => {
     if (!accountId) {
-      setName(null)
-      setDescription(null)
-      setImage(null)
-      setLinks([])
+      setProfile(clearedProfile)
       return
     }
 
     const source = axios.CancelToken.source()
 
     async function getInfoFrom3Box() {
-      const profile = await get3BoxProfile(accountId, source.token)
-      if (profile) {
-        const { name, emoji, description, image, links } = profile
-        setName(`${emoji || ''} ${name || accountTruncate(accountId)}`)
-        setDescription(description || null)
-        setImage(image || null)
-        setLinks(links || [])
+      const profile3Box = await get3BoxProfile(accountId, source.token)
+      if (profile3Box) {
+        const { name, emoji, description, image, links } = profile3Box
+        const newName = `${emoji || ''} ${name || accountTruncate(accountId)}`
+        const newProfile = {
+          name: newName,
+          image,
+          description,
+          links
+        }
+        setProfile(newProfile)
       } else {
-        setName(null)
-        setDescription(null)
-        setImage(null)
-        setLinks([])
+        setProfile(clearedProfile)
       }
     }
     getInfoFrom3Box()
@@ -65,44 +84,32 @@ export default function AccountHeader({
   return (
     <div className={styles.grid}>
       <div>
-        <Account accountId={accountId} image={image} name={name} />
+        <Account
+          accountId={accountId}
+          image={profile.image}
+          name={profile.name}
+        />
         <Stats accountId={accountId} />
       </div>
 
       <div>
-        <Markdown
-          text={
-            description ||
-            'No description found on [3box](https://3box.io/login).'
-          }
-          className={styles.description}
-        />
+        <Markdown text={profile.description} className={styles.description} />
         {isDescriptionTextClamped() ? (
           <span className={styles.more} onClick={toogleShowMore}>
-            <a
-              href={`https://www.3box.io/${accountId}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Read more on 3box
-            </a>
+            <Link3Box accountId={accountId} text="Read more on 3box" />
           </span>
         ) : (
           ''
         )}
-        {links?.length > 0 && (
-          <PublisherLinks links={links} className={styles.publisherLinks} />
+        {profile.links?.length > 0 && (
+          <PublisherLinks
+            links={profile.links}
+            className={styles.publisherLinks}
+          />
         )}
       </div>
       <div className={styles.meta}>
-        Profile data from{' '}
-        <a
-          href={`https://www.3box.io/${accountId}`}
-          target="_blank"
-          rel="noreferrer"
-        >
-          3Box Hub
-        </a>
+        Profile data from <Link3Box accountId={accountId} text="3Box Hub" />
       </div>
     </div>
   )

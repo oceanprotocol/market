@@ -4,7 +4,7 @@ export interface ProfileLink {
 }
 
 export interface Profile {
-  did: string
+  did?: string
   name?: string
   description?: string
   emoji?: string

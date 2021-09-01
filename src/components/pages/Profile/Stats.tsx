@@ -92,12 +92,12 @@ export default function Stats({
 
   return (
     <div className={styles.stats}>
-      <NumberUnit label="Published" value={numberOfAssets} />
-      <NumberUnit label="Sold" value={sold} />
       <NumberUnit
         label="Total Value Locked"
         value={<Conversion price={tvl?.price} hideApproximateSymbol />}
       />
+      <NumberUnit label="Sold" value={sold} />
+      <NumberUnit label="Published" value={numberOfAssets} />
     </div>
   )
 }
