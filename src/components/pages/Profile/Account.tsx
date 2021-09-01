@@ -6,6 +6,7 @@ import ExplorerLink from '../../atoms/ExplorerLink'
 import NetworkName from '../../atoms/NetworkName'
 import jellyfish from '@oceanprotocol/art/creatures/jellyfish/jellyfish-grid.svg'
 import styles from './Account.module.css'
+import Copy from '../../atoms/Copy'
 
 const Blockies = ({ account }: { account: string | undefined }) => {
   if (!account) return null
@@ -52,8 +53,12 @@ export default function Account({
 
       <div>
         <h3 className={styles.name}>{name || accountTruncate(accountId)}</h3>
+        <p>
+          <code className={styles.accountId}>{accountId}</code>{' '}
+          <Copy text={accountId} />
+        </p>
 
-        <div className={styles.links}>
+        <p>
           {accountId &&
             chainIds.map((value) => (
               <ExplorerLink
@@ -65,7 +70,7 @@ export default function Account({
                 <NetworkName networkId={value} />
               </ExplorerLink>
             ))}
-        </div>
+        </p>
       </div>
     </div>
   )

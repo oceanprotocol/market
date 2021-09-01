@@ -2,6 +2,10 @@
   text-align: center;
 }
 
+.account p {
+  margin: 0;
+}
+
 @media (min-width: 40rem) {
   .account {
     text-align: left;
@@ -28,7 +32,16 @@
 
 .name {
   font-size: var(--font-size-h3);
-  margin-bottom: 0;
+  margin-bottom: calc(var(--spacer) / 8);
+}
+
+.accountId {
+  font-size: var(--font-size-small);
+  color: var(--color-secondary);
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  padding: 0;
+  margin: 0;
 }
 
 .explorer {

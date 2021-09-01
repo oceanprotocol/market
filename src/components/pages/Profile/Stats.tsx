@@ -10,9 +10,6 @@ import {
 } from '../../../utils/subgraph'
 import Conversion from '../../atoms/Price/Conversion'
 import NumberUnit from '../../molecules/NumberUnit'
-import { ReactComponent as Published } from '../../../images/published.svg'
-import { ReactComponent as Sold } from '../../../images/sold.svg'
-import { ReactComponent as Tvl } from '../../../images/tvl.svg'
 import styles from './Stats.module.css'
 import {
   queryMetadata,
@@ -95,16 +92,11 @@ export default function Stats({
 
   return (
     <div className={styles.stats}>
-      <NumberUnit
-        label="Published"
-        value={numberOfAssets}
-        icon={<Published />}
-      />
-      <NumberUnit label="Sold" value={sold} icon={<Sold />} />
+      <NumberUnit label="Published" value={numberOfAssets} />
+      <NumberUnit label="Sold" value={sold} />
       <NumberUnit
         label="Total Value Locked"
         value={<Conversion price={tvl?.price} hideApproximateSymbol />}
-        icon={<Tvl />}
       />
     </div>
   )

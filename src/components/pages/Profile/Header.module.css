@@ -1,19 +1,31 @@
 .grid {
   composes: box from '../../atoms/Box.module.css';
-  display: grid;
-  gap: var(--spacer);
-  align-items: center;
   background: var(--background-body-transparent);
   backdrop-filter: blur(3px);
 }
 
+.description {
+  color: var(--color-secondary);
+  font-size: var(--font-size-small);
+  margin-bottom: unset;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  margin-top: var(--spacer);
+}
+
 @media (min-width: 50rem) {
   .grid {
+    display: grid;
+    gap: var(--spacer);
     /* lazy golden ratio */
     grid-template-columns: 1.618fr 1fr;
   }
 
   .description {
+    margin-top: calc(var(--spacer) / 1.3);
     -webkit-line-clamp: 7 !important;
   }
 }
@@ -26,17 +38,6 @@
   color: var(--color-secondary);
   font-size: var(--font-size-large);
   font-weight: var(--font-weight-bold);
-}
-
-.description {
-  color: var(--color-secondary);
-  font-size: var(--font-size-small);
-  margin-bottom: unset;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
 }
 
 .publisherLinks {
