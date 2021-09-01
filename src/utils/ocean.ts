@@ -16,9 +16,6 @@ export function getOceanConfig(network: string | number): ConfigHelperConfig {
       ? undefined
       : process.env.GATSBY_INFURA_PROJECT_ID
   ) as ConfigHelperConfig
-
-  // for testing purposes, must be removed before merge
-  config.subgraphUri = config.subgraphUri.replace('subgraph', 'subgraph2')
   return config as ConfigHelperConfig
 }
 
