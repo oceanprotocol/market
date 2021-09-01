@@ -1,20 +1,16 @@
 import React, { ReactElement } from 'react'
 import HistoryPage from './History'
 import AccountHeader from './Header'
-import { useWeb3 } from '../../../providers/Web3'
 
 export default function AccountPage({
-  accountIdentifier
+  accountId
 }: {
-  accountIdentifier: string
+  accountId: string
 }): ReactElement {
-  const { accountId } = useWeb3()
-  if (!accountIdentifier) accountIdentifier = accountId
-
   return (
-    <article>
-      <AccountHeader accountId={accountIdentifier} />
-      <HistoryPage accountIdentifier={accountIdentifier} />
-    </article>
+    <>
+      <AccountHeader accountId={accountId} />
+      <HistoryPage accountIdentifier={accountId} />
+    </>
   )
 }

@@ -5,13 +5,11 @@ import styles from './PoolShares.module.css'
 import AssetTitle from '../../../molecules/AssetListTitle'
 import { gql } from 'urql'
 import {
-  PoolShares as PoolSharesList,
   PoolShares_poolShares as PoolShare,
   PoolShares_poolShares_poolId_tokens as PoolSharePoolIdTokens
 } from '../../../../@types/apollo/PoolShares'
 import web3 from 'web3'
 import Token from '../../../organisms/AssetActions/Pool/Token'
-import { useWeb3 } from '../../../../providers/Web3'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import {
   fetchDataForMultipleChains,
