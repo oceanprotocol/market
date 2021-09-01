@@ -5,8 +5,8 @@ import PoolTransactions from '../../../molecules/PoolTransactions'
 import PublishedList from './PublishedList'
 import Downloads from './Downloads'
 import ComputeJobs from './ComputeJobs'
+import { useLocation } from '@reach/router'
 import styles from './index.module.css'
-import { useUserPreferences } from '../../../../providers/UserPreferences'
 import OceanProvider from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
 
@@ -53,20 +53,17 @@ export default function HistoryPage({
 }: {
   accountIdentifier: string
 }): ReactElement {
-  const { chainIds } = useUserPreferences()
   const { accountId } = useWeb3()
-  const url = new URL(window.location.href)
+  const location = useLocation()
+
+  const url = new URL(location.href)
   const defaultTab = url.searchParams.get('defaultTab')
   const tabs = getTabs(accountIdentifier, accountId)
+
   let defaultTabIndex = 0
   defaultTab === 'ComputeJobs' ? (defaultTabIndex = 4) : (defaultTabIndex = 0)
+
   return (
-    <article className={styles.content}>
-      <Tabs
-        items={tabs}
-        className={styles.tabs}
-        defaultIndex={defaultTabIndex}
-      />
-    </article>
+    <Tabs items={tabs} className={styles.tabs} defaultIndex={defaultTabIndex} />
   )
 }

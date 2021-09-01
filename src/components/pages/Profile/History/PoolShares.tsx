@@ -5,15 +5,16 @@ import styles from './PoolShares.module.css'
 import AssetTitle from '../../../molecules/AssetListTitle'
 import { gql } from 'urql'
 import {
-  PoolShares as PoolSharesList,
   PoolShares_poolShares as PoolShare,
   PoolShares_poolShares_poolId_tokens as PoolSharePoolIdTokens
 } from '../../../../@types/apollo/PoolShares'
 import web3 from 'web3'
 import Token from '../../../organisms/AssetActions/Pool/Token'
-import { useWeb3 } from '../../../../providers/Web3'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
-import { fetchDataForMultipleChains } from '../../../../utils/subgraph'
+import {
+  fetchDataForMultipleChains,
+  calculateUserLiquidity
+} from '../../../../utils/subgraph'
 import NetworkName from '../../../atoms/NetworkName'
 import axios from 'axios'
 import { retrieveDDO } from '../../../../utils/aquarius'
@@ -57,17 +58,6 @@ interface Asset {
   poolShare: PoolShare
   networkId: number
   createTime: number
-}
-
-function calculateUserLiquidity(poolShare: PoolShare) {
-  const ocean =
-    (poolShare.balance / poolShare.poolId.totalShares) *
-    poolShare.poolId.oceanReserve
-  const datatokens =
-    (poolShare.balance / poolShare.poolId.totalShares) *
-    poolShare.poolId.datatokenReserve
-  const totalLiquidity = ocean + datatokens * poolShare.poolId.consumePrice
-  return totalLiquidity
 }
 
 function findValidToken(tokens: PoolSharePoolIdTokens[]) {

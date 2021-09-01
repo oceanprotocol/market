@@ -1,6 +1,6 @@
 import { Logger } from '@oceanprotocol/lib'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
-import React, { ReactElement, useEffect, useState, useReducer } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import AssetList from '../../../organisms/AssetList'
 import axios from 'axios'
 import {

@@ -22,10 +22,7 @@ import styles from './index.module.css'
 import { useUserPreferences } from '../../../../../providers/UserPreferences'
 import { getOceanConfig } from '../../../../../utils/ocean'
 import { fetchDataForMultipleChains } from '../../../../../utils/subgraph'
-import {
-  OrdersData_tokenOrders as OrdersData,
-  OrdersData_tokenOrders_datatokenId as OrdersDatatoken
-} from '../../../../../@types/apollo/OrdersData'
+import { OrdersData_tokenOrders_datatokenId as OrdersDatatoken } from '../../../../../@types/apollo/OrdersData'
 import NetworkName from '../../../../atoms/NetworkName'
 
 const getComputeOrders = gql`
