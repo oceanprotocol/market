@@ -1,6 +1,6 @@
 .stats {
   display: grid;
   gap: var(--spacer);
-  grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
   margin-top: calc(var(--spacer) / 2);
 }
