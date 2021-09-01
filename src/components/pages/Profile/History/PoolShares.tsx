@@ -38,9 +38,9 @@ const poolSharesQuery = gql`
         datatokenAddress
         valueLocked
         tokens {
-          tokenId {
-            symbol
-          }
+          id
+          isDatatoken
+          symbol
         }
         oceanReserve
         datatokenReserve
@@ -60,13 +60,17 @@ interface Asset {
   createTime: number
 }
 
-function findValidToken(tokens: PoolSharePoolIdTokens[]) {
-  const symbol = tokens.find((token) => token.tokenId !== null)
-  return symbol.tokenId.symbol
+function findTokenByType(tokens: PoolSharePoolIdTokens[], type: string) {
+  const { symbol } = tokens.find((token) =>
+    type === 'datatoken'
+      ? token.isDatatoken === true
+      : token.isDatatoken === false
+  )
+  return symbol
 }
 
 function Symbol({ tokens }: { tokens: PoolSharePoolIdTokens[] }) {
-  return <>{findValidToken(tokens)}</>
+  return <>{findTokenByType(tokens, 'datatoken')}</>
 }
 
 function Liquidity({ row, type }: { row: Asset; type: string }) {
@@ -104,9 +108,13 @@ function Liquidity({ row, type }: { row: Asset; type: string }) {
         className={styles.totalLiquidity}
         hideApproximateSymbol
       />
-      <Token symbol="OCEAN" balance={oceanTokenBalance} noIcon />
       <Token
-        symbol={findValidToken(row.poolShare.poolId.tokens)}
+        symbol={findTokenByType(row.poolShare.poolId.tokens, 'ocean')}
+        balance={oceanTokenBalance}
+        noIcon
+      />
+      <Token
+        symbol={findTokenByType(row.poolShare.poolId.tokens, 'datatoken')}
         balance={dataTokenBalance}
         noIcon
       />

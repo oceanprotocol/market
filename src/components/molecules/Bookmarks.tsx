@@ -1,7 +1,7 @@
 import { useUserPreferences } from '../../providers/UserPreferences'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Table from '../atoms/Table'
-import { DDO, Logger, BestPrice } from '@oceanprotocol/lib'
+import { Logger } from '@oceanprotocol/lib'
 import Price from '../atoms/Price'
 import Tooltip from '../atoms/Tooltip'
 import AssetTitle from './AssetListTitle'

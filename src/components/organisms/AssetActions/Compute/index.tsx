@@ -3,8 +3,7 @@ import {
   DDO,
   File as FileMetadata,
   Logger,
-  publisherTrustedAlgorithm,
-  BestPrice
+  publisherTrustedAlgorithm
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '../../../atoms/Price'
@@ -40,6 +39,7 @@ import AlgorithmDatasetsListForCompute from '../../AssetContent/AlgorithmDataset
 import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
 import AssetActionHistoryTable from '../../AssetActionHistoryTable'
 import ComputeJobs from '../../../pages/Profile/History/ComputeJobs'
+import { BestPrice } from '../../../../models/BestPrice'
 
 const SuccessAction = () => (
   <Button style="text" to="/profile?defaultTab=ComputeJobs" size="small">
