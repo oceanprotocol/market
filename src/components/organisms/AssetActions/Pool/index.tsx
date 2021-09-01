@@ -55,7 +55,9 @@ const poolLiquidityQuery = gql`
       swapFee
       spotPrice
       tokens {
-        tokenAddress
+        address
+        symbol
+        isDatatoken
         balance
         denormWeight
       }
@@ -85,9 +87,10 @@ export default function Pool(): ReactElement {
 
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
+  const [dtSymbol, setDtSymbol] = useState<string>()
+  const [oceanSymbol, setOceanSymbol] = useState<string>()
   const { isInPurgatory, ddo, owner, price, refreshInterval, isAssetNetwork } =
     useAsset()
-  const dtSymbol = ddo?.dataTokenInfo.symbol
 
   const [poolTokens, setPoolTokens] = useState<string>()
   const [totalPoolTokens, setTotalPoolTokens] = useState<string>()
@@ -174,6 +177,12 @@ export default function Pool(): ReactElement {
         return
       }
 
+      // Set symbols
+      dataLiquidity.pool.tokens.forEach((token) => {
+        token.isDatatoken
+          ? setDtSymbol(token.symbol)
+          : setOceanSymbol(token.symbol)
+      })
       // Total pool shares
       const totalPoolTokens = dataLiquidity.pool.totalShares
       setTotalPoolTokens(totalPoolTokens)
@@ -188,7 +197,7 @@ export default function Pool(): ReactElement {
 
       // Get weights
       const weightDt = dataLiquidity.pool.tokens.filter(
-        (token: any) => token.tokenAddress === ddo.dataToken.toLowerCase()
+        (token: any) => token.address === ddo.dataToken.toLowerCase()
       )[0].denormWeight
 
       const weightDtDecimal = isValidNumber(weightDt)
@@ -391,7 +400,7 @@ export default function Pool(): ReactElement {
         <>
           <div className={styles.dataToken}>
             <PriceUnit price="1" symbol={dtSymbol} /> ={' '}
-            <PriceUnit price={`${price?.value}`} />
+            <PriceUnit price={`${price?.value}`} symbol={oceanSymbol} />
             <Tooltip content={content.tooltips.price} />
             <div className={styles.dataTokenLinks}>
               <ExplorerLink
@@ -426,6 +435,7 @@ export default function Pool(): ReactElement {
               </>
             }
             ocean={`${userLiquidity?.ocean}`}
+            oceanSymbol={oceanSymbol}
             dt={`${userLiquidity?.datatoken}`}
             dtSymbol={dtSymbol}
             poolShares={poolTokens}
@@ -438,6 +448,7 @@ export default function Pool(): ReactElement {
           <TokenList
             title="Pool Creator Statistics"
             ocean={`${creatorLiquidity?.ocean}`}
+            oceanSymbol={oceanSymbol}
             dt={`${creatorLiquidity?.datatoken}`}
             dtSymbol={dtSymbol}
             poolShares={creatorPoolTokens}
@@ -462,6 +473,7 @@ export default function Pool(): ReactElement {
               </>
             }
             ocean={`${price?.ocean}`}
+            oceanSymbol={oceanSymbol}
             dt={`${price?.datatoken}`}
             dtSymbol={dtSymbol}
             poolShares={totalPoolTokens}
