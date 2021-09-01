@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from 'react'
-import { BestPrice, DDO, Logger } from '@oceanprotocol/lib'
+import { DDO, Logger } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 import { Formik } from 'formik'
 import Actions from '../Pool/Actions'
@@ -15,6 +15,7 @@ import Decimal from 'decimal.js'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
 import { useAsset } from '../../../../providers/Asset'
+import { BestPrice } from '../../../../models/BestPrice'
 
 const contentQuery = graphql`
   query TradeQuery {
@@ -63,7 +64,7 @@ export default function FormTrade({
       ocean: Yup.number()
         .max(
           Number(maximumOcean),
-          (param) => `Must be more or equal to ${param.max}`
+          (param) => `Must be less or equal to ${param.max}`
         )
         .min(0.001, (param) => `Must be more or equal to ${param.min}`)
         .required('Required')
@@ -71,7 +72,7 @@ export default function FormTrade({
       datatoken: Yup.number()
         .max(
           Number(maximumDt),
-          (param) => `Must be less or equal than ${param.max}`
+          (param) => `Must be less or equal to ${param.max}`
         )
         .min(0.00001, (param) => `Must be more or equal to ${param.min}`)
         .required('Required')

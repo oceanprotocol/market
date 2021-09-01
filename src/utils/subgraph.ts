@@ -522,6 +522,7 @@ export async function getHighestLiquidityDIDs(
     const queryContext = getQueryContext(Number(chain))
     const fetchedPools: OperationResult<HighestLiquidityGraphAssets, any> =
       await fetchData(HighestLiquidityAssets, null, queryContext)
+    console.log('FETCHED POOLS: ', chain, fetchedPools)
     highestLiquidiyAssets = highestLiquidiyAssets.concat(
       fetchedPools.data.pools
     )
