@@ -190,6 +190,7 @@ export default function Consume({
       isLoading={pricingIsLoading || isLoading}
       priceType={price?.type}
       isConsumable={isConsumable}
+      isBalanceSufficient={isBalanceSufficient}
       consumableFeedback={consumableFeedback}
     />
   )

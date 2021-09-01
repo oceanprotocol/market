@@ -48,14 +48,12 @@ const SuccessAction = () => (
 )
 
 export default function Compute({
-  isBalanceSufficient,
   dtBalance,
   file,
   fileIsLoading,
   isConsumable,
   consumableFeedback
 }: {
-  isBalanceSufficient: boolean
   dtBalance: string
   file: FileMetadata
   fileIsLoading?: boolean
@@ -94,7 +92,6 @@ export default function Compute({
     isJobStarting === true ||
     file === null ||
     !ocean ||
-    !isBalanceSufficient ||
     (!hasPreviousDatasetOrder && !hasDatatoken && !(datasetMaxDT >= 1)) ||
     (!hasPreviousAlgorithmOrder && !hasAlgoAssetDatatoken && !(algoMaxDT >= 1))
 

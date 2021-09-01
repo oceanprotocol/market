@@ -67,6 +67,18 @@ const poolLiquidityQuery = gql`
   }
 `
 
+const userPoolShareQuery = gql`
+  query PoolShare($id: ID!, $shareId: ID) {
+    pool(id: $id) {
+      id
+      shares(where: { id: $shareId }) {
+        id
+        balance
+      }
+    }
+  }
+`
+
 export default function Pool(): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childContentJson.pool
@@ -122,6 +134,21 @@ export default function Pool(): ReactElement {
       queryContext
     )
     setdataLiquidity(queryResult?.data)
+  }
+
+  async function getUserPoolShareBalance() {
+    const queryContext = getQueryContext(ddo.chainId)
+    const queryVariables = {
+      id: price.address.toLowerCase(),
+      shareId: `${price.address.toLowerCase()}-${accountId.toLowerCase()}`
+    }
+
+    const queryResult: OperationResult<PoolLiquidity> = await fetchData(
+      userPoolShareQuery,
+      queryVariables,
+      queryContext
+    )
+    return queryResult?.data.pool.shares[0].balance
   }
 
   function refetchLiquidity() {
@@ -245,6 +272,7 @@ export default function Pool(): ReactElement {
   }, [isInPurgatory, owner, accountId])
 
   useEffect(() => {
+    if (!dataLiquidity) return
     const poolShare =
       isValidNumber(poolTokens) &&
       isValidNumber(totalPoolTokens) &&
@@ -261,9 +289,11 @@ export default function Pool(): ReactElement {
     const totalUserLiquidityInOcean =
       isValidNumber(userLiquidity?.ocean) &&
       isValidNumber(userLiquidity?.datatoken) &&
-      isValidNumber(price?.value)
+      isValidNumber(dataLiquidity.pool.spotPrice)
         ? new Decimal(userLiquidity?.ocean).add(
-            new Decimal(userLiquidity?.datatoken).mul(price?.value)
+            new Decimal(userLiquidity?.datatoken).mul(
+              dataLiquidity.pool.spotPrice
+            )
           )
         : new Decimal(0)
 
@@ -272,9 +302,9 @@ export default function Pool(): ReactElement {
     const totalLiquidityInOcean =
       isValidNumber(price?.ocean) &&
       isValidNumber(price?.datatoken) &&
-      isValidNumber(price?.value)
+      isValidNumber(dataLiquidity.pool.spotPrice)
         ? new Decimal(price?.ocean).add(
-            new Decimal(price?.datatoken).mul(price?.value)
+            new Decimal(price?.datatoken).mul(dataLiquidity.pool.spotPrice)
           )
         : new Decimal(0)
 
@@ -282,16 +312,13 @@ export default function Pool(): ReactElement {
   }, [userLiquidity, price, poolTokens, totalPoolTokens])
 
   useEffect(() => {
-    if (!ocean || !accountId || !price) return
+    if (!accountId || !price) return
     async function init() {
       try {
         //
         // Get everything the user has put into the pool
         //
-        const poolTokens = await ocean.pool.sharesBalance(
-          accountId,
-          price.address
-        )
+        const poolTokens = await getUserPoolShareBalance()
         setPoolTokens(poolTokens)
 
         // calculate user's provided liquidity based on pool tokens
@@ -326,7 +353,7 @@ export default function Pool(): ReactElement {
       }
     }
     init()
-  }, [ocean, accountId, price, ddo, refreshPool, owner, totalPoolTokens])
+  }, [accountId, price, ddo, refreshPool, owner, totalPoolTokens])
 
   const refreshInfo = async () => {
     setRefreshPool(!refreshPool)
