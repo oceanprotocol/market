@@ -113,7 +113,9 @@ const AssetPoolPriceQuerry = gql`
       datatokenAddress
       datatokenReserve
       oceanReserve
-      tokens
+      tokens {
+        symbol
+      }
     }
   }
 `
