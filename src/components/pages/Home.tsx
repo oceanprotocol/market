@@ -24,12 +24,12 @@ async function getQueryHighest(
   const [dids, didsLength] = await getHighestLiquidityDIDs(chainIds)
   const queryHighest = {
     page: 1,
-    offset: didsLength,
+    offset: didsLength > 0 ? didsLength : 1,
     query: {
       query_string: {
-        query: `(${dids}) AND (${transformChainIdsListToQuery(
+        query: `${dids && `(${dids}) AND`}(${transformChainIdsListToQuery(
           chainIds
-        )}) AND -isInPurgatory:true`,
+        )}) AND -isInPurgatory:true `,
         fields: ['dataToken']
       }
     }

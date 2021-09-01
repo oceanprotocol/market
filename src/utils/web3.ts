@@ -1,4 +1,5 @@
 import { Logger } from '@oceanprotocol/lib'
+import { getOceanConfig } from './ocean'
 
 export interface EthereumListsChain {
   name: string
@@ -17,6 +18,24 @@ export interface NetworkObject {
   chainId: number
   name: string
   urlList: string[]
+}
+
+const configGaiaX = getOceanConfig(2021000)
+
+export const networkDataGaiaX = {
+  name: 'GAIA-X Testnet',
+  chainId: 2021000,
+  shortName: 'GAIA-X',
+  chain: 'GAIA-X',
+  network: 'testnet',
+  networkId: 2021000,
+  nativeCurrency: { name: 'Gaia-X', symbol: 'GX', decimals: 18 },
+  rpc: [configGaiaX.nodeUri],
+  faucets: [
+    'https://faucet.gaiaxtestnet.oceanprotocol.com/',
+    'https://faucet.gx.gaiaxtestnet.oceanprotocol.com/'
+  ],
+  infoURL: 'https://www.gaia-x.eu'
 }
 
 export function getNetworkConfigObject(node: any): NetworkObject {
@@ -55,9 +74,6 @@ export function getNetworkDisplayName(
     case 8996:
       displayName = 'Development'
       break
-    case 2021000:
-      displayName = 'GAIA-X'
-      break
     default:
       displayName = data
         ? `${data.chain} ${data.network === 'mainnet' ? '' : data.network}`
@@ -77,7 +93,7 @@ export function getNetworkDataById(
     ({ node }: { node: EthereumListsChain }) => node.chainId === networkId
   )
 
-  return networkData[0]?.node
+  return networkId === 2021000 ? networkDataGaiaX : networkData[0]?.node
 }
 
 export async function addCustomNetwork(
@@ -106,7 +122,7 @@ export async function addCustomNetwork(
             Logger.error(
               `Couldn't add ${network.name} (0x${
                 network.chainId
-              }) netowrk to MetaMask, error: ${err || added.error}`
+              }) network to MetaMask, error: ${err || added.error}`
             )
           } else {
             Logger.log(
@@ -117,7 +133,7 @@ export async function addCustomNetwork(
       )
     } else {
       Logger.error(
-        `Couldn't add ${network.name} (0x${network.chainId}) netowrk to MetaMask, error: ${switchError}`
+        `Couldn't add ${network.name} (0x${network.chainId}) network to MetaMask, error: ${switchError}`
       )
     }
   }
