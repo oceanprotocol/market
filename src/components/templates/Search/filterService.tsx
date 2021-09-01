@@ -38,32 +38,11 @@ export default function FilterPrice({
   const [serviceSelections, setServiceSelections] = useState<string[]>([])
   const [accessSelections, setAccessSelections] = useState<string[]>([])
 
-  async function applyServiceFilter(filterBy: string) {
-    let urlLocation = await addExistingParamsToUrl(location, ['serviceType'])
-    if (filterBy && location.search.indexOf('&serviceType') === -1) {
-      urlLocation = `${urlLocation}&serviceType=${filterBy}`
-    }
-    setServiceType(filterBy)
-    navigate(urlLocation)
-  }
-
-  async function applyAccessFilter(filterBy: string) {
-    let urlLocation = await addExistingParamsToUrl(location, ['accessType'])
-    if (filterBy && location.search.indexOf('&accessType') === -1) {
-      urlLocation = `${urlLocation}&accessType=${filterBy}`
-    }
-    setAccessType(filterBy)
-    navigate(urlLocation)
-  }
-
   async function applyFilter(filter: string, filterType: string) {
-    console.log('APPLY FILTER: ', filter, filterType)
     let urlLocation = ''
     if (filterType.localeCompare('accessType') === 0) {
-      console.log('IS ACCESS TYPE')
       urlLocation = await addExistingParamsToUrl(location, ['accessType'])
     } else {
-      console.log('IS SERVICE TYPE')
       urlLocation = await addExistingParamsToUrl(location, ['serviceType'])
     }
 
@@ -78,7 +57,6 @@ export default function FilterPrice({
   }
 
   async function handleSelectedFilter(isSelected: boolean, value: string) {
-    console.log('IS SELECTED, VALUE: ', isSelected, value)
     if (
       value === FilterByAccessOptions.Download ||
       value === FilterByAccessOptions.Compute
