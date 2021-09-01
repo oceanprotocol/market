@@ -2,18 +2,22 @@
   composes: box from '../../atoms/Box.module.css';
   background: var(--background-body-transparent);
   backdrop-filter: blur(3px);
+  position: relative;
 }
 
 .description {
   color: var(--color-secondary);
   font-size: var(--font-size-small);
-  margin-bottom: unset;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   margin-top: var(--spacer);
+}
+
+.description p:last-child {
+  margin-bottom: 0;
 }
 
 @media (min-width: 50rem) {
@@ -30,22 +34,21 @@
   }
 }
 
-.infoSection {
-  border-right: 1px solid var(--border-color);
-}
-
-.descriptionLabel {
-  color: var(--color-secondary);
-  font-size: var(--font-size-large);
-  font-weight: var(--font-weight-bold);
-}
-
 .publisherLinks {
   margin-top: calc(var(--spacer) / 2);
+  margin-bottom: calc(var(--spacer) / 2);
 }
 
 .more {
   font-size: var(--font-size-mini);
   margin-left: calc(var(--spacer) / 8);
   cursor: pointer;
+}
+
+.meta {
+  color: var(--color-secondary);
+  font-size: var(--font-size-mini);
+  position: absolute;
+  right: calc(var(--spacer) / 3);
+  bottom: calc(var(--spacer) / 6);
 }

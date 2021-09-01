@@ -90,7 +90,19 @@ export default function AccountHeader({
         ) : (
           ''
         )}
-        {links?.length > 0 && <PublisherLinks links={links} />}
+        {links?.length > 0 && (
+          <PublisherLinks links={links} className={styles.publisherLinks} />
+        )}
+      </div>
+      <div className={styles.meta}>
+        Profile data from{' '}
+        <a
+          href={`https://www.3box.io/${accountId}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          3Box Hub
+        </a>
       </div>
     </div>
   )
