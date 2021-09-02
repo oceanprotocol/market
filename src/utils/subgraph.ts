@@ -85,6 +85,12 @@ const AssetFreQuery = gql`
     fixedRateExchanges(orderBy: id, where: { datatoken: $datatoken }) {
       rate
       id
+      baseTokenSymbol
+      datatoken {
+        id
+        address
+        symbol
+      }
     }
   }
 `
