@@ -79,9 +79,11 @@ const FreQuery = gql`
     fixedRateExchanges(orderBy: id, where: { datatoken_in: $datatoken_in }) {
       rate
       id
+      baseTokenSymbol
       datatoken {
         id
         address
+        symbol
       }
     }
   }
@@ -92,6 +94,12 @@ const AssetFreQuery = gql`
     fixedRateExchanges(orderBy: id, where: { datatoken: $datatoken }) {
       rate
       id
+      baseTokenSymbol
+      datatoken {
+        id
+        address
+        symbol
+      }
     }
   }
 `
@@ -303,6 +311,7 @@ function transformPriceToBestPrice(
       value: frePrice[0]?.rate,
       address: frePrice[0]?.id,
       exchangeId: frePrice[0]?.id,
+      oceanSymbol: frePrice[0]?.baseTokenSymbol,
       ocean: 0,
       datatoken: 0,
       pools: [],
