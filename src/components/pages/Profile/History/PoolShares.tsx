@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import Table from '../../../atoms/Table'
 import Conversion from '../../../atoms/Price/Conversion'
 import styles from './PoolShares.module.css'
@@ -102,7 +102,7 @@ function Liquidity({ row, type }: { row: Asset; type: string }) {
     dataTokenBalance = row.poolShare.poolId.datatokenReserve.toString()
   }
   return (
-    <div className={styles.yourLiquidity}>
+    <div className={styles.userLiquidity}>
       <Conversion
         price={price}
         className={styles.totalLiquidity}
@@ -146,7 +146,7 @@ const columns = [
     }
   },
   {
-    name: 'Your Liquidity',
+    name: 'Liquidity',
     selector: function getAssetRow(row: Asset) {
       return <Liquidity row={row} type="user" />
     },
@@ -161,6 +161,43 @@ const columns = [
   }
 ]
 
+async function getPoolSharesData(accountId: string, chainIds: number[]) {
+  const variables = { user: accountId?.toLowerCase() }
+  const data: PoolShare[] = []
+  const result = await fetchDataForMultipleChains(
+    poolSharesQuery,
+    variables,
+    chainIds
+  )
+  for (let i = 0; i < result.length; i++) {
+    result[i].poolShares.forEach((poolShare: PoolShare) => {
+      data.push(poolShare)
+    })
+  }
+  return data
+}
+
+async function getPoolSharesAssets(data: PoolShare[]) {
+  const assetList: Asset[] = []
+  const source = axios.CancelToken.source()
+
+  for (let i = 0; i < data.length; i++) {
+    const did = web3.utils
+      .toChecksumAddress(data[i].poolId.datatokenAddress)
+      .replace('0x', 'did:op:')
+    const ddo = await retrieveDDO(did, source.token)
+    const userLiquidity = calculateUserLiquidity(data[i])
+    assetList.push({
+      poolShare: data[i],
+      userLiquidity: userLiquidity,
+      networkId: ddo?.chainId,
+      createTime: data[i].poolId.createTime
+    })
+  }
+  const assets = assetList.sort((a, b) => b.createTime - a.createTime)
+  return assets
+}
+
 export default function PoolShares({
   accountId
 }: {
@@ -172,33 +209,16 @@ export default function PoolShares({
   const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
   const { chainIds } = useUserPreferences()
 
-  async function fetchPoolSharesData() {
-    const variables = { user: accountId?.toLowerCase() }
-    const shares: PoolShare[] = []
-    const result = await fetchDataForMultipleChains(
-      poolSharesQuery,
-      variables,
-      chainIds
-    )
-    for (let i = 0; i < result.length; i++) {
-      result[i].poolShares.forEach((poolShare: PoolShare) => {
-        shares.push(poolShare)
-      })
-    }
-    if (JSON.stringify(data) !== JSON.stringify(shares)) {
-      setData(shares)
-    }
-  }
+  const refetchPoolSharesData = useCallback(() => {
+    if (dataFetchInterval) return
 
-  function refetchPoolShares() {
-    if (!dataFetchInterval) {
-      setDataFetchInterval(
-        setInterval(function () {
-          fetchPoolSharesData()
-        }, REFETCH_INTERVAL)
-      )
-    }
-  }
+    setDataFetchInterval(
+      setInterval(async () => {
+        const newData = await getPoolSharesData(accountId, chainIds)
+        setData(newData)
+      }, REFETCH_INTERVAL)
+    )
+  }, [dataFetchInterval, chainIds, accountId])
 
   useEffect(() => {
     return () => {
@@ -207,43 +227,32 @@ export default function PoolShares({
   }, [dataFetchInterval])
 
   useEffect(() => {
-    async function getShares() {
-      const assetList: Asset[] = []
-      const source = axios.CancelToken.source()
+    async function init() {
+      setLoading(true)
+      const newData = await getPoolSharesData(accountId, chainIds)
+      setData(newData)
+      refetchPoolSharesData()
+    }
+    init()
+  }, [accountId, chainIds, refetchPoolSharesData])
 
+  useEffect(() => {
+    if (!data) return
+
+    async function getShares() {
       try {
-        setLoading(true)
-        if (!data) {
-          await fetchPoolSharesData()
-          return
+        const newAssets = await getPoolSharesAssets(data)
+        if (JSON.stringify(assets) !== JSON.stringify(newAssets)) {
+          setAssets(newAssets)
         }
-        for (let i = 0; i < data.length; i++) {
-          const did = web3.utils
-            .toChecksumAddress(data[i].poolId.datatokenAddress)
-            .replace('0x', 'did:op:')
-          const ddo = await retrieveDDO(did, source.token)
-          const userLiquidity = calculateUserLiquidity(data[i])
-          assetList.push({
-            poolShare: data[i],
-            userLiquidity: userLiquidity,
-            networkId: ddo.chainId,
-            createTime: data[i].poolId.createTime
-          })
-        }
-        const orderedAssets = assetList.sort(
-          (a, b) => b.createTime - a.createTime
-        )
-        setAssets(orderedAssets)
-        refetchPoolShares()
       } catch (error) {
         console.error('Error fetching pool shares: ', error.message)
       } finally {
         setLoading(false)
       }
     }
-
     getShares()
-  }, [accountId, chainIds, data])
+  }, [accountId, chainIds, data, assets])
 
   return accountId ? (
     <Table
