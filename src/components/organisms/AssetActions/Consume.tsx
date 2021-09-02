@@ -67,7 +67,7 @@ export default function Consume({
   const [data, setData] = useState<OrdersData>()
 
   useEffect(() => {
-    if (!ddo) return
+    if (!ddo || !accountId) return
     const context = getQueryContext(ddo.chainId)
     const variables = {
       id: ddo.dataToken?.toLowerCase(),
@@ -76,7 +76,7 @@ export default function Consume({
     fetchData(previousOrderQuery, variables, context).then((result: any) => {
       setData(result.data)
     })
-  }, [ddo])
+  }, [ddo, accountId])
 
   async function checkMaxAvaialableTokens(price: BestPrice) {
     if (!ocean || !price) return
@@ -88,7 +88,8 @@ export default function Consume({
   }
 
   useEffect(() => {
-    if (!data || !assetTimeout || data.tokenOrders.length === 0) return
+    if (!data || !assetTimeout || data.tokenOrders.length === 0 || !accountId)
+      return
 
     const lastOrder = data.tokenOrders[0]
     if (assetTimeout === '0') {
@@ -104,7 +105,7 @@ export default function Consume({
         setHasPreviousOrder(false)
       }
     }
-  }, [data, assetTimeout])
+  }, [data, assetTimeout, accountId])
 
   useEffect(() => {
     const { timeout } = ddo.findServiceByType('access').attributes.main
@@ -125,6 +126,7 @@ export default function Consume({
   }, [dtBalance])
 
   useEffect(() => {
+    if (!accountId) return
     setIsDisabled(
       !isConsumable ||
         ((!ocean ||
@@ -146,6 +148,7 @@ export default function Consume({
     pricingIsLoading,
     isConsumablePrice,
     hasDatatoken,
+    accountId,
     isConsumable
   ])
 
