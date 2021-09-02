@@ -4,7 +4,7 @@ import jwtDecode from 'jwt-decode'
 
 // https://docs.3box.io/api/rest-api
 const apiUri = 'https://3box.oceanprotocol.com'
-const ipfsUrl = 'https://dweb.link'
+const ipfsUrl = 'https://infura-ipfs.io'
 
 function decodeProof(proofJWT: string) {
   if (!proofJWT) return
