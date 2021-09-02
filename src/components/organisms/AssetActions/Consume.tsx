@@ -17,7 +17,6 @@ import { secondsToString } from '../../../utils/metadata'
 import AlgorithmDatasetsListForCompute from '../AssetContent/AlgorithmDatasetsListForCompute'
 import styles from './Consume.module.css'
 import { BestPrice } from '../../../models/BestPrice'
-import { fetchData, getQueryContext } from '../../../utils/subgraph'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {
@@ -64,19 +63,15 @@ export default function Consume({
   const [maxDt, setMaxDT] = useState<number>(1)
   const [isConsumablePrice, setIsConsumablePrice] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
-  const [data, setData] = useState<OrdersData>()
-
-  useEffect(() => {
-    if (!ddo) return
-    const context = getQueryContext(ddo.chainId)
-    const variables = {
+  const [result] = useQuery<OrdersData>({
+    query: previousOrderQuery,
+    variables: {
       id: ddo.dataToken?.toLowerCase(),
       account: accountId?.toLowerCase()
     }
-    fetchData(previousOrderQuery, variables, context).then((result: any) => {
-      setData(result.data)
-    })
-  }, [ddo])
+    // pollInterval: 5000
+  })
+  const { data } = result
 
   async function checkMaxAvaialableTokens(price: BestPrice) {
     if (!ocean || !price) return
