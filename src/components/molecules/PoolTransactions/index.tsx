@@ -26,21 +26,18 @@ const txHistoryQueryByPool = gql`
     ) {
       tokens {
         poolToken {
-          tokenId {
-            symbol
-          }
+          id
+          symbol
         }
+        value
+        type
+        tokenAddress
       }
       tx
       event
       timestamp
       poolAddress {
         datatokenAddress
-      }
-      tokens {
-        value
-        type
-        tokenAddress
       }
     }
   }
