@@ -37,10 +37,10 @@ async function getTitle(row: PoolTransaction, locale: string) {
       )[0]
       const secondTokenSymbol = secondToken?.poolToken.symbol
       title += `Create pool with ${formatPrice(
-        Math.abs(firstToken.value).toString(),
+        Math.abs(firstToken?.value).toString(),
         locale
       )}${firstTokenSymbol} and ${formatPrice(
-        Math.abs(secondToken.value).toString(),
+        Math.abs(secondToken?.value).toString(),
         locale
       )}${secondTokenSymbol}`
       break
