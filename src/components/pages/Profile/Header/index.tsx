@@ -1,13 +1,13 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import get3BoxProfile from '../../../utils/profile'
-import { Profile } from '../../../models/Profile'
-import { accountTruncate } from '../../../utils/web3'
+import get3BoxProfile from '../../../../utils/profile'
+import { Profile } from '../../../../models/Profile'
+import { accountTruncate } from '../../../../utils/web3'
 import axios from 'axios'
 import PublisherLinks from './PublisherLinks'
-import Markdown from '../../atoms/Markdown'
+import Markdown from '../../../atoms/Markdown'
 import Stats from './Stats'
 import Account from './Account'
-import styles from './Header.module.css'
+import styles from './index.module.css'
 
 const isDescriptionTextClamped = () => {
   const el = document.getElementById('description')

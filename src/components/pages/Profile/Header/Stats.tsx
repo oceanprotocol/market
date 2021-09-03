@@ -1,20 +1,20 @@
 import { DDO, Logger } from '@oceanprotocol/lib'
 import React, { useEffect, useState } from 'react'
 import { ReactElement } from 'react-markdown'
-import { useUserPreferences } from '../../../providers/UserPreferences'
+import { useUserPreferences } from '../../../../providers/UserPreferences'
 import {
   getAccountLiquidityInOwnAssets,
   getAccountNumberOfOrders,
   getAssetsBestPrices,
   UserTVL
-} from '../../../utils/subgraph'
-import Conversion from '../../atoms/Price/Conversion'
-import NumberUnit from '../../molecules/NumberUnit'
+} from '../../../../utils/subgraph'
+import Conversion from '../../../atoms/Price/Conversion'
+import NumberUnit from '../../../molecules/NumberUnit'
 import styles from './Stats.module.css'
 import {
   queryMetadata,
   transformChainIdsListToQuery
-} from '../../../utils/aquarius'
+} from '../../../../utils/aquarius'
 import axios from 'axios'
 
 export default function Stats({

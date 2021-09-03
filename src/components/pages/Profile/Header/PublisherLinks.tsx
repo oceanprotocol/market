@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import classNames from 'classnames/bind'
-import { ProfileLink } from '../../../models/Profile'
-import { ReactComponent as External } from '../../../images/external.svg'
+import { ProfileLink } from '../../../../models/Profile'
+import { ReactComponent as External } from '../../../../images/external.svg'
 import styles from './PublisherLinks.module.css'
 
 const cx = classNames.bind(styles)

@@ -1,12 +1,12 @@
 import React, { ReactElement } from 'react'
-import { useUserPreferences } from '../../../providers/UserPreferences'
-import { accountTruncate } from '../../../utils/web3'
-import ExplorerLink from '../../atoms/ExplorerLink'
-import NetworkName from '../../atoms/NetworkName'
+import { useUserPreferences } from '../../../../providers/UserPreferences'
+import { accountTruncate } from '../../../../utils/web3'
+import ExplorerLink from '../../../atoms/ExplorerLink'
+import NetworkName from '../../../atoms/NetworkName'
 import jellyfish from '@oceanprotocol/art/creatures/jellyfish/jellyfish-grid.svg'
+import Copy from '../../../atoms/Copy'
+import Blockies from '../../../atoms/Blockies'
 import styles from './Account.module.css'
-import Copy from '../../atoms/Copy'
-import Blockies from '../../atoms/Blockies'
 
 export default function Account({
   name,

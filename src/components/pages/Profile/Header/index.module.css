@@ -1,5 +1,5 @@
 .grid {
-  composes: box from '../../atoms/Box.module.css';
+  composes: box from '../../../atoms/Box.module.css';
   background: var(--background-body-transparent);
   backdrop-filter: blur(3px);
   position: relative;
