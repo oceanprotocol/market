@@ -23,8 +23,7 @@ async function getQueryHighest(
 ): Promise<[SearchQuery, string]> {
   const [dids, didsLength] = await getHighestLiquidityDIDs(chainIds)
   const queryHighest = {
-    page: 1,
-    offset: didsLength > 0 ? didsLength : 1,
+    size: didsLength > 0 ? didsLength : 1,
     query: {
       query_string: {
         query: `${dids && `(${dids}) AND`}(${transformChainIdsListToQuery(
@@ -38,10 +37,9 @@ async function getQueryHighest(
   return [queryHighest, dids]
 }
 
-function getQueryLatest(chainIds: number[]): SearchQuery {
+function getQueryLatest(chainIds: number[]): any {
   return {
-    page: 1,
-    offset: 9,
+    size: 9,
     query: {
       query_string: {
         query: `(${transformChainIdsListToQuery(
@@ -49,7 +47,7 @@ function getQueryLatest(chainIds: number[]): SearchQuery {
         )}) AND -isInPurgatory:true `
       }
     },
-    sort: { created: -1 }
+    sort: { created: 'desc' }
   }
 }
 
@@ -94,6 +92,7 @@ function SectionQueryResult({
         try {
           setLoading(true)
           const result = await queryMetadata(query, source.token)
+
           if (queryData && result.totalResults > 0) {
             const searchDIDs = queryData.split(' ')
             const sortedAssets = sortElements(result.results, searchDIDs)

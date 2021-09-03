@@ -30,24 +30,27 @@ function getQueryForAlgorithmDatasets(algorithmDid: string, chainId?: number) {
 // and not just strings of DDOs. For now, taken from
 // https://github.com/oceanprotocol/ocean.js/blob/main/src/metadatacache/MetadataCache.ts#L361-L375
 export function transformQueryResult(
-  {
-    results,
-    page,
-    total_pages: totalPages,
-    total_results: totalResults
-  }: any = {
-    result: [],
-    page: 0,
-    total_pages: 0,
-    total_results: 0
-  }
+  queryResult: any,
+  from = 0,
+  size = 21
 ): QueryResult {
-  return {
-    results: (results || []).map((ddo: DDO) => new DDO(ddo as DDO)),
-    page,
-    totalPages,
-    totalResults
+  console.log('transform query result', queryResult)
+
+  const result: QueryResult = {
+    results: [],
+    page: 0,
+    totalPages: 0,
+    totalResults: 0
   }
+
+  result.results = (queryResult.hits.hits || []).map(
+    (hit: any) => new DDO(hit._source as DDO)
+  )
+  result.totalResults = queryResult.hits.total
+  result.totalPages = Math.floor(result.totalResults / size)
+  result.page = from ? from / size : 1
+  console.log('parsed result', result)
+  return result
 }
 
 export function transformChainIdsListToQuery(chainIds: number[]): string {
@@ -65,11 +68,12 @@ export async function queryMetadata(
 ): Promise<QueryResult> {
   try {
     const response: AxiosResponse<any> = await axios.post(
-      `${metadataCacheUri}/api/v1/aquarius/assets/ddo/query`,
-      { ...query, cancelToken }
+      `${metadataCacheUri}/api/v1/aquarius/assets/query`,
+      { ...query },
+      { cancelToken }
     )
     if (!response || response.status !== 200 || !response.data) return
-    return transformQueryResult(response.data)
+    return transformQueryResult(response.data, query.from, query.size)
   } catch (error) {
     if (axios.isCancel(error)) {
       Logger.log(error.message)
