@@ -7,9 +7,10 @@ import {
   queryMetadata,
   transformChainIdsListToQuery
 } from '../../../../utils/aquarius'
-import ServiceFilter from '../../../templates/Search/filterService'
+import Filters from '../../../templates/Search/Filters'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
+import styles from './PublishedList.module.css'
 
 export default function PublishedList({
   accountId
@@ -57,11 +58,12 @@ export default function PublishedList({
   }, [accountId, page, appConfig.metadataCacheUri, chainIds, service])
 
   return accountId ? (
-    <div>
-      <ServiceFilter
+    <>
+      <Filters
         serviceType={service}
         setServiceType={setServiceType}
         isSearch={false}
+        className={styles.filters}
       />
       <AssetList
         assets={queryResult?.results}
@@ -72,8 +74,9 @@ export default function PublishedList({
         onPageChange={(newPage) => {
           setPage(newPage)
         }}
+        className={styles.assets}
       />
-    </div>
+    </>
   ) : (
     <div>Please connect your Web3 wallet.</div>
   )

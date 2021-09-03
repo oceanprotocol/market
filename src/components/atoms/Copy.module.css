@@ -29,7 +29,7 @@
   content: 'Copied!';
   position: absolute;
   top: -150%;
-  left: -100%;
+  left: -140%;
   font-size: var(--font-size-mini);
   color: var(--brand-alert-green);
 }

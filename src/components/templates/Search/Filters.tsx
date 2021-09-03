@@ -1,9 +1,9 @@
 import React, { ReactElement, useState } from 'react'
 import { useNavigate } from '@reach/router'
-import styles from './filterService.module.css'
 import classNames from 'classnames/bind'
 import { addExistingParamsToUrl, FilterByTypeOptions } from './utils'
 import Button from '../../atoms/Button'
+import styles from './Filters.module.css'
 
 const cx = classNames.bind(styles)
 
@@ -14,14 +14,16 @@ const serviceFilterItems = [
   { display: 'algorithms', value: FilterByTypeOptions.Algorithm }
 ]
 
-export default function FilterPrice({
+export default function Filters({
   serviceType,
   setServiceType,
-  isSearch
+  isSearch,
+  className
 }: {
   serviceType: string
   setServiceType: React.Dispatch<React.SetStateAction<string>>
   isSearch: boolean
+  className?: string
 }): ReactElement {
   const navigate = useNavigate()
   const [serviceSelections, setServiceSelections] = useState<string[]>([])
@@ -72,11 +74,17 @@ export default function FilterPrice({
     }
   }
 
+  const styleClasses = cx({
+    filterList: true,
+    [className]: className
+  })
+
   return (
-    <div className={styles.filterList}>
+    <div className={styleClasses}>
       {serviceFilterItems.map((e, index) => {
         const isServiceSelected =
           e.value === serviceType || serviceSelections.includes(e.value)
+
         const selectFilter = cx({
           [styles.selected]: isServiceSelected,
           [styles.filter]: true
