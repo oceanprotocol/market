@@ -76,7 +76,7 @@ export default function Consume({
     fetchData(previousOrderQuery, variables, context).then((result: any) => {
       setData(result.data)
     })
-  }, [ddo, accountId])
+  }, [ddo, accountId, hasPreviousOrder])
 
   async function checkMaxAvaialableTokens(price: BestPrice) {
     if (!ocean || !price) return
