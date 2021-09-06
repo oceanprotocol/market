@@ -34,8 +34,6 @@ export function transformQueryResult(
   from = 0,
   size = 21
 ): QueryResult {
-  console.log('transform query result', queryResult)
-
   const result: QueryResult = {
     results: [],
     page: 0,
@@ -49,7 +47,7 @@ export function transformQueryResult(
   result.totalResults = queryResult.hits.total
   result.totalPages = Math.floor(result.totalResults / size)
   result.page = from ? from / size : 1
-  console.log('parsed result', result)
+
   return result
 }
 
