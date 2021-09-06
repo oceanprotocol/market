@@ -92,7 +92,7 @@ export default function Stats({
       }
     }
     getAccountTVL()
-  }, [publishedAssets])
+  }, [publishedAssets, accountId, chainIds])
 
   return (
     <div className={styles.stats}>
