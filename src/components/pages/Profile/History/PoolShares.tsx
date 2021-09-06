@@ -205,54 +205,41 @@ export default function PoolShares({
 }): ReactElement {
   const [assets, setAssets] = useState<Asset[]>()
   const [loading, setLoading] = useState<boolean>(false)
-  const [data, setData] = useState<PoolShare[]>()
   const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
   const { chainIds } = useUserPreferences()
 
-  const refetchPoolSharesData = useCallback(() => {
-    if (dataFetchInterval) return
+  const fetchPoolSharesData = useCallback(async () => {
+    try {
+      setLoading(true)
+      const data = await getPoolSharesData(accountId, chainIds)
+      const newAssets = await getPoolSharesAssets(data)
 
-    setDataFetchInterval(
-      setInterval(async () => {
-        const newData = await getPoolSharesData(accountId, chainIds)
-        setData(newData)
-      }, REFETCH_INTERVAL)
-    )
-  }, [dataFetchInterval, chainIds, accountId])
-
-  useEffect(() => {
-    return () => {
-      clearInterval(dataFetchInterval)
+      if (JSON.stringify(assets) !== JSON.stringify(newAssets)) {
+        setAssets(newAssets)
+      }
+    } catch (error) {
+      console.error('Error fetching pool shares: ', error.message)
+    } finally {
+      setLoading(false)
     }
-  }, [dataFetchInterval])
+  }, [accountId, assets, chainIds])
 
   useEffect(() => {
     async function init() {
-      setLoading(true)
-      const newData = await getPoolSharesData(accountId, chainIds)
-      setData(newData)
-      refetchPoolSharesData()
+      await fetchPoolSharesData()
+
+      if (dataFetchInterval) return
+      const interval = setInterval(async () => {
+        await fetchPoolSharesData()
+      }, REFETCH_INTERVAL)
+      setDataFetchInterval(interval)
     }
     init()
-  }, [accountId, chainIds, refetchPoolSharesData])
 
-  useEffect(() => {
-    if (!data) return
-
-    async function getShares() {
-      try {
-        const newAssets = await getPoolSharesAssets(data)
-        if (JSON.stringify(assets) !== JSON.stringify(newAssets)) {
-          setAssets(newAssets)
-        }
-      } catch (error) {
-        console.error('Error fetching pool shares: ', error.message)
-      } finally {
-        setLoading(false)
-      }
+    return () => {
+      clearInterval(dataFetchInterval)
     }
-    getShares()
-  }, [accountId, chainIds, data, assets])
+  }, [dataFetchInterval, fetchPoolSharesData])
 
   return accountId ? (
     <Table
