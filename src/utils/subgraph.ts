@@ -167,15 +167,18 @@ const HighestLiquidityAssets = gql`
 `
 
 const TotalAccountOrders = gql`
-  query TotalAccountOrders($payer: String) {
-    tokenOrders(orderBy: id, where: { payer: $payer }) {
-      id
+  query TotalAccountOrders($datatokenId_in: [String!]) {
+    tokenOrders(where: { datatokenId_in: $datatokenId_in }) {
       payer {
+        id
+      }
+      datatokenId {
         id
       }
     }
   }
 `
+
 const UserSharesQuery = gql`
   query UserSharesQuery($user: String, $pools: [String!]) {
     poolShares(where: { userAddress: $user, poolId_in: $pools }) {
@@ -564,11 +567,15 @@ export async function getHighestLiquidityDIDs(
 }
 
 export async function getAccountNumberOfOrders(
-  accountId: string,
+  assets: DDO[],
   chainIds: number[]
 ): Promise<number> {
+  const datatokens: string[] = []
+  assets.forEach((ddo) => {
+    datatokens.push(ddo?.dataToken?.toLowerCase())
+  })
   const queryVariables = {
-    payer: accountId.toLowerCase()
+    datatokenId_in: datatokens
   }
   const results = await fetchDataForMultipleChains(
     TotalAccountOrders,
@@ -577,7 +584,7 @@ export async function getAccountNumberOfOrders(
   )
   let numberOfOrders = 0
   for (const result of results) {
-    numberOfOrders += result.tokenOrders.length
+    numberOfOrders += result?.tokenOrders?.length
   }
   return numberOfOrders
 }

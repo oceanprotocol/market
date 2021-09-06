@@ -52,17 +52,21 @@ export default function Stats({
         const result = await queryMetadata(queryPublishedAssets, source.token)
         setPublishedAssets(result.results)
         setNumberOfAssets(result.totalResults)
+        const nrOrders = await getAccountNumberOfOrders(
+          result.results,
+          chainIds
+        )
+        setSold(nrOrders)
       } catch (error) {
         Logger.error(error.message)
       }
     }
     getPublished()
 
-    async function getAccountSoldValue() {
-      const nrOrders = await getAccountNumberOfOrders(accountId, chainIds)
-      setSold(nrOrders)
-    }
-    getAccountSoldValue()
+    // async function getAccountSoldValue() {
+    //
+    // }
+    // getAccountSoldValue()
   }, [accountId, chainIds])
 
   useEffect(() => {
