@@ -210,7 +210,6 @@ export default function PoolShares({
 
   const fetchPoolSharesData = useCallback(async () => {
     try {
-      setLoading(true)
       const data = await getPoolSharesData(accountId, chainIds)
       const newAssets = await getPoolSharesAssets(data)
 
@@ -219,14 +218,14 @@ export default function PoolShares({
       }
     } catch (error) {
       console.error('Error fetching pool shares: ', error.message)
-    } finally {
-      setLoading(false)
     }
   }, [accountId, assets, chainIds])
 
   useEffect(() => {
     async function init() {
+      setLoading(true)
       await fetchPoolSharesData()
+      setLoading(false)
 
       if (dataFetchInterval) return
       const interval = setInterval(async () => {
