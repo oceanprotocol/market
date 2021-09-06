@@ -5,21 +5,20 @@ export async function setMinterToPublisher(
   dataTokenAddress: string,
   accountId: string,
   setError: (msg: string) => void
-): Promise<any> {
+): Promise<boolean> {
   // free pricing v3 workaround part1
   const status = await ocean.OceanDispenser.status(dataTokenAddress)
-  if (status.minterApproved) {
-    const response = await ocean.OceanDispenser.cancelMinter(
-      dataTokenAddress,
-      accountId
-    )
-    if (!response) {
-      setError('Updating DDO failed.')
-      Logger.error('Failed at cancelMinter')
-    }
-    return response
-  }
-  return true
+  if (!status?.minterApproved) return true
+
+  const response = await ocean.OceanDispenser.cancelMinter(
+    dataTokenAddress,
+    accountId
+  )
+  if (!response) {
+    setError('Updating DDO failed.')
+    Logger.error('Failed at cancelMinter')
+    return false
+  } else return true
 }
 
 export async function setMinterToDispenser(
