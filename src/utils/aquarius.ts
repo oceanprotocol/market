@@ -5,10 +5,7 @@ import {
   publisherTrustedAlgorithm as PublisherTrustedAlgorithm
 } from '@oceanprotocol/lib/'
 
-import {
-  QueryResult,
-  SearchQuery
-} from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
+import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { AssetSelectionAsset } from '../components/molecules/FormFields/AssetSelection'
 import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
@@ -61,7 +58,7 @@ export function transformChainIdsListToQuery(chainIds: number[]): string {
 }
 
 export async function queryMetadata(
-  query: SearchQuery,
+  query: any,
   cancelToken: CancelToken
 ): Promise<QueryResult> {
   try {
