@@ -5,7 +5,7 @@ import {
   transformChainIdsListToQuery
 } from '../../../utils/aquarius'
 import queryString from 'query-string'
-import axios from 'axios'
+import axios, { CancelToken, CancelTokenSource } from 'axios'
 
 export const SortTermOptions = {
   Created: 'created',
@@ -168,8 +168,8 @@ export async function getResults(
     sortOrder?: string
     serviceType?: string
   },
-  metadataCacheUri: string,
-  chainIds: number[]
+  chainIds: number[],
+  cancelToken?: CancelToken
 ): Promise<QueryResult> {
   const {
     text,
@@ -195,9 +195,7 @@ export async function getResults(
     sortOrder,
     serviceType
   )
-  const source = axios.CancelToken.source()
-  // const queryResult = await metadataCache.queryMetadata(searchQuery)
-  const queryResult = await queryMetadata(searchQuery, source.token)
+  const queryResult = await queryMetadata(searchQuery, cancelToken)
   return queryResult
 }
 

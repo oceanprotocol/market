@@ -11,6 +11,7 @@ import { navigate } from 'gatsby'
 import { updateQueryStringParameter } from '../../../utils'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../providers/UserPreferences'
+import axios from 'axios'
 
 export default function SearchPage({
   location,
@@ -33,14 +34,13 @@ export default function SearchPage({
 
   useEffect(() => {
     if (!appConfig.metadataCacheUri) return
+
+    const source = axios.CancelToken.source()
+
     async function initSearch() {
       setLoading(true)
       setTotalResults(undefined)
-      const queryResult = await getResults(
-        parsed,
-        appConfig.metadataCacheUri,
-        chainIds
-      )
+      const queryResult = await getResults(parsed, chainIds, source.token)
       setQueryResult(queryResult)
       setTotalResults(queryResult.totalResults)
       setLoading(false)
