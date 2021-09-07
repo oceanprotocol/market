@@ -61,7 +61,7 @@ export default function App({
         <Footer />
 
         {appConfig.privacyPreferenceCenter === 'true' && (
-          <PrivacyPreferenceCenter />
+          <PrivacyPreferenceCenter style="default" />
         )}
       </div>
     </Styles>

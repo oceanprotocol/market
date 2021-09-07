@@ -6,6 +6,7 @@ export interface UseGdprMetadata {
   accept: string
   reject: string
   close: string
+  configure: string
   placeholder: string
   optionalCookies?: {
     title: string
@@ -25,6 +26,7 @@ const query = graphql`
             accept
             reject
             close
+            configure
             optionalCookies {
               title
               desc

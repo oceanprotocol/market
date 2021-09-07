@@ -4,6 +4,7 @@
   "close": "Save and close",
   "accept": "Accept all",
   "reject": "Only essential",
+  "configure": "Customize",
   "optionalCookies": [
     {
       "title": "Marketing",

@@ -30,6 +30,7 @@ exports.sourceNodes = ({ actions }) => {
       accept: String
       reject: String
       close: String
+      configure: String
       optionalCookies: [Cookie!]
     }
     type Cookie {

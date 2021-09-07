@@ -22,6 +22,10 @@
   border-bottom: 1px solid var(--brand-grey-lighter);
 }
 
+.configureButton {
+  display: none;
+}
+
 .closeButton {
   margin-top: var(--spacer);
 }
@@ -33,7 +37,7 @@
 }
 
 .wrapper {
-  max-width: 25rem;
+  max-width: 90vw;
   position: fixed;
   left: 0;
   top: 0;
@@ -46,14 +50,73 @@
   transition: all 0.3s ease-out;
 }
 
+/* Small Cookie Banner Styles */
+
+.wrapper.small {
+  bottom: var(--spacer);
+  left: var(--spacer);
+  top: auto;
+  width: calc(100vw - (var(--spacer) * 2));
+  max-width: 42rem;
+  overflow: hidden;
+  height: auto;
+}
+
+.small .banner {
+  display: block;
+  min-height: 0;
+}
+
+.small .header {
+  font-size: var(--font-size-normal);
+  margin-bottom: calc(var(--spacer) / 4);
+}
+
+.small p {
+  font-size: var(--font-size-small);
+}
+
+.small .buttons {
+  flex-direction: column;
+  border: none;
+  padding: calc(var(--spacer) / 6);
+}
+
+.small .buttons button {
+  margin: calc(var(--spacer) / 6);
+  width: 100%;
+}
+
+.small .configureButton {
+  display: block;
+}
+
+.small .optionals {
+  display: none;
+}
+
+.small .closeButton {
+  margin: calc(var(--spacer) / 4) auto 0;
+}
+
+/* Hide and show the Cookie Banner */
+
 .wrapper.hidden {
   left: -25rem;
   opacity: 0;
   box-shadow: none;
 }
 
-@media screen and (max-width: 25rem) {
+/* Adjust for larger screen sizes */
+
+@media screen and (min-width: 26rem) {
   .wrapper {
-    max-width: 90vw;
+    max-width: 25rem;
+  }
+}
+
+@media screen and (min-width: 38rem) {
+  .small .container {
+    display: flex;
   }
 }
