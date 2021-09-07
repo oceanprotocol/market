@@ -43,10 +43,6 @@ button.filter,
   color: var(--background-body);
 }
 
-.filterList:first-of-type {
-  margin-bottom: calc(var(--spacer) / 6);
-}
-
 .showClear:hover {
   display: inline-flex;
   color: var(--color-primary);

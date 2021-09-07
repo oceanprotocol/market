@@ -76,7 +76,7 @@ export function checkIfTimeoutInPredefinedValues(
   return false
 }
 
-function getAlgoithComponent(
+function getAlgorithmComponent(
   image: string,
   containerTag: string,
   entrypoint: string,
@@ -94,7 +94,7 @@ function getAlgoithComponent(
   }
 }
 
-function getAlgoithFileExtension(fileUrl: string): string {
+function getAlgorithmFileExtension(fileUrl: string): string {
   const splitedFileUrl = fileUrl.split('.')
   return splitedFileUrl[splitedFileUrl.length - 1]
 }
@@ -203,7 +203,6 @@ export function transformPublishAlgorithmFormToMetadata(
     author,
     description,
     tags,
-    dockerImage,
     image,
     containerTag,
     entrypoint,
@@ -214,12 +213,12 @@ export function transformPublishAlgorithmFormToMetadata(
 ): MetadataMarket {
   const currentTime = toStringNoMS(new Date())
   const fileUrl = typeof files !== 'string' && files[0].url
-  const algorithmLanguace = getAlgoithFileExtension(fileUrl)
-  const algorithm = getAlgoithComponent(
+  const algorithmLanguage = getAlgorithmFileExtension(fileUrl)
+  const algorithm = getAlgorithmComponent(
     image,
     containerTag,
     entrypoint,
-    algorithmLanguace
+    algorithmLanguage
   )
   const metadata: MetadataMarket = {
     main: {
@@ -230,7 +229,7 @@ export function transformPublishAlgorithmFormToMetadata(
       dateCreated: ddo ? ddo.created : currentTime,
       files: typeof files !== 'string' && files,
       license: 'https://market.oceanprotocol.com/terms',
-      algorithm: algorithm
+      algorithm
     },
     additionalInformation: {
       ...AssetModel.additionalInformation,
@@ -241,30 +240,4 @@ export function transformPublishAlgorithmFormToMetadata(
   }
 
   return metadata
-}
-
-function idToName(id: number): string {
-  switch (id) {
-    case 1:
-      return 'eth'
-    case 137:
-      return 'polygon'
-    case 3:
-      return 'ropsten'
-    case 4:
-      return 'rinkeby'
-    case 1287:
-      return 'moonbase'
-    default:
-      return 'eth'
-  }
-}
-
-export function mapChainIdsToNetworkNames(chainIds: number[]): string[] {
-  const networkNames: string[] = []
-  for (let i = 0; i < chainIds.length; i++) {
-    const networkName = idToName(chainIds[i])
-    networkNames.push(networkName)
-  }
-  return networkNames
 }

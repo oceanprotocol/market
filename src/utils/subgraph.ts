@@ -5,11 +5,11 @@ import { getOceanConfig } from './ocean'
 import web3 from 'web3'
 import {
   AssetsPoolPrice,
-  AssetsPoolPrice_pools as AssetsPoolPricePools
+  AssetsPoolPrice_pools as AssetsPoolPricePool
 } from '../@types/apollo/AssetsPoolPrice'
 import {
   AssetsFrePrice,
-  AssetsFrePrice_fixedRateExchanges as AssetsFrePriceFixedRateExchanges
+  AssetsFrePrice_fixedRateExchanges as AssetsFrePriceFixedRateExchange
 } from '../@types/apollo/AssetsFrePrice'
 import {
   AssetsFreePrice,
@@ -17,10 +17,19 @@ import {
 } from '../@types/apollo/AssetsFreePrice'
 import { AssetPreviousOrder } from '../@types/apollo/AssetPreviousOrder'
 import {
-  HighestLiquidityAssets_pools as HighestLiquidityAssetsPools,
+  HighestLiquidityAssets_pools as HighestLiquidityAssetsPool,
   HighestLiquidityAssets as HighestLiquidityGraphAssets
 } from '../@types/apollo/HighestLiquidityAssets'
+import {
+  PoolShares as PoolSharesList,
+  PoolShares_poolShares as PoolShare
+} from '../@types/apollo/PoolShares'
 import { BestPrice } from '../models/BestPrice'
+
+export interface UserTVL {
+  price: string
+  oceanBalance: string
+}
 
 export interface PriceList {
   [key: string]: string
@@ -112,7 +121,7 @@ const PoolQuery = gql`
   }
 `
 
-const AssetPoolPriceQuerry = gql`
+const AssetPoolPriceQuery = gql`
   query AssetPoolPrice($datatokenAddress: String) {
     pools(where: { datatokenAddress: $datatokenAddress }) {
       id
@@ -157,6 +166,43 @@ const HighestLiquidityAssets = gql`
   }
 `
 
+const TotalAccountOrders = gql`
+  query TotalAccountOrders($payer: String) {
+    tokenOrders(orderBy: id, where: { payer: $payer }) {
+      id
+      payer {
+        id
+      }
+    }
+  }
+`
+const UserSharesQuery = gql`
+  query UserSharesQuery($user: String, $pools: [String!]) {
+    poolShares(where: { userAddress: $user, poolId_in: $pools }) {
+      id
+      balance
+      userAddress {
+        id
+      }
+      poolId {
+        id
+        datatokenAddress
+        valueLocked
+        tokens {
+          tokenId {
+            symbol
+          }
+        }
+        oceanReserve
+        datatokenReserve
+        totalShares
+        consumePrice
+        spotPrice
+        createTime
+      }
+    }
+  }
+`
 export function getSubgraphUri(chainId: number): string {
   const config = getOceanConfig(chainId)
   return config.subgraphUri
@@ -238,8 +284,8 @@ export async function getPreviousOrders(
 }
 
 function transformPriceToBestPrice(
-  frePrice: AssetsFrePriceFixedRateExchanges[],
-  poolPrice: AssetsPoolPricePools[],
+  frePrice: AssetsFrePriceFixedRateExchange[],
+  poolPrice: AssetsPoolPricePool[],
   freePrice: AssetFreePriceDispenser[]
 ) {
   if (poolPrice?.length > 0) {
@@ -303,8 +349,8 @@ async function getAssetsPoolsExchangesAndDatatokenMap(
   assets: DDO[]
 ): Promise<
   [
-    AssetsPoolPricePools[],
-    AssetsFrePriceFixedRateExchanges[],
+    AssetsPoolPricePool[],
+    AssetsFrePriceFixedRateExchange[],
     AssetFreePriceDispenser[],
     DidAndDatatokenMap
   ]
@@ -322,8 +368,8 @@ async function getAssetsPoolsExchangesAndDatatokenMap(
       chainAssetLists[ddo.chainId].push(ddo?.dataToken.toLowerCase())
     }
   }
-  let poolPriceResponse: AssetsPoolPricePools[] = []
-  let frePriceResponse: AssetsFrePriceFixedRateExchanges[] = []
+  let poolPriceResponse: AssetsPoolPricePool[] = []
+  let frePriceResponse: AssetsFrePriceFixedRateExchange[] = []
   let freePriceResponse: AssetFreePriceDispenser[] = []
 
   for (const chainKey in chainAssetLists) {
@@ -366,8 +412,8 @@ export async function getAssetsPriceList(assets: DDO[]): Promise<PriceList> {
   const priceList: PriceList = {}
 
   const values: [
-    AssetsPoolPricePools[],
-    AssetsFrePriceFixedRateExchanges[],
+    AssetsPoolPricePool[],
+    AssetsFrePriceFixedRateExchange[],
     AssetFreePriceDispenser[],
     DidAndDatatokenMap
   ] = await getAssetsPoolsExchangesAndDatatokenMap(assets)
@@ -404,7 +450,7 @@ export async function getPrice(asset: DDO): Promise<BestPrice> {
   const queryContext = getQueryContext(Number(asset.chainId))
 
   const poolPriceResponse: OperationResult<AssetsPoolPrice> = await fetchData(
-    AssetPoolPriceQuerry,
+    AssetPoolPriceQuery,
     poolVariables,
     queryContext
   )
@@ -435,7 +481,7 @@ export async function getSpotPrice(asset: DDO): Promise<number> {
   const queryContext = getQueryContext(Number(asset.chainId))
 
   const poolPriceResponse: OperationResult<AssetsPoolPrice> = await fetchData(
-    AssetPoolPriceQuerry,
+    AssetPoolPriceQuery,
     poolVariables,
     queryContext
   )
@@ -449,8 +495,8 @@ export async function getAssetsBestPrices(
   const assetsWithPrice: AssetListPrices[] = []
 
   const values: [
-    AssetsPoolPricePools[],
-    AssetsFrePriceFixedRateExchanges[],
+    AssetsPoolPricePool[],
+    AssetsFrePriceFixedRateExchange[],
     AssetFreePriceDispenser[],
     DidAndDatatokenMap
   ] = await getAssetsPoolsExchangesAndDatatokenMap(assets)
@@ -460,19 +506,20 @@ export async function getAssetsBestPrices(
   const freePriceResponse = values[2]
   for (const ddo of assets) {
     const dataToken = ddo.dataToken.toLowerCase()
-    const poolPrice: AssetsPoolPricePools[] = []
-    const frePrice: AssetsFrePriceFixedRateExchanges[] = []
+    const poolPrice: AssetsPoolPricePool[] = []
+    const frePrice: AssetsFrePriceFixedRateExchange[] = []
     const freePrice: AssetFreePriceDispenser[] = []
     const pool = poolPriceResponse.find(
-      (pool: any) => pool.datatokenAddress === dataToken
+      (pool: AssetsPoolPricePool) => pool.datatokenAddress === dataToken
     )
     pool && poolPrice.push(pool)
     const fre = frePriceResponse.find(
-      (fre: any) => fre.datatoken.address === dataToken
+      (fre: AssetsFrePriceFixedRateExchange) =>
+        fre.datatoken.address === dataToken
     )
     fre && frePrice.push(fre)
     const free = freePriceResponse.find(
-      (free: any) => free.datatoken.address === dataToken
+      (free: AssetFreePriceDispenser) => free.datatoken.address === dataToken
     )
     free && freePrice.push(free)
     const bestPrice = transformPriceToBestPrice(frePrice, poolPrice, freePrice)
@@ -489,22 +536,22 @@ export async function getHighestLiquidityDIDs(
   chainIds: number[]
 ): Promise<[string, number]> {
   const didList: string[] = []
-  let highestLiquidiyAssets: HighestLiquidityAssetsPools[] = []
+  let highestLiquidityAssets: HighestLiquidityAssetsPool[] = []
   for (const chain of chainIds) {
     const queryContext = getQueryContext(Number(chain))
     const fetchedPools: OperationResult<HighestLiquidityGraphAssets, any> =
       await fetchData(HighestLiquidityAssets, null, queryContext)
-    highestLiquidiyAssets = highestLiquidiyAssets.concat(
+    highestLiquidityAssets = highestLiquidityAssets.concat(
       fetchedPools.data.pools
     )
   }
-  highestLiquidiyAssets
+  highestLiquidityAssets
     .sort((a, b) => a.oceanReserve - b.oceanReserve)
     .reverse()
-  for (let i = 0; i < highestLiquidiyAssets.length; i++) {
-    if (!highestLiquidiyAssets[i].datatokenAddress) continue
+  for (let i = 0; i < highestLiquidityAssets.length; i++) {
+    if (!highestLiquidityAssets[i].datatokenAddress) continue
     const did = web3.utils
-      .toChecksumAddress(highestLiquidiyAssets[i].datatokenAddress)
+      .toChecksumAddress(highestLiquidityAssets[i].datatokenAddress)
       .replace('0x', 'did:op:')
     didList.push(did)
   }
@@ -514,4 +561,65 @@ export async function getHighestLiquidityDIDs(
     .replace(/(\[|\])/g, '')
     .replace(/(did:op:)/g, '0x')
   return [searchDids, didList.length]
+}
+
+export async function getAccountNumberOfOrders(
+  accountId: string,
+  chainIds: number[]
+): Promise<number> {
+  const queryVariables = {
+    payer: accountId.toLowerCase()
+  }
+  const results = await fetchDataForMultipleChains(
+    TotalAccountOrders,
+    queryVariables,
+    chainIds
+  )
+  let numberOfOrders = 0
+  for (const result of results) {
+    numberOfOrders += result.tokenOrders.length
+  }
+  return numberOfOrders
+}
+
+export function calculateUserLiquidity(poolShare: PoolShare): number {
+  const ocean =
+    (poolShare.balance / poolShare.poolId.totalShares) *
+    poolShare.poolId.oceanReserve
+  const datatokens =
+    (poolShare.balance / poolShare.poolId.totalShares) *
+    poolShare.poolId.datatokenReserve
+  const totalLiquidity = ocean + datatokens * poolShare.poolId.consumePrice
+  return totalLiquidity
+}
+
+export async function getAccountLiquidityInOwnAssets(
+  accountId: string,
+  chainIds: number[],
+  pools: string[]
+): Promise<UserTVL> {
+  const queryVariables = {
+    user: accountId.toLowerCase(),
+    pools: pools
+  }
+  const results: PoolSharesList[] = await fetchDataForMultipleChains(
+    UserSharesQuery,
+    queryVariables,
+    chainIds
+  )
+  let totalLiquidity = 0
+  let totalOceanLiquidity = 0
+  for (const result of results) {
+    for (const poolShare of result.poolShares) {
+      const userShare = poolShare.balance / poolShare.poolId.totalShares
+      const userBalance = userShare * poolShare.poolId.oceanReserve
+      totalOceanLiquidity += userBalance
+      const poolLiquidity = calculateUserLiquidity(poolShare)
+      totalLiquidity += poolLiquidity
+    }
+  }
+  return {
+    price: totalLiquidity.toString(),
+    oceanBalance: totalOceanLiquidity.toString()
+  }
 }

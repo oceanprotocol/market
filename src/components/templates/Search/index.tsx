@@ -2,15 +2,15 @@ import React, { ReactElement, useState, useEffect } from 'react'
 import Permission from '../../organisms/Permission'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import AssetList from '../../organisms/AssetList'
-import styles from './index.module.css'
 import queryString from 'query-string'
-import ServiceFilter from './filterService'
+import Filters from './Filters'
 import Sort from './sort'
 import { getResults } from './utils'
 import { navigate } from 'gatsby'
 import { updateQueryStringParameter } from '../../../utils'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../providers/UserPreferences'
+import styles from './index.module.css'
 
 export default function SearchPage({
   location,
@@ -72,9 +72,10 @@ export default function SearchPage({
       <>
         <div className={styles.search}>
           <div className={styles.row}>
-            <ServiceFilter
+            <Filters
               serviceType={service}
               setServiceType={setServiceType}
+              isSearch
             />
             <Sort
               sortType={sortType}
