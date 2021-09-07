@@ -3,10 +3,11 @@ import React, { useEffect, useState } from 'react'
 import { ReactElement } from 'react-markdown'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import {
+  getAccountLiquidity,
   getAccountLiquidityInOwnAssets,
   getAccountNumberOfOrders,
   getAssetsBestPrices,
-  UserTVL
+  UserLiquidity
 } from '../../../../utils/subgraph'
 import Conversion from '../../../atoms/Price/Conversion'
 import NumberUnit from '../../../molecules/NumberUnit'
@@ -27,13 +28,15 @@ export default function Stats({
   const [publishedAssets, setPublishedAssets] = useState<DDO[]>()
   const [numberOfAssets, setNumberOfAssets] = useState(0)
   const [sold, setSold] = useState(0)
-  const [tvl, setTvl] = useState<UserTVL>()
+  const [publisherLiquidity, setPublisherLiquidity] = useState<UserLiquidity>()
+  const [totalLiquidity, setTotalLiquidity] = useState(0)
 
   useEffect(() => {
     if (!accountId) {
       setNumberOfAssets(0)
       setSold(0)
-      setTvl({ price: '0', oceanBalance: '0' })
+      setPublisherLiquidity({ price: '0', oceanBalance: '0' })
+      setTotalLiquidity(0)
       return
     }
 
@@ -76,12 +79,12 @@ export default function Stats({
             accountPoolAdresses.push(priceInfo.price.address.toLowerCase())
           }
         }
-        const userTvl: UserTVL = await getAccountLiquidityInOwnAssets(
+        const userLiquidity = await getAccountLiquidityInOwnAssets(
           accountId,
           chainIds,
           accountPoolAdresses
         )
-        setTvl(userTvl)
+        setPublisherLiquidity(userLiquidity)
       } catch (error) {
         Logger.error(error.message)
       }
@@ -89,13 +92,31 @@ export default function Stats({
     getAccountTVL()
   }, [publishedAssets, accountId, chainIds])
 
+  useEffect(() => {
+    async function initTotalLiquidity() {
+      try {
+        const totalLiquidity = await getAccountLiquidity(accountId, chainIds)
+        setTotalLiquidity(totalLiquidity)
+      } catch (error) {
+        console.error('Error fetching pool shares: ', error.message)
+      }
+    }
+    initTotalLiquidity()
+  }, [accountId, chainIds])
+
   return (
     <div className={styles.stats}>
       <NumberUnit
-        label="Total Value Locked"
-        value={<Conversion price={tvl?.price} hideApproximateSymbol />}
+        label="Liquidity in Own Assets"
+        value={
+          <Conversion price={publisherLiquidity?.price} hideApproximateSymbol />
+        }
       />
-      <NumberUnit label="Sold" value={sold} />
+      <NumberUnit
+        label="Total Liquidity"
+        value={<Conversion price={`${totalLiquidity}`} hideApproximateSymbol />}
+      />
+      <NumberUnit label="Sales" value={sold} />
       <NumberUnit label="Published" value={numberOfAssets} />
     </div>
   )

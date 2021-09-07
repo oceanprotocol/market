@@ -3,6 +3,7 @@
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-h4);
   color: var(--font-color-heading);
+  margin-left: 0;
 }
 
 .number {

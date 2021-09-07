@@ -3,7 +3,6 @@ import Table from '../../../atoms/Table'
 import Conversion from '../../../atoms/Price/Conversion'
 import styles from './PoolShares.module.css'
 import AssetTitle from '../../../molecules/AssetListTitle'
-import { gql } from 'urql'
 import {
   PoolShares_poolShares as PoolShare,
   PoolShares_poolShares_poolId_tokens as PoolSharePoolIdTokens
@@ -12,8 +11,8 @@ import web3 from 'web3'
 import Token from '../../../organisms/AssetActions/Pool/Token'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import {
-  fetchDataForMultipleChains,
-  calculateUserLiquidity
+  calculateUserLiquidity,
+  getPoolSharesData
 } from '../../../../utils/subgraph'
 import NetworkName from '../../../atoms/NetworkName'
 import axios from 'axios'
@@ -24,34 +23,6 @@ import Decimal from 'decimal.js'
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
 const REFETCH_INTERVAL = 20000
-
-const poolSharesQuery = gql`
-  query PoolShares($user: String) {
-    poolShares(where: { userAddress: $user, balance_gt: 0.001 }, first: 1000) {
-      id
-      balance
-      userAddress {
-        id
-      }
-      poolId {
-        id
-        datatokenAddress
-        valueLocked
-        tokens {
-          id
-          isDatatoken
-          symbol
-        }
-        oceanReserve
-        datatokenReserve
-        totalShares
-        consumePrice
-        spotPrice
-        createTime
-      }
-    }
-  }
-`
 
 interface Asset {
   userLiquidity: number
@@ -160,22 +131,6 @@ const columns = [
     right: true
   }
 ]
-
-async function getPoolSharesData(accountId: string, chainIds: number[]) {
-  const variables = { user: accountId?.toLowerCase() }
-  const data: PoolShare[] = []
-  const result = await fetchDataForMultipleChains(
-    poolSharesQuery,
-    variables,
-    chainIds
-  )
-  for (let i = 0; i < result.length; i++) {
-    result[i].poolShares.forEach((poolShare: PoolShare) => {
-      data.push(poolShare)
-    })
-  }
-  return data
-}
 
 async function getPoolSharesAssets(data: PoolShare[]) {
   const assetList: Asset[] = []

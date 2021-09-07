@@ -26,7 +26,7 @@ import {
 } from '../@types/apollo/PoolShares'
 import { BestPrice } from '../models/BestPrice'
 
-export interface UserTVL {
+export interface UserLiquidity {
   price: string
   oceanBalance: string
 }
@@ -206,6 +206,35 @@ const UserSharesQuery = gql`
     }
   }
 `
+
+const userPoolSharesQuery = gql`
+  query PoolShares($user: String) {
+    poolShares(where: { userAddress: $user, balance_gt: 0.001 }, first: 1000) {
+      id
+      balance
+      userAddress {
+        id
+      }
+      poolId {
+        id
+        datatokenAddress
+        valueLocked
+        tokens {
+          id
+          isDatatoken
+          symbol
+        }
+        oceanReserve
+        datatokenReserve
+        totalShares
+        consumePrice
+        spotPrice
+        createTime
+      }
+    }
+  }
+`
+
 export function getSubgraphUri(chainId: number): string {
   const config = getOceanConfig(chainId)
   return config.subgraphUri
@@ -604,7 +633,7 @@ export async function getAccountLiquidityInOwnAssets(
   accountId: string,
   chainIds: number[],
   pools: string[]
-): Promise<UserTVL> {
+): Promise<UserLiquidity> {
   const queryVariables = {
     user: accountId.toLowerCase(),
     pools: pools
@@ -629,4 +658,38 @@ export async function getAccountLiquidityInOwnAssets(
     price: totalLiquidity.toString(),
     oceanBalance: totalOceanLiquidity.toString()
   }
+}
+
+export async function getPoolSharesData(
+  accountId: string,
+  chainIds: number[]
+): Promise<PoolShare[]> {
+  const variables = { user: accountId?.toLowerCase() }
+  const data: PoolShare[] = []
+  const result = await fetchDataForMultipleChains(
+    userPoolSharesQuery,
+    variables,
+    chainIds
+  )
+  for (let i = 0; i < result.length; i++) {
+    result[i].poolShares.forEach((poolShare: PoolShare) => {
+      data.push(poolShare)
+    })
+  }
+  return data
+}
+
+export async function getAccountLiquidity(
+  accountId: string,
+  chainIds: number[]
+): Promise<number> {
+  const poolShares = await getPoolSharesData(accountId, chainIds)
+
+  let totalLiquidity = 0
+  for (const poolShare of poolShares) {
+    const poolLiquidity = calculateUserLiquidity(poolShare)
+    totalLiquidity += poolLiquidity
+  }
+
+  return totalLiquidity
 }
