@@ -4,6 +4,7 @@ import classNames from 'classnames/bind'
 import Conversion from './Conversion'
 import styles from './PriceUnit.module.css'
 import { useUserPreferences } from '../../../providers/UserPreferences'
+import { useOcean } from '../../../providers/Ocean'
 import Badge from '../Badge'
 
 const cx = classNames.bind(styles)
@@ -48,7 +49,7 @@ export default function PriceUnit({
         <>
           <div>
             {Number.isNaN(Number(price)) ? '-' : formatPrice(price, locale)}{' '}
-            <span className={styles.symbol}>{symbol || 'OCEAN'}</span>
+            <span className={styles.symbol}>{symbol}</span>
             {type && type === 'pool' && (
               <Badge label="pool" className={styles.badge} />
             )}

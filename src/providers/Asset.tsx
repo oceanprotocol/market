@@ -7,7 +7,7 @@ import React, {
   useCallback,
   ReactNode
 } from 'react'
-import { Logger, DDO, BestPrice, MetadataMain } from '@oceanprotocol/lib'
+import { Logger, DDO, MetadataMain } from '@oceanprotocol/lib'
 import { PurgatoryData } from '@oceanprotocol/lib/dist/node/ddo/interfaces/PurgatoryData'
 import getAssetPurgatoryData from '../utils/purgatory'
 import axios, { CancelToken } from 'axios'
@@ -16,6 +16,7 @@ import { getPrice } from '../utils/subgraph'
 import { MetadataMarket } from '../@types/MetaData'
 import { useWeb3 } from './Web3'
 import { useSiteMetadata } from '../hooks/useSiteMetadata'
+import { BestPrice } from '../models/BestPrice'
 
 interface AssetProviderValue {
   isInPurgatory: boolean

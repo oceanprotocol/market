@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { BestPrice, DDO } from '@oceanprotocol/lib'
+import { DDO } from '@oceanprotocol/lib'
 import styles from './Swap.module.css'
 import TradeInput from './TradeInput'
 import Button from '../../../atoms/Button'
@@ -13,6 +13,7 @@ import { useOcean } from '../../../../providers/Ocean'
 import PriceImpact from './PriceImpact'
 
 import Decimal from 'decimal.js'
+import { BestPrice } from '../../../../models/BestPrice'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
@@ -33,10 +34,10 @@ export default function Swap({
   setMaximumDt: (value: string) => void
   setMaximumOcean: (value: string) => void
 }): ReactElement {
-  const { ocean } = useOcean()
+  const { ocean, config } = useOcean()
   const [oceanItem, setOceanItem] = useState<TradeItem>({
     amount: '0',
-    token: 'OCEAN',
+    token: price.oceanSymbol,
     maxAmount: '0'
   })
   const [dtItem, setDtItem] = useState<TradeItem>({
@@ -194,7 +195,11 @@ export default function Swap({
         handleValueChange={handleValueChange}
       />
 
-      <Output dtSymbol={dtItem.token} poolAddress={price?.address} />
+      <Output
+        dtSymbol={dtItem.token}
+        oceanSymbol={oceanItem.token}
+        poolAddress={price?.address}
+      />
 
       <PriceImpact
         totalValue={totalValue}
