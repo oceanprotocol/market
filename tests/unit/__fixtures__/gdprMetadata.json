@@ -9,6 +9,7 @@
             "accept": null,
             "reject": null,
             "close": "Acknowledge",
+            "configure": "Customize",
             "placeholder": null,
             "optionalCookies": null
           }
