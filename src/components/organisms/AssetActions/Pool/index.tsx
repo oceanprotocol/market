@@ -55,24 +55,10 @@ const poolLiquidityQuery = gql`
       swapFee
       spotPrice
       tokens {
-        address
-        symbol
-        isDatatoken
+        tokenAddress
         balance
         denormWeight
       }
-      shares(where: { id: $shareId }) {
-        id
-        balance
-      }
-    }
-  }
-`
-
-const userPoolShareQuery = gql`
-  query PoolShare($id: ID!, $shareId: ID) {
-    pool(id: $id) {
-      id
       shares(where: { id: $shareId }) {
         id
         balance
@@ -87,10 +73,9 @@ export default function Pool(): ReactElement {
 
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
-  const [dtSymbol, setDtSymbol] = useState<string>()
-  const [oceanSymbol, setOceanSymbol] = useState<string>()
   const { isInPurgatory, ddo, owner, price, refreshInterval, isAssetNetwork } =
     useAsset()
+  const dtSymbol = ddo?.dataTokenInfo.symbol
 
   const [poolTokens, setPoolTokens] = useState<string>()
   const [totalPoolTokens, setTotalPoolTokens] = useState<string>()
@@ -139,21 +124,6 @@ export default function Pool(): ReactElement {
     setdataLiquidity(queryResult?.data)
   }
 
-  async function getUserPoolShareBalance() {
-    const queryContext = getQueryContext(ddo.chainId)
-    const queryVariables = {
-      id: price.address.toLowerCase(),
-      shareId: `${price.address.toLowerCase()}-${accountId.toLowerCase()}`
-    }
-
-    const queryResult: OperationResult<PoolLiquidity> = await fetchData(
-      userPoolShareQuery,
-      queryVariables,
-      queryContext
-    )
-    return queryResult?.data.pool.shares[0].balance
-  }
-
   function refetchLiquidity() {
     if (!liquidityFetchInterval) {
       setLiquidityFetchInterval(
@@ -177,12 +147,6 @@ export default function Pool(): ReactElement {
         return
       }
 
-      // Set symbols
-      dataLiquidity.pool.tokens.forEach((token) => {
-        token.isDatatoken
-          ? setDtSymbol(token.symbol)
-          : setOceanSymbol(token.symbol)
-      })
       // Total pool shares
       const totalPoolTokens = dataLiquidity.pool.totalShares
       setTotalPoolTokens(totalPoolTokens)
@@ -197,7 +161,7 @@ export default function Pool(): ReactElement {
 
       // Get weights
       const weightDt = dataLiquidity.pool.tokens.filter(
-        (token: any) => token.address === ddo.dataToken.toLowerCase()
+        (token: any) => token.tokenAddress === ddo.dataToken.toLowerCase()
       )[0].denormWeight
 
       const weightDtDecimal = isValidNumber(weightDt)
@@ -281,7 +245,6 @@ export default function Pool(): ReactElement {
   }, [isInPurgatory, owner, accountId])
 
   useEffect(() => {
-    if (!dataLiquidity) return
     const poolShare =
       isValidNumber(poolTokens) &&
       isValidNumber(totalPoolTokens) &&
@@ -298,11 +261,9 @@ export default function Pool(): ReactElement {
     const totalUserLiquidityInOcean =
       isValidNumber(userLiquidity?.ocean) &&
       isValidNumber(userLiquidity?.datatoken) &&
-      isValidNumber(dataLiquidity.pool.spotPrice)
+      isValidNumber(price?.value)
         ? new Decimal(userLiquidity?.ocean).add(
-            new Decimal(userLiquidity?.datatoken).mul(
-              dataLiquidity.pool.spotPrice
-            )
+            new Decimal(userLiquidity?.datatoken).mul(price?.value)
           )
         : new Decimal(0)
 
@@ -311,9 +272,9 @@ export default function Pool(): ReactElement {
     const totalLiquidityInOcean =
       isValidNumber(price?.ocean) &&
       isValidNumber(price?.datatoken) &&
-      isValidNumber(dataLiquidity.pool.spotPrice)
+      isValidNumber(price?.value)
         ? new Decimal(price?.ocean).add(
-            new Decimal(price?.datatoken).mul(dataLiquidity.pool.spotPrice)
+            new Decimal(price?.datatoken).mul(price?.value)
           )
         : new Decimal(0)
 
@@ -321,13 +282,16 @@ export default function Pool(): ReactElement {
   }, [userLiquidity, price, poolTokens, totalPoolTokens])
 
   useEffect(() => {
-    if (!accountId || !price) return
+    if (!ocean || !accountId || !price) return
     async function init() {
       try {
         //
         // Get everything the user has put into the pool
         //
-        const poolTokens = await getUserPoolShareBalance()
+        const poolTokens = await ocean.pool.sharesBalance(
+          accountId,
+          price.address
+        )
         setPoolTokens(poolTokens)
 
         // calculate user's provided liquidity based on pool tokens
@@ -362,7 +326,7 @@ export default function Pool(): ReactElement {
       }
     }
     init()
-  }, [accountId, price, ddo, refreshPool, owner, totalPoolTokens])
+  }, [ocean, accountId, price, ddo, refreshPool, owner, totalPoolTokens])
 
   const refreshInfo = async () => {
     setRefreshPool(!refreshPool)
@@ -400,7 +364,7 @@ export default function Pool(): ReactElement {
         <>
           <div className={styles.dataToken}>
             <PriceUnit price="1" symbol={dtSymbol} /> ={' '}
-            <PriceUnit price={`${price?.value}`} symbol={oceanSymbol} />
+            <PriceUnit price={`${price?.value}`} />
             <Tooltip content={content.tooltips.price} />
             <div className={styles.dataTokenLinks}>
               <ExplorerLink
@@ -435,7 +399,6 @@ export default function Pool(): ReactElement {
               </>
             }
             ocean={`${userLiquidity?.ocean}`}
-            oceanSymbol={oceanSymbol}
             dt={`${userLiquidity?.datatoken}`}
             dtSymbol={dtSymbol}
             poolShares={poolTokens}
@@ -448,7 +411,6 @@ export default function Pool(): ReactElement {
           <TokenList
             title="Pool Creator Statistics"
             ocean={`${creatorLiquidity?.ocean}`}
-            oceanSymbol={oceanSymbol}
             dt={`${creatorLiquidity?.datatoken}`}
             dtSymbol={dtSymbol}
             poolShares={creatorPoolTokens}
@@ -473,7 +435,6 @@ export default function Pool(): ReactElement {
               </>
             }
             ocean={`${price?.ocean}`}
-            oceanSymbol={oceanSymbol}
             dt={`${price?.datatoken}`}
             dtSymbol={dtSymbol}
             poolShares={totalPoolTokens}

@@ -1,4 +1,4 @@
-import { DDO, Logger } from '@oceanprotocol/lib'
+import { DDO, Logger, BestPrice } from '@oceanprotocol/lib'
 import { useState } from 'react'
 import { TransactionReceipt } from 'web3-core'
 import { Decimal } from 'decimal.js'
@@ -13,7 +13,6 @@ import { sleep } from '../utils'
 
 import { useOcean } from '../providers/Ocean'
 import { useWeb3 } from '../providers/Web3'
-import { BestPrice } from '../models/BestPrice'
 
 interface PriceOptions {
   price: number

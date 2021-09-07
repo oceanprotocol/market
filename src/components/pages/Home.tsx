@@ -12,11 +12,19 @@ import {
   transformChainIdsListToQuery
 } from '../../utils/aquarius'
 import Permission from '../organisms/Permission'
-import { getHighestLiquidityDIDs } from '../../utils/subgraph'
+import {
+  getAllPublishers,
+  getHighestLiquidityDIDs,
+  getAssetsBestPrices,
+  UserTVL,
+  getAccountLiquidityInOwnAssets
+} from '../../utils/subgraph'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../providers/UserPreferences'
 import styles from './Home.module.css'
+import AccountTeaser from '../molecules/AccountTeaser'
+import { useWeb3 } from '../../providers/Web3'
 
 async function getQueryHighest(
   chainIds: number[]
@@ -131,6 +139,7 @@ function SectionQueryResult({
 export default function HomePage(): ReactElement {
   const [queryAndDids, setQueryAndDids] = useState<[SearchQuery, string]>()
   const { chainIds } = useUserPreferences()
+  const { accountId } = useWeb3()
 
   useEffect(() => {
     getQueryHighest(chainIds).then((results) => {
@@ -145,7 +154,7 @@ export default function HomePage(): ReactElement {
           <h3>Bookmarks</h3>
           <Bookmarks />
         </section>
-
+        <AccountTeaser account={accountId} large />
         {queryAndDids && (
           <SectionQueryResult
             title="Highest Liquidity"

@@ -3,7 +3,8 @@ import {
   DDO,
   File as FileMetadata,
   Logger,
-  publisherTrustedAlgorithm
+  publisherTrustedAlgorithm,
+  BestPrice
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '../../../atoms/Price'
@@ -38,8 +39,7 @@ import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelectio
 import AlgorithmDatasetsListForCompute from '../../AssetContent/AlgorithmDatasetsListForCompute'
 import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
 import AssetActionHistoryTable from '../../AssetActionHistoryTable'
-import ComputeJobs from '../../../pages/History/ComputeJobs'
-import { BestPrice } from '../../../../models/BestPrice'
+import ComputeJobs from '../../../pages/Profile/History/ComputeJobs'
 
 const SuccessAction = () => (
   <Button style="text" to="/profile?defaultTab=ComputeJobs" size="small">
@@ -48,12 +48,14 @@ const SuccessAction = () => (
 )
 
 export default function Compute({
+  isBalanceSufficient,
   dtBalance,
   file,
   fileIsLoading,
   isConsumable,
   consumableFeedback
 }: {
+  isBalanceSufficient: boolean
   dtBalance: string
   file: FileMetadata
   fileIsLoading?: boolean
@@ -63,7 +65,7 @@ export default function Compute({
   const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
   const { ocean, account } = useOcean()
-  const { price, type, ddo } = useAsset()
+  const { price, type, ddo, isAssetNetwork } = useAsset()
   const { buyDT, pricingError, pricingStepText } = usePricing()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
@@ -92,6 +94,7 @@ export default function Compute({
     isJobStarting === true ||
     file === null ||
     !ocean ||
+    !isBalanceSufficient ||
     (!hasPreviousDatasetOrder && !hasDatatoken && !(datasetMaxDT >= 1)) ||
     (!hasPreviousAlgorithmOrder && !hasAlgoAssetDatatoken && !(algoMaxDT >= 1))
 

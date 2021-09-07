@@ -1,5 +1,5 @@
+import { BestPrice } from '@oceanprotocol/lib'
 import React, { ReactElement } from 'react'
-import { BestPrice } from '../../../../models/BestPrice'
 import { useAsset } from '../../../../providers/Asset'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
 import Tooltip from '../../../atoms/Tooltip'

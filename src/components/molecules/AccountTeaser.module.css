@@ -7,21 +7,20 @@
 }
 
 .teaser {
-  max-width: 35rem;
+  max-width: 33rem;
   height: 100%;
-  background-color: var(--background-content);
-  padding: var(--spacer);
-  padding-right: calc(var(--spacer) / 2) !important;
-  border: 1px solid var(--border-color);
+}
+
+.link {
+  composes: box from '../atoms/Box.module.css';
+  font-size: var(--font-size-small);
+  height: 100%;
+  color: var(--color-secondary);
+  position: relative;
 }
 
 .name h3 {
   margin-bottom: 0rem;
-}
-
-.link {
-  color: var(--color-secondary);
-  font-size: smaller;
 }
 
 .header {

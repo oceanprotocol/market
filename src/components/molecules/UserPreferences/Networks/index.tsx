@@ -16,7 +16,7 @@ export function filterNetworksByType(
   type: 'mainnet' | 'testnet',
   chainIds: number[],
   networksList: { node: EthereumListsChain }[]
-): number[] {
+) {
   const finalNetworks = chainIds.filter((chainId: number) => {
     const networkData = getNetworkDataById(networksList, chainId)
 

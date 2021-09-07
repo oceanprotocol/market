@@ -4,3 +4,9 @@
   grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
   margin-top: calc(var(--spacer) / 2);
 }
+
+.separator {
+  border-left: 2px;
+  border-right: 2px;
+  border-color: var(--border-color);
+}
