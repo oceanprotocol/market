@@ -1,22 +1,32 @@
-import { DDO, Logger } from '@oceanprotocol/lib'
+import { Logger } from '@oceanprotocol/lib'
 import React, { useEffect, useState } from 'react'
 import { ReactElement } from 'react-markdown'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import {
-  getAccountLiquidity,
   getAccountLiquidityInOwnAssets,
   getAccountNumberOfOrders,
   getAssetsBestPrices,
-  UserLiquidity
+  UserLiquidity,
+  calculateUserLiquidity
 } from '../../../../utils/subgraph'
 import Conversion from '../../../atoms/Price/Conversion'
 import NumberUnit from '../../../molecules/NumberUnit'
 import styles from './Stats.module.css'
-import {
-  queryMetadata,
-  transformChainIdsListToQuery
-} from '../../../../utils/aquarius'
-import axios from 'axios'
+import { useProfile } from '../../../../providers/Profile'
+import { PoolShares_poolShares as PoolShare } from '../../../../@types/apollo/PoolShares'
+
+async function getPoolSharesLiquidity(
+  poolShares: PoolShare[]
+): Promise<number> {
+  let totalLiquidity = 0
+
+  for (const poolShare of poolShares) {
+    const poolLiquidity = calculateUserLiquidity(poolShare)
+    totalLiquidity += poolLiquidity
+  }
+
+  return totalLiquidity
+}
 
 export default function Stats({
   accountId
@@ -24,56 +34,38 @@ export default function Stats({
   accountId: string
 }): ReactElement {
   const { chainIds } = useUserPreferences()
+  const { poolShares, assets, assetsTotal } = useProfile()
 
-  const [publishedAssets, setPublishedAssets] = useState<DDO[]>()
-  const [numberOfAssets, setNumberOfAssets] = useState(0)
   const [sold, setSold] = useState(0)
   const [publisherLiquidity, setPublisherLiquidity] = useState<UserLiquidity>()
   const [totalLiquidity, setTotalLiquidity] = useState(0)
 
   useEffect(() => {
     if (!accountId) {
-      setNumberOfAssets(0)
       setSold(0)
       setPublisherLiquidity({ price: '0', oceanBalance: '0' })
       setTotalLiquidity(0)
       return
     }
 
-    async function getPublished() {
-      const queryPublishedAssets = {
-        query: {
-          query_string: {
-            query: `(publicKey.owner:${accountId}) AND (${transformChainIdsListToQuery(
-              chainIds
-            )})`
-          }
-        }
-      }
+    async function getSales() {
       try {
-        const source = axios.CancelToken.source()
-        const result = await queryMetadata(queryPublishedAssets, source.token)
-        setPublishedAssets(result.results)
-        setNumberOfAssets(result.totalResults)
-        const nrOrders = await getAccountNumberOfOrders(
-          result.results,
-          chainIds
-        )
+        const nrOrders = await getAccountNumberOfOrders(assets, chainIds)
         setSold(nrOrders)
       } catch (error) {
         Logger.error(error.message)
       }
     }
-    getPublished()
-  }, [accountId, chainIds])
+    getSales()
+  }, [accountId, chainIds, assets])
 
   useEffect(() => {
-    if (!publishedAssets) return
+    if (!assets) return
 
-    async function getAccountTVL() {
+    async function getPublisherLiquidity() {
       try {
         const accountPoolAdresses: string[] = []
-        const assetsPrices = await getAssetsBestPrices(publishedAssets)
+        const assetsPrices = await getAssetsBestPrices(assets)
         for (const priceInfo of assetsPrices) {
           if (priceInfo.price.type === 'pool') {
             accountPoolAdresses.push(priceInfo.price.address.toLowerCase())
@@ -89,20 +81,22 @@ export default function Stats({
         Logger.error(error.message)
       }
     }
-    getAccountTVL()
-  }, [publishedAssets, accountId, chainIds])
+    getPublisherLiquidity()
+  }, [assets, accountId, chainIds])
 
   useEffect(() => {
-    async function initTotalLiquidity() {
+    if (!poolShares) return
+
+    async function getTotalLiquidity() {
       try {
-        const totalLiquidity = await getAccountLiquidity(accountId, chainIds)
+        const totalLiquidity = await getPoolSharesLiquidity(poolShares)
         setTotalLiquidity(totalLiquidity)
       } catch (error) {
         console.error('Error fetching pool shares: ', error.message)
       }
     }
-    initTotalLiquidity()
-  }, [accountId, chainIds])
+    getTotalLiquidity()
+  }, [poolShares])
 
   return (
     <div className={styles.stats}>
@@ -117,7 +111,7 @@ export default function Stats({
         value={<Conversion price={`${totalLiquidity}`} hideApproximateSymbol />}
       />
       <NumberUnit label="Sales" value={sold} />
-      <NumberUnit label="Published" value={numberOfAssets} />
+      <NumberUnit label="Published" value={assetsTotal} />
     </div>
   )
 }

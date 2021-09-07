@@ -204,3 +204,36 @@ export async function getAlgorithmDatasetsForCompute(
   )
   return datasets
 }
+
+export async function getPublishedAssets(
+  accountId: string,
+  chainIds: number[],
+  page?: number,
+  type?: string
+): Promise<QueryResult> {
+  if (!accountId) return
+
+  page = page || 1
+  type = type || 'dataset OR algorithm'
+
+  const queryPublishedAssets = {
+    page,
+    offset: 9,
+    query: {
+      query_string: {
+        query: `(publicKey.owner:${accountId}) AND (service.attributes.main.type:${type}) AND (${transformChainIdsListToQuery(
+          chainIds
+        )})`
+      }
+    },
+    sort: { created: -1 }
+  }
+
+  try {
+    const source = axios.CancelToken.source()
+    const result = await queryMetadata(queryPublishedAssets, source.token)
+    return result
+  } catch (error) {
+    Logger.error(error.message)
+  }
+}

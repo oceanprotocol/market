@@ -678,18 +678,3 @@ export async function getPoolSharesData(
   }
   return data
 }
-
-export async function getAccountLiquidity(
-  accountId: string,
-  chainIds: number[]
-): Promise<number> {
-  const poolShares = await getPoolSharesData(accountId, chainIds)
-
-  let totalLiquidity = 0
-  for (const poolShare of poolShares) {
-    const poolLiquidity = calculateUserLiquidity(poolShare)
-    totalLiquidity += poolLiquidity
-  }
-
-  return totalLiquidity
-}

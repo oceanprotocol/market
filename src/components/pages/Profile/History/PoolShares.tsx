@@ -19,6 +19,7 @@ import axios from 'axios'
 import { retrieveDDO } from '../../../../utils/aquarius'
 import { isValidNumber } from '../../../../utils/numberValidations'
 import Decimal from 'decimal.js'
+import { useProfile } from '../../../../providers/Profile'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
@@ -158,33 +159,31 @@ export default function PoolShares({
 }: {
   accountId: string
 }): ReactElement {
+  const { poolShares, poolSharesLoading } = useProfile()
   const [assets, setAssets] = useState<Asset[]>()
   const [loading, setLoading] = useState<boolean>(false)
   const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
-  const { chainIds } = useUserPreferences()
 
-  const fetchPoolSharesData = useCallback(async () => {
+  const fetchPoolSharesAssets = useCallback(async () => {
+    if (!poolShares || poolSharesLoading) return
+
     try {
-      const data = await getPoolSharesData(accountId, chainIds)
-      const newAssets = await getPoolSharesAssets(data)
-
-      if (JSON.stringify(assets) !== JSON.stringify(newAssets)) {
-        setAssets(newAssets)
-      }
+      const assets = await getPoolSharesAssets(poolShares)
+      setAssets(assets)
     } catch (error) {
       console.error('Error fetching pool shares: ', error.message)
     }
-  }, [accountId, assets, chainIds])
+  }, [poolShares, poolSharesLoading])
 
   useEffect(() => {
     async function init() {
       setLoading(true)
-      await fetchPoolSharesData()
+      await fetchPoolSharesAssets()
       setLoading(false)
 
       if (dataFetchInterval) return
       const interval = setInterval(async () => {
-        await fetchPoolSharesData()
+        await fetchPoolSharesAssets()
       }, REFETCH_INTERVAL)
       setDataFetchInterval(interval)
     }
@@ -193,7 +192,7 @@ export default function PoolShares({
     return () => {
       clearInterval(dataFetchInterval)
     }
-  }, [dataFetchInterval, fetchPoolSharesData])
+  }, [dataFetchInterval, fetchPoolSharesAssets])
 
   return accountId ? (
     <Table
