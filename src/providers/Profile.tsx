@@ -23,6 +23,7 @@ interface ProfileProviderValue {
   isPoolSharesLoading: boolean
   assets: DDO[]
   assetsTotal: number
+  // assetsWithPrices: AssetListPrices[]
 }
 
 const ProfileContext = createContext({} as ProfileProviderValue)
@@ -82,6 +83,7 @@ function ProfileProvider({
   //
   const [assets, setAssets] = useState<DDO[]>()
   const [assetsTotal, setAssetsTotal] = useState(0)
+  // const [assetsWithPrices, setAssetsWithPrices] = useState<AssetListPrices[]>()
 
   useEffect(() => {
     async function getAllPublished() {
@@ -91,6 +93,12 @@ function ProfileProvider({
         const result = await getPublishedAssets(accountId, chainIds)
         setAssets(result.results)
         setAssetsTotal(result.totalResults)
+
+        // Hint: this would only make sense if we "search" in all subcomponents
+        // against this provider's state, meaning filtering via js rather then sending
+        // more queries to Aquarius.
+        // const assetsWithPrices = await getAssetsBestPrices(result.results)
+        // setAssetsWithPrices(assetsWithPrices)
       } catch (error) {
         Logger.error(error.message)
       }

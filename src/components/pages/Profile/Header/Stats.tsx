@@ -49,6 +49,8 @@ export default function Stats({
     }
 
     async function getSales() {
+      if (!assets) return
+
       try {
         const nrOrders = await getAccountNumberOfOrders(assets, chainIds)
         setSold(nrOrders)
@@ -60,7 +62,7 @@ export default function Stats({
   }, [accountId, chainIds, assets])
 
   useEffect(() => {
-    if (!assets) return
+    if (!assets || !accountId || !chainIds) return
 
     async function getPublisherLiquidity() {
       try {

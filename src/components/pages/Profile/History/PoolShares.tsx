@@ -159,13 +159,13 @@ export default function PoolShares({
 }: {
   accountId: string
 }): ReactElement {
-  const { poolShares, poolSharesLoading } = useProfile()
+  const { poolShares, isPoolSharesLoading } = useProfile()
   const [assets, setAssets] = useState<Asset[]>()
   const [loading, setLoading] = useState<boolean>(false)
   const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
 
   const fetchPoolSharesAssets = useCallback(async () => {
-    if (!poolShares || poolSharesLoading) return
+    if (!poolShares || isPoolSharesLoading) return
 
     try {
       const assets = await getPoolSharesAssets(poolShares)
@@ -173,7 +173,7 @@ export default function PoolShares({
     } catch (error) {
       console.error('Error fetching pool shares: ', error.message)
     }
-  }, [poolShares, poolSharesLoading])
+  }, [poolShares, isPoolSharesLoading])
 
   useEffect(() => {
     async function init() {
