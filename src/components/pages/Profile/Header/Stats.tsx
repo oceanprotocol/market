@@ -62,11 +62,6 @@ export default function Stats({
       }
     }
     getPublished()
-
-    // async function getAccountSoldValue() {
-    //
-    // }
-    // getAccountSoldValue()
   }, [accountId, chainIds])
 
   useEffect(() => {
