@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { File as FileMetadata, DDO, BestPrice } from '@oceanprotocol/lib'
+import { File as FileMetadata, DDO } from '@oceanprotocol/lib'
 import File from '../../atoms/File'
 import Price from '../../atoms/Price'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
@@ -16,6 +16,7 @@ import ButtonBuy from '../../atoms/ButtonBuy'
 import { secondsToString } from '../../../utils/metadata'
 import AlgorithmDatasetsListForCompute from '../AssetContent/AlgorithmDatasetsListForCompute'
 import styles from './Consume.module.css'
+import { BestPrice } from '../../../models/BestPrice'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {

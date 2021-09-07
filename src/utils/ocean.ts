@@ -15,8 +15,7 @@ export function getOceanConfig(network: string | number): ConfigHelperConfig {
       network === 2021000
       ? undefined
       : process.env.GATSBY_INFURA_PROJECT_ID
-  )
-
+  ) as ConfigHelperConfig
   return config as ConfigHelperConfig
 }
 

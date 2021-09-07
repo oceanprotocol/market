@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from 'react'
-import { BestPrice, DDO, Logger } from '@oceanprotocol/lib'
+import { DDO, Logger } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 import { Formik } from 'formik'
 import Actions from '../Pool/Actions'
@@ -15,6 +15,7 @@ import Decimal from 'decimal.js'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
 import { useAsset } from '../../../../providers/Asset'
+import { BestPrice } from '../../../../models/BestPrice'
 
 const contentQuery = graphql`
   query TradeQuery {

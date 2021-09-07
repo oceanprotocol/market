@@ -4,7 +4,7 @@ import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import Input from '../../../atoms/Input'
 import { FormFieldProps } from '../../../../@types/Form'
 import { useStaticQuery, graphql } from 'gatsby'
-import { DDO, BestPrice } from '@oceanprotocol/lib'
+import { DDO } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import compareAsBN from '../../../../utils/compareAsBN'
 import ButtonBuy from '../../../atoms/ButtonBuy'
@@ -12,6 +12,7 @@ import PriceOutput from './PriceOutput'
 import { useAsset } from '../../../../providers/Asset'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
+import { BestPrice } from '../../../../models/BestPrice'
 
 const contentQuery = graphql`
   query StartComputeDatasetQuery {

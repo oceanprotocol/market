@@ -13,9 +13,11 @@ Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
 export default function Output({
   dtSymbol,
+  oceanSymbol,
   poolAddress
 }: {
   dtSymbol: string
+  oceanSymbol: string
   poolAddress: string
 }): ReactElement {
   const { isAssetNetwork } = useAsset()
@@ -80,14 +82,14 @@ export default function Output({
       <div>
         <p>Minimum Received</p>
         <Token
-          symbol={values.type === 'buy' ? dtSymbol : 'OCEAN'}
+          symbol={values.type === 'buy' ? dtSymbol : oceanSymbol}
           balance={maxOutput}
         />
       </div>
       <div>
         <p>Swap fee</p>
         <Token
-          symbol={`${values.type === 'buy' ? `OCEAN` : dtSymbol} ${
+          symbol={`${values.type === 'buy' ? oceanSymbol : dtSymbol} ${
             swapFee ? `(${swapFee}%)` : ''
           }`}
           balance={swapFeeValue}
