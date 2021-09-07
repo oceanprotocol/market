@@ -75,7 +75,7 @@ export default function TokenApproval({
   amount: string
   coin: string
 }): ReactElement {
-  const { ddo } = useAsset()
+  const { ddo, price } = useAsset()
   const [tokenApproved, setTokenApproved] = useState(false)
   const [loading, setLoading] = useState(false)
   const { ocean, config } = useOcean()
@@ -83,11 +83,7 @@ export default function TokenApproval({
 
   const tokenAddress =
     coin === 'OCEAN' ? config.oceanTokenAddress : ddo.dataTokenInfo.address
-  const spender = ocean
-    ? coin === 'OCEAN'
-      ? ocean.pool.oceanAddress
-      : ocean.pool.dtAddress
-    : undefined
+  const spender = price.address
 
   const checkTokenApproval = useCallback(async () => {
     if (!ocean || !tokenAddress || !spender) return
