@@ -69,6 +69,7 @@ export default function PublishedList({
           setPage(newPage)
         }}
         className={styles.assets}
+        noPublisher
       />
     </>
   ) : (
