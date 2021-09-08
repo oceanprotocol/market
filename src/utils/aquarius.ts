@@ -66,7 +66,8 @@ export async function queryMetadata(
   try {
     const response: AxiosResponse<any> = await axios.post(
       `${metadataCacheUri}/api/v1/aquarius/assets/ddo/query`,
-      { ...query, cancelToken }
+      { ...query },
+      { cancelToken }
     )
     if (!response || response.status !== 200 || !response.data) return
     return transformQueryResult(response.data)
@@ -108,10 +109,8 @@ export async function getAssetsNames(
   try {
     const response: AxiosResponse<Record<string, string>> = await axios.post(
       `${metadataCacheUri}/api/v1/aquarius/assets/names`,
-      {
-        didList,
-        cancelToken
-      }
+      { didList },
+      { cancelToken }
     )
     if (!response || response.status !== 200 || !response.data) return
     return response.data
