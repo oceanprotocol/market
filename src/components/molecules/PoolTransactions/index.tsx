@@ -13,6 +13,7 @@ import { retrieveDDO } from '../../../utils/aquarius'
 import axios from 'axios'
 import Title from './Title'
 import styles from './index.module.css'
+import { DDO } from '@oceanprotocol/lib'
 
 const REFETCH_INTERVAL = 20000
 
@@ -75,6 +76,7 @@ export interface Datatoken {
 
 export interface PoolTransaction extends TransactionHistoryPoolTransactions {
   networkId: number
+  ddo: DDO
 }
 
 const columns = [
@@ -87,11 +89,7 @@ const columns = [
   {
     name: 'Data Set',
     selector: function getAssetRow(row: PoolTransaction) {
-      const did = web3.utils
-        .toChecksumAddress(row.poolAddress.datatokenAddress)
-        .replace('0x', 'did:op:')
-
-      return <AssetTitle did={did} />
+      return <AssetTitle ddo={row.ddo} />
     }
   },
   {
@@ -180,9 +178,11 @@ export default function PoolTransactions({
   useEffect(() => {
     if (!appConfig.metadataCacheUri) return
 
+    const cancelTokenSource = axios.CancelToken.source()
+
     async function getTransactions() {
       const poolTransactions: PoolTransaction[] = []
-      const source = axios.CancelToken.source()
+
       try {
         setIsLoading(true)
 
@@ -198,9 +198,12 @@ export default function PoolTransactions({
               poolTransactionsData[i].poolAddress.datatokenAddress
             )
             .replace('0x', 'did:op:')
-          const ddo = await retrieveDDO(did, source.token)
-          poolTransactionsData[i].networkId = ddo.chainId
-          poolTransactions.push(poolTransactionsData[i])
+          const ddo = await retrieveDDO(did, cancelTokenSource.token)
+          poolTransactions.push({
+            ...poolTransactionsData[i],
+            networkId: ddo.chainId,
+            ddo
+          })
         }
         const sortedTransactions = poolTransactions.sort(
           (a, b) => b.timestamp - a.timestamp
@@ -214,6 +217,10 @@ export default function PoolTransactions({
       }
     }
     getTransactions()
+
+    return () => {
+      cancelTokenSource.cancel()
+    }
   }, [accountId, chainIds, appConfig.metadataCacheUri, poolAddress, data])
 
   return accountId ? (
