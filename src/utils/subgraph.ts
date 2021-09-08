@@ -26,6 +26,8 @@ import {
 } from '../@types/apollo/PoolShares'
 import { BestPrice } from '../models/BestPrice'
 
+import { UserSharesQuery_poolShares_userAddress as UsersList } from '../@types/apollo/UserSharesQuery'
+
 export interface UserTVL {
   price: string
   oceanBalance: string
@@ -203,6 +205,18 @@ const UserSharesQuery = gql`
     }
   }
 `
+const UsersQuery = gql`
+  query UsersQuery {
+    users {
+      id
+    }
+  }
+`
+interface AccountSales {
+  publisher: string
+  sales: number
+}
+
 export function getSubgraphUri(chainId: number): string {
   const config = getOceanConfig(chainId)
   return config.subgraphUri
@@ -622,4 +636,33 @@ export async function getAccountLiquidityInOwnAssets(
     price: totalLiquidity.toString(),
     oceanBalance: totalOceanLiquidity.toString()
   }
+}
+
+export async function getAssetsPublishers(
+  chainIds: number[]
+): Promise<AccountSales[]> {
+  let publishers: UsersList[] = []
+  const publishersSales: AccountSales[] = []
+
+  for (const chain of chainIds) {
+    const queryContext = getQueryContext(Number(chain))
+    const fetchedPublishers: OperationResult<UsersList> = await fetchData(
+      UsersQuery,
+      null,
+      queryContext
+    )
+    publishers = publishers.concat(fetchedPublishers.data.users)
+  }
+
+  publishers.forEach(async (publisher) => {
+    const sale = await getAccountNumberOfOrders(publisher.id, chainIds)
+    if (sale > 0) {
+      publishersSales.push({ publisher: publisher.id, sales: sale })
+    }
+  })
+
+  const sortedPublishers = publishersSales.sort((a, b) => a.sales - b.sales)
+  console.log(sortedPublishers)
+
+  return publishersSales
 }
