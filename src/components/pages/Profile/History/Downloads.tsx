@@ -76,10 +76,11 @@ export default function ComputeDownloads({
 
   useEffect(() => {
     const variables = { user: accountId?.toLowerCase() }
+    const cancelTokenSource = axios.CancelToken.source()
 
     async function filterAssets() {
       const filteredOrders: DownloadedAssets[] = []
-      const source = axios.CancelToken.source()
+
       try {
         setIsLoading(true)
         const response = await fetchDataForMultipleChains(
@@ -99,7 +100,7 @@ export default function ComputeDownloads({
           const did = web3.utils
             .toChecksumAddress(data[i].datatokenId.address)
             .replace('0x', 'did:op:')
-          const ddo = await retrieveDDO(did, source.token)
+          const ddo = await retrieveDDO(did, cancelTokenSource.token)
           if (!ddo) continue
           if (ddo.service[1].type === 'access') {
             filteredOrders.push({
@@ -122,6 +123,10 @@ export default function ComputeDownloads({
     }
 
     filterAssets()
+
+    return () => {
+      cancelTokenSource.cancel()
+    }
   }, [accountId, appConfig.metadataCacheUri, chainIds])
 
   return accountId ? (

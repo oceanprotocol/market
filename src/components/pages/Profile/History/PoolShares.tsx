@@ -15,7 +15,7 @@ import {
   getPoolSharesData
 } from '../../../../utils/subgraph'
 import NetworkName from '../../../atoms/NetworkName'
-import axios from 'axios'
+import axios, { CancelToken } from 'axios'
 import { retrieveDDO } from '../../../../utils/aquarius'
 import { isValidNumber } from '../../../../utils/numberValidations'
 import Decimal from 'decimal.js'
@@ -133,15 +133,17 @@ const columns = [
   }
 ]
 
-async function getPoolSharesAssets(data: PoolShare[]) {
+async function getPoolSharesAssets(
+  data: PoolShare[],
+  cancelToken: CancelToken
+) {
   const assetList: Asset[] = []
-  const source = axios.CancelToken.source()
 
   for (let i = 0; i < data.length; i++) {
     const did = web3.utils
       .toChecksumAddress(data[i].poolId.datatokenAddress)
       .replace('0x', 'did:op:')
-    const ddo = await retrieveDDO(did, source.token)
+    const ddo = await retrieveDDO(did, cancelToken)
     const userLiquidity = calculateUserLiquidity(data[i])
     assetList.push({
       poolShare: data[i],
@@ -164,26 +166,31 @@ export default function PoolShares({
   const [loading, setLoading] = useState<boolean>(false)
   const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
 
-  const fetchPoolSharesAssets = useCallback(async () => {
-    if (!poolShares || isPoolSharesLoading) return
+  const fetchPoolSharesAssets = useCallback(
+    async (cancelToken: CancelToken) => {
+      if (!poolShares || isPoolSharesLoading) return
 
-    try {
-      const assets = await getPoolSharesAssets(poolShares)
-      setAssets(assets)
-    } catch (error) {
-      console.error('Error fetching pool shares: ', error.message)
-    }
-  }, [poolShares, isPoolSharesLoading])
+      try {
+        const assets = await getPoolSharesAssets(poolShares, cancelToken)
+        setAssets(assets)
+      } catch (error) {
+        console.error('Error fetching pool shares: ', error.message)
+      }
+    },
+    [poolShares, isPoolSharesLoading]
+  )
 
   useEffect(() => {
+    const cancelTokenSource = axios.CancelToken.source()
+
     async function init() {
       setLoading(true)
-      await fetchPoolSharesAssets()
+      await fetchPoolSharesAssets(cancelTokenSource.token)
       setLoading(false)
 
       if (dataFetchInterval) return
       const interval = setInterval(async () => {
-        await fetchPoolSharesAssets()
+        await fetchPoolSharesAssets(cancelTokenSource.token)
       }, REFETCH_INTERVAL)
       setDataFetchInterval(interval)
     }
@@ -191,6 +198,7 @@ export default function PoolShares({
 
     return () => {
       clearInterval(dataFetchInterval)
+      cancelTokenSource.cancel()
     }
   }, [dataFetchInterval, fetchPoolSharesAssets])
 
