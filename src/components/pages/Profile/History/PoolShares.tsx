@@ -9,17 +9,14 @@ import {
 } from '../../../../@types/apollo/PoolShares'
 import web3 from 'web3'
 import Token from '../../../organisms/AssetActions/Pool/Token'
-import { useUserPreferences } from '../../../../providers/UserPreferences'
-import {
-  calculateUserLiquidity,
-  getPoolSharesData
-} from '../../../../utils/subgraph'
+import { calculateUserLiquidity } from '../../../../utils/subgraph'
 import NetworkName from '../../../atoms/NetworkName'
 import axios, { CancelToken } from 'axios'
 import { retrieveDDO } from '../../../../utils/aquarius'
 import { isValidNumber } from '../../../../utils/numberValidations'
 import Decimal from 'decimal.js'
 import { useProfile } from '../../../../providers/Profile'
+import { DDO } from '@oceanprotocol/lib'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
@@ -30,6 +27,7 @@ interface Asset {
   poolShare: PoolShare
   networkId: number
   createTime: number
+  ddo: DDO
 }
 
 function findTokenByType(tokens: PoolSharePoolIdTokens[], type: string) {
@@ -98,10 +96,7 @@ const columns = [
   {
     name: 'Data Set',
     selector: function getAssetRow(row: Asset) {
-      const did = web3.utils
-        .toChecksumAddress(row.poolShare.poolId.datatokenAddress)
-        .replace('0x', 'did:op:')
-      return <AssetTitle did={did} />
+      return <AssetTitle ddo={row.ddo} />
     },
     grow: 2
   },
@@ -149,7 +144,8 @@ async function getPoolSharesAssets(
       poolShare: data[i],
       userLiquidity: userLiquidity,
       networkId: ddo?.chainId,
-      createTime: data[i].poolId.createTime
+      createTime: data[i].poolId.createTime,
+      ddo
     })
   }
   const assets = assetList.sort((a, b) => b.createTime - a.createTime)
