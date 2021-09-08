@@ -6,7 +6,7 @@ import web3 from 'web3'
 import AssetTitle from '../../../molecules/AssetListTitle'
 import axios from 'axios'
 import { retrieveDDO } from '../../../../utils/aquarius'
-import { Logger } from '@oceanprotocol/lib'
+import { DDO, Logger } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import { fetchDataForMultipleChains } from '../../../../utils/subgraph'
@@ -31,17 +31,17 @@ const getTokenOrders = gql`
 `
 
 interface DownloadedAssets {
-  did: string
   dtSymbol: string
   timestamp: number
   networkId: number
+  ddo: DDO
 }
 
 const columns = [
   {
     name: 'Data Set',
     selector: function getAssetRow(row: DownloadedAssets) {
-      return <AssetTitle did={row.did} />
+      return <AssetTitle ddo={row.ddo} />
     }
   },
   {
@@ -104,7 +104,7 @@ export default function ComputeDownloads({
           if (!ddo) continue
           if (ddo.service[1].type === 'access') {
             filteredOrders.push({
-              did: did,
+              ddo,
               networkId: ddo.chainId,
               dtSymbol: data[i].datatokenId.symbol,
               timestamp: data[i].timestamp
