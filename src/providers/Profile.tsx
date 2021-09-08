@@ -7,23 +7,25 @@ import React, {
   useCallback,
   ReactNode
 } from 'react'
-import {
-  AssetListPrices,
-  getAssetsBestPrices,
-  getPoolSharesData
-} from '../utils/subgraph'
+import { getPoolSharesData } from '../utils/subgraph'
 import { useUserPreferences } from './UserPreferences'
 import { PoolShares_poolShares as PoolShare } from '../@types/apollo/PoolShares'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import { getPublishedAssets } from '../utils/aquarius'
 import { useSiteMetadata } from '../hooks/useSiteMetadata'
+import { Profile } from '../models/Profile'
+import { accountTruncate } from '../utils/web3'
+import axios from 'axios'
+import ethereumAddress from 'ethereum-address'
+import get3BoxProfile from '../utils/profile'
 
 interface ProfileProviderValue {
+  profile: Profile
   poolShares: PoolShare[]
   isPoolSharesLoading: boolean
   assets: DDO[]
   assetsTotal: number
-  // assetsWithPrices: AssetListPrices[]
+  isEthAddress: boolean
 }
 
 const ProfileContext = createContext({} as ProfileProviderValue)
@@ -40,6 +42,65 @@ function ProfileProvider({
   const { chainIds } = useUserPreferences()
   const { appConfig } = useSiteMetadata()
 
+  const [isEthAddress, setIsEthAddress] = useState<boolean>()
+
+  //
+  // Do nothing in all following effects
+  // when accountId is no ETH address
+  //
+  useEffect(() => {
+    const isEthAddress = ethereumAddress.isAddress(accountId)
+    setIsEthAddress(isEthAddress)
+  }, [accountId])
+
+  //
+  // 3Box
+  //
+  const [profile, setProfile] = useState<Profile>({
+    name: accountTruncate(accountId),
+    image: null,
+    description: null,
+    links: null
+  })
+
+  useEffect(() => {
+    const clearedProfile: Profile = {
+      name: null,
+      image: null,
+      description: null,
+      links: null
+    }
+
+    if (!accountId || !isEthAddress) {
+      setProfile(clearedProfile)
+      return
+    }
+
+    const source = axios.CancelToken.source()
+
+    async function getInfoFrom3Box() {
+      const profile3Box = await get3BoxProfile(accountId, source.token)
+      if (profile3Box) {
+        const { name, emoji, description, image, links } = profile3Box
+        const newName = `${emoji || ''} ${name || accountTruncate(accountId)}`
+        const newProfile = {
+          name: newName,
+          image,
+          description,
+          links
+        }
+        setProfile(newProfile)
+      } else {
+        setProfile(clearedProfile)
+      }
+    }
+    getInfoFrom3Box()
+
+    return () => {
+      source.cancel()
+    }
+  }, [accountId, isEthAddress])
+
   //
   // POOL SHARES
   //
@@ -48,7 +109,7 @@ function ProfileProvider({
   const [poolSharesInterval, setPoolSharesInterval] = useState<NodeJS.Timeout>()
 
   const fetchPoolShares = useCallback(async () => {
-    if (!accountId || !chainIds) return
+    if (!accountId || !chainIds || !isEthAddress) return
 
     try {
       setIsPoolSharesLoading(true)
@@ -59,7 +120,7 @@ function ProfileProvider({
     } finally {
       setIsPoolSharesLoading(false)
     }
-  }, [accountId, chainIds])
+  }, [accountId, chainIds, isEthAddress])
 
   useEffect(() => {
     async function init() {
@@ -87,7 +148,7 @@ function ProfileProvider({
 
   useEffect(() => {
     async function getAllPublished() {
-      if (!accountId) return
+      if (!accountId || !isEthAddress) return
 
       try {
         const result = await getPublishedAssets(accountId, chainIds)
@@ -104,15 +165,17 @@ function ProfileProvider({
       }
     }
     getAllPublished()
-  }, [accountId, appConfig.metadataCacheUri, chainIds])
+  }, [accountId, appConfig.metadataCacheUri, chainIds, isEthAddress])
 
   return (
     <ProfileContext.Provider
       value={{
+        profile,
         poolShares,
         isPoolSharesLoading,
         assets,
-        assetsTotal
+        assetsTotal,
+        isEthAddress
       }}
     >
       {children}
