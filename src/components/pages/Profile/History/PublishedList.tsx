@@ -7,6 +7,7 @@ import Filters from '../../../templates/Search/Filters'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import styles from './PublishedList.module.css'
+import axios from 'axios'
 
 export default function PublishedList({
   accountId
@@ -22,14 +23,17 @@ export default function PublishedList({
   const [service, setServiceType] = useState('dataset OR algorithm')
 
   useEffect(() => {
-    async function getPublished() {
-      if (!accountId) return
+    if (!accountId) return
 
+    const cancelTokenSource = axios.CancelToken.source()
+
+    async function getPublished() {
       try {
         setIsLoading(true)
         const result = await getPublishedAssets(
           accountId,
           chainIds,
+          cancelTokenSource.token,
           page,
           service
         )
@@ -41,6 +45,10 @@ export default function PublishedList({
       }
     }
     getPublished()
+
+    return () => {
+      cancelTokenSource.cancel()
+    }
   }, [accountId, page, appConfig.metadataCacheUri, chainIds, service])
 
   return accountId ? (

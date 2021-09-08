@@ -208,6 +208,7 @@ export async function getAlgorithmDatasetsForCompute(
 export async function getPublishedAssets(
   accountId: string,
   chainIds: number[],
+  cancelToken: CancelToken,
   page?: number,
   type?: string
 ): Promise<QueryResult> {
@@ -230,10 +231,13 @@ export async function getPublishedAssets(
   }
 
   try {
-    const source = axios.CancelToken.source()
-    const result = await queryMetadata(queryPublishedAssets, source.token)
+    const result = await queryMetadata(queryPublishedAssets, cancelToken)
     return result
   } catch (error) {
-    Logger.error(error.message)
+    if (axios.isCancel(error)) {
+      Logger.log(error.message)
+    } else {
+      Logger.error(error.message)
+    }
   }
 }

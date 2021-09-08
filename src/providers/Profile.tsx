@@ -76,10 +76,13 @@ function ProfileProvider({
       return
     }
 
-    const source = axios.CancelToken.source()
+    const cancelTokenSource = axios.CancelToken.source()
 
     async function getInfoFrom3Box() {
-      const profile3Box = await get3BoxProfile(accountId, source.token)
+      const profile3Box = await get3BoxProfile(
+        accountId,
+        cancelTokenSource.token
+      )
       if (profile3Box) {
         const { name, emoji, description, image, links } = profile3Box
         const newName = `${emoji || ''} ${name || accountTruncate(accountId)}`
@@ -97,7 +100,7 @@ function ProfileProvider({
     getInfoFrom3Box()
 
     return () => {
-      source.cancel()
+      cancelTokenSource.cancel()
     }
   }, [accountId, isEthAddress])
 
@@ -147,11 +150,17 @@ function ProfileProvider({
   // const [assetsWithPrices, setAssetsWithPrices] = useState<AssetListPrices[]>()
 
   useEffect(() => {
-    async function getAllPublished() {
-      if (!accountId || !isEthAddress) return
+    if (!accountId || !isEthAddress) return
 
+    const cancelTokenSource = axios.CancelToken.source()
+
+    async function getAllPublished() {
       try {
-        const result = await getPublishedAssets(accountId, chainIds)
+        const result = await getPublishedAssets(
+          accountId,
+          chainIds,
+          cancelTokenSource.token
+        )
         setAssets(result.results)
         setAssetsTotal(result.totalResults)
 
@@ -165,6 +174,10 @@ function ProfileProvider({
       }
     }
     getAllPublished()
+
+    return () => {
+      cancelTokenSource.cancel()
+    }
   }, [accountId, appConfig.metadataCacheUri, chainIds, isEthAddress])
 
   return (

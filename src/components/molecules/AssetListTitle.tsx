@@ -1,5 +1,4 @@
 import { DDO } from '@oceanprotocol/lib'
-import { useOcean } from '../../providers/Ocean'
 import { Link } from 'gatsby'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { getAssetsNames } from '../../utils/aquarius'
