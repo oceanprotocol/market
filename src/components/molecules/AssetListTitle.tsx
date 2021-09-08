@@ -42,7 +42,7 @@ export default function AssetListTitle({
 
   return (
     <h3 className={styles.title}>
-      <Link to={`/asset/${did || ddo.id}`}>{assetTitle}</Link>
+      <Link to={`/asset/${did || ddo?.id}`}>{assetTitle}</Link>
     </h3>
   )
 }
