@@ -712,7 +712,7 @@ export async function getUserTokenOrders(
     )
 
     for (let i = 0; i < tokenOrders?.length; i++) {
-      tokenOrders[i]?.tokenOrders.forEach((tokenOrder: OrdersData) => {
+      tokenOrders[i].tokenOrders.forEach((tokenOrder: OrdersData) => {
         data.push(tokenOrder)
       })
     }

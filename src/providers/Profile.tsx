@@ -203,10 +203,9 @@ function ProfileProvider({
       const didList: string[] = []
       const tokenOrders = await getUserTokenOrders(accountId, chainIds)
 
-      if (!tokenOrders) return
       for (let i = 0; i < tokenOrders?.length; i++) {
         const did = web3.utils
-          .toChecksumAddress(tokenOrders[i]?.datatokenId.address)
+          .toChecksumAddress(tokenOrders[i].datatokenId.address)
           .replace('0x', 'did:op:')
         didList.push(did)
       }

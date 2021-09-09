@@ -265,7 +265,7 @@ export async function getAssetsFromDidList(
 
     const query = {
       page: 1,
-      offset: 100,
+      offset: 1000,
       query: {
         query_string: {
           query: `(${searchDids}) AND (${transformChainIdsListToQuery(
@@ -302,12 +302,18 @@ export async function getDownloadAssets(
     const ddoList = queryResult?.results
 
     for (let i = 0; i < ddoList?.length; i++) {
-      if (ddoList[i]?.service[1].type === 'access') {
+      if (ddoList[i].service[1].type === 'access') {
+        const tokenOrder = tokenOrders.filter(
+          (order) =>
+            order.datatokenId.address.toLowerCase() ===
+            ddoList[i].dataToken.toLowerCase()
+        )
+
         downloadedAssets.push({
           ddo: ddoList[i],
-          networkId: ddoList[i]?.chainId,
-          dtSymbol: tokenOrders[i]?.datatokenId.symbol,
-          timestamp: tokenOrders[i]?.timestamp
+          networkId: ddoList[i].chainId,
+          dtSymbol: tokenOrder[0].datatokenId.symbol,
+          timestamp: tokenOrder[0].timestamp
         })
       }
     }
