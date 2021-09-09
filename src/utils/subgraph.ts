@@ -1,5 +1,5 @@
 import { gql, OperationResult, TypedDocumentNode, OperationContext } from 'urql'
-import { DDO } from '@oceanprotocol/lib'
+import { DDO, BestPrice } from '@oceanprotocol/lib'
 import { getUrqlClientInstance } from '../providers/UrqlProvider'
 import { getOceanConfig } from './ocean'
 import web3 from 'web3'
@@ -115,10 +115,6 @@ const PoolQuery = gql`
       datatokenAddress
       datatokenReserve
       oceanReserve
-      tokens(where: { isDatatoken: false }) {
-        isDatatoken
-        symbol
-      }
     }
   }
 `
@@ -132,9 +128,6 @@ const AssetPoolPriceQuery = gql`
       datatokenAddress
       datatokenReserve
       oceanReserve
-      tokens {
-        symbol
-      }
     }
   }
 `
@@ -311,7 +304,6 @@ function transformPriceToBestPrice(
           ? poolPrice[0]?.spotPrice
           : poolPrice[0]?.consumePrice,
       ocean: poolPrice[0]?.oceanReserve,
-      oceanSymbol: poolPrice[0]?.tokens[0]?.symbol,
       datatoken: poolPrice[0]?.datatokenReserve,
       pools: [poolPrice[0]?.id],
       isConsumable: poolPrice[0]?.consumePrice === '-1' ? 'false' : 'true'
@@ -337,7 +329,7 @@ function transformPriceToBestPrice(
       type: 'free',
       value: 0,
       address: freePrice[0]?.datatoken.id,
-      exchangeId: '',
+      exchange_id: '',
       ocean: 0,
       datatoken: 0,
       pools: [],
@@ -349,7 +341,7 @@ function transformPriceToBestPrice(
       type: '',
       value: 0,
       address: '',
-      exchangeId: '',
+      exchange_id: '',
       ocean: 0,
       datatoken: 0,
       pools: [],

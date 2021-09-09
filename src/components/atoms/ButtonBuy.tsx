@@ -21,7 +21,6 @@ interface ButtonBuyProps {
   dtBalanceSelectedComputeAsset?: string
   selectedComputeAssetLowPoolLiquidity?: boolean
   selectedComputeAssetType?: string
-  isBalanceSufficient: boolean
   isLoading: boolean
   onClick?: (e: FormEvent<HTMLButtonElement>) => void
   stepText?: string
@@ -39,7 +38,6 @@ function getConsumeHelpText(
   lowPoolLiquidity: boolean,
   assetType: string,
   isConsumable: boolean,
-  isBalanceSufficient: boolean,
   consumableFeedback: string
 ) {
   const text =
@@ -51,8 +49,6 @@ function getConsumeHelpText(
       ? `You own ${dtBalance} ${dtSymbol} allowing you to use this data set by spending 1 ${dtSymbol}, but without paying OCEAN again.`
       : lowPoolLiquidity
       ? `There are not enought ${dtSymbol} available in the pool for the transaction to take place`
-      : isBalanceSufficient === false
-      ? 'You do not have enough OCEAN in your wallet to purchase this asset.'
       : `For using this ${assetType}, you will buy 1 ${dtSymbol} and immediately spend it back to the publisher and pool.`
   return text
 }
@@ -66,7 +62,6 @@ function getComputeAssetHelpText(
   assetType: string,
   isConsumable: boolean,
   consumableFeedback: string,
-  isBalanceSufficient: boolean,
   hasPreviousOrderSelectedComputeAsset?: boolean,
   hasDatatokenSelectedComputeAsset?: boolean,
   dtSymbolSelectedComputeAsset?: string,
@@ -83,7 +78,6 @@ function getComputeAssetHelpText(
     lowPoolLiquidity,
     assetType,
     isConsumable,
-    isBalanceSufficient,
     consumableFeedback
   )
   const computeAlgoHelpText =
@@ -102,8 +96,6 @@ function getComputeAssetHelpText(
       ? `You own ${dtBalanceSelectedComputeAsset} ${dtSymbolSelectedComputeAsset} allowing you to use the selected ${selectedComputeAssetType} by spending 1 ${dtSymbolSelectedComputeAsset}, but without paying OCEAN again.`
       : selectedComputeAssettLowPoolLiquidity
       ? `There are not enought ${dtSymbolSelectedComputeAsset} available in the pool for the transaction to take place`
-      : isBalanceSufficient === false
-      ? ''
       : `Additionally, you will buy 1 ${dtSymbolSelectedComputeAsset} for the ${selectedComputeAssetType} and spend it back to its publisher and pool.`
   const computeHelpText = selectedComputeAssettLowPoolLiquidity
     ? computeAlgoHelpText
@@ -125,7 +117,6 @@ export default function ButtonBuy({
   assetTimeout,
   isConsumable,
   consumableFeedback,
-  isBalanceSufficient,
   hasPreviousOrderSelectedComputeAsset,
   hasDatatokenSelectedComputeAsset,
   dtSymbolSelectedComputeAsset,
@@ -177,7 +168,6 @@ export default function ButtonBuy({
                   datasetLowPoolLiquidity,
                   assetType,
                   isConsumable,
-                  isBalanceSufficient,
                   consumableFeedback
                 )
               : getComputeAssetHelpText(
@@ -189,7 +179,6 @@ export default function ButtonBuy({
                   assetType,
                   isConsumable,
                   consumableFeedback,
-                  isBalanceSufficient,
                   hasPreviousOrderSelectedComputeAsset,
                   hasDatatokenSelectedComputeAsset,
                   dtSymbolSelectedComputeAsset,

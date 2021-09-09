@@ -16,7 +16,7 @@ export default function ExplorerLink({
 }: {
   networkId: number
   path: string
-  children: ReactNode
+  children?: ReactNode
   className?: string
 }): ReactElement {
   const { config, ocean } = useOcean()

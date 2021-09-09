@@ -8,7 +8,6 @@ export default function TokenList({
   title,
   children,
   ocean,
-  oceanSymbol,
   dt,
   dtSymbol,
   poolShares,
@@ -19,7 +18,6 @@ export default function TokenList({
   title: string | ReactNode
   children: ReactNode
   ocean: string
-  oceanSymbol: string
   dt: string
   dtSymbol: string
   poolShares: string
@@ -32,7 +30,7 @@ export default function TokenList({
       <h3 className={styles.title}>{title}</h3>
       <div className={styles.tokens}>
         <div>
-          <Token symbol={oceanSymbol} balance={ocean} />
+          <Token symbol="OCEAN" balance={ocean} />
           <Token symbol={dtSymbol} balance={dt} />
           {conversion.greaterThan(0) && (
             <Conversion

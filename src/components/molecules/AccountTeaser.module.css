@@ -1,0 +1,39 @@
+.blockies {
+  width: 15%;
+  height: 15%;
+  border-radius: 50%;
+  margin-left: 0;
+  margin-right: calc(var(--spacer) / 2);
+}
+
+.teaser {
+  max-width: 33rem;
+  height: 100%;
+}
+
+.link {
+  composes: box from '../atoms/Box.module.css';
+  font-size: var(--font-size-small);
+  height: 100%;
+  color: var(--color-secondary);
+  position: relative;
+}
+
+.name h3 {
+  margin-bottom: 0rem;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+}
+
+.account {
+  display: flex;
+  flex-direction: row;
+}
+
+.account a {
+  padding: 0 0.5rem;
+  font-size: medium;
+}
