@@ -1,5 +1,5 @@
 import { gql, OperationResult, TypedDocumentNode, OperationContext } from 'urql'
-import { DDO } from '@oceanprotocol/lib'
+import { DDO, Logger } from '@oceanprotocol/lib'
 import { getUrqlClientInstance } from '../providers/UrqlProvider'
 import { getOceanConfig } from './ocean'
 import web3 from 'web3'
@@ -25,6 +25,9 @@ import {
   PoolShares_poolShares as PoolShare
 } from '../@types/apollo/PoolShares'
 import { BestPrice } from '../models/BestPrice'
+import { CancelToken } from 'axios'
+import { OrdersData_tokenOrders as OrdersData } from '../@types/apollo/OrdersData'
+import { retrieveDDO } from './aquarius'
 
 export interface UserLiquidity {
   price: string
@@ -42,6 +45,13 @@ export interface AssetListPrices {
 
 interface DidAndDatatokenMap {
   [name: string]: string
+}
+
+export interface DownloadedAsset {
+  dtSymbol: string
+  timestamp: number
+  networkId: number
+  ddo: DDO
 }
 
 const FreeQuery = gql`
@@ -231,6 +241,23 @@ const userPoolSharesQuery = gql`
         spotPrice
         createTime
       }
+    }
+  }
+`
+
+const UserTokenOrders = gql`
+  query OrdersData($user: String!) {
+    tokenOrders(
+      orderBy: timestamp
+      orderDirection: desc
+      where: { consumer: $user }
+    ) {
+      datatokenId {
+        address
+        symbol
+      }
+      timestamp
+      tx
     }
   }
 `
@@ -677,4 +704,50 @@ export async function getPoolSharesData(
     })
   }
   return data
+}
+
+export async function getDownloads(
+  accountId: string,
+  chainIds: number[],
+  cancelToken: CancelToken
+): Promise<DownloadedAsset[]> {
+  const variables = { user: accountId?.toLowerCase() }
+  const filteredOrders: DownloadedAsset[] = []
+
+  try {
+    const response = await fetchDataForMultipleChains(
+      UserTokenOrders,
+      variables,
+      chainIds
+    )
+
+    const data: OrdersData[] = []
+    for (let i = 0; i < response.length; i++) {
+      response[i].tokenOrders.forEach((tokenOrder: OrdersData) => {
+        data.push(tokenOrder)
+      })
+    }
+
+    for (let i = 0; i < data.length; i++) {
+      const did = web3.utils
+        .toChecksumAddress(data[i].datatokenId.address)
+        .replace('0x', 'did:op:')
+      const ddo = await retrieveDDO(did, cancelToken)
+      if (!ddo) continue
+      if (ddo.service[1].type === 'access') {
+        filteredOrders.push({
+          ddo,
+          networkId: ddo.chainId,
+          dtSymbol: data[i].datatokenId.symbol,
+          timestamp: data[i].timestamp
+        })
+      }
+    }
+    const sortedOrders = filteredOrders.sort(
+      (a, b) => b.timestamp - a.timestamp
+    )
+    return sortedOrders
+  } catch (error) {
+    Logger.error(error.message)
+  }
 }

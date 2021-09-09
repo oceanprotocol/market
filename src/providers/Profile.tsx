@@ -7,7 +7,11 @@ import React, {
   useCallback,
   ReactNode
 } from 'react'
-import { getPoolSharesData } from '../utils/subgraph'
+import {
+  DownloadedAsset,
+  getDownloads,
+  getPoolSharesData
+} from '../utils/subgraph'
 import { useUserPreferences } from './UserPreferences'
 import { PoolShares_poolShares as PoolShare } from '../@types/apollo/PoolShares'
 import { DDO, Logger } from '@oceanprotocol/lib'
@@ -26,6 +30,9 @@ interface ProfileProviderValue {
   assets: DDO[]
   assetsTotal: number
   isEthAddress: boolean
+  downloads: DownloadedAsset[]
+  downloadsTotal: number
+  isDownloadsLoading: boolean
 }
 
 const ProfileContext = createContext({} as ProfileProviderValue)
@@ -180,6 +187,53 @@ function ProfileProvider({
     }
   }, [accountId, appConfig.metadataCacheUri, chainIds, isEthAddress])
 
+  //
+  // DOWNLOADS
+  //
+  const [downloads, setDownloads] = useState<DownloadedAsset[]>()
+  const [downloadsTotal, setDownloadsTotal] = useState(0)
+  const [isDownloadsLoading, setIsDownloadsLoading] = useState<boolean>()
+  const [downloadsInterval, setDownloadsInterval] = useState<NodeJS.Timeout>()
+
+  useEffect(() => {
+    const cancelTokenSource = axios.CancelToken.source()
+
+    async function getDownloadAssets() {
+      if (!accountId || !chainIds || !appConfig?.metadataCacheUri) return
+      try {
+        setIsDownloadsLoading(true)
+        const downloads = await getDownloads(
+          accountId,
+          chainIds,
+          cancelTokenSource.token
+        )
+        setDownloads(downloads)
+        setDownloadsTotal(downloads.length)
+      } catch (err) {
+        Logger.log(err.message)
+      } finally {
+        setIsDownloadsLoading(false)
+      }
+    }
+    getDownloadAssets()
+
+    if (downloadsInterval) return
+    const interval = setInterval(async () => {
+      const downloads = await getDownloads(
+        accountId,
+        chainIds,
+        cancelTokenSource.token
+      )
+      setDownloads(downloads)
+    }, refreshInterval)
+    setDownloadsInterval(interval)
+
+    return () => {
+      cancelTokenSource.cancel()
+      clearInterval(downloadsInterval)
+    }
+  }, [accountId, appConfig.metadataCacheUri, chainIds, downloadsInterval])
+
   return (
     <ProfileContext.Provider
       value={{
@@ -188,7 +242,10 @@ function ProfileProvider({
         isPoolSharesLoading,
         assets,
         assetsTotal,
-        isEthAddress
+        isEthAddress,
+        downloads,
+        downloadsTotal,
+        isDownloadsLoading
       }}
     >
       {children}
