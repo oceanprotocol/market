@@ -301,21 +301,22 @@ export async function getDownloadAssets(
     )
     const ddoList = queryResult?.results
 
-    for (let i = 0; i < ddoList?.length; i++) {
-      if (ddoList[i].service[1].type === 'access') {
-        const tokenOrder = tokenOrders.filter(
-          (order) =>
-            order.datatokenId.address.toLowerCase() ===
-            ddoList[i].dataToken.toLowerCase()
-        )
+    for (let i = 0; i < tokenOrders?.length; i++) {
+      const ddo = ddoList.filter(
+        (ddo) =>
+          tokenOrders[i].datatokenId.address.toLowerCase() ===
+          ddo.dataToken.toLowerCase()
+      )[0]
 
-        downloadedAssets.push({
-          ddo: ddoList[i],
-          networkId: ddoList[i].chainId,
-          dtSymbol: tokenOrder[0].datatokenId.symbol,
-          timestamp: tokenOrder[0].timestamp
-        })
-      }
+      // make sure we are only pushing download orders
+      if (ddo.service[1].type !== 'access') continue
+
+      downloadedAssets.push({
+        ddo,
+        networkId: ddo.chainId,
+        dtSymbol: tokenOrders[i].datatokenId.symbol,
+        timestamp: tokenOrders[i].timestamp
+      })
     }
 
     const sortedOrders = downloadedAssets.sort(
