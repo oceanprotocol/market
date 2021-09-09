@@ -250,14 +250,11 @@ export async function getPublishedAssets(
   }
 }
 
-export async function getDownloadAssets(
+export async function getAssetsFromDidList(
   didList: string[],
-  tokenOrders: OrdersData[],
   chainIds: number[],
   cancelToken: CancelToken
-): Promise<DownloadedAsset[]> {
-  const downloadedAssets: DownloadedAsset[] = []
-
+): Promise<QueryResult> {
   try {
     const searchDids = JSON.stringify(didList)
       .replace(/,/g, ' ')
@@ -266,7 +263,7 @@ export async function getDownloadAssets(
       // for whatever reason ddo.id is not searchable, so use ddo.dataToken instead
       .replace(/(did:op:)/g, '0x')
 
-    const queryDownloads = {
+    const query = {
       page: 1,
       offset: 100,
       query: {
@@ -281,7 +278,27 @@ export async function getDownloadAssets(
       sort: { created: -1 }
     }
 
-    const queryResult = await queryMetadata(queryDownloads, cancelToken)
+    const queryResult = await queryMetadata(query, cancelToken)
+    return queryResult
+  } catch (error) {
+    Logger.error(error.message)
+  }
+}
+
+export async function getDownloadAssets(
+  didList: string[],
+  tokenOrders: OrdersData[],
+  chainIds: number[],
+  cancelToken: CancelToken
+): Promise<DownloadedAsset[]> {
+  const downloadedAssets: DownloadedAsset[] = []
+
+  try {
+    const queryResult = await getAssetsFromDidList(
+      didList,
+      chainIds,
+      cancelToken
+    )
     const ddoList = queryResult?.results
 
     for (let i = 0; i < ddoList?.length; i++) {
