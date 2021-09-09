@@ -3,8 +3,7 @@ import {
   DDO,
   File as FileMetadata,
   Logger,
-  publisherTrustedAlgorithm,
-  BestPrice
+  publisherTrustedAlgorithm
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '../../../atoms/Price'

@@ -13,18 +13,14 @@ import {
 } from '../../utils/aquarius'
 import Permission from '../organisms/Permission'
 import {
-  getAllPublishers,
-  getHighestLiquidityDIDs,
-  getAssetsBestPrices,
-  UserTVL,
-  getAccountLiquidityInOwnAssets
+  getAssetsPublishers,
+  getHighestLiquidityDIDs
 } from '../../utils/subgraph'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../providers/UserPreferences'
 import styles from './Home.module.css'
-import AccountTeaser from '../molecules/AccountTeaser'
-import { useWeb3 } from '../../providers/Web3'
+import AccountList from '../organisms/AccountList'
 
 async function getQueryHighest(
   chainIds: number[]
@@ -75,7 +71,7 @@ function SectionQueryResult({
   queryData
 }: {
   title: ReactElement | string
-  query: SearchQuery
+  query?: SearchQuery
   action?: ReactElement
   queryData?: string
 }) {
@@ -136,12 +132,75 @@ function SectionQueryResult({
   )
 }
 
+function SectionGraphResult({
+  title,
+  action
+}: {
+  title: ReactElement | string
+  action?: ReactElement
+}) {
+  const { appConfig } = useSiteMetadata()
+  const { chainIds } = useUserPreferences()
+  const [result, setResult] = useState<QueryResult>()
+  const [loading, setLoading] = useState<boolean>()
+
+  useEffect(() => {
+    if (!appConfig.metadataCacheUri) return
+    const source = axios.CancelToken.source()
+
+    async function init() {
+      if (chainIds.length === 0) {
+        const result: QueryResult = {
+          results: [],
+          page: 0,
+          totalPages: 0,
+          totalResults: 0
+        }
+        setResult(result)
+        setLoading(false)
+      } else {
+        try {
+          setLoading(true)
+          const publishers = await getAssetsPublishers(chainIds)
+          const result: QueryResult = {
+            results: publishers,
+            page: 1,
+            totalPages: 10,
+            totalResults: 134
+          }
+          setResult(result)
+          setLoading(false)
+        } catch (error) {
+          Logger.error(error.message)
+        }
+      }
+    }
+    init()
+
+    return () => {
+      source.cancel()
+    }
+  }, [appConfig.metadataCacheUri, chainIds])
+
+  return (
+    <section className={styles.section}>
+      <h3>{title}</h3>
+      <AccountList
+        accounts={result?.results}
+        showPagination={false}
+        isLoading={loading}
+      />
+      {action && action}
+    </section>
+  )
+}
+
 export default function HomePage(): ReactElement {
   const [queryAndDids, setQueryAndDids] = useState<[SearchQuery, string]>()
   const { chainIds } = useUserPreferences()
-  const { accountId } = useWeb3()
 
   useEffect(() => {
+    getAssetsPublishers(chainIds)
     getQueryHighest(chainIds).then((results) => {
       setQueryAndDids(results)
     })
@@ -154,7 +213,7 @@ export default function HomePage(): ReactElement {
           <h3>Bookmarks</h3>
           <Bookmarks />
         </section>
-        <AccountTeaser account={accountId} large />
+
         {queryAndDids && (
           <SectionQueryResult
             title="Highest Liquidity"
@@ -169,6 +228,15 @@ export default function HomePage(): ReactElement {
           action={
             <Button style="text" to="/search?sort=created&sortOrder=desc">
               All data sets and algorithms →
+            </Button>
+          }
+        />
+
+        <SectionGraphResult
+          title="Publishers with most sales"
+          action={
+            <Button style="text" to="/">
+              All publishers →
             </Button>
           }
         />

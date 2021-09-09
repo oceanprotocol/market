@@ -1,5 +1,5 @@
 import { gql, OperationResult, TypedDocumentNode, OperationContext } from 'urql'
-import { DDO, BestPrice } from '@oceanprotocol/lib'
+import { DDO } from '@oceanprotocol/lib'
 import { getUrqlClientInstance } from '../providers/UrqlProvider'
 import { getOceanConfig } from './ocean'
 import web3 from 'web3'
@@ -44,6 +44,11 @@ export interface AssetListPrices {
 
 interface DidAndDatatokenMap {
   [name: string]: string
+}
+
+export interface AccountSales {
+  publisher: string
+  sales: number
 }
 
 const FreeQuery = gql`
@@ -198,6 +203,23 @@ const UserSharesQuery = gql`
     }
   }
 `
+
+const PaginatedUsersQuery = gql`
+  query PaginatedUsersQuery {
+    users {
+      id
+      publishers(first: 9) {
+        edges {
+          node {
+            id
+          }
+          cursor
+        }
+      }
+    }
+  }
+`
+
 const UsersQuery = gql`
   query UsersQuery {
     users {
@@ -205,10 +227,6 @@ const UsersQuery = gql`
     }
   }
 `
-interface AccountSales {
-  publisher: string
-  sales: number
-}
 
 export function getSubgraphUri(chainId: number): string {
   const config = getOceanConfig(chainId)
@@ -643,6 +661,11 @@ export async function getAssetsPublishers(
       null,
       queryContext
     )
+    const paginatedUsers = await fetchData(
+      PaginatedUsersQuery,
+      null,
+      queryContext
+    )
     publishers = publishers.concat(fetchedPublishers.data.users)
   }
 
@@ -652,9 +675,7 @@ export async function getAssetsPublishers(
       publishersSales.push({ publisher: publisher.id, sales: sale })
     }
   })
-
   const sortedPublishers = publishersSales.sort((a, b) => a.sales - b.sales)
-  console.log(sortedPublishers)
 
   return publishersSales
 }

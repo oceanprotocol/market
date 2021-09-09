@@ -30,39 +30,36 @@ const Blockies = ({ account }: { account: string | undefined }) => {
 }
 
 const AccountTeaser: React.FC<AccountTeaserProps> = ({ account, large }) => {
-  const { accountId, networkId } = useWeb3()
+  const { networkId } = useWeb3()
   const [profile, setProfile] = useState<Profile>()
 
   useEffect(() => {
-    if (!accountId) return
+    if (!account) return
     const source = axios.CancelToken.source()
     async function get3Box() {
-      const profile = await get3BoxProfile(accountId, source.token)
+      const profile = await get3BoxProfile(account, source.token)
       if (!profile) return
       setProfile(profile)
     }
     get3Box()
-  }, [accountId, networkId])
+  }, [account])
 
   return (
     <article className={styles.teaser}>
-      <Link to={`/account/${accountId}`} className={styles.link}>
+      <Link to={`/account/${account}`} className={styles.link}>
         <header className={styles.header}>
-          {profile?.emoji || <Blockies account={accountId} />}
+          {profile?.emoji || <Blockies account={account} />}
           <div>
             <Dotdotdot className={styles.name} clamp={3}>
               {profile && <h3> {profile.name}</h3>}
             </Dotdotdot>
             <div className={styles.account}>
-              <p>{accountId}</p>
-              <ExplorerLink
-                networkId={networkId}
-                path={`address/${accountId}`}
-              />
+              <p>{account}</p>
+              <ExplorerLink networkId={networkId} path={`address/${account}`} />
             </div>
           </div>
         </header>
-        {large && <Stats accountId={accountId} />}
+        {large && <Stats accountId={account} />}
       </Link>
     </article>
   )
