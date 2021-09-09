@@ -140,13 +140,15 @@ async function getPoolSharesAssets(
       .replace('0x', 'did:op:')
     const ddo = await retrieveDDO(did, cancelToken)
     const userLiquidity = calculateUserLiquidity(data[i])
-    assetList.push({
-      poolShare: data[i],
-      userLiquidity: userLiquidity,
-      networkId: ddo?.chainId,
-      createTime: data[i].poolId.createTime,
-      ddo
-    })
+
+    ddo &&
+      assetList.push({
+        poolShare: data[i],
+        userLiquidity: userLiquidity,
+        networkId: ddo?.chainId,
+        createTime: data[i].poolId.createTime,
+        ddo
+      })
   }
   const assets = assetList.sort((a, b) => b.createTime - a.createTime)
   return assets
