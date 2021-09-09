@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import Time from '../../atoms/Time'
 import Table from '../../atoms/Table'
 import AssetTitle from '../AssetListTitle'
@@ -10,10 +10,10 @@ import { fetchDataForMultipleChains } from '../../../utils/subgraph'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import NetworkName from '../../atoms/NetworkName'
 import { retrieveDDO } from '../../../utils/aquarius'
-import axios from 'axios'
+import axios, { CancelToken } from 'axios'
 import Title from './Title'
 import styles from './index.module.css'
-import { DDO } from '@oceanprotocol/lib'
+import { DDO, Logger } from '@oceanprotocol/lib'
 
 const REFETCH_INTERVAL = 20000
 
@@ -129,14 +129,14 @@ export default function PoolTransactions({
   minimal?: boolean
   accountId: string
 }): ReactElement {
-  const [logs, setLogs] = useState<PoolTransaction[]>()
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [transactions, setTransactions] = useState<PoolTransaction[]>()
+  const [isLoading, setIsLoading] = useState<boolean>(true)
   const { chainIds } = useUserPreferences()
   const { appConfig } = useSiteMetadata()
   const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
   const [data, setData] = useState<PoolTransaction[]>()
 
-  async function fetchPoolTransactionData() {
+  const getPoolTransactionData = useCallback(async () => {
     const variables = {
       user: accountId?.toLowerCase(),
       pool: poolAddress?.toLowerCase()
@@ -157,80 +157,94 @@ export default function PoolTransactions({
     if (JSON.stringify(data) !== JSON.stringify(transactions)) {
       setData(transactions)
     }
-  }
+  }, [accountId, chainIds, data, poolAddress, poolChainId])
 
-  function refetchPoolTransactions() {
-    if (!dataFetchInterval) {
-      setDataFetchInterval(
-        setInterval(function () {
-          fetchPoolTransactionData()
-        }, REFETCH_INTERVAL)
-      )
-    }
-  }
+  const getPoolTransactions = useCallback(
+    async (cancelToken: CancelToken) => {
+      if (!data) return
 
-  useEffect(() => {
-    return () => {
-      clearInterval(dataFetchInterval)
-    }
-  }, [dataFetchInterval])
-
-  useEffect(() => {
-    if (!appConfig.metadataCacheUri) return
-
-    const cancelTokenSource = axios.CancelToken.source()
-
-    async function getTransactions() {
       const poolTransactions: PoolTransaction[] = []
 
-      try {
-        setIsLoading(true)
-
-        if (!data) {
-          await fetchPoolTransactionData()
-          return
-        }
-        const poolTransactionsData = data.map((obj) => ({ ...obj }))
-
-        for (let i = 0; i < poolTransactionsData.length; i++) {
-          const did = web3.utils
-            .toChecksumAddress(
-              poolTransactionsData[i].poolAddress.datatokenAddress
-            )
-            .replace('0x', 'did:op:')
-          const ddo = await retrieveDDO(did, cancelTokenSource.token)
+      for (let i = 0; i < data.length; i++) {
+        const { datatokenAddress } = data[i].poolAddress
+        const did = web3.utils
+          .toChecksumAddress(datatokenAddress)
+          .replace('0x', 'did:op:')
+        const ddo = await retrieveDDO(did, cancelToken)
+        ddo &&
           poolTransactions.push({
-            ...poolTransactionsData[i],
-            networkId: ddo.chainId,
+            ...data[i],
+            networkId: ddo?.chainId,
             ddo
           })
-        }
-        const sortedTransactions = poolTransactions.sort(
-          (a, b) => b.timestamp - a.timestamp
-        )
-        setLogs(sortedTransactions)
-        refetchPoolTransactions()
+      }
+      const sortedTransactions = poolTransactions.sort(
+        (a, b) => b.timestamp - a.timestamp
+      )
+      setTransactions(sortedTransactions)
+    },
+    [data]
+  )
+
+  //
+  // Get data, periodically
+  //
+  useEffect(() => {
+    if (!appConfig?.metadataCacheUri) return
+
+    async function getTransactions() {
+      try {
+        await getPoolTransactionData()
+
+        if (dataFetchInterval) return
+        const interval = setInterval(async () => {
+          await getPoolTransactionData()
+        }, REFETCH_INTERVAL)
+        setDataFetchInterval(interval)
       } catch (error) {
-        console.error('Error fetching pool transactions: ', error.message)
-      } finally {
-        setIsLoading(false)
+        Logger.error('Error fetching pool transactions: ', error.message)
       }
     }
     getTransactions()
 
     return () => {
+      clearInterval(dataFetchInterval)
+    }
+  }, [getPoolTransactionData, dataFetchInterval, appConfig.metadataCacheUri])
+
+  //
+  // Transform to final transactions
+  //
+  useEffect(() => {
+    const cancelTokenSource = axios.CancelToken.source()
+
+    async function transformData() {
+      try {
+        setIsLoading(true)
+        await getPoolTransactions(cancelTokenSource.token)
+      } catch (error) {
+        Logger.error('Error fetching pool transactions: ', error.message)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    transformData()
+
+    return () => {
       cancelTokenSource.cancel()
     }
-  }, [accountId, chainIds, appConfig.metadataCacheUri, poolAddress, data])
+  }, [getPoolTransactions])
 
   return accountId ? (
     <Table
       columns={minimal ? columnsMinimal : columns}
-      data={logs}
+      data={transactions}
       isLoading={isLoading}
       noTableHead={minimal}
       dense={minimal}
-      pagination={minimal ? logs?.length >= 4 : logs?.length >= 9}
+      pagination={
+        minimal ? transactions?.length >= 4 : transactions?.length >= 9
+      }
       paginationPerPage={minimal ? 5 : 10}
     />
   ) : (
