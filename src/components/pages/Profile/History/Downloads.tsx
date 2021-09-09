@@ -2,9 +2,9 @@ import React, { ReactElement } from 'react'
 import Table from '../../../atoms/Table'
 import Time from '../../../atoms/Time'
 import AssetTitle from '../../../molecules/AssetListTitle'
-import { DownloadedAsset } from '../../../../utils/subgraph'
 import NetworkName from '../../../atoms/NetworkName'
 import { useProfile } from '../../../../providers/Profile'
+import { DownloadedAsset } from '../../../../utils/aquarius'
 
 const columns = [
   {

@@ -12,7 +12,16 @@ import {
 import { AssetSelectionAsset } from '../components/molecules/FormFields/AssetSelection'
 import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
+import { OrdersData_tokenOrders as OrdersData } from '../@types/apollo/OrdersData'
 import { metadataCacheUri } from '../../app.config'
+import web3 from '../../tests/unit/__mocks__/web3'
+
+export interface DownloadedAsset {
+  dtSymbol: string
+  timestamp: number
+  networkId: number
+  ddo: DDO
+}
 
 function getQueryForAlgorithmDatasets(algorithmDid: string, chainId?: number) {
   return {
@@ -238,5 +247,59 @@ export async function getPublishedAssets(
     } else {
       Logger.error(error.message)
     }
+  }
+}
+
+export async function getDownloadAssets(
+  didList: string[],
+  tokenOrders: OrdersData[],
+  chainIds: number[],
+  cancelToken: CancelToken
+): Promise<DownloadedAsset[]> {
+  const downloadedAssets: DownloadedAsset[] = []
+
+  try {
+    const searchDids = JSON.stringify(didList)
+      .replace(/,/g, ' ')
+      .replace(/"/g, '')
+      .replace(/(\[|\])/g, '')
+      // for whatever reason ddo.id is not searchable, so use ddo.dataToken instead
+      .replace(/(did:op:)/g, '0x')
+
+    const queryDownloads = {
+      page: 1,
+      offset: 100,
+      query: {
+        query_string: {
+          query: `(${searchDids}) AND (${transformChainIdsListToQuery(
+            chainIds
+          )})`,
+          fields: ['dataToken'],
+          default_operator: 'OR'
+        }
+      },
+      sort: { created: -1 }
+    }
+
+    const queryResult = await queryMetadata(queryDownloads, cancelToken)
+    const ddoList = queryResult?.results
+
+    for (let i = 0; i < ddoList?.length; i++) {
+      if (ddoList[i]?.service[1].type === 'access') {
+        downloadedAssets.push({
+          ddo: ddoList[i],
+          networkId: ddoList[i]?.chainId,
+          dtSymbol: tokenOrders[i]?.datatokenId.symbol,
+          timestamp: tokenOrders[i]?.timestamp
+        })
+      }
+    }
+
+    const sortedOrders = downloadedAssets.sort(
+      (a, b) => b.timestamp - a.timestamp
+    )
+    return sortedOrders
+  } catch (error) {
+    Logger.error(error.message)
   }
 }

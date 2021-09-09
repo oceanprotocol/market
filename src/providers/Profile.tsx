@@ -7,21 +7,22 @@ import React, {
   useCallback,
   ReactNode
 } from 'react'
-import {
-  DownloadedAsset,
-  getDownloads,
-  getPoolSharesData
-} from '../utils/subgraph'
+import { getPoolSharesData, getUserTokenOrders } from '../utils/subgraph'
 import { useUserPreferences } from './UserPreferences'
 import { PoolShares_poolShares as PoolShare } from '../@types/apollo/PoolShares'
 import { DDO, Logger } from '@oceanprotocol/lib'
-import { getPublishedAssets } from '../utils/aquarius'
+import {
+  DownloadedAsset,
+  getDownloadAssets,
+  getPublishedAssets
+} from '../utils/aquarius'
 import { useSiteMetadata } from '../hooks/useSiteMetadata'
 import { Profile } from '../models/Profile'
 import { accountTruncate } from '../utils/web3'
-import axios from 'axios'
+import axios, { CancelToken } from 'axios'
 import ethereumAddress from 'ethereum-address'
 import get3BoxProfile from '../utils/profile'
+import web3 from 'web3'
 
 interface ProfileProviderValue {
   profile: Profile
@@ -195,20 +196,42 @@ function ProfileProvider({
   const [isDownloadsLoading, setIsDownloadsLoading] = useState<boolean>()
   const [downloadsInterval, setDownloadsInterval] = useState<NodeJS.Timeout>()
 
+  const fetchDownloads = useCallback(
+    async (cancelToken: CancelToken) => {
+      if (!accountId || !chainIds) return
+
+      const didList: string[] = []
+      const tokenOrders = await getUserTokenOrders(accountId, chainIds)
+
+      if (!tokenOrders) return
+      for (let i = 0; i < tokenOrders?.length; i++) {
+        const did = web3.utils
+          .toChecksumAddress(tokenOrders[i]?.datatokenId.address)
+          .replace('0x', 'did:op:')
+        didList.push(did)
+      }
+
+      const downloads = await getDownloadAssets(
+        didList,
+        tokenOrders,
+        chainIds,
+        cancelToken
+      )
+      setDownloads(downloads)
+      setDownloadsTotal(downloads.length)
+    },
+    [accountId, chainIds]
+  )
+
   useEffect(() => {
     const cancelTokenSource = axios.CancelToken.source()
 
     async function getDownloadAssets() {
-      if (!accountId || !chainIds || !appConfig?.metadataCacheUri) return
+      if (!appConfig?.metadataCacheUri) return
+
       try {
         setIsDownloadsLoading(true)
-        const downloads = await getDownloads(
-          accountId,
-          chainIds,
-          cancelTokenSource.token
-        )
-        setDownloads(downloads)
-        setDownloadsTotal(downloads.length)
+        await fetchDownloads(cancelTokenSource.token)
       } catch (err) {
         Logger.log(err.message)
       } finally {
@@ -219,12 +242,7 @@ function ProfileProvider({
 
     if (downloadsInterval) return
     const interval = setInterval(async () => {
-      const downloads = await getDownloads(
-        accountId,
-        chainIds,
-        cancelTokenSource.token
-      )
-      setDownloads(downloads)
+      await fetchDownloads(cancelTokenSource.token)
     }, refreshInterval)
     setDownloadsInterval(interval)
 
@@ -232,7 +250,7 @@ function ProfileProvider({
       cancelTokenSource.cancel()
       clearInterval(downloadsInterval)
     }
-  }, [accountId, appConfig.metadataCacheUri, chainIds, downloadsInterval])
+  }, [fetchDownloads, appConfig.metadataCacheUri, downloadsInterval])
 
   return (
     <ProfileContext.Provider
