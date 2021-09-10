@@ -14,6 +14,7 @@ const networksQuery = graphql`
           network
           networkId
           chainId
+          rpc
           nativeCurrency {
             name
             symbol

@@ -43,7 +43,7 @@ export function getNetworkConfigObject(node: any): NetworkObject {
     name: node.chain,
     symbol: node.nativeCurrency.symbol,
     chainId: node.chainId,
-    urlList: [node.nodeUri]
+    urlList: node.rpc
   }
   return networkConfig
 }

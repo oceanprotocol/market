@@ -31,8 +31,7 @@ export default function WalletNetworkSwitcher(): ReactElement {
     const networkNode = networksList.find(
       (data) => data.node.chainId === ddo.chainId
     ).node
-    const network = { ...networkNode, nodeUri: oceanConfig.nodeUri }
-    const networkConfig = getNetworkConfigObject(network)
+    const networkConfig = getNetworkConfigObject(networkNode)
     addCustomNetwork(web3Provider, networkConfig)
   }
 
