@@ -9,13 +9,11 @@ import {
 import Button from '../atoms/Button'
 import styles from './WalletNetworkSwitcher.module.css'
 import useNetworkMetadata from '../../hooks/useNetworkMetadata'
-import { getOceanConfig } from '../../utils/ocean'
 import { useAsset } from '../../providers/Asset'
 
 export default function WalletNetworkSwitcher(): ReactElement {
   const { networkId, web3Provider } = useWeb3()
   const { ddo } = useAsset()
-  const oceanConfig = getOceanConfig(ddo.chainId)
   const { networksList } = useNetworkMetadata()
   const ddoNetworkData = getNetworkDataById(networksList, ddo.chainId)
   const walletNetworkData = getNetworkDataById(networksList, networkId)
