@@ -256,12 +256,16 @@ export async function getAssetsFromDidList(
   cancelToken: CancelToken
 ): Promise<QueryResult> {
   try {
+    // TODO: figure out cleaner way to transform string[] into csv
     const searchDids = JSON.stringify(didList)
       .replace(/,/g, ' ')
       .replace(/"/g, '')
       .replace(/(\[|\])/g, '')
       // for whatever reason ddo.id is not searchable, so use ddo.dataToken instead
       .replace(/(did:op:)/g, '0x')
+
+    // safeguard against passed empty didList, preventing 500 from Aquarius
+    if (!searchDids) return
 
     const query = {
       page: 1,
