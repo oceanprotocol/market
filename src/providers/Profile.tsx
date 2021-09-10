@@ -101,8 +101,10 @@ function ProfileProvider({
           links
         }
         setProfile(newProfile)
+        Logger.log('[profile] Found and set 3box profile.', newProfile)
       } else {
         setProfile(clearedProfile)
+        Logger.log('[profile] No 3box profile found.')
       }
     }
     getInfoFrom3Box()
@@ -124,10 +126,14 @@ function ProfileProvider({
 
     try {
       setIsPoolSharesLoading(true)
-      const data = await getPoolSharesData(accountId, chainIds)
-      setPoolShares(data)
+      const poolShares = await getPoolSharesData(accountId, chainIds)
+      setPoolShares(poolShares)
+      Logger.log(
+        `[profile] Fetched ${poolShares.length} pool shares.`,
+        poolShares
+      )
     } catch (error) {
-      console.error('Error fetching pool shares: ', error.message)
+      Logger.error('Error fetching pool shares: ', error.message)
     } finally {
       setIsPoolSharesLoading(false)
     }
@@ -171,6 +177,10 @@ function ProfileProvider({
         )
         setAssets(result.results)
         setAssetsTotal(result.totalResults)
+        Logger.log(
+          `[profile] Fetched ${result.totalResults} assets.`,
+          result.results
+        )
 
         // Hint: this would only make sense if we "search" in all subcomponents
         // against this provider's state, meaning filtering via js rather then sending
@@ -218,6 +228,10 @@ function ProfileProvider({
       )
       setDownloads(downloads)
       setDownloadsTotal(downloads.length)
+      Logger.log(
+        `[profile] Fetched ${downloads.length} download orders.`,
+        downloads
+      )
     },
     [accountId, chainIds]
   )
