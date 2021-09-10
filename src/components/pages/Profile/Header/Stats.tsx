@@ -114,7 +114,11 @@ export default function Stats({
       />
       <NumberUnit label="Sales" value={sold} />
       <NumberUnit label="Published" value={assetsTotal} />
-      <NumberUnit label="Downloads" value={downloadsTotal} />
+      <NumberUnit
+        label="Downloads"
+        tooltip="Datatoken orders for assets with `access` service, as opposed to `compute`. As one order could allow multiple or infinite downloads this number does not reflect the actual download count of an asset file."
+        value={downloadsTotal}
+      />
     </div>
   )
 }
