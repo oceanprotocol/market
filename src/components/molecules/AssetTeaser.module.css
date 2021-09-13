@@ -21,8 +21,6 @@
 .content {
   margin-top: calc(var(--spacer) / 2);
   overflow-wrap: break-word;
-  word-wrap: break-word;
-  word-break: break-all;
 
   /* for sticking footer to bottom */
   flex: 1;
