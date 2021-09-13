@@ -5,7 +5,8 @@ import File from '../../atoms/File'
 import Price from '../../atoms/Price'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { useAsset } from '../../../providers/Asset'
-import { gql, useQuery } from 'urql'
+import { gql } from 'urql'
+import { fetchData, getQueryContext } from '../../../utils/subgraph'
 import { OrdersData } from '../../../@types/apollo/OrdersData'
 import BigNumber from 'bignumber.js'
 import { useOcean } from '../../../providers/Ocean'
@@ -63,15 +64,19 @@ export default function Consume({
   const [maxDt, setMaxDT] = useState<number>(1)
   const [isConsumablePrice, setIsConsumablePrice] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
-  const [result] = useQuery<OrdersData>({
-    query: previousOrderQuery,
-    variables: {
+  const [data, setData] = useState<OrdersData>()
+
+  useEffect(() => {
+    if (!ddo || !accountId) return
+    const context = getQueryContext(ddo.chainId)
+    const variables = {
       id: ddo.dataToken?.toLowerCase(),
       account: accountId?.toLowerCase()
     }
-    // pollInterval: 5000
-  })
-  const { data } = result
+    fetchData(previousOrderQuery, variables, context).then((result: any) => {
+      setData(result.data)
+    })
+  }, [ddo, accountId, hasPreviousOrder])
 
   async function checkMaxAvaialableTokens(price: BestPrice) {
     if (!ocean || !price) return
@@ -83,7 +88,8 @@ export default function Consume({
   }
 
   useEffect(() => {
-    if (!data || !assetTimeout || data.tokenOrders.length === 0) return
+    if (!data || !assetTimeout || data.tokenOrders.length === 0 || !accountId)
+      return
 
     const lastOrder = data.tokenOrders[0]
     if (assetTimeout === '0') {
@@ -99,7 +105,7 @@ export default function Consume({
         setHasPreviousOrder(false)
       }
     }
-  }, [data, assetTimeout])
+  }, [data, assetTimeout, accountId])
 
   useEffect(() => {
     const { timeout } = ddo.findServiceByType('access').attributes.main
@@ -120,6 +126,7 @@ export default function Consume({
   }, [dtBalance])
 
   useEffect(() => {
+    if (!accountId) return
     setIsDisabled(
       !isConsumable ||
         ((!ocean ||
@@ -141,6 +148,7 @@ export default function Consume({
     pricingIsLoading,
     isConsumablePrice,
     hasDatatoken,
+    accountId,
     isConsumable
   ])
 
