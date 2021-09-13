@@ -34,11 +34,13 @@ export default function PageGatsbySearch(props: PageProps): ReactElement {
 
   return (
     <Page
-      title={title}
+      title={
+        totalPagesNumber > 476 ? `>10000 results for ${searchValue}` : title
+      }
       description={
         totalPagesNumber &&
         totalPagesNumber > 476 &&
-        'More than 10k results were found, displaying the first 10k. Please refine your search'
+        '**Results displayed are limited to the first 10k, please refine your search.**'
       }
       uri={props.uri}
     >

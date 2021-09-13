@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react'
 import classNames from 'classnames/bind'
 import styles from './PageHeader.module.css'
+import Markdown from '../atoms/Markdown'
 
 const cx = classNames.bind(styles)
 
@@ -21,7 +22,11 @@ export default function PageHeader({
   return (
     <header className={styleClasses}>
       <h1 className={styles.title}>{title}</h1>
-      {description && <p className={styles.description}>{description}</p>}
+      {description && (
+        <p className={styles.description}>
+          <Markdown text={description} />
+        </p>
+      )}
     </header>
   )
 }
