@@ -4,6 +4,7 @@ import { graphql, PageProps } from 'gatsby'
 import ProfilePage from '../../components/pages/Profile'
 import { accountTruncate } from '../../utils/web3'
 import { useWeb3 } from '../../providers/Web3'
+import ProfileProvider from '../../providers/Profile'
 
 export default function PageGatsbyProfile(props: PageProps): ReactElement {
   const { accountId } = useWeb3()
@@ -18,7 +19,9 @@ export default function PageGatsbyProfile(props: PageProps): ReactElement {
 
   return (
     <Page uri={props.uri} title={accountTruncate(finalAccountId)} noPageHeader>
-      <ProfilePage accountId={finalAccountId} />
+      <ProfileProvider accountId={finalAccountId}>
+        <ProfilePage accountId={finalAccountId} />
+      </ProfileProvider>
     </Page>
   )
 }
