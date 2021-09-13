@@ -23,9 +23,7 @@ export default function PageHeader({
     <header className={styleClasses}>
       <h1 className={styles.title}>{title}</h1>
       {description && (
-        <p className={styles.description}>
-          <Markdown text={description} />
-        </p>
+        <Markdown text={description} className={styles.description} />
       )}
     </header>
   )
