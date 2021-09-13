@@ -5,6 +5,7 @@ import { useSpring, animated } from 'react-spring'
 import styles from './Tooltip.module.css'
 import { ReactComponent as Info } from '../../images/info.svg'
 import { Placement } from 'tippy.js'
+import Markdown from './Markdown'
 
 const cx = classNames.bind(styles)
 

@@ -34,7 +34,7 @@ export default function Stats({
   accountId: string
 }): ReactElement {
   const { chainIds } = useUserPreferences()
-  const { poolShares, assets, assetsTotal } = useProfile()
+  const { poolShares, assets, assetsTotal, downloadsTotal } = useProfile()
 
   const [sold, setSold] = useState(0)
   const [publisherLiquidity, setPublisherLiquidity] = useState<UserLiquidity>()
@@ -112,8 +112,13 @@ export default function Stats({
         label="Total Liquidity"
         value={<Conversion price={`${totalLiquidity}`} hideApproximateSymbol />}
       />
-      <NumberUnit label="Sales" value={sold} />
+      <NumberUnit label={`Sale${sold === 1 ? '' : 's'}`} value={sold} />
       <NumberUnit label="Published" value={assetsTotal} />
+      <NumberUnit
+        label={`Download${downloadsTotal === 1 ? '' : 's'}`}
+        tooltip="Datatoken orders for assets with `access` service, as opposed to `compute`. As one order could allow multiple or infinite downloads this number does not reflect the actual download count of an asset file."
+        value={downloadsTotal}
+      />
     </div>
   )
 }

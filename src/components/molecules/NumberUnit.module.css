@@ -47,3 +47,9 @@
   background: var(--brand-white);
   border: 0.1rem solid var(--brand-pink);
 }
+
+.tooltip svg {
+  width: 0.8em !important;
+  height: 0.8em !important;
+  margin-left: 0;
+}

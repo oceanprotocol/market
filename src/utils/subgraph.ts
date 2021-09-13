@@ -1,5 +1,5 @@
 import { gql, OperationResult, TypedDocumentNode, OperationContext } from 'urql'
-import { DDO } from '@oceanprotocol/lib'
+import { DDO, Logger } from '@oceanprotocol/lib'
 import { getUrqlClientInstance } from '../providers/UrqlProvider'
 import { getOceanConfig } from './ocean'
 import web3 from 'web3'
@@ -25,6 +25,7 @@ import {
   PoolShares_poolShares as PoolShare
 } from '../@types/apollo/PoolShares'
 import { BestPrice } from '../models/BestPrice'
+import { OrdersData_tokenOrders as OrdersData } from '../@types/apollo/OrdersData'
 
 export interface UserLiquidity {
   price: string
@@ -231,6 +232,23 @@ const userPoolSharesQuery = gql`
         spotPrice
         createTime
       }
+    }
+  }
+`
+
+const UserTokenOrders = gql`
+  query OrdersData($user: String!) {
+    tokenOrders(
+      orderBy: timestamp
+      orderDirection: desc
+      where: { consumer: $user }
+    ) {
+      datatokenId {
+        address
+        symbol
+      }
+      timestamp
+      tx
     }
   }
 `
@@ -677,4 +695,30 @@ export async function getPoolSharesData(
     })
   }
   return data
+}
+
+export async function getUserTokenOrders(
+  accountId: string,
+  chainIds: number[]
+): Promise<OrdersData[]> {
+  const data: OrdersData[] = []
+  const variables = { user: accountId?.toLowerCase() }
+
+  try {
+    const tokenOrders = await fetchDataForMultipleChains(
+      UserTokenOrders,
+      variables,
+      chainIds
+    )
+
+    for (let i = 0; i < tokenOrders?.length; i++) {
+      tokenOrders[i].tokenOrders.forEach((tokenOrder: OrdersData) => {
+        data.push(tokenOrder)
+      })
+    }
+
+    return data
+  } catch (error) {
+    Logger.error(error.message)
+  }
 }
