@@ -121,7 +121,7 @@ const AssetPoolPriceQuerry = gql`
       datatokenAddress
       datatokenReserve
       oceanReserve
-      tokens {
+      tokens(where: { isDatatoken: false }) {
         symbol
       }
     }
