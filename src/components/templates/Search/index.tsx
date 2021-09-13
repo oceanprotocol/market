@@ -33,8 +33,6 @@ export default function SearchPage({
   )
 
   useEffect(() => {
-    if (!appConfig.metadataCacheUri) return
-
     const source = axios.CancelToken.source()
 
     async function initSearch() {
@@ -46,17 +44,10 @@ export default function SearchPage({
       setLoading(false)
     }
     initSearch()
-  }, [
-    text,
-    owner,
-    tags,
-    sort,
-    page,
-    serviceType,
-    sortOrder,
-    appConfig.metadataCacheUri,
-    chainIds
-  ])
+    return () => {
+      source.cancel()
+    }
+  }, [text, owner, tags, sort, page, serviceType, sortOrder, chainIds])
 
   function setPage(page: number) {
     const newUrl = updateQueryStringParameter(
