@@ -15,9 +15,9 @@ async function getTitle(row: PoolTransaction, locale: string) {
   switch (row.event) {
     case 'swap': {
       const inToken = row.tokens.filter((x) => x.type === 'in')[0]
-      const inTokenSymbol = getSymbol(inToken.poolToken.tokenId)
+      const inTokenSymbol = inToken.poolToken.symbol
       const outToken = row.tokens.filter((x) => x.type === 'out')[0]
-      const outTokenSymbol = getSymbol(outToken.poolToken.tokenId)
+      const outTokenSymbol = outToken.poolToken.symbol
       title += `Swap ${formatPrice(
         Math.abs(inToken.value).toString(),
         locale
@@ -34,13 +34,13 @@ async function getTitle(row: PoolTransaction, locale: string) {
           x.tokenAddress.toLowerCase() !==
           row.poolAddress.datatokenAddress.toLowerCase()
       )[0]
-      const firstTokenSymbol = await getSymbol(firstToken.poolToken.tokenId)
+      const firstTokenSymbol = firstToken.poolToken.symbol
       const secondToken = row.tokens.filter(
         (x) =>
           x.tokenAddress.toLowerCase() ===
           row.poolAddress.datatokenAddress.toLowerCase()
       )[0]
-      const secondTokenSymbol = await getSymbol(secondToken.poolToken.tokenId)
+      const secondTokenSymbol = secondToken.poolToken.symbol
       title += `Create pool with ${formatPrice(
         Math.abs(firstToken.value).toString(),
         locale
@@ -53,7 +53,7 @@ async function getTitle(row: PoolTransaction, locale: string) {
     case 'join':
     case 'exit': {
       for (let i = 0; i < row.tokens.length; i++) {
-        const tokenSymbol = await getSymbol(row.tokens[i].poolToken.tokenId)
+        const tokenSymbol = row.tokens[i].poolToken.symbol
         if (i > 0) title += '\n'
         title += `${row.event === 'join' ? 'Add' : 'Remove'} ${formatPrice(
           Math.abs(row.tokens[i].value).toString(),

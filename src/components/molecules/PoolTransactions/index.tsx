@@ -25,13 +25,6 @@ const txHistoryQueryByPool = gql`
       where: { userAddress: $user, poolAddress: $pool }
       first: 1000
     ) {
-      tokens {
-        poolToken {
-          tokenId {
-            symbol
-          }
-        }
-      }
       tx
       event
       timestamp
@@ -39,6 +32,9 @@ const txHistoryQueryByPool = gql`
         datatokenAddress
       }
       tokens {
+        poolToken {
+          symbol
+        }
         value
         type
         tokenAddress
@@ -54,13 +50,6 @@ const txHistoryQuery = gql`
       where: { userAddress: $user }
       first: 1000
     ) {
-      tokens {
-        poolToken {
-          tokenId {
-            symbol
-          }
-        }
-      }
       tx
       event
       timestamp
@@ -68,6 +57,9 @@ const txHistoryQuery = gql`
         datatokenAddress
       }
       tokens {
+        poolToken {
+          symbol
+        }
         value
         type
         tokenAddress
