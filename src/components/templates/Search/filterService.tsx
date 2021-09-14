@@ -148,7 +148,7 @@ export default function FilterPrice({
           </Button>
         )
       })}
-      &nbsp;&nbsp;&nbsp;
+      <div className={styles.separator} />
       {accessFilterItems.map((e, index) => {
         const isAccessSelected =
           e.value === accessType || accessSelections.includes(e.value)
