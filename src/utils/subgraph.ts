@@ -204,22 +204,6 @@ const UserSharesQuery = gql`
   }
 `
 
-const PaginatedUsersQuery = gql`
-  query PaginatedUsersQuery {
-    users {
-      id
-      publishers(first: 9) {
-        edges {
-          node {
-            id
-          }
-          cursor
-        }
-      }
-    }
-  }
-`
-
 const UsersQuery = gql`
   query UsersQuery {
     users {
@@ -650,8 +634,9 @@ export async function getAccountLiquidityInOwnAssets(
 
 export async function getAssetsPublishers(
   chainIds: number[]
-): Promise<AccountSales[]> {
-  let publishers: UsersList[] = []
+): Promise<string[]> {
+  let users: UsersList[] = []
+  const accounts: string[] = []
   const publishersSales: AccountSales[] = []
 
   for (const chain of chainIds) {
@@ -661,21 +646,17 @@ export async function getAssetsPublishers(
       null,
       queryContext
     )
-    const paginatedUsers = await fetchData(
-      PaginatedUsersQuery,
-      null,
-      queryContext
-    )
-    publishers = publishers.concat(fetchedPublishers.data.users)
+    users = users.concat(fetchedPublishers.data.users)
   }
 
-  publishers.forEach(async (publisher) => {
-    const sale = await getAccountNumberOfOrders(publisher.id, chainIds)
+  users.forEach(async (user) => {
+    const sale = await getAccountNumberOfOrders(user.id, chainIds)
     if (sale > 0) {
-      publishersSales.push({ publisher: publisher.id, sales: sale })
+      accounts.push(user.id)
+      publishersSales.push({ publisher: user.id, sales: sale })
     }
   })
-  const sortedPublishers = publishersSales.sort((a, b) => a.sales - b.sales)
+  // const sortedPublishers = publishersSales.sort((a, b) => a.sales - b.sales)
 
-  return publishersSales
+  return accounts
 }

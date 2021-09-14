@@ -5,7 +5,6 @@ import styles from './AssetList.module.css'
 import classNames from 'classnames/bind'
 import Loader from '../atoms/Loader'
 import { useUserPreferences } from '../../providers/UserPreferences'
-import { AccountSales } from '../../utils/subgraph'
 
 const cx = classNames.bind(styles)
 
@@ -18,7 +17,7 @@ function LoaderArea() {
 }
 
 declare type AccountListProps = {
-  accounts: AccountSales[]
+  accounts: string[]
   showPagination: boolean
   page?: number
   totalPages?: number
@@ -27,7 +26,7 @@ declare type AccountListProps = {
   className?: string
 }
 
-const AssetList: React.FC<AccountListProps> = ({
+const AccountList: React.FC<AccountListProps> = ({
   accounts,
   showPagination,
   page,
@@ -40,8 +39,9 @@ const AssetList: React.FC<AccountListProps> = ({
   const [loading, setLoading] = useState<boolean>(true)
 
   useEffect(() => {
-    if (!accounts) return
     isLoading && setLoading(true)
+    if (!accounts) return
+    setLoading(false)
   }, [accounts])
 
   function handlePageChange(selected: number) {
@@ -60,8 +60,7 @@ const AssetList: React.FC<AccountListProps> = ({
       <div className={styleClasses}>
         {accounts.length > 0 ? (
           accounts.map((account) => (
-            // eslint-disable-next-line react/jsx-key
-            <AccountTeaser account={account.publisher} large={false} />
+            <AccountTeaser account={account} key={account} large />
           ))
         ) : chainIds.length === 0 ? (
           <div className={styles.empty}>No network selected.</div>
@@ -69,7 +68,6 @@ const AssetList: React.FC<AccountListProps> = ({
           <div className={styles.empty}>No results found.</div>
         )}
       </div>
-
       {showPagination && (
         <Pagination
           totalPages={totalPages}
@@ -83,4 +81,4 @@ const AssetList: React.FC<AccountListProps> = ({
   )
 }
 
-export default AssetList
+export default AccountList

@@ -7,13 +7,13 @@
 }
 
 .teaser {
-  max-width: 33rem;
+  max-width: 40rem;
   height: 100%;
 }
 
 .link {
   composes: box from '../atoms/Box.module.css';
-  font-size: var(--font-size-small);
+  font-size: var(--font-size-mini);
   height: 100%;
   color: var(--color-secondary);
   position: relative;

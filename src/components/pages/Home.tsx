@@ -141,7 +141,7 @@ function SectionGraphResult({
 }) {
   const { appConfig } = useSiteMetadata()
   const { chainIds } = useUserPreferences()
-  const [result, setResult] = useState<QueryResult>()
+  const [result, setResult] = useState<string[]>([])
   const [loading, setLoading] = useState<boolean>()
 
   useEffect(() => {
@@ -150,25 +150,14 @@ function SectionGraphResult({
 
     async function init() {
       if (chainIds.length === 0) {
-        const result: QueryResult = {
-          results: [],
-          page: 0,
-          totalPages: 0,
-          totalResults: 0
-        }
+        const result: string[] = []
         setResult(result)
         setLoading(false)
       } else {
         try {
           setLoading(true)
           const publishers = await getAssetsPublishers(chainIds)
-          const result: QueryResult = {
-            results: publishers,
-            page: 1,
-            totalPages: 10,
-            totalResults: 134
-          }
-          setResult(result)
+          setResult(publishers)
           setLoading(false)
         } catch (error) {
           Logger.error(error.message)
@@ -186,7 +175,7 @@ function SectionGraphResult({
     <section className={styles.section}>
       <h3>{title}</h3>
       <AccountList
-        accounts={result?.results}
+        accounts={result}
         showPagination={false}
         isLoading={loading}
       />
