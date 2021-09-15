@@ -2,7 +2,6 @@ import React, { ReactElement } from 'react'
 import { useWeb3 } from '../../providers/Web3'
 import {
   addCustomNetwork,
-  getNetworkConfigObject,
   getNetworkDisplayName,
   getNetworkDataById
 } from '../../utils/web3'
@@ -26,11 +25,10 @@ export default function WalletNetworkSwitcher(): ReactElement {
   )
 
   async function switchWalletNetwork() {
-    const networkNode = networksList.find(
+    const networkNode = await networksList.find(
       (data) => data.node.chainId === ddo.chainId
     ).node
-    const networkConfig = getNetworkConfigObject(networkNode)
-    addCustomNetwork(web3Provider, networkConfig)
+    addCustomNetwork(web3Provider, networkNode)
   }
 
   return (

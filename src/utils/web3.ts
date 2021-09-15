@@ -10,19 +10,22 @@ export interface EthereumListsChain {
   networkId: number
   nativeCurrency: { name: string; symbol: string; decimals: number }
   rpc: string[]
-  faucets: string[]
   infoURL: string
+  faucets: string[]
+  explorers: [{ url: string }]
 }
 
 export interface NetworkObject {
   chainId: number
   name: string
+  nativeCurrency: string
+  explorers: [{ url: string }]
   urlList: string[]
 }
 
 const configGaiaX = getOceanConfig(2021000)
 
-export const networkDataGaiaX = {
+export const networkDataGaiaX: EthereumListsChain = {
   name: 'GAIA-X Testnet',
   chainId: 2021000,
   shortName: 'GAIA-X',
@@ -35,17 +38,8 @@ export const networkDataGaiaX = {
     'https://faucet.gaiaxtestnet.oceanprotocol.com/',
     'https://faucet.gx.gaiaxtestnet.oceanprotocol.com/'
   ],
-  infoURL: 'https://www.gaia-x.eu'
-}
-
-export function getNetworkConfigObject(node: any): NetworkObject {
-  const networkConfig = {
-    name: node.chain,
-    symbol: node.nativeCurrency.symbol,
-    chainId: node.chainId,
-    urlList: node.rpc
-  }
-  return networkConfig
+  infoURL: 'https://www.gaia-x.eu',
+  explorers: [{ url: '' }]
 }
 
 export function accountTruncate(account: string): string {
@@ -98,12 +92,14 @@ export function getNetworkDataById(
 
 export async function addCustomNetwork(
   web3Provider: any,
-  network: NetworkObject
+  network: EthereumListsChain
 ): Promise<void> {
   const newNewtworkData = {
     chainId: `0x${network.chainId.toString(16)}`,
-    chainName: network.name,
-    rpcUrls: network.urlList
+    chainName: getNetworkDisplayName(network, network.chainId),
+    nativeCurrency: network.nativeCurrency,
+    rpcUrls: network.rpc,
+    blockExplorerUrls: [network.explorers[0].url]
   }
   try {
     await web3Provider.request({
@@ -112,7 +108,7 @@ export async function addCustomNetwork(
     })
   } catch (switchError) {
     if (switchError.code === 4902) {
-      web3Provider.request(
+      await web3Provider.request(
         {
           method: 'wallet_addEthereumChain',
           params: [newNewtworkData]
