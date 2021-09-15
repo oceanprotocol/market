@@ -1,4 +1,5 @@
 import React, { ChangeEvent, ReactElement } from 'react'
+import debounce from 'lodash.debounce'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import { removeItemFromArray } from '../../../../utils'
 import NetworkName from '../../../atoms/NetworkName'
@@ -11,7 +12,7 @@ export default function NetworkItem({
 }): ReactElement {
   const { chainIds, setChainIds } = useUserPreferences()
 
-  function handleNetworkChanged(e: ChangeEvent<HTMLInputElement>) {
+  const handleNetworkChanged = debounce((e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target
 
     // storing all chainId everywhere as a number so convert from here
@@ -21,7 +22,7 @@ export default function NetworkItem({
       ? [...removeItemFromArray(chainIds, valueAsNumber)]
       : [...chainIds, valueAsNumber]
     setChainIds(newChainIds)
-  }
+  }, 150)
 
   return (
     <div className={styles.radioWrap} key={chainId}>
