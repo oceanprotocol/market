@@ -80,7 +80,6 @@ export default function SearchPage({
               accessType={access}
               setServiceType={setServiceType}
               setAccessType={setAccessType}
-              isSearch
             />
             <Sort
               sortType={sortType}

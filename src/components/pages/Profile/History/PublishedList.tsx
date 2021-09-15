@@ -3,7 +3,7 @@ import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/Metadata
 import React, { ReactElement, useEffect, useState } from 'react'
 import AssetList from '../../../organisms/AssetList'
 import { getPublishedAssets } from '../../../../utils/aquarius'
-import Filters from '../../../templates/Search/Filters'
+// import Filters from '../../../templates/Search/Filters'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import styles from './PublishedList.module.css'
@@ -53,12 +53,11 @@ export default function PublishedList({
 
   return accountId ? (
     <>
-      <Filters
+      {/* <Filters
         serviceType={service}
         setServiceType={setServiceType}
-        isSearch={false}
         className={styles.filters}
-      />
+      /> */}
       <AssetList
         assets={queryResult?.results}
         isLoading={isLoading}
