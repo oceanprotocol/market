@@ -2,6 +2,13 @@
 div.filterList {
   white-space: normal;
   margin-bottom: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+}
+
+.separator {
+  width: calc(var(--spacer) / 2);
 }
 
 .filter {
