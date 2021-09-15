@@ -1,9 +1,9 @@
 .blockies {
-  width: 15%;
-  height: 15%;
+  width: 13%;
+  height: 13%;
   border-radius: 50%;
   margin-left: 0;
-  margin-right: calc(var(--spacer) / 2);
+  margin-right: calc(var(--spacer) / 4);
 }
 
 .teaser {
@@ -13,6 +13,7 @@
 
 .link {
   composes: box from '../atoms/Box.module.css';
+  padding: calc(var(--spacer) / 2) !important;
   font-size: var(--font-size-mini);
   height: 100%;
   color: var(--color-secondary);
@@ -31,9 +32,13 @@
 .account {
   display: flex;
   flex-direction: row;
+  align-items: baseline;
 }
 
-.account a {
-  padding: 0 0.5rem;
-  font-size: medium;
+.account p {
+  margin-right: 0.25rem;
+}
+
+.explore {
+  font-size: small;
 }

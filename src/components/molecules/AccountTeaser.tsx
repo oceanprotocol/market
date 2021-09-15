@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import Dotdotdot from 'react-dotdotdot'
 import { Profile } from '../../models/Profile'
 import { useWeb3 } from '../../providers/Web3'
+import { accountTruncate } from '../../utils/web3'
 import get3BoxProfile from '../../utils/profile'
 import ExplorerLink from '../atoms/ExplorerLink'
 import Stats from '../pages/Profile/Stats'
@@ -39,6 +40,7 @@ const AccountTeaser: React.FC<AccountTeaserProps> = ({ account, large }) => {
     async function get3Box() {
       const profile = await get3BoxProfile(account, source.token)
       if (!profile) return
+
       setProfile(profile)
     }
     get3Box()
@@ -46,20 +48,32 @@ const AccountTeaser: React.FC<AccountTeaserProps> = ({ account, large }) => {
 
   return (
     <article className={styles.teaser}>
-      <Link to={`/account/${account}`} className={styles.link}>
+      <Link to={`/profile/${account}`} className={styles.link}>
         <header className={styles.header}>
-          {profile?.emoji || <Blockies account={account} />}
+          {profile?.image ? (
+            <img src={profile.image} className={styles.blockies} />
+          ) : (
+            <Blockies account={account} />
+          )}
           <div>
             <Dotdotdot className={styles.name} clamp={3}>
-              {profile && <h3> {profile.name}</h3>}
+              {profile?.name ? (
+                <h3> {profile.name}</h3>
+              ) : (
+                <h3>{accountTruncate(account)}</h3>
+              )}
             </Dotdotdot>
             <div className={styles.account}>
               <p>{account}</p>
-              <ExplorerLink networkId={networkId} path={`address/${account}`} />
+              <ExplorerLink
+                networkId={networkId}
+                path={`address/${account}`}
+                className={styles.explore}
+              />
             </div>
           </div>
         </header>
-        {large && <Stats accountId={account} />}
+        {large && <Stats accountId={account} showInAccountTeaser />}
       </Link>
     </article>
   )

@@ -21,9 +21,11 @@ import {
 import axios from 'axios'
 
 export default function Stats({
-  accountId
+  accountId,
+  showInAccountTeaser
 }: {
   accountId: string
+  showInAccountTeaser?: boolean
 }): ReactElement {
   const { chainIds } = useUserPreferences()
 
@@ -99,12 +101,19 @@ export default function Stats({
         label="Published"
         value={numberOfAssets}
         icon={<Published />}
+        small={showInAccountTeaser}
       />
-      <NumberUnit label="Sold" value={sold} icon={<Sold />} />
+      <NumberUnit
+        label="Sold"
+        value={sold}
+        icon={<Sold />}
+        small={showInAccountTeaser}
+      />
       <NumberUnit
         label="Total Value Locked"
         value={<Conversion price={tvl?.price} hideApproximateSymbol />}
         icon={<Tvl />}
+        small={showInAccountTeaser}
       />
     </div>
   )
