@@ -1,5 +1,5 @@
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
-import { MetadataCache, Logger } from '@oceanprotocol/lib'
+import { Logger } from '@oceanprotocol/lib'
 import {
   queryMetadata,
   transformChainIdsListToQuery
@@ -33,6 +33,13 @@ export const FilterByTypeOptions = {
 type FilterByTypeOptions =
   typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
 
+export const FilterByAccessOptions = {
+  Download: 'access',
+  Compute: 'compute'
+}
+type FilterByAccessOptions =
+  typeof FilterByAccessOptions[keyof typeof FilterByAccessOptions]
+
 function getSortType(sortParam: string): string {
   const sortTerm =
     sortParam === SortTermOptions.Created
@@ -51,7 +58,8 @@ export function getSearchQuery(
   offset?: string,
   sort?: string,
   sortOrder?: string,
-  serviceType?: string
+  serviceType?: string,
+  accessType?: string
 ): any {
   const emptySearchTerm = text === undefined || text === ''
   let searchTerm = owner
@@ -138,6 +146,12 @@ export function getSearchQuery(
             }
           },
           {
+            match: {
+              'service.type':
+                accessType === undefined ? 'access OR compute' : `${accessType}`
+            }
+          },
+          {
             query_string: {
               query: `${transformChainIdsListToQuery(chainIds)}`
             }
@@ -167,6 +181,7 @@ export async function getResults(
     sort?: string
     sortOrder?: string
     serviceType?: string
+    accessType?: string
   },
   chainIds: number[],
   cancelToken?: CancelToken
@@ -180,7 +195,8 @@ export async function getResults(
     offset,
     sort,
     sortOrder,
-    serviceType
+    serviceType,
+    accessType
   } = params
 
   const searchQuery = getSearchQuery(
@@ -193,7 +209,8 @@ export async function getResults(
     offset,
     sort,
     sortOrder,
-    serviceType
+    serviceType,
+    accessType
   )
   const queryResult = await queryMetadata(searchQuery, cancelToken)
   return queryResult

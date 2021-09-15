@@ -22,11 +22,13 @@ export default function SearchPage({
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const parsed = queryString.parse(location.search)
-  const { text, owner, tags, page, sort, sortOrder, serviceType } = parsed
+  const { text, owner, tags, page, sort, sortOrder, serviceType, accessType } =
+    parsed
   const { chainIds } = useUserPreferences()
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [loading, setLoading] = useState<boolean>()
   const [service, setServiceType] = useState<string>(serviceType as string)
+  const [access, setAccessType] = useState<string>(accessType as string)
   const [sortType, setSortType] = useState<string>(sort as string)
   const [sortDirection, setSortDirection] = useState<string>(
     sortOrder as string
@@ -47,7 +49,17 @@ export default function SearchPage({
     return () => {
       source.cancel()
     }
-  }, [text, owner, tags, sort, page, serviceType, sortOrder, chainIds])
+  }, [
+    text,
+    owner,
+    tags,
+    sort,
+    page,
+    serviceType,
+    accessType,
+    sortOrder,
+    chainIds
+  ])
 
   function setPage(page: number) {
     const newUrl = updateQueryStringParameter(
@@ -65,7 +77,9 @@ export default function SearchPage({
           <div className={styles.row}>
             <ServiceFilter
               serviceType={service}
+              accessType={access}
               setServiceType={setServiceType}
+              setAccessType={setAccessType}
             />
             <Sort
               sortType={sortType}
