@@ -14,6 +14,8 @@ import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { metadataCacheUri } from '../../app.config'
 
+export const MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS = 476
+
 function getQueryForAlgorithmDatasets(algorithmDid: string, chainId?: number) {
   return {
     query: {
