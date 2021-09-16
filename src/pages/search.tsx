@@ -42,8 +42,9 @@ export default function PageGatsbySearch(props: PageProps): ReactElement {
       }
       description={
         totalPagesNumber &&
-        totalPagesNumber > MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS &&
-        '**Results displayed are limited to the first 10k, please refine your search.**'
+        totalPagesNumber > MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS
+          ? '**Results displayed are limited to the first 10k, please refine your search.**'
+          : undefined
       }
       uri={props.uri}
     >
