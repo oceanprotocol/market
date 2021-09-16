@@ -1,5 +1,5 @@
 import { gql, OperationResult, TypedDocumentNode, OperationContext } from 'urql'
-import { DDO } from '@oceanprotocol/lib'
+import { DDO, Logger } from '@oceanprotocol/lib'
 import { getUrqlClientInstance } from '../providers/UrqlProvider'
 import { getOceanConfig } from './ocean'
 import web3 from 'web3'
@@ -25,10 +25,10 @@ import {
   PoolShares_poolShares as PoolShare
 } from '../@types/apollo/PoolShares'
 import { BestPrice } from '../models/BestPrice'
+import { OrdersData_tokenOrders as OrdersData } from '../@types/apollo/OrdersData'
 
 import { UserSharesQuery_poolShares_userAddress as UsersList } from '../@types/apollo/UserSharesQuery'
-
-export interface UserTVL {
+export interface UserLiquidity {
   price: string
   oceanBalance: string
 }
@@ -133,6 +133,9 @@ const AssetPoolPriceQuery = gql`
       datatokenAddress
       datatokenReserve
       oceanReserve
+      tokens(where: { isDatatoken: false }) {
+        symbol
+      }
     }
   }
 `
@@ -167,15 +170,18 @@ const HighestLiquidityAssets = gql`
 `
 
 const TotalAccountOrders = gql`
-  query TotalAccountOrders($payer: String) {
-    tokenOrders(orderBy: id, where: { payer: $payer }) {
-      id
+  query TotalAccountOrders($datatokenId_in: [String!]) {
+    tokenOrders(where: { datatokenId_in: $datatokenId_in }) {
       payer {
+        id
+      }
+      datatokenId {
         id
       }
     }
   }
 `
+
 const UserSharesQuery = gql`
   query UserSharesQuery($user: String, $pools: [String!]) {
     poolShares(where: { userAddress: $user, poolId_in: $pools }) {
@@ -203,6 +209,52 @@ const UserSharesQuery = gql`
     }
   }
 `
+
+const userPoolSharesQuery = gql`
+  query PoolShares($user: String) {
+    poolShares(where: { userAddress: $user, balance_gt: 0.001 }, first: 1000) {
+      id
+      balance
+      userAddress {
+        id
+      }
+      poolId {
+        id
+        datatokenAddress
+        valueLocked
+        tokens {
+          id
+          isDatatoken
+          symbol
+        }
+        oceanReserve
+        datatokenReserve
+        totalShares
+        consumePrice
+        spotPrice
+        createTime
+      }
+    }
+  }
+`
+
+const UserTokenOrders = gql`
+  query OrdersData($user: String!) {
+    tokenOrders(
+      orderBy: timestamp
+      orderDirection: desc
+      where: { consumer: $user }
+    ) {
+      datatokenId {
+        address
+        symbol
+      }
+      timestamp
+      tx
+    }
+  }
+`
+
 
 const UsersQuery = gql`
   query UsersQuery {
@@ -572,11 +624,15 @@ export async function getHighestLiquidityDIDs(
 }
 
 export async function getAccountNumberOfOrders(
-  accountId: string,
+  assets: DDO[],
   chainIds: number[]
 ): Promise<number> {
+  const datatokens: string[] = []
+  assets.forEach((ddo) => {
+    datatokens.push(ddo?.dataToken?.toLowerCase())
+  })
   const queryVariables = {
-    payer: accountId.toLowerCase()
+    datatokenId_in: datatokens
   }
   const results = await fetchDataForMultipleChains(
     TotalAccountOrders,
@@ -585,7 +641,7 @@ export async function getAccountNumberOfOrders(
   )
   let numberOfOrders = 0
   for (const result of results) {
-    numberOfOrders += result.tokenOrders.length
+    numberOfOrders += result?.tokenOrders?.length
   }
   return numberOfOrders
 }
@@ -605,7 +661,7 @@ export async function getAccountLiquidityInOwnAssets(
   accountId: string,
   chainIds: number[],
   pools: string[]
-): Promise<UserTVL> {
+): Promise<UserLiquidity> {
   const queryVariables = {
     user: accountId.toLowerCase(),
     pools: pools
@@ -629,6 +685,51 @@ export async function getAccountLiquidityInOwnAssets(
   return {
     price: totalLiquidity.toString(),
     oceanBalance: totalOceanLiquidity.toString()
+  }
+}
+
+export async function getPoolSharesData(
+  accountId: string,
+  chainIds: number[]
+): Promise<PoolShare[]> {
+  const variables = { user: accountId?.toLowerCase() }
+  const data: PoolShare[] = []
+  const result = await fetchDataForMultipleChains(
+    userPoolSharesQuery,
+    variables,
+    chainIds
+  )
+  for (let i = 0; i < result.length; i++) {
+    result[i].poolShares.forEach((poolShare: PoolShare) => {
+      data.push(poolShare)
+    })
+  }
+  return data
+}
+
+export async function getUserTokenOrders(
+  accountId: string,
+  chainIds: number[]
+): Promise<OrdersData[]> {
+  const data: OrdersData[] = []
+  const variables = { user: accountId?.toLowerCase() }
+
+  try {
+    const tokenOrders = await fetchDataForMultipleChains(
+      UserTokenOrders,
+      variables,
+      chainIds
+    )
+
+    for (let i = 0; i < tokenOrders?.length; i++) {
+      tokenOrders[i].tokenOrders.forEach((tokenOrder: OrdersData) => {
+        data.push(tokenOrder)
+      })
+    }
+
+    return data
+  } catch (error) {
+    Logger.error(error.message)
   }
 }
 

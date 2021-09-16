@@ -7,23 +7,26 @@ import jellyfish from '@oceanprotocol/art/creatures/jellyfish/jellyfish-grid.svg
 import Copy from '../../../atoms/Copy'
 import Blockies from '../../../atoms/Blockies'
 import styles from './Account.module.css'
+import { useProfile } from '../../../../providers/Profile'
 
 export default function Account({
-  name,
-  image,
   accountId
 }: {
-  name: string
-  image: string
   accountId: string
 }): ReactElement {
   const { chainIds } = useUserPreferences()
+  const { profile } = useProfile()
 
   return (
     <div className={styles.account}>
       <figure className={styles.imageWrap}>
-        {image ? (
-          <img src={image} className={styles.image} width="96" height="96" />
+        {profile?.image ? (
+          <img
+            src={profile?.image}
+            className={styles.image}
+            width="96"
+            height="96"
+          />
         ) : accountId ? (
           <Blockies accountId={accountId} className={styles.image} />
         ) : (
@@ -37,7 +40,9 @@ export default function Account({
       </figure>
 
       <div>
-        <h3 className={styles.name}>{name || accountTruncate(accountId)}</h3>
+        <h3 className={styles.name}>
+          {profile?.name || accountTruncate(accountId)}
+        </h3>
         {accountId && (
           <code className={styles.accountId}>
             {accountId} <Copy text={accountId} />

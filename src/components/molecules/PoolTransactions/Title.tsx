@@ -68,6 +68,7 @@ export default function Title({ row }: { row: PoolTransaction }): ReactElement {
 
   useEffect(() => {
     if (!locale || !row) return
+
     async function init() {
       const title = await getTitle(row, locale)
       setTitle(title)

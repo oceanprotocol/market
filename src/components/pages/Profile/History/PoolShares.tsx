@@ -3,61 +3,31 @@ import Table from '../../../atoms/Table'
 import Conversion from '../../../atoms/Price/Conversion'
 import styles from './PoolShares.module.css'
 import AssetTitle from '../../../molecules/AssetListTitle'
-import { gql } from 'urql'
 import {
   PoolShares_poolShares as PoolShare,
   PoolShares_poolShares_poolId_tokens as PoolSharePoolIdTokens
 } from '../../../../@types/apollo/PoolShares'
 import web3 from 'web3'
 import Token from '../../../organisms/AssetActions/Pool/Token'
-import { useUserPreferences } from '../../../../providers/UserPreferences'
-import {
-  fetchDataForMultipleChains,
-  calculateUserLiquidity
-} from '../../../../utils/subgraph'
+import { calculateUserLiquidity } from '../../../../utils/subgraph'
 import NetworkName from '../../../atoms/NetworkName'
-import axios from 'axios'
+import axios, { CancelToken } from 'axios'
 import { retrieveDDO } from '../../../../utils/aquarius'
 import { isValidNumber } from '../../../../utils/numberValidations'
 import Decimal from 'decimal.js'
+import { useProfile } from '../../../../providers/Profile'
+import { DDO } from '@oceanprotocol/lib'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
 const REFETCH_INTERVAL = 20000
-
-const poolSharesQuery = gql`
-  query PoolShares($user: String) {
-    poolShares(where: { userAddress: $user, balance_gt: 0.001 }, first: 1000) {
-      id
-      balance
-      userAddress {
-        id
-      }
-      poolId {
-        id
-        datatokenAddress
-        valueLocked
-        tokens {
-          id
-          isDatatoken
-          symbol
-        }
-        oceanReserve
-        datatokenReserve
-        totalShares
-        consumePrice
-        spotPrice
-        createTime
-      }
-    }
-  }
-`
 
 interface Asset {
   userLiquidity: number
   poolShare: PoolShare
   networkId: number
   createTime: number
+  ddo: DDO
 }
 
 function findTokenByType(tokens: PoolSharePoolIdTokens[], type: string) {
@@ -126,10 +96,7 @@ const columns = [
   {
     name: 'Data Set',
     selector: function getAssetRow(row: Asset) {
-      const did = web3.utils
-        .toChecksumAddress(row.poolShare.poolId.datatokenAddress)
-        .replace('0x', 'did:op:')
-      return <AssetTitle did={did} />
+      return <AssetTitle ddo={row.ddo} />
     },
     grow: 2
   },
@@ -161,38 +128,27 @@ const columns = [
   }
 ]
 
-async function getPoolSharesData(accountId: string, chainIds: number[]) {
-  const variables = { user: accountId?.toLowerCase() }
-  const data: PoolShare[] = []
-  const result = await fetchDataForMultipleChains(
-    poolSharesQuery,
-    variables,
-    chainIds
-  )
-  for (let i = 0; i < result.length; i++) {
-    result[i].poolShares.forEach((poolShare: PoolShare) => {
-      data.push(poolShare)
-    })
-  }
-  return data
-}
-
-async function getPoolSharesAssets(data: PoolShare[]) {
+async function getPoolSharesAssets(
+  data: PoolShare[],
+  cancelToken: CancelToken
+) {
   const assetList: Asset[] = []
-  const source = axios.CancelToken.source()
 
   for (let i = 0; i < data.length; i++) {
     const did = web3.utils
       .toChecksumAddress(data[i].poolId.datatokenAddress)
       .replace('0x', 'did:op:')
-    const ddo = await retrieveDDO(did, source.token)
+    const ddo = await retrieveDDO(did, cancelToken)
     const userLiquidity = calculateUserLiquidity(data[i])
-    assetList.push({
-      poolShare: data[i],
-      userLiquidity: userLiquidity,
-      networkId: ddo?.chainId,
-      createTime: data[i].poolId.createTime
-    })
+
+    ddo &&
+      assetList.push({
+        poolShare: data[i],
+        userLiquidity: userLiquidity,
+        networkId: ddo?.chainId,
+        createTime: data[i].poolId.createTime,
+        ddo
+      })
   }
   const assets = assetList.sort((a, b) => b.createTime - a.createTime)
   return assets
@@ -203,33 +159,36 @@ export default function PoolShares({
 }: {
   accountId: string
 }): ReactElement {
+  const { poolShares, isPoolSharesLoading } = useProfile()
   const [assets, setAssets] = useState<Asset[]>()
   const [loading, setLoading] = useState<boolean>(false)
   const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
-  const { chainIds } = useUserPreferences()
 
-  const fetchPoolSharesData = useCallback(async () => {
-    try {
-      const data = await getPoolSharesData(accountId, chainIds)
-      const newAssets = await getPoolSharesAssets(data)
+  const fetchPoolSharesAssets = useCallback(
+    async (cancelToken: CancelToken) => {
+      if (!poolShares || isPoolSharesLoading) return
 
-      if (JSON.stringify(assets) !== JSON.stringify(newAssets)) {
-        setAssets(newAssets)
+      try {
+        const assets = await getPoolSharesAssets(poolShares, cancelToken)
+        setAssets(assets)
+      } catch (error) {
+        console.error('Error fetching pool shares: ', error.message)
       }
-    } catch (error) {
-      console.error('Error fetching pool shares: ', error.message)
-    }
-  }, [accountId, assets, chainIds])
+    },
+    [poolShares, isPoolSharesLoading]
+  )
 
   useEffect(() => {
+    const cancelTokenSource = axios.CancelToken.source()
+
     async function init() {
       setLoading(true)
-      await fetchPoolSharesData()
+      await fetchPoolSharesAssets(cancelTokenSource.token)
       setLoading(false)
 
       if (dataFetchInterval) return
       const interval = setInterval(async () => {
-        await fetchPoolSharesData()
+        await fetchPoolSharesAssets(cancelTokenSource.token)
       }, REFETCH_INTERVAL)
       setDataFetchInterval(interval)
     }
@@ -237,8 +196,9 @@ export default function PoolShares({
 
     return () => {
       clearInterval(dataFetchInterval)
+      cancelTokenSource.cancel()
     }
-  }, [dataFetchInterval, fetchPoolSharesData])
+  }, [dataFetchInterval, fetchPoolSharesAssets])
 
   return accountId ? (
     <Table
