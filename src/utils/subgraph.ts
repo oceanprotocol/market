@@ -632,6 +632,38 @@ export async function getAccountLiquidityInOwnAssets(
   }
 }
 
+function findIndex(arr: AccountSales[], val: AccountSales): number {
+  let low = 0
+  let high = arr.length
+  if (high === 0) {
+    return high
+  }
+  while (low < high) {
+    const mid = (low + high) / 2
+    if (arr[mid].sales < val.sales) {
+      low = mid + 1
+      console.log('IF 1: ', low, high)
+    } else {
+      high = mid
+      console.log('IF 2: ', low, high)
+    }
+  }
+  return low
+}
+
+function insertAt(arr: AccountSales[], num: AccountSales) {
+  if (arr.length === 0) {
+    arr.push(num)
+    return
+  }
+  const position = findIndex(arr, num)
+  for (let i = position; typeof arr[i] !== 'undefined'; i++) {
+    arr[i + 1] = arr[i]
+    arr[i] = num
+  }
+  arr.push(num)
+}
+
 export async function getAssetsPublishers(
   chainIds: number[]
 ): Promise<string[]> {
@@ -649,14 +681,28 @@ export async function getAssetsPublishers(
     users = users.concat(fetchedPublishers.data.users)
   }
 
-  users.forEach(async (user) => {
-    const sale = await getAccountNumberOfOrders(user.id, chainIds)
-    if (sale > 0) {
-      accounts.push(user.id)
-      publishersSales.push({ publisher: user.id, sales: sale })
+  for (let i = 0; i < users.length; i++) {
+    if (users[i] === undefined) continue
+    const sale = await getAccountNumberOfOrders(users[i].id, chainIds)
+    if (sale && sale > 0) {
+      accounts.push(users[i].id)
+      publishersSales.push({ publisher: users[i].id, sales: sale })
     }
-  })
-  // const sortedPublishers = publishersSales.sort((a, b) => a.sales - b.sales)
+  }
 
   return accounts
+}
+
+export async function getTopPublishers(
+  chainIds: number[]
+): Promise<AccountSales[]> {
+  const sortedList: AccountSales[] = []
+  const publisherList = await getAssetsPublishers(chainIds)
+  publisherList.forEach(async (user) => {
+    const sale = await getAccountNumberOfOrders(user, chainIds)
+    if (sale > 0) {
+      insertAt(sortedList, { publisher: user, sales: sale })
+    }
+  })
+  return sortedList
 }

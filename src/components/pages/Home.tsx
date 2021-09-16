@@ -189,7 +189,6 @@ export default function HomePage(): ReactElement {
   const { chainIds } = useUserPreferences()
 
   useEffect(() => {
-    getAssetsPublishers(chainIds)
     getQueryHighest(chainIds).then((results) => {
       setQueryAndDids(results)
     })
