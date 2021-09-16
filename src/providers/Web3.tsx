@@ -15,10 +15,10 @@ import { Logger } from '@oceanprotocol/lib'
 import { isBrowser } from '../utils'
 import {
   EthereumListsChain,
-  getEnsName,
   getNetworkDataById,
   getNetworkDisplayName
 } from '../utils/web3'
+import { getEnsName, getEnsNameWithWeb3 } from '../utils/ens'
 import { UserBalance } from '../@types/TokenBalance'
 import { getOceanBalance } from '../utils/ocean'
 import useNetworkMetadata from '../hooks/useNetworkMetadata'
@@ -167,21 +167,22 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   // Helper: Get user ENS name
   // -----------------------------------
   const getUserEnsName = useCallback(async () => {
-    if (!accountId || !networkId || !web3Provider) return
+    if (!accountId) return
 
     try {
-      const accountEns = await getEnsName(
-        accountId,
-        web3Provider,
-        `${networkId}`
-      )
+      // const accountEns = await getEnsNameWithWeb3(
+      //   accountId,
+      //   web3Provider,
+      //   `${networkId}`
+      // )
+      const accountEns = await getEnsName(accountId)
       setAccountEns(accountEns)
       accountEns &&
         Logger.log(`[web3] ENS name found for ${accountId}:`, accountEns)
     } catch (error) {
       Logger.error('[web3] Error: ', error.message)
     }
-  }, [accountId, networkId, web3Provider])
+  }, [accountId])
 
   // -----------------------------------
   // Create initial Web3Modal instance

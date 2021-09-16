@@ -1,5 +1,4 @@
 import { Logger } from '@oceanprotocol/lib'
-import ENS, { getEnsAddress } from '@ensdomains/ensjs'
 import { getOceanConfig } from './ocean'
 
 export interface EthereumListsChain {
@@ -176,18 +175,4 @@ export async function addTokenToWallet(
       }
     }
   )
-}
-
-export async function getEnsName(
-  accountId: string,
-  provider: any,
-  networkId: string
-): Promise<string> {
-  const ens = new ENS({ provider, ensAddress: getEnsAddress(networkId) })
-  let { name } = await ens.getName(accountId)
-  // Check to be sure the reverse record is correct.
-  const reverseAccountId = await ens.name(name).getAddress()
-  if (accountId.toLowerCase() !== reverseAccountId.toLowerCase()) name = null
-
-  return name
 }
