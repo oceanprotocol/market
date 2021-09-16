@@ -23,6 +23,7 @@ import axios, { CancelToken } from 'axios'
 import ethereumAddress from 'ethereum-address'
 import get3BoxProfile from '../utils/profile'
 import web3 from 'web3'
+import { getEnsName } from '../utils/ens'
 
 interface ProfileProviderValue {
   profile: Profile
@@ -86,7 +87,18 @@ function ProfileProvider({
 
     const cancelTokenSource = axios.CancelToken.source()
 
-    async function getInfoFrom3Box() {
+    async function getInfo() {
+      // ENS name
+      const accountEns = await getEnsName(accountId)
+      if (accountEns) {
+        setProfile((prevState) => ({
+          name: accountEns,
+          accountEns,
+          ...prevState
+        }))
+        Logger.log(`[profile] ENS name found for ${accountId}:`, accountEns)
+      }
+
       const profile3Box = await get3BoxProfile(
         accountId,
         cancelTokenSource.token
@@ -100,14 +112,17 @@ function ProfileProvider({
           description,
           links
         }
-        setProfile(newProfile)
+        setProfile((prevState) => ({
+          ...prevState,
+          ...newProfile
+        }))
         Logger.log('[profile] Found and set 3box profile.', newProfile)
       } else {
         setProfile(clearedProfile)
         Logger.log('[profile] No 3box profile found.')
       }
     }
-    getInfoFrom3Box()
+    getInfo()
 
     return () => {
       cancelTokenSource.cancel()
