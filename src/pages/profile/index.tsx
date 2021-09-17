@@ -9,54 +9,55 @@ import { getEnsAddress, getEnsName } from '../../utils/ens'
 import ethereumAddress from 'ethereum-address'
 
 export default function PageGatsbyProfile(props: PageProps): ReactElement {
-  const { accountId } = useWeb3()
+  const { accountId, accountEns } = useWeb3()
   const [finalAccountId, setFinalAccountId] = useState<string>()
-  const [accountEns, setAccountEns] = useState<string>()
+  const [finalAccountEns, setFinalAccountEns] = useState<string>()
 
   // Have accountId in path take over, if not present fall back to web3
   useEffect(() => {
     async function init() {
       if (!props?.location?.pathname) return
-      const pathAccountId = props.location.pathname.split('/')[2]
-      // Path is root /profile
+
+      // Path is root /profile, have web3 take over
       if (props.location.pathname === '/profile') {
-        setAccountEns(null)
+        setFinalAccountEns(accountEns)
         setFinalAccountId(accountId)
-        // navigate(`/profile`, { replace: true })
         return
       }
 
+      const pathAccount = props.location.pathname.split('/')[2]
+
       // Path has ETH addreess
-      if (ethereumAddress.isAddress(pathAccountId)) {
-        const finalAccountId = pathAccountId || accountId
+      if (ethereumAddress.isAddress(pathAccount)) {
+        const finalAccountId = pathAccount || accountId
         setFinalAccountId(finalAccountId)
 
         const accountEns = await getEnsName(finalAccountId)
         if (!accountEns) return
-        setAccountEns(accountEns)
+        setFinalAccountEns(accountEns)
       } else {
         // Path has ENS name
-        setAccountEns(pathAccountId)
-        const resolvedAccountId = await getEnsAddress(pathAccountId)
+        setFinalAccountEns(pathAccount)
+        const resolvedAccountId = await getEnsAddress(pathAccount)
         setFinalAccountId(resolvedAccountId)
       }
     }
     init()
-  }, [props.location.pathname, accountId])
+  }, [props.location.pathname, accountId, accountEns])
 
   // Replace pathname with ENS name if present
   useEffect(() => {
-    if (!accountEns || props.location.pathname === '/profile') return
+    if (!finalAccountEns || props.location.pathname === '/profile') return
 
-    const newProfilePath = `/profile/${accountEns}`
+    const newProfilePath = `/profile/${finalAccountEns}`
     // make sure we only replace path once
     if (newProfilePath !== props.location.pathname)
       navigate(newProfilePath, { replace: true })
-  }, [props.location, accountEns, accountId])
+  }, [props.location, finalAccountEns, accountId])
 
   return (
     <Page uri={props.uri} title={accountTruncate(finalAccountId)} noPageHeader>
-      <ProfileProvider accountId={finalAccountId} accountEns={accountEns}>
+      <ProfileProvider accountId={finalAccountId} accountEns={finalAccountEns}>
         <ProfilePage accountId={finalAccountId} />
       </ProfileProvider>
     </Page>
