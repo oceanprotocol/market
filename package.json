@@ -26,7 +26,6 @@
   },
   "dependencies": {
     "@coingecko/cryptoformat": "^0.4.4",
-    "@ensdomains/ensjs": "^2.0.1",
     "@loadable/component": "^5.15.0",
     "@oceanprotocol/art": "^3.2.0",
     "@oceanprotocol/lib": "^0.17.3",
@@ -46,7 +45,6 @@
     "dotenv": "^10.0.0",
     "ethereum-address": "0.0.4",
     "ethereum-blockies": "github:MyEtherWallet/blockies",
-    "ethereum-ens": "^0.8.0",
     "filesize": "^6.3.0",
     "formik": "^2.2.9",
     "gatsby": "^2.32.13",

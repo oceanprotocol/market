@@ -1,4 +1,3 @@
-// import ENS, { getEnsAddress } from '@ensdomains/ensjs'
 import { gql, OperationContext, OperationResult } from 'urql'
 import { fetchData } from './subgraph'
 
@@ -51,17 +50,3 @@ export async function getEnsAddress(ensName: string): Promise<string> {
   const { id } = response.data.domains[0].resolvedAddress
   return id
 }
-
-// export async function getEnsNameWithWeb3(
-//   accountId: string,
-//   provider: any, // usually web3.currentProvider
-//   networkId: string
-// ): Promise<string> {
-//   const ens = new ENS({ provider, ensAddress: getEnsAddress(networkId) })
-//   let { name } = await ens.getName(accountId)
-//   // Check to be sure the reverse record is correct.
-//   const reverseAccountId = await ens.name(name).getAddress()
-//   if (accountId.toLowerCase() !== reverseAccountId.toLowerCase()) name = null
-
-//   return name
-// }
