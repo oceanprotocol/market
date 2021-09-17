@@ -24,6 +24,7 @@ export default function Publisher({
   const { accountId } = useWeb3()
   const [profile, setProfile] = useState<Profile>()
   const [name, setName] = useState(accountTruncate(account))
+  const [accountEns, setAccountEns] = useState<string>()
 
   const showAdd = account === accountId && !profile
 
@@ -35,7 +36,10 @@ export default function Publisher({
     async function getExternalName() {
       // ENS
       const accountEns = await getEnsName(account)
-      accountEns && setName(accountEns)
+      if (accountEns) {
+        setAccountEns(accountEns)
+        setName(accountEns)
+      }
 
       // 3box
       const profile = await get3BoxProfile(account, source.token)
@@ -62,7 +66,10 @@ export default function Publisher({
         name
       ) : (
         <>
-          <Link to={`/profile/${account}`} title="Show profile page.">
+          <Link
+            to={`/profile/${accountEns || account}`}
+            title="Show profile page."
+          >
             {name}
           </Link>
           {showAdd && <Add />}
