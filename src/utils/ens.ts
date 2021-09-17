@@ -3,7 +3,7 @@ import { fetchData } from './subgraph'
 
 // make sure to only query for domains owned by account, so domains
 // solely set by 3rd parties like *.gitcoin.eth won't show up
-const UserEnsNames = gql`
+const UserEnsNames = gql<any>`
   query UserEnsDomains($accountId: String!) {
     domains(where: { resolvedAddress: $accountId, owner: $accountId }) {
       name
@@ -11,7 +11,7 @@ const UserEnsNames = gql`
   }
 `
 
-const UserEnsAddress = gql`
+const UserEnsAddress = gql<any>`
   query UserEnsDomainsAddress($name: String!) {
     domains(where: { name: $name }) {
       resolvedAddress {
