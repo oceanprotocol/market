@@ -19,6 +19,12 @@ export default function PageGatsbyProfile(props: PageProps): ReactElement {
       if (!props?.location?.pathname) return
       const pathAccountId = props.location.pathname.split('/')[2]
 
+      // Path is root /profile
+      if (!pathAccountId) {
+        navigate(`/profile`, { replace: true })
+        setFinalAccountId(accountId)
+      }
+
       // Path has ETH addreess
       if (ethereumAddress.isAddress(pathAccountId)) {
         const finalAccountId = pathAccountId || accountId

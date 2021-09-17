@@ -33,7 +33,7 @@ export async function getEnsName(accountId: string): Promise<string> {
     { accountId: accountId.toLowerCase() },
     ensSubgraphQueryContext
   )
-  if (!response.data.domains.length) return
+  if (!response?.data?.domains?.length) return
 
   // Default order of response.data.domains seems to be by creation time, from oldest to newest.
   // Pick the last one as that is what direct web3 calls do.
@@ -47,7 +47,7 @@ export async function getEnsAddress(ensName: string): Promise<string> {
     { name: ensName },
     ensSubgraphQueryContext
   )
-  if (!response.data.domains.length) return
+  if (!response?.data?.domains?.length) return
   const { id } = response.data.domains[0].resolvedAddress
   return id
 }
