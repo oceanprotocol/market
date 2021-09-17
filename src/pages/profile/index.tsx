@@ -18,11 +18,12 @@ export default function PageGatsbyProfile(props: PageProps): ReactElement {
     async function init() {
       if (!props?.location?.pathname) return
       const pathAccountId = props.location.pathname.split('/')[2]
-
       // Path is root /profile
-      if (!pathAccountId) {
-        navigate(`/profile`, { replace: true })
+      if (props.location.pathname === '/profile') {
+        setAccountEns(null)
         setFinalAccountId(accountId)
+        // navigate(`/profile`, { replace: true })
+        return
       }
 
       // Path has ETH addreess
@@ -45,13 +46,13 @@ export default function PageGatsbyProfile(props: PageProps): ReactElement {
 
   // Replace pathname with ENS name if present
   useEffect(() => {
-    if (!accountEns) return
+    if (!accountEns || props.location.pathname === '/profile') return
 
     const newProfilePath = `/profile/${accountEns}`
     // make sure we only replace path once
     if (newProfilePath !== props.location.pathname)
       navigate(newProfilePath, { replace: true })
-  }, [props.location, accountEns])
+  }, [props.location, accountEns, accountId])
 
   return (
     <Page uri={props.uri} title={accountTruncate(finalAccountId)} noPageHeader>
