@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
-import { accountTruncate } from '../../../../utils/web3'
 import ExplorerLink from '../../../atoms/ExplorerLink'
 import NetworkName from '../../../atoms/NetworkName'
 import jellyfish from '@oceanprotocol/art/creatures/jellyfish/jellyfish-grid.svg'
@@ -40,9 +39,7 @@ export default function Account({
       </figure>
 
       <div>
-        <h3 className={styles.name}>
-          {profile?.name || accountTruncate(accountId)}
-        </h3>
+        <h3 className={styles.name}>{profile?.name}</h3>
         {accountId && (
           <code
             className={styles.accountId}

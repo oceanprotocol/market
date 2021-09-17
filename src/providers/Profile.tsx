@@ -23,7 +23,6 @@ import axios, { CancelToken } from 'axios'
 import ethereumAddress from 'ethereum-address'
 import get3BoxProfile from '../utils/profile'
 import web3 from 'web3'
-import { getEnsName } from '../utils/ens'
 
 interface ProfileProviderValue {
   profile: Profile
@@ -43,9 +42,11 @@ const refreshInterval = 10000 // 10 sec.
 
 function ProfileProvider({
   accountId,
+  accountEns,
   children
 }: {
   accountId: string
+  accountEns: string
   children: ReactNode
 }): ReactElement {
   const { chainIds } = useUserPreferences()
@@ -63,18 +64,19 @@ function ProfileProvider({
   }, [accountId])
 
   //
-  // 3Box
+  // User profile: ENS + 3Box
   //
-  const [profile, setProfile] = useState<Profile>({
-    name: accountTruncate(accountId),
-    image: null,
-    description: null,
-    links: null
-  })
+  const [profile, setProfile] = useState<Profile>()
+
+  useEffect(() => {
+    if (!accountEns) return
+    Logger.log(`[profile] ENS name found for ${accountId}:`, accountEns)
+  }, [accountId, accountEns])
 
   useEffect(() => {
     const clearedProfile: Profile = {
       name: null,
+      accountEns: null,
       image: null,
       description: null,
       links: null
@@ -88,16 +90,7 @@ function ProfileProvider({
     const cancelTokenSource = axios.CancelToken.source()
 
     async function getInfo() {
-      // ENS name
-      const accountEns = await getEnsName(accountId)
-      if (accountEns) {
-        setProfile((prevState) => ({
-          name: accountEns,
-          accountEns,
-          ...prevState
-        }))
-        Logger.log(`[profile] ENS name found for ${accountId}:`, accountEns)
-      }
+      setProfile({ name: accountEns || accountTruncate(accountId), accountEns })
 
       const profile3Box = await get3BoxProfile(
         accountId,
@@ -118,7 +111,7 @@ function ProfileProvider({
         }))
         Logger.log('[profile] Found and set 3box profile.', newProfile)
       } else {
-        setProfile(clearedProfile)
+        // setProfile(clearedProfile)
         Logger.log('[profile] No 3box profile found.')
       }
     }
@@ -127,7 +120,7 @@ function ProfileProvider({
     return () => {
       cancelTokenSource.cancel()
     }
-  }, [accountId, isEthAddress])
+  }, [accountId, accountEns, isEthAddress])
 
   //
   // POOL SHARES
