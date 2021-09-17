@@ -18,7 +18,7 @@ import {
   getNetworkDataById,
   getNetworkDisplayName
 } from '../utils/web3'
-import { getEnsName, getEnsNameWithWeb3 } from '../utils/ens'
+import { getEnsName } from '../utils/ens'
 import { UserBalance } from '../@types/TokenBalance'
 import { getOceanBalance } from '../utils/ocean'
 import useNetworkMetadata from '../hooks/useNetworkMetadata'
