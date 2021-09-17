@@ -11,13 +11,9 @@ const isDescriptionTextClamped = () => {
   if (el) return el.scrollHeight > el.clientHeight
 }
 
-const Link3Box = ({ accountId, text }: { accountId: string; text: string }) => {
+const LinkExternal = ({ url, text }: { url: string; text: string }) => {
   return (
-    <a
-      href={`https://www.3box.io/${accountId}`}
-      target="_blank"
-      rel="noreferrer"
-    >
+    <a href={url} target="_blank" rel="noreferrer">
       {text}
     </a>
   )
@@ -46,7 +42,10 @@ export default function AccountHeader({
         <Markdown text={profile?.description} className={styles.description} />
         {isDescriptionTextClamped() ? (
           <span className={styles.more} onClick={toogleShowMore}>
-            <Link3Box accountId={accountId} text="Read more on 3box" />
+            <LinkExternal
+              url={`https://www.3box.io/${accountId}`}
+              text="Read more on 3box"
+            />
           </span>
         ) : (
           ''
@@ -56,7 +55,20 @@ export default function AccountHeader({
         )}
       </div>
       <div className={styles.meta}>
-        Profile data from <Link3Box accountId={accountId} text="3Box Hub" />
+        Profile data from{' '}
+        {profile?.accountEns && (
+          <>
+            <LinkExternal
+              url={`https://app.ens.domains/name/${profile.accountEns}`}
+              text="ENS"
+            />{' '}
+            &{' '}
+          </>
+        )}
+        <LinkExternal
+          url={`https://www.3box.io/${accountId}`}
+          text="3Box Hub"
+        />
       </div>
     </div>
   )
