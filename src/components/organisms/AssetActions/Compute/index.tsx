@@ -40,6 +40,7 @@ import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
 import AssetActionHistoryTable from '../../AssetActionHistoryTable'
 import ComputeJobs from '../../../pages/History/ComputeJobs'
 import { BestPrice } from '../../../../models/BestPrice'
+import { useCancelToken } from '../../../../hooks/useCancelToken'
 
 const SuccessAction = () => (
   <Button style="text" to="/history?defaultTab=ComputeJobs" size="small">
@@ -85,7 +86,7 @@ export default function Compute({
     useState<string>()
   const [datasetTimeout, setDatasetTimeout] = useState<string>()
   const [algorithmTimeout, setAlgorithmTimeout] = useState<string>()
-
+  const newCancelToken = useCancelToken()
   const hasDatatoken = Number(dtBalance) >= 1
 
   const isComputeButtonDisabled =
@@ -189,7 +190,8 @@ export default function Compute({
       algorithmSelectionList = await transformDDOToAssetSelection(
         datasetComputeService?.serviceEndpoint,
         gueryResults.results,
-        []
+        [],
+        newCancelToken()
       )
     }
     return algorithmSelectionList

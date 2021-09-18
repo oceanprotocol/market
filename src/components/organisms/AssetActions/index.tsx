@@ -15,6 +15,7 @@ import Web3Feedback from '../../molecules/Web3Feedback'
 import { getFileInfo } from '../../../utils/provider'
 import axios from 'axios'
 import { getOceanConfig } from '../../../utils/ocean'
+import { useCancelToken } from '../../../hooks/useCancelToken'
 
 export default function AssetActions(): ReactElement {
   const { accountId, balance } = useWeb3()
@@ -29,6 +30,7 @@ export default function AssetActions(): ReactElement {
 
   const [isConsumable, setIsConsumable] = useState<boolean>(true)
   const [consumableFeedback, setConsumableFeedback] = useState<string>('')
+  const newCancelToken = useCancelToken()
 
   useEffect(() => {
     if (!ddo || !accountId || !ocean || !isAssetNetwork) return
@@ -50,15 +52,13 @@ export default function AssetActions(): ReactElement {
     const oceanConfig = getOceanConfig(ddo.chainId)
     if (!oceanConfig) return
 
-    const source = axios.CancelToken.source()
-
     async function initFileInfo() {
       setFileIsLoading(true)
       try {
         const fileInfo = await getFileInfo(
           DID.parse(`${ddo.id}`),
           oceanConfig.providerUri,
-          source.token
+          newCancelToken()
         )
 
         setFileMetadata(fileInfo.data[0])
@@ -70,10 +70,6 @@ export default function AssetActions(): ReactElement {
       }
     }
     initFileInfo()
-
-    return () => {
-      source.cancel()
-    }
   }, [ddo])
 
   // Get and set user DT balance

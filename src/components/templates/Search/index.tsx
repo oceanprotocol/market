@@ -11,6 +11,7 @@ import { navigate } from 'gatsby'
 import { updateQueryStringParameter } from '../../../utils'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../providers/UserPreferences'
+import { useCancelToken } from '../../../hooks/useCancelToken'
 
 export default function SearchPage({
   location,
@@ -34,17 +35,14 @@ export default function SearchPage({
   const [sortDirection, setSortDirection] = useState<string>(
     sortOrder as string
   )
+  const newCancelToken = useCancelToken()
 
   useEffect(() => {
     if (!appConfig.metadataCacheUri) return
     async function initSearch() {
       setLoading(true)
       setTotalResults(undefined)
-      const queryResult = await getResults(
-        parsed,
-        appConfig.metadataCacheUri,
-        chainIds
-      )
+      const queryResult = await getResults(parsed, chainIds, newCancelToken())
       setQueryResult(queryResult)
       setTotalResults(queryResult.totalResults)
       setTotalPagesNumber(queryResult.totalPages)

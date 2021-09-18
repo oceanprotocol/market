@@ -122,12 +122,11 @@ export default function PublishPage({
       nextState?: Partial<FormikState<Partial<MetadataPublishFormDataset>>>
     ) => void
   ): Promise<void> {
-    const metadata = transformPublishFormToMetadata(values)
-    const timeout = mapTimeoutStringToSeconds(values.timeout)
-
-    const serviceType = values.access === 'Download' ? 'access' : 'compute'
-
     try {
+      const metadata = transformPublishFormToMetadata(values)
+      const timeout = mapTimeoutStringToSeconds(values.timeout)
+
+      const serviceType = values.access === 'Download' ? 'access' : 'compute'
       Logger.log(
         'Publish with ',
         metadata,

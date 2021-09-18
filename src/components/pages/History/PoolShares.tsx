@@ -19,6 +19,7 @@ import axios from 'axios'
 import { retrieveDDO } from '../../../utils/aquarius'
 import { isValidNumber } from './../../../utils/numberValidations'
 import Decimal from 'decimal.js'
+import { useCancelToken } from '../../../hooks/useCancelToken'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
@@ -178,7 +179,7 @@ export default function PoolShares(): ReactElement {
   const [data, setData] = useState<PoolShare[]>()
   const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
   const { chainIds } = useUserPreferences()
-
+  const newCancelToken = useCancelToken()
   async function fetchPoolSharesData() {
     const variables = { user: accountId?.toLowerCase() }
     const shares: PoolShare[] = []
@@ -216,7 +217,6 @@ export default function PoolShares(): ReactElement {
   useEffect(() => {
     async function getShares() {
       const assetList: Asset[] = []
-      const source = axios.CancelToken.source()
 
       try {
         setLoading(true)
@@ -224,11 +224,12 @@ export default function PoolShares(): ReactElement {
           await fetchPoolSharesData()
           return
         }
+        const cancelToken = newCancelToken()
         for (let i = 0; i < data.length; i++) {
           const did = web3.utils
             .toChecksumAddress(data[i].poolId.datatokenAddress)
             .replace('0x', 'did:op:')
-          const ddo = await retrieveDDO(did, source.token)
+          const ddo = await retrieveDDO(did, cancelToken)
           const userLiquidity = calculateUserLiquidity(data[i])
           assetList.push({
             poolShare: data[i],

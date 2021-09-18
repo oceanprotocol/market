@@ -2,7 +2,6 @@ import { Logger } from '@oceanprotocol/lib'
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import React, { ReactElement, useEffect, useState } from 'react'
 import AssetList from '../../organisms/AssetList'
-import axios from 'axios'
 import {
   queryMetadata,
   transformChainIdsListToQuery
@@ -10,11 +9,14 @@ import {
 import { useWeb3 } from '../../../providers/Web3'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../providers/UserPreferences'
+import { useCancelToken } from '../../../hooks/useCancelToken'
 
 export default function PublishedList(): ReactElement {
   const { accountId } = useWeb3()
   const { appConfig } = useSiteMetadata()
   const { chainIds } = useUserPreferences()
+
+  const newCancelToken = useCancelToken()
 
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [isLoading, setIsLoading] = useState(false)
@@ -36,10 +38,11 @@ export default function PublishedList(): ReactElement {
         sort: { created: -1 }
       }
       try {
-        const source = axios.CancelToken.source()
-
         queryResult || setIsLoading(true)
-        const result = await queryMetadata(queryPublishedAssets, source.token)
+        const result = await queryMetadata(
+          queryPublishedAssets,
+          newCancelToken()
+        )
         setQueryResult(result)
       } catch (error) {
         Logger.error(error.message)

@@ -11,6 +11,7 @@ import { useOcean } from '../../../../providers/Ocean'
 import Results from './Results'
 import styles from './Details.module.css'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
+import { useCancelToken } from '../../../../hooks/useCancelToken'
 
 function Asset({
   title,
@@ -45,12 +46,10 @@ function DetailsAssets({ job }: { job: ComputeJobMetaData }) {
   const { appConfig } = useSiteMetadata()
   const [algoName, setAlgoName] = useState<string>()
   const [algoDtSymbol, setAlgoDtSymbol] = useState<string>()
-
+  const newCancelToken = useCancelToken()
   useEffect(() => {
     async function getAlgoMetadata() {
-      const source = axios.CancelToken.source()
-
-      const ddo = await retrieveDDO(job.algoDID, source.token)
+      const ddo = await retrieveDDO(job.algoDID, newCancelToken())
       setAlgoDtSymbol(ddo.dataTokenInfo.symbol)
 
       const { attributes } = ddo.findServiceByType('metadata')

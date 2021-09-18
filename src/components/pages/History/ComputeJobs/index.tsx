@@ -27,6 +27,7 @@ import {
   OrdersData_tokenOrders_datatokenId as OrdersDatatoken
 } from '../../../../@types/apollo/OrdersData'
 import NetworkName from '../../../atoms/NetworkName'
+import { useCancelToken } from '../../../../hooks/useCancelToken'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -162,7 +163,7 @@ export default function ComputeJobs({
   const [isLoading, setIsLoading] = useState(true)
   const { chainIds } = useUserPreferences()
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
-
+  const newCancelToken = useCancelToken()
   const columnsMinimal = [columns[4], columns[5], columns[3]]
 
   useEffect(() => {
@@ -219,8 +220,11 @@ export default function ComputeJobs({
 
     try {
       setIsLoading(true)
-      const source = axios.CancelToken.source()
-      const assets = await getAssetMetadata(queryDtList, source.token, chainIds)
+      const assets = await getAssetMetadata(
+        queryDtList,
+        newCancelToken(),
+        chainIds
+      )
       const providers: Provider[] = []
       const serviceEndpoints: string[] = []
       for (let i = 0; i < data.length; i++) {
