@@ -1,11 +1,11 @@
-import { useRef, useEffect } from 'react'
-import axios, { Cancel, CancelToken } from 'axios'
+import { useRef, useEffect, useCallback } from 'react'
+import axios, { CancelToken } from 'axios'
 export const useCancelToken = (): (() => CancelToken) => {
   const axiosSource = useRef(null)
-  const newCancelToken = (): CancelToken => {
+  const newCancelToken = useCallback(() => {
     axiosSource.current = axios.CancelToken.source()
     return axiosSource.current.token
-  }
+  }, [])
 
   useEffect(
     () => () => {

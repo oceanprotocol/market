@@ -117,6 +117,8 @@ export default function ComputeDownloads(): ReactElement {
         const sortedOrders = filteredOrders.sort(
           (a, b) => b.timestamp - a.timestamp
         )
+        if (!isMounted()) return
+
         setOrders(sortedOrders)
       } catch (err) {
         Logger.log(err.message)
@@ -126,7 +128,7 @@ export default function ComputeDownloads(): ReactElement {
     }
 
     filterAssets()
-  }, [accountId, appConfig.metadataCacheUri, chainIds, newCancelToken])
+  }, [accountId, appConfig.metadataCacheUri, chainIds])
 
   return accountId ? (
     <Table
