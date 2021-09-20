@@ -53,7 +53,7 @@ export default function Permission({
     return () => {
       controller.abort()
     }
-  }, [eventType, accountId, url])
+  }, [eventType, accountId, url, isMounted])
 
   if (url === undefined || data === true) {
     return <>{children}</>

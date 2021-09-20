@@ -62,21 +62,30 @@ export async function getFileInfo(
   url: string | DID,
   providerUri: string,
   cancelToken: CancelToken
-): Promise<AxiosResponse> {
+): Promise<any> {
   let postBody
   try {
     if (url instanceof DID)
       postBody = {
-        did: url.getDid(),
-        cancelToken
+        did: url.getDid()
       }
     else
       postBody = {
-        url,
-        cancelToken
+        url
       }
-    return await axios.post(`${providerUri}/api/v1/services/fileinfo`, postBody)
+    const response = await axios.post(
+      `${providerUri}/api/v1/services/fileinfo`,
+      postBody,
+      { cancelToken }
+    )
+
+    if (!response || response.status !== 200 || !response.data) return
+    return response.data
   } catch (error) {
-    Logger.error(error.message)
+    if (axios.isCancel(error)) {
+      Logger.log(error.message)
+    } else {
+      Logger.error(error.message)
+    }
   }
 }

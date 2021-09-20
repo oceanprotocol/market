@@ -12,10 +12,11 @@ import { useAsset } from '../../../providers/Asset'
 import { useOcean } from '../../../providers/Ocean'
 import { useWeb3 } from '../../../providers/Web3'
 import Web3Feedback from '../../molecules/Web3Feedback'
-import { getFileInfo } from '../../../utils/provider'
+import { fileinfo, getFileInfo } from '../../../utils/provider'
 import axios from 'axios'
 import { getOceanConfig } from '../../../utils/ocean'
 import { useCancelToken } from '../../../hooks/useCancelToken'
+import { useIsMounted } from '../../../hooks/useIsMounted'
 
 export default function AssetActions(): ReactElement {
   const { accountId, balance } = useWeb3()
@@ -31,7 +32,7 @@ export default function AssetActions(): ReactElement {
   const [isConsumable, setIsConsumable] = useState<boolean>(true)
   const [consumableFeedback, setConsumableFeedback] = useState<string>('')
   const newCancelToken = useCancelToken()
-
+  const isMounted = useIsMounted()
   useEffect(() => {
     if (!ddo || !accountId || !ocean || !isAssetNetwork) return
 
@@ -55,27 +56,23 @@ export default function AssetActions(): ReactElement {
     async function initFileInfo() {
       setFileIsLoading(true)
       try {
-        const fileInfo = await getFileInfo(
+        const fileInfoResponse = await getFileInfo(
           DID.parse(`${ddo.id}`),
           oceanConfig.providerUri,
           newCancelToken()
         )
-
-        setFileMetadata(fileInfo.data[0])
+        fileInfoResponse && setFileMetadata(fileInfoResponse[0])
+        isMounted() && setFileIsLoading(false)
       } catch (error) {
         Logger.error(error.message)
-      } finally {
-        // this triggers a memory leak warning, no idea how to fix
-        setFileIsLoading(false)
       }
     }
     initFileInfo()
-  }, [ddo])
+  }, [ddo, isMounted, newCancelToken])
 
   // Get and set user DT balance
   useEffect(() => {
-    if (!ocean || !accountId) return
-
+    if (!ocean || !accountId || !isAssetNetwork) return
     async function init() {
       try {
         const dtBalance = await ocean.datatokens.balance(
