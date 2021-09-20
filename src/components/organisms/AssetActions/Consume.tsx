@@ -17,7 +17,6 @@ import ButtonBuy from '../../atoms/ButtonBuy'
 import { secondsToString } from '../../../utils/metadata'
 import AlgorithmDatasetsListForCompute from '../AssetContent/AlgorithmDatasetsListForCompute'
 import styles from './Consume.module.css'
-import { BestPrice } from '../../../models/BestPrice'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {
@@ -173,7 +172,7 @@ export default function Consume({
       hasDatatoken={hasDatatoken}
       dtSymbol={ddo.dataTokenInfo?.symbol}
       dtBalance={dtBalance}
-      datasetLowPoolLiquidity={isConsumablePrice}
+      datasetLowPoolLiquidity={!isConsumablePrice}
       onClick={handleConsume}
       assetTimeout={secondsToString(parseInt(assetTimeout))}
       assetType={type}
