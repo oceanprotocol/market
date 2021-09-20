@@ -61,7 +61,6 @@ export default function Consume({
   const { consumeStepText, consume, consumeError, isLoading } = useConsume()
   const [isDisabled, setIsDisabled] = useState(true)
   const [hasDatatoken, setHasDatatoken] = useState(false)
-  const [maxDt, setMaxDT] = useState<number>(1)
   const [isConsumablePrice, setIsConsumablePrice] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
   const [data, setData] = useState<OrdersData>()
@@ -77,15 +76,6 @@ export default function Consume({
       setData(result.data)
     })
   }, [ddo, accountId, hasPreviousOrder])
-
-  async function checkMaxAvaialableTokens(price: BestPrice) {
-    if (!ocean || !price) return
-    const maxTokensInPool =
-      price.type === 'pool'
-        ? await ocean.pool.getDTMaxBuyQuantity(price.address)
-        : 1
-    setMaxDT(Number(maxTokensInPool))
-  }
 
   useEffect(() => {
     if (!data || !assetTimeout || data.tokenOrders.length === 0 || !accountId)
@@ -118,7 +108,6 @@ export default function Consume({
     setIsConsumablePrice(
       price.isConsumable !== undefined ? price.isConsumable === 'true' : true
     )
-    checkMaxAvaialableTokens(price)
   }, [price])
 
   useEffect(() => {
@@ -134,7 +123,7 @@ export default function Consume({
           !isAssetNetwork ||
           typeof consumeStepText !== 'undefined' ||
           pricingIsLoading ||
-          (!hasPreviousOrder && !hasDatatoken && !(maxDt >= 1)) ||
+          (!hasPreviousOrder && !hasDatatoken) ||
           !isConsumablePrice) &&
           !hasPreviousOrder &&
           !hasDatatoken)
@@ -184,7 +173,7 @@ export default function Consume({
       hasDatatoken={hasDatatoken}
       dtSymbol={ddo.dataTokenInfo?.symbol}
       dtBalance={dtBalance}
-      datasetLowPoolLiquidity={!(maxDt >= 1)}
+      datasetLowPoolLiquidity={isConsumablePrice}
       onClick={handleConsume}
       assetTimeout={secondsToString(parseInt(assetTimeout))}
       assetType={type}
