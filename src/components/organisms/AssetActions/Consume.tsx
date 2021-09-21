@@ -17,6 +17,7 @@ import ButtonBuy from '../../atoms/ButtonBuy'
 import { secondsToString } from '../../../utils/metadata'
 import AlgorithmDatasetsListForCompute from '../AssetContent/AlgorithmDatasetsListForCompute'
 import styles from './Consume.module.css'
+import { useIsMounted } from '../../../hooks/useIsMounted'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {
@@ -63,6 +64,7 @@ export default function Consume({
   const [isConsumablePrice, setIsConsumablePrice] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
   const [data, setData] = useState<OrdersData>()
+  const isMounted = useIsMounted()
 
   useEffect(() => {
     if (!ddo || !accountId) return
@@ -72,9 +74,9 @@ export default function Consume({
       account: accountId?.toLowerCase()
     }
     fetchData(previousOrderQuery, variables, context).then((result: any) => {
-      setData(result.data)
+      isMounted() && setData(result.data)
     })
-  }, [ddo, accountId, hasPreviousOrder])
+  }, [ddo, accountId, hasPreviousOrder, isMounted])
 
   useEffect(() => {
     if (!data || !assetTimeout || data.tokenOrders.length === 0 || !accountId)
