@@ -1,11 +1,12 @@
 import { Logger, Ocean } from '@oceanprotocol/lib'
+import { TransactionReceipt } from 'web3-core'
 
 export async function setMinterToPublisher(
   ocean: Ocean,
   dataTokenAddress: string,
   accountId: string,
   setError: (msg: string) => void
-): Promise<boolean> {
+): Promise<TransactionReceipt | boolean> {
   // free pricing v3 workaround part1
   const status = await ocean.OceanDispenser.status(dataTokenAddress)
   if (!status?.minterApproved) return true
@@ -17,8 +18,8 @@ export async function setMinterToPublisher(
   if (!response) {
     setError('Updating DDO failed.')
     Logger.error('Failed at cancelMinter')
-    return false
-  } else return true
+  }
+  return response
 }
 
 export async function setMinterToDispenser(
@@ -26,7 +27,7 @@ export async function setMinterToDispenser(
   dataTokenAddress: string,
   accountId: string,
   setError: (msg: string) => void
-): Promise<any> {
+): Promise<TransactionReceipt> {
   // free pricing v3 workaround part2
   const response = await ocean.OceanDispenser.makeMinter(
     dataTokenAddress,
