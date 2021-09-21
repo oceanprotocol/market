@@ -26,6 +26,9 @@ import {
 } from '../@types/apollo/PoolShares'
 import { BestPrice } from '../models/BestPrice'
 import { OrdersData_tokenOrders as OrdersData } from '../@types/apollo/OrdersData'
+import { UserSharesQuery_poolShares_userAddress as UsersList } from '../@types/apollo/UserSharesQuery'
+import { getPublishedAssets } from './aquarius'
+import axios from 'axios'
 
 export interface UserLiquidity {
   price: string
@@ -43,6 +46,11 @@ export interface AssetListPrices {
 
 interface DidAndDatatokenMap {
   [name: string]: string
+}
+
+export interface PublisherSales {
+  publisher: string
+  sales: number
 }
 
 const FreeQuery = gql`
@@ -249,6 +257,13 @@ const UserTokenOrders = gql`
       }
       timestamp
       tx
+    }
+  }
+`
+const UsersQuery = gql`
+  query UsersQuery {
+    users {
+      id
     }
   }
 `
@@ -721,4 +736,37 @@ export async function getUserTokenOrders(
   } catch (error) {
     Logger.error(error.message)
   }
+}
+
+export async function getTopAssetsPublishers(
+  chainIds: number[]
+): Promise<string[]> {
+  let users: UsersList[] = []
+  const accounts: string[] = []
+  const publishersSales: PublisherSales[] = []
+  const source = axios.CancelToken.source()
+
+  for (const chain of chainIds) {
+    const queryContext = getQueryContext(Number(chain))
+    const fetchedPublishers: OperationResult<UsersList> = await fetchData(
+      UsersQuery,
+      null,
+      queryContext
+    )
+    users = users.concat(fetchedPublishers.data.users)
+  }
+
+  for (let i = 0; i < users.length; i++) {
+    if (users[i] === undefined) continue
+    const assets = await getPublishedAssets(users[i].id, chainIds, source.token)
+    const sales = await getAccountNumberOfOrders(assets.results, chainIds)
+    if (sales && sales > 0) {
+      publishersSales.push({ publisher: users[i].id, sales: sales })
+    }
+  }
+  publishersSales.sort((a, b) => b.sales - a.sales)
+  for (let i = 0; i < 3; i++) {
+    accounts.push(publishersSales[i].publisher)
+  }
+  return accounts
 }

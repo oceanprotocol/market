@@ -12,11 +12,15 @@ import {
   transformChainIdsListToQuery
 } from '../../utils/aquarius'
 import Permission from '../organisms/Permission'
-import { getHighestLiquidityDIDs } from '../../utils/subgraph'
+import {
+  getTopAssetsPublishers,
+  getHighestLiquidityDIDs
+} from '../../utils/subgraph'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../providers/UserPreferences'
 import styles from './Home.module.css'
+import AccountList from '../organisms/AccountList'
 
 async function getQueryHighest(
   chainIds: number[]
@@ -58,6 +62,58 @@ function sortElements(items: DDO[], sorted: string[]) {
     return sorted.indexOf(a.dataToken) - sorted.indexOf(b.dataToken)
   })
   return items
+}
+
+function SectionGraphResult({
+  title,
+  action
+}: {
+  title: ReactElement | string
+  action?: ReactElement
+}) {
+  const { appConfig } = useSiteMetadata()
+  const { chainIds } = useUserPreferences()
+  const [result, setResult] = useState<string[]>([])
+  const [loading, setLoading] = useState<boolean>()
+
+  useEffect(() => {
+    if (!appConfig.metadataCacheUri) return
+    const source = axios.CancelToken.source()
+
+    async function init() {
+      if (chainIds.length === 0) {
+        const result: string[] = []
+        setResult(result)
+        setLoading(false)
+      } else {
+        try {
+          setLoading(true)
+          const publishers = await getTopAssetsPublishers(chainIds)
+          setResult(publishers)
+          setLoading(false)
+        } catch (error) {
+          Logger.error(error.message)
+        }
+      }
+    }
+    init()
+
+    return () => {
+      source.cancel()
+    }
+  }, [appConfig.metadataCacheUri, chainIds])
+
+  return (
+    <section className={styles.section}>
+      <h3>{title}</h3>
+      <AccountList
+        accounts={result}
+        showPagination={false}
+        isLoading={loading}
+      />
+      {action && action}
+    </section>
+  )
 }
 
 function SectionQueryResult({
@@ -163,6 +219,8 @@ export default function HomePage(): ReactElement {
             </Button>
           }
         />
+
+        <SectionGraphResult title="Publishers with most sales" />
       </>
     </Permission>
   )
