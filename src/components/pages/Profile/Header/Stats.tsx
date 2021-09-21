@@ -29,9 +29,11 @@ async function getPoolSharesLiquidity(
 }
 
 export default function Stats({
-  accountId
+  accountId,
+  showInAccountTeaser
 }: {
   accountId: string
+  showInAccountTeaser: boolean
 }): ReactElement {
   const { chainIds } = useUserPreferences()
   const { poolShares, assets, assetsTotal, downloadsTotal } = useProfile()
@@ -101,23 +103,38 @@ export default function Stats({
   }, [poolShares])
 
   return (
-    <div className={styles.stats}>
+    <div
+      className={`${styles.stats} ${
+        showInAccountTeaser ? styles.accountTeaserStats : ''
+      }`}
+    >
       <NumberUnit
         label="Liquidity in Own Assets"
         value={
           <Conversion price={publisherLiquidity?.price} hideApproximateSymbol />
         }
+        small={showInAccountTeaser}
       />
       <NumberUnit
         label="Total Liquidity"
         value={<Conversion price={`${totalLiquidity}`} hideApproximateSymbol />}
+        small={showInAccountTeaser}
       />
-      <NumberUnit label={`Sale${sold === 1 ? '' : 's'}`} value={sold} />
-      <NumberUnit label="Published" value={assetsTotal} />
+      <NumberUnit
+        label={`Sale${sold === 1 ? '' : 's'}`}
+        value={sold}
+        small={showInAccountTeaser}
+      />
+      <NumberUnit
+        label="Published"
+        value={assetsTotal}
+        small={showInAccountTeaser}
+      />
       <NumberUnit
         label={`Download${downloadsTotal === 1 ? '' : 's'}`}
         tooltip="Datatoken orders for assets with `access` service, as opposed to `compute`. As one order could allow multiple or infinite downloads this number does not reflect the actual download count of an asset file."
         value={downloadsTotal}
+        small={showInAccountTeaser}
       />
     </div>
   )

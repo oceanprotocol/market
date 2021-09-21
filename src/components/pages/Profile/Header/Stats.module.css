@@ -4,3 +4,8 @@
   grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
   margin-top: var(--spacer);
 }
+
+.accountTeaserStats {
+  grid-template-columns: repeat(auto-fit, minmax(4rem, 1fr)) !important;
+  margin-top: calc(var(--spacer) / 6);
+}

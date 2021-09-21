@@ -13,7 +13,7 @@ import {
 } from '../../utils/aquarius'
 import Permission from '../organisms/Permission'
 import {
-  getAssetsPublishers,
+  getTopAssetsPublishers,
   getHighestLiquidityDIDs
 } from '../../utils/subgraph'
 import { DDO, Logger } from '@oceanprotocol/lib'
@@ -156,7 +156,7 @@ function SectionGraphResult({
       } else {
         try {
           setLoading(true)
-          const publishers = await getAssetsPublishers(chainIds)
+          const publishers = await getTopAssetsPublishers(chainIds)
           setResult(publishers)
           setLoading(false)
         } catch (error) {
@@ -220,14 +220,7 @@ export default function HomePage(): ReactElement {
           }
         />
 
-        <SectionGraphResult
-          title="Publishers with most sales"
-          action={
-            <Button style="text" to="/">
-              All publishers →
-            </Button>
-          }
-        />
+        <SectionGraphResult title="Publishers with most sales" />
       </>
     </Permission>
   )

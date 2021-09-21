@@ -14,7 +14,7 @@ import ProfileProvider from '../../providers/Profile'
 
 declare type AccountTeaserProps = {
   account: string
-  large: boolean
+  showStatistics: boolean
 }
 
 const Blockies = ({ account }: { account: string | undefined }) => {
@@ -31,7 +31,10 @@ const Blockies = ({ account }: { account: string | undefined }) => {
   )
 }
 
-const AccountTeaser: React.FC<AccountTeaserProps> = ({ account, large }) => {
+const AccountTeaser: React.FC<AccountTeaserProps> = ({
+  account,
+  showStatistics
+}) => {
   const { networkId } = useWeb3()
   const [profile, setProfile] = useState<Profile>()
 
@@ -74,10 +77,12 @@ const AccountTeaser: React.FC<AccountTeaserProps> = ({ account, large }) => {
             </div>
           </div>
         </header>
-        {large && (
-          <ProfileProvider accountId={account}>
-            <Stats accountId={account} />
-          </ProfileProvider>
+        {showStatistics && (
+          <div className={styles.stats}>
+            <ProfileProvider accountId={account}>
+              <Stats accountId={account} showInAccountTeaser />
+            </ProfileProvider>
+          </div>
         )}
       </Link>
     </article>

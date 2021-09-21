@@ -229,7 +229,7 @@ function ProfileProvider({
       setDownloads(downloads)
       setDownloadsTotal(downloads?.length)
       Logger.log(
-        `[profile] Fetched ${downloads.length} download orders.`,
+        `[profile] Fetched ${downloads?.length} download orders.`,
         downloads
       )
     },

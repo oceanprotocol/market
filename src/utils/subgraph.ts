@@ -48,7 +48,7 @@ interface DidAndDatatokenMap {
   [name: string]: string
 }
 
-export interface AccountSales {
+export interface PublisherSales {
   publisher: string
   sales: number
 }
@@ -734,44 +734,12 @@ export async function getUserTokenOrders(
   }
 }
 
-function findIndex(arr: AccountSales[], val: AccountSales): number {
-  let low = 0
-  let high = arr.length
-  if (high === 0) {
-    return high
-  }
-  while (low < high) {
-    const mid = (low + high) / 2
-    if (arr[mid].sales < val.sales) {
-      low = mid + 1
-      console.log('IF 1: ', low, high)
-    } else {
-      high = mid
-      console.log('IF 2: ', low, high)
-    }
-  }
-  return low
-}
-
-function insertAt(arr: AccountSales[], num: AccountSales) {
-  if (arr.length === 0) {
-    arr.push(num)
-    return
-  }
-  const position = findIndex(arr, num)
-  for (let i = position; typeof arr[i] !== 'undefined'; i++) {
-    arr[i + 1] = arr[i]
-    arr[i] = num
-  }
-  arr.push(num)
-}
-
-export async function getAssetsPublishers(
+export async function getTopAssetsPublishers(
   chainIds: number[]
 ): Promise<string[]> {
   let users: UsersList[] = []
   const accounts: string[] = []
-  const publishersSales: AccountSales[] = []
+  const publishersSales: PublisherSales[] = []
   const source = axios.CancelToken.source()
 
   for (const chain of chainIds) {
@@ -792,25 +760,9 @@ export async function getAssetsPublishers(
       publishersSales.push({ publisher: users[i].id, sales: sales })
     }
   }
-  if (publishersSales) {
-    publishersSales.sort((a, b) => b.sales - a.sales)
-  }
-  for (let i = 0; i < publishersSales.length; i++) {
+  publishersSales.sort((a, b) => b.sales - a.sales)
+  for (let i = 0; i < 3; i++) {
     accounts.push(publishersSales[i].publisher)
   }
   return accounts
-}
-
-export async function getTopPublishers(
-  chainIds: number[]
-): Promise<AccountSales[]> {
-  const sortedList: AccountSales[] = []
-  const publisherList = await getAssetsPublishers(chainIds)
-  publisherList.forEach(async (user) => {
-    const sale = await getAccountNumberOfOrders(user, chainIds)
-    if (sale > 0) {
-      insertAt(sortedList, { publisher: user, sales: sale })
-    }
-  })
-  return sortedList
 }
