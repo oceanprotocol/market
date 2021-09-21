@@ -8,8 +8,9 @@ import { useWeb3 } from '../../providers/Web3'
 import { accountTruncate } from '../../utils/web3'
 import get3BoxProfile from '../../utils/profile'
 import ExplorerLink from '../atoms/ExplorerLink'
-import Stats from '../pages/Profile/Stats'
+import Stats from '../pages/Profile/Header/Stats'
 import styles from './AccountTeaser.module.css'
+import ProfileProvider from '../../providers/Profile'
 
 declare type AccountTeaserProps = {
   account: string
@@ -73,7 +74,11 @@ const AccountTeaser: React.FC<AccountTeaserProps> = ({ account, large }) => {
             </div>
           </div>
         </header>
-        {large && <Stats accountId={account} showInAccountTeaser />}
+        {large && (
+          <ProfileProvider accountId={account}>
+            <Stats accountId={account} />
+          </ProfileProvider>
+        )}
       </Link>
     </article>
   )

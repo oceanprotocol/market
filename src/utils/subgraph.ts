@@ -28,6 +28,8 @@ import { BestPrice } from '../models/BestPrice'
 import { OrdersData_tokenOrders as OrdersData } from '../@types/apollo/OrdersData'
 
 import { UserSharesQuery_poolShares_userAddress as UsersList } from '../@types/apollo/UserSharesQuery'
+import { getPublishedAssets } from './aquarius'
+import axios from 'axios'
 export interface UserLiquidity {
   price: string
   oceanBalance: string
@@ -254,7 +256,6 @@ const UserTokenOrders = gql`
     }
   }
 `
-
 
 const UsersQuery = gql`
   query UsersQuery {
@@ -771,6 +772,7 @@ export async function getAssetsPublishers(
   let users: UsersList[] = []
   const accounts: string[] = []
   const publishersSales: AccountSales[] = []
+  const source = axios.CancelToken.source()
 
   for (const chain of chainIds) {
     const queryContext = getQueryContext(Number(chain))
@@ -784,13 +786,18 @@ export async function getAssetsPublishers(
 
   for (let i = 0; i < users.length; i++) {
     if (users[i] === undefined) continue
-    const sale = await getAccountNumberOfOrders(users[i].id, chainIds)
-    if (sale && sale > 0) {
-      accounts.push(users[i].id)
-      publishersSales.push({ publisher: users[i].id, sales: sale })
+    const assets = await getPublishedAssets(users[i].id, chainIds, source.token)
+    const sales = await getAccountNumberOfOrders(assets.results, chainIds)
+    if (sales && sales > 0) {
+      publishersSales.push({ publisher: users[i].id, sales: sales })
     }
   }
-
+  if (publishersSales) {
+    publishersSales.sort((a, b) => b.sales - a.sales)
+  }
+  for (let i = 0; i < publishersSales.length; i++) {
+    accounts.push(publishersSales[i].publisher)
+  }
   return accounts
 }
 
