@@ -14,18 +14,22 @@ import { useUserPreferences } from '../../../providers/UserPreferences'
 
 export default function SearchPage({
   location,
-  setTotalResults
+  setTotalResults,
+  setTotalPagesNumber
 }: {
   location: Location
   setTotalResults: (totalResults: number) => void
+  setTotalPagesNumber: (totalPagesNumber: number) => void
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const parsed = queryString.parse(location.search)
-  const { text, owner, tags, page, sort, sortOrder, serviceType } = parsed
+  const { text, owner, tags, page, sort, sortOrder, serviceType, accessType } =
+    parsed
   const { chainIds } = useUserPreferences()
   const [queryResult, setQueryResult] = useState<QueryResult>()
   const [loading, setLoading] = useState<boolean>()
   const [service, setServiceType] = useState<string>(serviceType as string)
+  const [access, setAccessType] = useState<string>(accessType as string)
   const [sortType, setSortType] = useState<string>(sort as string)
   const [sortDirection, setSortDirection] = useState<string>(
     sortOrder as string
@@ -43,6 +47,7 @@ export default function SearchPage({
       )
       setQueryResult(queryResult)
       setTotalResults(queryResult.totalResults)
+      setTotalPagesNumber(queryResult.totalPages)
       setLoading(false)
     }
     initSearch()
@@ -53,6 +58,7 @@ export default function SearchPage({
     sort,
     page,
     serviceType,
+    accessType,
     sortOrder,
     appConfig.metadataCacheUri,
     chainIds
@@ -74,7 +80,9 @@ export default function SearchPage({
           <div className={styles.row}>
             <ServiceFilter
               serviceType={service}
+              accessType={access}
               setServiceType={setServiceType}
+              setAccessType={setAccessType}
             />
             <Sort
               sortType={sortType}

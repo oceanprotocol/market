@@ -23,6 +23,7 @@ export default function Alert({
   action?: {
     name: string
     style?: 'text' | 'primary' | 'ghost'
+    disabled?: boolean
     handleAction: (e: FormEvent<HTMLButtonElement>) => void
   }
   onDismiss?: () => void
@@ -48,6 +49,7 @@ export default function Alert({
           size="small"
           style={action.style || 'primary'}
           onClick={action.handleAction}
+          disabled={action.disabled}
         >
           {action.name}
         </Button>
