@@ -1,12 +1,12 @@
 import { Logger } from '@oceanprotocol/lib'
 import React, { ReactElement, useState } from 'react'
-import Loader from '../../../atoms/Loader'
-import { ComputeJobMetaData } from '../../../../@types/ComputeJobMetaData'
-import { ListItem } from '../../../atoms/Lists'
-import Button from '../../../atoms/Button'
-import { useOcean } from '../../../../providers/Ocean'
+import Loader from '../../../../atoms/Loader'
+import { ComputeJobMetaData } from '../../../../../@types/ComputeJobMetaData'
+import { ListItem } from '../../../../atoms/Lists'
+import Button from '../../../../atoms/Button'
+import { useOcean } from '../../../../../providers/Ocean'
 import styles from './Results.module.css'
-import FormHelp from '../../../atoms/Input/Help'
+import FormHelp from '../../../../atoms/Input/Help'
 import { graphql, useStaticQuery } from 'gatsby'
 
 export const contentQuery = graphql`

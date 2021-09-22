@@ -1,3 +1,7 @@
+.links {
+  width: 100%;
+}
+
 .links,
 .links a {
   font-size: var(--font-size-small);
@@ -7,6 +11,7 @@
 .links a {
   margin-left: calc(var(--spacer) / 3);
   color: inherit;
+  display: inline-block;
 }
 
 .links a:first-child {
@@ -19,5 +24,5 @@
 }
 
 .linksExternal {
-  composes: linksExternal from './index.module.css';
+  composes: linksExternal from '../../../atoms/Publisher/index.module.css';
 }

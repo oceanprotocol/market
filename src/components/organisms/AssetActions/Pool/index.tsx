@@ -512,6 +512,7 @@ export default function Pool(): ReactElement {
           {accountId && (
             <AssetActionHistoryTable title="Your Pool Transactions">
               <PoolTransactions
+                accountId={accountId}
                 poolAddress={price?.address}
                 poolChainId={[ddo.chainId]}
                 minimal

@@ -27,6 +27,7 @@ declare type AssetListProps = {
   isLoading?: boolean
   onPageChange?: React.Dispatch<React.SetStateAction<number>>
   className?: string
+  noPublisher?: boolean
 }
 
 const AssetList: React.FC<AssetListProps> = ({
@@ -36,7 +37,8 @@ const AssetList: React.FC<AssetListProps> = ({
   totalPages,
   isLoading,
   onPageChange,
-  className
+  className,
+  noPublisher
 }) => {
   const { chainIds } = useUserPreferences()
   const [assetsWithPrices, setAssetWithPrices] = useState<AssetListPrices[]>()
@@ -77,6 +79,7 @@ const AssetList: React.FC<AssetListProps> = ({
               ddo={assetWithPrice.ddo}
               price={assetWithPrice.price}
               key={assetWithPrice.ddo.id}
+              noPublisher={noPublisher}
             />
           ))
         ) : chainIds.length === 0 ? (
