@@ -16,7 +16,7 @@ import { useUserPreferences } from '../../../providers/UserPreferences'
 import { fetchDataForMultipleChains } from '../../../utils/subgraph'
 import NetworkName from '../../atoms/NetworkName'
 import axios from 'axios'
-import { retrieveDDO } from '../../../utils/aquarius'
+import { retrieveDDO, retrieveDDOListByChainIds } from '../../../utils/aquarius'
 import { isValidNumber } from './../../../utils/numberValidations'
 import Decimal from 'decimal.js'
 
@@ -216,6 +216,7 @@ export default function PoolShares(): ReactElement {
   useEffect(() => {
     async function getShares() {
       const assetList: Asset[] = []
+      const didList: string[] = []
       const source = axios.CancelToken.source()
 
       try {
@@ -228,12 +229,15 @@ export default function PoolShares(): ReactElement {
           const did = web3.utils
             .toChecksumAddress(data[i].poolId.datatokenAddress)
             .replace('0x', 'did:op:')
-          const ddo = await retrieveDDO(did, source.token)
+          didList.push(did)
+        }
+        const ddoList = await retrieveDDOListByChainIds(didList, source.token)
+        for (let i = 0; i < data.length; i++) {
           const userLiquidity = calculateUserLiquidity(data[i])
           assetList.push({
             poolShare: data[i],
             userLiquidity: userLiquidity,
-            networkId: ddo.chainId,
+            networkId: ddoList[i].chainId,
             createTime: data[i].poolId.createTime
           })
         }

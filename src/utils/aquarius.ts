@@ -81,6 +81,28 @@ export async function queryMetadata(
   }
 }
 
+export async function retrieveDDOListByChainIds(
+  didList: string[] | DID[],
+  cancelToken: CancelToken
+): Promise<DDO[]> {
+  const query = {
+    query: {
+      query_string: {
+        query: `-isInPurgatory:true `
+      }
+    },
+    filter: {
+      terms: {
+        id: didList,
+        minimum_should_match: 1
+      }
+    },
+    sort: { created: -1 }
+  }
+  const result = await queryMetadata(query, cancelToken)
+  return result.results
+}
+
 export async function retrieveDDO(
   did: string | DID,
   cancelToken: CancelToken
