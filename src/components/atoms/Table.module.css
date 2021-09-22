@@ -61,6 +61,10 @@ div [class*='rdt_TableCell'] {
   display: none;
 }
 
+div [class*='Table-module'] {
+  scrollbar-width: thin;
+}
+
 .empty {
   width: 100%;
   text-align: left;
