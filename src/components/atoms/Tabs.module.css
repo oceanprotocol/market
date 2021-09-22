@@ -1,8 +1,7 @@
 .tabList {
   text-align: center;
   border-bottom: 1px solid var(--border-color);
-  padding-top: calc(var(--spacer) / 2);
-  padding-bottom: calc(var(--spacer) / 2);
+  padding: calc(var(--spacer) / 2);
 }
 
 .tab {
@@ -36,5 +35,11 @@
 }
 
 .tabContent {
-  padding: var(--spacer);
+  padding: calc(var(--spacer) / 2);
+}
+
+@media (min-width: 40rem) {
+  .tabContent {
+    padding: var(--spacer);
+  }
 }
