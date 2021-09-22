@@ -61,6 +61,15 @@ export function transformChainIdsListToQuery(chainIds: number[]): string {
   return chainQuery
 }
 
+export function transformDIDListToQuery(didList: string[] | DID[]): string {
+  let chainQuery = ''
+  didList.forEach((did: any) => {
+    chainQuery += `id:${did} OR `
+  })
+  chainQuery = chainQuery.slice(0, chainQuery.length - 4)
+  return chainQuery
+}
+
 export async function queryMetadata(
   query: SearchQuery,
   cancelToken: CancelToken
@@ -79,28 +88,6 @@ export async function queryMetadata(
       Logger.error(error.message)
     }
   }
-}
-
-export async function retrieveDDOListByChainIds(
-  didList: string[] | DID[],
-  cancelToken: CancelToken
-): Promise<DDO[]> {
-  const query = {
-    query: {
-      query_string: {
-        query: `-isInPurgatory:true `
-      }
-    },
-    filter: {
-      terms: {
-        id: didList,
-        minimum_should_match: 1
-      }
-    },
-    sort: { created: -1 }
-  }
-  const result = await queryMetadata(query, cancelToken)
-  return result.results
 }
 
 export async function retrieveDDO(
@@ -227,4 +214,19 @@ export async function getAlgorithmDatasetsForCompute(
     []
   )
   return datasets
+}
+
+export async function retrieveDDOListByChainIds(
+  didList: string[] | DID[],
+  cancelToken: CancelToken
+): Promise<DDO[]> {
+  const query = {
+    query: {
+      query_string: {
+        query: `(${transformDIDListToQuery(didList)}) AND -isInPurgatory:true`
+      }
+    }
+  }
+  const result = await queryMetadata(query, cancelToken)
+  return result.results
 }

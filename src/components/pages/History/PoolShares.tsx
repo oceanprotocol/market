@@ -16,7 +16,10 @@ import { useUserPreferences } from '../../../providers/UserPreferences'
 import { fetchDataForMultipleChains } from '../../../utils/subgraph'
 import NetworkName from '../../atoms/NetworkName'
 import axios from 'axios'
-import { retrieveDDO, retrieveDDOListByChainIds } from '../../../utils/aquarius'
+import {
+  getAssetsNames,
+  retrieveDDOListByChainIds
+} from '../../../utils/aquarius'
 import { isValidNumber } from './../../../utils/numberValidations'
 import Decimal from 'decimal.js'
 
@@ -57,6 +60,7 @@ interface Asset {
   poolShare: PoolShare
   networkId: number
   createTime: number
+  name: string
 }
 
 function calculateUserLiquidity(poolShare: PoolShare) {
@@ -139,7 +143,7 @@ const columns = [
       const did = web3.utils
         .toChecksumAddress(row.poolShare.poolId.datatokenAddress)
         .replace('0x', 'did:op:')
-      return <AssetTitle did={did} />
+      return <AssetTitle title={row.name} did={did} />
     },
     grow: 2
   },
@@ -232,13 +236,15 @@ export default function PoolShares(): ReactElement {
           didList.push(did)
         }
         const ddoList = await retrieveDDOListByChainIds(didList, source.token)
+        const ddoNames = await getAssetsNames(didList, source.token)
         for (let i = 0; i < data.length; i++) {
           const userLiquidity = calculateUserLiquidity(data[i])
           assetList.push({
             poolShare: data[i],
             userLiquidity: userLiquidity,
             networkId: ddoList[i].chainId,
-            createTime: data[i].poolId.createTime
+            createTime: data[i].poolId.createTime,
+            name: ddoNames[didList[i]]
           })
         }
         const orderedAssets = assetList.sort(
