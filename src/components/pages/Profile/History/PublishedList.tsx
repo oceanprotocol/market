@@ -3,7 +3,7 @@ import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/Metadata
 import React, { ReactElement, useEffect, useState } from 'react'
 import AssetList from '../../../organisms/AssetList'
 import { getPublishedAssets } from '../../../../utils/aquarius'
-// import Filters from '../../../templates/Search/Filters'
+import Filters from '../../../templates/Search/Filters'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import styles from './PublishedList.module.css'
@@ -21,6 +21,7 @@ export default function PublishedList({
   const [isLoading, setIsLoading] = useState(false)
   const [page, setPage] = useState<number>(1)
   const [service, setServiceType] = useState('dataset OR algorithm')
+  const [access, setAccsesType] = useState('access OR compute')
 
   useEffect(() => {
     if (!accountId) return
@@ -35,7 +36,8 @@ export default function PublishedList({
           chainIds,
           cancelTokenSource.token,
           page,
-          service
+          service,
+          access
         )
         setQueryResult(result)
       } catch (error) {
@@ -49,15 +51,18 @@ export default function PublishedList({
     return () => {
       cancelTokenSource.cancel()
     }
-  }, [accountId, page, appConfig.metadataCacheUri, chainIds, service])
+  }, [accountId, page, appConfig.metadataCacheUri, chainIds, service, access])
 
   return accountId ? (
     <>
-      {/* <Filters
+      <Filters
         serviceType={service}
         setServiceType={setServiceType}
+        accessType={access}
+        setAccessType={setAccsesType}
         className={styles.filters}
-      /> */}
+        isSearch={false}
+      />
       <AssetList
         assets={queryResult?.results}
         isLoading={isLoading}
