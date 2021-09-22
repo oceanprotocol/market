@@ -23,6 +23,10 @@
   color: var(--color-secondary);
 }
 
+div [class*='rdt_TableCell'] {
+  min-width: 80px;
+}
+
 .table [role='row'] {
   border-bottom: 1px solid var(--border-color) !important;
 }
