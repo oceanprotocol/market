@@ -11,24 +11,11 @@ import ExplorerLink from '../atoms/ExplorerLink'
 import Stats from '../pages/Profile/Header/Stats'
 import styles from './AccountTeaser.module.css'
 import ProfileProvider from '../../providers/Profile'
+import Blockies from '../atoms/Blockies'
 
 declare type AccountTeaserProps = {
   account: string
   showStatistics: boolean
-}
-
-const Blockies = ({ account }: { account: string | undefined }) => {
-  if (!account) return null
-  const blockies = toDataUrl(account)
-
-  return (
-    <img
-      className={styles.blockies}
-      src={blockies}
-      alt="Blockies"
-      aria-hidden="true"
-    />
-  )
 }
 
 const AccountTeaser: React.FC<AccountTeaserProps> = ({
@@ -57,7 +44,7 @@ const AccountTeaser: React.FC<AccountTeaserProps> = ({
           {profile?.image ? (
             <img src={profile.image} className={styles.blockies} />
           ) : (
-            <Blockies account={account} />
+            <Blockies accountId={account} />
           )}
           <div>
             <Dotdotdot className={styles.name} clamp={3}>

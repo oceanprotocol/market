@@ -108,18 +108,28 @@ export default function Stats({
         showInAccountTeaser ? styles.accountTeaserStats : ''
       }`}
     >
-      <NumberUnit
-        label="Liquidity in Own Assets"
-        value={
-          <Conversion price={publisherLiquidity?.price} hideApproximateSymbol />
-        }
-        small={showInAccountTeaser}
-      />
-      <NumberUnit
-        label="Total Liquidity"
-        value={<Conversion price={`${totalLiquidity}`} hideApproximateSymbol />}
-        small={showInAccountTeaser}
-      />
+      {!showInAccountTeaser && (
+        <NumberUnit
+          label="Liquidity in Own Assets"
+          value={
+            <Conversion
+              price={publisherLiquidity?.price}
+              hideApproximateSymbol
+            />
+          }
+          small={showInAccountTeaser}
+        />
+      )}
+
+      {!showInAccountTeaser && (
+        <NumberUnit
+          label="Total Liquidity"
+          value={
+            <Conversion price={`${totalLiquidity}`} hideApproximateSymbol />
+          }
+          small={showInAccountTeaser}
+        />
+      )}
       <NumberUnit
         label={`Sale${sold === 1 ? '' : 's'}`}
         value={sold}
