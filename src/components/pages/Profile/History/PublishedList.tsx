@@ -7,7 +7,7 @@ import Filters from '../../../templates/Search/Filters'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import styles from './PublishedList.module.css'
-import axios from 'axios'
+import axios, { CancelToken } from 'axios'
 
 export default function PublishedList({
   accountId
@@ -23,35 +23,54 @@ export default function PublishedList({
   const [service, setServiceType] = useState('dataset OR algorithm')
   const [access, setAccsesType] = useState('access OR compute')
 
+  async function getPublished(token: CancelToken) {
+    try {
+      setIsLoading(true)
+      const result = await getPublishedAssets(
+        accountId,
+        chainIds,
+        token,
+        page,
+        service,
+        access
+      )
+      setQueryResult(result)
+    } catch (error) {
+      Logger.error(error.message)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    const cancelTokenSource = axios.CancelToken.source()
+    async function fetchPublishedAssets() {
+      await getPublished(cancelTokenSource.token)
+    }
+    if (page !== 1) {
+      setPage(1)
+    } else {
+      fetchPublishedAssets()
+    }
+    return () => {
+      cancelTokenSource.cancel()
+    }
+  }, [service, access])
+
   useEffect(() => {
     if (!accountId) return
 
     const cancelTokenSource = axios.CancelToken.source()
 
-    async function getPublished() {
-      try {
-        setIsLoading(true)
-        const result = await getPublishedAssets(
-          accountId,
-          chainIds,
-          cancelTokenSource.token,
-          page,
-          service,
-          access
-        )
-        setQueryResult(result)
-      } catch (error) {
-        Logger.error(error.message)
-      } finally {
-        setIsLoading(false)
-      }
+    async function fetchPublishedAssets() {
+      await getPublished(cancelTokenSource.token)
     }
-    getPublished()
+    fetchPublishedAssets()
 
     return () => {
       cancelTokenSource.cancel()
     }
-  }, [accountId, page, appConfig.metadataCacheUri, chainIds, service, access])
+  }, [accountId, page, appConfig.metadataCacheUri, chainIds])
 
   return accountId ? (
     <>
