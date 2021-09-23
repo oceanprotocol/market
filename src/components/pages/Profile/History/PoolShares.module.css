@@ -30,31 +30,31 @@
   }
 }
 
-.yourLiquidity {
+.userLiquidity {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
 }
 
-.yourLiquidity [class*='Conversion-module--'] {
+.userLiquidity [class*='Conversion-module--'] {
   margin-bottom: calc(var(--spacer) / 8);
 }
 
-.yourLiquidity [class*='Conversion-module--'] strong {
+.userLiquidity [class*='Conversion-module--'] strong {
   font-size: var(--font-size-base);
 }
 
-.yourLiquidity [class*='Token-module--token'] {
+.userLiquidity [class*='Token-module--token'] {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   margin-bottom: calc(var(--spacer) / 8);
 }
 
-.yourLiquidity [class*='Token-module--token'] div {
+.userLiquidity [class*='Token-module--token'] div {
   font-size: var(--font-size-small);
 }
 
-.yourLiquidity [class*='Token-module--icon'] {
+.userLiquidity [class*='Token-module--icon'] {
   display: none;
 }

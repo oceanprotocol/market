@@ -1,17 +1,27 @@
 import React, { ReactElement } from 'react'
+import classNames from 'classnames/bind'
+import { ReactComponent as External } from '../../../../images/external.svg'
 import styles from './PublisherLinks.module.css'
-import { ProfileLink } from '../../../models/Profile'
-import { ReactComponent as External } from '../../../images/external.svg'
+import { useProfile } from '../../../../providers/Profile'
+
+const cx = classNames.bind(styles)
 
 export default function PublisherLinks({
-  links
+  className
 }: {
-  links: ProfileLink[]
+  className: string
 }): ReactElement {
+  const { profile } = useProfile()
+
+  const styleClasses = cx({
+    links: true,
+    [className]: className
+  })
+
   return (
-    <div className={styles.links}>
+    <div className={styleClasses}>
       {' — '}
-      {links?.map((link: ProfileLink) => {
+      {profile?.links?.map((link) => {
         const href =
           link.name === 'Twitter'
             ? `https://twitter.com/${link.value}`

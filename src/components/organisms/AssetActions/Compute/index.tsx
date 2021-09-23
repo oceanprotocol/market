@@ -38,11 +38,11 @@ import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelectio
 import AlgorithmDatasetsListForCompute from '../../AssetContent/AlgorithmDatasetsListForCompute'
 import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
 import AssetActionHistoryTable from '../../AssetActionHistoryTable'
-import ComputeJobs from '../../../pages/History/ComputeJobs'
+import ComputeJobs from '../../../pages/Profile/History/ComputeJobs'
 import { BestPrice } from '../../../../models/BestPrice'
 
 const SuccessAction = () => (
-  <Button style="text" to="/history?defaultTab=ComputeJobs" size="small">
+  <Button style="text" to="/profile?defaultTab=ComputeJobs" size="small">
     Go to history →
   </Button>
 )
@@ -473,11 +473,7 @@ export default function Compute({
       </footer>
       {accountId && (
         <AssetActionHistoryTable title="Your Compute Jobs">
-          <ComputeJobs
-            minimal
-            assetDTAddress={ddo.dataTokenInfo.address}
-            chainId={ddo.chainId}
-          />
+          <ComputeJobs minimal />
         </AssetActionHistoryTable>
       )}
     </>

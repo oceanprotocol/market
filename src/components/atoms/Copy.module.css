@@ -1,0 +1,35 @@
+.button {
+  display: inline-block;
+  margin: 0;
+  border: 0;
+  box-shadow: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+}
+
+.icon {
+  fill: var(--color-secondary);
+  transition: 0.15s ease-out;
+  width: 10px;
+  height: 10px;
+}
+
+.button:hover .icon {
+  fill: var(--font-color-text);
+}
+
+.copied .icon,
+.button.copied:hover .icon {
+  fill: var(--brand-alert-green);
+}
+
+.copied::after {
+  content: 'Copied!';
+  position: absolute;
+  top: -150%;
+  left: -140%;
+  font-size: var(--font-size-mini);
+  color: var(--brand-alert-green);
+}
