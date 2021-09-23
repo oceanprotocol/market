@@ -228,6 +228,7 @@ export async function retrieveDDOListByDIDs(
   didList: string[] | DID[],
   cancelToken: CancelToken
 ): Promise<DDO[]> {
+  const orderedDDOListByDIDList: DDO[] = []
   const query = {
     query: {
       query_string: {
@@ -236,7 +237,11 @@ export async function retrieveDDOListByDIDs(
     }
   }
   const result = await queryMetadata(query, cancelToken)
-  return result.results
+  didList.forEach((did: string | DID) => {
+    const ddo: DDO = result.results.find((ddo) => ddo.id === did)
+    orderedDDOListByDIDList.push(ddo)
+  })
+  return orderedDDOListByDIDList
 }
 
 export async function getPublishedAssets(
