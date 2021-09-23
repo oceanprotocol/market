@@ -68,12 +68,13 @@ const AccountTeaser: React.FC<AccountTeaserProps> = ({
               )}
             </Dotdotdot>
             <div className={styles.account}>
-              <p>{account}</p>
               <ExplorerLink
                 networkId={networkId}
                 path={`address/${account}`}
                 className={styles.explore}
-              />
+              >
+                <span>{account}</span>
+              </ExplorerLink>
             </div>
           </div>
         </header>

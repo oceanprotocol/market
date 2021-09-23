@@ -41,6 +41,14 @@
 
 .explore {
   font-size: small;
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+}
+
+.explore span {
+  margin-right: calc(var(--spacer) / 8);
+  font-size: x-small;
 }
 
 .stats {

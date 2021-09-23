@@ -33,7 +33,7 @@ export default function Stats({
   showInAccountTeaser
 }: {
   accountId: string
-  showInAccountTeaser: boolean
+  showInAccountTeaser?: boolean
 }): ReactElement {
   const { chainIds } = useUserPreferences()
   const { poolShares, assets, assetsTotal, downloadsTotal } = useProfile()

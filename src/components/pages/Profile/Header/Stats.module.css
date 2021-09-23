@@ -7,5 +7,5 @@
 
 .accountTeaserStats {
   grid-template-columns: repeat(auto-fit, minmax(4rem, 1fr)) !important;
-  margin-top: calc(var(--spacer) / 6);
+  margin-top: calc(var(--spacer) / 2);
 }
