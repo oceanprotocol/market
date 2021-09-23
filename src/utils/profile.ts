@@ -1,11 +1,10 @@
 import { Profile, ProfileLink, ResponseData3Box } from '../models/Profile'
 import axios, { AxiosResponse, CancelToken } from 'axios'
 import jwtDecode from 'jwt-decode'
-import { Logger } from '@oceanprotocol/lib'
 
 // https://docs.3box.io/api/rest-api
 const apiUri = 'https://3box.oceanprotocol.com'
-const ipfsUrl = 'https://dweb.link'
+const ipfsUrl = 'https://infura-ipfs.io'
 
 function decodeProof(proofJWT: string) {
   if (!proofJWT) return

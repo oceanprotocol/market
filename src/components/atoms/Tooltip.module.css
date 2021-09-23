@@ -9,6 +9,10 @@
   font-size: var(--font-size-small);
 }
 
+.content p {
+  margin: 0;
+}
+
 .icon {
   width: 1em;
   height: 1em;
