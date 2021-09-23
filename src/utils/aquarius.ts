@@ -232,7 +232,7 @@ export async function retrieveDDOListByDIDs(
   const query = {
     query: {
       query_string: {
-        query: `(${transformDIDListToQuery(didList)}) AND -isInPurgatory:true`
+        query: `${transformDIDListToQuery(didList)}`
       }
     }
   }

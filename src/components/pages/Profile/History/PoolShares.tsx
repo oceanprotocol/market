@@ -132,6 +132,8 @@ async function getPoolSharesAssets(
   data: PoolShare[],
   cancelToken: CancelToken
 ) {
+  if (data.length < 1) return
+
   const assetList: Asset[] = []
   const didList: string[] = []
 
