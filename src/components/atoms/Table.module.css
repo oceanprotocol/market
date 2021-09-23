@@ -23,8 +23,8 @@
   color: var(--color-secondary);
 }
 
-div [class*='rdt_TableCell'] {
-  min-width: 80px;
+.table [role='gridcell'] {
+  min-width: 0;
 }
 
 .table [role='row'] {
