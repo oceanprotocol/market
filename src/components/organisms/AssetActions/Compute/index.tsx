@@ -153,13 +153,12 @@ export default function Compute({
     const algorithmQuery =
       trustedAlgorithmList.length > 0 ? `(${algoQuerry}) AND` : ``
     const query = {
-      offset: 500,
       query: {
         query_string: {
           query: `${algorithmQuery} service.attributes.main.type:algorithm AND chainId:${chainId} -isInPurgatory:true`
         }
       },
-      sort: { created: -1 }
+      sort: { created: 'desc' }
     }
     return query
   }
