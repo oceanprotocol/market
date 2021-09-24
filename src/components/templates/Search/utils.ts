@@ -1,11 +1,10 @@
-import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { Logger } from '@oceanprotocol/lib'
 import {
   queryMetadata,
   transformChainIdsListToQuery
 } from '../../../utils/aquarius'
 import queryString from 'query-string'
-import axios, { CancelToken } from 'axios'
+import { CancelToken } from 'axios'
 
 export const SortTermOptions = {
   Created: 'created',
@@ -61,8 +60,6 @@ export function getSearchQuery(
   serviceType?: string,
   accessType?: string
 ): any {
-  const sortTerm = getSortType(sort)
-  const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
   const emptySearchTerm = text === undefined || text === ''
   let searchTerm = owner
     ? `(publicKey.owner:${owner})`
@@ -96,8 +93,8 @@ export function getSearchQuery(
     'service.attributes.additionalInformation.tags'
   ]
   return {
-    page: Number(page) || 1,
-    offset: Number(offset) || 21,
+    from: (Number(page) || 0) * (Number(offset) || 21),
+    size: Number(offset) || 21,
     query: {
       bool: {
         must: [
@@ -167,7 +164,7 @@ export function getSearchQuery(
       }
     },
     sort: {
-      [sortTerm]: sortValue
+      [sort]: sortOrder
     }
   }
 }
@@ -186,8 +183,8 @@ export async function getResults(
     accessType?: string
   },
   chainIds: number[],
-  cancelToken: CancelToken
-): Promise<QueryResult> {
+  cancelToken?: CancelToken
+): Promise<any> {
   const {
     text,
     owner,
@@ -214,7 +211,6 @@ export async function getResults(
     serviceType,
     accessType
   )
-  // const queryResult = await metadataCache.queryMetadata(searchQuery)
   const queryResult = await queryMetadata(searchQuery, cancelToken)
   return queryResult
 }
@@ -239,7 +235,7 @@ export async function addExistingParamsToUrl(
   } else {
     // sort should be relevance when fixed in aqua
     urlLocation = `${urlLocation}sort=${encodeURIComponent(
-      SortTermOptions.Created
+      SortTermOptions.Relevance
     )}&sortOrder=${SortValueOptions.Descending}&`
   }
   urlLocation = urlLocation.slice(0, -1)

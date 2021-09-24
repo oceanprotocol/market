@@ -1,6 +1,5 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import Permission from '../../organisms/Permission'
-import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import AssetList from '../../organisms/AssetList'
 import queryString from 'query-string'
 import Filters from './Filters'
@@ -8,7 +7,6 @@ import Sort from './sort'
 import { getResults } from './utils'
 import { navigate } from 'gatsby'
 import { updateQueryStringParameter } from '../../../utils'
-import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import { useCancelToken } from '../../../hooks/useCancelToken'
 import styles from './index.module.css'
@@ -22,12 +20,11 @@ export default function SearchPage({
   setTotalResults: (totalResults: number) => void
   setTotalPagesNumber: (totalPagesNumber: number) => void
 }): ReactElement {
-  const { appConfig } = useSiteMetadata()
   const parsed = queryString.parse(location.search)
   const { text, owner, tags, page, sort, sortOrder, serviceType, accessType } =
     parsed
   const { chainIds } = useUserPreferences()
-  const [queryResult, setQueryResult] = useState<QueryResult>()
+  const [queryResult, setQueryResult] = useState<any>()
   const [loading, setLoading] = useState<boolean>()
   const [service, setServiceType] = useState<string>(serviceType as string)
   const [access, setAccessType] = useState<string>(accessType as string)
@@ -38,7 +35,6 @@ export default function SearchPage({
   const newCancelToken = useCancelToken()
 
   useEffect(() => {
-    if (!appConfig.metadataCacheUri) return
     async function initSearch() {
       setLoading(true)
       setTotalResults(undefined)
@@ -58,8 +54,8 @@ export default function SearchPage({
     serviceType,
     accessType,
     sortOrder,
-    appConfig.metadataCacheUri,
-    chainIds
+    chainIds,
+    newCancelToken
   ])
 
   function setPage(page: number) {

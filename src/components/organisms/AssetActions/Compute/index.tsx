@@ -149,7 +149,7 @@ export default function Compute({
           query: `${algorithmQuery} service.attributes.main.type:algorithm AND chainId:${chainId} -isInPurgatory:true`
         }
       },
-      sort: { created: -1 }
+      sort: { created: 'desc' }
     }
     return query
   }
