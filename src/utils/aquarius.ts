@@ -266,8 +266,6 @@ export async function getAssetsFromDidList(
     if (!searchDids) return
 
     const query = {
-      page: 1,
-      offset: 1000,
       query: {
         query_string: {
           query: `(${searchDids}) AND (${transformChainIdsListToQuery(
