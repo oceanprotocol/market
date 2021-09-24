@@ -28,14 +28,14 @@ export default function FilterPrice({
   accessType,
   setServiceType,
   setAccessType,
-  isSearch,
+  addFiltersToUrl,
   className
 }: {
   serviceType: string
   accessType: string
   setServiceType: React.Dispatch<React.SetStateAction<string>>
   setAccessType: React.Dispatch<React.SetStateAction<string>>
-  isSearch: boolean
+  addFiltersToUrl?: boolean
   className?: string
 }): ReactElement {
   const navigate = useNavigate()
@@ -44,7 +44,7 @@ export default function FilterPrice({
 
   async function applyFilter(filter: string, filterType: string) {
     filterType === 'accessType' ? setAccessType(filter) : setServiceType(filter)
-    if (isSearch) {
+    if (addFiltersToUrl) {
       let urlLocation = ''
       if (filterType.localeCompare('accessType') === 0) {
         urlLocation = await addExistingParamsToUrl(location, ['accessType'])
@@ -115,12 +115,12 @@ export default function FilterPrice({
     }
   }
 
-  async function applyClearFilter(isSearch: boolean) {
+  async function applyClearFilter(addFiltersToUrl: boolean) {
     setServiceSelections([])
     setAccessSelections([])
     setServiceType(undefined)
     setAccessType(undefined)
-    if (isSearch) {
+    if (addFiltersToUrl) {
       let urlLocation = await addExistingParamsToUrl(location, [
         'accessType',
         'serviceType'
@@ -190,7 +190,7 @@ export default function FilterPrice({
             key={index}
             className={showClear ? styles.showClear : styles.hideClear}
             onClick={async () => {
-              applyClearFilter(isSearch)
+              applyClearFilter(addFiltersToUrl)
             }}
           >
             {e.display}

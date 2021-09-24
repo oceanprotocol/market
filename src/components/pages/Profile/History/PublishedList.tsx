@@ -80,7 +80,6 @@ export default function PublishedList({
         accessType={access}
         setAccessType={setAccsesType}
         className={styles.filters}
-        isSearch={false}
       />
       <AssetList
         assets={queryResult?.results}
