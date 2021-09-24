@@ -9,6 +9,7 @@ import { getAssetsFromDidList } from '../../utils/aquarius'
 import { getAssetsBestPrices, AssetListPrices } from '../../utils/subgraph'
 import axios, { CancelToken } from 'axios'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
+import { useCancelToken } from '../../hooks/useCancelToken'
 
 async function getAssetsBookmarked(
   bookmarks: string[],
@@ -60,11 +61,9 @@ export default function Bookmarks(): ReactElement {
   const [pinned, setPinned] = useState<AssetListPrices[]>()
   const [isLoading, setIsLoading] = useState<boolean>()
   const { chainIds } = useUserPreferences()
-
+  const newCancelToken = useCancelToken()
   useEffect(() => {
     if (!appConfig?.metadataCacheUri || bookmarks === []) return
-
-    const source = axios.CancelToken.source()
 
     async function init() {
       if (!bookmarks?.length) {
@@ -78,7 +77,7 @@ export default function Bookmarks(): ReactElement {
         const resultPinned = await getAssetsBookmarked(
           bookmarks,
           chainIds,
-          source.token
+          newCancelToken()
         )
         const pinnedAssets: AssetListPrices[] = await getAssetsBestPrices(
           resultPinned?.results
@@ -91,11 +90,7 @@ export default function Bookmarks(): ReactElement {
       setIsLoading(false)
     }
     init()
-
-    return () => {
-      source.cancel()
-    }
-  }, [bookmarks, chainIds, appConfig?.metadataCacheUri])
+  }, [appConfig?.metadataCacheUri, bookmarks, chainIds, newCancelToken])
 
   return (
     <Table

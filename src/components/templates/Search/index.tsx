@@ -7,9 +7,8 @@ import Sort from './sort'
 import { getResults } from './utils'
 import { navigate } from 'gatsby'
 import { updateQueryStringParameter } from '../../../utils'
-import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../providers/UserPreferences'
-import axios from 'axios'
+import { useCancelToken } from '../../../hooks/useCancelToken'
 import styles from './index.module.css'
 
 export default function SearchPage({
@@ -21,7 +20,6 @@ export default function SearchPage({
   setTotalResults: (totalResults: number) => void
   setTotalPagesNumber: (totalPagesNumber: number) => void
 }): ReactElement {
-  const { appConfig } = useSiteMetadata()
   const parsed = queryString.parse(location.search)
   const { text, owner, tags, page, sort, sortOrder, serviceType, accessType } =
     parsed
@@ -34,23 +32,19 @@ export default function SearchPage({
   const [sortDirection, setSortDirection] = useState<string>(
     sortOrder as string
   )
+  const newCancelToken = useCancelToken()
 
   useEffect(() => {
-    const source = axios.CancelToken.source()
-
     async function initSearch() {
       setLoading(true)
       setTotalResults(undefined)
-      const queryResult = await getResults(parsed, chainIds, source.token)
+      const queryResult = await getResults(parsed, chainIds, newCancelToken())
       setQueryResult(queryResult)
       setTotalResults(queryResult.totalResults)
       setTotalPagesNumber(queryResult.totalPages)
       setLoading(false)
     }
     initSearch()
-    return () => {
-      source.cancel()
-    }
   }, [
     text,
     owner,
@@ -60,7 +54,8 @@ export default function SearchPage({
     serviceType,
     accessType,
     sortOrder,
-    chainIds
+    chainIds,
+    newCancelToken
   ])
 
   function setPage(page: number) {
