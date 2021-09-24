@@ -41,6 +41,7 @@ import AssetActionHistoryTable from '../../AssetActionHistoryTable'
 import ComputeJobs from '../../../pages/Profile/History/ComputeJobs'
 import { BestPrice } from '../../../../models/BestPrice'
 import { useCancelToken } from '../../../../hooks/useCancelToken'
+import { useIsMounted } from '../../../../hooks/useIsMounted'
 
 const SuccessAction = () => (
   <Button style="text" to="/profile?defaultTab=ComputeJobs" size="small">
@@ -73,7 +74,6 @@ export default function Compute({
   const [ddoAlgorithmList, setDdoAlgorithmList] = useState<DDO[]>()
   const [selectedAlgorithmAsset, setSelectedAlgorithmAsset] = useState<DDO>()
   const [hasAlgoAssetDatatoken, setHasAlgoAssetDatatoken] = useState<boolean>()
-  const [datasetMaxDT, setDatasetMaxDT] = useState<number>(1)
   const [algoMaxDT, setAlgoMaxDT] = useState<number>(1)
   const [isPublished, setIsPublished] = useState(false)
   const [hasPreviousDatasetOrder, setHasPreviousDatasetOrder] = useState(false)
@@ -88,12 +88,12 @@ export default function Compute({
   const [algorithmTimeout, setAlgorithmTimeout] = useState<string>()
   const newCancelToken = useCancelToken()
   const hasDatatoken = Number(dtBalance) >= 1
-
+  const isMounted = useIsMounted()
   const isComputeButtonDisabled =
     isJobStarting === true ||
     file === null ||
     !ocean ||
-    (!hasPreviousDatasetOrder && !hasDatatoken && !(datasetMaxDT >= 1)) ||
+    (!hasPreviousDatasetOrder && !hasDatatoken) ||
     (!hasPreviousAlgorithmOrder && !hasAlgoAssetDatatoken && !(algoMaxDT >= 1))
 
   async function checkPreviousOrders(ddo: DDO) {
@@ -106,6 +106,8 @@ export default function Compute({
       timeout.toString()
     )
     const assetType = ddo.findServiceByType('metadata').attributes.main.type
+
+    if (!isMounted()) return
     if (assetType === 'algorithm') {
       setPreviousAlgorithmOrderId(orderId)
       setHasPreviousAlgorithmOrder(!!orderId)
@@ -122,22 +124,6 @@ export default function Compute({
     )
     setalgorithmDTBalance(AssetDtBalance)
     setHasAlgoAssetDatatoken(Number(AssetDtBalance) >= 1)
-  }
-
-  async function checkAssetDTMaxBuyQuantity(
-    price: BestPrice,
-    assetType: string
-  ) {
-    if (!ocean || !price || !assetType) return
-    const maxTokensInPool =
-      price.type === 'pool'
-        ? await ocean.pool.getDTMaxBuyQuantity(price.address)
-        : 1
-    if (assetType === 'algorithm') {
-      setAlgoMaxDT(Number(maxTokensInPool))
-    } else {
-      setDatasetMaxDT(Number(maxTokensInPool))
-    }
   }
 
   function getQuerryString(
@@ -197,13 +183,6 @@ export default function Compute({
     return algorithmSelectionList
   }
 
-  useEffect(() => {
-    const { timeout } = (
-      ddo.findServiceByType('access') || ddo.findServiceByType('compute')
-    ).attributes.main
-    setDatasetTimeout(secondsToString(timeout))
-  }, [ddo])
-
   const initMetadata = useCallback(async (ddo: DDO): Promise<void> => {
     if (!ddo) return
     const price = await getPrice(ddo)
@@ -216,6 +195,13 @@ export default function Compute({
   }, [])
 
   useEffect(() => {
+    const { timeout } = (
+      ddo.findServiceByType('access') || ddo.findServiceByType('compute')
+    ).attributes.main
+    setDatasetTimeout(secondsToString(timeout))
+  }, [ddo])
+
+  useEffect(() => {
     if (!ddo) return
     getAlgorithmList().then((algorithms) => {
       setAlgorithmList(algorithms)
@@ -225,10 +211,6 @@ export default function Compute({
   useEffect(() => {
     if (!ocean || !accountId) return
     checkPreviousOrders(ddo)
-    checkAssetDTMaxBuyQuantity(
-      price,
-      ddo.findServiceByType('metadata').attributes.main.type
-    )
   }, [ocean, ddo, accountId])
 
   useEffect(() => {
@@ -445,7 +427,7 @@ export default function Compute({
             hasPreviousOrder={hasPreviousDatasetOrder}
             hasDatatoken={hasDatatoken}
             dtBalance={dtBalance}
-            datasetLowPoolLiquidity={!(datasetMaxDT >= 1)}
+            datasetLowPoolLiquidity={!isConsumablePrice}
             assetType={type}
             assetTimeout={datasetTimeout}
             hasPreviousOrderSelectedComputeAsset={hasPreviousAlgorithmOrder}

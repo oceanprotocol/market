@@ -16,6 +16,7 @@ import NetworkName from '../../../../atoms/NetworkName'
 import { getComputeJobs } from '../../../../../utils/compute'
 import styles from './index.module.css'
 import { useAsset } from '../../../../../providers/Asset'
+import { useIsMounted } from '../../../../../hooks/useIsMounted'
 
 export function Status({ children }: { children: string }): ReactElement {
   return <div className={styles.status}>{children}</div>
@@ -79,6 +80,7 @@ export default function ComputeJobs({
   const [isLoading, setIsLoading] = useState(true)
   const { chainIds } = useUserPreferences()
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
+  const isMounted = useIsMounted()
 
   const columnsMinimal = [columns[4], columns[5], columns[3]]
 
@@ -101,7 +103,7 @@ export default function ComputeJobs({
     try {
       setIsLoading(true)
       const jobs = await getComputeJobs(chainIds, config, ocean, account, ddo)
-      setJobs(jobs)
+      isMounted() && setJobs(jobs)
     } catch (error) {
       Logger.error(error.message)
     } finally {
