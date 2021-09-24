@@ -11,12 +11,13 @@ import web3 from 'web3'
 import Token from '../../../organisms/AssetActions/Pool/Token'
 import { calculateUserLiquidity } from '../../../../utils/subgraph'
 import NetworkName from '../../../atoms/NetworkName'
-import axios, { CancelToken } from 'axios'
 import { retrieveDDOListByDIDs } from '../../../../utils/aquarius'
+import { CancelToken } from 'axios'
 import { isValidNumber } from '../../../../utils/numberValidations'
 import Decimal from 'decimal.js'
 import { useProfile } from '../../../../providers/Profile'
 import { DDO } from '@oceanprotocol/lib'
+import { useCancelToken } from '../../../../hooks/useCancelToken'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
@@ -167,7 +168,7 @@ export default function PoolShares({
   const [assets, setAssets] = useState<Asset[]>()
   const [loading, setLoading] = useState<boolean>(false)
   const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
-
+  const newCancelToken = useCancelToken()
   const fetchPoolSharesAssets = useCallback(
     async (cancelToken: CancelToken) => {
       if (!poolShares || isPoolSharesLoading) return
@@ -183,16 +184,15 @@ export default function PoolShares({
   )
 
   useEffect(() => {
-    const cancelTokenSource = axios.CancelToken.source()
-
+    const cancelToken = newCancelToken()
     async function init() {
       setLoading(true)
-      await fetchPoolSharesAssets(cancelTokenSource.token)
+      await fetchPoolSharesAssets(cancelToken)
       setLoading(false)
 
       if (dataFetchInterval) return
       const interval = setInterval(async () => {
-        await fetchPoolSharesAssets(cancelTokenSource.token)
+        await fetchPoolSharesAssets(cancelToken)
       }, REFETCH_INTERVAL)
       setDataFetchInterval(interval)
     }
@@ -200,9 +200,8 @@ export default function PoolShares({
 
     return () => {
       clearInterval(dataFetchInterval)
-      cancelTokenSource.cancel()
     }
-  }, [dataFetchInterval, fetchPoolSharesAssets])
+  }, [dataFetchInterval, fetchPoolSharesAssets, newCancelToken])
 
   return accountId ? (
     <Table

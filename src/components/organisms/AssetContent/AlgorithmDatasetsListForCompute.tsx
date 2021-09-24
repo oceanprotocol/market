@@ -5,6 +5,7 @@ import { AssetSelectionAsset } from '../../molecules/FormFields/AssetSelection'
 import AssetComputeList from '../../molecules/AssetComputeList'
 import { useAsset } from '../../../providers/Asset'
 import { DDO } from '@oceanprotocol/lib'
+import { useCancelToken } from '../../../hooks/useCancelToken'
 
 export default function AlgorithmDatasetsListForCompute({
   algorithmDid,
@@ -16,7 +17,7 @@ export default function AlgorithmDatasetsListForCompute({
   const { type } = useAsset()
   const [datasetsForCompute, setDatasetsForCompute] =
     useState<AssetSelectionAsset[]>()
-
+  const newCancelToken = useCancelToken()
   useEffect(() => {
     async function getDatasetsAllowedForCompute() {
       const isCompute = Boolean(dataset?.findServiceByType('compute'))
@@ -26,7 +27,8 @@ export default function AlgorithmDatasetsListForCompute({
       const datasets = await getAlgorithmDatasetsForCompute(
         algorithmDid,
         datasetComputeService?.serviceEndpoint,
-        dataset?.chainId
+        dataset?.chainId,
+        newCancelToken()
       )
       setDatasetsForCompute(datasets)
     }
