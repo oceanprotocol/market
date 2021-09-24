@@ -33,7 +33,7 @@ export default function PublishedList({
           accountId,
           chainIds,
           cancelTokenSource.token,
-          page,
+          page - 1,
           service
         )
         setQueryResult(result)
