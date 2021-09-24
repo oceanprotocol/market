@@ -236,8 +236,8 @@ export async function getPublishedAssets(
   type = type || 'dataset OR algorithm'
 
   const queryPublishedAssets = {
-    page,
-    offset: 9,
+    from: (Number(page) || 0) * (Number(9) || 21),
+    size: Number(9) || 21,
     query: {
       query_string: {
         query: `(publicKey.owner:${accountId}) AND (service.attributes.main.type:${type}) AND (${transformChainIdsListToQuery(
