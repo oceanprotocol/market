@@ -146,9 +146,9 @@ export async function getAssetsNames(
 export async function transformDDOToAssetSelection(
   datasetProviderEndpoint: string,
   ddoList: DDO[],
-  selectedAlgorithms?: PublisherTrustedAlgorithm[]
+  selectedAlgorithms?: PublisherTrustedAlgorithm[],
+  cancelToken?: CancelToken
 ): Promise<AssetSelectionAsset[]> {
-  const source = axios.CancelToken.source()
   const didList: string[] = []
   const priceList: PriceList = await getAssetsPriceList(ddoList)
   const symbolList: any = {}
@@ -160,7 +160,7 @@ export async function transformDDOToAssetSelection(
     algoComputeService?.serviceEndpoint &&
       (didProviderEndpointMap[ddo.id] = algoComputeService?.serviceEndpoint)
   }
-  const ddoNames = await getAssetsNames(didList, source.token)
+  const ddoNames = await getAssetsNames(didList, cancelToken)
   const algorithmList: AssetSelectionAsset[] = []
   didList?.forEach((did: string) => {
     if (
@@ -197,12 +197,12 @@ export async function transformDDOToAssetSelection(
 export async function getAlgorithmDatasetsForCompute(
   algorithmId: string,
   datasetProviderUri: string,
-  datasetChainId?: number
+  datasetChainId?: number,
+  cancelToken?: CancelToken
 ): Promise<AssetSelectionAsset[]> {
-  const source = axios.CancelToken.source()
   const computeDatasets = await queryMetadata(
     getQueryForAlgorithmDatasets(algorithmId, datasetChainId),
-    source.token
+    cancelToken
   )
   const computeDatasetsForCurrentAlgorithm: DDO[] = []
   computeDatasets.results.forEach((data: DDO) => {
@@ -219,7 +219,8 @@ export async function getAlgorithmDatasetsForCompute(
   const datasets = await transformDDOToAssetSelection(
     datasetProviderUri,
     computeDatasetsForCurrentAlgorithm,
-    []
+    [],
+    cancelToken
   )
   return datasets
 }
