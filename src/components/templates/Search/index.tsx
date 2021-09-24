@@ -49,13 +49,14 @@ export default function SearchPage({
     setLoading(false)
   }
 
-  useEffect(() => {
-    if (page !== '1') {
-      setPage(1)
-    } else {
-      fetchAssets()
-    }
-  }, [serviceType, accessType])
+  function setPage(page: number) {
+    const newUrl = updateQueryStringParameter(
+      location.pathname + location.search,
+      'page',
+      `${page}`
+    )
+    return navigate(newUrl)
+  }
 
   useEffect(() => {
     if (!appConfig.metadataCacheUri) return
@@ -74,14 +75,13 @@ export default function SearchPage({
     chainIds
   ])
 
-  function setPage(page: number) {
-    const newUrl = updateQueryStringParameter(
-      location.pathname + location.search,
-      'page',
-      `${page}`
-    )
-    return navigate(newUrl)
-  }
+  useEffect(() => {
+    if (page !== '1') {
+      setPage(1)
+    } else {
+      fetchAssets()
+    }
+  }, [serviceType, accessType])
 
   return (
     <Permission eventType="browse">
