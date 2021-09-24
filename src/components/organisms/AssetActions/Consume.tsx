@@ -145,7 +145,6 @@ export default function Consume({
     isConsumablePrice,
     hasDatatoken,
     isConsumable,
-    maxDt,
     accountId
   ])
 
