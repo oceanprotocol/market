@@ -27,7 +27,7 @@ function getQueryForAlgorithmDatasets(algorithmDid: string, chainId?: number) {
         query: `service.attributes.main.privacy.publisherTrustedAlgorithms.did:${algorithmDid} AND chainId:${chainId}`
       }
     },
-    sort: { created: -1 }
+    sort: { created: 'desc' }
   }
 }
 
@@ -233,7 +233,7 @@ export async function getPublishedAssets(
         )})`
       }
     },
-    sort: { created: -1 }
+    sort: { created: 'desc' }
   }
 
   try {
@@ -277,7 +277,7 @@ export async function getAssetsFromDidList(
           default_operator: 'OR'
         }
       },
-      sort: { created: -1 }
+      sort: { created: 'desc' }
     }
 
     const queryResult = await queryMetadata(query, cancelToken)

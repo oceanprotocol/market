@@ -130,7 +130,7 @@ const queryLatest = {
 
     query_string: { query: `-isInPurgatory:true` }
   },
-  sort: { created: -1 }
+  sort: { created: 'desc' }
 }
 
 function Component() {

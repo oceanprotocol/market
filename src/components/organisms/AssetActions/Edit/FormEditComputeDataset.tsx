@@ -44,7 +44,7 @@ export default function FormEditComputeDataset({
           query: `service.attributes.main.type:algorithm AND chainId:${ddo.chainId} -isInPurgatory:true`
         }
       },
-      sort: { created: -1 }
+      sort: { created: 'desc' }
     }
     const querryResult = await queryMetadata(query, source.token)
     const datasetComputeService = ddo.findServiceByType('compute')
