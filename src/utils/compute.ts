@@ -72,8 +72,6 @@ async function getAssetMetadata(
   chainIds: number[]
 ): Promise<DDO[]> {
   const queryDid = {
-    page: 1,
-    offset: 100,
     query: {
       query_string: {
         query: `(${queryDtList}) AND (${transformChainIdsListToQuery(

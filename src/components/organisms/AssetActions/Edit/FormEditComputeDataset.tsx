@@ -38,7 +38,6 @@ export default function FormEditComputeDataset({
   ): Promise<AssetSelectionAsset[]> {
     const source = axios.CancelToken.source()
     const query = {
-      offset: 500,
       query: {
         query_string: {
           query: `service.attributes.main.type:algorithm AND chainId:${ddo.chainId} -isInPurgatory:true`
