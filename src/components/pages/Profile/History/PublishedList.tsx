@@ -6,7 +6,6 @@ import { getPublishedAssets } from '../../../../utils/aquarius'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import styles from './PublishedList.module.css'
-import axios from 'axios'
 import { useCancelToken } from '../../../../hooks/useCancelToken'
 
 export default function PublishedList({
@@ -33,7 +32,7 @@ export default function PublishedList({
           accountId,
           chainIds,
           newCancelToken(),
-          page,
+          page - 1,
           service
         )
         setQueryResult(result)

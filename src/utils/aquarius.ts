@@ -23,11 +23,23 @@ export const MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS = 476
 function getQueryForAlgorithmDatasets(algorithmDid: string, chainId?: number) {
   return {
     query: {
-      query_string: {
-        query: `service.attributes.main.privacy.publisherTrustedAlgorithms.did:${algorithmDid} AND chainId:${chainId}`
+      bool: {
+        must: [
+          {
+            match: {
+              'service.attributes.main.privacy.publisherTrustedAlgorithms.did':
+                algorithmDid
+            }
+          },
+          {
+            query_string: {
+              query: `chainId:${chainId}`
+            }
+          }
+        ]
       }
     },
-    sort: { created: -1 }
+    sort: { created: 'desc' }
   }
 }
 
@@ -77,6 +89,7 @@ export async function queryMetadata(
       { cancelToken }
     )
     if (!response || response.status !== 200 || !response.data) return
+
     return transformQueryResult(response.data, query.from, query.size)
   } catch (error) {
     if (axios.isCancel(error)) {
@@ -221,12 +234,11 @@ export async function getPublishedAssets(
 ): Promise<any> {
   if (!accountId) return
 
-  page = page || 1
   type = type || 'dataset OR algorithm'
 
   const queryPublishedAssets = {
-    page,
-    offset: 9,
+    from: (Number(page) || 0) * (Number(9) || 21),
+    size: Number(9) || 21,
     query: {
       query_string: {
         query: `(publicKey.owner:${accountId}) AND (service.attributes.main.type:${type}) AND (${transformChainIdsListToQuery(
@@ -234,9 +246,8 @@ export async function getPublishedAssets(
         )})`
       }
     },
-    sort: { created: -1 }
+    sort: { created: 'desc' }
   }
-
   try {
     const result = await queryMetadata(queryPublishedAssets, cancelToken)
     return result
@@ -267,8 +278,6 @@ export async function getAssetsFromDidList(
     if (!searchDids) return
 
     const query = {
-      page: 1,
-      offset: 1000,
       query: {
         query_string: {
           query: `(${searchDids}) AND (${transformChainIdsListToQuery(
@@ -278,7 +287,7 @@ export async function getAssetsFromDidList(
           default_operator: 'OR'
         }
       },
-      sort: { created: -1 }
+      sort: { created: 'desc' }
     }
 
     const queryResult = await queryMetadata(query, cancelToken)
