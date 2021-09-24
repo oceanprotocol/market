@@ -1,5 +1,4 @@
 import { Logger } from '@oceanprotocol/lib'
-import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import React, { ReactElement, useEffect, useState } from 'react'
 import AssetList from '../../../organisms/AssetList'
 import { getPublishedAssets } from '../../../../utils/aquarius'
@@ -17,7 +16,7 @@ export default function PublishedList({
   const { appConfig } = useSiteMetadata()
   const { chainIds } = useUserPreferences()
 
-  const [queryResult, setQueryResult] = useState<QueryResult>()
+  const [queryResult, setQueryResult] = useState<any>()
   const [isLoading, setIsLoading] = useState(false)
   const [page, setPage] = useState<number>(1)
   const [service, setServiceType] = useState('dataset OR algorithm')
