@@ -35,20 +35,32 @@ export default function SearchPage({
     sortOrder as string
   )
 
+  async function fetchAssets() {
+    setLoading(true)
+    setTotalResults(undefined)
+    const queryResult = await getResults(
+      parsed,
+      appConfig.metadataCacheUri,
+      chainIds
+    )
+    setQueryResult(queryResult)
+    setTotalResults(queryResult.totalResults)
+    setTotalPagesNumber(queryResult.totalPages)
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    if (page !== '1') {
+      setPage(1)
+    } else {
+      fetchAssets()
+    }
+  }, [serviceType, accessType])
+
   useEffect(() => {
     if (!appConfig.metadataCacheUri) return
     async function initSearch() {
-      setLoading(true)
-      setTotalResults(undefined)
-      const queryResult = await getResults(
-        parsed,
-        appConfig.metadataCacheUri,
-        chainIds
-      )
-      setQueryResult(queryResult)
-      setTotalResults(queryResult.totalResults)
-      setTotalPagesNumber(queryResult.totalPages)
-      setLoading(false)
+      await fetchAssets()
     }
     initSearch()
   }, [
@@ -57,8 +69,6 @@ export default function SearchPage({
     tags,
     sort,
     page,
-    serviceType,
-    accessType,
     sortOrder,
     appConfig.metadataCacheUri,
     chainIds
