@@ -74,7 +74,6 @@ export default function Compute({
   const [ddoAlgorithmList, setDdoAlgorithmList] = useState<DDO[]>()
   const [selectedAlgorithmAsset, setSelectedAlgorithmAsset] = useState<DDO>()
   const [hasAlgoAssetDatatoken, setHasAlgoAssetDatatoken] = useState<boolean>()
-  const [algoMaxDT, setAlgoMaxDT] = useState<number>(1)
   const [isPublished, setIsPublished] = useState(false)
   const [hasPreviousDatasetOrder, setHasPreviousDatasetOrder] = useState(false)
   const [previousDatasetOrderId, setPreviousDatasetOrderId] = useState<string>()
@@ -89,12 +88,16 @@ export default function Compute({
   const newCancelToken = useCancelToken()
   const hasDatatoken = Number(dtBalance) >= 1
   const isMounted = useIsMounted()
+  const [isConsumablePrice, setIsConsumablePrice] = useState(true)
+  const [isAlgoConsumablePrice, setIsAlgoConsumablePrice] = useState(true)
   const isComputeButtonDisabled =
     isJobStarting === true ||
     file === null ||
     !ocean ||
-    (!hasPreviousDatasetOrder && !hasDatatoken) ||
-    (!hasPreviousAlgorithmOrder && !hasAlgoAssetDatatoken && !(algoMaxDT >= 1))
+    (!hasPreviousDatasetOrder && !hasDatatoken && !isConsumablePrice) ||
+    (!hasPreviousAlgorithmOrder &&
+      !hasAlgoAssetDatatoken &&
+      !isAlgoConsumablePrice)
 
   async function checkPreviousOrders(ddo: DDO) {
     const { timeout } = (
@@ -187,12 +190,24 @@ export default function Compute({
     if (!ddo) return
     const price = await getPrice(ddo)
     setAlgorithmPrice(price)
-    ocean &&
-      checkAssetDTMaxBuyQuantity(
-        price,
-        ddo.findServiceByType('metadata').attributes.main.type
-      )
   }, [])
+
+  useEffect(() => {
+    if (!algorithmPrice) return
+
+    setIsAlgoConsumablePrice(
+      algorithmPrice.isConsumable !== undefined
+        ? algorithmPrice.isConsumable === 'true'
+        : true
+    )
+  }, [algorithmPrice])
+  useEffect(() => {
+    if (!price) return
+
+    setIsConsumablePrice(
+      price.isConsumable !== undefined ? price.isConsumable === 'true' : true
+    )
+  }, [price])
 
   useEffect(() => {
     const { timeout } = (
@@ -436,7 +451,7 @@ export default function Compute({
               selectedAlgorithmAsset?.dataTokenInfo?.symbol
             }
             dtBalanceSelectedComputeAsset={algorithmDTBalance}
-            selectedComputeAssetLowPoolLiquidity={!(algoMaxDT >= 1)}
+            selectedComputeAssetLowPoolLiquidity={!isAlgoConsumablePrice}
             selectedComputeAssetType="algorithm"
             selectedComputeAssetTimeout={algorithmTimeout}
             stepText={pricingStepText || 'Starting Compute Job...'}
