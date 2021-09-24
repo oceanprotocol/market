@@ -89,6 +89,7 @@ export async function queryMetadata(
       { cancelToken }
     )
     if (!response || response.status !== 200 || !response.data) return
+
     return transformQueryResult(response.data, query.from, query.size)
   } catch (error) {
     if (axios.isCancel(error)) {
@@ -232,7 +233,6 @@ export async function getPublishedAssets(
 ): Promise<any> {
   if (!accountId) return
 
-  page = page || 1
   type = type || 'dataset OR algorithm'
 
   const queryPublishedAssets = {
@@ -247,7 +247,6 @@ export async function getPublishedAssets(
     },
     sort: { created: 'desc' }
   }
-
   try {
     const result = await queryMetadata(queryPublishedAssets, cancelToken)
     return result
