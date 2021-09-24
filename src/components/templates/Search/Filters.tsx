@@ -1,6 +1,5 @@
 import React, { ReactElement, useState } from 'react'
 import { useNavigate } from '@reach/router'
-import styles from './filterService.module.css'
 import classNames from 'classnames/bind'
 import {
   addExistingParamsToUrl,
@@ -8,6 +7,7 @@ import {
   FilterByTypeOptions
 } from './utils'
 import Button from '../../atoms/Button'
+import styles from './Filters.module.css'
 
 const cx = classNames.bind(styles)
 

@@ -1,0 +1,55 @@
+.number,
+.number * {
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-h4);
+  color: var(--font-color-heading);
+  margin-left: 0;
+}
+
+.number {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.number.small,
+.number.small * {
+  font-size: var(--font-size-h5);
+}
+
+.label {
+  display: block;
+}
+
+.number svg {
+  width: var(--font-size-large);
+  height: var(--font-size-large);
+  margin-right: calc(var(--spacer) / 4);
+  stroke: currentColor;
+}
+
+.unit {
+  font-size: var(--font-size-small);
+  color: var(--color-secondary);
+}
+
+.unit a {
+  color: var(--color-secondary);
+  display: block;
+  padding: 0.5rem 1rem;
+  border: 0.1rem solid transparent;
+  border-radius: 0.2rem;
+}
+
+.unit a:hover,
+.unit a:focus {
+  background: var(--brand-white);
+  border: 0.1rem solid var(--brand-pink);
+}
+
+.tooltip svg {
+  width: 0.8em !important;
+  height: 0.8em !important;
+  margin-left: 0;
+}
