@@ -23,6 +23,10 @@
   color: var(--color-secondary);
 }
 
+.table [role='gridcell'] {
+  min-width: 0;
+}
+
 .table [role='row'] {
   border-bottom: 1px solid var(--border-color) !important;
 }
@@ -55,6 +59,10 @@
 .table + div [class*='rdt_Pagination'] button[aria-label='First Page'],
 .table + div [class*='rdt_Pagination'] button[aria-label='Last Page'] {
   display: none;
+}
+
+div [class*='Table-module'] {
+  scrollbar-width: thin;
 }
 
 .empty {

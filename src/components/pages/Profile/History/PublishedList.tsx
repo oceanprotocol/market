@@ -1,5 +1,4 @@
 import { Logger } from '@oceanprotocol/lib'
-import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import React, { ReactElement, useEffect, useState } from 'react'
 import AssetList from '../../../organisms/AssetList'
 import { getPublishedAssets } from '../../../../utils/aquarius'
@@ -7,7 +6,7 @@ import Filters from '../../../templates/Search/Filters'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import styles from './PublishedList.module.css'
-import axios, { CancelToken } from 'axios'
+import { useCancelToken } from '../../../../hooks/useCancelToken'
 
 export default function PublishedList({
   accountId
@@ -17,19 +16,20 @@ export default function PublishedList({
   const { appConfig } = useSiteMetadata()
   const { chainIds } = useUserPreferences()
 
-  const [queryResult, setQueryResult] = useState<QueryResult>()
+  const [queryResult, setQueryResult] = useState<any>()
   const [isLoading, setIsLoading] = useState(false)
   const [page, setPage] = useState<number>(1)
   const [service, setServiceType] = useState('dataset OR algorithm')
   const [access, setAccsesType] = useState('access OR compute')
+  const newCancelToken = useCancelToken()
 
-  async function getPublished(token: CancelToken) {
+  async function getPublished() {
     try {
       setIsLoading(true)
       const result = await getPublishedAssets(
         accountId,
         chainIds,
-        token,
+        newCancelToken(),
         page,
         service,
         access
@@ -43,34 +43,23 @@ export default function PublishedList({
   }
 
   useEffect(() => {
-    const cancelTokenSource = axios.CancelToken.source()
     async function fetchPublishedAssets() {
-      await getPublished(cancelTokenSource.token)
+      await getPublished()
     }
     if (page !== 1) {
       setPage(1)
     } else {
       fetchPublishedAssets()
     }
-    return () => {
-      cancelTokenSource.cancel()
-    }
   }, [service, access])
 
   useEffect(() => {
     if (!accountId) return
-
-    const cancelTokenSource = axios.CancelToken.source()
-
     async function fetchPublishedAssets() {
-      await getPublished(cancelTokenSource.token)
+      await getPublished()
     }
     fetchPublishedAssets()
-
-    return () => {
-      cancelTokenSource.cancel()
-    }
-  }, [accountId, page, appConfig.metadataCacheUri, chainIds])
+  }, [accountId, page, appConfig.metadataCacheUri, chainIds, newCancelToken])
 
   return accountId ? (
     <>
