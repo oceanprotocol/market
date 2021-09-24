@@ -1,11 +1,10 @@
-import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { Logger } from '@oceanprotocol/lib'
 import {
   queryMetadata,
   transformChainIdsListToQuery
 } from '../../../utils/aquarius'
 import queryString from 'query-string'
-import axios, { CancelToken, CancelTokenSource } from 'axios'
+import { CancelToken } from 'axios'
 
 export const SortTermOptions = {
   Created: 'created',
@@ -185,7 +184,7 @@ export async function getResults(
   },
   chainIds: number[],
   cancelToken?: CancelToken
-): Promise<QueryResult> {
+): Promise<any> {
   const {
     text,
     owner,

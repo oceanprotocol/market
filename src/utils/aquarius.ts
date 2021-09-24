@@ -5,13 +5,11 @@ import {
   publisherTrustedAlgorithm as PublisherTrustedAlgorithm
 } from '@oceanprotocol/lib/'
 
-import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import { AssetSelectionAsset } from '../components/molecules/FormFields/AssetSelection'
 import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { OrdersData_tokenOrders as OrdersData } from '../@types/apollo/OrdersData'
 import { metadataCacheUri } from '../../app.config'
-import web3 from '../../tests/unit/__mocks__/web3'
 
 export interface DownloadedAsset {
   dtSymbol: string
@@ -41,8 +39,8 @@ export function transformQueryResult(
   queryResult: any,
   from = 0,
   size = 21
-): QueryResult {
-  const result: QueryResult = {
+): any {
+  const result: any = {
     results: [],
     page: 0,
     totalPages: 0,
@@ -71,7 +69,7 @@ export function transformChainIdsListToQuery(chainIds: number[]): string {
 export async function queryMetadata(
   query: any,
   cancelToken: CancelToken
-): Promise<QueryResult> {
+): Promise<any> {
   try {
     const response: AxiosResponse<any> = await axios.post(
       `${metadataCacheUri}/api/v1/aquarius/assets/query`,
@@ -219,7 +217,7 @@ export async function getPublishedAssets(
   cancelToken: CancelToken,
   page?: number,
   type?: string
-): Promise<QueryResult> {
+): Promise<any> {
   if (!accountId) return
 
   page = page || 1
@@ -254,7 +252,7 @@ export async function getAssetsFromDidList(
   didList: string[],
   chainIds: number[],
   cancelToken: CancelToken
-): Promise<QueryResult> {
+): Promise<any> {
   try {
     // TODO: figure out cleaner way to transform string[] into csv
     const searchDids = JSON.stringify(didList)
@@ -307,7 +305,7 @@ export async function getDownloadAssets(
 
     for (let i = 0; i < tokenOrders?.length; i++) {
       const ddo = ddoList.filter(
-        (ddo) =>
+        (ddo: { dataToken: string }) =>
           tokenOrders[i].datatokenId.address.toLowerCase() ===
           ddo.dataToken.toLowerCase()
       )[0]

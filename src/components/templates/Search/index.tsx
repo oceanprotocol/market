@@ -1,6 +1,5 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import Permission from '../../organisms/Permission'
-import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import AssetList from '../../organisms/AssetList'
 import queryString from 'query-string'
 import Filters from './Filters'
@@ -27,7 +26,7 @@ export default function SearchPage({
   const { text, owner, tags, page, sort, sortOrder, serviceType, accessType } =
     parsed
   const { chainIds } = useUserPreferences()
-  const [queryResult, setQueryResult] = useState<QueryResult>()
+  const [queryResult, setQueryResult] = useState<any>()
   const [loading, setLoading] = useState<boolean>()
   const [service, setServiceType] = useState<string>(serviceType as string)
   const [access, setAccessType] = useState<string>(accessType as string)

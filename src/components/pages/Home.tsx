@@ -1,9 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import AssetList from '../organisms/AssetList'
-import {
-  QueryResult,
-  SearchQuery
-} from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
+import { SearchQuery } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import Button from '../atoms/Button'
 import Bookmarks from '../molecules/Bookmarks'
 import axios from 'axios'
@@ -71,7 +68,7 @@ function SectionQueryResult({
 }) {
   const { appConfig } = useSiteMetadata()
   const { chainIds } = useUserPreferences()
-  const [result, setResult] = useState<QueryResult>()
+  const [result, setResult] = useState<any>()
   const [loading, setLoading] = useState<boolean>()
 
   useEffect(() => {
@@ -80,7 +77,7 @@ function SectionQueryResult({
 
     async function init() {
       if (chainIds.length === 0) {
-        const result: QueryResult = {
+        const result: any = {
           results: [],
           page: 0,
           totalPages: 0,
