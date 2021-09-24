@@ -1,5 +1,4 @@
 import { Logger } from '@oceanprotocol/lib'
-import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import React, { ReactElement, useEffect, useState } from 'react'
 import AssetList from '../../../organisms/AssetList'
 import { getPublishedAssets } from '../../../../utils/aquarius'
@@ -7,7 +6,7 @@ import { getPublishedAssets } from '../../../../utils/aquarius'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import styles from './PublishedList.module.css'
-import axios from 'axios'
+import { useCancelToken } from '../../../../hooks/useCancelToken'
 
 export default function PublishedList({
   accountId
@@ -17,15 +16,14 @@ export default function PublishedList({
   const { appConfig } = useSiteMetadata()
   const { chainIds } = useUserPreferences()
 
-  const [queryResult, setQueryResult] = useState<QueryResult>()
+  const [queryResult, setQueryResult] = useState<any>()
   const [isLoading, setIsLoading] = useState(false)
   const [page, setPage] = useState<number>(1)
   const [service, setServiceType] = useState('dataset OR algorithm')
+  const newCancelToken = useCancelToken()
 
   useEffect(() => {
     if (!accountId) return
-
-    const cancelTokenSource = axios.CancelToken.source()
 
     async function getPublished() {
       try {
@@ -33,8 +31,8 @@ export default function PublishedList({
         const result = await getPublishedAssets(
           accountId,
           chainIds,
-          cancelTokenSource.token,
-          page,
+          newCancelToken(),
+          page - 1,
           service
         )
         setQueryResult(result)
@@ -45,11 +43,14 @@ export default function PublishedList({
       }
     }
     getPublished()
-
-    return () => {
-      cancelTokenSource.cancel()
-    }
-  }, [accountId, page, appConfig.metadataCacheUri, chainIds, service])
+  }, [
+    accountId,
+    page,
+    appConfig.metadataCacheUri,
+    chainIds,
+    service,
+    newCancelToken
+  ])
 
   return accountId ? (
     <>

@@ -15,6 +15,7 @@ import { publisherTrustedAlgorithm as PublisherTrustedAlgorithm } from '@oceanpr
 import axios from 'axios'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import FormActions from './FormActions'
+import { useCancelToken } from '../../../../hooks/useCancelToken'
 
 export default function FormEditComputeDataset({
   data,
@@ -29,29 +30,28 @@ export default function FormEditComputeDataset({
   const { ddo } = useAsset()
   const { values }: FormikContextType<ComputePrivacyForm> = useFormikContext()
   const [allAlgorithms, setAllAlgorithms] = useState<AssetSelectionAsset[]>()
-
+  const newCancelToken = useCancelToken()
   const { publisherTrustedAlgorithms } =
     ddo?.findServiceByType('compute').attributes.main.privacy
 
   async function getAlgorithmList(
     publisherTrustedAlgorithms: PublisherTrustedAlgorithm[]
   ): Promise<AssetSelectionAsset[]> {
-    const source = axios.CancelToken.source()
     const query = {
-      offset: 500,
       query: {
         query_string: {
           query: `service.attributes.main.type:algorithm AND chainId:${ddo.chainId} -isInPurgatory:true`
         }
       },
-      sort: { created: -1 }
+      sort: { created: 'desc' }
     }
-    const querryResult = await queryMetadata(query, source.token)
+    const querryResult = await queryMetadata(query, newCancelToken())
     const datasetComputeService = ddo.findServiceByType('compute')
     const algorithmSelectionList = await transformDDOToAssetSelection(
       datasetComputeService?.serviceEndpoint,
       querryResult.results,
-      publisherTrustedAlgorithms
+      publisherTrustedAlgorithms,
+      newCancelToken()
     )
     return algorithmSelectionList
   }

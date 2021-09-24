@@ -7,6 +7,7 @@ import classNames from 'classnames/bind'
 import { getAssetsBestPrices, AssetListPrices } from '../../utils/subgraph'
 import Loader from '../atoms/Loader'
 import { useUserPreferences } from '../../providers/UserPreferences'
+import { useIsMounted } from '../../hooks/useIsMounted'
 
 const cx = classNames.bind(styles)
 
@@ -42,14 +43,19 @@ const AssetList: React.FC<AssetListProps> = ({
   const { chainIds } = useUserPreferences()
   const [assetsWithPrices, setAssetWithPrices] = useState<AssetListPrices[]>()
   const [loading, setLoading] = useState<boolean>(true)
-
+  const isMounted = useIsMounted()
   useEffect(() => {
     if (!assets) return
     isLoading && setLoading(true)
-    getAssetsBestPrices(assets).then((asset) => {
+
+    async function fetchPrices() {
+      const asset = await getAssetsBestPrices(assets)
+      if (!isMounted()) return
       setAssetWithPrices(asset)
       setLoading(false)
-    })
+    }
+
+    fetchPrices()
   }, [assets])
 
   // // This changes the page field inside the query
