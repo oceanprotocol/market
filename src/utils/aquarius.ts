@@ -63,7 +63,10 @@ export function transformQueryResult(
     (hit: any) => new DDO(hit._source as DDO)
   )
   result.totalResults = queryResult.hits.total
-  result.totalPages = (result.totalResults / size < 1) ? Math.floor(result.totalResults / size) : Math.ceil(result.totalResults / size)
+  result.totalPages =
+    result.totalResults / size < 1
+      ? Math.floor(result.totalResults / size)
+      : Math.ceil(result.totalResults / size)
   result.page = from ? from / size + 1 : 1
 
   return result
