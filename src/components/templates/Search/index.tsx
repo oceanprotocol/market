@@ -77,6 +77,7 @@ export default function SearchPage({
               accessType={access}
               setServiceType={setServiceType}
               setAccessType={setAccessType}
+              addFiltersToUrl
             />
             <Sort
               sortType={sortType}

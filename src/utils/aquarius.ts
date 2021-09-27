@@ -230,18 +230,20 @@ export async function getPublishedAssets(
   chainIds: number[],
   cancelToken: CancelToken,
   page?: number,
-  type?: string
+  type?: string,
+  accesType?: string
 ): Promise<any> {
   if (!accountId) return
 
   type = type || 'dataset OR algorithm'
+  accesType = accesType || 'access OR compute'
 
   const queryPublishedAssets = {
     from: (Number(page) || 0) * (Number(9) || 21),
     size: Number(9) || 21,
     query: {
       query_string: {
-        query: `(publicKey.owner:${accountId}) AND (service.attributes.main.type:${type}) AND (${transformChainIdsListToQuery(
+        query: `(publicKey.owner:${accountId}) AND (service.attributes.main.type:${type}) AND (service.type:${accesType}) AND (${transformChainIdsListToQuery(
           chainIds
         )})`
       }

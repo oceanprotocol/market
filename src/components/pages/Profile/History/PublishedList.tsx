@@ -2,7 +2,7 @@ import { Logger } from '@oceanprotocol/lib'
 import React, { ReactElement, useEffect, useState } from 'react'
 import AssetList from '../../../organisms/AssetList'
 import { getPublishedAssets } from '../../../../utils/aquarius'
-// import Filters from '../../../templates/Search/Filters'
+import Filters from '../../../templates/Search/Filters'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import styles from './PublishedList.module.css'
@@ -20,45 +20,56 @@ export default function PublishedList({
   const [isLoading, setIsLoading] = useState(false)
   const [page, setPage] = useState<number>(1)
   const [service, setServiceType] = useState('dataset OR algorithm')
+  const [access, setAccsesType] = useState('access OR compute')
   const newCancelToken = useCancelToken()
+
+  async function getPublished() {
+    try {
+      setIsLoading(true)
+      const result = await getPublishedAssets(
+        accountId,
+        chainIds,
+        newCancelToken(),
+        page,
+        service,
+        access
+      )
+      setQueryResult(result)
+    } catch (error) {
+      Logger.error(error.message)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    async function fetchPublishedAssets() {
+      await getPublished()
+    }
+    if (page !== 1) {
+      setPage(1)
+    } else {
+      fetchPublishedAssets()
+    }
+  }, [service, access])
 
   useEffect(() => {
     if (!accountId) return
-
-    async function getPublished() {
-      try {
-        setIsLoading(true)
-        const result = await getPublishedAssets(
-          accountId,
-          chainIds,
-          newCancelToken(),
-          page - 1,
-          service
-        )
-        setQueryResult(result)
-      } catch (error) {
-        Logger.error(error.message)
-      } finally {
-        setIsLoading(false)
-      }
+    async function fetchPublishedAssets() {
+      await getPublished()
     }
-    getPublished()
-  }, [
-    accountId,
-    page,
-    appConfig.metadataCacheUri,
-    chainIds,
-    service,
-    newCancelToken
-  ])
+    fetchPublishedAssets()
+  }, [accountId, page, appConfig.metadataCacheUri, chainIds, newCancelToken])
 
   return accountId ? (
     <>
-      {/* <Filters
+      <Filters
         serviceType={service}
         setServiceType={setServiceType}
+        accessType={access}
+        setAccessType={setAccsesType}
         className={styles.filters}
-      /> */}
+      />
       <AssetList
         assets={queryResult?.results}
         isLoading={isLoading}
