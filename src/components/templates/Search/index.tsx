@@ -94,7 +94,7 @@ export default function SearchPage({
             assets={queryResult?.results}
             showPagination
             isLoading={loading}
-            page={Number(page)}
+            page={queryResult?.page}
             totalPages={queryResult?.totalPages}
             onPageChange={setPage}
           />
