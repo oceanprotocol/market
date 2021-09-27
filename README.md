@@ -430,6 +430,17 @@ cookies.map((cookie) => {
 })
 ```
 
+#### Privacy Preference Centre Styling
+
+The privacy preference centre has two styling options `default` and `small`. The default view shows all of the customization options on a full-height side banner. When the `small` setting is used, a much smaller banner is shown which only reveals all of the customization options when the user clicks "Customize".
+
+The style can be changed by altering the `style` prop in the `PrivacyPreferenceCenter` component in `src/components/App.tsx`. For example:
+
+```Typescript
+<PrivacyPreferenceCenter style="small" />
+```
+
+
 ## 🏛 License
 
 ```text
