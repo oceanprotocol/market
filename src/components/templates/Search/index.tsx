@@ -34,29 +34,16 @@ export default function SearchPage({
   )
   const newCancelToken = useCancelToken()
 
-  useEffect(() => {
-    async function initSearch() {
-      setLoading(true)
-      setTotalResults(undefined)
-      const queryResult = await getResults(parsed, chainIds, newCancelToken())
-      setQueryResult(queryResult)
-      setTotalResults(queryResult.totalResults)
-      setTotalPagesNumber(queryResult.totalPages)
-      setLoading(false)
-    }
-    initSearch()
-  }, [
-    text,
-    owner,
-    tags,
-    sort,
-    page,
-    serviceType,
-    accessType,
-    sortOrder,
-    chainIds,
-    newCancelToken
-  ])
+  async function fetchAssets() {
+    setLoading(true)
+    setTotalResults(undefined)
+    const queryResult = await getResults(parsed, chainIds, newCancelToken())
+
+    setQueryResult(queryResult)
+    setTotalResults(queryResult.totalResults)
+    setTotalPagesNumber(queryResult.totalPages)
+    setLoading(false)
+  }
 
   function setPage(page: number) {
     const newUrl = updateQueryStringParameter(
@@ -66,6 +53,21 @@ export default function SearchPage({
     )
     return navigate(newUrl)
   }
+
+  useEffect(() => {
+    async function initSearch() {
+      await fetchAssets()
+    }
+    initSearch()
+  }, [text, owner, tags, sort, page, sortOrder, chainIds, newCancelToken])
+
+  useEffect(() => {
+    if (page !== '1') {
+      setPage(1)
+    } else {
+      fetchAssets()
+    }
+  }, [serviceType, accessType])
 
   return (
     <Permission eventType="browse">
