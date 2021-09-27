@@ -81,7 +81,7 @@ export function transformChainIdsListToQuery(chainIds: number[]): string {
 export function transformDIDListToQuery(didList: string[] | DID[]): string {
   let chainQuery = ''
   didList.forEach((did: any) => {
-    chainQuery += `id:${did} OR `
+    chainQuery += `id:${did.replace(/(:)/g, '\\:')} OR `
   })
   chainQuery = chainQuery.slice(0, chainQuery.length - 4)
   return chainQuery
@@ -236,19 +236,23 @@ export async function getAlgorithmDatasetsForCompute(
 
 export async function retrieveDDOListByDIDs(
   didList: string[] | DID[],
+  chainIds: number[],
   cancelToken: CancelToken
 ): Promise<DDO[]> {
   const orderedDDOListByDIDList: DDO[] = []
   const query = {
+    size: didList.length,
     query: {
       query_string: {
-        query: `${transformDIDListToQuery(didList)}`
+        query: `(${transformDIDListToQuery(
+          didList
+        )})  AND (${transformChainIdsListToQuery(chainIds)})`
       }
     }
   }
   const result = await queryMetadata(query, cancelToken)
   didList.forEach((did: string | DID) => {
-    const ddo: DDO = result.results.find((ddo) => ddo.id === did)
+    const ddo: DDO = result.results.find((ddo: DDO) => ddo.id === did)
     orderedDDOListByDIDList.push(ddo)
   })
   return orderedDDOListByDIDList

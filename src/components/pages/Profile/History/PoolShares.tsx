@@ -18,6 +18,7 @@ import Decimal from 'decimal.js'
 import { useProfile } from '../../../../providers/Profile'
 import { DDO } from '@oceanprotocol/lib'
 import { useCancelToken } from '../../../../hooks/useCancelToken'
+import { useUserPreferences } from '../../../../providers/UserPreferences'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
@@ -131,6 +132,7 @@ const columns = [
 
 async function getPoolSharesAssets(
   data: PoolShare[],
+  chainIds: number[],
   cancelToken: CancelToken
 ) {
   if (data.length < 1) return
@@ -144,7 +146,7 @@ async function getPoolSharesAssets(
       .replace('0x', 'did:op:')
     didList.push(did)
   }
-  const ddoList = await retrieveDDOListByDIDs(didList, cancelToken)
+  const ddoList = await retrieveDDOListByDIDs(didList, chainIds, cancelToken)
   for (let i = 0; i < data.length; i++) {
     const userLiquidity = calculateUserLiquidity(data[i])
     assetList.push({
@@ -168,13 +170,18 @@ export default function PoolShares({
   const [assets, setAssets] = useState<Asset[]>()
   const [loading, setLoading] = useState<boolean>(false)
   const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
+  const { chainIds } = useUserPreferences()
   const newCancelToken = useCancelToken()
   const fetchPoolSharesAssets = useCallback(
     async (cancelToken: CancelToken) => {
       if (!poolShares || isPoolSharesLoading) return
 
       try {
-        const assets = await getPoolSharesAssets(poolShares, cancelToken)
+        const assets = await getPoolSharesAssets(
+          poolShares,
+          chainIds,
+          cancelToken
+        )
         setAssets(assets)
       } catch (error) {
         console.error('Error fetching pool shares: ', error.message)
