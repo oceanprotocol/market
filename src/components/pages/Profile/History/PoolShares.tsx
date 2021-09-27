@@ -18,6 +18,7 @@ import Decimal from 'decimal.js'
 import { useProfile } from '../../../../providers/Profile'
 import { DDO } from '@oceanprotocol/lib'
 import { useCancelToken } from '../../../../hooks/useCancelToken'
+import { useUserPreferences } from '../../../../providers/UserPreferences'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
@@ -165,6 +166,8 @@ export default function PoolShares({
   const [loading, setLoading] = useState<boolean>(false)
   const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
   const newCancelToken = useCancelToken()
+  const { chainIds } = useUserPreferences()
+
   const fetchPoolSharesAssets = useCallback(
     async (cancelToken: CancelToken) => {
       if (!poolShares || isPoolSharesLoading) return
@@ -199,7 +202,9 @@ export default function PoolShares({
     }
   }, [dataFetchInterval, fetchPoolSharesAssets, newCancelToken])
 
-  return accountId ? (
+  return chainIds.length === 0 ? (
+    <div>Please select a network.</div>
+  ) : accountId ? (
     <Table
       columns={columns}
       className={styles.poolSharesTable}

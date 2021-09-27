@@ -235,7 +235,9 @@ export default function PoolTransactions({
     }
   }, [getPoolTransactions])
 
-  return accountId ? (
+  return chainIds.length === 0 ? (
+    <div>Please select a network.</div>
+  ) : accountId ? (
     <Table
       columns={minimal ? columnsMinimal : columns}
       data={transactions}

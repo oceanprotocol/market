@@ -115,7 +115,9 @@ export default function ComputeJobs({
     fetchJobs()
   }, [fetchJobs])
 
-  return accountId ? (
+  return chainIds.length === 0 ? (
+    <div>Please select a network.</div>
+  ) : accountId ? (
     <>
       {jobs?.length >= 0 && !minimal && (
         <Button
