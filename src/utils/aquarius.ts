@@ -89,7 +89,6 @@ export async function queryMetadata(
       { cancelToken }
     )
     if (!response || response.status !== 200 || !response.data) return
-
     return transformQueryResult(response.data, query.from, query.size)
   } catch (error) {
     if (axios.isCancel(error)) {
@@ -239,7 +238,7 @@ export async function getPublishedAssets(
   accesType = accesType || 'access OR compute'
 
   const queryPublishedAssets = {
-    from: (Number(page) || 0) * (Number(9) || 21),
+    from: (Number(page) - 1 || 0) * (Number(9) || 21),
     size: Number(9) || 21,
     query: {
       query_string: {
