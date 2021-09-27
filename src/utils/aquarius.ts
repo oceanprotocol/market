@@ -64,7 +64,7 @@ export function transformQueryResult(
   )
   result.totalResults = queryResult.hits.total
   result.totalPages = Math.floor(result.totalResults / size)
-  result.page = from ? from / size : 1
+  result.page = from ? from / size + 1 : 1
 
   return result
 }
