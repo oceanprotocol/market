@@ -7,6 +7,7 @@ import { useWeb3 } from '../../providers/Web3'
 import { useUserPreferences } from '../../providers/UserPreferences'
 import Tooltip from '../atoms/Tooltip'
 import { graphql, useStaticQuery } from 'gatsby'
+import Decimal from 'decimal.js'
 
 const query = graphql`
   query {
@@ -95,8 +96,10 @@ export default function TokenApproval({
     )
 
     amount &&
-      Number(amount) > 0 &&
-      setTokenApproved(Number(allowance) >= Number(amount))
+      new Decimal(amount).greaterThan(new Decimal('0')) &&
+      setTokenApproved(
+        new Decimal(allowance).greaterThanOrEqualTo(new Decimal(amount))
+      )
   }, [ocean, tokenAddress, spender, accountId, amount])
 
   useEffect(() => {
