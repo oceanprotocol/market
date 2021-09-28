@@ -68,7 +68,9 @@ const AssetList: React.FC<AssetListProps> = ({
     [className]: className
   })
 
-  return assetsWithPrices &&
+  return chainIds.length === 0 ? (
+    <div className={styles.empty}>No network selected</div>
+  ) : assetsWithPrices &&
     !loading &&
     (isLoading === undefined || isLoading === false) ? (
     <>
@@ -82,8 +84,6 @@ const AssetList: React.FC<AssetListProps> = ({
               noPublisher={noPublisher}
             />
           ))
-        ) : chainIds.length === 0 ? (
-          <div className={styles.empty}>No network selected.</div>
         ) : (
           <div className={styles.empty}>No results found.</div>
         )}

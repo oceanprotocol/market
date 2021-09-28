@@ -61,9 +61,7 @@ export default function PublishedList({
     fetchPublishedAssets()
   }, [accountId, page, appConfig.metadataCacheUri, newCancelToken])
 
-  return chainIds.length === 0 ? (
-    <div>Please select a network.</div>
-  ) : accountId ? (
+  return accountId ? (
     <>
       <Filters
         serviceType={service}

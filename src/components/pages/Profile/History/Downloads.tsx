@@ -5,7 +5,6 @@ import AssetTitle from '../../../molecules/AssetListTitle'
 import NetworkName from '../../../atoms/NetworkName'
 import { useProfile } from '../../../../providers/Profile'
 import { DownloadedAsset } from '../../../../utils/aquarius'
-import { useUserPreferences } from '../../../../providers/UserPreferences'
 
 const columns = [
   {
@@ -40,11 +39,8 @@ export default function ComputeDownloads({
   accountId: string
 }): ReactElement {
   const { downloads, isDownloadsLoading } = useProfile()
-  const { chainIds } = useUserPreferences()
 
-  return chainIds.length === 0 ? (
-    <div>Please select a network.</div>
-  ) : accountId ? (
+  return accountId ? (
     <Table
       columns={columns}
       data={downloads}
