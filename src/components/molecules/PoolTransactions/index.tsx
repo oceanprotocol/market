@@ -10,10 +10,13 @@ import { fetchDataForMultipleChains } from '../../../utils/subgraph'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import NetworkName from '../../atoms/NetworkName'
 import { retrieveDDO } from '../../../utils/aquarius'
-import axios, { CancelToken } from 'axios'
+import { CancelToken } from 'axios'
 import Title from './Title'
 import styles from './index.module.css'
 import { DDO, Logger } from '@oceanprotocol/lib'
+import { useIsMounted } from '../../../hooks/useIsMounted'
+import { useCancelToken } from '../../../hooks/useCancelToken'
+import { setLocale } from 'yup'
 
 const REFETCH_INTERVAL = 20000
 
@@ -130,11 +133,13 @@ export default function PoolTransactions({
   accountId: string
 }): ReactElement {
   const [transactions, setTransactions] = useState<PoolTransaction[]>()
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const { chainIds } = useUserPreferences()
   const { appConfig } = useSiteMetadata()
   const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
   const [data, setData] = useState<PoolTransaction[]>()
+  const isMounted = useIsMounted()
+  const cancelToken = useCancelToken()
 
   const getPoolTransactionData = useCallback(async () => {
     const variables = {
@@ -161,6 +166,7 @@ export default function PoolTransactions({
 
   const getPoolTransactions = useCallback(
     async (cancelToken: CancelToken) => {
+      console.log('DATA: ', data)
       if (!data) return
 
       const poolTransactions: PoolTransaction[] = []
@@ -190,12 +196,11 @@ export default function PoolTransactions({
   // Get data, periodically
   //
   useEffect(() => {
-    if (!appConfig?.metadataCacheUri) return
+    if (!appConfig?.metadataCacheUri || !isMounted()) return
 
     async function getTransactions() {
       try {
         await getPoolTransactionData()
-
         if (dataFetchInterval) return
         const interval = setInterval(async () => {
           await getPoolTransactionData()
@@ -210,18 +215,22 @@ export default function PoolTransactions({
     return () => {
       clearInterval(dataFetchInterval)
     }
-  }, [getPoolTransactionData, dataFetchInterval, appConfig.metadataCacheUri])
+  }, [
+    getPoolTransactionData,
+    dataFetchInterval,
+    appConfig?.metadataCacheUri,
+    isMounted
+  ])
 
   //
   // Transform to final transactions
   //
   useEffect(() => {
-    const cancelTokenSource = axios.CancelToken.source()
-
+    if (!cancelToken()) return
     async function transformData() {
       try {
         setIsLoading(true)
-        await getPoolTransactions(cancelTokenSource.token)
+        await getPoolTransactions(cancelToken())
       } catch (error) {
         Logger.error('Error fetching pool transactions: ', error.message)
       } finally {
@@ -231,9 +240,9 @@ export default function PoolTransactions({
     transformData()
 
     return () => {
-      cancelTokenSource.cancel()
+      cancelToken()
     }
-  }, [getPoolTransactions])
+  }, [cancelToken, getPoolTransactions, isMounted])
 
   return accountId ? (
     <Table

@@ -18,6 +18,7 @@ import Decimal from 'decimal.js'
 import { useProfile } from '../../../../providers/Profile'
 import { DDO } from '@oceanprotocol/lib'
 import { useCancelToken } from '../../../../hooks/useCancelToken'
+import { useIsMounted } from '../../../../hooks/useIsMounted'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
@@ -165,9 +166,11 @@ export default function PoolShares({
   const [loading, setLoading] = useState<boolean>(false)
   const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
   const newCancelToken = useCancelToken()
+  const isMounted = useIsMounted()
+
   const fetchPoolSharesAssets = useCallback(
     async (cancelToken: CancelToken) => {
-      if (!poolShares || isPoolSharesLoading) return
+      if (!poolShares || isPoolSharesLoading || !isMounted()) return
 
       try {
         const assets = await getPoolSharesAssets(poolShares, cancelToken)
@@ -176,7 +179,7 @@ export default function PoolShares({
         console.error('Error fetching pool shares: ', error.message)
       }
     },
-    [poolShares, isPoolSharesLoading]
+    [poolShares, isPoolSharesLoading, isMounted]
   )
 
   useEffect(() => {
