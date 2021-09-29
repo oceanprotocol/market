@@ -104,11 +104,7 @@ function SectionQueryResult({
       }
     }
     init()
-  }, [
-    isMounted,
-    newCancelToken,
-    query
-  ])
+  }, [isMounted, newCancelToken, query])
 
   return (
     <section className={styles.section}>
