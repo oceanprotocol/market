@@ -74,8 +74,6 @@ function SectionQueryResult({
   const isMounted = useIsMounted()
   const newCancelToken = useCancelToken()
   useEffect(() => {
-    if (!appConfig.metadataCacheUri) return
-
     async function init() {
       if (chainIds.length === 0) {
         const result: any = {
@@ -107,12 +105,9 @@ function SectionQueryResult({
     }
     init()
   }, [
-    appConfig.metadataCacheUri,
-    chainIds.length,
     isMounted,
     newCancelToken,
-    query,
-    queryData
+    query
   ])
 
   return (
