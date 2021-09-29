@@ -59,7 +59,7 @@ export default function PublishedList({
       await getPublished()
     }
     fetchPublishedAssets()
-  }, [accountId, page, appConfig.metadataCacheUri, newCancelToken])
+  }, [accountId, page, appConfig.metadataCacheUri, chainIds, newCancelToken])
 
   return accountId ? (
     <>
