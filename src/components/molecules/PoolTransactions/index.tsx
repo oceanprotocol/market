@@ -166,7 +166,6 @@ export default function PoolTransactions({
 
   const getPoolTransactions = useCallback(
     async (cancelToken: CancelToken) => {
-      console.log('DATA: ', data)
       if (!data) return
 
       const poolTransactions: PoolTransaction[] = []
@@ -187,9 +186,11 @@ export default function PoolTransactions({
       const sortedTransactions = poolTransactions.sort(
         (a, b) => b.timestamp - a.timestamp
       )
+
       setTransactions(sortedTransactions)
+      setIsLoading(false)
     },
-    [data]
+    [data, setIsLoading]
   )
 
   //
@@ -233,8 +234,6 @@ export default function PoolTransactions({
         await getPoolTransactions(cancelToken())
       } catch (error) {
         Logger.error('Error fetching pool transactions: ', error.message)
-      } finally {
-        setIsLoading(false)
       }
     }
     transformData()
