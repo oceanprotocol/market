@@ -124,7 +124,6 @@ export default function Consume({
           !isAssetNetwork ||
           typeof consumeStepText !== 'undefined' ||
           pricingIsLoading ||
-          (!hasPreviousOrder && !hasDatatoken) ||
           !isConsumablePrice) &&
           !hasPreviousOrder &&
           !hasDatatoken)
