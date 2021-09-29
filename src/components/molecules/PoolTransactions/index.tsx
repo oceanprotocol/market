@@ -14,9 +14,7 @@ import { CancelToken } from 'axios'
 import Title from './Title'
 import styles from './index.module.css'
 import { DDO, Logger } from '@oceanprotocol/lib'
-import { useIsMounted } from '../../../hooks/useIsMounted'
 import { useCancelToken } from '../../../hooks/useCancelToken'
-import { setLocale } from 'yup'
 
 const REFETCH_INTERVAL = 20000
 
@@ -138,7 +136,6 @@ export default function PoolTransactions({
   const { appConfig } = useSiteMetadata()
   const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
   const [data, setData] = useState<PoolTransaction[]>()
-  const isMounted = useIsMounted()
   const cancelToken = useCancelToken()
 
   const getPoolTransactionData = useCallback(async () => {
@@ -197,7 +194,7 @@ export default function PoolTransactions({
   // Get data, periodically
   //
   useEffect(() => {
-    if (!appConfig?.metadataCacheUri || !isMounted()) return
+    if (!appConfig?.metadataCacheUri) return
 
     async function getTransactions() {
       try {
@@ -216,12 +213,7 @@ export default function PoolTransactions({
     return () => {
       clearInterval(dataFetchInterval)
     }
-  }, [
-    getPoolTransactionData,
-    dataFetchInterval,
-    appConfig?.metadataCacheUri,
-    isMounted
-  ])
+  }, [getPoolTransactionData, dataFetchInterval, appConfig?.metadataCacheUri])
 
   //
   // Transform to final transactions
@@ -241,7 +233,7 @@ export default function PoolTransactions({
     return () => {
       cancelToken()
     }
-  }, [cancelToken, getPoolTransactions, isMounted])
+  }, [cancelToken, getPoolTransactions])
 
   return accountId ? (
     <Table
