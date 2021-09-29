@@ -67,7 +67,6 @@ function SectionQueryResult({
   action?: ReactElement
   queryData?: string
 }) {
-  const { appConfig } = useSiteMetadata()
   const { chainIds } = useUserPreferences()
   const [result, setResult] = useState<any>()
   const [loading, setLoading] = useState<boolean>()
