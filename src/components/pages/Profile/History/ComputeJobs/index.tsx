@@ -95,7 +95,7 @@ export default function ComputeJobs({
   }, [networkId, ocean, connect])
 
   const fetchJobs = useCallback(async () => {
-    if (!chainIds || !accountId) {
+    if (!chainIds || chainIds.length === 0 || !accountId) {
       setIsLoading(false)
       return
     }
@@ -109,8 +109,7 @@ export default function ComputeJobs({
         account,
         ddo
       )
-      console.log('JOBS: ', computeJobs)
-      isMounted() && setJobs(computeJobs?.computeJobs)
+      isMounted() && setJobs(computeJobs.computeJobs)
       setIsLoading(computeJobs.isLoaded)
     } catch (error) {
       Logger.error(error.message)
