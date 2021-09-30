@@ -8,6 +8,7 @@ import { useUserPreferences } from '../../providers/UserPreferences'
 import Tooltip from '../atoms/Tooltip'
 import { graphql, useStaticQuery } from 'gatsby'
 import Decimal from 'decimal.js'
+import { getOceanConfig } from '../../utils/ocean'
 
 const query = graphql`
   query {
@@ -79,8 +80,10 @@ export default function TokenApproval({
   const { ddo, price } = useAsset()
   const [tokenApproved, setTokenApproved] = useState(false)
   const [loading, setLoading] = useState(false)
-  const { ocean, config } = useOcean()
+  const { ocean } = useOcean()
   const { accountId } = useWeb3()
+
+  const config = getOceanConfig(ddo.chainId)
 
   const tokenAddress =
     coin === 'OCEAN' ? config.oceanTokenAddress : ddo.dataTokenInfo.address
