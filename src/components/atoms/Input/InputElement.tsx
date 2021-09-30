@@ -61,6 +61,7 @@ export default function InputElement({
           id={name}
           className={styleClasses}
           {...props}
+          disabled={disabled}
           multiple={multiple}
         >
           {field !== undefined && field.value === '' && (

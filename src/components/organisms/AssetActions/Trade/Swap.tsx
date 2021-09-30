@@ -14,6 +14,7 @@ import PriceImpact from './PriceImpact'
 
 import Decimal from 'decimal.js'
 import { BestPrice } from '../../../../models/BestPrice'
+import { useAsset } from '../../../../providers/Asset'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
@@ -36,7 +37,8 @@ export default function Swap({
   setMaximumOcean: (value: string) => void
   setCoin: (value: string) => void
 }): ReactElement {
-  const { ocean, config } = useOcean()
+  const { ocean } = useOcean()
+  const { isAssetNetwork } = useAsset()
   const [oceanItem, setOceanItem] = useState<TradeItem>({
     amount: '0',
     token: price.oceanSymbol,
@@ -203,16 +205,23 @@ export default function Swap({
       <TradeInput
         name={values.type === 'sell' ? 'datatoken' : 'ocean'}
         item={values.type === 'sell' ? dtItem : oceanItem}
+        disabled={!isAssetNetwork}
         handleValueChange={handleValueChange}
       />
 
-      <Button className={styles.swapButton} style="text" onClick={switchTokens}>
+      <Button
+        className={styles.swapButton}
+        style="text"
+        onClick={switchTokens}
+        disabled={!isAssetNetwork}
+      >
         <Arrow />
       </Button>
 
       <TradeInput
         name={values.type === 'sell' ? 'ocean' : 'datatoken'}
         item={values.type === 'sell' ? oceanItem : dtItem}
+        disabled={!isAssetNetwork}
         handleValueChange={handleValueChange}
       />
 
@@ -227,7 +236,7 @@ export default function Swap({
         tokenAmount={tokenAmount}
         spotPrice={spotPrice}
       />
-      <Slippage />
+      <Slippage disabled={!isAssetNetwork} />
     </div>
   )
 }
