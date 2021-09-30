@@ -17,6 +17,7 @@ import { useWeb3 } from '../../../../../providers/Web3'
 
 import { isValidNumber } from './../../../../../utils/numberValidations'
 import Decimal from 'decimal.js'
+import { useAsset } from '../../../../../providers/Asset'
 
 export default function FormAdd({
   coin,
@@ -45,6 +46,7 @@ export default function FormAdd({
 }): ReactElement {
   const { balance } = useWeb3()
   const { ocean } = useOcean()
+  const { isAssetNetwork } = useAsset()
 
   // Connect with form
   const {
@@ -75,6 +77,9 @@ export default function FormAdd({
       }
 
       if (Number(values.amount) > Number(amountMax)) return
+
+      console.log(poolAddress)
+      console.log(coin)
 
       const poolTokens = await ocean.pool.calcPoolOutGivenSingleIn(
         poolAddress,
@@ -132,12 +137,18 @@ export default function FormAdd({
             min="0"
             value={`${values.amount}`}
             step="any"
-            prefix={<CoinSelect dtSymbol={dtSymbol} setCoin={setCoin} />}
+            prefix={
+              <CoinSelect
+                dtSymbol={dtSymbol}
+                setCoin={setCoin}
+                disabled={!ocean || !isAssetNetwork}
+              />
+            }
             placeholder="0"
             field={field}
             form={form}
             onChange={handleFieldChange}
-            disabled={!ocean}
+            disabled={!ocean || !isAssetNetwork}
           />
         )}
       </Field>
