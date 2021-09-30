@@ -79,7 +79,13 @@ export default function Consume({
   }, [ddo, accountId, hasPreviousOrder, isMounted])
 
   useEffect(() => {
-    if (!data || !assetTimeout || data.tokenOrders.length === 0 || !accountId)
+    if (
+      !data ||
+      !assetTimeout ||
+      data.tokenOrders.length === 0 ||
+      !accountId ||
+      !isAssetNetwork
+    )
       return
 
     const lastOrder = data.tokenOrders[0]
@@ -96,11 +102,11 @@ export default function Consume({
         setHasPreviousOrder(false)
       }
     }
-  }, [data, assetTimeout, accountId])
+  }, [data, assetTimeout, accountId, isAssetNetwork])
 
   useEffect(() => {
     const { timeout } = ddo.findServiceByType('access').attributes.main
-    setAssetTimeout(timeout.toString())
+    setAssetTimeout(`${timeout}`)
   }, [ddo])
 
   useEffect(() => {
@@ -137,8 +143,8 @@ export default function Consume({
     pricingIsLoading,
     isConsumablePrice,
     hasDatatoken,
-    accountId,
-    isConsumable
+    isConsumable,
+    accountId
   ])
 
   async function handleConsume() {
