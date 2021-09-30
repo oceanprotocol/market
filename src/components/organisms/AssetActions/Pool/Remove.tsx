@@ -22,6 +22,7 @@ import InputElement from '../../../atoms/Input/InputElement'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
 import Decimal from 'decimal.js'
+import { useAsset } from '../../../../providers/Asset'
 
 const contentQuery = graphql`
   query PoolRemoveQuery {
@@ -69,6 +70,7 @@ export default function Remove({
   const slippagePresets = ['5', '10', '15', '25', '50']
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
+  const { isAssetNetwork } = useAsset()
   const [amountPercent, setAmountPercent] = useState('0')
   const [amountMaxPercent, setAmountMaxPercent] = useState('100')
   const [amountPoolShares, setAmountPoolShares] = useState('0')
@@ -231,6 +233,7 @@ export default function Remove({
               type="range"
               min="0"
               max={amountMaxPercent}
+              disabled={!isAssetNetwork}
               value={amountPercent}
               onChange={handleAmountPercentChange}
             />
@@ -238,6 +241,7 @@ export default function Remove({
               style="text"
               size="small"
               className={styles.maximum}
+              disabled={!isAssetNetwork}
               onClick={handleMaxButton}
             >
               {`${amountMaxPercent}% max`}
@@ -251,6 +255,7 @@ export default function Remove({
             style="text"
             size="small"
             onClick={handleAdvancedButton}
+            disabled={!isAssetNetwork}
             className={styles.toggle}
           >
             {isAdvanced === true ? 'Simple' : 'Advanced'}
@@ -283,6 +288,7 @@ export default function Remove({
           postfix="%"
           sortOptions={false}
           options={slippagePresets}
+          disabled={!isAssetNetwork}
           value={slippage}
           onChange={handleSlippageChange}
         />
@@ -293,6 +299,7 @@ export default function Remove({
         actionName={content.action}
         action={handleRemoveLiquidity}
         successMessage="Successfully removed liquidity."
+        isDisabled={!isAssetNetwork}
         txId={txId}
       />
     </div>
