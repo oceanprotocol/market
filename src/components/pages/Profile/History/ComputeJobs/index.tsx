@@ -102,14 +102,20 @@ export default function ComputeJobs({
 
     try {
       setIsLoading(true)
-      const jobs = await getComputeJobs(chainIds, config, ocean, account, ddo)
-      isMounted() && setJobs(jobs)
+      const computeJobs = await getComputeJobs(
+        chainIds,
+        config,
+        ocean,
+        account,
+        ddo
+      )
+      console.log('JOBS: ', computeJobs)
+      isMounted() && setJobs(computeJobs?.computeJobs)
+      setIsLoading(computeJobs.isLoaded)
     } catch (error) {
       Logger.error(error.message)
-    } finally {
-      setIsLoading(false)
     }
-  }, [account, accountId, chainIds, ddo, config, ocean])
+  }, [chainIds, accountId, config, ocean, account, ddo, isMounted])
 
   useEffect(() => {
     fetchJobs()
