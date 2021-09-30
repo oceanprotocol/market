@@ -70,7 +70,9 @@ export default function FormAdd({
 
   useEffect(() => {
     async function calculatePoolShares() {
-      if (!values.amount) {
+      const tokenInAddress =
+        coin === 'OCEAN' ? ocean.pool.oceanAddress : ocean.pool.dtAddress
+      if (!values.amount || !tokenInAddress) {
         setNewPoolTokens('0')
         setNewPoolShare('0')
         return
@@ -78,12 +80,9 @@ export default function FormAdd({
 
       if (Number(values.amount) > Number(amountMax)) return
 
-      console.log(poolAddress)
-      console.log(coin)
-
       const poolTokens = await ocean.pool.calcPoolOutGivenSingleIn(
         poolAddress,
-        coin === 'OCEAN' ? ocean.pool.oceanAddress : ocean.pool.dtAddress,
+        tokenInAddress,
         `${values.amount}`
       )
 
