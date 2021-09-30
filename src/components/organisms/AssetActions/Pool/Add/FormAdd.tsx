@@ -114,6 +114,10 @@ export default function FormAdd({
     setNewPoolShare
   ])
 
+  useEffect(() => {
+    setFieldValue('amount', undefined)
+  }, [coin])
+
   return (
     <>
       <UserLiquidity
