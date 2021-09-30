@@ -6,10 +6,10 @@ import Button from '../../../atoms/Button'
 import { ReactComponent as Arrow } from '../../../../images/arrow.svg'
 import { FormikContextType, useFormikContext } from 'formik'
 import { PoolBalance } from '../../../../@types/TokenBalance'
-import Output from './Output'
-import Slippage from './Slippage'
 import { FormTradeData, TradeItem } from '../../../../models/FormTrade'
 import { useOcean } from '../../../../providers/Ocean'
+import Output from './Output'
+import Slippage from './Slippage'
 import PriceImpact from './PriceImpact'
 
 import Decimal from 'decimal.js'
@@ -24,7 +24,8 @@ export default function Swap({
   balance,
   price,
   setMaximumDt,
-  setMaximumOcean
+  setMaximumOcean,
+  setCoin
 }: {
   ddo: DDO
   maxDt: string
@@ -33,6 +34,7 @@ export default function Swap({
   price: BestPrice
   setMaximumDt: (value: string) => void
   setMaximumOcean: (value: string) => void
+  setCoin: (value: string) => void
 }): ReactElement {
   const { ocean, config } = useOcean()
   const [oceanItem, setOceanItem] = useState<TradeItem>({
@@ -53,63 +55,82 @@ export default function Swap({
     validateForm
   }: FormikContextType<FormTradeData> = useFormikContext()
 
-  /// Values used for calculation of price impact
+  // Values used for calculation of price impact
   const [spotPrice, setSpotPrice] = useState<string>()
   const [totalValue, setTotalValue] = useState<string>()
   const [tokenAmount, setTokenAmount] = useState<string>()
-  ///
+
   useEffect(() => {
-    if (!ddo || !balance || !values || !price) return
+    if (!ddo || !balance || !values?.type || !price) return
 
     async function calculateMaximum() {
-      const dtAmount = values.type === 'buy' ? maxDt : balance.datatoken
-      const oceanAmount = values.type === 'buy' ? balance.ocean : maxOcean
+      const dtAmount =
+        values.type === 'buy'
+          ? new Decimal(maxDt)
+          : new Decimal(balance.datatoken)
+      const oceanAmount =
+        values.type === 'buy'
+          ? new Decimal(balance.ocean)
+          : new Decimal(maxOcean)
 
       const maxBuyOcean = await ocean.pool.getOceanReceived(
         price.address,
-        dtAmount.toString()
+        `${dtAmount.toString()}`
       )
       const maxBuyDt = await ocean.pool.getDTReceived(
         price.address,
-        oceanAmount.toString()
+        `${oceanAmount.toString()}`
       )
 
       const maximumDt =
         values.type === 'buy'
-          ? Number(dtAmount) > Number(maxBuyDt)
-            ? new Decimal(maxBuyDt)
-            : new Decimal(dtAmount)
-          : Number(dtAmount) > Number(balance.datatoken)
-          ? new Decimal(balance.datatoken)
-          : new Decimal(dtAmount)
+          ? dtAmount.greaterThan(new Decimal(maxBuyDt))
+            ? maxBuyDt
+            : dtAmount
+          : dtAmount.greaterThan(new Decimal(balance.datatoken))
+          ? balance.datatoken
+          : dtAmount
 
       const maximumOcean =
         values.type === 'sell'
-          ? Number(oceanAmount) > Number(maxBuyOcean)
-            ? new Decimal(maxBuyOcean)
-            : new Decimal(oceanAmount)
-          : Number(oceanAmount) > Number(balance.ocean)
-          ? new Decimal(balance.ocean)
-          : new Decimal(oceanAmount)
+          ? oceanAmount.greaterThan(new Decimal(maxBuyOcean))
+            ? maxBuyOcean
+            : oceanAmount
+          : oceanAmount.greaterThan(new Decimal(balance.ocean))
+          ? balance.ocean
+          : oceanAmount
 
       setMaximumDt(maximumDt.toString())
       setMaximumOcean(maximumOcean.toString())
-      setOceanItem({
-        ...oceanItem,
+
+      setOceanItem((prevState) => ({
+        ...prevState,
         amount: oceanAmount.toString(),
         maxAmount: maximumOcean.toString()
-      })
-      setDtItem({
-        ...dtItem,
+      }))
+
+      setDtItem((prevState) => ({
+        ...prevState,
         amount: dtAmount.toString(),
         maxAmount: maximumDt.toString()
-      })
+      }))
     }
     calculateMaximum()
-  }, [ddo, maxOcean, maxDt, balance, price?.value, values.type])
+  }, [
+    ddo,
+    maxOcean,
+    maxDt,
+    balance,
+    price,
+    values?.type,
+    ocean,
+    setMaximumDt,
+    setMaximumOcean
+  ])
 
   const switchTokens = () => {
     setFieldValue('type', values.type === 'buy' ? 'sell' : 'buy')
+    setCoin(values.type === 'sell' ? 'OCEAN' : ddo.dataTokenInfo.symbol)
     // don't reset form because we don't want to reset type
     setFieldValue('datatoken', 0)
     setFieldValue('ocean', 0)
