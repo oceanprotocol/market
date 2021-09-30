@@ -77,7 +77,7 @@ export default function TokenApproval({
   amount: string
   coin: string
 }): ReactElement {
-  const { ddo, price } = useAsset()
+  const { ddo, price, isAssetNetwork } = useAsset()
   const [tokenApproved, setTokenApproved] = useState(false)
   const [loading, setLoading] = useState(false)
   const { ocean } = useOcean()
@@ -90,7 +90,7 @@ export default function TokenApproval({
   const spender = price.address
 
   const checkTokenApproval = useCallback(async () => {
-    if (!ocean || !tokenAddress || !spender) return
+    if (!ocean || !tokenAddress || !spender || !isAssetNetwork) return
 
     const allowance = await ocean.datatokens.allowance(
       tokenAddress,
