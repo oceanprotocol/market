@@ -90,7 +90,8 @@ export default function TokenApproval({
   const spender = price.address
 
   const checkTokenApproval = useCallback(async () => {
-    if (!ocean || !tokenAddress || !spender || !isAssetNetwork) return
+    if (!ocean || !tokenAddress || !spender || !isAssetNetwork || !amount)
+      return
 
     const allowance = await ocean.datatokens.allowance(
       tokenAddress,
