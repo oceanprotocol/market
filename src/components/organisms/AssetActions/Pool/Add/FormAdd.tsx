@@ -70,6 +70,7 @@ export default function FormAdd({
 
   useEffect(() => {
     async function calculatePoolShares() {
+      if (!ocean) return
       const tokenInAddress =
         coin === 'OCEAN' ? ocean.pool.oceanAddress : ocean.pool.dtAddress
       if (!values.amount || !tokenInAddress) {
