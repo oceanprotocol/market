@@ -56,11 +56,14 @@ export function getNetworkDisplayName(
   let displayName
 
   switch (networkId) {
+    case 137:
+      displayName = 'Polygon'
+      break
     case 1287:
       displayName = 'Moonbase Alpha'
       break
-    case 137:
-      displayName = 'Polygon'
+    case 1285:
+      displayName = 'Moonriver'
       break
     case 80001:
       displayName = 'Polygon Mumbai'
