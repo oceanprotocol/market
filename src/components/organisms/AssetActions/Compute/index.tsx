@@ -333,6 +333,7 @@ export default function Compute({
             computeAlgorithm,
             appConfig.marketFeeAddress,
             undefined,
+            null,
             false
           )
 
@@ -353,6 +354,7 @@ export default function Compute({
             serviceAlgo.index,
             appConfig.marketFeeAddress,
             undefined,
+            null,
             false
           )
 
