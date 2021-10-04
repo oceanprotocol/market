@@ -254,9 +254,10 @@ export async function getComputeJobs(
       data.push(tokenOrder)
     })
   }
-  if (!ocean || !account || !data) {
-    isLoading = false
-    return
+  if (!ocean || !account || !data) return
+
+  if (data.length === 0) {
+    return computeResult
   }
 
   data = data.sort((a, b) => b.timestamp - a.timestamp)
