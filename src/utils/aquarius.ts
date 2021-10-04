@@ -80,8 +80,9 @@ export function transformChainIdsListToQuery(chainIds: number[]): string {
 
 export function transformDIDListToQuery(didList: string[] | DID[]): string {
   let chainQuery = ''
+  const regex = new RegExp('(:)', 'g')
   didList.forEach((did: any) => {
-    chainQuery += `id:${did.replace(/(:)/g, '\\:')} OR `
+    chainQuery += `id:${did.replace(regex, '\\:')} OR `
   })
   chainQuery = chainQuery.slice(0, chainQuery.length - 4)
   return chainQuery
