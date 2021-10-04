@@ -213,7 +213,7 @@ export default function PoolTransactions({
     return () => {
       clearInterval(dataFetchInterval)
     }
-  }, [getPoolTransactionData, dataFetchInterval, appConfig?.metadataCacheUri])
+  }, [getPoolTransactionData, dataFetchInterval, appConfig.metadataCacheUri])
 
   //
   // Transform to final transactions

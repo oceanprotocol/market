@@ -228,6 +228,10 @@ export async function getComputeJobs(
   ddo?: DDO
 ): Promise<ComputeResults> {
   const assetDTAddress = ddo?.dataTokenInfo?.address
+  let computeResult: ComputeResults = {
+    computeJobs: [],
+    isLoaded: false
+  }
   let isLoading = true
   const variables = assetDTAddress
     ? {
@@ -244,14 +248,12 @@ export async function getComputeJobs(
     assetDTAddress ? [ddo?.chainId] : chainIds
   )
   let data: TokenOrder[] = []
-
   for (let i = 0; i < result.length; i++) {
-    if (!result[i]?.tokenOrders) continue
+    if (!result[i]?.tokenOrders || result[i].tokenOrders.length === 0) continue
     result[i]?.tokenOrders.forEach((tokenOrder: TokenOrder) => {
       data.push(tokenOrder)
     })
   }
-
   if (!ocean || !account || !data) {
     isLoading = false
     return
@@ -271,11 +273,12 @@ export async function getComputeJobs(
   )
   const computeJobs = await getJobs(providers, account, assets)
   isLoading = false
-  const computeReesult: ComputeResults = {
+  computeResult = {
     computeJobs: computeJobs,
     isLoaded: isLoading
   }
-  return computeReesult
+
+  return computeResult
 }
 
 export async function createTrustedAlgorithmList(

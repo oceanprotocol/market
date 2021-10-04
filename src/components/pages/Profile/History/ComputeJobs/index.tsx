@@ -77,7 +77,7 @@ export default function ComputeJobs({
   const { ocean, account, config, connect } = useOcean()
   const { accountId, networkId } = useWeb3()
   const { ddo } = useAsset()
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const { chainIds } = useUserPreferences()
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
   const isMounted = useIsMounted()
@@ -96,21 +96,15 @@ export default function ComputeJobs({
 
   const fetchJobs = useCallback(async () => {
     if (!chainIds || chainIds.length === 0 || !accountId) {
+      setJobs([])
       setIsLoading(false)
       return
     }
-
     try {
       setIsLoading(true)
-      const computeJobs = await getComputeJobs(
-        chainIds,
-        config,
-        ocean,
-        account,
-        ddo
-      )
-      isMounted() && setJobs(computeJobs.computeJobs)
-      setIsLoading(computeJobs.isLoaded)
+      const jobs = await getComputeJobs(chainIds, config, ocean, account, ddo)
+      isMounted() && setJobs(jobs.computeJobs)
+      setIsLoading(jobs.isLoaded)
     } catch (error) {
       Logger.error(error.message)
     }
