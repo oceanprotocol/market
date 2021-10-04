@@ -26,7 +26,7 @@ export function filterNetworksByType(
     //
     // HEADS UP NO. 2! We hack in mainnet detection for moonriver as their
     // network data uses the `network` key wrong over in
-    // https://github.com/PureStake/chains/blob/master/_data/chains/eip155-1285.json
+    // https://github.com/ethereum-lists/chains/blob/master/_data/chains/eip155-1285.json
     //
     return type === 'mainnet'
       ? networkData.network === type || networkData.network === 'moonriver'
