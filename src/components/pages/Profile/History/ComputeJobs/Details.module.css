@@ -1,0 +1,72 @@
+.main {
+  margin-bottom: var(--spacer);
+}
+
+.main > div:first-child {
+  margin-bottom: calc(var(--spacer) / 2);
+}
+
+.asset {
+  composes: box from '../../../../atoms/Box.module.css';
+  box-shadow: none;
+  padding: calc(var(--spacer) / 2);
+  margin-bottom: calc(var(--spacer) / 2);
+}
+
+.asset + .asset {
+  margin-left: var(--spacer);
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  position: relative;
+  overflow: visible;
+}
+
+.asset + .asset:before {
+  content: '';
+  display: block;
+  position: absolute;
+  left: -1px;
+  top: -1.15rem;
+  bottom: 3px;
+  width: 1px;
+  background-color: var(--border-color);
+}
+
+.asset p {
+  margin: 0;
+}
+
+.asset code {
+  padding: 0;
+}
+
+.assetTitle {
+  margin-bottom: 0;
+  font-size: var(--font-size-base);
+  color: var(--font-color-text);
+}
+
+.assetLink {
+  display: inline-block;
+  margin-left: calc(var(--spacer) / 8);
+}
+
+.assetLink svg {
+  margin: 0;
+  fill: var(--color-primary);
+  width: 0.6em;
+  height: 0.6em;
+}
+
+.assetMeta,
+.assetMeta code {
+  color: var(--color-secondary);
+  font-size: var(--font-size-small);
+}
+
+.meta {
+  display: grid;
+  gap: var(--spacer);
+  grid-template-columns: 1fr 1fr;
+  margin-top: calc(var(--spacer) * 1.5);
+}

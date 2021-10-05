@@ -5,7 +5,7 @@ import { usePublish } from '../../../hooks/usePublish'
 import styles from './index.module.css'
 import FormPublish from './FormPublish'
 import FormAlgoPublish from './FormAlgoPublish'
-import Web3Feedback from '../../molecules/Wallet/Feedback'
+import Web3Feedback from '../../molecules/Web3Feedback'
 import Tabs from '../../atoms/Tabs'
 import { initialValues, validationSchema } from '../../../models/FormPublish'
 import {
@@ -56,7 +56,6 @@ function TabContent({
           ) : (
             <MetadataAlgorithmPreview values={values} />
           )}
-
           <Web3Feedback />
         </div>
       </aside>
@@ -123,24 +122,25 @@ export default function PublishPage({
       nextState?: Partial<FormikState<Partial<MetadataPublishFormDataset>>>
     ) => void
   ): Promise<void> {
-    const metadata = transformPublishFormToMetadata(values)
-    const timeout = mapTimeoutStringToSeconds(values.timeout)
-
-    const serviceType = values.access === 'Download' ? 'access' : 'compute'
-
     try {
+      const metadata = transformPublishFormToMetadata(values)
+      const timeout = mapTimeoutStringToSeconds(values.timeout)
+
+      const serviceType = values.access === 'Download' ? 'access' : 'compute'
       Logger.log(
         'Publish with ',
         metadata,
         serviceType,
-        values.dataTokenOptions
+        values.dataTokenOptions,
+        values.providerUri
       )
 
       const ddo = await publish(
         metadata as unknown as Metadata,
         serviceType,
         values.dataTokenOptions,
-        timeout
+        timeout,
+        values.providerUri
       )
 
       // Publish failed
@@ -159,6 +159,8 @@ export default function PublishPage({
         values: initialValues as MetadataPublishFormDataset,
         status: 'empty'
       })
+      // move user's focus to top of screen
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     } catch (error) {
       setError(error.message)
       Logger.error(error.message)
@@ -173,14 +175,10 @@ export default function PublishPage({
   ): Promise<void> {
     const metadata = transformPublishAlgorithmFormToMetadata(values)
     const timeout = mapTimeoutStringToSeconds(values.timeout)
-
-    // TODO: put back check once #572 is resolved
-    // https://github.com/oceanprotocol/market/issues/572
-    const validDockerImage = true
-    // const validDockerImage =
-    //   values.dockerImage === 'custom image'
-    //     ? await validateDockerImage(values.image, values.containerTag)
-    //     : true
+    const validDockerImage =
+      values.dockerImage === 'custom image'
+        ? await validateDockerImage(values.image, values.containerTag)
+        : true
     try {
       if (validDockerImage) {
         Logger.log('Publish algorithm with ', metadata, values.dataTokenOptions)
@@ -208,6 +206,10 @@ export default function PublishPage({
           values: initialValuesAlgorithm as MetadataPublishFormAlgorithm,
           status: 'empty'
         })
+        // move user's focus to top of screen
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+      } else {
+        document.getElementById('image').scrollIntoView({ behavior: 'smooth' })
       }
     } catch (error) {
       setError(error.message)
@@ -228,8 +230,6 @@ export default function PublishPage({
             : validationSchemaAlgorithm
         }
         onSubmit={async (values, { resetForm }) => {
-          // move user's focus to top of screen
-          window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
           // kick off publishing
           publishType === 'dataset'
             ? await handleSubmit(values, resetForm)

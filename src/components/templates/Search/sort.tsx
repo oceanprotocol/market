@@ -11,7 +11,10 @@ import classNames from 'classnames/bind'
 
 const cx = classNames.bind(styles)
 
-const sortItems = [{ display: 'Published', value: SortTermOptions.Created }]
+const sortItems = [
+  { display: 'Relevance', value: SortTermOptions.Relevance },
+  { display: 'Published', value: SortTermOptions.Created }
+]
 
 export default function Sort({
   sortType,
@@ -31,10 +34,11 @@ export default function Sort({
   async function sortResults(sortBy?: string, direction?: string) {
     let urlLocation: string
     if (sortBy) {
+      urlLocation = await addExistingParamsToUrl(location, ['sort'])
       urlLocation = `${urlLocation}&sort=${sortBy}`
       setSortType(sortBy)
     } else if (direction) {
-      urlLocation = await addExistingParamsToUrl(location, 'sortOrder')
+      urlLocation = await addExistingParamsToUrl(location, ['sortOrder'])
       urlLocation = `${urlLocation}&sortOrder=${direction}`
       setSortDirection(direction)
     }

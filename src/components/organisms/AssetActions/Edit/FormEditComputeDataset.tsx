@@ -1,9 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
-import Button from '../../../atoms/Button'
 import Input from '../../../atoms/Input'
-import { useOcean } from '../../../../providers/Ocean'
-import { useWeb3 } from '../../../../providers/Web3'
 import { FormFieldProps } from '../../../../@types/Form'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
 import stylesIndex from './index.module.css'
@@ -16,6 +13,9 @@ import { useAsset } from '../../../../providers/Asset'
 import { ComputePrivacyForm } from '../../../../models/FormEditComputeDataset'
 import { publisherTrustedAlgorithm as PublisherTrustedAlgorithm } from '@oceanprotocol/lib'
 import axios from 'axios'
+import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
+import FormActions from './FormActions'
+import { useCancelToken } from '../../../../hooks/useCancelToken'
 
 export default function FormEditComputeDataset({
   data,
@@ -26,38 +26,32 @@ export default function FormEditComputeDataset({
   title: string
   setShowEdit: (show: boolean) => void
 }): ReactElement {
-  const { accountId } = useWeb3()
-  const { ocean, config } = useOcean()
+  const { appConfig } = useSiteMetadata()
   const { ddo } = useAsset()
-  const { isValid, values }: FormikContextType<ComputePrivacyForm> =
-    useFormikContext()
+  const { values }: FormikContextType<ComputePrivacyForm> = useFormikContext()
   const [allAlgorithms, setAllAlgorithms] = useState<AssetSelectionAsset[]>()
-
+  const newCancelToken = useCancelToken()
   const { publisherTrustedAlgorithms } =
     ddo?.findServiceByType('compute').attributes.main.privacy
 
   async function getAlgorithmList(
     publisherTrustedAlgorithms: PublisherTrustedAlgorithm[]
   ): Promise<AssetSelectionAsset[]> {
-    const source = axios.CancelToken.source()
     const query = {
-      offset: 500,
       query: {
         query_string: {
-          query: `service.attributes.main.type:algorithm -isInPurgatory:true`
+          query: `service.attributes.main.type:algorithm AND chainId:${ddo.chainId} -isInPurgatory:true`
         }
       },
-      sort: { created: -1 }
+      sort: { created: 'desc' }
     }
-    const querryResult = await queryMetadata(
-      query,
-      config.metadataCacheUri,
-      source.token
-    )
+    const querryResult = await queryMetadata(query, newCancelToken())
+    const datasetComputeService = ddo.findServiceByType('compute')
     const algorithmSelectionList = await transformDDOToAssetSelection(
+      datasetComputeService?.serviceEndpoint,
       querryResult.results,
-      config.metadataCacheUri,
-      publisherTrustedAlgorithms
+      publisherTrustedAlgorithms,
+      newCancelToken()
     )
     return algorithmSelectionList
   }
@@ -66,7 +60,7 @@ export default function FormEditComputeDataset({
     getAlgorithmList(publisherTrustedAlgorithms).then((algorithms) => {
       setAllAlgorithms(algorithms)
     })
-  }, [config.metadataCacheUri, publisherTrustedAlgorithms])
+  }, [appConfig.metadataCacheUri, publisherTrustedAlgorithms])
 
   return (
     <Form className={styles.form}>
@@ -88,14 +82,8 @@ export default function FormEditComputeDataset({
           component={Input}
         />
       ))}
-      <footer className={styles.actions}>
-        <Button style="primary" disabled={!ocean || !accountId || !isValid}>
-          Submit
-        </Button>
-        <Button style="text" onClick={() => setShowEdit(false)}>
-          Cancel
-        </Button>
-      </footer>
+
+      <FormActions setShowEdit={setShowEdit} />
     </Form>
   )
 }

@@ -42,6 +42,7 @@ export function secondsToString(numberOfSeconds: number): string {
   if (numberOfSeconds === 0) return 'Forever'
 
   const years = Math.floor(numberOfSeconds / 31536000)
+  const months = Math.floor((numberOfSeconds %= 31536000) / 2630000)
   const weeks = Math.floor((numberOfSeconds %= 31536000) / 604800)
   const days = Math.floor((numberOfSeconds %= 604800) / 86400)
   const hours = Math.floor((numberOfSeconds %= 86400) / 3600)
@@ -50,6 +51,8 @@ export function secondsToString(numberOfSeconds: number): string {
 
   return years
     ? `${years} year${numberEnding(years)}`
+    : months
+    ? `${months} month${numberEnding(months)}`
     : weeks
     ? `${weeks} week${numberEnding(weeks)}`
     : days
@@ -73,7 +76,7 @@ export function checkIfTimeoutInPredefinedValues(
   return false
 }
 
-function getAlgoithComponent(
+function getAlgorithmComponent(
   image: string,
   containerTag: string,
   entrypoint: string,
@@ -91,7 +94,7 @@ function getAlgoithComponent(
   }
 }
 
-function getAlgoithFileExtension(fileUrl: string): string {
+function getAlgorithmFileExtension(fileUrl: string): string {
   const splitedFileUrl = fileUrl.split('.')
   return splitedFileUrl[splitedFileUrl.length - 1]
 }
@@ -116,6 +119,7 @@ export function transformPublishFormToMetadata(
       name,
       author,
       dateCreated: ddo ? ddo.created : currentTime,
+      datePublished: '',
       files: typeof files !== 'string' && files,
       license: 'https://market.oceanprotocol.com/terms'
     },
@@ -136,10 +140,18 @@ async function isDockerHubImageValid(
   tag: string
 ): Promise<boolean> {
   try {
-    const response = await axios.get(
-      `https://hub.docker.com/v2/repositories/${image}/tags/${tag}`
+    const response = await axios.post(
+      `https://dockerhub-proxy.oceanprotocol.com`,
+      {
+        image,
+        tag
+      }
     )
-    if (!response || response.status !== 200 || !response.data) {
+    if (
+      !response ||
+      response.status !== 200 ||
+      response.data.status !== 'success'
+    ) {
       toast.error(
         'Could not fetch docker hub image info. Please check image name and tag and try again'
       )
@@ -191,7 +203,6 @@ export function transformPublishAlgorithmFormToMetadata(
     author,
     description,
     tags,
-    dockerImage,
     image,
     containerTag,
     entrypoint,
@@ -202,12 +213,12 @@ export function transformPublishAlgorithmFormToMetadata(
 ): MetadataMarket {
   const currentTime = toStringNoMS(new Date())
   const fileUrl = typeof files !== 'string' && files[0].url
-  const algorithmLanguace = getAlgoithFileExtension(fileUrl)
-  const algorithm = getAlgoithComponent(
+  const algorithmLanguage = getAlgorithmFileExtension(fileUrl)
+  const algorithm = getAlgorithmComponent(
     image,
     containerTag,
     entrypoint,
-    algorithmLanguace
+    algorithmLanguage
   )
   const metadata: MetadataMarket = {
     main: {
@@ -218,7 +229,7 @@ export function transformPublishAlgorithmFormToMetadata(
       dateCreated: ddo ? ddo.created : currentTime,
       files: typeof files !== 'string' && files,
       license: 'https://market.oceanprotocol.com/terms',
-      algorithm: algorithm
+      algorithm
     },
     additionalInformation: {
       ...AssetModel.additionalInformation,

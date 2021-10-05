@@ -1,16 +1,22 @@
-import React, { ReactElement, useEffect, FormEvent, ChangeEvent } from 'react'
+import React, {
+  ReactElement,
+  useEffect,
+  FormEvent,
+  ChangeEvent,
+  useState
+} from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 import { useFormikContext, Field, Form, FormikContextType } from 'formik'
 import Input from '../../atoms/Input'
-import Button from '../../atoms/Button'
 import { FormContent, FormFieldProps } from '../../../@types/Form'
 import { MetadataPublishFormDataset } from '../../../@types/MetaData'
 import { initialValues as initialValuesDataset } from '../../../models/FormAlgoPublish'
-import { useOcean } from '../../../providers/Ocean'
 import { ReactComponent as Download } from '../../../images/download.svg'
 import { ReactComponent as Compute } from '../../../images/compute.svg'
-import stylesIndex from './index.module.css'
+import FormTitle from './FormTitle'
+import FormActions from './FormActions'
 import styles from './FormPublish.module.css'
+import AdvancedSettings from '../../molecules/FormFields/AdvancedSettings'
 
 const query = graphql`
   query {
@@ -30,6 +36,7 @@ const query = graphql`
               required
               sortOptions
               options
+              advanced
             }
             warning
           }
@@ -42,18 +49,20 @@ const query = graphql`
 export default function FormPublish(): ReactElement {
   const data = useStaticQuery(query)
   const content: FormContent = data.content.edges[0].node.childPublishJson
-  const { ocean, account } = useOcean()
+
   const {
     status,
     setStatus,
     isValid,
+    values,
     setErrors,
     setTouched,
     resetForm,
-    initialValues,
     validateField,
     setFieldValue
   }: FormikContextType<MetadataPublishFormDataset> = useFormikContext()
+
+  const [computeTypeSelected, setComputeTypeSelected] = useState<boolean>(false)
 
   // reset form validation on every mount
   useEffect(() => {
@@ -76,6 +85,8 @@ export default function FormPublish(): ReactElement {
     }
   ]
 
+  const computeTypeOptions = ['1 day', '1 week', '1 month', '1 year']
+
   // Manually handle change events instead of using `handleChange` from Formik.
   // Workaround for default `validateOnChange` not kicking in
   function handleFieldChange(
@@ -84,6 +95,16 @@ export default function FormPublish(): ReactElement {
   ) {
     const value =
       field.type === 'terms' ? !JSON.parse(e.target.value) : e.target.value
+
+    if (field.name === 'access' && value === 'Compute') {
+      setComputeTypeSelected(true)
+      if (values.timeout === 'Forever')
+        setFieldValue('timeout', computeTypeOptions[0])
+    } else {
+      if (field.name === 'access' && value === 'Download') {
+        setComputeTypeSelected(false)
+      }
+    }
 
     validateField(field.name)
     setFieldValue(field.name, value)
@@ -104,36 +125,37 @@ export default function FormPublish(): ReactElement {
       // do we need this?
       onChange={() => status === 'empty' && setStatus(null)}
     >
-      <h2 className={stylesIndex.formTitle}>{content.title}</h2>
-      {content.data.map((field: FormFieldProps) => (
-        <Field
-          key={field.name}
-          {...field}
-          options={
-            field.type === 'boxSelection' ? accessTypeOptions : field.options
-          }
-          component={Input}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            handleFieldChange(e, field)
-          }
-        />
-      ))}
+      <FormTitle title={content.title} />
 
-      <footer className={styles.actions}>
-        <Button
-          style="primary"
-          type="submit"
-          disabled={!ocean || !account || !isValid || status === 'empty'}
-        >
-          Submit
-        </Button>
+      {content.data.map(
+        (field: FormFieldProps) =>
+          field.advanced !== true && (
+            <Field
+              key={field.name}
+              {...field}
+              options={
+                field.type === 'boxSelection'
+                  ? accessTypeOptions
+                  : field.name === 'timeout' && computeTypeSelected === true
+                  ? computeTypeOptions
+                  : field.options
+              }
+              component={Input}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                handleFieldChange(e, field)
+              }
+            />
+          )
+      )}
+      <AdvancedSettings
+        content={content}
+        handleFieldChange={handleFieldChange}
+      />
 
-        {status !== 'empty' && (
-          <Button style="text" size="small" onClick={resetFormAndClearStorage}>
-            Reset Form
-          </Button>
-        )}
-      </footer>
+      <FormActions
+        isValid={isValid}
+        resetFormAndClearStorage={resetFormAndClearStorage}
+      />
     </Form>
   )
 }

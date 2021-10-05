@@ -3,6 +3,7 @@ import styles from './index.module.css'
 import Tabs from '../../../../atoms/Tabs'
 import Fixed from './Fixed'
 import Dynamic from './Dynamic'
+import Free from './Free'
 import { useFormikContext } from 'formik'
 import { useUserPreferences } from '../../../../../providers/UserPreferences'
 import { PriceOptionsMarket } from '../../../../../@types/MetaData'
@@ -10,6 +11,11 @@ import Button from '../../../../atoms/Button'
 import { DDO } from '@oceanprotocol/lib'
 import FormHelp from '../../../../atoms/Input/Help'
 import { useSiteMetadata } from '../../../../../hooks/useSiteMetadata'
+
+import { isValidNumber } from './../../../../../utils/numberValidations'
+import Decimal from 'decimal.js'
+
+Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
 export default function FormPricing({
   ddo,
@@ -33,14 +39,22 @@ export default function FormPricing({
     const type = tabName.toLowerCase()
     setFieldValue('type', type)
     type === 'fixed' && setFieldValue('dtAmount', 1000)
+    type === 'free' && price < 1 && setFieldValue('price', 1)
   }
 
   // Always update everything when price value changes
   useEffect(() => {
     if (type === 'fixed') return
     const dtAmount =
-      (Number(oceanAmount) / Number(weightOnOcean) / price) *
-      Number(weightOnDataToken)
+      isValidNumber(oceanAmount) &&
+      isValidNumber(weightOnOcean) &&
+      isValidNumber(price) &&
+      isValidNumber(weightOnDataToken)
+        ? new Decimal(oceanAmount)
+            .dividedBy(new Decimal(weightOnOcean))
+            .dividedBy(new Decimal(price))
+            .mul(new Decimal(weightOnDataToken))
+        : 0
 
     setFieldValue('dtAmount', dtAmount)
   }, [price, oceanAmount, weightOnOcean, weightOnDataToken, type])
@@ -56,6 +70,12 @@ export default function FormPricing({
       ? {
           title: content.dynamic.title,
           content: <Dynamic content={content.dynamic} ddo={ddo} />
+        }
+      : undefined,
+    appConfig.allowFreePricing === 'true'
+      ? {
+          title: content.free.title,
+          content: <Free content={content.free} ddo={ddo} />
         }
       : undefined
   ].filter((tab) => tab !== undefined)

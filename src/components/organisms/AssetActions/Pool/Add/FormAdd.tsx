@@ -13,6 +13,10 @@ import { FormAddLiquidity } from '.'
 import { PoolBalance } from '../../../../../@types/TokenBalance'
 import UserLiquidity from '../../../../atoms/UserLiquidity'
 import { useOcean } from '../../../../../providers/Ocean'
+import { useWeb3 } from '../../../../../providers/Web3'
+
+import { isValidNumber } from './../../../../../utils/numberValidations'
+import Decimal from 'decimal.js'
 
 export default function FormAdd({
   coin,
@@ -20,6 +24,7 @@ export default function FormAdd({
   dtSymbol,
   amountMax,
   setCoin,
+  setAmount,
   totalPoolTokens,
   totalBalance,
   poolAddress,
@@ -31,13 +36,15 @@ export default function FormAdd({
   dtSymbol: string
   amountMax: string
   setCoin: (value: string) => void
+  setAmount: (value: string) => void
   totalPoolTokens: string
   totalBalance: PoolBalance
   poolAddress: string
   setNewPoolTokens: (value: string) => void
   setNewPoolShare: (value: string) => void
 }): ReactElement {
-  const { ocean, balance } = useOcean()
+  const { balance } = useWeb3()
+  const { ocean } = useOcean()
 
   // Connect with form
   const {
@@ -51,6 +58,7 @@ export default function FormAdd({
   function handleFieldChange(e: ChangeEvent<HTMLInputElement>) {
     // Workaround so validation kicks in on first touch
     !touched?.amount && setTouched({ amount: true })
+    setAmount(e.target.value)
 
     // Manually handle change events instead of using `handleChange` from Formik.
     // Solves bug where 0.0 can't be typed.
@@ -65,6 +73,7 @@ export default function FormAdd({
         setNewPoolShare('0')
         return
       }
+
       if (Number(values.amount) > Number(amountMax)) return
 
       const poolTokens = await ocean.pool.calcPoolOutGivenSingleIn(
@@ -72,15 +81,20 @@ export default function FormAdd({
         coin === 'OCEAN' ? ocean.pool.oceanAddress : ocean.pool.dtAddress,
         `${values.amount}`
       )
+
       setNewPoolTokens(poolTokens)
-      totalBalance &&
-        setNewPoolShare(
-          `${
-            (Number(poolTokens) /
-              (Number(totalPoolTokens) + Number(poolTokens))) *
-            100
-          }`
-        )
+
+      const newPoolShareDecimal =
+        isValidNumber(poolTokens) && isValidNumber(totalPoolTokens)
+          ? new Decimal(poolTokens)
+              .dividedBy(
+                new Decimal(totalPoolTokens).plus(new Decimal(poolTokens))
+              )
+              .mul(100)
+              .toString()
+          : '0'
+
+      totalBalance && setNewPoolShare(newPoolShareDecimal)
     }
     calculatePoolShares()
   }, [

@@ -11,13 +11,17 @@ import Trade from './Trade'
 import { useAsset } from '../../../providers/Asset'
 import { useOcean } from '../../../providers/Ocean'
 import { useWeb3 } from '../../../providers/Web3'
-import { getFileInfo } from '../../../utils/provider'
+import Web3Feedback from '../../molecules/Web3Feedback'
+import { fileinfo, getFileInfo } from '../../../utils/provider'
 import axios from 'axios'
+import { getOceanConfig } from '../../../utils/ocean'
+import { useCancelToken } from '../../../hooks/useCancelToken'
+import { useIsMounted } from '../../../hooks/useIsMounted'
 
 export default function AssetActions(): ReactElement {
-  const { accountId } = useWeb3()
-  const { config, ocean, balance, account } = useOcean()
-  const { price, ddo } = useAsset()
+  const { accountId, balance } = useWeb3()
+  const { ocean, account } = useOcean()
+  const { price, ddo, isAssetNetwork } = useAsset()
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
   const [dtBalance, setDtBalance] = useState<string>()
@@ -25,31 +29,51 @@ export default function AssetActions(): ReactElement {
   const [fileIsLoading, setFileIsLoading] = useState<boolean>(false)
   const isCompute = Boolean(ddo?.findServiceByType('compute'))
 
+  const [isConsumable, setIsConsumable] = useState<boolean>(true)
+  const [consumableFeedback, setConsumableFeedback] = useState<string>('')
+  const newCancelToken = useCancelToken()
+  const isMounted = useIsMounted()
   useEffect(() => {
-    if (!config) return
-    const source = axios.CancelToken.source()
+    if (!ddo || !accountId || !ocean || !isAssetNetwork) return
+
+    async function checkIsConsumable() {
+      const consumable = await ocean.assets.isConsumable(
+        ddo,
+        accountId.toLowerCase()
+      )
+      if (consumable) {
+        setIsConsumable(consumable.result)
+        setConsumableFeedback(consumable.message)
+      }
+    }
+    checkIsConsumable()
+  }, [accountId, isAssetNetwork, ddo, ocean])
+
+  useEffect(() => {
+    const oceanConfig = getOceanConfig(ddo.chainId)
+    if (!oceanConfig) return
+
     async function initFileInfo() {
       setFileIsLoading(true)
       try {
-        const fileInfo = await getFileInfo(
+        const fileInfoResponse = await getFileInfo(
           DID.parse(`${ddo.id}`),
           ddo.findServiceByType('access')?.serviceEndpoint ||
             ddo.findServiceByType('compute')?.serviceEndpoint,
-          source.token
+          newCancelToken()
         )
-        setFileMetadata(fileInfo.data[0])
+        fileInfoResponse && setFileMetadata(fileInfoResponse[0])
+        isMounted() && setFileIsLoading(false)
       } catch (error) {
         Logger.error(error.message)
-      } finally {
-        setFileIsLoading(false)
       }
     }
     initFileInfo()
-  }, [config, ddo.id])
+  }, [ddo, isMounted, newCancelToken])
 
   // Get and set user DT balance
   useEffect(() => {
-    if (!ocean || !accountId) return
+    if (!ocean || !accountId || !isAssetNetwork) return
     async function init() {
       try {
         const dtBalance = await ocean.datatokens.balance(
@@ -62,10 +86,11 @@ export default function AssetActions(): ReactElement {
       }
     }
     init()
-  }, [ocean, accountId, ddo.dataToken])
+  }, [ocean, accountId, ddo.dataToken, isAssetNetwork])
 
   // Check user balance against price
   useEffect(() => {
+    if (price?.type === 'free') setIsBalanceSufficient(true)
     if (!price?.value || !account || !balance?.ocean || !dtBalance) return
 
     setIsBalanceSufficient(
@@ -80,9 +105,10 @@ export default function AssetActions(): ReactElement {
   const UseContent = isCompute ? (
     <Compute
       dtBalance={dtBalance}
-      isBalanceSufficient={isBalanceSufficient}
       file={fileMetadata}
       fileIsLoading={fileIsLoading}
+      isConsumable={isConsumable}
+      consumableFeedback={consumableFeedback}
     />
   ) : (
     <Consume
@@ -91,6 +117,8 @@ export default function AssetActions(): ReactElement {
       isBalanceSufficient={isBalanceSufficient}
       file={fileMetadata}
       fileIsLoading={fileIsLoading}
+      isConsumable={isConsumable}
+      consumableFeedback={consumableFeedback}
     />
   )
 
@@ -114,8 +142,11 @@ export default function AssetActions(): ReactElement {
     )
 
   return (
-    <Permission eventType="consume">
-      <Tabs items={tabs} className={styles.actions} />
-    </Permission>
+    <>
+      <Permission eventType="consume">
+        <Tabs items={tabs} className={styles.actions} />
+      </Permission>
+      <Web3Feedback isAssetNetwork={isAssetNetwork} />
+    </>
   )
 }

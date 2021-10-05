@@ -16,7 +16,6 @@ jobs:
 
       - run: npm run build
         env:
-          GATSBY_NETWORK: ${{ secrets.GATSBY_NETWORK }}
           GATSBY_INFURA_PROJECT_ID: ${{ secrets.GATSBY_INFURA_PROJECT_ID }}
           GATSBY_PORTIS_ID: ${{ secrets.GATSBY_PORTIS_ID }}
 

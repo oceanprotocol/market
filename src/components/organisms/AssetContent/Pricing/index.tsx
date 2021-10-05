@@ -4,12 +4,13 @@ import { initialValues, validationSchema } from '../../../../models/FormPricing'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import { PriceOptionsMarket } from '../../../../@types/MetaData'
 import Alert from '../../../atoms/Alert'
-import styles from './index.module.css'
 import FormPricing from './FormPricing'
 import { toast } from 'react-toastify'
 import Feedback from './Feedback'
 import { graphql, useStaticQuery } from 'gatsby'
 import { usePricing } from '../../../../hooks/usePricing'
+import styles from './index.module.css'
+import { useAsset } from '../../../../providers/Asset'
 
 const query = graphql`
   query PricingQuery {
@@ -29,6 +30,10 @@ const query = graphql`
               fixed {
                 title
                 info
+                tooltips {
+                  communityFee
+                  marketplaceFee
+                }
               }
               dynamic {
                 title
@@ -39,6 +44,10 @@ const query = graphql`
                   communityFee
                   marketplaceFee
                 }
+              }
+              free {
+                title
+                info
               }
             }
           }
@@ -59,6 +68,7 @@ export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
 
   const { createPricing, pricingIsLoading, pricingError, pricingStepText } =
     usePricing()
+  const { isAssetNetwork } = useAsset()
 
   const hasFeedback = pricingIsLoading || typeof success !== 'undefined'
 
@@ -125,6 +135,7 @@ export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
             text={content.empty.info}
             action={{
               name: content.empty.action.name,
+              disabled: !isAssetNetwork,
               handleAction: handleShowPricingForm
             }}
           />

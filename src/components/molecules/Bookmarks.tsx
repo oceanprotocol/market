@@ -1,46 +1,23 @@
 import { useUserPreferences } from '../../providers/UserPreferences'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Table from '../atoms/Table'
-import { DDO, Logger, ConfigHelperConfig } from '@oceanprotocol/lib'
-import { useOcean } from '../../providers/Ocean'
+import { Logger } from '@oceanprotocol/lib'
 import Price from '../atoms/Price'
 import Tooltip from '../atoms/Tooltip'
 import AssetTitle from './AssetListTitle'
-import { queryMetadata } from '../../utils/aquarius'
+import { getAssetsFromDidList } from '../../utils/aquarius'
+import { getAssetsBestPrices, AssetListPrices } from '../../utils/subgraph'
 import axios, { CancelToken } from 'axios'
+import { useSiteMetadata } from '../../hooks/useSiteMetadata'
+import { useCancelToken } from '../../hooks/useCancelToken'
 
 async function getAssetsBookmarked(
   bookmarks: string[],
-  metadataCacheUri: string,
+  chainIds: number[],
   cancelToken: CancelToken
 ) {
-  const searchDids = JSON.stringify(bookmarks)
-    .replace(/,/g, ' ')
-    .replace(/"/g, '')
-    .replace(/(\[|\])/g, '')
-    // for whatever reason ddo.id is not searchable, so use ddo.dataToken instead
-    .replace(/(did:op:)/g, '0x')
-
-  const queryBookmarks = {
-    page: 1,
-    offset: 100,
-    query: {
-      query_string: {
-        query: searchDids,
-        fields: ['dataToken'],
-        default_operator: 'OR'
-      }
-    },
-    sort: { created: -1 }
-  }
-
   try {
-    const result = await queryMetadata(
-      queryBookmarks,
-      metadataCacheUri,
-      cancelToken
-    )
-
+    const result = await getAssetsFromDidList(bookmarks, chainIds, cancelToken)
     return result
   } catch (error) {
     Logger.error(error.message)
@@ -50,19 +27,19 @@ async function getAssetsBookmarked(
 const columns = [
   {
     name: 'Data Set',
-    selector: function getAssetRow(row: DDO) {
-      const { attributes } = row.findServiceByType('metadata')
-      return <AssetTitle title={attributes.main.name} ddo={row} />
+    selector: function getAssetRow(row: AssetListPrices) {
+      const { attributes } = row.ddo.findServiceByType('metadata')
+      return <AssetTitle title={attributes.main.name} ddo={row.ddo} />
     },
     maxWidth: '45rem',
     grow: 1
   },
   {
     name: 'Datatoken Symbol',
-    selector: function getAssetRow(row: DDO) {
+    selector: function getAssetRow(row: AssetListPrices) {
       return (
-        <Tooltip content={row.dataTokenInfo.name}>
-          {row.dataTokenInfo.symbol}
+        <Tooltip content={row.ddo.dataTokenInfo.name}>
+          {row.ddo.dataTokenInfo.symbol}
         </Tooltip>
       )
     },
@@ -70,7 +47,7 @@ const columns = [
   },
   {
     name: 'Price',
-    selector: function getAssetRow(row: DDO) {
+    selector: function getAssetRow(row: AssetListPrices) {
       return <Price price={row.price} small />
     },
     right: true
@@ -78,21 +55,18 @@ const columns = [
 ]
 
 export default function Bookmarks(): ReactElement {
-  const { config } = useOcean()
+  const { appConfig } = useSiteMetadata()
   const { bookmarks } = useUserPreferences()
 
-  const [pinned, setPinned] = useState<DDO[]>()
+  const [pinned, setPinned] = useState<AssetListPrices[]>()
   const [isLoading, setIsLoading] = useState<boolean>()
-
-  const networkName = (config as ConfigHelperConfig)?.network
-
+  const { chainIds } = useUserPreferences()
+  const newCancelToken = useCancelToken()
   useEffect(() => {
-    if (!config?.metadataCacheUri || !networkName || bookmarks === {}) return
-
-    const source = axios.CancelToken.source()
+    if (!appConfig?.metadataCacheUri || bookmarks === []) return
 
     async function init() {
-      if (!bookmarks[networkName]?.length) {
+      if (!bookmarks?.length) {
         setPinned([])
         return
       }
@@ -101,11 +75,14 @@ export default function Bookmarks(): ReactElement {
 
       try {
         const resultPinned = await getAssetsBookmarked(
-          bookmarks[networkName],
-          config.metadataCacheUri,
-          source.token
+          bookmarks,
+          chainIds,
+          newCancelToken()
         )
-        setPinned(resultPinned?.results)
+        const pinnedAssets: AssetListPrices[] = await getAssetsBestPrices(
+          resultPinned?.results
+        )
+        setPinned(pinnedAssets)
       } catch (error) {
         Logger.error(error.message)
       }
@@ -113,11 +90,7 @@ export default function Bookmarks(): ReactElement {
       setIsLoading(false)
     }
     init()
-
-    return () => {
-      source.cancel()
-    }
-  }, [bookmarks, config.metadataCacheUri, networkName])
+  }, [appConfig?.metadataCacheUri, bookmarks, chainIds, newCancelToken])
 
   return (
     <Table

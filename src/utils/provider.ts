@@ -79,12 +79,30 @@ export async function checkFile(
   url: string | DID,
   providerUri: string,
   cancelToken: CancelToken
-): Promise<boolean> {
-  const response = await getFileInfo(url, providerUri, cancelToken)
+): Promise<any> {
+  let postBody
+  try {
+    if (url instanceof DID)
+      postBody = {
+        did: url.getDid()
+      }
+    else
+      postBody = {
+        url
+      }
+    const response = await axios.post(
+      `${providerUri}/api/v1/services/fileinfo`,
+      postBody,
+      { cancelToken }
+    )
 
-  if (!response || response.status !== 200 || !response.data) return false
-
-  if (!response.data[0] || !response.data[0].valid) return false
-
-  return response.data[0].valid
+    if (!response || response.status !== 200 || !response.data) return
+    return response.data
+  } catch (error) {
+    if (axios.isCancel(error)) {
+      Logger.log(error.message)
+    } else {
+      Logger.error(error.message)
+    }
+  }
 }

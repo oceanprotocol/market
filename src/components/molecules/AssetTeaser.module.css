@@ -21,9 +21,7 @@
 .content {
   margin-top: calc(var(--spacer) / 2);
   overflow-wrap: break-word;
-  word-wrap: break-word;
-  word-break: break-all;
-
+  hyphens: auto;
   /* for sticking footer to bottom */
   flex: 1;
 }
@@ -36,6 +34,7 @@
   font-size: var(--font-size-large);
   margin: 0;
   padding-bottom: calc(var(--spacer) / 6);
+  overflow-wrap: break-word;
 }
 
 .publisher {
@@ -57,15 +56,17 @@
   display: block;
 }
 
-.date {
-  font-size: var(--font-size-mini);
-  margin-top: calc(var(--spacer) / 2);
-}
-
 .typeDetails {
   position: absolute;
   top: calc(var(--spacer) / 3);
   right: calc(var(--spacer) / 3);
   width: auto;
   font-size: var(--font-size-mini);
+}
+
+.network {
+  font-size: var(--font-size-mini);
+  position: absolute;
+  right: calc(var(--spacer) / 3);
+  bottom: calc(var(--spacer) / 3);
 }

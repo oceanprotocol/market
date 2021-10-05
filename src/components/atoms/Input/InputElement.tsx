@@ -3,6 +3,7 @@ import slugify from '@sindresorhus/slugify'
 import styles from './InputElement.module.css'
 import { InputProps } from '.'
 import FilesInput from '../../molecules/FormFields/FilesInput'
+import CustomProvider from '../../molecules/FormFields/CustomProvider'
 import Terms from '../../molecules/FormFields/Terms'
 import BoxSelection, {
   BoxSelectionOption
@@ -12,6 +13,7 @@ import classNames from 'classnames/bind'
 import AssetSelection, {
   AssetSelectionAsset
 } from '../../molecules/FormFields/AssetSelection'
+import Credentials from '../../molecules/FormFields/Credential'
 
 const cx = classNames.bind(styles)
 
@@ -124,6 +126,8 @@ export default function InputElement({
       )
     case 'files':
       return <FilesInput name={name} {...field} {...props} />
+    case 'providerUri':
+      return <CustomProvider name={name} {...field} {...props} />
     case 'datatoken':
       return <Datatoken name={name} {...field} {...props} />
     case 'terms':
@@ -137,6 +141,8 @@ export default function InputElement({
           {...props}
         />
       )
+    case 'credentials':
+      return <Credentials name={name} {...field} {...props} />
     default:
       return prefix || postfix ? (
         <div className={`${prefix ? styles.prefixGroup : styles.postfixGroup}`}>

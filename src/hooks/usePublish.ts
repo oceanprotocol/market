@@ -4,10 +4,12 @@ import {
   ServiceComputePrivacy,
   ServiceType
 } from '@oceanprotocol/lib/dist/node/ddo/interfaces/Service'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { sleep } from '../utils'
 import { publishFeedback } from '../utils/feedback'
 import { useOcean } from '../providers/Ocean'
+import { useWeb3 } from '../providers/Web3'
+import { getOceanConfig } from '../utils/ocean'
 
 interface DataTokenOptions {
   cap?: string
@@ -30,7 +32,8 @@ interface UsePublish {
 }
 
 function usePublish(): UsePublish {
-  const { ocean, account } = useOcean()
+  const { networkId, web3Loading } = useWeb3()
+  const { connect, ocean, account } = useOcean()
   const [isLoading, setIsLoading] = useState(false)
   const [publishStep, setPublishStep] = useState<number | undefined>()
   const [publishStepText, setPublishStepText] = useState<string | undefined>()
@@ -40,6 +43,20 @@ function usePublish(): UsePublish {
     setPublishStep(index)
     index && setPublishStepText(publishFeedback[index])
   }
+
+  //
+  // Initiate OceanProvider based on user wallet
+  //
+  useEffect(() => {
+    if (web3Loading || !connect) return
+
+    async function initOcean() {
+      const config = getOceanConfig(networkId)
+      await connect(config)
+    }
+    initOcean()
+  }, [web3Loading, networkId, connect])
+
   /**
    * Publish an asset. It also creates the datatoken, mints tokens and gives the market allowance
    * @param  {Metadata} asset The metadata of the asset.
@@ -65,6 +82,7 @@ function usePublish(): UsePublish {
         new Date(Date.now()).toISOString().split('.')[0] + 'Z'
       const services: Service[] = []
       const price = '1'
+      asset.main.dateCreated = asset.main.datePublished = publishedDate
 
       switch (serviceType) {
         case 'access': {
@@ -75,7 +93,8 @@ function usePublish(): UsePublish {
               price,
               publishedDate,
               timeout,
-              providerUri
+              providerUri,
+              null
             )
           Logger.log('access service created', accessService)
           services.push(accessService)
@@ -118,9 +137,9 @@ function usePublish(): UsePublish {
           providerUri
         )
         .next(setStep)
-
-      await ocean.assets.publishDdo(ddo, account.getId())
       Logger.log('ddo created', ddo)
+      await ocean.assets.publishDdo(ddo, account.getId())
+      Logger.log('ddo published')
       await sleep(20000)
       setStep(7)
       return ddo

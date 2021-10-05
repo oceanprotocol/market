@@ -6,21 +6,23 @@ import React, {
   useState,
   useEffect
 } from 'react'
-import { Logger, LogLevel, ConfigHelperConfig } from '@oceanprotocol/lib'
-import { useOcean } from './Ocean'
+import { Logger, LogLevel } from '@oceanprotocol/lib'
 import { isBrowser } from '../utils'
+import { useSiteMetadata } from '../hooks/useSiteMetadata'
 
 interface UserPreferencesValue {
   debug: boolean
-  currency: string
-  locale: string
-  bookmarks: {
-    [network: string]: string[]
-  }
   setDebug: (value: boolean) => void
+  currency: string
   setCurrency: (value: string) => void
+  chainIds: number[]
+  setChainIds: (chainIds: number[]) => void
+  bookmarks: string[]
   addBookmark: (did: string) => void
   removeBookmark: (did: string) => void
+  infiniteApproval: boolean
+  setInfiniteApproval: (value: boolean) => void
+  locale: string
 }
 
 const UserPreferencesContext = createContext(null)
@@ -45,8 +47,7 @@ function UserPreferencesProvider({
 }: {
   children: ReactNode
 }): ReactElement {
-  const { config } = useOcean()
-  const networkName = (config as ConfigHelperConfig).network
+  const { appConfig } = useSiteMetadata()
   const localStorage = getLocalStorage()
 
   // Set default values from localStorage
@@ -55,12 +56,18 @@ function UserPreferencesProvider({
     localStorage?.currency || 'EUR'
   )
   const [locale, setLocale] = useState<string>()
-  const [bookmarks, setBookmarks] = useState(localStorage?.bookmarks || {})
+  const [bookmarks, setBookmarks] = useState(localStorage?.bookmarks || [])
+  const [chainIds, setChainIds] = useState(
+    localStorage?.chainIds || appConfig.chainIds
+  )
+  const [infiniteApproval, setInfiniteApproval] = useState(
+    localStorage?.infiniteApproval || false
+  )
 
   // Write values to localStorage on change
   useEffect(() => {
-    setLocalStorage({ debug, currency, bookmarks })
-  }, [debug, currency, bookmarks])
+    setLocalStorage({ chainIds, debug, currency, bookmarks, infiniteApproval })
+  }, [chainIds, debug, currency, bookmarks, infiniteApproval])
 
   // Set ocean.js log levels, default: Error
   useEffect(() => {
@@ -76,27 +83,24 @@ function UserPreferencesProvider({
   }, [])
 
   function addBookmark(didToAdd: string): void {
-    const newPinned = {
-      ...bookmarks,
-      [networkName]: [didToAdd].concat(bookmarks[networkName])
-    }
+    const newPinned = [...bookmarks, didToAdd]
     setBookmarks(newPinned)
   }
 
   function removeBookmark(didToAdd: string): void {
-    const newPinned = {
-      ...bookmarks,
-      [networkName]: bookmarks[networkName].filter(
-        (did: string) => did !== didToAdd
-      )
-    }
+    const newPinned = bookmarks.filter((did: string) => did !== didToAdd)
     setBookmarks(newPinned)
   }
 
   // Bookmarks old data structure migration
   useEffect(() => {
-    if (!bookmarks.length) return
-    const newPinned = { mainnet: bookmarks as any }
+    if (bookmarks.length !== undefined) return
+    const newPinned: string[] = []
+    for (const network in bookmarks) {
+      ;(bookmarks[network] as unknown as string[]).forEach((did: string) => {
+        did !== null && newPinned.push(did)
+      })
+    }
     setBookmarks(newPinned)
   }, [bookmarks])
 
@@ -107,7 +111,11 @@ function UserPreferencesProvider({
           debug,
           currency,
           locale,
+          chainIds,
           bookmarks,
+          infiniteApproval,
+          setInfiniteApproval,
+          setChainIds,
           setDebug,
           setCurrency,
           addBookmark,

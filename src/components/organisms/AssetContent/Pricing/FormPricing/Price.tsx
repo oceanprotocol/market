@@ -2,18 +2,20 @@ import Conversion from '../../../../atoms/Price/Conversion'
 import { useField } from 'formik'
 import React, { ReactElement, useState, useEffect } from 'react'
 import Input from '../../../../atoms/Input'
-import styles from './Price.module.css'
 import Error from './Error'
 import { DDO } from '@oceanprotocol/lib'
 import PriceUnit from '../../../../atoms/Price/PriceUnit'
 import usePricing from '../../../../../hooks/usePricing'
+import styles from './Price.module.css'
 
 export default function Price({
   ddo,
-  firstPrice
+  firstPrice,
+  free
 }: {
   ddo: DDO
   firstPrice?: string
+  free?: boolean
 }): ReactElement {
   const [field, meta] = useField('price')
   const { getDTName, getDTSymbol } = usePricing()
@@ -38,22 +40,30 @@ export default function Price({
     <div className={styles.price}>
       <div className={styles.grid}>
         <div className={styles.form}>
-          <Input
-            value={field.value}
-            name="price"
-            type="number"
-            prefix="OCEAN"
-            min="1"
-            {...field}
-            additionalComponent={
-              <Conversion price={field.value} className={styles.conversion} />
-            }
-          />
+          {free ? (
+            <Input
+              value="0"
+              name="price"
+              type="number"
+              prefix="OCEAN"
+              readOnly
+            />
+          ) : (
+            <Input
+              value={field.value}
+              name="price"
+              type="number"
+              prefix="OCEAN"
+              min="1"
+              {...field}
+            />
+          )}
           <Error meta={meta} />
         </div>
         <div className={styles.datatoken}>
           <h4>
-            = <strong>1</strong> {dtName} — {dtSymbol}
+            = <strong>1</strong> {dtSymbol}{' '}
+            <Conversion price={field.value} className={styles.conversion} />
           </h4>
         </div>
       </div>

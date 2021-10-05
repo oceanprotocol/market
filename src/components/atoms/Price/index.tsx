@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react'
 import styles from './index.module.css'
-import { BestPrice } from '@oceanprotocol/lib'
 import Loader from '../Loader'
 import Tooltip from '../Tooltip'
 import PriceUnit from './PriceUnit'
+import { BestPrice } from '../../../models/BestPrice'
 
 export default function Price({
   price,
@@ -16,9 +16,10 @@ export default function Price({
   small?: boolean
   conversion?: boolean
 }): ReactElement {
-  return price?.value ? (
+  return price?.value || price?.type === 'free' ? (
     <PriceUnit
       price={`${price.value}`}
+      symbol={price.oceanSymbol}
       className={className}
       small={small}
       conversion={conversion}

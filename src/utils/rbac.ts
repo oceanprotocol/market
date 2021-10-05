@@ -3,7 +3,8 @@ import appConfig from '../../app.config'
 
 export default async function rbacRequest(
   eventType: string,
-  address: string
+  address: string,
+  signal?: AbortSignal
 ): Promise<boolean | 'ERROR'> {
   const url = appConfig.rbacUrl
   if (url === undefined) {
@@ -23,7 +24,8 @@ export default async function rbacRequest(
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
+        signal: signal
       })
       return await response.json()
     } catch (error) {

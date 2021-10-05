@@ -8,10 +8,10 @@ import { ReactComponent as Caret } from '../../../images/caret.svg'
 import useDarkMode from 'use-dark-mode'
 import Appearance from './Appearance'
 import { darkModeConfig } from '../../../../app.config'
-import Chain from './Chain'
+import TokenApproval from './TokenApproval'
 
 export default function UserPreferences(): ReactElement {
-  // Calling this here because <Theme /> is not mounted on first load
+  // Calling this here because <Style /> is not mounted on first load
   const darkMode = useDarkMode(false, darkModeConfig)
 
   return (
@@ -19,8 +19,8 @@ export default function UserPreferences(): ReactElement {
       content={
         <ul className={styles.preferencesDetails}>
           <Currency />
+          <TokenApproval />
           <Appearance darkMode={darkMode} />
-          <Chain />
           <Debug />
         </ul>
       }
@@ -28,7 +28,7 @@ export default function UserPreferences(): ReactElement {
       className={styles.preferences}
     >
       <Cog aria-label="Preferences" className={styles.icon} />
-      <Caret aria-hidden="true" />
+      <Caret aria-hidden="true" className={styles.caret} />
     </Tooltip>
   )
 }

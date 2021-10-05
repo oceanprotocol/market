@@ -7,6 +7,9 @@ execSync(`node ./scripts/write-repo-metadata > repo-metadata.json`, {
   stdio: 'inherit'
 })
 
+// Generate GraphQl typings for urql
+// execSync(`npm run graphql:graphTypes`, { stdio: 'inherit' })
+
 // Generate Apollo typings
 execSync(`npm run apollo:codegen`, { stdio: 'inherit' })
 
@@ -30,12 +33,15 @@ exports.onCreatePage = async ({ page, actions }) => {
   const { createPage } = actions
   // page.matchPath is a special key that's used for matching pages
   // only on the client.
-  const handleClientSideOnly = page.path.match(/^\/asset/)
+  const handleClientSideOnlyAsset = page.path.match(/^\/asset/)
+  const handleClientSideOnlyAccount = page.path.match(/^\/profile/)
 
-  if (handleClientSideOnly) {
+  if (handleClientSideOnlyAsset) {
     page.matchPath = '/asset/*'
-
     // Update the page.
+    createPage(page)
+  } else if (handleClientSideOnlyAccount) {
+    page.matchPath = '/profile/*'
     createPage(page)
   }
 }

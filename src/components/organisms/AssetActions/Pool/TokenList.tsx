@@ -2,37 +2,43 @@ import Conversion from '../../../atoms/Price/Conversion'
 import React, { ReactElement, ReactNode } from 'react'
 import Token from './Token'
 import styles from './TokenList.module.css'
+import Decimal from 'decimal.js'
 
 export default function TokenList({
   title,
   children,
   ocean,
+  oceanSymbol,
   dt,
   dtSymbol,
   poolShares,
   conversion,
-  highlight
+  highlight,
+  showTVLLabel
 }: {
   title: string | ReactNode
   children: ReactNode
   ocean: string
+  oceanSymbol: string
   dt: string
   dtSymbol: string
   poolShares: string
-  conversion: number
+  conversion: Decimal
   highlight?: boolean
+  showTVLLabel?: boolean
 }): ReactElement {
   return (
     <div className={`${styles.tokenlist} ${highlight ? styles.highlight : ''}`}>
       <h3 className={styles.title}>{title}</h3>
       <div className={styles.tokens}>
         <div>
-          <Token symbol="OCEAN" balance={ocean} />
+          <Token symbol={oceanSymbol} balance={ocean} />
           <Token symbol={dtSymbol} balance={dt} />
-          {conversion > 0 && (
+          {conversion.greaterThan(0) && (
             <Conversion
-              price={`${conversion}`}
+              price={conversion.toString()}
               className={styles.totalLiquidity}
+              showTVLLabel={showTVLLabel}
             />
           )}
         </div>

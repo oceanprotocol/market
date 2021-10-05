@@ -9,12 +9,16 @@
   font-size: var(--font-size-small);
 }
 
+.content p {
+  margin: 0;
+}
+
 .icon {
-  width: 1rem;
-  height: 1rem;
+  width: 1em;
+  height: 1em;
   cursor: help;
   display: inline-block;
-  margin-bottom: -0.1rem;
+  margin-bottom: -0.1em;
   margin-left: calc(var(--spacer) / 6);
   fill: var(--color-secondary);
 }

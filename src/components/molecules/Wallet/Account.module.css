@@ -5,14 +5,15 @@
   text-transform: uppercase;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-  padding: calc(var(--spacer) / 4);
+  padding: calc(var(--spacer) / 6) calc(var(--spacer) / 3);
   white-space: nowrap;
   background: var(--background-content);
   margin: 0;
   transition: border 0.2s ease-out;
   cursor: pointer;
-  min-width: 190px;
   height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .button,
@@ -30,20 +31,32 @@
   color: var(--color-primary);
 }
 
-.blockies {
-  width: var(--font-size-large);
-  height: var(--font-size-large);
-  border-radius: 50%;
-  overflow: hidden;
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: calc(var(--spacer) / 6);
+.button.initial span {
+  display: none;
+}
+
+@media screen and (min-width: 42rem) {
+  .button.initial span {
+    display: inline;
+  }
 }
 
 .address {
+  display: none;
   text-transform: none;
   border-right: 1px solid var(--border-color);
   padding-right: calc(var(--spacer) / 3);
+  padding-left: calc(var(--spacer) / 8);
+}
+
+@media screen and (min-width: 60rem) {
+  .address {
+    display: inline-block;
+  }
+
+  .blockies {
+    margin-right: calc(var(--spacer) / 6);
+  }
 }
 
 .button svg {
@@ -64,4 +77,16 @@
   margin-left: calc(var(--spacer) / 4);
   position: relative;
   top: 1px;
+}
+
+.caret,
+svg.caret {
+  display: none;
+}
+
+@media screen and (min-width: 42rem) {
+  .caret,
+  svg.caret {
+    display: inline-block;
+  }
 }

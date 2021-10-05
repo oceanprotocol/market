@@ -14,10 +14,15 @@ describe('Search', () => {
       const results = totalResults
     }
 
+    const setTotalPagesNumber = (totalPages: number) => {
+      const pages = totalPages
+    }
+
     const { container } = render(
       <LocationProvider history={history}>
         <Search
           location={{ search: '?text=water' } as any}
+          setTotalPagesNumber={(totalPages) => setTotalPagesNumber(totalPages)}
           setTotalResults={(totalResults) => setTotalResults(totalResults)}
         />
       </LocationProvider>

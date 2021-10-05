@@ -1,17 +1,14 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './index.module.css'
 import classNames from 'classnames/bind'
-import Tooltip from '../Tooltip'
 import { Profile } from '../../../models/Profile'
 import { Link } from 'gatsby'
 import get3BoxProfile from '../../../utils/profile'
-import ExplorerLink from '../ExplorerLink'
 import { accountTruncate } from '../../../utils/web3'
 import axios from 'axios'
-import { ReactComponent as Info } from '../../../images/info.svg'
-import ProfileDetails from './ProfileDetails'
 import Add from './Add'
 import { useWeb3 } from '../../../providers/Web3'
+import { getEnsName } from '../../../utils/ens'
 
 const cx = classNames.bind(styles)
 
@@ -24,27 +21,34 @@ export default function Publisher({
   minimal?: boolean
   className?: string
 }): ReactElement {
-  const { networkId, accountId } = useWeb3()
+  const { accountId } = useWeb3()
   const [profile, setProfile] = useState<Profile>()
-  const [name, setName] = useState<string>()
+  const [name, setName] = useState(accountTruncate(account))
+  const [accountEns, setAccountEns] = useState<string>()
 
   const showAdd = account === accountId && !profile
 
   useEffect(() => {
     if (!account) return
 
-    setName(accountTruncate(account))
     const source = axios.CancelToken.source()
 
-    async function get3Box() {
+    async function getExternalName() {
+      // ENS
+      const accountEns = await getEnsName(account)
+      if (accountEns) {
+        setAccountEns(accountEns)
+        setName(accountEns)
+      }
+
+      // 3box
       const profile = await get3BoxProfile(account, source.token)
       if (!profile) return
-
       setProfile(profile)
       const { name, emoji } = profile
       name && setName(`${emoji || ''} ${name}`)
     }
-    get3Box()
+    getExternalName()
 
     return () => {
       source.cancel()
@@ -63,34 +67,12 @@ export default function Publisher({
       ) : (
         <>
           <Link
-            to={`/search/?owner=${account}&sort=created&sortOrder=desc`}
-            title="Show all data sets created by this account."
+            to={`/profile/${accountEns || account}`}
+            title="Show profile page."
           >
             {name}
           </Link>
-          <div className={styles.links}>
-            {' — '}
-            {profile && (
-              <Tooltip
-                placement="bottom"
-                content={
-                  <ProfileDetails
-                    profile={profile}
-                    networkId={networkId}
-                    account={account}
-                  />
-                }
-              >
-                <span className={styles.detailsTrigger}>
-                  Profile <Info className={styles.linksExternal} />
-                </span>
-              </Tooltip>
-            )}
-            {showAdd && <Add />}
-            <ExplorerLink networkId={networkId} path={`address/${account}`}>
-              Explorer
-            </ExplorerLink>
-          </div>
+          {showAdd && <Add />}
         </>
       )}
     </div>

@@ -4,11 +4,15 @@ import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import Input from '../../../atoms/Input'
 import { FormFieldProps } from '../../../../@types/Form'
 import { useStaticQuery, graphql } from 'gatsby'
-import { DDO, BestPrice } from '@oceanprotocol/lib'
+import { DDO } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelection'
+import compareAsBN from '../../../../utils/compareAsBN'
 import ButtonBuy from '../../../atoms/ButtonBuy'
 import PriceOutput from './PriceOutput'
 import { useAsset } from '../../../../providers/Asset'
+import { useOcean } from '../../../../providers/Ocean'
+import { useWeb3 } from '../../../../providers/Web3'
+import { BestPrice } from '../../../../models/BestPrice'
 
 const contentQuery = graphql`
   query StartComputeDatasetQuery {
@@ -49,16 +53,20 @@ export default function FormStartCompute({
   hasPreviousOrder,
   hasDatatoken,
   dtBalance,
+  datasetLowPoolLiquidity,
   assetType,
   assetTimeout,
   hasPreviousOrderSelectedComputeAsset,
   hasDatatokenSelectedComputeAsset,
   dtSymbolSelectedComputeAsset,
   dtBalanceSelectedComputeAsset,
+  selectedComputeAssetLowPoolLiquidity,
   selectedComputeAssetType,
   selectedComputeAssetTimeout,
   stepText,
-  algorithmPrice
+  algorithmPrice,
+  isConsumable,
+  consumableFeedback
 }: {
   algorithms: AssetSelectionAsset[]
   ddoListAlgorithms: DDO[]
@@ -68,24 +76,33 @@ export default function FormStartCompute({
   hasPreviousOrder: boolean
   hasDatatoken: boolean
   dtBalance: string
+  datasetLowPoolLiquidity: boolean
   assetType: string
   assetTimeout: string
   hasPreviousOrderSelectedComputeAsset?: boolean
   hasDatatokenSelectedComputeAsset?: boolean
   dtSymbolSelectedComputeAsset?: string
   dtBalanceSelectedComputeAsset?: string
+  selectedComputeAssetLowPoolLiquidity?: boolean
   selectedComputeAssetType?: string
   selectedComputeAssetTimeout?: string
   stepText: string
   algorithmPrice: BestPrice
+  isConsumable: boolean
+  consumableFeedback: string
 }): ReactElement {
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
 
   const { isValid, values }: FormikContextType<{ algorithm: string }> =
     useFormikContext()
-  const { price, ddo } = useAsset()
+  const { price, ddo, isAssetNetwork } = useAsset()
   const [totalPrice, setTotalPrice] = useState(price?.value)
+  const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>(false)
+  const { accountId, balance } = useWeb3()
+  const { ocean } = useOcean()
+  const [algorithmConsumableStatus, setAlgorithmConsumableStatus] =
+    useState<number>()
 
   function getAlgorithmAsset(algorithmId: string): DDO {
     let assetDdo = null
@@ -97,8 +114,19 @@ export default function FormStartCompute({
 
   useEffect(() => {
     if (!values.algorithm) return
-    setSelectedAlgorithm(getAlgorithmAsset(values.algorithm))
-  }, [values.algorithm])
+    const algorithmDDO = getAlgorithmAsset(values.algorithm)
+    setSelectedAlgorithm(algorithmDDO)
+
+    if (!accountId || !isConsumable) return
+    async function checkIsConsumable() {
+      const consumable = await ocean.assets.isConsumable(
+        algorithmDDO,
+        accountId.toLowerCase()
+      )
+      if (consumable) setAlgorithmConsumableStatus(consumable.status)
+    }
+    checkIsConsumable()
+  }, [values.algorithm, accountId, isConsumable])
 
   //
   // Set price for calculation output
@@ -122,6 +150,13 @@ export default function FormStartCompute({
     hasPreviousOrderSelectedComputeAsset,
     hasDatatokenSelectedComputeAsset
   ])
+
+  useEffect(() => {
+    if (!totalPrice) return
+    setIsBalanceSufficient(
+      compareAsBN(balance.ocean, `${totalPrice}`) || Number(dtBalance) >= 1
+    )
+  }, [totalPrice])
 
   return (
     <Form className={styles.form}>
@@ -149,11 +184,18 @@ export default function FormStartCompute({
 
       <ButtonBuy
         action="compute"
-        disabled={isComputeButtonDisabled || !isValid}
+        disabled={
+          isComputeButtonDisabled ||
+          !isValid ||
+          !isBalanceSufficient ||
+          !isAssetNetwork ||
+          algorithmConsumableStatus > 0
+        }
         hasPreviousOrder={hasPreviousOrder}
         hasDatatoken={hasDatatoken}
         dtSymbol={ddo.dataTokenInfo.symbol}
         dtBalance={dtBalance}
+        datasetLowPoolLiquidity={datasetLowPoolLiquidity}
         assetTimeout={assetTimeout}
         assetType={assetType}
         hasPreviousOrderSelectedComputeAsset={
@@ -162,10 +204,19 @@ export default function FormStartCompute({
         hasDatatokenSelectedComputeAsset={hasDatatokenSelectedComputeAsset}
         dtSymbolSelectedComputeAsset={dtSymbolSelectedComputeAsset}
         dtBalanceSelectedComputeAsset={dtBalanceSelectedComputeAsset}
+        selectedComputeAssetLowPoolLiquidity={
+          selectedComputeAssetLowPoolLiquidity
+        }
         selectedComputeAssetType={selectedComputeAssetType}
         stepText={stepText}
         isLoading={isLoading}
         type="submit"
+        priceType={price?.type}
+        algorithmPriceType={algorithmPrice?.type}
+        isBalanceSufficient={isBalanceSufficient}
+        isConsumable={isConsumable}
+        consumableFeedback={consumableFeedback}
+        algorithmConsumableStatus={algorithmConsumableStatus}
       />
     </Form>
   )

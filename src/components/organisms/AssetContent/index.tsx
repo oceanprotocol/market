@@ -17,6 +17,9 @@ import MetaMain from './MetaMain'
 import EditHistory from './EditHistory'
 import { useWeb3 } from '../../../providers/Web3'
 import styles from './index.module.css'
+import EditAdvancedSettings from '../AssetActions/Edit/EditAdvancedSettings'
+import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
+import NetworkName from '../../atoms/NetworkName'
 
 export interface AssetContentProps {
   path?: string
@@ -44,12 +47,16 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   const content = data.purgatory.edges[0].node.childContentJson.asset
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
-  const { owner, isInPurgatory, purgatoryData } = useAsset()
+  const { owner, isInPurgatory, purgatoryData, isAssetNetwork } = useAsset()
   const [showPricing, setShowPricing] = useState(false)
   const [showEdit, setShowEdit] = useState<boolean>()
+  const [isComputeType, setIsComputeType] = useState<boolean>(false)
   const [showEditCompute, setShowEditCompute] = useState<boolean>()
+  const [showEditAdvancedSettings, setShowEditAdvancedSettings] =
+    useState<boolean>()
   const [isOwner, setIsOwner] = useState(false)
   const { ddo, price, metadata, type } = useAsset()
+  const { appConfig } = useSiteMetadata()
 
   useEffect(() => {
     if (!accountId || !owner) return
@@ -57,7 +64,8 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
     const isOwner = accountId.toLowerCase() === owner.toLowerCase()
     setIsOwner(isOwner)
     setShowPricing(isOwner && price.type === '')
-  }, [accountId, price, owner])
+    setIsComputeType(Boolean(ddo.findServiceByType('compute')))
+  }, [accountId, price, owner, ddo])
 
   function handleEditButton() {
     // move user's focus to top of screen
@@ -70,65 +78,94 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
     setShowEditCompute(true)
   }
 
+  function handleEditAdvancedSettingsButton() {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    setShowEditAdvancedSettings(true)
+  }
+
   return showEdit ? (
-    <Edit setShowEdit={setShowEdit} />
+    <Edit setShowEdit={setShowEdit} isComputeType={isComputeType} />
   ) : showEditCompute ? (
     <EditComputeDataset setShowEdit={setShowEditCompute} />
+  ) : showEditAdvancedSettings ? (
+    <EditAdvancedSettings setShowEdit={setShowEditAdvancedSettings} />
   ) : (
-    <article className={styles.grid}>
-      <div>
-        {showPricing && <Pricing ddo={ddo} />}
-        <div className={styles.content}>
-          <MetaMain />
-          <Bookmark did={ddo.id} />
+    <>
+      <div className={styles.networkWrap}>
+        <NetworkName networkId={ddo.chainId} className={styles.network} />
+      </div>
 
-          {isInPurgatory ? (
-            <Alert
-              title={content.title}
-              badge={`Reason: ${purgatoryData?.reason}`}
-              text={content.description}
-              state="error"
-            />
-          ) : (
-            <>
-              <Markdown
-                className={styles.description}
-                text={metadata?.additionalInformation?.description || ''}
+      <article className={styles.grid}>
+        <div>
+          {showPricing && <Pricing ddo={ddo} />}
+          <div className={styles.content}>
+            <MetaMain />
+            <Bookmark did={ddo.id} />
+
+            {isInPurgatory ? (
+              <Alert
+                title={content.title}
+                badge={`Reason: ${purgatoryData?.reason}`}
+                text={content.description}
+                state="error"
               />
+            ) : (
+              <>
+                <Markdown
+                  className={styles.description}
+                  text={metadata?.additionalInformation?.description || ''}
+                />
 
-              <MetaSecondary />
+                <MetaSecondary />
 
-              {isOwner && (
-                <div className={styles.ownerActions}>
-                  <Button style="text" size="small" onClick={handleEditButton}>
-                    Edit Metadata
-                  </Button>
-                  {ddo.findServiceByType('compute') && type === 'dataset' && (
-                    <>
-                      <span className={styles.separator}>|</span>
-                      <Button
-                        style="text"
-                        size="small"
-                        onClick={handleEditComputeButton}
-                      >
-                        Edit Compute Settings
-                      </Button>
-                    </>
-                  )}
-                </div>
-              )}
-            </>
-          )}
+                {isOwner && isAssetNetwork && (
+                  <div className={styles.ownerActions}>
+                    <Button
+                      style="text"
+                      size="small"
+                      onClick={handleEditButton}
+                    >
+                      Edit Metadata
+                    </Button>
+                    {appConfig.allowAdvancedSettings === 'true' && (
+                      <>
+                        <span className={styles.separator}>|</span>
+                        <Button
+                          style="text"
+                          size="small"
+                          onClick={handleEditAdvancedSettingsButton}
+                        >
+                          Edit Advanced Settings
+                        </Button>
+                      </>
+                    )}
+                    {ddo.findServiceByType('compute') && type === 'dataset' && (
+                      <>
+                        <span className={styles.separator}>|</span>
+                        <Button
+                          style="text"
+                          size="small"
+                          onClick={handleEditComputeButton}
+                        >
+                          Edit Compute Settings
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                )}
+              </>
+            )}
 
-          <MetaFull />
-          <EditHistory />
-          {debug === true && <DebugOutput title="DDO" output={ddo} />}
+            <MetaFull />
+            <EditHistory />
+            {debug === true && <DebugOutput title="DDO" output={ddo} />}
+          </div>
         </div>
-      </div>
 
-      <div className={styles.actions}>
-        <AssetActions />
-      </div>
-    </article>
+        <div className={styles.actions}>
+          <AssetActions />
+        </div>
+      </article>
+    </>
   )
 }

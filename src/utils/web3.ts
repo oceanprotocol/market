@@ -1,4 +1,5 @@
 import { Logger } from '@oceanprotocol/lib'
+import { getOceanConfig } from './ocean'
 
 export interface EthereumListsChain {
   name: string
@@ -9,14 +10,36 @@ export interface EthereumListsChain {
   networkId: number
   nativeCurrency: { name: string; symbol: string; decimals: number }
   rpc: string[]
-  faucets: string[]
   infoURL: string
+  faucets: string[]
+  explorers: [{ url: string }]
 }
 
 export interface NetworkObject {
   chainId: number
   name: string
+  nativeCurrency: string
+  explorers: [{ url: string }]
   urlList: string[]
+}
+
+const configGaiaX = getOceanConfig(2021000)
+
+export const networkDataGaiaX: EthereumListsChain = {
+  name: 'GAIA-X Testnet',
+  chainId: 2021000,
+  shortName: 'GAIA-X',
+  chain: 'GAIA-X',
+  network: 'testnet',
+  networkId: 2021000,
+  nativeCurrency: { name: 'Gaia-X', symbol: 'GX', decimals: 18 },
+  rpc: [configGaiaX.nodeUri],
+  faucets: [
+    'https://faucet.gaiaxtestnet.oceanprotocol.com/',
+    'https://faucet.gx.gaiaxtestnet.oceanprotocol.com/'
+  ],
+  infoURL: 'https://www.gaia-x.eu',
+  explorers: [{ url: '' }]
 }
 
 export function accountTruncate(account: string): string {
@@ -30,53 +53,87 @@ export function getNetworkDisplayName(
   data: EthereumListsChain,
   networkId: number
 ): string {
-  const displayName = data
-    ? `${data.chain} ${data.network === 'mainnet' ? '' : data.network}`
-    : networkId === 8996
-    ? 'Development'
-    : 'Unknown'
+  let displayName
+
+  switch (networkId) {
+    case 1287:
+      displayName = 'Moonbase Alpha'
+      break
+    case 137:
+      displayName = 'Polygon'
+      break
+    case 80001:
+      displayName = 'Polygon Mumbai'
+      break
+    case 8996:
+      displayName = 'Development'
+      break
+    default:
+      displayName = data
+        ? `${data.chain} ${data.network === 'mainnet' ? '' : data.network}`
+        : 'Unknown'
+      break
+  }
 
   return displayName
 }
 
-export function getNetworkData(
+export function getNetworkDataById(
   data: { node: EthereumListsChain }[],
   networkId: number
 ): EthereumListsChain {
+  if (!networkId) return
   const networkData = data.filter(
-    ({ node }: { node: EthereumListsChain }) => node.networkId === networkId
-  )[0]
-  return networkData.node
+    ({ node }: { node: EthereumListsChain }) => node.chainId === networkId
+  )
+
+  return networkId === 2021000 ? networkDataGaiaX : networkData[0]?.node
 }
 
-export function addCustomNetwork(
+export async function addCustomNetwork(
   web3Provider: any,
-  network: NetworkObject
-): void {
+  network: EthereumListsChain
+): Promise<void> {
   const newNewtworkData = {
     chainId: `0x${network.chainId.toString(16)}`,
-    chainName: network.name,
-    rpcUrls: network.urlList
+    chainName: getNetworkDisplayName(network, network.chainId),
+    nativeCurrency: network.nativeCurrency,
+    rpcUrls: network.rpc,
+    blockExplorerUrls: [network.explorers[0].url]
   }
-  web3Provider.request(
-    {
-      method: 'wallet_addEthereumChain',
-      params: [newNewtworkData]
-    },
-    (err: string, added: any) => {
-      if (err || 'error' in added) {
-        Logger.error(
-          `Couldn't add ${network.name} (0x${
-            network.chainId
-          }) netowrk to MetaMask, error: ${err || added.error}`
-        )
-      } else {
-        Logger.log(
-          `Added ${network.name} (0x${network.chainId}) network to MetaMask`
-        )
-      }
+  try {
+    await web3Provider.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: newNewtworkData.chainId }]
+    })
+  } catch (switchError) {
+    if (switchError.code === 4902) {
+      await web3Provider.request(
+        {
+          method: 'wallet_addEthereumChain',
+          params: [newNewtworkData]
+        },
+        (err: string, added: any) => {
+          if (err || 'error' in added) {
+            Logger.error(
+              `Couldn't add ${network.name} (0x${
+                network.chainId
+              }) network to MetaMask, error: ${err || added.error}`
+            )
+          } else {
+            Logger.log(
+              `Added ${network.name} (0x${network.chainId}) network to MetaMask`
+            )
+          }
+        }
+      )
+    } else {
+      Logger.error(
+        `Couldn't add ${network.name} (0x${network.chainId}) network to MetaMask, error: ${switchError}`
+      )
     }
-  )
+  }
+  Logger.log(`Added ${network.name} (0x${network.chainId}) network to MetaMask`)
 }
 
 export async function addTokenToWallet(

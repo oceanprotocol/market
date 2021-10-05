@@ -3,12 +3,10 @@ import { toast } from 'react-toastify'
 import { File as FileMetadata, DDO } from '@oceanprotocol/lib'
 import File from '../../atoms/File'
 import Price from '../../atoms/Price'
-import Web3Feedback from '../../molecules/Wallet/Feedback'
-import styles from './Consume.module.css'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import { useAsset } from '../../../providers/Asset'
-import { secondsToString } from '../../../utils/metadata'
-import { gql, useQuery } from '@apollo/client'
+import { gql } from 'urql'
+import { fetchData, getQueryContext } from '../../../utils/subgraph'
 import { OrdersData } from '../../../@types/apollo/OrdersData'
 import BigNumber from 'bignumber.js'
 import { useOcean } from '../../../providers/Ocean'
@@ -17,6 +15,10 @@ import { usePricing } from '../../../hooks/usePricing'
 import { useConsume } from '../../../hooks/useConsume'
 import ButtonBuy from '../../atoms/ButtonBuy'
 import AssetStatus from '../../molecules/AssetStatus'
+import { secondsToString } from '../../../utils/metadata'
+import AlgorithmDatasetsListForCompute from '../AssetContent/AlgorithmDatasetsListForCompute'
+import styles from './Consume.module.css'
+import { useIsMounted } from '../../../hooks/useIsMounted'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {
@@ -37,42 +39,58 @@ export default function Consume({
   file,
   isBalanceSufficient,
   dtBalance,
-  fileIsLoading
+  fileIsLoading,
+  isConsumable,
+  consumableFeedback
 }: {
   ddo: DDO
   file: FileMetadata
   isBalanceSufficient: boolean
   dtBalance: string
   fileIsLoading?: boolean
+  isConsumable?: boolean
+  consumableFeedback?: string
 }): ReactElement {
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
   const { appConfig } = useSiteMetadata()
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
   const [previousOrderId, setPreviousOrderId] = useState<string>()
-  const { isInPurgatory, price, type } = useAsset()
+  const { isInPurgatory, price, type, isAssetNetwork } = useAsset()
   const { buyDT, pricingStepText, pricingError, pricingIsLoading } =
     usePricing()
-  const { consumeStepText, consume, consumeError } = useConsume()
+  const { consumeStepText, consume, consumeError, isLoading } = useConsume()
   const [isDisabled, setIsDisabled] = useState(true)
   const [hasDatatoken, setHasDatatoken] = useState(false)
-  const [isConsumable, setIsConsumable] = useState(true)
+  const [isConsumablePrice, setIsConsumablePrice] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
-
-  const { data } = useQuery<OrdersData>(previousOrderQuery, {
-    variables: {
-      id: ddo.dataToken?.toLowerCase(),
-      account: accountId?.toLowerCase()
-    },
-    pollInterval: 5000
-  })
+  const [data, setData] = useState<OrdersData>()
+  const isMounted = useIsMounted()
 
   useEffect(() => {
-    if (!data || !assetTimeout || data.tokenOrders.length === 0) return
+    if (!ddo || !accountId) return
+    const context = getQueryContext(ddo.chainId)
+    const variables = {
+      id: ddo.dataToken?.toLowerCase(),
+      account: accountId?.toLowerCase()
+    }
+    fetchData(previousOrderQuery, variables, context).then((result: any) => {
+      isMounted() && setData(result.data)
+    })
+  }, [ddo, accountId, hasPreviousOrder, isMounted])
+
+  useEffect(() => {
+    if (
+      !data ||
+      !assetTimeout ||
+      data.tokenOrders.length === 0 ||
+      !accountId ||
+      !isAssetNetwork
+    )
+      return
 
     const lastOrder = data.tokenOrders[0]
-
-    if (assetTimeout === 'Forever') {
+    if (assetTimeout === '0') {
       setPreviousOrderId(lastOrder.tx)
       setHasPreviousOrder(true)
     } else {
@@ -85,17 +103,17 @@ export default function Consume({
         setHasPreviousOrder(false)
       }
     }
-  }, [data, assetTimeout])
+  }, [data, assetTimeout, accountId, isAssetNetwork])
 
   useEffect(() => {
     const { timeout } = ddo.findServiceByType('access').attributes.main
-    setAssetTimeout(secondsToString(timeout))
+    setAssetTimeout(`${timeout}`)
   }, [ddo])
 
   useEffect(() => {
     if (!price) return
 
-    setIsConsumable(
+    setIsConsumablePrice(
       price.isConsumable !== undefined ? price.isConsumable === 'true' : true
     )
   }, [price])
@@ -105,42 +123,54 @@ export default function Consume({
   }, [dtBalance])
 
   useEffect(() => {
+    if (!accountId) return
     setIsDisabled(
-      (!ocean ||
-        !isBalanceSufficient ||
-        typeof consumeStepText !== 'undefined' ||
-        pricingIsLoading ||
-        !isConsumable) &&
-        !hasPreviousOrder &&
-        !hasDatatoken
+      !isConsumable ||
+        ((!ocean ||
+          !isBalanceSufficient ||
+          !isAssetNetwork ||
+          typeof consumeStepText !== 'undefined' ||
+          pricingIsLoading ||
+          !isConsumablePrice) &&
+          !hasPreviousOrder &&
+          !hasDatatoken)
     )
   }, [
     ocean,
     hasPreviousOrder,
     isBalanceSufficient,
+    isAssetNetwork,
     consumeStepText,
     pricingIsLoading,
+    isConsumablePrice,
+    hasDatatoken,
     isConsumable,
-    hasDatatoken
+    accountId
   ])
 
   async function handleConsume() {
-    !hasPreviousOrder && !hasDatatoken && (await buyDT('1', price, ddo))
-    await consume(
+    if (!hasPreviousOrder && !hasDatatoken) {
+      const tx = await buyDT('1', price, ddo)
+      if (tx === undefined) return
+    }
+    const error = await consume(
       ddo.id,
       ddo.dataToken,
       'access',
       appConfig.marketFeeAddress,
       previousOrderId
     )
-    setHasPreviousOrder(true)
+    error || setHasPreviousOrder(true)
   }
 
   // Output errors in UI
   useEffect(() => {
     consumeError && toast.error(consumeError)
+  }, [consumeError])
+
+  useEffect(() => {
     pricingError && toast.error(pricingError)
-  }, [consumeError, pricingError])
+  }, [pricingError])
 
   const PurchaseButton = () => (
     <ButtonBuy
@@ -150,11 +180,16 @@ export default function Consume({
       hasDatatoken={hasDatatoken}
       dtSymbol={ddo.dataTokenInfo?.symbol}
       dtBalance={dtBalance}
+      datasetLowPoolLiquidity={!isConsumablePrice}
       onClick={handleConsume}
-      assetTimeout={assetTimeout}
+      assetTimeout={secondsToString(parseInt(assetTimeout))}
       assetType={type}
       stepText={consumeStepText || pricingStepText}
-      isLoading={pricingIsLoading}
+      isLoading={pricingIsLoading || isLoading}
+      priceType={price?.type}
+      isConsumable={isConsumable}
+      isBalanceSufficient={isBalanceSufficient}
+      consumableFeedback={consumableFeedback}
     />
   )
 
@@ -170,9 +205,9 @@ export default function Consume({
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>
-      <footer className={styles.feedback}>
-        <Web3Feedback isBalanceSufficient={isBalanceSufficient} />
-      </footer>
+      {type === 'algorithm' && (
+        <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} dataset={ddo} />
+      )}
     </aside>
   )
 }
