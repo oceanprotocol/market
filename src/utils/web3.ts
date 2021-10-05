@@ -62,6 +62,9 @@ export function getNetworkDisplayName(
     case 137:
       displayName = 'Polygon'
       break
+    case 246:
+      displayName = 'Energy Web Chain'
+      break
     case 80001:
       displayName = 'Polygon Mumbai'
       break
