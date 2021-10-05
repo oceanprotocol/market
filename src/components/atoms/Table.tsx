@@ -3,6 +3,7 @@ import DataTable, { IDataTableProps } from 'react-data-table-component'
 import Loader from './Loader'
 import Pagination from '../molecules/Pagination'
 import styles from './Table.module.css'
+import { useUserPreferences } from '../../providers/UserPreferences'
 
 interface TableProps extends IDataTableProps {
   isLoading?: boolean
@@ -13,7 +14,14 @@ interface TableProps extends IDataTableProps {
 }
 
 function Empty({ message }: { message?: string }): ReactElement {
-  return <div className={styles.empty}>{message || 'No results found'}</div>
+  const { chainIds } = useUserPreferences()
+  return (
+    <div className={styles.empty}>
+      {chainIds.length === 0
+        ? 'No network selected'
+        : message || 'No results found'}
+    </div>
+  )
 }
 
 export default function Table({

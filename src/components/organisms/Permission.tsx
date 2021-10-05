@@ -4,6 +4,7 @@ import rbacRequest from '../../utils/rbac'
 import Alert from '../atoms/Alert'
 import Loader from '../atoms/Loader'
 import appConfig from '../../../app.config'
+import { useIsMounted } from '../../hooks/useIsMounted'
 
 export default function Permission({
   eventType,
@@ -18,14 +19,17 @@ export default function Permission({
   const [messageState, updateMessageState] =
     useState<'error' | 'warning' | 'info' | 'success'>()
   const { accountId } = useWeb3()
+  const isMounted = useIsMounted()
   useEffect(() => {
     if (url === undefined) return
+    const controller = new AbortController()
     const getData = async () => {
       if (accountId === undefined) {
         updateError('Please make sure your wallet is connected to proceed.')
         updateMessageState('info')
       } else {
-        const data = await rbacRequest(eventType, accountId)
+        const data = await rbacRequest(eventType, accountId, controller.signal)
+        if (!isMounted()) return
         updateData(data)
         if (data === 'ERROR') {
           updateError(
@@ -46,7 +50,10 @@ export default function Permission({
       }
     }
     getData()
-  }, [eventType, accountId, url])
+    return () => {
+      controller.abort()
+    }
+  }, [eventType, accountId, url, isMounted])
 
   if (url === undefined || data === true) {
     return <>{children}</>

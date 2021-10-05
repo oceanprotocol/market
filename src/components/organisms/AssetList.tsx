@@ -7,6 +7,7 @@ import classNames from 'classnames/bind'
 import { getAssetsBestPrices, AssetListPrices } from '../../utils/subgraph'
 import Loader from '../atoms/Loader'
 import { useUserPreferences } from '../../providers/UserPreferences'
+import { useIsMounted } from '../../hooks/useIsMounted'
 
 const cx = classNames.bind(styles)
 
@@ -26,6 +27,7 @@ declare type AssetListProps = {
   isLoading?: boolean
   onPageChange?: React.Dispatch<React.SetStateAction<number>>
   className?: string
+  noPublisher?: boolean
 }
 
 const AssetList: React.FC<AssetListProps> = ({
@@ -35,19 +37,25 @@ const AssetList: React.FC<AssetListProps> = ({
   totalPages,
   isLoading,
   onPageChange,
-  className
+  className,
+  noPublisher
 }) => {
   const { chainIds } = useUserPreferences()
   const [assetsWithPrices, setAssetWithPrices] = useState<AssetListPrices[]>()
   const [loading, setLoading] = useState<boolean>(true)
-
+  const isMounted = useIsMounted()
   useEffect(() => {
     if (!assets) return
     isLoading && setLoading(true)
-    getAssetsBestPrices(assets).then((asset) => {
+
+    async function fetchPrices() {
+      const asset = await getAssetsBestPrices(assets)
+      if (!isMounted()) return
       setAssetWithPrices(asset)
       setLoading(false)
-    })
+    }
+
+    fetchPrices()
   }, [assets])
 
   // // This changes the page field inside the query
@@ -60,7 +68,11 @@ const AssetList: React.FC<AssetListProps> = ({
     [className]: className
   })
 
-  return assetsWithPrices &&
+  return chainIds.length === 0 ? (
+    <div className={styleClasses}>
+      <div className={styles.empty}>No network selected</div>
+    </div>
+  ) : assetsWithPrices &&
     !loading &&
     (isLoading === undefined || isLoading === false) ? (
     <>
@@ -71,12 +83,11 @@ const AssetList: React.FC<AssetListProps> = ({
               ddo={assetWithPrice.ddo}
               price={assetWithPrice.price}
               key={assetWithPrice.ddo.id}
+              noPublisher={noPublisher}
             />
           ))
-        ) : chainIds.length === 0 ? (
-          <div className={styles.empty}>No network selected.</div>
         ) : (
-          <div className={styles.empty}>No results found.</div>
+          <div className={styles.empty}>No results found</div>
         )}
       </div>
 

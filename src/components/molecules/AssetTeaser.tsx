@@ -13,11 +13,13 @@ import { BestPrice } from '../../models/BestPrice'
 declare type AssetTeaserProps = {
   ddo: DDO
   price: BestPrice
+  noPublisher?: boolean
 }
 
 const AssetTeaser: React.FC<AssetTeaserProps> = ({
   ddo,
-  price
+  price,
+  noPublisher
 }: AssetTeaserProps) => {
   const { attributes } = ddo.findServiceByType('metadata')
   const { name, type } = attributes.main
@@ -34,7 +36,9 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
           <Dotdotdot clamp={3}>
             <h1 className={styles.title}>{name}</h1>
           </Dotdotdot>
-          <Publisher account={owner} minimal className={styles.publisher} />
+          {!noPublisher && (
+            <Publisher account={owner} minimal className={styles.publisher} />
+          )}
         </header>
 
         <AssetType
