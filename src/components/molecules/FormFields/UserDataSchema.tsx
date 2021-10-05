@@ -69,12 +69,14 @@ export default function UserDataSchema(prop: {
   const data = useStaticQuery(query)
   const content: FormContent = data.content.edges[0].node.childPublishJson
 
-  const nameField = content.data.find((x) => x.name === 'fieldName')
-  const labelField = content.data.find((x) => x.name === 'fieldLabel')
-  const typeField = content.data.find((x) => x.name === 'fieldType')
-  const isRequiredField = content.data.find((x) => x.name === 'fieldRequired')
+  const nameField = content.data.find((field) => field.name === 'fieldName')
+  const labelField = content.data.find((field) => field.name === 'fieldLabel')
+  const typeField = content.data.find((field) => field.name === 'fieldType')
+  const isRequiredField = content.data.find(
+    (field) => field.name === 'fieldRequired'
+  )
   const descriptionField = content.data.find(
-    (x) => x.name === 'fieldDescription'
+    (field) => field.name === 'fieldDescription'
   )
 
   const defaultMultiselectOptions = [
@@ -172,7 +174,7 @@ export default function UserDataSchema(prop: {
 
   function addMultiselectOption(userSchemaId: string) {
     const userSchema = userDataSchema.find(
-      (x) => x.userSchemaId === userSchemaId
+      (userSchema) => userSchema.userSchemaId === userSchemaId
     )
     const numberOfMultiselectOptions = userSchema.multiselectOptions.length + 1
 
@@ -199,8 +201,9 @@ export default function UserDataSchema(prop: {
     userSchemaId: string
   ) {
     const userSchemas = [...userDataSchema]
-    const el = userSchemas.find((x) => x.userSchemaId === userSchemaId)
-    const index = userSchemas.indexOf(el)
+    const index = userSchemas.indexOf(
+      userSchemas.find((userSchema) => userSchema.userSchemaId === userSchemaId)
+    )
 
     if (index > -1) {
       userSchemas.splice(index, 1)
@@ -210,145 +213,173 @@ export default function UserDataSchema(prop: {
 
   return (
     <div>
-      {userDataSchema.map((x: IUserDataSchemaTemplate, index: number) => (
-        <div className={styles.dataSchemaBox} key={x.userSchemaId}>
-          <div className={styles.dataSchemaBox}>
-            <div className={styles.dataSchemaNumeration}>
-              <div className={styles.dataSchemaBorder} />
-              <div className={styles.dataSchemaBorderNumber}>{index + 1}</div>
-              <div className={styles.dataSchemaBorder} />
-            </div>
-
-            <div className={styles.fieldContainer}>
-              <div className={styles.fieldsContainerRow}>
-                <div className={styles.fieldsContainerColumn}>
-                  <Field
-                    key={x.fieldName.name}
-                    {...x.fieldName}
-                    options={x.fieldName.options}
-                    component={Input}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                      handleFieldChange(e, x.fieldName, x.userSchemaId)
-                    }
-                  />
-                </div>
-                <div className={styles.fieldsContainerColumn}>
-                  <Field
-                    key={x.fieldLabel.name}
-                    {...x.fieldLabel}
-                    options={x.fieldLabel.options}
-                    component={Input}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                      handleFieldChange(e, x.fieldLabel, x.userSchemaId)
-                    }
-                  />
-                </div>
+      {userDataSchema.map(
+        (userSchema: IUserDataSchemaTemplate, index: number) => (
+          <div className={styles.dataSchemaBox} key={userSchema.userSchemaId}>
+            <div className={styles.dataSchemaBox}>
+              <div className={styles.dataSchemaNumeration}>
+                <div className={styles.dataSchemaBorder} />
+                <div className={styles.dataSchemaBorderNumber}>{index + 1}</div>
+                <div className={styles.dataSchemaBorder} />
               </div>
-              <div className={styles.fieldsContainerRow}>
-                <div className={styles.fieldsContainerColumn}>
-                  <Field
-                    key={x.fieldType.name}
-                    {...x.fieldType}
-                    options={x.fieldType.options}
-                    component={Input}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                      handleFieldChange(e, x.fieldType, x.userSchemaId)
-                    }
-                  />
-                </div>
-                <div className={styles.fieldsContainerColumn}>
-                  <Field
-                    key={x.isFieldRequired.name}
-                    {...x.isFieldRequired}
-                    options={x.isFieldRequired.options}
-                    component={Input}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                      handleFieldChange(e, x.isFieldRequired, x.userSchemaId)
-                    }
-                  />
-                </div>
-              </div>
-              <div className={styles.fieldsContainerRow}>
-                {x.multiselectOptions.map(
-                  (field: IMultiselectOptionTemplate) =>
-                    x.showMultiselectOptions && (
-                      <div className={styles.fieldsContainerColumn}>
-                        <Field
-                          key={field.optionid}
-                          name={field.name}
-                          {...field}
-                          component={Input}
-                          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                            handleFieldChange(e, field, x.userSchemaId)
-                          }
-                        />
-                      </div>
-                    )
-                )}
 
-                <div className={styles.fieldsContainerColumn}>
-                  {x.showMultiselectOptions ? (
-                    <Button
-                      className={styles.addOptionButton}
-                      style="text"
-                      size="small"
-                      onClick={() => addMultiselectOption(x.userSchemaId)}
-                    >
-                      ADD OPTION {x.multiselectOptions.length + 1}
-                    </Button>
-                  ) : (
-                    ''
+              <div className={styles.fieldContainer}>
+                <div className={styles.fieldsContainerRow}>
+                  <div className={styles.fieldsContainerColumn}>
+                    <Field
+                      key={userSchema.fieldName.name}
+                      {...userSchema.fieldName}
+                      options={userSchema.fieldName.options}
+                      component={Input}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        handleFieldChange(
+                          e,
+                          userSchema.fieldName,
+                          userSchema.userSchemaId
+                        )
+                      }
+                    />
+                  </div>
+                  <div className={styles.fieldsContainerColumn}>
+                    <Field
+                      key={userSchema.fieldLabel.name}
+                      {...userSchema.fieldLabel}
+                      options={userSchema.fieldLabel.options}
+                      component={Input}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        handleFieldChange(
+                          e,
+                          userSchema.fieldLabel,
+                          userSchema.userSchemaId
+                        )
+                      }
+                    />
+                  </div>
+                </div>
+                <div className={styles.fieldsContainerRow}>
+                  <div className={styles.fieldsContainerColumn}>
+                    <Field
+                      key={userSchema.fieldType.name}
+                      {...userSchema.fieldType}
+                      options={userSchema.fieldType.options}
+                      component={Input}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        handleFieldChange(
+                          e,
+                          userSchema.fieldType,
+                          userSchema.userSchemaId
+                        )
+                      }
+                    />
+                  </div>
+                  <div className={styles.fieldsContainerColumn}>
+                    <Field
+                      key={userSchema.isFieldRequired.name}
+                      {...userSchema.isFieldRequired}
+                      options={userSchema.isFieldRequired.options}
+                      component={Input}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        handleFieldChange(
+                          e,
+                          userSchema.isFieldRequired,
+                          userSchema.userSchemaId
+                        )
+                      }
+                    />
+                  </div>
+                </div>
+                <div className={styles.fieldsContainerRow}>
+                  {userSchema.multiselectOptions.map(
+                    (optionField: IMultiselectOptionTemplate) =>
+                      userSchema.showMultiselectOptions && (
+                        <div className={styles.fieldsContainerColumn}>
+                          <Field
+                            key={optionField.optionid}
+                            name={optionField.name}
+                            {...optionField}
+                            component={Input}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                              handleFieldChange(
+                                e,
+                                optionField,
+                                userSchema.userSchemaId
+                              )
+                            }
+                          />
+                        </div>
+                      )
                   )}
+
+                  <div className={styles.fieldsContainerColumn}>
+                    {userSchema.showMultiselectOptions ? (
+                      <Button
+                        className={styles.addOptionButton}
+                        style="text"
+                        size="small"
+                        onClick={() =>
+                          addMultiselectOption(userSchema.userSchemaId)
+                        }
+                      >
+                        ADD OPTION {userSchema.multiselectOptions.length + 1}
+                      </Button>
+                    ) : (
+                      ''
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className={styles.fieldsContainerRow}>
-                <div className={styles.fieldsContainerColumn}>
-                  <Field
-                    key={descriptionField.name}
-                    {...descriptionField}
-                    options={descriptionField.options}
-                    component={Input}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                      handleFieldChange(e, descriptionField, x.userSchemaId)
-                    }
-                  />
+                <div className={styles.fieldsContainerRow}>
+                  <div className={styles.fieldsContainerColumn}>
+                    <Field
+                      key={descriptionField.name}
+                      {...descriptionField}
+                      options={descriptionField.options}
+                      component={Input}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        handleFieldChange(
+                          e,
+                          descriptionField,
+                          userSchema.userSchemaId
+                        )
+                      }
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className={styles.break} />
+            <div className={styles.break} />
 
-          <div className={styles.deleteUserSchemaButton}>
-            {userDataSchema.length > 1 ? (
-              <Button
-                style="text"
-                size="small"
-                onClick={(e: ChangeEvent<HTMLInputElement>) => {
-                  onDeleteUserDataSchemaButton(e, x.userSchemaId)
-                }}
-                className={styles.deleteUserSchemaButton}
-              >
-                DELETE
-              </Button>
-            ) : (
-              ''
-            )}
-            {index === userDataSchema.length - 1 ? (
-              <Button
-                style="text"
-                size="small"
-                onClick={addNewUserSchemaButton}
-                className={styles.addNewUserSchemaButton}
-              >
-                ADD ANOTHER USER SCHEMA
-              </Button>
-            ) : (
-              ''
-            )}
+            <div className={styles.deleteUserSchemaButton}>
+              {userDataSchema.length > 1 ? (
+                <Button
+                  style="text"
+                  size="small"
+                  onClick={(e: ChangeEvent<HTMLInputElement>) => {
+                    onDeleteUserDataSchemaButton(e, userSchema.userSchemaId)
+                  }}
+                  className={styles.deleteUserSchemaButton}
+                >
+                  DELETE
+                </Button>
+              ) : (
+                ''
+              )}
+              {index === userDataSchema.length - 1 ? (
+                <Button
+                  style="text"
+                  size="small"
+                  onClick={addNewUserSchemaButton}
+                  className={styles.addNewUserSchemaButton}
+                >
+                  ADD ANOTHER USER SCHEMA
+                </Button>
+              ) : (
+                ''
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        )
+      )}
     </div>
   )
 }
