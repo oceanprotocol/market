@@ -13,10 +13,14 @@ import { MetadataPublishFormDataset } from '../../../@types/MetaData'
 import { initialValues as initialValuesDataset } from '../../../models/FormAlgoPublish'
 import { ReactComponent as Download } from '../../../images/download.svg'
 import { ReactComponent as Compute } from '../../../images/compute.svg'
+import { ReactComponent as Caret } from '../../../images/caret.svg'
 import FormTitle from './FormTitle'
 import FormActions from './FormActions'
+import FormAdvancedSettings from './FormAdvancedSettings'
 import styles from './FormPublish.module.css'
 import AdvancedSettings from '../../molecules/FormFields/AdvancedSettings'
+import UserDataSchema from '../../molecules/FormFields/UserDataSchema'
+import Button from '../../atoms/Button'
 
 const query = graphql`
   query {
@@ -63,6 +67,7 @@ export default function FormPublish(): ReactElement {
   }: FormikContextType<MetadataPublishFormDataset> = useFormikContext()
 
   const [computeTypeSelected, setComputeTypeSelected] = useState<boolean>(false)
+  const [open, setOpen] = useState<boolean>()
 
   // reset form validation on every mount
   useEffect(() => {
@@ -125,7 +130,7 @@ export default function FormPublish(): ReactElement {
       // do we need this?
       onChange={() => status === 'empty' && setStatus(null)}
     >
-      <FormTitle title={content.title} />
+      <FormTitle title={content.title} showNetwork />
 
       {content.data.map(
         (field: FormFieldProps) =>
@@ -147,6 +152,12 @@ export default function FormPublish(): ReactElement {
             />
           )
       )}
+
+      <FormAdvancedSettings
+        content={content}
+        handleFieldChange={handleFieldChange}
+      />
+
       <AdvancedSettings
         content={content}
         handleFieldChange={handleFieldChange}

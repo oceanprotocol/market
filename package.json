@@ -86,6 +86,7 @@
     "swr": "^0.5.6",
     "urql": "^2.0.3",
     "use-dark-mode": "^2.3.1",
+    "uuid": "^8.3.2",
     "web3": "^1.5.2",
     "web3modal": "^1.9.4",
     "yup": "^0.32.9"
@@ -113,6 +114,7 @@
     "@types/react-tabs": "^2.3.2",
     "@types/remove-markdown": "^0.3.0",
     "@types/shortid": "0.0.29",
+    "@types/uuid": "^8.3.1",
     "@types/yup": "^0.29.11",
     "@typescript-eslint/eslint-plugin": "^4.26.0",
     "@typescript-eslint/parser": "^4.26.0",

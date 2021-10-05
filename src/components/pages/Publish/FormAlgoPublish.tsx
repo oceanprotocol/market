@@ -143,7 +143,7 @@ export default function FormPublish(): ReactElement {
       // do we need this?
       onChange={() => status === 'empty' && setStatus(null)}
     >
-      <FormTitle title={content.title} />
+      <FormTitle title={content.title} showNetwork />
 
       {content.data.map(
         (field: FormFieldProps) =>
@@ -167,6 +167,7 @@ export default function FormPublish(): ReactElement {
             />
           )
       )}
+
       <AdvancedSettings
         content={content}
         handleFieldChange={handleFieldChange}

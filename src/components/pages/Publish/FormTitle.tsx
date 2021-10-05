@@ -22,7 +22,10 @@ const query = graphql`
   }
 `
 
-export default function FormTitle({ title }: { title: string }): ReactElement {
+export default function FormTitle(props: {
+  title: string
+  showNetwork: boolean
+}): ReactElement {
   const data = useStaticQuery(query)
   const contentTooltip =
     data.content.edges[0].node.childPublishJson.tooltipNetwork
@@ -30,8 +33,8 @@ export default function FormTitle({ title }: { title: string }): ReactElement {
 
   return (
     <h2 className={styles.title}>
-      {title}{' '}
-      {networkId && (
+      {props.title}{' '}
+      {props.showNetwork && networkId && (
         <>
           into <NetworkName networkId={networkId} className={styles.network} />
           <Tooltip content={contentTooltip} className={styles.tooltip} />

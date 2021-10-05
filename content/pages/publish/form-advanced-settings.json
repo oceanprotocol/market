@@ -1,0 +1,42 @@
+{
+  "title": "Define user schema",
+  "data": [
+    {
+      "name": "fieldName",
+      "label": "Field name",
+      "placeholder": "Define the name of the field",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "fieldLabel",
+      "label": "Field label",
+      "placeholder": "Define the field label",
+      "type": "text",
+      "required": true
+    },
+    {
+      "name": "fieldType",
+      "label": "Field type",
+      "type": "select",
+      "options": ["Text", "Number", "Boolean", "Select"],
+      "sortOptions": false,
+      "required": true
+    },
+    {
+      "name": "fieldRequired",
+      "label": "Is this field required?",
+      "type": "select",
+      "options": ["YES", "NO"],
+      "sortOptions": false,
+      "required": true
+    },
+    {
+      "name": "fieldDescription",
+      "label": "Field description",
+      "placeholder": "Define the description of this field",
+      "type": "text",
+      "required": true
+    }
+  ]
+}

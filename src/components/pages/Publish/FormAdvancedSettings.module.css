@@ -1,0 +1,102 @@
+.formAdvancedSettings {
+  border-top: 1px solid #e0e0e0;
+  margin-bottom: 25px;
+
+  border-bottom: 1px solid #e0e0e0;
+  margin-top: 25px;
+}
+
+.advancedSettingsSection {
+  margin-top: 25px;
+}
+
+.defineUserSchemaSubSection {
+}
+
+.hideSection {
+  display: none;
+}
+
+.form {
+  composes: box from '../../atoms/Box.module.css';
+  margin-bottom: var(--spacer);
+  border-top: none;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.toggle {
+  margin-left: 20px;
+  color: var(--font-color-heading);
+}
+
+.toggle svg {
+  display: inline-block;
+  width: var(--font-size-text);
+  height: var(--font-size-text);
+  fill: currentColor;
+  transition: 0.2s ease-out;
+}
+
+.open .toggle svg {
+  transform: rotate(180deg);
+}
+
+.dataSchemaBox {
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  margin-bottom: 25px;
+}
+
+.dataSchemaNumeration {
+  display: flex;
+  flex-direction: column;
+  flex-flow: column;
+}
+
+.dataSchemaBorder {
+  width: 1.2px;
+  background-color: #e2e2e2;
+  margin-left: 3px;
+  display: flex;
+  height: 100%;
+  flex-grow: 4;
+}
+
+.dataSchemaBorderNumber {
+  color: #8591a2;
+  font-size: 14px;
+  height: 20px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  flex-grow: 1;
+}
+
+.fieldContainer {
+  height: auto;
+
+  flex-grow: 1;
+  flex-basis: 0;
+}
+
+.fieldsContainerRow {
+  margin-left: 25px;
+  display: flex;
+  align-items: center;
+}
+
+.fieldsContainerColumn {
+  flex-grow: 1;
+  margin-right: 25px;
+  flex-basis: 0;
+}
+
+.fieldContainer:last-child > div:last-child > div > div {
+  margin-bottom: 7px;
+}
+
+.addOptionButton {
+  margin-top: 14px;
+  color: #7b1173;
+}
