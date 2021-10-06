@@ -177,6 +177,8 @@ export default function PoolShares({
         setAssets(assets)
       } catch (error) {
         console.error('Error fetching pool shares: ', error.message)
+      } finally {
+        setLoading(false)
       }
     },
     [poolShares, isPoolSharesLoading, isMounted]
@@ -187,7 +189,6 @@ export default function PoolShares({
     async function init() {
       setLoading(true)
       await fetchPoolSharesAssets(cancelToken)
-      setLoading(false)
 
       if (dataFetchInterval) return
       const interval = setInterval(async () => {
