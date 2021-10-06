@@ -14,5 +14,7 @@ public/storybook
 repo-metadata.json
 content/networks-metadata.json
 src/@types/apollo
+src/@types/codegen/
+src/@types/codegen/*
 graphql.schema.json
 src/@types/graph.types.ts

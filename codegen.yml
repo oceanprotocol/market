@@ -12,11 +12,35 @@ documents:
   - './src/components/molecules/PoolTransactions.tsx'
   - './src/components/molecules/MarketStats.tsx'
 generates:
-  ./src/@types/graph.types.ts:
+  ./src/@types/codegen/graph.types.ts:
+    plugins:
+      - 'typescript'
+  ./src/@types/codegen/graph.operations.ts:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+  ./src/@types/codegen/graph.urql.ts:
+    plugins:
+      - 'typescript-urql'
+  ./src/@types/codegen/graph.reactApollo.ts:
     plugins:
       - 'typescript'
       - 'typescript-operations'
       - 'typescript-react-apollo'
-  ./graphql.schema.json:
+  ./src/@types/codegen/graph.reactQuery.ts:
     plugins:
-      - 'introspection'
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-react-query'
+  ./src/@types/codegen/graph.genericSdk.ts:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-generic-sdk'
+  ./src/@types/codegen/graph.tyedDocumentNode.ts:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typed-document-node'
+    config:
+      withHooks: false
