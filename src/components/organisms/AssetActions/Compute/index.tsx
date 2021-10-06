@@ -465,10 +465,7 @@ export default function Compute({
 
       <footer className={styles.feedback}>
         {isPublished && (
-          <SuccessConfetti
-            success="Your job started successfully! Watch the progress on the history page."
-            action={<SuccessAction />}
-          />
+          <SuccessConfetti success="Your job started successfully! Watch the progress below or on your profile." />
         )}
       </footer>
       {accountId && (
