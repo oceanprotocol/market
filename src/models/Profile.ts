@@ -6,6 +6,7 @@ export interface ProfileLink {
 export interface Profile {
   did?: string
   name?: string
+  accountEns?: string
   description?: string
   emoji?: string
   image?: string

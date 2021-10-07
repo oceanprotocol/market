@@ -17,7 +17,7 @@ import ButtonBuy from '../../atoms/ButtonBuy'
 import { secondsToString } from '../../../utils/metadata'
 import AlgorithmDatasetsListForCompute from '../AssetContent/AlgorithmDatasetsListForCompute'
 import styles from './Consume.module.css'
-import { BestPrice } from '../../../models/BestPrice'
+import { useIsMounted } from '../../../hooks/useIsMounted'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {
@@ -61,10 +61,10 @@ export default function Consume({
   const { consumeStepText, consume, consumeError, isLoading } = useConsume()
   const [isDisabled, setIsDisabled] = useState(true)
   const [hasDatatoken, setHasDatatoken] = useState(false)
-  const [maxDt, setMaxDT] = useState<number>(1)
   const [isConsumablePrice, setIsConsumablePrice] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
   const [data, setData] = useState<OrdersData>()
+  const isMounted = useIsMounted()
 
   useEffect(() => {
     if (!ddo || !accountId) return
@@ -74,21 +74,18 @@ export default function Consume({
       account: accountId?.toLowerCase()
     }
     fetchData(previousOrderQuery, variables, context).then((result: any) => {
-      setData(result.data)
+      isMounted() && setData(result.data)
     })
-  }, [ddo, accountId, hasPreviousOrder])
-
-  async function checkMaxAvaialableTokens(price: BestPrice) {
-    if (!ocean || !price) return
-    const maxTokensInPool =
-      price.type === 'pool'
-        ? await ocean.pool.getDTMaxBuyQuantity(price.address)
-        : 1
-    setMaxDT(Number(maxTokensInPool))
-  }
+  }, [ddo, accountId, hasPreviousOrder, isMounted])
 
   useEffect(() => {
-    if (!data || !assetTimeout || data.tokenOrders.length === 0 || !accountId)
+    if (
+      !data ||
+      !assetTimeout ||
+      data.tokenOrders.length === 0 ||
+      !accountId ||
+      !isAssetNetwork
+    )
       return
 
     const lastOrder = data.tokenOrders[0]
@@ -105,11 +102,11 @@ export default function Consume({
         setHasPreviousOrder(false)
       }
     }
-  }, [data, assetTimeout, accountId])
+  }, [data, assetTimeout, accountId, isAssetNetwork])
 
   useEffect(() => {
     const { timeout } = ddo.findServiceByType('access').attributes.main
-    setAssetTimeout(timeout.toString())
+    setAssetTimeout(`${timeout}`)
   }, [ddo])
 
   useEffect(() => {
@@ -118,7 +115,6 @@ export default function Consume({
     setIsConsumablePrice(
       price.isConsumable !== undefined ? price.isConsumable === 'true' : true
     )
-    checkMaxAvaialableTokens(price)
   }, [price])
 
   useEffect(() => {
@@ -134,7 +130,6 @@ export default function Consume({
           !isAssetNetwork ||
           typeof consumeStepText !== 'undefined' ||
           pricingIsLoading ||
-          (!hasPreviousOrder && !hasDatatoken && !(maxDt >= 1)) ||
           !isConsumablePrice) &&
           !hasPreviousOrder &&
           !hasDatatoken)
@@ -148,8 +143,8 @@ export default function Consume({
     pricingIsLoading,
     isConsumablePrice,
     hasDatatoken,
-    accountId,
-    isConsumable
+    isConsumable,
+    accountId
   ])
 
   async function handleConsume() {
@@ -184,7 +179,7 @@ export default function Consume({
       hasDatatoken={hasDatatoken}
       dtSymbol={ddo.dataTokenInfo?.symbol}
       dtBalance={dtBalance}
-      datasetLowPoolLiquidity={!(maxDt >= 1)}
+      datasetLowPoolLiquidity={!isConsumablePrice}
       onClick={handleConsume}
       assetTimeout={secondsToString(parseInt(assetTimeout))}
       assetType={type}

@@ -40,6 +40,8 @@ import { getPreviousOrders, getPrice } from '../../../../utils/subgraph'
 import AssetActionHistoryTable from '../../AssetActionHistoryTable'
 import ComputeJobs from '../../../pages/Profile/History/ComputeJobs'
 import { BestPrice } from '../../../../models/BestPrice'
+import { useCancelToken } from '../../../../hooks/useCancelToken'
+import { useIsMounted } from '../../../../hooks/useIsMounted'
 
 const SuccessAction = () => (
   <Button style="text" to="/profile?defaultTab=ComputeJobs" size="small">
@@ -72,8 +74,6 @@ export default function Compute({
   const [ddoAlgorithmList, setDdoAlgorithmList] = useState<DDO[]>()
   const [selectedAlgorithmAsset, setSelectedAlgorithmAsset] = useState<DDO>()
   const [hasAlgoAssetDatatoken, setHasAlgoAssetDatatoken] = useState<boolean>()
-  const [datasetMaxDT, setDatasetMaxDT] = useState<number>(1)
-  const [algoMaxDT, setAlgoMaxDT] = useState<number>(1)
   const [isPublished, setIsPublished] = useState(false)
   const [hasPreviousDatasetOrder, setHasPreviousDatasetOrder] = useState(false)
   const [previousDatasetOrderId, setPreviousDatasetOrderId] = useState<string>()
@@ -85,15 +85,19 @@ export default function Compute({
     useState<string>()
   const [datasetTimeout, setDatasetTimeout] = useState<string>()
   const [algorithmTimeout, setAlgorithmTimeout] = useState<string>()
-
+  const newCancelToken = useCancelToken()
   const hasDatatoken = Number(dtBalance) >= 1
-
+  const isMounted = useIsMounted()
+  const [isConsumablePrice, setIsConsumablePrice] = useState(true)
+  const [isAlgoConsumablePrice, setIsAlgoConsumablePrice] = useState(true)
   const isComputeButtonDisabled =
     isJobStarting === true ||
     file === null ||
     !ocean ||
-    (!hasPreviousDatasetOrder && !hasDatatoken && !(datasetMaxDT >= 1)) ||
-    (!hasPreviousAlgorithmOrder && !hasAlgoAssetDatatoken && !(algoMaxDT >= 1))
+    (!hasPreviousDatasetOrder && !hasDatatoken && !isConsumablePrice) ||
+    (!hasPreviousAlgorithmOrder &&
+      !hasAlgoAssetDatatoken &&
+      !isAlgoConsumablePrice)
 
   async function checkPreviousOrders(ddo: DDO) {
     const { timeout } = (
@@ -105,6 +109,8 @@ export default function Compute({
       timeout.toString()
     )
     const assetType = ddo.findServiceByType('metadata').attributes.main.type
+
+    if (!isMounted()) return
     if (assetType === 'algorithm') {
       setPreviousAlgorithmOrderId(orderId)
       setHasPreviousAlgorithmOrder(!!orderId)
@@ -123,22 +129,6 @@ export default function Compute({
     setHasAlgoAssetDatatoken(Number(AssetDtBalance) >= 1)
   }
 
-  async function checkAssetDTMaxBuyQuantity(
-    price: BestPrice,
-    assetType: string
-  ) {
-    if (!ocean || !price || !assetType) return
-    const maxTokensInPool =
-      price.type === 'pool'
-        ? await ocean.pool.getDTMaxBuyQuantity(price.address)
-        : 1
-    if (assetType === 'algorithm') {
-      setAlgoMaxDT(Number(maxTokensInPool))
-    } else {
-      setDatasetMaxDT(Number(maxTokensInPool))
-    }
-  }
-
   function getQuerryString(
     trustedAlgorithmList: publisherTrustedAlgorithm[],
     chainId?: number
@@ -153,13 +143,12 @@ export default function Compute({
     const algorithmQuery =
       trustedAlgorithmList.length > 0 ? `(${algoQuerry}) AND` : ``
     const query = {
-      offset: 500,
       query: {
         query_string: {
           query: `${algorithmQuery} service.attributes.main.type:algorithm AND chainId:${chainId} -isInPurgatory:true`
         }
       },
-      sort: { created: -1 }
+      sort: { created: 'desc' }
     }
     return query
   }
@@ -189,11 +178,35 @@ export default function Compute({
       algorithmSelectionList = await transformDDOToAssetSelection(
         datasetComputeService?.serviceEndpoint,
         gueryResults.results,
-        []
+        [],
+        newCancelToken()
       )
     }
     return algorithmSelectionList
   }
+
+  const initMetadata = useCallback(async (ddo: DDO): Promise<void> => {
+    if (!ddo) return
+    const price = await getPrice(ddo)
+    setAlgorithmPrice(price)
+  }, [])
+
+  useEffect(() => {
+    if (!algorithmPrice) return
+
+    setIsAlgoConsumablePrice(
+      algorithmPrice.isConsumable !== undefined
+        ? algorithmPrice.isConsumable === 'true'
+        : true
+    )
+  }, [algorithmPrice])
+  useEffect(() => {
+    if (!price) return
+
+    setIsConsumablePrice(
+      price.isConsumable !== undefined ? price.isConsumable === 'true' : true
+    )
+  }, [price])
 
   useEffect(() => {
     const { timeout } = (
@@ -201,17 +214,6 @@ export default function Compute({
     ).attributes.main
     setDatasetTimeout(secondsToString(timeout))
   }, [ddo])
-
-  const initMetadata = useCallback(async (ddo: DDO): Promise<void> => {
-    if (!ddo) return
-    const price = await getPrice(ddo)
-    setAlgorithmPrice(price)
-    ocean &&
-      checkAssetDTMaxBuyQuantity(
-        price,
-        ddo.findServiceByType('metadata').attributes.main.type
-      )
-  }, [])
 
   useEffect(() => {
     if (!ddo) return
@@ -223,10 +225,6 @@ export default function Compute({
   useEffect(() => {
     if (!ocean || !accountId) return
     checkPreviousOrders(ddo)
-    checkAssetDTMaxBuyQuantity(
-      price,
-      ddo.findServiceByType('metadata').attributes.main.type
-    )
   }, [ocean, ddo, accountId])
 
   useEffect(() => {
@@ -335,6 +333,7 @@ export default function Compute({
             computeAlgorithm,
             appConfig.marketFeeAddress,
             undefined,
+            null,
             false
           )
 
@@ -355,6 +354,7 @@ export default function Compute({
             serviceAlgo.index,
             appConfig.marketFeeAddress,
             undefined,
+            null,
             false
           )
 
@@ -443,7 +443,7 @@ export default function Compute({
             hasPreviousOrder={hasPreviousDatasetOrder}
             hasDatatoken={hasDatatoken}
             dtBalance={dtBalance}
-            datasetLowPoolLiquidity={!(datasetMaxDT >= 1)}
+            datasetLowPoolLiquidity={!isConsumablePrice}
             assetType={type}
             assetTimeout={datasetTimeout}
             hasPreviousOrderSelectedComputeAsset={hasPreviousAlgorithmOrder}
@@ -452,7 +452,7 @@ export default function Compute({
               selectedAlgorithmAsset?.dataTokenInfo?.symbol
             }
             dtBalanceSelectedComputeAsset={algorithmDTBalance}
-            selectedComputeAssetLowPoolLiquidity={!(algoMaxDT >= 1)}
+            selectedComputeAssetLowPoolLiquidity={!isAlgoConsumablePrice}
             selectedComputeAssetType="algorithm"
             selectedComputeAssetTimeout={algorithmTimeout}
             stepText={pricingStepText || 'Starting Compute Job...'}
@@ -465,10 +465,7 @@ export default function Compute({
 
       <footer className={styles.feedback}>
         {isPublished && (
-          <SuccessConfetti
-            success="Your job started successfully! Watch the progress on the history page."
-            action={<SuccessAction />}
-          />
+          <SuccessConfetti success="Your job started successfully! Watch the progress below or on your profile." />
         )}
       </footer>
       {accountId && (

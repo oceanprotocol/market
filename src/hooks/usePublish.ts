@@ -93,7 +93,8 @@ function usePublish(): UsePublish {
               price,
               publishedDate,
               timeout,
-              providerUri
+              providerUri,
+              null
             )
           Logger.log('access service created', accessService)
           services.push(accessService)

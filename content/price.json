@@ -34,7 +34,9 @@
   "pool": {
     "tooltips": {
       "price": "The price is determined by an automated market maker, which is a type of decentralized exchange protocol that relies on a mathematical formula. It is an alternative to a traditional order book.",
-      "liquidity": "Providing liquidity will earn you SWAPFEE% on every transaction in this pool, proportionally to your share of the pool."
+      "liquidity": "Providing liquidity will earn you SWAPFEE% on every transaction in this pool, proportionally to your share of the pool.",
+      "approveSpecific": "Give the smart contract permission to spend your COIN which has to be done for each transaction. You can optionally set this to infinite in your user preferences.",
+      "approveInfinite": "Give the smart contract permission to spend infinte amounts of your COIN so you have to do this only once. You can disable allowing infinite amounts in your user preferences."
     },
     "add": {
       "title": "Add Liquidity",
@@ -43,7 +45,7 @@
         "titleIn": "You will receive",
         "titleOut": "Pool conversion"
       },
-      "action": "Approve & Supply",
+      "action": "Supply",
       "warning": "Use at your own risk. Please familiarize yourself [with the risks](https://blog.oceanprotocol.com/on-staking-on-data-in-ocean-market-3d8e09eb0a13) and the [Terms of Use](/terms)."
     },
     "remove": {
@@ -54,11 +56,11 @@
         "titleIn": "You will spend",
         "titleOut": "You will receive"
       },
-      "action": "Approve & Remove"
+      "action": "Remove"
     }
   },
   "trade": {
-    "action": "Approve & Swap",
+    "action": "Swap",
     "warning": "Use at your own risk. Please familiarize yourself [with the risks](https://blog.oceanprotocol.com/on-staking-on-data-in-ocean-market-3d8e09eb0a13) and the [Terms of Use](/terms)."
   }
 }

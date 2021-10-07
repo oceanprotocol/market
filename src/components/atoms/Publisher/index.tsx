@@ -8,6 +8,7 @@ import { accountTruncate } from '../../../utils/web3'
 import axios from 'axios'
 import Add from './Add'
 import { useWeb3 } from '../../../providers/Web3'
+import { getEnsName } from '../../../utils/ens'
 
 const cx = classNames.bind(styles)
 
@@ -20,27 +21,34 @@ export default function Publisher({
   minimal?: boolean
   className?: string
 }): ReactElement {
-  const { networkId, accountId } = useWeb3()
+  const { accountId } = useWeb3()
   const [profile, setProfile] = useState<Profile>()
-  const [name, setName] = useState<string>()
+  const [name, setName] = useState(accountTruncate(account))
+  const [accountEns, setAccountEns] = useState<string>()
 
   const showAdd = account === accountId && !profile
 
   useEffect(() => {
     if (!account) return
 
-    setName(accountTruncate(account))
     const source = axios.CancelToken.source()
 
-    async function get3Box() {
+    async function getExternalName() {
+      // ENS
+      const accountEns = await getEnsName(account)
+      if (accountEns) {
+        setAccountEns(accountEns)
+        setName(accountEns)
+      }
+
+      // 3box
       const profile = await get3BoxProfile(account, source.token)
       if (!profile) return
-
       setProfile(profile)
       const { name, emoji } = profile
       name && setName(`${emoji || ''} ${name}`)
     }
-    get3Box()
+    getExternalName()
 
     return () => {
       source.cancel()
@@ -58,7 +66,10 @@ export default function Publisher({
         name
       ) : (
         <>
-          <Link to={`/profile/${account}`} title="Show profile page.">
+          <Link
+            to={`/profile/${accountEns || account}`}
+            title="Show profile page."
+          >
             {name}
           </Link>
           {showAdd && <Add />}

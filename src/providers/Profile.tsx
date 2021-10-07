@@ -42,9 +42,11 @@ const refreshInterval = 10000 // 10 sec.
 
 function ProfileProvider({
   accountId,
+  accountEns,
   children
 }: {
   accountId: string
+  accountEns: string
   children: ReactNode
 }): ReactElement {
   const { chainIds } = useUserPreferences()
@@ -62,18 +64,19 @@ function ProfileProvider({
   }, [accountId])
 
   //
-  // 3Box
+  // User profile: ENS + 3Box
   //
-  const [profile, setProfile] = useState<Profile>({
-    name: accountTruncate(accountId),
-    image: null,
-    description: null,
-    links: null
-  })
+  const [profile, setProfile] = useState<Profile>()
+
+  useEffect(() => {
+    if (!accountEns) return
+    Logger.log(`[profile] ENS name found for ${accountId}:`, accountEns)
+  }, [accountId, accountEns])
 
   useEffect(() => {
     const clearedProfile: Profile = {
       name: null,
+      accountEns: null,
       image: null,
       description: null,
       links: null
@@ -86,7 +89,9 @@ function ProfileProvider({
 
     const cancelTokenSource = axios.CancelToken.source()
 
-    async function getInfoFrom3Box() {
+    async function getInfo() {
+      setProfile({ name: accountEns || accountTruncate(accountId), accountEns })
+
       const profile3Box = await get3BoxProfile(
         accountId,
         cancelTokenSource.token
@@ -100,19 +105,22 @@ function ProfileProvider({
           description,
           links
         }
-        setProfile(newProfile)
+        setProfile((prevState) => ({
+          ...prevState,
+          ...newProfile
+        }))
         Logger.log('[profile] Found and set 3box profile.', newProfile)
       } else {
-        setProfile(clearedProfile)
+        // setProfile(clearedProfile)
         Logger.log('[profile] No 3box profile found.')
       }
     }
-    getInfoFrom3Box()
+    getInfo()
 
     return () => {
       cancelTokenSource.cancel()
     }
-  }, [accountId, isEthAddress])
+  }, [accountId, accountEns, isEthAddress])
 
   //
   // POOL SHARES

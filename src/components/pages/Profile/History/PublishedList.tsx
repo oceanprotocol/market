@@ -1,13 +1,12 @@
 import { Logger } from '@oceanprotocol/lib'
-import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import React, { ReactElement, useEffect, useState } from 'react'
 import AssetList from '../../../organisms/AssetList'
 import { getPublishedAssets } from '../../../../utils/aquarius'
-// import Filters from '../../../templates/Search/Filters'
+import Filters from '../../../templates/Search/Filters'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import styles from './PublishedList.module.css'
-import axios from 'axios'
+import { useCancelToken } from '../../../../hooks/useCancelToken'
 
 export default function PublishedList({
   accountId
@@ -17,47 +16,60 @@ export default function PublishedList({
   const { appConfig } = useSiteMetadata()
   const { chainIds } = useUserPreferences()
 
-  const [queryResult, setQueryResult] = useState<QueryResult>()
+  const [queryResult, setQueryResult] = useState<any>()
   const [isLoading, setIsLoading] = useState(false)
   const [page, setPage] = useState<number>(1)
   const [service, setServiceType] = useState('dataset OR algorithm')
+  const [access, setAccsesType] = useState('access OR compute')
+  const newCancelToken = useCancelToken()
+
+  async function getPublished() {
+    try {
+      setIsLoading(true)
+      const result = await getPublishedAssets(
+        accountId,
+        chainIds,
+        newCancelToken(),
+        page,
+        service,
+        access
+      )
+      setQueryResult(result)
+    } catch (error) {
+      Logger.error(error.message)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    async function fetchPublishedAssets() {
+      await getPublished()
+    }
+    if (page !== 1) {
+      setPage(1)
+    } else {
+      fetchPublishedAssets()
+    }
+  }, [service, access])
 
   useEffect(() => {
     if (!accountId) return
-
-    const cancelTokenSource = axios.CancelToken.source()
-
-    async function getPublished() {
-      try {
-        setIsLoading(true)
-        const result = await getPublishedAssets(
-          accountId,
-          chainIds,
-          cancelTokenSource.token,
-          page,
-          service
-        )
-        setQueryResult(result)
-      } catch (error) {
-        Logger.error(error.message)
-      } finally {
-        setIsLoading(false)
-      }
+    async function fetchPublishedAssets() {
+      await getPublished()
     }
-    getPublished()
-
-    return () => {
-      cancelTokenSource.cancel()
-    }
-  }, [accountId, page, appConfig.metadataCacheUri, chainIds, service])
+    fetchPublishedAssets()
+  }, [accountId, page, appConfig.metadataCacheUri, chainIds, newCancelToken])
 
   return accountId ? (
     <>
-      {/* <Filters
+      <Filters
         serviceType={service}
         setServiceType={setServiceType}
+        accessType={access}
+        setAccessType={setAccsesType}
         className={styles.filters}
-      /> */}
+      />
       <AssetList
         assets={queryResult?.results}
         isLoading={isLoading}
