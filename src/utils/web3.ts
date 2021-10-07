@@ -56,11 +56,14 @@ export function getNetworkDisplayName(
   let displayName
 
   switch (networkId) {
+    case 137:
+      displayName = 'Polygon'
+      break
     case 1287:
       displayName = 'Moonbase Alpha'
       break
-    case 137:
-      displayName = 'Polygon'
+    case 1285:
+      displayName = 'Moonriver'
       break
     case 246:
       displayName = 'Energy Web Chain'
@@ -97,24 +100,31 @@ export async function addCustomNetwork(
   web3Provider: any,
   network: EthereumListsChain
 ): Promise<void> {
-  const newNewtworkData = {
+  // Always add explorer URL from ocean.js first, as it's null sometimes
+  // in network data
+  const blockExplorerUrls = [
+    getOceanConfig(network.networkId).explorerUri,
+    network.explorers && network.explorers[0].url
+  ]
+
+  const newNetworkData = {
     chainId: `0x${network.chainId.toString(16)}`,
     chainName: getNetworkDisplayName(network, network.chainId),
     nativeCurrency: network.nativeCurrency,
     rpcUrls: network.rpc,
-    blockExplorerUrls: [network.explorers[0].url]
+    blockExplorerUrls
   }
   try {
     await web3Provider.request({
       method: 'wallet_switchEthereumChain',
-      params: [{ chainId: newNewtworkData.chainId }]
+      params: [{ chainId: newNetworkData.chainId }]
     })
   } catch (switchError) {
     if (switchError.code === 4902) {
       await web3Provider.request(
         {
           method: 'wallet_addEthereumChain',
-          params: [newNewtworkData]
+          params: [newNetworkData]
         },
         (err: string, added: any) => {
           if (err || 'error' in added) {
