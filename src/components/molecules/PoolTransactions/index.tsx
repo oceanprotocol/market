@@ -173,6 +173,7 @@ export default function PoolTransactions({
           .replace('0x', 'did:op:')
         didList.push(did)
       }
+      if (didList.length === 0) return
       const ddoList = await retrieveDDOListByDIDs(
         didList,
         chainIds,

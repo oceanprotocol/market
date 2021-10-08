@@ -241,6 +241,7 @@ export async function retrieveDDOListByDIDs(
   cancelToken: CancelToken
 ): Promise<DDO[]> {
   try {
+    if (didList?.length === 0 || chainIds?.length === 0) return []
     const orderedDDOListByDIDList: DDO[] = []
     const query = {
       size: didList.length,
