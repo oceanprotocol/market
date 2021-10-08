@@ -172,6 +172,7 @@ export default function PoolShares({
   const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
   const { chainIds } = useUserPreferences()
   const newCancelToken = useCancelToken()
+
   const fetchPoolSharesAssets = useCallback(
     async (cancelToken: CancelToken) => {
       if (!poolShares || isPoolSharesLoading) return

@@ -10,10 +10,10 @@ module.exports = {
 
   // List of chainIds which metadata cache queries will return by default.
   // This preselects the Chains user preferences.
-  chainIds: [1, 137, 56],
+  chainIds: [1, 137, 56, 1285, 246],
 
   // List of all supported chainIds. Used to populate the Chains user preferences list.
-  chainIdsSupported: [1, 3, 4, 137, 80001, 1287, 56, 2021000],
+  chainIdsSupported: [1, 3, 4, 137, 80001, 1287, 56, 2021000, 1285, 246],
 
   rbacUrl: process.env.GATSBY_RBAC_URL,
 
@@ -22,7 +22,7 @@ module.exports = {
   // The ETH address the marketplace fee will be sent to.
   marketFeeAddress:
     process.env.GATSBY_MARKET_FEE_ADDRESS ||
-    '0x903322C7E45A60d7c8C3EA236c5beA9Af86310c7',
+    '0x9984b2453eC7D99a73A5B3a46Da81f197B753C8d',
 
   // Used for conversion display, can be whatever coingecko API supports
   // see: https://api.coingecko.com/api/v3/simple/supported_vs_currencies

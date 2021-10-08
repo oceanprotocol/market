@@ -93,7 +93,7 @@ export function getSearchQuery(
     'service.attributes.additionalInformation.tags'
   ]
   return {
-    from: (Number(page) || 0) * (Number(offset) || 21),
+    from: (Number(page) - 1 || 0) * (Number(offset) || 21),
     size: Number(offset) || 21,
     query: {
       bool: {

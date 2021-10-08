@@ -58,7 +58,8 @@ export default function Output({
   const [poolDatatoken, setPoolDatatoken] = useState('0')
 
   useEffect(() => {
-    if (!values.amount || !totalBalance || !totalPoolTokens) return
+    if (!values.amount || !totalBalance || !totalPoolTokens || !newPoolTokens)
+      return
     const newPoolSupply = new Decimal(totalPoolTokens).plus(newPoolTokens)
     const ratio = new Decimal(newPoolTokens).div(newPoolSupply)
     const newOceanReserve =
@@ -73,7 +74,14 @@ export default function Output({
     const poolDatatoken = newDtReserve.mul(ratio).toString()
     setPoolOcean(poolOcean)
     setPoolDatatoken(poolDatatoken)
-  }, [values.amount, coin, totalBalance, totalPoolTokens, newPoolShare])
+  }, [
+    values.amount,
+    coin,
+    totalBalance,
+    totalPoolTokens,
+    newPoolShare,
+    newPoolTokens
+  ])
 
   return (
     <>
