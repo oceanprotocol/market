@@ -81,6 +81,16 @@ export function transformChainIdsListToQuery(chainIds: number[]): string {
   return chainQuery
 }
 
+export function transformDIDListToQuery(didList: string[] | DID[]): string {
+  let chainQuery = ''
+  const regex = new RegExp('(:)', 'g')
+  didList.forEach((did: any) => {
+    chainQuery += `id:${did.replace(regex, '\\:')} OR `
+  })
+  chainQuery = chainQuery.slice(0, chainQuery.length - 4)
+  return chainQuery
+}
+
 export async function queryMetadata(
   query: any,
   cancelToken: CancelToken
@@ -227,6 +237,34 @@ export async function getAlgorithmDatasetsForCompute(
   return datasets
 }
 
+export async function retrieveDDOListByDIDs(
+  didList: string[] | DID[],
+  chainIds: number[],
+  cancelToken: CancelToken
+): Promise<DDO[]> {
+  try {
+    const orderedDDOListByDIDList: DDO[] = []
+    const query = {
+      size: didList.length,
+      query: {
+        query_string: {
+          query: `(${transformDIDListToQuery(
+            didList
+          )})  AND (${transformChainIdsListToQuery(chainIds)})`
+        }
+      }
+    }
+    const result = await queryMetadata(query, cancelToken)
+    didList.forEach((did: string | DID) => {
+      const ddo: DDO = result.results.find((ddo: DDO) => ddo.id === did)
+      orderedDDOListByDIDList.push(ddo)
+    })
+    return orderedDDOListByDIDList
+  } catch (error) {
+    Logger.error(error.message)
+  }
+}
+
 export async function getPublishedAssets(
   accountId: string,
   chainIds: number[],
@@ -264,43 +302,6 @@ export async function getPublishedAssets(
   }
 }
 
-export async function getAssetsFromDidList(
-  didList: string[],
-  chainIds: number[],
-  cancelToken: CancelToken
-): Promise<any> {
-  try {
-    // TODO: figure out cleaner way to transform string[] into csv
-    const searchDids = JSON.stringify(didList)
-      .replace(/,/g, ' ')
-      .replace(/"/g, '')
-      .replace(/(\[|\])/g, '')
-      // for whatever reason ddo.id is not searchable, so use ddo.dataToken instead
-      .replace(/(did:op:)/g, '0x')
-
-    // safeguard against passed empty didList, preventing 500 from Aquarius
-    if (!searchDids) return
-
-    const query = {
-      query: {
-        query_string: {
-          query: `(${searchDids}) AND (${transformChainIdsListToQuery(
-            chainIds
-          )})`,
-          fields: ['dataToken'],
-          default_operator: 'OR'
-        }
-      },
-      sort: { created: 'desc' }
-    }
-
-    const queryResult = await queryMetadata(query, cancelToken)
-    return queryResult
-  } catch (error) {
-    Logger.error(error.message)
-  }
-}
-
 export async function getDownloadAssets(
   didList: string[],
   tokenOrders: OrdersData[],
@@ -310,12 +311,12 @@ export async function getDownloadAssets(
   const downloadedAssets: DownloadedAsset[] = []
 
   try {
-    const queryResult = await getAssetsFromDidList(
+    const queryResult = await retrieveDDOListByDIDs(
       didList,
       chainIds,
       cancelToken
     )
-    const ddoList = queryResult?.results
+    const ddoList = queryResult
 
     for (let i = 0; i < tokenOrders?.length; i++) {
       const ddo = ddoList.filter(
