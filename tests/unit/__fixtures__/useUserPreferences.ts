@@ -8,13 +8,15 @@ const useUserPreferences: UserPreferencesValue = {
   bookmarks: [],
   privacyPolicySlug: '/privacy/en',
   showPPC: false,
+  infiniteApproval: false,
   setChainIds: jest.fn(),
   setCurrency: jest.fn(),
   setPrivacyPolicySlug: jest.fn(),
   setDebug: jest.fn(),
   setShowPPC: jest.fn(),
   addBookmark: jest.fn(),
-  removeBookmark: jest.fn()
+  removeBookmark: jest.fn(),
+  setInfiniteApproval: jest.fn()
 }
 
 export default useUserPreferences
