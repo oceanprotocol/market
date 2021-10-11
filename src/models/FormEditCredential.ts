@@ -2,7 +2,6 @@ import {
   CredentialAction,
   Credential,
   Credentials,
-  CredentialType,
   DDO
 } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
@@ -22,7 +21,7 @@ export const validationSchema: Yup.SchemaOf<AdvancedSettingsForm> =
 
 function getCredentialList(
   credential: Credential[],
-  credentialType: CredentialType
+  credentialType: string
 ): string[] {
   const credentialByType = credential.find(
     (credential) => credential.type === credentialType
@@ -36,7 +35,7 @@ function getCredentialList(
 
 function getAssetCredentials(
   credentials: Credentials,
-  credentialType: CredentialType,
+  credentialType: string,
   credentialAction: CredentialAction
 ): string[] {
   if (!credentials) return []
@@ -53,7 +52,7 @@ function getAssetCredentials(
 
 export function getInitialValues(
   ddo: DDO,
-  credentailType: CredentialType
+  credentailType: string
 ): AdvancedSettingsForm {
   const allowCredential = getAssetCredentials(
     ddo.credentials,

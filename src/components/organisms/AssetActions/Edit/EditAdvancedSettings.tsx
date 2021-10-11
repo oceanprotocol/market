@@ -3,7 +3,7 @@ import React, { ReactElement, useState } from 'react'
 import { useAsset } from '../../../../providers/Asset'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import styles from './index.module.css'
-import { Logger, CredentialType, DDO } from '@oceanprotocol/lib'
+import { Logger, DDO } from '@oceanprotocol/lib'
 import MetadataFeedback from '../../../molecules/MetadataFeedback'
 import { graphql, useStaticQuery } from 'gatsby'
 import { useWeb3 } from '../../../../providers/Web3'
@@ -51,17 +51,6 @@ const contentQuery = graphql`
   }
 `
 
-function getDefaultCredentialType(credentialType: string): CredentialType {
-  switch (credentialType) {
-    case 'address':
-      return CredentialType.address
-    case 'credential3Box':
-      return CredentialType.credential3Box
-    default:
-      return CredentialType.address
-  }
-}
-
 export default function EditAdvancedSettings({
   setShowEdit
 }: {
@@ -80,7 +69,7 @@ export default function EditAdvancedSettings({
 
   const hasFeedback = error || success
 
-  const credentialType = getDefaultCredentialType(appConfig.credentialType)
+  const { credentialType } = appConfig
 
   async function handleSubmit(
     values: Partial<AdvancedSettingsForm>,
