@@ -18,7 +18,7 @@ import {
   getNetworkDataById,
   getNetworkDisplayName
 } from '../utils/web3'
-import { graphql } from 'gatsby'
+import { getEnsName } from '../utils/ens'
 import { UserBalance } from '../@types/TokenBalance'
 import { getOceanBalance } from '../utils/ocean'
 import useNetworkMetadata from '../hooks/useNetworkMetadata'
@@ -29,6 +29,7 @@ interface Web3ProviderValue {
   web3Modal: Web3Modal
   web3ProviderInfo: IProviderInfo
   accountId: string
+  accountEns: string
   balance: UserBalance
   networkId: number
   chainId: number
@@ -84,26 +85,6 @@ export const web3ModalOpts = {
 
 const refreshInterval = 20000 // 20 sec.
 
-const networksQuery = graphql`
-  query {
-    allNetworksMetadataJson {
-      edges {
-        node {
-          chain
-          network
-          networkId
-          chainId
-          nativeCurrency {
-            name
-            symbol
-            decimals
-          }
-        }
-      }
-    }
-  }
-`
-
 const Web3Context = createContext({} as Web3ProviderValue)
 
 function Web3Provider({ children }: { children: ReactNode }): ReactElement {
@@ -120,6 +101,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   const [block, setBlock] = useState<number>()
   const [isTestnet, setIsTestnet] = useState<boolean>()
   const [accountId, setAccountId] = useState<string>()
+  const [accountEns, setAccountEns] = useState<string>()
   const [web3Loading, setWeb3Loading] = useState<boolean>(true)
   const [balance, setBalance] = useState<UserBalance>({
     eth: '0',
@@ -182,6 +164,27 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   }, [accountId, networkId, web3])
 
   // -----------------------------------
+  // Helper: Get user ENS name
+  // -----------------------------------
+  const getUserEnsName = useCallback(async () => {
+    if (!accountId) return
+
+    try {
+      // const accountEns = await getEnsNameWithWeb3(
+      //   accountId,
+      //   web3Provider,
+      //   `${networkId}`
+      // )
+      const accountEns = await getEnsName(accountId)
+      setAccountEns(accountEns)
+      accountEns &&
+        Logger.log(`[web3] ENS name found for ${accountId}:`, accountEns)
+    } catch (error) {
+      Logger.error('[web3] Error: ', error.message)
+    }
+  }, [accountId])
+
+  // -----------------------------------
   // Create initial Web3Modal instance
   // -----------------------------------
   useEffect(() => {
@@ -230,6 +233,13 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   }, [getUserBalance])
 
   // -----------------------------------
+  // Get and set user ENS name
+  // -----------------------------------
+  useEffect(() => {
+    getUserEnsName()
+  }, [getUserEnsName])
+
+  // -----------------------------------
   // Get and set network metadata
   // -----------------------------------
   useEffect(() => {
@@ -248,7 +258,9 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     setNetworkDisplayName(networkDisplayName)
 
     // Figure out if we're on a chain's testnet, or not
-    setIsTestnet(networkData?.network !== 'mainnet')
+    setIsTestnet(
+      networkData?.network !== 'mainnet' && networkData.network !== 'moonriver'
+    )
 
     Logger.log(`[web3] Network display name set to: ${networkDisplayName}`)
   }, [networkId, networksList])
@@ -333,6 +345,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
         web3Modal,
         web3ProviderInfo,
         accountId,
+        accountEns,
         balance,
         networkId,
         chainId,

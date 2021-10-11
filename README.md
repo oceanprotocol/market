@@ -126,14 +126,12 @@ import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/Metadata
 import { queryMetadata } from '../../utils/aquarius'
 
 const queryLatest = {
-  page: 1,
-  offset: 9,
   query: {
     // https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html
 
     query_string: { query: `-isInPurgatory:true` }
   },
-  sort: { created: -1 }
+  sort: { created: 'desc' }
 }
 
 function Component() {
@@ -439,7 +437,6 @@ The style can be changed by altering the `style` prop in the `PrivacyPreferenceC
 ```Typescript
 <PrivacyPreferenceCenter style="small" />
 ```
-
 
 ## 🏛 License
 

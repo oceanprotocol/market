@@ -86,7 +86,6 @@ export default function Pool(): ReactElement {
   const content = data.content.edges[0].node.childContentJson.pool
 
   const { accountId } = useWeb3()
-  const { ocean } = useOcean()
   const [dtSymbol, setDtSymbol] = useState<string>()
   const [oceanSymbol, setOceanSymbol] = useState<string>()
   const { isInPurgatory, ddo, owner, price, refreshInterval, isAssetNetwork } =
@@ -151,7 +150,7 @@ export default function Pool(): ReactElement {
       queryVariables,
       queryContext
     )
-    return queryResult?.data.pool.shares[0].balance
+    return queryResult?.data.pool.shares[0]?.balance
   }
 
   function refetchLiquidity() {
@@ -483,23 +482,19 @@ export default function Pool(): ReactElement {
             <Token symbol="% swap fee" balance={swapFee} noIcon />
           </TokenList>
 
-          {ocean && (
-            <div className={styles.update}>
-              Fetching every {refreshInterval / 1000} sec.
-            </div>
-          )}
+          <div className={styles.update}>
+            Fetching every {refreshInterval / 1000} sec.
+          </div>
 
           <div className={stylesActions.actions}>
-            {!isInPurgatory && (
-              <Button
-                style="primary"
-                size="small"
-                onClick={() => setShowAdd(true)}
-                disabled={isInPurgatory}
-              >
-                Add Liquidity
-              </Button>
-            )}
+            <Button
+              style="primary"
+              size="small"
+              onClick={() => setShowAdd(true)}
+              disabled={isInPurgatory}
+            >
+              Add Liquidity
+            </Button>
 
             {hasAddedLiquidity && !isRemoveDisabled && (
               <Button
@@ -515,6 +510,7 @@ export default function Pool(): ReactElement {
           {accountId && (
             <AssetActionHistoryTable title="Your Pool Transactions">
               <PoolTransactions
+                accountId={accountId}
                 poolAddress={price?.address}
                 poolChainId={[ddo.chainId]}
                 minimal

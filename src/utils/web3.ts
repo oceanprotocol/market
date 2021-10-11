@@ -10,19 +10,22 @@ export interface EthereumListsChain {
   networkId: number
   nativeCurrency: { name: string; symbol: string; decimals: number }
   rpc: string[]
-  faucets: string[]
   infoURL: string
+  faucets: string[]
+  explorers: [{ url: string }]
 }
 
 export interface NetworkObject {
   chainId: number
   name: string
+  nativeCurrency: string
+  explorers: [{ url: string }]
   urlList: string[]
 }
 
 const configGaiaX = getOceanConfig(2021000)
 
-export const networkDataGaiaX = {
+export const networkDataGaiaX: EthereumListsChain = {
   name: 'GAIA-X Testnet',
   chainId: 2021000,
   shortName: 'GAIA-X',
@@ -35,17 +38,8 @@ export const networkDataGaiaX = {
     'https://faucet.gaiaxtestnet.oceanprotocol.com/',
     'https://faucet.gx.gaiaxtestnet.oceanprotocol.com/'
   ],
-  infoURL: 'https://www.gaia-x.eu'
-}
-
-export function getNetworkConfigObject(node: any): NetworkObject {
-  const networkConfig = {
-    name: node.chain,
-    symbol: node.nativeCurrency.symbol,
-    chainId: node.chainId,
-    urlList: [node.providerUri]
-  }
-  return networkConfig
+  infoURL: 'https://www.gaia-x.eu',
+  explorers: [{ url: '' }]
 }
 
 export function accountTruncate(account: string): string {
@@ -62,11 +56,14 @@ export function getNetworkDisplayName(
   let displayName
 
   switch (networkId) {
+    case 137:
+      displayName = 'Polygon'
+      break
     case 1287:
       displayName = 'Moonbase Alpha'
       break
-    case 137:
-      displayName = 'Polygon'
+    case 1285:
+      displayName = 'Moonriver'
       break
     case 80001:
       displayName = 'Polygon Mumbai'
@@ -98,24 +95,33 @@ export function getNetworkDataById(
 
 export async function addCustomNetwork(
   web3Provider: any,
-  network: NetworkObject
+  network: EthereumListsChain
 ): Promise<void> {
-  const newNewtworkData = {
+  // Always add explorer URL from ocean.js first, as it's null sometimes
+  // in network data
+  const blockExplorerUrls = [
+    getOceanConfig(network.networkId).explorerUri,
+    network.explorers && network.explorers[0].url
+  ]
+
+  const newNetworkData = {
     chainId: `0x${network.chainId.toString(16)}`,
-    chainName: network.name,
-    rpcUrls: network.urlList
+    chainName: getNetworkDisplayName(network, network.chainId),
+    nativeCurrency: network.nativeCurrency,
+    rpcUrls: network.rpc,
+    blockExplorerUrls
   }
   try {
     await web3Provider.request({
       method: 'wallet_switchEthereumChain',
-      params: [{ chainId: newNewtworkData.chainId }]
+      params: [{ chainId: newNetworkData.chainId }]
     })
   } catch (switchError) {
     if (switchError.code === 4902) {
-      web3Provider.request(
+      await web3Provider.request(
         {
           method: 'wallet_addEthereumChain',
-          params: [newNewtworkData]
+          params: [newNetworkData]
         },
         (err: string, added: any) => {
           if (err || 'error' in added) {

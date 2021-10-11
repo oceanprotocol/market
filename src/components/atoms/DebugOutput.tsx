@@ -8,7 +8,7 @@ export default function DebugOutput({
   output: any
 }): ReactElement {
   return (
-    <div>
+    <div style={{ marginTop: 'var(--spacer)' }}>
       <h5>{title}</h5>
       <pre>
         <code>{JSON.stringify(output, null, 2)}</code>

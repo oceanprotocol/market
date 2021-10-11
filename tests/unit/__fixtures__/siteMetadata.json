@@ -67,7 +67,18 @@
                     "src": "/static/share-5558ae2d9f99864a95f6f99172be9768.png"
                   }
                 }
-              }
+              },
+              "copyright": "All Rights Reserved. Powered by [Ocean Protocol](https://oceanprotocol.com)",
+              "menu": [
+                {
+                  "name": "Publish",
+                  "link": "/publish"
+                },
+                {
+                  "name": "Profile",
+                  "link": "/profile"
+                }
+              ]
             }
           }
         }

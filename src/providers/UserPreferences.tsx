@@ -12,19 +12,21 @@ import { useSiteMetadata } from '../hooks/useSiteMetadata'
 
 interface UserPreferencesValue {
   debug: boolean
+  setDebug: (value: boolean) => void
   currency: string
-  locale: string
+  setCurrency: (value: string) => void
   chainIds: number[]
-  bookmarks: string[]
   privacyPolicySlug: string
   showPPC: boolean
   setChainIds: (chainIds: number[]) => void
-  setDebug: (value: boolean) => void
-  setCurrency: (value: string) => void
+  bookmarks: string[]
   addBookmark: (did: string) => void
   removeBookmark: (did: string) => void
   setPrivacyPolicySlug: (slug: string) => void
   setShowPPC: (value: boolean) => void
+  infiniteApproval: boolean
+  setInfiniteApproval: (value: boolean) => void
+  locale: string
 }
 
 const UserPreferencesContext = createContext(null)
@@ -72,6 +74,10 @@ function UserPreferencesProvider({
     localStorage?.showPPC !== false
   )
 
+  const [infiniteApproval, setInfiniteApproval] = useState(
+    localStorage?.infiniteApproval || false
+  )
+
   // Write values to localStorage on change
   useEffect(() => {
     setLocalStorage({
@@ -80,9 +86,18 @@ function UserPreferencesProvider({
       currency,
       bookmarks,
       privacyPolicySlug,
-      showPPC
+      showPPC,
+      infiniteApproval
     })
-  }, [chainIds, debug, currency, bookmarks, privacyPolicySlug, showPPC])
+  }, [
+    chainIds,
+    debug,
+    currency,
+    bookmarks,
+    privacyPolicySlug,
+    showPPC,
+    infiniteApproval
+  ])
 
   // Set ocean.js log levels, default: Error
   useEffect(() => {
@@ -130,6 +145,8 @@ function UserPreferencesProvider({
           bookmarks,
           privacyPolicySlug,
           showPPC,
+          infiniteApproval,
+          setInfiniteApproval,
           setChainIds,
           setDebug,
           setCurrency,

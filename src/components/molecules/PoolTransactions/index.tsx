@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import Time from '../../atoms/Time'
 import Table from '../../atoms/Table'
 import AssetTitle from '../AssetListTitle'
@@ -6,14 +6,14 @@ import { useUserPreferences } from '../../../providers/UserPreferences'
 import { gql } from 'urql'
 import { TransactionHistory_poolTransactions as TransactionHistoryPoolTransactions } from '../../../@types/apollo/TransactionHistory'
 import web3 from 'web3'
-import { useWeb3 } from '../../../providers/Web3'
 import { fetchDataForMultipleChains } from '../../../utils/subgraph'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import NetworkName from '../../atoms/NetworkName'
-import { retrieveDDO } from '../../../utils/aquarius'
-import axios from 'axios'
+import { retrieveDDOListByDIDs } from '../../../utils/aquarius'
+import axios, { CancelToken } from 'axios'
 import Title from './Title'
 import styles from './index.module.css'
+import { DDO, Logger } from '@oceanprotocol/lib'
 
 const REFETCH_INTERVAL = 20000
 
@@ -27,21 +27,18 @@ const txHistoryQueryByPool = gql`
     ) {
       tokens {
         poolToken {
-          tokenId {
-            symbol
-          }
+          id
+          symbol
         }
+        value
+        type
+        tokenAddress
       }
       tx
       event
       timestamp
       poolAddress {
         datatokenAddress
-      }
-      tokens {
-        value
-        type
-        tokenAddress
       }
     }
   }
@@ -56,21 +53,18 @@ const txHistoryQuery = gql`
     ) {
       tokens {
         poolToken {
-          tokenId {
-            symbol
-          }
+          id
+          symbol
         }
+        value
+        type
+        tokenAddress
       }
       tx
       event
       timestamp
       poolAddress {
         datatokenAddress
-      }
-      tokens {
-        value
-        type
-        tokenAddress
       }
     }
   }
@@ -82,6 +76,7 @@ export interface Datatoken {
 
 export interface PoolTransaction extends TransactionHistoryPoolTransactions {
   networkId: number
+  ddo: DDO
 }
 
 const columns = [
@@ -94,11 +89,7 @@ const columns = [
   {
     name: 'Data Set',
     selector: function getAssetRow(row: PoolTransaction) {
-      const did = web3.utils
-        .toChecksumAddress(row.poolAddress.datatokenAddress)
-        .replace('0x', 'did:op:')
-
-      return <AssetTitle did={did} />
+      return <AssetTitle ddo={row.ddo} />
     }
   },
   {
@@ -130,21 +121,22 @@ const columnsMinimal = [columns[0], columns[3]]
 export default function PoolTransactions({
   poolAddress,
   poolChainId,
-  minimal
+  minimal,
+  accountId
 }: {
   poolAddress?: string
   poolChainId?: number[]
   minimal?: boolean
+  accountId: string
 }): ReactElement {
-  const { accountId } = useWeb3()
-  const [logs, setLogs] = useState<PoolTransaction[]>()
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [transactions, setTransactions] = useState<PoolTransaction[]>()
+  const [isLoading, setIsLoading] = useState<boolean>(true)
   const { chainIds } = useUserPreferences()
   const { appConfig } = useSiteMetadata()
   const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
   const [data, setData] = useState<PoolTransaction[]>()
 
-  async function fetchPoolTransactionData() {
+  const getPoolTransactionData = useCallback(async () => {
     const variables = {
       user: accountId?.toLowerCase(),
       pool: poolAddress?.toLowerCase()
@@ -165,71 +157,102 @@ export default function PoolTransactions({
     if (JSON.stringify(data) !== JSON.stringify(transactions)) {
       setData(transactions)
     }
-  }
+  }, [accountId, chainIds, data, poolAddress, poolChainId])
 
-  function refetchPoolTransactions() {
-    if (!dataFetchInterval) {
-      setDataFetchInterval(
-        setInterval(function () {
-          fetchPoolTransactionData()
-        }, REFETCH_INTERVAL)
+  const getPoolTransactions = useCallback(
+    async (cancelToken: CancelToken) => {
+      if (!data) return
+
+      const poolTransactions: PoolTransaction[] = []
+      const didList: string[] = []
+
+      for (let i = 0; i < data.length; i++) {
+        const { datatokenAddress } = data[i].poolAddress
+        const did = web3.utils
+          .toChecksumAddress(datatokenAddress)
+          .replace('0x', 'did:op:')
+        didList.push(did)
+      }
+      if (didList.length === 0) return
+      const ddoList = await retrieveDDOListByDIDs(
+        didList,
+        chainIds,
+        cancelToken
       )
-    }
-  }
+      for (let i = 0; i < data.length; i++) {
+        poolTransactions.push({
+          ...data[i],
+          networkId: ddoList[i]?.chainId,
+          ddo: ddoList[i]
+        })
+      }
+      const sortedTransactions = poolTransactions.sort(
+        (a, b) => b.timestamp - a.timestamp
+      )
+      setTransactions(sortedTransactions)
+    },
+    [data]
+  )
 
+  //
+  // Get data, periodically
+  //
   useEffect(() => {
+    if (!appConfig?.metadataCacheUri) return
+
+    async function getTransactions() {
+      try {
+        await getPoolTransactionData()
+
+        if (dataFetchInterval) return
+        const interval = setInterval(async () => {
+          await getPoolTransactionData()
+        }, REFETCH_INTERVAL)
+        setDataFetchInterval(interval)
+      } catch (error) {
+        Logger.error('Error fetching pool transactions: ', error.message)
+      }
+    }
+    getTransactions()
+
     return () => {
       clearInterval(dataFetchInterval)
     }
-  }, [dataFetchInterval])
+  }, [getPoolTransactionData, dataFetchInterval, appConfig.metadataCacheUri])
 
+  //
+  // Transform to final transactions
+  //
   useEffect(() => {
-    if (!appConfig.metadataCacheUri) return
+    const cancelTokenSource = axios.CancelToken.source()
 
-    async function getTransactions() {
-      const poolTransactions: PoolTransaction[] = []
-      const source = axios.CancelToken.source()
+    async function transformData() {
       try {
         setIsLoading(true)
-
-        if (!data) {
-          await fetchPoolTransactionData()
-          return
-        }
-        const poolTransactionsData = data.map((obj) => ({ ...obj }))
-
-        for (let i = 0; i < poolTransactionsData.length; i++) {
-          const did = web3.utils
-            .toChecksumAddress(
-              poolTransactionsData[i].poolAddress.datatokenAddress
-            )
-            .replace('0x', 'did:op:')
-          const ddo = await retrieveDDO(did, source.token)
-          poolTransactionsData[i].networkId = ddo.chainId
-          poolTransactions.push(poolTransactionsData[i])
-        }
-        const sortedTransactions = poolTransactions.sort(
-          (a, b) => b.timestamp - a.timestamp
-        )
-        setLogs(sortedTransactions)
-        refetchPoolTransactions()
+        await getPoolTransactions(cancelTokenSource.token)
       } catch (error) {
-        console.error('Error fetching pool transactions: ', error.message)
+        Logger.error('Error fetching pool transactions: ', error.message)
       } finally {
         setIsLoading(false)
       }
     }
-    getTransactions()
-  }, [accountId, chainIds, appConfig.metadataCacheUri, poolAddress, data])
+    transformData()
+
+    return () => {
+      cancelTokenSource.cancel()
+    }
+  }, [getPoolTransactions])
 
   return accountId ? (
     <Table
       columns={minimal ? columnsMinimal : columns}
-      data={logs}
+      data={transactions}
       isLoading={isLoading}
       noTableHead={minimal}
       dense={minimal}
-      pagination={minimal ? logs?.length >= 4 : logs?.length >= 9}
+      pagination={
+        minimal ? transactions?.length >= 4 : transactions?.length >= 9
+      }
       paginationPerPage={minimal ? 5 : 10}
     />
   ) : (

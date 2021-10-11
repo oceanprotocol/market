@@ -1,16 +1,16 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import axios from 'axios'
-import { ComputeJobMetaData } from '../../../../@types/ComputeJobMetaData'
-import Time from '../../../atoms/Time'
-import Button from '../../../atoms/Button'
-import Modal from '../../../atoms/Modal'
-import MetaItem from '../../../organisms/AssetContent/MetaItem'
-import { ReactComponent as External } from '../../../../images/external.svg'
-import { retrieveDDO } from '../../../../utils/aquarius'
-import { useOcean } from '../../../../providers/Ocean'
+import { ComputeJobMetaData } from '../../../../../@types/ComputeJobMetaData'
+import Time from '../../../../atoms/Time'
+import Button from '../../../../atoms/Button'
+import Modal from '../../../../atoms/Modal'
+import MetaItem from '../../../../organisms/AssetContent/MetaItem'
+import { ReactComponent as External } from '../../../../../images/external.svg'
+import { retrieveDDO } from '../../../../../utils/aquarius'
 import Results from './Results'
 import styles from './Details.module.css'
-import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
+import { useCancelToken } from '../../../../../hooks/useCancelToken'
+import { useSiteMetadata } from '../../../../../hooks/useSiteMetadata'
 
 function Asset({
   title,
@@ -45,12 +45,10 @@ function DetailsAssets({ job }: { job: ComputeJobMetaData }) {
   const { appConfig } = useSiteMetadata()
   const [algoName, setAlgoName] = useState<string>()
   const [algoDtSymbol, setAlgoDtSymbol] = useState<string>()
-
+  const newCancelToken = useCancelToken()
   useEffect(() => {
     async function getAlgoMetadata() {
-      const source = axios.CancelToken.source()
-
-      const ddo = await retrieveDDO(job.algoDID, source.token)
+      const ddo = await retrieveDDO(job.algoDID, newCancelToken())
       setAlgoDtSymbol(ddo.dataTokenInfo.symbol)
 
       const { attributes } = ddo.findServiceByType('metadata')

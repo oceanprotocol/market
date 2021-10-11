@@ -41,20 +41,12 @@
   }
 }
 
-.blockies {
-  width: var(--font-size-large);
-  height: var(--font-size-large);
-  border-radius: 50%;
-  overflow: hidden;
-  display: inline-block;
-  vertical-align: middle;
-}
-
 .address {
   display: none;
   text-transform: none;
   border-right: 1px solid var(--border-color);
   padding-right: calc(var(--spacer) / 3);
+  padding-left: calc(var(--spacer) / 8);
 }
 
 @media screen and (min-width: 60rem) {

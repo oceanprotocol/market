@@ -1,11 +1,10 @@
-import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
-import { MetadataCache, Logger } from '@oceanprotocol/lib'
+import { Logger } from '@oceanprotocol/lib'
 import {
   queryMetadata,
   transformChainIdsListToQuery
 } from '../../../utils/aquarius'
 import queryString from 'query-string'
-import axios from 'axios'
+import { CancelToken } from 'axios'
 
 export const SortTermOptions = {
   Created: 'created',
@@ -33,6 +32,13 @@ export const FilterByTypeOptions = {
 type FilterByTypeOptions =
   typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
 
+export const FilterByAccessOptions = {
+  Download: 'access',
+  Compute: 'compute'
+}
+type FilterByAccessOptions =
+  typeof FilterByAccessOptions[keyof typeof FilterByAccessOptions]
+
 function getSortType(sortParam: string): string {
   const sortTerm =
     sortParam === SortTermOptions.Created
@@ -51,10 +57,9 @@ export function getSearchQuery(
   offset?: string,
   sort?: string,
   sortOrder?: string,
-  serviceType?: string
+  serviceType?: string,
+  accessType?: string
 ): any {
-  const sortTerm = getSortType(sort)
-  const sortValue = sortOrder === SortValueOptions.Ascending ? 1 : -1
   const emptySearchTerm = text === undefined || text === ''
   let searchTerm = owner
     ? `(publicKey.owner:${owner})`
@@ -88,8 +93,8 @@ export function getSearchQuery(
     'service.attributes.additionalInformation.tags'
   ]
   return {
-    page: Number(page) || 1,
-    offset: Number(offset) || 21,
+    from: (Number(page) - 1 || 0) * (Number(offset) || 21),
+    size: Number(offset) || 21,
     query: {
       bool: {
         must: [
@@ -140,6 +145,12 @@ export function getSearchQuery(
             }
           },
           {
+            match: {
+              'service.type':
+                accessType === undefined ? 'access OR compute' : `${accessType}`
+            }
+          },
+          {
             query_string: {
               query: `${transformChainIdsListToQuery(chainIds)}`
             }
@@ -153,7 +164,7 @@ export function getSearchQuery(
       }
     },
     sort: {
-      [sortTerm]: sortValue
+      [sort]: sortOrder
     }
   }
 }
@@ -169,10 +180,11 @@ export async function getResults(
     sort?: string
     sortOrder?: string
     serviceType?: string
+    accessType?: string
   },
-  metadataCacheUri: string,
-  chainIds: number[]
-): Promise<QueryResult> {
+  chainIds: number[],
+  cancelToken?: CancelToken
+): Promise<any> {
   const {
     text,
     owner,
@@ -182,7 +194,8 @@ export async function getResults(
     offset,
     sort,
     sortOrder,
-    serviceType
+    serviceType,
+    accessType
   } = params
 
   const searchQuery = getSearchQuery(
@@ -195,11 +208,10 @@ export async function getResults(
     offset,
     sort,
     sortOrder,
-    serviceType
+    serviceType,
+    accessType
   )
-  const source = axios.CancelToken.source()
-  // const queryResult = await metadataCache.queryMetadata(searchQuery)
-  const queryResult = await queryMetadata(searchQuery, source.token)
+  const queryResult = await queryMetadata(searchQuery, cancelToken)
   return queryResult
 }
 
@@ -223,7 +235,7 @@ export async function addExistingParamsToUrl(
   } else {
     // sort should be relevance when fixed in aqua
     urlLocation = `${urlLocation}sort=${encodeURIComponent(
-      SortTermOptions.Created
+      SortTermOptions.Relevance
     )}&sortOrder=${SortValueOptions.Descending}&`
   }
   urlLocation = urlLocation.slice(0, -1)
