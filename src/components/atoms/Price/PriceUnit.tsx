@@ -4,7 +4,6 @@ import classNames from 'classnames/bind'
 import Conversion from './Conversion'
 import styles from './PriceUnit.module.css'
 import { useUserPreferences } from '../../../providers/UserPreferences'
-import { useOcean } from '../../../providers/Ocean'
 import Badge from '../Badge'
 
 const cx = classNames.bind(styles)
