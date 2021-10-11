@@ -26,7 +26,7 @@ import {
 } from '../@types/apollo/PoolShares'
 import { BestPrice } from '../models/BestPrice'
 import { OrdersData_tokenOrders as OrdersData } from '../@types/apollo/OrdersData'
-import { UserSharesQuery_poolShares_userAddress as UsersList } from '../@types/apollo/UserSharesQuery'
+import { UserSharesQuery_poolShares_userAddress as User } from '../@types/apollo/UserSharesQuery'
 import { getPublishedAssets } from './aquarius'
 import axios from 'axios'
 
@@ -260,13 +260,30 @@ const UserTokenOrders = gql`
     }
   }
 `
-const UsersQuery = gql`
-  query UsersQuery {
-    users {
+const UserSalesQuery = gql`
+  query UsersSalesQuery {
+    users(
+      first: 9
+      orderBy: nrSales
+      orderDirection: desc
+      where: { nrSales_not: 0 }
+    ) {
       id
+      nrSales
     }
   }
 `
+const UserSalesNumberQuery = gql`
+  query UserSalesNumberQuery($user: String!) {
+    user(where: { id: $user }) {
+      nrSales
+    }
+  }
+`
+interface UserSales {
+  id: string
+  sales: number
+}
 
 export function getSubgraphUri(chainId: number): string {
   const config = getOceanConfig(chainId)
@@ -741,32 +758,40 @@ export async function getUserTokenOrders(
 export async function getTopAssetsPublishers(
   chainIds: number[]
 ): Promise<string[]> {
-  let users: UsersList[] = []
-  const accounts: string[] = []
-  const publishersSales: PublisherSales[] = []
-  const source = axios.CancelToken.source()
-
-  for (const chain of chainIds) {
-    const queryContext = getQueryContext(Number(chain))
-    const fetchedPublishers: OperationResult<UsersList> = await fetchData(
-      UsersQuery,
+  const data: string[] = []
+  try {
+    const userSales = await fetchDataForMultipleChains(
+      UserSalesQuery,
       null,
-      queryContext
+      chainIds
     )
-    users = users.concat(fetchedPublishers.data.users)
-  }
 
-  for (let i = 0; i < users.length; i++) {
-    if (users[i] === undefined) continue
-    const assets = await getPublishedAssets(users[i].id, chainIds, source.token)
-    const sales = await getAccountNumberOfOrders(assets.results, chainIds)
-    if (sales && sales > 0) {
-      publishersSales.push({ publisher: users[i].id, sales: sales })
+    for (let i = 0; i < userSales?.length; i++) {
+      userSales[i].users.forEach((user: UserSales) => {
+        data.push(user.id)
+      })
     }
+
+    return data
+  } catch (error) {
+    Logger.error(error.message)
   }
-  publishersSales.sort((a, b) => b.sales - a.sales)
-  for (let i = 0; i < 3; i++) {
-    accounts.push(publishersSales[i].publisher)
+}
+
+export async function getUserSalesNumber(
+  accountId: string,
+  chainIds: number[]
+): Promise<number> {
+  const variables = { user: accountId?.toLowerCase() }
+
+  try {
+    const sales = await fetchDataForMultipleChains(
+      UserSalesNumberQuery,
+      variables,
+      chainIds
+    )
+    return sales[0]
+  } catch (error) {
+    Logger.error(error.message)
   }
-  return accounts
 }

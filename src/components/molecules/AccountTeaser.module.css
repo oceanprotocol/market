@@ -1,6 +1,6 @@
 .blockies {
-  width: 13%;
-  height: 13%;
+  width: 15%;
+  height: 15%;
   border-radius: 50%;
   margin-left: 0;
   margin-right: calc(var(--spacer) / 4);
@@ -53,4 +53,5 @@
 
 .stats {
   padding-left: var(--spacer);
+  margin-left: calc(var(--spacer) * 0.75);
 }

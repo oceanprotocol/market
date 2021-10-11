@@ -74,7 +74,6 @@ function SectionGraphResult({
 
   useEffect(() => {
     if (!appConfig.metadataCacheUri) return
-    const source = axios.CancelToken.source()
 
     async function init() {
       if (chainIds.length === 0) {
@@ -93,10 +92,6 @@ function SectionGraphResult({
       }
     }
     init()
-
-    return () => {
-      source.cancel()
-    }
   }, [appConfig.metadataCacheUri, chainIds])
 
   return (

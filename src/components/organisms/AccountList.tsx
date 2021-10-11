@@ -60,7 +60,7 @@ const AccountList: React.FC<AccountListProps> = ({
       <div className={styleClasses}>
         {accounts.length > 0 ? (
           accounts.map((account) => (
-            <AccountTeaser account={account} key={account} showStatistics />
+            <AccountTeaser account={account} key={account} />
           ))
         ) : chainIds.length === 0 ? (
           <div className={styles.empty}>No network selected.</div>
