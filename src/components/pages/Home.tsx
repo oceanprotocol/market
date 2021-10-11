@@ -1,12 +1,8 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import AssetList from '../organisms/AssetList'
-import { SearchQuery } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import Button from '../atoms/Button'
 import Bookmarks from '../molecules/Bookmarks'
-import {
-  queryMetadata,
-  transformChainIdsListToQuery
-} from '../../utils/aquarius'
+import { generateBaseQuery, queryMetadata } from '../../utils/aquarius'
 import Permission from '../organisms/Permission'
 import { getHighestLiquidityDIDs } from '../../utils/subgraph'
 import { DDO, Logger } from '@oceanprotocol/lib'
@@ -15,6 +11,9 @@ import { useUserPreferences } from '../../providers/UserPreferences'
 import styles from './Home.module.css'
 import { useIsMounted } from '../../hooks/useIsMounted'
 import { useCancelToken } from '../../hooks/useCancelToken'
+import { SearchQuery } from '../../models/aquarius/SearchQuery'
+import { SortTermOptions } from '../../models/SortAndFilters'
+import { BaseQueryParams } from '../../models/aquarius/BaseQueryParams'
 
 async function getQueryHighest(
   chainIds: number[]
@@ -24,29 +23,13 @@ async function getQueryHighest(
     size: didsLength > 0 ? didsLength : 1,
     query: {
       query_string: {
-        query: `${dids && `(${dids}) AND`}(${transformChainIdsListToQuery(
-          chainIds
-        )}) AND -isInPurgatory:true `,
+        query: `${dids && `(${dids}) AND`}-isInPurgatory:true `,
         fields: ['dataToken']
       }
     }
   }
 
   return [queryHighest, dids]
-}
-
-function getQueryLatest(chainIds: number[]): any {
-  return {
-    size: 9,
-    query: {
-      query_string: {
-        query: `(${transformChainIdsListToQuery(
-          chainIds
-        )}) AND -isInPurgatory:true `
-      }
-    },
-    sort: { created: 'desc' }
-  }
 }
 
 function sortElements(items: DDO[], sorted: string[]) {
@@ -130,12 +113,21 @@ function SectionQueryResult({
 
 export default function HomePage(): ReactElement {
   const [queryAndDids, setQueryAndDids] = useState<[SearchQuery, string]>()
+  const [queryLatest, setQueryLatest] = useState<SearchQuery>()
   const { chainIds } = useUserPreferences()
 
   useEffect(() => {
     getQueryHighest(chainIds).then((results) => {
       setQueryAndDids(results)
     })
+
+    const baseParams = {
+      chainIds: chainIds,
+      esPaginationOptions: { size: 9 },
+      sort: { sortBy: SortTermOptions.Created }
+    } as BaseQueryParams
+
+    setQueryLatest(generateBaseQuery(baseParams))
   }, [chainIds])
 
   return (
@@ -156,7 +148,7 @@ export default function HomePage(): ReactElement {
 
         <SectionQueryResult
           title="Recently Published"
-          query={getQueryLatest(chainIds)}
+          query={queryLatest}
           action={
             <Button style="text" to="/search?sort=created&sortOrder=desc">
               All data sets and algorithms →

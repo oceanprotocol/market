@@ -1,8 +1,5 @@
 import { Logger } from '@oceanprotocol/lib'
-import {
-  queryMetadata,
-  transformChainIdsListToQuery
-} from '../../../utils/aquarius'
+import { queryMetadata } from '../../../utils/aquarius'
 import queryString from 'query-string'
 import { CancelToken } from 'axios'
 
@@ -148,11 +145,6 @@ export function getSearchQuery(
             match: {
               'service.type':
                 accessType === undefined ? 'access OR compute' : `${accessType}`
-            }
-          },
-          {
-            query_string: {
-              query: `${transformChainIdsListToQuery(chainIds)}`
             }
           },
           {
