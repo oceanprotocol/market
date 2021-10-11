@@ -86,10 +86,32 @@ export function transformQueryResult(
     (hit) => new DDO(hit._source as DDO)
   )
   result.totalResults = queryResult.hits.total
-  result.totalPages = Math.floor(result.totalResults / size)
-  result.page = from ? from / size : 1
+  result.totalPages =
+    result.totalResults / size < 1
+      ? Math.floor(result.totalResults / size)
+      : Math.ceil(result.totalResults / size)
+  result.page = from ? from / size + 1 : 1
 
   return result
+}
+
+export function transformChainIdsListToQuery(chainIds: number[]): string {
+  let chainQuery = ''
+  chainIds.forEach((chainId) => {
+    chainQuery += `chainId:${chainId} OR `
+  })
+  chainQuery = chainQuery.slice(0, chainQuery.length - 4)
+  return chainQuery
+}
+
+export function transformDIDListToQuery(didList: string[] | DID[]): string {
+  let chainQuery = ''
+  const regex = new RegExp('(:)', 'g')
+  didList.forEach((did: any) => {
+    chainQuery += `id:${did.replace(regex, '\\:')} OR `
+  })
+  chainQuery = chainQuery.slice(0, chainQuery.length - 4)
+  return chainQuery
 }
 
 export async function queryMetadata(
@@ -103,7 +125,6 @@ export async function queryMetadata(
       { cancelToken }
     )
     if (!response || response.status !== 200 || !response.data) return
-
     return transformQueryResult(response.data, query.from, query.size)
   } catch (error) {
     if (axios.isCancel(error)) {
@@ -289,6 +310,35 @@ export async function getAlgorithmDatasetsForCompute(
   return datasets
 }
 
+export async function retrieveDDOListByDIDs(
+  didList: string[] | DID[],
+  chainIds: number[],
+  cancelToken: CancelToken
+): Promise<DDO[]> {
+  try {
+    if (didList?.length === 0 || chainIds?.length === 0) return []
+    const orderedDDOListByDIDList: DDO[] = []
+    const query = {
+      size: didList.length,
+      query: {
+        query_string: {
+          query: `(${transformDIDListToQuery(
+            didList
+          )})  AND (${transformChainIdsListToQuery(chainIds)})`
+        }
+      }
+    }
+    const result = await queryMetadata(query, cancelToken)
+    didList.forEach((did: string | DID) => {
+      const ddo: DDO = result.results.find((ddo: DDO) => ddo.id === did)
+      orderedDDOListByDIDList.push(ddo)
+    })
+    return orderedDDOListByDIDList
+  } catch (error) {
+    Logger.error(error.message)
+  }
+}
+
 export async function getPublishedAssets(
   accountId: string,
   chainIds: number[],
@@ -303,7 +353,7 @@ export async function getPublishedAssets(
   accesType = accesType || 'access OR compute'
 
   const queryPublishedAssets = {
-    from: (Number(page) || 0) * (Number(9) || 21),
+    from: (Number(page) - 1 || 0) * (Number(9) || 21),
     size: Number(9) || 21,
     query: {
       query_string: {
@@ -333,12 +383,12 @@ export async function getDownloadAssets(
   const downloadedAssets: DownloadedAsset[] = []
 
   try {
-    const queryResult = await getAssetsFromDidList(
+    const queryResult = await retrieveDDOListByDIDs(
       didList,
       chainIds,
       cancelToken
     )
-    const ddoList = queryResult?.results
+    const ddoList = queryResult
 
     for (let i = 0; i < tokenOrders?.length; i++) {
       const ddo = ddoList.filter(

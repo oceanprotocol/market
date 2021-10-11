@@ -50,7 +50,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
         <div className={styles.content}>
           <Dotdotdot tagName="p" clamp={3}>
             {removeMarkdown(
-              attributes?.additionalInformation?.description.substring(
+              attributes?.additionalInformation?.description?.substring(
                 0,
                 300
               ) || ''

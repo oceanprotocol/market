@@ -11,13 +11,14 @@ import web3 from 'web3'
 import Token from '../../../organisms/AssetActions/Pool/Token'
 import { calculateUserLiquidity } from '../../../../utils/subgraph'
 import NetworkName from '../../../atoms/NetworkName'
+import { retrieveDDOListByDIDs } from '../../../../utils/aquarius'
 import { CancelToken } from 'axios'
-import { retrieveDDO } from '../../../../utils/aquarius'
 import { isValidNumber } from '../../../../utils/numberValidations'
 import Decimal from 'decimal.js'
 import { useProfile } from '../../../../providers/Profile'
 import { DDO } from '@oceanprotocol/lib'
 import { useCancelToken } from '../../../../hooks/useCancelToken'
+import { useUserPreferences } from '../../../../providers/UserPreferences'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
@@ -131,25 +132,30 @@ const columns = [
 
 async function getPoolSharesAssets(
   data: PoolShare[],
+  chainIds: number[],
   cancelToken: CancelToken
 ) {
+  if (data.length < 1) return
+
   const assetList: Asset[] = []
+  const didList: string[] = []
 
   for (let i = 0; i < data.length; i++) {
     const did = web3.utils
       .toChecksumAddress(data[i].poolId.datatokenAddress)
       .replace('0x', 'did:op:')
-    const ddo = await retrieveDDO(did, cancelToken)
+    didList.push(did)
+  }
+  const ddoList = await retrieveDDOListByDIDs(didList, chainIds, cancelToken)
+  for (let i = 0; i < data.length; i++) {
     const userLiquidity = calculateUserLiquidity(data[i])
-
-    ddo &&
-      assetList.push({
-        poolShare: data[i],
-        userLiquidity: userLiquidity,
-        networkId: ddo?.chainId,
-        createTime: data[i].poolId.createTime,
-        ddo
-      })
+    assetList.push({
+      poolShare: data[i],
+      userLiquidity: userLiquidity,
+      networkId: ddoList[i].chainId,
+      createTime: data[i].poolId.createTime,
+      ddo: ddoList[i]
+    })
   }
   const assets = assetList.sort((a, b) => b.createTime - a.createTime)
   return assets
@@ -164,13 +170,19 @@ export default function PoolShares({
   const [assets, setAssets] = useState<Asset[]>()
   const [loading, setLoading] = useState<boolean>(false)
   const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
+  const { chainIds } = useUserPreferences()
   const newCancelToken = useCancelToken()
+
   const fetchPoolSharesAssets = useCallback(
     async (cancelToken: CancelToken) => {
       if (!poolShares || isPoolSharesLoading) return
 
       try {
-        const assets = await getPoolSharesAssets(poolShares, cancelToken)
+        const assets = await getPoolSharesAssets(
+          poolShares,
+          chainIds,
+          cancelToken
+        )
         setAssets(assets)
       } catch (error) {
         console.error('Error fetching pool shares: ', error.message)

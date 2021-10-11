@@ -37,7 +37,9 @@ export default function PageGatsbySearch(props: PageProps): ReactElement {
     <Page
       title={
         totalPagesNumber > MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS
-          ? `>10000 results for ${searchValue}`
+          ? `>10000 results ${
+              searchValue && searchValue !== ' ' ? `for ${searchValue}` : ''
+            }`
           : title
       }
       description={

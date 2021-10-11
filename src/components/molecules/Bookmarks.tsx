@@ -5,7 +5,7 @@ import { Logger } from '@oceanprotocol/lib'
 import Price from '../atoms/Price'
 import Tooltip from '../atoms/Tooltip'
 import AssetTitle from './AssetListTitle'
-import { getAssetsFromDidList } from '../../utils/aquarius'
+import { retrieveDDOListByDIDs } from '../../utils/aquarius'
 import { getAssetsBestPrices, AssetListPrices } from '../../utils/subgraph'
 import axios, { CancelToken } from 'axios'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
@@ -17,7 +17,7 @@ async function getAssetsBookmarked(
   cancelToken: CancelToken
 ) {
   try {
-    const result = await getAssetsFromDidList(bookmarks, chainIds, cancelToken)
+    const result = await retrieveDDOListByDIDs(bookmarks, chainIds, cancelToken)
     return result
   } catch (error) {
     Logger.error(error.message)
@@ -80,7 +80,7 @@ export default function Bookmarks(): ReactElement {
           newCancelToken()
         )
         const pinnedAssets: AssetListPrices[] = await getAssetsBestPrices(
-          resultPinned?.results
+          resultPinned
         )
         setPinned(pinnedAssets)
       } catch (error) {
