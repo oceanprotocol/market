@@ -45,7 +45,6 @@ export function generateBaseQuery(
     getFilterTerm('_index', 'aquarius'),
     getFilterTerm('isInPurgatory', 'false')
   ]
-
   const generatedQuery = {
     from: baseQueryParams.esPaginationOptions?.from || 0,
     size: baseQueryParams.esPaginationOptions?.size || 1000,
@@ -93,25 +92,6 @@ export function transformQueryResult(
   result.page = from ? from / size + 1 : 1
 
   return result
-}
-
-export function transformChainIdsListToQuery(chainIds: number[]): string {
-  let chainQuery = ''
-  chainIds.forEach((chainId) => {
-    chainQuery += `chainId:${chainId} OR `
-  })
-  chainQuery = chainQuery.slice(0, chainQuery.length - 4)
-  return chainQuery
-}
-
-export function transformDIDListToQuery(didList: string[] | DID[]): string {
-  let chainQuery = ''
-  const regex = new RegExp('(:)', 'g')
-  didList.forEach((did: any) => {
-    chainQuery += `id:${did.replace(regex, '\\:')} OR `
-  })
-  chainQuery = chainQuery.slice(0, chainQuery.length - 4)
-  return chainQuery
 }
 
 export async function queryMetadata(
@@ -178,7 +158,6 @@ export async function getAssetsNames(
   }
 }
 
-// rewrite with filter
 export async function getAssetsFromDidList(
   didList: string[],
   chainIds: number[],
@@ -202,6 +181,24 @@ export async function getAssetsFromDidList(
 
 // under this needs to be removed or moved
 
+export function transformChainIdsListToQuery(chainIds: number[]): string {
+  let chainQuery = ''
+  chainIds.forEach((chainId) => {
+    chainQuery += `chainId:${chainId} OR `
+  })
+  chainQuery = chainQuery.slice(0, chainQuery.length - 4)
+  return chainQuery
+}
+
+export function transformDIDListToQuery(didList: string[] | DID[]): string {
+  let chainQuery = ''
+  const regex = new RegExp('(:)', 'g')
+  didList.forEach((did: any) => {
+    chainQuery += `id:${did.replace(regex, '\\:')} OR `
+  })
+  chainQuery = chainQuery.slice(0, chainQuery.length - 4)
+  return chainQuery
+}
 function getQueryForAlgorithmDatasets(
   algorithmDid: string,
   chainId?: number

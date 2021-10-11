@@ -2,9 +2,13 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import AssetList from '../organisms/AssetList'
 import Button from '../atoms/Button'
 import Bookmarks from '../molecules/Bookmarks'
-import { generateBaseQuery, queryMetadata } from '../../utils/aquarius'
+import {
+  generateBaseQuery,
+  getFilterTerm,
+  queryMetadata
+} from '../../utils/aquarius'
 import Permission from '../organisms/Permission'
-import { getHighestLiquidityDIDs } from '../../utils/subgraph'
+import { getHighestLiquidityDatatokens } from '../../utils/subgraph'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../providers/UserPreferences'
@@ -14,27 +18,30 @@ import { useCancelToken } from '../../hooks/useCancelToken'
 import { SearchQuery } from '../../models/aquarius/SearchQuery'
 import { SortTermOptions } from '../../models/SortAndFilters'
 import { BaseQueryParams } from '../../models/aquarius/BaseQueryParams'
+import { PagedAssets } from '../../models/PagedAssets'
 
 async function getQueryHighest(
   chainIds: number[]
-): Promise<[SearchQuery, string]> {
-  const [dids, didsLength] = await getHighestLiquidityDIDs(chainIds)
-  const queryHighest = {
-    size: didsLength > 0 ? didsLength : 1,
-    query: {
-      query_string: {
-        query: `${dids && `(${dids}) AND`}-isInPurgatory:true `,
-        fields: ['dataToken']
-      }
-    }
-  }
+): Promise<[SearchQuery, string[]]> {
+  const dtList = await getHighestLiquidityDatatokens(chainIds)
+  const baseQueryParams = {
+    chainIds,
+    esPaginationOptions: {
+      size: dtList.length > 0 ? dtList.length : 1
+    },
+    filters: [getFilterTerm('dataToken', dtList)]
+  } as BaseQueryParams
+  const queryHighest = generateBaseQuery(baseQueryParams)
 
-  return [queryHighest, dids]
+  return [queryHighest, dtList]
 }
 
 function sortElements(items: DDO[], sorted: string[]) {
   items.sort(function (a, b) {
-    return sorted.indexOf(a.dataToken) - sorted.indexOf(b.dataToken)
+    return (
+      sorted.indexOf(a.dataToken.toLowerCase()) -
+      sorted.indexOf(b.dataToken.toLowerCase())
+    )
   })
   return items
 }
@@ -48,7 +55,7 @@ function SectionQueryResult({
   title: ReactElement | string
   query: SearchQuery
   action?: ReactElement
-  queryData?: string
+  queryData?: string[]
 }) {
   const { chainIds } = useUserPreferences()
   const [result, setResult] = useState<any>()
@@ -58,7 +65,7 @@ function SectionQueryResult({
   useEffect(() => {
     async function init() {
       if (chainIds.length === 0) {
-        const result: any = {
+        const result: PagedAssets = {
           results: [],
           page: 0,
           totalPages: 0,
@@ -71,9 +78,9 @@ function SectionQueryResult({
           setLoading(true)
           const result = await queryMetadata(query, newCancelToken())
           if (!isMounted()) return
+          console.log('query data and result', queryData, result)
           if (queryData && result?.totalResults > 0) {
-            const searchDIDs = queryData.split(' ')
-            const sortedAssets = sortElements(result.results, searchDIDs)
+            const sortedAssets = sortElements(result.results, queryData)
             const overflow = sortedAssets.length - 9
             sortedAssets.splice(sortedAssets.length - overflow, overflow)
             result.results = sortedAssets
@@ -86,7 +93,7 @@ function SectionQueryResult({
       }
     }
     init()
-  }, [isMounted, newCancelToken, query])
+  }, [chainIds.length, isMounted, newCancelToken, query, queryData])
 
   return (
     <section className={styles.section}>
@@ -102,7 +109,7 @@ function SectionQueryResult({
 }
 
 export default function HomePage(): ReactElement {
-  const [queryAndDids, setQueryAndDids] = useState<[SearchQuery, string]>()
+  const [queryAndDids, setQueryAndDids] = useState<[SearchQuery, string[]]>()
   const [queryLatest, setQueryLatest] = useState<SearchQuery>()
   const { chainIds } = useUserPreferences()
 
@@ -136,15 +143,17 @@ export default function HomePage(): ReactElement {
           />
         )}
 
-        <SectionQueryResult
-          title="Recently Published"
-          query={queryLatest}
-          action={
-            <Button style="text" to="/search?sort=created&sortOrder=desc">
-              All data sets and algorithms →
-            </Button>
-          }
-        />
+        {queryLatest && (
+          <SectionQueryResult
+            title="Recently Published"
+            query={queryLatest}
+            action={
+              <Button style="text" to="/search?sort=created&sortOrder=desc">
+                All data sets and algorithms →
+              </Button>
+            }
+          />
+        )}
       </>
     </Permission>
   )

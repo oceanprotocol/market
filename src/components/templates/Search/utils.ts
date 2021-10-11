@@ -1,7 +1,8 @@
 import { Logger } from '@oceanprotocol/lib'
-import { queryMetadata } from '../../../utils/aquarius'
+import { generateBaseQuery, queryMetadata } from '../../../utils/aquarius'
 import queryString from 'query-string'
 import { CancelToken } from 'axios'
+import { BaseQueryParams } from '../../../models/aquarius/BaseQueryParams'
 
 export const SortTermOptions = {
   Created: 'created',
@@ -36,14 +37,6 @@ export const FilterByAccessOptions = {
 type FilterByAccessOptions =
   typeof FilterByAccessOptions[keyof typeof FilterByAccessOptions]
 
-function getSortType(sortParam: string): string {
-  const sortTerm =
-    sortParam === SortTermOptions.Created
-      ? SortTermOptions.Created
-      : SortTermOptions.Relevance
-  return sortTerm
-}
-
 export function getSearchQuery(
   chainIds: number[],
   text?: string,
@@ -53,7 +46,7 @@ export function getSearchQuery(
   page?: string,
   offset?: string,
   sort?: string,
-  sortOrder?: string,
+  sortDirection?: string,
   serviceType?: string,
   accessType?: string
 ): any {
@@ -89,76 +82,82 @@ export function getSearchQuery(
     'service.attributes.additionalInformation.description',
     'service.attributes.additionalInformation.tags'
   ]
-  return {
-    from: (Number(page) - 1 || 0) * (Number(offset) || 21),
-    size: Number(offset) || 21,
-    query: {
-      bool: {
-        must: [
-          {
-            bool: {
-              should: [
-                {
-                  query_string: {
-                    query: `${modifiedSearchTerm}`,
-                    fields: searchFields,
-                    minimum_should_match: '2<75%',
-                    phrase_slop: 2,
-                    boost: 5
-                  }
-                },
-                {
-                  query_string: {
-                    query: `${noSpaceSearchTerm}*`,
-                    fields: searchFields,
-                    boost: 5,
-                    lenient: true
-                  }
-                },
-                {
-                  match_phrase: {
-                    content: {
-                      query: `${searchTerm}`,
-                      boost: 10
-                    }
-                  }
-                },
-                {
-                  query_string: {
-                    query: `${prefixedSearchTerm}`,
-                    fields: searchFields,
-                    default_operator: 'AND'
-                  }
+
+  const nestedQuery = {
+    must: [
+      {
+        bool: {
+          should: [
+            {
+              query_string: {
+                query: `${modifiedSearchTerm}`,
+                fields: searchFields,
+                minimum_should_match: '2<75%',
+                phrase_slop: 2,
+                boost: 5
+              }
+            },
+            {
+              query_string: {
+                query: `${noSpaceSearchTerm}*`,
+                fields: searchFields,
+                boost: 5,
+                lenient: true
+              }
+            },
+            {
+              match_phrase: {
+                content: {
+                  query: `${searchTerm}`,
+                  boost: 10
                 }
-              ]
+              }
+            },
+            {
+              query_string: {
+                query: `${prefixedSearchTerm}`,
+                fields: searchFields,
+                default_operator: 'AND'
+              }
             }
-          },
-          {
-            match: {
-              'service.attributes.main.type':
-                serviceType === undefined
-                  ? 'dataset OR algorithm'
-                  : `${serviceType}`
-            }
-          },
-          {
-            match: {
-              'service.type':
-                accessType === undefined ? 'access OR compute' : `${accessType}`
-            }
-          },
-          {
-            term: {
-              isInPurgatory: false
-            }
-          }
-        ]
+          ]
+        }
+      },
+      {
+        match: {
+          'service.attributes.main.type':
+            serviceType === undefined
+              ? 'dataset OR algorithm'
+              : `${serviceType}`
+        }
+      },
+      {
+        match: {
+          'service.type':
+            accessType === undefined ? 'access OR compute' : `${accessType}`
+        }
+      },
+      {
+        term: {
+          isInPurgatory: false
+        }
       }
-    },
-    sort: {
-      [sort]: sortOrder
-    }
+    ]
   }
+
+  const baseQueryParams = {
+    chainIds,
+    nestedQuery,
+    esPaginationOptions: {
+      from: (Number(page) - 1 || 0) * (Number(offset) || 21),
+      size: Number(offset) || 21
+    },
+    sortOptions: { sortBy: sort, sortDirection: sortDirection }
+  } as BaseQueryParams
+
+  const query = generateBaseQuery(baseQueryParams)
+
+  return query
 }
 
 export async function getResults(
