@@ -9,39 +9,10 @@ import { CancelToken } from 'axios'
 import { BaseQueryParams } from '../../../models/aquarius/BaseQueryParams'
 import { SearchQuery } from '../../../models/aquarius/SearchQuery'
 import { FilterTerm } from '../../../models/aquarius/FilterTerm'
-
-export const SortTermOptions = {
-  Created: 'created',
-  Relevance: '_score'
-} as const
-type SortTermOptions = typeof SortTermOptions[keyof typeof SortTermOptions]
-
-export const SortElasticTerm = {
-  Liquidity: 'price.ocean',
-  Price: 'price.value',
-  Created: 'created'
-} as const
-type SortElasticTerm = typeof SortElasticTerm[keyof typeof SortElasticTerm]
-
-export const SortValueOptions = {
-  Ascending: 'asc',
-  Descending: 'desc'
-} as const
-type SortValueOptions = typeof SortValueOptions[keyof typeof SortValueOptions]
-
-export const FilterByTypeOptions = {
-  Data: 'dataset',
-  Algorithm: 'algorithm'
-} as const
-type FilterByTypeOptions =
-  typeof FilterByTypeOptions[keyof typeof FilterByTypeOptions]
-
-export const FilterByAccessOptions = {
-  Download: 'access',
-  Compute: 'compute'
-}
-type FilterByAccessOptions =
-  typeof FilterByAccessOptions[keyof typeof FilterByAccessOptions]
+import {
+  SortDirectionOptions,
+  SortTermOptions
+} from '../../../models/SortAndFilters'
 
 export function getSearchQuery(
   chainIds: number[],
@@ -221,7 +192,7 @@ export async function addExistingParamsToUrl(
     // sort should be relevance when fixed in aqua
     urlLocation = `${urlLocation}sort=${encodeURIComponent(
       SortTermOptions.Relevance
-    )}&sortOrder=${SortValueOptions.Descending}&`
+    )}&sortOrder=${SortDirectionOptions.Descending}&`
   }
   urlLocation = urlLocation.slice(0, -1)
   return urlLocation
