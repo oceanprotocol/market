@@ -10,10 +10,10 @@ module.exports = {
 
   // List of chainIds which metadata cache queries will return by default.
   // This preselects the Chains user preferences.
-  chainIds: [1, 137, 56, 1285],
+  chainIds: [1, 137, 56, 1285, 246],
 
   // List of all supported chainIds. Used to populate the Chains user preferences list.
-  chainIdsSupported: [1, 3, 4, 137, 80001, 1287, 56, 2021000, 1285],
+  chainIdsSupported: [1, 3, 4, 137, 80001, 1287, 56, 2021000, 1285, 246],
 
   rbacUrl: process.env.GATSBY_RBAC_URL,
 
@@ -62,5 +62,17 @@ module.exports = {
   allowAdvancedSettings: process.env.GATSBY_ALLOW_ADVANCED_SETTINGS || 'false',
   allowAdvancedPublishSettings:
     process.env.GATSBY_ALLOW_ADVANCED_PUBLISH_SETTINGS || 'false',
-  credentialType: process.env.GATSBY_CREDENTIAL_TYPE || 'address'
+  credentialType: process.env.GATSBY_CREDENTIAL_TYPE || 'address',
+
+  // Set the default privacy policy to initially display
+  // this should be the slug of your default policy markdown file
+  defaultPrivacyPolicySlug: '/privacy/en',
+
+  // This enables / disables the use of a GDPR compliant
+  // privacy preference center to manage cookies on the market
+  // If set to true a gdpr.json file inside the content directory
+  // is used to create and show a privacy preference center / cookie banner
+  // To learn more about how to configure and use this, please refer to the readme
+  privacyPreferenceCenter:
+    process.env.GATSBY_PRIVACY_PREFERENCE_CENTER || 'false'
 }

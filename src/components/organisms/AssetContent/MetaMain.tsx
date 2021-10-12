@@ -10,9 +10,12 @@ import styles from './MetaMain.module.css'
 
 export default function MetaMain(): ReactElement {
   const { ddo, owner, type, isAssetNetwork } = useAsset()
-  const { networkId, web3ProviderInfo } = useWeb3()
+  const { web3ProviderInfo } = useWeb3()
+
   const isCompute = Boolean(ddo?.findServiceByType('compute'))
   const accessType = isCompute ? 'compute' : 'access'
+  const blockscoutNetworks = [1287, 2021000, 2021001, 44787, 246, 1285]
+  const isBlockscoutExplorer = blockscoutNetworks.includes(ddo?.chainId)
 
   return (
     <aside className={styles.meta}>
@@ -24,9 +27,9 @@ export default function MetaMain(): ReactElement {
         />
         <ExplorerLink
           className={styles.datatoken}
-          networkId={networkId}
+          networkId={ddo?.chainId}
           path={
-            networkId === 137 || networkId === 1287
+            isBlockscoutExplorer
               ? `tokens/${ddo?.dataToken}`
               : `token/${ddo?.dataToken}`
           }
