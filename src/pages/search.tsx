@@ -52,8 +52,8 @@ export default function PageGatsbySearch(props: PageProps): ReactElement {
     >
       <PageSearch
         location={props.location}
-        setTotalResults={(totalResults) => setTotalResults(totalResults)}
-        setTotalPagesNumber={(totalPages) => setTotalPagesNumber(totalPages)}
+        setTotalResults={setTotalResults}
+        setTotalPagesNumber={setTotalPagesNumber}
       />
     </Page>
   )

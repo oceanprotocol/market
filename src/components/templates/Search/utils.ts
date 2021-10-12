@@ -1,8 +1,14 @@
 import { Logger } from '@oceanprotocol/lib'
-import { generateBaseQuery, queryMetadata } from '../../../utils/aquarius'
+import {
+  generateBaseQuery,
+  getFilterTerm,
+  queryMetadata
+} from '../../../utils/aquarius'
 import queryString from 'query-string'
 import { CancelToken } from 'axios'
 import { BaseQueryParams } from '../../../models/aquarius/BaseQueryParams'
+import { SearchQuery } from '../../../models/aquarius/SearchQuery'
+import { FilterTerm } from '../../../models/aquarius/FilterTerm'
 
 export const SortTermOptions = {
   Created: 'created',
@@ -49,7 +55,7 @@ export function getSearchQuery(
   sortDirection?: string,
   serviceType?: string,
   accessType?: string
-): any {
+): SearchQuery {
   const emptySearchTerm = text === undefined || text === ''
   let searchTerm = owner
     ? `(publicKey.owner:${owner})`
@@ -122,28 +128,15 @@ export function getSearchQuery(
             }
           ]
         }
-      },
-      {
-        match: {
-          'service.attributes.main.type':
-            serviceType === undefined
-              ? 'dataset OR algorithm'
-              : `${serviceType}`
-        }
-      },
-      {
-        match: {
-          'service.type':
-            accessType === undefined ? 'access OR compute' : `${accessType}`
-        }
-      },
-      {
-        term: {
-          isInPurgatory: false
-        }
       }
     ]
   }
+
+  const filters: FilterTerm[] = []
+  accessType !== undefined &&
+    filters.push(getFilterTerm('service.type', accessType))
+  serviceType !== undefined &&
+    filters.push(getFilterTerm('service.attributes.main.type', serviceType))
 
   const baseQueryParams = {
     chainIds,
@@ -152,7 +145,8 @@ export function getSearchQuery(
       from: (Number(page) - 1 || 0) * (Number(offset) || 21),
       size: Number(offset) || 21
     },
-    sortOptions: { sortBy: sort, sortDirection: sortDirection }
+    sortOptions: { sortBy: sort, sortDirection: sortDirection },
+    filters
   } as BaseQueryParams
 
   const query = generateBaseQuery(baseQueryParams)

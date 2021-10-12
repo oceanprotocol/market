@@ -78,7 +78,6 @@ function SectionQueryResult({
           setLoading(true)
           const result = await queryMetadata(query, newCancelToken())
           if (!isMounted()) return
-          console.log('query data and result', queryData, result)
           if (queryData && result?.totalResults > 0) {
             const sortedAssets = sortElements(result.results, queryData)
             const overflow = sortedAssets.length - 9

@@ -73,16 +73,16 @@ export default function App({
     // queryMetadata(newquey, newCancelToken()).then((res) => {
     //   console.log('res', res.results)
     // })
-    getAssetsFromDidList(
-      [
-        'did:op:119F22fa21D4ee54c9911E1Bf876Fcf24A0ADFC1',
-        'did:op:a2B8b3aC4207CFCCbDe4Ac7fa40214fd00A2BA71'
-      ],
-      [1, 3],
-      newCancelToken()
-    ).then((res) => {
-      console.log('res', res)
-    })
+    // getAssetsFromDidList(
+    //   [
+    //     'did:op:119F22fa21D4ee54c9911E1Bf876Fcf24A0ADFC1',
+    //     'did:op:a2B8b3aC4207CFCCbDe4Ac7fa40214fd00A2BA71'
+    //   ],
+    //   [1, 3],
+    //   newCancelToken()
+    // ).then((res) => {
+    //   console.log('res', res)
+    // })
     // const filt = getFilterTerm(FilterByTypeOptions.Algorithm, "")
   }, [])
   return (
