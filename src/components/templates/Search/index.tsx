@@ -32,7 +32,6 @@ export default function SearchPage({
   const newCancelToken = useCancelToken()
 
   useEffect(() => {
-    console.log('location parse', location)
     const parsed = queryString.parse(location.search)
     const { sort, sortOrder, serviceType, accessType } = parsed
     setParsed(parsed)

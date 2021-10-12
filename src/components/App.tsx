@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement } from 'react'
 import { graphql, PageProps, useStaticQuery } from 'gatsby'
 import Alert from './atoms/Alert'
 import Footer from './organisms/Footer'
@@ -9,8 +9,6 @@ import { useSiteMetadata } from '../hooks/useSiteMetadata'
 import { useAccountPurgatory } from '../hooks/useAccountPurgatory'
 import AnnouncementBanner from './atoms/AnnouncementBanner'
 import styles from './App.module.css'
-import { getAssetsFromDidList } from '../utils/aquarius'
-import { useCancelToken } from '../hooks/useCancelToken'
 
 const contentQuery = graphql`
   query AppQuery {
