@@ -163,8 +163,11 @@ export default function PoolTransactions({
 
   const getPoolTransactions = useCallback(
     async (cancelToken: CancelToken) => {
-      if (!data) return
-
+      if (!data || data.length === 0) {
+        setTransactions([])
+        setIsLoading(false)
+        return
+      }
       const poolTransactions: PoolTransaction[] = []
       const didList: string[] = []
 
