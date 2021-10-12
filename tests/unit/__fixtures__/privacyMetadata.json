@@ -1,0 +1,17 @@
+{
+  "privacyJson": {
+    "policies": [
+      {
+        "policy": "en",
+        "date": "2021-07-31",
+        "language": "English",
+        "params": {
+          "updated": "Last updated on",
+          "dateFormat": "MM/dd/yyyy",
+          "tocHeader": "Table of contents",
+          "languageLabel": "Language"
+        }
+      }
+    ]
+  }
+}

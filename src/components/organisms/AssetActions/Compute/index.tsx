@@ -333,6 +333,7 @@ export default function Compute({
             computeAlgorithm,
             appConfig.marketFeeAddress,
             undefined,
+            null,
             false
           )
 
@@ -353,6 +354,7 @@ export default function Compute({
             serviceAlgo.index,
             appConfig.marketFeeAddress,
             undefined,
+            null,
             false
           )
 
@@ -446,6 +448,7 @@ export default function Compute({
             assetTimeout={datasetTimeout}
             hasPreviousOrderSelectedComputeAsset={hasPreviousAlgorithmOrder}
             hasDatatokenSelectedComputeAsset={hasAlgoAssetDatatoken}
+            oceanSymbol={price ? price.oceanSymbol : ''}
             dtSymbolSelectedComputeAsset={
               selectedAlgorithmAsset?.dataTokenInfo?.symbol
             }
@@ -463,10 +466,7 @@ export default function Compute({
 
       <footer className={styles.feedback}>
         {isPublished && (
-          <SuccessConfetti
-            success="Your job started successfully! Watch the progress on the history page."
-            action={<SuccessAction />}
-          />
+          <SuccessConfetti success="Your job started successfully! Watch the progress below or on your profile." />
         )}
       </footer>
       {accountId && (

@@ -9,8 +9,8 @@ import web3 from 'web3'
 import { fetchDataForMultipleChains } from '../../../utils/subgraph'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import NetworkName from '../../atoms/NetworkName'
-import { retrieveDDO } from '../../../utils/aquarius'
-import { CancelToken } from 'axios'
+import { retrieveDDOListByDIDs } from '../../../utils/aquarius'
+import axios, { CancelToken } from 'axios'
 import Title from './Title'
 import styles from './index.module.css'
 import { DDO, Logger } from '@oceanprotocol/lib'
@@ -166,19 +166,27 @@ export default function PoolTransactions({
       if (!data) return
 
       const poolTransactions: PoolTransaction[] = []
+      const didList: string[] = []
 
       for (let i = 0; i < data.length; i++) {
         const { datatokenAddress } = data[i].poolAddress
         const did = web3.utils
           .toChecksumAddress(datatokenAddress)
           .replace('0x', 'did:op:')
-        const ddo = await retrieveDDO(did, cancelToken)
-        ddo &&
-          poolTransactions.push({
-            ...data[i],
-            networkId: ddo?.chainId,
-            ddo
-          })
+        didList.push(did)
+      }
+      if (didList.length === 0) return
+      const ddoList = await retrieveDDOListByDIDs(
+        didList,
+        chainIds,
+        cancelToken
+      )
+      for (let i = 0; i < data.length; i++) {
+        poolTransactions.push({
+          ...data[i],
+          networkId: ddoList[i]?.chainId,
+          ddo: ddoList[i]
+        })
       }
       const sortedTransactions = poolTransactions.sort(
         (a, b) => b.timestamp - a.timestamp

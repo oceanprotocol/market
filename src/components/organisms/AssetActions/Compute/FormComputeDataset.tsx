@@ -58,6 +58,7 @@ export default function FormStartCompute({
   assetTimeout,
   hasPreviousOrderSelectedComputeAsset,
   hasDatatokenSelectedComputeAsset,
+  oceanSymbol,
   dtSymbolSelectedComputeAsset,
   dtBalanceSelectedComputeAsset,
   selectedComputeAssetLowPoolLiquidity,
@@ -81,6 +82,7 @@ export default function FormStartCompute({
   assetTimeout: string
   hasPreviousOrderSelectedComputeAsset?: boolean
   hasDatatokenSelectedComputeAsset?: boolean
+  oceanSymbol?: string
   dtSymbolSelectedComputeAsset?: string
   dtBalanceSelectedComputeAsset?: string
   selectedComputeAssetLowPoolLiquidity?: boolean
@@ -179,6 +181,7 @@ export default function FormStartCompute({
         selectedComputeAssetTimeout={selectedComputeAssetTimeout}
         hasDatatokenSelectedComputeAsset={hasDatatokenSelectedComputeAsset}
         algorithmPrice={algorithmPrice}
+        symbol={oceanSymbol}
         totalPrice={totalPrice}
       />
 

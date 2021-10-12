@@ -13,6 +13,8 @@ export interface FormFieldProps {
   placeholder?: string
   pattern?: string
   min?: string
+  disclaimer?: string
+  disclaimerValues?: string[]
   advanced?: boolean
 }
 
