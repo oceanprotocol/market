@@ -1,0 +1,20 @@
+{
+  "gdpr": {
+    "edges": [
+      {
+        "node": {
+          "childContentJson": {
+            "title": "Our use of cookies",
+            "text": "We use [cookies](/privacy/en) to optimize and continuously improve our website. These cookies are only used to enable essential features on our website and do not track you in any third-party related context.",
+            "accept": null,
+            "reject": null,
+            "close": "Acknowledge",
+            "configure": "Customize",
+            "placeholder": null,
+            "optionalCookies": null
+          }
+        }
+      }
+    ]
+  }
+}
