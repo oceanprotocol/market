@@ -26,15 +26,14 @@ const AccountTeaser: React.FC<AccountTeaserProps> = ({ account }) => {
 
   useEffect(() => {
     if (!account) return
-    async function get3Box() {
+    async function getProfileData() {
       const profile = await get3BoxProfile(account, newCancelToken())
-      console.log('PROFILE: ', profile)
       if (!profile) return
       setProfile(profile)
       const userSales = await getUserSalesNumber(account, chainIds)
       setSales(userSales)
     }
-    get3Box()
+    getProfileData()
   }, [account, newCancelToken, chainIds])
 
   return (
@@ -65,13 +64,13 @@ const AccountTeaser: React.FC<AccountTeaserProps> = ({ account }) => {
             </div>
           </div>
         </header>
-        <div className={styles.stats}>
+        {/* <div className={styles.stats}>
           <NumberUnit
             label={`Sale${sales === 1 ? '' : 's'}`}
             value={sales}
             small
           />
-        </div>
+        </div> */}
       </Link>
     </article>
   )

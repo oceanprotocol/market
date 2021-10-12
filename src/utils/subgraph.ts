@@ -26,9 +26,6 @@ import {
 } from '../@types/apollo/PoolShares'
 import { BestPrice } from '../models/BestPrice'
 import { OrdersData_tokenOrders as OrdersData } from '../@types/apollo/OrdersData'
-import { UserSharesQuery_poolShares_userAddress as User } from '../@types/apollo/UserSharesQuery'
-import { getPublishedAssets } from './aquarius'
-import axios from 'axios'
 
 export interface UserLiquidity {
   price: string
@@ -274,8 +271,9 @@ const UserSalesQuery = gql`
   }
 `
 const UserSalesNumberQuery = gql`
-  query UserSalesNumberQuery($user: String!) {
-    user(where: { id: $user }) {
+  query UserSalesNumberQuery($id: String) {
+    user(where: { id: $id }) {
+      id
       nrSales
     }
   }
@@ -765,7 +763,6 @@ export async function getTopAssetsPublishers(
       null,
       chainIds
     )
-
     for (let i = 0; i < userSales?.length; i++) {
       userSales[i].users.forEach((user: UserSales) => {
         data.push(user.id)
@@ -782,8 +779,9 @@ export async function getUserSalesNumber(
   accountId: string,
   chainIds: number[]
 ): Promise<number> {
-  const variables = { user: accountId?.toLowerCase() }
-
+  const variables = {
+    id: accountId.toLowerCase()
+  }
   try {
     const sales = await fetchDataForMultipleChains(
       UserSalesNumberQuery,
