@@ -10,7 +10,7 @@ import { fetchDataForMultipleChains } from '../../../utils/subgraph'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import NetworkName from '../../atoms/NetworkName'
 import { retrieveDDOListByDIDs } from '../../../utils/aquarius'
-import axios, { CancelToken } from 'axios'
+import { CancelToken } from 'axios'
 import Title from './Title'
 import styles from './index.module.css'
 import { DDO, Logger } from '@oceanprotocol/lib'
@@ -163,9 +163,7 @@ export default function PoolTransactions({
 
   const getPoolTransactions = useCallback(
     async (cancelToken: CancelToken) => {
-      if (!data || data.length === 0) {
-        setTransactions([])
-        setIsLoading(false)
+      if (!data) {
         return
       }
       const poolTransactions: PoolTransaction[] = []
@@ -178,7 +176,10 @@ export default function PoolTransactions({
           .replace('0x', 'did:op:')
         didList.push(did)
       }
-      if (didList.length === 0) return
+      if (didList.length === 0) {
+        setIsLoading(false)
+        return
+      }
       const ddoList = await retrieveDDOListByDIDs(
         didList,
         chainIds,
@@ -198,7 +199,7 @@ export default function PoolTransactions({
       setTransactions(sortedTransactions)
       setIsLoading(false)
     },
-    [data, setIsLoading]
+    [data, chainIds, setIsLoading]
   )
 
   //
