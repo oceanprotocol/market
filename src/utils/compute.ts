@@ -12,12 +12,13 @@ import {
 import { ComputePrivacyForm } from '../models/FormEditComputeDataset'
 import web3 from 'web3'
 import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
-import axios, { CancelToken } from 'axios'
+import { CancelToken } from 'axios'
 import { gql } from 'urql'
 import { ComputeJobMetaData } from '../@types/ComputeJobMetaData'
-import { transformChainIdsListToQuery, queryMetadata } from './aquarius'
+import { queryMetadata, getFilterTerm, generateBaseQuery } from './aquarius'
 import { fetchDataForMultipleChains } from './subgraph'
 import { OrdersData_tokenOrders_datatokenId as OrdersDatatoken } from '../@types/apollo/OrdersData'
+import { BaseQueryParams } from '../models/aquarius/BaseQueryParams'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -67,22 +68,22 @@ interface TokenOrder {
 }
 
 async function getAssetMetadata(
-  queryDtList: string,
+  queryDtList: string[],
   cancelToken: CancelToken,
   chainIds: number[]
 ): Promise<DDO[]> {
-  const queryDid = {
-    query: {
-      query_string: {
-        query: `(${queryDtList}) AND (${transformChainIdsListToQuery(
-          chainIds
-        )}) AND service.attributes.main.type:dataset AND service.type:compute`,
-        fields: ['dataToken']
-      }
-    }
-  }
+  const baseQueryparams = {
+    chainIds,
+    filters: [
+      getFilterTerm('dataToken', queryDtList),
+      getFilterTerm('service.type', 'compute'),
+      getFilterTerm('service.attributes.main.type', 'dataset')
+    ],
+    ignorePurgatory: true
+  } as BaseQueryParams
+  const query = generateBaseQuery(baseQueryparams)
+  const result = await queryMetadata(query, cancelToken)
 
-  const result = await queryMetadata(queryDid, cancelToken)
   return result.results
 }
 
@@ -201,18 +202,14 @@ async function getJobs(
   return computeJobs
 }
 
-function getDtList(data: TokenOrder[]) {
+function getDtList(data: TokenOrder[]): string[] {
   const dtList = []
 
   for (let i = 0; i < data.length; i++) {
     dtList.push(data[i].datatokenId.address)
   }
-  const queryDtList = JSON.stringify(dtList)
-    .replace(/,/g, ' ')
-    .replace(/"/g, '')
-    .replace(/(\[|\])/g, '')
 
-  return queryDtList
+  return dtList
 }
 
 export async function getComputeJobs(
@@ -220,10 +217,10 @@ export async function getComputeJobs(
   config: Config,
   ocean: Ocean,
   account: Account,
-  ddo?: DDO
+  ddo?: DDO,
+  token?: CancelToken
 ): Promise<ComputeJobMetaData[]> {
   const assetDTAddress = ddo?.dataTokenInfo?.address
-
   const variables = assetDTAddress
     ? {
         user: account?.getId().toLowerCase(),
@@ -251,10 +248,9 @@ export async function getComputeJobs(
 
   data = data.sort((a, b) => b.timestamp - a.timestamp)
   const queryDtList = getDtList(data)
-  if (queryDtList === '') return
+  if (!queryDtList) return
 
-  const source = axios.CancelToken.source()
-  const assets = await getAssetMetadata(queryDtList, source.token, chainIds)
+  const assets = await getAssetMetadata(queryDtList, token, chainIds)
   const serviceEndpoints = getServiceEndpoints(data, assets)
   const providers: Provider[] = await getProviders(
     serviceEndpoints,

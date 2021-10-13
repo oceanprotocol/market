@@ -109,7 +109,7 @@ export default function ComputeJobs({
     } finally {
       setIsLoading(false)
     }
-  }, [account, accountId, chainIds, ddo, config, ocean])
+  }, [chainIds, accountId, config, ocean, account, ddo, isMounted])
 
   useEffect(() => {
     fetchJobs()
