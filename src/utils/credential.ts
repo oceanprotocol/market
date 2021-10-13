@@ -37,12 +37,10 @@ export function updateCredential(
   credentials: Credential[],
   credentialType: string,
   value: string[]
-): void {
+): Credential[] {
   const credentialTypes = credentials
     ? credentials.map((credential) => credential.type)
     : []
-  console.log('credentialTypes')
-  console.log(credentialTypes)
   const isCredntialTypesExsit = credentialTypes.indexOf(credentialType) !== -1
   if (!credentials) {
     credentials = [
@@ -51,18 +49,19 @@ export function updateCredential(
         values: value
       }
     ]
-    return
+    return credentials
   }
   if (!isCredntialTypesExsit) {
     credentials.push({
       type: credentialType,
       values: value
     })
-    return
+    return credentials
   }
   credentials.forEach((credential) => {
     if (credential.type === credentialType) {
       credential.values = value
     }
   })
+  return credentials
 }

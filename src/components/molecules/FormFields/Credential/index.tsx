@@ -20,7 +20,7 @@ export default function Credentials(props: InputProps): ReactElement {
   const [arrayInput, setArrayInput] = useState<string[]>()
   const [value, setValue] = useState('')
   const [type, setType] = useState('')
-  const initialValues = field.value as Credential[]
+  let initialValues = field.value as Credential[]
   const { credentialType } = appConfig
 
   function handleDeleteChip(value: string) {
@@ -40,7 +40,11 @@ export default function Credentials(props: InputProps): ReactElement {
       return
     }
     setArrayInput((arrayInput) => [...arrayInput, value.toLowerCase()])
-    updateCredential(initialValues, type, [...arrayInput, value.toLowerCase()])
+    initialValues = updateCredential(initialValues, type, [
+      ...arrayInput,
+      value.toLowerCase()
+    ])
+    helpers.setValue(initialValues)
     setValue('')
   }
 
