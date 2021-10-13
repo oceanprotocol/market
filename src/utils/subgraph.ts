@@ -1,6 +1,6 @@
 import { gql, OperationResult, TypedDocumentNode, OperationContext } from 'urql'
 import { DDO, Logger } from '@oceanprotocol/lib'
-import { getUrqlClientInstance } from '../providers/UrqlProvider'
+import { getUrqlClientInstance } from '@context/UrqlProvider'
 import { getOceanConfig } from './ocean'
 import web3 from 'web3'
 import {
@@ -24,7 +24,6 @@ import {
   PoolShares as PoolSharesList,
   PoolShares_poolShares as PoolShare
 } from '../@types/apollo/PoolShares'
-import { BestPrice } from '../models/BestPrice'
 import { OrdersData_tokenOrders as OrdersData } from '../@types/apollo/OrdersData'
 
 export interface UserLiquidity {

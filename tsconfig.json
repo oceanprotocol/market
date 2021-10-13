@@ -12,8 +12,15 @@
     "noEmit": true,
     "sourceMap": true,
     "noImplicitAny": true,
-    "skipLibCheck": true,
-    "allowJs": true
+    "skipLibCheck": false,
+    "allowJs": true,
+    "paths": {
+      "@shared/*": ["./src/components/@shared/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@context/*": ["./src/context/*"],
+      "@images/*": ["./src/images/*"],
+      "@utils/*": ["./src/utils/*"]
+    }
     //"baseUrl": "./src"
   },
   "exclude": ["node_modules", "public", ".cache", "*.js"],

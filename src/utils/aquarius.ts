@@ -5,7 +5,7 @@ import {
   publisherTrustedAlgorithm as PublisherTrustedAlgorithm
 } from '@oceanprotocol/lib/'
 
-import { AssetSelectionAsset } from '../components/molecules/FormFields/AssetSelection'
+import { AssetSelectionAsset } from '@shared/Form/FormFields/AssetSelection'
 import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { OrdersData_tokenOrders as OrdersData } from '../@types/apollo/OrdersData'

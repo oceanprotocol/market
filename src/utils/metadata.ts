@@ -1,15 +1,10 @@
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import isUrl from 'is-url-superb'
-import {
-  MetadataMarket,
-  MetadataPublishFormDataset,
-  MetadataPublishFormAlgorithm
-} from '../@types/MetaData'
 import { toStringNoMS } from '.'
-import AssetModel from '../models/Asset'
 import slugify from '@sindresorhus/slugify'
 import { DDO, MetadataAlgorithm, Logger } from '@oceanprotocol/lib'
+import { FormPublishData } from '../components/Publish/_types'
 
 export function transformTags(value: string): string[] {
   const originalTags = value?.split(',')
@@ -108,14 +103,13 @@ export function transformPublishFormToMetadata(
     links,
     termsAndConditions,
     files
-  }: Partial<MetadataPublishFormDataset>,
+  }: Partial<FormPublishData>,
   ddo?: DDO
 ): MetadataMarket {
   const currentTime = toStringNoMS(new Date())
 
   const metadata: MetadataMarket = {
     main: {
-      ...AssetModel.main,
       name,
       author,
       dateCreated: ddo ? ddo.created : currentTime,
@@ -124,7 +118,6 @@ export function transformPublishFormToMetadata(
       license: 'https://market.oceanprotocol.com/terms'
     },
     additionalInformation: {
-      ...AssetModel.additionalInformation,
       description,
       tags: transformTags(tags),
       links: typeof links !== 'string' ? links : [],
@@ -208,7 +201,7 @@ export function transformPublishAlgorithmFormToMetadata(
     entrypoint,
     termsAndConditions,
     files
-  }: Partial<MetadataPublishFormAlgorithm>,
+  }: Partial<FormPublishData>,
   ddo?: DDO
 ): MetadataMarket {
   const currentTime = toStringNoMS(new Date())
@@ -222,7 +215,6 @@ export function transformPublishAlgorithmFormToMetadata(
   )
   const metadata: MetadataMarket = {
     main: {
-      ...AssetModel.main,
       name,
       type: 'algorithm',
       author,
@@ -232,7 +224,6 @@ export function transformPublishAlgorithmFormToMetadata(
       algorithm
     },
     additionalInformation: {
-      ...AssetModel.additionalInformation,
       description,
       tags: transformTags(tags),
       termsAndConditions

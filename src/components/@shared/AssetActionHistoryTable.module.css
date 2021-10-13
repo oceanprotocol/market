@@ -1,0 +1,60 @@
+.actions {
+  /* composes: container from './AssetActions/Pool/index.module.css'; */
+  border-top: 1px solid var(--border-color);
+  margin-top: calc(var(--spacer) / 1.5);
+  padding: calc(var(--spacer) / 1.5);
+  background: var(--background-highlight);
+  margin-bottom: -2rem;
+}
+
+.actions [class*='rdt_Pagination'] {
+  margin-bottom: -1rem;
+}
+
+.title {
+  /* composes: title from './AssetActions/Pool/index.module.css'; */
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.title:hover .toggle {
+  color: var(--color-primary);
+}
+
+.title + div {
+  margin-top: calc(var(--spacer) / 3);
+}
+
+.toggle {
+  color: var(--color-secondary);
+}
+
+.toggle svg {
+  display: inline-block;
+  width: var(--font-size-mini);
+  height: var(--font-size-mini);
+  fill: currentColor;
+  transition: 0.2s ease-out;
+}
+
+.open .toggle svg {
+  transform: rotate(180deg);
+}
+
+.actions [class*='Table-module--table'] {
+  /* 
+    react-data-table-component sets a default width: 100% 
+    which often leads to unneccessary overflows. Following lines make
+    sure table always spans between edges of container, without any overflow
+    when enough space is available. But it also destroys overflow table on narrow
+    viewports.
+  */
+  width: 100%;
+}
+
+.actions [class*='TableCell'] {
+  width: 140px;
+}

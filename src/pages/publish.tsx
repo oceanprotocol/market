@@ -1,8 +1,8 @@
 import React, { ReactElement } from 'react'
-import PagePublish from '../components/pages/Publish'
-import Page from '../components/templates/Page'
+import PagePublish from '../components/Publish'
+import Page from '@shared/Page'
 import { graphql, PageProps } from 'gatsby'
-import OceanProvider from '../providers/Ocean'
+import OceanProvider from '@context/Ocean'
 
 export default function PageGatsbyPublish(props: PageProps): ReactElement {
   const content = (props.data as any).content.edges[0].node.childPublishJson

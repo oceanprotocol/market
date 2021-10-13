@@ -9,12 +9,10 @@ import {
   Ocean,
   Account
 } from '@oceanprotocol/lib'
-import { ComputePrivacyForm } from '../models/FormEditComputeDataset'
 import web3 from 'web3'
 import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
 import { CancelToken } from 'axios'
 import { gql } from 'urql'
-import { ComputeJobMetaData } from '../@types/ComputeJobMetaData'
 import { queryMetadata, getFilterTerm, generateBaseQuery } from './aquarius'
 import { fetchDataForMultipleChains } from './subgraph'
 import { OrdersData_tokenOrders_datatokenId as OrdersDatatoken } from '../@types/apollo/OrdersData'

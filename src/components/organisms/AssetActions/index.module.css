@@ -1,6 +1,0 @@
-.actions {
-  composes: box from '../../atoms/Box.module.css';
-  max-width: 35rem;
-  margin: auto;
-  padding: 0;
-}

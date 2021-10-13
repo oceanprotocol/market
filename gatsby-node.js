@@ -1,6 +1,7 @@
 const createFields = require('./gatsby/createFields')
 const createMarkdownPages = require('./gatsby/createMarkdownPages')
 const execSync = require('child_process').execSync
+const path = require('path')
 
 // Write out repo metadata
 execSync(`node ./scripts/write-repo-metadata > repo-metadata.json`, {
@@ -73,6 +74,15 @@ exports.onCreatePage = async ({ page, actions }) => {
 
 exports.onCreateWebpackConfig = ({ actions }) => {
   actions.setWebpackConfig({
+    resolve: {
+      alias: {
+        '@shared': path.resolve(__dirname, 'src/components/@shared'),
+        '@hooks': path.resolve(__dirname, 'src/hooks'),
+        '@context': path.resolve(__dirname, 'src/context'),
+        '@images': path.resolve(__dirname, 'src/images'),
+        '@utils': path.resolve(__dirname, 'src/utils')
+      }
+    },
     node: {
       // 'fs' fix for ocean.js
       fs: 'empty'

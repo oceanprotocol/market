@@ -1,0 +1,31 @@
+.radioWrap {
+  composes: radioWrap from '@shared/Form/Input/InputElement.module.css';
+  padding: calc(var(--spacer) / 6) calc(var(--spacer) / 3);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.radioWrap:last-child {
+  border-bottom: none;
+}
+
+.input {
+  composes: checkbox from '@shared/Form/Input/InputElement.module.css';
+  vertical-align: baseline;
+  margin-right: calc(var(--spacer) / 3);
+  margin-top: 0;
+}
+
+.radioLabel {
+  composes: radioLabel from '@shared/Form/Input/InputElement.module.css';
+  font-weight: var(--font-weight-base);
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.input:checked + span {
+  color: var(--font-color-text);
+  font-weight: var(--font-weight-bold);
+}

@@ -1,11 +1,11 @@
 import React, { ReactElement, useState } from 'react'
-import PageSearch from '../components/templates/Search'
+import PageSearch from '../components/Search'
 import { PageProps } from 'gatsby'
-import Page from '../components/templates/Page'
+import Page from '@shared/Page'
 import queryString from 'query-string'
-import { accountTruncate } from '../utils/web3'
+import { accountTruncate } from '@utils/web3'
 import ethereumAddress from 'ethereum-address'
-import { MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS } from '../utils/aquarius'
+import { MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS } from '@utils/aquarius'
 
 export default function PageGatsbySearch(props: PageProps): ReactElement {
   const parsed = queryString.parse(props.location.search)
