@@ -179,6 +179,30 @@ export async function getAssetsFromDidList(
   }
 }
 
+export async function retrieveDDOListByDIDs(
+  didList: string[],
+  chainIds: number[],
+  cancelToken: CancelToken
+): Promise<DDO[]> {
+  try {
+    if (didList?.length === 0 || chainIds?.length === 0) return []
+    const orderedDDOListByDIDList: DDO[] = []
+    const baseQueryparams = {
+      chainIds,
+      filters: [getFilterTerm('id', didList)]
+    } as BaseQueryParams
+    const query = generateBaseQuery(baseQueryparams)
+    const result = await queryMetadata(query, cancelToken)
+    didList.forEach((did: string | DID) => {
+      const ddo: DDO = result.results.find((ddo: DDO) => ddo.id === did)
+      orderedDDOListByDIDList.push(ddo)
+    })
+    return orderedDDOListByDIDList
+  } catch (error) {
+    Logger.error(error.message)
+  }
+}
+
 // under this needs to be removed or moved
 
 export function transformChainIdsListToQuery(chainIds: number[]): string {
@@ -305,35 +329,6 @@ export async function getAlgorithmDatasetsForCompute(
     cancelToken
   )
   return datasets
-}
-
-export async function retrieveDDOListByDIDs(
-  didList: string[] | DID[],
-  chainIds: number[],
-  cancelToken: CancelToken
-): Promise<DDO[]> {
-  try {
-    if (didList?.length === 0 || chainIds?.length === 0) return []
-    const orderedDDOListByDIDList: DDO[] = []
-    const query = {
-      size: didList.length,
-      query: {
-        query_string: {
-          query: `(${transformDIDListToQuery(
-            didList
-          )})  AND (${transformChainIdsListToQuery(chainIds)})`
-        }
-      }
-    }
-    const result = await queryMetadata(query, cancelToken)
-    didList.forEach((did: string | DID) => {
-      const ddo: DDO = result.results.find((ddo: DDO) => ddo.id === did)
-      orderedDDOListByDIDList.push(ddo)
-    })
-    return orderedDDOListByDIDList
-  } catch (error) {
-    Logger.error(error.message)
-  }
 }
 
 export async function getPublishedAssets(
