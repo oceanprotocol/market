@@ -26,6 +26,10 @@ import {
 } from '../@types/apollo/PoolShares'
 import { BestPrice } from '../models/BestPrice'
 import { OrdersData_tokenOrders as OrdersData } from '../@types/apollo/OrdersData'
+import {
+  UsersSalesQuery_users as UserSales,
+  UsersSalesQuery as UsersSalesList
+} from '../@types/apollo/UsersSalesQuery'
 
 export interface UserLiquidity {
   price: string
@@ -270,19 +274,6 @@ const UserSalesQuery = gql`
     }
   }
 `
-const UserSalesNumberQuery = gql`
-  query UserSalesNumberQuery($id: String) {
-    user(where: { id: $id }) {
-      id
-      nrSales
-    }
-  }
-`
-interface UserSales {
-  id: string
-  sales: number
-}
-
 export function getSubgraphUri(chainId: number): string {
   const config = getOceanConfig(chainId)
   return config.subgraphUri
@@ -757,39 +748,25 @@ export async function getTopAssetsPublishers(
   chainIds: number[]
 ): Promise<string[]> {
   const data: string[] = []
-  try {
-    const userSales = await fetchDataForMultipleChains(
+  let users: UserSales[] = []
+  for (const chain of chainIds) {
+    const queryContext = getQueryContext(Number(chain))
+    const fetchedUsers: OperationResult<UsersSalesList> = await fetchData(
       UserSalesQuery,
       null,
-      chainIds
+      queryContext
     )
-    for (let i = 0; i < userSales?.length; i++) {
-      userSales[i].users.forEach((user: UserSales) => {
-        data.push(user.id)
-      })
+    users = users.concat(fetchedUsers.data.users)
+  }
+  users.sort((a, b) => b.nrSales - a.nrSales)
+
+  for (let i = 0; i < users.length; i++) {
+    if (data.length < 9) {
+      data.push(users[i].id)
+    } else {
+      return data
     }
+  }
 
-    return data
-  } catch (error) {
-    Logger.error(error.message)
-  }
-}
-
-export async function getUserSalesNumber(
-  accountId: string,
-  chainIds: number[]
-): Promise<number> {
-  const variables = {
-    id: accountId.toLowerCase()
-  }
-  try {
-    const sales = await fetchDataForMultipleChains(
-      UserSalesNumberQuery,
-      variables,
-      chainIds
-    )
-    return sales[0]
-  } catch (error) {
-    Logger.error(error.message)
-  }
+  return data
 }

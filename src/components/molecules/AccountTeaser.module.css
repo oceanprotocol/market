@@ -1,6 +1,6 @@
 .blockies {
-  width: 15%;
-  height: 15%;
+  width: 13%;
+  height: 13%;
   border-radius: 50%;
   margin-left: 0;
   margin-right: calc(var(--spacer) / 4);
@@ -33,25 +33,4 @@
   display: flex;
   flex-direction: row;
   align-items: baseline;
-}
-
-.account p {
-  margin-right: calc(var(--spacer) / 8);
-}
-
-.explore {
-  font-size: small;
-  display: flex;
-  flex-direction: row;
-  align-items: baseline;
-}
-
-.explore span {
-  margin-right: calc(var(--spacer) / 8);
-  font-size: x-small;
-}
-
-.stats {
-  padding-left: var(--spacer);
-  margin-left: calc(var(--spacer) * 0.75);
 }

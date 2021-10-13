@@ -9,9 +9,6 @@ import ExplorerLink from '../atoms/ExplorerLink'
 import styles from './AccountTeaser.module.css'
 import Blockies from '../atoms/Blockies'
 import { useCancelToken } from '../../hooks/useCancelToken'
-import { getUserSalesNumber } from '../../utils/subgraph'
-import { useUserPreferences } from '../../providers/UserPreferences'
-import NumberUnit from './NumberUnit'
 
 declare type AccountTeaserProps = {
   account: string
@@ -20,9 +17,7 @@ declare type AccountTeaserProps = {
 const AccountTeaser: React.FC<AccountTeaserProps> = ({ account }) => {
   const { networkId } = useWeb3()
   const [profile, setProfile] = useState<Profile>()
-  const [sales, setSales] = useState<number>(0)
   const newCancelToken = useCancelToken()
-  const { chainIds } = useUserPreferences()
 
   useEffect(() => {
     if (!account) return
@@ -30,11 +25,9 @@ const AccountTeaser: React.FC<AccountTeaserProps> = ({ account }) => {
       const profile = await get3BoxProfile(account, newCancelToken())
       if (!profile) return
       setProfile(profile)
-      const userSales = await getUserSalesNumber(account, chainIds)
-      setSales(userSales)
     }
     getProfileData()
-  }, [account, newCancelToken, chainIds])
+  }, [account, newCancelToken])
 
   return (
     <article className={styles.teaser}>
@@ -54,23 +47,12 @@ const AccountTeaser: React.FC<AccountTeaserProps> = ({ account }) => {
               )}
             </Dotdotdot>
             <div className={styles.account}>
-              <ExplorerLink
-                networkId={networkId}
-                path={`address/${account}`}
-                className={styles.explore}
-              >
+              <ExplorerLink networkId={networkId} path={`address/${account}`}>
                 <span>{account}</span>
               </ExplorerLink>
             </div>
           </div>
         </header>
-        {/* <div className={styles.stats}>
-          <NumberUnit
-            label={`Sale${sales === 1 ? '' : 's'}`}
-            value={sales}
-            small
-          />
-        </div> */}
       </Link>
     </article>
   )
