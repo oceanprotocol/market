@@ -633,7 +633,7 @@ export function calculateUserLiquidity(poolShare: PoolShare): number {
   const datatokens =
     (poolShare.balance / poolShare.poolId.totalShares) *
     poolShare.poolId.datatokenReserve
-  const totalLiquidity = ocean + datatokens * poolShare.poolId.consumePrice
+  const totalLiquidity = ocean + datatokens * poolShare.poolId.spotPrice
   return totalLiquidity
 }
 
@@ -653,6 +653,7 @@ export async function getAccountLiquidityInOwnAssets(
   )
   let totalLiquidity = 0
   let totalOceanLiquidity = 0
+
   for (const result of results) {
     for (const poolShare of result.poolShares) {
       const userShare = poolShare.balance / poolShare.poolId.totalShares

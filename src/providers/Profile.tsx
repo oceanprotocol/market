@@ -126,31 +126,34 @@ function ProfileProvider({
   const [isPoolSharesLoading, setIsPoolSharesLoading] = useState<boolean>(false)
   const [poolSharesInterval, setPoolSharesInterval] = useState<NodeJS.Timeout>()
 
-  const fetchPoolShares = useCallback(async () => {
-    if (!accountId || !chainIds || !isEthAddress) return
+  const fetchPoolShares = useCallback(
+    async (accountId, chainIds, isEthAddress) => {
+      if (!accountId || !chainIds || !isEthAddress) return
 
-    try {
-      setIsPoolSharesLoading(true)
-      const poolShares = await getPoolSharesData(accountId, chainIds)
-      setPoolShares(poolShares)
-      Logger.log(
-        `[profile] Fetched ${poolShares.length} pool shares.`,
-        poolShares
-      )
-    } catch (error) {
-      Logger.error('Error fetching pool shares: ', error.message)
-    } finally {
-      setIsPoolSharesLoading(false)
-    }
-  }, [accountId, chainIds, isEthAddress])
+      try {
+        setIsPoolSharesLoading(true)
+        const poolShares = await getPoolSharesData(accountId, chainIds)
+        setPoolShares(poolShares)
+        Logger.log(
+          `[profile] Fetched ${poolShares.length} pool shares.`,
+          poolShares
+        )
+      } catch (error) {
+        Logger.error('Error fetching pool shares: ', error.message)
+      } finally {
+        setIsPoolSharesLoading(false)
+      }
+    },
+    []
+  )
 
   useEffect(() => {
     async function init() {
-      await fetchPoolShares()
+      await fetchPoolShares(accountId, chainIds, isEthAddress)
 
       if (poolSharesInterval) return
       const interval = setInterval(async () => {
-        await fetchPoolShares()
+        await fetchPoolShares(accountId, chainIds, isEthAddress)
       }, refreshInterval)
       setPoolSharesInterval(interval)
     }
@@ -159,7 +162,7 @@ function ProfileProvider({
     return () => {
       clearInterval(poolSharesInterval)
     }
-  }, [poolSharesInterval, fetchPoolShares])
+  }, [poolSharesInterval, fetchPoolShares, accountId, chainIds, isEthAddress])
 
   //
   // PUBLISHED ASSETS

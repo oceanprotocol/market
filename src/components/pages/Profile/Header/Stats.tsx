@@ -59,7 +59,7 @@ export default function Stats({
       }
     }
     getSales()
-  }, [accountId, assets])
+  }, [accountId, assets, chainIds])
 
   useEffect(() => {
     if (!assets || !accountId || !chainIds) return
@@ -84,7 +84,7 @@ export default function Stats({
       }
     }
     getPublisherLiquidity()
-  }, [assets, accountId])
+  }, [assets, accountId, chainIds])
 
   useEffect(() => {
     if (!poolShares) return

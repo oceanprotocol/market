@@ -40,11 +40,6 @@ export function getFilterTerm(
 export function generateBaseQuery(
   baseQueryParams: BaseQueryParams
 ): SearchQuery {
-  const baseFilters = [
-    getFilterTerm('chainId', baseQueryParams.chainIds),
-    getFilterTerm('_index', 'aquarius'),
-    getFilterTerm('isInPurgatory', 'false')
-  ]
   const generatedQuery = {
     from: baseQueryParams.esPaginationOptions?.from || 0,
     size: baseQueryParams.esPaginationOptions?.size || 1000,
@@ -53,7 +48,11 @@ export function generateBaseQuery(
         ...baseQueryParams.nestedQuery,
         filter: [
           ...(baseQueryParams.filters || []),
-          ...(baseQueryParams.ignoreDefaultFilters ? [] : baseFilters)
+          getFilterTerm('chainId', baseQueryParams.chainIds),
+          getFilterTerm('_index', 'aquarius'),
+          ...(baseQueryParams.ignorePurgatory
+            ? []
+            : [getFilterTerm('isInPurgatory', 'false')])
         ]
       }
     }
@@ -168,7 +167,8 @@ export async function getAssetsFromDidList(
 
     const baseParams = {
       chainIds: chainIds,
-      filters: [getFilterTerm('id', didList)]
+      filters: [getFilterTerm('id', didList)],
+      ignorePurgatory: true
     } as BaseQueryParams
     const query = generateBaseQuery(baseParams)
 
@@ -189,7 +189,8 @@ export async function retrieveDDOListByDIDs(
     const orderedDDOListByDIDList: DDO[] = []
     const baseQueryparams = {
       chainIds,
-      filters: [getFilterTerm('id', didList)]
+      filters: [getFilterTerm('id', didList)],
+      ignorePurgatory: true
     } as BaseQueryParams
     const query = generateBaseQuery(baseQueryparams)
     const result = await queryMetadata(query, cancelToken)
@@ -302,7 +303,7 @@ export async function getPublishedAssets(
 
   const filters: FilterTerm[] = []
 
-  filters.push(getFilterTerm('publicKey.owner', accountId))
+  filters.push(getFilterTerm('publicKey.owner', accountId.toLowerCase()))
   accesType !== undefined &&
     filters.push(getFilterTerm('service.type', accesType))
   type !== undefined &&
