@@ -31,7 +31,7 @@ interface UseSiteMetadata {
     allowDynamicPricing: string
     allowFreePricing: string
     allowAdvancedSettings: string
-    credentialType: string
+    credentialType: string[]
     allowAdvancedPublishSettings: string
   }
 }

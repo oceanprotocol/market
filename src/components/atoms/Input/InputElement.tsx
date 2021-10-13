@@ -63,9 +63,8 @@ export default function InputElement({
           {...props}
           multiple={multiple}
         >
-          {field !== undefined && field.value === '' && (
-            <option value="">---</option>
-          )}
+          {((field !== undefined && field.value === '') ||
+            props?.value === '') && <option value="">---</option>}
           {sortedOptions &&
             sortedOptions.map((option: string, index: number) => (
               <option key={index} value={option}>

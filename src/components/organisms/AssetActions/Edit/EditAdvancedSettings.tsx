@@ -3,7 +3,7 @@ import React, { ReactElement, useState } from 'react'
 import { useAsset } from '../../../../providers/Asset'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import styles from './index.module.css'
-import { Logger, DDO } from '@oceanprotocol/lib'
+import { Logger, DDO, Credentials } from '@oceanprotocol/lib'
 import MetadataFeedback from '../../../molecules/MetadataFeedback'
 import { graphql, useStaticQuery } from 'gatsby'
 import { useWeb3 } from '../../../../providers/Web3'
@@ -86,19 +86,16 @@ export default function EditAdvancedSettings({
         if (!tx) return
       }
 
-      let newDdo: DDO
-      newDdo = await ocean.assets.updateCredentials(
-        ddo,
-        credentialType,
-        values.allow,
-        values.deny
-      )
-
-      newDdo = await ocean.assets.editMetadata(newDdo, {
+      const newDdo: DDO = await ocean.assets.editMetadata(ddo, {
         status: {
           isOrderDisabled: values.isOrderDisabled
         }
       })
+
+      newDdo.credentials = {
+        allow: values?.allow,
+        deny: values?.deny
+      }
 
       const storedddo = await ocean.assets.updateMetadata(newDdo, accountId)
 
@@ -127,7 +124,7 @@ export default function EditAdvancedSettings({
 
   return (
     <Formik
-      initialValues={getInitialValues(ddo, credentialType)}
+      initialValues={getInitialValues(ddo)}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
         window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
@@ -161,11 +158,7 @@ export default function EditAdvancedSettings({
             <Web3Feedback isAssetNetwork={isAssetNetwork} />
             {debug === true && (
               <div className={styles.grid}>
-                <DebugEditCredential
-                  values={values}
-                  ddo={ddo}
-                  credentialType={credentialType}
-                />
+                <DebugEditCredential values={values} />
               </div>
             )}
           </>

@@ -10,13 +10,9 @@ export interface AdvancedSettings {
 }
 
 export default function DebugEditCredential({
-  values,
-  ddo,
-  credentialType
+  values
 }: {
   values: AdvancedSettingsForm
-  ddo: DDO
-  credentialType: string
 }): ReactElement {
   const { ocean } = useOcean()
   const [advancedSettings, setAdvancedSettings] = useState<AdvancedSettings>()
@@ -25,19 +21,17 @@ export default function DebugEditCredential({
     if (!ocean) return
 
     async function transformValues() {
-      const newDdo = await ocean.assets.updateCredentials(
-        ddo,
-        credentialType,
-        values.allow,
-        values.deny
-      )
+      const DebugCredential: Credentials = {
+        allow: values?.allow,
+        deny: values?.deny
+      }
       setAdvancedSettings({
-        credentail: newDdo.credentials,
+        credentail: DebugCredential,
         isOrderDisabled: values.isOrderDisabled
       })
     }
     transformValues()
-  }, [values, ddo, ocean])
+  }, [values, ocean])
 
   return (
     <>
