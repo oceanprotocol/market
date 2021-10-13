@@ -315,14 +315,13 @@ export async function getPublishedAssets(
       sortBy: SortTermOptions.Created,
       sortDirection: SortDirectionOptions.Descending
     },
-    from: (Number(page) - 1 || 0) * 9,
-    size: 9
+    esPaginationOptions: {
+      from: (Number(page) - 1 || 0) * 9,
+      size: 9
+    }
   } as BaseQueryParams
 
   const query = generateBaseQuery(baseQueryParams)
-  type = type || 'dataset OR algorithm'
-  accesType = accesType || 'access OR compute'
-
   try {
     const result = await queryMetadata(query, cancelToken)
     return result
