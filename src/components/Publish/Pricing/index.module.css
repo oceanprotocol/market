@@ -1,0 +1,11 @@
+.pricing {
+  composes: box from '@shared/atoms/Box.module.css';
+  padding: 0;
+  padding-bottom: var(--spacer);
+  margin-top: var(--spacer);
+}
+
+.pricing [class*='alert'] {
+  margin: var(--spacer);
+  margin-bottom: 0;
+}

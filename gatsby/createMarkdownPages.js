@@ -4,7 +4,7 @@ async function createMarkdownPages(graphql, actions) {
   const { createPage } = actions
 
   const markdownPageTemplate = path.resolve(
-    './src/components/templates/PageMarkdown.tsx'
+    './src/components/@shared/Page/PageMarkdown.tsx'
   )
   // Grab all markdown files with a frontmatter title defined
   const markdownResult = await graphql(`

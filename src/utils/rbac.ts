@@ -7,7 +7,7 @@ export default async function rbacRequest(
   signal?: AbortSignal
 ): Promise<boolean | 'ERROR'> {
   const url = appConfig.rbacUrl
-  if (url === undefined) {
+  if (url === '') {
     return true
   } else {
     const data = {

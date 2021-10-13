@@ -1,11 +1,11 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import Page from '../../components/templates/Page'
+import Page from '@shared/Page'
 import { graphql, PageProps, navigate } from 'gatsby'
-import ProfilePage from '../../components/pages/Profile'
-import { accountTruncate } from '../../utils/web3'
-import { useWeb3 } from '../../providers/Web3'
-import ProfileProvider from '../../providers/Profile'
-import { getEnsAddress, getEnsName } from '../../utils/ens'
+import ProfilePage from '../../components/Profile'
+import { accountTruncate } from '@utils/web3'
+import { useWeb3 } from '@context/Web3'
+import ProfileProvider from '@context/Profile'
+import { getEnsAddress, getEnsName } from '@utils/ens'
 import ethereumAddress from 'ethereum-address'
 
 export default function PageGatsbyProfile(props: PageProps): ReactElement {

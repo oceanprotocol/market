@@ -1,4 +1,3 @@
-import { Profile, ProfileLink, ResponseData3Box } from '../models/Profile'
 import axios, { AxiosResponse, CancelToken } from 'axios'
 import jwtDecode from 'jwt-decode'
 

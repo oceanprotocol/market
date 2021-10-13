@@ -15,7 +15,7 @@ module.exports = {
   // List of all supported chainIds. Used to populate the Chains user preferences list.
   chainIdsSupported: [1, 3, 4, 137, 80001, 1287, 56, 2021000, 1285, 246],
 
-  rbacUrl: process.env.GATSBY_RBAC_URL,
+  rbacUrl: process.env.GATSBY_RBAC_URL || '',
 
   infuraProjectId: process.env.GATSBY_INFURA_PROJECT_ID || 'xxx',
 

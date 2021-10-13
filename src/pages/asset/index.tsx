@@ -1,9 +1,9 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import Permission from '../../components/organisms/Permission'
+import Permission from '@shared/Permission'
 import { PageProps } from 'gatsby'
-import PageTemplateAssetDetails from '../../components/templates/PageAssetDetails'
-import AssetProvider from '../../providers/Asset'
-import OceanProvider from '../../providers/Ocean'
+import PageTemplateAssetDetails from '../../components/Asset'
+import AssetProvider from '@context/Asset'
+import OceanProvider from '@context/Ocean'
 
 export default function PageGatsbyAssetDetails(props: PageProps): ReactElement {
   const [did, setDid] = useState<string>()

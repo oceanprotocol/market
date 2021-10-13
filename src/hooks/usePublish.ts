@@ -7,8 +7,8 @@ import {
 import { useEffect, useState } from 'react'
 import { sleep } from '../utils'
 import { publishFeedback } from '../utils/feedback'
-import { useOcean } from '../providers/Ocean'
-import { useWeb3 } from '../providers/Web3'
+import { useOcean } from '../context/Ocean'
+import { useWeb3 } from '../context/Web3'
 import { getOceanConfig } from '../utils/ocean'
 
 interface DataTokenOptions {

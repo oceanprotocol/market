@@ -11,18 +11,8 @@ import {
 } from '../utils/feedback'
 import { sleep } from '../utils'
 
-import { useOcean } from '../providers/Ocean'
-import { useWeb3 } from '../providers/Web3'
-import { BestPrice } from '../models/BestPrice'
-
-interface PriceOptions {
-  price: number
-  dtAmount: number
-  oceanAmount: number
-  type: 'fixed' | 'dynamic' | 'free' | string
-  weightOnDataToken: string
-  swapFee: string
-}
+import { useOcean } from '../context/Ocean'
+import { useWeb3 } from '../context/Web3'
 
 interface UsePricing {
   getDTSymbol: (ddo: DDO) => Promise<string>
@@ -303,5 +293,5 @@ function usePricing(): UsePricing {
   }
 }
 
-export { usePricing, UsePricing, PriceOptions }
+export { usePricing, UsePricing }
 export default usePricing

@@ -1,0 +1,12 @@
+.titleGroup {
+  font-size: var(--font-size-small);
+  margin-bottom: calc(var(--spacer) / 6);
+  margin-top: calc(var(--spacer) / 2);
+  color: var(--color-secondary);
+}
+
+.networks {
+  composes: box from '@shared/atoms/Box.module.css';
+  box-shadow: none;
+  padding: 0;
+}

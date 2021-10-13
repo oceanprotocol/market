@@ -1,5 +1,5 @@
 import { PurgatoryData as PurgatoryDataAsset } from '@oceanprotocol/lib'
-import { fetchData } from '.'
+import { fetchData } from './fetch'
 
 const purgatoryUrl = 'https://market-purgatory.oceanprotocol.com/api/'
 
