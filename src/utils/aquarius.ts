@@ -14,7 +14,7 @@ import { DownloadedAsset } from '../models/aquarius/DownloadedAsset'
 import { SearchQuery } from '../models/aquarius/SearchQuery'
 import { SearchResponse } from '../models/aquarius/SearchResponse'
 import { PagedAssets } from '../models/PagedAssets'
-import { SortDirectionOptions } from '../models/SortAndFilters'
+import { SortDirectionOptions, SortTermOptions } from '../models/SortAndFilters'
 import { FilterTerm } from '../models/aquarius/FilterTerm'
 import { BaseQueryParams } from '../models/aquarius/BaseQueryParams'
 
@@ -205,50 +205,6 @@ export async function retrieveDDOListByDIDs(
 
 // under this needs to be removed or moved
 
-export function transformChainIdsListToQuery(chainIds: number[]): string {
-  let chainQuery = ''
-  chainIds.forEach((chainId) => {
-    chainQuery += `chainId:${chainId} OR `
-  })
-  chainQuery = chainQuery.slice(0, chainQuery.length - 4)
-  return chainQuery
-}
-
-export function transformDIDListToQuery(didList: string[] | DID[]): string {
-  let chainQuery = ''
-  const regex = new RegExp('(:)', 'g')
-  didList.forEach((did: any) => {
-    chainQuery += `id:${did.replace(regex, '\\:')} OR `
-  })
-  chainQuery = chainQuery.slice(0, chainQuery.length - 4)
-  return chainQuery
-}
-function getQueryForAlgorithmDatasets(
-  algorithmDid: string,
-  chainId?: number
-): SearchQuery {
-  return {
-    query: {
-      bool: {
-        must: [
-          {
-            match: {
-              'service.attributes.main.privacy.publisherTrustedAlgorithms.did':
-                algorithmDid
-            }
-          },
-          {
-            query_string: {
-              query: `chainId:${chainId}`
-            }
-          }
-        ]
-      }
-    },
-    sort: { created: SortDirectionOptions.Descending }
-  }
-}
-
 export async function transformDDOToAssetSelection(
   datasetProviderEndpoint: string,
   ddoList: DDO[],
@@ -306,25 +262,28 @@ export async function getAlgorithmDatasetsForCompute(
   datasetChainId?: number,
   cancelToken?: CancelToken
 ): Promise<AssetSelectionAsset[]> {
-  const computeDatasets = await queryMetadata(
-    getQueryForAlgorithmDatasets(algorithmId, datasetChainId),
-    cancelToken
-  )
-  const computeDatasetsForCurrentAlgorithm: DDO[] = []
-  computeDatasets.results.forEach((data: DDO) => {
-    const algorithm = data
-      .findServiceByType('compute')
-      .attributes.main.privacy.publisherTrustedAlgorithms.find(
-        (algo) => algo.did === algorithmId
+  const baseQueryParams = {
+    chainIds: [datasetChainId],
+    filters: [
+      getFilterTerm(
+        'service.attributes.main.privacy.publisherTrustedAlgorithms.did',
+        algorithmId
       )
-    algorithm && computeDatasetsForCurrentAlgorithm.push(data)
-  })
-  if (computeDatasetsForCurrentAlgorithm.length === 0) {
-    return []
-  }
+    ],
+    sortOptions: {
+      sortBy: SortTermOptions.Created,
+      sortDirection: SortDirectionOptions.Descending
+    }
+  } as BaseQueryParams
+
+  const query = generateBaseQuery(baseQueryParams)
+  const computeDatasets = await queryMetadata(query, cancelToken)
+
+  if (computeDatasets.totalResults === 0) return []
+
   const datasets = await transformDDOToAssetSelection(
     datasetProviderUri,
-    computeDatasetsForCurrentAlgorithm,
+    computeDatasets.results,
     [],
     cancelToken
   )
@@ -338,24 +297,34 @@ export async function getPublishedAssets(
   page?: number,
   type?: string,
   accesType?: string
-): Promise<any> {
+): Promise<PagedAssets> {
   if (!accountId) return
 
+  const filters: FilterTerm[] = []
+
+  filters.push(getFilterTerm('publicKey.owner', accountId))
+  accesType !== undefined &&
+    filters.push(getFilterTerm('service.type', accesType))
+  type !== undefined &&
+    filters.push(getFilterTerm('service.attributes.main.type', type))
+
+  const baseQueryParams = {
+    chainIds,
+    filters,
+    sortOptions: {
+      sortBy: SortTermOptions.Created,
+      sortDirection: SortDirectionOptions.Descending
+    },
+    from: (Number(page) - 1 || 0) * 9,
+    size: 9
+  } as BaseQueryParams
+
+  const query = generateBaseQuery(baseQueryParams)
   type = type || 'dataset OR algorithm'
   accesType = accesType || 'access OR compute'
 
-  const queryPublishedAssets = {
-    from: (Number(page) - 1 || 0) * (Number(9) || 21),
-    size: Number(9) || 21,
-    query: {
-      query_string: {
-        query: `(publicKey.owner:${accountId}) AND (service.attributes.main.type:${type}) AND (service.type:${accesType}) AND (${chainIds})`
-      }
-    },
-    sort: { created: 'desc' }
-  } as SearchQuery
   try {
-    const result = await queryMetadata(queryPublishedAssets, cancelToken)
+    const result = await queryMetadata(query, cancelToken)
     return result
   } catch (error) {
     if (axios.isCancel(error)) {
@@ -372,38 +341,34 @@ export async function getDownloadAssets(
   chainIds: number[],
   cancelToken: CancelToken
 ): Promise<DownloadedAsset[]> {
-  const downloadedAssets: DownloadedAsset[] = []
-
   try {
-    const queryResult = await retrieveDDOListByDIDs(
-      didList,
+    const baseQueryparams = {
       chainIds,
-      cancelToken
-    )
-    const ddoList = queryResult
+      filters: [
+        getFilterTerm('id', didList),
+        getFilterTerm('service.type', 'access')
+      ]
+    } as BaseQueryParams
+    const query = generateBaseQuery(baseQueryparams)
+    const result = await queryMetadata(query, cancelToken)
 
-    for (let i = 0; i < tokenOrders?.length; i++) {
-      const ddo = ddoList.filter(
-        (ddo: { dataToken: string }) =>
-          tokenOrders[i].datatokenId.address.toLowerCase() ===
-          ddo.dataToken.toLowerCase()
-      )[0]
+    const downloadedAssets: DownloadedAsset[] = result.results
+      .map((ddo) => {
+        const order = tokenOrders.find(
+          ({ datatokenId }) =>
+            datatokenId?.address.toLowerCase() === ddo.dataToken.toLowerCase()
+        )
 
-      // make sure we are only pushing download orders
-      if (ddo.service[1].type !== 'access') continue
-
-      downloadedAssets.push({
-        ddo,
-        networkId: ddo.chainId,
-        dtSymbol: tokenOrders[i].datatokenId.symbol,
-        timestamp: tokenOrders[i].timestamp
+        return {
+          ddo,
+          networkId: ddo.chainId,
+          dtSymbol: order?.datatokenId?.symbol,
+          timestamp: order?.timestamp
+        }
       })
-    }
+      .sort((a, b) => b.timestamp - a.timestamp)
 
-    const sortedOrders = downloadedAssets.sort(
-      (a, b) => b.timestamp - a.timestamp
-    )
-    return sortedOrders
+    return downloadedAssets
   } catch (error) {
     Logger.error(error.message)
   }

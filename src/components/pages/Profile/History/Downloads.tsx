@@ -4,8 +4,7 @@ import Time from '../../../atoms/Time'
 import AssetTitle from '../../../molecules/AssetListTitle'
 import NetworkName from '../../../atoms/NetworkName'
 import { useProfile } from '../../../../providers/Profile'
-import { DownloadedAsset } from '../../../../utils/aquarius'
-
+import { DownloadedAsset } from '../../../../models/aquarius/DownloadedAsset'
 const columns = [
   {
     name: 'Data Set',
