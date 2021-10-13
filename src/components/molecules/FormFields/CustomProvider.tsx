@@ -36,7 +36,7 @@ export default function CustomProvider(props: InputProps): ReactElement {
 
   useEffect(() => {
     loadProvider()
-  }, [providerUrl, config.providerUri])
+  }, [providerUrl, config?.providerUri])
 
   async function handleButtonClick(e: React.SyntheticEvent, url: string) {
     helpers.setTouched(false)
