@@ -1,8 +1,14 @@
 import React, { ReactElement } from 'react'
 import classNames from 'classnames/bind'
+<<<<<<< HEAD:src/components/@shared/AnnouncementBanner/index.tsx
 import Markdown from '@shared/Markdown'
 import Button from '@shared/atoms/Button'
 import styles from './index.module.css'
+=======
+import Markdown from './Markdown'
+import Button from './Button'
+import styles from './AnnouncementBanner.module.css'
+>>>>>>> 14d71ad2 (reorganize all the things):src/components/@shared/atoms/AnnouncementBanner.tsx
 
 const cx = classNames.bind(styles)
 

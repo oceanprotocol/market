@@ -1,8 +1,13 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useWeb3 } from '@context/Web3'
 import Status from '@shared/atoms/Status'
+<<<<<<< HEAD:src/components/@shared/Web3Feedback/index.tsx
 import styles from './index.module.css'
 import WalletNetworkSwitcher from '../WalletNetworkSwitcher'
+=======
+import styles from './Web3Feedback.module.css'
+import WalletNetworkSwitcher from './WalletNetworkSwitcher'
+>>>>>>> 14d71ad2 (reorganize all the things):src/components/@shared/Web3Feedback.tsx
 import { useGraphSyncStatus } from '@hooks/useGraphSyncStatus'
 
 export declare type Web3Error = {

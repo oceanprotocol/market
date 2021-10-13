@@ -8,6 +8,7 @@ import {
   FilterByTypeOptions
 } from '../../@types/aquarius/SearchQuery'
 import router, { useRouter } from 'next/router'
+import styles from './Filters.module.css'
 
 const cx = classNames.bind(styles)
 

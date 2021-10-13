@@ -11,6 +11,7 @@ import useNetworkMetadata, {
 } from '@hooks/useNetworkMetadata'
 import { Logger } from '@oceanprotocol/lib'
 import styles from './MarketStats.module.css'
+import { filterNetworksByType } from '../Header/UserPreferences/Networks'
 
 const getTotalPoolsValues = gql`
   query PoolsData {

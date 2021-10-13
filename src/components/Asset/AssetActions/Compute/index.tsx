@@ -17,7 +17,6 @@ import { useAsset } from '@context/Asset'
 import {
   generateBaseQuery,
   getFilterTerm,
-  queryMetadata,
   transformDDOToAssetSelection
 } from '@utils/aquarius'
 import { Formik } from 'formik'
@@ -34,7 +33,7 @@ import { secondsToString } from '@utils/metadata'
 import { AssetSelectionAsset } from '@shared/Form/FormFields/AssetSelection'
 import AlgorithmDatasetsListForCompute from '../../AssetContent/AlgorithmDatasetsListForCompute'
 import { getPreviousOrders, getPrice } from '@utils/subgraph'
-import AssetActionHistoryTable from '../AssetActionHistoryTable'
+import AssetActionHistoryTable from '@shared/AssetActionHistoryTable'
 import ComputeJobs from '../../../Profile/History/ComputeJobs'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'

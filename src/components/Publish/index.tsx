@@ -1,4 +1,5 @@
 import React, { ReactElement, useState, useEffect } from 'react'
+import Permission from '@shared/Permission'
 import { Formik, FormikState } from 'formik'
 import { usePublish } from '@hooks/usePublish'
 import styles from './index.module.css'
@@ -78,6 +79,7 @@ export default function PublishPage({
   // }
 
   return isInPurgatory && purgatoryData ? null : (
+    <Permission eventType="publish">
     <Formik
       initialValues={initialValues}
       initialStatus="empty"
@@ -90,6 +92,7 @@ export default function PublishPage({
       {({ values }) => {
         return <>Hello</>
       }}
-    </Formik>
+      </Formik>
+    </Permission>
   )
 }

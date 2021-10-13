@@ -1,14 +1,21 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './index.module.css'
 import classNames from 'classnames/bind'
+<<<<<<< HEAD:src/components/@shared/Publisher/index.tsx
 import Link from 'next/link'
+=======
+import { Link } from 'gatsby'
+>>>>>>> 14d71ad2 (reorganize all the things):src/components/@shared/atoms/Publisher/index.tsx
 import get3BoxProfile from '@utils/profile'
 import { accountTruncate } from '@utils/web3'
 import axios from 'axios'
 import Add from './Add'
 import { useWeb3 } from '@context/Web3'
 import { getEnsName } from '@utils/ens'
+<<<<<<< HEAD:src/components/@shared/Publisher/index.tsx
 import { useIsMounted } from '@hooks/useIsMounted'
+=======
+>>>>>>> 14d71ad2 (reorganize all the things):src/components/@shared/atoms/Publisher/index.tsx
 
 const cx = classNames.bind(styles)
 

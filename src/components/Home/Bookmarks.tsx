@@ -11,6 +11,19 @@ import { CancelToken } from 'axios'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { useCancelToken } from '@hooks/useCancelToken'
 
+async function getAssetsBookmarked(
+  bookmarks: string[],
+  chainIds: number[],
+  cancelToken: CancelToken
+) {
+  try {
+    const result = await retrieveDDOListByDIDs(bookmarks, chainIds, cancelToken)
+    return result
+  } catch (error) {
+    Logger.error(error.message)
+  }
+}
+
 const columns = [
   {
     name: 'Data Set',

@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect } from 'react'
 import { File as FileMetadata } from '@oceanprotocol/lib/dist/node/ddo/interfaces/File'
-import { prettySize } from './utils'
+import { prettySize } from '@utils/index'
 import cleanupContentType from '@utils/cleanupContentType'
 import styles from './Info.module.css'
 import { useField, useFormikContext } from 'formik'

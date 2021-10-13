@@ -1,5 +1,9 @@
 import React, { ReactElement } from 'react'
+<<<<<<< HEAD:src/components/Profile/Header/NumberUnit.tsx
 import Markdown from '@shared/Markdown'
+=======
+import Markdown from '@shared/atoms/Markdown'
+>>>>>>> 14d71ad2 (reorganize all the things):src/components/@shared/NumberUnit.tsx
 import Tooltip from '@shared/atoms/Tooltip'
 import styles from './NumberUnit.module.css'
 

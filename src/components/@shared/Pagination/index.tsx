@@ -1,9 +1,23 @@
 import React, { useState, useEffect, ReactElement } from 'react'
 import ReactPaginate from 'react-paginate'
+<<<<<<< HEAD:src/components/@shared/Pagination/index.tsx
 import styles from './index.module.css'
 import { MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS } from '@utils/aquarius'
 import Arrow from '@images/arrow.svg'
 import { PaginationProps } from './_types'
+=======
+import styles from './Pagination.module.css'
+import { MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS } from '@utils/aquarius'
+import { ReactComponent as Arrow } from '@images/arrow.svg'
+
+interface PaginationProps {
+  totalPages?: number
+  currentPage?: number
+  onChangePage?(selected: number): void
+  rowsPerPage?: number
+  rowCount?: number
+}
+>>>>>>> 14d71ad2 (reorganize all the things):src/components/@shared/Pagination.tsx
 
 export default function Pagination({
   totalPages,
