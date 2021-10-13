@@ -120,7 +120,7 @@ export default function Add({
           : Number(dtBalance) > Number(amountMaxPool)
           ? amountMaxPool
           : dtBalance
-      setAmountMax(amountMax)
+      setAmountMax(Number(amountMax).toFixed(3))
     }
     getMaximum()
   }, [ocean, poolAddress, coin, dtBalance, balance.ocean])

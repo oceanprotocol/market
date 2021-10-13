@@ -163,7 +163,10 @@ export default function FormAdd({
           style="text"
           size="small"
           disabled={!ocean}
-          onClick={() => setFieldValue('amount', amountMax)}
+          onClick={() => {
+            setAmount(amountMax)
+            setFieldValue('amount', amountMax)
+          }}
         >
           Use Max
         </Button>
