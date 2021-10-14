@@ -1,4 +1,4 @@
-import { CredentialAction, Credential, Credentials } from '@oceanprotocol/lib'
+import { Credential } from '@oceanprotocol/lib'
 
 export function getCredentialList(
   credential: Credential[],
@@ -12,60 +12,51 @@ export function getCredentialList(
   return credentialByType?.values || []
 }
 
-export function getAssetCredentials(
-  credentials: Credentials,
-  credentialType: string,
-  credentialAction: CredentialAction
-): string[] {
-  if (!credentials) return []
-
-  if (credentialAction === 'allow') {
-    return credentials.allow
-      ? getCredentialList(credentials.allow, credentialType)
-      : []
-  }
-  return credentials.deny
-    ? getCredentialList(credentials.deny, credentialType)
-    : []
-}
-
 function generateCredential(
   credentialType: string,
-  value: string[]
+  values: string[]
 ): Credential {
   return {
     type: credentialType,
-    values: value
+    values: values
   }
 }
 
-function isCredentialTypeExist(
+function removeCredential(
+  credentials: Credential[],
+  index: number
+): Credential[] {
+  credentials?.length > 1 ? credentials.splice(index, 1) : (credentials = [])
+  return credentials
+}
+
+function getCredentialIndex(
   credentials: Credential[],
   credentialType: string
-): boolean {
+): number {
   const credentialTypes = credentials
     ? credentials.map((credential) => credential.type)
     : []
-  return credentialTypes.indexOf(credentialType) !== -1
+  return credentialTypes.indexOf(credentialType)
 }
 
 export function updateCredential(
   credentials: Credential[],
   credentialType: string,
-  value: string[]
+  values: string[]
 ): Credential[] {
+  const credentialIndex = getCredentialIndex(credentials, credentialType)
   if (!credentials) {
-    credentials = [generateCredential(credentialType, value)]
+    credentials = [generateCredential(credentialType, values)]
     return credentials
   }
-  if (!isCredentialTypeExist(credentials, credentialType)) {
-    credentials.push(generateCredential(credentialType, value))
+  if (credentialIndex === -1) {
+    credentials.push(generateCredential(credentialType, values))
     return credentials
   }
-  credentials.forEach((credential) => {
-    if (credential.type === credentialType) {
-      credential.values = value
-    }
-  })
+  if (!values?.length) {
+    return removeCredential(credentials, credentialIndex)
+  }
+  credentials[credentialIndex] = generateCredential(credentialType, values)
   return credentials
 }
