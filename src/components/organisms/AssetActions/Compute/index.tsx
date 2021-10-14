@@ -465,6 +465,7 @@ export default function Compute({
             assetTimeout={datasetTimeout}
             hasPreviousOrderSelectedComputeAsset={hasPreviousAlgorithmOrder}
             hasDatatokenSelectedComputeAsset={hasAlgoAssetDatatoken}
+            oceanSymbol={price ? price.oceanSymbol : ''}
             dtSymbolSelectedComputeAsset={
               selectedAlgorithmAsset?.dataTokenInfo?.symbol
             }

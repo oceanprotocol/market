@@ -164,9 +164,15 @@ export default function FormTrade({
             loaderMessage="Swapping tokens..."
             successMessage="Successfully swapped tokens."
             actionName={content.action}
-            amount={`${
-              values.type === 'sell' ? values.datatoken : values.ocean
-            }`}
+            amount={
+              values.type === 'sell'
+                ? values.datatoken
+                  ? `${values.datatoken}`
+                  : undefined
+                : values.ocean
+                ? `${values.ocean}`
+                : undefined
+            }
             action={submitForm}
             coin={coinFrom}
             txId={txId}

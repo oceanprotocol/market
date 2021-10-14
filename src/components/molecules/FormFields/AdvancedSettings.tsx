@@ -33,21 +33,21 @@ export default function AdvancedSettings(prop: {
           Advanced Settings
         </Button>
       )}
-      {prop.content.data.map(
-        (field: FormFieldProps) =>
-          advancedSettings === true &&
-          field.advanced === true && (
-            <Field
-              key={field.name}
-              {...field}
-              options={field.options}
-              component={Input}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                prop.handleFieldChange(e, field)
-              }
-            />
-          )
-      )}
+      {advancedSettings === true &&
+        prop.content.data.map(
+          (field: FormFieldProps) =>
+            field.advanced === true && (
+              <Field
+                key={field.name}
+                {...field}
+                options={field.options}
+                component={Input}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  prop.handleFieldChange(e, field)
+                }
+              />
+            )
+        )}
     </>
   )
 }

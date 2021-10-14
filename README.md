@@ -27,6 +27,9 @@
 - [💖 Contributing](#-contributing)
 - [🍴 Forking](#-forking)
 - [💻 Advanced Features](#-advanced-features)
+- [✅ GDPR Compliance](#-gdpr-compliance)
+  - [Multi-Language Privacy Policies](#multi-language-privacy-policies)
+  - [Privacy Preference Center](#privacy-preference-center)
 - [🏛 License](#-license)
 
 ## 🏄 Get Started
@@ -383,6 +386,57 @@ Ocean Market also includes a number of advanced features that are suitable for a
 - Free pricing
 
 [See our seperate guide on advanced features](docs/advancedSettings.md)
+
+## ✅ GDPR Compliance
+
+Ocean Market comes with prebuilt components for you to customize to cover GDPR requirements. Find additional information on how to use them below.
+
+### Multi-Language Privacy Policies
+
+Feel free to adopt our provided privacy policies to your needs. Per default we cover four different languages: English, German, Spanish and French. Please be advised, that you will need to adjust some paragraphs in the policies depending on your market setup (e.g. the use of cookies). You can easily add or remove policies by providing your own markdown files in the `content/pages/privacy` directory. For guidelines on how to format your markdown files refer to our provided policies. The pre-linked content tables for these files are automatically generated.
+
+### Privacy Preference Center
+
+Additionally, Ocean Market provides a privacy preference center for you to use. This feature is disabled per default since we do not use cookies requiring consent on our deployment of the market. However, if you need to add some functionality depending on cookies, you can simply enable this feature by changing the value of the `GATSBY_PRIVACY_PREFERENCE_CENTER` environmental variable to `"true"` in your `.env` file. This will enable a customizable cookie banner stating the use of your individual cookies. The content of this banner can be adjusted within the `content/gdpr.json` file. If no `optionalCookies` are provided, the privacy preference center will be set to a simpler version displaying only the `title`, `text` and `close`-button. This can be used to inform the user about the use of essential cookies, where no consent is needed. The privacy preference center supports two different styling options: `'small'` and `'default'`. Setting the style propertie to `'small'` will display a smaller cookie banner to the user at first, only showing the default styled privacy preference center upon the user's customization request.
+
+Now your market users will be provided with additional options to toggle the use of your configured cookie consent categories. You can always retrieve the current consent status per category with the provided `useConsent()` hook. See below, how you can set your own custom cookies depending on the market user's consent. Feel free to adjust the provided utility functions for cookie usage provided in the `src/utils/cookies.ts` file to your needs.
+
+```tsx
+import { CookieConsentStatus, useConsent } from '../../providers/CookieConsent'
+import { deleteCookie, setCookie } from '../../utils/cookies'
+
+// ...
+
+const { cookies, cookieConsentStatus } = useConsent()
+
+cookies.map((cookie) => {
+  const consent = cookieConsentStatus[cookie.cookieName]
+
+  switch (consent) {
+    case CookieConsentStatus.APPROVED:
+      // example logic
+      setCookie(`YOUR_COOKIE_NAME`, 'VALUE')
+      break
+
+    case CookieConsentStatus.REJECTED:
+    case CookieConsentStatus.NOT_AVAILABLE:
+    default:
+      // example logic
+      deleteCookie(`YOUR_COOKIE_NAME`)
+      break
+  }
+})
+```
+
+#### Privacy Preference Centre Styling
+
+The privacy preference centre has two styling options `default` and `small`. The default view shows all of the customization options on a full-height side banner. When the `small` setting is used, a much smaller banner is shown which only reveals all of the customization options when the user clicks "Customize".
+
+The style can be changed by altering the `style` prop in the `PrivacyPreferenceCenter` component in `src/components/App.tsx`. For example:
+
+```Typescript
+<PrivacyPreferenceCenter style="small" />
+```
 
 ## 🏛 License
 

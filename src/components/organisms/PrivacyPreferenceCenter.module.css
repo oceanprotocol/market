@@ -1,0 +1,122 @@
+.banner {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background: var(--background-body-transparent);
+  backdrop-filter: blur(4px);
+  padding: calc(var(--spacer) / 2);
+  min-height: 100vh;
+}
+
+.banner p {
+  margin: 0;
+}
+
+.buttons {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: var(--spacer) 0;
+  border-bottom: 1px solid var(--brand-grey-lighter);
+}
+
+.configureButton {
+  display: none;
+}
+
+.closeButton {
+  margin-top: var(--spacer);
+}
+
+.header {
+  font-size: var(--font-size-large);
+  font-weight: bold;
+  margin-bottom: calc(var(--spacer) / 2);
+}
+
+.wrapper {
+  max-width: 90vw;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  height: 100vh;
+  z-index: 10;
+  overflow-y: auto;
+  box-shadow: 6px 0 17px var(--box-shadow-color);
+  opacity: 1;
+  transition: all 0.3s ease-out;
+}
+
+/* Small Cookie Banner Styles */
+
+.wrapper.small {
+  bottom: var(--spacer);
+  left: var(--spacer);
+  top: auto;
+  width: calc(100vw - (var(--spacer) * 2));
+  max-width: 42rem;
+  overflow: hidden;
+  height: auto;
+}
+
+.small .banner {
+  display: block;
+  min-height: 0;
+}
+
+.small .header {
+  font-size: var(--font-size-normal);
+  margin-bottom: calc(var(--spacer) / 4);
+}
+
+.small p {
+  font-size: var(--font-size-small);
+}
+
+.small .buttons {
+  flex-direction: column;
+  border: none;
+  padding: calc(var(--spacer) / 6);
+}
+
+.small .buttons button {
+  margin: calc(var(--spacer) / 6);
+  width: 100%;
+}
+
+.small .configureButton {
+  display: block;
+}
+
+.small .optionals {
+  display: none;
+}
+
+.small .closeButton {
+  margin: calc(var(--spacer) / 4) auto 0;
+}
+
+/* Hide and show the Cookie Banner */
+
+.wrapper.hidden {
+  left: -25rem;
+  opacity: 0;
+  box-shadow: none;
+}
+
+/* Adjust for larger screen sizes */
+
+@media screen and (min-width: 26rem) {
+  .wrapper {
+    max-width: 25rem;
+  }
+}
+
+@media screen and (min-width: 38rem) {
+  .small .container {
+    display: flex;
+  }
+}

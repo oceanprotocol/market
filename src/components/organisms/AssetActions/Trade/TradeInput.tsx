@@ -15,10 +15,12 @@ import { useOcean } from '../../../../providers/Ocean'
 export default function TradeInput({
   name,
   item,
+  disabled,
   handleValueChange
 }: {
   name: string
   item: TradeItem
+  disabled: boolean
   handleValueChange: (name: string, value: number) => void
 }): ReactElement {
   const { ocean } = useOcean()
@@ -62,13 +64,14 @@ export default function TradeInput({
               validateForm()
               handleChange(e)
             }}
-            disabled={!ocean}
+            disabled={!ocean || disabled}
           />
         )}
       </Field>
       {!isTopField && (
         <Button
           className={styles.buttonMax}
+          disabled={disabled}
           style="text"
           size="small"
           onClick={() => {

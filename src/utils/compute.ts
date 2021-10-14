@@ -67,6 +67,11 @@ interface TokenOrder {
   timestamp: number
 }
 
+interface ComputeResults {
+  computeJobs: ComputeJobMetaData[]
+  isLoaded: boolean
+}
+
 async function getAssetMetadata(
   queryDtList: string[],
   cancelToken: CancelToken,
@@ -219,8 +224,13 @@ export async function getComputeJobs(
   account: Account,
   ddo?: DDO,
   token?: CancelToken
-): Promise<ComputeJobMetaData[]> {
+): Promise<ComputeResults> {
   const assetDTAddress = ddo?.dataTokenInfo?.address
+  let computeResult: ComputeResults = {
+    computeJobs: [],
+    isLoaded: false
+  }
+  let isLoading = true
   const variables = assetDTAddress
     ? {
         user: account?.getId().toLowerCase(),
@@ -236,15 +246,17 @@ export async function getComputeJobs(
     assetDTAddress ? [ddo?.chainId] : chainIds
   )
   let data: TokenOrder[] = []
-
   for (let i = 0; i < result.length; i++) {
-    if (!result[i]?.tokenOrders) continue
+    if (!result[i]?.tokenOrders || result[i].tokenOrders.length === 0) continue
     result[i]?.tokenOrders.forEach((tokenOrder: TokenOrder) => {
       data.push(tokenOrder)
     })
   }
-
   if (!ocean || !account || !data) return
+
+  if (data.length === 0) {
+    return computeResult
+  }
 
   data = data.sort((a, b) => b.timestamp - a.timestamp)
   const queryDtList = getDtList(data)
@@ -258,8 +270,13 @@ export async function getComputeJobs(
     ocean
   )
   const computeJobs = await getJobs(providers, account, assets)
+  isLoading = false
+  computeResult = {
+    computeJobs: computeJobs,
+    isLoaded: isLoading
+  }
 
-  return computeJobs
+  return computeResult
 }
 
 export async function createTrustedAlgorithmList(

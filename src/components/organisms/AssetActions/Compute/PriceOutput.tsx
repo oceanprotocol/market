@@ -9,6 +9,7 @@ interface PriceOutputProps {
   totalPrice: number
   hasPreviousOrder: boolean
   hasDatatoken: boolean
+  symbol: string
   assetTimeout: string
   hasPreviousOrderSelectedComputeAsset: boolean
   hasDatatokenSelectedComputeAsset: boolean
@@ -20,12 +21,14 @@ function Row({
   price,
   hasPreviousOrder,
   hasDatatoken,
+  symbol,
   timeout,
   sign
 }: {
   price: number
   hasPreviousOrder?: boolean
   hasDatatoken?: boolean
+  symbol?: string
   timeout?: string
   sign?: string
 }) {
@@ -35,6 +38,7 @@ function Row({
       <div>
         <PriceUnit
           price={hasPreviousOrder || hasDatatoken ? '0' : `${price}`}
+          symbol={symbol}
           small
           className={styles.price}
         />
@@ -54,6 +58,7 @@ export default function PriceOutput({
   hasPreviousOrder,
   hasDatatoken,
   assetTimeout,
+  symbol,
   hasPreviousOrderSelectedComputeAsset,
   hasDatatokenSelectedComputeAsset,
   algorithmPrice,
@@ -63,7 +68,7 @@ export default function PriceOutput({
 
   return (
     <div className={styles.priceComponent}>
-      You will pay <PriceUnit price={`${totalPrice}`} small />
+      You will pay <PriceUnit price={`${totalPrice}`} symbol={symbol} small />
       <Tooltip
         content={
           <div className={styles.calculation}>
@@ -72,15 +77,17 @@ export default function PriceOutput({
               hasDatatoken={hasDatatoken}
               price={price?.value}
               timeout={assetTimeout}
+              symbol={symbol}
             />
             <Row
               hasPreviousOrder={hasPreviousOrderSelectedComputeAsset}
               hasDatatoken={hasDatatokenSelectedComputeAsset}
               price={algorithmPrice?.value}
               timeout={selectedComputeAssetTimeout}
+              symbol={symbol}
               sign="+"
             />
-            <Row price={totalPrice} sign="=" />
+            <Row price={totalPrice} symbol={symbol} sign="=" />
           </div>
         }
       />

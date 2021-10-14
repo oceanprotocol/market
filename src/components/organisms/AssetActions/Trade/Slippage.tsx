@@ -5,7 +5,11 @@ import InputElement from '../../../atoms/Input/InputElement'
 import Tooltip from '../../../atoms/Tooltip'
 import styles from './Slippage.module.css'
 
-export default function Slippage(): ReactElement {
+export default function Slippage({
+  disabled
+}: {
+  disabled: boolean
+}): ReactElement {
   // Connect with form
   const { setFieldValue, values }: FormikContextType<FormTradeData> =
     useFormikContext()
@@ -26,6 +30,7 @@ export default function Slippage(): ReactElement {
           sortOptions={false}
           options={slippagePresets}
           value={values.slippage}
+          disabled={disabled}
           onChange={handleChange}
         />
         <Tooltip content="Your transaction will revert if the price changes unfavorably by more than this percentage." />

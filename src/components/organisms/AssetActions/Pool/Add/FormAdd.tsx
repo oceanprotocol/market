@@ -17,6 +17,7 @@ import { useWeb3 } from '../../../../../providers/Web3'
 
 import { isValidNumber } from './../../../../../utils/numberValidations'
 import Decimal from 'decimal.js'
+import { useAsset } from '../../../../../providers/Asset'
 
 export default function FormAdd({
   coin,
@@ -45,6 +46,7 @@ export default function FormAdd({
 }): ReactElement {
   const { balance } = useWeb3()
   const { ocean } = useOcean()
+  const { isAssetNetwork } = useAsset()
 
   // Connect with form
   const {
@@ -68,7 +70,10 @@ export default function FormAdd({
 
   useEffect(() => {
     async function calculatePoolShares() {
-      if (!values.amount) {
+      if (!ocean) return
+      const tokenInAddress =
+        coin === 'OCEAN' ? ocean.pool.oceanAddress : ocean.pool.dtAddress
+      if (!values.amount || !tokenInAddress) {
         setNewPoolTokens('0')
         setNewPoolShare('0')
         return
@@ -78,7 +83,7 @@ export default function FormAdd({
 
       const poolTokens = await ocean.pool.calcPoolOutGivenSingleIn(
         poolAddress,
-        coin === 'OCEAN' ? ocean.pool.oceanAddress : ocean.pool.dtAddress,
+        tokenInAddress,
         `${values.amount}`
       )
 
@@ -109,6 +114,10 @@ export default function FormAdd({
     setNewPoolShare
   ])
 
+  useEffect(() => {
+    setFieldValue('amount', undefined)
+  }, [coin])
+
   return (
     <>
       <UserLiquidity
@@ -132,12 +141,18 @@ export default function FormAdd({
             min="0"
             value={`${values.amount}`}
             step="any"
-            prefix={<CoinSelect dtSymbol={dtSymbol} setCoin={setCoin} />}
+            prefix={
+              <CoinSelect
+                dtSymbol={dtSymbol}
+                setCoin={setCoin}
+                disabled={!ocean || !isAssetNetwork}
+              />
+            }
             placeholder="0"
             field={field}
             form={form}
             onChange={handleFieldChange}
-            disabled={!ocean}
+            disabled={!ocean || !isAssetNetwork}
           />
         )}
       </Field>
@@ -148,7 +163,10 @@ export default function FormAdd({
           style="text"
           size="small"
           disabled={!ocean}
-          onClick={() => setFieldValue('amount', amountMax)}
+          onClick={() => {
+            setAmount(amountMax)
+            setFieldValue('amount', amountMax)
+          }}
         >
           Use Max
         </Button>

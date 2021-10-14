@@ -18,6 +18,7 @@ import Decimal from 'decimal.js'
 import { useProfile } from '../../../../providers/Profile'
 import { DDO } from '@oceanprotocol/lib'
 import { useCancelToken } from '../../../../hooks/useCancelToken'
+import { useIsMounted } from '../../../../hooks/useIsMounted'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
@@ -173,6 +174,7 @@ export default function PoolShares({
   const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
   const { chainIds } = useUserPreferences()
   const newCancelToken = useCancelToken()
+  const isMounted = useIsMounted()
 
   const fetchPoolSharesAssets = useCallback(
     async (
@@ -189,6 +191,8 @@ export default function PoolShares({
         setAssets(assets)
       } catch (error) {
         console.error('Error fetching pool shares: ', error.message)
+      } finally {
+        setLoading(false)
       }
     },
     []
@@ -199,7 +203,8 @@ export default function PoolShares({
     async function init() {
       setLoading(true)
 
-      if (!poolShares || isPoolSharesLoading || !chainIds) return
+      if (!poolShares || isPoolSharesLoading || !chainIds || !isMounted())
+        return
       await fetchPoolSharesAssets(chainIds, poolShares, cancelToken)
       setLoading(false)
 
@@ -215,7 +220,13 @@ export default function PoolShares({
     return () => {
       clearInterval(dataFetchInterval)
     }
-  }, [fetchPoolSharesAssets, isPoolSharesLoading, newCancelToken, poolShares])
+  }, [
+    fetchPoolSharesAssets,
+    isPoolSharesLoading,
+    newCancelToken,
+    poolShares,
+    isMounted
+  ])
 
   return accountId ? (
     <Table
