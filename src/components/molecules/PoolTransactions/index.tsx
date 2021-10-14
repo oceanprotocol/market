@@ -10,10 +10,11 @@ import { fetchDataForMultipleChains } from '../../../utils/subgraph'
 import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
 import NetworkName from '../../atoms/NetworkName'
 import { retrieveDDOListByDIDs } from '../../../utils/aquarius'
-import axios, { CancelToken } from 'axios'
+import { CancelToken } from 'axios'
 import Title from './Title'
 import styles from './index.module.css'
 import { DDO, Logger } from '@oceanprotocol/lib'
+import { useCancelToken } from '../../../hooks/useCancelToken'
 
 const REFETCH_INTERVAL = 20000
 
@@ -130,11 +131,12 @@ export default function PoolTransactions({
   accountId: string
 }): ReactElement {
   const [transactions, setTransactions] = useState<PoolTransaction[]>()
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const { chainIds } = useUserPreferences()
   const { appConfig } = useSiteMetadata()
   const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
   const [data, setData] = useState<PoolTransaction[]>()
+  const cancelToken = useCancelToken()
 
   const getPoolTransactionData = useCallback(async () => {
     const variables = {
@@ -161,8 +163,9 @@ export default function PoolTransactions({
 
   const getPoolTransactions = useCallback(
     async (cancelToken: CancelToken) => {
-      if (!data) return
-
+      if (!data) {
+        return
+      }
       const poolTransactions: PoolTransaction[] = []
       const didList: string[] = []
 
@@ -173,7 +176,10 @@ export default function PoolTransactions({
           .replace('0x', 'did:op:')
         didList.push(did)
       }
-      if (didList.length === 0) return
+      if (didList.length === 0) {
+        setIsLoading(false)
+        return
+      }
       const ddoList = await retrieveDDOListByDIDs(
         didList,
         chainIds,
@@ -189,9 +195,11 @@ export default function PoolTransactions({
       const sortedTransactions = poolTransactions.sort(
         (a, b) => b.timestamp - a.timestamp
       )
+
       setTransactions(sortedTransactions)
+      setIsLoading(false)
     },
-    [data]
+    [data, chainIds, setIsLoading]
   )
 
   //
@@ -203,7 +211,6 @@ export default function PoolTransactions({
     async function getTransactions() {
       try {
         await getPoolTransactionData()
-
         if (dataFetchInterval) return
         const interval = setInterval(async () => {
           await getPoolTransactionData()
@@ -224,24 +231,21 @@ export default function PoolTransactions({
   // Transform to final transactions
   //
   useEffect(() => {
-    const cancelTokenSource = axios.CancelToken.source()
-
+    if (!cancelToken()) return
     async function transformData() {
       try {
         setIsLoading(true)
-        await getPoolTransactions(cancelTokenSource.token)
+        await getPoolTransactions(cancelToken())
       } catch (error) {
         Logger.error('Error fetching pool transactions: ', error.message)
-      } finally {
-        setIsLoading(false)
       }
     }
     transformData()
 
     return () => {
-      cancelTokenSource.cancel()
+      cancelToken()
     }
-  }, [getPoolTransactions])
+  }, [cancelToken, getPoolTransactions])
 
   return accountId ? (
     <Table
