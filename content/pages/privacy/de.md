@@ -233,12 +233,8 @@ Wenn du Fragen zu Purgatory hast oder wenn du kein GitHub-Konto besitzt und möc
 ## 7.5 Recht auf Datenübertragbarkeit (Art. 20 GDPR)
 
 Du hast das Recht, deine personenbezogenen Daten in einem strukturierten, gängigen und maschinenlesbaren Format zu erhalten. Zusätzlich hast du das Recht, diese Daten ungehindert an einen anderen Verantwortlichen zu übermitteln, sofern die in Art. 20 DSGVO definierten Voraussetzungen zutreffen.
+Sie können von Ihrem Recht auf Datenübertragbarkeit Gebrauch machen, indem Sie sich mit uns in Verbindung setzen.
 
-Sie können von Ihrem Recht auf Datenübertragbarkeit Gebrauch machen, indem Sie sich mit uns in Verbindung setzen oder die folgenden Schritte durchführen.
-
-- Besuche die History Table auf Ocean Market ([market.oceanprotocol.com/history](https://market.oceanprotocol.com/history)).
-- Validiere deine Identität mit deinem Private Key.
-- Klicke den Download Button für jede Tabelle, die relevant für dich ist.
 
 ## 7.6 Widerspruchsrecht (Art. 21 GDPR)
 
