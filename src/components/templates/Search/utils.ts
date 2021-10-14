@@ -48,7 +48,7 @@ function getSortType(sortParam: string): string {
 }
 
 export function escapeESReservedChars(text: string): string {
-  return text.replace(/([!*+-=<>&|()\\[\]{}^~?:\\/"])/g, '\\$1')
+  return text.replace(/([!*+\-=<>&|()\\[\]{}^~?:\\/"])/g, '\\$1')
 }
 
 export function getSearchQuery(
