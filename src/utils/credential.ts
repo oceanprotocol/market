@@ -9,11 +9,7 @@ export function getCredentialList(
   const credentialByType = credential.find(
     (credential) => credential.type === credentialType
   )
-  return credentialByType &&
-    credentialByType.values &&
-    credentialByType.values.length > 0
-    ? credentialByType.values
-    : []
+  return credentialByType?.values || []
 }
 
 export function getAssetCredentials(
@@ -33,29 +29,37 @@ export function getAssetCredentials(
     : []
 }
 
+function generateCredential(
+  credentialType: string,
+  value: string[]
+): Credential {
+  return {
+    type: credentialType,
+    values: value
+  }
+}
+
+function isCredentialTypeExist(
+  credentials: Credential[],
+  credentialType: string
+): boolean {
+  const credentialTypes = credentials
+    ? credentials.map((credential) => credential.type)
+    : []
+  return credentialTypes.indexOf(credentialType) !== -1
+}
+
 export function updateCredential(
   credentials: Credential[],
   credentialType: string,
   value: string[]
 ): Credential[] {
-  const credentialTypes = credentials
-    ? credentials.map((credential) => credential.type)
-    : []
-  const isCredntialTypesExsit = credentialTypes.indexOf(credentialType) !== -1
   if (!credentials) {
-    credentials = [
-      {
-        type: credentialType,
-        values: value
-      }
-    ]
+    credentials = [generateCredential(credentialType, value)]
     return credentials
   }
-  if (!isCredntialTypesExsit) {
-    credentials.push({
-      type: credentialType,
-      values: value
-    })
+  if (!isCredentialTypeExist(credentials, credentialType)) {
+    credentials.push(generateCredential(credentialType, value))
     return credentials
   }
   credentials.forEach((credential) => {

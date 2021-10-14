@@ -25,8 +25,9 @@ export default function Credentials(props: InputProps): ReactElement {
 
   function handleDeleteChip(value: string) {
     const newInput = arrayInput.filter((input) => input !== value)
+    initialValues = updateCredential(initialValues, type, newInput)
     setArrayInput(newInput)
-    helpers.setValue(newInput)
+    helpers.setValue(initialValues)
   }
 
   function handleAddValue(e: FormEvent<HTMLButtonElement>) {
@@ -79,6 +80,7 @@ export default function Credentials(props: InputProps): ReactElement {
         />
         <Button
           onClick={(e: FormEvent<HTMLButtonElement>) => handleAddValue(e)}
+          disabled={type === '' || value === ''}
         >
           Add
         </Button>
