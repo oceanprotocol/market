@@ -5,7 +5,7 @@ import styles from './Button.module.css'
 
 const cx = classNames.bind(styles)
 
-interface ButtonProps {
+export interface ButtonProps {
   children: ReactNode
   className?: string
   href?: string

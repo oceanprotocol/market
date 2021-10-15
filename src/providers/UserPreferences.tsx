@@ -16,10 +16,14 @@ interface UserPreferencesValue {
   currency: string
   setCurrency: (value: string) => void
   chainIds: number[]
+  privacyPolicySlug: string
+  showPPC: boolean
   setChainIds: (chainIds: number[]) => void
   bookmarks: string[]
   addBookmark: (did: string) => void
   removeBookmark: (did: string) => void
+  setPrivacyPolicySlug: (slug: string) => void
+  setShowPPC: (value: boolean) => void
   infiniteApproval: boolean
   setInfiniteApproval: (value: boolean) => void
   locale: string
@@ -60,14 +64,40 @@ function UserPreferencesProvider({
   const [chainIds, setChainIds] = useState(
     localStorage?.chainIds || appConfig.chainIds
   )
+  const { defaultPrivacyPolicySlug } = useSiteMetadata().appConfig
+
+  const [privacyPolicySlug, setPrivacyPolicySlug] = useState<string>(
+    localStorage?.privacyPolicySlug || defaultPrivacyPolicySlug
+  )
+
+  const [showPPC, setShowPPC] = useState<boolean>(
+    localStorage?.showPPC !== false
+  )
+
   const [infiniteApproval, setInfiniteApproval] = useState(
     localStorage?.infiniteApproval || false
   )
 
   // Write values to localStorage on change
   useEffect(() => {
-    setLocalStorage({ chainIds, debug, currency, bookmarks, infiniteApproval })
-  }, [chainIds, debug, currency, bookmarks, infiniteApproval])
+    setLocalStorage({
+      chainIds,
+      debug,
+      currency,
+      bookmarks,
+      privacyPolicySlug,
+      showPPC,
+      infiniteApproval
+    })
+  }, [
+    chainIds,
+    debug,
+    currency,
+    bookmarks,
+    privacyPolicySlug,
+    showPPC,
+    infiniteApproval
+  ])
 
   // Set ocean.js log levels, default: Error
   useEffect(() => {
@@ -113,13 +143,17 @@ function UserPreferencesProvider({
           locale,
           chainIds,
           bookmarks,
+          privacyPolicySlug,
+          showPPC,
           infiniteApproval,
           setInfiniteApproval,
           setChainIds,
           setDebug,
           setCurrency,
           addBookmark,
-          removeBookmark
+          removeBookmark,
+          setPrivacyPolicySlug,
+          setShowPPC
         } as UserPreferencesValue
       }
     >

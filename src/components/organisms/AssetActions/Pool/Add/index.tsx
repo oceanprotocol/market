@@ -14,6 +14,7 @@ import Output from './Output'
 import DebugOutput from '../../../../atoms/DebugOutput'
 import { useOcean } from '../../../../../providers/Ocean'
 import { useWeb3 } from '../../../../../providers/Web3'
+import { useAsset } from '../../../../../providers/Asset'
 
 const contentQuery = graphql`
   query PoolAddQuery {
@@ -67,6 +68,7 @@ export default function Add({
 
   const { accountId, balance } = useWeb3()
   const { ocean } = useOcean()
+  const { isAssetNetwork } = useAsset()
   const { debug } = useUserPreferences()
   const [txId, setTxId] = useState<string>()
   const [coin, setCoin] = useState('OCEAN')
@@ -91,7 +93,7 @@ export default function Add({
 
   // Get datatoken balance when datatoken selected
   useEffect(() => {
-    if (!ocean || coin === 'OCEAN') return
+    if (!ocean || !isAssetNetwork || coin === 'OCEAN') return
 
     async function getDtBalance() {
       const dtBalance = await ocean.datatokens.balance(dtAddress, accountId)
@@ -102,7 +104,7 @@ export default function Add({
 
   // Get maximum amount for either OCEAN or datatoken
   useEffect(() => {
-    if (!ocean || !poolAddress) return
+    if (!ocean || !isAssetNetwork || !poolAddress) return
 
     async function getMaximum() {
       const amountMaxPool =
@@ -118,7 +120,7 @@ export default function Add({
           : Number(dtBalance) > Number(amountMaxPool)
           ? amountMaxPool
           : dtBalance
-      setAmountMax(amountMax)
+      setAmountMax(Number(amountMax).toFixed(3))
     }
     getMaximum()
   }, [ocean, poolAddress, coin, dtBalance, balance.ocean])

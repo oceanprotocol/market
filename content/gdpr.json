@@ -1,0 +1,20 @@
+{
+  "title": "Our use of cookies",
+  "text": "We use [cookies](/privacy/en#cookies) to optimize and continuously improve our website. You can accept or reject them, and you can change your settings at any time by clicking **Cookie Settings** at the bottom of the page.",
+  "close": "Save and close",
+  "accept": "Accept all",
+  "reject": "Only essential",
+  "configure": "Customize",
+  "optionalCookies": [
+    {
+      "title": "Marketing",
+      "desc": "We'd like to set Marketing related cookies to help us improve our services and personalize your experience. The cookies collect information in a way that does not directly identify anyone. Head over to our [Cookies page](/privacy/en#cookies) to find more detailed information about this process.",
+      "cookieName": "MarketingCookieConsent"
+    },
+    {
+      "title": "Analytics",
+      "desc": "We'd like to set analytics related cookies to help us improve our website by collecting and reporting information on how you use it. For more information on how these cookies work please see our [Cookies page](/privacy/en#cookies).",
+      "cookieName": "AnalyticsCookieConsent"
+    }
+  ]
+}

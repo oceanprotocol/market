@@ -32,6 +32,8 @@ interface UseSiteMetadata {
     allowFreePricing: string
     allowAdvancedSettings: string
     credentialType: string[]
+    defaultPrivacyPolicySlug: string
+    privacyPreferenceCenter: string
     allowAdvancedPublishSettings: string
   }
 }
@@ -71,6 +73,8 @@ const query = graphql`
           allowAdvancedSettings
           allowAdvancedPublishSettings
           credentialType
+          defaultPrivacyPolicySlug
+          privacyPreferenceCenter
         }
       }
     }

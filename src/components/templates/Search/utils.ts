@@ -47,6 +47,10 @@ function getSortType(sortParam: string): string {
   return sortTerm
 }
 
+export function escapeESReservedChars(text: string): string {
+  return text.replace(/([!*+\-=<>&|()\\[\]{}^~?:\\/"])/g, '\\$1')
+}
+
 export function getSearchQuery(
   chainIds: number[],
   text?: string,
@@ -61,6 +65,7 @@ export function getSearchQuery(
   accessType?: string
 ): any {
   const emptySearchTerm = text === undefined || text === ''
+  text = escapeESReservedChars(text)
   let searchTerm = owner
     ? `(publicKey.owner:${owner})`
     : tags

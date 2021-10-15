@@ -47,6 +47,8 @@ export default function InputElement({
   help,
   form,
   additionalComponent,
+  disclaimer,
+  disclaimerValues,
   ...props
 }: InputProps): ReactElement {
   const styleClasses = cx({ select: true, [size]: size })
@@ -61,6 +63,7 @@ export default function InputElement({
           id={name}
           className={styleClasses}
           {...props}
+          disabled={disabled}
           multiple={multiple}
         >
           {((field !== undefined && field.value === '') ||
@@ -98,7 +101,10 @@ export default function InputElement({
                   defaultChecked={props.defaultChecked}
                   {...props}
                 />
-                <label className={styles.radioLabel} htmlFor={slugify(option)}>
+                <label
+                  className={cx({ [styles.radioLabel]: true, [size]: size })}
+                  htmlFor={slugify(option)}
+                >
                   {option}
                 </label>
               </div>

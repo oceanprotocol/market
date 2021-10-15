@@ -1,0 +1,14 @@
+.langSelect {
+  background: var(--background-body);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: calc(var(--spacer) / 2);
+  margin: var(--spacer) auto;
+  text-align: center;
+}
+
+.langLabel {
+  font-size: var(--font-size-base);
+  color: var(--font-color-heading);
+  font-weight: var(--font-weight-bold);
+}
