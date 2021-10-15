@@ -4,8 +4,7 @@ export function getCredentialList(
   credential: Credential[],
   credentialType: string
 ): string[] {
-  if (!credentialType) return []
-  if (!credential) return []
+  if (!credentialType || !credential) return []
   const credentialByType = credential.find(
     (credential) => credential.type === credentialType
   )

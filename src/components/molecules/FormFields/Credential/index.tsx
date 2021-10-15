@@ -90,7 +90,9 @@ export default function Credentials(props: InputProps): ReactElement {
           arrayInput.map((value) => {
             return (
               <div className={styles.chip} key={value}>
-                <code>{value}</code>
+                <div className={styles.chipItem} key={value}>
+                  <code>{value}</code>
+                </div>
                 <span className={styles.buttonWrapper}>
                   <Button
                     className={styles.crossButton}
