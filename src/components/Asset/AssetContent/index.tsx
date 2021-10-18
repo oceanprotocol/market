@@ -17,7 +17,6 @@ import MetaMain from './MetaMain'
 import EditHistory from './EditHistory'
 import { useWeb3 } from '@context/Web3'
 import styles from './index.module.css'
-import EditAdvancedSettings from '../AssetActions/Edit/EditAdvancedSettings'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import NetworkName from '@shared/atoms/NetworkName'
 
@@ -78,17 +77,10 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
     setShowEditCompute(true)
   }
 
-  function handleEditAdvancedSettingsButton() {
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-    setShowEditAdvancedSettings(true)
-  }
-
   return showEdit ? (
     <Edit setShowEdit={setShowEdit} isComputeType={isComputeType} />
   ) : showEditCompute ? (
     <EditComputeDataset setShowEdit={setShowEditCompute} />
-  ) : showEditAdvancedSettings ? (
-    <EditAdvancedSettings setShowEdit={setShowEditAdvancedSettings} />
   ) : (
     <>
       <div className={styles.networkWrap}>
@@ -127,18 +119,6 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
                     >
                       Edit Metadata
                     </Button>
-                    {appConfig.allowAdvancedSettings === 'true' && (
-                      <>
-                        <span className={styles.separator}>|</span>
-                        <Button
-                          style="text"
-                          size="small"
-                          onClick={handleEditAdvancedSettingsButton}
-                        >
-                          Edit Advanced Settings
-                        </Button>
-                      </>
-                    )}
                     {ddo.findServiceByType('compute') && type === 'dataset' && (
                       <>
                         <span className={styles.separator}>|</span>

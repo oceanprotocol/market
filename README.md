@@ -26,10 +26,14 @@
 - [⬆️ Deployment](#️-deployment)
 - [💖 Contributing](#-contributing)
 - [🍴 Forking](#-forking)
-- [💻 Advanced Features](#-advanced-features)
+- [💰 Pricing Options](#-pricing-options)
+  - [Dynamic Pricing](#dynamic-pricing)
+  - [Fixed Pricing](#fixed-pricing)
+  - [Free Pricing](#free-pricing)
 - [✅ GDPR Compliance](#-gdpr-compliance)
   - [Multi-Language Privacy Policies](#multi-language-privacy-policies)
   - [Privacy Preference Center](#privacy-preference-center)
+    - [Privacy Preference Center Styling](#privacy-preference-center-styling)
 - [🏛 License](#-license)
 
 ## 🏄 Get Started
@@ -377,15 +381,21 @@ Additionally, we would also advise that your retain the text saying "Powered by 
 
 Everything else is made open according to the apache2 license. We look forward to seeing your data marketplace!
 
-## 💻 Advanced Features
+## 💰 Pricing Options
 
-Ocean Market also includes a number of advanced features that are suitable for an enterprise data market, such as:
+### Dynamic Pricing
 
-- Role based access control
-- Allow and deny lists
-- Free pricing
+To allow publishers to set pricing as "Dynamic" you need to add the following environmental variable to your .env file: `GATSBY_ALLOW_DYNAMIC_PRICING="true"` (default).
 
-[See our seperate guide on advanced features](docs/advancedSettings.md)
+### Fixed Pricing
+
+To allow publishers to set pricing as "Fixed" you need to add the following environmental variable to your .env file: `GATSBY_ALLOW_FIXED_PRICING="true"` (default).
+
+### Free Pricing
+
+To allow publishers to set pricing as "Free" you need to add the following environmental variable to your .env file: `GATSBY_ALLOW_FREE_PRICING="true"` (default).
+
+This allocates the datatokens to the [dispenser contract](https://github.com/oceanprotocol/contracts/blob/main/contracts/dispenser/Dispenser.sol) which dispenses data tokens to users for free. Publishers in your market will now be able to offer their datasets to users for free (excluding gas costs).
 
 ## ✅ GDPR Compliance
 
@@ -428,7 +438,7 @@ cookies.map((cookie) => {
 })
 ```
 
-#### Privacy Preference Centre Styling
+#### Privacy Preference Center Styling
 
 The privacy preference centre has two styling options `default` and `small`. The default view shows all of the customization options on a full-height side banner. When the `small` setting is used, a much smaller banner is shown which only reveals all of the customization options when the user clicks "Customize".
 

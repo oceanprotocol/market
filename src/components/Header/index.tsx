@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import Menu from './Menu'
-import styles from './Header.module.css'
+import styles from './index.module.css'
 
 export default function Header(): ReactElement {
   return (

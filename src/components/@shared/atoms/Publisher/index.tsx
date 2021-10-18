@@ -8,6 +8,7 @@ import axios from 'axios'
 import Add from './Add'
 import { useWeb3 } from '@context/Web3'
 import { getEnsName } from '@utils/ens'
+import { useIsMounted } from '@hooks/useIsMounted'
 
 const cx = classNames.bind(styles)
 
@@ -21,6 +22,7 @@ export default function Publisher({
   className?: string
 }): ReactElement {
   const { accountId } = useWeb3()
+  const isMounted = useIsMounted()
   const [profile, setProfile] = useState<Profile>()
   const [name, setName] = useState(accountTruncate(account))
   const [accountEns, setAccountEns] = useState<string>()
@@ -35,7 +37,7 @@ export default function Publisher({
     async function getExternalName() {
       // ENS
       const accountEns = await getEnsName(account)
-      if (accountEns) {
+      if (accountEns && isMounted()) {
         setAccountEns(accountEns)
         setName(accountEns)
       }
@@ -52,7 +54,7 @@ export default function Publisher({
     return () => {
       source.cancel()
     }
-  }, [account])
+  }, [account, isMounted])
 
   const styleClasses = cx({
     publisher: true,

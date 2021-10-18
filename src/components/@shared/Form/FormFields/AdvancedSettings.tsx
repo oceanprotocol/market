@@ -1,5 +1,4 @@
 import React, { ReactElement, useState, FormEvent, ChangeEvent } from 'react'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import Input from '@shared/Form/Input'
 import Button from '@shared/atoms/Button'
 import { Field } from 'formik'
@@ -12,27 +11,24 @@ export default function AdvancedSettings(prop: {
     field: FormFieldProps
   ) => void
 }): ReactElement {
-  const { appConfig } = useSiteMetadata()
-  const [advancedSettings, setAdvancedSettings] = useState<boolean>(false)
+  const [showAdvancedSettings, setShowAdvancedSettings] =
+    useState<boolean>(false)
+
   function toggleAdvancedSettings(e: FormEvent<Element>) {
     e.preventDefault()
-    advancedSettings === true
-      ? setAdvancedSettings(false)
-      : setAdvancedSettings(true)
+    setShowAdvancedSettings(!!showAdvancedSettings)
   }
   return (
     <>
-      {appConfig.allowAdvancedPublishSettings === 'true' && (
-        <Button
-          className={styles.advancedBtn}
-          style="text"
-          size="small"
-          onClick={toggleAdvancedSettings}
-        >
-          Advanced Settings
-        </Button>
-      )}
-      {advancedSettings === true &&
+      <Button
+        className={styles.advancedBtn}
+        style="text"
+        size="small"
+        onClick={toggleAdvancedSettings}
+      >
+        Advanced Settings
+      </Button>
+      {showAdvancedSettings &&
         prop.content.data.map(
           (field: FormFieldProps) =>
             field.advanced === true && (

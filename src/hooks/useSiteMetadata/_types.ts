@@ -28,12 +28,8 @@ export interface UseSiteMetadata {
     allowFixedPricing: string
     allowDynamicPricing: string
     allowFreePricing: string
-    allowAdvancedSettings: string
-    credentialType: string
     defaultPrivacyPolicySlug: string
     privacyPreferenceCenter: string
-    allowAdvancedPublishSettings: string
-    rbacUrl: string
     darkModeConfig: {
       classNameDark: string
       classNameLight: string

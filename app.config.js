@@ -15,8 +15,6 @@ module.exports = {
   // List of all supported chainIds. Used to populate the Chains user preferences list.
   chainIdsSupported: [1, 3, 4, 137, 80001, 1287, 56, 2021000, 1285, 246],
 
-  rbacUrl: process.env.GATSBY_RBAC_URL || '',
-
   infuraProjectId: process.env.GATSBY_INFURA_PROJECT_ID || 'xxx',
 
   // The ETH address the marketplace fee will be sent to.
@@ -56,13 +54,7 @@ module.exports = {
   // tab to publishers during the price creation.
   allowFixedPricing: process.env.GATSBY_ALLOW_FIXED_PRICING || 'true',
   allowDynamicPricing: process.env.GATSBY_ALLOW_DYNAMIC_PRICING || 'true',
-  allowFreePricing: process.env.GATSBY_ALLOW_FREE_PRICING || 'false',
-
-  // Used to show or hide advanced settings button in asset details page
-  allowAdvancedSettings: process.env.GATSBY_ALLOW_ADVANCED_SETTINGS || 'false',
-  allowAdvancedPublishSettings:
-    process.env.GATSBY_ALLOW_ADVANCED_PUBLISH_SETTINGS || 'false',
-  credentialType: process.env.GATSBY_CREDENTIAL_TYPE || 'address',
+  allowFreePricing: process.env.GATSBY_ALLOW_FREE_PRICING || 'true',
 
   // Set the default privacy policy to initially display
   // this should be the slug of your default policy markdown file

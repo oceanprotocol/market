@@ -1,5 +1,4 @@
 import React, { ReactElement, useState, useEffect } from 'react'
-import Permission from '@shared/Permission'
 import { Formik, FormikState } from 'formik'
 import { usePublish } from '@hooks/usePublish'
 import styles from './index.module.css'
@@ -79,20 +78,18 @@ export default function PublishPage({
   }
 
   return isInPurgatory && purgatoryData ? null : (
-    <Permission eventType="publish">
-      <Formik
-        initialValues={initialValues}
-        initialStatus="empty"
-        validationSchema={validationSchema}
-        onSubmit={async (values, { resetForm }) => {
-          // kick off publishing
-          await handleSubmit(values, resetForm)
-        }}
-      >
-        {({ values }) => {
-          return <>Hello</>
-        }}
-      </Formik>
-    </Permission>
+    <Formik
+      initialValues={initialValues}
+      initialStatus="empty"
+      validationSchema={validationSchema}
+      onSubmit={async (values, { resetForm }) => {
+        // kick off publishing
+        await handleSubmit(values, resetForm)
+      }}
+    >
+      {({ values }) => {
+        return <>Hello</>
+      }}
+    </Formik>
   )
 }

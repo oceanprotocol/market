@@ -126,20 +126,19 @@ export default function HomePage(): ReactElement {
   }, [chainIds])
 
   return (
-    <Permission eventType="browse">
-      <>
-        <section className={styles.section}>
-          <h3>Bookmarks</h3>
-          <Bookmarks />
-        </section>
+    <>
+      <section className={styles.section}>
+        <h3>Bookmarks</h3>
+        <Bookmarks />
+      </section>
 
-        {queryAndDids && (
-          <SectionQueryResult
-            title="Highest Liquidity"
-            query={queryAndDids[0]}
-            queryData={queryAndDids[1]}
-          />
-        )}
+      {queryAndDids && (
+        <SectionQueryResult
+          title="Highest Liquidity"
+          query={queryAndDids[0]}
+          queryData={queryAndDids[1]}
+        />
+      )}
 
         {queryLatest && (
           <SectionQueryResult
@@ -153,6 +152,7 @@ export default function HomePage(): ReactElement {
           />
         )}
       </>
-    </Permission>
+
+
   )
 }
