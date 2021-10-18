@@ -621,29 +621,6 @@ export async function getHighestLiquidityDIDs(
   return [searchDids, didList.length]
 }
 
-export async function getAccountNumberOfOrders(
-  assets: DDO[],
-  chainIds: number[]
-): Promise<number> {
-  const datatokens: string[] = []
-  assets.forEach((ddo) => {
-    datatokens.push(ddo?.dataToken?.toLowerCase())
-  })
-  const queryVariables = {
-    datatokenId_in: datatokens
-  }
-  const results = await fetchDataForMultipleChains(
-    TotalAccountOrders,
-    queryVariables,
-    chainIds
-  )
-  let numberOfOrders = 0
-  for (const result of results) {
-    numberOfOrders += result?.tokenOrders?.length
-  }
-  return numberOfOrders
-}
-
 export function calculateUserLiquidity(poolShare: PoolShare): number {
   const ocean =
     (poolShare.balance / poolShare.poolId.totalShares) *
