@@ -1,5 +1,4 @@
 import React, { ReactElement, useState, useEffect, useCallback } from 'react'
-import Permission from '@shared/Permission'
 import AssetList from '@shared/AssetList/AssetList'
 import queryString from 'query-string'
 import Filters from './Filters'
@@ -78,8 +77,7 @@ export default function SearchPage({
   }, [parsed, chainIds, newCancelToken, fetchAssets])
 
   return (
-    <Permission eventType="browse">
-      <>
+    <>
         <div className={styles.search}>
           <div className={styles.row}>
             <Filters
@@ -108,6 +106,5 @@ export default function SearchPage({
           />
         </div>
       </>
-    </Permission>
   )
 }

@@ -1,5 +1,4 @@
 import React, { ReactElement, useState, useEffect } from 'react'
-import Permission from '@shared/Permission'
 import Compute from './Compute'
 import Consume from './Consume'
 import { Logger, File as FileMetadata, DID } from '@oceanprotocol/lib'
@@ -141,9 +140,7 @@ export default function AssetActions(): ReactElement {
 
   return (
     <>
-      <Permission eventType="consume">
-        <Tabs items={tabs} className={styles.actions} />
-      </Permission>
+      <Tabs items={tabs} className={styles.actions} />
       <Web3Feedback isAssetNetwork={isAssetNetwork} />
     </>
   )

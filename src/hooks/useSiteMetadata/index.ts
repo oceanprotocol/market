@@ -33,12 +33,8 @@ const query = graphql`
           allowFixedPricing
           allowDynamicPricing
           allowFreePricing
-          allowAdvancedSettings
-          allowAdvancedPublishSettings
-          credentialType
           defaultPrivacyPolicySlug
           privacyPreferenceCenter
-          rbacUrl
           darkModeConfig {
             classNameDark
             classNameLight

@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
-import fetch from 'cross-fetch'
 import { useOcean } from '../context/Ocean'
 import { useWeb3 } from '../context/Web3'
 import { Logger } from '@oceanprotocol/lib'
 import Web3 from 'web3'
 import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
+import axios, { AxiosResponse } from 'axios'
 
 const blockDifferenceThreshold = 30
 const ethGraphUrl = `https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks`
@@ -19,16 +19,15 @@ export interface UseGraphSyncStatus {
   blockGraph: number
 }
 
-async function fetchGraph(url: string, queryBody: string): Promise<Response> {
+async function fetchGraph(
+  url: string,
+  queryBody: string
+): Promise<AxiosResponse> {
   try {
-    const response = await fetch(url, {
-      method: 'POST',
-      body: queryBody
-    })
-
-    return await response.json()
+    const response = await axios.post(url, { ...JSON.parse(queryBody) })
+    return response
   } catch (error) {
-    console.error('Error parsing json: ' + error.message)
+    Logger.error('Error parsing json: ' + error.message)
   }
 }
 
@@ -36,7 +35,7 @@ async function getBlockHead(config: ConfigHelperConfig) {
   // for ETH main, get block from graph fetch
   if (config.network === 'mainnet') {
     const response: any = await fetchGraph(ethGraphUrl, ethGraphQuery)
-    return Number(response.data.blocks[0].number)
+    return Number(response?.data?.blocks[0].number)
   }
 
   // for everything else, create new web3 instance with infura
@@ -50,7 +49,7 @@ async function getBlockSubgraph(subgraphUri: string) {
     `${subgraphUri}/subgraphs/name/oceanprotocol/ocean-subgraph`,
     graphQuery
   )
-  const blockNumberGraph = Number(response.data._meta.block.number)
+  const blockNumberGraph = Number(response?.data?._meta?.block?.number)
   return blockNumberGraph
 }
 

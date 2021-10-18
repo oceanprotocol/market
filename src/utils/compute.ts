@@ -57,19 +57,6 @@ const getComputeOrdersByDatatokenAddress = gql`
   }
 `
 
-interface TokenOrder {
-  id: string
-  serviceId: number
-  datatokenId: OrdersDatatoken
-  tx: any
-  timestamp: number
-}
-
-interface ComputeResults {
-  computeJobs: ComputeJobMetaData[]
-  isLoaded: boolean
-}
-
 async function getAssetMetadata(
   queryDtList: string[],
   cancelToken: CancelToken,
