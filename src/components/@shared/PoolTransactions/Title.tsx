@@ -1,8 +1,8 @@
 import React, { useState, useEffect, ReactElement } from 'react'
 import { PoolTransaction } from '.'
 import { useUserPreferences } from '@context/UserPreferences'
-import ExplorerLink from '@shared/atoms/ExplorerLink'
-import { formatPrice } from '@shared/atoms/Price/PriceUnit'
+import ExplorerLink from '@shared/ExplorerLink'
+import { formatPrice } from '@shared/Price/PriceUnit'
 import styles from './Title.module.css'
 
 async function getTitle(row: PoolTransaction, locale: string) {

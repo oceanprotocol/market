@@ -1,6 +1,5 @@
 import { Ocean } from '@oceanprotocol/lib'
-
-import { isValidNumber } from '../../../../utils/numbers'
+import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })

@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import DebugOutput from '@shared/atoms/DebugOutput'
+import DebugOutput from '@shared/DebugOutput'
 import styles from './index.module.css'
 import { transformPublishFormToMetadata } from '@utils/metadata'
 import { FormPublishData } from './_types'

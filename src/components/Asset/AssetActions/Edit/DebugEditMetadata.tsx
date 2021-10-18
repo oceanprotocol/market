@@ -1,7 +1,7 @@
 import { DDO } from '@oceanprotocol/lib'
 import React, { ReactElement } from 'react'
 import { transformPublishFormToMetadata } from '@utils/metadata'
-import DebugOutput from '@shared/atoms/DebugOutput'
+import DebugOutput from '@shared/DebugOutput'
 import { FormPublishData } from '../../../Publish/_types'
 
 export default function Debug({

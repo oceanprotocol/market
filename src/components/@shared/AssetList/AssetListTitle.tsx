@@ -1,10 +1,10 @@
 import { DDO } from '@oceanprotocol/lib'
 import { Link } from 'gatsby'
 import React, { ReactElement, useEffect, useState } from 'react'
-import { getAssetsNames } from '../../../utils/aquarius'
+import { getAssetsNames } from '@utils/aquarius'
 import styles from './AssetListTitle.module.css'
 import axios from 'axios'
-import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
+import { useSiteMetadata } from '@hooks/useSiteMetadata'
 
 export default function AssetListTitle({
   ddo,

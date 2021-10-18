@@ -1,11 +1,11 @@
 import { FormikContextType, useFormikContext } from 'formik'
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useAsset } from '../../../../context/Asset'
-import { useOcean } from '../../../../context/Ocean'
+import { useAsset } from '@context/Asset'
+import { useOcean } from '@context/Ocean'
 import Token from '../Pool/Token'
 import styles from './Output.module.css'
 
-import { isValidNumber } from '../../../../utils/numbers'
+import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
 import { FormTradeData } from './_types'
 

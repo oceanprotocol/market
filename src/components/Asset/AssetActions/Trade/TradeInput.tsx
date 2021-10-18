@@ -8,9 +8,9 @@ import {
 } from 'formik'
 import Input from '@shared/Form/Input'
 import Button from '@shared/atoms/Button'
-import { useOcean } from '../../../../context/Ocean'
+import { useOcean } from '@context/Ocean'
 import { FormTradeData, TradeItem } from './_types'
-import UserLiquidity from '@shared/atoms/UserLiquidity'
+import UserLiquidity from '../UserLiquidity'
 
 export default function TradeInput({
   name,

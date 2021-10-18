@@ -1,4 +1,4 @@
-import PriceUnit from '@shared/atoms/Price/PriceUnit'
+import PriceUnit from '@shared/Price/PriceUnit'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Alert from '@shared/atoms/Alert'
 import FormHelp from '@shared/Form/Input/Help'
@@ -12,8 +12,8 @@ import { FormikContextType, useFormikContext } from 'formik'
 import { DDO } from '@oceanprotocol/lib'
 import Price from './Price'
 import Decimal from 'decimal.js'
-import { useOcean } from '../../../../context/Ocean'
-import { useWeb3 } from '../../../../context/Web3'
+import { useOcean } from '@context/Ocean'
+import { useWeb3 } from '@context/Web3'
 
 export default function Dynamic({
   ddo,

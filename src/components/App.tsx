@@ -3,13 +3,13 @@ import { graphql, PageProps, useStaticQuery } from 'gatsby'
 import Alert from '@shared/atoms/Alert'
 import Footer from './Footer/Footer'
 import Header from './Header'
-import Styles from '../global/Styles'
+import StylesGlobal from '../stylesGlobal/StylesGlobal'
 import { useWeb3 } from '@context/Web3'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
-import AnnouncementBanner from '@shared/atoms/AnnouncementBanner'
-import styles from './App.module.css'
+import AnnouncementBanner from '@shared/AnnouncementBanner'
 import PrivacyPreferenceCenter from './Privacy/PrivacyPreferenceCenter'
+import styles from './App.module.css'
 
 const contentQuery = graphql`
   query AppQuery {
@@ -42,7 +42,7 @@ export default function App({
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
 
   return (
-    <Styles>
+    <StylesGlobal>
       <div className={styles.app}>
         {(props as PageProps).uri === '/' && (
           <AnnouncementBanner text={warning.main} />
@@ -64,6 +64,6 @@ export default function App({
           <PrivacyPreferenceCenter style="small" />
         )}
       </div>
-    </Styles>
+    </StylesGlobal>
   )
 }

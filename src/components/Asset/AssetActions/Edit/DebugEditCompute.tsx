@@ -1,8 +1,8 @@
 import { DDO, ServiceComputePrivacy } from '@oceanprotocol/lib'
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useOcean } from '../../../../context/Ocean'
-import { transformComputeFormToServiceComputePrivacy } from '../../../../utils/compute'
-import DebugOutput from '@shared/atoms/DebugOutput'
+import { useOcean } from '@context/Ocean'
+import { transformComputeFormToServiceComputePrivacy } from '@utils/compute'
+import DebugOutput from '@shared/DebugOutput'
 
 export default function DebugEditCompute({
   values,

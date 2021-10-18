@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import Table from '@shared/atoms/Table'
 import Time from '@shared/atoms/Time'
 import AssetTitle from '@shared/AssetList/AssetListTitle'
-import NetworkName from '@shared/atoms/NetworkName'
+import NetworkName from '@shared/NetworkName'
 import { useProfile } from '@context/Profile'
 import { DownloadedAsset } from '@utils/aquarius'
 const columns = [

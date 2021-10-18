@@ -74,9 +74,9 @@ div [class*='Table-module'] {
 }
 
 .arrow {
-  composes: arrow from '@shared/Pagination.module.css';
+  composes: arrow from '@shared/Pagination/index.module.css';
 }
 
 .previous {
-  composes: previous from '@shared/Pagination.module.css';
+  composes: previous from '@shared/Pagination/index.module.css';
 }

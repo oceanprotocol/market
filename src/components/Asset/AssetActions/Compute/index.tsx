@@ -6,8 +6,8 @@ import {
   publisherTrustedAlgorithm
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
-import Price from '@shared/atoms/Price'
-import File from '@shared/atoms/File'
+import Price from '@shared/Price'
+import FileIcon from '@shared/FileIcon'
 import Alert from '@shared/atoms/Alert'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { useOcean } from '@context/Ocean'
@@ -28,13 +28,13 @@ import {
 import axios from 'axios'
 import FormStartComputeDataset from './FormComputeDataset'
 import styles from './index.module.css'
-import SuccessConfetti from '@shared/atoms/SuccessConfetti'
+import SuccessConfetti from '@shared/SuccessConfetti'
 import Button from '@shared/atoms/Button'
 import { secondsToString } from '@utils/metadata'
 import { AssetSelectionAsset } from '@shared/Form/FormFields/AssetSelection'
 import AlgorithmDatasetsListForCompute from '../../AssetContent/AlgorithmDatasetsListForCompute'
 import { getPreviousOrders, getPrice } from '@utils/subgraph'
-import AssetActionHistoryTable from '@shared/AssetActionHistoryTable'
+import AssetActionHistoryTable from '../AssetActionHistoryTable'
 import ComputeJobs from '../../../Profile/History/ComputeJobs'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
@@ -406,7 +406,7 @@ export default function Compute({
   return (
     <>
       <div className={styles.info}>
-        <File file={file} isLoading={fileIsLoading} small />
+        <FileIcon file={file} isLoading={fileIsLoading} small />
         <Price price={price} conversion />
       </div>
 

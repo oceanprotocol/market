@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useAsset } from '@context/Asset'
-import ExplorerLink from '@shared/atoms/ExplorerLink'
+import ExplorerLink from '@shared/ExplorerLink'
 import Time from '@shared/atoms/Time'
 import { gql, OperationContext, useQuery } from 'urql'
 import { ReceiptData_datatokens_updates as ReceiptData } from '../../../@types/apollo/ReceiptData'
