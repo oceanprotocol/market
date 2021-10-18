@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import MetaItem from './MetaItem'
 import styles from './MetaFull.module.css'
-import Publisher from '@shared/atoms/Publisher'
+import Publisher from '@shared/Publisher'
 import { useAsset } from '@context/Asset'
 
 export default function MetaFull(): ReactElement {

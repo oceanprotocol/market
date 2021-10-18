@@ -16,10 +16,10 @@
     "allowJs": true,
     "paths": {
       "@shared/*": ["./src/components/@shared/*"],
-      "@hooks/*": ["./src/hooks/*"],
-      "@context/*": ["./src/context/*"],
-      "@images/*": ["./src/images/*"],
-      "@utils/*": ["./src/utils/*"]
+      "@hooks/*": ["./src/@hooks/*"],
+      "@context/*": ["./src/@context/*"],
+      "@images/*": ["./src/@images/*"],
+      "@utils/*": ["./src/@utils/*"]
     }
     //"baseUrl": "./src"
   },

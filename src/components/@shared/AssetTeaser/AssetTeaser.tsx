@@ -1,12 +1,12 @@
 import React from 'react'
 import { Link } from 'gatsby'
 import Dotdotdot from 'react-dotdotdot'
-import Price from '../atoms/Price'
+import Price from '@shared/Price'
 import { DDO } from '@oceanprotocol/lib'
 import removeMarkdown from 'remove-markdown'
-import Publisher from '../atoms/Publisher'
-import AssetType from '../atoms/AssetType'
-import NetworkName from '../atoms/NetworkName'
+import Publisher from '@shared/Publisher'
+import AssetType from '@shared/AssetType'
+import NetworkName from '@shared/NetworkName'
 import styles from './AssetTeaser.module.css'
 
 declare type AssetTeaserProps = {

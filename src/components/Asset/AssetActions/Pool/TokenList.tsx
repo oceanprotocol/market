@@ -1,4 +1,4 @@
-import Conversion from '@shared/atoms/Price/Conversion'
+import Conversion from '@shared/Price/Conversion'
 import React, { ReactElement, ReactNode } from 'react'
 import Token from './Token'
 import styles from './TokenList.module.css'

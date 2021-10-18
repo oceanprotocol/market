@@ -1,5 +1,5 @@
 import Loader from '@shared/atoms/Loader'
-import SuccessConfetti from '@shared/atoms/SuccessConfetti'
+import SuccessConfetti from '@shared/SuccessConfetti'
 import React, { ReactElement } from 'react'
 import styles from './Feedback.module.css'
 import Button from '@shared/atoms/Button'

@@ -1,6 +1,6 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import Table from '@shared/atoms/Table'
-import Conversion from '@shared/atoms/Price/Conversion'
+import Conversion from '@shared/Price/Conversion'
 import styles from './PoolShares.module.css'
 import AssetTitle from '@shared/AssetList/AssetListTitle'
 import {
@@ -10,7 +10,7 @@ import {
 import web3 from 'web3'
 import Token from '../../Asset/AssetActions/Pool/Token'
 import { calculateUserLiquidity } from '@utils/subgraph'
-import NetworkName from '@shared/atoms/NetworkName'
+import NetworkName from '@shared/NetworkName'
 import { retrieveDDOListByDIDs } from '@utils/aquarius'
 import { CancelToken } from 'axios'
 import { isValidNumber } from '@utils/numbers'

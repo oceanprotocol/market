@@ -8,8 +8,8 @@ import {
   UserLiquidity,
   calculateUserLiquidity
 } from '@utils/subgraph'
-import Conversion from '@shared/atoms/Price/Conversion'
-import NumberUnit from '@shared/NumberUnit'
+import Conversion from '@shared/Price/Conversion'
+import NumberUnit from './NumberUnit'
 import styles from './Stats.module.css'
 import { useProfile } from '@context/Profile'
 import { PoolShares_poolShares as PoolShare } from '../../../@types/apollo/PoolShares'

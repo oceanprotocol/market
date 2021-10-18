@@ -1,7 +1,7 @@
 import React from 'react'
 import Dotdotdot from 'react-dotdotdot'
 import { Link } from 'gatsby'
-import PriceUnit from '@shared/atoms/Price/PriceUnit'
+import PriceUnit from '@shared/Price/PriceUnit'
 import Loader from '@shared/atoms/Loader'
 import styles from './AssetComputeList.module.css'
 import { AssetSelectionAsset } from '@shared/Form/FormFields/AssetSelection'

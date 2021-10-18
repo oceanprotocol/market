@@ -4,10 +4,10 @@ import Pagination from '@shared/Pagination'
 import styles from './AssetList.module.css'
 import { DDO } from '@oceanprotocol/lib'
 import classNames from 'classnames/bind'
-import { getAssetsBestPrices, AssetListPrices } from '../../../utils/subgraph'
+import { getAssetsBestPrices, AssetListPrices } from '@utils/subgraph'
 import Loader from '../atoms/Loader'
-import { useUserPreferences } from '../../../context/UserPreferences'
-import { useIsMounted } from '../../../hooks/useIsMounted'
+import { useUserPreferences } from '@context/UserPreferences'
+import { useIsMounted } from '@hooks/useIsMounted'
 
 const cx = classNames.bind(styles)
 

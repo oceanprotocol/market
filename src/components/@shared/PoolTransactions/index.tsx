@@ -8,13 +8,13 @@ import { TransactionHistory_poolTransactions as TransactionHistoryPoolTransactio
 import web3 from 'web3'
 import { fetchDataForMultipleChains } from '@utils/subgraph'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
-import NetworkName from '@shared/atoms/NetworkName'
+import NetworkName from '@shared/NetworkName'
 import { retrieveDDOListByDIDs } from '@utils/aquarius'
 import { CancelToken } from 'axios'
 import Title from './Title'
 import styles from './index.module.css'
 import { DDO, Logger } from '@oceanprotocol/lib'
-import { useCancelToken } from '../../../hooks/useCancelToken'
+import { useCancelToken } from '@hooks/useCancelToken'
 
 const REFETCH_INTERVAL = 20000
 

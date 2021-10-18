@@ -7,9 +7,9 @@ import FormPricing from './FormPricing'
 import { toast } from 'react-toastify'
 import Feedback from './Feedback'
 import { graphql, useStaticQuery } from 'gatsby'
-import { usePricing } from '../../../hooks/usePricing'
+import { usePricing } from '@hooks/usePricing'
 import styles from './index.module.css'
-import { useAsset } from '../../../context/Asset'
+import { useAsset } from '@context/Asset'
 
 const query = graphql`
   query PricingQuery {

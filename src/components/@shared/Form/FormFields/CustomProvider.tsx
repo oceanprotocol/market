@@ -2,7 +2,7 @@ import React, { ReactElement, useState, useEffect } from 'react'
 import { useField } from 'formik'
 import { toast } from 'react-toastify'
 import CustomInput from './URLInput/Input'
-import { useOcean } from '../../../../context/Ocean'
+import { useOcean } from '@context/Ocean'
 import { InputProps } from '@shared/Form/Input'
 
 export default function CustomProvider(props: InputProps): ReactElement {

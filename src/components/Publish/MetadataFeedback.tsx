@@ -3,7 +3,7 @@ import Button from '@shared/atoms/Button'
 import Loader from '@shared/atoms/Loader'
 import React, { ReactElement, useState, FormEvent } from 'react'
 import styles from './MetadataFeedback.module.css'
-import SuccessConfetti from '@shared/atoms/SuccessConfetti'
+import SuccessConfetti from '@shared/SuccessConfetti'
 
 interface Action {
   name: string

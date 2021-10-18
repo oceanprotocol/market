@@ -77,10 +77,10 @@ exports.onCreateWebpackConfig = ({ actions }) => {
     resolve: {
       alias: {
         '@shared': path.resolve(__dirname, 'src/components/@shared'),
-        '@hooks': path.resolve(__dirname, 'src/hooks'),
-        '@context': path.resolve(__dirname, 'src/context'),
-        '@images': path.resolve(__dirname, 'src/images'),
-        '@utils': path.resolve(__dirname, 'src/utils')
+        '@hooks': path.resolve(__dirname, 'src/@hooks'),
+        '@context': path.resolve(__dirname, 'src/@context'),
+        '@images': path.resolve(__dirname, 'src/@images'),
+        '@utils': path.resolve(__dirname, 'src/@utils')
       }
     },
     node: {

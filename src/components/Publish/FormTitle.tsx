@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import NetworkName from '@shared/atoms/NetworkName'
+import NetworkName from '@shared/NetworkName'
 import Tooltip from '@shared/atoms/Tooltip'
 import { useWeb3 } from '@context/Web3'
 import styles from './FormTitle.module.css'

@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react'
-import Web3Provider from '../context/Web3'
-import { UserPreferencesProvider } from '../context/UserPreferences'
-import PricesProvider from '../context/Prices'
-import UrqlProvider from '../context/UrqlProvider'
-import ConsentProvider from '../context/CookieConsent'
+import Web3Provider from '@context/Web3'
+import { UserPreferencesProvider } from '@context/UserPreferences'
+import PricesProvider from '@context/Prices'
+import UrqlProvider from '@context/UrqlProvider'
+import ConsentProvider from '@context/CookieConsent'
 
 export default function wrapRootElement({
   element

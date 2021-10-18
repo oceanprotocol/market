@@ -3,7 +3,7 @@ import Status from '@shared/atoms/Status'
 import Badge from '@shared/atoms/Badge'
 import Tooltip from '@shared/atoms/Tooltip'
 import { useWeb3 } from '@context/Web3'
-import NetworkName from '@shared/atoms/NetworkName'
+import NetworkName from '@shared/NetworkName'
 import styles from './Network.module.css'
 import { getOceanConfig } from '@utils/ocean'
 

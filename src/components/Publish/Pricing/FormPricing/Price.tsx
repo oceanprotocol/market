@@ -1,10 +1,10 @@
-import Conversion from '@shared/atoms/Price/Conversion'
+import Conversion from '@shared/Price/Conversion'
 import { useField } from 'formik'
 import React, { ReactElement, useState, useEffect } from 'react'
 import Input from '@shared/Form/Input'
 import Error from './Error'
 import { DDO } from '@oceanprotocol/lib'
-import PriceUnit from '@shared/atoms/Price/PriceUnit'
+import PriceUnit from '@shared/Price/PriceUnit'
 import usePricing from '@hooks/usePricing'
 import styles from './Price.module.css'
 

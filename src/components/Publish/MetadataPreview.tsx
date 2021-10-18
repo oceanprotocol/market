@@ -3,10 +3,10 @@ import { File as FileMetadata } from '@oceanprotocol/lib/dist/node/ddo/interface
 import Markdown from '@shared/atoms/Markdown'
 import Tags from '@shared/atoms/Tags'
 import MetaItem from '../../components/Asset/AssetContent/MetaItem'
-import File from '@shared/atoms/File'
+import FileIcon from '@shared/FileIcon'
 import Button from '@shared/atoms/Button'
 import { transformTags } from '@utils/metadata'
-import NetworkName from '@shared/atoms/NetworkName'
+import NetworkName from '@shared/NetworkName'
 import { useWeb3 } from '@context/Web3'
 import styles from './MetadataPreview.module.css'
 import Web3Feedback from '@shared/Web3Feedback'
@@ -111,7 +111,7 @@ export function MetadataPreview({
 
         <div className={styles.asset}>
           {values.files?.length > 0 && typeof values.files !== 'string' && (
-            <File
+            <FileIcon
               file={values.files[0] as FileMetadata}
               className={styles.file}
               small
@@ -155,7 +155,7 @@ export function MetadataAlgorithmPreview({
 
         <div className={styles.asset}>
           {values.files?.length > 0 && typeof values.files !== 'string' && (
-            <File
+            <FileIcon
               file={values.files[0] as FileMetadata}
               className={styles.file}
               small

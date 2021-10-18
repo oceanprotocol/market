@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
-import { useAsset } from '../../../../context/Asset'
-import PriceUnit from '@shared/atoms/Price/PriceUnit'
+import { useAsset } from '@context/Asset'
+import PriceUnit from '@shared/Price/PriceUnit'
 import Tooltip from '@shared/atoms/Tooltip'
 import styles from './PriceOutput.module.css'
 

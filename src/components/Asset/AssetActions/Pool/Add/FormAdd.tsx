@@ -10,7 +10,7 @@ import {
 import Button from '@shared/atoms/Button'
 import CoinSelect from '../CoinSelect'
 import { FormAddLiquidity } from '.'
-import UserLiquidity from '@shared/atoms/UserLiquidity'
+import UserLiquidity from '../../UserLiquidity'
 import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 

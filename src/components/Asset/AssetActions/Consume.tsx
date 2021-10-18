@@ -1,23 +1,23 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { File as FileMetadata, DDO } from '@oceanprotocol/lib'
-import File from '@shared/atoms/File'
-import Price from '@shared/atoms/Price'
-import { useSiteMetadata } from '../../../hooks/useSiteMetadata'
-import { useAsset } from '../../../context/Asset'
+import FileIcon from '@shared/FileIcon'
+import Price from '@shared/Price'
+import { useSiteMetadata } from '@hooks/useSiteMetadata'
+import { useAsset } from '@context/Asset'
 import { gql } from 'urql'
-import { fetchData, getQueryContext } from '../../../utils/subgraph'
+import { fetchData, getQueryContext } from '@utils/subgraph'
 import { OrdersData } from '../../../@types/apollo/OrdersData'
 import BigNumber from 'bignumber.js'
-import { useOcean } from '../../../context/Ocean'
-import { useWeb3 } from '../../../context/Web3'
-import { usePricing } from '../../../hooks/usePricing'
-import { useConsume } from '../../../hooks/useConsume'
-import ButtonBuy from '@shared/atoms/ButtonBuy'
-import { secondsToString } from '../../../utils/metadata'
+import { useOcean } from '@context/Ocean'
+import { useWeb3 } from '@context/Web3'
+import { usePricing } from '@hooks/usePricing'
+import { useConsume } from '@hooks/useConsume'
+import ButtonBuy from '@shared/ButtonBuy'
+import { secondsToString } from '@utils/metadata'
 import AlgorithmDatasetsListForCompute from '../AssetContent/AlgorithmDatasetsListForCompute'
 import styles from './Consume.module.css'
-import { useIsMounted } from '../../../hooks/useIsMounted'
+import { useIsMounted } from '@hooks/useIsMounted'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {
@@ -196,7 +196,7 @@ export default function Consume({
     <aside className={styles.consume}>
       <div className={styles.info}>
         <div className={styles.filewrapper}>
-          <File file={file} isLoading={fileIsLoading} />
+          <FileIcon file={file} isLoading={fileIsLoading} />
         </div>
         <div className={styles.pricewrapper}>
           <Price price={price} conversion />

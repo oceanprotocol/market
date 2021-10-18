@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import styles from './Token.module.css'
-import PriceUnit from '@shared/atoms/Price/PriceUnit'
+import PriceUnit from '@shared/Price/PriceUnit'
 import Logo from '@shared/atoms/Logo'
 
 export default function Token({

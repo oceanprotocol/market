@@ -1,11 +1,11 @@
 import React, { ReactElement } from 'react'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
-import ExplorerLink from '@shared/atoms/ExplorerLink'
-import Publisher from '@shared/atoms/Publisher'
-import AddToken from '@shared/atoms/AddToken'
+import ExplorerLink from '@shared/ExplorerLink'
+import Publisher from '@shared/Publisher'
+import AddToken from '@shared/AddToken'
 import Time from '@shared/atoms/Time'
-import AssetType from '@shared/atoms/AssetType'
+import AssetType from '@shared/AssetType'
 import styles from './MetaMain.module.css'
 
 export default function MetaMain(): ReactElement {
