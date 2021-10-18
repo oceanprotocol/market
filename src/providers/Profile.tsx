@@ -7,7 +7,11 @@ import React, {
   useCallback,
   ReactNode
 } from 'react'
-import { getPoolSharesData, getUserTokenOrders } from '../utils/subgraph'
+import {
+  getPoolSharesData,
+  getUserSales,
+  getUserTokenOrders
+} from '../utils/subgraph'
 import { useUserPreferences } from './UserPreferences'
 import { PoolShares_poolShares as PoolShare } from '../@types/apollo/PoolShares'
 import { DDO, Logger } from '@oceanprotocol/lib'
@@ -34,6 +38,7 @@ interface ProfileProviderValue {
   downloads: DownloadedAsset[]
   downloadsTotal: number
   isDownloadsLoading: boolean
+  sales: number
 }
 
 const ProfileContext = createContext({} as ProfileProviderValue)
@@ -273,6 +278,27 @@ function ProfileProvider({
     }
   }, [fetchDownloads, appConfig.metadataCacheUri, downloadsInterval])
 
+  //
+  // SALES NUMBER
+  //
+  const [sales, setSales] = useState(0)
+  useEffect(() => {
+    if (!accountId || chainIds.length === 0) {
+      setSales(0)
+      return
+    }
+    async function getUserSalesNumber() {
+      try {
+        const result = await getUserSales(accountId, chainIds)
+        setSales(result)
+        Logger.log(`[profile] Fetched sales number: ${result}.`, result)
+      } catch (error) {
+        Logger.error(error.message)
+      }
+    }
+    getUserSalesNumber()
+  }, [accountId, chainIds])
+
   return (
     <ProfileContext.Provider
       value={{
@@ -284,7 +310,8 @@ function ProfileProvider({
         isEthAddress,
         downloads,
         downloadsTotal,
-        isDownloadsLoading
+        isDownloadsLoading,
+        sales
       }}
     >
       {children}

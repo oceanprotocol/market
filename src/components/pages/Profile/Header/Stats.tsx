@@ -4,8 +4,8 @@ import { ReactElement } from 'react-markdown'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import {
   getAccountLiquidityInOwnAssets,
-  getAccountNumberOfOrders,
   getAssetsBestPrices,
+  getUserSales,
   UserLiquidity,
   calculateUserLiquidity
 } from '../../../../utils/subgraph'
@@ -34,32 +34,17 @@ export default function Stats({
   accountId: string
 }): ReactElement {
   const { chainIds } = useUserPreferences()
-  const { poolShares, assets, assetsTotal, downloadsTotal } = useProfile()
+  const { poolShares, assets, assetsTotal, sales } = useProfile()
 
-  const [sold, setSold] = useState(0)
   const [publisherLiquidity, setPublisherLiquidity] = useState<UserLiquidity>()
   const [totalLiquidity, setTotalLiquidity] = useState(0)
 
   useEffect(() => {
-    if (!accountId) {
-      setSold(0)
+    if (!accountId || chainIds.length === 0) {
       setPublisherLiquidity({ price: '0', oceanBalance: '0' })
       setTotalLiquidity(0)
-      return
     }
-
-    async function getSales() {
-      if (!assets) return
-
-      try {
-        const nrOrders = await getAccountNumberOfOrders(assets, chainIds)
-        setSold(nrOrders)
-      } catch (error) {
-        Logger.error(error.message)
-      }
-    }
-    getSales()
-  }, [accountId, assets])
+  }, [accountId, chainIds])
 
   useEffect(() => {
     if (!assets || !accountId || !chainIds) return
@@ -84,7 +69,7 @@ export default function Stats({
       }
     }
     getPublisherLiquidity()
-  }, [assets, accountId])
+  }, [assets, accountId, chainIds])
 
   useEffect(() => {
     if (!poolShares) return
@@ -112,7 +97,7 @@ export default function Stats({
         label="Total Liquidity"
         value={<Conversion price={`${totalLiquidity}`} hideApproximateSymbol />}
       />
-      <NumberUnit label={`Sale${sold === 1 ? '' : 's'}`} value={sold} />
+      <NumberUnit label={`Sale${sales === 1 ? '' : 's'}`} value={sales} />
       <NumberUnit label="Published" value={assetsTotal} />
     </div>
   )
