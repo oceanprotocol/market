@@ -18,21 +18,13 @@ function LoaderArea() {
 
 declare type AccountListProps = {
   accounts: string[]
-  showPagination: boolean
-  page?: number
-  totalPages?: number
   isLoading?: boolean
-  onPageChange?: React.Dispatch<React.SetStateAction<number>>
   className?: string
 }
 
 const AccountList: React.FC<AccountListProps> = ({
   accounts,
-  showPagination,
-  page,
-  totalPages,
   isLoading,
-  onPageChange,
   className
 }) => {
   const { chainIds } = useUserPreferences()
@@ -43,10 +35,6 @@ const AccountList: React.FC<AccountListProps> = ({
     if (!accounts) return
     setLoading(false)
   }, [accounts])
-
-  function handlePageChange(selected: number) {
-    onPageChange(selected + 1)
-  }
 
   const styleClasses = cx({
     assetList: true,
@@ -68,13 +56,6 @@ const AccountList: React.FC<AccountListProps> = ({
           <div className={styles.empty}>No results found.</div>
         )}
       </div>
-      {showPagination && (
-        <Pagination
-          totalPages={totalPages}
-          currentPage={page}
-          onChangePage={handlePageChange}
-        />
-      )}
     </>
   ) : (
     <LoaderArea />

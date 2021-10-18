@@ -97,11 +97,7 @@ function SectionGraphResult({
   return (
     <section className={styles.section}>
       <h3>{title}</h3>
-      <AccountList
-        accounts={result}
-        showPagination={false}
-        isLoading={loading}
-      />
+      <AccountList accounts={result} isLoading={loading} />
       {action && action}
     </section>
   )
