@@ -19,9 +19,7 @@
   - [3Box](#3box)
   - [Purgatory](#purgatory)
   - [Network Metadata](#network-metadata)
-- [🎨 Storybook](#-storybook)
 - [✨ Code Style](#-code-style)
-- [👩‍🔬 Testing](#-testing)
 - [🛳 Production](#-production)
 - [⬆️ Deployment](#️-deployment)
 - [💖 Contributing](#-contributing)
@@ -109,10 +107,11 @@ All displayed data in the app is presented around the concept of one data set, w
 
 - metadata about a data set
 - the actual data set files
-- the datatoken which represents the data set
-- financial data connected to this datatoken, either a pool or a fixed rate exchange contract
+- the NFT which represents the data set
+- the datatokens representing access rights to the data set files
+- financial data connected to these datatokens, either a pool or a fixed rate exchange contract
 - calculations and conversions based on financial data
-- metadata about publishers
+- metadata about publisher accounts
 
 All this data then comes from multiple sources:
 
@@ -127,12 +126,11 @@ Aquarius runs Elasticsearch under the hood so its stored metadata can be queried
 
 ```tsx
 import { QueryResult } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
-import { queryMetadata } from '../../utils/aquarius'
+import { queryMetadata } from '@utils/aquarius'
 
 const queryLatest = {
   query: {
     // https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html
-
     query_string: { query: `-isInPurgatory:true` }
   },
   sort: { created: 'desc' }
@@ -164,7 +162,7 @@ function Component() {
 For components within a single data set view the `useAsset()` hook can be used, which in the background gets the respective metadata from Aquarius.
 
 ```tsx
-import { useAsset } from '../../../providers/Asset'
+import { useAsset } from '@context/Asset'
 
 function Component() {
   const { ddo } = useAsset()
@@ -203,7 +201,7 @@ Publishers can create a profile on [3Box Hub](https://www.3box.io/hub) and when 
 For this our own [3box-proxy](https://github.com/oceanprotocol/3box-proxy) is used, within the app the utility method `get3BoxProfile()` can be used to get all info:
 
 ```tsx
-import get3BoxProfile from '../../../utils/profile'
+import get3BoxProfile from '@utils/profile'
 
 function Component() {
   const [profile, setProfile] = useState<Profile>()
@@ -239,7 +237,7 @@ Based on [list-purgatory](https://github.com/oceanprotocol/list-purgatory) some 
 For asset purgatory:
 
 ```tsx
-import { useAsset } from '../../../providers/Asset'
+import { useAsset } from '@context/Asset'
 
 function Component() {
   const { isInPurgatory, purgatoryData } = useAsset()
@@ -250,8 +248,8 @@ function Component() {
 For account purgatory:
 
 ```tsx
-import { useWeb3 } from '../../../providers/Web3'
-import { useAccountPurgatory } from '../../../hooks/useAccountPurgatory'
+import { useWeb3 } from '@context/Web3'
+import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
 
 function Component() {
   const { accountId } = useWeb3()
@@ -281,20 +279,6 @@ export default function NetworkName(): ReactElement {
 }
 ```
 
-## 🎨 Storybook
-
-> TODO: this is broken for most components. See https://github.com/oceanprotocol/market/issues/128
-
-[Storybook](https://storybook.js.org) is set up for this project and is used for UI development of components. Stories are created inside `src/components/` alongside each component in the form of `ComponentName.stories.tsx`.
-
-To run the Storybook server, execute in your Terminal:
-
-```bash
-npm run storybook
-```
-
-This will launch the Storybook UI with all stories loaded under [localhost:4000](http://localhost:4000).
-
 ## ✨ Code Style
 
 Code style is automatically enforced through [ESLint](https://eslint.org) & [Prettier](https://prettier.io) rules:
@@ -311,32 +295,6 @@ npm run lint
 
 # auto format all files in the project with prettier, taking all configs into account
 npm run format
-```
-
-## 👩‍🔬 Testing
-
-> TODO: this is broken and never runs in CI. See https://github.com/oceanprotocol/market/issues/128
-
-Test suite for unit tests is setup with [Jest](https://jestjs.io) as a test runner and:
-
-- [react-testing-library](https://github.com/kentcdodds/react-testing-library) for all React components
-
-To run all linting and unit tests:
-
-```bash
-npm test
-```
-
-For local development, you can start the test runner in a watch mode.
-
-```bash
-npm run test:watch
-```
-
-For analyzing the generated JavaScript bundle sizes you can use:
-
-```bash
-npm run analyze
 ```
 
 ## 🛳 Production
@@ -412,8 +370,8 @@ Additionally, Ocean Market provides a privacy preference center for you to use. 
 Now your market users will be provided with additional options to toggle the use of your configured cookie consent categories. You can always retrieve the current consent status per category with the provided `useConsent()` hook. See below, how you can set your own custom cookies depending on the market user's consent. Feel free to adjust the provided utility functions for cookie usage provided in the `src/utils/cookies.ts` file to your needs.
 
 ```tsx
-import { CookieConsentStatus, useConsent } from '../../providers/CookieConsent'
-import { deleteCookie, setCookie } from '../../utils/cookies'
+import { CookieConsentStatus, useConsent } from '@context/CookieConsent'
+import { deleteCookie, setCookie } from '@utils/cookies'
 
 // ...
 
