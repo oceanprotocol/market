@@ -4,19 +4,11 @@ import {
   Logger,
   publisherTrustedAlgorithm as PublisherTrustedAlgorithm
 } from '@oceanprotocol/lib/'
-
 import { AssetSelectionAsset } from '@shared/Form/FormFields/AssetSelection'
 import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { OrdersData_tokenOrders as OrdersData } from '../@types/apollo/OrdersData'
 import { metadataCacheUri } from '../../app.config'
-import { DownloadedAsset } from '../models/aquarius/DownloadedAsset'
-import { SearchQuery } from '../models/aquarius/SearchQuery'
-import { SearchResponse } from '../models/aquarius/SearchResponse'
-import { PagedAssets } from '../models/PagedAssets'
-import { SortDirectionOptions, SortTermOptions } from '../models/SortAndFilters'
-import { FilterTerm } from '../models/aquarius/FilterTerm'
-import { BaseQueryParams } from '../models/aquarius/BaseQueryParams'
 
 export const MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS = 476
 

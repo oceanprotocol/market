@@ -5,7 +5,8 @@ import PricesProvider from '@context/Prices'
 import UrqlProvider from '@context/UrqlProvider'
 import ConsentProvider from '@context/CookieConsent'
 
-export default function wrapRootElement({
+// Referenced in gatsby-browser.js & gatsby-ssr.js
+export default function ContextProviders({
   element
 }: {
   element: ReactElement

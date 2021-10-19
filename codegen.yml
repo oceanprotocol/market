@@ -1,16 +1,16 @@
 overwrite: true
 schema: 'https://subgraph.rinkeby.oceanprotocol.com/subgraphs/name/oceanprotocol/ocean-subgraph'
 documents:
-  - './src/utils/subgraph.ts'
-  - './src/components/pages/History/PoolShares.tsx'
-  - './src/components/pages/History/Downloads.tsx'
-  - './src/components/pages/History/ComputeJobs/index.tsx'
-  - './src/components/organisms/AssetContent/EditHistory.tsx'
-  # - './src/components/organisms/AssetActions/Pool/index.tsx'
-  - './src/components/organisms/AssetActions/Pool/Graph.tsx'
-  - './src/components/organisms/AssetActions/Consume.tsx'
-  - './src/components/molecules/PoolTransactions.tsx'
-  - './src/components/molecules/MarketStats.tsx'
+  - './src/@utils/aquarius.ts'
+  - './src/@utils/subgraph.ts'
+  - './src/@context/Profile.tsx'
+  - './src/components/@shared/PoolTransactions/index.tsx'
+  - './src/components/@shared/Asset/AssetActions/Consume.tsx'
+  - './src/components/@shared/Asset/AssetActions/Pool/index.tsx'
+  - './src/components/@shared/Asset/AssetActions/Pool/Graph.tsx'
+  - './src/components/@shared/Asset/AssetContent/EditHistory.tsx'
+  - './src/components/Profile/Header/Stats.tsx'
+  - './src/components/Profile/History/PoolShares.tsx'
 generates:
   ./src/@types/graph.types.ts:
     plugins:

@@ -13,15 +13,11 @@ import { useUserPreferences } from '@context/UserPreferences'
 import styles from './Home.module.css'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useCancelToken } from '@hooks/useCancelToken'
-import { SearchQuery } from '../../models/aquarius/SearchQuery'
-import { SortTermOptions } from '../../models/SortAndFilters'
-import { BaseQueryParams } from '../../models/aquarius/BaseQueryParams'
-import { PagedAssets } from '../../models/PagedAssets'
+import { SortTermOptions } from '../../@types/aquarius/SearchQuery'
 
 async function getQueryHighest(
   chainIds: number[]
 ): Promise<[SearchQuery, string[]]> {
-  const dtList = await getHighestLiquidityDatatokens(chainIds)
   const dtList = await getHighestLiquidityDatatokens(chainIds)
   const baseQueryParams = {
     chainIds,
@@ -140,19 +136,17 @@ export default function HomePage(): ReactElement {
         />
       )}
 
-        {queryLatest && (
-          <SectionQueryResult
-            title="Recently Published"
-            query={queryLatest}
-            action={
-              <Button style="text" to="/search?sort=created&sortOrder=desc">
-                All data sets and algorithms →
-              </Button>
-            }
-          />
-        )}
-      </>
-
-
+      {queryLatest && (
+        <SectionQueryResult
+          title="Recently Published"
+          query={queryLatest}
+          action={
+            <Button style="text" to="/search?sort=created&sortOrder=desc">
+              All data sets and algorithms →
+            </Button>
+          }
+        />
+      )}
+    </>
   )
 }

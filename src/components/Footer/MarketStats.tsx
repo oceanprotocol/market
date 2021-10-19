@@ -6,10 +6,11 @@ import Tooltip from '@shared/atoms/Tooltip'
 import NetworkName from '@shared/NetworkName'
 import { fetchData, getSubgraphUri } from '@utils/subgraph'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
-import useNetworkMetadata from '@hooks/useNetworkMetadata'
+import useNetworkMetadata, {
+  filterNetworksByType
+} from '@hooks/useNetworkMetadata'
 import { Logger } from '@oceanprotocol/lib'
 import styles from './MarketStats.module.css'
-import { filterNetworksByType } from '../Header/UserPreferences/Networks'
 
 const getTotalPoolsValues = gql`
   query PoolsData {

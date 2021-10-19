@@ -1,7 +1,8 @@
 import { PageProps } from 'gatsby'
 import React, { ReactElement } from 'react'
-import App from './App'
+import App from '.'
 
+// Gatsby-specific, referenced in gatsby-browser.js & gatsby-ssr.js
 const wrapPageElement = ({
   element,
   props

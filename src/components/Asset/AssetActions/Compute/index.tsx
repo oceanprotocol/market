@@ -17,6 +17,7 @@ import { useAsset } from '@context/Asset'
 import {
   generateBaseQuery,
   getFilterTerm,
+  queryMetadata,
   transformDDOToAssetSelection
 } from '@utils/aquarius'
 import { Formik } from 'formik'
@@ -29,7 +30,6 @@ import axios from 'axios'
 import FormStartComputeDataset from './FormComputeDataset'
 import styles from './index.module.css'
 import SuccessConfetti from '@shared/SuccessConfetti'
-import Button from '@shared/atoms/Button'
 import { secondsToString } from '@utils/metadata'
 import { AssetSelectionAsset } from '@shared/Form/FormFields/AssetSelection'
 import AlgorithmDatasetsListForCompute from '../../AssetContent/AlgorithmDatasetsListForCompute'
@@ -38,15 +38,6 @@ import AssetActionHistoryTable from '../AssetActionHistoryTable'
 import ComputeJobs from '../../../Profile/History/ComputeJobs'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
-import { BaseQueryParams } from '../../../../models/aquarius/BaseQueryParams'
-import { SortTermOptions } from '../../../../models/SortAndFilters'
-import { SearchQuery } from '../../../../models/aquarius/SearchQuery'
-
-const SuccessAction = () => (
-  <Button style="text" to="/profile?defaultTab=ComputeJobs" size="small">
-    Go to history →
-  </Button>
-)
 
 export default function Compute({
   dtBalance,

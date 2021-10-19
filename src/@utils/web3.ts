@@ -1,96 +1,12 @@
+import { getNetworkDisplayName } from '@hooks/useNetworkMetadata'
 import { Logger } from '@oceanprotocol/lib'
 import { getOceanConfig } from './ocean'
-
-export interface EthereumListsChain {
-  name: string
-  chainId: number
-  shortName: string
-  chain: string
-  network: string
-  networkId: number
-  nativeCurrency: { name: string; symbol: string; decimals: number }
-  rpc: string[]
-  infoURL: string
-  faucets: string[]
-  explorers: [{ url: string }]
-}
-
-export interface NetworkObject {
-  chainId: number
-  name: string
-  nativeCurrency: string
-  explorers: [{ url: string }]
-  urlList: string[]
-}
-
-const configGaiaX = getOceanConfig(2021000)
-
-export const networkDataGaiaX: EthereumListsChain = {
-  name: 'GAIA-X Testnet',
-  chainId: 2021000,
-  shortName: 'GAIA-X',
-  chain: 'GAIA-X',
-  network: 'testnet',
-  networkId: 2021000,
-  nativeCurrency: { name: 'Gaia-X', symbol: 'GX', decimals: 18 },
-  rpc: [configGaiaX.nodeUri],
-  faucets: [
-    'https://faucet.gaiaxtestnet.oceanprotocol.com/',
-    'https://faucet.gx.gaiaxtestnet.oceanprotocol.com/'
-  ],
-  infoURL: 'https://www.gaia-x.eu',
-  explorers: [{ url: '' }]
-}
 
 export function accountTruncate(account: string): string {
   if (!account) return
   const middle = account.substring(6, 38)
   const truncated = account.replace(middle, '…')
   return truncated
-}
-
-export function getNetworkDisplayName(
-  data: EthereumListsChain,
-  networkId: number
-): string {
-  let displayName
-
-  switch (networkId) {
-    case 137:
-      displayName = 'Polygon'
-      break
-    case 1287:
-      displayName = 'Moonbase Alpha'
-      break
-    case 1285:
-      displayName = 'Moonriver'
-      break
-    case 80001:
-      displayName = 'Polygon Mumbai'
-      break
-    case 8996:
-      displayName = 'Development'
-      break
-    default:
-      displayName = data
-        ? `${data.chain} ${data.network === 'mainnet' ? '' : data.network}`
-        : 'Unknown'
-      break
-  }
-
-  return displayName
-}
-
-export function getNetworkDataById(
-  data: { node: EthereumListsChain }[],
-  networkId: number
-): EthereumListsChain {
-  if (!networkId) return
-  const networkData = data.filter(
-    ({ node }: { node: EthereumListsChain }) => node.chainId === networkId
-  )
-
-  return networkId === 2021000 ? networkDataGaiaX : networkData[0]?.node
 }
 
 export async function addCustomNetwork(

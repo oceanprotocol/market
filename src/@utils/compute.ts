@@ -15,8 +15,6 @@ import { CancelToken } from 'axios'
 import { gql } from 'urql'
 import { queryMetadata, getFilterTerm, generateBaseQuery } from './aquarius'
 import { fetchDataForMultipleChains } from './subgraph'
-import { OrdersData_tokenOrders_datatokenId as OrdersDatatoken } from '../@types/apollo/OrdersData'
-import { BaseQueryParams } from '../models/aquarius/BaseQueryParams'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {

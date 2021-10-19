@@ -13,14 +13,12 @@ import { infuraProjectId as infuraId, portisId } from '../../app.config'
 import WalletConnectProvider from '@walletconnect/web3-provider'
 import { Logger } from '@oceanprotocol/lib'
 import { isBrowser } from '@utils/index'
-import {
-  EthereumListsChain,
-  getNetworkDataById,
-  getNetworkDisplayName
-} from '@utils/web3'
 import { getEnsName } from '@utils/ens'
 import { getOceanBalance } from '@utils/ocean'
-import useNetworkMetadata from '@hooks/useNetworkMetadata'
+import useNetworkMetadata, {
+  getNetworkDataById,
+  getNetworkDisplayName
+} from '@hooks/useNetworkMetadata'
 
 interface Web3ProviderValue {
   web3: Web3

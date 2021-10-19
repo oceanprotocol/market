@@ -1,9 +1,5 @@
 import { useStaticQuery, graphql } from 'gatsby'
-import { EthereumListsChain } from '@utils/web3'
-
-export interface UseNetworkMetadata {
-  networksList: { node: EthereumListsChain }[]
-}
+import { UseNetworkMetadata } from './types'
 
 const networksQuery = graphql`
   query {
@@ -36,3 +32,5 @@ export default function useNetworkMetadata(): UseNetworkMetadata {
 
   return { networksList }
 }
+
+export * from './utils'

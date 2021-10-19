@@ -17,7 +17,6 @@ import MetaMain from './MetaMain'
 import EditHistory from './EditHistory'
 import { useWeb3 } from '@context/Web3'
 import styles from './index.module.css'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import NetworkName from '@shared/NetworkName'
 
 export interface AssetContentProps {
@@ -51,11 +50,8 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
   const [showEdit, setShowEdit] = useState<boolean>()
   const [isComputeType, setIsComputeType] = useState<boolean>(false)
   const [showEditCompute, setShowEditCompute] = useState<boolean>()
-  const [showEditAdvancedSettings, setShowEditAdvancedSettings] =
-    useState<boolean>()
   const [isOwner, setIsOwner] = useState(false)
   const { ddo, price, metadata, type } = useAsset()
-  const { appConfig } = useSiteMetadata()
 
   useEffect(() => {
     if (!accountId || !owner) return

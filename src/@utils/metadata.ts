@@ -1,10 +1,13 @@
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import isUrl from 'is-url-superb'
-import { toStringNoMS } from '.'
 import slugify from '@sindresorhus/slugify'
 import { DDO, MetadataAlgorithm, Logger } from '@oceanprotocol/lib'
 import { FormPublishData } from '../components/Publish/_types'
+
+export function dateToStringNoMS(date: Date): string {
+  return date.toISOString().replace(/\.[0-9]{3}Z/, 'Z')
+}
 
 export function transformTags(value: string): string[] {
   const originalTags = value?.split(',')
@@ -106,7 +109,7 @@ export function transformPublishFormToMetadata(
   }: Partial<FormPublishData>,
   ddo?: DDO
 ): MetadataMarket {
-  const currentTime = toStringNoMS(new Date())
+  const currentTime = dateToStringNoMS(new Date())
 
   const metadata: MetadataMarket = {
     main: {
@@ -204,7 +207,7 @@ export function transformPublishAlgorithmFormToMetadata(
   }: Partial<FormPublishData>,
   ddo?: DDO
 ): MetadataMarket {
-  const currentTime = toStringNoMS(new Date())
+  const currentTime = dateToStringNoMS(new Date())
   const fileUrl = typeof files !== 'string' && files[0].url
   const algorithmLanguage = getAlgorithmFileExtension(fileUrl)
   const algorithm = getAlgorithmComponent(

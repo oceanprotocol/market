@@ -15,16 +15,13 @@ import {
 import { useUserPreferences } from './UserPreferences'
 import { PoolShares_poolShares as PoolShare } from '../@types/apollo/PoolShares'
 import { DDO, Logger } from '@oceanprotocol/lib'
-import { getDownloadAssets, getPublishedAssets } from '../utils/aquarius'
-  getPublishedAssets
-} from '@utils/aquarius'
+import { getDownloadAssets, getPublishedAssets } from '@utils/aquarius'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { accountTruncate } from '@utils/web3'
 import axios, { CancelToken } from 'axios'
 import ethereumAddress from 'ethereum-address'
 import get3BoxProfile from '@utils/profile'
 import web3 from 'web3'
-import { DownloadedAsset } from '../models/aquarius/DownloadedAsset'
 
 interface ProfileProviderValue {
   profile: Profile
