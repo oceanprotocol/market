@@ -6,13 +6,25 @@ import {
 } from '@utils/aquarius'
 import queryString from 'query-string'
 import { CancelToken } from 'axios'
-import { BaseQueryParams } from '../../../models/aquarius/BaseQueryParams'
-import { SearchQuery } from '../../../models/aquarius/SearchQuery'
-import { FilterTerm } from '../../../models/aquarius/FilterTerm'
 import {
   SortDirectionOptions,
   SortTermOptions
-} from '../../../models/SortAndFilters'
+} from '../../@types/aquarius/SearchQuery'
+
+export function updateQueryStringParameter(
+  uri: string,
+  key: string,
+  newValue: string
+): string {
+  const regex = new RegExp('([?&])' + key + '=.*?(&|$)', 'i')
+  const separator = uri.indexOf('?') !== -1 ? '&' : '?'
+
+  if (uri.match(regex)) {
+    return uri.replace(regex, '$1' + key + '=' + newValue + '$2')
+  } else {
+    return uri + separator + key + '=' + newValue
+  }
+}
 
 export function escapeESReservedChars(text: string): string {
   return text?.replace(/([!*+\-=<>&|()\\[\]{}^~?:\\/"])/g, '\\$1')

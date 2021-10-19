@@ -2,13 +2,13 @@ import React, { ReactElement } from 'react'
 import { Link } from 'gatsby'
 import { useLocation } from '@reach/router'
 import loadable from '@loadable/component'
-import styles from './Menu.module.css'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
-import UserPreferences from './UserPreferences'
 import Badge from '@shared/atoms/Badge'
 import Logo from '@shared/atoms/Logo'
+import UserPreferences from './UserPreferences'
 import Networks from './UserPreferences/Networks'
 import SearchBar from './SearchBar'
+import styles from './Menu.module.css'
 
 const Wallet = loadable(() => import('./Wallet'))
 

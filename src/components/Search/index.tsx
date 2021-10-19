@@ -3,13 +3,11 @@ import AssetList from '@shared/AssetList/AssetList'
 import queryString from 'query-string'
 import Filters from './Filters'
 import Sort from './sort'
-import { getResults } from './utils'
+import { getResults, updateQueryStringParameter } from './utils'
 import { navigate } from 'gatsby'
-import { updateQueryStringParameter } from '@utils/index'
 import { useUserPreferences } from '@context/UserPreferences'
 import { useCancelToken } from '@hooks/useCancelToken'
 import styles from './index.module.css'
-import { PagedAssets } from '../../../models/PagedAssets'
 
 export default function SearchPage({
   location,
@@ -78,33 +76,33 @@ export default function SearchPage({
 
   return (
     <>
-        <div className={styles.search}>
-          <div className={styles.row}>
-            <Filters
-              serviceType={serviceType}
-              accessType={accessType}
-              setServiceType={setServiceType}
-              setAccessType={setAccessType}
-              addFiltersToUrl
-            />
-            <Sort
-              sortType={sortType}
-              sortDirection={sortDirection}
-              setSortType={setSortType}
-              setSortDirection={setSortDirection}
-            />
-          </div>
-        </div>
-        <div className={styles.results}>
-          <AssetList
-            assets={queryResult?.results}
-            showPagination
-            isLoading={loading}
-            page={queryResult?.page}
-            totalPages={queryResult?.totalPages}
-            onPageChange={updatePage}
+      <div className={styles.search}>
+        <div className={styles.row}>
+          <Filters
+            serviceType={serviceType}
+            accessType={accessType}
+            setServiceType={setServiceType}
+            setAccessType={setAccessType}
+            addFiltersToUrl
+          />
+          <Sort
+            sortType={sortType}
+            sortDirection={sortDirection}
+            setSortType={setSortType}
+            setSortDirection={setSortDirection}
           />
         </div>
-      </>
+      </div>
+      <div className={styles.results}>
+        <AssetList
+          assets={queryResult?.results}
+          showPagination
+          isLoading={loading}
+          page={queryResult?.page}
+          totalPages={queryResult?.totalPages}
+          onPageChange={updatePage}
+        />
+      </div>
+    </>
   )
 }

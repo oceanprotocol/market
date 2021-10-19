@@ -7,7 +7,7 @@ import classNames from 'classnames/bind'
 import {
   SortDirectionOptions,
   SortTermOptions
-} from '../../../models/SortAndFilters'
+} from '../../@types/aquarius/SearchQuery'
 
 const cx = classNames.bind(styles)
 

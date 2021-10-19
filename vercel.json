@@ -1,1 +1,6 @@
-{ "rewrites": [{ "source": "/asset/:did", "destination": "/asset/" }] }
+{
+  "rewrites": [
+    { "source": "/asset/:did", "destination": "/asset/" },
+    { "source": "/profile/:account", "destination": "/profile/" }
+  ]
+}

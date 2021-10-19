@@ -1,7 +1,9 @@
 import React, { ReactElement } from 'react'
-import { getNetworkDataById, getNetworkDisplayName } from '@utils/web3'
 import styles from './index.module.css'
-import useNetworkMetadata from '@hooks/useNetworkMetadata'
+import useNetworkMetadata, {
+  getNetworkDataById,
+  getNetworkDisplayName
+} from '@hooks/useNetworkMetadata'
 import { NetworkIcon } from './NetworkIcon'
 
 export default function NetworkName({

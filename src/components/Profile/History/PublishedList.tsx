@@ -6,7 +6,7 @@ import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { useUserPreferences } from '@context/UserPreferences'
 import styles from './PublishedList.module.css'
 import { useCancelToken } from '@hooks/useCancelToken'
-import { PagedAssets } from '../../../../models/PagedAssets'
+import Filters from '../../Search/Filters'
 
 export default function PublishedList({
   accountId

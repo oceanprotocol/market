@@ -4,7 +4,7 @@ import Time from '@shared/atoms/Time'
 import AssetTitle from '@shared/AssetList/AssetListTitle'
 import NetworkName from '@shared/NetworkName'
 import { useProfile } from '@context/Profile'
-import { DownloadedAsset } from '@utils/aquarius'
+
 const columns = [
   {
     name: 'Data Set',

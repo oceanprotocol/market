@@ -1,15 +1,15 @@
 import React, { ReactElement } from 'react'
 import { graphql, PageProps, useStaticQuery } from 'gatsby'
 import Alert from '@shared/atoms/Alert'
-import Footer from './Footer/Footer'
-import Header from './Header'
-import StylesGlobal from '../stylesGlobal/StylesGlobal'
+import Footer from '../Footer/Footer'
+import Header from '../Header'
+import StylesGlobal from '../../stylesGlobal/StylesGlobal'
 import { useWeb3 } from '@context/Web3'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
 import AnnouncementBanner from '@shared/AnnouncementBanner'
-import PrivacyPreferenceCenter from './Privacy/PrivacyPreferenceCenter'
-import styles from './App.module.css'
+import PrivacyPreferenceCenter from '../Privacy/PrivacyPreferenceCenter'
+import styles from './index.module.css'
 
 const contentQuery = graphql`
   query AppQuery {

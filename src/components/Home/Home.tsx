@@ -13,10 +13,7 @@ import { useUserPreferences } from '@context/UserPreferences'
 import styles from './Home.module.css'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useCancelToken } from '@hooks/useCancelToken'
-import { SearchQuery } from '../../models/aquarius/SearchQuery'
-import { SortOptions, SortTermOptions } from '../../models/SortAndFilters'
-import { BaseQueryParams } from '../../models/aquarius/BaseQueryParams'
-import { PagedAssets } from '../../models/PagedAssets'
+import { SortOptions, SortTermOptions } from '../../@types/aquarius/SearchQuery'
 
 async function getQueryHighest(
   chainIds: number[]
@@ -141,19 +138,17 @@ export default function HomePage(): ReactElement {
         />
       )}
 
-        {queryLatest && (
-          <SectionQueryResult
-            title="Recently Published"
-            query={queryLatest}
-            action={
-              <Button style="text" to="/search?sort=created&sortOrder=desc">
-                All data sets and algorithms →
-              </Button>
-            }
-          />
-        )}
-      </>
-
-
+      {queryLatest && (
+        <SectionQueryResult
+          title="Recently Published"
+          query={queryLatest}
+          action={
+            <Button style="text" to="/search?sort=created&sortOrder=desc">
+              All data sets and algorithms →
+            </Button>
+          }
+        />
+      )}
+    </>
   )
 }

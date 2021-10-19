@@ -12,6 +12,7 @@ export default function AssetActionHistoryTable({
   children: ReactNode
 }): ReactElement {
   const [open, setOpen] = useState(false)
+
   function handleClick() {
     setOpen(!open)
   }

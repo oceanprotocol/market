@@ -1,5 +1,6 @@
-const createFields = require('./gatsby/createFields')
+const createMarkdownFields = require('./gatsby/createMarkdownFields')
 const createMarkdownPages = require('./gatsby/createMarkdownPages')
+const createTypes = require('./gatsby/createTypes')
 const execSync = require('child_process').execSync
 const path = require('path')
 
@@ -8,7 +9,7 @@ execSync(`node ./scripts/write-repo-metadata > repo-metadata.json`, {
   stdio: 'inherit'
 })
 
-// Generate GraphQl typings for urql
+// Generate GraphQL typings for urql
 // execSync(`npm run graphql:graphTypes`, { stdio: 'inherit' })
 
 // Generate Apollo typings
@@ -22,33 +23,12 @@ execSync(
   }
 )
 
-//Extend ContentJson to support optional field "optionalCookies" in gdpr.json
-//Extend PublishJsonData to support optional fields for disclaimers
 exports.sourceNodes = ({ actions }) => {
-  const { createTypes } = actions
-  const typeDefs = `
-    type ContentJson implements Node {
-      accept: String
-      reject: String
-      close: String
-      configure: String
-      optionalCookies: [Cookie!]
-    }
-    type Cookie {
-      title: String!
-      desc: String!
-      cookieName: String!
-    }
-    type PublishJsonData implements Node {
-      disclaimer: String
-      disclaimerValues: [String!]
-    }
-  `
-  createTypes(typeDefs)
+  createTypes(actions)
 }
 
 exports.onCreateNode = ({ node, actions, getNode }) => {
-  createFields(node, actions, getNode)
+  createMarkdownFields(node, actions, getNode)
 }
 
 exports.createPages = async ({ graphql, actions }) => {
