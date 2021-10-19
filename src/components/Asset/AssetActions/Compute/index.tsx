@@ -17,6 +17,7 @@ import { useAsset } from '@context/Asset'
 import {
   generateBaseQuery,
   getFilterTerm,
+  queryMetadata,
   transformDDOToAssetSelection
 } from '@utils/aquarius'
 import { Formik } from 'formik'

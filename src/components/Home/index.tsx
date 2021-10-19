@@ -10,25 +10,14 @@ import {
 import { getHighestLiquidityDatatokens } from '@utils/subgraph'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import { useUserPreferences } from '@context/UserPreferences'
-<<<<<<< HEAD:src/components/Home/index.tsx
 import styles from './index.module.css'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { SortTermOptions } from '../../@types/aquarius/SearchQuery'
-=======
-import styles from './Home.module.css'
-import { useIsMounted } from '@hooks/useIsMounted'
-import { useCancelToken } from '@hooks/useCancelToken'
-import { SearchQuery } from '../../models/aquarius/SearchQuery'
-import { SortTermOptions } from '../../models/SortAndFilters'
-import { BaseQueryParams } from '../../models/aquarius/BaseQueryParams'
-import { PagedAssets } from '../../models/PagedAssets'
->>>>>>> 14d71ad2 (reorganize all the things):src/components/Home/Home.tsx
 
 async function getQueryHighest(
   chainIds: number[]
 ): Promise<[SearchQuery, string[]]> {
-  const dtList = await getHighestLiquidityDatatokens(chainIds)
   const dtList = await getHighestLiquidityDatatokens(chainIds)
   const baseQueryParams = {
     chainIds,

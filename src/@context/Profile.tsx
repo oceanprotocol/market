@@ -15,16 +15,9 @@ import {
 import { useUserPreferences } from './UserPreferences'
 import { PoolShares_poolShares as PoolShare } from '../@types/apollo/PoolShares'
 import { DDO, Logger } from '@oceanprotocol/lib'
-<<<<<<< HEAD:src/@context/Profile.tsx
 import { getDownloadAssets, getPublishedAssets } from '@utils/aquarius'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { accountTruncate } from '@utils/web3'
-=======
-import { getDownloadAssets, getPublishedAssets } from '../utils/aquarius'
-import { useSiteMetadata } from '../hooks/useSiteMetadata'
-import { Profile } from '../@types/Profile'
-import { accountTruncate } from '../utils/web3'
->>>>>>> 14d71ad2 (reorganize all the things):src/context/Profile.tsx
 import axios, { CancelToken } from 'axios'
 import ethereumAddress from 'ethereum-address'
 import get3BoxProfile from '@utils/profile'

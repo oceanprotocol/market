@@ -18,14 +18,7 @@ import { getOceanBalance } from '@utils/ocean'
 import useNetworkMetadata, {
   getNetworkDataById,
   getNetworkDisplayName
-<<<<<<< HEAD:src/@context/Web3.tsx
 } from '@hooks/useNetworkMetadata'
-=======
-} from '../utils/web3'
-import { getEnsName } from '../utils/ens'
-import { getOceanBalance } from '../utils/ocean'
-import useNetworkMetadata from '../hooks/useNetworkMetadata'
->>>>>>> 14d71ad2 (reorganize all the things):src/context/Web3.tsx
 
 interface Web3ProviderValue {
   web3: Web3
