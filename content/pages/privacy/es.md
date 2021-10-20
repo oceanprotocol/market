@@ -233,12 +233,7 @@ Si tiene preguntas sobre el Purgatory o no tiene una cuenta de GitHub y desea qu
 ## 7.5 Derecho a la portabilidad de los datos (Art. 20 del GDPR)
 
 Tiene derecho a recibir sus datos personales en formato estructurado, de uso común y legible por máquina. Además, tiene derecho a transmitir esos datos a otro responsable del tratamiento sin impedimentos, cuando los fundamentos legales definidos en el Art. 20 del GDPR se aplican.
-
-Puede hacer uso de su derecho a la portabilidad de los datos comunicándose con nosotros o realizando los siguientes pasos:
-
-- Visite la tabla de historial en Ocean Market ([market.oceanprotocol.com/history](https://market.oceanprotocol.com/history)).
-- Valide su identidad.
-- Haga clic en el botón de descarga para cada tabla de interés.
+Puede hacer uso de su derecho a la portabilidad de los datos comunicándose con nosotros.
 
 ## 7.6 Derecho de oposición (Art. 21 del GDPR)
 

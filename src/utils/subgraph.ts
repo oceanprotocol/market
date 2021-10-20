@@ -252,6 +252,14 @@ const UserTokenOrders = gql`
     }
   }
 `
+const UserSalesQuery = gql`
+  query UserSalesQuery($userSalesId: String) {
+    users(where: { id: $userSalesId }) {
+      id
+      nrSales
+    }
+  }
+`
 
 export function getSubgraphUri(chainId: number): string {
   const config = getOceanConfig(chainId)
@@ -603,29 +611,6 @@ export async function getHighestLiquidityDatatokens(
   return dtList
 }
 
-export async function getAccountNumberOfOrders(
-  assets: DDO[],
-  chainIds: number[]
-): Promise<number> {
-  const datatokens: string[] = []
-  assets.forEach((ddo) => {
-    datatokens.push(ddo?.dataToken?.toLowerCase())
-  })
-  const queryVariables = {
-    datatokenId_in: datatokens
-  }
-  const results = await fetchDataForMultipleChains(
-    TotalAccountOrders,
-    queryVariables,
-    chainIds
-  )
-  let numberOfOrders = 0
-  for (const result of results) {
-    numberOfOrders += result?.tokenOrders?.length
-  }
-  return numberOfOrders
-}
-
 export function calculateUserLiquidity(poolShare: PoolShare): number {
   const ocean =
     (poolShare.balance / poolShare.poolId.totalShares) *
@@ -711,5 +696,28 @@ export async function getUserTokenOrders(
     return data
   } catch (error) {
     Logger.error(error.message)
+  }
+}
+
+export async function getUserSales(
+  accountId: string,
+  chainIds: number[]
+): Promise<number> {
+  const variables = { userSalesId: accountId?.toLowerCase() }
+  try {
+    const userSales = await fetchDataForMultipleChains(
+      UserSalesQuery,
+      variables,
+      chainIds
+    )
+    let salesSum = 0
+    for (let i = 0; i < userSales.length; i++) {
+      if (userSales[i].users.length > 0) {
+        salesSum += userSales[i].users[0].nrSales
+      }
+    }
+    return salesSum
+  } catch (error) {
+    Logger.log(error.message)
   }
 }
