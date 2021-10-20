@@ -148,24 +148,6 @@ export default function Compute({
       ]
     } as BaseQueryParams
 
-    // let algoQuerry = ''
-    // trustedAlgorithmList.forEach((trusteAlgo) => {
-    //   algoQuerry += `id:"${trusteAlgo.did}" OR `
-    // })
-    // if (trustedAlgorithmList.length >= 1) {
-    //   algoQuerry = algoQuerry.substring(0, algoQuerry.length - 3)
-    // }
-    // const algorithmQuery =
-    //   trustedAlgorithmList.length > 0 ? `(${algoQuerry}) AND` : ``
-    // const query = {
-    //   query: {
-    //     query_string: {
-    //       query: `${algorithmQuery} service.attributes.main.type:algorithm AND chainId:${chainId} -isInPurgatory:true`
-    //     }
-    //   },
-    //   sort: { created: 'desc' }
-    // }
-
     const query = generateBaseQuery(baseParams)
     return query
   }

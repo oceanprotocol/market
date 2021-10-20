@@ -204,8 +204,6 @@ export async function retrieveDDOListByDIDs(
   }
 }
 
-// under this needs to be removed or moved
-
 export async function transformDDOToAssetSelection(
   datasetProviderEndpoint: string,
   ddoList: DDO[],
