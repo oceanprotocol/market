@@ -1,7 +1,3 @@
-.dynamic {
-  composes: content from './index.module.css';
-}
-
 .wallet {
   display: flex;
   align-items: center;

@@ -5,7 +5,7 @@ import { Field } from 'formik'
 import styles from './AdvancedSettings.module.css'
 
 export default function AdvancedSettings(prop: {
-  content: FormContent
+  content: FormStepContent
   handleFieldChange: (
     e: ChangeEvent<HTMLInputElement>,
     field: FormFieldProps

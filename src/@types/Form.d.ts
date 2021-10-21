@@ -21,10 +21,9 @@ declare global {
     advanced?: boolean
   }
 
-  interface FormContent {
+  interface FormStepContent {
     title: string
     description?: string
-    success: string
-    data: FormFieldProps[]
+    fields: FormFieldProps[]
   }
 }

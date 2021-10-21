@@ -1,40 +1,23 @@
 import Conversion from '@shared/Price/Conversion'
-import { useField } from 'formik'
-import React, { ReactElement, useState, useEffect } from 'react'
+import { useField, useFormikContext } from 'formik'
+import React, { ReactElement } from 'react'
 import Input from '@shared/Form/Input'
 import Error from './Error'
-import { DDO } from '@oceanprotocol/lib'
 import PriceUnit from '@shared/Price/PriceUnit'
-import usePricing from '@hooks/usePricing'
 import styles from './Price.module.css'
+import { FormPublishData } from '../../_types'
 
 export default function Price({
-  ddo,
   firstPrice,
   free
 }: {
-  ddo: DDO
   firstPrice?: string
   free?: boolean
 }): ReactElement {
   const [field, meta] = useField('price')
-  const { getDTName, getDTSymbol } = usePricing()
-  const [dtSymbol, setDtSymbol] = useState<string>()
-  const [dtName, setDtName] = useState<string>()
 
-  useEffect(() => {
-    if (!ddo) return
-    async function setDatatokenSymbol(ddo: DDO) {
-      const dtSymbol = await getDTSymbol(ddo)
-      setDtSymbol(dtSymbol)
-    }
-    async function setDatatokenName(ddo: DDO) {
-      const dtName = await getDTName(ddo)
-      setDtName(dtName)
-    }
-    setDatatokenSymbol(ddo)
-    setDatatokenName(ddo)
-  }, [])
+  const { values } = useFormikContext<FormPublishData>()
+  const { dataTokenOptions } = values.services[0]
 
   return (
     <div className={styles.price}>
@@ -62,7 +45,7 @@ export default function Price({
         </div>
         <div className={styles.datatoken}>
           <h4>
-            = <strong>1</strong> {dtSymbol}{' '}
+            = <strong>1</strong> {dataTokenOptions.symbol}{' '}
             <Conversion price={field.value} className={styles.conversion} />
           </h4>
         </div>

@@ -13,6 +13,8 @@ import styles from './index.module.css'
 import { ErrorMessage, FieldInputProps } from 'formik'
 import classNames from 'classnames/bind'
 import Disclaimer from './Disclaimer'
+import Tooltip from '@shared/atoms/Tooltip'
+import Markdown from '@shared/atoms/Markdown'
 
 const cx = classNames.bind(styles)
 
@@ -97,7 +99,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
       data-is-submitting={props.form?.isSubmitting ? true : null}
     >
       <Label htmlFor={props.name} required={props.required}>
-        {label}
+        {label} {help && <Tooltip content={<Markdown text={help} />} />}
       </Label>
       <InputElement size={size} {...field} {...props} />
 
@@ -107,7 +109,7 @@ export default function Input(props: Partial<InputProps>): ReactElement {
         </div>
       )}
 
-      {help && <Help>{help}</Help>}
+      {/* {help && <Help>{help}</Help>} */}
 
       {disclaimer && (
         <Disclaimer visible={disclaimerVisible}>{disclaimer}</Disclaimer>

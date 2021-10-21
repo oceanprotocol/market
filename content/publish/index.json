@@ -1,6 +1,6 @@
 {
   "title": "Publish",
   "description": "Highlight the important features of your data set or algorithm to make it more discoverable and catch the interest of data consumers.",
-  "warning": "Given the beta status, publishing on Ropsten or Rinkeby first is strongly recommended. Please familiarize yourself with [the market](https://oceanprotocol.com/technology/marketplaces), [the risks](https://blog.oceanprotocol.com/on-staking-on-data-in-ocean-market-3d8e09eb0a13), and the [Terms of Use](/terms).",
+  "warning": "Publishing into a test network first is strongly recommended. Please familiarize yourself with [the market](https://oceanprotocol.com/technology/marketplaces), [the risks](https://blog.oceanprotocol.com/on-staking-on-data-in-ocean-market-3d8e09eb0a13), and the [Terms of Use](/terms).",
   "tooltipNetwork": "Assets are published into the network your wallet is connected to. Switch your wallet's network to publish into another one."
 }

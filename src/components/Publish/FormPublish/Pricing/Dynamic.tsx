@@ -7,27 +7,21 @@ import Wallet from '../../../Header/Wallet'
 import Coin from './Coin'
 import styles from './Dynamic.module.css'
 import Fees from './Fees'
-import stylesIndex from './index.module.css'
 import { FormikContextType, useFormikContext } from 'formik'
-import { DDO } from '@oceanprotocol/lib'
 import Price from './Price'
 import Decimal from 'decimal.js'
 import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
+import { FormPublishData } from '../../_types'
 
-export default function Dynamic({
-  ddo,
-  content
-}: {
-  ddo: DDO
-  content: any
-}): ReactElement {
+export default function Dynamic({ content }: { content: any }): ReactElement {
   const { networkId, balance } = useWeb3()
   const { account } = useOcean()
   const [firstPrice, setFirstPrice] = useState<string>()
 
   // Connect with form
-  const { values }: FormikContextType<PriceOptions> = useFormikContext()
+  const { values }: FormikContextType<FormPublishData> = useFormikContext()
+  const { dataTokenOptions } = values.services[0]
 
   const {
     price,
@@ -36,7 +30,7 @@ export default function Dynamic({
     swapFee,
     dtAmount,
     oceanAmount
-  } = values
+  } = values.pricing
 
   const [error, setError] = useState<string>()
 
@@ -69,8 +63,8 @@ export default function Dynamic({
   }, [price, networkId, account, balance])
 
   return (
-    <div className={styles.dynamic}>
-      <FormHelp className={stylesIndex.help}>{content.info}</FormHelp>
+    <>
+      <FormHelp>{content.info}</FormHelp>
 
       <aside className={styles.wallet}>
         {balance?.ocean && (
@@ -88,7 +82,7 @@ export default function Dynamic({
         Price <Tooltip content={content.tooltips.poolInfo} />
       </h4>
 
-      <Price ddo={ddo} firstPrice={firstPrice} />
+      <Price firstPrice={firstPrice} />
 
       <h4 className={styles.title}>
         Datatoken Liquidity Pool <Tooltip content={content.tooltips.poolInfo} />
@@ -103,8 +97,8 @@ export default function Dynamic({
         <Coin
           name="dtAmount"
           datatokenOptions={{
-            symbol: ddo.dataTokenInfo.symbol,
-            name: ddo.dataTokenInfo.name
+            symbol: dataTokenOptions.symbol,
+            name: dataTokenOptions.name
           }}
           weight={`${Number(weightOnDataToken) * 10}%`}
           readOnly
@@ -123,6 +117,6 @@ export default function Dynamic({
           <Alert text={error} state="error" />
         </div>
       )}
-    </div>
+    </>
   )
 }

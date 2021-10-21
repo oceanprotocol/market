@@ -10,23 +10,23 @@ export default function Debug({
   values: Partial<FormPublishData>
 }): ReactElement {
   const ddo = {
-    '@context': 'https://w3id.org/did/v1',
-    dataTokenInfo: {
-      ...values.dataTokenOptions
-    },
-    service: [
-      {
-        index: 0,
-        type: 'metadata',
-        attributes: { ...transformPublishFormToMetadata(values) }
-      },
-      {
-        index: 1,
-        type: values.access,
-        serviceEndpoint: values.providerUri,
-        attributes: {}
-      }
-    ]
+    '@context': 'https://w3id.org/did/v1'
+    // dataTokenInfo: {
+    //   ...values.dataTokenOptions
+    // },
+    // service: [
+    //   {
+    //     index: 0,
+    //     type: 'metadata',
+    //     attributes: { ...transformPublishFormToMetadata(values) }
+    //   },
+    //   {
+    //     index: 1,
+    //     type: values.access,
+    //     serviceEndpoint: values.providerUri,
+    //     attributes: {}
+    //   }
+    // ]
   }
 
   return (

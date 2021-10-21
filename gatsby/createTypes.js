@@ -16,9 +16,15 @@ function createTypes(actions) {
       desc: String!
       cookieName: String!
     }
-    type PublishJsonData implements Node {
+    type PublishJson implements Node {
+      metadata: Extensions
+      services: Extensions
+      pricing: Extensions
+    }
+    type Extensions {
       disclaimer: String
       disclaimerValues: [String!]
+      advanced: Boolean
     }
   `
   createTypes(typeDefs)

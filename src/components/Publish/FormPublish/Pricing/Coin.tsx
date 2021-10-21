@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react'
-import stylesIndex from './index.module.css'
 import styles from './Coin.module.css'
 import InputElement from '@shared/Form/Input/InputElement'
 import Logo from '@images/logo.svg'
@@ -46,7 +45,7 @@ export default function Coin({
           {...field}
         />
         {datatokenOptions?.symbol === 'OCEAN' && (
-          <Conversion price={field.value} className={stylesIndex.conversion} />
+          <Conversion price={field.value} />
         )}
         <Error meta={meta} />
       </div>
