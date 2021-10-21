@@ -10,9 +10,8 @@ import {
 import Permission from '../organisms/Permission'
 import {
   getTopAssetsPublishers,
-  getHighestLiquidityDIDs
+  getHighestLiquidityDatatokens
 } from '../../utils/subgraph'
-import { getHighestLiquidityDatatokens } from '../../utils/subgraph'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../providers/UserPreferences'

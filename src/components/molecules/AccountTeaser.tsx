@@ -48,18 +48,18 @@ const AccountTeaser: React.FC<AccountTeaserProps> = ({ account }) => {
           ) : (
             <Blockies accountId={account} className={styles.blockies} />
           )}
-          {/* <div> */}
-          <Dotdotdot className={styles.name} clamp={3}>
-            {profile?.name ? (
-              <h3> {profile.name}</h3>
-            ) : (
-              <h3>{accountTruncate(account)}</h3>
-            )}
-          </Dotdotdot>
-          <div className={styles.sales}>
-            {`${sales} ${sales === 1 ? 'sale' : 'sales'}`}
+          <div>
+            <Dotdotdot className={styles.name} clamp={3}>
+              {profile?.name ? (
+                <h3> {profile.name}</h3>
+              ) : (
+                <h3>{accountTruncate(account)}</h3>
+              )}
+            </Dotdotdot>
+            <p className={styles.sales}>
+              {`${sales} ${sales === 1 ? 'sale' : 'sales'}`}
+            </p>
           </div>
-          {/* </div> */}
         </header>
       </Link>
     </article>

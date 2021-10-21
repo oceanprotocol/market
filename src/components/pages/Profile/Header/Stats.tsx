@@ -28,11 +28,9 @@ async function getPoolSharesLiquidity(
 }
 
 export default function Stats({
-  accountId,
-  showInAccountTeaser
+  accountId
 }: {
   accountId: string
-  showInAccountTeaser?: boolean
 }): ReactElement {
   const { chainIds } = useUserPreferences()
   const { poolShares, assets, assetsTotal, sales } = useProfile()
@@ -87,42 +85,17 @@ export default function Stats({
   }, [poolShares])
 
   return (
-    <div
-      className={`${styles.stats} ${
-        showInAccountTeaser ? styles.accountTeaserStats : ''
-      }`}
-    >
-      {!showInAccountTeaser && (
-        <NumberUnit
-          label="Liquidity in Own Assets"
-          value={
-            <Conversion
-              price={publisherLiquidity?.price}
-              hideApproximateSymbol
-            />
-          }
-          small={showInAccountTeaser}
-        />
-      )}
-
-      {!showInAccountTeaser && (
-        <NumberUnit
-          label="Total Liquidity"
-          value={
-            <Conversion price={`${totalLiquidity}`} hideApproximateSymbol />
-          }
-          small={showInAccountTeaser}
-        />
-      )}
+    <div className={styles.stats}>
       <NumberUnit
-        label={`Sale${sold === 1 ? '' : 's'}`}
-        value={sold}
-        small={showInAccountTeaser}
+        label="Liquidity in Own Assets"
+        value={
+          <Conversion price={publisherLiquidity?.price} hideApproximateSymbol />
+        }
       />
+
       <NumberUnit
-        label="Published"
-        value={assetsTotal}
-        small={showInAccountTeaser}
+        label="Total Liquidity"
+        value={<Conversion price={`${totalLiquidity}`} hideApproximateSymbol />}
       />
       <NumberUnit label={`Sale${sales === 1 ? '' : 's'}`} value={sales} />
       <NumberUnit label="Published" value={assetsTotal} />

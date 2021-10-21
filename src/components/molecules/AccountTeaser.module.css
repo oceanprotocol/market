@@ -16,7 +16,7 @@
   composes: box from '../atoms/Box.module.css';
   padding: calc(var(--spacer) / 2) !important;
   font-size: var(--font-size-mini);
-  height: 100%;
+  height: 90%;
   color: var(--color-secondary);
   position: relative;
 }
