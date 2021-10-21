@@ -13,6 +13,7 @@ Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 export default function Trade(): ReactElement {
   const { accountId, balance } = useWeb3()
   const { ocean } = useOcean()
+  const { isAssetNetwork } = useAsset()
   const [tokenBalance, setTokenBalance] = useState<PoolBalance>()
   const { price, ddo } = useAsset()
   const [maxDt, setMaxDt] = useState('0')
@@ -20,7 +21,14 @@ export default function Trade(): ReactElement {
 
   // Get datatoken balance, and combine with OCEAN balance from hooks into one object
   useEffect(() => {
-    if (!ocean || !balance?.ocean || !accountId || !ddo?.dataToken) return
+    if (
+      !ocean ||
+      !isAssetNetwork ||
+      !balance?.ocean ||
+      !accountId ||
+      !ddo?.dataToken
+    )
+      return
 
     async function getTokenBalance() {
       const dtBalance = await ocean.datatokens.balance(ddo.dataToken, accountId)
@@ -34,12 +42,13 @@ export default function Trade(): ReactElement {
 
   // Get maximum amount for either OCEAN or datatoken
   useEffect(() => {
-    if (!ocean || !price || price.value === 0) return
+    if (!ocean || !isAssetNetwork || !price || price.value === 0) return
 
     async function getMaximum() {
       const maxTokensInPool = await ocean.pool.getDTMaxBuyQuantity(
         price.address
       )
+
       setMaxDt(
         isValidNumber(maxTokensInPool)
           ? new Decimal(maxTokensInPool).toString()
@@ -49,6 +58,7 @@ export default function Trade(): ReactElement {
       const maxOceanInPool = await ocean.pool.getOceanMaxBuyQuantity(
         price.address
       )
+
       setMaxOcean(
         isValidNumber(maxOceanInPool)
           ? new Decimal(maxOceanInPool).toString()

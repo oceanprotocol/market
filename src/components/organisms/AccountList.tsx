@@ -1,6 +1,5 @@
 import AccountTeaser from '../molecules/AccountTeaser'
 import React, { useEffect, useState } from 'react'
-import Pagination from '../molecules/Pagination'
 import styles from './AssetList.module.css'
 import classNames from 'classnames/bind'
 import Loader from '../atoms/Loader'

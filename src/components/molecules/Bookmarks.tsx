@@ -1,5 +1,5 @@
 import { useUserPreferences } from '../../providers/UserPreferences'
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import Table from '../atoms/Table'
 import { Logger } from '@oceanprotocol/lib'
 import Price from '../atoms/Price'
@@ -7,22 +7,9 @@ import Tooltip from '../atoms/Tooltip'
 import AssetTitle from './AssetListTitle'
 import { retrieveDDOListByDIDs } from '../../utils/aquarius'
 import { getAssetsBestPrices, AssetListPrices } from '../../utils/subgraph'
-import axios, { CancelToken } from 'axios'
 import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import { useCancelToken } from '../../hooks/useCancelToken'
-
-async function getAssetsBookmarked(
-  bookmarks: string[],
-  chainIds: number[],
-  cancelToken: CancelToken
-) {
-  try {
-    const result = await retrieveDDOListByDIDs(bookmarks, chainIds, cancelToken)
-    return result
-  } catch (error) {
-    Logger.error(error.message)
-  }
-}
+import { CancelToken } from 'axios'
 
 const columns = [
   {
@@ -62,6 +49,27 @@ export default function Bookmarks(): ReactElement {
   const [isLoading, setIsLoading] = useState<boolean>()
   const { chainIds } = useUserPreferences()
   const newCancelToken = useCancelToken()
+
+  const getAssetsBookmarked = useCallback(
+    async (
+      bookmarks: string[],
+      chainIds: number[],
+      cancelToken: CancelToken
+    ) => {
+      try {
+        const result = await retrieveDDOListByDIDs(
+          bookmarks,
+          chainIds,
+          cancelToken
+        )
+        return result
+      } catch (error) {
+        Logger.error(error.message)
+      }
+    },
+    []
+  )
+
   useEffect(() => {
     if (!appConfig?.metadataCacheUri || bookmarks === []) return
 
@@ -90,7 +98,13 @@ export default function Bookmarks(): ReactElement {
       setIsLoading(false)
     }
     init()
-  }, [appConfig?.metadataCacheUri, bookmarks, chainIds, newCancelToken])
+  }, [
+    appConfig?.metadataCacheUri,
+    bookmarks,
+    chainIds,
+    getAssetsBookmarked,
+    newCancelToken
+  ])
 
   return (
     <Table

@@ -9,7 +9,7 @@
     box-shadow: none !important;
   }
   .profile,
-  .profile *:not(.printButton) {
+  .profile * {
     visibility: visible;
   }
   .profile {

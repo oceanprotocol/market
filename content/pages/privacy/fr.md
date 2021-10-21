@@ -233,12 +233,7 @@ Si vous avez des questions sur Purgatory ou si vous n&#39;avez pas de compte Git
 ## 7.5 Droit à la portabilité des données (art. 20 RGPD)
 
 Vous avez le droit de recevoir vos données personnelles dans un format structuré, couramment utilisé et lisible par machine. En outre, vous avez le droit de transmettre ces données à un autre responsable du traitement sans entrave, lorsque les fondements juridiques définis à l&#39;article 20 du RGPD s&#39;appliquent.
-
-Vous pouvez faire usage de votre droit à la portabilité des données en nous contactant ou en procédant comme suit.
-
-- Visitez l&#39;historique sur le marché Ocean ([market.oceanprotocol.com/history](https://market.oceanprotocol.com/history)).
-- Validez votre identité avec votre clé privée.
-- Cliquez sur le bouton de téléchargement pour chaque table d&#39;intérêt.
+Vous pouvez faire usage de votre droit à la portabilité des données en nous contactant.
 
 ## 7.6 Droit d&#39;opposition (art. 21 du RGPD)
 

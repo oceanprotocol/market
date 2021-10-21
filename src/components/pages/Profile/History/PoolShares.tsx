@@ -18,6 +18,7 @@ import Decimal from 'decimal.js'
 import { useProfile } from '../../../../providers/Profile'
 import { DDO } from '@oceanprotocol/lib'
 import { useCancelToken } from '../../../../hooks/useCancelToken'
+import { useIsMounted } from '../../../../hooks/useIsMounted'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
@@ -63,9 +64,9 @@ function Liquidity({ row, type }: { row: Asset; type: string }) {
     price =
       isValidNumber(row.poolShare.poolId.oceanReserve) &&
       isValidNumber(row.poolShare.poolId.datatokenReserve) &&
-      isValidNumber(row.poolShare.poolId.consumePrice)
+      isValidNumber(row.poolShare.poolId.spotPrice)
         ? new Decimal(row.poolShare.poolId.datatokenReserve)
-            .mul(new Decimal(row.poolShare.poolId.consumePrice))
+            .mul(new Decimal(row.poolShare.poolId.spotPrice))
             .plus(row.poolShare.poolId.oceanReserve)
             .toString()
         : '0'
@@ -147,6 +148,7 @@ async function getPoolSharesAssets(
     didList.push(did)
   }
   const ddoList = await retrieveDDOListByDIDs(didList, chainIds, cancelToken)
+
   for (let i = 0; i < data.length; i++) {
     const userLiquidity = calculateUserLiquidity(data[i])
     assetList.push({
@@ -172,11 +174,14 @@ export default function PoolShares({
   const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
   const { chainIds } = useUserPreferences()
   const newCancelToken = useCancelToken()
+  const isMounted = useIsMounted()
 
   const fetchPoolSharesAssets = useCallback(
-    async (cancelToken: CancelToken) => {
-      if (!poolShares || isPoolSharesLoading) return
-
+    async (
+      chainIds: number[],
+      poolShares: PoolShare[],
+      cancelToken: CancelToken
+    ) => {
       try {
         const assets = await getPoolSharesAssets(
           poolShares,
@@ -186,21 +191,27 @@ export default function PoolShares({
         setAssets(assets)
       } catch (error) {
         console.error('Error fetching pool shares: ', error.message)
+      } finally {
+        setLoading(false)
       }
     },
-    [poolShares, isPoolSharesLoading]
+    []
   )
-
+  // do not add chainIds,dataFetchInterval to effect dep
   useEffect(() => {
     const cancelToken = newCancelToken()
     async function init() {
       setLoading(true)
-      await fetchPoolSharesAssets(cancelToken)
+
+      if (!poolShares || isPoolSharesLoading || !chainIds || !isMounted())
+        return
+      await fetchPoolSharesAssets(chainIds, poolShares, cancelToken)
       setLoading(false)
 
       if (dataFetchInterval) return
+
       const interval = setInterval(async () => {
-        await fetchPoolSharesAssets(cancelToken)
+        await fetchPoolSharesAssets(chainIds, poolShares, cancelToken)
       }, REFETCH_INTERVAL)
       setDataFetchInterval(interval)
     }
@@ -209,7 +220,13 @@ export default function PoolShares({
     return () => {
       clearInterval(dataFetchInterval)
     }
-  }, [dataFetchInterval, fetchPoolSharesAssets, newCancelToken])
+  }, [
+    fetchPoolSharesAssets,
+    isPoolSharesLoading,
+    newCancelToken,
+    poolShares,
+    isMounted
+  ])
 
   return accountId ? (
     <Table

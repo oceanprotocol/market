@@ -1,13 +1,13 @@
 import React, { ReactElement, useState } from 'react'
 import { useNavigate } from '@reach/router'
 import classNames from 'classnames/bind'
-import {
-  addExistingParamsToUrl,
-  FilterByAccessOptions,
-  FilterByTypeOptions
-} from './utils'
+import { addExistingParamsToUrl } from './utils'
 import Button from '../../atoms/Button'
 import styles from './Filters.module.css'
+import {
+  FilterByAccessOptions,
+  FilterByTypeOptions
+} from '../../../models/SortAndFilters'
 
 const cx = classNames.bind(styles)
 

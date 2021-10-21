@@ -261,8 +261,8 @@ const UserTokenOrders = gql`
     }
   }
 `
-const UserSalesQuery = gql`
-  query UsersSalesQuery {
+const TopSalesQuery = gql`
+  query TopSalesQuery {
     users(
       first: 9
       orderBy: nrSales
@@ -274,6 +274,15 @@ const UserSalesQuery = gql`
     }
   }
 `
+const UserSalesQuery = gql`
+  query UserSalesQuery($userSalesId: String) {
+    users(where: { id: $userSalesId }) {
+      id
+      nrSales
+    }
+  }
+`
+
 export function getSubgraphUri(chainId: number): string {
   const config = getOceanConfig(chainId)
   return config.subgraphUri
@@ -603,10 +612,10 @@ export async function getAssetsBestPrices(
   return assetsWithPrice
 }
 
-export async function getHighestLiquidityDIDs(
+export async function getHighestLiquidityDatatokens(
   chainIds: number[]
-): Promise<[string, number]> {
-  const didList: string[] = []
+): Promise<string[]> {
+  const dtList: string[] = []
   let highestLiquidityAssets: HighestLiquidityAssetsPool[] = []
   for (const chain of chainIds) {
     const queryContext = getQueryContext(Number(chain))
@@ -616,45 +625,12 @@ export async function getHighestLiquidityDIDs(
       fetchedPools.data.pools
     )
   }
-  highestLiquidityAssets
-    .sort((a, b) => a.oceanReserve - b.oceanReserve)
-    .reverse()
+  highestLiquidityAssets.sort((a, b) => b.oceanReserve - a.oceanReserve)
   for (let i = 0; i < highestLiquidityAssets.length; i++) {
     if (!highestLiquidityAssets[i].datatokenAddress) continue
-    const did = web3.utils
-      .toChecksumAddress(highestLiquidityAssets[i].datatokenAddress)
-      .replace('0x', 'did:op:')
-    didList.push(did)
+    dtList.push(highestLiquidityAssets[i].datatokenAddress)
   }
-  const searchDids = JSON.stringify(didList)
-    .replace(/,/g, ' ')
-    .replace(/"/g, '')
-    .replace(/(\[|\])/g, '')
-    .replace(/(did:op:)/g, '0x')
-  return [searchDids, didList.length]
-}
-
-export async function getAccountNumberOfOrders(
-  assets: DDO[],
-  chainIds: number[]
-): Promise<number> {
-  const datatokens: string[] = []
-  assets.forEach((ddo) => {
-    datatokens.push(ddo?.dataToken?.toLowerCase())
-  })
-  const queryVariables = {
-    datatokenId_in: datatokens
-  }
-  const results = await fetchDataForMultipleChains(
-    TotalAccountOrders,
-    queryVariables,
-    chainIds
-  )
-  let numberOfOrders = 0
-  for (const result of results) {
-    numberOfOrders += result?.tokenOrders?.length
-  }
-  return numberOfOrders
+  return dtList
 }
 
 export function calculateUserLiquidity(poolShare: PoolShare): number {
@@ -664,7 +640,7 @@ export function calculateUserLiquidity(poolShare: PoolShare): number {
   const datatokens =
     (poolShare.balance / poolShare.poolId.totalShares) *
     poolShare.poolId.datatokenReserve
-  const totalLiquidity = ocean + datatokens * poolShare.poolId.consumePrice
+  const totalLiquidity = ocean + datatokens * poolShare.poolId.spotPrice
   return totalLiquidity
 }
 
@@ -684,6 +660,7 @@ export async function getAccountLiquidityInOwnAssets(
   )
   let totalLiquidity = 0
   let totalOceanLiquidity = 0
+
   for (const result of results) {
     for (const poolShare of result.poolShares) {
       const userShare = poolShare.balance / poolShare.poolId.totalShares
@@ -752,7 +729,7 @@ export async function getTopAssetsPublishers(
   for (const chain of chainIds) {
     const queryContext = getQueryContext(Number(chain))
     const fetchedUsers: OperationResult<UsersSalesList> = await fetchData(
-      UserSalesQuery,
+      TopSalesQuery,
       null,
       queryContext
     )
@@ -769,4 +746,27 @@ export async function getTopAssetsPublishers(
   }
 
   return data
+}
+
+export async function getUserSales(
+  accountId: string,
+  chainIds: number[]
+): Promise<number> {
+  const variables = { userSalesId: accountId?.toLowerCase() }
+  try {
+    const userSales = await fetchDataForMultipleChains(
+      UserSalesQuery,
+      variables,
+      chainIds
+    )
+    let salesSum = 0
+    for (let i = 0; i < userSales.length; i++) {
+      if (userSales[i].users.length > 0) {
+        salesSum += userSales[i].users[0].nrSales
+      }
+    }
+    return salesSum
+  } catch (error) {
+    Logger.log(error.message)
+  }
 }

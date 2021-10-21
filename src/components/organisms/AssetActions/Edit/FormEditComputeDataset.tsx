@@ -6,16 +6,19 @@ import { AssetSelectionAsset } from '../../../molecules/FormFields/AssetSelectio
 import stylesIndex from './index.module.css'
 import styles from './FormEditMetadata.module.css'
 import {
+  generateBaseQuery,
+  getFilterTerm,
   queryMetadata,
   transformDDOToAssetSelection
 } from '../../../../utils/aquarius'
 import { useAsset } from '../../../../providers/Asset'
 import { ComputePrivacyForm } from '../../../../models/FormEditComputeDataset'
 import { publisherTrustedAlgorithm as PublisherTrustedAlgorithm } from '@oceanprotocol/lib'
-import axios from 'axios'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import FormActions from './FormActions'
 import { useCancelToken } from '../../../../hooks/useCancelToken'
+import { BaseQueryParams } from '../../../../models/aquarius/BaseQueryParams'
+import { SortTermOptions } from '../../../../models/SortAndFilters'
 
 export default function FormEditComputeDataset({
   data,
@@ -37,14 +40,13 @@ export default function FormEditComputeDataset({
   async function getAlgorithmList(
     publisherTrustedAlgorithms: PublisherTrustedAlgorithm[]
   ): Promise<AssetSelectionAsset[]> {
-    const query = {
-      query: {
-        query_string: {
-          query: `service.attributes.main.type:algorithm AND chainId:${ddo.chainId} -isInPurgatory:true`
-        }
-      },
-      sort: { created: 'desc' }
-    }
+    const baseParams = {
+      chainIds: [ddo.chainId],
+      sort: { sortBy: SortTermOptions.Created },
+      filters: [getFilterTerm('service.attributes.main.type', 'algorithm')]
+    } as BaseQueryParams
+
+    const query = generateBaseQuery(baseParams)
     const querryResult = await queryMetadata(query, newCancelToken())
     const datasetComputeService = ddo.findServiceByType('compute')
     const algorithmSelectionList = await transformDDOToAssetSelection(

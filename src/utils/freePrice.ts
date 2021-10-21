@@ -8,6 +8,9 @@ export async function setMinterToPublisher(
   setError: (msg: string) => void
 ): Promise<TransactionReceipt> {
   // free pricing v3 workaround part1
+  const status = await ocean.OceanDispenser.status(dataTokenAddress)
+  if (!status?.minterApproved) return
+
   const response = await ocean.OceanDispenser.cancelMinter(
     dataTokenAddress,
     accountId

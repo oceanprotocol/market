@@ -2,22 +2,23 @@ import { Link } from 'gatsby'
 import React, { useEffect, useState } from 'react'
 import Dotdotdot from 'react-dotdotdot'
 import { Profile } from '../../models/Profile'
-import { useWeb3 } from '../../providers/Web3'
 import { accountTruncate } from '../../utils/web3'
 import get3BoxProfile from '../../utils/profile'
-import ExplorerLink from '../atoms/ExplorerLink'
 import styles from './AccountTeaser.module.css'
 import Blockies from '../atoms/Blockies'
 import { useCancelToken } from '../../hooks/useCancelToken'
+import { getUserSales } from '../../utils/subgraph'
+import { useUserPreferences } from '../../providers/UserPreferences'
 
 declare type AccountTeaserProps = {
   account: string
 }
 
 const AccountTeaser: React.FC<AccountTeaserProps> = ({ account }) => {
-  const { networkId } = useWeb3()
   const [profile, setProfile] = useState<Profile>()
+  const [sales, setSales] = useState(0)
   const newCancelToken = useCancelToken()
+  const { chainIds } = useUserPreferences()
 
   useEffect(() => {
     if (!account) return
@@ -29,6 +30,15 @@ const AccountTeaser: React.FC<AccountTeaserProps> = ({ account }) => {
     getProfileData()
   }, [account, newCancelToken])
 
+  useEffect(() => {
+    if (!account) return
+    async function getProfileSales() {
+      const userSales = await getUserSales(account, chainIds)
+      setSales(userSales)
+    }
+    getProfileSales()
+  }, [account, chainIds])
+
   return (
     <article className={styles.teaser}>
       <Link to={`/profile/${account}`} className={styles.link}>
@@ -38,20 +48,18 @@ const AccountTeaser: React.FC<AccountTeaserProps> = ({ account }) => {
           ) : (
             <Blockies accountId={account} className={styles.blockies} />
           )}
-          <div>
-            <Dotdotdot className={styles.name} clamp={3}>
-              {profile?.name ? (
-                <h3> {profile.name}</h3>
-              ) : (
-                <h3>{accountTruncate(account)}</h3>
-              )}
-            </Dotdotdot>
-            <div className={styles.account}>
-              <ExplorerLink networkId={networkId} path={`address/${account}`}>
-                <span>{account}</span>
-              </ExplorerLink>
-            </div>
+          {/* <div> */}
+          <Dotdotdot className={styles.name} clamp={3}>
+            {profile?.name ? (
+              <h3> {profile.name}</h3>
+            ) : (
+              <h3>{accountTruncate(account)}</h3>
+            )}
+          </Dotdotdot>
+          <div className={styles.sales}>
+            {`${sales} ${sales === 1 ? 'sale' : 'sales'}`}
           </div>
+          {/* </div> */}
         </header>
       </Link>
     </article>

@@ -232,12 +232,7 @@ If you have questions about Purgatory or do not have a GitHub account and want u
 ## 7.5 Right to data portability (Art. 20 GDPR)
 
 You have the right to receive your personal data in a structured, commonly used, and machine-readable format. Additionally, you have the right to transmit those data to another controller without hindrance, where the defined legal grounds in Art. 20 GDPR apply.
-
-You can make use of your right to data portability either by contacting us or by conducting the following steps.
-
-- Visit the History Table on Ocean Market ([market.oceanprotocol.com/history](https://market.oceanprotocol.com/history)).
-- Validate your identity with your private key.
-- Click on the download button for each table of interest.
+You can make use of your right to data portability by contacting us.
 
 ## 7.6 Right to object (Art. 21 GDPR)
 
