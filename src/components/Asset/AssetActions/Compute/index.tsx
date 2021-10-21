@@ -38,6 +38,7 @@ import AssetActionHistoryTable from '../AssetActionHistoryTable'
 import ComputeJobs from '../../../Profile/History/ComputeJobs'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
+import { SortTermOptions } from '../../../../@types/aquarius/SearchQuery'
 
 export default function Compute({
   dtBalance,

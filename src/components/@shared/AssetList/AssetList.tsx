@@ -41,22 +41,27 @@ const AssetList: React.FC<AssetListProps> = ({
   noPublisher
 }) => {
   const { chainIds } = useUserPreferences()
-  const [assetsWithPrices, setAssetWithPrices] = useState<AssetListPrices[]>()
-  const [loading, setLoading] = useState<boolean>(true)
+  const [assetsWithPrices, setAssetsWithPrices] = useState<AssetListPrices[]>()
+  const [loading, setLoading] = useState<boolean>(isLoading)
   const isMounted = useIsMounted()
+
   useEffect(() => {
     if (!assets) return
-    isLoading && setLoading(true)
+
+    const initialAssets: AssetListPrices[] = assets.map((asset) => ({
+      ddo: asset,
+      price: null
+    }))
+    setAssetsWithPrices(initialAssets)
+    setLoading(false)
 
     async function fetchPrices() {
-      const asset = await getAssetsBestPrices(assets)
+      const assetsWithPrices = await getAssetsBestPrices(assets)
       if (!isMounted()) return
-      setAssetWithPrices(asset)
-      setLoading(false)
+      setAssetsWithPrices(assetsWithPrices)
     }
-
     fetchPrices()
-  }, [assets])
+  }, [assets, isMounted])
 
   // // This changes the page field inside the query
   function handlePageChange(selected: number) {
@@ -72,9 +77,7 @@ const AssetList: React.FC<AssetListProps> = ({
     <div className={styleClasses}>
       <div className={styles.empty}>No network selected</div>
     </div>
-  ) : assetsWithPrices &&
-    !loading &&
-    (isLoading === undefined || isLoading === false) ? (
+  ) : assetsWithPrices && !loading ? (
     <>
       <div className={styleClasses}>
         {assetsWithPrices.length > 0 ? (
