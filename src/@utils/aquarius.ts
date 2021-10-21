@@ -9,6 +9,10 @@ import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { OrdersData_tokenOrders as OrdersData } from '../@types/apollo/OrdersData'
 import { metadataCacheUri } from '../../app.config'
+import {
+  SortDirectionOptions,
+  SortTermOptions
+} from '../@types/aquarius/SearchQuery'
 
 export const MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS = 476
 

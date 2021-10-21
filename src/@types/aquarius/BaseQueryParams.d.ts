@@ -5,6 +5,7 @@ interface EsPaginationOptions {
 
 interface BaseQueryParams {
   chainIds: number[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   nestedQuery?: any
   esPaginationOptions?: EsPaginationOptions
   sortOptions?: SortOptions
