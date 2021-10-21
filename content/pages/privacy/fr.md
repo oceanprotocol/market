@@ -235,7 +235,6 @@ Si vous avez des questions sur Purgatory ou si vous n&#39;avez pas de compte Git
 Vous avez le droit de recevoir vos données personnelles dans un format structuré, couramment utilisé et lisible par machine. En outre, vous avez le droit de transmettre ces données à un autre responsable du traitement sans entrave, lorsque les fondements juridiques définis à l&#39;article 20 du RGPD s&#39;appliquent.
 Vous pouvez faire usage de votre droit à la portabilité des données en nous contactant.
 
-
 ## 7.6 Droit d&#39;opposition (art. 21 du RGPD)
 
 Pour des motifs liés à votre situation particulière, vous avez le droit de vous opposer au traitement de vos données personnelles lorsque nous avons basé le traitement sur des intérêts légitimes (art. 6(1)(f) du RGPD). Si vous vous y opposez, Ocean ne traitera plus vos données personnelles à moins que nous puissions démontrer des motifs légitimes impérieux pour le traitement, outrepassant vos droits, libertés et intérêts, ou si le traitement est nécessaire pour établir, exercer ou défendre des réclamations légales.

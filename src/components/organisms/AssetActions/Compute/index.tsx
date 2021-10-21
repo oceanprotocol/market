@@ -15,6 +15,8 @@ import { useWeb3 } from '../../../../providers/Web3'
 import { usePricing } from '../../../../hooks/usePricing'
 import { useAsset } from '../../../../providers/Asset'
 import {
+  generateBaseQuery,
+  getFilterTerm,
   queryMetadata,
   transformDDOToAssetSelection
 } from '../../../../utils/aquarius'
@@ -27,7 +29,6 @@ import {
   ComputeAlgorithm,
   ComputeOutput
 } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
-import { SearchQuery } from '@oceanprotocol/lib/dist/node/metadatacache/MetadataCache'
 import axios from 'axios'
 import FormStartComputeDataset from './FormComputeDataset'
 import styles from './index.module.css'
@@ -42,6 +43,9 @@ import ComputeJobs from '../../../pages/Profile/History/ComputeJobs'
 import { BestPrice } from '../../../../models/BestPrice'
 import { useCancelToken } from '../../../../hooks/useCancelToken'
 import { useIsMounted } from '../../../../hooks/useIsMounted'
+import { BaseQueryParams } from '../../../../models/aquarius/BaseQueryParams'
+import { SortTermOptions } from '../../../../models/SortAndFilters'
+import { SearchQuery } from '../../../../models/aquarius/SearchQuery'
 
 const SuccessAction = () => (
   <Button style="text" to="/profile?defaultTab=ComputeJobs" size="small">
@@ -133,23 +137,18 @@ export default function Compute({
     trustedAlgorithmList: publisherTrustedAlgorithm[],
     chainId?: number
   ): SearchQuery {
-    let algoQuerry = ''
-    trustedAlgorithmList.forEach((trusteAlgo) => {
-      algoQuerry += `id:"${trusteAlgo.did}" OR `
-    })
-    if (trustedAlgorithmList.length >= 1) {
-      algoQuerry = algoQuerry.substring(0, algoQuerry.length - 3)
-    }
-    const algorithmQuery =
-      trustedAlgorithmList.length > 0 ? `(${algoQuerry}) AND` : ``
-    const query = {
-      query: {
-        query_string: {
-          query: `${algorithmQuery} service.attributes.main.type:algorithm AND chainId:${chainId} -isInPurgatory:true`
-        }
-      },
-      sort: { created: 'desc' }
-    }
+    const algorithmDidList = trustedAlgorithmList.map((x) => x.did)
+
+    const baseParams = {
+      chainIds: [chainId],
+      sort: { sortBy: SortTermOptions.Created },
+      filters: [
+        getFilterTerm('service.attributes.main.type', 'algorithm'),
+        getFilterTerm('id', algorithmDidList)
+      ]
+    } as BaseQueryParams
+
+    const query = generateBaseQuery(baseParams)
     return query
   }
 

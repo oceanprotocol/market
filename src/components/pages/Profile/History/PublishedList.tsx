@@ -1,5 +1,5 @@
 import { Logger } from '@oceanprotocol/lib'
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import AssetList from '../../../organisms/AssetList'
 import { getPublishedAssets } from '../../../../utils/aquarius'
 import Filters from '../../../templates/Search/Filters'
@@ -7,6 +7,7 @@ import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import styles from './PublishedList.module.css'
 import { useCancelToken } from '../../../../hooks/useCancelToken'
+import { PagedAssets } from '../../../../models/PagedAssets'
 
 export default function PublishedList({
   accountId
@@ -16,50 +17,53 @@ export default function PublishedList({
   const { appConfig } = useSiteMetadata()
   const { chainIds } = useUserPreferences()
 
-  const [queryResult, setQueryResult] = useState<any>()
+  const [queryResult, setQueryResult] = useState<PagedAssets>()
   const [isLoading, setIsLoading] = useState(false)
   const [page, setPage] = useState<number>(1)
-  const [service, setServiceType] = useState('dataset OR algorithm')
-  const [access, setAccsesType] = useState('access OR compute')
+  const [service, setServiceType] = useState()
+  const [access, setAccsesType] = useState()
   const newCancelToken = useCancelToken()
 
-  async function getPublished() {
-    try {
-      setIsLoading(true)
-      const result = await getPublishedAssets(
-        accountId,
-        chainIds,
-        newCancelToken(),
-        page,
-        service,
-        access
-      )
-      setQueryResult(result)
-    } catch (error) {
-      Logger.error(error.message)
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  const getPublished = useCallback(
+    async (accountId, chainIds, page, service, access, cancelToken) => {
+      try {
+        setIsLoading(true)
+        const result = await getPublishedAssets(
+          accountId.toLowerCase(),
+          chainIds,
+          cancelToken,
+          page,
+          service,
+          access
+        )
+        setQueryResult(result)
+      } catch (error) {
+        Logger.error(error.message)
+      } finally {
+        setIsLoading(false)
+      }
+    },
+    []
+  )
 
   useEffect(() => {
-    async function fetchPublishedAssets() {
-      await getPublished()
-    }
-    if (page !== 1) {
-      setPage(1)
-    } else {
-      fetchPublishedAssets()
-    }
-  }, [service, access])
+    if (queryResult && queryResult.totalPages < page) setPage(1)
+  }, [page, queryResult])
 
   useEffect(() => {
     if (!accountId) return
-    async function fetchPublishedAssets() {
-      await getPublished()
-    }
-    fetchPublishedAssets()
-  }, [accountId, page, appConfig.metadataCacheUri, chainIds, newCancelToken])
+
+    getPublished(accountId, chainIds, page, service, access, newCancelToken())
+  }, [
+    accountId,
+    page,
+    appConfig.metadataCacheUri,
+    chainIds,
+    newCancelToken,
+    getPublished,
+    service,
+    access
+  ])
 
   return accountId ? (
     <>

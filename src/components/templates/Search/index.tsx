@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect } from 'react'
+import React, { ReactElement, useState, useEffect, useCallback } from 'react'
 import Permission from '../../organisms/Permission'
 import AssetList from '../../organisms/AssetList'
 import queryString from 'query-string'
@@ -10,6 +10,7 @@ import { updateQueryStringParameter } from '../../../utils'
 import { useUserPreferences } from '../../../providers/UserPreferences'
 import { useCancelToken } from '../../../hooks/useCancelToken'
 import styles from './index.module.css'
+import { PagedAssets } from '../../../models/PagedAssets'
 
 export default function SearchPage({
   location,
@@ -20,54 +21,61 @@ export default function SearchPage({
   setTotalResults: (totalResults: number) => void
   setTotalPagesNumber: (totalPagesNumber: number) => void
 }): ReactElement {
-  const parsed = queryString.parse(location.search)
-  const { text, owner, tags, page, sort, sortOrder, serviceType, accessType } =
-    parsed
+  const [parsed, setParsed] = useState<queryString.ParsedQuery<string>>()
   const { chainIds } = useUserPreferences()
-  const [queryResult, setQueryResult] = useState<any>()
+  const [queryResult, setQueryResult] = useState<PagedAssets>()
   const [loading, setLoading] = useState<boolean>()
-  const [service, setServiceType] = useState<string>(serviceType as string)
-  const [access, setAccessType] = useState<string>(accessType as string)
-  const [sortType, setSortType] = useState<string>(sort as string)
-  const [sortDirection, setSortDirection] = useState<string>(
-    sortOrder as string
-  )
+  const [serviceType, setServiceType] = useState<string>()
+  const [accessType, setAccessType] = useState<string>()
+  const [sortType, setSortType] = useState<string>()
+  const [sortDirection, setSortDirection] = useState<string>()
   const newCancelToken = useCancelToken()
 
-  async function fetchAssets() {
-    setLoading(true)
-    setTotalResults(undefined)
-    const queryResult = await getResults(parsed, chainIds, newCancelToken())
+  useEffect(() => {
+    const parsed = queryString.parse(location.search)
+    const { sort, sortOrder, serviceType, accessType } = parsed
+    setParsed(parsed)
+    setServiceType(serviceType as string)
+    setAccessType(accessType as string)
+    setSortDirection(sortOrder as string)
+    setSortType(sort as string)
+  }, [location])
 
-    setQueryResult(queryResult)
-    setTotalResults(queryResult.totalResults)
-    setTotalPagesNumber(queryResult.totalPages)
-    setLoading(false)
-  }
+  const updatePage = useCallback(
+    (page: number) => {
+      const { pathname, search } = location
+      const newUrl = updateQueryStringParameter(
+        pathname + search,
+        'page',
+        `${page}`
+      )
+      return navigate(newUrl)
+    },
+    [location]
+  )
 
-  function setPage(page: number) {
-    const newUrl = updateQueryStringParameter(
-      location.pathname + location.search,
-      'page',
-      `${page}`
-    )
-    return navigate(newUrl)
-  }
+  const fetchAssets = useCallback(
+    async (parsed: queryString.ParsedQuery<string>, chainIds: number[]) => {
+      setLoading(true)
+      setTotalResults(undefined)
+      const queryResult = await getResults(parsed, chainIds, newCancelToken())
+      setQueryResult(queryResult)
+      setTotalResults(queryResult.totalResults)
+      setTotalPagesNumber(queryResult.totalPages)
+      setLoading(false)
+    },
+    [newCancelToken, setTotalPagesNumber, setTotalResults]
+  )
+  useEffect(() => {
+    if (!parsed || !queryResult) return
+    const { page } = parsed
+    if (queryResult.totalPages < Number(page)) updatePage(1)
+  }, [parsed, queryResult, updatePage])
 
   useEffect(() => {
-    async function initSearch() {
-      await fetchAssets()
-    }
-    initSearch()
-  }, [text, owner, tags, sort, page, sortOrder, chainIds, newCancelToken])
-
-  useEffect(() => {
-    if (page !== '1') {
-      setPage(1)
-    } else {
-      fetchAssets()
-    }
-  }, [serviceType, accessType])
+    if (!parsed || !chainIds) return
+    fetchAssets(parsed, chainIds)
+  }, [parsed, chainIds, newCancelToken, fetchAssets])
 
   return (
     <Permission eventType="browse">
@@ -75,8 +83,8 @@ export default function SearchPage({
         <div className={styles.search}>
           <div className={styles.row}>
             <Filters
-              serviceType={service}
-              accessType={access}
+              serviceType={serviceType}
+              accessType={accessType}
               setServiceType={setServiceType}
               setAccessType={setAccessType}
               addFiltersToUrl
@@ -96,7 +104,7 @@ export default function SearchPage({
             isLoading={loading}
             page={queryResult?.page}
             totalPages={queryResult?.totalPages}
-            onPageChange={setPage}
+            onPageChange={updatePage}
           />
         </div>
       </>

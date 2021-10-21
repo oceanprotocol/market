@@ -5,7 +5,6 @@ import { useUserPreferences } from '../../../../providers/UserPreferences'
 import {
   getAccountLiquidityInOwnAssets,
   getAssetsBestPrices,
-  getUserSales,
   UserLiquidity,
   calculateUserLiquidity
 } from '../../../../utils/subgraph'

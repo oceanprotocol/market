@@ -590,10 +590,10 @@ export async function getAssetsBestPrices(
   return assetsWithPrice
 }
 
-export async function getHighestLiquidityDIDs(
+export async function getHighestLiquidityDatatokens(
   chainIds: number[]
-): Promise<[string, number]> {
-  const didList: string[] = []
+): Promise<string[]> {
+  const dtList: string[] = []
   let highestLiquidityAssets: HighestLiquidityAssetsPool[] = []
   for (const chain of chainIds) {
     const queryContext = getQueryContext(Number(chain))
@@ -603,22 +603,12 @@ export async function getHighestLiquidityDIDs(
       fetchedPools.data.pools
     )
   }
-  highestLiquidityAssets
-    .sort((a, b) => a.oceanReserve - b.oceanReserve)
-    .reverse()
+  highestLiquidityAssets.sort((a, b) => b.oceanReserve - a.oceanReserve)
   for (let i = 0; i < highestLiquidityAssets.length; i++) {
     if (!highestLiquidityAssets[i].datatokenAddress) continue
-    const did = web3.utils
-      .toChecksumAddress(highestLiquidityAssets[i].datatokenAddress)
-      .replace('0x', 'did:op:')
-    didList.push(did)
+    dtList.push(highestLiquidityAssets[i].datatokenAddress)
   }
-  const searchDids = JSON.stringify(didList)
-    .replace(/,/g, ' ')
-    .replace(/"/g, '')
-    .replace(/(\[|\])/g, '')
-    .replace(/(did:op:)/g, '0x')
-  return [searchDids, didList.length]
+  return dtList
 }
 
 export function calculateUserLiquidity(poolShare: PoolShare): number {
@@ -628,7 +618,7 @@ export function calculateUserLiquidity(poolShare: PoolShare): number {
   const datatokens =
     (poolShare.balance / poolShare.poolId.totalShares) *
     poolShare.poolId.datatokenReserve
-  const totalLiquidity = ocean + datatokens * poolShare.poolId.consumePrice
+  const totalLiquidity = ocean + datatokens * poolShare.poolId.spotPrice
   return totalLiquidity
 }
 
@@ -648,6 +638,7 @@ export async function getAccountLiquidityInOwnAssets(
   )
   let totalLiquidity = 0
   let totalOceanLiquidity = 0
+
   for (const result of results) {
     for (const poolShare of result.poolShares) {
       const userShare = poolShare.balance / poolShare.poolId.totalShares

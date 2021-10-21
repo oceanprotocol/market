@@ -235,7 +235,6 @@ Wenn du Fragen zu Purgatory hast oder wenn du kein GitHub-Konto besitzt und möc
 Du hast das Recht, deine personenbezogenen Daten in einem strukturierten, gängigen und maschinenlesbaren Format zu erhalten. Zusätzlich hast du das Recht, diese Daten ungehindert an einen anderen Verantwortlichen zu übermitteln, sofern die in Art. 20 DSGVO definierten Voraussetzungen zutreffen.
 Sie können von Ihrem Recht auf Datenübertragbarkeit Gebrauch machen, indem Sie sich mit uns in Verbindung setzen.
 
-
 ## 7.6 Widerspruchsrecht (Art. 21 GDPR)
 
 Du hast das Recht, aus Gründen, die sich aus deiner besonderen Situation ergeben, gegen die Verarbeitung deiner personenbezogenen Daten Widerspruch einzulegen, wenn wir die Verarbeitung auf die Wahrung unseres berechtigten Interessens stützen (Art. 6(1)(f) GDPR). Wenn du Widerspruch einlegst, werden wir deine personenbezogenen Daten nicht mehr verarbeiten, es sei denn, wir können zwingende schutzwürdige Gründe für die Verarbeitung nachweisen, die deine Rechte, Freiheiten und Interessen überwiegen, oder wenn die Verarbeitung zur Begründung, Ausübung oder Verteidigung von Rechtsansprüchen erforderlich ist.

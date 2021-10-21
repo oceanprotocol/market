@@ -10,49 +10,70 @@ import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { OrdersData_tokenOrders as OrdersData } from '../@types/apollo/OrdersData'
 import { metadataCacheUri } from '../../app.config'
-
-export interface DownloadedAsset {
-  dtSymbol: string
-  timestamp: number
-  networkId: number
-  ddo: DDO
-}
+import { DownloadedAsset } from '../models/aquarius/DownloadedAsset'
+import { SearchQuery } from '../models/aquarius/SearchQuery'
+import { SearchResponse } from '../models/aquarius/SearchResponse'
+import { PagedAssets } from '../models/PagedAssets'
+import { SortDirectionOptions, SortTermOptions } from '../models/SortAndFilters'
+import { FilterTerm } from '../models/aquarius/FilterTerm'
+import { BaseQueryParams } from '../models/aquarius/BaseQueryParams'
 
 export const MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS = 476
 
-function getQueryForAlgorithmDatasets(algorithmDid: string, chainId?: number) {
+/**
+ * @param filterField the name of the actual field from the ddo schema e.g. 'id','service.attributes.main.type'
+ * @param value the value of the filter
+ * @returns json structure of the es filter
+ */
+export function getFilterTerm(
+  filterField: string,
+  value: string | number | boolean | number[] | string[]
+): FilterTerm {
+  const isArray = Array.isArray(value)
   return {
-    query: {
-      bool: {
-        must: [
-          {
-            match: {
-              'service.attributes.main.privacy.publisherTrustedAlgorithms.did':
-                algorithmDid
-            }
-          },
-          {
-            query_string: {
-              query: `chainId:${chainId}`
-            }
-          }
-        ]
-      }
-    },
-    sort: { created: 'desc' }
+    [isArray ? 'terms' : 'term']: {
+      [filterField]: value
+    }
   }
 }
 
-// TODO: import directly from ocean.js somehow.
-// Transforming Aquarius' direct response is needed for getting actual DDOs
-// and not just strings of DDOs. For now, taken from
-// https://github.com/oceanprotocol/ocean.js/blob/main/src/metadatacache/MetadataCache.ts#L361-L375
+export function generateBaseQuery(
+  baseQueryParams: BaseQueryParams
+): SearchQuery {
+  const generatedQuery = {
+    from: baseQueryParams.esPaginationOptions?.from || 0,
+    size: baseQueryParams.esPaginationOptions?.size || 1000,
+    query: {
+      bool: {
+        ...baseQueryParams.nestedQuery,
+        filter: [
+          ...(baseQueryParams.filters || []),
+          getFilterTerm('chainId', baseQueryParams.chainIds),
+          getFilterTerm('_index', 'aquarius'),
+          ...(baseQueryParams.ignorePurgatory
+            ? []
+            : [getFilterTerm('isInPurgatory', 'false')])
+        ]
+      }
+    }
+  } as SearchQuery
+
+  if (baseQueryParams.sortOptions !== undefined)
+    generatedQuery.sort = {
+      [baseQueryParams.sortOptions.sortBy]:
+        baseQueryParams.sortOptions.sortDirection ||
+        SortDirectionOptions.Descending
+    }
+
+  return generatedQuery
+}
+
 export function transformQueryResult(
-  queryResult: any,
+  queryResult: SearchResponse,
   from = 0,
   size = 21
-): any {
-  const result: any = {
+): PagedAssets {
+  const result: PagedAssets = {
     results: [],
     page: 0,
     totalPages: 0,
@@ -60,7 +81,7 @@ export function transformQueryResult(
   }
 
   result.results = (queryResult.hits.hits || []).map(
-    (hit: any) => new DDO(hit._source as DDO)
+    (hit) => new DDO(hit._source as DDO)
   )
   result.totalResults = queryResult.hits.total
   result.totalPages =
@@ -72,31 +93,12 @@ export function transformQueryResult(
   return result
 }
 
-export function transformChainIdsListToQuery(chainIds: number[]): string {
-  let chainQuery = ''
-  chainIds.forEach((chainId) => {
-    chainQuery += `chainId:${chainId} OR `
-  })
-  chainQuery = chainQuery.slice(0, chainQuery.length - 4)
-  return chainQuery
-}
-
-export function transformDIDListToQuery(didList: string[] | DID[]): string {
-  let chainQuery = ''
-  const regex = new RegExp('(:)', 'g')
-  didList.forEach((did: any) => {
-    chainQuery += `id:${did.replace(regex, '\\:')} OR `
-  })
-  chainQuery = chainQuery.slice(0, chainQuery.length - 4)
-  return chainQuery
-}
-
 export async function queryMetadata(
-  query: any,
+  query: SearchQuery,
   cancelToken: CancelToken
-): Promise<any> {
+): Promise<PagedAssets> {
   try {
-    const response: AxiosResponse<any> = await axios.post(
+    const response: AxiosResponse<SearchResponse> = await axios.post(
       `${metadataCacheUri}/api/v1/aquarius/assets/query`,
       { ...query },
       { cancelToken }
@@ -152,6 +154,53 @@ export async function getAssetsNames(
     } else {
       Logger.error(error.message)
     }
+  }
+}
+
+export async function getAssetsFromDidList(
+  didList: string[],
+  chainIds: number[],
+  cancelToken: CancelToken
+): Promise<any> {
+  try {
+    if (!(didList.length > 0)) return
+
+    const baseParams = {
+      chainIds: chainIds,
+      filters: [getFilterTerm('id', didList)],
+      ignorePurgatory: true
+    } as BaseQueryParams
+    const query = generateBaseQuery(baseParams)
+
+    const queryResult = await queryMetadata(query, cancelToken)
+    return queryResult
+  } catch (error) {
+    Logger.error(error.message)
+  }
+}
+
+export async function retrieveDDOListByDIDs(
+  didList: string[],
+  chainIds: number[],
+  cancelToken: CancelToken
+): Promise<DDO[]> {
+  try {
+    if (didList?.length === 0 || chainIds?.length === 0) return []
+    const orderedDDOListByDIDList: DDO[] = []
+    const baseQueryparams = {
+      chainIds,
+      filters: [getFilterTerm('id', didList)],
+      ignorePurgatory: true
+    } as BaseQueryParams
+    const query = generateBaseQuery(baseQueryparams)
+    const result = await queryMetadata(query, cancelToken)
+    didList.forEach((did: string | DID) => {
+      const ddo: DDO = result.results.find((ddo: DDO) => ddo.id === did)
+      orderedDDOListByDIDList.push(ddo)
+    })
+    return orderedDDOListByDIDList
+  } catch (error) {
+    Logger.error(error.message)
   }
 }
 
@@ -212,58 +261,32 @@ export async function getAlgorithmDatasetsForCompute(
   datasetChainId?: number,
   cancelToken?: CancelToken
 ): Promise<AssetSelectionAsset[]> {
-  const computeDatasets = await queryMetadata(
-    getQueryForAlgorithmDatasets(algorithmId, datasetChainId),
-    cancelToken
-  )
-  const computeDatasetsForCurrentAlgorithm: DDO[] = []
-  computeDatasets.results.forEach((data: DDO) => {
-    const algorithm = data
-      .findServiceByType('compute')
-      .attributes.main.privacy.publisherTrustedAlgorithms.find(
-        (algo) => algo.did === algorithmId
+  const baseQueryParams = {
+    chainIds: [datasetChainId],
+    filters: [
+      getFilterTerm(
+        'service.attributes.main.privacy.publisherTrustedAlgorithms.did',
+        algorithmId
       )
-    algorithm && computeDatasetsForCurrentAlgorithm.push(data)
-  })
-  if (computeDatasetsForCurrentAlgorithm.length === 0) {
-    return []
-  }
+    ],
+    sortOptions: {
+      sortBy: SortTermOptions.Created,
+      sortDirection: SortDirectionOptions.Descending
+    }
+  } as BaseQueryParams
+
+  const query = generateBaseQuery(baseQueryParams)
+  const computeDatasets = await queryMetadata(query, cancelToken)
+
+  if (computeDatasets.totalResults === 0) return []
+
   const datasets = await transformDDOToAssetSelection(
     datasetProviderUri,
-    computeDatasetsForCurrentAlgorithm,
+    computeDatasets.results,
     [],
     cancelToken
   )
   return datasets
-}
-
-export async function retrieveDDOListByDIDs(
-  didList: string[] | DID[],
-  chainIds: number[],
-  cancelToken: CancelToken
-): Promise<DDO[]> {
-  try {
-    if (didList?.length === 0 || chainIds?.length === 0) return []
-    const orderedDDOListByDIDList: DDO[] = []
-    const query = {
-      size: didList.length,
-      query: {
-        query_string: {
-          query: `(${transformDIDListToQuery(
-            didList
-          )})  AND (${transformChainIdsListToQuery(chainIds)})`
-        }
-      }
-    }
-    const result = await queryMetadata(query, cancelToken)
-    didList.forEach((did: string | DID) => {
-      const ddo: DDO = result.results.find((ddo: DDO) => ddo.id === did)
-      orderedDDOListByDIDList.push(ddo)
-    })
-    return orderedDDOListByDIDList
-  } catch (error) {
-    Logger.error(error.message)
-  }
 }
 
 export async function getPublishedAssets(
@@ -273,26 +296,33 @@ export async function getPublishedAssets(
   page?: number,
   type?: string,
   accesType?: string
-): Promise<any> {
+): Promise<PagedAssets> {
   if (!accountId) return
 
-  type = type || 'dataset OR algorithm'
-  accesType = accesType || 'access OR compute'
+  const filters: FilterTerm[] = []
 
-  const queryPublishedAssets = {
-    from: (Number(page) - 1 || 0) * (Number(9) || 21),
-    size: Number(9) || 21,
-    query: {
-      query_string: {
-        query: `(publicKey.owner:${accountId}) AND (service.attributes.main.type:${type}) AND (service.type:${accesType}) AND (${transformChainIdsListToQuery(
-          chainIds
-        )})`
-      }
+  filters.push(getFilterTerm('publicKey.owner', accountId.toLowerCase()))
+  accesType !== undefined &&
+    filters.push(getFilterTerm('service.type', accesType))
+  type !== undefined &&
+    filters.push(getFilterTerm('service.attributes.main.type', type))
+
+  const baseQueryParams = {
+    chainIds,
+    filters,
+    sortOptions: {
+      sortBy: SortTermOptions.Created,
+      sortDirection: SortDirectionOptions.Descending
     },
-    sort: { created: 'desc' }
-  }
+    esPaginationOptions: {
+      from: (Number(page) - 1 || 0) * 9,
+      size: 9
+    }
+  } as BaseQueryParams
+
+  const query = generateBaseQuery(baseQueryParams)
   try {
-    const result = await queryMetadata(queryPublishedAssets, cancelToken)
+    const result = await queryMetadata(query, cancelToken)
     return result
   } catch (error) {
     if (axios.isCancel(error)) {
@@ -309,38 +339,34 @@ export async function getDownloadAssets(
   chainIds: number[],
   cancelToken: CancelToken
 ): Promise<DownloadedAsset[]> {
-  const downloadedAssets: DownloadedAsset[] = []
-
   try {
-    const queryResult = await retrieveDDOListByDIDs(
-      didList,
+    const baseQueryparams = {
       chainIds,
-      cancelToken
-    )
-    const ddoList = queryResult
+      filters: [
+        getFilterTerm('id', didList),
+        getFilterTerm('service.type', 'access')
+      ]
+    } as BaseQueryParams
+    const query = generateBaseQuery(baseQueryparams)
+    const result = await queryMetadata(query, cancelToken)
 
-    for (let i = 0; i < tokenOrders?.length; i++) {
-      const ddo = ddoList.filter(
-        (ddo: { dataToken: string }) =>
-          tokenOrders[i].datatokenId.address.toLowerCase() ===
-          ddo.dataToken.toLowerCase()
-      )[0]
+    const downloadedAssets: DownloadedAsset[] = result.results
+      .map((ddo) => {
+        const order = tokenOrders.find(
+          ({ datatokenId }) =>
+            datatokenId?.address.toLowerCase() === ddo.dataToken.toLowerCase()
+        )
 
-      // make sure we are only pushing download orders
-      if (ddo.service[1].type !== 'access') continue
-
-      downloadedAssets.push({
-        ddo,
-        networkId: ddo.chainId,
-        dtSymbol: tokenOrders[i].datatokenId.symbol,
-        timestamp: tokenOrders[i].timestamp
+        return {
+          ddo,
+          networkId: ddo.chainId,
+          dtSymbol: order?.datatokenId?.symbol,
+          timestamp: order?.timestamp
+        }
       })
-    }
+      .sort((a, b) => b.timestamp - a.timestamp)
 
-    const sortedOrders = downloadedAssets.sort(
-      (a, b) => b.timestamp - a.timestamp
-    )
-    return sortedOrders
+    return downloadedAssets
   } catch (error) {
     Logger.error(error.message)
   }

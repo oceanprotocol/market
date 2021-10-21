@@ -1,13 +1,13 @@
 import React, { ReactElement } from 'react'
 import { useNavigate } from '@reach/router'
-import {
-  addExistingParamsToUrl,
-  SortTermOptions,
-  SortValueOptions
-} from './utils'
+import { addExistingParamsToUrl } from './utils'
 import Button from '../../atoms/Button'
 import styles from './sort.module.css'
 import classNames from 'classnames/bind'
+import {
+  SortDirectionOptions,
+  SortTermOptions
+} from '../../../models/SortAndFilters'
 
 const cx = classNames.bind(styles)
 
@@ -29,7 +29,7 @@ export default function Sort({
 }): ReactElement {
   const navigate = useNavigate()
   const directionArrow = String.fromCharCode(
-    sortDirection === SortValueOptions.Ascending ? 9650 : 9660
+    sortDirection === SortDirectionOptions.Ascending ? 9650 : 9660
   )
   async function sortResults(sortBy?: string, direction?: string) {
     let urlLocation: string
@@ -46,10 +46,10 @@ export default function Sort({
   }
   function handleSortButtonClick(value: string) {
     if (value === sortType) {
-      if (sortDirection === SortValueOptions.Descending) {
-        sortResults(null, SortValueOptions.Ascending)
+      if (sortDirection === SortDirectionOptions.Descending) {
+        sortResults(null, SortDirectionOptions.Ascending)
       } else {
-        sortResults(null, SortValueOptions.Descending)
+        sortResults(null, SortDirectionOptions.Descending)
       }
     } else {
       sortResults(value, null)
