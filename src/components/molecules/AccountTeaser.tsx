@@ -12,9 +12,10 @@ import { useUserPreferences } from '../../providers/UserPreferences'
 
 declare type AccountTeaserProps = {
   account: string
+  place: number
 }
 
-const AccountTeaser: React.FC<AccountTeaserProps> = ({ account }) => {
+const AccountTeaser: React.FC<AccountTeaserProps> = ({ account, place }) => {
   const [profile, setProfile] = useState<Profile>()
   const [sales, setSales] = useState(0)
   const newCancelToken = useCancelToken()
@@ -43,13 +44,14 @@ const AccountTeaser: React.FC<AccountTeaserProps> = ({ account }) => {
     <article className={styles.teaser}>
       <Link to={`/profile/${account}`} className={styles.link}>
         <header className={styles.header}>
+          <span>{place + 1}</span>
           {profile?.image ? (
             <img src={profile.image} className={styles.blockies} />
           ) : (
             <Blockies accountId={account} className={styles.blockies} />
           )}
           <div>
-            <Dotdotdot className={styles.name} clamp={3}>
+            <Dotdotdot clamp={3} className={styles.name}>
               {profile?.name ? (
                 <h3> {profile.name}</h3>
               ) : (
