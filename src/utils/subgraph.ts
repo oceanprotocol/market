@@ -176,19 +176,6 @@ const HighestLiquidityAssets = gql`
   }
 `
 
-const TotalAccountOrders = gql`
-  query TotalAccountOrders($datatokenId_in: [String!]) {
-    tokenOrders(where: { datatokenId_in: $datatokenId_in }) {
-      payer {
-        id
-      }
-      datatokenId {
-        id
-      }
-    }
-  }
-`
-
 const UserSharesQuery = gql`
   query UserSharesQuery($user: String, $pools: [String!]) {
     poolShares(where: { userAddress: $user, poolId_in: $pools }) {
