@@ -27,9 +27,9 @@ import {
 import { BestPrice } from '../models/BestPrice'
 import { OrdersData_tokenOrders as OrdersData } from '../@types/apollo/OrdersData'
 import {
-  UsersSalesQuery_users as UserSales,
-  UsersSalesQuery as UsersSalesList
-} from '../@types/apollo/UsersSalesQuery'
+  TopSalesQuery_users as UserSales,
+  TopSalesQuery as UsersSalesList
+} from '../@types/apollo/TopSalesQuery'
 
 export interface UserLiquidity {
   price: string
