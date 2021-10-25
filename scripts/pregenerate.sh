@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Write out repo metadata
-node ./scripts/write-repo-metadata > repo-metadata.json
+node ./scripts/write-repo-metadata > content/repo-metadata.json
 
 # Generate GraphQL typings for urql
 # npm run codegen:graphql

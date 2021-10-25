@@ -2,17 +2,15 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
-    "lib": ["dom", "es2017"],
+    "lib": ["dom", "ES2020"],
     "resolveJsonModule": true,
-    "moduleResolution": "Node",
+    "moduleResolution": "node",
     "jsx": "preserve",
-    "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "noEmit": true,
     "sourceMap": true,
     "noImplicitAny": true,
-    "allowJs": true,
     "paths": {
       "@shared/*": ["./src/components/@shared/*"],
       "@hooks/*": ["./src/@hooks/*"],
@@ -25,7 +23,9 @@
     "strict": false,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "allowJs": true,
+    "esModuleInterop": true
   },
   "exclude": ["node_modules", ".next", "*.js"],
   "include": [

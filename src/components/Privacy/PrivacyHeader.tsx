@@ -8,7 +8,7 @@ export default function PrivacyPolicyHeader({
   tableOfContents,
   policy
 }: {
-  tableOfContents: string
+  tableOfContents?: string
   policy: string
 }): ReactElement {
   const { policies } = usePrivacyMetadata()

@@ -4,13 +4,12 @@ out
 .idea
 .env
 coverage
-dist
 .cache
 .next
 .artifacts
 .vercel
 repo-metadata.json
-content/networks-metadata.json
+networks-metadata.json
 src/@types/apollo
 graphql.schema.json
 src/@types/graph.types.ts

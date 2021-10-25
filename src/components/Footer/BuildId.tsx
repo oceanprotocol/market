@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import repoMetadata from '../../../repo-metadata.json'
+import repoMetadata from '../../../content/repo-metadata.json'
 import styles from './BuildId.module.css'
 
 export default function BuildId(): ReactElement {
