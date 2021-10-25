@@ -25,8 +25,8 @@ export default function WalletNetworkSwitcher(): ReactElement {
 
   async function switchWalletNetwork() {
     const networkNode = await networksList.find(
-      (data) => data.node.chainId === ddo.chainId
-    ).node
+      (data) => data.chainId === ddo.chainId
+    )
     addCustomNetwork(web3Provider, networkNode)
   }
 

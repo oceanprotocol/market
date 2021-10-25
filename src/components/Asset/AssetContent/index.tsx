@@ -1,5 +1,4 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { graphql, useStaticQuery } from 'gatsby'
 import Markdown from '@shared/atoms/Markdown'
 import MetaFull from './MetaFull'
 import MetaSecondary from './MetaSecondary'
@@ -18,31 +17,9 @@ import EditHistory from './EditHistory'
 import { useWeb3 } from '@context/Web3'
 import styles from './index.module.css'
 import NetworkName from '@shared/NetworkName'
+import content from '../../../../content/purgatory.json'
 
-export interface AssetContentProps {
-  path?: string
-}
-
-const contentQuery = graphql`
-  query AssetContentQuery {
-    purgatory: allFile(filter: { relativePath: { eq: "purgatory.json" } }) {
-      edges {
-        node {
-          childContentJson {
-            asset {
-              title
-              description
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
-export default function AssetContent(props: AssetContentProps): ReactElement {
-  const data = useStaticQuery(contentQuery)
-  const content = data.purgatory.edges[0].node.childContentJson.asset
+export default function AssetContent(): ReactElement {
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
   const { owner, isInPurgatory, purgatoryData, isAssetNetwork } = useAsset()
@@ -92,9 +69,9 @@ export default function AssetContent(props: AssetContentProps): ReactElement {
 
             {isInPurgatory ? (
               <Alert
-                title={content.title}
+                title={content.asset.title}
                 badge={`Reason: ${purgatoryData?.reason}`}
-                text={content.description}
+                text={content.asset.description}
                 state="error"
               />
             ) : (

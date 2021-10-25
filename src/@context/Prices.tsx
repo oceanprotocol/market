@@ -59,4 +59,4 @@ export default function PricesProvider({
 // Helper hook to access the provider values
 const usePrices = (): PricesValue => useContext(PricesContext)
 
-export { PricesProvider, usePrices, PricesValue }
+export { PricesProvider, usePrices }

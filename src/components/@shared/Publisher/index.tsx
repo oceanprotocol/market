@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './index.module.css'
 import classNames from 'classnames/bind'
-import { Link } from 'gatsby'
+import Link from 'next/link'
 import get3BoxProfile from '@utils/profile'
 import { accountTruncate } from '@utils/web3'
 import axios from 'axios'
@@ -67,11 +67,8 @@ export default function Publisher({
         name
       ) : (
         <>
-          <Link
-            to={`/profile/${accountEns || account}`}
-            title="Show profile page."
-          >
-            {name}
+          <Link href={`/profile/${accountEns || account}`}>
+            <a title="Show profile page.">{name}</a>
           </Link>
           {showAdd && <Add />}
         </>

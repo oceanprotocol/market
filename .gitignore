@@ -5,10 +5,8 @@ out
 .env
 coverage
 dist
-public
 .cache
-storybook-static
-public/storybook
+.next
 .artifacts
 .vercel
 repo-metadata.json

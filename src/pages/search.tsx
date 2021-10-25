@@ -1,14 +1,14 @@
 import React, { ReactElement, useState } from 'react'
-import PageSearch from '../components/Search'
-import { PageProps } from 'gatsby'
+import Search from '../components/Search'
 import Page from '@shared/Page'
-import queryString from 'query-string'
 import { accountTruncate } from '@utils/web3'
 import ethereumAddress from 'ethereum-address'
 import { MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS } from '@utils/aquarius'
+import { useRouter } from 'next/router'
 
-export default function PageGatsbySearch(props: PageProps): ReactElement {
-  const parsed = queryString.parse(props.location.search)
+export default function PageSearch(): ReactElement {
+  const router = useRouter()
+  const parsed = router.query
   const { text, owner, tags, categories } = parsed
   const [totalResults, setTotalResults] = useState<number>()
   const [totalPagesNumber, setTotalPagesNumber] = useState<number>()
@@ -48,10 +48,9 @@ export default function PageGatsbySearch(props: PageProps): ReactElement {
           ? '**Results displayed are limited to the first 10k, please refine your search.**'
           : undefined
       }
-      uri={props.uri}
+      uri={router.route}
     >
-      <PageSearch
-        location={props.location}
+      <Search
         setTotalResults={setTotalResults}
         setTotalPagesNumber={setTotalPagesNumber}
       />

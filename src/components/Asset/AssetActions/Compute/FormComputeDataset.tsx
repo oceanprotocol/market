@@ -2,7 +2,6 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './FormComputeDataset.module.css'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import Input from '@shared/Form/Input'
-import { useStaticQuery, graphql } from 'gatsby'
 import { DDO } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '@shared/Form/FormFields/AssetSelection'
 import { compareAsBN } from '@utils/numbers'
@@ -11,36 +10,7 @@ import PriceOutput from './PriceOutput'
 import { useAsset } from '@context/Asset'
 import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
-
-const contentQuery = graphql`
-  query StartComputeDatasetQuery {
-    content: allFile(
-      filter: { relativePath: { eq: "pages/startComputeDataset.json" } }
-    ) {
-      edges {
-        node {
-          childPagesJson {
-            description
-            form {
-              success
-              successAction
-              error
-              data {
-                name
-                label
-                help
-                type
-                required
-                sortOptions
-                options
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`
+import { form } from '../../../../../content/pages/startComputeDataset.json'
 
 export default function FormStartCompute({
   algorithms,
@@ -91,9 +61,6 @@ export default function FormStartCompute({
   isConsumable: boolean
   consumableFeedback: string
 }): ReactElement {
-  const data = useStaticQuery(contentQuery)
-  const content = data.content.edges[0].node.childPagesJson
-
   const { isValid, values }: FormikContextType<{ algorithm: string }> =
     useFormikContext()
   const { price, ddo, isAssetNetwork } = useAsset()
@@ -160,7 +127,7 @@ export default function FormStartCompute({
 
   return (
     <Form className={styles.form}>
-      {content.form.data.map((field: FormFieldProps) => (
+      {form.data.map((field: FormFieldProps) => (
         <Field
           key={field.name}
           {...field}

@@ -1,17 +1,18 @@
 import React, { ReactElement } from 'react'
-import { PageProps, graphql } from 'gatsby'
 import Page from '@shared/Page'
 import fishfail from '@images/fishfail.gif'
-import { Helmet } from 'react-helmet'
+import Head from 'next/head'
 import Button from '@shared/atoms/Button'
+import content from '../../content/pages/404.json'
+import { useRouter } from 'next/router'
 
-export default function PageGatsby404(props: PageProps): ReactElement {
-  const { title, description, actions } = (props.data as any).content.edges[0]
-    .node.childPagesJson
+export default function Page404(): ReactElement {
+  const router = useRouter()
+  const { title, description, actions } = content
 
   return (
     <>
-      <Helmet>
+      <Head>
         <style type="text/css">{`
           body {
             background: url(${fishfail}) center bottom no-repeat;
@@ -33,11 +34,11 @@ export default function PageGatsby404(props: PageProps): ReactElement {
             fill: var(--brand-white) !important;
           }
         `}</style>
-      </Helmet>
+      </Head>
       <Page
         title={title}
         description={description}
-        uri={props.uri}
+        uri={router.route}
         headerCenter
       >
         {actions.map((action: { title: string; url: string }) => (
@@ -49,22 +50,3 @@ export default function PageGatsby404(props: PageProps): ReactElement {
     </>
   )
 }
-
-export const contentQuery = graphql`
-  query Page404Query {
-    content: allFile(filter: { relativePath: { eq: "pages/404.json" } }) {
-      edges {
-        node {
-          childPagesJson {
-            title
-            description
-            actions {
-              title
-              url
-            }
-          }
-        }
-      }
-    }
-  }
-`

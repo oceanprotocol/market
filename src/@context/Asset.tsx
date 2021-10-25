@@ -180,5 +180,5 @@ function AssetProvider({
 // Helper hook to access the provider values
 const useAsset = (): AssetProviderValue => useContext(AssetContext)
 
-export { AssetProvider, useAsset, AssetProviderValue, AssetContext }
+export { AssetProvider, useAsset, AssetContext }
 export default AssetProvider

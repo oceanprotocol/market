@@ -62,8 +62,7 @@ function MetaFull({ values }: { values: Partial<FormPublishData> }) {
               key.includes('dataTokenOptions') ||
               key.includes('dockerImage') ||
               key.includes('algorithmPrivacy') ||
-              value === undefined ||
-              value === ''
+              value === undefined
             )
         )
         .map(([key, value]) => (
@@ -99,7 +98,7 @@ export function MetadataPreview({
   return (
     <div className={styles.preview}>
       <h2 className={styles.previewTitle}>Preview</h2>
-      <header>
+      {/* <header>
         {networkId && <NetworkName networkId={networkId} />}
         {values.name && <h3 className={styles.title}>{values.name}</h3>}
         {values.dataTokenOptions?.name && (
@@ -180,7 +179,7 @@ export function MetadataAlgorithmPreview({
           />
         )}
       </div>
-      <MetaFull values={values} />
+      <MetaFull values={values} /> */}
     </div>
   )
 }

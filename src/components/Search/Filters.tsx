@@ -1,5 +1,4 @@
 import React, { ReactElement, useState } from 'react'
-import { useNavigate } from '@reach/router'
 import classNames from 'classnames/bind'
 import { addExistingParamsToUrl } from './utils'
 import Button from '@shared/atoms/Button'
@@ -8,6 +7,7 @@ import {
   FilterByAccessOptions,
   FilterByTypeOptions
 } from '../../@types/aquarius/SearchQuery'
+import router, { useRouter } from 'next/router'
 
 const cx = classNames.bind(styles)
 
@@ -38,7 +38,7 @@ export default function FilterPrice({
   addFiltersToUrl?: boolean
   className?: string
 }): ReactElement {
-  const navigate = useNavigate()
+  const router = useRouter()
   const [serviceSelections, setServiceSelections] = useState<string[]>([])
   const [accessSelections, setAccessSelections] = useState<string[]>([])
 
@@ -58,7 +58,7 @@ export default function FilterPrice({
           : (urlLocation = `${urlLocation}&serviceType=${filter}`)
       }
 
-      navigate(urlLocation)
+      router.push(urlLocation)
     }
   }
 
@@ -126,7 +126,7 @@ export default function FilterPrice({
         'serviceType'
       ])
       urlLocation = `${urlLocation}`
-      navigate(urlLocation)
+      router.push(urlLocation)
     }
   }
 

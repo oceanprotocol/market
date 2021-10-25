@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import slugify from '@sindresorhus/slugify'
+import slugify from 'slugify'
 import styles from './InputElement.module.css'
 import { InputProps } from '.'
 import FilesInput from '../FormFields/FilesInput'

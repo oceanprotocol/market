@@ -5,7 +5,6 @@ import React, { ReactElement, useState } from 'react'
 import { useAsset } from '@context/Asset'
 import FormEditComputeDataset from './FormEditComputeDataset'
 import { Logger, ServiceComputePrivacy } from '@oceanprotocol/lib'
-import { graphql, useStaticQuery } from 'gatsby'
 import { useUserPreferences } from '@context/UserPreferences'
 import DebugEditCompute from './DebugEditCompute'
 import styles from './index.module.css'
@@ -14,49 +13,13 @@ import { setMinterToDispenser, setMinterToPublisher } from '@utils/freePrice'
 import Web3Feedback from '@shared/Web3Feedback'
 import MetadataFeedback from '../../../Publish/MetadataFeedback'
 import { getInitialValues, validationSchema } from './_constants'
-
-const contentQuery = graphql`
-  query EditComputeDataQuery {
-    content: allFile(
-      filter: { relativePath: { eq: "pages/editComputeDataset.json" } }
-    ) {
-      edges {
-        node {
-          childPagesJson {
-            description
-            form {
-              title
-              success
-              successAction
-              error
-              data {
-                name
-                placeholder
-                label
-                help
-                type
-                required
-                sortOptions
-                options
-                multiple
-                rows
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`
+import content from '../../../../../content/pages/editComputeDataset.json'
 
 export default function EditComputeDataset({
   setShowEdit
 }: {
   setShowEdit: (show: boolean) => void
 }): ReactElement {
-  const data = useStaticQuery(contentQuery)
-  const content = data.content.edges[0].node.childPagesJson
-
   const { debug } = useUserPreferences()
   const { ocean } = useOcean()
   const { accountId } = useWeb3()
@@ -127,15 +90,18 @@ export default function EditComputeDataset({
 
   return (
     <Formik
-      initialValues={getInitialValues(
-        ddo.findServiceByType('compute').attributes.main.privacy
-      )}
+      initialValues={
+        {}
+        //   getInitialValues(
+        //   ddo.findServiceByType('compute').attributes.main.privacy
+        // )
+      }
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
         // move user's focus to top of screen
         window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
         // kick off editing
-        await handleSubmit(values, resetForm)
+        // await handleSubmit(values, resetForm)
       }}
     >
       {({ values, isSubmitting }) =>
@@ -166,7 +132,7 @@ export default function EditComputeDataset({
             <Web3Feedback isAssetNetwork={isAssetNetwork} />
             {debug === true && (
               <div className={styles.grid}>
-                <DebugEditCompute values={values} ddo={ddo} />
+                {/* <DebugEditCompute values={values} ddo={ddo} /> */}
               </div>
             )}
           </>

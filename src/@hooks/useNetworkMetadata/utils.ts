@@ -33,21 +33,21 @@ export function getNetworkDisplayName(
 }
 
 export function getNetworkDataById(
-  data: { node: EthereumListsChain }[],
+  data: EthereumListsChain[],
   networkId: number
 ): EthereumListsChain {
   if (!networkId) return
   const networkData = data.filter(
-    ({ node }: { node: EthereumListsChain }) => node.chainId === networkId
+    (chain: EthereumListsChain) => chain.chainId === networkId
   )
 
-  return networkId === 2021000 ? networkDataGaiaX : networkData[0]?.node
+  return networkId === 2021000 ? networkDataGaiaX : networkData[0]
 }
 
 export function filterNetworksByType(
   type: 'mainnet' | 'testnet',
   chainIds: number[],
-  networksList: { node: EthereumListsChain }[]
+  networksList: EthereumListsChain[]
 ): number[] {
   const finalNetworks = chainIds.filter((chainId: number) => {
     const networkData = getNetworkDataById(networksList, chainId)

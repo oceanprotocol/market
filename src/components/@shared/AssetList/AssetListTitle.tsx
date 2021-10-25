@@ -1,5 +1,5 @@
 import { DDO } from '@oceanprotocol/lib'
-import { Link } from 'gatsby'
+import Link from 'next/link'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { getAssetsNames } from '@utils/aquarius'
 import styles from './AssetListTitle.module.css'
@@ -42,7 +42,9 @@ export default function AssetListTitle({
 
   return (
     <h3 className={styles.title}>
-      <Link to={`/asset/${did || ddo?.id}`}>{assetTitle}</Link>
+      <Link href={`/asset/${did || ddo?.id}`}>
+        <a>{assetTitle}</a>
+      </Link>
     </h3>
   )
 }

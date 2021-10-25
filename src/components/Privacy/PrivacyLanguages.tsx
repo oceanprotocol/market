@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import styles from './PrivacyLanguages.module.css'
 import { usePrivacyMetadata } from '@hooks/usePrivacyMetadata'
 import { useUserPreferences } from '@context/UserPreferences'
-import { Link } from '@reach/router'
+import Link from 'next/link'
 
 export default function PrivacyLanguages({
   label
@@ -21,13 +21,14 @@ export default function PrivacyLanguages({
           return (
             <React.Fragment key={policy.policy}>
               {i > 0 && ' — '}
-              <Link
-                to={slug}
-                onClick={() => {
-                  setPrivacyPolicySlug(slug)
-                }}
-              >
-                {policy.language}
+              <Link href={slug}>
+                <a
+                  onClick={() => {
+                    setPrivacyPolicySlug(slug)
+                  }}
+                >
+                  {policy.language}
+                </a>
               </Link>
             </React.Fragment>
           )

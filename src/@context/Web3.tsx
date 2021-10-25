@@ -47,7 +47,7 @@ const web3ModalTheme = {
   hover: 'var(--background-highlight)'
 }
 
-// HEADS UP! We inline-require some packages so the Gatsby SSR build does not break.
+// HEADS UP! We inline-require some packages so the SSR build does not break.
 // We only need them client-side.
 const providerOptions = isBrowser
   ? {
@@ -363,5 +363,5 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
 // Helper hook to access the provider values
 const useWeb3 = (): Web3ProviderValue => useContext(Web3Context)
 
-export { Web3Provider, useWeb3, Web3ProviderValue, Web3Context }
+export { Web3Provider, useWeb3, Web3Context }
 export default Web3Provider

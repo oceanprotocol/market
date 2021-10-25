@@ -1,35 +1,8 @@
-import { useStaticQuery, graphql } from 'gatsby'
 import { UseNetworkMetadata } from './types'
-
-const networksQuery = graphql`
-  query {
-    allNetworksMetadataJson {
-      edges {
-        node {
-          chain
-          network
-          networkId
-          chainId
-          rpc
-          explorers {
-            url
-          }
-          nativeCurrency {
-            name
-            symbol
-            decimals
-          }
-        }
-      }
-    }
-  }
-`
+import networkdata from '../../../content/networks-metadata.json'
 
 export default function useNetworkMetadata(): UseNetworkMetadata {
-  const data = useStaticQuery(networksQuery)
-  const networksList: { node: EthereumListsChain }[] =
-    data.allNetworksMetadataJson.edges
-
+  const networksList: EthereumListsChain[] = networkdata
   return { networksList }
 }
 

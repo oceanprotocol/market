@@ -1,36 +1,18 @@
 import React, { ReactElement } from 'react'
-import PagePublish from '../components/Publish'
+import Publish from '../components/Publish'
 import Page from '@shared/Page'
-import { graphql, PageProps } from 'gatsby'
 import OceanProvider from '@context/Ocean'
+import content from '../../content/pages/publish/index.json'
+import router from 'next/router'
 
-export default function PageGatsbyPublish(props: PageProps): ReactElement {
-  const content = (props.data as any).content.edges[0].node.childPublishJson
+export default function PagePublish(): ReactElement {
   const { title, description } = content
 
   return (
     <OceanProvider>
-      <Page title={title} description={description} uri={props.uri}>
-        <PagePublish content={content} />
+      <Page title={title} description={description} uri={router.route}>
+        <Publish content={content} />
       </Page>
     </OceanProvider>
   )
 }
-
-export const contentQuery = graphql`
-  query PublishPageQuery {
-    content: allFile(
-      filter: { relativePath: { eq: "pages/publish/index.json" } }
-    ) {
-      edges {
-        node {
-          childPublishJson {
-            title
-            description
-            warning
-          }
-        }
-      }
-    }
-  }
-`

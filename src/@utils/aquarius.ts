@@ -3,7 +3,7 @@ import {
   DID,
   Logger,
   publisherTrustedAlgorithm as PublisherTrustedAlgorithm
-} from '@oceanprotocol/lib/'
+} from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '@shared/Form/FormFields/AssetSelection'
 import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'

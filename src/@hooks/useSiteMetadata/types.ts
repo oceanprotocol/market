@@ -3,7 +3,7 @@ export interface UseSiteMetadata {
   siteTagline: string
   siteUrl: string
   siteIcon: string
-  siteImage: { childImageSharp: { original: { src: string } } }
+  siteImage: string
   copyright: string
   menu: {
     name: string

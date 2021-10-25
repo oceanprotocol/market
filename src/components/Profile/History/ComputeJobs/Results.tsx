@@ -6,32 +6,13 @@ import Button from '@shared/atoms/Button'
 import { useOcean } from '@context/Ocean'
 import styles from './Results.module.css'
 import FormHelp from '@shared/Form/Input/Help'
-import { graphql, useStaticQuery } from 'gatsby'
-
-export const contentQuery = graphql`
-  query HistoryPageComputeResultsQuery {
-    content: allFile(filter: { relativePath: { eq: "pages/history.json" } }) {
-      edges {
-        node {
-          childPagesJson {
-            compute {
-              storage
-            }
-          }
-        }
-      }
-    }
-  }
-`
+import content from '../../../../../content/pages/history.json'
 
 export default function Results({
   job
 }: {
   job: ComputeJobMetaData
 }): ReactElement {
-  const data = useStaticQuery(contentQuery)
-  const content = data.content.edges[0].node.childPagesJson
-
   const { ocean, account } = useOcean()
   const [isLoading, setIsLoading] = useState(false)
   const [hasFetched, setHasFetched] = useState(false)

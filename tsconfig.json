@@ -1,28 +1,37 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "commonjs",
+    "module": "esnext",
     "lib": ["dom", "es2017"],
     "resolveJsonModule": true,
     "moduleResolution": "Node",
-    "jsx": "react",
+    "jsx": "preserve",
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "noEmit": true,
     "sourceMap": true,
     "noImplicitAny": true,
-    "skipLibCheck": false,
     "allowJs": true,
     "paths": {
       "@shared/*": ["./src/components/@shared/*"],
       "@hooks/*": ["./src/@hooks/*"],
       "@context/*": ["./src/@context/*"],
       "@images/*": ["./src/@images/*"],
-      "@utils/*": ["./src/@utils/*"]
-    }
-    //"baseUrl": "./src"
+      "@utils/*": ["./src/@utils/*"],
+      "@content/*": ["./@content/*"]
+    },
+    "baseUrl": ".",
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "skipLibCheck": true
   },
-  "exclude": ["node_modules", "public", ".cache", "*.js"],
-  "include": ["./src/**/*", "./tests/**/*", "./app.config.js"]
+  "exclude": ["node_modules", ".next", "*.js"],
+  "include": [
+    "./src/**/*",
+    "./tests/**/*",
+    "./app.config.js",
+    "./next-env.d.ts"
+  ]
 }

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import isUrl from 'is-url-superb'
-import slugify from '@sindresorhus/slugify'
+import slugify from 'slugify'
 import { DDO, MetadataAlgorithm, Logger } from '@oceanprotocol/lib'
 import { FormPublishData } from '../components/Publish/_types'
 
@@ -97,72 +97,72 @@ function getAlgorithmFileExtension(fileUrl: string): string {
   return splitedFileUrl[splitedFileUrl.length - 1]
 }
 
-export function transformPublishFormToMetadata(
-  {
-    name,
-    author,
-    description,
-    tags,
-    links,
-    termsAndConditions,
-    files
-  }: Partial<FormPublishData>,
-  ddo?: DDO
-): MetadataMarket {
-  const currentTime = dateToStringNoMS(new Date())
+// export function transformPublishFormToMetadata(
+//   {
+//     name,
+//     author,
+//     description,
+//     tags,
+//     links,
+//     termsAndConditions,
+//     files
+//   }: Partial<FormPublishData>,
+//   ddo?: DDO
+// ): MetadataMarket {
+//   const currentTime = dateToStringNoMS(new Date())
 
-  const metadata: MetadataMarket = {
-    main: {
-      name,
-      author,
-      dateCreated: ddo ? ddo.created : currentTime,
-      datePublished: '',
-      files: typeof files !== 'string' && files,
-      license: 'https://market.oceanprotocol.com/terms'
-    },
-    additionalInformation: {
-      description,
-      tags: transformTags(tags),
-      links: typeof links !== 'string' ? links : [],
-      termsAndConditions
-    }
-  }
+//   const metadata: MetadataMarket = {
+//     main: {
+//       name,
+//       author,
+//       dateCreated: ddo ? ddo.created : currentTime,
+//       datePublished: '',
+//       files: typeof files !== 'string' && files,
+//       license: 'https://market.oceanprotocol.com/terms'
+//     },
+//     additionalInformation: {
+//       description,
+//       tags: transformTags(tags),
+//       links: typeof links !== 'string' ? links : [],
+//       termsAndConditions
+//     }
+//   }
 
-  return metadata
-}
+//   return metadata
+// }
 
-async function isDockerHubImageValid(
-  image: string,
-  tag: string
-): Promise<boolean> {
-  try {
-    const response = await axios.post(
-      `https://dockerhub-proxy.oceanprotocol.com`,
-      {
-        image,
-        tag
-      }
-    )
-    if (
-      !response ||
-      response.status !== 200 ||
-      response.data.status !== 'success'
-    ) {
-      toast.error(
-        'Could not fetch docker hub image info. Please check image name and tag and try again'
-      )
-      return false
-    }
+// async function isDockerHubImageValid(
+//   image: string,
+//   tag: string
+// ): Promise<boolean> {
+//   try {
+//     const response = await axios.post(
+//       `https://dockerhub-proxy.oceanprotocol.com`,
+//       {
+//         image,
+//         tag
+//       }
+//     )
+//     if (
+//       !response ||
+//       response.status !== 200 ||
+//       response.data.status !== 'success'
+//     ) {
+//       toast.error(
+//         'Could not fetch docker hub image info. Please check image name and tag and try again'
+//       )
+//       return false
+//     }
 
-    return true
-  } catch (error) {
-    Logger.error(error.message)
-    toast.error(
-      'Could not fetch docker hub image info. Please check image name and tag and try again'
-    )
-    return false
-  }
-}
+//     return true
+//   } catch (error) {
+//     Logger.error(error.message)
+//     toast.error(
+//       'Could not fetch docker hub image info. Please check image name and tag and try again'
+//     )
+//     return false
+//   }
+// }
 
 async function is3rdPartyImageValid(imageURL: string): Promise<boolean> {
   try {
@@ -183,55 +183,55 @@ async function is3rdPartyImageValid(imageURL: string): Promise<boolean> {
   }
 }
 
-export async function validateDockerImage(
-  dockerImage: string,
-  tag: string
-): Promise<boolean> {
-  const isValid = isUrl(dockerImage)
-    ? await is3rdPartyImageValid(dockerImage)
-    : await isDockerHubImageValid(dockerImage, tag)
-  return isValid
-}
+// export async function validateDockerImage(
+//   dockerImage: string,
+//   tag: string
+// ): Promise<boolean> {
+//   const isValid = isUrl(dockerImage)
+//     ? await is3rdPartyImageValid(dockerImage)
+//     : await isDockerHubImageValid(dockerImage, tag)
+//   return isValid
+// }
 
-export function transformPublishAlgorithmFormToMetadata(
-  {
-    name,
-    author,
-    description,
-    tags,
-    image,
-    containerTag,
-    entrypoint,
-    termsAndConditions,
-    files
-  }: Partial<FormPublishData>,
-  ddo?: DDO
-): MetadataMarket {
-  const currentTime = dateToStringNoMS(new Date())
-  const fileUrl = typeof files !== 'string' && files[0].url
-  const algorithmLanguage = getAlgorithmFileExtension(fileUrl)
-  const algorithm = getAlgorithmComponent(
-    image,
-    containerTag,
-    entrypoint,
-    algorithmLanguage
-  )
-  const metadata: MetadataMarket = {
-    main: {
-      name,
-      type: 'algorithm',
-      author,
-      dateCreated: ddo ? ddo.created : currentTime,
-      files: typeof files !== 'string' && files,
-      license: 'https://market.oceanprotocol.com/terms',
-      algorithm
-    },
-    additionalInformation: {
-      description,
-      tags: transformTags(tags),
-      termsAndConditions
-    }
-  }
+// export function transformPublishAlgorithmFormToMetadata(
+//   {
+//     name,
+//     author,
+//     description,
+//     tags,
+//     image,
+//     containerTag,
+//     entrypoint,
+//     termsAndConditions,
+//     files
+//   }: Partial<FormPublishData>,
+//   ddo?: DDO
+// ): MetadataMarket {
+//   const currentTime = dateToStringNoMS(new Date())
+//   const fileUrl = typeof files !== 'string' && files[0].url
+//   const algorithmLanguage = getAlgorithmFileExtension(fileUrl)
+//   const algorithm = getAlgorithmComponent(
+//     image,
+//     containerTag,
+//     entrypoint,
+//     algorithmLanguage
+//   )
+//   const metadata: MetadataMarket = {
+//     main: {
+//       name,
+//       type: 'algorithm',
+//       author,
+//       dateCreated: ddo ? ddo.created : currentTime,
+//       files: typeof files !== 'string' && files,
+//       license: 'https://market.oceanprotocol.com/terms',
+//       algorithm
+//     },
+//     additionalInformation: {
+//       description,
+//       tags: transformTags(tags),
+//       termsAndConditions
+//     }
+//   }
 
-  return metadata
-}
+//   return metadata
+// }

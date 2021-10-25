@@ -1,20 +1,21 @@
 import React, { ReactElement } from 'react'
-import { PageProps } from 'gatsby'
-import PageHome from '../components/Home/Home'
+import Home from '../components/Home'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import Page from '@shared/Page'
+import { useRouter } from 'next/router'
 
-export default function PageGatsbyHome(props: PageProps): ReactElement {
+export default function PageHome(): ReactElement {
   const { siteTitle, siteTagline } = useSiteMetadata()
+  const router = useRouter()
 
   return (
     <Page
       title={siteTitle}
       description={siteTagline}
-      uri={props.uri}
+      uri={router.route}
       headerCenter
     >
-      <PageHome />
+      <Home />
     </Page>
   )
 }

@@ -257,7 +257,7 @@ function usePricing(): UsePricing {
               `${dtAmount}`,
               weightOnDataToken,
               `${oceanAmount}`,
-              swapFee
+              `${swapFee}`
             )
             .next((step: number) => setStep(step, 'pool', ddo))
         : type === 'fixed'
@@ -292,5 +292,5 @@ function usePricing(): UsePricing {
   }
 }
 
-export { usePricing, UsePricing }
+export { usePricing }
 export default usePricing

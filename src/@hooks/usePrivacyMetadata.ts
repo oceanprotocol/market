@@ -1,4 +1,4 @@
-import { useStaticQuery, graphql } from 'gatsby'
+import privacyContent from '../../content/pages/privacy/policies.json'
 
 export interface UsePrivacyMetadata {
   policies: {
@@ -14,26 +14,6 @@ export interface UsePrivacyMetadata {
   }[]
 }
 
-const query = graphql`
-  {
-    privacyJson {
-      policies {
-        policy
-        date
-        language
-        params {
-          updated
-          dateFormat
-          tocHeader
-          languageLabel
-        }
-      }
-    }
-  }
-`
-
 export function usePrivacyMetadata(): UsePrivacyMetadata {
-  const data = useStaticQuery(query)
-
-  return { ...data.privacyJson }
+  return { ...privacyContent }
 }

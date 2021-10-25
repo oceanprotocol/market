@@ -1,5 +1,5 @@
 import React, { ReactNode, FormEvent, ReactElement } from 'react'
-import { Link } from 'gatsby'
+import Link from 'next/link'
 import classNames from 'classnames/bind'
 import styles from './Button.module.css'
 
@@ -41,8 +41,10 @@ export default function Button({
   })
 
   return to ? (
-    <Link to={to} className={styleClasses} {...props}>
-      {children}
+    <Link href={to}>
+      <a className={styleClasses} {...props}>
+        {children}
+      </a>
     </Link>
   ) : href ? (
     <a href={href} className={styleClasses} {...props}>

@@ -1,6 +1,4 @@
-const createMarkdownFields = require('./gatsby/createMarkdownFields')
 const createMarkdownPages = require('./gatsby/createMarkdownPages')
-const createTypes = require('./gatsby/createTypes')
 const execSync = require('child_process').execSync
 const path = require('path')
 
@@ -22,14 +20,6 @@ execSync(
     stdio: 'inherit'
   }
 )
-
-exports.sourceNodes = ({ actions }) => {
-  createTypes(actions)
-}
-
-exports.onCreateNode = ({ node, actions, getNode }) => {
-  createMarkdownFields(node, actions, getNode)
-}
 
 exports.createPages = async ({ graphql, actions }) => {
   await createMarkdownPages(graphql, actions)

@@ -109,5 +109,5 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
 // Helper hook to access the provider values
 const useOcean = (): OceanProviderValue => useContext(OceanContext)
 
-export { OceanProvider, useOcean, OceanProviderValue, OceanContext }
+export { OceanProvider, useOcean, OceanContext }
 export default OceanProvider

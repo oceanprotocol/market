@@ -1,33 +1,11 @@
 import { FormikContextType, useFormikContext } from 'formik'
-import { graphql, useStaticQuery } from 'gatsby'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { FormAddLiquidity } from '.'
 import FormHelp from '@shared/Form/Input/Help'
 import Token from '../Token'
 import styles from './Output.module.css'
 import Decimal from 'decimal.js'
-
-const contentQuery = graphql`
-  query PoolAddOutputQuery {
-    content: allFile(filter: { relativePath: { eq: "price.json" } }) {
-      edges {
-        node {
-          childContentJson {
-            pool {
-              add {
-                output {
-                  help
-                  titleIn
-                  titleOut
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`
+import { pool } from '../../../../../../content/price.json'
 
 export default function Output({
   newPoolTokens,
@@ -46,9 +24,7 @@ export default function Output({
   totalBalance: PoolBalance
   coin: string
 }): ReactElement {
-  const data = useStaticQuery(contentQuery)
-  const { help, titleIn, titleOut } =
-    data.content.edges[0].node.childContentJson.pool.add.output
+  const { help, titleIn, titleOut } = pool.add.output
 
   // Connect with form
   const { values }: FormikContextType<FormAddLiquidity> = useFormikContext()

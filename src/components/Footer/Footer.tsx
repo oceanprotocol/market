@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import styles from './Footer.module.css'
 import Markdown from '@shared/atoms/Markdown'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
-import { Link } from 'gatsby'
+import Link from 'next/link'
 import MarketStats from './MarketStats'
 import BuildId from './BuildId'
 import { useUserPreferences } from '@context/UserPreferences'
@@ -27,11 +27,17 @@ export default function Footer(): ReactElement {
         <div className={styles.copyright}>
           © {year} <Markdown text={copyright} />
           <br />
-          <Link to="/imprint">Imprint</Link>
+          <Link href="/imprint">
+            <a>Imprint</a>
+          </Link>
           {' — '}
-          <Link to="/terms">Terms</Link>
+          <Link href="/terms">
+            <a>Terms</a>
+          </Link>
           {' — '}
-          <Link to={privacyPolicySlug}>Privacy</Link>
+          <Link href={privacyPolicySlug}>
+            <a>Privacy</a>
+          </Link>
           {appConfig.privacyPreferenceCenter === 'true' && (
             <>
               {' — '}

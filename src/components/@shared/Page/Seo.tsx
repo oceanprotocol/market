@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import { Helmet } from 'react-helmet'
+import Head from 'next/head'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { isBrowser } from '@utils/index'
 
@@ -18,12 +18,10 @@ export default function Seo({
   const canonical = `${siteUrl}${uri}`.replace(/\/$/, '')
 
   return (
-    <Helmet
-      defaultTitle={`${siteTitle} — ${siteTagline}`}
-      titleTemplate={`%s — ${siteTitle}`}
-      title={title}
-    >
+    <Head>
       <html lang="en" />
+
+      <title>{`${siteTitle} — ${siteTagline}`}</title>
 
       {isBrowser &&
         window.location &&
@@ -38,18 +36,12 @@ export default function Seo({
       <meta property="og:description" content={description} />
       <meta property="og:url" content={uri} />
 
-      <meta
-        name="image"
-        content={`${siteUrl}${siteImage.childImageSharp.original.src}`}
-      />
-      <meta
-        property="og:image"
-        content={`${siteUrl}${siteImage.childImageSharp.original.src}`}
-      />
+      <meta name="image" content={`${siteUrl}${siteImage}`} />
+      <meta property="og:image" content={`${siteUrl}${siteImage}`} />
 
       <meta property="og:site_name" content={siteTitle} />
       <meta name="twitter:creator" content="@oceanprotocol" />
       <meta name="twitter:card" content="summary_large_image" />
-    </Helmet>
+    </Head>
   )
 }

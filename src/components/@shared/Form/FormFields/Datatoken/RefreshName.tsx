@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import styles from './RefreshName.module.css'
 import Button from '@shared/atoms/Button'
-import { ReactComponent as Refresh } from '@images/refresh.svg'
+import Refresh from '@images/refresh.svg'
 
 export default function RefreshName({
   generateName

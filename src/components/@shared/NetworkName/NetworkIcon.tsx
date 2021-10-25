@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react'
-import { ReactComponent as EthIcon } from '@images/eth.svg'
-import { ReactComponent as PolygonIcon } from '@images/polygon.svg'
-import { ReactComponent as MoonbeamIcon } from '@images/moonbeam.svg'
-import { ReactComponent as BscIcon } from '@images/bsc.svg'
-import { ReactComponent as EnergywebIcon } from '@images/energyweb.svg'
+import EthIcon from '@images/eth.svg'
+import PolygonIcon from '@images/polygon.svg'
+import MoonbeamIcon from '@images/moonbeam.svg'
+import BscIcon from '@images/bsc.svg'
+import EnergywebIcon from '@images/energyweb.svg'
 import styles from './index.module.css'
 
 export function NetworkIcon({ name }: { name: string }): ReactElement {

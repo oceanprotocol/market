@@ -7,39 +7,39 @@ import FormActions from './FormActions'
 import styles from './FormEditMetadata.module.css'
 import { FormPublishData } from '../../../Publish/_types'
 
-function handleTimeoutCustomOption(
-  data: FormFieldProps[],
-  values: Partial<FormPublishData>
-) {
-  const timeoutFieldContent = data.filter(
-    (field) => field.name === 'timeout'
-  )[0]
-  const timeoutInputIndex = data.findIndex(
-    (element) => element.name === 'timeout'
-  )
-  if (
-    data[timeoutInputIndex].options.length < 6 &&
-    !checkIfTimeoutInPredefinedValues(
-      values.timeout,
-      timeoutFieldContent.options
-    )
-  ) {
-    data[timeoutInputIndex].options.push(values.timeout)
-  } else if (
-    data[timeoutInputIndex].options.length === 6 &&
-    checkIfTimeoutInPredefinedValues(
-      values.timeout,
-      timeoutFieldContent.options
-    )
-  ) {
-    data[timeoutInputIndex].options.pop()
-  } else if (
-    data[timeoutInputIndex].options.length === 6 &&
-    data[timeoutInputIndex].options[5] !== values.timeout
-  ) {
-    data[timeoutInputIndex].options[5] = values.timeout
-  }
-}
+// function handleTimeoutCustomOption(
+//   data: FormFieldProps[],
+//   values: Partial<FormPublishData>
+// ) {
+//   const timeoutFieldContent = data.filter(
+//     (field) => field.name === 'timeout'
+//   )[0]
+//   const timeoutInputIndex = data.findIndex(
+//     (element) => element.name === 'timeout'
+//   )
+//   if (
+//     data[timeoutInputIndex].options.length < 6 &&
+//     !checkIfTimeoutInPredefinedValues(
+//       values.timeout,
+//       timeoutFieldContent.options
+//     )
+//   ) {
+//     data[timeoutInputIndex].options.push(values.timeout)
+//   } else if (
+//     data[timeoutInputIndex].options.length === 6 &&
+//     checkIfTimeoutInPredefinedValues(
+//       values.timeout,
+//       timeoutFieldContent.options
+//     )
+//   ) {
+//     data[timeoutInputIndex].options.pop()
+//   } else if (
+//     data[timeoutInputIndex].options.length === 6 &&
+//     data[timeoutInputIndex].options[5] !== values.timeout
+//   ) {
+//     data[timeoutInputIndex].options[5] = values.timeout
+//   }
+// }
 export default function FormEditMetadata({
   data,
   setShowEdit,
@@ -73,18 +73,18 @@ export default function FormEditMetadata({
   // This component is handled by Formik so it's not rendered like a "normal" react component,
   // so handleTimeoutCustomOption is called only once.
   // https://github.com/oceanprotocol/market/pull/324#discussion_r561132310
-  if (data && values) handleTimeoutCustomOption(data, values)
+  // if (data && values) handleTimeoutCustomOption(data, values)
 
   const timeoutOptionsArray = data.filter(
     (field) => field.name === 'timeout'
   )[0].options
 
-  if (isComputeDataset && timeoutOptionsArray.includes('Forever')) {
-    const foreverOptionIndex = timeoutOptionsArray.indexOf('Forever')
-    timeoutOptionsArray.splice(foreverOptionIndex, 1)
-  } else if (!isComputeDataset && !timeoutOptionsArray.includes('Forever')) {
-    timeoutOptionsArray.push('Forever')
-  }
+  // if (isComputeDataset && timeoutOptionsArray.includes('Forever')) {
+  //   const foreverOptionIndex = timeoutOptionsArray.indexOf('Forever')
+  //   timeoutOptionsArray.splice(foreverOptionIndex, 1)
+  // } else if (!isComputeDataset && !timeoutOptionsArray.includes('Forever')) {
+  //   timeoutOptionsArray.push('Forever')
+  // }
 
   return (
     <Form className={styles.form}>
@@ -108,10 +108,10 @@ export default function FormEditMetadata({
           )
       )}
 
-      <FormActions
+      {/* <FormActions
         setShowEdit={setShowEdit}
         handleClick={() => setTimeoutStringValue(values.timeout)}
-      />
+      /> */}
     </Form>
   )
 }

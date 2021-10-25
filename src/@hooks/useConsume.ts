@@ -100,5 +100,5 @@ function useConsume(): UseConsume {
   return { consume, consumeStep, consumeStepText, consumeError, isLoading }
 }
 
-export { useConsume, UseConsume }
+export { useConsume }
 export default useConsume

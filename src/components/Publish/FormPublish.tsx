@@ -5,52 +5,19 @@ import React, {
   ChangeEvent,
   useState
 } from 'react'
-import { useStaticQuery, graphql } from 'gatsby'
 import { useFormikContext, Field, Form, FormikContextType } from 'formik'
 import Input from '@shared/Form/Input'
-import { ReactComponent as Download } from '@images/download.svg'
-import { ReactComponent as Compute } from '@images/compute.svg'
+import Download from '@images/download.svg'
+import Compute from '@images/compute.svg'
 import FormTitle from './FormTitle'
 import FormActions from './FormActions'
 import AdvancedSettings from '@shared/Form/FormFields/AdvancedSettings'
 import { FormPublishData } from './_types'
 import styles from './FormPublish.module.css'
 import { initialValues } from './_constants'
-
-const query = graphql`
-  query {
-    content: allFile(
-      filter: { relativePath: { eq: "pages/publish/form-dataset.json" } }
-    ) {
-      edges {
-        node {
-          childPublishJson {
-            title
-            data {
-              name
-              placeholder
-              label
-              help
-              type
-              required
-              sortOptions
-              options
-              disclaimer
-              disclaimerValues
-              advanced
-            }
-            warning
-          }
-        }
-      }
-    }
-  }
-`
+import content from '../../../content/pages/publish/form-dataset.json'
 
 export default function FormPublish(): ReactElement {
-  const data = useStaticQuery(query)
-  const content: FormContent = data.content.edges[0].node.childPublishJson
-
   const {
     status,
     setStatus,
@@ -90,26 +57,26 @@ export default function FormPublish(): ReactElement {
 
   // Manually handle change events instead of using `handleChange` from Formik.
   // Workaround for default `validateOnChange` not kicking in
-  function handleFieldChange(
-    e: ChangeEvent<HTMLInputElement>,
-    field: FormFieldProps
-  ) {
-    const value =
-      field.type === 'terms' ? !JSON.parse(e.target.value) : e.target.value
+  // function handleFieldChange(
+  //   e: ChangeEvent<HTMLInputElement>,
+  //   field: FormFieldProps
+  // ) {
+  //   const value =
+  //     field.type === 'terms' ? !JSON.parse(e.target.value) : e.target.value
 
-    if (field.name === 'access' && value === 'Compute') {
-      setComputeTypeSelected(true)
-      if (values.timeout === 'Forever')
-        setFieldValue('timeout', computeTypeOptions[0])
-    } else {
-      if (field.name === 'access' && value === 'Download') {
-        setComputeTypeSelected(false)
-      }
-    }
+  //   if (field.name === 'access' && value === 'Compute') {
+  //     setComputeTypeSelected(true)
+  //     if (values.timeout === 'Forever')
+  //       setFieldValue('timeout', computeTypeOptions[0])
+  //   } else {
+  //     if (field.name === 'access' && value === 'Download') {
+  //       setComputeTypeSelected(false)
+  //     }
+  //   }
 
-    validateField(field.name)
-    setFieldValue(field.name, value)
-  }
+  //   validateField(field.name)
+  //   setFieldValue(field.name, value)
+  // }
 
   const resetFormAndClearStorage = (e: FormEvent<Element>) => {
     e.preventDefault()
@@ -142,16 +109,12 @@ export default function FormPublish(): ReactElement {
                   : field.options
               }
               component={Input}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                handleFieldChange(e, field)
-              }
+              // onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              //   handleFieldChange(e, field)
+              // }
             />
           )
       )}
-      <AdvancedSettings
-        content={content}
-        handleFieldChange={handleFieldChange}
-      />
 
       <FormActions
         isValid={isValid}

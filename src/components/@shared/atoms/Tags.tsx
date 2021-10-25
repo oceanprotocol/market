@@ -1,6 +1,5 @@
 import React from 'react'
-import { Link } from 'gatsby'
-import shortid from 'shortid'
+import Link from 'next/link'
 import styles from './Tags.module.css'
 
 declare type TagsProps = {
@@ -16,12 +15,10 @@ const Tag = ({ tag, noLinks }: { tag: string; noLinks?: boolean }) => {
   return noLinks ? (
     <span className={styles.tag}>{tag}</span>
   ) : (
-    <Link
-      to={`/search?tags=${urlEncodedTag}&sort=created&sortOrder=desc`}
-      className={styles.tag}
-      title={tag}
-    >
-      {tag}
+    <Link href={`/search?tags=${urlEncodedTag}&sort=created&sortOrder=desc`}>
+      <a className={styles.tag} title={tag}>
+        {tag}
+      </a>
     </Link>
   )
 }
@@ -43,7 +40,7 @@ const Tags: React.FC<TagsProps> = ({
   return (
     <div className={classes}>
       {tags?.map((tag) => (
-        <Tag tag={tag} noLinks={noLinks} key={shortid.generate()} />
+        <Tag tag={tag} noLinks={noLinks} key={tag} />
       ))}
       {shouldShowMore && (
         <span className={styles.more}>{`+ ${items.length - max} more`}</span>

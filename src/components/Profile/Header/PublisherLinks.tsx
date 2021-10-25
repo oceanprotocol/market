@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import classNames from 'classnames/bind'
-import { ReactComponent as External } from '@images/external.svg'
+import External from '@images/external.svg'
 import styles from './PublisherLinks.module.css'
 import { useProfile } from '@context/Profile'
 

@@ -10,7 +10,7 @@ import {
 import { getHighestLiquidityDatatokens } from '@utils/subgraph'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import { useUserPreferences } from '@context/UserPreferences'
-import styles from './Home.module.css'
+import styles from './index.module.css'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { SortTermOptions } from '../../@types/aquarius/SearchQuery'

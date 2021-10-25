@@ -61,7 +61,7 @@
   display: none;
 }
 
-div [class*='Table-module'] {
+.table [class*='Table-module'] {
   scrollbar-width: thin;
 }
 

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, ReactElement } from 'react'
-import { Router } from '@reach/router'
 import Page from '@shared/Page'
 import Alert from '@shared/atoms/Alert'
 import Loader from '@shared/atoms/Loader'
@@ -21,9 +20,7 @@ export default function AssetDetails({ uri }: { uri: string }): ReactElement {
 
   return ddo && pageTitle !== undefined && !loading ? (
     <Page title={pageTitle} uri={uri}>
-      <Router basepath="/asset">
-        <AssetContent path=":did" />
-      </Router>
+      <AssetContent />
     </Page>
   ) : error ? (
     <Page title={pageTitle} noPageHeader uri={uri}>
