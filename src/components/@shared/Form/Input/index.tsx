@@ -7,14 +7,13 @@ import React, {
   useState
 } from 'react'
 import InputElement from './InputElement'
-import Help from './Help'
 import Label from './Label'
 import styles from './index.module.css'
 import { ErrorMessage, FieldInputProps } from 'formik'
 import classNames from 'classnames/bind'
 import Disclaimer from './Disclaimer'
 import Tooltip from '@shared/atoms/Tooltip'
-import Markdown from '@shared/atoms/Markdown'
+import Markdown from '@shared/Markdown'
 
 const cx = classNames.bind(styles)
 

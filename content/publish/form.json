@@ -16,21 +16,6 @@
         "required": true
       },
       {
-        "name": "files",
-        "label": "File",
-        "placeholder": "e.g. https://file.com/file.json",
-        "help": "Please enter the URL to your data set file and click \"ADD FILE\" to validate the data. This URL will be stored encrypted after publishing. For a compute data set, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size.",
-        "type": "files",
-        "required": true
-      },
-      {
-        "name": "links",
-        "label": "Sample file",
-        "placeholder": "e.g. https://file.com/samplefile.json",
-        "help": "Please enter the URL to a sample of your data set file and click \"ADD FILE\" to validate the data. This file should reveal the data structure of your data set, e.g. by including the header and one line of a CSV file. This file URL will be publicly available after publishing.",
-        "type": "files"
-      },
-      {
         "name": "author",
         "label": "Author",
         "placeholder": "e.g. Jelly McJellyfish",
@@ -56,6 +41,28 @@
     "title": "Create services",
     "fields": [
       {
+        "name": "dataTokenOptions",
+        "label": "Datatoken Name & Symbol",
+        "type": "datatoken",
+        "help": "The datatoken for this data set will be created with this name & symbol.",
+        "required": true
+      },
+      {
+        "name": "files",
+        "label": "File",
+        "placeholder": "e.g. https://file.com/file.json",
+        "help": "Please enter the URL to your data set file and click \"ADD FILE\" to validate the data. This URL will be stored encrypted after publishing. For a compute data set, your file should match the file type required by the algorithm, and should not exceed 1 GB in file size.",
+        "type": "files",
+        "required": true
+      },
+      {
+        "name": "links",
+        "label": "Sample file",
+        "placeholder": "e.g. https://file.com/samplefile.json",
+        "help": "Please enter the URL to a sample of your data set file and click \"ADD FILE\" to validate the data. This file should reveal the data structure of your data set, e.g. by including the header and one line of a CSV file. This file URL will be publicly available after publishing.",
+        "type": "files"
+      },
+      {
         "name": "access",
         "label": "Access Type",
         "help": "Choose how you want your files to be accessible for the specified price.",
@@ -66,14 +73,6 @@
         "disclaimerValues": ["Download"]
       },
       {
-        "name": "providerUri",
-        "label": "Custom Provider URL",
-        "type": "providerUri",
-        "help": "Enter the URL for your custom provider or leave blank to use the default provider. [Learn more](https://github.com/oceanprotocol/provider/).",
-        "placeholder": "https://provider.polygon.oceanprotocol.com/",
-        "advanced": true
-      },
-      {
         "name": "timeout",
         "label": "Timeout",
         "help": "Define how long buyers should be able to download the data set again after the initial purchase.",
@@ -82,17 +81,23 @@
         "sortOptions": false,
         "required": true
       },
+
       {
-        "name": "dataTokenOptions",
-        "label": "Datatoken Name & Symbol",
-        "type": "datatoken",
-        "help": "The datatoken for this data set will be created with this name & symbol.",
-        "required": true
+        "name": "providerUri",
+        "label": "Custom Provider URL",
+        "type": "providerUri",
+        "help": "Enter the URL for your custom provider or leave blank to use the default provider. [Learn more](https://github.com/oceanprotocol/provider/).",
+        "placeholder": "https://provider.polygon.oceanprotocol.com/",
+        "advanced": true
       }
     ]
   },
   "pricing": {
     "title": "Create pricing schema",
-    "fields": [{ "name": "dummy content" }]
+    "fields": [
+      {
+        "name": "dummy content, as content is defined under 'create' key in ../price.json"
+      }
+    ]
   }
 }

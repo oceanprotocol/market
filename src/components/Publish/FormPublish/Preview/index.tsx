@@ -2,7 +2,7 @@ import React, { FormEvent, ReactElement, useState } from 'react'
 import { File as FileMetadata } from '@oceanprotocol/lib/dist/node/ddo/interfaces/File'
 import Markdown from '@shared/Markdown'
 import Tags from '@shared/atoms/Tags'
-import MetaItem from '../../components/Asset/AssetContent/MetaItem'
+import MetaItem from '../../../Asset/AssetContent/MetaItem'
 import FileIcon from '@shared/FileIcon'
 import Button from '@shared/atoms/Button'
 import { transformTags } from '@utils/metadata'
@@ -11,7 +11,7 @@ import { useWeb3 } from '@context/Web3'
 import styles from './MetadataPreview.module.css'
 import Web3Feedback from '@shared/Web3Feedback'
 import { useAsset } from '@context/Asset'
-import { FormPublishData } from './_types'
+import { FormPublishData } from '../../_types'
 
 function Description({ description }: { description: string }) {
   const [fullDescription, setFullDescription] = useState<boolean>(false)

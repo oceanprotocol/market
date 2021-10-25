@@ -29,7 +29,7 @@ export default function AdvancedSettings(prop: {
         Advanced Settings
       </Button>
       {showAdvancedSettings &&
-        prop.content.data.map(
+        prop.content.fields.map(
           (field: FormFieldProps) =>
             field.advanced === true && (
               <Field

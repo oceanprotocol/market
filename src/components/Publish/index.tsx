@@ -1,5 +1,4 @@
 import React, { ReactElement, useState, useEffect } from 'react'
-import Permission from '@shared/Permission'
 import { Formik, FormikState } from 'formik'
 import { usePublish } from '@hooks/usePublish'
 import { initialValues, validationSchema } from './_constants'
@@ -80,6 +79,10 @@ export default function PublishPage({
   //     Logger.error(error.message)
   //   }
   // }
+
+  return (
+    <>
+      <PageHeader title={<Title />} description={content.description} />
 
       {isInPurgatory && purgatoryData ? null : (
         <Formik

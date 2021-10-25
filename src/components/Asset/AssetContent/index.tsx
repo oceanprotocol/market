@@ -16,14 +16,6 @@ import EditHistory from './EditHistory'
 import { useWeb3 } from '@context/Web3'
 import styles from './index.module.css'
 import NetworkName from '@shared/NetworkName'
-import NetworkName from '@shared/atoms/NetworkName'
-
-export interface AssetContentProps {
-  path?: string
-}
-
-const contentQuery = graphql`
-  query AssetContentQuery {
 import content from '../../../../content/purgatory.json'
 
 export default function AssetContent(): ReactElement {

@@ -1,15 +1,9 @@
 import React, { ReactElement } from 'react'
 import styles from './index.module.css'
 import classNames from 'classnames/bind'
-<<<<<<< HEAD:src/components/@shared/AssetType/index.tsx
 import Compute from '@images/compute.svg'
 import Download from '@images/download.svg'
 import Lock from '@images/lock.svg'
-=======
-import { ReactComponent as Compute } from '@images/compute.svg'
-import { ReactComponent as Download } from '@images/download.svg'
-import { ReactComponent as Lock } from '@images/lock.svg'
->>>>>>> 14d71ad2 (reorganize all the things):src/components/@shared/atoms/AssetType.tsx
 
 const cx = classNames.bind(styles)
 

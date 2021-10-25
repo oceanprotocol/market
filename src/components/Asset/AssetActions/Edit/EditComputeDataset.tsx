@@ -11,7 +11,6 @@ import styles from './index.module.css'
 import { transformComputeFormToServiceComputePrivacy } from '@utils/compute'
 import { setMinterToDispenser, setMinterToPublisher } from '@utils/freePrice'
 import Web3Feedback from '@shared/Web3Feedback'
-import MetadataFeedback from '../../../Publish/MetadataFeedback'
 import { getInitialValues, validationSchema } from './_constants'
 import content from '../../../../../content/pages/editComputeDataset.json'
 
@@ -106,19 +105,7 @@ export default function EditComputeDataset({
     >
       {({ values, isSubmitting }) =>
         isSubmitting || hasFeedback ? (
-          <MetadataFeedback
-            title="Updating Data Set"
-            error={error}
-            success={success}
-            setError={setError}
-            successAction={{
-              name: content.form.successAction,
-              onClick: async () => {
-                await refreshDdo()
-                setShowEdit(false)
-              }
-            }}
-          />
+          <div />
         ) : (
           <>
             <p className={styles.description}>{content.description}</p>

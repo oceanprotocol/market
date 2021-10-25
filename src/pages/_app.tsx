@@ -8,19 +8,10 @@ import UrqlProvider from '@context/UrqlProvider'
 import ConsentProvider from '@context/CookieConsent'
 import App from 'src/components/App'
 
-<<<<<<< HEAD:src/pages/_app.tsx
 import '@oceanprotocol/typographies/css/ocean-typo.css'
 import '../stylesGlobal/styles.css'
 
 function MyApp({ Component, pageProps }: AppProps): ReactElement {
-=======
-// Referenced in gatsby-browser.js & gatsby-ssr.js
-export default function ContextProviders({
-  element
-}: {
-  element: ReactElement
-}): ReactElement {
->>>>>>> 4a56991b (more refactor):src/components/App/ContextProviders.tsx
   return (
     <Web3Provider>
       <UrqlProvider>

@@ -4,11 +4,7 @@ import classNames from 'classnames/bind'
 import Conversion from './Conversion'
 import styles from './PriceUnit.module.css'
 import { useUserPreferences } from '@context/UserPreferences'
-<<<<<<< HEAD:src/components/@shared/Price/PriceUnit.tsx
 import Badge from '@shared/atoms/Badge'
-=======
-import Badge from '../Badge'
->>>>>>> 14d71ad2 (reorganize all the things):src/components/@shared/atoms/Price/PriceUnit.tsx
 
 const cx = classNames.bind(styles)
 

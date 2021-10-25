@@ -1,20 +1,12 @@
 import React, { ReactElement } from 'react'
 import { useWeb3 } from '@context/Web3'
-import { addCustomNetwork } from '@utils/web3'
 import Button from '@shared/atoms/Button'
 import styles from './index.module.css'
+import { addCustomNetwork } from '@utils/web3'
 import useNetworkMetadata, {
   getNetworkDataById,
   getNetworkDisplayName
 } from '@hooks/useNetworkMetadata'
-import {
-  addCustomNetwork,
-  getNetworkDisplayName,
-  getNetworkDataById
-} from '@utils/web3'
-import Button from '@shared/atoms/Button'
-import styles from './WalletNetworkSwitcher.module.css'
-import useNetworkMetadata from '@hooks/useNetworkMetadata'
 import { useAsset } from '@context/Asset'
 
 export default function WalletNetworkSwitcher(): ReactElement {

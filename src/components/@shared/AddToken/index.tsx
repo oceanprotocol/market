@@ -2,13 +2,8 @@ import React, { ReactElement } from 'react'
 import classNames from 'classnames/bind'
 import { addTokenToWallet } from '@utils/web3'
 import { useWeb3 } from '@context/Web3'
-<<<<<<< HEAD:src/components/@shared/AddToken/index.tsx
 import Button from '@shared/atoms/Button'
 import styles from './index.module.css'
-=======
-import Button from './Button'
-import styles from './AddToken.module.css'
->>>>>>> 14d71ad2 (reorganize all the things):src/components/@shared/atoms/AddToken.tsx
 
 const cx = classNames.bind(styles)
 

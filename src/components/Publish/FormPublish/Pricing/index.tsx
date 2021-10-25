@@ -1,7 +1,6 @@
 import React, { ReactElement, useEffect } from 'react'
 import { useFormikContext } from 'formik'
 import { DDO } from '@oceanprotocol/lib'
-import { graphql, useStaticQuery } from 'gatsby'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import Tabs from '@shared/atoms/Tabs'
 import { isValidNumber } from '@utils/numbers'
@@ -10,57 +9,9 @@ import { FormPublishData } from '../../_types'
 import Dynamic from './Dynamic'
 import Fixed from './Fixed'
 import Free from './Free'
+import content from '../../../../../content/price.json'
 
-const query = graphql`
-  query PricingQuery {
-    content: allFile(filter: { relativePath: { eq: "price.json" } }) {
-      edges {
-        node {
-          childContentJson {
-            create {
-              empty {
-                title
-                info
-                action {
-                  name
-                  help
-                }
-              }
-              fixed {
-                title
-                info
-                tooltips {
-                  communityFee
-                  marketplaceFee
-                }
-              }
-              dynamic {
-                title
-                info
-                tooltips {
-                  poolInfo
-                  swapFee
-                  communityFee
-                  marketplaceFee
-                }
-              }
-              free {
-                title
-                info
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
-export default function Pricing(): ReactElement {
-  // Get content
-  const data = useStaticQuery(query)
-  const content = data.content.edges[0].node.childContentJson.create
-
+export default function PricingFields(): ReactElement {
   const { appConfig } = useSiteMetadata()
 
   // Connect with main publish form
@@ -96,20 +47,20 @@ export default function Pricing(): ReactElement {
   const tabs = [
     appConfig.allowFixedPricing === 'true'
       ? {
-          title: content.fixed.title,
-          content: <Fixed content={content.fixed} />
+          title: content.create.fixed.title,
+          content: <Fixed content={content.create.fixed} />
         }
       : undefined,
     appConfig.allowDynamicPricing === 'true'
       ? {
-          title: content.dynamic.title,
-          content: <Dynamic content={content.dynamic} />
+          title: content.create.dynamic.title,
+          content: <Dynamic content={content.create.dynamic} />
         }
       : undefined,
     appConfig.allowFreePricing === 'true'
       ? {
-          title: content.free.title,
-          content: <Free content={content.free} />
+          title: content.create.free.title,
+          content: <Free content={content.create.free} />
         }
       : undefined
   ].filter((tab) => tab !== undefined)

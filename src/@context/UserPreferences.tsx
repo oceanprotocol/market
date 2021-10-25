@@ -7,11 +7,7 @@ import React, {
   useEffect
 } from 'react'
 import { Logger, LogLevel } from '@oceanprotocol/lib'
-<<<<<<< HEAD:src/@context/UserPreferences.tsx
 import { isBrowser } from '@utils/index'
-=======
-import { isBrowser } from '../utils'
->>>>>>> 14d71ad2 (reorganize all the things):src/context/UserPreferences.tsx
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 
 interface UserPreferencesValue {

@@ -3,13 +3,8 @@ import { File as FileMetadata } from '@oceanprotocol/lib'
 import filesize from 'filesize'
 import classNames from 'classnames/bind'
 import cleanupContentType from '@utils/cleanupContentType'
-<<<<<<< HEAD:src/components/@shared/FileIcon/index.tsx
 import styles from './index.module.css'
 import Loader from '@shared/atoms/Loader'
-=======
-import styles from './File.module.css'
-import Loader from './Loader'
->>>>>>> 14d71ad2 (reorganize all the things):src/components/@shared/atoms/File.tsx
 
 const cx = classNames.bind(styles)
 
