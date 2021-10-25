@@ -17,7 +17,7 @@ function LoaderArea() {
 
 declare type AccountListProps = {
   accounts: string[]
-  isLoading?: boolean
+  isLoading: boolean
   className?: string
 }
 
@@ -27,22 +27,13 @@ const AccountList: React.FC<AccountListProps> = ({
   className
 }) => {
   const { chainIds } = useUserPreferences()
-  const [loading, setLoading] = useState<boolean>(true)
-
-  useEffect(() => {
-    isLoading && setLoading(true)
-    if (!accounts) return
-    setLoading(false)
-  }, [accounts])
 
   const styleClasses = cx({
     assetList: true,
     [className]: className
   })
 
-  return accounts &&
-    !loading &&
-    (isLoading === undefined || isLoading === false) ? (
+  return accounts && (isLoading === undefined || isLoading === false) ? (
     <>
       <div className={styleClasses}>
         {accounts.length > 0 ? (

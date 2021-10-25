@@ -12,7 +12,7 @@ import { useUserPreferences } from '../../providers/UserPreferences'
 
 declare type AccountTeaserProps = {
   account: string
-  place: number
+  place?: number
 }
 
 const AccountTeaser: React.FC<AccountTeaserProps> = ({ account, place }) => {
@@ -44,7 +44,7 @@ const AccountTeaser: React.FC<AccountTeaserProps> = ({ account, place }) => {
     <article className={styles.teaser}>
       <Link to={`/profile/${account}`} className={styles.link}>
         <header className={styles.header}>
-          <span>{place}</span>
+          {place && <span>{place}</span>}
           {profile?.image ? (
             <img src={profile.image} className={styles.blockies} />
           ) : (
