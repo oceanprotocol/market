@@ -44,19 +44,17 @@ const AccountTeaser: React.FC<AccountTeaserProps> = ({ account, place }) => {
     <article className={styles.teaser}>
       <Link to={`/profile/${account}`} className={styles.link}>
         <header className={styles.header}>
-          <span>{place + 1}</span>
+          <span>{place}</span>
           {profile?.image ? (
             <img src={profile.image} className={styles.blockies} />
           ) : (
             <Blockies accountId={account} className={styles.blockies} />
           )}
           <div>
-            <Dotdotdot clamp={3} className={styles.name}>
-              {profile?.name ? (
-                <h3> {profile.name}</h3>
-              ) : (
-                <h3>{accountTruncate(account)}</h3>
-              )}
+            <Dotdotdot clamp={3}>
+              <h3 className={styles.name}>
+                {profile?.name ? profile?.name : accountTruncate(account)}
+              </h3>
             </Dotdotdot>
             <p className={styles.sales}>
               {`${sales} ${sales === 1 ? 'sale' : 'sales'}`}

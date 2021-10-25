@@ -50,7 +50,7 @@ function sortElements(items: DDO[], sorted: string[]) {
   return items
 }
 
-function SectionGraphResult({
+function PublishersWithMostSales({
   title,
   action
 }: {
@@ -200,7 +200,7 @@ export default function HomePage(): ReactElement {
             }
           />
         )}
-        <SectionGraphResult title="Publishers with most sales" />
+        <PublishersWithMostSales title="Publishers with most sales" />
       </>
     </Permission>
   )

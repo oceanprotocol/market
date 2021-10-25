@@ -26,9 +26,9 @@
   margin-right: calc(var(--spacer) / 3);
   margin-top: calc(var(--spacer) / 4);
 }
-.name h3 {
+.name {
   margin-bottom: 0;
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-base) !important;
 }
 
 .header {
