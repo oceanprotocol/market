@@ -18,6 +18,7 @@ module.exports = (phase, { defaultConfig }) => {
       )
 
       config.node.fs = 'empty'
+      config.externals.push('got')
 
       // for webpack 5
       // config.resolve.fallback = {
