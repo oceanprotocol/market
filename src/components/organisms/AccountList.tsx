@@ -1,5 +1,5 @@
 import AccountTeaser from '../molecules/AccountTeaser'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import styles from './AssetList.module.css'
 import classNames from 'classnames/bind'
 import Loader from '../atoms/Loader'

@@ -2,7 +2,6 @@ import { gql, OperationResult, TypedDocumentNode, OperationContext } from 'urql'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import { getUrqlClientInstance } from '../providers/UrqlProvider'
 import { getOceanConfig } from './ocean'
-import web3 from 'web3'
 import {
   AssetsPoolPrice,
   AssetsPoolPrice_pools as AssetsPoolPricePool
