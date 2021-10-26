@@ -14,7 +14,6 @@
     "lint": "eslint --ignore-path .gitignore --ext .js --ext .ts --ext .tsx .",
     "format": "prettier --ignore-path .gitignore './**/*.{css,yml,js,ts,tsx,json}' --write",
     "type-check": "tsc --noEmit",
-    "analyze": "npm run build && source-map-explorer 'public/*.js'",
     "deploy:s3": "./scripts/deploy-s3.sh",
     "postinstall": "husky install",
     "codegen:apollo": "apollo client:codegen --target typescript --tsFileExtension=d.ts --outputFlat src/@types/apollo/",
@@ -65,7 +64,7 @@
     "remark-html": "^13.0.1",
     "remove-markdown": "^0.3.0",
     "slugify": "^1.6.1",
-    "swr": "^0.5.6",
+    "swr": "^1.0.1",
     "urql": "^2.0.5",
     "use-dark-mode": "^2.3.1",
     "web3": "^1.6.0",
@@ -106,7 +105,6 @@
     "prettier": "^2.4.1",
     "pretty-quick": "^3.1.1",
     "serve": "^12.0.1",
-    "source-map-explorer": "^2.5.2",
     "typescript": "^4.4.4"
   },
   "repository": {
