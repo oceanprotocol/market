@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import Markdown from '@shared/atoms/Markdown'
+import Markdown from '@shared/Markdown'
 import Tooltip from '@shared/atoms/Tooltip'
 import styles from './NumberUnit.module.css'
 

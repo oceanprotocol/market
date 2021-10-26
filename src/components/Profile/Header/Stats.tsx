@@ -1,6 +1,5 @@
 import { Logger } from '@oceanprotocol/lib'
-import React, { useEffect, useState } from 'react'
-import { ReactElement } from 'react-markdown'
+import React, { useEffect, useState, ReactElement } from 'react'
 import { useUserPreferences } from '@context/UserPreferences'
 import {
   getAccountLiquidityInOwnAssets,

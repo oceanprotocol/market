@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import Markdown from '@shared/atoms/Markdown'
+import Markdown from '@shared/Markdown'
 import MetaFull from './MetaFull'
 import MetaSecondary from './MetaSecondary'
 import AssetActions from '../AssetActions'

@@ -10,6 +10,7 @@ import PrivacyPreferenceCenter from '../Privacy/PrivacyPreferenceCenter'
 import styles from './index.module.css'
 import { ToastContainer } from 'react-toastify'
 import { useRouter } from 'next/router'
+// import waves from '@oceanprotocol/art/waves/waves.png'
 import content from '../../../content/purgatory.json'
 
 export default function App({

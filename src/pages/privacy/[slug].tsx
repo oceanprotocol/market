@@ -8,14 +8,14 @@ import {
 import Page from '@shared/Page'
 import styles from '@shared/Page/PageMarkdown.module.css'
 import Container from '@shared/atoms/Container'
+import PrivacyPolicyHeader from '../../components/Privacy/PrivacyHeader'
 import { useRouter } from 'next/router'
 
 export default function PageMarkdown(page: PageData): ReactElement {
   const router = useRouter()
   if (!page || page.content === '') return null
-
   const { title, description } = page.frontmatter
-  const { content } = page
+  const { slug, content } = page
 
   return (
     <Page
@@ -25,6 +25,10 @@ export default function PageMarkdown(page: PageData): ReactElement {
       headerCenter
     >
       <Container narrow>
+        <PrivacyPolicyHeader
+          // tableOfContents={tableOfContents}
+          policy={slug.replace('/privacy/', '')}
+        />
         <div
           className={styles.content}
           dangerouslySetInnerHTML={{ __html: content }}
@@ -39,7 +43,7 @@ export async function getStaticProps({
 }: {
   params: { slug: string }
 }): Promise<{ props: PageData }> {
-  const page = getPageBySlug(params.slug)
+  const page = getPageBySlug(params.slug, 'privacy')
   const content = markdownToHtml(page?.content || '')
 
   return {
@@ -47,15 +51,8 @@ export async function getStaticProps({
   }
 }
 
-export async function getStaticPaths(): Promise<{
-  paths: {
-    params: {
-      slug: string
-    }
-  }[]
-  fallback: boolean
-}> {
-  const pages = getAllPages()
+export async function getStaticPaths() {
+  const pages = getAllPages('privacy')
 
   return {
     paths: pages.map((page) => {

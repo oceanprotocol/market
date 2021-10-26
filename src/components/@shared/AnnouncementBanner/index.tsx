@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import classNames from 'classnames/bind'
-import Markdown from '@shared/atoms/Markdown'
+import Markdown from '@shared/Markdown'
 import Button from '@shared/atoms/Button'
 import styles from './index.module.css'
 

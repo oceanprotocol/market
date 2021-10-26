@@ -36,7 +36,7 @@
 
 ## 🏄 Get Started
 
-The app is a React app built with [next.js](https://nextjs.org) + TypeScript + CSS modules and will connect to Ocean remote components by default.
+The app is a React app built with [Next.js](https://nextjs.org) + TypeScript + CSS modules and will connect to Ocean remote components by default.
 
 To start local development:
 
@@ -52,7 +52,7 @@ npm start
 ```
 
 This will start the development server under
-`http://localhost:3000`.
+`http://localhost:8000`.
 
 ### Local components with Barge
 

@@ -1,6 +1,6 @@
 import React, { FormEvent, ReactElement, useState } from 'react'
 import { File as FileMetadata } from '@oceanprotocol/lib/dist/node/ddo/interfaces/File'
-import Markdown from '@shared/atoms/Markdown'
+import Markdown from '@shared/Markdown'
 import Tags from '@shared/atoms/Tags'
 import MetaItem from '../../components/Asset/AssetContent/MetaItem'
 import FileIcon from '@shared/FileIcon'

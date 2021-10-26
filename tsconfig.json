@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "esnext",
+    "module": "ES2020",
     "lib": ["dom", "ES2020"],
     "resolveJsonModule": true,
     "moduleResolution": "node",
@@ -32,6 +32,7 @@
     "./src/**/*",
     "./tests/**/*",
     "./app.config.js",
-    "./next-env.d.ts"
+    "./next-env.d.ts",
+    "./content/**/*"
   ]
 }

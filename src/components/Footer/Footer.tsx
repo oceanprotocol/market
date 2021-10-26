@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import styles from './Footer.module.css'
-import Markdown from '@shared/atoms/Markdown'
+import Markdown from '@shared/Markdown'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import Link from 'next/link'
 import MarketStats from './MarketStats'

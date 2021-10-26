@@ -1,5 +1,3 @@
-// const path = require('path')
-
 module.exports = (phase, { defaultConfig }) => {
   /**
    * @type {import('next').NextConfig}
@@ -9,11 +7,21 @@ module.exports = (phase, { defaultConfig }) => {
       config.module.rules.push(
         {
           test: /\.svg$/,
+          issuer: /\.tsx$/,
           use: [{ loader: '@svgr/webpack', options: { icon: true } }]
         },
         {
           test: /\.(png|jpg|gif)$/,
-          use: ['file-loader']
+          use: [
+            {
+              loader: 'file-loader',
+              options: {
+                publicPath: `/_next/static/media/`,
+                outputPath: `${options.isServer ? '../' : ''}static/media/`,
+                name: '[name].[hash].[ext]'
+              }
+            }
+          ]
         }
       )
 
@@ -35,6 +43,10 @@ module.exports = (phase, { defaultConfig }) => {
         : config
     },
     webpack5: false
+
+    // Prefer loading of ES Modules over CommonJS
+    // https://nextjs.org/blog/next-11-1#es-modules-support
+    // experimental: { esmExternals: true }
   }
 
   return nextConfig
