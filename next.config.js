@@ -7,11 +7,11 @@ module.exports = (phase, { defaultConfig }) => {
       config.module.rules.push(
         {
           test: /\.svg$/,
-          issuer: /\.tsx$/,
+          issuer: /\.(tsx|ts)$/,
           use: [{ loader: '@svgr/webpack', options: { icon: true } }]
         },
         {
-          test: /\.(png|jpg|gif)$/,
+          test: /\.gif$/,
           use: [
             {
               loader: 'file-loader',
