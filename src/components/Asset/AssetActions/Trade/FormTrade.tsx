@@ -14,7 +14,7 @@ import { useWeb3 } from '@context/Web3'
 import { useAsset } from '@context/Asset'
 import { FormTradeData } from './_types'
 import { initialValues } from './_constants'
-import { trade } from '../../../../../content/price.json'
+import content from '../../../../../content/price.json'
 
 export default function FormTrade({
   ddo,
@@ -122,7 +122,7 @@ export default function FormTrade({
           ) : (
             <div className={styles.alertWrap}>
               <Alert
-                text={trade.warning}
+                text={content.trade.warning}
                 state="info"
                 action={{
                   name: 'I understand',
@@ -143,7 +143,7 @@ export default function FormTrade({
             isLoading={isSubmitting}
             loaderMessage="Swapping tokens..."
             successMessage="Successfully swapped tokens."
-            actionName={trade.action}
+            actionName={content.trade.action}
             amount={
               values.type === 'sell'
                 ? values.datatoken

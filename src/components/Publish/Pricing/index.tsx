@@ -9,7 +9,7 @@ import Feedback from './Feedback'
 import { usePricing } from '@hooks/usePricing'
 import styles from './index.module.css'
 import { useAsset } from '@context/Asset'
-import { create as content } from '../../../../content/price.json'
+import content from '../../../../content/price.json'
 
 export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
   // View states
@@ -76,15 +76,15 @@ export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
           <FormPricing
             ddo={ddo}
             setShowPricing={setShowPricing}
-            content={content}
+            content={content.create}
           />
         ) : (
           <Alert
             state="info"
-            title={content.empty.title}
-            text={content.empty.info}
+            title={content.create.empty.title}
+            text={content.create.empty.info}
             action={{
-              name: content.empty.action.name,
+              name: content.create.empty.action.name,
               disabled: !isAssetNetwork,
               handleAction: handleShowPricingForm
             }}

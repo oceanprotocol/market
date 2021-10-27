@@ -13,7 +13,7 @@ import DebugOutput from '@shared/DebugOutput'
 import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 import { useAsset } from '@context/Asset'
-import { pool } from '../../../../../../content/price.json'
+import content from '../../../../../../content/price.json'
 
 export interface FormAddLiquidity {
   amount: number
@@ -124,7 +124,10 @@ export default function Add({
 
   return (
     <>
-      <Header title={pool.add.title} backAction={() => setShowAdd(false)} />
+      <Header
+        title={content.pool.add.title}
+        backAction={() => setShowAdd(false)}
+      />
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -151,10 +154,10 @@ export default function Add({
                   setNewPoolShare={setNewPoolShare}
                 />
               ) : (
-                pool.add.warning && (
+                content.pool.add.warning && (
                   <Alert
                     className={styles.warning}
-                    text={pool.add.warning.toString()}
+                    text={content.pool.add.warning.toString()}
                     state="info"
                     action={{
                       name: 'I understand',
@@ -186,7 +189,7 @@ export default function Add({
               isLoading={isSubmitting}
               loaderMessage="Adding Liquidity..."
               successMessage="Successfully added liquidity."
-              actionName={pool.add.action}
+              actionName={content.pool.add.action}
               action={submitForm}
               amount={amount}
               coin={coin}

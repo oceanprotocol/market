@@ -3,7 +3,7 @@ import Button from '@shared/atoms/Button'
 import Loader from '@shared/atoms/Loader'
 import { useUserPreferences } from '@context/UserPreferences'
 import Tooltip from '@shared/atoms/Tooltip'
-import { pool } from '../../../../content/price.json'
+import content from '../../../../content/price.json'
 
 export function ButtonApprove({
   amount,
@@ -28,12 +28,16 @@ export function ButtonApprove({
       onClick={() => approveTokens(`${2 ** 53 - 1}`)}
     >
       Approve {coin}{' '}
-      <Tooltip content={pool.tooltips.approveInfinite.replace('COIN', coin)} />
+      <Tooltip
+        content={content.pool.tooltips.approveInfinite.replace('COIN', coin)}
+      />
     </Button>
   ) : (
     <Button style="primary" size="small" onClick={() => approveTokens(amount)}>
       Approve {amount} {coin}
-      <Tooltip content={pool.tooltips.approveSpecific.replace('COIN', coin)} />
+      <Tooltip
+        content={content.pool.tooltips.approveSpecific.replace('COIN', coin)}
+      />
     </Button>
   )
 }

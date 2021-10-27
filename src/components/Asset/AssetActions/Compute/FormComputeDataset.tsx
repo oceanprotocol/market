@@ -10,7 +10,7 @@ import PriceOutput from './PriceOutput'
 import { useAsset } from '@context/Asset'
 import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
-import { form } from '../../../../../content/pages/startComputeDataset.json'
+import content from '../../../../../content/pages/startComputeDataset.json'
 
 export default function FormStartCompute({
   algorithms,
@@ -127,7 +127,7 @@ export default function FormStartCompute({
 
   return (
     <Form className={styles.form}>
-      {form.data.map((field: FormFieldProps) => (
+      {content.form.data.map((field: FormFieldProps) => (
         <Field
           key={field.name}
           {...field}

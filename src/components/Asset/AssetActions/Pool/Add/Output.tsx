@@ -5,7 +5,7 @@ import FormHelp from '@shared/Form/Input/Help'
 import Token from '../Token'
 import styles from './Output.module.css'
 import Decimal from 'decimal.js'
-import { pool } from '../../../../../../content/price.json'
+import content from '../../../../../../content/price.json'
 
 export default function Output({
   newPoolTokens,
@@ -24,7 +24,7 @@ export default function Output({
   totalBalance: PoolBalance
   coin: string
 }): ReactElement {
-  const { help, titleIn, titleOut } = pool.add.output
+  const { help, titleIn, titleOut } = content.pool.add.output
 
   // Connect with form
   const { values }: FormikContextType<FormAddLiquidity> = useFormikContext()

@@ -22,7 +22,7 @@ import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 import Decimal from 'decimal.js'
 import { useAsset } from '@context/Asset'
-import { pool } from '../../../../../content/price.json'
+import content from '../../../../../content/price.json'
 
 export default function Remove({
   setShowRemove,
@@ -195,7 +195,7 @@ export default function Remove({
   return (
     <div className={styles.remove}>
       <Header
-        title={pool.remove.title}
+        title={content.pool.remove.title}
         backAction={() => setShowRemove(false)}
       />
 
@@ -224,7 +224,9 @@ export default function Remove({
           </div>
 
           <FormHelp>
-            {isAdvanced === true ? pool.remove.advanced : pool.remove.simple}
+            {isAdvanced === true
+              ? content.pool.remove.advanced
+              : content.pool.remove.simple}
           </FormHelp>
           <Button
             style="text"
@@ -239,11 +241,11 @@ export default function Remove({
       </form>
       <div className={styles.output}>
         <div>
-          <p>{pool.remove.output.titleIn}</p>
+          <p>{content.pool.remove.output.titleIn}</p>
           <Token symbol="pool shares" balance={amountPoolShares} noIcon />
         </div>
         <div>
-          <p>{pool.remove.output.titleOut} minimum</p>
+          <p>{content.pool.remove.output.titleOut} minimum</p>
           {isAdvanced === true ? (
             <>
               <Token symbol="OCEAN" balance={minOceanAmount} />
@@ -271,7 +273,7 @@ export default function Remove({
       <Actions
         isLoading={isLoading}
         loaderMessage="Removing Liquidity..."
-        actionName={pool.remove.action}
+        actionName={content.pool.remove.action}
         action={handleRemoveLiquidity}
         successMessage="Successfully removed liquidity."
         isDisabled={!isAssetNetwork}

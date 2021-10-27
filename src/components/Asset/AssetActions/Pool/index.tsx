@@ -20,7 +20,7 @@ import PoolTransactions from '@shared/PoolTransactions'
 import { fetchData, getQueryContext } from '@utils/subgraph'
 import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
-import { pool } from '../../../../../content/price.json'
+import content from '../../../../../content/price.json'
 
 const REFETCH_INTERVAL = 5000
 
@@ -376,7 +376,7 @@ export default function Pool(): ReactElement {
           <div className={styles.dataToken}>
             <PriceUnit price="1" symbol={dtSymbol} /> ={' '}
             <PriceUnit price={`${price?.value}`} symbol={oceanSymbol} />
-            <Tooltip content={pool.tooltips.price} />
+            <Tooltip content={content.pool.tooltips.price} />
             <div className={styles.dataTokenLinks}>
               <ExplorerLink
                 networkId={ddo.chainId}
@@ -402,7 +402,10 @@ export default function Pool(): ReactElement {
               <>
                 Your Liquidity
                 <Tooltip
-                  content={pool.tooltips.liquidity.replace('SWAPFEE', swapFee)}
+                  content={content.pool.tooltips.liquidity.replace(
+                    'SWAPFEE',
+                    swapFee
+                  )}
                 />
               </>
             }
