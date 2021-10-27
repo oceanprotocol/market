@@ -18,7 +18,7 @@ export default function Coin({
   weight: string
   readOnly?: boolean
 }): ReactElement {
-  const [field, meta] = useField(name)
+  const [field, meta] = useField(`pricing.${name}`)
 
   return (
     <div className={styles.coin}>

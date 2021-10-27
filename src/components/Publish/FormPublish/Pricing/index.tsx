@@ -19,6 +19,8 @@ export default function PricingFields(): ReactElement {
   const { pricing } = values
   const { price, oceanAmount, weightOnOcean, weightOnDataToken, type } = pricing
 
+  console.log(pricing)
+
   // Switch type value upon tab change
   function handleTabChange(tabName: string) {
     const type = tabName.toLowerCase()

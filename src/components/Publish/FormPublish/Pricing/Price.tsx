@@ -14,7 +14,7 @@ export default function Price({
   firstPrice?: string
   free?: boolean
 }): ReactElement {
-  const [field, meta] = useField('price')
+  const [field, meta] = useField('pricing.price')
 
   const { values } = useFormikContext<FormPublishData>()
   const { dataTokenOptions } = values.services[0]

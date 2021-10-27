@@ -36,7 +36,7 @@ export default function Fees({
   tooltips: { [key: string]: string }
   pricingType: 'dynamic' | 'fixed'
 }): ReactElement {
-  const [field, meta] = useField('swapFee')
+  const [field, meta] = useField('pricing.swapFee')
 
   return (
     <>
