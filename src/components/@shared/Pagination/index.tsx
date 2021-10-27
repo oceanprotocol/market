@@ -2,7 +2,7 @@ import React, { useState, useEffect, ReactElement } from 'react'
 import ReactPaginate from 'react-paginate'
 import styles from './index.module.css'
 import { MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS } from '@utils/aquarius'
-import { ReactComponent as Arrow } from '@images/arrow.svg'
+import Arrow from '@images/arrow.svg'
 import { PaginationProps } from './_types'
 
 export default function Pagination({

@@ -1,8 +1,7 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, ReactNode, useState } from 'react'
 import Button from '@shared/atoms/Button'
 import styles from './AssetActionHistoryTable.module.css'
-import { ReactComponent as Caret } from '@images/caret.svg'
-import { ReactNode } from 'react-markdown'
+import Caret from '@images/caret.svg'
 
 export default function AssetActionHistoryTable({
   title,

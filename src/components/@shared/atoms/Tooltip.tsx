@@ -3,7 +3,7 @@ import classNames from 'classnames/bind'
 import loadable from '@loadable/component'
 import { useSpring, animated } from 'react-spring'
 import styles from './Tooltip.module.css'
-import { ReactComponent as Info } from '@images/info.svg'
+import Info from '@images/info.svg'
 import { Placement } from 'tippy.js'
 
 const cx = classNames.bind(styles)

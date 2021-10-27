@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState, useCallback } from 'react'
 import Time from '@shared/atoms/Time'
-import { Link } from 'gatsby'
+import Link from 'next/link'
 import { Logger } from '@oceanprotocol/lib'
 import Dotdotdot from 'react-dotdotdot'
 import Table from '@shared/atoms/Table'
@@ -8,7 +8,7 @@ import Button from '@shared/atoms/Button'
 import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 import Details from './Details'
-import { ReactComponent as Refresh } from '@images/refresh.svg'
+import Refresh from '@images/refresh.svg'
 import { useUserPreferences } from '@context/UserPreferences'
 import { getOceanConfig } from '@utils/ocean'
 import NetworkName from '@shared/NetworkName'
@@ -27,7 +27,9 @@ const columns = [
     selector: function getAssetRow(row: ComputeJobMetaData) {
       return (
         <Dotdotdot clamp={2}>
-          <Link to={`/asset/${row.inputDID[0]}`}>{row.assetName}</Link>
+          <Link href={`/asset/${row.inputDID[0]}`}>
+            <a>{row.assetName}</a>
+          </Link>
         </Dotdotdot>
       )
     }

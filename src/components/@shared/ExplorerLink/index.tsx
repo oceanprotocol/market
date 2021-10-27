@@ -1,5 +1,5 @@
 import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
-import { ReactComponent as External } from '@images/external.svg'
+import External from '@images/external.svg'
 import classNames from 'classnames/bind'
 import { ConfigHelperConfig } from '@oceanprotocol/lib'
 import { useOcean } from '@context/Ocean'

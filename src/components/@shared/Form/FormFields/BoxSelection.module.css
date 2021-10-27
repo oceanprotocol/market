@@ -35,7 +35,7 @@
   pointer-events: none;
 }
 
-input[type='radio']:checked + label {
+.boxSelectionsWrapper input[type='radio']:checked + label {
   color: var(--font-color-text);
   border-color: var(--color-secondary);
 }

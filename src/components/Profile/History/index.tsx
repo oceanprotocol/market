@@ -5,7 +5,6 @@ import PoolTransactions from '@shared/PoolTransactions'
 import PublishedList from './PublishedList'
 import Downloads from './Downloads'
 import ComputeJobs from './ComputeJobs'
-import { useLocation } from '@reach/router'
 import styles from './index.module.css'
 import OceanProvider from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
@@ -54,7 +53,6 @@ export default function HistoryPage({
   accountIdentifier: string
 }): ReactElement {
   const { accountId } = useWeb3()
-  const location = useLocation()
 
   const url = new URL(location.href)
   const defaultTab = url.searchParams.get('defaultTab')

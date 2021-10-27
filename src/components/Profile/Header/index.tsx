@@ -1,6 +1,6 @@
 import React, { ReactElement, useState } from 'react'
 import PublisherLinks from './PublisherLinks'
-import Markdown from '@shared/atoms/Markdown'
+import Markdown from '@shared/Markdown'
 import Stats from './Stats'
 import Account from './Account'
 import styles from './index.module.css'

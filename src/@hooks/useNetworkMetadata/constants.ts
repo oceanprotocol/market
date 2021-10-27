@@ -16,5 +16,5 @@ export const networkDataGaiaX: EthereumListsChain = {
     'https://faucet.gx.gaiaxtestnet.oceanprotocol.com/'
   ],
   infoURL: 'https://www.gaia-x.eu',
-  explorers: [{ url: '' }]
+  explorers: [{ name: '', url: '', standard: '' }]
 }

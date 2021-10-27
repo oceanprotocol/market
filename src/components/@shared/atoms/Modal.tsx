@@ -2,7 +2,7 @@ import React, { ReactElement, ReactNode } from 'react'
 import ReactModal from 'react-modal'
 import styles from './Modal.module.css'
 
-if (process.env.NODE_ENV !== 'test') ReactModal.setAppElement('#___gatsby')
+if (process.env.NODE_ENV !== 'test') ReactModal.setAppElement('#__next')
 
 export interface ModalProps extends ReactModal.Props {
   title: string

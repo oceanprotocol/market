@@ -9,7 +9,7 @@ interface EthereumListsChain {
   rpc: string[]
   infoURL: string
   faucets: string[]
-  explorers: [{ url: string }]
+  explorers?: { name: string; url: string; standard: string }[]
 }
 
 interface NetworkObject {

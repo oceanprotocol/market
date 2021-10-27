@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import styles from './Help.module.css'
-import Markdown from '@shared/atoms/Markdown'
+import Markdown from '@shared/Markdown'
 import classNames from 'classnames/bind'
 
 const cx = classNames.bind(styles)

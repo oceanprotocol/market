@@ -3,7 +3,6 @@ import { DDO, Logger } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 import { Formik } from 'formik'
 import Actions from '../Pool/Actions'
-import { graphql, useStaticQuery } from 'gatsby'
 import { useUserPreferences } from '@context/UserPreferences'
 import { toast } from 'react-toastify'
 import Swap from './Swap'
@@ -15,23 +14,7 @@ import { useWeb3 } from '@context/Web3'
 import { useAsset } from '@context/Asset'
 import { FormTradeData } from './_types'
 import { initialValues } from './_constants'
-
-const contentQuery = graphql`
-  query TradeQuery {
-    content: allFile(filter: { relativePath: { eq: "price.json" } }) {
-      edges {
-        node {
-          childContentJson {
-            trade {
-              action
-              warning
-            }
-          }
-        }
-      }
-    }
-  }
-`
+import content from '../../../../../content/price.json'
 
 export default function FormTrade({
   ddo,
@@ -46,8 +29,6 @@ export default function FormTrade({
   maxOcean: string
   price: BestPrice
 }): ReactElement {
-  const data = useStaticQuery(contentQuery)
-  const content = data.content.edges[0].node.childContentJson.trade
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
   const { isAssetNetwork } = useAsset()
@@ -141,7 +122,7 @@ export default function FormTrade({
           ) : (
             <div className={styles.alertWrap}>
               <Alert
-                text={content.warning}
+                text={content.trade.warning}
                 state="info"
                 action={{
                   name: 'I understand',
@@ -162,7 +143,7 @@ export default function FormTrade({
             isLoading={isSubmitting}
             loaderMessage="Swapping tokens..."
             successMessage="Successfully swapped tokens."
-            actionName={content.action}
+            actionName={content.trade.action}
             amount={
               values.type === 'sell'
                 ? values.datatoken

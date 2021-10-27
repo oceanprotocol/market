@@ -1,6 +1,6 @@
 import React from 'react'
 import Dotdotdot from 'react-dotdotdot'
-import { Link } from 'gatsby'
+import Link from 'next/link'
 import PriceUnit from '@shared/Price/PriceUnit'
 import Loader from '@shared/atoms/Loader'
 import styles from './AssetComputeList.module.css'
@@ -24,22 +24,20 @@ export default function AssetComputeSelection({
           <Empty />
         ) : (
           assets.map((asset: AssetSelectionAsset) => (
-            <Link
-              to={`/asset/${asset.did}`}
-              className={styles.row}
-              key={asset.did}
-            >
-              <div className={styles.info}>
-                <h3 className={styles.title}>
-                  <Dotdotdot clamp={1} tagName="span">
-                    {asset.name}
+            <Link href={`/asset/${asset.did}`} key={asset.did}>
+              <a className={styles.row}>
+                <div className={styles.info}>
+                  <h3 className={styles.title}>
+                    <Dotdotdot clamp={1} tagName="span">
+                      {asset.name}
+                    </Dotdotdot>
+                  </h3>
+                  <Dotdotdot clamp={1} tagName="code" className={styles.did}>
+                    {asset.symbol} | {asset.did}
                   </Dotdotdot>
-                </h3>
-                <Dotdotdot clamp={1} tagName="code" className={styles.did}>
-                  {asset.symbol} | {asset.did}
-                </Dotdotdot>
-              </div>
-              <PriceUnit price={asset.price} small className={styles.price} />
+                </div>
+                <PriceUnit price={asset.price} small className={styles.price} />
+              </a>
             </Link>
           ))
         )}

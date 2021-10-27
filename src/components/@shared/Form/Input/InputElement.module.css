@@ -218,17 +218,17 @@
   border-color: var(--brand-grey);
 }
 
-input[type='range'] {
+.input[type='range'] {
   background: transparent;
   appearance: none;
 }
 
-input[type='range']:focus {
+.input[type='range']:focus {
   outline: none;
 }
 
 /* Selectors need to be split up to work in both engines */
-input[type='range']::-webkit-slider-thumb {
+.input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none;
   margin-top: -0.5rem;
   background: var(--brand-gradient);
@@ -240,7 +240,7 @@ input[type='range']::-webkit-slider-thumb {
   box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.2);
 }
 
-input[type='range']::-moz-range-thumb {
+.input[type='range']::-moz-range-thumb {
   background: var(--brand-gradient);
   border: 2px solid var(--border-color);
   width: var(--font-size-large);
@@ -250,7 +250,7 @@ input[type='range']::-moz-range-thumb {
   box-shadow: 0 2px 9px 0 rgba(0, 0, 0, 0.2);
 }
 
-input[type='range']::-webkit-slider-runnable-track {
+.input[type='range']::-webkit-slider-runnable-track {
   margin-top: -1rem;
   background: var(--border-color);
   border-radius: var(--border-radius);
@@ -258,7 +258,7 @@ input[type='range']::-webkit-slider-runnable-track {
   border: none;
 }
 
-input[type='range']::-moz-range-track {
+.input[type='range']::-moz-range-track {
   background: var(--border-color);
   border-radius: var(--border-radius);
   height: 0.3rem;

@@ -36,7 +36,7 @@
 
 ## 🏄 Get Started
 
-The app is a React app built with [Gatsby.js](https://www.gatsbyjs.org) + TypeScript + CSS modules and will connect to Ocean remote components by default.
+The app is a React app built with [Next.js](https://nextjs.org) + TypeScript + CSS modules and will connect to Ocean remote components by default.
 
 To start local development:
 
@@ -53,9 +53,6 @@ npm start
 
 This will start the development server under
 `http://localhost:8000`.
-
-To explore the generated GraphQL data structure fire up the accompanying GraphiQL IDE under
-`http://localhost:8000/__graphql`.
 
 ### Local components with Barge
 
@@ -260,7 +257,7 @@ function Component() {
 
 ### Network Metadata
 
-All displayed chain & network metadata is retrieved from `https://chainid.network` on build time and integrated into Gatsby's GraphQL layer. This data source is a community-maintained GitHub repository under [ethereum-lists/chains](https://github.com/ethereum-lists/chains).
+All displayed chain & network metadata is retrieved from `https://chainid.network` on build time and integrated into NEXT's GraphQL layer. This data source is a community-maintained GitHub repository under [ethereum-lists/chains](https://github.com/ethereum-lists/chains).
 
 Within components this metadata can be queried for under `allNetworksMetadataJson`. The `useWeb3()` hook does this in the background to expose the final `networkDisplayName` for use in components:
 
@@ -343,15 +340,15 @@ Everything else is made open according to the apache2 license. We look forward t
 
 ### Dynamic Pricing
 
-To allow publishers to set pricing as "Dynamic" you need to add the following environmental variable to your .env file: `GATSBY_ALLOW_DYNAMIC_PRICING="true"` (default).
+To allow publishers to set pricing as "Dynamic" you need to add the following environmental variable to your .env file: `NEXT_ALLOW_DYNAMIC_PRICING="true"` (default).
 
 ### Fixed Pricing
 
-To allow publishers to set pricing as "Fixed" you need to add the following environmental variable to your .env file: `GATSBY_ALLOW_FIXED_PRICING="true"` (default).
+To allow publishers to set pricing as "Fixed" you need to add the following environmental variable to your .env file: `NEXT_ALLOW_FIXED_PRICING="true"` (default).
 
 ### Free Pricing
 
-To allow publishers to set pricing as "Free" you need to add the following environmental variable to your .env file: `GATSBY_ALLOW_FREE_PRICING="true"` (default).
+To allow publishers to set pricing as "Free" you need to add the following environmental variable to your .env file: `NEXT_ALLOW_FREE_PRICING="true"` (default).
 
 This allocates the datatokens to the [dispenser contract](https://github.com/oceanprotocol/contracts/blob/main/contracts/dispenser/Dispenser.sol) which dispenses data tokens to users for free. Publishers in your market will now be able to offer their datasets to users for free (excluding gas costs).
 
@@ -365,7 +362,7 @@ Feel free to adopt our provided privacy policies to your needs. Per default we c
 
 ### Privacy Preference Center
 
-Additionally, Ocean Market provides a privacy preference center for you to use. This feature is disabled per default since we do not use cookies requiring consent on our deployment of the market. However, if you need to add some functionality depending on cookies, you can simply enable this feature by changing the value of the `GATSBY_PRIVACY_PREFERENCE_CENTER` environmental variable to `"true"` in your `.env` file. This will enable a customizable cookie banner stating the use of your individual cookies. The content of this banner can be adjusted within the `content/gdpr.json` file. If no `optionalCookies` are provided, the privacy preference center will be set to a simpler version displaying only the `title`, `text` and `close`-button. This can be used to inform the user about the use of essential cookies, where no consent is needed. The privacy preference center supports two different styling options: `'small'` and `'default'`. Setting the style propertie to `'small'` will display a smaller cookie banner to the user at first, only showing the default styled privacy preference center upon the user's customization request.
+Additionally, Ocean Market provides a privacy preference center for you to use. This feature is disabled per default since we do not use cookies requiring consent on our deployment of the market. However, if you need to add some functionality depending on cookies, you can simply enable this feature by changing the value of the `NEXT_PRIVACY_PREFERENCE_CENTER` environmental variable to `"true"` in your `.env` file. This will enable a customizable cookie banner stating the use of your individual cookies. The content of this banner can be adjusted within the `content/gdpr.json` file. If no `optionalCookies` are provided, the privacy preference center will be set to a simpler version displaying only the `title`, `text` and `close`-button. This can be used to inform the user about the use of essential cookies, where no consent is needed. The privacy preference center supports two different styling options: `'small'` and `'default'`. Setting the style propertie to `'small'` will display a smaller cookie banner to the user at first, only showing the default styled privacy preference center upon the user's customization request.
 
 Now your market users will be provided with additional options to toggle the use of your configured cookie consent categories. You can always retrieve the current consent status per category with the provided `useConsent()` hook. See below, how you can set your own custom cookies depending on the market user's consent. Feel free to adjust the provided utility functions for cookie usage provided in the `src/utils/cookies.ts` file to your needs.
 

@@ -4,20 +4,19 @@ import queryString from 'query-string'
 import Filters from './Filters'
 import Sort from './sort'
 import { getResults, updateQueryStringParameter } from './utils'
-import { navigate } from 'gatsby'
 import { useUserPreferences } from '@context/UserPreferences'
 import { useCancelToken } from '@hooks/useCancelToken'
 import styles from './index.module.css'
+import { useRouter } from 'next/router'
 
 export default function SearchPage({
-  location,
   setTotalResults,
   setTotalPagesNumber
 }: {
-  location: Location
   setTotalResults: (totalResults: number) => void
   setTotalPagesNumber: (totalPagesNumber: number) => void
 }): ReactElement {
+  const router = useRouter()
   const [parsed, setParsed] = useState<queryString.ParsedQuery<string>>()
   const { chainIds } = useUserPreferences()
   const [queryResult, setQueryResult] = useState<PagedAssets>()
@@ -36,19 +35,19 @@ export default function SearchPage({
     setAccessType(accessType as string)
     setSortDirection(sortOrder as string)
     setSortType(sort as string)
-  }, [location])
+  }, [router])
 
   const updatePage = useCallback(
     (page: number) => {
-      const { pathname, search } = location
+      const { pathname, query } = router
       const newUrl = updateQueryStringParameter(
-        pathname + search,
+        pathname + query,
         'page',
         `${page}`
       )
-      return navigate(newUrl)
+      return router.push(newUrl)
     },
-    [location]
+    [router]
   )
 
   const fetchAssets = useCallback(

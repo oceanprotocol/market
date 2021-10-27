@@ -10,7 +10,6 @@ import Tooltip from '@shared/atoms/Tooltip'
 import ExplorerLink from '@shared/ExplorerLink'
 import Token from './Token'
 import TokenList from './TokenList'
-import { graphql, useStaticQuery } from 'gatsby'
 import AssetActionHistoryTable from '../AssetActionHistoryTable'
 import Graph from './Graph'
 import { useAsset } from '@context/Asset'
@@ -21,29 +20,12 @@ import PoolTransactions from '@shared/PoolTransactions'
 import { fetchData, getQueryContext } from '@utils/subgraph'
 import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
+import content from '../../../../../content/price.json'
 
 const REFETCH_INTERVAL = 5000
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
-const contentQuery = graphql`
-  query PoolQuery {
-    content: allFile(filter: { relativePath: { eq: "price.json" } }) {
-      edges {
-        node {
-          childContentJson {
-            pool {
-              tooltips {
-                price
-                liquidity
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`
 const poolLiquidityQuery = gql`
   query PoolLiquidity($id: ID!, $shareId: ID) {
     pool(id: $id) {
@@ -79,9 +61,6 @@ const userPoolShareQuery = gql`
 `
 
 export default function Pool(): ReactElement {
-  const data = useStaticQuery(contentQuery)
-  const content = data.content.edges[0].node.childContentJson.pool
-
   const { accountId } = useWeb3()
   const [dtSymbol, setDtSymbol] = useState<string>()
   const [oceanSymbol, setOceanSymbol] = useState<string>()
@@ -397,7 +376,7 @@ export default function Pool(): ReactElement {
           <div className={styles.dataToken}>
             <PriceUnit price="1" symbol={dtSymbol} /> ={' '}
             <PriceUnit price={`${price?.value}`} symbol={oceanSymbol} />
-            <Tooltip content={content.tooltips.price} />
+            <Tooltip content={content.pool.tooltips.price} />
             <div className={styles.dataTokenLinks}>
               <ExplorerLink
                 networkId={ddo.chainId}
@@ -423,7 +402,7 @@ export default function Pool(): ReactElement {
               <>
                 Your Liquidity
                 <Tooltip
-                  content={content.tooltips.liquidity.replace(
+                  content={content.pool.tooltips.liquidity.replace(
                     'SWAPFEE',
                     swapFee
                   )}

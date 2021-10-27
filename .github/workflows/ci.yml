@@ -36,7 +36,7 @@ jobs:
           restore-keys: ${{ runner.os }}-${{ matrix.node }}-build-${{ env.cache-name }}-
 
       - run: npm ci
-      - run: npm run apollo:codegen
+      - run: npm run codegen:apollo
       - run: npm run lint
       # - run: npm test
       - run: npm run build

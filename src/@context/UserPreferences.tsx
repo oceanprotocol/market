@@ -166,4 +166,4 @@ function UserPreferencesProvider({
 const useUserPreferences = (): UserPreferencesValue =>
   useContext(UserPreferencesContext)
 
-export { UserPreferencesProvider, useUserPreferences, UserPreferencesValue }
+export { UserPreferencesProvider, useUserPreferences }

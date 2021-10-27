@@ -2,7 +2,6 @@ import React, { ReactElement, useState, useEffect } from 'react'
 import Header from '../Header'
 import { toast } from 'react-toastify'
 import Actions from '../Actions'
-import { graphql, useStaticQuery } from 'gatsby'
 import * as Yup from 'yup'
 import { Formik } from 'formik'
 import FormAdd from './FormAdd'
@@ -14,26 +13,7 @@ import DebugOutput from '@shared/DebugOutput'
 import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 import { useAsset } from '@context/Asset'
-
-const contentQuery = graphql`
-  query PoolAddQuery {
-    content: allFile(filter: { relativePath: { eq: "price.json" } }) {
-      edges {
-        node {
-          childContentJson {
-            pool {
-              add {
-                title
-                action
-                warning
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`
+import content from '../../../../../../content/price.json'
 
 export interface FormAddLiquidity {
   amount: number
@@ -62,9 +42,6 @@ export default function Add({
   dtSymbol: string
   dtAddress: string
 }): ReactElement {
-  const data = useStaticQuery(contentQuery)
-  const content = data.content.edges[0].node.childContentJson.pool.add
-
   const { accountId, balance } = useWeb3()
   const { ocean } = useOcean()
   const { isAssetNetwork } = useAsset()
@@ -147,7 +124,10 @@ export default function Add({
 
   return (
     <>
-      <Header title={content.title} backAction={() => setShowAdd(false)} />
+      <Header
+        title={content.pool.add.title}
+        backAction={() => setShowAdd(false)}
+      />
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -174,10 +154,10 @@ export default function Add({
                   setNewPoolShare={setNewPoolShare}
                 />
               ) : (
-                content.warning && (
+                content.pool.add.warning && (
                   <Alert
                     className={styles.warning}
-                    text={content.warning.toString()}
+                    text={content.pool.add.warning.toString()}
                     state="info"
                     action={{
                       name: 'I understand',
@@ -209,7 +189,7 @@ export default function Add({
               isLoading={isSubmitting}
               loaderMessage="Adding Liquidity..."
               successMessage="Successfully added liquidity."
-              actionName={content.action}
+              actionName={content.pool.add.action}
               action={submitForm}
               amount={amount}
               coin={coin}

@@ -15,7 +15,6 @@ import Token from './Token'
 import FormHelp from '@shared/Form/Input/Help'
 import Button from '@shared/atoms/Button'
 import { getMaxPercentRemove } from './utils'
-import { graphql, useStaticQuery } from 'gatsby'
 import debounce from 'lodash.debounce'
 import UserLiquidity from '../UserLiquidity'
 import InputElement from '@shared/Form/Input/InputElement'
@@ -23,31 +22,7 @@ import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 import Decimal from 'decimal.js'
 import { useAsset } from '@context/Asset'
-
-const contentQuery = graphql`
-  query PoolRemoveQuery {
-    content: allFile(filter: { relativePath: { eq: "price.json" } }) {
-      edges {
-        node {
-          childContentJson {
-            pool {
-              remove {
-                title
-                simple
-                advanced
-                output {
-                  titleIn
-                  titleOut
-                }
-                action
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`
+import content from '../../../../../content/price.json'
 
 export default function Remove({
   setShowRemove,
@@ -64,9 +39,6 @@ export default function Remove({
   totalPoolTokens: string
   dtSymbol: string
 }): ReactElement {
-  const data = useStaticQuery(contentQuery)
-  const content = data.content.edges[0].node.childContentJson.pool.remove
-
   const slippagePresets = ['5', '10', '15', '25', '50']
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
@@ -222,7 +194,10 @@ export default function Remove({
 
   return (
     <div className={styles.remove}>
-      <Header title={content.title} backAction={() => setShowRemove(false)} />
+      <Header
+        title={content.pool.remove.title}
+        backAction={() => setShowRemove(false)}
+      />
 
       <form className={styles.removeInput}>
         <UserLiquidity amount={poolTokens} symbol="pool shares" />
@@ -249,7 +224,9 @@ export default function Remove({
           </div>
 
           <FormHelp>
-            {isAdvanced === true ? content.advanced : content.simple}
+            {isAdvanced === true
+              ? content.pool.remove.advanced
+              : content.pool.remove.simple}
           </FormHelp>
           <Button
             style="text"
@@ -264,11 +241,11 @@ export default function Remove({
       </form>
       <div className={styles.output}>
         <div>
-          <p>{content.output.titleIn}</p>
+          <p>{content.pool.remove.output.titleIn}</p>
           <Token symbol="pool shares" balance={amountPoolShares} noIcon />
         </div>
         <div>
-          <p>{content.output.titleOut} minimum</p>
+          <p>{content.pool.remove.output.titleOut} minimum</p>
           {isAdvanced === true ? (
             <>
               <Token symbol="OCEAN" balance={minOceanAmount} />
@@ -296,7 +273,7 @@ export default function Remove({
       <Actions
         isLoading={isLoading}
         loaderMessage="Removing Liquidity..."
-        actionName={content.action}
+        actionName={content.pool.remove.action}
         action={handleRemoveLiquidity}
         successMessage="Successfully removed liquidity."
         isDisabled={!isAssetNetwork}

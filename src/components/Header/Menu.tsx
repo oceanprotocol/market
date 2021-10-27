@@ -1,6 +1,5 @@
 import React, { ReactElement } from 'react'
-import { Link } from 'gatsby'
-import { useLocation } from '@reach/router'
+import Link from 'next/link'
 import loadable from '@loadable/component'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import Badge from '@shared/atoms/Badge'
@@ -9,6 +8,7 @@ import UserPreferences from './UserPreferences'
 import Networks from './UserPreferences/Networks'
 import SearchBar from './SearchBar'
 import styles from './Menu.module.css'
+import { useRouter } from 'next/router'
 
 const Wallet = loadable(() => import('./Wallet'))
 
@@ -18,16 +18,16 @@ declare type MenuItem = {
 }
 
 function MenuLink({ item }: { item: MenuItem }) {
-  const location = useLocation()
+  const router = useRouter()
 
   const classes =
-    location?.pathname === item.link
+    router?.pathname === item.link
       ? `${styles.link} ${styles.active}`
       : styles.link
 
   return (
-    <Link key={item.name} to={item.link} className={classes}>
-      {item.name}
+    <Link key={item.name} href={item.link}>
+      <a className={classes}>{item.name}</a>
     </Link>
   )
 }
@@ -37,11 +37,13 @@ export default function Menu(): ReactElement {
 
   return (
     <nav className={styles.menu}>
-      <Link to="/" className={styles.logo}>
-        <Logo noWordmark />
-        <h1 className={styles.title}>
-          {siteTitle} <Badge label="v3" />
-        </h1>
+      <Link href="/">
+        <a className={styles.logo}>
+          <Logo noWordmark />
+          <h1 className={styles.title}>
+            {siteTitle} <Badge label="v3" />
+          </h1>
+        </a>
       </Link>
 
       <ul className={styles.navigation}>

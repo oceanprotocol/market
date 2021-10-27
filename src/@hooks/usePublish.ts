@@ -11,7 +11,7 @@ import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 import { getOceanConfig } from '@utils/ocean'
 
-interface DataTokenOptions {
+export interface DataTokenOptions {
   cap?: string
   name?: string
   symbol?: string
@@ -161,5 +161,5 @@ function usePublish(): UsePublish {
   }
 }
 
-export { usePublish, UsePublish, DataTokenOptions }
+export { usePublish }
 export default usePublish

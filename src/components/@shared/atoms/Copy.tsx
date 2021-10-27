@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import loadable from '@loadable/component'
 import styles from './Copy.module.css'
-import { ReactComponent as IconCopy } from '@images/copy.svg'
+import IconCopy from '@images/copy.svg'
 
 // lazy load when needed only, as library is a bit big
 const Clipboard = loadable(() => import('react-clipboard.js'))

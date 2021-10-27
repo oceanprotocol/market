@@ -6,23 +6,23 @@ import React, {
   KeyboardEvent,
   ReactElement
 } from 'react'
-import { navigate } from 'gatsby'
-import queryString from 'query-string'
-import { ReactComponent as SearchIcon } from '@images/search.svg'
+import SearchIcon from '@images/search.svg'
 import InputElement from '@shared/Form/Input/InputElement'
 import styles from './SearchBar.module.css'
 import { addExistingParamsToUrl } from '../Search/utils'
+import { useRouter } from 'next/router'
 
 async function emptySearch() {
-  const searchParams = new URLSearchParams(window.location.href)
+  const searchParams = new URLSearchParams(window?.location.href)
   const text = searchParams.get('text')
+
   if (text !== ('' || undefined || null)) {
     const url = await addExistingParamsToUrl(location, [
       'text',
       'owner',
       'tags'
     ])
-    navigate(`${url}&text=%20`)
+    // router.push(`${url}&text=%20`)
   }
 }
 
@@ -33,8 +33,9 @@ export default function SearchBar({
   placeholder?: string
   initialValue?: string
 }): ReactElement {
+  const router = useRouter()
   const [value, setValue] = useState(initialValue || '')
-  const parsed = queryString.parse(location.search)
+  const parsed = router.query
   const { text, owner } = parsed
 
   useEffect(() => {
@@ -52,7 +53,7 @@ export default function SearchBar({
       'owner',
       'tags'
     ])
-    navigate(`${url}&text=${urlEncodedValue}`)
+    router.push(`${url}&text=${urlEncodedValue}`)
   }
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {

@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import classNames from 'classnames/bind'
 import styles from './PageHeader.module.css'
-import Markdown from '@shared/atoms/Markdown'
+import Markdown from '@shared/Markdown'
 
 const cx = classNames.bind(styles)
 

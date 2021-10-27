@@ -2,8 +2,8 @@ import React, { ReactElement, ChangeEvent } from 'react'
 import { DarkMode } from 'use-dark-mode'
 import FormHelp from '@shared/Form/Input/Help'
 import Label from '@shared/Form/Input/Label'
-import { ReactComponent as Moon } from '@images/moon.svg'
-import { ReactComponent as Sun } from '@images/sun.svg'
+import Moon from '@images/moon.svg'
+import Sun from '@images/sun.svg'
 import BoxSelection, {
   BoxSelectionOption
 } from '@shared/Form/FormFields/BoxSelection'

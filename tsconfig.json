@@ -1,28 +1,39 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "commonjs",
-    "lib": ["dom", "es2017"],
+    "module": "ES2020",
+    "lib": ["dom", "ES2020"],
     "resolveJsonModule": true,
-    "moduleResolution": "Node",
-    "jsx": "react",
-    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "jsx": "preserve",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "noEmit": true,
     "sourceMap": true,
     "noImplicitAny": true,
-    "skipLibCheck": false,
-    "allowJs": true,
     "paths": {
       "@shared/*": ["./src/components/@shared/*"],
       "@hooks/*": ["./src/@hooks/*"],
       "@context/*": ["./src/@context/*"],
       "@images/*": ["./src/@images/*"],
-      "@utils/*": ["./src/@utils/*"]
-    }
-    //"baseUrl": "./src"
+      "@utils/*": ["./src/@utils/*"],
+      "@content/*": ["./@content/*"]
+    },
+    "baseUrl": ".",
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "incremental": true
   },
-  "exclude": ["node_modules", "public", ".cache", "*.js"],
-  "include": ["./src/**/*", "./tests/**/*", "./app.config.js"]
+  "exclude": ["node_modules", ".next", "*.js"],
+  "include": [
+    "./src/**/*",
+    "./tests/**/*",
+    "./app.config.js",
+    "./next-env.d.ts",
+    "./content/**/*"
+  ]
 }

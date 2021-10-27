@@ -1,11 +1,10 @@
-// import React, {
-//   ReactElement,
-//   useEffect,
-//   useState,
-//   FormEvent,
-//   ChangeEvent
-// } from 'react'
-// import { useStaticQuery, graphql } from 'gatsby'
+import React, {
+  ReactElement,
+  useEffect,
+  useState,
+  FormEvent,
+  ChangeEvent
+} from 'react'
 // import { useFormikContext, Field, Form, FormikContextType } from 'formik'
 // import Input from '../../atoms/Input'
 // import { FormContent, FormFieldProps } from '@types/Form'
@@ -15,36 +14,6 @@
 // import FormTitle from './FormTitle'
 // import FormActions from './FormActions'
 // import styles from './FormPublish.module.css'
-
-// const query = graphql`
-//   query {
-//     content: allFile(
-//       filter: { relativePath: { eq: "pages/publish/form-algorithm.json" } }
-//     ) {
-//       edges {
-//         node {
-//           childPublishJson {
-//             title
-//             data {
-//               name
-//               placeholder
-//               label
-//               help
-//               type
-//               required
-//               sortOptions
-//               options
-//               disclaimer
-//               disclaimerValues
-//               advanced
-//             }
-//             warning
-//           }
-//         }
-//       }
-//     }
-//   }
-// `
 
 // export default function FormPublish(): ReactElement {
 //   const data = useStaticQuery(query)

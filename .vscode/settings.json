@@ -11,7 +11,7 @@
     "typescriptreact"
   ],
   "search.exclude": {
-    "**/.cache": true,
-    "**/public": true
+    "**/.next": true,
+    "**/out": true
   }
 }

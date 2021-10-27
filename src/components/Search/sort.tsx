@@ -1,5 +1,4 @@
 import React, { ReactElement } from 'react'
-import { useNavigate } from '@reach/router'
 import { addExistingParamsToUrl } from './utils'
 import Button from '@shared/atoms/Button'
 import styles from './sort.module.css'
@@ -8,6 +7,7 @@ import {
   SortDirectionOptions,
   SortTermOptions
 } from '../../@types/aquarius/SearchQuery'
+import { useRouter } from 'next/router'
 
 const cx = classNames.bind(styles)
 
@@ -27,7 +27,7 @@ export default function Sort({
   sortDirection: string
   setSortDirection: React.Dispatch<React.SetStateAction<string>>
 }): ReactElement {
-  const navigate = useNavigate()
+  const router = useRouter()
   const directionArrow = String.fromCharCode(
     sortDirection === SortDirectionOptions.Ascending ? 9650 : 9660
   )
@@ -42,7 +42,7 @@ export default function Sort({
       urlLocation = `${urlLocation}&sortOrder=${direction}`
       setSortDirection(direction)
     }
-    navigate(urlLocation)
+    router.push(urlLocation)
   }
   function handleSortButtonClick(value: string) {
     if (value === sortType) {

@@ -4,7 +4,7 @@
 }
 
 .link {
-  composes: box from '../atoms/Box.module.css';
+  composes: box from '@shared/atoms/Box.module.css';
   font-size: var(--font-size-small);
   height: 100%;
   color: var(--color-secondary);
