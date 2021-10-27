@@ -32,8 +32,8 @@
   "include": [
     "./src/**/*",
     "./tests/**/*",
-    "./app.config.js",
     "./next-env.d.ts",
-    "./content/**/*"
+    "./content/**/*",
+    "app.config.ts"
   ]
 }

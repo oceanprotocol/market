@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   // URI of single metadata cache instance for all networks.
   // While ocean.js includes this value for each network as part of its ConfigHelper,
   // it is assumed to be the same for all networks.
@@ -6,7 +6,8 @@ module.exports = {
   // const { appConfig } = useSiteMetadata()
   // return appConfig.metadataCacheUri
   metadataCacheUri:
-    process.env.METADATACACHE_URI || 'https://aquarius.oceanprotocol.com',
+    process.env.NEXT_PUBLIC_METADATACACHE_URI ||
+    'https://aquarius.oceanprotocol.com',
 
   // List of chainIds which metadata cache queries will return by default.
   // This preselects the Chains user preferences.
@@ -15,11 +16,11 @@ module.exports = {
   // List of all supported chainIds. Used to populate the Chains user preferences list.
   chainIdsSupported: [1, 3, 4, 137, 80001, 1287, 56, 2021000, 1285, 246],
 
-  infuraProjectId: process.env.NEXT_INFURA_PROJECT_ID || 'xxx',
+  infuraProjectId: process.env.NEXT_PUBLIC_INFURA_PROJECT_ID || 'xxx',
 
   // The ETH address the marketplace fee will be sent to.
   marketFeeAddress:
-    process.env.NEXT_MARKET_FEE_ADDRESS ||
+    process.env.NEXT_PUBLIC_MARKET_FEE_ADDRESS ||
     '0x9984b2453eC7D99a73A5B3a46Da81f197B753C8d',
 
   // Used for conversion display, can be whatever coingecko API supports
@@ -48,13 +49,13 @@ module.exports = {
   },
 
   // Wallets
-  portisId: process.env.NEXT_PORTIS_ID || 'xxx',
+  portisId: process.env.NEXT_PUBLIC_PORTIS_ID || 'xxx',
 
   // Used to show or hide the fixed, dynamic or free price options
   // tab to publishers during the price creation.
-  allowFixedPricing: process.env.NEXT_ALLOW_FIXED_PRICING || 'true',
-  allowDynamicPricing: process.env.NEXT_ALLOW_DYNAMIC_PRICING || 'true',
-  allowFreePricing: process.env.NEXT_ALLOW_FREE_PRICING || 'true',
+  allowFixedPricing: process.env.NEXT_PUBLIC_ALLOW_FIXED_PRICING || 'true',
+  allowDynamicPricing: process.env.NEXT_PUBLIC_ALLOW_DYNAMIC_PRICING || 'true',
+  allowFreePricing: process.env.NEXT_PUBLIC_ALLOW_FREE_PRICING || 'true',
 
   // Set the default privacy policy to initially display
   // this should be the slug of your default policy markdown file
@@ -65,5 +66,6 @@ module.exports = {
   // If set to true a gdpr.json file inside the content directory
   // is used to create and show a privacy preference center / cookie banner
   // To learn more about how to configure and use this, please refer to the readme
-  privacyPreferenceCenter: process.env.NEXT_PRIVACY_PREFERENCE_CENTER || 'false'
+  privacyPreferenceCenter:
+    process.env.NEXT_PUBLIC_PRIVACY_PREFERENCE_CENTER || 'false'
 }

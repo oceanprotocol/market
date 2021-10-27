@@ -16,8 +16,8 @@ jobs:
 
       - run: npm run build
         env:
-          NEXT_INFURA_PROJECT_ID: ${{ secrets.NEXT_INFURA_PROJECT_ID }}
-          NEXT_PORTIS_ID: ${{ secrets.NEXT_PORTIS_ID }}
+          NEXT_PUBLIC_INFURA_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_INFURA_PROJECT_ID }}
+          NEXT_PUBLIC_PORTIS_ID: ${{ secrets.NEXT_PUBLIC_PORTIS_ID }}
 
       - run: npm run deploy:s3
         env:
