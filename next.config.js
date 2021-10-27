@@ -12,37 +12,26 @@ module.exports = (phase, { defaultConfig }) => {
         },
         {
           test: /\.gif$/,
-          use: [
-            {
-              loader: 'file-loader',
-              options: {
-                publicPath: `/_next/static/media/`,
-                outputPath: `${options.isServer ? '../' : ''}static/media/`,
-                name: '[name].[hash].[ext]'
-              }
-            }
-          ]
+          // yay for webpack 5
+          // https://webpack.js.org/guides/asset-management/#loading-images
+          type: 'asset/resource'
         }
       )
 
-      config.node.fs = 'empty'
-      config.externals.push('got')
-
-      // for webpack 5
-      // config.resolve.fallback = {
-      //   fs: false,
-      //   crypto: false,
-      //   os: false,
-      //   stream: false,
-      //   http: false,
-      //   https: false
-      // }
+      // for old ocean.js, most likely can be removed later on
+      config.resolve.fallback = {
+        fs: false,
+        crypto: false,
+        os: false,
+        stream: false,
+        http: false,
+        https: false
+      }
 
       return typeof defaultConfig.webpack === 'function'
         ? defaultConfig.webpack(config, options)
         : config
-    },
-    webpack5: false
+    }
 
     // Prefer loading of ES Modules over CommonJS
     // https://nextjs.org/blog/next-11-1#es-modules-support

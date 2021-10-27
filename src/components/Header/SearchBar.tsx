@@ -6,7 +6,6 @@ import React, {
   KeyboardEvent,
   ReactElement
 } from 'react'
-import queryString from 'query-string'
 import SearchIcon from '@images/search.svg'
 import InputElement from '@shared/Form/Input/InputElement'
 import styles from './SearchBar.module.css'
@@ -14,7 +13,7 @@ import { addExistingParamsToUrl } from '../Search/utils'
 import { useRouter } from 'next/router'
 
 async function emptySearch() {
-  const searchParams = new URLSearchParams(window.location.href)
+  const searchParams = new URLSearchParams(window?.location.href)
   const text = searchParams.get('text')
 
   if (text !== ('' || undefined || null)) {

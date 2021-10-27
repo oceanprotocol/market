@@ -1,14 +1,10 @@
 import React, { ReactElement } from 'react'
-import {
-  getPageBySlug,
-  getAllPages,
-  PageData,
-  markdownToHtml
-} from '@utils/markdown'
+import { getPageBySlug, getAllPages, PageData } from '@utils/markdownPages'
 import Page from '@shared/Page'
 import styles from '@shared/Page/PageMarkdown.module.css'
 import Container from '@shared/atoms/Container'
 import { useRouter } from 'next/router'
+import { markdownToHtml } from '@utils/markdown'
 
 export default function PageMarkdown(page: PageData): ReactElement {
   const router = useRouter()
