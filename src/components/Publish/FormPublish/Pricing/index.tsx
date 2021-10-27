@@ -32,7 +32,8 @@ export default function PricingFields(): ReactElement {
 
   // Always update everything when price value changes
   useEffect(() => {
-    if (type === 'fixed') return
+    if (type === 'fixed' || type === 'free') return
+
     const dtAmount =
       isValidNumber(oceanAmount) &&
       isValidNumber(weightOnOcean) &&
@@ -72,7 +73,7 @@ export default function PricingFields(): ReactElement {
     <Tabs
       items={tabs}
       handleTabChange={handleTabChange}
-      defaultIndex={type === 'fixed' ? 0 : 1}
+      defaultIndex={type === 'fixed' ? 0 : type === 'dynamic' ? 1 : 2}
       className={styles.pricing}
     />
   )
