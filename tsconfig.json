@@ -11,8 +11,6 @@
     "noEmit": true,
     "sourceMap": true,
     "noImplicitAny": true,
-    "skipLibCheck": false,
-    "allowJs": true,
     "paths": {
       "@shared/*": ["./src/components/@shared/*"],
       "@hooks/*": ["./src/@hooks/*"],
