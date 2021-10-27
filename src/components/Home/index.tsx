@@ -13,7 +13,7 @@ import { useUserPreferences } from '@context/UserPreferences'
 import styles from './index.module.css'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useCancelToken } from '@hooks/useCancelToken'
-import { SortOptions, SortTermOptions } from '../../@types/aquarius/SearchQuery'
+import { SortTermOptions } from '../../@types/aquarius/SearchQuery'
 
 async function getQueryHighest(
   chainIds: number[]
