@@ -42,6 +42,8 @@
 @media screen and (min-width: 40rem) {
   .tokens {
     grid-template-columns: 1fr 1fr;
+    margin-left: -4rem;
+    margin-right: -4rem;
   }
 }
 

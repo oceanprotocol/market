@@ -10,6 +10,7 @@ import Dynamic from './Dynamic'
 import Fixed from './Fixed'
 import Free from './Free'
 import content from '../../../../../content/price.json'
+import styles from './index.module.css'
 
 export default function PricingFields(): ReactElement {
   const { appConfig } = useSiteMetadata()
@@ -72,6 +73,7 @@ export default function PricingFields(): ReactElement {
       items={tabs}
       handleTabChange={handleTabChange}
       defaultIndex={type === 'fixed' ? 0 : 1}
+      className={styles.pricing}
     />
   )
 

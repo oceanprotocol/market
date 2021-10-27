@@ -22,6 +22,11 @@
   fill: var(--font-color-text);
 }
 
+.icon svg {
+  width: 100%;
+  height: 100%;
+}
+
 .coin:last-child .icon {
   fill: var(--brand-violet);
 }

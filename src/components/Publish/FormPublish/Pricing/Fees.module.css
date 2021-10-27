@@ -12,6 +12,13 @@
   background: var(--background-highlight);
 }
 
+@media screen and (min-width: 40rem) {
+  .fees {
+    margin-left: -4rem;
+    margin-right: -4rem;
+  }
+}
+
 .fees > div {
   margin-bottom: 0;
   justify-self: center;
