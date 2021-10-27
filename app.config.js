@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   // URI of single metadata cache instance for all networks.
   // While ocean.js includes this value for each network as part of its ConfigHelper,
   // it is assumed to be the same for all networks.

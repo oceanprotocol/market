@@ -29,11 +29,5 @@
     "incremental": true
   },
   "exclude": ["node_modules", ".next", "*.js"],
-  "include": [
-    "./src/**/*",
-    "./tests/**/*",
-    "./next-env.d.ts",
-    "./content/**/*",
-    "app.config.ts"
-  ]
+  "include": ["./src/**/*", "./tests/**/*", "./next-env.d.ts", "./content/**/*"]
 }
