@@ -1,10 +1,6 @@
 import React, { ReactElement } from 'react'
-import {
-  getPageBySlug,
-  getAllPages,
-  PageData,
-  markdownToHtml
-} from '@utils/markdown'
+import { markdownToHtml } from '@utils/markdown'
+import { getPageBySlug, getAllPages, PageData } from '@utils/markdownPages'
 import Page from '@shared/Page'
 import styles from '@shared/Page/PageMarkdown.module.css'
 import Container from '@shared/atoms/Container'
@@ -51,7 +47,14 @@ export async function getStaticProps({
   }
 }
 
-export async function getStaticPaths() {
+export async function getStaticPaths(): Promise<{
+  paths: {
+    params: {
+      slug: string
+    }
+  }[]
+  fallback: boolean
+}> {
   const pages = getAllPages('privacy')
 
   return {
