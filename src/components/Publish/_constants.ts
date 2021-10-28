@@ -1,9 +1,10 @@
 import { File as FileMetadata } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
-import { allowDynamicPricing, allowFixedPricing } from '../../../app.config'
+import { allowDynamicPricing, allowFixedPricing } from '../../../app.config.js'
 import { FormPublishData } from './_types'
 
 export const initialValues: Partial<FormPublishData> = {
+  type: 'dataset',
   metadata: {
     name: '',
     author: '',

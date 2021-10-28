@@ -31,7 +31,7 @@
       {
         "name": "termsAndConditions",
         "label": "Terms & Conditions",
-        "type": "terms",
+        "type": "checkbox",
         "options": ["I agree to these Terms and Conditions"],
         "required": true
       }
@@ -40,6 +40,20 @@
   "services": {
     "title": "Access",
     "fields": [
+      {
+        "name": "type",
+        "label": "Asset Type",
+        "type": "boxSelection",
+        "options": ["Dataset", "Algorithm"],
+        "required": true
+      },
+      {
+        "name": "dataTokenOptions",
+        "label": "Datatoken Name & Symbol",
+        "type": "datatoken",
+        "help": "The datatoken for this data set will be created with this name & symbol.",
+        "required": true
+      },
       {
         "name": "dataTokenOptions",
         "label": "Datatoken Name & Symbol",
@@ -95,8 +109,11 @@
     "title": "Pricing",
     "fields": [
       {
-        "name": "dummy content, as content is defined under 'create' key in ../price.json"
+        "name": "dummy content, actual content is defined under 'create' key in ../price.json"
       }
     ]
+  },
+  "preview": {
+    "title": "Preview"
   }
 }

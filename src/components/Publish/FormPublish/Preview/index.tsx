@@ -8,10 +8,11 @@ import Button from '@shared/atoms/Button'
 import { transformTags } from '@utils/ddo'
 import NetworkName from '@shared/NetworkName'
 import { useWeb3 } from '@context/Web3'
-import styles from './MetadataPreview.module.css'
+import styles from './index.module.css'
 import Web3Feedback from '@shared/Web3Feedback'
 import { useAsset } from '@context/Asset'
 import { FormPublishData } from '../../_types'
+import { useFormikContext } from 'formik'
 
 function Description({ description }: { description: string }) {
   const [fullDescription, setFullDescription] = useState<boolean>(false)
@@ -87,13 +88,10 @@ function Sample({ url }: { url: string }) {
   )
 }
 
-export function MetadataPreview({
-  values
-}: {
-  values: Partial<FormPublishData>
-}): ReactElement {
+export default function Preview(): ReactElement {
   const { networkId } = useWeb3()
   const { isAssetNetwork } = useAsset()
+  const { values } = useFormikContext<FormPublishData>()
 
   return (
     <div className={styles.preview}>

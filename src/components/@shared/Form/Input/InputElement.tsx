@@ -4,7 +4,6 @@ import styles from './InputElement.module.css'
 import { InputProps } from '.'
 import FilesInput from '../FormFields/FilesInput'
 import CustomProvider from '../FormFields/CustomProvider'
-import Terms from '../FormFields/Terms'
 import BoxSelection, { BoxSelectionOption } from '../FormFields/BoxSelection'
 import Datatoken from '../FormFields/Datatoken'
 import classNames from 'classnames/bind'
@@ -54,7 +53,9 @@ export default function InputElement({
       const sortedOptions =
         !sortOptions && sortOptions === false
           ? options
-          : options.sort((a: string, b: string) => a.localeCompare(b))
+          : (options as string[]).sort((a: string, b: string) =>
+              a.localeCompare(b)
+            )
       return (
         <select
           id={name}
@@ -67,7 +68,7 @@ export default function InputElement({
             <option value="">---</option>
           )}
           {sortedOptions &&
-            sortedOptions.map((option: string, index: number) => (
+            (sortedOptions as string[]).map((option: string, index: number) => (
               <option key={index} value={option}>
                 {option} {postfix}
               </option>
@@ -89,7 +90,7 @@ export default function InputElement({
       return (
         <div className={styles.radioGroup}>
           {options &&
-            options.map((option: string, index: number) => (
+            (options as string[]).map((option: string, index: number) => (
               <div className={styles.radioWrap} key={index}>
                 <input
                   className={styles[type]}
@@ -133,8 +134,6 @@ export default function InputElement({
       return <CustomProvider name={name} {...field} {...props} />
     case 'datatoken':
       return <Datatoken name={name} {...field} {...props} />
-    case 'terms':
-      return <Terms name={name} options={options} {...field} {...props} />
     case 'boxSelection':
       return (
         <BoxSelection

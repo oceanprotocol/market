@@ -10,6 +10,7 @@ import Debug from '../Debug'
 import MetadataFields from './Metadata'
 import ServicesFields from './Services'
 import content from '../../../../content/publish/form.json'
+import Preview from './Preview'
 
 export default function FormPublish(): ReactElement {
   const { isValid, values, resetForm }: FormikContextType<FormPublishData> =
@@ -62,6 +63,18 @@ export default function FormPublish(): ReactElement {
       content: (
         <>
           <PricingFields />
+          <FormActions
+            isValid={isValid}
+            resetFormAndClearStorage={resetFormAndClearStorage}
+          />
+        </>
+      )
+    },
+    {
+      title: content.preview.title,
+      content: (
+        <>
+          <Preview />
           <FormActions
             isValid={isValid}
             resetFormAndClearStorage={resetFormAndClearStorage}

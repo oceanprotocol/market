@@ -40,27 +40,27 @@ export default function BoxSelection({
       {!options ? (
         <Loader />
       ) : (
-        options.map((value: BoxSelectionOption) => (
-          <div key={value.name}>
+        options.map((option: BoxSelectionOption) => (
+          <div key={option.name}>
             <input
-              id={value.name}
+              id={option.name}
               type="radio"
               className={styleClassesInput}
-              defaultChecked={value.checked}
-              // onChange={(event) => handleChange(event)}
+              defaultChecked={option.checked}
+              onChange={(event) => handleChange(event)}
               {...props}
               disabled={disabled}
-              value={value.name}
+              value={option.name}
               name={name}
             />
             <label
               className={`${styles.boxSelection} ${styles.label}`}
-              htmlFor={value.name}
-              title={value.name}
+              htmlFor={option.name}
+              title={option.name}
             >
-              {value.icon}
-              <span className={styles.title}>{value.title}</span>
-              {value.text}
+              {option.icon}
+              <span className={styles.title}>{option.title}</span>
+              {option.text}
             </label>
           </div>
         ))

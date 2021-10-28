@@ -1,4 +1,12 @@
-import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
+import React, {
+  ChangeEvent,
+  FormEvent,
+  KeyboardEvent,
+  ReactElement,
+  ReactNode,
+  useEffect,
+  useState
+} from 'react'
 import InputElement from './InputElement'
 import Label from './Label'
 import styles from './index.module.css'
@@ -10,7 +18,8 @@ import Markdown from '@shared/Markdown'
 
 const cx = classNames.bind(styles)
 
-export interface InputProps extends FieldInputProps<any> {
+export interface InputProps {
+  name: string
   label?: string | ReactNode
   placeholder?: string
   required?: boolean
@@ -20,7 +29,23 @@ export interface InputProps extends FieldInputProps<any> {
   options?: string[]
   sortOptions?: boolean
   additionalComponent?: ReactElement
+  value?: string
+  onChange?(
+    e:
+      | FormEvent<HTMLInputElement>
+      | ChangeEvent<HTMLInputElement>
+      | ChangeEvent<HTMLSelectElement>
+      | ChangeEvent<HTMLTextAreaElement>
+  ): void
+  onKeyPress?(
+    e:
+      | KeyboardEvent<HTMLInputElement>
+      | KeyboardEvent<HTMLInputElement>
+      | KeyboardEvent<HTMLSelectElement>
+      | KeyboardEvent<HTMLTextAreaElement>
+  ): void
   rows?: number
+  multiple?: boolean
   pattern?: string
   min?: string
   max?: string
@@ -34,6 +59,7 @@ export interface InputProps extends FieldInputProps<any> {
   defaultChecked?: boolean
   size?: 'mini' | 'small' | 'large' | 'default'
   className?: string
+  checked?: boolean
   disclaimer?: string
   disclaimerValues?: string[]
 }
