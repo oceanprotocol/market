@@ -69,11 +69,6 @@ export default function ServicesFields(): ReactElement {
         name="services[0].links"
       />
       <Field
-        {...getFieldContent('links', content.services.fields)}
-        component={Input}
-        name="services[0].links"
-      />
-      <Field
         {...getFieldContent('access', content.services.fields)}
         component={Input}
         name="services[0].access"

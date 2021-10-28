@@ -154,6 +154,7 @@ export default function InputElement({
             type={type || 'text'}
             size={size}
             disabled={disabled}
+            {...field}
             {...props}
           />
           {postfix && (
@@ -166,6 +167,7 @@ export default function InputElement({
           type={type || 'text'}
           size={size}
           disabled={disabled}
+          {...field}
           {...props}
         />
       )

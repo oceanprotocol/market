@@ -22,6 +22,7 @@ export default function URLInput({
       <input
         className={styles.input}
         {...props}
+        {...field}
         type="url"
         onBlur={(e: React.SyntheticEvent) => handleButtonClick(e, field.value)}
       />

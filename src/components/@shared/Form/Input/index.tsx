@@ -10,11 +10,13 @@ import React, {
 import InputElement from './InputElement'
 import Label from './Label'
 import styles from './index.module.css'
-import { ErrorMessage, FieldInputProps } from 'formik'
+import { ErrorMessage, FieldInputProps, FieldMetaProps, useField } from 'formik'
 import classNames from 'classnames/bind'
 import Disclaimer from './Disclaimer'
 import Tooltip from '@shared/atoms/Tooltip'
 import Markdown from '@shared/Markdown'
+import MetadataFields from 'src/components/Publish/FormPublish/Metadata'
+import toPath from 'lodash/toPath'
 
 const cx = classNames.bind(styles)
 
@@ -70,40 +72,53 @@ export default function Input(props: Partial<InputProps>): ReactElement {
     help,
     additionalComponent,
     size,
+    form,
     field,
     disclaimer,
     disclaimerValues
   } = props
 
-  const hasError =
-    props.form?.touched[field.name] && props.form?.errors[field.name]
+  const isFormikField = typeof field !== 'undefined'
+  const isNestedField = field?.name?.includes('.')
+
+  // TODO: this feels hacky as it assumes nested `values` store. But we can't use the
+  // `useField()` hook in here to get `meta.error` so we have to match against form?.errors?
+  // handling flat and nested data at same time.
+  const parsedFieldName =
+    isFormikField && (isNestedField ? field?.name.split('.') : [field?.name])
+  // const hasFormikError = !!meta?.touched && !!meta?.error
+  const hasFormikError =
+    form?.errors !== {} &&
+    form?.touched?.[parsedFieldName[0]]?.[parsedFieldName[1]] &&
+    form?.errors?.[parsedFieldName[0]]?.[parsedFieldName[1]]
 
   const styleClasses = cx({
     field: true,
-    hasError: hasError
+    hasError: hasFormikError
   })
 
   const [disclaimerVisible, setDisclaimerVisible] = useState(true)
 
   useEffect(() => {
+    if (!isFormikField) return
+
     if (disclaimer && disclaimerValues) {
       setDisclaimerVisible(
-        disclaimerValues.includes(props.form?.values[field.name])
+        disclaimerValues.includes(
+          props.form?.values[parsedFieldName[0]]?.[parsedFieldName[1]]
+        )
       )
     }
-  }, [props.form?.values[field.name]])
+  }, [isFormikField, props.form?.values])
 
   return (
-    <div
-      className={styleClasses}
-      data-is-submitting={props.form?.isSubmitting ? true : null}
-    >
+    <div className={styleClasses}>
       <Label htmlFor={props.name} required={props.required}>
         {label} {help && <Tooltip content={<Markdown text={help} />} />}
       </Label>
       <InputElement size={size} {...field} {...props} />
 
-      {field && hasError && (
+      {isFormikField && hasFormikError && (
         <div className={styles.error}>
           <ErrorMessage name={field.name} />
         </div>
