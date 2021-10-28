@@ -1,4 +1,4 @@
-import { secondsToString } from '@utils/metadata'
+import { secondsToString } from '@utils/ddo'
 import { EditableMetadataLinks } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 

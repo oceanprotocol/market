@@ -2,15 +2,12 @@ import React, { ReactElement, useState, useEffect } from 'react'
 import { Formik, FormikState } from 'formik'
 import { usePublish } from '@hooks/usePublish'
 import { initialValues, validationSchema } from './_constants'
-// import {
-//   transformPublishFormToMetadata,
-//   mapTimeoutStringToSeconds,
-//   validateDockerImage
-// } from '@utils/metadata'
+import { validateDockerImage } from '@utils/docker'
 import { Logger, Metadata } from '@oceanprotocol/lib'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
 import { useWeb3 } from '@context/Web3'
 import { FormPublishData } from './_types'
+import { transformPublishFormToDdo } from './_utils'
 import PageHeader from '@shared/Page/PageHeader'
 import Title from './Title'
 import styles from './index.module.css'

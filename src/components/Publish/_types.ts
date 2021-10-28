@@ -1,5 +1,5 @@
 import { DataTokenOptions } from '@hooks/usePublish'
-import { EditableMetadataLinks } from '@oceanprotocol/lib'
+import { EditableMetadataLinks, File } from '@oceanprotocol/lib'
 
 export interface FormPublishService {
   files: string | File[]
@@ -7,6 +7,9 @@ export interface FormPublishService {
   timeout: string
   dataTokenOptions: DataTokenOptions
   access: 'Download' | 'Compute' | string
+  image?: string
+  containerTag?: string
+  entrypoint?: string
   providerUri?: string
 }
 

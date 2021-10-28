@@ -1,14 +1,14 @@
 import React, { ChangeEvent, ReactElement } from 'react'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import { useOcean } from '@context/Ocean'
-import Input from '@shared/Form/Input'
-import { checkIfTimeoutInPredefinedValues } from '@utils/metadata'
+import Input, { InputProps } from '@shared/Form/Input'
+import { checkIfTimeoutInPredefinedValues } from '@utils/ddo'
 import FormActions from './FormActions'
 import styles from './FormEditMetadata.module.css'
 import { FormPublishData } from '../../../Publish/_types'
 
 // function handleTimeoutCustomOption(
-//   data: FormFieldProps[],
+//   data: FormFieldContent[],
 //   values: Partial<FormPublishData>
 // ) {
 //   const timeoutFieldContent = data.filter(
@@ -48,7 +48,7 @@ export default function FormEditMetadata({
   showPrice,
   isComputeDataset
 }: {
-  data: FormFieldProps[]
+  data: InputProps[]
   setShowEdit: (show: boolean) => void
   setTimeoutStringValue: (value: string) => void
   values: Partial<FormPublishData>
@@ -65,7 +65,7 @@ export default function FormEditMetadata({
   // Workaround for default `validateOnChange` not kicking in
   function handleFieldChange(
     e: ChangeEvent<HTMLInputElement>,
-    field: FormFieldProps
+    field: InputProps
   ) {
     validateField(field.name)
     setFieldValue(field.name, e.target.value)
@@ -89,7 +89,7 @@ export default function FormEditMetadata({
   return (
     <Form className={styles.form}>
       {data.map(
-        (field: FormFieldProps) =>
+        (field: InputProps) =>
           (!showPrice && field.name === 'price') || (
             <Field
               key={field.name}

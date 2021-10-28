@@ -6,7 +6,7 @@ import styles from './Terms.module.css'
 export default function Terms(props: InputProps): ReactElement {
   const termsProps: InputProps = {
     ...props,
-    defaultChecked: props.value.toString() === 'true'
+    defaultChecked: props.value?.toString() === 'true'
   }
 
   return (

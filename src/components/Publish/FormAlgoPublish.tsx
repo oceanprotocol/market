@@ -8,7 +8,7 @@ import React, {
 // import { useStaticQuery, graphql } from 'gatsby'
 // import { useFormikContext, Field, Form, FormikContextType } from 'formik'
 // import Input from '../../atoms/Input'
-// import { FormContent, FormFieldProps } from '../../../@types/Form'
+// import { FormContent, FormFieldContent } from '../../../@types/Form'
 // import { MetadataPublishFormAlgorithm } from '../../../@types/MetaData'
 // import { initialValues as initialValuesAlgorithm } from '../../../@types/FormAlgoPublish'
 // import AdvancedSettings from '../../molecules/FormFields/AdvancedSettings'
@@ -116,7 +116,7 @@ import React, {
 //   // Workaround for default `validateOnChange` not kicking in
 //   function handleFieldChange(
 //     e: ChangeEvent<HTMLInputElement>,
-//     field: FormFieldProps
+//     field: InputProps
 //   ) {
 //     const value =
 //       field.type === 'checkbox' || field.type === 'terms'
@@ -148,7 +148,7 @@ import React, {
 //       <FormTitle title={content.title} />
 
 //       {content.data.map(
-//         (field: FormFieldProps) =>
+//         (field: InputProps) =>
 //           field.advanced !== true &&
 //           ((field.name !== 'entrypoint' &&
 //             field.name !== 'image' &&

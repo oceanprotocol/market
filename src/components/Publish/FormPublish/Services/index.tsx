@@ -4,6 +4,7 @@ import React, { ReactElement } from 'react'
 import IconDownload from '@images/download.svg'
 import IconCompute from '@images/compute.svg'
 import content from '../../../../../content/publish/form.json'
+import { getFieldContent } from '../../_utils'
 
 const accessTypeOptions = [
   {
@@ -21,8 +22,45 @@ const accessTypeOptions = [
 export default function ServicesFields(): ReactElement {
   return (
     <>
-      {content.services.fields.map(
-        (field: FormFieldProps) =>
+      <Field
+        {...getFieldContent('dataTokenOptions', content.services.fields)}
+        component={Input}
+        name="services[0].dataTokenOptions"
+      />
+      <Field
+        {...getFieldContent('files', content.services.fields)}
+        component={Input}
+        name="services[0].files"
+      />
+      <Field
+        {...getFieldContent('links', content.services.fields)}
+        component={Input}
+        name="services[0].links"
+      />
+      <Field
+        {...getFieldContent('links', content.services.fields)}
+        component={Input}
+        name="services[0].links"
+      />
+      <Field
+        {...getFieldContent('access', content.services.fields)}
+        component={Input}
+        name="services[0].access"
+        options={accessTypeOptions}
+      />
+      <Field
+        {...getFieldContent('timeout', content.services.fields)}
+        component={Input}
+        name="services[0].timeout"
+      />
+      <Field
+        {...getFieldContent('providerUri', content.services.fields)}
+        component={Input}
+        name="services[0].providerUri"
+      />
+
+      {/* {content.services.fields.map(
+        (field: FormFieldContent) =>
           field.advanced !== true && (
             <Field
               {...field}
@@ -34,7 +72,7 @@ export default function ServicesFields(): ReactElement {
               }
             />
           )
-      )}
+      )} */}
     </>
   )
 }

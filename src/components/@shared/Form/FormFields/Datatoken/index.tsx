@@ -15,10 +15,10 @@ export default function Datatoken(props: InputProps): ReactElement {
 
   // Generate new DT name & symbol on first mount
   useEffect(() => {
-    if (field.value.name !== '') return
+    if (field.value?.name !== '') return
 
     generateName()
-  }, [field.value.name])
+  }, [field.value?.name])
 
   return (
     <div className={styles.datatoken}>

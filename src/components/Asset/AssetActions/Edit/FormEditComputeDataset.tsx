@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
-import Input from '@shared/Form/Input'
+import Input, { InputProps } from '@shared/Form/Input'
 import { AssetSelectionAsset } from '@shared/Form/FormFields/AssetSelection'
 import stylesIndex from './index.module.css'
 import styles from './FormEditMetadata.module.css'
@@ -22,7 +22,7 @@ export default function FormEditComputeDataset({
   title,
   setShowEdit
 }: {
-  data: FormFieldProps[]
+  data: InputProps[]
   title: string
   setShowEdit: (show: boolean) => void
 }): ReactElement {
@@ -64,7 +64,7 @@ export default function FormEditComputeDataset({
   return (
     <Form className={styles.form}>
       <h3 className={stylesIndex.title}>{title}</h3>
-      {data.map((field: FormFieldProps) => (
+      {data.map((field: InputProps) => (
         <Field
           key={field.name}
           {...field}

@@ -8,7 +8,7 @@ export default function AdvancedSettings(prop: {
   content: FormStepContent
   handleFieldChange: (
     e: ChangeEvent<HTMLInputElement>,
-    field: FormFieldProps
+    field: FormFieldContent
   ) => void
 }): ReactElement {
   const [showAdvancedSettings, setShowAdvancedSettings] =
@@ -30,7 +30,7 @@ export default function AdvancedSettings(prop: {
       </Button>
       {showAdvancedSettings &&
         prop.content.fields.map(
-          (field: FormFieldProps) =>
+          (field: FormFieldContent) =>
             field.advanced === true && (
               <Field
                 key={field.name}

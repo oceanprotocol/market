@@ -127,7 +127,7 @@ export default function FormStartCompute({
 
   return (
     <Form className={styles.form}>
-      {content.form.data.map((field: FormFieldProps) => (
+      {content.form.data.map((field: FormFieldContent) => (
         <Field
           key={field.name}
           {...field}

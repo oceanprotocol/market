@@ -7,6 +7,11 @@ import {
 // declaring into global scope to be able to use this as
 // ambiant types despite the above imports
 declare global {
+  interface DdoMarket {
+    metadata: any
+    services: any[]
+  }
+
   interface AdditionalInformationMarket extends AdditionalInformation {
     termsAndConditions: boolean
   }
