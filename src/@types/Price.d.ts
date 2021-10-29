@@ -13,8 +13,8 @@ interface BestPrice {
 
 interface PriceOptions {
   price: number
-  dtAmount: number
-  oceanAmount: number
+  amountDataToken: number
+  amountOcean: number
   type: 'fixed' | 'dynamic' | 'free' | string
   weightOnDataToken: string
   weightOnOcean: string

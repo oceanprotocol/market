@@ -9,13 +9,13 @@ export const initialValues: Partial<FormPublishData> = {
     name: '',
     author: '',
     description: '',
-    termsAndConditions: false,
-    tags: ''
+    tags: '',
+    termsAndConditions: false
   },
   services: [
     {
-      files: '',
-      links: '',
+      files: [],
+      links: [],
       dataTokenOptions: { name: '', symbol: '' },
       timeout: 'Forever',
       access: '',
@@ -30,10 +30,10 @@ export const initialValues: Partial<FormPublishData> = {
         : allowFixedPricing === 'true'
         ? 'fixed'
         : 'free',
-    dtAmount: allowDynamicPricing === 'true' ? 9 : 1000,
-    oceanAmount: 21,
-    weightOnOcean: '7', // 70% on OCEAN
-    weightOnDataToken: '3', // 30% on datatoken
+    amountDataToken: allowDynamicPricing === 'true' ? 50 : 1000,
+    amountOcean: 50,
+    weightOnOcean: '5', // 50% on OCEAN
+    weightOnDataToken: '5', // 50% on datatoken
     swapFee: 0.1 // in %
   }
 }
@@ -42,7 +42,9 @@ const validationMetadata = {
   name: Yup.string()
     .min(4, (param) => `Title must be at least ${param.min} characters`)
     .required('Required'),
-  description: Yup.string().min(10).required('Required'),
+  description: Yup.string()
+    .min(10, (param) => `Description must be at least ${param.min} characters`)
+    .required('Required'),
   author: Yup.string().required('Required'),
   tags: Yup.string().nullable(),
   termsAndConditions: Yup.boolean().required('Required')
@@ -60,6 +62,9 @@ const validationService = {
     })
     .required('Required'),
   timeout: Yup.string().required('Required'),
+  type: Yup.string()
+    .matches(/Dataset|Algorithm/g, { excludeEmptyString: true })
+    .required('Required'),
   access: Yup.string()
     .matches(/Compute|Download/g, { excludeEmptyString: true })
     .required('Required'),
@@ -70,10 +75,10 @@ const validationPricing = {
   price: Yup.number()
     .min(1, (param) => `Must be more or equal to ${param.min}`)
     .required('Required'),
-  dtAmount: Yup.number()
+  amountDataToken: Yup.number()
     .min(9, (param) => `Must be more or equal to ${param.min}`)
     .required('Required'),
-  oceanAmount: Yup.number()
+  amountOcean: Yup.number()
     .min(21, (param) => `Must be more or equal to ${param.min}`)
     .required('Required'),
   type: Yup.string()

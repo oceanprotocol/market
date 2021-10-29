@@ -28,28 +28,28 @@ export default function Dynamic({ content }: { content: any }): ReactElement {
     weightOnDataToken,
     weightOnOcean,
     swapFee,
-    dtAmount,
-    oceanAmount
+    amountDataToken,
+    amountOcean
   } = values.pricing
 
   const [error, setError] = useState<string>()
 
   // Calculate firstPrice whenever user values change
   useEffect(() => {
-    if (`${oceanAmount}` === '') return
+    if (`${amountOcean}` === '') return
 
     const tokenAmountOut = 1
     const weightRatio = new Decimal(weightOnDataToken).div(
       new Decimal(weightOnOcean)
     )
-    const diff = new Decimal(dtAmount).minus(tokenAmountOut)
-    const y = new Decimal(dtAmount).div(diff)
+    const diff = new Decimal(amountDataToken).minus(tokenAmountOut)
+    const y = new Decimal(amountDataToken).div(diff)
     const foo = y.pow(weightRatio).minus(new Decimal(1))
-    const tokenAmountIn = new Decimal(oceanAmount)
+    const tokenAmountIn = new Decimal(amountOcean)
       .times(foo)
       .div(new Decimal(1).minus(new Decimal(swapFee / 100)))
     setFirstPrice(`${tokenAmountIn}`)
-  }, [swapFee, weightOnOcean, weightOnDataToken, dtAmount, oceanAmount])
+  }, [swapFee, weightOnOcean, weightOnDataToken, amountDataToken, amountOcean])
 
   // Check: account, network & insufficient balance
   useEffect(() => {
@@ -90,12 +90,12 @@ export default function Dynamic({ content }: { content: any }): ReactElement {
 
       <div className={styles.tokens}>
         <Coin
-          name="oceanAmount"
+          name="amountOcean"
           datatokenOptions={{ symbol: 'OCEAN', name: 'Ocean Token' }}
           weight={`${Number(weightOnOcean) * 10}%`}
         />
         <Coin
-          name="dtAmount"
+          name="amountDataToken"
           datatokenOptions={{
             symbol: dataTokenOptions.symbol,
             name: dataTokenOptions.name

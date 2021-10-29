@@ -22,7 +22,7 @@ interface UsePricing {
   ) => Promise<TransactionReceipt | string | void>
   mint: (tokensToMint: string, ddo: DDO) => Promise<TransactionReceipt | void>
   buyDT: (
-    dtAmount: number | string,
+    amountDataToken: number | string,
     price: BestPrice,
     ddo: DDO
   ) => Promise<TransactionReceipt | void>
@@ -112,7 +112,7 @@ function usePricing(): UsePricing {
   }
 
   async function buyDT(
-    dtAmount: number | string,
+    amountDataToken: number | string,
     price: BestPrice,
     ddo: DDO
   ): Promise<TransactionReceipt | void> {
@@ -144,7 +144,7 @@ function usePricing(): UsePricing {
           tx = await ocean.pool.buyDT(
             accountId,
             price.address,
-            String(dtAmount),
+            String(amountDataToken),
             oceanAmmount,
             maxPrice
           )
@@ -171,7 +171,7 @@ function usePricing(): UsePricing {
           setStep(2, 'buy', ddo)
           tx = await ocean.fixedRateExchange.buyDT(
             price.address,
-            `${dtAmount}`,
+            `${amountDataToken}`,
             accountId
           )
           setStep(3, 'buy', ddo)
@@ -222,10 +222,10 @@ function usePricing(): UsePricing {
 
     if (!ocean || !accountId || !dtSymbol) return
 
-    const { type, oceanAmount, price, weightOnDataToken, swapFee } =
+    const { type, amountOcean, price, weightOnDataToken, swapFee } =
       priceOptions
 
-    let { dtAmount } = priceOptions
+    let { amountDataToken } = priceOptions
     const isPool = type === 'dynamic'
 
     if (!isPool && !config.fixedRateExchangeAddress) {
@@ -244,25 +244,25 @@ function usePricing(): UsePricing {
         await ocean.OceanDispenser.activate(dataToken, '1', '1', accountId)
       } else {
         // if fixedPrice set dt to max amount
-        if (!isPool) dtAmount = 1000
-        await mint(`${dtAmount}`, ddo)
+        if (!isPool) amountDataToken = 1000
+        await mint(`${amountDataToken}`, ddo)
       }
 
-      // dtAmount for fixed price is set to max
+      // amountDataToken for fixed price is set to max
       const tx = isPool
         ? await ocean.pool
             .create(
               accountId,
               dataToken,
-              `${dtAmount}`,
+              `${amountDataToken}`,
               weightOnDataToken,
-              `${oceanAmount}`,
+              `${amountOcean}`,
               `${swapFee}`
             )
             .next((step: number) => setStep(step, 'pool', ddo))
         : type === 'fixed'
         ? await ocean.fixedRateExchange
-            .create(dataToken, `${price}`, accountId, `${dtAmount}`)
+            .create(dataToken, `${price}`, accountId, `${amountDataToken}`)
             .next((step: number) => setStep(step, 'exchange', ddo))
         : await ocean.OceanDispenser.makeMinter(dataToken, accountId).next(
             (step: number) => setStep(step, 'free', ddo)

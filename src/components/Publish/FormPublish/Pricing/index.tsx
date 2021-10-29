@@ -18,7 +18,7 @@ export default function PricingFields(): ReactElement {
   // Connect with main publish form
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
   const { pricing } = values
-  const { price, oceanAmount, weightOnOcean, weightOnDataToken, type } = pricing
+  const { price, amountOcean, weightOnOcean, weightOnDataToken, type } = pricing
 
   console.log(pricing)
 
@@ -26,7 +26,7 @@ export default function PricingFields(): ReactElement {
   function handleTabChange(tabName: string) {
     const type = tabName.toLowerCase()
     setFieldValue('pricing.type', type)
-    type === 'fixed' && setFieldValue('pricing.dtAmount', 1000)
+    type === 'fixed' && setFieldValue('pricing.amountDataToken', 1000)
     type === 'free' && price < 1 && setFieldValue('pricing.price', 1)
   }
 
@@ -34,19 +34,19 @@ export default function PricingFields(): ReactElement {
   useEffect(() => {
     if (type === 'fixed' || type === 'free') return
 
-    const dtAmount =
-      isValidNumber(oceanAmount) &&
+    const amountDataToken =
+      isValidNumber(amountOcean) &&
       isValidNumber(weightOnOcean) &&
       isValidNumber(price) &&
       isValidNumber(weightOnDataToken)
-        ? new Decimal(oceanAmount)
+        ? new Decimal(amountOcean)
             .dividedBy(new Decimal(weightOnOcean))
             .dividedBy(new Decimal(price))
             .mul(new Decimal(weightOnDataToken))
         : 0
 
-    setFieldValue('pricing.dtAmount', dtAmount)
-  }, [price, oceanAmount, weightOnOcean, weightOnDataToken, type])
+    setFieldValue('pricing.amountDataToken', amountDataToken)
+  }, [price, amountOcean, weightOnOcean, weightOnDataToken, type])
 
   const tabs = [
     appConfig.allowFixedPricing === 'true'

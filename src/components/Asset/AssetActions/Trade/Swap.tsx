@@ -64,54 +64,54 @@ export default function Swap({
     if (!ddo || !balance || !values?.type || !price) return
 
     async function calculateMaximum() {
-      const dtAmount =
+      const amountDataToken =
         values.type === 'buy'
           ? new Decimal(maxDt)
           : new Decimal(balance.datatoken)
-      const oceanAmount =
+      const amountOcean =
         values.type === 'buy'
           ? new Decimal(balance.ocean)
           : new Decimal(maxOcean)
 
       const maxBuyOcean = await ocean.pool.getOceanReceived(
         price.address,
-        `${dtAmount.toString()}`
+        `${amountDataToken.toString()}`
       )
       const maxBuyDt = await ocean.pool.getDTReceived(
         price.address,
-        `${oceanAmount.toString()}`
+        `${amountOcean.toString()}`
       )
 
       const maximumDt =
         values.type === 'buy'
-          ? dtAmount.greaterThan(new Decimal(maxBuyDt))
+          ? amountDataToken.greaterThan(new Decimal(maxBuyDt))
             ? maxBuyDt
-            : dtAmount
-          : dtAmount.greaterThan(new Decimal(balance.datatoken))
+            : amountDataToken
+          : amountDataToken.greaterThan(new Decimal(balance.datatoken))
           ? balance.datatoken
-          : dtAmount
+          : amountDataToken
 
       const maximumOcean =
         values.type === 'sell'
-          ? oceanAmount.greaterThan(new Decimal(maxBuyOcean))
+          ? amountOcean.greaterThan(new Decimal(maxBuyOcean))
             ? maxBuyOcean
-            : oceanAmount
-          : oceanAmount.greaterThan(new Decimal(balance.ocean))
+            : amountOcean
+          : amountOcean.greaterThan(new Decimal(balance.ocean))
           ? balance.ocean
-          : oceanAmount
+          : amountOcean
 
       setMaximumDt(maximumDt.toString())
       setMaximumOcean(maximumOcean.toString())
 
       setOceanItem((prevState) => ({
         ...prevState,
-        amount: oceanAmount.toString(),
+        amount: amountOcean.toString(),
         maxAmount: maximumOcean.toString()
       }))
 
       setDtItem((prevState) => ({
         ...prevState,
-        amount: dtAmount.toString(),
+        amount: amountDataToken.toString(),
         maxAmount: maximumDt.toString()
       }))
     }
