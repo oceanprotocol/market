@@ -4,6 +4,7 @@ import { allowDynamicPricing, allowFixedPricing } from '../../../app.config.js'
 import { FormPublishData } from './_types'
 
 export const initialValues: Partial<FormPublishData> = {
+  step: 1,
   type: 'dataset',
   metadata: {
     name: '',

@@ -14,6 +14,7 @@ export interface FormPublishService {
 }
 
 export interface FormPublishData {
+  step: number
   type: 'dataset' | 'algorithm'
   metadata: {
     name: string
