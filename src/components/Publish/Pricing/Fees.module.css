@@ -2,21 +2,8 @@
   display: grid;
   gap: var(--spacer);
   grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
-  margin-left: -2rem;
-  margin-right: -2rem;
-  border-bottom: 1px solid var(--border-color);
   padding: var(--spacer);
-
   text-align: center;
-  border-bottom: 1px solid var(--border-color);
-  background: var(--background-highlight);
-}
-
-@media screen and (min-width: 40rem) {
-  .fees {
-    margin-left: -4rem;
-    margin-right: -4rem;
-  }
 }
 
 .fees > div {

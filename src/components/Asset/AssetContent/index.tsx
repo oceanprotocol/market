@@ -17,16 +17,24 @@ import { useWeb3 } from '@context/Web3'
 import styles from './index.module.css'
 import NetworkName from '@shared/NetworkName'
 import content from '../../../../content/purgatory.json'
+import { DDO } from '@oceanprotocol/lib'
 
-export default function AssetContent(): ReactElement {
+export default function AssetContent({ ddo }: { ddo: DDO }): ReactElement {
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
-  const { owner, isInPurgatory, purgatoryData, isAssetNetwork } = useAsset()
+  const {
+    price,
+    metadata,
+    type,
+    owner,
+    isInPurgatory,
+    purgatoryData,
+    isAssetNetwork
+  } = useAsset()
   const [showEdit, setShowEdit] = useState<boolean>()
   const [isComputeType, setIsComputeType] = useState<boolean>(false)
   const [showEditCompute, setShowEditCompute] = useState<boolean>()
   const [isOwner, setIsOwner] = useState(false)
-  const { ddo, price, metadata, type } = useAsset()
 
   useEffect(() => {
     if (!accountId || !owner) return
@@ -37,13 +45,10 @@ export default function AssetContent(): ReactElement {
   }, [accountId, price, owner, ddo])
 
   function handleEditButton() {
-    // move user's focus to top of screen
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     setShowEdit(true)
   }
 
   function handleEditComputeButton() {
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
     setShowEditCompute(true)
   }
 

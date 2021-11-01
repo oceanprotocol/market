@@ -2,3 +2,17 @@
   composes: box from '@shared/atoms/Box.module.css';
   margin-bottom: var(--spacer);
 }
+
+@media (min-width: 45rem) {
+  .form {
+    padding-left: calc(var(--spacer) * 2);
+    padding-right: calc(var(--spacer) * 2);
+  }
+}
+
+@media (min-width: 60rem) {
+  .form {
+    padding-left: calc(var(--spacer) * 4);
+    padding-right: calc(var(--spacer) * 4);
+  }
+}

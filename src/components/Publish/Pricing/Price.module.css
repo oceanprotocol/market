@@ -7,18 +7,9 @@
 }
 
 .price {
-  margin-left: -2rem;
-  margin-right: -2rem;
   background: var(--background-highlight);
-  border-top: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
-}
-
-@media (min-width: 40rem) {
-  .price {
-    margin-left: -4rem;
-    margin-right: -4rem;
-  }
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
 }
 
 .grid {

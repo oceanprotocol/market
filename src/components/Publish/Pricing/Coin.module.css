@@ -1,6 +1,5 @@
 .coin {
   padding: var(--spacer) calc(var(--spacer) / 2);
-  border-top: 1px solid var(--border-color);
 }
 
 .coin:last-child {
@@ -9,9 +8,9 @@
 
 .icon {
   composes: box from '@shared/atoms/Box.module.css';
-  padding: calc(var(--spacer) / 1.5);
-  width: 6rem;
-  height: 6rem;
+  padding: calc(var(--spacer) / 2);
+  width: 4rem;
+  height: 4rem;
   display: flex;
   align-items: center;
   justify-content: center;

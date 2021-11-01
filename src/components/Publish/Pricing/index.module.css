@@ -1,3 +1,8 @@
 .pricing input {
   text-align: center;
 }
+
+.pricing [class*='Tabs_tabContent'] {
+  padding-left: 0;
+  padding-right: 0;
+}

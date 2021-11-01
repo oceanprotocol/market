@@ -1,5 +1,4 @@
 .navigation {
-  border-bottom: 1px solid var(--border-color);
   margin-bottom: var(--spacer);
   margin-top: -1rem;
   padding: calc(var(--spacer) / 2) 0;
@@ -31,9 +30,11 @@
   counter-increment: list-number;
   font-weight: var(--font-weight-bold);
   white-space: nowrap;
+  position: relative;
 }
 
-.navigation li:before {
+/* inject the numbers */
+.navigation li::before {
   content: counter(list-number);
   display: inline-flex;
   align-items: center;
@@ -44,6 +45,22 @@
   border: 1px solid var(--border-color);
 
   margin-right: calc(var(--spacer) / 4);
+}
+
+/* inject line */
+.navigation li::after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 100%;
+  top: 1rem;
+  width: 50%;
+  height: 1px;
+  background: var(--border-color);
+}
+
+.navigation li:last-child::after {
+  display: none;
 }
 
 .current {

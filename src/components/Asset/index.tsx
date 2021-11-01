@@ -20,7 +20,7 @@ export default function AssetDetails({ uri }: { uri: string }): ReactElement {
 
   return ddo && pageTitle !== undefined && !loading ? (
     <Page title={pageTitle} uri={uri}>
-      <AssetContent />
+      <AssetContent ddo={ddo} />
     </Page>
   ) : error ? (
     <Page title={pageTitle} noPageHeader uri={uri}>
