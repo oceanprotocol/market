@@ -3,7 +3,7 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import Alert from '@shared/atoms/Alert'
 import FormHelp from '@shared/Form/Input/Help'
 import Tooltip from '@shared/atoms/Tooltip'
-import Wallet from '../../../Header/Wallet'
+import Wallet from '../../Header/Wallet'
 import Coin from './Coin'
 import styles from './Dynamic.module.css'
 import Fees from './Fees'
@@ -12,7 +12,7 @@ import Price from './Price'
 import Decimal from 'decimal.js'
 import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
-import { FormPublishData } from '../../_types'
+import { FormPublishData } from '../_types'
 
 export default function Dynamic({ content }: { content: any }): ReactElement {
   const { networkId, balance } = useWeb3()

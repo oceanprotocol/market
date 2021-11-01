@@ -5,11 +5,11 @@ import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import Tabs from '@shared/atoms/Tabs'
 import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
-import { FormPublishData } from '../../_types'
+import { FormPublishData } from '../_types'
 import Dynamic from './Dynamic'
 import Fixed from './Fixed'
 import Free from './Free'
-import content from '../../../../../content/price.json'
+import content from '../../../../content/price.json'
 import styles from './index.module.css'
 
 export default function PricingFields(): ReactElement {

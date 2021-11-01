@@ -1,41 +1,4 @@
-.tabs ul[class*='tabList'] {
-  background-color: var(--background-content);
-  border: 1px solid var(--border-color);
-  border-top-left-radius: var(--border-radius);
-  border-top-right-radius: var(--border-radius);
-}
-
-.tabs div[class*='tabContent'] {
-  padding-left: 0;
-  padding-right: 0;
-  padding-top: 0;
-}
-
-.grid {
-  display: grid;
-  gap: calc(var(--spacer) * 1.5);
-  position: relative;
-}
-
-.alert,
-div.alert {
+.form {
+  composes: box from '@shared/atoms/Box.module.css';
   margin-bottom: var(--spacer);
-  margin-left: 0;
-}
-
-@media (min-width: 55rem) {
-  .grid {
-    /* lazy golden ratio */
-    grid-template-columns: 1.618fr 1fr;
-  }
-
-  .tabs ul[class*='tabList'] {
-    /* fake the above 1.618fr column */
-    max-width: calc((100% / 1.618) - calc(var(--spacer) / 1.075));
-  }
-
-  .sticky {
-    position: sticky;
-    top: calc(var(--spacer) / 2);
-  }
 }

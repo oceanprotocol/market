@@ -1,9 +1,25 @@
 import Input from '@shared/Form/Input'
 import { Field, useFormikContext } from 'formik'
 import React, { ReactElement } from 'react'
-import content from '../../../../../content/publish/form.json'
-import { FormPublishData } from '../../_types'
-import { getFieldContent } from '../../_utils'
+import content from '../../../../content/publish/form.json'
+import { FormPublishData } from '../_types'
+import { getFieldContent } from '../_utils'
+
+const assetTypeOptionsTitles = getFieldContent(
+  'type',
+  content.services.fields
+).options
+
+const assetTypeOptions = [
+  {
+    name: assetTypeOptionsTitles[0].toLowerCase(),
+    title: assetTypeOptionsTitles[0]
+  },
+  {
+    name: assetTypeOptionsTitles[1].toLowerCase(),
+    title: assetTypeOptionsTitles[1]
+  }
+]
 
 export default function MetadataFields(): ReactElement {
   // connect with Form state, use for conditional field rendering
@@ -11,6 +27,12 @@ export default function MetadataFields(): ReactElement {
 
   return (
     <>
+      <Field
+        {...getFieldContent('type', content.services.fields)}
+        component={Input}
+        name="type"
+        options={assetTypeOptions}
+      />
       <Field
         {...getFieldContent('name', content.metadata.fields)}
         component={Input}

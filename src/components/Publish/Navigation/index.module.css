@@ -1,0 +1,11 @@
+.navigation {
+  background: red;
+}
+
+.navigation li {
+  cursor: pointer;
+}
+
+.current {
+  font-weight: var(--font-weight-bold);
+}

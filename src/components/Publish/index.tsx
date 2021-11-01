@@ -1,7 +1,7 @@
 import React, { ReactElement, useState, useEffect } from 'react'
-import { Formik, FormikState } from 'formik'
+import { Form, Formik, FormikState } from 'formik'
 import { usePublish } from '@hooks/usePublish'
-import { initialValues, validationSchema } from './_constants'
+import { initialValues, validationSchema, wizardSteps } from './_constants'
 import { validateDockerImage } from '@utils/docker'
 import { Logger, Metadata } from '@oceanprotocol/lib'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
@@ -11,9 +11,19 @@ import { transformPublishFormToDdo } from './_utils'
 import PageHeader from '@shared/Page/PageHeader'
 import Title from './Title'
 import styles from './index.module.css'
-import FormPublish from './FormPublish'
+import Actions from './Actions'
+import Debug from './Debug'
+import Navigation from './Navigation'
 
 const formName = 'ocean-publish-form'
+
+function Steps({ step }: { step: number }) {
+  const { component } = wizardSteps.filter(
+    (stepContent) => stepContent.step === step
+  )[0]
+
+  return component
+}
 
 export default function PublishPage({
   content
@@ -84,14 +94,24 @@ export default function PublishPage({
       {isInPurgatory && purgatoryData ? null : (
         <Formik
           initialValues={initialValues}
-          initialStatus="empty"
           validationSchema={validationSchema}
           onSubmit={async (values, { resetForm }) => {
             // kick off publishing
             // await handleSubmit(values, resetForm)
           }}
         >
-          <FormPublish />
+          {({ values }) => {
+            return (
+              <>
+                <Form className={styles.form}>
+                  <Navigation />
+                  <Steps step={values.step} />
+                  <Actions />
+                </Form>
+                <Debug values={values} />
+              </>
+            )
+          }}
         </Formik>
       )}
     </>

@@ -15,7 +15,7 @@ import classNames from 'classnames/bind'
 import Disclaimer from './Disclaimer'
 import Tooltip from '@shared/atoms/Tooltip'
 import Markdown from '@shared/Markdown'
-import MetadataFields from 'src/components/Publish/FormPublish/Metadata'
+import MetadataFields from 'src/components/Publish/Metadata'
 import toPath from 'lodash/toPath'
 
 const cx = classNames.bind(styles)

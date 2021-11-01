@@ -5,7 +5,7 @@ import Input from '@shared/Form/Input'
 import Error from './Error'
 import PriceUnit from '@shared/Price/PriceUnit'
 import styles from './Price.module.css'
-import { FormPublishData } from '../../_types'
+import { FormPublishData } from '../_types'
 
 export default function Price({
   firstPrice,

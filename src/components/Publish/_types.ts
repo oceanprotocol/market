@@ -1,5 +1,6 @@
 import { DataTokenOptions } from '@hooks/usePublish'
 import { EditableMetadataLinks, File } from '@oceanprotocol/lib'
+import { ReactElement } from 'react'
 
 export interface FormPublishService {
   files: string | File[]
@@ -15,6 +16,7 @@ export interface FormPublishService {
 
 export interface FormPublishData {
   step: number
+  steps: number
   type: 'dataset' | 'algorithm'
   metadata: {
     name: string
@@ -25,4 +27,10 @@ export interface FormPublishData {
   }
   services: FormPublishService[]
   pricing: PriceOptions
+}
+
+export interface StepContent {
+  step: number
+  title: string
+  component: ReactElement
 }

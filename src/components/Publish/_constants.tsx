@@ -1,7 +1,36 @@
+import React from 'react'
 import { File as FileMetadata } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 import { allowDynamicPricing, allowFixedPricing } from '../../../app.config.js'
-import { FormPublishData } from './_types'
+import { FormPublishData, StepContent } from './_types'
+import content from '../../../content/publish/form.json'
+import PricingFields from './Pricing'
+import MetadataFields from './Metadata'
+import ServicesFields from './Services'
+import Preview from './Preview'
+
+export const wizardSteps: StepContent[] = [
+  {
+    step: 1,
+    title: content.metadata.title,
+    component: <MetadataFields />
+  },
+  {
+    step: 2,
+    title: content.services.title,
+    component: <ServicesFields />
+  },
+  {
+    step: 3,
+    title: content.pricing.title,
+    component: <PricingFields />
+  },
+  {
+    step: 4,
+    title: content.preview.title,
+    component: <Preview />
+  }
+]
 
 export const initialValues: Partial<FormPublishData> = {
   step: 1,
