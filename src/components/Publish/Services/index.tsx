@@ -37,6 +37,11 @@ export default function ServicesFields(): ReactElement {
         name="services[0].dataTokenOptions"
       />
       <Field
+        {...getFieldContent('providerUri', content.services.fields)}
+        component={Input}
+        name="services[0].providerUri"
+      />
+      <Field
         {...getFieldContent('files', content.services.fields)}
         component={Input}
         name="services[0].files"
@@ -56,11 +61,6 @@ export default function ServicesFields(): ReactElement {
         {...getFieldContent('timeout', content.services.fields)}
         component={Input}
         name="services[0].timeout"
-      />
-      <Field
-        {...getFieldContent('providerUri', content.services.fields)}
-        component={Input}
-        name="services[0].providerUri"
       />
 
       {/* {content.services.fields.map(

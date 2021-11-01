@@ -16,6 +16,8 @@ export default function URLInput({
   isLoading: boolean
 }): ReactElement {
   const [field, meta] = useField(props as FieldInputProps<any>)
+  const isButtonDisabled =
+    !field.value || field.value.length === 0 || field.value === ''
 
   return (
     <InputGroup>
@@ -25,12 +27,11 @@ export default function URLInput({
         type="url"
         onBlur={(e: React.SyntheticEvent) => handleButtonClick(e, field.value)}
       />
-
       <Button
         style="primary"
         size="small"
         onClick={(e: React.SyntheticEvent) => e.preventDefault()}
-        disabled={!field.value}
+        disabled={isButtonDisabled}
       >
         {isLoading ? <Loader /> : submitText}
       </Button>
