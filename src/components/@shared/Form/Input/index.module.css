@@ -12,6 +12,13 @@
   margin-bottom: calc(var(--spacer) / 2);
 }
 
+.required {
+  font-size: var(--font-size-base);
+  color: var(--color-secondary);
+  display: inline-block;
+  margin-left: 0.1rem;
+}
+
 .error {
   display: inline-block;
   font-size: var(--font-size-mini);

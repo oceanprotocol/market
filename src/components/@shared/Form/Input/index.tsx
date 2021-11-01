@@ -10,13 +10,11 @@ import React, {
 import InputElement from './InputElement'
 import Label from './Label'
 import styles from './index.module.css'
-import { ErrorMessage, FieldInputProps, FieldMetaProps, useField } from 'formik'
+import { ErrorMessage, FieldInputProps } from 'formik'
 import classNames from 'classnames/bind'
 import Disclaimer from './Disclaimer'
 import Tooltip from '@shared/atoms/Tooltip'
 import Markdown from '@shared/Markdown'
-import MetadataFields from 'src/components/Publish/Metadata'
-import toPath from 'lodash/toPath'
 
 const cx = classNames.bind(styles)
 
@@ -113,8 +111,14 @@ export default function Input(props: Partial<InputProps>): ReactElement {
 
   return (
     <div className={styleClasses}>
-      <Label htmlFor={props.name} required={props.required}>
-        {label} {help && <Tooltip content={<Markdown text={help} />} />}
+      <Label htmlFor={props.name}>
+        {label}
+        {props.required && (
+          <span title="Required" className={styles.required}>
+            *
+          </span>
+        )}
+        {help && <Tooltip content={<Markdown text={help} />} />}
       </Label>
       <InputElement size={size} {...field} {...props} />
 
@@ -123,8 +127,6 @@ export default function Input(props: Partial<InputProps>): ReactElement {
           <ErrorMessage name={field.name} />
         </div>
       )}
-
-      {/* {help && <Help>{help}</Help>} */}
 
       {disclaimer && (
         <Disclaimer visible={disclaimerVisible}>{disclaimer}</Disclaimer>

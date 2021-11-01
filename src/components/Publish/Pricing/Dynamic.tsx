@@ -1,9 +1,7 @@
-import PriceUnit from '@shared/Price/PriceUnit'
 import React, { ReactElement, useEffect, useState } from 'react'
 import Alert from '@shared/atoms/Alert'
 import FormHelp from '@shared/Form/Input/Help'
 import Tooltip from '@shared/atoms/Tooltip'
-import Wallet from '../../Header/Wallet'
 import Coin from './Coin'
 import styles from './Dynamic.module.css'
 import Fees from './Fees'
@@ -65,18 +63,6 @@ export default function Dynamic({ content }: { content: any }): ReactElement {
   return (
     <>
       <FormHelp>{content.info}</FormHelp>
-
-      <aside className={styles.wallet}>
-        {balance?.ocean && (
-          <PriceUnit
-            className={styles.balance}
-            price={balance.ocean}
-            symbol="OCEAN"
-            small
-          />
-        )}
-        <Wallet />
-      </aside>
 
       <h4 className={styles.title}>
         Price <Tooltip content={content.tooltips.poolInfo} />

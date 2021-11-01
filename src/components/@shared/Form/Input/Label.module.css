@@ -6,11 +6,3 @@
   display: block;
   margin-bottom: calc(var(--spacer) / 4);
 }
-
-.required:after {
-  content: '*';
-  font-size: var(--font-size-base);
-  color: var(--color-secondary);
-  display: inline-block;
-  margin-left: 0.1rem;
-}
