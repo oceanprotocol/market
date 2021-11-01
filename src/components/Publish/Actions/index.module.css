@@ -1,7 +1,11 @@
 .actions {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding-top: var(--spacer);
   border-top: 1px solid var(--border-color);
+}
+
+.actions button {
+  margin: 0 calc(var(--spacer) / 2);
 }

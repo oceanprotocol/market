@@ -1,4 +1,4 @@
-import React, { FormEvent, ReactElement } from 'react'
+import React, { FormEvent, ReactElement, Ref, RefObject } from 'react'
 import { useOcean } from '@context/Ocean'
 import Button from '@shared/atoms/Button'
 import styles from './index.module.css'
@@ -6,7 +6,11 @@ import { FormikContextType, useFormikContext } from 'formik'
 import { FormPublishData } from '../_types'
 import { wizardSteps } from '../_constants'
 
-export default function Actions(): ReactElement {
+export default function Actions({
+  scrollToRef
+}: {
+  scrollToRef: RefObject<any>
+}): ReactElement {
   const { ocean, account } = useOcean()
   const {
     status,
@@ -18,16 +22,18 @@ export default function Actions(): ReactElement {
   function handleNext(e: FormEvent) {
     e.preventDefault()
     setFieldValue('step', values.step + 1)
+    scrollToRef.current.scrollIntoView()
   }
 
   function handlePrevious(e: FormEvent) {
     e.preventDefault()
     setFieldValue('step', values.step - 1)
+    scrollToRef.current.scrollIntoView()
   }
 
   return (
     <footer className={styles.actions}>
-      <Button onClick={handlePrevious}>Back</Button>
+      {values.step > 1 && <Button onClick={handlePrevious}>Back</Button>}
 
       {values.step < wizardSteps.length ? (
         <Button style="primary" onClick={handleNext}>

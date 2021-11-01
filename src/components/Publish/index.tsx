@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect } from 'react'
+import React, { ReactElement, useState, useEffect, useRef } from 'react'
 import { Form, Formik, FormikState } from 'formik'
 import { usePublish } from '@hooks/usePublish'
 import { initialValues, validationSchema, wizardSteps } from './_constants'
@@ -35,6 +35,7 @@ export default function PublishPage({
   const { publish, publishError, isLoading, publishStepText } = usePublish()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
+  const scrollToRef = useRef()
 
   // async function handleSubmit(
   //   values: Partial<FormPublishData>,
@@ -103,10 +104,10 @@ export default function PublishPage({
           {({ values }) => {
             return (
               <>
-                <Form className={styles.form}>
+                <Form className={styles.form} ref={scrollToRef}>
                   <Navigation />
                   <Steps step={values.step} />
-                  <Actions />
+                  <Actions scrollToRef={scrollToRef} />
                 </Form>
                 <Debug values={values} />
               </>
