@@ -76,7 +76,7 @@ export default function AssetActions(): ReactElement {
     async function init() {
       try {
         const dtBalance = await ocean.datatokens.balance(
-          ddo.dataToken,
+          ddo.services[0].datatokenAddress,
           accountId
         )
         setDtBalance(dtBalance)
@@ -85,7 +85,7 @@ export default function AssetActions(): ReactElement {
       }
     }
     init()
-  }, [ocean, accountId, ddo.dataToken, isAssetNetwork])
+  }, [ocean, accountId, ddo, isAssetNetwork])
 
   // Check user balance against price
   useEffect(() => {

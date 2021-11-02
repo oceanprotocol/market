@@ -153,7 +153,7 @@ export default function Consume({
     }
     const error = await consume(
       ddo.id,
-      ddo.dataToken,
+      ddo.services[0].datatokenAddress,
       'access',
       appConfig.marketFeeAddress,
       previousOrderId
@@ -202,7 +202,7 @@ export default function Consume({
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>
-      {type === 'algorithm' && (
+      {ddo.metadata.type === 'algorithm' && (
         <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} dataset={ddo} />
       )}
     </aside>

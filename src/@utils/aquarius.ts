@@ -8,6 +8,7 @@ import {
   SortDirectionOptions,
   SortTermOptions
 } from '../@types/aquarius/SearchQuery'
+import { getServiceByName } from './ddo'
 
 export const MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS = 476
 
@@ -72,7 +73,7 @@ export function transformQueryResult(
   }
 
   result.results = (queryResult.hits.hits || []).map(
-    (hit) => new DDO(hit._source as DDO)
+    (hit) => hit._source as DDO
   )
   result.totalResults = queryResult.hits.total
   result.totalPages =
@@ -117,7 +118,7 @@ export async function retrieveDDO(
     if (!response || response.status !== 200 || !response.data) return
 
     const data = { ...response.data }
-    return new DDO(data)
+    return data
   } catch (error) {
     if (axios.isCancel(error)) {
       Logger.log(error.message)
@@ -208,9 +209,9 @@ export async function transformDDOToAssetSelection(
   for (const ddo of ddoList) {
     didList.push(ddo.id)
     symbolList[ddo.id] = ddo.dataTokenInfo.symbol
-    const algoComputeService = ddo.findServiceByType('compute')
-    algoComputeService?.serviceEndpoint &&
-      (didProviderEndpointMap[ddo.id] = algoComputeService?.serviceEndpoint)
+    const algoComputeService = getServiceByName(ddo, 'compute')
+    algoComputeService?.providerEndpoint &&
+      (didProviderEndpointMap[ddo.id] = algoComputeService?.providerEndpoint)
   }
   const ddoNames = await getAssetsNames(didList, cancelToken)
   const algorithmList: AssetSelectionAsset[] = []
@@ -345,7 +346,8 @@ export async function getDownloadAssets(
       .map((ddo) => {
         const order = tokenOrders.find(
           ({ datatokenId }) =>
-            datatokenId?.address.toLowerCase() === ddo.dataToken.toLowerCase()
+            datatokenId?.address.toLowerCase() ===
+            ddo.services[0].datatokenAddress.toLowerCase()
         )
 
         return {

@@ -20,8 +20,7 @@ export default function AssetListTitle({
   useEffect(() => {
     if (title || !appConfig.metadataCacheUri) return
     if (ddo) {
-      const { attributes } = ddo.findServiceByType('metadata')
-      setAssetTitle(attributes.main.name)
+      setAssetTitle(ddo.metadata.name)
       return
     }
 

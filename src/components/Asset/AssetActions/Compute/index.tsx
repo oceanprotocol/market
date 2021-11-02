@@ -25,7 +25,7 @@ import axios from 'axios'
 import FormStartComputeDataset from './FormComputeDataset'
 import styles from './index.module.css'
 import SuccessConfetti from '@shared/SuccessConfetti'
-import { secondsToString } from '@utils/ddo'
+import { getServiceByName, secondsToString } from '@utils/ddo'
 import { AssetSelectionAsset } from '@shared/Form/FormFields/AssetSelection'
 import AlgorithmDatasetsListForCompute from './AlgorithmDatasetsListForCompute'
 import { getPreviousOrders, getPrice } from '@utils/subgraph'
@@ -108,7 +108,7 @@ export default function Compute({
 
   async function checkAssetDTBalance(asset: DDO) {
     const AssetDtBalance = await ocean.datatokens.balance(
-      asset.dataToken,
+      asset.services[0].datatokenAddress,
       accountId
     )
     setalgorithmDTBalance(AssetDtBalance)
@@ -209,27 +209,27 @@ export default function Compute({
 
     initMetadata(selectedAlgorithmAsset)
 
-    const { timeout } = (
-      ddo.findServiceByType('access') || ddo.findServiceByType('compute')
-    ).attributes.main
+    const { timeout } =
+      getServiceByName(ddo, 'access') || getServiceByName(ddo, 'compute')
+
     setAlgorithmTimeout(secondsToString(timeout))
 
     if (accountId) {
-      if (selectedAlgorithmAsset.findServiceByType('access')) {
+      if (getServiceByName(selectedAlgorithmAsset, 'access')) {
         checkPreviousOrders(selectedAlgorithmAsset).then(() => {
           if (
             !hasPreviousAlgorithmOrder &&
-            selectedAlgorithmAsset.findServiceByType('compute')
+            getServiceByName(selectedAlgorithmAsset, 'compute')
           ) {
             checkPreviousOrders(selectedAlgorithmAsset)
           }
         })
-      } else if (selectedAlgorithmAsset.findServiceByType('compute')) {
+      } else if (getServiceByName(selectedAlgorithmAsset, 'compute')) {
         checkPreviousOrders(selectedAlgorithmAsset)
       }
     }
     ocean && checkAssetDTBalance(selectedAlgorithmAsset)
-  }, [selectedAlgorithmAsset, ocean, accountId, hasPreviousAlgorithmOrder])
+  }, [ddo, selectedAlgorithmAsset, ocean, accountId, hasPreviousAlgorithmOrder])
 
   // Output errors in toast UI
   useEffect(() => {
@@ -246,15 +246,15 @@ export default function Compute({
       setIsPublished(false)
       setError(undefined)
 
-      const computeService = ddo.findServiceByType('compute')
-      const serviceAlgo = selectedAlgorithmAsset.findServiceByType('access')
-        ? selectedAlgorithmAsset.findServiceByType('access')
-        : selectedAlgorithmAsset.findServiceByType('compute')
+      const computeService = getServiceByName(ddo, 'compute')
+      const serviceAlgo = getServiceByName(selectedAlgorithmAsset, 'access')
+        ? getServiceByName(selectedAlgorithmAsset, 'access')
+        : getServiceByName(selectedAlgorithmAsset, 'compute')
 
       const computeAlgorithm: ComputeAlgorithm = {
         did: selectedAlgorithmAsset.id,
         serviceIndex: serviceAlgo.index,
-        dataToken: selectedAlgorithmAsset.dataToken
+        dataToken: selectedAlgorithmAsset.services[0].datatokenAddress
       }
       const allowed = await ocean.compute.isOrderable(
         ddo.id,
@@ -358,7 +358,7 @@ export default function Compute({
       const response = await ocean.compute.start(
         ddo.id,
         assetOrderId,
-        ddo.dataToken,
+        ddo.services[0].datatokenAddress,
         account,
         computeAlgorithm,
         output,
@@ -393,7 +393,7 @@ export default function Compute({
         <Price price={price} conversion />
       </div>
 
-      {type === 'algorithm' ? (
+      {ddo.metadata.type === 'algorithm' ? (
         <>
           <Alert
             text="This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
@@ -421,7 +421,7 @@ export default function Compute({
             hasDatatoken={hasDatatoken}
             dtBalance={dtBalance}
             datasetLowPoolLiquidity={!isConsumablePrice}
-            assetType={type}
+            assetType={ddo.metadata.type}
             assetTimeout={datasetTimeout}
             hasPreviousOrderSelectedComputeAsset={hasPreviousAlgorithmOrder}
             hasDatatokenSelectedComputeAsset={hasAlgoAssetDatatoken}

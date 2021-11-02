@@ -5,6 +5,7 @@ import { AssetSelectionAsset } from '@shared/Form/FormFields/AssetSelection'
 import AssetComputeList from '@shared/AssetList/AssetComputeList'
 import { useAsset } from '@context/Asset'
 import { useCancelToken } from '@hooks/useCancelToken'
+import { getServiceByName } from '@utils/ddo'
 
 export default function AlgorithmDatasetsListForCompute({
   algorithmDid,
@@ -13,26 +14,27 @@ export default function AlgorithmDatasetsListForCompute({
   algorithmDid: string
   dataset: DDO
 }): ReactElement {
-  const { type } = useAsset()
+  const { ddo } = useAsset()
   const [datasetsForCompute, setDatasetsForCompute] =
     useState<AssetSelectionAsset[]>()
   const newCancelToken = useCancelToken()
   useEffect(() => {
     async function getDatasetsAllowedForCompute() {
-      const isCompute = Boolean(dataset?.findServiceByType('compute'))
-      const datasetComputeService = dataset.findServiceByType(
+      const isCompute = Boolean(getServiceByName(dataset, 'compute'))
+      const datasetComputeService = getServiceByName(
+        dataset,
         isCompute ? 'compute' : 'access'
       )
       const datasets = await getAlgorithmDatasetsForCompute(
         algorithmDid,
-        datasetComputeService?.serviceEndpoint,
+        datasetComputeService?.providerEndpoint,
         dataset?.chainId,
         newCancelToken()
       )
       setDatasetsForCompute(datasets)
     }
-    type === 'algorithm' && getDatasetsAllowedForCompute()
-  }, [type])
+    ddo.metadata.type === 'algorithm' && getDatasetsAllowedForCompute()
+  }, [ddo.metadata.type])
 
   return (
     <div className={styles.datasetsContainer}>

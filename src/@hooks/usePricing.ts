@@ -181,18 +181,20 @@ function usePricing(): UsePricing {
         case 'free': {
           setStep(1, 'dispense', ddo)
           const isDispensable = await ocean.OceanDispenser.isDispensable(
-            ddo.dataToken,
+            ddo?.services[0].datatokenAddress,
             accountId,
             '1'
           )
 
           if (!isDispensable) {
-            Logger.error(`Dispenser for ${ddo.dataToken} failed to dispense`)
+            Logger.error(
+              `Dispenser for ${ddo?.services[0].datatokenAddress} failed to dispense`
+            )
             return
           }
 
           tx = await ocean.OceanDispenser.dispense(
-            ddo.dataToken,
+            ddo?.services[0].datatokenAddress,
             accountId,
             '1'
           )
@@ -217,7 +219,7 @@ function usePricing(): UsePricing {
     priceOptions: PriceOptions,
     ddo: DDO
   ): Promise<TransactionReceipt | void> {
-    const { dataToken } = ddo
+    const dataToken = ddo?.services[0].datatokenAddress
     const dtSymbol = await getDTSymbol(ddo)
 
     if (!ocean || !accountId || !dtSymbol) return

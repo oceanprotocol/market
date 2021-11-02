@@ -1,4 +1,5 @@
 interface DDO {
+  // DDO spec
   '@context': string[]
   id: string
   created: string
@@ -15,6 +16,27 @@ interface DDO {
     status: 0 | 1 | 2 | 3
     isListed?: boolean
     isOrderDisabled?: boolean
+  }
+
+  // The following is added by Aquarius on top of what's on-chain
+  nft: {
+    address: string
+    name: string
+    symbol: string
+    owner: string
+  }
+
+  events: {
+    txid: string
+    blockNo: number
+    from: string
+    contract: string
+    update: boolean
+    chainId: number
+  }[]
+
+  stats: {
+    consume: number
   }
 }
 

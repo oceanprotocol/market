@@ -36,7 +36,7 @@ export default function EditComputeDataset({
       if (price.type === 'free') {
         const tx = await setMinterToPublisher(
           ocean,
-          ddo.dataToken,
+          ddo.services[0].datatokenAddress,
           accountId,
           setError
         )
@@ -71,7 +71,7 @@ export default function EditComputeDataset({
         if (price.type === 'free') {
           const tx = await setMinterToDispenser(
             ocean,
-            ddo.dataToken,
+            ddo.services[0].datatokenAddress,
             accountId,
             setError
           )

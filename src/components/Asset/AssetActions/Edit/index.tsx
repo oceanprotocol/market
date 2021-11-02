@@ -6,7 +6,7 @@ import { useUserPreferences } from '@context/UserPreferences'
 // import Debug from './DebugEditMetadata'
 import Web3Feedback from '@shared/Web3Feedback'
 import FormEditMetadata from './FormEditMetadata'
-import { mapTimeoutStringToSeconds } from '@utils/ddo'
+import { getServiceByName, mapTimeoutStringToSeconds } from '@utils/ddo'
 import styles from './index.module.css'
 import { Logger } from '@oceanprotocol/lib'
 import { useWeb3 } from '@context/Web3'
@@ -52,7 +52,7 @@ export default function Edit({
       if (price.type === 'free') {
         const tx = await setMinterToPublisher(
           ocean,
-          ddo.dataToken,
+          ddo.services[0].datatokenAddress,
           accountId,
           setError
         )
@@ -78,8 +78,8 @@ export default function Edit({
       let ddoEditedTimeout = ddoEditedMetdata
       if (timeoutStringValue !== values.timeout) {
         const service =
-          ddoEditedMetdata.findServiceByType('access') ||
-          ddoEditedMetdata.findServiceByType('compute')
+          getServiceByName(ddoEditedMetdata, 'access') ||
+          getServiceByName(ddoEditedMetdata, 'compute')
         const timeout = mapTimeoutStringToSeconds(values.timeout)
         ddoEditedTimeout = await ocean.assets.editServiceTimeout(
           ddoEditedMetdata,
@@ -106,7 +106,7 @@ export default function Edit({
         if (price.type === 'free') {
           const tx = await setMinterToDispenser(
             ocean,
-            ddo.dataToken,
+            ddo.services[0].datatokenAddress,
             accountId,
             setError
           )
@@ -124,7 +124,7 @@ export default function Edit({
 
   return (
     <Formik
-      initialValues={getInitialValues(metadata, timeout, price.value)}
+      initialValues={getInitialValues(ddo.metadata, timeout, price.value)}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
         // move user's focus to top of screen

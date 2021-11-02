@@ -148,7 +148,7 @@ export default function Swap({
         setTotalValue(newValue)
         setTokenAmount(value.toString())
 
-        tokenIn = ddo.dataToken
+        tokenIn = ddo.services[0].datatokenAddress
         tokenOut = ocean.pool.oceanAddress
       } else {
         newValue = await ocean.pool.getDTReceived(
@@ -159,7 +159,7 @@ export default function Swap({
         setTotalValue(value.toString())
         setTokenAmount(newValue)
         tokenIn = ocean.pool.oceanAddress
-        tokenOut = ddo.dataToken
+        tokenOut = ddo.services[0].datatokenAddress
       }
     } else {
       if (values.type === 'sell') {
@@ -170,7 +170,7 @@ export default function Swap({
 
         setTotalValue(value.toString())
         setTokenAmount(newValue)
-        tokenIn = ddo.dataToken
+        tokenIn = ddo.services[0].datatokenAddress
         tokenOut = ocean.pool.oceanAddress
       } else {
         newValue = await ocean.pool.getOceanNeeded(
@@ -181,7 +181,7 @@ export default function Swap({
         setTotalValue(newValue)
         setTokenAmount(value.toString())
         tokenIn = ocean.pool.oceanAddress
-        tokenOut = ddo.dataToken
+        tokenOut = ddo.services[0].datatokenAddress
       }
     }
 

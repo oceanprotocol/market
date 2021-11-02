@@ -1,8 +1,15 @@
-import axios from 'axios'
-import { toast } from 'react-toastify'
-import isUrl from 'is-url-superb'
 import slugify from 'slugify'
-import { MetadataAlgorithm, Logger } from '@oceanprotocol/lib'
+import { MetadataAlgorithm } from '@oceanprotocol/lib'
+
+export function getServiceByName(
+  ddo: DDO,
+  name: 'access' | 'compute'
+): Service {
+  if (!ddo) return
+
+  const service = ddo.services.filter((service) => service.type === name)[0]
+  return service
+}
 
 export function dateToStringNoMS(date: Date): string {
   return date.toISOString().replace(/\.[0-9]{3}Z/, 'Z')

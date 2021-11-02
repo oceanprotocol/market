@@ -7,6 +7,7 @@ import Publisher from '@shared/Publisher'
 import AssetType from '@shared/AssetType'
 import NetworkName from '@shared/NetworkName'
 import styles from './AssetTeaser.module.css'
+import { getServiceByName } from '@utils/ddo'
 
 declare type AssetTeaserProps = {
   ddo: DDO
@@ -21,7 +22,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
 }: AssetTeaserProps) => {
   const { name, type, description } = ddo.metadata
   const { dataTokenInfo } = ddo
-  const isCompute = Boolean(ddo?.findServiceByType('compute'))
+  const isCompute = Boolean(getServiceByName(ddo, 'compute'))
   const accessType = isCompute ? 'compute' : 'access'
   const { owner } = ddo.publicKey[0]
 

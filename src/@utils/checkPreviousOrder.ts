@@ -1,20 +1,21 @@
-import { Ocean, ServiceType } from '@oceanprotocol/lib'
+import { Ocean } from '@oceanprotocol/lib'
+import { getServiceByName } from './ddo'
 
 export default async function checkPreviousOrder(
   ocean: Ocean,
   accountId: string,
   ddo: DDO,
-  serviceType: ServiceType
+  serviceType: 'access' | 'compute'
 ): Promise<string> {
   if (!ocean) return
 
-  const service = ddo.findServiceByType(serviceType)
+  const service = getServiceByName(ddo, serviceType)
   // apparenlty cost and timeout are not found, even though they are there...
   const previousOrder = await ocean.datatokens.getPreviousValidOrders(
-    ddo.dataToken,
-    (service.attributes.main as any).cost,
+    ddo?.services[0].datatokenAddress,
+    service.cost,
     service.index,
-    (service.attributes.main as any).timeout,
+    service.timeout,
     accountId
   )
   return previousOrder
