@@ -34,7 +34,7 @@
 }
 
 /* inject the numbers */
-.navigation li::before {
+.navigation li:before {
   content: counter(list-number);
   display: inline-flex;
   align-items: center;
@@ -43,12 +43,11 @@
   height: 2rem;
   border-radius: 50%;
   border: 1px solid var(--border-color);
-
   margin-right: calc(var(--spacer) / 4);
 }
 
 /* inject line */
-.navigation li::after {
+.navigation li:after {
   content: '';
   display: block;
   position: absolute;
@@ -59,17 +58,17 @@
   background: var(--border-color);
 }
 
-.navigation li:last-child::after {
+.navigation li:last-child:after {
   display: none;
 }
 
-.current::before {
-  color: var(--brand-white);
-  background: var(--brand-black);
+.current:before {
+  color: var(--background-content);
+  background: var(--font-color-heading);
   border-color: transparent;
 }
 
-.navigation .success::before {
+.navigation .success:before {
   content: '✓';
   color: var(--brand-white);
   background: var(--brand-alert-green);
