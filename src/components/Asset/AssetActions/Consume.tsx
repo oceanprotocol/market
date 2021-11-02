@@ -1,6 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { File as FileMetadata, DDO } from '@oceanprotocol/lib'
 import FileIcon from '@shared/FileIcon'
 import Price from '@shared/Price'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
@@ -43,7 +42,7 @@ export default function Consume({
   consumableFeedback
 }: {
   ddo: DDO
-  file: FileMetadata
+  file: File
   isBalanceSufficient: boolean
   dtBalance: string
   fileIsLoading?: boolean
@@ -55,7 +54,7 @@ export default function Consume({
   const { appConfig } = useSiteMetadata()
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
   const [previousOrderId, setPreviousOrderId] = useState<string>()
-  const { isInPurgatory, price, type, isAssetNetwork } = useAsset()
+  const { isInPurgatory, price, isAssetNetwork } = useAsset()
   const { buyDT, pricingStepText, pricingError, pricingIsLoading } =
     usePricing()
   const { consumeStepText, consume, consumeError, isLoading } = useConsume()
@@ -105,7 +104,7 @@ export default function Consume({
   }, [data, assetTimeout, accountId, isAssetNetwork])
 
   useEffect(() => {
-    const { timeout } = ddo.findServiceByType('access').attributes.main
+    const { timeout } = ddo.services[0]
     setAssetTimeout(`${timeout}`)
   }, [ddo])
 
@@ -177,12 +176,12 @@ export default function Consume({
       disabled={isDisabled}
       hasPreviousOrder={hasPreviousOrder}
       hasDatatoken={hasDatatoken}
-      dtSymbol={ddo.dataTokenInfo?.symbol}
+      dtSymbol={ddo?.dataTokenInfo?.symbol}
       dtBalance={dtBalance}
       datasetLowPoolLiquidity={!isConsumablePrice}
       onClick={handleConsume}
       assetTimeout={secondsToString(parseInt(assetTimeout))}
-      assetType={type}
+      assetType={ddo?.metadata.type}
       stepText={consumeStepText || pricingStepText}
       isLoading={pricingIsLoading || isLoading}
       priceType={price?.type}

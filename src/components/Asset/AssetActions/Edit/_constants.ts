@@ -14,16 +14,16 @@ export const validationSchema = Yup.object().shape({
 })
 
 export function getInitialValues(
-  metadata: MetadataMarket,
+  metadata: Metadata,
   timeout: number,
   price: number
 ): Partial<MetadataEditForm> {
   return {
-    name: metadata.main.name,
+    name: metadata.name,
     description: metadata.additionalInformation.description,
     price,
     timeout: secondsToString(timeout),
-    author: metadata.main.author
+    author: metadata.author
   }
 }
 

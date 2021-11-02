@@ -1,4 +1,4 @@
-import { DDO, Ocean, ServiceType } from '@oceanprotocol/lib'
+import { Ocean, ServiceType } from '@oceanprotocol/lib'
 
 export default async function checkPreviousOrder(
   ocean: Ocean,

@@ -15,8 +15,8 @@ const columns = [
   {
     name: 'Data Set',
     selector: function getAssetRow(row: AssetListPrices) {
-      const { attributes } = row.ddo.findServiceByType('metadata')
-      return <AssetTitle title={attributes.main.name} ddo={row.ddo} />
+      const { metadata } = row.ddo
+      return <AssetTitle title={metadata.name} ddo={row.ddo} />
     },
     maxWidth: '45rem',
     grow: 1

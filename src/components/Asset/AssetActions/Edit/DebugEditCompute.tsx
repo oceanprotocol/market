@@ -1,4 +1,4 @@
-import { DDO, ServiceComputePrivacy } from '@oceanprotocol/lib'
+import { ServiceComputePrivacy } from '@oceanprotocol/lib'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useOcean } from '@context/Ocean'
 import { transformComputeFormToServiceComputePrivacy } from '@utils/compute'

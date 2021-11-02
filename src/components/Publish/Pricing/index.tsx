@@ -1,6 +1,5 @@
 import React, { ReactElement, useEffect } from 'react'
 import { useFormikContext } from 'formik'
-import { DDO } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import Tabs from '@shared/atoms/Tabs'
 import { isValidNumber } from '@utils/numbers'

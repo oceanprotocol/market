@@ -25,7 +25,9 @@ export default function AssetActions(): ReactElement {
   const [dtBalance, setDtBalance] = useState<string>()
   const [fileMetadata, setFileMetadata] = useState<FileMetadata>(Object)
   const [fileIsLoading, setFileIsLoading] = useState<boolean>(false)
-  const isCompute = Boolean(ddo?.findServiceByType('compute'))
+  const isCompute = Boolean(
+    ddo?.services.filter((service) => service.type === 'compute')[0]
+  )
 
   const [isConsumable, setIsConsumable] = useState<boolean>(true)
   const [consumableFeedback, setConsumableFeedback] = useState<string>('')

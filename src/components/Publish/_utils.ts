@@ -15,8 +15,8 @@ export function getFieldContent(
 
 export function transformPublishFormToDdo(
   data: Partial<FormPublishData>,
-  ddo?: DdoMarket
-): DdoMarket {
+  ddo?: DDO
+): DDO {
   const currentTime = dateToStringNoMS(new Date())
   const { type } = data
   const { name, description, tags, author, termsAndConditions } = data.metadata
@@ -25,6 +25,7 @@ export function transformPublishFormToDdo(
 
   const fileUrl = typeof files !== 'string' && files[0].url
   const algorithmLanguage = getAlgorithmFileExtension(fileUrl)
+
   const algorithm = getAlgorithmComponent(
     image,
     containerTag,
@@ -38,15 +39,14 @@ export function transformPublishFormToDdo(
     ...(type === 'algorithm' && { ...algorithm })
   }
 
-  const newDdo: DdoMarket = {
+  const newDdo: DDO = {
+    created: ddo ? ddo.created : currentTime,
     metadata: {
+      type,
       name,
       description,
       tags: transformTags(tags),
       author,
-      dateCreated: ddo ? ddo.metadata.dateCreated : currentTime,
-      datePublished: '',
-      termsAndConditions,
       license: 'https://market.oceanprotocol.com/terms'
     },
     services: [service]

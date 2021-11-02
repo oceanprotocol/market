@@ -1,4 +1,3 @@
-import { DDO } from '@oceanprotocol/lib'
 import Link from 'next/link'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { getAssetsNames } from '@utils/aquarius'

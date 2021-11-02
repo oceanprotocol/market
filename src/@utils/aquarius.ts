@@ -1,9 +1,4 @@
-import {
-  DDO,
-  DID,
-  Logger,
-  publisherTrustedAlgorithm as PublisherTrustedAlgorithm
-} from '@oceanprotocol/lib'
+import { Logger } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '@shared/Form/FormFields/AssetSelection'
 import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
@@ -111,7 +106,7 @@ export async function queryMetadata(
 }
 
 export async function retrieveDDO(
-  did: string | DID,
+  did: string,
   cancelToken: CancelToken
 ): Promise<DDO> {
   try {
@@ -133,7 +128,7 @@ export async function retrieveDDO(
 }
 
 export async function getAssetsNames(
-  didList: string[] | DID[],
+  didList: string[],
   cancelToken: CancelToken
 ): Promise<Record<string, string>> {
   try {
@@ -190,8 +185,8 @@ export async function retrieveDDOListByDIDs(
     } as BaseQueryParams
     const query = generateBaseQuery(baseQueryparams)
     const result = await queryMetadata(query, cancelToken)
-    didList.forEach((did: string | DID) => {
-      const ddo: DDO = result.results.find((ddo: DDO) => ddo.id === did)
+    didList.forEach((did: string) => {
+      const ddo = result.results.find((ddo: DDO) => ddo.id === did)
       orderedDDOListByDIDList.push(ddo)
     })
     return orderedDDOListByDIDList

@@ -17,31 +17,27 @@ import { useWeb3 } from '@context/Web3'
 import styles from './index.module.css'
 import NetworkName from '@shared/NetworkName'
 import content from '../../../../content/purgatory.json'
-import { DDO } from '@oceanprotocol/lib'
 
 export default function AssetContent({ ddo }: { ddo: DDO }): ReactElement {
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
-  const {
-    price,
-    metadata,
-    type,
-    owner,
-    isInPurgatory,
-    purgatoryData,
-    isAssetNetwork
-  } = useAsset()
+  const { price, owner, isInPurgatory, purgatoryData, isAssetNetwork } =
+    useAsset()
   const [showEdit, setShowEdit] = useState<boolean>()
   const [isComputeType, setIsComputeType] = useState<boolean>(false)
   const [showEditCompute, setShowEditCompute] = useState<boolean>()
   const [isOwner, setIsOwner] = useState(false)
+
+  const serviceCompute = ddo.services.filter(
+    (service) => service.type === 'compute'
+  )[0]
 
   useEffect(() => {
     if (!accountId || !owner) return
 
     const isOwner = accountId.toLowerCase() === owner.toLowerCase()
     setIsOwner(isOwner)
-    setIsComputeType(Boolean(ddo.findServiceByType('compute')))
+    setIsComputeType(Boolean(serviceCompute))
   }, [accountId, price, owner, ddo])
 
   function handleEditButton() {
@@ -79,7 +75,7 @@ export default function AssetContent({ ddo }: { ddo: DDO }): ReactElement {
               <>
                 <Markdown
                   className={styles.description}
-                  text={metadata?.additionalInformation?.description || ''}
+                  text={ddo?.metadata.description || ''}
                 />
 
                 <MetaSecondary />
@@ -93,7 +89,7 @@ export default function AssetContent({ ddo }: { ddo: DDO }): ReactElement {
                     >
                       Edit Metadata
                     </Button>
-                    {ddo.findServiceByType('compute') && type === 'dataset' && (
+                    {serviceCompute && ddo?.metadata.type === 'dataset' && (
                       <>
                         <span className={styles.separator}>|</span>
                         <Button

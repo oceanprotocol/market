@@ -4,7 +4,6 @@ import { getAlgorithmDatasetsForCompute } from '@utils/aquarius'
 import { AssetSelectionAsset } from '@shared/Form/FormFields/AssetSelection'
 import AssetComputeList from '@shared/AssetList/AssetComputeList'
 import { useAsset } from '@context/Asset'
-import { DDO } from '@oceanprotocol/lib'
 import { useCancelToken } from '@hooks/useCancelToken'
 
 export default function AlgorithmDatasetsListForCompute({

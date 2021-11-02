@@ -24,13 +24,11 @@ export default function Edit({
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
-  const { metadata, ddo, refreshDdo, price } = useAsset()
+  const { ddo, refreshDdo, price } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const [timeoutStringValue, setTimeoutStringValue] = useState<string>()
-  const timeout = ddo.findServiceByType('access')
-    ? ddo.findServiceByType('access').attributes.main.timeout
-    : ddo.findServiceByType('compute').attributes.main.timeout
+  const { timeout } = ddo.services[0]
 
   const hasFeedback = error || success
 

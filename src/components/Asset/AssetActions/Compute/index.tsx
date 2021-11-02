@@ -1,10 +1,5 @@
 import React, { useState, ReactElement, useEffect, useCallback } from 'react'
-import {
-  DDO,
-  File as FileMetadata,
-  Logger,
-  publisherTrustedAlgorithm
-} from '@oceanprotocol/lib'
+import { Logger } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
 import FileIcon from '@shared/FileIcon'
@@ -48,7 +43,7 @@ export default function Compute({
   consumableFeedback
 }: {
   dtBalance: string
-  file: FileMetadata
+  file: File
   fileIsLoading?: boolean
   isConsumable?: boolean
   consumableFeedback?: string
@@ -56,7 +51,7 @@ export default function Compute({
   const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
   const { ocean, account } = useOcean()
-  const { price, type, ddo } = useAsset()
+  const { price, ddo } = useAsset()
   const { buyDT, pricingError, pricingStepText } = usePricing()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
@@ -90,19 +85,19 @@ export default function Compute({
       !hasAlgoAssetDatatoken &&
       !isAlgoConsumablePrice)
 
+  const { timeout } = ddo?.services[0]
+
   async function checkPreviousOrders(ddo: DDO) {
-    const { timeout } = (
-      ddo.findServiceByType('access') || ddo.findServiceByType('compute')
-    ).attributes.main
+    const { type } = ddo.metadata
+
     const orderId = await getPreviousOrders(
       ddo.dataToken?.toLowerCase(),
       accountId?.toLowerCase(),
       timeout.toString()
     )
-    const assetType = ddo.findServiceByType('metadata').attributes.main.type
 
     if (!isMounted()) return
-    if (assetType === 'algorithm') {
+    if (type === 'algorithm') {
       setPreviousAlgorithmOrderId(orderId)
       setHasPreviousAlgorithmOrder(!!orderId)
     } else {
@@ -121,7 +116,7 @@ export default function Compute({
   }
 
   function getQuerryString(
-    trustedAlgorithmList: publisherTrustedAlgorithm[],
+    trustedAlgorithmList: PublisherTrustedAlgorithm[],
     chainId?: number
   ): SearchQuery {
     const algorithmDidList = trustedAlgorithmList.map((x) => x.did)
@@ -141,28 +136,26 @@ export default function Compute({
 
   async function getAlgorithmList(): Promise<AssetSelectionAsset[]> {
     const source = axios.CancelToken.source()
-    const computeService = ddo.findServiceByType('compute')
+    const computeService = ddo.services[0]
     let algorithmSelectionList: AssetSelectionAsset[]
     if (
-      !computeService.attributes.main.privacy ||
-      !computeService.attributes.main.privacy.publisherTrustedAlgorithms ||
-      (computeService.attributes.main.privacy.publisherTrustedAlgorithms
-        .length === 0 &&
-        !computeService.attributes.main.privacy.allowAllPublishedAlgorithms)
+      !computeService.privacy ||
+      !computeService.privacy.publisherTrustedAlgorithms ||
+      computeService.privacy.publisherTrustedAlgorithms.length === 0
     ) {
       algorithmSelectionList = []
     } else {
       const gueryResults = await queryMetadata(
         getQuerryString(
-          computeService.attributes.main.privacy.publisherTrustedAlgorithms,
+          computeService.privacy.publisherTrustedAlgorithms,
           ddo.chainId
         ),
         source.token
       )
       setDdoAlgorithmList(gueryResults.results)
-      const datasetComputeService = ddo.findServiceByType('compute')
+
       algorithmSelectionList = await transformDDOToAssetSelection(
-        datasetComputeService?.serviceEndpoint,
+        computeService?.providerEndpoint,
         gueryResults.results,
         [],
         newCancelToken()
@@ -186,6 +179,7 @@ export default function Compute({
         : true
     )
   }, [algorithmPrice])
+
   useEffect(() => {
     if (!price) return
 
@@ -195,9 +189,6 @@ export default function Compute({
   }, [price])
 
   useEffect(() => {
-    const { timeout } = (
-      ddo.findServiceByType('access') || ddo.findServiceByType('compute')
-    ).attributes.main
     setDatasetTimeout(secondsToString(timeout))
   }, [ddo])
 

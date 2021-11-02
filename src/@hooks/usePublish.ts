@@ -1,11 +1,10 @@
-import { DDO, Logger, Metadata } from '@oceanprotocol/lib'
+import { Logger } from '@oceanprotocol/lib'
 import {
   Service,
   ServiceComputePrivacy,
   ServiceType
 } from '@oceanprotocol/lib/dist/node/ddo/interfaces/Service'
 import { useEffect, useState } from 'react'
-import { sleep } from '@utils/index'
 import { publishFeedback } from '@utils/feedback'
 import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
@@ -19,12 +18,12 @@ export interface DataTokenOptions {
 
 interface UsePublish {
   publish: (
-    asset: Metadata,
+    asset: DDO,
     serviceType: ServiceType,
     dataTokenOptions?: DataTokenOptions,
     timeout?: number,
     providerUri?: string
-  ) => Promise<DDO | undefined | null>
+  ) => Promise<DDO>
   publishStep?: number
   publishStepText?: string
   publishError?: string
@@ -66,12 +65,12 @@ function usePublish(): UsePublish {
    * @return {Promise<DDO>} Returns the newly published ddo
    */
   async function publish(
-    asset: Metadata,
+    asset: DDO,
     serviceType: ServiceType,
     dataTokenOptions?: DataTokenOptions,
     timeout?: number,
     providerUri?: string
-  ): Promise<DDO | undefined | null> {
+  ): Promise<DDO> {
     if (!ocean || !account) return null
     setIsLoading(true)
     setPublishError(undefined)
@@ -82,7 +81,7 @@ function usePublish(): UsePublish {
         new Date(Date.now()).toISOString().split('.')[0] + 'Z'
       const services: Service[] = []
       const price = '1'
-      asset.main.dateCreated = asset.main.datePublished = publishedDate
+      asset.created = publishedDate
 
       switch (serviceType) {
         case 'access': {
@@ -125,24 +124,24 @@ function usePublish(): UsePublish {
 
       Logger.log('services created', services)
 
-      const ddo = await ocean.assets
-        .create(
-          asset,
-          account,
-          services,
-          undefined,
-          dataTokenOptions?.cap,
-          dataTokenOptions?.name,
-          dataTokenOptions?.symbol,
-          providerUri
-        )
-        .next(setStep)
-      Logger.log('ddo created', ddo)
-      await ocean.assets.publishDdo(ddo, account.getId())
-      Logger.log('ddo published')
-      await sleep(20000)
-      setStep(7)
-      return ddo
+      // const ddo = await ocean.assets
+      //   .create(
+      //     asset,
+      //     account,
+      //     services,
+      //     undefined,
+      //     dataTokenOptions?.cap,
+      //     dataTokenOptions?.name,
+      //     dataTokenOptions?.symbol,
+      //     providerUri
+      //   )
+      //   .next(setStep)
+      // Logger.log('ddo created', ddo)
+      // await ocean.assets.publishDdo(ddo, account.getId())
+      // Logger.log('ddo published')
+      // await sleep(20000)
+      // setStep(7)
+      // return ddo
     } catch (error) {
       setPublishError(error.message)
       Logger.error(error)
