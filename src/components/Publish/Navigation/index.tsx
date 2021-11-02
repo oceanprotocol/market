@@ -1,5 +1,5 @@
 import { FormikContextType, useFormikContext } from 'formik'
-import React, { FormEvent, ReactElement } from 'react'
+import React, { ReactElement } from 'react'
 import { FormPublishData } from '../_types'
 import { wizardSteps } from '../_constants'
 import styles from './index.module.css'
@@ -19,6 +19,7 @@ export default function Navigation(): ReactElement {
           <li
             key={step.title}
             onClick={() => handleStepClick(step.step)}
+            // TODO: add success class
             className={values.step === step.step ? styles.current : null}
           >
             {step.title}

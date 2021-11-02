@@ -63,12 +63,15 @@
   display: none;
 }
 
-.current {
-  font-weight: var(--font-weight-bold);
-}
-
-.current:before {
+.current::before {
   color: var(--brand-white);
   background: var(--brand-black);
+  border-color: transparent;
+}
+
+.navigation .success::before {
+  content: '✓';
+  color: var(--brand-white);
+  background: var(--brand-alert-green);
   border-color: transparent;
 }
