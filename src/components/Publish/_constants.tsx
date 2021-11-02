@@ -69,6 +69,9 @@ export const initialValues: Partial<FormPublishData> = {
 }
 
 const validationMetadata = {
+  type: Yup.string()
+    .matches(/Dataset|Algorithm/g, { excludeEmptyString: true })
+    .required('Required'),
   name: Yup.string()
     .min(4, (param) => `Title must be at least ${param.min} characters`)
     .required('Required'),
@@ -92,9 +95,6 @@ const validationService = {
     })
     .required('Required'),
   timeout: Yup.string().required('Required'),
-  type: Yup.string()
-    .matches(/Dataset|Algorithm/g, { excludeEmptyString: true })
-    .required('Required'),
   access: Yup.string()
     .matches(/Compute|Download/g, { excludeEmptyString: true })
     .required('Required'),
