@@ -18,7 +18,7 @@ export default function MetaFull(): ReactElement {
       {!isInPurgatory && <MetaItem title="Data Author" content={author} />}
       <MetaItem
         title="Owner"
-        content={<Publisher account={ddo?.publicKey[0].owner} />}
+        content={<Publisher account={ddo?.nft?.owner} />}
       />
 
       {type === 'algorithm' && algorithm && (

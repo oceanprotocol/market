@@ -103,7 +103,7 @@ export default function Pool(): ReactElement {
     const queryContext = getQueryContext(ddo.chainId)
     const queryVariables = {
       id: price.address.toLowerCase(),
-      shareId: `${price.address.toLowerCase()}-${ddo.publicKey[0].owner.toLowerCase()}`
+      shareId: `${price.address.toLowerCase()}-${ddo.nft.owner.toLowerCase()}`
     }
 
     const queryResult: OperationResult<PoolLiquidity> = await fetchData(
@@ -361,7 +361,7 @@ export default function Pool(): ReactElement {
           }}
           swapFee={swapFee}
           dtSymbol={dtSymbol}
-          dtAddress={ddo.dataToken}
+          dtAddress={ddo.services[0].datatokenAddress}
         />
       ) : showRemove ? (
         <Remove

@@ -2,7 +2,7 @@ import slugify from 'slugify'
 import { MetadataAlgorithm } from '@oceanprotocol/lib'
 
 export function getServiceByName(
-  ddo: Asset,
+  ddo: Asset | DDO,
   name: 'access' | 'compute'
 ): Service {
   if (!ddo) return

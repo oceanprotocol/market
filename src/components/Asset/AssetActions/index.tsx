@@ -33,21 +33,22 @@ export default function AssetActions(): ReactElement {
   const [consumableFeedback, setConsumableFeedback] = useState<string>('')
   const newCancelToken = useCancelToken()
   const isMounted = useIsMounted()
-  useEffect(() => {
-    if (!ddo || !accountId || !ocean || !isAssetNetwork) return
 
-    async function checkIsConsumable() {
-      const consumable = await ocean.assets.isConsumable(
-        ddo,
-        accountId.toLowerCase()
-      )
-      if (consumable) {
-        setIsConsumable(consumable.result)
-        setConsumableFeedback(consumable.message)
-      }
-    }
-    checkIsConsumable()
-  }, [accountId, isAssetNetwork, ddo, ocean])
+  // useEffect(() => {
+  //   if (!ddo || !accountId || !ocean || !isAssetNetwork) return
+
+  //   async function checkIsConsumable() {
+  //     const consumable = await ocean.assets.isConsumable(
+  //       ddo,
+  //       accountId.toLowerCase()
+  //     )
+  //     if (consumable) {
+  //       setIsConsumable(consumable.result)
+  //       setConsumableFeedback(consumable.message)
+  //     }
+  //   }
+  //   checkIsConsumable()
+  // }, [accountId, isAssetNetwork, ddo, ocean])
 
   useEffect(() => {
     const oceanConfig = getOceanConfig(ddo.chainId)

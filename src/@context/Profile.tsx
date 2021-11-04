@@ -170,7 +170,7 @@ function ProfileProvider({
   //
   // PUBLISHED ASSETS
   //
-  const [assets, setAssets] = useState<DDO[]>()
+  const [assets, setAssets] = useState<Asset[]>()
   const [assetsTotal, setAssetsTotal] = useState(0)
   // const [assetsWithPrices, setAssetsWithPrices] = useState<AssetListPrices[]>()
 
