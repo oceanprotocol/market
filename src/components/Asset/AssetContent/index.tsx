@@ -18,7 +18,7 @@ import styles from './index.module.css'
 import NetworkName from '@shared/NetworkName'
 import content from '../../../../content/purgatory.json'
 
-export default function AssetContent({ ddo }: { ddo: DDO }): ReactElement {
+export default function AssetContent({ ddo }: { ddo: Asset }): ReactElement {
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
   const { price, owner, isInPurgatory, purgatoryData, isAssetNetwork } =

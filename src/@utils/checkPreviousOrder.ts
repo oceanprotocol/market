@@ -4,7 +4,7 @@ import { getServiceByName } from './ddo'
 export default async function checkPreviousOrder(
   ocean: Ocean,
   accountId: string,
-  ddo: DDO,
+  ddo: Asset,
   serviceType: 'access' | 'compute'
 ): Promise<string> {
   if (!ocean) return

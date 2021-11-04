@@ -20,7 +20,7 @@ import { useCancelToken } from '@hooks/useCancelToken'
 interface AssetProviderValue {
   isInPurgatory: boolean
   purgatoryData: PurgatoryData
-  ddo: DDO
+  ddo: Asset
   title: string
   owner: string
   price: BestPrice
@@ -39,7 +39,7 @@ function AssetProvider({
   asset,
   children
 }: {
-  asset: string | DDO
+  asset: string | Asset
   children: ReactNode
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
@@ -47,7 +47,7 @@ function AssetProvider({
   const { networkId } = useWeb3()
   const [isInPurgatory, setIsInPurgatory] = useState(false)
   const [purgatoryData, setPurgatoryData] = useState<PurgatoryData>()
-  const [ddo, setDDO] = useState<DDO>()
+  const [ddo, setDDO] = useState<Asset>()
   const [did, setDID] = useState<string>()
   const [title, setTitle] = useState<string>()
   const [price, setPrice] = useState<BestPrice>()
@@ -110,7 +110,7 @@ function AssetProvider({
       setDDO(ddo)
       setDID(asset as string)
       setTitle(ddo.metadata.name)
-      setOwner(ddo.publicKey[0].owner)
+      setOwner(ddo.nft.owner)
       setIsInPurgatory(ddo.isInPurgatory === 'true')
       await setPurgatory(ddo.id)
     }
@@ -120,7 +120,7 @@ function AssetProvider({
     }
   }, [asset, appConfig.metadataCacheUri])
 
-  const initPrice = useCallback(async (ddo: DDO): Promise<void> => {
+  const initPrice = useCallback(async (ddo: Asset): Promise<void> => {
     if (!ddo) return
     const returnedPrice = await getPrice(ddo)
     setPrice({ ...returnedPrice })

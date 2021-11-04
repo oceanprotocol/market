@@ -15,7 +15,7 @@ export function getFieldContent(
 
 export function transformPublishFormToDdo(
   data: Partial<FormPublishData>,
-  ddo?: DDO
+  ddo?: Asset
 ): DDO {
   const currentTime = dateToStringNoMS(new Date())
   const { type } = data

@@ -23,7 +23,7 @@ interface UsePublish {
     dataTokenOptions?: DataTokenOptions,
     timeout?: number,
     providerUri?: string
-  ) => Promise<DDO>
+  ) => Promise<Asset>
   publishStep?: number
   publishStepText?: string
   publishError?: string
@@ -62,15 +62,15 @@ function usePublish(): UsePublish {
    * @param  {PriceOptions}  priceOptions : number of tokens to mint, datatoken weight , liquidity fee, type : fixed, dynamic
    * @param  {ServiceType} serviceType Desired service type of the asset access or compute
    * @param  {DataTokenOptions} dataTokenOptions custom name, symbol and cap for datatoken
-   * @return {Promise<DDO>} Returns the newly published ddo
+   * @return {Promise<Asset>} Returns the newly published ddo
    */
   async function publish(
-    asset: DDO,
+    asset: Asset,
     serviceType: ServiceType,
     dataTokenOptions?: DataTokenOptions,
     timeout?: number,
     providerUri?: string
-  ): Promise<DDO> {
+  ): Promise<Asset> {
     if (!ocean || !account) return null
     setIsLoading(true)
     setPublishError(undefined)

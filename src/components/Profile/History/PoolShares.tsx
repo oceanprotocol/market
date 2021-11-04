@@ -29,7 +29,7 @@ interface Asset {
   poolShare: PoolShare
   networkId: number
   createTime: number
-  ddo: DDO
+  ddo: Asset
 }
 
 function findTokenByType(tokens: PoolSharePoolIdTokens[], type: string) {

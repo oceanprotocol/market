@@ -31,11 +31,11 @@ async function getQueryHighest(
   return [queryHighest, dtList]
 }
 
-function sortElements(items: DDO[], sorted: string[]) {
+function sortElements(items: Asset[], sorted: string[]) {
   items.sort(function (a, b) {
     return (
-      sorted.indexOf(a.dataToken.toLowerCase()) -
-      sorted.indexOf(b.dataToken.toLowerCase())
+      sorted.indexOf(a.services[0].datatokenAddress.toLowerCase()) -
+      sorted.indexOf(b.services[0].datatokenAddress.toLowerCase())
     )
   })
   return items

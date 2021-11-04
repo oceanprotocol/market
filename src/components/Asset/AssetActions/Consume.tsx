@@ -41,7 +41,7 @@ export default function Consume({
   isConsumable,
   consumableFeedback
 }: {
-  ddo: DDO
+  ddo: Asset
   file: File
   isBalanceSufficient: boolean
   dtBalance: string
@@ -69,7 +69,7 @@ export default function Consume({
     if (!ddo || !accountId) return
     const context = getQueryContext(ddo.chainId)
     const variables = {
-      id: ddo.dataToken?.toLowerCase(),
+      id: ddo.services[0].datatokenAddress?.toLowerCase(),
       account: accountId?.toLowerCase()
     }
     fetchData(previousOrderQuery, variables, context).then((result: any) => {

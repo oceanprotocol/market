@@ -19,7 +19,7 @@ function LoaderArea() {
 }
 
 declare type AssetListProps = {
-  assets: DDO[]
+  assets: Asset[]
   showPagination: boolean
   page?: number
   totalPages?: number

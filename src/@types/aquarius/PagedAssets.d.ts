@@ -1,5 +1,5 @@
 interface PagedAssets {
-  results: DDO[]
+  results: Asset[]
   page: number
   totalPages: number
   totalResults: number

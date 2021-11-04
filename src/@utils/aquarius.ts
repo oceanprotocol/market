@@ -73,7 +73,7 @@ export function transformQueryResult(
   }
 
   result.results = (queryResult.hits.hits || []).map(
-    (hit) => hit._source as DDO
+    (hit) => hit._source as Asset
   )
   result.totalResults = queryResult.hits.total
   result.totalPages =
@@ -109,9 +109,9 @@ export async function queryMetadata(
 export async function retrieveDDO(
   did: string,
   cancelToken: CancelToken
-): Promise<DDO> {
+): Promise<Asset> {
   try {
-    const response: AxiosResponse<DDO> = await axios.get(
+    const response: AxiosResponse<Asset> = await axios.get(
       `${metadataCacheUri}/api/v1/aquarius/assets/ddo/${did}`,
       { cancelToken }
     )
@@ -175,10 +175,10 @@ export async function retrieveDDOListByDIDs(
   didList: string[],
   chainIds: number[],
   cancelToken: CancelToken
-): Promise<DDO[]> {
+): Promise<Asset[]> {
   try {
     if (didList?.length === 0 || chainIds?.length === 0) return []
-    const orderedDDOListByDIDList: DDO[] = []
+    const orderedDDOListByDIDList: Asset[] = []
     const baseQueryparams = {
       chainIds,
       filters: [getFilterTerm('id', didList)],
@@ -187,7 +187,7 @@ export async function retrieveDDOListByDIDs(
     const query = generateBaseQuery(baseQueryparams)
     const result = await queryMetadata(query, cancelToken)
     didList.forEach((did: string) => {
-      const ddo = result.results.find((ddo: DDO) => ddo.id === did)
+      const ddo = result.results.find((ddo: Asset) => ddo.id === did)
       orderedDDOListByDIDList.push(ddo)
     })
     return orderedDDOListByDIDList
@@ -198,7 +198,7 @@ export async function retrieveDDOListByDIDs(
 
 export async function transformDDOToAssetSelection(
   datasetProviderEndpoint: string,
-  ddoList: DDO[],
+  ddoList: Asset[],
   selectedAlgorithms?: PublisherTrustedAlgorithm[],
   cancelToken?: CancelToken
 ): Promise<AssetSelectionAsset[]> {

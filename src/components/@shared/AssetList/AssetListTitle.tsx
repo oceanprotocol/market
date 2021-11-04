@@ -10,7 +10,7 @@ export default function AssetListTitle({
   did,
   title
 }: {
-  ddo?: DDO
+  ddo?: Asset
   did?: string
   title?: string
 }): ReactElement {

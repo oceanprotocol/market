@@ -18,6 +18,16 @@ interface Asset extends DDO {
   stats: {
     consume: number
   }
+
+  // This is fake and most likely won't be used.
+  // Just here so we can continue to have successful builds.
+  dataTokenInfo: {
+    name: string
+    symbol: string
+    address: string
+  }
+
+  isInPurgatory: string
 }
 
 // interface MetadataEditForm {

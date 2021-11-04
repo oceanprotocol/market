@@ -35,7 +35,7 @@ export interface PriceList {
 }
 
 export interface AssetListPrices {
-  ddo: DDO
+  ddo: Asset
   price: BestPrice
 }
 
@@ -402,7 +402,7 @@ function transformPriceToBestPrice(
 }
 
 async function getAssetsPoolsExchangesAndDatatokenMap(
-  assets: DDO[]
+  assets: Asset[]
 ): Promise<
   [
     AssetsPoolPricePool[],
@@ -468,7 +468,7 @@ async function getAssetsPoolsExchangesAndDatatokenMap(
   return [poolPriceResponse, frePriceResponse, freePriceResponse, didDTMap]
 }
 
-export async function getAssetsPriceList(assets: DDO[]): Promise<PriceList> {
+export async function getAssetsPriceList(assets: Asset[]): Promise<PriceList> {
   const priceList: PriceList = {}
 
   const values: [
@@ -497,7 +497,7 @@ export async function getAssetsPriceList(assets: DDO[]): Promise<PriceList> {
   return priceList
 }
 
-export async function getPrice(asset: DDO): Promise<BestPrice> {
+export async function getPrice(asset: Asset): Promise<BestPrice> {
   const freVariables = {
     datatoken: asset?.services[0].datatokenAddress.toLowerCase()
   }
@@ -534,7 +534,7 @@ export async function getPrice(asset: DDO): Promise<BestPrice> {
   return bestPrice
 }
 
-export async function getSpotPrice(asset: DDO): Promise<number> {
+export async function getSpotPrice(asset: Asset): Promise<number> {
   const poolVariables = {
     datatokenAddress: asset?.services[0].datatokenAddress.toLowerCase()
   }
@@ -550,7 +550,7 @@ export async function getSpotPrice(asset: DDO): Promise<number> {
 }
 
 export async function getAssetsBestPrices(
-  assets: DDO[]
+  assets: Asset[]
 ): Promise<AssetListPrices[]> {
   const assetsWithPrice: AssetListPrices[] = []
 

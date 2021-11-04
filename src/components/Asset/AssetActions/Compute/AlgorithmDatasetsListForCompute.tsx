@@ -12,7 +12,7 @@ export default function AlgorithmDatasetsListForCompute({
   dataset
 }: {
   algorithmDid: string
-  dataset: DDO
+  dataset: Asset
 }): ReactElement {
   const { ddo } = useAsset()
   const [datasetsForCompute, setDatasetsForCompute] =

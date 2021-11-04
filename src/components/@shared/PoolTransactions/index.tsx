@@ -77,7 +77,7 @@ export interface Datatoken {
 
 export interface PoolTransaction extends TransactionHistoryPoolTransactions {
   networkId: number
-  ddo: DDO
+  ddo: Asset
 }
 
 const columns = [

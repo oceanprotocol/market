@@ -9,7 +9,7 @@ export default function DebugEditCompute({
   ddo
 }: {
   values: ComputePrivacyForm
-  ddo: DDO
+  ddo: Asset
 }): ReactElement {
   const { ocean } = useOcean()
   const [formTransformed, setFormTransformed] =

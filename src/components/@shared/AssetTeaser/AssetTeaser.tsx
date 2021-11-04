@@ -10,7 +10,7 @@ import styles from './AssetTeaser.module.css'
 import { getServiceByName } from '@utils/ddo'
 
 declare type AssetTeaserProps = {
-  ddo: DDO
+  ddo: Asset
   price: BestPrice
   noPublisher?: boolean
 }
@@ -24,7 +24,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
   const { dataTokenInfo } = ddo
   const isCompute = Boolean(getServiceByName(ddo, 'compute'))
   const accessType = isCompute ? 'compute' : 'access'
-  const { owner } = ddo.publicKey[0]
+  const { owner } = ddo.nft
 
   return (
     <article className={`${styles.teaser} ${styles[type]}`}>

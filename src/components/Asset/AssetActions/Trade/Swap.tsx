@@ -25,7 +25,7 @@ export default function Swap({
   setMaximumOcean,
   setCoin
 }: {
-  ddo: DDO
+  ddo: Asset
   maxDt: string
   maxOcean: string
   balance: PoolBalance

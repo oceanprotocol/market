@@ -37,8 +37,8 @@ export default function FormStartCompute({
   consumableFeedback
 }: {
   algorithms: AssetSelectionAsset[]
-  ddoListAlgorithms: DDO[]
-  setSelectedAlgorithm: React.Dispatch<React.SetStateAction<DDO>>
+  ddoListAlgorithms: Asset[]
+  setSelectedAlgorithm: React.Dispatch<React.SetStateAction<Asset>>
   isLoading: boolean
   isComputeButtonDisabled: boolean
   hasPreviousOrder: boolean

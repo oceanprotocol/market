@@ -23,7 +23,7 @@ export default function FormTrade({
   maxOcean,
   price
 }: {
-  ddo: DDO
+  ddo: Asset
   balance: PoolBalance
   maxDt: string
   maxOcean: string
