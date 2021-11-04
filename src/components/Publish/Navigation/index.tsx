@@ -5,8 +5,12 @@ import { wizardSteps } from '../_constants'
 import styles from './index.module.css'
 
 export default function Navigation(): ReactElement {
-  const { values, setFieldValue }: FormikContextType<FormPublishData> =
-    useFormikContext()
+  const {
+    values,
+    errors,
+    touched,
+    setFieldValue
+  }: FormikContextType<FormPublishData> = useFormikContext()
 
   function handleStepClick(step: number) {
     setFieldValue('step', step)
