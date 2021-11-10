@@ -33,6 +33,7 @@ export const wizardSteps: StepContent[] = [
 
 export const initialValues: Partial<FormPublishData> = {
   step: 1,
+  chainId: 1,
   metadata: {
     type: 'dataset',
     name: '',
@@ -123,6 +124,7 @@ const validationPricing = {
 // export const validationSchema: Yup.SchemaOf<FormPublishData> =
 export const validationSchema: Yup.SchemaOf<any> = Yup.object().shape({
   step: Yup.number(),
+  chainId: Yup.number(),
   metadata: Yup.object().shape(validationMetadata),
   services: Yup.array().of(Yup.object().shape(validationService)),
   pricing: Yup.object().shape(validationPricing)

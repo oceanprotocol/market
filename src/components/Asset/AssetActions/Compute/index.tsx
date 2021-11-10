@@ -155,7 +155,7 @@ export default function Compute({
       setDdoAlgorithmList(gueryResults.results)
 
       algorithmSelectionList = await transformDDOToAssetSelection(
-        computeService?.providerUrl,
+        computeService?.serviceEndpoint,
         gueryResults.results,
         [],
         newCancelToken()

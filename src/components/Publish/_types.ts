@@ -25,6 +25,7 @@ export interface FormPublishData {
   }
   services: FormPublishService[]
   pricing: PriceOptions
+  chainId: number
 }
 
 export interface StepContent {

@@ -6,6 +6,10 @@ import {
 } from '@utils/ddo'
 import { FormPublishData } from './_types'
 
+function encryptMe(files: string | FileMetadata[]): string {
+  throw new Error('Function not implemented.')
+}
+
 export function getFieldContent(
   fieldName: string,
   fields: FormFieldContent[]
@@ -13,10 +17,7 @@ export function getFieldContent(
   return fields.filter((field: FormFieldContent) => field.name === fieldName)[0]
 }
 
-export function transformPublishFormToDdo(
-  data: Partial<FormPublishData>,
-  ddo?: Asset
-): DDO {
+export function transformPublishFormToDdo(data: Partial<FormPublishData>): DDO {
   const currentTime = dateToStringNoMS(new Date())
   const { type } = data.metadata
   const { name, description, tags, author, termsAndConditions } = data.metadata
@@ -33,10 +34,13 @@ export function transformPublishFormToDdo(
 
   const fileUrl = typeof files !== 'string' && files[0].url
 
+  const filesEncrypted = encryptMe(files)
+
   const service: Service = {
     type: access,
+    files: filesEncrypted,
     datatokenAddress: '',
-    providerUrl,
+    serviceEndpoint: providerUrl,
     timeout
   }
 
@@ -44,13 +48,8 @@ export function transformPublishFormToDdo(
     '@context': [''],
     id: '',
     version: '4.0.0',
-    created: ddo ? ddo.created : currentTime,
-    updated: '',
-    chainId: ddo ? ddo.chainId : 1,
-    status: {
-      state: 1
-    },
-    files: files as FileMetadata[],
+    created: currentTime,
+    chainId: data.chainId,
     metadata: {
       type,
       name,
