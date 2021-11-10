@@ -1,6 +1,6 @@
 // This is all super questionable,
 // but we most likely need something to represent what we get
-// back from fileinfo endpoint in Provider.
+// back from fileinfo endpoint in Provider. But then should be moved out of DDO typings.
 
 interface FileMetadata {
   url: string

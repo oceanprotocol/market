@@ -13,7 +13,7 @@ interface ServiceComputePrivacy {
 
 interface Service {
   type: 'access' | 'compute' | string
-  files: FileMetadata[]
+  files: string
   datatokenAddress: string
   serviceEndpoint: string
   timeout: string
