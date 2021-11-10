@@ -18,7 +18,7 @@ export function transformPublishFormToDdo(
   ddo?: Asset
 ): DDO {
   const currentTime = dateToStringNoMS(new Date())
-  const { type } = data
+  const { type } = data.metadata
   const { name, description, tags, author, termsAndConditions } = data.metadata
   const {
     access,

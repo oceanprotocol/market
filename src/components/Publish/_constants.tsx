@@ -33,8 +33,8 @@ export const wizardSteps: StepContent[] = [
 
 export const initialValues: Partial<FormPublishData> = {
   step: 1,
-  type: 'dataset',
   metadata: {
+    type: 'dataset',
     name: '',
     author: '',
     description: '',
@@ -69,7 +69,7 @@ export const initialValues: Partial<FormPublishData> = {
 
 const validationMetadata = {
   type: Yup.string()
-    .matches(/Dataset|Algorithm/g, { excludeEmptyString: true })
+    .matches(/dataset|algorithm/g, { excludeEmptyString: true })
     .required('Required'),
   name: Yup.string()
     .min(4, (param) => `Title must be at least ${param.min} characters`)
@@ -87,12 +87,10 @@ const validationService = {
     .required('Enter a valid URL and click "ADD FILE"')
     .nullable(),
   links: Yup.array<FileMetadata[]>().nullable(),
-  dataTokenOptions: Yup.object()
-    .shape({
-      name: Yup.string(),
-      symbol: Yup.string()
-    })
-    .required('Required'),
+  dataTokenOptions: Yup.object().shape({
+    name: Yup.string(),
+    symbol: Yup.string()
+  }),
   timeout: Yup.string().required('Required'),
   access: Yup.string()
     .matches(/Compute|Download/g, { excludeEmptyString: true })
@@ -122,13 +120,13 @@ const validationPricing = {
     .nullable()
 }
 
-export const validationSchema: Yup.SchemaOf<FormPublishData> = Yup.object()
-  .shape({
-    metadata: Yup.object().shape(validationMetadata),
-    services: Yup.array().of(Yup.object().shape(validationService)),
-    pricing: Yup.object().shape(validationPricing)
-  })
-  .defined()
+// export const validationSchema: Yup.SchemaOf<FormPublishData> =
+export const validationSchema: Yup.SchemaOf<any> = Yup.object().shape({
+  step: Yup.number(),
+  metadata: Yup.object().shape(validationMetadata),
+  services: Yup.array().of(Yup.object().shape(validationService)),
+  pricing: Yup.object().shape(validationPricing)
+})
 
 // export const validationSchemaAlgo: Yup.SchemaOf<MetadataPublishFormAlgorithm> =
 //   Yup.object()
