@@ -1,5 +1,4 @@
 import React from 'react'
-import { File as FileMetadata } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 import { allowDynamicPricing, allowFixedPricing } from '../../../app.config.js'
 import { FormPublishData, StepContent } from './_types'
@@ -49,7 +48,7 @@ export const initialValues: Partial<FormPublishData> = {
       dataTokenOptions: { name: '', symbol: '' },
       timeout: 'Forever',
       access: '',
-      providerUri: ''
+      providerUrl: ''
     }
   ],
   pricing: {
@@ -98,7 +97,7 @@ const validationService = {
   access: Yup.string()
     .matches(/Compute|Download/g, { excludeEmptyString: true })
     .required('Required'),
-  providerUri: Yup.string().url().nullable()
+  providerUrl: Yup.string().url().nullable()
 }
 
 const validationPricing = {

@@ -43,7 +43,7 @@ export default function Compute({
   consumableFeedback
 }: {
   dtBalance: string
-  file: File
+  file: FileMetadata
   fileIsLoading?: boolean
   isConsumable?: boolean
   consumableFeedback?: string
@@ -57,8 +57,8 @@ export default function Compute({
   const [error, setError] = useState<string>()
 
   const [algorithmList, setAlgorithmList] = useState<AssetSelectionAsset[]>()
-  const [ddoAlgorithmList, setDdoAlgorithmList] = useState<DDO[]>()
-  const [selectedAlgorithmAsset, setSelectedAlgorithmAsset] = useState<DDO>()
+  const [ddoAlgorithmList, setDdoAlgorithmList] = useState<Asset[]>()
+  const [selectedAlgorithmAsset, setSelectedAlgorithmAsset] = useState<Asset>()
   const [hasAlgoAssetDatatoken, setHasAlgoAssetDatatoken] = useState<boolean>()
   const [isPublished, setIsPublished] = useState(false)
   const [hasPreviousDatasetOrder, setHasPreviousDatasetOrder] = useState(false)
@@ -91,7 +91,7 @@ export default function Compute({
     const { type } = ddo.metadata
 
     const orderId = await getPreviousOrders(
-      ddo.dataToken?.toLowerCase(),
+      ddo.services[0].datatokenAddress?.toLowerCase(),
       accountId?.toLowerCase(),
       timeout.toString()
     )
@@ -155,7 +155,7 @@ export default function Compute({
       setDdoAlgorithmList(gueryResults.results)
 
       algorithmSelectionList = await transformDDOToAssetSelection(
-        computeService?.providerEndpoint,
+        computeService?.providerUrl,
         gueryResults.results,
         [],
         newCancelToken()
@@ -164,7 +164,7 @@ export default function Compute({
     return algorithmSelectionList
   }
 
-  const initMetadata = useCallback(async (ddo: DDO): Promise<void> => {
+  const initMetadata = useCallback(async (ddo: Asset): Promise<void> => {
     if (!ddo) return
     const price = await getPrice(ddo)
     setAlgorithmPrice(price)
@@ -188,9 +188,9 @@ export default function Compute({
     )
   }, [price])
 
-  useEffect(() => {
-    setDatasetTimeout(secondsToString(timeout))
-  }, [ddo])
+  // useEffect(() => {
+  //   setDatasetTimeout(secondsToString(timeout))
+  // }, [ddo])
 
   useEffect(() => {
     if (!ddo) return
@@ -209,10 +209,9 @@ export default function Compute({
 
     initMetadata(selectedAlgorithmAsset)
 
-    const { timeout } =
-      getServiceByName(ddo, 'access') || getServiceByName(ddo, 'compute')
+    const { timeout } = ddo.services[0]
 
-    setAlgorithmTimeout(secondsToString(timeout))
+    // setAlgorithmTimeout(secondsToString(timeout))
 
     if (accountId) {
       if (getServiceByName(selectedAlgorithmAsset, 'access')) {
@@ -238,153 +237,153 @@ export default function Compute({
     toast.error(newError)
   }, [error, pricingError])
 
-  async function startJob(algorithmId: string) {
-    try {
-      if (!ocean) return
+  // async function startJob(algorithmId: string) {
+  //   try {
+  //     if (!ocean) return
 
-      setIsJobStarting(true)
-      setIsPublished(false)
-      setError(undefined)
+  //     setIsJobStarting(true)
+  //     setIsPublished(false)
+  //     setError(undefined)
 
-      const computeService = getServiceByName(ddo, 'compute')
-      const serviceAlgo = getServiceByName(selectedAlgorithmAsset, 'access')
-        ? getServiceByName(selectedAlgorithmAsset, 'access')
-        : getServiceByName(selectedAlgorithmAsset, 'compute')
+  //     const computeService = getServiceByName(ddo, 'compute')
+  //     const serviceAlgo = getServiceByName(selectedAlgorithmAsset, 'access')
+  //       ? getServiceByName(selectedAlgorithmAsset, 'access')
+  //       : getServiceByName(selectedAlgorithmAsset, 'compute')
 
-      const computeAlgorithm: ComputeAlgorithm = {
-        did: selectedAlgorithmAsset.id,
-        serviceIndex: serviceAlgo.index,
-        dataToken: selectedAlgorithmAsset.services[0].datatokenAddress
-      }
-      const allowed = await ocean.compute.isOrderable(
-        ddo.id,
-        computeService.index,
-        computeAlgorithm
-      )
-      Logger.log('[compute] Is data set orderable?', allowed)
+  //     const computeAlgorithm: ComputeAlgorithm = {
+  //       did: selectedAlgorithmAsset.id,
+  //       serviceIndex: serviceAlgo.index,
+  //       dataToken: selectedAlgorithmAsset.services[0].datatokenAddress
+  //     }
+  //     const allowed = await ocean.compute.isOrderable(
+  //       ddo.id,
+  //       computeService.index,
+  //       computeAlgorithm
+  //     )
+  //     Logger.log('[compute] Is data set orderable?', allowed)
 
-      if (!allowed) {
-        setError(
-          'Data set is not orderable in combination with selected algorithm.'
-        )
-        Logger.error(
-          '[compute] Error starting compute job. Dataset is not orderable in combination with selected algorithm.'
-        )
-        return
-      }
+  //     if (!allowed) {
+  //       setError(
+  //         'Data set is not orderable in combination with selected algorithm.'
+  //       )
+  //       Logger.error(
+  //         '[compute] Error starting compute job. Dataset is not orderable in combination with selected algorithm.'
+  //       )
+  //       return
+  //     }
 
-      if (!hasPreviousDatasetOrder && !hasDatatoken) {
-        const tx = await buyDT('1', price, ddo)
-        if (!tx) {
-          setError('Error buying datatoken.')
-          Logger.error('[compute] Error buying datatoken for data set ', ddo.id)
-          return
-        }
-      }
+  //     if (!hasPreviousDatasetOrder && !hasDatatoken) {
+  //       const tx = await buyDT('1', price, ddo)
+  //       if (!tx) {
+  //         setError('Error buying datatoken.')
+  //         Logger.error('[compute] Error buying datatoken for data set ', ddo.id)
+  //         return
+  //       }
+  //     }
 
-      if (!hasPreviousAlgorithmOrder && !hasAlgoAssetDatatoken) {
-        const tx = await buyDT('1', algorithmPrice, selectedAlgorithmAsset)
-        if (!tx) {
-          setError('Error buying datatoken.')
-          Logger.error(
-            '[compute] Error buying datatoken for algorithm ',
-            selectedAlgorithmAsset.id
-          )
-          return
-        }
-      }
+  //     if (!hasPreviousAlgorithmOrder && !hasAlgoAssetDatatoken) {
+  //       const tx = await buyDT('1', algorithmPrice, selectedAlgorithmAsset)
+  //       if (!tx) {
+  //         setError('Error buying datatoken.')
+  //         Logger.error(
+  //           '[compute] Error buying datatoken for algorithm ',
+  //           selectedAlgorithmAsset.id
+  //         )
+  //         return
+  //       }
+  //     }
 
-      // TODO: pricingError is always undefined even upon errors during buyDT for whatever reason.
-      // So manually drop out above, but ideally could be replaced with this alone.
-      if (pricingError) {
-        setError(pricingError)
-        return
-      }
+  //     // TODO: pricingError is always undefined even upon errors during buyDT for whatever reason.
+  //     // So manually drop out above, but ideally could be replaced with this alone.
+  //     if (pricingError) {
+  //       setError(pricingError)
+  //       return
+  //     }
 
-      const assetOrderId = hasPreviousDatasetOrder
-        ? previousDatasetOrderId
-        : await ocean.compute.orderAsset(
-            accountId,
-            ddo.id,
-            computeService.index,
-            computeAlgorithm,
-            appConfig.marketFeeAddress,
-            undefined,
-            null,
-            false
-          )
+  //     const assetOrderId = hasPreviousDatasetOrder
+  //       ? previousDatasetOrderId
+  //       : await ocean.compute.orderAsset(
+  //           accountId,
+  //           ddo.id,
+  //           computeService.index,
+  //           computeAlgorithm,
+  //           appConfig.marketFeeAddress,
+  //           undefined,
+  //           null,
+  //           false
+  //         )
 
-      assetOrderId &&
-        Logger.log(
-          `[compute] Got ${
-            hasPreviousDatasetOrder ? 'existing' : 'new'
-          } order ID for dataset: `,
-          assetOrderId
-        )
+  //     assetOrderId &&
+  //       Logger.log(
+  //         `[compute] Got ${
+  //           hasPreviousDatasetOrder ? 'existing' : 'new'
+  //         } order ID for dataset: `,
+  //         assetOrderId
+  //       )
 
-      const algorithmAssetOrderId = hasPreviousAlgorithmOrder
-        ? previousAlgorithmOrderId
-        : await ocean.compute.orderAlgorithm(
-            algorithmId,
-            serviceAlgo.type,
-            accountId,
-            serviceAlgo.index,
-            appConfig.marketFeeAddress,
-            undefined,
-            null,
-            false
-          )
+  //     const algorithmAssetOrderId = hasPreviousAlgorithmOrder
+  //       ? previousAlgorithmOrderId
+  //       : await ocean.compute.orderAlgorithm(
+  //           algorithmId,
+  //           serviceAlgo.type,
+  //           accountId,
+  //           serviceAlgo.index,
+  //           appConfig.marketFeeAddress,
+  //           undefined,
+  //           null,
+  //           false
+  //         )
 
-      algorithmAssetOrderId &&
-        Logger.log(
-          `[compute] Got ${
-            hasPreviousAlgorithmOrder ? 'existing' : 'new'
-          } order ID for algorithm: `,
-          algorithmAssetOrderId
-        )
+  //     algorithmAssetOrderId &&
+  //       Logger.log(
+  //         `[compute] Got ${
+  //           hasPreviousAlgorithmOrder ? 'existing' : 'new'
+  //         } order ID for algorithm: `,
+  //         algorithmAssetOrderId
+  //       )
 
-      if (!assetOrderId || !algorithmAssetOrderId) {
-        setError('Error ordering assets.')
-        return
-      }
+  //     if (!assetOrderId || !algorithmAssetOrderId) {
+  //       setError('Error ordering assets.')
+  //       return
+  //     }
 
-      computeAlgorithm.transferTxId = algorithmAssetOrderId
-      Logger.log('[compute] Starting compute job.')
+  //     computeAlgorithm.transferTxId = algorithmAssetOrderId
+  //     Logger.log('[compute] Starting compute job.')
 
-      const output: ComputeOutput = {
-        publishAlgorithmLog: true,
-        publishOutput: true
-      }
-      const response = await ocean.compute.start(
-        ddo.id,
-        assetOrderId,
-        ddo.services[0].datatokenAddress,
-        account,
-        computeAlgorithm,
-        output,
-        `${computeService.index}`,
-        computeService.type
-      )
+  //     const output: ComputeOutput = {
+  //       publishAlgorithmLog: true,
+  //       publishOutput: true
+  //     }
+  //     const response = await ocean.compute.start(
+  //       ddo.id,
+  //       assetOrderId,
+  //       ddo.services[0].datatokenAddress,
+  //       account,
+  //       computeAlgorithm,
+  //       output,
+  //       `${computeService.index}`,
+  //       computeService.type
+  //     )
 
-      if (!response) {
-        setError('Error starting compute job.')
-        return
-      }
+  //     if (!response) {
+  //       setError('Error starting compute job.')
+  //       return
+  //     }
 
-      Logger.log('[compute] Starting compute job response: ', response)
+  //     Logger.log('[compute] Starting compute job response: ', response)
 
-      await checkPreviousOrders(selectedAlgorithmAsset)
-      await checkPreviousOrders(ddo)
-      setIsPublished(true)
-    } catch (error) {
-      await checkPreviousOrders(selectedAlgorithmAsset)
-      await checkPreviousOrders(ddo)
-      setError('Failed to start job!')
-      Logger.error('[compute] Failed to start job: ', error.message)
-    } finally {
-      setIsJobStarting(false)
-    }
-  }
+  //     await checkPreviousOrders(selectedAlgorithmAsset)
+  //     await checkPreviousOrders(ddo)
+  //     setIsPublished(true)
+  //   } catch (error) {
+  //     await checkPreviousOrders(selectedAlgorithmAsset)
+  //     await checkPreviousOrders(ddo)
+  //     setError('Failed to start job!')
+  //     Logger.error('[compute] Failed to start job: ', error.message)
+  //   } finally {
+  //     setIsJobStarting(false)
+  //   }
+  // }
 
   return (
     <>
@@ -409,7 +408,9 @@ export default function Compute({
           initialValues={getInitialValues()}
           validateOnMount
           validationSchema={validationSchema}
-          onSubmit={async (values) => await startJob(values.algorithm)}
+          onSubmit={async (values) => {
+            // await startJob(values.algorithm)
+          }}
         >
           <FormStartComputeDataset
             algorithms={algorithmList}

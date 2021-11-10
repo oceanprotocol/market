@@ -130,7 +130,7 @@ export default function InputElement({
       )
     case 'files':
       return <FilesInput name={name} {...field} {...props} />
-    case 'providerUri':
+    case 'providerUrl':
       return <CustomProvider name={name} {...field} {...props} />
     case 'datatoken':
       return <Datatoken name={name} {...field} {...props} />

@@ -1,7 +1,7 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import Compute from './Compute'
 import Consume from './Consume'
-import { Logger, File as FileMetadata, DID } from '@oceanprotocol/lib'
+import { Logger, DID } from '@oceanprotocol/lib'
 import Tabs from '@shared/atoms/Tabs'
 import { compareAsBN } from '@utils/numbers'
 import Pool from './Pool'

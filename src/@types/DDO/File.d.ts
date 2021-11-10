@@ -1,6 +1,6 @@
-interface File {
+interface FileMetadata {
+  url: string
   contentType: string
-  url?: string
   name?: string
   checksum?: string
   checksumType?: string

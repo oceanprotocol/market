@@ -210,8 +210,8 @@ export async function transformDDOToAssetSelection(
     didList.push(ddo.id)
     symbolList[ddo.id] = ddo.dataTokenInfo.symbol
     const algoComputeService = getServiceByName(ddo, 'compute')
-    algoComputeService?.providerEndpoint &&
-      (didProviderEndpointMap[ddo.id] = algoComputeService?.providerEndpoint)
+    algoComputeService?.providerUrl &&
+      (didProviderEndpointMap[ddo.id] = algoComputeService?.providerUrl)
   }
   const ddoNames = await getAssetsNames(didList, cancelToken)
   const algorithmList: AssetSelectionAsset[] = []

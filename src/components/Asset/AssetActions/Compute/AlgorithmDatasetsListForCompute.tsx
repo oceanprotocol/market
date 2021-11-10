@@ -27,7 +27,7 @@ export default function AlgorithmDatasetsListForCompute({
       )
       const datasets = await getAlgorithmDatasetsForCompute(
         algorithmDid,
-        datasetComputeService?.providerEndpoint,
+        datasetComputeService?.providerUrl,
         dataset?.chainId,
         newCancelToken()
       )

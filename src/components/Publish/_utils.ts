@@ -20,34 +20,53 @@ export function transformPublishFormToDdo(
   const currentTime = dateToStringNoMS(new Date())
   const { type } = data
   const { name, description, tags, author, termsAndConditions } = data.metadata
-  const { files, links, image, containerTag, entrypoint, providerUri } =
-    data.services[0]
-
-  const fileUrl = typeof files !== 'string' && files[0].url
-  const algorithmLanguage = getAlgorithmFileExtension(fileUrl)
-
-  const algorithm = getAlgorithmComponent(
+  const {
+    access,
+    files,
+    links,
     image,
     containerTag,
     entrypoint,
-    algorithmLanguage
-  )
+    providerUrl,
+    timeout
+  } = data.services[0]
 
-  const service = {
-    files: typeof files !== 'string' && files,
-    links: typeof links !== 'string' ? links : [],
-    ...(type === 'algorithm' && { ...algorithm })
+  const fileUrl = typeof files !== 'string' && files[0].url
+
+  const service: Service = {
+    type: access,
+    datatokenAddress: '',
+    providerUrl,
+    timeout
   }
 
   const newDdo: DDO = {
+    '@context': [''],
+    id: '',
+    version: '4.0.0',
     created: ddo ? ddo.created : currentTime,
+    updated: '',
+    chainId: ddo ? ddo.chainId : 1,
+    status: {
+      state: 1
+    },
+    files: files as FileMetadata[],
     metadata: {
       type,
       name,
       description,
       tags: transformTags(tags),
       author,
-      license: 'https://market.oceanprotocol.com/terms'
+      license: 'https://market.oceanprotocol.com/terms',
+      links,
+      ...(type === 'algorithm' && {
+        ...getAlgorithmComponent(
+          image,
+          containerTag,
+          entrypoint,
+          getAlgorithmFileExtension(fileUrl)
+        )
+      })
     },
     services: [service]
   }

@@ -50,7 +50,7 @@ export default function FormEditComputeDataset({
     const querryResult = await queryMetadata(query, newCancelToken())
     const datasetComputeService = getServiceByName(ddo, 'compute')
     const algorithmSelectionList = await transformDDOToAssetSelection(
-      datasetComputeService?.providerEndpoint,
+      datasetComputeService?.providerUrl,
       querryResult.results,
       publisherTrustedAlgorithms,
       newCancelToken()

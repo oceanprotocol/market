@@ -9,17 +9,13 @@ interface MetadataAlgorithm {
   }
 }
 
-interface Link {
-  url: string
-}
-
 interface Metadata {
   name: string
   description: string
   type: 'dataset' | 'algorithm'
   author: string
   license: string
-  links?: Link[]
+  links?: string[]
   tags?: string[]
   algorithm?: MetadataAlgorithm
   copyrightHolder?: string

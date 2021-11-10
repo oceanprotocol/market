@@ -27,7 +27,7 @@ export default function MetaSecondary(): ReactElement {
         <div className={styles.samples}>
           <MetaItem
             title="Sample Data"
-            content={<SampleButton url={ddo?.metadata.links[0].url} />}
+            content={<SampleButton url={ddo?.metadata.links[0]} />}
           />
         </div>
       )}

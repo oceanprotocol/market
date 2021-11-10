@@ -70,9 +70,9 @@ export default function FormStartCompute({
   const [algorithmConsumableStatus, setAlgorithmConsumableStatus] =
     useState<number>()
 
-  function getAlgorithmAsset(algorithmId: string): DDO {
+  function getAlgorithmAsset(algorithmId: string): Asset {
     let assetDdo = null
-    ddoListAlgorithms.forEach((ddo: DDO) => {
+    ddoListAlgorithms.forEach((ddo: Asset) => {
       if (ddo.id === algorithmId) assetDdo = ddo
     })
     return assetDdo
@@ -86,7 +86,7 @@ export default function FormStartCompute({
     if (!accountId || !isConsumable) return
     async function checkIsConsumable() {
       const consumable = await ocean.assets.isConsumable(
-        algorithmDDO,
+        algorithmDDO as any,
         accountId.toLowerCase()
       )
       if (consumable) setAlgorithmConsumableStatus(consumable.status)

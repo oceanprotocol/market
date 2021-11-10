@@ -42,7 +42,7 @@ export default function Consume({
   consumableFeedback
 }: {
   ddo: Asset
-  file: File
+  file: FileMetadata
   isBalanceSufficient: boolean
   dtBalance: string
   fileIsLoading?: boolean
