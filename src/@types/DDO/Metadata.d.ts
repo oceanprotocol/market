@@ -17,8 +17,8 @@ interface Metadata {
   license: string
   links?: string[]
   tags?: string[]
-  algorithm?: MetadataAlgorithm
   copyrightHolder?: string
   contentLanguage?: string
+  algorithm?: MetadataAlgorithm
   additionalInformation?: any
 }

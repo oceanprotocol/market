@@ -1,21 +1,18 @@
+// DDO spec
 interface DDO {
-  // DDO spec
   '@context': string[]
   id: string
-  created: string
-  updated?: string
   version: string
   chainId: number
-  files: FileMetadata[]
+  created: string
+  updated?: string
   metadata: Metadata
+  files: FileMetadata[]
   services: Service[]
+  credentials?: Credentials
   status: {
     state: 0 | 1 | 2 | 3
     isListed?: boolean
     isOrderDisabled?: boolean
-  }
-  credentials?: {
-    allow: Credential[]
-    deny: Credential[]
   }
 }
