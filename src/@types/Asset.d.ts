@@ -3,15 +3,17 @@ interface AssetNft {
   name: string
   symbol: string
   owner: string
+  state: 0 | 1 | 2 | 3 | 4
 }
 
 interface AssetDatatoken {
   name: string
   symbol: string
   address: string
+  serviceId: string
 }
 
-interface AssetEvent {
+interface AssetLastEvent {
   tx: string
   block: number
   from: string
@@ -21,12 +23,11 @@ interface AssetEvent {
 interface Asset extends DDO {
   nft: AssetNft
   datatokens: AssetDatatoken[]
-  events: AssetEvent[]
+  event: AssetLastEvent
   stats: { consume: number }
+  isInPurgatory: string
 
   // This is fake and most likely won't be used like this.
   // Just here so we can continue to have successful builds.
   dataTokenInfo: AssetDatatoken
-
-  isInPurgatory: string
 }
