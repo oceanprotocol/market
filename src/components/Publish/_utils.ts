@@ -38,14 +38,14 @@ export function transformPublishFormToDdo(data: Partial<FormPublishData>): DDO {
   const service: Service = {
     type: access,
     files: filesEncrypted,
-    datatokenAddress: '',
+    datatokenAddress: '', // how to get before publish?
     serviceEndpoint: providerUrl,
     timeout
   }
 
   const newDdo: DDO = {
-    '@context': [''],
-    id: '',
+    '@context': ['https://w3id.org/did/v1'],
+    id: '', // how to get before publish? sha256(address of ERC721 contract + data.chainId)
     version: '4.0.0',
     created: currentTime,
     updated: currentTime,
@@ -58,6 +58,9 @@ export function transformPublishFormToDdo(data: Partial<FormPublishData>): DDO {
       author,
       license: 'https://market.oceanprotocol.com/terms',
       links,
+      additionalInformation: {
+        termsAndConditions
+      },
       ...(type === 'algorithm' && {
         ...getAlgorithmComponent(
           image,
