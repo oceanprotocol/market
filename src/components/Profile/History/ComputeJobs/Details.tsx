@@ -48,9 +48,7 @@ function DetailsAssets({ job }: { job: ComputeJobMetaData }) {
     async function getAlgoMetadata() {
       const ddo = await retrieveDDO(job.algoDID, newCancelToken())
       setAlgoDtSymbol(ddo.dataTokenInfo.symbol)
-
-      const { attributes } = ddo.findServiceByType('metadata')
-      setAlgoName(attributes?.main.name)
+      setAlgoName(ddo?.metadata.name)
     }
     getAlgoMetadata()
   }, [appConfig.metadataCacheUri, job.algoDID])

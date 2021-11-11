@@ -1,23 +1,22 @@
 import { DataTokenOptions } from '@hooks/usePublish'
-import { EditableMetadataLinks, File } from '@oceanprotocol/lib'
 import { ReactElement } from 'react'
 
 export interface FormPublishService {
-  files: string | File[]
-  links?: string | EditableMetadataLinks[]
+  files: string | FileMetadata[]
+  links?: string[]
   timeout: string
   dataTokenOptions: DataTokenOptions
   access: 'Download' | 'Compute' | string
   image?: string
   containerTag?: string
   entrypoint?: string
-  providerUri?: string
+  providerUrl?: string
 }
 
 export interface FormPublishData {
   step: number
   metadata: {
-    type: 'dataset' | 'algorithm' | string
+    type: 'dataset' | 'algorithm'
     name: string
     description: string
     author: string
@@ -26,6 +25,7 @@ export interface FormPublishData {
   }
   services: FormPublishService[]
   pricing: PriceOptions
+  chainId: number
 }
 
 export interface StepContent {

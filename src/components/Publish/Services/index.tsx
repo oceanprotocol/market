@@ -37,9 +37,9 @@ export default function ServicesFields(): ReactElement {
         name="services[0].dataTokenOptions"
       />
       <Field
-        {...getFieldContent('providerUri', content.services.fields)}
+        {...getFieldContent('providerUrl', content.services.fields)}
         component={Input}
-        name="services[0].providerUri"
+        name="services[0].providerUrl"
       />
       <Field
         {...getFieldContent('files', content.services.fields)}

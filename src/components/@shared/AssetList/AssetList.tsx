@@ -2,7 +2,6 @@ import AssetTeaser from '@shared/AssetTeaser/AssetTeaser'
 import React, { useEffect, useState } from 'react'
 import Pagination from '@shared/Pagination'
 import styles from './AssetList.module.css'
-import { DDO } from '@oceanprotocol/lib'
 import classNames from 'classnames/bind'
 import { getAssetsBestPrices, AssetListPrices } from '@utils/subgraph'
 import Loader from '@shared/atoms/Loader'
@@ -20,7 +19,7 @@ function LoaderArea() {
 }
 
 declare type AssetListProps = {
-  assets: DDO[]
+  assets: Asset[]
   showPagination: boolean
   page?: number
   totalPages?: number

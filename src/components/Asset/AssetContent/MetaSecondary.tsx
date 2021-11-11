@@ -19,26 +19,19 @@ const SampleButton = ({ url }: { url: string }) => (
 )
 
 export default function MetaSecondary(): ReactElement {
-  const { metadata } = useAsset()
+  const { ddo } = useAsset()
 
   return (
     <aside className={styles.metaSecondary}>
-      {metadata?.additionalInformation?.links?.length > 0 && (
+      {ddo?.metadata.links?.length > 0 && (
         <div className={styles.samples}>
           <MetaItem
             title="Sample Data"
-            content={
-              <SampleButton
-                url={metadata?.additionalInformation?.links[0].url}
-              />
-            }
+            content={<SampleButton url={ddo?.metadata.links[0]} />}
           />
         </div>
       )}
-
-      {metadata?.additionalInformation?.tags?.length > 0 && (
-        <Tags items={metadata?.additionalInformation?.tags} />
-      )}
+      {ddo?.metadata?.tags?.length > 0 && <Tags items={ddo?.metadata?.tags} />}
     </aside>
   )
 }

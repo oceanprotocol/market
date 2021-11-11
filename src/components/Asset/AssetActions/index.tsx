@@ -1,7 +1,7 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import Compute from './Compute'
 import Consume from './Consume'
-import { Logger, File as FileMetadata, DID } from '@oceanprotocol/lib'
+import { Logger, DID } from '@oceanprotocol/lib'
 import Tabs from '@shared/atoms/Tabs'
 import { compareAsBN } from '@utils/numbers'
 import Pool from './Pool'
@@ -25,27 +25,30 @@ export default function AssetActions(): ReactElement {
   const [dtBalance, setDtBalance] = useState<string>()
   const [fileMetadata, setFileMetadata] = useState<FileMetadata>(Object)
   const [fileIsLoading, setFileIsLoading] = useState<boolean>(false)
-  const isCompute = Boolean(ddo?.findServiceByType('compute'))
+  const isCompute = Boolean(
+    ddo?.services.filter((service) => service.type === 'compute')[0]
+  )
 
   const [isConsumable, setIsConsumable] = useState<boolean>(true)
   const [consumableFeedback, setConsumableFeedback] = useState<string>('')
   const newCancelToken = useCancelToken()
   const isMounted = useIsMounted()
-  useEffect(() => {
-    if (!ddo || !accountId || !ocean || !isAssetNetwork) return
 
-    async function checkIsConsumable() {
-      const consumable = await ocean.assets.isConsumable(
-        ddo,
-        accountId.toLowerCase()
-      )
-      if (consumable) {
-        setIsConsumable(consumable.result)
-        setConsumableFeedback(consumable.message)
-      }
-    }
-    checkIsConsumable()
-  }, [accountId, isAssetNetwork, ddo, ocean])
+  // useEffect(() => {
+  //   if (!ddo || !accountId || !ocean || !isAssetNetwork) return
+
+  //   async function checkIsConsumable() {
+  //     const consumable = await ocean.assets.isConsumable(
+  //       ddo,
+  //       accountId.toLowerCase()
+  //     )
+  //     if (consumable) {
+  //       setIsConsumable(consumable.result)
+  //       setConsumableFeedback(consumable.message)
+  //     }
+  //   }
+  //   checkIsConsumable()
+  // }, [accountId, isAssetNetwork, ddo, ocean])
 
   useEffect(() => {
     const oceanConfig = getOceanConfig(ddo.chainId)
@@ -74,7 +77,7 @@ export default function AssetActions(): ReactElement {
     async function init() {
       try {
         const dtBalance = await ocean.datatokens.balance(
-          ddo.dataToken,
+          ddo.services[0].datatokenAddress,
           accountId
         )
         setDtBalance(dtBalance)
@@ -83,7 +86,7 @@ export default function AssetActions(): ReactElement {
       }
     }
     init()
-  }, [ocean, accountId, ddo.dataToken, isAssetNetwork])
+  }, [ocean, accountId, ddo, isAssetNetwork])
 
   // Check user balance against price
   useEffect(() => {

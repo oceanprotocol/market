@@ -7,12 +7,13 @@ import AddToken from '@shared/AddToken'
 import Time from '@shared/atoms/Time'
 import AssetType from '@shared/AssetType'
 import styles from './MetaMain.module.css'
+import { getServiceByName } from '@utils/ddo'
 
 export default function MetaMain(): ReactElement {
-  const { ddo, owner, type, isAssetNetwork } = useAsset()
+  const { ddo, owner, isAssetNetwork } = useAsset()
   const { web3ProviderInfo } = useWeb3()
 
-  const isCompute = Boolean(ddo?.findServiceByType('compute'))
+  const isCompute = Boolean(getServiceByName(ddo, 'compute'))
   const accessType = isCompute ? 'compute' : 'access'
   const blockscoutNetworks = [1287, 2021000, 2021001, 44787, 246, 1285]
   const isBlockscoutExplorer = blockscoutNetworks.includes(ddo?.chainId)
@@ -21,7 +22,7 @@ export default function MetaMain(): ReactElement {
     <aside className={styles.meta}>
       <header className={styles.asset}>
         <AssetType
-          type={type}
+          type={ddo?.metadata.type}
           accessType={accessType}
           className={styles.assetType}
         />
@@ -30,8 +31,8 @@ export default function MetaMain(): ReactElement {
           networkId={ddo?.chainId}
           path={
             isBlockscoutExplorer
-              ? `tokens/${ddo?.dataToken}`
-              : `token/${ddo?.dataToken}`
+              ? `tokens/${ddo?.services[0].datatokenAddress}`
+              : `token/${ddo?.services[0].datatokenAddress}`
           }
         >
           {`${ddo?.dataTokenInfo.name} — ${ddo?.dataTokenInfo.symbol}`}
@@ -40,7 +41,7 @@ export default function MetaMain(): ReactElement {
         {web3ProviderInfo?.name === 'MetaMask' && isAssetNetwork && (
           <span className={styles.addWrap}>
             <AddToken
-              address={ddo?.dataTokenInfo.address}
+              address={ddo?.services[0].datatokenAddress}
               symbol={ddo?.dataTokenInfo.symbol}
               logo="https://raw.githubusercontent.com/oceanprotocol/art/main/logo/datatoken.png"
               text={`Add ${ddo?.dataTokenInfo.symbol} to wallet`}

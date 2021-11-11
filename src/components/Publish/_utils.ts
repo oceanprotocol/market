@@ -6,6 +6,10 @@ import {
 } from '@utils/ddo'
 import { FormPublishData } from './_types'
 
+function encryptMe(files: string | FileMetadata[]): string {
+  throw new Error('Function not implemented.')
+}
+
 export function getFieldContent(
   fieldName: string,
   fields: FormFieldContent[]
@@ -13,41 +17,55 @@ export function getFieldContent(
   return fields.filter((field: FormFieldContent) => field.name === fieldName)[0]
 }
 
-export function transformPublishFormToDdo(
-  data: Partial<FormPublishData>,
-  ddo?: DdoMarket
-): DdoMarket {
+export function transformPublishFormToDdo(data: Partial<FormPublishData>): DDO {
   const currentTime = dateToStringNoMS(new Date())
-  const { type } = data
+  const { type } = data.metadata
   const { name, description, tags, author, termsAndConditions } = data.metadata
-  const { files, links, image, containerTag, entrypoint, providerUri } =
-    data.services[0]
-
-  const fileUrl = typeof files !== 'string' && files[0].url
-  const algorithmLanguage = getAlgorithmFileExtension(fileUrl)
-  const algorithm = getAlgorithmComponent(
+  const {
+    access,
+    files,
+    links,
     image,
     containerTag,
     entrypoint,
-    algorithmLanguage
-  )
+    providerUrl,
+    timeout
+  } = data.services[0]
 
-  const service = {
-    files: typeof files !== 'string' && files,
-    links: typeof links !== 'string' ? links : [],
-    ...(type === 'algorithm' && { ...algorithm })
+  const fileUrl = typeof files !== 'string' && files[0].url
+
+  const filesEncrypted = encryptMe(files)
+
+  const service: Service = {
+    type: access,
+    files: filesEncrypted,
+    datatokenAddress: '',
+    serviceEndpoint: providerUrl,
+    timeout
   }
 
-  const newDdo: DdoMarket = {
+  const newDdo: DDO = {
+    '@context': [''],
+    id: '',
+    version: '4.0.0',
+    created: currentTime,
+    chainId: data.chainId,
     metadata: {
+      type,
       name,
       description,
       tags: transformTags(tags),
       author,
-      dateCreated: ddo ? ddo.metadata.dateCreated : currentTime,
-      datePublished: '',
-      termsAndConditions,
-      license: 'https://market.oceanprotocol.com/terms'
+      license: 'https://market.oceanprotocol.com/terms',
+      links,
+      ...(type === 'algorithm' && {
+        ...getAlgorithmComponent(
+          image,
+          containerTag,
+          entrypoint,
+          getAlgorithmFileExtension(fileUrl)
+        )
+      })
     },
     services: [service]
   }

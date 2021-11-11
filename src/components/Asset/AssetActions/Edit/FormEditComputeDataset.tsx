@@ -16,6 +16,7 @@ import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import FormActions from './FormActions'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { SortTermOptions } from '../../../../@types/aquarius/SearchQuery'
+import { getServiceByName } from '@utils/ddo'
 
 export default function FormEditComputeDataset({
   data,
@@ -31,8 +32,10 @@ export default function FormEditComputeDataset({
   const { values }: FormikContextType<ComputePrivacyForm> = useFormikContext()
   const [allAlgorithms, setAllAlgorithms] = useState<AssetSelectionAsset[]>()
   const newCancelToken = useCancelToken()
-  const { publisherTrustedAlgorithms } =
-    ddo?.findServiceByType('compute').attributes.main.privacy
+  const { publisherTrustedAlgorithms } = getServiceByName(
+    ddo,
+    'compute'
+  ).privacy
 
   async function getAlgorithmList(
     publisherTrustedAlgorithms: PublisherTrustedAlgorithm[]
@@ -45,7 +48,7 @@ export default function FormEditComputeDataset({
 
     const query = generateBaseQuery(baseParams)
     const querryResult = await queryMetadata(query, newCancelToken())
-    const datasetComputeService = ddo.findServiceByType('compute')
+    const datasetComputeService = getServiceByName(ddo, 'compute')
     const algorithmSelectionList = await transformDDOToAssetSelection(
       datasetComputeService?.serviceEndpoint,
       querryResult.results,

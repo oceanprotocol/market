@@ -30,7 +30,7 @@ export default function PublishPage({
 }: {
   content: { title: string; description: string; warning: string }
 }): ReactElement {
-  const { accountId } = useWeb3()
+  const { accountId, chainId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
   const { publish, publishError, isLoading, publishStepText } = usePublish()
   const [success, setSuccess] = useState<string>()
@@ -101,7 +101,9 @@ export default function PublishPage({
             // await handleSubmit(values, resetForm)
           }}
         >
-          {({ values }) => {
+          {({ values, setFieldValue }) => {
+            setFieldValue('chainId', chainId)
+
             return (
               <>
                 <Form className={styles.form} ref={scrollToRef}>

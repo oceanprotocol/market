@@ -2,15 +2,15 @@ import React from 'react'
 import Link from 'next/link'
 import Dotdotdot from 'react-dotdotdot'
 import Price from '@shared/Price'
-import { DDO } from '@oceanprotocol/lib'
 import removeMarkdown from 'remove-markdown'
 import Publisher from '@shared/Publisher'
 import AssetType from '@shared/AssetType'
 import NetworkName from '@shared/NetworkName'
 import styles from './AssetTeaser.module.css'
+import { getServiceByName } from '@utils/ddo'
 
 declare type AssetTeaserProps = {
-  ddo: DDO
+  ddo: Asset
   price: BestPrice
   noPublisher?: boolean
 }
@@ -20,12 +20,11 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
   price,
   noPublisher
 }: AssetTeaserProps) => {
-  const { attributes } = ddo.findServiceByType('metadata')
-  const { name, type } = attributes.main
+  const { name, type, description } = ddo.metadata
   const { dataTokenInfo } = ddo
-  const isCompute = Boolean(ddo?.findServiceByType('compute'))
+  const isCompute = Boolean(getServiceByName(ddo, 'compute'))
   const accessType = isCompute ? 'compute' : 'access'
-  const { owner } = ddo.publicKey[0]
+  const { owner } = ddo.nft
 
   return (
     <article className={`${styles.teaser} ${styles[type]}`}>
@@ -49,12 +48,7 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
 
           <div className={styles.content}>
             <Dotdotdot tagName="p" clamp={3}>
-              {removeMarkdown(
-                attributes?.additionalInformation?.description?.substring(
-                  0,
-                  300
-                ) || ''
-              )}
+              {removeMarkdown(description?.substring(0, 300) || '')}
             </Dotdotdot>
           </div>
 

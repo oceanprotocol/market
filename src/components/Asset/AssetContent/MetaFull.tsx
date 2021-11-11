@@ -5,22 +5,20 @@ import Publisher from '@shared/Publisher'
 import { useAsset } from '@context/Asset'
 
 export default function MetaFull(): ReactElement {
-  const { ddo, metadata, isInPurgatory, type } = useAsset()
-  const { algorithm } = ddo.findServiceByType('metadata').attributes.main
+  const { ddo, isInPurgatory } = useAsset()
+  const { type, author, algorithm } = ddo?.metadata
 
   function DockerImage() {
-    const { image, tag } = algorithm.container
+    const { image, tag } = algorithm?.container
     return <span>{`${image}:${tag}`}</span>
   }
 
   return (
     <div className={styles.metaFull}>
-      {!isInPurgatory && (
-        <MetaItem title="Data Author" content={metadata?.main.author} />
-      )}
+      {!isInPurgatory && <MetaItem title="Data Author" content={author} />}
       <MetaItem
         title="Owner"
-        content={<Publisher account={ddo?.publicKey[0].owner} />}
+        content={<Publisher account={ddo?.nft?.owner} />}
       />
 
       {type === 'algorithm' && algorithm && (

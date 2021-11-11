@@ -1,5 +1,4 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { DDO } from '@oceanprotocol/lib'
 import styles from './Swap.module.css'
 import TradeInput from './TradeInput'
 import Button from '@shared/atoms/Button'
@@ -26,7 +25,7 @@ export default function Swap({
   setMaximumOcean,
   setCoin
 }: {
-  ddo: DDO
+  ddo: Asset
   maxDt: string
   maxOcean: string
   balance: PoolBalance
@@ -149,7 +148,7 @@ export default function Swap({
         setTotalValue(newValue)
         setTokenAmount(value.toString())
 
-        tokenIn = ddo.dataToken
+        tokenIn = ddo.services[0].datatokenAddress
         tokenOut = ocean.pool.oceanAddress
       } else {
         newValue = await ocean.pool.getDTReceived(
@@ -160,7 +159,7 @@ export default function Swap({
         setTotalValue(value.toString())
         setTokenAmount(newValue)
         tokenIn = ocean.pool.oceanAddress
-        tokenOut = ddo.dataToken
+        tokenOut = ddo.services[0].datatokenAddress
       }
     } else {
       if (values.type === 'sell') {
@@ -171,7 +170,7 @@ export default function Swap({
 
         setTotalValue(value.toString())
         setTokenAmount(newValue)
-        tokenIn = ddo.dataToken
+        tokenIn = ddo.services[0].datatokenAddress
         tokenOut = ocean.pool.oceanAddress
       } else {
         newValue = await ocean.pool.getOceanNeeded(
@@ -182,7 +181,7 @@ export default function Swap({
         setTotalValue(newValue)
         setTokenAmount(value.toString())
         tokenIn = ocean.pool.oceanAddress
-        tokenOut = ddo.dataToken
+        tokenOut = ddo.services[0].datatokenAddress
       }
     }
 

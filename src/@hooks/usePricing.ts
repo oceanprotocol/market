@@ -1,4 +1,4 @@
-import { DDO, Logger } from '@oceanprotocol/lib'
+import { Logger } from '@oceanprotocol/lib'
 import { useState } from 'react'
 import { TransactionReceipt } from 'web3-core'
 import { Decimal } from 'decimal.js'
@@ -14,17 +14,17 @@ import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 
 interface UsePricing {
-  getDTSymbol: (ddo: DDO) => Promise<string>
-  getDTName: (ddo: DDO) => Promise<string>
+  getDTSymbol: (ddo: Asset) => Promise<string>
+  getDTName: (ddo: Asset) => Promise<string>
   createPricing: (
     priceOptions: PriceOptions,
-    ddo: DDO
+    ddo: Asset
   ) => Promise<TransactionReceipt | string | void>
-  mint: (tokensToMint: string, ddo: DDO) => Promise<TransactionReceipt | void>
+  mint: (tokensToMint: string, ddo: Asset) => Promise<TransactionReceipt | void>
   buyDT: (
     amountDataToken: number | string,
     price: BestPrice,
-    ddo: DDO
+    ddo: Asset
   ) => Promise<TransactionReceipt | void>
   pricingStep?: number
   pricingStepText?: string
@@ -40,28 +40,28 @@ function usePricing(): UsePricing {
   const [pricingStepText, setPricingStepText] = useState<string>()
   const [pricingError, setPricingError] = useState<string>()
 
-  async function getDTSymbol(ddo: DDO): Promise<string> {
+  async function getDTSymbol(ddo: Asset): Promise<string> {
     if (!ocean || !accountId) return
 
-    const { dataToken, dataTokenInfo } = ddo
+    const { dataTokenInfo } = ddo
     return dataTokenInfo
       ? dataTokenInfo.symbol
-      : await ocean?.datatokens.getSymbol(dataToken)
+      : await ocean?.datatokens.getSymbol(dataTokenInfo.address)
   }
 
-  async function getDTName(ddo: DDO): Promise<string> {
+  async function getDTName(ddo: Asset): Promise<string> {
     if (!ocean || !accountId) return
-    const { dataToken, dataTokenInfo } = ddo
+    const { dataTokenInfo } = ddo
     return dataTokenInfo
       ? dataTokenInfo.name
-      : await ocean?.datatokens.getName(dataToken)
+      : await ocean?.datatokens.getName(dataTokenInfo.address)
   }
 
   // Helper for setting steps & feedback for all flows
   async function setStep(
     index: number,
     type: 'pool' | 'exchange' | 'free' | 'buy' | 'dispense',
-    ddo: DDO
+    ddo: Asset
   ) {
     const dtSymbol = await getDTSymbol(ddo)
     setPricingStep(index)
@@ -92,18 +92,18 @@ function usePricing(): UsePricing {
 
   async function mint(
     tokensToMint: string,
-    ddo: DDO
+    ddo: Asset
   ): Promise<TransactionReceipt | void> {
-    const { dataToken } = ddo
-    Logger.log('mint function', dataToken, accountId)
+    const { dataTokenInfo } = ddo
+    Logger.log('mint function', dataTokenInfo.address, accountId)
     const balance = new Decimal(
-      await ocean.datatokens.balance(dataToken, accountId)
+      await ocean.datatokens.balance(dataTokenInfo.address, accountId)
     )
     const tokens = new Decimal(tokensToMint)
     if (tokens.greaterThan(balance)) {
       const mintAmount = tokens.minus(balance)
       const tx = await ocean.datatokens.mint(
-        dataToken,
+        dataTokenInfo.address,
         accountId,
         mintAmount.toString()
       )
@@ -114,7 +114,7 @@ function usePricing(): UsePricing {
   async function buyDT(
     amountDataToken: number | string,
     price: BestPrice,
-    ddo: DDO
+    ddo: Asset
   ): Promise<TransactionReceipt | void> {
     if (!ocean || !accountId) return
 
@@ -181,18 +181,20 @@ function usePricing(): UsePricing {
         case 'free': {
           setStep(1, 'dispense', ddo)
           const isDispensable = await ocean.OceanDispenser.isDispensable(
-            ddo.dataToken,
+            ddo?.services[0].datatokenAddress,
             accountId,
             '1'
           )
 
           if (!isDispensable) {
-            Logger.error(`Dispenser for ${ddo.dataToken} failed to dispense`)
+            Logger.error(
+              `Dispenser for ${ddo?.services[0].datatokenAddress} failed to dispense`
+            )
             return
           }
 
           tx = await ocean.OceanDispenser.dispense(
-            ddo.dataToken,
+            ddo?.services[0].datatokenAddress,
             accountId,
             '1'
           )
@@ -215,9 +217,9 @@ function usePricing(): UsePricing {
 
   async function createPricing(
     priceOptions: PriceOptions,
-    ddo: DDO
+    ddo: Asset
   ): Promise<TransactionReceipt | void> {
-    const { dataToken } = ddo
+    const dataToken = ddo?.services[0].datatokenAddress
     const dtSymbol = await getDTSymbol(ddo)
 
     if (!ocean || !accountId || !dtSymbol) return

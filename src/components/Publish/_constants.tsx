@@ -1,5 +1,4 @@
 import React from 'react'
-import { File as FileMetadata } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 import { allowDynamicPricing, allowFixedPricing } from '../../../app.config.js'
 import { FormPublishData, StepContent } from './_types'
@@ -34,6 +33,7 @@ export const wizardSteps: StepContent[] = [
 
 export const initialValues: Partial<FormPublishData> = {
   step: 1,
+  chainId: 1,
   metadata: {
     type: 'dataset',
     name: '',
@@ -49,7 +49,7 @@ export const initialValues: Partial<FormPublishData> = {
       dataTokenOptions: { name: '', symbol: '' },
       timeout: 'Forever',
       access: '',
-      providerUri: ''
+      providerUrl: ''
     }
   ],
   pricing: {
@@ -96,7 +96,7 @@ const validationService = {
   access: Yup.string()
     .matches(/Compute|Download/g, { excludeEmptyString: true })
     .required('Required'),
-  providerUri: Yup.string().url().nullable()
+  providerUrl: Yup.string().url().nullable()
 }
 
 const validationPricing = {
@@ -124,6 +124,7 @@ const validationPricing = {
 // export const validationSchema: Yup.SchemaOf<FormPublishData> =
 export const validationSchema: Yup.SchemaOf<any> = Yup.object().shape({
   step: Yup.number(),
+  chainId: Yup.number(),
   metadata: Yup.object().shape(validationMetadata),
   services: Yup.array().of(Yup.object().shape(validationService)),
   pricing: Yup.object().shape(validationPricing)

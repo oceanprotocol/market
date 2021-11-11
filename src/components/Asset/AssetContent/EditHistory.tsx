@@ -37,7 +37,7 @@ export default function EditHistory(): ReactElement {
 
   const [result] = useQuery({
     query: getReceipts,
-    variables: { address: ddo?.dataToken.toLowerCase() },
+    variables: { address: ddo?.services[0].datatokenAddress.toLowerCase() },
     context: queryContext,
     pause: !ddo || !queryContext
   })
