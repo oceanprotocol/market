@@ -55,11 +55,11 @@ export async function transformPublishFormToDdo(
   const { chainId, accountId, metadata, services } = values
   const did = sha256(`${nftAddress}${chainId}`)
   const currentTime = dateToStringNoMS(new Date())
-  const { type, name, description, tags, author, termsAndConditions } = metadata
+  const { type, name, description, tags, links, author, termsAndConditions } =
+    metadata
   const {
     access,
     files,
-    links,
     image,
     containerTag,
     entrypoint,

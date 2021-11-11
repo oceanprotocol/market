@@ -121,12 +121,14 @@ export default function PublishPage({
             await handleSubmit(values)
           }}
         >
-          <Form className={styles.form} ref={scrollToRef}>
-            <Navigation />
-            <Steps />
-            <Actions scrollToRef={scrollToRef} />
-          </Form>
-          <Debug />
+          <>
+            <Form className={styles.form} ref={scrollToRef}>
+              <Navigation />
+              <Steps />
+              <Actions scrollToRef={scrollToRef} />
+            </Form>
+            <Debug />
+          </>
         </Formik>
       )}
     </>

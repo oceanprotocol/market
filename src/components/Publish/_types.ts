@@ -2,8 +2,7 @@ import { DataTokenOptions } from '@hooks/usePublish'
 import { ReactElement } from 'react'
 
 export interface FormPublishService {
-  files: string | string[]
-  links?: string[]
+  files: string[]
   timeout: string
   dataTokenOptions: DataTokenOptions
   access: 'Download' | 'Compute' | string
@@ -24,6 +23,7 @@ export interface FormPublishData {
     author: string
     termsAndConditions: boolean
     tags?: string
+    links?: string[]
   }
   services: FormPublishService[]
   pricing: PriceOptions

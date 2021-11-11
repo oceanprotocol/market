@@ -41,12 +41,12 @@ export const initialValues: FormPublishData = {
     author: '',
     description: '',
     tags: '',
+    links: [],
     termsAndConditions: false
   },
   services: [
     {
       files: [],
-      links: [],
       dataTokenOptions: { name: '', symbol: '' },
       timeout: '',
       access: '',
