@@ -10,7 +10,7 @@ import { useAsset } from '@context/Asset'
 import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 import Web3Feedback from '@shared/Web3Feedback'
-import { getFileInfo } from '@utils/provider'
+import { FileMetadata, getFileInfo } from '@utils/provider'
 import { getOceanConfig } from '@utils/ocean'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
@@ -23,7 +23,7 @@ export default function AssetActions(): ReactElement {
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
   const [dtBalance, setDtBalance] = useState<string>()
-  const [fileMetadata, setFileMetadata] = useState<FileMetadata>(Object)
+  const [fileMetadata, setFileMetadata] = useState<FileMetadata>()
   const [fileIsLoading, setFileIsLoading] = useState<boolean>(false)
   const isCompute = Boolean(
     ddo?.services.filter((service) => service.type === 'compute')[0]

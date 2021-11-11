@@ -1,14 +1,7 @@
+import axios, { AxiosResponse } from 'axios'
 import { sha256 } from 'js-sha256'
-import {
-  dateToStringNoMS,
-  transformTags,
-  getUrlFileExtension
-} from '@utils/ddo'
+import slugify from 'slugify'
 import { FormPublishData } from './_types'
-
-function encryptMe(files: string | FileMetadata[]): string {
-  throw new Error('Function not implemented.')
-}
 
 export function getFieldContent(
   fieldName: string,
@@ -17,15 +10,52 @@ export function getFieldContent(
   return fields.filter((field: FormFieldContent) => field.name === fieldName)[0]
 }
 
-export function transformPublishFormToDdo(
+async function getEncryptedFileUrls(
+  files: string[],
+  providerUrl: string,
+  did: string,
+  accountId: string
+): Promise<string> {
+  try {
+    // https://github.com/oceanprotocol/provider/blob/v4main/API.md#encrypt-endpoint
+    const url = `${providerUrl}/api/v1/services/encrypt`
+    const response: AxiosResponse<{ encryptedDocument: string }> =
+      await axios.post(url, {
+        documentId: did,
+        signature: '', // TODO: add signature
+        publisherAddress: accountId,
+        document: files
+      })
+    return response?.data?.encryptedDocument
+  } catch (error) {
+    console.error('Error parsing json: ' + error.message)
+  }
+}
+
+function getUrlFileExtension(fileUrl: string): string {
+  const splittedFileUrl = fileUrl.split('.')
+  return splittedFileUrl[splittedFileUrl.length - 1]
+}
+
+function dateToStringNoMS(date: Date): string {
+  return date.toISOString().replace(/\.[0-9]{3}Z/, 'Z')
+}
+
+function transformTags(value: string): string[] {
+  const originalTags = value?.split(',')
+  const transformedTags = originalTags?.map((tag) => slugify(tag).toLowerCase())
+  return transformedTags
+}
+
+export async function transformPublishFormToDdo(
   values: FormPublishData,
   datatokenAddress: string,
   nftAddress: string
-): DDO {
-  const did = sha256(`${nftAddress}${values.chainId}`)
+): Promise<DDO> {
+  const { chainId, accountId, metadata, services } = values
+  const did = sha256(`${nftAddress}${chainId}`)
   const currentTime = dateToStringNoMS(new Date())
-  const { type, name, description, tags, author, termsAndConditions } =
-    values.metadata
+  const { type, name, description, tags, author, termsAndConditions } = metadata
   const {
     access,
     files,
@@ -35,11 +65,16 @@ export function transformPublishFormToDdo(
     entrypoint,
     providerUrl,
     timeout
-  } = values.services[0]
+  } = services[0]
 
-  const fileUrl = typeof files !== 'string' && files[0].url
+  const filesEncrypted = await getEncryptedFileUrls(
+    files as string[],
+    providerUrl,
+    did,
+    accountId
+  )
 
-  const metadata: Metadata = {
+  const newMetadata: Metadata = {
     created: currentTime,
     updated: currentTime,
     type,
@@ -54,7 +89,7 @@ export function transformPublishFormToDdo(
     },
     ...(type === 'algorithm' && {
       algorithm: {
-        language: getUrlFileExtension(fileUrl),
+        language: getUrlFileExtension(files[0]),
         version: '0.1',
         container: {
           entrypoint,
@@ -66,9 +101,9 @@ export function transformPublishFormToDdo(
     })
   }
 
-  const service: Service = {
+  const newService: Service = {
     type: access,
-    files: encryptMe(files),
+    files: filesEncrypted,
     datatokenAddress,
     serviceEndpoint: providerUrl,
     timeout,
@@ -92,9 +127,9 @@ export function transformPublishFormToDdo(
     '@context': ['https://w3id.org/did/v1'],
     id: did,
     version: '4.0.0',
-    chainId: values.chainId,
-    metadata,
-    services: [service]
+    chainId,
+    metadata: newMetadata,
+    services: [newService]
   }
 
   return newDdo

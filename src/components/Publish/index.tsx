@@ -1,6 +1,5 @@
 import React, { ReactElement, useState, useRef } from 'react'
 import { Form, Formik, FormikState } from 'formik'
-import { usePublish } from '@hooks/usePublish'
 import { initialValues, validationSchema } from './_constants'
 import { validateDockerImage } from '@utils/docker'
 import { Logger, Metadata } from '@oceanprotocol/lib'
@@ -15,6 +14,7 @@ import Debug from './Debug'
 import Navigation from './Navigation'
 import { Steps } from './Steps'
 import { FormPublishData } from './_types'
+import { sha256 } from 'js-sha256'
 
 const formName = 'ocean-publish-form'
 
@@ -25,7 +25,7 @@ export default function PublishPage({
 }): ReactElement {
   const { accountId, chainId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
-  const { publish, publishError, isLoading, publishStepText } = usePublish()
+  // const { publish, publishError, isLoading, publishStepText } = usePublish()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const scrollToRef = useRef()
@@ -35,10 +35,22 @@ export default function PublishPage({
       // 1. Mint NFT & datatokens & put in pool
       // const txMint = await createNftWithErc()
       // const { nftAddress, datatokenAddress } = txMint.logs[0].args
+      //
       // 2. Construct and publish DDO
       // const did = sha256(`${nftAddress}${chainId}`)
       // const ddo = transformPublishFormToDdo(values, datatokenAddress, nftAddress)
       // const txPublish = await publish(ddo)
+      //
+      // 3. Integrity check of DDO before & after publishing
+      // const checksumBefore = sha256(ddo)
+      // const ddoFromChain = await getDdoFromChain(ddo.id)
+      // const ddoFromChainDecrypted = await decryptDdo(ddoFromChain)
+      // const checksumAfter = sha256(ddoFromChainDecrypted)
+
+      // if (checksumBefore !== checksumAfter) {
+      //   throw new Error('DDO integrity check failed!')
+      // }
+
       setSuccess('Your DDO was published successfully!')
     } catch (error) {
       setError(error.message)
@@ -109,16 +121,12 @@ export default function PublishPage({
             await handleSubmit(values)
           }}
         >
-          {({ values }) => (
-            <>
-              <Form className={styles.form} ref={scrollToRef}>
-                <Navigation />
-                <Steps step={values.step} />
-                <Actions scrollToRef={scrollToRef} />
-              </Form>
-              <Debug values={values} />
-            </>
-          )}
+          <Form className={styles.form} ref={scrollToRef}>
+            <Navigation />
+            <Steps />
+            <Actions scrollToRef={scrollToRef} />
+          </Form>
+          <Debug />
         </Formik>
       )}
     </>

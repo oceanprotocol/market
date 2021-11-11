@@ -1,5 +1,3 @@
-import slugify from 'slugify'
-
 export function getServiceByName(
   ddo: Asset | DDO,
   name: 'access' | 'compute'
@@ -8,16 +6,6 @@ export function getServiceByName(
 
   const service = ddo.services.filter((service) => service.type === name)[0]
   return service
-}
-
-export function dateToStringNoMS(date: Date): string {
-  return date.toISOString().replace(/\.[0-9]{3}Z/, 'Z')
-}
-
-export function transformTags(value: string): string[] {
-  const originalTags = value?.split(',')
-  const transformedTags = originalTags?.map((tag) => slugify(tag).toLowerCase())
-  return transformedTags
 }
 
 export function mapTimeoutStringToSeconds(timeout: string): number {
@@ -67,19 +55,4 @@ export function secondsToString(numberOfSeconds: number): string {
     : seconds
     ? `${seconds} second${numberEnding(seconds)}`
     : 'less than a second'
-}
-
-export function checkIfTimeoutInPredefinedValues(
-  timeout: string,
-  timeoutOptions: string[]
-): boolean {
-  if (timeoutOptions.indexOf(timeout) > -1) {
-    return true
-  }
-  return false
-}
-
-export function getUrlFileExtension(fileUrl: string): string {
-  const splitedFileUrl = fileUrl.split('.')
-  return splitedFileUrl[splitedFileUrl.length - 1]
 }

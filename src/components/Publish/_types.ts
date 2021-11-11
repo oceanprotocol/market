@@ -2,7 +2,7 @@ import { DataTokenOptions } from '@hooks/usePublish'
 import { ReactElement } from 'react'
 
 export interface FormPublishService {
-  files: string | FileMetadata[]
+  files: string | string[]
   links?: string[]
   timeout: string
   dataTokenOptions: DataTokenOptions
@@ -14,7 +14,9 @@ export interface FormPublishService {
 }
 
 export interface FormPublishData {
-  step: number
+  stepCurrent: number
+  accountId: string
+  chainId: number
   metadata: {
     type: 'dataset' | 'algorithm'
     name: string
@@ -25,7 +27,6 @@ export interface FormPublishData {
   }
   services: FormPublishService[]
   pricing: PriceOptions
-  chainId: number
 }
 
 export interface StepContent {

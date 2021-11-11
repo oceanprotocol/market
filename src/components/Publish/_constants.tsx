@@ -32,8 +32,9 @@ export const wizardSteps: StepContent[] = [
 ]
 
 export const initialValues: FormPublishData = {
-  step: 1,
+  stepCurrent: 1,
   chainId: 1,
+  accountId: '',
   metadata: {
     type: 'dataset',
     name: '',
@@ -47,9 +48,9 @@ export const initialValues: FormPublishData = {
       files: [],
       links: [],
       dataTokenOptions: { name: '', symbol: '' },
-      timeout: 'Forever',
+      timeout: '',
       access: '',
-      providerUrl: ''
+      providerUrl: 'https://provider.oceanprotocol.com'
     }
   ],
   pricing: {
@@ -84,17 +85,17 @@ const validationMetadata = {
 }
 
 const validationService = {
-  files: Yup.array<FileMetadata>()
+  files: Yup.array<string[]>()
     .required('Enter a valid URL and click "ADD FILE"')
     .nullable(),
-  links: Yup.array<FileMetadata[]>().nullable(),
+  links: Yup.array<string[]>().nullable(),
   dataTokenOptions: Yup.object().shape({
     name: Yup.string(),
     symbol: Yup.string()
   }),
   timeout: Yup.string().required('Required'),
   access: Yup.string()
-    .matches(/Compute|Download/g, { excludeEmptyString: true })
+    .matches(/compute|download/g, { excludeEmptyString: true })
     .required('Required'),
   providerUrl: Yup.string().url().nullable()
 }
@@ -123,8 +124,9 @@ const validationPricing = {
 
 // export const validationSchema: Yup.SchemaOf<FormPublishData> =
 export const validationSchema: Yup.SchemaOf<any> = Yup.object().shape({
-  step: Yup.number(),
+  stepCurrent: Yup.number(),
   chainId: Yup.number(),
+  accountId: Yup.string(),
   metadata: Yup.object().shape(validationMetadata),
   services: Yup.array().of(Yup.object().shape(validationService)),
   pricing: Yup.object().shape(validationPricing)

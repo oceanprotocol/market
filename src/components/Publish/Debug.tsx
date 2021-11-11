@@ -3,12 +3,10 @@ import DebugOutput from '@shared/DebugOutput'
 import styles from './index.module.css'
 // import { transformPublishFormToMetadata } from '@utils/metadata'
 import { FormPublishData } from './_types'
+import { useFormikContext } from 'formik'
 
-export default function Debug({
-  values
-}: {
-  values: Partial<FormPublishData>
-}): ReactElement {
+export default function Debug(): ReactElement {
+  const { values } = useFormikContext<FormPublishData>()
   const ddo = {
     '@context': 'https://w3id.org/did/v1'
     // dataTokenInfo: {

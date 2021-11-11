@@ -3,6 +3,7 @@ import { prettySize } from './utils'
 import cleanupContentType from '@utils/cleanupContentType'
 import styles from './Info.module.css'
 import { useField, useFormikContext } from 'formik'
+import { FileMetadata } from '@utils/provider'
 
 export default function FileInfo({
   name,
@@ -21,7 +22,7 @@ export default function FileInfo({
 
   return (
     <div className={styles.info}>
-      <h3 className={styles.url}>{file.url}</h3>
+      {/* <h3 className={styles.url}>{file}</h3> */}
       <ul>
         <li>URL confirmed</li>
         {file.contentLength && <li>{prettySize(+file.contentLength)}</li>}

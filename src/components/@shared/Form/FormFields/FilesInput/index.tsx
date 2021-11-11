@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 import FileInfo from './Info'
 import CustomInput from '../URLInput/Input'
 import { InputProps } from '@shared/Form/Input'
-import { fileinfo } from '@utils/provider'
+import { getFileInfo } from '@utils/provider'
 import { useWeb3 } from '@context/Web3'
 import { getOceanConfig } from '@utils/ocean'
 import { useCancelToken } from '@hooks/useCancelToken'
@@ -22,7 +22,7 @@ export default function FilesInput(props: InputProps): ReactElement {
     async function validateUrl() {
       try {
         setIsLoading(true)
-        const checkedFile = await fileinfo(
+        const checkedFile = await getFileInfo(
           fileUrl,
           config?.providerUri,
           newCancelToken()

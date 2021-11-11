@@ -34,6 +34,7 @@ import ComputeJobs from '../../../Profile/History/ComputeJobs'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { SortTermOptions } from '../../../../@types/aquarius/SearchQuery'
+import { FileMetadata } from '@utils/provider'
 
 export default function Compute({
   dtBalance,
