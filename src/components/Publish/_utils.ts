@@ -33,7 +33,6 @@ export function transformPublishFormToDdo(data: Partial<FormPublishData>): DDO {
   } = data.services[0]
 
   const fileUrl = typeof files !== 'string' && files[0].url
-
   const filesEncrypted = encryptMe(files)
 
   const service: Service = {
@@ -49,6 +48,7 @@ export function transformPublishFormToDdo(data: Partial<FormPublishData>): DDO {
     id: '',
     version: '4.0.0',
     created: currentTime,
+    updated: currentTime,
     chainId: data.chainId,
     metadata: {
       type,

@@ -1,12 +1,11 @@
-import React, { ReactElement, useState, useEffect, useRef } from 'react'
+import React, { ReactElement, useState, useRef } from 'react'
 import { Form, Formik, FormikState } from 'formik'
 import { usePublish } from '@hooks/usePublish'
-import { initialValues, validationSchema, wizardSteps } from './_constants'
+import { initialValues, validationSchema } from './_constants'
 import { validateDockerImage } from '@utils/docker'
 import { Logger, Metadata } from '@oceanprotocol/lib'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
 import { useWeb3 } from '@context/Web3'
-import { FormPublishData } from './_types'
 import { transformPublishFormToDdo } from './_utils'
 import PageHeader from '@shared/Page/PageHeader'
 import Title from './Title'
@@ -14,16 +13,9 @@ import styles from './index.module.css'
 import Actions from './Actions'
 import Debug from './Debug'
 import Navigation from './Navigation'
+import { Steps } from './Steps'
 
 const formName = 'ocean-publish-form'
-
-function Steps({ step }: { step: number }) {
-  const { component } = wizardSteps.filter(
-    (stepContent) => stepContent.step === step
-  )[0]
-
-  return component
-}
 
 export default function PublishPage({
   content
@@ -101,9 +93,7 @@ export default function PublishPage({
             // await handleSubmit(values, resetForm)
           }}
         >
-          {({ values, setFieldValue }) => {
-            setFieldValue('chainId', chainId)
-
+          {({ values }) => {
             return (
               <>
                 <Form className={styles.form} ref={scrollToRef}>
