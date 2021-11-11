@@ -93,18 +93,16 @@ export default function PublishPage({
             // await handleSubmit(values, resetForm)
           }}
         >
-          {({ values }) => {
-            return (
-              <>
-                <Form className={styles.form} ref={scrollToRef}>
-                  <Navigation />
-                  <Steps step={values.step} />
-                  <Actions scrollToRef={scrollToRef} />
-                </Form>
-                <Debug values={values} />
-              </>
-            )
-          }}
+          {({ values }) => (
+            <>
+              <Form className={styles.form} ref={scrollToRef}>
+                <Navigation />
+                <Steps step={values.step} />
+                <Actions scrollToRef={scrollToRef} />
+              </Form>
+              <Debug values={values} />
+            </>
+          )}
         </Formik>
       )}
     </>

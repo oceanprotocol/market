@@ -81,7 +81,7 @@ function usePublish(): UsePublish {
         new Date(Date.now()).toISOString().split('.')[0] + 'Z'
       const services: Service[] = []
       const price = '1'
-      asset.created = publishedDate
+      asset.metadata.created = publishedDate
 
       switch (serviceType) {
         case 'access': {

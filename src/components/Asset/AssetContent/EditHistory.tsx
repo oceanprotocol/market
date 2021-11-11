@@ -75,7 +75,7 @@ export default function EditHistory(): ReactElement {
         ))}
         <li className={styles.item}>
           <ExplorerLink networkId={ddo.chainId} path={`/tx/${creationTx}`}>
-            published <Time date={ddo.created} relative />
+            published <Time date={ddo.metadata.created} relative />
           </ExplorerLink>
         </li>
       </ul>

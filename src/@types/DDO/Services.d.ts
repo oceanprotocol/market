@@ -4,7 +4,13 @@ interface PublisherTrustedAlgorithm {
   containerSectionChecksum: string
 }
 
-interface ServiceComputePrivacy {
+interface ServiceComputeOptions {
+  namespace: string
+  cpu?: number
+  gpu?: number
+  gpuType?: string
+  memory?: string
+  volumeSize?: string
   allowRawAlgorithm: boolean
   allowNetworkAccess: boolean
   publisherTrustedAlgorithmPublishers: string[]
@@ -19,5 +25,5 @@ interface Service {
   timeout: string
   name?: string
   description?: string
-  privacy?: ServiceComputePrivacy
+  compute?: ServiceComputeOptions
 }

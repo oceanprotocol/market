@@ -139,15 +139,15 @@ export default function Compute({
     const computeService = ddo.services[0]
     let algorithmSelectionList: AssetSelectionAsset[]
     if (
-      !computeService.privacy ||
-      !computeService.privacy.publisherTrustedAlgorithms ||
-      computeService.privacy.publisherTrustedAlgorithms.length === 0
+      !computeService.compute ||
+      !computeService.compute.publisherTrustedAlgorithms ||
+      computeService.compute.publisherTrustedAlgorithms.length === 0
     ) {
       algorithmSelectionList = []
     } else {
       const gueryResults = await queryMetadata(
         getQuerryString(
-          computeService.privacy.publisherTrustedAlgorithms,
+          computeService.compute.publisherTrustedAlgorithms,
           ddo.chainId
         ),
         source.token

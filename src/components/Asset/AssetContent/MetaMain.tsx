@@ -55,12 +55,12 @@ export default function MetaMain(): ReactElement {
       <div className={styles.byline}>
         Published By <Publisher account={owner} />
         <p>
-          <Time date={ddo?.created} relative />
-          {ddo?.created !== ddo?.updated && (
+          <Time date={ddo?.metadata.created} relative />
+          {ddo?.metadata.created !== ddo?.metadata.updated && (
             <>
               {' — '}
               <span className={styles.updated}>
-                updated <Time date={ddo?.updated} relative />
+                updated <Time date={ddo?.metadata.updated} relative />
               </span>
             </>
           )}

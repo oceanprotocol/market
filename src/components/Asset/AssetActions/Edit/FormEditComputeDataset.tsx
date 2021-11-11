@@ -35,7 +35,7 @@ export default function FormEditComputeDataset({
   const { publisherTrustedAlgorithms } = getServiceByName(
     ddo,
     'compute'
-  ).privacy
+  ).compute
 
   async function getAlgorithmList(
     publisherTrustedAlgorithms: PublisherTrustedAlgorithm[]

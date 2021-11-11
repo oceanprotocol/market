@@ -1,5 +1,4 @@
 import slugify from 'slugify'
-import { MetadataAlgorithm } from '@oceanprotocol/lib'
 
 export function getServiceByName(
   ddo: Asset | DDO,
@@ -80,25 +79,7 @@ export function checkIfTimeoutInPredefinedValues(
   return false
 }
 
-export function getAlgorithmComponent(
-  image: string,
-  containerTag: string,
-  entrypoint: string,
-  algorithmLanguage: string
-): MetadataAlgorithm {
-  return {
-    language: algorithmLanguage,
-    format: 'docker-image',
-    version: '0.1',
-    container: {
-      entrypoint: entrypoint,
-      image: image,
-      tag: containerTag
-    }
-  }
-}
-
-export function getAlgorithmFileExtension(fileUrl: string): string {
+export function getUrlFileExtension(fileUrl: string): string {
   const splitedFileUrl = fileUrl.split('.')
   return splitedFileUrl[splitedFileUrl.length - 1]
 }

@@ -10,6 +10,8 @@ interface MetadataAlgorithm {
 }
 
 interface Metadata {
+  created: string
+  updated: string
   name: string
   description: string
   type: 'dataset' | 'algorithm'
