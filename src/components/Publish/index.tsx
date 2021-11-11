@@ -14,6 +14,7 @@ import Actions from './Actions'
 import Debug from './Debug'
 import Navigation from './Navigation'
 import { Steps } from './Steps'
+import { FormPublishData } from './_types'
 
 const formName = 'ocean-publish-form'
 
@@ -28,6 +29,21 @@ export default function PublishPage({
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const scrollToRef = useRef()
+
+  async function handleSubmit(values: FormPublishData) {
+    try {
+      // 1. Mint NFT & datatokens & put in pool
+      // const txMint = await createNftWithErc()
+      // const { nftAddress, datatokenAddress } = txMint.logs[0].args
+      // 2. Construct and publish DDO
+      // const did = sha256(`${nftAddress}${chainId}`)
+      // const ddo = transformPublishFormToDdo(values, datatokenAddress, nftAddress)
+      // const txPublish = await publish(ddo)
+      setSuccess('Your DDO was published successfully!')
+    } catch (error) {
+      setError(error.message)
+    }
+  }
 
   // async function handleSubmit(
   //   values: Partial<FormPublishData>,
@@ -90,7 +106,7 @@ export default function PublishPage({
           validationSchema={validationSchema}
           onSubmit={async (values, { resetForm }) => {
             // kick off publishing
-            // await handleSubmit(values, resetForm)
+            await handleSubmit(values)
           }}
         >
           {({ values }) => (

@@ -1,3 +1,4 @@
+import { sha256 } from 'js-sha256'
 import {
   dateToStringNoMS,
   transformTags,
@@ -16,10 +17,15 @@ export function getFieldContent(
   return fields.filter((field: FormFieldContent) => field.name === fieldName)[0]
 }
 
-export function transformPublishFormToDdo(data: Partial<FormPublishData>): DDO {
+export function transformPublishFormToDdo(
+  values: FormPublishData,
+  datatokenAddress: string,
+  nftAddress: string
+): DDO {
+  const did = sha256(`${nftAddress}${values.chainId}`)
   const currentTime = dateToStringNoMS(new Date())
   const { type, name, description, tags, author, termsAndConditions } =
-    data.metadata
+    values.metadata
   const {
     access,
     files,
@@ -29,7 +35,7 @@ export function transformPublishFormToDdo(data: Partial<FormPublishData>): DDO {
     entrypoint,
     providerUrl,
     timeout
-  } = data.services[0]
+  } = values.services[0]
 
   const fileUrl = typeof files !== 'string' && files[0].url
 
@@ -51,10 +57,10 @@ export function transformPublishFormToDdo(data: Partial<FormPublishData>): DDO {
         language: getUrlFileExtension(fileUrl),
         version: '0.1',
         container: {
-          entrypoint: entrypoint,
-          image: image,
+          entrypoint,
+          image,
           tag: containerTag,
-          checksum: ''
+          checksum: '' // how to get? Is it user input?
         }
       }
     })
@@ -63,7 +69,7 @@ export function transformPublishFormToDdo(data: Partial<FormPublishData>): DDO {
   const service: Service = {
     type: access,
     files: encryptMe(files),
-    datatokenAddress: '', // how to get before publish?
+    datatokenAddress,
     serviceEndpoint: providerUrl,
     timeout,
     ...(access === 'compute' && {
@@ -84,9 +90,9 @@ export function transformPublishFormToDdo(data: Partial<FormPublishData>): DDO {
 
   const newDdo: DDO = {
     '@context': ['https://w3id.org/did/v1'],
-    id: '', // how to get before publish? sha256(address of ERC721 contract + data.chainId)
+    id: did,
     version: '4.0.0',
-    chainId: data.chainId,
+    chainId: values.chainId,
     metadata,
     services: [service]
   }

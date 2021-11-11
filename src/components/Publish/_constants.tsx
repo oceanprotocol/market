@@ -31,7 +31,7 @@ export const wizardSteps: StepContent[] = [
   }
 ]
 
-export const initialValues: Partial<FormPublishData> = {
+export const initialValues: FormPublishData = {
   step: 1,
   chainId: 1,
   metadata: {
