@@ -9,12 +9,7 @@ import { publishFeedback } from '@utils/feedback'
 import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 import { getOceanConfig } from '@utils/ocean'
-
-export interface DataTokenOptions {
-  cap?: string
-  name?: string
-  symbol?: string
-}
+import { DataTokenOptions } from '@utils/datatokens'
 
 interface UsePublish {
   publish: (

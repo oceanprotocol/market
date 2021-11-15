@@ -40,6 +40,11 @@ export default function ServicesFields(): ReactElement {
 
   return (
     <>
+      <Field
+        {...getFieldContent('dataTokenOptions', content.services.fields)}
+        component={Input}
+        name="services[0].dataTokenOptions"
+      />
       {values.metadata.type === 'algorithm' ? (
         <Field
           {...getFieldContent('algorithmPrivacy', content.services.fields)}
@@ -54,11 +59,6 @@ export default function ServicesFields(): ReactElement {
           options={accessTypeOptions}
         />
       )}
-      <Field
-        {...getFieldContent('dataTokenOptions', content.services.fields)}
-        component={Input}
-        name="services[0].dataTokenOptions"
-      />
       <Field
         {...getFieldContent('providerUrl', content.services.fields)}
         component={Input}

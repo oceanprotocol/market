@@ -1,4 +1,5 @@
-import { DataTokenOptions } from '@hooks/usePublish'
+import { DataTokenOptions } from '@utils/datatokens'
+import { NftOptions } from '@utils/nft'
 import { ReactElement } from 'react'
 
 export interface FormPublishService {
@@ -15,6 +16,7 @@ export interface FormPublishData {
   accountId: string
   chainId: number
   metadata: {
+    nft: NftOptions
     type: 'Dataset' | 'Algorithm' | string
     name: string
     description: string

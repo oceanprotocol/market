@@ -1,4 +1,4 @@
-.datatoken {
+.nft {
   display: grid;
   gap: var(--spacer);
   grid-template-columns: 3fr 1fr;
@@ -13,15 +13,6 @@
 }
 
 .image {
-  width: 128px;
-  height: 128px;
-  padding: var(--spacer);
-  background: var(--brand-black);
-  fill: var(--brand-violet);
-  border-radius: 50%;
-}
-
-.image svg {
-  width: 100%;
-  height: 100%;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
 }

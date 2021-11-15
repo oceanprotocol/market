@@ -3,6 +3,13 @@
     "title": "Metadata",
     "fields": [
       {
+        "name": "nft",
+        "label": "Data NFT",
+        "type": "nft",
+        "help": "All metadata is stored on-chain in a newly deployed ERC-721 contract representing this asset.",
+        "required": true
+      },
+      {
         "name": "type",
         "label": "Asset Type",
         "type": "boxSelection",

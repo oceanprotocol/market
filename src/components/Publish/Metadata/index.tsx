@@ -32,6 +32,11 @@ export default function MetadataFields(): ReactElement {
   return (
     <>
       <Field
+        {...getFieldContent('nft', content.metadata.fields)}
+        component={Input}
+        name="metadata.nft"
+      />
+      <Field
         {...getFieldContent('type', content.metadata.fields)}
         component={Input}
         name="metadata.type"
@@ -96,15 +101,6 @@ export default function MetadataFields(): ReactElement {
           )}
         </>
       )}
-
-      <div>
-        <strong>Fancy NFT display</strong>
-        <p>
-          Place to show that metadata becomes part of a NFT. Plan is to
-          autogenerate some graphic, display it here, and pass that graphic to
-          the publish methods.
-        </p>
-      </div>
 
       <Field
         {...getFieldContent('termsAndConditions', content.metadata.fields)}

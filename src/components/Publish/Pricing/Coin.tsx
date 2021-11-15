@@ -3,7 +3,7 @@ import styles from './Coin.module.css'
 import InputElement from '@shared/Form/Input/InputElement'
 import Logo from '@images/logo.svg'
 import Conversion from '@shared/Price/Conversion'
-import { DataTokenOptions } from '@hooks/usePublish'
+import { DataTokenOptions } from '@utils/datatokens'
 import { useField } from 'formik'
 import Error from './Error'
 

@@ -10,6 +10,7 @@ import classNames from 'classnames/bind'
 import AssetSelection, {
   AssetSelectionAsset
 } from '../FormFields/AssetSelection'
+import Nft from '../FormFields/Nft'
 
 const cx = classNames.bind(styles)
 
@@ -132,6 +133,8 @@ export default function InputElement({
       return <FilesInput name={name} {...field} {...props} />
     case 'providerUrl':
       return <CustomProvider name={name} {...field} {...props} />
+    case 'nft':
+      return <Nft name={name} {...field} {...props} />
     case 'datatoken':
       return <Datatoken name={name} {...field} {...props} />
     case 'boxSelection':
