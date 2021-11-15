@@ -7,19 +7,23 @@ import { getFieldContent } from '../_utils'
 
 const assetTypeOptionsTitles = getFieldContent(
   'type',
-  content.services.fields
+  content.metadata.fields
 ).options
 
-const assetTypeOptions = [
-  {
-    name: assetTypeOptionsTitles[0].toLowerCase(),
-    title: assetTypeOptionsTitles[0]
-  },
-  {
-    name: assetTypeOptionsTitles[1].toLowerCase(),
-    title: assetTypeOptionsTitles[1]
-  }
-]
+const dockerImageOptionsTitles = getFieldContent(
+  'dockerImage',
+  content.metadata.fields
+).options
+
+const assetTypeOptions = assetTypeOptionsTitles.map((title) => ({
+  name: title.toLowerCase(),
+  title
+}))
+
+const dockerImageOptions = dockerImageOptionsTitles.map((title) => ({
+  name: title.toLowerCase(),
+  title
+}))
 
 export default function MetadataFields(): ReactElement {
   // connect with Form state, use for conditional field rendering
@@ -28,9 +32,9 @@ export default function MetadataFields(): ReactElement {
   return (
     <>
       <Field
-        {...getFieldContent('type', content.services.fields)}
+        {...getFieldContent('type', content.metadata.fields)}
         component={Input}
-        name="type"
+        name="metadata.type"
         options={assetTypeOptions}
       />
       <Field
@@ -54,6 +58,45 @@ export default function MetadataFields(): ReactElement {
         name="metadata.tags"
       />
 
+      {values.metadata.type === 'algorithm' && (
+        <>
+          <Field
+            {...getFieldContent('dockerImage', content.metadata.fields)}
+            component={Input}
+            name="metadata.dockerImage"
+            options={dockerImageOptions}
+          />
+          {values.metadata.dockerImage === 'custom' && (
+            <>
+              <Field
+                {...getFieldContent(
+                  'dockerImageCustom',
+                  content.metadata.fields
+                )}
+                component={Input}
+                name="metadata.dockerImageCustom"
+              />
+              <Field
+                {...getFieldContent(
+                  'dockerImageCustomTag',
+                  content.metadata.fields
+                )}
+                component={Input}
+                name="metadata.dockerImageCustomTag"
+              />
+              <Field
+                {...getFieldContent(
+                  'dockerImageCustomEntrypoint',
+                  content.metadata.fields
+                )}
+                component={Input}
+                name="metadata.dockerImageCustomEntrypoint"
+              />
+            </>
+          )}
+        </>
+      )}
+
       <div>
         <strong>Fancy NFT display</strong>
         <p>
@@ -68,15 +111,6 @@ export default function MetadataFields(): ReactElement {
         component={Input}
         name="metadata.termsAndConditions"
       />
-
-      {/* {content.metadata.fields.map((field: FormFieldContent) => (
-        <Field
-          {...field}
-          key={`metadata-${field.name}`}
-          component={Input}
-          name={`metadata.${field.name}`}
-        />
-      ))} */}
     </>
   )
 }

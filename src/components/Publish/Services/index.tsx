@@ -1,6 +1,6 @@
 import Input from '@shared/Form/Input'
 import { Field, useFormikContext } from 'formik'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import IconDownload from '@images/download.svg'
 import IconCompute from '@images/compute.svg'
 import content from '../../../../content/publish/form.json'
@@ -27,10 +27,33 @@ const accessTypeOptions = [
 
 export default function ServicesFields(): ReactElement {
   // connect with Form state, use for conditional field rendering
-  const { values } = useFormikContext<FormPublishData>()
+  const { values, setFieldValue } = useFormikContext<FormPublishData>()
+
+  // Auto-change access type based on algo privacy boolean.
+  // Could be also done later in transformPublishFormToDdo().
+  useEffect(() => {
+    setFieldValue(
+      'services[0].access',
+      values.services[0].algorithmPrivacy === true ? 'compute' : 'download'
+    )
+  }, [values.services[0].algorithmPrivacy])
 
   return (
     <>
+      {values.metadata.type === 'algorithm' ? (
+        <Field
+          {...getFieldContent('algorithmPrivacy', content.services.fields)}
+          component={Input}
+          name="services[0].algorithmPrivacy"
+        />
+      ) : (
+        <Field
+          {...getFieldContent('access', content.services.fields)}
+          component={Input}
+          name="services[0].access"
+          options={accessTypeOptions}
+        />
+      )}
       <Field
         {...getFieldContent('dataTokenOptions', content.services.fields)}
         component={Input}
@@ -52,31 +75,10 @@ export default function ServicesFields(): ReactElement {
         name="services[0].links"
       />
       <Field
-        {...getFieldContent('access', content.services.fields)}
-        component={Input}
-        name="services[0].access"
-        options={accessTypeOptions}
-      />
-      <Field
         {...getFieldContent('timeout', content.services.fields)}
         component={Input}
         name="services[0].timeout"
       />
-
-      {/* {content.services.fields.map(
-        (field: FormFieldContent) =>
-          field.advanced !== true && (
-            <Field
-              {...field}
-              key={`services-${field.name}`}
-              component={Input}
-              name={`services[0].${field.name}`}
-              options={
-                field.name === 'access' ? accessTypeOptions : field.options
-              }
-            />
-          )
-      )} */}
     </>
   )
 }

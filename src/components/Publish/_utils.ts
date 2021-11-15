@@ -55,17 +55,19 @@ export async function transformPublishFormToDdo(
   const { chainId, accountId, metadata, services } = values
   const did = sha256(`${nftAddress}${chainId}`)
   const currentTime = dateToStringNoMS(new Date())
-  const { type, name, description, tags, links, author, termsAndConditions } =
-    metadata
   const {
-    access,
-    files,
-    image,
-    containerTag,
-    entrypoint,
-    providerUrl,
-    timeout
-  } = services[0]
+    type,
+    name,
+    description,
+    tags,
+    links,
+    author,
+    termsAndConditions,
+    dockerImageCustom,
+    dockerImageCustomTag,
+    dockerImageCustomEntrypoint
+  } = metadata
+  const { access, files, providerUrl, timeout } = services[0]
 
   const filesEncrypted = await getEncryptedFileUrls(
     files as string[],
@@ -92,9 +94,9 @@ export async function transformPublishFormToDdo(
         language: getUrlFileExtension(files[0]),
         version: '0.1',
         container: {
-          entrypoint,
-          image,
-          tag: containerTag,
+          entrypoint: dockerImageCustomEntrypoint,
+          image: dockerImageCustom,
+          tag: dockerImageCustomTag,
           checksum: '' // how to get? Is it user input?
         }
       }
@@ -109,7 +111,7 @@ export async function transformPublishFormToDdo(
     timeout,
     ...(access === 'compute' && {
       compute: {
-        namespace: '',
+        namespace: 'ocean-compute',
         cpu: 1,
         gpu: 1,
         gpuType: '',

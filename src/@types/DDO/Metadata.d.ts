@@ -14,7 +14,7 @@ interface Metadata {
   updated: string
   name: string
   description: string
-  type: 'dataset' | 'algorithm'
+  type: 'dataset' | 'algorithm' | string
   author: string
   license: string
   links?: string[]

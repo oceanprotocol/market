@@ -6,10 +6,8 @@ export interface FormPublishService {
   timeout: string
   dataTokenOptions: DataTokenOptions
   access: 'Download' | 'Compute' | string
-  image?: string
-  containerTag?: string
-  entrypoint?: string
   providerUrl?: string
+  algorithmPrivacy?: boolean
 }
 
 export interface FormPublishData {
@@ -17,13 +15,17 @@ export interface FormPublishData {
   accountId: string
   chainId: number
   metadata: {
-    type: 'dataset' | 'algorithm'
+    type: 'Dataset' | 'Algorithm' | string
     name: string
     description: string
     author: string
     termsAndConditions: boolean
     tags?: string
     links?: string[]
+    dockerImage?: string
+    dockerImageCustom?: string
+    dockerImageCustomTag?: string
+    dockerImageCustomEntrypoint?: string
   }
   services: FormPublishService[]
   pricing: PriceOptions

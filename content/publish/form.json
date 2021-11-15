@@ -3,6 +3,13 @@
     "title": "Metadata",
     "fields": [
       {
+        "name": "type",
+        "label": "Asset Type",
+        "type": "boxSelection",
+        "options": ["Dataset", "Algorithm"],
+        "required": true
+      },
+      {
         "name": "name",
         "label": "Title",
         "placeholder": "e.g. Shapes of Desert Plants",
@@ -29,6 +36,35 @@
         "help": "Separate tags with comma."
       },
       {
+        "name": "dockerImage",
+        "label": "Docker Image",
+        "help": "Please select an image to run your algorithm.",
+        "type": "boxSelection",
+        "options": ["node:latest", "python:latest", "Custom"],
+        "required": true
+      },
+      {
+        "name": "dockerImageCustom",
+        "label": "Docker Image URL",
+        "placeholder": "e.g. oceanprotocol/algo_dockers or https://example.com/image_path",
+        "help": "Provide the name of a public Docker image or the full url if you have it hosted in a 3rd party repo",
+        "required": true
+      },
+      {
+        "name": "dockerImageCustomTag",
+        "label": "Docker Image Tag",
+        "placeholder": "e.g. latest",
+        "help": "Provide the tag for your Docker image.",
+        "required": true
+      },
+      {
+        "name": "dockerImageCustomEntrypoint",
+        "label": "Docker Entrypoint",
+        "placeholder": "e.g. python $ALGO",
+        "help": "Provide the entrypoint for your algorithm.",
+        "required": true
+      },
+      {
         "name": "termsAndConditions",
         "label": "Terms & Conditions",
         "type": "checkbox",
@@ -41,13 +77,6 @@
     "title": "Access",
     "fields": [
       {
-        "name": "type",
-        "label": "Asset Type",
-        "type": "boxSelection",
-        "options": ["Dataset", "Algorithm"],
-        "required": true
-      },
-      {
         "name": "dataTokenOptions",
         "label": "Datatoken Name & Symbol",
         "type": "datatoken",
@@ -55,11 +84,11 @@
         "required": true
       },
       {
-        "name": "dataTokenOptions",
-        "label": "Datatoken Name & Symbol",
-        "type": "datatoken",
-        "help": "The datatoken for this data set will be created with this name & symbol.",
-        "required": true
+        "name": "providerUrl",
+        "label": "Custom Provider URL",
+        "type": "providerUrl",
+        "help": "Enter the URL for your custom provider or leave blank to use the default provider. [Learn more](https://github.com/oceanprotocol/provider/).",
+        "placeholder": "e.g. https://provider.polygon.oceanprotocol.com/"
       },
       {
         "name": "files",
@@ -75,6 +104,14 @@
         "placeholder": "e.g. https://file.com/samplefile.json",
         "help": "Please enter the URL to a sample of your data set file and click \"ADD FILE\" to validate the data. This file should reveal the data structure of your data set, e.g. by including the header and one line of a CSV file. This file URL will be publicly available after publishing.",
         "type": "files"
+      },
+      {
+        "name": "algorithmPrivacy",
+        "label": "Algorithm Privacy",
+        "type": "checkbox",
+        "options": ["Keep my algorithm private"],
+        "help": "By default, your algorithm can be downloaded for a fixed or dynamic price in addition to running in compute jobs. Enabling this option will prevent downloading, so your algorithm can only be run as part of a compute job on a data set.",
+        "required": false
       },
       {
         "name": "access",
@@ -94,14 +131,6 @@
         "options": ["Forever", "1 day", "1 week", "1 month", "1 year"],
         "sortOptions": false,
         "required": true
-      },
-
-      {
-        "name": "providerUrl",
-        "label": "Custom Provider URL",
-        "type": "providerUrl",
-        "help": "Enter the URL for your custom provider or leave blank to use the default provider. [Learn more](https://github.com/oceanprotocol/provider/).",
-        "placeholder": "e.g. https://provider.polygon.oceanprotocol.com/"
       }
     ]
   },

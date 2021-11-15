@@ -36,13 +36,17 @@ export const initialValues: FormPublishData = {
   chainId: 1,
   accountId: '',
   metadata: {
-    type: 'dataset',
+    type: '',
     name: '',
     author: '',
     description: '',
     tags: '',
     links: [],
-    termsAndConditions: false
+    termsAndConditions: false,
+    dockerImage: '',
+    dockerImageCustom: '',
+    dockerImageCustomTag: '',
+    dockerImageCustomEntrypoint: ''
   },
   services: [
     {
