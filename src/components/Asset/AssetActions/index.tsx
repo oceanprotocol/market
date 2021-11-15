@@ -1,7 +1,7 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import Compute from './Compute'
 import Consume from './Consume'
-import { Logger, DID } from '@oceanprotocol/lib'
+import { Logger } from '@oceanprotocol/lib'
 import Tabs from '@shared/atoms/Tabs'
 import { compareAsBN } from '@utils/numbers'
 import Pool from './Pool'
@@ -58,7 +58,7 @@ export default function AssetActions(): ReactElement {
       setFileIsLoading(true)
       try {
         const fileInfoResponse = await getFileInfo(
-          DID.parse(`${ddo.id}`),
+          ddo.id,
           oceanConfig.providerUri,
           newCancelToken()
         )

@@ -23,14 +23,14 @@ export default function Datatoken(props: InputProps): ReactElement {
 
   return (
     <div className={styles.datatoken}>
+      <figure className={styles.image}>
+        <Logo />
+      </figure>
       <div className={styles.token}>
         <strong>{field?.value?.name}</strong> —{' '}
         <strong>{field?.value?.symbol}</strong>
         <RefreshName generateName={generateName} />
       </div>
-      <figure className={styles.image}>
-        <Logo />
-      </figure>
     </div>
   )
 }

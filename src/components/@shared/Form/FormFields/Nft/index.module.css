@@ -1,7 +1,7 @@
 .nft {
   display: grid;
-  gap: var(--spacer);
-  grid-template-columns: 3fr 1fr;
+  gap: calc(var(--spacer) / 2);
+  grid-template-columns: 1fr 4fr;
   margin-bottom: var(--spacer);
   align-items: center;
 }
