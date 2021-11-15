@@ -1,7 +1,7 @@
 import React, { ChangeEvent, ReactElement } from 'react'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import { useOcean } from '@context/Ocean'
-import Input, { InputProps } from '@shared/Form/Input'
+import Input, { InputProps } from '@shared/FormInput'
 import FormActions from './FormActions'
 import styles from './FormEditMetadata.module.css'
 import { FormPublishData } from '../../../Publish/_types'

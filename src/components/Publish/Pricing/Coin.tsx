@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import styles from './Coin.module.css'
-import InputElement from '@shared/Form/Input/InputElement'
+import InputElement from '@shared/FormInput/InputElement'
 import Logo from '@images/logo.svg'
 import Conversion from '@shared/Price/Conversion'
 import { DataTokenOptions } from '@utils/datatokens'

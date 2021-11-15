@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './AlgorithmDatasetsListForCompute.module.css'
 import { getAlgorithmDatasetsForCompute } from '@utils/aquarius'
-import { AssetSelectionAsset } from '@shared/Form/FormFields/AssetSelection'
+import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import AssetComputeList from '@shared/AssetList/AssetComputeList'
 import { useAsset } from '@context/Asset'
 import { useCancelToken } from '@hooks/useCancelToken'

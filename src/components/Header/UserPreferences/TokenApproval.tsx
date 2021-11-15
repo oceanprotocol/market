@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 import { useUserPreferences } from '@context/UserPreferences'
-import Input from '@shared/Form/Input'
+import Input from '@shared/FormInput'
 
 export default function TokenApproval(): ReactElement {
   const { infiniteApproval, setInfiniteApproval } = useUserPreferences()

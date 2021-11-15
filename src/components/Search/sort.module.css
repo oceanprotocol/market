@@ -16,7 +16,7 @@
 }
 
 .sortLabel {
-  composes: label from '@shared/Form/Input/Label.module.css';
+  composes: label from '@shared/FormInput/Label.module.css';
   margin-bottom: 0;
   margin-left: calc(var(--spacer) / 2);
   margin-right: calc(var(--spacer) / 1.5);

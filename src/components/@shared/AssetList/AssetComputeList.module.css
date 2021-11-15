@@ -1,5 +1,5 @@
 .display {
-  composes: selection from '@shared/Form/FormFields/AssetSelection.module.css';
+  composes: selection from '@shared/FormFields/AssetSelection.module.css';
 }
 
 .display [class*='loaderWrap'] {
@@ -7,14 +7,14 @@
 }
 
 .scroll {
-  composes: scroll from '@shared/Form/FormFields/AssetSelection.module.css';
+  composes: scroll from '@shared/FormFields/AssetSelection.module.css';
   margin-top: 0;
   border-top: none;
   width: 100%;
 }
 
 .row {
-  composes: row from '@shared/Form/FormFields/AssetSelection.module.css';
+  composes: row from '@shared/FormFields/AssetSelection.module.css';
 }
 
 .row:last-child {
@@ -35,7 +35,7 @@
 }
 
 .title {
-  composes: title from '@shared/Form/FormFields/AssetSelection.module.css';
+  composes: title from '@shared/FormFields/AssetSelection.module.css';
 }
 
 .hover:hover {
@@ -43,7 +43,7 @@
 }
 
 .price {
-  composes: price from '@shared/Form/FormFields/AssetSelection.module.css';
+  composes: price from '@shared/FormFields/AssetSelection.module.css';
 }
 
 .price [class*='symbol'] {
@@ -51,9 +51,9 @@
 }
 
 .did {
-  composes: did from '@shared/Form/FormFields/AssetSelection.module.css';
+  composes: did from '@shared/FormFields/AssetSelection.module.css';
 }
 
 .empty {
-  composes: empty from '@shared/Form/FormFields/AssetSelection.module.css';
+  composes: empty from '@shared/FormFields/AssetSelection.module.css';
 }

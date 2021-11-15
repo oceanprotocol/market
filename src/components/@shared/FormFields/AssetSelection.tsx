@@ -4,7 +4,7 @@ import slugify from 'slugify'
 import classNames from 'classnames/bind'
 import PriceUnit from '@shared/Price/PriceUnit'
 import External from '@images/external.svg'
-import InputElement from '@shared/Form/Input/InputElement'
+import InputElement from '@shared/FormInput/InputElement'
 import Loader from '@shared/atoms/Loader'
 import styles from './AssetSelection.module.css'
 

@@ -3,7 +3,7 @@ import { useField } from 'formik'
 import { toast } from 'react-toastify'
 import CustomInput from './URLInput/Input'
 import { useOcean } from '@context/Ocean'
-import { InputProps } from '@shared/Form/Input'
+import { InputProps } from '@shared/FormInput'
 
 export default function CustomProvider(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)

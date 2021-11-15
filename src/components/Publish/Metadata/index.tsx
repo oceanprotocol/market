@@ -1,5 +1,5 @@
-import { BoxSelectionOption } from '@shared/Form/FormFields/BoxSelection'
-import Input from '@shared/Form/Input'
+import { BoxSelectionOption } from '@shared/FormFields/BoxSelection'
+import Input from '@shared/FormInput'
 import { Field, useFormikContext } from 'formik'
 import React, { ReactElement } from 'react'
 import content from '../../../../content/publish/form.json'

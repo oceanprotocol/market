@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import FormHelp from '@shared/Form/Input/Help'
+import FormHelp from '@shared/FormInput/Help'
 import Price from './Price'
 import Fees from './Fees'
 

@@ -1,5 +1,5 @@
 import React, { ReactElement, useState, FormEvent, ChangeEvent } from 'react'
-import Input from '@shared/Form/Input'
+import Input from '@shared/FormInput'
 import Button from '@shared/atoms/Button'
 import { Field } from 'formik'
 import styles from './AdvancedSettings.module.css'

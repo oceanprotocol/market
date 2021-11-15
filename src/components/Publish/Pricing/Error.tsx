@@ -1,6 +1,6 @@
 import { FieldMetaProps } from 'formik'
 import React, { ReactElement } from 'react'
-import stylesInput from '@shared/Form/Input/index.module.css'
+import stylesInput from '@shared/FormInput/index.module.css'
 
 export default function Error({
   meta

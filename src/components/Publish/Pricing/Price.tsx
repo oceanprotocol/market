@@ -1,7 +1,7 @@
 import Conversion from '@shared/Price/Conversion'
 import { useField, useFormikContext } from 'formik'
 import React, { ReactElement } from 'react'
-import Input from '@shared/Form/Input'
+import Input from '@shared/FormInput'
 import Error from './Error'
 import PriceUnit from '@shared/Price/PriceUnit'
 import styles from './Price.module.css'

@@ -1,5 +1,5 @@
 import { Logger } from '@oceanprotocol/lib'
-import { AssetSelectionAsset } from '@shared/Form/FormFields/AssetSelection'
+import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { OrdersData_tokenOrders as OrdersData } from '../@types/apollo/OrdersData'

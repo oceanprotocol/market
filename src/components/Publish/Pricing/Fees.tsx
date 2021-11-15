@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import Tooltip from '@shared/atoms/Tooltip'
 import styles from './Fees.module.css'
 import { useField } from 'formik'
-import Input from '@shared/Form/Input'
+import Input from '@shared/FormInput'
 import Error from './Error'
 
 const Default = ({

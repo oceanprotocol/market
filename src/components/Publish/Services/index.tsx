@@ -1,4 +1,4 @@
-import Input from '@shared/Form/Input'
+import Input from '@shared/FormInput'
 import { Field, useFormikContext } from 'formik'
 import React, { ReactElement, useEffect } from 'react'
 import IconDownload from '@images/download.svg'

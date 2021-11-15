@@ -3,7 +3,7 @@ import Button from '@shared/atoms/Button'
 import { FieldInputProps, useField } from 'formik'
 import Loader from '@shared/atoms/Loader'
 import styles from './Input.module.css'
-import InputGroup from '@shared/Form/Input/InputGroup'
+import InputGroup from '@shared/FormInput/InputGroup'
 
 export default function URLInput({
   submitText,

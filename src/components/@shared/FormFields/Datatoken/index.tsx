@@ -1,6 +1,6 @@
 import { useField } from 'formik'
 import React, { ReactElement, useEffect } from 'react'
-import { InputProps } from '@shared/Form/Input'
+import { InputProps } from '@shared/FormInput'
 import Logo from '@images/logo.svg'
 import RefreshName from './RefreshName'
 import styles from './index.module.css'

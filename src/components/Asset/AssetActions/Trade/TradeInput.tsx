@@ -6,7 +6,7 @@ import {
   FormikContextType,
   useFormikContext
 } from 'formik'
-import Input from '@shared/Form/Input'
+import Input from '@shared/FormInput'
 import Button from '@shared/atoms/Button'
 import { useOcean } from '@context/Ocean'
 import { FormTradeData, TradeItem } from './_types'

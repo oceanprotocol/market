@@ -1,4 +1,4 @@
-import { InputProps } from '@shared/Form/Input'
+import { InputProps } from '@shared/FormInput'
 import { generateNftOptions } from '@utils/nft'
 import { useField } from 'formik'
 import React, { ReactElement, useEffect } from 'react'

@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
-import Input, { InputProps } from '@shared/Form/Input'
-import { AssetSelectionAsset } from '@shared/Form/FormFields/AssetSelection'
+import Input, { InputProps } from '@shared/FormInput'
+import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import stylesIndex from './index.module.css'
 import styles from './FormEditMetadata.module.css'
 import {
