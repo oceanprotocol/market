@@ -1,5 +1,5 @@
 .field {
-  margin-bottom: var(--spacer);
+  margin-bottom: calc(var(--spacer) * var(--line-height));
   position: relative;
 }
 

@@ -17,12 +17,10 @@ export default function Nft(props: InputProps): ReactElement {
 
   return (
     <div className={styles.nft}>
-      <img
-        src="//placekitten.com/g/128/128"
-        className={styles.image}
-        width="128"
-        height="128"
-      />
+      <figure className={styles.image}>
+        <img src="//placekitten.com/g/128/128" width="128" height="128" />
+      </figure>
+
       <div className={styles.token}>
         <strong>{field?.value?.name}</strong> —{' '}
         <strong>{field?.value?.symbol}</strong>

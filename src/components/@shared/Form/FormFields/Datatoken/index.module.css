@@ -1,7 +1,7 @@
 .datatoken {
   display: grid;
-  gap: calc(var(--spacer) / 2);
-  grid-template-columns: 1fr 4fr;
+  gap: var(--spacer);
+  grid-template-columns: 1fr 11fr;
   margin-bottom: var(--spacer);
   align-items: center;
 }
@@ -16,7 +16,8 @@
   width: 128px;
   height: 128px;
   padding: var(--spacer);
-  background: var(--brand-black);
+  background: var(--background-body);
+  border: 1px solid var(--border-color);
   fill: var(--brand-violet);
   border-radius: 50%;
 }

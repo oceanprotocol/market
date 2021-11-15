@@ -1,9 +1,12 @@
+import { BoxSelectionOption } from '@shared/Form/FormFields/BoxSelection'
 import Input from '@shared/Form/Input'
 import { Field, useFormikContext } from 'formik'
 import React, { ReactElement } from 'react'
 import content from '../../../../content/publish/form.json'
 import { FormPublishData } from '../_types'
 import { getFieldContent } from '../_utils'
+import IconDataset from '@images/dataset.svg'
+import IconAlgorithm from '@images/algorithm.svg'
 
 const assetTypeOptionsTitles = getFieldContent(
   'type',
@@ -26,16 +29,18 @@ export default function MetadataFields(): ReactElement {
 
   // BoxSelection component is not a Formik component
   // so we need to handle checked state manually.
-  const assetTypeOptions = [
+  const assetTypeOptions: BoxSelectionOption[] = [
     {
       name: assetTypeOptionsTitles[0].toLowerCase(),
       title: assetTypeOptionsTitles[0],
-      checked: values.metadata.type === assetTypeOptionsTitles[0].toLowerCase()
+      checked: values.metadata.type === assetTypeOptionsTitles[0].toLowerCase(),
+      icon: <IconDataset />
     },
     {
       name: assetTypeOptionsTitles[1].toLowerCase(),
       title: assetTypeOptionsTitles[1],
-      checked: values.metadata.type === assetTypeOptionsTitles[1].toLowerCase()
+      checked: values.metadata.type === assetTypeOptionsTitles[1].toLowerCase(),
+      icon: <IconAlgorithm />
     }
   ]
 
@@ -61,6 +66,7 @@ export default function MetadataFields(): ReactElement {
         {...getFieldContent('description', content.metadata.fields)}
         component={Input}
         name="metadata.description"
+        rows={7}
       />
       <Field
         {...getFieldContent('author', content.metadata.fields)}

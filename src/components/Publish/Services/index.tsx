@@ -12,19 +12,6 @@ const accessTypeOptionsTitles = getFieldContent(
   content.services.fields
 ).options
 
-const accessTypeOptions = [
-  {
-    name: accessTypeOptionsTitles[0].toLowerCase(),
-    title: accessTypeOptionsTitles[0],
-    icon: <IconDownload />
-  },
-  {
-    name: accessTypeOptionsTitles[1].toLowerCase(),
-    title: accessTypeOptionsTitles[1],
-    icon: <IconCompute />
-  }
-]
-
 export default function ServicesFields(): ReactElement {
   // connect with Form state, use for conditional field rendering
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
