@@ -6,6 +6,7 @@
 
 .boxSelectionsWrapper > div {
   width: 100%;
+  position: relative;
 }
 
 .boxSelection {
@@ -36,13 +37,14 @@
 }
 
 .boxSelectionsWrapper input[type='radio']:checked + label {
-  color: var(--font-color-text);
-  border-color: var(--color-secondary);
+  color: var(--background-body);
+  border-color: var(--background-body);
+  background: var(--font-color-heading);
 }
 
 .boxSelection svg {
-  width: var(--font-size-h4);
-  height: var(--font-size-h4);
+  width: var(--font-size-h5);
+  height: var(--font-size-h5);
   fill: currentColor;
   margin-bottom: calc(var(--spacer) / 5);
 }
