@@ -15,11 +15,6 @@ const dockerImageOptionsTitles = getFieldContent(
   content.metadata.fields
 ).options
 
-const assetTypeOptions = assetTypeOptionsTitles.map((title) => ({
-  name: title.toLowerCase(),
-  title
-}))
-
 const dockerImageOptions = dockerImageOptionsTitles.map((title) => ({
   name: title.toLowerCase(),
   title
@@ -28,6 +23,21 @@ const dockerImageOptions = dockerImageOptionsTitles.map((title) => ({
 export default function MetadataFields(): ReactElement {
   // connect with Form state, use for conditional field rendering
   const { values } = useFormikContext<FormPublishData>()
+
+  // BoxSelection component is not a Formik component
+  // so we need to handle checked state manually.
+  const assetTypeOptions = [
+    {
+      name: assetTypeOptionsTitles[0].toLowerCase(),
+      title: assetTypeOptionsTitles[0],
+      checked: values.metadata.type === assetTypeOptionsTitles[0].toLowerCase()
+    },
+    {
+      name: assetTypeOptionsTitles[1].toLowerCase(),
+      title: assetTypeOptionsTitles[1],
+      checked: values.metadata.type === assetTypeOptionsTitles[1].toLowerCase()
+    }
+  ]
 
   return (
     <>

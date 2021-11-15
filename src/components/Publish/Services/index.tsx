@@ -29,6 +29,25 @@ export default function ServicesFields(): ReactElement {
   // connect with Form state, use for conditional field rendering
   const { values, setFieldValue } = useFormikContext<FormPublishData>()
 
+  const accessTypeOptions = [
+    {
+      name: accessTypeOptionsTitles[0].toLowerCase(),
+      title: accessTypeOptionsTitles[0],
+      icon: <IconDownload />,
+      // BoxSelection component is not a Formik component
+      // so we need to handle checked state manually.
+      checked:
+        values.services[0].access === accessTypeOptionsTitles[0].toLowerCase()
+    },
+    {
+      name: accessTypeOptionsTitles[1].toLowerCase(),
+      title: accessTypeOptionsTitles[1],
+      icon: <IconCompute />,
+      checked:
+        values.services[0].access === accessTypeOptionsTitles[1].toLowerCase()
+    }
+  ]
+
   // Auto-change access type based on algo privacy boolean.
   // Could be also done later in transformPublishFormToDdo().
   useEffect(() => {
