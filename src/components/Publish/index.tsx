@@ -15,6 +15,7 @@ import Navigation from './Navigation'
 import { Steps } from './Steps'
 import { FormPublishData } from './_types'
 import { sha256 } from 'js-sha256'
+import { generateNftCreateData } from '@utils/nft'
 
 const formName = 'ocean-publish-form'
 
@@ -32,16 +33,25 @@ export default function PublishPage({
 
   async function handleSubmit(values: FormPublishData) {
     try {
+      // --------------------------------------------------
       // 1. Mint NFT & datatokens & put in pool
-      // const txMint = await createNftWithErc()
+      // --------------------------------------------------
+      // const nftOptions = values.metadata.nft
+      // const nftCreateData = generateNftCreateData(nftOptions)
+      // const ercParams = {}
+      // const txMint = await createNftWithErc(accountId, nftCreateData)
       // const { nftAddress, datatokenAddress } = txMint.logs[0].args
       //
+      // --------------------------------------------------
       // 2. Construct and publish DDO
+      // --------------------------------------------------
       // const did = sha256(`${nftAddress}${chainId}`)
       // const ddo = transformPublishFormToDdo(values, datatokenAddress, nftAddress)
       // const txPublish = await publish(ddo)
       //
+      // --------------------------------------------------
       // 3. Integrity check of DDO before & after publishing
+      // --------------------------------------------------
       // const checksumBefore = sha256(ddo)
       // const ddoFromChain = await getDdoFromChain(ddo.id)
       // const ddoFromChainDecrypted = await decryptDdo(ddoFromChain)
