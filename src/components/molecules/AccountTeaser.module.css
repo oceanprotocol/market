@@ -19,6 +19,8 @@
   height: 90%;
   color: var(--color-secondary);
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .link span {
@@ -34,8 +36,10 @@
 .header {
   display: flex;
   flex-direction: row;
+  align-items: center;
 }
 
 .sales {
   font-size: small;
+  margin-bottom: clac(var(--spacer) / 2);
 }

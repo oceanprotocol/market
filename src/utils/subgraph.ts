@@ -707,33 +707,6 @@ export async function getUserTokenOrders(
   }
 }
 
-export async function getTopAssetsPublishers(
-  chainIds: number[]
-): Promise<string[]> {
-  const data: string[] = []
-  let users: UserSales[] = []
-  for (const chain of chainIds) {
-    const queryContext = getQueryContext(Number(chain))
-    const fetchedUsers: OperationResult<UsersSalesList> = await fetchData(
-      TopSalesQuery,
-      null,
-      queryContext
-    )
-    users = users.concat(fetchedUsers.data.users)
-  }
-  users.sort((a, b) => b.nrSales - a.nrSales)
-
-  for (let i = 0; i < users.length; i++) {
-    if (data.length < 9) {
-      data.push(users[i].id)
-    } else {
-      return data
-    }
-  }
-
-  return data
-}
-
 export async function getUserSales(
   accountId: string,
   chainIds: number[]
@@ -755,4 +728,45 @@ export async function getUserSales(
   } catch (error) {
     Logger.log(error.message)
   }
+}
+
+export async function getTopAssetsPublishers(
+  chainIds: number[]
+): Promise<string[]> {
+  const data: string[] = []
+  const publisherSales: UserSales[] = []
+  let users: UserSales[] = []
+
+  for (const chain of chainIds) {
+    const queryContext = getQueryContext(Number(chain))
+    const fetchedUsers: OperationResult<UsersSalesList> = await fetchData(
+      TopSalesQuery,
+      null,
+      queryContext
+    )
+    users = users.concat(fetchedUsers.data.users)
+  }
+
+  for (let i = 0; i < users.length; i++) {
+    if (publisherSales.findIndex((user) => user.id === users[i].id) === -1) {
+      const sales = await getUserSales(users[i].id, chainIds)
+      const publisher: UserSales = {
+        id: users[i].id,
+        nrSales: sales,
+        __typename: 'User'
+      }
+      publisherSales.push(publisher)
+    }
+  }
+
+  publisherSales.sort((a, b) => b.nrSales - a.nrSales)
+  for (let i = 0; i < publisherSales.length; i++) {
+    if (data.length < 9) {
+      data.push(publisherSales[i].id)
+    } else {
+      return data
+    }
+  }
+
+  return data
 }
