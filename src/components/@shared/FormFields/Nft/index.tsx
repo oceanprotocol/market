@@ -1,7 +1,9 @@
+import Button from '@shared/atoms/Button'
 import { InputProps } from '@shared/FormInput'
 import { generateNftOptions } from '@utils/nft'
 import { useField } from 'formik'
 import React, { ReactElement, useEffect } from 'react'
+import Refresh from '@images/refresh.svg'
 import styles from './index.module.css'
 
 export default function Nft(props: InputProps): ReactElement {
@@ -19,6 +21,19 @@ export default function Nft(props: InputProps): ReactElement {
     <div className={styles.nft}>
       <figure className={styles.image}>
         <img src={field?.value?.image} width="128" height="128" />
+        <Button
+          style="text"
+          size="small"
+          className={styles.refresh}
+          title="Generate new image"
+          onClick={(e) => {
+            e.preventDefault()
+            const nftOptions = generateNftOptions()
+            helpers.setValue({ ...nftOptions })
+          }}
+        >
+          <Refresh />
+        </Button>
       </figure>
 
       <div className={styles.token}>

@@ -18,4 +18,17 @@
   height: 128px;
   border-radius: var(--border-radius);
   border: 1px solid var(--border-color);
+  position: relative;
+}
+
+.refresh {
+  position: absolute;
+  right: calc(var(--spacer) / 4);
+  bottom: calc(var(--spacer) / 4);
+}
+
+.refresh svg {
+  fill: var(--brand-pink);
+  width: var(--font-size-mini);
+  height: var(--font-size-mini);
 }

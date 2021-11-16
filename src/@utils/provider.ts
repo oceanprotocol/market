@@ -6,9 +6,31 @@ export interface FileMetadata {
   contentLength: string
 }
 
+export async function getEncryptedFileUrls(
+  files: string[],
+  providerUrl: string,
+  did: string,
+  accountId: string
+): Promise<string> {
+  try {
+    // https://github.com/oceanprotocol/provider/blob/v4main/API.md#encrypt-endpoint
+    const url = `${providerUrl}/api/v1/services/encrypt`
+    const response: AxiosResponse<{ encryptedDocument: string }> =
+      await axios.post(url, {
+        documentId: did,
+        signature: '', // TODO: add signature
+        publisherAddress: accountId,
+        document: files
+      })
+    return response?.data?.encryptedDocument
+  } catch (error) {
+    console.error('Error parsing json: ' + error.message)
+  }
+}
+
 export async function getFileInfo(
   url: string | DID,
-  providerUri: string,
+  providerUrl: string,
   cancelToken: CancelToken
 ): Promise<FileMetadata[]> {
   let postBody
@@ -22,7 +44,7 @@ export async function getFileInfo(
         url
       }
     const response: AxiosResponse<FileMetadata[]> = await axios.post(
-      `${providerUri}/api/v1/services/fileinfo`,
+      `${providerUrl}/api/v1/services/fileinfo`,
       postBody,
       {
         cancelToken

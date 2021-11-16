@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios'
+import { getEncryptedFileUrls } from '@utils/provider'
 import { sha256 } from 'js-sha256'
 import slugify from 'slugify'
 import { FormPublishData } from './_types'
@@ -8,28 +8,6 @@ export function getFieldContent(
   fields: FormFieldContent[]
 ): FormFieldContent {
   return fields.filter((field: FormFieldContent) => field.name === fieldName)[0]
-}
-
-async function getEncryptedFileUrls(
-  files: string[],
-  providerUrl: string,
-  did: string,
-  accountId: string
-): Promise<string> {
-  try {
-    // https://github.com/oceanprotocol/provider/blob/v4main/API.md#encrypt-endpoint
-    const url = `${providerUrl}/api/v1/services/encrypt`
-    const response: AxiosResponse<{ encryptedDocument: string }> =
-      await axios.post(url, {
-        documentId: did,
-        signature: '', // TODO: add signature
-        publisherAddress: accountId,
-        document: files
-      })
-    return response?.data?.encryptedDocument
-  } catch (error) {
-    console.error('Error parsing json: ' + error.message)
-  }
 }
 
 function getUrlFileExtension(fileUrl: string): string {

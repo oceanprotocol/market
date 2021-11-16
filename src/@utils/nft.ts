@@ -1,3 +1,5 @@
+import { renderStaticWaves } from './oceanWaves'
+
 export interface NftOptions {
   name: string
   symbol: string
@@ -24,9 +26,10 @@ function encodeSvg(svgString: string): string {
 }
 
 export function generateNftOptions(): NftOptions {
-  // TODO: generate new SVG image here
   // @images/arrow.svg test
-  const image = `<svg><path d="M0 10.4304L16.3396 10.4304L8.88727 17.6833L10.2401 19L20 9.5L10.2401 0L8.88727 1.31491L16.3396 8.56959L0 8.56959V10.4304Z" /></svg>`
+  const image = renderStaticWaves()
+  // const image = new XMLSerializer().serializeToString(waves)
+  // const image = `<svg><path d="M0 10.4304L16.3396 10.4304L8.88727 17.6833L10.2401 19L20 9.5L10.2401 0L8.88727 1.31491L16.3396 8.56959L0 8.56959V10.4304Z" /></svg>`
 
   const newNft: NftOptions = {
     name: 'Ocean Asset v4 NFT',
