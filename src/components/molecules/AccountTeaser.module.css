@@ -26,11 +26,11 @@
 .link span {
   font-size: var(--font-size-large);
   margin-right: calc(var(--spacer) / 3);
-  margin-top: calc(var(--spacer) / 4);
 }
 .name {
   margin-bottom: 0;
   font-size: var(--font-size-base) !important;
+  padding-top: calc(var(--spacer) / 4);
 }
 
 .header {
@@ -41,5 +41,6 @@
 
 .sales {
   font-size: small;
+  margin-top: -5px !important;
   margin-bottom: clac(var(--spacer) / 2);
 }

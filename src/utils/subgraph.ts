@@ -48,11 +48,6 @@ interface DidAndDatatokenMap {
   [name: string]: string
 }
 
-export interface PublisherSales {
-  publisher: string
-  sales: number
-}
-
 const FreeQuery = gql`
   query AssetsFreePrice($datatoken_in: [String!]) {
     dispensers(orderBy: id, where: { datatoken_in: $datatoken_in }) {
@@ -735,7 +730,6 @@ export async function getTopAssetsPublishers(
 ): Promise<string[]> {
   const data: string[] = []
   const publisherSales: UserSales[] = []
-  let users: UserSales[] = []
 
   for (const chain of chainIds) {
     const queryContext = getQueryContext(Number(chain))
@@ -744,18 +738,23 @@ export async function getTopAssetsPublishers(
       null,
       queryContext
     )
-    users = users.concat(fetchedUsers.data.users)
-  }
-
-  for (let i = 0; i < users.length; i++) {
-    if (publisherSales.findIndex((user) => user.id === users[i].id) === -1) {
-      const sales = await getUserSales(users[i].id, chainIds)
-      const publisher: UserSales = {
-        id: users[i].id,
-        nrSales: sales,
-        __typename: 'User'
+    for (let i = 0; i < fetchedUsers.data.users.length; i++) {
+      if (
+        publisherSales.findIndex(
+          (user) => user.id === fetchedUsers.data.users[i].id
+        ) === -1
+      ) {
+        const sales = await getUserSales(
+          fetchedUsers.data.users[i].id,
+          chainIds
+        )
+        const publisher: UserSales = {
+          id: fetchedUsers.data.users[i].id,
+          nrSales: sales,
+          __typename: 'User'
+        }
+        publisherSales.push(publisher)
       }
-      publisherSales.push(publisher)
     }
   }
 
