@@ -13,14 +13,13 @@ import {
   getHighestLiquidityDatatokens
 } from '../../utils/subgraph'
 import { DDO, Logger } from '@oceanprotocol/lib'
-import { useSiteMetadata } from '../../hooks/useSiteMetadata'
 import { useUserPreferences } from '../../providers/UserPreferences'
 import styles from './Home.module.css'
 import AccountList from '../organisms/AccountList'
 import { useIsMounted } from '../../hooks/useIsMounted'
 import { useCancelToken } from '../../hooks/useCancelToken'
 import { SearchQuery } from '../../models/aquarius/SearchQuery'
-import { SortTermOptions } from '../../models/SortAndFilters'
+import { SortOptions, SortTermOptions } from '../../models/SortAndFilters'
 import { BaseQueryParams } from '../../models/aquarius/BaseQueryParams'
 import { PagedAssets } from '../../models/PagedAssets'
 
@@ -167,7 +166,9 @@ export default function HomePage(): ReactElement {
     const baseParams = {
       chainIds: chainIds,
       esPaginationOptions: { size: 9 },
-      sort: { sortBy: SortTermOptions.Created }
+      sortOptions: {
+        sortBy: SortTermOptions.Created
+      } as SortOptions
     } as BaseQueryParams
 
     setQueryLatest(generateBaseQuery(baseParams))
