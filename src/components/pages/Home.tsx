@@ -56,14 +56,11 @@ function PublishersWithMostSales({
   title: ReactElement | string
   action?: ReactElement
 }) {
-  const { appConfig } = useSiteMetadata()
   const { chainIds } = useUserPreferences()
   const [result, setResult] = useState<string[]>([])
   const [loading, setLoading] = useState<boolean>()
 
   useEffect(() => {
-    if (!appConfig.metadataCacheUri) return
-
     async function init() {
       if (chainIds.length === 0) {
         const result: string[] = []
@@ -81,7 +78,7 @@ function PublishersWithMostSales({
       }
     }
     init()
-  }, [appConfig.metadataCacheUri, chainIds])
+  }, [chainIds])
 
   return (
     <section className={styles.section}>
