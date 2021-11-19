@@ -112,10 +112,10 @@ const validationPricing = {
     .min(1, (param) => `Must be more or equal to ${param.min}`)
     .required('Required'),
   amountDataToken: Yup.number()
-    .min(9, (param) => `Must be more or equal to ${param.min}`)
+    .min(50, (param) => `Must be more or equal to ${param.min}`)
     .required('Required'),
   amountOcean: Yup.number()
-    .min(21, (param) => `Must be more or equal to ${param.min}`)
+    .min(50, (param) => `Must be more or equal to ${param.min}`)
     .required('Required'),
   type: Yup.string()
     .matches(/fixed|dynamic|free/g, { excludeEmptyString: true })

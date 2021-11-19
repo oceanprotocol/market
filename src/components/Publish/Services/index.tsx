@@ -38,6 +38,8 @@ export default function ServicesFields(): ReactElement {
   // Auto-change access type based on algo privacy boolean.
   // Could be also done later in transformPublishFormToDdo().
   useEffect(() => {
+    if (!values.services[0].algorithmPrivacy) return
+
     setFieldValue(
       'services[0].access',
       values.services[0].algorithmPrivacy === true ? 'compute' : 'download'
