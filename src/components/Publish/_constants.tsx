@@ -53,7 +53,7 @@ export const initialValues: FormPublishData = {
   },
   services: [
     {
-      files: [],
+      files: undefined,
       dataTokenOptions: { name: '', symbol: '' },
       timeout: '',
       access: '',
@@ -88,7 +88,7 @@ const validationMetadata = {
     .required('Required'),
   author: Yup.string().required('Required'),
   tags: Yup.string().nullable(),
-  termsAndConditions: Yup.boolean().required('Required')
+  termsAndConditions: Yup.boolean().required('Required').isTrue()
 }
 
 const validationService = {
@@ -102,7 +102,7 @@ const validationService = {
   }),
   timeout: Yup.string().required('Required'),
   access: Yup.string()
-    .matches(/compute|download/g, { excludeEmptyString: true })
+    .matches(/compute|download/g)
     .required('Required'),
   providerUrl: Yup.string().url().nullable()
 }
