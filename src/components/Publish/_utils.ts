@@ -30,7 +30,8 @@ export async function transformPublishFormToDdo(
   datatokenAddress: string,
   nftAddress: string
 ): Promise<DDO> {
-  const { chainId, accountId, metadata, services } = values
+  const { metadata, services } = values
+  const { chainId, accountId } = values.user
   const did = sha256(`${nftAddress}${chainId}`)
   const currentTime = dateToStringNoMS(new Date())
   const {

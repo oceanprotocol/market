@@ -10,7 +10,6 @@ export function renderStaticWaves(): string {
   const svg = d3.create('svg')
   const width = 1000
   const height = 250
-  console.log(height)
   const x = d3.scaleLinear().range([0, width])
   const angles = d3.range(Math.random(), 4 * Math.PI, Math.PI / 20)
 

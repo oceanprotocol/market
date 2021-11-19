@@ -12,9 +12,11 @@ export interface FormPublishService {
 }
 
 export interface FormPublishData {
-  stepCurrent: number
-  accountId: string
-  chainId: number
+  user: {
+    stepCurrent: number
+    accountId: string
+    chainId: number
+  }
   metadata: {
     nft: NftOptions
     type: 'Dataset' | 'Algorithm' | string

@@ -21,21 +21,23 @@ export default function Actions({
 
   function handleNext(e: FormEvent) {
     e.preventDefault()
-    setFieldValue('stepCurrent', values.stepCurrent + 1)
+    setFieldValue('stepCurrent', values.user.stepCurrent + 1)
     scrollToRef.current.scrollIntoView()
   }
 
   function handlePrevious(e: FormEvent) {
     e.preventDefault()
-    setFieldValue('stepCurrent', values.stepCurrent - 1)
+    setFieldValue('stepCurrent', values.user.stepCurrent - 1)
     scrollToRef.current.scrollIntoView()
   }
 
   return (
     <footer className={styles.actions}>
-      {values.stepCurrent > 1 && <Button onClick={handlePrevious}>Back</Button>}
+      {values.user.stepCurrent > 1 && (
+        <Button onClick={handlePrevious}>Back</Button>
+      )}
 
-      {values.stepCurrent < wizardSteps.length ? (
+      {values.user.stepCurrent < wizardSteps.length ? (
         <Button style="primary" onClick={handleNext}>
           Continue
         </Button>

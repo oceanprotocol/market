@@ -11,12 +11,12 @@ export function Steps(): ReactElement {
   useEffect(() => {
     if (!chainId || !accountId) return
 
-    setFieldValue('chainId', chainId)
-    setFieldValue('accountId', accountId)
+    setFieldValue('user.chainId', chainId)
+    setFieldValue('user.accountId', accountId)
   }, [chainId, accountId, setFieldValue])
 
   const { component } = wizardSteps.filter(
-    (stepContent) => stepContent.step === values.stepCurrent
+    (stepContent) => stepContent.step === values.user.stepCurrent
   )[0]
 
   return component

@@ -20,7 +20,9 @@ export default function Navigation(): ReactElement {
             key={step.title}
             onClick={() => handleStepClick(step.step)}
             // TODO: add success class
-            className={values.stepCurrent === step.step ? styles.current : null}
+            className={
+              values.user.stepCurrent === step.step ? styles.current : null
+            }
           >
             {step.title}
           </li>

@@ -32,9 +32,11 @@ export const wizardSteps: StepContent[] = [
 ]
 
 export const initialValues: FormPublishData = {
-  stepCurrent: 1,
-  chainId: 1,
-  accountId: '',
+  user: {
+    stepCurrent: 1,
+    chainId: 1,
+    accountId: ''
+  },
   metadata: {
     nft: { name: '', symbol: '', description: '', image: '' },
     type: 'dataset',
