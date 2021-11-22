@@ -8,7 +8,6 @@ import { gql } from 'urql'
 import { fetchData, getQueryContext } from '@utils/subgraph'
 import { OrdersData } from '../../../@types/apollo/OrdersData'
 import BigNumber from 'bignumber.js'
-import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 import { usePricing } from '@hooks/usePricing'
 import { useConsume } from '@hooks/useConsume'
@@ -51,7 +50,6 @@ export default function Consume({
   consumableFeedback?: string
 }): ReactElement {
   const { accountId } = useWeb3()
-  const { ocean } = useOcean()
   const { appConfig } = useSiteMetadata()
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
   const [previousOrderId, setPreviousOrderId] = useState<string>()
@@ -127,8 +125,7 @@ export default function Consume({
     if (!accountId) return
     setIsDisabled(
       !isConsumable ||
-        ((!ocean ||
-          !isBalanceSufficient ||
+        ((!isBalanceSufficient ||
           !isAssetNetwork ||
           typeof consumeStepText !== 'undefined' ||
           pricingIsLoading ||
@@ -137,7 +134,6 @@ export default function Consume({
           !hasDatatoken)
     )
   }, [
-    ocean,
     hasPreviousOrder,
     isBalanceSufficient,
     isAssetNetwork,

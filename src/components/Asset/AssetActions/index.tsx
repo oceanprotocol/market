@@ -16,10 +16,10 @@ import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
 import styles from './index.module.css'
 
-export default function AssetActions(): ReactElement {
+export default function AssetActions({ ddo }: { ddo: Asset }): ReactElement {
   const { accountId, balance } = useWeb3()
   const { ocean, account } = useOcean()
-  const { price, ddo, isAssetNetwork } = useAsset()
+  const { price, isAssetNetwork } = useAsset()
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
   const [dtBalance, setDtBalance] = useState<string>()
@@ -104,6 +104,7 @@ export default function AssetActions(): ReactElement {
 
   const UseContent = isCompute ? (
     <Compute
+      ddo={ddo}
       dtBalance={dtBalance}
       file={fileMetadata}
       fileIsLoading={fileIsLoading}

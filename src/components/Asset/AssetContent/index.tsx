@@ -18,7 +18,7 @@ export default function AssetContent({
   ddo,
   isPreview
 }: {
-  ddo: Asset | DDO
+  ddo: Asset
   isPreview?: boolean
 }): ReactElement {
   const { debug } = useUserPreferences()
@@ -49,8 +49,7 @@ export default function AssetContent({
                   className={styles.description}
                   text={ddo?.metadata.description || ''}
                 />
-
-                <MetaSecondary />
+                <MetaSecondary ddo={ddo} />
               </>
             )}
 
@@ -63,7 +62,7 @@ export default function AssetContent({
         </div>
 
         <div className={styles.actions}>
-          <AssetActions />
+          <AssetActions ddo={ddo} />
 
           {/* {isOwner && isAssetNetwork && (
             <div className={styles.ownerActions}>
