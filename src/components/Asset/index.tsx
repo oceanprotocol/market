@@ -14,7 +14,6 @@ export default function AssetDetails({ uri }: { uri: string }): ReactElement {
       setPageTitle('Could not retrieve asset')
       return
     }
-
     setPageTitle(isInPurgatory ? '' : title)
   }, [ddo, error, isInPurgatory, title])
 

@@ -4,8 +4,8 @@ import styles from './MetaFull.module.css'
 import Publisher from '@shared/Publisher'
 import { useAsset } from '@context/Asset'
 
-export default function MetaFull(): ReactElement {
-  const { ddo, isInPurgatory } = useAsset()
+export default function MetaFull({ ddo }: { ddo: Asset | DDO }): ReactElement {
+  const { isInPurgatory } = useAsset()
 
   function DockerImage() {
     const { image, tag } = ddo?.metadata?.algorithm?.container
@@ -19,7 +19,7 @@ export default function MetaFull(): ReactElement {
       )}
       <MetaItem
         title="Owner"
-        content={<Publisher account={ddo?.nft?.owner} />}
+        content={<Publisher account={(ddo as Asset)?.nft?.owner} />}
       />
 
       {ddo?.metadata?.type === 'algorithm' && ddo?.metadata?.algorithm && (

@@ -28,6 +28,8 @@ export default function Preview(): ReactElement {
   return (
     <div className={styles.preview}>
       <h2 className={styles.previewTitle}>Preview</h2>
+
+      <h3 className={styles.assetTitle}>{values.metadata.name}</h3>
       <AssetContent ddo={ddo} />
     </div>
   )

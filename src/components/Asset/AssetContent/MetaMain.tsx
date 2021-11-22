@@ -9,8 +9,8 @@ import AssetType from '@shared/AssetType'
 import styles from './MetaMain.module.css'
 import { getServiceByName } from '@utils/ddo'
 
-export default function MetaMain(): ReactElement {
-  const { ddo, owner, isAssetNetwork } = useAsset()
+export default function MetaMain({ ddo }: { ddo: Asset | DDO }): ReactElement {
+  const { owner, isAssetNetwork } = useAsset()
   const { web3ProviderInfo } = useWeb3()
 
   const isCompute = Boolean(getServiceByName(ddo, 'compute'))
@@ -35,16 +35,18 @@ export default function MetaMain(): ReactElement {
               : `token/${ddo?.services[0].datatokenAddress}`
           }
         >
-          {`${ddo?.dataTokenInfo.name} — ${ddo?.dataTokenInfo.symbol}`}
+          {`${(ddo as Asset)?.dataTokenInfo?.name} — ${
+            (ddo as Asset)?.dataTokenInfo?.symbol
+          }`}
         </ExplorerLink>
 
         {web3ProviderInfo?.name === 'MetaMask' && isAssetNetwork && (
           <span className={styles.addWrap}>
             <AddToken
               address={ddo?.services[0].datatokenAddress}
-              symbol={ddo?.dataTokenInfo.symbol}
+              symbol={(ddo as Asset)?.dataTokenInfo?.symbol}
               logo="https://raw.githubusercontent.com/oceanprotocol/art/main/logo/datatoken.png"
-              text={`Add ${ddo?.dataTokenInfo.symbol} to wallet`}
+              text={`Add ${(ddo as Asset)?.dataTokenInfo?.symbol} to wallet`}
               className={styles.add}
               minimal
             />

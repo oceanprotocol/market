@@ -16,6 +16,7 @@ import { Steps } from './Steps'
 import { FormPublishData } from './_types'
 import { sha256 } from 'js-sha256'
 import { generateNftCreateData } from '@utils/nft'
+import { useUserPreferences } from '@context/UserPreferences'
 
 const formName = 'ocean-publish-form'
 
@@ -24,6 +25,7 @@ export default function PublishPage({
 }: {
   content: { title: string; description: string; warning: string }
 }): ReactElement {
+  const { debug } = useUserPreferences()
   const { accountId, chainId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
   // const { publish, publishError, isLoading, publishStepText } = usePublish()
@@ -137,7 +139,7 @@ export default function PublishPage({
               <Steps />
               <Actions scrollToRef={scrollToRef} />
             </Form>
-            <Debug />
+            {debug && <Debug />}
           </>
         </Formik>
       )}

@@ -63,7 +63,7 @@ export async function transformPublishFormToDdo(
     },
     ...(type === 'algorithm' && {
       algorithm: {
-        language: getUrlFileExtension(files[0]),
+        language: files?.length ? getUrlFileExtension(files[0]) : '',
         version: '0.1',
         container: {
           entrypoint: dockerImageCustomEntrypoint,

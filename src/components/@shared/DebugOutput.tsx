@@ -10,7 +10,7 @@ export default function DebugOutput({
   return (
     <div style={{ marginTop: 'var(--spacer)' }}>
       <h5>{title}</h5>
-      <pre>
+      <pre style={{ wordWrap: 'break-word' }}>
         <code>{JSON.stringify(output, null, 2)}</code>
       </pre>
     </div>

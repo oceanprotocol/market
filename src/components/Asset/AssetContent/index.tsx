@@ -40,7 +40,7 @@ export default function AssetContent({
       <article className={styles.grid}>
         <div>
           <div className={styles.content}>
-            <MetaMain />
+            <MetaMain ddo={ddo} />
             <Bookmark did={ddo?.id} />
 
             {isInPurgatory ? (
@@ -85,7 +85,7 @@ export default function AssetContent({
               </>
             )}
 
-            <MetaFull />
+            <MetaFull ddo={ddo} />
             <EditHistory />
             {debug === true && <DebugOutput title="DDO" output={ddo} />}
           </div>
