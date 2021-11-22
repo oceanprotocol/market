@@ -6,13 +6,13 @@ import AssetContent from 'src/components/Asset/AssetContent'
 import { transformPublishFormToDdo } from '../_utils'
 
 export default function Preview(): ReactElement {
-  const [ddo, setDdo] = useState<DDO>()
+  const [ddo, setDdo] = useState<Asset>()
   const { values } = useFormikContext<FormPublishData>()
 
   useEffect(() => {
     async function makeDdo() {
       const ddo = await transformPublishFormToDdo(values)
-      setDdo(ddo)
+      setDdo(ddo as Asset)
     }
     makeDdo()
   }, [values])

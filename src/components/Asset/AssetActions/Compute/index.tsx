@@ -401,10 +401,7 @@ export default function Compute({
             text="This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
             state="info"
           />
-          <AlgorithmDatasetsListForCompute
-            algorithmDid={ddo.id}
-            dataset={ddo}
-          />
+          <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} ddo={ddo} />
         </>
       ) : (
         <Formik

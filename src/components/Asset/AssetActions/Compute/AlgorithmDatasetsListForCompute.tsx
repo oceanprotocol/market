@@ -3,38 +3,39 @@ import styles from './AlgorithmDatasetsListForCompute.module.css'
 import { getAlgorithmDatasetsForCompute } from '@utils/aquarius'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import AssetComputeList from '@shared/AssetList/AssetComputeList'
-import { useAsset } from '@context/Asset'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getServiceByName } from '@utils/ddo'
 
 export default function AlgorithmDatasetsListForCompute({
-  algorithmDid,
-  dataset
+  ddo,
+  algorithmDid
 }: {
+  ddo: Asset
   algorithmDid: string
-  dataset: Asset
 }): ReactElement {
-  const { ddo } = useAsset()
   const [datasetsForCompute, setDatasetsForCompute] =
     useState<AssetSelectionAsset[]>()
   const newCancelToken = useCancelToken()
+
   useEffect(() => {
+    if (!ddo) return
+
     async function getDatasetsAllowedForCompute() {
-      const isCompute = Boolean(getServiceByName(dataset, 'compute'))
+      const isCompute = Boolean(getServiceByName(ddo, 'compute'))
       const datasetComputeService = getServiceByName(
-        dataset,
+        ddo,
         isCompute ? 'compute' : 'access'
       )
       const datasets = await getAlgorithmDatasetsForCompute(
         algorithmDid,
         datasetComputeService?.serviceEndpoint,
-        dataset?.chainId,
+        ddo?.chainId,
         newCancelToken()
       )
       setDatasetsForCompute(datasets)
     }
     ddo.metadata.type === 'algorithm' && getDatasetsAllowedForCompute()
-  }, [ddo.metadata.type])
+  }, [ddo?.metadata?.type])
 
   return (
     <div className={styles.datasetsContainer}>
