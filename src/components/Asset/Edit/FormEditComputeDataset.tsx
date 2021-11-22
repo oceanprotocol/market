@@ -15,7 +15,7 @@ import { publisherTrustedAlgorithm as PublisherTrustedAlgorithm } from '@oceanpr
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import FormActions from './FormActions'
 import { useCancelToken } from '@hooks/useCancelToken'
-import { SortTermOptions } from '../../../../@types/aquarius/SearchQuery'
+import { SortTermOptions } from '../../../@types/aquarius/SearchQuery'
 import { getServiceByName } from '@utils/ddo'
 
 export default function FormEditComputeDataset({

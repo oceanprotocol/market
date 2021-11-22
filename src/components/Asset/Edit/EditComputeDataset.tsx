@@ -12,7 +12,7 @@ import { transformComputeFormToServiceComputePrivacy } from '@utils/compute'
 import { setMinterToDispenser, setMinterToPublisher } from '@utils/freePrice'
 import Web3Feedback from '@shared/Web3Feedback'
 import { getInitialValues, validationSchema } from './_constants'
-import content from '../../../../../content/pages/editComputeDataset.json'
+import content from '../../../../content/pages/editComputeDataset.json'
 
 export default function EditComputeDataset({
   setShowEdit

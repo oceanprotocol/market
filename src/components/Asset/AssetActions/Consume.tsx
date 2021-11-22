@@ -105,6 +105,8 @@ export default function Consume({
   }, [data, assetTimeout, accountId, isAssetNetwork])
 
   useEffect(() => {
+    if (!ddo) return
+
     const { timeout } = ddo.services[0]
     setAssetTimeout(`${timeout}`)
   }, [ddo])
@@ -182,7 +184,7 @@ export default function Consume({
       datasetLowPoolLiquidity={!isConsumablePrice}
       onClick={handleConsume}
       assetTimeout={secondsToString(parseInt(assetTimeout))}
-      assetType={ddo?.metadata.type}
+      assetType={ddo?.metadata?.type}
       stepText={consumeStepText || pricingStepText}
       isLoading={pricingIsLoading || isLoading}
       priceType={price?.type}
@@ -203,7 +205,7 @@ export default function Consume({
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>
-      {ddo.metadata.type === 'algorithm' && (
+      {ddo?.metadata?.type === 'algorithm' && (
         <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} dataset={ddo} />
       )}
     </aside>

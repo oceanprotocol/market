@@ -8,8 +8,6 @@ import Bookmark from './Bookmark'
 import { useAsset } from '@context/Asset'
 import Alert from '@shared/atoms/Alert'
 import Button from '@shared/atoms/Button'
-import Edit from '../AssetActions/Edit'
-import EditComputeDataset from '../AssetActions/Edit/EditComputeDataset'
 import DebugOutput from '@shared/DebugOutput'
 import MetaMain from './MetaMain'
 import EditHistory from './EditHistory'
@@ -27,36 +25,13 @@ export default function AssetContent({
   const { accountId } = useWeb3()
   const { price, owner, isInPurgatory, purgatoryData, isAssetNetwork } =
     useAsset()
-  const [showEdit, setShowEdit] = useState<boolean>()
-  const [isComputeType, setIsComputeType] = useState<boolean>(false)
-  const [showEditCompute, setShowEditCompute] = useState<boolean>()
   const [isOwner, setIsOwner] = useState(false)
 
   const serviceCompute = ddo?.services?.filter(
     (service) => service.type === 'compute'
   )[0]
 
-  useEffect(() => {
-    if (!accountId || !owner) return
-
-    const isOwner = accountId.toLowerCase() === owner.toLowerCase()
-    setIsOwner(isOwner)
-    setIsComputeType(Boolean(serviceCompute))
-  }, [accountId, price, owner, ddo])
-
-  function handleEditButton() {
-    setShowEdit(true)
-  }
-
-  function handleEditComputeButton() {
-    setShowEditCompute(true)
-  }
-
-  return showEdit ? (
-    <Edit setShowEdit={setShowEdit} isComputeType={isComputeType} />
-  ) : showEditCompute ? (
-    <EditComputeDataset setShowEdit={setShowEditCompute} />
-  ) : (
+  return (
     <>
       <div className={styles.networkWrap}>
         <NetworkName networkId={ddo?.chainId} className={styles.network} />
@@ -84,7 +59,7 @@ export default function AssetContent({
 
                 <MetaSecondary />
 
-                {isOwner && isAssetNetwork && (
+                {/* {isOwner && isAssetNetwork && (
                   <div className={styles.ownerActions}>
                     <Button
                       style="text"
@@ -106,7 +81,7 @@ export default function AssetContent({
                       </>
                     )}
                   </div>
-                )}
+                )} */}
               </>
             )}
 

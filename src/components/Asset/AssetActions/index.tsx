@@ -51,7 +51,7 @@ export default function AssetActions(): ReactElement {
   // }, [accountId, isAssetNetwork, ddo, ocean])
 
   useEffect(() => {
-    const oceanConfig = getOceanConfig(ddo.chainId)
+    const oceanConfig = getOceanConfig(ddo?.chainId)
     if (!oceanConfig) return
 
     async function initFileInfo() {
