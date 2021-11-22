@@ -27,12 +27,14 @@ function transformTags(value: string): string[] {
 
 export async function transformPublishFormToDdo(
   values: FormPublishData,
+  // Those 2 are only passed during actual publishing process
+  // so we can always assume if they are not passed, we are on preview.
   datatokenAddress?: string,
   nftAddress?: string
 ): Promise<DDO> {
   const { metadata, services, user } = values
   const { chainId, accountId } = user
-  const did = nftAddress ? sha256(`${nftAddress}${chainId}`) : ''
+  const did = nftAddress ? `0x${sha256(`${nftAddress}${chainId}`)}` : '0x...'
   const currentTime = dateToStringNoMS(new Date())
   const {
     type,
@@ -69,7 +71,7 @@ export async function transformPublishFormToDdo(
           entrypoint: dockerImageCustomEntrypoint,
           image: dockerImageCustom,
           tag: dockerImageCustomTag,
-          checksum: '' // how to get? Is it user input?
+          checksum: '' // TODO: how to get? Is it user input?
         }
       }
     })
@@ -108,6 +110,7 @@ export async function transformPublishFormToDdo(
     chainId,
     metadata: newMetadata,
     services: [newService],
+    // only added for DDO preview, reflecting Asset response
     ...(!datatokenAddress && {
       dataTokenInfo: {
         name: values.services[0].dataTokenOptions.name,

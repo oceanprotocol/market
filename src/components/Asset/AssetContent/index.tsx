@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement } from 'react'
 import Markdown from '@shared/Markdown'
 import MetaFull from './MetaFull'
 import MetaSecondary from './MetaSecondary'
@@ -7,11 +7,9 @@ import { useUserPreferences } from '@context/UserPreferences'
 import Bookmark from './Bookmark'
 import { useAsset } from '@context/Asset'
 import Alert from '@shared/atoms/Alert'
-import Button from '@shared/atoms/Button'
 import DebugOutput from '@shared/DebugOutput'
 import MetaMain from './MetaMain'
 import EditHistory from './EditHistory'
-import { useWeb3 } from '@context/Web3'
 import styles from './index.module.css'
 import NetworkName from '@shared/NetworkName'
 import content from '../../../../content/purgatory.json'
@@ -24,14 +22,7 @@ export default function AssetContent({
   isPreview?: boolean
 }): ReactElement {
   const { debug } = useUserPreferences()
-  const { accountId } = useWeb3()
-  const { price, owner, isInPurgatory, purgatoryData, isAssetNetwork } =
-    useAsset()
-  const [isOwner, setIsOwner] = useState(false)
-
-  const serviceCompute = ddo?.services?.filter(
-    (service) => service.type === 'compute'
-  )[0]
+  const { isInPurgatory, purgatoryData } = useAsset()
 
   return (
     <>
