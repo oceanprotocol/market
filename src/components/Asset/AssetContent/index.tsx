@@ -17,9 +17,11 @@ import NetworkName from '@shared/NetworkName'
 import content from '../../../../content/purgatory.json'
 
 export default function AssetContent({
-  ddo
+  ddo,
+  isPreview
 }: {
   ddo: Asset | DDO
+  isPreview?: boolean
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
@@ -41,7 +43,7 @@ export default function AssetContent({
         <div>
           <div className={styles.content}>
             <MetaMain ddo={ddo} />
-            <Bookmark did={ddo?.id} />
+            {!isPreview && <Bookmark did={ddo?.id} />}
 
             {isInPurgatory ? (
               <Alert
@@ -58,41 +60,43 @@ export default function AssetContent({
                 />
 
                 <MetaSecondary />
-
-                {/* {isOwner && isAssetNetwork && (
-                  <div className={styles.ownerActions}>
-                    <Button
-                      style="text"
-                      size="small"
-                      onClick={handleEditButton}
-                    >
-                      Edit Metadata
-                    </Button>
-                    {serviceCompute && ddo?.metadata.type === 'dataset' && (
-                      <>
-                        <span className={styles.separator}>|</span>
-                        <Button
-                          style="text"
-                          size="small"
-                          onClick={handleEditComputeButton}
-                        >
-                          Edit Compute Settings
-                        </Button>
-                      </>
-                    )}
-                  </div>
-                )} */}
               </>
             )}
 
             <MetaFull ddo={ddo} />
-            <EditHistory />
-            {debug === true && <DebugOutput title="DDO" output={ddo} />}
+            {!isPreview && <EditHistory />}
+            {!isPreview && debug === true && (
+              <DebugOutput title="DDO" output={ddo} />
+            )}
           </div>
         </div>
 
         <div className={styles.actions}>
           <AssetActions />
+
+          {/* {isOwner && isAssetNetwork && (
+            <div className={styles.ownerActions}>
+              <Button
+                style="text"
+                size="small"
+                onClick={handleEditButton}
+              >
+                Edit Metadata
+              </Button>
+              {serviceCompute && ddo?.metadata.type === 'dataset' && (
+                <>
+                  <span className={styles.separator}>|</span>
+                  <Button
+                    style="text"
+                    size="small"
+                    onClick={handleEditComputeButton}
+                  >
+                    Edit Compute Settings
+                  </Button>
+                </>
+              )}
+            </div>
+          )} */}
         </div>
       </article>
     </>

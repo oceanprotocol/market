@@ -32,7 +32,7 @@ export async function transformPublishFormToDdo(
 ): Promise<DDO> {
   const { metadata, services, user } = values
   const { chainId, accountId } = user
-  const did = sha256(`${nftAddress}${chainId}`)
+  const did = nftAddress ? sha256(`${nftAddress}${chainId}`) : ''
   const currentTime = dateToStringNoMS(new Date())
   const {
     type,
@@ -75,12 +75,9 @@ export async function transformPublishFormToDdo(
     })
   }
 
-  const filesEncrypted = await getEncryptedFileUrls(
-    files as string[],
-    providerUrl,
-    did,
-    accountId
-  )
+  const filesEncrypted =
+    files?.length &&
+    (await getEncryptedFileUrls(files as string[], providerUrl, did, accountId))
 
   const newService: Service = {
     type: access,
@@ -110,7 +107,16 @@ export async function transformPublishFormToDdo(
     version: '4.0.0',
     chainId,
     metadata: newMetadata,
-    services: [newService]
+    services: [newService],
+    ...(!datatokenAddress && {
+      dataTokenInfo: {
+        name: values.services[0].dataTokenOptions.name,
+        symbol: values.services[0].dataTokenOptions.symbol
+      },
+      nft: {
+        owner: accountId
+      }
+    })
   }
 
   return newDdo

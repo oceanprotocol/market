@@ -10,13 +10,16 @@ import styles from './MetaMain.module.css'
 import { getServiceByName } from '@utils/ddo'
 
 export default function MetaMain({ ddo }: { ddo: Asset | DDO }): ReactElement {
-  const { owner, isAssetNetwork } = useAsset()
+  const { isAssetNetwork } = useAsset()
   const { web3ProviderInfo } = useWeb3()
 
   const isCompute = Boolean(getServiceByName(ddo, 'compute'))
   const accessType = isCompute ? 'compute' : 'access'
   const blockscoutNetworks = [1287, 2021000, 2021001, 44787, 246, 1285]
   const isBlockscoutExplorer = blockscoutNetworks.includes(ddo?.chainId)
+
+  const dataTokenName = (ddo as Asset)?.dataTokenInfo?.name
+  const dataTokenSymbol = (ddo as Asset)?.dataTokenInfo?.symbol
 
   return (
     <aside className={styles.meta}>
@@ -35,9 +38,7 @@ export default function MetaMain({ ddo }: { ddo: Asset | DDO }): ReactElement {
               : `token/${ddo?.services[0].datatokenAddress}`
           }
         >
-          {`${(ddo as Asset)?.dataTokenInfo?.name} — ${
-            (ddo as Asset)?.dataTokenInfo?.symbol
-          }`}
+          {`${dataTokenName} — ${dataTokenSymbol}`}
         </ExplorerLink>
 
         {web3ProviderInfo?.name === 'MetaMask' && isAssetNetwork && (
@@ -55,7 +56,7 @@ export default function MetaMain({ ddo }: { ddo: Asset | DDO }): ReactElement {
       </header>
 
       <div className={styles.byline}>
-        Published By <Publisher account={owner} />
+        Published By <Publisher account={(ddo as Asset)?.nft?.owner} />
         <p>
           <Time date={ddo?.metadata.created} relative />
           {ddo?.metadata.created !== ddo?.metadata.updated && (
