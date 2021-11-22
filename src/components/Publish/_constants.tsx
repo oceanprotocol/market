@@ -76,6 +76,8 @@ export const initialValues: FormPublishData = {
   }
 }
 
+// TODO: conditional validation
+// e.g. when algo is selected, Docker image is required
 const validationMetadata = {
   type: Yup.string()
     .matches(/dataset|algorithm/g, { excludeEmptyString: true })

@@ -27,11 +27,11 @@ function transformTags(value: string): string[] {
 
 export async function transformPublishFormToDdo(
   values: FormPublishData,
-  datatokenAddress: string,
-  nftAddress: string
+  datatokenAddress?: string,
+  nftAddress?: string
 ): Promise<DDO> {
-  const { metadata, services } = values
-  const { chainId, accountId } = values.user
+  const { metadata, services, user } = values
+  const { chainId, accountId } = user
   const did = sha256(`${nftAddress}${chainId}`)
   const currentTime = dateToStringNoMS(new Date())
   const {
@@ -47,13 +47,6 @@ export async function transformPublishFormToDdo(
     dockerImageCustomEntrypoint
   } = metadata
   const { access, files, providerUrl, timeout } = services[0]
-
-  const filesEncrypted = await getEncryptedFileUrls(
-    files as string[],
-    providerUrl,
-    did,
-    accountId
-  )
 
   const newMetadata: Metadata = {
     created: currentTime,
@@ -81,6 +74,13 @@ export async function transformPublishFormToDdo(
       }
     })
   }
+
+  const filesEncrypted = await getEncryptedFileUrls(
+    files as string[],
+    providerUrl,
+    did,
+    accountId
+  )
 
   const newService: Service = {
     type: access,

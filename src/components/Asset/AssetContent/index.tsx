@@ -18,7 +18,11 @@ import styles from './index.module.css'
 import NetworkName from '@shared/NetworkName'
 import content from '../../../../content/purgatory.json'
 
-export default function AssetContent({ ddo }: { ddo: Asset }): ReactElement {
+export default function AssetContent({
+  ddo
+}: {
+  ddo: Asset | DDO
+}): ReactElement {
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
   const { price, owner, isInPurgatory, purgatoryData, isAssetNetwork } =
@@ -28,7 +32,7 @@ export default function AssetContent({ ddo }: { ddo: Asset }): ReactElement {
   const [showEditCompute, setShowEditCompute] = useState<boolean>()
   const [isOwner, setIsOwner] = useState(false)
 
-  const serviceCompute = ddo.services.filter(
+  const serviceCompute = ddo?.services?.filter(
     (service) => service.type === 'compute'
   )[0]
 
@@ -55,14 +59,14 @@ export default function AssetContent({ ddo }: { ddo: Asset }): ReactElement {
   ) : (
     <>
       <div className={styles.networkWrap}>
-        <NetworkName networkId={ddo.chainId} className={styles.network} />
+        <NetworkName networkId={ddo?.chainId} className={styles.network} />
       </div>
 
       <article className={styles.grid}>
         <div>
           <div className={styles.content}>
             <MetaMain />
-            <Bookmark did={ddo.id} />
+            <Bookmark did={ddo?.id} />
 
             {isInPurgatory ? (
               <Alert
