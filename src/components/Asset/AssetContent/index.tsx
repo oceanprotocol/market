@@ -64,6 +64,11 @@ export default function AssetContent({
         <div className={styles.actions}>
           <AssetActions ddo={ddo} />
 
+          {/* 
+            TODO: restore edit actions, ideally put edit screens on new page 
+            with own URL instead of switching out AssetContent in place. 
+            Simple way would be modal usage 
+          */}
           {/* {isOwner && isAssetNetwork && (
             <div className={styles.ownerActions}>
               <Button

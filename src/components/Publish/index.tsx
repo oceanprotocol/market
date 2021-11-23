@@ -18,6 +18,7 @@ import { sha256 } from 'js-sha256'
 import { generateNftCreateData } from '@utils/nft'
 import { useUserPreferences } from '@context/UserPreferences'
 
+// TODO: restore FormikPersist, add back clear form action
 const formName = 'ocean-publish-form'
 
 export default function PublishPage({
