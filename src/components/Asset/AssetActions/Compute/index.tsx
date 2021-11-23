@@ -448,7 +448,7 @@ export default function Compute({
           <SuccessConfetti success="Your job started successfully! Watch the progress below or on your profile." />
         )}
       </footer>
-      {accountId && (
+      {accountId && price.datatoken && (
         <AssetActionHistoryTable title="Your Compute Jobs">
           <ComputeJobs minimal />
         </AssetActionHistoryTable>

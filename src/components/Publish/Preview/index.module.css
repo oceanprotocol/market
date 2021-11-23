@@ -2,8 +2,15 @@
   font-size: var(--font-size-small);
   margin-top: calc(var(--spacer) / 2);
   margin-bottom: var(--spacer);
-  margin-left: calc(var(--spacer) * -2);
-  margin-right: calc(var(--spacer) * -2);
+  margin-left: calc(var(--spacer) / -4);
+  margin-right: calc(var(--spacer) / -4);
+}
+
+@media (min-width: 60rem) {
+  .preview {
+    margin-left: calc(var(--spacer) * -3);
+    margin-right: calc(var(--spacer) * -3);
+  }
 }
 
 .previewTitle {
