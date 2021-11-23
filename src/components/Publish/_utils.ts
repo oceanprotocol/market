@@ -1,3 +1,4 @@
+import { mapTimeoutStringToSeconds } from '@utils/ddo'
 import { getEncryptedFileUrls } from '@utils/provider'
 import { sha256 } from 'js-sha256'
 import slugify from 'slugify'
@@ -86,7 +87,7 @@ export async function transformPublishFormToDdo(
     files: filesEncrypted,
     datatokenAddress,
     serviceEndpoint: providerUrl,
-    timeout,
+    timeout: mapTimeoutStringToSeconds(timeout),
     ...(access === 'compute' && {
       compute: {
         namespace: 'ocean-compute',
