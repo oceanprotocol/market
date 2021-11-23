@@ -16,7 +16,7 @@
   display: grid;
   gap: calc(var(--spacer) / 2);
   grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-  padding: var(--spacer);
+  padding: calc(var(--spacer) / 2);
   max-width: 30rem;
   margin-left: auto;
   margin-right: auto;

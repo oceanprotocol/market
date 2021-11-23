@@ -3,8 +3,7 @@
   margin-top: var(--spacer);
   margin-bottom: 0;
   color: var(--color-secondary);
-  text-align: center;
-  padding-bottom: calc(var(--spacer) / 3);
+  padding-bottom: calc(var(--spacer) / 4);
 }
 
 .tokens {

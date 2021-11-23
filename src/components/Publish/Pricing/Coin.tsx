@@ -22,16 +22,19 @@ export default function Coin({
 
   return (
     <div className={styles.coin}>
-      <figure className={styles.icon}>
-        <Logo />
-      </figure>
+      <div className={styles.token}>
+        <figure className={styles.icon}>
+          <Logo />
+        </figure>
+        <div>
+          <h4 className={styles.tokenName}>
+            {datatokenOptions?.name || 'Data Token'}
+          </h4>
 
-      <h4 className={styles.tokenName}>
-        {datatokenOptions?.name || 'Data Token'}
-      </h4>
-
-      <div className={styles.weight}>
-        Weight <strong>{weight}</strong>
+          <div className={styles.weight}>
+            Weight <strong>{weight}</strong>
+          </div>
+        </div>
       </div>
 
       <div className={styles.data}>
