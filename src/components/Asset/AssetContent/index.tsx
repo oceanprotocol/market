@@ -16,9 +16,11 @@ import content from '../../../../content/purgatory.json'
 
 export default function AssetContent({
   ddo,
+  price,
   isPreview
 }: {
   ddo: Asset
+  price: BestPrice
   isPreview?: boolean
 }): ReactElement {
   const { debug } = useUserPreferences()
@@ -62,7 +64,7 @@ export default function AssetContent({
         </div>
 
         <div className={styles.actions}>
-          <AssetActions ddo={ddo} />
+          <AssetActions ddo={ddo} price={price} />
 
           {/* 
             TODO: restore edit actions, ideally put edit screens on new page 

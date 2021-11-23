@@ -42,6 +42,11 @@ export default function PublishPage({
       // const nftOptions = values.metadata.nft
       // const nftCreateData = generateNftCreateData(nftOptions)
       // const ercParams = {}
+      // const priceOptions = {
+      //   ...values,
+      //   // swapFee is tricky: to get 0.1% you need to send 0.001 as value
+      //   swapFee: `${values.swapFee / 100}`
+      // }
       // const txMint = await createNftWithErc(accountId, nftCreateData)
       // const { nftAddress, datatokenAddress } = txMint.logs[0].args
       //

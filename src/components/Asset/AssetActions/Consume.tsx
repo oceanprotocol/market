@@ -34,6 +34,7 @@ const previousOrderQuery = gql`
 
 export default function Consume({
   ddo,
+  price,
   file,
   isBalanceSufficient,
   dtBalance,
@@ -42,6 +43,7 @@ export default function Consume({
   consumableFeedback
 }: {
   ddo: Asset
+  price: BestPrice
   file: FileMetadata
   isBalanceSufficient: boolean
   dtBalance: string
@@ -53,7 +55,7 @@ export default function Consume({
   const { appConfig } = useSiteMetadata()
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
   const [previousOrderId, setPreviousOrderId] = useState<string>()
-  const { isInPurgatory, price, isAssetNetwork } = useAsset()
+  const { isInPurgatory, isAssetNetwork } = useAsset()
   const { buyDT, pricingStepText, pricingError, pricingIsLoading } =
     usePricing()
   const { consumeStepText, consume, consumeError, isLoading } = useConsume()

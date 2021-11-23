@@ -129,7 +129,7 @@ function usePricing(): UsePricing {
       Decimal.set({ precision: 18 })
 
       switch (price?.type) {
-        case 'pool': {
+        case 'dynamic': {
           const oceanAmmount = new Decimal(price.value).times(1.05).toString()
           const maxPrice = new Decimal(price.value).times(2).toString()
 
@@ -152,7 +152,7 @@ function usePricing(): UsePricing {
           Logger.log('DT buy response', tx)
           break
         }
-        case 'exchange': {
+        case 'fixed': {
           if (!config.oceanTokenAddress) {
             Logger.error(`'oceanTokenAddress' not set in config`)
             return

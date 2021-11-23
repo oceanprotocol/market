@@ -6,7 +6,7 @@ import { useAsset } from '@context/Asset'
 import AssetContent from './AssetContent'
 
 export default function AssetDetails({ uri }: { uri: string }): ReactElement {
-  const { ddo, title, error, isInPurgatory, loading } = useAsset()
+  const { ddo, title, error, isInPurgatory, loading, price } = useAsset()
   const [pageTitle, setPageTitle] = useState<string>()
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export default function AssetDetails({ uri }: { uri: string }): ReactElement {
 
   return ddo && pageTitle !== undefined && !loading ? (
     <Page title={pageTitle} uri={uri}>
-      <AssetContent ddo={ddo} />
+      <AssetContent ddo={ddo} price={price} />
     </Page>
   ) : error ? (
     <Page title={pageTitle} noPageHeader uri={uri}>

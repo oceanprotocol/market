@@ -2,7 +2,7 @@ import React, { ReactElement, useState, useEffect } from 'react'
 import Compute from './Compute'
 import Consume from './Consume'
 import { Logger } from '@oceanprotocol/lib'
-import Tabs from '@shared/atoms/Tabs'
+import Tabs, { TabsItem } from '@shared/atoms/Tabs'
 import { compareAsBN } from '@utils/numbers'
 import Pool from './Pool'
 import Trade from './Trade'
@@ -16,10 +16,16 @@ import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
 import styles from './index.module.css'
 
-export default function AssetActions({ ddo }: { ddo: Asset }): ReactElement {
+export default function AssetActions({
+  ddo,
+  price
+}: {
+  ddo: Asset
+  price: BestPrice
+}): ReactElement {
   const { accountId, balance } = useWeb3()
   const { ocean, account } = useOcean()
-  const { price, isAssetNetwork } = useAsset()
+  const { isAssetNetwork } = useAsset()
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
   const [dtBalance, setDtBalance] = useState<string>()
@@ -105,6 +111,7 @@ export default function AssetActions({ ddo }: { ddo: Asset }): ReactElement {
   const UseContent = isCompute ? (
     <Compute
       ddo={ddo}
+      price={price}
       dtBalance={dtBalance}
       file={fileMetadata}
       fileIsLoading={fileIsLoading}
@@ -114,6 +121,7 @@ export default function AssetActions({ ddo }: { ddo: Asset }): ReactElement {
   ) : (
     <Consume
       ddo={ddo}
+      price={price}
       dtBalance={dtBalance}
       isBalanceSufficient={isBalanceSufficient}
       file={fileMetadata}
@@ -123,22 +131,24 @@ export default function AssetActions({ ddo }: { ddo: Asset }): ReactElement {
     />
   )
 
-  const tabs = [
+  const tabs: TabsItem[] = [
     {
       title: 'Use',
       content: UseContent
     }
   ]
 
-  price?.type === 'pool' &&
+  price?.type === 'dynamic' &&
     tabs.push(
       {
         title: 'Pool',
-        content: <Pool />
+        content: <Pool />,
+        disabled: !price.datatoken
       },
       {
         title: 'Trade',
-        content: <Trade />
+        content: <Trade />,
+        disabled: !price.datatoken
       }
     )
 

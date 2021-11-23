@@ -38,6 +38,7 @@ import { FileMetadata } from '@utils/provider'
 
 export default function Compute({
   ddo,
+  price,
   dtBalance,
   file,
   fileIsLoading,
@@ -45,6 +46,7 @@ export default function Compute({
   consumableFeedback
 }: {
   ddo: Asset
+  price: BestPrice
   dtBalance: string
   file: FileMetadata
   fileIsLoading?: boolean
@@ -54,7 +56,6 @@ export default function Compute({
   const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
   const { ocean } = useOcean()
-  const { price } = useAsset()
   const { buyDT, pricingError, pricingStepText } = usePricing()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
