@@ -9,14 +9,17 @@ import AssetType from '@shared/AssetType'
 import styles from './MetaMain.module.css'
 import { getServiceByName } from '@utils/ddo'
 
-export default function MetaMain(): ReactElement {
-  const { ddo, owner, isAssetNetwork } = useAsset()
+export default function MetaMain({ ddo }: { ddo: Asset }): ReactElement {
+  const { isAssetNetwork } = useAsset()
   const { web3ProviderInfo } = useWeb3()
 
   const isCompute = Boolean(getServiceByName(ddo, 'compute'))
   const accessType = isCompute ? 'compute' : 'access'
   const blockscoutNetworks = [1287, 2021000, 2021001, 44787, 246, 1285]
   const isBlockscoutExplorer = blockscoutNetworks.includes(ddo?.chainId)
+
+  const dataTokenName = ddo?.dataTokenInfo?.name
+  const dataTokenSymbol = ddo?.dataTokenInfo?.symbol
 
   return (
     <aside className={styles.meta}>
@@ -35,16 +38,16 @@ export default function MetaMain(): ReactElement {
               : `token/${ddo?.services[0].datatokenAddress}`
           }
         >
-          {`${ddo?.dataTokenInfo.name} — ${ddo?.dataTokenInfo.symbol}`}
+          {`${dataTokenName} — ${dataTokenSymbol}`}
         </ExplorerLink>
 
         {web3ProviderInfo?.name === 'MetaMask' && isAssetNetwork && (
           <span className={styles.addWrap}>
             <AddToken
               address={ddo?.services[0].datatokenAddress}
-              symbol={ddo?.dataTokenInfo.symbol}
+              symbol={(ddo as Asset)?.dataTokenInfo?.symbol}
               logo="https://raw.githubusercontent.com/oceanprotocol/art/main/logo/datatoken.png"
-              text={`Add ${ddo?.dataTokenInfo.symbol} to wallet`}
+              text={`Add ${(ddo as Asset)?.dataTokenInfo?.symbol} to wallet`}
               className={styles.add}
               minimal
             />
@@ -53,7 +56,7 @@ export default function MetaMain(): ReactElement {
       </header>
 
       <div className={styles.byline}>
-        Published By <Publisher account={owner} />
+        Published By <Publisher account={(ddo as Asset)?.nft?.owner} />
         <p>
           <Time date={ddo?.metadata.created} relative />
           {ddo?.metadata.created !== ddo?.metadata.updated && (

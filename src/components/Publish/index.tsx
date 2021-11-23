@@ -16,7 +16,9 @@ import { Steps } from './Steps'
 import { FormPublishData } from './_types'
 import { sha256 } from 'js-sha256'
 import { generateNftCreateData } from '@utils/nft'
+import { useUserPreferences } from '@context/UserPreferences'
 
+// TODO: restore FormikPersist, add back clear form action
 const formName = 'ocean-publish-form'
 
 export default function PublishPage({
@@ -24,6 +26,7 @@ export default function PublishPage({
 }: {
   content: { title: string; description: string; warning: string }
 }): ReactElement {
+  const { debug } = useUserPreferences()
   const { accountId, chainId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
   // const { publish, publishError, isLoading, publishStepText } = usePublish()
@@ -39,6 +42,11 @@ export default function PublishPage({
       // const nftOptions = values.metadata.nft
       // const nftCreateData = generateNftCreateData(nftOptions)
       // const ercParams = {}
+      // const priceOptions = {
+      //   ...values,
+      //   // swapFee is tricky: to get 0.1% you need to send 0.001 as value
+      //   swapFee: `${values.swapFee / 100}`
+      // }
       // const txMint = await createNftWithErc(accountId, nftCreateData)
       // const { nftAddress, datatokenAddress } = txMint.logs[0].args
       //
@@ -137,7 +145,7 @@ export default function PublishPage({
               <Steps />
               <Actions scrollToRef={scrollToRef} />
             </Form>
-            <Debug />
+            {debug && <Debug />}
           </>
         </Formik>
       )}

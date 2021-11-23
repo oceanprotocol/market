@@ -1,17 +1,17 @@
 import React, { FormEvent, ReactElement, Ref, RefObject } from 'react'
-import { useOcean } from '@context/Ocean'
 import Button from '@shared/atoms/Button'
 import styles from './index.module.css'
 import { FormikContextType, useFormikContext } from 'formik'
 import { FormPublishData } from '../_types'
 import { wizardSteps } from '../_constants'
+import { useWeb3 } from '@context/Web3'
 
 export default function Actions({
   scrollToRef
 }: {
   scrollToRef: RefObject<any>
 }): ReactElement {
-  const { ocean, account } = useOcean()
+  const { accountId } = useWeb3()
   const {
     status,
     values,
@@ -21,13 +21,13 @@ export default function Actions({
 
   function handleNext(e: FormEvent) {
     e.preventDefault()
-    setFieldValue('stepCurrent', values.user.stepCurrent + 1)
+    setFieldValue('user.stepCurrent', values.user.stepCurrent + 1)
     scrollToRef.current.scrollIntoView()
   }
 
   function handlePrevious(e: FormEvent) {
     e.preventDefault()
-    setFieldValue('stepCurrent', values.user.stepCurrent - 1)
+    setFieldValue('user.stepCurrent', values.user.stepCurrent - 1)
     scrollToRef.current.scrollIntoView()
   }
 
@@ -42,11 +42,7 @@ export default function Actions({
           Continue
         </Button>
       ) : (
-        <Button
-          type="submit"
-          style="primary"
-          disabled={!ocean || !account || !isValid}
-        >
+        <Button type="submit" style="primary" disabled={!accountId || !isValid}>
           Submit
         </Button>
       )}

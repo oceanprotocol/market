@@ -12,32 +12,26 @@ export default function Navigation(): ReactElement {
     setFieldValue('user.stepCurrent', step)
   }
 
-  console.log(errors)
+  const isSuccessMetadata = errors.metadata === undefined
+  const isSuccessServices = errors.services === undefined
 
   return (
     <nav className={styles.navigation}>
       <ol>
-        {wizardSteps.map((step) => {
-          const isSuccessMetadata = errors.metadata === undefined
-          const isSuccessServices = errors.services === undefined
-
-          return (
-            <li
-              key={step.title}
-              onClick={() => handleStepClick(step.step)}
-              // TODO: add success class for all steps
-              className={`${
-                values.user.stepCurrent === step.step ? styles.current : null
-              } ${
-                step.step === 1 && isSuccessMetadata ? styles.success : null
-              } ${
-                step.step === 2 && isSuccessServices ? styles.success : null
-              }`}
-            >
-              {step.title}
-            </li>
-          )
-        })}
+        {wizardSteps.map((step) => (
+          <li
+            key={step.title}
+            onClick={() => handleStepClick(step.step)}
+            // TODO: add success class for all steps
+            className={`${
+              values.user.stepCurrent === step.step ? styles.current : null
+            } ${step.step === 1 && isSuccessMetadata ? styles.success : null} ${
+              step.step === 2 && isSuccessServices ? styles.success : null
+            }`}
+          >
+            {step.title}
+          </li>
+        ))}
       </ol>
     </nav>
   )

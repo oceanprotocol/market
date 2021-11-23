@@ -8,7 +8,6 @@ import { gql } from 'urql'
 import { fetchData, getQueryContext } from '@utils/subgraph'
 import { OrdersData } from '../../../@types/apollo/OrdersData'
 import BigNumber from 'bignumber.js'
-import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 import { usePricing } from '@hooks/usePricing'
 import { useConsume } from '@hooks/useConsume'
@@ -35,6 +34,7 @@ const previousOrderQuery = gql`
 
 export default function Consume({
   ddo,
+  price,
   file,
   isBalanceSufficient,
   dtBalance,
@@ -43,6 +43,7 @@ export default function Consume({
   consumableFeedback
 }: {
   ddo: Asset
+  price: BestPrice
   file: FileMetadata
   isBalanceSufficient: boolean
   dtBalance: string
@@ -51,11 +52,10 @@ export default function Consume({
   consumableFeedback?: string
 }): ReactElement {
   const { accountId } = useWeb3()
-  const { ocean } = useOcean()
   const { appConfig } = useSiteMetadata()
   const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
   const [previousOrderId, setPreviousOrderId] = useState<string>()
-  const { isInPurgatory, price, isAssetNetwork } = useAsset()
+  const { isInPurgatory, isAssetNetwork } = useAsset()
   const { buyDT, pricingStepText, pricingError, pricingIsLoading } =
     usePricing()
   const { consumeStepText, consume, consumeError, isLoading } = useConsume()
@@ -105,6 +105,8 @@ export default function Consume({
   }, [data, assetTimeout, accountId, isAssetNetwork])
 
   useEffect(() => {
+    if (!ddo) return
+
     const { timeout } = ddo.services[0]
     setAssetTimeout(`${timeout}`)
   }, [ddo])
@@ -125,8 +127,7 @@ export default function Consume({
     if (!accountId) return
     setIsDisabled(
       !isConsumable ||
-        ((!ocean ||
-          !isBalanceSufficient ||
+        ((!isBalanceSufficient ||
           !isAssetNetwork ||
           typeof consumeStepText !== 'undefined' ||
           pricingIsLoading ||
@@ -135,7 +136,6 @@ export default function Consume({
           !hasDatatoken)
     )
   }, [
-    ocean,
     hasPreviousOrder,
     isBalanceSufficient,
     isAssetNetwork,
@@ -182,7 +182,7 @@ export default function Consume({
       datasetLowPoolLiquidity={!isConsumablePrice}
       onClick={handleConsume}
       assetTimeout={secondsToString(parseInt(assetTimeout))}
-      assetType={ddo?.metadata.type}
+      assetType={ddo?.metadata?.type}
       stepText={consumeStepText || pricingStepText}
       isLoading={pricingIsLoading || isLoading}
       priceType={price?.type}
@@ -203,8 +203,8 @@ export default function Consume({
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>
-      {ddo.metadata.type === 'algorithm' && (
-        <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} dataset={ddo} />
+      {ddo?.metadata?.type === 'algorithm' && (
+        <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} ddo={ddo} />
       )}
     </aside>
   )

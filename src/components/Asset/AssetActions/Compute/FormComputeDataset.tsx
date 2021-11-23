@@ -160,7 +160,7 @@ export default function FormStartCompute({
         }
         hasPreviousOrder={hasPreviousOrder}
         hasDatatoken={hasDatatoken}
-        dtSymbol={ddo.dataTokenInfo.symbol}
+        dtSymbol={ddo?.dataTokenInfo?.symbol}
         dtBalance={dtBalance}
         datasetLowPoolLiquidity={datasetLowPoolLiquidity}
         assetTimeout={assetTimeout}

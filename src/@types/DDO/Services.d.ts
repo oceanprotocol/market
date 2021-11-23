@@ -22,7 +22,7 @@ interface Service {
   files: string
   datatokenAddress: string
   serviceEndpoint: string
-  timeout: string
+  timeout: number
   name?: string
   description?: string
   compute?: ServiceComputeOptions

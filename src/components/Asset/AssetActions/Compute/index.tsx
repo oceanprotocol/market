@@ -37,12 +37,16 @@ import { SortTermOptions } from '../../../../@types/aquarius/SearchQuery'
 import { FileMetadata } from '@utils/provider'
 
 export default function Compute({
+  ddo,
+  price,
   dtBalance,
   file,
   fileIsLoading,
   isConsumable,
   consumableFeedback
 }: {
+  ddo: Asset
+  price: BestPrice
   dtBalance: string
   file: FileMetadata
   fileIsLoading?: boolean
@@ -51,8 +55,7 @@ export default function Compute({
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
-  const { ocean, account } = useOcean()
-  const { price, ddo } = useAsset()
+  const { ocean } = useOcean()
   const { buyDT, pricingError, pricingStepText } = usePricing()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
@@ -399,10 +402,7 @@ export default function Compute({
             text="This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
             state="info"
           />
-          <AlgorithmDatasetsListForCompute
-            algorithmDid={ddo.id}
-            dataset={ddo}
-          />
+          <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} ddo={ddo} />
         </>
       ) : (
         <Formik
@@ -423,7 +423,7 @@ export default function Compute({
             hasDatatoken={hasDatatoken}
             dtBalance={dtBalance}
             datasetLowPoolLiquidity={!isConsumablePrice}
-            assetType={ddo.metadata.type}
+            assetType={ddo?.metadata.type}
             assetTimeout={datasetTimeout}
             hasPreviousOrderSelectedComputeAsset={hasPreviousAlgorithmOrder}
             hasDatatokenSelectedComputeAsset={hasAlgoAssetDatatoken}
@@ -448,7 +448,7 @@ export default function Compute({
           <SuccessConfetti success="Your job started successfully! Watch the progress below or on your profile." />
         )}
       </footer>
-      {accountId && (
+      {accountId && price?.datatoken && (
         <AssetActionHistoryTable title="Your Compute Jobs">
           <ComputeJobs minimal />
         </AssetActionHistoryTable>

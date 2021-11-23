@@ -1,181 +1,39 @@
-import React, { FormEvent, ReactElement, useState } from 'react'
-import Markdown from '@shared/Markdown'
-import Tags from '@shared/atoms/Tags'
-import MetaItem from '../../Asset/AssetContent/MetaItem'
-import FileIcon from '@shared/FileIcon'
-import Button from '@shared/atoms/Button'
-import NetworkName from '@shared/NetworkName'
-import { useWeb3 } from '@context/Web3'
+import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './index.module.css'
-import Web3Feedback from '@shared/Web3Feedback'
-import { useAsset } from '@context/Asset'
 import { FormPublishData } from '../_types'
 import { useFormikContext } from 'formik'
-
-function Description({ description }: { description: string }) {
-  const [fullDescription, setFullDescription] = useState<boolean>(false)
-
-  const textLimit = 500 // string.length
-  const descriptionDisplay =
-    fullDescription === true
-      ? description
-      : `${description.substring(0, textLimit)}${
-          description.length > textLimit ? '...' : ''
-        }`
-
-  function handleDescriptionToggle(e: FormEvent<HTMLButtonElement>) {
-    e.preventDefault()
-    setFullDescription(!fullDescription)
-  }
-
-  return (
-    <div className={styles.description}>
-      <Markdown text={descriptionDisplay} />
-      {description.length > textLimit && (
-        <Button
-          style="text"
-          size="small"
-          onClick={handleDescriptionToggle}
-          className={styles.toggle}
-        >
-          {fullDescription === true ? 'Close' : 'Expand'}
-        </Button>
-      )}
-    </div>
-  )
-}
-
-function MetaFull({ values }: { values: Partial<FormPublishData> }) {
-  return (
-    <div className={styles.metaFull}>
-      {Object.entries(values)
-        .filter(
-          ([key, value]) =>
-            !(
-              key.includes('name') ||
-              key.includes('description') ||
-              key.includes('tags') ||
-              key.includes('files') ||
-              key.includes('links') ||
-              key.includes('termsAndConditions') ||
-              key.includes('dataTokenOptions') ||
-              key.includes('dockerImage') ||
-              key.includes('algorithmPrivacy') ||
-              value === undefined
-            )
-        )
-        .map(([key, value]) => (
-          <MetaItem key={key} title={key} content={value} />
-        ))}
-    </div>
-  )
-}
-
-function Sample({ url }: { url: string }) {
-  return (
-    <Button
-      href={url}
-      target="_blank"
-      rel="noreferrer"
-      download
-      style="text"
-      size="small"
-    >
-      Download Sample
-    </Button>
-  )
-}
+import AssetContent from 'src/components/Asset/AssetContent'
+import { transformPublishFormToDdo } from '../_utils'
 
 export default function Preview(): ReactElement {
-  const { networkId } = useWeb3()
-  const { isAssetNetwork } = useAsset()
+  const [ddo, setDdo] = useState<Asset>()
+  const [price, setPrice] = useState<BestPrice>()
   const { values } = useFormikContext<FormPublishData>()
 
-  return (
-    <div className={styles.preview}>
-      <h2 className={styles.previewTitle}>Preview</h2>
-      {/* <header>
-        {networkId && <NetworkName networkId={networkId} />}
-        {values.name && <h3 className={styles.title}>{values.name}</h3>}
-        {values.dataTokenOptions?.name && (
-          <p
-            className={styles.datatoken}
-          >{`${values.dataTokenOptions.name} — ${values.dataTokenOptions.symbol}`}</p>
-        )}
-        {values.description && <Description description={values.description} />}
+  useEffect(() => {
+    async function makeDdo() {
+      const ddo = await transformPublishFormToDdo(values)
+      setDdo(ddo as Asset)
 
-        <div className={styles.asset}>
-          {values.files?.length > 0 && typeof values.files !== 'string' && (
-            <FileIcon
-              file={values.files[0] as FileMetadata}
-              className={styles.file}
-              small
-            />
-          )}
-        </div>
-
-        {typeof values.links !== 'string' && values.links?.length && (
-          <Sample url={(values.links[0] as FileMetadata).url} />
-        )}
-        {values.tags && <Tags items={transformTags(values.tags)} />}
-      </header>
-
-      <MetaFull values={values} />
-      {isAssetNetwork === false && (
-        <Web3Feedback isAssetNetwork={isAssetNetwork} />
-      )}
-    </div>
-  )
-}
-
-export function MetadataAlgorithmPreview({
-  values
-}: {
-  values: Partial<FormPublishData>
-}): ReactElement {
-  const { networkId } = useWeb3()
+      // dummy BestPrice to trigger certain AssetActions
+      const price: BestPrice = {
+        type: values.pricing.type,
+        address: '0x...',
+        value: values.pricing.price,
+        pools: [],
+        oceanSymbol: 'OCEAN'
+      }
+      setPrice(price)
+    }
+    makeDdo()
+  }, [values])
 
   return (
     <div className={styles.preview}>
       <h2 className={styles.previewTitle}>Preview</h2>
-      <header>
-        {networkId && <NetworkName networkId={networkId} />}
-        {values.name && <h3 className={styles.title}>{values.name}</h3>}
-        {values.dataTokenOptions?.name && (
-          <p
-            className={styles.datatoken}
-          >{`${values.dataTokenOptions.name} — ${values.dataTokenOptions.symbol}`}</p>
-        )}
-        {values.description && <Description description={values.description} />}
 
-        <div className={styles.asset}>
-          {values.files?.length > 0 && typeof values.files !== 'string' && (
-            <FileIcon
-              file={values.files[0] as FileMetadata}
-              className={styles.file}
-              small
-            />
-          )}
-        </div>
-        {values.tags && <Tags items={transformTags(values.tags)} />}
-      </header>
-      <div className={styles.metaAlgorithm}>
-        {values.dockerImage && (
-          <MetaItem
-            key="dockerImage"
-            title="Docker Image"
-            content={values.dockerImage}
-          />
-        )}
-        {values.algorithmPrivacy && (
-          <MetaItem
-            key="privateAlgorithm"
-            title="Private Algorithm"
-            content="Yes"
-          />
-        )}
-      </div>
-      <MetaFull values={values} /> */}
+      <h3 className={styles.assetTitle}>{values.metadata.name}</h3>
+      <AssetContent ddo={ddo} price={price} />
     </div>
   )
 }

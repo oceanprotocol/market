@@ -1,4 +1,4 @@
-import { secondsToString } from '@utils/ddo'
+import { mapTimeoutStringToSeconds, secondsToString } from '@utils/ddo'
 import { EditableMetadataLinks } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 import { MetadataEditForm } from './_types'
@@ -16,7 +16,7 @@ export const validationSchema = Yup.object().shape({
 
 export function getInitialValues(
   metadata: Metadata,
-  timeout: string,
+  timeout: number,
   price: number
 ): Partial<MetadataEditForm> {
   return {

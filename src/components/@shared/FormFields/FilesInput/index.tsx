@@ -27,7 +27,7 @@ export default function FilesInput(props: InputProps): ReactElement {
           config?.providerUri,
           newCancelToken()
         )
-        checkedFile && helpers.setValue([checkedFile])
+        checkedFile && helpers.setValue([{ url: fileUrl, ...checkedFile[0] }])
       } catch (error) {
         toast.error('Could not fetch file info. Please check URL and try again')
         console.error(error.message)

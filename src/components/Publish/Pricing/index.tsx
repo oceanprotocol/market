@@ -23,13 +23,13 @@ export default function PricingFields(): ReactElement {
   function handleTabChange(tabName: string) {
     const type = tabName.toLowerCase()
     setFieldValue('pricing.type', type)
-    type === 'fixed' && setFieldValue('pricing.amountDataToken', 1000)
+    type === 'dynamic' && setFieldValue('pricing.amountDataToken', 1000)
     type === 'free' && price < 1 && setFieldValue('pricing.price', 1)
   }
 
   // Always update everything when price value changes
   useEffect(() => {
-    if (type === 'fixed' || type === 'free') return
+    if (type === 'dynamic' || type === 'free') return
 
     const amountDataToken =
       isValidNumber(amountOcean) &&
@@ -70,36 +70,8 @@ export default function PricingFields(): ReactElement {
     <Tabs
       items={tabs}
       handleTabChange={handleTabChange}
-      defaultIndex={type === 'fixed' ? 0 : type === 'dynamic' ? 1 : 2}
+      defaultIndex={type === 'dynamic' ? 1 : type === 'free' ? 2 : 0}
       className={styles.pricing}
     />
   )
-
-  // async function handleCreatePricing(values: PriceOptions) {
-  //   try {
-  //     const priceOptions = {
-  //       ...values,
-  //       // swapFee is tricky: to get 0.1% you need to send 0.001 as value
-  //       swapFee: `${values.swapFee / 100}`
-  //     }
-
-  //     const tx = await createPricing(priceOptions, ddo)
-
-  //     // Pricing failed
-  //     if (!tx || pricingError) {
-  //       toast.error(pricingError || 'Price creation failed.')
-  //       Logger.error(pricingError || 'Price creation failed.')
-  //       return
-  //     }
-
-  //     // Pricing succeeded
-  //     setSuccess(
-  //       `🎉 Successfully created a ${values.type} price. 🎉 Reload the page to get all updates.`
-  //     )
-  //     Logger.log(`Transaction: ${tx}`)
-  //   } catch (error) {
-  //     toast.error(error.message)
-  //     Logger.error(error.message)
-  //   }
-  // }
 }

@@ -52,7 +52,7 @@ export default function Stats({
         const accountPoolAdresses: string[] = []
         const assetsPrices = await getAssetsBestPrices(assets)
         for (const priceInfo of assetsPrices) {
-          if (priceInfo.price.type === 'pool') {
+          if (priceInfo.price.type === 'dynamic') {
             accountPoolAdresses.push(priceInfo.price.address.toLowerCase())
           }
         }

@@ -4,7 +4,7 @@ import { useOcean } from '@context/Ocean'
 import Input, { InputProps } from '@shared/FormInput'
 import FormActions from './FormActions'
 import styles from './FormEditMetadata.module.css'
-import { FormPublishData } from '../../../Publish/_types'
+import { FormPublishData } from '../../Publish/_types'
 
 // function handleTimeoutCustomOption(
 //   data: FormFieldContent[],

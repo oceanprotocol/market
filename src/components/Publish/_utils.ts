@@ -1,3 +1,4 @@
+import { mapTimeoutStringToSeconds } from '@utils/ddo'
 import { getEncryptedFileUrls } from '@utils/provider'
 import { sha256 } from 'js-sha256'
 import slugify from 'slugify'
@@ -27,12 +28,14 @@ function transformTags(value: string): string[] {
 
 export async function transformPublishFormToDdo(
   values: FormPublishData,
-  datatokenAddress: string,
-  nftAddress: string
+  // Those 2 are only passed during actual publishing process
+  // so we can always assume if they are not passed, we are on preview.
+  datatokenAddress?: string,
+  nftAddress?: string
 ): Promise<DDO> {
-  const { metadata, services } = values
-  const { chainId, accountId } = values.user
-  const did = sha256(`${nftAddress}${chainId}`)
+  const { metadata, services, user } = values
+  const { chainId, accountId } = user
+  const did = nftAddress ? `0x${sha256(`${nftAddress}${chainId}`)}` : '0x...'
   const currentTime = dateToStringNoMS(new Date())
   const {
     type,
@@ -48,12 +51,12 @@ export async function transformPublishFormToDdo(
   } = metadata
   const { access, files, providerUrl, timeout } = services[0]
 
-  const filesEncrypted = await getEncryptedFileUrls(
-    files as string[],
-    providerUrl,
-    did,
-    accountId
-  )
+  const filesTransformed = files?.length && files[0].valid && [...files[0].url]
+
+  const filesEncrypted =
+    files?.length &&
+    files[0].valid &&
+    (await getEncryptedFileUrls(filesTransformed, providerUrl, did, accountId))
 
   const newMetadata: Metadata = {
     created: currentTime,
@@ -70,13 +73,13 @@ export async function transformPublishFormToDdo(
     },
     ...(type === 'algorithm' && {
       algorithm: {
-        language: getUrlFileExtension(files[0]),
+        language: files?.length ? getUrlFileExtension(filesTransformed[0]) : '',
         version: '0.1',
         container: {
           entrypoint: dockerImageCustomEntrypoint,
           image: dockerImageCustom,
           tag: dockerImageCustomTag,
-          checksum: '' // how to get? Is it user input?
+          checksum: '' // TODO: how to get? Is it user input?
         }
       }
     })
@@ -87,7 +90,7 @@ export async function transformPublishFormToDdo(
     files: filesEncrypted,
     datatokenAddress,
     serviceEndpoint: providerUrl,
-    timeout,
+    timeout: mapTimeoutStringToSeconds(timeout),
     ...(access === 'compute' && {
       compute: {
         namespace: 'ocean-compute',
@@ -110,7 +113,17 @@ export async function transformPublishFormToDdo(
     version: '4.0.0',
     chainId,
     metadata: newMetadata,
-    services: [newService]
+    services: [newService],
+    // only added for DDO preview, reflecting Asset response
+    ...(!datatokenAddress && {
+      dataTokenInfo: {
+        name: values.services[0].dataTokenOptions.name,
+        symbol: values.services[0].dataTokenOptions.symbol
+      },
+      nft: {
+        owner: accountId
+      }
+    })
   }
 
   return newDdo

@@ -12,7 +12,7 @@ import { Logger } from '@oceanprotocol/lib'
 import { useWeb3 } from '@context/Web3'
 import { useOcean } from '@context/Ocean'
 import { setMinterToDispenser, setMinterToPublisher } from '@utils/freePrice'
-import content from '../../../../../content/pages/edit.json'
+import content from '../../../../content/pages/edit.json'
 import { MetadataEditForm } from './_types'
 
 export default function Edit({

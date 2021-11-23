@@ -2,6 +2,8 @@ import axios, { CancelToken, AxiosResponse } from 'axios'
 import { DID, Logger } from '@oceanprotocol/lib'
 
 export interface FileMetadata {
+  index: number
+  valid: boolean
   contentType: string
   contentLength: string
 }
@@ -35,20 +37,13 @@ export async function getFileInfo(
 ): Promise<FileMetadata[]> {
   let postBody
   try {
-    if (url instanceof DID)
-      postBody = {
-        did: url.getDid()
-      }
-    else
-      postBody = {
-        url
-      }
+    if (url instanceof DID) postBody = { did: url.getDid() }
+    else postBody = { url }
+
     const response: AxiosResponse<FileMetadata[]> = await axios.post(
       `${providerUrl}/api/v1/services/fileinfo`,
       postBody,
-      {
-        cancelToken
-      }
+      { cancelToken }
     )
 
     if (!response || response.status !== 200 || !response.data) return

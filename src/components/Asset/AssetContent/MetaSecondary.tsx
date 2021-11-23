@@ -3,7 +3,6 @@ import MetaItem from './MetaItem'
 import styles from './MetaSecondary.module.css'
 import Tags from '@shared/atoms/Tags'
 import Button from '@shared/atoms/Button'
-import { useAsset } from '@context/Asset'
 
 const SampleButton = ({ url }: { url: string }) => (
   <Button
@@ -18,9 +17,7 @@ const SampleButton = ({ url }: { url: string }) => (
   </Button>
 )
 
-export default function MetaSecondary(): ReactElement {
-  const { ddo } = useAsset()
-
+export default function MetaSecondary({ ddo }: { ddo: Asset }): ReactElement {
   return (
     <aside className={styles.metaSecondary}>
       {ddo?.metadata.links?.length > 0 && (

@@ -2,7 +2,7 @@ import React, { ReactElement, useState, useEffect } from 'react'
 import Compute from './Compute'
 import Consume from './Consume'
 import { Logger } from '@oceanprotocol/lib'
-import Tabs from '@shared/atoms/Tabs'
+import Tabs, { TabsItem } from '@shared/atoms/Tabs'
 import { compareAsBN } from '@utils/numbers'
 import Pool from './Pool'
 import Trade from './Trade'
@@ -15,11 +15,20 @@ import { getOceanConfig } from '@utils/ocean'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
 import styles from './index.module.css'
+import { useFormikContext } from 'formik'
+import { FormPublishData } from 'src/components/Publish/_types'
 
-export default function AssetActions(): ReactElement {
+export default function AssetActions({
+  ddo,
+  price
+}: {
+  ddo: Asset
+  price: BestPrice
+}): ReactElement {
   const { accountId, balance } = useWeb3()
   const { ocean, account } = useOcean()
-  const { price, ddo, isAssetNetwork } = useAsset()
+  const { isAssetNetwork } = useAsset()
+  const { values } = useFormikContext<FormPublishData>()
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
   const [dtBalance, setDtBalance] = useState<string>()
@@ -51,25 +60,30 @@ export default function AssetActions(): ReactElement {
   // }, [accountId, isAssetNetwork, ddo, ocean])
 
   useEffect(() => {
-    const oceanConfig = getOceanConfig(ddo.chainId)
+    const oceanConfig = getOceanConfig(ddo?.chainId)
     if (!oceanConfig) return
 
     async function initFileInfo() {
       setFileIsLoading(true)
+
+      const asset = values?.services?.[0].files?.[0].url || ddo.id
+      const providerUrl =
+        values?.services[0].providerUrl || oceanConfig.providerUri
+
       try {
         const fileInfoResponse = await getFileInfo(
-          ddo.id,
+          asset,
           oceanConfig.providerUri,
           newCancelToken()
         )
         fileInfoResponse && setFileMetadata(fileInfoResponse[0])
-        isMounted() && setFileIsLoading(false)
+        setFileIsLoading(false)
       } catch (error) {
         Logger.error(error.message)
       }
     }
     initFileInfo()
-  }, [ddo, isMounted, newCancelToken])
+  }, [ddo, isMounted, newCancelToken, values?.services])
 
   // Get and set user DT balance
   useEffect(() => {
@@ -104,6 +118,8 @@ export default function AssetActions(): ReactElement {
 
   const UseContent = isCompute ? (
     <Compute
+      ddo={ddo}
+      price={price}
       dtBalance={dtBalance}
       file={fileMetadata}
       fileIsLoading={fileIsLoading}
@@ -113,6 +129,7 @@ export default function AssetActions(): ReactElement {
   ) : (
     <Consume
       ddo={ddo}
+      price={price}
       dtBalance={dtBalance}
       isBalanceSufficient={isBalanceSufficient}
       file={fileMetadata}
@@ -122,22 +139,24 @@ export default function AssetActions(): ReactElement {
     />
   )
 
-  const tabs = [
+  const tabs: TabsItem[] = [
     {
       title: 'Use',
       content: UseContent
     }
   ]
 
-  price?.type === 'pool' &&
+  price?.type === 'dynamic' &&
     tabs.push(
       {
         title: 'Pool',
-        content: <Pool />
+        content: <Pool />,
+        disabled: !price.datatoken
       },
       {
         title: 'Trade',
-        content: <Trade />
+        content: <Trade />,
+        disabled: !price.datatoken
       }
     )
 

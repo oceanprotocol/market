@@ -1,5 +1,5 @@
 interface BestPrice {
-  type: 'pool' | 'exchange' | 'free' | ''
+  type: 'dynamic' | 'fixed' | 'free' | ''
   address: string
   value: number
   isConsumable?: 'true' | 'false' | ''
@@ -15,7 +15,7 @@ interface PriceOptions {
   price: number
   amountDataToken: number
   amountOcean: number
-  type: 'fixed' | 'dynamic' | 'free' | string
+  type: 'dynamic' | 'fixed' | 'free' | ''
   weightOnDataToken: string
   weightOnOcean: string
   // easier to keep this as number for Yup input validation

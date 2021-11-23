@@ -346,7 +346,7 @@ function transformPriceToBestPrice(
 ) {
   if (poolPrice?.length > 0) {
     const price: BestPrice = {
-      type: 'pool',
+      type: 'dynamic',
       address: poolPrice[0]?.id,
       value:
         poolPrice[0]?.consumePrice === '-1'
@@ -363,7 +363,7 @@ function transformPriceToBestPrice(
     // TODO Hacky hack, temporary™: set isConsumable to true for fre assets.
     // isConsumable: 'true'
     const price: BestPrice = {
-      type: 'exchange',
+      type: 'fixed',
       value: frePrice[0]?.rate,
       address: frePrice[0]?.id,
       exchangeId: frePrice[0]?.id,
