@@ -66,7 +66,7 @@ export default function AssetActions({
     async function initFileInfo() {
       setFileIsLoading(true)
 
-      const asset = values?.services[0]?.files[0]?.url || ddo.id
+      const asset = values?.services?.[0].files?.[0].url || ddo.id
       const providerUrl =
         values?.services[0].providerUrl || oceanConfig.providerUri
 
