@@ -24,12 +24,12 @@ export default function PricingFields(): ReactElement {
     const type = tabName.toLowerCase()
     setFieldValue('pricing.type', type)
     type === 'dynamic' && setFieldValue('pricing.amountDataToken', 1000)
-    type === 'free' && price < 1 && setFieldValue('pricing.price', 1)
+    setFieldValue('pricing.price', type === 'free' ? 0 : 1)
   }
 
   // Always update everything when price value changes
   useEffect(() => {
-    if (type === 'dynamic' || type === 'free') return
+    if (type === 'fixed' || type === 'free') return
 
     const amountDataToken =
       isValidNumber(amountOcean) &&

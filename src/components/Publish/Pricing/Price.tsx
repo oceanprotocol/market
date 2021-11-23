@@ -8,11 +8,9 @@ import styles from './Price.module.css'
 import { FormPublishData } from '../_types'
 
 export default function Price({
-  firstPrice,
-  free
+  firstPrice
 }: {
   firstPrice?: string
-  free?: boolean
 }): ReactElement {
   const [field, meta] = useField('pricing.price')
 
@@ -23,10 +21,10 @@ export default function Price({
     <div className={styles.price}>
       <div className={styles.grid}>
         <div className={styles.form}>
-          {free ? (
+          {field.value === 0 ? (
             <Input
               value="0"
-              name="price"
+              name="pricing.price"
               type="number"
               prefix="OCEAN"
               readOnly
@@ -34,10 +32,9 @@ export default function Price({
           ) : (
             <Input
               value={field.value}
-              name="price"
+              name="pricing.price"
               type="number"
               prefix="OCEAN"
-              min="1"
               {...field}
             />
           )}

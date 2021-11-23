@@ -2,7 +2,6 @@
   font-size: var(--font-size-base);
   margin-top: var(--spacer);
   margin-bottom: 0;
-  color: var(--color-secondary);
   padding-bottom: calc(var(--spacer) / 4);
 }
 

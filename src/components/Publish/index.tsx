@@ -1,6 +1,7 @@
 import React, { ReactElement, useState, useRef } from 'react'
 import { Form, Formik, FormikState } from 'formik'
-import { initialValues, validationSchema } from './_constants'
+import { initialValues } from './_constants'
+import { validationSchema } from './_validation'
 import { validateDockerImage } from '@utils/docker'
 import { Logger } from '@oceanprotocol/lib'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
