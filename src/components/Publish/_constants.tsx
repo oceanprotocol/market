@@ -44,7 +44,6 @@ export const initialValues: FormPublishData = {
     author: '',
     description: '',
     tags: '',
-    links: [],
     termsAndConditions: false,
     dockerImage: '',
     dockerImageCustom: '',
@@ -53,7 +52,8 @@ export const initialValues: FormPublishData = {
   },
   services: [
     {
-      files: undefined,
+      files: [{ url: '' }],
+      links: [{ url: '' }],
       dataTokenOptions: { name: '', symbol: '' },
       timeout: '',
       access: '',
@@ -94,10 +94,23 @@ const validationMetadata = {
 }
 
 const validationService = {
-  files: Yup.array<string[]>()
-    .required('Enter a valid URL and click "ADD FILE"')
+  files: Yup.array<{ url: string; valid: boolean }[]>()
+    .of(
+      Yup.object().shape({
+        url: Yup.string().required('Required'),
+        valid: Yup.boolean().isTrue().required('File must be valid.')
+      })
+    )
+    .min(1, (param) => `At least one file is required`)
+    .required('Enter a valid URL and click "ADD FILE"'),
+  links: Yup.array<{ url: string; valid: boolean }[]>()
+    .of(
+      Yup.object().shape({
+        url: Yup.string().required('Required'),
+        valid: Yup.boolean().isTrue().required('File must be valid.')
+      })
+    )
     .nullable(),
-  links: Yup.array<string[]>().nullable(),
   dataTokenOptions: Yup.object().shape({
     name: Yup.string(),
     symbol: Yup.string()

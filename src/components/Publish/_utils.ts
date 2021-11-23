@@ -42,21 +42,17 @@ export async function transformPublishFormToDdo(
     name,
     description,
     tags,
-    links,
     author,
     termsAndConditions,
     dockerImageCustom,
     dockerImageCustomTag,
     dockerImageCustomEntrypoint
   } = metadata
-  const { access, files, providerUrl, timeout } = services[0]
+  const { access, files, links, providerUrl, timeout } = services[0]
 
-  const filesTransformed = files?.length && files[0].valid && [...files[0].url]
-
-  const filesEncrypted =
-    files?.length &&
-    files[0].valid &&
-    (await getEncryptedFileUrls(filesTransformed, providerUrl, did, accountId))
+  // Transform from files[0].url to string[] assuming only 1 file
+  const filesTransformed = files?.length && files[0].valid && [files[0].url]
+  const linksTransformed = links?.length && links[0].valid && [links[0].url]
 
   const newMetadata: Metadata = {
     created: currentTime,
@@ -67,7 +63,7 @@ export async function transformPublishFormToDdo(
     tags: transformTags(tags),
     author,
     license: 'https://market.oceanprotocol.com/terms',
-    links,
+    links: linksTransformed,
     additionalInformation: {
       termsAndConditions
     },
@@ -85,9 +81,15 @@ export async function transformPublishFormToDdo(
     })
   }
 
+  // Encypt just created string[] of urls
+  const filesEncrypted =
+    files?.length &&
+    files[0].valid &&
+    (await getEncryptedFileUrls(filesTransformed, providerUrl, did, accountId))
+
   const newService: Service = {
     type: access,
-    files: filesEncrypted,
+    files: filesEncrypted || '',
     datatokenAddress,
     serviceEndpoint: providerUrl,
     timeout: mapTimeoutStringToSeconds(timeout),

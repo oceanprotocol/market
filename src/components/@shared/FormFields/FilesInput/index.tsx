@@ -2,7 +2,7 @@ import React, { ReactElement, useState, useEffect } from 'react'
 import { useField } from 'formik'
 import { toast } from 'react-toastify'
 import FileInfo from './Info'
-import CustomInput from '../URLInput/Input'
+import UrlInput from '../URLInput/Input'
 import { InputProps } from '@shared/FormInput'
 import { getFileInfo } from '@utils/provider'
 import { useWeb3 } from '@context/Web3'
@@ -61,13 +61,15 @@ export default function FilesInput(props: InputProps): ReactElement {
 
   return (
     <>
-      {field?.value && field.value[0] && typeof field.value === 'object' ? (
+      {field?.value && field.value[0].url !== '' && field.value[0].valid ? (
         <FileInfo name={props.name} file={field.value[0]} />
       ) : (
-        <CustomInput
+        <UrlInput
           submitText="Add File"
           {...props}
           {...field}
+          name={`${props.name}[0].url`}
+          value={field?.value && field.value[0].url}
           isLoading={isLoading}
           handleButtonClick={handleButtonClick}
         />

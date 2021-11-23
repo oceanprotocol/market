@@ -92,10 +92,11 @@
       },
       {
         "name": "providerUrl",
-        "label": "Custom Provider URL",
+        "label": "Provider URL",
         "type": "providerUrl",
-        "help": "Enter the URL for your custom provider or leave blank to use the default provider. [Learn more](https://github.com/oceanprotocol/provider/).",
-        "placeholder": "e.g. https://provider.polygon.oceanprotocol.com/"
+        "help": "Enter the URL for your custom [provider](https://github.com/oceanprotocol/provider/) or leave as is to use the default one. If you change your provider URL after adding your file, please add & validate your file again.",
+        "placeholder": "e.g. https://provider.oceanprotocol.com/",
+        "required": true
       },
       {
         "name": "files",

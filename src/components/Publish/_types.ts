@@ -2,13 +2,16 @@ import { DataTokenOptions } from '@utils/datatokens'
 import { NftOptions } from '@utils/nft'
 import { ReactElement } from 'react'
 
+interface FileMetadata {
+  url: string
+  valid?: boolean
+  contentLength?: string
+  contentType?: string
+}
+
 export interface FormPublishService {
-  files: {
-    url: string
-    valid: boolean
-    contentLength: string
-    contentType: string
-  }[]
+  files: FileMetadata[]
+  links?: FileMetadata[]
   timeout: string
   dataTokenOptions: DataTokenOptions
   access: 'Download' | 'Compute' | string
@@ -30,7 +33,6 @@ export interface FormPublishData {
     author: string
     termsAndConditions: boolean
     tags?: string
-    links?: string[]
     dockerImage?: string
     dockerImageCustom?: string
     dockerImageCustomTag?: string
