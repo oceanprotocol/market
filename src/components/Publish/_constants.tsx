@@ -101,8 +101,8 @@ const validationService = {
         valid: Yup.boolean().isTrue().required('File must be valid.')
       })
     )
-    .min(1, (param) => `At least one file is required`)
-    .required('Enter a valid URL and click "ADD FILE"'),
+    .min(1, (param) => `At least one file is required.`)
+    .required('Enter a valid URL and click ADD FILE.'),
   links: Yup.array<{ url: string; valid: boolean }[]>()
     .of(
       Yup.object().shape({
@@ -119,7 +119,7 @@ const validationService = {
   access: Yup.string()
     .matches(/compute|download/g)
     .required('Required'),
-  providerUrl: Yup.string().url().nullable()
+  providerUrl: Yup.string().url().required('Required')
 }
 
 const validationPricing = {
@@ -141,14 +141,17 @@ const validationPricing = {
     .min(0.1, (param) => `Must be more or equal to ${param.min}`)
     .max(10, 'Maximum is 10%')
     .required('Required')
-    .nullable()
 }
 
+// TODO: make Yup.SchemaOf<FormPublishData> work, requires conditional validation
+// of all the custom docker image stuff.
 // export const validationSchema: Yup.SchemaOf<FormPublishData> =
 export const validationSchema: Yup.SchemaOf<any> = Yup.object().shape({
-  stepCurrent: Yup.number(),
-  chainId: Yup.number(),
-  accountId: Yup.string(),
+  user: Yup.object().shape({
+    stepCurrent: Yup.number(),
+    chainId: Yup.number().required('Required'),
+    accountId: Yup.string().required('Required')
+  }),
   metadata: Yup.object().shape(validationMetadata),
   services: Yup.array().of(Yup.object().shape(validationService)),
   pricing: Yup.object().shape(validationPricing)
