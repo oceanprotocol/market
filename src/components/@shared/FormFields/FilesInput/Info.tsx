@@ -22,7 +22,7 @@ export default function FileInfo({
 
   return (
     <div className={styles.info}>
-      {/* <h3 className={styles.url}>{file}</h3> */}
+      <h3 className={styles.url}>{(file as any).url}</h3>
       <ul>
         <li>URL confirmed</li>
         {file.contentLength && <li>{prettySize(+file.contentLength)}</li>}

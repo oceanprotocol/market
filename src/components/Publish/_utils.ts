@@ -51,6 +51,13 @@ export async function transformPublishFormToDdo(
   } = metadata
   const { access, files, providerUrl, timeout } = services[0]
 
+  const filesTransformed = files?.length && files[0].valid && [...files[0].url]
+
+  const filesEncrypted =
+    files?.length &&
+    files[0].valid &&
+    (await getEncryptedFileUrls(filesTransformed, providerUrl, did, accountId))
+
   const newMetadata: Metadata = {
     created: currentTime,
     updated: currentTime,
@@ -66,7 +73,7 @@ export async function transformPublishFormToDdo(
     },
     ...(type === 'algorithm' && {
       algorithm: {
-        language: files?.length ? getUrlFileExtension(files[0]) : '',
+        language: files?.length ? getUrlFileExtension(filesTransformed[0]) : '',
         version: '0.1',
         container: {
           entrypoint: dockerImageCustomEntrypoint,
@@ -77,10 +84,6 @@ export async function transformPublishFormToDdo(
       }
     })
   }
-
-  const filesEncrypted =
-    files?.length &&
-    (await getEncryptedFileUrls(files as string[], providerUrl, did, accountId))
 
   const newService: Service = {
     type: access,

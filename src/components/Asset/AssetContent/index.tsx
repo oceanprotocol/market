@@ -16,12 +16,10 @@ import content from '../../../../content/purgatory.json'
 
 export default function AssetContent({
   ddo,
-  price,
-  isPreview
+  price
 }: {
   ddo: Asset
   price: BestPrice
-  isPreview?: boolean
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { isInPurgatory, purgatoryData } = useAsset()
@@ -36,7 +34,7 @@ export default function AssetContent({
         <div>
           <div className={styles.content}>
             <MetaMain ddo={ddo} />
-            {!isPreview && <Bookmark did={ddo?.id} />}
+            {price?.datatoken && <Bookmark did={ddo?.id} />}
 
             {isInPurgatory ? (
               <Alert
@@ -56,8 +54,8 @@ export default function AssetContent({
             )}
 
             <MetaFull ddo={ddo} />
-            {!isPreview && <EditHistory />}
-            {!isPreview && debug === true && (
+            {price?.datatoken && <EditHistory />}
+            {price?.datatoken && debug === true && (
               <DebugOutput title="DDO" output={ddo} />
             )}
           </div>

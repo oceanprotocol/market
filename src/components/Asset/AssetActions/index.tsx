@@ -15,6 +15,8 @@ import { getOceanConfig } from '@utils/ocean'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
 import styles from './index.module.css'
+import { useFormikContext } from 'formik'
+import { FormPublishData } from 'src/components/Publish/_types'
 
 export default function AssetActions({
   ddo,
@@ -26,6 +28,7 @@ export default function AssetActions({
   const { accountId, balance } = useWeb3()
   const { ocean, account } = useOcean()
   const { isAssetNetwork } = useAsset()
+  const { values } = useFormikContext<FormPublishData>()
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
   const [dtBalance, setDtBalance] = useState<string>()
@@ -62,20 +65,25 @@ export default function AssetActions({
 
     async function initFileInfo() {
       setFileIsLoading(true)
+
+      const asset = values?.services[0]?.files[0]?.url || ddo.id
+      const providerUrl =
+        values?.services[0].providerUrl || oceanConfig.providerUri
+
       try {
         const fileInfoResponse = await getFileInfo(
-          ddo.id,
+          asset,
           oceanConfig.providerUri,
           newCancelToken()
         )
         fileInfoResponse && setFileMetadata(fileInfoResponse[0])
-        isMounted() && setFileIsLoading(false)
+        setFileIsLoading(false)
       } catch (error) {
         Logger.error(error.message)
       }
     }
     initFileInfo()
-  }, [ddo, isMounted, newCancelToken])
+  }, [ddo, isMounted, newCancelToken, values?.services])
 
   // Get and set user DT balance
   useEffect(() => {

@@ -3,7 +3,12 @@ import { NftOptions } from '@utils/nft'
 import { ReactElement } from 'react'
 
 export interface FormPublishService {
-  files: string[]
+  files: {
+    url: string
+    valid: boolean
+    contentLength: string
+    contentType: string
+  }[]
   timeout: string
   dataTokenOptions: DataTokenOptions
   access: 'Download' | 'Compute' | string
