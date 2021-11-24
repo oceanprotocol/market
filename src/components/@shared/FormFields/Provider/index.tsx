@@ -14,6 +14,7 @@ export default function CustomProvider(props: InputProps): ReactElement {
     setIsLoading(true)
 
     try {
+      // TODO: #948 Remove ocean.provider.isValidProvider dependency.
       const isValid = await ocean.provider.isValidProvider(url)
       setIsValid(isValid)
       helpers.setError(undefined)
