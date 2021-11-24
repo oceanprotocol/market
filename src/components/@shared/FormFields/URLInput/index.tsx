@@ -1,8 +1,8 @@
 import React, { ReactElement } from 'react'
 import Button from '@shared/atoms/Button'
-import { ErrorMessage, FieldInputProps, useField } from 'formik'
+import { ErrorMessage, useField } from 'formik'
 import Loader from '@shared/atoms/Loader'
-import styles from './Input.module.css'
+import styles from './index.module.css'
 import InputGroup from '@shared/FormInput/InputGroup'
 import InputElement from '@shared/FormInput/InputElement'
 
@@ -12,6 +12,7 @@ export default function URLInput({
   isLoading,
   name,
   value,
+  isValid,
   ...props
 }: {
   submitText: string
@@ -19,6 +20,7 @@ export default function URLInput({
   isLoading: boolean
   name: string
   value: string
+  isValid?: boolean
 }): ReactElement {
   const [field, meta] = useField(name)
   const isButtonDisabled =
@@ -36,17 +38,24 @@ export default function URLInput({
           value={value}
           type="url"
         />
-        <Button
-          style="primary"
-          size="small"
-          onClick={(e: React.SyntheticEvent) => {
-            e.preventDefault()
-            handleButtonClick(e, field.value)
-          }}
-          disabled={isButtonDisabled}
-        >
-          {isLoading ? <Loader /> : submitText}
-        </Button>
+
+        {isValid ? (
+          <Button size="small" disabled className={styles.success}>
+            ✓ Valid
+          </Button>
+        ) : (
+          <Button
+            style="primary"
+            size="small"
+            onClick={(e: React.SyntheticEvent) => {
+              e.preventDefault()
+              handleButtonClick(e, field.value)
+            }}
+            disabled={isButtonDisabled}
+          >
+            {isLoading ? <Loader /> : submitText}
+          </Button>
+        )}
       </InputGroup>
 
       {meta.touched && meta.error && (

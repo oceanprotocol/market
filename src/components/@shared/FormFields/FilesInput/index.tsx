@@ -1,8 +1,8 @@
-import React, { ReactElement, useState, useEffect } from 'react'
+import React, { ReactElement, useState } from 'react'
 import { useField } from 'formik'
 import { toast } from 'react-toastify'
 import FileInfo from './Info'
-import UrlInput from '../URLInput/Input'
+import UrlInput from '../URLInput'
 import { InputProps } from '@shared/FormInput'
 import { getFileInfo } from '@utils/provider'
 import { useWeb3 } from '@context/Web3'
@@ -12,22 +12,21 @@ import { useCancelToken } from '@hooks/useCancelToken'
 export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
   const [isLoading, setIsLoading] = useState(false)
-  const [fileUrl, setFileUrl] = useState<string>()
   const { chainId } = useWeb3()
   const newCancelToken = useCancelToken()
 
-  function loadFileInfo() {
+  function loadFileInfo(url: string) {
     const config = getOceanConfig(chainId || 1)
 
     async function validateUrl() {
       try {
         setIsLoading(true)
         const checkedFile = await getFileInfo(
-          fileUrl,
+          url,
           config?.providerUri,
           newCancelToken()
         )
-        checkedFile && helpers.setValue([{ url: fileUrl, ...checkedFile[0] }])
+        checkedFile && helpers.setValue([{ url, ...checkedFile[0] }])
       } catch (error) {
         toast.error('Could not fetch file info. Please check URL and try again')
         console.error(error.message)
@@ -36,27 +35,13 @@ export default function FilesInput(props: InputProps): ReactElement {
       }
     }
 
-    fileUrl && validateUrl()
+    validateUrl()
   }
 
-  useEffect(() => {
-    loadFileInfo()
-  }, [fileUrl])
-
   async function handleButtonClick(e: React.SyntheticEvent, url: string) {
-    // hack so the onBlur-triggered validation does not show,
-    // like when this field is required
-    helpers.setTouched(false)
-
     // File example 'https://oceanprotocol.com/tech-whitepaper.pdf'
     e.preventDefault()
-
-    // In the case when the user re-add the same URL after it was removed (by accident or intentionally)
-    if (fileUrl === url) {
-      loadFileInfo()
-    }
-
-    setFileUrl(url)
+    loadFileInfo(url)
   }
 
   return (
