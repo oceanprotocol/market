@@ -15,8 +15,6 @@ export default function Navigation(): ReactElement {
   const isSuccessMetadata = errors.metadata === undefined
   const isSuccessServices = errors.services === undefined
 
-  console.log(errors.services)
-
   return (
     <nav className={styles.navigation}>
       <ol>
