@@ -6,7 +6,7 @@ import PriceUnit from '@shared/Price/PriceUnit'
 import External from '@images/external.svg'
 import InputElement from '@shared/FormInput/InputElement'
 import Loader from '@shared/atoms/Loader'
-import styles from './AssetSelection.module.css'
+import styles from './index.module.css'
 
 const cx = classNames.bind(styles)
 

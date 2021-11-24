@@ -1,8 +1,7 @@
 import React, { ChangeEvent } from 'react'
 import classNames from 'classnames/bind'
 import Loader from '@shared/atoms/Loader'
-import styles from './BoxSelection.module.css'
-import { useField } from 'formik'
+import styles from './index.module.css'
 
 const cx = classNames.bind(styles)
 

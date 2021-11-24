@@ -1,7 +1,7 @@
 import AssetTeaser from '@shared/AssetTeaser/AssetTeaser'
 import React, { useEffect, useState } from 'react'
 import Pagination from '@shared/Pagination'
-import styles from './AssetList.module.css'
+import styles from './index.module.css'
 import classNames from 'classnames/bind'
 import { getAssetsBestPrices, AssetListPrices } from '@utils/subgraph'
 import Loader from '@shared/atoms/Loader'

@@ -1,6 +1,6 @@
 import React, { ReactElement, useState } from 'react'
 import { useField } from 'formik'
-import UrlInput from './URLInput'
+import UrlInput from '../URLInput'
 import { useOcean } from '@context/Ocean'
 import { InputProps } from '@shared/FormInput'
 

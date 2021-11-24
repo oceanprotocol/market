@@ -12,6 +12,7 @@ export interface PersistProps {
   isSessionStorage?: boolean
 }
 
+// TODO: refactor into functional component
 class PersistImpl extends React.Component<
   PersistProps & { formik: FormikProps<any> },
   any

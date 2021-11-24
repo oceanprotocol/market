@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import AssetList from '@shared/AssetList/AssetList'
+import AssetList from '@shared/AssetList'
 import Button from '@shared/atoms/Button'
 import Bookmarks from './Bookmarks'
 import {

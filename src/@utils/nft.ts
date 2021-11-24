@@ -26,7 +26,8 @@ function encodeSvg(svgString: string): string {
 }
 
 export function generateNftOptions(): NftOptions {
-  // @images/arrow.svg test
+  // TODO: crop image properly in the end as generated SVG waves are a super-wide image,
+  // and add a filled background deciding on either black or white.
   const image = renderStaticWaves()
   // const image = new XMLSerializer().serializeToString(waves)
   // const image = `<svg><path d="M0 10.4304L16.3396 10.4304L8.88727 17.6833L10.2401 19L20 9.5L10.2401 0L8.88727 1.31491L16.3396 8.56959L0 8.56959V10.4304Z" /></svg>`
@@ -52,6 +53,7 @@ export function generateNftCreateData(nftOptions: NftOptions): any {
     symbol: nftOptions.symbol,
     templateIndex: 1,
     // TODO: figure out if Buffer.from method is working in browser in final build
+    // as BTOA is deprecated.
     tokenURI: window?.btoa(JSON.stringify(nftOptions))
     // tokenURI: Buffer.from(JSON.stringify(nftOptions)).toString('base64') // should end up as data:application/json;base64
   }
