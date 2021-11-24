@@ -18,8 +18,13 @@
   }
 }
 
-.summary {
-  margin-top: var(--spacer);
+.subtitle {
+  display: inline-block;
+  color: var(--color-secondary);
+  margin-left: calc(var(--spacer) / 4);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-base);
+  font-size: var(--font-size-small);
 }
 
 .alertArea {

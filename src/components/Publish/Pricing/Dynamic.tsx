@@ -8,13 +8,11 @@ import Fees from './Fees'
 import { FormikContextType, useFormikContext } from 'formik'
 import Price from './Price'
 import Decimal from 'decimal.js'
-import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 import { FormPublishData } from '../_types'
 
 export default function Dynamic({ content }: { content: any }): ReactElement {
-  const { networkId, balance } = useWeb3()
-  const { account } = useOcean()
+  const { networkId, accountId, balance } = useWeb3()
   const [firstPrice, setFirstPrice] = useState<string>()
 
   // Connect with form
@@ -51,14 +49,14 @@ export default function Dynamic({ content }: { content: any }): ReactElement {
 
   // Check: account, network & insufficient balance
   useEffect(() => {
-    if (!account) {
+    if (!accountId) {
       setError(`No account connected. Please connect your Web3 wallet.`)
-    } else if (Number(balance.ocean) < Number(price)) {
-      setError(`Insufficient balance. You need at least ${price} OCEAN`)
+    } else if (Number(balance.ocean) < Number(amountOcean)) {
+      setError(`Insufficient balance. You need at least ${amountOcean} OCEAN.`)
     } else {
       setError(undefined)
     }
-  }, [price, networkId, account, balance])
+  }, [amountOcean, networkId, accountId, balance])
 
   return (
     <>
@@ -71,7 +69,8 @@ export default function Dynamic({ content }: { content: any }): ReactElement {
       <Price firstPrice={firstPrice} />
 
       <h4 className={styles.title}>
-        Datatoken Liquidity Pool <Tooltip content={content.tooltips.poolInfo} />
+        Datatoken Liquidity Pool <Tooltip content={content.tooltips.poolInfo} />{' '}
+        <span className={styles.subtitle}>100% share of pool</span>
       </h4>
 
       <div className={styles.tokens}>
@@ -92,11 +91,6 @@ export default function Dynamic({ content }: { content: any }): ReactElement {
       </div>
 
       <Fees tooltips={content.tooltips} pricingType="dynamic" />
-
-      <footer className={styles.summary}>
-        You will get: <br />
-        100% share of pool
-      </footer>
 
       {error && (
         <div className={styles.alertArea}>
