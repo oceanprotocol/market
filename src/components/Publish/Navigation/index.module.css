@@ -1,30 +1,43 @@
 .navigation {
-  margin-bottom: var(--spacer);
-  margin-top: -1rem;
+  margin: -1.3rem calc(var(--spacer) / -1.5) var(--spacer)
+    calc(var(--spacer) / -1.5);
   padding: calc(var(--spacer) / 2) 0;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--background-highlight);
 }
 
 @media (min-width: 40rem) {
   .navigation {
     margin-top: -2rem;
+    margin-left: calc(var(--spacer) * -2);
+    margin-right: calc(var(--spacer) * -2);
+  }
+}
+
+@media (min-width: 60rem) {
+  .navigation {
     padding: var(--spacer) 0;
+    margin-left: calc(var(--spacer) * -4);
+    margin-right: calc(var(--spacer) * -4);
   }
 }
 
 .navigation ol {
-  display: flex;
-  justify-content: center;
+  white-space: nowrap;
+  text-align: center;
   width: 100%;
   padding: 0;
   margin: 0;
   counter-reset: list-number;
-  overflow-y: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
 }
 
 .navigation li {
   cursor: pointer;
-  display: block;
+  display: inline-block;
   margin: 0 var(--spacer);
   padding: 0 calc(var(--spacer) / 2);
   counter-increment: list-number;

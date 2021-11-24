@@ -3,7 +3,7 @@
   margin-bottom: var(--spacer);
 }
 
-@media (min-width: 45rem) {
+@media (min-width: 40rem) {
   .form {
     padding-left: calc(var(--spacer) * 2);
     padding-right: calc(var(--spacer) * 2);

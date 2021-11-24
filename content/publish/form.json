@@ -152,5 +152,8 @@
   },
   "preview": {
     "title": "Preview"
+  },
+  "submission": {
+    "title": "Submit"
   }
 }

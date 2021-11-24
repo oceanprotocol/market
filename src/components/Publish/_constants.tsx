@@ -6,6 +6,7 @@ import PricingFields from './Pricing'
 import MetadataFields from './Metadata'
 import ServicesFields from './Services'
 import Preview from './Preview'
+import Submission from './Submission'
 
 export const wizardSteps: StepContent[] = [
   {
@@ -27,6 +28,11 @@ export const wizardSteps: StepContent[] = [
     step: 4,
     title: content.preview.title,
     component: <Preview />
+  },
+  {
+    step: 5,
+    title: content.submission.title,
+    component: <Submission />
   }
 ]
 
