@@ -31,8 +31,10 @@ const validationService = {
   links: Yup.array<{ url: string; valid: boolean }[]>()
     .of(
       Yup.object().shape({
-        url: Yup.string().required('Required'),
-        valid: Yup.boolean().isTrue().required('File must be valid.')
+        url: Yup.string(),
+        // TODO: require valid file only when URL is given
+        valid: Yup.boolean()
+        // valid: Yup.boolean().isTrue('File must be valid.')
       })
     )
     .nullable(),
