@@ -85,13 +85,18 @@ export async function transformPublishFormToDdo(
   const filesEncrypted =
     files?.length &&
     files[0].valid &&
-    (await getEncryptedFileUrls(filesTransformed, providerUrl, did, accountId))
+    (await getEncryptedFileUrls(
+      filesTransformed,
+      providerUrl.url,
+      did,
+      accountId
+    ))
 
   const newService: Service = {
     type: access,
     files: filesEncrypted || '',
     datatokenAddress,
-    serviceEndpoint: providerUrl,
+    serviceEndpoint: providerUrl.url,
     timeout: mapTimeoutStringToSeconds(timeout),
     ...(access === 'compute' && {
       compute: {
