@@ -7,6 +7,7 @@ import { FormPublishData } from '../_types'
 import { getFieldContent } from '../_utils'
 import IconDataset from '@images/dataset.svg'
 import IconAlgorithm from '@images/algorithm.svg'
+import styles from './index.module.css'
 
 const assetTypeOptionsTitles = getFieldContent(
   'type',
@@ -123,6 +124,14 @@ export default function MetadataFields(): ReactElement {
         component={Input}
         name="metadata.termsAndConditions"
       />
+      <a
+        className={styles.termsLink}
+        href="/terms"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        View Terms and Conditions
+      </a>
     </>
   )
 }

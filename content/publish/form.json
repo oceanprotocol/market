@@ -75,7 +75,7 @@
         "name": "termsAndConditions",
         "label": "Terms & Conditions",
         "type": "checkbox",
-        "options": ["I agree to these Terms and Conditions"],
+        "options": ["I agree to the Terms and Conditions"],
         "required": true
       }
     ]

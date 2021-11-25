@@ -15,7 +15,9 @@ const validationMetadata = {
     .required('Required'),
   author: Yup.string().required('Required'),
   tags: Yup.string().nullable(),
-  termsAndConditions: Yup.boolean().required('Required').isTrue()
+  termsAndConditions: Yup.boolean()
+    .required('Required')
+    .isTrue('Please agree to the Terms and Conditions.')
 }
 
 const validationService = {
