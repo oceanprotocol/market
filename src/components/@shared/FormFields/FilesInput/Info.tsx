@@ -1,37 +1,25 @@
-import React, { ReactElement, useEffect } from 'react'
+import React, { ReactElement } from 'react'
 import { prettySize } from './utils'
 import cleanupContentType from '@utils/cleanupContentType'
 import styles from './Info.module.css'
-import { useField, useFormikContext } from 'formik'
 import { FileMetadata } from '@utils/provider'
 
 export default function FileInfo({
-  name,
-  file
+  file,
+  handleClose
 }: {
-  name: string
   file: FileMetadata
+  handleClose(): void
 }): ReactElement {
-  const { validateField } = useFormikContext()
-  const [field, meta, helpers] = useField(name)
-
-  // On mount, validate the field manually
-  useEffect(() => {
-    validateField(name)
-  }, [name, validateField])
-
   return (
     <div className={styles.info}>
       <h3 className={styles.url}>{(file as any).url}</h3>
       <ul>
-        <li>URL confirmed</li>
+        <li className={styles.success}>✓ URL confirmed</li>
         {file.contentLength && <li>{prettySize(+file.contentLength)}</li>}
         {file.contentType && <li>{cleanupContentType(file.contentType)}</li>}
       </ul>
-      <button
-        className={styles.removeButton}
-        onClick={() => helpers.setValue(undefined)}
-      >
+      <button className={styles.removeButton} onClick={handleClose}>
         &times;
       </button>
     </div>

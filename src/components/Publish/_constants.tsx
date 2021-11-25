@@ -62,7 +62,10 @@ export const initialValues: FormPublishData = {
       dataTokenOptions: { name: '', symbol: '' },
       timeout: '',
       access: '',
-      providerUrl: 'https://provider.mainnet.oceanprotocol.com'
+      providerUrl: {
+        url: 'https://provider.mainnet.oceanprotocol.com',
+        valid: true
+      }
     }
   ],
   pricing: {

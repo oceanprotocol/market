@@ -22,7 +22,7 @@ const validationService = {
   files: Yup.array<{ url: string; valid: boolean }[]>()
     .of(
       Yup.object().shape({
-        url: Yup.string().required('Required'),
+        url: Yup.string().url('Must be a valid URL.').required('Required'),
         valid: Yup.boolean().isTrue().required('File must be valid.')
       })
     )
@@ -31,7 +31,7 @@ const validationService = {
   links: Yup.array<{ url: string; valid: boolean }[]>()
     .of(
       Yup.object().shape({
-        url: Yup.string(),
+        url: Yup.string().url('Must be a valid URL.'),
         // TODO: require valid file only when URL is given
         valid: Yup.boolean()
         // valid: Yup.boolean().isTrue('File must be valid.')
@@ -46,7 +46,10 @@ const validationService = {
   access: Yup.string()
     .matches(/compute|download/g)
     .required('Required'),
-  providerUrl: Yup.string().url().required('Required')
+  providerUrl: Yup.object().shape({
+    url: Yup.string().url('Must be a valid URL.').required('Required'),
+    valid: Yup.boolean().isTrue().required('Valid Provider is required.')
+  })
 }
 
 const validationPricing = {

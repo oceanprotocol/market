@@ -15,7 +15,7 @@ export interface FormPublishService {
   timeout: string
   dataTokenOptions: DataTokenOptions
   access: 'Download' | 'Compute' | string
-  providerUrl?: string
+  providerUrl?: { url: string; valid: boolean }
   algorithmPrivacy?: boolean
 }
 

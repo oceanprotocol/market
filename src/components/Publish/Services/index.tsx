@@ -54,8 +54,8 @@ export default function ServicesFields(): ReactElement {
     if (!values?.user?.chainId) return
 
     const config = getOceanConfig(values.user.chainId)
-    config && setFieldValue('services[0].providerUrl', config.providerUri)
-    setTouched({ services: [{ providerUrl: true }] })
+    config && setFieldValue('services[0].providerUrl.url', config.providerUri)
+    setTouched({ services: [{ providerUrl: { url: true } }] })
   }, [values.user.chainId, setFieldValue, setTouched])
 
   return (
