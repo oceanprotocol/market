@@ -35,8 +35,6 @@ export async function transformPublishFormToDdo(
 ): Promise<DDO> {
   const { metadata, services, user } = values
   const { chainId, accountId } = user
-  const did = nftAddress ? `0x${sha256(`${nftAddress}${chainId}`)}` : '0x...'
-  const currentTime = dateToStringNoMS(new Date())
   const {
     type,
     name,
@@ -49,6 +47,9 @@ export async function transformPublishFormToDdo(
     dockerImageCustomEntrypoint
   } = metadata
   const { access, files, links, providerUrl, timeout } = services[0]
+
+  const did = nftAddress ? `0x${sha256(`${nftAddress}${chainId}`)}` : '0x...'
+  const currentTime = dateToStringNoMS(new Date())
 
   // Transform from files[0].url to string[] assuming only 1 file
   const filesTransformed = files?.length && files[0].valid && [files[0].url]
@@ -68,6 +69,8 @@ export async function transformPublishFormToDdo(
       termsAndConditions
     },
     ...(type === 'algorithm' && {
+      // TODO: This needs some set of predefined values for `container`,
+      // depending on user selection in the form.
       algorithm: {
         language: files?.length ? getUrlFileExtension(filesTransformed[0]) : '',
         version: '0.1',
@@ -81,7 +84,7 @@ export async function transformPublishFormToDdo(
     })
   }
 
-  // Encypt just created string[] of urls
+  // Encrypt just created string[] of urls
   const filesEncrypted =
     files?.length &&
     files[0].valid &&
@@ -99,6 +102,7 @@ export async function transformPublishFormToDdo(
     serviceEndpoint: providerUrl.url,
     timeout: mapTimeoutStringToSeconds(timeout),
     ...(access === 'compute' && {
+      // TODO: get all the default values we want to send here.
       compute: {
         namespace: 'ocean-compute',
         cpu: 1,
@@ -121,7 +125,9 @@ export async function transformPublishFormToDdo(
     chainId,
     metadata: newMetadata,
     services: [newService],
-    // only added for DDO preview, reflecting Asset response
+    // Only added for DDO preview, reflecting Asset response,
+    // again, we can assume if `datatokenAddress` is not passed,
+    // we are on preview.
     ...(!datatokenAddress && {
       dataTokenInfo: {
         name: values.services[0].dataTokenOptions.name,
