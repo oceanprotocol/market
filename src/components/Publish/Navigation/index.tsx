@@ -21,7 +21,8 @@ export default function Navigation(): ReactElement {
     const isSuccessServices = errors.services === undefined
     const isSuccessPricing =
       errors.pricing === undefined && touched.pricing?.price
-    const isSuccessPreview = false
+    const isSuccessPreview =
+      isSuccessMetadata && isSuccessServices && isSuccessPricing
 
     const isSuccess =
       (step === 1 && isSuccessMetadata) ||
@@ -38,7 +39,6 @@ export default function Navigation(): ReactElement {
           <li
             key={step.title}
             onClick={() => handleStepClick(step.step)}
-            // TODO: add success class for all steps
             className={`${
               values.user.stepCurrent === step.step ? styles.current : null
             } ${getSuccessClass(step.step)}`}
