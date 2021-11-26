@@ -60,14 +60,7 @@ const validationPricing = {
     .required('Required'),
   // https://github.com/jquense/yup#mixedwhenkeys-string--arraystring-builder-object--value-schema-schema-schema
   price: Yup.number()
-    .when('type', (type, schema) =>
-      type === 'free'
-        ? schema
-        : schema.min(
-            1,
-            (param: { min: number }) => `Must be more or equal to ${param.min}`
-          )
-    )
+    .min(1, (param: { min: number }) => `Must be more or equal to ${param.min}`)
     .required('Required'),
   amountDataToken: Yup.number()
     .min(50, (param) => `Must be more or equal to ${param.min}`)
