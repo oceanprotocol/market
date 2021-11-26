@@ -1,5 +1,5 @@
 import React, { ReactElement, useState, useRef } from 'react'
-import { Form, Formik } from 'formik'
+import { Form, Formik, validateYupSchema } from 'formik'
 import { initialValues } from './_constants'
 import { validationSchema } from './_validation'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
@@ -80,29 +80,29 @@ export default function PublishPage({
     }
   }
 
-  return (
-    <>
-      <PageHeader title={<Title />} description={content.description} />
-
-      {isInPurgatory && purgatoryData ? null : (
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={async (values, { resetForm }) => {
-            // kick off publishing
-            await handleSubmit(values)
-          }}
-        >
-          <>
-            <Form className={styles.form} ref={scrollToRef}>
-              <Navigation />
-              <Steps />
-              <Actions scrollToRef={scrollToRef} />
-            </Form>
-            {debug && <Debug />}
-          </>
-        </Formik>
+  return isInPurgatory && purgatoryData ? null : (
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={async (values, { resetForm }) => {
+        // kick off publishing
+        await handleSubmit(values)
+      }}
+    >
+      {({ values }) => (
+        <>
+          <PageHeader
+            title={<Title networkId={values.user.chainId} />}
+            description={content.description}
+          />
+          <Form className={styles.form} ref={scrollToRef}>
+            <Navigation />
+            <Steps />
+            <Actions scrollToRef={scrollToRef} />
+          </Form>
+          {debug && <Debug />}
+        </>
       )}
-    </>
+    </Formik>
   )
 }
