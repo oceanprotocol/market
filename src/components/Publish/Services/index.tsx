@@ -16,7 +16,7 @@ const accessTypeOptionsTitles = getFieldContent(
 
 export default function ServicesFields(): ReactElement {
   // connect with Form state, use for conditional field rendering
-  const { values, setFieldValue, setTouched } =
+  const { values, setFieldValue, touched, setTouched } =
     useFormikContext<FormPublishData>()
 
   const accessTypeOptions = [
@@ -55,7 +55,7 @@ export default function ServicesFields(): ReactElement {
 
     const config = getOceanConfig(values.user.chainId)
     config && setFieldValue('services[0].providerUrl.url', config.providerUri)
-    setTouched({ services: [{ providerUrl: { url: true } }] })
+    setTouched({ ...touched, services: [{ providerUrl: { url: true } }] })
   }, [values.user.chainId, setFieldValue, setTouched])
 
   return (

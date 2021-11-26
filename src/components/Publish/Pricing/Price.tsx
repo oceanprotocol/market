@@ -22,21 +22,9 @@ export default function Price({
       <div className={styles.grid}>
         <div className={styles.form}>
           {field.value === 0 ? (
-            <Input
-              value="0"
-              name="pricing.price"
-              type="number"
-              prefix="OCEAN"
-              readOnly
-            />
+            <Input value="0" type="number" prefix="OCEAN" readOnly {...field} />
           ) : (
-            <Input
-              value={field.value}
-              name="pricing.price"
-              type="number"
-              prefix="OCEAN"
-              {...field}
-            />
+            <Input type="number" prefix="OCEAN" {...field} />
           )}
           <Error meta={meta} />
         </div>

@@ -5,15 +5,31 @@ import { wizardSteps } from '../_constants'
 import styles from './index.module.css'
 
 export default function Navigation(): ReactElement {
-  const { values, errors, setFieldValue }: FormikContextType<FormPublishData> =
-    useFormikContext()
+  const {
+    values,
+    errors,
+    touched,
+    setFieldValue
+  }: FormikContextType<FormPublishData> = useFormikContext()
 
   function handleStepClick(step: number) {
     setFieldValue('user.stepCurrent', step)
   }
 
-  const isSuccessMetadata = errors.metadata === undefined
-  const isSuccessServices = errors.services === undefined
+  function getSuccessClass(step: number) {
+    const isSuccessMetadata = errors.metadata === undefined
+    const isSuccessServices = errors.services === undefined
+    const isSuccessPricing =
+      errors.pricing === undefined && touched.pricing?.price
+    const isSuccessPreview = false
+
+    const isSuccess =
+      (step === 1 && isSuccessMetadata) ||
+      (step === 2 && isSuccessServices) ||
+      (step === 3 && isSuccessPricing) ||
+      (step === 4 && isSuccessPreview)
+    return isSuccess ? styles.success : null
+  }
 
   return (
     <nav className={styles.navigation}>
@@ -25,9 +41,7 @@ export default function Navigation(): ReactElement {
             // TODO: add success class for all steps
             className={`${
               values.user.stepCurrent === step.step ? styles.current : null
-            } ${step.step === 1 && isSuccessMetadata ? styles.success : null} ${
-              step.step === 2 && isSuccessServices ? styles.success : null
-            }`}
+            } ${getSuccessClass(step.step)}`}
           >
             {step.title}
           </li>
