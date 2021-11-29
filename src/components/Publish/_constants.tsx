@@ -89,7 +89,7 @@ export const algorithmContainerPresets: MetadataAlgorithmContainer[] = [
     image: 'node',
     tag: 'latest',
     entrypoint: 'node $ALGO',
-    checksum: '' // TODO: how to get?
+    checksum: '' // TODO: how to get? Most likely needs to be fetched from DockerHub.
   },
   {
     image: 'python',
@@ -98,3 +98,16 @@ export const algorithmContainerPresets: MetadataAlgorithmContainer[] = [
     checksum: ''
   }
 ]
+
+export const computeEnvironmentDefaults: ServiceComputeOptions = {
+  namespace: 'ocean-compute',
+  cpu: 1,
+  gpu: 0,
+  gpuType: '',
+  memory: '1Gb',
+  volumeSize: '1Gb',
+  allowRawAlgorithm: false,
+  allowNetworkAccess: true,
+  publisherTrustedAlgorithmPublishers: null,
+  publisherTrustedAlgorithms: null
+}

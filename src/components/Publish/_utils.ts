@@ -2,7 +2,10 @@ import { mapTimeoutStringToSeconds } from '@utils/ddo'
 import { getEncryptedFileUrls } from '@utils/provider'
 import { sha256 } from 'js-sha256'
 import slugify from 'slugify'
-import { algorithmContainerPresets } from './_constants'
+import {
+  algorithmContainerPresets,
+  computeEnvironmentDefaults
+} from './_constants'
 import { FormPublishData } from './_types'
 
 export function getFieldContent(
@@ -129,19 +132,7 @@ export async function transformPublishFormToDdo(
     serviceEndpoint: providerUrl.url,
     timeout: mapTimeoutStringToSeconds(timeout),
     ...(access === 'compute' && {
-      // TODO: get all the default values we want to send here.
-      compute: {
-        namespace: 'ocean-compute',
-        cpu: 1,
-        gpu: 1,
-        gpuType: '',
-        memory: '',
-        volumeSize: '',
-        allowRawAlgorithm: false,
-        allowNetworkAccess: false,
-        publisherTrustedAlgorithmPublishers: null,
-        publisherTrustedAlgorithms: null
-      }
+      compute: computeEnvironmentDefaults
     })
   }
 
