@@ -36,6 +36,19 @@ export const wizardSteps: StepContent[] = [
   }
 ]
 
+export const computeEnvironmentDefaults: ServiceComputeOptions = {
+  namespace: 'ocean-compute',
+  cpu: 1,
+  gpu: 0,
+  gpuType: '',
+  memory: '1Gb',
+  volumeSize: '1Gb',
+  allowRawAlgorithm: false,
+  allowNetworkAccess: true,
+  publisherTrustedAlgorithmPublishers: null,
+  publisherTrustedAlgorithms: null
+}
+
 export const initialValues: FormPublishData = {
   user: {
     stepCurrent: 1,
@@ -65,7 +78,8 @@ export const initialValues: FormPublishData = {
       providerUrl: {
         url: 'https://provider.mainnet.oceanprotocol.com',
         valid: true
-      }
+      },
+      computeOptions: computeEnvironmentDefaults
     }
   ],
   pricing: {
@@ -98,16 +112,3 @@ export const algorithmContainerPresets: MetadataAlgorithmContainer[] = [
     checksum: ''
   }
 ]
-
-export const computeEnvironmentDefaults: ServiceComputeOptions = {
-  namespace: 'ocean-compute',
-  cpu: 1,
-  gpu: 0,
-  gpuType: '',
-  memory: '1Gb',
-  volumeSize: '1Gb',
-  allowRawAlgorithm: false,
-  allowNetworkAccess: true,
-  publisherTrustedAlgorithmPublishers: null,
-  publisherTrustedAlgorithms: null
-}

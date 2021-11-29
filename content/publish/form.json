@@ -141,6 +141,15 @@
         "options": ["Forever", "1 day", "1 week", "1 month", "1 year"],
         "sortOptions": false,
         "required": true
+      },
+      {
+        "name": "computeOptions",
+        "label": "Compute Environment",
+        "type": "radio",
+        "options": [
+          "populated from computeEnvironmentDefaults in Publish/_constants & computeEnvironmentOptions in Publish/Services/"
+        ],
+        "required": true
       }
     ]
   },

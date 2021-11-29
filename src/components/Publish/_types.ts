@@ -17,6 +17,7 @@ export interface FormPublishService {
   access: 'Download' | 'Compute' | string
   providerUrl?: { url: string; valid: boolean }
   algorithmPrivacy?: boolean
+  computeOptions?: ServiceComputeOptions
 }
 
 export interface FormPublishData {
