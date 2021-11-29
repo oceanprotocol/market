@@ -37,6 +37,7 @@ export interface FormPublishData {
     dockerImageCustom?: string
     dockerImageCustomTag?: string
     dockerImageCustomEntrypoint?: string
+    dockerImageCustomChecksum?: string
   }
   services: FormPublishService[]
   pricing: PriceOptions

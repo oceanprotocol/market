@@ -8,21 +8,12 @@ import { getFieldContent } from '../_utils'
 import IconDataset from '@images/dataset.svg'
 import IconAlgorithm from '@images/algorithm.svg'
 import styles from './index.module.css'
+import { algorithmContainerPresets } from '../_constants'
 
 const assetTypeOptionsTitles = getFieldContent(
   'type',
   content.metadata.fields
 ).options
-
-const dockerImageOptionsTitles = getFieldContent(
-  'dockerImage',
-  content.metadata.fields
-).options
-
-const dockerImageOptions = dockerImageOptionsTitles.map((title) => ({
-  name: title.toLowerCase(),
-  title
-}))
 
 export default function MetadataFields(): ReactElement {
   // connect with Form state, use for conditional field rendering
@@ -44,6 +35,17 @@ export default function MetadataFields(): ReactElement {
       icon: <IconAlgorithm />
     }
   ]
+
+  // Populate the Docker image field with our presets in _constants,
+  // transformPublishFormToDdo will do the rest.
+  const dockerImageOptions: BoxSelectionOption[] =
+    algorithmContainerPresets.map((preset) => ({
+      name: `${preset.image}:${preset.tag}`,
+      title: `${preset.image}:${preset.tag}`,
+      checked: values.metadata.dockerImage === `${preset.image}:${preset.tag}`
+    }))
+
+  dockerImageOptions.push({ name: 'custom', title: 'Custom', checked: false })
 
   return (
     <>

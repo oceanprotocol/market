@@ -84,22 +84,17 @@ export const initialValues: FormPublishData = {
   }
 }
 
-// export const initialValuesAlgo: Partial<MetadataPublishFormAlgorithm> = {
-//   name: '',
-//   author: '',
-//   dataTokenOptions: {
-//     name: '',
-//     symbol: ''
-//   },
-//   dockerImage: 'node:latest',
-//   image: 'node',
-//   containerTag: 'latest',
-//   entrypoint: 'node $ALGO',
-//   files: '',
-//   description: '',
-//   algorithmPrivacy: false,
-//   termsAndConditions: false,
-//   tags: '',
-//   timeout: 'Forever',
-//   providerUri: ''
-// }
+export const algorithmContainerPresets: MetadataAlgorithmContainer[] = [
+  {
+    image: 'node',
+    tag: 'latest',
+    entrypoint: 'node $ALGO',
+    checksum: '' // TODO: how to get?
+  },
+  {
+    image: 'python',
+    tag: 'latest',
+    entrypoint: 'python $ALGO',
+    checksum: ''
+  }
+]

@@ -2,6 +2,7 @@ import { mapTimeoutStringToSeconds } from '@utils/ddo'
 import { getEncryptedFileUrls } from '@utils/provider'
 import { sha256 } from 'js-sha256'
 import slugify from 'slugify'
+import { algorithmContainerPresets } from './_constants'
 import { FormPublishData } from './_types'
 
 export function getFieldContent(
@@ -14,6 +15,17 @@ export function getFieldContent(
 function getUrlFileExtension(fileUrl: string): string {
   const splittedFileUrl = fileUrl.split('.')
   return splittedFileUrl[splittedFileUrl.length - 1]
+}
+
+function getAlgorithmContainerPreset(
+  dockerImage: string
+): MetadataAlgorithmContainer {
+  if (dockerImage === '') return
+
+  const preset = algorithmContainerPresets.find(
+    (preset) => `${preset.image}:${preset.tag}` === dockerImage
+  )
+  return preset
 }
 
 function dateToStringNoMS(date: Date): string {
@@ -42,9 +54,11 @@ export async function transformPublishFormToDdo(
     tags,
     author,
     termsAndConditions,
+    dockerImage,
     dockerImageCustom,
     dockerImageCustomTag,
-    dockerImageCustomEntrypoint
+    dockerImageCustomEntrypoint,
+    dockerImageCustomChecksum
   } = metadata
   const { access, files, links, providerUrl, timeout } = services[0]
 
@@ -68,20 +82,33 @@ export async function transformPublishFormToDdo(
     additionalInformation: {
       termsAndConditions
     },
-    ...(type === 'algorithm' && {
-      // TODO: This needs some set of predefined values for `container`,
-      // depending on user selection in the form.
-      algorithm: {
-        language: files?.length ? getUrlFileExtension(filesTransformed[0]) : '',
-        version: '0.1',
-        container: {
-          entrypoint: dockerImageCustomEntrypoint,
-          image: dockerImageCustom,
-          tag: dockerImageCustomTag,
-          checksum: '' // TODO: how to get? Is it user input?
+    ...(type === 'algorithm' &&
+      dockerImage !== '' && {
+        algorithm: {
+          language: filesTransformed?.length
+            ? getUrlFileExtension(filesTransformed[0])
+            : '',
+          version: '0.1',
+          container: {
+            entrypoint:
+              dockerImage === 'custom'
+                ? dockerImageCustomEntrypoint
+                : getAlgorithmContainerPreset(dockerImage).entrypoint,
+            image:
+              dockerImage === 'custom'
+                ? dockerImageCustom
+                : getAlgorithmContainerPreset(dockerImage).image,
+            tag:
+              dockerImage === 'custom'
+                ? dockerImageCustomTag
+                : getAlgorithmContainerPreset(dockerImage).tag,
+            checksum:
+              dockerImage === 'custom'
+                ? dockerImageCustomChecksum
+                : getAlgorithmContainerPreset(dockerImage).checksum
+          }
         }
-      }
-    })
+      })
   }
 
   // Encrypt just created string[] of urls

@@ -47,7 +47,9 @@
         "label": "Docker Image",
         "help": "Please select an image to run your algorithm.",
         "type": "boxSelection",
-        "options": ["node:latest", "python:latest", "Custom"],
+        "options": [
+          "populated from algorithmContainerPresets in Publish/_constants"
+        ],
         "required": true
       },
       {
