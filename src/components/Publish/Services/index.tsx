@@ -39,7 +39,13 @@ export default function ServicesFields(): ReactElement {
   ]
 
   const computeEnvironmentOptions = [
-    `Default: ${computeEnvironmentDefaults.cpu} CPU, ${computeEnvironmentDefaults.memory} memory, ${computeEnvironmentDefaults.volumeSize} disk`
+    `Default: ${computeEnvironmentDefaults.cpu} CPU, ${
+      computeEnvironmentDefaults.gpu > 0
+        ? `${computeEnvironmentDefaults.gpu} ${computeEnvironmentDefaults.gpuType} GPU, `
+        : ''
+    } ${computeEnvironmentDefaults.memory} memory, ${
+      computeEnvironmentDefaults.volumeSize
+    } disk`
   ]
 
   // Auto-change access type based on algo privacy boolean.
