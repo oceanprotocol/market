@@ -95,6 +95,7 @@ export default function ServicesFields(): ReactElement {
           name="services[0].computeOptions"
           options={computeEnvironmentOptions}
           disabled
+          checked
         />
       )}
       <Field
