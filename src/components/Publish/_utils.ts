@@ -2,10 +2,7 @@ import { mapTimeoutStringToSeconds } from '@utils/ddo'
 import { getEncryptedFileUrls } from '@utils/provider'
 import { sha256 } from 'js-sha256'
 import slugify from 'slugify'
-import {
-  algorithmContainerPresets,
-  computeEnvironmentDefaults
-} from './_constants'
+import { algorithmContainerPresets } from './_constants'
 import { FormPublishData } from './_types'
 
 export function getFieldContent(
@@ -132,7 +129,7 @@ export async function transformPublishFormToDdo(
     serviceEndpoint: providerUrl.url,
     timeout: mapTimeoutStringToSeconds(timeout),
     ...(access === 'compute' && {
-      compute: computeEnvironmentDefaults
+      compute: values.services[0].computeOptions
     })
   }
 
