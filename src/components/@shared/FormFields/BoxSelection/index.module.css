@@ -1,0 +1,59 @@
+.boxSelectionsWrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 0 calc(var(--spacer) / 4);
+}
+
+.boxSelectionsWrapper > div {
+  width: 100%;
+  position: relative;
+}
+
+.boxSelection {
+  display: block;
+  flex: 1 1 0px;
+  padding: calc(var(--spacer) / 3) calc(var(--spacer) / 2)
+    calc(var(--spacer) / 4) calc(var(--spacer) / 2) !important;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  color: var(--color-secondary);
+  cursor: pointer;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.title {
+  font-weight: var(--font-weight-bold);
+  text-align: center;
+}
+
+.boxSelectionsWrapper input[type='radio'] {
+  position: fixed;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.boxSelectionsWrapper input[type='radio']:checked + label {
+  color: var(--background-body);
+  border-color: var(--background-body);
+  background: var(--font-color-heading);
+}
+
+.boxSelection svg {
+  width: var(--font-size-h5);
+  height: var(--font-size-h5);
+  fill: currentColor;
+  margin-bottom: calc(var(--spacer) / 5);
+}
+
+.boxSelectionsWrapper label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  color: var(--color-secondary);
+  font-weight: normal;
+}

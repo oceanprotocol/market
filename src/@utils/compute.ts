@@ -1,7 +1,6 @@
 import {
   ServiceComputePrivacy,
   publisherTrustedAlgorithm as PublisherTrustedAlgorithm,
-  DDO,
   Service,
   Logger,
   Provider,
@@ -59,7 +58,7 @@ async function getAssetMetadata(
   queryDtList: string[],
   cancelToken: CancelToken,
   chainIds: number[]
-): Promise<DDO[]> {
+): Promise<Asset[]> {
   const baseQueryparams = {
     chainIds,
     filters: [
@@ -75,35 +74,37 @@ async function getAssetMetadata(
   return result.results
 }
 
-function getServiceEndpoints(data: TokenOrder[], assets: DDO[]): string[] {
-  const serviceEndpoints: string[] = []
+function getServiceEndpoints(data: TokenOrder[], assets: Asset[]): string[] {
+  // const serviceEndpoints: string[] = []
 
-  for (let i = 0; i < data.length; i++) {
-    try {
-      const did = web3.utils
-        .toChecksumAddress(data[i].datatokenId.address)
-        .replace('0x', 'did:op:')
-      const ddo = assets.filter((x) => x.id === did)[0]
-      if (ddo === undefined) continue
+  // for (let i = 0; i < data.length; i++) {
+  //   try {
+  //     const did = web3.utils
+  //       .toChecksumAddress(data[i].datatokenId.address)
+  //       .replace('0x', 'did:op:')
+  //     const ddo = assets.filter((x) => x.id === did)[0]
+  //     if (ddo === undefined) continue
 
-      const service = ddo.service.filter(
-        (x: Service) => x.index === data[i].serviceId
-      )[0]
+  //     const service = ddo.services.filter(
+  //       (x: Service) => x.index === data[i].serviceId
+  //     )[0]
 
-      if (!service || service.type !== 'compute') continue
-      const { serviceEndpoint } = service
+  //     if (!service || service.type !== 'compute') continue
+  //     const { providerEndpoint } = service
 
-      const wasProviderQueried =
-        serviceEndpoints?.filter((x) => x === serviceEndpoint).length > 0
+  //     const wasProviderQueried =
+  //       serviceEndpoints?.filter((x) => x === providerEndpoint).length > 0
 
-      if (wasProviderQueried) continue
-      serviceEndpoints.push(serviceEndpoint)
-    } catch (err) {
-      Logger.error(err.message)
-    }
-  }
+  //     if (wasProviderQueried) continue
+  //     serviceEndpoints.push(providerEndpoint)
+  //   } catch (err) {
+  //     Logger.error(err.message)
+  //   }
+  // }
 
-  return serviceEndpoints
+  // return serviceEndpoints
+
+  return ['dummy']
 }
 
 async function getProviders(
@@ -138,7 +139,7 @@ async function getProviders(
 async function getJobs(
   providers: Provider[],
   account: Account,
-  assets: DDO[]
+  assets: Asset[]
 ): Promise<ComputeJobMetaData[]> {
   const computeJobs: ComputeJobMetaData[] = []
 
@@ -170,13 +171,10 @@ async function getJobs(
         const ddo = assets.filter((x) => x.id === did)[0]
 
         if (!ddo) continue
-        const serviceMetadata = ddo.service.filter(
-          (x: Service) => x.type === 'metadata'
-        )[0]
 
         const compJob: ComputeJobMetaData = {
           ...job,
-          assetName: serviceMetadata.attributes.main.name,
+          assetName: ddo.metadata.name,
           assetDtSymbol: ddo.dataTokenInfo.symbol,
           networkId: ddo.chainId
         }
@@ -205,7 +203,7 @@ export async function getComputeJobs(
   config: Config,
   ocean: Ocean,
   account: Account,
-  ddo?: DDO,
+  ddo?: Asset,
   token?: CancelToken
 ): Promise<ComputeResults> {
   const assetDTAddress = ddo?.dataTokenInfo?.address

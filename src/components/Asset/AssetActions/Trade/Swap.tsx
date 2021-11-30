@@ -1,5 +1,4 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { DDO } from '@oceanprotocol/lib'
 import styles from './Swap.module.css'
 import TradeInput from './TradeInput'
 import Button from '@shared/atoms/Button'
@@ -26,7 +25,7 @@ export default function Swap({
   setMaximumOcean,
   setCoin
 }: {
-  ddo: DDO
+  ddo: Asset
   maxDt: string
   maxOcean: string
   balance: PoolBalance
@@ -64,54 +63,54 @@ export default function Swap({
     if (!ddo || !balance || !values?.type || !price) return
 
     async function calculateMaximum() {
-      const dtAmount =
+      const amountDataToken =
         values.type === 'buy'
           ? new Decimal(maxDt)
           : new Decimal(balance.datatoken)
-      const oceanAmount =
+      const amountOcean =
         values.type === 'buy'
           ? new Decimal(balance.ocean)
           : new Decimal(maxOcean)
 
       const maxBuyOcean = await ocean.pool.getOceanReceived(
         price.address,
-        `${dtAmount.toString()}`
+        `${amountDataToken.toString()}`
       )
       const maxBuyDt = await ocean.pool.getDTReceived(
         price.address,
-        `${oceanAmount.toString()}`
+        `${amountOcean.toString()}`
       )
 
       const maximumDt =
         values.type === 'buy'
-          ? dtAmount.greaterThan(new Decimal(maxBuyDt))
+          ? amountDataToken.greaterThan(new Decimal(maxBuyDt))
             ? maxBuyDt
-            : dtAmount
-          : dtAmount.greaterThan(new Decimal(balance.datatoken))
+            : amountDataToken
+          : amountDataToken.greaterThan(new Decimal(balance.datatoken))
           ? balance.datatoken
-          : dtAmount
+          : amountDataToken
 
       const maximumOcean =
         values.type === 'sell'
-          ? oceanAmount.greaterThan(new Decimal(maxBuyOcean))
+          ? amountOcean.greaterThan(new Decimal(maxBuyOcean))
             ? maxBuyOcean
-            : oceanAmount
-          : oceanAmount.greaterThan(new Decimal(balance.ocean))
+            : amountOcean
+          : amountOcean.greaterThan(new Decimal(balance.ocean))
           ? balance.ocean
-          : oceanAmount
+          : amountOcean
 
       setMaximumDt(maximumDt.toString())
       setMaximumOcean(maximumOcean.toString())
 
       setOceanItem((prevState) => ({
         ...prevState,
-        amount: oceanAmount.toString(),
+        amount: amountOcean.toString(),
         maxAmount: maximumOcean.toString()
       }))
 
       setDtItem((prevState) => ({
         ...prevState,
-        amount: dtAmount.toString(),
+        amount: amountDataToken.toString(),
         maxAmount: maximumDt.toString()
       }))
     }
@@ -149,7 +148,7 @@ export default function Swap({
         setTotalValue(newValue)
         setTokenAmount(value.toString())
 
-        tokenIn = ddo.dataToken
+        tokenIn = ddo.services[0].datatokenAddress
         tokenOut = ocean.pool.oceanAddress
       } else {
         newValue = await ocean.pool.getDTReceived(
@@ -160,7 +159,7 @@ export default function Swap({
         setTotalValue(value.toString())
         setTokenAmount(newValue)
         tokenIn = ocean.pool.oceanAddress
-        tokenOut = ddo.dataToken
+        tokenOut = ddo.services[0].datatokenAddress
       }
     } else {
       if (values.type === 'sell') {
@@ -171,7 +170,7 @@ export default function Swap({
 
         setTotalValue(value.toString())
         setTokenAmount(newValue)
-        tokenIn = ddo.dataToken
+        tokenIn = ddo.services[0].datatokenAddress
         tokenOut = ocean.pool.oceanAddress
       } else {
         newValue = await ocean.pool.getOceanNeeded(
@@ -182,7 +181,7 @@ export default function Swap({
         setTotalValue(newValue)
         setTokenAmount(value.toString())
         tokenIn = ocean.pool.oceanAddress
-        tokenOut = ddo.dataToken
+        tokenOut = ddo.services[0].datatokenAddress
       }
     }
 

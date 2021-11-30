@@ -1,0 +1,16 @@
+.network {
+  color: var(--font-color-heading);
+  margin-left: calc(var(--spacer) / 3);
+}
+
+.network svg {
+  width: 1em;
+  height: 1em;
+  margin-top: -0.25em;
+  fill: currentColor;
+}
+
+.tooltip {
+  width: 0.5em;
+  height: 0.5em;
+}

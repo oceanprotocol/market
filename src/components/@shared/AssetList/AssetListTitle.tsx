@@ -1,4 +1,3 @@
-import { DDO } from '@oceanprotocol/lib'
 import Link from 'next/link'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { getAssetsNames } from '@utils/aquarius'
@@ -11,7 +10,7 @@ export default function AssetListTitle({
   did,
   title
 }: {
-  ddo?: DDO
+  ddo?: Asset
   did?: string
   title?: string
 }): ReactElement {
@@ -21,8 +20,7 @@ export default function AssetListTitle({
   useEffect(() => {
     if (title || !appConfig.metadataCacheUri) return
     if (ddo) {
-      const { attributes } = ddo.findServiceByType('metadata')
-      setAssetTitle(attributes.main.name)
+      setAssetTitle(ddo.metadata.name)
       return
     }
 

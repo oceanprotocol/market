@@ -1,0 +1,34 @@
+.nft {
+  display: grid;
+  gap: var(--spacer);
+  grid-template-columns: 1fr 11fr;
+  margin-bottom: var(--spacer);
+  align-items: center;
+}
+
+.token {
+  border: 1px solid var(--border-color);
+  padding: calc(var(--spacer) / 3);
+  border-radius: var(--border-radius);
+}
+
+.image {
+  display: block;
+  width: 128px;
+  height: 128px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  position: relative;
+}
+
+.refresh {
+  position: absolute;
+  right: calc(var(--spacer) / 4);
+  bottom: calc(var(--spacer) / 4);
+}
+
+.refresh svg {
+  fill: var(--brand-pink);
+  width: var(--font-size-mini);
+  height: var(--font-size-mini);
+}

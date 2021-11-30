@@ -1,7 +1,7 @@
 import { FormikContextType, useFormikContext } from 'formik'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { FormAddLiquidity } from '.'
-import FormHelp from '@shared/Form/Input/Help'
+import FormHelp from '@shared/FormInput/Help'
 import Token from '../Token'
 import styles from './Output.module.css'
 import Decimal from 'decimal.js'

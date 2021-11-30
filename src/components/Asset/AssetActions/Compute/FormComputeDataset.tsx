@@ -1,9 +1,8 @@
 import React, { ReactElement, useEffect, useState } from 'react'
 import styles from './FormComputeDataset.module.css'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
-import Input from '@shared/Form/Input'
-import { DDO } from '@oceanprotocol/lib'
-import { AssetSelectionAsset } from '@shared/Form/FormFields/AssetSelection'
+import Input from '@shared/FormInput'
+import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import { compareAsBN } from '@utils/numbers'
 import ButtonBuy from '@shared/ButtonBuy'
 import PriceOutput from './PriceOutput'
@@ -38,8 +37,8 @@ export default function FormStartCompute({
   consumableFeedback
 }: {
   algorithms: AssetSelectionAsset[]
-  ddoListAlgorithms: DDO[]
-  setSelectedAlgorithm: React.Dispatch<React.SetStateAction<DDO>>
+  ddoListAlgorithms: Asset[]
+  setSelectedAlgorithm: React.Dispatch<React.SetStateAction<Asset>>
   isLoading: boolean
   isComputeButtonDisabled: boolean
   hasPreviousOrder: boolean
@@ -71,9 +70,9 @@ export default function FormStartCompute({
   const [algorithmConsumableStatus, setAlgorithmConsumableStatus] =
     useState<number>()
 
-  function getAlgorithmAsset(algorithmId: string): DDO {
+  function getAlgorithmAsset(algorithmId: string): Asset {
     let assetDdo = null
-    ddoListAlgorithms.forEach((ddo: DDO) => {
+    ddoListAlgorithms.forEach((ddo: Asset) => {
       if (ddo.id === algorithmId) assetDdo = ddo
     })
     return assetDdo
@@ -87,7 +86,7 @@ export default function FormStartCompute({
     if (!accountId || !isConsumable) return
     async function checkIsConsumable() {
       const consumable = await ocean.assets.isConsumable(
-        algorithmDDO,
+        algorithmDDO as any,
         accountId.toLowerCase()
       )
       if (consumable) setAlgorithmConsumableStatus(consumable.status)
@@ -127,7 +126,7 @@ export default function FormStartCompute({
 
   return (
     <Form className={styles.form}>
-      {content.form.data.map((field: FormFieldProps) => (
+      {content.form.data.map((field: FormFieldContent) => (
         <Field
           key={field.name}
           {...field}
@@ -161,7 +160,7 @@ export default function FormStartCompute({
         }
         hasPreviousOrder={hasPreviousOrder}
         hasDatatoken={hasDatatoken}
-        dtSymbol={ddo.dataTokenInfo.symbol}
+        dtSymbol={ddo?.dataTokenInfo?.symbol}
         dtBalance={dtBalance}
         datasetLowPoolLiquidity={datasetLowPoolLiquidity}
         assetTimeout={assetTimeout}

@@ -1,5 +1,5 @@
 import { gql, OperationResult, TypedDocumentNode, OperationContext } from 'urql'
-import { DDO, Logger } from '@oceanprotocol/lib'
+import { Logger } from '@oceanprotocol/lib'
 import { getUrqlClientInstance } from '@context/UrqlProvider'
 import { getOceanConfig } from './ocean'
 import {
@@ -35,7 +35,7 @@ export interface PriceList {
 }
 
 export interface AssetListPrices {
-  ddo: DDO
+  ddo: Asset
   price: BestPrice
 }
 
@@ -346,7 +346,7 @@ function transformPriceToBestPrice(
 ) {
   if (poolPrice?.length > 0) {
     const price: BestPrice = {
-      type: 'pool',
+      type: 'dynamic',
       address: poolPrice[0]?.id,
       value:
         poolPrice[0]?.consumePrice === '-1'
@@ -363,7 +363,7 @@ function transformPriceToBestPrice(
     // TODO Hacky hack, temporary™: set isConsumable to true for fre assets.
     // isConsumable: 'true'
     const price: BestPrice = {
-      type: 'exchange',
+      type: 'fixed',
       value: frePrice[0]?.rate,
       address: frePrice[0]?.id,
       exchangeId: frePrice[0]?.id,
@@ -402,7 +402,7 @@ function transformPriceToBestPrice(
 }
 
 async function getAssetsPoolsExchangesAndDatatokenMap(
-  assets: DDO[]
+  assets: Asset[]
 ): Promise<
   [
     AssetsPoolPricePool[],
@@ -415,13 +415,17 @@ async function getAssetsPoolsExchangesAndDatatokenMap(
   const chainAssetLists: any = {}
 
   for (const ddo of assets) {
-    didDTMap[ddo?.dataToken.toLowerCase()] = ddo.id
+    didDTMap[ddo?.services[0].datatokenAddress.toLowerCase()] = ddo.id
     //  harcoded until we have chainId on assets
     if (chainAssetLists[ddo.chainId]) {
-      chainAssetLists[ddo.chainId].push(ddo?.dataToken.toLowerCase())
+      chainAssetLists[ddo.chainId].push(
+        ddo?.services[0].datatokenAddress.toLowerCase()
+      )
     } else {
       chainAssetLists[ddo.chainId] = []
-      chainAssetLists[ddo.chainId].push(ddo?.dataToken.toLowerCase())
+      chainAssetLists[ddo.chainId].push(
+        ddo?.services[0].datatokenAddress.toLowerCase()
+      )
     }
   }
   let poolPriceResponse: AssetsPoolPricePool[] = []
@@ -464,7 +468,7 @@ async function getAssetsPoolsExchangesAndDatatokenMap(
   return [poolPriceResponse, frePriceResponse, freePriceResponse, didDTMap]
 }
 
-export async function getAssetsPriceList(assets: DDO[]): Promise<PriceList> {
+export async function getAssetsPriceList(assets: Asset[]): Promise<PriceList> {
   const priceList: PriceList = {}
 
   const values: [
@@ -493,15 +497,15 @@ export async function getAssetsPriceList(assets: DDO[]): Promise<PriceList> {
   return priceList
 }
 
-export async function getPrice(asset: DDO): Promise<BestPrice> {
+export async function getPrice(asset: Asset): Promise<BestPrice> {
   const freVariables = {
-    datatoken: asset?.dataToken.toLowerCase()
+    datatoken: asset?.services[0].datatokenAddress.toLowerCase()
   }
   const freeVariables = {
-    datatoken: asset?.dataToken.toLowerCase()
+    datatoken: asset?.services[0].datatokenAddress.toLowerCase()
   }
   const poolVariables = {
-    datatokenAddress: asset?.dataToken.toLowerCase()
+    datatokenAddress: asset?.services[0].datatokenAddress.toLowerCase()
   }
   const queryContext = getQueryContext(Number(asset.chainId))
 
@@ -530,9 +534,9 @@ export async function getPrice(asset: DDO): Promise<BestPrice> {
   return bestPrice
 }
 
-export async function getSpotPrice(asset: DDO): Promise<number> {
+export async function getSpotPrice(asset: Asset): Promise<number> {
   const poolVariables = {
-    datatokenAddress: asset?.dataToken.toLowerCase()
+    datatokenAddress: asset?.services[0].datatokenAddress.toLowerCase()
   }
   const queryContext = getQueryContext(Number(asset.chainId))
 
@@ -546,7 +550,7 @@ export async function getSpotPrice(asset: DDO): Promise<number> {
 }
 
 export async function getAssetsBestPrices(
-  assets: DDO[]
+  assets: Asset[]
 ): Promise<AssetListPrices[]> {
   const assetsWithPrice: AssetListPrices[] = []
 
@@ -561,7 +565,7 @@ export async function getAssetsBestPrices(
   const frePriceResponse = values[1]
   const freePriceResponse = values[2]
   for (const ddo of assets) {
-    const dataToken = ddo.dataToken.toLowerCase()
+    const dataToken = ddo.services[0].datatokenAddress.toLowerCase()
     const poolPrice: AssetsPoolPricePool[] = []
     const frePrice: AssetsFrePriceFixedRateExchange[] = []
     const freePrice: AssetFreePriceDispenser[] = []

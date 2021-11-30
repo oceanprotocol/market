@@ -1,0 +1,6 @@
+.debug {
+  display: grid;
+  gap: var(--spacer);
+  grid-template-columns: 1fr 1fr;
+  word-break: break-all;
+}

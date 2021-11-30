@@ -1,82 +1,47 @@
 import axios, { CancelToken, AxiosResponse } from 'axios'
-import { toast } from 'react-toastify'
-import { DID, File as FileMetadata, Logger } from '@oceanprotocol/lib'
+import { DID, Logger } from '@oceanprotocol/lib'
 
-export async function fileinfo(
-  url: string,
-  providerUri: string,
-  cancelToken: CancelToken
-): Promise<FileMetadata> {
+export interface FileMetadata {
+  index: number
+  valid: boolean
+  contentType: string
+  contentLength: string
+}
+
+export async function getEncryptedFileUrls(
+  files: string[],
+  providerUrl: string,
+  did: string,
+  accountId: string
+): Promise<string> {
   try {
-    const response = (await axios.post(
-      `${providerUri}/api/v1/services/fileinfo`,
-      {
-        url,
-        cancelToken
-      }
-    )) as AxiosResponse<
-      { valid: boolean; contentLength: string; contentType: string }[]
-    >
-
-    if (!response || response.status !== 200 || !response.data) {
-      toast.error('Could not connect to File API')
-      return
-    }
-    if (!response.data[0] || !response.data[0].valid) {
-      toast.error(
-        'The data file URL you entered apears to be invalid. Please check URL and try again',
-        {
-          autoClose: false,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined
-        }
-      )
-      return
-    } else {
-      toast.dismiss() // Remove any existing error message
-      toast.success('Great! That file looks good. 🐳', {
-        position: 'bottom-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined
+    // https://github.com/oceanprotocol/provider/blob/v4main/API.md#encrypt-endpoint
+    const url = `${providerUrl}/api/v1/services/encrypt`
+    const response: AxiosResponse<{ encryptedDocument: string }> =
+      await axios.post(url, {
+        documentId: did,
+        signature: '', // TODO: add signature
+        publisherAddress: accountId,
+        document: files
       })
-    }
-
-    const { contentLength, contentType } = response.data[0]
-
-    return {
-      contentLength: contentLength || '',
-      contentType: contentType || '', // need to do that cause lib-js File interface requires contentType
-      url
-    }
+    return response?.data?.encryptedDocument
   } catch (error) {
-    Logger.error(error.message)
+    console.error('Error parsing json: ' + error.message)
   }
 }
 
 export async function getFileInfo(
   url: string | DID,
-  providerUri: string,
+  providerUrl: string,
   cancelToken: CancelToken
-): Promise<any> {
+): Promise<FileMetadata[]> {
   let postBody
   try {
-    if (url instanceof DID)
-      postBody = {
-        did: url.getDid()
-      }
-    else
-      postBody = {
-        url
-      }
-    const response = await axios.post(
-      `${providerUri}/api/v1/services/fileinfo`,
+    if (url instanceof DID) postBody = { did: url.getDid() }
+    else postBody = { url }
+
+    const response: AxiosResponse<FileMetadata[]> = await axios.post(
+      `${providerUrl}/api/v1/services/fileinfo`,
       postBody,
       { cancelToken }
     )

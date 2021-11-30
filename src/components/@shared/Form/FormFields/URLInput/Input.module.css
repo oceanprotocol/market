@@ -1,3 +1,0 @@
-.input {
-  composes: input from '@shared/Form/Input/InputElement.module.css';
-}

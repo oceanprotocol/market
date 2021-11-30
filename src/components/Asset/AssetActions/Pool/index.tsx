@@ -103,7 +103,7 @@ export default function Pool(): ReactElement {
     const queryContext = getQueryContext(ddo.chainId)
     const queryVariables = {
       id: price.address.toLowerCase(),
-      shareId: `${price.address.toLowerCase()}-${ddo.publicKey[0].owner.toLowerCase()}`
+      shareId: `${price.address.toLowerCase()}-${ddo.nft.owner.toLowerCase()}`
     }
 
     const queryResult: OperationResult<PoolLiquidity> = await fetchData(
@@ -172,7 +172,8 @@ export default function Pool(): ReactElement {
 
       // Get weights
       const weightDt = dataLiquidity.pool.tokens.filter(
-        (token: any) => token.address === ddo.dataToken.toLowerCase()
+        (token: any) =>
+          token.address === ddo.services[0].datatokenAddress.toLowerCase()
       )[0].denormWeight
 
       const weightDtDecimal = isValidNumber(weightDt)
@@ -249,7 +250,7 @@ export default function Pool(): ReactElement {
       refetchLiquidity()
     }
     init()
-  }, [dataLiquidity, ddo.dataToken, price.datatoken, price.ocean, price?.value])
+  }, [dataLiquidity, ddo, price.datatoken, price.ocean, price?.value])
 
   useEffect(() => {
     setIsRemoveDisabled(isInPurgatory && owner === accountId)
@@ -360,7 +361,7 @@ export default function Pool(): ReactElement {
           }}
           swapFee={swapFee}
           dtSymbol={dtSymbol}
-          dtAddress={ddo.dataToken}
+          dtAddress={ddo.services[0].datatokenAddress}
         />
       ) : showRemove ? (
         <Remove
@@ -388,8 +389,8 @@ export default function Pool(): ReactElement {
                 networkId={ddo.chainId}
                 path={
                   ddo.chainId === 2021000 || ddo.chainId === 1287
-                    ? `tokens/${ddo.dataToken}`
-                    : `token/${ddo.dataToken}`
+                    ? `tokens/${ddo.services[0].datatokenAddress}`
+                    : `token/${ddo.services[0].datatokenAddress}`
                 }
               >
                 Datatoken

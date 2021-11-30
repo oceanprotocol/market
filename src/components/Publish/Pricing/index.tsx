@@ -1,96 +1,76 @@
-import React, { FormEvent, ReactElement, useState } from 'react'
-import { Formik } from 'formik'
-import { initialValues, validationSchema } from '../_constants'
-import { DDO, Logger } from '@oceanprotocol/lib'
-import Alert from '@shared/atoms/Alert'
-import FormPricing from './FormPricing'
-import { toast } from 'react-toastify'
-import Feedback from './Feedback'
-import { usePricing } from '@hooks/usePricing'
-import styles from './index.module.css'
-import { useAsset } from '@context/Asset'
+import React, { ReactElement, useEffect } from 'react'
+import { useFormikContext } from 'formik'
+import { useSiteMetadata } from '@hooks/useSiteMetadata'
+import Tabs from '@shared/atoms/Tabs'
+import { isValidNumber } from '@utils/numbers'
+import Decimal from 'decimal.js'
+import { FormPublishData } from '../_types'
+import Dynamic from './Dynamic'
+import Fixed from './Fixed'
+import Free from './Free'
 import content from '../../../../content/price.json'
+import styles from './index.module.css'
 
-export default function Pricing({ ddo }: { ddo: DDO }): ReactElement {
-  // View states
-  const [showPricing, setShowPricing] = useState(false)
-  const [success, setSuccess] = useState<string>()
+export default function PricingFields(): ReactElement {
+  const { appConfig } = useSiteMetadata()
 
-  const { createPricing, pricingIsLoading, pricingError, pricingStepText } =
-    usePricing()
-  const { isAssetNetwork } = useAsset()
+  // Connect with main publish form
+  const { values, setFieldValue } = useFormikContext<FormPublishData>()
+  const { pricing } = values
+  const { price, amountOcean, weightOnOcean, weightOnDataToken, type } = pricing
 
-  const hasFeedback = pricingIsLoading || typeof success !== 'undefined'
-
-  // async function handleCreatePricing(values: PriceOptions) {
-  //   try {
-  //     const priceOptions = {
-  //       ...values,
-  //       // swapFee is tricky: to get 0.1% you need to send 0.001 as value
-  //       swapFee: `${values.swapFee / 100}`
-  //     }
-
-  //     // const tx = await createPricing(priceOptions, ddo)
-
-  //     // Pricing failed
-  //     if (!tx || pricingError) {
-  //       toast.error(pricingError || 'Price creation failed.')
-  //       Logger.error(pricingError || 'Price creation failed.')
-  //       return
-  //     }
-
-  //     // Pricing succeeded
-  //     setSuccess(
-  //       `🎉 Successfully created a ${values.type} price. 🎉 Reload the page to get all updates.`
-  //     )
-  //     Logger.log(`Transaction: ${tx}`)
-  //   } catch (error) {
-  //     toast.error(error.message)
-  //     Logger.error(error.message)
-  //   }
-  // }
-
-  function handleShowPricingForm(e: FormEvent<HTMLButtonElement>) {
-    e.preventDefault()
-    setShowPricing(true)
+  // Switch type value upon tab change
+  function handleTabChange(tabName: string) {
+    const type = tabName.toLowerCase()
+    setFieldValue('pricing.type', type)
+    type === 'dynamic' && setFieldValue('pricing.amountDataToken', 1000)
   }
 
-  return (
-    <div className={styles.pricing}>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        validateOnChange
-        onSubmit={async (values, { setSubmitting }) => {
-          // move user's focus to top of screen
-          window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+  // Always update everything when price value changes
+  useEffect(() => {
+    if (type === 'fixed' || type === 'free') return
 
-          // Kick off price creation
-          // await handleCreatePricing(values)
-          setSubmitting(false)
-        }}
-      >
-        {hasFeedback ? (
-          <Feedback success={success} pricingStepText={pricingStepText} />
-        ) : showPricing ? (
-          <FormPricing
-            ddo={ddo}
-            setShowPricing={setShowPricing}
-            content={content.create}
-          />
-        ) : (
-          <Alert
-            state="info"
-            title={content.create.empty.title}
-            text={content.create.empty.info}
-            action={{
-              name: content.create.empty.action.name,
-              disabled: !isAssetNetwork,
-              handleAction: handleShowPricingForm
-            }}
-          />
-        )}
-      </Formik>
-    </div>
+    const amountDataToken =
+      isValidNumber(amountOcean) &&
+      isValidNumber(weightOnOcean) &&
+      isValidNumber(price) &&
+      isValidNumber(weightOnDataToken)
+        ? new Decimal(amountOcean)
+            .dividedBy(new Decimal(weightOnOcean))
+            .dividedBy(new Decimal(price))
+            .mul(new Decimal(weightOnDataToken))
+        : 0
+
+    setFieldValue('pricing.amountDataToken', amountDataToken)
+  }, [price, amountOcean, weightOnOcean, weightOnDataToken, type])
+
+  const tabs = [
+    appConfig.allowFixedPricing === 'true'
+      ? {
+          title: content.create.fixed.title,
+          content: <Fixed content={content.create.fixed} />
+        }
+      : undefined,
+    appConfig.allowDynamicPricing === 'true'
+      ? {
+          title: content.create.dynamic.title,
+          content: <Dynamic content={content.create.dynamic} />
+        }
+      : undefined,
+    appConfig.allowFreePricing === 'true'
+      ? {
+          title: content.create.free.title,
+          content: <Free content={content.create.free} />
+        }
+      : undefined
+  ].filter((tab) => tab !== undefined)
+
+  return (
+    <Tabs
+      items={tabs}
+      handleTabChange={handleTabChange}
+      defaultIndex={type === 'dynamic' ? 1 : type === 'free' ? 2 : 0}
+      className={styles.pricing}
+    />
   )
 }

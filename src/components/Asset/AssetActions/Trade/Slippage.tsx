@@ -1,6 +1,6 @@
 import { FormikContextType, useFormikContext } from 'formik'
 import React, { ChangeEvent, ReactElement } from 'react'
-import InputElement from '@shared/Form/Input/InputElement'
+import InputElement from '@shared/FormInput/InputElement'
 import Tooltip from '@shared/atoms/Tooltip'
 import styles from './Slippage.module.css'
 import { FormTradeData } from './_types'

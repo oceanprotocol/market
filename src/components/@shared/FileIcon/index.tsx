@@ -1,10 +1,10 @@
 import React, { ReactElement } from 'react'
-import { File as FileMetadata } from '@oceanprotocol/lib'
 import filesize from 'filesize'
 import classNames from 'classnames/bind'
 import cleanupContentType from '@utils/cleanupContentType'
 import styles from './index.module.css'
 import Loader from '@shared/atoms/Loader'
+import { FileMetadata } from '@utils/provider'
 
 const cx = classNames.bind(styles)
 

@@ -1,0 +1,94 @@
+.navigation {
+  margin: -1.3rem calc(var(--spacer) / -1.5) var(--spacer)
+    calc(var(--spacer) / -1.5);
+  padding: calc(var(--spacer) / 2) 0;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--background-highlight);
+}
+
+@media (min-width: 40rem) {
+  .navigation {
+    margin-top: -2rem;
+    margin-left: calc(var(--spacer) * -2);
+    margin-right: calc(var(--spacer) * -2);
+  }
+}
+
+@media (min-width: 60rem) {
+  .navigation {
+    padding: var(--spacer) 0;
+    margin-left: calc(var(--spacer) * -4);
+    margin-right: calc(var(--spacer) * -4);
+  }
+}
+
+.navigation ol {
+  white-space: nowrap;
+  text-align: center;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  counter-reset: list-number;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.navigation li {
+  cursor: pointer;
+  display: inline-block;
+  margin: 0 var(--spacer);
+  padding: 0 calc(var(--spacer) / 2);
+  counter-increment: list-number;
+  font-weight: var(--font-weight-bold);
+  white-space: nowrap;
+  position: relative;
+}
+
+/* inject the numbers */
+.navigation li:before {
+  content: counter(list-number);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  margin-right: calc(var(--spacer) / 4);
+}
+
+/* inject line */
+.navigation li:after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 100%;
+  top: 1rem;
+  width: 50%;
+  height: 1px;
+  background: var(--border-color);
+}
+
+.navigation li:last-child:after {
+  display: none;
+}
+
+.current:before {
+  color: var(--background-content);
+  background: var(--font-color-heading);
+  border-color: transparent;
+}
+
+.navigation .success:before {
+  content: '✓';
+  color: var(--brand-white);
+  background: var(--brand-alert-green);
+  border-color: transparent;
+}
+
+.success.current:before {
+  background: var(--font-color-heading);
+  border-color: var(--brand-alert-green);
+}

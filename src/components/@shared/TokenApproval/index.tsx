@@ -26,7 +26,9 @@ export default function TokenApproval({
   const config = getOceanConfig(ddo.chainId)
 
   const tokenAddress =
-    coin === 'OCEAN' ? config.oceanTokenAddress : ddo.dataTokenInfo.address
+    coin === 'OCEAN'
+      ? config.oceanTokenAddress
+      : ddo.services[0].datatokenAddress
   const spender = price.address
 
   const checkTokenApproval = useCallback(async () => {

@@ -2,9 +2,10 @@ import React, { ReactElement, ReactNode } from 'react'
 import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs'
 import styles from './Tabs.module.css'
 
-interface TabsItem {
+export interface TabsItem {
   title: string
   content: ReactNode
+  disabled?: boolean
 }
 
 export default function Tabs({
@@ -29,6 +30,7 @@ export default function Tabs({
             className={styles.tab}
             key={item.title}
             onClick={handleTabChange ? () => handleTabChange(item.title) : null}
+            disabled={item.disabled}
           >
             {item.title}
           </Tab>

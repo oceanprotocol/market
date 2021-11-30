@@ -17,7 +17,6 @@ export default function PageProfile(): ReactElement {
   // Have accountId in path take over, if not present fall back to web3
   useEffect(() => {
     async function init() {
-      console.log(router)
       if (!router?.asPath) return
 
       // Path is root /profile, have web3 take over

@@ -1,10 +1,5 @@
-import {
-  DDO,
-  DID,
-  Logger,
-  publisherTrustedAlgorithm as PublisherTrustedAlgorithm
-} from '@oceanprotocol/lib'
-import { AssetSelectionAsset } from '@shared/Form/FormFields/AssetSelection'
+import { Logger } from '@oceanprotocol/lib'
+import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { OrdersData_tokenOrders as OrdersData } from '../@types/apollo/OrdersData'
@@ -13,6 +8,7 @@ import {
   SortDirectionOptions,
   SortTermOptions
 } from '../@types/aquarius/SearchQuery'
+import { getServiceByName } from './ddo'
 
 export const MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS = 476
 
@@ -77,7 +73,7 @@ export function transformQueryResult(
   }
 
   result.results = (queryResult.hits.hits || []).map(
-    (hit) => new DDO(hit._source as DDO)
+    (hit) => hit._source as Asset
   )
   result.totalResults = queryResult.hits.total
   result.totalPages =
@@ -111,18 +107,18 @@ export async function queryMetadata(
 }
 
 export async function retrieveDDO(
-  did: string | DID,
+  did: string,
   cancelToken: CancelToken
-): Promise<DDO> {
+): Promise<Asset> {
   try {
-    const response: AxiosResponse<DDO> = await axios.get(
+    const response: AxiosResponse<Asset> = await axios.get(
       `${metadataCacheUri}/api/v1/aquarius/assets/ddo/${did}`,
       { cancelToken }
     )
     if (!response || response.status !== 200 || !response.data) return
 
     const data = { ...response.data }
-    return new DDO(data)
+    return data
   } catch (error) {
     if (axios.isCancel(error)) {
       Logger.log(error.message)
@@ -133,7 +129,7 @@ export async function retrieveDDO(
 }
 
 export async function getAssetsNames(
-  didList: string[] | DID[],
+  didList: string[],
   cancelToken: CancelToken
 ): Promise<Record<string, string>> {
   try {
@@ -179,10 +175,10 @@ export async function retrieveDDOListByDIDs(
   didList: string[],
   chainIds: number[],
   cancelToken: CancelToken
-): Promise<DDO[]> {
+): Promise<Asset[]> {
   try {
     if (didList?.length === 0 || chainIds?.length === 0) return []
-    const orderedDDOListByDIDList: DDO[] = []
+    const orderedDDOListByDIDList: Asset[] = []
     const baseQueryparams = {
       chainIds,
       filters: [getFilterTerm('id', didList)],
@@ -190,8 +186,8 @@ export async function retrieveDDOListByDIDs(
     } as BaseQueryParams
     const query = generateBaseQuery(baseQueryparams)
     const result = await queryMetadata(query, cancelToken)
-    didList.forEach((did: string | DID) => {
-      const ddo: DDO = result.results.find((ddo: DDO) => ddo.id === did)
+    didList.forEach((did: string) => {
+      const ddo = result.results.find((ddo: Asset) => ddo.id === did)
       orderedDDOListByDIDList.push(ddo)
     })
     return orderedDDOListByDIDList
@@ -202,7 +198,7 @@ export async function retrieveDDOListByDIDs(
 
 export async function transformDDOToAssetSelection(
   datasetProviderEndpoint: string,
-  ddoList: DDO[],
+  ddoList: Asset[],
   selectedAlgorithms?: PublisherTrustedAlgorithm[],
   cancelToken?: CancelToken
 ): Promise<AssetSelectionAsset[]> {
@@ -213,7 +209,7 @@ export async function transformDDOToAssetSelection(
   for (const ddo of ddoList) {
     didList.push(ddo.id)
     symbolList[ddo.id] = ddo.dataTokenInfo.symbol
-    const algoComputeService = ddo.findServiceByType('compute')
+    const algoComputeService = getServiceByName(ddo, 'compute')
     algoComputeService?.serviceEndpoint &&
       (didProviderEndpointMap[ddo.id] = algoComputeService?.serviceEndpoint)
   }
@@ -350,7 +346,8 @@ export async function getDownloadAssets(
       .map((ddo) => {
         const order = tokenOrders.find(
           ({ datatokenId }) =>
-            datatokenId?.address.toLowerCase() === ddo.dataToken.toLowerCase()
+            datatokenId?.address.toLowerCase() ===
+            ddo.services[0].datatokenAddress.toLowerCase()
         )
 
         return {

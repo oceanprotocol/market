@@ -14,7 +14,7 @@ import {
 } from '@utils/subgraph'
 import { useUserPreferences } from './UserPreferences'
 import { PoolShares_poolShares as PoolShare } from '../@types/apollo/PoolShares'
-import { DDO, Logger } from '@oceanprotocol/lib'
+import { Logger } from '@oceanprotocol/lib'
 import { getDownloadAssets, getPublishedAssets } from '@utils/aquarius'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { accountTruncate } from '@utils/web3'
@@ -27,7 +27,7 @@ interface ProfileProviderValue {
   profile: Profile
   poolShares: PoolShare[]
   isPoolSharesLoading: boolean
-  assets: DDO[]
+  assets: Asset[]
   assetsTotal: number
   isEthAddress: boolean
   downloads: DownloadedAsset[]
@@ -170,7 +170,7 @@ function ProfileProvider({
   //
   // PUBLISHED ASSETS
   //
-  const [assets, setAssets] = useState<DDO[]>()
+  const [assets, setAssets] = useState<Asset[]>()
   const [assetsTotal, setAssetsTotal] = useState(0)
   // const [assetsWithPrices, setAssetsWithPrices] = useState<AssetListPrices[]>()
 

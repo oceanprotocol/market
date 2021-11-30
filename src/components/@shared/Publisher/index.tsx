@@ -21,13 +21,13 @@ export default function Publisher({
   minimal?: boolean
   className?: string
 }): ReactElement {
-  const { accountId } = useWeb3()
+  // const { accountId } = useWeb3()
   const isMounted = useIsMounted()
   const [profile, setProfile] = useState<Profile>()
   const [name, setName] = useState(accountTruncate(account))
   const [accountEns, setAccountEns] = useState<string>()
 
-  const showAdd = account === accountId && !profile
+  // const showAdd = account === accountId && !profile
 
   useEffect(() => {
     if (!account) return
@@ -70,7 +70,7 @@ export default function Publisher({
           <Link href={`/profile/${accountEns || account}`}>
             <a title="Show profile page.">{name}</a>
           </Link>
-          {showAdd && <Add />}
+          {/* {showAdd && <Add />} */}
         </>
       )}
     </div>

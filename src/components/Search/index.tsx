@@ -1,5 +1,5 @@
 import React, { ReactElement, useState, useEffect, useCallback } from 'react'
-import AssetList from '@shared/AssetList/AssetList'
+import AssetList from '@shared/AssetList'
 import queryString from 'query-string'
 import Filters from './Filters'
 import Sort from './sort'

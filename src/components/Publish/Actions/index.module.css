@@ -1,0 +1,10 @@
+.actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: var(--spacer);
+}
+
+.actions button {
+  margin: 0 calc(var(--spacer) / 2);
+}

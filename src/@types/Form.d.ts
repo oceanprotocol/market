@@ -1,30 +1,23 @@
-import { AssetSelectionAsset } from '@shared/Form/FormFields/AssetSelection'
+interface FormFieldContent {
+  label: string
+  name: string
+  type?: string
+  options?: string[]
+  sortOptions?: boolean
+  required?: boolean
+  multiple?: boolean
+  disabled?: boolean
+  help?: string
+  placeholder?: string
+  pattern?: string
+  min?: string
+  disclaimer?: string
+  disclaimerValues?: string[]
+  advanced?: boolean
+}
 
-// declaring into global scope to be able to use this as
-// ambiant types despite the above imports
-declare global {
-  interface FormFieldProps {
-    label: string
-    name: string
-    type?: string
-    options?: string[] | AssetSelectionAsset[]
-    sortOptions?: boolean
-    required?: boolean
-    multiple?: boolean
-    disabled?: boolean
-    help?: string
-    placeholder?: string
-    pattern?: string
-    min?: string
-    disclaimer?: string
-    disclaimerValues?: string[]
-    advanced?: boolean
-  }
-
-  interface FormContent {
-    title: string
-    description?: string
-    success: string
-    data: FormFieldProps[]
-  }
+interface FormStepContent {
+  title: string
+  description?: string
+  fields: FormFieldContent[]
 }

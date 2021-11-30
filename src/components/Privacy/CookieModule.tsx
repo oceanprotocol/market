@@ -1,6 +1,6 @@
 import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react'
 import { CookieConsentStatus, useConsent } from '@context/CookieConsent'
-import InputElement from '@shared/Form/Input/InputElement'
+import InputElement from '@shared/FormInput/InputElement'
 import Markdown from '@shared/Markdown'
 import styles from './CookieModule.module.css'
 

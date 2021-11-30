@@ -37,7 +37,7 @@ export default function EditHistory(): ReactElement {
 
   const [result] = useQuery({
     query: getReceipts,
-    variables: { address: ddo?.dataToken.toLowerCase() },
+    variables: { address: ddo?.services[0].datatokenAddress.toLowerCase() },
     context: queryContext,
     pause: !ddo || !queryContext
   })
@@ -68,14 +68,14 @@ export default function EditHistory(): ReactElement {
       <ul className={styles.history}>
         {receipts?.map((receipt) => (
           <li key={receipt.id} className={styles.item}>
-            <ExplorerLink networkId={ddo.chainId} path={`/tx/${receipt.tx}`}>
+            <ExplorerLink networkId={ddo?.chainId} path={`/tx/${receipt.tx}`}>
               edited <Time date={`${receipt.timestamp}`} relative isUnix />
             </ExplorerLink>
           </li>
         ))}
         <li className={styles.item}>
-          <ExplorerLink networkId={ddo.chainId} path={`/tx/${creationTx}`}>
-            published <Time date={ddo.created} relative />
+          <ExplorerLink networkId={ddo?.chainId} path={`/tx/${creationTx}`}>
+            published <Time date={ddo?.metadata?.created} relative />
           </ExplorerLink>
         </li>
       </ul>

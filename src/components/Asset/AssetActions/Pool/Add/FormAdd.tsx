@@ -1,6 +1,6 @@
 import React, { ChangeEvent, ReactElement, useEffect } from 'react'
 import styles from './FormAdd.module.css'
-import Input from '@shared/Form/Input'
+import Input from '@shared/FormInput'
 import {
   Field,
   FieldInputProps,

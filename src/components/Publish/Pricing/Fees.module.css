@@ -1,0 +1,20 @@
+.fees {
+  display: grid;
+  gap: var(--spacer);
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  padding: var(--spacer);
+  text-align: center;
+}
+
+.fees > div {
+  margin-bottom: 0;
+  justify-self: center;
+}
+
+.fees label {
+  white-space: nowrap;
+}
+
+.fees input {
+  max-width: 5rem;
+}

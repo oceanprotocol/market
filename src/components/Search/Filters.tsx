@@ -2,12 +2,12 @@ import React, { ReactElement, useState } from 'react'
 import classNames from 'classnames/bind'
 import { addExistingParamsToUrl } from './utils'
 import Button from '@shared/atoms/Button'
-import styles from './Filters.module.css'
 import {
   FilterByAccessOptions,
   FilterByTypeOptions
 } from '../../@types/aquarius/SearchQuery'
-import router, { useRouter } from 'next/router'
+import { useRouter } from 'next/router'
+import styles from './Filters.module.css'
 
 const cx = classNames.bind(styles)
 

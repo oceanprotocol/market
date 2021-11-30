@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from 'react'
-import { DDO, Logger } from '@oceanprotocol/lib'
+import { Logger } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 import { Formik } from 'formik'
 import Actions from '../Pool/Actions'
@@ -23,7 +23,7 @@ export default function FormTrade({
   maxOcean,
   price
 }: {
-  ddo: DDO
+  ddo: Asset
   balance: PoolBalance
   maxDt: string
   maxOcean: string

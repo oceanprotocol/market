@@ -1,7 +1,7 @@
 import React, { ReactElement, ChangeEvent } from 'react'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { useUserPreferences } from '@context/UserPreferences'
-import Input from '@shared/Form/Input'
+import Input from '@shared/FormInput'
 
 export default function Currency(): ReactElement {
   const { currency, setCurrency } = useUserPreferences()

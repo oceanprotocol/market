@@ -5,7 +5,7 @@ import { ListItem } from '@shared/atoms/Lists'
 import Button from '@shared/atoms/Button'
 import { useOcean } from '@context/Ocean'
 import styles from './Results.module.css'
-import FormHelp from '@shared/Form/Input/Help'
+import FormHelp from '@shared/FormInput/Help'
 import content from '../../../../../content/pages/history.json'
 
 export default function Results({

@@ -25,19 +25,22 @@ export default function Trade(): ReactElement {
       !isAssetNetwork ||
       !balance?.ocean ||
       !accountId ||
-      !ddo?.dataToken
+      !ddo?.services[0].datatokenAddress
     )
       return
 
     async function getTokenBalance() {
-      const dtBalance = await ocean.datatokens.balance(ddo.dataToken, accountId)
+      const dtBalance = await ocean.datatokens.balance(
+        ddo.services[0].datatokenAddress,
+        accountId
+      )
       setTokenBalance({
         ocean: new Decimal(balance.ocean).toString(),
         datatoken: new Decimal(dtBalance).toString()
       })
     }
     getTokenBalance()
-  }, [balance.ocean, ocean, accountId, ddo.dataToken])
+  }, [balance.ocean, ocean, accountId, ddo, isAssetNetwork])
 
   // Get maximum amount for either OCEAN or datatoken
   useEffect(() => {

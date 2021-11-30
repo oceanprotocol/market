@@ -16,7 +16,6 @@ import { CancelToken } from 'axios'
 import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
 import { useProfile } from '@context/Profile'
-import { DDO } from '@oceanprotocol/lib'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useUserPreferences } from '@context/UserPreferences'
@@ -25,12 +24,12 @@ Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
 const REFETCH_INTERVAL = 20000
 
-interface Asset {
+interface AssetPoolShare {
   userLiquidity: number
   poolShare: PoolShare
   networkId: number
   createTime: number
-  ddo: DDO
+  ddo: Asset
 }
 
 function findTokenByType(tokens: PoolSharePoolIdTokens[], type: string) {
@@ -46,7 +45,7 @@ function Symbol({ tokens }: { tokens: PoolSharePoolIdTokens[] }) {
   return <>{findTokenByType(tokens, 'datatoken')}</>
 }
 
-function Liquidity({ row, type }: { row: Asset; type: string }) {
+function Liquidity({ row, type }: { row: AssetPoolShare; type: string }) {
   let price = ``
   let oceanTokenBalance = ''
   let dataTokenBalance = ''
@@ -98,33 +97,33 @@ function Liquidity({ row, type }: { row: Asset; type: string }) {
 const columns = [
   {
     name: 'Data Set',
-    selector: function getAssetRow(row: Asset) {
+    selector: function getAssetRow(row: AssetPoolShare) {
       return <AssetTitle ddo={row.ddo} />
     },
     grow: 2
   },
   {
     name: 'Network',
-    selector: function getNetwork(row: Asset) {
+    selector: function getNetwork(row: AssetPoolShare) {
       return <NetworkName networkId={row.networkId} />
     }
   },
   {
     name: 'Datatoken',
-    selector: function getSymbol(row: Asset) {
+    selector: function getSymbol(row: AssetPoolShare) {
       return <Symbol tokens={row.poolShare.poolId.tokens} />
     }
   },
   {
     name: 'Liquidity',
-    selector: function getAssetRow(row: Asset) {
+    selector: function getAssetRow(row: AssetPoolShare) {
       return <Liquidity row={row} type="user" />
     },
     right: true
   },
   {
     name: 'Pool Liquidity',
-    selector: function getAssetRow(row: Asset) {
+    selector: function getAssetRow(row: AssetPoolShare) {
       return <Liquidity row={row} type="pool" />
     },
     right: true
@@ -138,7 +137,7 @@ async function getPoolSharesAssets(
 ) {
   if (data.length < 1) return
 
-  const assetList: Asset[] = []
+  const assetList: AssetPoolShare[] = []
   const didList: string[] = []
 
   for (let i = 0; i < data.length; i++) {
@@ -169,7 +168,7 @@ export default function PoolShares({
   accountId: string
 }): ReactElement {
   const { poolShares, isPoolSharesLoading } = useProfile()
-  const [assets, setAssets] = useState<Asset[]>()
+  const [assets, setAssets] = useState<AssetPoolShare[]>()
   const [loading, setLoading] = useState<boolean>(false)
   const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
   const { chainIds } = useUserPreferences()

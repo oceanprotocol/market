@@ -1,0 +1,17 @@
+.input {
+  composes: input from '@shared/FormInput/InputElement.module.css';
+}
+
+.hasError {
+  color: var(--brand-alert-red);
+  border-color: var(--brand-alert-red);
+}
+
+.error {
+  composes: error from '@shared/FormInput/index.module.css';
+}
+
+.success {
+  background: var(--brand-alert-green);
+  opacity: 1 !important;
+}
