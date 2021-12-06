@@ -26,9 +26,9 @@ import {
 import { BestPrice } from '../models/BestPrice'
 import { OrdersData_tokenOrders as OrdersData } from '../@types/apollo/OrdersData'
 import {
-  TopSalesQuery_users as UserSales,
-  TopSalesQuery as UsersSalesList
-} from '../@types/apollo/TopSalesQuery'
+  UserSalesQuery_users as UserSales,
+  UserSalesQuery as UsersSalesList
+} from '../@types/apollo/UserSalesQuery'
 
 export interface UserLiquidity {
   price: string
@@ -739,18 +739,22 @@ export async function getTopAssetsPublishers(
       queryContext
     )
     for (let i = 0; i < fetchedUsers.data.users.length; i++) {
-      if (
-        publisherSales.findIndex(
-          (user) => user.id === fetchedUsers.data.users[i].id
-        ) === -1
-      ) {
-        const sales = await getUserSales(
-          fetchedUsers.data.users[i].id,
-          chainIds
-        )
+      const publishersIndex = publisherSales.findIndex(
+        (user) => user.id === fetchedUsers.data.users[i].id
+      )
+      if (publishersIndex === -1) {
         const publisher: UserSales = {
           id: fetchedUsers.data.users[i].id,
-          nrSales: sales,
+          nrSales: fetchedUsers.data.users[i].nrSales,
+          __typename: 'User'
+        }
+        publisherSales.push(publisher)
+      } else {
+        const publisher: UserSales = {
+          id: fetchedUsers.data.users[i].id,
+          nrSales:
+            fetchedUsers.data.users[i].nrSales +
+            publisherSales[publishersIndex].nrSales,
           __typename: 'User'
         }
         publisherSales.push(publisher)
