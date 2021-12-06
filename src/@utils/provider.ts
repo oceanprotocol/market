@@ -56,3 +56,17 @@ export async function getFileInfo(
     }
   }
 }
+
+export async function isValidProvider(url: string): Promise<boolean> {
+  try {
+    const response = await axios.get(url)
+    if (response) {
+      const params = await response.data
+      if (params && params.providerAddress) return true
+    }
+    return false
+  } catch (error) {
+    console.error(`Error validating provider: ${error.message}`)
+    return false
+  }
+}
