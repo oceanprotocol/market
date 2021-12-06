@@ -47,7 +47,9 @@
         "label": "Docker Image",
         "help": "Please select an image to run your algorithm.",
         "type": "boxSelection",
-        "options": ["node:latest", "python:latest", "Custom"],
+        "options": [
+          "populated from algorithmContainerPresets in Publish/_constants"
+        ],
         "required": true
       },
       {
@@ -75,7 +77,7 @@
         "name": "termsAndConditions",
         "label": "Terms & Conditions",
         "type": "checkbox",
-        "options": ["I agree to these Terms and Conditions"],
+        "options": ["I agree to the Terms and Conditions"],
         "required": true
       }
     ]
@@ -138,6 +140,15 @@
         "type": "select",
         "options": ["Forever", "1 day", "1 week", "1 month", "1 year"],
         "sortOptions": false,
+        "required": true
+      },
+      {
+        "name": "computeOptions",
+        "label": "Compute Environment",
+        "type": "radio",
+        "options": [
+          "populated from computeEnvironmentDefaults in Publish/_constants & computeEnvironmentOptions in Publish/Services/"
+        ],
         "required": true
       }
     ]

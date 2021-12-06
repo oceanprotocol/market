@@ -19,43 +19,33 @@ export default function Price({
 
   return (
     <div className={styles.price}>
-      <div className={styles.grid}>
-        <div className={styles.form}>
-          {field.value === 0 ? (
-            <Input
-              value="0"
-              name="pricing.price"
-              type="number"
-              prefix="OCEAN"
-              readOnly
-            />
-          ) : (
-            <Input
-              value={field.value}
-              name="pricing.price"
-              type="number"
-              prefix="OCEAN"
-              {...field}
-            />
+      {values.pricing.type === 'free' ? (
+        <h4 className={styles.free}>Free</h4>
+      ) : (
+        <>
+          <div className={styles.grid}>
+            <div className={styles.form}>
+              <Input type="number" prefix="OCEAN" {...field} />
+              <Error meta={meta} />
+            </div>
+            <div className={styles.datatoken}>
+              <h4>
+                = <strong>1</strong> {dataTokenOptions.symbol}{' '}
+                <Conversion price={field.value} className={styles.conversion} />
+              </h4>
+            </div>
+          </div>
+          {firstPrice && (
+            <aside className={styles.firstPrice}>
+              Expected first price:{' '}
+              <PriceUnit
+                price={Number(firstPrice) > 0 ? firstPrice : '-'}
+                small
+                conversion
+              />
+            </aside>
           )}
-          <Error meta={meta} />
-        </div>
-        <div className={styles.datatoken}>
-          <h4>
-            = <strong>1</strong> {dataTokenOptions.symbol}{' '}
-            <Conversion price={field.value} className={styles.conversion} />
-          </h4>
-        </div>
-      </div>
-      {firstPrice && (
-        <aside className={styles.firstPrice}>
-          Expected first price:{' '}
-          <PriceUnit
-            price={Number(firstPrice) > 0 ? firstPrice : '-'}
-            small
-            conversion
-          />
-        </aside>
+        </>
       )}
     </div>
   )

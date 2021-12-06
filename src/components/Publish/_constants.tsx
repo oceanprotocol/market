@@ -36,6 +36,19 @@ export const wizardSteps: StepContent[] = [
   }
 ]
 
+export const computeEnvironmentDefaults: ServiceComputeOptions = {
+  namespace: 'ocean-compute',
+  cpu: 1,
+  gpu: 0,
+  gpuType: '',
+  memory: '1Gb',
+  volumeSize: '1Gb',
+  allowRawAlgorithm: false,
+  allowNetworkAccess: true,
+  publisherTrustedAlgorithmPublishers: null,
+  publisherTrustedAlgorithms: null
+}
+
 export const initialValues: FormPublishData = {
   user: {
     stepCurrent: 1,
@@ -62,7 +75,11 @@ export const initialValues: FormPublishData = {
       dataTokenOptions: { name: '', symbol: '' },
       timeout: '',
       access: '',
-      providerUrl: 'https://provider.mainnet.oceanprotocol.com'
+      providerUrl: {
+        url: 'https://provider.mainnet.oceanprotocol.com',
+        valid: true
+      },
+      computeOptions: computeEnvironmentDefaults
     }
   ],
   pricing: {
@@ -81,22 +98,17 @@ export const initialValues: FormPublishData = {
   }
 }
 
-// export const initialValuesAlgo: Partial<MetadataPublishFormAlgorithm> = {
-//   name: '',
-//   author: '',
-//   dataTokenOptions: {
-//     name: '',
-//     symbol: ''
-//   },
-//   dockerImage: 'node:latest',
-//   image: 'node',
-//   containerTag: 'latest',
-//   entrypoint: 'node $ALGO',
-//   files: '',
-//   description: '',
-//   algorithmPrivacy: false,
-//   termsAndConditions: false,
-//   tags: '',
-//   timeout: 'Forever',
-//   providerUri: ''
-// }
+export const algorithmContainerPresets: MetadataAlgorithmContainer[] = [
+  {
+    image: 'node',
+    tag: 'latest',
+    entrypoint: 'node $ALGO',
+    checksum: '' // TODO: how to get? Most likely needs to be fetched from DockerHub.
+  },
+  {
+    image: 'python',
+    tag: 'latest',
+    entrypoint: 'python $ALGO',
+    checksum: ''
+  }
+]

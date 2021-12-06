@@ -15,8 +15,9 @@ export interface FormPublishService {
   timeout: string
   dataTokenOptions: DataTokenOptions
   access: 'Download' | 'Compute' | string
-  providerUrl?: string
+  providerUrl?: { url: string; valid: boolean }
   algorithmPrivacy?: boolean
+  computeOptions?: ServiceComputeOptions
 }
 
 export interface FormPublishData {
@@ -37,6 +38,7 @@ export interface FormPublishData {
     dockerImageCustom?: string
     dockerImageCustomTag?: string
     dockerImageCustomEntrypoint?: string
+    dockerImageCustomChecksum?: string
   }
   services: FormPublishService[]
   pricing: PriceOptions

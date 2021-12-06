@@ -15,14 +15,16 @@ const validationMetadata = {
     .required('Required'),
   author: Yup.string().required('Required'),
   tags: Yup.string().nullable(),
-  termsAndConditions: Yup.boolean().required('Required').isTrue()
+  termsAndConditions: Yup.boolean()
+    .required('Required')
+    .isTrue('Please agree to the Terms and Conditions.')
 }
 
 const validationService = {
   files: Yup.array<{ url: string; valid: boolean }[]>()
     .of(
       Yup.object().shape({
-        url: Yup.string().required('Required'),
+        url: Yup.string().url('Must be a valid URL.').required('Required'),
         valid: Yup.boolean().isTrue().required('File must be valid.')
       })
     )
@@ -31,7 +33,7 @@ const validationService = {
   links: Yup.array<{ url: string; valid: boolean }[]>()
     .of(
       Yup.object().shape({
-        url: Yup.string(),
+        url: Yup.string().url('Must be a valid URL.'),
         // TODO: require valid file only when URL is given
         valid: Yup.boolean()
         // valid: Yup.boolean().isTrue('File must be valid.')
@@ -46,7 +48,10 @@ const validationService = {
   access: Yup.string()
     .matches(/compute|download/g)
     .required('Required'),
-  providerUrl: Yup.string().url().required('Required')
+  providerUrl: Yup.object().shape({
+    url: Yup.string().url('Must be a valid URL.').required('Required'),
+    valid: Yup.boolean().isTrue().required('Valid Provider is required.')
+  })
 }
 
 const validationPricing = {
@@ -55,14 +60,7 @@ const validationPricing = {
     .required('Required'),
   // https://github.com/jquense/yup#mixedwhenkeys-string--arraystring-builder-object--value-schema-schema-schema
   price: Yup.number()
-    .when('type', (type, schema) =>
-      type === 'free'
-        ? schema
-        : schema.min(
-            1,
-            (param: { min: number }) => `Must be more or equal to ${param.min}`
-          )
-    )
+    .min(1, (param: { min: number }) => `Must be more or equal to ${param.min}`)
     .required('Required'),
   amountDataToken: Yup.number()
     .min(50, (param) => `Must be more or equal to ${param.min}`)

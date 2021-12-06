@@ -2,6 +2,7 @@ import { mapTimeoutStringToSeconds } from '@utils/ddo'
 import { getEncryptedFileUrls } from '@utils/provider'
 import { sha256 } from 'js-sha256'
 import slugify from 'slugify'
+import { algorithmContainerPresets } from './_constants'
 import { FormPublishData } from './_types'
 
 export function getFieldContent(
@@ -14,6 +15,17 @@ export function getFieldContent(
 function getUrlFileExtension(fileUrl: string): string {
   const splittedFileUrl = fileUrl.split('.')
   return splittedFileUrl[splittedFileUrl.length - 1]
+}
+
+function getAlgorithmContainerPreset(
+  dockerImage: string
+): MetadataAlgorithmContainer {
+  if (dockerImage === '') return
+
+  const preset = algorithmContainerPresets.find(
+    (preset) => `${preset.image}:${preset.tag}` === dockerImage
+  )
+  return preset
 }
 
 function dateToStringNoMS(date: Date): string {
@@ -35,8 +47,6 @@ export async function transformPublishFormToDdo(
 ): Promise<DDO> {
   const { metadata, services, user } = values
   const { chainId, accountId } = user
-  const did = nftAddress ? `0x${sha256(`${nftAddress}${chainId}`)}` : '0x...'
-  const currentTime = dateToStringNoMS(new Date())
   const {
     type,
     name,
@@ -44,11 +54,16 @@ export async function transformPublishFormToDdo(
     tags,
     author,
     termsAndConditions,
+    dockerImage,
     dockerImageCustom,
     dockerImageCustomTag,
-    dockerImageCustomEntrypoint
+    dockerImageCustomEntrypoint,
+    dockerImageCustomChecksum
   } = metadata
   const { access, files, links, providerUrl, timeout } = services[0]
+
+  const did = nftAddress ? `0x${sha256(`${nftAddress}${chainId}`)}` : '0x...'
+  const currentTime = dateToStringNoMS(new Date())
 
   // Transform from files[0].url to string[] assuming only 1 file
   const filesTransformed = files?.length && files[0].valid && [files[0].url]
@@ -67,45 +82,54 @@ export async function transformPublishFormToDdo(
     additionalInformation: {
       termsAndConditions
     },
-    ...(type === 'algorithm' && {
-      algorithm: {
-        language: files?.length ? getUrlFileExtension(filesTransformed[0]) : '',
-        version: '0.1',
-        container: {
-          entrypoint: dockerImageCustomEntrypoint,
-          image: dockerImageCustom,
-          tag: dockerImageCustomTag,
-          checksum: '' // TODO: how to get? Is it user input?
+    ...(type === 'algorithm' &&
+      dockerImage !== '' && {
+        algorithm: {
+          language: filesTransformed?.length
+            ? getUrlFileExtension(filesTransformed[0])
+            : '',
+          version: '0.1',
+          container: {
+            entrypoint:
+              dockerImage === 'custom'
+                ? dockerImageCustomEntrypoint
+                : getAlgorithmContainerPreset(dockerImage).entrypoint,
+            image:
+              dockerImage === 'custom'
+                ? dockerImageCustom
+                : getAlgorithmContainerPreset(dockerImage).image,
+            tag:
+              dockerImage === 'custom'
+                ? dockerImageCustomTag
+                : getAlgorithmContainerPreset(dockerImage).tag,
+            checksum:
+              dockerImage === 'custom'
+                ? dockerImageCustomChecksum
+                : getAlgorithmContainerPreset(dockerImage).checksum
+          }
         }
-      }
-    })
+      })
   }
 
-  // Encypt just created string[] of urls
+  // Encrypt just created string[] of urls
   const filesEncrypted =
     files?.length &&
     files[0].valid &&
-    (await getEncryptedFileUrls(filesTransformed, providerUrl, did, accountId))
+    (await getEncryptedFileUrls(
+      filesTransformed,
+      providerUrl.url,
+      did,
+      accountId
+    ))
 
   const newService: Service = {
     type: access,
     files: filesEncrypted || '',
     datatokenAddress,
-    serviceEndpoint: providerUrl,
+    serviceEndpoint: providerUrl.url,
     timeout: mapTimeoutStringToSeconds(timeout),
     ...(access === 'compute' && {
-      compute: {
-        namespace: 'ocean-compute',
-        cpu: 1,
-        gpu: 1,
-        gpuType: '',
-        memory: '',
-        volumeSize: '',
-        allowRawAlgorithm: false,
-        allowNetworkAccess: false,
-        publisherTrustedAlgorithmPublishers: null,
-        publisherTrustedAlgorithms: null
-      }
+      compute: values.services[0].computeOptions
     })
   }
 
@@ -116,7 +140,9 @@ export async function transformPublishFormToDdo(
     chainId,
     metadata: newMetadata,
     services: [newService],
-    // only added for DDO preview, reflecting Asset response
+    // Only added for DDO preview, reflecting Asset response,
+    // again, we can assume if `datatokenAddress` is not passed,
+    // we are on preview.
     ...(!datatokenAddress && {
       dataTokenInfo: {
         name: values.services[0].dataTokenOptions.name,

@@ -1,5 +1,5 @@
 import React, { ReactElement, useState, useRef } from 'react'
-import { Form, Formik } from 'formik'
+import { Form, Formik, validateYupSchema } from 'formik'
 import { initialValues } from './_constants'
 import { validationSchema } from './_validation'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
@@ -28,6 +28,9 @@ export default function PublishPage({
   const { debug } = useUserPreferences()
   const { accountId, chainId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
+
+  // TODO: success & error states need to be handled for each step we want to display
+  // most likely with a nested data structure.
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const scrollToRef = useRef()
@@ -39,14 +42,19 @@ export default function PublishPage({
       // --------------------------------------------------
       // const nftOptions = values.metadata.nft
       // const nftCreateData = generateNftCreateData(nftOptions)
+
+      // TODO: figure out syntax of ercParams we most likely need to pass
+      // to createNftWithErc() as we need to pass options for the datatoken.
       // const ercParams = {}
       // const priceOptions = {
-      //   ...values,
       //   // swapFee is tricky: to get 0.1% you need to send 0.001 as value
-      //   swapFee: `${values.swapFee / 100}`
+      //   swapFee: `${values.pricing.swapFee / 100}`
       // }
       // const txMint = await createNftWithErc(accountId, nftCreateData)
+
+      // TODO: figure out how to get nftAddress & datatokenAddress from tx log.
       // const { nftAddress, datatokenAddress } = txMint.logs[0].args
+      // if (!nftAddress || !datatokenAddress) { throw new Error() }
       //
       // --------------------------------------------------
       // 2. Construct and publish DDO
@@ -66,36 +74,35 @@ export default function PublishPage({
       // if (checksumBefore !== checksumAfter) {
       //   throw new Error('DDO integrity check failed!')
       // }
-
       setSuccess('Your DDO was published successfully!')
     } catch (error) {
       setError(error.message)
     }
   }
 
-  return (
-    <>
-      <PageHeader title={<Title />} description={content.description} />
-
-      {isInPurgatory && purgatoryData ? null : (
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={async (values, { resetForm }) => {
-            // kick off publishing
-            await handleSubmit(values)
-          }}
-        >
-          <>
-            <Form className={styles.form} ref={scrollToRef}>
-              <Navigation />
-              <Steps />
-              <Actions scrollToRef={scrollToRef} />
-            </Form>
-            {debug && <Debug />}
-          </>
-        </Formik>
+  return isInPurgatory && purgatoryData ? null : (
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={async (values, { resetForm }) => {
+        // kick off publishing
+        await handleSubmit(values)
+      }}
+    >
+      {({ values }) => (
+        <>
+          <PageHeader
+            title={<Title networkId={values.user.chainId} />}
+            description={content.description}
+          />
+          <Form className={styles.form} ref={scrollToRef}>
+            <Navigation />
+            <Steps />
+            <Actions scrollToRef={scrollToRef} />
+          </Form>
+          {debug && <Debug />}
+        </>
       )}
-    </>
+    </Formik>
   )
 }

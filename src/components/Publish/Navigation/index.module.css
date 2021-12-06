@@ -87,3 +87,8 @@
   background: var(--brand-alert-green);
   border-color: transparent;
 }
+
+.success.current:before {
+  background: var(--font-color-heading);
+  border-color: var(--brand-alert-green);
+}

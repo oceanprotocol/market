@@ -24,7 +24,6 @@ export default function PricingFields(): ReactElement {
     const type = tabName.toLowerCase()
     setFieldValue('pricing.type', type)
     type === 'dynamic' && setFieldValue('pricing.amountDataToken', 1000)
-    setFieldValue('pricing.price', type === 'free' ? 0 : 1)
   }
 
   // Always update everything when price value changes

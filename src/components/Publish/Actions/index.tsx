@@ -1,23 +1,17 @@
-import React, { FormEvent, ReactElement, Ref, RefObject } from 'react'
+import React, { FormEvent, ReactElement, RefObject } from 'react'
 import Button from '@shared/atoms/Button'
 import styles from './index.module.css'
 import { FormikContextType, useFormikContext } from 'formik'
 import { FormPublishData } from '../_types'
 import { wizardSteps } from '../_constants'
-import { useWeb3 } from '@context/Web3'
 
 export default function Actions({
   scrollToRef
 }: {
   scrollToRef: RefObject<any>
 }): ReactElement {
-  const { accountId } = useWeb3()
-  const {
-    status,
-    values,
-    isValid,
-    setFieldValue
-  }: FormikContextType<FormPublishData> = useFormikContext()
+  const { values, isValid, setFieldValue }: FormikContextType<FormPublishData> =
+    useFormikContext()
 
   function handleNext(e: FormEvent) {
     e.preventDefault()
@@ -42,7 +36,11 @@ export default function Actions({
           Continue
         </Button>
       ) : (
-        <Button type="submit" style="primary" disabled={!accountId || !isValid}>
+        <Button
+          type="submit"
+          style="primary"
+          disabled={values.user.accountId === '' || !isValid}
+        >
           Submit
         </Button>
       )}

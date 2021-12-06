@@ -8,6 +8,7 @@ import { getFileInfo } from '@utils/provider'
 import { useWeb3 } from '@context/Web3'
 import { getOceanConfig } from '@utils/ocean'
 import { useCancelToken } from '@hooks/useCancelToken'
+import { initialValues } from 'src/components/Publish/_constants'
 
 export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
@@ -44,17 +45,23 @@ export default function FilesInput(props: InputProps): ReactElement {
     loadFileInfo(url)
   }
 
+  function handleClose() {
+    helpers.setValue(initialValues.services[0].files)
+    helpers.setTouched(false)
+  }
+
   return (
     <>
-      {field?.value && field.value[0].url !== '' && field.value[0].valid ? (
-        <FileInfo name={props.name} file={field.value[0]} />
+      {field?.value?.length &&
+      field.value[0].url !== '' &&
+      field.value[0].valid ? (
+        <FileInfo file={field.value[0]} handleClose={handleClose} />
       ) : (
         <UrlInput
-          submitText="Add File"
+          submitText="Validate"
           {...props}
-          {...field}
-          name={`${props.name}[0].url`}
-          value={field?.value && field.value[0].url}
+          name={`${field.name}[0].url`}
+          hasError={Boolean(meta.touched && meta.error)}
           isLoading={isLoading}
           handleButtonClick={handleButtonClick}
         />

@@ -38,3 +38,7 @@
   color: var(--font-color-text);
   background-color: transparent;
 }
+
+.info li.success {
+  color: var(--brand-alert-green);
+}

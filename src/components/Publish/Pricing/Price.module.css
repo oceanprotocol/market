@@ -2,7 +2,8 @@
   position: relative;
 }
 
-.form * {
+.form *,
+.form label {
   margin-bottom: 0;
 }
 
@@ -58,4 +59,10 @@
 
 .conversion strong {
   color: var(--color-secondary);
+}
+
+.free {
+  text-align: center;
+  margin: calc(var(--spacer) / 2) 0;
+  font-size: var(--font-size-base);
 }

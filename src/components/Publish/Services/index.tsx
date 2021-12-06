@@ -6,8 +6,8 @@ import IconCompute from '@images/compute.svg'
 import content from '../../../../content/publish/form.json'
 import { getFieldContent } from '../_utils'
 import { FormPublishData } from '../_types'
-import { useWeb3 } from '@context/Web3'
 import { getOceanConfig } from '@utils/ocean'
+import { computeEnvironmentDefaults } from '../_constants'
 
 const accessTypeOptionsTitles = getFieldContent(
   'access',
@@ -16,7 +16,7 @@ const accessTypeOptionsTitles = getFieldContent(
 
 export default function ServicesFields(): ReactElement {
   // connect with Form state, use for conditional field rendering
-  const { values, setFieldValue, setTouched } =
+  const { values, setFieldValue, touched, setTouched } =
     useFormikContext<FormPublishData>()
 
   const accessTypeOptions = [
@@ -38,6 +38,16 @@ export default function ServicesFields(): ReactElement {
     }
   ]
 
+  const computeEnvironmentOptions = [
+    `Default: ${computeEnvironmentDefaults.cpu} CPU, ${
+      computeEnvironmentDefaults.gpu > 0
+        ? `${computeEnvironmentDefaults.gpu} ${computeEnvironmentDefaults.gpuType} GPU, `
+        : ''
+    } ${computeEnvironmentDefaults.memory} memory, ${
+      computeEnvironmentDefaults.volumeSize
+    } disk`
+  ]
+
   // Auto-change access type based on algo privacy boolean.
   // Could be also done later in transformPublishFormToDdo().
   useEffect(() => {
@@ -54,8 +64,8 @@ export default function ServicesFields(): ReactElement {
     if (!values?.user?.chainId) return
 
     const config = getOceanConfig(values.user.chainId)
-    config && setFieldValue('services[0].providerUrl', config.providerUri)
-    setTouched({ services: [{ providerUrl: true }] })
+    config && setFieldValue('services[0].providerUrl.url', config.providerUri)
+    setTouched({ ...touched, services: [{ providerUrl: { url: true } }] })
   }, [values.user.chainId, setFieldValue, setTouched])
 
   return (
@@ -84,6 +94,16 @@ export default function ServicesFields(): ReactElement {
         component={Input}
         name="services[0].providerUrl"
       />
+      {values.services[0].access === 'compute' && (
+        <Field
+          {...getFieldContent('computeOptions', content.services.fields)}
+          component={Input}
+          name="services[0].computeOptions"
+          options={computeEnvironmentOptions}
+          disabled
+          checked
+        />
+      )}
       <Field
         {...getFieldContent('files', content.services.fields)}
         component={Input}

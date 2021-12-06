@@ -1,0 +1,9 @@
+.error {
+  composes: error from '@shared/FormInput/index.module.css';
+}
+
+.restore {
+  font-family: var(--font-family-base);
+  text-transform: none;
+  font-weight: var(--font-weight-base);
+}
