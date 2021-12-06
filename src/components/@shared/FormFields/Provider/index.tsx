@@ -11,9 +11,6 @@ import { initialValues } from 'src/components/Publish/_constants'
 export default function CustomProvider(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
   const [isLoading, setIsLoading] = useState(false)
-  const { ocean, config } = useOcean()
-  const [isValid, setIsValid] = useState(false)
-  // const { ocean, config } = useOcean()
 
   async function validateProvider(url: string) {
     setIsLoading(true)
@@ -21,7 +18,7 @@ export default function CustomProvider(props: InputProps): ReactElement {
     try {
       // TODO: #948 Remove ocean.provider.isValidProvider dependency.
       const isValid = await isValidProvider(url)
-      setIsValid(isValid)
+      helpers.setValue({ url, valid: isValid })
       helpers.setError(undefined)
     } catch (error) {
       helpers.setError(
