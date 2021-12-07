@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import Link from 'next/link'
 import styles from './Tags.module.css'
 
@@ -23,13 +23,13 @@ const Tag = ({ tag, noLinks }: { tag: string; noLinks?: boolean }) => {
   )
 }
 
-const Tags: React.FC<TagsProps> = ({
+export default function Tags({
   items,
   max,
   showMore,
   className,
   noLinks
-}) => {
+}: TagsProps): ReactElement {
   max = max || items.length
   const remainder = items.length - max
   // filter out empty array items, and restrict to `max`
@@ -48,5 +48,3 @@ const Tags: React.FC<TagsProps> = ({
     </div>
   )
 }
-
-export default Tags
