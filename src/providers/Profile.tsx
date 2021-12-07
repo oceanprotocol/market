@@ -240,9 +240,9 @@ function ProfileProvider({
         cancelToken
       )
       setDownloads(downloads)
-      setDownloadsTotal(downloads.length)
+      setDownloadsTotal(downloads?.length)
       Logger.log(
-        `[profile] Fetched ${downloads.length} download orders.`,
+        `[profile] Fetched ${downloads?.length} download orders.`,
         downloads
       )
     },

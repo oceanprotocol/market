@@ -1,0 +1,46 @@
+.blockies {
+  aspect-ratio: 1/1;
+  width: 13%;
+  height: 13%;
+  border-radius: 50%;
+  margin-left: 0;
+  margin-right: calc(var(--spacer) / 4);
+}
+
+.teaser {
+  max-width: 40rem;
+  height: 100%;
+}
+
+.link {
+  composes: box from '../atoms/Box.module.css';
+  padding: calc(var(--spacer) / 2) !important;
+  font-size: var(--font-size-mini);
+  height: 90%;
+  color: var(--color-secondary);
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.link span {
+  font-size: var(--font-size-large);
+  margin-right: calc(var(--spacer) / 3);
+}
+.name {
+  margin-bottom: 0;
+  font-size: var(--font-size-base) !important;
+  padding-top: calc(var(--spacer) / 4);
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.sales {
+  font-size: small;
+  margin-top: -5px !important;
+  margin-bottom: clac(var(--spacer) / 2);
+}

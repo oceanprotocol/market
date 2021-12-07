@@ -2,7 +2,6 @@ import { gql, OperationResult, TypedDocumentNode, OperationContext } from 'urql'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import { getUrqlClientInstance } from '../providers/UrqlProvider'
 import { getOceanConfig } from './ocean'
-import web3 from 'web3'
 import {
   AssetsPoolPrice,
   AssetsPoolPrice_pools as AssetsPoolPricePool
@@ -26,6 +25,10 @@ import {
 } from '../@types/apollo/PoolShares'
 import { BestPrice } from '../models/BestPrice'
 import { OrdersData_tokenOrders as OrdersData } from '../@types/apollo/OrdersData'
+import {
+  UserSalesQuery_users as UserSales,
+  UserSalesQuery as UsersSalesList
+} from '../@types/apollo/UserSalesQuery'
 
 export interface UserLiquidity {
   price: string
@@ -167,19 +170,6 @@ const HighestLiquidityAssets = gql`
   }
 `
 
-const TotalAccountOrders = gql`
-  query TotalAccountOrders($datatokenId_in: [String!]) {
-    tokenOrders(where: { datatokenId_in: $datatokenId_in }) {
-      payer {
-        id
-      }
-      datatokenId {
-        id
-      }
-    }
-  }
-`
-
 const UserSharesQuery = gql`
   query UserSharesQuery($user: String, $pools: [String!]) {
     poolShares(where: { userAddress: $user, poolId_in: $pools }) {
@@ -249,6 +239,19 @@ const UserTokenOrders = gql`
       }
       timestamp
       tx
+    }
+  }
+`
+const TopSalesQuery = gql`
+  query TopSalesQuery {
+    users(
+      first: 20
+      orderBy: nrSales
+      orderDirection: desc
+      where: { nrSales_not: 0 }
+    ) {
+      id
+      nrSales
     }
   }
 `
@@ -720,4 +723,53 @@ export async function getUserSales(
   } catch (error) {
     Logger.log(error.message)
   }
+}
+
+export async function getTopAssetsPublishers(
+  chainIds: number[]
+): Promise<string[]> {
+  const data: string[] = []
+  const publisherSales: UserSales[] = []
+
+  for (const chain of chainIds) {
+    const queryContext = getQueryContext(Number(chain))
+    const fetchedUsers: OperationResult<UsersSalesList> = await fetchData(
+      TopSalesQuery,
+      null,
+      queryContext
+    )
+    for (let i = 0; i < fetchedUsers.data.users.length; i++) {
+      const publishersIndex = publisherSales.findIndex(
+        (user) => fetchedUsers.data.users[i].id === user.id
+      )
+      if (publishersIndex === -1) {
+        const publisher: UserSales = {
+          id: fetchedUsers.data.users[i].id,
+          nrSales: fetchedUsers.data.users[i].nrSales,
+          __typename: 'User'
+        }
+        publisherSales.push(publisher)
+      } else {
+        const publisher: UserSales = {
+          id: fetchedUsers.data.users[i].id,
+          nrSales:
+            fetchedUsers.data.users[i].nrSales +
+            publisherSales[publishersIndex].nrSales,
+          __typename: 'User'
+        }
+        publisherSales[publishersIndex] = publisher
+      }
+    }
+  }
+
+  publisherSales.sort((a, b) => b.nrSales - a.nrSales)
+  for (let i = 0; i < publisherSales.length; i++) {
+    if (data.length < 9) {
+      data.push(publisherSales[i].id)
+    } else {
+      return data
+    }
+  }
+
+  return data
 }
