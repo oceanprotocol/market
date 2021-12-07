@@ -245,7 +245,7 @@ const UserTokenOrders = gql`
 const TopSalesQuery = gql`
   query TopSalesQuery {
     users(
-      first: 9
+      first: 20
       orderBy: nrSales
       orderDirection: desc
       where: { nrSales_not: 0 }
@@ -740,7 +740,7 @@ export async function getTopAssetsPublishers(
     )
     for (let i = 0; i < fetchedUsers.data.users.length; i++) {
       const publishersIndex = publisherSales.findIndex(
-        (user) => user.id === fetchedUsers.data.users[i].id
+        (user) => fetchedUsers.data.users[i].id === user.id
       )
       if (publishersIndex === -1) {
         const publisher: UserSales = {
@@ -757,7 +757,7 @@ export async function getTopAssetsPublishers(
             publisherSales[publishersIndex].nrSales,
           __typename: 'User'
         }
-        publisherSales.push(publisher)
+        publisherSales[publishersIndex] = publisher
       }
     }
   }
