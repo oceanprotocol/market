@@ -48,9 +48,12 @@ export default function Results({
         job.did,
         undefined,
         undefined,
-        job.jobId
+        job.jobId,
+        undefined,
+        false
       )
       if (jobStatus?.length > 0) {
+        console.log('STATUS: ', jobStatus[0])
         job.algorithmLogUrl = jobStatus[0].algorithmLogUrl
         job.resultsUrl = jobStatus[0].resultsUrl
       }
