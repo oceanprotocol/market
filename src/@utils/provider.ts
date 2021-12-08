@@ -57,14 +57,20 @@ export async function getFileInfo(
   }
 }
 
+export async function fetchMethod(url: string): Promise<AxiosResponse> {
+  const result = await axios.get(url)
+  if (!result) {
+    console.error(`Error requesting ${url}`)
+    console.error(`Response message: \n${result}`)
+    throw result
+  }
+  return result
+}
+
 export async function isValidProvider(url: string): Promise<boolean> {
   try {
-    const response = await axios.get(url)
-    if (response) {
-      const params = await response.data
-      if (params && params.providerAddress) return true
-    }
-    return false
+    const response = await ocean.provider.isValidProvider(url, fetchMethod)
+    return response
   } catch (error) {
     console.error(`Error validating provider: ${error.message}`)
     return false
