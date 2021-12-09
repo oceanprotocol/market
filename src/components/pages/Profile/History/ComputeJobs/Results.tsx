@@ -65,13 +65,13 @@ export default function Results({
     getResults()
   }, [ocean, account, job])
 
-  async function accessResult(result: ComputeResult) {
+  async function accessResult(result: ComputeResult, index: number) {
     if (!account || !ocean || !job) return
     try {
       const jobResult = await ocean.compute.getResult(
         account,
         job.jobId,
-        result.index,
+        index,
         undefined
       )
       return jobResult
@@ -86,11 +86,11 @@ export default function Results({
         <ul>
           {job.results &&
             Array.isArray(job.results) &&
-            job.results.map((result) =>
+            job.results.map((result, index) =>
               result ? (
                 <ListItem key={job.jobId}>
                   <a
-                    onClick={() => accessResult(result)}
+                    onClick={() => accessResult(result, index)}
                     target="_blank"
                     rel="noreferrer"
                   >
