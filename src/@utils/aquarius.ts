@@ -1,4 +1,4 @@
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
@@ -99,9 +99,9 @@ export async function queryMetadata(
     return transformQueryResult(response.data, query.from, query.size)
   } catch (error) {
     if (axios.isCancel(error)) {
-      Logger.log(error.message)
+      LoggerInstance.log(error.message)
     } else {
-      Logger.error(error.message)
+      LoggerInstance.error(error.message)
     }
   }
 }
@@ -121,9 +121,9 @@ export async function retrieveDDO(
     return data
   } catch (error) {
     if (axios.isCancel(error)) {
-      Logger.log(error.message)
+      LoggerInstance.log(error.message)
     } else {
-      Logger.error(error.message)
+      LoggerInstance.error(error.message)
     }
   }
 }
@@ -142,9 +142,9 @@ export async function getAssetsNames(
     return response.data
   } catch (error) {
     if (axios.isCancel(error)) {
-      Logger.log(error.message)
+      LoggerInstance.log(error.message)
     } else {
-      Logger.error(error.message)
+      LoggerInstance.error(error.message)
     }
   }
 }
@@ -167,7 +167,7 @@ export async function getAssetsFromDidList(
     const queryResult = await queryMetadata(query, cancelToken)
     return queryResult
   } catch (error) {
-    Logger.error(error.message)
+    LoggerInstance.error(error.message)
   }
 }
 
@@ -192,7 +192,7 @@ export async function retrieveDDOListByDIDs(
     })
     return orderedDDOListByDIDList
   } catch (error) {
-    Logger.error(error.message)
+    LoggerInstance.error(error.message)
   }
 }
 
@@ -318,9 +318,9 @@ export async function getPublishedAssets(
     return result
   } catch (error) {
     if (axios.isCancel(error)) {
-      Logger.log(error.message)
+      LoggerInstance.log(error.message)
     } else {
-      Logger.error(error.message)
+      LoggerInstance.error(error.message)
     }
   }
 }
@@ -361,6 +361,6 @@ export async function getDownloadAssets(
 
     return downloadedAssets
   } catch (error) {
-    Logger.error(error.message)
+    LoggerInstance.error(error.message)
   }
 }

@@ -8,7 +8,7 @@ import React, {
 import { fetchData } from '@utils/fetch'
 import useSWR from 'swr'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 
 interface PricesValue {
   [key: string]: number
@@ -39,7 +39,7 @@ export default function PricesProvider({
 
   const onSuccess = async (data: { [tokenId]: { [key: string]: number } }) => {
     if (!data) return
-    Logger.log('[prices] Got new OCEAN spot prices.', data[tokenId])
+    LoggerInstance.log('[prices] Got new OCEAN spot prices.', data[tokenId])
     setPrices(data[tokenId])
   }
 

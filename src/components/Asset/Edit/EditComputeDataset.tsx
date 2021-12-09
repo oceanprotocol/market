@@ -4,7 +4,7 @@ import { Formik } from 'formik'
 import React, { ReactElement, useState } from 'react'
 import { useAsset } from '@context/Asset'
 import FormEditComputeDataset from './FormEditComputeDataset'
-import { Logger, ServiceComputePrivacy } from '@oceanprotocol/lib'
+import { LoggerInstance, ServiceComputePrivacy } from '@oceanprotocol/lib'
 import { useUserPreferences } from '@context/UserPreferences'
 import DebugEditCompute from './DebugEditCompute'
 import styles from './index.module.css'
@@ -53,7 +53,7 @@ export default function EditComputeDataset({
     //   )
     //   if (!ddoEditedComputePrivacy) {
     //     setError(content.form.error)
-    //     Logger.error(content.form.error)
+    //     LoggerInstance.error(content.form.error)
     //     return
     //   }
     //   const storedddo = await ocean.assets.updateMetadata(
@@ -62,7 +62,7 @@ export default function EditComputeDataset({
     //   )
     //   if (!storedddo) {
     //     setError(content.form.error)
-    //     Logger.error(content.form.error)
+    //     LoggerInstance.error(content.form.error)
     //     return
     //   } else {
     //     if (price.type === 'free') {
@@ -79,7 +79,7 @@ export default function EditComputeDataset({
     //     resetForm()
     //   }
     // } catch (error) {
-    //   Logger.error(error.message)
+    //   LoggerInstance.error(error.message)
     //   setError(error.message)
     // }
   }

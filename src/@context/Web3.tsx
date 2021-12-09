@@ -11,7 +11,7 @@ import Web3 from 'web3'
 import Web3Modal, { getProviderInfo, IProviderInfo } from 'web3modal'
 import { infuraProjectId as infuraId, portisId } from '../../app.config'
 import WalletConnectProvider from '@walletconnect/web3-provider'
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import { isBrowser } from '@utils/index'
 import { getEnsName } from '@utils/ens'
 import { getOceanBalance } from '@utils/ocean'
@@ -115,28 +115,28 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     }
     try {
       setWeb3Loading(true)
-      Logger.log('[web3] Connecting Web3...')
+      LoggerInstance.log('[web3] Connecting Web3...')
 
       const provider = await web3Modal?.connect()
       setWeb3Provider(provider)
 
       const web3 = new Web3(provider)
       setWeb3(web3)
-      Logger.log('[web3] Web3 created.', web3)
+      LoggerInstance.log('[web3] Web3 created.', web3)
 
       const networkId = await web3.eth.net.getId()
       setNetworkId(networkId)
-      Logger.log('[web3] network id ', networkId)
+      LoggerInstance.log('[web3] network id ', networkId)
 
       const chainId = await web3.eth.getChainId()
       setChainId(chainId)
-      Logger.log('[web3] chain id ', chainId)
+      LoggerInstance.log('[web3] chain id ', chainId)
 
       const accountId = (await web3.eth.getAccounts())[0]
       setAccountId(accountId)
-      Logger.log('[web3] account id', accountId)
+      LoggerInstance.log('[web3] account id', accountId)
     } catch (error) {
-      Logger.error('[web3] Error: ', error.message)
+      LoggerInstance.error('[web3] Error: ', error.message)
     } finally {
       setWeb3Loading(false)
     }
@@ -154,9 +154,9 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
         ocean: await getOceanBalance(accountId, networkId, web3)
       }
       setBalance(balance)
-      Logger.log('[web3] Balance: ', balance)
+      LoggerInstance.log('[web3] Balance: ', balance)
     } catch (error) {
-      Logger.error('[web3] Error: ', error.message)
+      LoggerInstance.error('[web3] Error: ', error.message)
     }
   }, [accountId, networkId, web3])
 
@@ -175,9 +175,12 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
       const accountEns = await getEnsName(accountId)
       setAccountEns(accountEns)
       accountEns &&
-        Logger.log(`[web3] ENS name found for ${accountId}:`, accountEns)
+        LoggerInstance.log(
+          `[web3] ENS name found for ${accountId}:`,
+          accountEns
+        )
     } catch (error) {
-      Logger.error('[web3] Error: ', error.message)
+      LoggerInstance.error('[web3] Error: ', error.message)
     }
   }, [accountId])
 
@@ -194,7 +197,10 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
       // note: needs artificial await here so the log message is reached and output
       const web3ModalInstance = await new Web3Modal(web3ModalOpts)
       setWeb3Modal(web3ModalInstance)
-      Logger.log('[web3] Web3Modal instance created.', web3ModalInstance)
+      LoggerInstance.log(
+        '[web3] Web3Modal instance created.',
+        web3ModalInstance
+      )
     }
     init()
   }, [connect, web3Modal])
@@ -206,7 +212,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     if (!web3Modal?.cachedProvider) return
 
     async function connectCached() {
-      Logger.log(
+      LoggerInstance.log(
         '[web3] Connecting to cached provider: ',
         web3Modal.cachedProvider
       )
@@ -243,7 +249,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     if (!networkId) return
     const networkData = getNetworkDataById(networksList, networkId)
     setNetworkData(networkData)
-    Logger.log(
+    LoggerInstance.log(
       networkData
         ? `[web3] Network metadata found.`
         : `[web3] No network metadata found.`,
@@ -259,7 +265,9 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
       networkData?.network !== 'mainnet' && networkData.network !== 'moonriver'
     )
 
-    Logger.log(`[web3] Network display name set to: ${networkDisplayName}`)
+    LoggerInstance.log(
+      `[web3] Network display name set to: ${networkDisplayName}`
+    )
   }, [networkId, networksList])
 
   // -----------------------------------
@@ -271,7 +279,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     async function getBlock() {
       const block = await web3.eth.getBlockNumber()
       setBlock(block)
-      Logger.log('[web3] Head block: ', block)
+      LoggerInstance.log('[web3] Head block: ', block)
     }
     getBlock()
   }, [web3, networkId])
@@ -302,21 +310,21 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
   // Handle change events
   // -----------------------------------
   async function handleChainChanged(chainId: string) {
-    Logger.log('[web3] Chain changed', chainId)
+    LoggerInstance.log('[web3] Chain changed', chainId)
     const networkId = await web3.eth.net.getId()
     setChainId(Number(chainId))
     setNetworkId(Number(networkId))
   }
 
   async function handleNetworkChanged(networkId: string) {
-    Logger.log('[web3] Network changed', networkId)
+    LoggerInstance.log('[web3] Network changed', networkId)
     const chainId = await web3.eth.getChainId()
     setNetworkId(Number(networkId))
     setChainId(Number(chainId))
   }
 
   async function handleAccountsChanged(accounts: string[]) {
-    Logger.log('[web3] Account changed', accounts[0])
+    LoggerInstance.log('[web3] Account changed', accounts[0])
     setAccountId(accounts[0])
   }
 

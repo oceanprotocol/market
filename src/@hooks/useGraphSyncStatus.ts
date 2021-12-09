@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
-import { Logger } from '@oceanprotocol/lib'
+import { Config, LoggerInstance } from '@oceanprotocol/lib'
 import Web3 from 'web3'
-import { ConfigHelperConfig } from '@oceanprotocol/lib/dist/node/utils/ConfigHelper'
 import axios, { AxiosResponse } from 'axios'
 
 const blockDifferenceThreshold = 30
@@ -27,11 +26,11 @@ async function fetchGraph(
     const response = await axios.post(url, { ...JSON.parse(queryBody) })
     return response
   } catch (error) {
-    Logger.error('Error parsing json: ' + error.message)
+    LoggerInstance.error('Error parsing json: ' + error.message)
   }
 }
 
-async function getBlockHead(config: ConfigHelperConfig) {
+async function getBlockHead(config: Config) {
   // for ETH main, get block from graph fetch
   if (config.network === 'mainnet') {
     const response: any = await fetchGraph(ethGraphUrl, ethGraphQuery)
@@ -68,7 +67,7 @@ export function useGraphSyncStatus(): UseGraphSyncStatus {
     async function initBlockHead() {
       const blockHead = block || (await getBlockHead(config))
       setBlockHead(blockHead)
-      Logger.log('[GraphStatus] Head block: ', blockHead)
+      LoggerInstance.log('[GraphStatus] Head block: ', blockHead)
     }
     initBlockHead()
   }, [web3Loading, block, config])
@@ -82,7 +81,10 @@ export function useGraphSyncStatus(): UseGraphSyncStatus {
       const blockGraph = await getBlockSubgraph(config.subgraphUri)
       setBlockGraph(blockGraph)
       setSubgraphLoading(false)
-      Logger.log('[GraphStatus] Latest block from subgraph: ', blockGraph)
+      LoggerInstance.log(
+        '[GraphStatus] Latest block from subgraph: ',
+        blockGraph
+      )
     }
     initBlockSubgraph()
   }, [config])

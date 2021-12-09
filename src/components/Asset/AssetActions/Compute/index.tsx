@@ -1,5 +1,5 @@
 import React, { useState, ReactElement, useEffect, useCallback } from 'react'
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
 import FileIcon from '@shared/FileIcon'
@@ -264,13 +264,13 @@ export default function Compute({
   //       computeService.index,
   //       computeAlgorithm
   //     )
-  //     Logger.log('[compute] Is data set orderable?', allowed)
+  //     LoggerInstance.log('[compute] Is data set orderable?', allowed)
 
   //     if (!allowed) {
   //       setError(
   //         'Data set is not orderable in combination with selected algorithm.'
   //       )
-  //       Logger.error(
+  //       LoggerInstance.error(
   //         '[compute] Error starting compute job. Dataset is not orderable in combination with selected algorithm.'
   //       )
   //       return
@@ -280,7 +280,7 @@ export default function Compute({
   //       const tx = await buyDT('1', price, ddo)
   //       if (!tx) {
   //         setError('Error buying datatoken.')
-  //         Logger.error('[compute] Error buying datatoken for data set ', ddo.id)
+  //         LoggerInstance.error('[compute] Error buying datatoken for data set ', ddo.id)
   //         return
   //       }
   //     }
@@ -289,7 +289,7 @@ export default function Compute({
   //       const tx = await buyDT('1', algorithmPrice, selectedAlgorithmAsset)
   //       if (!tx) {
   //         setError('Error buying datatoken.')
-  //         Logger.error(
+  //         LoggerInstance.error(
   //           '[compute] Error buying datatoken for algorithm ',
   //           selectedAlgorithmAsset.id
   //         )
@@ -318,7 +318,7 @@ export default function Compute({
   //         )
 
   //     assetOrderId &&
-  //       Logger.log(
+  //       LoggerInstance.log(
   //         `[compute] Got ${
   //           hasPreviousDatasetOrder ? 'existing' : 'new'
   //         } order ID for dataset: `,
@@ -339,7 +339,7 @@ export default function Compute({
   //         )
 
   //     algorithmAssetOrderId &&
-  //       Logger.log(
+  //       LoggerInstance.log(
   //         `[compute] Got ${
   //           hasPreviousAlgorithmOrder ? 'existing' : 'new'
   //         } order ID for algorithm: `,
@@ -352,7 +352,7 @@ export default function Compute({
   //     }
 
   //     computeAlgorithm.transferTxId = algorithmAssetOrderId
-  //     Logger.log('[compute] Starting compute job.')
+  //     LoggerInstance.log('[compute] Starting compute job.')
 
   //     const output: ComputeOutput = {
   //       publishAlgorithmLog: true,
@@ -374,7 +374,7 @@ export default function Compute({
   //       return
   //     }
 
-  //     Logger.log('[compute] Starting compute job response: ', response)
+  //     LoggerInstance.log('[compute] Starting compute job response: ', response)
 
   //     await checkPreviousOrders(selectedAlgorithmAsset)
   //     await checkPreviousOrders(ddo)
@@ -383,7 +383,7 @@ export default function Compute({
   //     await checkPreviousOrders(selectedAlgorithmAsset)
   //     await checkPreviousOrders(ddo)
   //     setError('Failed to start job!')
-  //     Logger.error('[compute] Failed to start job: ', error.message)
+  //     LoggerInstance.error('[compute] Failed to start job: ', error.message)
   //   } finally {
   //     setIsJobStarting(false)
   //   }

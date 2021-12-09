@@ -1,4 +1,4 @@
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import React, { ReactElement, useState } from 'react'
 import Loader from '@shared/atoms/Loader'
 import { ListItem } from '@shared/atoms/Lists'
@@ -35,7 +35,7 @@ export default function Results({
         job.resultsUrl = jobStatus[0].resultsUrl
       }
     } catch (error) {
-      Logger.error(error.message)
+      LoggerInstance.error(error.message)
     } finally {
       setIsLoading(false)
       setHasFetched(true)

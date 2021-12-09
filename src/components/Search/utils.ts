@@ -1,4 +1,4 @@
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import {
   generateBaseQuery,
   getFilterTerm,
@@ -199,7 +199,7 @@ export async function addExistingParamsToUrl(
     for (const querryParam in parsed) {
       if (!excludedParams.includes(querryParam)) {
         if (querryParam === 'page' && excludedParams.includes('text')) {
-          Logger.log('remove page when starting a new search')
+          LoggerInstance.log('remove page when starting a new search')
         } else {
           const value = parsed[querryParam]
           urlLocation = `${urlLocation}${querryParam}=${value}&`

@@ -86,7 +86,7 @@ export default async function get3BoxProfile(
     )
       return
 
-    // Logger.log(`3Box profile found for ${accountId}`, response.data)
+    // LoggerInstance.log(`3Box profile found for ${accountId}`, response.data)
     const profile = transformResponse(response.data)
     return profile
     // eslint-disable-next-line no-empty

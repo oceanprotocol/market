@@ -1,4 +1,4 @@
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import React, { ReactElement, useEffect, useState, useCallback } from 'react'
 import AssetList from '@shared/AssetList'
 import { getPublishedAssets } from '@utils/aquarius'
@@ -37,7 +37,7 @@ export default function PublishedList({
         )
         setQueryResult(result)
       } catch (error) {
-        Logger.error(error.message)
+        LoggerInstance.error(error.message)
       } finally {
         setIsLoading(false)
       }

@@ -8,7 +8,7 @@ import {
   queryMetadata
 } from '@utils/aquarius'
 import { getHighestLiquidityDatatokens } from '@utils/subgraph'
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import { useUserPreferences } from '@context/UserPreferences'
 import styles from './index.module.css'
 import { useIsMounted } from '@hooks/useIsMounted'
@@ -82,7 +82,7 @@ function SectionQueryResult({
           setResult(result)
           setLoading(false)
         } catch (error) {
-          Logger.error(error.message)
+          LoggerInstance.error(error.message)
         }
       }
     }
