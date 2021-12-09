@@ -1,17 +1,17 @@
-import {Logger} from '@oceanprotocol/lib'
-import React, {ReactElement, useEffect, useState} from 'react'
+import { Logger } from '@oceanprotocol/lib'
+import React, { ReactElement, useEffect, useState } from 'react'
 import Loader from '../../../../atoms/Loader'
-import {ComputeJobMetaData} from '../../../../../@types/ComputeJobMetaData'
-import {ListItem} from '../../../../atoms/Lists'
-import {useOcean} from '../../../../../providers/Ocean'
+import { ComputeJobMetaData } from '../../../../../@types/ComputeJobMetaData'
+import { ListItem } from '../../../../atoms/Lists'
+import { useOcean } from '../../../../../providers/Ocean'
 import styles from './Results.module.css'
 import FormHelp from '../../../../atoms/Input/Help'
-import {graphql, useStaticQuery} from 'gatsby'
-import {ComputeResult} from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
+import { graphql, useStaticQuery } from 'gatsby'
+import { ComputeResult } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
 
 export const contentQuery = graphql`
   query HistoryPageComputeResultsQuery {
-    content: allFile(filter: {relativePath: {eq: "pages/history.json"}}) {
+    content: allFile(filter: { relativePath: { eq: "pages/history.json" } }) {
       edges {
         node {
           childPagesJson {
@@ -33,7 +33,7 @@ export default function Results({
   const data = useStaticQuery(contentQuery)
   const content = data.content.edges[0].node.childPagesJson
 
-  const {ocean, account} = useOcean()
+  const { ocean, account } = useOcean()
   const [isLoading, setIsLoading] = useState(false)
   const [hasFetched, setHasFetched] = useState(false)
   const isFinished = job.dateFinished !== null
