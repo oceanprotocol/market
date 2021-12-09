@@ -92,6 +92,7 @@ export default function Stats({
           <Conversion price={publisherLiquidity?.price} hideApproximateSymbol />
         }
       />
+
       <NumberUnit
         label="Total Liquidity"
         value={<Conversion price={`${totalLiquidity}`} hideApproximateSymbol />}

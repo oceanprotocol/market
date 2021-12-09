@@ -8,10 +8,14 @@ import {
   queryMetadata
 } from '../../utils/aquarius'
 import Permission from '../organisms/Permission'
-import { getHighestLiquidityDatatokens } from '../../utils/subgraph'
+import {
+  getTopAssetsPublishers,
+  getHighestLiquidityDatatokens
+} from '../../utils/subgraph'
 import { DDO, Logger } from '@oceanprotocol/lib'
 import { useUserPreferences } from '../../providers/UserPreferences'
 import styles from './Home.module.css'
+import AccountList from '../organisms/AccountList'
 import { useIsMounted } from '../../hooks/useIsMounted'
 import { useCancelToken } from '../../hooks/useCancelToken'
 import { SearchQuery } from '../../models/aquarius/SearchQuery'
@@ -43,6 +47,46 @@ function sortElements(items: DDO[], sorted: string[]) {
     )
   })
   return items
+}
+
+function PublishersWithMostSales({
+  title,
+  action
+}: {
+  title: ReactElement | string
+  action?: ReactElement
+}) {
+  const { chainIds } = useUserPreferences()
+  const [result, setResult] = useState<string[]>([])
+  const [loading, setLoading] = useState<boolean>()
+
+  useEffect(() => {
+    async function init() {
+      if (chainIds.length === 0) {
+        const result: string[] = []
+        setResult(result)
+        setLoading(false)
+      } else {
+        try {
+          setLoading(true)
+          const publishers = await getTopAssetsPublishers(chainIds)
+          setResult(publishers)
+          setLoading(false)
+        } catch (error) {
+          Logger.error(error.message)
+        }
+      }
+    }
+    init()
+  }, [chainIds])
+
+  return (
+    <section className={styles.section}>
+      <h3>{title}</h3>
+      <AccountList accounts={result} isLoading={loading} />
+      {action && action}
+    </section>
+  )
 }
 
 function SectionQueryResult({
@@ -154,6 +198,7 @@ export default function HomePage(): ReactElement {
             }
           />
         )}
+        <PublishersWithMostSales title="Publishers with most sales" />
       </>
     </Permission>
   )
