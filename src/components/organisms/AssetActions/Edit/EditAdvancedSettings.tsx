@@ -3,7 +3,7 @@ import React, { ReactElement, useState } from 'react'
 import { useAsset } from '../../../../providers/Asset'
 import { useUserPreferences } from '../../../../providers/UserPreferences'
 import styles from './index.module.css'
-import { Logger, CredentialType, DDO } from '@oceanprotocol/lib'
+import { Logger, DDO } from '@oceanprotocol/lib'
 import MetadataFeedback from '../../../molecules/MetadataFeedback'
 import { graphql, useStaticQuery } from 'gatsby'
 import { useWeb3 } from '../../../../providers/Web3'
@@ -50,6 +50,12 @@ const contentQuery = graphql`
     }
   }
 `
+
+enum CredentialType {
+  address = 'address',
+  credential3Box = 'credential3Box',
+  domain = 'domain'
+}
 
 function getDefaultCredentialType(credentialType: string): CredentialType {
   switch (credentialType) {

@@ -2,7 +2,6 @@ import {
   CredentialAction,
   Credential,
   Credentials,
-  CredentialType,
   DDO
 } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
@@ -11,6 +10,12 @@ export interface AdvancedSettingsForm {
   allow: string[]
   deny: string[]
   isOrderDisabled: boolean
+}
+
+enum CredentialType {
+  address = 'address',
+  credential3Box = 'credential3Box',
+  domain = 'domain'
 }
 
 export const validationSchema: Yup.SchemaOf<AdvancedSettingsForm> =
