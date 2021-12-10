@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import Link from 'next/link'
 import Dotdotdot from 'react-dotdotdot'
 import Price from '@shared/Price'
@@ -15,11 +15,11 @@ declare type AssetTeaserProps = {
   noPublisher?: boolean
 }
 
-const AssetTeaser: React.FC<AssetTeaserProps> = ({
+export default function AssetTeaser({
   ddo,
   price,
   noPublisher
-}: AssetTeaserProps) => {
+}: AssetTeaserProps): ReactElement {
   const { name, type, description } = ddo.metadata
   const { dataTokenInfo } = ddo
   const isCompute = Boolean(getServiceByName(ddo, 'compute'))
@@ -61,5 +61,3 @@ const AssetTeaser: React.FC<AssetTeaserProps> = ({
     </article>
   )
 }
-
-export default AssetTeaser
