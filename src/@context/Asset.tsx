@@ -7,8 +7,7 @@ import React, {
   useCallback,
   ReactNode
 } from 'react'
-import { Logger } from '@oceanprotocol/lib'
-import { PurgatoryData } from '@oceanprotocol/lib/dist/node/ddo/interfaces/PurgatoryData'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import getAssetPurgatoryData from '@utils/purgatory'
 import { CancelToken } from 'axios'
 import { retrieveDDO } from '@utils/aquarius'
@@ -29,6 +28,12 @@ interface AssetProviderValue {
   isAssetNetwork: boolean
   loading: boolean
   refreshDdo: (token?: CancelToken) => Promise<void>
+}
+
+// temp, just to get rid of the error
+export interface PurgatoryData {
+  did: string
+  reason: string
 }
 
 const AssetContext = createContext({} as AssetProviderValue)
@@ -59,7 +64,7 @@ function AssetProvider({
   const newCancelToken = useCancelToken()
 
   const fetchDdo = async (token?: CancelToken) => {
-    Logger.log('[asset] Init asset, get DDO')
+    LoggerInstance.log('[asset] Init asset, get DDO')
     setLoading(true)
     const ddo = await retrieveDDO(asset as string, token)
 
@@ -77,7 +82,7 @@ function AssetProvider({
   const refreshDdo = async (token?: CancelToken) => {
     setLoading(true)
     const ddo = await fetchDdo(token)
-    Logger.debug('[asset] Got DDO', ddo)
+    LoggerInstance.debug('[asset] Got DDO', ddo)
     setDDO(ddo)
     setLoading(false)
   }
@@ -91,7 +96,7 @@ function AssetProvider({
       setIsInPurgatory(isInPurgatory)
       isInPurgatory && setPurgatoryData(result)
     } catch (error) {
-      Logger.error(error)
+      LoggerInstance.error(error)
     }
   }, [])
 
@@ -106,7 +111,7 @@ function AssetProvider({
     async function init() {
       const ddo = await fetchDdo(newCancelToken())
       if (!isMounted || !ddo) return
-      Logger.debug('[asset] Got DDO', ddo)
+      LoggerInstance.debug('[asset] Got DDO', ddo)
       setDDO(ddo)
       setDID(asset as string)
       setTitle(ddo.metadata.name)

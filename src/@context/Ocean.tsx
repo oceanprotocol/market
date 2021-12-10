@@ -7,16 +7,13 @@ import React, {
   ReactNode,
   useEffect
 } from 'react'
-import { Ocean, Logger, Account, ConfigHelperConfig } from '@oceanprotocol/lib'
+import { Config, LoggerInstance } from '@oceanprotocol/lib'
 import { useWeb3 } from './Web3'
 import { getDevelopmentConfig, getOceanConfig } from '@utils/ocean'
 import { useAsset } from './Asset'
 
 interface OceanProviderValue {
-  ocean: Ocean
-  account: Account
-  config: ConfigHelperConfig
-  connect: (config: ConfigHelperConfig) => Promise<void>
+  config: Config
 }
 
 const OceanContext = createContext({} as OceanProviderValue)
@@ -25,30 +22,29 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
   const { web3, accountId } = useWeb3()
   const { ddo } = useAsset()
 
-  const [ocean, setOcean] = useState<Ocean>()
-  const [account, setAccount] = useState<Account>()
-  const [config, setConfig] = useState<ConfigHelperConfig>()
+  const [config, setConfig] = useState<Config>()
 
   // -----------------------------------
   // Helper: Create Ocean instance
   // -----------------------------------
   const connect = useCallback(
-    async (config: ConfigHelperConfig) => {
+    async (config: Config) => {
       if (!web3) return
 
-      const newConfig: ConfigHelperConfig = {
+      const newConfig: Config = {
         ...config,
         web3Provider: web3
       }
 
       try {
-        Logger.log('[ocean] Connecting Ocean...', newConfig)
-        const newOcean = await Ocean.getInstance(newConfig)
-        setOcean(newOcean)
+        LoggerInstance.log(
+          '[ocean] Connecting Ocean...  not anymore ',
+          newConfig
+        )
+
         setConfig(newConfig)
-        Logger.log('[ocean] Ocean instance created.', newOcean)
       } catch (error) {
-        Logger.error('[ocean] Error: ', error.message)
+        LoggerInstance.error('[ocean] Error: ', error.message)
       }
     },
     [web3]
@@ -78,23 +74,21 @@ function OceanProvider({ children }: { children: ReactNode }): ReactElement {
   // -----------------------------------
   // Get user info, handle account change from web3
   // -----------------------------------
-  useEffect(() => {
-    if (!ocean || !accountId || !web3) return
+  // useEffect(() => {
+  //   if ( !accountId || !web3) return
 
-    async function getInfo() {
-      const account = (await ocean.accounts.list())[0]
-      Logger.log('[ocean] Account: ', account)
-      setAccount(account)
-    }
-    getInfo()
-  }, [ocean, accountId, web3])
+  //   async function getInfo() {
+  //     const account = (await ocean.accounts.list())[0]
+  //     LoggerInstance.log('[ocean] Account: ', account)
+  //     setAccount(account)
+  //   }
+  //   getInfo()
+  // }, [ocean, accountId, web3])
 
   return (
     <OceanContext.Provider
       value={
         {
-          ocean,
-          account,
           connect,
           config
           // refreshBalance

@@ -13,7 +13,7 @@ import { retrieveDDOListByDIDs } from '@utils/aquarius'
 import { CancelToken } from 'axios'
 import Title from './Title'
 import styles from './index.module.css'
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import { useCancelToken } from '@hooks/useCancelToken'
 
 const REFETCH_INTERVAL = 20000
@@ -217,7 +217,10 @@ export default function PoolTransactions({
         }, REFETCH_INTERVAL)
         setDataFetchInterval(interval)
       } catch (error) {
-        Logger.error('Error fetching pool transactions: ', error.message)
+        LoggerInstance.error(
+          'Error fetching pool transactions: ',
+          error.message
+        )
       }
     }
     getTransactions()
@@ -237,7 +240,10 @@ export default function PoolTransactions({
         setIsLoading(true)
         await getPoolTransactions(cancelToken())
       } catch (error) {
-        Logger.error('Error fetching pool transactions: ', error.message)
+        LoggerInstance.error(
+          'Error fetching pool transactions: ',
+          error.message
+        )
       }
     }
     transformData()

@@ -14,7 +14,7 @@ import { useUserPreferences } from '@context/UserPreferences'
 import useDarkMode from 'use-dark-mode'
 import { darkModeConfig } from '../../../../../app.config'
 import Button from '@shared/atoms/Button'
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import { useAsset } from '@context/Asset'
 import { gql, OperationResult } from 'urql'
 import { PoolHistory } from '../../../../@types/apollo/PoolHistory'
@@ -173,7 +173,7 @@ export default function Graph(): ReactElement {
   }, [graphFetchInterval])
 
   useEffect(() => {
-    Logger.log('Fired GraphOptions!')
+    LoggerInstance.log('Fired GraphOptions!')
     const options = getOptions(locale, darkMode.value)
     setOptions(options)
   }, [locale, darkMode.value])
@@ -189,7 +189,7 @@ export default function Graph(): ReactElement {
         await getPoolHistory()
         return
       }
-      Logger.log('Fired GraphData!')
+      LoggerInstance.log('Fired GraphData!')
 
       const latestTimestamps = [
         ...timestamps,

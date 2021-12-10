@@ -1,9 +1,9 @@
-import { ConfigHelper, ConfigHelperConfig, Logger } from '@oceanprotocol/lib'
-import contractAddresses from '@oceanprotocol/contracts/artifacts/address.json'
+import { ConfigHelper, LoggerInstance, Config } from '@oceanprotocol/lib'
+// import contractAddresses from '@oceanprotocol/contracts/artifacts/address.json'
 import { AbiItem } from 'web3-utils/types'
 import Web3 from 'web3'
 
-export function getOceanConfig(network: string | number): ConfigHelperConfig {
+export function getOceanConfig(network: string | number): Config {
   const config = new ConfigHelper().getConfig(
     network,
     network === 'polygon' ||
@@ -15,20 +15,20 @@ export function getOceanConfig(network: string | number): ConfigHelperConfig {
       network === 2021000
       ? undefined
       : process.env.NEXT_PUBLIC_INFURA_PROJECT_ID
-  ) as ConfigHelperConfig
-  return config as ConfigHelperConfig
+  ) as Config
+  return config as Config
 }
 
-export function getDevelopmentConfig(): Partial<ConfigHelperConfig> {
+export function getDevelopmentConfig(): Config {
   return {
-    factoryAddress: contractAddresses.development?.DTFactory,
-    poolFactoryAddress: contractAddresses.development?.BFactory,
-    fixedRateExchangeAddress: contractAddresses.development?.FixedRateExchange,
-    metadataContractAddress: contractAddresses.development?.Metadata,
-    oceanTokenAddress: contractAddresses.development?.Ocean,
+    // factoryAddress: contractAddresses.development?.DTFactory,
+    // poolFactoryAddress: contractAddresses.development?.BFactory,
+    // fixedRateExchangeAddress: contractAddresses.development?.FixedRateExchange,
+    // metadataContractAddress: contractAddresses.development?.Metadata,
+    // oceanTokenAddress: contractAddresses.development?.Ocean,
     // There is no subgraph in barge so we hardcode the Rinkeby one for now
     subgraphUri: 'https://subgraph.rinkeby.oceanprotocol.com'
-  }
+  } as Config
 }
 
 export async function getOceanBalance(
@@ -69,6 +69,6 @@ export async function getOceanBalance(
     )
     return result
   } catch (e) {
-    Logger.error(`ERROR: Failed to get the balance: ${e.message}`)
+    LoggerInstance.error(`ERROR: Failed to get the balance: ${e.message}`)
   }
 }

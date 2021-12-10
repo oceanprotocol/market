@@ -1,7 +1,7 @@
 import React, { ReactElement, useEffect, useState, useCallback } from 'react'
 import Time from '@shared/atoms/Time'
 import Link from 'next/link'
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import Dotdotdot from 'react-dotdotdot'
 import Table from '@shared/atoms/Table'
 import Button from '@shared/atoms/Button'
@@ -107,7 +107,7 @@ export default function ComputeJobs({
       isMounted() && setJobs(jobs.computeJobs)
       setIsLoading(jobs.isLoaded)
     } catch (error) {
-      Logger.error(error.message)
+      LoggerInstance.error(error.message)
     }
   }, [chainIds, accountId, config, ocean, account, ddo, isMounted])
 

@@ -1,4 +1,4 @@
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import { useState } from 'react'
 import { TransactionReceipt } from 'web3-core'
 import { Decimal } from 'decimal.js'
@@ -34,27 +34,29 @@ interface UsePricing {
 
 function usePricing(): UsePricing {
   const { accountId } = useWeb3()
-  const { ocean, config } = useOcean()
+  const { config } = useOcean()
   const [pricingIsLoading, setPricingIsLoading] = useState(false)
   const [pricingStep, setPricingStep] = useState<number>()
   const [pricingStepText, setPricingStepText] = useState<string>()
   const [pricingError, setPricingError] = useState<string>()
 
   async function getDTSymbol(ddo: Asset): Promise<string> {
-    if (!ocean || !accountId) return
+    if (!accountId) return
 
     const { dataTokenInfo } = ddo
-    return dataTokenInfo
-      ? dataTokenInfo.symbol
-      : await ocean?.datatokens.getSymbol(dataTokenInfo.address)
+    return dataTokenInfo.symbol
+    // return dataTokenInfo
+    //   ? dataTokenInfo.symbol
+    //   : await ocean?.datatokens.getSymbol(dataTokenInfo.address)
   }
 
   async function getDTName(ddo: Asset): Promise<string> {
-    if (!ocean || !accountId) return
+    if (!accountId) return
     const { dataTokenInfo } = ddo
-    return dataTokenInfo
-      ? dataTokenInfo.name
-      : await ocean?.datatokens.getName(dataTokenInfo.address)
+    return dataTokenInfo.name
+    // return dataTokenInfo
+    //   ? dataTokenInfo.name
+    //   : await ocean?.datatokens.getName(dataTokenInfo.address)
   }
 
   // Helper for setting steps & feedback for all flows
@@ -95,20 +97,20 @@ function usePricing(): UsePricing {
     ddo: Asset
   ): Promise<TransactionReceipt | void> {
     const { dataTokenInfo } = ddo
-    Logger.log('mint function', dataTokenInfo.address, accountId)
-    const balance = new Decimal(
-      await ocean.datatokens.balance(dataTokenInfo.address, accountId)
-    )
-    const tokens = new Decimal(tokensToMint)
-    if (tokens.greaterThan(balance)) {
-      const mintAmount = tokens.minus(balance)
-      const tx = await ocean.datatokens.mint(
-        dataTokenInfo.address,
-        accountId,
-        mintAmount.toString()
-      )
-      return tx
-    }
+    LoggerInstance.log('mint function', dataTokenInfo.address, accountId)
+    // const balance = new Decimal(
+    //   await ocean.datatokens.balance(dataTokenInfo.address, accountId)
+    // )
+    // const tokens = new Decimal(tokensToMint)
+    // if (tokens.greaterThan(balance)) {
+    //   const mintAmount = tokens.minus(balance)
+    //   const tx = await ocean.datatokens.mint(
+    //     dataTokenInfo.address,
+    //     accountId,
+    //     mintAmount.toString()
+    //   )
+    //   return tx
+    // }
   }
 
   async function buyDT(
@@ -116,7 +118,7 @@ function usePricing(): UsePricing {
     price: BestPrice,
     ddo: Asset
   ): Promise<TransactionReceipt | void> {
-    if (!ocean || !accountId) return
+    if (!accountId) return
 
     let tx
 
@@ -125,7 +127,7 @@ function usePricing(): UsePricing {
       setPricingError(undefined)
       setStep(1, 'buy', ddo)
 
-      Logger.log('Price found for buying', price)
+      LoggerInstance.log('Price found for buying', price)
       Decimal.set({ precision: 18 })
 
       switch (price?.type) {
@@ -134,78 +136,78 @@ function usePricing(): UsePricing {
           const maxPrice = new Decimal(price.value).times(2).toString()
 
           setStep(2, 'buy', ddo)
-          Logger.log(
+          LoggerInstance.log(
             'Buying token from pool',
             price,
             accountId,
             oceanAmmount,
             maxPrice
           )
-          tx = await ocean.pool.buyDT(
-            accountId,
-            price.address,
-            String(amountDataToken),
-            oceanAmmount,
-            maxPrice
-          )
+          // tx = await ocean.pool.buyDT(
+          //   accountId,
+          //   price.address,
+          //   String(amountDataToken),
+          //   oceanAmmount,
+          //   maxPrice
+          // )
           setStep(3, 'buy', ddo)
-          Logger.log('DT buy response', tx)
+          LoggerInstance.log('DT buy response', tx)
           break
         }
         case 'fixed': {
           if (!config.oceanTokenAddress) {
-            Logger.error(`'oceanTokenAddress' not set in config`)
+            LoggerInstance.error(`'oceanTokenAddress' not set in config`)
             return
           }
           if (!config.fixedRateExchangeAddress) {
-            Logger.error(`'fixedRateExchangeAddress' not set in config`)
+            LoggerInstance.error(`'fixedRateExchangeAddress' not set in config`)
             return
           }
-          Logger.log('Buying token from exchange', price, accountId)
-          await ocean.datatokens.approve(
-            config.oceanTokenAddress,
-            config.fixedRateExchangeAddress,
-            `${price.value}`,
-            accountId
-          )
+          LoggerInstance.log('Buying token from exchange', price, accountId)
+          // await ocean.datatokens.approve(
+          //   config.oceanTokenAddress,
+          //   config.fixedRateExchangeAddress,
+          //   `${price.value}`,
+          //   accountId
+          // )
           setStep(2, 'buy', ddo)
-          tx = await ocean.fixedRateExchange.buyDT(
-            price.address,
-            `${amountDataToken}`,
-            accountId
-          )
+          // tx = await ocean.fixedRateExchange.buyDT(
+          //   price.address,
+          //   `${amountDataToken}`,
+          //   accountId
+          // )
           setStep(3, 'buy', ddo)
-          Logger.log('DT exchange buy response', tx)
+          LoggerInstance.log('DT exchange buy response', tx)
           break
         }
         case 'free': {
           setStep(1, 'dispense', ddo)
-          const isDispensable = await ocean.OceanDispenser.isDispensable(
-            ddo?.services[0].datatokenAddress,
-            accountId,
-            '1'
-          )
+          // const isDispensable = await ocean.OceanDispenser.isDispensable(
+          //   ddo?.services[0].datatokenAddress,
+          //   accountId,
+          //   '1'
+          // )
 
-          if (!isDispensable) {
-            Logger.error(
-              `Dispenser for ${ddo?.services[0].datatokenAddress} failed to dispense`
-            )
-            return
-          }
+          // if (!isDispensable) {
+          //   LoggerInstance.error(
+          //     `Dispenser for ${ddo?.services[0].datatokenAddress} failed to dispense`
+          //   )
+          //   return
+          // }
 
-          tx = await ocean.OceanDispenser.dispense(
-            ddo?.services[0].datatokenAddress,
-            accountId,
-            '1'
-          )
+          // tx = await ocean.OceanDispenser.dispense(
+          //   ddo?.services[0].datatokenAddress,
+          //   accountId,
+          //   '1'
+          // )
           setStep(2, 'dispense', ddo)
-          Logger.log('DT dispense response', tx)
+          LoggerInstance.log('DT dispense response', tx)
           break
         }
       }
     } catch (error) {
       setPricingError(error.message)
-      Logger.error(error)
+      LoggerInstance.error(error)
     } finally {
       setStep(0, 'buy', ddo)
       setPricingStepText(undefined)
@@ -222,7 +224,7 @@ function usePricing(): UsePricing {
     const dataToken = ddo?.services[0].datatokenAddress
     const dtSymbol = await getDTSymbol(ddo)
 
-    if (!ocean || !accountId || !dtSymbol) return
+    if (!accountId || !dtSymbol) return
 
     const { type, amountOcean, price, weightOnDataToken, swapFee } =
       priceOptions
@@ -231,7 +233,7 @@ function usePricing(): UsePricing {
     const isPool = type === 'dynamic'
 
     if (!isPool && !config.fixedRateExchangeAddress) {
-      Logger.error(`'fixedRateExchangeAddress' not set in config.`)
+      LoggerInstance.error(`'fixedRateExchangeAddress' not set in config.`)
       return
     }
 
@@ -243,7 +245,7 @@ function usePricing(): UsePricing {
     try {
       if (type === 'free') {
         setStep(99, 'free', ddo)
-        await ocean.OceanDispenser.activate(dataToken, '1', '1', accountId)
+        // await ocean.OceanDispenser.activate(dataToken, '1', '1', accountId)
       } else {
         // if fixedPrice set dt to max amount
         if (!isPool) amountDataToken = 1000
@@ -251,29 +253,30 @@ function usePricing(): UsePricing {
       }
 
       // amountDataToken for fixed price is set to max
-      const tx = isPool
-        ? await ocean.pool
-            .create(
-              accountId,
-              dataToken,
-              `${amountDataToken}`,
-              weightOnDataToken,
-              `${amountOcean}`,
-              `${swapFee}`
-            )
-            .next((step: number) => setStep(step, 'pool', ddo))
-        : type === 'fixed'
-        ? await ocean.fixedRateExchange
-            .create(dataToken, `${price}`, accountId, `${amountDataToken}`)
-            .next((step: number) => setStep(step, 'exchange', ddo))
-        : await ocean.OceanDispenser.makeMinter(dataToken, accountId).next(
-            (step: number) => setStep(step, 'free', ddo)
-          )
-      await sleep(20000)
-      return tx
+      // const tx = isPool
+      //   ? await ocean.pool
+      //       .create(
+      //         accountId,
+      //         dataToken,
+      //         `${amountDataToken}`,
+      //         weightOnDataToken,
+      //         `${amountOcean}`,
+      //         `${swapFee}`
+      //       )
+      //       .next((step: number) => setStep(step, 'pool', ddo))
+      //   : type === 'fixed'
+      //   ? await ocean.fixedRateExchange
+      //       .create(dataToken, `${price}`, accountId, `${amountDataToken}`)
+      //       .next((step: number) => setStep(step, 'exchange', ddo))
+      //   : await ocean.OceanDispenser.makeMinter(dataToken, accountId).next(
+      //       (step: number) => setStep(step, 'free', ddo)
+      //     )
+      // we should remove this sleep , why do we have sleep for 20 seconds !?!?!?!?!?!?!!?
+      // await sleep(20000)
+      // return tx
     } catch (error) {
       setPricingError(error.message)
-      Logger.error(error)
+      LoggerInstance.error(error)
     } finally {
       setPricingStep(0)
       setPricingStepText(undefined)

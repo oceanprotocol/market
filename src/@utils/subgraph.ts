@@ -1,5 +1,5 @@
 import { gql, OperationResult, TypedDocumentNode, OperationContext } from 'urql'
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import { getUrqlClientInstance } from '@context/UrqlProvider'
 import { getOceanConfig } from './ocean'
 import {
@@ -702,7 +702,7 @@ export async function getUserTokenOrders(
 
     return data
   } catch (error) {
-    Logger.error(error.message)
+    LoggerInstance.error(error.message)
   }
 }
 
@@ -725,7 +725,7 @@ export async function getUserSales(
     }
     return salesSum
   } catch (error) {
-    Logger.log(error.message)
+    LoggerInstance.log(error.message)
   }
 }
 

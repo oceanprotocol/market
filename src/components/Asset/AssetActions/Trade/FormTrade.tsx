@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from 'react'
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 import { Formik } from 'formik'
 import Actions from '../Pool/Actions'
@@ -91,7 +91,7 @@ export default function FormTrade({
             )
       setTxId(tx?.transactionHash)
     } catch (error) {
-      Logger.error(error.message)
+      LoggerInstance.error(error.message)
       toast.error(error.message)
     }
   }

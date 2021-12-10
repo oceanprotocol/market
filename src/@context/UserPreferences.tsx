@@ -6,7 +6,7 @@ import React, {
   useState,
   useEffect
 } from 'react'
-import { Logger, LogLevel } from '@oceanprotocol/lib'
+import { LoggerInstance, LogLevel } from '@oceanprotocol/lib'
 import { isBrowser } from '@utils/index'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 
@@ -102,8 +102,8 @@ function UserPreferencesProvider({
   // Set ocean.js log levels, default: Error
   useEffect(() => {
     debug === true
-      ? Logger.setLevel(LogLevel.Verbose)
-      : Logger.setLevel(LogLevel.Error)
+      ? LoggerInstance.setLevel(LogLevel.Verbose)
+      : LoggerInstance.setLevel(LogLevel.Error)
   }, [debug])
 
   // Get locale always from user's browser

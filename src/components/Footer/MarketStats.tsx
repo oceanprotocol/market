@@ -9,7 +9,7 @@ import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import useNetworkMetadata, {
   filterNetworksByType
 } from '@hooks/useNetworkMetadata'
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import styles from './MarketStats.module.css'
 
 const getTotalPoolsValues = gql`
@@ -144,7 +144,7 @@ export default function MarketStats(): ReactElement {
         newTotalOceanLiquiditySum += parseInt(totalOceanLiquidity)
         newPoolCountSum += parseInt(finalizedPoolCount)
       } catch (error) {
-        Logger.error('Error fetchData: ', error.message)
+        LoggerInstance.error('Error fetchData: ', error.message)
       }
     }
     setTotalValueLockedSum(`${newTotalValueLockedSum}`)

@@ -1,5 +1,5 @@
 import { getNetworkDisplayName } from '@hooks/useNetworkMetadata'
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import { getOceanConfig } from './ocean'
 
 export function accountTruncate(account: string): string {
@@ -41,25 +41,27 @@ export async function addCustomNetwork(
         },
         (err: string, added: any) => {
           if (err || 'error' in added) {
-            Logger.error(
+            LoggerInstance.error(
               `Couldn't add ${network.name} (0x${
                 network.chainId
               }) network to MetaMask, error: ${err || added.error}`
             )
           } else {
-            Logger.log(
+            LoggerInstance.log(
               `Added ${network.name} (0x${network.chainId}) network to MetaMask`
             )
           }
         }
       )
     } else {
-      Logger.error(
+      LoggerInstance.error(
         `Couldn't add ${network.name} (0x${network.chainId}) network to MetaMask, error: ${switchError}`
       )
     }
   }
-  Logger.log(`Added ${network.name} (0x${network.chainId}) network to MetaMask`)
+  LoggerInstance.log(
+    `Added ${network.name} (0x${network.chainId}) network to MetaMask`
+  )
 }
 
 export async function addTokenToWallet(
@@ -85,13 +87,13 @@ export async function addTokenToWallet(
     },
     (err: { code: number; message: string }, added: any) => {
       if (err || 'error' in added) {
-        Logger.error(
+        LoggerInstance.error(
           `Couldn't add ${tokenMetadata.options.symbol} (${
             tokenMetadata.options.address
           }) to MetaMask, error: ${err.message || added.error}`
         )
       } else {
-        Logger.log(
+        LoggerInstance.log(
           `Added ${tokenMetadata.options.symbol} (${tokenMetadata.options.address}) to MetaMask`
         )
       }
