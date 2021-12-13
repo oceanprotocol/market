@@ -90,6 +90,7 @@ export default function Results({
               result ? (
                 <ListItem key={job.jobId}>
                   <a
+                    className={styles.result}
                     onClick={() => accessResult(result, index)}
                     target="_blank"
                     rel="noreferrer"

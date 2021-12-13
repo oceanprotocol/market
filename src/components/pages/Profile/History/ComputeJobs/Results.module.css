@@ -6,3 +6,7 @@
 .help {
   margin-top: calc(var(--spacer) / 3);
 }
+
+.result {
+  cursor: pointer;
+}
