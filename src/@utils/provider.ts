@@ -1,5 +1,6 @@
 import axios, { CancelToken, AxiosResponse } from 'axios'
-import { DID, LoggerInstance } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
+import { ProviderInstance } from '@oceanprotocol/lib/dist/node/provider'
 
 export interface FileMetadata {
   index: number
@@ -31,15 +32,12 @@ export async function getEncryptedFileUrls(
 }
 
 export async function getFileInfo(
-  url: string | DID,
+  url: string,
   providerUrl: string,
   cancelToken: CancelToken
 ): Promise<FileMetadata[]> {
   let postBody
   try {
-    if (url instanceof DID) postBody = { did: url.getDid() }
-    else postBody = { url }
-
     const response: AxiosResponse<FileMetadata[]> = await axios.post(
       `${providerUrl}/api/v1/services/fileinfo`,
       postBody,
@@ -69,7 +67,8 @@ export async function fetchMethod(url: string): Promise<AxiosResponse> {
 
 export async function isValidProvider(url: string): Promise<boolean> {
   try {
-    const response = await ocean.provider.isValidProvider(url, fetchMethod)
+    LoggerInstance.log('Validating provider...')
+    const response = await ProviderInstance.isValidProvider(url, fetchMethod)
     return response
   } catch (error) {
     console.error(`Error validating provider: ${error.message}`)
