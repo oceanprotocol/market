@@ -1,7 +1,7 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import Compute from './Compute'
 import Consume from './Consume'
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import Tabs, { TabsItem } from '@shared/atoms/Tabs'
 import { compareAsBN } from '@utils/numbers'
 import Pool from './Pool'
@@ -79,7 +79,7 @@ export default function AssetActions({
         fileInfoResponse && setFileMetadata(fileInfoResponse[0])
         setFileIsLoading(false)
       } catch (error) {
-        Logger.error(error.message)
+        LoggerInstance.error(error.message)
       }
     }
     initFileInfo()
@@ -96,7 +96,7 @@ export default function AssetActions({
         )
         setDtBalance(dtBalance)
       } catch (e) {
-        Logger.error(e.message)
+        LoggerInstance.error(e.message)
       }
     }
     init()

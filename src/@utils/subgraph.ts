@@ -1,5 +1,5 @@
 import { gql, OperationResult, TypedDocumentNode, OperationContext } from 'urql'
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import { getUrqlClientInstance } from '@context/UrqlProvider'
 import { getOceanConfig } from './ocean'
 import {
@@ -24,6 +24,10 @@ import {
   PoolShares_poolShares as PoolShare
 } from '../@types/apollo/PoolShares'
 import { OrdersData_tokenOrders as OrdersData } from '../@types/apollo/OrdersData'
+import {
+  UserSalesQuery_users as UserSales,
+  UserSalesQuery as UsersSalesList
+} from '../@types/apollo/UserSalesQuery'
 
 export interface UserLiquidity {
   price: string
@@ -165,19 +169,6 @@ const HighestLiquidityAssets = gql`
   }
 `
 
-const TotalAccountOrders = gql`
-  query TotalAccountOrders($datatokenId_in: [String!]) {
-    tokenOrders(where: { datatokenId_in: $datatokenId_in }) {
-      payer {
-        id
-      }
-      datatokenId {
-        id
-      }
-    }
-  }
-`
-
 const UserSharesQuery = gql`
   query UserSharesQuery($user: String, $pools: [String!]) {
     poolShares(where: { userAddress: $user, poolId_in: $pools }) {
@@ -253,6 +244,20 @@ const UserTokenOrders = gql`
 const UserSalesQuery = gql`
   query UserSalesQuery($userSalesId: ID) {
     users(where: { id: $userSalesId }) {
+      id
+      nrSales
+    }
+  }
+`
+
+const TopSalesQuery = gql`
+  query TopSalesQuery {
+    users(
+      first: 20
+      orderBy: nrSales
+      orderDirection: desc
+      where: { nrSales_not: 0 }
+    ) {
       id
       nrSales
     }
@@ -697,7 +702,7 @@ export async function getUserTokenOrders(
 
     return data
   } catch (error) {
-    Logger.error(error.message)
+    LoggerInstance.error(error.message)
   }
 }
 
@@ -720,6 +725,41 @@ export async function getUserSales(
     }
     return salesSum
   } catch (error) {
-    Logger.log(error.message)
+    LoggerInstance.log(error.message)
   }
+}
+
+export async function getTopAssetsPublishers(
+  chainIds: number[],
+  nrItems = 9
+): Promise<AccountTeaserVM[]> {
+  const publisherSales: AccountTeaserVM[] = []
+
+  for (const chain of chainIds) {
+    const queryContext = getQueryContext(Number(chain))
+    const fetchedUsers: OperationResult<UsersSalesList> = await fetchData(
+      TopSalesQuery,
+      null,
+      queryContext
+    )
+    for (let i = 0; i < fetchedUsers.data.users.length; i++) {
+      const publishersIndex = publisherSales.findIndex(
+        (user) => fetchedUsers.data.users[i].id === user.address
+      )
+      if (publishersIndex === -1) {
+        const publisher: AccountTeaserVM = {
+          address: fetchedUsers.data.users[i].id,
+          nrSales: fetchedUsers.data.users[i].nrSales
+        }
+        publisherSales.push(publisher)
+      } else {
+        publisherSales[publishersIndex].nrSales +=
+          publisherSales[publishersIndex].nrSales
+      }
+    }
+  }
+
+  publisherSales.sort((a, b) => b.nrSales - a.nrSales)
+
+  return publisherSales.slice(0, nrItems)
 }

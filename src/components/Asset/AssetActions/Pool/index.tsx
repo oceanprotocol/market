@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import styles from './index.module.css'
 import stylesActions from './Actions.module.css'
 import PriceUnit from '@shared/Price/PriceUnit'
@@ -334,7 +334,7 @@ export default function Pool(): ReactElement {
 
         setUserLiquidity(userLiquidity)
       } catch (error) {
-        Logger.error(error.message)
+        LoggerInstance.error(error.message)
       }
     }
     init()

@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { consumeFeedback } from '@utils/feedback'
-import { DID, Logger, ServiceType } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 
 interface UseConsume {
   consume: (
-    did: DID | string,
+    did: string,
     dataTokenAddress: string,
-    serviceType: ServiceType,
+    serviceType: string,
     marketFeeAddress: string,
     orderId?: string
   ) => Promise<string>
@@ -20,7 +20,6 @@ interface UseConsume {
 
 function useConsume(): UseConsume {
   const { accountId } = useWeb3()
-  const { ocean, account } = useOcean()
   const [isLoading, setIsLoading] = useState(false)
   const [consumeStep, setConsumeStep] = useState<number | undefined>()
   const [consumeStepText, setConsumeStepText] = useState<string | undefined>()
@@ -32,13 +31,13 @@ function useConsume(): UseConsume {
   }
 
   async function consume(
-    did: DID | string,
+    did: string,
     dataTokenAddress: string,
-    serviceType: ServiceType = 'access',
+    serviceType = 'access',
     marketFeeAddress: string,
     orderId?: string
   ): Promise<string> {
-    if (!ocean || !account || !accountId) return
+    if (!accountId) return
 
     setIsLoading(true)
     setConsumeError(undefined)
@@ -47,47 +46,47 @@ function useConsume(): UseConsume {
       setStep(0)
       if (!orderId) {
         // if we don't have a previous valid order, get one
-        const userOwnedTokens = await ocean.accounts.getTokenBalance(
-          dataTokenAddress,
-          account
-        )
-        if (parseFloat(userOwnedTokens) < 1) {
-          setConsumeError('Not enough datatokens')
-          return 'Not enough datatokens'
-        } else {
-          setStep(1)
-          try {
-            orderId = await ocean.assets.order(
-              did as string,
-              serviceType,
-              accountId,
-              undefined,
-              marketFeeAddress,
-              undefined,
-              null,
-              false
-            )
-            Logger.log('order created', orderId)
-            setStep(2)
-          } catch (error) {
-            setConsumeError(error.message)
-            return error.message
-          }
-        }
+        // const userOwnedTokens = await ocean.accounts.getTokenBalance(
+        //   dataTokenAddress,
+        //   account
+        // )
+        // if (parseFloat(userOwnedTokens) < 1) {
+        //   setConsumeError('Not enough datatokens')
+        //   return 'Not enough datatokens'
+        // } else {
+        //   setStep(1)
+        //   try {
+        //     orderId = await ocean.assets.order(
+        //       did as string,
+        //       serviceType,
+        //       accountId,
+        //       undefined,
+        //       marketFeeAddress,
+        //       undefined,
+        //       null,
+        //       false
+        //     )
+        //     LoggerInstance.log('order created', orderId)
+        //     setStep(2)
+        //   } catch (error) {
+        //     setConsumeError(error.message)
+        //     return error.message
+        //   }
+        // }
       }
       setStep(3)
-      if (orderId)
-        await ocean.assets.download(
-          did as string,
-          orderId,
-          dataTokenAddress,
-          account,
-          ''
-        )
+      // if (orderId)
+      //   await ocean.assets.download(
+      //     did as string,
+      //     orderId,
+      //     dataTokenAddress,
+      //     account,
+      //     ''
+      //   )
       setStep(4)
     } catch (error) {
       setConsumeError(error.message)
-      Logger.error(error)
+      LoggerInstance.error(error)
       return error.message
     } finally {
       setConsumeStep(undefined)

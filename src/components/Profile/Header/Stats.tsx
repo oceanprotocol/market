@@ -1,4 +1,4 @@
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import React, { useEffect, useState, ReactElement } from 'react'
 import { useUserPreferences } from '@context/UserPreferences'
 import {
@@ -63,7 +63,7 @@ export default function Stats({
         )
         setPublisherLiquidity(userLiquidity)
       } catch (error) {
-        Logger.error(error.message)
+        LoggerInstance.error(error.message)
       }
     }
     getPublisherLiquidity()

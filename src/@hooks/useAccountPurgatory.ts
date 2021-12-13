@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import { PurgatoryDataAccount, getAccountPurgatoryData } from '@utils/purgatory'
 
 interface UseAccountPurgatory {
@@ -24,7 +24,7 @@ function useAccountPurgatory(accountId: string): UseAccountPurgatory {
         setIsInPurgatory(isInPurgatory)
         isInPurgatory && setPurgatoryData(result)
       } catch (error) {
-        Logger.error(error)
+        LoggerInstance.error(error)
       } finally {
         setIsLoading(false)
       }

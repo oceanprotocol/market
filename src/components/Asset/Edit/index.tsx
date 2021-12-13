@@ -8,7 +8,7 @@ import Web3Feedback from '@shared/Web3Feedback'
 import FormEditMetadata from './FormEditMetadata'
 import { getServiceByName, mapTimeoutStringToSeconds } from '@utils/ddo'
 import styles from './index.module.css'
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import { useWeb3 } from '@context/Web3'
 import { useOcean } from '@context/Ocean'
 import { setMinterToDispenser, setMinterToPublisher } from '@utils/freePrice'
@@ -41,7 +41,7 @@ export default function Edit({
     )
     if (!setPriceResp) {
       setError(content.form.error)
-      Logger.error(content.form.error)
+      LoggerInstance.error(content.form.error)
     }
   }
 
@@ -71,7 +71,7 @@ export default function Edit({
     //     (await updateFixedPrice(values.price))
     //   if (!ddoEditedMetdata) {
     //     setError(content.form.error)
-    //     Logger.error(content.form.error)
+    //     LoggerInstance.error(content.form.error)
     //     return
     //   }
     //   let ddoEditedTimeout = ddoEditedMetdata
@@ -88,7 +88,7 @@ export default function Edit({
     //   }
     //   if (!ddoEditedTimeout) {
     //     setError(content.form.error)
-    //     Logger.error(content.form.error)
+    //     LoggerInstance.error(content.form.error)
     //     return
     //   }
     //   const storedddo = await ocean.assets.updateMetadata(
@@ -97,7 +97,7 @@ export default function Edit({
     //   )
     //   if (!storedddo) {
     //     setError(content.form.error)
-    //     Logger.error(content.form.error)
+    //     LoggerInstance.error(content.form.error)
     //     return
     //   } else {
     //     if (price.type === 'free') {
@@ -114,7 +114,7 @@ export default function Edit({
     //     resetForm()
     //   }
     // } catch (error) {
-    //   Logger.error(error.message)
+    //   LoggerInstance.error(error.message)
     //   setError(error.message)
     // }
   }

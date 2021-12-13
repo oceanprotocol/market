@@ -14,7 +14,7 @@ import {
 } from '@utils/subgraph'
 import { useUserPreferences } from './UserPreferences'
 import { PoolShares_poolShares as PoolShare } from '../@types/apollo/PoolShares'
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import { getDownloadAssets, getPublishedAssets } from '@utils/aquarius'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { accountTruncate } from '@utils/web3'
@@ -70,7 +70,7 @@ function ProfileProvider({
 
   useEffect(() => {
     if (!accountEns) return
-    Logger.log(`[profile] ENS name found for ${accountId}:`, accountEns)
+    LoggerInstance.log(`[profile] ENS name found for ${accountId}:`, accountEns)
   }, [accountId, accountEns])
 
   useEffect(() => {
@@ -109,10 +109,10 @@ function ProfileProvider({
           ...prevState,
           ...newProfile
         }))
-        Logger.log('[profile] Found and set 3box profile.', newProfile)
+        LoggerInstance.log('[profile] Found and set 3box profile.', newProfile)
       } else {
         // setProfile(clearedProfile)
-        Logger.log('[profile] No 3box profile found.')
+        LoggerInstance.log('[profile] No 3box profile found.')
       }
     }
     getInfo()
@@ -137,12 +137,12 @@ function ProfileProvider({
         setIsPoolSharesLoading(true)
         const poolShares = await getPoolSharesData(accountId, chainIds)
         setPoolShares(poolShares)
-        Logger.log(
+        LoggerInstance.log(
           `[profile] Fetched ${poolShares.length} pool shares.`,
           poolShares
         )
       } catch (error) {
-        Logger.error('Error fetching pool shares: ', error.message)
+        LoggerInstance.error('Error fetching pool shares: ', error.message)
       } finally {
         setIsPoolSharesLoading(false)
       }
@@ -188,7 +188,7 @@ function ProfileProvider({
         )
         setAssets(result.results)
         setAssetsTotal(result.totalResults)
-        Logger.log(
+        LoggerInstance.log(
           `[profile] Fetched ${result.totalResults} assets.`,
           result.results
         )
@@ -199,7 +199,7 @@ function ProfileProvider({
         // const assetsWithPrices = await getAssetsBestPrices(result.results)
         // setAssetsWithPrices(assetsWithPrices)
       } catch (error) {
-        Logger.error(error.message)
+        LoggerInstance.error(error.message)
       }
     }
     getAllPublished()
@@ -239,7 +239,7 @@ function ProfileProvider({
       )
       setDownloads(downloads)
       setDownloadsTotal(downloads.length)
-      Logger.log(
+      LoggerInstance.log(
         `[profile] Fetched ${downloads.length} download orders.`,
         downloads
       )
@@ -257,7 +257,7 @@ function ProfileProvider({
         setIsDownloadsLoading(true)
         await fetchDownloads(cancelTokenSource.token)
       } catch (err) {
-        Logger.log(err.message)
+        LoggerInstance.log(err.message)
       } finally {
         setIsDownloadsLoading(false)
       }
@@ -289,9 +289,9 @@ function ProfileProvider({
       try {
         const result = await getUserSales(accountId, chainIds)
         setSales(result)
-        Logger.log(`[profile] Fetched sales number: ${result}.`, result)
+        LoggerInstance.log(`[profile] Fetched sales number: ${result}.`, result)
       } catch (error) {
-        Logger.error(error.message)
+        LoggerInstance.error(error.message)
       }
     }
     getUserSalesNumber()

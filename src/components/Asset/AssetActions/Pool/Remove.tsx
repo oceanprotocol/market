@@ -10,7 +10,7 @@ import styles from './Remove.module.css'
 import Header from './Header'
 import { toast } from 'react-toastify'
 import Actions from './Actions'
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import Token from './Token'
 import FormHelp from '@shared/FormInput/Help'
 import Button from '@shared/atoms/Button'
@@ -79,7 +79,7 @@ export default function Remove({
       setTxId(result?.transactionHash)
       refreshInfo()
     } catch (error) {
-      Logger.error(error.message)
+      LoggerInstance.error(error.message)
       toast.error(error.message)
     } finally {
       setIsLoading(false)

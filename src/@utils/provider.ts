@@ -1,5 +1,5 @@
 import axios, { CancelToken, AxiosResponse } from 'axios'
-import { DID, Logger } from '@oceanprotocol/lib'
+import { DID, LoggerInstance } from '@oceanprotocol/lib'
 
 export interface FileMetadata {
   index: number
@@ -50,9 +50,9 @@ export async function getFileInfo(
     return response.data
   } catch (error) {
     if (axios.isCancel(error)) {
-      Logger.log(error.message)
+      LoggerInstance.log(error.message)
     } else {
-      Logger.error(error.message)
+      LoggerInstance.error(error.message)
     }
   }
 }

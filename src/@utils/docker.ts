@@ -1,4 +1,4 @@
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import axios from 'axios'
 import isUrl from 'is-url-superb'
 import { toast } from 'react-toastify'
@@ -25,7 +25,7 @@ async function isDockerHubImageValid(
 
     return true
   } catch (error) {
-    Logger.error(error.message)
+    LoggerInstance.error(error.message)
     toast.error(
       'Could not fetch docker hub image info. Please check image name and tag and try again'
     )
@@ -44,7 +44,7 @@ async function is3rdPartyImageValid(imageURL: string): Promise<boolean> {
     }
     return true
   } catch (error) {
-    Logger.error(error.message)
+    LoggerInstance.error(error.message)
     toast.error(
       'Could not fetch docker image info. Please check URL and try again'
     )

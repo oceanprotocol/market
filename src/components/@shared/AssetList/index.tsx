@@ -1,5 +1,5 @@
 import AssetTeaser from '@shared/AssetTeaser/AssetTeaser'
-import React, { useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import Pagination from '@shared/Pagination'
 import styles from './index.module.css'
 import classNames from 'classnames/bind'
@@ -29,7 +29,7 @@ declare type AssetListProps = {
   noPublisher?: boolean
 }
 
-const AssetList: React.FC<AssetListProps> = ({
+export default function AssetList({
   assets,
   showPagination,
   page,
@@ -38,7 +38,7 @@ const AssetList: React.FC<AssetListProps> = ({
   onPageChange,
   className,
   noPublisher
-}) => {
+}: AssetListProps): ReactElement {
   const { chainIds } = useUserPreferences()
   const [assetsWithPrices, setAssetsWithPrices] = useState<AssetListPrices[]>()
   const [loading, setLoading] = useState<boolean>(isLoading)
@@ -105,5 +105,3 @@ const AssetList: React.FC<AssetListProps> = ({
     <LoaderArea />
   )
 }
-
-export default AssetList

@@ -1,7 +1,7 @@
 import { useUserPreferences } from '@context/UserPreferences'
 import React, { ReactElement, useEffect, useState, useCallback } from 'react'
 import Table from '@shared/atoms/Table'
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import Price from '@shared/Price'
 import Tooltip from '@shared/atoms/Tooltip'
 import AssetTitle from '@shared/AssetList/AssetListTitle'
@@ -64,7 +64,7 @@ export default function Bookmarks(): ReactElement {
         )
         return result
       } catch (error) {
-        Logger.error(error.message)
+        LoggerInstance.error(error.message)
       }
     },
     []
@@ -92,7 +92,7 @@ export default function Bookmarks(): ReactElement {
         )
         setPinned(pinnedAssets)
       } catch (error) {
-        Logger.error(error.message)
+        LoggerInstance.error(error.message)
       }
 
       setIsLoading(false)
