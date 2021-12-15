@@ -1,5 +1,4 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import axios from 'axios'
 import { ComputeJobMetaData } from '../../../../../@types/ComputeJobMetaData'
 import Time from '../../../../atoms/Time'
 import Button from '../../../../atoms/Button'
@@ -101,12 +100,12 @@ export default function Details({
             />
           )}
           <MetaItem title="Job ID" content={<code>{job.jobId}</code>} />
-          {job.resultsDid && (
+          {/* {job.resultsDid && (
             <MetaItem
               title="Published Results DID"
               content={<code>{job.resultsDid}</code>}
             />
-          )}
+          )} */}
         </div>
       </Modal>
     </>
