@@ -54,19 +54,9 @@ export async function getFileInfo(
   }
 }
 
-async function fetchMethod(url: string): Promise<Response> {
-  const result = await fetch(url)
-  if (!result) {
-    LoggerInstance.error(`Error requesting ${url}`)
-    LoggerInstance.error(`Response message: \n${result}`)
-    throw result
-  }
-  return result
-}
-
 export async function isValidProvider(url: string): Promise<boolean> {
   try {
-    const response = await ProviderInstance.isValidProvider(url, fetchMethod)
+    const response = await ProviderInstance.isValidProvider(url, fetch)
     return response
   } catch (error) {
     console.error(`Error validating provider: ${error.message}`)
