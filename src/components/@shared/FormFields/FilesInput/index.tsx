@@ -4,17 +4,15 @@ import { toast } from 'react-toastify'
 import FileInfo from './Info'
 import UrlInput from '../URLInput'
 import { InputProps } from '@shared/FormInput'
-import { getFileInfo } from '@utils/provider'
+import { fileInfo } from '@utils/provider'
 import { useWeb3 } from '@context/Web3'
 import { getOceanConfig } from '@utils/ocean'
-import { useCancelToken } from '@hooks/useCancelToken'
 import { initialValues } from 'src/components/Publish/_constants'
 
 export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
   const [isLoading, setIsLoading] = useState(false)
   const { chainId } = useWeb3()
-  const newCancelToken = useCancelToken()
 
   function loadFileInfo(url: string) {
     const config = getOceanConfig(chainId || 1)
@@ -22,11 +20,7 @@ export default function FilesInput(props: InputProps): ReactElement {
     async function validateUrl() {
       try {
         setIsLoading(true)
-        const checkedFile = await getFileInfo(
-          url,
-          config?.providerUri,
-          newCancelToken()
-        )
+        const checkedFile = await fileInfo(url, config?.providerUri)
         checkedFile && helpers.setValue([{ url, ...checkedFile[0] }])
       } catch (error) {
         toast.error('Could not fetch file info. Please check URL and try again')
