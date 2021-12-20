@@ -1,6 +1,6 @@
+import { generateDid } from '@oceanprotocol/lib'
 import { mapTimeoutStringToSeconds } from '@utils/ddo'
-import { getEncryptedFileUrls } from '@utils/provider'
-import { sha256 } from 'js-sha256'
+import { getEncryptedFiles } from '@utils/provider'
 import slugify from 'slugify'
 import { algorithmContainerPresets } from './_constants'
 import { FormPublishData } from './_types'
@@ -62,9 +62,10 @@ export async function transformPublishFormToDdo(
   } = metadata
   const { access, files, links, providerUrl, timeout } = services[0]
 
-  const did = nftAddress ? `0x${sha256(`${nftAddress}${chainId}`)}` : '0x...'
+  const did = nftAddress ? generateDid(nftAddress, chainId) : '0x...'
   const currentTime = dateToStringNoMS(new Date())
-
+  const isPreview = !datatokenAddress && !nftAddress
+  console.log('did', did, isPreview)
   // Transform from files[0].url to string[] assuming only 1 file
   const filesTransformed = files?.length && files[0].valid && [files[0].url]
   const linksTransformed = links?.length && links[0].valid && [links[0].url]
@@ -110,19 +111,24 @@ export async function transformPublishFormToDdo(
         }
       })
   }
+  console.log('new meta', newMetadata)
 
-  // Encrypt just created string[] of urls
+  // this is the default format hardcoded
+  const file = [
+    {
+      type: 'url',
+      url: files[0].url,
+      method: 'GET'
+    }
+  ]
   const filesEncrypted =
+    !isPreview &&
     files?.length &&
     files[0].valid &&
-    (await getEncryptedFileUrls(
-      filesTransformed,
-      providerUrl.url,
-      did,
-      accountId
-    ))
+    (await getEncryptedFiles(file, providerUrl.url, did, accountId))
 
   const newService: Service = {
+    id: 'notAnId',
     type: access,
     files: filesEncrypted || '',
     datatokenAddress,
@@ -139,19 +145,19 @@ export async function transformPublishFormToDdo(
     version: '4.0.0',
     chainId,
     metadata: newMetadata,
-    services: [newService],
+    services: [newService]
     // Only added for DDO preview, reflecting Asset response,
     // again, we can assume if `datatokenAddress` is not passed,
     // we are on preview.
-    ...(!datatokenAddress && {
-      dataTokenInfo: {
-        name: values.services[0].dataTokenOptions.name,
-        symbol: values.services[0].dataTokenOptions.symbol
-      },
-      nft: {
-        owner: accountId
-      }
-    })
+    // ...(!datatokenAddress && {
+    //   dataTokenInfo: {
+    //     name: values.services[0].dataTokenOptions.name,
+    //     symbol: values.services[0].dataTokenOptions.symbol
+    //   },
+    //   nft: {
+    //     owner: accountId
+    //   }
+    // })
   }
 
   return newDdo

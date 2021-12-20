@@ -18,6 +18,7 @@ interface ServiceComputeOptions {
 }
 
 interface Service {
+  id: string
   type: 'access' | 'compute' | string
   files: string
   datatokenAddress: string

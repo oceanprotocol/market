@@ -1,47 +1,57 @@
 import axios, { CancelToken, AxiosResponse } from 'axios'
-import { DID, LoggerInstance } from '@oceanprotocol/lib'
+import {
+  FileMetadata,
+  LoggerInstance,
+  ProviderInstance
+} from '@oceanprotocol/lib'
 
-export interface FileMetadata {
+export interface FileInfo {
   index: number
   valid: boolean
   contentType: string
   contentLength: string
 }
 
-export async function getEncryptedFileUrls(
-  files: string[],
+export async function getEncryptedFiles(
+  files: FileMetadata[],
   providerUrl: string,
   did: string,
   accountId: string
 ): Promise<string> {
   try {
     // https://github.com/oceanprotocol/provider/blob/v4main/API.md#encrypt-endpoint
-    const url = `${providerUrl}/api/v1/services/encrypt`
-    const response: AxiosResponse<{ encryptedDocument: string }> =
-      await axios.post(url, {
-        documentId: did,
-        signature: '', // TODO: add signature
-        publisherAddress: accountId,
-        document: files
-      })
-    return response?.data?.encryptedDocument
+    console.log('start encr')
+    const response = await ProviderInstance.encrypt(
+      did,
+      accountId,
+      files,
+      providerUrl,
+      (url: string, body: string) => {
+        return axios.post(url, body, {
+          headers: { 'Content-Type': 'application/octet-stream' }
+        })
+      }
+    )
+    console.log('encr eres', response)
+    return response.data
   } catch (error) {
     console.error('Error parsing json: ' + error.message)
   }
 }
 
 export async function getFileInfo(
-  url: string | DID,
+  url: string,
   providerUrl: string,
   cancelToken: CancelToken
-): Promise<FileMetadata[]> {
+): Promise<FileInfo[]> {
   let postBody
   try {
-    if (url instanceof DID) postBody = { did: url.getDid() }
-    else postBody = { url }
-
-    const response: AxiosResponse<FileMetadata[]> = await axios.post(
-      `${providerUrl}/api/v1/services/fileinfo`,
+    // TODO: what was the point of this?
+    // if (url instanceof DID) postBody = { did: url.getDid() }
+    // else postBody = { url }
+    postBody = { url: url, type: 'url' }
+    const response: AxiosResponse<FileInfo[]> = await axios.post(
+      `${providerUrl}/api/services/fileinfo`,
       postBody,
       { cancelToken }
     )
