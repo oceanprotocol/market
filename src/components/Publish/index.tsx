@@ -59,7 +59,7 @@ export default function PublishPage({
       // --------------------------------------------------
 
       const config = getOceanConfig(chainId)
-      console.log('config', config)
+
       // image not included here for gas fees reasons. It is also an issue to reaserch how we add the image in the nft
       const nftCreateData: NftCreateData = {
         name: values.metadata.nft.name,
@@ -189,7 +189,7 @@ export default function PublishPage({
         ddo.id,
         accountId,
         ddo,
-        'https://providerv4.rinkeby.oceanprotocol.com/',
+        config.providerAddress,
         (url: string, body: string) => {
           return axios.post(url, body, {
             headers: { 'Content-Type': 'application/octet-stream' },
@@ -211,7 +211,7 @@ export default function PublishPage({
         erc721Address,
         accountId,
         0,
-        'https://providerv4.rinkeby.oceanprotocol.com/',
+        config.providerAddress,
         '',
         flags,
         encryptedDddo,
