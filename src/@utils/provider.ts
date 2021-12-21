@@ -14,16 +14,12 @@ export interface FileInfo {
 
 export async function getEncryptedFiles(
   files: FileMetadata[],
-  providerUrl: string,
-  did: string,
-  accountId: string
+  providerUrl: string
 ): Promise<string> {
   try {
     // https://github.com/oceanprotocol/provider/blob/v4main/API.md#encrypt-endpoint
     console.log('start encr')
     const response = await ProviderInstance.encrypt(
-      did,
-      accountId,
       files,
       providerUrl,
       (url: string, body: string) => {

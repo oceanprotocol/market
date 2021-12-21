@@ -125,7 +125,7 @@ export async function transformPublishFormToDdo(
     !isPreview &&
     files?.length &&
     files[0].valid &&
-    (await getEncryptedFiles(file, providerUrl.url, did, accountId))
+    (await getEncryptedFiles(file, providerUrl.url))
 
   const newService: Service = {
     id: 'notAnId',

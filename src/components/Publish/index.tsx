@@ -59,7 +59,7 @@ export default function PublishPage({
       // --------------------------------------------------
 
       const config = getOceanConfig(chainId)
-
+      console.log('config', config)
       // image not included here for gas fees reasons. It is also an issue to reaserch how we add the image in the nft
       const nftCreateData: NftCreateData = {
         name: values.metadata.nft.name,
@@ -186,10 +186,8 @@ export default function PublishPage({
       )
 
       const encryptedResponse = await ProviderInstance.encrypt(
-        ddo.id,
-        accountId,
         ddo,
-        config.providerAddress,
+        config.providerUri,
         (url: string, body: string) => {
           return axios.post(url, body, {
             headers: { 'Content-Type': 'application/octet-stream' },
@@ -199,9 +197,11 @@ export default function PublishPage({
       )
       const encryptedDddo = encryptedResponse.data
 
+      console.log('ddo', JSON.stringify(ddo))
+
       // TODO: this whole setMetadata needs to go in a function ,too many hardcoded/calculated params
       // TODO: hash generation : this needs to be moved in a function (probably on ocean.js) after we figure out what is going on in provider, leave it here for now
-      const metadataHash = getHash(Web3.utils.stringToHex(JSON.stringify(ddo)))
+      const metadataHash = getHash(JSON.stringify(ddo))
       const nft = new Nft(web3)
 
       // theoretically used by aquarius or provider, not implemented yet, will remain hardcoded
@@ -211,12 +211,14 @@ export default function PublishPage({
         erc721Address,
         accountId,
         0,
-        config.providerAddress,
+        config.providerUri,
         '',
         flags,
         encryptedDddo,
         '0x' + metadataHash
       )
+
+      console.log('result', res)
 
       // --------------------------------------------------
       // 3. Integrity check of DDO before & after publishing
