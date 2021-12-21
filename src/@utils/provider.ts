@@ -47,7 +47,6 @@ export async function fileInfo(url: string, providerUri: string): Promise<any> {
     const response = await ProviderInstance.fileinfo(
       url,
       providerUri,
-      // 'https://providerv4.rinkeby.oceanprotocol.com',
       fetchMethod
     )
     if (!response) return
