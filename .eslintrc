@@ -2,11 +2,20 @@
   "extends": ["eslint:recommended", "prettier"],
   "parserOptions": {
     "sourceType": "module",
-    "ecmaFeatures": { "jsx": true }
+    "ecmaFeatures": {
+      "jsx": true
+    }
   },
-  "env": { "browser": true, "node": true, "es2020": true, "jest": true },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2020": true,
+    "jest": true
+  },
   "settings": {
-    "react": { "version": "detect" }
+    "react": {
+      "version": "detect"
+    }
   },
   "overrides": [
     {
@@ -30,7 +39,14 @@
         "react/jsx-no-bind": "off",
         "@typescript-eslint/explicit-function-return-type": "off",
         "no-use-before-define": "off",
-        "@typescript-eslint/no-use-before-define": "error"
+        "@typescript-eslint/no-use-before-define": "error",
+        "prefer-destructuring": [
+          "error",
+          {
+            "object": true,
+            "array": false
+          }
+        ]
       }
     }
   ]
