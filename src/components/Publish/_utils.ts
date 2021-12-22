@@ -1,5 +1,6 @@
+import { ProviderInstance } from '@oceanprotocol/lib'
 import { mapTimeoutStringToSeconds } from '@utils/ddo'
-import { getEncryptedFileUrls } from '@utils/provider'
+import axios, { CancelToken } from 'axios'
 import { sha256 } from 'js-sha256'
 import slugify from 'slugify'
 import { algorithmContainerPresets } from './_constants'
@@ -40,6 +41,7 @@ function transformTags(value: string): string[] {
 
 export async function transformPublishFormToDdo(
   values: FormPublishData,
+  cancelToken: CancelToken,
   // Those 2 are only passed during actual publishing process
   // so we can always assume if they are not passed, we are on preview.
   datatokenAddress?: string,
@@ -112,14 +114,21 @@ export async function transformPublishFormToDdo(
   }
 
   // Encrypt just created string[] of urls
+
   const filesEncrypted =
     files?.length &&
     files[0].valid &&
-    (await getEncryptedFileUrls(
+    (await ProviderInstance.encrypt(
+      did,
+      accountId,
       filesTransformed,
       providerUrl.url,
-      did,
-      accountId
+      (url: string, body: string) => {
+        return axios.post(url, body, {
+          headers: { 'Content-Type': 'application/octet-stream' },
+          cancelToken: cancelToken
+        })
+      }
     ))
 
   const newService: Service = {

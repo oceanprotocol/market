@@ -4,14 +4,16 @@ import { FormPublishData } from '../_types'
 import { useFormikContext } from 'formik'
 import { transformPublishFormToDdo } from '../_utils'
 import styles from './index.module.css'
+import { useCancelToken } from '@hooks/useCancelToken'
 
 export default function Debug(): ReactElement {
   const { values } = useFormikContext<FormPublishData>()
   const [ddo, setDdo] = useState<DDO>()
+  const cancelToken = useCancelToken()
 
   useEffect(() => {
     async function makeDdo() {
-      const ddo = await transformPublishFormToDdo(values)
+      const ddo = await transformPublishFormToDdo(values, cancelToken())
       setDdo(ddo)
     }
     makeDdo()
