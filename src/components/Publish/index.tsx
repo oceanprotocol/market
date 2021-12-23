@@ -73,7 +73,7 @@ export default function PublishPage({
       // fee is default 0 for now
       // TODO: templateIndex is hardcoded for now but this is incorrect, in the future it should be something like 1 for pools, and 2 for fre and free
       const ercParams: Erc20CreateParams = {
-        templateIndex: 1,
+        templateIndex: values.pricing.type === 'dynamic' ? 1 : 2,
         minter: accountId,
         feeManager: accountId,
         mpFeeAddress: appConfig.marketFeeAddress,
@@ -136,7 +136,7 @@ export default function PublishPage({
             baseTokenDecimals: 18,
             dataTokenDecimals: 18,
             fixedRate: values.pricing.price,
-            marketFee: 0.1,
+            marketFee: 1e15,
             withMint: true
           }
 

@@ -7,6 +7,7 @@ const cx = classNames.bind(styles)
 
 export interface BoxSelectionOption {
   name: string
+  value?: string
   checked: boolean
   title: JSX.Element | string
   icon?: JSX.Element
@@ -50,7 +51,7 @@ export default function BoxSelection({
               onChange={(event) => handleChange(event)}
               {...props}
               disabled={disabled}
-              value={option.name}
+              value={option.value ? option.value : option.name}
               name={name}
             />
             <label

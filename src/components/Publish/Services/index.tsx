@@ -23,6 +23,7 @@ export default function ServicesFields(): ReactElement {
   const accessTypeOptions = [
     {
       name: 'download',
+      value: accessTypeOptionsTitles[0].toLowerCase(),
       title: 'Download',
       icon: <IconDownload />,
       // BoxSelection component is not a Formik component
@@ -32,6 +33,7 @@ export default function ServicesFields(): ReactElement {
     },
     {
       name: accessTypeOptionsTitles[1].toLowerCase(),
+      value: accessTypeOptionsTitles[1].toLowerCase(),
       title: accessTypeOptionsTitles[1],
       icon: <IconCompute />,
       checked:
