@@ -50,6 +50,19 @@ export function accountTruncate(account: string): string {
   return truncated
 }
 
+export function getNetworkType(network: EthereumListsChain): string {
+  if (
+    (!network.name.includes('Testnet') &&
+      !network.title?.includes('Testnet') &&
+      network.name !== 'Moonbase Alpha') ||
+    network.name === 'Moonriver'
+  ) {
+    return 'mainnet'
+  } else {
+    return 'testnet'
+  }
+}
+
 export function getNetworkDisplayName(
   data: EthereumListsChain,
   networkId: number
@@ -72,9 +85,12 @@ export function getNetworkDisplayName(
     case 8996:
       displayName = 'Development'
       break
+    case 3:
+      displayName = 'ETH Ropsten'
+      break
     default:
       displayName = data
-        ? `${data.chain} ${data.network === 'mainnet' ? '' : data.network}`
+        ? `${data.chain} ${getNetworkType(data) === 'mainnet' ? '' : data.name}`
         : 'Unknown'
       break
   }
