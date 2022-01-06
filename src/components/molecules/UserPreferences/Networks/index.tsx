@@ -2,7 +2,11 @@ import React, { ReactElement } from 'react'
 import Label from '../../../atoms/Input/Label'
 import { useSiteMetadata } from '../../../../hooks/useSiteMetadata'
 import FormHelp from '../../../atoms/Input/Help'
-import { EthereumListsChain, getNetworkDataById } from '../../../../utils/web3'
+import {
+  EthereumListsChain,
+  getNetworkDataById,
+  getNetworkType
+} from '../../../../utils/web3'
 import Tooltip from '../../../atoms/Tooltip'
 import { ReactComponent as Caret } from '../../../../images/caret.svg'
 import { ReactComponent as Network } from '../../../../images/network.svg'
@@ -19,25 +23,7 @@ export function filterNetworksByType(
 ): number[] {
   const finalNetworks = chainIds.filter((chainId: number) => {
     const networkData = getNetworkDataById(networksList, chainId)
-
-    // HEADS UP! Only networkData.network === 'mainnet' is consistent
-    // while not every test network in the network data has 'testnet'
-    // in its place. So for the 'testnet' case filter for all non-'mainnet'.
-    //
-    // HEADS UP NO. 2! We hack in mainnet detection for moonriver as their
-    // network data uses the `network` key wrong over in
-    // https://github.com/ethereum-lists/chains/blob/master/_data/chains/eip155-1285.json
-    //
-    if (
-      (!networkData.name.includes('Testnet') &&
-        !networkData.title?.includes('Testnet') &&
-        networkData.name !== 'Moonbase Alpha') ||
-      networkData.name === 'Moonriver'
-    ) {
-      return type === 'mainnet'
-    } else {
-      return type === 'testnet'
-    }
+    return type === getNetworkType(networkData)
   })
   return finalNetworks
 }
