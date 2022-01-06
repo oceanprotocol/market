@@ -17,9 +17,10 @@ export function filterNetworksByType(
   chainIds: number[],
   networksList: { node: EthereumListsChain }[]
 ): number[] {
+  // console.log('NETWORKS LSIT: ', JSON.stringify(networksList))
   const finalNetworks = chainIds.filter((chainId: number) => {
     const networkData = getNetworkDataById(networksList, chainId)
-
+    console.log('NETWORK DATA: ', networkData)
     // HEADS UP! Only networkData.network === 'mainnet' is consistent
     // while not every test network in the network data has 'testnet'
     // in its place. So for the 'testnet' case filter for all non-'mainnet'.
