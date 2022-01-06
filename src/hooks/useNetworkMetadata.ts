@@ -11,7 +11,8 @@ const networksQuery = graphql`
       edges {
         node {
           chain
-          network
+          name
+          title
           networkId
           chainId
           rpc

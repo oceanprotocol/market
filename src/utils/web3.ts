@@ -3,6 +3,7 @@ import { getOceanConfig } from './ocean'
 
 export interface EthereumListsChain {
   name: string
+  title?: string
   chainId: number
   shortName: string
   chain: string
