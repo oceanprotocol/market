@@ -56,10 +56,9 @@ export function getNetworkType(network: EthereumListsChain): string {
   // We hack in mainnet detection for moonriver.
 
   if (
-    (!network.name.includes('Testnet') &&
-      !network.title?.includes('Testnet') &&
-      network.name !== 'Moonbase Alpha') ||
-    network.name === 'Moonriver'
+    !network.name.includes('Testnet') &&
+    !network.title?.includes('Testnet') &&
+    network.name !== 'Moonbase Alpha'
   ) {
     return 'mainnet'
   } else {
