@@ -25,9 +25,9 @@ export default function FilesInput(props: InputProps): ReactElement {
           url,
           config.providerUri,
           (method: Method, path: string, body: string) => {
-            return axios(path, {
+            return fetch(path, {
               method: method,
-              data: body,
+              body: body,
               headers: { 'Content-Type': 'application/json' }
             })
           }
