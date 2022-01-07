@@ -72,6 +72,8 @@ export function getNetworkDisplayName(
 ): string {
   let displayName
 
+  console.log('DATA_NETW: ', data, networkId)
+
   switch (networkId) {
     case 137:
       displayName = 'Polygon'
@@ -90,6 +92,9 @@ export function getNetworkDisplayName(
       break
     case 3:
       displayName = 'ETH Ropsten'
+      break
+    case 2021000:
+      displayName = 'GAIA-X Testnet'
       break
     default:
       displayName = data
