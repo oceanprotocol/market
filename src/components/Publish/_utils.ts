@@ -1,6 +1,6 @@
 import { ProviderInstance } from '@oceanprotocol/lib'
 import { mapTimeoutStringToSeconds } from '@utils/ddo'
-import axios, { CancelToken } from 'axios'
+import axios, { CancelToken, Method } from 'axios'
 import { sha256 } from 'js-sha256'
 import slugify from 'slugify'
 import { algorithmContainerPresets } from './_constants'
@@ -119,14 +119,13 @@ export async function transformPublishFormToDdo(
     files?.length &&
     files[0].valid &&
     (await ProviderInstance.encrypt(
-      did,
-      accountId,
       filesTransformed,
       providerUrl.url,
-      (url: string, body: string) => {
-        return axios.post(url, body, {
-          headers: { 'Content-Type': 'application/octet-stream' },
-          cancelToken: cancelToken
+      (method: Method, path: string, body: string, headers: any) => {
+        return axios(path, {
+          method: method,
+          data: body,
+          headers: headers
         })
       }
     ))
