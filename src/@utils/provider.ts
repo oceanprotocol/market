@@ -53,13 +53,3 @@ export async function getFileInfo(
     }
   }
 }
-
-export async function isValidProvider(url: string): Promise<boolean> {
-  try {
-    const response = await ProviderInstance.isValidProvider(url, fetch)
-    return response
-  } catch (error) {
-    console.error(`Error validating provider: ${error.message}`)
-    return false
-  }
-}

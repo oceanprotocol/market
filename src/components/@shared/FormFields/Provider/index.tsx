@@ -6,7 +6,7 @@ import FileInfo from '../FilesInput/Info'
 import styles from './index.module.css'
 import Button from '@shared/atoms/Button'
 import { initialValues } from 'src/components/Publish/_constants'
-import { isValidProvider } from '@utils/provider'
+import { ProviderInstance } from '@oceanprotocol/lib'
 
 export default function CustomProvider(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
@@ -16,8 +16,7 @@ export default function CustomProvider(props: InputProps): ReactElement {
     setIsLoading(true)
 
     try {
-      // TODO: #948 Remove ocean.provider.isValidProvider dependency.
-      const isValid = await isValidProvider(url)
+      const isValid = await ProviderInstance.isValidProvider(url, fetch)
       helpers.setValue({ url, valid: isValid })
       helpers.setError(undefined)
     } catch (error) {
