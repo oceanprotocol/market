@@ -3,6 +3,7 @@ import { getOceanConfig } from './ocean'
 
 export interface EthereumListsChain {
   name: string
+  title?: string
   chainId: number
   shortName: string
   chain: string
@@ -49,6 +50,22 @@ export function accountTruncate(account: string): string {
   return truncated
 }
 
+export function getNetworkType(network: EthereumListsChain): string {
+  // HEADS UP! Hack for getting network's type main/test, without using
+  // .network field, which is innexistent on https://chainid.network/chains.json
+  // We hack in mainnet detection for moonriver.
+
+  if (
+    !network.name.includes('Testnet') &&
+    !network.title?.includes('Testnet') &&
+    network.name !== 'Moonbase Alpha'
+  ) {
+    return 'mainnet'
+  } else {
+    return 'testnet'
+  }
+}
+
 export function getNetworkDisplayName(
   data: EthereumListsChain,
   networkId: number
@@ -71,9 +88,15 @@ export function getNetworkDisplayName(
     case 8996:
       displayName = 'Development'
       break
+    case 3:
+      displayName = 'ETH Ropsten'
+      break
+    case 2021000:
+      displayName = 'GAIA-X Testnet'
+      break
     default:
       displayName = data
-        ? `${data.chain} ${data.network === 'mainnet' ? '' : data.network}`
+        ? `${data.chain} ${getNetworkType(data) === 'mainnet' ? '' : data.name}`
         : 'Unknown'
       break
   }
