@@ -23,11 +23,13 @@ import {
   FreCreationParams,
   PoolCreationParams,
   ProviderInstance,
-  ZERO_ADDRESS
+  ZERO_ADDRESS,
+  Pool,
+  LoggerInstance
 } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import Web3 from 'web3'
-import axios from 'axios'
+import axios, { Method } from 'axios'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getOceanConfig } from '@utils/ocean'
 
@@ -100,22 +102,24 @@ export default function PublishPage({
             publisherAddress: accountId,
             marketFeeCollector: appConfig.marketFeeAddress,
             poolTemplateAddress: config.poolTemplateAddress,
-            rate: values.pricing.price,
+            rate: values.pricing.price.toString(),
             basetokenDecimals: 18,
             vestingAmount: '0',
             vestedBlocks: 2726000,
-            initialBasetokenLiquidity: values.pricing.amountOcean,
+            initialBasetokenLiquidity: values.pricing.amountOcean.toString(),
             swapFeeLiquidityProvider: 1e15,
             swapFeeMarketRunner: 1e15
           }
-          const token = new Datatoken(web3)
           // the spender in this case is the erc721Factory because we are delegating
-          token.approve(
+          const pool = new Pool(web3, LoggerInstance)
+          const txApp = await pool.approve(
+            accountId,
             config.oceanTokenAddress,
             config.erc721FactoryAddress,
-            values.pricing.amountOcean.toString(),
-            accountId
+            '200',
+            false
           )
+          console.log('aprove', txApp)
           const result = await nftFactory.createNftErcWithPool(
             accountId,
             nftCreateData,
@@ -135,7 +139,7 @@ export default function PublishPage({
             marketFeeCollector: appConfig.marketFeeAddress,
             baseTokenDecimals: 18,
             dataTokenDecimals: 18,
-            fixedRate: values.pricing.price,
+            fixedRate: values.pricing.price.toString(),
             marketFee: 1e15,
             withMint: true
           }
@@ -188,9 +192,11 @@ export default function PublishPage({
       const encryptedResponse = await ProviderInstance.encrypt(
         ddo,
         config.providerUri,
-        (url: string, body: string) => {
-          return axios.post(url, body, {
-            headers: { 'Content-Type': 'application/octet-stream' },
+        (httpMethod: Method, url: string, body: string, headers: any) => {
+          return axios(url, {
+            method: httpMethod,
+            data: body,
+            headers: headers,
             cancelToken: newCancelToken()
           })
         }

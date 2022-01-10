@@ -1,4 +1,4 @@
-import axios, { CancelToken, AxiosResponse } from 'axios'
+import axios, { CancelToken, AxiosResponse, Method } from 'axios'
 import {
   FileMetadata,
   LoggerInstance,
@@ -22,9 +22,11 @@ export async function getEncryptedFiles(
     const response = await ProviderInstance.encrypt(
       files,
       providerUrl,
-      (url: string, body: string) => {
-        return axios.post(url, body, {
-          headers: { 'Content-Type': 'application/octet-stream' }
+      (httpMethod: Method, url: string, body: string, headers: any) => {
+        return axios(url, {
+          method: httpMethod,
+          data: body,
+          headers: headers
         })
       }
     )
