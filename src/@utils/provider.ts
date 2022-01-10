@@ -1,5 +1,5 @@
 import axios, { CancelToken, AxiosResponse } from 'axios'
-import { LoggerInstance, ProviderInstance } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 
 export interface FileMetadata {
   index: number
