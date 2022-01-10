@@ -72,8 +72,6 @@ export function getNetworkDisplayName(
 ): string {
   let displayName
 
-  console.log('DATA_NETW: ', data, networkId)
-
   switch (networkId) {
     case 137:
       displayName = 'Polygon'
