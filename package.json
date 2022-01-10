@@ -38,7 +38,6 @@
     "decimal.js": "^10.3.1",
     "dom-confetti": "^0.2.2",
     "dotenv": "^10.0.0",
-    "electron": "^16.0.5",
     "ethereum-address": "0.0.4",
     "ethereum-blockies": "github:MyEtherWallet/blockies",
     "filesize": "^8.0.6",
