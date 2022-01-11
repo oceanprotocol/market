@@ -28,10 +28,10 @@ import {
   LoggerInstance
 } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
-import Web3 from 'web3'
 import axios, { Method } from 'axios'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getOceanConfig } from '@utils/ocean'
+import { validationSchema } from './_validation'
 
 // TODO: restore FormikPersist, add back clear form action
 const formName = 'ocean-publish-form'
@@ -284,7 +284,7 @@ export default function PublishPage({
   return isInPurgatory && purgatoryData ? null : (
     <Formik
       initialValues={initialValues}
-      // validationSchema={validationSchema}
+      validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
         // kick off publishing
         await handleSubmit(values)
