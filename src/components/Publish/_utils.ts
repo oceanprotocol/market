@@ -155,19 +155,21 @@ export async function transformPublishFormToDdo(
     version: '4.0.0',
     chainId,
     metadata: newMetadata,
-    services: [newService]
+    services: [newService],
     // Only added for DDO preview, reflecting Asset response,
     // again, we can assume if `datatokenAddress` is not passed,
     // we are on preview.
-    // ...(!datatokenAddress && {
-    //   dataTokenInfo: {
-    //     name: values.services[0].dataTokenOptions.name,
-    //     symbol: values.services[0].dataTokenOptions.symbol
-    //   },
-    //   nft: {
-    //     owner: accountId
-    //   }
-    // })
+    ...(!datatokenAddress && {
+      datatokens: [
+        {
+          name: values.services[0].dataTokenOptions.name,
+          symbol: values.services[0].dataTokenOptions.symbol
+        }
+      ],
+      nft: {
+        owner: accountId
+      }
+    })
   }
 
   return newDdo
