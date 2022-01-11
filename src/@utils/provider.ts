@@ -1,5 +1,5 @@
 import axios, { CancelToken, AxiosResponse } from 'axios'
-import { DID, LoggerInstance } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 
 export interface FileMetadata {
   index: number
@@ -31,15 +31,12 @@ export async function getEncryptedFileUrls(
 }
 
 export async function getFileInfo(
-  url: string | DID,
+  url: string,
   providerUrl: string,
   cancelToken: CancelToken
 ): Promise<FileMetadata[]> {
-  let postBody
   try {
-    if (url instanceof DID) postBody = { did: url.getDid() }
-    else postBody = { url }
-
+    const postBody = { url }
     const response: AxiosResponse<FileMetadata[]> = await axios.post(
       `${providerUrl}/api/v1/services/fileinfo`,
       postBody,
