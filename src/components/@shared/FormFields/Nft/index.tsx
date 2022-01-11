@@ -1,6 +1,6 @@
 import Button from '@shared/atoms/Button'
 import { InputProps } from '@shared/FormInput'
-import { generateNftOptions } from '@utils/nft'
+import { generateNftMetadata } from '@utils/nft'
 import { useField } from 'formik'
 import React, { ReactElement, useEffect } from 'react'
 import Refresh from '@images/refresh.svg'
@@ -13,7 +13,7 @@ export default function Nft(props: InputProps): ReactElement {
   useEffect(() => {
     if (field.value?.name !== '') return
 
-    const nftOptions = generateNftOptions()
+    const nftOptions = generateNftMetadata()
     helpers.setValue({ ...nftOptions })
   }, [field.value?.name])
 
@@ -28,8 +28,8 @@ export default function Nft(props: InputProps): ReactElement {
           title="Generate new image"
           onClick={(e) => {
             e.preventDefault()
-            const nftOptions = generateNftOptions()
-            helpers.setValue({ ...nftOptions })
+            const nftMetadata = generateNftMetadata()
+            helpers.setValue({ ...nftMetadata })
           }}
         >
           <Refresh />
