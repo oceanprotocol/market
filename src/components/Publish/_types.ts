@@ -1,3 +1,4 @@
+import { ServiceComputeOptions } from '@oceanprotocol/lib'
 import { DataTokenOptions } from '@utils/datatokens'
 import { NftOptions } from '@utils/nft'
 import { ReactElement } from 'react'
@@ -28,7 +29,7 @@ export interface FormPublishData {
   }
   metadata: {
     nft: NftOptions
-    type: 'Dataset' | 'Algorithm' | string
+    type: 'dataset' | 'algorithm'
     name: string
     description: string
     author: string

@@ -1,4 +1,4 @@
-import { generateDid } from '@oceanprotocol/lib'
+import { DDO, generateDid, Metadata, Service } from '@oceanprotocol/lib'
 import { mapTimeoutStringToSeconds } from '@utils/ddo'
 import { getEncryptedFiles } from '@utils/provider'
 import slugify from 'slugify'
@@ -127,6 +127,7 @@ export async function transformPublishFormToDdo(
     files[0].valid &&
     (await getEncryptedFiles(file, providerUrl.url))
 
+  // TODO: fix id
   const newService: Service = {
     id: 'notAnId',
     type: access,
@@ -144,6 +145,7 @@ export async function transformPublishFormToDdo(
     id: did,
     version: '4.0.0',
     chainId,
+    nftAddress,
     metadata: newMetadata,
     services: [newService]
     // Only added for DDO preview, reflecting Asset response,
