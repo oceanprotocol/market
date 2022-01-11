@@ -4,6 +4,7 @@ import { getAssetsNames } from '@utils/aquarius'
 import styles from './AssetListTitle.module.css'
 import axios from 'axios'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
+import { Asset } from '@oceanprotocol/lib'
 
 export default function AssetListTitle({
   ddo,

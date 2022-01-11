@@ -13,7 +13,7 @@ import { retrieveDDOListByDIDs } from '@utils/aquarius'
 import { CancelToken } from 'axios'
 import Title from './Title'
 import styles from './index.module.css'
-import { LoggerInstance } from '@oceanprotocol/lib'
+import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import { useCancelToken } from '@hooks/useCancelToken'
 
 const REFETCH_INTERVAL = 20000

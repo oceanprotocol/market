@@ -1,3 +1,5 @@
+import { Asset, DDO, Service } from '@oceanprotocol/lib'
+
 export function getServiceByName(
   ddo: Asset | DDO,
   name: 'access' | 'compute'

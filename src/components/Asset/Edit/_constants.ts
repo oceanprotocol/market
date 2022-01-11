@@ -1,3 +1,4 @@
+import { Metadata } from '@oceanprotocol/lib'
 import { mapTimeoutStringToSeconds, secondsToString } from '@utils/ddo'
 // import { EditableMetadataLinks } from '@oceanprotocol/lib'
 import * as Yup from 'yup'

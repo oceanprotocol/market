@@ -1,8 +1,12 @@
+import { DDO, Metadata, Service } from '@oceanprotocol/lib'
 import { mapTimeoutStringToSeconds } from '@utils/ddo'
 import { getEncryptedFileUrls } from '@utils/provider'
 import { sha256 } from 'js-sha256'
 import slugify from 'slugify'
-import { algorithmContainerPresets } from './_constants'
+import {
+  algorithmContainerPresets,
+  MetadataAlgorithmContainer
+} from './_constants'
 import { FormPublishData } from './_types'
 
 export function getFieldContent(
@@ -123,6 +127,8 @@ export async function transformPublishFormToDdo(
     ))
 
   const newService: Service = {
+    // TODO: give some id
+    id: '1',
     type: access,
     files: filesEncrypted || '',
     datatokenAddress,
@@ -136,6 +142,7 @@ export async function transformPublishFormToDdo(
   const newDdo: DDO = {
     '@context': ['https://w3id.org/did/v1'],
     id: did,
+    nftAddress,
     version: '4.0.0',
     chainId,
     metadata: newMetadata,

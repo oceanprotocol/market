@@ -1,4 +1,4 @@
-import { LoggerInstance } from '@oceanprotocol/lib'
+import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import { useState } from 'react'
 import { TransactionReceipt } from 'web3-core'
 import { Decimal } from 'decimal.js'
@@ -43,8 +43,8 @@ function usePricing(): UsePricing {
   async function getDTSymbol(ddo: Asset): Promise<string> {
     if (!accountId) return
 
-    const { dataTokenInfo } = ddo
-    return dataTokenInfo.symbol
+    const { datatokens } = ddo
+    return datatokens[0].symbol
     // return dataTokenInfo
     //   ? dataTokenInfo.symbol
     //   : await ocean?.datatokens.getSymbol(dataTokenInfo.address)
@@ -52,8 +52,8 @@ function usePricing(): UsePricing {
 
   async function getDTName(ddo: Asset): Promise<string> {
     if (!accountId) return
-    const { dataTokenInfo } = ddo
-    return dataTokenInfo.name
+    const { datatokens } = ddo
+    return datatokens[0].name
     // return dataTokenInfo
     //   ? dataTokenInfo.name
     //   : await ocean?.datatokens.getName(dataTokenInfo.address)
@@ -96,8 +96,8 @@ function usePricing(): UsePricing {
     tokensToMint: string,
     ddo: Asset
   ): Promise<TransactionReceipt | void> {
-    const { dataTokenInfo } = ddo
-    LoggerInstance.log('mint function', dataTokenInfo.address, accountId)
+    const { datatokens } = ddo
+    LoggerInstance.log('mint function', datatokens[0].address, accountId)
     // const balance = new Decimal(
     //   await ocean.datatokens.balance(dataTokenInfo.address, accountId)
     // )

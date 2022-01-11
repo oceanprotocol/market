@@ -8,6 +8,7 @@ import Time from '@shared/atoms/Time'
 import AssetType from '@shared/AssetType'
 import styles from './MetaMain.module.css'
 import { getServiceByName } from '@utils/ddo'
+import { Asset } from '@oceanprotocol/lib'
 
 export default function MetaMain({ ddo }: { ddo: Asset }): ReactElement {
   const { isAssetNetwork } = useAsset()
@@ -18,8 +19,8 @@ export default function MetaMain({ ddo }: { ddo: Asset }): ReactElement {
   const blockscoutNetworks = [1287, 2021000, 2021001, 44787, 246, 1285]
   const isBlockscoutExplorer = blockscoutNetworks.includes(ddo?.chainId)
 
-  const dataTokenName = ddo?.dataTokenInfo?.name
-  const dataTokenSymbol = ddo?.dataTokenInfo?.symbol
+  const dataTokenName = ddo?.datatokens[0]?.name
+  const dataTokenSymbol = ddo?.datatokens[0]?.symbol
 
   return (
     <aside className={styles.meta}>
@@ -45,9 +46,9 @@ export default function MetaMain({ ddo }: { ddo: Asset }): ReactElement {
           <span className={styles.addWrap}>
             <AddToken
               address={ddo?.services[0].datatokenAddress}
-              symbol={(ddo as Asset)?.dataTokenInfo?.symbol}
+              symbol={(ddo as Asset)?.datatokens[0]?.symbol}
               logo="https://raw.githubusercontent.com/oceanprotocol/art/main/logo/datatoken.png"
-              text={`Add ${(ddo as Asset)?.dataTokenInfo?.symbol} to wallet`}
+              text={`Add ${(ddo as Asset)?.datatokens[0]?.symbol} to wallet`}
               className={styles.add}
               minimal
             />

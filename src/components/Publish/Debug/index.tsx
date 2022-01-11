@@ -4,6 +4,7 @@ import { FormPublishData } from '../_types'
 import { useFormikContext } from 'formik'
 import { transformPublishFormToDdo } from '../_utils'
 import styles from './index.module.css'
+import { DDO } from '@oceanprotocol/lib'
 
 export default function Debug(): ReactElement {
   const { values } = useFormikContext<FormPublishData>()

@@ -25,8 +25,8 @@ const columns = [
     name: 'Datatoken Symbol',
     selector: function getAssetRow(row: AssetListPrices) {
       return (
-        <Tooltip content={row.ddo.dataTokenInfo.name}>
-          {row.ddo.dataTokenInfo.symbol}
+        <Tooltip content={row.ddo.datatokens[0].name}>
+          {row.ddo.datatokens[0].symbol}
         </Tooltip>
       )
     },
