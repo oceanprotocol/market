@@ -43,10 +43,19 @@ export interface FormPublishData {
   }
   services: FormPublishService[]
   pricing: PriceOptions
+  feedback?: PublishFeedback
 }
 
 export interface StepContent {
   step: number
   title: string
   component: ReactElement
+}
+
+export interface PublishFeedback {
+  [key: number]: {
+    name: string
+    status: 'success' | 'error' | 'pending'
+    message?: string
+  }
 }
