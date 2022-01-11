@@ -149,11 +149,11 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     if (!accountId || !networkId || !web3) return
 
     try {
-      // const balance = {
-      //   eth: web3.utils.fromWei(await web3.eth.getBalance(accountId, 'latest')),
-      //   ocean: await getOceanBalance(accountId, networkId, web3)
-      // }
-      // setBalance(balance)
+      const balance = {
+        eth: web3.utils.fromWei(await web3.eth.getBalance(accountId, 'latest')),
+        ocean: await getOceanBalance(accountId, networkId, web3)
+      }
+      setBalance(balance)
       LoggerInstance.log('[web3] Balance: ', balance)
     } catch (error) {
       LoggerInstance.error('[web3] Error: ', error.message)
