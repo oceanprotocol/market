@@ -3,7 +3,7 @@ import { Form, Formik } from 'formik'
 import { initialValues } from './_constants'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
 import { useWeb3 } from '@context/Web3'
-import { transformPublishFormToDdo } from './_utils'
+import { createTokensAndPricing, transformPublishFormToDdo } from './_utils'
 import PageHeader from '@shared/Page/PageHeader'
 import Title from './Title'
 import styles from './index.module.css'
@@ -14,19 +14,7 @@ import { Steps } from './Steps'
 import { FormPublishData } from './_types'
 import { useUserPreferences } from '@context/UserPreferences'
 import useNftFactory from '@hooks/contracts/useNftFactory'
-import {
-  Datatoken,
-  Nft,
-  NftCreateData,
-  getHash,
-  Erc20CreateParams,
-  FreCreationParams,
-  PoolCreationParams,
-  ProviderInstance,
-  ZERO_ADDRESS,
-  Pool,
-  LoggerInstance
-} from '@oceanprotocol/lib'
+import { Nft, getHash, ProviderInstance } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import axios, { Method } from 'axios'
 import { useCancelToken } from '@hooks/useCancelToken'
@@ -62,127 +50,20 @@ export default function PublishPage({
 
       const config = getOceanConfig(chainId)
       console.log('config', config)
-      // image not included here for gas fees reasons. It is also an issue to reaserch how we add the image in the nft
-      const nftCreateData: NftCreateData = {
-        name: values.metadata.nft.name,
-        symbol: values.metadata.nft.symbol,
-        // tokenURI: values.metadata.nft.image,
-        tokenURI: '',
-        templateIndex: 1
-      }
 
-      // TODO: cap is hardcoded for now to 1000, this needs to be discussed at some point
-      // fee is default 0 for now
-      // TODO: templateIndex is hardcoded for now but this is incorrect, in the future it should be something like 1 for pools, and 2 for fre and free
-      const ercParams: Erc20CreateParams = {
-        templateIndex: values.pricing.type === 'dynamic' ? 1 : 2,
-        minter: accountId,
-        feeManager: accountId,
-        mpFeeAddress: appConfig.marketFeeAddress,
-        feeToken: config.oceanTokenAddress,
-        feeAmount: `0`,
-        cap: '1000',
-        name: values.services[0].dataTokenOptions.name,
-        symbol: values.services[0].dataTokenOptions.symbol
-      }
-
-      let erc721Address = ''
-      let datatokenAddress = ''
-
-      // TODO: cleaner code for this huge switch !??!?
-      switch (values.pricing.type) {
-        case 'dynamic': {
-          // no vesting in market by default, maybe at a later time , vestingAmount and vestedBlocks are hardcoded
-          // we use only ocean as basetoken
-          // TODO: discuss swapFeeLiquidityProvider, swapFeeMarketPlaceRunner
-          const poolParams: PoolCreationParams = {
-            ssContract: config.sideStakingAddress,
-            basetokenAddress: config.oceanTokenAddress,
-            basetokenSender: config.erc721FactoryAddress,
-            publisherAddress: accountId,
-            marketFeeCollector: appConfig.marketFeeAddress,
-            poolTemplateAddress: config.poolTemplateAddress,
-            rate: values.pricing.price.toString(),
-            basetokenDecimals: 18,
-            vestingAmount: '0',
-            vestedBlocks: 2726000,
-            initialBasetokenLiquidity: values.pricing.amountOcean.toString(),
-            swapFeeLiquidityProvider: 1e15,
-            swapFeeMarketRunner: 1e15
-          }
-          // the spender in this case is the erc721Factory because we are delegating
-          const pool = new Pool(web3, LoggerInstance)
-          const txApp = await pool.approve(
-            accountId,
-            config.oceanTokenAddress,
-            config.erc721FactoryAddress,
-            '200',
-            false
-          )
-          console.log('aprove', txApp)
-          const result = await nftFactory.createNftErcWithPool(
-            accountId,
-            nftCreateData,
-            ercParams,
-            poolParams
-          )
-
-          erc721Address = result.events.NFTCreated.returnValues[0]
-          datatokenAddress = result.events.TokenCreated.returnValues[0]
-          break
-        }
-        case 'fixed': {
-          const freParams: FreCreationParams = {
-            fixedRateAddress: config.fixedRateExchangeAddress,
-            baseTokenAddress: config.oceanTokenAddress,
-            owner: accountId,
-            marketFeeCollector: appConfig.marketFeeAddress,
-            baseTokenDecimals: 18,
-            dataTokenDecimals: 18,
-            fixedRate: values.pricing.price.toString(),
-            marketFee: 1e15,
-            withMint: true
-          }
-
-          const result = await nftFactory.createNftErcWithFixedRate(
-            accountId,
-            nftCreateData,
-            ercParams,
-            freParams
-          )
-
-          erc721Address = result.events.NFTCreated.returnValues[0]
-          datatokenAddress = result.events.TokenCreated.returnValues[0]
-
-          break
-        }
-        case 'free': {
-          // maxTokens -  how many tokens cand be dispensed when someone requests . If maxTokens=2 then someone can't request 3 in one tx
-          // maxBalance - how many dt the user has in it's wallet before the dispenser will not dispense dt
-          // both will be just 1 for the market
-          const dispenserParams = {
-            dispenserAddress: config.dispenserAddress,
-            maxTokens: web3.utils.toWei('1'),
-            maxBalance: web3.utils.toWei('1'),
-            withMint: true,
-            allowedSwapper: ZERO_ADDRESS
-          }
-          const result = await nftFactory.createNftErcWithDispenser(
-            accountId,
-            nftCreateData,
-            ercParams,
-            dispenserParams
-          )
-          erc721Address = result.events.NFTCreated.returnValues[0]
-          datatokenAddress = result.events.TokenCreated.returnValues[0]
-
-          break
-        }
-      }
+      const { erc721Address, datatokenAddress } = await createTokensAndPricing(
+        values,
+        accountId,
+        appConfig.marketFeeAddress,
+        config,
+        nftFactory,
+        web3
+      )
 
       // --------------------------------------------------
       // 2. Construct and publish DDO
       // --------------------------------------------------
+
       const ddo = await transformPublishFormToDdo(
         values,
         datatokenAddress,
@@ -191,7 +72,7 @@ export default function PublishPage({
 
       const encryptedResponse = await ProviderInstance.encrypt(
         ddo,
-        config.providerUri,
+        values.services[0].providerUrl.url,
         (httpMethod: Method, url: string, body: string, headers: any) => {
           return axios(url, {
             method: httpMethod,
