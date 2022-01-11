@@ -1,10 +1,16 @@
 import { renderStaticWaves } from './oceanWaves'
 
+// https://docs.opensea.io/docs/metadata-standards
 export interface NftOptions {
   name: string
   symbol: string
   description: string
-  image: string
+  image?: string
+  /* eslint-disable camelcase */
+  external_url?: string
+  image_data?: string
+  background_color?: string
+  /* eslint-enable camelcase */
 }
 
 function encodeSvg(svgString: string): string {
@@ -36,9 +42,12 @@ export function generateNftOptions(): NftOptions {
     name: 'Ocean Asset v4 NFT',
     symbol: 'OCEAN-V4-NFT',
     description: `This NFT represents an asset in the Ocean Protocol v4 ecosystem.`,
+    // TODO: ideally this includes the final DID
+    external_url: 'https://market.oceanprotocol.com',
+    background_color: '141414', // dark background
     // TODO: figure out if also image URI needs base64 encoding
     // generated SVG embedded as 'data:image/svg+xml' and encoded characters
-    image: `data:image/svg+xml,${encodeSvg(image)}`
+    image_data: `data:image/svg+xml,${encodeSvg(image)}`
     // generated SVG embedded as 'data:image/svg+xml;base64'
     // image: `data:image/svg+xml;base64,${window?.btoa(image)}`
     // image: `data:image/svg+xml;base64,${Buffer.from(image).toString('base64')}`
