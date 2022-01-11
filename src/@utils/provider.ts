@@ -42,12 +42,11 @@ export async function getFileInfo(
   providerUrl: string,
   cancelToken: CancelToken
 ): Promise<FileInfo[]> {
-  let postBody
   try {
     // TODO: what was the point of this?
     // if (url instanceof DID) postBody = { did: url.getDid() }
     // else postBody = { url }
-    postBody = { url: url, type: 'url' }
+    const postBody = { url, type: 'url' }
     const response: AxiosResponse<FileInfo[]> = await axios.post(
       `${providerUrl}/api/services/fileinfo`,
       postBody,

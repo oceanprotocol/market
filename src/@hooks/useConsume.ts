@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { consumeFeedback } from '@utils/feedback'
 import { LoggerInstance } from '@oceanprotocol/lib'
-import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 
 interface UseConsume {
