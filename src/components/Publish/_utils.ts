@@ -1,4 +1,10 @@
-import { DDO, generateDid, Metadata, Service } from '@oceanprotocol/lib'
+import {
+  DDO,
+  generateDid,
+  getHash,
+  Metadata,
+  Service
+} from '@oceanprotocol/lib'
 import { mapTimeoutStringToSeconds } from '@utils/ddo'
 import { getEncryptedFiles } from '@utils/provider'
 import slugify from 'slugify'
@@ -127,9 +133,8 @@ export async function transformPublishFormToDdo(
     files[0].valid &&
     (await getEncryptedFiles(file, providerUrl.url))
 
-  // TODO: fix id
   const newService: Service = {
-    id: 'notAnId',
+    id: getHash(datatokenAddress + filesEncrypted),
     type: access,
     files: filesEncrypted || '',
     datatokenAddress,
