@@ -4,11 +4,6 @@ module.exports = (phase, { defaultConfig }) => {
    */
   const nextConfig = {
     webpack: (config, options) => {
-      config.plugins.push(
-        new options.webpack.IgnorePlugin({
-          resourceRegExp: /^electron$/
-        })
-      )
       config.module.rules.push(
         {
           test: /\.svg$/,
