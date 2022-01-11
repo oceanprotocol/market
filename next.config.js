@@ -24,6 +24,12 @@ module.exports = (phase, { defaultConfig }) => {
       )
 
       // for old ocean.js, most likely can be removed later on
+      config.plugins.push(
+        new options.webpack.IgnorePlugin({
+          resourceRegExp: /^electron$/
+        })
+      )
+
       config.resolve.fallback = {
         fs: false,
         crypto: false,
