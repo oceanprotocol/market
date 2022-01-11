@@ -65,7 +65,7 @@ function useConsume(): UseConsume {
       //       null,
       //       false
       //     )
-      //     LoggerInstance.log('order created', orderId)
+      //     LoggerInstance.log('ordercreated', orderId)
       //     setStep(2)
       //   } catch (error) {
       //     setConsumeError(error.message)
