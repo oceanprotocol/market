@@ -11,6 +11,7 @@ import PriceImpact from './PriceImpact'
 import Decimal from 'decimal.js'
 import { useAsset } from '@context/Asset'
 import { FormTradeData, TradeItem } from './_types'
+import { Asset } from '@oceanprotocol/lib'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
@@ -41,7 +42,7 @@ export default function Swap({
   })
   const [dtItem, setDtItem] = useState<TradeItem>({
     amount: '0',
-    token: ddo.dataTokenInfo.symbol,
+    token: ddo.datatokens[0].symbol,
     maxAmount: '0'
   })
 
@@ -126,7 +127,7 @@ export default function Swap({
 
   const switchTokens = () => {
     setFieldValue('type', values.type === 'buy' ? 'sell' : 'buy')
-    setCoin(values.type === 'sell' ? 'OCEAN' : ddo.dataTokenInfo.symbol)
+    setCoin(values.type === 'sell' ? 'OCEAN' : ddo.datatokens[0].symbol)
     // don't reset form because we don't want to reset type
     setFieldValue('datatoken', 0)
     setFieldValue('ocean', 0)

@@ -1,4 +1,4 @@
-import { ServiceComputeOptions } from '@oceanprotocol/lib'
+import { Asset, ServiceComputeOptions } from '@oceanprotocol/lib'
 import React, { ReactElement, useEffect, useState } from 'react'
 // import { transformComputeFormToServiceComputePrivacy } from '@utils/compute'
 import DebugOutput from '@shared/DebugOutput'

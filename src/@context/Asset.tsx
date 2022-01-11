@@ -7,7 +7,7 @@ import React, {
   useCallback,
   ReactNode
 } from 'react'
-import { LoggerInstance, Purgatory } from '@oceanprotocol/lib'
+import { Asset, LoggerInstance, Purgatory } from '@oceanprotocol/lib'
 import getAssetPurgatoryData from '@utils/purgatory'
 import { CancelToken } from 'axios'
 import { retrieveDDO } from '@utils/aquarius'
@@ -110,7 +110,7 @@ function AssetProvider({
       setDID(asset as string)
       setTitle(ddo.metadata.name)
       setOwner(ddo.nft.owner)
-      setIsInPurgatory(ddo.isInPurgatory === 'true')
+      setIsInPurgatory(ddo.purgatory.state === true)
       await setPurgatory(ddo.id)
     }
     init()

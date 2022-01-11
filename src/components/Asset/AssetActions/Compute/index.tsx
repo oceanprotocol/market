@@ -2,14 +2,16 @@ import React, { useState, ReactElement, useEffect, useCallback } from 'react'
 import {
   LoggerInstance,
   ComputeAlgorithm,
-  ComputeOutput
+  ComputeOutput,
+  Asset,
+  DDO,
+  PublisherTrustedAlgorithm
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
 import FileIcon from '@shared/FileIcon'
 import Alert from '@shared/atoms/Alert'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
-import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 import { usePricing } from '@hooks/usePricing'
 import { useAsset } from '@context/Asset'
@@ -427,7 +429,7 @@ export default function Compute({
             hasDatatokenSelectedComputeAsset={hasAlgoAssetDatatoken}
             oceanSymbol={price ? price.oceanSymbol : ''}
             dtSymbolSelectedComputeAsset={
-              selectedAlgorithmAsset?.dataTokenInfo?.symbol
+              selectedAlgorithmAsset?.datatokens[0]?.symbol
             }
             dtBalanceSelectedComputeAsset={algorithmDTBalance}
             selectedComputeAssetLowPoolLiquidity={!isAlgoConsumablePrice}

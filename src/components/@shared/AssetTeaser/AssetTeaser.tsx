@@ -8,6 +8,7 @@ import AssetType from '@shared/AssetType'
 import NetworkName from '@shared/NetworkName'
 import styles from './AssetTeaser.module.css'
 import { getServiceByName } from '@utils/ddo'
+import { Asset } from '@oceanprotocol/lib'
 
 declare type AssetTeaserProps = {
   ddo: Asset
@@ -21,7 +22,7 @@ export default function AssetTeaser({
   noPublisher
 }: AssetTeaserProps): ReactElement {
   const { name, type, description } = ddo.metadata
-  const { dataTokenInfo } = ddo
+  const { datatokens } = ddo
   const isCompute = Boolean(getServiceByName(ddo, 'compute'))
   const accessType = isCompute ? 'compute' : 'access'
   const { owner } = ddo.nft
@@ -31,7 +32,7 @@ export default function AssetTeaser({
       <Link href={`/asset/${ddo.id}`}>
         <a className={styles.link}>
           <header className={styles.header}>
-            <div className={styles.symbol}>{dataTokenInfo?.symbol}</div>
+            <div className={styles.symbol}>{datatokens[0]?.symbol}</div>
             <Dotdotdot clamp={3}>
               <h1 className={styles.title}>{name}</h1>
             </Dotdotdot>
