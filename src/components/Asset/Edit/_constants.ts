@@ -1,5 +1,5 @@
 import { mapTimeoutStringToSeconds, secondsToString } from '@utils/ddo'
-import { EditableMetadataLinks } from '@oceanprotocol/lib'
+// import { EditableMetadataLinks } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 import { MetadataEditForm } from './_types'
 
@@ -9,7 +9,7 @@ export const validationSchema = Yup.object().shape({
     .required('Required'),
   description: Yup.string().required('Required').min(10),
   price: Yup.number().required('Required'),
-  links: Yup.array<EditableMetadataLinks[]>().nullable(),
+  links: Yup.array<any[]>().nullable(),
   timeout: Yup.string().required('Required'),
   author: Yup.string().nullable()
 })

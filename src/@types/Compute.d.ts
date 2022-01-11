@@ -1,4 +1,4 @@
-import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
+import { ComputeJob } from '@oceanprotocol/lib'
 import { OrdersData_tokenOrders_datatokenId as OrdersDatatoken } from './apollo/OrdersData'
 
 // declaring into global scope to be able to use this as

@@ -1,7 +1,6 @@
-import { ServiceComputePrivacy } from '@oceanprotocol/lib'
+import { ServiceComputeOptions } from '@oceanprotocol/lib'
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useOcean } from '@context/Ocean'
-import { transformComputeFormToServiceComputePrivacy } from '@utils/compute'
+// import { transformComputeFormToServiceComputePrivacy } from '@utils/compute'
 import DebugOutput from '@shared/DebugOutput'
 
 export default function DebugEditCompute({
@@ -11,22 +10,16 @@ export default function DebugEditCompute({
   values: ComputePrivacyForm
   ddo: Asset
 }): ReactElement {
-  const { ocean } = useOcean()
   const [formTransformed, setFormTransformed] =
-    useState<ServiceComputePrivacy>()
+    useState<ServiceComputeOptions>()
 
   useEffect(() => {
-    if (!ocean) return
-
-    async function transformValues() {
-      const privacy = await transformComputeFormToServiceComputePrivacy(
-        values,
-        ocean
-      )
-      setFormTransformed(privacy)
-    }
-    transformValues()
-  }, [values, ddo, ocean])
+    // async function transformValues() {
+    //   const privacy = await transformComputeFormToServiceComputePrivacy(values)
+    //   setFormTransformed(privacy)
+    // }
+    // transformValues()
+  }, [values, ddo])
 
   return (
     <>

@@ -1,14 +1,13 @@
-import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 import { Formik } from 'formik'
 import React, { ReactElement, useState } from 'react'
 import { useAsset } from '@context/Asset'
 import FormEditComputeDataset from './FormEditComputeDataset'
-import { LoggerInstance, ServiceComputePrivacy } from '@oceanprotocol/lib'
+import { LoggerInstance, ServiceComputeOptions } from '@oceanprotocol/lib'
 import { useUserPreferences } from '@context/UserPreferences'
 import DebugEditCompute from './DebugEditCompute'
 import styles from './index.module.css'
-import { transformComputeFormToServiceComputePrivacy } from '@utils/compute'
+// import { transformComputeFormToServiceComputePrivacy } from '@utils/compute'
 import { setMinterToDispenser, setMinterToPublisher } from '@utils/freePrice'
 import Web3Feedback from '@shared/Web3Feedback'
 import { getInitialValues, validationSchema } from './_constants'
@@ -20,7 +19,6 @@ export default function EditComputeDataset({
   setShowEdit: (show: boolean) => void
 }): ReactElement {
   const { debug } = useUserPreferences()
-  const { ocean } = useOcean()
   const { accountId } = useWeb3()
   const { ddo, price, isAssetNetwork, refreshDdo } = useAsset()
   const [success, setSuccess] = useState<string>()

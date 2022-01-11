@@ -1,5 +1,9 @@
 import React, { useState, ReactElement, useEffect, useCallback } from 'react'
-import { LoggerInstance } from '@oceanprotocol/lib'
+import {
+  LoggerInstance,
+  ComputeAlgorithm,
+  ComputeOutput
+} from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
 import FileIcon from '@shared/FileIcon'
@@ -17,10 +21,6 @@ import {
 } from '@utils/aquarius'
 import { Formik } from 'formik'
 import { getInitialValues, validationSchema } from './_constants'
-import {
-  ComputeAlgorithm,
-  ComputeOutput
-} from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
 import axios from 'axios'
 import FormStartComputeDataset from './FormComputeDataset'
 import styles from './index.module.css'
@@ -55,7 +55,6 @@ export default function Compute({
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
-  const { ocean } = useOcean()
   const { buyDT, pricingError, pricingStepText } = usePricing()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
@@ -83,7 +82,6 @@ export default function Compute({
   const isComputeButtonDisabled =
     isJobStarting === true ||
     file === null ||
-    !ocean ||
     (!hasPreviousDatasetOrder && !hasDatatoken && !isConsumablePrice) ||
     (!hasPreviousAlgorithmOrder &&
       !hasAlgoAssetDatatoken &&
@@ -111,12 +109,12 @@ export default function Compute({
   }
 
   async function checkAssetDTBalance(asset: DDO) {
-    const AssetDtBalance = await ocean.datatokens.balance(
-      asset.services[0].datatokenAddress,
-      accountId
-    )
-    setalgorithmDTBalance(AssetDtBalance)
-    setHasAlgoAssetDatatoken(Number(AssetDtBalance) >= 1)
+    // const AssetDtBalance = await ocean.datatokens.balance(
+    //   asset.services[0].datatokenAddress,
+    //   accountId
+    // )
+    // setalgorithmDTBalance(AssetDtBalance)
+    // setHasAlgoAssetDatatoken(Number(AssetDtBalance) >= 1)
   }
 
   function getQuerryString(
@@ -204,9 +202,9 @@ export default function Compute({
   }, [ddo])
 
   useEffect(() => {
-    if (!ocean || !accountId) return
+    if (!accountId) return
     checkPreviousOrders(ddo)
-  }, [ocean, ddo, accountId])
+  }, [ddo, accountId])
 
   useEffect(() => {
     if (!selectedAlgorithmAsset) return
@@ -231,8 +229,8 @@ export default function Compute({
         checkPreviousOrders(selectedAlgorithmAsset)
       }
     }
-    ocean && checkAssetDTBalance(selectedAlgorithmAsset)
-  }, [ddo, selectedAlgorithmAsset, ocean, accountId, hasPreviousAlgorithmOrder])
+    // ocean && checkAssetDTBalance(selectedAlgorithmAsset)
+  }, [ddo, selectedAlgorithmAsset, accountId, hasPreviousAlgorithmOrder])
 
   // Output errors in toast UI
   useEffect(() => {
