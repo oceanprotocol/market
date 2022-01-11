@@ -3,37 +3,37 @@ import React, { ReactElement, useState } from 'react'
 import Loader from '@shared/atoms/Loader'
 import { ListItem } from '@shared/atoms/Lists'
 import Button from '@shared/atoms/Button'
-import { useOcean } from '@context/Ocean'
 import styles from './Results.module.css'
 import FormHelp from '@shared/FormInput/Help'
 import content from '../../../../../content/pages/history.json'
+import { useWeb3 } from '@context/Web3'
 
 export default function Results({
   job
 }: {
   job: ComputeJobMetaData
 }): ReactElement {
-  const { ocean, account } = useOcean()
+  const { accountId } = useWeb3()
   const [isLoading, setIsLoading] = useState(false)
   const [hasFetched, setHasFetched] = useState(false)
   const isFinished = job.dateFinished !== null
 
   async function getResults() {
-    if (!account || !ocean || !job) return
+    if (!accountId || !job) return
 
     try {
       setIsLoading(true)
-      const jobStatus = await ocean.compute.status(
-        account,
-        job.did,
-        undefined,
-        undefined,
-        job.jobId
-      )
-      if (jobStatus?.length > 0) {
-        job.algorithmLogUrl = jobStatus[0].algorithmLogUrl
-        job.resultsUrl = jobStatus[0].resultsUrl
-      }
+      // const jobStatus = await ocean.compute.status(
+      //   account,
+      //   job.did,
+      //   undefined,
+      //   undefined,
+      //   job.jobId
+      // )
+      // if (jobStatus?.length > 0) {
+      //   job.algorithmLogUrl = jobStatus[0].algorithmLogUrl
+      //   job.resultsUrl = jobStatus[0].resultsUrl
+      // }
     } catch (error) {
       LoggerInstance.error(error.message)
     } finally {
@@ -47,16 +47,16 @@ export default function Results({
       {hasFetched ? (
         <ul>
           <ListItem>
-            {job.algorithmLogUrl ? (
+            {/* {job.algorithmLogUrl ? (
               <a href={job.algorithmLogUrl} target="_blank" rel="noreferrer">
                 View Log
               </a>
             ) : (
               'No logs found.'
-            )}
+            )} */}
           </ListItem>
 
-          {job.resultsUrl &&
+          {/* {job.resultsUrl &&
             Array.isArray(job.resultsUrl) &&
             job.resultsUrl.map((url, i) =>
               url ? (
@@ -68,7 +68,7 @@ export default function Results({
               ) : (
                 <ListItem>No results found.</ListItem>
               )
-            )}
+            )} */}
         </ul>
       ) : (
         <Button

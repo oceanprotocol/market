@@ -41,7 +41,6 @@ export default function Remove({
 }): ReactElement {
   const slippagePresets = ['5', '10', '15', '25', '50']
   const { accountId } = useWeb3()
-  const { ocean } = useOcean()
   const { isAssetNetwork } = useAsset()
   const [amountPercent, setAmountPercent] = useState('0')
   const [amountMaxPercent, setAmountMaxPercent] = useState('100')
@@ -60,24 +59,23 @@ export default function Remove({
   async function handleRemoveLiquidity() {
     setIsLoading(true)
     try {
-      const result =
-        isAdvanced === true
-          ? await ocean.pool.removePoolLiquidity(
-              accountId,
-              poolAddress,
-              amountPoolShares,
-              minDatatokenAmount,
-              minOceanAmount
-            )
-          : await ocean.pool.removeOceanLiquidityWithMinimum(
-              accountId,
-              poolAddress,
-              amountPoolShares,
-              minOceanAmount
-            )
-
-      setTxId(result?.transactionHash)
-      refreshInfo()
+      // const result =
+      //   isAdvanced === true
+      //     ? await ocean.pool.removePoolLiquidity(
+      //         accountId,
+      //         poolAddress,
+      //         amountPoolShares,
+      //         minDatatokenAmount,
+      //         minOceanAmount
+      //       )
+      //     : await ocean.pool.removeOceanLiquidityWithMinimum(
+      //         accountId,
+      //         poolAddress,
+      //         amountPoolShares,
+      //         minOceanAmount
+      //       )
+      // setTxId(result?.transactionHash)
+      // refreshInfo()
     } catch (error) {
       LoggerInstance.error(error.message)
       toast.error(error.message)
@@ -88,45 +86,44 @@ export default function Remove({
 
   // Get and set max percentage
   useEffect(() => {
-    if (!ocean || !poolTokens) return
+    if (!accountId || !poolTokens) return
 
     async function getMax() {
-      const amountMaxPercent =
-        isAdvanced === true
-          ? '100'
-          : await getMaxPercentRemove(ocean, poolAddress, poolTokens)
-      setAmountMaxPercent(amountMaxPercent)
+      // const amountMaxPercent =
+      //   isAdvanced === true
+      //     ? '100'
+      //     : await getMaxPercentRemove(poolAddress, poolTokens)
+      // setAmountMaxPercent(amountMaxPercent)
     }
     getMax()
-  }, [ocean, isAdvanced, poolAddress, poolTokens])
+  }, [accountId, isAdvanced, poolAddress, poolTokens])
 
   const getValues = useRef(
     debounce(async (newAmountPoolShares, isAdvanced) => {
-      if (isAdvanced === true) {
-        const tokens = await ocean.pool.getTokensRemovedforPoolShares(
-          poolAddress,
-          `${newAmountPoolShares}`
-        )
-        setAmountOcean(tokens?.oceanAmount)
-        setAmountDatatoken(tokens?.dtAmount)
-        return
-      }
-
-      const amountOcean = await ocean.pool.getOceanRemovedforPoolShares(
-        poolAddress,
-        newAmountPoolShares
-      )
-      setAmountOcean(amountOcean)
+      // if (isAdvanced === true) {
+      //   const tokens = await ocean.pool.getTokensRemovedforPoolShares(
+      //     poolAddress,
+      //     `${newAmountPoolShares}`
+      //   )
+      //   setAmountOcean(tokens?.oceanAmount)
+      //   setAmountDatatoken(tokens?.dtAmount)
+      //   return
+      // }
+      // const amountOcean = await ocean.pool.getOceanRemovedforPoolShares(
+      //   poolAddress,
+      //   newAmountPoolShares
+      // )
+      // setAmountOcean(amountOcean)
     }, 150)
   )
   // Check and set outputs when amountPoolShares changes
   useEffect(() => {
-    if (!ocean || !poolTokens) return
+    if (!accountId || !poolTokens) return
     getValues.current(amountPoolShares, isAdvanced)
   }, [
     amountPoolShares,
     isAdvanced,
-    ocean,
+    accountId,
     poolTokens,
     poolAddress,
     totalPoolTokens

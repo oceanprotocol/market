@@ -66,7 +66,6 @@ export default function FormStartCompute({
   const [totalPrice, setTotalPrice] = useState(price?.value)
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>(false)
   const { accountId, balance } = useWeb3()
-  const { ocean } = useOcean()
   const [algorithmConsumableStatus, setAlgorithmConsumableStatus] =
     useState<number>()
 
@@ -85,11 +84,11 @@ export default function FormStartCompute({
 
     if (!accountId || !isConsumable) return
     async function checkIsConsumable() {
-      const consumable = await ocean.assets.isConsumable(
-        algorithmDDO as any,
-        accountId.toLowerCase()
-      )
-      if (consumable) setAlgorithmConsumableStatus(consumable.status)
+      // const consumable = await ocean.assets.isConsumable(
+      //   algorithmDDO as any,
+      //   accountId.toLowerCase()
+      // )
+      // if (consumable) setAlgorithmConsumableStatus(consumable.status)
     }
     checkIsConsumable()
   }, [values.algorithm, accountId, isConsumable])

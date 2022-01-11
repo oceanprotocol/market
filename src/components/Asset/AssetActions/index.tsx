@@ -26,7 +26,6 @@ export default function AssetActions({
   price: BestPrice
 }): ReactElement {
   const { accountId, balance } = useWeb3()
-  const { ocean, account } = useOcean()
   const { isAssetNetwork } = useAsset()
   const { values } = useFormikContext<FormPublishData>()
 
@@ -87,25 +86,25 @@ export default function AssetActions({
 
   // Get and set user DT balance
   useEffect(() => {
-    if (!ocean || !accountId || !isAssetNetwork) return
+    if (!accountId || !isAssetNetwork) return
     async function init() {
       try {
-        const dtBalance = await ocean.datatokens.balance(
-          ddo.services[0].datatokenAddress,
-          accountId
-        )
-        setDtBalance(dtBalance)
+        // const dtBalance = await ocean.datatokens.balance(
+        //   ddo.services[0].datatokenAddress,
+        //   accountId
+        // )
+        // setDtBalance(dtBalance)
       } catch (e) {
         LoggerInstance.error(e.message)
       }
     }
     init()
-  }, [ocean, accountId, ddo, isAssetNetwork])
+  }, [accountId, ddo, isAssetNetwork])
 
   // Check user balance against price
   useEffect(() => {
     if (price?.type === 'free') setIsBalanceSufficient(true)
-    if (!price?.value || !account || !balance?.ocean || !dtBalance) return
+    if (!price?.value || !accountId || !balance?.ocean || !dtBalance) return
 
     setIsBalanceSufficient(
       compareAsBN(balance.ocean, `${price.value}`) || Number(dtBalance) >= 1
@@ -114,7 +113,7 @@ export default function AssetActions({
     return () => {
       setIsBalanceSufficient(false)
     }
-  }, [balance, account, price, dtBalance])
+  }, [balance, accountId, price, dtBalance])
 
   const UseContent = isCompute ? (
     <Compute
