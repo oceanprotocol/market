@@ -16,8 +16,7 @@ import { secondsToString } from '@utils/ddo'
 import AlgorithmDatasetsListForCompute from './Compute/AlgorithmDatasetsListForCompute'
 import styles from './Consume.module.css'
 import { useIsMounted } from '@hooks/useIsMounted'
-import { FileMetadata } from '@utils/provider'
-import { Asset } from '@oceanprotocol/lib'
+import { Asset, FileMetadata } from '@oceanprotocol/lib'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {

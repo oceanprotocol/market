@@ -154,7 +154,6 @@ export async function transformPublishFormToDdo(
     nftAddress,
     version: '4.0.0',
     chainId,
-    nftAddress,
     metadata: newMetadata,
     services: [newService]
     // Only added for DDO preview, reflecting Asset response,

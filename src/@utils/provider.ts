@@ -5,13 +5,6 @@ import {
   ProviderInstance
 } from '@oceanprotocol/lib'
 
-export interface FileInfo {
-  index: number
-  valid: boolean
-  contentType: string
-  contentLength: string
-}
-
 export async function getEncryptedFiles(
   files: FileMetadata[],
   providerUrl: string
@@ -41,13 +34,13 @@ export async function getFileInfo(
   url: string,
   providerUrl: string,
   cancelToken: CancelToken
-): Promise<FileInfo[]> {
+): Promise<FileMetadata[]> {
   try {
     // TODO: what was the point of this?
     // if (url instanceof DID) postBody = { did: url.getDid() }
     // else postBody = { url }
     const postBody = { url, type: 'url' }
-    const response: AxiosResponse<FileInfo[]> = await axios.post(
+    const response: AxiosResponse<FileMetadata[]> = await axios.post(
       `${providerUrl}/api/services/fileinfo`,
       postBody,
       { cancelToken }
