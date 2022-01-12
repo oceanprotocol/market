@@ -1,6 +1,6 @@
 import React, { ReactElement, useState, useRef } from 'react'
 import { Form, Formik } from 'formik'
-import { initialValues } from './_constants'
+import { initialPublishFeedback, initialValues } from './_constants'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
 import { useWeb3 } from '@context/Web3'
 import { createTokensAndPricing, transformPublishFormToDdo } from './_utils'
@@ -37,20 +37,9 @@ export default function PublishPage({
   const nftFactory = useNftFactory()
   const newCancelToken = useCancelToken()
 
-  const [feedback, setFeedback] = useState<PublishFeedback>({
-    1: {
-      name: 'Create Tokens & Pricing',
-      status: 'pending'
-    },
-    2: {
-      name: 'Encrypt DDO',
-      status: 'pending'
-    },
-    3: {
-      name: 'Publish DDO',
-      status: 'pending'
-    }
-  })
+  const [feedback, setFeedback] = useState<PublishFeedback>(
+    initialPublishFeedback
+  )
 
   async function handleSubmit(values: FormPublishData) {
     let _erc721Address, _datatokenAddress, _ddo, _encryptedDdo
@@ -59,6 +48,14 @@ export default function PublishPage({
     // 1. Create NFT & datatokens & create pricing schema
     // --------------------------------------------------
     try {
+      setFeedback({
+        ...feedback,
+        1: {
+          ...feedback[1],
+          status: 'active'
+        }
+      })
+
       const config = getOceanConfig(chainId)
       console.log('config', config)
 
@@ -98,6 +95,14 @@ export default function PublishPage({
     // 2. Construct and encypt DDO
     // --------------------------------------------------
     try {
+      setFeedback({
+        ...feedback,
+        2: {
+          ...feedback[2],
+          status: 'active'
+        }
+      })
+
       const ddo = await transformPublishFormToDdo(
         values,
         _datatokenAddress,
@@ -147,6 +152,14 @@ export default function PublishPage({
     // 3. Publish DDO
     // --------------------------------------------------
     try {
+      setFeedback({
+        ...feedback,
+        3: {
+          ...feedback[3],
+          status: 'active'
+        }
+      })
+
       // TODO: this whole setMetadata needs to go in a function ,too many hardcoded/calculated params
       // TODO: hash generation : this needs to be moved in a function (probably on ocean.js) after we figure out what is going on in provider, leave it here for now
       const metadataHash = getHash(JSON.stringify(_ddo))

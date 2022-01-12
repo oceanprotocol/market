@@ -55,7 +55,8 @@ export interface StepContent {
 export interface PublishFeedback {
   [key: number]: {
     name: string
-    status: 'success' | 'error' | 'pending'
+    description: string
+    status: 'success' | 'error' | 'pending' | 'active'
     message?: string
   }
 }

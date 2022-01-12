@@ -1,6 +1,6 @@
 import React from 'react'
 import { allowDynamicPricing, allowFixedPricing } from '../../../app.config.js'
-import { FormPublishData, StepContent } from './_types'
+import { FormPublishData, PublishFeedback, StepContent } from './_types'
 import content from '../../../content/publish/form.json'
 import PricingFields from './Pricing'
 import MetadataFields from './Metadata'
@@ -120,3 +120,24 @@ export const algorithmContainerPresets: MetadataAlgorithmContainer[] = [
     checksum: ''
   }
 ]
+
+export const initialPublishFeedback: PublishFeedback = {
+  1: {
+    name: 'Create Tokens & Pricing',
+    description:
+      'The Data NFT representing your asset, the Datatokens defining access to it, and the pricing schema are all created in one transaction.',
+    status: 'pending'
+  },
+  2: {
+    name: 'Construct & Encrypt DDO',
+    description:
+      'The entered metadata and services are made into a DDO, where the file URLs are encrypted, and afterwards the whole DDO will be encrypted for storage on-chain. Indexers like Aquarius can decrypt the DDO for displaying purposes, the file URLs can only be decrypted by a user exchanging datatokens.',
+    status: 'pending'
+  },
+  3: {
+    name: 'Publish DDO',
+    description:
+      'The encrypted DDO is stored on-chain as part of the Data NFT.',
+    status: 'pending'
+  }
+}
