@@ -8,7 +8,7 @@
   color: var(--color-secondary);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-  padding: calc(var(--spacer) / 12) calc(var(--spacer) / 4);
+  padding: calc(var(--spacer) / 16) calc(var(--spacer) / 4);
 }
 
 a.txHash {
