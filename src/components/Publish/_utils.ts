@@ -15,6 +15,7 @@ import {
   ZERO_ADDRESS
 } from '@oceanprotocol/lib'
 import { mapTimeoutStringToSeconds } from '@utils/ddo'
+import { generateNftCreateData } from '@utils/nft'
 import { getEncryptedFiles } from '@utils/provider'
 import slugify from 'slugify'
 import Web3 from 'web3'
@@ -130,7 +131,6 @@ export async function transformPublishFormToDdo(
         }
       })
   }
-  console.log('new meta', newMetadata)
 
   // this is the default format hardcoded
   const file = [
@@ -193,14 +193,11 @@ export async function createTokensAndPricing(
   nftFactory: NftFactory,
   web3: Web3
 ) {
-  // image not included here for gas fees reasons. It is also an issue to reaserch how we add the image in the nft
-  const nftCreateData: NftCreateData = {
-    name: values.metadata.nft.name,
-    symbol: values.metadata.nft.symbol,
-    // tokenURI: values.metadata.nft.image_data,
-    tokenURI: '',
-    templateIndex: 1
-  }
+  const nftCreateData: NftCreateData = generateNftCreateData(
+    values.metadata.nft
+  )
+
+  LoggerInstance.log('[publish] NFT metadata', nftCreateData)
 
   // TODO: cap is hardcoded for now to 1000, this needs to be discussed at some point
   // fee is default 0 for now
@@ -250,7 +247,7 @@ export async function createTokensAndPricing(
         '200',
         false
       )
-      console.log('aprove', txApp)
+      LoggerInstance.log('[publish] approve', txApp)
       const result = await nftFactory.createNftErcWithPool(
         accountId,
         nftCreateData,
