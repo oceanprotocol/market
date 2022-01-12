@@ -1,26 +1,25 @@
 import React, { ReactElement, useState } from 'react'
-import { useField } from 'formik'
+import { useField, useFormikContext } from 'formik'
 import { toast } from 'react-toastify'
 import FileInfo from './Info'
 import UrlInput from '../URLInput'
 import { InputProps } from '@shared/FormInput'
-import { useWeb3 } from '@context/Web3'
-import { getOceanConfig } from '@utils/ocean'
 import { initialValues } from 'src/components/Publish/_constants'
 import { getFileInfo } from '@utils/provider'
+import { FormPublishData } from 'src/components/Publish/_types'
 
 export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
   const [isLoading, setIsLoading] = useState(false)
-  const { chainId } = useWeb3()
+  const { values } = useFormikContext<FormPublishData>()
 
   function loadFileInfo(url: string) {
-    const config = getOceanConfig(chainId || 1)
+    const providerUri = values.services[0].providerUrl.url
 
     async function validateUrl() {
       try {
         setIsLoading(true)
-        const checkedFile = await getFileInfo(url, config.providerUri)
+        const checkedFile = await getFileInfo(url, providerUri)
         checkedFile && helpers.setValue([{ url, ...checkedFile[0] }])
       } catch (error) {
         toast.error('Could not fetch file info. Please check URL and try again')
