@@ -197,7 +197,7 @@ export async function createTokensAndPricing(
     values.metadata.nft
   )
 
-  LoggerInstance.log('[publish] NFT metadata', nftCreateData)
+  LoggerInstance.log('[publish] Creating NFT with metadata', nftCreateData)
 
   // TODO: cap is hardcoded for now to 1000, this needs to be discussed at some point
   // fee is default 0 for now
@@ -213,6 +213,8 @@ export async function createTokensAndPricing(
     name: values.services[0].dataTokenOptions.name,
     symbol: values.services[0].dataTokenOptions.symbol
   }
+
+  LoggerInstance.log('[publish] Creating datatoken with ercParams', ercParams)
 
   let erc721Address, datatokenAddress, txHash
 
@@ -237,16 +239,23 @@ export async function createTokensAndPricing(
         swapFeeLiquidityProvider: 1e15,
         swapFeeMarketRunner: 1e15
       }
+
+      LoggerInstance.log(
+        '[publish] Creating dynamic pricing with poolParams',
+        poolParams
+      )
+
       // the spender in this case is the erc721Factory because we are delegating
       const pool = new Pool(web3, LoggerInstance)
-      const txApp = await pool.approve(
+      const txApprove = await pool.approve(
         accountId,
         config.oceanTokenAddress,
         config.erc721FactoryAddress,
         '200',
         false
       )
-      LoggerInstance.log('[publish] approve', txApp)
+      LoggerInstance.log('[publish] pool.approve tx', txApprove)
+
       const result = await nftFactory.createNftErcWithPool(
         accountId,
         nftCreateData,
@@ -257,6 +266,8 @@ export async function createTokensAndPricing(
       erc721Address = result.events.NFTCreated.returnValues[0]
       datatokenAddress = result.events.TokenCreated.returnValues[0]
       txHash = result.transactionHash
+
+      LoggerInstance.log('[publish] createNftErcWithPool tx', txHash)
       break
     }
     case 'fixed': {
@@ -272,6 +283,11 @@ export async function createTokensAndPricing(
         withMint: true
       }
 
+      LoggerInstance.log(
+        '[publish] Creating fixed pricing with freParams',
+        freParams
+      )
+
       const result = await nftFactory.createNftErcWithFixedRate(
         accountId,
         nftCreateData,
@@ -282,6 +298,8 @@ export async function createTokensAndPricing(
       erc721Address = result.events.NFTCreated.returnValues[0]
       datatokenAddress = result.events.TokenCreated.returnValues[0]
       txHash = result.transactionHash
+
+      LoggerInstance.log('[publish] createNftErcWithFixedRate tx', txHash)
 
       break
     }
@@ -296,6 +314,12 @@ export async function createTokensAndPricing(
         withMint: true,
         allowedSwapper: ZERO_ADDRESS
       }
+
+      LoggerInstance.log(
+        '[publish] Creating free pricing with dispenserParams',
+        dispenserParams
+      )
+
       const result = await nftFactory.createNftErcWithDispenser(
         accountId,
         nftCreateData,
@@ -305,6 +329,8 @@ export async function createTokensAndPricing(
       erc721Address = result.events.NFTCreated.returnValues[0]
       datatokenAddress = result.events.TokenCreated.returnValues[0]
       txHash = result.transactionHash
+
+      LoggerInstance.log('[publish] createNftErcWithDispenser tx', txHash)
 
       break
     }

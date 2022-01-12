@@ -133,7 +133,7 @@ export default function PublishPage({
       )
 
       _ddo = ddo
-      LoggerInstance.log('[publish] Got new DDO', JSON.stringify(ddo))
+      LoggerInstance.log('[publish] Got new DDO', ddo)
 
       const encryptedResponse = await ProviderInstance.encrypt(
         ddo,

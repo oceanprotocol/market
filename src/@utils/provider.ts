@@ -11,7 +11,6 @@ export async function getEncryptedFiles(
 ): Promise<string> {
   try {
     // https://github.com/oceanprotocol/provider/blob/v4main/API.md#encrypt-endpoint
-    console.log('start encr')
     const response = await ProviderInstance.encrypt(
       files,
       providerUrl,
@@ -23,7 +22,6 @@ export async function getEncryptedFiles(
         })
       }
     )
-    console.log('encr eres', response)
     return response.data
   } catch (error) {
     console.error('Error parsing json: ' + error.message)
