@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useRef } from 'react'
+import React, { ReactElement, useState, useRef, useEffect } from 'react'
 import { Form, Formik } from 'formik'
 import { initialPublishFeedback, initialValues } from './_constants'
 import { useAccountPurgatory } from '@hooks/useAccountPurgatory'
@@ -65,8 +65,7 @@ export default function PublishPage({
         ...prevState,
         '1': {
           ...prevState['1'],
-          status: 'active',
-          txCount: values.pricing.type === 'dynamic' ? 2 : 1
+          status: 'active'
         }
       }))
 
@@ -119,7 +118,7 @@ export default function PublishPage({
         ...prevState,
         '2': {
           ...prevState['2'],
-          status: _datatokenAddress && _erc721Address ? 'active' : 'error'
+          status: 'active'
         }
       }))
 
@@ -178,7 +177,7 @@ export default function PublishPage({
         ...prevState,
         '3': {
           ...prevState['3'],
-          status: _ddo && _encryptedDdo ? 'active' : 'error'
+          status: 'active'
         }
       }))
 

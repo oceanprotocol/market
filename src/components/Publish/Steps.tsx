@@ -25,6 +25,24 @@ export function Steps({
     setFieldValue('feedback', feedback)
   }, [feedback, setFieldValue])
 
+  // auto-switch some feedback content based on pricing type
+  useEffect(() => {
+    setFieldValue('feedback', {
+      ...feedback,
+      '1': {
+        ...feedback['1'],
+        txCount: values.pricing.type === 'dynamic' ? 2 : 1,
+        description:
+          values.pricing.type === 'dynamic'
+            ? feedback['1'].description.replace(
+                'a single transaction',
+                'a single transaction, after an initial approve transaction'
+              )
+            : feedback['1'].description
+      }
+    })
+  }, [values.pricing.type, setFieldValue])
+
   const { component } = wizardSteps.filter(
     (stepContent) => stepContent.step === values.user.stepCurrent
   )[0]

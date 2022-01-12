@@ -1,7 +1,7 @@
 {
   "1": {
     "name": "Create Tokens & Pricing",
-    "description": "The Data NFT representing your asset, the Datatokens defining access to it, and the pricing schema are all created in one transaction.",
+    "description": "The Data NFT representing your asset, the Datatokens defining access to it, and the pricing schema are all created in a single transaction.",
     "status": "pending",
     "txCount": 1
   },
