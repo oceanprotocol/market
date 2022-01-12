@@ -32,27 +32,22 @@ export async function getEncryptedFiles(
 
 export async function getFileInfo(
   url: string,
-  providerUrl: string,
-  cancelToken: CancelToken
+  providerUrl: string
 ): Promise<FileMetadata[]> {
   try {
-    // TODO: what was the point of this?
-    // if (url instanceof DID) postBody = { did: url.getDid() }
-    // else postBody = { url }
-    const postBody = { url, type: 'url' }
-    const response: AxiosResponse<FileMetadata[]> = await axios.post(
-      `${providerUrl}/api/services/fileinfo`,
-      postBody,
-      { cancelToken }
+    const response = await ProviderInstance.checkFileUrl(
+      url,
+      providerUrl,
+      (method: Method, path: string, body: string) => {
+        return fetch(path, {
+          method: method,
+          body: body,
+          headers: { 'Content-Type': 'application/json' }
+        })
+      }
     )
-
-    if (!response || response.status !== 200 || !response.data) return
-    return response.data
+    return response
   } catch (error) {
-    if (axios.isCancel(error)) {
-      LoggerInstance.log(error.message)
-    } else {
-      LoggerInstance.error(error.message)
-    }
+    LoggerInstance.error(error.message)
   }
 }
