@@ -62,8 +62,8 @@ export default function PublishPage({
     try {
       setFeedback((prevState) => ({
         ...prevState,
-        1: {
-          ...prevState[1],
+        '1': {
+          ...prevState['1'],
           status: 'active',
           txCount: values.pricing.type === 'dynamic' ? 2 : 1
         }
@@ -92,8 +92,8 @@ export default function PublishPage({
 
       setFeedback((prevState) => ({
         ...prevState,
-        1: {
-          ...prevState[1],
+        '1': {
+          ...prevState['1'],
           status: isSuccess ? 'success' : 'error',
           txHash
         }
@@ -102,8 +102,8 @@ export default function PublishPage({
       LoggerInstance.error('[publish] error', error.message)
       setFeedback((prevState) => ({
         ...prevState,
-        1: {
-          ...prevState[1],
+        '1': {
+          ...prevState['1'],
           status: 'error',
           message: error.message
         }
@@ -116,8 +116,8 @@ export default function PublishPage({
     try {
       setFeedback((prevState) => ({
         ...prevState,
-        2: {
-          ...prevState[2],
+        '2': {
+          ...prevState['2'],
           status: _datatokenAddress && _erc721Address ? 'active' : 'error'
         }
       }))
@@ -152,8 +152,8 @@ export default function PublishPage({
 
       setFeedback((prevState) => ({
         ...prevState,
-        2: {
-          ...prevState[2],
+        '2': {
+          ...prevState['2'],
           status: encryptedDdo ? 'success' : 'error'
         }
       }))
@@ -161,8 +161,8 @@ export default function PublishPage({
       LoggerInstance.error('[publish] error', error.message)
       setFeedback((prevState) => ({
         ...prevState,
-        2: {
-          ...prevState[2],
+        '2': {
+          ...prevState['2'],
           status: 'error',
           message: error.message
         }
@@ -175,8 +175,8 @@ export default function PublishPage({
     try {
       setFeedback((prevState) => ({
         ...prevState,
-        3: {
-          ...prevState[3],
+        '3': {
+          ...prevState['3'],
           status: _ddo && _encryptedDdo ? 'active' : 'error'
         }
       }))
@@ -208,8 +208,8 @@ export default function PublishPage({
 
       setFeedback((prevState) => ({
         ...prevState,
-        3: {
-          ...prevState[3],
+        '3': {
+          ...prevState['3'],
           status: res ? 'success' : 'error',
           txHash
         }
@@ -218,8 +218,8 @@ export default function PublishPage({
       LoggerInstance.error('[publish] error', error.message)
       setFeedback((prevState) => ({
         ...prevState,
-        3: {
-          ...prevState[3],
+        '3': {
+          ...prevState['3'],
           status: 'error',
           message: error.message
         }

@@ -9,8 +9,6 @@ export default function Submission(): ReactElement {
 
   return (
     <div className={styles.submission}>
-      <h3>Submission</h3>
-
       <Feedback />
     </div>
   )

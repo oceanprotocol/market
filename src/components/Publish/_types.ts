@@ -53,10 +53,10 @@ export interface StepContent {
 }
 
 export interface PublishFeedback {
-  [key: number]: {
+  [key: string]: {
     name: string
     description: string
-    status: 'success' | 'error' | 'pending' | 'active'
+    status: 'success' | 'error' | 'pending' | 'active' | string
     txCount: number
     message?: string
     txHash?: string

@@ -2,6 +2,7 @@
   padding: 0;
   margin: 0 auto;
   max-width: 40rem;
+  padding-top: var(--spacer);
 }
 
 .feedback li {
@@ -13,7 +14,7 @@
 }
 
 .feedback li:last-child {
-  border-bottom: none;
+  margin-bottom: 0;
 }
 
 /* inject the numbers */
@@ -23,8 +24,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.4rem;
-  height: 1.4rem;
+  width: 1.5rem;
+  height: 1.5rem;
   border-radius: 50%;
   border: 2px solid var(--border-color);
   margin-right: calc(var(--spacer) / 4);
