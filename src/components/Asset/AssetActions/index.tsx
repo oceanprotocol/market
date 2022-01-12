@@ -1,7 +1,7 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import Compute from './Compute'
 import Consume from './Consume'
-import { Asset, LoggerInstance } from '@oceanprotocol/lib'
+import { Asset, FileMetadata, LoggerInstance } from '@oceanprotocol/lib'
 import Tabs, { TabsItem } from '@shared/atoms/Tabs'
 import { compareAsBN } from '@utils/numbers'
 import Pool from './Pool'
@@ -9,7 +9,7 @@ import Trade from './Trade'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import Web3Feedback from '@shared/Web3Feedback'
-import { FileMetadata, getFileInfo } from '@utils/provider'
+import { getFileInfo } from '@utils/provider'
 import { getOceanConfig } from '@utils/ocean'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
@@ -66,14 +66,10 @@ export default function AssetActions({
 
       const asset = values?.services?.[0].files?.[0].url || ddo.id
       const providerUrl =
-        values?.services[0].providerUrl || oceanConfig.providerUri
+        values?.services[0].providerUrl.url || oceanConfig.providerUri
 
       try {
-        const fileInfoResponse = await getFileInfo(
-          asset,
-          oceanConfig.providerUri,
-          newCancelToken()
-        )
+        const fileInfoResponse = await getFileInfo(asset, providerUrl)
         fileInfoResponse && setFileMetadata(fileInfoResponse[0])
         setFileIsLoading(false)
       } catch (error) {

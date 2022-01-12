@@ -46,7 +46,7 @@ const validationService = {
   }),
   timeout: Yup.string().required('Required'),
   access: Yup.string()
-    .matches(/compute|download/g)
+    .matches(/compute|access/g)
     .required('Required'),
   providerUrl: Yup.object().shape({
     url: Yup.string().url('Must be a valid URL.').required('Required'),

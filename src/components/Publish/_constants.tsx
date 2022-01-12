@@ -1,6 +1,6 @@
 import React from 'react'
 import { allowDynamicPricing, allowFixedPricing } from '../../../app.config.js'
-import { FormPublishData, StepContent } from './_types'
+import { FormPublishData, PublishFeedback, StepContent } from './_types'
 import content from '../../../content/publish/form.json'
 import PricingFields from './Pricing'
 import MetadataFields from './Metadata'
@@ -8,6 +8,7 @@ import ServicesFields from './Services'
 import Preview from './Preview'
 import Submission from './Submission'
 import { ServiceComputeOptions } from '@oceanprotocol/lib'
+import contentFeedback from '../../../content/publish/feedback.json'
 
 export const wizardSteps: StepContent[] = [
   {
@@ -57,7 +58,7 @@ export const initialValues: FormPublishData = {
     accountId: ''
   },
   metadata: {
-    nft: { name: '', symbol: '', description: '', image: '' },
+    nft: { name: '', symbol: '', description: '', image_data: '' },
     type: 'dataset',
     name: '',
     author: '',
@@ -120,3 +121,5 @@ export const algorithmContainerPresets: MetadataAlgorithmContainer[] = [
     checksum: ''
   }
 ]
+
+export const initialPublishFeedback: PublishFeedback = contentFeedback
