@@ -52,6 +52,17 @@
 .description {
   margin-left: calc(var(--spacer) * 1.3);
   color: var(--color-secondary);
+  margin-bottom: 0;
+}
+
+.txHash {
+  display: inline-block;
+  margin-left: calc(var(--spacer) / 2);
+  margin-top: calc(var(--spacer) / 2);
+  font-size: var(--font-size-small);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-base);
+  color: var(--color-primary);
 }
 
 @keyframes loader {

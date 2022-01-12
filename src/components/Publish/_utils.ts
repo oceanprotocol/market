@@ -214,8 +214,7 @@ export async function createTokensAndPricing(
     symbol: values.services[0].dataTokenOptions.symbol
   }
 
-  let erc721Address = ''
-  let datatokenAddress = ''
+  let erc721Address, datatokenAddress, txHash
 
   // TODO: cleaner code for this huge switch !??!?
   switch (values.pricing.type) {
@@ -257,6 +256,7 @@ export async function createTokensAndPricing(
 
       erc721Address = result.events.NFTCreated.returnValues[0]
       datatokenAddress = result.events.TokenCreated.returnValues[0]
+      txHash = result.transactionHash
       break
     }
     case 'fixed': {
@@ -281,6 +281,7 @@ export async function createTokensAndPricing(
 
       erc721Address = result.events.NFTCreated.returnValues[0]
       datatokenAddress = result.events.TokenCreated.returnValues[0]
+      txHash = result.transactionHash
 
       break
     }
@@ -303,10 +304,11 @@ export async function createTokensAndPricing(
       )
       erc721Address = result.events.NFTCreated.returnValues[0]
       datatokenAddress = result.events.TokenCreated.returnValues[0]
+      txHash = result.transactionHash
 
       break
     }
   }
 
-  return { erc721Address, datatokenAddress }
+  return { erc721Address, datatokenAddress, txHash }
 }
