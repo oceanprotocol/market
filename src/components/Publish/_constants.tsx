@@ -7,6 +7,7 @@ import MetadataFields from './Metadata'
 import ServicesFields from './Services'
 import Preview from './Preview'
 import Submission from './Submission'
+import { ServiceComputeOptions } from '@oceanprotocol/lib'
 
 export const wizardSteps: StepContent[] = [
   {
@@ -56,7 +57,7 @@ export const initialValues: FormPublishData = {
     accountId: ''
   },
   metadata: {
-    nft: { name: '', symbol: '', description: '', image: '' },
+    nft: { name: '', symbol: '', description: '', image_data: '' },
     type: 'dataset',
     name: '',
     author: '',
@@ -96,6 +97,13 @@ export const initialValues: FormPublishData = {
     weightOnDataToken: '5', // 50% on datatoken
     swapFee: 0.1 // in %
   }
+}
+
+export interface MetadataAlgorithmContainer {
+  entrypoint: string
+  image: string
+  tag: string
+  checksum: string
 }
 
 export const algorithmContainerPresets: MetadataAlgorithmContainer[] = [

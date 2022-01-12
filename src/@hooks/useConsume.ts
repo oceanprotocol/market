@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { consumeFeedback } from '@utils/feedback'
 import { LoggerInstance } from '@oceanprotocol/lib'
-import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 
 interface UseConsume {
@@ -44,36 +43,36 @@ function useConsume(): UseConsume {
 
     try {
       setStep(0)
-      if (!orderId) {
-        // if we don't have a previous valid order, get one
-        // const userOwnedTokens = await ocean.accounts.getTokenBalance(
-        //   dataTokenAddress,
-        //   account
-        // )
-        // if (parseFloat(userOwnedTokens) < 1) {
-        //   setConsumeError('Not enough datatokens')
-        //   return 'Not enough datatokens'
-        // } else {
-        //   setStep(1)
-        //   try {
-        //     orderId = await ocean.assets.order(
-        //       did as string,
-        //       serviceType,
-        //       accountId,
-        //       undefined,
-        //       marketFeeAddress,
-        //       undefined,
-        //       null,
-        //       false
-        //     )
-        //     LoggerInstance.log('ordercreated', orderId)
-        //     setStep(2)
-        //   } catch (error) {
-        //     setConsumeError(error.message)
-        //     return error.message
-        //   }
-        // }
-      }
+      // if (!orderId) {
+      // if we don't have a previous valid order, get one
+      // const userOwnedTokens = await ocean.accounts.getTokenBalance(
+      //   dataTokenAddress,
+      //   account
+      // )
+      // if (parseFloat(userOwnedTokens) < 1) {
+      //   setConsumeError('Not enough datatokens')
+      //   return 'Not enough datatokens'
+      // } else {
+      //   setStep(1)
+      //   try {
+      //     orderId = await ocean.assets.order(
+      //       did as string,
+      //       serviceType,
+      //       accountId,
+      //       undefined,
+      //       marketFeeAddress,
+      //       undefined,
+      //       null,
+      //       false
+      //     )
+      //     LoggerInstance.log('ordercreated', orderId)
+      //     setStep(2)
+      //   } catch (error) {
+      //     setConsumeError(error.message)
+      //     return error.message
+      //   }
+      // }
+      // }
       setStep(3)
       // if (orderId)
       //   await ocean.assets.download(

@@ -3,6 +3,7 @@ import MetaItem from './MetaItem'
 import styles from './MetaSecondary.module.css'
 import Tags from '@shared/atoms/Tags'
 import Button from '@shared/atoms/Button'
+import { Asset } from '@oceanprotocol/lib'
 
 const SampleButton = ({ url }: { url: string }) => (
   <Button

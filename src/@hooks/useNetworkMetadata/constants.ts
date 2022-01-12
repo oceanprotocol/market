@@ -7,7 +7,6 @@ export const networkDataGaiaX: EthereumListsChain = {
   chainId: 2021000,
   shortName: 'GAIA-X',
   chain: 'GAIA-X',
-  network: 'testnet',
   networkId: 2021000,
   nativeCurrency: { name: 'Gaia-X', symbol: 'GX', decimals: 18 },
   rpc: [configGaiaX.nodeUri],

@@ -39,7 +39,7 @@ export default function Actions({
         <Button
           type="submit"
           style="primary"
-          disabled={values.user.accountId === '' || !isValid}
+          disabled={values.user.accountId === ''}
         >
           Submit
         </Button>

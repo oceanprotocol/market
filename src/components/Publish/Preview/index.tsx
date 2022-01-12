@@ -4,6 +4,7 @@ import { FormPublishData } from '../_types'
 import { useFormikContext } from 'formik'
 import AssetContent from 'src/components/Asset/AssetContent'
 import { transformPublishFormToDdo } from '../_utils'
+import { Asset } from '@oceanprotocol/lib'
 import { useCancelToken } from '@hooks/useCancelToken'
 
 export default function Preview(): ReactElement {

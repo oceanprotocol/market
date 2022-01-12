@@ -1,4 +1,8 @@
-import { LoggerInstance } from '@oceanprotocol/lib'
+import {
+  Asset,
+  LoggerInstance,
+  PublisherTrustedAlgorithm
+} from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
@@ -208,7 +212,7 @@ export async function transformDDOToAssetSelection(
   const didProviderEndpointMap: any = {}
   for (const ddo of ddoList) {
     didList.push(ddo.id)
-    symbolList[ddo.id] = ddo.dataTokenInfo.symbol
+    symbolList[ddo.id] = ddo.datatokens[0].symbol
     const algoComputeService = getServiceByName(ddo, 'compute')
     algoComputeService?.serviceEndpoint &&
       (didProviderEndpointMap[ddo.id] = algoComputeService?.serviceEndpoint)

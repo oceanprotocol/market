@@ -13,6 +13,7 @@ import EditHistory from './EditHistory'
 import styles from './index.module.css'
 import NetworkName from '@shared/NetworkName'
 import content from '../../../../content/purgatory.json'
+import { Asset } from '@oceanprotocol/lib'
 
 export default function AssetContent({
   ddo,

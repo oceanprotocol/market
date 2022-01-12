@@ -1,8 +1,6 @@
 import { FormikContextType, useFormikContext } from 'formik'
 import React, { ReactElement } from 'react'
 import { useAsset } from '@context/Asset'
-import { useOcean } from '@context/Ocean'
-import { useWeb3 } from '@context/Web3'
 import Button from '@shared/atoms/Button'
 import styles from './FormActions.module.css'
 
@@ -13,8 +11,6 @@ export default function FormActions({
   setShowEdit: (show: boolean) => void
   handleClick?: () => void
 }): ReactElement {
-  const { accountId } = useWeb3()
-  const { ocean } = useOcean()
   const { isAssetNetwork } = useAsset()
   const { isValid }: FormikContextType<Partial<any>> = useFormikContext()
 
@@ -22,7 +18,7 @@ export default function FormActions({
     <footer className={styles.actions}>
       <Button
         style="primary"
-        disabled={!ocean || !accountId || !isValid || !isAssetNetwork}
+        disabled={!isValid || !isAssetNetwork}
         onClick={handleClick}
       >
         Submit

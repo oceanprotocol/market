@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react'
 import styles from './index.module.css'
 import { FormPublishData } from '../_types'
 import { useFormikContext } from 'formik'
+import { Feedback } from './Feedback'
 
 export default function Submission(): ReactElement {
   const { values, handleSubmit } = useFormikContext<FormPublishData>()
@@ -12,6 +13,7 @@ export default function Submission(): ReactElement {
       Place to teach about what happens next, output all the steps in background
       in some list, after submission continously update this list with the
       status of the submission.
+      <Feedback />
     </div>
   )
 }

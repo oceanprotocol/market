@@ -12,7 +12,7 @@ import Refresh from '@images/refresh.svg'
 import { useUserPreferences } from '@context/UserPreferences'
 import { getOceanConfig } from '@utils/ocean'
 import NetworkName from '@shared/NetworkName'
-import { getComputeJobs } from '@utils/compute'
+// import { getComputeJobs } from '@utils/compute'
 import styles from './index.module.css'
 import { useAsset } from '@context/Asset'
 import { useIsMounted } from '@hooks/useIsMounted'
@@ -75,7 +75,7 @@ export default function ComputeJobs({
 }: {
   minimal?: boolean
 }): ReactElement {
-  const { ocean, account, config, connect } = useOcean()
+  const { config } = useOcean()
   const { accountId, networkId } = useWeb3()
   const { ddo } = useAsset()
   const [isLoading, setIsLoading] = useState(false)
@@ -85,15 +85,15 @@ export default function ComputeJobs({
 
   const columnsMinimal = [columns[4], columns[5], columns[3]]
 
-  useEffect(() => {
-    async function initOcean() {
-      const oceanInitialConfig = getOceanConfig(networkId)
-      await connect(oceanInitialConfig)
-    }
-    if (ocean === undefined) {
-      initOcean()
-    }
-  }, [networkId, ocean, connect])
+  // useEffect(() => {
+  //   async function initOcean() {
+  //     const oceanInitialConfig = getOceanConfig(networkId)
+  //     await connect(oceanInitialConfig)
+  //   }
+  //   if (ocean === undefined) {
+  //     initOcean()
+  //   }
+  // }, [networkId])
 
   const fetchJobs = useCallback(async () => {
     if (!chainIds || chainIds.length === 0 || !accountId) {
@@ -103,13 +103,13 @@ export default function ComputeJobs({
     }
     try {
       setIsLoading(true)
-      const jobs = await getComputeJobs(chainIds, config, ocean, account, ddo)
-      isMounted() && setJobs(jobs.computeJobs)
-      setIsLoading(jobs.isLoaded)
+      // const jobs = await getComputeJobs(chainIds, config, ocean, account, ddo)
+      // isMounted() && setJobs(jobs.computeJobs)
+      // setIsLoading(jobs.isLoaded)
     } catch (error) {
       LoggerInstance.error(error.message)
     }
-  }, [chainIds, accountId, config, ocean, account, ddo, isMounted])
+  }, [chainIds, accountId, config, ddo, isMounted])
 
   useEffect(() => {
     fetchJobs()

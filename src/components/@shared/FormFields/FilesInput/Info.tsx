@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import { prettySize } from './utils'
 import cleanupContentType from '@utils/cleanupContentType'
 import styles from './Info.module.css'
-import { FileMetadata } from '@utils/provider'
+import { FileMetadata } from '@oceanprotocol/lib'
 
 export default function FileInfo({
   file,
@@ -13,7 +13,7 @@ export default function FileInfo({
 }): ReactElement {
   return (
     <div className={styles.info}>
-      <h3 className={styles.url}>{(file as any).url}</h3>
+      <h3 className={styles.url}>{file.url}</h3>
       <ul>
         <li className={styles.success}>✓ URL confirmed</li>
         {file.contentLength && <li>{prettySize(+file.contentLength)}</li>}

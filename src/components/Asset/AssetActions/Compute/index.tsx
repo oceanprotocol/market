@@ -1,14 +1,20 @@
 import React, { useState, ReactElement, useEffect, useCallback } from 'react'
-import { LoggerInstance } from '@oceanprotocol/lib'
+import {
+  LoggerInstance,
+  ComputeAlgorithm,
+  ComputeOutput,
+  Asset,
+  DDO,
+  PublisherTrustedAlgorithm,
+  FileMetadata
+} from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
 import FileIcon from '@shared/FileIcon'
 import Alert from '@shared/atoms/Alert'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
-import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 import { usePricing } from '@hooks/usePricing'
-import { useAsset } from '@context/Asset'
 import {
   generateBaseQuery,
   getFilterTerm,
@@ -17,10 +23,6 @@ import {
 } from '@utils/aquarius'
 import { Formik } from 'formik'
 import { getInitialValues, validationSchema } from './_constants'
-import {
-  ComputeAlgorithm,
-  ComputeOutput
-} from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
 import axios from 'axios'
 import FormStartComputeDataset from './FormComputeDataset'
 import styles from './index.module.css'
@@ -34,7 +36,6 @@ import ComputeJobs from '../../../Profile/History/ComputeJobs'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { SortTermOptions } from '../../../../@types/aquarius/SearchQuery'
-import { FileMetadata } from '@utils/provider'
 
 export default function Compute({
   ddo,
@@ -55,7 +56,6 @@ export default function Compute({
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
-  const { ocean } = useOcean()
   const { buyDT, pricingError, pricingStepText } = usePricing()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
@@ -83,7 +83,6 @@ export default function Compute({
   const isComputeButtonDisabled =
     isJobStarting === true ||
     file === null ||
-    !ocean ||
     (!hasPreviousDatasetOrder && !hasDatatoken && !isConsumablePrice) ||
     (!hasPreviousAlgorithmOrder &&
       !hasAlgoAssetDatatoken &&
@@ -111,12 +110,12 @@ export default function Compute({
   }
 
   async function checkAssetDTBalance(asset: DDO) {
-    const AssetDtBalance = await ocean.datatokens.balance(
-      asset.services[0].datatokenAddress,
-      accountId
-    )
-    setalgorithmDTBalance(AssetDtBalance)
-    setHasAlgoAssetDatatoken(Number(AssetDtBalance) >= 1)
+    // const AssetDtBalance = await ocean.datatokens.balance(
+    //   asset.services[0].datatokenAddress,
+    //   accountId
+    // )
+    // setalgorithmDTBalance(AssetDtBalance)
+    // setHasAlgoAssetDatatoken(Number(AssetDtBalance) >= 1)
   }
 
   function getQuerryString(
@@ -204,9 +203,9 @@ export default function Compute({
   }, [ddo])
 
   useEffect(() => {
-    if (!ocean || !accountId) return
+    if (!accountId) return
     checkPreviousOrders(ddo)
-  }, [ocean, ddo, accountId])
+  }, [ddo, accountId])
 
   useEffect(() => {
     if (!selectedAlgorithmAsset) return
@@ -231,8 +230,8 @@ export default function Compute({
         checkPreviousOrders(selectedAlgorithmAsset)
       }
     }
-    ocean && checkAssetDTBalance(selectedAlgorithmAsset)
-  }, [ddo, selectedAlgorithmAsset, ocean, accountId, hasPreviousAlgorithmOrder])
+    // ocean && checkAssetDTBalance(selectedAlgorithmAsset)
+  }, [ddo, selectedAlgorithmAsset, accountId, hasPreviousAlgorithmOrder])
 
   // Output errors in toast UI
   useEffect(() => {
@@ -429,7 +428,7 @@ export default function Compute({
             hasDatatokenSelectedComputeAsset={hasAlgoAssetDatatoken}
             oceanSymbol={price ? price.oceanSymbol : ''}
             dtSymbolSelectedComputeAsset={
-              selectedAlgorithmAsset?.dataTokenInfo?.symbol
+              selectedAlgorithmAsset?.datatokens[0]?.symbol
             }
             dtBalanceSelectedComputeAsset={algorithmDTBalance}
             selectedComputeAssetLowPoolLiquidity={!isAlgoConsumablePrice}

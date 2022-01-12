@@ -14,7 +14,7 @@ import {
 } from '@utils/subgraph'
 import { useUserPreferences } from './UserPreferences'
 import { PoolShares_poolShares as PoolShare } from '../@types/apollo/PoolShares'
-import { LoggerInstance } from '@oceanprotocol/lib'
+import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import { getDownloadAssets, getPublishedAssets } from '@utils/aquarius'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { accountTruncate } from '@utils/web3'

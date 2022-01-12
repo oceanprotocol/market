@@ -9,6 +9,7 @@
 //   Account
 // } from '@oceanprotocol/lib'
 // import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
+import { Asset } from '@oceanprotocol/lib'
 import { CancelToken } from 'axios'
 import { gql } from 'urql'
 import { queryMetadata, getFilterTerm, generateBaseQuery } from './aquarius'

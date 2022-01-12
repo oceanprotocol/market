@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from 'react'
-import { LoggerInstance } from '@oceanprotocol/lib'
+import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 import { Formik } from 'formik'
 import Actions from '../Pool/Actions'
@@ -9,7 +9,6 @@ import Swap from './Swap'
 import Alert from '@shared/atoms/Alert'
 import styles from './FormTrade.module.css'
 import Decimal from 'decimal.js'
-import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 import { useAsset } from '@context/Asset'
 import { FormTradeData } from './_types'
@@ -30,7 +29,6 @@ export default function FormTrade({
   price: BestPrice
 }): ReactElement {
   const { accountId } = useWeb3()
-  const { ocean } = useOcean()
   const { isAssetNetwork } = useAsset()
   const { debug } = useUserPreferences()
   const [txId, setTxId] = useState<string>()
@@ -69,27 +67,27 @@ export default function FormTrade({
         new Decimal(100).sub(new Decimal(values.slippage))
       ).div(100)
       const precision = 15
-      const tx =
-        values.type === 'buy'
-          ? await ocean.pool.buyDTWithExactOcean(
-              accountId,
-              price.address,
-              new Decimal(values.datatoken)
-                .mul(impact)
-                .toFixed(precision)
-                .toString(),
-              new Decimal(values.ocean).toFixed(precision).toString()
-            )
-          : await ocean.pool.sellDT(
-              accountId,
-              price.address,
-              new Decimal(values.datatoken).toFixed(precision).toString(),
-              new Decimal(values.ocean)
-                .mul(impact)
-                .toFixed(precision)
-                .toString()
-            )
-      setTxId(tx?.transactionHash)
+      // const tx =
+      //   values.type === 'buy'
+      //     ? await ocean.pool.buyDTWithExactOcean(
+      //         accountId,
+      //         price.address,
+      //         new Decimal(values.datatoken)
+      //           .mul(impact)
+      //           .toFixed(precision)
+      //           .toString(),
+      //         new Decimal(values.ocean).toFixed(precision).toString()
+      //       )
+      //     : await ocean.pool.sellDT(
+      //         accountId,
+      //         price.address,
+      //         new Decimal(values.datatoken).toFixed(precision).toString(),
+      //         new Decimal(values.ocean)
+      //           .mul(impact)
+      //           .toFixed(precision)
+      //           .toString()
+      //       )
+      // setTxId(tx?.transactionHash)
     } catch (error) {
       LoggerInstance.error(error.message)
       toast.error(error.message)

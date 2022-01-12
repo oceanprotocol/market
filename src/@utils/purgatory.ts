@@ -1,4 +1,4 @@
-import { PurgatoryData as PurgatoryDataAsset } from '@oceanprotocol/lib'
+import { Purgatory } from '@oceanprotocol/lib'
 import { fetchData } from './fetch'
 
 const purgatoryUrl = 'https://market-purgatory.oceanprotocol.com/api/'
@@ -10,12 +10,12 @@ export interface PurgatoryDataAccount {
 
 export default async function getAssetPurgatoryData(
   did: string
-): Promise<PurgatoryDataAsset> {
+): Promise<Purgatory> {
   const data = (await fetchData(
     `${purgatoryUrl}asset?did=${did}`
-  )) as PurgatoryDataAsset[]
+  )) as Purgatory[]
 
-  return { did: data[0]?.did, reason: data[0]?.reason }
+  return { state: data[0]?.state, reason: data[0]?.reason }
 }
 
 export async function getAccountPurgatoryData(

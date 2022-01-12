@@ -11,6 +11,7 @@ import Button from '@shared/atoms/Button'
 import { useOcean } from '@context/Ocean'
 import { FormTradeData, TradeItem } from './_types'
 import UserLiquidity from '../UserLiquidity'
+import { useWeb3 } from '@context/Web3'
 
 export default function TradeInput({
   name,
@@ -23,7 +24,7 @@ export default function TradeInput({
   disabled: boolean
   handleValueChange: (name: string, value: number) => void
 }): ReactElement {
-  const { ocean } = useOcean()
+  const { accountId } = useWeb3()
 
   // Connect with form
   const {
@@ -64,7 +65,7 @@ export default function TradeInput({
               validateForm()
               handleChange(e)
             }}
-            disabled={!ocean || disabled}
+            disabled={!accountId || disabled}
           />
         )}
       </Field>

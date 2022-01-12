@@ -4,7 +4,6 @@ import Button from '@shared/atoms/Button'
 import styles from './Actions.module.css'
 import ExplorerLink from '@shared/ExplorerLink'
 import SuccessConfetti from '@shared/SuccessConfetti'
-import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 import TokenApproval from '@shared/TokenApproval'
 
@@ -30,14 +29,13 @@ export default function Actions({
   isDisabled?: boolean
 }): ReactElement {
   const { networkId } = useWeb3()
-  const { ocean } = useOcean()
 
   const actionButton = (
     <Button
       style="primary"
       size="small"
       onClick={() => action()}
-      disabled={!ocean || isDisabled}
+      disabled={isDisabled}
     >
       {actionName}
     </Button>
@@ -53,7 +51,7 @@ export default function Actions({
             actionButton={actionButton}
             amount={amount}
             coin={coin}
-            disabled={!ocean || isDisabled}
+            disabled={isDisabled}
           />
         ) : (
           actionButton

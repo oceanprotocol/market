@@ -19,6 +19,7 @@ import { useProfile } from '@context/Profile'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useUserPreferences } from '@context/UserPreferences'
+import { Asset } from '@oceanprotocol/lib'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 

@@ -10,7 +10,6 @@ import { getServiceByName, mapTimeoutStringToSeconds } from '@utils/ddo'
 import styles from './index.module.css'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { useWeb3 } from '@context/Web3'
-import { useOcean } from '@context/Ocean'
 import { setMinterToDispenser, setMinterToPublisher } from '@utils/freePrice'
 import content from '../../../../content/pages/edit.json'
 import { MetadataEditForm } from './_types'
@@ -24,7 +23,6 @@ export default function Edit({
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
-  const { ocean } = useOcean()
   const { ddo, refreshDdo, price } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
@@ -34,15 +32,15 @@ export default function Edit({
   const hasFeedback = error || success
 
   async function updateFixedPrice(newPrice: number) {
-    const setPriceResp = await ocean.fixedRateExchange.setRate(
-      price.address,
-      newPrice,
-      accountId
-    )
-    if (!setPriceResp) {
-      setError(content.form.error)
-      LoggerInstance.error(content.form.error)
-    }
+    // const setPriceResp = await ocean.fixedRateExchange.setRate(
+    //   price.address,
+    //   newPrice,
+    //   accountId
+    // )
+    // if (!setPriceResp) {
+    //   setError(content.form.error)
+    //   LoggerInstance.error(content.form.error)
+    // }
   }
 
   async function handleSubmit(

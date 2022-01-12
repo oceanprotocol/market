@@ -1,5 +1,20 @@
 import { networkDataGaiaX } from './constants'
 
+export function getNetworkType(network: EthereumListsChain): string {
+  // HEADS UP! Hack for getting network's type main/test, without using
+  // .network field, which is innexistent on https://chainid.network/chains.json
+  // We hack in mainnet detection for moonriver.
+  if (
+    !network.name.includes('Testnet') &&
+    !network.title?.includes('Testnet') &&
+    network.name !== 'Moonbase Alpha'
+  ) {
+    return 'mainnet'
+  } else {
+    return 'testnet'
+  }
+}
+
 export function getNetworkDisplayName(
   data: EthereumListsChain,
   networkId: number
@@ -22,9 +37,15 @@ export function getNetworkDisplayName(
     case 8996:
       displayName = 'Development'
       break
+    case 3:
+      displayName = 'ETH Ropsten'
+      break
+    case 2021000:
+      displayName = 'GAIA-X Testnet'
+      break
     default:
       displayName = data
-        ? `${data.chain} ${data.network === 'mainnet' ? '' : data.network}`
+        ? `${data.chain} ${getNetworkType(data) === 'mainnet' ? '' : data.name}`
         : 'Unknown'
       break
   }
@@ -60,9 +81,7 @@ export function filterNetworksByType(
     // network data uses the `network` key wrong over in
     // https://github.com/ethereum-lists/chains/blob/master/_data/chains/eip155-1285.json
     //
-    return type === 'mainnet'
-      ? networkData.network === type || networkData.network === 'moonriver'
-      : networkData.network !== 'mainnet' && networkData.network !== 'moonriver'
+    return type === getNetworkType(networkData)
   })
   return finalNetworks
 }

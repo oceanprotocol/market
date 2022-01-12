@@ -47,7 +47,7 @@ function DetailsAssets({ job }: { job: ComputeJobMetaData }) {
   useEffect(() => {
     async function getAlgoMetadata() {
       const ddo = await retrieveDDO(job.algoDID, newCancelToken())
-      setAlgoDtSymbol(ddo.dataTokenInfo.symbol)
+      setAlgoDtSymbol(ddo.datatokens[0].symbol)
       setAlgoName(ddo?.metadata.name)
     }
     getAlgoMetadata()
@@ -97,12 +97,12 @@ export default function Details({
             />
           )}
           <MetaItem title="Job ID" content={<code>{job.jobId}</code>} />
-          {job.resultsDid && (
+          {/* {job.resultsDid && (
             <MetaItem
               title="Published Results DID"
               content={<code>{job.resultsDid}</code>}
             />
-          )}
+          )} */}
         </div>
       </Modal>
     </>
