@@ -46,6 +46,7 @@ export default function PublishPage({
   const [feedback, setFeedback] = useState<PublishFeedback>(
     initialPublishFeedback
   )
+  const [did, setDid] = useState<string>()
 
   async function handleSubmit(values: FormPublishData) {
     let _erc721Address: string,
@@ -214,6 +215,8 @@ export default function PublishPage({
           txHash
         }
       }))
+
+      setDid(_ddo.id)
     } catch (error) {
       LoggerInstance.error('[publish] error', error.message)
       setFeedback((prevState) => ({
@@ -294,7 +297,7 @@ export default function PublishPage({
           <Form className={styles.form} ref={scrollToRef}>
             <Navigation />
             <Steps feedback={feedback} />
-            <Actions scrollToRef={scrollToRef} />
+            <Actions scrollToRef={scrollToRef} did={did} />
           </Form>
           {debug && <Debug />}
         </>
