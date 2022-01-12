@@ -10,6 +10,7 @@ import { useAsset } from '@context/Asset'
 import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 import content from '../../../../../content/pages/startComputeDataset.json'
+import { Asset } from '@oceanprotocol/lib'
 
 export default function FormStartCompute({
   algorithms,
@@ -66,7 +67,6 @@ export default function FormStartCompute({
   const [totalPrice, setTotalPrice] = useState(price?.value)
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>(false)
   const { accountId, balance } = useWeb3()
-  const { ocean } = useOcean()
   const [algorithmConsumableStatus, setAlgorithmConsumableStatus] =
     useState<number>()
 
@@ -85,11 +85,11 @@ export default function FormStartCompute({
 
     if (!accountId || !isConsumable) return
     async function checkIsConsumable() {
-      const consumable = await ocean.assets.isConsumable(
-        algorithmDDO as any,
-        accountId.toLowerCase()
-      )
-      if (consumable) setAlgorithmConsumableStatus(consumable.status)
+      // const consumable = await ocean.assets.isConsumable(
+      //   algorithmDDO as any,
+      //   accountId.toLowerCase()
+      // )
+      // if (consumable) setAlgorithmConsumableStatus(consumable.status)
     }
     checkIsConsumable()
   }, [values.algorithm, accountId, isConsumable])
@@ -160,7 +160,7 @@ export default function FormStartCompute({
         }
         hasPreviousOrder={hasPreviousOrder}
         hasDatatoken={hasDatatoken}
-        dtSymbol={ddo?.dataTokenInfo?.symbol}
+        dtSymbol={ddo?.datatokens[0]?.symbol}
         dtBalance={dtBalance}
         datasetLowPoolLiquidity={datasetLowPoolLiquidity}
         assetTimeout={assetTimeout}

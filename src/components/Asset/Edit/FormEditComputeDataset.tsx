@@ -11,7 +11,7 @@ import {
   transformDDOToAssetSelection
 } from '@utils/aquarius'
 import { useAsset } from '@context/Asset'
-import { publisherTrustedAlgorithm as PublisherTrustedAlgorithm } from '@oceanprotocol/lib'
+import { PublisherTrustedAlgorithm } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import FormActions from './FormActions'
 import { useCancelToken } from '@hooks/useCancelToken'

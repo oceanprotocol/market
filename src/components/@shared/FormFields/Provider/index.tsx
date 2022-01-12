@@ -1,24 +1,22 @@
 import React, { ReactElement, useState } from 'react'
 import { ErrorMessage, useField } from 'formik'
 import UrlInput from '../URLInput'
-import { useOcean } from '@context/Ocean'
 import { InputProps } from '@shared/FormInput'
 import FileInfo from '../FilesInput/Info'
 import styles from './index.module.css'
 import Button from '@shared/atoms/Button'
 import { initialValues } from 'src/components/Publish/_constants'
+import { ProviderInstance } from '@oceanprotocol/lib'
 
 export default function CustomProvider(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
   const [isLoading, setIsLoading] = useState(false)
-  const { ocean, config } = useOcean()
 
   async function validateProvider(url: string) {
     setIsLoading(true)
 
     try {
-      // TODO: #948 Remove ocean.provider.isValidProvider dependency.
-      const isValid = await ocean.provider.isValidProvider(url)
+      const isValid = await ProviderInstance.isValidProvider(url, fetch)
       helpers.setValue({ url, valid: isValid })
       helpers.setError(undefined)
     } catch (error) {

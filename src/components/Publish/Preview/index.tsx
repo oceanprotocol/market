@@ -4,6 +4,7 @@ import { FormPublishData } from '../_types'
 import { useFormikContext } from 'formik'
 import AssetContent from 'src/components/Asset/AssetContent'
 import { transformPublishFormToDdo } from '../_utils'
+import { Asset } from '@oceanprotocol/lib'
 
 export default function Preview(): ReactElement {
   const [ddo, setDdo] = useState<Asset>()

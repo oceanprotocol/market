@@ -7,6 +7,7 @@ import { getAssetsBestPrices, AssetListPrices } from '@utils/subgraph'
 import Loader from '@shared/atoms/Loader'
 import { useUserPreferences } from '@context/UserPreferences'
 import { useIsMounted } from '@hooks/useIsMounted'
+import { Asset } from '@oceanprotocol/lib'
 
 const cx = classNames.bind(styles)
 

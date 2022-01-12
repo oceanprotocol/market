@@ -261,9 +261,9 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     setNetworkDisplayName(networkDisplayName)
 
     // Figure out if we're on a chain's testnet, or not
-    setIsTestnet(
-      networkData?.network !== 'mainnet' && networkData.network !== 'moonriver'
-    )
+    // setIsTestnet(
+    //   networkData?.network !== 'mainnet' && networkData.network !== 'moonriver'
+    // )
 
     LoggerInstance.log(
       `[web3] Network display name set to: ${networkDisplayName}`

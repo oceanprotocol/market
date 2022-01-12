@@ -10,7 +10,6 @@ import Alert from '@shared/atoms/Alert'
 import { useUserPreferences } from '@context/UserPreferences'
 import Output from './Output'
 import DebugOutput from '@shared/DebugOutput'
-import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 import { useAsset } from '@context/Asset'
 import content from '../../../../../../content/price.json'
@@ -43,7 +42,6 @@ export default function Add({
   dtAddress: string
 }): ReactElement {
   const { accountId, balance } = useWeb3()
-  const { ocean } = useOcean()
   const { isAssetNetwork } = useAsset()
   const { debug } = useUserPreferences()
   const [txId, setTxId] = useState<string>()
@@ -69,53 +67,50 @@ export default function Add({
 
   // Get datatoken balance when datatoken selected
   useEffect(() => {
-    if (!ocean || !isAssetNetwork || coin === 'OCEAN') return
-
-    async function getDtBalance() {
-      const dtBalance = await ocean.datatokens.balance(dtAddress, accountId)
-      setDtBalance(dtBalance)
-    }
-    getDtBalance()
-  }, [ocean, accountId, dtAddress, coin])
+    // if (!accountId || !isAssetNetwork || coin === 'OCEAN') return
+    // async function getDtBalance() {
+    //   const dtBalance = await ocean.datatokens.balance(dtAddress, accountId)
+    //   setDtBalance(dtBalance)
+    // }
+    // getDtBalance()
+  }, [accountId, dtAddress, coin])
 
   // Get maximum amount for either OCEAN or datatoken
   useEffect(() => {
-    if (!ocean || !isAssetNetwork || !poolAddress) return
+    if (!accountId || !isAssetNetwork || !poolAddress) return
 
     async function getMaximum() {
-      const amountMaxPool =
-        coin === 'OCEAN'
-          ? await ocean.pool.getOceanMaxAddLiquidity(poolAddress)
-          : await ocean.pool.getDTMaxAddLiquidity(poolAddress)
-
-      const amountMax =
-        coin === 'OCEAN'
-          ? Number(balance.ocean) > Number(amountMaxPool)
-            ? amountMaxPool
-            : balance.ocean
-          : Number(dtBalance) > Number(amountMaxPool)
-          ? amountMaxPool
-          : dtBalance
-      setAmountMax(Number(amountMax).toFixed(3))
+      // const amountMaxPool =
+      //   coin === 'OCEAN'
+      //     ? await ocean.pool.getOceanMaxAddLiquidity(poolAddress)
+      //     : await ocean.pool.getDTMaxAddLiquidity(poolAddress)
+      // const amountMax =
+      //   coin === 'OCEAN'
+      //     ? Number(balance.ocean) > Number(amountMaxPool)
+      //       ? amountMaxPool
+      //       : balance.ocean
+      //     : Number(dtBalance) > Number(amountMaxPool)
+      //     ? amountMaxPool
+      //     : dtBalance
+      // setAmountMax(Number(amountMax).toFixed(3))
     }
     getMaximum()
-  }, [ocean, poolAddress, coin, dtBalance, balance.ocean])
+  }, [accountId, isAssetNetwork, poolAddress, coin, dtBalance, balance.ocean])
 
   // Submit
   async function handleAddLiquidity(amount: number, resetForm: () => void) {
     try {
-      const result =
-        coin === 'OCEAN'
-          ? await ocean.pool.addOceanLiquidity(
-              accountId,
-              poolAddress,
-              `${amount}`
-            )
-          : await ocean.pool.addDTLiquidity(accountId, poolAddress, `${amount}`)
-
-      setTxId(result?.transactionHash)
-      resetForm()
-      refreshInfo()
+      // const result =
+      //   coin === 'OCEAN'
+      //     ? await ocean.pool.addOceanLiquidity(
+      //         accountId,
+      //         poolAddress,
+      //         `${amount}`
+      //       )
+      //     : await ocean.pool.addDTLiquidity(accountId, poolAddress, `${amount}`)
+      // setTxId(result?.transactionHash)
+      // resetForm()
+      // refreshInfo()
     } catch (error) {
       console.error(error.message)
       toast.error(error.message)

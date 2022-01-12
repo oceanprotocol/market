@@ -17,6 +17,7 @@ import AlgorithmDatasetsListForCompute from './Compute/AlgorithmDatasetsListForC
 import styles from './Consume.module.css'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { FileMetadata } from '@utils/provider'
+import { Asset } from '@oceanprotocol/lib'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {
@@ -177,7 +178,7 @@ export default function Consume({
       disabled={isDisabled}
       hasPreviousOrder={hasPreviousOrder}
       hasDatatoken={hasDatatoken}
-      dtSymbol={ddo?.dataTokenInfo?.symbol}
+      dtSymbol={ddo?.datatokens[0]?.symbol}
       dtBalance={dtBalance}
       datasetLowPoolLiquidity={!isConsumablePrice}
       onClick={handleConsume}

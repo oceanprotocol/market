@@ -7,7 +7,7 @@ import React, {
   useCallback,
   ReactNode
 } from 'react'
-import { LoggerInstance } from '@oceanprotocol/lib'
+import { Asset, LoggerInstance, Purgatory } from '@oceanprotocol/lib'
 import getAssetPurgatoryData from '@utils/purgatory'
 import { CancelToken } from 'axios'
 import { retrieveDDO } from '@utils/aquarius'
@@ -18,7 +18,7 @@ import { useCancelToken } from '@hooks/useCancelToken'
 
 interface AssetProviderValue {
   isInPurgatory: boolean
-  purgatoryData: PurgatoryData
+  purgatoryData: Purgatory
   ddo: Asset
   title: string
   owner: string
@@ -28,12 +28,6 @@ interface AssetProviderValue {
   isAssetNetwork: boolean
   loading: boolean
   refreshDdo: (token?: CancelToken) => Promise<void>
-}
-
-// temp, just to get rid of the error
-export interface PurgatoryData {
-  did: string
-  reason: string
 }
 
 const AssetContext = createContext({} as AssetProviderValue)
@@ -51,7 +45,7 @@ function AssetProvider({
 
   const { networkId } = useWeb3()
   const [isInPurgatory, setIsInPurgatory] = useState(false)
-  const [purgatoryData, setPurgatoryData] = useState<PurgatoryData>()
+  const [purgatoryData, setPurgatoryData] = useState<Purgatory>()
   const [ddo, setDDO] = useState<Asset>()
   const [did, setDID] = useState<string>()
   const [title, setTitle] = useState<string>()
@@ -92,7 +86,7 @@ function AssetProvider({
 
     try {
       const result = await getAssetPurgatoryData(did)
-      const isInPurgatory = result?.did !== undefined
+      const isInPurgatory = result?.state === true
       setIsInPurgatory(isInPurgatory)
       isInPurgatory && setPurgatoryData(result)
     } catch (error) {
@@ -116,7 +110,7 @@ function AssetProvider({
       setDID(asset as string)
       setTitle(ddo.metadata.name)
       setOwner(ddo.nft.owner)
-      setIsInPurgatory(ddo.isInPurgatory === 'true')
+      setIsInPurgatory(ddo.purgatory.state === true)
       await setPurgatory(ddo.id)
     }
     init()

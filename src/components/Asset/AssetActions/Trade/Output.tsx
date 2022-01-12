@@ -1,7 +1,6 @@
 import { FormikContextType, useFormikContext } from 'formik'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useAsset } from '@context/Asset'
-import { useOcean } from '@context/Ocean'
 import Token from '../Pool/Token'
 import styles from './Output.module.css'
 
@@ -21,7 +20,6 @@ export default function Output({
   poolAddress: string
 }): ReactElement {
   const { isAssetNetwork } = useAsset()
-  const { ocean } = useOcean()
   const [maxOutput, setMaxOutput] = useState<string>()
   const [swapFee, setSwapFee] = useState<string>()
   const [swapFeeValue, setSwapFeeValue] = useState<string>()
@@ -30,15 +28,15 @@ export default function Output({
 
   // Get swap fee
   useEffect(() => {
-    if (!ocean || !poolAddress || !isAssetNetwork) return
+    if (!poolAddress || !isAssetNetwork) return
 
     async function getSwapFee() {
-      const swapFee = await ocean.pool.getSwapFee(poolAddress)
+      // const swapFee = await ocean.pool.getSwapFee(poolAddress)
 
-      // swapFee is tricky: to get 0.1% you need to convert from 0.001
-      setSwapFee(
-        isValidNumber(swapFee) ? new Decimal(swapFee).mul(100).toString() : '0'
-      )
+      // // swapFee is tricky: to get 0.1% you need to convert from 0.001
+      // setSwapFee(
+      //   isValidNumber(swapFee) ? new Decimal(swapFee).mul(100).toString() : '0'
+      // )
 
       const value =
         values.type === 'buy'
@@ -51,11 +49,11 @@ export default function Output({
       setSwapFeeValue(value.toString())
     }
     getSwapFee()
-  }, [ocean, poolAddress, values, isAssetNetwork])
+  }, [poolAddress, values, isAssetNetwork])
 
   // Get output values
   useEffect(() => {
-    if (!ocean || !poolAddress || !isAssetNetwork) return
+    if (!poolAddress || !isAssetNetwork) return
 
     async function getOutput() {
       // Minimum received
@@ -75,7 +73,7 @@ export default function Output({
       setMaxOutput(maxPrice)
     }
     getOutput()
-  }, [ocean, poolAddress, values, isAssetNetwork])
+  }, [poolAddress, values, isAssetNetwork])
 
   return (
     <div className={styles.output}>

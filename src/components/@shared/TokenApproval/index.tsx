@@ -1,5 +1,4 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react'
-import { useOcean } from '@context/Ocean'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import Decimal from 'decimal.js'
@@ -20,7 +19,6 @@ export default function TokenApproval({
   const { ddo, price, isAssetNetwork } = useAsset()
   const [tokenApproved, setTokenApproved] = useState(false)
   const [loading, setLoading] = useState(false)
-  const { ocean } = useOcean()
   const { accountId } = useWeb3()
 
   const config = getOceanConfig(ddo.chainId)
@@ -32,21 +30,18 @@ export default function TokenApproval({
   const spender = price.address
 
   const checkTokenApproval = useCallback(async () => {
-    if (!ocean || !tokenAddress || !spender || !isAssetNetwork || !amount)
-      return
-
-    const allowance = await ocean.datatokens.allowance(
-      tokenAddress,
-      accountId,
-      spender
-    )
-
-    amount &&
-      new Decimal(amount).greaterThan(new Decimal('0')) &&
-      setTokenApproved(
-        new Decimal(allowance).greaterThanOrEqualTo(new Decimal(amount))
-      )
-  }, [ocean, tokenAddress, spender, accountId, amount, isAssetNetwork])
+    // if (!tokenAddress || !spender || !isAssetNetwork || !amount) return
+    // const allowance = await ocean.datatokens.allowance(
+    //   tokenAddress,
+    //   accountId,
+    //   spender
+    // )
+    // amount &&
+    //   new Decimal(amount).greaterThan(new Decimal('0')) &&
+    //   setTokenApproved(
+    //     new Decimal(allowance).greaterThanOrEqualTo(new Decimal(amount))
+    //   )
+  }, [tokenAddress, spender, accountId, amount, isAssetNetwork])
 
   useEffect(() => {
     checkTokenApproval()
@@ -56,7 +51,7 @@ export default function TokenApproval({
     setLoading(true)
 
     try {
-      await ocean.datatokens.approve(tokenAddress, spender, amount, accountId)
+      // await ocean.datatokens.approve(tokenAddress, spender, amount, accountId)
     } catch (error) {
       setLoading(false)
     }

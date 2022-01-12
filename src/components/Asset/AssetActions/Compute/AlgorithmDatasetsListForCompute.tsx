@@ -5,6 +5,7 @@ import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import AssetComputeList from '@shared/AssetList/AssetComputeList'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getServiceByName } from '@utils/ddo'
+import { Asset } from '@oceanprotocol/lib'
 
 export default function AlgorithmDatasetsListForCompute({
   ddo,

@@ -4,7 +4,6 @@ import TradeInput from './TradeInput'
 import Button from '@shared/atoms/Button'
 import Arrow from '@images/arrow.svg'
 import { FormikContextType, useFormikContext } from 'formik'
-import { useOcean } from '@context/Ocean'
 import Output from './Output'
 import Slippage from './Slippage'
 import PriceImpact from './PriceImpact'
@@ -12,6 +11,7 @@ import PriceImpact from './PriceImpact'
 import Decimal from 'decimal.js'
 import { useAsset } from '@context/Asset'
 import { FormTradeData, TradeItem } from './_types'
+import { Asset } from '@oceanprotocol/lib'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
@@ -34,7 +34,6 @@ export default function Swap({
   setMaximumOcean: (value: string) => void
   setCoin: (value: string) => void
 }): ReactElement {
-  const { ocean } = useOcean()
   const { isAssetNetwork } = useAsset()
   const [oceanItem, setOceanItem] = useState<TradeItem>({
     amount: '0',
@@ -43,7 +42,7 @@ export default function Swap({
   })
   const [dtItem, setDtItem] = useState<TradeItem>({
     amount: '0',
-    token: ddo.dataTokenInfo.symbol,
+    token: ddo.datatokens[0].symbol,
     maxAmount: '0'
   })
 
@@ -72,47 +71,47 @@ export default function Swap({
           ? new Decimal(balance.ocean)
           : new Decimal(maxOcean)
 
-      const maxBuyOcean = await ocean.pool.getOceanReceived(
-        price.address,
-        `${amountDataToken.toString()}`
-      )
-      const maxBuyDt = await ocean.pool.getDTReceived(
-        price.address,
-        `${amountOcean.toString()}`
-      )
+      // const maxBuyOcean = await ocean.pool.getOceanReceived(
+      //   price.address,
+      //   `${amountDataToken.toString()}`
+      // )
+      // const maxBuyDt = await ocean.pool.getDTReceived(
+      //   price.address,
+      //   `${amountOcean.toString()}`
+      // )
 
-      const maximumDt =
-        values.type === 'buy'
-          ? amountDataToken.greaterThan(new Decimal(maxBuyDt))
-            ? maxBuyDt
-            : amountDataToken
-          : amountDataToken.greaterThan(new Decimal(balance.datatoken))
-          ? balance.datatoken
-          : amountDataToken
+      // const maximumDt =
+      //   values.type === 'buy'
+      //     ? amountDataToken.greaterThan(new Decimal(maxBuyDt))
+      //       ? maxBuyDt
+      //       : amountDataToken
+      //     : amountDataToken.greaterThan(new Decimal(balance.datatoken))
+      //     ? balance.datatoken
+      //     : amountDataToken
 
-      const maximumOcean =
-        values.type === 'sell'
-          ? amountOcean.greaterThan(new Decimal(maxBuyOcean))
-            ? maxBuyOcean
-            : amountOcean
-          : amountOcean.greaterThan(new Decimal(balance.ocean))
-          ? balance.ocean
-          : amountOcean
+      // const maximumOcean =
+      //   values.type === 'sell'
+      //     ? amountOcean.greaterThan(new Decimal(maxBuyOcean))
+      //       ? maxBuyOcean
+      //       : amountOcean
+      //     : amountOcean.greaterThan(new Decimal(balance.ocean))
+      //     ? balance.ocean
+      //     : amountOcean
 
-      setMaximumDt(maximumDt.toString())
-      setMaximumOcean(maximumOcean.toString())
+      // setMaximumDt(maximumDt.toString())
+      // setMaximumOcean(maximumOcean.toString())
 
-      setOceanItem((prevState) => ({
-        ...prevState,
-        amount: amountOcean.toString(),
-        maxAmount: maximumOcean.toString()
-      }))
+      // setOceanItem((prevState) => ({
+      //   ...prevState,
+      //   amount: amountOcean.toString(),
+      //   maxAmount: maximumOcean.toString()
+      // }))
 
-      setDtItem((prevState) => ({
-        ...prevState,
-        amount: amountDataToken.toString(),
-        maxAmount: maximumDt.toString()
-      }))
+      // setDtItem((prevState) => ({
+      //   ...prevState,
+      //   amount: amountDataToken.toString(),
+      //   maxAmount: maximumDt.toString()
+      // }))
     }
     calculateMaximum()
   }, [
@@ -122,14 +121,13 @@ export default function Swap({
     balance,
     price,
     values?.type,
-    ocean,
     setMaximumDt,
     setMaximumOcean
   ])
 
   const switchTokens = () => {
     setFieldValue('type', values.type === 'buy' ? 'sell' : 'buy')
-    setCoin(values.type === 'sell' ? 'OCEAN' : ddo.dataTokenInfo.symbol)
+    setCoin(values.type === 'sell' ? 'OCEAN' : ddo.datatokens[0].symbol)
     // don't reset form because we don't want to reset type
     setFieldValue('datatoken', 0)
     setFieldValue('ocean', 0)
@@ -137,63 +135,63 @@ export default function Swap({
   }
 
   const handleValueChange = async (name: string, value: number) => {
-    let tokenIn = ''
-    let tokenOut = ''
+    const tokenIn = ''
+    const tokenOut = ''
     let newValue
 
-    if (name === 'ocean') {
-      if (values.type === 'sell') {
-        newValue = await ocean.pool.getDTNeeded(price.address, value.toString())
+    // if (name === 'ocean') {
+    //   if (values.type === 'sell') {
+    //     newValue = await ocean.pool.getDTNeeded(price.address, value.toString())
 
-        setTotalValue(newValue)
-        setTokenAmount(value.toString())
+    //     setTotalValue(newValue)
+    //     setTokenAmount(value.toString())
 
-        tokenIn = ddo.services[0].datatokenAddress
-        tokenOut = ocean.pool.oceanAddress
-      } else {
-        newValue = await ocean.pool.getDTReceived(
-          price.address,
-          value.toString()
-        )
+    //     tokenIn = ddo.services[0].datatokenAddress
+    //     tokenOut = ocean.pool.oceanAddress
+    //   } else {
+    //     newValue = await ocean.pool.getDTReceived(
+    //       price.address,
+    //       value.toString()
+    //     )
 
-        setTotalValue(value.toString())
-        setTokenAmount(newValue)
-        tokenIn = ocean.pool.oceanAddress
-        tokenOut = ddo.services[0].datatokenAddress
-      }
-    } else {
-      if (values.type === 'sell') {
-        newValue = await ocean.pool.getOceanReceived(
-          price.address,
-          value.toString()
-        )
+    //     setTotalValue(value.toString())
+    //     setTokenAmount(newValue)
+    //     tokenIn = ocean.pool.oceanAddress
+    //     tokenOut = ddo.services[0].datatokenAddress
+    //   }
+    // } else {
+    //   if (values.type === 'sell') {
+    //     newValue = await ocean.pool.getOceanReceived(
+    //       price.address,
+    //       value.toString()
+    //     )
 
-        setTotalValue(value.toString())
-        setTokenAmount(newValue)
-        tokenIn = ddo.services[0].datatokenAddress
-        tokenOut = ocean.pool.oceanAddress
-      } else {
-        newValue = await ocean.pool.getOceanNeeded(
-          price.address,
-          value.toString()
-        )
+    //     setTotalValue(value.toString())
+    //     setTokenAmount(newValue)
+    //     tokenIn = ddo.services[0].datatokenAddress
+    //     tokenOut = ocean.pool.oceanAddress
+    //   } else {
+    //     newValue = await ocean.pool.getOceanNeeded(
+    //       price.address,
+    //       value.toString()
+    //     )
 
-        setTotalValue(newValue)
-        setTokenAmount(value.toString())
-        tokenIn = ocean.pool.oceanAddress
-        tokenOut = ddo.services[0].datatokenAddress
-      }
-    }
+    //     setTotalValue(newValue)
+    //     setTokenAmount(value.toString())
+    //     tokenIn = ocean.pool.oceanAddress
+    //     tokenOut = ddo.services[0].datatokenAddress
+    //   }
+    // }
 
     await setFieldValue(name === 'ocean' ? 'datatoken' : 'ocean', newValue)
 
-    const spotPrice = await ocean.pool.getSpotPrice(
-      price.address,
-      tokenIn,
-      tokenOut
-    )
+    // const spotPrice = await ocean.pool.getSpotPrice(
+    //   price.address,
+    //   tokenIn,
+    //   tokenOut
+    // )
 
-    setSpotPrice(spotPrice)
+    // setSpotPrice(spotPrice)
     validateForm()
   }
 

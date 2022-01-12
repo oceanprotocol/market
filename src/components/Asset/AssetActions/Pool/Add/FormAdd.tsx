@@ -11,7 +11,6 @@ import Button from '@shared/atoms/Button'
 import CoinSelect from '../CoinSelect'
 import { FormAddLiquidity } from '.'
 import UserLiquidity from '../../UserLiquidity'
-import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 
 import { isValidNumber } from '@utils/numbers'
@@ -43,8 +42,7 @@ export default function FormAdd({
   setNewPoolTokens: (value: string) => void
   setNewPoolShare: (value: string) => void
 }): ReactElement {
-  const { balance } = useWeb3()
-  const { ocean } = useOcean()
+  const { balance, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
 
   // Connect with form
@@ -69,36 +67,31 @@ export default function FormAdd({
 
   useEffect(() => {
     async function calculatePoolShares() {
-      if (!ocean) return
-      const tokenInAddress =
-        coin === 'OCEAN' ? ocean.pool.oceanAddress : ocean.pool.dtAddress
-      if (!values.amount || !tokenInAddress) {
-        setNewPoolTokens('0')
-        setNewPoolShare('0')
-        return
-      }
-
-      if (Number(values.amount) > Number(amountMax)) return
-
-      const poolTokens = await ocean.pool.calcPoolOutGivenSingleIn(
-        poolAddress,
-        tokenInAddress,
-        `${values.amount}`
-      )
-
-      setNewPoolTokens(poolTokens)
-
-      const newPoolShareDecimal =
-        isValidNumber(poolTokens) && isValidNumber(totalPoolTokens)
-          ? new Decimal(poolTokens)
-              .dividedBy(
-                new Decimal(totalPoolTokens).plus(new Decimal(poolTokens))
-              )
-              .mul(100)
-              .toString()
-          : '0'
-
-      totalBalance && setNewPoolShare(newPoolShareDecimal)
+      // if (!web3) return
+      // const tokenInAddress =
+      //   coin === 'OCEAN' ? ocean.pool.oceanAddress : ocean.pool.dtAddress
+      // if (!values.amount || !tokenInAddress) {
+      //   setNewPoolTokens('0')
+      //   setNewPoolShare('0')
+      //   return
+      // }
+      // if (Number(values.amount) > Number(amountMax)) return
+      // const poolTokens = await ocean.pool.calcPoolOutGivenSingleIn(
+      //   poolAddress,
+      //   tokenInAddress,
+      //   `${values.amount}`
+      // )
+      // setNewPoolTokens(poolTokens)
+      // const newPoolShareDecimal =
+      //   isValidNumber(poolTokens) && isValidNumber(totalPoolTokens)
+      //     ? new Decimal(poolTokens)
+      //         .dividedBy(
+      //           new Decimal(totalPoolTokens).plus(new Decimal(poolTokens))
+      //         )
+      //         .mul(100)
+      //         .toString()
+      //     : '0'
+      // totalBalance && setNewPoolShare(newPoolShareDecimal)
     }
     calculatePoolShares()
   }, [
@@ -108,7 +101,6 @@ export default function FormAdd({
     amountMax,
     coin,
     poolAddress,
-    ocean?.pool,
     setNewPoolTokens,
     setNewPoolShare
   ])
@@ -144,14 +136,14 @@ export default function FormAdd({
               <CoinSelect
                 dtSymbol={dtSymbol}
                 setCoin={setCoin}
-                disabled={!ocean || !isAssetNetwork}
+                disabled={!web3 || !isAssetNetwork}
               />
             }
             placeholder="0"
             field={field}
             form={form}
             onChange={handleFieldChange}
-            disabled={!ocean || !isAssetNetwork}
+            disabled={!isAssetNetwork}
           />
         )}
       </Field>
@@ -161,7 +153,7 @@ export default function FormAdd({
           className={styles.buttonMax}
           style="text"
           size="small"
-          disabled={!ocean}
+          disabled={!web3}
           onClick={() => {
             setAmount(amountMax)
             setFieldValue('amount', amountMax)
