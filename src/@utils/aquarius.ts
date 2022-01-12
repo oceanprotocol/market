@@ -116,7 +116,7 @@ export async function retrieveDDO(
 ): Promise<Asset> {
   try {
     const response: AxiosResponse<Asset> = await axios.get(
-      `${metadataCacheUri}/api/v1/aquarius/assets/ddo/${did}`,
+      `${metadataCacheUri}/api/aquarius/assets/ddo/${did}`,
       { cancelToken }
     )
     if (!response || response.status !== 200 || !response.data) return
