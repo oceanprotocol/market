@@ -4,11 +4,14 @@ import styles from './index.module.css'
 import { FormikContextType, useFormikContext } from 'formik'
 import { FormPublishData } from '../_types'
 import { wizardSteps } from '../_constants'
+import SuccessConfetti from '@shared/SuccessConfetti'
 
 export default function Actions({
-  scrollToRef
+  scrollToRef,
+  did
 }: {
   scrollToRef: RefObject<any>
+  did: string
 }): ReactElement {
   const {
     values,
@@ -37,28 +40,43 @@ export default function Actions({
 
   return (
     <footer className={styles.actions}>
-      {values.user.stepCurrent > 1 && (
-        <Button onClick={handlePrevious} disabled={isSubmitting}>
-          Back
-        </Button>
-      )}
-
-      {values.user.stepCurrent < wizardSteps.length ? (
-        <Button
-          style="primary"
-          onClick={handleNext}
-          disabled={isContinueDisabled}
-        >
-          Continue
-        </Button>
+      {did ? (
+        <SuccessConfetti
+          success="Successfully published!"
+          action={
+            <Button style="primary" to={`/asset/${did}`}>
+              View Asset
+            </Button>
+          }
+        />
       ) : (
-        <Button
-          type="submit"
-          style="primary"
-          disabled={values.user.accountId === '' || !isValid || isSubmitting}
-        >
-          Submit
-        </Button>
+        <>
+          {values.user.stepCurrent > 1 && (
+            <Button onClick={handlePrevious} disabled={isSubmitting}>
+              Back
+            </Button>
+          )}
+
+          {values.user.stepCurrent < wizardSteps.length ? (
+            <Button
+              style="primary"
+              onClick={handleNext}
+              disabled={isContinueDisabled}
+            >
+              Continue
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              style="primary"
+              disabled={
+                values.user.accountId === '' || !isValid || isSubmitting
+              }
+            >
+              Submit
+            </Button>
+          )}
+        </>
       )}
     </footer>
   )
