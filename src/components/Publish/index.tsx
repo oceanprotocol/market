@@ -71,19 +71,21 @@ export default function PublishPage({
       const config = getOceanConfig(chainId)
       LoggerInstance.log('[publish] using config: ', config)
 
-      const { erc721Address, datatokenAddress } = await createTokensAndPricing(
-        values,
-        accountId,
-        appConfig.marketFeeAddress,
-        config,
-        nftFactory,
-        web3
-      )
+      const { erc721Address, datatokenAddress, txHash } =
+        await createTokensAndPricing(
+          values,
+          accountId,
+          appConfig.marketFeeAddress,
+          config,
+          nftFactory,
+          web3
+        )
 
-      const isSuccess = Boolean(erc721Address && datatokenAddress)
+      const isSuccess = Boolean(erc721Address && datatokenAddress && txHash)
       _erc721Address = erc721Address
       _datatokenAddress = datatokenAddress
 
+      LoggerInstance.log('[publish] createTokensAndPricing tx', txHash)
       LoggerInstance.log('[publish] erc721Address', erc721Address)
       LoggerInstance.log('[publish] datatokenAddress', datatokenAddress)
 
@@ -91,7 +93,8 @@ export default function PublishPage({
         ...prevState,
         1: {
           ...prevState[1],
-          status: isSuccess ? 'success' : 'error'
+          status: isSuccess ? 'success' : 'error',
+          txHash
         }
       }))
     } catch (error) {
@@ -200,11 +203,14 @@ export default function PublishPage({
 
       LoggerInstance.log('[publish] setMetadata result', res)
 
+      const txHash = res.transactionHash
+
       setFeedback((prevState) => ({
         ...prevState,
         3: {
           ...prevState[3],
-          status: res ? 'success' : 'error'
+          status: res ? 'success' : 'error',
+          txHash
         }
       }))
     } catch (error) {

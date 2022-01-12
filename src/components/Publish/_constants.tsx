@@ -131,13 +131,13 @@ export const initialPublishFeedback: PublishFeedback = {
   2: {
     name: 'Construct & Encrypt DDO',
     description:
-      'The entered metadata and services are made into a DDO, where the file URLs are encrypted, and afterwards the whole DDO will be encrypted for storage on-chain. Indexers like Aquarius can decrypt the DDO for displaying purposes, the file URLs can only be decrypted by a user exchanging datatokens.',
+      'The file URLs are encrypted, and the whole DDO is encrypted too.',
     status: 'pending'
   },
   3: {
     name: 'Publish DDO',
     description:
-      'The encrypted DDO is stored on-chain as part of the Data NFT.',
+      'The encrypted DDO is stored on-chain as part of the Data NFT. Indexers like Aquarius can decrypt the DDO for displaying purposes, but the file URLs can only be decrypted by exchanging the respective datatokens for this asset.',
     status: 'pending'
   }
 }
