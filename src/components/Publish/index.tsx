@@ -106,7 +106,7 @@ export default function PublishPage({
         '1': {
           ...prevState['1'],
           status: 'error',
-          message: error.message
+          errorMessage: error.message
         }
       }))
     }
@@ -165,7 +165,7 @@ export default function PublishPage({
         '2': {
           ...prevState['2'],
           status: 'error',
-          message: error.message
+          errorMessage: error.message
         }
       }))
     }
@@ -224,7 +224,7 @@ export default function PublishPage({
         '3': {
           ...prevState['3'],
           status: 'error',
-          message: error.message
+          errorMessage: error.message
         }
       }))
     }

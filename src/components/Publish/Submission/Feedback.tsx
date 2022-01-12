@@ -20,6 +20,9 @@ export function Feedback(): ReactElement {
         )}
       </h3>
       <p className={styles.description}>{value.description}</p>
+      {value.errorMessage && (
+        <span className={styles.errorMessage}>{value.errorMessage}</span>
+      )}
     </li>
   ))
 

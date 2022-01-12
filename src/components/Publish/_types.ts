@@ -58,7 +58,7 @@ export interface PublishFeedback {
     description: string
     status: 'success' | 'error' | 'pending' | 'active' | string
     txCount: number
-    message?: string
+    errorMessage?: string
     txHash?: string
   }
 }
