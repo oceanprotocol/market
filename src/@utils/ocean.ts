@@ -27,7 +27,7 @@ export function getDevelopmentConfig(): Config {
     // metadataContractAddress: contractAddresses.development?.Metadata,
     // oceanTokenAddress: contractAddresses.development?.Ocean,
     // There is no subgraph in barge so we hardcode the Rinkeby one for now
-    subgraphUri: 'https://subgraph.rinkeby.oceanprotocol.com'
+    subgraphUri: 'https://subgraphv4.rinkeby.oceanprotocol.com'
   } as Config
 }
 

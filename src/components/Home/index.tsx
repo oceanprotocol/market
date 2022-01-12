@@ -72,6 +72,8 @@ function SectionQueryResult({
         try {
           setLoading(true)
           const result = await queryMetadata(query, newCancelToken())
+          console.log('RESULT: ', result)
+          console.log('QUERY DATA: ', queryData)
           if (!isMounted()) return
           if (queryData && result?.totalResults > 0) {
             const sortedAssets = sortElements(result.results, queryData)
@@ -114,12 +116,13 @@ export default function HomePage(): ReactElement {
 
     const baseParams = {
       chainIds: chainIds,
-      esPaginationOptions: { size: 9 },
-      sortOptions: {
-        sortBy: SortTermOptions.Created
-      } as SortOptions
+      size: 9
+      // sortOptions: {
+      //   sortBy: SortTermOptions.Created
+      // } as SortOptions
     } as BaseQueryParams
-
+    console.log('BASE PARAMS: ', baseParams)
+    console.log('BASE QUERY: ', generateBaseQuery(baseParams))
     setQueryLatest(generateBaseQuery(baseParams))
   }, [chainIds])
 

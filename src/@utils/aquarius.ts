@@ -44,11 +44,11 @@ export function generateBaseQuery(
         ...baseQueryParams.nestedQuery,
         filter: [
           ...(baseQueryParams.filters || []),
-          getFilterTerm('chainId', baseQueryParams.chainIds),
-          getFilterTerm('_index', 'aquarius'),
-          ...(baseQueryParams.ignorePurgatory
-            ? []
-            : [getFilterTerm('isInPurgatory', 'false')])
+          getFilterTerm('chainId', baseQueryParams.chainIds)
+          // getFilterTerm('_index', 'aquarius'),
+          // ...(baseQueryParams.ignorePurgatory
+          //   ? []
+          //   : [getFilterTerm('isInPurgatory', 'false')])
         ]
       }
     }
@@ -95,7 +95,7 @@ export async function queryMetadata(
 ): Promise<PagedAssets> {
   try {
     const response: AxiosResponse<SearchResponse> = await axios.post(
-      `${metadataCacheUri}/api/v1/aquarius/assets/query`,
+      `${metadataCacheUri}/api/aquarius/assets/query`,
       { ...query },
       { cancelToken }
     )
@@ -138,7 +138,7 @@ export async function getAssetsNames(
 ): Promise<Record<string, string>> {
   try {
     const response: AxiosResponse<Record<string, string>> = await axios.post(
-      `${metadataCacheUri}/api/v1/aquarius/assets/names`,
+      `${metadataCacheUri}/api/aquarius/assets/names`,
       { didList },
       { cancelToken }
     )
