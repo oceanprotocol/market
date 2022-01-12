@@ -10,8 +10,13 @@ export default function Actions({
 }: {
   scrollToRef: RefObject<any>
 }): ReactElement {
-  const { values, isValid, setFieldValue }: FormikContextType<FormPublishData> =
-    useFormikContext()
+  const {
+    values,
+    errors,
+    isValid,
+    isSubmitting,
+    setFieldValue
+  }: FormikContextType<FormPublishData> = useFormikContext()
 
   function handleNext(e: FormEvent) {
     e.preventDefault()
@@ -25,21 +30,32 @@ export default function Actions({
     scrollToRef.current.scrollIntoView()
   }
 
+  const isContinueDisabled =
+    (values.user.stepCurrent === 1 && errors.metadata !== undefined) ||
+    (values.user.stepCurrent === 2 && errors.services !== undefined) ||
+    (values.user.stepCurrent === 3 && errors.pricing !== undefined)
+
   return (
     <footer className={styles.actions}>
       {values.user.stepCurrent > 1 && (
-        <Button onClick={handlePrevious}>Back</Button>
+        <Button onClick={handlePrevious} disabled={isSubmitting}>
+          Back
+        </Button>
       )}
 
       {values.user.stepCurrent < wizardSteps.length ? (
-        <Button style="primary" onClick={handleNext}>
+        <Button
+          style="primary"
+          onClick={handleNext}
+          disabled={isContinueDisabled}
+        >
           Continue
         </Button>
       ) : (
         <Button
           type="submit"
           style="primary"
-          disabled={values.user.accountId === ''}
+          disabled={values.user.accountId === '' || !isValid || isSubmitting}
         >
           Submit
         </Button>
