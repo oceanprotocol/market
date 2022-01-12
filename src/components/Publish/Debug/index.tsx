@@ -9,11 +9,10 @@ import { DDO } from '@oceanprotocol/lib'
 export default function Debug(): ReactElement {
   const { values } = useFormikContext<FormPublishData>()
   const [ddo, setDdo] = useState<DDO>()
-  const cancelToken = useCancelToken()
 
   useEffect(() => {
     async function makeDdo() {
-      const ddo = await transformPublishFormToDdo(values, cancelToken())
+      const ddo = await transformPublishFormToDdo(values)
       setDdo(ddo)
     }
     makeDdo()
