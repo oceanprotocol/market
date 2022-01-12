@@ -59,7 +59,6 @@ function transformTags(value: string): string[] {
 
 export async function transformPublishFormToDdo(
   values: FormPublishData,
-  cancelToken: CancelToken,
   // Those 2 are only passed during actual publishing process
   // so we can always assume if they are not passed, we are on preview.
   datatokenAddress?: string,

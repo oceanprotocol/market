@@ -7,8 +7,7 @@ import { InputProps } from '@shared/FormInput'
 import { useWeb3 } from '@context/Web3'
 import { getOceanConfig } from '@utils/ocean'
 import { initialValues } from 'src/components/Publish/_constants'
-import { ProviderInstance } from '@oceanprotocol/lib'
-import axios, { Method } from 'axios'
+import { getFileInfo } from '@utils/provider'
 
 export default function FilesInput(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
@@ -21,17 +20,7 @@ export default function FilesInput(props: InputProps): ReactElement {
     async function validateUrl() {
       try {
         setIsLoading(true)
-        const checkedFile = await ProviderInstance.checkFileUrl(
-          url,
-          config.providerUri,
-          (method: Method, path: string, body: string) => {
-            return fetch(path, {
-              method: method,
-              body: body,
-              headers: { 'Content-Type': 'application/json' }
-            })
-          }
-        )
+        const checkedFile = await getFileInfo(url, config.providerUri)
         checkedFile && helpers.setValue([{ url, ...checkedFile[0] }])
       } catch (error) {
         toast.error('Could not fetch file info. Please check URL and try again')
@@ -73,7 +62,4 @@ export default function FilesInput(props: InputProps): ReactElement {
       )}
     </>
   )
-}
-function newCancelToken(): import('axios').CancelToken {
-  throw new Error('Function not implemented.')
 }

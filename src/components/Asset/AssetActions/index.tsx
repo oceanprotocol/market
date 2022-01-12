@@ -65,14 +65,11 @@ export default function AssetActions({
       setFileIsLoading(true)
 
       const asset = values?.services?.[0].files?.[0].url || ddo.id
-      const providerUrl =
-        values?.services[0].providerUrl || oceanConfig.providerUri
 
       try {
         const fileInfoResponse = await getFileInfo(
           asset,
-          oceanConfig.providerUri,
-          newCancelToken()
+          oceanConfig.providerUri
         )
         fileInfoResponse && setFileMetadata(fileInfoResponse[0])
         setFileIsLoading(false)
