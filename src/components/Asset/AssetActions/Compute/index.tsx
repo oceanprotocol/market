@@ -5,7 +5,8 @@ import {
   ComputeOutput,
   Asset,
   DDO,
-  PublisherTrustedAlgorithm
+  PublisherTrustedAlgorithm,
+  FileMetadata
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
@@ -14,7 +15,6 @@ import Alert from '@shared/atoms/Alert'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { useWeb3 } from '@context/Web3'
 import { usePricing } from '@hooks/usePricing'
-import { useAsset } from '@context/Asset'
 import {
   generateBaseQuery,
   getFilterTerm,
@@ -36,7 +36,6 @@ import ComputeJobs from '../../../Profile/History/ComputeJobs'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { SortTermOptions } from '../../../../@types/aquarius/SearchQuery'
-import { FileMetadata } from '@utils/provider'
 
 export default function Compute({
   ddo,

@@ -1,30 +1,30 @@
-import axios, { CancelToken, AxiosResponse } from 'axios'
-import { LoggerInstance } from '@oceanprotocol/lib'
+import axios, { CancelToken, AxiosResponse, Method } from 'axios'
+import {
+  FileMetadata,
+  LoggerInstance,
+  ProviderInstance
+} from '@oceanprotocol/lib'
 
-export interface FileMetadata {
-  index: number
-  valid: boolean
-  contentType: string
-  contentLength: string
-}
-
-export async function getEncryptedFileUrls(
-  files: string[],
-  providerUrl: string,
-  did: string,
-  accountId: string
+export async function getEncryptedFiles(
+  files: FileMetadata[],
+  providerUrl: string
 ): Promise<string> {
   try {
     // https://github.com/oceanprotocol/provider/blob/v4main/API.md#encrypt-endpoint
-    const url = `${providerUrl}/api/v1/services/encrypt`
-    const response: AxiosResponse<{ encryptedDocument: string }> =
-      await axios.post(url, {
-        documentId: did,
-        signature: '', // TODO: add signature
-        publisherAddress: accountId,
-        document: files
-      })
-    return response?.data?.encryptedDocument
+    console.log('start encr')
+    const response = await ProviderInstance.encrypt(
+      files,
+      providerUrl,
+      (httpMethod: Method, url: string, body: string, headers: any) => {
+        return axios(url, {
+          method: httpMethod,
+          data: body,
+          headers: headers
+        })
+      }
+    )
+    console.log('encr eres', response)
+    return response.data
   } catch (error) {
     console.error('Error parsing json: ' + error.message)
   }
@@ -36,9 +36,12 @@ export async function getFileInfo(
   cancelToken: CancelToken
 ): Promise<FileMetadata[]> {
   try {
-    const postBody = { url }
+    // TODO: what was the point of this?
+    // if (url instanceof DID) postBody = { did: url.getDid() }
+    // else postBody = { url }
+    const postBody = { url, type: 'url' }
     const response: AxiosResponse<FileMetadata[]> = await axios.post(
-      `${providerUrl}/api/v1/services/fileinfo`,
+      `${providerUrl}/api/services/fileinfo`,
       postBody,
       { cancelToken }
     )

@@ -19,10 +19,12 @@ export default function ServicesFields(): ReactElement {
   const { values, setFieldValue, touched, setTouched } =
     useFormikContext<FormPublishData>()
 
+  // name and title should be download, but option value should be access, probably the best way would be to change the component so that option is an object like {name,value}
   const accessTypeOptions = [
     {
-      name: accessTypeOptionsTitles[0].toLowerCase(),
-      title: accessTypeOptionsTitles[0],
+      name: 'download',
+      value: accessTypeOptionsTitles[0].toLowerCase(),
+      title: 'Download',
       icon: <IconDownload />,
       // BoxSelection component is not a Formik component
       // so we need to handle checked state manually.
@@ -31,6 +33,7 @@ export default function ServicesFields(): ReactElement {
     },
     {
       name: accessTypeOptionsTitles[1].toLowerCase(),
+      value: accessTypeOptionsTitles[1].toLowerCase(),
       title: accessTypeOptionsTitles[1],
       icon: <IconCompute />,
       checked:
@@ -55,7 +58,7 @@ export default function ServicesFields(): ReactElement {
 
     setFieldValue(
       'services[0].access',
-      values.services[0].algorithmPrivacy === true ? 'compute' : 'download'
+      values.services[0].algorithmPrivacy === true ? 'compute' : 'access'
     )
   }, [values.services[0].algorithmPrivacy, setFieldValue])
 

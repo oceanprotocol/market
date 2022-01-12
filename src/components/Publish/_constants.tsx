@@ -57,7 +57,7 @@ export const initialValues: FormPublishData = {
     accountId: ''
   },
   metadata: {
-    nft: { name: '', symbol: '', description: '', image: '' },
+    nft: { name: '', symbol: '', description: '', image_data: '' },
     type: 'dataset',
     name: '',
     author: '',
