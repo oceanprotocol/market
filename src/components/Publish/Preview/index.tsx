@@ -5,17 +5,15 @@ import { useFormikContext } from 'formik'
 import AssetContent from 'src/components/Asset/AssetContent'
 import { transformPublishFormToDdo } from '../_utils'
 import { Asset } from '@oceanprotocol/lib'
-import { useCancelToken } from '@hooks/useCancelToken'
 
 export default function Preview(): ReactElement {
   const [ddo, setDdo] = useState<Asset>()
   const [price, setPrice] = useState<BestPrice>()
   const { values } = useFormikContext<FormPublishData>()
-  const cancelToken = useCancelToken()
 
   useEffect(() => {
     async function makeDdo() {
-      const ddo = await transformPublishFormToDdo(values, cancelToken())
+      const ddo = await transformPublishFormToDdo(values)
       setDdo(ddo as Asset)
 
       // dummy BestPrice to trigger certain AssetActions
