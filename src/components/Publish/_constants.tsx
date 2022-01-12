@@ -126,18 +126,21 @@ export const initialPublishFeedback: PublishFeedback = {
     name: 'Create Tokens & Pricing',
     description:
       'The Data NFT representing your asset, the Datatokens defining access to it, and the pricing schema are all created in one transaction.',
-    status: 'pending'
+    status: 'pending',
+    txCount: 1
   },
   2: {
     name: 'Construct & Encrypt DDO',
     description:
       'The file URLs are encrypted, and the whole DDO is encrypted too.',
-    status: 'pending'
+    status: 'pending',
+    txCount: 0
   },
   3: {
     name: 'Publish DDO',
     description:
       'The encrypted DDO is stored on-chain as part of the Data NFT. Indexers like Aquarius can decrypt the DDO for displaying purposes, but the file URLs can only be decrypted by exchanging the respective datatokens for this asset.',
-    status: 'pending'
+    status: 'pending',
+    txCount: 1
   }
 }
