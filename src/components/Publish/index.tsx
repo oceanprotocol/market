@@ -14,7 +14,13 @@ import { Steps } from './Steps'
 import { FormPublishData, PublishFeedback } from './_types'
 import { useUserPreferences } from '@context/UserPreferences'
 import useNftFactory from '@hooks/contracts/useNftFactory'
-import { Nft, getHash, ProviderInstance } from '@oceanprotocol/lib'
+import {
+  Nft,
+  getHash,
+  ProviderInstance,
+  LoggerInstance,
+  DDO
+} from '@oceanprotocol/lib'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import axios, { Method } from 'axios'
 import { useCancelToken } from '@hooks/useCancelToken'
@@ -42,22 +48,28 @@ export default function PublishPage({
   )
 
   async function handleSubmit(values: FormPublishData) {
-    let _erc721Address, _datatokenAddress, _ddo, _encryptedDdo
+    let _erc721Address: string,
+      _datatokenAddress: string,
+      _ddo: DDO,
+      _encryptedDdo: string
+
+    // reset all feedback state
+    setFeedback(initialPublishFeedback)
 
     // --------------------------------------------------
     // 1. Create NFT & datatokens & create pricing schema
     // --------------------------------------------------
     try {
-      setFeedback({
-        ...feedback,
+      setFeedback((prevState) => ({
+        ...prevState,
         1: {
-          ...feedback[1],
+          ...prevState[1],
           status: 'active'
         }
-      })
+      }))
 
       const config = getOceanConfig(chainId)
-      console.log('config', config)
+      LoggerInstance.log('[publish] using config: ', config)
 
       const { erc721Address, datatokenAddress } = await createTokensAndPricing(
         values,
@@ -68,40 +80,46 @@ export default function PublishPage({
         web3
       )
 
-      const isSuccess = erc721Address && datatokenAddress
+      const isSuccess = Boolean(erc721Address && datatokenAddress)
       _erc721Address = erc721Address
       _datatokenAddress = datatokenAddress
 
-      setFeedback({
-        ...feedback,
+      LoggerInstance.log('[publish] erc721Address', erc721Address)
+      LoggerInstance.log('[publish] datatokenAddress', datatokenAddress)
+
+      setFeedback((prevState) => ({
+        ...prevState,
         1: {
-          ...feedback[1],
+          ...prevState[1],
           status: isSuccess ? 'success' : 'error'
         }
-      })
+      }))
     } catch (error) {
-      console.error('error', error.message)
-      setFeedback({
-        ...feedback,
+      LoggerInstance.error('[publish] error', error.message)
+      setFeedback((prevState) => ({
+        ...prevState,
         1: {
-          ...feedback[1],
+          ...prevState[1],
           status: 'error',
           message: error.message
         }
-      })
+      }))
     }
 
     // --------------------------------------------------
-    // 2. Construct and encypt DDO
+    // 2. Construct and encrypt DDO
     // --------------------------------------------------
     try {
-      setFeedback({
-        ...feedback,
+      setFeedback((prevState) => ({
+        ...prevState,
         2: {
-          ...feedback[2],
-          status: 'active'
+          ...prevState[2],
+          status: _datatokenAddress && _erc721Address ? 'active' : 'error'
         }
-      })
+      }))
+
+      if (!_datatokenAddress || !_erc721Address)
+        throw new Error('No NFT or Datatoken received.')
 
       const ddo = await transformPublishFormToDdo(
         values,
@@ -110,6 +128,7 @@ export default function PublishPage({
       )
 
       _ddo = ddo
+      LoggerInstance.log('[publish] Got new DDO', JSON.stringify(ddo))
 
       const encryptedResponse = await ProviderInstance.encrypt(
         ddo,
@@ -124,41 +143,41 @@ export default function PublishPage({
         }
       )
       const encryptedDdo = encryptedResponse.data
-
       _encryptedDdo = encryptedDdo
+      LoggerInstance.log('[publish] Got encrypted DDO', encryptedDdo)
 
-      console.log('ddo', JSON.stringify(ddo))
-
-      setFeedback({
-        ...feedback,
+      setFeedback((prevState) => ({
+        ...prevState,
         2: {
-          ...feedback[2],
+          ...prevState[2],
           status: encryptedDdo ? 'success' : 'error'
         }
-      })
+      }))
     } catch (error) {
-      console.error('error', error.message)
-      setFeedback({
-        ...feedback,
+      LoggerInstance.error('[publish] error', error.message)
+      setFeedback((prevState) => ({
+        ...prevState,
         2: {
-          ...feedback[2],
+          ...prevState[2],
           status: 'error',
           message: error.message
         }
-      })
+      }))
     }
 
     // --------------------------------------------------
-    // 3. Publish DDO
+    // 3. Write DDO into NFT metadata
     // --------------------------------------------------
     try {
-      setFeedback({
-        ...feedback,
+      setFeedback((prevState) => ({
+        ...prevState,
         3: {
-          ...feedback[3],
-          status: 'active'
+          ...prevState[3],
+          status: _ddo && _encryptedDdo ? 'active' : 'error'
         }
-      })
+      }))
+
+      if (!_ddo || !_encryptedDdo) throw new Error('No DDO received.')
 
       // TODO: this whole setMetadata needs to go in a function ,too many hardcoded/calculated params
       // TODO: hash generation : this needs to be moved in a function (probably on ocean.js) after we figure out what is going on in provider, leave it here for now
@@ -179,25 +198,25 @@ export default function PublishPage({
         '0x' + metadataHash
       )
 
-      console.log('result', res)
+      LoggerInstance.log('[publish] setMetadata result', res)
 
-      setFeedback({
-        ...feedback,
+      setFeedback((prevState) => ({
+        ...prevState,
         3: {
-          ...feedback[3],
+          ...prevState[3],
           status: res ? 'success' : 'error'
         }
-      })
+      }))
     } catch (error) {
-      console.error('error', error.message)
-      setFeedback({
-        ...feedback,
+      LoggerInstance.error('[publish] error', error.message)
+      setFeedback((prevState) => ({
+        ...prevState,
         3: {
-          ...feedback[3],
+          ...prevState[3],
           status: 'error',
           message: error.message
         }
-      })
+      }))
     }
 
     // --------------------------------------------------
