@@ -49,8 +49,8 @@ interface DidAndDatatokenMap {
 
 const FreeQuery = gql`
   query AssetsFreePrice($datatoken_in: [String!]) {
-    dispensers(orderBy: id, where: { datatoken_in: $datatoken_in }) {
-      datatoken {
+    dispensers(orderBy: id, where: { token_in: $datatoken_in }) {
+      token {
         id
         address
       }
@@ -60,18 +60,16 @@ const FreeQuery = gql`
 
 const AssetFreeQuery = gql`
   query AssetFreePrice($datatoken: String) {
-    dispensers(orderBy: id, where: { datatoken: $datatoken }) {
+    dispensers(orderBy: id, where: { token: $datatoken }) {
       active
-      owner {
-        id
-      }
-      minterApproved
-      isTrueMinter
+      owner
+      isMinter
       maxTokens
       maxBalance
       balance
-      datatoken {
+      token {
         id
+        isDatatoken
       }
     }
   }
@@ -80,9 +78,11 @@ const AssetFreeQuery = gql`
 const FreQuery = gql`
   query AssetsFrePrice($datatoken_in: [String!]) {
     fixedRateExchanges(orderBy: id, where: { datatoken_in: $datatoken_in }) {
-      rate
       id
-      baseTokenSymbol
+      price
+      baseToken {
+        symbol
+      }
       datatoken {
         id
         address
@@ -95,9 +95,11 @@ const FreQuery = gql`
 const AssetFreQuery = gql`
   query AssetFrePrice($datatoken: String) {
     fixedRateExchanges(orderBy: id, where: { datatoken: $datatoken }) {
-      rate
       id
-      baseTokenSymbol
+      price
+      baseToken {
+        symbol
+      }
       datatoken {
         id
         address
@@ -109,46 +111,46 @@ const AssetFreQuery = gql`
 
 const PoolQuery = gql`
   query AssetsPoolPrice($datatokenAddress_in: [String!]) {
-    pools(where: { datatokenAddress_in: $datatokenAddress_in }) {
+    pools(where: { datatoken_in: $datatokenAddress_in }) {
       id
       spotPrice
-      consumePrice
-      datatokenAddress
-      datatokenReserve
-      oceanReserve
-      tokens(where: { isDatatoken: false }) {
-        isDatatoken
+      datatoken {
+        address
         symbol
       }
+      datatokenLiquidity
+      baseTokenLiquidity
     }
   }
 `
 
 const AssetPoolPriceQuery = gql`
   query AssetPoolPrice($datatokenAddress: String) {
-    pools(where: { datatokenAddress: $datatokenAddress }) {
+    pools(where: { datatoken: $datatokenAddress }) {
       id
       spotPrice
-      consumePrice
-      datatokenAddress
-      datatokenReserve
-      oceanReserve
-      tokens(where: { isDatatoken: false }) {
+      datatoken {
+        address
         symbol
       }
+      baseToken {
+        symbol
+      }
+      datatokenLiquidity
+      baseTokenLiquidity
     }
   }
 `
 
 const PreviousOrderQuery = gql`
   query AssetPreviousOrder($id: String!, $account: String!) {
-    tokenOrders(
+    orders(
       first: 1
-      where: { datatokenId: $id, payer: $account }
-      orderBy: timestamp
+      where: { token: $id, payer: $account }
+      orderBy: createdTimestamp
       orderDirection: desc
     ) {
-      timestamp
+      createdTimestamp
       tx
     }
   }
@@ -156,42 +158,43 @@ const PreviousOrderQuery = gql`
 const HighestLiquidityAssets = gql`
   query HighestLiquidityAssets {
     pools(
-      where: { datatokenReserve_gte: 1 }
-      orderBy: oceanReserve
+      where: { datatokenLiquidity_gte: 1 }
+      orderBy: baseTokenLiquidity
       orderDirection: desc
       first: 15
     ) {
       id
-      datatokenAddress
-      valueLocked
-      oceanReserve
+      datatoken {
+        address
+      }
+      baseTokenLiquidity
     }
   }
 `
 
 const UserSharesQuery = gql`
   query UserSharesQuery($user: String, $pools: [String!]) {
-    poolShares(where: { userAddress: $user, poolId_in: $pools }) {
+    poolShares(where: { user: $user, pool_in: $pools }) {
       id
-      balance
-      userAddress {
+      shares
+      user {
         id
       }
-      poolId {
+      pool {
         id
-        datatokenAddress
-        valueLocked
-        tokens {
-          tokenId {
-            symbol
-          }
+        datatoken {
+          address
+          symbol
         }
-        oceanReserve
-        datatokenReserve
+        baseToken {
+          address
+          symbol
+        }
+        datatokenLiquidity
+        baseTokenLiquidity
         totalShares
-        consumePrice
         spotPrice
-        createTime
+        createdTimestamp
       }
     }
   }
@@ -199,27 +202,29 @@ const UserSharesQuery = gql`
 
 const userPoolSharesQuery = gql`
   query PoolShares($user: String) {
-    poolShares(where: { userAddress: $user, balance_gt: 0.001 }, first: 1000) {
+    poolShares(where: { user: $user, shares_gt: 0.001 }, first: 1000) {
       id
-      balance
-      userAddress {
+      shares
+      user {
         id
       }
-      poolId {
+      pool {
         id
-        datatokenAddress
-        valueLocked
-        tokens {
+        datatoken {
           id
-          isDatatoken
+          address
           symbol
         }
-        oceanReserve
-        datatokenReserve
+        baseToken {
+          id
+          address
+          symbol
+        }
+        baseTokenLiquidity
+        datatokenLiquidity
         totalShares
-        consumePrice
         spotPrice
-        createTime
+        createdTimestamp
       }
     }
   }
@@ -227,39 +232,47 @@ const userPoolSharesQuery = gql`
 
 const UserTokenOrders = gql`
   query OrdersData($user: String!) {
-    tokenOrders(
-      orderBy: timestamp
+    orders(
+      orderBy: createdTimestamp
       orderDirection: desc
       where: { consumer: $user }
     ) {
-      datatokenId {
+      token {
         address
         symbol
+        isDatatoken
       }
-      timestamp
+      createdTimestamp
       tx
     }
   }
 `
+
+// TODO: counting orders might be enough here to get sales for a user
 const UserSalesQuery = gql`
   query UserSalesQuery($userSalesId: ID) {
     users(where: { id: $userSalesId }) {
       id
-      nrSales
+      orders(first: 10000) {
+        id
+      }
     }
   }
 `
 
+// TODO: figure out some way to get this
 const TopSalesQuery = gql`
   query TopSalesQuery {
     users(
       first: 20
-      orderBy: nrSales
+      orderBy: tokensOwned
       orderDirection: desc
-      where: { nrSales_not: 0 }
+      where: { tokenBalancesOwned_not: "0" }
     ) {
       id
-      nrSales
+      tokenBalancesOwned {
+        value
+      }
     }
   }
 `
