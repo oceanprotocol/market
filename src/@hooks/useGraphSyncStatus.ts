@@ -31,6 +31,7 @@ async function fetchGraph(
 }
 
 async function getBlockHead(config: Config) {
+  if (!config) return
   // for ETH main, get block from graph fetch
   if (config.network === 'mainnet') {
     const response: any = await fetchGraph(ethGraphUrl, ethGraphQuery)

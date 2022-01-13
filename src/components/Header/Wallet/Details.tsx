@@ -6,7 +6,6 @@ import AddToken from '@shared/AddToken'
 import Conversion from '@shared/Price/Conversion'
 import { useWeb3 } from '@context/Web3'
 import { getOceanConfig } from '@utils/ocean'
-import Web3Feedback from '@shared/Web3Feedback'
 import styles from './Details.module.css'
 
 export default function Details(): ReactElement {
@@ -128,7 +127,6 @@ export default function Details(): ReactElement {
           </p>
         </li>
       </ul>
-      <Web3Feedback networkId={networkId} />
     </div>
   )
 }
