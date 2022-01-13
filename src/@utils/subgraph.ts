@@ -23,11 +23,8 @@ import {
   PoolShares as PoolSharesList,
   PoolShares_poolShares as PoolShare
 } from '../@types/apollo/PoolShares'
-import { OrdersData_tokenOrders as OrdersData } from '../@types/apollo/OrdersData'
-import {
-  UserSalesQuery_users as UserSales,
-  UserSalesQuery as UsersSalesList
-} from '../@types/apollo/UserSalesQuery'
+import { OrdersData_orders as OrdersData } from '../@types/apollo/OrdersData'
+import { UserSalesQuery as UsersSalesList } from '../@types/apollo/UserSalesQuery'
 
 export interface UserLiquidity {
   price: string
@@ -118,6 +115,10 @@ const PoolQuery = gql`
         address
         symbol
       }
+      baseToken {
+        address
+        symbol
+      }
       datatokenLiquidity
       baseTokenLiquidity
     }
@@ -166,6 +167,9 @@ const HighestLiquidityAssets = gql`
       id
       datatoken {
         address
+      }
+      baseToken {
+        symbol
       }
       baseTokenLiquidity
     }
@@ -342,15 +346,15 @@ export async function getPreviousOrders(
   }
   const fetchedPreviousOrders: OperationResult<AssetPreviousOrder> =
     await fetchData(PreviousOrderQuery, variables, null)
-  if (fetchedPreviousOrders.data?.tokenOrders?.length === 0) return null
+  if (fetchedPreviousOrders.data?.orders?.length === 0) return null
   if (assetTimeout === '0') {
-    return fetchedPreviousOrders?.data?.tokenOrders[0]?.tx
+    return fetchedPreviousOrders?.data?.orders[0]?.tx
   } else {
     const expiry =
-      fetchedPreviousOrders?.data?.tokenOrders[0]?.timestamp * 1000 +
+      fetchedPreviousOrders?.data?.orders[0]?.createdTimestamp * 1000 +
       Number(assetTimeout) * 1000
     if (Date.now() <= expiry) {
-      return fetchedPreviousOrders?.data?.tokenOrders[0]?.tx
+      return fetchedPreviousOrders?.data?.orders[0]?.tx
     } else {
       return null
     }
@@ -366,15 +370,12 @@ function transformPriceToBestPrice(
     const price: BestPrice = {
       type: 'dynamic',
       address: poolPrice[0]?.id,
-      value:
-        poolPrice[0]?.consumePrice === '-1'
-          ? poolPrice[0]?.spotPrice
-          : poolPrice[0]?.consumePrice,
-      ocean: poolPrice[0]?.oceanReserve,
-      oceanSymbol: poolPrice[0]?.tokens[0]?.symbol,
-      datatoken: poolPrice[0]?.datatokenReserve,
+      value: poolPrice[0]?.spotPrice,
+      ocean: poolPrice[0]?.baseTokenLiquidity,
+      oceanSymbol: poolPrice[0]?.baseToken.symbol,
+      datatoken: poolPrice[0]?.datatokenLiquidity,
       pools: [poolPrice[0]?.id],
-      isConsumable: poolPrice[0]?.consumePrice === '-1' ? 'false' : 'true'
+      isConsumable: poolPrice[0]?.spotPrice === '-1' ? 'false' : 'true'
     }
     return price
   } else if (frePrice?.length > 0) {
@@ -382,10 +383,10 @@ function transformPriceToBestPrice(
     // isConsumable: 'true'
     const price: BestPrice = {
       type: 'fixed',
-      value: frePrice[0]?.rate,
+      value: frePrice[0]?.price,
       address: frePrice[0]?.id,
       exchangeId: frePrice[0]?.id,
-      oceanSymbol: frePrice[0]?.baseTokenSymbol,
+      oceanSymbol: frePrice[0]?.baseToken.symbol,
       ocean: 0,
       datatoken: 0,
       pools: [],
@@ -396,7 +397,7 @@ function transformPriceToBestPrice(
     const price: BestPrice = {
       type: 'free',
       value: 0,
-      address: freePrice[0]?.datatoken.id,
+      address: freePrice[0]?.token.id,
       exchangeId: '',
       ocean: 0,
       datatoken: 0,
@@ -501,16 +502,13 @@ export async function getAssetsPriceList(assets: Asset[]): Promise<PriceList> {
   const didDTMap: DidAndDatatokenMap = values[3]
 
   for (const poolPrice of poolPriceResponse) {
-    priceList[didDTMap[poolPrice.datatokenAddress]] =
-      poolPrice.consumePrice === '-1'
-        ? poolPrice.spotPrice
-        : poolPrice.consumePrice
+    priceList[didDTMap[poolPrice.datatoken.address]] = poolPrice.spotPrice
   }
   for (const frePrice of frePriceResponse) {
-    priceList[didDTMap[frePrice.datatoken?.address]] = frePrice.rate
+    priceList[didDTMap[frePrice.datatoken?.address]] = frePrice.price
   }
   for (const freePrice of freePriceResponse) {
-    priceList[didDTMap[freePrice.datatoken?.address]] = '0'
+    priceList[didDTMap[freePrice.token?.address]] = '0'
   }
   return priceList
 }
@@ -588,7 +586,7 @@ export async function getAssetsBestPrices(
     const frePrice: AssetsFrePriceFixedRateExchange[] = []
     const freePrice: AssetFreePriceDispenser[] = []
     const pool = poolPriceResponse.find(
-      (pool: AssetsPoolPricePool) => pool.datatokenAddress === dataToken
+      (pool: AssetsPoolPricePool) => pool.datatoken.address === dataToken
     )
     pool && poolPrice.push(pool)
     const fre = frePriceResponse.find(
@@ -597,7 +595,7 @@ export async function getAssetsBestPrices(
     )
     fre && frePrice.push(fre)
     const free = freePriceResponse.find(
-      (free: AssetFreePriceDispenser) => free.datatoken.address === dataToken
+      (free: AssetFreePriceDispenser) => free.token.address === dataToken
     )
     free && freePrice.push(free)
     const bestPrice = transformPriceToBestPrice(frePrice, poolPrice, freePrice)
@@ -623,22 +621,24 @@ export async function getHighestLiquidityDatatokens(
       fetchedPools.data.pools
     )
   }
-  highestLiquidityAssets.sort((a, b) => b.oceanReserve - a.oceanReserve)
+  highestLiquidityAssets.sort(
+    (a, b) => b.baseTokenLiquidity - a.baseTokenLiquidity
+  )
   for (let i = 0; i < highestLiquidityAssets.length; i++) {
-    if (!highestLiquidityAssets[i].datatokenAddress) continue
-    dtList.push(highestLiquidityAssets[i].datatokenAddress)
+    if (!highestLiquidityAssets[i].datatoken.address) continue
+    dtList.push(highestLiquidityAssets[i].datatoken.address)
   }
   return dtList
 }
 
 export function calculateUserLiquidity(poolShare: PoolShare): number {
   const ocean =
-    (poolShare.balance / poolShare.poolId.totalShares) *
-    poolShare.poolId.oceanReserve
+    (poolShare.shares / poolShare.pool.totalShares) *
+    poolShare.pool.baseTokenLiquidity
   const datatokens =
-    (poolShare.balance / poolShare.poolId.totalShares) *
-    poolShare.poolId.datatokenReserve
-  const totalLiquidity = ocean + datatokens * poolShare.poolId.spotPrice
+    (poolShare.shares / poolShare.pool.totalShares) *
+    poolShare.pool.datatokenLiquidity
+  const totalLiquidity = ocean + datatokens * poolShare.pool.spotPrice
   return totalLiquidity
 }
 
@@ -661,8 +661,8 @@ export async function getAccountLiquidityInOwnAssets(
 
   for (const result of results) {
     for (const poolShare of result.poolShares) {
-      const userShare = poolShare.balance / poolShare.poolId.totalShares
-      const userBalance = userShare * poolShare.poolId.oceanReserve
+      const userShare = poolShare.shares / poolShare.pool.totalShares
+      const userBalance = userShare * poolShare.pool.baseTokenLiquidity
       totalOceanLiquidity += userBalance
       const poolLiquidity = calculateUserLiquidity(poolShare)
       totalLiquidity += poolLiquidity
@@ -762,7 +762,7 @@ export async function getTopAssetsPublishers(
       if (publishersIndex === -1) {
         const publisher: AccountTeaserVM = {
           address: fetchedUsers.data.users[i].id,
-          nrSales: fetchedUsers.data.users[i].nrSales
+          nrSales: fetchedUsers.data.users[i].orders.length
         }
         publisherSales.push(publisher)
       } else {
