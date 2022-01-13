@@ -157,7 +157,7 @@ export default function AssetActions({
   return (
     <>
       <Tabs items={tabs} className={styles.actions} />
-      <Web3Feedback isAssetNetwork={isAssetNetwork} />
+      <Web3Feedback networkId={ddo?.chainId} isAssetNetwork={isAssetNetwork} />
     </>
   )
 }

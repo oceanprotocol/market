@@ -6,7 +6,6 @@ import PublishedList from './PublishedList'
 import Downloads from './Downloads'
 import ComputeJobs from './ComputeJobs'
 import styles from './index.module.css'
-import OceanProvider from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 
 interface HistoryTab {
@@ -35,11 +34,7 @@ function getTabs(accountId: string, userAccountId: string): HistoryTab[] {
   ]
   const computeTab: HistoryTab = {
     title: 'Compute Jobs',
-    content: (
-      <OceanProvider>
-        <ComputeJobs />
-      </OceanProvider>
-    )
+    content: <ComputeJobs />
   }
   if (accountId === userAccountId) {
     defaultTabs.push(computeTab)

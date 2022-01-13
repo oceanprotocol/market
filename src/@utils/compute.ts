@@ -200,8 +200,6 @@ function getServiceEndpoints(data: TokenOrder[], assets: Asset[]): string[] {
 
 // export async function getComputeJobs(
 //   chainIds: number[],
-//   config: Config,
-//   ocean: Ocean,
 //   account: Account,
 //   ddo?: Asset,
 //   token?: CancelToken

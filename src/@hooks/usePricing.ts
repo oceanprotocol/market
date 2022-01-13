@@ -1,5 +1,5 @@
-import { Asset, LoggerInstance } from '@oceanprotocol/lib'
-import { useState } from 'react'
+import { Asset, Config, LoggerInstance } from '@oceanprotocol/lib'
+import { useEffect, useState } from 'react'
 import { TransactionReceipt } from 'web3-core'
 import { Decimal } from 'decimal.js'
 import {
@@ -10,8 +10,8 @@ import {
   getDispenseFeedback
 } from '@utils/feedback'
 import { sleep } from '@utils/index'
-import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
+import { getOceanConfig } from '@utils/ocean'
 
 interface UsePricing {
   getDTSymbol: (ddo: Asset) => Promise<string>
@@ -33,12 +33,20 @@ interface UsePricing {
 }
 
 function usePricing(): UsePricing {
-  const { accountId } = useWeb3()
-  const { config } = useOcean()
+  const { accountId, networkId } = useWeb3()
   const [pricingIsLoading, setPricingIsLoading] = useState(false)
   const [pricingStep, setPricingStep] = useState<number>()
   const [pricingStepText, setPricingStepText] = useState<string>()
   const [pricingError, setPricingError] = useState<string>()
+  const [oceanConfig, setOceanConfig] = useState<Config>()
+
+  // Grab ocen config based on passed networkId
+  useEffect(() => {
+    if (!networkId) return
+
+    const oceanConfig = getOceanConfig(networkId)
+    setOceanConfig(oceanConfig)
+  }, [networkId])
 
   async function getDTSymbol(ddo: Asset): Promise<string> {
     if (!accountId) return
@@ -155,18 +163,20 @@ function usePricing(): UsePricing {
           break
         }
         case 'fixed': {
-          if (!config.oceanTokenAddress) {
-            LoggerInstance.error(`'oceanTokenAddress' not set in config`)
+          if (!oceanConfig.oceanTokenAddress) {
+            LoggerInstance.error(`'oceanTokenAddress' not set in oceanConfig`)
             return
           }
-          if (!config.fixedRateExchangeAddress) {
-            LoggerInstance.error(`'fixedRateExchangeAddress' not set in config`)
+          if (!oceanConfig.fixedRateExchangeAddress) {
+            LoggerInstance.error(
+              `'fixedRateExchangeAddress' not set in oceanConfig`
+            )
             return
           }
           LoggerInstance.log('Buying token from exchange', price, accountId)
           // await ocean.datatokens.approve(
-          //   config.oceanTokenAddress,
-          //   config.fixedRateExchangeAddress,
+          //   oceanConfig.oceanTokenAddress,
+          //   oceanConfig.fixedRateExchangeAddress,
           //   `${price.value}`,
           //   accountId
           // )
@@ -232,8 +242,8 @@ function usePricing(): UsePricing {
     let { amountDataToken } = priceOptions
     const isPool = type === 'dynamic'
 
-    if (!isPool && !config.fixedRateExchangeAddress) {
-      LoggerInstance.error(`'fixedRateExchangeAddress' not set in config.`)
+    if (!isPool && !oceanConfig.fixedRateExchangeAddress) {
+      LoggerInstance.error(`'fixedRateExchangeAddress' not set in oceanConfig.`)
       return
     }
 

@@ -8,7 +8,6 @@ import {
 } from 'formik'
 import Input from '@shared/FormInput'
 import Button from '@shared/atoms/Button'
-import { useOcean } from '@context/Ocean'
 import { FormTradeData, TradeItem } from './_types'
 import UserLiquidity from '../UserLiquidity'
 import { useWeb3 } from '@context/Web3'
