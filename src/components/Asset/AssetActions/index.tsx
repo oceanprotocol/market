@@ -26,7 +26,7 @@ export default function AssetActions({
 }): ReactElement {
   const { accountId, balance } = useWeb3()
   const { isAssetNetwork } = useAsset()
-  const { values } = useFormikContext<FormPublishData>()
+  const formikState = useFormikContext<FormPublishData>()
 
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>()
   const [dtBalance, setDtBalance] = useState<string>()
@@ -64,9 +64,10 @@ export default function AssetActions({
     async function initFileInfo() {
       setFileIsLoading(true)
 
-      const asset = values?.services?.[0].files?.[0].url || ddo.id
+      const asset = formikState?.values?.services?.[0].files?.[0].url || ddo.id
       const providerUrl =
-        values?.services[0].providerUrl.url || oceanConfig.providerUri
+        formikState?.values?.services[0].providerUrl.url ||
+        oceanConfig.providerUri
 
       try {
         const fileInfoResponse = await getFileInfo(asset, providerUrl)
@@ -77,7 +78,7 @@ export default function AssetActions({
       }
     }
     initFileInfo()
-  }, [ddo, isMounted, newCancelToken, values?.services])
+  }, [ddo, isMounted, newCancelToken, formikState?.values?.services])
 
   // Get and set user DT balance
   useEffect(() => {

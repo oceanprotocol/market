@@ -4,7 +4,7 @@ export enum SortDirectionOptions {
 }
 
 export enum SortTermOptions {
-  Created = 'created',
+  Created = 'metadata.created',
   Relevance = '_score'
 }
 

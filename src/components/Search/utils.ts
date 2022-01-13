@@ -47,14 +47,14 @@ export function getSearchQuery(
   const emptySearchTerm = text === undefined || text === ''
 
   let searchTerm = owner
-    ? `(publicKey.owner:${owner})`
+    ? `(nft.owner:${owner})`
     : tags
     ? // eslint-disable-next-line no-useless-escape
-      `(service.attributes.additionalInformation.tags:\"${tags}\")`
-    : categories
-    ? // eslint-disable-next-line no-useless-escape
-      `(service.attributes.additionalInformation.categories:\"${categories}\")`
-    : text || ''
+      `(metadata.tags:\"${tags}\")`
+    : // : categories
+      // ? // eslint-disable-next-line no-useless-escape
+      //   `(service.attributes.additionalInformation.categories:\"${categories}\")`
+      text || ''
 
   searchTerm = searchTerm.trim()
   const modifiedSearchTerm = searchTerm.split(' ').join(' OR ').trim()
@@ -68,14 +68,14 @@ export function getSearchQuery(
       : '**'
   const searchFields = [
     'id',
-    'publicKey.owner',
-    'dataToken',
-    'dataTokenInfo.name',
-    'dataTokenInfo.symbol',
-    'service.attributes.main.name^10',
-    'service.attributes.main.author',
-    'service.attributes.additionalInformation.description',
-    'service.attributes.additionalInformation.tags'
+    'nft.owner',
+    'datatokens.address',
+    'datatokens.name',
+    'datatokens.symbol',
+    'metadata.name^10',
+    'metadata.author',
+    'metadata.description',
+    'metadata.tags'
   ]
 
   const nestedQuery = {
@@ -123,9 +123,9 @@ export function getSearchQuery(
 
   const filters: FilterTerm[] = []
   accessType !== undefined &&
-    filters.push(getFilterTerm('service.type', accessType))
+    filters.push(getFilterTerm('nft.type', accessType))
   serviceType !== undefined &&
-    filters.push(getFilterTerm('service.attributes.main.type', serviceType))
+    filters.push(getFilterTerm('metadata.type', serviceType))
 
   const baseQueryParams = {
     chainIds,
@@ -139,7 +139,6 @@ export function getSearchQuery(
   } as BaseQueryParams
 
   const query = generateBaseQuery(baseQueryParams)
-
   return query
 }
 
