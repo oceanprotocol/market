@@ -133,7 +133,7 @@ export default function Pool(): ReactElement {
       queryVariables,
       queryContext
     )
-    return queryResult?.data.pool.shares[0]?.balance
+    return queryResult?.data.pool.shares[0]?.shares
   }
 
   function refetchLiquidity() {

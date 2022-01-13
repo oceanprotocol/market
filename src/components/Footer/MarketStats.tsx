@@ -116,7 +116,7 @@ export default function MarketStats(): ReactElement {
     setMainChainIds(mainChainIdsList)
 
     let newTotalValueLockedSum = 0
-    let newTotalOceanLiquiditySum = 0
+    // let newTotalOceanLiquiditySum = 0
     let newPoolCountSum = 0
 
     for (const chainId of mainChainIdsList) {
@@ -141,26 +141,27 @@ export default function MarketStats(): ReactElement {
 
         await setTotalValueLocked((prevState) => ({
           ...prevState,
-          [chainId]: totalValueLocked
+          [chainId]: totalLiquidity.value
         }))
-        await setTotalOceanLiquidity((prevState) => ({
-          ...prevState,
-          [chainId]: totalOceanLiquidity
-        }))
+        // TODO: how to get total OCEAN liquidity?
+        // await setTotalOceanLiquidity((prevState) => ({
+        //   ...prevState,
+        //   [chainId]: totalLiquidity
+        // }))
         await setPoolCount((prevState) => ({
           ...prevState,
           [chainId]: poolCount
         }))
 
-        newTotalValueLockedSum += parseInt(totalValueLocked)
-        newTotalOceanLiquiditySum += parseInt(totalOceanLiquidity)
+        newTotalValueLockedSum += parseInt(totalLiquidity.value)
+        // newTotalOceanLiquiditySum += parseInt(totalOceanLiquidity)
         newPoolCountSum += parseInt(poolCount)
       } catch (error) {
         LoggerInstance.error('Error fetchData: ', error.message)
       }
     }
     setTotalValueLockedSum(`${newTotalValueLockedSum}`)
-    setTotalOceanLiquiditySum(`${newTotalOceanLiquiditySum}`)
+    // setTotalOceanLiquiditySum(`${newTotalOceanLiquiditySum}`)
     setPoolCountSum(`${newPoolCountSum}`)
   }
 
