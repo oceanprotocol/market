@@ -145,7 +145,7 @@ export default function Edit({
               /> */}
 
               <aside>
-                <Web3Feedback />
+                <Web3Feedback networkId={ddo?.chainId} />
               </aside>
 
               {/* {debug === true && <Debug values={values} ddo={ddo} />} */}

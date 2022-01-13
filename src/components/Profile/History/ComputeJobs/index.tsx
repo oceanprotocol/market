@@ -5,12 +5,10 @@ import { LoggerInstance } from '@oceanprotocol/lib'
 import Dotdotdot from 'react-dotdotdot'
 import Table from '@shared/atoms/Table'
 import Button from '@shared/atoms/Button'
-import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 import Details from './Details'
 import Refresh from '@images/refresh.svg'
 import { useUserPreferences } from '@context/UserPreferences'
-import { getOceanConfig } from '@utils/ocean'
 import NetworkName from '@shared/NetworkName'
 // import { getComputeJobs } from '@utils/compute'
 import styles from './index.module.css'
@@ -75,25 +73,14 @@ export default function ComputeJobs({
 }: {
   minimal?: boolean
 }): ReactElement {
-  const { config } = useOcean()
   const { accountId, networkId } = useWeb3()
   const { ddo } = useAsset()
-  const [isLoading, setIsLoading] = useState(false)
   const { chainIds } = useUserPreferences()
+  const [isLoading, setIsLoading] = useState(false)
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
   const isMounted = useIsMounted()
 
   const columnsMinimal = [columns[4], columns[5], columns[3]]
-
-  // useEffect(() => {
-  //   async function initOcean() {
-  //     const oceanInitialConfig = getOceanConfig(networkId)
-  //     await connect(oceanInitialConfig)
-  //   }
-  //   if (ocean === undefined) {
-  //     initOcean()
-  //   }
-  // }, [networkId])
 
   const fetchJobs = useCallback(async () => {
     if (!chainIds || chainIds.length === 0 || !accountId) {
@@ -103,13 +90,13 @@ export default function ComputeJobs({
     }
     try {
       setIsLoading(true)
-      // const jobs = await getComputeJobs(chainIds, config, ocean, account, ddo)
+      // const jobs = await getComputeJobs(chainIds, accountId, ddo)
       // isMounted() && setJobs(jobs.computeJobs)
       // setIsLoading(jobs.isLoaded)
     } catch (error) {
       LoggerInstance.error(error.message)
     }
-  }, [chainIds, accountId, config, ddo, isMounted])
+  }, [chainIds, accountId, ddo, isMounted])
 
   useEffect(() => {
     fetchJobs()

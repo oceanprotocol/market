@@ -128,7 +128,7 @@ export default function Details(): ReactElement {
           </p>
         </li>
       </ul>
-      <Web3Feedback />
+      <Web3Feedback networkId={networkId} />
     </div>
   )
 }
