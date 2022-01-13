@@ -9,12 +9,15 @@ import styles from './EditHistory.module.css'
 
 const getReceipts = gql`
   query ReceiptData($address: ID!) {
-    datatokens(where: { id: $address }) {
-      updates(orderBy: timestamp, orderDirection: desc) {
-        id
-        tx
-        timestamp
-      }
+    nftUpdates(
+      where: { id: $address }
+      subgraphError: deny
+      orderBy: timestamp
+      orderDirection: desc
+    ) {
+      id
+      tx
+      timestamp
     }
   }
 `
@@ -50,13 +53,13 @@ export default function EditHistory(): ReactElement {
   const [creationTx, setCreationTx] = useState<string>()
 
   useEffect(() => {
-    if (!data || data.datatokens.length === 0) return
+    if (!data || data.nftUpdates.length === 0) return
 
-    const receiptCollectionLength = data.datatokens[0].updates.length
-    const creationData = data.datatokens[0].updates[receiptCollectionLength - 1]
+    const receiptCollectionLength = data.nftUpdates.length
+    const creationData = data.nftUpdates[receiptCollectionLength - 1]
     setCreationTx(creationData.tx)
 
-    const receiptCollection = [...data.datatokens[0].updates]
+    const receiptCollection = [...data.nftUpdates]
     receiptCollection.splice(-1, 1)
 
     setReceipts(receiptCollection)
