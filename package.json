@@ -16,8 +16,7 @@
     "type-check": "tsc --noEmit",
     "deploy:s3": "bash scripts/deploy-s3.sh",
     "postinstall": "husky install",
-    "codegen:apollo": "apollo client:codegen --target typescript --tsFileExtension=d.ts --outputFlat src/@types/apollo/",
-    "codegen:graphql": "graphql-codegen --config codegen.yml"
+    "codegen:apollo": "apollo client:codegen --target typescript --tsFileExtension=d.ts --outputFlat src/@types/apollo/"
   },
   "dependencies": {
     "@coingecko/cryptoformat": "^0.4.4",
@@ -75,11 +74,6 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^2.3.1",
-    "@graphql-codegen/introspection": "^2.1.1",
-    "@graphql-codegen/typescript": "^2.4.2",
-    "@graphql-codegen/typescript-operations": "^2.2.2",
-    "@graphql-codegen/typescript-react-apollo": "^3.2.3",
     "@svgr/webpack": "^6.2.0",
     "@types/chart.js": "^2.9.35",
     "@types/d3": "^7.1.0",
