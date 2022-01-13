@@ -28,21 +28,28 @@ Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
 const poolLiquidityQuery = gql`
   query PoolLiquidity($id: ID!, $shareId: ID) {
-    pool(id: $id) {
+    pool(id: $id, subgraphError: deny) {
       id
       totalShares
-      swapFee
+      poolFee
+      opfFee
+      marketFee
       spotPrice
-      tokens {
+      baseToken {
         address
         symbol
-        isDatatoken
-        balance
-        denormWeight
       }
+      baseTokenWeight
+      baseTokenLiquidity
+      datatoken {
+        address
+        symbol
+      }
+      datatokenWeight
+      datatokenLiquidity
       shares(where: { id: $shareId }) {
         id
-        balance
+        shares
       }
     }
   }
@@ -54,7 +61,7 @@ const userPoolShareQuery = gql`
       id
       shares(where: { id: $shareId }) {
         id
-        balance
+        shares
       }
     }
   }
@@ -147,52 +154,43 @@ export default function Pool(): ReactElement {
 
   useEffect(() => {
     async function init() {
-      if (!dataLiquidity || !dataLiquidity.pool) {
+      if (!dataLiquidity?.pool) {
         await getPoolLiquidity()
         return
       }
 
       // Set symbols
-      dataLiquidity.pool.tokens.forEach((token) => {
-        token.isDatatoken
-          ? setDtSymbol(token.symbol)
-          : setOceanSymbol(token.symbol)
-      })
+      setOceanSymbol(dataLiquidity.pool.baseToken.symbol)
+      setDtSymbol(dataLiquidity.pool.datatoken.symbol)
+
       // Total pool shares
       const totalPoolTokens = dataLiquidity.pool.totalShares
       setTotalPoolTokens(totalPoolTokens)
 
-      // Get swap fee
-      // swapFee is tricky: to get 0.1% you need to convert from 0.001
-      const swapFee = isValidNumber(dataLiquidity.pool.swapFee)
-        ? new Decimal(dataLiquidity.pool.swapFee).mul(100).toString()
+      // Get poolFee
+      // poolFee is tricky: to get 0.1% you need to convert from 0.001
+      const swapFee = isValidNumber(dataLiquidity.pool.poolFee)
+        ? new Decimal(dataLiquidity.pool.poolFee).mul(100).toString()
         : '0'
-
       setSwapFee(swapFee)
 
       // Get weights
-      const weightDt = dataLiquidity.pool.tokens.filter(
-        (token: any) =>
-          token.address === ddo.services[0].datatokenAddress.toLowerCase()
-      )[0].denormWeight
-
+      const weightDt = dataLiquidity.pool.datatokenWeight
       const weightDtDecimal = isValidNumber(weightDt)
         ? new Decimal(weightDt).mul(10).toString()
         : '0'
-
       setWeightDt(weightDtDecimal)
 
       const weightOceanDecimal = isValidNumber(weightDt)
         ? new Decimal(100).minus(new Decimal(weightDt).mul(10)).toString()
         : '0'
-
       setWeightOcean(weightOceanDecimal)
 
       //
       // Get everything the creator put into the pool
       //
 
-      const creatorPoolTokens = dataLiquidity.pool.shares[0].balance
+      const creatorPoolTokens = dataLiquidity.pool.shares[0].shares
       setCreatorPoolTokens(creatorPoolTokens)
 
       const creatorOceanBalance =
@@ -250,7 +248,7 @@ export default function Pool(): ReactElement {
       refetchLiquidity()
     }
     init()
-  }, [dataLiquidity, ddo, price.datatoken, price.ocean, price?.value])
+  }, [dataLiquidity, ddo, price])
 
   useEffect(() => {
     setIsRemoveDisabled(isInPurgatory && owner === accountId)
@@ -258,6 +256,7 @@ export default function Pool(): ReactElement {
 
   useEffect(() => {
     if (!dataLiquidity) return
+
     const poolShare =
       isValidNumber(poolTokens) &&
       isValidNumber(totalPoolTokens) &&
@@ -294,10 +293,11 @@ export default function Pool(): ReactElement {
         : new Decimal(0)
 
     setTotalLiquidityInOcean(totalLiquidityInOcean)
-  }, [userLiquidity, price, poolTokens, totalPoolTokens])
+  }, [dataLiquidity, userLiquidity, price, poolTokens, totalPoolTokens])
 
   useEffect(() => {
     if (!accountId || !price) return
+
     async function init() {
       try {
         //

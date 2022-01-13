@@ -131,8 +131,13 @@ export default function MarketStats(): ReactElement {
         const response = await fetchData(getGlobalStatsValues, null, context)
         if (!response) continue
 
-        const { totalValueLocked, totalOceanLiquidity, finalizedPoolCount } =
-          response?.data?.globalStats[0]
+        const {
+          poolCount,
+          nftCount,
+          datatokenCount,
+          orderCount,
+          totalLiquidity
+        } = response?.data?.globalStats[0]
 
         await setTotalValueLocked((prevState) => ({
           ...prevState,
@@ -144,12 +149,12 @@ export default function MarketStats(): ReactElement {
         }))
         await setPoolCount((prevState) => ({
           ...prevState,
-          [chainId]: finalizedPoolCount
+          [chainId]: poolCount
         }))
 
         newTotalValueLockedSum += parseInt(totalValueLocked)
         newTotalOceanLiquiditySum += parseInt(totalOceanLiquidity)
-        newPoolCountSum += parseInt(finalizedPoolCount)
+        newPoolCountSum += parseInt(poolCount)
       } catch (error) {
         LoggerInstance.error('Error fetchData: ', error.message)
       }
