@@ -23,23 +23,31 @@ const txHistoryQueryByPool = gql`
     poolTransactions(
       orderBy: timestamp
       orderDirection: desc
-      where: { userAddress: $user, poolAddress: $pool }
+      where: { user: $user, pool: $pool }
       first: 1000
+      subgraphError: deny
     ) {
-      tokens {
-        poolToken {
-          id
-          symbol
-        }
+      baseToken {
+        id
         value
-        type
-        tokenAddress
+        token {
+          symbol
+          address
+        }
       }
+      datatoken {
+        id
+        value
+        token {
+          symbol
+          address
+        }
+      }
+      type
       tx
-      event
       timestamp
-      poolAddress {
-        datatokenAddress
+      pool {
+        id
       }
     }
   }
@@ -49,23 +57,31 @@ const txHistoryQuery = gql`
     poolTransactions(
       orderBy: timestamp
       orderDirection: desc
-      where: { userAddress: $user }
+      where: { user: $user }
       first: 1000
+      subgraphError: deny
     ) {
-      tokens {
-        poolToken {
-          id
-          symbol
-        }
+      baseToken {
+        id
         value
-        type
-        tokenAddress
+        token {
+          symbol
+          address
+        }
       }
+      datatoken {
+        id
+        value
+        token {
+          symbol
+          address
+        }
+      }
+      type
       tx
-      event
       timestamp
-      poolAddress {
-        datatokenAddress
+      pool {
+        id
       }
     }
   }
@@ -170,9 +186,9 @@ export default function PoolTransactions({
       const didList: string[] = []
 
       for (let i = 0; i < data.length; i++) {
-        const { datatokenAddress } = data[i].poolAddress
+        const { address } = data[i].datatoken.token
         const did = web3.utils
-          .toChecksumAddress(datatokenAddress)
+          .toChecksumAddress(address)
           .replace('0x', 'did:op:')
         didList.push(did)
       }
