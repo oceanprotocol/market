@@ -41,7 +41,12 @@ export default function SearchPage({
     (page: number) => {
       const { pathname, query } = router
       const newUrl = updateQueryStringParameter(
-        pathname + query,
+        pathname +
+          '?' +
+          JSON.stringify(query)
+            .replace(/"|{|}/g, '')
+            .replace(/:/g, '=')
+            .replace(/,/g, '&'),
         'page',
         `${page}`
       )

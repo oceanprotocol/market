@@ -114,12 +114,13 @@ export default function HomePage(): ReactElement {
 
     const baseParams = {
       chainIds: chainIds,
-      esPaginationOptions: { size: 9 },
+      esPaginationOptions: {
+        size: 9
+      },
       sortOptions: {
         sortBy: SortTermOptions.Created
       } as SortOptions
     } as BaseQueryParams
-
     setQueryLatest(generateBaseQuery(baseParams))
   }, [chainIds])
 
@@ -143,7 +144,10 @@ export default function HomePage(): ReactElement {
           title="Recently Published"
           query={queryLatest}
           action={
-            <Button style="text" to="/search?sort=created&sortOrder=desc">
+            <Button
+              style="text"
+              to="/search?sort=metadata.created&sortOrder=desc"
+            >
               All data sets and algorithms →
             </Button>
           }

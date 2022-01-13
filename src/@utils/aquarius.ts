@@ -48,7 +48,7 @@ export function generateBaseQuery(
           getFilterTerm('_index', 'aquarius'),
           ...(baseQueryParams.ignorePurgatory
             ? []
-            : [getFilterTerm('isInPurgatory', 'false')])
+            : [getFilterTerm('stats.isInPurgatory', 'false')])
         ]
       }
     }
@@ -95,7 +95,7 @@ export async function queryMetadata(
 ): Promise<PagedAssets> {
   try {
     const response: AxiosResponse<SearchResponse> = await axios.post(
-      `${metadataCacheUri}/api/v1/aquarius/assets/query`,
+      `${metadataCacheUri}/api/aquarius/assets/query`,
       { ...query },
       { cancelToken }
     )
@@ -116,7 +116,7 @@ export async function retrieveDDO(
 ): Promise<Asset> {
   try {
     const response: AxiosResponse<Asset> = await axios.get(
-      `${metadataCacheUri}/api/v1/aquarius/assets/ddo/${did}`,
+      `${metadataCacheUri}/api/aquarius/assets/ddo/${did}`,
       { cancelToken }
     )
     if (!response || response.status !== 200 || !response.data) return
@@ -138,7 +138,7 @@ export async function getAssetsNames(
 ): Promise<Record<string, string>> {
   try {
     const response: AxiosResponse<Record<string, string>> = await axios.post(
-      `${metadataCacheUri}/api/v1/aquarius/assets/names`,
+      `${metadataCacheUri}/api/aquarius/assets/names`,
       { didList },
       { cancelToken }
     )
@@ -297,11 +297,10 @@ export async function getPublishedAssets(
 
   const filters: FilterTerm[] = []
 
-  filters.push(getFilterTerm('publicKey.owner', accountId.toLowerCase()))
+  filters.push(getFilterTerm('nft.owner', accountId.toLowerCase()))
   accesType !== undefined &&
-    filters.push(getFilterTerm('service.type', accesType))
-  type !== undefined &&
-    filters.push(getFilterTerm('service.attributes.main.type', type))
+    filters.push(getFilterTerm('services.type', accesType))
+  type !== undefined && filters.push(getFilterTerm('metadata.type', type))
 
   const baseQueryParams = {
     chainIds,

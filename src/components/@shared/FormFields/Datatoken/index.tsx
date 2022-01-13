@@ -4,14 +4,14 @@ import { InputProps } from '@shared/FormInput'
 import Logo from '@images/logo.svg'
 import RefreshName from './RefreshName'
 import styles from './index.module.css'
-import { generateDatatokenName } from '@utils/datatokens'
+import { generateDtName } from '@oceanprotocol/lib'
 
 export default function Datatoken(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
 
   async function generateName() {
-    const dataTokenOptions = generateDatatokenName()
-    helpers.setValue({ ...dataTokenOptions })
+    const datatokenOptions = generateDtName()
+    helpers.setValue({ ...datatokenOptions })
   }
 
   // Generate new DT name & symbol on first mount
