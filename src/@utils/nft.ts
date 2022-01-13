@@ -34,9 +34,12 @@ function encodeSvg(svgString: string): string {
 export function generateNftMetadata(): NftMetadata {
   // TODO: crop image properly in the end as generated SVG waves are a super-wide image,
   // and add a filled background deciding on either black or white.
-  const image = renderStaticWaves()
+  // const image = renderStaticWaves()
   // const image = new XMLSerializer().serializeToString(waves)
   // const image = `<svg><path d="M0 10.4304L16.3396 10.4304L8.88727 17.6833L10.2401 19L20 9.5L10.2401 0L8.88727 1.31491L16.3396 8.56959L0 8.56959V10.4304Z" /></svg>`
+
+  // smaller svg for quick testing
+  const image = `<svg> width='23' height='9' viewBox='0 0 23 9' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M0.93 9V0.599999H2.682L5.832 7.956H5.634V0.599999H6.822V9H5.286L2.064 1.668H2.118V9H0.93ZM9.47869 9V0.599999H14.4287V1.512H10.6667V4.854H13.8707V5.766H10.6667V9H9.47869ZM18.9094 9V1.512H16.4554V0.599999H22.5514V1.512H20.0974V9H18.9094Z' fill='white'/></svg>`
 
   const newNft: NftMetadata = {
     name: 'Ocean Asset v4 NFT',
@@ -62,12 +65,18 @@ export function generateNftCreateData(nftMetadata: NftMetadata): any {
     symbol: nftMetadata.symbol,
     templateIndex: 1,
     // Gas estimation fails if we add our huge tokenURI
-    tokenURI: ''
+    // tokenURI: ''
     // TODO: figure out if Buffer.from method is working in browser in final build
     // as BTOA is deprecated.
     // tokenURI: window?.btoa(JSON.stringify(nftMetadata))
-    // tokenURI: Buffer.from(JSON.stringify(nftMetadata)).toString('base64') // should end up as data:application/json;base64
+    tokenURI: Buffer.from(JSON.stringify(nftMetadata)).toString('base64') // should end up as data:application/json;base64
   }
+
+  console.log('encoded tokeURI', nftCreateData)
+  console.log(
+    'decoded tokeURI',
+    Buffer.from(nftCreateData.tokenURI, 'base64').toString()
+  )
 
   return nftCreateData
 }
