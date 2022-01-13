@@ -1,10 +1,10 @@
 import React, { ChangeEvent, ReactElement } from 'react'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
-import { useOcean } from '@context/Ocean'
 import Input, { InputProps } from '@shared/FormInput'
 import FormActions from './FormActions'
 import styles from './FormEditMetadata.module.css'
 import { FormPublishData } from '../../Publish/_types'
+import { useAsset } from '@context/Asset'
 
 // function handleTimeoutCustomOption(
 //   data: FormFieldContent[],
@@ -54,7 +54,7 @@ export default function FormEditMetadata({
   showPrice: boolean
   isComputeDataset: boolean
 }): ReactElement {
-  const { config } = useOcean()
+  const { oceanConfig } = useAsset()
   const {
     validateField,
     setFieldValue
@@ -99,7 +99,7 @@ export default function FormEditMetadata({
               }
               {...field}
               component={Input}
-              prefix={field.name === 'price' && config.oceanTokenSymbol}
+              prefix={field.name === 'price' && oceanConfig.oceanTokenSymbol}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 handleFieldChange(e, field)
               }

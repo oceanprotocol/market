@@ -111,7 +111,10 @@ export default function EditComputeDataset({
                 setShowEdit={setShowEdit}
               />
             </article>
-            <Web3Feedback isAssetNetwork={isAssetNetwork} />
+            <Web3Feedback
+              networkId={ddo?.chainId}
+              isAssetNetwork={isAssetNetwork}
+            />
             {debug === true && (
               <div className={styles.grid}>
                 {/* <DebugEditCompute values={values} ddo={ddo} /> */}

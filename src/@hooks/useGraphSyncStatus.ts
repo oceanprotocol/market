@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
-import { useOcean } from '@context/Ocean'
 import { useWeb3 } from '@context/Web3'
 import { Config, LoggerInstance } from '@oceanprotocol/lib'
 import Web3 from 'web3'
 import axios, { AxiosResponse } from 'axios'
+import { getOceanConfig } from '@utils/ocean'
 
 const blockDifferenceThreshold = 30
 const ethGraphUrl = `https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks`
@@ -52,33 +52,41 @@ async function getBlockSubgraph(subgraphUri: string) {
   return blockNumberGraph
 }
 
-export function useGraphSyncStatus(): UseGraphSyncStatus {
-  const { config } = useOcean()
+export function useGraphSyncStatus(networkId: number): UseGraphSyncStatus {
   const { block, web3Loading } = useWeb3()
   const [blockGraph, setBlockGraph] = useState<number>()
   const [blockHead, setBlockHead] = useState<number>()
   const [isGraphSynced, setIsGraphSynced] = useState(true)
   const [subgraphLoading, setSubgraphLoading] = useState(false)
+  const [oceanConfig, setOceanConfig] = useState<Config>()
+
+  // Grab ocean config based on passed networkId
+  useEffect(() => {
+    if (!networkId) return
+
+    const oceanConfig = getOceanConfig(networkId)
+    setOceanConfig(oceanConfig)
+  }, [networkId])
 
   // Get and set head block
   useEffect(() => {
-    if (!config?.nodeUri || web3Loading) return
+    if (!oceanConfig?.nodeUri || web3Loading) return
 
     async function initBlockHead() {
-      const blockHead = block || (await getBlockHead(config))
+      const blockHead = block || (await getBlockHead(oceanConfig))
       setBlockHead(blockHead)
       LoggerInstance.log('[GraphStatus] Head block: ', blockHead)
     }
     initBlockHead()
-  }, [web3Loading, block, config])
+  }, [web3Loading, block, oceanConfig])
 
   // Get and set subgraph block
   useEffect(() => {
-    if (!config?.subgraphUri) return
+    if (!oceanConfig?.subgraphUri) return
 
     async function initBlockSubgraph() {
       setSubgraphLoading(true)
-      const blockGraph = await getBlockSubgraph(config.subgraphUri)
+      const blockGraph = await getBlockSubgraph(oceanConfig.subgraphUri)
       setBlockGraph(blockGraph)
       setSubgraphLoading(false)
       LoggerInstance.log(
@@ -87,7 +95,7 @@ export function useGraphSyncStatus(): UseGraphSyncStatus {
       )
     }
     initBlockSubgraph()
-  }, [config])
+  }, [oceanConfig])
 
   // Set sync status
   useEffect(() => {
