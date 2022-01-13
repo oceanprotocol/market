@@ -1,5 +1,4 @@
 import { ServiceComputeOptions } from '@oceanprotocol/lib'
-import { DataTokenOptions } from '@utils/datatokens'
 import { NftMetadata } from '@utils/nft'
 import { ReactElement } from 'react'
 
@@ -14,7 +13,7 @@ export interface FormPublishService {
   files: FileMetadata[]
   links?: FileMetadata[]
   timeout: string
-  dataTokenOptions: DataTokenOptions
+  dataTokenOptions: { name: string; symbol: string }
   access: 'Download' | 'Compute' | string
   providerUrl?: { url: string; valid: boolean }
   algorithmPrivacy?: boolean
