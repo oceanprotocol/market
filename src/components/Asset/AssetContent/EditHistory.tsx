@@ -3,7 +3,7 @@ import { useAsset } from '@context/Asset'
 import ExplorerLink from '@shared/ExplorerLink'
 import Time from '@shared/atoms/Time'
 import { gql, OperationContext, useQuery } from 'urql'
-import { ReceiptData_nftUpdates as ReceiptData } from '../../../@types/apollo/ReceiptData'
+import { ReceiptData_nftUpdates as ReceiptData } from '../../../@types/subgraph/ReceiptData'
 import { getQueryContext } from '@utils/subgraph'
 import styles from './EditHistory.module.css'
 

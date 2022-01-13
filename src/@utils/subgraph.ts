@@ -5,26 +5,26 @@ import { getOceanConfig } from './ocean'
 import {
   AssetsPoolPrice,
   AssetsPoolPrice_pools as AssetsPoolPricePool
-} from '../@types/apollo/AssetsPoolPrice'
+} from '../@types/subgraph/AssetsPoolPrice'
 import {
   AssetsFrePrice,
   AssetsFrePrice_fixedRateExchanges as AssetsFrePriceFixedRateExchange
-} from '../@types/apollo/AssetsFrePrice'
+} from '../@types/subgraph/AssetsFrePrice'
 import {
   AssetsFreePrice,
   AssetsFreePrice_dispensers as AssetFreePriceDispenser
-} from '../@types/apollo/AssetsFreePrice'
-import { AssetPreviousOrder } from '../@types/apollo/AssetPreviousOrder'
+} from '../@types/subgraph/AssetsFreePrice'
+import { AssetPreviousOrder } from '../@types/subgraph/AssetPreviousOrder'
 import {
   HighestLiquidityAssets_pools as HighestLiquidityAssetsPool,
   HighestLiquidityAssets as HighestLiquidityGraphAssets
-} from '../@types/apollo/HighestLiquidityAssets'
+} from '../@types/subgraph/HighestLiquidityAssets'
 import {
   PoolShares as PoolSharesList,
   PoolShares_poolShares as PoolShare
-} from '../@types/apollo/PoolShares'
-import { OrdersData_orders as OrdersData } from '../@types/apollo/OrdersData'
-import { UserSalesQuery as UsersSalesList } from '../@types/apollo/UserSalesQuery'
+} from '../@types/subgraph/PoolShares'
+import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
+import { UserSalesQuery as UsersSalesList } from '../@types/subgraph/UserSalesQuery'
 
 export interface UserLiquidity {
   price: string

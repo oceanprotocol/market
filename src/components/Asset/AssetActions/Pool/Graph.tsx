@@ -17,7 +17,7 @@ import Button from '@shared/atoms/Button'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { useAsset } from '@context/Asset'
 import { gql, OperationResult } from 'urql'
-import { PoolHistory } from '../../../../@types/apollo/PoolHistory'
+import { PoolHistory } from '../../../../@types/subgraph/PoolHistory'
 import { fetchData, getQueryContext } from '@utils/subgraph'
 import styles from './Graph.module.css'
 

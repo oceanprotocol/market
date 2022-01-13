@@ -6,7 +6,7 @@ import {
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
-import { OrdersData_orders as OrdersData } from '../@types/apollo/OrdersData'
+import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { metadataCacheUri } from '../../app.config'
 import {
   SortDirectionOptions,

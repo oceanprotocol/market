@@ -10,13 +10,12 @@
     "serve": "serve -s public/",
     "pregenerate": "bash scripts/pregenerate.sh",
     "test": "npm run pregenerate && npm run lint && npm run type-check",
-    "test:graphql": "npm run codegen:graphql && npm run lint",
     "lint": "eslint --ignore-path .gitignore --ext .js --ext .ts --ext .tsx .",
     "format": "prettier --ignore-path .gitignore './**/*.{css,yml,js,ts,tsx,json}' --write",
     "type-check": "tsc --noEmit",
     "deploy:s3": "bash scripts/deploy-s3.sh",
     "postinstall": "husky install",
-    "codegen:apollo": "apollo client:codegen --target typescript --tsFileExtension=d.ts --outputFlat src/@types/apollo/"
+    "codegen:apollo": "apollo client:codegen --endpoint=https://subgraphv4.rinkeby.oceanprotocol.com/subgraphs/name/oceanprotocol/ocean-subgraph --target typescript --tsFileExtension=d.ts --outputFlat src/@types/subgraph/"
   },
   "dependencies": {
     "@coingecko/cryptoformat": "^0.4.4",
