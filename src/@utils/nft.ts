@@ -40,7 +40,7 @@ export function generateNftMetadata(): NftMetadata {
 
   const newNft: NftMetadata = {
     name: 'Ocean Asset v4 NFT',
-    symbol: 'OCEAN-V4-NFT',
+    symbol: 'OCEAN-NFT',
     description: `This NFT represents an asset in the Ocean Protocol v4 ecosystem.`,
     // TODO: ideally this includes the final DID
     external_url: 'https://market.oceanprotocol.com',
