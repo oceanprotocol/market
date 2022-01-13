@@ -3,7 +3,6 @@ import styles from './Coin.module.css'
 import InputElement from '@shared/FormInput/InputElement'
 import Logo from '@images/logo.svg'
 import Conversion from '@shared/Price/Conversion'
-import { DataTokenOptions } from '@utils/datatokens'
 import { useField } from 'formik'
 import Error from './Error'
 
@@ -13,7 +12,7 @@ export default function Coin({
   weight,
   readOnly
 }: {
-  datatokenOptions: DataTokenOptions
+  datatokenOptions: { name: string; symbol: string }
   name: string
   weight: string
   readOnly?: boolean
