@@ -44,11 +44,11 @@ export function generateBaseQuery(
         ...baseQueryParams.nestedQuery,
         filter: [
           ...(baseQueryParams.filters || []),
-          getFilterTerm('chainId', baseQueryParams.chainIds)
-          // getFilterTerm('_index', 'aquarius'),
-          // ...(baseQueryParams.ignorePurgatory
-          //   ? []
-          //   : [getFilterTerm('isInPurgatory', 'false')])
+          getFilterTerm('chainId', baseQueryParams.chainIds),
+          getFilterTerm('_index', 'aquarius'),
+          ...(baseQueryParams.ignorePurgatory
+            ? []
+            : [getFilterTerm('stats.isInPurgatory', 'false')])
         ]
       }
     }
@@ -297,11 +297,10 @@ export async function getPublishedAssets(
 
   const filters: FilterTerm[] = []
 
-  filters.push(getFilterTerm('publicKey.owner', accountId.toLowerCase()))
+  filters.push(getFilterTerm('nft.owner', accountId.toLowerCase()))
   accesType !== undefined &&
-    filters.push(getFilterTerm('service.type', accesType))
-  type !== undefined &&
-    filters.push(getFilterTerm('service.attributes.main.type', type))
+    filters.push(getFilterTerm('services.type', accesType))
+  type !== undefined && filters.push(getFilterTerm('metadata.type', type))
 
   const baseQueryParams = {
     chainIds,
