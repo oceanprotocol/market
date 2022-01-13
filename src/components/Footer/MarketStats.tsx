@@ -12,12 +12,19 @@ import useNetworkMetadata, {
 import { LoggerInstance } from '@oceanprotocol/lib'
 import styles from './MarketStats.module.css'
 
-const getTotalPoolsValues = gql`
-  query PoolsData {
-    poolFactories {
-      totalValueLocked
-      totalOceanLiquidity
-      finalizedPoolCount
+const getGlobalStatsValues = gql`
+  query FooterStatsValues {
+    globalStats(subgraphError: deny) {
+      poolCount
+      nftCount
+      datatokenCount
+      orderCount
+      totalLiquidity {
+        token {
+          id
+        }
+        value
+      }
     }
   }
 `
@@ -121,11 +128,11 @@ export default function MarketStats(): ReactElement {
       }
 
       try {
-        const response = await fetchData(getTotalPoolsValues, null, context)
+        const response = await fetchData(getGlobalStatsValues, null, context)
         if (!response) continue
 
         const { totalValueLocked, totalOceanLiquidity, finalizedPoolCount } =
-          response?.data?.poolFactories[0]
+          response?.data?.globalStats[0]
 
         await setTotalValueLocked((prevState) => ({
           ...prevState,
