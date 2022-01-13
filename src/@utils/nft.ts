@@ -42,8 +42,8 @@ export function generateNftMetadata(): NftMetadata {
   const image = `<svg> width='23' height='9' viewBox='0 0 23 9' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M0.93 9V0.599999H2.682L5.832 7.956H5.634V0.599999H6.822V9H5.286L2.064 1.668H2.118V9H0.93ZM9.47869 9V0.599999H14.4287V1.512H10.6667V4.854H13.8707V5.766H10.6667V9H9.47869ZM18.9094 9V1.512H16.4554V0.599999H22.5514V1.512H20.0974V9H18.9094Z' fill='white'/></svg>`
 
   const newNft: NftMetadata = {
-    name: 'Ocean Asset v4 NFT',
-    symbol: 'OCEAN-V4-NFT',
+    name: 'Ocean Asset NFT',
+    symbol: 'OCEAN-NFT',
     description: `This NFT represents an asset in the Ocean Protocol v4 ecosystem.`,
     // TODO: ideally this includes the final DID
     external_url: 'https://market.oceanprotocol.com',
