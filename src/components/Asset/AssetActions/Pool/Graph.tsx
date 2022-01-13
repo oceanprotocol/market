@@ -107,13 +107,14 @@ const poolHistory = gql`
   query PoolHistory($id: String!, $block: Int) {
     poolTransactions(
       first: 1000
-      where: { poolAddress: $id, block_gt: $block }
+      where: { pool: $id, block_gt: $block }
       orderBy: block
+      subgraphError: deny
     ) {
       block
-      spotPrice
       timestamp
-      oceanReserve
+      baseTokenValue
+      datatokenValue
     }
   }
 `
@@ -200,16 +201,16 @@ export default function Graph(): ReactElement {
       ]
       setTimestamps(latestTimestamps)
 
-      const latestLiquidtyHistory = [
+      const latestLiquidityHistory = [
         ...liquidityHistory,
-        ...data.poolTransactions.map((item) => item.oceanReserve)
+        ...data.poolTransactions.map((item) => item.baseTokenValue)
       ]
 
-      setLiquidityHistory(latestLiquidtyHistory)
+      setLiquidityHistory(latestLiquidityHistory)
 
       const latestPriceHistory = [
         ...priceHistory,
-        ...data.poolTransactions.map((item) => item.spotPrice)
+        ...data.poolTransactions.map((item) => item.datatokenValue)
       ]
 
       setPriceHistory(latestPriceHistory)
@@ -230,7 +231,7 @@ export default function Graph(): ReactElement {
               label: 'Liquidity (OCEAN)',
               data:
                 graphType === 'liquidity'
-                  ? latestLiquidtyHistory.slice(0)
+                  ? latestLiquidityHistory.slice(0)
                   : latestPriceHistory.slice(0),
               borderColor: `#8b98a9`,
               pointBackgroundColor: `#8b98a9`
