@@ -1,7 +1,12 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import Compute from './Compute'
 import Consume from './Consume'
-import { Asset, FileMetadata, LoggerInstance } from '@oceanprotocol/lib'
+import {
+  Asset,
+  FileMetadata,
+  LoggerInstance,
+  Datatoken
+} from '@oceanprotocol/lib'
 import Tabs, { TabsItem } from '@shared/atoms/Tabs'
 import { compareAsBN } from '@utils/numbers'
 import Pool from './Pool'
@@ -24,7 +29,7 @@ export default function AssetActions({
   ddo: Asset
   price: BestPrice
 }): ReactElement {
-  const { accountId, balance } = useWeb3()
+  const { accountId, balance, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
 
   // TODO: using this for the publish preview works fine, but produces a console warning
@@ -87,20 +92,22 @@ export default function AssetActions({
 
   // Get and set user DT balance
   useEffect(() => {
-    if (!accountId || !isAssetNetwork) return
+    if (!web3 || !accountId || !isAssetNetwork) return
+
     async function init() {
       try {
-        // const dtBalance = await ocean.datatokens.balance(
-        //   ddo.services[0].datatokenAddress,
-        //   accountId
-        // )
-        // setDtBalance(dtBalance)
+        const datatokenInstance = new Datatoken(web3)
+        const dtBalance = await datatokenInstance.balance(
+          ddo.services[0].datatokenAddress,
+          accountId
+        )
+        setDtBalance(dtBalance)
       } catch (e) {
         LoggerInstance.error(e.message)
       }
     }
     init()
-  }, [accountId, ddo, isAssetNetwork])
+  }, [web3, accountId, ddo, isAssetNetwork])
 
   // Check user balance against price
   useEffect(() => {
