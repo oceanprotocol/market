@@ -176,13 +176,15 @@ export class Waves {
         viewBox="0 0 ${width} ${height}"
         xmlns="${xmlns}"
       >
-        ${path.map((p, index) => {
-          const pathProps = []
-          pathProps.push(
-            `<path d="${p.d}" fill="${this.properties.fillColor}${OPACITY_ARR[index]}"/>`
-          )
-          return pathProps
-        })}
+        ${path
+          .map((p, index) => {
+            const pathProps = []
+            pathProps.push(
+              `<path d="${p.d}" fill="${this.properties.fillColor}${OPACITY_ARR[index]}"/>`
+            )
+            return pathProps
+          })
+          .join('')}
       </svg>`
 
     return svgString
