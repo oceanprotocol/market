@@ -24,6 +24,11 @@ export interface NetworkObject {
   urlList: string[]
 }
 
+export enum NetworkType {
+  Mainnet = 'mainnet',
+  Testnet = 'testnet'
+}
+
 const configGaiaX = getOceanConfig(2021000)
 
 export const networkDataGaiaX: EthereumListsChain = {
@@ -59,9 +64,9 @@ export function getNetworkType(network: EthereumListsChain): string {
     !network.title?.includes('Testnet') &&
     network.name !== 'Moonbase Alpha'
   ) {
-    return 'mainnet'
+    return NetworkType.Mainnet
   } else {
-    return 'testnet'
+    return NetworkType.Testnet
   }
 }
 

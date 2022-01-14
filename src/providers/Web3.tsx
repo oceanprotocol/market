@@ -17,7 +17,8 @@ import {
   EthereumListsChain,
   getNetworkDataById,
   getNetworkDisplayName,
-  getNetworkType
+  getNetworkType,
+  NetworkType
 } from '../utils/web3'
 import { getEnsName } from '../utils/ens'
 import { UserBalance } from '../@types/TokenBalance'
@@ -259,7 +260,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     setNetworkDisplayName(networkDisplayName)
 
     // Figure out if we're on a chain's testnet, or not
-    setIsTestnet(getNetworkType(networkData) !== 'mainnet')
+    setIsTestnet(getNetworkType(networkData) !== NetworkType.Mainnet)
 
     Logger.log(`[web3] Network display name set to: ${networkDisplayName}`)
   }, [networkId, networksList])
