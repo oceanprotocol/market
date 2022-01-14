@@ -24,3 +24,9 @@ export function compareAsBN(balance: string, price: string): boolean {
       return false
   }
 }
+
+// Random number from interval
+export function randomIntFromInterval(min: number, max: number): number {
+  // min and max are included
+  return Math.floor(Math.random() * (max - min + 1) + min)
+}
