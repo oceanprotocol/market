@@ -175,22 +175,23 @@ export default function Pool(): ReactElement {
       setSwapFee(swapFee)
 
       // Get weights
+      function getWeight(weight: string) {
+        return isValidNumber(weight)
+          ? new Decimal(weight).mul(10).toString()
+          : '0'
+      }
       const weightDt = dataLiquidity.pool.datatokenWeight
-      const weightDtDecimal = isValidNumber(weightDt)
-        ? new Decimal(weightDt).mul(10).toString()
-        : '0'
+      const weightDtDecimal = getWeight(weightDt)
       setWeightDt(weightDtDecimal)
 
-      const weightOceanDecimal = isValidNumber(weightDt)
-        ? new Decimal(100).minus(new Decimal(weightDt).mul(10)).toString()
-        : '0'
+      const weightOcean = dataLiquidity.pool.baseTokenWeight
+      const weightOceanDecimal = getWeight(weightOcean)
       setWeightOcean(weightOceanDecimal)
 
       //
       // Get everything the creator put into the pool
       //
-
-      const creatorPoolTokens = dataLiquidity.pool.shares[0].shares
+      const creatorPoolTokens = dataLiquidity.pool.shares[0]?.shares
       setCreatorPoolTokens(creatorPoolTokens)
 
       const creatorOceanBalance =
