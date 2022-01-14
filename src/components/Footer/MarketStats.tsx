@@ -11,6 +11,7 @@ import useNetworkMetadata, {
 } from '@hooks/useNetworkMetadata'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import styles from './MarketStats.module.css'
+import { FooterStatsValues_globalStats_totalLiquidity_token as LiquidityToken } from 'src/@types/subgraph/FooterStatsValues'
 
 const getGlobalStatsValues = gql`
   query FooterStatsValues {
@@ -22,6 +23,8 @@ const getGlobalStatsValues = gql`
       totalLiquidity {
         token {
           id
+          name
+          symbol
         }
         value
       }
@@ -116,7 +119,7 @@ export default function MarketStats(): ReactElement {
     setMainChainIds(mainChainIdsList)
 
     let newTotalValueLockedSum = 0
-    // let newTotalOceanLiquiditySum = 0
+    const newTotalOceanLiquiditySum = 0
     let newPoolCountSum = 0
 
     for (const chainId of mainChainIdsList) {
@@ -143,25 +146,27 @@ export default function MarketStats(): ReactElement {
           ...prevState,
           [chainId]: totalLiquidity.value
         }))
-        // TODO: how to get total OCEAN liquidity?
-        // await setTotalOceanLiquidity((prevState) => ({
-        //   ...prevState,
-        //   [chainId]: totalLiquidity
-        // }))
+        // TODO: how to get total OCEAN liquidity? Does this work?
+        await setTotalOceanLiquidity((prevState) => ({
+          ...prevState,
+          [chainId]: totalLiquidity.filter(
+            (token: LiquidityToken) => token.symbol === 'OCEAN'
+          )[0]
+        }))
         await setPoolCount((prevState) => ({
           ...prevState,
           [chainId]: poolCount
         }))
 
         newTotalValueLockedSum += parseInt(totalLiquidity.value)
-        // newTotalOceanLiquiditySum += parseInt(totalOceanLiquidity)
+        // newTotalOceanLiquiditySum += parseInt(totalOceanLiquidity.value)
         newPoolCountSum += parseInt(poolCount)
       } catch (error) {
         LoggerInstance.error('Error fetchData: ', error.message)
       }
     }
     setTotalValueLockedSum(`${newTotalValueLockedSum}`)
-    // setTotalOceanLiquiditySum(`${newTotalOceanLiquiditySum}`)
+    setTotalOceanLiquiditySum(`${newTotalOceanLiquiditySum}`)
     setPoolCountSum(`${newPoolCountSum}`)
   }
 
