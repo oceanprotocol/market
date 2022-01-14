@@ -105,16 +105,17 @@ const graphTypes = ['Liquidity', 'Price']
 
 const poolHistory = gql`
   query PoolHistory($id: String!, $block: Int) {
-    poolTransactions(
+    poolSnapshots(
       first: 1000
-      where: { pool: $id, block_gt: $block }
-      orderBy: block
+      where: { pool: $id }
+      block: { number_gte: $block }
+      orderBy: date
       subgraphError: deny
     ) {
-      block
-      timestamp
-      baseTokenValue
-      datatokenValue
+      date
+      spotPrice
+      baseTokenLiquidity
+      datatokenLiquidity
     }
   }
 `
@@ -194,8 +195,8 @@ export default function Graph(): ReactElement {
 
       const latestTimestamps = [
         ...timestamps,
-        ...data.poolTransactions.map((item) => {
-          const date = new Date(item.timestamp * 1000)
+        ...data.poolSnapshots.map((item) => {
+          const date = new Date(item.date * 1000)
           return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
         })
       ]
@@ -203,25 +204,22 @@ export default function Graph(): ReactElement {
 
       const latestLiquidityHistory = [
         ...liquidityHistory,
-        ...data.poolTransactions.map((item) => item.baseTokenValue)
+        ...data.poolSnapshots.map((item) => item.baseTokenLiquidity)
       ]
 
       setLiquidityHistory(latestLiquidityHistory)
 
       const latestPriceHistory = [
         ...priceHistory,
-        ...data.poolTransactions.map((item) => item.datatokenValue)
+        ...data.poolSnapshots.map((item) => item.datatokenLiquidity)
       ]
 
       setPriceHistory(latestPriceHistory)
 
-      if (data.poolTransactions.length > 0) {
-        const newBlock =
-          data.poolTransactions[data.poolTransactions.length - 1].block
+      if (data.poolSnapshots.length > 0) {
+        const newBlock = data.poolSnapshots[data.poolSnapshots.length - 1].block
         if (newBlock === lastBlock) return
-        setLastBlock(
-          data.poolTransactions[data.poolTransactions.length - 1].block
-        )
+        setLastBlock(data.poolSnapshots[data.poolSnapshots.length - 1].block)
       } else {
         setGraphData({
           labels: latestTimestamps.slice(0),
