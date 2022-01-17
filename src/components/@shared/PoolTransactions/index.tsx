@@ -25,7 +25,6 @@ const txHistoryQueryByPool = gql`
       orderDirection: desc
       where: { user: $user, pool: $pool }
       first: 1000
-      subgraphError: deny
     ) {
       baseToken {
         id
@@ -86,10 +85,6 @@ const txHistoryQuery = gql`
     }
   }
 `
-
-export interface Datatoken {
-  symbol: string
-}
 
 export interface PoolTransaction extends TransactionHistoryPoolTransactions {
   networkId: number
