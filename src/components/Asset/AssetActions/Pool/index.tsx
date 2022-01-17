@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import styles from './index.module.css'
 import stylesActions from './Actions.module.css'
@@ -22,13 +22,11 @@ import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
 import content from '../../../../../content/price.json'
 
-const REFETCH_INTERVAL = 5000
-
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
 const poolLiquidityQuery = gql`
-  query PoolLiquidity($id: ID!, $shareId: ID) {
-    pool(id: $id, subgraphError: deny) {
+  query PoolLiquidity($pool: ID!, $owner: ID) {
+    pool(id: $pool) {
       id
       totalShares
       poolFee
@@ -47,8 +45,7 @@ const poolLiquidityQuery = gql`
       }
       datatokenWeight
       datatokenLiquidity
-      shares(where: { id: $shareId }) {
-        id
+      shares(where: { user: $owner }) {
         shares
       }
     }
@@ -56,11 +53,10 @@ const poolLiquidityQuery = gql`
 `
 
 const userPoolShareQuery = gql`
-  query PoolShare($id: ID!, $shareId: ID) {
-    pool(id: $id) {
+  query PoolShare($pool: ID!, $user: ID) {
+    pool(id: $pool) {
       id
-      shares(where: { id: $shareId }) {
-        id
+      shares(where: { user: $user }) {
         shares
       }
     }
@@ -106,45 +102,40 @@ export default function Pool(): ReactElement {
   // the purpose of the value is just to trigger the effect
   const [refreshPool, setRefreshPool] = useState(false)
 
-  async function getPoolLiquidity() {
-    const queryContext = getQueryContext(ddo.chainId)
-    const queryVariables = {
-      id: price.address.toLowerCase(),
-      shareId: `${price.address.toLowerCase()}-${ddo.nft.owner.toLowerCase()}`
-    }
+  const getPoolLiquidity = useCallback(async () => {
+    if (!ddo?.chainId || !price?.address || !owner) return
 
+    const queryVariables = {
+      pool: price.address.toLowerCase(),
+      owner: owner.toLowerCase()
+    }
     const queryResult: OperationResult<PoolLiquidity> = await fetchData(
       poolLiquidityQuery,
       queryVariables,
-      queryContext
+      getQueryContext(ddo.chainId)
     )
     setdataLiquidity(queryResult?.data)
-  }
+  }, [ddo?.chainId, price?.address, owner])
 
   async function getUserPoolShareBalance() {
-    const queryContext = getQueryContext(ddo.chainId)
     const queryVariables = {
-      id: price.address.toLowerCase(),
-      shareId: `${price.address.toLowerCase()}-${accountId.toLowerCase()}`
+      pool: price.address.toLowerCase(),
+      user: accountId.toLowerCase()
     }
-
     const queryResult: OperationResult<PoolLiquidity> = await fetchData(
       userPoolShareQuery,
       queryVariables,
-      queryContext
+      getQueryContext(ddo.chainId)
     )
     return queryResult?.data.pool.shares[0]?.shares
   }
 
-  function refetchLiquidity() {
-    if (!liquidityFetchInterval) {
-      setLiquidityFetchInterval(
-        setInterval(function () {
-          getPoolLiquidity()
-        }, REFETCH_INTERVAL)
-      )
-    }
-  }
+  const refetchLiquidity = useCallback(() => {
+    if (liquidityFetchInterval) return
+
+    const newInterval = setInterval(() => getPoolLiquidity(), refreshInterval)
+    setLiquidityFetchInterval(newInterval)
+  }, [liquidityFetchInterval, getPoolLiquidity, refreshInterval])
 
   useEffect(() => {
     return () => {
@@ -249,7 +240,13 @@ export default function Pool(): ReactElement {
       refetchLiquidity()
     }
     init()
-  }, [dataLiquidity, ddo, price])
+  }, [
+    dataLiquidity,
+    price?.datatoken,
+    price?.ocean,
+    getPoolLiquidity,
+    refetchLiquidity
+  ])
 
   useEffect(() => {
     setIsRemoveDisabled(isInPurgatory && owner === accountId)
