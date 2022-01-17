@@ -111,8 +111,7 @@ function AssetProvider({
       setDDO(ddo)
       setTitle(ddo.metadata.name)
       setOwner(ddo.nft.owner)
-      // TODO: restore asset purgatory once Aquarius supports it, ref #953
-      // setIsInPurgatory(ddo.purgatory.state === true)
+      setIsInPurgatory(ddo.purgatory.state)
       await setPurgatory(ddo.id)
     }
     init()
