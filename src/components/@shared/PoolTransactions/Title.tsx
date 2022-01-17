@@ -5,14 +5,22 @@ import ExplorerLink from '@shared/ExplorerLink'
 import { formatPrice } from '@shared/Price/PriceUnit'
 import styles from './Title.module.css'
 
-async function getTitle(row: PoolTransaction, locale: string) {
+function getTitle(row: PoolTransaction, locale: string) {
   let title = ''
-  switch (row.event) {
-    case 'swap': {
-      const inToken = row.tokens.filter((x) => x.type === 'in')[0]
-      const inTokenSymbol = inToken?.poolToken.symbol
-      const outToken = row.tokens.filter((x) => x.type === 'out')[0]
-      const outTokenSymbol = outToken?.poolToken.symbol
+
+  switch (row.type) {
+    case 'SWAP': {
+      const { datatoken, baseToken } = row
+      const outToken =
+        (datatoken.value < 0 && datatoken.value) ||
+        (baseToken.value < 0 && baseToken.value)
+      const outTokenSymbol = outToken?.token.symbol
+
+      const inToken =
+        (datatoken.value > 0 && datatoken.value) ||
+        (baseToken.value > 0 && baseToken.value)
+      const inTokenSymbol = inToken?.token.symbol
+
       title += `Swap ${formatPrice(
         Math.abs(inToken?.value).toString(),
         locale
@@ -23,19 +31,11 @@ async function getTitle(row: PoolTransaction, locale: string) {
 
       break
     }
-    case 'setup': {
-      const firstToken = row.tokens.filter(
-        (x) =>
-          x.tokenAddress.toLowerCase() !==
-          row.poolAddress.datatokenAddress.toLowerCase()
-      )[0]
-      const firstTokenSymbol = firstToken?.poolToken.symbol
-      const secondToken = row.tokens.filter(
-        (x) =>
-          x.tokenAddress.toLowerCase() ===
-          row.poolAddress.datatokenAddress.toLowerCase()
-      )[0]
-      const secondTokenSymbol = secondToken?.poolToken.symbol
+    case 'SETUP': {
+      const firstToken = row.baseToken
+      const firstTokenSymbol = firstToken?.token.symbol
+      const secondToken = row.datatoken
+      const secondTokenSymbol = secondToken?.token.symbol
       title += `Create pool with ${formatPrice(
         Math.abs(firstToken?.value).toString(),
         locale
@@ -45,16 +45,16 @@ async function getTitle(row: PoolTransaction, locale: string) {
       )}${secondTokenSymbol}`
       break
     }
-    case 'join':
-    case 'exit': {
-      for (let i = 0; i < row.tokens.length; i++) {
-        const tokenSymbol = row.tokens[i].poolToken.symbol
-        if (i > 0) title += '\n'
-        title += `${row.event === 'join' ? 'Add' : 'Remove'} ${formatPrice(
-          Math.abs(row.tokens[i].value).toString(),
-          locale
-        )}${tokenSymbol}`
-      }
+    case 'JOIN':
+    case 'EXIT': {
+      const tokenMoved = row.baseToken.value > 0 ? row.baseToken : row.datatoken
+      const tokenSymbol = tokenMoved.token.symbol
+
+      title += `${row.type === 'JOIN' ? 'Add' : 'Remove'} ${formatPrice(
+        Math.abs(tokenMoved.value).toString(),
+        locale
+      )}${tokenSymbol}`
+
       break
     }
   }
@@ -69,11 +69,8 @@ export default function Title({ row }: { row: PoolTransaction }): ReactElement {
   useEffect(() => {
     if (!locale || !row) return
 
-    async function init() {
-      const title = await getTitle(row, locale)
-      setTitle(title)
-    }
-    init()
+    const title = getTitle(row, locale)
+    setTitle(title)
   }, [row, locale])
 
   return title ? (

@@ -11,13 +11,23 @@ import useNetworkMetadata, {
 } from '@hooks/useNetworkMetadata'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import styles from './MarketStats.module.css'
+import { FooterStatsValues_globalStats_totalLiquidity_token as LiquidityToken } from 'src/@types/subgraph/FooterStatsValues'
 
-const getTotalPoolsValues = gql`
-  query PoolsData {
-    poolFactories {
-      totalValueLocked
-      totalOceanLiquidity
-      finalizedPoolCount
+const getGlobalStatsValues = gql`
+  query FooterStatsValues {
+    globalStats {
+      poolCount
+      nftCount
+      datatokenCount
+      orderCount
+      totalLiquidity {
+        token {
+          id
+          name
+          symbol
+        }
+        value
+      }
     }
   }
 `
@@ -109,7 +119,7 @@ export default function MarketStats(): ReactElement {
     setMainChainIds(mainChainIdsList)
 
     let newTotalValueLockedSum = 0
-    let newTotalOceanLiquiditySum = 0
+    const newTotalOceanLiquiditySum = 0
     let newPoolCountSum = 0
 
     for (const chainId of mainChainIdsList) {
@@ -121,28 +131,36 @@ export default function MarketStats(): ReactElement {
       }
 
       try {
-        const response = await fetchData(getTotalPoolsValues, null, context)
+        const response = await fetchData(getGlobalStatsValues, null, context)
         if (!response) continue
 
-        const { totalValueLocked, totalOceanLiquidity, finalizedPoolCount } =
-          response?.data?.poolFactories[0]
+        const {
+          poolCount,
+          nftCount,
+          datatokenCount,
+          orderCount,
+          totalLiquidity
+        } = response?.data?.globalStats[0]
 
         await setTotalValueLocked((prevState) => ({
           ...prevState,
-          [chainId]: totalValueLocked
+          [chainId]: totalLiquidity.value
         }))
+        // TODO: how to get total OCEAN liquidity? Does this work?
         await setTotalOceanLiquidity((prevState) => ({
           ...prevState,
-          [chainId]: totalOceanLiquidity
+          [chainId]: totalLiquidity.filter(
+            (token: LiquidityToken) => token.symbol === 'OCEAN'
+          )[0]
         }))
         await setPoolCount((prevState) => ({
           ...prevState,
-          [chainId]: finalizedPoolCount
+          [chainId]: poolCount
         }))
 
-        newTotalValueLockedSum += parseInt(totalValueLocked)
-        newTotalOceanLiquiditySum += parseInt(totalOceanLiquidity)
-        newPoolCountSum += parseInt(finalizedPoolCount)
+        newTotalValueLockedSum += parseInt(totalLiquidity.value)
+        // newTotalOceanLiquiditySum += parseInt(totalOceanLiquidity.value)
+        newPoolCountSum += parseInt(poolCount)
       } catch (error) {
         LoggerInstance.error('Error fetchData: ', error.message)
       }

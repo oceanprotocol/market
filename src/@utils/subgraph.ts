@@ -5,29 +5,26 @@ import { getOceanConfig } from './ocean'
 import {
   AssetsPoolPrice,
   AssetsPoolPrice_pools as AssetsPoolPricePool
-} from '../@types/apollo/AssetsPoolPrice'
+} from '../@types/subgraph/AssetsPoolPrice'
 import {
   AssetsFrePrice,
   AssetsFrePrice_fixedRateExchanges as AssetsFrePriceFixedRateExchange
-} from '../@types/apollo/AssetsFrePrice'
+} from '../@types/subgraph/AssetsFrePrice'
 import {
   AssetsFreePrice,
   AssetsFreePrice_dispensers as AssetFreePriceDispenser
-} from '../@types/apollo/AssetsFreePrice'
-import { AssetPreviousOrder } from '../@types/apollo/AssetPreviousOrder'
+} from '../@types/subgraph/AssetsFreePrice'
+import { AssetPreviousOrder } from '../@types/subgraph/AssetPreviousOrder'
 import {
   HighestLiquidityAssets_pools as HighestLiquidityAssetsPool,
   HighestLiquidityAssets as HighestLiquidityGraphAssets
-} from '../@types/apollo/HighestLiquidityAssets'
+} from '../@types/subgraph/HighestLiquidityAssets'
 import {
   PoolShares as PoolSharesList,
   PoolShares_poolShares as PoolShare
-} from '../@types/apollo/PoolShares'
-import { OrdersData_tokenOrders as OrdersData } from '../@types/apollo/OrdersData'
-import {
-  UserSalesQuery_users as UserSales,
-  UserSalesQuery as UsersSalesList
-} from '../@types/apollo/UserSalesQuery'
+} from '../@types/subgraph/PoolShares'
+import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
+import { UserSalesQuery as UsersSalesList } from '../@types/subgraph/UserSalesQuery'
 
 export interface UserLiquidity {
   price: string
@@ -49,8 +46,8 @@ interface DidAndDatatokenMap {
 
 const FreeQuery = gql`
   query AssetsFreePrice($datatoken_in: [String!]) {
-    dispensers(orderBy: id, where: { datatoken_in: $datatoken_in }) {
-      datatoken {
+    dispensers(orderBy: id, where: { token_in: $datatoken_in }) {
+      token {
         id
         address
       }
@@ -60,18 +57,16 @@ const FreeQuery = gql`
 
 const AssetFreeQuery = gql`
   query AssetFreePrice($datatoken: String) {
-    dispensers(orderBy: id, where: { datatoken: $datatoken }) {
+    dispensers(orderBy: id, where: { token: $datatoken }) {
       active
-      owner {
-        id
-      }
-      minterApproved
-      isTrueMinter
+      owner
+      isMinter
       maxTokens
       maxBalance
       balance
-      datatoken {
+      token {
         id
+        isDatatoken
       }
     }
   }
@@ -80,9 +75,11 @@ const AssetFreeQuery = gql`
 const FreQuery = gql`
   query AssetsFrePrice($datatoken_in: [String!]) {
     fixedRateExchanges(orderBy: id, where: { datatoken_in: $datatoken_in }) {
-      rate
       id
-      baseTokenSymbol
+      price
+      baseToken {
+        symbol
+      }
       datatoken {
         id
         address
@@ -95,9 +92,11 @@ const FreQuery = gql`
 const AssetFreQuery = gql`
   query AssetFrePrice($datatoken: String) {
     fixedRateExchanges(orderBy: id, where: { datatoken: $datatoken }) {
-      rate
       id
-      baseTokenSymbol
+      price
+      baseToken {
+        symbol
+      }
       datatoken {
         id
         address
@@ -109,46 +108,50 @@ const AssetFreQuery = gql`
 
 const PoolQuery = gql`
   query AssetsPoolPrice($datatokenAddress_in: [String!]) {
-    pools(where: { datatokenAddress_in: $datatokenAddress_in }) {
+    pools(where: { datatoken_in: $datatokenAddress_in }) {
       id
       spotPrice
-      consumePrice
-      datatokenAddress
-      datatokenReserve
-      oceanReserve
-      tokens(where: { isDatatoken: false }) {
-        isDatatoken
+      datatoken {
+        address
         symbol
       }
+      baseToken {
+        address
+        symbol
+      }
+      datatokenLiquidity
+      baseTokenLiquidity
     }
   }
 `
 
 const AssetPoolPriceQuery = gql`
   query AssetPoolPrice($datatokenAddress: String) {
-    pools(where: { datatokenAddress: $datatokenAddress }) {
+    pools(where: { datatoken: $datatokenAddress }) {
       id
       spotPrice
-      consumePrice
-      datatokenAddress
-      datatokenReserve
-      oceanReserve
-      tokens(where: { isDatatoken: false }) {
+      datatoken {
+        address
         symbol
       }
+      baseToken {
+        symbol
+      }
+      datatokenLiquidity
+      baseTokenLiquidity
     }
   }
 `
 
 const PreviousOrderQuery = gql`
   query AssetPreviousOrder($id: String!, $account: String!) {
-    tokenOrders(
+    orders(
       first: 1
-      where: { datatokenId: $id, payer: $account }
-      orderBy: timestamp
+      where: { token: $id, payer: $account }
+      orderBy: createdTimestamp
       orderDirection: desc
     ) {
-      timestamp
+      createdTimestamp
       tx
     }
   }
@@ -156,42 +159,46 @@ const PreviousOrderQuery = gql`
 const HighestLiquidityAssets = gql`
   query HighestLiquidityAssets {
     pools(
-      where: { datatokenReserve_gte: 1 }
-      orderBy: oceanReserve
+      where: { datatokenLiquidity_gte: 1 }
+      orderBy: baseTokenLiquidity
       orderDirection: desc
       first: 15
     ) {
       id
-      datatokenAddress
-      valueLocked
-      oceanReserve
+      datatoken {
+        address
+      }
+      baseToken {
+        symbol
+      }
+      baseTokenLiquidity
     }
   }
 `
 
 const UserSharesQuery = gql`
   query UserSharesQuery($user: String, $pools: [String!]) {
-    poolShares(where: { userAddress: $user, poolId_in: $pools }) {
+    poolShares(where: { user: $user, pool_in: $pools }) {
       id
-      balance
-      userAddress {
+      shares
+      user {
         id
       }
-      poolId {
+      pool {
         id
-        datatokenAddress
-        valueLocked
-        tokens {
-          tokenId {
-            symbol
-          }
+        datatoken {
+          address
+          symbol
         }
-        oceanReserve
-        datatokenReserve
+        baseToken {
+          address
+          symbol
+        }
+        datatokenLiquidity
+        baseTokenLiquidity
         totalShares
-        consumePrice
         spotPrice
-        createTime
+        createdTimestamp
       }
     }
   }
@@ -199,27 +206,29 @@ const UserSharesQuery = gql`
 
 const userPoolSharesQuery = gql`
   query PoolShares($user: String) {
-    poolShares(where: { userAddress: $user, balance_gt: 0.001 }, first: 1000) {
+    poolShares(where: { user: $user, shares_gt: 0.001 }, first: 1000) {
       id
-      balance
-      userAddress {
+      shares
+      user {
         id
       }
-      poolId {
+      pool {
         id
-        datatokenAddress
-        valueLocked
-        tokens {
+        datatoken {
           id
-          isDatatoken
+          address
           symbol
         }
-        oceanReserve
-        datatokenReserve
+        baseToken {
+          id
+          address
+          symbol
+        }
+        baseTokenLiquidity
+        datatokenLiquidity
         totalShares
-        consumePrice
         spotPrice
-        createTime
+        createdTimestamp
       }
     }
   }
@@ -227,39 +236,47 @@ const userPoolSharesQuery = gql`
 
 const UserTokenOrders = gql`
   query OrdersData($user: String!) {
-    tokenOrders(
-      orderBy: timestamp
+    orders(
+      orderBy: createdTimestamp
       orderDirection: desc
       where: { consumer: $user }
     ) {
-      datatokenId {
+      token {
         address
         symbol
+        isDatatoken
       }
-      timestamp
+      createdTimestamp
       tx
     }
   }
 `
+
+// TODO: counting orders might be enough here to get sales for a user
 const UserSalesQuery = gql`
   query UserSalesQuery($userSalesId: ID) {
     users(where: { id: $userSalesId }) {
       id
-      nrSales
+      orders(first: 10000) {
+        id
+      }
     }
   }
 `
 
+// TODO: figure out some way to get this
 const TopSalesQuery = gql`
   query TopSalesQuery {
     users(
       first: 20
-      orderBy: nrSales
+      orderBy: tokensOwned
       orderDirection: desc
-      where: { nrSales_not: 0 }
+      where: { tokenBalancesOwned_not: "0" }
     ) {
       id
-      nrSales
+      tokenBalancesOwned {
+        value
+      }
     }
   }
 `
@@ -329,15 +346,15 @@ export async function getPreviousOrders(
   }
   const fetchedPreviousOrders: OperationResult<AssetPreviousOrder> =
     await fetchData(PreviousOrderQuery, variables, null)
-  if (fetchedPreviousOrders.data?.tokenOrders?.length === 0) return null
+  if (fetchedPreviousOrders.data?.orders?.length === 0) return null
   if (assetTimeout === '0') {
-    return fetchedPreviousOrders?.data?.tokenOrders[0]?.tx
+    return fetchedPreviousOrders?.data?.orders[0]?.tx
   } else {
     const expiry =
-      fetchedPreviousOrders?.data?.tokenOrders[0]?.timestamp * 1000 +
+      fetchedPreviousOrders?.data?.orders[0]?.createdTimestamp * 1000 +
       Number(assetTimeout) * 1000
     if (Date.now() <= expiry) {
-      return fetchedPreviousOrders?.data?.tokenOrders[0]?.tx
+      return fetchedPreviousOrders?.data?.orders[0]?.tx
     } else {
       return null
     }
@@ -353,15 +370,12 @@ function transformPriceToBestPrice(
     const price: BestPrice = {
       type: 'dynamic',
       address: poolPrice[0]?.id,
-      value:
-        poolPrice[0]?.consumePrice === '-1'
-          ? poolPrice[0]?.spotPrice
-          : poolPrice[0]?.consumePrice,
-      ocean: poolPrice[0]?.oceanReserve,
-      oceanSymbol: poolPrice[0]?.tokens[0]?.symbol,
-      datatoken: poolPrice[0]?.datatokenReserve,
+      value: poolPrice[0]?.spotPrice,
+      ocean: poolPrice[0]?.baseTokenLiquidity,
+      oceanSymbol: poolPrice[0]?.baseToken.symbol,
+      datatoken: poolPrice[0]?.datatokenLiquidity,
       pools: [poolPrice[0]?.id],
-      isConsumable: poolPrice[0]?.consumePrice === '-1' ? 'false' : 'true'
+      isConsumable: poolPrice[0]?.spotPrice === '-1' ? 'false' : 'true'
     }
     return price
   } else if (frePrice?.length > 0) {
@@ -369,10 +383,10 @@ function transformPriceToBestPrice(
     // isConsumable: 'true'
     const price: BestPrice = {
       type: 'fixed',
-      value: frePrice[0]?.rate,
+      value: frePrice[0]?.price,
       address: frePrice[0]?.id,
       exchangeId: frePrice[0]?.id,
-      oceanSymbol: frePrice[0]?.baseTokenSymbol,
+      oceanSymbol: frePrice[0]?.baseToken.symbol,
       ocean: 0,
       datatoken: 0,
       pools: [],
@@ -383,7 +397,7 @@ function transformPriceToBestPrice(
     const price: BestPrice = {
       type: 'free',
       value: 0,
-      address: freePrice[0]?.datatoken.id,
+      address: freePrice[0]?.token.id,
       exchangeId: '',
       ocean: 0,
       datatoken: 0,
@@ -488,16 +502,13 @@ export async function getAssetsPriceList(assets: Asset[]): Promise<PriceList> {
   const didDTMap: DidAndDatatokenMap = values[3]
 
   for (const poolPrice of poolPriceResponse) {
-    priceList[didDTMap[poolPrice.datatokenAddress]] =
-      poolPrice.consumePrice === '-1'
-        ? poolPrice.spotPrice
-        : poolPrice.consumePrice
+    priceList[didDTMap[poolPrice.datatoken.address]] = poolPrice.spotPrice
   }
   for (const frePrice of frePriceResponse) {
-    priceList[didDTMap[frePrice.datatoken?.address]] = frePrice.rate
+    priceList[didDTMap[frePrice.datatoken?.address]] = frePrice.price
   }
   for (const freePrice of freePriceResponse) {
-    priceList[didDTMap[freePrice.datatoken?.address]] = '0'
+    priceList[didDTMap[freePrice.token?.address]] = '0'
   }
   return priceList
 }
@@ -575,7 +586,7 @@ export async function getAssetsBestPrices(
     const frePrice: AssetsFrePriceFixedRateExchange[] = []
     const freePrice: AssetFreePriceDispenser[] = []
     const pool = poolPriceResponse.find(
-      (pool: AssetsPoolPricePool) => pool.datatokenAddress === dataToken
+      (pool: AssetsPoolPricePool) => pool.datatoken.address === dataToken
     )
     pool && poolPrice.push(pool)
     const fre = frePriceResponse.find(
@@ -584,7 +595,7 @@ export async function getAssetsBestPrices(
     )
     fre && frePrice.push(fre)
     const free = freePriceResponse.find(
-      (free: AssetFreePriceDispenser) => free.datatoken.address === dataToken
+      (free: AssetFreePriceDispenser) => free.token.address === dataToken
     )
     free && freePrice.push(free)
     const bestPrice = transformPriceToBestPrice(frePrice, poolPrice, freePrice)
@@ -610,22 +621,24 @@ export async function getHighestLiquidityDatatokens(
       fetchedPools.data.pools
     )
   }
-  highestLiquidityAssets.sort((a, b) => b.oceanReserve - a.oceanReserve)
+  highestLiquidityAssets.sort(
+    (a, b) => b.baseTokenLiquidity - a.baseTokenLiquidity
+  )
   for (let i = 0; i < highestLiquidityAssets.length; i++) {
-    if (!highestLiquidityAssets[i].datatokenAddress) continue
-    dtList.push(highestLiquidityAssets[i].datatokenAddress)
+    if (!highestLiquidityAssets[i].datatoken.address) continue
+    dtList.push(highestLiquidityAssets[i].datatoken.address)
   }
   return dtList
 }
 
 export function calculateUserLiquidity(poolShare: PoolShare): number {
   const ocean =
-    (poolShare.balance / poolShare.poolId.totalShares) *
-    poolShare.poolId.oceanReserve
+    (poolShare.shares / poolShare.pool.totalShares) *
+    poolShare.pool.baseTokenLiquidity
   const datatokens =
-    (poolShare.balance / poolShare.poolId.totalShares) *
-    poolShare.poolId.datatokenReserve
-  const totalLiquidity = ocean + datatokens * poolShare.poolId.spotPrice
+    (poolShare.shares / poolShare.pool.totalShares) *
+    poolShare.pool.datatokenLiquidity
+  const totalLiquidity = ocean + datatokens * poolShare.pool.spotPrice
   return totalLiquidity
 }
 
@@ -648,8 +661,8 @@ export async function getAccountLiquidityInOwnAssets(
 
   for (const result of results) {
     for (const poolShare of result.poolShares) {
-      const userShare = poolShare.balance / poolShare.poolId.totalShares
-      const userBalance = userShare * poolShare.poolId.oceanReserve
+      const userShare = poolShare.shares / poolShare.pool.totalShares
+      const userBalance = userShare * poolShare.pool.baseTokenLiquidity
       totalOceanLiquidity += userBalance
       const poolLiquidity = calculateUserLiquidity(poolShare)
       totalLiquidity += poolLiquidity
@@ -749,7 +762,7 @@ export async function getTopAssetsPublishers(
       if (publishersIndex === -1) {
         const publisher: AccountTeaserVM = {
           address: fetchedUsers.data.users[i].id,
-          nrSales: fetchedUsers.data.users[i].nrSales
+          nrSales: fetchedUsers.data.users[i].orders.length
         }
         publisherSales.push(publisher)
       } else {
