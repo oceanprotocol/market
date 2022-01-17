@@ -25,7 +25,7 @@ import content from '../../../../../content/price.json'
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
 const poolLiquidityQuery = gql`
-  query PoolLiquidity($pool: ID!, $owner: ID) {
+  query PoolLiquidity($pool: ID!, $owner: String) {
     pool(id: $pool) {
       id
       totalShares
@@ -53,7 +53,7 @@ const poolLiquidityQuery = gql`
 `
 
 const userPoolShareQuery = gql`
-  query PoolShare($pool: ID!, $user: ID) {
+  query PoolShare($pool: ID!, $user: String) {
     pool(id: $pool) {
       id
       shares(where: { user: $user }) {
