@@ -25,12 +25,6 @@ export default function Seo({
     >
       <html lang="en" />
 
-      {isBrowser &&
-        window.location &&
-        window.location.hostname !== 'oceanprotocol.com' && (
-          <meta name="robots" content="noindex,nofollow" />
-        )}
-
       <link rel="canonical" href={canonical} />
 
       <meta name="description" content={description} />
