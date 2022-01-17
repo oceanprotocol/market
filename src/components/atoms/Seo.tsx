@@ -42,7 +42,11 @@ export default function Seo({
       />
 
       <meta property="og:site_name" content={siteTitle} />
-      <meta name="twitter:creator" content="@oceanprotocol" />
+      {isBrowser &&
+        window.location &&
+        window.location.hostname == 'market.oceanprotocol.com' && (
+          <meta name="twitter:creator" content="@oceanprotocol" />
+        )}
       <meta name="twitter:card" content="summary_large_image" />
     </Helmet>
   )
