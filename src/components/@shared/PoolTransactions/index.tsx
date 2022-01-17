@@ -58,7 +58,6 @@ const txHistoryQuery = gql`
       orderDirection: desc
       where: { user: $user }
       first: 1000
-      subgraphError: deny
     ) {
       baseToken {
         id

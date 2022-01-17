@@ -11,7 +11,6 @@ const getReceipts = gql`
   query ReceiptData($address: ID!) {
     nftUpdates(
       where: { id: $address }
-      subgraphError: deny
       orderBy: timestamp
       orderDirection: desc
     ) {

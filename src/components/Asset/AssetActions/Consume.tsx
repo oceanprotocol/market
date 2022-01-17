@@ -25,7 +25,6 @@ const previousOrderQuery = gql`
       where: { token: $id, payer: $account }
       orderBy: createdTimestamp
       orderDirection: desc
-      subgraphError: deny
     ) {
       createdTimestamp
       tx
