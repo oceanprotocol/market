@@ -1,5 +1,10 @@
 import { networkDataGaiaX } from './constants'
 
+export enum NetworkType {
+  Mainnet = 'mainnet',
+  Testnet = 'testnet'
+}
+
 export function getNetworkType(network: EthereumListsChain): string {
   // HEADS UP! Hack for getting network's type main/test, without using
   // .network field, which is innexistent on https://chainid.network/chains.json
@@ -9,9 +14,9 @@ export function getNetworkType(network: EthereumListsChain): string {
     !network.title?.includes('Testnet') &&
     network.name !== 'Moonbase Alpha'
   ) {
-    return 'mainnet'
+    return NetworkType.Mainnet
   } else {
-    return 'testnet'
+    return NetworkType.Testnet
   }
 }
 
