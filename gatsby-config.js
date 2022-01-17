@@ -78,6 +78,23 @@ module.exports = {
         ...appConfig.darkModeConfig,
         minify: true
       }
+    },
+    'gatsby-plugin-robots-txt',
+    {
+      resolve: 'gatsby-plugin-robots-txt',
+      options: {
+        sitemap: `${
+          appConfig.metadataCacheUri
+        }/sitemap?base=${encodeURIComponent(siteContent.site.siteUrl)}`,
+        env: {
+          development: {
+            policy: [{ userAgent: '*', disallow: ['/'] }]
+          },
+          production: {
+            policy: [{ userAgent: '*', allow: '/' }]
+          }
+        }
+      }
     }
   ]
 }

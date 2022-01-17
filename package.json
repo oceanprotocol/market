@@ -52,6 +52,7 @@
     "gatsby-plugin-manifest": "^2.10.0",
     "gatsby-plugin-react-helmet": "^3.8.0",
     "gatsby-plugin-remove-trailing-slashes": "^2.8.0",
+    "gatsby-plugin-robots-txt": "^1.6.14",
     "gatsby-plugin-sharp": "^2.14.4",
     "gatsby-plugin-svgr": "^2.1.0",
     "gatsby-plugin-use-dark-mode": "^1.3.0",
