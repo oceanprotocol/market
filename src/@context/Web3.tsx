@@ -17,8 +17,10 @@ import { getEnsName } from '@utils/ens'
 import { getOceanBalance } from '@utils/ocean'
 import useNetworkMetadata, {
   getNetworkDataById,
-  getNetworkDisplayName
-} from '@hooks/useNetworkMetadata'
+  getNetworkDisplayName,
+  getNetworkType,
+  NetworkType
+} from '../@hooks/useNetworkMetadata'
 
 interface Web3ProviderValue {
   web3: Web3
@@ -260,10 +262,7 @@ function Web3Provider({ children }: { children: ReactNode }): ReactElement {
     const networkDisplayName = getNetworkDisplayName(networkData, networkId)
     setNetworkDisplayName(networkDisplayName)
 
-    // Figure out if we're on a chain's testnet, or not
-    // setIsTestnet(
-    //   networkData?.network !== 'mainnet' && networkData.network !== 'moonriver'
-    // )
+    setIsTestnet(getNetworkType(networkData) !== NetworkType.Mainnet)
 
     LoggerInstance.log(
       `[web3] Network display name set to: ${networkDisplayName}`

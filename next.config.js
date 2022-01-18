@@ -31,7 +31,8 @@ module.exports = (phase, { defaultConfig }) => {
         os: false,
         stream: false,
         http: false,
-        https: false
+        https: false,
+        assert: false
       }
 
       return typeof defaultConfig.webpack === 'function'

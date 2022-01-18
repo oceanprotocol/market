@@ -7,10 +7,10 @@ import { getOceanConfig } from '@utils/ocean'
 
 const blockDifferenceThreshold = 30
 const ethGraphUrl = `https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks`
-const ethGraphQuery =
+const ethGraphQueryBody =
   '{"query":"  query Blocks{   blocks(first: 1, skip: 0, orderBy: number, orderDirection: desc, where: {number_gt: 9300000}) { id number timestamp  author  difficulty  gasUsed  gasLimit } }","variables":{},"operationName":"Blocks"}'
-const graphQuery =
-  '{"query":"  query Meta {   _meta {      block {        hash       number     }      deployment      hasIndexingErrors    }  }","variables":{},"operationName":"Meta"}'
+const graphQueryBody =
+  '{"query": "query Meta { _meta { block { hash number } deployment hasIndexingErrors } }", "variables": {},"operationName":"Meta"}'
 
 export interface UseGraphSyncStatus {
   isGraphSynced: boolean
@@ -34,7 +34,7 @@ async function getBlockHead(config: Config) {
   if (!config) return
   // for ETH main, get block from graph fetch
   if (config.network === 'mainnet') {
-    const response: any = await fetchGraph(ethGraphUrl, ethGraphQuery)
+    const response: any = await fetchGraph(ethGraphUrl, ethGraphQueryBody)
     return Number(response?.data?.blocks[0]?.number)
   }
 
@@ -47,9 +47,9 @@ async function getBlockHead(config: Config) {
 async function getBlockSubgraph(subgraphUri: string) {
   const response: any = await fetchGraph(
     `${subgraphUri}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-    graphQuery
+    graphQueryBody
   )
-  const blockNumberGraph = Number(response?.data?._meta?.block?.number)
+  const blockNumberGraph = Number(response?.data?.data?._meta?.block?.number)
   return blockNumberGraph
 }
 

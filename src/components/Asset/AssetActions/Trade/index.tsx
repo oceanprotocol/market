@@ -5,11 +5,12 @@ import { useWeb3 } from '@context/Web3'
 
 import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
+import { Datatoken } from '@oceanprotocol/lib'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
 export default function Trade(): ReactElement {
-  const { accountId, balance } = useWeb3()
+  const { accountId, balance, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
   const [tokenBalance, setTokenBalance] = useState<PoolBalance>()
   const { price, ddo } = useAsset()
@@ -19,6 +20,7 @@ export default function Trade(): ReactElement {
   // Get datatoken balance, and combine with OCEAN balance from hooks into one object
   useEffect(() => {
     if (
+      !web3 ||
       !accountId ||
       !isAssetNetwork ||
       !balance?.ocean ||
@@ -28,17 +30,18 @@ export default function Trade(): ReactElement {
       return
 
     async function getTokenBalance() {
-      // const dtBalance = await ocean.datatokens.balance(
-      //   ddo.services[0].datatokenAddress,
-      //   accountId
-      // )
-      // setTokenBalance({
-      //   ocean: new Decimal(balance.ocean).toString(),
-      //   datatoken: new Decimal(dtBalance).toString()
-      // })
+      const datatokenInstance = new Datatoken(web3)
+      const dtBalance = await datatokenInstance.balance(
+        ddo.services[0].datatokenAddress,
+        accountId
+      )
+      setTokenBalance({
+        ocean: new Decimal(balance.ocean).toString(),
+        datatoken: new Decimal(dtBalance).toString()
+      })
     }
     getTokenBalance()
-  }, [balance.ocean, accountId, ddo, isAssetNetwork])
+  }, [web3, balance.ocean, accountId, ddo, isAssetNetwork])
 
   // Get maximum amount for either OCEAN or datatoken
   useEffect(() => {

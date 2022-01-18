@@ -6,7 +6,7 @@ import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { useAsset } from '@context/Asset'
 import { gql } from 'urql'
 import { fetchData, getQueryContext } from '@utils/subgraph'
-import { OrdersData } from '../../../@types/apollo/OrdersData'
+import { OrdersData } from '../../../@types/subgraph/OrdersData'
 import BigNumber from 'bignumber.js'
 import { useWeb3 } from '@context/Web3'
 import { usePricing } from '@hooks/usePricing'
@@ -20,13 +20,13 @@ import { Asset, FileMetadata } from '@oceanprotocol/lib'
 
 const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {
-    tokenOrders(
+    orders(
       first: 1
-      where: { datatokenId: $id, payer: $account }
-      orderBy: timestamp
+      where: { token: $id, payer: $account }
+      orderBy: createdTimestamp
       orderDirection: desc
     ) {
-      timestamp
+      createdTimestamp
       tx
     }
   }
@@ -68,6 +68,7 @@ export default function Consume({
 
   useEffect(() => {
     if (!ddo || !accountId) return
+
     const context = getQueryContext(ddo.chainId)
     const variables = {
       id: ddo.services[0].datatokenAddress?.toLowerCase(),
@@ -82,18 +83,20 @@ export default function Consume({
     if (
       !data ||
       !assetTimeout ||
-      data.tokenOrders.length === 0 ||
+      data.orders.length === 0 ||
       !accountId ||
       !isAssetNetwork
     )
       return
 
-    const lastOrder = data.tokenOrders[0]
+    const lastOrder = data.orders[0]
     if (assetTimeout === '0') {
       setPreviousOrderId(lastOrder.tx)
       setHasPreviousOrder(true)
     } else {
-      const expiry = new BigNumber(lastOrder.timestamp).plus(assetTimeout)
+      const expiry = new BigNumber(lastOrder.createdTimestamp).plus(
+        assetTimeout
+      )
       const unixTime = new BigNumber(Math.floor(Date.now() / 1000))
       if (unixTime.isLessThan(expiry)) {
         setPreviousOrderId(lastOrder.tx)

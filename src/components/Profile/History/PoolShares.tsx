@@ -3,10 +3,7 @@ import Table from '@shared/atoms/Table'
 import Conversion from '@shared/Price/Conversion'
 import styles from './PoolShares.module.css'
 import AssetTitle from '@shared/AssetList/AssetListTitle'
-import {
-  PoolShares_poolShares as PoolShare,
-  PoolShares_poolShares_poolId_tokens as PoolSharePoolIdTokens
-} from '../../../@types/apollo/PoolShares'
+import { PoolShares_poolShares as PoolShare } from '../../../@types/subgraph/PoolShares'
 import web3 from 'web3'
 import Token from '../../Asset/AssetActions/Pool/Token'
 import { calculateUserLiquidity } from '@utils/subgraph'
@@ -33,46 +30,33 @@ interface AssetPoolShare {
   ddo: Asset
 }
 
-function findTokenByType(tokens: PoolSharePoolIdTokens[], type: string) {
-  const { symbol } = tokens.find((token) =>
-    type === 'datatoken'
-      ? token.isDatatoken === true
-      : token.isDatatoken === false
-  )
-  return symbol
-}
-
-function Symbol({ tokens }: { tokens: PoolSharePoolIdTokens[] }) {
-  return <>{findTokenByType(tokens, 'datatoken')}</>
-}
-
 function Liquidity({ row, type }: { row: AssetPoolShare; type: string }) {
   let price = ``
   let oceanTokenBalance = ''
   let dataTokenBalance = ''
   if (type === 'user') {
     price = `${row.userLiquidity}`
-    const userShare = row.poolShare.balance / row.poolShare.poolId.totalShares
+    const userShare = row.poolShare.shares / row.poolShare.pool.totalShares
     oceanTokenBalance = (
-      userShare * row.poolShare.poolId.oceanReserve
+      userShare * row.poolShare.pool.baseTokenLiquidity
     ).toString()
     dataTokenBalance = (
-      userShare * row.poolShare.poolId.datatokenReserve
+      userShare * row.poolShare.pool.datatokenLiquidity
     ).toString()
   }
   if (type === 'pool') {
     price =
-      isValidNumber(row.poolShare.poolId.oceanReserve) &&
-      isValidNumber(row.poolShare.poolId.datatokenReserve) &&
-      isValidNumber(row.poolShare.poolId.spotPrice)
-        ? new Decimal(row.poolShare.poolId.datatokenReserve)
-            .mul(new Decimal(row.poolShare.poolId.spotPrice))
-            .plus(row.poolShare.poolId.oceanReserve)
+      isValidNumber(row.poolShare.pool.baseTokenLiquidity) &&
+      isValidNumber(row.poolShare.pool.datatokenLiquidity) &&
+      isValidNumber(row.poolShare.pool.spotPrice)
+        ? new Decimal(row.poolShare.pool.datatokenLiquidity)
+            .mul(new Decimal(row.poolShare.pool.spotPrice))
+            .plus(row.poolShare.pool.baseTokenLiquidity)
             .toString()
         : '0'
 
-    oceanTokenBalance = row.poolShare.poolId.oceanReserve.toString()
-    dataTokenBalance = row.poolShare.poolId.datatokenReserve.toString()
+    oceanTokenBalance = row.poolShare.pool.baseTokenLiquidity.toString()
+    dataTokenBalance = row.poolShare.pool.datatokenLiquidity.toString()
   }
   return (
     <div className={styles.userLiquidity}>
@@ -82,12 +66,12 @@ function Liquidity({ row, type }: { row: AssetPoolShare; type: string }) {
         hideApproximateSymbol
       />
       <Token
-        symbol={findTokenByType(row.poolShare.poolId.tokens, 'ocean')}
+        symbol={row.poolShare.pool.baseToken.symbol}
         balance={oceanTokenBalance}
         noIcon
       />
       <Token
-        symbol={findTokenByType(row.poolShare.poolId.tokens, 'datatoken')}
+        symbol={row.poolShare.pool.datatoken.symbol}
         balance={dataTokenBalance}
         noIcon
       />
@@ -112,7 +96,7 @@ const columns = [
   {
     name: 'Datatoken',
     selector: function getSymbol(row: AssetPoolShare) {
-      return <Symbol tokens={row.poolShare.poolId.tokens} />
+      return <>{row.poolShare.pool.datatoken.symbol}</>
     }
   },
   {
@@ -143,7 +127,7 @@ async function getPoolSharesAssets(
 
   for (let i = 0; i < data.length; i++) {
     const did = web3.utils
-      .toChecksumAddress(data[i].poolId.datatokenAddress)
+      .toChecksumAddress(data[i].pool.datatoken.address)
       .replace('0x', 'did:op:')
     didList.push(did)
   }
@@ -155,7 +139,7 @@ async function getPoolSharesAssets(
       poolShare: data[i],
       userLiquidity: userLiquidity,
       networkId: ddoList[i].chainId,
-      createTime: data[i].poolId.createTime,
+      createTime: data[i].pool.createdTimestamp,
       ddo: ddoList[i]
     })
   }

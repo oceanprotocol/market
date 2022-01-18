@@ -11,7 +11,7 @@ import Conversion from '@shared/Price/Conversion'
 import NumberUnit from './NumberUnit'
 import styles from './Stats.module.css'
 import { useProfile } from '@context/Profile'
-import { PoolShares_poolShares as PoolShare } from '../../../@types/apollo/PoolShares'
+import { PoolShares_poolShares as PoolShare } from '../../../@types/subgraph/PoolShares'
 
 async function getPoolSharesLiquidity(
   poolShares: PoolShare[]
