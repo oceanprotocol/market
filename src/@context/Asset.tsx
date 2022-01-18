@@ -83,19 +83,6 @@ function AssetProvider({
     setLoading(false)
   }
 
-  // const setPurgatory = useCallback(async (did: string): Promise<void> => {
-  //   if (!did) return
-
-  //   try {
-  //     const result = await getAssetPurgatoryData(did)
-  //     const isInPurgatory = result?.state === true
-  //     setIsInPurgatory(isInPurgatory)
-  //     isInPurgatory && setPurgatoryData(result)
-  //   } catch (error) {
-  //     LoggerInstance.error(error)
-  //   }
-  // }, [])
-
   // -----------------------------------
   // Get and set DDO based on passed DID
   // -----------------------------------
