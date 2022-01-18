@@ -10,22 +10,27 @@ function getTitle(row: PoolTransaction, locale: string) {
 
   switch (row.type) {
     case 'SWAP': {
-      const { datatokenValue, baseTokenValue } = row
+      const { datatoken, baseToken, datatokenValue, baseTokenValue } = row
+
       const outToken =
+        (datatokenValue < 0 && datatoken) || (baseTokenValue < 0 && baseToken)
+      const outTokenValue =
         (datatokenValue < 0 && datatokenValue) ||
         (baseTokenValue < 0 && baseTokenValue)
       const outTokenSymbol = outToken?.symbol
 
       const inToken =
+        (datatokenValue > 0 && datatoken) || (baseTokenValue > 0 && baseToken)
+      const inTokenValue =
         (datatokenValue > 0 && datatokenValue) ||
         (baseTokenValue > 0 && baseTokenValue)
       const inTokenSymbol = inToken?.symbol
 
       title += `Swap ${formatPrice(
-        Math.abs(inToken?.value).toString(),
+        Math.abs(inTokenValue).toString(),
         locale
       )}${inTokenSymbol} for ${formatPrice(
-        Math.abs(outToken?.value).toString(),
+        Math.abs(outTokenValue).toString(),
         locale
       )}${outTokenSymbol}`
 
