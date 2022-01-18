@@ -5,14 +5,19 @@ import Page from './Page'
 import Alert from '../atoms/Alert'
 import Loader from '../atoms/Loader'
 import { useAsset } from '../../providers/Asset'
+import removeMarkdown from 'remove-markdown'
 
 export default function PageTemplateAssetDetails({
   uri
 }: {
   uri: string
 }): ReactElement {
-  const { ddo, title, error, isInPurgatory, loading } = useAsset()
+  const { metadata, ddo, title, error, isInPurgatory, loading } = useAsset()
   const [pageTitle, setPageTitle] = useState<string>()
+
+  const metaDescription = removeMarkdown(
+    metadata?.additionalInformation?.description?.substring(0, 150) || ''
+  )
 
   useEffect(() => {
     if (!ddo || error) {
@@ -24,7 +29,7 @@ export default function PageTemplateAssetDetails({
   }, [ddo, error, isInPurgatory, title])
 
   return ddo && pageTitle !== undefined && !loading ? (
-    <Page title={pageTitle} uri={uri}>
+    <Page title={pageTitle} uri={uri} metadescription={metaDescription}>
       <Router basepath="/asset">
         <AssetContent path=":did" />
       </Router>

@@ -8,6 +8,7 @@ export interface PageProps {
   title?: string
   uri: string
   description?: string
+  metadescription?: string
   noPageHeader?: boolean
   headerCenter?: boolean
 }
@@ -17,12 +18,18 @@ export default function Page({
   title,
   uri,
   description,
+  metadescription,
   noPageHeader,
   headerCenter
 }: PageProps): ReactElement {
   return (
     <>
-      <Seo title={title} description={description} uri={uri} />
+      <Seo
+        title={title}
+        description={description}
+        metadescription={metadescription}
+        uri={uri}
+      />
       <Container>
         {title && !noPageHeader && (
           <PageHeader

@@ -6,11 +6,13 @@ import { isBrowser } from '../../utils'
 export default function Seo({
   title,
   description,
-  uri
+  uri,
+  metadescription
 }: {
   title?: string
   description?: string
   uri: string
+  metadescription: string
 }): ReactElement {
   const { siteTitle, siteTagline, siteUrl, siteImage } = useSiteMetadata()
 
@@ -27,9 +29,12 @@ export default function Seo({
 
       <link rel="canonical" href={canonical} />
 
-      <meta name="description" content={description} />
+      <meta name="description" content={metadescription || description} />
       <meta property="og:title" content={title} />
-      <meta property="og:description" content={description} />
+      <meta
+        property="og:description"
+        content={metadescription || description}
+      />
       <meta property="og:url" content={uri} />
 
       <meta
