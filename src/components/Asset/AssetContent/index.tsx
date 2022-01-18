@@ -37,7 +37,7 @@ export default function AssetContent({
             <MetaMain ddo={ddo} />
             {price?.datatoken && <Bookmark did={ddo?.id} />}
 
-            {isInPurgatory ? (
+            {isInPurgatory === true ? (
               <Alert
                 title={content.asset.title}
                 badge={`Reason: ${purgatoryData?.reason}`}
