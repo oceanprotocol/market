@@ -12,7 +12,7 @@ const defaultOptions = {
   fillColor: '#ff4092', // Ocean pink
   segmentCount: 4,
   layerCount: 4,
-  variance: 0.7
+  variance: 0.5
 }
 const OPACITY_ARR = ['44', '66', '88', 'ff']
 const svgns = 'http://www.w3.org/2000/svg'
@@ -30,7 +30,7 @@ interface ClosedPath {
 export interface WaveProperties {
   width?: number
   height?: number
-  fillColor?: string
+  fillColor?: string | string[]
   segmentCount?: number
   layerCount?: number
   variance?: number
@@ -144,13 +144,14 @@ export class Waves {
     svg.setAttribute('xmlns', svgns)
 
     const pathList = []
+    const { fillColor } = this.properties
     // Append layer of a wave
     for (let i = 0; i < this.points.length; i++) {
       const pathData = generateClosedPath(
         this.points[i],
         { x: 0, y: this.properties.height },
         { x: this.properties.width, y: this.properties.height },
-        this.properties.fillColor
+        Array.isArray(fillColor) ? fillColor[i] : fillColor
       )
       pathList.push(pathData)
     }
@@ -170,17 +171,13 @@ export class Waves {
   generateSvgString() {
     const svg = this.generateSvg()
     const { width, height, xmlns, path } = svg.svg
-    console.log('path:', path)
-    const svgString = `
-      <svg
-        viewBox="0 0 ${width} ${height}"
-        xmlns="${xmlns}"
-      >
+    const opacity = OPACITY_ARR.slice(-path.length)
+    const svgString = `<svg viewBox="0 0 ${width} ${height}" xmlns="${xmlns}">
         ${path
           .map((p, index) => {
             const pathProps = []
             pathProps.push(
-              `<path d="${p.d}" fill="${this.properties.fillColor}${OPACITY_ARR[index]}"/>`
+              `<path d="${p.d}" fill="${p.fill}${opacity[index]}"/>`
             )
             return pathProps
           })
