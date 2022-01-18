@@ -12,6 +12,8 @@ import styles from './index.module.css'
 import { useWeb3 } from '@context/Web3'
 import useNftFactory from '@hooks/contracts/useNftFactory'
 import { NftFactory } from '@oceanprotocol/lib'
+import Tooltip from '@shared/atoms/Tooltip'
+import Markdown from '@shared/Markdown'
 
 const getEstGasFee = async ({
   address,
@@ -71,18 +73,23 @@ export default function Nft(props: InputProps): ReactElement {
     <div className={styles.nft}>
       <figure className={styles.image}>
         <img src={field?.value?.image_data} width="128" height="128" />
-        <Button
-          style="text"
-          size="small"
-          className={styles.refresh}
-          title="Generate new image"
-          onClick={async (e) => {
-            e.preventDefault()
-            await refreshNftMetadata({ address: accountId, nftFactory })
-          }}
-        >
-          <Refresh />
-        </Button>
+        <div className={styles.actions}>
+          <Tooltip
+            content={`Gas fee estimation for this artwork: ${gasFee} ETH`}
+          />
+          <Button
+            style="text"
+            size="small"
+            className={styles.refresh}
+            title="Generate new image"
+            onClick={async (e) => {
+              e.preventDefault()
+              await refreshNftMetadata({ address: accountId, nftFactory })
+            }}
+          >
+            <Refresh />
+          </Button>
+        </div>
       </figure>
 
       <div className={styles.token}>
@@ -90,9 +97,6 @@ export default function Nft(props: InputProps): ReactElement {
         <strong>{field?.value?.symbol}</strong>
         <br />
         {field?.value?.description}
-      </div>
-      <div className={styles.gas}>
-        <p>{`Gas fee estimation for this artwork: ${gasFee} ETH`}</p>
       </div>
     </div>
   )
