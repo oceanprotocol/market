@@ -48,10 +48,12 @@ export function generateNftMetadata(): NftMetadata {
 
   // smaller svg for quick testing
   // const image = `<svg width='23' height='9' viewBox='0 0 23 9' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M0.93 9V0.599999H2.682L5.832 7.956H5.634V0.599999H6.822V9H5.286L2.064 1.668H2.118V9H0.93ZM9.47869 9V0.599999H14.4287V1.512H10.6667V4.854H13.8707V5.766H10.6667V9H9.47869ZM18.9094 9V1.512H16.4554V0.599999H22.5514V1.512H20.0974V9H18.9094Z' fill='#ff4092' /></svg>`
+  const layers = randomIntFromInterval(3, 5)
   const properties: WaveProperties = {
-    layerCount: randomIntFromInterval(3, 5),
+    layerCount: layers,
     segmentCount: randomIntFromInterval(2, 7),
-    fillColor: nftColors[randomIntFromInterval(0, nftColors.length - 1)]
+    fillColor: nftColors[randomIntFromInterval(0, nftColors.length - 1)],
+    variance: Math.random() * 0.7 + 0.1
   }
   const image = new Waves(properties).generateSvgString()
   console.log('svg:', image)
