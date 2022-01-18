@@ -27,20 +27,12 @@ const txHistoryQueryByPool = gql`
       first: 1000
     ) {
       baseToken {
-        id
-        value
-        token {
-          symbol
-          address
-        }
+        symbol
+        address
       }
       datatoken {
-        id
-        value
-        token {
-          symbol
-          address
-        }
+        symbol
+        address
       }
       type
       tx
@@ -60,21 +52,15 @@ const txHistoryQuery = gql`
       first: 1000
     ) {
       baseToken {
-        id
-        value
-        token {
-          symbol
-          address
-        }
+        symbol
+        address
       }
+      baseTokenValue
       datatoken {
-        id
-        value
-        token {
-          symbol
-          address
-        }
+        symbol
+        address
       }
+      datatokenValue
       type
       tx
       timestamp
@@ -180,7 +166,7 @@ export default function PoolTransactions({
       const didList: string[] = []
 
       for (let i = 0; i < data.length; i++) {
-        const { address } = data[i].datatoken.token
+        const { address } = data[i].datatoken
         const did = web3.utils
           .toChecksumAddress(address)
           .replace('0x', 'did:op:')
