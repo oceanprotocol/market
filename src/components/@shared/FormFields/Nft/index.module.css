@@ -32,3 +32,9 @@
   width: var(--font-size-mini);
   height: var(--font-size-mini);
 }
+
+.gas {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  color: var(--color-secondary);
+}
