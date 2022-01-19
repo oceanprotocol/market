@@ -25,7 +25,6 @@ const initialValues: FormAddLiquidity = {
 
 export default function Add({
   setShowAdd,
-  refreshInfo,
   poolAddress,
   totalPoolTokens,
   totalBalance,
@@ -34,7 +33,6 @@ export default function Add({
   dtAddress
 }: {
   setShowAdd: (show: boolean) => void
-  refreshInfo: () => void
   poolAddress: string
   totalPoolTokens: string
   totalBalance: PoolBalance
@@ -113,7 +111,6 @@ export default function Add({
       //     : await ocean.pool.addDTLiquidity(accountId, poolAddress, `${amount}`)
       // setTxId(result?.transactionHash)
       // resetForm()
-      // refreshInfo()
     } catch (error) {
       console.error(error.message)
       toast.error(error.message)

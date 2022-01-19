@@ -25,14 +25,12 @@ import content from '../../../../../content/price.json'
 
 export default function Remove({
   setShowRemove,
-  refreshInfo,
   poolAddress,
   poolTokens,
   totalPoolTokens,
   dtSymbol
 }: {
   setShowRemove: (show: boolean) => void
-  refreshInfo: () => void
   poolAddress: string
   poolTokens: string
   totalPoolTokens: string
@@ -74,7 +72,6 @@ export default function Remove({
       //         minOceanAmount
       //       )
       // setTxId(result?.transactionHash)
-      // refreshInfo()
     } catch (error) {
       LoggerInstance.error(error.message)
       toast.error(error.message)
