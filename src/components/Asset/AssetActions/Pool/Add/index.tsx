@@ -30,7 +30,8 @@ export default function Add({
   totalBalance,
   swapFee,
   dtSymbol,
-  dtAddress
+  dtAddress,
+  refreshAllLiquidity
 }: {
   setShowAdd: (show: boolean) => void
   poolAddress: string
@@ -39,6 +40,7 @@ export default function Add({
   swapFee: string
   dtSymbol: string
   dtAddress: string
+  refreshAllLiquidity: () => void
 }): ReactElement {
   const { accountId, balance, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
@@ -111,6 +113,7 @@ export default function Add({
       //     : await ocean.pool.addDTLiquidity(accountId, poolAddress, `${amount}`)
       // setTxId(result?.transactionHash)
       // resetForm()
+      refreshAllLiquidity()
     } catch (error) {
       console.error(error.message)
       toast.error(error.message)
