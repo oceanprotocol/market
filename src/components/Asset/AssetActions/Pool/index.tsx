@@ -14,7 +14,10 @@ import AssetActionHistoryTable from '../AssetActionHistoryTable'
 import Graph from './Graph'
 import { useAsset } from '@context/Asset'
 import { gql, OperationResult } from 'urql'
-import { PoolLiquidity } from '../../../../@types/subgraph/PoolLiquidity'
+import {
+  PoolLiquidity,
+  PoolLiquidity_pool as PoolLiquidityData
+} from '../../../../@types/subgraph/PoolLiquidity'
 import { useWeb3 } from '@context/Web3'
 import PoolTransactions from '@shared/PoolTransactions'
 import { fetchData, getQueryContext } from '@utils/subgraph'
@@ -63,21 +66,34 @@ const userPoolShareQuery = gql`
   }
 `
 
+async function getPoolLiquidity(chainId: number, pool: string, owner: string) {
+  const queryVariables = {
+    pool: pool.toLowerCase(),
+    owner: owner.toLowerCase()
+  }
+  const response: OperationResult<PoolLiquidity> = await fetchData(
+    poolLiquidityQuery,
+    queryVariables,
+    getQueryContext(chainId)
+  )
+  return response?.data.pool
+}
+
 async function getUserPoolShareBalance(
   chainId: number,
-  price: BestPrice,
+  pool: string,
   accountId: string
 ): Promise<string> {
   const queryVariables = {
-    pool: price.address.toLowerCase(),
+    pool: pool.toLowerCase(),
     user: accountId.toLowerCase()
   }
-  const queryResult: OperationResult<PoolLiquidity> = await fetchData(
+  const response: OperationResult<PoolLiquidity> = await fetchData(
     userPoolShareQuery,
     queryVariables,
     getQueryContext(chainId)
   )
-  return queryResult?.data.pool.shares[0]?.shares
+  return response?.data.pool.shares[0]?.shares
 }
 
 function getWeight(weight: string) {
@@ -92,17 +108,16 @@ export default function Pool(): ReactElement {
   const [dtSymbol, setDtSymbol] = useState<string>()
   const [oceanSymbol, setOceanSymbol] = useState<string>()
 
-  const [poolTokens, setPoolTokens] = useState<string>()
+  const [userShares, setUserShares] = useState<string>()
   const [totalPoolTokens, setTotalPoolTokens] = useState<string>()
-  const [userLiquidity, setUserLiquidity] = useState<PoolBalance>()
+
+  const [poolLiquidityData, setPoolLiquidityData] =
+    useState<PoolLiquidityData>()
   const [poolFee, setPoolFee] = useState<string>()
   const [weightOcean, setWeightOcean] = useState<string>()
   const [weightDt, setWeightDt] = useState<string>()
 
-  const [showAdd, setShowAdd] = useState(false)
-  const [showRemove, setShowRemove] = useState(false)
-  const [isRemoveDisabled, setIsRemoveDisabled] = useState(false)
-
+  const [userLiquidity, setUserLiquidity] = useState<PoolBalance>()
   const [hasAddedLiquidity, setHasAddedLiquidity] = useState(false)
   const [poolShare, setPoolShare] = useState<string>()
   const [userLiquidityInOcean, setUserLiquidityInOcean] = useState(
@@ -117,103 +132,110 @@ export default function Pool(): ReactElement {
   const [creatorLiquidity, setCreatorLiquidity] = useState<PoolBalance>()
   const [creatorPoolTokens, setCreatorPoolTokens] = useState<string>()
   const [creatorPoolShare, setCreatorPoolShare] = useState<string>()
-  const [dataLiquidity, setDataLiquidity] = useState<PoolLiquidity>()
-  const [liquidityFetchInterval, setLiquidityFetchInterval] =
-    useState<NodeJS.Timeout>()
+
+  const [showAdd, setShowAdd] = useState(false)
+  const [showRemove, setShowRemove] = useState(false)
+  const [isRemoveDisabled, setIsRemoveDisabled] = useState(false)
+  const [fetchInterval, setFetchInterval] = useState<NodeJS.Timeout>()
 
   // This returns totalPoolTokens, among other things.
   // Calling this method will trigger all other effects in case
   // totalPoolTokens changes.
-  const getPoolLiquidity = useCallback(async () => {
+  const fetchPoolLiquidity = useCallback(async () => {
     if (!ddo?.chainId || !price?.address || !owner) return
 
-    const queryVariables = {
-      pool: price.address.toLowerCase(),
-      owner: owner.toLowerCase()
-    }
-    const queryResult: OperationResult<PoolLiquidity> = await fetchData(
-      poolLiquidityQuery,
-      queryVariables,
-      getQueryContext(ddo.chainId)
+    const poolLiquidity = await getPoolLiquidity(
+      ddo.chainId,
+      price.address,
+      owner
     )
-    setDataLiquidity(queryResult?.data)
+    setPoolLiquidityData(poolLiquidity)
   }, [ddo?.chainId, price?.address, owner])
 
-  const setPoolLiquidityFetchInterval = useCallback(() => {
-    if (liquidityFetchInterval) return
+  const fetchUserLiquidity = useCallback(async () => {
+    if (!ddo?.chainId || !price?.address || !accountId) return
 
-    const newInterval = setInterval(() => getPoolLiquidity(), refreshInterval)
-    setLiquidityFetchInterval(newInterval)
-  }, [liquidityFetchInterval, getPoolLiquidity, refreshInterval])
+    const userShares = await getUserPoolShareBalance(
+      ddo.chainId,
+      price.address,
+      accountId
+    )
+    setUserShares(userShares)
+  }, [ddo?.chainId, price?.address, accountId])
+
+  const initFetchInterval = useCallback(() => {
+    if (fetchInterval) return
+
+    const newInterval = setInterval(() => {
+      fetchPoolLiquidity()
+      fetchUserLiquidity()
+    }, refreshInterval)
+    setFetchInterval(newInterval)
+  }, [fetchInterval, fetchPoolLiquidity, fetchUserLiquidity, refreshInterval])
 
   useEffect(() => {
     return () => {
-      clearInterval(liquidityFetchInterval)
+      clearInterval(fetchInterval)
     }
-  }, [liquidityFetchInterval])
+  }, [fetchInterval])
+
+  //
+  // 0 Fetch all the data
+  // All further effects depend on the fetched data
+  // and only do further data checking and manipulation.
+  //
+  useEffect(() => {
+    fetchPoolLiquidity()
+    fetchUserLiquidity()
+    initFetchInterval()
+  }, [fetchPoolLiquidity, fetchUserLiquidity, initFetchInterval])
 
   //
   // 1 General Pool Info
   //
   useEffect(() => {
-    async function init() {
-      // Fetch pool liquidity
-      if (!dataLiquidity?.pool) {
-        await getPoolLiquidity()
-        return
-      }
+    if (!poolLiquidityData || !price?.ocean || !price?.datatoken) return
 
-      // Set symbols
-      setOceanSymbol(dataLiquidity.pool.baseToken.symbol)
-      setDtSymbol(dataLiquidity.pool.datatoken.symbol)
+    // Set symbols
+    setOceanSymbol(poolLiquidityData.baseToken.symbol)
+    setDtSymbol(poolLiquidityData.datatoken.symbol)
 
-      // Total pool shares
-      setTotalPoolTokens(dataLiquidity.pool.totalShares)
+    // Total pool shares
+    setTotalPoolTokens(poolLiquidityData.totalShares)
 
-      // Pool Fee (swap fee)
-      // poolFee is tricky: to get 0.1% you need to convert from 0.001
-      const poolFee = isValidNumber(dataLiquidity.pool.poolFee)
-        ? new Decimal(dataLiquidity.pool.poolFee).mul(100).toString()
-        : '0'
-      setPoolFee(poolFee)
+    // Pool Fee (swap fee)
+    // poolFee is tricky: to get 0.1% you need to convert from 0.001
+    const poolFee = isValidNumber(poolLiquidityData.poolFee)
+      ? new Decimal(poolLiquidityData.poolFee).mul(100).toString()
+      : '0'
+    setPoolFee(poolFee)
 
-      // Get weights
-      const weightDtDecimal = getWeight(dataLiquidity.pool.datatokenWeight)
-      const weightOceanDecimal = getWeight(dataLiquidity.pool.baseTokenWeight)
-      setWeightDt(weightDtDecimal)
-      setWeightOcean(weightOceanDecimal)
+    // Get weights
+    const weightDtDecimal = getWeight(poolLiquidityData.datatokenWeight)
+    const weightOceanDecimal = getWeight(poolLiquidityData.baseTokenWeight)
+    setWeightDt(weightDtDecimal)
+    setWeightOcean(weightOceanDecimal)
 
-      // Total Liquidity
-      const totalLiquidityInOcean =
-        isValidNumber(price?.ocean) &&
-        isValidNumber(price?.datatoken) &&
-        isValidNumber(dataLiquidity.pool.spotPrice)
-          ? new Decimal(price?.ocean).add(
-              new Decimal(price?.datatoken).mul(dataLiquidity.pool.spotPrice)
-            )
-          : new Decimal(0)
+    // Total Liquidity
+    const totalLiquidityInOcean =
+      isValidNumber(price.ocean) &&
+      isValidNumber(price.datatoken) &&
+      isValidNumber(poolLiquidityData.spotPrice)
+        ? new Decimal(price.ocean).add(
+            new Decimal(price.datatoken).mul(poolLiquidityData.spotPrice)
+          )
+        : new Decimal(0)
 
-      setTotalLiquidityInOcean(totalLiquidityInOcean)
-    }
-    init()
-
-    setPoolLiquidityFetchInterval()
-  }, [
-    dataLiquidity,
-    totalPoolTokens,
-    price?.datatoken,
-    price?.ocean,
-    getPoolLiquidity,
-    setPoolLiquidityFetchInterval
-  ])
+    setTotalLiquidityInOcean(totalLiquidityInOcean)
+  }, [poolLiquidityData, totalPoolTokens, price?.datatoken, price?.ocean])
 
   //
   // 2 Pool Creator Info
   //
   useEffect(() => {
-    if (!dataLiquidity?.pool?.shares || !dataLiquidity?.pool?.spotPrice) return
+    if (!poolLiquidityData || !price?.ocean || !price?.datatoken) return
 
-    const creatorPoolTokens = dataLiquidity.pool.shares[0]?.shares
+    const creatorPoolTokens = poolLiquidityData.shares[0]?.shares
     setCreatorPoolTokens(creatorPoolTokens)
 
     const creatorOceanBalance =
@@ -245,10 +267,10 @@ export default function Pool(): ReactElement {
     const totalCreatorLiquidityInOcean =
       isValidNumber(creatorLiquidity?.ocean) &&
       isValidNumber(creatorLiquidity?.datatoken) &&
-      isValidNumber(dataLiquidity.pool.spotPrice)
+      isValidNumber(poolLiquidityData.spotPrice)
         ? new Decimal(creatorLiquidity?.ocean).add(
             new Decimal(creatorLiquidity?.datatoken).mul(
-              new Decimal(dataLiquidity.pool.spotPrice)
+              new Decimal(poolLiquidityData.spotPrice)
             )
           )
         : new Decimal(0)
@@ -256,8 +278,6 @@ export default function Pool(): ReactElement {
     setCreatorTotalLiquidityInOcean(totalCreatorLiquidityInOcean)
 
     const creatorPoolShare =
-      price?.ocean &&
-      price?.datatoken &&
       creatorLiquidity &&
       isValidNumber(creatorPoolTokens) &&
       isValidNumber(totalPoolTokens)
@@ -268,87 +288,74 @@ export default function Pool(): ReactElement {
         : '0'
 
     setCreatorPoolShare(creatorPoolShare)
-  }, [
-    dataLiquidity?.pool?.shares,
-    dataLiquidity?.pool?.spotPrice,
-    price,
-    totalPoolTokens
-  ])
+  }, [poolLiquidityData, price?.ocean, price?.datatoken, totalPoolTokens])
 
   //
   // 3 User Pool Info
   //
   useEffect(() => {
-    if (!ddo?.chainId || !accountId || !price) return
+    if (
+      !poolLiquidityData?.spotPrice ||
+      !ddo?.chainId ||
+      !accountId ||
+      !price?.ocean ||
+      !price?.datatoken
+    )
+      return
 
-    async function init() {
-      try {
-        const poolTokens = await getUserPoolShareBalance(
-          ddo?.chainId,
-          price,
-          accountId
-        )
-        setPoolTokens(poolTokens)
+    const poolShare =
+      isValidNumber(userShares) &&
+      isValidNumber(totalPoolTokens) &&
+      new Decimal(userShares)
+        .dividedBy(new Decimal(totalPoolTokens))
+        .mul(100)
+        .toFixed(5)
 
-        const poolShare =
-          isValidNumber(poolTokens) &&
-          isValidNumber(totalPoolTokens) &&
-          price?.ocean &&
-          price?.datatoken &&
-          new Decimal(poolTokens)
+    setPoolShare(poolShare)
+    setHasAddedLiquidity(Number(poolShare) > 0)
+
+    // calculate user's provided liquidity based on pool tokens
+    const userOceanBalance =
+      isValidNumber(userShares) &&
+      isValidNumber(totalPoolTokens) &&
+      isValidNumber(price.ocean)
+        ? new Decimal(userShares)
             .dividedBy(new Decimal(totalPoolTokens))
-            .mul(100)
-            .toFixed(5)
+            .mul(price.ocean)
+            .toString()
+        : '0'
 
-        setPoolShare(poolShare)
-        setHasAddedLiquidity(Number(poolShare) > 0)
+    const userDtBalance =
+      isValidNumber(userShares) &&
+      isValidNumber(totalPoolTokens) &&
+      isValidNumber(price.datatoken)
+        ? new Decimal(userShares)
+            .dividedBy(new Decimal(totalPoolTokens))
+            .mul(price.datatoken)
+            .toString()
+        : '0'
 
-        // calculate user's provided liquidity based on pool tokens
-        const userOceanBalance =
-          isValidNumber(poolTokens) &&
-          isValidNumber(totalPoolTokens) &&
-          isValidNumber(price.ocean)
-            ? new Decimal(poolTokens)
-                .dividedBy(new Decimal(totalPoolTokens))
-                .mul(price.ocean)
-                .toString()
-            : '0'
-
-        const userDtBalance =
-          isValidNumber(poolTokens) &&
-          isValidNumber(totalPoolTokens) &&
-          isValidNumber(price.datatoken)
-            ? new Decimal(poolTokens)
-                .dividedBy(new Decimal(totalPoolTokens))
-                .mul(price.datatoken)
-                .toString()
-            : '0'
-
-        const userLiquidity = {
-          ocean: userOceanBalance,
-          datatoken: userDtBalance
-        }
-        setUserLiquidity(userLiquidity)
-
-        const userLiquidityInOcean =
-          isValidNumber(userLiquidity?.ocean) &&
-          isValidNumber(userLiquidity?.datatoken) &&
-          isValidNumber(dataLiquidity.pool.spotPrice)
-            ? new Decimal(userLiquidity?.ocean).add(
-                new Decimal(userLiquidity?.datatoken).mul(
-                  dataLiquidity.pool.spotPrice
-                )
-              )
-            : new Decimal(0)
-
-        setUserLiquidityInOcean(userLiquidityInOcean)
-      } catch (error) {
-        LoggerInstance.error(error.message)
-      }
+    const userLiquidity = {
+      ocean: userOceanBalance,
+      datatoken: userDtBalance
     }
-    init()
+    setUserLiquidity(userLiquidity)
+
+    const userLiquidityInOcean =
+      isValidNumber(userLiquidity.ocean) &&
+      isValidNumber(userLiquidity.datatoken) &&
+      isValidNumber(poolLiquidityData.spotPrice)
+        ? new Decimal(userLiquidity.ocean).add(
+            new Decimal(userLiquidity.datatoken).mul(
+              poolLiquidityData.spotPrice
+            )
+          )
+        : new Decimal(0)
+
+    setUserLiquidityInOcean(userLiquidityInOcean)
   }, [
-    dataLiquidity?.pool?.spotPrice,
+    poolLiquidityData?.spotPrice,
+    userShares,
     accountId,
     price,
     ddo?.chainId,
@@ -356,7 +363,12 @@ export default function Pool(): ReactElement {
     totalPoolTokens
   ])
 
+  //
+  // Check if removing liquidity should be disabled.
+  //
   useEffect(() => {
+    if (!owner || !accountId) return
+
     setIsRemoveDisabled(isInPurgatory && owner === accountId)
   }, [isInPurgatory, owner, accountId])
 
@@ -379,7 +391,7 @@ export default function Pool(): ReactElement {
         <Remove
           setShowRemove={setShowRemove}
           poolAddress={price.address}
-          poolTokens={poolTokens}
+          poolTokens={userShares}
           totalPoolTokens={totalPoolTokens}
           dtSymbol={dtSymbol}
         />
@@ -425,7 +437,7 @@ export default function Pool(): ReactElement {
             oceanSymbol={oceanSymbol}
             dt={`${userLiquidity?.datatoken}`}
             dtSymbol={dtSymbol}
-            poolShares={poolTokens}
+            poolShares={userShares}
             conversion={userLiquidityInOcean}
             highlight
           >
