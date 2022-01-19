@@ -1,5 +1,5 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react'
-import { Logger, LoggerInstance } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import styles from './index.module.css'
 import stylesActions from './Actions.module.css'
 import PriceUnit from '@shared/Price/PriceUnit'
@@ -105,17 +105,15 @@ export default function Pool(): ReactElement {
   const { isInPurgatory, ddo, owner, price, refreshInterval, isAssetNetwork } =
     useAsset()
 
-  const [dtSymbol, setDtSymbol] = useState<string>()
-  const [oceanSymbol, setOceanSymbol] = useState<string>()
-
-  const [userShares, setUserShares] = useState<string>()
-  const [totalPoolTokens, setTotalPoolTokens] = useState<string>()
-
   const [poolData, setPoolData] = useState<PoolLiquidityData>()
   const [poolFee, setPoolFee] = useState<string>()
   const [weightOcean, setWeightOcean] = useState<string>()
   const [weightDt, setWeightDt] = useState<string>()
+  const [dtSymbol, setDtSymbol] = useState<string>()
+  const [oceanSymbol, setOceanSymbol] = useState<string>()
+  const [totalPoolTokens, setTotalPoolTokens] = useState<string>()
 
+  const [userShares, setUserShares] = useState<string>()
   const [userLiquidity, setUserLiquidity] = useState<PoolBalance>()
   const [hasAddedLiquidity, setHasAddedLiquidity] = useState(false)
   const [poolShare, setPoolShare] = useState<string>()
@@ -145,7 +143,7 @@ export default function Pool(): ReactElement {
 
     const poolData = await getPoolData(ddo.chainId, price.address, owner)
     setPoolData(poolData)
-    LoggerInstance.log('[pool] Pool data', poolData)
+    LoggerInstance.log('[pool] Fetched pool data:', poolData)
   }, [ddo?.chainId, price?.address, owner])
 
   const fetchUserShares = useCallback(async () => {
@@ -157,7 +155,7 @@ export default function Pool(): ReactElement {
       accountId
     )
     setUserShares(userShares)
-    LoggerInstance.log(`[pool] User shares: ${userShares}`)
+    LoggerInstance.log(`[pool] Fetched user shares: ${userShares}`)
   }, [ddo?.chainId, price?.address, accountId])
 
   // Helper to fetch everything
@@ -172,6 +170,9 @@ export default function Pool(): ReactElement {
     const newInterval = setInterval(() => {
       fetchPoolData()
       fetchUserShares()
+      LoggerInstance.log(
+        `[pool] Refetch interval fired after ${refreshInterval / 1000}s`
+      )
     }, refreshInterval)
     setFetchInterval(newInterval)
   }, [fetchInterval, fetchPoolData, fetchUserShares, refreshInterval])
