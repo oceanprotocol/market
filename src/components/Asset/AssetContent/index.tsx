@@ -55,10 +55,8 @@ export default function AssetContent({
             )}
 
             <MetaFull ddo={ddo} />
-            {price?.datatoken !== null && <EditHistory />}
-            {price?.datatoken !== null && debug === true && (
-              <DebugOutput title="DDO" output={ddo} />
-            )}
+            <EditHistory />
+            {debug === true && <DebugOutput title="DDO" output={ddo} />}
           </div>
         </div>
 
