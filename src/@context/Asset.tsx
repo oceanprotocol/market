@@ -8,7 +8,6 @@ import React, {
   ReactNode
 } from 'react'
 import { Asset, Config, LoggerInstance, Purgatory } from '@oceanprotocol/lib'
-import getAssetPurgatoryData from '@utils/purgatory'
 import { CancelToken } from 'axios'
 import { retrieveDDO } from '@utils/aquarius'
 import { getPrice } from '@utils/subgraph'
@@ -98,7 +97,7 @@ function AssetProvider({
       setDDO(ddo)
       setTitle(ddo.metadata.name)
       setOwner(ddo.nft.owner)
-      setIsInPurgatory(ddo.purgatory.state)
+      setIsInPurgatory(ddo.purgatory?.state)
       setPurgatoryData(ddo.purgatory)
       // setPurgatory(ddo.purgatory)
     }

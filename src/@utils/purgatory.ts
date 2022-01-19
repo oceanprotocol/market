@@ -8,16 +8,6 @@ export interface PurgatoryDataAccount {
   reason: string
 }
 
-export default async function getAssetPurgatoryData(
-  did: string
-): Promise<Purgatory> {
-  const data = (await fetchData(
-    `${purgatoryUrl}asset?did=${did}`
-  )) as Purgatory[]
-
-  return { state: data[0]?.state, reason: data[0]?.reason }
-}
-
 export async function getAccountPurgatoryData(
   address: string
 ): Promise<PurgatoryDataAccount> {
