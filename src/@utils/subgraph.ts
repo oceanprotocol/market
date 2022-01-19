@@ -25,6 +25,7 @@ import {
 } from '../@types/subgraph/PoolShares'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { UserSalesQuery as UsersSalesList } from '../@types/subgraph/UserSalesQuery'
+import { PoolLiquidity } from 'src/@types/subgraph/PoolLiquidity'
 
 export interface UserLiquidity {
   price: string
@@ -276,6 +277,44 @@ const TopSalesQuery = gql`
       id
       tokenBalancesOwned {
         value
+      }
+    }
+  }
+`
+
+const poolLiquidityQuery = gql`
+  query PoolLiquidity($pool: ID!, $owner: String!) {
+    pool(id: $pool) {
+      id
+      totalShares
+      poolFee
+      opfFee
+      marketFee
+      spotPrice
+      baseToken {
+        address
+        symbol
+      }
+      baseTokenWeight
+      baseTokenLiquidity
+      datatoken {
+        address
+        symbol
+      }
+      datatokenWeight
+      datatokenLiquidity
+      shares(where: { user: $owner }) {
+        shares
+      }
+    }
+  }
+`
+
+const userPoolShareQuery = gql`
+  query PoolShare($pool: ID!, $user: String!) {
+    pool(id: $pool) {
+      shares(where: { user: $user }) {
+        shares
       }
     }
   }
@@ -775,4 +814,38 @@ export async function getTopAssetsPublishers(
   publisherSales.sort((a, b) => b.nrSales - a.nrSales)
 
   return publisherSales.slice(0, nrItems)
+}
+
+export async function getPoolData(
+  chainId: number,
+  pool: string,
+  owner: string
+) {
+  const queryVariables = {
+    pool: pool.toLowerCase(),
+    owner: owner.toLowerCase()
+  }
+  const response: OperationResult<PoolLiquidity> = await fetchData(
+    poolLiquidityQuery,
+    queryVariables,
+    getQueryContext(chainId)
+  )
+  return response?.data.pool
+}
+
+export async function getUserPoolShareBalance(
+  chainId: number,
+  pool: string,
+  accountId: string
+): Promise<string> {
+  const queryVariables = {
+    pool: pool.toLowerCase(),
+    user: accountId.toLowerCase()
+  }
+  const response: OperationResult<PoolLiquidity> = await fetchData(
+    userPoolShareQuery,
+    queryVariables,
+    getQueryContext(chainId)
+  )
+  return response?.data.pool.shares[0]?.shares || '0'
 }
