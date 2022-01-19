@@ -6,7 +6,8 @@ import {
   Asset,
   DDO,
   PublisherTrustedAlgorithm,
-  FileMetadata
+  FileMetadata,
+  Datatoken
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
@@ -36,6 +37,7 @@ import ComputeJobs from '../../../Profile/History/ComputeJobs'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { SortTermOptions } from '../../../../@types/aquarius/SearchQuery'
+import { Decimal } from 'decimal.js'
 
 export default function Compute({
   ddo,
@@ -55,7 +57,7 @@ export default function Compute({
   consumableFeedback?: string
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
-  const { accountId } = useWeb3()
+  const { accountId, web3 } = useWeb3()
   const { buyDT, pricingError, pricingStepText } = usePricing()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
@@ -69,7 +71,7 @@ export default function Compute({
   const [previousDatasetOrderId, setPreviousDatasetOrderId] = useState<string>()
   const [hasPreviousAlgorithmOrder, setHasPreviousAlgorithmOrder] =
     useState(false)
-  const [algorithmDTBalance, setalgorithmDTBalance] = useState<string>()
+  const [algorithmDTBalance, setAlgorithmDTBalance] = useState<string>()
   const [algorithmPrice, setAlgorithmPrice] = useState<BestPrice>()
   const [previousAlgorithmOrderId, setPreviousAlgorithmOrderId] =
     useState<string>()
@@ -110,12 +112,13 @@ export default function Compute({
   }
 
   async function checkAssetDTBalance(asset: DDO) {
-    // const AssetDtBalance = await ocean.datatokens.balance(
-    //   asset.services[0].datatokenAddress,
-    //   accountId
-    // )
-    // setalgorithmDTBalance(AssetDtBalance)
-    // setHasAlgoAssetDatatoken(Number(AssetDtBalance) >= 1)
+    const datatokenInstance = new Datatoken(web3)
+    const AssetDtBalance = await datatokenInstance.balance(
+      asset.services[0].datatokenAddress,
+      accountId
+    )
+    setAlgorithmDTBalance(new Decimal(AssetDtBalance).toString())
+    setHasAlgoAssetDatatoken(Number(AssetDtBalance) >= 1)
   }
 
   function getQuerryString(
@@ -230,7 +233,7 @@ export default function Compute({
         checkPreviousOrders(selectedAlgorithmAsset)
       }
     }
-    // ocean && checkAssetDTBalance(selectedAlgorithmAsset)
+    checkAssetDTBalance(selectedAlgorithmAsset)
   }, [ddo, selectedAlgorithmAsset, accountId, hasPreviousAlgorithmOrder])
 
   // Output errors in toast UI

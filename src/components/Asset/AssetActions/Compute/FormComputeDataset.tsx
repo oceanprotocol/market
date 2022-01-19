@@ -8,6 +8,7 @@ import ButtonBuy from '@shared/ButtonBuy'
 import PriceOutput from './PriceOutput'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
+import { checkIfConsumable } from '@utils/ddo'
 import content from '../../../../../content/pages/startComputeDataset.json'
 import { Asset } from '@oceanprotocol/lib'
 
@@ -84,11 +85,8 @@ export default function FormStartCompute({
 
     if (!accountId || !isConsumable) return
     async function checkIsConsumable() {
-      // const consumable = await ocean.assets.isConsumable(
-      //   algorithmDDO as any,
-      //   accountId.toLowerCase()
-      // )
-      // if (consumable) setAlgorithmConsumableStatus(consumable.status)
+      const consumable = await checkIfConsumable(algorithmDDO as any)
+      if (consumable) setAlgorithmConsumableStatus(consumable.status)
     }
     checkIsConsumable()
   }, [values.algorithm, accountId, isConsumable])

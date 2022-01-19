@@ -1,8 +1,13 @@
 import { Asset, DDO, Service } from '@oceanprotocol/lib'
+interface Consumable {
+  status: number
+  message: string
+  result: boolean
+}
 
 export function getServiceByName(
   ddo: Asset | DDO,
-  name: 'access' | 'compute'
+  name: 'access' | 'compute' | 'metadata'
 ): Service {
   if (!ddo) return
 
@@ -57,4 +62,20 @@ export function secondsToString(numberOfSeconds: number): string {
     : seconds
     ? `${seconds} second${numberEnding(seconds)}`
     : 'less than a second'
+}
+
+export async function checkIfConsumable(ddo: DDO): Promise<Consumable> {
+  if (!ddo) throw new Error('ERROR: DDO does not exist')
+  const allowedConsume = { status: 0, message: 'All good', result: true }
+  const orderDisabled = {
+    status: 1,
+    message:
+      'Ordering this asset has been temporarily disabled by the publisher.',
+    result: false
+  }
+
+  const metadata = this.getServiceByName(ddo, 'metadata')
+  if (metadata.attributes.status?.isOrderDisabled) return orderDisabled
+
+  return allowedConsume
 }
