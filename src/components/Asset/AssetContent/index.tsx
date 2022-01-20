@@ -35,9 +35,9 @@ export default function AssetContent({
         <div>
           <div className={styles.content}>
             <MetaMain ddo={ddo} />
-            {price?.datatoken && <Bookmark did={ddo?.id} />}
+            {price?.datatoken !== null && <Bookmark did={ddo?.id} />}
 
-            {isInPurgatory ? (
+            {isInPurgatory === true ? (
               <Alert
                 title={content.asset.title}
                 badge={`Reason: ${purgatoryData?.reason}`}
@@ -55,10 +55,8 @@ export default function AssetContent({
             )}
 
             <MetaFull ddo={ddo} />
-            {price?.datatoken && <EditHistory />}
-            {price?.datatoken && debug === true && (
-              <DebugOutput title="DDO" output={ddo} />
-            )}
+            <EditHistory />
+            {debug === true && <DebugOutput title="DDO" output={ddo} />}
           </div>
         </div>
 

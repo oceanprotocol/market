@@ -6,7 +6,7 @@ import {
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import { PriceList, getAssetsPriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
-import { OrdersData_tokenOrders as OrdersData } from '../@types/apollo/OrdersData'
+import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { metadataCacheUri } from '../../app.config'
 import {
   SortDirectionOptions,
@@ -48,7 +48,7 @@ export function generateBaseQuery(
           getFilterTerm('_index', 'aquarius'),
           ...(baseQueryParams.ignorePurgatory
             ? []
-            : [getFilterTerm('stats.isInPurgatory', 'false')])
+            : [getFilterTerm('purgatory.state', 'false')])
         ]
       }
     }
@@ -348,16 +348,16 @@ export async function getDownloadAssets(
     const downloadedAssets: DownloadedAsset[] = result.results
       .map((ddo) => {
         const order = tokenOrders.find(
-          ({ datatokenId }) =>
-            datatokenId?.address.toLowerCase() ===
+          ({ token }) =>
+            token?.address.toLowerCase() ===
             ddo.services[0].datatokenAddress.toLowerCase()
         )
 
         return {
           ddo,
           networkId: ddo.chainId,
-          dtSymbol: order?.datatokenId?.symbol,
-          timestamp: order?.timestamp
+          dtSymbol: order?.token?.symbol,
+          timestamp: order?.createdTimestamp
         }
       })
       .sort((a, b) => b.timestamp - a.timestamp)

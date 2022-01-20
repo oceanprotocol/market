@@ -13,6 +13,7 @@ import DebugOutput from '@shared/DebugOutput'
 import { useWeb3 } from '@context/Web3'
 import { useAsset } from '@context/Asset'
 import content from '../../../../../../content/price.json'
+import { Datatoken } from '@oceanprotocol/lib'
 
 export interface FormAddLiquidity {
   amount: number
@@ -41,7 +42,7 @@ export default function Add({
   dtSymbol: string
   dtAddress: string
 }): ReactElement {
-  const { accountId, balance } = useWeb3()
+  const { accountId, balance, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
   const { debug } = useUserPreferences()
   const [txId, setTxId] = useState<string>()
@@ -67,13 +68,15 @@ export default function Add({
 
   // Get datatoken balance when datatoken selected
   useEffect(() => {
-    // if (!accountId || !isAssetNetwork || coin === 'OCEAN') return
-    // async function getDtBalance() {
-    //   const dtBalance = await ocean.datatokens.balance(dtAddress, accountId)
-    //   setDtBalance(dtBalance)
-    // }
-    // getDtBalance()
-  }, [accountId, dtAddress, coin])
+    if (!web3 || !accountId || !isAssetNetwork || coin === 'OCEAN') return
+
+    async function getDtBalance() {
+      const datatokenInstance = new Datatoken(web3)
+      const dtBalance = await datatokenInstance.balance(dtAddress, accountId)
+      setDtBalance(dtBalance)
+    }
+    getDtBalance()
+  }, [web3, accountId, dtAddress, coin])
 
   // Get maximum amount for either OCEAN or datatoken
   useEffect(() => {

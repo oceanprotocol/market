@@ -1,5 +1,11 @@
 /* eslint-disable camelcase */
-import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react'
+import React, {
+  ChangeEvent,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState
+} from 'react'
 import { Line, defaults } from 'react-chartjs-2'
 import {
   ChartData,
@@ -17,7 +23,7 @@ import Button from '@shared/atoms/Button'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { useAsset } from '@context/Asset'
 import { gql, OperationResult } from 'urql'
-import { PoolHistory } from '../../../../@types/apollo/PoolHistory'
+import { PoolHistory } from '../../../../@types/subgraph/PoolHistory'
 import { fetchData, getQueryContext } from '@utils/subgraph'
 import styles from './Graph.module.css'
 
@@ -103,74 +109,49 @@ function getOptions(locale: string, isDarkMode: boolean): ChartOptions {
 
 const graphTypes = ['Liquidity', 'Price']
 
-const poolHistory = gql`
-  query PoolHistory($id: String!, $block: Int) {
-    poolTransactions(
-      first: 1000
-      where: { poolAddress: $id, block_gt: $block }
-      orderBy: block
-    ) {
-      block
+const poolHistoryQuery = gql`
+  query PoolHistory($id: String!) {
+    poolSnapshots(first: 1000, where: { pool: $id }, orderBy: date) {
+      date
       spotPrice
-      timestamp
-      oceanReserve
+      baseTokenLiquidity
+      datatokenLiquidity
     }
   }
 `
 
 export default function Graph(): ReactElement {
   const { locale } = useUserPreferences()
+  const { price, ddo } = useAsset()
   const darkMode = useDarkMode(false, darkModeConfig)
   const [options, setOptions] = useState<ChartOptions>()
   const [graphType, setGraphType] = useState<GraphType>('liquidity')
-
-  const { price, ddo } = useAsset()
-
-  const [lastBlock, setLastBlock] = useState<number>(0)
-  const [priceHistory, setPriceHistory] = useState([])
   const [error, setError] = useState<Error>()
-  const [liquidityHistory, setLiquidityHistory] = useState([])
-  const [timestamps, setTimestamps] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [dataHistory, setDataHistory] = useState<PoolHistory>()
   const [graphData, setGraphData] = useState<ChartData>()
   const [graphFetchInterval, setGraphFetchInterval] = useState<NodeJS.Timeout>()
 
-  async function getPoolHistory() {
+  const getPoolHistory = useCallback(async () => {
     try {
-      const queryContext = getQueryContext(ddo.chainId)
-      const queryVariables = {
-        id: price.address.toLowerCase(),
-        block: lastBlock
-      }
-
       const queryResult: OperationResult<PoolHistory> = await fetchData(
-        poolHistory,
-        queryVariables,
-        queryContext
+        poolHistoryQuery,
+        { id: price.address.toLowerCase() },
+        getQueryContext(ddo.chainId)
       )
       setDataHistory(queryResult?.data)
     } catch (error) {
       console.error('Error fetchData: ', error.message)
       setError(error)
     }
-  }
+  }, [ddo?.chainId, price?.address])
 
-  function refetchGraph() {
-    if (!graphFetchInterval) {
-      setGraphFetchInterval(
-        setInterval(function () {
-          getPoolHistory()
-        }, REFETCH_INTERVAL)
-      )
-    }
-  }
+  const refetchGraph = useCallback(async () => {
+    if (graphFetchInterval) return
 
-  useEffect(() => {
-    return () => {
-      clearInterval(graphFetchInterval)
-    }
-  }, [graphFetchInterval])
+    const newInterval = setInterval(() => getPoolHistory(), REFETCH_INTERVAL)
+    setGraphFetchInterval(newInterval)
+  }, [getPoolHistory, graphFetchInterval])
 
   useEffect(() => {
     LoggerInstance.log('Fired GraphOptions!')
@@ -179,70 +160,50 @@ export default function Graph(): ReactElement {
   }, [locale, darkMode.value])
 
   useEffect(() => {
-    getPoolHistory()
-  }, [lastBlock])
-
-  useEffect(() => {
     async function init() {
-      const data: PoolHistory = dataHistory
-      if (!data) {
+      if (!dataHistory) {
         await getPoolHistory()
         return
       }
       LoggerInstance.log('Fired GraphData!')
 
       const latestTimestamps = [
-        ...timestamps,
-        ...data.poolTransactions.map((item) => {
-          const date = new Date(item.timestamp * 1000)
+        ...dataHistory.poolSnapshots.map((item) => {
+          const date = new Date(item.date * 1000)
           return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
         })
       ]
-      setTimestamps(latestTimestamps)
 
-      const latestLiquidtyHistory = [
-        ...liquidityHistory,
-        ...data.poolTransactions.map((item) => item.oceanReserve)
+      const latestLiquidityHistory = [
+        ...dataHistory.poolSnapshots.map((item) => item.baseTokenLiquidity)
       ]
-
-      setLiquidityHistory(latestLiquidtyHistory)
 
       const latestPriceHistory = [
-        ...priceHistory,
-        ...data.poolTransactions.map((item) => item.spotPrice)
+        ...dataHistory.poolSnapshots.map((item) => item.datatokenLiquidity)
       ]
 
-      setPriceHistory(latestPriceHistory)
-
-      if (data.poolTransactions.length > 0) {
-        const newBlock =
-          data.poolTransactions[data.poolTransactions.length - 1].block
-        if (newBlock === lastBlock) return
-        setLastBlock(
-          data.poolTransactions[data.poolTransactions.length - 1].block
-        )
-      } else {
-        setGraphData({
-          labels: latestTimestamps.slice(0),
-          datasets: [
-            {
-              ...lineStyle,
-              label: 'Liquidity (OCEAN)',
-              data:
-                graphType === 'liquidity'
-                  ? latestLiquidtyHistory.slice(0)
-                  : latestPriceHistory.slice(0),
-              borderColor: `#8b98a9`,
-              pointBackgroundColor: `#8b98a9`
-            }
-          ]
-        })
-        setIsLoading(false)
-        refetchGraph()
-      }
+      setGraphData({
+        labels: latestTimestamps.slice(0),
+        datasets: [
+          {
+            ...lineStyle,
+            label: 'Liquidity (OCEAN)',
+            data:
+              graphType === 'liquidity'
+                ? latestLiquidityHistory.slice(0)
+                : latestPriceHistory.slice(0),
+            borderColor: `#8b98a9`,
+            pointBackgroundColor: `#8b98a9`
+          }
+        ]
+      })
+      setIsLoading(false)
+      refetchGraph()
     }
     init()
-  }, [dataHistory, graphType])
+
+    return () => clearInterval(graphFetchInterval)
+  }, [dataHistory, graphType, graphFetchInterval, getPoolHistory, refetchGraph])
 
   function handleGraphTypeSwitch(e: ChangeEvent<HTMLButtonElement>) {
     e.preventDefault()

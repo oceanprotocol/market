@@ -17,18 +17,19 @@ import { fetchDataForMultipleChains } from './subgraph'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
-    tokenOrders(
-      orderBy: timestamp
+    orders(
+      orderBy: createdTimestamp
       orderDirection: desc
       where: { payer: $user }
     ) {
       id
       serviceId
-      datatokenId {
+      token {
         address
+        isDatatoken
       }
       tx
-      timestamp
+      createdTimestamp
     }
   }
 `
@@ -38,18 +39,19 @@ const getComputeOrdersByDatatokenAddress = gql`
     $user: String!
     $datatokenAddress: String!
   ) {
-    tokenOrders(
-      orderBy: timestamp
+    orders(
+      orderBy: createdTimestamp
       orderDirection: desc
-      where: { payer: $user, datatokenId: $datatokenAddress }
+      where: { payer: $user, token: $datatokenAddress }
     ) {
       id
       serviceId
-      datatokenId {
+      token {
         address
+        isDatatoken
       }
       tx
-      timestamp
+      createdTimestamp
     }
   }
 `

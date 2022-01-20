@@ -4,7 +4,7 @@ import Table from '@shared/atoms/Table'
 import AssetTitle from '@shared/AssetList/AssetListTitle'
 import { useUserPreferences } from '@context/UserPreferences'
 import { gql } from 'urql'
-import { TransactionHistory_poolTransactions as TransactionHistoryPoolTransactions } from '../../../@types/apollo/TransactionHistory'
+import { TransactionHistory_poolTransactions as TransactionHistoryPoolTransactions } from '../../../@types/subgraph/TransactionHistory'
 import web3 from 'web3'
 import { fetchDataForMultipleChains } from '@utils/subgraph'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
@@ -23,23 +23,22 @@ const txHistoryQueryByPool = gql`
     poolTransactions(
       orderBy: timestamp
       orderDirection: desc
-      where: { userAddress: $user, poolAddress: $pool }
+      where: { user: $user, pool: $pool }
       first: 1000
     ) {
-      tokens {
-        poolToken {
-          id
-          symbol
-        }
-        value
-        type
-        tokenAddress
+      baseToken {
+        symbol
+        address
       }
+      datatoken {
+        symbol
+        address
+      }
+      type
       tx
-      event
       timestamp
-      poolAddress {
-        datatokenAddress
+      pool {
+        id
       }
     }
   }
@@ -49,31 +48,28 @@ const txHistoryQuery = gql`
     poolTransactions(
       orderBy: timestamp
       orderDirection: desc
-      where: { userAddress: $user }
+      where: { user: $user }
       first: 1000
     ) {
-      tokens {
-        poolToken {
-          id
-          symbol
-        }
-        value
-        type
-        tokenAddress
+      baseToken {
+        symbol
+        address
       }
+      baseTokenValue
+      datatoken {
+        symbol
+        address
+      }
+      datatokenValue
+      type
       tx
-      event
       timestamp
-      poolAddress {
-        datatokenAddress
+      pool {
+        id
       }
     }
   }
 `
-
-export interface Datatoken {
-  symbol: string
-}
 
 export interface PoolTransaction extends TransactionHistoryPoolTransactions {
   networkId: number
@@ -170,9 +166,9 @@ export default function PoolTransactions({
       const didList: string[] = []
 
       for (let i = 0; i < data.length; i++) {
-        const { datatokenAddress } = data[i].poolAddress
+        const { address } = data[i].datatoken
         const did = web3.utils
-          .toChecksumAddress(datatokenAddress)
+          .toChecksumAddress(address)
           .replace('0x', 'did:op:')
         didList.push(did)
       }

@@ -10,7 +10,7 @@ coverage
 .vercel
 repo-metadata.json
 networks-metadata.json
-src/@types/apollo
+src/@types/subgraph
 graphql.schema.json
 src/@types/graph.types.ts
 tsconfig.tsbuildinfo
