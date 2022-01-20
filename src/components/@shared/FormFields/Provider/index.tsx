@@ -19,11 +19,11 @@ export default function CustomProvider(props: InputProps): ReactElement {
     try {
       const isValid = await ProviderInstance.isValidProvider(
         url,
-        (method: Method, path: string, body: string) => {
+        (method: Method, path: string, body: string, headers: any) => {
           return fetch(path, {
             method: method,
             body: body,
-            headers: { 'Content-Type': 'application/json' }
+            headers: headers
           })
         }
       )
