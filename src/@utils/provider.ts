@@ -37,9 +37,9 @@ export async function getFileInfo(
       url,
       providerUrl,
       (method: Method, path: string, body: string) => {
-        return fetch(path, {
+        return axios(path, {
           method: method,
-          body: body,
+          data: body,
           headers: { 'Content-Type': 'application/json' }
         })
       }

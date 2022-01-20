@@ -7,6 +7,7 @@ import styles from './index.module.css'
 import Button from '@shared/atoms/Button'
 import { initialValues } from 'src/components/Publish/_constants'
 import { ProviderInstance } from '@oceanprotocol/lib'
+import { Method } from 'axios'
 
 export default function CustomProvider(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
@@ -14,9 +15,17 @@ export default function CustomProvider(props: InputProps): ReactElement {
 
   async function validateProvider(url: string) {
     setIsLoading(true)
-
     try {
-      const isValid = await ProviderInstance.isValidProvider(url, fetch)
+      const isValid = await ProviderInstance.isValidProvider(
+        url,
+        (method: Method, path: string, body: string) => {
+          return fetch(path, {
+            method: method,
+            body: body,
+            headers: { 'Content-Type': 'application/json' }
+          })
+        }
+      )
       helpers.setValue({ url, valid: isValid })
       helpers.setError(undefined)
     } catch (error) {
