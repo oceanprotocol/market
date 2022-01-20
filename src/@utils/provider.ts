@@ -36,11 +36,11 @@ export async function getFileInfo(
     const response = await ProviderInstance.checkFileUrl(
       url,
       providerUrl,
-      (method: Method, path: string, body: string) => {
-        return fetch(path, {
-          method: method,
-          body: body,
-          headers: { 'Content-Type': 'application/json' }
+      (httpMethod: Method, url: string, body: string, headers: any) => {
+        return axios(url, {
+          method: httpMethod,
+          data: body,
+          headers: headers
         })
       }
     )
