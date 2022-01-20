@@ -7,7 +7,7 @@ import styles from './index.module.css'
 import Button from '@shared/atoms/Button'
 import { initialValues } from 'src/components/Publish/_constants'
 import { ProviderInstance } from '@oceanprotocol/lib'
-import { Method } from 'axios'
+import axios, { Method } from 'axios'
 
 export default function CustomProvider(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
@@ -20,9 +20,9 @@ export default function CustomProvider(props: InputProps): ReactElement {
       const isValid = await ProviderInstance.isValidProvider(
         url,
         (method: Method, path: string, body: string, headers: any) => {
-          return fetch(path, {
+          return axios(path, {
             method: method,
-            body: body,
+            data: body,
             headers: headers
           })
         }
