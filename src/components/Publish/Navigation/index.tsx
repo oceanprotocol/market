@@ -12,7 +12,7 @@ export default function Navigation(): ReactElement {
     setFieldValue('user.stepCurrent', step)
   }
 
-  function getSuccessClass(step: StepContent) {
+  function getSuccessClass(step: number) {
     const isSuccessMetadata = errors.metadata === undefined
     const isSuccessServices = errors.services === undefined
     isSuccessServices
@@ -24,10 +24,10 @@ export default function Navigation(): ReactElement {
       isSuccessMetadata && isSuccessServices && isSuccessPricing
 
     const isSuccess =
-      (step.step === 1 && isSuccessMetadata) ||
-      (step.step === 2 && isSuccessServices) ||
-      (step.step === 3 && isSuccessPricing) ||
-      (step.step === 4 && isSuccessPreview)
+      (step === 1 && isSuccessMetadata) ||
+      (step === 2 && isSuccessServices) ||
+      (step === 3 && isSuccessPricing) ||
+      (step === 4 && isSuccessPreview)
 
     return isSuccess ? styles.success : null
   }
@@ -41,7 +41,7 @@ export default function Navigation(): ReactElement {
             onClick={() => handleStepClick(step.step)}
             className={`${
               values.user.stepCurrent === step.step ? styles.current : null
-            } ${getSuccessClass(step)}`}
+            } ${getSuccessClass(step.step)}`}
           >
             {step.title}
           </li>
