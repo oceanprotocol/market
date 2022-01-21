@@ -25,22 +25,22 @@ const initialValues: FormAddLiquidity = {
 
 export default function Add({
   setShowAdd,
-  refreshInfo,
   poolAddress,
   totalPoolTokens,
   totalBalance,
   swapFee,
   dtSymbol,
-  dtAddress
+  dtAddress,
+  fetchAllData
 }: {
   setShowAdd: (show: boolean) => void
-  refreshInfo: () => void
   poolAddress: string
   totalPoolTokens: string
   totalBalance: PoolBalance
   swapFee: string
   dtSymbol: string
   dtAddress: string
+  fetchAllData: () => void
 }): ReactElement {
   const { accountId, balance, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
@@ -76,7 +76,7 @@ export default function Add({
       setDtBalance(dtBalance)
     }
     getDtBalance()
-  }, [web3, accountId, dtAddress, coin])
+  }, [web3, accountId, dtAddress, coin, isAssetNetwork])
 
   // Get maximum amount for either OCEAN or datatoken
   useEffect(() => {
@@ -113,7 +113,7 @@ export default function Add({
       //     : await ocean.pool.addDTLiquidity(accountId, poolAddress, `${amount}`)
       // setTxId(result?.transactionHash)
       // resetForm()
-      // refreshInfo()
+      fetchAllData()
     } catch (error) {
       console.error(error.message)
       toast.error(error.message)
