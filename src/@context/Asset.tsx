@@ -8,7 +8,6 @@ import React, {
   ReactNode
 } from 'react'
 import { Asset, Config, LoggerInstance, Purgatory } from '@oceanprotocol/lib'
-import getAssetPurgatoryData from '@utils/purgatory'
 import { CancelToken } from 'axios'
 import { retrieveDDO } from '@utils/aquarius'
 import { getPrice } from '@utils/subgraph'
@@ -83,19 +82,6 @@ function AssetProvider({
     setLoading(false)
   }
 
-  const setPurgatory = useCallback(async (did: string): Promise<void> => {
-    if (!did) return
-
-    try {
-      const result = await getAssetPurgatoryData(did)
-      const isInPurgatory = result?.state === true
-      setIsInPurgatory(isInPurgatory)
-      isInPurgatory && setPurgatoryData(result)
-    } catch (error) {
-      LoggerInstance.error(error)
-    }
-  }, [])
-
   // -----------------------------------
   // Get and set DDO based on passed DID
   // -----------------------------------
@@ -111,9 +97,9 @@ function AssetProvider({
       setDDO(ddo)
       setTitle(ddo.metadata.name)
       setOwner(ddo.nft.owner)
-      // TODO: restore asset purgatory once Aquarius supports it, ref #953
-      // setIsInPurgatory(ddo.purgatory.state === true)
-      await setPurgatory(ddo.id)
+      setIsInPurgatory(ddo.purgatory?.state)
+      setPurgatoryData(ddo.purgatory)
+      // setPurgatory(ddo.purgatory)
     }
     init()
     return () => {
