@@ -100,7 +100,7 @@ export default function Pool(): ReactElement {
   }, [ddo?.chainId, price?.address, accountId])
 
   // Helper: fetch everything
-  const refreshAllLiquidity = useCallback(() => {
+  const fetchAllData = useCallback(() => {
     fetchPoolData()
     fetchUserShares()
   }, [fetchPoolData, fetchUserShares])
@@ -110,13 +110,13 @@ export default function Pool(): ReactElement {
     if (fetchInterval) return
 
     const newInterval = setInterval(() => {
-      refreshAllLiquidity()
+      fetchAllData()
       LoggerInstance.log(
         `[pool] Refetch interval fired after ${refreshInterval / 1000}s`
       )
     }, refreshInterval)
     setFetchInterval(newInterval)
-  }, [fetchInterval, refreshAllLiquidity, refreshInterval])
+  }, [fetchInterval, fetchAllData, refreshInterval])
 
   useEffect(() => {
     return () => {
@@ -125,14 +125,14 @@ export default function Pool(): ReactElement {
   }, [fetchInterval])
 
   //
-  // 0 Fetch all the data
+  // 0 Fetch all the data on mount
   // All further effects depend on the fetched data
   // and only do further data checking and manipulation.
   //
   useEffect(() => {
-    refreshAllLiquidity()
+    fetchAllData()
     initFetchInterval()
-  }, [refreshAllLiquidity, initFetchInterval])
+  }, [fetchAllData, initFetchInterval])
 
   //
   // 1 General Pool Info
@@ -345,7 +345,7 @@ export default function Pool(): ReactElement {
           swapFee={poolInfo.poolFee}
           dtSymbol={poolInfo.dtSymbol}
           dtAddress={ddo?.services[0].datatokenAddress}
-          refreshAllLiquidity={refreshAllLiquidity}
+          fetchAllData={fetchAllData}
         />
       ) : showRemove ? (
         <Remove
@@ -354,7 +354,7 @@ export default function Pool(): ReactElement {
           poolTokens={poolInfoUser.poolShares}
           totalPoolTokens={poolInfo?.totalPoolTokens}
           dtSymbol={poolInfo?.dtSymbol}
-          refreshAllLiquidity={refreshAllLiquidity}
+          fetchAllData={fetchAllData}
         />
       ) : (
         <>

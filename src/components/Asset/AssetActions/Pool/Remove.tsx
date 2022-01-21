@@ -29,14 +29,14 @@ export default function Remove({
   poolTokens,
   totalPoolTokens,
   dtSymbol,
-  refreshAllLiquidity
+  fetchAllData
 }: {
   setShowRemove: (show: boolean) => void
   poolAddress: string
   poolTokens: string
   totalPoolTokens: string
   dtSymbol: string
-  refreshAllLiquidity: () => void
+  fetchAllData: () => void
 }): ReactElement {
   const slippagePresets = ['5', '10', '15', '25', '50']
   const { accountId } = useWeb3()
@@ -74,7 +74,7 @@ export default function Remove({
       //         minOceanAmount
       //       )
       // setTxId(result?.transactionHash)
-      refreshAllLiquidity()
+      fetchAllData()
     } catch (error) {
       LoggerInstance.error(error.message)
       toast.error(error.message)
