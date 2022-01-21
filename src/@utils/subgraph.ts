@@ -830,7 +830,7 @@ export async function getPoolData(
     queryVariables,
     getQueryContext(chainId)
   )
-  return response?.data.pool
+  return response?.data?.pool
 }
 
 export async function getUserPoolShareBalance(
@@ -847,5 +847,5 @@ export async function getUserPoolShareBalance(
     queryVariables,
     getQueryContext(chainId)
   )
-  return response?.data.pool.shares[0]?.shares || '0'
+  return response?.data?.pool?.shares[0]?.shares || '0'
 }
