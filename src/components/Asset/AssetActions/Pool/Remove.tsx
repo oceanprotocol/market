@@ -43,6 +43,7 @@ export default function Remove({
 }): ReactElement {
   const { accountId, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
+
   const [amountPercent, setAmountPercent] = useState('0')
   const [amountMaxPercent, setAmountMaxPercent] = useState('100')
   const [amountPoolShares, setAmountPoolShares] = useState('0')
@@ -52,6 +53,7 @@ export default function Remove({
   const [slippage, setSlippage] = useState<string>('5')
   const [minOceanAmount, setMinOceanAmount] = useState<string>('0')
 
+  // TODO: precision needs to be set based on baseToken decimals
   Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
   const poolInstance = new Pool(web3, LoggerInstance)
 
@@ -89,21 +91,15 @@ export default function Remove({
 
   const getValues = useRef(
     debounce(async (newAmountPoolShares) => {
-      // TODO: check based on pool tokens sent in, what I get out in baseToken.
-      // Seems to be not possible with getAmountInExactOut().
-      // const tokenIn = newAmountPoolShares // TODO: this needs to pool shares?
-      // const swapMarketFee = '' // TODO: which is it? Swap fee or market fee?
-      // const baseTokenAmount = '' // TODO: this is what I want to know, why do I need to pass as param then?
-      // const newAmountOcean = await poolInstance.getAmountInExactOut(
-      //   poolAddress,
-      //   tokenIn,
-      //   baseTokenAddress,
-      //   baseTokenAmount,
-      //   swapMarketFee
-      // )
-      // setAmountOcean(newAmountOcean)
+      const newAmountOcean = await poolInstance.calcSingleOutGivenPoolIn(
+        poolAddress,
+        baseTokenAddress,
+        newAmountPoolShares
+      )
+      setAmountOcean(newAmountOcean)
     }, 150)
   )
+
   // Check and set outputs when amountPoolShares changes
   useEffect(() => {
     if (!accountId || !poolTokens) return
