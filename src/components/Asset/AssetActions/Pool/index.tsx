@@ -33,6 +33,7 @@ interface PoolInfo {
   weightDt: string
   datatokenSymbol: string
   baseTokenSymbol: string
+  baseTokenAddress: string
   totalPoolTokens: string
   totalLiquidityInOcean: Decimal
 }
@@ -162,6 +163,7 @@ export default function Pool(): ReactElement {
       weightDt: getWeight(poolData.datatokenWeight),
       datatokenSymbol: poolData.datatoken.symbol,
       baseTokenSymbol: poolData.baseToken.symbol,
+      baseTokenAddress: poolData.baseToken.address,
       totalPoolTokens: poolData.totalShares,
       totalLiquidityInOcean
     }
@@ -352,7 +354,8 @@ export default function Pool(): ReactElement {
           poolAddress={price?.address}
           poolTokens={poolInfoUser?.poolShares}
           totalPoolTokens={poolInfo?.totalPoolTokens}
-          datatokenSymbol={poolInfo?.datatokenSymbol}
+          baseTokenAddress={poolInfo?.baseTokenAddress}
+          baseTokenSymbol={poolInfo?.baseTokenSymbol}
           fetchAllData={fetchAllData}
         />
       ) : (
