@@ -26,6 +26,7 @@ import { gql, OperationResult } from 'urql'
 import { PoolHistory } from '../../../../@types/subgraph/PoolHistory'
 import { fetchData, getQueryContext } from '@utils/subgraph'
 import styles from './Graph.module.css'
+import Decimal from 'decimal.js'
 
 declare type GraphType = 'liquidity' | 'price'
 
@@ -167,20 +168,24 @@ export default function Graph(): ReactElement {
       }
       LoggerInstance.log('Fired GraphData!')
 
-      const latestTimestamps = [
-        ...dataHistory.poolSnapshots.map((item) => {
-          const date = new Date(item.date * 1000)
-          return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
-        })
-      ]
+      const latestTimestamps = dataHistory.poolSnapshots.map((item) => {
+        const date = new Date(item.date * 1000)
+        return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+      })
 
-      const latestLiquidityHistory = [
-        ...dataHistory.poolSnapshots.map((item) => item.baseTokenLiquidity)
-      ]
+      let baseTokenLiquidityCumulative = '0'
 
-      const latestPriceHistory = [
-        ...dataHistory.poolSnapshots.map((item) => item.datatokenLiquidity)
-      ]
+      const latestLiquidityHistory = dataHistory.poolSnapshots.map((item) => {
+        baseTokenLiquidityCumulative = new Decimal(baseTokenLiquidityCumulative)
+          .add(item.baseTokenLiquidity)
+          .toString()
+
+        return baseTokenLiquidityCumulative
+      })
+
+      const latestPriceHistory = dataHistory.poolSnapshots.map(
+        (item) => item.spotPrice
+      )
 
       setGraphData({
         labels: latestTimestamps.slice(0),
