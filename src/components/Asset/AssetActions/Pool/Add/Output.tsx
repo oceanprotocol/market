@@ -11,14 +11,14 @@ export default function Output({
   newPoolTokens,
   newPoolShare,
   swapFee,
-  dtSymbol,
+  datatokenSymbol,
   totalPoolTokens,
   totalBalance
 }: {
   newPoolTokens: string
   newPoolShare: string
   swapFee: string
-  dtSymbol: string
+  datatokenSymbol: string
   totalPoolTokens: string
   totalBalance: PoolBalance
 }): ReactElement {
@@ -63,7 +63,7 @@ export default function Output({
         <div>
           <p>{titleOut}</p>
           <Token symbol="OCEAN" balance={poolOcean} />
-          <Token symbol={dtSymbol} balance={poolDatatoken} />
+          <Token symbol={datatokenSymbol} balance={poolDatatoken} />
         </div>
       </div>
     </>

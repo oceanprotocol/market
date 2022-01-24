@@ -30,7 +30,7 @@ export default function Add({
   totalPoolTokens,
   totalBalance,
   swapFee,
-  dtSymbol,
+  datatokenSymbol,
   baseTokenSymbol,
   fetchAllData
 }: {
@@ -39,7 +39,7 @@ export default function Add({
   totalPoolTokens: string
   totalBalance: PoolBalance
   swapFee: string
-  dtSymbol: string
+  datatokenSymbol: string
   baseTokenSymbol: string
   fetchAllData: () => void
 }): ReactElement {
@@ -164,7 +164,7 @@ export default function Add({
               newPoolTokens={newPoolTokens}
               newPoolShare={newPoolShare}
               swapFee={swapFee}
-              dtSymbol={dtSymbol}
+              datatokenSymbol={datatokenSymbol}
               totalPoolTokens={totalPoolTokens}
               totalBalance={totalBalance}
             />

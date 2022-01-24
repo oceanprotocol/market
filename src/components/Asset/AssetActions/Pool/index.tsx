@@ -29,9 +29,9 @@ function getWeight(weight: string) {
 
 interface PoolInfo {
   poolFee: string
-  weightOcean: string
+  weightBaseToken: string
   weightDt: string
-  dtSymbol: string
+  datatokenSymbol: string
   baseTokenSymbol: string
   totalPoolTokens: string
   totalLiquidityInOcean: Decimal
@@ -158,9 +158,9 @@ export default function Pool(): ReactElement {
 
     const newPoolInfo = {
       poolFee,
-      weightOcean: getWeight(poolData.baseTokenWeight),
+      weightBaseToken: getWeight(poolData.baseTokenWeight),
       weightDt: getWeight(poolData.datatokenWeight),
-      dtSymbol: poolData.datatoken.symbol,
+      datatokenSymbol: poolData.datatoken.symbol,
       baseTokenSymbol: poolData.baseToken.symbol,
       totalPoolTokens: poolData.totalShares,
       totalLiquidityInOcean
@@ -342,7 +342,7 @@ export default function Pool(): ReactElement {
             datatoken: new Decimal(price?.datatoken).toString()
           }}
           swapFee={poolInfo?.poolFee}
-          dtSymbol={poolInfo?.dtSymbol}
+          datatokenSymbol={poolInfo?.datatokenSymbol}
           baseTokenSymbol={poolInfo?.baseTokenSymbol}
           fetchAllData={fetchAllData}
         />
@@ -350,15 +350,15 @@ export default function Pool(): ReactElement {
         <Remove
           setShowRemove={setShowRemove}
           poolAddress={price?.address}
-          poolTokens={poolInfoUser.poolShares}
+          poolTokens={poolInfoUser?.poolShares}
           totalPoolTokens={poolInfo?.totalPoolTokens}
-          dtSymbol={poolInfo?.dtSymbol}
+          datatokenSymbol={poolInfo?.datatokenSymbol}
           fetchAllData={fetchAllData}
         />
       ) : (
         <>
           <div className={styles.dataToken}>
-            <PriceUnit price="1" symbol={poolInfo?.dtSymbol} /> ={' '}
+            <PriceUnit price="1" symbol={poolInfo?.datatokenSymbol} /> ={' '}
             <PriceUnit
               price={`${price?.value}`}
               symbol={poolInfo?.baseTokenSymbol}
@@ -396,10 +396,10 @@ export default function Pool(): ReactElement {
                 />
               </>
             }
-            ocean={`${poolInfoUser?.liquidity?.ocean}`}
-            oceanSymbol={poolInfo?.baseTokenSymbol}
-            dt={`${poolInfoUser?.liquidity?.datatoken}`}
-            dtSymbol={poolInfo?.dtSymbol}
+            baseTokenValue={`${poolInfoUser?.liquidity?.ocean}`}
+            baseTokenSymbol={poolInfo?.baseTokenSymbol}
+            datatokenValue={`${poolInfoUser?.liquidity?.datatoken}`}
+            datatokenSymbol={poolInfo?.datatokenSymbol}
             poolShares={poolInfoUser?.poolShares}
             conversion={poolInfoUser?.totalLiquidityInOcean}
             highlight
@@ -413,10 +413,10 @@ export default function Pool(): ReactElement {
 
           <TokenList
             title="Pool Creator Statistics"
-            ocean={`${poolInfoOwner?.liquidity?.ocean}`}
-            oceanSymbol={poolInfo?.baseTokenSymbol}
-            dt={`${poolInfoOwner?.liquidity?.datatoken}`}
-            dtSymbol={poolInfo?.dtSymbol}
+            baseTokenValue={`${poolInfoOwner?.liquidity?.ocean}`}
+            baseTokenSymbol={poolInfo?.baseTokenSymbol}
+            datatokenValue={`${poolInfoOwner?.liquidity?.datatoken}`}
+            datatokenSymbol={poolInfo?.datatokenSymbol}
             poolShares={poolInfoOwner?.poolShares}
             conversion={poolInfoOwner?.totalLiquidityInOcean}
           >
@@ -434,18 +434,18 @@ export default function Pool(): ReactElement {
                 {poolInfo?.weightDt && (
                   <span
                     className={styles.titleInfo}
-                    title={`Weight of ${poolInfo?.weightOcean}% OCEAN & ${poolInfo?.weightDt}% ${poolInfo?.dtSymbol}`}
+                    title={`Weight of ${poolInfo?.weightBaseToken}% ${poolInfo?.baseTokenSymbol} & ${poolInfo?.weightDt}% ${poolInfo?.datatokenSymbol}`}
                   >
-                    {poolInfo?.weightOcean}/{poolInfo?.weightDt}
+                    {poolInfo?.weightBaseToken}/{poolInfo?.weightDt}
                   </span>
                 )}
                 <Graph />
               </>
             }
-            ocean={`${price?.ocean}`}
-            oceanSymbol={poolInfo?.baseTokenSymbol}
-            dt={`${price?.datatoken}`}
-            dtSymbol={poolInfo?.dtSymbol}
+            baseTokenValue={`${price?.ocean}`}
+            baseTokenSymbol={poolInfo?.baseTokenSymbol}
+            datatokenValue={`${price?.datatoken}`}
+            datatokenSymbol={poolInfo?.datatokenSymbol}
             poolShares={poolInfo?.totalPoolTokens}
             conversion={poolInfo?.totalLiquidityInOcean}
             showTVLLabel

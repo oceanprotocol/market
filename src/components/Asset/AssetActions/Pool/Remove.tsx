@@ -28,14 +28,14 @@ export default function Remove({
   poolAddress,
   poolTokens,
   totalPoolTokens,
-  dtSymbol,
+  datatokenSymbol,
   fetchAllData
 }: {
   setShowRemove: (show: boolean) => void
   poolAddress: string
   poolTokens: string
   totalPoolTokens: string
-  dtSymbol: string
+  datatokenSymbol: string
   fetchAllData: () => void
 }): ReactElement {
   const slippagePresets = ['5', '10', '15', '25', '50']
@@ -245,7 +245,7 @@ export default function Remove({
           {isAdvanced === true ? (
             <>
               <Token symbol="OCEAN" balance={minOceanAmount} />
-              <Token symbol={dtSymbol} balance={minDatatokenAmount} />
+              <Token symbol={datatokenSymbol} balance={minDatatokenAmount} />
             </>
           ) : (
             <Token symbol="OCEAN" balance={minOceanAmount} />
