@@ -13,7 +13,7 @@ import DebugOutput from '@shared/DebugOutput'
 import { useWeb3 } from '@context/Web3'
 import { useAsset } from '@context/Asset'
 import content from '../../../../../../content/price.json'
-import { Datatoken } from '@oceanprotocol/lib'
+import { Datatoken, LoggerInstance, Pool } from '@oceanprotocol/lib'
 
 export interface FormAddLiquidity {
   amount: number
@@ -53,6 +53,7 @@ export default function Add({
   const [newPoolTokens, setNewPoolTokens] = useState('0')
   const [newPoolShare, setNewPoolShare] = useState('0')
   const [isWarningAccepted, setIsWarningAccepted] = useState(false)
+  const [tokenInAddress, setTokenInAddress] = useState<string>()
 
   // Live validation rules
   // https://github.com/jquense/yup#number
@@ -80,37 +81,56 @@ export default function Add({
 
   // Get maximum amount for either OCEAN or datatoken
   useEffect(() => {
-    if (!accountId || !isAssetNetwork || !poolAddress) return
+    if (!web3 || !accountId || !isAssetNetwork || !poolAddress) return
 
     async function getMaximum() {
-      // const amountMaxPool =
-      //   coin === 'OCEAN'
-      //     ? await ocean.pool.getOceanMaxAddLiquidity(poolAddress)
-      //     : await ocean.pool.getDTMaxAddLiquidity(poolAddress)
-      // const amountMax =
-      //   coin === 'OCEAN'
-      //     ? Number(balance.ocean) > Number(amountMaxPool)
-      //       ? amountMaxPool
-      //       : balance.ocean
-      //     : Number(dtBalance) > Number(amountMaxPool)
-      //     ? amountMaxPool
-      //     : dtBalance
-      // setAmountMax(Number(amountMax).toFixed(3))
+      const poolInstance = new Pool(web3, LoggerInstance)
+      const baseTokenAddress = await poolInstance.getBasetoken(poolAddress)
+
+      const tokenInAddress = coin === 'OCEAN' ? baseTokenAddress : dtAddress
+      setTokenInAddress(tokenInAddress)
+
+      const amountMaxPool = await poolInstance.getReserve(
+        poolAddress,
+        tokenInAddress
+      )
+
+      // coin === 'OCEAN'
+      //   ? await poolInstance.getOceanMaxAddLiquidity(poolAddress)
+      //   : await poolInstance.getDTMaxAddLiquidity(poolAddress)
+      const amountMax =
+        coin === 'OCEAN'
+          ? Number(balance.ocean) > Number(amountMaxPool)
+            ? amountMaxPool
+            : balance.ocean
+          : Number(dtBalance) > Number(amountMaxPool)
+          ? amountMaxPool
+          : dtBalance
+      setAmountMax(Number(amountMax).toFixed(3))
     }
     getMaximum()
-  }, [accountId, isAssetNetwork, poolAddress, coin, dtBalance, balance.ocean])
+  }, [
+    web3,
+    accountId,
+    isAssetNetwork,
+    poolAddress,
+    dtAddress,
+    coin,
+    dtBalance,
+    balance.ocean
+  ])
 
   // Submit
   async function handleAddLiquidity(amount: number, resetForm: () => void) {
+    const poolInstance = new Pool(web3, LoggerInstance)
+
     try {
-      // const result =
-      //   coin === 'OCEAN'
-      //     ? await ocean.pool.addOceanLiquidity(
-      //         accountId,
-      //         poolAddress,
-      //         `${amount}`
-      //       )
-      //     : await ocean.pool.addDTLiquidity(accountId, poolAddress, `${amount}`)
+      // const result = await poolInstance.joinPool(
+      //   accountId,
+      //   poolAddress,
+      //   poolAmountOut,
+      //   amountMax
+      // )
       // setTxId(result?.transactionHash)
       // resetForm()
       fetchAllData()
@@ -139,6 +159,7 @@ export default function Add({
             <div className={styles.addInput}>
               {isWarningAccepted ? (
                 <FormAdd
+                  tokenInAddress={tokenInAddress}
                   coin={coin}
                   dtBalance={dtBalance}
                   dtSymbol={dtSymbol}

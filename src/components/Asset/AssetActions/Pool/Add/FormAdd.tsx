@@ -16,8 +16,10 @@ import { useWeb3 } from '@context/Web3'
 import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
 import { useAsset } from '@context/Asset'
+import { LoggerInstance, Pool } from '@oceanprotocol/lib'
 
 export default function FormAdd({
+  tokenInAddress,
   coin,
   dtBalance,
   dtSymbol,
@@ -30,6 +32,7 @@ export default function FormAdd({
   setNewPoolTokens,
   setNewPoolShare
 }: {
+  tokenInAddress: string
   coin: string
   dtBalance: string
   dtSymbol: string
@@ -67,39 +70,42 @@ export default function FormAdd({
 
   useEffect(() => {
     async function calculatePoolShares() {
-      // if (!web3) return
-      // const tokenInAddress =
-      //   coin === 'OCEAN' ? ocean.pool.oceanAddress : ocean.pool.dtAddress
-      // if (!values.amount || !tokenInAddress) {
-      //   setNewPoolTokens('0')
-      //   setNewPoolShare('0')
-      //   return
-      // }
-      // if (Number(values.amount) > Number(amountMax)) return
-      // const poolTokens = await ocean.pool.calcPoolOutGivenSingleIn(
-      //   poolAddress,
-      //   tokenInAddress,
-      //   `${values.amount}`
-      // )
-      // setNewPoolTokens(poolTokens)
-      // const newPoolShareDecimal =
-      //   isValidNumber(poolTokens) && isValidNumber(totalPoolTokens)
-      //     ? new Decimal(poolTokens)
-      //         .dividedBy(
-      //           new Decimal(totalPoolTokens).plus(new Decimal(poolTokens))
-      //         )
-      //         .mul(100)
-      //         .toString()
-      //     : '0'
-      // totalBalance && setNewPoolShare(newPoolShareDecimal)
+      if (!web3) return
+
+      if (!values.amount || !tokenInAddress) {
+        setNewPoolTokens('0')
+        setNewPoolShare('0')
+        return
+      }
+      if (Number(values.amount) > Number(amountMax)) return
+
+      const poolInstance = new Pool(web3, LoggerInstance)
+
+      const poolTokens = await poolInstance.calcPoolOutGivenSingleIn(
+        poolAddress,
+        tokenInAddress,
+        `${values.amount}`
+      )
+      setNewPoolTokens(poolTokens)
+      const newPoolShareDecimal =
+        isValidNumber(poolTokens) && isValidNumber(totalPoolTokens)
+          ? new Decimal(poolTokens)
+              .dividedBy(
+                new Decimal(totalPoolTokens).plus(new Decimal(poolTokens))
+              )
+              .mul(100)
+              .toString()
+          : '0'
+      totalBalance && setNewPoolShare(newPoolShareDecimal)
     }
     calculatePoolShares()
   }, [
+    tokenInAddress,
+    web3,
     values.amount,
     totalBalance,
     totalPoolTokens,
     amountMax,
-    coin,
     poolAddress,
     setNewPoolTokens,
     setNewPoolShare
