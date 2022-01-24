@@ -53,12 +53,12 @@ export default function Remove({
   const [minOceanAmount, setMinOceanAmount] = useState<string>('0')
 
   Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
+  const poolInstance = new Pool(web3, LoggerInstance)
 
   async function handleRemoveLiquidity() {
     setIsLoading(true)
 
     try {
-      const poolInstance = new Pool(web3, LoggerInstance)
       const result = await poolInstance.exitswapPoolAmountIn(
         accountId,
         poolAddress,
@@ -89,11 +89,19 @@ export default function Remove({
 
   const getValues = useRef(
     debounce(async (newAmountPoolShares) => {
-      // const amountOcean = await ocean.pool.getOceanRemovedforPoolShares(
+      // TODO: check based on pool tokens sent in, what I get out in baseToken.
+      // Seems to be not possible with getAmountInExactOut().
+      // const tokenIn = newAmountPoolShares // TODO: this needs to pool shares?
+      // const swapMarketFee = '' // TODO: which is it? Swap fee or market fee?
+      // const baseTokenAmount = '' // TODO: this is what I want to know, why do I need to pass as param then?
+      // const newAmountOcean = await poolInstance.getAmountInExactOut(
       //   poolAddress,
-      //   newAmountPoolShares
+      //   tokenIn,
+      //   baseTokenAddress,
+      //   baseTokenAmount,
+      //   swapMarketFee
       // )
-      // setAmountOcean(amountOcean)
+      // setAmountOcean(newAmountOcean)
     }, 150)
   )
   // Check and set outputs when amountPoolShares changes

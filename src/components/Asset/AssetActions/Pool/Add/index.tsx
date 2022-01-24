@@ -14,7 +14,6 @@ import { useWeb3 } from '@context/Web3'
 import { useAsset } from '@context/Asset'
 import content from '../../../../../../content/price.json'
 import { LoggerInstance, Pool } from '@oceanprotocol/lib'
-import { getOceanConfig } from '@utils/ocean'
 
 export interface FormAddLiquidity {
   amount: number
