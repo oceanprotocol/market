@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import React, {
   ChangeEvent,
   ReactElement,
@@ -6,14 +5,24 @@ import React, {
   useEffect,
   useState
 } from 'react'
-import { Line, defaults, Bar } from 'react-chartjs-2'
 import {
+  Chart as ChartJS,
+  LinearScale,
+  CategoryScale,
+  PointElement,
+  Tooltip,
   ChartData,
-  ChartDataSets,
   ChartOptions,
-  ChartTooltipItem,
-  ChartTooltipOptions
+  defaults,
+  ChartDataset,
+  TooltipOptions,
+  TooltipItem,
+  BarElement,
+  LineElement,
+  LineController,
+  BarController
 } from 'chart.js'
+import { Chart } from 'react-chartjs-2'
 import Loader from '@shared/atoms/Loader'
 import { formatPrice } from '@shared/Price/PriceUnit'
 import { useUserPreferences } from '@context/UserPreferences'
@@ -28,18 +37,28 @@ import { fetchData, getQueryContext } from '@utils/subgraph'
 import styles from './Graph.module.css'
 import Decimal from 'decimal.js'
 
+ChartJS.register(
+  LineElement,
+  BarElement,
+  PointElement,
+  LinearScale,
+  CategoryScale,
+  // Title,
+  Tooltip,
+  LineController,
+  BarController
+)
+
 declare type GraphType = 'liquidity' | 'price' | 'volume'
 
 // Chart.js global defaults
-defaults.global.defaultFontFamily = `'Sharp Sans', -apple-system, BlinkMacSystemFont,
-'Segoe UI', Helvetica, Arial, sans-serif`
-defaults.global.animation = { easing: 'easeInOutQuart', duration: 1000 }
+defaults.font.family = `'Sharp Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif`
+defaults.animation = { easing: 'easeInOutQuart', duration: 1000 }
 
 const REFETCH_INTERVAL = 10000
 
-const lineStyle: Partial<ChartDataSets> = {
+const lineStyle: Partial<ChartDataset> = {
   fill: false,
-  lineTension: 0.1,
   borderWidth: 2,
   pointBorderWidth: 0,
   pointRadius: 0,
@@ -49,15 +68,10 @@ const lineStyle: Partial<ChartDataSets> = {
   pointHoverBackgroundColor: '#ff4092'
 }
 
-const tooltipOptions: Partial<ChartTooltipOptions> = {
+const tooltipOptions: Partial<TooltipOptions> = {
   intersect: false,
-  titleFontStyle: 'normal',
-  titleFontSize: 10,
-  bodyFontSize: 12,
-  bodyFontStyle: 'bold',
   displayColors: false,
-  xPadding: 10,
-  yPadding: 10,
+  padding: 10,
   cornerRadius: 3,
   borderWidth: 1,
   caretSize: 7
@@ -73,37 +87,23 @@ function getOptions(locale: string, isDarkMode: boolean): ChartOptions {
         bottom: 10
       }
     },
-    tooltips: {
-      ...tooltipOptions,
-      backgroundColor: isDarkMode ? `#141414` : `#fff`,
-      titleFontColor: isDarkMode ? `#e2e2e2` : `#303030`,
-      bodyFontColor: isDarkMode ? `#fff` : `#141414`,
-      borderColor: isDarkMode ? `#41474e` : `#e2e2e2`,
-      callbacks: {
-        label: (tooltipItem: ChartTooltipItem) =>
-          `${formatPrice(`${tooltipItem.yLabel}`, locale)} OCEAN`
+    plugins: {
+      tooltip: {
+        ...tooltipOptions,
+        backgroundColor: isDarkMode ? `#141414` : `#fff`,
+        titleColor: isDarkMode ? `#e2e2e2` : `#303030`,
+        bodyColor: isDarkMode ? `#fff` : `#141414`,
+        borderColor: isDarkMode ? `#41474e` : `#e2e2e2`,
+        callbacks: {
+          label: (tooltipItem: TooltipItem<any>) =>
+            `${formatPrice(`${tooltipItem.formattedValue}`, locale)} OCEAN`
+        }
       }
     },
-    legend: {
-      display: false
-    },
-    hover: {
-      intersect: false,
-      animationDuration: 0
-    },
+    hover: { intersect: false },
     scales: {
-      yAxes: [
-        {
-          display: false
-          // gridLines: {
-          //   drawBorder: false,
-          //   color: isDarkMode ? '#303030' : '#e2e2e2',
-          //   zeroLineColor: isDarkMode ? '#303030' : '#e2e2e2'
-          // },
-          // ticks: { display: false }
-        }
-      ],
-      xAxes: [{ display: false, gridLines: { display: true } }]
+      y: { display: false },
+      x: { display: false }
     }
   }
 }
@@ -126,6 +126,7 @@ export default function Graph(): ReactElement {
   const { locale } = useUserPreferences()
   const { price, ddo } = useAsset()
   const darkMode = useDarkMode(false, darkModeConfig)
+
   const [options, setOptions] = useState<ChartOptions>()
   const [graphType, setGraphType] = useState<GraphType>('liquidity')
   const [error, setError] = useState<Error>()
@@ -214,8 +215,7 @@ export default function Graph(): ReactElement {
             ...lineStyle,
             label: 'Liquidity (OCEAN)',
             data,
-            borderColor: `#8b98a9`,
-            pointBackgroundColor: `#8b98a9`
+            borderColor: `#8b98a9`
           }
         ]
       })
@@ -256,11 +256,14 @@ export default function Graph(): ReactElement {
             ))}
           </nav>
 
-          {graphType === 'volume' ? (
-            <Bar height={70} data={graphData} options={options} />
-          ) : (
-            <Line height={70} data={graphData} options={options} />
-          )}
+          <Chart
+            type={graphType === 'volume' ? 'bar' : 'line'}
+            width={416}
+            height={80}
+            data={graphData}
+            options={options}
+            redraw
+          />
         </>
       )}
     </div>
