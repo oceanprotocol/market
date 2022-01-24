@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useState
 } from 'react'
-import { Line, defaults } from 'react-chartjs-2'
+import { Line, defaults, Bar } from 'react-chartjs-2'
 import {
   ChartData,
   ChartDataSets,
@@ -28,7 +28,7 @@ import { fetchData, getQueryContext } from '@utils/subgraph'
 import styles from './Graph.module.css'
 import Decimal from 'decimal.js'
 
-declare type GraphType = 'liquidity' | 'price'
+declare type GraphType = 'liquidity' | 'price' | 'volume'
 
 // Chart.js global defaults
 defaults.global.defaultFontFamily = `'Sharp Sans', -apple-system, BlinkMacSystemFont,
@@ -108,7 +108,7 @@ function getOptions(locale: string, isDarkMode: boolean): ChartOptions {
   }
 }
 
-const graphTypes = ['Liquidity', 'Price']
+const graphTypes = ['Liquidity', 'Price', 'Volume']
 
 const poolHistoryQuery = gql`
   query PoolHistory($id: String!) {
@@ -117,6 +117,7 @@ const poolHistoryQuery = gql`
       spotPrice
       baseTokenLiquidity
       datatokenLiquidity
+      swapVolume
     }
   }
 `
@@ -168,35 +169,51 @@ export default function Graph(): ReactElement {
       }
       LoggerInstance.log('Fired GraphData!')
 
-      const latestTimestamps = dataHistory.poolSnapshots.map((item) => {
+      const timestamps = dataHistory.poolSnapshots.map((item) => {
         const date = new Date(item.date * 1000)
         return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
       })
 
       let baseTokenLiquidityCumulative = '0'
-
-      const latestLiquidityHistory = dataHistory.poolSnapshots.map((item) => {
+      const liquidityHistory = dataHistory.poolSnapshots.map((item) => {
         baseTokenLiquidityCumulative = new Decimal(baseTokenLiquidityCumulative)
           .add(item.baseTokenLiquidity)
           .toString()
-
         return baseTokenLiquidityCumulative
       })
 
-      const latestPriceHistory = dataHistory.poolSnapshots.map(
+      const priceHistory = dataHistory.poolSnapshots.map(
         (item) => item.spotPrice
       )
 
+      let volumeCumulative = '0'
+      const volumeHistory = dataHistory.poolSnapshots.map((item) => {
+        volumeCumulative = new Decimal(volumeCumulative)
+          .add(item.swapVolume)
+          .toString()
+        return baseTokenLiquidityCumulative
+      })
+
+      let data
+      switch (graphType) {
+        case 'price':
+          data = priceHistory.slice(0)
+          break
+        case 'volume':
+          data = volumeHistory.slice(0)
+          break
+        default:
+          data = liquidityHistory.slice(0)
+          break
+      }
+
       setGraphData({
-        labels: latestTimestamps.slice(0),
+        labels: timestamps.slice(0),
         datasets: [
           {
             ...lineStyle,
             label: 'Liquidity (OCEAN)',
-            data:
-              graphType === 'liquidity'
-                ? latestLiquidityHistory.slice(0)
-                : latestPriceHistory.slice(0),
+            data,
             borderColor: `#8b98a9`,
             pointBackgroundColor: `#8b98a9`
           }
@@ -238,7 +255,12 @@ export default function Graph(): ReactElement {
               </Button>
             ))}
           </nav>
-          <Line height={70} data={graphData} options={options} />
+
+          {graphType === 'volume' ? (
+            <Bar height={70} data={graphData} options={options} />
+          ) : (
+            <Line height={70} data={graphData} options={options} />
+          )}
         </>
       )}
     </div>
