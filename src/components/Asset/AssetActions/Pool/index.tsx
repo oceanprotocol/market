@@ -32,7 +32,7 @@ interface PoolInfo {
   weightOcean: string
   weightDt: string
   dtSymbol: string
-  oceanSymbol: string
+  baseTokenSymbol: string
   totalPoolTokens: string
   totalLiquidityInOcean: Decimal
 }
@@ -161,7 +161,7 @@ export default function Pool(): ReactElement {
       weightOcean: getWeight(poolData.baseTokenWeight),
       weightDt: getWeight(poolData.datatokenWeight),
       dtSymbol: poolData.datatoken.symbol,
-      oceanSymbol: poolData.baseToken.symbol,
+      baseTokenSymbol: poolData.baseToken.symbol,
       totalPoolTokens: poolData.totalShares,
       totalLiquidityInOcean
     }
@@ -327,7 +327,6 @@ export default function Pool(): ReactElement {
   //
   useEffect(() => {
     if (!owner || !accountId) return
-
     setIsRemoveDisabled(isInPurgatory && owner === accountId)
   }, [isInPurgatory, owner, accountId])
 
@@ -337,14 +336,14 @@ export default function Pool(): ReactElement {
         <Add
           setShowAdd={setShowAdd}
           poolAddress={price?.address}
-          totalPoolTokens={poolInfo.totalPoolTokens}
+          totalPoolTokens={poolInfo?.totalPoolTokens}
           totalBalance={{
             ocean: new Decimal(price?.ocean).toString(),
             datatoken: new Decimal(price?.datatoken).toString()
           }}
-          swapFee={poolInfo.poolFee}
-          dtSymbol={poolInfo.dtSymbol}
-          dtAddress={ddo?.services[0].datatokenAddress}
+          swapFee={poolInfo?.poolFee}
+          dtSymbol={poolInfo?.dtSymbol}
+          baseTokenSymbol={poolInfo?.baseTokenSymbol}
           fetchAllData={fetchAllData}
         />
       ) : showRemove ? (
@@ -362,7 +361,7 @@ export default function Pool(): ReactElement {
             <PriceUnit price="1" symbol={poolInfo?.dtSymbol} /> ={' '}
             <PriceUnit
               price={`${price?.value}`}
-              symbol={poolInfo?.oceanSymbol}
+              symbol={poolInfo?.baseTokenSymbol}
             />
             <Tooltip content={content.pool.tooltips.price} />
             <div className={styles.dataTokenLinks}>
@@ -398,7 +397,7 @@ export default function Pool(): ReactElement {
               </>
             }
             ocean={`${poolInfoUser?.liquidity?.ocean}`}
-            oceanSymbol={poolInfo?.oceanSymbol}
+            oceanSymbol={poolInfo?.baseTokenSymbol}
             dt={`${poolInfoUser?.liquidity?.datatoken}`}
             dtSymbol={poolInfo?.dtSymbol}
             poolShares={poolInfoUser?.poolShares}
@@ -415,7 +414,7 @@ export default function Pool(): ReactElement {
           <TokenList
             title="Pool Creator Statistics"
             ocean={`${poolInfoOwner?.liquidity?.ocean}`}
-            oceanSymbol={poolInfo?.oceanSymbol}
+            oceanSymbol={poolInfo?.baseTokenSymbol}
             dt={`${poolInfoOwner?.liquidity?.datatoken}`}
             dtSymbol={poolInfo?.dtSymbol}
             poolShares={poolInfoOwner?.poolShares}
@@ -444,7 +443,7 @@ export default function Pool(): ReactElement {
               </>
             }
             ocean={`${price?.ocean}`}
-            oceanSymbol={poolInfo?.oceanSymbol}
+            oceanSymbol={poolInfo?.baseTokenSymbol}
             dt={`${price?.datatoken}`}
             dtSymbol={poolInfo?.dtSymbol}
             poolShares={poolInfo?.totalPoolTokens}

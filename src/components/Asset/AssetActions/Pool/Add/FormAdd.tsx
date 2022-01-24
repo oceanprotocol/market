@@ -8,11 +8,9 @@ import {
   useFormikContext
 } from 'formik'
 import Button from '@shared/atoms/Button'
-import CoinSelect from '../CoinSelect'
 import { FormAddLiquidity } from '.'
 import UserLiquidity from '../../UserLiquidity'
 import { useWeb3 } from '@context/Web3'
-
 import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
 import { useAsset } from '@context/Asset'
@@ -20,11 +18,8 @@ import { LoggerInstance, Pool } from '@oceanprotocol/lib'
 
 export default function FormAdd({
   tokenInAddress,
-  coin,
-  dtBalance,
-  dtSymbol,
+  tokenInSymbol,
   amountMax,
-  setCoin,
   setAmount,
   totalPoolTokens,
   totalBalance,
@@ -33,11 +28,8 @@ export default function FormAdd({
   setNewPoolShare
 }: {
   tokenInAddress: string
-  coin: string
-  dtBalance: string
-  dtSymbol: string
+  tokenInSymbol: string
   amountMax: string
-  setCoin: (value: string) => void
   setAmount: (value: string) => void
   totalPoolTokens: string
   totalBalance: PoolBalance
@@ -111,16 +103,12 @@ export default function FormAdd({
     setNewPoolShare
   ])
 
-  useEffect(() => {
-    setFieldValue('amount', undefined)
-  }, [coin])
-
   return (
     <>
       <UserLiquidity
-        amount={coin === 'OCEAN' ? balance.ocean : dtBalance}
+        amount={balance.ocean}
         amountMax={amountMax}
-        symbol={coin}
+        symbol={tokenInSymbol}
       />
 
       <Field name="amount">
@@ -138,13 +126,7 @@ export default function FormAdd({
             min="0"
             value={`${values.amount}`}
             step="any"
-            prefix={
-              <CoinSelect
-                dtSymbol={dtSymbol}
-                setCoin={setCoin}
-                disabled={!web3 || !isAssetNetwork}
-              />
-            }
+            prefix={tokenInSymbol}
             placeholder="0"
             field={field}
             form={form}
@@ -154,7 +136,7 @@ export default function FormAdd({
         )}
       </Field>
 
-      {(Number(balance.ocean) || dtBalance) > (values.amount || 0) && (
+      {Number(balance.ocean) && (
         <Button
           className={styles.buttonMax}
           style="text"

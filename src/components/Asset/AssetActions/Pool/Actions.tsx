@@ -50,7 +50,7 @@ export default function Actions({
           <TokenApproval
             actionButton={actionButton}
             amount={amount}
-            coin={coin}
+            coin={coin || 'OCEAN'}
             disabled={isDisabled}
           />
         ) : (
