@@ -85,7 +85,9 @@ module.exports = {
       options: {
         sitemap: `${
           appConfig.metadataCacheUri
-        }/sitemap?base=${encodeURIComponent(siteContent.site.siteUrl)}`,
+        }/api/v1/aquarius/assets/sitemap?base=${encodeURIComponent(
+          siteContent.site.siteUrl
+        )}`,
         env: {
           development: {
             policy: [{ userAgent: '*', disallow: ['/'] }]
