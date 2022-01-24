@@ -86,7 +86,6 @@ export default function Add({
     async function getMaximum() {
       const poolInstance = new Pool(web3, LoggerInstance)
       const baseTokenAddress = await poolInstance.getBasetoken(poolAddress)
-
       const tokenInAddress = coin === 'OCEAN' ? baseTokenAddress : dtAddress
       setTokenInAddress(tokenInAddress)
 
@@ -123,15 +122,17 @@ export default function Add({
   // Submit
   async function handleAddLiquidity(amount: number, resetForm: () => void) {
     const poolInstance = new Pool(web3, LoggerInstance)
+    const minPoolAmountOut = '0' // ? TODO: how to get?
 
     try {
-      // const result = await poolInstance.joinPool(
-      //   accountId,
-      //   poolAddress,
-      //   poolAmountOut,
-      //   amountMax
-      // )
-      // setTxId(result?.transactionHash)
+      const result = await poolInstance.joinswapExternAmountIn(
+        accountId,
+        poolAddress,
+        tokenInAddress,
+        `${amount}`,
+        minPoolAmountOut
+      )
+      setTxId(result?.transactionHash)
       // resetForm()
       fetchAllData()
     } catch (error) {

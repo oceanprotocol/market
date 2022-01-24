@@ -4,6 +4,7 @@ import { useWeb3 } from '@context/Web3'
 import Decimal from 'decimal.js'
 import { getOceanConfig } from '@utils/ocean'
 import { ButtonApprove } from './ButtonApprove'
+import { Datatoken } from '@oceanprotocol/lib'
 
 export default function TokenApproval({
   actionButton,
@@ -19,7 +20,7 @@ export default function TokenApproval({
   const { ddo, price, isAssetNetwork } = useAsset()
   const [tokenApproved, setTokenApproved] = useState(false)
   const [loading, setLoading] = useState(false)
-  const { accountId } = useWeb3()
+  const { web3, accountId } = useWeb3()
 
   const config = getOceanConfig(ddo.chainId)
 
@@ -29,34 +30,39 @@ export default function TokenApproval({
       : ddo.services[0].datatokenAddress
   const spender = price.address
 
-  const checkTokenApproval = useCallback(async () => {
-    // if (!tokenAddress || !spender || !isAssetNetwork || !amount) return
-    // const allowance = await ocean.datatokens.allowance(
-    //   tokenAddress,
-    //   accountId,
-    //   spender
-    // )
-    // amount &&
-    //   new Decimal(amount).greaterThan(new Decimal('0')) &&
-    //   setTokenApproved(
-    //     new Decimal(allowance).greaterThanOrEqualTo(new Decimal(amount))
-    //   )
-  }, [tokenAddress, spender, accountId, amount, isAssetNetwork])
+  // TODO: how to check if token is approved as .allowance does not exist?
+  // const checkTokenApproval = useCallback(async () => {
+  //   if (!web3 || !tokenAddress || !spender || !isAssetNetwork || !amount) return
 
-  useEffect(() => {
-    checkTokenApproval()
-  }, [checkTokenApproval])
+  //   const datatokenInstance = new Datatoken(web3)
+  //   const allowance = await datatokenInstance.allowance(
+  //     tokenAddress,
+  //     accountId,
+  //     spender
+  //   )
+  //   amount &&
+  //     new Decimal(amount).greaterThan(new Decimal('0')) &&
+  //     setTokenApproved(
+  //       new Decimal(allowance).greaterThanOrEqualTo(new Decimal(amount))
+  //     )
+  // }, [web3, tokenAddress, spender, accountId, amount, isAssetNetwork])
+
+  // useEffect(() => {
+  //   checkTokenApproval()
+  // }, [checkTokenApproval])
 
   async function approveTokens(amount: string) {
     setLoading(true)
 
     try {
-      // await ocean.datatokens.approve(tokenAddress, spender, amount, accountId)
+      const datatokenInstance = new Datatoken(web3)
+      await datatokenInstance.approve(tokenAddress, spender, amount, accountId)
+      setTokenApproved(true)
     } catch (error) {
       setLoading(false)
     }
 
-    await checkTokenApproval()
+    // await checkTokenApproval()
     setLoading(false)
   }
 
