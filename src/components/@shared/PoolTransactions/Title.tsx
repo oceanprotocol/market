@@ -10,22 +10,27 @@ function getTitle(row: PoolTransaction, locale: string) {
 
   switch (row.type) {
     case 'SWAP': {
-      const { datatoken, baseToken } = row
+      const { datatoken, baseToken, datatokenValue, baseTokenValue } = row
+
       const outToken =
-        (datatoken.value < 0 && datatoken.value) ||
-        (baseToken.value < 0 && baseToken.value)
-      const outTokenSymbol = outToken?.token.symbol
+        (datatokenValue < 0 && datatoken) || (baseTokenValue < 0 && baseToken)
+      const outTokenValue =
+        (datatokenValue < 0 && datatokenValue) ||
+        (baseTokenValue < 0 && baseTokenValue)
+      const outTokenSymbol = outToken?.symbol
 
       const inToken =
-        (datatoken.value > 0 && datatoken.value) ||
-        (baseToken.value > 0 && baseToken.value)
-      const inTokenSymbol = inToken?.token.symbol
+        (datatokenValue > 0 && datatoken) || (baseTokenValue > 0 && baseToken)
+      const inTokenValue =
+        (datatokenValue > 0 && datatokenValue) ||
+        (baseTokenValue > 0 && baseTokenValue)
+      const inTokenSymbol = inToken?.symbol
 
       title += `Swap ${formatPrice(
-        Math.abs(inToken?.value).toString(),
+        Math.abs(inTokenValue).toString(),
         locale
       )}${inTokenSymbol} for ${formatPrice(
-        Math.abs(outToken?.value).toString(),
+        Math.abs(outTokenValue).toString(),
         locale
       )}${outTokenSymbol}`
 
@@ -33,25 +38,27 @@ function getTitle(row: PoolTransaction, locale: string) {
     }
     case 'SETUP': {
       const firstToken = row.baseToken
-      const firstTokenSymbol = firstToken?.token.symbol
+      const firstTokenSymbol = firstToken?.symbol
       const secondToken = row.datatoken
-      const secondTokenSymbol = secondToken?.token.symbol
+      const secondTokenSymbol = secondToken?.symbol
       title += `Create pool with ${formatPrice(
-        Math.abs(firstToken?.value).toString(),
+        Math.abs(row.baseTokenValue).toString(),
         locale
       )}${firstTokenSymbol} and ${formatPrice(
-        Math.abs(secondToken?.value).toString(),
+        Math.abs(row.datatokenValue).toString(),
         locale
       )}${secondTokenSymbol}`
       break
     }
     case 'JOIN':
     case 'EXIT': {
-      const tokenMoved = row.baseToken.value > 0 ? row.baseToken : row.datatoken
-      const tokenSymbol = tokenMoved.token.symbol
+      const tokenMoved = row.baseTokenValue > 0 ? row.baseToken : row.datatoken
+      const tokenValueMoved =
+        row.baseTokenValue > 0 ? row.baseTokenValue : row.datatokenValue
+      const tokenSymbol = tokenMoved.symbol
 
       title += `${row.type === 'JOIN' ? 'Add' : 'Remove'} ${formatPrice(
-        Math.abs(tokenMoved.value).toString(),
+        Math.abs(tokenValueMoved).toString(),
         locale
       )}${tokenSymbol}`
 
