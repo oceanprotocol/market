@@ -27,7 +27,7 @@ export function getOptions(locale: string, isDarkMode: boolean): ChartOptions {
     },
     hover: { intersect: false },
     scales: {
-      y: { display: false },
+      y: { display: false, beginAtZero: true },
       x: { display: false }
     }
   }

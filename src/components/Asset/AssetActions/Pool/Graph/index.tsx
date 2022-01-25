@@ -1,6 +1,6 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import { ChartData, ChartOptions } from 'chart.js'
-import { Chart } from 'react-chartjs-2'
+import { Bar, Chart, Line } from 'react-chartjs-2'
 import Loader from '@shared/atoms/Loader'
 import { useUserPreferences } from '@context/UserPreferences'
 import useDarkMode from 'use-dark-mode'
@@ -26,7 +26,7 @@ export default function Graph(): ReactElement {
   const [error, setError] = useState<Error>()
   const [isLoading, setIsLoading] = useState(true)
   const [dataHistory, setDataHistory] = useState<PoolHistory>()
-  const [graphData, setGraphData] = useState<ChartData>()
+  const [graphData, setGraphData] = useState<ChartData<any>>()
   const [graphFetchInterval, setGraphFetchInterval] = useState<NodeJS.Timeout>()
 
   // Helper: fetch pool snapshots data
@@ -71,10 +71,10 @@ export default function Graph(): ReactElement {
   // 0 Get Graph options
   //
   useEffect(() => {
-    LoggerInstance.log('[pool graph] Fired getOptions() for color scheme.')
+    LoggerInstance.log('[pool graph] Fired getOptions().')
     const options = getOptions(locale, darkMode.value)
     setOptions(options)
-  }, [locale, darkMode.value])
+  }, [locale, darkMode.value, graphType])
 
   //
   // 1 Fetch all the data on mount
@@ -112,7 +112,7 @@ export default function Graph(): ReactElement {
       volumeCumulative = new Decimal(volumeCumulative)
         .add(item.swapVolume)
         .toString()
-      return baseTokenLiquidityCumulative
+      return volumeCumulative
     })
 
     let data
@@ -146,14 +146,11 @@ export default function Graph(): ReactElement {
         <>
           <Nav graphType={graphType} setGraphType={setGraphType} />
 
-          <Chart
-            type={graphType === 'volume' ? 'bar' : 'line'}
-            width={416}
-            height={90}
-            data={graphData}
-            options={options}
-            redraw
-          />
+          {graphType === 'volume' ? (
+            <Bar width={416} height={120} data={graphData} options={options} />
+          ) : (
+            <Line width={416} height={120} data={graphData} options={options} />
+          )}
         </>
       )}
     </div>
