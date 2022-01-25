@@ -1,27 +1,5 @@
-import React, {
-  ChangeEvent,
-  ReactElement,
-  useCallback,
-  useEffect,
-  useState
-} from 'react'
-import {
-  Chart as ChartJS,
-  LinearScale,
-  CategoryScale,
-  PointElement,
-  Tooltip,
-  ChartData,
-  ChartOptions,
-  defaults,
-  ChartDataset,
-  TooltipOptions,
-  TooltipItem,
-  BarElement,
-  LineElement,
-  LineController,
-  BarController
-} from 'chart.js'
+import React, { ReactElement, useCallback, useEffect, useState } from 'react'
+import { ChartData, ChartOptions } from 'chart.js'
 import { Chart } from 'react-chartjs-2'
 import Loader from '@shared/atoms/Loader'
 import { useUserPreferences } from '@context/UserPreferences'
@@ -34,28 +12,9 @@ import { PoolHistory } from '../../../../../@types/subgraph/PoolHistory'
 import { fetchData, getQueryContext } from '@utils/subgraph'
 import styles from './index.module.css'
 import Decimal from 'decimal.js'
-import {
-  poolHistoryQuery,
-  getOptions,
-  lineStyle,
-  GraphType
-} from './_constants'
+import { poolHistoryQuery, lineStyle, GraphType } from './_constants'
 import Nav from './Nav'
-
-ChartJS.register(
-  LineElement,
-  BarElement,
-  PointElement,
-  LinearScale,
-  CategoryScale,
-  Tooltip,
-  LineController,
-  BarController
-)
-
-// Chart.js global defaults
-defaults.font.family = `'Sharp Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif`
-defaults.animation = { easing: 'easeInOutQuart', duration: 1000 }
+import { getOptions } from './_utils'
 
 export default function Graph(): ReactElement {
   const { locale } = useUserPreferences()
@@ -190,7 +149,7 @@ export default function Graph(): ReactElement {
           <Chart
             type={graphType === 'volume' ? 'bar' : 'line'}
             width={416}
-            height={80}
+            height={90}
             data={graphData}
             options={options}
             redraw

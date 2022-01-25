@@ -1,13 +1,22 @@
-import { formatPrice } from '@shared/Price/PriceUnit'
 import {
+  Chart as ChartJS,
+  LinearScale,
+  CategoryScale,
+  PointElement,
+  Tooltip,
+  BarElement,
+  LineElement,
+  LineController,
+  BarController,
   ChartDataset,
   TooltipOptions,
-  ChartOptions,
-  TooltipItem
+  defaults
 } from 'chart.js'
 import { gql } from 'urql'
 
 export declare type GraphType = 'liquidity' | 'price' | 'volume'
+
+export const graphTypes = ['Liquidity', 'Price', 'Volume']
 
 export const poolHistoryQuery = gql`
   query PoolHistory($id: String!) {
@@ -20,6 +29,21 @@ export const poolHistoryQuery = gql`
     }
   }
 `
+
+// Chart.js global defaults
+ChartJS.register(
+  LineElement,
+  BarElement,
+  PointElement,
+  LinearScale,
+  CategoryScale,
+  Tooltip,
+  LineController,
+  BarController
+)
+
+defaults.font.family = `'Sharp Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif`
+defaults.animation = { easing: 'easeInOutQuart', duration: 1000 }
 
 export const lineStyle: Partial<ChartDataset> = {
   fill: false,
@@ -40,36 +64,3 @@ export const tooltipOptions: Partial<TooltipOptions> = {
   borderWidth: 1,
   caretSize: 7
 }
-
-export function getOptions(locale: string, isDarkMode: boolean): ChartOptions {
-  return {
-    layout: {
-      padding: {
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 10
-      }
-    },
-    plugins: {
-      tooltip: {
-        ...tooltipOptions,
-        backgroundColor: isDarkMode ? `#141414` : `#fff`,
-        titleColor: isDarkMode ? `#e2e2e2` : `#303030`,
-        bodyColor: isDarkMode ? `#fff` : `#141414`,
-        borderColor: isDarkMode ? `#41474e` : `#e2e2e2`,
-        callbacks: {
-          label: (tooltipItem: TooltipItem<any>) =>
-            `${formatPrice(`${tooltipItem.formattedValue}`, locale)} OCEAN`
-        }
-      }
-    },
-    hover: { intersect: false },
-    scales: {
-      y: { display: false },
-      x: { display: false }
-    }
-  }
-}
-
-export const graphTypes = ['Liquidity', 'Price', 'Volume']
