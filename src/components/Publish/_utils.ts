@@ -208,7 +208,7 @@ export async function createTokensAndPricing(
     feeManager: accountId,
     mpFeeAddress: marketFeeAddress,
     feeToken: config.oceanTokenAddress,
-    feeAmount: `0`,
+    feeAmount: '0',
     cap: '1000',
     name: values.services[0].dataTokenOptions.name,
     symbol: values.services[0].dataTokenOptions.symbol
