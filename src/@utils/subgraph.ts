@@ -25,7 +25,7 @@ import {
 } from '../@types/subgraph/PoolShares'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { UserSalesQuery as UsersSalesList } from '../@types/subgraph/UserSalesQuery'
-import { PoolLiquidity } from 'src/@types/subgraph/PoolLiquidity'
+import { PoolData } from 'src/@types/subgraph/PoolData'
 
 export interface UserLiquidity {
   price: string
@@ -285,9 +285,9 @@ const TopSalesQuery = gql`
   }
 `
 
-const poolLiquidityQuery = gql`
-  query PoolLiquidity($pool: ID!, $owner: String!) {
-    pool(id: $pool) {
+const poolDataQuery = gql`
+  query PoolData($pool: ID!, $owner: String!, $user: String) {
+    poolData: pool(id: $pool) {
       id
       totalShares
       poolFee
@@ -310,15 +310,19 @@ const poolLiquidityQuery = gql`
         shares
       }
     }
-  }
-`
 
-const userPoolShareQuery = gql`
-  query PoolShare($pool: ID!, $user: String!) {
-    pool(id: $pool) {
+    poolDataUser: pool(id: $pool) {
       shares(where: { user: $user }) {
         shares
       }
+    }
+
+    poolSnapshots(first: 1000, where: { pool: $pool }, orderBy: date) {
+      date
+      spotPrice
+      baseTokenLiquidity
+      datatokenLiquidity
+      swapVolume
     }
   }
 `
@@ -822,33 +826,19 @@ export async function getTopAssetsPublishers(
 export async function getPoolData(
   chainId: number,
   pool: string,
-  owner: string
+  owner: string,
+  user: string
 ) {
   const queryVariables = {
     pool: pool.toLowerCase(),
-    owner: owner.toLowerCase()
+    owner: owner.toLowerCase(),
+    user: user.toLowerCase()
   }
-  const response: OperationResult<PoolLiquidity> = await fetchData(
-    poolLiquidityQuery,
-    queryVariables,
-    getQueryContext(chainId)
-  )
-  return response?.data?.pool
-}
 
-export async function getUserPoolShareBalance(
-  chainId: number,
-  pool: string,
-  accountId: string
-): Promise<string> {
-  const queryVariables = {
-    pool: pool.toLowerCase(),
-    user: accountId.toLowerCase()
-  }
-  const response: OperationResult<PoolLiquidity> = await fetchData(
-    userPoolShareQuery,
+  const response: OperationResult<PoolData> = await fetchData(
+    poolDataQuery,
     queryVariables,
     getQueryContext(chainId)
   )
-  return response?.data?.pool?.shares[0]?.shares || '0'
+  return response?.data
 }

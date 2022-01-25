@@ -1,71 +1,29 @@
-import React, { ReactElement, useCallback, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { ChartData, ChartOptions } from 'chart.js'
-import { Bar, Chart, Line } from 'react-chartjs-2'
+import { Bar, Line } from 'react-chartjs-2'
 import Loader from '@shared/atoms/Loader'
 import { useUserPreferences } from '@context/UserPreferences'
 import useDarkMode from 'use-dark-mode'
 import { darkModeConfig } from '../../../../../../app.config'
 import { LoggerInstance } from '@oceanprotocol/lib'
-import { useAsset } from '@context/Asset'
-import { OperationResult } from 'urql'
-import { PoolHistory } from '../../../../../@types/subgraph/PoolHistory'
-import { fetchData, getQueryContext } from '@utils/subgraph'
 import styles from './index.module.css'
 import Decimal from 'decimal.js'
-import { poolHistoryQuery, lineStyle, GraphType } from './_constants'
+import { lineStyle, GraphType } from './_constants'
 import Nav from './Nav'
 import { getOptions } from './_utils'
+import { PoolData_poolSnapshots as PoolDataPoolSnapshots } from 'src/@types/subgraph/PoolData'
 
-export default function Graph(): ReactElement {
+export default function Graph({
+  poolSnapshots
+}: {
+  poolSnapshots: PoolDataPoolSnapshots[]
+}): ReactElement {
   const { locale } = useUserPreferences()
-  const { price, ddo, refreshInterval } = useAsset()
   const darkMode = useDarkMode(false, darkModeConfig)
 
   const [options, setOptions] = useState<ChartOptions<any>>()
   const [graphType, setGraphType] = useState<GraphType>('liquidity')
-  const [error, setError] = useState<Error>()
-  const [isLoading, setIsLoading] = useState(true)
-  const [dataHistory, setDataHistory] = useState<PoolHistory>()
   const [graphData, setGraphData] = useState<ChartData<any>>()
-  const [graphFetchInterval, setGraphFetchInterval] = useState<NodeJS.Timeout>()
-
-  // Helper: fetch pool snapshots data
-  const fetchPoolHistory = useCallback(async () => {
-    try {
-      const queryResult: OperationResult<PoolHistory> = await fetchData(
-        poolHistoryQuery,
-        { id: price.address.toLowerCase() },
-        getQueryContext(ddo.chainId)
-      )
-      setDataHistory(queryResult?.data)
-      setIsLoading(false)
-
-      LoggerInstance.log(
-        `[pool graph] Fetched pool snapshots:`,
-        queryResult?.data
-      )
-    } catch (error) {
-      LoggerInstance.error('[pool graph] Error fetchData: ', error.message)
-      setError(error)
-    }
-  }, [ddo?.chainId, price?.address])
-
-  // Helper: start interval fetching
-  const initFetchInterval = useCallback(() => {
-    if (graphFetchInterval) return
-
-    const newInterval = setInterval(() => {
-      fetchPoolHistory()
-      LoggerInstance.log(
-        `[pool graph] Refetch interval fired after ${refreshInterval / 1000}s`
-      )
-    }, refreshInterval)
-    setGraphFetchInterval(newInterval)
-  }, [fetchPoolHistory, graphFetchInterval, refreshInterval])
-
-  useEffect(() => {
-    return () => clearInterval(graphFetchInterval)
-  }, [graphFetchInterval])
 
   //
   // 0 Get Graph options
@@ -77,38 +35,28 @@ export default function Graph(): ReactElement {
   }, [locale, darkMode.value, graphType])
 
   //
-  // 1 Fetch all the data on mount
-  // All further effects depend on the fetched data
-  // and only do further data checking and manipulation.
+  // 1 Data manipulation
   //
   useEffect(() => {
-    fetchPoolHistory()
-    initFetchInterval()
-  }, [fetchPoolHistory, initFetchInterval])
+    if (!poolSnapshots) return
 
-  //
-  // 2 Data manipulation
-  //
-  useEffect(() => {
-    if (!dataHistory?.poolSnapshots) return
-
-    const timestamps = dataHistory.poolSnapshots.map((item) => {
+    const timestamps = poolSnapshots.map((item) => {
       const date = new Date(item.date * 1000)
       return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
     })
 
     let baseTokenLiquidityCumulative = '0'
-    const liquidityHistory = dataHistory.poolSnapshots.map((item) => {
+    const liquidityHistory = poolSnapshots.map((item) => {
       baseTokenLiquidityCumulative = new Decimal(baseTokenLiquidityCumulative)
         .add(item.baseTokenLiquidity)
         .toString()
       return baseTokenLiquidityCumulative
     })
 
-    const priceHistory = dataHistory.poolSnapshots.map((item) => item.spotPrice)
+    const priceHistory = poolSnapshots.map((item) => item.spotPrice)
 
     let volumeCumulative = '0'
-    const volumeHistory = dataHistory.poolSnapshots.map((item) => {
+    const volumeHistory = poolSnapshots.map((item) => {
       volumeCumulative = new Decimal(volumeCumulative)
         .add(item.swapVolume)
         .toString()
@@ -133,15 +81,13 @@ export default function Graph(): ReactElement {
       datasets: [{ ...lineStyle, data, borderColor: `#8b98a9` }]
     }
     setGraphData(newGraphData)
-    LoggerInstance.log('[pool graph] New graph data:', newGraphData)
-  }, [dataHistory?.poolSnapshots, graphType])
+    LoggerInstance.log('[pool graph] New graph data created:', newGraphData)
+  }, [poolSnapshots, graphType])
 
   return (
     <div className={styles.graphWrap}>
-      {isLoading ? (
+      {!graphData ? (
         <Loader />
-      ) : error ? (
-        <small>{error.message}</small>
       ) : (
         <>
           <Nav graphType={graphType} setGraphType={setGraphType} />

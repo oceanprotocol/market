@@ -12,23 +12,10 @@ import {
   TooltipOptions,
   defaults
 } from 'chart.js'
-import { gql } from 'urql'
 
 export declare type GraphType = 'liquidity' | 'price' | 'volume'
 
 export const graphTypes = ['Liquidity', 'Price', 'Volume']
-
-export const poolHistoryQuery = gql`
-  query PoolHistory($id: String!) {
-    poolSnapshots(first: 1000, where: { pool: $id }, orderBy: date) {
-      date
-      spotPrice
-      baseTokenLiquidity
-      datatokenLiquidity
-      swapVolume
-    }
-  }
-`
 
 // Chart.js global defaults
 ChartJS.register(

@@ -19,7 +19,8 @@ import PoolTransactions from '@shared/PoolTransactions'
 import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
 import content from '../../../../../content/price.json'
-import { getPoolData, getUserPoolShareBalance } from '@utils/subgraph'
+import { getPoolData } from '@utils/subgraph'
+import { PoolData_poolSnapshots as PoolDataPoolSnapshots } from 'src/@types/subgraph/PoolData'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
@@ -70,6 +71,7 @@ export default function Pool(): ReactElement {
   const [poolInfoUser, setPoolInfoUser] = useState<PoolInfoUser>(
     initialPoolInfoUser as PoolInfoUser
   )
+  const [poolSnapshots, setPoolSnapshots] = useState<PoolDataPoolSnapshots[]>()
 
   const [hasUserAddedLiquidity, setUserHasAddedLiquidity] = useState(false)
   const [showAdd, setShowAdd] = useState(false)
@@ -77,34 +79,27 @@ export default function Pool(): ReactElement {
   const [isRemoveDisabled, setIsRemoveDisabled] = useState(false)
   const [fetchInterval, setFetchInterval] = useState<NodeJS.Timeout>()
 
-  const fetchPoolData = useCallback(async () => {
+  const fetchAllData = useCallback(async () => {
     if (!ddo?.chainId || !price?.address || !owner) return
 
-    const poolData = await getPoolData(ddo.chainId, price.address, owner)
-    setPoolData(poolData)
-    LoggerInstance.log('[pool] Fetched pool data:', poolData)
-  }, [ddo?.chainId, price?.address, owner])
-
-  const fetchUserShares = useCallback(async () => {
-    if (!ddo?.chainId || !price?.address || !accountId) return
-
-    const userShares = await getUserPoolShareBalance(
+    const response = await getPoolData(
       ddo.chainId,
       price.address,
-      accountId
+      owner,
+      accountId || ''
     )
+    if (!response) return
+
+    setPoolData(response.poolData)
     setPoolInfoUser((prevState) => ({
       ...prevState,
-      poolShares: userShares
+      poolShares: response.poolDataUser?.shares[0]?.shares
     }))
-    LoggerInstance.log(`[pool] Fetched user shares: ${userShares}`)
-  }, [ddo?.chainId, price?.address, accountId])
-
-  // Helper: fetch everything
-  const fetchAllData = useCallback(() => {
-    fetchPoolData()
-    fetchUserShares()
-  }, [fetchPoolData, fetchUserShares])
+    setPoolSnapshots(response.poolSnapshots)
+    LoggerInstance.log('[pool] Fetched pool data:', response.poolData)
+    LoggerInstance.log('[pool] Fetched user data:', response.poolDataUser)
+    LoggerInstance.log('[pool] Fetched pool snapshots:', response.poolSnapshots)
+  }, [ddo?.chainId, price?.address, owner, accountId])
 
   // Helper: start interval fetching
   const initFetchInterval = useCallback(() => {
@@ -443,7 +438,7 @@ export default function Pool(): ReactElement {
                     {poolInfo?.weightBaseToken}/{poolInfo?.weightDt}
                   </span>
                 )}
-                <Graph />
+                <Graph poolSnapshots={poolSnapshots} />
               </>
             }
             baseTokenValue={`${price?.ocean}`}
