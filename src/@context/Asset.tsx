@@ -97,9 +97,8 @@ function AssetProvider({
       setDDO(ddo)
       setTitle(ddo.metadata.name)
       setOwner(ddo.nft.owner)
-      setIsInPurgatory(ddo.purgatory?.state)
+      setIsInPurgatory((ddo.purgatory?.state as unknown as string) === 'true')
       setPurgatoryData(ddo.purgatory)
-      // setPurgatory(ddo.purgatory)
     }
     init()
     return () => {
