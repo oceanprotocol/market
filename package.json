@@ -116,8 +116,5 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ],
-  "optionalDependencies": {
-    "fsevents": "^2.3.2"
-  }
+  ]
 }
