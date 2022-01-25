@@ -1,6 +1,6 @@
 import { FormikContextType, useFormikContext } from 'formik'
 import React, { ReactElement } from 'react'
-import { FormPublishData, StepContent } from '../_types'
+import { FormPublishData } from '../_types'
 import { wizardSteps } from '../_constants'
 import styles from './index.module.css'
 
