@@ -21,7 +21,7 @@ export default function Graph(): ReactElement {
   const { price, ddo, refreshInterval } = useAsset()
   const darkMode = useDarkMode(false, darkModeConfig)
 
-  const [options, setOptions] = useState<ChartOptions>()
+  const [options, setOptions] = useState<ChartOptions<any>>()
   const [graphType, setGraphType] = useState<GraphType>('liquidity')
   const [error, setError] = useState<Error>()
   const [isLoading, setIsLoading] = useState(true)
