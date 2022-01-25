@@ -62,5 +62,19 @@ export const tooltipOptions: Partial<TooltipOptions> = {
   padding: 10,
   cornerRadius: 3,
   borderWidth: 1,
-  caretSize: 7
+  caretSize: 7,
+  bodyFont: {
+    size: 13,
+    weight: 'bold',
+    lineHeight: 1,
+    style: 'normal',
+    family: defaults.font.family
+  },
+  titleFont: {
+    size: 10,
+    weight: 'normal',
+    lineHeight: 1,
+    style: 'normal',
+    family: defaults.font.family
+  }
 }
