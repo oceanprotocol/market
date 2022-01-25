@@ -25,18 +25,18 @@ import content from '../../../../../content/price.json'
 
 export default function Remove({
   setShowRemove,
-  refreshInfo,
   poolAddress,
   poolTokens,
   totalPoolTokens,
-  dtSymbol
+  dtSymbol,
+  fetchAllData
 }: {
   setShowRemove: (show: boolean) => void
-  refreshInfo: () => void
   poolAddress: string
   poolTokens: string
   totalPoolTokens: string
   dtSymbol: string
+  fetchAllData: () => void
 }): ReactElement {
   const slippagePresets = ['5', '10', '15', '25', '50']
   const { accountId } = useWeb3()
@@ -74,7 +74,7 @@ export default function Remove({
       //         minOceanAmount
       //       )
       // setTxId(result?.transactionHash)
-      // refreshInfo()
+      fetchAllData()
     } catch (error) {
       LoggerInstance.error(error.message)
       toast.error(error.message)
