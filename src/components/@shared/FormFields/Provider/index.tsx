@@ -16,7 +16,7 @@ export default function CustomProvider(props: InputProps): ReactElement {
     setIsLoading(true)
 
     try {
-      const isValid = await ProviderInstance.isValidProvider(url, fetch)
+      const isValid = await ProviderInstance.isValidProvider(url)
       helpers.setValue({ url, valid: isValid })
       helpers.setError(undefined)
     } catch (error) {

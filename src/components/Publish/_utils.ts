@@ -1,4 +1,5 @@
 import {
+  approve,
   Config,
   DDO,
   Erc20CreateParams,
@@ -226,16 +227,16 @@ export async function createTokensAndPricing(
       // TODO: discuss swapFeeLiquidityProvider, swapFeeMarketPlaceRunner
       const poolParams: PoolCreationParams = {
         ssContract: config.sideStakingAddress,
-        basetokenAddress: config.oceanTokenAddress,
-        basetokenSender: config.erc721FactoryAddress,
+        baseTokenAddress: config.oceanTokenAddress,
+        baseTokenSender: config.erc721FactoryAddress,
         publisherAddress: accountId,
         marketFeeCollector: marketFeeAddress,
         poolTemplateAddress: config.poolTemplateAddress,
         rate: values.pricing.price.toString(),
-        basetokenDecimals: 18,
+        baseTokenDecimals: 18,
         vestingAmount: '0',
         vestedBlocks: 2726000,
-        initialBasetokenLiquidity: values.pricing.amountOcean.toString(),
+        initialBaseTokenLiquidity: values.pricing.amountOcean.toString(),
         swapFeeLiquidityProvider: 1e15,
         swapFeeMarketRunner: 1e15
       }
@@ -247,7 +248,8 @@ export async function createTokensAndPricing(
 
       // the spender in this case is the erc721Factory because we are delegating
       const pool = new Pool(web3, LoggerInstance)
-      const txApprove = await pool.approve(
+      const txApprove = await approve(
+        web3,
         accountId,
         config.oceanTokenAddress,
         config.erc721FactoryAddress,
@@ -277,7 +279,7 @@ export async function createTokensAndPricing(
         owner: accountId,
         marketFeeCollector: marketFeeAddress,
         baseTokenDecimals: 18,
-        dataTokenDecimals: 18,
+        datatokenDecimals: 18,
         fixedRate: values.pricing.price.toString(),
         marketFee: 1e15,
         withMint: true
