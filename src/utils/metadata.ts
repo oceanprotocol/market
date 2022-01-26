@@ -9,7 +9,7 @@ import {
 import { toStringNoMS } from '.'
 import AssetModel from '../models/Asset'
 import slugify from '@sindresorhus/slugify'
-import { DDO, MetadataAlgorithm, Logger } from '@oceanprotocol/lib'
+import { DDO, File, MetadataAlgorithm, Logger } from '@oceanprotocol/lib'
 
 export function transformTags(value: string): string[] {
   const originalTags = value?.split(',')
@@ -113,6 +113,16 @@ export function transformPublishFormToMetadata(
 ): MetadataMarket {
   const currentTime = toStringNoMS(new Date())
 
+  const filesTransformed = files?.length &&
+    (files as File[])[0].valid && [
+      {
+        ...(files as File[])[0],
+        url: (files as File[])[0].url.replace('javascript:', '')
+      }
+    ]
+  const linksTransformed = links?.length &&
+    links[0].valid && [links[0].url.replace('javascript:', '')]
+
   const metadata: MetadataMarket = {
     main: {
       ...AssetModel.main,
@@ -120,14 +130,14 @@ export function transformPublishFormToMetadata(
       author,
       dateCreated: ddo ? ddo.created : currentTime,
       datePublished: '',
-      files: typeof files !== 'string' && files,
+      files: filesTransformed,
       license: 'https://market.oceanprotocol.com/terms'
     },
     additionalInformation: {
       ...AssetModel.additionalInformation,
       description,
       tags: transformTags(tags),
-      links: typeof links !== 'string' ? links : [],
+      links: linksTransformed,
       termsAndConditions
     }
   }
