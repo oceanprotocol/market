@@ -34,7 +34,7 @@
 
 .actions svg {
   margin: 0;
-  fill: var(--brand-white);
+  fill: var(--font-color-text);
 }
 
 .refresh svg {
