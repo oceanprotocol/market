@@ -222,7 +222,8 @@ export function transformPublishAlgorithmFormToMetadata(
   ddo?: DDO
 ): MetadataMarket {
   const currentTime = toStringNoMS(new Date())
-  const fileUrl = typeof files !== 'string' && files[0].url
+  const fileUrl =
+    typeof files !== 'string' && files[0].url.replace('javascript:', '')
   const algorithmLanguage = getAlgorithmFileExtension(fileUrl)
   const algorithm = getAlgorithmComponent(
     image,
@@ -230,6 +231,14 @@ export function transformPublishAlgorithmFormToMetadata(
     entrypoint,
     algorithmLanguage
   )
+  const filesTransformed = files?.length &&
+    (files as File[])[0].valid && [
+      {
+        ...(files as File[])[0],
+        url: (files as File[])[0].url.replace('javascript:', '')
+      }
+    ]
+
   const metadata: MetadataMarket = {
     main: {
       ...AssetModel.main,
@@ -237,7 +246,7 @@ export function transformPublishAlgorithmFormToMetadata(
       type: 'algorithm',
       author,
       dateCreated: ddo ? ddo.created : currentTime,
-      files: typeof files !== 'string' && files,
+      files: filesTransformed,
       license: 'https://market.oceanprotocol.com/terms',
       algorithm
     },
