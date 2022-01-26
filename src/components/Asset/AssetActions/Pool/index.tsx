@@ -13,14 +13,16 @@ import TokenList from './TokenList'
 import AssetActionHistoryTable from '../AssetActionHistoryTable'
 import Graph from './Graph'
 import { useAsset } from '@context/Asset'
-import { PoolLiquidity_pool as PoolLiquidityData } from '../../../../@types/subgraph/PoolLiquidity'
 import { useWeb3 } from '@context/Web3'
 import PoolTransactions from '@shared/PoolTransactions'
 import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
 import content from '../../../../../content/price.json'
 import { getPoolData } from '@utils/subgraph'
-import { PoolData_poolSnapshots as PoolDataPoolSnapshots } from 'src/@types/subgraph/PoolData'
+import {
+  PoolData_poolSnapshots as PoolDataPoolSnapshots,
+  PoolData_poolData as PoolDataPoolData
+} from 'src/@types/subgraph/PoolData'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
@@ -61,7 +63,7 @@ export default function Pool(): ReactElement {
   const { isInPurgatory, ddo, owner, price, refreshInterval, isAssetNetwork } =
     useAsset()
 
-  const [poolData, setPoolData] = useState<PoolLiquidityData>()
+  const [poolData, setPoolData] = useState<PoolDataPoolData>()
   const [poolInfo, setPoolInfo] = useState<PoolInfo>(
     initialPoolInfo as PoolInfo
   )
