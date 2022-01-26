@@ -151,10 +151,10 @@ export default function Consume({
   ])
 
   async function handleConsume() {
-    if (!hasPreviousOrder && !hasDatatoken) {
-      const tx = await buyDT('1', price, ddo)
-      if (tx === undefined) return
-    }
+    // if (!hasPreviousOrder && !hasDatatoken) {
+    //   const tx = await buyDT('1', price, ddo)
+    //   if (tx === undefined) return
+    // }
     const error = await consume(
       ddo.id,
       ddo.services[0].datatokenAddress,

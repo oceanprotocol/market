@@ -39,6 +39,7 @@ async function getBlockHead(config: Config) {
   }
 
   // for everything else, create new web3 instance with infura
+  console.log('confgig', config.nodeUri)
   const web3Instance = new Web3(config.nodeUri)
   const blockHead = await web3Instance.eth.getBlockNumber()
   return blockHead
