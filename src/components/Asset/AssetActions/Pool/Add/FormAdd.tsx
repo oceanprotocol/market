@@ -1,4 +1,4 @@
-import React, { ChangeEvent, ReactElement, useEffect } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import styles from './FormAdd.module.css'
 import Input from '@shared/FormInput'
 import {
@@ -20,7 +20,6 @@ export default function FormAdd({
   tokenInAddress,
   tokenInSymbol,
   amountMax,
-  setAmount,
   totalPoolTokens,
   totalBalance,
   poolAddress,
@@ -30,7 +29,6 @@ export default function FormAdd({
   tokenInAddress: string
   tokenInSymbol: string
   amountMax: string
-  setAmount: (value: string) => void
   totalPoolTokens: string
   totalBalance: PoolBalance
   poolAddress: string
@@ -41,24 +39,8 @@ export default function FormAdd({
   const { isAssetNetwork } = useAsset()
 
   // Connect with form
-  const {
-    touched,
-    setTouched,
-    setFieldValue,
-    validateField,
-    values
-  }: FormikContextType<FormAddLiquidity> = useFormikContext()
-
-  function handleFieldChange(e: ChangeEvent<HTMLInputElement>) {
-    // Workaround so validation kicks in on first touch
-    !touched?.amount && setTouched({ amount: true })
-    setAmount(e.target.value)
-
-    // Manually handle change events instead of using `handleChange` from Formik.
-    // Solves bug where 0.0 can't be typed.
-    validateField('amount')
-    setFieldValue('amount', e.target.value)
-  }
+  const { setFieldValue, values }: FormikContextType<FormAddLiquidity> =
+    useFormikContext()
 
   useEffect(() => {
     async function calculatePoolShares() {
@@ -76,7 +58,7 @@ export default function FormAdd({
       const poolTokens = await poolInstance.calcPoolOutGivenSingleIn(
         poolAddress,
         tokenInAddress,
-        `${values.amount}`
+        values.amount
       )
       setNewPoolTokens(poolTokens)
       const newPoolShareDecimal =
@@ -124,13 +106,12 @@ export default function FormAdd({
             name="amount"
             max={amountMax}
             min="0"
-            value={`${values.amount}`}
+            value={values.amount}
             step="any"
             prefix={tokenInSymbol}
             placeholder="0"
             field={field}
             form={form}
-            onChange={handleFieldChange}
             disabled={!isAssetNetwork}
           />
         )}
@@ -142,10 +123,7 @@ export default function FormAdd({
           style="text"
           size="small"
           disabled={!web3}
-          onClick={() => {
-            setAmount(amountMax)
-            setFieldValue('amount', amountMax)
-          }}
+          onClick={() => setFieldValue('amount', amountMax)}
         >
           Use Max
         </Button>

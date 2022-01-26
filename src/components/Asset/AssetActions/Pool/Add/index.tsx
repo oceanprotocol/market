@@ -16,11 +16,11 @@ import content from '../../../../../../content/price.json'
 import { LoggerInstance, Pool } from '@oceanprotocol/lib'
 
 export interface FormAddLiquidity {
-  amount: number
+  amount: string
 }
 
 const initialValues: FormAddLiquidity = {
-  amount: undefined
+  amount: ''
 }
 
 export default function Add({
@@ -49,7 +49,6 @@ export default function Add({
   const { debug } = useUserPreferences()
   const [txId, setTxId] = useState<string>()
   const [amountMax, setAmountMax] = useState<string>()
-  const [amount, setAmount] = useState<string>('0')
   const [newPoolTokens, setNewPoolTokens] = useState('0')
   const [newPoolShare, setNewPoolShare] = useState('0')
   const [isWarningAccepted, setIsWarningAccepted] = useState(false)
@@ -57,7 +56,7 @@ export default function Add({
   // Live validation rules
   // https://github.com/jquense/yup#number
   const validationSchema: Yup.SchemaOf<FormAddLiquidity> = Yup.object().shape({
-    amount: Yup.number()
+    amount: Yup.string()
       .min(0.00001, (param) => `Must be more or equal to ${param.min}`)
       .max(
         Number(amountMax),
@@ -99,7 +98,7 @@ export default function Add({
   ])
 
   // Submit
-  async function handleAddLiquidity(amount: number, resetForm: () => void) {
+  async function handleAddLiquidity(amount: string, resetForm: () => void) {
     const poolInstance = new Pool(web3, LoggerInstance)
     const minPoolAmountOut = '0' // ? TODO: how to get?
 
@@ -108,7 +107,7 @@ export default function Add({
         accountId,
         poolAddress,
         tokenInAddress,
-        `${amount}`,
+        amount,
         minPoolAmountOut
       )
       setTxId(result?.transactionHash)
@@ -142,7 +141,6 @@ export default function Add({
                   tokenInAddress={tokenInAddress}
                   tokenInSymbol={tokenInSymbol}
                   amountMax={amountMax}
-                  setAmount={setAmount}
                   totalPoolTokens={totalPoolTokens}
                   totalBalance={totalBalance}
                   poolAddress={poolAddress}
@@ -178,16 +176,16 @@ export default function Add({
               isDisabled={
                 !isValid ||
                 !isWarningAccepted ||
-                !amount ||
-                amount === '' ||
-                amount === '0'
+                !values.amount ||
+                values.amount === '' ||
+                values.amount === '0'
               }
               isLoading={isSubmitting}
               loaderMessage="Adding Liquidity..."
               successMessage="Successfully added liquidity."
               actionName={content.pool.add.action}
               action={submitForm}
-              amount={amount}
+              amount={values.amount}
               tokenAddress={tokenInAddress}
               tokenSymbol={tokenInSymbol}
               txId={txId}
