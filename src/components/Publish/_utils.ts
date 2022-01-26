@@ -1,4 +1,5 @@
 import {
+  approve,
   Config,
   DDO,
   Erc20CreateParams,
@@ -247,7 +248,8 @@ export async function createTokensAndPricing(
 
       // the spender in this case is the erc721Factory because we are delegating
       const pool = new Pool(web3, LoggerInstance)
-      const txApprove = await pool.approve(
+      const txApprove = await approve(
+        web3,
         accountId,
         config.oceanTokenAddress,
         config.erc721FactoryAddress,
