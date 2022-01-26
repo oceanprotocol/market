@@ -345,7 +345,8 @@ export default function Pool(): ReactElement {
           }}
           swapFee={poolInfo?.poolFee}
           datatokenSymbol={poolInfo?.datatokenSymbol}
-          baseTokenSymbol={poolInfo?.baseTokenSymbol}
+          tokenInAddress={poolInfo?.baseTokenAddress}
+          tokenInSymbol={poolInfo?.baseTokenSymbol}
           fetchAllData={fetchAllData}
         />
       ) : showRemove ? (
@@ -354,8 +355,8 @@ export default function Pool(): ReactElement {
           poolAddress={price?.address}
           poolTokens={poolInfoUser?.poolShares}
           totalPoolTokens={poolInfo?.totalPoolTokens}
-          baseTokenAddress={poolInfo?.baseTokenAddress}
-          baseTokenSymbol={poolInfo?.baseTokenSymbol}
+          tokenOutAddress={poolInfo?.baseTokenAddress}
+          tokenOutSymbol={poolInfo?.baseTokenSymbol}
           fetchAllData={fetchAllData}
         />
       ) : (

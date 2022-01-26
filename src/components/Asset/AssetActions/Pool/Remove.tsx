@@ -29,16 +29,16 @@ export default function Remove({
   poolAddress,
   poolTokens,
   totalPoolTokens,
-  baseTokenAddress,
-  baseTokenSymbol,
+  tokenOutAddress,
+  tokenOutSymbol,
   fetchAllData
 }: {
   setShowRemove: (show: boolean) => void
   poolAddress: string
   poolTokens: string
   totalPoolTokens: string
-  baseTokenAddress: string
-  baseTokenSymbol: string
+  tokenOutAddress: string
+  tokenOutSymbol: string
   fetchAllData: () => void
 }): ReactElement {
   const { accountId, web3 } = useWeb3()
@@ -64,7 +64,7 @@ export default function Remove({
       const result = await poolInstance.exitswapPoolAmountIn(
         accountId,
         poolAddress,
-        baseTokenAddress,
+        tokenOutAddress,
         amountPoolShares,
         minOceanAmount
       )
@@ -78,7 +78,7 @@ export default function Remove({
     }
   }
 
-  // Get and set max percentage
+  // TODO: Get and set max percentage
   useEffect(() => {
     if (!accountId || !poolTokens) return
 
@@ -93,7 +93,7 @@ export default function Remove({
     debounce(async (newAmountPoolShares) => {
       const newAmountOcean = await poolInstance.calcSingleOutGivenPoolIn(
         poolAddress,
-        baseTokenAddress,
+        tokenOutAddress,
         newAmountPoolShares
       )
       setAmountOcean(newAmountOcean)
@@ -185,7 +185,7 @@ export default function Remove({
         </div>
         <div>
           <p>{content.pool.remove.output.titleOut} minimum</p>
-          <Token symbol={baseTokenSymbol} balance={minOceanAmount} />
+          <Token symbol={tokenOutSymbol} balance={minOceanAmount} />
         </div>
       </div>
       <div className={styles.slippage}>
@@ -210,6 +210,8 @@ export default function Remove({
         successMessage="Successfully removed liquidity."
         isDisabled={!isAssetNetwork}
         txId={txId}
+        tokenAddress={tokenOutAddress}
+        tokenSymbol={tokenOutSymbol}
       />
     </div>
   )

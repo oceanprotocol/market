@@ -30,7 +30,8 @@ export default function Add({
   totalBalance,
   swapFee,
   datatokenSymbol,
-  baseTokenSymbol,
+  tokenInSymbol,
+  tokenInAddress,
   fetchAllData
 }: {
   setShowAdd: (show: boolean) => void
@@ -39,7 +40,8 @@ export default function Add({
   totalBalance: PoolBalance
   swapFee: string
   datatokenSymbol: string
-  baseTokenSymbol: string
+  tokenInSymbol: string
+  tokenInAddress: string
   fetchAllData: () => void
 }): ReactElement {
   const { accountId, balance, web3 } = useWeb3()
@@ -51,7 +53,6 @@ export default function Add({
   const [newPoolTokens, setNewPoolTokens] = useState('0')
   const [newPoolShare, setNewPoolShare] = useState('0')
   const [isWarningAccepted, setIsWarningAccepted] = useState(false)
-  const [tokenInAddress, setTokenInAddress] = useState<string>()
 
   // Live validation rules
   // https://github.com/jquense/yup#number
@@ -72,8 +73,6 @@ export default function Add({
     async function getMaximum() {
       try {
         const poolInstance = new Pool(web3, LoggerInstance)
-        const tokenInAddress = await poolInstance.getBaseToken(poolAddress)
-        setTokenInAddress(tokenInAddress)
 
         const amountMaxPool = await poolInstance.getReserve(
           poolAddress,
@@ -90,7 +89,14 @@ export default function Add({
       }
     }
     getMaximum()
-  }, [web3, accountId, isAssetNetwork, poolAddress, balance?.ocean])
+  }, [
+    web3,
+    accountId,
+    isAssetNetwork,
+    poolAddress,
+    tokenInAddress,
+    balance?.ocean
+  ])
 
   // Submit
   async function handleAddLiquidity(amount: number, resetForm: () => void) {
@@ -134,7 +140,7 @@ export default function Add({
               {isWarningAccepted ? (
                 <FormAdd
                   tokenInAddress={tokenInAddress}
-                  tokenInSymbol={baseTokenSymbol}
+                  tokenInSymbol={tokenInSymbol}
                   amountMax={amountMax}
                   setAmount={setAmount}
                   totalPoolTokens={totalPoolTokens}
@@ -182,6 +188,8 @@ export default function Add({
               actionName={content.pool.add.action}
               action={submitForm}
               amount={amount}
+              tokenAddress={tokenInAddress}
+              tokenSymbol={tokenInSymbol}
               txId={txId}
             />
             {debug && <DebugOutput output={values} />}
