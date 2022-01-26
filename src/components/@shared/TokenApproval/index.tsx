@@ -4,7 +4,7 @@ import { useWeb3 } from '@context/Web3'
 import Decimal from 'decimal.js'
 import { getOceanConfig } from '@utils/ocean'
 import { ButtonApprove } from './ButtonApprove'
-import { Datatoken } from '@oceanprotocol/lib'
+import { allowance, approve, LoggerInstance } from '@oceanprotocol/lib'
 
 export default function TokenApproval({
   actionButton,
@@ -28,42 +28,42 @@ export default function TokenApproval({
     coin === 'OCEAN'
       ? config.oceanTokenAddress
       : ddo.services[0].datatokenAddress
-  const spender = price.address
+  const spender = price?.address
 
-  // TODO: how to check if token is approved as .allowance does not exist?
-  // const checkTokenApproval = useCallback(async () => {
-  //   if (!web3 || !tokenAddress || !spender || !isAssetNetwork || !amount) return
+  const checkTokenApproval = useCallback(async () => {
+    if (!web3 || !tokenAddress || !spender || !isAssetNetwork || !amount) return
 
-  //   const datatokenInstance = new Datatoken(web3)
-  //   const allowance = await datatokenInstance.allowance(
-  //     tokenAddress,
-  //     accountId,
-  //     spender
-  //   )
-  //   amount &&
-  //     new Decimal(amount).greaterThan(new Decimal('0')) &&
-  //     setTokenApproved(
-  //       new Decimal(allowance).greaterThanOrEqualTo(new Decimal(amount))
-  //     )
-  // }, [web3, tokenAddress, spender, accountId, amount, isAssetNetwork])
+    const allowanceValue = await allowance(
+      web3,
+      tokenAddress,
+      accountId,
+      spender
+    )
 
-  // useEffect(() => {
-  //   checkTokenApproval()
-  // }, [checkTokenApproval])
+    if (!allowanceValue) return
+
+    new Decimal(amount).greaterThan(new Decimal('0')) &&
+      setTokenApproved(
+        new Decimal(allowanceValue).greaterThanOrEqualTo(new Decimal(amount))
+      )
+  }, [web3, tokenAddress, spender, accountId, amount, isAssetNetwork])
+
+  useEffect(() => {
+    checkTokenApproval()
+  }, [checkTokenApproval])
 
   async function approveTokens(amount: string) {
     setLoading(true)
 
     try {
-      const datatokenInstance = new Datatoken(web3)
-      await datatokenInstance.approve(tokenAddress, spender, amount, accountId)
-      setTokenApproved(true)
+      const tx = await approve(web3, accountId, tokenAddress, spender, amount)
+      LoggerInstance.log(`Approve tokens tx:`, tx)
     } catch (error) {
+      LoggerInstance.error(`Approve tokens tx failed:`, error.message)
+    } finally {
+      await checkTokenApproval()
       setLoading(false)
     }
-
-    // await checkTokenApproval()
-    setLoading(false)
   }
 
   return (

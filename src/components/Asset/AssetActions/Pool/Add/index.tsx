@@ -72,7 +72,7 @@ export default function Add({
     async function getMaximum() {
       try {
         const poolInstance = new Pool(web3, LoggerInstance)
-        const tokenInAddress = await poolInstance.getBasetoken(poolAddress)
+        const tokenInAddress = await poolInstance.getBaseToken(poolAddress)
         setTokenInAddress(tokenInAddress)
 
         const amountMaxPool = await poolInstance.getReserve(
