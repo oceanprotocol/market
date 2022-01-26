@@ -172,6 +172,7 @@ export default function Add({
               isDisabled={
                 !isValid ||
                 !isWarningAccepted ||
+                !amount ||
                 amount === '' ||
                 amount === '0'
               }
@@ -183,7 +184,7 @@ export default function Add({
               amount={amount}
               txId={txId}
             />
-            {debug && <DebugOutput title="Collected values" output={values} />}
+            {debug && <DebugOutput output={values} />}
           </>
         )}
       </Formik>
