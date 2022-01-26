@@ -32,11 +32,9 @@ export default function URLInput({
         field.value === '' ||
         !isUrl(field.value) ||
         field.value.includes('javascript:') ||
-        meta.error
+        meta?.error
     )
   }, [field?.value, meta?.error])
-
-  console.log(meta)
 
   return (
     <>
