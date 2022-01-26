@@ -6,6 +6,8 @@ import ExplorerLink from '@shared/ExplorerLink'
 import SuccessConfetti from '@shared/SuccessConfetti'
 import { useWeb3 } from '@context/Web3'
 import TokenApproval from '@shared/TokenApproval'
+import { getOceanConfig } from '@utils/ocean'
+import { useAsset } from '@context/Asset'
 
 export default function Actions({
   isLoading,
@@ -29,6 +31,7 @@ export default function Actions({
   isDisabled?: boolean
 }): ReactElement {
   const { networkId } = useWeb3()
+  const { ddo } = useAsset()
 
   const actionButton = (
     <Button
@@ -41,6 +44,10 @@ export default function Actions({
     </Button>
   )
 
+  const config = getOceanConfig(ddo?.chainId)
+  const tokenAddress = config.oceanTokenAddress
+  const tokenSymbol = config.oceanTokenSymbol
+
   return (
     <>
       <div className={styles.actions}>
@@ -50,7 +57,8 @@ export default function Actions({
           <TokenApproval
             actionButton={actionButton}
             amount={amount}
-            coin={coin || 'OCEAN'}
+            tokenAddress={tokenAddress}
+            tokenSymbol={tokenSymbol}
             disabled={isDisabled}
           />
         ) : (
