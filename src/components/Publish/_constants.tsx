@@ -85,7 +85,7 @@ export const initialValues: FormPublishData = {
     }
   ],
   pricing: {
-    price: 1,
+    price: 0,
     type:
       allowDynamicPricing === 'true'
         ? 'dynamic'

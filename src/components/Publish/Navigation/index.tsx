@@ -5,8 +5,12 @@ import { wizardSteps } from '../_constants'
 import styles from './index.module.css'
 
 export default function Navigation(): ReactElement {
-  const { values, errors, setFieldValue }: FormikContextType<FormPublishData> =
-    useFormikContext()
+  const {
+    values,
+    errors,
+    touched,
+    setFieldValue
+  }: FormikContextType<FormPublishData> = useFormikContext()
 
   function handleStepClick(step: number) {
     setFieldValue('user.stepCurrent', step)
@@ -15,11 +19,8 @@ export default function Navigation(): ReactElement {
   function getSuccessClass(step: number) {
     const isSuccessMetadata = errors.metadata === undefined
     const isSuccessServices = errors.services === undefined
-    isSuccessServices
-      ? (wizardSteps[1].visited = true)
-      : (wizardSteps[1].visited = false)
     const isSuccessPricing =
-      errors.pricing === undefined && wizardSteps[1].visited
+      errors.pricing === undefined && touched.pricing?.price
     const isSuccessPreview =
       isSuccessMetadata && isSuccessServices && isSuccessPricing
 

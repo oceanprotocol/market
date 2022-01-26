@@ -49,7 +49,6 @@ export interface StepContent {
   step: number
   title: string
   component: ReactElement
-  visited?: boolean
 }
 
 export interface PublishFeedback {
