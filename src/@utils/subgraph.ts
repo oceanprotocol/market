@@ -286,7 +286,12 @@ const TopSalesQuery = gql`
 `
 
 const poolDataQuery = gql`
-  query PoolData($pool: ID!, $owner: String!, $user: String) {
+  query PoolData(
+    $pool: ID!
+    $poolAsString: String!
+    $owner: String!
+    $user: String
+  ) {
     poolData: pool(id: $pool) {
       id
       totalShares
@@ -310,14 +315,12 @@ const poolDataQuery = gql`
         shares
       }
     }
-
     poolDataUser: pool(id: $pool) {
       shares(where: { user: $user }) {
         shares
       }
     }
-
-    poolSnapshots(first: 1000, where: { pool: $pool }, orderBy: date) {
+    poolSnapshots(first: 1000, where: { pool: $poolAsString }, orderBy: date) {
       date
       spotPrice
       baseTokenLiquidity
@@ -830,7 +833,10 @@ export async function getPoolData(
   user: string
 ) {
   const queryVariables = {
+    // Using `pool` & `poolAsString` is a workaround to make the mega query work.
+    // See https://github.com/oceanprotocol/ocean-subgraph/issues/301
     pool: pool.toLowerCase(),
+    poolAsString: pool.toLowerCase(),
     owner: owner.toLowerCase(),
     user: user.toLowerCase()
   }
