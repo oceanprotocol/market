@@ -74,7 +74,10 @@ export default function AssetActions({
     async function initFileInfo() {
       setFileIsLoading(true)
 
-      const asset = formikState?.values?.services?.[0].files?.[0].url || ddo.id
+      const asset =
+        formikState?.values?.services?.[0].files?.[0].url ||
+        ddo.metadata.links[0] ||
+        ddo.id
       const providerUrl =
         formikState?.values?.services[0].providerUrl.url ||
         oceanConfig.providerUri
