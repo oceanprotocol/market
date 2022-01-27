@@ -9,11 +9,20 @@
 //   Account
 // } from '@oceanprotocol/lib'
 // import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
-import { Asset } from '@oceanprotocol/lib'
+import {
+  Asset,
+  DDO,
+  ComputeAlgorithm,
+  Service,
+  LoggerInstance,
+  ProviderInstance
+} from '@oceanprotocol/lib'
 import { CancelToken } from 'axios'
 import { gql } from 'urql'
 import { queryMetadata, getFilterTerm, generateBaseQuery } from './aquarius'
 import { fetchDataForMultipleChains } from './subgraph'
+import { getServiceById } from './ddo'
+import { getOceanConfig } from './ocean'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -74,6 +83,38 @@ async function getAssetMetadata(
   const result = await queryMetadata(query, cancelToken)
 
   return result.results
+}
+
+export async function isOrderable(
+  asset: Asset | DDO,
+  serviceId: string,
+  algorithm: ComputeAlgorithm,
+  algorithmDDO: Asset | DDO
+): Promise<boolean> {
+  const datasetService: Service = getServiceById(asset, serviceId)
+  if (!datasetService) return false
+  if (datasetService.type === 'compute') {
+    if (algorithm.meta) {
+      // check if raw algo is allowed
+      if (datasetService.compute.allowRawAlgorithm) return true
+      LoggerInstance.error('ERROR: This service does not allow raw algorithm')
+      return false
+    }
+    if (algorithm.documentId) {
+      const algoService: Service = getServiceById(
+        algorithmDDO,
+        algorithm.serviceId
+      )
+      if (algoService && algoService.type === 'compute') {
+        if (algoService.serviceEndpoint !== datasetService.serviceEndpoint) {
+          this.logger.error(
+            'ERROR: Both assets with compute service are not served by the same provider'
+          )
+          return false
+        }
+      }
+    }
+  }
 }
 
 function getServiceEndpoints(data: TokenOrder[], assets: Asset[]): string[] {
