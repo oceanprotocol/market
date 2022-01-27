@@ -42,7 +42,8 @@ export class SvgWaves {
    * - randomly decide if fill or stroke coloring should be used
    * - create 2 - 5 layers with 3 - 7 points per layers
    *     -> results in random looking, yet small enough svgs
-   * - variance between 0.3 and 0.8 to get results
+   * - variance between 0.3 and 0.8 returns best results
+   *     -> random, different, yet not too chaotic
    *
    * @returns new randomly generated WaveProperties
    */
