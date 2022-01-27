@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect } from 'react'
+import React, { ReactElement } from 'react'
 import Container from '../../atoms/Container'
 import Alert from '../../atoms/Alert'
 import styles from './startMigration.module.css'
