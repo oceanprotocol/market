@@ -1,4 +1,4 @@
-import { SvgWaves } from './Wave'
+import { SvgWaves } from './SvgWaves'
 
 // https://docs.opensea.io/docs/metadata-standards
 export interface NftMetadata {

@@ -1,15 +1,7 @@
+import { Logger } from '@oceanprotocol/lib'
+import { getRandomItemFromArray } from '.'
 import { computeControlPoints } from './bezier-spline'
 import { randomIntFromInterval } from './numbers'
-
-export class Point {
-  x: number
-  y: number
-
-  constructor(x: number, y: number) {
-    this.x = Math.floor(x)
-    this.y = Math.floor(y)
-  }
-}
 
 export interface WaveProperties {
   width?: number
@@ -23,6 +15,16 @@ export interface WaveProperties {
   opacitySteps?: number
 }
 
+class Point {
+  x: number
+  y: number
+
+  constructor(x: number, y: number) {
+    this.x = Math.floor(x)
+    this.y = Math.floor(y)
+  }
+}
+
 export class SvgWaves {
   properties: WaveProperties
   layers: Point[][]
@@ -31,13 +33,25 @@ export class SvgWaves {
   // violet, pink, grey-light
   static colors = ['#e000cf', '#ff4092', '#8b98a9']
 
+  /**
+   * Helper function to get randomly generated WaveProperties
+   * These are generated with a focus on small file size for the svg
+   * meaning low character count.
+   * - width & height: default is 2 digits max (99)
+   * - a color will be randomly picked from SvgWaves.colors
+   * - randomly decide if fill or stroke coloring should be used
+   * - create 2 - 5 layers with 3 - 7 points per layers
+   *     -> results in random looking, yet small enough svgs
+   * - variance between 0.3 and 0.8 to get results
+   *
+   * @returns new randomly generated WaveProperties
+   */
   static getProps(): WaveProperties {
     return {
       width: 99,
       height: 99,
-      color:
-        SvgWaves.colors[randomIntFromInterval(0, SvgWaves.colors.length - 1)],
-      fill: randomIntFromInterval(0, 1) > 0,
+      color: getRandomItemFromArray(SvgWaves.colors),
+      fill: Math.random() < 0.5, // random true or false
       layerCount: randomIntFromInterval(2, 5),
       pointsPerLayer: randomIntFromInterval(3, 7),
       variance: Math.random() * 0.5 + 0.3, // 0.3 - 0.8
@@ -70,7 +84,11 @@ export class SvgWaves {
 
     const cellWidth = width / pointsPerLayer
     const cellHeight = height / layerCount
-    const moveX = cellWidth * variance * 0.5
+
+    // define movement constraints for point generation
+    // lower smoothness results in steeper curves in waves
+    const horizontalSmoothness = 0.5
+    const moveX = cellWidth * variance * (1 - horizontalSmoothness)
     const moveY = cellHeight * variance
 
     const layers = []
@@ -139,10 +157,9 @@ export class SvgWaves {
         `${xPoints[i + 1]},${yPoints[i + 1]}`
     }
 
-    // if closing in bottom corner move there and close
-    if (closed) path += `L${endPoint.x},${endPoint.y}Z`
-    // else just close
-    else path += 'AZ'
+    path = closed
+      ? `${path}L${endPoint.x},${endPoint.y}Z` // if closing in bottom corners move there and close
+      : `${path}AZ` // else just close the path
 
     // create the path element
     // TODO: save characters by replacing closing tag with '<path ... />'
@@ -162,8 +179,10 @@ export class SvgWaves {
     const { layerCount, maxOpacity, opacitySteps } = this.properties
 
     const minOpacity = maxOpacity - (layerCount - 1) * opacitySteps
+    // calculate decimal opacity value for layer
     const opacityDec = minOpacity + layer * opacitySteps
 
+    // translate to hex string
     return opacityDec.toString(16)
   }
 
