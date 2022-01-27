@@ -22,10 +22,9 @@ import {
   DDO
 } from '@oceanprotocol/lib'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
-import axios, { Method } from 'axios'
-import { useCancelToken } from '@hooks/useCancelToken'
 import { getOceanConfig } from '@utils/ocean'
 import { validationSchema } from './_validation'
+import { useAbortController } from '@hooks/useAbortController'
 
 // TODO: restore FormikPersist, add back clear form action
 const formName = 'ocean-publish-form'
@@ -41,7 +40,7 @@ export default function PublishPage({
   const scrollToRef = useRef()
   const { appConfig } = useSiteMetadata()
   const nftFactory = useNftFactory()
-  const newCancelToken = useCancelToken()
+  const newAbortController = useAbortController()
 
   const [feedback, setFeedback] = useState<PublishFeedback>(
     initialPublishFeedback
@@ -137,16 +136,9 @@ export default function PublishPage({
       const encryptedResponse = await ProviderInstance.encrypt(
         ddo,
         values.services[0].providerUrl.url,
-        (httpMethod: Method, url: string, body: string, headers: any) => {
-          return axios(url, {
-            method: httpMethod,
-            data: body,
-            headers: headers,
-            cancelToken: newCancelToken()
-          })
-        }
+        newAbortController()
       )
-      const encryptedDdo = encryptedResponse.data
+      const encryptedDdo = encryptedResponse
       _encryptedDdo = encryptedDdo
       LoggerInstance.log('[publish] Got encrypted DDO', encryptedDdo)
 
