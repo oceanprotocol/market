@@ -21,6 +21,7 @@ function encodeSvg(svgString: string): string {
         ? '<svg'
         : '<svg xmlns="http://www.w3.org/2000/svg"'
     )
+    .replace('></path>', '/>')
     .replace(/"/g, "'")
     .replace(/%/g, '%25')
     .replace(/#/g, '%23')
@@ -32,8 +33,13 @@ function encodeSvg(svgString: string): string {
 }
 
 export function generateNftMetadata(): NftMetadata {
-  const wave = new SvgWaves()
-  const svg = wave.generateSvg()
+  const waves = new SvgWaves()
+  const svg = waves.generateSvg()
+
+  // TODO: figure out if also image URI needs base64 encoding
+  // e.g. 'data:image/svg+xml;base64,'
+  // generated SVG embedded as 'data:image/svg+xml' and encoded characters
+  const imageData = `data:image/svg+xml,${encodeSvg(svg.outerHTML)}`
 
   const newNft: NftMetadata = {
     name: 'Ocean Asset NFT',
@@ -42,13 +48,10 @@ export function generateNftMetadata(): NftMetadata {
     // TODO: ideally this includes the final DID
     external_url: 'https://market.oceanprotocol.com',
     background_color: '141414', // dark background
-    // TODO: figure out if also image URI needs base64 encoding
-    // generated SVG embedded as 'data:image/svg+xml' and encoded characters
-    image_data: `data:image/svg+xml,${encodeSvg(svg.outerHTML)}`
-    // generated SVG embedded as 'data:image/svg+xml;base64'
-    // image: `data:image/svg+xml;base64,${window?.btoa(image)}`
-    // image: `data:image/svg+xml;base64,${Buffer.from(image).toString('base64')}`
+    image_data: imageData
   }
+
+  console.log('image data:', imageData)
 
   return newNft
 }

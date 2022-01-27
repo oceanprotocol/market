@@ -1,4 +1,4 @@
-import { Logger } from '@oceanprotocol/lib'
+import { LoggerInstance } from '@oceanprotocol/lib'
 import { getRandomItemFromArray } from '.'
 import { computeControlPoints } from './bezier-spline'
 import { randomIntFromInterval } from './numbers'
@@ -77,6 +77,8 @@ export class SvgWaves {
   constructor() {
     this.properties = SvgWaves.getProps()
     this.layers = this.generateLayers()
+
+    LoggerInstance.log('[SvgWaves] created new waves:', this)
   }
 
   generateLayers(): Point[][] {
@@ -105,9 +107,6 @@ export class SvgWaves {
 
   generateSvg(): Element {
     const svg = document.createElementNS(SvgWaves.xmlns, 'svg')
-    // TODO: figure out if width,height & xmlns can be removed
-    // could save characters
-    // for example see https://stackoverflow.com/questions/18467982/are-svg-parameters-such-as-xmlns-and-version-needed
     svg.setAttribute('width', this.properties.width.toString())
     svg.setAttribute('height', this.properties.height.toString())
     svg.setAttribute('fill', this.properties.fill ? undefined : 'transparent')
@@ -121,6 +120,7 @@ export class SvgWaves {
       svg.appendChild(path)
     }
 
+    LoggerInstance.log('[SvgWaves] generated new svg for wave:', svg.outerHTML)
     return svg
   }
 
@@ -163,7 +163,6 @@ export class SvgWaves {
       : `${path}AZ` // else just close the path
 
     // create the path element
-    // TODO: save characters by replacing closing tag with '<path ... />'
     const svgPath = document.createElementNS(SvgWaves.xmlns, 'path')
     const colorStyle = closed ? 'fill' : 'stroke'
     svgPath.setAttributeNS(

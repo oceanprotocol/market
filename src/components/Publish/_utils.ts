@@ -82,12 +82,11 @@ export async function transformPublishFormToDdo(
     dockerImageCustomChecksum
   } = metadata
   const { access, files, links, providerUrl, timeout } = services[0]
-  // TODO: remove comments
-  console.log('nft meta', generateNftCreateData(metadata.nft))
+
   const did = nftAddress ? generateDid(nftAddress, chainId) : '0x...'
   const currentTime = dateToStringNoMS(new Date())
   const isPreview = !datatokenAddress && !nftAddress
-  console.log('did', did, isPreview)
+
   // Transform from files[0].url to string[] assuming only 1 file
   const filesTransformed = files?.length && files[0].valid && [files[0].url]
   const linksTransformed = links?.length && links[0].valid && [links[0].url]
