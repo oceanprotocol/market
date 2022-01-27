@@ -113,15 +113,17 @@ export function transformPublishFormToMetadata(
 ): MetadataMarket {
   const currentTime = toStringNoMS(new Date())
 
-  const filesTransformed = files?.length &&
-    (files as File[])[0].valid && [
+  const filesTransformed = typeof files !== 'string' &&
+    files?.length && [
       {
         ...(files as File[])[0],
         url: (files as File[])[0].url.replace('javascript:', '')
       }
     ]
-  const linksTransformed = links?.length &&
-    links[0].valid && [links[0].url.replace('javascript:', '')]
+  const linksTransformed = typeof links !== 'string' &&
+    links?.length && [
+      { ...links[0], url: links[0].url.replace('javascript:', '') }
+    ]
 
   const metadata: MetadataMarket = {
     main: {
@@ -231,8 +233,8 @@ export function transformPublishAlgorithmFormToMetadata(
     entrypoint,
     algorithmLanguage
   )
-  const filesTransformed = files?.length &&
-    (files as File[])[0].valid && [
+  const filesTransformed = typeof files !== 'string' &&
+    files?.length && [
       {
         ...(files as File[])[0],
         url: (files as File[])[0].url.replace('javascript:', '')
