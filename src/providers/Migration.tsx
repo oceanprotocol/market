@@ -24,10 +24,25 @@ import { getEnsName } from '../utils/ens'
 import { UserBalance } from '../@types/TokenBalance'
 import { getOceanBalance } from '../utils/ocean'
 import useNetworkMetadata from '../hooks/useNetworkMetadata'
+import { PoolStatus as MigrationPoolStatus } from 'v4-migration-lib/' // currently using npm link
 
-interface MigrationStatus {}
+// interface MigrationPoolStatus {
+//     migrationStatus status;
+//     address poolV3Address;
+//     address poolV4Address;
+//     string didV3;
+//     string didV4;
+//     address owner;
+//     address[] poolShareOwners;
+//     address dtV3Address;
+//     uint256 totalOcean;
+//     uint256 totalDTBurnt;
+//     uint256 newLPTAmount;
+//     uint256 lptRounding;
+//     uint256 deadline;
+// }
 
-const MigrationContext = createContext({} as MigrationStatus)
+const MigrationContext = createContext({} as MigrationPoolStatus)
 
 function MigrationProvider({
   asset,
@@ -47,12 +62,13 @@ function MigrationProvider({
   )
 }
 // Helper hook to access the provider values
-const useMigrationStatus = (): MigrationStatus => useContext(MigrationContext)
+const useMigrationStatus = (): MigrationPoolStatus =>
+  useContext(MigrationContext)
 
 export {
   MigrationProvider,
   useMigrationStatus,
-  MigrationStatus,
+  MigrationPoolStatus,
   MigrationContext
 }
 export default MigrationProvider
