@@ -51,8 +51,6 @@ export function generateNftMetadata(): NftMetadata {
     image_data: imageData
   }
 
-  console.log('image data:', imageData)
-
   return newNft
 }
 
