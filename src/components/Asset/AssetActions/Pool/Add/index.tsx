@@ -13,14 +13,14 @@ import DebugOutput from '@shared/DebugOutput'
 import { useWeb3 } from '@context/Web3'
 import { useAsset } from '@context/Asset'
 import content from '../../../../../../content/price.json'
-import { Datatoken } from '@oceanprotocol/lib'
+import { LoggerInstance, Pool } from '@oceanprotocol/lib'
 
 export interface FormAddLiquidity {
-  amount: number
+  amount: string
 }
 
 const initialValues: FormAddLiquidity = {
-  amount: undefined
+  amount: ''
 }
 
 export default function Add({
@@ -29,8 +29,9 @@ export default function Add({
   totalPoolTokens,
   totalBalance,
   swapFee,
-  dtSymbol,
-  dtAddress,
+  datatokenSymbol,
+  tokenInSymbol,
+  tokenInAddress,
   fetchAllData
 }: {
   setShowAdd: (show: boolean) => void
@@ -38,18 +39,16 @@ export default function Add({
   totalPoolTokens: string
   totalBalance: PoolBalance
   swapFee: string
-  dtSymbol: string
-  dtAddress: string
+  datatokenSymbol: string
+  tokenInSymbol: string
+  tokenInAddress: string
   fetchAllData: () => void
 }): ReactElement {
   const { accountId, balance, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
   const { debug } = useUserPreferences()
   const [txId, setTxId] = useState<string>()
-  const [coin, setCoin] = useState('OCEAN')
-  const [dtBalance, setDtBalance] = useState<string>()
   const [amountMax, setAmountMax] = useState<string>()
-  const [amount, setAmount] = useState<string>('0')
   const [newPoolTokens, setNewPoolTokens] = useState('0')
   const [newPoolShare, setNewPoolShare] = useState('0')
   const [isWarningAccepted, setIsWarningAccepted] = useState(false)
@@ -57,65 +56,65 @@ export default function Add({
   // Live validation rules
   // https://github.com/jquense/yup#number
   const validationSchema: Yup.SchemaOf<FormAddLiquidity> = Yup.object().shape({
-    amount: Yup.number()
+    amount: Yup.string()
       .min(0.00001, (param) => `Must be more or equal to ${param.min}`)
       .max(
         Number(amountMax),
-        `Maximum you can add is ${Number(amountMax).toFixed(2)} ${coin}`
+        `Maximum you can add is ${Number(amountMax).toFixed(2)} OCEAN`
       )
       .required('Required')
   })
 
-  // Get datatoken balance when datatoken selected
+  // Get maximum amount for OCEAN
   useEffect(() => {
-    if (!web3 || !accountId || !isAssetNetwork || coin === 'OCEAN') return
-
-    async function getDtBalance() {
-      const datatokenInstance = new Datatoken(web3)
-      const dtBalance = await datatokenInstance.balance(dtAddress, accountId)
-      setDtBalance(dtBalance)
-    }
-    getDtBalance()
-  }, [web3, accountId, dtAddress, coin, isAssetNetwork])
-
-  // Get maximum amount for either OCEAN or datatoken
-  useEffect(() => {
-    if (!accountId || !isAssetNetwork || !poolAddress) return
+    if (!web3 || !accountId || !isAssetNetwork || !poolAddress) return
 
     async function getMaximum() {
-      // const amountMaxPool =
-      //   coin === 'OCEAN'
-      //     ? await ocean.pool.getOceanMaxAddLiquidity(poolAddress)
-      //     : await ocean.pool.getDTMaxAddLiquidity(poolAddress)
-      // const amountMax =
-      //   coin === 'OCEAN'
-      //     ? Number(balance.ocean) > Number(amountMaxPool)
-      //       ? amountMaxPool
-      //       : balance.ocean
-      //     : Number(dtBalance) > Number(amountMaxPool)
-      //     ? amountMaxPool
-      //     : dtBalance
-      // setAmountMax(Number(amountMax).toFixed(3))
+      try {
+        const poolInstance = new Pool(web3, LoggerInstance)
+
+        const amountMaxPool = await poolInstance.getReserve(
+          poolAddress,
+          tokenInAddress
+        )
+
+        const amountMax =
+          Number(balance.ocean) > Number(amountMaxPool)
+            ? amountMaxPool
+            : balance.ocean
+        setAmountMax(Number(amountMax).toFixed(3))
+      } catch (error) {
+        LoggerInstance.error(error.message)
+      }
     }
     getMaximum()
-  }, [accountId, isAssetNetwork, poolAddress, coin, dtBalance, balance.ocean])
+  }, [
+    web3,
+    accountId,
+    isAssetNetwork,
+    poolAddress,
+    tokenInAddress,
+    balance?.ocean
+  ])
 
   // Submit
-  async function handleAddLiquidity(amount: number, resetForm: () => void) {
+  async function handleAddLiquidity(amount: string, resetForm: () => void) {
+    const poolInstance = new Pool(web3, LoggerInstance)
+    const minPoolAmountOut = '0' // ? TODO: how to get?
+
     try {
-      // const result =
-      //   coin === 'OCEAN'
-      //     ? await ocean.pool.addOceanLiquidity(
-      //         accountId,
-      //         poolAddress,
-      //         `${amount}`
-      //       )
-      //     : await ocean.pool.addDTLiquidity(accountId, poolAddress, `${amount}`)
-      // setTxId(result?.transactionHash)
-      // resetForm()
+      const result = await poolInstance.joinswapExternAmountIn(
+        accountId,
+        poolAddress,
+        tokenInAddress,
+        amount,
+        minPoolAmountOut
+      )
+      setTxId(result?.transactionHash)
       fetchAllData()
+      resetForm()
     } catch (error) {
-      console.error(error.message)
+      LoggerInstance.error(error.message)
       toast.error(error.message)
     }
   }
@@ -139,12 +138,9 @@ export default function Add({
             <div className={styles.addInput}>
               {isWarningAccepted ? (
                 <FormAdd
-                  coin={coin}
-                  dtBalance={dtBalance}
-                  dtSymbol={dtSymbol}
+                  tokenInAddress={tokenInAddress}
+                  tokenInSymbol={tokenInSymbol}
                   amountMax={amountMax}
-                  setCoin={setCoin}
-                  setAmount={setAmount}
                   totalPoolTokens={totalPoolTokens}
                   totalBalance={totalBalance}
                   poolAddress={poolAddress}
@@ -171,29 +167,30 @@ export default function Add({
               newPoolTokens={newPoolTokens}
               newPoolShare={newPoolShare}
               swapFee={swapFee}
-              dtSymbol={dtSymbol}
+              datatokenSymbol={datatokenSymbol}
               totalPoolTokens={totalPoolTokens}
               totalBalance={totalBalance}
-              coin={coin}
             />
 
             <Actions
               isDisabled={
                 !isValid ||
                 !isWarningAccepted ||
-                amount === '' ||
-                amount === '0'
+                !values.amount ||
+                values.amount === '' ||
+                values.amount === '0'
               }
               isLoading={isSubmitting}
               loaderMessage="Adding Liquidity..."
               successMessage="Successfully added liquidity."
               actionName={content.pool.add.action}
               action={submitForm}
-              amount={amount}
-              coin={coin}
+              amount={values.amount}
+              tokenAddress={tokenInAddress}
+              tokenSymbol={tokenInSymbol}
               txId={txId}
             />
-            {debug && <DebugOutput title="Collected values" output={values} />}
+            {debug && <DebugOutput output={values} />}
           </>
         )}
       </Formik>

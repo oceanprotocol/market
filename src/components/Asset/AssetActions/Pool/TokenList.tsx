@@ -7,10 +7,10 @@ import Decimal from 'decimal.js'
 export default function TokenList({
   title,
   children,
-  ocean,
-  oceanSymbol,
-  dt,
-  dtSymbol,
+  baseTokenValue,
+  baseTokenSymbol,
+  datatokenValue,
+  datatokenSymbol,
   poolShares,
   conversion,
   highlight,
@@ -18,10 +18,10 @@ export default function TokenList({
 }: {
   title: string | ReactNode
   children: ReactNode
-  ocean: string
-  oceanSymbol: string
-  dt: string
-  dtSymbol: string
+  baseTokenValue: string
+  baseTokenSymbol: string
+  datatokenValue: string
+  datatokenSymbol: string
   poolShares: string
   conversion: Decimal
   highlight?: boolean
@@ -32,8 +32,8 @@ export default function TokenList({
       <h3 className={styles.title}>{title}</h3>
       <div className={styles.tokens}>
         <div>
-          <Token symbol={oceanSymbol} balance={ocean} />
-          <Token symbol={dtSymbol} balance={dt} />
+          <Token symbol={baseTokenSymbol} balance={baseTokenValue} />
+          <Token symbol={datatokenSymbol} balance={datatokenValue} />
           {conversion.greaterThan(0) && (
             <Conversion
               price={conversion.toString()}
@@ -45,7 +45,6 @@ export default function TokenList({
 
         <div>
           <Token symbol="pool shares" balance={poolShares} noIcon />
-
           {children}
         </div>
       </div>
