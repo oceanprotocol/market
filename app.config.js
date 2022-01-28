@@ -74,5 +74,19 @@ module.exports = {
   // is used to create and show a privacy preference center / cookie banner
   // To learn more about how to configure and use this, please refer to the readme
   privacyPreferenceCenter:
-    process.env.GATSBY_PRIVACY_PREFERENCE_CENTER || 'false'
+    process.env.GATSBY_PRIVACY_PREFERENCE_CENTER || 'false',
+
+  // Migration contract addresses
+  ethereumMigrationContractAddresss:
+    process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_ETHEREUM || '',
+  polygonMigrationContractAddresss:
+    process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_POLYGON || '',
+  bscMigrationContractAddresss:
+    process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_BSC || '',
+  moonriverMigrationContractAddresss:
+    process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_MOONRIVER || '',
+  ewcMigrationContractAddresss:
+    process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_EWC || '',
+  rinkebyMigrationContractAddresss:
+    process.env.GATSBY_MIGRATION_CONTRACT_ADDRESS_RINKEBY || ''
 }
