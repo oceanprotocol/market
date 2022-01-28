@@ -10,11 +10,13 @@ import styles from './EditHistory.module.css'
 const getReceipts = gql`
   query ReceiptData($address: ID!) {
     nftUpdates(
-      where: { id: $address }
+      where: { nft: $address }
       orderBy: timestamp
       orderDirection: desc
     ) {
-      id
+      nft {
+        address
+      }
       tx
       timestamp
     }
@@ -39,7 +41,7 @@ export default function EditHistory(): ReactElement {
 
   const [result] = useQuery({
     query: getReceipts,
-    variables: { address: ddo?.services[0].datatokenAddress.toLowerCase() },
+    variables: { address: ddo?.nft.address.toLowerCase() },
     context: queryContext,
     pause: !ddo || !queryContext
   })
