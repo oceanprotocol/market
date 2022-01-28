@@ -14,6 +14,7 @@ const getReceipts = gql`
       orderBy: timestamp
       orderDirection: desc
     ) {
+      id
       nft {
         address
       }
