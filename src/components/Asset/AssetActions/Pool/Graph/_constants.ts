@@ -35,8 +35,8 @@ defaults.animation = { easing: 'easeInOutQuart', duration: 1000 }
 export const lineStyle: Partial<ChartDataset> = {
   fill: false,
   borderWidth: 2,
-  pointBorderWidth: 0,
-  pointRadius: 0,
+  pointBorderWidth: 1,
+  pointRadius: 2,
   pointHoverRadius: 4,
   pointHoverBorderWidth: 0,
   pointHitRadius: 2,
