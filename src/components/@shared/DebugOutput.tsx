@@ -4,12 +4,12 @@ export default function DebugOutput({
   title,
   output
 }: {
-  title: string
+  title?: string
   output: any
 }): ReactElement {
   return (
     <div style={{ marginTop: 'var(--spacer)' }}>
-      <h5>{title}</h5>
+      {title && <h5>{title}</h5>}
       <pre style={{ wordWrap: 'break-word' }}>
         <code>{JSON.stringify(output, null, 2)}</code>
       </pre>

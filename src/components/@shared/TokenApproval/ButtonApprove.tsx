@@ -7,19 +7,19 @@ import content from '../../../../content/price.json'
 
 export function ButtonApprove({
   amount,
-  coin,
+  tokenSymbol,
   approveTokens,
   isLoading
 }: {
   amount: string
-  coin: string
+  tokenSymbol: string
   approveTokens: (amount: string) => void
   isLoading: boolean
 }): ReactElement {
   const { infiniteApproval } = useUserPreferences()
 
   return isLoading ? (
-    <Loader message={`Approving ${coin}...`} />
+    <Loader message={`Approving ${tokenSymbol}...`} />
   ) : infiniteApproval ? (
     <Button
       style="primary"
@@ -27,16 +27,22 @@ export function ButtonApprove({
       disabled={parseInt(amount) < 1}
       onClick={() => approveTokens(`${2 ** 53 - 1}`)}
     >
-      Approve {coin}{' '}
+      Approve {tokenSymbol}{' '}
       <Tooltip
-        content={content.pool.tooltips.approveInfinite.replace('COIN', coin)}
+        content={content.pool.tooltips.approveInfinite.replace(
+          'COIN',
+          tokenSymbol
+        )}
       />
     </Button>
   ) : (
     <Button style="primary" size="small" onClick={() => approveTokens(amount)}>
-      Approve {amount} {coin}
+      Approve {amount} {tokenSymbol}
       <Tooltip
-        content={content.pool.tooltips.approveSpecific.replace('COIN', coin)}
+        content={content.pool.tooltips.approveSpecific.replace(
+          'COIN',
+          tokenSymbol
+        )}
       />
     </Button>
   )
