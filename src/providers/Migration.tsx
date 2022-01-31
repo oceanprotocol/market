@@ -14,6 +14,7 @@ import { useWeb3 } from './Web3'
 import { useAsset } from './Asset'
 
 interface MigrationStatusProvider {
+  migrationAddress: string
   status: number
   poolV3Address: string
   poolV4Address: string
@@ -38,10 +39,9 @@ function MigrationProvider({
   asset: string | DDO
   children: ReactNode
 }): ReactElement {
-  const [migrationPoolStatus, setMigrationStatus] =
-    useState<MigrationPoolStatus>()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>()
+  const [migrationAddress, setMigrationAddress] = useState<string>()
   const [status, setStatus] = useState<number>()
   const [poolV3Address, setPoolV3Address] = useState<string>()
   const [poolV4Address, setPoolV4Address] = useState<string>()
@@ -59,31 +59,29 @@ function MigrationProvider({
   const { ddo } = useAsset()
   const { web3 } = useWeb3()
 
-  function setMigrationAddress(chainId: number): string {
-    let migrationAddress: string
+  async function switchMigrationAddress(chainId: number): Promise<void> {
     switch (chainId) {
       case 1:
-        migrationAddress = appConfig.ethereumMigrationContractAddresss
+        setMigrationAddress(appConfig.ethereumMigrationContractAddresss)
         break
       case 137:
-        migrationAddress = appConfig.polygonMigrationContractAddresss
+        setMigrationAddress(appConfig.polygonMigrationContractAddresss)
         break
       case 56:
-        migrationAddress = appConfig.bscMigrationContractAddresss
+        setMigrationAddress(appConfig.bscMigrationContractAddresss)
         break
       case 1285:
-        migrationAddress = appConfig.moonriverMigrationContractAddresss
+        setMigrationAddress(appConfig.moonriverMigrationContractAddresss)
         break
       case 246:
-        migrationAddress = appConfig.ewcMigrationContractAddresss
+        setMigrationAddress(appConfig.ewcMigrationContractAddresss)
         break
       case 4:
-        migrationAddress = appConfig.rinkebyMigrationContractAddresss
+        setMigrationAddress(appConfig.rinkebyMigrationContractAddresss)
         break
       default:
         break
     }
-    return migrationAddress
   }
 
   async function fetchMigrationStatus(
@@ -115,7 +113,7 @@ function MigrationProvider({
     if (!ddo) return
 
     async function init() {
-      const migrationAddress = setMigrationAddress(chainId)
+      await switchMigrationAddress(chainId)
       const status = await fetchMigrationStatus(
         ddo.price.pools[0],
         migrationAddress
@@ -141,6 +139,7 @@ function MigrationProvider({
   return (
     <MigrationContext.Provider
       value={{
+        migrationAddress,
         status,
         poolV3Address,
         poolV4Address,
@@ -161,7 +160,7 @@ function MigrationProvider({
   )
 }
 // Helper hook to access the provider values
-const useMigrationStatus = (): MigrationPoolStatus =>
+const useMigrationStatus = (): MigrationStatusProvider =>
   useContext(MigrationContext)
 
 export {
