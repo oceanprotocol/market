@@ -25,7 +25,6 @@
     "@oceanprotocol/typographies": "^0.1.0",
     "@portis/web3": "^4.0.6",
     "@tippyjs/react": "^4.2.6",
-    "@urql/introspection": "^0.3.1",
     "@walletconnect/web3-provider": "^1.7.1",
     "axios": "^0.25.0",
     "bignumber.js": "^9.0.2",
