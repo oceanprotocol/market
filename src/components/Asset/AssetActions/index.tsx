@@ -73,14 +73,15 @@ export default function AssetActions({
 
     async function initFileInfo() {
       setFileIsLoading(true)
-
-      const asset = formikState?.values?.services?.[0].files?.[0].url || ddo.id
+      const fileUrl =
+        formikState?.values?.services?.[0].files?.[0].url ||
+        (ddo.metadata?.links ? ddo.metadata?.links[0] : ' ')
       const providerUrl =
         formikState?.values?.services[0].providerUrl.url ||
         oceanConfig.providerUri
 
       try {
-        const fileInfoResponse = await getFileInfo(asset, providerUrl)
+        const fileInfoResponse = await getFileInfo(fileUrl, providerUrl)
         fileInfoResponse && setFileMetadata(fileInfoResponse[0])
         setFileIsLoading(false)
       } catch (error) {

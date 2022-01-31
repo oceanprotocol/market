@@ -11,18 +11,16 @@ export default function Output({
   newPoolTokens,
   newPoolShare,
   swapFee,
-  dtSymbol,
+  datatokenSymbol,
   totalPoolTokens,
-  totalBalance,
-  coin
+  totalBalance
 }: {
   newPoolTokens: string
   newPoolShare: string
   swapFee: string
-  dtSymbol: string
+  datatokenSymbol: string
   totalPoolTokens: string
   totalBalance: PoolBalance
-  coin: string
 }): ReactElement {
   const { help, titleIn, titleOut } = content.pool.add.output
 
@@ -37,21 +35,14 @@ export default function Output({
       return
     const newPoolSupply = new Decimal(totalPoolTokens).plus(newPoolTokens)
     const ratio = new Decimal(newPoolTokens).div(newPoolSupply)
-    const newOceanReserve =
-      coin === 'OCEAN'
-        ? new Decimal(totalBalance.ocean).plus(values.amount)
-        : new Decimal(totalBalance.ocean)
-    const newDtReserve =
-      coin === 'OCEAN'
-        ? new Decimal(totalBalance.datatoken)
-        : new Decimal(totalBalance.datatoken).plus(values.amount)
+    const newOceanReserve = new Decimal(totalBalance.ocean).plus(values.amount)
+    const newDtReserve = new Decimal(totalBalance.datatoken)
     const poolOcean = newOceanReserve.mul(ratio).toString()
     const poolDatatoken = newDtReserve.mul(ratio).toString()
     setPoolOcean(poolOcean)
     setPoolDatatoken(poolDatatoken)
   }, [
     values.amount,
-    coin,
     totalBalance,
     totalPoolTokens,
     newPoolShare,
@@ -72,7 +63,7 @@ export default function Output({
         <div>
           <p>{titleOut}</p>
           <Token symbol="OCEAN" balance={poolOcean} />
-          <Token symbol={dtSymbol} balance={poolDatatoken} />
+          <Token symbol={datatokenSymbol} balance={poolDatatoken} />
         </div>
       </div>
     </>
