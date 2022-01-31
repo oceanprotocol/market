@@ -2,9 +2,9 @@ import React, { ReactElement, useState } from 'react'
 import Search from '../components/Search'
 import Page from '@shared/Page'
 import { accountTruncate } from '@utils/web3'
-import ethereumAddress from 'ethereum-address'
 import { MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS } from '@utils/aquarius'
 import { useRouter } from 'next/router'
+import web3 from 'web3'
 
 export default function PageSearch(): ReactElement {
   const router = useRouter()
@@ -13,7 +13,7 @@ export default function PageSearch(): ReactElement {
   const [totalResults, setTotalResults] = useState<number>()
   const [totalPagesNumber, setTotalPagesNumber] = useState<number>()
 
-  const isETHAddress = ethereumAddress.isAddress(text as string)
+  const isETHAddress = web3.utils.isAddress(text as string)
   const searchValue =
     (isETHAddress ? accountTruncate(text as string) : text) ||
     tags ||
