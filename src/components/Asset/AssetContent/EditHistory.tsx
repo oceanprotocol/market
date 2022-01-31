@@ -36,8 +36,8 @@ export default function EditHistory(): ReactElement {
         return 'updated'
       case 'STATE_UPDATED':
         return 'state updated'
-      case 'TOKEN_UPDATED':
-        return 'token updated'
+      case 'TOKENURI_UPDATED':
+        return 'token uri updated'
       default:
         return ''
     }
