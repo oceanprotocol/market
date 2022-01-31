@@ -7,6 +7,7 @@ import Web3 from 'web3'
 import { useAsset } from '../../../providers/Asset'
 import { useMigrationStatus } from '../../../providers/Migration'
 import { Migration } from 'v4-migration-lib/'
+import { DDO, MetadataMain } from '@oceanprotocol/lib'
 
 async function startMigration(
   web3: Web3,
@@ -14,9 +15,12 @@ async function startMigration(
   migrationAddress: string,
   poolV3Address: string,
   dtV3Address: string,
-  did: string
+  did: string,
+  ddo: DDO,
+  metadata: MetadataMain
 ) {
   console.log('Start Migration Clicked')
+
   const migration = new Migration(web3)
   await migration.startMigration(
     accountId,
@@ -24,15 +28,15 @@ async function startMigration(
     dtV3Address,
     poolV3Address,
     did,
-    'tokenURI',
+    metadata.encryptedFiles,
     ['NFTname', 'NFTsymbol'],
-    ['ERC20name', 'ERC20symbol']
+    [ddo.dataTokenInfo.name, ddo.dataTokenInfo.symbol]
   )
 }
 
 export default function StartMigration(): ReactElement {
   const { accountId } = useWeb3()
-  const { owner, did } = useAsset()
+  const { owner, did, ddo, metadata } = useAsset()
   const { status, migrationAddress, poolV3Address, dtV3Address } =
     useMigrationStatus()
   const { web3 } = useWeb3()
@@ -53,7 +57,8 @@ export default function StartMigration(): ReactElement {
                 migrationAddress,
                 poolV3Address,
                 dtV3Address,
-                did
+                did,
+                ddo
               )
           }}
         />
