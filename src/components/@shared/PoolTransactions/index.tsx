@@ -30,10 +30,12 @@ const txHistoryQueryByPool = gql`
         symbol
         address
       }
+      baseTokenValue
       datatoken {
         symbol
         address
       }
+      datatokenValue
       type
       tx
       timestamp
