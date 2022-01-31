@@ -32,10 +32,9 @@ const getComputeOrders = gql`
       where: { payer: $user }
     ) {
       id
-      serviceId
-      token {
+      serviceIndex
+      datatoken {
         address
-        isDatatoken
       }
       tx
       createdTimestamp
@@ -51,13 +50,12 @@ const getComputeOrdersByDatatokenAddress = gql`
     orders(
       orderBy: createdTimestamp
       orderDirection: desc
-      where: { payer: $user, token: $datatokenAddress }
+      where: { payer: $user, datatoken: $datatokenAddress }
     ) {
       id
-      serviceId
-      token {
+      serviceIndex
+      datatoken {
         address
-        isDatatoken
       }
       tx
       createdTimestamp
