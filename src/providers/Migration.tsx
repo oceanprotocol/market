@@ -13,31 +13,23 @@ import appConfig from '../../app.config'
 import { useWeb3 } from './Web3'
 import { useAsset } from './Asset'
 
-const MigrationContext = createContext({} as MigrationPoolStatus)
-let migrationAddress: string
-
-switch (chainId) {
-  case 1:
-    migrationAddress = appConfig.ethereumMigrationContractAddresss
-    break
-  case 137:
-    migrationAddress = appConfig.polygonMigrationContractAddresss
-    break
-  case 56:
-    migrationAddress = appConfig.bscMigrationContractAddresss
-    break
-  case 1285:
-    migrationAddress = appConfig.moonriverMigrationContractAddresss
-    break
-  case 246:
-    migrationAddress = appConfig.ewcMigrationContractAddresss
-    break
-  case 4:
-    migrationAddress = appConfig.rinkebyMigrationContractAddresss
-    break
-  default:
-    break
+interface MigrationStatusProvider {
+  status: number
+  poolV3Address: string
+  poolV4Address: string
+  didV3: string
+  didV4: string
+  owner: string
+  poolShareOwners: string[]
+  dtV3Address: string
+  totalOcean: number
+  totalDTBurnt: number
+  newLPTAmount: number
+  lptRounding: number
+  deadline: number
 }
+
+const MigrationContext = createContext({} as MigrationStatusProvider)
 
 function MigrationProvider({
   asset,
@@ -46,16 +38,61 @@ function MigrationProvider({
   asset: string | DDO
   children: ReactNode
 }): ReactElement {
+  const [migrationPoolStatus, setMigrationStatus] =
+    useState<MigrationPoolStatus>()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>()
+  const [status, setStatus] = useState<number>()
+  const [poolV3Address, setPoolV3Address] = useState<string>()
+  const [poolV4Address, setPoolV4Address] = useState<string>()
+  const [didV3, setDidV3] = useState<string>()
+  const [didV4, setDidV4] = useState<string>()
+  const [owner, setOwner] = useState<string>()
+  const [poolShareOwners, setPoolShareOwners] = useState<string[]>()
+  const [dtV3Address, setDtV3Address] = useState<string>()
+  const [totalOcean, setTotalOcean] = useState<number>()
+  const [totalDTBurnt, setTotalDTBurnt] = useState<number>()
+  const [newLPTAmount, setNewLPTAmount] = useState<number>()
+  const [lptRounding, setLptRounding] = useState<number>()
+  const [deadline, setDeadline] = useState<number>()
   const { chainId } = useWeb3()
   const { ddo } = useAsset()
   const { web3 } = useWeb3()
-  const migration = new Migration(web3)
 
-  async function fetchMigrationStatus(poolAddressV3: string) {
+  function setMigrationAddress(chainId: number): string {
+    let migrationAddress: string
+    switch (chainId) {
+      case 1:
+        migrationAddress = appConfig.ethereumMigrationContractAddresss
+        break
+      case 137:
+        migrationAddress = appConfig.polygonMigrationContractAddresss
+        break
+      case 56:
+        migrationAddress = appConfig.bscMigrationContractAddresss
+        break
+      case 1285:
+        migrationAddress = appConfig.moonriverMigrationContractAddresss
+        break
+      case 246:
+        migrationAddress = appConfig.ewcMigrationContractAddresss
+        break
+      case 4:
+        migrationAddress = appConfig.rinkebyMigrationContractAddresss
+        break
+      default:
+        break
+    }
+    return migrationAddress
+  }
+
+  async function fetchMigrationStatus(
+    poolAddressV3: string,
+    migrationAddress: string
+  ): Promise<MigrationPoolStatus> {
     Logger.log('Fetching migration status')
     setLoading(true)
+    const migration = new Migration(web3)
     const status = await migration.getPoolStatus(
       migrationAddress,
       poolAddressV3
@@ -68,12 +105,55 @@ function MigrationProvider({
       setError(undefined)
     }
     setLoading(false)
+    return status
   }
+
+  //
+  // Get and set Migration status based on passed DDO
+  //
+  useEffect(() => {
+    if (!ddo) return
+
+    async function init() {
+      const migrationAddress = setMigrationAddress(chainId)
+      const status = await fetchMigrationStatus(
+        ddo.price.pools[0],
+        migrationAddress
+      )
+      Logger.debug('[Migration] Got Migration Pool Status', status)
+      setStatus(status.status)
+      setPoolV3Address(status.poolV3Address)
+      setPoolV4Address(status.poolV4Address)
+      setDidV3(status.didV3)
+      setDidV4(status.didV4)
+      setOwner(status.owner)
+      setPoolShareOwners(status.poolShareOwners)
+      setDtV3Address(status.dtV3Address)
+      setTotalOcean(status.totalOcean)
+      setTotalDTBurnt(status.totalDTBurnt)
+      setNewLPTAmount(status.newLPTAmount)
+      setLptRounding(status.lptRounding)
+      setDeadline(status.deadline)
+    }
+    init()
+  }, [ddo, chainId])
 
   return (
     <MigrationContext.Provider
       value={{
-        migrationStatus
+        status,
+        poolV3Address,
+        poolV4Address,
+        didV3,
+        didV4,
+        owner,
+        poolShareOwners,
+        dtV3Address,
+        totalOcean,
+        totalDTBurnt,
+        newLPTAmount,
+        lptRounding,
+        deadline
       }}
     >
       {children}
