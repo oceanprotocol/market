@@ -22,7 +22,7 @@ const previousOrderQuery = gql`
   query PreviousOrder($id: String!, $account: String!) {
     orders(
       first: 1
-      where: { token: $id, payer: $account }
+      where: { datatoken: $id, payer: $account }
       orderBy: createdTimestamp
       orderDirection: desc
     ) {

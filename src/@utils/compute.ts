@@ -23,10 +23,9 @@ const getComputeOrders = gql`
       where: { payer: $user }
     ) {
       id
-      serviceId
-      token {
+      serviceIndex
+      datatoken {
         address
-        isDatatoken
       }
       tx
       createdTimestamp
@@ -48,7 +47,6 @@ const getComputeOrdersByDatatokenAddress = gql`
       serviceIndex
       datatoken {
         address
-        isDatatoken
       }
       tx
       createdTimestamp

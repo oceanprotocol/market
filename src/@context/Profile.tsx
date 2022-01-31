@@ -226,7 +226,7 @@ function ProfileProvider({
 
       for (let i = 0; i < tokenOrders?.length; i++) {
         const did = web3.utils
-          .toChecksumAddress(tokenOrders[i].token.address)
+          .toChecksumAddress(tokenOrders[i].datatoken.address)
           .replace('0x', 'did:op:')
         didList.push(did)
       }
