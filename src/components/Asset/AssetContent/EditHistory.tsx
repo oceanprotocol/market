@@ -37,7 +37,7 @@ export default function EditHistory(): ReactElement {
       case 'STATE_UPDATED':
         return 'state updated'
       case 'TOKENURI_UPDATED':
-        return 'token uri updated'
+        return 'NFT metadata updated'
       default:
         return ''
     }
