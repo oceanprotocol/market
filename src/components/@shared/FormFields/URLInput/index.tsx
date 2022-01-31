@@ -1,10 +1,11 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import Button from '@shared/atoms/Button'
 import { ErrorMessage, useField } from 'formik'
 import Loader from '@shared/atoms/Loader'
 import styles from './index.module.css'
 import InputGroup from '@shared/FormInput/InputGroup'
 import InputElement from '@shared/FormInput/InputElement'
+import isUrl from 'is-url-superb'
 
 export default function URLInput({
   submitText,
@@ -21,7 +22,19 @@ export default function URLInput({
   hasError: boolean
 }): ReactElement {
   const [field, meta] = useField(name)
-  const isButtonDisabled = !field?.value || field.value === ''
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true)
+
+  useEffect(() => {
+    if (!field?.value) return
+
+    setIsButtonDisabled(
+      !field?.value ||
+        field.value === '' ||
+        !isUrl(field.value) ||
+        field.value.includes('javascript:') ||
+        meta?.error
+    )
+  }, [field?.value, meta?.error])
 
   return (
     <>
