@@ -348,15 +348,15 @@ export async function getDownloadAssets(
     const downloadedAssets: DownloadedAsset[] = result.results
       .map((ddo) => {
         const order = tokenOrders.find(
-          ({ token }) =>
-            token?.address.toLowerCase() ===
+          ({ datatoken }) =>
+            datatoken?.address.toLowerCase() ===
             ddo.services[0].datatokenAddress.toLowerCase()
         )
 
         return {
           ddo,
           networkId: ddo.chainId,
-          dtSymbol: order?.token?.symbol,
+          dtSymbol: order?.datatoken?.symbol,
           timestamp: order?.createdTimestamp
         }
       })

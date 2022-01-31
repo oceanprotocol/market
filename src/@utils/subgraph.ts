@@ -148,7 +148,7 @@ const PreviousOrderQuery = gql`
   query AssetPreviousOrder($id: String!, $account: String!) {
     orders(
       first: 1
-      where: { token: $id, payer: $account }
+      where: { datatoken: $id, payer: $account }
       orderBy: createdTimestamp
       orderDirection: desc
     ) {
@@ -242,10 +242,13 @@ const UserTokenOrders = gql`
       orderDirection: desc
       where: { consumer: $user }
     ) {
-      token {
+      datatoken {
         address
         symbol
-        isDatatoken
+      }
+      consumerMarketToken {
+        address
+        symbol
       }
       createdTimestamp
       tx
