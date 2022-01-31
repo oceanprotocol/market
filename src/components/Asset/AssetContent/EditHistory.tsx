@@ -10,13 +10,17 @@ import styles from './EditHistory.module.css'
 const getReceipts = gql`
   query ReceiptData($address: ID!) {
     nftUpdates(
-      where: { id: $address }
+      where: { nft: $address }
       orderBy: timestamp
       orderDirection: desc
     ) {
       id
+      nft {
+        address
+      }
       tx
       timestamp
+      type
     }
   }
 `
@@ -24,6 +28,20 @@ const getReceipts = gql`
 export default function EditHistory(): ReactElement {
   const { ddo } = useAsset()
 
+  function getUpdateType(type: string): string {
+    switch (type) {
+      case 'METADATA_CREATED':
+        return 'published'
+      case 'METADATA_UPDATED':
+        return 'updated'
+      case 'STATE_UPDATED':
+        return 'state updated'
+      case 'TOKENURI_UPDATED':
+        return 'NFT metadata updated'
+      default:
+        return ''
+    }
+  }
   //
   // 1. Construct subgraph query based on DDO.
   // Need to wait for it to avoid infinite rerender loop with useQuery.
@@ -39,7 +57,7 @@ export default function EditHistory(): ReactElement {
 
   const [result] = useQuery({
     query: getReceipts,
-    variables: { address: ddo?.services[0].datatokenAddress.toLowerCase() },
+    variables: { address: ddo?.nft.address.toLowerCase() },
     context: queryContext,
     pause: !ddo || !queryContext
   })
@@ -49,18 +67,10 @@ export default function EditHistory(): ReactElement {
   // 2. Construct display data based on fetched data.
   //
   const [receipts, setReceipts] = useState<ReceiptData[]>()
-  const [creationTx, setCreationTx] = useState<string>()
 
   useEffect(() => {
     if (!data || data.nftUpdates.length === 0) return
-
-    const receiptCollectionLength = data.nftUpdates.length
-    const creationData = data.nftUpdates[receiptCollectionLength - 1]
-    setCreationTx(creationData.tx)
-
-    const receiptCollection = [...data.nftUpdates]
-    receiptCollection.splice(-1, 1)
-
+    const receiptCollection = data.nftUpdates
     setReceipts(receiptCollection)
   }, [data])
 
@@ -71,15 +81,11 @@ export default function EditHistory(): ReactElement {
         {receipts?.map((receipt) => (
           <li key={receipt.id} className={styles.item}>
             <ExplorerLink networkId={ddo?.chainId} path={`/tx/${receipt.tx}`}>
-              edited <Time date={`${receipt.timestamp}`} relative isUnix />
+              {getUpdateType(receipt.type)}{' '}
+              <Time date={`${receipt.timestamp}`} relative isUnix />
             </ExplorerLink>
           </li>
         ))}
-        <li className={styles.item}>
-          <ExplorerLink networkId={ddo?.chainId} path={`/tx/${creationTx}`}>
-            published <Time date={ddo?.metadata?.created} relative />
-          </ExplorerLink>
-        </li>
       </ul>
     </>
   )
