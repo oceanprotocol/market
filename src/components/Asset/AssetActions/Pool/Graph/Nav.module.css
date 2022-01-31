@@ -1,24 +1,3 @@
-.graphWrap {
-  min-height: 97px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: calc(var(--spacer) / 6) -1.35rem calc(var(--spacer) / 1.5) -1.35rem;
-  position: relative;
-}
-
-@media (min-width: 40rem) {
-  .graphWrap {
-    margin-left: -2rem;
-    margin-right: -2rem;
-  }
-}
-
-.graphWrap canvas {
-  position: relative;
-  z-index: 0;
-}
-
 .type {
   position: absolute;
   bottom: -10px;
