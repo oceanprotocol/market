@@ -7,18 +7,18 @@ import { FormikContextType, useFormikContext } from 'formik'
 import Output from './Output'
 import Slippage from './Slippage'
 import PriceImpact from './PriceImpact'
-
 import Decimal from 'decimal.js'
 import { useAsset } from '@context/Asset'
+import { useWeb3 } from '@context/Web3'
 import { FormTradeData, TradeItem } from './_types'
-import { Asset } from '@oceanprotocol/lib'
+import { Asset, Pool, LoggerInstance } from '@oceanprotocol/lib'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
 export default function Swap({
   ddo,
   maxDt,
-  maxOcean,
+  maxBaseToken,
   balance,
   price,
   setMaximumDt,
@@ -27,7 +27,7 @@ export default function Swap({
 }: {
   ddo: Asset
   maxDt: string
-  maxOcean: string
+  maxBaseToken: string
   balance: PoolBalance
   price: BestPrice
   setMaximumDt: (value: string) => void
@@ -35,7 +35,9 @@ export default function Swap({
   setCoin: (value: string) => void
 }): ReactElement {
   const { isAssetNetwork } = useAsset()
-  const [oceanItem, setOceanItem] = useState<TradeItem>({
+  const { web3 } = useWeb3()
+
+  const [baseTokenItem, setBaseTokenItem] = useState<TradeItem>({
     amount: '0',
     token: price.oceanSymbol,
     maxAmount: '0'
@@ -45,7 +47,6 @@ export default function Swap({
     token: ddo.datatokens[0].symbol,
     maxAmount: '0'
   })
-
   const {
     setFieldValue,
     values,
@@ -62,67 +63,83 @@ export default function Swap({
     if (!ddo || !balance || !values?.type || !price) return
 
     async function calculateMaximum() {
+      if (!web3 || !LoggerInstance) return
+
+      const poolInstance = new Pool(web3, LoggerInstance)
+
       const amountDataToken =
         values.type === 'buy'
           ? new Decimal(maxDt)
           : new Decimal(balance.datatoken)
-      const amountOcean =
+      const amountBaseToken =
         values.type === 'buy'
           ? new Decimal(balance.ocean)
-          : new Decimal(maxOcean)
+          : new Decimal(maxBaseToken)
 
-      // const maxBuyOcean = await ocean.pool.getOceanReceived(
-      //   price.address,
-      //   `${amountDataToken.toString()}`
-      // )
-      // const maxBuyDt = await ocean.pool.getDTReceived(
-      //   price.address,
-      //   `${amountOcean.toString()}`
-      // )
+      const swapFee = await poolInstance.getSwapFee(price.address)
 
-      // const maximumDt =
-      //   values.type === 'buy'
-      //     ? amountDataToken.greaterThan(new Decimal(maxBuyDt))
-      //       ? maxBuyDt
-      //       : amountDataToken
-      //     : amountDataToken.greaterThan(new Decimal(balance.datatoken))
-      //     ? balance.datatoken
-      //     : amountDataToken
+      const maxBuyBaseToken = await poolInstance.getAmountInExactOut(
+        price.address,
+        baseTokenItem.token,
+        dtItem.token,
+        `${amountDataToken.toString()}`,
+        swapFee
+      )
 
-      // const maximumOcean =
-      //   values.type === 'sell'
-      //     ? amountOcean.greaterThan(new Decimal(maxBuyOcean))
-      //       ? maxBuyOcean
-      //       : amountOcean
-      //     : amountOcean.greaterThan(new Decimal(balance.ocean))
-      //     ? balance.ocean
-      //     : amountOcean
+      const maxBuyDt = await poolInstance.getAmountInExactOut(
+        price.address,
+        dtItem.token,
+        baseTokenItem.token,
+        `${amountBaseToken.toString()}`,
+        swapFee
+      )
 
-      // setMaximumDt(maximumDt.toString())
-      // setMaximumOcean(maximumOcean.toString())
+      const maximumDt =
+        values.type === 'buy'
+          ? amountDataToken.greaterThan(new Decimal(maxBuyDt))
+            ? maxBuyDt
+            : amountDataToken
+          : amountDataToken.greaterThan(new Decimal(balance.datatoken))
+          ? balance.datatoken
+          : amountDataToken
 
-      // setOceanItem((prevState) => ({
-      //   ...prevState,
-      //   amount: amountOcean.toString(),
-      //   maxAmount: maximumOcean.toString()
-      // }))
+      const maximumBaseToken =
+        values.type === 'sell'
+          ? amountBaseToken.greaterThan(new Decimal(maxBuyBaseToken))
+            ? maxBuyBaseToken
+            : amountBaseToken
+          : amountBaseToken.greaterThan(new Decimal(balance.ocean))
+          ? balance.ocean
+          : amountBaseToken
 
-      // setDtItem((prevState) => ({
-      //   ...prevState,
-      //   amount: amountDataToken.toString(),
-      //   maxAmount: maximumDt.toString()
-      // }))
+      setMaximumDt(maximumDt.toString())
+      setMaximumOcean(maximumBaseToken.toString())
+
+      setBaseTokenItem((prevState) => ({
+        ...prevState,
+        amount: amountBaseToken.toString(),
+        maxAmount: maximumBaseToken.toString()
+      }))
+
+      setDtItem((prevState) => ({
+        ...prevState,
+        amount: amountDataToken.toString(),
+        maxAmount: maximumDt.toString()
+      }))
     }
     calculateMaximum()
   }, [
+    web3,
     ddo,
-    maxOcean,
+    maxBaseToken,
     maxDt,
     balance,
     price,
-    values?.type,
+    values.type,
     setMaximumDt,
-    setMaximumOcean
+    setMaximumOcean,
+    baseTokenItem.token,
+    dtItem.token
   ])
 
   const switchTokens = () => {
@@ -199,7 +216,7 @@ export default function Swap({
     <div className={styles.swap}>
       <TradeInput
         name={values.type === 'sell' ? 'datatoken' : 'ocean'}
-        item={values.type === 'sell' ? dtItem : oceanItem}
+        item={values.type === 'sell' ? dtItem : baseTokenItem}
         disabled={!isAssetNetwork}
         handleValueChange={handleValueChange}
       />
@@ -215,14 +232,14 @@ export default function Swap({
 
       <TradeInput
         name={values.type === 'sell' ? 'ocean' : 'datatoken'}
-        item={values.type === 'sell' ? oceanItem : dtItem}
+        item={values.type === 'sell' ? baseTokenItem : dtItem}
         disabled={!isAssetNetwork}
         handleValueChange={handleValueChange}
       />
 
       <Output
         dtSymbol={dtItem.token}
-        oceanSymbol={oceanItem.token}
+        oceanSymbol={baseTokenItem.token}
         poolAddress={price?.address}
       />
 
