@@ -6,11 +6,20 @@ import {
 } from '../@types/subgraph/TokenPriceQuery'
 
 const TokenPriceQuery = gql`
-  query TokenPriceQuery($datatokenId: ID!) {
+  query TokenPriceQuery($datatokenId: ID!, $account: String) {
     token(id: $datatokenId) {
       id
       symbol
       name
+      orders(
+        where: { consumer: $account }
+        orderBy: createdTimestamp
+        orderDirection: desc
+      ) {
+        tx
+        serviceIndex
+        createdTimestamp
+      }
       dispensers {
         id
         active
@@ -58,22 +67,34 @@ const TokenPriceQuery = gql`
 `
 
 // TODO: orders to be added in query after subgraph update, as well as owned property
-export async function getPrice(
+export async function getConsumeDetails(
   chain: number,
-  datatokenAddress: string
+  datatokenAddress: string,
+  timeout?: number,
+  account = ''
 ): Promise<ConsumeDetails> {
   const consumeDetails = {} as ConsumeDetails
   const queryContext = getQueryContext(Number(chain))
   const tokenQueryResult: OperationResult<TokenPriceQuery, any> =
     await fetchData(
       TokenPriceQuery,
-      { datatoken: datatokenAddress },
+      {
+        datatokenId: datatokenAddress.toLowerCase(),
+        account: account.toLowerCase()
+      },
       queryContext
     )
+  console.log('token info', tokenQueryResult)
   const tokenPrice: TokenPrice = tokenQueryResult.data.token
 
+  if (!timeout && !tokenPrice.orders && tokenPrice.orders.length > 0) {
+    const order = tokenPrice.orders[0]
+    consumeDetails.owned = Date.now() / 1000 - order.createdTimestamp < timeout
+    consumeDetails.validOrderTx = order.tx
+  }
+
   // free is always the best price
-  if (tokenPrice.dispensers !== null && tokenPrice.dispensers.length > 0) {
+  if (tokenPrice.dispensers && tokenPrice.dispensers.length > 0) {
     const dispenser = tokenPrice.dispensers[0]
     consumeDetails.type = 'free'
     consumeDetails.addressOrId = dispenser.id
@@ -86,12 +107,13 @@ export async function getPrice(
     }
     return consumeDetails
   }
-
+  console.log('fre ', !tokenPrice.fixedRateExchanges)
   // checking for fixed price
   if (
-    tokenPrice.fixedRateExchanges !== null &&
+    tokenPrice.fixedRateExchanges &&
     tokenPrice.fixedRateExchanges.length > 0
   ) {
+    console.log('fre ')
     const fre = tokenPrice.fixedRateExchanges[0]
     consumeDetails.type = 'fixed'
     consumeDetails.addressOrId = fre.id
@@ -108,11 +130,12 @@ export async function getPrice(
       name: fre.datatoken.name,
       symbol: fre.datatoken.symbol
     }
+    console.log('fre consumeDetails', consumeDetails)
     return consumeDetails
   }
 
   // checking for pools
-  if (tokenPrice.pools !== null && tokenPrice.pools.length > 0) {
+  if (tokenPrice.pools && tokenPrice.pools.length > 0) {
     const pool = tokenPrice.pools[0]
     consumeDetails.type = 'dynamic'
     consumeDetails.addressOrId = pool.id

@@ -8,6 +8,7 @@ interface ConsumeDetails {
   isConsumable?: boolean
   // if there are valid orders for this
   owned: bool
+  validOrderTx: string
 }
 
 interface PriceOptions {

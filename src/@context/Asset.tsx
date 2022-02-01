@@ -10,11 +10,11 @@ import React, {
 import { Asset, Config, LoggerInstance, Purgatory } from '@oceanprotocol/lib'
 import { CancelToken } from 'axios'
 import { retrieveDDO } from '@utils/aquarius'
-import { getPrice } from '@utils/subgraph'
 import { useWeb3 } from './Web3'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getOceanConfig, getDevelopmentConfig } from '@utils/ocean'
+import { getConsumeDetails } from '@utils/consumeDetails'
 
 interface AssetProviderValue {
   isInPurgatory: boolean
@@ -22,7 +22,7 @@ interface AssetProviderValue {
   ddo: Asset
   title: string
   owner: string
-  price: BestPrice
+  consumeDetails: ConsumeDetails
   error?: string
   refreshInterval: number
   isAssetNetwork: boolean
@@ -44,12 +44,12 @@ function AssetProvider({
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
 
-  const { networkId } = useWeb3()
+  const { networkId, accountId } = useWeb3()
   const [isInPurgatory, setIsInPurgatory] = useState(false)
   const [purgatoryData, setPurgatoryData] = useState<Purgatory>()
   const [ddo, setDDO] = useState<Asset>()
   const [title, setTitle] = useState<string>()
-  const [price, setPrice] = useState<BestPrice>()
+  const [consumeDetails, setConsumeDetails] = useState<ConsumeDetails>()
   const [owner, setOwner] = useState<string>()
   const [error, setError] = useState<string>()
   const [loading, setLoading] = useState(false)
@@ -58,7 +58,7 @@ function AssetProvider({
 
   const newCancelToken = useCancelToken()
 
-  const fetchDdo = async (token?: CancelToken) => {
+  const fetchDdo = useCallback(async (token?: CancelToken) => {
     LoggerInstance.log('[asset] Init asset, get DDO')
     setLoading(true)
     const ddo = await retrieveDDO(did, token)
@@ -72,7 +72,7 @@ function AssetProvider({
     }
     setLoading(false)
     return ddo
-  }
+  }, [])
 
   const refreshDdo = async (token?: CancelToken) => {
     setLoading(true)
@@ -104,15 +104,19 @@ function AssetProvider({
     return () => {
       isMounted = false
     }
-  }, [did, appConfig.metadataCacheUri])
+  }, [did, appConfig.metadataCacheUri, fetchDdo, newCancelToken])
 
   // -----------------------------------
   // Attach price to asset
   // -----------------------------------
   const initPrice = useCallback(async (ddo: Asset): Promise<void> => {
     if (!ddo) return
-    const returnedPrice = await getPrice(ddo)
-    setPrice({ ...returnedPrice })
+    const consumeDetails = await getConsumeDetails(
+      ddo.chainId,
+      ddo.services[0].datatokenAddress
+    )
+    console.log('consume details', consumeDetails)
+    setConsumeDetails({ ...consumeDetails })
   }, [])
 
   useEffect(() => {
@@ -155,7 +159,7 @@ function AssetProvider({
           did,
           title,
           owner,
-          price,
+          consumeDetails,
           error,
           isInPurgatory,
           purgatoryData,

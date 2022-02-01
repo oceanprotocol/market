@@ -562,43 +562,6 @@ export async function getAssetsPriceList(assets: Asset[]): Promise<PriceList> {
   return priceList
 }
 
-export async function getPrice(asset: Asset): Promise<BestPrice> {
-  const freVariables = {
-    datatoken: asset?.services[0].datatokenAddress.toLowerCase()
-  }
-  const freeVariables = {
-    datatoken: asset?.services[0].datatokenAddress.toLowerCase()
-  }
-  const poolVariables = {
-    datatokenAddress: asset?.services[0].datatokenAddress.toLowerCase()
-  }
-  const queryContext = getQueryContext(Number(asset.chainId))
-
-  const poolPriceResponse: OperationResult<AssetsPoolPrice> = await fetchData(
-    AssetPoolPriceQuery,
-    poolVariables,
-    queryContext
-  )
-  const frePriceResponse: OperationResult<AssetsFrePrice> = await fetchData(
-    AssetFreQuery,
-    freVariables,
-    queryContext
-  )
-  const freePriceResponse: OperationResult<AssetsFreePrice> = await fetchData(
-    AssetFreeQuery,
-    freeVariables,
-    queryContext
-  )
-
-  const bestPrice: BestPrice = transformPriceToBestPrice(
-    frePriceResponse.data.fixedRateExchanges,
-    poolPriceResponse.data.pools,
-    freePriceResponse.data.dispensers
-  )
-
-  return bestPrice
-}
-
 export async function getSpotPrice(asset: Asset): Promise<number> {
   const poolVariables = {
     datatokenAddress: asset?.services[0].datatokenAddress.toLowerCase()
