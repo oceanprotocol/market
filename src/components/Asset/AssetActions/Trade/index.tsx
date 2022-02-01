@@ -74,7 +74,7 @@ export default function Trade(): ReactElement {
       price={price}
       balance={tokenBalance}
       maxDt={maxDt}
-      maxOcean={maxOcean}
+      maxBaseToken={maxOcean}
     />
   )
 }

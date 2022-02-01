@@ -239,7 +239,7 @@ export default function Swap({
 
       <Output
         dtSymbol={dtItem.token}
-        oceanSymbol={baseTokenItem.token}
+        baseTokenSymbol={baseTokenItem.token}
         poolAddress={price?.address}
       />
 
