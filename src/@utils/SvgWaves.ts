@@ -1,4 +1,3 @@
-import { LoggerInstance } from '@oceanprotocol/lib'
 import { getRandomItemFromArray } from '.'
 import { computeControlPoints } from './bezier-spline'
 import { randomIntFromInterval } from './numbers'
@@ -40,7 +39,7 @@ export class SvgWaves {
    * - width & height: default is 2 digits max (99)
    * - a color will be randomly picked from SvgWaves.colors
    * - randomly decide if fill or stroke coloring should be used
-   * - create 2 - 5 layers with 3 - 7 points per layers
+   * - create 2 - 4 layers with 3 - 5 points per layers
    *     -> results in random looking, yet small enough svgs
    * - variance between 0.3 and 0.8 returns best results
    *     -> random, different, yet not too chaotic
@@ -53,8 +52,8 @@ export class SvgWaves {
       height: 99,
       color: getRandomItemFromArray(SvgWaves.colors),
       fill: Math.random() < 0.5, // random true or false
-      layerCount: randomIntFromInterval(2, 5),
-      pointsPerLayer: randomIntFromInterval(3, 7),
+      layerCount: randomIntFromInterval(2, 4),
+      pointsPerLayer: randomIntFromInterval(3, 5),
       variance: Math.random() * 0.5 + 0.3, // 0.3 - 0.8
       maxOpacity: 255, // 0xff
       opacitySteps: 68 // 0x44
@@ -77,8 +76,6 @@ export class SvgWaves {
   constructor() {
     this.properties = SvgWaves.getProps()
     this.layers = this.generateLayers()
-
-    LoggerInstance.log('[SvgWaves] created new waves:', this)
   }
 
   generateLayers(): Point[][] {
@@ -119,8 +116,6 @@ export class SvgWaves {
       )
       svg.appendChild(path)
     }
-
-    LoggerInstance.log('[SvgWaves] generated new svg for wave:', svg.outerHTML)
     return svg
   }
 
