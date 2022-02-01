@@ -66,7 +66,14 @@ const TokenPriceQuery = gql`
   }
 `
 
-// TODO: orders to be added in query after subgraph update, as well as owned property
+/**
+ * returns various consume details for the desired datatoken
+ * @param chain chain on witch the dt is preset
+ * @param datatokenAddress address of the datatoken
+ * @param timeout timeout of the service , only needed if you want order details like owned and validOrderId
+ * @param account account that wants to consume, only needed if you want order details like owned and validOrderId
+ * @returns ConsumeDetails
+ */
 export async function getConsumeDetails(
   chain: number,
   datatokenAddress: string,
