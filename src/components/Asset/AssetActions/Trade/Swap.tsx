@@ -22,7 +22,7 @@ export default function Swap({
   balance,
   price,
   setMaximumDt,
-  setMaximumOcean,
+  setMaximumBaseToken,
   setCoin
 }: {
   ddo: Asset
@@ -31,7 +31,7 @@ export default function Swap({
   balance: PoolBalance
   price: BestPrice
   setMaximumDt: (value: string) => void
-  setMaximumOcean: (value: string) => void
+  setMaximumBaseToken: (value: string) => void
   setCoin: (value: string) => void
 }): ReactElement {
   const { isAssetNetwork } = useAsset()
@@ -113,7 +113,7 @@ export default function Swap({
           : amountBaseToken
 
       setMaximumDt(maximumDt.toString())
-      setMaximumOcean(maximumBaseToken.toString())
+      setMaximumBaseToken(maximumBaseToken.toString())
 
       setBaseTokenItem((prevState) => ({
         ...prevState,
@@ -137,7 +137,7 @@ export default function Swap({
     price,
     values.type,
     setMaximumDt,
-    setMaximumOcean,
+    setMaximumBaseToken,
     baseTokenItem.token,
     dtItem.token
   ])

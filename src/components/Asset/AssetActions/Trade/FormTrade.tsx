@@ -19,13 +19,13 @@ export default function FormTrade({
   ddo,
   balance,
   maxDt,
-  maxOcean,
+  maxBaseToken,
   price
 }: {
   ddo: Asset
   balance: PoolBalance
   maxDt: string
-  maxOcean: string
+  maxBaseToken: string
   price: BestPrice
 }): ReactElement {
   const { accountId } = useWeb3()
@@ -34,7 +34,7 @@ export default function FormTrade({
   const [txId, setTxId] = useState<string>()
   const [coinFrom, setCoinFrom] = useState<string>('OCEAN')
 
-  const [maximumOcean, setMaximumOcean] = useState(maxOcean)
+  const [maximumBaseToken, setMaximumBaseToken] = useState(maxBaseToken)
   const [maximumDt, setMaximumDt] = useState(maxDt)
   const [isWarningAccepted, setIsWarningAccepted] = useState(false)
 
@@ -45,7 +45,7 @@ export default function FormTrade({
     .shape({
       ocean: Yup.number()
         .max(
-          Number(maximumOcean),
+          Number(maximumBaseToken),
           (param) => `Must be less or equal to ${param.max}`
         )
         .min(0.001, (param) => `Must be more or equal to ${param.min}`)
@@ -114,10 +114,10 @@ export default function FormTrade({
               ddo={ddo}
               balance={balance}
               maxDt={maxDt}
-              maxOcean={maxOcean}
+              maxBaseToken={maxBaseToken}
               price={price}
               setCoin={setCoinFrom}
-              setMaximumOcean={setMaximumOcean}
+              setMaximumBaseToken={setMaximumBaseToken}
               setMaximumDt={setMaximumDt}
             />
           ) : (
