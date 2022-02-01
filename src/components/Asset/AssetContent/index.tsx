@@ -17,10 +17,10 @@ import { Asset } from '@oceanprotocol/lib'
 
 export default function AssetContent({
   ddo,
-  price
+  consumeDetails
 }: {
   ddo: Asset
-  price: BestPrice
+  consumeDetails: ConsumeDetails
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { isInPurgatory, purgatoryData } = useAsset()
@@ -35,7 +35,7 @@ export default function AssetContent({
         <div>
           <div className={styles.content}>
             <MetaMain ddo={ddo} />
-            {price?.datatoken !== null && <Bookmark did={ddo?.id} />}
+            {consumeDetails?.datatoken !== null && <Bookmark did={ddo?.id} />}
 
             {isInPurgatory === true ? (
               <Alert
@@ -61,7 +61,7 @@ export default function AssetContent({
         </div>
 
         <div className={styles.actions}>
-          <AssetActions ddo={ddo} price={price} />
+          <AssetActions ddo={ddo} consumeDetails={consumeDetails} />
 
           {/* 
             TODO: restore edit actions, ideally put edit screens on new page 

@@ -62,7 +62,6 @@ function useConsume(): UseConsume {
           datatokenAddress,
           accountId
         )
-        console.log('balance ', userOwnedTokens, datatokenAddress)
 
         setStep(1)
         try {
@@ -108,8 +107,6 @@ function useConsume(): UseConsume {
             swapMarketFee: web3.utils.toWei('0'),
             marketFeeAddress: ZERO_ADDRESS
           } as FreOrderParams
-          console.log('orderParams', orderParams)
-          console.log('freParams', freParams)
 
           const esttx = await datatoken.estGasBuyFromFreAndOrder(
             datatokenAddress,
@@ -117,18 +114,16 @@ function useConsume(): UseConsume {
             orderParams,
             freParams
           )
-          console.log('est', esttx)
           const tx = await datatoken.buyFromFreAndOrder(
             datatokenAddress,
             accountId,
             orderParams,
             freParams
           )
-          console.log('order tx', tx)
+
           LoggerInstance.log('ordercreated', orderId)
           setStep(2)
         } catch (error) {
-          console.log(error)
           setConsumeError(error.message)
           return error.message
         }

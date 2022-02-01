@@ -24,10 +24,10 @@ import { FormPublishData } from 'src/components/Publish/_types'
 
 export default function AssetActions({
   ddo,
-  price
+  consumeDetails
 }: {
   ddo: Asset
-  price: BestPrice
+  consumeDetails: ConsumeDetails
 }): ReactElement {
   const { accountId, balance, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
@@ -112,32 +112,35 @@ export default function AssetActions({
 
   // Check user balance against price
   useEffect(() => {
-    if (price?.type === 'free') setIsBalanceSufficient(true)
-    if (!price?.value || !accountId || !balance?.ocean || !dtBalance) return
+    if (consumeDetails?.type === 'free') setIsBalanceSufficient(true)
+    if (!consumeDetails?.price || !accountId || !balance?.ocean || !dtBalance)
+      return
 
     setIsBalanceSufficient(
-      compareAsBN(balance.ocean, `${price.value}`) || Number(dtBalance) >= 1
+      compareAsBN(balance.ocean, `${consumeDetails.price}`) ||
+        Number(dtBalance) >= 1
     )
 
     return () => {
       setIsBalanceSufficient(false)
     }
-  }, [balance, accountId, price, dtBalance])
+  }, [balance, accountId, consumeDetails, dtBalance])
 
   const UseContent = isCompute ? (
-    <Compute
-      ddo={ddo}
-      price={price}
-      dtBalance={dtBalance}
-      file={fileMetadata}
-      fileIsLoading={fileIsLoading}
-      isConsumable={isConsumable}
-      consumableFeedback={consumableFeedback}
-    />
+    <></>
   ) : (
+    // <Compute
+    //   ddo={ddo}
+    //   price={price}
+    //   dtBalance={dtBalance}
+    //   file={fileMetadata}
+    //   fileIsLoading={fileIsLoading}
+    //   isConsumable={isConsumable}
+    //   consumableFeedback={consumableFeedback}
+    // />
     <Consume
       ddo={ddo}
-      price={price}
+      consumeDetails={consumeDetails}
       dtBalance={dtBalance}
       isBalanceSufficient={isBalanceSufficient}
       file={fileMetadata}
@@ -154,17 +157,17 @@ export default function AssetActions({
     }
   ]
 
-  price?.type === 'dynamic' &&
+  consumeDetails?.type === 'dynamic' &&
     tabs.push(
       {
         title: 'Pool',
         content: <Pool />,
-        disabled: !price.datatoken
+        disabled: !consumeDetails.datatoken
       },
       {
         title: 'Trade',
         content: <Trade />,
-        disabled: !price.datatoken
+        disabled: !consumeDetails.datatoken
       }
     )
 

@@ -58,21 +58,24 @@ function AssetProvider({
 
   const newCancelToken = useCancelToken()
 
-  const fetchDdo = useCallback(async (token?: CancelToken) => {
-    LoggerInstance.log('[asset] Init asset, get DDO')
-    setLoading(true)
-    const ddo = await retrieveDDO(did, token)
+  const fetchDdo = useCallback(
+    async (token?: CancelToken) => {
+      LoggerInstance.log('[asset] Init asset, get DDO')
+      setLoading(true)
+      const ddo = await retrieveDDO(did, token)
 
-    if (!ddo) {
-      setError(
-        `[asset] The DDO for ${did} was not found in MetadataCache. If you just published a new data set, wait some seconds and refresh this page.`
-      )
-    } else {
-      setError(undefined)
-    }
-    setLoading(false)
-    return ddo
-  }, [])
+      if (!ddo) {
+        setError(
+          `[asset] The DDO for ${did} was not found in MetadataCache. If you just published a new data set, wait some seconds and refresh this page.`
+        )
+      } else {
+        setError(undefined)
+      }
+      setLoading(false)
+      return ddo
+    },
+    [did]
+  )
 
   const refreshDdo = async (token?: CancelToken) => {
     setLoading(true)
@@ -115,7 +118,6 @@ function AssetProvider({
       ddo.chainId,
       ddo.services[0].datatokenAddress
     )
-    console.log('consume details', consumeDetails)
     setConsumeDetails({ ...consumeDetails })
   }, [])
 

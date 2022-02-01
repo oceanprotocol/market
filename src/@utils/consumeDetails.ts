@@ -91,7 +91,7 @@ export async function getConsumeDetails(
       },
       queryContext
     )
-  console.log('token info', tokenQueryResult)
+
   const tokenPrice: TokenPrice = tokenQueryResult.data.token
 
   if (!timeout && !tokenPrice.orders && tokenPrice.orders.length > 0) {
@@ -114,13 +114,12 @@ export async function getConsumeDetails(
     }
     return consumeDetails
   }
-  console.log('fre ', !tokenPrice.fixedRateExchanges)
+
   // checking for fixed price
   if (
     tokenPrice.fixedRateExchanges &&
     tokenPrice.fixedRateExchanges.length > 0
   ) {
-    console.log('fre ')
     const fre = tokenPrice.fixedRateExchanges[0]
     consumeDetails.type = 'fixed'
     consumeDetails.addressOrId = fre.id
@@ -137,7 +136,6 @@ export async function getConsumeDetails(
       name: fre.datatoken.name,
       symbol: fre.datatoken.symbol
     }
-    console.log('fre consumeDetails', consumeDetails)
     return consumeDetails
   }
 

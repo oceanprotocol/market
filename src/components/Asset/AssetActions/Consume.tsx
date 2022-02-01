@@ -52,27 +52,6 @@ export default function Consume({
   const isMounted = useIsMounted()
 
   useEffect(() => {
-    if (!assetTimeout || !accountId || !isAssetNetwork) return
-
-    const lastOrder = data.orders[0]
-    if (assetTimeout === '0') {
-      setPreviousOrderId(lastOrder.tx)
-      setHasPreviousOrder(true)
-    } else {
-      const expiry = new BigNumber(lastOrder.createdTimestamp).plus(
-        assetTimeout
-      )
-      const unixTime = new BigNumber(Math.floor(Date.now() / 1000))
-      if (unixTime.isLessThan(expiry)) {
-        setPreviousOrderId(lastOrder.tx)
-        setHasPreviousOrder(true)
-      } else {
-        setHasPreviousOrder(false)
-      }
-    }
-  }, [data, assetTimeout, accountId, isAssetNetwork])
-
-  useEffect(() => {
     if (!ddo) return
 
     const { timeout } = ddo.services[0]
@@ -80,12 +59,10 @@ export default function Consume({
   }, [ddo])
 
   useEffect(() => {
-    if (!price) return
+    if (!consumeDetails) return
 
-    setIsConsumablePrice(
-      price.isConsumable !== undefined ? price.isConsumable === 'true' : true
-    )
-  }, [price])
+    setIsConsumablePrice(consumeDetails.isConsumable)
+  }, [consumeDetails])
 
   useEffect(() => {
     setHasDatatoken(Number(dtBalance) >= 1)
@@ -153,7 +130,7 @@ export default function Consume({
       assetType={ddo?.metadata?.type}
       stepText={consumeStepText || pricingStepText}
       isLoading={pricingIsLoading || isLoading}
-      priceType={price?.type}
+      priceType={consumeDetails?.type}
       isConsumable={isConsumable}
       isBalanceSufficient={isBalanceSufficient}
       consumableFeedback={consumableFeedback}
@@ -167,7 +144,7 @@ export default function Consume({
           <FileIcon file={file} isLoading={fileIsLoading} />
         </div>
         <div className={styles.pricewrapper}>
-          <Price price={price} conversion />
+          <Price consumeDetails={consumeDetails} conversion />
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>
