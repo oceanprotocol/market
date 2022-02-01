@@ -4,10 +4,6 @@ import FileIcon from '@shared/FileIcon'
 import Price from '@shared/Price'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { useAsset } from '@context/Asset'
-import { gql } from 'urql'
-import { fetchData, getQueryContext } from '@utils/subgraph'
-import { OrdersData } from '../../../@types/subgraph/OrdersData'
-import BigNumber from 'bignumber.js'
 import { useWeb3 } from '@context/Web3'
 import { usePricing } from '@hooks/usePricing'
 import { useConsume } from '@hooks/useConsume'
@@ -62,6 +58,8 @@ export default function Consume({
     if (!consumeDetails) return
 
     setIsConsumablePrice(consumeDetails.isConsumable)
+    setHasPreviousOrder(consumeDetails.owned)
+    setPreviousOrderId(consumeDetails.validOrderTx)
   }, [consumeDetails])
 
   useEffect(() => {

@@ -127,17 +127,16 @@ export default function AssetActions({
   }, [balance, accountId, consumeDetails, dtBalance])
 
   const UseContent = isCompute ? (
-    <></>
+    <Compute
+      ddo={ddo}
+      consumeDetails={consumeDetails}
+      dtBalance={dtBalance}
+      file={fileMetadata}
+      fileIsLoading={fileIsLoading}
+      isConsumable={isConsumable}
+      consumableFeedback={consumableFeedback}
+    />
   ) : (
-    // <Compute
-    //   ddo={ddo}
-    //   price={price}
-    //   dtBalance={dtBalance}
-    //   file={fileMetadata}
-    //   fileIsLoading={fileIsLoading}
-    //   isConsumable={isConsumable}
-    //   consumableFeedback={consumableFeedback}
-    // />
     <Consume
       ddo={ddo}
       consumeDetails={consumeDetails}

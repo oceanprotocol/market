@@ -38,7 +38,7 @@ export interface PriceList {
 
 export interface AssetListPrices {
   ddo: Asset
-  price: BestPrice
+  consumeDetails: ConsumeDetails
 }
 
 interface DidAndDatatokenMap {
@@ -416,7 +416,7 @@ function transformPriceToBestPrice(
   freePrice: AssetFreePriceDispenser[]
 ) {
   if (poolPrice?.length > 0) {
-    const price: BestPrice = {
+    const consumeDetails: ConsumeDetails = {
       type: 'dynamic',
       address: poolPrice[0]?.id,
       value: poolPrice[0]?.spotPrice,

@@ -32,7 +32,7 @@ export default function FormStartCompute({
   selectedComputeAssetType,
   selectedComputeAssetTimeout,
   stepText,
-  algorithmPrice,
+  algorithmConsumeDetails,
   isConsumable,
   consumableFeedback
 }: {
@@ -56,14 +56,14 @@ export default function FormStartCompute({
   selectedComputeAssetType?: string
   selectedComputeAssetTimeout?: string
   stepText: string
-  algorithmPrice: BestPrice
+  algorithmConsumeDetails: ConsumeDetails
   isConsumable: boolean
   consumableFeedback: string
 }): ReactElement {
   const { isValid, values }: FormikContextType<{ algorithm: string }> =
     useFormikContext()
-  const { price, ddo, isAssetNetwork } = useAsset()
-  const [totalPrice, setTotalPrice] = useState(price?.value)
+  const { consumeDetails, ddo, isAssetNetwork } = useAsset()
+  const [totalPrice, setTotalPrice] = useState(consumeDetails?.price)
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>(false)
   const { accountId, balance } = useWeb3()
   const [algorithmConsumableStatus, setAlgorithmConsumableStatus] =
@@ -97,19 +97,19 @@ export default function FormStartCompute({
   // Set price for calculation output
   //
   useEffect(() => {
-    if (!price || !algorithmPrice) return
+    if (!consumeDetails || !algorithmConsumeDetails) return
 
     const priceDataset =
-      hasPreviousOrder || hasDatatoken ? 0 : Number(price.value)
+      hasPreviousOrder || hasDatatoken ? 0 : Number(consumeDetails.price)
     const priceAlgo =
       hasPreviousOrderSelectedComputeAsset || hasDatatokenSelectedComputeAsset
         ? 0
-        : Number(algorithmPrice.value)
+        : Number(algorithmConsumeDetails.price)
 
     setTotalPrice(priceDataset + priceAlgo)
   }, [
-    price,
-    algorithmPrice,
+    consumeDetails,
+    algorithmConsumeDetails,
     hasPreviousOrder,
     hasDatatoken,
     hasPreviousOrderSelectedComputeAsset,
@@ -143,7 +143,7 @@ export default function FormStartCompute({
         hasDatatoken={hasDatatoken}
         selectedComputeAssetTimeout={selectedComputeAssetTimeout}
         hasDatatokenSelectedComputeAsset={hasDatatokenSelectedComputeAsset}
-        algorithmPrice={algorithmPrice}
+        algorithmConsumeDetails={algorithmConsumeDetails}
         symbol={oceanSymbol}
         totalPrice={totalPrice}
       />
@@ -177,8 +177,8 @@ export default function FormStartCompute({
         stepText={stepText}
         isLoading={isLoading}
         type="submit"
-        priceType={price?.type}
-        algorithmPriceType={algorithmPrice?.type}
+        priceType={consumeDetails?.type}
+        algorithmPriceType={algorithmConsumeDetails?.type}
         isBalanceSufficient={isBalanceSufficient}
         isConsumable={isConsumable}
         consumableFeedback={consumableFeedback}
