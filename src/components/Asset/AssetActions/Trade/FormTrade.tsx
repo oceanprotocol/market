@@ -1,5 +1,12 @@
 import React, { ReactElement, useState } from 'react'
-import { Asset, LoggerInstance } from '@oceanprotocol/lib'
+import {
+  AmountsInMaxFee,
+  AmountsOutMaxFee,
+  Asset,
+  LoggerInstance,
+  Pool,
+  TokenInOutMarket
+} from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 import { Formik } from 'formik'
 import Actions from '../Pool/Actions'
@@ -28,7 +35,7 @@ export default function FormTrade({
   maxBaseToken: string
   price: BestPrice
 }): ReactElement {
-  const { accountId } = useWeb3()
+  const { web3, accountId } = useWeb3()
   const { isAssetNetwork } = useAsset()
   const { debug } = useUserPreferences()
   const [txId, setTxId] = useState<string>()
@@ -65,32 +72,60 @@ export default function FormTrade({
     .defined()
 
   async function handleTrade(values: FormTradeData) {
+    if (!web3) return
+
+    const poolInstance = new Pool(web3, LoggerInstance)
+    const tokenInOutMarket: TokenInOutMarket = {
+      tokenIn: '',
+      tokenOut: '',
+      marketFeeAddress: ''
+    }
+    const tokenOutMarket: TokenInOutMarket = {
+      tokenIn: '',
+      tokenOut: '',
+      marketFeeAddress: ''
+    }
+    const swapMarketFee = await poolInstance.getSwapFee(price.address)
+
     try {
       const impact = new Decimal(
         new Decimal(100).sub(new Decimal(values.slippage))
       ).div(100)
       const precision = 15
-      // const tx =
-      //   values.type === 'buy'
-      //     ? await ocean.pool.buyDTWithExactOcean(
-      //         accountId,
-      //         price.address,
-      //         new Decimal(values.datatoken)
-      //           .mul(impact)
-      //           .toFixed(precision)
-      //           .toString(),
-      //         new Decimal(values.ocean).toFixed(precision).toString()
-      //       )
-      //     : await ocean.pool.sellDT(
-      //         accountId,
-      //         price.address,
-      //         new Decimal(values.datatoken).toFixed(precision).toString(),
-      //         new Decimal(values.ocean)
-      //           .mul(impact)
-      //           .toFixed(precision)
-      //           .toString()
-      //       )
-      // setTxId(tx?.transactionHash)
+
+      const amountsInOutMaxFee: AmountsInMaxFee = {
+        tokenAmountIn: new Decimal(values.datatoken)
+          .mul(impact)
+          .toFixed(precision)
+          .toString(),
+        minAmountOut: '2',
+        swapMarketFee: swapMarketFee
+      }
+
+      const amountsOutMaxFee: AmountsOutMaxFee = {
+        maxAmountIn: '50',
+        tokenAmountOut: new Decimal(values.ocean)
+          .mul(impact)
+          .toFixed(precision)
+          .toString(),
+        swapMarketFee: swapMarketFee
+      }
+
+      const tx =
+        values.type === 'buy'
+          ? await poolInstance.swapExactAmountIn(
+              accountId,
+              price.address,
+              tokenInOutMarket,
+              amountsInOutMaxFee
+            )
+          : await poolInstance.swapExactAmountOut(
+              accountId,
+              price.address,
+              tokenOutMarket,
+              amountsOutMaxFee
+            )
+      setTxId(tx?.transactionHash)
     } catch (error) {
       LoggerInstance.error(error.message)
       toast.error(error.message)
