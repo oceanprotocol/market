@@ -3,14 +3,13 @@ import React, {
   useState,
   ChangeEvent,
   useEffect,
-  FormEvent,
   useRef
 } from 'react'
 import styles from './Remove.module.css'
 import Header from './Header'
 import { toast } from 'react-toastify'
 import Actions from './Actions'
-import { LoggerInstance } from '@oceanprotocol/lib'
+import { LoggerInstance, Pool } from '@oceanprotocol/lib'
 import Token from './Token'
 import FormHelp from '@shared/FormInput/Help'
 import Button from '@shared/atoms/Button'
@@ -23,57 +22,53 @@ import Decimal from 'decimal.js'
 import { useAsset } from '@context/Asset'
 import content from '../../../../../content/price.json'
 
+const slippagePresets = ['5', '10', '15', '25', '50']
+
 export default function Remove({
   setShowRemove,
   poolAddress,
   poolTokens,
   totalPoolTokens,
-  dtSymbol,
+  tokenOutAddress,
+  tokenOutSymbol,
   fetchAllData
 }: {
   setShowRemove: (show: boolean) => void
   poolAddress: string
   poolTokens: string
   totalPoolTokens: string
-  dtSymbol: string
+  tokenOutAddress: string
+  tokenOutSymbol: string
   fetchAllData: () => void
 }): ReactElement {
-  const slippagePresets = ['5', '10', '15', '25', '50']
-  const { accountId } = useWeb3()
+  const { accountId, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
+
   const [amountPercent, setAmountPercent] = useState('0')
   const [amountMaxPercent, setAmountMaxPercent] = useState('100')
   const [amountPoolShares, setAmountPoolShares] = useState('0')
   const [amountOcean, setAmountOcean] = useState('0')
-  const [amountDatatoken, setAmountDatatoken] = useState('0')
-  const [isAdvanced, setIsAdvanced] = useState(false)
   const [isLoading, setIsLoading] = useState<boolean>()
   const [txId, setTxId] = useState<string>()
   const [slippage, setSlippage] = useState<string>('5')
   const [minOceanAmount, setMinOceanAmount] = useState<string>('0')
-  const [minDatatokenAmount, setMinDatatokenAmount] = useState<string>('0')
 
+  // TODO: precision needs to be set based on baseToken decimals
   Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
+  const poolInstance = new Pool(web3, LoggerInstance)
 
   async function handleRemoveLiquidity() {
     setIsLoading(true)
+
     try {
-      // const result =
-      //   isAdvanced === true
-      //     ? await ocean.pool.removePoolLiquidity(
-      //         accountId,
-      //         poolAddress,
-      //         amountPoolShares,
-      //         minDatatokenAmount,
-      //         minOceanAmount
-      //       )
-      //     : await ocean.pool.removeOceanLiquidityWithMinimum(
-      //         accountId,
-      //         poolAddress,
-      //         amountPoolShares,
-      //         minOceanAmount
-      //       )
-      // setTxId(result?.transactionHash)
+      const result = await poolInstance.exitswapPoolAmountIn(
+        accountId,
+        poolAddress,
+        tokenOutAddress,
+        amountPoolShares,
+        minOceanAmount
+      )
+      setTxId(result?.transactionHash)
       fetchAllData()
     } catch (error) {
       LoggerInstance.error(error.message)
@@ -83,50 +78,33 @@ export default function Remove({
     }
   }
 
-  // Get and set max percentage
+  // TODO: Get and set max percentage
   useEffect(() => {
     if (!accountId || !poolTokens) return
 
     async function getMax() {
-      // const amountMaxPercent =
-      //   isAdvanced === true
-      //     ? '100'
-      //     : await getMaxPercentRemove(poolAddress, poolTokens)
+      // const amountMaxPercent = await getMaxPercentRemove(poolAddress, poolTokens)
       // setAmountMaxPercent(amountMaxPercent)
     }
     getMax()
-  }, [accountId, isAdvanced, poolAddress, poolTokens])
+  }, [accountId, poolAddress, poolTokens])
 
   const getValues = useRef(
-    debounce(async (newAmountPoolShares, isAdvanced) => {
-      // if (isAdvanced === true) {
-      //   const tokens = await ocean.pool.getTokensRemovedforPoolShares(
-      //     poolAddress,
-      //     `${newAmountPoolShares}`
-      //   )
-      //   setAmountOcean(tokens?.oceanAmount)
-      //   setAmountDatatoken(tokens?.dtAmount)
-      //   return
-      // }
-      // const amountOcean = await ocean.pool.getOceanRemovedforPoolShares(
-      //   poolAddress,
-      //   newAmountPoolShares
-      // )
-      // setAmountOcean(amountOcean)
+    debounce(async (newAmountPoolShares) => {
+      const newAmountOcean = await poolInstance.calcSingleOutGivenPoolIn(
+        poolAddress,
+        tokenOutAddress,
+        newAmountPoolShares
+      )
+      setAmountOcean(newAmountOcean)
     }, 150)
   )
+
   // Check and set outputs when amountPoolShares changes
   useEffect(() => {
     if (!accountId || !poolTokens) return
-    getValues.current(amountPoolShares, isAdvanced)
-  }, [
-    amountPoolShares,
-    isAdvanced,
-    accountId,
-    poolTokens,
-    poolAddress,
-    totalPoolTokens
-  ])
+    getValues.current(amountPoolShares)
+  }, [amountPoolShares, accountId, poolTokens, poolAddress, totalPoolTokens])
 
   useEffect(() => {
     const minOceanAmount = new Decimal(amountOcean)
@@ -134,14 +112,8 @@ export default function Remove({
       .dividedBy(100)
       .toString()
 
-    const minDatatokenAmount = new Decimal(amountDatatoken)
-      .mul(new Decimal(100).minus(new Decimal(slippage)))
-      .dividedBy(100)
-      .toString()
-
     setMinOceanAmount(minOceanAmount.slice(0, 18))
-    setMinDatatokenAmount(minDatatokenAmount.slice(0, 18))
-  }, [slippage, amountOcean, amountDatatoken, isAdvanced])
+  }, [slippage, amountOcean])
 
   // Set amountPoolShares based on set slider value
   function handleAmountPercentChange(e: ChangeEvent<HTMLInputElement>) {
@@ -166,22 +138,6 @@ export default function Remove({
       .toString()
 
     setAmountPoolShares(`${amountPoolShares.slice(0, 18)}`)
-  }
-
-  function handleAdvancedButton(e: FormEvent<HTMLButtonElement>) {
-    e.preventDefault()
-    setIsAdvanced(!isAdvanced)
-
-    setAmountPoolShares('0')
-    setAmountPercent('0')
-    setAmountOcean('0')
-    setSlippage('5')
-    setMinOceanAmount('0')
-    setMinDatatokenAmount('0')
-
-    if (isAdvanced === true) {
-      setAmountDatatoken('0')
-    }
   }
 
   function handleSlippageChange(e: ChangeEvent<HTMLSelectElement>) {
@@ -219,20 +175,7 @@ export default function Remove({
             </Button>
           </div>
 
-          <FormHelp>
-            {isAdvanced === true
-              ? content.pool.remove.advanced
-              : content.pool.remove.simple}
-          </FormHelp>
-          <Button
-            style="text"
-            size="small"
-            onClick={handleAdvancedButton}
-            disabled={!isAssetNetwork}
-            className={styles.toggle}
-          >
-            {isAdvanced === true ? 'Simple' : 'Advanced'}
-          </Button>
+          <FormHelp>{content.pool.remove.simple}</FormHelp>
         </div>
       </form>
       <div className={styles.output}>
@@ -242,14 +185,7 @@ export default function Remove({
         </div>
         <div>
           <p>{content.pool.remove.output.titleOut} minimum</p>
-          {isAdvanced === true ? (
-            <>
-              <Token symbol="OCEAN" balance={minOceanAmount} />
-              <Token symbol={dtSymbol} balance={minDatatokenAmount} />
-            </>
-          ) : (
-            <Token symbol="OCEAN" balance={minOceanAmount} />
-          )}
+          <Token symbol={tokenOutSymbol} balance={minOceanAmount} />
         </div>
       </div>
       <div className={styles.slippage}>
@@ -274,6 +210,8 @@ export default function Remove({
         successMessage="Successfully removed liquidity."
         isDisabled={!isAssetNetwork}
         txId={txId}
+        tokenAddress={tokenOutAddress}
+        tokenSymbol={tokenOutSymbol}
       />
     </div>
   )

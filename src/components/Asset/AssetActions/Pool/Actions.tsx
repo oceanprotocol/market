@@ -14,9 +14,10 @@ export default function Actions({
   txId,
   actionName,
   amount,
-  coin,
   action,
-  isDisabled
+  isDisabled,
+  tokenAddress,
+  tokenSymbol
 }: {
   isLoading: boolean
   loaderMessage: string
@@ -24,9 +25,10 @@ export default function Actions({
   txId: string
   actionName: string
   amount?: string
-  coin?: string
   action: () => void
   isDisabled?: boolean
+  tokenAddress: string
+  tokenSymbol: string
 }): ReactElement {
   const { networkId } = useWeb3()
 
@@ -50,7 +52,8 @@ export default function Actions({
           <TokenApproval
             actionButton={actionButton}
             amount={amount}
-            coin={coin}
+            tokenAddress={tokenAddress}
+            tokenSymbol={tokenSymbol}
             disabled={isDisabled}
           />
         ) : (

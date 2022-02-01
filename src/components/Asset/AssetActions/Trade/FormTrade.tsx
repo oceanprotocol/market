@@ -38,6 +38,9 @@ export default function FormTrade({
   const [maximumDt, setMaximumDt] = useState(maxDt)
   const [isWarningAccepted, setIsWarningAccepted] = useState(false)
 
+  const tokenAddress = ''
+  const tokenSymbol = ''
+
   const validationSchema: Yup.SchemaOf<FormTradeData> = Yup.object()
     .shape({
       ocean: Yup.number()
@@ -152,8 +155,9 @@ export default function FormTrade({
                 : undefined
             }
             action={submitForm}
-            coin={coinFrom}
             txId={txId}
+            tokenAddress={tokenAddress}
+            tokenSymbol={tokenSymbol}
           />
 
           {debug && (

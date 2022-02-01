@@ -2,46 +2,47 @@ import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import Decimal from 'decimal.js'
-import { getOceanConfig } from '@utils/ocean'
 import { ButtonApprove } from './ButtonApprove'
+import { allowance, approve, LoggerInstance } from '@oceanprotocol/lib'
 
 export default function TokenApproval({
   actionButton,
   disabled,
   amount,
-  coin
+  tokenAddress,
+  tokenSymbol
 }: {
   actionButton: JSX.Element
   disabled: boolean
   amount: string
-  coin: string
+  tokenAddress: string
+  tokenSymbol: string
 }): ReactElement {
-  const { ddo, price, isAssetNetwork } = useAsset()
+  const { price, isAssetNetwork } = useAsset()
   const [tokenApproved, setTokenApproved] = useState(false)
   const [loading, setLoading] = useState(false)
-  const { accountId } = useWeb3()
+  const { web3, accountId } = useWeb3()
 
-  const config = getOceanConfig(ddo.chainId)
-
-  const tokenAddress =
-    coin === 'OCEAN'
-      ? config.oceanTokenAddress
-      : ddo.services[0].datatokenAddress
-  const spender = price.address
+  const spender = price?.address
 
   const checkTokenApproval = useCallback(async () => {
-    // if (!tokenAddress || !spender || !isAssetNetwork || !amount) return
-    // const allowance = await ocean.datatokens.allowance(
-    //   tokenAddress,
-    //   accountId,
-    //   spender
-    // )
-    // amount &&
-    //   new Decimal(amount).greaterThan(new Decimal('0')) &&
-    //   setTokenApproved(
-    //     new Decimal(allowance).greaterThanOrEqualTo(new Decimal(amount))
-    //   )
-  }, [tokenAddress, spender, accountId, amount, isAssetNetwork])
+    if (!web3 || !tokenAddress || !spender || !isAssetNetwork || !amount) return
+
+    const allowanceValue = await allowance(
+      web3,
+      tokenAddress,
+      accountId,
+      spender
+    )
+    LoggerInstance.log(`[token approval] allowanceValue: ${allowanceValue}`)
+
+    if (!allowanceValue) return
+
+    new Decimal(amount).greaterThan(new Decimal('0')) &&
+      setTokenApproved(
+        new Decimal(allowanceValue).greaterThanOrEqualTo(new Decimal(amount))
+      )
+  }, [web3, tokenAddress, spender, accountId, amount, isAssetNetwork])
 
   useEffect(() => {
     checkTokenApproval()
@@ -51,13 +52,17 @@ export default function TokenApproval({
     setLoading(true)
 
     try {
-      // await ocean.datatokens.approve(tokenAddress, spender, amount, accountId)
+      const tx = await approve(web3, accountId, tokenAddress, spender, amount)
+      LoggerInstance.log(`[token approval] Approve tokens tx:`, tx)
     } catch (error) {
+      LoggerInstance.error(
+        `[token approval] Approve tokens tx failed:`,
+        error.message
+      )
+    } finally {
+      await checkTokenApproval()
       setLoading(false)
     }
-
-    await checkTokenApproval()
-    setLoading(false)
   }
 
   return (
@@ -72,7 +77,7 @@ export default function TokenApproval({
       ) : (
         <ButtonApprove
           amount={amount}
-          coin={coin}
+          tokenSymbol={tokenSymbol}
           approveTokens={approveTokens}
           isLoading={loading}
         />
