@@ -5,7 +5,7 @@ interface ConsumeDetails {
   addressOrId: string
   baseToken: TokenInfo
   datatoken: TokenInfo
-  isConsumable?: 'true' | 'false' | ''
+  isConsumable?: boolean
   // if there are valid orders for this
   owned: bool
 }
