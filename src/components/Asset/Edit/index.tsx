@@ -10,7 +10,6 @@ import { getServiceByName, mapTimeoutStringToSeconds } from '@utils/ddo'
 import styles from './index.module.css'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { useWeb3 } from '@context/Web3'
-import { setMinterToDispenser, setMinterToPublisher } from '@utils/freePrice'
 import content from '../../../../content/pages/edit.json'
 import { MetadataEditForm } from './_types'
 

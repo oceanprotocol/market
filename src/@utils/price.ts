@@ -1,4 +1,9 @@
-import { gql } from 'urql'
+import { gql, OperationResult } from 'urql'
+import { fetchData, getQueryContext } from './subgraph'
+import {
+  TokenPriceQuery,
+  TokenPriceQuery_token as TokenPrice
+} from '../@types/subgraph/TokenPriceQuery'
 
 const TokenPriceQuery = gql`
   query TokenPriceQuery($datatokenId: ID!) {
@@ -9,6 +14,13 @@ const TokenPriceQuery = gql`
       dispensers {
         id
         active
+        isMinter
+        maxBalance
+        token {
+          id
+          name
+          symbol
+        }
       }
       fixedRateExchanges {
         price
@@ -32,7 +44,19 @@ const TokenPriceQuery = gql`
   }
 `
 
-export async function getPrice(): Promise<BestPrice> {
-  const price = {} as BestPrice
+export async function getPrice(
+  chain: number,
+  datatokenAddress: string
+): Promise<ConsumeDetails> {
+  const price = {} as ConsumeDetails
+  const queryContext = getQueryContext(Number(chain))
+  const tokenQueryResult: OperationResult<TokenPriceQuery, any> =
+    await fetchData(
+      TokenPriceQuery,
+      { datatoken: datatokenAddress },
+      queryContext
+    )
+  const tokenPrice: TokenPrice = tokenQueryResult.data.token
+
   return price
 }
