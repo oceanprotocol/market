@@ -18,23 +18,9 @@ import styles from './Consume.module.css'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { Asset, FileMetadata } from '@oceanprotocol/lib'
 
-const previousOrderQuery = gql`
-  query PreviousOrder($id: String!, $account: String!) {
-    orders(
-      first: 1
-      where: { datatoken: $id, payer: $account }
-      orderBy: createdTimestamp
-      orderDirection: desc
-    ) {
-      createdTimestamp
-      tx
-    }
-  }
-`
-
 export default function Consume({
   ddo,
-  price,
+  consumeDetails,
   file,
   isBalanceSufficient,
   dtBalance,
@@ -43,7 +29,7 @@ export default function Consume({
   consumableFeedback
 }: {
   ddo: Asset
-  price: BestPrice
+  consumeDetails: ConsumeDetails
   file: FileMetadata
   isBalanceSufficient: boolean
   dtBalance: string
@@ -63,31 +49,10 @@ export default function Consume({
   const [hasDatatoken, setHasDatatoken] = useState(false)
   const [isConsumablePrice, setIsConsumablePrice] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
-  const [data, setData] = useState<OrdersData>()
   const isMounted = useIsMounted()
 
   useEffect(() => {
-    if (!ddo || !accountId) return
-
-    const context = getQueryContext(ddo.chainId)
-    const variables = {
-      id: ddo.services[0].datatokenAddress?.toLowerCase(),
-      account: accountId?.toLowerCase()
-    }
-    fetchData(previousOrderQuery, variables, context).then((result: any) => {
-      isMounted() && setData(result.data)
-    })
-  }, [ddo, accountId, hasPreviousOrder, isMounted])
-
-  useEffect(() => {
-    if (
-      !data ||
-      !assetTimeout ||
-      data.orders.length === 0 ||
-      !accountId ||
-      !isAssetNetwork
-    )
-      return
+    if (!assetTimeout || !accountId || !isAssetNetwork) return
 
     const lastOrder = data.orders[0]
     if (assetTimeout === '0') {
