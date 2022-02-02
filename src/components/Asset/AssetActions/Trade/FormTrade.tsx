@@ -139,7 +139,7 @@ export default function FormTrade({
               !isWarningAccepted ||
               !isAssetNetwork ||
               values.datatoken === undefined ||
-              values.ocean === undefined
+              values.baseToken === undefined
             }
             isLoading={isSubmitting}
             loaderMessage="Swapping tokens..."
@@ -150,8 +150,8 @@ export default function FormTrade({
                 ? values.datatoken
                   ? `${values.datatoken}`
                   : undefined
-                : values.ocean
-                ? `${values.ocean}`
+                : values.baseToken
+                ? `${values.baseToken}`
                 : undefined
             }
             action={submitForm}
