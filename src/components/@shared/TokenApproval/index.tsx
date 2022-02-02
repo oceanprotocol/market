@@ -18,12 +18,12 @@ export default function TokenApproval({
   tokenAddress: string
   tokenSymbol: string
 }): ReactElement {
-  const { price, isAssetNetwork } = useAsset()
+  const { consumeDetails, isAssetNetwork } = useAsset()
   const [tokenApproved, setTokenApproved] = useState(false)
   const [loading, setLoading] = useState(false)
   const { web3, accountId } = useWeb3()
 
-  const spender = price?.address
+  const spender = consumeDetails?.addressOrId
 
   const checkTokenApproval = useCallback(async () => {
     if (!web3 || !tokenAddress || !spender || !isAssetNetwork || !amount) return

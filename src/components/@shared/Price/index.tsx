@@ -18,7 +18,7 @@ export default function Price({
   return consumeDetails?.price || consumeDetails?.type === 'free' ? (
     <PriceUnit
       price={`${consumeDetails.price}`}
-      symbol={consumeDetails.baseToken.symbol}
+      symbol={consumeDetails.baseToken?.symbol}
       className={className}
       small={small}
       conversion={conversion}

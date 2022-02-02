@@ -4,7 +4,7 @@ import {
   PublisherTrustedAlgorithm
 } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
-import { PriceList, getAssetsPriceList } from './subgraph'
+import { PriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { metadataCacheUri } from '../../app.config'
@@ -207,7 +207,8 @@ export async function transformDDOToAssetSelection(
   cancelToken?: CancelToken
 ): Promise<AssetSelectionAsset[]> {
   const didList: string[] = []
-  const priceList: PriceList = await getAssetsPriceList(ddoList)
+  // const priceList: PriceList = await getAssetsPriceList(ddoList)
+  const priceList: PriceList = null
   const symbolList: any = {}
   const didProviderEndpointMap: any = {}
   for (const ddo of ddoList) {

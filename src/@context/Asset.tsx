@@ -14,7 +14,7 @@ import { useWeb3 } from './Web3'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getOceanConfig, getDevelopmentConfig } from '@utils/ocean'
-import { getConsumeDetails } from '@utils/consumeDetails'
+import { getConsumeDetails } from '@utils/consumeDetailsAndPricing'
 
 interface AssetProviderValue {
   isInPurgatory: boolean

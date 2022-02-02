@@ -36,7 +36,7 @@ import ComputeJobs from '../../../Profile/History/ComputeJobs'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { SortTermOptions } from '../../../../@types/aquarius/SearchQuery'
-import { getConsumeDetails } from '@utils/consumeDetails'
+import { getConsumeDetails } from '@utils/consumeDetailsAndPricing'
 
 export default function Compute({
   ddo,
