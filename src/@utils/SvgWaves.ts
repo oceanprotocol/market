@@ -24,25 +24,28 @@ class Point {
   }
 }
 
+enum WaveColors {
+  Violet = '#e000cf',
+  Pink = '#ff4092',
+  Grey = '#8b98a9'
+}
+
 export class SvgWaves {
   properties: WaveProperties
   layers: Point[][]
 
   static xmlns = 'http://www.w3.org/2000/svg'
-  // violet, pink, grey-light
-  static colors = ['#e000cf', '#ff4092', '#8b98a9']
 
   /**
    * Helper function to get randomly generated WaveProperties
    * These are generated with a focus on small file size for the svg
    * meaning low character count.
    * - width & height: default is 2 digits max (99)
-   * - a color will be randomly picked from SvgWaves.colors
+   * - color pink is selected per default
    * - randomly decide if fill or stroke coloring should be used
-   * - create 2 - 4 layers with 3 - 5 points per layers
+   * - create 4 layers with 4 - 5 points per layers
    *     -> results in random looking, yet small enough svgs
-   * - variance between 0.3 and 0.8 returns best results
-   *     -> random, different, yet not too chaotic
+   * - variance between 0.5 and 0.7 returns smooth & different results
    *
    * @returns new randomly generated WaveProperties
    */
@@ -50,11 +53,11 @@ export class SvgWaves {
     return {
       width: 99,
       height: 99,
-      color: getRandomItemFromArray(SvgWaves.colors),
+      color: WaveColors.Pink,
       fill: Math.random() < 0.5, // random true or false
-      layerCount: randomIntFromInterval(2, 4),
-      pointsPerLayer: randomIntFromInterval(3, 5),
-      variance: Math.random() * 0.5 + 0.3, // 0.3 - 0.8
+      layerCount: 4,
+      pointsPerLayer: randomIntFromInterval(3, 4),
+      variance: Math.random() * 0.2 + 0.5, // 0.5 - 0.7
       maxOpacity: 255, // 0xff
       opacitySteps: 68 // 0x44
     }
