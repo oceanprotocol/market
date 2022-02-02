@@ -19,7 +19,7 @@ export default function EditComputeDataset({
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
-  const { ddo, price, isAssetNetwork, refreshDdo } = useAsset()
+  const { assetExtended, isAssetNetwork, refreshAsset } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
 
@@ -111,7 +111,7 @@ export default function EditComputeDataset({
               />
             </article>
             <Web3Feedback
-              networkId={ddo?.chainId}
+              networkId={assetExtended?.chainId}
               isAssetNetwork={isAssetNetwork}
             />
             {debug === true && (

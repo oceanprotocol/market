@@ -132,31 +132,31 @@ const TokenPriceQuery = gql`
   }
 `
 
-function getConsumeDetailsFromTokenPrice(
+function getAccessDetailsFromTokenPrice(
   tokenPrice: TokenPrice | TokensPrice,
   timeout?: number
-): ConsumeDetails {
-  const consumeDetails = {} as ConsumeDetails
+): AccessDetails {
+  const accessDetails = {} as AccessDetails
 
   if (!timeout && !tokenPrice.orders && tokenPrice.orders.length > 0) {
     const order = tokenPrice.orders[0]
-    consumeDetails.owned = Date.now() / 1000 - order.createdTimestamp < timeout
-    consumeDetails.validOrderTx = order.tx
+    accessDetails.owned = Date.now() / 1000 - order.createdTimestamp < timeout
+    accessDetails.validOrderTx = order.tx
   }
 
   // free is always the best price
   if (tokenPrice.dispensers && tokenPrice.dispensers.length > 0) {
     const dispenser = tokenPrice.dispensers[0]
-    consumeDetails.type = 'free'
-    consumeDetails.addressOrId = dispenser.id
-    consumeDetails.price = 0
-    consumeDetails.isConsumable = dispenser.active
-    consumeDetails.datatoken = {
+    accessDetails.type = 'free'
+    accessDetails.addressOrId = dispenser.id
+    accessDetails.price = 0
+    accessDetails.isConsumable = dispenser.active
+    accessDetails.datatoken = {
       address: dispenser.token.id,
       name: dispenser.token.name,
       symbol: dispenser.token.symbol
     }
-    return consumeDetails
+    return accessDetails
   }
 
   // checking for fixed price
@@ -165,47 +165,46 @@ function getConsumeDetailsFromTokenPrice(
     tokenPrice.fixedRateExchanges.length > 0
   ) {
     const fre = tokenPrice.fixedRateExchanges[0]
-    consumeDetails.type = 'fixed'
-    consumeDetails.addressOrId = fre.id
-    consumeDetails.price = fre.price
+    accessDetails.type = 'fixed'
+    accessDetails.addressOrId = fre.id
+    accessDetails.price = fre.price
     // in theory we should check dt balance here, we can skip this because in the market we always create fre with minting capabilities.
-    consumeDetails.isConsumable = fre.active
-    consumeDetails.baseToken = {
+    accessDetails.isConsumable = fre.active
+    accessDetails.baseToken = {
       address: fre.baseToken.address,
       name: fre.baseToken.name,
       symbol: fre.baseToken.symbol
     }
-    consumeDetails.datatoken = {
+    accessDetails.datatoken = {
       address: fre.datatoken.address,
       name: fre.datatoken.name,
       symbol: fre.datatoken.symbol
     }
-    return consumeDetails
+    return accessDetails
   }
 
   // checking for pools
   if (tokenPrice.pools && tokenPrice.pools.length > 0) {
     const pool = tokenPrice.pools[0]
-    consumeDetails.type = 'dynamic'
-    consumeDetails.addressOrId = pool.id
+    accessDetails.type = 'dynamic'
+    accessDetails.addressOrId = pool.id
     // TODO: this needs to be consumePrice
-    consumeDetails.price = pool.spotPrice
+    accessDetails.price = pool.spotPrice
     // TODO: pool.datatokenLiquidity > 3 is kinda random here, we shouldn't run into this anymore now , needs more thinking/testing
-    consumeDetails.isConsumable =
-      pool.isFinalized && pool.datatokenLiquidity > 3
-    consumeDetails.baseToken = {
+    accessDetails.isConsumable = pool.isFinalized && pool.datatokenLiquidity > 3
+    accessDetails.baseToken = {
       address: pool.baseToken.address,
       name: pool.baseToken.name,
       symbol: pool.baseToken.symbol
     }
-    consumeDetails.datatoken = {
+    accessDetails.datatoken = {
       address: pool.datatoken.address,
       name: pool.datatoken.name,
       symbol: pool.datatoken.symbol
     }
-    return consumeDetails
+    return accessDetails
   }
-  return consumeDetails
+  return accessDetails
 }
 
 /**
@@ -214,15 +213,15 @@ function getConsumeDetailsFromTokenPrice(
  * @param datatokenAddress address of the datatoken
  * @param timeout timeout of the service , only needed if you want order details like owned and validOrderId
  * @param account account that wants to consume, only needed if you want order details like owned and validOrderId
- * @returns ConsumeDetails
+ * @returns AccessDetails
  */
-export async function getConsumeDetails(
+export async function getAccessDetails(
   chain: number,
   datatokenAddress: string,
   timeout?: number,
   account = ''
-): Promise<ConsumeDetails> {
-  let consumeDetails = {} as ConsumeDetails
+): Promise<AccessDetails> {
+  let accessDetails = {} as AccessDetails
   const queryContext = getQueryContext(Number(chain))
   const tokenQueryResult: OperationResult<TokenPriceQuery, any> =
     await fetchData(
@@ -235,11 +234,11 @@ export async function getConsumeDetails(
     )
 
   const tokenPrice: TokenPrice = tokenQueryResult.data.token
-  consumeDetails = getConsumeDetailsFromTokenPrice(tokenPrice, timeout)
-  return consumeDetails
+  accessDetails = getAccessDetailsFromTokenPrice(tokenPrice, timeout)
+  return accessDetails
 }
 
-export async function getConsumeDetailsForAssets(
+export async function getAccessDetailsForAssets(
   assets: Asset[],
   account = ''
 ): Promise<AssetExtended[]> {
@@ -272,11 +271,11 @@ export async function getConsumeDetailsForAssets(
         queryContext
       )
     tokenQueryResult.data?.tokens.forEach((token) => {
-      const consumeDetails = getConsumeDetailsFromTokenPrice(token)
+      const accessDetails = getAccessDetailsFromTokenPrice(token)
       const currentAsset = assetsExtended.find(
         (asset) => asset.services[0].datatokenAddress.toLowerCase() === token.id
       )
-      currentAsset.consumeDetails = consumeDetails
+      currentAsset.accessDetails = accessDetails
     })
   }
   return assetsExtended

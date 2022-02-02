@@ -36,11 +36,6 @@ export interface PriceList {
   [key: string]: string
 }
 
-export interface AssetListPrices {
-  ddo: Asset
-  consumeDetails: ConsumeDetails
-}
-
 interface DidAndDatatokenMap {
   [name: string]: string
 }

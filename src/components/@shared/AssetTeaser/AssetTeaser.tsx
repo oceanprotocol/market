@@ -52,7 +52,7 @@ export default function AssetTeaser({
           </div>
 
           <footer className={styles.foot}>
-            <Price consumeDetails={assetExtended.consumeDetails} small />
+            <Price accessDetails={assetExtended.accessDetails} small />
             <NetworkName
               networkId={assetExtended.chainId}
               className={styles.network}

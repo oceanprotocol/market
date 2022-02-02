@@ -1,4 +1,4 @@
-interface ConsumeDetails {
+interface AccessDetails {
   type: 'dynamic' | 'fixed' | 'free' | ''
   price: number
   // if type is dynamic this is the pool address, for fixed/free this is an id.

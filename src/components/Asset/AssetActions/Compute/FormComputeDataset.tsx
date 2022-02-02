@@ -56,14 +56,14 @@ export default function FormStartCompute({
   selectedComputeAssetType?: string
   selectedComputeAssetTimeout?: string
   stepText: string
-  algorithmConsumeDetails: ConsumeDetails
+  algorithmConsumeDetails: AccessDetails
   isConsumable: boolean
   consumableFeedback: string
 }): ReactElement {
   const { isValid, values }: FormikContextType<{ algorithm: string }> =
     useFormikContext()
-  const { consumeDetails, ddo, isAssetNetwork } = useAsset()
-  const [totalPrice, setTotalPrice] = useState(consumeDetails?.price)
+  const { accessDetails, assetExtended, isAssetNetwork } = useAsset()
+  const [totalPrice, setTotalPrice] = useState(accessDetails?.price)
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>(false)
   const { accountId, balance } = useWeb3()
   const [algorithmConsumableStatus, setAlgorithmConsumableStatus] =
@@ -97,10 +97,10 @@ export default function FormStartCompute({
   // Set price for calculation output
   //
   useEffect(() => {
-    if (!consumeDetails || !algorithmConsumeDetails) return
+    if (!accessDetails || !algorithmConsumeDetails) return
 
     const priceDataset =
-      hasPreviousOrder || hasDatatoken ? 0 : Number(consumeDetails.price)
+      hasPreviousOrder || hasDatatoken ? 0 : Number(accessDetails.price)
     const priceAlgo =
       hasPreviousOrderSelectedComputeAsset || hasDatatokenSelectedComputeAsset
         ? 0
@@ -108,7 +108,7 @@ export default function FormStartCompute({
 
     setTotalPrice(priceDataset + priceAlgo)
   }, [
-    consumeDetails,
+    accessDetails,
     algorithmConsumeDetails,
     hasPreviousOrder,
     hasDatatoken,
@@ -159,7 +159,7 @@ export default function FormStartCompute({
         }
         hasPreviousOrder={hasPreviousOrder}
         hasDatatoken={hasDatatoken}
-        dtSymbol={ddo?.datatokens[0]?.symbol}
+        dtSymbol={assetExtended?.datatokens[0]?.symbol}
         dtBalance={dtBalance}
         datasetLowPoolLiquidity={datasetLowPoolLiquidity}
         assetTimeout={assetTimeout}
@@ -177,7 +177,7 @@ export default function FormStartCompute({
         stepText={stepText}
         isLoading={isLoading}
         type="submit"
-        priceType={consumeDetails?.type}
+        priceType={accessDetails?.type}
         algorithmPriceType={algorithmConsumeDetails?.type}
         isBalanceSufficient={isBalanceSufficient}
         isConsumable={isConsumable}

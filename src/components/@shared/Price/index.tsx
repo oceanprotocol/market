@@ -5,26 +5,26 @@ import Tooltip from '../atoms/Tooltip'
 import PriceUnit from './PriceUnit'
 
 export default function Price({
-  consumeDetails,
+  accessDetails,
   className,
   small,
   conversion
 }: {
-  consumeDetails: ConsumeDetails
+  accessDetails: AccessDetails
   className?: string
   small?: boolean
   conversion?: boolean
 }): ReactElement {
-  return consumeDetails?.price || consumeDetails?.type === 'free' ? (
+  return accessDetails?.price || accessDetails?.type === 'free' ? (
     <PriceUnit
-      price={`${consumeDetails.price}`}
-      symbol={consumeDetails.baseToken?.symbol}
+      price={`${accessDetails.price}`}
+      symbol={accessDetails.baseToken?.symbol}
       className={className}
       small={small}
       conversion={conversion}
-      type={consumeDetails.type}
+      type={accessDetails.type}
     />
-  ) : !consumeDetails || consumeDetails?.type === '' ? (
+  ) : !accessDetails || accessDetails?.type === '' ? (
     <div className={styles.empty}>
       No price set{' '}
       <Tooltip content="No pricing mechanism has been set on this asset yet." />

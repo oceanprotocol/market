@@ -6,27 +6,29 @@ import Price from '@shared/Price'
 import Tooltip from '@shared/atoms/Tooltip'
 import AssetTitle from '@shared/AssetList/AssetListTitle'
 import { retrieveDDOListByDIDs } from '@utils/aquarius'
-import { getAssetsBestPrices, AssetListPrices } from '@utils/subgraph'
 import { CancelToken } from 'axios'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { useCancelToken } from '@hooks/useCancelToken'
+import { AssetExtended } from 'src/@types/AssetExtended'
+import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
+import { useWeb3 } from '@context/Web3'
 
 const columns = [
   {
     name: 'Data Set',
-    selector: function getAssetRow(row: AssetListPrices) {
-      const { metadata } = row.ddo
-      return <AssetTitle title={metadata.name} ddo={row.ddo} />
+    selector: function getAssetRow(row: AssetExtended) {
+      const { metadata } = row
+      return <AssetTitle title={metadata.name} asset={row} />
     },
     maxWidth: '45rem',
     grow: 1
   },
   {
     name: 'Datatoken Symbol',
-    selector: function getAssetRow(row: AssetListPrices) {
+    selector: function getAssetRow(row: AssetExtended) {
       return (
-        <Tooltip content={row.ddo.datatokens[0].name}>
-          {row.ddo.datatokens[0].symbol}
+        <Tooltip content={row.datatokens[0].name}>
+          {row.datatokens[0].symbol}
         </Tooltip>
       )
     },
@@ -34,8 +36,8 @@ const columns = [
   },
   {
     name: 'Price',
-    selector: function getAssetRow(row: AssetListPrices) {
-      return <Price price={row.price} small />
+    selector: function getAssetRow(row: AssetExtended) {
+      return <Price accessDetails={row.accessDetails} small />
     },
     right: true
   }
@@ -43,9 +45,10 @@ const columns = [
 
 export default function Bookmarks(): ReactElement {
   const { appConfig } = useSiteMetadata()
+  const { accountId } = useWeb3()
   const { bookmarks } = useUserPreferences()
 
-  const [pinned, setPinned] = useState<AssetListPrices[]>()
+  const [pinned, setPinned] = useState<AssetExtended[]>()
   const [isLoading, setIsLoading] = useState<boolean>()
   const { chainIds } = useUserPreferences()
   const newCancelToken = useCancelToken()
@@ -87,8 +90,9 @@ export default function Bookmarks(): ReactElement {
           chainIds,
           newCancelToken()
         )
-        const pinnedAssets: AssetListPrices[] = await getAssetsBestPrices(
-          resultPinned
+        const pinnedAssets: AssetExtended[] = await getAccessDetailsForAssets(
+          resultPinned,
+          accountId
         )
         setPinned(pinnedAssets)
       } catch (error) {
@@ -102,6 +106,7 @@ export default function Bookmarks(): ReactElement {
     appConfig?.metadataCacheUri,
     bookmarks,
     chainIds,
+    accountId,
     getAssetsBookmarked,
     newCancelToken
   ])

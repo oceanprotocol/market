@@ -16,7 +16,7 @@ import { Asset, FileMetadata } from '@oceanprotocol/lib'
 
 export default function Consume({
   ddo,
-  consumeDetails,
+  accessDetails,
   file,
   isBalanceSufficient,
   dtBalance,
@@ -25,7 +25,7 @@ export default function Consume({
   consumableFeedback
 }: {
   ddo: Asset
-  consumeDetails: ConsumeDetails
+  accessDetails: AccessDetails
   file: FileMetadata
   isBalanceSufficient: boolean
   dtBalance: string
@@ -55,12 +55,12 @@ export default function Consume({
   }, [ddo])
 
   useEffect(() => {
-    if (!consumeDetails) return
+    if (!accessDetails) return
 
-    setIsConsumablePrice(consumeDetails.isConsumable)
-    setHasPreviousOrder(consumeDetails.owned)
-    setPreviousOrderId(consumeDetails.validOrderTx)
-  }, [consumeDetails])
+    setIsConsumablePrice(accessDetails.isConsumable)
+    setHasPreviousOrder(accessDetails.owned)
+    setPreviousOrderId(accessDetails.validOrderTx)
+  }, [accessDetails])
 
   useEffect(() => {
     setHasDatatoken(Number(dtBalance) >= 1)
@@ -128,7 +128,7 @@ export default function Consume({
       assetType={ddo?.metadata?.type}
       stepText={consumeStepText || pricingStepText}
       isLoading={pricingIsLoading || isLoading}
-      priceType={consumeDetails?.type}
+      priceType={accessDetails?.type}
       isConsumable={isConsumable}
       isBalanceSufficient={isBalanceSufficient}
       consumableFeedback={consumableFeedback}
@@ -142,7 +142,7 @@ export default function Consume({
           <FileIcon file={file} isLoading={fileIsLoading} />
         </div>
         <div className={styles.pricewrapper}>
-          <Price consumeDetails={consumeDetails} conversion />
+          <Price accessDetails={accessDetails} conversion />
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>

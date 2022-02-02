@@ -28,12 +28,12 @@ export default function FormEditComputeDataset({
   setShowEdit: (show: boolean) => void
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
-  const { ddo } = useAsset()
+  const { assetExtended } = useAsset()
   const { values }: FormikContextType<ComputePrivacyForm> = useFormikContext()
   const [allAlgorithms, setAllAlgorithms] = useState<AssetSelectionAsset[]>()
   const newCancelToken = useCancelToken()
   const { publisherTrustedAlgorithms } = getServiceByName(
-    ddo,
+    assetExtended,
     'compute'
   ).compute
 
@@ -41,14 +41,14 @@ export default function FormEditComputeDataset({
     publisherTrustedAlgorithms: PublisherTrustedAlgorithm[]
   ): Promise<AssetSelectionAsset[]> {
     const baseParams = {
-      chainIds: [ddo.chainId],
+      chainIds: [assetExtended.chainId],
       sort: { sortBy: SortTermOptions.Created },
       filters: [getFilterTerm('service.attributes.main.type', 'algorithm')]
     } as BaseQueryParams
 
     const query = generateBaseQuery(baseParams)
     const querryResult = await queryMetadata(query, newCancelToken())
-    const datasetComputeService = getServiceByName(ddo, 'compute')
+    const datasetComputeService = getServiceByName(assetExtended, 'compute')
     const algorithmSelectionList = await transformDDOToAssetSelection(
       datasetComputeService?.serviceEndpoint,
       querryResult.results,

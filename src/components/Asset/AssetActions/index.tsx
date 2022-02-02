@@ -24,10 +24,10 @@ import { FormPublishData } from 'src/components/Publish/_types'
 
 export default function AssetActions({
   ddo,
-  consumeDetails
+  accessDetails
 }: {
   ddo: Asset
-  consumeDetails: ConsumeDetails
+  accessDetails: AccessDetails
 }): ReactElement {
   const { accountId, balance, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
@@ -112,24 +112,24 @@ export default function AssetActions({
 
   // Check user balance against price
   useEffect(() => {
-    if (consumeDetails?.type === 'free') setIsBalanceSufficient(true)
-    if (!consumeDetails?.price || !accountId || !balance?.ocean || !dtBalance)
+    if (accessDetails?.type === 'free') setIsBalanceSufficient(true)
+    if (!accessDetails?.price || !accountId || !balance?.ocean || !dtBalance)
       return
 
     setIsBalanceSufficient(
-      compareAsBN(balance.ocean, `${consumeDetails.price}`) ||
+      compareAsBN(balance.ocean, `${accessDetails.price}`) ||
         Number(dtBalance) >= 1
     )
 
     return () => {
       setIsBalanceSufficient(false)
     }
-  }, [balance, accountId, consumeDetails, dtBalance])
+  }, [balance, accountId, accessDetails, dtBalance])
 
   const UseContent = isCompute ? (
     <Compute
       ddo={ddo}
-      consumeDetails={consumeDetails}
+      accessDetails={accessDetails}
       dtBalance={dtBalance}
       file={fileMetadata}
       fileIsLoading={fileIsLoading}
@@ -139,7 +139,7 @@ export default function AssetActions({
   ) : (
     <Consume
       ddo={ddo}
-      consumeDetails={consumeDetails}
+      accessDetails={accessDetails}
       dtBalance={dtBalance}
       isBalanceSufficient={isBalanceSufficient}
       file={fileMetadata}
@@ -156,17 +156,17 @@ export default function AssetActions({
     }
   ]
 
-  consumeDetails?.type === 'dynamic' &&
+  accessDetails?.type === 'dynamic' &&
     tabs.push(
       {
         title: 'Pool',
         content: <Pool />,
-        disabled: !consumeDetails.datatoken
+        disabled: !accessDetails.datatoken
       },
       {
         title: 'Trade',
         content: <Trade />,
-        disabled: !consumeDetails.datatoken
+        disabled: !accessDetails.datatoken
       }
     )
 

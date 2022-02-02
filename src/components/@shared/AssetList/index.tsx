@@ -9,7 +9,7 @@ import { useIsMounted } from '@hooks/useIsMounted'
 // not sure why this import is required
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { Asset } from '@oceanprotocol/lib'
-import { getConsumeDetailsForAssets } from '@utils/consumeDetailsAndPricing'
+import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 
 const cx = classNames.bind(styles)
 
@@ -53,7 +53,7 @@ export default function AssetList({
     setLoading(false)
 
     async function fetchPrices() {
-      const assetsWithPrices = await getConsumeDetailsForAssets(assets)
+      const assetsWithPrices = await getAccessDetailsForAssets(assets)
       if (!isMounted()) return
       setAssetsWithPrices([...assetsWithPrices])
     }

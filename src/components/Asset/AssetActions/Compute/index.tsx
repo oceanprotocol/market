@@ -36,11 +36,11 @@ import ComputeJobs from '../../../Profile/History/ComputeJobs'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { SortTermOptions } from '../../../../@types/aquarius/SearchQuery'
-import { getConsumeDetails } from '@utils/consumeDetailsAndPricing'
+import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 
 export default function Compute({
   ddo,
-  consumeDetails,
+  accessDetails,
   dtBalance,
   file,
   fileIsLoading,
@@ -48,7 +48,7 @@ export default function Compute({
   consumableFeedback
 }: {
   ddo: Asset
-  consumeDetails: ConsumeDetails
+  accessDetails: AccessDetails
   dtBalance: string
   file: FileMetadata
   fileIsLoading?: boolean
@@ -72,7 +72,7 @@ export default function Compute({
     useState(false)
   const [algorithmDTBalance, setalgorithmDTBalance] = useState<string>()
   const [algorithmConsumeDetails, setAlgorithmConsumeDetails] =
-    useState<ConsumeDetails>()
+    useState<AccessDetails>()
   const [previousAlgorithmOrderId, setPreviousAlgorithmOrderId] =
     useState<string>()
   const [datasetTimeout, setDatasetTimeout] = useState<string>()
@@ -171,11 +171,11 @@ export default function Compute({
 
   const initMetadata = useCallback(async (ddo: Asset): Promise<void> => {
     if (!ddo) return
-    const consumeDetails = await getConsumeDetails(
+    const accessDetails = await getAccessDetails(
       ddo.chainId,
       ddo.services[0].datatokenAddress
     )
-    setAlgorithmConsumeDetails(consumeDetails)
+    setAlgorithmConsumeDetails(accessDetails)
   }, [])
 
   useEffect(() => {
@@ -185,10 +185,10 @@ export default function Compute({
   }, [algorithmConsumeDetails])
 
   useEffect(() => {
-    if (!consumeDetails) return
+    if (!accessDetails) return
 
-    setIsConsumablePrice(consumeDetails.isConsumable)
-  }, [consumeDetails])
+    setIsConsumablePrice(accessDetails.isConsumable)
+  }, [accessDetails])
 
   // useEffect(() => {
   //   setDatasetTimeout(secondsToString(timeout))
@@ -391,7 +391,7 @@ export default function Compute({
     <>
       <div className={styles.info}>
         <FileIcon file={file} isLoading={fileIsLoading} small />
-        <Price consumeDetails={consumeDetails} conversion />
+        <Price accessDetails={accessDetails} conversion />
       </div>
 
       {ddo.metadata.type === 'algorithm' ? (
@@ -425,7 +425,7 @@ export default function Compute({
             assetTimeout={datasetTimeout}
             hasPreviousOrderSelectedComputeAsset={hasPreviousAlgorithmOrder}
             hasDatatokenSelectedComputeAsset={hasAlgoAssetDatatoken}
-            oceanSymbol={consumeDetails ? consumeDetails.baseToken.symbol : ''}
+            oceanSymbol={accessDetails ? accessDetails.baseToken.symbol : ''}
             dtSymbolSelectedComputeAsset={
               selectedAlgorithmAsset?.datatokens[0]?.symbol
             }
@@ -446,7 +446,7 @@ export default function Compute({
           <SuccessConfetti success="Your job started successfully! Watch the progress below or on your profile." />
         )}
       </footer>
-      {accountId && consumeDetails?.datatoken && (
+      {accountId && accessDetails?.datatoken && (
         <AssetActionHistoryTable title="Your Compute Jobs">
           <ComputeJobs minimal />
         </AssetActionHistoryTable>

@@ -22,11 +22,11 @@ export default function Edit({
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
-  const { ddo, refreshDdo, price } = useAsset()
+  const { assetExtended, refreshAsset, accessDetails } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const [timeoutStringValue, setTimeoutStringValue] = useState<string>()
-  const { timeout } = ddo.services[0]
+  const { timeout } = assetExtended.services[0]
 
   const hasFeedback = error || success
 
@@ -118,7 +118,11 @@ export default function Edit({
 
   return (
     <Formik
-      initialValues={getInitialValues(ddo.metadata, timeout, price.value)}
+      initialValues={getInitialValues(
+        assetExtended.metadata,
+        timeout,
+        accessDetails.price
+      )}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
         // move user's focus to top of screen
@@ -144,7 +148,7 @@ export default function Edit({
               /> */}
 
               <aside>
-                <Web3Feedback networkId={ddo?.chainId} />
+                <Web3Feedback networkId={assetExtended?.chainId} />
               </aside>
 
               {/* {debug === true && <Debug values={values} ddo={ddo} />} */}

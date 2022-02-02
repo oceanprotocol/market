@@ -347,16 +347,16 @@ export async function getDownloadAssets(
     const result = await queryMetadata(query, cancelToken)
 
     const downloadedAssets: DownloadedAsset[] = result.results
-      .map((ddo) => {
+      .map((asset) => {
         const order = tokenOrders.find(
           ({ datatoken }) =>
             datatoken?.address.toLowerCase() ===
-            ddo.services[0].datatokenAddress.toLowerCase()
+            asset.services[0].datatokenAddress.toLowerCase()
         )
 
         return {
-          ddo,
-          networkId: ddo.chainId,
+          asset,
+          networkId: asset.chainId,
           dtSymbol: order?.datatoken?.symbol,
           timestamp: order?.createdTimestamp
         }

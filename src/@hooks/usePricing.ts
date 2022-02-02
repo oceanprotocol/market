@@ -18,7 +18,7 @@ interface UsePricing {
   mint: (tokensToMint: string, ddo: Asset) => Promise<TransactionReceipt | void>
   buyDT: (
     amountDataToken: number | string,
-    consumeDetails: ConsumeDetails,
+    accessDetails: AccessDetails,
     ddo: Asset
   ) => Promise<TransactionReceipt | void>
   pricingStep?: number
@@ -118,7 +118,7 @@ function usePricing(): UsePricing {
 
   async function buyDT(
     amountDataToken: number | string,
-    consumeDetails: ConsumeDetails,
+    accessDetails: AccessDetails,
     ddo: Asset
   ): Promise<TransactionReceipt | void> {
     if (!accountId) return
@@ -130,20 +130,20 @@ function usePricing(): UsePricing {
       setPricingError(undefined)
       setStep(1, 'buy', ddo)
 
-      LoggerInstance.log('Price found for buying', consumeDetails)
+      LoggerInstance.log('Price found for buying', accessDetails)
       Decimal.set({ precision: 18 })
 
-      switch (consumeDetails?.type) {
+      switch (accessDetails?.type) {
         case 'dynamic': {
-          const oceanAmmount = new Decimal(consumeDetails.price)
+          const oceanAmmount = new Decimal(accessDetails.price)
             .times(1.05)
             .toString()
-          const maxPrice = new Decimal(consumeDetails.price).times(2).toString()
+          const maxPrice = new Decimal(accessDetails.price).times(2).toString()
 
           setStep(2, 'buy', ddo)
           LoggerInstance.log(
             'Buying token from pool',
-            consumeDetails,
+            accessDetails,
             accountId,
             oceanAmmount,
             maxPrice
@@ -172,7 +172,7 @@ function usePricing(): UsePricing {
           }
           LoggerInstance.log(
             'Buying token from exchange',
-            consumeDetails,
+            accessDetails,
             accountId
           )
           // await ocean.datatokens.approve(

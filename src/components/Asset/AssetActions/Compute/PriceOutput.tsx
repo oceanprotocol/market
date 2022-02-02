@@ -12,7 +12,7 @@ interface PriceOutputProps {
   assetTimeout: string
   hasPreviousOrderSelectedComputeAsset: boolean
   hasDatatokenSelectedComputeAsset: boolean
-  algorithmConsumeDetails: ConsumeDetails
+  algorithmConsumeDetails: AccessDetails
   selectedComputeAssetTimeout: string
 }
 
@@ -63,7 +63,7 @@ export default function PriceOutput({
   algorithmConsumeDetails,
   selectedComputeAssetTimeout
 }: PriceOutputProps): ReactElement {
-  const { consumeDetails } = useAsset()
+  const { accessDetails } = useAsset()
 
   return (
     <div className={styles.priceComponent}>
@@ -74,7 +74,7 @@ export default function PriceOutput({
             <Row
               hasPreviousOrder={hasPreviousOrder}
               hasDatatoken={hasDatatoken}
-              price={consumeDetails?.price}
+              price={accessDetails?.price}
               timeout={assetTimeout}
               symbol={symbol}
             />
