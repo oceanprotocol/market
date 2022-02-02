@@ -13,13 +13,17 @@ import { useWeb3 } from '@context/Web3'
 import useNftFactory from '@hooks/contracts/useNftFactory'
 import { NftFactory } from '@oceanprotocol/lib'
 import Tooltip from '@shared/atoms/Tooltip'
+import Conversion from '@shared/Price/Conversion'
+import { usePrices } from '@context/Prices'
 
 const getEstGasFee = async (
   address: string,
   nftFactory: NftFactory,
-  nftMetadata: NftMetadata
+  nftMetadata: NftMetadata,
+  ethToOceanConversionRate: number
 ): Promise<string> => {
-  if (!address || !nftFactory || !nftMetadata) return
+  if (!address || !nftFactory || !nftMetadata || !ethToOceanConversionRate)
+    return
 
   const { web3 } = nftFactory
   const nft = generateNftCreateData(nftMetadata)
@@ -30,11 +34,13 @@ const getEstGasFee = async (
     (+gasPrice * +gasLimit).toString(),
     'ether'
   )
-  return (+gasFeeEth).toFixed(8)
+  const gasFeeOcean = (+gasFeeEth / +ethToOceanConversionRate).toString()
+  return gasFeeOcean
 }
 
 export default function Nft(props: InputProps): ReactElement {
   const { accountId } = useWeb3()
+  const { prices } = usePrices()
   const nftFactory = useNftFactory()
 
   const [gasFee, setGasFee] = useState('')
@@ -54,9 +60,16 @@ export default function Nft(props: InputProps): ReactElement {
 
   useEffect(() => {
     const calculateGasFee = async () =>
-      setGasFee(await getEstGasFee(accountId, nftFactory, field.value))
+      setGasFee(
+        await getEstGasFee(
+          accountId,
+          nftFactory,
+          field.value,
+          (prices as any)?.eth
+        )
+      )
     calculateGasFee()
-  }, [accountId, nftFactory, field.value])
+  }, [accountId, nftFactory, field.value, prices])
 
   return (
     <div className={styles.nft}>
@@ -65,9 +78,16 @@ export default function Nft(props: InputProps): ReactElement {
         <div className={styles.actions}>
           <Tooltip
             content={
-              gasFee
-                ? `Gas fee estimation for this artwork: ${gasFee} ETH`
-                : 'Please connect your wallet to get a gas fee estimate for this artwork'
+              gasFee ? (
+                <>
+                  Gas fee estimation for this artwork
+                  <Conversion price={gasFee} />
+                </>
+              ) : accountId ? (
+                'An error occurred while estimating the gas fee for this artwork, please try again.'
+              ) : (
+                'Please connect your wallet to get a gas fee estimate for this artwork'
+              )
             }
           />
           <Button
