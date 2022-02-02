@@ -13,18 +13,13 @@ import { useWeb3 } from '@context/Web3'
 import useNftFactory from '@hooks/contracts/useNftFactory'
 import { NftFactory } from '@oceanprotocol/lib'
 import Tooltip from '@shared/atoms/Tooltip'
-import Markdown from '@shared/Markdown'
 
-const getEstGasFee = async ({
-  address,
-  nftFactory,
-  nftMetadata
-}: {
-  address: string
-  nftFactory: NftFactory
+const getEstGasFee = async (
+  address: string,
+  nftFactory: NftFactory,
   nftMetadata: NftMetadata
-}): Promise<string> => {
-  if (!address || !nftFactory) return
+): Promise<string> => {
+  if (!address || !nftFactory || !nftMetadata) return
 
   const { web3 } = nftFactory
   const nft = generateNftCreateData(nftMetadata)
@@ -45,29 +40,23 @@ export default function Nft(props: InputProps): ReactElement {
   const [gasFee, setGasFee] = useState('')
   const [field, meta, helpers] = useField(props.name)
 
-  const refreshNftMetadata = async ({
-    address,
-    nftFactory
-  }: {
-    address: string
-    nftFactory: NftFactory
-  }) => {
-    if (!address || !nftFactory) return
-
+  const refreshNftMetadata = () => {
     const nftMetadata = generateNftMetadata()
     helpers.setValue({ ...nftMetadata })
-    setGasFee(await getEstGasFee({ address, nftFactory, nftMetadata }))
   }
 
   // Generate on first mount
   useEffect(() => {
-    if (field.value?.name !== '' || !accountId || !nftFactory) return
+    if (field.value?.name !== '') return
 
-    const initialize = async () =>
-      await refreshNftMetadata({ address: accountId, nftFactory })
+    refreshNftMetadata()
+  }, [field.value?.name])
 
-    initialize()
-  }, [field.value?.name, accountId, nftFactory])
+  useEffect(() => {
+    const calculateGasFee = async () =>
+      setGasFee(await getEstGasFee(accountId, nftFactory, field.value))
+    calculateGasFee()
+  }, [accountId, nftFactory, field.value])
 
   return (
     <div className={styles.nft}>
@@ -75,16 +64,20 @@ export default function Nft(props: InputProps): ReactElement {
         <img src={field?.value?.image_data} width="128" height="128" />
         <div className={styles.actions}>
           <Tooltip
-            content={`Gas fee estimation for this artwork: ${gasFee} ETH`}
+            content={
+              gasFee
+                ? `Gas fee estimation for this artwork: ${gasFee} ETH`
+                : 'Please connect your wallet to get a gas fee estimate for this artwork'
+            }
           />
           <Button
             style="text"
             size="small"
             className={styles.refresh}
             title="Generate new image"
-            onClick={async (e) => {
+            onClick={(e) => {
               e.preventDefault()
-              await refreshNftMetadata({ address: accountId, nftFactory })
+              refreshNftMetadata()
             }}
           >
             <Refresh />
