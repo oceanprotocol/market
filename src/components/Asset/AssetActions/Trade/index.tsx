@@ -36,7 +36,7 @@ export default function Trade(): ReactElement {
         accountId
       )
       setTokenBalance({
-        ocean: new Decimal(balance.ocean).toString(),
+        baseToken: new Decimal(balance.ocean).toString(),
         datatoken: new Decimal(dtBalance).toString()
       })
     }
