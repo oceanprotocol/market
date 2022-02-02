@@ -1,7 +1,7 @@
 import { FormTradeData } from './_types'
 
 export const initialValues: FormTradeData = {
-  ocean: undefined,
+  baseToken: undefined,
   datatoken: undefined,
   type: 'buy',
   slippage: '5'

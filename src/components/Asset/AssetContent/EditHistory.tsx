@@ -8,7 +8,7 @@ import { getQueryContext } from '@utils/subgraph'
 import styles from './EditHistory.module.css'
 
 const getReceipts = gql`
-  query ReceiptData($address: ID!) {
+  query ReceiptData($address: String!) {
     nftUpdates(
       where: { nft: $address }
       orderBy: timestamp

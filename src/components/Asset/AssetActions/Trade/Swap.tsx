@@ -68,7 +68,7 @@ export default function Swap({
           : new Decimal(balance.datatoken)
       const amountOcean =
         values.type === 'buy'
-          ? new Decimal(balance.ocean)
+          ? new Decimal(balance.baseToken)
           : new Decimal(maxOcean)
 
       // const maxBuyOcean = await ocean.pool.getOceanReceived(
