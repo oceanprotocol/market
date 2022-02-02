@@ -41,6 +41,7 @@ function useConsume(): UseConsume {
     setConsumeStepText(consumeFeedback[index])
   }
 
+  // TODO: this will be done in another PR
   async function consume(
     did: string,
     datatokenAddress: string,
