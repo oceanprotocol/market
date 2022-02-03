@@ -27,14 +27,7 @@ export default function TokenList({
     <div className={`${styles.tokenlist} ${highlight ? styles.highlight : ''}`}>
       <h3 className={styles.title}>{title}</h3>
       <div className={styles.tokens}>
-        <Token
-          symbol={baseTokenSymbol}
-          balance={
-            datatokenValue
-              ? baseTokenValue
-              : new Decimal(Number(baseTokenValue)).mul(2).toString()
-          }
-        />
+        <Token symbol={baseTokenSymbol} balance={baseTokenValue} />
         {datatokenValue && (
           <Token symbol={datatokenSymbol} balance={datatokenValue} />
         )}

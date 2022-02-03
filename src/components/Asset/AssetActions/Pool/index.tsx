@@ -32,9 +32,7 @@ function getWeight(weight: string) {
 
 function getFee(fee: string) {
   // fees are tricky: to get 0.1% you need to convert from 0.001
-  const newFee = isValidNumber(fee) ? new Decimal(fee).mul(100).toString() : '0'
-
-  return newFee
+  return isValidNumber(fee) ? new Decimal(fee).mul(100).toString() : '0'
 }
 
 interface PoolInfo {
@@ -51,9 +49,8 @@ interface PoolInfo {
 }
 
 interface PoolInfoUser {
-  totalLiquidityInOcean: Decimal
-  liquidity: PoolBalance
-  poolShares: string
+  liquidity: Decimal // liquidity in base token
+  poolShares: string // pool share tokens
   poolShare: string // in %
 }
 
@@ -62,7 +59,7 @@ const initialPoolInfo: Partial<PoolInfo> = {
 }
 
 const initialPoolInfoUser: Partial<PoolInfoUser> = {
-  totalLiquidityInOcean: new Decimal(0)
+  liquidity: new Decimal(0)
 }
 
 const initialPoolInfoCreator: Partial<PoolInfoUser> = initialPoolInfoUser
@@ -183,46 +180,21 @@ export default function Pool(): ReactElement {
 
     const ownerPoolTokens = poolData.shares[0]?.shares
 
-    const ownerBaseTokenBalance =
+    // Liquidity in base token, calculated from pool tokens.
+    // Hardcoded 50/50 pool weight so we can multiply fetched
+    // poolData.baseTokenLiquidity by 2.
+    const liquidity =
       isValidNumber(ownerPoolTokens) &&
       isValidNumber(poolInfo.totalPoolTokens) &&
       isValidNumber(poolData.baseTokenLiquidity)
         ? new Decimal(ownerPoolTokens)
             .dividedBy(new Decimal(poolInfo.totalPoolTokens))
             .mul(poolData.baseTokenLiquidity)
-            .toString()
-        : '0'
-
-    const ownerDtBalance =
-      isValidNumber(ownerPoolTokens) &&
-      isValidNumber(poolInfo.totalPoolTokens) &&
-      isValidNumber(poolData.datatokenLiquidity)
-        ? new Decimal(ownerPoolTokens)
-            .dividedBy(new Decimal(poolInfo.totalPoolTokens))
-            .mul(poolData.datatokenLiquidity)
-            .toString()
-        : '0'
-
-    const liquidity = {
-      baseToken: ownerBaseTokenBalance,
-      datatoken: ownerDtBalance
-    }
-
-    const totalLiquidityInOcean =
-      isValidNumber(liquidity.baseToken) &&
-      isValidNumber(liquidity.datatoken) &&
-      isValidNumber(poolData.spotPrice)
-        ? new Decimal(liquidity.baseToken).add(
-            new Decimal(liquidity.datatoken).mul(
-              new Decimal(poolData.spotPrice)
-            )
-          )
+            .mul(2)
         : new Decimal(0)
 
     const poolShare =
-      liquidity &&
-      isValidNumber(ownerPoolTokens) &&
-      isValidNumber(poolInfo.totalPoolTokens)
+      isValidNumber(ownerPoolTokens) && isValidNumber(poolInfo.totalPoolTokens)
         ? new Decimal(ownerPoolTokens)
             .dividedBy(new Decimal(poolInfo.totalPoolTokens))
             .mul(100)
@@ -230,7 +202,6 @@ export default function Pool(): ReactElement {
         : '0'
 
     const newPoolOwnerInfo = {
-      totalLiquidityInOcean,
       liquidity,
       poolShares: ownerPoolTokens,
       poolShare
@@ -261,43 +232,20 @@ export default function Pool(): ReactElement {
 
     setUserHasAddedLiquidity(Number(poolShare) > 0)
 
-    // calculate user's provided liquidity based on pool tokens
-    const userBaseTokenBalance =
+    // Liquidity in base token, calculated from pool tokens.
+    // Hardcoded 50/50 pool weight so we can multiply fetched
+    // poolData.baseTokenLiquidity by 2.
+    const liquidity =
       isValidNumber(poolInfoUser.poolShares) &&
       isValidNumber(poolInfo.totalPoolTokens) &&
       isValidNumber(poolData.baseTokenLiquidity)
         ? new Decimal(poolInfoUser.poolShares)
             .dividedBy(new Decimal(poolInfo.totalPoolTokens))
             .mul(poolData.baseTokenLiquidity)
-            .toString()
-        : '0'
-
-    const userDtBalance =
-      isValidNumber(poolInfoUser.poolShares) &&
-      isValidNumber(poolInfo.totalPoolTokens) &&
-      isValidNumber(poolData.datatokenLiquidity)
-        ? new Decimal(poolInfoUser.poolShares)
-            .dividedBy(new Decimal(poolInfo.totalPoolTokens))
-            .mul(poolData.datatokenLiquidity)
-            .toString()
-        : '0'
-
-    const liquidity = {
-      baseToken: userBaseTokenBalance,
-      datatoken: userDtBalance
-    }
-
-    const totalLiquidityInOcean =
-      isValidNumber(liquidity.baseToken) &&
-      isValidNumber(liquidity.datatoken) &&
-      isValidNumber(poolData.spotPrice)
-        ? new Decimal(liquidity.baseToken).add(
-            new Decimal(liquidity.datatoken).mul(poolData.spotPrice)
-          )
+            .mul(2)
         : new Decimal(0)
 
     const newPoolInfoUser = {
-      totalLiquidityInOcean,
       liquidity,
       poolShare
     }
@@ -398,9 +346,9 @@ export default function Pool(): ReactElement {
                 </span>
               </>
             }
-            baseTokenValue={poolInfoUser?.liquidity?.baseToken}
+            baseTokenValue={poolInfoUser?.liquidity.toString()}
             baseTokenSymbol={poolInfo?.baseTokenSymbol}
-            conversion={poolInfoUser?.totalLiquidityInOcean}
+            conversion={poolInfoUser?.liquidity}
             highlight
           />
 
@@ -413,9 +361,9 @@ export default function Pool(): ReactElement {
                 </span>
               </>
             }
-            baseTokenValue={poolInfoOwner?.liquidity?.baseToken}
+            baseTokenValue={poolInfoOwner?.liquidity.toString()}
             baseTokenSymbol={poolInfo?.baseTokenSymbol}
-            conversion={poolInfoOwner?.totalLiquidityInOcean}
+            conversion={poolInfoOwner?.liquidity}
           />
 
           <TokenList
