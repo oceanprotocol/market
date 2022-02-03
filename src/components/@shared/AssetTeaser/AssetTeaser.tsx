@@ -24,7 +24,6 @@ export default function AssetTeaser({
   const isCompute = Boolean(getServiceByName(assetExtended, 'compute'))
   const accessType = isCompute ? 'compute' : 'access'
   const { owner } = assetExtended.nft
-  console.log('asset teaser', assetExtended)
   return (
     <article className={`${styles.teaser} ${styles[type]}`}>
       <Link href={`/asset/${assetExtended.id}`}>
