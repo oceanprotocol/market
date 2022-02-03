@@ -30,8 +30,17 @@ function getWeight(weight: string) {
   return isValidNumber(weight) ? new Decimal(weight).mul(10).toString() : '0'
 }
 
+function getFee(fee: string) {
+  // fees are tricky: to get 0.1% you need to convert from 0.001
+  const newFee = isValidNumber(fee) ? new Decimal(fee).mul(100).toString() : '0'
+
+  return newFee
+}
+
 interface PoolInfo {
   poolFee: string
+  marketFee: string
+  opfFee: string
   weightBaseToken: string
   weightDt: string
   datatokenSymbol: string
@@ -138,11 +147,10 @@ export default function Pool(): ReactElement {
   useEffect(() => {
     if (!poolData) return
 
-    // Pool Fee (swap fee)
-    // poolFee is tricky: to get 0.1% you need to convert from 0.001
-    const poolFee = isValidNumber(poolData.poolFee)
-      ? new Decimal(poolData.poolFee).mul(100).toString()
-      : '0'
+    // Fees
+    const poolFee = getFee(poolData.poolFee)
+    const marketFee = getFee(poolData.marketFee)
+    const opfFee = getFee(poolData.opfFee)
 
     // Total Liquidity
     const totalLiquidityInOcean = isValidNumber(poolData.spotPrice)
@@ -153,6 +161,8 @@ export default function Pool(): ReactElement {
 
     const newPoolInfo = {
       poolFee,
+      marketFee,
+      opfFee,
       weightBaseToken: getWeight(poolData.baseTokenWeight),
       weightDt: getWeight(poolData.datatokenWeight),
       datatokenSymbol: poolData.datatoken.symbol,
@@ -430,6 +440,10 @@ export default function Pool(): ReactElement {
             conversion={poolInfo?.totalLiquidityInOcean}
           >
             <Token symbol="% pool fee" balance={poolInfo?.poolFee} noIcon />
+            <Token symbol="% market fee" balance={poolInfo?.marketFee} noIcon />
+            <Token symbol="% OPF fee" balance={poolInfo?.opfFee} noIcon />
+            <Token symbol={`${poolInfo?.datatokenSymbol} minted`} balance="0" />
+            <Token symbol={`${poolInfo?.datatokenSymbol} burned`} balance="0" />
           </TokenList>
 
           <div className={styles.update}>
