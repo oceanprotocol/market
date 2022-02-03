@@ -60,14 +60,8 @@ const initialPoolInfoCreator: Partial<PoolInfoUser> = initialPoolInfoUser
 
 export default function Pool(): ReactElement {
   const { accountId } = useWeb3()
-  const {
-    isInPurgatory,
-    assetExtended,
-    owner,
-    accessDetails,
-    refreshInterval,
-    isAssetNetwork
-  } = useAsset()
+  const { isInPurgatory, asset, owner, refreshInterval, isAssetNetwork } =
+    useAsset()
 
   const [poolData, setPoolData] = useState<PoolDataPoolData>()
   const [poolInfo, setPoolInfo] = useState<PoolInfo>(
@@ -88,11 +82,11 @@ export default function Pool(): ReactElement {
   const [fetchInterval, setFetchInterval] = useState<NodeJS.Timeout>()
 
   const fetchAllData = useCallback(async () => {
-    if (!assetExtended?.chainId || !accessDetails?.addressOrId || !owner) return
+    if (!asset?.chainId || !asset?.accessDetails?.addressOrId || !owner) return
 
     const response = await getPoolData(
-      assetExtended.chainId,
-      accessDetails.addressOrId,
+      asset.chainId,
+      asset.accessDetails.addressOrId,
       owner,
       accountId || ''
     )
@@ -107,7 +101,7 @@ export default function Pool(): ReactElement {
     LoggerInstance.log('[pool] Fetched pool data:', response.poolData)
     LoggerInstance.log('[pool] Fetched user data:', response.poolDataUser)
     LoggerInstance.log('[pool] Fetched pool snapshots:', response.poolSnapshots)
-  }, [assetExtended?.chainId, accessDetails?.addressOrId, owner, accountId])
+  }, [asset?.chainId, asset?.accessDetails?.addressOrId, owner, accountId])
 
   // Helper: start interval fetching
   const initFetchInterval = useCallback(() => {
@@ -242,7 +236,7 @@ export default function Pool(): ReactElement {
     if (
       !poolData ||
       !poolInfo?.totalPoolTokens ||
-      !assetExtended?.chainId ||
+      !asset?.chainId ||
       !accountId
     )
       return
@@ -310,7 +304,7 @@ export default function Pool(): ReactElement {
     poolData,
     poolInfoUser?.poolShares,
     accountId,
-    assetExtended?.chainId,
+    asset?.chainId,
     owner,
     poolInfo?.totalPoolTokens
   ])
@@ -328,7 +322,7 @@ export default function Pool(): ReactElement {
       {showAdd ? (
         <Add
           setShowAdd={setShowAdd}
-          poolAddress={accessDetails?.addressOrId}
+          poolAddress={asset?.accessDetails?.addressOrId}
           totalPoolTokens={poolInfo?.totalPoolTokens}
           totalBalance={{
             baseToken: new Decimal(poolData?.baseTokenLiquidity).toString(),
@@ -343,7 +337,7 @@ export default function Pool(): ReactElement {
       ) : showRemove ? (
         <Remove
           setShowRemove={setShowRemove}
-          poolAddress={accessDetails?.addressOrId}
+          poolAddress={asset?.accessDetails?.addressOrId}
           poolTokens={poolInfoUser?.poolShares}
           totalPoolTokens={poolInfo?.totalPoolTokens}
           tokenOutAddress={poolInfo?.baseTokenAddress}
@@ -361,18 +355,17 @@ export default function Pool(): ReactElement {
             <Tooltip content={content.pool.tooltips.price} />
             <div className={styles.dataTokenLinks}>
               <ExplorerLink
-                networkId={assetExtended?.chainId}
-                path={`address/${accessDetails?.addressOrId}`}
+                networkId={asset?.chainId}
+                path={`address/${asset?.accessDetails?.addressOrId}`}
               >
                 Pool
               </ExplorerLink>
               <ExplorerLink
-                networkId={assetExtended?.chainId}
+                networkId={asset?.chainId}
                 path={
-                  assetExtended?.chainId === 2021000 ||
-                  assetExtended?.chainId === 1287
-                    ? `tokens/${assetExtended.services[0].datatokenAddress}`
-                    : `token/${assetExtended.services[0].datatokenAddress}`
+                  asset?.chainId === 2021000 || asset?.chainId === 1287
+                    ? `tokens/${asset.services[0].datatokenAddress}`
+                    : `token/${asset.services[0].datatokenAddress}`
                 }
               >
                 Datatoken
@@ -478,8 +471,8 @@ export default function Pool(): ReactElement {
             <AssetActionHistoryTable title="Your Pool Transactions">
               <PoolTransactions
                 accountId={accountId}
-                poolAddress={accessDetails?.addressOrId}
-                poolChainId={[assetExtended?.chainId]}
+                poolAddress={asset?.accessDetails?.addressOrId}
+                poolChainId={[asset?.chainId]}
                 minimal
               />
             </AssetActionHistoryTable>

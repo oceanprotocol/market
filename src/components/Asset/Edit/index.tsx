@@ -22,11 +22,11 @@ export default function Edit({
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
-  const { assetExtended, refreshAsset, accessDetails } = useAsset()
+  const { asset, fetchAsset } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const [timeoutStringValue, setTimeoutStringValue] = useState<string>()
-  const { timeout } = assetExtended.services[0]
+  const { timeout } = asset.services[0]
 
   const hasFeedback = error || success
 
@@ -119,9 +119,9 @@ export default function Edit({
   return (
     <Formik
       initialValues={getInitialValues(
-        assetExtended.metadata,
+        asset.metadata,
         timeout,
-        accessDetails.price
+        asset.accessDetails.price
       )}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
@@ -148,7 +148,7 @@ export default function Edit({
               /> */}
 
               <aside>
-                <Web3Feedback networkId={assetExtended?.chainId} />
+                <Web3Feedback networkId={asset?.chainId} />
               </aside>
 
               {/* {debug === true && <Debug values={values} ddo={ddo} />} */}

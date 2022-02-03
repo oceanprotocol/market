@@ -17,7 +17,7 @@ import { AssetExtended } from 'src/@types/AssetExtended'
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
 export default function Swap({
-  assetExtended,
+  asset,
   maxDt,
   maxOcean,
   balance,
@@ -25,7 +25,7 @@ export default function Swap({
   setMaximumOcean,
   setCoin
 }: {
-  assetExtended: AssetExtended
+  asset: AssetExtended
   maxDt: string
   maxOcean: string
   balance: PoolBalance
@@ -36,12 +36,12 @@ export default function Swap({
   const { isAssetNetwork } = useAsset()
   const [oceanItem, setOceanItem] = useState<TradeItem>({
     amount: '0',
-    token: assetExtended.accessDetails.baseToken?.symbol,
+    token: asset.accessDetails.baseToken?.symbol,
     maxAmount: '0'
   })
   const [dtItem, setDtItem] = useState<TradeItem>({
     amount: '0',
-    token: assetExtended.accessDetails.datatoken.symbol,
+    token: asset.accessDetails.datatoken.symbol,
     maxAmount: '0'
   })
 
@@ -58,7 +58,7 @@ export default function Swap({
   const [tokenAmount, setTokenAmount] = useState<string>()
 
   useEffect(() => {
-    if (!assetExtended || !balance || !values?.type) return
+    if (!asset || !balance || !values?.type) return
 
     async function calculateMaximum() {
       const amountDataToken =
@@ -114,7 +114,7 @@ export default function Swap({
     }
     calculateMaximum()
   }, [
-    assetExtended,
+    asset,
     maxOcean,
     maxDt,
     balance,
@@ -125,9 +125,7 @@ export default function Swap({
 
   const switchTokens = () => {
     setFieldValue('type', values.type === 'buy' ? 'sell' : 'buy')
-    setCoin(
-      values.type === 'sell' ? 'OCEAN' : assetExtended.datatokens[0].symbol
-    )
+    setCoin(values.type === 'sell' ? 'OCEAN' : asset.datatokens[0].symbol)
     // don't reset form because we don't want to reset type
     setFieldValue('datatoken', 0)
     setFieldValue('ocean', 0)
@@ -223,7 +221,7 @@ export default function Swap({
       <Output
         dtSymbol={dtItem.token}
         oceanSymbol={oceanItem.token}
-        poolAddress={assetExtended.accessDetails?.addressOrId}
+        poolAddress={asset.accessDetails?.addressOrId}
       />
 
       <PriceImpact

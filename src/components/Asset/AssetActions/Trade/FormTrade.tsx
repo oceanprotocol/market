@@ -17,12 +17,12 @@ import content from '../../../../../content/price.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
 
 export default function FormTrade({
-  assetExtended,
+  asset,
   balance,
   maxDt,
   maxOcean
 }: {
-  assetExtended: AssetExtended
+  asset: AssetExtended
   balance: PoolBalance
   maxDt: string
   maxOcean: string
@@ -110,7 +110,7 @@ export default function FormTrade({
         <>
           {isWarningAccepted ? (
             <Swap
-              assetExtended={assetExtended}
+              asset={asset}
               balance={balance}
               maxDt={maxDt}
               maxOcean={maxOcean}

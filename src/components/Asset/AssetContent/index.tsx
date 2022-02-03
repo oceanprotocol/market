@@ -13,14 +13,12 @@ import EditHistory from './EditHistory'
 import styles from './index.module.css'
 import NetworkName from '@shared/NetworkName'
 import content from '../../../../content/purgatory.json'
-import { Asset } from '@oceanprotocol/lib'
+import { AssetExtended } from 'src/@types/AssetExtended'
 
 export default function AssetContent({
-  asset,
-  accessDetails
+  asset
 }: {
-  asset: Asset
-  accessDetails: AccessDetails
+  asset: AssetExtended
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { isInPurgatory, purgatoryData } = useAsset()
@@ -35,7 +33,9 @@ export default function AssetContent({
         <div>
           <div className={styles.content}>
             <MetaMain ddo={asset} />
-            {accessDetails?.datatoken !== null && <Bookmark did={asset?.id} />}
+            {asset?.accessDetails?.datatoken !== null && (
+              <Bookmark did={asset?.id} />
+            )}
 
             {isInPurgatory === true ? (
               <Alert
@@ -61,7 +61,7 @@ export default function AssetContent({
         </div>
 
         <div className={styles.actions}>
-          <AssetActions ddo={asset} accessDetails={accessDetails} />
+          <AssetActions asset={asset} />
 
           {/* 
             TODO: restore edit actions, ideally put edit screens on new page 

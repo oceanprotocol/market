@@ -62,8 +62,8 @@ export default function FormStartCompute({
 }): ReactElement {
   const { isValid, values }: FormikContextType<{ algorithm: string }> =
     useFormikContext()
-  const { accessDetails, assetExtended, isAssetNetwork } = useAsset()
-  const [totalPrice, setTotalPrice] = useState(accessDetails?.price)
+  const { asset, isAssetNetwork } = useAsset()
+  const [totalPrice, setTotalPrice] = useState(asset?.accessDetails?.price)
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>(false)
   const { accountId, balance } = useWeb3()
   const [algorithmConsumableStatus, setAlgorithmConsumableStatus] =
@@ -97,10 +97,10 @@ export default function FormStartCompute({
   // Set price for calculation output
   //
   useEffect(() => {
-    if (!accessDetails || !algorithmConsumeDetails) return
+    if (!asset?.accessDetails || !algorithmConsumeDetails) return
 
     const priceDataset =
-      hasPreviousOrder || hasDatatoken ? 0 : Number(accessDetails.price)
+      hasPreviousOrder || hasDatatoken ? 0 : Number(asset.accessDetails.price)
     const priceAlgo =
       hasPreviousOrderSelectedComputeAsset || hasDatatokenSelectedComputeAsset
         ? 0
@@ -108,7 +108,7 @@ export default function FormStartCompute({
 
     setTotalPrice(priceDataset + priceAlgo)
   }, [
-    accessDetails,
+    asset?.accessDetails,
     algorithmConsumeDetails,
     hasPreviousOrder,
     hasDatatoken,
@@ -159,7 +159,7 @@ export default function FormStartCompute({
         }
         hasPreviousOrder={hasPreviousOrder}
         hasDatatoken={hasDatatoken}
-        dtSymbol={assetExtended?.datatokens[0]?.symbol}
+        dtSymbol={asset?.datatokens[0]?.symbol}
         dtBalance={dtBalance}
         datasetLowPoolLiquidity={datasetLowPoolLiquidity}
         assetTimeout={assetTimeout}
@@ -177,7 +177,7 @@ export default function FormStartCompute({
         stepText={stepText}
         isLoading={isLoading}
         type="submit"
-        priceType={accessDetails?.type}
+        priceType={asset?.accessDetails?.type}
         algorithmPriceType={algorithmConsumeDetails?.type}
         isBalanceSufficient={isBalanceSufficient}
         isConsumable={isConsumable}
