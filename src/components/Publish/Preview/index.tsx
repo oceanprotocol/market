@@ -44,7 +44,7 @@ export default function Preview(): ReactElement {
       <h2 className={styles.previewTitle}>Preview</h2>
 
       <h3 className={styles.assetTitle}>{values.metadata.name}</h3>
-      <AssetContent asset={asset} accessDetails={accessDetails} />
+      <AssetContent asset={asset} />
     </div>
   )
 }

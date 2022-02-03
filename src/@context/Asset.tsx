@@ -7,7 +7,7 @@ import React, {
   useCallback,
   ReactNode
 } from 'react'
-import { Asset, Config, LoggerInstance, Purgatory } from '@oceanprotocol/lib'
+import { Config, LoggerInstance, Purgatory } from '@oceanprotocol/lib'
 import { CancelToken } from 'axios'
 import { retrieveAsset } from '@utils/aquarius'
 import { useWeb3 } from './Web3'
@@ -20,16 +20,15 @@ import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 interface AssetProviderValue {
   isInPurgatory: boolean
   purgatoryData: Purgatory
-  assetExtended: AssetExtended
+  asset: AssetExtended
   title: string
   owner: string
-  accessDetails: AccessDetails
   error?: string
   refreshInterval: number
   isAssetNetwork: boolean
   oceanConfig: Config
   loading: boolean
-  refreshAsset: (token?: CancelToken) => Promise<void>
+  fetchAsset: (token?: CancelToken) => Promise<void>
 }
 
 const AssetContext = createContext({} as AssetProviderValue)
@@ -48,9 +47,8 @@ function AssetProvider({
   const { networkId, accountId } = useWeb3()
   const [isInPurgatory, setIsInPurgatory] = useState(false)
   const [purgatoryData, setPurgatoryData] = useState<Purgatory>()
-  const [assetExtended, setAssetExtended] = useState<Asset>()
+  const [asset, setAsset] = useState<AssetExtended>()
   const [title, setTitle] = useState<string>()
-  const [accessDetails, setConsumeDetails] = useState<AccessDetails>()
   const [owner, setOwner] = useState<string>()
   const [error, setError] = useState<string>()
   const [loading, setLoading] = useState(false)
@@ -59,125 +57,137 @@ function AssetProvider({
 
   const newCancelToken = useCancelToken()
 
+  // -----------------------------------
+  // Helper: Get and set asset based on passed DID
+  // -----------------------------------
   const fetchAsset = useCallback(
     async (token?: CancelToken) => {
-      LoggerInstance.log('[asset] Init asset, get assetExtended')
-      setLoading(true)
-      const assetExtended = await retrieveAsset(did, token)
+      if (!did) return
 
-      if (!assetExtended) {
+      LoggerInstance.log('[asset] Fetching asset...')
+      setLoading(true)
+      const asset = await retrieveAsset(did, token)
+
+      if (!asset) {
         setError(
-          `[asset] The assetExtended for ${did} was not found in MetadataCache. If you just published a new data set, wait some seconds and refresh this page.`
+          `[asset] The asset for ${did} was not found in MetadataCache. If you just published a new data set, wait some seconds and refresh this page.`
         )
+        LoggerInstance.error(`[asset] Failed getting asset for ${did}`, asset)
       } else {
         setError(undefined)
       }
+
+      setAsset((prevState) => ({
+        ...prevState,
+        ...asset
+      }))
+      setTitle(asset.metadata.name)
+      setOwner(asset.nft.owner)
+      setIsInPurgatory((asset.purgatory?.state as unknown as string) === 'true')
+      setPurgatoryData(asset.purgatory)
+      LoggerInstance.log('[asset] Got asset', asset)
+
       setLoading(false)
-      return assetExtended
     },
     [did]
   )
 
-  const refreshAsset = async (token?: CancelToken) => {
-    setLoading(true)
-    const assetExtended = await fetchAsset(token)
-    LoggerInstance.debug('[asset] Got assetExtended', assetExtended)
-    setAssetExtended(assetExtended)
-    setLoading(false)
-  }
+  // -----------------------------------
+  // Helper: Get and set asset access details
+  // -----------------------------------
+  const fetchAccessDetails = useCallback(async (): Promise<void> => {
+    if (!asset?.chainId || !asset?.services) return
+
+    const accessDetails = await getAccessDetails(
+      asset.chainId,
+      asset.services[0].datatokenAddress,
+      asset.services[0].timeout,
+      accountId
+    )
+    setAsset((prevState) => ({
+      ...prevState,
+      accessDetails
+    }))
+    LoggerInstance.log(`[asset] Got access details for ${did}`, accessDetails)
+  }, [asset?.chainId, asset?.services, accountId, did])
 
   // -----------------------------------
-  // Get and set assetExtended based on passed DID
+  // 1. Get and set asset based on passed DID
   // -----------------------------------
   useEffect(() => {
-    if (!did || !appConfig.metadataCacheUri) return
+    if (!appConfig?.metadataCacheUri) return
 
     let isMounted = true
 
     async function init() {
-      const assetExtended = await fetchAsset(newCancelToken())
-      if (!isMounted || !assetExtended) return
-      LoggerInstance.debug('[asset] Got assetExtended', assetExtended)
-      setAssetExtended(assetExtended)
-      setTitle(assetExtended.metadata.name)
-      setOwner(assetExtended.nft.owner)
-      setIsInPurgatory(
-        (assetExtended.purgatory?.state as unknown as string) === 'true'
-      )
-      setPurgatoryData(assetExtended.purgatory)
+      if (!isMounted) return
+      await fetchAsset(newCancelToken())
     }
     init()
+
     return () => {
       isMounted = false
     }
-  }, [did, appConfig.metadataCacheUri, fetchAsset, newCancelToken])
+  }, [appConfig?.metadataCacheUri, fetchAsset, newCancelToken])
 
   // -----------------------------------
-  // Attach price to asset
+  // 2. Attach access details to asset
   // -----------------------------------
-  const initPrice = useCallback(
-    async (assetExtended: AssetExtended, accountId: string): Promise<void> => {
-      if (!assetExtended) return
-      const accessDetails = await getAccessDetails(
-        assetExtended.chainId,
-        assetExtended.services[0].datatokenAddress,
-        assetExtended.services[0].timeout,
-        accountId
-      )
-      assetExtended.accessDetails = accessDetails
-      setConsumeDetails({ ...accessDetails })
-      setAssetExtended(assetExtended)
-    },
-    []
-  )
-
   useEffect(() => {
-    if (!assetExtended) return
-    initPrice(assetExtended, accountId)
-  }, [accountId, assetExtended, initPrice])
+    let isMounted = true
+
+    async function init() {
+      if (!isMounted) return
+      await fetchAccessDetails()
+    }
+    init()
+
+    return () => {
+      isMounted = false
+    }
+  }, [accountId, fetchAccessDetails])
 
   // -----------------------------------
   // Check user network against asset network
   // -----------------------------------
   useEffect(() => {
-    if (!networkId || !assetExtended) return
+    if (!networkId || !asset) return
 
-    const isAssetNetwork = networkId === assetExtended?.chainId
+    const isAssetNetwork = networkId === asset?.chainId
     setIsAssetNetwork(isAssetNetwork)
-  }, [networkId, assetExtended])
+  }, [networkId, asset])
 
   // -----------------------------------
   // Load ocean config based on asset network
   // -----------------------------------
   useEffect(() => {
-    if (!assetExtended?.chainId) return
+    if (!asset?.chainId) return
 
     const oceanConfig = {
-      ...getOceanConfig(assetExtended?.chainId),
+      ...getOceanConfig(asset?.chainId),
 
       // add local dev values
-      ...(assetExtended?.chainId === 8996 && {
+      ...(asset?.chainId === 8996 && {
         ...getDevelopmentConfig()
       })
     }
     setOceanConfig(oceanConfig)
-  }, [assetExtended])
+  }, [asset])
 
   return (
     <AssetContext.Provider
       value={
         {
-          assetExtended,
+          asset,
           did,
           title,
           owner,
-          accessDetails,
           error,
           isInPurgatory,
           purgatoryData,
           refreshInterval,
           loading,
-          refreshAsset,
+          fetchAsset,
           isAssetNetwork,
           oceanConfig
         } as AssetProviderValue

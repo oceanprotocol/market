@@ -26,7 +26,7 @@ const getReceipts = gql`
 `
 
 export default function EditHistory(): ReactElement {
-  const { assetExtended } = useAsset()
+  const { asset } = useAsset()
 
   function getUpdateType(type: string): string {
     switch (type) {
@@ -49,17 +49,17 @@ export default function EditHistory(): ReactElement {
   const [queryContext, setQueryContext] = useState<OperationContext>()
 
   useEffect(() => {
-    if (!assetExtended) return
+    if (!asset) return
 
-    const queryContext = getQueryContext(assetExtended.chainId)
+    const queryContext = getQueryContext(asset.chainId)
     setQueryContext(queryContext)
-  }, [assetExtended])
+  }, [asset])
 
   const [result] = useQuery({
     query: getReceipts,
-    variables: { address: assetExtended?.nft.address.toLowerCase() },
+    variables: { address: asset?.nft.address.toLowerCase() },
     context: queryContext,
-    pause: !assetExtended || !queryContext
+    pause: !asset || !queryContext
   })
   const { data } = result
 
@@ -80,10 +80,7 @@ export default function EditHistory(): ReactElement {
       <ul className={styles.history}>
         {receipts?.map((receipt) => (
           <li key={receipt.id} className={styles.item}>
-            <ExplorerLink
-              networkId={assetExtended?.chainId}
-              path={`/tx/${receipt.tx}`}
-            >
+            <ExplorerLink networkId={asset?.chainId} path={`/tx/${receipt.tx}`}>
               {getUpdateType(receipt.type)}{' '}
               <Time date={`${receipt.timestamp}`} relative isUnix />
             </ExplorerLink>

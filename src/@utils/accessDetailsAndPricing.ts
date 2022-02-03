@@ -221,7 +221,6 @@ export async function getAccessDetails(
   timeout?: number,
   account = ''
 ): Promise<AccessDetails> {
-  let accessDetails = {} as AccessDetails
   const queryContext = getQueryContext(Number(chain))
   const tokenQueryResult: OperationResult<TokenPriceQuery, any> =
     await fetchData(
@@ -234,7 +233,7 @@ export async function getAccessDetails(
     )
 
   const tokenPrice: TokenPrice = tokenQueryResult.data.token
-  accessDetails = getAccessDetailsFromTokenPrice(tokenPrice, timeout)
+  const accessDetails = getAccessDetailsFromTokenPrice(tokenPrice, timeout)
   return accessDetails
 }
 
