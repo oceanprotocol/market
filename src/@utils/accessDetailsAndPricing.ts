@@ -209,9 +209,9 @@ function getAccessDetailsFromTokenPrice(
 
 /**
  * returns various consume details for the desired datatoken
- * @param chain chain on witch the dt is preset
+ * @param chain chain on which the datatoken is preset
  * @param datatokenAddress address of the datatoken
- * @param timeout timeout of the service , only needed if you want order details like owned and validOrderId
+ * @param timeout timeout of the service, only needed if you want order details like owned and validOrderId
  * @param account account that wants to consume, only needed if you want order details like owned and validOrderId
  * @returns AccessDetails
  */
@@ -222,15 +222,17 @@ export async function getAccessDetails(
   account = ''
 ): Promise<AccessDetails> {
   const queryContext = getQueryContext(Number(chain))
-  const tokenQueryResult: OperationResult<TokenPriceQuery, any> =
-    await fetchData(
-      TokenPriceQuery,
-      {
-        datatokenId: datatokenAddress.toLowerCase(),
-        account: account.toLowerCase()
-      },
-      queryContext
-    )
+  const tokenQueryResult: OperationResult<
+    TokenPriceQuery,
+    { datatokenId: string; account: string }
+  > = await fetchData(
+    TokenPriceQuery,
+    {
+      datatokenId: datatokenAddress.toLowerCase(),
+      account: account.toLowerCase()
+    },
+    queryContext
+  )
 
   const tokenPrice: TokenPrice = tokenQueryResult.data.token
   const accessDetails = getAccessDetailsFromTokenPrice(tokenPrice, timeout)
@@ -242,7 +244,7 @@ export async function getAccessDetailsForAssets(
   account = ''
 ): Promise<AssetExtended[]> {
   const assetsExtended: AssetExtended[] = assets
-  const chainAssetLists: any = {}
+  const chainAssetLists: { [key: number]: string[] } = {}
 
   for (const asset of assets) {
     //  harcoded until we have chainId on assets
@@ -260,15 +262,17 @@ export async function getAccessDetailsForAssets(
 
   for (const chainKey in chainAssetLists) {
     const queryContext = getQueryContext(Number(chainKey))
-    const tokenQueryResult: OperationResult<TokensPriceQuery, any> =
-      await fetchData(
-        TokensPriceQuery,
-        {
-          datatokenIds: chainAssetLists[chainKey],
-          account: account.toLowerCase()
-        },
-        queryContext
-      )
+    const tokenQueryResult: OperationResult<
+      TokensPriceQuery,
+      { datatokenId: string; account: string }
+    > = await fetchData(
+      TokensPriceQuery,
+      {
+        datatokenIds: chainAssetLists[chainKey],
+        account: account.toLowerCase()
+      },
+      queryContext
+    )
     tokenQueryResult.data?.tokens.forEach((token) => {
       const accessDetails = getAccessDetailsFromTokenPrice(token)
       const currentAsset = assetsExtended.find(

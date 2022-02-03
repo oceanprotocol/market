@@ -135,11 +135,11 @@ function AssetProvider({
   // Check user network against asset network
   // -----------------------------------
   useEffect(() => {
-    if (!networkId || !asset) return
+    if (!networkId || !asset?.chainId) return
 
     const isAssetNetwork = networkId === asset?.chainId
     setIsAssetNetwork(isAssetNetwork)
-  }, [networkId, asset])
+  }, [networkId, asset?.chainId])
 
   // -----------------------------------
   // Load ocean config based on asset network
