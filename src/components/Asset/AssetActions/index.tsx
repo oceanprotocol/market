@@ -24,10 +24,10 @@ import { FormPublishData } from 'src/components/Publish/_types'
 
 export default function AssetActions({
   ddo,
-  price
+  accessDetails
 }: {
   ddo: Asset
-  price: BestPrice
+  accessDetails: AccessDetails
 }): ReactElement {
   const { accountId, balance, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
@@ -112,22 +112,24 @@ export default function AssetActions({
 
   // Check user balance against price
   useEffect(() => {
-    if (price?.type === 'free') setIsBalanceSufficient(true)
-    if (!price?.value || !accountId || !balance?.ocean || !dtBalance) return
+    if (accessDetails?.type === 'free') setIsBalanceSufficient(true)
+    if (!accessDetails?.price || !accountId || !balance?.ocean || !dtBalance)
+      return
 
     setIsBalanceSufficient(
-      compareAsBN(balance.ocean, `${price.value}`) || Number(dtBalance) >= 1
+      compareAsBN(balance.ocean, `${accessDetails.price}`) ||
+        Number(dtBalance) >= 1
     )
 
     return () => {
       setIsBalanceSufficient(false)
     }
-  }, [balance, accountId, price, dtBalance])
+  }, [balance, accountId, accessDetails, dtBalance])
 
   const UseContent = isCompute ? (
     <Compute
       ddo={ddo}
-      price={price}
+      accessDetails={accessDetails}
       dtBalance={dtBalance}
       file={fileMetadata}
       fileIsLoading={fileIsLoading}
@@ -137,7 +139,7 @@ export default function AssetActions({
   ) : (
     <Consume
       ddo={ddo}
-      price={price}
+      accessDetails={accessDetails}
       dtBalance={dtBalance}
       isBalanceSufficient={isBalanceSufficient}
       file={fileMetadata}
@@ -154,17 +156,17 @@ export default function AssetActions({
     }
   ]
 
-  price?.type === 'dynamic' &&
+  accessDetails?.type === 'dynamic' &&
     tabs.push(
       {
         title: 'Pool',
         content: <Pool />,
-        disabled: !price.datatoken
+        disabled: !accessDetails.datatoken
       },
       {
         title: 'Trade',
         content: <Trade />,
-        disabled: !price.datatoken
+        disabled: !accessDetails.datatoken
       }
     )
 

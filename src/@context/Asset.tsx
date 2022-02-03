@@ -9,26 +9,27 @@ import React, {
 } from 'react'
 import { Asset, Config, LoggerInstance, Purgatory } from '@oceanprotocol/lib'
 import { CancelToken } from 'axios'
-import { retrieveDDO } from '@utils/aquarius'
-import { getPrice } from '@utils/subgraph'
+import { retrieveAsset } from '@utils/aquarius'
 import { useWeb3 } from './Web3'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getOceanConfig, getDevelopmentConfig } from '@utils/ocean'
+import { AssetExtended } from 'src/@types/AssetExtended'
+import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 
 interface AssetProviderValue {
   isInPurgatory: boolean
   purgatoryData: Purgatory
-  ddo: Asset
+  assetExtended: AssetExtended
   title: string
   owner: string
-  price: BestPrice
+  accessDetails: AccessDetails
   error?: string
   refreshInterval: number
   isAssetNetwork: boolean
   oceanConfig: Config
   loading: boolean
-  refreshDdo: (token?: CancelToken) => Promise<void>
+  refreshAsset: (token?: CancelToken) => Promise<void>
 }
 
 const AssetContext = createContext({} as AssetProviderValue)
@@ -44,12 +45,12 @@ function AssetProvider({
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
 
-  const { networkId } = useWeb3()
+  const { networkId, accountId } = useWeb3()
   const [isInPurgatory, setIsInPurgatory] = useState(false)
   const [purgatoryData, setPurgatoryData] = useState<Purgatory>()
-  const [ddo, setDDO] = useState<Asset>()
+  const [assetExtended, setAssetExtended] = useState<Asset>()
   const [title, setTitle] = useState<string>()
-  const [price, setPrice] = useState<BestPrice>()
+  const [accessDetails, setConsumeDetails] = useState<AccessDetails>()
   const [owner, setOwner] = useState<string>()
   const [error, setError] = useState<string>()
   const [loading, setLoading] = useState(false)
@@ -58,32 +59,35 @@ function AssetProvider({
 
   const newCancelToken = useCancelToken()
 
-  const fetchDdo = async (token?: CancelToken) => {
-    LoggerInstance.log('[asset] Init asset, get DDO')
-    setLoading(true)
-    const ddo = await retrieveDDO(did, token)
+  const fetchAsset = useCallback(
+    async (token?: CancelToken) => {
+      LoggerInstance.log('[asset] Init asset, get assetExtended')
+      setLoading(true)
+      const assetExtended = await retrieveAsset(did, token)
 
-    if (!ddo) {
-      setError(
-        `[asset] The DDO for ${did} was not found in MetadataCache. If you just published a new data set, wait some seconds and refresh this page.`
-      )
-    } else {
-      setError(undefined)
-    }
-    setLoading(false)
-    return ddo
-  }
+      if (!assetExtended) {
+        setError(
+          `[asset] The assetExtended for ${did} was not found in MetadataCache. If you just published a new data set, wait some seconds and refresh this page.`
+        )
+      } else {
+        setError(undefined)
+      }
+      setLoading(false)
+      return assetExtended
+    },
+    [did]
+  )
 
-  const refreshDdo = async (token?: CancelToken) => {
+  const refreshAsset = async (token?: CancelToken) => {
     setLoading(true)
-    const ddo = await fetchDdo(token)
-    LoggerInstance.debug('[asset] Got DDO', ddo)
-    setDDO(ddo)
+    const assetExtended = await fetchAsset(token)
+    LoggerInstance.debug('[asset] Got assetExtended', assetExtended)
+    setAssetExtended(assetExtended)
     setLoading(false)
   }
 
   // -----------------------------------
-  // Get and set DDO based on passed DID
+  // Get and set assetExtended based on passed DID
   // -----------------------------------
   useEffect(() => {
     if (!did || !appConfig.metadataCacheUri) return
@@ -91,77 +95,89 @@ function AssetProvider({
     let isMounted = true
 
     async function init() {
-      const ddo = await fetchDdo(newCancelToken())
-      if (!isMounted || !ddo) return
-      LoggerInstance.debug('[asset] Got DDO', ddo)
-      setDDO(ddo)
-      setTitle(ddo.metadata.name)
-      setOwner(ddo.nft.owner)
-      setIsInPurgatory((ddo.purgatory?.state as unknown as string) === 'true')
-      setPurgatoryData(ddo.purgatory)
+      const assetExtended = await fetchAsset(newCancelToken())
+      if (!isMounted || !assetExtended) return
+      LoggerInstance.debug('[asset] Got assetExtended', assetExtended)
+      setAssetExtended(assetExtended)
+      setTitle(assetExtended.metadata.name)
+      setOwner(assetExtended.nft.owner)
+      setIsInPurgatory(
+        (assetExtended.purgatory?.state as unknown as string) === 'true'
+      )
+      setPurgatoryData(assetExtended.purgatory)
     }
     init()
     return () => {
       isMounted = false
     }
-  }, [did, appConfig.metadataCacheUri])
+  }, [did, appConfig.metadataCacheUri, fetchAsset, newCancelToken])
 
   // -----------------------------------
   // Attach price to asset
   // -----------------------------------
-  const initPrice = useCallback(async (ddo: Asset): Promise<void> => {
-    if (!ddo) return
-    const returnedPrice = await getPrice(ddo)
-    setPrice({ ...returnedPrice })
-  }, [])
+  const initPrice = useCallback(
+    async (assetExtended: AssetExtended, accountId: string): Promise<void> => {
+      if (!assetExtended) return
+      const accessDetails = await getAccessDetails(
+        assetExtended.chainId,
+        assetExtended.services[0].datatokenAddress,
+        assetExtended.services[0].timeout,
+        accountId
+      )
+      assetExtended.accessDetails = accessDetails
+      setConsumeDetails({ ...accessDetails })
+      setAssetExtended(assetExtended)
+    },
+    []
+  )
 
   useEffect(() => {
-    if (!ddo) return
-    initPrice(ddo)
-  }, [ddo, initPrice])
+    if (!assetExtended) return
+    initPrice(assetExtended, accountId)
+  }, [accountId, assetExtended, initPrice])
 
   // -----------------------------------
   // Check user network against asset network
   // -----------------------------------
   useEffect(() => {
-    if (!networkId || !ddo) return
+    if (!networkId || !assetExtended) return
 
-    const isAssetNetwork = networkId === ddo?.chainId
+    const isAssetNetwork = networkId === assetExtended?.chainId
     setIsAssetNetwork(isAssetNetwork)
-  }, [networkId, ddo])
+  }, [networkId, assetExtended])
 
   // -----------------------------------
   // Load ocean config based on asset network
   // -----------------------------------
   useEffect(() => {
-    if (!ddo?.chainId) return
+    if (!assetExtended?.chainId) return
 
     const oceanConfig = {
-      ...getOceanConfig(ddo?.chainId),
+      ...getOceanConfig(assetExtended?.chainId),
 
       // add local dev values
-      ...(ddo?.chainId === 8996 && {
+      ...(assetExtended?.chainId === 8996 && {
         ...getDevelopmentConfig()
       })
     }
     setOceanConfig(oceanConfig)
-  }, [ddo])
+  }, [assetExtended])
 
   return (
     <AssetContext.Provider
       value={
         {
-          ddo,
+          assetExtended,
           did,
           title,
           owner,
-          price,
+          accessDetails,
           error,
           isInPurgatory,
           purgatoryData,
           refreshInterval,
           loading,
-          refreshDdo,
+          refreshAsset,
           isAssetNetwork,
           oceanConfig
         } as AssetProviderValue

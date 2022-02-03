@@ -62,7 +62,7 @@ export function generateNftCreateData(nftMetadata: NftMetadata): any {
     symbol: nftMetadata.symbol,
     templateIndex: 1,
     // Gas estimation fails if we add our huge tokenURI
-    tokenURI: ''
+    tokenURI: '{url:"https://coolImage.com, name: "just for test"}'
     // TODO: figure out if Buffer.from method is working in browser in final build
     // as BTOA is deprecated.
     // tokenURI: window?.btoa(JSON.stringify(nftMetadata))

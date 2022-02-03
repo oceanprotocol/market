@@ -27,7 +27,7 @@ interface AssetPoolShare {
   poolShare: PoolShare
   networkId: number
   createTime: number
-  ddo: Asset
+  asset: Asset
 }
 
 function Liquidity({ row, type }: { row: AssetPoolShare; type: string }) {
@@ -83,7 +83,7 @@ const columns = [
   {
     name: 'Data Set',
     selector: function getAssetRow(row: AssetPoolShare) {
-      return <AssetTitle ddo={row.ddo} />
+      return <AssetTitle asset={row.asset} />
     },
     grow: 2
   },
@@ -140,7 +140,7 @@ async function getPoolSharesAssets(
       userLiquidity: userLiquidity,
       networkId: ddoList[i].chainId,
       createTime: data[i].pool.createdTimestamp,
-      ddo: ddoList[i]
+      asset: ddoList[i]
     })
   }
   const assets = assetList.sort((a, b) => b.createTime - a.createTime)

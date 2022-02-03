@@ -4,10 +4,6 @@ import FileIcon from '@shared/FileIcon'
 import Price from '@shared/Price'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { useAsset } from '@context/Asset'
-import { gql } from 'urql'
-import { fetchData, getQueryContext } from '@utils/subgraph'
-import { OrdersData } from '../../../@types/subgraph/OrdersData'
-import BigNumber from 'bignumber.js'
 import { useWeb3 } from '@context/Web3'
 import { usePricing } from '@hooks/usePricing'
 import { useConsume } from '@hooks/useConsume'
@@ -18,23 +14,9 @@ import styles from './Consume.module.css'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { Asset, FileMetadata } from '@oceanprotocol/lib'
 
-const previousOrderQuery = gql`
-  query PreviousOrder($id: String!, $account: String!) {
-    orders(
-      first: 1
-      where: { datatoken: $id, payer: $account }
-      orderBy: createdTimestamp
-      orderDirection: desc
-    ) {
-      createdTimestamp
-      tx
-    }
-  }
-`
-
 export default function Consume({
   ddo,
-  price,
+  accessDetails,
   file,
   isBalanceSufficient,
   dtBalance,
@@ -43,7 +25,7 @@ export default function Consume({
   consumableFeedback
 }: {
   ddo: Asset
-  price: BestPrice
+  accessDetails: AccessDetails
   file: FileMetadata
   isBalanceSufficient: boolean
   dtBalance: string
@@ -63,49 +45,7 @@ export default function Consume({
   const [hasDatatoken, setHasDatatoken] = useState(false)
   const [isConsumablePrice, setIsConsumablePrice] = useState(true)
   const [assetTimeout, setAssetTimeout] = useState('')
-  const [data, setData] = useState<OrdersData>()
   const isMounted = useIsMounted()
-
-  useEffect(() => {
-    if (!ddo || !accountId) return
-
-    const context = getQueryContext(ddo.chainId)
-    const variables = {
-      id: ddo.services[0].datatokenAddress?.toLowerCase(),
-      account: accountId?.toLowerCase()
-    }
-    fetchData(previousOrderQuery, variables, context).then((result: any) => {
-      isMounted() && setData(result.data)
-    })
-  }, [ddo, accountId, hasPreviousOrder, isMounted])
-
-  useEffect(() => {
-    if (
-      !data ||
-      !assetTimeout ||
-      data.orders.length === 0 ||
-      !accountId ||
-      !isAssetNetwork
-    )
-      return
-
-    const lastOrder = data.orders[0]
-    if (assetTimeout === '0') {
-      setPreviousOrderId(lastOrder.tx)
-      setHasPreviousOrder(true)
-    } else {
-      const expiry = new BigNumber(lastOrder.createdTimestamp).plus(
-        assetTimeout
-      )
-      const unixTime = new BigNumber(Math.floor(Date.now() / 1000))
-      if (unixTime.isLessThan(expiry)) {
-        setPreviousOrderId(lastOrder.tx)
-        setHasPreviousOrder(true)
-      } else {
-        setHasPreviousOrder(false)
-      }
-    }
-  }, [data, assetTimeout, accountId, isAssetNetwork])
 
   useEffect(() => {
     if (!ddo) return
@@ -115,12 +55,12 @@ export default function Consume({
   }, [ddo])
 
   useEffect(() => {
-    if (!price) return
+    if (!accessDetails) return
 
-    setIsConsumablePrice(
-      price.isConsumable !== undefined ? price.isConsumable === 'true' : true
-    )
-  }, [price])
+    setIsConsumablePrice(accessDetails.isConsumable)
+    setHasPreviousOrder(accessDetails.owned)
+    setPreviousOrderId(accessDetails.validOrderTx)
+  }, [accessDetails])
 
   useEffect(() => {
     setHasDatatoken(Number(dtBalance) >= 1)
@@ -151,10 +91,10 @@ export default function Consume({
   ])
 
   async function handleConsume() {
-    if (!hasPreviousOrder && !hasDatatoken) {
-      const tx = await buyDT('1', price, ddo)
-      if (tx === undefined) return
-    }
+    // if (!hasPreviousOrder && !hasDatatoken) {
+    //   const tx = await buyDT('1', price, ddo)
+    //   if (tx === undefined) return
+    // }
     const error = await consume(
       ddo.id,
       ddo.services[0].datatokenAddress,
@@ -188,7 +128,7 @@ export default function Consume({
       assetType={ddo?.metadata?.type}
       stepText={consumeStepText || pricingStepText}
       isLoading={pricingIsLoading || isLoading}
-      priceType={price?.type}
+      priceType={accessDetails?.type}
       isConsumable={isConsumable}
       isBalanceSufficient={isBalanceSufficient}
       consumableFeedback={consumableFeedback}
@@ -202,7 +142,7 @@ export default function Consume({
           <FileIcon file={file} isLoading={fileIsLoading} />
         </div>
         <div className={styles.pricewrapper}>
-          <Price price={price} conversion />
+          <Price accessDetails={accessDetails} conversion />
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>
