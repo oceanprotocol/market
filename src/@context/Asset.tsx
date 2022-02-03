@@ -85,7 +85,7 @@ function AssetProvider({
       }))
       setTitle(asset.metadata.name)
       setOwner(asset.nft.owner)
-      setIsInPurgatory((asset.purgatory?.state as unknown as string) === 'true')
+      setIsInPurgatory(asset.purgatory?.state)
       setPurgatoryData(asset.purgatory)
       LoggerInstance.log('[asset] Got asset', asset)
 

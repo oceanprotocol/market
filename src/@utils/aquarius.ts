@@ -48,7 +48,7 @@ export function generateBaseQuery(
           getFilterTerm('_index', 'aquarius'),
           ...(baseQueryParams.ignorePurgatory
             ? []
-            : [getFilterTerm('purgatory.state', 'false')])
+            : [getFilterTerm('purgatory.state', false)])
         ]
       }
     }
