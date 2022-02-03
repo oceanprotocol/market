@@ -399,7 +399,7 @@ export default function Pool(): ReactElement {
           </TokenList>
 
           <TokenList
-            title="Pool Creator Statistics"
+            title="Owner Liquidity"
             baseTokenValue={`${poolInfoOwner?.liquidity?.baseToken}`}
             baseTokenSymbol={poolInfo?.baseTokenSymbol}
             poolShares={poolInfoOwner?.poolShares}
