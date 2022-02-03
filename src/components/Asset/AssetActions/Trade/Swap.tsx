@@ -3,7 +3,7 @@ import styles from './Swap.module.css'
 import TradeInput from './TradeInput'
 import Button from '@shared/atoms/Button'
 import Arrow from '@images/arrow.svg'
-import { FormikContextType, swap, useFormikContext } from 'formik'
+import { FormikContextType, useFormikContext } from 'formik'
 import Output from './Output'
 import Slippage from './Slippage'
 import PriceImpact from './PriceImpact'
@@ -12,7 +12,6 @@ import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import { FormTradeData, TradeItem } from './_types'
 import { Asset, Pool, LoggerInstance } from '@oceanprotocol/lib'
-import { DecimationAlgorithm } from 'chart.js'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
@@ -66,24 +65,20 @@ export default function Swap({
     async function calculateMaximum() {
       try {
         const poolInstance = new Pool(web3, LoggerInstance)
-        console.log('VALUES: ', values.type)
 
         const amountDataToken =
           values.type === 'buy'
             ? new Decimal(maxDt)
             : new Decimal(balance.datatoken)
-        console.log('Amount DataToken: ', amountDataToken.toString())
 
         const amountBaseToken =
           values.type === 'buy'
             ? new Decimal(balance.ocean)
             : new Decimal(maxBaseToken)
-        console.log('Amount BASEToken: ', amountBaseToken.toString())
 
         const swapFee = await poolInstance.getSwapFee(price.address)
 
-        console.log(
-          'FCT ITEMS: ',
+        const maxBuyBaseToken = await poolInstance.getAmountOutExactIn(
           price.address,
           dtItem.token,
           baseTokenItem.token,
@@ -91,16 +86,7 @@ export default function Swap({
           swapFee
         )
 
-        const maxBuyBaseToken = await poolInstance.getAmountInExactOut(
-          price.address,
-          dtItem.token,
-          baseTokenItem.token,
-          amountDataToken.toString(),
-          swapFee
-        )
-        console.log('MAX BUY BASE TOKEN: ', maxBuyBaseToken)
-
-        const maxBuyDt = await poolInstance.getAmountInExactOut(
+        const maxBuyDt = await poolInstance.getAmountOutExactIn(
           price.address,
           baseTokenItem.token,
           dtItem.token,
@@ -126,8 +112,6 @@ export default function Swap({
             ? balance.ocean
             : amountBaseToken
 
-        console.log('MAXIMUM DT: ', maximumDt)
-        console.log('MAXIMUM BT: ', maximumBaseToken)
         setMaximumDt(maximumDt.toString())
         setMaximumBaseToken(maximumBaseToken.toString())
 
