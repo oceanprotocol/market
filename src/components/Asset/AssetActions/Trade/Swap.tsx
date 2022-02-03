@@ -3,7 +3,7 @@ import styles from './Swap.module.css'
 import TradeInput from './TradeInput'
 import Button from '@shared/atoms/Button'
 import Arrow from '@images/arrow.svg'
-import { FormikContextType, useFormikContext } from 'formik'
+import { FormikContextType, swap, useFormikContext } from 'formik'
 import Output from './Output'
 import Slippage from './Slippage'
 import PriceImpact from './PriceImpact'
@@ -12,6 +12,7 @@ import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import { FormTradeData, TradeItem } from './_types'
 import { Asset, Pool, LoggerInstance } from '@oceanprotocol/lib'
+import { DecimationAlgorithm } from 'chart.js'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
@@ -60,86 +61,102 @@ export default function Swap({
   const [tokenAmount, setTokenAmount] = useState<string>()
 
   useEffect(() => {
-    if (!ddo || !balance || !values?.type || !price) return
+    if (!web3 || !ddo || !balance || !values?.type || !price) return
 
     async function calculateMaximum() {
-      if (!web3 || !LoggerInstance) return
+      try {
+        const poolInstance = new Pool(web3, LoggerInstance)
+        console.log('VALUES: ', values.type)
 
-      const poolInstance = new Pool(web3, LoggerInstance)
+        const amountDataToken =
+          values.type === 'buy'
+            ? new Decimal(maxDt)
+            : new Decimal(balance.datatoken)
+        console.log('Amount DataToken: ', amountDataToken.toString())
 
-      const amountDataToken =
-        values.type === 'buy'
-          ? new Decimal(maxDt)
-          : new Decimal(balance.datatoken)
-      const amountBaseToken =
-        values.type === 'buy'
-          ? new Decimal(balance.ocean)
-          : new Decimal(maxBaseToken)
+        const amountBaseToken =
+          values.type === 'buy'
+            ? new Decimal(balance.ocean)
+            : new Decimal(maxBaseToken)
+        console.log('Amount BASEToken: ', amountBaseToken.toString())
 
-      const swapFee = await poolInstance.getSwapFee(price.address)
+        const swapFee = await poolInstance.getSwapFee(price.address)
 
-      const maxBuyBaseToken = await poolInstance.getAmountInExactOut(
-        price.address,
-        baseTokenItem.token,
-        dtItem.token,
-        `${amountDataToken.toString()}`,
-        swapFee
-      )
+        console.log(
+          'FCT ITEMS: ',
+          price.address,
+          dtItem.token,
+          baseTokenItem.token,
+          amountDataToken.toString(),
+          swapFee
+        )
 
-      const maxBuyDt = await poolInstance.getAmountInExactOut(
-        price.address,
-        dtItem.token,
-        baseTokenItem.token,
-        `${amountBaseToken.toString()}`,
-        swapFee
-      )
+        const maxBuyBaseToken = await poolInstance.getAmountInExactOut(
+          price.address,
+          dtItem.token,
+          baseTokenItem.token,
+          amountDataToken.toString(),
+          swapFee
+        )
+        console.log('MAX BUY BASE TOKEN: ', maxBuyBaseToken)
 
-      const maximumDt =
-        values.type === 'buy'
-          ? amountDataToken.greaterThan(new Decimal(maxBuyDt))
-            ? maxBuyDt
+        const maxBuyDt = await poolInstance.getAmountInExactOut(
+          price.address,
+          baseTokenItem.token,
+          dtItem.token,
+          amountBaseToken.toString(),
+          swapFee
+        )
+
+        const maximumDt =
+          values.type === 'buy'
+            ? amountDataToken.greaterThan(new Decimal(maxBuyDt))
+              ? maxBuyDt
+              : amountDataToken
+            : amountDataToken.greaterThan(new Decimal(balance.datatoken))
+            ? balance.datatoken
             : amountDataToken
-          : amountDataToken.greaterThan(new Decimal(balance.datatoken))
-          ? balance.datatoken
-          : amountDataToken
 
-      const maximumBaseToken =
-        values.type === 'sell'
-          ? amountBaseToken.greaterThan(new Decimal(maxBuyBaseToken))
-            ? maxBuyBaseToken
+        const maximumBaseToken =
+          values.type === 'sell'
+            ? amountBaseToken.greaterThan(new Decimal(maxBuyBaseToken))
+              ? maxBuyBaseToken
+              : amountBaseToken
+            : amountBaseToken.greaterThan(new Decimal(balance.ocean))
+            ? balance.ocean
             : amountBaseToken
-          : amountBaseToken.greaterThan(new Decimal(balance.ocean))
-          ? balance.ocean
-          : amountBaseToken
 
-      setMaximumDt(maximumDt.toString())
-      setMaximumBaseToken(maximumBaseToken.toString())
+        console.log('MAXIMUM DT: ', maximumDt)
+        console.log('MAXIMUM BT: ', maximumBaseToken)
+        setMaximumDt(maximumDt.toString())
+        setMaximumBaseToken(maximumBaseToken.toString())
 
-      setBaseTokenItem((prevState) => ({
-        ...prevState,
-        amount: amountBaseToken.toString(),
-        maxAmount: maximumBaseToken.toString()
-      }))
+        setBaseTokenItem((prevState) => ({
+          ...prevState,
+          amount: amountBaseToken.toString(),
+          maxAmount: maximumBaseToken.toString()
+        }))
 
-      setDtItem((prevState) => ({
-        ...prevState,
-        amount: amountDataToken.toString(),
-        maxAmount: maximumDt.toString()
-      }))
+        setDtItem((prevState) => ({
+          ...prevState,
+          amount: amountDataToken.toString(),
+          maxAmount: maximumDt.toString()
+        }))
+      } catch (error) {
+        LoggerInstance.error(error.message)
+      }
     }
     calculateMaximum()
   }, [
     web3,
     ddo,
-    maxBaseToken,
     maxDt,
+    maxBaseToken,
     balance,
     price,
     values.type,
     setMaximumDt,
-    setMaximumBaseToken,
-    baseTokenItem.token,
-    dtItem.token
+    setMaximumBaseToken
   ])
 
   const switchTokens = () => {
