@@ -67,7 +67,7 @@ export default function Compute({
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { accountId, web3 } = useWeb3()
-  const { buyDT, pricingError, pricingStepText } = usePricing()
+  const { pricingError, pricingStepText } = usePricing()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
   const newAbortController = useAbortController()
@@ -468,13 +468,6 @@ export default function Compute({
         }
       }
 
-      // TODO: pricingError is always undefined even upon errors during buyDT for whatever reason.
-      // So manually drop out above, but ideally could be replaced with this alone.
-      if (pricingError) {
-        setError(pricingError)
-        return
-      }
-
       LoggerInstance.log(
         `[compute] Got ${
           hasPreviousDatasetOrder ? 'existing' : 'new'
@@ -561,7 +554,7 @@ export default function Compute({
           validateOnMount
           validationSchema={validationSchema}
           onSubmit={async (values) => {
-            // await startJob(values.algorithm)
+            await startJob(values.algorithm)
           }}
         >
           <FormStartComputeDataset
