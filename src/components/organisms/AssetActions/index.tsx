@@ -18,6 +18,7 @@ import { getOceanConfig } from '../../../utils/ocean'
 import { useCancelToken } from '../../../hooks/useCancelToken'
 import { useIsMounted } from '../../../hooks/useIsMounted'
 import StartMigration from '../../molecules/migration/startMigration'
+import LockPoolShares from '../../molecules/migration/lockPoolShares'
 
 export default function AssetActions(): ReactElement {
   const { accountId, balance } = useWeb3()
@@ -144,6 +145,7 @@ export default function AssetActions(): ReactElement {
   return (
     <>
       <StartMigration />
+      <LockPoolShares />
       <Permission eventType="consume">
         <Tabs items={tabs} className={styles.actions} />
       </Permission>
