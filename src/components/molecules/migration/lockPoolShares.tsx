@@ -7,13 +7,29 @@ import Web3 from 'web3'
 import { useAsset } from '../../../providers/Asset'
 import { useMigrationStatus } from '../../../providers/Migration'
 import { Migration } from 'v4-migration-lib/'
-import { DDO, MetadataMain } from '@oceanprotocol/lib'
+import { Logger } from '@oceanprotocol/lib'
+import { gql, OperationResult } from 'urql'
+import { fetchData, getQueryContext } from '../../../utils/subgraph'
+import { PoolLiquidity } from '../../../@types/apollo/PoolLiquidity'
+
+const userPoolShareQuery = gql`
+  query PoolShare($id: ID!, $shareId: ID) {
+    pool(id: $id) {
+      id
+      shares(where: { id: $shareId }) {
+        id
+        balance
+      }
+    }
+  }
+`
 
 async function addShares(
   web3: Web3,
   accountId: string,
   migrationAddress: string,
-  poolV3Address: string
+  poolV3Address: string,
+  lptV3Amount: string
 ) {
   const migration = new Migration(web3)
   await migration.addShares(
@@ -26,12 +42,41 @@ async function addShares(
 
 export default function LockPoolShares(): ReactElement {
   const { accountId } = useWeb3()
-  const { owner, did, ddo, metadata } = useAsset()
+  const { owner, ddo, price } = useAsset()
   const [poolTokens, setPoolTokens] = useState<string>()
-  const { status, migrationAddress, poolV3Address, dtV3Address } =
-    useMigrationStatus()
+  const { status, migrationAddress, poolV3Address } = useMigrationStatus()
   const { web3 } = useWeb3()
 
+  async function getUserPoolShareBalance() {
+    const queryContext = getQueryContext(ddo.chainId)
+    const queryVariables = {
+      id: price.address.toLowerCase(),
+      shareId: `${price.address.toLowerCase()}-${accountId.toLowerCase()}`
+    }
+
+    const queryResult: OperationResult<PoolLiquidity> = await fetchData(
+      userPoolShareQuery,
+      queryVariables,
+      queryContext
+    )
+    return queryResult?.data.pool.shares[0]?.balance
+  }
+
+  useEffect(() => {
+    if (!accountId) return
+    async function init() {
+      try {
+        //
+        // Get everything the user has put into the pool
+        //
+        const poolTokens = await getUserPoolShareBalance()
+        setPoolTokens(poolTokens)
+      } catch (error) {
+        Logger.error(error.message)
+      }
+    }
+    init()
+  }, [accountId])
   return (
     owner === accountId &&
     status === 0 && (
@@ -41,9 +86,15 @@ export default function LockPoolShares(): ReactElement {
           \n\nThe migration requires 80% of liquidity providers to lock their shares in the migration contract."
           state="info"
           action={{
-            name: 'Lock Tokens',
+            name: 'Lock Pool Shares',
             handleAction: () =>
-              addShares(web3, accountId, migrationAddress, poolV3Address)
+              addShares(
+                web3,
+                accountId,
+                migrationAddress,
+                poolV3Address,
+                poolTokens
+              )
           }}
         />
       </Container>
