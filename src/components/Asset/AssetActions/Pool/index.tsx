@@ -387,8 +387,6 @@ export default function Pool(): ReactElement {
             }
             baseTokenValue={`${poolInfoUser?.liquidity?.baseToken}`}
             baseTokenSymbol={poolInfo?.baseTokenSymbol}
-            datatokenValue={`${poolInfoUser?.liquidity?.datatoken}`}
-            datatokenSymbol={poolInfo?.datatokenSymbol}
             poolShares={poolInfoUser?.poolShares}
             conversion={poolInfoUser?.totalLiquidityInOcean}
             highlight
@@ -404,8 +402,6 @@ export default function Pool(): ReactElement {
             title="Pool Creator Statistics"
             baseTokenValue={`${poolInfoOwner?.liquidity?.baseToken}`}
             baseTokenSymbol={poolInfo?.baseTokenSymbol}
-            datatokenValue={`${poolInfoOwner?.liquidity?.datatoken}`}
-            datatokenSymbol={poolInfo?.datatokenSymbol}
             poolShares={poolInfoOwner?.poolShares}
             conversion={poolInfoOwner?.totalLiquidityInOcean}
           >
@@ -437,7 +433,6 @@ export default function Pool(): ReactElement {
             datatokenSymbol={poolInfo?.datatokenSymbol}
             poolShares={poolInfo?.totalPoolTokens}
             conversion={poolInfo?.totalLiquidityInOcean}
-            showTVLLabel
           >
             <Token symbol="% pool fee" balance={poolInfo?.poolFee} noIcon />
           </TokenList>
