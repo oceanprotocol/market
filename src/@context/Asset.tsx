@@ -45,7 +45,7 @@ function AssetProvider({
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
 
-  const { networkId, accountId } = useWeb3()
+  const { chainId, accountId } = useWeb3()
   const [isInPurgatory, setIsInPurgatory] = useState(false)
   const [purgatoryData, setPurgatoryData] = useState<Purgatory>()
   const [asset, setAsset] = useState<AssetExtended>()
@@ -135,11 +135,11 @@ function AssetProvider({
   // Check user network against asset network
   // -----------------------------------
   useEffect(() => {
-    if (!networkId || !asset?.chainId) return
+    if (!chainId || !asset?.chainId) return
 
-    const isAssetNetwork = networkId === asset?.chainId
+    const isAssetNetwork = chainId === asset?.chainId
     setIsAssetNetwork(isAssetNetwork)
-  }, [networkId, asset?.chainId])
+  }, [chainId, asset?.chainId])
 
   // -----------------------------------
   // Load ocean config based on asset network
