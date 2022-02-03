@@ -80,7 +80,7 @@ export default function AssetList({
         {assetsWithPrices.length > 0 ? (
           assetsWithPrices.map((assetWithPrice) => (
             <AssetTeaser
-              assetExtended={assetWithPrice}
+              asset={assetWithPrice}
               key={assetWithPrice.id}
               noPublisher={noPublisher}
             />

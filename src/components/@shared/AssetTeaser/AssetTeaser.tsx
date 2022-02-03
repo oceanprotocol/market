@@ -11,22 +11,22 @@ import { getServiceByName } from '@utils/ddo'
 import { AssetExtended } from 'src/@types/AssetExtended'
 
 declare type AssetTeaserProps = {
-  assetExtended: AssetExtended
+  asset: AssetExtended
   noPublisher?: boolean
 }
 
 export default function AssetTeaser({
-  assetExtended,
+  asset,
   noPublisher
 }: AssetTeaserProps): ReactElement {
-  const { name, type, description } = assetExtended.metadata
-  const { datatokens } = assetExtended
-  const isCompute = Boolean(getServiceByName(assetExtended, 'compute'))
+  const { name, type, description } = asset.metadata
+  const { datatokens } = asset
+  const isCompute = Boolean(getServiceByName(asset, 'compute'))
   const accessType = isCompute ? 'compute' : 'access'
-  const { owner } = assetExtended.nft
+  const { owner } = asset.nft
   return (
     <article className={`${styles.teaser} ${styles[type]}`}>
-      <Link href={`/asset/${assetExtended.id}`}>
+      <Link href={`/asset/${asset.id}`}>
         <a className={styles.link}>
           <header className={styles.header}>
             <div className={styles.symbol}>{datatokens[0]?.symbol}</div>
@@ -51,11 +51,8 @@ export default function AssetTeaser({
           </div>
 
           <footer className={styles.foot}>
-            <Price accessDetails={assetExtended.accessDetails} small />
-            <NetworkName
-              networkId={assetExtended.chainId}
-              className={styles.network}
-            />
+            <Price accessDetails={asset.accessDetails} small />
+            <NetworkName networkId={asset.chainId} className={styles.network} />
           </footer>
         </a>
       </Link>

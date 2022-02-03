@@ -11,15 +11,13 @@ import { useAsset } from '@context/Asset'
 
 export default function WalletNetworkSwitcher(): ReactElement {
   const { networkId, web3Provider } = useWeb3()
-  const { assetExtended } = useAsset()
+  const { asset } = useAsset()
   const { networksList } = useNetworkMetadata()
-  const ddoNetworkData = getNetworkDataById(networksList, assetExtended.chainId)
+  const ddoNetworkData = getNetworkDataById(networksList, asset.chainId)
   const walletNetworkData = getNetworkDataById(networksList, networkId)
 
   const ddoNetworkName = (
-    <strong>
-      {getNetworkDisplayName(ddoNetworkData, assetExtended.chainId)}
-    </strong>
+    <strong>{getNetworkDisplayName(ddoNetworkData, asset.chainId)}</strong>
   )
   const walletNetworkName = (
     <strong>{getNetworkDisplayName(walletNetworkData, networkId)}</strong>
@@ -27,7 +25,7 @@ export default function WalletNetworkSwitcher(): ReactElement {
 
   async function switchWalletNetwork() {
     const networkNode = await networksList.find(
-      (data) => data.chainId === assetExtended.chainId
+      (data) => data.chainId === asset.chainId
     )
     addCustomNetwork(web3Provider, networkNode)
   }

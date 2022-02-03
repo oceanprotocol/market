@@ -74,7 +74,7 @@ export default function ComputeJobs({
   minimal?: boolean
 }): ReactElement {
   const { accountId, networkId } = useWeb3()
-  const { assetExtended } = useAsset()
+  const { asset } = useAsset()
   const { chainIds } = useUserPreferences()
   const [isLoading, setIsLoading] = useState(false)
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
@@ -96,7 +96,7 @@ export default function ComputeJobs({
     } catch (error) {
       LoggerInstance.error(error.message)
     }
-  }, [chainIds, accountId, assetExtended, isMounted])
+  }, [chainIds, accountId, asset, isMounted])
 
   useEffect(() => {
     fetchJobs()
