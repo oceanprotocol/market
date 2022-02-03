@@ -11,17 +11,15 @@ export default function TokenList({
   baseTokenSymbol,
   datatokenValue,
   datatokenSymbol,
-  poolShares,
   conversion,
   highlight
 }: {
   title: string | ReactNode
-  children: ReactNode
+  children?: ReactNode
   baseTokenValue: string
   baseTokenSymbol: string
   datatokenValue?: string
   datatokenSymbol?: string
-  poolShares: string
   conversion: Decimal
   highlight?: boolean
 }): ReactElement {
@@ -29,31 +27,26 @@ export default function TokenList({
     <div className={`${styles.tokenlist} ${highlight ? styles.highlight : ''}`}>
       <h3 className={styles.title}>{title}</h3>
       <div className={styles.tokens}>
-        <div>
-          <Token
-            symbol={baseTokenSymbol}
-            balance={
-              datatokenValue
-                ? baseTokenValue
-                : new Decimal(Number(baseTokenValue)).mul(2).toString()
-            }
+        <Token
+          symbol={baseTokenSymbol}
+          balance={
+            datatokenValue
+              ? baseTokenValue
+              : new Decimal(Number(baseTokenValue)).mul(2).toString()
+          }
+        />
+        {datatokenValue && (
+          <Token symbol={datatokenSymbol} balance={datatokenValue} />
+        )}
+        {conversion.greaterThan(0) && (
+          <Conversion
+            price={conversion.toString()}
+            className={styles.totalLiquidity}
           />
-          {datatokenValue && (
-            <Token symbol={datatokenSymbol} balance={datatokenValue} />
-          )}
-          {conversion.greaterThan(0) && (
-            <Conversion
-              price={conversion.toString()}
-              className={styles.totalLiquidity}
-            />
-          )}
-        </div>
-
-        <div>
-          <Token symbol="pool shares" balance={poolShares} noIcon />
-          {children}
-        </div>
+        )}
       </div>
+
+      {children}
     </div>
   )
 }

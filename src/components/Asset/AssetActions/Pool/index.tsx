@@ -364,8 +364,8 @@ export default function Pool(): ReactElement {
                 networkId={asset?.chainId}
                 path={
                   asset?.chainId === 2021000 || asset?.chainId === 1287
-                    ? `tokens/${asset.services[0].datatokenAddress}`
-                    : `token/${asset.services[0].datatokenAddress}`
+                    ? `tokens/${asset?.services[0].datatokenAddress}`
+                    : `token/${asset?.services[0].datatokenAddress}`
                 }
               >
                 Datatoken
@@ -383,34 +383,30 @@ export default function Pool(): ReactElement {
                     poolInfo?.poolFee
                   )}
                 />
+                <span className={styles.titleInfo}>
+                  {poolInfoUser?.poolShare}% of pool
+                </span>
               </>
             }
-            baseTokenValue={`${poolInfoUser?.liquidity?.baseToken}`}
+            baseTokenValue={poolInfoUser?.liquidity?.baseToken}
             baseTokenSymbol={poolInfo?.baseTokenSymbol}
-            poolShares={poolInfoUser?.poolShares}
             conversion={poolInfoUser?.totalLiquidityInOcean}
             highlight
-          >
-            <Token
-              symbol="% of pool"
-              balance={poolInfoUser?.poolShare}
-              noIcon
-            />
-          </TokenList>
+          />
 
           <TokenList
-            title="Owner Liquidity"
-            baseTokenValue={`${poolInfoOwner?.liquidity?.baseToken}`}
+            title={
+              <>
+                Owner Liquidity
+                <span className={styles.titleInfo}>
+                  {poolInfoOwner?.poolShare}% of pool
+                </span>
+              </>
+            }
+            baseTokenValue={poolInfoOwner?.liquidity?.baseToken}
             baseTokenSymbol={poolInfo?.baseTokenSymbol}
-            poolShares={poolInfoOwner?.poolShares}
             conversion={poolInfoOwner?.totalLiquidityInOcean}
-          >
-            <Token
-              symbol="% of pool"
-              balance={poolInfoOwner?.poolShare}
-              noIcon
-            />
-          </TokenList>
+          />
 
           <TokenList
             title={
@@ -431,7 +427,6 @@ export default function Pool(): ReactElement {
             baseTokenSymbol={poolInfo?.baseTokenSymbol}
             datatokenValue={`${poolData?.datatokenLiquidity}`}
             datatokenSymbol={poolInfo?.datatokenSymbol}
-            poolShares={poolInfo?.totalPoolTokens}
             conversion={poolInfo?.totalLiquidityInOcean}
           >
             <Token symbol="% pool fee" balance={poolInfo?.poolFee} noIcon />
