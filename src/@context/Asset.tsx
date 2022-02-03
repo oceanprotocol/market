@@ -156,7 +156,7 @@ function AssetProvider({
       })
     }
     setOceanConfig(oceanConfig)
-  }, [asset])
+  }, [asset?.chainId])
 
   return (
     <AssetContext.Provider
