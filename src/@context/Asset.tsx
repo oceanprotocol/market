@@ -16,6 +16,7 @@ import { useCancelToken } from '@hooks/useCancelToken'
 import { getOceanConfig, getDevelopmentConfig } from '@utils/ocean'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
+import { useIsMounted } from '@hooks/useIsMounted'
 
 interface AssetProviderValue {
   isInPurgatory: boolean
@@ -56,6 +57,7 @@ function AssetProvider({
   const [oceanConfig, setOceanConfig] = useState<Config>()
 
   const newCancelToken = useCancelToken()
+  const isMounted = useIsMounted()
 
   // -----------------------------------
   // Helper: Get and set asset based on passed DID
@@ -115,37 +117,19 @@ function AssetProvider({
   // 1. Get and set asset based on passed DID
   // -----------------------------------
   useEffect(() => {
-    if (!appConfig?.metadataCacheUri) return
+    if (!isMounted || !appConfig?.metadataCacheUri) return
 
-    let isMounted = true
-
-    async function init() {
-      if (!isMounted) return
-      await fetchAsset(newCancelToken())
-    }
-    init()
-
-    return () => {
-      isMounted = false
-    }
-  }, [appConfig?.metadataCacheUri, fetchAsset, newCancelToken])
+    fetchAsset(newCancelToken())
+  }, [appConfig?.metadataCacheUri, fetchAsset, newCancelToken, isMounted])
 
   // -----------------------------------
   // 2. Attach access details to asset
   // -----------------------------------
   useEffect(() => {
-    let isMounted = true
+    if (!isMounted) return
 
-    async function init() {
-      if (!isMounted) return
-      await fetchAccessDetails()
-    }
-    init()
-
-    return () => {
-      isMounted = false
-    }
-  }, [accountId, fetchAccessDetails])
+    fetchAccessDetails()
+  }, [accountId, fetchAccessDetails, isMounted])
 
   // -----------------------------------
   // Check user network against asset network
