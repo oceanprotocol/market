@@ -86,7 +86,7 @@ export async function transformPublishFormToDdo(
   const did = nftAddress ? generateDid(nftAddress, chainId) : '0x...'
   const currentTime = dateToStringNoMS(new Date())
   const isPreview = !datatokenAddress && !nftAddress
-  console.log('did', did, isPreview)
+
   // Transform from files[0].url to string[] assuming only 1 file
   const filesTransformed = files?.length &&
     files[0].valid && [files[0].url.replace('javascript:', '')]

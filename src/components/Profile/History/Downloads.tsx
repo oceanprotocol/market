@@ -9,7 +9,7 @@ const columns = [
   {
     name: 'Data Set',
     selector: function getAssetRow(row: DownloadedAsset) {
-      return <AssetTitle ddo={row.ddo} />
+      return <AssetTitle asset={row.asset} />
     }
   },
   {

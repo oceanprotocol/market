@@ -2,8 +2,6 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import FormTrade from './FormTrade'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
-
-import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
 import { Datatoken } from '@oceanprotocol/lib'
 
@@ -13,7 +11,7 @@ export default function Trade(): ReactElement {
   const { accountId, balance, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
   const [tokenBalance, setTokenBalance] = useState<PoolBalance>()
-  const { price, ddo } = useAsset()
+  const { assetExtended } = useAsset()
   const [maxDt, setMaxDt] = useState('0')
   const [maxOcean, setMaxOcean] = useState('0')
 
@@ -25,27 +23,32 @@ export default function Trade(): ReactElement {
       !isAssetNetwork ||
       !balance?.ocean ||
       !accountId ||
-      !ddo?.services[0].datatokenAddress
+      !assetExtended?.services[0].datatokenAddress
     )
       return
 
     async function getTokenBalance() {
       const datatokenInstance = new Datatoken(web3)
       const dtBalance = await datatokenInstance.balance(
-        ddo.services[0].datatokenAddress,
+        assetExtended.services[0].datatokenAddress,
         accountId
       )
       setTokenBalance({
-        ocean: new Decimal(balance.ocean).toString(),
+        baseToken: new Decimal(balance.ocean).toString(),
         datatoken: new Decimal(dtBalance).toString()
       })
     }
     getTokenBalance()
-  }, [web3, balance.ocean, accountId, ddo, isAssetNetwork])
+  }, [web3, balance.ocean, accountId, assetExtended, isAssetNetwork])
 
   // Get maximum amount for either OCEAN or datatoken
   useEffect(() => {
-    if (!isAssetNetwork || !price || price.value === 0) return
+    if (
+      !isAssetNetwork ||
+      !assetExtended.accessDetails ||
+      assetExtended.accessDetails.price === 0
+    )
+      return
 
     async function getMaximum() {
       // const maxTokensInPool = await ocean.pool.getDTMaxBuyQuantity(
@@ -66,12 +69,11 @@ export default function Trade(): ReactElement {
       // )
     }
     getMaximum()
-  }, [isAssetNetwork, balance.ocean, price])
+  }, [isAssetNetwork, balance.ocean, assetExtended])
 
   return (
     <FormTrade
-      ddo={ddo}
-      price={price}
+      assetExtended={assetExtended}
       balance={tokenBalance}
       maxDt={maxDt}
       maxOcean={maxOcean}

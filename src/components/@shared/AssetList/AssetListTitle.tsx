@@ -7,11 +7,11 @@ import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { Asset } from '@oceanprotocol/lib'
 
 export default function AssetListTitle({
-  ddo,
+  asset,
   did,
   title
 }: {
-  ddo?: Asset
+  asset?: Asset
   did?: string
   title?: string
 }): ReactElement {
@@ -20,8 +20,8 @@ export default function AssetListTitle({
 
   useEffect(() => {
     if (title || !appConfig.metadataCacheUri) return
-    if (ddo) {
-      setAssetTitle(ddo.metadata.name)
+    if (asset) {
+      setAssetTitle(asset.metadata.name)
       return
     }
 
@@ -32,16 +32,16 @@ export default function AssetListTitle({
       setAssetTitle(title[did])
     }
 
-    !ddo && did && getAssetName()
+    !asset && did && getAssetName()
 
     return () => {
       source.cancel()
     }
-  }, [assetTitle, appConfig.metadataCacheUri, ddo, did, title])
+  }, [assetTitle, appConfig.metadataCacheUri, asset, did, title])
 
   return (
     <h3 className={styles.title}>
-      <Link href={`/asset/${did || ddo?.id}`}>
+      <Link href={`/asset/${did || asset?.id}`}>
         <a>{assetTitle}</a>
       </Link>
     </h3>

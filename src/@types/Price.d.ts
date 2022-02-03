@@ -1,14 +1,14 @@
-interface BestPrice {
+interface AccessDetails {
   type: 'dynamic' | 'fixed' | 'free' | ''
-  address: string
-  value: number
-  isConsumable?: 'true' | 'false' | ''
-  ocean?: number
-  oceanSymbol?: string
-  datatoken?: number
-  datatokenSymbol?: string
-  exchangeId?: string
-  pools: string[]
+  price: number
+  // if type is dynamic this is the pool address, for fixed/free this is an id.
+  addressOrId: string
+  baseToken: TokenInfo
+  datatoken: TokenInfo
+  isConsumable?: boolean
+  // if there are valid orders for this
+  owned: bool
+  validOrderTx: string
 }
 
 interface PriceOptions {

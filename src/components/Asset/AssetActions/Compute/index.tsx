@@ -38,7 +38,7 @@ import { getServiceByName, secondsToString } from '@utils/ddo'
 import { isOrderable } from '@utils/compute'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import AlgorithmDatasetsListForCompute from './AlgorithmDatasetsListForCompute'
-import { getPreviousOrders, getPrice } from '@utils/subgraph'
+import { getPreviousOrders } from '@utils/subgraph'
 import AssetActionHistoryTable from '../AssetActionHistoryTable'
 import ComputeJobs from '../../../Profile/History/ComputeJobs'
 import { useCancelToken } from '@hooks/useCancelToken'
@@ -47,10 +47,11 @@ import { SortTermOptions } from '../../../../@types/aquarius/SearchQuery'
 import { Decimal } from 'decimal.js'
 import { TransactionReceipt } from 'web3-core'
 import { useAbortController } from '@hooks/useAbortController'
+import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 
 export default function Compute({
   ddo,
-  price,
+  accessDetails,
   dtBalance,
   file,
   fileIsLoading,
@@ -58,7 +59,7 @@ export default function Compute({
   consumableFeedback
 }: {
   ddo: Asset
-  price: BestPrice
+  accessDetails: AccessDetails
   dtBalance: string
   file: FileMetadata
   fileIsLoading?: boolean
@@ -82,7 +83,8 @@ export default function Compute({
   const [hasPreviousAlgorithmOrder, setHasPreviousAlgorithmOrder] =
     useState(false)
   const [algorithmDTBalance, setAlgorithmDTBalance] = useState<string>()
-  const [algorithmPrice, setAlgorithmPrice] = useState<BestPrice>()
+  const [algorithmConsumeDetails, setAlgorithmConsumeDetails] =
+    useState<AccessDetails>()
   const [previousAlgorithmOrderId, setPreviousAlgorithmOrderId] =
     useState<string>()
   const [datasetTimeout, setDatasetTimeout] = useState<string>()
@@ -182,27 +184,24 @@ export default function Compute({
 
   const initMetadata = useCallback(async (ddo: Asset): Promise<void> => {
     if (!ddo) return
-    const price = await getPrice(ddo)
-    setAlgorithmPrice(price)
+    const accessDetails = await getAccessDetails(
+      ddo.chainId,
+      ddo.services[0].datatokenAddress
+    )
+    setAlgorithmConsumeDetails(accessDetails)
   }, [])
 
   useEffect(() => {
-    if (!algorithmPrice) return
+    if (!algorithmConsumeDetails) return
 
-    setIsAlgoConsumablePrice(
-      algorithmPrice.isConsumable !== undefined
-        ? algorithmPrice.isConsumable === 'true'
-        : true
-    )
-  }, [algorithmPrice])
+    setIsAlgoConsumablePrice(algorithmConsumeDetails.isConsumable)
+  }, [algorithmConsumeDetails])
 
   useEffect(() => {
-    if (!price) return
+    if (!accessDetails) return
 
-    setIsConsumablePrice(
-      price.isConsumable !== undefined ? price.isConsumable === 'true' : true
-    )
-  }, [price])
+    setIsConsumablePrice(accessDetails.isConsumable)
+  }, [accessDetails])
 
   // useEffect(() => {
   //   setDatasetTimeout(secondsToString(timeout))
@@ -309,7 +308,7 @@ export default function Compute({
         }
         if (!hasDatatoken) {
           let tx: TransactionReceipt
-          switch (price?.type) {
+          switch (accessDetails?.type) {
             case 'dynamic': {
               // const poolInstance = new Pool(web3, LoggerInstance)
               // const tx = poolInstance.
@@ -322,8 +321,9 @@ export default function Compute({
                 _providerFees: providerFees
               }
               const fre: FreOrderParams = {
-                exchangeContract: price.address,
-                exchangeId: price.exchangeId,
+                exchangeContract: accessDetails.addressOrId,
+                exchangeId:
+                  '0x7ac824fef114255e5e3521a161ef692ec32003916fb6f3fe985cb74790d053ca',
                 maxBaseTokenAmount: '1',
                 swapMarketFee: web3.utils.toWei('0.1'),
                 marketFeeAddress: appConfig.marketFeeAddress
@@ -344,8 +344,9 @@ export default function Compute({
                 _providerFees: providerFees
               }
               const fre: FreOrderParams = {
-                exchangeContract: price.address,
-                exchangeId: price.exchangeId,
+                exchangeContract: accessDetails.addressOrId,
+                exchangeId:
+                  '0x7ac824fef114255e5e3521a161ef692ec32003916fb6f3fe985cb74790d053ca',
                 maxBaseTokenAmount: '1',
                 swapMarketFee: web3.utils.toWei('0.1'),
                 marketFeeAddress: appConfig.marketFeeAddress
@@ -354,7 +355,7 @@ export default function Compute({
                 ddo.datatokens[0].address,
                 accountId,
                 order,
-                price.address
+                accessDetails.addressOrId
               )
               assetOrderId = tx.transactionHash
             }
@@ -405,7 +406,7 @@ export default function Compute({
         }
         if (!hasAlgoAssetDatatoken) {
           let tx: TransactionReceipt
-          switch (algorithmPrice?.type) {
+          switch (algorithmConsumeDetails?.type) {
             case 'dynamic': {
               // const poolInstance = new Pool(web3, LoggerInstance)
               // const tx = poolInstance.
@@ -418,8 +419,9 @@ export default function Compute({
                 _providerFees: providerFees
               }
               const fre: FreOrderParams = {
-                exchangeContract: price.address,
-                exchangeId: price.exchangeId,
+                exchangeContract: algorithmConsumeDetails.addressOrId,
+                exchangeId:
+                  '0x7ac824fef114255e5e3521a161ef692ec32003916fb6f3fe985cb74790d053ca',
                 maxBaseTokenAmount: '1',
                 swapMarketFee: web3.utils.toWei('0.1'), // to update
                 marketFeeAddress: appConfig.marketFeeAddress
@@ -440,8 +442,9 @@ export default function Compute({
                 _providerFees: providerFees
               }
               const fre: FreOrderParams = {
-                exchangeContract: price.address,
-                exchangeId: price.exchangeId,
+                exchangeContract: algorithmConsumeDetails.addressOrId,
+                exchangeId:
+                  '0x7ac824fef114255e5e3521a161ef692ec32003916fb6f3fe985cb74790d053ca',
                 maxBaseTokenAmount: '1',
                 swapMarketFee: web3.utils.toWei('0.1'), // to update
                 marketFeeAddress: appConfig.marketFeeAddress
@@ -450,7 +453,7 @@ export default function Compute({
                 selectedAlgorithmAsset.datatokens[0].address,
                 accountId,
                 order,
-                price.address
+                algorithmConsumeDetails.addressOrId
               )
               algorithmAssetOrderId = tx.transactionHash
             }
@@ -537,7 +540,7 @@ export default function Compute({
     <>
       <div className={styles.info}>
         <FileIcon file={file} isLoading={fileIsLoading} small />
-        <Price price={price} conversion />
+        <Price accessDetails={accessDetails} conversion />
       </div>
 
       {ddo.metadata.type === 'algorithm' ? (
@@ -571,7 +574,7 @@ export default function Compute({
             assetTimeout={datasetTimeout}
             hasPreviousOrderSelectedComputeAsset={hasPreviousAlgorithmOrder}
             hasDatatokenSelectedComputeAsset={hasAlgoAssetDatatoken}
-            oceanSymbol={price ? price.oceanSymbol : ''}
+            oceanSymbol={accessDetails ? accessDetails.baseToken.symbol : ''}
             dtSymbolSelectedComputeAsset={
               selectedAlgorithmAsset?.datatokens[0]?.symbol
             }
@@ -580,7 +583,7 @@ export default function Compute({
             selectedComputeAssetType="algorithm"
             selectedComputeAssetTimeout={algorithmTimeout}
             stepText={pricingStepText || 'Starting Compute Job...'}
-            algorithmPrice={algorithmPrice}
+            algorithmConsumeDetails={algorithmConsumeDetails}
             isConsumable={isConsumable}
             consumableFeedback={consumableFeedback}
           />
@@ -592,7 +595,7 @@ export default function Compute({
           <SuccessConfetti success="Your job started successfully! Watch the progress below or on your profile." />
         )}
       </footer>
-      {accountId && price?.datatoken && (
+      {accountId && accessDetails?.datatoken && (
         <AssetActionHistoryTable title="Your Compute Jobs">
           <ComputeJobs minimal />
         </AssetActionHistoryTable>

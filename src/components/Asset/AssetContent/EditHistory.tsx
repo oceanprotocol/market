@@ -8,7 +8,7 @@ import { getQueryContext } from '@utils/subgraph'
 import styles from './EditHistory.module.css'
 
 const getReceipts = gql`
-  query ReceiptData($address: ID!) {
+  query ReceiptData($address: String!) {
     nftUpdates(
       where: { nft: $address }
       orderBy: timestamp
@@ -26,7 +26,7 @@ const getReceipts = gql`
 `
 
 export default function EditHistory(): ReactElement {
-  const { ddo } = useAsset()
+  const { assetExtended } = useAsset()
 
   function getUpdateType(type: string): string {
     switch (type) {
@@ -49,17 +49,17 @@ export default function EditHistory(): ReactElement {
   const [queryContext, setQueryContext] = useState<OperationContext>()
 
   useEffect(() => {
-    if (!ddo) return
+    if (!assetExtended) return
 
-    const queryContext = getQueryContext(ddo.chainId)
+    const queryContext = getQueryContext(assetExtended.chainId)
     setQueryContext(queryContext)
-  }, [ddo])
+  }, [assetExtended])
 
   const [result] = useQuery({
     query: getReceipts,
-    variables: { address: ddo?.nft.address.toLowerCase() },
+    variables: { address: assetExtended?.nft.address.toLowerCase() },
     context: queryContext,
-    pause: !ddo || !queryContext
+    pause: !assetExtended || !queryContext
   })
   const { data } = result
 
@@ -80,7 +80,10 @@ export default function EditHistory(): ReactElement {
       <ul className={styles.history}>
         {receipts?.map((receipt) => (
           <li key={receipt.id} className={styles.item}>
-            <ExplorerLink networkId={ddo?.chainId} path={`/tx/${receipt.tx}`}>
+            <ExplorerLink
+              networkId={assetExtended?.chainId}
+              path={`/tx/${receipt.tx}`}
+            >
               {getUpdateType(receipt.type)}{' '}
               <Time date={`${receipt.timestamp}`} relative isUnix />
             </ExplorerLink>

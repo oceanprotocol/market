@@ -75,7 +75,7 @@ const txHistoryQuery = gql`
 
 export interface PoolTransaction extends TransactionHistoryPoolTransactions {
   networkId: number
-  ddo: Asset
+  asset: Asset
 }
 
 const columns = [
@@ -88,7 +88,7 @@ const columns = [
   {
     name: 'Data Set',
     selector: function getAssetRow(row: PoolTransaction) {
-      return <AssetTitle ddo={row.ddo} />
+      return <AssetTitle asset={row.asset} />
     }
   },
   {
@@ -187,7 +187,7 @@ export default function PoolTransactions({
         poolTransactions.push({
           ...data[i],
           networkId: ddoList[i]?.chainId,
-          ddo: ddoList[i]
+          asset: ddoList[i]
         })
       }
       const sortedTransactions = poolTransactions.sort(

@@ -5,8 +5,8 @@ import { accountTruncate } from '@utils/web3'
 import { useWeb3 } from '@context/Web3'
 import ProfileProvider from '@context/Profile'
 import { getEnsAddress, getEnsName } from '@utils/ens'
-import ethereumAddress from 'ethereum-address'
 import { useRouter } from 'next/router'
+import web3 from 'web3'
 
 export default function PageProfile(): ReactElement {
   const router = useRouter()
@@ -29,7 +29,7 @@ export default function PageProfile(): ReactElement {
       const pathAccount = router.query.account as string
 
       // Path has ETH addreess
-      if (ethereumAddress.isAddress(pathAccount)) {
+      if (web3.utils.isAddress(pathAccount)) {
         const finalAccountId = pathAccount || accountId
         setFinalAccountId(finalAccountId)
 
