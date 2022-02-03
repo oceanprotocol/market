@@ -9,7 +9,7 @@ import React, {
 } from 'react'
 import { Asset, Config, LoggerInstance, Purgatory } from '@oceanprotocol/lib'
 import { CancelToken } from 'axios'
-import { retrieveDDO } from '@utils/aquarius'
+import { retrieveAsset } from '@utils/aquarius'
 import { useWeb3 } from './Web3'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { useCancelToken } from '@hooks/useCancelToken'
@@ -63,7 +63,7 @@ function AssetProvider({
     async (token?: CancelToken) => {
       LoggerInstance.log('[asset] Init asset, get assetExtended')
       setLoading(true)
-      const assetExtended = await retrieveDDO(did, token)
+      const assetExtended = await retrieveAsset(did, token)
 
       if (!assetExtended) {
         setError(

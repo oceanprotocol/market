@@ -110,7 +110,7 @@ export async function queryMetadata(
   }
 }
 
-export async function retrieveDDO(
+export async function retrieveAsset(
   did: string,
   cancelToken: CancelToken
 ): Promise<Asset> {
