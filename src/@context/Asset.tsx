@@ -77,17 +77,16 @@ function AssetProvider({
         LoggerInstance.error(`[asset] Failed getting asset for ${did}`, asset)
       } else {
         setError(undefined)
+        setAsset((prevState) => ({
+          ...prevState,
+          ...asset
+        }))
+        setTitle(asset.metadata?.name)
+        setOwner(asset.nft?.owner)
+        setIsInPurgatory(asset.purgatory?.state)
+        setPurgatoryData(asset.purgatory)
+        LoggerInstance.log('[asset] Got asset', asset)
       }
-
-      setAsset((prevState) => ({
-        ...prevState,
-        ...asset
-      }))
-      setTitle(asset.metadata.name)
-      setOwner(asset.nft.owner)
-      setIsInPurgatory(asset.purgatory?.state)
-      setPurgatoryData(asset.purgatory)
-      LoggerInstance.log('[asset] Got asset', asset)
 
       setLoading(false)
     },
