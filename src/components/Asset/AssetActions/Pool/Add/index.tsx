@@ -133,7 +133,7 @@ export default function Add({
           setSubmitting(false)
         }}
       >
-        {({ isSubmitting, submitForm, values, isValid }) => (
+        {({ isSubmitting, setSubmitting, submitForm, values, isValid }) => (
           <>
             <div className={styles.addInput}>
               {isWarningAccepted ? (
@@ -189,6 +189,7 @@ export default function Add({
               tokenAddress={tokenInAddress}
               tokenSymbol={tokenInSymbol}
               txId={txId}
+              setSubmitting={setSubmitting}
             />
             {debug && <DebugOutput output={values} />}
           </>
