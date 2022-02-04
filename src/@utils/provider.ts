@@ -18,7 +18,24 @@ export async function getEncryptedFiles(
   }
 }
 
-export async function getFileInfo(
+export async function getFileDidInfo(
+  did: string,
+  serviceId: string,
+  providerUrl: string
+): Promise<FileMetadata[]> {
+  try {
+    const response = await ProviderInstance.checkDidFiles(
+      did,
+      serviceId as any, // TODO: why does ocean.js want a number here?
+      providerUrl
+    )
+    return response
+  } catch (error) {
+    LoggerInstance.error(error.message)
+  }
+}
+
+export async function getFileUrlInfo(
   url: string,
   providerUrl: string
 ): Promise<FileMetadata[]> {
