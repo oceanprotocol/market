@@ -1,12 +1,7 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import Compute from './Compute'
 import Consume from './Consume'
-import {
-  Asset,
-  FileMetadata,
-  LoggerInstance,
-  Datatoken
-} from '@oceanprotocol/lib'
+import { FileMetadata, LoggerInstance, Datatoken } from '@oceanprotocol/lib'
 import Tabs, { TabsItem } from '@shared/atoms/Tabs'
 import { compareAsBN } from '@utils/numbers'
 import Pool from './Pool'
@@ -21,13 +16,12 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import styles from './index.module.css'
 import { useFormikContext } from 'formik'
 import { FormPublishData } from 'src/components/Publish/_types'
+import { AssetExtended } from 'src/@types/AssetExtended'
 
 export default function AssetActions({
-  ddo,
-  price
+  asset
 }: {
-  ddo: Asset
-  price: BestPrice
+  asset: AssetExtended
 }): ReactElement {
   const { accountId, balance, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
@@ -43,7 +37,7 @@ export default function AssetActions({
   const [fileMetadata, setFileMetadata] = useState<FileMetadata>()
   const [fileIsLoading, setFileIsLoading] = useState<boolean>(false)
   const isCompute = Boolean(
-    ddo?.services.filter((service) => service.type === 'compute')[0]
+    asset?.services.filter((service) => service.type === 'compute')[0]
   )
 
   const [isConsumable, setIsConsumable] = useState<boolean>(true)
@@ -68,14 +62,14 @@ export default function AssetActions({
   // }, [accountId, isAssetNetwork, ddo, ocean])
 
   useEffect(() => {
-    const oceanConfig = getOceanConfig(ddo?.chainId)
+    const oceanConfig = getOceanConfig(asset?.chainId)
     if (!oceanConfig) return
 
     async function initFileInfo() {
       setFileIsLoading(true)
       const fileUrl =
         formikState?.values?.services?.[0].files?.[0].url ||
-        (ddo.metadata?.links ? ddo.metadata?.links[0] : ' ')
+        (asset.metadata?.links ? asset.metadata?.links[0] : ' ')
       const providerUrl =
         formikState?.values?.services[0].providerUrl.url ||
         oceanConfig.providerUri
@@ -89,7 +83,7 @@ export default function AssetActions({
       }
     }
     initFileInfo()
-  }, [ddo, isMounted, newCancelToken, formikState?.values?.services])
+  }, [asset, isMounted, newCancelToken, formikState?.values?.services])
 
   // Get and set user DT balance
   useEffect(() => {
@@ -99,7 +93,7 @@ export default function AssetActions({
       try {
         const datatokenInstance = new Datatoken(web3)
         const dtBalance = await datatokenInstance.balance(
-          ddo.services[0].datatokenAddress,
+          asset.services[0].datatokenAddress,
           accountId
         )
         setDtBalance(dtBalance)
@@ -108,26 +102,33 @@ export default function AssetActions({
       }
     }
     init()
-  }, [web3, accountId, ddo, isAssetNetwork])
+  }, [web3, accountId, asset, isAssetNetwork])
 
   // Check user balance against price
   useEffect(() => {
-    if (price?.type === 'free') setIsBalanceSufficient(true)
-    if (!price?.value || !accountId || !balance?.ocean || !dtBalance) return
+    if (asset?.accessDetails?.type === 'free') setIsBalanceSufficient(true)
+    if (
+      !asset?.accessDetails?.price ||
+      !accountId ||
+      !balance?.ocean ||
+      !dtBalance
+    )
+      return
 
     setIsBalanceSufficient(
-      compareAsBN(balance.ocean, `${price.value}`) || Number(dtBalance) >= 1
+      compareAsBN(balance.ocean, `${asset?.accessDetails.price}`) ||
+        Number(dtBalance) >= 1
     )
 
     return () => {
       setIsBalanceSufficient(false)
     }
-  }, [balance, accountId, price, dtBalance])
+  }, [balance, accountId, asset?.accessDetails, dtBalance])
 
   const UseContent = isCompute ? (
     <Compute
-      ddo={ddo}
-      price={price}
+      ddo={asset}
+      accessDetails={asset?.accessDetails}
       dtBalance={dtBalance}
       file={fileMetadata}
       fileIsLoading={fileIsLoading}
@@ -136,8 +137,8 @@ export default function AssetActions({
     />
   ) : (
     <Consume
-      ddo={ddo}
-      price={price}
+      ddo={asset}
+      accessDetails={asset?.accessDetails}
       dtBalance={dtBalance}
       isBalanceSufficient={isBalanceSufficient}
       file={fileMetadata}
@@ -154,24 +155,27 @@ export default function AssetActions({
     }
   ]
 
-  price?.type === 'dynamic' &&
+  asset?.accessDetails?.type === 'dynamic' &&
     tabs.push(
       {
         title: 'Pool',
         content: <Pool />,
-        disabled: !price.datatoken
+        disabled: !asset?.accessDetails.datatoken
       },
       {
         title: 'Trade',
         content: <Trade />,
-        disabled: !price.datatoken
+        disabled: !asset?.accessDetails.datatoken
       }
     )
 
   return (
     <>
       <Tabs items={tabs} className={styles.actions} />
-      <Web3Feedback networkId={ddo?.chainId} isAssetNetwork={isAssetNetwork} />
+      <Web3Feedback
+        networkId={asset?.chainId}
+        isAssetNetwork={isAssetNetwork}
+      />
     </>
   )
 }

@@ -2,7 +2,6 @@ import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import FormTrade from './FormTrade'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
-import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
 import { Datatoken, LoggerInstance, Pool } from '@oceanprotocol/lib'
 import { getPoolData } from '@utils/subgraph'
@@ -26,16 +25,7 @@ export default function Trade(): ReactElement {
   const { accountId, balance, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
   const [tokenBalance, setTokenBalance] = useState<PoolBalance>()
-  const { price, ddo, owner, refreshInterval } = useAsset()
-  const initialPoolInfo: Partial<PoolInfo> = {
-    totalLiquidityInOcean: new Decimal(0)
-  }
-  const [poolInfo, setPoolInfo] = useState<PoolInfo>(
-    initialPoolInfo as PoolInfo
-  )
-  const [poolData, setPoolData] = useState<PoolDataPoolData>()
-  const [fetchInterval, setFetchInterval] = useState<NodeJS.Timeout>()
-
+  const { asset } = useAsset()
   const [maxDt, setMaxDt] = useState('0')
   const [maxBaseToken, setMaxBaseToken] = useState('0')
 
@@ -116,27 +106,32 @@ export default function Trade(): ReactElement {
       !isAssetNetwork ||
       !balance?.ocean ||
       !accountId ||
-      !ddo?.services[0].datatokenAddress
+      !asset?.services[0].datatokenAddress
     )
       return
 
     async function getTokenBalance() {
       const datatokenInstance = new Datatoken(web3)
       const dtBalance = await datatokenInstance.balance(
-        ddo.services[0].datatokenAddress,
+        asset.services[0].datatokenAddress,
         accountId
       )
       setTokenBalance({
-        ocean: new Decimal(balance.ocean).toString(),
+        baseToken: new Decimal(balance.ocean).toString(),
         datatoken: new Decimal(dtBalance).toString()
       })
     }
     getTokenBalance()
-  }, [web3, balance.ocean, accountId, ddo, isAssetNetwork])
+  }, [web3, balance.ocean, accountId, asset, isAssetNetwork])
 
   // Get maximum amount for either OCEAN or datatoken
   useEffect(() => {
-    if (!web3 || !isAssetNetwork || !price || price.value === 0) return
+    if (
+      !isAssetNetwork ||
+      !asset.accessDetails ||
+      asset.accessDetails.price === 0
+    )
+      return
 
     async function getMaximum() {
       try {
@@ -165,19 +160,11 @@ export default function Trade(): ReactElement {
       }
     }
     getMaximum()
-  }, [
-    isAssetNetwork,
-    price,
-    web3,
-    balance,
-    poolInfo.datatokenAddress,
-    poolInfo.baseTokenAddress
-  ])
+  }, [isAssetNetwork, balance.ocean, asset])
 
   return (
     <FormTrade
-      ddo={ddo}
-      price={price}
+      asset={asset}
       balance={tokenBalance}
       maxDt={maxDt}
       maxBaseToken={maxBaseToken}

@@ -19,7 +19,6 @@ import { getDownloadAssets, getPublishedAssets } from '@utils/aquarius'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { accountTruncate } from '@utils/web3'
 import axios, { CancelToken } from 'axios'
-import ethereumAddress from 'ethereum-address'
 import get3BoxProfile from '@utils/profile'
 import web3 from 'web3'
 
@@ -59,7 +58,7 @@ function ProfileProvider({
   // when accountId is no ETH address
   //
   useEffect(() => {
-    const isEthAddress = ethereumAddress.isAddress(accountId)
+    const isEthAddress = web3.utils.isAddress(accountId)
     setIsEthAddress(isEthAddress)
   }, [accountId])
 

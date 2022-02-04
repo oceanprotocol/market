@@ -3,7 +3,6 @@ import React, { useEffect, useState, ReactElement } from 'react'
 import { useUserPreferences } from '@context/UserPreferences'
 import {
   getAccountLiquidityInOwnAssets,
-  getAssetsBestPrices,
   UserLiquidity,
   calculateUserLiquidity
 } from '@utils/subgraph'
@@ -12,6 +11,7 @@ import NumberUnit from './NumberUnit'
 import styles from './Stats.module.css'
 import { useProfile } from '@context/Profile'
 import { PoolShares_poolShares as PoolShare } from '../../../@types/subgraph/PoolShares'
+import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 
 async function getPoolSharesLiquidity(
   poolShares: PoolShare[]
@@ -50,10 +50,12 @@ export default function Stats({
     async function getPublisherLiquidity() {
       try {
         const accountPoolAdresses: string[] = []
-        const assetsPrices = await getAssetsBestPrices(assets)
+        const assetsPrices = await getAccessDetailsForAssets(assets)
         for (const priceInfo of assetsPrices) {
-          if (priceInfo.price.type === 'dynamic') {
-            accountPoolAdresses.push(priceInfo.price.address.toLowerCase())
+          if (priceInfo.accessDetails.type === 'dynamic') {
+            accountPoolAdresses.push(
+              priceInfo.accessDetails.addressOrId.toLowerCase()
+            )
           }
         }
         const userLiquidity = await getAccountLiquidityInOwnAssets(

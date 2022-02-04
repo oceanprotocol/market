@@ -7,24 +7,34 @@ import { transformPublishFormToDdo } from '../_utils'
 import { Asset } from '@oceanprotocol/lib'
 
 export default function Preview(): ReactElement {
-  const [ddo, setDdo] = useState<Asset>()
-  const [price, setPrice] = useState<BestPrice>()
+  const [asset, setAsset] = useState<Asset>()
+  const [accessDetails, setAccessDetails] = useState<AccessDetails>()
   const { values } = useFormikContext<FormPublishData>()
 
   useEffect(() => {
     async function makeDdo() {
-      const ddo = await transformPublishFormToDdo(values)
-      setDdo(ddo as Asset)
+      const asset = await transformPublishFormToDdo(values)
+      setAsset(asset as Asset)
 
       // dummy BestPrice to trigger certain AssetActions
-      const price: BestPrice = {
+      const accessDetails: AccessDetails = {
         type: values.pricing.type,
-        address: '0x...',
-        value: values.pricing.price,
-        pools: [],
-        oceanSymbol: 'OCEAN'
+        addressOrId: '0x...',
+        price: values.pricing.price,
+        baseToken: {
+          address: '0x..',
+          name: '',
+          symbol: ''
+        },
+        datatoken: {
+          address: '0x..',
+          name: '',
+          symbol: ''
+        },
+        owned: false,
+        validOrderTx: ''
       }
-      setPrice(price)
+      setAccessDetails(accessDetails)
     }
     makeDdo()
   }, [values])
@@ -34,7 +44,7 @@ export default function Preview(): ReactElement {
       <h2 className={styles.previewTitle}>Preview</h2>
 
       <h3 className={styles.assetTitle}>{values.metadata.name}</h3>
-      <AssetContent ddo={ddo} price={price} />
+      <AssetContent asset={asset} />
     </div>
   )
 }

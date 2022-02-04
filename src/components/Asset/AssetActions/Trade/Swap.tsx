@@ -11,25 +11,24 @@ import Decimal from 'decimal.js'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import { FormTradeData, TradeItem } from './_types'
-import { Asset, Pool, LoggerInstance } from '@oceanprotocol/lib'
+import { Asset } from '@oceanprotocol/lib'
+import { AssetExtended } from 'src/@types/AssetExtended'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
 export default function Swap({
-  ddo,
+  asset,
   maxDt,
   maxBaseToken,
   balance,
-  price,
   setMaximumDt,
   setMaximumBaseToken,
   setCoin
 }: {
-  ddo: Asset
+  asset: AssetExtended
   maxDt: string
   maxBaseToken: string
   balance: PoolBalance
-  price: BestPrice
   setMaximumDt: (value: string) => void
   setMaximumBaseToken: (value: string) => void
   setCoin: (value: string) => void
@@ -39,12 +38,12 @@ export default function Swap({
 
   const [baseTokenItem, setBaseTokenItem] = useState<TradeItem>({
     amount: '0',
-    token: price.oceanSymbol,
+    token: asset.accessDetails.baseToken?.symbol,
     maxAmount: '0'
   })
   const [dtItem, setDtItem] = useState<TradeItem>({
     amount: '0',
-    token: ddo.datatokens[0].symbol,
+    token: asset.accessDetails.datatoken.symbol,
     maxAmount: '0'
   })
   const {
@@ -60,11 +59,19 @@ export default function Swap({
   const [tokenAmount, setTokenAmount] = useState<string>()
 
   useEffect(() => {
-    if (!web3 || !ddo || !balance || !values?.type || !price) return
+    if (!asset || !balance || !values?.type) return
 
     async function calculateMaximum() {
       try {
         const poolInstance = new Pool(web3, LoggerInstance)
+        const amountDataToken =
+          values.type === 'buy'
+            ? new Decimal(maxDt)
+            : new Decimal(balance.datatoken)
+        const amountOcean =
+          values.type === 'buy'
+            ? new Decimal(balance.baseToken)
+            : new Decimal(maxOcean)
 
         const amountDataToken =
           values.type === 'buy'
@@ -132,20 +139,19 @@ export default function Swap({
     }
     calculateMaximum()
   }, [
-    web3,
-    ddo,
+    asset,
+    maxOcean,
     maxDt,
     maxBaseToken,
     balance,
-    price,
-    values.type,
+    values?.type,
     setMaximumDt,
     setMaximumBaseToken
   ])
 
   const switchTokens = () => {
     setFieldValue('type', values.type === 'buy' ? 'sell' : 'buy')
-    setCoin(values.type === 'sell' ? 'OCEAN' : ddo.datatokens[0].symbol)
+    setCoin(values.type === 'sell' ? 'OCEAN' : asset.datatokens[0].symbol)
     // don't reset form because we don't want to reset type
     setFieldValue('datatoken', 0)
     setFieldValue('ocean', 0)
@@ -240,8 +246,8 @@ export default function Swap({
 
       <Output
         dtSymbol={dtItem.token}
-        baseTokenSymbol={baseTokenItem.token}
-        poolAddress={price?.address}
+        oceanSymbol={oceanItem.token}
+        poolAddress={asset.accessDetails?.addressOrId}
       />
 
       <PriceImpact

@@ -3,11 +3,13 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import Pagination from '@shared/Pagination'
 import styles from './index.module.css'
 import classNames from 'classnames/bind'
-import { getAssetsBestPrices, AssetListPrices } from '@utils/subgraph'
 import Loader from '@shared/atoms/Loader'
 import { useUserPreferences } from '@context/UserPreferences'
 import { useIsMounted } from '@hooks/useIsMounted'
+// not sure why this import is required
+import { AssetExtended } from 'src/@types/AssetExtended'
 import { Asset } from '@oceanprotocol/lib'
+import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
 
 const cx = classNames.bind(styles)
 
@@ -41,24 +43,19 @@ export default function AssetList({
   noPublisher
 }: AssetListProps): ReactElement {
   const { chainIds } = useUserPreferences()
-  const [assetsWithPrices, setAssetsWithPrices] = useState<AssetListPrices[]>()
+  const [assetsWithPrices, setAssetsWithPrices] = useState<AssetExtended[]>()
   const [loading, setLoading] = useState<boolean>(isLoading)
   const isMounted = useIsMounted()
 
   useEffect(() => {
     if (!assets) return
-
-    const initialAssets: AssetListPrices[] = assets.map((asset) => ({
-      ddo: asset,
-      price: null
-    }))
-    setAssetsWithPrices(initialAssets)
+    setAssetsWithPrices(assets as AssetExtended[])
     setLoading(false)
 
     async function fetchPrices() {
-      const assetsWithPrices = await getAssetsBestPrices(assets)
+      const assetsWithPrices = await getAccessDetailsForAssets(assets)
       if (!isMounted()) return
-      setAssetsWithPrices(assetsWithPrices)
+      setAssetsWithPrices([...assetsWithPrices])
     }
     fetchPrices()
   }, [assets, isMounted])
@@ -83,9 +80,8 @@ export default function AssetList({
         {assetsWithPrices.length > 0 ? (
           assetsWithPrices.map((assetWithPrice) => (
             <AssetTeaser
-              ddo={assetWithPrice.ddo}
-              price={assetWithPrice.price}
-              key={assetWithPrice.ddo.id}
+              asset={assetWithPrice}
+              key={assetWithPrice.id}
               noPublisher={noPublisher}
             />
           ))

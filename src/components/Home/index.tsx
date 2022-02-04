@@ -53,7 +53,7 @@ function SectionQueryResult({
   queryData?: string[]
 }) {
   const { chainIds } = useUserPreferences()
-  const [result, setResult] = useState<any>()
+  const [result, setResult] = useState<PagedAssets>()
   const [loading, setLoading] = useState<boolean>()
   const isMounted = useIsMounted()
   const newCancelToken = useCancelToken()

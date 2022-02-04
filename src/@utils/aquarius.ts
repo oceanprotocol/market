@@ -4,7 +4,7 @@ import {
   PublisherTrustedAlgorithm
 } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
-import { PriceList, getAssetsPriceList } from './subgraph'
+import { PriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { metadataCacheUri } from '../../app.config'
@@ -48,7 +48,7 @@ export function generateBaseQuery(
           getFilterTerm('_index', 'aquarius'),
           ...(baseQueryParams.ignorePurgatory
             ? []
-            : [getFilterTerm('purgatory.state', 'false')])
+            : [getFilterTerm('purgatory.state', false)])
         ]
       }
     }
@@ -110,7 +110,7 @@ export async function queryMetadata(
   }
 }
 
-export async function retrieveDDO(
+export async function retrieveAsset(
   did: string,
   cancelToken: CancelToken
 ): Promise<Asset> {
@@ -207,7 +207,8 @@ export async function transformDDOToAssetSelection(
   cancelToken?: CancelToken
 ): Promise<AssetSelectionAsset[]> {
   const didList: string[] = []
-  const priceList: PriceList = await getAssetsPriceList(ddoList)
+  // const priceList: PriceList = await getAssetsPriceList(ddoList)
+  const priceList: PriceList = null
   const symbolList: any = {}
   const didProviderEndpointMap: any = {}
   for (const ddo of ddoList) {
@@ -346,16 +347,16 @@ export async function getDownloadAssets(
     const result = await queryMetadata(query, cancelToken)
 
     const downloadedAssets: DownloadedAsset[] = result.results
-      .map((ddo) => {
+      .map((asset) => {
         const order = tokenOrders.find(
           ({ datatoken }) =>
             datatoken?.address.toLowerCase() ===
-            ddo.services[0].datatokenAddress.toLowerCase()
+            asset.services[0].datatokenAddress.toLowerCase()
         )
 
         return {
-          ddo,
-          networkId: ddo.chainId,
+          asset,
+          networkId: asset.chainId,
           dtSymbol: order?.datatoken?.symbol,
           timestamp: order?.createdTimestamp
         }

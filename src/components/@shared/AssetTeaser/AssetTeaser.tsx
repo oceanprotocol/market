@@ -8,28 +8,25 @@ import AssetType from '@shared/AssetType'
 import NetworkName from '@shared/NetworkName'
 import styles from './AssetTeaser.module.css'
 import { getServiceByName } from '@utils/ddo'
-import { Asset } from '@oceanprotocol/lib'
+import { AssetExtended } from 'src/@types/AssetExtended'
 
 declare type AssetTeaserProps = {
-  ddo: Asset
-  price: BestPrice
+  asset: AssetExtended
   noPublisher?: boolean
 }
 
 export default function AssetTeaser({
-  ddo,
-  price,
+  asset,
   noPublisher
 }: AssetTeaserProps): ReactElement {
-  const { name, type, description } = ddo.metadata
-  const { datatokens } = ddo
-  const isCompute = Boolean(getServiceByName(ddo, 'compute'))
+  const { name, type, description } = asset.metadata
+  const { datatokens } = asset
+  const isCompute = Boolean(getServiceByName(asset, 'compute'))
   const accessType = isCompute ? 'compute' : 'access'
-  const { owner } = ddo.nft
-
+  const { owner } = asset.nft
   return (
     <article className={`${styles.teaser} ${styles[type]}`}>
-      <Link href={`/asset/${ddo.id}`}>
+      <Link href={`/asset/${asset.id}`}>
         <a className={styles.link}>
           <header className={styles.header}>
             <div className={styles.symbol}>{datatokens[0]?.symbol}</div>
@@ -54,8 +51,8 @@ export default function AssetTeaser({
           </div>
 
           <footer className={styles.foot}>
-            <Price price={price} small />
-            <NetworkName networkId={ddo.chainId} className={styles.network} />
+            <Price accessDetails={asset.accessDetails} small />
+            <NetworkName networkId={asset.chainId} className={styles.network} />
           </footer>
         </a>
       </Link>

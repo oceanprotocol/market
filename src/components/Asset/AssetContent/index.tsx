@@ -13,14 +13,12 @@ import EditHistory from './EditHistory'
 import styles from './index.module.css'
 import NetworkName from '@shared/NetworkName'
 import content from '../../../../content/purgatory.json'
-import { Asset } from '@oceanprotocol/lib'
+import { AssetExtended } from 'src/@types/AssetExtended'
 
 export default function AssetContent({
-  ddo,
-  price
+  asset
 }: {
-  ddo: Asset
-  price: BestPrice
+  asset: AssetExtended
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { isInPurgatory, purgatoryData } = useAsset()
@@ -28,14 +26,16 @@ export default function AssetContent({
   return (
     <>
       <div className={styles.networkWrap}>
-        <NetworkName networkId={ddo?.chainId} className={styles.network} />
+        <NetworkName networkId={asset?.chainId} className={styles.network} />
       </div>
 
       <article className={styles.grid}>
         <div>
           <div className={styles.content}>
-            <MetaMain ddo={ddo} />
-            {price?.datatoken !== null && <Bookmark did={ddo?.id} />}
+            <MetaMain ddo={asset} />
+            {asset?.accessDetails?.datatoken !== null && (
+              <Bookmark did={asset?.id} />
+            )}
 
             {isInPurgatory === true ? (
               <Alert
@@ -48,20 +48,20 @@ export default function AssetContent({
               <>
                 <Markdown
                   className={styles.description}
-                  text={ddo?.metadata.description || ''}
+                  text={asset?.metadata.description || ''}
                 />
-                <MetaSecondary ddo={ddo} />
+                <MetaSecondary ddo={asset} />
               </>
             )}
 
-            <MetaFull ddo={ddo} />
+            <MetaFull ddo={asset} />
             <EditHistory />
-            {debug === true && <DebugOutput title="DDO" output={ddo} />}
+            {debug === true && <DebugOutput title="DDO" output={asset} />}
           </div>
         </div>
 
         <div className={styles.actions}>
-          <AssetActions ddo={ddo} price={price} />
+          <AssetActions asset={asset} />
 
           {/* 
             TODO: restore edit actions, ideally put edit screens on new page 

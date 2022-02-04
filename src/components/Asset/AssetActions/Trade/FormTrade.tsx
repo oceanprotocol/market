@@ -21,19 +21,18 @@ import { useAsset } from '@context/Asset'
 import { FormTradeData } from './_types'
 import { initialValues } from './_constants'
 import content from '../../../../../content/price.json'
+import { AssetExtended } from 'src/@types/AssetExtended'
 
 export default function FormTrade({
-  ddo,
+  asset,
   balance,
   maxDt,
-  maxBaseToken,
-  price
+  maxOcean
 }: {
-  ddo: Asset
+  asset: AssetExtended
   balance: PoolBalance
   maxDt: string
-  maxBaseToken: string
-  price: BestPrice
+  maxOcean: string
 }): ReactElement {
   const { web3, accountId } = useWeb3()
   const { isAssetNetwork } = useAsset()
@@ -146,11 +145,10 @@ export default function FormTrade({
         <>
           {isWarningAccepted ? (
             <Swap
-              ddo={ddo}
+              asset={asset}
               balance={balance}
               maxDt={maxDt}
-              maxBaseToken={maxBaseToken}
-              price={price}
+              maxOcean={maxOcean}
               setCoin={setCoinFrom}
               setMaximumBaseToken={setMaximumBaseToken}
               setMaximumDt={setMaximumDt}
@@ -174,7 +172,7 @@ export default function FormTrade({
               !isWarningAccepted ||
               !isAssetNetwork ||
               values.datatoken === undefined ||
-              values.ocean === undefined
+              values.baseToken === undefined
             }
             isLoading={isSubmitting}
             loaderMessage="Swapping tokens..."
@@ -185,8 +183,8 @@ export default function FormTrade({
                 ? values.datatoken
                   ? `${values.datatoken}`
                   : undefined
-                : values.ocean
-                ? `${values.ocean}`
+                : values.baseToken
+                ? `${values.baseToken}`
                 : undefined
             }
             action={submitForm}

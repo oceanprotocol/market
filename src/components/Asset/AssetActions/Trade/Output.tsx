@@ -45,8 +45,8 @@ export default function Output({
 
       const value =
         values.type === 'buy'
-          ? isValidNumber(swapFee) && isValidNumber(values.ocean)
-            ? new Decimal(swapFee).mul(new Decimal(values.ocean))
+          ? isValidNumber(swapFee) && isValidNumber(values.baseToken)
+            ? new Decimal(swapFee).mul(new Decimal(values.baseToken))
             : 0
           : isValidNumber(swapFee) && isValidNumber(values.datatoken)
           ? new Decimal(swapFee).mul(new Decimal(values.datatoken))
@@ -54,7 +54,7 @@ export default function Output({
       setSwapFeeValue(value.toString())
     }
     getSwapFee()
-  }, [poolAddress, values, isAssetNetwork])
+  }, [poolAddress, values, isAssetNetwork, swapFee])
 
   // Get output values
   useEffect(() => {
@@ -71,8 +71,8 @@ export default function Output({
                 .mul(new Decimal(maxImpact))
                 .toString()
             : '0'
-          : isValidNumber(values.ocean) && isValidNumber(maxImpact)
-          ? new Decimal(values.ocean).mul(new Decimal(maxImpact)).toString()
+          : isValidNumber(values.baseToken) && isValidNumber(maxImpact)
+          ? new Decimal(values.baseToken).mul(new Decimal(maxImpact)).toString()
           : '0'
 
       setMaxOutput(maxPrice)
