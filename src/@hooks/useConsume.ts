@@ -66,63 +66,6 @@ function useConsume(): UseConsume {
 
         setStep(1)
         try {
-          const config = getOceanConfig(chainId)
-          // const txApprove = await approve(
-          //   web3,
-          //   accountId,
-          //   config.oceanTokenAddress,
-          //   accountId,
-          //   '1',
-          //   false
-          // )
-          // console.log('approve tx', txApprove)
-
-          // const txApprove1 = await approve(
-          //   web3,
-          //   accountId,
-          //   config.oceanTokenAddress,
-          //   datatokenAddress,
-          //   '1',
-          //   false
-          // )
-          // console.log('approve tx', txApprove1)
-
-          // diference between timeout and validUntil?
-          const initializeData = await ProviderInstance.initialize(
-            did,
-            'fca052c239a62523be30ab8ee70c4046867f6cd89f228185fe2996ded3d23c3c',
-            0,
-            accountId,
-            'https://providerv4.rinkeby.oceanprotocol.com'
-          )
-          const orderParams = {
-            consumer: accountId,
-            serviceIndex: 1,
-            _providerFees: initializeData.providerFee
-          } as OrderParams
-          const freParams = {
-            exchangeContract: config.fixedRateExchangeAddress,
-            exchangeId:
-              '0x7ac824fef114255e5e3521a161ef692ec32003916fb6f3fe985cb74790d053ca',
-            maxBaseTokenAmount: web3.utils.toWei('2'),
-            swapMarketFee: web3.utils.toWei('0'),
-            marketFeeAddress: ZERO_ADDRESS
-          } as FreOrderParams
-
-          const esttx = await datatoken.estGasBuyFromFreAndOrder(
-            datatokenAddress,
-            accountId,
-            orderParams,
-            freParams
-          )
-          const tx = await datatoken.buyFromFreAndOrder(
-            datatokenAddress,
-            accountId,
-            orderParams,
-            freParams
-          )
-
-          LoggerInstance.log('ordercreated', orderId)
           setStep(2)
         } catch (error) {
           setConsumeError(error.message)
