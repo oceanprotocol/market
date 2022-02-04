@@ -387,11 +387,11 @@ export default function Pool(): ReactElement {
             datatokenSymbol={poolInfo?.datatokenSymbol}
             conversion={poolInfo?.totalLiquidityInOcean}
           >
+            <Token symbol={`${poolInfo?.datatokenSymbol} minted`} balance="0" />
+            <Token symbol={`${poolInfo?.datatokenSymbol} burned`} balance="0" />
             <Token symbol="% pool fee" balance={poolInfo?.poolFee} noIcon />
             <Token symbol="% market fee" balance={poolInfo?.marketFee} noIcon />
             <Token symbol="% OPF fee" balance={poolInfo?.opfFee} noIcon />
-            <Token symbol={`${poolInfo?.datatokenSymbol} minted`} balance="0" />
-            <Token symbol={`${poolInfo?.datatokenSymbol} burned`} balance="0" />
           </TokenList>
 
           <div className={styles.update}>

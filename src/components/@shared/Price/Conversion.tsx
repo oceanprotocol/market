@@ -36,7 +36,7 @@ export default function Conversion({
       return
     }
 
-    const conversionValue = (prices as any)[currency.toLowerCase()]
+    const conversionValue = prices[currency.toLowerCase()]
     const converted = conversionValue * Number(price)
     const convertedFormatted = formatCurrency(
       converted,

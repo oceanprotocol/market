@@ -2,7 +2,11 @@ import { formatPrice } from '@shared/Price/PriceUnit'
 import { ChartOptions, TooltipItem } from 'chart.js'
 import { tooltipOptions } from './_constants'
 
-export function getOptions(locale: string, isDarkMode: boolean): ChartOptions {
+export function getOptions(
+  locale: string,
+  isDarkMode: boolean,
+  symbol: string
+): ChartOptions {
   return {
     layout: {
       padding: {
@@ -21,7 +25,7 @@ export function getOptions(locale: string, isDarkMode: boolean): ChartOptions {
         borderColor: isDarkMode ? `#41474e` : `#e2e2e2`,
         callbacks: {
           label: (tooltipItem: TooltipItem<any>) =>
-            `${formatPrice(`${tooltipItem.formattedValue}`, locale)} OCEAN`
+            `${formatPrice(`${tooltipItem.formattedValue}`, locale)} ${symbol}`
         }
       }
     },

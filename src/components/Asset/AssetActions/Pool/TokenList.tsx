@@ -37,9 +37,8 @@ export default function TokenList({
             className={styles.totalLiquidity}
           />
         )}
+        {children}
       </div>
-
-      {children}
     </div>
   )
 }
