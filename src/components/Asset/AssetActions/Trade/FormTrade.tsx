@@ -27,12 +27,12 @@ export default function FormTrade({
   asset,
   balance,
   maxDt,
-  maxOcean
+  maxBaseToken
 }: {
   asset: AssetExtended
   balance: PoolBalance
   maxDt: string
-  maxOcean: string
+  maxBaseToken: string
 }): ReactElement {
   const { web3, accountId } = useWeb3()
   const { isAssetNetwork } = useAsset()
@@ -84,7 +84,9 @@ export default function FormTrade({
       tokenOut: '',
       marketFeeAddress: ''
     }
-    const swapMarketFee = await poolInstance.getSwapFee(price.address)
+    const swapMarketFee = await poolInstance.getSwapFee(
+      asset.accessDetails.addressOrId
+    )
 
     try {
       const impact = new Decimal(
@@ -103,7 +105,7 @@ export default function FormTrade({
 
       const amountsOutMaxFee: AmountsOutMaxFee = {
         maxAmountIn: '50',
-        tokenAmountOut: new Decimal(values.ocean)
+        tokenAmountOut: new Decimal(values.baseToken)
           .mul(impact)
           .toFixed(precision)
           .toString(),
@@ -114,13 +116,13 @@ export default function FormTrade({
         values.type === 'buy'
           ? await poolInstance.swapExactAmountIn(
               accountId,
-              price.address,
+              asset.accessDetails.addressOrId,
               tokenInOutMarket,
               amountsInOutMaxFee
             )
           : await poolInstance.swapExactAmountOut(
               accountId,
-              price.address,
+              asset.accessDetails.addressOrId,
               tokenOutMarket,
               amountsOutMaxFee
             )
@@ -145,10 +147,10 @@ export default function FormTrade({
         <>
           {isWarningAccepted ? (
             <Swap
-              asset={asset}
+              assetExtended={asset}
               balance={balance}
               maxDt={maxDt}
-              maxOcean={maxOcean}
+              maxBaseToken={maxBaseToken}
               setCoin={setCoinFrom}
               setMaximumBaseToken={setMaximumBaseToken}
               setMaximumDt={setMaximumDt}

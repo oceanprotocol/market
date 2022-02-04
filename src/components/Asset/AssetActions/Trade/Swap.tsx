@@ -11,13 +11,13 @@ import Decimal from 'decimal.js'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import { FormTradeData, TradeItem } from './_types'
-import { Asset } from '@oceanprotocol/lib'
+import { Asset, LoggerInstance, Pool } from '@oceanprotocol/lib'
 import { AssetExtended } from 'src/@types/AssetExtended'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
 export default function Swap({
-  asset,
+  assetExtended,
   maxDt,
   maxBaseToken,
   balance,
@@ -25,7 +25,7 @@ export default function Swap({
   setMaximumBaseToken,
   setCoin
 }: {
-  asset: AssetExtended
+  assetExtended: AssetExtended
   maxDt: string
   maxBaseToken: string
   balance: PoolBalance
@@ -38,12 +38,12 @@ export default function Swap({
 
   const [baseTokenItem, setBaseTokenItem] = useState<TradeItem>({
     amount: '0',
-    token: asset.accessDetails.baseToken?.symbol,
+    token: assetExtended.accessDetails.baseToken?.symbol,
     maxAmount: '0'
   })
   const [dtItem, setDtItem] = useState<TradeItem>({
     amount: '0',
-    token: asset.accessDetails.datatoken.symbol,
+    token: assetExtended.accessDetails.datatoken.symbol,
     maxAmount: '0'
   })
   const {
@@ -59,7 +59,7 @@ export default function Swap({
   const [tokenAmount, setTokenAmount] = useState<string>()
 
   useEffect(() => {
-    if (!asset || !balance || !values?.type) return
+    if (!assetExtended || !balance || !values?.type) return
 
     async function calculateMaximum() {
       try {
@@ -68,25 +68,18 @@ export default function Swap({
           values.type === 'buy'
             ? new Decimal(maxDt)
             : new Decimal(balance.datatoken)
-        const amountOcean =
-          values.type === 'buy'
-            ? new Decimal(balance.baseToken)
-            : new Decimal(maxOcean)
-
-        const amountDataToken =
-          values.type === 'buy'
-            ? new Decimal(maxDt)
-            : new Decimal(balance.datatoken)
 
         const amountBaseToken =
           values.type === 'buy'
-            ? new Decimal(balance.ocean)
+            ? new Decimal(balance.baseToken)
             : new Decimal(maxBaseToken)
 
-        const swapFee = await poolInstance.getSwapFee(price.address)
+        const swapFee = await poolInstance.getSwapFee(
+          assetExtended.accessDetails?.addressOrId
+        )
 
         const maxBuyBaseToken = await poolInstance.getAmountOutExactIn(
-          price.address,
+          assetExtended.accessDetails?.addressOrId,
           dtItem.token,
           baseTokenItem.token,
           amountDataToken.toString(),
@@ -94,7 +87,7 @@ export default function Swap({
         )
 
         const maxBuyDt = await poolInstance.getAmountOutExactIn(
-          price.address,
+          assetExtended.accessDetails?.addressOrId,
           baseTokenItem.token,
           dtItem.token,
           amountBaseToken.toString(),
@@ -115,8 +108,8 @@ export default function Swap({
             ? amountBaseToken.greaterThan(new Decimal(maxBuyBaseToken))
               ? maxBuyBaseToken
               : amountBaseToken
-            : amountBaseToken.greaterThan(new Decimal(balance.ocean))
-            ? balance.ocean
+            : amountBaseToken.greaterThan(new Decimal(balance.baseToken))
+            ? balance.baseToken
             : amountBaseToken
 
         setMaximumDt(maximumDt.toString())
@@ -139,19 +132,21 @@ export default function Swap({
     }
     calculateMaximum()
   }, [
-    asset,
-    maxOcean,
     maxDt,
     maxBaseToken,
     balance,
-    values?.type,
+    values.type,
     setMaximumDt,
-    setMaximumBaseToken
+    setMaximumBaseToken,
+    assetExtended,
+    web3
   ])
 
   const switchTokens = () => {
     setFieldValue('type', values.type === 'buy' ? 'sell' : 'buy')
-    setCoin(values.type === 'sell' ? 'OCEAN' : asset.datatokens[0].symbol)
+    setCoin(
+      values.type === 'sell' ? 'OCEAN' : assetExtended.datatokens[0].symbol
+    )
     // don't reset form because we don't want to reset type
     setFieldValue('datatoken', 0)
     setFieldValue('ocean', 0)
@@ -246,8 +241,8 @@ export default function Swap({
 
       <Output
         dtSymbol={dtItem.token}
-        oceanSymbol={oceanItem.token}
-        poolAddress={asset.accessDetails?.addressOrId}
+        baseTokenSymbol={baseTokenItem.token}
+        poolAddress={assetExtended.accessDetails?.addressOrId}
       />
 
       <PriceImpact

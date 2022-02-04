@@ -2,6 +2,7 @@ import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import FormTrade from './FormTrade'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
+import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
 import { Datatoken, LoggerInstance, Pool } from '@oceanprotocol/lib'
 import { getPoolData } from '@utils/subgraph'
@@ -25,32 +26,38 @@ export default function Trade(): ReactElement {
   const { accountId, balance, web3 } = useWeb3()
   const { isAssetNetwork } = useAsset()
   const [tokenBalance, setTokenBalance] = useState<PoolBalance>()
-  const { asset } = useAsset()
+  const { asset, owner, refreshInterval } = useAsset()
+  const initialPoolInfo: Partial<PoolInfo> = {
+    totalLiquidityInOcean: new Decimal(0)
+  }
+  const [poolInfo, setPoolInfo] = useState<PoolInfo>(
+    initialPoolInfo as PoolInfo
+  )
+  const [poolData, setPoolData] = useState<PoolDataPoolData>()
+  const [fetchInterval, setFetchInterval] = useState<NodeJS.Timeout>()
+
   const [maxDt, setMaxDt] = useState('0')
   const [maxBaseToken, setMaxBaseToken] = useState('0')
 
   const fetchPoolData = useCallback(async () => {
-    if (!ddo?.chainId || !price?.address || !owner) return
+    if (!asset?.chainId || !asset?.accessDetails.addressOrId || !owner) return
 
     const response = await getPoolData(
-      ddo.chainId,
-      price.address,
+      asset.chainId,
+      asset.accessDetails.addressOrId,
       owner,
       accountId || ''
     )
     if (!response) return
 
     setPoolData(response.poolData)
-  }, [ddo?.chainId, price?.address, owner, accountId])
+  }, [asset?.chainId, asset.accessDetails?.addressOrId, owner, accountId])
 
   const initFetchInterval = useCallback(() => {
     if (fetchInterval) return
 
     const newInterval = setInterval(() => {
       fetchPoolData()
-      LoggerInstance.log(
-        `[pool] Refetch interval fired after ${refreshInterval / 1000}s`
-      )
     }, refreshInterval)
     setFetchInterval(newInterval)
   }, [fetchInterval, fetchPoolData, refreshInterval])
@@ -67,7 +74,7 @@ export default function Trade(): ReactElement {
   }, [fetchPoolData, initFetchInterval])
 
   useEffect(() => {
-    if (!poolData || !price?.ocean || !price?.datatoken) return
+    if (!poolData) return
 
     // Pool Fee (swap fee)
     // poolFee is tricky: to get 0.1% you need to convert from 0.001
@@ -76,14 +83,11 @@ export default function Trade(): ReactElement {
       : '0'
 
     // Total Liquidity
-    const totalLiquidityInOcean =
-      isValidNumber(price.ocean) &&
-      isValidNumber(price.datatoken) &&
-      isValidNumber(poolData.spotPrice)
-        ? new Decimal(price.ocean).add(
-            new Decimal(price.datatoken).mul(poolData.spotPrice)
-          )
-        : new Decimal(0)
+    const totalLiquidityInOcean = isValidNumber(poolData.spotPrice)
+      ? new Decimal(poolData.baseTokenLiquidity).add(
+          new Decimal(poolData.datatokenLiquidity).mul(poolData.spotPrice)
+        )
+      : new Decimal(0)
 
     const newPoolInfo = {
       poolFee,
@@ -96,7 +100,7 @@ export default function Trade(): ReactElement {
     }
     setPoolInfo(newPoolInfo)
     LoggerInstance.log('[pool] Created new pool info:', newPoolInfo)
-  }, [poolData, price?.datatoken, price?.ocean])
+  }, [poolData])
 
   // Get datatoken balance, and combine with OCEAN balance from hooks into one object
   useEffect(() => {
@@ -127,6 +131,13 @@ export default function Trade(): ReactElement {
   // Get maximum amount for either OCEAN or datatoken
   useEffect(() => {
     if (
+      !web3 ||
+      !isAssetNetwork ||
+      !asset.accessDetails.addressOrId ||
+      asset.accessDetails.price === 0
+    )
+      return
+    if (
       !isAssetNetwork ||
       !asset.accessDetails ||
       asset.accessDetails.price === 0
@@ -138,7 +149,7 @@ export default function Trade(): ReactElement {
         const poolInstance = new Pool(web3, LoggerInstance)
 
         const maxTokensInPool = await poolInstance.getReserve(
-          price.address,
+          asset.accessDetails.addressOrId,
           poolInfo.datatokenAddress
         )
         setMaxDt(
@@ -147,7 +158,7 @@ export default function Trade(): ReactElement {
             : '0'
         )
         const maxBaseTokenInPool = await poolInstance.getReserve(
-          price.address,
+          asset.accessDetails.addressOrId,
           poolInfo.baseTokenAddress
         )
         setMaxBaseToken(
@@ -160,7 +171,7 @@ export default function Trade(): ReactElement {
       }
     }
     getMaximum()
-  }, [isAssetNetwork, balance.ocean, asset])
+  }, [isAssetNetwork, web3, balance, asset])
 
   return (
     <FormTrade
