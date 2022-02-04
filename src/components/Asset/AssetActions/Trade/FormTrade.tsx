@@ -106,7 +106,7 @@ export default function FormTrade({
         setSubmitting(false)
       }}
     >
-      {({ isSubmitting, submitForm, values, isValid }) => (
+      {({ isSubmitting, setSubmitting, submitForm, values, isValid }) => (
         <>
           {isWarningAccepted ? (
             <Swap
@@ -156,6 +156,7 @@ export default function FormTrade({
             txId={txId}
             tokenAddress={tokenAddress}
             tokenSymbol={tokenSymbol}
+            setSubmitting={setSubmitting}
           />
 
           {debug && (
