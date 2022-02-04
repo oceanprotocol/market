@@ -35,7 +35,11 @@ export default function Graph({
 
     LoggerInstance.log('[pool graph] Fired getOptions().')
     const symbol =
-      graphType === 'liquidity' ? currency : poolSnapshots[0]?.baseToken?.symbol
+      graphType === 'liquidity'
+        ? currency
+        : // TODO: remove any once baseToken works
+          // see https://github.com/oceanprotocol/ocean-subgraph/issues/312
+          (poolSnapshots[0] as any)?.baseToken?.symbol
     const options = getOptions(locale, darkMode.value, symbol)
     setOptions(options)
   }, [locale, darkMode.value, graphType, currency, poolSnapshots])
