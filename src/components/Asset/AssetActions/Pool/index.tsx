@@ -228,7 +228,7 @@ export default function Pool(): ReactElement {
       new Decimal(poolInfoUser.poolShares)
         .dividedBy(new Decimal(poolInfo.totalPoolTokens))
         .mul(100)
-        .toFixed(5)
+        .toFixed(2)
 
     setUserHasAddedLiquidity(Number(poolShare) > 0)
 
@@ -341,9 +341,11 @@ export default function Pool(): ReactElement {
                     poolInfo?.poolFee
                   )}
                 />
-                <span className={styles.titleInfo}>
-                  {poolInfoUser?.poolShare}% of pool
-                </span>
+                {poolInfoUser?.poolShare && (
+                  <span className={styles.titleInfo}>
+                    {poolInfoUser?.poolShare}% of pool
+                  </span>
+                )}
               </>
             }
             baseTokenValue={poolInfoUser?.liquidity.toString()}
