@@ -1,12 +1,6 @@
 import { UseSiteMetadata } from './types'
-import siteContent from '../../../content/site.json'
-import appConfig from '../../../app.config'
+import { getSiteMetadata } from '@utils/siteConfig'
 
 export function useSiteMetadata(): UseSiteMetadata {
-  const siteMeta: UseSiteMetadata = {
-    ...siteContent,
-    appConfig
-  }
-
-  return siteMeta
+  return getSiteMetadata()
 }

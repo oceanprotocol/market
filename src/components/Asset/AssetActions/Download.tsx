@@ -11,6 +11,7 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { FileMetadata } from '@oceanprotocol/lib'
 import { order } from '@utils/order'
 import { AssetExtended } from 'src/@types/AssetExtended'
+import { calculateBuyPrice } from '@utils/pool'
 
 export default function Download({
   asset,
@@ -50,11 +51,25 @@ export default function Download({
 
   useEffect(() => {
     if (!accessDetails) return
+    async function init() {
+      if (accessDetails.type === 'dynamic') {
+        const priceAndEstimate = await calculateBuyPrice(
+          accessDetails.addressOrId,
+          accessDetails.price,
+          accessDetails.baseToken.address,
+          accessDetails.datatoken.address,
+          null,
+          asset.chainId
+        )
+        accessDetails.price = Number.parseFloat(priceAndEstimate.price)
+      }
+    }
 
     setIsConsumablePrice(accessDetails.isConsumable)
     setHasPreviousOrder(accessDetails.owned)
     setPreviousOrderId(accessDetails.validOrderTx)
-  }, [accessDetails])
+    init()
+  }, [accessDetails, asset.chainId])
 
   useEffect(() => {
     setHasDatatoken(Number(dtBalance) >= 1)

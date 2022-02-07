@@ -30,7 +30,8 @@ const initialPoolInfo: Partial<PoolInfo> = {
 }
 
 const initialPoolInfoUser: Partial<PoolInfoUser> = {
-  liquidity: new Decimal(0)
+  liquidity: new Decimal(0),
+  poolShares: '0'
 }
 
 const initialPoolInfoCreator: Partial<PoolInfoUser> = initialPoolInfoUser
@@ -68,7 +69,9 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
     setPoolData(response.poolData)
     setPoolInfoUser((prevState) => ({
       ...prevState,
-      poolShares: response.poolDataUser?.shares[0]?.shares
+      poolShares: response.poolDataUser?.shares[0]
+        ? response.poolDataUser?.shares[0].shares
+        : '0'
     }))
     setPoolSnapshots(response.poolSnapshots)
     LoggerInstance.log('[pool] Fetched pool data:', response.poolData)
@@ -89,7 +92,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
       )
     }, refreshInterval)
     setFetchInterval(newInterval)
-  }, [fetchInterval, fetchAllData, accountId])
+  }, [fetchInterval, fetchAllData])
 
   useEffect(() => {
     return () => {
@@ -191,10 +194,11 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
       !poolData ||
       !poolInfo?.totalPoolTokens ||
       !asset?.chainId ||
-      !accountId
+      !accountId ||
+      !poolInfoUser
     )
       return
-
+    console.log('poolInfoUser', poolInfoUser)
     // Staking bot receives half the pool shares so for display purposes
     // we can multiply by 2 as we have a hardcoded 50/50 pool weight.
     const userPoolShares = new Decimal(poolInfoUser.poolShares)
