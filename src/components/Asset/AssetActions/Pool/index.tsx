@@ -1,5 +1,4 @@
-import React, { ReactElement, useCallback, useEffect, useState } from 'react'
-import { LoggerInstance } from '@oceanprotocol/lib'
+import React, { ReactElement, useState } from 'react'
 import styles from './index.module.css'
 import stylesActions from './Actions.module.css'
 import PriceUnit from '@shared/Price/PriceUnit'
@@ -8,274 +7,33 @@ import Add from './Add'
 import Remove from './Remove'
 import Tooltip from '@shared/atoms/Tooltip'
 import ExplorerLink from '@shared/ExplorerLink'
-import Token from './Token'
 import TokenList from './TokenList'
 import AssetActionHistoryTable from '../AssetActionHistoryTable'
 import Graph from './Graph'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import PoolTransactions from '@shared/PoolTransactions'
-import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
 import content from '../../../../../content/price.json'
-import { getPoolData } from '@utils/subgraph'
-import {
-  PoolData_poolSnapshots as PoolDataPoolSnapshots,
-  PoolData_poolData as PoolDataPoolData
-} from 'src/@types/subgraph/PoolData'
-
-Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
-
-function getWeight(weight: string) {
-  return isValidNumber(weight) ? new Decimal(weight).mul(10).toString() : '0'
-}
-
-function getFee(fee: string) {
-  // fees are tricky: to get 0.1% you need to convert from 0.001
-  return isValidNumber(fee) ? new Decimal(fee).mul(100).toString() : '0'
-}
-
-interface PoolInfo {
-  poolFee: string
-  marketFee: string
-  opfFee: string
-  weightBaseToken: string
-  weightDt: string
-  datatokenSymbol: string
-  baseTokenSymbol: string
-  baseTokenAddress: string
-  totalPoolTokens: string
-  totalLiquidityInOcean: Decimal
-}
-
-interface PoolInfoUser {
-  liquidity: Decimal // liquidity in base token
-  poolShares: string // pool share tokens
-  poolShare: string // in %
-}
-
-const initialPoolInfo: Partial<PoolInfo> = {
-  totalLiquidityInOcean: new Decimal(0)
-}
-
-const initialPoolInfoUser: Partial<PoolInfoUser> = {
-  liquidity: new Decimal(0)
-}
-
-const initialPoolInfoCreator: Partial<PoolInfoUser> = initialPoolInfoUser
+import { usePool } from '@context/Pool'
 
 export default function Pool(): ReactElement {
   const { accountId } = useWeb3()
-  const { isInPurgatory, asset, owner, refreshInterval, isAssetNetwork } =
-    useAsset()
+  const { isInPurgatory, asset, isAssetNetwork } = useAsset()
+  const {
+    poolData,
+    poolInfo,
+    poolInfoUser,
+    poolInfoOwner,
+    poolSnapshots,
+    hasUserAddedLiquidity,
+    isRemoveDisabled,
+    refreshInterval,
+    fetchAllData
+  } = usePool()
 
-  const [poolData, setPoolData] = useState<PoolDataPoolData>()
-  const [poolInfo, setPoolInfo] = useState<PoolInfo>(
-    initialPoolInfo as PoolInfo
-  )
-  const [poolInfoOwner, setPoolInfoOwner] = useState<PoolInfoUser>(
-    initialPoolInfoCreator as PoolInfoUser
-  )
-  const [poolInfoUser, setPoolInfoUser] = useState<PoolInfoUser>(
-    initialPoolInfoUser as PoolInfoUser
-  )
-  const [poolSnapshots, setPoolSnapshots] = useState<PoolDataPoolSnapshots[]>()
-
-  const [hasUserAddedLiquidity, setUserHasAddedLiquidity] = useState(false)
   const [showAdd, setShowAdd] = useState(false)
   const [showRemove, setShowRemove] = useState(false)
-  const [isRemoveDisabled, setIsRemoveDisabled] = useState(false)
-  const [fetchInterval, setFetchInterval] = useState<NodeJS.Timeout>()
-
-  const fetchAllData = useCallback(async () => {
-    if (!asset?.chainId || !asset?.accessDetails?.addressOrId || !owner) return
-
-    const response = await getPoolData(
-      asset.chainId,
-      asset.accessDetails.addressOrId,
-      owner,
-      accountId || ''
-    )
-    if (!response) return
-
-    setPoolData(response.poolData)
-    setPoolInfoUser((prevState) => ({
-      ...prevState,
-      poolShares: response.poolDataUser?.shares[0]?.shares
-    }))
-    setPoolSnapshots(response.poolSnapshots)
-    LoggerInstance.log('[pool] Fetched pool data:', response.poolData)
-    LoggerInstance.log('[pool] Fetched user data:', response.poolDataUser)
-    LoggerInstance.log('[pool] Fetched pool snapshots:', response.poolSnapshots)
-  }, [asset?.chainId, asset?.accessDetails?.addressOrId, owner, accountId])
-
-  // Helper: start interval fetching
-  // Having `accountId` as dependency is important for interval to
-  // change after user account switch.
-  const initFetchInterval = useCallback(() => {
-    if (fetchInterval) return
-
-    const newInterval = setInterval(() => {
-      fetchAllData()
-      LoggerInstance.log(
-        `[pool] Refetch interval fired after ${refreshInterval / 1000}s`
-      )
-    }, refreshInterval)
-    setFetchInterval(newInterval)
-  }, [fetchInterval, fetchAllData, refreshInterval, accountId])
-
-  useEffect(() => {
-    return () => {
-      clearInterval(fetchInterval)
-    }
-  }, [fetchInterval])
-
-  //
-  // 0 Fetch all the data on mount
-  // All further effects depend on the fetched data
-  // and only do further data checking and manipulation.
-  //
-  useEffect(() => {
-    fetchAllData()
-    initFetchInterval()
-  }, [fetchAllData, initFetchInterval])
-
-  //
-  // 1 General Pool Info
-  //
-  useEffect(() => {
-    if (!poolData) return
-
-    // Fees
-    const poolFee = getFee(poolData.poolFee)
-    const marketFee = getFee(poolData.marketFee)
-    const opfFee = getFee(poolData.opfFee)
-
-    // Total Liquidity
-    const totalLiquidityInOcean = isValidNumber(poolData.spotPrice)
-      ? new Decimal(poolData.baseTokenLiquidity).add(
-          new Decimal(poolData.datatokenLiquidity).mul(poolData.spotPrice)
-        )
-      : new Decimal(0)
-
-    const newPoolInfo = {
-      poolFee,
-      marketFee,
-      opfFee,
-      weightBaseToken: getWeight(poolData.baseTokenWeight),
-      weightDt: getWeight(poolData.datatokenWeight),
-      datatokenSymbol: poolData.datatoken.symbol,
-      baseTokenSymbol: poolData.baseToken.symbol,
-      baseTokenAddress: poolData.baseToken.address,
-      totalPoolTokens: poolData.totalShares,
-      totalLiquidityInOcean
-    }
-    setPoolInfo(newPoolInfo)
-    LoggerInstance.log('[pool] Created new pool info:', newPoolInfo)
-  }, [poolData])
-
-  //
-  // 2 Pool Creator Info
-  //
-  useEffect(() => {
-    if (!poolData || !poolInfo?.totalPoolTokens) return
-
-    const ownerPoolTokens = poolData.shares[0]?.shares
-
-    // Liquidity in base token, calculated from pool tokens.
-    // Hardcoded 50/50 pool weight so we can multiply fetched
-    // poolData.baseTokenLiquidity by 2.
-    const liquidity =
-      isValidNumber(ownerPoolTokens) &&
-      isValidNumber(poolInfo.totalPoolTokens) &&
-      isValidNumber(poolData.baseTokenLiquidity)
-        ? new Decimal(ownerPoolTokens)
-            .dividedBy(new Decimal(poolInfo.totalPoolTokens))
-            .mul(poolData.baseTokenLiquidity)
-            .mul(2)
-        : new Decimal(0)
-
-    const poolShare =
-      isValidNumber(ownerPoolTokens) && isValidNumber(poolInfo.totalPoolTokens)
-        ? new Decimal(ownerPoolTokens)
-            .dividedBy(new Decimal(poolInfo.totalPoolTokens))
-            .mul(100)
-            .toFixed(2)
-        : '0'
-
-    const newPoolOwnerInfo = {
-      liquidity,
-      poolShares: ownerPoolTokens,
-      poolShare
-    }
-    setPoolInfoOwner(newPoolOwnerInfo)
-    LoggerInstance.log('[pool] Created new owner pool info:', newPoolOwnerInfo)
-  }, [poolData, poolInfo?.totalPoolTokens])
-
-  //
-  // 3 User Pool Info
-  //
-  useEffect(() => {
-    if (
-      !poolData ||
-      !poolInfo?.totalPoolTokens ||
-      !asset?.chainId ||
-      !accountId
-    )
-      return
-
-    const poolShare =
-      isValidNumber(poolInfoUser.poolShares) &&
-      isValidNumber(poolInfo.totalPoolTokens) &&
-      new Decimal(poolInfoUser.poolShares)
-        .dividedBy(new Decimal(poolInfo.totalPoolTokens))
-        .mul(100)
-        .toFixed(2)
-
-    setUserHasAddedLiquidity(Number(poolShare) > 0)
-
-    // Liquidity in base token, calculated from pool tokens.
-    // Hardcoded 50/50 pool weight so we can multiply fetched
-    // poolData.baseTokenLiquidity by 2.
-    const liquidity =
-      isValidNumber(poolInfoUser.poolShares) &&
-      isValidNumber(poolInfo.totalPoolTokens) &&
-      isValidNumber(poolData.baseTokenLiquidity)
-        ? new Decimal(poolInfoUser.poolShares)
-            .dividedBy(new Decimal(poolInfo.totalPoolTokens))
-            .mul(poolData.baseTokenLiquidity)
-            .mul(2)
-        : new Decimal(0)
-
-    const newPoolInfoUser = {
-      liquidity,
-      poolShare
-    }
-    setPoolInfoUser((prevState: PoolInfoUser) => ({
-      ...prevState,
-      ...newPoolInfoUser
-    }))
-
-    LoggerInstance.log('[pool] Created new user pool info:', {
-      poolShares: poolInfoUser?.poolShares,
-      ...newPoolInfoUser
-    })
-  }, [
-    poolData,
-    poolInfoUser?.poolShares,
-    accountId,
-    asset?.chainId,
-    owner,
-    poolInfo?.totalPoolTokens
-  ])
-
-  //
-  // Check if removing liquidity should be disabled.
-  //
-  useEffect(() => {
-    if (!owner || !accountId) return
-    setIsRemoveDisabled(isInPurgatory && owner === accountId)
-  }, [isInPurgatory, owner, accountId])
 
   return (
     <>
