@@ -150,24 +150,26 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   useEffect(() => {
     if (!poolData || !poolInfo?.totalPoolTokens) return
 
-    const ownerPoolTokens = poolData.shares[0]?.shares
+    // Staking bot receives half the pool shares so for display purposes
+    // we can multiply by 2 as we have a hardcoded 50/50 pool weight.
+    const ownerPoolShares = new Decimal(poolData.shares[0]?.shares)
+      .mul(2)
+      .toString()
 
-    // Liquidity in base token, calculated from pool tokens.
-    // Hardcoded 50/50 pool weight so we can multiply fetched
-    // poolData.baseTokenLiquidity by 2.
+    // Liquidity in base token, calculated from pool share tokens.
     const liquidity =
-      isValidNumber(ownerPoolTokens) &&
+      isValidNumber(ownerPoolShares) &&
       isValidNumber(poolInfo.totalPoolTokens) &&
       isValidNumber(poolData.baseTokenLiquidity)
-        ? new Decimal(ownerPoolTokens)
+        ? new Decimal(ownerPoolShares)
             .dividedBy(new Decimal(poolInfo.totalPoolTokens))
             .mul(poolData.baseTokenLiquidity)
-            .mul(2)
         : new Decimal(0)
 
+    // Pool share tokens.
     const poolShare =
-      isValidNumber(ownerPoolTokens) && isValidNumber(poolInfo.totalPoolTokens)
-        ? new Decimal(ownerPoolTokens)
+      isValidNumber(ownerPoolShares) && isValidNumber(poolInfo.totalPoolTokens)
+        ? new Decimal(ownerPoolShares)
             .dividedBy(new Decimal(poolInfo.totalPoolTokens))
             .mul(100)
             .toFixed(2)
@@ -175,7 +177,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
 
     const newPoolOwnerInfo = {
       liquidity,
-      poolShares: ownerPoolTokens,
+      poolShares: ownerPoolShares,
       poolShare
     }
     setPoolInfoOwner(newPoolOwnerInfo)
@@ -194,27 +196,31 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
     )
       return
 
+    // Staking bot receives half the pool shares so for display purposes
+    // we can multiply by 2 as we have a hardcoded 50/50 pool weight.
+    const userPoolShares = new Decimal(poolInfoUser.poolShares)
+      .mul(2)
+      .toString()
+
+    // Pool share in %.
     const poolShare =
-      isValidNumber(poolInfoUser.poolShares) &&
+      isValidNumber(userPoolShares) &&
       isValidNumber(poolInfo.totalPoolTokens) &&
-      new Decimal(poolInfoUser.poolShares)
+      new Decimal(userPoolShares)
         .dividedBy(new Decimal(poolInfo.totalPoolTokens))
         .mul(100)
         .toFixed(2)
 
     setUserHasAddedLiquidity(Number(poolShare) > 0)
 
-    // Liquidity in base token, calculated from pool tokens.
-    // Hardcoded 50/50 pool weight so we can multiply fetched
-    // poolData.baseTokenLiquidity by 2.
+    // Liquidity in base token, calculated from pool share tokens.
     const liquidity =
-      isValidNumber(poolInfoUser.poolShares) &&
+      isValidNumber(userPoolShares) &&
       isValidNumber(poolInfo.totalPoolTokens) &&
       isValidNumber(poolData.baseTokenLiquidity)
-        ? new Decimal(poolInfoUser.poolShares)
+        ? new Decimal(userPoolShares)
             .dividedBy(new Decimal(poolInfo.totalPoolTokens))
             .mul(poolData.baseTokenLiquidity)
-            .mul(2)
         : new Decimal(0)
 
     const newPoolInfoUser = {
@@ -227,7 +233,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
     }))
 
     LoggerInstance.log('[pool] Created new user pool info:', {
-      poolShares: poolInfoUser?.poolShares,
+      poolShares: userPoolShares,
       ...newPoolInfoUser
     })
   }, [
