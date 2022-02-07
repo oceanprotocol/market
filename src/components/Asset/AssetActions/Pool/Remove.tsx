@@ -160,7 +160,7 @@ export default function Remove({
               type="range"
               min="0"
               max={amountMaxPercent}
-              disabled={!isAssetNetwork}
+              disabled={!isAssetNetwork || isLoading}
               value={amountPercent}
               onChange={handleAmountPercentChange}
             />
@@ -168,7 +168,7 @@ export default function Remove({
               style="text"
               size="small"
               className={styles.maximum}
-              disabled={!isAssetNetwork}
+              disabled={!isAssetNetwork || isLoading}
               onClick={handleMaxButton}
             >
               {`${amountMaxPercent}% max`}
@@ -197,7 +197,7 @@ export default function Remove({
           postfix="%"
           sortOptions={false}
           options={slippagePresets}
-          disabled={!isAssetNetwork}
+          disabled={!isAssetNetwork || isLoading}
           value={slippage}
           onChange={handleSlippageChange}
         />
@@ -208,7 +208,7 @@ export default function Remove({
         actionName={content.pool.remove.action}
         action={handleRemoveLiquidity}
         successMessage="Successfully removed liquidity."
-        isDisabled={!isAssetNetwork}
+        isDisabled={!isAssetNetwork || amountOcean === '0'}
         txId={txId}
         tokenAddress={tokenOutAddress}
         tokenSymbol={tokenOutSymbol}
