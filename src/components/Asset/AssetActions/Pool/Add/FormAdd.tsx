@@ -120,7 +120,7 @@ export default function FormAdd({
         )}
       </Field>
 
-      {Number(balance.ocean) && (
+      {Number(balance.ocean) > 0 && (
         <Button
           className={styles.buttonMax}
           style="text"

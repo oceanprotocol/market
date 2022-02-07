@@ -110,6 +110,8 @@ export default function Pool(): ReactElement {
   }, [asset?.chainId, asset?.accessDetails?.addressOrId, owner, accountId])
 
   // Helper: start interval fetching
+  // Having `accountId` as dependency is important for interval to
+  // change after user account switch.
   const initFetchInterval = useCallback(() => {
     if (fetchInterval) return
 
@@ -120,7 +122,7 @@ export default function Pool(): ReactElement {
       )
     }, refreshInterval)
     setFetchInterval(newInterval)
-  }, [fetchInterval, fetchAllData, refreshInterval])
+  }, [fetchInterval, fetchAllData, refreshInterval, accountId])
 
   useEffect(() => {
     return () => {
@@ -389,8 +391,6 @@ export default function Pool(): ReactElement {
             datatokenSymbol={poolInfo?.datatokenSymbol}
             conversion={poolInfo?.totalLiquidityInOcean}
           >
-            <Token symbol={`${poolInfo?.datatokenSymbol} minted`} balance="0" />
-            <Token symbol={`${poolInfo?.datatokenSymbol} burned`} balance="0" />
             <Token symbol="% pool fee" balance={poolInfo?.poolFee} noIcon />
             <Token symbol="% market fee" balance={poolInfo?.marketFee} noIcon />
             <Token symbol="% OPF fee" balance={poolInfo?.opfFee} noIcon />
