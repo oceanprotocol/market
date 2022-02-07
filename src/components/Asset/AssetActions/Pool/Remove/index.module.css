@@ -1,5 +1,5 @@
 .removeInput {
-  composes: addInput from './Add/index.module.css';
+  composes: addInput from '../Add/index.module.css';
   padding-left: calc(var(--spacer) * 2);
   padding-right: calc(var(--spacer) * 2);
   padding-bottom: calc(var(--spacer) / 2);
@@ -46,7 +46,7 @@
 }
 
 .output {
-  composes: output from './Add/Output.module.css';
+  composes: output from '../Add/Output.module.css';
 }
 
 .output [class*='token'] {
@@ -66,5 +66,5 @@
 }
 
 .slippage {
-  composes: slippage from '../Trade/Slippage.module.css';
+  composes: slippage from '../../Trade/Slippage.module.css';
 }
