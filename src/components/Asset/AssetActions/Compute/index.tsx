@@ -289,6 +289,7 @@ export default function Compute({
       let assetOrderId = hasPreviousDatasetOrder ? previousDatasetOrderId : ''
 
       if (!hasPreviousDatasetOrder) {
+        // going to move replace part of this logic when the use consume hook will be ready
         const initializeData = await ProviderInstance.initialize(
           ddo.id,
           ddo.services[0].id,
@@ -387,6 +388,7 @@ export default function Compute({
 
       // add method for this logic
       if (!hasPreviousAlgorithmOrder) {
+        // going to move replace part of this logic when the use consume hook will be ready
         const initializeData = await ProviderInstance.initialize(
           selectedAlgorithmAsset.id,
           selectedAlgorithmAsset.services[0].id,
