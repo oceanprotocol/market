@@ -73,7 +73,7 @@ export default function FormTrade({
   async function handleTrade(values: FormTradeData) {
     if (!web3) return
 
-    const poolInstance = new Pool(web3, LoggerInstance)
+    const poolInstance = new Pool(web3)
     const tokenInOutMarket: TokenInOutMarket = {
       tokenIn: '',
       tokenOut: '',

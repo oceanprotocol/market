@@ -146,7 +146,7 @@ export default function Trade(): ReactElement {
 
     async function getMaximum() {
       try {
-        const poolInstance = new Pool(web3, LoggerInstance)
+        const poolInstance = new Pool(web3)
 
         const maxTokensInPool = await poolInstance.getReserve(
           asset.accessDetails.addressOrId,
@@ -171,7 +171,14 @@ export default function Trade(): ReactElement {
       }
     }
     getMaximum()
-  }, [isAssetNetwork, web3, balance, asset])
+  }, [
+    isAssetNetwork,
+    web3,
+    balance,
+    asset,
+    poolInfo.datatokenAddress,
+    poolInfo.baseTokenAddress
+  ])
 
   return (
     <FormTrade

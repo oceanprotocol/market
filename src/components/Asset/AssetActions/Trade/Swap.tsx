@@ -11,7 +11,7 @@ import Decimal from 'decimal.js'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import { FormTradeData, TradeItem } from './_types'
-import { Asset, LoggerInstance, Pool } from '@oceanprotocol/lib'
+import { LoggerInstance, Pool } from '@oceanprotocol/lib'
 import { AssetExtended } from 'src/@types/AssetExtended'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
@@ -57,36 +57,45 @@ export default function Swap({
   const [spotPrice, setSpotPrice] = useState<string>()
   const [totalValue, setTotalValue] = useState<string>()
   const [tokenAmount, setTokenAmount] = useState<string>()
+  const [swapFee, setSwapFee] = useState<string>()
 
   useEffect(() => {
     if (!assetExtended || !balance || !values?.type) return
+    const poolInstance = new Pool(web3)
 
     async function calculateMaximum() {
+      const amountDataToken =
+        values.type === 'buy'
+          ? new Decimal(maxDt)
+          : new Decimal(balance.datatoken)
+
+      const amountBaseToken =
+        values.type === 'buy'
+          ? new Decimal(balance.baseToken)
+          : new Decimal(maxBaseToken)
+
       try {
-        const poolInstance = new Pool(web3, LoggerInstance)
-        const amountDataToken =
-          values.type === 'buy'
-            ? new Decimal(maxDt)
-            : new Decimal(balance.datatoken)
-
-        const amountBaseToken =
-          values.type === 'buy'
-            ? new Decimal(balance.baseToken)
-            : new Decimal(maxBaseToken)
-
         const swapFee = await poolInstance.getSwapFee(
           assetExtended.accessDetails?.addressOrId
         )
+        setSwapFee(swapFee)
+        console.log('SWAP FEE: ', swapFee)
+
+        // console.log('POOL ADDR: ', assetExtended.accessDetails.addressOrId)
+        // console.log('TOKEN : ', dtItem.token)
+        // console.log('BASE TOKEN: ', baseTokenItem.token)
+        // console.log('AMOUNT DT', amountDataToken.toString())
+        // console.log('SWAP FEE', swapFee)
 
         const maxBuyBaseToken = await poolInstance.getAmountOutExactIn(
-          assetExtended.accessDetails?.addressOrId,
+          assetExtended.accessDetails.addressOrId,
           dtItem.token,
           baseTokenItem.token,
           amountDataToken.toString(),
           swapFee
         )
-
-        const maxBuyDt = await poolInstance.getAmountOutExactIn(
+        console.log('MAX BUY BASE TOKEN: ', maxBuyBaseToken)
+        const maxBuyDt = await poolInstance.getAmountInExactOut(
           assetExtended.accessDetails?.addressOrId,
           baseTokenItem.token,
           dtItem.token,
@@ -156,6 +165,7 @@ export default function Swap({
   const handleValueChange = async (name: string, value: number) => {
     const tokenIn = ''
     const tokenOut = ''
+    const poolInstance = new Pool(web3)
     let newValue
 
     // if (name === 'ocean') {
@@ -202,15 +212,16 @@ export default function Swap({
     //   }
     // }
 
-    await setFieldValue(name === 'ocean' ? 'datatoken' : 'ocean', newValue)
+    // await setFieldValue(name === 'ocean' ? 'datatoken' : 'ocean', newValue)
 
-    // const spotPrice = await ocean.pool.getSpotPrice(
-    //   price.address,
-    //   tokenIn,
-    //   tokenOut
-    // )
+    const spotPrice = await poolInstance.getSpotPrice(
+      assetExtended.accessDetails.addressOrId,
+      baseTokenItem.token,
+      dtItem.token,
+      swapFee
+    )
 
-    // setSpotPrice(spotPrice)
+    setSpotPrice(spotPrice)
     validateForm()
   }
 

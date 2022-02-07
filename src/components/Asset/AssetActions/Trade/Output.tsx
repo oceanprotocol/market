@@ -35,7 +35,7 @@ export default function Output({
 
     async function getSwapFee() {
       if (!web3) return
-      const poolInstance = new Pool(web3, LoggerInstance)
+      const poolInstance = new Pool(web3)
       const swapFee = await poolInstance.getSwapFee(poolAddress)
 
       // // swapFee is tricky: to get 0.1% you need to convert from 0.001
