@@ -71,7 +71,7 @@ export default function Add({
 
     async function getMaximum() {
       try {
-        const poolInstance = new Pool(web3, LoggerInstance)
+        const poolInstance = new Pool(web3)
 
         const amountMaxPool = await poolInstance.getReserve(
           poolAddress,
@@ -99,7 +99,7 @@ export default function Add({
 
   // Submit
   async function handleAddLiquidity(amount: string, resetForm: () => void) {
-    const poolInstance = new Pool(web3, LoggerInstance)
+    const poolInstance = new Pool(web3)
     const minPoolAmountOut = '0' // ? TODO: how to get?
 
     try {
@@ -133,7 +133,7 @@ export default function Add({
           setSubmitting(false)
         }}
       >
-        {({ isSubmitting, submitForm, values, isValid }) => (
+        {({ isSubmitting, setSubmitting, submitForm, values, isValid }) => (
           <>
             <div className={styles.addInput}>
               {isWarningAccepted ? (
@@ -189,6 +189,7 @@ export default function Add({
               tokenAddress={tokenInAddress}
               tokenSymbol={tokenInSymbol}
               txId={txId}
+              setSubmitting={setSubmitting}
             />
             {debug && <DebugOutput output={values} />}
           </>

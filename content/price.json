@@ -41,7 +41,7 @@
     "add": {
       "title": "Add Liquidity",
       "output": {
-        "help": "Providing liquidity will earn you SWAPFEE% on every transaction in this pool, proportionally to your share of the pool. Your token input will be converted based on the weight of the pool.",
+        "help": "Providing liquidity will earn you SWAPFEE% on every transaction in this pool, proportionally to your share of the pool.",
         "titleIn": "You will receive",
         "titleOut": "Pool conversion"
       },
@@ -50,8 +50,7 @@
     },
     "remove": {
       "title": "Remove Liquidity",
-      "simple": "Set the amount of your pool shares to spend. You will get the equivalent value in OCEAN, limited to maximum amount for pool protection. If you have Datatokens left in your wallet, you can add them to the pool to increase the maximum amount.",
-      "advanced": "Set the amount of your pool shares to spend. You will get OCEAN and Datatokens equivalent to your pool share, without any limit. You can use these Datatokens in other DeFi tools.",
+      "simple": "Set the amount of your pool shares to spend. You will get the equivalent value in OCEAN, limited to maximum amount for pool protection.",
       "output": {
         "titleIn": "You will spend",
         "titleOut": "You will receive"

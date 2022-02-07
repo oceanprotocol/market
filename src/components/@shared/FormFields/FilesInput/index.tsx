@@ -5,7 +5,7 @@ import FileInfo from './Info'
 import UrlInput from '../URLInput'
 import { InputProps } from '@shared/FormInput'
 import { initialValues } from 'src/components/Publish/_constants'
-import { getFileInfo } from '@utils/provider'
+import { getFileUrlInfo } from '@utils/provider'
 import { FormPublishData } from 'src/components/Publish/_types'
 
 export default function FilesInput(props: InputProps): ReactElement {
@@ -19,7 +19,7 @@ export default function FilesInput(props: InputProps): ReactElement {
     async function validateUrl() {
       try {
         setIsLoading(true)
-        const checkedFile = await getFileInfo(url, providerUri)
+        const checkedFile = await getFileUrlInfo(url, providerUri)
         checkedFile && helpers.setValue([{ url, ...checkedFile[0] }])
       } catch (error) {
         toast.error('Could not fetch file info. Please check URL and try again')
