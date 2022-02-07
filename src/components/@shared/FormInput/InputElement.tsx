@@ -87,6 +87,23 @@ export default function InputElement({
         />
       )
     case 'radio':
+      return (
+        <div className={styles.radioWrap}>
+          <input
+            className={styles[type]}
+            type={type}
+            name={name}
+            checked={props.defaultChecked}
+            {...props}
+            readOnly
+          />
+          <label
+            className={cx({ [styles.radioLabelPricing]: true, [size]: size })}
+          >
+            {label}
+          </label>
+        </div>
+      )
     case 'checkbox':
       return (
         <div className={styles.radioGroup}>

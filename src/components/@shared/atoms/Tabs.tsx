@@ -1,5 +1,6 @@
 import React, { ReactElement, ReactNode } from 'react'
 import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs'
+import InputElement from '@shared/FormInput/InputElement'
 import styles from './Tabs.module.css'
 
 export interface TabsItem {
@@ -12,12 +13,14 @@ export default function Tabs({
   items,
   className,
   handleTabChange,
-  defaultIndex
+  defaultIndex,
+  showRadio
 }: {
   items: TabsItem[]
   className?: string
   handleTabChange?: (tabName: string) => void
   defaultIndex?: number
+  showRadio?: boolean
 }): ReactElement {
   return (
     <ReactTabs
@@ -25,14 +28,24 @@ export default function Tabs({
       defaultIndex={defaultIndex}
     >
       <TabList className={styles.tabList}>
-        {items.map((item) => (
+        {items.map((item, index) => (
           <Tab
             className={styles.tab}
             key={item.title}
             onClick={handleTabChange ? () => handleTabChange(item.title) : null}
             disabled={item.disabled}
           >
-            {item.title}
+            {showRadio ? (
+              <InputElement
+                name="radio-pricing"
+                type="radio"
+                checked={defaultIndex === index}
+                label={item.title}
+                readOnly
+              />
+            ) : (
+              item.title
+            )}
           </Tab>
         ))}
       </TabList>
