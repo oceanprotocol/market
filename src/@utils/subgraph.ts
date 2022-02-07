@@ -2,18 +2,7 @@ import { gql, OperationResult, TypedDocumentNode, OperationContext } from 'urql'
 import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import { getUrqlClientInstance } from '@context/UrqlProvider'
 import { getOceanConfig } from './ocean'
-import {
-  AssetsPoolPrice,
-  AssetsPoolPrice_pools as AssetsPoolPricePool
-} from '../@types/subgraph/AssetsPoolPrice'
-import {
-  AssetsFrePrice,
-  AssetsFrePrice_fixedRateExchanges as AssetsFrePriceFixedRateExchange
-} from '../@types/subgraph/AssetsFrePrice'
-import {
-  AssetsFreePrice,
-  AssetsFreePrice_dispensers as AssetFreePriceDispenser
-} from '../@types/subgraph/AssetsFreePrice'
+import { AssetsPoolPrice } from '../@types/subgraph/AssetsPoolPrice'
 import { AssetPreviousOrder } from '../@types/subgraph/AssetPreviousOrder'
 import {
   HighestLiquidityAssets_pools as HighestLiquidityAssetsPool,
@@ -25,7 +14,6 @@ import {
 } from '../@types/subgraph/PoolShares'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { UserSalesQuery as UsersSalesList } from '../@types/subgraph/UserSalesQuery'
-import { PoolData } from 'src/@types/subgraph/PoolData'
 
 export interface UserLiquidity {
   price: string
@@ -35,91 +23,6 @@ export interface UserLiquidity {
 export interface PriceList {
   [key: string]: string
 }
-
-interface DidAndDatatokenMap {
-  [name: string]: string
-}
-
-const FreeQuery = gql`
-  query AssetsFreePrice($datatoken_in: [String!]) {
-    dispensers(orderBy: id, where: { token_in: $datatoken_in }) {
-      token {
-        id
-        address
-      }
-    }
-  }
-`
-
-const AssetFreeQuery = gql`
-  query AssetFreePrice($datatoken: String) {
-    dispensers(orderBy: id, where: { token: $datatoken }) {
-      active
-      owner
-      isMinter
-      maxTokens
-      maxBalance
-      balance
-      token {
-        id
-        isDatatoken
-      }
-    }
-  }
-`
-
-const FreQuery = gql`
-  query AssetsFrePrice($datatoken_in: [String!]) {
-    fixedRateExchanges(orderBy: id, where: { datatoken_in: $datatoken_in }) {
-      id
-      price
-      baseToken {
-        symbol
-      }
-      datatoken {
-        id
-        address
-        symbol
-      }
-    }
-  }
-`
-
-const AssetFreQuery = gql`
-  query AssetFrePrice($datatoken: String) {
-    fixedRateExchanges(orderBy: id, where: { datatoken: $datatoken }) {
-      id
-      price
-      baseToken {
-        symbol
-      }
-      datatoken {
-        id
-        address
-        symbol
-      }
-    }
-  }
-`
-
-const PoolQuery = gql`
-  query AssetsPoolPrice($datatokenAddress_in: [String!]) {
-    pools(where: { datatoken_in: $datatokenAddress_in }) {
-      id
-      spotPrice
-      datatoken {
-        address
-        symbol
-      }
-      baseToken {
-        address
-        symbol
-      }
-      datatokenLiquidity
-      baseTokenLiquidity
-    }
-  }
-`
 
 const AssetPoolPriceQuery = gql`
   query AssetPoolPrice($datatokenAddress: String) {
@@ -276,51 +179,6 @@ const TopSalesQuery = gql`
       tokenBalancesOwned {
         value
       }
-    }
-  }
-`
-
-const poolDataQuery = gql`
-  query PoolData(
-    $pool: ID!
-    $poolAsString: String!
-    $owner: String!
-    $user: String
-  ) {
-    poolData: pool(id: $pool) {
-      id
-      totalShares
-      poolFee
-      opfFee
-      marketFee
-      spotPrice
-      baseToken {
-        address
-        symbol
-      }
-      baseTokenWeight
-      baseTokenLiquidity
-      datatoken {
-        address
-        symbol
-      }
-      datatokenWeight
-      datatokenLiquidity
-      shares(where: { user: $owner }) {
-        shares
-      }
-    }
-    poolDataUser: pool(id: $pool) {
-      shares(where: { user: $user }) {
-        shares
-      }
-    }
-    poolSnapshots(first: 1000, where: { pool: $poolAsString }, orderBy: date) {
-      date
-      spotPrice
-      baseTokenLiquidity
-      datatokenLiquidity
-      swapVolume
     }
   }
 `
@@ -587,27 +445,4 @@ export async function getTopAssetsPublishers(
   publisherSales.sort((a, b) => b.nrSales - a.nrSales)
 
   return publisherSales.slice(0, nrItems)
-}
-
-export async function getPoolData(
-  chainId: number,
-  pool: string,
-  owner: string,
-  user: string
-) {
-  const queryVariables = {
-    // Using `pool` & `poolAsString` is a workaround to make the mega query work.
-    // See https://github.com/oceanprotocol/ocean-subgraph/issues/301
-    pool: pool.toLowerCase(),
-    poolAsString: pool.toLowerCase(),
-    owner: owner.toLowerCase(),
-    user: user.toLowerCase()
-  }
-
-  const response: OperationResult<PoolData> = await fetchData(
-    poolDataQuery,
-    queryVariables,
-    getQueryContext(chainId)
-  )
-  return response?.data
 }

@@ -1,6 +1,5 @@
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { isValidNumber } from '@utils/numbers'
-import { getPoolData } from '@utils/subgraph'
 import Decimal from 'decimal.js'
 import React, {
   useContext,
@@ -18,7 +17,7 @@ import {
 import { useAsset } from '../Asset'
 import { useWeb3 } from '../Web3'
 import { PoolProviderValue, PoolInfo, PoolInfoUser } from './_types'
-import { getFee, getWeight } from './_utils'
+import { getFee, getPoolData, getWeight } from './_utils'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
