@@ -249,7 +249,7 @@ export async function createTokensAndPricing(
       )
 
       // the spender in this case is the erc721Factory because we are delegating
-      const pool = new Pool(web3, LoggerInstance)
+      const pool = new Pool(web3)
       const txApprove = await approve(
         web3,
         accountId,

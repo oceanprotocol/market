@@ -56,7 +56,7 @@ export default function FormAdd({
       }
       if (Number(values.amount) > Number(amountMax)) return
 
-      const poolInstance = new Pool(web3, LoggerInstance)
+      const poolInstance = new Pool(web3)
 
       const poolTokens = await poolInstance.calcPoolOutGivenSingleIn(
         poolAddress,

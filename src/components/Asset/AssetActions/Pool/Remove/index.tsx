@@ -55,7 +55,7 @@ export default function Remove({
 
   // TODO: precision needs to be set based on baseToken decimals
   Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
-  const poolInstance = new Pool(web3, LoggerInstance)
+  const poolInstance = new Pool(web3)
 
   async function handleRemoveLiquidity() {
     setIsLoading(true)
