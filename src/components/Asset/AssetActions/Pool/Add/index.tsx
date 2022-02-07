@@ -71,7 +71,7 @@ export default function Add({
 
     async function getMaximum() {
       try {
-        const poolInstance = new Pool(web3, LoggerInstance)
+        const poolInstance = new Pool(web3)
 
         const amountMaxPool = await poolInstance.getReserve(
           poolAddress,
@@ -99,7 +99,7 @@ export default function Add({
 
   // Submit
   async function handleAddLiquidity(amount: string, resetForm: () => void) {
-    const poolInstance = new Pool(web3, LoggerInstance)
+    const poolInstance = new Pool(web3)
     const minPoolAmountOut = '0' // ? TODO: how to get?
 
     try {
