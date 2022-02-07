@@ -430,14 +430,14 @@ export async function getHighestLiquidityDatatokens(
     const fetchedPools: OperationResult<HighestLiquidityGraphAssets, any> =
       await fetchData(HighestLiquidityAssets, null, queryContext)
     highestLiquidityAssets = highestLiquidityAssets.concat(
-      fetchedPools.data.pools
+      fetchedPools?.data?.pools
     )
   }
   highestLiquidityAssets.sort(
     (a, b) => b.baseTokenLiquidity - a.baseTokenLiquidity
   )
   for (let i = 0; i < highestLiquidityAssets.length; i++) {
-    if (!highestLiquidityAssets[i].datatoken.address) continue
+    if (!highestLiquidityAssets[i]?.datatoken?.address) continue
     dtList.push(highestLiquidityAssets[i].datatoken.address)
   }
   return dtList
