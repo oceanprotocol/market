@@ -11,6 +11,7 @@ export interface PoolInfo {
   weightBaseToken: string
   weightDt: string
   datatokenSymbol: string
+  datatokenAddress: string
   baseTokenSymbol: string
   baseTokenAddress: string
   totalPoolTokens: string

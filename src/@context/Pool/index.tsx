@@ -134,6 +134,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
       weightBaseToken: getWeight(poolData.baseTokenWeight),
       weightDt: getWeight(poolData.datatokenWeight),
       datatokenSymbol: poolData.datatoken.symbol,
+      datatokenAddress: poolData.datatoken.address,
       baseTokenSymbol: poolData.baseToken.symbol,
       baseTokenAddress: poolData.baseToken.address,
       totalPoolTokens: poolData.totalShares,
@@ -190,6 +191,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
     if (
       !poolData ||
       !poolInfo?.totalPoolTokens ||
+      !poolInfoUser?.poolShares ||
       !asset?.chainId ||
       !accountId
     )

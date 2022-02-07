@@ -13,6 +13,7 @@ import { useWeb3 } from '@context/Web3'
 import { FormTradeData, TradeItem } from './_types'
 import { LoggerInstance, Pool } from '@oceanprotocol/lib'
 import { AssetExtended } from 'src/@types/AssetExtended'
+import { usePool } from '@context/Pool'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
@@ -20,7 +21,6 @@ export default function Swap({
   assetExtended,
   maxDt,
   maxBaseToken,
-  baseTokenAddress,
   balance,
   setMaximumDt,
   setMaximumBaseToken,
@@ -29,7 +29,6 @@ export default function Swap({
   assetExtended: AssetExtended
   maxDt: string
   maxBaseToken: string
-  baseTokenAddress: string
   balance: PoolBalance
   setMaximumDt: (value: string) => void
   setMaximumBaseToken: (value: string) => void
@@ -37,6 +36,7 @@ export default function Swap({
 }): ReactElement {
   const { isAssetNetwork } = useAsset()
   const { web3 } = useWeb3()
+  const { poolInfo } = usePool()
 
   const [baseTokenItem, setBaseTokenItem] = useState<TradeItem>({
     amount: '0',
@@ -84,15 +84,15 @@ export default function Swap({
 
         const maxBuyBaseToken = await poolInstance.getAmountOutExactIn(
           assetExtended.accessDetails.addressOrId,
-          dtItem.token,
-          baseTokenItem.token,
+          poolInfo.datatokenAddress,
+          poolInfo.baseTokenAddress,
           amountDataToken.toString(),
           swapFee
         )
         const maxBuyDt = await poolInstance.getAmountInExactOut(
           assetExtended.accessDetails?.addressOrId,
-          baseTokenItem.token,
-          dtItem.token,
+          poolInfo.baseTokenAddress,
+          poolInfo.datatokenAddress,
           amountBaseToken.toString(),
           swapFee
         )
@@ -142,7 +142,9 @@ export default function Swap({
     setMaximumDt,
     setMaximumBaseToken,
     assetExtended,
-    web3
+    web3,
+    dtItem.token,
+    baseTokenItem.token
   ])
 
   const switchTokens = () => {
@@ -174,7 +176,7 @@ export default function Swap({
         setTokenAmount(value.toString())
 
         tokenIn = assetExtended.services[0].datatokenAddress
-        tokenOut = baseTokenAddress
+        tokenOut = poolInfo.baseTokenAddress
       } else {
         newValue = await poolInstance.calcSingleInGivenPoolOut(
           assetExtended.accessDetails.addressOrId,
@@ -184,7 +186,7 @@ export default function Swap({
 
         setTotalValue(value.toString())
         setTokenAmount(newValue)
-        tokenIn = baseTokenAddress
+        tokenIn = poolInfo.baseTokenAddress
         tokenOut = assetExtended.services[0].datatokenAddress
       }
     } else {
@@ -198,7 +200,7 @@ export default function Swap({
         setTotalValue(value.toString())
         setTokenAmount(newValue)
         tokenIn = assetExtended.services[0].datatokenAddress
-        tokenOut = baseTokenAddress
+        tokenOut = poolInfo.baseTokenAddress
       } else {
         newValue = await poolInstance.calcPoolOutGivenSingleIn(
           assetExtended.accessDetails.addressOrId,
@@ -208,13 +210,12 @@ export default function Swap({
 
         setTotalValue(newValue)
         setTokenAmount(value.toString())
-        tokenIn = baseTokenAddress
+        tokenIn = poolInfo.baseTokenAddress
         tokenOut = assetExtended.services[0].datatokenAddress
       }
     }
 
     await setFieldValue(name === 'ocean' ? 'datatoken' : 'ocean', newValue)
-
     const spotPrice = await poolInstance.getSpotPrice(
       assetExtended.accessDetails.addressOrId,
       tokenIn,

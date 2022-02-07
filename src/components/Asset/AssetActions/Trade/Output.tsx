@@ -8,7 +8,7 @@ import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
 import { FormTradeData } from './_types'
 import { useWeb3 } from '@context/Web3'
-import { LoggerInstance, Pool } from '@oceanprotocol/lib'
+import { Pool } from '@oceanprotocol/lib'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
@@ -54,7 +54,7 @@ export default function Output({
       setSwapFeeValue(value.toString())
     }
     getSwapFee()
-  }, [poolAddress, values, isAssetNetwork, swapFee])
+  }, [poolAddress, values, isAssetNetwork, swapFee, web3])
 
   // Get output values
   useEffect(() => {

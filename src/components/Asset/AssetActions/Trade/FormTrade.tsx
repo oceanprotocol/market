@@ -2,7 +2,6 @@ import React, { ReactElement, useState } from 'react'
 import {
   AmountsInMaxFee,
   AmountsOutMaxFee,
-  Asset,
   LoggerInstance,
   Pool,
   TokenInOutMarket
@@ -27,14 +26,12 @@ export default function FormTrade({
   asset,
   balance,
   maxDt,
-  maxBaseToken,
-  baseTokenAddress
+  maxBaseToken
 }: {
   asset: AssetExtended
   balance: PoolBalance
   maxDt: string
   maxBaseToken: string
-  baseTokenAddress: string
 }): ReactElement {
   const { web3, accountId } = useWeb3()
   const { isAssetNetwork } = useAsset()
@@ -153,7 +150,6 @@ export default function FormTrade({
               balance={balance}
               maxDt={maxDt}
               maxBaseToken={maxBaseToken}
-              baseTokenAddress={baseTokenAddress}
               setCoin={setCoinFrom}
               setMaximumBaseToken={setMaximumBaseToken}
               setMaximumDt={setMaximumDt}
