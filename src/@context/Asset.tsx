@@ -25,7 +25,6 @@ interface AssetProviderValue {
   title: string
   owner: string
   error?: string
-  refreshInterval: number
   isAssetNetwork: boolean
   oceanConfig: Config
   loading: boolean
@@ -33,8 +32,6 @@ interface AssetProviderValue {
 }
 
 const AssetContext = createContext({} as AssetProviderValue)
-
-const refreshInterval = 10000 // 10 sec.
 
 function AssetProvider({
   did,
@@ -168,7 +165,6 @@ function AssetProvider({
           error,
           isInPurgatory,
           purgatoryData,
-          refreshInterval,
           loading,
           fetchAsset,
           isAssetNetwork,

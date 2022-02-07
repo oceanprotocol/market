@@ -5,22 +5,22 @@ import React, {
   useEffect,
   useRef
 } from 'react'
-import styles from './Remove.module.css'
-import Header from './Header'
+import styles from './index.module.css'
+import Header from '../Header'
 import { toast } from 'react-toastify'
-import Actions from './Actions'
+import Actions from '../Actions'
 import { LoggerInstance, Pool } from '@oceanprotocol/lib'
-import Token from './Token'
+import Token from '../Token'
 import FormHelp from '@shared/FormInput/Help'
 import Button from '@shared/atoms/Button'
-import { getMaxPercentRemove } from './utils'
+import { getMaxPercentRemove } from '../utils'
 import debounce from 'lodash.debounce'
-import UserLiquidity from '../UserLiquidity'
+import UserLiquidity from '../../UserLiquidity'
 import InputElement from '@shared/FormInput/InputElement'
 import { useWeb3 } from '@context/Web3'
 import Decimal from 'decimal.js'
 import { useAsset } from '@context/Asset'
-import content from '../../../../../content/price.json'
+import content from '../../../../../../content/price.json'
 
 const slippagePresets = ['5', '10', '15', '25', '50']
 
@@ -180,13 +180,13 @@ export default function Remove({
       </form>
       <div className={styles.output}>
         <div>
-          <p>{content.pool.remove.output.titleIn}</p>
-          <Token symbol="pool shares" balance={amountPoolShares} noIcon />
-        </div>
-        <div>
           <p>{content.pool.remove.output.titleOut} minimum</p>
           <Token symbol={tokenOutSymbol} balance={minOceanAmount} />
         </div>
+        {/* <div>
+          <p>{content.pool.remove.output.titleIn}</p>
+          <Token symbol="pool shares" balance={amountPoolShares} noIcon />
+        </div> */}
       </div>
       <div className={styles.slippage}>
         <strong>Expected price impact</strong>

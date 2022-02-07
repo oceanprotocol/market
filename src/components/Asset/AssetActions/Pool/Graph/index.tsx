@@ -12,13 +12,15 @@ import { lineStyle, GraphType } from './_constants'
 import Nav from './Nav'
 import { getOptions } from './_utils'
 import { PoolData_poolSnapshots as PoolDataPoolSnapshots } from 'src/@types/subgraph/PoolData'
+import { usePrices } from '@context/Prices'
 
 export default function Graph({
   poolSnapshots
 }: {
   poolSnapshots: PoolDataPoolSnapshots[]
 }): ReactElement {
-  const { locale } = useUserPreferences()
+  const { locale, currency } = useUserPreferences()
+  const { prices } = usePrices()
   const darkMode = useDarkMode(false, darkModeConfig)
 
   const [options, setOptions] = useState<ChartOptions<any>>()
@@ -29,10 +31,18 @@ export default function Graph({
   // 0 Get Graph options
   //
   useEffect(() => {
+    if (!poolSnapshots) return
+
     LoggerInstance.log('[pool graph] Fired getOptions().')
-    const options = getOptions(locale, darkMode.value)
+    const symbol =
+      graphType === 'liquidity'
+        ? currency
+        : // TODO: remove any once baseToken works
+          // see https://github.com/oceanprotocol/ocean-subgraph/issues/312
+          (poolSnapshots[0] as any)?.baseToken?.symbol
+    const options = getOptions(locale, darkMode.value, symbol)
     setOptions(options)
-  }, [locale, darkMode.value, graphType])
+  }, [locale, darkMode.value, graphType, currency, poolSnapshots])
 
   //
   // 1 Data manipulation
@@ -42,14 +52,21 @@ export default function Graph({
 
     const timestamps = poolSnapshots.map((item) => {
       const date = new Date(item.date * 1000)
-      return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+      return `${date.toLocaleDateString(locale)} ${date.toLocaleTimeString(
+        locale,
+        { hour: '2-digit', minute: '2-digit' }
+      )}`
     })
 
     let baseTokenLiquidityCumulative = '0'
     const liquidityHistory = poolSnapshots.map((item) => {
+      const conversionSpotPrice = prices[currency.toLowerCase()]
       baseTokenLiquidityCumulative = new Decimal(baseTokenLiquidityCumulative)
         .add(item.baseTokenLiquidity)
+        .mul(2) // double baseTokenLiquidity as we have 50/50 weight
+        .mul(conversionSpotPrice) // convert to user currency
         .toString()
+
       return baseTokenLiquidityCumulative
     })
 
@@ -66,23 +83,23 @@ export default function Graph({
     let data
     switch (graphType) {
       case 'price':
-        data = priceHistory.slice(0)
+        data = priceHistory
         break
       case 'volume':
-        data = volumeHistory.slice(0)
+        data = volumeHistory
         break
       default:
-        data = liquidityHistory.slice(0)
+        data = liquidityHistory
         break
     }
 
     const newGraphData = {
-      labels: timestamps.slice(0),
+      labels: timestamps,
       datasets: [{ ...lineStyle, data, borderColor: `#8b98a9` }]
     }
     setGraphData(newGraphData)
     LoggerInstance.log('[pool graph] New graph data created:', newGraphData)
-  }, [poolSnapshots, graphType])
+  }, [poolSnapshots, graphType, currency, prices, locale])
 
   return (
     <div className={styles.graphWrap}>

@@ -10,11 +10,15 @@ import useSWR from 'swr'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { LoggerInstance } from '@oceanprotocol/lib'
 
-interface PricesValue {
+interface Prices {
   [key: string]: number
 }
 
-const initialData: PricesValue = {
+interface PricesValue {
+  prices: Prices
+}
+
+const initialData: Prices = {
   eur: 0.0,
   usd: 0.0,
   eth: 0.0,
@@ -37,7 +41,7 @@ export default function PricesProvider({
 
   const [prices, setPrices] = useState(initialData)
 
-  const onSuccess = async (data: { [tokenId]: { [key: string]: number } }) => {
+  const onSuccess = async (data: { [tokenId]: Prices }) => {
     if (!data) return
     LoggerInstance.log('[prices] Got new OCEAN spot prices.', data[tokenId])
     setPrices(data[tokenId])
