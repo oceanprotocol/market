@@ -21,3 +21,8 @@ interface PriceOptions {
   // easier to keep this as number for Yup input validation
   swapFee: number
 }
+
+interface PriceAndEstimation {
+  price: string
+  gasEstimation: number
+}

@@ -1,5 +1,6 @@
 import { getNetworkDisplayName } from '@hooks/useNetworkMetadata'
 import { LoggerInstance } from '@oceanprotocol/lib'
+import Web3 from 'web3'
 import { getOceanConfig } from './ocean'
 
 export function accountTruncate(account: string): string {
@@ -7,6 +8,15 @@ export function accountTruncate(account: string): string {
   const middle = account.substring(6, 38)
   const truncated = account.replace(middle, '…')
   return truncated
+}
+/**
+ * returns a dummy web3 instance, only usable to get info from the chain
+ * @param chainId
+ * @returns Web3 instance
+ */
+export async function getDummyWeb3(chainId: number): Promise<Web3> {
+  const config = getOceanConfig(chainId)
+  return new Web3(config.nodeUri)
 }
 
 export async function addCustomNetwork(

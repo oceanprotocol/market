@@ -22,6 +22,7 @@ module.exports = {
   marketFeeAddress:
     process.env.NEXT_PUBLIC_MARKET_FEE_ADDRESS ||
     '0x9984b2453eC7D99a73A5B3a46Da81f197B753C8d',
+  marketFee: process.env.NEXT_PUBLIC_MARKET_FEE || '0.2',
 
   // Used for conversion display, can be whatever coingecko API supports
   // see: https://api.coingecko.com/api/v3/simple/supported_vs_currencies
