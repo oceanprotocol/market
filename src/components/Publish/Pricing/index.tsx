@@ -42,7 +42,14 @@ export default function PricingFields(): ReactElement {
         : 0
 
     setFieldValue('pricing.amountDataToken', amountDataToken)
-  }, [price, amountOcean, weightOnOcean, weightOnDataToken, type])
+  }, [
+    price,
+    amountOcean,
+    weightOnOcean,
+    weightOnDataToken,
+    type,
+    setFieldValue
+  ])
 
   const tabs = [
     appConfig.allowFixedPricing === 'true'

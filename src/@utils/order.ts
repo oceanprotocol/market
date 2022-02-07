@@ -37,17 +37,6 @@ export async function order(
   )
   console.log('approve tx', txApprove)
 
-  // const txApprove1 = await approve(
-  //   web3,
-  //   accountId,
-  //   config.oceanTokenAddress,
-  //   datatokenAddress,
-  //   '1',
-  //   false
-  // )
-  // console.log('approve tx', txApprove1)
-
-  // diference between timeout and validUntil?
   const initializeData = await ProviderInstance.initialize(
     asset.id,
     asset.services[0].id,
@@ -55,26 +44,47 @@ export async function order(
     accountId,
     asset.services[0].serviceEndpoint
   )
+
   const orderParams = {
     consumer: accountId,
     serviceIndex: 1,
     _providerFees: initializeData.providerFee
   } as OrderParams
-  const freParams = {
-    exchangeContract: config.fixedRateExchangeAddress,
-    exchangeId: asset.accessDetails.addressOrId,
-    maxBaseTokenAmount: web3.utils.toWei('2'),
-    swapMarketFee: web3.utils.toWei('0'),
-    marketFeeAddress: ZERO_ADDRESS
-  } as FreOrderParams
 
-  const tx = await datatoken.buyFromFreAndOrder(
-    asset.services[0].datatokenAddress,
-    accountId,
-    orderParams,
-    freParams
-  )
+  switch (asset.accessDetails?.type) {
+    case 'fixed': {
+      const freParams = {
+        exchangeContract: config.fixedRateExchangeAddress,
+        exchangeId: asset.accessDetails.addressOrId,
+        maxBaseTokenAmount: web3.utils.toWei('2'),
+        swapMarketFee: web3.utils.toWei('0'),
+        marketFeeAddress: ZERO_ADDRESS
+      } as FreOrderParams
 
-  LoggerInstance.log('ordercreated', tx)
-  return tx
+      const tx = await datatoken.buyFromFreAndOrder(
+        asset.services[0].datatokenAddress,
+        accountId,
+        orderParams,
+        freParams
+      )
+
+      LoggerInstance.log('ordercreated', tx)
+      return tx
+    }
+    case 'dynamic': {
+      return null
+    }
+
+    case 'free': {
+      const tx = await datatoken.buyFromDispenserAndOrder(
+        asset.services[0].datatokenAddress,
+        accountId,
+        orderParams,
+        config.dispenserAddress
+      )
+
+      LoggerInstance.log('ordercreated', tx)
+      return tx
+    }
+  }
 }
