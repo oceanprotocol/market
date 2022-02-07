@@ -20,6 +20,7 @@ export default function Swap({
   assetExtended,
   maxDt,
   maxBaseToken,
+  baseTokenAddress,
   balance,
   setMaximumDt,
   setMaximumBaseToken,
@@ -28,6 +29,7 @@ export default function Swap({
   assetExtended: AssetExtended
   maxDt: string
   maxBaseToken: string
+  baseTokenAddress: string
   balance: PoolBalance
   setMaximumDt: (value: string) => void
   setMaximumBaseToken: (value: string) => void
@@ -79,13 +81,6 @@ export default function Swap({
           assetExtended.accessDetails?.addressOrId
         )
         setSwapFee(swapFee)
-        console.log('SWAP FEE: ', swapFee)
-
-        // console.log('POOL ADDR: ', assetExtended.accessDetails.addressOrId)
-        // console.log('TOKEN : ', dtItem.token)
-        // console.log('BASE TOKEN: ', baseTokenItem.token)
-        // console.log('AMOUNT DT', amountDataToken.toString())
-        // console.log('SWAP FEE', swapFee)
 
         const maxBuyBaseToken = await poolInstance.getAmountOutExactIn(
           assetExtended.accessDetails.addressOrId,
@@ -94,7 +89,6 @@ export default function Swap({
           amountDataToken.toString(),
           swapFee
         )
-        console.log('MAX BUY BASE TOKEN: ', maxBuyBaseToken)
         const maxBuyDt = await poolInstance.getAmountInExactOut(
           assetExtended.accessDetails?.addressOrId,
           baseTokenItem.token,
@@ -163,61 +157,68 @@ export default function Swap({
   }
 
   const handleValueChange = async (name: string, value: number) => {
-    const tokenIn = ''
-    const tokenOut = ''
+    let tokenIn = ''
+    let tokenOut = ''
     const poolInstance = new Pool(web3)
     let newValue
 
-    // if (name === 'ocean') {
-    //   if (values.type === 'sell') {
-    //     newValue = await ocean.pool.getDTNeeded(price.address, value.toString())
+    if (name === 'ocean') {
+      if (values.type === 'sell') {
+        newValue = await poolInstance.calcPoolOutGivenSingleIn(
+          assetExtended.accessDetails.addressOrId,
+          dtItem.token,
+          value.toString()
+        )
 
-    //     setTotalValue(newValue)
-    //     setTokenAmount(value.toString())
+        setTotalValue(newValue)
+        setTokenAmount(value.toString())
 
-    //     tokenIn = ddo.services[0].datatokenAddress
-    //     tokenOut = ocean.pool.oceanAddress
-    //   } else {
-    //     newValue = await ocean.pool.getDTReceived(
-    //       price.address,
-    //       value.toString()
-    //     )
+        tokenIn = assetExtended.services[0].datatokenAddress
+        tokenOut = baseTokenAddress
+      } else {
+        newValue = await poolInstance.calcSingleInGivenPoolOut(
+          assetExtended.accessDetails.addressOrId,
+          baseTokenItem.token,
+          value.toString()
+        )
 
-    //     setTotalValue(value.toString())
-    //     setTokenAmount(newValue)
-    //     tokenIn = ocean.pool.oceanAddress
-    //     tokenOut = ddo.services[0].datatokenAddress
-    //   }
-    // } else {
-    //   if (values.type === 'sell') {
-    //     newValue = await ocean.pool.getOceanReceived(
-    //       price.address,
-    //       value.toString()
-    //     )
+        setTotalValue(value.toString())
+        setTokenAmount(newValue)
+        tokenIn = baseTokenAddress
+        tokenOut = assetExtended.services[0].datatokenAddress
+      }
+    } else {
+      if (values.type === 'sell') {
+        newValue = await poolInstance.calcSingleInGivenPoolOut(
+          assetExtended.accessDetails.addressOrId,
+          baseTokenItem.token,
+          value.toString()
+        )
 
-    //     setTotalValue(value.toString())
-    //     setTokenAmount(newValue)
-    //     tokenIn = ddo.services[0].datatokenAddress
-    //     tokenOut = ocean.pool.oceanAddress
-    //   } else {
-    //     newValue = await ocean.pool.getOceanNeeded(
-    //       price.address,
-    //       value.toString()
-    //     )
+        setTotalValue(value.toString())
+        setTokenAmount(newValue)
+        tokenIn = assetExtended.services[0].datatokenAddress
+        tokenOut = baseTokenAddress
+      } else {
+        newValue = await poolInstance.calcPoolOutGivenSingleIn(
+          assetExtended.accessDetails.addressOrId,
+          dtItem.token,
+          value.toString()
+        )
 
-    //     setTotalValue(newValue)
-    //     setTokenAmount(value.toString())
-    //     tokenIn = ocean.pool.oceanAddress
-    //     tokenOut = ddo.services[0].datatokenAddress
-    //   }
-    // }
+        setTotalValue(newValue)
+        setTokenAmount(value.toString())
+        tokenIn = baseTokenAddress
+        tokenOut = assetExtended.services[0].datatokenAddress
+      }
+    }
 
-    // await setFieldValue(name === 'ocean' ? 'datatoken' : 'ocean', newValue)
+    await setFieldValue(name === 'ocean' ? 'datatoken' : 'ocean', newValue)
 
     const spotPrice = await poolInstance.getSpotPrice(
       assetExtended.accessDetails.addressOrId,
-      baseTokenItem.token,
-      dtItem.token,
+      tokenIn,
+      tokenOut,
       swapFee
     )
 

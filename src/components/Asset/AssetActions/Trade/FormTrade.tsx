@@ -27,12 +27,14 @@ export default function FormTrade({
   asset,
   balance,
   maxDt,
-  maxBaseToken
+  maxBaseToken,
+  baseTokenAddress
 }: {
   asset: AssetExtended
   balance: PoolBalance
   maxDt: string
   maxBaseToken: string
+  baseTokenAddress: string
 }): ReactElement {
   const { web3, accountId } = useWeb3()
   const { isAssetNetwork } = useAsset()
@@ -151,6 +153,7 @@ export default function FormTrade({
               balance={balance}
               maxDt={maxDt}
               maxBaseToken={maxBaseToken}
+              baseTokenAddress={baseTokenAddress}
               setCoin={setCoinFrom}
               setMaximumBaseToken={setMaximumBaseToken}
               setMaximumDt={setMaximumDt}
