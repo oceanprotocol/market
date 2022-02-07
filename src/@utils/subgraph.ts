@@ -2,7 +2,7 @@ import { gql, OperationResult, TypedDocumentNode, OperationContext } from 'urql'
 import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import { getUrqlClientInstance } from '@context/UrqlProvider'
 import { getOceanConfig } from './ocean'
-import { AssetsPoolPrice } from '../@types/subgraph/AssetsPoolPrice'
+import { AssetPoolPrice } from '../@types/subgraph/AssetPoolPrice'
 import { AssetPreviousOrder } from '../@types/subgraph/AssetPreviousOrder'
 import {
   HighestLiquidityAssets_pools as HighestLiquidityAssetsPool,
@@ -269,7 +269,7 @@ export async function getSpotPrice(asset: Asset): Promise<number> {
   }
   const queryContext = getQueryContext(Number(asset.chainId))
 
-  const poolPriceResponse: OperationResult<AssetsPoolPrice> = await fetchData(
+  const poolPriceResponse: OperationResult<AssetPoolPrice> = await fetchData(
     AssetPoolPriceQuery,
     poolVariables,
     queryContext
