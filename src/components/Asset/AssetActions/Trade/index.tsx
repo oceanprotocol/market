@@ -34,7 +34,7 @@ export default function Trade(): ReactElement {
     async function getTokenBalance() {
       const datatokenInstance = new Datatoken(web3)
       const dtBalance = await datatokenInstance.balance(
-        asset.services[0].datatokenAddress,
+        asset.accessDetails.datatoken.address,
         accountId
       )
       setTokenBalance({

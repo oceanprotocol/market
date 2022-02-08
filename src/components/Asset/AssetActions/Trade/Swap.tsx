@@ -89,7 +89,7 @@ export default function Swap({
           amountDataToken.toString(),
           swapFee
         )
-        const maxBuyDt = await poolInstance.getAmountInExactOut(
+        const maxBuyDt = await poolInstance.getAmountOutExactIn(
           assetExtended.accessDetails?.addressOrId,
           poolInfo.baseTokenAddress,
           poolInfo.datatokenAddress,
