@@ -13,7 +13,11 @@ import {
   Pool,
   OrderParams,
   FreOrderParams,
-  ComputeAsset
+  ComputeAsset,
+  approve,
+  TokenInOutMarket,
+  AmountsInMaxFee,
+  AmountsOutMaxFee
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
@@ -48,6 +52,7 @@ import { Decimal } from 'decimal.js'
 import { TransactionReceipt } from 'web3-core'
 import { useAbortController } from '@hooks/useAbortController'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
+import AssetDetails from '../..'
 
 export default function Compute({
   ddo,
@@ -289,7 +294,7 @@ export default function Compute({
       let assetOrderId = hasPreviousDatasetOrder ? previousDatasetOrderId : ''
 
       if (!hasPreviousDatasetOrder) {
-        // going to move replace part of this logic when the use consume hook will be ready
+        // going to move/replace part of this logic when the use consume hook will be ready
         const initializeData = await ProviderInstance.initialize(
           ddo.id,
           ddo.services[0].id,
@@ -311,8 +316,65 @@ export default function Compute({
           let tx: TransactionReceipt
           switch (accessDetails?.type) {
             case 'dynamic': {
-              // const poolInstance = new Pool(web3, LoggerInstance)
-              // const tx = poolInstance.
+              const oceanAmmount = new Decimal(accessDetails.price)
+                .times(1.05)
+                .toString()
+              const maxPrice = new Decimal(accessDetails.price)
+                .times(2)
+                .toString()
+              const poolInstance = new Pool(web3)
+              if (
+                new Decimal('1').greaterThan(
+                  await poolInstance.getReserve(
+                    accessDetails.addressOrId,
+                    accessDetails.datatoken.address
+                  )
+                )
+              ) {
+                LoggerInstance.error(
+                  'ERROR: Buy quantity exceeds quantity allowed'
+                )
+              }
+              const calcInGivenOut = await poolInstance.getAmountInExactOut(
+                accessDetails.addressOrId,
+                accessDetails.baseToken.address,
+                accessDetails.datatoken.address,
+                '1',
+                '0.1'
+              )
+              if (new Decimal(calcInGivenOut).greaterThan(oceanAmmount)) {
+                this.logger.error('ERROR: Not enough Ocean Tokens')
+                return null
+              }
+
+              const approvetx = await approve(
+                web3,
+                accountId,
+                accessDetails.baseToken.address,
+                accountId,
+                '1'
+              )
+              if (!approvetx) {
+                LoggerInstance.error(
+                  'ERROR: Failed to call approve OCEAN token'
+                )
+              }
+              const tokenInOutMarket: TokenInOutMarket = {
+                tokenIn: accessDetails.baseToken.address,
+                tokenOut: accessDetails.datatoken.address,
+                marketFeeAddress: appConfig.marketFeeAddress
+              }
+              const amountsInOutMaxFee: AmountsOutMaxFee = {
+                maxAmountIn: oceanAmmount,
+                tokenAmountOut: '1',
+                swapMarketFee: '0.1'
+              }
+              const tx = await poolInstance.swapExactAmountOut(
+                accountId,
+                accessDetails.addressOrId,
+                tokenInOutMarket,
+                amountsInOutMaxFee
+              )
             }
             case 'fixed': {
               const datatokenInstance = new Datatoken(web3)
@@ -410,8 +472,65 @@ export default function Compute({
           let tx: TransactionReceipt
           switch (algorithmConsumeDetails?.type) {
             case 'dynamic': {
-              // const poolInstance = new Pool(web3, LoggerInstance)
-              // const tx = poolInstance.
+              const oceanAmmount = new Decimal(algorithmConsumeDetails.price)
+                .times(1.05)
+                .toString()
+              const maxPrice = new Decimal(algorithmConsumeDetails.price)
+                .times(2)
+                .toString()
+              const poolInstance = new Pool(web3)
+              if (
+                new Decimal('1').greaterThan(
+                  await poolInstance.getReserve(
+                    algorithmConsumeDetails.addressOrId,
+                    algorithmConsumeDetails.datatoken.address
+                  )
+                )
+              ) {
+                LoggerInstance.error(
+                  'ERROR: Buy quantity exceeds quantity allowed'
+                )
+              }
+              const calcInGivenOut = await poolInstance.getAmountInExactOut(
+                algorithmConsumeDetails.addressOrId,
+                algorithmConsumeDetails.baseToken.address,
+                algorithmConsumeDetails.datatoken.address,
+                '1',
+                '0.1'
+              )
+              if (new Decimal(calcInGivenOut).greaterThan(oceanAmmount)) {
+                this.logger.error('ERROR: Not enough Ocean Tokens')
+                return null
+              }
+
+              const approvetx = await approve(
+                web3,
+                accountId,
+                algorithmConsumeDetails.baseToken.address,
+                accountId,
+                '1'
+              )
+              if (!approvetx) {
+                LoggerInstance.error(
+                  'ERROR: Failed to call approve OCEAN token'
+                )
+              }
+              const tokenInOutMarket: TokenInOutMarket = {
+                tokenIn: algorithmConsumeDetails.baseToken.address,
+                tokenOut: algorithmConsumeDetails.datatoken.address,
+                marketFeeAddress: appConfig.marketFeeAddress
+              }
+              const amountsInOutMaxFee: AmountsOutMaxFee = {
+                maxAmountIn: oceanAmmount,
+                tokenAmountOut: '1',
+                swapMarketFee: '0.1'
+              }
+              const tx = await poolInstance.swapExactAmountOut(
+                accountId,
+                algorithmConsumeDetails.addressOrId,
+                tokenInOutMarket,
+                amountsInOutMaxFee
+              )
             }
             case 'fixed': {
               const datatokenInstance = new Datatoken(web3)
