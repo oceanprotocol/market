@@ -156,7 +156,7 @@ export default function Swap({
     )
     // don't reset form because we don't want to reset type
     setFieldValue('datatoken', 0)
-    setFieldValue('ocean', 0)
+    setFieldValue('baseToken', 0)
     setErrors({})
   }
 
@@ -166,7 +166,7 @@ export default function Swap({
     const poolInstance = new Pool(web3)
     let newValue
 
-    if (name === 'ocean') {
+    if (name === 'baseToken') {
       if (values.type === 'sell') {
         newValue = await poolInstance.calcPoolOutGivenSingleIn(
           assetExtended.accessDetails.addressOrId,
@@ -217,7 +217,10 @@ export default function Swap({
       }
     }
 
-    await setFieldValue(name === 'ocean' ? 'datatoken' : 'ocean', newValue)
+    await setFieldValue(
+      name === 'baseToken' ? 'datatoken' : 'baseToken',
+      newValue
+    )
     const spotPrice = await poolInstance.getSpotPrice(
       assetExtended.accessDetails.addressOrId,
       tokenIn,
@@ -232,7 +235,7 @@ export default function Swap({
   return (
     <div className={styles.swap}>
       <TradeInput
-        name={values.type === 'sell' ? 'datatoken' : 'ocean'}
+        name={values.type === 'sell' ? 'datatoken' : 'baseToken'}
         item={values.type === 'sell' ? dtItem : baseTokenItem}
         disabled={!isAssetNetwork}
         handleValueChange={handleValueChange}
@@ -248,7 +251,7 @@ export default function Swap({
       </Button>
 
       <TradeInput
-        name={values.type === 'sell' ? 'ocean' : 'datatoken'}
+        name={values.type === 'sell' ? 'baseToken' : 'datatoken'}
         item={values.type === 'sell' ? baseTokenItem : dtItem}
         disabled={!isAssetNetwork}
         handleValueChange={handleValueChange}

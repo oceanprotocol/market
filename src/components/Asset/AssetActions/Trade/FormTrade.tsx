@@ -21,6 +21,7 @@ import { FormTradeData } from './_types'
 import { initialValues } from './_constants'
 import content from '../../../../../content/price.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
+import { usePool } from '@context/Pool'
 
 export default function FormTrade({
   asset,
@@ -36,6 +37,7 @@ export default function FormTrade({
   const { web3, accountId } = useWeb3()
   const { isAssetNetwork } = useAsset()
   const { debug } = useUserPreferences()
+  const { poolInfo } = usePool()
   const [txId, setTxId] = useState<string>()
   const [coinFrom, setCoinFrom] = useState<string>('OCEAN')
 
@@ -43,12 +45,12 @@ export default function FormTrade({
   const [maximumDt, setMaximumDt] = useState(maxDt)
   const [isWarningAccepted, setIsWarningAccepted] = useState(false)
 
-  const tokenAddress = ''
-  const tokenSymbol = ''
+  const tokenAddress = poolInfo.baseTokenAddress
+  const tokenSymbol = poolInfo.baseTokenSymbol
 
   const validationSchema: Yup.SchemaOf<FormTradeData> = Yup.object()
     .shape({
-      ocean: Yup.number()
+      baseToken: Yup.number()
         .max(
           Number(maximumBaseToken),
           (param) => `Must be less or equal to ${param.max}`
@@ -70,8 +72,7 @@ export default function FormTrade({
     .defined()
 
   async function handleTrade(values: FormTradeData) {
-    if (!web3) return
-
+    if (!web3 || !asset) return
     const poolInstance = new Pool(web3)
     const tokenInOutMarket: TokenInOutMarket = {
       tokenIn: '',
