@@ -41,12 +41,14 @@ export default function Swap({
   const [baseTokenItem, setBaseTokenItem] = useState<TradeItem>({
     amount: '0',
     token: assetExtended.accessDetails.baseToken?.symbol,
-    maxAmount: '0'
+    maxAmount: '0',
+    address: assetExtended.accessDetails.baseToken.address
   })
   const [dtItem, setDtItem] = useState<TradeItem>({
     amount: '0',
     token: assetExtended.accessDetails.datatoken.symbol,
-    maxAmount: '0'
+    maxAmount: '0',
+    address: assetExtended.accessDetails.datatoken.address
   })
   const {
     setFieldValue,
@@ -168,7 +170,7 @@ export default function Swap({
       if (values.type === 'sell') {
         newValue = await poolInstance.calcPoolOutGivenSingleIn(
           assetExtended.accessDetails.addressOrId,
-          dtItem.token,
+          dtItem.address,
           value.toString()
         )
 
@@ -180,7 +182,7 @@ export default function Swap({
       } else {
         newValue = await poolInstance.calcSingleInGivenPoolOut(
           assetExtended.accessDetails.addressOrId,
-          baseTokenItem.token,
+          baseTokenItem.address,
           value.toString()
         )
 
@@ -193,7 +195,7 @@ export default function Swap({
       if (values.type === 'sell') {
         newValue = await poolInstance.calcSingleInGivenPoolOut(
           assetExtended.accessDetails.addressOrId,
-          baseTokenItem.token,
+          baseTokenItem.address,
           value.toString()
         )
 
@@ -204,7 +206,7 @@ export default function Swap({
       } else {
         newValue = await poolInstance.calcPoolOutGivenSingleIn(
           assetExtended.accessDetails.addressOrId,
-          dtItem.token,
+          dtItem.address,
           value.toString()
         )
 
