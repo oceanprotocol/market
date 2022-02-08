@@ -9,7 +9,7 @@ import Trade from './Trade'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import Web3Feedback from '@shared/Web3Feedback'
-import { getFileInfo } from '@utils/provider'
+import { getFileDidInfo, getFileUrlInfo } from '@utils/provider'
 import { getOceanConfig } from '@utils/ocean'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
@@ -17,6 +17,7 @@ import styles from './index.module.css'
 import { useFormikContext } from 'formik'
 import { FormPublishData } from 'src/components/Publish/_types'
 import { AssetExtended } from 'src/@types/AssetExtended'
+import PoolProvider from '@context/Pool'
 
 export default function AssetActions({
   asset
@@ -67,15 +68,18 @@ export default function AssetActions({
 
     async function initFileInfo() {
       setFileIsLoading(true)
-      const fileUrl =
-        formikState?.values?.services?.[0].files?.[0].url ||
-        (asset.metadata?.links ? asset.metadata?.links[0] : ' ')
       const providerUrl =
         formikState?.values?.services[0].providerUrl.url ||
-        oceanConfig.providerUri
+        asset?.services[0]?.serviceEndpoint
 
       try {
-        const fileInfoResponse = await getFileInfo(fileUrl, providerUrl)
+        const fileInfoResponse = formikState?.values?.services?.[0].files?.[0]
+          .url
+          ? await getFileUrlInfo(
+              formikState?.values?.services?.[0].files?.[0].url,
+              providerUrl
+            )
+          : await getFileDidInfo(asset?.id, asset?.services[0]?.id, providerUrl)
         fileInfoResponse && setFileMetadata(fileInfoResponse[0])
         setFileIsLoading(false)
       } catch (error) {
@@ -171,11 +175,13 @@ export default function AssetActions({
 
   return (
     <>
-      <Tabs items={tabs} className={styles.actions} />
-      <Web3Feedback
-        networkId={asset?.chainId}
-        isAssetNetwork={isAssetNetwork}
-      />
+      <PoolProvider>
+        <Tabs items={tabs} className={styles.actions} />
+        <Web3Feedback
+          networkId={asset?.chainId}
+          isAssetNetwork={isAssetNetwork}
+        />
+      </PoolProvider>
     </>
   )
 }

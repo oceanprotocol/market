@@ -39,8 +39,11 @@ export default function FormAdd({
   const { isAssetNetwork } = useAsset()
 
   // Connect with form
-  const { setFieldValue, values }: FormikContextType<FormAddLiquidity> =
-    useFormikContext()
+  const {
+    setFieldValue,
+    values,
+    isSubmitting
+  }: FormikContextType<FormAddLiquidity> = useFormikContext()
 
   useEffect(() => {
     async function calculatePoolShares() {
@@ -53,7 +56,7 @@ export default function FormAdd({
       }
       if (Number(values.amount) > Number(amountMax)) return
 
-      const poolInstance = new Pool(web3, LoggerInstance)
+      const poolInstance = new Pool(web3)
 
       const poolTokens = await poolInstance.calcPoolOutGivenSingleIn(
         poolAddress,
@@ -112,17 +115,17 @@ export default function FormAdd({
             placeholder="0"
             field={field}
             form={form}
-            disabled={!isAssetNetwork}
+            disabled={!isAssetNetwork || isSubmitting}
           />
         )}
       </Field>
 
-      {Number(balance.ocean) && (
+      {Number(balance.ocean) > 0 && (
         <Button
           className={styles.buttonMax}
           style="text"
           size="small"
-          disabled={!web3}
+          disabled={!web3 || isSubmitting}
           onClick={() => setFieldValue('amount', amountMax)}
         >
           Use Max

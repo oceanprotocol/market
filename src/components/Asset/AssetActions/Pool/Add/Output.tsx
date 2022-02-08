@@ -57,16 +57,9 @@ export default function Output({
         {help.replace('SWAPFEE', swapFee)}
       </FormHelp>
       <div className={styles.output}>
-        <div>
-          <p>{titleIn}</p>
-          <Token symbol="pool shares" balance={newPoolTokens} />
-          <Token symbol="% of pool" balance={newPoolShare} />
-        </div>
-        <div>
-          <p>{titleOut}</p>
-          <Token symbol="OCEAN" balance={poolOcean} />
-          <Token symbol={datatokenSymbol} balance={poolDatatoken} />
-        </div>
+        <p>{titleIn}</p>
+        <Token symbol="pool shares" balance={newPoolTokens} noIcon />
+        <Token symbol="% of pool" balance={newPoolShare} noIcon />
       </div>
     </>
   )
