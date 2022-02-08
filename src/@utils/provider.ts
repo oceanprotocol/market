@@ -1,8 +1,11 @@
 import {
+  downloadFileBrowser,
   FileMetadata,
   LoggerInstance,
   ProviderInstance
 } from '@oceanprotocol/lib'
+import { AssetExtended } from 'src/@types/AssetExtended'
+import Web3 from 'web3'
 
 // TODO: Why do we have these functions ?!?!?!
 export async function getEncryptedFiles(
@@ -45,4 +48,21 @@ export async function getFileUrlInfo(
   } catch (error) {
     LoggerInstance.error(error.message)
   }
+}
+
+export async function downloadFile(
+  web3: Web3,
+  asset: AssetExtended,
+  accountId: string
+) {
+  const downloadUrl = await ProviderInstance.getDownloadUrl(
+    asset.id,
+    accountId,
+    asset.services[0].id,
+    0,
+    asset.accessDetails.validOrderTx,
+    asset.services[0].serviceEndpoint,
+    web3
+  )
+  await downloadFileBrowser(downloadUrl + '&serviceType=access')
 }

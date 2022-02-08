@@ -7,15 +7,19 @@ import ButtonBuy from '@shared/ButtonBuy'
 import { secondsToString } from '@utils/ddo'
 import AlgorithmDatasetsListForCompute from './Compute/AlgorithmDatasetsListForCompute'
 import styles from './Download.module.css'
-import { useIsMounted } from '@hooks/useIsMounted'
-import { FileMetadata } from '@oceanprotocol/lib'
+import {
+  downloadFileBrowser,
+  FileMetadata,
+  LoggerInstance
+} from '@oceanprotocol/lib'
 import { order } from '@utils/order'
 import { AssetExtended } from 'src/@types/AssetExtended'
-import { calculateBuyPrice } from '@utils/pool'
+import { buyDtFromPool, calculateBuyPrice } from '@utils/pool'
+import { getOceanConfig } from '@utils/ocean'
+import { downloadFile } from '@utils/provider'
 
 export default function Download({
   asset,
-  accessDetails,
   file,
   isBalanceSufficient,
   dtBalance,
@@ -24,7 +28,6 @@ export default function Download({
   consumableFeedback
 }: {
   asset: AssetExtended
-  accessDetails: AccessDetails
   file: FileMetadata
   isBalanceSufficient: boolean
   dtBalance: string
@@ -32,21 +35,18 @@ export default function Download({
   isConsumable?: boolean
   consumableFeedback?: string
 }): ReactElement {
-  const { accountId, web3 } = useWeb3()
-  const [hasPreviousOrder, setHasPreviousOrder] = useState(false)
-  const [previousOrderId, setPreviousOrderId] = useState<string>()
+  const [accessDetails, setAccessDetails] = useState<AccessDetails>()
+  const { accountId, web3, chainId } = useWeb3()
   const { isInPurgatory, isAssetNetwork } = useAsset()
   const [isDisabled, setIsDisabled] = useState(true)
   const [hasDatatoken, setHasDatatoken] = useState(false)
-  const [isConsumablePrice, setIsConsumablePrice] = useState(true)
-  const [assetTimeout, setAssetTimeout] = useState('')
-  const isMounted = useIsMounted()
+  const [statusText, setStatusText] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    if (!asset) return
+    if (!asset || !asset.accessDetails) return
 
-    const { timeout } = asset.services[0]
-    setAssetTimeout(`${timeout}`)
+    setAccessDetails(asset.accessDetails)
   }, [asset])
 
   useEffect(() => {
@@ -54,20 +54,13 @@ export default function Download({
     async function init() {
       if (accessDetails.type === 'dynamic') {
         const priceAndEstimate = await calculateBuyPrice(
-          accessDetails.addressOrId,
-          accessDetails.price,
-          accessDetails.baseToken.address,
-          accessDetails.datatoken.address,
+          accessDetails,
           null,
           asset.chainId
         )
         accessDetails.price = Number.parseFloat(priceAndEstimate.price)
       }
     }
-
-    setIsConsumablePrice(accessDetails.isConsumable)
-    setHasPreviousOrder(accessDetails.owned)
-    setPreviousOrderId(accessDetails.validOrderTx)
     init()
   }, [accessDetails, asset.chainId])
 
@@ -76,50 +69,65 @@ export default function Download({
   }, [dtBalance])
 
   useEffect(() => {
-    if (!accountId) return
+    if (!accountId || !accessDetails) return
     setIsDisabled(
-      !isConsumable ||
-        ((!isBalanceSufficient || !isAssetNetwork || !isConsumablePrice) &&
-          !hasPreviousOrder &&
+      !accessDetails.isPurchasable ||
+        ((!isBalanceSufficient || !isAssetNetwork) &&
+          !accessDetails.isOwned &&
           !hasDatatoken)
     )
   }, [
-    hasPreviousOrder,
+    accessDetails,
     isBalanceSufficient,
     isAssetNetwork,
-
-    isConsumablePrice,
     hasDatatoken,
     isConsumable,
     accountId
   ])
 
   async function handleConsume() {
-    // if (!hasPreviousOrder && !hasDatatoken) {
-    //   const tx = await buyDT('1', price, ddo)
-    //   if (tx === undefined) return
-    // }
-    const tx = await order(web3, asset, accountId)
+    setIsLoading(true)
+    if (accessDetails.isOwned) {
+      await downloadFile(web3, asset, accountId)
+    } else {
+      try {
+        if (!hasDatatoken && accessDetails.type === 'dynamic') {
+          const config = getOceanConfig(chainId)
+          const tx = await buyDtFromPool(accessDetails, accountId, config, web3)
+          dtBalance = dtBalance + 1
+          if (tx === undefined) return
+        }
+
+        const orderTx = await order(web3, asset, accountId)
+
+        accessDetails.isOwned = true
+        accessDetails.validOrderTx = orderTx.transactionHash
+      } catch (ex) {
+        LoggerInstance.log(ex)
+        setIsLoading(false)
+      }
+    }
+
+    setIsLoading(false)
   }
 
   const PurchaseButton = () => (
     <ButtonBuy
       action="download"
       disabled={isDisabled}
-      hasPreviousOrder={hasPreviousOrder}
+      hasPreviousOrder={accessDetails?.isOwned}
       hasDatatoken={hasDatatoken}
       dtSymbol={asset?.datatokens[0]?.symbol}
       dtBalance={dtBalance}
-      datasetLowPoolLiquidity={!isConsumablePrice}
+      datasetLowPoolLiquidity={accessDetails?.isPurchasable}
       onClick={handleConsume}
-      assetTimeout={secondsToString(parseInt(assetTimeout))}
+      assetTimeout={secondsToString(asset.services[0].timeout)}
       assetType={asset?.metadata?.type}
-      // stepText={consumeStepText || pricingStepText}
+      stepText={statusText}
       // isLoading={pricingIsLoading || isLoading}
-      stepText=""
-      isLoading={false}
+      isLoading={isLoading}
       priceType={accessDetails?.type}
-      isConsumable={isConsumable}
+      isConsumable={accessDetails?.isPurchasable}
       isBalanceSufficient={isBalanceSufficient}
       consumableFeedback={consumableFeedback}
     />

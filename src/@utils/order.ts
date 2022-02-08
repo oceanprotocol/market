@@ -2,15 +2,14 @@ import {
   approve,
   Datatoken,
   FreOrderParams,
-  LoggerInstance,
   OrderParams,
-  ProviderInstance,
-  ZERO_ADDRESS
+  ProviderInstance
 } from '@oceanprotocol/lib'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import Web3 from 'web3'
 import { getOceanConfig } from './ocean'
 import { TransactionReceipt } from 'web3-eth'
+import { getSiteMetadata } from './siteConfig'
 
 /**
  * For pool you need to buy the datatoken beforehand, this always assumes you want to order the first service
@@ -27,15 +26,7 @@ export async function order(
   const datatoken = new Datatoken(web3)
   console.log('asset order', asset)
   const config = getOceanConfig(asset.chainId)
-  const txApprove = await approve(
-    web3,
-    accountId,
-    config.oceanTokenAddress,
-    accountId,
-    '1',
-    false
-  )
-  console.log('approve tx', txApprove)
+  const { appConfig } = getSiteMetadata()
 
   const initializeData = await ProviderInstance.initialize(
     asset.id,
@@ -47,18 +38,33 @@ export async function order(
 
   const orderParams = {
     consumer: accountId,
-    serviceIndex: 1,
+    serviceIndex: 0,
     _providerFees: initializeData.providerFee
   } as OrderParams
 
   switch (asset.accessDetails?.type) {
     case 'fixed': {
+      // this approve implies that basetToken is the same as swap fee token
+      const totalCost =
+        asset.accessDetails.price + Number.parseFloat(appConfig.marketFee)
+
+      console.log('wei', totalCost, web3.utils.toWei(totalCost.toString()))
+      const txApprove = await approve(
+        web3,
+        accountId,
+        config.oceanTokenAddress,
+        asset.accessDetails.datatoken.address,
+        totalCost.toString(),
+        false
+      )
+      console.log('approve tx', txApprove)
+
       const freParams = {
         exchangeContract: config.fixedRateExchangeAddress,
         exchangeId: asset.accessDetails.addressOrId,
-        maxBaseTokenAmount: web3.utils.toWei('2'),
-        swapMarketFee: web3.utils.toWei('0'),
-        marketFeeAddress: ZERO_ADDRESS
+        maxBaseTokenAmount: web3.utils.toWei('1'),
+        swapMarketFee: web3.utils.toWei(appConfig.marketFee),
+        marketFeeAddress: appConfig.marketFeeAddress
       } as FreOrderParams
 
       const tx = await datatoken.buyFromFreAndOrder(
@@ -68,11 +74,17 @@ export async function order(
         freParams
       )
 
-      LoggerInstance.log('ordercreated', tx)
       return tx
     }
     case 'dynamic': {
-      return null
+      const tx = await datatoken.startOrder(
+        asset.accessDetails.datatoken.address,
+        accountId,
+        accountId,
+        1,
+        initializeData.providerFee
+      )
+      return tx
     }
 
     case 'free': {
@@ -82,8 +94,6 @@ export async function order(
         orderParams,
         config.dispenserAddress
       )
-
-      LoggerInstance.log('ordercreated', tx)
       return tx
     }
   }

@@ -137,10 +137,9 @@ function getAccessDetailsFromTokenPrice(
   timeout?: number
 ): AccessDetails {
   const accessDetails = {} as AccessDetails
-
-  if (!timeout && !tokenPrice.orders && tokenPrice.orders.length > 0) {
+  if (timeout && tokenPrice.orders && tokenPrice.orders.length > 0) {
     const order = tokenPrice.orders[0]
-    accessDetails.owned = Date.now() / 1000 - order.createdTimestamp < timeout
+    accessDetails.isOwned = Date.now() / 1000 - order.createdTimestamp < timeout
     accessDetails.validOrderTx = order.tx
   }
 
@@ -150,7 +149,7 @@ function getAccessDetailsFromTokenPrice(
     accessDetails.type = 'free'
     accessDetails.addressOrId = dispenser.id
     accessDetails.price = 0
-    accessDetails.isConsumable = dispenser.active
+    accessDetails.isPurchasable = dispenser.active
     accessDetails.datatoken = {
       address: dispenser.token.id,
       name: dispenser.token.name,
@@ -169,7 +168,7 @@ function getAccessDetailsFromTokenPrice(
     accessDetails.addressOrId = fre.id
     accessDetails.price = fre.price
     // in theory we should check dt balance here, we can skip this because in the market we always create fre with minting capabilities.
-    accessDetails.isConsumable = fre.active
+    accessDetails.isPurchasable = fre.active
     accessDetails.baseToken = {
       address: fre.baseToken.address,
       name: fre.baseToken.name,
@@ -188,10 +187,10 @@ function getAccessDetailsFromTokenPrice(
     const pool = tokenPrice.pools[0]
     accessDetails.type = 'dynamic'
     accessDetails.addressOrId = pool.id
-    // TODO: this needs to be consumePrice
     accessDetails.price = pool.spotPrice
     // TODO: pool.datatokenLiquidity > 3 is kinda random here, we shouldn't run into this anymore now , needs more thinking/testing
-    accessDetails.isConsumable = pool.isFinalized && pool.datatokenLiquidity > 3
+    accessDetails.isPurchasable =
+      pool.isFinalized && pool.datatokenLiquidity > 3
     accessDetails.baseToken = {
       address: pool.baseToken.address,
       name: pool.baseToken.name,
@@ -235,6 +234,7 @@ export async function getAccessDetails(
   )
 
   const tokenPrice: TokenPrice = tokenQueryResult.data.token
+  console.log('acces token pri', tokenPrice, timeout)
   const accessDetails = getAccessDetailsFromTokenPrice(tokenPrice, timeout)
   return accessDetails
 }

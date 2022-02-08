@@ -142,7 +142,6 @@ export default function AssetActions({
   ) : (
     <Consume
       asset={asset}
-      accessDetails={asset?.accessDetails}
       dtBalance={dtBalance}
       isBalanceSufficient={isBalanceSufficient}
       file={fileMetadata}

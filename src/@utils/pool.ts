@@ -1,13 +1,11 @@
-import { Pool, ZERO_ADDRESS } from '@oceanprotocol/lib'
+import { approve, Config, Pool, ZERO_ADDRESS } from '@oceanprotocol/lib'
 import Web3 from 'web3'
 import { getSiteMetadata } from './siteConfig'
 import { getDummyWeb3 } from './web3'
+import { TransactionReceipt } from 'web3-eth'
 
 export async function calculateBuyPrice(
-  poolAddress: string,
-  spotPrice: number,
-  tokenIn: string,
-  tokenOut: string,
+  accessDetails: AccessDetails,
   web3?: Web3,
   chainId?: number
 ): Promise<PriceAndEstimation> {
@@ -17,7 +15,7 @@ export async function calculateBuyPrice(
   if (!web3) {
     web3 = await getDummyWeb3(chainId)
   }
-  console.log('web3', web3)
+
   const pool = new Pool(web3)
   const { appConfig } = getSiteMetadata()
   const priceAndEstimation = {
@@ -26,9 +24,9 @@ export async function calculateBuyPrice(
   } as PriceAndEstimation
 
   const estimatedPrice = await pool.getAmountInExactOut(
-    poolAddress,
-    tokenIn,
-    tokenOut,
+    accessDetails.addressOrId,
+    accessDetails.baseToken.address,
+    accessDetails.datatoken.address,
     '1',
     appConfig.marketFee
   )
@@ -36,14 +34,14 @@ export async function calculateBuyPrice(
 
   const estimation = await pool.estSwapExactAmountOut(
     ZERO_ADDRESS,
-    poolAddress,
+    accessDetails.addressOrId,
     {
       marketFeeAddress: appConfig.marketFeeAddress,
-      tokenIn,
-      tokenOut
+      tokenIn: accessDetails.baseToken.address,
+      tokenOut: accessDetails.datatoken.address
     },
     {
-      maxAmountIn: (10 * spotPrice).toString(),
+      maxAmountIn: (10 * accessDetails.price).toString(),
       swapMarketFee: appConfig.marketFee,
       tokenAmountOut: '1'
     }
@@ -53,4 +51,37 @@ export async function calculateBuyPrice(
   return priceAndEstimation
 }
 
-// export async function buy
+export async function buyDtFromPool(
+  accessDetails: AccessDetails,
+  accountId: string,
+  config: Config,
+  web3: Web3
+): Promise<TransactionReceipt> {
+  const pool = new Pool(web3)
+  const { appConfig } = getSiteMetadata()
+  await approve(
+    web3,
+    accountId,
+    config.oceanTokenAddress,
+    accessDetails.addressOrId,
+    '200',
+    false
+  )
+
+  const result = await pool.swapExactAmountOut(
+    accountId,
+    accessDetails.addressOrId,
+    {
+      marketFeeAddress: appConfig.marketFeeAddress,
+      tokenIn: accessDetails.baseToken.address,
+      tokenOut: accessDetails.datatoken.address
+    },
+    {
+      maxAmountIn: (10 * accessDetails.price).toString(),
+      swapMarketFee: appConfig.marketFee,
+      tokenAmountOut: '1'
+    }
+  )
+
+  return result
+}

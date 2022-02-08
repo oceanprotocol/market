@@ -1,31 +1,14 @@
-export const feedback: { [key in number]: string } = {
-  99: 'Decrypting file URL...',
-  0: '1/3 Looking for data token. Buying if none found...',
-  1: '2/3 Transfering data token.',
-  2: '3/3 Payment confirmed. Requesting access...'
-}
-
-export const publishFeedback: { [key in number]: string } = {
-  0: '1/5 Creating datatoken ...',
-  2: '2/5 Encrypting files ...',
-  4: '3/5 Storing ddo ...',
-  6: '4/5 Minting tokens ...',
-  8: '5/5 Asset published succesfully'
-}
-
-// TODO: do something with this object,
-// consumeStep should probably return one of those strings
-// instead of just a number
-export const consumeFeedback: { [key in number]: string } = {
-  ...feedback,
-  3: '3/3 Access granted. Consuming file...'
+export const orderFeedback: { [key in number]: string } = {
+  0: 'Buying one datatoken from pool',
+  1: 'Approving and ordering asset',
+  2: 'Generating signature to access download url'
 }
 
 // TODO: customize for compute
 export const computeFeedback: { [key in number]: string } = {
-  0: '1/3 Ordering asset...',
-  1: '2/3 Transfering data token.',
-  2: '3/3 Access granted. Starting job...'
+  0: 'Ordering asset...',
+  1: 'Transfering data token.',
+  2: 'Access granted. Starting job...'
 }
 
 export function getCreatePricingPoolFeedback(dtSymbol: string): {
