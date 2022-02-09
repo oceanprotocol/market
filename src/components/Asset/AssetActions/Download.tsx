@@ -7,16 +7,13 @@ import ButtonBuy from '@shared/ButtonBuy'
 import { secondsToString } from '@utils/ddo'
 import AlgorithmDatasetsListForCompute from './Compute/AlgorithmDatasetsListForCompute'
 import styles from './Download.module.css'
-import {
-  downloadFileBrowser,
-  FileMetadata,
-  LoggerInstance
-} from '@oceanprotocol/lib'
+import { FileMetadata, LoggerInstance } from '@oceanprotocol/lib'
 import { order } from '@utils/order'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { buyDtFromPool, calculateBuyPrice } from '@utils/pool'
 import { getOceanConfig } from '@utils/ocean'
 import { downloadFile } from '@utils/provider'
+import { orderFeedback } from '@utils/feedback'
 
 export default function Download({
   asset,
@@ -62,7 +59,7 @@ export default function Download({
       }
     }
     init()
-  }, [accessDetails, asset.chainId])
+  }, [accessDetails, asset?.chainId])
 
   useEffect(() => {
     setHasDatatoken(Number(dtBalance) >= 1)
@@ -88,16 +85,18 @@ export default function Download({
   async function handleConsume() {
     setIsLoading(true)
     if (accessDetails.isOwned) {
+      setStatusText(orderFeedback[2])
       await downloadFile(web3, asset, accountId)
     } else {
       try {
         if (!hasDatatoken && accessDetails.type === 'dynamic') {
+          setStatusText(orderFeedback[0])
           const config = getOceanConfig(chainId)
           const tx = await buyDtFromPool(accessDetails, accountId, config, web3)
           dtBalance = dtBalance + 1
           if (tx === undefined) return
         }
-
+        setStatusText(orderFeedback[1])
         const orderTx = await order(web3, asset, accountId)
 
         accessDetails.isOwned = true

@@ -7,7 +7,7 @@ import {
 import { AssetExtended } from 'src/@types/AssetExtended'
 import Web3 from 'web3'
 
-// TODO: Why do we have these functions ?!?!?!
+// TODO: Why do we have these one line functions ?!?!?!
 export async function getEncryptedFiles(
   files: FileMetadata[],
   providerUrl: string
