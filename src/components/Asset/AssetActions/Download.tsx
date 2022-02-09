@@ -20,7 +20,6 @@ export default function Download({
   isBalanceSufficient,
   dtBalance,
   fileIsLoading,
-  isConsumable,
   consumableFeedback
 }: {
   asset: AssetExtended
@@ -28,15 +27,16 @@ export default function Download({
   isBalanceSufficient: boolean
   dtBalance: string
   fileIsLoading?: boolean
-  isConsumable?: boolean
   consumableFeedback?: string
 }): ReactElement {
-  const { accountId, web3, chainId } = useWeb3()
+  const { accountId, web3 } = useWeb3()
   const { isInPurgatory, isAssetNetwork } = useAsset()
   const [isDisabled, setIsDisabled] = useState(true)
   const [hasDatatoken, setHasDatatoken] = useState(false)
   const [statusText, setStatusText] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isOwned, setIsOwned] = useState(false)
+  const [validOrderTx, setValidOrderTx] = useState('')
 
   useEffect(() => {
     if (!asset?.accessDetails) return
@@ -55,6 +55,8 @@ export default function Download({
       }
     }
     init()
+    setIsOwned(asset?.accessDetails?.isOwned)
+    setValidOrderTx(asset?.accessDetails?.validOrderTx)
   }, [asset?.accessDetails, asset?.chainId])
 
   useEffect(() => {
@@ -65,29 +67,27 @@ export default function Download({
     if (!accountId || !asset?.accessDetails) return
     setIsDisabled(
       !asset?.accessDetails.isPurchasable ||
-        ((!isBalanceSufficient || !isAssetNetwork) &&
-          !asset?.accessDetails.isOwned &&
-          !hasDatatoken)
+        ((!isBalanceSufficient || !isAssetNetwork) && !isOwned && !hasDatatoken)
     )
   }, [
     asset?.accessDetails,
     isBalanceSufficient,
     isAssetNetwork,
     hasDatatoken,
-    isConsumable,
-    accountId
+    accountId,
+    isOwned
   ])
 
   async function handleConsume() {
     setIsLoading(true)
-    if (asset.accessDetails.isOwned) {
+    if (isOwned) {
       setStatusText(
         getOrderFeedback(
           asset.accessDetails.baseToken.symbol,
           asset.accessDetails.datatoken.symbol
         )[2]
       )
-      await downloadFile(web3, asset, accountId)
+      await downloadFile(web3, asset, accountId, validOrderTx)
     } else {
       try {
         if (!hasDatatoken && asset.accessDetails.type === 'dynamic') {
@@ -98,7 +98,7 @@ export default function Download({
             )[0]
           )
           const tx = await buyDtFromPool(asset.accessDetails, accountId, web3)
-          dtBalance = dtBalance + 1
+
           if (tx === undefined) return
         }
         setStatusText(
@@ -109,8 +109,8 @@ export default function Download({
         )
         const orderTx = await order(web3, asset, accountId)
 
-        asset.accessDetails.isOwned = true
-        asset.accessDetails.validOrderTx = orderTx.transactionHash
+        setIsOwned(true)
+        setValidOrderTx(orderTx.transactionHash)
       } catch (ex) {
         LoggerInstance.log(ex)
         setIsLoading(false)
@@ -124,7 +124,7 @@ export default function Download({
     <ButtonBuy
       action="download"
       disabled={isDisabled}
-      hasPreviousOrder={asset.accessDetails?.isOwned}
+      hasPreviousOrder={isOwned}
       hasDatatoken={hasDatatoken}
       dtSymbol={asset?.datatokens[0]?.symbol}
       dtBalance={dtBalance}

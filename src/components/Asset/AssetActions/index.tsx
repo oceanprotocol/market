@@ -146,7 +146,6 @@ export default function AssetActions({
       isBalanceSufficient={isBalanceSufficient}
       file={fileMetadata}
       fileIsLoading={fileIsLoading}
-      isConsumable={isConsumable}
       consumableFeedback={consumableFeedback}
     />
   )

@@ -53,14 +53,15 @@ export async function getFileUrlInfo(
 export async function downloadFile(
   web3: Web3,
   asset: AssetExtended,
-  accountId: string
+  accountId: string,
+  validOrderTx?: string
 ) {
   const downloadUrl = await ProviderInstance.getDownloadUrl(
     asset.id,
     accountId,
     asset.services[0].id,
     0,
-    asset.accessDetails.validOrderTx,
+    validOrderTx || asset.accessDetails.validOrderTx,
     asset.services[0].serviceEndpoint,
     web3
   )
