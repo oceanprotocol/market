@@ -64,5 +64,5 @@ export async function downloadFile(
     asset.services[0].serviceEndpoint,
     web3
   )
-  await downloadFileBrowser(downloadUrl + '&serviceType=access')
+  await downloadFileBrowser(downloadUrl)
 }
