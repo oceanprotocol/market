@@ -2,6 +2,8 @@
   text-align: center;
   border-bottom: 1px solid var(--border-color);
   padding: calc(var(--spacer) / 2);
+  display: flex;
+  justify-content: center;
 }
 
 .tab {

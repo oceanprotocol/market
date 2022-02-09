@@ -18,3 +18,9 @@
 .fees input {
   max-width: 5rem;
 }
+
+@media screen and (max-width: 41rem) {
+  .fees > div {
+    justify-self: start;
+  }
+}
