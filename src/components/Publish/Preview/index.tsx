@@ -32,7 +32,6 @@ export default function Preview(): ReactElement {
         isOwned: false,
         validOrderTx: ''
       }
-      console.log('preview ass', asset)
       setAsset(asset)
     }
     makeDdo()

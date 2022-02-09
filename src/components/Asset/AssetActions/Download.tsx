@@ -11,9 +11,8 @@ import { FileMetadata, LoggerInstance } from '@oceanprotocol/lib'
 import { order } from '@utils/order'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { buyDtFromPool, calculateBuyPrice } from '@utils/pool'
-import { getOceanConfig } from '@utils/ocean'
 import { downloadFile } from '@utils/provider'
-import { orderFeedback } from '@utils/feedback'
+import { getOrderFeedback } from '@utils/feedback'
 
 export default function Download({
   asset,
@@ -85,18 +84,32 @@ export default function Download({
   async function handleConsume() {
     setIsLoading(true)
     if (accessDetails.isOwned) {
-      setStatusText(orderFeedback[2])
+      setStatusText(
+        getOrderFeedback(
+          accessDetails.baseToken.symbol,
+          accessDetails.datatoken.symbol
+        )[2]
+      )
       await downloadFile(web3, asset, accountId)
     } else {
       try {
         if (!hasDatatoken && accessDetails.type === 'dynamic') {
-          setStatusText(orderFeedback[0])
-          const config = getOceanConfig(chainId)
-          const tx = await buyDtFromPool(accessDetails, accountId, config, web3)
+          setStatusText(
+            getOrderFeedback(
+              accessDetails.baseToken.symbol,
+              accessDetails.datatoken.symbol
+            )[0]
+          )
+          const tx = await buyDtFromPool(accessDetails, accountId, web3)
           dtBalance = dtBalance + 1
           if (tx === undefined) return
         }
-        setStatusText(orderFeedback[1])
+        setStatusText(
+          getOrderFeedback(
+            accessDetails.baseToken.symbol,
+            accessDetails.datatoken.symbol
+          )[1]
+        )
         const orderTx = await order(web3, asset, accountId)
 
         accessDetails.isOwned = true

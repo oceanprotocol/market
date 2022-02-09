@@ -1,4 +1,4 @@
-import { approve, Config, Pool, ZERO_ADDRESS } from '@oceanprotocol/lib'
+import { approve, Pool, ZERO_ADDRESS } from '@oceanprotocol/lib'
 import Web3 from 'web3'
 import { getSiteMetadata } from './siteConfig'
 import { getDummyWeb3 } from './web3'
@@ -54,7 +54,6 @@ export async function calculateBuyPrice(
 export async function buyDtFromPool(
   accessDetails: AccessDetails,
   accountId: string,
-  config: Config,
   web3: Web3
 ): Promise<TransactionReceipt> {
   const pool = new Pool(web3)
@@ -62,7 +61,7 @@ export async function buyDtFromPool(
   await approve(
     web3,
     accountId,
-    config.oceanTokenAddress,
+    accessDetails.baseToken.address,
     accessDetails.addressOrId,
     '200',
     false

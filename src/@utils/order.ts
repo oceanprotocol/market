@@ -24,7 +24,6 @@ export async function order(
   accountId: string
 ): Promise<TransactionReceipt> {
   const datatoken = new Datatoken(web3)
-  console.log('asset order', asset)
   const config = getOceanConfig(asset.chainId)
   const { appConfig } = getSiteMetadata()
 
@@ -47,8 +46,6 @@ export async function order(
       // this approve implies that basetToken is the same as swap fee token
       const totalCost =
         asset.accessDetails.price + Number.parseFloat(appConfig.marketFee)
-
-      console.log('wei', totalCost, web3.utils.toWei(totalCost.toString()))
       const txApprove = await approve(
         web3,
         accountId,
@@ -57,7 +54,6 @@ export async function order(
         totalCost.toString(),
         false
       )
-      console.log('approve tx', txApprove)
 
       const freParams = {
         exchangeContract: config.fixedRateExchangeAddress,
