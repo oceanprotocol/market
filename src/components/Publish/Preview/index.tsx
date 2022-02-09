@@ -31,7 +31,8 @@ export default function Preview(): ReactElement {
           name: '',
           symbol: ''
         },
-        owned: false,
+        isPurchasable: true,
+        isOwned: false,
         validOrderTx: ''
       }
       setAccessDetails(accessDetails)
