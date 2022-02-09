@@ -5,6 +5,7 @@ import { useFormikContext } from 'formik'
 import AssetContent from 'src/components/Asset/AssetContent'
 import { transformPublishFormToDdo } from '../_utils'
 import { AssetExtended } from 'src/@types/AssetExtended'
+import { ZERO_ADDRESS } from '@oceanprotocol/lib'
 
 export default function Preview(): ReactElement {
   const [asset, setAsset] = useState<AssetExtended>()
@@ -16,15 +17,15 @@ export default function Preview(): ReactElement {
       // dummy BestPrice to trigger certain AssetActions
       asset.accessDetails = {
         type: values.pricing.type,
-        addressOrId: '0x...',
+        addressOrId: ZERO_ADDRESS,
         price: values.pricing.price,
         baseToken: {
-          address: '0x..',
+          address: ZERO_ADDRESS,
           name: 'OCEAN',
           symbol: 'OCEAN'
         },
         datatoken: {
-          address: '0x..',
+          address: ZERO_ADDRESS,
           name: '',
           symbol: ''
         },

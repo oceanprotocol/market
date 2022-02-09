@@ -7,8 +7,8 @@ import { TransactionReceipt } from 'web3-eth'
 /**
  * This is used to calculate the price to buy one datatoken from a pool, that is different from spot price. You need to pass either a web3 object or a chainId. If you pass a chainId a dummy web3 object will be created
  * @param {AccessDetails} accessDetails
- * @param {Web3} [web3]
- * @param {number} [chainId]
+ * @param {Web3?} [web3]
+ * @param {number?} [chainId]
  * @return {Promise<PriceAndEstimation>}
  */
 export async function calculateBuyPrice(

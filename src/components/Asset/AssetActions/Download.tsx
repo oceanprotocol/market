@@ -7,7 +7,7 @@ import ButtonBuy from '@shared/ButtonBuy'
 import { secondsToString } from '@utils/ddo'
 import AlgorithmDatasetsListForCompute from './Compute/AlgorithmDatasetsListForCompute'
 import styles from './Download.module.css'
-import { FileMetadata, LoggerInstance } from '@oceanprotocol/lib'
+import { FileMetadata, LoggerInstance, ZERO_ADDRESS } from '@oceanprotocol/lib'
 import { order } from '@utils/order'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { buyDtFromPool, calculateBuyPrice } from '@utils/pool'
@@ -31,7 +31,6 @@ export default function Download({
   isConsumable?: boolean
   consumableFeedback?: string
 }): ReactElement {
-  const [accessDetails, setAccessDetails] = useState<AccessDetails>()
   const { accountId, web3, chainId } = useWeb3()
   const { isInPurgatory, isAssetNetwork } = useAsset()
   const [isDisabled, setIsDisabled] = useState(true)
@@ -40,40 +39,38 @@ export default function Download({
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    if (!asset || !asset.accessDetails) return
-
-    setAccessDetails(asset.accessDetails)
-  }, [asset])
-
-  useEffect(() => {
-    if (!accessDetails) return
+    if (!asset?.accessDetails) return
     async function init() {
-      if (accessDetails.type === 'dynamic') {
+      // the ZERO_ADDRESS check is for the publish preview
+      if (
+        asset.accessDetails.type === 'dynamic' &&
+        asset.accessDetails.addressOrId !== ZERO_ADDRESS
+      ) {
         const priceAndEstimate = await calculateBuyPrice(
-          accessDetails,
+          asset.accessDetails,
           null,
           asset.chainId
         )
-        accessDetails.price = Number.parseFloat(priceAndEstimate.price)
+        asset.accessDetails.price = Number.parseFloat(priceAndEstimate.price)
       }
     }
     init()
-  }, [accessDetails, asset?.chainId])
+  }, [asset?.accessDetails, asset?.chainId])
 
   useEffect(() => {
     setHasDatatoken(Number(dtBalance) >= 1)
   }, [dtBalance])
 
   useEffect(() => {
-    if (!accountId || !accessDetails) return
+    if (!accountId || !asset?.accessDetails) return
     setIsDisabled(
-      !accessDetails.isPurchasable ||
+      !asset?.accessDetails.isPurchasable ||
         ((!isBalanceSufficient || !isAssetNetwork) &&
-          !accessDetails.isOwned &&
+          !asset?.accessDetails.isOwned &&
           !hasDatatoken)
     )
   }, [
-    accessDetails,
+    asset?.accessDetails,
     isBalanceSufficient,
     isAssetNetwork,
     hasDatatoken,
@@ -83,37 +80,37 @@ export default function Download({
 
   async function handleConsume() {
     setIsLoading(true)
-    if (accessDetails.isOwned) {
+    if (asset.accessDetails.isOwned) {
       setStatusText(
         getOrderFeedback(
-          accessDetails.baseToken.symbol,
-          accessDetails.datatoken.symbol
+          asset.accessDetails.baseToken.symbol,
+          asset.accessDetails.datatoken.symbol
         )[2]
       )
       await downloadFile(web3, asset, accountId)
     } else {
       try {
-        if (!hasDatatoken && accessDetails.type === 'dynamic') {
+        if (!hasDatatoken && asset.accessDetails.type === 'dynamic') {
           setStatusText(
             getOrderFeedback(
-              accessDetails.baseToken.symbol,
-              accessDetails.datatoken.symbol
+              asset.accessDetails.baseToken.symbol,
+              asset.accessDetails.datatoken.symbol
             )[0]
           )
-          const tx = await buyDtFromPool(accessDetails, accountId, web3)
+          const tx = await buyDtFromPool(asset.accessDetails, accountId, web3)
           dtBalance = dtBalance + 1
           if (tx === undefined) return
         }
         setStatusText(
           getOrderFeedback(
-            accessDetails.baseToken.symbol,
-            accessDetails.datatoken.symbol
+            asset.accessDetails.baseToken.symbol,
+            asset.accessDetails.datatoken.symbol
           )[1]
         )
         const orderTx = await order(web3, asset, accountId)
 
-        accessDetails.isOwned = true
-        accessDetails.validOrderTx = orderTx.transactionHash
+        asset.accessDetails.isOwned = true
+        asset.accessDetails.validOrderTx = orderTx.transactionHash
       } catch (ex) {
         LoggerInstance.log(ex)
         setIsLoading(false)
@@ -127,19 +124,19 @@ export default function Download({
     <ButtonBuy
       action="download"
       disabled={isDisabled}
-      hasPreviousOrder={accessDetails?.isOwned}
+      hasPreviousOrder={asset.accessDetails?.isOwned}
       hasDatatoken={hasDatatoken}
       dtSymbol={asset?.datatokens[0]?.symbol}
       dtBalance={dtBalance}
-      datasetLowPoolLiquidity={accessDetails?.isPurchasable}
+      datasetLowPoolLiquidity={asset.accessDetails?.isPurchasable}
       onClick={handleConsume}
       assetTimeout={secondsToString(asset.services[0].timeout)}
       assetType={asset?.metadata?.type}
       stepText={statusText}
       // isLoading={pricingIsLoading || isLoading}
       isLoading={isLoading}
-      priceType={accessDetails?.type}
-      isConsumable={accessDetails?.isPurchasable}
+      priceType={asset.accessDetails?.type}
+      isConsumable={asset.accessDetails?.isPurchasable}
       isBalanceSufficient={isBalanceSufficient}
       consumableFeedback={consumableFeedback}
     />
@@ -152,7 +149,7 @@ export default function Download({
           <FileIcon file={file} isLoading={fileIsLoading} />
         </div>
         <div className={styles.pricewrapper}>
-          <Price accessDetails={accessDetails} conversion />
+          <Price accessDetails={asset.accessDetails} conversion />
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>

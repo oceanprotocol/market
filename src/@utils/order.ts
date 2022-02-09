@@ -42,6 +42,7 @@ export async function order(
     _providerFees: initializeData.providerFee
   } as OrderParams
 
+  // TODO: we need to approve provider fee
   switch (asset.accessDetails?.type) {
     case 'fixed': {
       // this approve implies that basetToken is the same as swap fee token

@@ -254,10 +254,10 @@ export async function createTokensAndPricing(
         accountId,
         config.oceanTokenAddress,
         config.erc721FactoryAddress,
-        '200',
+        values.pricing.amountOcean.toString(),
         false
       )
-      LoggerInstance.log('[publish] pool.approve tx', txApprove)
+      LoggerInstance.log('[publish] pool.approve tx', txApprove, nftFactory)
 
       const result = await nftFactory.createNftErcWithPool(
         accountId,
