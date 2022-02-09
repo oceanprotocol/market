@@ -69,9 +69,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
     setPoolData(response.poolData)
     setPoolInfoUser((prevState) => ({
       ...prevState,
-      poolShares: response.poolDataUser?.shares[0]
-        ? response.poolDataUser?.shares[0].shares
-        : '0'
+      poolShares: response.poolDataUser?.shares[0].shares || '0'
     }))
     setPoolSnapshots(response.poolSnapshots)
     LoggerInstance.log('[pool] Fetched pool data:', response.poolData)

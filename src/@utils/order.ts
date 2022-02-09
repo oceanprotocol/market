@@ -67,7 +67,7 @@ export async function order(
       } as FreOrderParams
 
       const tx = await datatoken.buyFromFreAndOrder(
-        asset.services[0].datatokenAddress,
+        asset.accessDetails.datatoken.address,
         accountId,
         orderParams,
         freParams
