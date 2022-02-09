@@ -10,6 +10,7 @@ import Web3 from 'web3'
 import { getOceanConfig } from './ocean'
 import { TransactionReceipt } from 'web3-eth'
 import { getSiteMetadata } from './siteConfig'
+import Decimal from 'decimal.js'
 
 /**
  * For pool you need to buy the datatoken beforehand, this always assumes you want to order the first service
@@ -44,12 +45,14 @@ export async function order(
   switch (asset.accessDetails?.type) {
     case 'fixed': {
       // this approve implies that basetToken is the same as swap fee token
-      const totalCost =
-        asset.accessDetails.price + Number.parseFloat(appConfig.marketFee)
+      const totalCost = new Decimal(asset.accessDetails.price).add(
+        new Decimal(appConfig.marketFee)
+      )
+
       const txApprove = await approve(
         web3,
         accountId,
-        config.oceanTokenAddress,
+        asset.accessDetails.baseToken.address,
         asset.accessDetails.datatoken.address,
         totalCost.toString(),
         false
