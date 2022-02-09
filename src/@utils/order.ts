@@ -16,7 +16,7 @@ import { getSiteMetadata } from './siteConfig'
  * @param web3
  * @param asset
  * @param accountId
- * @returns {TokenReceipt} receipt of the order
+ * @returns {TransactionReceipt} receipt of the order
  */
 export async function order(
   web3: Web3,
