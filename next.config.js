@@ -31,7 +31,13 @@ module.exports = (phase, { defaultConfig }) => {
         // https: require.resolve('https-browserify'),
         // os: require.resolve('os-browserify'),
         // url: require.resolve('url'),
-        http: require.resolve('stream-http')
+        http: require.resolve('stream-http'),
+        fs: false,
+        crypto: false,
+        os: false,
+        stream: false,
+        https: false,
+        assert: false
       })
       config.resolve.fallback = fallback
 
