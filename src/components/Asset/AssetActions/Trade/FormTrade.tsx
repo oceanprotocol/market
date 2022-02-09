@@ -44,9 +44,8 @@ export default function FormTrade({
   const [maximumBaseToken, setMaximumBaseToken] = useState(maxBaseToken)
   const [maximumDt, setMaximumDt] = useState(maxDt)
   const [isWarningAccepted, setIsWarningAccepted] = useState(false)
-
-  const tokenAddress = poolInfo.baseTokenAddress
-  const tokenSymbol = poolInfo.baseTokenSymbol
+  const [tokenAddress, setTokenAddress] = useState<string>('')
+  const [tokenSymbol, setTokenSymbol] = useState<string>('')
 
   const validationSchema: Yup.SchemaOf<FormTradeData> = Yup.object()
     .shape({
@@ -72,23 +71,32 @@ export default function FormTrade({
     .defined()
 
   async function handleTrade(values: FormTradeData) {
-    if (!web3 || !asset) return
-    const poolInstance = new Pool(web3)
-    const tokenInOutMarket: TokenInOutMarket = {
-      tokenIn: '',
-      tokenOut: '',
-      marketFeeAddress: ''
-    }
-    const tokenOutMarket: TokenInOutMarket = {
-      tokenIn: '',
-      tokenOut: '',
-      marketFeeAddress: ''
-    }
-    const swapMarketFee = await poolInstance.getSwapFee(
-      asset.accessDetails.addressOrId
-    )
+    if (!web3 || !asset || !poolInfo || !values) return
 
     try {
+      const poolInstance = new Pool(web3)
+
+      const swapMarketFeeIn = await poolInstance.getMarketFees(
+        asset.accessDetails.addressOrId,
+        poolInfo.baseTokenAddress
+      )
+
+      const swapMarketFeeOut = await poolInstance.getMarketFees(
+        asset.accessDetails.addressOrId,
+        poolInfo.datatokenAddress
+      )
+
+      const tokenInOutMarket: TokenInOutMarket = {
+        tokenIn: poolInfo.baseTokenAddress,
+        tokenOut: poolInfo.datatokenAddress,
+        marketFeeAddress: swapMarketFeeIn
+      }
+      const tokenOutMarket: TokenInOutMarket = {
+        tokenIn: poolInfo.datatokenAddress,
+        tokenOut: poolInfo.baseTokenAddress,
+        marketFeeAddress: swapMarketFeeOut
+      }
+
       const impact = new Decimal(
         new Decimal(100).sub(new Decimal(values.slippage))
       ).div(100)
@@ -100,7 +108,7 @@ export default function FormTrade({
           .toFixed(precision)
           .toString(),
         minAmountOut: '2',
-        swapMarketFee: swapMarketFee
+        swapMarketFee: swapMarketFeeIn
       }
 
       const amountsOutMaxFee: AmountsOutMaxFee = {
@@ -109,8 +117,19 @@ export default function FormTrade({
           .mul(impact)
           .toFixed(precision)
           .toString(),
-        swapMarketFee: swapMarketFee
+        swapMarketFee: swapMarketFeeOut
       }
+
+      const tokenAddress =
+        values.type === 'buy'
+          ? poolInfo.baseTokenAddress
+          : poolInfo.datatokenAddress
+      const tokenSymbol =
+        values.type === 'buy'
+          ? poolInfo.baseTokenSymbol
+          : poolInfo.datatokenSymbol
+      setTokenAddress(tokenAddress)
+      setTokenSymbol(tokenSymbol)
 
       const tx =
         values.type === 'buy'
@@ -191,8 +210,16 @@ export default function FormTrade({
             }
             action={submitForm}
             txId={txId}
-            tokenAddress={tokenAddress}
-            tokenSymbol={tokenSymbol}
+            tokenAddress={
+              values.type === 'buy'
+                ? poolInfo.baseTokenAddress
+                : poolInfo.datatokenAddress
+            }
+            tokenSymbol={
+              values.type === 'buy'
+                ? poolInfo.baseTokenSymbol
+                : poolInfo.datatokenSymbol
+            }
             setSubmitting={setSubmitting}
           />
 
