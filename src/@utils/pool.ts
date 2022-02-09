@@ -16,7 +16,7 @@ export async function calculateBuyPrice(
   web3?: Web3,
   chainId?: number
 ): Promise<PriceAndEstimation> {
-  if (web3 && chainId)
+  if (!web3 && !chainId)
     throw new Error("web3 and chainId can't be undefined at the same time!")
 
   if (!web3) {
@@ -35,7 +35,7 @@ export async function calculateBuyPrice(
     accessDetails.baseToken.address,
     accessDetails.datatoken.address,
     '1',
-    appConfig.marketFee
+    appConfig.marketSwapFee
   )
   priceAndEstimation.price = estimatedPrice
 
@@ -49,7 +49,7 @@ export async function calculateBuyPrice(
     },
     {
       maxAmountIn: (10 * accessDetails.price).toString(),
-      swapMarketFee: appConfig.marketFee,
+      swapMarketFee: appConfig.marketSwapFee,
       tokenAmountOut: '1'
     }
   )
@@ -84,7 +84,7 @@ export async function buyDtFromPool(
     },
     {
       maxAmountIn: (10 * accessDetails.price).toString(),
-      swapMarketFee: appConfig.marketFee,
+      swapMarketFee: appConfig.marketSwapFee,
       tokenAmountOut: '1'
     }
   )

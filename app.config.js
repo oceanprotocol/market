@@ -22,7 +22,12 @@ module.exports = {
   marketFeeAddress:
     process.env.NEXT_PUBLIC_MARKET_FEE_ADDRESS ||
     '0x9984b2453eC7D99a73A5B3a46Da81f197B753C8d',
-  marketFee: process.env.NEXT_PUBLIC_MARKET_FEE || '0.2',
+  // market fee that is taken upon ordering an asset, it is an absolute value, it is declared on erc20 creation
+  publisherMarketFee: process.env.NEXT_PUBLIC_PUBLISHER_MARKET_FEE || '1',
+  // fee taken by the market where the asset is consumed, it is passed in the order function, it is an absolute value
+  marketOrderFee: process.env.NEXT_PUBLIC_MARKET_ORDER_FEE || '1',
+  // fee recieved upon swaping in pool or fixed rate exchange , it is a percent, it is in the base token of the respective pool/fre
+  marketSwapFee: process.env.NEXT_PUBLIC_MARKET_SWAP_FEE || '0.1',
 
   // Used for conversion display, can be whatever coingecko API supports
   // see: https://api.coingecko.com/api/v3/simple/supported_vs_currencies
