@@ -36,8 +36,6 @@ export default function Stats({
   const [publisherLiquidity, setPublisherLiquidity] = useState<UserLiquidity>()
   const [totalLiquidity, setTotalLiquidity] = useState(0)
 
-  console.log('POOL SHARES: ', poolShares)
-
   useEffect(() => {
     if (!accountId || chainIds.length === 0) {
       setPublisherLiquidity({ price: '0', oceanBalance: '0' })

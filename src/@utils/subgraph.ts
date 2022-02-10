@@ -59,7 +59,7 @@ const HighestLiquidityAssets = gql`
   query HighestLiquidityAssets {
     pools(
       where: { datatokenLiquidity_gte: 1 }
-      orderBy: datatokenLiquidity
+      orderBy: baseTokenLiquidity
       orderDirection: desc
       first: 30
     ) {
@@ -292,7 +292,6 @@ export async function getHighestLiquidityDatatokens(
       fetchedPools?.data?.pools
     )
   }
-  console.log('HIGHEST LIQUIDITY: ', highestLiquidityAssets)
   for (let i = 0; i < highestLiquidityAssets.length; i++) {
     if (!highestLiquidityAssets[i]?.datatoken?.address) continue
     dtList.push(highestLiquidityAssets[i].datatoken.address)
@@ -354,7 +353,6 @@ export async function getPoolSharesData(
     variables,
     chainIds
   )
-  console.log('SHARES: ', result)
   for (let i = 0; i < result.length; i++) {
     result[i].poolShares.forEach((poolShare: PoolShare) => {
       data.push(poolShare)
