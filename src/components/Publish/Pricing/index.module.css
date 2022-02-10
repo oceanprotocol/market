@@ -2,7 +2,7 @@
   text-align: center;
 }
 
-.pricing ul > li {
+.pricing ul > li[class*='Tabs_tab'] {
   padding: calc(var(--spacer) / 4) var(--spacer);
 }
 
