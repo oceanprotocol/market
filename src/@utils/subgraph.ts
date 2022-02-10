@@ -61,7 +61,7 @@ const HighestLiquidityAssets = gql`
       where: { datatokenLiquidity_gte: 1 }
       orderBy: baseTokenLiquidity
       orderDirection: desc
-      first: 30
+      first: 15
     ) {
       id
       datatoken {
