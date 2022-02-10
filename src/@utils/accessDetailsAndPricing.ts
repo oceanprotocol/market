@@ -10,6 +10,7 @@ import {
 } from '../@types/subgraph/TokensPriceQuery'
 import { Asset } from '@oceanprotocol/lib'
 import { AssetExtended } from 'src/@types/AssetExtended'
+import { calculateBuyPrice } from './pool'
 
 const TokensPriceQuery = gql`
   query TokensPriceQuery($datatokenIds: [ID!], $account: String) {
@@ -132,6 +133,7 @@ const TokenPriceQuery = gql`
   }
 `
 
+// TODO: fill in fees after subgraph update
 function getAccessDetailsFromTokenPrice(
   tokenPrice: TokenPrice | TokensPrice,
   timeout?: number
@@ -148,7 +150,7 @@ function getAccessDetailsFromTokenPrice(
     const dispenser = tokenPrice.dispensers[0]
     accessDetails.type = 'free'
     accessDetails.addressOrId = dispenser.id
-    accessDetails.price = 0
+    accessDetails.price = '0'
     accessDetails.isPurchasable = dispenser.active
     accessDetails.datatoken = {
       address: dispenser.token.id,
@@ -206,19 +208,39 @@ function getAccessDetailsFromTokenPrice(
   return accessDetails
 }
 
+async function processDetails(
+  tokenPrice: TokenPrice | TokensPrice,
+  timeout?: number,
+  chainId?: number
+): Promise<AccessDetails> {
+  const accessDetails = getAccessDetailsFromTokenPrice(tokenPrice, timeout)
+  switch (accessDetails.type) {
+    case 'dynamic': {
+      const poolPrice = await calculateBuyPrice(accessDetails, chainId)
+      accessDetails.price = poolPrice
+      break
+    }
+    case 'fixed': {
+      break
+    }
+  }
+  return accessDetails
+}
+
 /**
- * returns various consume details for the desired datatoken
- * @param chain chain on which the datatoken is preset
- * @param datatokenAddress address of the datatoken
- * @param timeout timeout of the service, only needed if you want order details like owned and validOrderId
- * @param account account that wants to consume, only needed if you want order details like owned and validOrderId
- * @returns AccessDetails
+ * @param {number} chain
+ * @param {string} datatokenAddress
+ * @param {bool=} isOrderPrice if false price will be spot price (pool) and rate (fre), if true you will get the order price including fees
+ * @param {number=} timeout timout of the service, this is needed to return order details
+ * @param {string=} account account that wants to buy, is needed to return order details
+ * @returns {Promise<AccessDetails>}
  */
 export async function getAccessDetails(
   chain: number,
   datatokenAddress: string,
   timeout?: number,
-  account = ''
+  account?: string,
+  isOrderPrice = true
 ): Promise<AccessDetails> {
   const queryContext = getQueryContext(Number(chain))
   const tokenQueryResult: OperationResult<
@@ -240,13 +262,13 @@ export async function getAccessDetails(
 
 export async function getAccessDetailsForAssets(
   assets: Asset[],
-  account = ''
+  account?: string,
+  isOrderPrice = false
 ): Promise<AssetExtended[]> {
   const assetsExtended: AssetExtended[] = assets
   const chainAssetLists: { [key: number]: string[] } = {}
 
   for (const asset of assets) {
-    //  harcoded until we have chainId on assets
     if (chainAssetLists[asset.chainId]) {
       chainAssetLists[asset.chainId].push(
         asset?.services[0].datatokenAddress.toLowerCase()
@@ -273,10 +295,14 @@ export async function getAccessDetailsForAssets(
       queryContext
     )
     tokenQueryResult.data?.tokens.forEach((token) => {
-      const accessDetails = getAccessDetailsFromTokenPrice(token)
       const currentAsset = assetsExtended.find(
         (asset) => asset.services[0].datatokenAddress.toLowerCase() === token.id
       )
+      const accessDetails = getAccessDetailsFromTokenPrice(
+        token,
+        currentAsset?.services[0]?.timeout
+      )
+
       currentAsset.accessDetails = accessDetails
     })
   }

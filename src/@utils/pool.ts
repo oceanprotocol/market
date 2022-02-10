@@ -1,8 +1,9 @@
-import { approve, Pool, ZERO_ADDRESS } from '@oceanprotocol/lib'
+import { approve, Pool } from '@oceanprotocol/lib'
 import Web3 from 'web3'
 import { getSiteMetadata } from './siteConfig'
 import { getDummyWeb3 } from './web3'
 import { TransactionReceipt } from 'web3-eth'
+import Decimal from 'decimal.js'
 
 /**
  * This is used to calculate the price to buy one datatoken from a pool, that is different from spot price. You need to pass either a web3 object or a chainId. If you pass a chainId a dummy web3 object will be created
@@ -13,49 +14,26 @@ import { TransactionReceipt } from 'web3-eth'
  */
 export async function calculateBuyPrice(
   accessDetails: AccessDetails,
-  web3?: Web3,
-  chainId?: number
-): Promise<PriceAndEstimation> {
+  chainId?: number,
+  web3?: Web3
+): Promise<string> {
   if (!web3 && !chainId)
     throw new Error("web3 and chainId can't be undefined at the same time!")
 
   if (!web3) {
     web3 = await getDummyWeb3(chainId)
   }
-
   const pool = new Pool(web3)
   const { appConfig } = getSiteMetadata()
-  const priceAndEstimation = {
-    price: '0',
-    gasEstimation: 0
-  } as PriceAndEstimation
-
   const estimatedPrice = await pool.getAmountInExactOut(
     accessDetails.addressOrId,
     accessDetails.baseToken.address,
     accessDetails.datatoken.address,
     '1',
-    appConfig.marketSwapFee
+    appConfig.consumeMarketPoolSwapFee
   )
-  priceAndEstimation.price = estimatedPrice
 
-  const estimation = await pool.estSwapExactAmountOut(
-    ZERO_ADDRESS,
-    accessDetails.addressOrId,
-    {
-      marketFeeAddress: appConfig.marketFeeAddress,
-      tokenIn: accessDetails.baseToken.address,
-      tokenOut: accessDetails.datatoken.address
-    },
-    {
-      maxAmountIn: (10 * accessDetails.price).toString(),
-      swapMarketFee: appConfig.marketSwapFee,
-      tokenAmountOut: '1'
-    }
-  )
-  priceAndEstimation.gasEstimation = estimation
-
-  return priceAndEstimation
+  return estimatedPrice
 }
 
 export async function buyDtFromPool(
@@ -83,8 +61,8 @@ export async function buyDtFromPool(
       tokenOut: accessDetails.datatoken.address
     },
     {
-      maxAmountIn: (10 * accessDetails.price).toString(),
-      swapMarketFee: appConfig.marketSwapFee,
+      maxAmountIn: new Decimal(accessDetails.price).mul(10).toString(),
+      swapMarketFee: appConfig.consumeMarketPoolSwapFee,
       tokenAmountOut: '1'
     }
   )

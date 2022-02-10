@@ -47,7 +47,7 @@ export async function order(
     case 'fixed': {
       // this approve implies that basetToken is the same as swap fee token
       const totalCost = new Decimal(asset.accessDetails.price).add(
-        new Decimal(appConfig.marketOrderFee)
+        new Decimal(appConfig.consumeMarketFreSwapFee)
       )
 
       const txApprove = await approve(
@@ -62,8 +62,8 @@ export async function order(
       const freParams = {
         exchangeContract: config.fixedRateExchangeAddress,
         exchangeId: asset.accessDetails.addressOrId,
-        maxBaseTokenAmount: web3.utils.toWei('1'),
-        swapMarketFee: web3.utils.toWei(appConfig.marketOrderFee),
+        maxBaseTokenAmount: '1',
+        swapMarketFee: appConfig.consumeMarketFreSwapFee,
         marketFeeAddress: appConfig.marketFeeAddress
       } as FreOrderParams
 

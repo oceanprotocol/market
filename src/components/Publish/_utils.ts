@@ -209,7 +209,7 @@ export async function createTokensAndPricing(
     feeManager: accountId,
     mpFeeAddress: appConfig.marketFeeAddress,
     feeToken: config.oceanTokenAddress,
-    feeAmount: appConfig.publisherMarketFee,
+    feeAmount: appConfig.publisherMarketOrderFee,
     cap: '1000',
     name: values.services[0].dataTokenOptions.name,
     symbol: values.services[0].dataTokenOptions.symbol
@@ -240,7 +240,9 @@ export async function createTokensAndPricing(
         initialBaseTokenLiquidity: values.pricing.amountOcean.toString(),
         swapFeeLiquidityProvider: values.pricing.swapFee,
         // TODO: hack , we need to fix this in ocean.js
-        swapFeeMarketRunner: Number.parseFloat(appConfig.marketSwapFee)
+        swapFeeMarketRunner: Number.parseFloat(
+          appConfig.publisherMarketPoolSwapFee
+        )
       }
 
       LoggerInstance.log(
@@ -259,7 +261,7 @@ export async function createTokensAndPricing(
       )
       LoggerInstance.log('[publish] pool.approve tx', txApprove, nftFactory)
 
-      const result = await nftFactory.createNftErcWithPool(
+      const result = await nftFactory.createNftErc20WithPool(
         accountId,
         nftCreateData,
         ercParams,
@@ -283,7 +285,7 @@ export async function createTokensAndPricing(
         datatokenDecimals: 18,
         fixedRate: values.pricing.price.toString(),
         // TODO: needs to be fixed in ocean.js
-        marketFee: Number.parseFloat(appConfig.publisherMarketFee),
+        marketFee: Number.parseFloat(appConfig.publisherMarketFreSwapFee),
         withMint: true
       }
 
@@ -292,7 +294,7 @@ export async function createTokensAndPricing(
         freParams
       )
 
-      const result = await nftFactory.createNftErcWithFixedRate(
+      const result = await nftFactory.createNftErc20WithFixedRate(
         accountId,
         nftCreateData,
         ercParams,
@@ -324,7 +326,7 @@ export async function createTokensAndPricing(
         dispenserParams
       )
 
-      const result = await nftFactory.createNftErcWithDispenser(
+      const result = await nftFactory.createNftErc20WithDispenser(
         accountId,
         nftCreateData,
         ercParams,

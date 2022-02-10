@@ -48,7 +48,6 @@ export default function Download({
       ) {
         const priceAndEstimate = await calculateBuyPrice(
           asset.accessDetails,
-          null,
           asset.chainId
         )
         asset.accessDetails.price = Number.parseFloat(priceAndEstimate.price)
