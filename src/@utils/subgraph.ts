@@ -292,6 +292,10 @@ export async function getHighestLiquidityDatatokens(
       fetchedPools?.data?.pools
     )
   }
+  highestLiquidityAssets.sort(
+    (a, b) => b.baseTokenLiquidity - a.baseTokenLiquidity
+  )
+
   for (let i = 0; i < highestLiquidityAssets.length; i++) {
     if (!highestLiquidityAssets[i]?.datatoken?.address) continue
     dtList.push(highestLiquidityAssets[i].datatoken.address)
