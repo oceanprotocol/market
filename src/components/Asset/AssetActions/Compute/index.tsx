@@ -17,7 +17,8 @@ import {
   approve,
   TokenInOutMarket,
   AmountsInMaxFee,
-  AmountsOutMaxFee
+  AmountsOutMaxFee,
+  Service
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
@@ -39,8 +40,14 @@ import FormStartComputeDataset from './FormComputeDataset'
 import styles from './index.module.css'
 import SuccessConfetti from '@shared/SuccessConfetti'
 import { getServiceByName, secondsToString } from '@utils/ddo'
-import { isOrderable } from '@utils/compute'
-import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
+import {
+  isOrderable,
+  getAlgorithmAssetSelectionList,
+  getAlgorithmsForAsset
+} from '@utils/compute'
+import AssetSelection, {
+  AssetSelectionAsset
+} from '@shared/FormFields/AssetSelection'
 import AlgorithmDatasetsListForCompute from './AlgorithmDatasetsListForCompute'
 import { getPreviousOrders } from '@utils/subgraph'
 import AssetActionHistoryTable from '../AssetActionHistoryTable'
@@ -52,10 +59,9 @@ import { Decimal } from 'decimal.js'
 import { TransactionReceipt } from 'web3-core'
 import { useAbortController } from '@hooks/useAbortController'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
-import AssetDetails from '../..'
 
 export default function Compute({
-  ddo,
+  asset,
   accessDetails,
   dtBalance,
   file,
@@ -63,7 +69,7 @@ export default function Compute({
   isConsumable,
   consumableFeedback
 }: {
-  ddo: Asset
+  asset: Asset
   accessDetails: AccessDetails
   dtBalance: string
   file: FileMetadata
@@ -94,9 +100,9 @@ export default function Compute({
     useState<string>()
   const [datasetTimeout, setDatasetTimeout] = useState<string>()
   const [algorithmTimeout, setAlgorithmTimeout] = useState<string>()
-  const newCancelToken = useCancelToken()
   const hasDatatoken = Number(dtBalance) >= 1
   const isMounted = useIsMounted()
+  const newCancelToken = useCancelToken()
   const [isConsumablePrice, setIsConsumablePrice] = useState(true)
   const [isAlgoConsumablePrice, setIsAlgoConsumablePrice] = useState(true)
   const isComputeButtonDisabled =
@@ -107,13 +113,13 @@ export default function Compute({
       !hasAlgoAssetDatatoken &&
       !isAlgoConsumablePrice)
 
-  const { timeout } = ddo?.services[0]
+  const { timeout } = asset?.services[0]
 
-  async function checkPreviousOrders(ddo: DDO) {
-    const { type } = ddo.metadata
+  async function checkPreviousOrders(asset: DDO) {
+    const { type } = asset.metadata
 
     const orderId = await getPreviousOrders(
-      ddo.services[0].datatokenAddress?.toLowerCase(),
+      asset.services[0].datatokenAddress?.toLowerCase(),
       accountId?.toLowerCase(),
       timeout.toString()
     )
@@ -138,60 +144,11 @@ export default function Compute({
     setHasAlgoAssetDatatoken(Number(AssetDtBalance) >= 1)
   }
 
-  function getQuerryString(
-    trustedAlgorithmList: PublisherTrustedAlgorithm[],
-    chainId?: number
-  ): SearchQuery {
-    const algorithmDidList = trustedAlgorithmList.map((x) => x.did)
-
-    const baseParams = {
-      chainIds: [chainId],
-      sort: { sortBy: SortTermOptions.Created },
-      filters: [
-        getFilterTerm('service.attributes.main.type', 'algorithm'),
-        getFilterTerm('id', algorithmDidList)
-      ]
-    } as BaseQueryParams
-
-    const query = generateBaseQuery(baseParams)
-    return query
-  }
-
-  async function getAlgorithmList(): Promise<AssetSelectionAsset[]> {
-    const source = axios.CancelToken.source()
-    const computeService = ddo.services[0]
-    let algorithmSelectionList: AssetSelectionAsset[]
-    if (
-      !computeService.compute ||
-      !computeService.compute.publisherTrustedAlgorithms ||
-      computeService.compute.publisherTrustedAlgorithms.length === 0
-    ) {
-      algorithmSelectionList = []
-    } else {
-      const gueryResults = await queryMetadata(
-        getQuerryString(
-          computeService.compute.publisherTrustedAlgorithms,
-          ddo.chainId
-        ),
-        source.token
-      )
-      setDdoAlgorithmList(gueryResults.results)
-
-      algorithmSelectionList = await transformDDOToAssetSelection(
-        computeService?.serviceEndpoint,
-        gueryResults.results,
-        [],
-        newCancelToken()
-      )
-    }
-    return algorithmSelectionList
-  }
-
-  const initMetadata = useCallback(async (ddo: Asset): Promise<void> => {
-    if (!ddo) return
+  const initMetadata = useCallback(async (asset: Asset): Promise<void> => {
+    if (!asset) return
     const accessDetails = await getAccessDetails(
-      ddo.chainId,
-      ddo.services[0].datatokenAddress
+      asset.chainId,
+      asset.services[0].datatokenAddress
     )
     setAlgorithmConsumeDetails(accessDetails)
   }, [])
@@ -213,23 +170,31 @@ export default function Compute({
   // }, [ddo])
 
   useEffect(() => {
-    if (!ddo) return
-    getAlgorithmList().then((algorithms) => {
-      setAlgorithmList(algorithms)
+    if (!asset) return
+
+    getAlgorithmsForAsset(asset, newCancelToken()).then((algorithmsAssets) => {
+      setDdoAlgorithmList(algorithmsAssets)
+      getAlgorithmAssetSelectionList(
+        asset,
+        algorithmsAssets,
+        newCancelToken()
+      ).then((algorithmSelectionList) => {
+        setAlgorithmList(algorithmSelectionList)
+      })
     })
-  }, [ddo])
+  }, [asset])
 
   useEffect(() => {
     if (!accountId) return
-    checkPreviousOrders(ddo)
-  }, [ddo, accountId])
+    checkPreviousOrders(asset)
+  }, [asset, accountId])
 
   useEffect(() => {
     if (!selectedAlgorithmAsset) return
 
     initMetadata(selectedAlgorithmAsset)
 
-    const { timeout } = ddo.services[0]
+    const { timeout } = asset.services[0]
 
     // setAlgorithmTimeout(secondsToString(timeout))
 
@@ -248,7 +213,7 @@ export default function Compute({
       }
     }
     checkAssetDTBalance(selectedAlgorithmAsset)
-  }, [ddo, selectedAlgorithmAsset, accountId, hasPreviousAlgorithmOrder])
+  }, [asset, selectedAlgorithmAsset, accountId, hasPreviousAlgorithmOrder])
 
   // Output errors in toast UI
   useEffect(() => {
@@ -257,13 +222,13 @@ export default function Compute({
     toast.error(newError)
   }, [error, pricingError])
 
-  async function startJob(algorithmId: string) {
+  async function startJob(algorithmId: string): Promise<string> {
     try {
       setIsJobStarting(true)
       setIsPublished(false) // would be nice to rename this
       setError(undefined)
 
-      const computeService = getServiceByName(ddo, 'compute')
+      const computeService = getServiceByName(asset, 'compute')
       const serviceAlgo = getServiceByName(selectedAlgorithmAsset, 'access')
         ? getServiceByName(selectedAlgorithmAsset, 'access')
         : getServiceByName(selectedAlgorithmAsset, 'compute')
@@ -274,7 +239,7 @@ export default function Compute({
       }
 
       const allowed = await isOrderable(
-        ddo,
+        asset,
         computeService.id,
         computeAlgorithm,
         selectedAlgorithmAsset
@@ -296,11 +261,11 @@ export default function Compute({
       if (!hasPreviousDatasetOrder) {
         // going to move/replace part of this logic when the use consume hook will be ready
         const initializeData = await ProviderInstance.initialize(
-          ddo.id,
-          ddo.services[0].id,
+          asset.id,
+          asset.services[0].id,
           0,
           accountId,
-          ddo.services[0].serviceEndpoint //to check
+          asset.services[0].serviceEndpoint // to check
         )
         const providerFees: ProviderFees = {
           providerFeeAddress: initializeData.providerFee.providerFeeAddress,
@@ -375,6 +340,8 @@ export default function Compute({
                 tokenInOutMarket,
                 amountsInOutMaxFee
               )
+
+              break
             }
             case 'fixed': {
               const datatokenInstance = new Datatoken(web3)
@@ -392,12 +359,14 @@ export default function Compute({
                 marketFeeAddress: appConfig.marketFeeAddress
               }
               tx = await datatokenInstance.buyFromFreAndOrder(
-                ddo.datatokens[0].address,
+                asset.datatokens[0].address,
                 accountId,
                 order,
                 fre
               )
               assetOrderId = tx.transactionHash
+
+              break
             }
             case 'free': {
               const datatokenInstance = new Datatoken(web3)
@@ -415,26 +384,27 @@ export default function Compute({
                 marketFeeAddress: appConfig.marketFeeAddress
               }
               tx = await datatokenInstance.buyFromDispenserAndOrder(
-                ddo.datatokens[0].address,
+                asset.datatokens[0].address,
                 accountId,
                 order,
                 accessDetails.addressOrId
               )
               assetOrderId = tx.transactionHash
+              if (!tx) {
+                setError('Error buying datatoken.')
+                LoggerInstance.error(
+                  '[compute] Error buying datatoken for data set ',
+                  asset.id
+                )
+                return
+              }
+              break
             }
-          }
-          if (!tx) {
-            setError('Error buying datatoken.')
-            LoggerInstance.error(
-              '[compute] Error buying datatoken for data set ',
-              ddo.id
-            )
-            return
           }
         } else {
           const datatokenInstance = new Datatoken(web3)
           const tx = await datatokenInstance.startOrder(
-            ddo.datatokens[0].address,
+            asset.datatokens[0].address,
             accountId,
             initializeData.computeAddress,
             0,
@@ -456,7 +426,7 @@ export default function Compute({
           selectedAlgorithmAsset.services[0].id,
           0,
           accountId,
-          selectedAlgorithmAsset.services[0].serviceEndpoint //to check
+          selectedAlgorithmAsset.services[0].serviceEndpoint // to check
         )
         const providerFees: ProviderFees = {
           providerFeeAddress: initializeData.providerFee.providerFeeAddress,
@@ -531,6 +501,7 @@ export default function Compute({
                 tokenInOutMarket,
                 amountsInOutMaxFee
               )
+              break
             }
             case 'fixed': {
               const datatokenInstance = new Datatoken(web3)
@@ -554,6 +525,7 @@ export default function Compute({
                 fre
               )
               algorithmAssetOrderId = tx.transactionHash
+              break
             }
             case 'free': {
               const datatokenInstance = new Datatoken(web3)
@@ -577,6 +549,7 @@ export default function Compute({
                 algorithmConsumeDetails.addressOrId
               )
               algorithmAssetOrderId = tx.transactionHash
+              break
             }
           }
         } else {
@@ -615,8 +588,8 @@ export default function Compute({
       LoggerInstance.log('[compute] Starting compute job.')
 
       const computeAsset: ComputeAsset = {
-        documentId: ddo.id,
-        serviceId: ddo.services[0].id,
+        documentId: asset.id,
+        serviceId: asset.services[0].id,
         transferTxId: assetOrderId
       }
       computeAlgorithm.transferTxId = algorithmAssetOrderId
@@ -627,7 +600,7 @@ export default function Compute({
       }
 
       const response = await ProviderInstance.computeStart(
-        ddo.services[0].serviceEndpoint,
+        asset.services[0].serviceEndpoint,
         web3,
         accountId,
         'env1',
@@ -646,17 +619,18 @@ export default function Compute({
       LoggerInstance.log('[compute] Starting compute job response: ', response)
 
       await checkPreviousOrders(selectedAlgorithmAsset)
-      await checkPreviousOrders(ddo)
+      await checkPreviousOrders(asset)
       setIsPublished(true)
     } catch (error) {
       await checkPreviousOrders(selectedAlgorithmAsset)
-      await checkPreviousOrders(ddo)
+      await checkPreviousOrders(asset)
       setError('Failed to start job!')
       LoggerInstance.error('[compute] Failed to start job: ', error.message)
     } finally {
       setIsJobStarting(false)
     }
   }
+
   return (
     <>
       <div className={styles.info}>
@@ -664,13 +638,16 @@ export default function Compute({
         <Price accessDetails={accessDetails} conversion />
       </div>
 
-      {ddo.metadata.type === 'algorithm' ? (
+      {asset.metadata.type === 'algorithm' ? (
         <>
           <Alert
             text="This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
             state="info"
           />
-          <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} ddo={ddo} />
+          <AlgorithmDatasetsListForCompute
+            algorithmDid={asset.id}
+            ddo={asset}
+          />
         </>
       ) : (
         <Formik
@@ -691,7 +668,7 @@ export default function Compute({
             hasDatatoken={hasDatatoken}
             dtBalance={dtBalance}
             datasetLowPoolLiquidity={!isConsumablePrice}
-            assetType={ddo?.metadata.type}
+            assetType={asset?.metadata.type}
             assetTimeout={datasetTimeout}
             hasPreviousOrderSelectedComputeAsset={hasPreviousAlgorithmOrder}
             hasDatatokenSelectedComputeAsset={hasAlgoAssetDatatoken}
