@@ -8,7 +8,7 @@
 
 .fees > div {
   margin-bottom: 0;
-  justify-self: center;
+  justify-self: start;
 }
 
 .fees label {
@@ -19,8 +19,8 @@
   max-width: 5rem;
 }
 
-@media screen and (max-width: 41rem) {
+@media screen and (min-width: 40rem) {
   .fees > div {
-    justify-self: start;
+    justify-self: center;
   }
 }
