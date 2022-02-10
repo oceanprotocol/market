@@ -19,15 +19,16 @@ async function getQueryHighest(
   chainIds: number[]
 ): Promise<[SearchQuery, string[]]> {
   const dtList = await getHighestLiquidityDatatokens(chainIds)
+  console.log('DT LIST: ', dtList)
   const baseQueryParams = {
     chainIds,
     esPaginationOptions: {
       size: dtList.length > 0 ? dtList.length : 1
     },
-    filters: [getFilterTerm('dataToken', dtList)]
+    filters: [getFilterTerm('services.datatokenAddress', dtList)]
   } as BaseQueryParams
   const queryHighest = generateBaseQuery(baseQueryParams)
-
+  console.log('QUERY highest: ', queryHighest)
   return [queryHighest, dtList]
 }
 

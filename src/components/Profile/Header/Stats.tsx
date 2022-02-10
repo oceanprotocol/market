@@ -17,7 +17,6 @@ async function getPoolSharesLiquidity(
   poolShares: PoolShare[]
 ): Promise<number> {
   let totalLiquidity = 0
-
   for (const poolShare of poolShares) {
     const poolLiquidity = calculateUserLiquidity(poolShare)
     totalLiquidity += poolLiquidity
@@ -36,6 +35,8 @@ export default function Stats({
 
   const [publisherLiquidity, setPublisherLiquidity] = useState<UserLiquidity>()
   const [totalLiquidity, setTotalLiquidity] = useState(0)
+
+  console.log('POOL SHARES: ', poolShares)
 
   useEffect(() => {
     if (!accountId || chainIds.length === 0) {
