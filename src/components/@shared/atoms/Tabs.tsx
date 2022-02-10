@@ -37,10 +37,10 @@ export default function Tabs({
           >
             {showRadio ? (
               <InputElement
-                name="radio-pricing"
+                name={item.title}
                 type="radio"
                 checked={defaultIndex === index}
-                label={item.title}
+                options={[item.title]}
                 readOnly
               />
             ) : (
