@@ -17,7 +17,6 @@ async function getPoolSharesLiquidity(
   poolShares: PoolShare[]
 ): Promise<number> {
   let totalLiquidity = 0
-
   for (const poolShare of poolShares) {
     const poolLiquidity = calculateUserLiquidity(poolShare)
     totalLiquidity += poolLiquidity
