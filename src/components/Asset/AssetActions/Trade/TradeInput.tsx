@@ -54,6 +54,7 @@ export default function TradeInput({
           <Input
             type="number"
             max={`${item?.maxAmount}`}
+            min="0"
             prefix={item?.token}
             placeholder="0"
             field={field}
