@@ -71,6 +71,7 @@ const HighestLiquidityAssets = gql`
         symbol
       }
       baseTokenLiquidity
+      datatokenLiquidity
     }
   }
 `
@@ -294,6 +295,7 @@ export async function getHighestLiquidityDatatokens(
   highestLiquidityAssets.sort(
     (a, b) => b.baseTokenLiquidity - a.baseTokenLiquidity
   )
+
   for (let i = 0; i < highestLiquidityAssets.length; i++) {
     if (!highestLiquidityAssets[i]?.datatoken?.address) continue
     dtList.push(highestLiquidityAssets[i].datatoken.address)

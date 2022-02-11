@@ -24,10 +24,9 @@ async function getQueryHighest(
     esPaginationOptions: {
       size: dtList.length > 0 ? dtList.length : 1
     },
-    filters: [getFilterTerm('dataToken', dtList)]
+    filters: [getFilterTerm('services.datatokenAddress', dtList)]
   } as BaseQueryParams
   const queryHighest = generateBaseQuery(baseQueryParams)
-
   return [queryHighest, dtList]
 }
 
