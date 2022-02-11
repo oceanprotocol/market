@@ -12,8 +12,9 @@ import { PoolStatus as MigrationPoolStatus, Migration } from 'v4-migration-lib/'
 import appConfig from '../../app.config'
 import { useWeb3 } from './Web3'
 import { useAsset } from './Asset'
+Logger.log('Migration provider called')
 
-interface MigrationStatusProvider {
+interface MigrationProviderValue {
   migrationAddress: string
   status: number
   poolV3Address: string
@@ -28,22 +29,24 @@ interface MigrationStatusProvider {
   newLPTAmount: number
   lptRounding: number
   deadline: number
+  refreshMigrationStatus: (
+    poolAddressV3: string,
+    migrationAddress: string
+  ) => Promise<void>
 }
 
-const MigrationContext = createContext({} as MigrationStatusProvider)
+const MigrationContext = createContext({} as MigrationProviderValue)
 
 function MigrationProvider({
-  asset,
   children
 }: {
-  asset: string | DDO
   children: ReactNode
 }): ReactElement {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>()
   const [migrationAddress, setMigrationAddress] = useState<string>()
   const [status, setStatus] = useState<number>()
-  const [poolV3Address, setPoolV3Address] = useState<string>()
+  const [poolV3Address, setPoolV3Address] = useState<string>('TEST')
   const [poolV4Address, setPoolV4Address] = useState<string>()
   const [didV3, setDidV3] = useState<string>()
   const [didV4, setDidV4] = useState<string>()
@@ -58,26 +61,33 @@ function MigrationProvider({
   const { chainId } = useWeb3()
   const { ddo } = useAsset()
   const { web3 } = useWeb3()
-
+  Logger.log('chainId', chainId)
   async function switchMigrationAddress(chainId: number): Promise<void> {
+    Logger.log('switchMigrationAddress', migrationAddress)
     switch (chainId) {
       case 1:
         setMigrationAddress(appConfig.ethereumMigrationContractAddresss)
+        Logger.log('switchMigrationAddress', migrationAddress)
         break
       case 137:
         setMigrationAddress(appConfig.polygonMigrationContractAddresss)
+        Logger.log('switchMigrationAddress', migrationAddress)
         break
       case 56:
         setMigrationAddress(appConfig.bscMigrationContractAddresss)
+        Logger.log('switchMigrationAddress', migrationAddress)
         break
       case 1285:
         setMigrationAddress(appConfig.moonriverMigrationContractAddresss)
+        Logger.log('switchMigrationAddress', migrationAddress)
         break
       case 246:
         setMigrationAddress(appConfig.ewcMigrationContractAddresss)
+        Logger.log('switchMigrationAddress', migrationAddress)
         break
       case 4:
         setMigrationAddress(appConfig.rinkebyMigrationContractAddresss)
+        Logger.log('switchMigrationAddress', migrationAddress)
         break
       default:
         break
@@ -106,14 +116,48 @@ function MigrationProvider({
     return status
   }
 
+  const refreshMigrationStatus = async (
+    poolAddressV3: string,
+    migrationAddress: string
+  ) => {
+    setLoading(true)
+    const status = await fetchMigrationStatus(poolAddressV3, migrationAddress)
+    Logger.debug('[migration] Got Migration Status', status.status)
+    setStatus(status.status)
+    setLoading(false)
+  }
+
   //
   // Get and set Migration status based on passed DDO
   //
+  Logger.log('fetchMigrationStatus 1', migrationAddress)
+
+  // const initMigrationStatus = useCallback(async (ddo: DDO): Promise<void> => {
+  //   if (!ddo) return
+  //   setLoading(true)
+  //   const returnedPrice = await getPrice(ddo)
+  //   setPrice({ ...returnedPrice })
+
+  //   // Get metadata from DDO
+  //   const { attributes } = ddo.findServiceByType('metadata')
+  //   setMetadata(attributes as unknown as MetadataMarket)
+  //   setTitle(attributes?.main.name)
+  //   setType(attributes.main.type)
+  //   setOwner(ddo.publicKey[0].owner)
+  //   Logger.log('[asset] Got Metadata from DDO', attributes)
+
+  //   setIsInPurgatory(ddo.isInPurgatory === 'true')
+  //   await setPurgatory(ddo.id)
+  //   setLoading(false)
+  // }, [])
+
   useEffect(() => {
-    if (!ddo) return
+    Logger.log('fetchMigrationStatus 2', migrationAddress)
 
     async function init() {
+      Logger.log('fetchMigrationStatus 3', migrationAddress)
       await switchMigrationAddress(chainId)
+      Logger.log('fetchMigrationStatus 4', migrationAddress)
       const status = await fetchMigrationStatus(
         ddo.price.pools[0],
         migrationAddress
@@ -133,40 +177,44 @@ function MigrationProvider({
       setLptRounding(status.lptRounding)
       setDeadline(status.deadline)
     }
+    Logger.log('fetchMigrationStatus 5', migrationAddress)
     init()
-  }, [ddo, chainId])
-
+  }, [chainId])
+  Logger.log('fetchMigrationStatus 6', migrationAddress)
   return (
     <MigrationContext.Provider
-      value={{
-        migrationAddress,
-        status,
-        poolV3Address,
-        poolV4Address,
-        didV3,
-        didV4,
-        owner,
-        poolShareOwners,
-        dtV3Address,
-        totalOcean,
-        totalDTBurnt,
-        newLPTAmount,
-        lptRounding,
-        deadline
-      }}
+      value={
+        {
+          migrationAddress: 'test123',
+          status,
+          poolV3Address,
+          poolV4Address,
+          didV3,
+          didV4,
+          owner,
+          poolShareOwners,
+          dtV3Address,
+          totalOcean,
+          totalDTBurnt,
+          newLPTAmount,
+          lptRounding,
+          deadline,
+          refreshMigrationStatus
+        } as MigrationProviderValue
+      }
     >
       {children}
     </MigrationContext.Provider>
   )
 }
 // Helper hook to access the provider values
-const useMigrationStatus = (): MigrationStatusProvider =>
+const useMigrationStatus = (): MigrationProviderValue =>
   useContext(MigrationContext)
 
 export {
   MigrationProvider,
   useMigrationStatus,
-  MigrationPoolStatus,
+  MigrationProviderValue,
   MigrationContext
 }
 export default MigrationProvider
