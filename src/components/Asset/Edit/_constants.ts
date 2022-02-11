@@ -21,11 +21,11 @@ export function getInitialValues(
   price: number
 ): Partial<MetadataEditForm> {
   return {
-    name: metadata.name,
-    description: metadata.description,
+    name: metadata?.name,
+    description: metadata?.description,
     price,
     timeout,
-    author: metadata.author
+    author: metadata?.author
   }
 }
 

@@ -1,4 +1,5 @@
 import React, { ReactElement } from 'react'
+import Link from 'next/link'
 import Markdown from '@shared/Markdown'
 import MetaFull from './MetaFull'
 import MetaSecondary from './MetaSecondary'
@@ -62,6 +63,11 @@ export default function AssetContent({
 
         <div className={styles.actions}>
           <AssetActions asset={asset} />
+          <div className={styles.ownerActions}>
+            <Link href={`/asset/${asset?.id}/edit`}>
+              <a>Edit</a>
+            </Link>
+          </div>
 
           {/* 
             TODO: restore edit actions, ideally put edit screens on new page 

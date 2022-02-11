@@ -11,15 +11,15 @@ import styles from './index.module.css'
 import Web3Feedback from '@shared/Web3Feedback'
 import { getInitialValues, validationSchema } from './_constants'
 import content from '../../../../content/pages/editComputeDataset.json'
+import { AssetExtended } from 'src/@types/AssetExtended'
 
 export default function EditComputeDataset({
-  setShowEdit
+  asset
 }: {
-  setShowEdit: (show: boolean) => void
+  asset: AssetExtended
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
-  const { asset, isAssetNetwork, fetchAsset } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
 
@@ -107,12 +107,11 @@ export default function EditComputeDataset({
               <FormEditComputeDataset
                 title={content.form.title}
                 data={content.form.data}
-                setShowEdit={setShowEdit}
               />
             </article>
             <Web3Feedback
               networkId={asset?.chainId}
-              isAssetNetwork={isAssetNetwork}
+              // isAssetNetwork={isAssetNetwork}
             />
             {debug === true && (
               <div className={styles.grid}>

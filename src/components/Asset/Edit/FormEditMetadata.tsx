@@ -41,14 +41,12 @@ import { useAsset } from '@context/Asset'
 // }
 export default function FormEditMetadata({
   data,
-  setShowEdit,
   setTimeoutStringValue,
   values,
   showPrice,
   isComputeDataset
 }: {
   data: InputProps[]
-  setShowEdit: (show: boolean) => void
   setTimeoutStringValue: (value: string) => void
   values: Partial<FormPublishData>
   showPrice: boolean
@@ -106,11 +104,6 @@ export default function FormEditMetadata({
             />
           )
       )}
-
-      {/* <FormActions
-        setShowEdit={setShowEdit}
-        handleClick={() => setTimeoutStringValue(values.timeout)}
-      /> */}
     </Form>
   )
 }
