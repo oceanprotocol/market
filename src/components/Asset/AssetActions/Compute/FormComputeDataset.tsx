@@ -106,7 +106,7 @@ export default function FormStartCompute({
         ? 0
         : Number(algorithmConsumeDetails.price)
 
-    setTotalPrice(priceDataset + priceAlgo)
+    setTotalPrice((priceDataset + priceAlgo).toString())
   }, [
     asset?.accessDetails,
     algorithmConsumeDetails,
@@ -145,7 +145,7 @@ export default function FormStartCompute({
         hasDatatokenSelectedComputeAsset={hasDatatokenSelectedComputeAsset}
         algorithmConsumeDetails={algorithmConsumeDetails}
         symbol={oceanSymbol}
-        totalPrice={totalPrice}
+        totalPrice={Number.parseFloat(totalPrice)}
       />
 
       <ButtonBuy

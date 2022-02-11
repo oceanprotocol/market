@@ -40,20 +40,7 @@ export default function Download({
 
   useEffect(() => {
     if (!asset?.accessDetails) return
-    async function init() {
-      // the ZERO_ADDRESS check is for the publish preview
-      if (
-        asset.accessDetails.type === 'dynamic' &&
-        asset.accessDetails.addressOrId !== ZERO_ADDRESS
-      ) {
-        const priceAndEstimate = await calculateBuyPrice(
-          asset.accessDetails,
-          asset.chainId
-        )
-        asset.accessDetails.price = Number.parseFloat(priceAndEstimate.price)
-      }
-    }
-    init()
+
     setIsOwned(asset?.accessDetails?.isOwned)
     setValidOrderTx(asset?.accessDetails?.validOrderTx)
   }, [asset?.accessDetails, asset?.chainId])
