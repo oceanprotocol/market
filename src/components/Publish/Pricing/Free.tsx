@@ -15,7 +15,7 @@ export default function Free({ content }: { content: any }): ReactElement {
   useEffect(() => {
     // if the user has agreed, then set pricing to continue
     if (values.pricing.freeAgreement) {
-      setFieldValue('pricing.price', 1000)
+      setFieldValue('pricing.price', 1)
       setFieldValue('pricing.amountDataToken', 1000)
     } else {
       // disabled continue button if the user hasn't agree to the "free agreement"

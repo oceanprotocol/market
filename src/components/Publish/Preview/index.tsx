@@ -8,7 +8,6 @@ import { Asset } from '@oceanprotocol/lib'
 
 export default function Preview(): ReactElement {
   const [asset, setAsset] = useState<Asset>()
-  const [accessDetails, setAccessDetails] = useState<AccessDetails>()
   const { values } = useFormikContext<FormPublishData>()
 
   useEffect(() => {
@@ -34,8 +33,10 @@ export default function Preview(): ReactElement {
         owned: false,
         validOrderTx: ''
       }
-      setAccessDetails(accessDetails)
+      // TODO: add Property 'accessDetails' to type 'DDO' on ocean.js. see <Asset>
+      asset.accessDetails = accessDetails
     }
+
     makeDdo()
   }, [values])
 
