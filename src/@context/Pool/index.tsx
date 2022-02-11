@@ -197,7 +197,9 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
 
     // Staking bot receives half the pool shares so for display purposes
     // we can multiply by 2 as we have a hardcoded 50/50 pool weight.
-    const userPoolShares = new Decimal(poolInfoUser.poolShares)
+    const userPoolShares = new Decimal(
+      poolInfoUser.poolShares ? poolInfoUser.poolShares : 0
+    )
       .mul(2)
       .toString()
 
