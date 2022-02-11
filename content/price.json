@@ -28,7 +28,18 @@
     },
     "free": {
       "title": "Free",
-      "info": "Set your data set as free. The datatoken for this data set will be given for free via creating a faucet."
+      "info": "Set your data set as free. The datatoken for this data set will be given for free via creating a faucet.",
+      "fields": [
+        {
+          "name": "freeAgreement",
+          "label": "Confirm",
+          "type": "checkbox",
+          "options": [
+            "I want this asset to be free. I understand network fees are still to be paid"
+          ],
+          "required": true
+        }
+      ]
     }
   },
   "pool": {
