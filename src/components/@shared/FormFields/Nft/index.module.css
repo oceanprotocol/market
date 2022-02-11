@@ -1,7 +1,8 @@
 .nft {
   display: grid;
   gap: var(--spacer);
-  grid-template-columns: 1fr 11fr;
+  grid-template-columns: none;
+  margin-top: var(--spacer);
   margin-bottom: var(--spacer);
   align-items: center;
 }
@@ -31,4 +32,11 @@
   fill: var(--brand-pink);
   width: var(--font-size-mini);
   height: var(--font-size-mini);
+}
+
+@media (min-width: 40rem) {
+  .nft {
+    grid-template-columns: 1fr 11fr;
+    margin-top: 0;
+  }
 }
