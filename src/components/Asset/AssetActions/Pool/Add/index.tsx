@@ -106,7 +106,6 @@ export default function Add({
       const result = await poolInstance.joinswapExternAmountIn(
         accountId,
         poolAddress,
-        tokenInAddress,
         amount,
         minPoolAmountOut
       )

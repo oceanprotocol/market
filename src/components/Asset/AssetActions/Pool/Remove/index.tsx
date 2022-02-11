@@ -64,7 +64,6 @@ export default function Remove({
       const result = await poolInstance.exitswapPoolAmountIn(
         accountId,
         poolAddress,
-        tokenOutAddress,
         amountPoolShares,
         minOceanAmount
       )

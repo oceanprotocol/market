@@ -239,8 +239,8 @@ export async function createTokensAndPricing(
         vestingAmount: '0',
         vestedBlocks: 2726000,
         initialBaseTokenLiquidity: values.pricing.amountOcean.toString(),
-        swapFeeLiquidityProvider: 1e15,
-        swapFeeMarketRunner: 1e15
+        swapFeeLiquidityProvider: '0.1',
+        swapFeeMarketRunner: '0'
       }
 
       LoggerInstance.log(
@@ -260,7 +260,7 @@ export async function createTokensAndPricing(
       )
       LoggerInstance.log('[publish] pool.approve tx', txApprove)
 
-      const result = await nftFactory.createNftErcWithPool(
+      const result = await nftFactory.createNftErc20WithPool(
         accountId,
         nftCreateData,
         ercParams,
@@ -283,7 +283,7 @@ export async function createTokensAndPricing(
         baseTokenDecimals: 18,
         datatokenDecimals: 18,
         fixedRate: values.pricing.price.toString(),
-        marketFee: 1e15,
+        marketFee: '0',
         withMint: true
       }
 
@@ -292,7 +292,7 @@ export async function createTokensAndPricing(
         freParams
       )
 
-      const result = await nftFactory.createNftErcWithFixedRate(
+      const result = await nftFactory.createNftErc20WithFixedRate(
         accountId,
         nftCreateData,
         ercParams,
@@ -324,7 +324,7 @@ export async function createTokensAndPricing(
         dispenserParams
       )
 
-      const result = await nftFactory.createNftErcWithDispenser(
+      const result = await nftFactory.createNftErc20WithDispenser(
         accountId,
         nftCreateData,
         ercParams,
