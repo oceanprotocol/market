@@ -9,10 +9,10 @@
 interface FeeInfo {
   publisherMarketOrderFee: string
   publisherMarketPoolSwapFee: string
-  publisherMarketFreSwapFee: string
+  publisherMarketFixedSwapFee: string
   consumeMarketOrderFee: string
   consumeMarketPoolSwapFee: string
-  consumeMarketFreSwapFee: string
+  consumeMarketFixedSwapFee: string
   opcFee: string
 }
 

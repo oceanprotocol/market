@@ -238,11 +238,9 @@ export async function createTokensAndPricing(
         vestingAmount: '0',
         vestedBlocks: 2726000,
         initialBaseTokenLiquidity: values.pricing.amountOcean.toString(),
-        swapFeeLiquidityProvider: values.pricing.swapFee,
+        swapFeeLiquidityProvider: values.pricing.swapFee.toString(),
         // TODO: hack , we need to fix this in ocean.js
-        swapFeeMarketRunner: Number.parseFloat(
-          appConfig.publisherMarketPoolSwapFee
-        )
+        swapFeeMarketRunner: appConfig.publisherMarketPoolSwapFee
       }
 
       LoggerInstance.log(
@@ -285,7 +283,7 @@ export async function createTokensAndPricing(
         datatokenDecimals: 18,
         fixedRate: values.pricing.price.toString(),
         // TODO: needs to be fixed in ocean.js
-        marketFee: Number.parseFloat(appConfig.publisherMarketFreSwapFee),
+        marketFee: appConfig.publisherMarketFixedSwapFee,
         withMint: true
       }
 

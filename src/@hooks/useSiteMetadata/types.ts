@@ -25,10 +25,10 @@ export interface UseSiteMetadata {
     marketFeeAddress: string
     publisherMarketOrderFee: string
     publisherMarketPoolSwapFee: string
-    publisherMarketFreSwapFee: string
+    publisherMarketFixedSwapFee: string
     consumeMarketOrderFee: string
     consumeMarketPoolSwapFee: string
-    consumeMarketFreSwapFee: string
+    consumeMarketFixedSwapFee: string
     currencies: string[]
     portisId: string
     allowFixedPricing: string

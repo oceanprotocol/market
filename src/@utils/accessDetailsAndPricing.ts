@@ -165,21 +165,21 @@ function getAccessDetailsFromTokenPrice(
     tokenPrice.fixedRateExchanges &&
     tokenPrice.fixedRateExchanges.length > 0
   ) {
-    const fre = tokenPrice.fixedRateExchanges[0]
+    const fixed = tokenPrice.fixedRateExchanges[0]
     accessDetails.type = 'fixed'
-    accessDetails.addressOrId = fre.id
-    accessDetails.price = fre.price
+    accessDetails.addressOrId = fixed.id
+    accessDetails.price = fixed.price
     // in theory we should check dt balance here, we can skip this because in the market we always create fre with minting capabilities.
-    accessDetails.isPurchasable = fre.active
+    accessDetails.isPurchasable = fixed.active
     accessDetails.baseToken = {
-      address: fre.baseToken.address,
-      name: fre.baseToken.name,
-      symbol: fre.baseToken.symbol
+      address: fixed.baseToken.address,
+      name: fixed.baseToken.name,
+      symbol: fixed.baseToken.symbol
     }
     accessDetails.datatoken = {
-      address: fre.datatoken.address,
-      name: fre.datatoken.name,
-      symbol: fre.datatoken.symbol
+      address: fixed.datatoken.address,
+      name: fixed.datatoken.name,
+      symbol: fixed.datatoken.symbol
     }
     return accessDetails
   }
@@ -250,7 +250,7 @@ export async function getAccessDetails(
     TokenPriceQuery,
     {
       datatokenId: datatokenAddress.toLowerCase(),
-      account: account.toLowerCase()
+      account: account?.toLowerCase()
     },
     queryContext
   )
@@ -285,12 +285,12 @@ export async function getAccessDetailsForAssets(
     const queryContext = getQueryContext(Number(chainKey))
     const tokenQueryResult: OperationResult<
       TokensPriceQuery,
-      { datatokenId: string; account: string }
+      { datatokenIds: [string]; account: string }
     > = await fetchData(
       TokensPriceQuery,
       {
         datatokenIds: chainAssetLists[chainKey],
-        account: account.toLowerCase()
+        account: account?.toLowerCase()
       },
       queryContext
     )

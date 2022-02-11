@@ -28,9 +28,9 @@ module.exports = {
   // fee recieved by the publisher market when a dt is swaped from a pool, percent
   publisherMarketPoolSwapFee:
     process.env.NEXT_PUBLIC_PUBLISHER_MARKET_POOL_SWAP_FEE || '0',
-  // fee recieved by the publisher market when a dt is bought from a fre, percent
-  publisherMarketFreSwapFee:
-    process.env.NEXT_PUBLIC_PUBLISHER_MARKET_FRE_SWAP_FEE || '0',
+  // fee recieved by the publisher market when a dt is bought from a fixed rate exchange, percent
+  publisherMarketFixedSwapFee:
+    process.env.NEXT_PUBLIC_PUBLISHER_MARKET_FIXED_SWAP_FEE || '0',
 
   // consume market fee that is taken upon ordering an asset, it is an absolute value, it is specified on order
   consumeMarketOrderFee:
@@ -38,9 +38,9 @@ module.exports = {
   // fee recieved by the consume market when a dt is swaped from a pool, percent
   consumeMarketPoolSwapFee:
     process.env.NEXT_PUBLIC_CONSUME_MARKET_POOL_SWAP_FEE || '0',
-  // fee recieved by the consume market when a dt is bought from a fre, percent
-  consumeMarketFreSwapFee:
-    process.env.NEXT_PUBLIC_CONSUME_MARKET_FRE_SWAP_FEE || '0',
+  // fee recieved by the consume market when a dt is bought from a fixed rate exchange, percent
+  consumeMarketFixedSwapFee:
+    process.env.NEXT_PUBLIC_CONSUME_MARKET_FIXED_SWAP_FEE || '0',
 
   // Used for conversion display, can be whatever coingecko API supports
   // see: https://api.coingecko.com/api/v3/simple/supported_vs_currencies
