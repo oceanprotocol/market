@@ -163,7 +163,7 @@ export async function getAssetsFromDidList(
 
     const baseParams = {
       chainIds: chainIds,
-      filters: [getFilterTerm('id', didList)],
+      filters: [getFilterTerm('_id', didList)],
       ignorePurgatory: true
     } as BaseQueryParams
     const query = generateBaseQuery(baseParams)
@@ -185,7 +185,7 @@ export async function retrieveDDOListByDIDs(
     const orderedDDOListByDIDList: Asset[] = []
     const baseQueryparams = {
       chainIds,
-      filters: [getFilterTerm('id', didList)],
+      filters: [getFilterTerm('_id', didList)],
       ignorePurgatory: true
     } as BaseQueryParams
     const query = generateBaseQuery(baseQueryparams)
@@ -339,7 +339,7 @@ export async function getDownloadAssets(
     const baseQueryparams = {
       chainIds,
       filters: [
-        getFilterTerm('id', didList),
+        getFilterTerm('_id', didList),
         getFilterTerm('service.type', 'access')
       ]
     } as BaseQueryParams

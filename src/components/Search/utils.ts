@@ -123,7 +123,7 @@ export function getSearchQuery(
 
   const filters: FilterTerm[] = []
   accessType !== undefined &&
-    filters.push(getFilterTerm('nft.type', accessType))
+    filters.push(getFilterTerm('services.type', accessType))
   serviceType !== undefined &&
     filters.push(getFilterTerm('metadata.type', serviceType))
 

@@ -78,6 +78,7 @@ export default function PricingFields(): ReactElement {
       handleTabChange={handleTabChange}
       defaultIndex={type === 'dynamic' ? 1 : type === 'free' ? 2 : 0}
       className={styles.pricing}
+      showRadio
     />
   )
 }
