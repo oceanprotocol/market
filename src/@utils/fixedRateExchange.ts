@@ -21,12 +21,15 @@ export async function getFixedBuyPrice(
   if (!web3) {
     web3 = await getDummyWeb3(chainId)
   }
+  console.log('web3 dubb', web3)
   const config = getOceanConfig(chainId)
   const fixed = new FixedRateExchange(web3, config.fixedRateExchangeAddress)
   const estimatedPrice = await fixed.calcBaseInGivenOutDT(
     accessDetails.addressOrId,
     '1'
   )
+
+  console.log('fixed estimatedPrice', estimatedPrice)
 
   return estimatedPrice
 }

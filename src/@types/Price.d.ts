@@ -1,18 +1,24 @@
 /**
- * @interface FeeInfo
- * @prop {string}  publishingMarketFee fee received by the market where the asset was published. It is set on erc20 creation. It is a absolute value
- * @prop {string}  publishingMarketSwapFee fee received by the market where the asset was published on any swap (pool or fre). It is a percentage
+ * @interface OrdePriceAndFee
+ * @prop {string}  price total price including fees
+ * @prop {string}  publisherMarketOrderFee fee received by the market where the asset was published. It is set on erc20 creation. It is a absolute value
+ * @prop {string}  publisherMarketPoolSwapFee fee received by the market where the asset was published on any swap (pool or fre). It is a percentage
+ * @prop {string}  publisherMarketFixedSwapFee fee received by the market where the asset was published on any swap (pool or fre). It is a percentage
+ * @prop {string}  consumeMarketOrderFee fee received by the market where the asset was published. It is set on erc20 creation. It is a absolute value
+ * @prop {string}  consumeMarketPoolSwapFee fee received by the market where the asset was published on any swap (pool or fre). It is a percentage
+ * @prop {string}  consumeMarketFixedSwapFee fee received by the market where the asset was published on any swap (pool or fre). It is a percentage
  * @prop {string}  liquidityProviderSwapFee fee received by the liquidity providers of the pool. It is a percentage  ( ex 50% means liquidityProviderSwapFee=0.5)
- * @prop {string}  marketOrderFee fee received by the market where the asset is ordered. It is an absolute value
  * @prop {string}  opcFee ocean protocol community fee, it is a percentage
  */
-interface FeeInfo {
+interface OrdePriceAndFee {
+  price: string
   publisherMarketOrderFee: string
   publisherMarketPoolSwapFee: string
   publisherMarketFixedSwapFee: string
   consumeMarketOrderFee: string
   consumeMarketPoolSwapFee: string
   consumeMarketFixedSwapFee: string
+  providerFee: string
   opcFee: string
 }
 
@@ -37,7 +43,6 @@ interface AccessDetails {
   isPurchasable?: boolean
   isOwned: bool
   validOrderTx: string
-  feeInfo: FeeInfo
 }
 
 interface PriceOptions {

@@ -209,7 +209,7 @@ function getAccessDetailsFromTokenPrice(
   return accessDetails
 }
 
-async function processDetails(
+async function getOrderPriceAndFees(
   tokenPrice: TokenPrice | TokensPrice,
   includeOrderPriceAndFees: boolean,
   timeout?: number,
@@ -244,8 +244,7 @@ export async function getAccessDetails(
   chainId: number,
   datatokenAddress: string,
   timeout?: number,
-  account?: string,
-  includeOrderPriceAndFees = true
+  account = ''
 ): Promise<AccessDetails> {
   const queryContext = getQueryContext(Number(chainId))
   const tokenQueryResult: OperationResult<
@@ -261,19 +260,13 @@ export async function getAccessDetails(
   )
 
   const tokenPrice: TokenPrice = tokenQueryResult.data.token
-  const accessDetails = processDetails(
-    tokenPrice,
-    includeOrderPriceAndFees,
-    timeout,
-    chainId
-  )
+  const accessDetails = getAccessDetailsFromTokenPrice(tokenPrice, timeout)
   return accessDetails
 }
 
 export async function getAccessDetailsForAssets(
   assets: Asset[],
-  account?: string,
-  isOrderPrice = false
+  account = ''
 ): Promise<AssetExtended[]> {
   const assetsExtended: AssetExtended[] = assets
   const chainAssetLists: { [key: number]: string[] } = {}

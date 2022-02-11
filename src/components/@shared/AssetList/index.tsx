@@ -10,6 +10,7 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { Asset } from '@oceanprotocol/lib'
 import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
+import { useWeb3 } from '@context/Web3'
 
 const cx = classNames.bind(styles)
 
@@ -43,6 +44,7 @@ export default function AssetList({
   noPublisher
 }: AssetListProps): ReactElement {
   const { chainIds } = useUserPreferences()
+  const { accountId } = useWeb3()
   const [assetsWithPrices, setAssetsWithPrices] = useState<AssetExtended[]>()
   const [loading, setLoading] = useState<boolean>(isLoading)
   const isMounted = useIsMounted()
@@ -51,14 +53,17 @@ export default function AssetList({
     if (!assets) return
     setAssetsWithPrices(assets as AssetExtended[])
     setLoading(false)
-
     async function fetchPrices() {
-      const assetsWithPrices = await getAccessDetailsForAssets(assets)
+      const assetsWithPrices = await getAccessDetailsForAssets(
+        assets,
+        accountId || '',
+        false
+      )
       if (!isMounted()) return
       setAssetsWithPrices([...assetsWithPrices])
     }
     fetchPrices()
-  }, [assets, isMounted])
+  }, [assets, isMounted, accountId])
 
   // // This changes the page field inside the query
   function handlePageChange(selected: number) {
