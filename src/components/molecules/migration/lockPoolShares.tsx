@@ -11,9 +11,11 @@ import { Logger } from '@oceanprotocol/lib'
 import { gql, OperationResult } from 'urql'
 import { fetchData, getQueryContext } from '../../../utils/subgraph'
 import { PoolLiquidity } from '../../../@types/apollo/PoolLiquidity'
+console.log('useMigrationStatus', useMigrationStatus)
+console.log('useAsset', useAsset)
 
 const userPoolShareQuery = gql`
-  query PoolShare($id: ID!, $shareId: ID) {
+  query poolShare($id: ID!, $shareId: ID) {
     pool(id: $id) {
       id
       shares(where: { id: $shareId }) {
@@ -31,6 +33,12 @@ async function addShares(
   poolV3Address: string,
   lptV3Amount: string
 ) {
+  console.log('add shares', {
+    accountId,
+    migrationAddress,
+    poolV3Address,
+    lptV3Amount
+  })
   const migration = new Migration(web3)
   await migration.addShares(
     accountId,
@@ -45,6 +53,10 @@ export default function LockPoolShares(): ReactElement {
   const { owner, ddo, price } = useAsset()
   const [poolTokens, setPoolTokens] = useState<string>()
   const { status, migrationAddress, poolV3Address } = useMigrationStatus()
+  console.log('[Migration] status', status)
+  console.log('[Migration] migrationAddress', migrationAddress)
+  console.log('[Migration] poolV3Address', poolV3Address)
+  console.log('[asset] owner', owner)
   const { web3 } = useWeb3()
 
   async function getUserPoolShareBalance() {
