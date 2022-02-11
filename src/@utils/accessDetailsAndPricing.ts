@@ -11,6 +11,7 @@ import {
 import { Asset } from '@oceanprotocol/lib'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { calculateBuyPrice } from './pool'
+import { getFixedBuyPrice } from './fixedRateExchange'
 
 const TokensPriceQuery = gql`
   query TokensPriceQuery($datatokenIds: [ID!], $account: String) {
@@ -210,39 +211,43 @@ function getAccessDetailsFromTokenPrice(
 
 async function processDetails(
   tokenPrice: TokenPrice | TokensPrice,
+  includeOrderPriceAndFees: boolean,
   timeout?: number,
   chainId?: number
 ): Promise<AccessDetails> {
   const accessDetails = getAccessDetailsFromTokenPrice(tokenPrice, timeout)
-  switch (accessDetails.type) {
-    case 'dynamic': {
-      const poolPrice = await calculateBuyPrice(accessDetails, chainId)
-      accessDetails.price = poolPrice
-      break
+  if (includeOrderPriceAndFees)
+    switch (accessDetails.type) {
+      case 'dynamic': {
+        const poolPrice = await calculateBuyPrice(accessDetails, chainId)
+        accessDetails.price = poolPrice
+        break
+      }
+      case 'fixed': {
+        const fixed = await getFixedBuyPrice(accessDetails, chainId)
+        accessDetails.price = fixed.baseTokenAmount
+        break
+      }
     }
-    case 'fixed': {
-      break
-    }
-  }
   return accessDetails
 }
 
 /**
  * @param {number} chain
  * @param {string} datatokenAddress
- * @param {bool=} isOrderPrice if false price will be spot price (pool) and rate (fre), if true you will get the order price including fees
  * @param {number=} timeout timout of the service, this is needed to return order details
  * @param {string=} account account that wants to buy, is needed to return order details
+ * @param {bool=} includeOrderPriceAndFees if false price will be spot price (pool) and rate (fre), if true you will get the order price including fees !! fees not yet done
  * @returns {Promise<AccessDetails>}
  */
 export async function getAccessDetails(
-  chain: number,
+  chainId: number,
   datatokenAddress: string,
   timeout?: number,
   account?: string,
-  isOrderPrice = true
+  includeOrderPriceAndFees = true
 ): Promise<AccessDetails> {
-  const queryContext = getQueryContext(Number(chain))
+  const queryContext = getQueryContext(Number(chainId))
   const tokenQueryResult: OperationResult<
     TokenPriceQuery,
     { datatokenId: string; account: string }
@@ -256,7 +261,12 @@ export async function getAccessDetails(
   )
 
   const tokenPrice: TokenPrice = tokenQueryResult.data.token
-  const accessDetails = getAccessDetailsFromTokenPrice(tokenPrice, timeout)
+  const accessDetails = processDetails(
+    tokenPrice,
+    includeOrderPriceAndFees,
+    timeout,
+    chainId
+  )
   return accessDetails
 }
 
