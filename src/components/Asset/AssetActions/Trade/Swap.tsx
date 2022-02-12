@@ -168,22 +168,25 @@ export default function Swap({
 
     if (name === 'baseToken') {
       if (values.type === 'sell') {
-        newValue = await poolInstance.calcPoolOutGivenSingleIn(
+        newValue = await poolInstance.getAmountInExactOut(
           assetExtended.accessDetails.addressOrId,
+          baseTokenItem.address,
           dtItem.address,
-          value.toString()
+          value.toString(),
+          swapFee
         )
 
         setTotalValue(newValue)
         setTokenAmount(value.toString())
-
         tokenIn = assetExtended.services[0].datatokenAddress
         tokenOut = poolInfo.baseTokenAddress
       } else {
-        newValue = await poolInstance.calcSingleInGivenPoolOut(
+        newValue = await poolInstance.getAmountOutExactIn(
           assetExtended.accessDetails.addressOrId,
           baseTokenItem.address,
-          value.toString()
+          dtItem.address,
+          value.toString(),
+          swapFee
         )
 
         setTotalValue(value.toString())
@@ -193,10 +196,12 @@ export default function Swap({
       }
     } else {
       if (values.type === 'sell') {
-        newValue = await poolInstance.calcSingleInGivenPoolOut(
+        newValue = await poolInstance.getAmountInExactOut(
           assetExtended.accessDetails.addressOrId,
+          dtItem.address,
           baseTokenItem.address,
-          value.toString()
+          value.toString(),
+          swapFee
         )
 
         setTotalValue(value.toString())
@@ -204,10 +209,12 @@ export default function Swap({
         tokenIn = assetExtended.services[0].datatokenAddress
         tokenOut = poolInfo.baseTokenAddress
       } else {
-        newValue = await poolInstance.calcPoolOutGivenSingleIn(
+        newValue = await poolInstance.getAmountOutExactIn(
           assetExtended.accessDetails.addressOrId,
           dtItem.address,
-          value.toString()
+          baseTokenItem.address,
+          value.toString(),
+          swapFee
         )
 
         setTotalValue(newValue)
