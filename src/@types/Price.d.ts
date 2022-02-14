@@ -21,6 +21,7 @@ interface OrderPriceAndFees {
   consumeMarketOrderFee: string
   consumeMarketPoolSwapFee: string
   consumeMarketFixedSwapFee: string
+  liquidityProviderSwapFee: string
   providerFee: ProviderFees
   opcFee: string
 }
