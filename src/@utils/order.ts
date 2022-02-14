@@ -59,7 +59,7 @@ export async function order(
       const freParams = {
         exchangeContract: config.fixedRateExchangeAddress,
         exchangeId: asset.accessDetails.addressOrId,
-        maxBaseTokenAmount: Web3.utils.toWei(orderPriceAndFees.price),
+        maxBaseTokenAmount: orderPriceAndFees.price,
         swapMarketFee: appConfig.consumeMarketFixedSwapFee,
         marketFeeAddress: appConfig.marketFeeAddress
       } as FreOrderParams
