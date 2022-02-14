@@ -30,6 +30,5 @@ export async function getFixedBuyPrice(
     accessDetails.addressOrId,
     '1'
   )
-  console.log('getFixed', estimatedPrice)
   return estimatedPrice
 }

@@ -143,7 +143,12 @@ function getAccessDetailsFromTokenPrice(
   timeout?: number
 ): AccessDetails {
   const accessDetails = {} as AccessDetails
-  if (timeout && tokenPrice.orders && tokenPrice.orders.length > 0) {
+  if (
+    tokenPrice &&
+    timeout &&
+    tokenPrice.orders &&
+    tokenPrice.orders.length > 0
+  ) {
     const order = tokenPrice.orders[0]
     accessDetails.isOwned = Date.now() / 1000 - order.createdTimestamp < timeout
     accessDetails.validOrderTx = order.tx
