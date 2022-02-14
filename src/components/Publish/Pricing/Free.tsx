@@ -1,9 +1,6 @@
 import React, { ReactElement, useEffect } from 'react'
-import { Field, useFormikContext } from 'formik'
-import Input from '@shared/FormInput'
-
+import { useFormikContext } from 'formik'
 import { FormPublishData } from '../_types'
-import { getFieldContent } from '../_utils'
 import FormHelp from '@shared/FormInput/Help'
 import Price from './Price'
 import styles from './Dynamic.module.css'
@@ -28,13 +25,7 @@ export default function Free({ content }: { content: any }): ReactElement {
     <>
       <FormHelp>{content.info}</FormHelp>
       <h4 className={styles.title}>Price</h4>
-      <Price />
-      <br />
-      <Field
-        {...getFieldContent('freeAgreement', content.fields)}
-        component={Input}
-        name="pricing.freeAgreement"
-      />
+      <Price content={content} />
     </>
   )
 }

@@ -32,12 +32,10 @@
       "fields": [
         {
           "name": "freeAgreement",
-          "label": "Confirm",
           "type": "checkbox",
           "options": [
             "I want this asset to be free. I understand network fees are still to be paid"
-          ],
-          "required": true
+          ]
         }
       ]
     }
