@@ -46,8 +46,6 @@ export default function FormTrade({
   const [maximumBaseToken, setMaximumBaseToken] = useState(maxBaseToken)
   const [maximumDt, setMaximumDt] = useState(maxDt)
   const [isWarningAccepted, setIsWarningAccepted] = useState(false)
-  const [tokenAddress, setTokenAddress] = useState<string>('')
-  const [tokenSymbol, setTokenSymbol] = useState<string>('')
 
   const validationSchema: Yup.SchemaOf<FormTradeData> = Yup.object()
     .shape({
@@ -121,17 +119,6 @@ export default function FormTrade({
           .toString(),
         swapMarketFee: swapMarketFeeOut
       }
-
-      const tokenAddress =
-        values.type === 'buy'
-          ? poolInfo.baseTokenAddress
-          : poolInfo.datatokenAddress
-      const tokenSymbol =
-        values.type === 'buy'
-          ? poolInfo.baseTokenSymbol
-          : poolInfo.datatokenSymbol
-      setTokenAddress(tokenAddress)
-      setTokenSymbol(tokenSymbol)
 
       const tx =
         values.type === 'buy'
