@@ -38,6 +38,6 @@
 }
 
 .refresh svg {
-  width: var(--font-size-mini);
-  height: var(--font-size-mini);
+  transform: scale(0.9);
+  transform-origin: center;
 }
