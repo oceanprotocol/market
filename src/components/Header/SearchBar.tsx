@@ -54,6 +54,11 @@ export default function SearchBar({
       'tags'
     ])
     router.push(`${url}&text=${urlEncodedValue}`)
+
+    // clear input after search
+    setTimeout(() => {
+      setValue('')
+    }, 100)
   }
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
