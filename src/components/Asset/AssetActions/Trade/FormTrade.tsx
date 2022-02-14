@@ -47,6 +47,8 @@ export default function FormTrade({
   const [maximumDt, setMaximumDt] = useState(maxDt)
   const [isWarningAccepted, setIsWarningAccepted] = useState(false)
 
+  console.log('MARKET SWAP FEE: ', appConfig)
+
   const validationSchema: Yup.SchemaOf<FormTradeData> = Yup.object()
     .shape({
       baseToken: Yup.number()
@@ -89,12 +91,12 @@ export default function FormTrade({
       const tokenInOutMarket: TokenInOutMarket = {
         tokenIn: poolInfo.baseTokenAddress,
         tokenOut: poolInfo.datatokenAddress,
-        marketFeeAddress: appConfig.marketFeeAddress
+        marketFeeAddress: appConfig.consumeMarketPoolSwapFee
       }
       const tokenOutMarket: TokenInOutMarket = {
         tokenIn: poolInfo.datatokenAddress,
         tokenOut: poolInfo.baseTokenAddress,
-        marketFeeAddress: appConfig.marketFeeAddress
+        marketFeeAddress: appConfig.consumeMarketPoolSwapFee
       }
 
       const impact = new Decimal(
