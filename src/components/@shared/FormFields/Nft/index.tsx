@@ -5,35 +5,43 @@ import { useField } from 'formik'
 import React, { ReactElement, useEffect } from 'react'
 import Refresh from '@images/refresh.svg'
 import styles from './index.module.css'
+import Tooltip from '@shared/atoms/Tooltip'
+import TxFee from './TxFee'
 
 export default function Nft(props: InputProps): ReactElement {
   const [field, meta, helpers] = useField(props.name)
+
+  const refreshNftMetadata = () => {
+    const nftMetadata = generateNftMetadata()
+    helpers.setValue({ ...nftMetadata })
+  }
 
   // Generate on first mount
   useEffect(() => {
     if (field.value?.name !== '') return
 
-    const nftOptions = generateNftMetadata()
-    helpers.setValue({ ...nftOptions })
+    refreshNftMetadata()
   }, [field.value?.name])
 
   return (
     <div className={styles.nft}>
       <figure className={styles.image}>
         <img src={field?.value?.image_data} width="128" height="128" />
-        <Button
-          style="text"
-          size="small"
-          className={styles.refresh}
-          title="Generate new image"
-          onClick={(e) => {
-            e.preventDefault()
-            const nftMetadata = generateNftMetadata()
-            helpers.setValue({ ...nftMetadata })
-          }}
-        >
-          <Refresh />
-        </Button>
+        <div className={styles.actions}>
+          <Tooltip content={<TxFee nftMetadata={field.value} />} />
+          <Button
+            style="text"
+            size="small"
+            className={styles.refresh}
+            title="Generate new image"
+            onClick={(e) => {
+              e.preventDefault()
+              refreshNftMetadata()
+            }}
+          >
+            <Refresh />
+          </Button>
+        </div>
       </figure>
 
       <div className={styles.token}>
