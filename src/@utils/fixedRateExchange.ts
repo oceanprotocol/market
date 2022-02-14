@@ -1,4 +1,5 @@
 import { FixedRateExchange, PriceAndFees } from '@oceanprotocol/lib'
+import { AccessDetails } from 'src/@types/Price'
 import Web3 from 'web3'
 import { getOceanConfig } from './ocean'
 import { getDummyWeb3 } from './web3'
@@ -21,15 +22,14 @@ export async function getFixedBuyPrice(
   if (!web3) {
     web3 = await getDummyWeb3(chainId)
   }
-  console.log('web3 dubb', web3)
+
   const config = getOceanConfig(chainId)
+  console.time('getFixed')
   const fixed = new FixedRateExchange(web3, config.fixedRateExchangeAddress)
   const estimatedPrice = await fixed.calcBaseInGivenOutDT(
     accessDetails.addressOrId,
     '1'
   )
-
-  console.log('fixed estimatedPrice', estimatedPrice)
-
+  console.timeEnd('getFixed')
   return estimatedPrice
 }

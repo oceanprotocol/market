@@ -13,6 +13,7 @@ import { AssetExtended } from 'src/@types/AssetExtended'
 import { buyDtFromPool, calculateBuyPrice } from '@utils/pool'
 import { downloadFile } from '@utils/provider'
 import { getOrderFeedback } from '@utils/feedback'
+import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
 
 export default function Download({
   asset,
@@ -41,9 +42,24 @@ export default function Download({
   useEffect(() => {
     if (!asset?.accessDetails) return
 
+    console.log()
+
     setIsOwned(asset?.accessDetails?.isOwned)
     setValidOrderTx(asset?.accessDetails?.validOrderTx)
-  }, [asset?.accessDetails, asset?.chainId])
+    // get full price and fees
+    async function init() {
+      setIsLoading(true)
+      setStatusText('Calculating price including fees.')
+      const orderPriceAndFees = await getOrderPriceAndFees(asset, ZERO_ADDRESS)
+
+      console.log('download orderprice', orderPriceAndFees)
+      setIsLoading(false)
+    }
+
+    init()
+
+    // do not add asset here `asset.accessDetails` covers all the cases, adding asset will trigger this effect a lot of times (for some reason)
+  }, [asset, accountId])
 
   useEffect(() => {
     setHasDatatoken(Number(dtBalance) >= 1)

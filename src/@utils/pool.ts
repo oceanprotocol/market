@@ -4,6 +4,7 @@ import { getSiteMetadata } from './siteConfig'
 import { getDummyWeb3 } from './web3'
 import { TransactionReceipt } from 'web3-eth'
 import Decimal from 'decimal.js'
+import { AccessDetails } from 'src/@types/Price'
 
 /**
  * This is used to calculate the price to buy one datatoken from a pool, that is different from spot price. You need to pass either a web3 object or a chainId. If you pass a chainId a dummy web3 object will be created
@@ -23,6 +24,7 @@ export async function calculateBuyPrice(
   if (!web3) {
     web3 = await getDummyWeb3(chainId)
   }
+  console.time('pooPrice')
   const pool = new Pool(web3)
   const { appConfig } = getSiteMetadata()
   const estimatedPrice = await pool.getAmountInExactOut(
@@ -32,7 +34,7 @@ export async function calculateBuyPrice(
     '1',
     appConfig.consumeMarketPoolSwapFee
   )
-
+  console.timeEnd('pooPrice')
   return estimatedPrice
 }
 

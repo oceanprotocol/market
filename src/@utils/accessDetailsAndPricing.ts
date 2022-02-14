@@ -8,10 +8,13 @@ import {
   TokensPriceQuery,
   TokensPriceQuery_tokens as TokensPrice
 } from '../@types/subgraph/TokensPriceQuery'
-import { Asset } from '@oceanprotocol/lib'
+import { Asset, ProviderInstance } from '@oceanprotocol/lib'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { calculateBuyPrice } from './pool'
 import { getFixedBuyPrice } from './fixedRateExchange'
+import { getSiteMetadata } from './siteConfig'
+import { AccessDetails, OrdePriceAndFee } from 'src/@types/Price'
+import Decimal from 'decimal.js'
 
 const TokensPriceQuery = gql`
   query TokensPriceQuery($datatokenIds: [ID!], $account: String) {
@@ -146,6 +149,9 @@ function getAccessDetailsFromTokenPrice(
     accessDetails.validOrderTx = order.tx
   }
 
+  // TODO: fetch order fee from sub query
+  accessDetails.publisherMarketOrderFee = '0'
+
   // free is always the best price
   if (tokenPrice.dispensers && tokenPrice.dispensers.length > 0) {
     const dispenser = tokenPrice.dispensers[0]
@@ -209,27 +215,65 @@ function getAccessDetailsFromTokenPrice(
   return accessDetails
 }
 
-async function getOrderPriceAndFees(
-  tokenPrice: TokenPrice | TokensPrice,
-  includeOrderPriceAndFees: boolean,
-  timeout?: number,
-  chainId?: number
-): Promise<AccessDetails> {
-  const accessDetails = getAccessDetailsFromTokenPrice(tokenPrice, timeout)
-  if (includeOrderPriceAndFees)
-    switch (accessDetails.type) {
-      case 'dynamic': {
-        const poolPrice = await calculateBuyPrice(accessDetails, chainId)
-        accessDetails.price = poolPrice
-        break
-      }
-      case 'fixed': {
-        const fixed = await getFixedBuyPrice(accessDetails, chainId)
-        accessDetails.price = fixed.baseTokenAmount
-        break
-      }
+/**
+ * This will be used to get price including feed before ordering
+ * @param {AssetExtended} asset
+ * @return {Promise<OrdePriceAndFee>}
+ */
+export async function getOrderPriceAndFees(
+  asset: AssetExtended,
+  accountId?: string
+): Promise<OrdePriceAndFee> {
+  const orderPriceAndFee = {
+    price: '0',
+    publisherMarketOrderFee: '0',
+    publisherMarketPoolSwapFee: '0',
+    publisherMarketFixedSwapFee: '0',
+    consumeMarketOrderFee: '0',
+    consumeMarketPoolSwapFee: '0',
+    consumeMarketFixedSwapFee: '0',
+    providerFee: {},
+    opcFee: '0'
+  } as OrdePriceAndFee
+  const { accessDetails } = asset
+  const { appConfig } = getSiteMetadata()
+
+  // fetch publish market order fee
+  orderPriceAndFee.publisherMarketOrderFee =
+    asset.accessDetails.publisherMarketOrderFee
+  // fetch consume market order fee
+  orderPriceAndFee.consumeMarketOrderFee = appConfig.consumeMarketOrderFee
+  // fetch provider fee
+  const initializeData = await ProviderInstance.initialize(
+    asset.id,
+    asset.services[0].id,
+    0,
+    accountId,
+    asset.services[0].serviceEndpoint
+  )
+  orderPriceAndFee.providerFee = initializeData.providerFee
+
+  // fetch price and swap fees
+  switch (accessDetails.type) {
+    case 'dynamic': {
+      const poolPrice = await calculateBuyPrice(accessDetails, asset.chainId)
+      orderPriceAndFee.price = poolPrice
+      break
     }
-  return accessDetails
+    case 'fixed': {
+      const fixed = await getFixedBuyPrice(accessDetails, asset.chainId)
+      orderPriceAndFee.price = fixed.baseTokenAmount
+      break
+    }
+  }
+
+  // calculate full price, we assume that all the values are in ocean, otherwise this will be incorrect
+  orderPriceAndFee.price = new Decimal(orderPriceAndFee.price)
+    .add(new Decimal(orderPriceAndFee.consumeMarketOrderFee))
+    .add(new Decimal(orderPriceAndFee.publisherMarketOrderFee))
+    .add(new Decimal(orderPriceAndFee.providerFee.providerFeeAmount))
+    .toString()
+  return orderPriceAndFee
 }
 
 /**
