@@ -13,7 +13,7 @@ export default function Price({
   conversion
 }: {
   accessDetails: AccessDetails
-  orderPriceAndFees: OrderPriceAndFees
+  orderPriceAndFees?: OrderPriceAndFees
   className?: string
   small?: boolean
   conversion?: boolean

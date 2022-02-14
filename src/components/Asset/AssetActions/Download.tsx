@@ -55,7 +55,6 @@ export default function Download({
       const orderPriceAndFees = await getOrderPriceAndFees(asset, ZERO_ADDRESS)
       setOrderPriceAndFees(orderPriceAndFees)
 
-      console.log('aset', asset.accessDetails, orderPriceAndFees)
       setIsLoading(false)
     }
 
@@ -103,7 +102,6 @@ export default function Download({
             )[0]
           )
           const tx = await buyDtFromPool(asset.accessDetails, accountId, web3)
-          console.log('tx', tx)
 
           if (!tx) {
             toast.error('Failed to buy datatoken from pool!')

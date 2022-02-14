@@ -13,7 +13,7 @@ import { AssetExtended } from 'src/@types/AssetExtended'
 import { calculateBuyPrice } from './pool'
 import { getFixedBuyPrice } from './fixedRateExchange'
 import { getSiteMetadata } from './siteConfig'
-import { AccessDetails, OrdePriceAndFee } from 'src/@types/Price'
+import { AccessDetails, OrderPriceAndFees } from 'src/@types/Price'
 import Decimal from 'decimal.js'
 
 const TokensPriceQuery = gql`
@@ -223,7 +223,7 @@ function getAccessDetailsFromTokenPrice(
 export async function getOrderPriceAndFees(
   asset: AssetExtended,
   accountId?: string
-): Promise<OrdePriceAndFee> {
+): Promise<OrderPriceAndFees> {
   const orderPriceAndFee = {
     price: '0',
     publisherMarketOrderFee: '0',
@@ -234,7 +234,7 @@ export async function getOrderPriceAndFees(
     consumeMarketFixedSwapFee: '0',
     providerFee: {},
     opcFee: '0'
-  } as OrdePriceAndFee
+  } as OrderPriceAndFees
   const { accessDetails } = asset
   const { appConfig } = getSiteMetadata()
 
