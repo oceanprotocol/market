@@ -282,7 +282,6 @@ export async function createTokensAndPricing(
         baseTokenDecimals: 18,
         datatokenDecimals: 18,
         fixedRate: values.pricing.price.toString(),
-        // TODO: needs to be fixed in ocean.js
         marketFee: appConfig.publisherMarketFixedSwapFee,
         withMint: true
       }

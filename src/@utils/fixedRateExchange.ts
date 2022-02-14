@@ -24,12 +24,12 @@ export async function getFixedBuyPrice(
   }
 
   const config = getOceanConfig(chainId)
-  console.time('getFixed')
+
   const fixed = new FixedRateExchange(web3, config.fixedRateExchangeAddress)
   const estimatedPrice = await fixed.calcBaseInGivenOutDT(
     accessDetails.addressOrId,
     '1'
   )
-  console.timeEnd('getFixed')
+  console.log('getFixed', estimatedPrice)
   return estimatedPrice
 }

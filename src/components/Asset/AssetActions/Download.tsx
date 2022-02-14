@@ -87,7 +87,7 @@ export default function Download({
         getOrderFeedback(
           asset.accessDetails.baseToken.symbol,
           asset.accessDetails.datatoken.symbol
-        )[2]
+        )[3]
       )
       await downloadFile(web3, asset, accountId, validOrderTx)
     } else {
@@ -99,6 +99,7 @@ export default function Download({
               asset.accessDetails.datatoken.symbol
             )[0]
           )
+
           const tx = await buyDtFromPool(asset.accessDetails, accountId, web3)
 
           if (!tx) {
@@ -111,7 +112,7 @@ export default function Download({
           getOrderFeedback(
             asset.accessDetails.baseToken.symbol,
             asset.accessDetails.datatoken.symbol
-          )[1]
+          )[asset.accessDetails?.type === 'dynamic' ? 1 : 2]
         )
         const orderTx = await order(web3, asset, orderPriceAndFees, accountId)
 

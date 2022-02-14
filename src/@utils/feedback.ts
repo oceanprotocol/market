@@ -4,9 +4,10 @@ export function getOrderFeedback(
   datatokenSymbol: string
 ): { [key in number]: string } {
   return {
-    0: `Buying one ${datatokenSymbol} from pool`,
-    1: `Approving ${baseTokenSymbol} and ordering asset`,
-    2: 'Generating signature to access download url'
+    0: `Approving and buying one ${datatokenSymbol} from pool`,
+    1: `Ordering asset`,
+    2: `Approving ${baseTokenSymbol} and ordering asset`,
+    3: 'Generating signature to access download url'
   }
 }
 
