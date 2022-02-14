@@ -30,7 +30,6 @@
     "bignumber.js": "^9.0.2",
     "chart.js": "^3.7.0",
     "classnames": "^2.3.1",
-    "d3": "^7.3.0",
     "date-fns": "^2.28.0",
     "decimal.js": "^10.3.1",
     "dom-confetti": "^0.2.2",
