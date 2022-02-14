@@ -2,7 +2,7 @@
   display: grid;
   gap: var(--spacer);
   grid-template-columns: none;
-  margin-top: var(--spacer);
+  margin-top: calc(var(--spacer) / 2);
   margin-bottom: var(--spacer);
   align-items: center;
 }
@@ -21,6 +21,7 @@
   border: 1px solid var(--border-color);
   fill: var(--brand-violet);
   border-radius: 50%;
+  margin: 0;
 }
 
 .image svg {
@@ -31,6 +32,5 @@
 @media (min-width: 40rem) {
   .datatoken {
     grid-template-columns: 1fr 11fr;
-    margin-top: 0;
   }
 }
