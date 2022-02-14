@@ -29,7 +29,7 @@ interface OrderPriceAndFees {
 /**
  * @interface AccessDetails
  * @prop {'dynamic' | 'fixed' | 'free' | ''}  type
- * @prop {string} price can be either spotPrice/rate or price including fees based on `isOrderPrice` when calling `getAccessDetails`
+ * @prop {string} price can be either spotPrice/rate
  * @prop {string} addressOrId if type is dynamic this is the pool address, for fixed/free this is an id.
  * @prop {TokenInfo} baseToken
  * @prop {TokenInfo} datatoken
