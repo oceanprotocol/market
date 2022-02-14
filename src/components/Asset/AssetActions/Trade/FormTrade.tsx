@@ -22,6 +22,7 @@ import { initialValues } from './_constants'
 import content from '../../../../../content/price.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { usePool } from '@context/Pool'
+import { useSiteMetadata } from '@hooks/useSiteMetadata'
 
 export default function FormTrade({
   asset,
@@ -37,6 +38,7 @@ export default function FormTrade({
   const { web3, accountId } = useWeb3()
   const { isAssetNetwork } = useAsset()
   const { debug } = useUserPreferences()
+  const { appConfig } = useSiteMetadata()
   const { poolInfo } = usePool()
   const [txId, setTxId] = useState<string>()
   const [coinFrom, setCoinFrom] = useState<string>('OCEAN')
@@ -89,12 +91,12 @@ export default function FormTrade({
       const tokenInOutMarket: TokenInOutMarket = {
         tokenIn: poolInfo.baseTokenAddress,
         tokenOut: poolInfo.datatokenAddress,
-        marketFeeAddress: swapMarketFeeIn
+        marketFeeAddress: appConfig.marketFeeAddress
       }
       const tokenOutMarket: TokenInOutMarket = {
         tokenIn: poolInfo.datatokenAddress,
         tokenOut: poolInfo.baseTokenAddress,
-        marketFeeAddress: swapMarketFeeOut
+        marketFeeAddress: appConfig.marketFeeAddress
       }
 
       const impact = new Decimal(
