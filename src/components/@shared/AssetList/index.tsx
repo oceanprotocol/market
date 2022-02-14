@@ -56,8 +56,7 @@ export default function AssetList({
     async function fetchPrices() {
       const assetsWithPrices = await getAccessDetailsForAssets(
         assets,
-        accountId || '',
-        false
+        accountId || ''
       )
       if (!isMounted()) return
       setAssetsWithPrices([...assetsWithPrices])

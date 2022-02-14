@@ -3,6 +3,7 @@ import styles from './index.module.css'
 import Loader from '../atoms/Loader'
 import Tooltip from '../atoms/Tooltip'
 import PriceUnit from './PriceUnit'
+import { AccessDetails } from 'src/@types/Price'
 
 export default function Price({
   accessDetails,

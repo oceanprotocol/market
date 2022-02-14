@@ -10,6 +10,7 @@ import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import content from '../../../../../content/pages/startComputeDataset.json'
 import { Asset } from '@oceanprotocol/lib'
+import { AccessDetails } from 'src/@types/Price'
 
 export default function FormStartCompute({
   algorithms,

@@ -36,6 +36,7 @@ import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { SortTermOptions } from '../../../../@types/aquarius/SearchQuery'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
+import { AccessDetails } from 'src/@types/Price'
 
 export default function Compute({
   ddo,

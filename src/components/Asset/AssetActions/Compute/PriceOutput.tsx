@@ -3,6 +3,7 @@ import { useAsset } from '@context/Asset'
 import PriceUnit from '@shared/Price/PriceUnit'
 import Tooltip from '@shared/atoms/Tooltip'
 import styles from './PriceOutput.module.css'
+import { AccessDetails } from 'src/@types/Price'
 
 interface PriceOutputProps {
   totalPrice: number
