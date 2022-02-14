@@ -1,4 +1,3 @@
-import { getRandomItemFromArray } from '.'
 import { computeControlPoints } from './bezier-spline'
 import { randomIntFromInterval } from './numbers'
 
