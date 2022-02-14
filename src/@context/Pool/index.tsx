@@ -78,8 +78,6 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   }, [asset?.chainId, asset?.accessDetails?.addressOrId, owner, accountId])
 
   // Helper: start interval fetching
-  // Having `accountId` as dependency is important for interval to
-  // change after user account switch.
   const initFetchInterval = useCallback(() => {
     if (fetchInterval) return
 
@@ -90,6 +88,10 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
       )
     }, refreshInterval)
     setFetchInterval(newInterval)
+
+    // Having `accountId` as dependency is important for interval to
+    // change after user account switch.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fetchInterval, fetchAllData, accountId])
 
   useEffect(() => {
@@ -198,7 +200,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
       return
     // Staking bot receives half the pool shares so for display purposes
     // we can multiply by 2 as we have a hardcoded 50/50 pool weight.
-    const userPoolShares = new Decimal(poolInfoUser.poolShares)
+    const userPoolShares = new Decimal(poolInfoUser.poolShares || 0)
       .mul(2)
       .toString()
 
