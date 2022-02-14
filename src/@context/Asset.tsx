@@ -95,7 +95,6 @@ function AssetProvider({
   // -----------------------------------
   const fetchAccessDetails = useCallback(async (): Promise<void> => {
     if (!asset?.chainId || !asset?.services) return
-
     const accessDetails = await getAccessDetails(
       asset.chainId,
       asset.services[0].datatokenAddress,

@@ -14,7 +14,6 @@ import FileIcon from '@shared/FileIcon'
 import Alert from '@shared/atoms/Alert'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { useWeb3 } from '@context/Web3'
-import { usePricing } from '@hooks/usePricing'
 import {
   generateBaseQuery,
   getFilterTerm,
@@ -37,6 +36,7 @@ import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { SortTermOptions } from '../../../../@types/aquarius/SearchQuery'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
+import { AccessDetails } from 'src/@types/Price'
 
 export default function Compute({
   ddo,
@@ -57,7 +57,6 @@ export default function Compute({
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { accountId } = useWeb3()
-  const { buyDT, pricingError, pricingStepText } = usePricing()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
 
@@ -181,13 +180,13 @@ export default function Compute({
   useEffect(() => {
     if (!algorithmConsumeDetails) return
 
-    setIsAlgoConsumablePrice(algorithmConsumeDetails.isConsumable)
+    setIsAlgoConsumablePrice(algorithmConsumeDetails.isPurchasable)
   }, [algorithmConsumeDetails])
 
   useEffect(() => {
     if (!accessDetails) return
 
-    setIsConsumablePrice(accessDetails.isConsumable)
+    setIsConsumablePrice(accessDetails.isPurchasable)
   }, [accessDetails])
 
   // useEffect(() => {
@@ -234,10 +233,10 @@ export default function Compute({
 
   // Output errors in toast UI
   useEffect(() => {
-    const newError = error || pricingError
+    const newError = error
     if (!newError) return
     toast.error(newError)
-  }, [error, pricingError])
+  }, [error])
 
   // async function startJob(algorithmId: string) {
   //   try {
@@ -400,7 +399,7 @@ export default function Compute({
             text="This algorithm has been set to private by the publisher and can't be downloaded. You can run it against any allowed data sets though!"
             state="info"
           />
-          <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} ddo={ddo} />
+          <AlgorithmDatasetsListForCompute algorithmDid={ddo.id} asset={ddo} />
         </>
       ) : (
         <Formik
@@ -433,7 +432,8 @@ export default function Compute({
             selectedComputeAssetLowPoolLiquidity={!isAlgoConsumablePrice}
             selectedComputeAssetType="algorithm"
             selectedComputeAssetTimeout={algorithmTimeout}
-            stepText={pricingStepText || 'Starting Compute Job...'}
+            // lazy comment when removing pricingStepText
+            stepText={'pricingStepText' || 'Starting Compute Job...'}
             algorithmConsumeDetails={algorithmConsumeDetails}
             isConsumable={isConsumable}
             consumableFeedback={consumableFeedback}

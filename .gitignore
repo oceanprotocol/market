@@ -11,6 +11,7 @@ coverage
 repo-metadata.json
 networks-metadata.json
 src/@types/subgraph
+src/@types/apollo/
 graphql.schema.json
 src/@types/graph.types.ts
 tsconfig.tsbuildinfo

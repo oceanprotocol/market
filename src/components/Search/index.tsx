@@ -61,8 +61,9 @@ export default function SearchPage({
       setTotalResults(undefined)
       const queryResult = await getResults(parsed, chainIds, newCancelToken())
       setQueryResult(queryResult)
-      setTotalResults(queryResult.totalResults)
-      setTotalPagesNumber(queryResult.totalPages)
+
+      setTotalResults(queryResult?.totalResults || 0)
+      setTotalPagesNumber(queryResult?.totalPages || 0)
       setLoading(false)
     },
     [newCancelToken, setTotalPagesNumber, setTotalResults]
