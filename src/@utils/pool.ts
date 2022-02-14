@@ -24,7 +24,7 @@ export async function calculateBuyPrice(
   if (!web3) {
     web3 = await getDummyWeb3(chainId)
   }
-  console.time('pooPrice')
+
   const pool = new Pool(web3)
   const { appConfig } = getSiteMetadata()
   const estimatedPrice = await pool.getAmountInExactOut(
@@ -34,7 +34,7 @@ export async function calculateBuyPrice(
     '1',
     appConfig.consumeMarketPoolSwapFee
   )
-  console.timeEnd('pooPrice')
+
   return estimatedPrice
 }
 
@@ -45,15 +45,17 @@ export async function buyDtFromPool(
 ): Promise<TransactionReceipt> {
   const pool = new Pool(web3)
   const { appConfig } = getSiteMetadata()
-  await approve(
+  // we need to calculate the actual price to buy one datatoken
+  const dtPrice = await calculateBuyPrice(accessDetails, null, web3)
+  const approveTx = await approve(
     web3,
     accountId,
     accessDetails.baseToken.address,
     accessDetails.addressOrId,
-    '200',
+    dtPrice,
     false
   )
-
+  console.log('approveTx', approveTx)
   const result = await pool.swapExactAmountOut(
     accountId,
     accessDetails.addressOrId,
@@ -63,7 +65,8 @@ export async function buyDtFromPool(
       tokenOut: accessDetails.datatoken.address
     },
     {
-      maxAmountIn: new Decimal(accessDetails.price).mul(10).toString(),
+      // this is just to be safe
+      maxAmountIn: new Decimal(dtPrice).mul(10).toString(),
       swapMarketFee: appConfig.consumeMarketPoolSwapFee,
       tokenAmountOut: '1'
     }

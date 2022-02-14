@@ -3,22 +3,24 @@ import styles from './index.module.css'
 import Loader from '../atoms/Loader'
 import Tooltip from '../atoms/Tooltip'
 import PriceUnit from './PriceUnit'
-import { AccessDetails } from 'src/@types/Price'
+import { AccessDetails, OrderPriceAndFees } from 'src/@types/Price'
 
 export default function Price({
   accessDetails,
+  orderPriceAndFees,
   className,
   small,
   conversion
 }: {
   accessDetails: AccessDetails
+  orderPriceAndFees: OrderPriceAndFees
   className?: string
   small?: boolean
   conversion?: boolean
 }): ReactElement {
   return accessDetails?.price || accessDetails?.type === 'free' ? (
     <PriceUnit
-      price={`${accessDetails.price}`}
+      price={`${orderPriceAndFees?.price || accessDetails?.price}`}
       symbol={accessDetails.baseToken?.symbol}
       className={className}
       small={small}

@@ -14,6 +14,8 @@ import { buyDtFromPool, calculateBuyPrice } from '@utils/pool'
 import { downloadFile } from '@utils/provider'
 import { getOrderFeedback } from '@utils/feedback'
 import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
+import { OrderPriceAndFees } from 'src/@types/Price'
+import { toast } from 'react-toastify'
 
 export default function Download({
   asset,
@@ -38,21 +40,22 @@ export default function Download({
   const [isLoading, setIsLoading] = useState(false)
   const [isOwned, setIsOwned] = useState(false)
   const [validOrderTx, setValidOrderTx] = useState('')
-
+  const [orderPriceAndFees, setOrderPriceAndFees] =
+    useState<OrderPriceAndFees>()
   useEffect(() => {
     if (!asset?.accessDetails) return
-
-    console.log()
 
     setIsOwned(asset?.accessDetails?.isOwned)
     setValidOrderTx(asset?.accessDetails?.validOrderTx)
     // get full price and fees
     async function init() {
+      if (asset?.accessDetails?.addressOrId === ZERO_ADDRESS) return
       setIsLoading(true)
       setStatusText('Calculating price including fees.')
       const orderPriceAndFees = await getOrderPriceAndFees(asset, ZERO_ADDRESS)
+      setOrderPriceAndFees(orderPriceAndFees)
 
-      console.log('download orderprice', orderPriceAndFees)
+      console.log('aset', asset.accessDetails, orderPriceAndFees)
       setIsLoading(false)
     }
 
@@ -100,8 +103,13 @@ export default function Download({
             )[0]
           )
           const tx = await buyDtFromPool(asset.accessDetails, accountId, web3)
+          console.log('tx', tx)
 
-          if (tx === undefined) return
+          if (!tx) {
+            toast.error('Failed to buy datatoken from pool!')
+            setIsLoading(false)
+            return
+          }
         }
         setStatusText(
           getOrderFeedback(
@@ -109,7 +117,7 @@ export default function Download({
             asset.accessDetails.datatoken.symbol
           )[1]
         )
-        const orderTx = await order(web3, asset, accountId)
+        const orderTx = await order(web3, asset, orderPriceAndFees, accountId)
 
         setIsOwned(true)
         setValidOrderTx(orderTx.transactionHash)
@@ -130,7 +138,7 @@ export default function Download({
       hasDatatoken={hasDatatoken}
       dtSymbol={asset?.datatokens[0]?.symbol}
       dtBalance={dtBalance}
-      datasetLowPoolLiquidity={asset.accessDetails?.isPurchasable}
+      datasetLowPoolLiquidity={!asset.accessDetails?.isPurchasable}
       onClick={handleConsume}
       assetTimeout={secondsToString(asset.services[0].timeout)}
       assetType={asset?.metadata?.type}
@@ -151,7 +159,11 @@ export default function Download({
           <FileIcon file={file} isLoading={fileIsLoading} />
         </div>
         <div className={styles.pricewrapper}>
-          <Price accessDetails={asset.accessDetails} conversion />
+          <Price
+            accessDetails={asset.accessDetails}
+            orderPriceAndFees={orderPriceAndFees}
+            conversion
+          />
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>

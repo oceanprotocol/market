@@ -19,6 +19,7 @@ import { mapTimeoutStringToSeconds } from '@utils/ddo'
 import { generateNftCreateData } from '@utils/nft'
 import { getEncryptedFiles } from '@utils/provider'
 import { getSiteMetadata } from '@utils/siteConfig'
+import Decimal from 'decimal.js'
 import slugify from 'slugify'
 import Web3 from 'web3'
 import {
@@ -233,7 +234,7 @@ export async function createTokensAndPricing(
         publisherAddress: accountId,
         marketFeeCollector: appConfig.marketFeeAddress,
         poolTemplateAddress: config.poolTemplateAddress,
-        rate: values.pricing.price.toString(),
+        rate: new Decimal(1).div(values.pricing.price).toString(),
         baseTokenDecimals: 18,
         vestingAmount: '0',
         vestedBlocks: 2726000,

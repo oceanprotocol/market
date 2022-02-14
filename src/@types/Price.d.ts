@@ -13,7 +13,7 @@ import { ProviderFees } from '@oceanprotocol/lib'
  * @prop {ProviderFees} providerFee received from provider
  * @prop {string}  opcFee ocean protocol community fee, it is a percentage
  */
-interface OrdePriceAndFee {
+interface OrderPriceAndFees {
   price: string
   publisherMarketOrderFee: string
   publisherMarketPoolSwapFee: string
