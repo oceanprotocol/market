@@ -313,7 +313,7 @@ export async function createTokensAndPricing(
       const dispenserParams = {
         dispenserAddress: config.dispenserAddress,
         maxTokens: web3.utils.toWei('1'),
-        maxBalance: web3.utils.toWei('0'),
+        maxBalance: web3.utils.toWei('1'),
         withMint: true,
         allowedSwapper: ZERO_ADDRESS
       }

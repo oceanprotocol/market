@@ -85,8 +85,8 @@ export default function Download({
     if (isOwned) {
       setStatusText(
         getOrderFeedback(
-          asset.accessDetails.baseToken.symbol,
-          asset.accessDetails.datatoken.symbol
+          asset.accessDetails?.baseToken?.symbol,
+          asset.accessDetails?.datatoken?.symbol
         )[3]
       )
       await downloadFile(web3, asset, accountId, validOrderTx)
@@ -95,8 +95,8 @@ export default function Download({
         if (!hasDatatoken && asset.accessDetails.type === 'dynamic') {
           setStatusText(
             getOrderFeedback(
-              asset.accessDetails.baseToken.symbol,
-              asset.accessDetails.datatoken.symbol
+              asset.accessDetails.baseToken?.symbol,
+              asset.accessDetails.datatoken?.symbol
             )[0]
           )
 
@@ -110,9 +110,9 @@ export default function Download({
         }
         setStatusText(
           getOrderFeedback(
-            asset.accessDetails.baseToken.symbol,
-            asset.accessDetails.datatoken.symbol
-          )[asset.accessDetails?.type === 'dynamic' ? 1 : 2]
+            asset.accessDetails.baseToken?.symbol,
+            asset.accessDetails.datatoken?.symbol
+          )[asset.accessDetails?.type === 'fixed' ? 2 : 1]
         )
         const orderTx = await order(web3, asset, orderPriceAndFees, accountId)
 
