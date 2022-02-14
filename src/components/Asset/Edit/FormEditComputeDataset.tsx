@@ -20,17 +20,22 @@ import { getServiceByName } from '@utils/ddo'
 
 export default function FormEditComputeDataset({
   data,
-  title
+  title,
+  setShowEdit
 }: {
   data: InputProps[]
   title: string
+  setShowEdit: (show: boolean) => void
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { asset } = useAsset()
   const { values }: FormikContextType<ComputePrivacyForm> = useFormikContext()
   const [allAlgorithms, setAllAlgorithms] = useState<AssetSelectionAsset[]>()
   const newCancelToken = useCancelToken()
-  const publisherTrustedAlgorithms = getServiceByName(asset, 'compute')
+  const { publisherTrustedAlgorithms } = getServiceByName(
+    asset,
+    'compute'
+  ).compute
 
   async function getAlgorithmList(
     publisherTrustedAlgorithms: PublisherTrustedAlgorithm[]
@@ -79,6 +84,7 @@ export default function FormEditComputeDataset({
           component={Input}
         />
       ))}
+
       {/* <FormActions setShowEdit={setShowEdit} /> */}
     </Form>
   )
