@@ -25,8 +25,7 @@ export default function PricingFields(): ReactElement {
     setFieldValue('pricing.type', type)
     setFieldValue('pricing.price', 0)
     setFieldValue('pricing.freeAgreement', false)
-    type === 'dynamic' && setFieldValue('pricing.amountDataToken', 1000)
-    type === 'fixed' && setFieldValue('pricing.amountDataToken', 1000)
+    type !== 'free' && setFieldValue('pricing.amountDataToken', 1000)
   }
 
   // Always update everything when price value changes
