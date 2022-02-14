@@ -3,7 +3,7 @@ import Time from '@shared/atoms/Time'
 import Button from '@shared/atoms/Button'
 import Modal from '@shared/atoms/Modal'
 import External from '@images/external.svg'
-import { retrieveDDO } from '@utils/aquarius'
+import { retrieveAsset } from '@utils/aquarius'
 import Results from './Results'
 import styles from './Details.module.css'
 import { useCancelToken } from '@hooks/useCancelToken'
@@ -46,7 +46,7 @@ function DetailsAssets({ job }: { job: ComputeJobMetaData }) {
   const newCancelToken = useCancelToken()
   useEffect(() => {
     async function getAlgoMetadata() {
-      const ddo = await retrieveDDO(job.algoDID, newCancelToken())
+      const ddo = await retrieveAsset(job.algoDID, newCancelToken())
       setAlgoDtSymbol(ddo.datatokens[0].symbol)
       setAlgoName(ddo?.metadata.name)
     }

@@ -1,5 +1,5 @@
 interface PoolBalance {
-  ocean: string
+  baseToken: string
   datatoken: string
 }
 

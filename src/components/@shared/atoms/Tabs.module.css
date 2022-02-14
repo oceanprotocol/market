@@ -38,6 +38,10 @@
   cursor: not-allowed;
 }
 
+.tab > div {
+  margin: 0;
+}
+
 .tabContent {
   padding: calc(var(--spacer) / 2);
 }

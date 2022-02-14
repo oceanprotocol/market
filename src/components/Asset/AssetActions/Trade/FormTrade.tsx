@@ -14,19 +14,18 @@ import { useAsset } from '@context/Asset'
 import { FormTradeData } from './_types'
 import { initialValues } from './_constants'
 import content from '../../../../../content/price.json'
+import { AssetExtended } from 'src/@types/AssetExtended'
 
 export default function FormTrade({
-  ddo,
+  asset,
   balance,
   maxDt,
-  maxOcean,
-  price
+  maxOcean
 }: {
-  ddo: Asset
+  asset: AssetExtended
   balance: PoolBalance
   maxDt: string
   maxOcean: string
-  price: BestPrice
 }): ReactElement {
   const { accountId } = useWeb3()
   const { isAssetNetwork } = useAsset()
@@ -107,15 +106,14 @@ export default function FormTrade({
         setSubmitting(false)
       }}
     >
-      {({ isSubmitting, submitForm, values, isValid }) => (
+      {({ isSubmitting, setSubmitting, submitForm, values, isValid }) => (
         <>
           {isWarningAccepted ? (
             <Swap
-              ddo={ddo}
+              asset={asset}
               balance={balance}
               maxDt={maxDt}
               maxOcean={maxOcean}
-              price={price}
               setCoin={setCoinFrom}
               setMaximumOcean={setMaximumOcean}
               setMaximumDt={setMaximumDt}
@@ -139,7 +137,7 @@ export default function FormTrade({
               !isWarningAccepted ||
               !isAssetNetwork ||
               values.datatoken === undefined ||
-              values.ocean === undefined
+              values.baseToken === undefined
             }
             isLoading={isSubmitting}
             loaderMessage="Swapping tokens..."
@@ -150,14 +148,15 @@ export default function FormTrade({
                 ? values.datatoken
                   ? `${values.datatoken}`
                   : undefined
-                : values.ocean
-                ? `${values.ocean}`
+                : values.baseToken
+                ? `${values.baseToken}`
                 : undefined
             }
             action={submitForm}
             txId={txId}
             tokenAddress={tokenAddress}
             tokenSymbol={tokenSymbol}
+            setSubmitting={setSubmitting}
           />
 
           {debug && (

@@ -17,7 +17,8 @@ export default function Actions({
   action,
   isDisabled,
   tokenAddress,
-  tokenSymbol
+  tokenSymbol,
+  setSubmitting
 }: {
   isLoading: boolean
   loaderMessage: string
@@ -29,6 +30,7 @@ export default function Actions({
   isDisabled?: boolean
   tokenAddress: string
   tokenSymbol: string
+  setSubmitting?: (isSubmitting: boolean) => void
 }): ReactElement {
   const { networkId } = useWeb3()
 
@@ -55,6 +57,7 @@ export default function Actions({
             tokenAddress={tokenAddress}
             tokenSymbol={tokenSymbol}
             disabled={isDisabled}
+            setSubmitting={setSubmitting}
           />
         ) : (
           actionButton

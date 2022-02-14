@@ -10,20 +10,22 @@ export default function TokenApproval({
   disabled,
   amount,
   tokenAddress,
-  tokenSymbol
+  tokenSymbol,
+  setSubmitting
 }: {
   actionButton: JSX.Element
   disabled: boolean
   amount: string
   tokenAddress: string
   tokenSymbol: string
+  setSubmitting?: (isSubmitting: boolean) => void
 }): ReactElement {
-  const { price, isAssetNetwork } = useAsset()
+  const { asset, isAssetNetwork } = useAsset()
   const [tokenApproved, setTokenApproved] = useState(false)
   const [loading, setLoading] = useState(false)
   const { web3, accountId } = useWeb3()
 
-  const spender = price?.address
+  const spender = asset?.accessDetails?.addressOrId
 
   const checkTokenApproval = useCallback(async () => {
     if (!web3 || !tokenAddress || !spender || !isAssetNetwork || !amount) return
@@ -50,6 +52,7 @@ export default function TokenApproval({
 
   async function approveTokens(amount: string) {
     setLoading(true)
+    setSubmitting(true)
 
     try {
       const tx = await approve(web3, accountId, tokenAddress, spender, amount)
@@ -62,6 +65,7 @@ export default function TokenApproval({
     } finally {
       await checkTokenApproval()
       setLoading(false)
+      setSubmitting(false)
     }
   }
 

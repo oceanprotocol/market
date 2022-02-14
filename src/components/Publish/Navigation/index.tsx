@@ -29,6 +29,7 @@ export default function Navigation(): ReactElement {
       (step === 2 && isSuccessServices) ||
       (step === 3 && isSuccessPricing) ||
       (step === 4 && isSuccessPreview)
+
     return isSuccess ? styles.success : null
   }
 

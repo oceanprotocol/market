@@ -10,7 +10,6 @@ import { getServiceByName, mapTimeoutStringToSeconds } from '@utils/ddo'
 import styles from './index.module.css'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { useWeb3 } from '@context/Web3'
-import { setMinterToDispenser, setMinterToPublisher } from '@utils/freePrice'
 import content from '../../../../content/pages/edit.json'
 import { MetadataEditForm } from './_types'
 
@@ -23,11 +22,11 @@ export default function Edit({
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
-  const { ddo, refreshDdo, price } = useAsset()
+  const { asset, fetchAsset } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const [timeoutStringValue, setTimeoutStringValue] = useState<string>()
-  const { timeout } = ddo.services[0]
+  const { timeout } = asset.services[0]
 
   const hasFeedback = error || success
 
@@ -119,7 +118,11 @@ export default function Edit({
 
   return (
     <Formik
-      initialValues={getInitialValues(ddo.metadata, timeout, price.value)}
+      initialValues={getInitialValues(
+        asset.metadata,
+        timeout,
+        asset.accessDetails.price
+      )}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
         // move user's focus to top of screen
@@ -145,7 +148,7 @@ export default function Edit({
               /> */}
 
               <aside>
-                <Web3Feedback networkId={ddo?.chainId} />
+                <Web3Feedback networkId={asset?.chainId} />
               </aside>
 
               {/* {debug === true && <Debug values={values} ddo={ddo} />} */}

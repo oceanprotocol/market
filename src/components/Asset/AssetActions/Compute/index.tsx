@@ -30,16 +30,17 @@ import SuccessConfetti from '@shared/SuccessConfetti'
 import { getServiceByName, secondsToString } from '@utils/ddo'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import AlgorithmDatasetsListForCompute from './AlgorithmDatasetsListForCompute'
-import { getPreviousOrders, getPrice } from '@utils/subgraph'
+import { getPreviousOrders } from '@utils/subgraph'
 import AssetActionHistoryTable from '../AssetActionHistoryTable'
 import ComputeJobs from '../../../Profile/History/ComputeJobs'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { SortTermOptions } from '../../../../@types/aquarius/SearchQuery'
+import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 
 export default function Compute({
   ddo,
-  price,
+  accessDetails,
   dtBalance,
   file,
   fileIsLoading,
@@ -47,7 +48,7 @@ export default function Compute({
   consumableFeedback
 }: {
   ddo: Asset
-  price: BestPrice
+  accessDetails: AccessDetails
   dtBalance: string
   file: FileMetadata
   fileIsLoading?: boolean
@@ -70,7 +71,8 @@ export default function Compute({
   const [hasPreviousAlgorithmOrder, setHasPreviousAlgorithmOrder] =
     useState(false)
   const [algorithmDTBalance, setalgorithmDTBalance] = useState<string>()
-  const [algorithmPrice, setAlgorithmPrice] = useState<BestPrice>()
+  const [algorithmConsumeDetails, setAlgorithmConsumeDetails] =
+    useState<AccessDetails>()
   const [previousAlgorithmOrderId, setPreviousAlgorithmOrderId] =
     useState<string>()
   const [datasetTimeout, setDatasetTimeout] = useState<string>()
@@ -169,27 +171,24 @@ export default function Compute({
 
   const initMetadata = useCallback(async (ddo: Asset): Promise<void> => {
     if (!ddo) return
-    const price = await getPrice(ddo)
-    setAlgorithmPrice(price)
+    const accessDetails = await getAccessDetails(
+      ddo.chainId,
+      ddo.services[0].datatokenAddress
+    )
+    setAlgorithmConsumeDetails(accessDetails)
   }, [])
 
   useEffect(() => {
-    if (!algorithmPrice) return
+    if (!algorithmConsumeDetails) return
 
-    setIsAlgoConsumablePrice(
-      algorithmPrice.isConsumable !== undefined
-        ? algorithmPrice.isConsumable === 'true'
-        : true
-    )
-  }, [algorithmPrice])
+    setIsAlgoConsumablePrice(algorithmConsumeDetails.isConsumable)
+  }, [algorithmConsumeDetails])
 
   useEffect(() => {
-    if (!price) return
+    if (!accessDetails) return
 
-    setIsConsumablePrice(
-      price.isConsumable !== undefined ? price.isConsumable === 'true' : true
-    )
-  }, [price])
+    setIsConsumablePrice(accessDetails.isConsumable)
+  }, [accessDetails])
 
   // useEffect(() => {
   //   setDatasetTimeout(secondsToString(timeout))
@@ -392,7 +391,7 @@ export default function Compute({
     <>
       <div className={styles.info}>
         <FileIcon file={file} isLoading={fileIsLoading} small />
-        <Price price={price} conversion />
+        <Price accessDetails={accessDetails} conversion />
       </div>
 
       {ddo.metadata.type === 'algorithm' ? (
@@ -426,7 +425,7 @@ export default function Compute({
             assetTimeout={datasetTimeout}
             hasPreviousOrderSelectedComputeAsset={hasPreviousAlgorithmOrder}
             hasDatatokenSelectedComputeAsset={hasAlgoAssetDatatoken}
-            oceanSymbol={price ? price.oceanSymbol : ''}
+            oceanSymbol={accessDetails ? accessDetails.baseToken.symbol : ''}
             dtSymbolSelectedComputeAsset={
               selectedAlgorithmAsset?.datatokens[0]?.symbol
             }
@@ -435,7 +434,7 @@ export default function Compute({
             selectedComputeAssetType="algorithm"
             selectedComputeAssetTimeout={algorithmTimeout}
             stepText={pricingStepText || 'Starting Compute Job...'}
-            algorithmPrice={algorithmPrice}
+            algorithmConsumeDetails={algorithmConsumeDetails}
             isConsumable={isConsumable}
             consumableFeedback={consumableFeedback}
           />
@@ -447,7 +446,7 @@ export default function Compute({
           <SuccessConfetti success="Your job started successfully! Watch the progress below or on your profile." />
         )}
       </footer>
-      {accountId && price?.datatoken && (
+      {accountId && accessDetails?.datatoken && (
         <AssetActionHistoryTable title="Your Compute Jobs">
           <ComputeJobs minimal />
         </AssetActionHistoryTable>

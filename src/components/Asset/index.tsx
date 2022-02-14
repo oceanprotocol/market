@@ -6,20 +6,20 @@ import { useAsset } from '@context/Asset'
 import AssetContent from './AssetContent'
 
 export default function AssetDetails({ uri }: { uri: string }): ReactElement {
-  const { ddo, title, error, isInPurgatory, loading, price } = useAsset()
+  const { asset, title, error, isInPurgatory, loading } = useAsset()
   const [pageTitle, setPageTitle] = useState<string>()
 
   useEffect(() => {
-    if (!ddo || error) {
+    if (!asset || error) {
       setPageTitle('Could not retrieve asset')
       return
     }
     setPageTitle(isInPurgatory ? '' : title)
-  }, [ddo, error, isInPurgatory, title])
+  }, [asset, error, isInPurgatory, title])
 
-  return ddo && pageTitle !== undefined && !loading ? (
+  return asset && pageTitle !== undefined && !loading ? (
     <Page title={pageTitle} uri={uri}>
-      <AssetContent ddo={ddo} price={price} />
+      <AssetContent asset={asset} />
     </Page>
   ) : error ? (
     <Page title={pageTitle} noPageHeader uri={uri}>

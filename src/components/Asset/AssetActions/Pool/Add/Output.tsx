@@ -35,7 +35,9 @@ export default function Output({
       return
     const newPoolSupply = new Decimal(totalPoolTokens).plus(newPoolTokens)
     const ratio = new Decimal(newPoolTokens).div(newPoolSupply)
-    const newOceanReserve = new Decimal(totalBalance.ocean).plus(values.amount)
+    const newOceanReserve = new Decimal(totalBalance.baseToken).plus(
+      values.amount
+    )
     const newDtReserve = new Decimal(totalBalance.datatoken)
     const poolOcean = newOceanReserve.mul(ratio).toString()
     const poolDatatoken = newDtReserve.mul(ratio).toString()
@@ -55,16 +57,9 @@ export default function Output({
         {help.replace('SWAPFEE', swapFee)}
       </FormHelp>
       <div className={styles.output}>
-        <div>
-          <p>{titleIn}</p>
-          <Token symbol="pool shares" balance={newPoolTokens} />
-          <Token symbol="% of pool" balance={newPoolShare} />
-        </div>
-        <div>
-          <p>{titleOut}</p>
-          <Token symbol="OCEAN" balance={poolOcean} />
-          <Token symbol={datatokenSymbol} balance={poolDatatoken} />
-        </div>
+        <p>{titleIn}</p>
+        <Token symbol="pool shares" balance={newPoolTokens} noIcon />
+        <Token symbol="% of pool" balance={newPoolShare} noIcon />
       </div>
     </>
   )

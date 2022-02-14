@@ -16,7 +16,6 @@ export function getOceanConfig(network: string | number): Config {
       ? undefined
       : process.env.NEXT_PUBLIC_INFURA_PROJECT_ID
   ) as Config
-
   // TODO: remove hack once address is fixed
   if (network === 'rinkeby' || network === 4)
     config.oceanTokenAddress = '0x8967bcf84170c91b0d24d4302c2376283b0b3a07'

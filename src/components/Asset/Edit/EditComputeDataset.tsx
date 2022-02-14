@@ -8,7 +8,6 @@ import { useUserPreferences } from '@context/UserPreferences'
 import DebugEditCompute from './DebugEditCompute'
 import styles from './index.module.css'
 // import { transformComputeFormToServiceComputePrivacy } from '@utils/compute'
-import { setMinterToDispenser, setMinterToPublisher } from '@utils/freePrice'
 import Web3Feedback from '@shared/Web3Feedback'
 import { getInitialValues, validationSchema } from './_constants'
 import content from '../../../../content/pages/editComputeDataset.json'
@@ -20,7 +19,7 @@ export default function EditComputeDataset({
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { accountId } = useWeb3()
-  const { ddo, price, isAssetNetwork, refreshDdo } = useAsset()
+  const { asset, isAssetNetwork, fetchAsset } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
 
@@ -112,7 +111,7 @@ export default function EditComputeDataset({
               />
             </article>
             <Web3Feedback
-              networkId={ddo?.chainId}
+              networkId={asset?.chainId}
               isAssetNetwork={isAssetNetwork}
             />
             {debug === true && (
