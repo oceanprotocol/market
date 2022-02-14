@@ -17,19 +17,24 @@ export default function Price({
 }): ReactElement {
   const [field, meta] = useField('pricing.price')
 
-  const { values } = useFormikContext<FormPublishData>()
+  const { values, setFieldValue } = useFormikContext<FormPublishData>()
   const { dataTokenOptions } = values.services[0]
 
   return (
     <div className={styles.price}>
       {values.pricing.type === 'free' ? (
-        <h4 className={styles.free}>
-          <Field
+        <div className={styles.free}>
+          <Input
             {...getFieldContent('freeAgreement', content.fields)}
-            component={Input}
             name="pricing.freeAgreement"
+            onChange={() => {
+              setFieldValue(
+                'pricing.freeAgreement',
+                !values.pricing.freeAgreement
+              )
+            }}
           />
-        </h4>
+        </div>
       ) : (
         <>
           <div className={styles.grid}>
