@@ -59,8 +59,6 @@ export default function Download({
     }
 
     init()
-
-    // do not add asset here `asset.accessDetails` covers all the cases, adding asset will trigger this effect a lot of times (for some reason)
   }, [asset, accountId])
 
   useEffect(() => {
@@ -82,7 +80,7 @@ export default function Download({
     isOwned
   ])
 
-  async function handleConsume() {
+  async function handleOrderOrDownload() {
     setIsLoading(true)
     if (isOwned) {
       setStatusText(
@@ -120,7 +118,7 @@ export default function Download({
         setIsOwned(true)
         setValidOrderTx(orderTx.transactionHash)
       } catch (ex) {
-        LoggerInstance.log(ex)
+        LoggerInstance.log(ex.message)
         setIsLoading(false)
       }
     }
@@ -137,7 +135,7 @@ export default function Download({
       dtSymbol={asset?.datatokens[0]?.symbol}
       dtBalance={dtBalance}
       datasetLowPoolLiquidity={!asset.accessDetails?.isPurchasable}
-      onClick={handleConsume}
+      onClick={handleOrderOrDownload}
       assetTimeout={secondsToString(asset.services[0].timeout)}
       assetType={asset?.metadata?.type}
       stepText={statusText}

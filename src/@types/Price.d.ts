@@ -1,17 +1,17 @@
 import { ProviderFees } from '@oceanprotocol/lib'
 
 /**
- * @interface OrdePriceAndFee
+ * @interface OrderPriceAndFee
  * @prop {string}  price total price including fees
  * @prop {string}  publisherMarketOrderFee fee received by the market where the asset was published. It is set on erc20 creation. It is a absolute value
- * @prop {string}  publisherMarketPoolSwapFee fee received by the market where the asset was published on any swap (pool or fre). It is a percentage
- * @prop {string}  publisherMarketFixedSwapFee fee received by the market where the asset was published on any swap (pool or fre). It is a percentage
+ * @prop {string}  publisherMarketPoolSwapFee fee received by the market where the asset was published on any swap (pool or fre). Absolute value based on the configured percentage
+ * @prop {string}  publisherMarketFixedSwapFee fee received by the market where the asset was published on any swap (pool or fre). Absolute value based on the configured percentage
  * @prop {string}  consumeMarketOrderFee fee received by the market where the asset is ordered. It is set on erc20 creation. It is a absolute value
- * @prop {string}  consumeMarketPoolSwapFee fee received by the market where the asset is ordered on any swap (pool or fre). It is a percentage
- * @prop {string}  consumeMarketFixedSwapFee fee received by the market where the asset is ordered on any swap (pool or fre). It is a percentage
+ * @prop {string}  consumeMarketPoolSwapFee fee received by the market where the asset is ordered on any swap (pool or fre). Absolute value based on the configured percentage
+ * @prop {string}  consumeMarketFixedSwapFee fee received by the market where the asset is ordered on any swap (pool or fre). Absolute value based on the configured percentage
  * @prop {string}  liquidityProviderSwapFee fee received by the liquidity providers of the pool. It is a percentage  ( ex 50% means liquidityProviderSwapFee=0.5)
  * @prop {ProviderFees} providerFee received from provider
- * @prop {string}  opcFee ocean protocol community fee, it is a percentage
+ * @prop {string}  opcFee ocean protocol community fee, Absolute value based on the configured percentage
  */
 interface OrderPriceAndFees {
   price: string
