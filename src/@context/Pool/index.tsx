@@ -236,6 +236,8 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
       poolShares: userPoolShares,
       ...newPoolInfoUser
     })
+    // poolInfoUser was not added on purpose, we use setPoolInfoUser so it will just loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     poolData,
     poolInfoUser?.poolShares,
