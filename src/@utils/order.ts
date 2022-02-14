@@ -78,7 +78,7 @@ export async function order(
         asset.accessDetails.datatoken.address,
         accountId,
         accountId,
-        1,
+        0,
         initializeData.providerFee
       )
       return tx
