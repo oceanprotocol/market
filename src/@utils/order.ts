@@ -40,7 +40,12 @@ export async function order(
   const orderParams = {
     consumer: accountId,
     serviceIndex: 0,
-    _providerFees: initializeData.providerFee
+    _providerFee: initializeData.providerFee,
+    _consumeMarketFee: {
+      consumeMarketFeeAddress: appConfig.marketFeeAddress,
+      consumeMarketFeeAmount: appConfig.consumeMarketOrderFee,
+      consumeMarketFeeToken: config.oceanTokenAddress
+    }
   } as OrderParams
 
   // TODO: we need to approve provider fee
