@@ -90,7 +90,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
       )
     }, refreshInterval)
     setFetchInterval(newInterval)
-  }, [fetchInterval, fetchAllData])
+  }, [fetchInterval, fetchAllData, accountId])
 
   useEffect(() => {
     return () => {
