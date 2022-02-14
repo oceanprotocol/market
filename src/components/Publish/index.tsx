@@ -21,7 +21,6 @@ import {
   LoggerInstance,
   DDO
 } from '@oceanprotocol/lib'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { getOceanConfig } from '@utils/ocean'
 import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
@@ -38,7 +37,6 @@ export default function PublishPage({
   const { accountId, web3, chainId } = useWeb3()
   const { isInPurgatory, purgatoryData } = useAccountPurgatory(accountId)
   const scrollToRef = useRef()
-  const { appConfig } = useSiteMetadata()
   const nftFactory = useNftFactory()
   const newAbortController = useAbortController()
 
@@ -75,7 +73,6 @@ export default function PublishPage({
         await createTokensAndPricing(
           values,
           accountId,
-          appConfig.marketFeeAddress,
           config,
           nftFactory,
           web3

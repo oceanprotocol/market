@@ -6,8 +6,8 @@ import matter from 'gray-matter'
 // Next.js specifics to be used in getStaticProps / getStaticPaths
 // to automatically generate pages from Markdown files in `src/pages/[slug].tsx`.
 //
-const pagesDirectory = join(process.cwd(), 'content', 'pages')
-
+// const pagesDirectory = join(process.cwd(), 'content', 'pages')
+const pagesDirectory = './content/pages'
 export interface PageData {
   slug: string
   frontmatter: { [key: string]: any }
