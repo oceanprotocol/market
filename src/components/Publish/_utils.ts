@@ -259,6 +259,9 @@ export async function createTokensAndPricing(
       )
       LoggerInstance.log('[publish] pool.approve tx', txApprove, nftFactory)
 
+      if (!txApprove)
+        throw new Error('Failed to approve spender to spend tokens')
+
       const result = await nftFactory.createNftErc20WithPool(
         accountId,
         nftCreateData,
