@@ -42,15 +42,15 @@ export default function Swap({
 
   const [baseTokenItem, setBaseTokenItem] = useState<TradeItem>({
     amount: '0',
-    token: asset.accessDetails.baseToken?.symbol,
+    token: poolInfo?.baseTokenSymbol,
     maxAmount: '0',
-    address: asset.accessDetails.baseToken.address
+    address: poolInfo?.baseTokenAddress
   })
   const [dtItem, setDtItem] = useState<TradeItem>({
     amount: '0',
-    token: asset.accessDetails.datatoken.symbol,
+    token: poolInfo?.datatokenSymbol,
     maxAmount: '0',
-    address: asset.accessDetails.datatoken.address
+    address: poolInfo?.datatokenAddress
   })
   const {
     setFieldValue,
@@ -149,7 +149,11 @@ export default function Swap({
     asset,
     web3,
     dtItem.token,
-    baseTokenItem.token
+    baseTokenItem.token,
+    poolInfo.poolFee,
+    poolInfo.datatokenAddress,
+    poolInfo.baseTokenAddress,
+    appConfig.consumeMarketPoolSwapFee
   ])
 
   const switchTokens = () => {
