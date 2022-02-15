@@ -1,6 +1,15 @@
 import React, { ReactElement, useState } from 'react'
 import { Formik } from 'formik'
-import { LoggerInstance, Asset } from '@oceanprotocol/lib'
+import {
+  LoggerInstance,
+  Asset,
+  Metadata,
+  FixedRateExchange,
+  DDO,
+  ProviderInstance,
+  getHash,
+  Nft
+} from '@oceanprotocol/lib'
 import { validationSchema, getInitialValues } from './_constants'
 import { MetadataEditForm } from './_types'
 import { useAsset } from '@context/Asset'
@@ -12,6 +21,10 @@ import { getServiceByName, mapTimeoutStringToSeconds } from '@utils/ddo'
 import styles from './index.module.css'
 import content from '../../../../content/pages/edit.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
+import { setMinterToPublisher, setMinterToDispenser } from '@utils/dispenser'
+import Debug from 'src/components/Publish/Debug'
+import { useAbortController } from '@hooks/useAbortController'
+
 // import Debug from './DebugEditMetadata'
 
 export default function Edit({
@@ -20,7 +33,8 @@ export default function Edit({
   asset: AssetExtended
 }): ReactElement {
   const { debug } = useUserPreferences()
-  const { accountId } = useWeb3()
+  const { accountId, web3 } = useWeb3()
+  const newAbortController = useAbortController()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const [timeoutStringValue, setTimeoutStringValue] = useState<string>()
@@ -28,90 +42,122 @@ export default function Edit({
   const isComputeType = asset?.services[0]?.type === 'compute' ? true : false
   const hasFeedback = error || success
 
-  async function updateFixedPrice(newPrice: number) {
-    // const setPriceResp = await ocean.fixedRateExchange.setRate(
-    //   price.address,
-    //   newPrice,
-    //   accountId
-    // )
-    // if (!setPriceResp) {
-    //   setError(content.form.error)
-    //   LoggerInstance.error(content.form.error)
-    // }
+  async function updateFixedPrice(newPrice: string) {
+    const fixedRateInstance = new FixedRateExchange(
+      web3,
+      asset?.accessDetails?.addressOrId
+    )
+    const setPriceResp = await fixedRateInstance.setRate(
+      accountId,
+      asset?.accessDetails?.addressOrId,
+      newPrice
+    )
+    LoggerInstance.log('[edit] setFixedRate result', setPriceResp)
+    if (!setPriceResp) {
+      setError(content.form.error)
+      LoggerInstance.error(content.form.error)
+    }
   }
 
   async function handleSubmit(
     values: Partial<MetadataEditForm>,
     resetForm: () => void
   ) {
-    // try {
-    //   if (asset?.accessDetails?.type === 'free') {
-    //     const tx = await setMinterToPublisher(
-    //       ocean,
-    //       ddo.services[0].datatokenAddress,
-    //       accountId,
-    //       setError
-    //     )
-    //     if (!tx) return
-    //   }
-    //   // Construct new DDO with new values
-    //   const ddoEditedMetdata = await ocean.assets.editMetadata(ddo as any, {
-    //     title: values.name,
-    //     description: values.description,
-    //     links: typeof values.links !== 'string' ? values.links : [],
-    //     author: values.author === '' ? ' ' : values.author
-    //   })
-    //   price.type === 'exchange' &&
-    //     values.price !== price.value &&
-    //     (await updateFixedPrice(values.price))
-    //   if (!ddoEditedMetdata) {
-    //     setError(content.form.error)
-    //     LoggerInstance.error(content.form.error)
-    //     return
-    //   }
-    //   let ddoEditedTimeout = ddoEditedMetdata
-    //   if (timeoutStringValue !== values.timeout) {
-    //     const service =
-    //       getServiceByName(ddoEditedMetdata, 'access') ||
-    //       getServiceByName(ddoEditedMetdata, 'compute')
-    //     const timeout = mapTimeoutStringToSeconds(values.timeout)
-    //     ddoEditedTimeout = await ocean.assets.editServiceTimeout(
-    //       ddoEditedMetdata,
-    //       service.index,
-    //       timeout
-    //     )
-    //   }
-    //   if (!ddoEditedTimeout) {
-    //     setError(content.form.error)
-    //     LoggerInstance.error(content.form.error)
-    //     return
-    //   }
-    //   const storedddo = await ocean.assets.updateMetadata(
-    //     ddoEditedTimeout,
-    //     accountId
-    //   )
-    //   if (!storedddo) {
-    //     setError(content.form.error)
-    //     LoggerInstance.error(content.form.error)
-    //     return
-    //   } else {
-    //     if (price.type === 'free') {
-    //       const tx = await setMinterToDispenser(
-    //         ocean,
-    //         ddo.services[0].datatokenAddress,
-    //         accountId,
-    //         setError
-    //       )
-    //       if (!tx) return
-    //     }
-    //     // Edit succeeded
-    //     setSuccess(content.form.success)
-    //     resetForm()
-    //   }
-    // } catch (error) {
-    //   LoggerInstance.error(error.message)
-    //   setError(error.message)
-    // }
+    try {
+      if (asset.accessDetails?.type === 'free') {
+        const tx = await setMinterToPublisher(
+          web3,
+          asset?.accessDetails?.addressOrId,
+          asset?.accessDetails?.datatoken?.address,
+          accountId,
+          setError
+        )
+        if (!tx) return
+      }
+      const newMetadata: Metadata = {
+        name: values.name,
+        description: values.description,
+        links: typeof values.links !== 'string' ? values.links : [],
+        author: values.author,
+        ...asset.metadata
+      }
+      LoggerInstance.log('[edit] newMetadata', newMetadata)
+      asset?.accessDetails?.type === 'fixed' &&
+        values.price !== asset.accessDetails.price &&
+        (await updateFixedPrice(values.price))
+
+      // let ddoEditedTimeout = newMetadata
+
+      // if (timeoutStringValue !== values.timeout) {
+      //   const service =
+      //     getServiceByName(ddoEditedMetdata, 'access') ||
+      //     getServiceByName(ddoEditedMetdata, 'compute')
+      //   const timeout = mapTimeoutStringToSeconds(values.timeout)
+      //   ddoEditedTimeout = await ocean.assets.editServiceTimeout(
+      //     ddoEditedMetdata,
+      //     service.index,
+      //     timeout
+      //   )
+      // }
+      // if (!ddoEditedTimeout) {
+      //   setError(content.form.error)
+      //   LoggerInstance.error(content.form.error)
+      //   return
+      // }
+
+      const newDdo: DDO = {
+        metadata: newMetadata,
+        ...asset
+      }
+
+      LoggerInstance.log('[edit]  newDdo', newDdo)
+      const encryptedDdo = await ProviderInstance.encrypt(
+        newDdo,
+        newDdo.services[0].serviceEndpoint,
+        newAbortController()
+      )
+      LoggerInstance.log('[edit] Got encrypted DDO', encryptedDdo)
+
+      const metadataHash = getHash(JSON.stringify(newDdo))
+      const nft = new Nft(web3)
+
+      const flags = '0x2'
+
+      const setMetadataTx = await nft.setMetadata(
+        asset.nftAddress,
+        accountId,
+        0,
+        asset.services[0].serviceEndpoint,
+        '',
+        flags,
+        encryptedDdo,
+        '0x' + metadataHash
+      )
+
+      LoggerInstance.log('[edit] setMetadata result', setMetadataTx)
+
+      if (!setMetadataTx) {
+        setError(content.form.error)
+        LoggerInstance.error(content.form.error)
+        return
+      } else {
+        if (asset.accessDetails.type === 'free') {
+          const tx = await setMinterToDispenser(
+            web3,
+            asset?.accessDetails?.datatoken?.address,
+            accountId,
+            setError
+          )
+          if (!tx) return
+        }
+      }
+      //Edit succeeded
+      setSuccess(content.form.success)
+      resetForm()
+    } catch (error) {
+      LoggerInstance.error(error.message)
+      setError(error.message)
+    }
   }
 
   return (
@@ -148,7 +194,7 @@ export default function Edit({
                 <Web3Feedback networkId={asset?.chainId} />
               </aside>
 
-              {/* {debug === true && <Debug values={values} ddo={ddo} />} */}
+              {debug === true && <Debug />}
             </article>
           </>
         )
