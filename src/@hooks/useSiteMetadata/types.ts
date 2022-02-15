@@ -23,6 +23,12 @@ export interface UseSiteMetadata {
     chainIds: number[]
     chainIdsSupported: number[]
     marketFeeAddress: string
+    publisherMarketOrderFee: string
+    publisherMarketPoolSwapFee: string
+    publisherMarketFixedSwapFee: string
+    consumeMarketOrderFee: string
+    consumeMarketPoolSwapFee: string
+    consumeMarketFixedSwapFee: string
     currencies: string[]
     portisId: string
     allowFixedPricing: string

@@ -31,6 +31,8 @@ interface ButtonBuyProps {
   algorithmConsumableStatus?: number
 }
 
+// TODO: we need to take a look at these messages
+
 function getConsumeHelpText(
   dtBalance: string,
   dtSymbol: string,

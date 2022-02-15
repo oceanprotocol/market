@@ -3,6 +3,7 @@ import { useAsset } from '@context/Asset'
 import PriceUnit from '@shared/Price/PriceUnit'
 import Tooltip from '@shared/atoms/Tooltip'
 import styles from './PriceOutput.module.css'
+import { AccessDetails } from 'src/@types/Price'
 
 interface PriceOutputProps {
   totalPrice: number
@@ -74,14 +75,14 @@ export default function PriceOutput({
             <Row
               hasPreviousOrder={hasPreviousOrder}
               hasDatatoken={hasDatatoken}
-              price={asset?.accessDetails?.price}
+              price={Number.parseFloat(asset?.accessDetails?.price)}
               timeout={assetTimeout}
               symbol={symbol}
             />
             <Row
               hasPreviousOrder={hasPreviousOrderSelectedComputeAsset}
               hasDatatoken={hasDatatokenSelectedComputeAsset}
-              price={algorithmConsumeDetails?.price}
+              price={Number.parseFloat(algorithmConsumeDetails?.price)}
               timeout={selectedComputeAssetTimeout}
               symbol={symbol}
               sign="+"

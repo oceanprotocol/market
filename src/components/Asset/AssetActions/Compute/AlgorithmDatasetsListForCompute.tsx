@@ -6,12 +6,13 @@ import AssetComputeList from '@shared/AssetList/AssetComputeList'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { getServiceByName } from '@utils/ddo'
 import { Asset } from '@oceanprotocol/lib'
+import { AssetExtended } from 'src/@types/AssetExtended'
 
 export default function AlgorithmDatasetsListForCompute({
-  ddo,
+  asset,
   algorithmDid
 }: {
-  ddo: Asset
+  asset: AssetExtended
   algorithmDid: string
 }): ReactElement {
   const [datasetsForCompute, setDatasetsForCompute] =
@@ -19,24 +20,24 @@ export default function AlgorithmDatasetsListForCompute({
   const newCancelToken = useCancelToken()
 
   useEffect(() => {
-    if (!ddo) return
+    if (!asset) return
 
     async function getDatasetsAllowedForCompute() {
-      const isCompute = Boolean(getServiceByName(ddo, 'compute'))
+      const isCompute = Boolean(getServiceByName(asset, 'compute'))
       const datasetComputeService = getServiceByName(
-        ddo,
+        asset,
         isCompute ? 'compute' : 'access'
       )
       const datasets = await getAlgorithmDatasetsForCompute(
         algorithmDid,
         datasetComputeService?.serviceEndpoint,
-        ddo?.chainId,
+        asset?.chainId,
         newCancelToken()
       )
       setDatasetsForCompute(datasets)
     }
-    ddo.metadata.type === 'algorithm' && getDatasetsAllowedForCompute()
-  }, [ddo?.metadata?.type])
+    asset.metadata.type === 'algorithm' && getDatasetsAllowedForCompute()
+  }, [asset?.metadata?.type])
 
   return (
     <div className={styles.datasetsContainer}>
