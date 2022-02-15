@@ -71,6 +71,10 @@
   margin-left: var(--spacer);
   font-size: var(--font-size-small);
   color: var(--brand-alert-red);
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @keyframes loader {
