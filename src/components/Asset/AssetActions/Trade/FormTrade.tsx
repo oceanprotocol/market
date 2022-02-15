@@ -47,8 +47,6 @@ export default function FormTrade({
   const [maximumDt, setMaximumDt] = useState(maxDt)
   const [isWarningAccepted, setIsWarningAccepted] = useState(false)
 
-  console.log('MARKET SWAP FEE: ', appConfig)
-
   const validationSchema: Yup.SchemaOf<FormTradeData> = Yup.object()
     .shape({
       baseToken: Yup.number()
