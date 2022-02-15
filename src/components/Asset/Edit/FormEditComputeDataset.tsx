@@ -29,6 +29,7 @@ export default function FormEditComputeDataset({
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { asset } = useAsset()
+  const [showEditCompute, setShowEditCompute] = useState<boolean>()
   const { values }: FormikContextType<ComputePrivacyForm> = useFormikContext()
   const [allAlgorithms, setAllAlgorithms] = useState<AssetSelectionAsset[]>()
   const newCancelToken = useCancelToken()
@@ -86,6 +87,7 @@ export default function FormEditComputeDataset({
       ))}
 
       {/* <FormActions setShowEdit={setShowEdit} /> */}
+      <FormActions setShowEdit={setShowEditCompute} />
     </Form>
   )
 }

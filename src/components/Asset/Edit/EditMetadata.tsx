@@ -26,7 +26,6 @@ export default function Edit({
   const [timeoutStringValue, setTimeoutStringValue] = useState<string>()
   const timeout = asset?.services[0]?.timeout
   const isComputeType = asset?.services[0]?.type === 'compute' ? true : false
-
   const hasFeedback = error || success
 
   async function updateFixedPrice(newPrice: number) {
@@ -46,7 +45,7 @@ export default function Edit({
     resetForm: () => void
   ) {
     // try {
-    //   if (price.type === 'free') {
+    //   if (asset?.accessDetails?.type === 'free') {
     //     const tx = await setMinterToPublisher(
     //       ocean,
     //       ddo.services[0].datatokenAddress,

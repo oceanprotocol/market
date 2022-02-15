@@ -1,4 +1,4 @@
-import React, { ChangeEvent, ReactElement } from 'react'
+import React, { ChangeEvent, ReactElement, useState } from 'react'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import Input, { InputProps } from '@shared/FormInput'
 import FormActions from './FormActions'
@@ -6,39 +6,50 @@ import styles from './FormEditMetadata.module.css'
 import { FormPublishData } from '../../Publish/_types'
 import { useAsset } from '@context/Asset'
 
-// function handleTimeoutCustomOption(
-//   data: FormFieldContent[],
-//   values: Partial<FormPublishData>
-// ) {
-//   const timeoutFieldContent = data.filter(
-//     (field) => field.name === 'timeout'
-//   )[0]
-//   const timeoutInputIndex = data.findIndex(
-//     (element) => element.name === 'timeout'
-//   )
-//   if (
-//     data[timeoutInputIndex].options.length < 6 &&
-//     !checkIfTimeoutInPredefinedValues(
-//       values.timeout,
-//       timeoutFieldContent.options
-//     )
-//   ) {
-//     data[timeoutInputIndex].options.push(values.timeout)
-//   } else if (
-//     data[timeoutInputIndex].options.length === 6 &&
-//     checkIfTimeoutInPredefinedValues(
-//       values.timeout,
-//       timeoutFieldContent.options
-//     )
-//   ) {
-//     data[timeoutInputIndex].options.pop()
-//   } else if (
-//     data[timeoutInputIndex].options.length === 6 &&
-//     data[timeoutInputIndex].options[5] !== values.timeout
-//   ) {
-//     data[timeoutInputIndex].options[5] = values.timeout
-//   }
-// }
+export function checkIfTimeoutInPredefinedValues(
+  timeout: string,
+  timeoutOptions: string[]
+): boolean {
+  if (timeoutOptions.indexOf(timeout) > -1) {
+    return true
+  }
+  return false
+}
+
+function handleTimeoutCustomOption(
+  data: FormFieldContent[],
+  values: Partial<FormPublishData>
+) {
+  const timeoutFieldContent = data.filter(
+    (field) => field.name === 'timeout'
+  )[0]
+  const timeoutInputIndex = data.findIndex(
+    (element) => element.name === 'timeout'
+  )
+  if (
+    data[timeoutInputIndex].options.length < 6 &&
+    !checkIfTimeoutInPredefinedValues(
+      values?.services[0]?.timeout,
+      timeoutFieldContent.options
+    )
+  ) {
+    data[timeoutInputIndex].options.push(values?.services[0]?.timeout)
+  } else if (
+    data[timeoutInputIndex].options.length === 6 &&
+    checkIfTimeoutInPredefinedValues(
+      values?.services[0]?.timeout,
+      timeoutFieldContent.options
+    )
+  ) {
+    data[timeoutInputIndex].options.pop()
+  } else if (
+    data[timeoutInputIndex].options.length === 6 &&
+    data[timeoutInputIndex].options[5] !== values?.services[0]?.timeout
+  ) {
+    data[timeoutInputIndex].options[5] = values?.services[0]?.timeout
+  }
+}
+
 export default function FormEditMetadata({
   data,
   setTimeoutStringValue,
@@ -53,6 +64,7 @@ export default function FormEditMetadata({
   isComputeDataset: boolean
 }): ReactElement {
   const { oceanConfig } = useAsset()
+  const [showEdit, setShowEdit] = useState<boolean>()
   const {
     validateField,
     setFieldValue
@@ -104,6 +116,11 @@ export default function FormEditMetadata({
             />
           )
       )}
+
+      <FormActions
+        setShowEdit={setShowEdit}
+        handleClick={() => setTimeoutStringValue(values?.services[0]?.timeout)}
+      />
     </Form>
   )
 }
