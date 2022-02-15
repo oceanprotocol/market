@@ -96,6 +96,10 @@ export default function PublishPage({
       }))
     } catch (error) {
       LoggerInstance.error('[publish] error', error.message)
+      if (error.message.length > 65) {
+        error.message = 'No Token created.'
+      }
+
       setFeedback((prevState) => ({
         ...prevState,
         '1': {
