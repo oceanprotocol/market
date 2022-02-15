@@ -14,6 +14,7 @@ import { FormTradeData, TradeItem } from './_types'
 import { LoggerInstance, Pool, PoolPriceAndFees } from '@oceanprotocol/lib'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { usePool } from '@context/Pool'
+import { useSiteMetadata } from '@hooks/useSiteMetadata'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
@@ -37,6 +38,7 @@ export default function Swap({
   const { isAssetNetwork } = useAsset()
   const { web3 } = useWeb3()
   const { poolInfo } = usePool()
+  const { appConfig } = useSiteMetadata()
 
   const [baseTokenItem, setBaseTokenItem] = useState<TradeItem>({
     amount: '0',
@@ -87,7 +89,7 @@ export default function Swap({
             poolInfo.datatokenAddress,
             poolInfo.baseTokenAddress,
             amountDataToken.toString(),
-            poolInfo.poolFee
+            appConfig.consumeMarketPoolSwapFee
           )
         const maxBuyDt: PoolPriceAndFees =
           await poolInstance.getAmountOutExactIn(
@@ -95,7 +97,7 @@ export default function Swap({
             poolInfo.baseTokenAddress,
             poolInfo.datatokenAddress,
             amountBaseToken.toString(),
-            poolInfo.poolFee
+            appConfig.consumeMarketPoolSwapFee
           )
 
         const maximumDt =
