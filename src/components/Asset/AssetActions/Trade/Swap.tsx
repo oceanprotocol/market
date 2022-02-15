@@ -18,7 +18,7 @@ import { usePool } from '@context/Pool'
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
 export default function Swap({
-  assetExtended,
+  asset,
   maxDt,
   maxBaseToken,
   balance,
@@ -26,7 +26,7 @@ export default function Swap({
   setMaximumBaseToken,
   setCoin
 }: {
-  assetExtended: AssetExtended
+  asset: AssetExtended
   maxDt: string
   maxBaseToken: string
   balance: PoolBalance
@@ -40,15 +40,15 @@ export default function Swap({
 
   const [baseTokenItem, setBaseTokenItem] = useState<TradeItem>({
     amount: '0',
-    token: assetExtended.accessDetails.baseToken?.symbol,
+    token: asset.accessDetails.baseToken?.symbol,
     maxAmount: '0',
-    address: assetExtended.accessDetails.baseToken.address
+    address: asset.accessDetails.baseToken.address
   })
   const [dtItem, setDtItem] = useState<TradeItem>({
     amount: '0',
-    token: assetExtended.accessDetails.datatoken.symbol,
+    token: asset.accessDetails.datatoken.symbol,
     maxAmount: '0',
-    address: assetExtended.accessDetails.datatoken.address
+    address: asset.accessDetails.datatoken.address
   })
   const {
     setFieldValue,
@@ -64,7 +64,7 @@ export default function Swap({
   const [swapFee, setSwapFee] = useState<string>()
 
   useEffect(() => {
-    if (!assetExtended || !balance || !values?.type) return
+    if (!asset || !balance || !values?.type || !web3) return
     const poolInstance = new Pool(web3)
 
     async function calculateMaximum() {
@@ -79,20 +79,18 @@ export default function Swap({
           : new Decimal(maxBaseToken)
 
       try {
-        const swapFee = await poolInstance.getSwapFee(
-          assetExtended.accessDetails?.addressOrId
-        )
+        const swapFee = poolInfo.poolFee
         setSwapFee(swapFee)
 
         const maxBuyBaseToken = await poolInstance.getAmountOutExactIn(
-          assetExtended.accessDetails.addressOrId,
+          asset.accessDetails.addressOrId,
           poolInfo.datatokenAddress,
           poolInfo.baseTokenAddress,
           amountDataToken.toString(),
           swapFee
         )
         const maxBuyDt = await poolInstance.getAmountOutExactIn(
-          assetExtended.accessDetails?.addressOrId,
+          asset.accessDetails?.addressOrId,
           poolInfo.baseTokenAddress,
           poolInfo.datatokenAddress,
           amountBaseToken.toString(),
@@ -101,8 +99,8 @@ export default function Swap({
 
         const maximumDt =
           values.type === 'buy'
-            ? amountDataToken.greaterThan(new Decimal(maxBuyDt))
-              ? maxBuyDt
+            ? amountDataToken.greaterThan(new Decimal(maxBuyDt.tokenAmount))
+              ? maxBuyDt.tokenAmount
               : amountDataToken
             : amountDataToken.greaterThan(new Decimal(balance.datatoken))
             ? balance.datatoken
@@ -110,8 +108,10 @@ export default function Swap({
 
         const maximumBaseToken =
           values.type === 'sell'
-            ? amountBaseToken.greaterThan(new Decimal(maxBuyBaseToken))
-              ? maxBuyBaseToken
+            ? amountBaseToken.greaterThan(
+                new Decimal(maxBuyBaseToken.tokenAmount)
+              )
+              ? maxBuyBaseToken.tokenAmount
               : amountBaseToken
             : amountBaseToken.greaterThan(new Decimal(balance.baseToken))
             ? balance.baseToken
@@ -143,7 +143,7 @@ export default function Swap({
     values.type,
     setMaximumDt,
     setMaximumBaseToken,
-    assetExtended,
+    asset,
     web3,
     dtItem.token,
     baseTokenItem.token
@@ -152,7 +152,9 @@ export default function Swap({
   const switchTokens = () => {
     setFieldValue('type', values.type === 'buy' ? 'sell' : 'buy')
     setCoin(
-      values.type === 'sell' ? 'OCEAN' : assetExtended.datatokens[0].symbol
+      values.type === 'sell'
+        ? poolInfo.baseTokenSymbol
+        : poolInfo.datatokenSymbol
     )
     // don't reset form because we don't want to reset type
     setFieldValue('datatoken', 0)
@@ -169,20 +171,21 @@ export default function Swap({
     if (name === 'baseToken') {
       if (values.type === 'sell') {
         newValue = await poolInstance.getAmountInExactOut(
-          assetExtended.accessDetails.addressOrId,
+          asset.accessDetails.addressOrId,
           baseTokenItem.address,
           dtItem.address,
           value.toString(),
           swapFee
         )
 
-        setTotalValue(newValue)
+        setTotalValue(newValue.tokenAmount)
+        // TO DO: verify if tokenAmount is the correct attribute
         setTokenAmount(value.toString())
-        tokenIn = assetExtended.services[0].datatokenAddress
+        tokenIn = asset.services[0].datatokenAddress
         tokenOut = poolInfo.baseTokenAddress
       } else {
         newValue = await poolInstance.getAmountOutExactIn(
-          assetExtended.accessDetails.addressOrId,
+          asset.accessDetails.addressOrId,
           baseTokenItem.address,
           dtItem.address,
           value.toString(),
@@ -190,14 +193,14 @@ export default function Swap({
         )
 
         setTotalValue(value.toString())
-        setTokenAmount(newValue)
+        setTokenAmount(newValue.tokenAmount)
         tokenIn = poolInfo.baseTokenAddress
-        tokenOut = assetExtended.services[0].datatokenAddress
+        tokenOut = asset.services[0].datatokenAddress
       }
     } else {
       if (values.type === 'sell') {
         newValue = await poolInstance.getAmountInExactOut(
-          assetExtended.accessDetails.addressOrId,
+          asset.accessDetails.addressOrId,
           dtItem.address,
           baseTokenItem.address,
           value.toString(),
@@ -205,22 +208,22 @@ export default function Swap({
         )
 
         setTotalValue(value.toString())
-        setTokenAmount(newValue)
-        tokenIn = assetExtended.services[0].datatokenAddress
+        setTokenAmount(newValue.tokenAmount)
+        tokenIn = asset.services[0].datatokenAddress
         tokenOut = poolInfo.baseTokenAddress
       } else {
         newValue = await poolInstance.getAmountOutExactIn(
-          assetExtended.accessDetails.addressOrId,
+          asset.accessDetails.addressOrId,
           dtItem.address,
           baseTokenItem.address,
           value.toString(),
           swapFee
         )
 
-        setTotalValue(newValue)
+        setTotalValue(newValue.tokenAmount)
         setTokenAmount(value.toString())
         tokenIn = poolInfo.baseTokenAddress
-        tokenOut = assetExtended.services[0].datatokenAddress
+        tokenOut = asset.services[0].datatokenAddress
       }
     }
 
@@ -229,7 +232,7 @@ export default function Swap({
       newValue
     )
     const spotPrice = await poolInstance.getSpotPrice(
-      assetExtended.accessDetails.addressOrId,
+      asset.accessDetails.addressOrId,
       tokenIn,
       tokenOut,
       swapFee
@@ -264,11 +267,7 @@ export default function Swap({
         handleValueChange={handleValueChange}
       />
 
-      <Output
-        dtSymbol={dtItem.token}
-        baseTokenSymbol={baseTokenItem.token}
-        poolAddress={assetExtended.accessDetails?.addressOrId}
-      />
+      <Output poolAddress={asset.accessDetails?.addressOrId} />
 
       <PriceImpact
         totalValue={totalValue}

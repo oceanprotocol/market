@@ -76,25 +76,15 @@ export default function FormTrade({
     try {
       const poolInstance = new Pool(web3)
 
-      const swapMarketFeeIn = await poolInstance.getMarketFees(
-        asset.accessDetails.addressOrId,
-        poolInfo.baseTokenAddress
-      )
-
-      const swapMarketFeeOut = await poolInstance.getMarketFees(
-        asset.accessDetails.addressOrId,
-        poolInfo.datatokenAddress
-      )
-
       const tokenInOutMarket: TokenInOutMarket = {
         tokenIn: poolInfo.baseTokenAddress,
         tokenOut: poolInfo.datatokenAddress,
-        marketFeeAddress: appConfig.consumeMarketPoolSwapFee
+        marketFeeAddress: appConfig.marketFeeAddress
       }
       const tokenOutMarket: TokenInOutMarket = {
         tokenIn: poolInfo.datatokenAddress,
         tokenOut: poolInfo.baseTokenAddress,
-        marketFeeAddress: appConfig.consumeMarketPoolSwapFee
+        marketFeeAddress: appConfig.marketFeeAddress
       }
 
       const impact = new Decimal(
@@ -108,7 +98,7 @@ export default function FormTrade({
           .toFixed(precision)
           .toString(),
         minAmountOut: '2',
-        swapMarketFee: swapMarketFeeIn
+        swapMarketFee: appConfig.consumeMarketPoolSwapFee
       }
 
       const amountsOutMaxFee: AmountsOutMaxFee = {
@@ -117,7 +107,7 @@ export default function FormTrade({
           .mul(impact)
           .toFixed(precision)
           .toString(),
-        swapMarketFee: swapMarketFeeOut
+        swapMarketFee: appConfig.consumeMarketPoolSwapFee
       }
 
       const tx =
@@ -155,7 +145,7 @@ export default function FormTrade({
         <>
           {isWarningAccepted ? (
             <Swap
-              assetExtended={asset}
+              asset={asset}
               balance={balance}
               maxDt={maxDt}
               maxBaseToken={maxBaseToken}

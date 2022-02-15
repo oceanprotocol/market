@@ -8,5 +8,5 @@ export interface TradeItem {
   amount: string
   token: string
   maxAmount: string
-  address?: string
+  address: string
 }
