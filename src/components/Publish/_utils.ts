@@ -341,3 +341,142 @@ export async function createTokensAndPricing(
 
   return { erc721Address, datatokenAddress, txHash }
 }
+
+export async function getFeesTokensAndPricing(
+  values: FormPublishData,
+  accountId: string,
+  config: Config,
+  nftFactory: NftFactory,
+  web3: Web3
+) {
+  console.log(values)
+
+  const nftCreateData: NftCreateData = generateNftCreateData(
+    values.metadata.nft
+  )
+  const { appConfig } = getSiteMetadata()
+  LoggerInstance.log('[gas fee] Creating NFT with metadata', nftCreateData)
+
+  // TODO: cap is hardcoded for now to 1000, this needs to be discussed at some point
+  const ercParams: Erc20CreateParams = {
+    templateIndex: values.pricing.type === 'dynamic' ? 1 : 2,
+    minter: accountId,
+    feeManager: accountId,
+    mpFeeAddress: appConfig.marketFeeAddress,
+    feeToken: config.oceanTokenAddress,
+    feeAmount: appConfig.publisherMarketOrderFee,
+    cap: '1000',
+    name: values.services[0].dataTokenOptions.name,
+    symbol: values.services[0].dataTokenOptions.symbol
+  }
+
+  LoggerInstance.log('[gas fee] Creating datatoken with ercParams', ercParams)
+
+  let result
+
+  switch (values.pricing.type) {
+    case 'dynamic': {
+      // no vesting in market by default, maybe at a later time , vestingAmount and vestedBlocks are hardcoded
+      // we use only ocean as basetoken
+      // swapFeeLiquidityProvider is the swap fee of the liquidity providers
+      // swapFeeMarketRunner is the swap fee of the market where the swap occurs
+      const poolParams: PoolCreationParams = {
+        ssContract: config.sideStakingAddress,
+        baseTokenAddress: config.oceanTokenAddress,
+        baseTokenSender: config.erc721FactoryAddress,
+        publisherAddress: accountId,
+        marketFeeCollector: appConfig.marketFeeAddress,
+        poolTemplateAddress: config.poolTemplateAddress,
+        rate: new Decimal(1).div(values.pricing.price).toString(),
+        baseTokenDecimals: 18,
+        vestingAmount: '0',
+        vestedBlocks: 2726000,
+        initialBaseTokenLiquidity: values.pricing.amountOcean.toString(),
+        swapFeeLiquidityProvider: (values.pricing.swapFee / 100).toString(),
+        swapFeeMarketRunner: appConfig.publisherMarketPoolSwapFee
+      }
+
+      LoggerInstance.log(
+        '[gas fee] Creating dynamic pricing with poolParams',
+        poolParams
+      )
+
+      result = await nftFactory.estGasCreateNftErc20WithPool(
+        accountId,
+        nftCreateData,
+        ercParams,
+        poolParams
+      )
+
+      console.log(result)
+
+      LoggerInstance.log('[gas fee] estGasCreateNftErc20WithPool tx', result)
+      break
+    }
+    case 'fixed': {
+      const freParams: FreCreationParams = {
+        fixedRateAddress: config.fixedRateExchangeAddress,
+        baseTokenAddress: config.oceanTokenAddress,
+        owner: accountId,
+        marketFeeCollector: appConfig.marketFeeAddress,
+        baseTokenDecimals: 18,
+        datatokenDecimals: 18,
+        fixedRate: values.pricing.price.toString(),
+        marketFee: appConfig.publisherMarketFixedSwapFee,
+        withMint: true
+      }
+
+      LoggerInstance.log(
+        '[gas fee] Creating fixed pricing with freParams',
+        freParams
+      )
+
+      result = await nftFactory.estGasCreateNftErc20WithFixedRate(
+        accountId,
+        nftCreateData,
+        ercParams,
+        freParams
+      )
+
+      LoggerInstance.log(
+        '[gas fee] estGasCreateNftErc20WithFixedRate tx',
+        result
+      )
+
+      break
+    }
+    case 'free': {
+      // maxTokens -  how many tokens cand be dispensed when someone requests . If maxTokens=2 then someone can't request 3 in one tx
+      // maxBalance - how many dt the user has in it's wallet before the dispenser will not dispense dt
+      // both will be just 1 for the market
+      const dispenserParams = {
+        dispenserAddress: config.dispenserAddress,
+        maxTokens: web3.utils.toWei('1'),
+        maxBalance: web3.utils.toWei('1'),
+        withMint: true,
+        allowedSwapper: ZERO_ADDRESS
+      }
+
+      LoggerInstance.log(
+        '[gas fee] Creating free pricing with dispenserParams',
+        dispenserParams
+      )
+
+      result = await nftFactory.estGasCreateNftErc20WithDispenser(
+        accountId,
+        nftCreateData,
+        ercParams,
+        dispenserParams
+      )
+
+      LoggerInstance.log(
+        '[gas fee] estGasCreateNftErc20WithDispenser tx',
+        result
+      )
+
+      break
+    }
+  }
+
+  return result
+}
