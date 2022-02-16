@@ -46,7 +46,7 @@ function MigrationProvider({
   const [error, setError] = useState<string>()
   const [migrationAddress, setMigrationAddress] = useState<string>()
   const [status, setStatus] = useState<number>()
-  const [poolV3Address, setPoolV3Address] = useState<string>('TEST')
+  const [poolV3Address, setPoolV3Address] = useState<string>()
   const [poolV4Address, setPoolV4Address] = useState<string>()
   const [didV3, setDidV3] = useState<string>()
   const [didV4, setDidV4] = useState<string>()
@@ -62,6 +62,7 @@ function MigrationProvider({
   const { ddo } = useAsset()
   const { web3 } = useWeb3()
   Logger.log('chainId', chainId)
+
   async function switchMigrationAddress(chainId: number): Promise<void> {
     Logger.log('switchMigrationAddress', migrationAddress)
     switch (chainId) {
@@ -98,7 +99,7 @@ function MigrationProvider({
     poolAddressV3: string,
     migrationAddress: string
   ): Promise<MigrationPoolStatus> {
-    Logger.log('Fetching migration status')
+    Logger.log('[Migration] Fetching migration status')
     setLoading(true)
     const migration = new Migration(web3)
     console.log('**** migration')
@@ -113,7 +114,7 @@ function MigrationProvider({
     } catch (error) {
       console.log('[Migration] error: ', error)
     }
-    console.log('[Migration] 2. tatus:', status)
+    console.log('[Migration] 2. status:', status)
     if (!status) {
       setError(
         `No migration status was found for asset with poolAddress ${poolAddressV3} on network with chainId ${chainId} in migration contract with address ${migrationAddress}`
@@ -161,17 +162,14 @@ function MigrationProvider({
   // }, [])
 
   useEffect(() => {
-    Logger.log('fetchMigrationStatus 2', migrationAddress)
-
     async function init() {
-      Logger.log('fetchMigrationStatus 3', migrationAddress)
       await switchMigrationAddress(chainId)
-      Logger.log('fetchMigrationStatus 4', migrationAddress)
+      Logger.log('[Migration] fetchMigrationStatus 4', migrationAddress)
       const status = await fetchMigrationStatus(
         ddo.price.pools[0],
         migrationAddress
       )
-      Logger.debug('[Migration] Got Migration Pool Status', status)
+      Logger.log('[Migration] Got Migration Pool Status', status)
       setStatus(status.status)
       setPoolV3Address(status.poolV3Address)
       setPoolV4Address(status.poolV4Address)
