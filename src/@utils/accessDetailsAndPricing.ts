@@ -277,13 +277,7 @@ export async function getOrderPriceAndFees(
       orderPriceAndFee.opcFee = fixed.oceanFeeAmount
       orderPriceAndFee.publisherMarketFixedSwapFee = fixed.marketFeeAmount
       // hack because we don't have it in contracts
-      orderPriceAndFee.consumeMarketFixedSwapFee = new Decimal(
-        fixed.baseTokenAmount
-      )
-        .minus(new Decimal(fixed.baseTokenAmountBeforeFee))
-        .minus(new Decimal(fixed.oceanFeeAmount))
-        .minus(new Decimal(fixed.marketFeeAmount))
-        .toString()
+      orderPriceAndFee.consumeMarketFixedSwapFee = fixed.consumeMarketFeeAmount
 
       break
     }
