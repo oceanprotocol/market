@@ -18,7 +18,7 @@ export const validationSchema = Yup.object().shape({
 export function getInitialValues(
   metadata: Metadata,
   timeout: number,
-  price: number
+  price: string
 ): Partial<MetadataEditForm> {
   return {
     name: metadata?.name,

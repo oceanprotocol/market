@@ -21,9 +21,7 @@ export default function Edit({}): ReactElement {
   }
 
   useEffect(() => {
-    LoggerInstance.log('asset change ', asset)
     const isCompute = asset?.services[0]?.type === 'compute' ? true : false
-    LoggerInstance.log('is compute ', isCompute)
     setIsCompute(isCompute)
   }, [asset])
 

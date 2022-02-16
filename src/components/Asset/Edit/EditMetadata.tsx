@@ -24,6 +24,7 @@ import { AssetExtended } from 'src/@types/AssetExtended'
 import { setMinterToPublisher, setMinterToDispenser } from '@utils/dispenser'
 import Debug from 'src/components/Publish/Debug'
 import { useAbortController } from '@hooks/useAbortController'
+import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 
 // import Debug from './DebugEditMetadata'
 
@@ -38,9 +39,14 @@ export default function Edit({
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const [timeoutStringValue, setTimeoutStringValue] = useState<string>()
-  const timeout = asset?.services[0]?.timeout
   const isComputeType = asset?.services[0]?.type === 'compute' ? true : false
   const hasFeedback = error || success
+
+  console.log('asset', asset)
+  console.log(
+    'getAccessDetails ',
+    getAccessDetails(asset.chainId, asset.datatokens[0].address)
+  )
 
   async function updateFixedPrice(newPrice: string) {
     const fixedRateInstance = new FixedRateExchange(
@@ -64,7 +70,9 @@ export default function Edit({
     resetForm: () => void
   ) {
     try {
-      if (asset.accessDetails?.type === 'free') {
+      console.log('asset ', asset)
+      console.log('values ', values)
+      if (asset?.accessDetails?.type === 'free') {
         const tx = await setMinterToPublisher(
           web3,
           asset?.accessDetails?.addressOrId,
@@ -88,17 +96,18 @@ export default function Edit({
 
       // let ddoEditedTimeout = newMetadata
 
-      // if (timeoutStringValue !== values.timeout) {
-      //   const service =
-      //     getServiceByName(ddoEditedMetdata, 'access') ||
-      //     getServiceByName(ddoEditedMetdata, 'compute')
-      //   const timeout = mapTimeoutStringToSeconds(values.timeout)
-      //   ddoEditedTimeout = await ocean.assets.editServiceTimeout(
-      //     ddoEditedMetdata,
-      //     service.index,
-      //     timeout
-      //   )
-      // }
+      if (asset?.services[0]?.timeout !== values.timeout) {
+        const service =
+          getServiceByName(asset, 'access') ||
+          getServiceByName(asset, 'compute')
+        // const timeout = mapTimeoutStringToSeconds(values.timeout)
+        // ddoEditedTimeout = await ocean.assets.editServiceTimeout(
+        //   ddoEditedMetdata,
+        //   service.index,
+        //   timeout
+        // )
+      }
+
       // if (!ddoEditedTimeout) {
       //   setError(content.form.error)
       //   LoggerInstance.error(content.form.error)
@@ -121,15 +130,13 @@ export default function Edit({
       const metadataHash = getHash(JSON.stringify(newDdo))
       const nft = new Nft(web3)
 
-      const flags = '0x2'
-
       const setMetadataTx = await nft.setMetadata(
         asset.nftAddress,
         accountId,
         0,
         asset.services[0].serviceEndpoint,
         '',
-        flags,
+        '0x2',
         encryptedDdo,
         '0x' + metadataHash
       )
@@ -164,7 +171,7 @@ export default function Edit({
     <Formik
       initialValues={getInitialValues(
         asset?.metadata,
-        timeout,
+        asset?.services[0]?.timeout,
         asset?.accessDetails?.price
       )}
       validationSchema={validationSchema}
@@ -186,7 +193,7 @@ export default function Edit({
                 data={content.form.data}
                 setTimeoutStringValue={setTimeoutStringValue}
                 values={initialValues}
-                showPrice={asset?.accessDetails?.price?.type === 'exchange'}
+                showPrice={asset?.accessDetails?.price?.type === 'fixed'}
                 isComputeDataset={isComputeType}
               />
 
@@ -194,7 +201,7 @@ export default function Edit({
                 <Web3Feedback networkId={asset?.chainId} />
               </aside>
 
-              {debug === true && <Debug />}
+              {/* {debug === true && <Debug />} */}
             </article>
           </>
         )

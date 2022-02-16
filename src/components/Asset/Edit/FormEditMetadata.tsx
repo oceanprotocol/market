@@ -76,6 +76,8 @@ export default function FormEditMetadata({
     e: ChangeEvent<HTMLInputElement>,
     field: InputProps
   ) {
+    console.log('field ', field.name)
+    console.log('val ', e.target.value)
     validateField(field.name)
     setFieldValue(field.name, e.target.value)
   }
@@ -88,12 +90,12 @@ export default function FormEditMetadata({
     (field) => field.name === 'timeout'
   )[0].options
 
-  // if (isComputeDataset && timeoutOptionsArray.includes('Forever')) {
-  //   const foreverOptionIndex = timeoutOptionsArray.indexOf('Forever')
-  //   timeoutOptionsArray.splice(foreverOptionIndex, 1)
-  // } else if (!isComputeDataset && !timeoutOptionsArray.includes('Forever')) {
-  //   timeoutOptionsArray.push('Forever')
-  // }
+  if (isComputeDataset && timeoutOptionsArray.includes('Forever')) {
+    const foreverOptionIndex = timeoutOptionsArray.indexOf('Forever')
+    timeoutOptionsArray.splice(foreverOptionIndex, 1)
+  } else if (!isComputeDataset && !timeoutOptionsArray.includes('Forever')) {
+    timeoutOptionsArray.push('Forever')
+  }
 
   return (
     <Form className={styles.form}>
