@@ -6,7 +6,7 @@ import { useWeb3 } from '../../../providers/Web3'
 import Web3 from 'web3'
 import { useAsset } from '../../../providers/Asset'
 import { useMigrationStatus } from '../../../providers/Migration'
-import { Migration } from 'v4-migration-lib/'
+import { Migration } from 'v4-migration-lib'
 import { DDO, MetadataMain } from '@oceanprotocol/lib'
 
 async function startMigration(
