@@ -13,13 +13,14 @@ async function startMigration(
   web3: Web3,
   accountId: string,
   migrationAddress: string,
-  poolV3Address: string,
-  dtV3Address: string,
   did: string,
   ddo: DDO,
-  encryptedFiles: string
+  encryptedFiles: string,
+  dtV3Address: string,
+  poolV3Address: string
 ) {
   console.log('Start Migration Clicked')
+  console.log('Price', ddo.price)
 
   const migration = new Migration(web3)
   await migration.startMigration(
@@ -36,9 +37,9 @@ async function startMigration(
 
 export default function StartMigration(): ReactElement {
   const { accountId } = useWeb3()
-  const { owner, did, ddo, metadata } = useAsset()
-  const { status, migrationAddress, poolV3Address, dtV3Address } =
-    useMigrationStatus()
+  const { owner, did, ddo, metadata, price } = useAsset()
+  console.log('* ddo.dataToken', ddo.dataToken)
+  const { status, migrationAddress } = useMigrationStatus()
   const { web3 } = useWeb3()
   return (
     owner === accountId &&
@@ -55,11 +56,11 @@ export default function StartMigration(): ReactElement {
                 web3,
                 accountId,
                 migrationAddress,
-                poolV3Address,
-                dtV3Address,
                 did,
                 ddo,
-                metadata.encryptedFiles
+                metadata.encryptedFiles,
+                ddo.dataToken,
+                price.address
               )
           }}
         />

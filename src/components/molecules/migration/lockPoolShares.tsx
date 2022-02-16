@@ -53,10 +53,8 @@ export default function LockPoolShares(): ReactElement {
   const { owner, ddo, price } = useAsset()
   const [poolTokens, setPoolTokens] = useState<string>()
   const { status, migrationAddress, poolV3Address } = useMigrationStatus()
-  console.log('[Migration] status', status)
-  console.log('[Migration] migrationAddress', migrationAddress)
-  console.log('[Migration] poolV3Address', poolV3Address)
-  console.log('[asset] owner', owner)
+  console.log('[LockPoolShares] status', status)
+  console.log('[LockPoolShares] migrationAddress', migrationAddress)
   const { web3 } = useWeb3()
 
   async function getUserPoolShareBalance() {
