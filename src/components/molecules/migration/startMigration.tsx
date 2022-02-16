@@ -38,12 +38,11 @@ async function startMigration(
 export default function StartMigration(): ReactElement {
   const { accountId } = useWeb3()
   const { owner, did, ddo, metadata, price } = useAsset()
-  console.log('* ddo.dataToken', ddo.dataToken)
   const { status, migrationAddress } = useMigrationStatus()
   const { web3 } = useWeb3()
   return (
     owner === accountId &&
-    status === 0 && (
+    status === '0' && (
       <Container className={styles.container}>
         <Alert
           text="**Time to migrate from V3 to V4** \n\nAs the asset publisher you can initiate the migration from a V3 pool to
