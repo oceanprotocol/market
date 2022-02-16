@@ -1,11 +1,55 @@
 import { useFormikContext } from 'formik'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { FormPublishData } from '../_types'
+import { getFeesTokensAndPricing } from '../_utils'
+import { useWeb3 } from '@context/Web3'
 import styles from './Feedback.module.css'
 import TransactionCount from './TransactionCount'
+import GasFees from './GasFees'
+import useNftFactory from '@hooks/contracts/useNftFactory'
+import { NftFactory, LoggerInstance } from '@oceanprotocol/lib'
+import { getOceanConfig } from '@utils/ocean'
+
+import Web3 from 'web3'
 
 export function Feedback(): ReactElement {
   const { values } = useFormikContext<FormPublishData>()
+  const nftFactory = useNftFactory()
+  const [gasFeeToken, setGasFeeToken] = useState('')
+  const { web3, chainId } = useWeb3()
+
+  const getEstGasFeeToken = async (
+    values: FormPublishData,
+    accountId: string,
+    nftFactory: NftFactory,
+    web3: Web3
+  ): Promise<string> => {
+    if (!nftFactory) return
+
+    const config = getOceanConfig(chainId)
+    LoggerInstance.log('[gas fee] using config: ', config)
+
+    const result = await getFeesTokensAndPricing(
+      values,
+      accountId,
+      config,
+      nftFactory,
+      web3
+    )
+
+    LoggerInstance.log('[gas fee] createTokensAndPricing tx', result)
+    console.log(result)
+
+    return result
+  }
+
+  useEffect(() => {
+    const calculateGasFeeToken = async () =>
+      setGasFeeToken(
+        await getEstGasFeeToken(values, values.user.accountId, nftFactory, web3)
+      )
+    calculateGasFeeToken()
+  }, [values, nftFactory])
 
   const items = Object.entries(values.feedback).map(([key, value], index) => (
     <li key={index} className={styles[value.status]}>
@@ -18,6 +62,7 @@ export function Feedback(): ReactElement {
             txHash={value.txHash}
           />
         )}
+        {value.txCount > 0 && <GasFees gasFees={gasFeeToken} />}
       </h3>
       <p className={styles.description}>{value.description}</p>
       {value.errorMessage && (

@@ -1,0 +1,16 @@
+.gasFees {
+  display: inline-block;
+  margin-left: calc(var(--spacer) / 2);
+  margin-top: calc(var(--spacer) / 2);
+  font-size: var(--font-size-small);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-base);
+  color: var(--color-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: calc(var(--spacer) / 16) calc(var(--spacer) / 4);
+}
+
+a.gasFees {
+  color: var(--color-primary);
+}
