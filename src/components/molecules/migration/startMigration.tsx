@@ -17,7 +17,7 @@ async function startMigration(
   dtV3Address: string,
   did: string,
   ddo: DDO,
-  metadata: MetadataMain
+  encryptedFiles: string
 ) {
   console.log('Start Migration Clicked')
 
@@ -28,7 +28,7 @@ async function startMigration(
     dtV3Address,
     poolV3Address,
     did,
-    metadata.encryptedFiles,
+    encryptedFiles,
     ['NFTname', 'NFTsymbol'],
     [ddo.dataTokenInfo.name, ddo.dataTokenInfo.symbol]
   )
@@ -58,7 +58,8 @@ export default function StartMigration(): ReactElement {
                 poolV3Address,
                 dtV3Address,
                 did,
-                ddo
+                ddo,
+                metadata.encryptedFiles
               )
           }}
         />
