@@ -12,11 +12,11 @@ import { PoolStatus as MigrationPoolStatus, Migration } from 'v4-migration-lib' 
 import appConfig from '../../app.config'
 import { useWeb3 } from './Web3'
 import { useAsset } from './Asset'
-Logger.log('Migration provider called')
+Logger.log('[Migration] Migration provider called')
 
 interface MigrationProviderValue {
   migrationAddress: string
-  status: number
+  status: string
   poolV3Address: string
   poolV4Address: string
   didV3: string
@@ -24,11 +24,11 @@ interface MigrationProviderValue {
   owner: string
   poolShareOwners: string[]
   dtV3Address: string
-  totalOcean: number
-  totalDTBurnt: number
-  newLPTAmount: number
-  lptRounding: number
-  deadline: number
+  totalOcean: string
+  totalDTBurnt: string
+  newLPTAmount: string
+  lptRounding: string
+  deadline: string
   refreshMigrationStatus: (
     poolAddressV3: string,
     migrationAddress: string
@@ -36,6 +36,7 @@ interface MigrationProviderValue {
 }
 
 const MigrationContext = createContext({} as MigrationProviderValue)
+Logger.log('[Migration] MigrationContext: ', MigrationContext)
 
 function MigrationProvider({
   children
@@ -45,7 +46,7 @@ function MigrationProvider({
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>()
   const [migrationAddress, setMigrationAddress] = useState<string>()
-  const [status, setStatus] = useState<number>()
+  const [status, setStatus] = useState<string>()
   const [poolV3Address, setPoolV3Address] = useState<string>()
   const [poolV4Address, setPoolV4Address] = useState<string>()
   const [didV3, setDidV3] = useState<string>()
@@ -53,11 +54,11 @@ function MigrationProvider({
   const [owner, setOwner] = useState<string>()
   const [poolShareOwners, setPoolShareOwners] = useState<string[]>()
   const [dtV3Address, setDtV3Address] = useState<string>()
-  const [totalOcean, setTotalOcean] = useState<number>()
-  const [totalDTBurnt, setTotalDTBurnt] = useState<number>()
-  const [newLPTAmount, setNewLPTAmount] = useState<number>()
-  const [lptRounding, setLptRounding] = useState<number>()
-  const [deadline, setDeadline] = useState<number>()
+  const [totalOcean, setTotalOcean] = useState<string>()
+  const [totalDTBurnt, setTotalDTBurnt] = useState<string>()
+  const [newLPTAmount, setNewLPTAmount] = useState<string>()
+  const [lptRounding, setLptRounding] = useState<string>()
+  const [deadline, setDeadline] = useState<string>()
   const { chainId } = useWeb3()
   const { ddo } = useAsset()
   const { web3 } = useWeb3()
@@ -132,15 +133,10 @@ function MigrationProvider({
   ) => {
     setLoading(true)
     const status = await fetchMigrationStatus(poolAddressV3, migrationAddress)
-    Logger.debug('[migration] Got Migration Status', status.status)
+    Logger.log('[migration] Got Migration Status', status.status)
     setStatus(status.status)
     setLoading(false)
   }
-
-  //
-  // Get and set Migration status based on passed DDO
-  //
-  Logger.log('fetchMigrationStatus 1', migrationAddress)
 
   // const initMigrationStatus = useCallback(async (ddo: DDO): Promise<void> => {
   //   if (!ddo) return
@@ -162,6 +158,7 @@ function MigrationProvider({
   // }, [])
 
   useEffect(() => {
+    Logger.log('[Migration] useEffect: ')
     async function init() {
       await switchMigrationAddress(chainId)
       Logger.log('[Migration] fetchMigrationStatus 4', migrationAddress)
