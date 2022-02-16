@@ -262,12 +262,23 @@ export async function getOrderPriceAndFees(
   switch (accessDetails.type) {
     case 'dynamic': {
       const poolPrice = await calculateBuyPrice(accessDetails, asset.chainId)
-      orderPriceAndFee.price = poolPrice
+      orderPriceAndFee.price = poolPrice.tokenAmount
+      orderPriceAndFee.liquidityProviderSwapFee =
+        poolPrice.liquidityProviderSwapFeeAmount
+      orderPriceAndFee.publisherMarketPoolSwapFee =
+        poolPrice.publishMarketSwapFeeAmount
+      orderPriceAndFee.consumeMarketPoolSwapFee =
+        poolPrice.consumeMarketSwapFeeAmount
       break
     }
     case 'fixed': {
       const fixed = await getFixedBuyPrice(accessDetails, asset.chainId)
       orderPriceAndFee.price = fixed.baseTokenAmount
+      orderPriceAndFee.opcFee = fixed.oceanFeeAmount
+      orderPriceAndFee.publisherMarketFixedSwapFee = fixed.marketFeeAmount
+      // hack because we don't have it in contracts
+      orderPriceAndFee.consumeMarketFixedSwapFee = fixed.consumeMarketFeeAmount
+
       break
     }
   }
