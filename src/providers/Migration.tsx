@@ -8,7 +8,7 @@ import React, {
   useCallback
 } from 'react'
 import { DDO, Logger } from '@oceanprotocol/lib'
-import { PoolStatus as MigrationPoolStatus, Migration } from 'v4-migration-lib/' // currently using npm link
+import { PoolStatus as MigrationPoolStatus, Migration } from 'v4-migration-lib' // currently using npm link
 import appConfig from '../../app.config'
 import { useWeb3 } from './Web3'
 import { useAsset } from './Asset'
