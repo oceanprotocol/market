@@ -101,10 +101,19 @@ function MigrationProvider({
     Logger.log('Fetching migration status')
     setLoading(true)
     const migration = new Migration(web3)
-    const status = await migration.getPoolStatus(
-      migrationAddress,
-      poolAddressV3
-    )
+    console.log('**** migration')
+    console.log('**** migration', migration)
+    if (migration === undefined) {
+      Logger.error('[Migration] Migration not initiated')
+    }
+    let status
+    try {
+      status = await migration.getPoolStatus(migrationAddress, poolAddressV3)
+      console.log('[Migration] 1. Status:', status)
+    } catch (error) {
+      console.log('[Migration] error: ', error)
+    }
+    console.log('[Migration] 2. tatus:', status)
     if (!status) {
       setError(
         `No migration status was found for asset with poolAddress ${poolAddressV3} on network with chainId ${chainId} in migration contract with address ${migrationAddress}`
@@ -185,7 +194,7 @@ function MigrationProvider({
     <MigrationContext.Provider
       value={
         {
-          migrationAddress: 'test123',
+          migrationAddress,
           status,
           poolV3Address,
           poolV4Address,
