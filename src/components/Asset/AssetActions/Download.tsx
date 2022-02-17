@@ -7,19 +7,23 @@ import ButtonBuy from '@shared/ButtonBuy'
 import { secondsToString } from '@utils/ddo'
 import AlgorithmDatasetsListForCompute from './Compute/AlgorithmDatasetsListForCompute'
 import styles from './Download.module.css'
-import { FileMetadata, LoggerInstance, ZERO_ADDRESS } from '@oceanprotocol/lib'
+import {
+  FileMetadata,
+  FixedRateExchange,
+  LoggerInstance,
+  ZERO_ADDRESS
+} from '@oceanprotocol/lib'
 import { order } from '@utils/order'
 import { AssetExtended } from 'src/@types/AssetExtended'
-import { buyDtFromPool, calculateBuyPrice } from '@utils/pool'
+import { buyDtFromPool } from '@utils/pool'
 import { downloadFile } from '@utils/provider'
 import { getOrderFeedback } from '@utils/feedback'
 import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
 import { OrderPriceAndFees } from 'src/@types/Price'
 import { toast } from 'react-toastify'
-import Button from '@shared/atoms/Button'
-import { gql, OperationContext } from 'urql'
-import { fetchDataForMultipleChains } from '@utils/subgraph'
-import { chainIds } from 'app.config'
+import { gql } from 'urql'
+import { fetchData, getQueryContext } from '@utils/subgraph'
+import { getOceanConfig } from '@utils/ocean'
 
 const baseTokensBalanceQuery = gql`
   query BaseTokenbalance($user: String) {
@@ -54,7 +58,7 @@ export default function Download({
   const [isLoading, setIsLoading] = useState(false)
   const [isOwned, setIsOwned] = useState(false)
   const [validOrderTx, setValidOrderTx] = useState('')
-  const [baseTokensBalance, setBaseTokensBalance] = useState<number>(0)
+  const [baseTokenBalance, setBaseTokenBalance] = useState<number>(0)
   const [orderPriceAndFees, setOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
   useEffect(() => {
@@ -97,21 +101,21 @@ export default function Download({
 
   useEffect(() => {
     if (!accountId || asset.nft.owner !== accountId) return
+    const queryContext = getQueryContext(Number(asset.chainId))
 
     async function getBaseTokenBalance() {
       const variables = {
         user: accountId.toLowerCase()
       }
-      const result = await fetchDataForMultipleChains(
+      const result = await fetchData(
         baseTokensBalanceQuery,
         variables,
-        chainIds
+        queryContext
       )
-      console.log('RESULT: ', result)
-      // setBaseTokensBalance(result)
+      setBaseTokenBalance(result.data.fixedRateExchanges[0])
     }
     getBaseTokenBalance()
-  }, [accountId, asset?.nft])
+  }, [accountId, asset.chainId, asset.nft])
 
   async function handleOrderOrDownload() {
     setIsLoading(true)
@@ -160,7 +164,12 @@ export default function Download({
     setIsLoading(false)
   }
 
-  async function handleCollectTokens() {}
+  async function handleCollectTokens() {
+    const config = getOceanConfig(asset.chainId)
+
+    const fixed = new FixedRateExchange(web3, config.fixedRateExchangeAddress)
+    const tx = await fixed.collectBT(asset.accessDetails.addressOrId, accountId)
+  }
 
   const PurchaseButton = () => (
     <ButtonBuy
@@ -185,12 +194,21 @@ export default function Download({
   )
 
   const CollectTokensButton = () => (
-    <Button
-      name={`Collec ${asset.datatokens[0].symbol}`}
-      disabled={isDisabled}
-      // onClick={handleCollectTokens}
-      // eslint-disable-next-line react/no-children-prop
-      children=""
+    <ButtonBuy
+      action="collect"
+      onClick={handleCollectTokens}
+      disabled={false}
+      hasPreviousOrder={false}
+      hasDatatoken={false}
+      dtSymbol={asset.datatokens[0].symbol}
+      dtBalance={baseTokenBalance.toString()}
+      datasetLowPoolLiquidity={false}
+      assetType=""
+      assetTimeout=""
+      isConsumable={false}
+      consumableFeedback=""
+      isBalanceSufficient={false}
+      isLoading={false}
     />
   )
 
@@ -207,9 +225,9 @@ export default function Download({
             conversion
           />
           {!isInPurgatory && <PurchaseButton />}
-          <CollectTokensButton />
         </div>
       </div>
+      {asset.nft.owner === accountId && <CollectTokensButton />}
       {asset?.metadata?.type === 'algorithm' && (
         <AlgorithmDatasetsListForCompute
           algorithmDid={asset.id}
