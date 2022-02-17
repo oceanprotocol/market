@@ -1,4 +1,4 @@
-import { approve, Pool } from '@oceanprotocol/lib'
+import { approve, Pool, PoolPriceAndFees } from '@oceanprotocol/lib'
 import Web3 from 'web3'
 import { getSiteMetadata } from './siteConfig'
 import { getDummyWeb3 } from './web3'
@@ -11,13 +11,13 @@ import { AccessDetails } from 'src/@types/Price'
  * @param {AccessDetails} accessDetails
  * @param {Web3?} [web3]
  * @param {number?} [chainId]
- * @return {Promise<PriceAndEstimation>}
+ * @return {Promise<PoolPriceAndFees>}
  */
 export async function calculateBuyPrice(
   accessDetails: AccessDetails,
   chainId?: number,
   web3?: Web3
-): Promise<string> {
+): Promise<PoolPriceAndFees> {
   if (!web3 && !chainId)
     throw new Error("web3 and chainId can't be undefined at the same time!")
 
@@ -52,7 +52,7 @@ export async function buyDtFromPool(
     accountId,
     accessDetails.baseToken.address,
     accessDetails.addressOrId,
-    dtPrice,
+    dtPrice.tokenAmount,
     false
   )
   const result = await pool.swapExactAmountOut(
@@ -65,7 +65,7 @@ export async function buyDtFromPool(
     },
     {
       // this is just to be safe
-      maxAmountIn: new Decimal(dtPrice).mul(10).toString(),
+      maxAmountIn: new Decimal(dtPrice.tokenAmount).mul(10).toString(),
       swapMarketFee: appConfig.consumeMarketPoolSwapFee,
       tokenAmountOut: '1'
     }
