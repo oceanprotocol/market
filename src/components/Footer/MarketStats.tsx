@@ -15,7 +15,7 @@ import { FooterStatsValues_globalStats_totalLiquidity_token as LiquidityToken } 
 
 const getGlobalStatsValues = gql`
   query FooterStatsValues {
-    globalStats {
+    globalStatistics {
       poolCount
       nftCount
       datatokenCount
