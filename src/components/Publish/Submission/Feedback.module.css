@@ -58,7 +58,15 @@
 .title {
   font-size: var(--font-size-large);
   display: inline-block;
+  margin-bottom: 0;
+}
+
+.txs {
+  display: block;
+  margin-left: 1.5rem;
   margin-bottom: calc(var(--spacer) / 4);
+  white-space: nowrap;
+  width: 100%;
 }
 
 .description {
@@ -76,5 +84,20 @@
 @keyframes loader {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@media screen and (min-width: 30rem) {
+  .txs {
+    display: inline;
+  }
+}
+
+@media screen and (min-width: 40rem) {
+  .title {
+    margin-bottom: calc(var(--spacer) / 2);
+  }
+  .txs {
+    margin-left: calc(var(--spacer) / 4);
   }
 }
