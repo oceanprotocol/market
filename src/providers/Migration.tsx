@@ -36,7 +36,6 @@ interface MigrationProviderValue {
 }
 
 const MigrationContext = createContext({} as MigrationProviderValue)
-Logger.log('[Migration] MigrationContext: ', MigrationContext)
 
 function MigrationProvider({
   children
@@ -60,36 +59,28 @@ function MigrationProvider({
   const [lptRounding, setLptRounding] = useState<string>()
   const [deadline, setDeadline] = useState<string>()
   const { chainId } = useWeb3()
-  const { ddo } = useAsset()
+  const { price } = useAsset()
   const { web3 } = useWeb3()
-  Logger.log('chainId', chainId)
 
   async function switchMigrationAddress(chainId: number): Promise<void> {
-    Logger.log('switchMigrationAddress', migrationAddress)
     switch (chainId) {
       case 1:
         setMigrationAddress(appConfig.ethereumMigrationContractAddresss)
-        Logger.log('switchMigrationAddress', migrationAddress)
         break
       case 137:
         setMigrationAddress(appConfig.polygonMigrationContractAddresss)
-        Logger.log('switchMigrationAddress', migrationAddress)
         break
       case 56:
         setMigrationAddress(appConfig.bscMigrationContractAddresss)
-        Logger.log('switchMigrationAddress', migrationAddress)
         break
       case 1285:
         setMigrationAddress(appConfig.moonriverMigrationContractAddresss)
-        Logger.log('switchMigrationAddress', migrationAddress)
         break
       case 246:
         setMigrationAddress(appConfig.ewcMigrationContractAddresss)
-        Logger.log('switchMigrationAddress', migrationAddress)
         break
       case 4:
         setMigrationAddress(appConfig.rinkebyMigrationContractAddresss)
-        Logger.log('switchMigrationAddress', migrationAddress)
         break
       default:
         break
@@ -103,19 +94,17 @@ function MigrationProvider({
     Logger.log('[Migration] Fetching migration status')
     setLoading(true)
     const migration = new Migration(web3)
-    console.log('**** migration')
-    console.log('**** migration', migration)
     if (migration === undefined) {
       Logger.error('[Migration] Migration not initiated')
     }
     let status
     try {
       status = await migration.getPoolStatus(migrationAddress, poolAddressV3)
-      console.log('[Migration] 1. Status:', status)
     } catch (error) {
-      console.log('[Migration] error: ', error)
+      Logger.error('[Migration] migration.getPoolStatus ERROR: ', error)
     }
-    console.log('[Migration] 2. status:', status)
+    Logger.log('[Migration] status: ', status)
+    Logger.log('[Migration] status.status: ', status.status)
     if (!status) {
       setError(
         `No migration status was found for asset with poolAddress ${poolAddressV3} on network with chainId ${chainId} in migration contract with address ${migrationAddress}`
@@ -158,15 +147,22 @@ function MigrationProvider({
   // }, [])
 
   useEffect(() => {
-    Logger.log('[Migration] useEffect: ')
     async function init() {
       await switchMigrationAddress(chainId)
-      Logger.log('[Migration] fetchMigrationStatus 4', migrationAddress)
-      const status = await fetchMigrationStatus(
-        ddo.price.pools[0],
-        migrationAddress
-      )
-      Logger.log('[Migration] Got Migration Pool Status', status)
+      let status
+      try {
+        console.log(
+          'Calling fetchMigrationStatus :',
+          price.address,
+          migrationAddress
+        )
+        status = await fetchMigrationStatus(price.address, migrationAddress)
+        Logger.log('[Migration] status 1', status)
+      } catch (error) {
+        Logger.log('[Migration] fetchMigrationStatus ERROR', error)
+      }
+      Logger.log('[Migration] status 2', status)
+
       setStatus(status.status)
       setPoolV3Address(status.poolV3Address)
       setPoolV4Address(status.poolV4Address)
@@ -181,10 +177,8 @@ function MigrationProvider({
       setLptRounding(status.lptRounding)
       setDeadline(status.deadline)
     }
-    Logger.log('fetchMigrationStatus 5', migrationAddress)
     init()
-  }, [chainId])
-  Logger.log('fetchMigrationStatus 6', migrationAddress)
+  }, [chainId, migrationAddress, price])
   return (
     <MigrationContext.Provider
       value={

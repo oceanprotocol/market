@@ -21,6 +21,8 @@ async function startMigration(
 ) {
   console.log('Start Migration Clicked')
   console.log('Price', ddo.price)
+  const v4DtName = 'V4 - ' + ddo.dataTokenInfo.name
+  const v4DtSymbol = 'V4-' + ddo.dataTokenInfo.symbol
 
   const migration = new Migration(web3)
   await migration.startMigration(
@@ -30,8 +32,8 @@ async function startMigration(
     poolV3Address,
     did,
     encryptedFiles,
-    ['NFTname', 'NFTsymbol'],
-    [ddo.dataTokenInfo.name, ddo.dataTokenInfo.symbol]
+    ['Ocean Asset NFT', 'OCEAN-NFT'],
+    [v4DtName, v4DtSymbol]
   )
 }
 
@@ -40,6 +42,8 @@ export default function StartMigration(): ReactElement {
   const { owner, did, ddo, metadata, price } = useAsset()
   const { status, migrationAddress } = useMigrationStatus()
   const { web3 } = useWeb3()
+  console.log('Start Migration status', status)
+  console.log('Start Migration status TYPE', typeof status)
   return (
     owner === accountId &&
     status === '0' && (
