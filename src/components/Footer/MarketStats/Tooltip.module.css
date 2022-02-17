@@ -1,28 +1,7 @@
-.stats {
-  margin-bottom: calc(var(--spacer) * 2);
-}
-
-/* specificity sledgehammer override without !important */
-.stats,
-.stats *,
-.statsList * {
-  font-size: var(--font-size-small);
-  color: var(--color-secondary);
-  margin-left: 0;
-}
-
 .tooltipStats {
   margin-bottom: calc(var(--spacer) / 3);
   padding-bottom: calc(var(--spacer) / 3);
   border-bottom: 1px solid var(--border-color);
-}
-
-.network {
-  font-weight: var(--font-weight-bold);
-}
-
-.info {
-  width: 0.85rem;
 }
 
 .statsList,
@@ -39,4 +18,8 @@
   padding-top: 0;
   font-size: var(--font-size-mini);
   color: var(--color-secondary);
+}
+
+.network {
+  font-weight: var(--font-weight-bold);
 }
