@@ -20,7 +20,7 @@ import { gql, OperationResult } from 'urql'
 import { PoolLiquidity } from '../../../../@types/apollo/PoolLiquidity'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
-import { useMigration } from '../../../../providers/Migration'
+import { useMigrationStatus } from '../../../../providers/Migration'
 import PoolTransactions from '../../../molecules/PoolTransactions'
 import { fetchData, getQueryContext } from '../../../../utils/subgraph'
 
@@ -85,15 +85,15 @@ const userPoolShareQuery = gql`
 
 export default function Pool(): ReactElement {
   const data = useStaticQuery(contentQuery)
-  // const { status } = useMigration()
+
   const content = data.content.edges[0].node.childContentJson.pool
-  let status = '1'
-  status = '2'
+
   const { accountId } = useWeb3()
   const [dtSymbol, setDtSymbol] = useState<string>()
   const [oceanSymbol, setOceanSymbol] = useState<string>()
   const { isInPurgatory, ddo, owner, price, refreshInterval, isAssetNetwork } =
     useAsset()
+  const { status } = useMigrationStatus()
 
   const [poolTokens, setPoolTokens] = useState<string>()
   const [totalPoolTokens, setTotalPoolTokens] = useState<string>()
