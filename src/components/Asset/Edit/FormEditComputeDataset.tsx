@@ -20,12 +20,10 @@ import { getServiceByName } from '@utils/ddo'
 
 export default function FormEditComputeDataset({
   data,
-  title,
-  setShowEdit
+  title
 }: {
   data: InputProps[]
   title: string
-  setShowEdit: (show: boolean) => void
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
   const { asset } = useAsset()
@@ -44,7 +42,7 @@ export default function FormEditComputeDataset({
     const baseParams = {
       chainIds: [asset.chainId],
       sort: { sortBy: SortTermOptions.Created },
-      filters: [getFilterTerm('service.attributes.main.type', 'algorithm')]
+      filters: [getFilterTerm('metadata.type', 'algorithm')]
     } as BaseQueryParams
 
     const query = generateBaseQuery(baseParams)

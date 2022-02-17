@@ -43,10 +43,10 @@ export default function Edit({
   const hasFeedback = error || success
 
   console.log('asset', asset)
-  console.log(
-    'getAccessDetails ',
-    getAccessDetails(asset.chainId, asset.datatokens[0].address)
-  )
+  // console.log(
+  //   'getAccessDetails ',
+  //   getAccessDetails(asset.chainId, asset.datatokens[0].address)
+  // )
 
   async function updateFixedPrice(newPrice: string) {
     const fixedRateInstance = new FixedRateExchange(

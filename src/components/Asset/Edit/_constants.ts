@@ -1,4 +1,4 @@
-import { Metadata } from '@oceanprotocol/lib'
+import { Metadata, ServiceComputeOptions } from '@oceanprotocol/lib'
 import { mapTimeoutStringToSeconds, secondsToString } from '@utils/ddo'
 // import { EditableMetadataLinks } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
@@ -29,24 +29,32 @@ export function getInitialValues(
   }
 }
 
-// export const validationSchema: Yup.SchemaOf<ComputePrivacyForm> =
-//   Yup.object().shape({
-//     allowAllPublishedAlgorithms: Yup.boolean().nullable(),
-//     publisherTrustedAlgorithms: Yup.array().nullable()
-//   })
+export const ComputeSettingsValidationSchema = Yup.object().shape({
+  allowAllPublishedAlgorithms: Yup.boolean().nullable(),
+  publisherTrustedAlgorithms: Yup.array().nullable()
+})
 
-// export function getInitialValues(
-//   compute: ServiceComputePrivacy
-// ): ComputePrivacyForm {
-//   // TODO: ocean.js needs allowAllAlgoritms setting
-//   const { allowAllPublishedAlgorithms, publisherTrustedAlgorithms } = compute
+export function getComputeSettingsInitialValues(
+  compute: ServiceComputeOptions
+): ComputePrivacyForm {
+  const { publisherTrustedAlgorithmPublishers, publisherTrustedAlgorithms } =
+    compute
+  const allowAllPublishedAlgorithms =
+    publisherTrustedAlgorithms?.length > 0 ||
+    publisherTrustedAlgorithmPublishers?.length > 0
+      ? false
+      : true
 
-//   const publisherTrustedAlgorithmsForForm = (
-//     publisherTrustedAlgorithms || []
-//   ).map((algo) => algo.did)
+  const publisherTrustedAlgorithmsForForm = (
+    publisherTrustedAlgorithms || []
+  ).map((algo) => algo.did)
 
-//   return {
-//     allowAllPublishedAlgorithms,
-//     publisherTrustedAlgorithms: publisherTrustedAlgorithmsForForm
-//   }
-// }
+  //TODO: should we add publisherTrustedAlgorithmPublishers to the form?
+
+  console.log('allowAllPublishedAlgorithms', allowAllPublishedAlgorithms)
+  console.log('publisherTrustedAlgorithms', publisherTrustedAlgorithms)
+  return {
+    allowAllPublishedAlgorithms,
+    publisherTrustedAlgorithms: publisherTrustedAlgorithmsForForm
+  }
+}

@@ -9,9 +9,14 @@ import DebugEditCompute from './DebugEditCompute'
 import styles from './index.module.css'
 // import { transformComputeFormToServiceComputePrivacy } from '@utils/compute'
 import Web3Feedback from '@shared/Web3Feedback'
-import { getInitialValues, validationSchema } from './_constants'
+import {
+  getInitialValues,
+  validationSchema,
+  getComputeSettingsInitialValues
+} from './_constants'
 import content from '../../../../content/pages/editComputeDataset.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
+import { getServiceByName } from '@utils/ddo'
 
 export default function EditComputeDataset({
   asset
@@ -83,12 +88,9 @@ export default function EditComputeDataset({
 
   return (
     <Formik
-      initialValues={
-        {}
-        //   getInitialValues(
-        //   ddo.findServiceByType('compute').attributes.main.privacy
-        // )
-      }
+      initialValues={getComputeSettingsInitialValues(
+        getServiceByName(asset, 'compute')?.compute
+      )}
       validationSchema={validationSchema}
       onSubmit={async (values, { resetForm }) => {
         // move user's focus to top of screen
