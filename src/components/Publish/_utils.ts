@@ -182,7 +182,7 @@ export async function transformPublishFormToDdo(
         }
       ],
       nft: {
-        owner: accountId
+        ...generateNftCreateData(values?.metadata.nft)
       }
     })
   }
