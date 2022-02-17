@@ -12,7 +12,21 @@ import { PoolStatus as MigrationPoolStatus, Migration } from 'v4-migration-lib' 
 import appConfig from '../../app.config'
 import { useWeb3 } from './Web3'
 import { useAsset } from './Asset'
-Logger.log('[Migration] Migration provider called')
+import { gql, OperationResult } from 'urql'
+import { fetchData, getQueryContext } from '../utils/subgraph'
+import { PoolLiquidity } from '../@types/apollo/PoolLiquidity'
+
+const userPoolShareQuery = gql`
+  query poolShare($id: ID!, $shareId: ID) {
+    pool(id: $id) {
+      id
+      shares(where: { id: $shareId }) {
+        id
+        balance
+      }
+    }
+  }
+`
 
 interface MigrationProviderValue {
   migrationAddress: string
@@ -35,6 +49,7 @@ interface MigrationProviderValue {
   ) => Promise<void>
   thresholdMet: boolean
   deadlinePassed: boolean
+  poolTokens: string
 }
 
 const MigrationContext = createContext({} as MigrationProviderValue)
@@ -62,10 +77,10 @@ function MigrationProvider({
   const [deadline, setDeadline] = useState<string>()
   const [thresholdMet, setThresholdMet] = useState<boolean>()
   const [deadlinePassed, setDeadlinePassed] = useState<boolean>()
+  const [poolTokens, setPoolTokens] = useState<string>()
 
-  const { chainId } = useWeb3()
+  const { chainId, accountId, web3 } = useWeb3()
   const { price } = useAsset()
-  const { web3 } = useWeb3()
 
   async function switchMigrationAddress(chainId: number): Promise<void> {
     switch (chainId) {
@@ -175,6 +190,21 @@ function MigrationProvider({
     return thresholdMet
   }
 
+  async function getUserPoolShareBalance() {
+    const queryContext = getQueryContext(chainId)
+    const queryVariables = {
+      id: price.address.toLowerCase(),
+      shareId: `${price.address.toLowerCase()}-${accountId.toLowerCase()}`
+    }
+
+    const queryResult: OperationResult<PoolLiquidity> = await fetchData(
+      userPoolShareQuery,
+      queryVariables,
+      queryContext
+    )
+    return queryResult?.data.pool.shares[0]?.balance
+  }
+
   useEffect(() => {
     async function init() {
       await switchMigrationAddress(chainId)
@@ -228,6 +258,23 @@ function MigrationProvider({
     init()
   }, [deadline])
 
+  useEffect(() => {
+    if (!accountId) return
+    async function init() {
+      try {
+        //
+        // Get everything the user has put into the pool
+        //
+        const poolTokens = await getUserPoolShareBalance()
+        console.log('getUserPoolShareBalance', poolTokens)
+        setPoolTokens(poolTokens)
+      } catch (error) {
+        Logger.error(error.message)
+      }
+    }
+    init()
+  }, [accountId])
+
   return (
     <MigrationContext.Provider
       value={
@@ -248,7 +295,8 @@ function MigrationProvider({
           deadline,
           refreshMigrationStatus,
           thresholdMet,
-          deadlinePassed
+          deadlinePassed,
+          poolTokens
         } as MigrationProviderValue
       }
     >
