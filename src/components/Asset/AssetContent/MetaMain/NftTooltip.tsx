@@ -17,6 +17,23 @@ export default function NftTooltip({
   chainId: number
   isBlockscoutExplorer: boolean
 }): ReactElement {
+  // Currently Ocean NFTs are not displayed correctly on OpenSea
+  // Code prepared to easily integrate this feature once this is fixed
+  //
+  // Supported OpeanSea networks:
+  // https://support.opensea.io/hc/en-us/articles/4404027708051-Which-blockchains-does-OpenSea-support-
+  const openseaNetworks = [1, 137, 8217]
+  const openseaTestNetworks = [4, 1001, 80001, 97, 420]
+  const openSeaSupported = openseaNetworks
+    .concat(openseaTestNetworks)
+    .includes(chainId)
+
+  const openSeaBaseUri = openSeaSupported
+    ? openseaTestNetworks.includes(chainId)
+      ? 'https://testnets.opensea.io'
+      : 'https://opensea.io'
+    : undefined
+
   return (
     <div className={styles.wrapper}>
       <img src={nft?.image_data} alt={nft?.name} />
@@ -38,14 +55,16 @@ export default function NftTooltip({
             View on explorer
           </ExplorerLink>
           <br />
-          <a
-            href="https://delta-dao.com"
-            target="_blank"
-            rel="noreferrer"
-            className={explorerLinkStyles.link}
-          >
-            View on OpeanSea <External />
-          </a>
+          {openSeaSupported && (
+            <a
+              href={`${openSeaBaseUri}/assets/${address}/1`}
+              target="_blank"
+              rel="noreferrer"
+              className={explorerLinkStyles.link}
+            >
+              View on OpeanSea <External />
+            </a>
+          )}
         </div>
       </div>
     </div>
