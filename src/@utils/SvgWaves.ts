@@ -41,6 +41,7 @@ export class SvgWaves {
    * meaning low character count.
    * - width & height: default is 2 digits max (99)
    * - color pink is selected per default
+   * - set coloring to fill or stroke (fill is selected per default)
    * - randomly decide if fill or stroke coloring should be used
    * - create 4 layers with 4 - 5 points per layers
    *     -> results in random looking, yet small enough svgs
@@ -53,7 +54,7 @@ export class SvgWaves {
       width: 99,
       height: 99,
       color: WaveColors.Pink,
-      fill: Math.random() < 0.5, // random true or false
+      fill: true,
       layerCount: 4,
       pointsPerLayer: randomIntFromInterval(3, 4),
       variance: Math.random() * 0.2 + 0.5, // 0.5 - 0.7
