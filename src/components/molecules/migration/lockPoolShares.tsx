@@ -80,6 +80,7 @@ export default function LockPoolShares(): ReactElement {
         // Get everything the user has put into the pool
         //
         const poolTokens = await getUserPoolShareBalance()
+        console.log('getUserPoolShareBalance', poolTokens)
         setPoolTokens(poolTokens)
       } catch (error) {
         Logger.error(error.message)
@@ -88,8 +89,9 @@ export default function LockPoolShares(): ReactElement {
     init()
   }, [accountId])
   return (
-    owner !== accountId &&
-    poolTokens !== '0' && (
+    !owner.localeCompare(accountId) &&
+    poolTokens !== '0' &&
+    poolTokens !== undefined && (
       <Container className={styles.container}>
         <Alert
           text={`**The publisher of this data asset has initiated the migration of this pool from V3 to V4** 
