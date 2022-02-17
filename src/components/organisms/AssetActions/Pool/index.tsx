@@ -3,6 +3,7 @@ import { Logger } from '@oceanprotocol/lib'
 import styles from './index.module.css'
 import stylesActions from './Actions.module.css'
 import PriceUnit from '../../../atoms/Price/PriceUnit'
+import Alert from '../../../atoms/Alert'
 import Button from '../../../atoms/Button'
 import Add from './Add'
 import Remove from './Remove'
@@ -19,6 +20,7 @@ import { gql, OperationResult } from 'urql'
 import { PoolLiquidity } from '../../../../@types/apollo/PoolLiquidity'
 import { useOcean } from '../../../../providers/Ocean'
 import { useWeb3 } from '../../../../providers/Web3'
+import { useMigration } from '../../../../providers/Migration'
 import PoolTransactions from '../../../molecules/PoolTransactions'
 import { fetchData, getQueryContext } from '../../../../utils/subgraph'
 
@@ -83,8 +85,10 @@ const userPoolShareQuery = gql`
 
 export default function Pool(): ReactElement {
   const data = useStaticQuery(contentQuery)
+  // const { status } = useMigration()
   const content = data.content.edges[0].node.childContentJson.pool
-
+  let status = '1'
+  status = '2'
   const { accountId } = useWeb3()
   const [dtSymbol, setDtSymbol] = useState<string>()
   const [oceanSymbol, setOceanSymbol] = useState<string>()
@@ -456,47 +460,51 @@ export default function Pool(): ReactElement {
             <Token symbol="% of pool" balance={creatorPoolShare} noIcon />
           </TokenList>
 
-          <TokenList
-            title={
-              <>
-                Pool Statistics
-                {weightDt && (
-                  <span
-                    className={styles.titleInfo}
-                    title={`Weight of ${weightOcean}% OCEAN & ${weightDt}% ${dtSymbol}`}
-                  >
-                    {weightOcean}/{weightDt}
-                  </span>
-                )}
-                <Graph />
-              </>
-            }
-            ocean={`${price?.ocean}`}
-            oceanSymbol={oceanSymbol}
-            dt={`${price?.datatoken}`}
-            dtSymbol={dtSymbol}
-            poolShares={totalPoolTokens}
-            conversion={totalLiquidityInOcean}
-            showTVLLabel
-          >
-            <Token symbol="% swap fee" balance={swapFee} noIcon />
-          </TokenList>
+          {status === '0' && (
+            <TokenList
+              title={
+                <>
+                  Pool Statistics
+                  {weightDt && (
+                    <span
+                      className={styles.titleInfo}
+                      title={`Weight of ${weightOcean}% OCEAN & ${weightDt}% ${dtSymbol}`}
+                    >
+                      {weightOcean}/{weightDt}
+                    </span>
+                  )}
+                  <Graph />
+                </>
+              }
+              ocean={`${price?.ocean}`}
+              oceanSymbol={oceanSymbol}
+              dt={`${price?.datatoken}`}
+              dtSymbol={dtSymbol}
+              poolShares={totalPoolTokens}
+              conversion={totalLiquidityInOcean}
+              showTVLLabel
+            >
+              <Token symbol="% swap fee" balance={swapFee} noIcon />
+            </TokenList>
+          )}
 
           <div className={styles.update}>
             Fetching every {refreshInterval / 1000} sec.
           </div>
 
           <div className={stylesActions.actions}>
-            <Button
-              style="primary"
-              size="small"
-              onClick={() => setShowAdd(true)}
-              disabled={isInPurgatory}
-            >
-              Add Liquidity
-            </Button>
+            {status === '0' && (
+              <Button
+                style="primary"
+                size="small"
+                onClick={() => setShowAdd(true)}
+                disabled={isInPurgatory}
+              >
+                Add Liquidity
+              </Button>
+            )}
 
-            {hasAddedLiquidity && !isRemoveDisabled && (
+            {hasAddedLiquidity && !isRemoveDisabled && status === '0' && (
               <Button
                 size="small"
                 onClick={() => setShowRemove(true)}
@@ -504,6 +512,14 @@ export default function Pool(): ReactElement {
               >
                 Remove
               </Button>
+            )}
+            {status !== '0' && (
+              <Alert
+                title="Pool Migration in Progress"
+                text="Adding and removing liquidity is disabled while the pool is in
+              the process of being migrated from V3 to v4"
+                state="warning"
+              />
             )}
           </div>
 
