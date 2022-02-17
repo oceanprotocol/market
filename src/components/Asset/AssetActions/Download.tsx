@@ -16,6 +16,20 @@ import { getOrderFeedback } from '@utils/feedback'
 import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
 import { OrderPriceAndFees } from 'src/@types/Price'
 import { toast } from 'react-toastify'
+import Button from '@shared/atoms/Button'
+import { gql, OperationContext } from 'urql'
+import { fetchDataForMultipleChains } from '@utils/subgraph'
+import { chainIds } from 'app.config'
+
+const baseTokensBalanceQuery = gql`
+  query BaseTokenbalance($user: String) {
+    fixedRateExchanges(where: { owner: $user }) {
+      id
+      owner
+      baseTokenBalance
+    }
+  }
+`
 
 export default function Download({
   asset,
@@ -40,6 +54,7 @@ export default function Download({
   const [isLoading, setIsLoading] = useState(false)
   const [isOwned, setIsOwned] = useState(false)
   const [validOrderTx, setValidOrderTx] = useState('')
+  const [baseTokensBalance, setBaseTokensBalance] = useState<number>(0)
   const [orderPriceAndFees, setOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
   useEffect(() => {
@@ -79,6 +94,24 @@ export default function Download({
     accountId,
     isOwned
   ])
+
+  useEffect(() => {
+    if (!accountId || asset.nft.owner !== accountId) return
+
+    async function getBaseTokenBalance() {
+      const variables = {
+        user: accountId.toLowerCase()
+      }
+      const result = await fetchDataForMultipleChains(
+        baseTokensBalanceQuery,
+        variables,
+        chainIds
+      )
+      console.log('RESULT: ', result)
+      // setBaseTokensBalance(result)
+    }
+    getBaseTokenBalance()
+  }, [accountId, asset?.nft])
 
   async function handleOrderOrDownload() {
     setIsLoading(true)
@@ -127,6 +160,8 @@ export default function Download({
     setIsLoading(false)
   }
 
+  async function handleCollectTokens() {}
+
   const PurchaseButton = () => (
     <ButtonBuy
       action="download"
@@ -149,6 +184,16 @@ export default function Download({
     />
   )
 
+  const CollectTokensButton = () => (
+    <Button
+      name={`Collec ${asset.datatokens[0].symbol}`}
+      disabled={isDisabled}
+      // onClick={handleCollectTokens}
+      // eslint-disable-next-line react/no-children-prop
+      children=""
+    />
+  )
+
   return (
     <aside className={styles.consume}>
       <div className={styles.info}>
@@ -162,6 +207,7 @@ export default function Download({
             conversion
           />
           {!isInPurgatory && <PurchaseButton />}
+          <CollectTokensButton />
         </div>
       </div>
       {asset?.metadata?.type === 'algorithm' && (
