@@ -49,7 +49,7 @@ interface MigrationProviderValue {
   ) => Promise<void>
   thresholdMet: boolean
   deadlinePassed: boolean
-  poolTokens: string
+  poolShares: string
 }
 
 const MigrationContext = createContext({} as MigrationProviderValue)
@@ -77,7 +77,7 @@ function MigrationProvider({
   const [deadline, setDeadline] = useState<string>()
   const [thresholdMet, setThresholdMet] = useState<boolean>()
   const [deadlinePassed, setDeadlinePassed] = useState<boolean>()
-  const [poolTokens, setPoolTokens] = useState<string>()
+  const [poolShares, setpoolShares] = useState<string>()
 
   const { chainId, accountId, web3 } = useWeb3()
   const { price } = useAsset()
@@ -267,7 +267,7 @@ function MigrationProvider({
         //
         const poolTokens = await getUserPoolShareBalance()
         console.log('getUserPoolShareBalance', poolTokens)
-        setPoolTokens(poolTokens)
+        setpoolShares(poolTokens)
       } catch (error) {
         Logger.error(error.message)
       }
@@ -296,7 +296,7 @@ function MigrationProvider({
           refreshMigrationStatus,
           thresholdMet,
           deadlinePassed,
-          poolTokens
+          poolShares
         } as MigrationProviderValue
       }
     >
