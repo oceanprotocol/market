@@ -33,6 +33,7 @@ interface MigrationProviderValue {
     poolAddressV3: string,
     migrationAddress: string
   ) => Promise<void>
+  thresholdMet: boolean
 }
 
 const MigrationContext = createContext({} as MigrationProviderValue)
@@ -58,6 +59,7 @@ function MigrationProvider({
   const [newLPTAmount, setNewLPTAmount] = useState<string>()
   const [lptRounding, setLptRounding] = useState<string>()
   const [deadline, setDeadline] = useState<string>()
+  const [thresholdMet, setThresholdMet] = useState<boolean>()
   const { chainId } = useWeb3()
   const { price } = useAsset()
   const { web3 } = useWeb3()
@@ -146,6 +148,30 @@ function MigrationProvider({
   //   setLoading(false)
   // }, [])
 
+  async function fetchThresholdMet(
+    poolAddressV3: string,
+    migrationAddress: string
+  ): Promise<boolean> {
+    const migration = new Migration(web3)
+    let thresholdMet
+    try {
+      thresholdMet = await migration.thresholdMet(
+        migrationAddress,
+        poolAddressV3
+      )
+    } catch (error) {
+      Logger.error('[Migration] migration.getPoolStatus ERROR: ', error)
+    }
+    if (!status) {
+      setError(
+        `No migrationMet value was found for asset with poolAddress ${poolAddressV3} on network with chainId ${chainId} in migration contract with address ${migrationAddress}`
+      )
+    } else {
+      setError(undefined)
+    }
+    return thresholdMet
+  }
+
   useEffect(() => {
     async function init() {
       await switchMigrationAddress(chainId)
@@ -163,6 +189,11 @@ function MigrationProvider({
       }
       Logger.log('[Migration] status 2', status)
 
+      const thresholdMet = await fetchThresholdMet(
+        price.address,
+        migrationAddress
+      )
+
       setStatus(status.status)
       setPoolV3Address(status.poolV3Address)
       setPoolV4Address(status.poolV4Address)
@@ -176,6 +207,7 @@ function MigrationProvider({
       setNewLPTAmount(status.newLPTAmount)
       setLptRounding(status.lptRounding)
       setDeadline(status.deadline)
+      setThresholdMet(thresholdMet)
     }
     init()
   }, [chainId, migrationAddress, price])
@@ -197,7 +229,8 @@ function MigrationProvider({
           newLPTAmount,
           lptRounding,
           deadline,
-          refreshMigrationStatus
+          refreshMigrationStatus,
+          thresholdMet
         } as MigrationProviderValue
       }
     >

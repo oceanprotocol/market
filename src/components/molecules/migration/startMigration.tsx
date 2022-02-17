@@ -40,10 +40,10 @@ async function startMigration(
 export default function StartMigration(): ReactElement {
   const { accountId } = useWeb3()
   const { owner, did, ddo, metadata, price } = useAsset()
-  const { status, migrationAddress } = useMigrationStatus()
+  const { status, migrationAddress, thresholdMet } = useMigrationStatus()
   const { web3 } = useWeb3()
   console.log('Start Migration status', status)
-  console.log('Start Migration owner === accountId', owner === accountId)
+  console.log('Start Migration thresholdMet', thresholdMet)
   return (
     <>
       {owner === accountId && status === '0' && (
@@ -69,7 +69,7 @@ export default function StartMigration(): ReactElement {
           />
         </Container>
       )}
-      {owner === accountId && status !== '0' && (
+      {owner === accountId && status !== '0' && thresholdMet !== true && (
         <Container className={styles.container}>
           <Alert
             title="Migration in progress"
