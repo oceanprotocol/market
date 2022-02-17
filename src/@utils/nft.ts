@@ -1,3 +1,4 @@
+import { LoggerInstance } from '@oceanprotocol/lib'
 import { SvgWaves } from './SvgWaves'
 
 // https://docs.opensea.io/docs/metadata-standards
@@ -54,6 +55,8 @@ export function generateNftMetadata(): NftMetadata {
   return newNft
 }
 
+const tokenUriPrefix = 'data:application/json;base64,'
+
 export function generateNftCreateData(nftMetadata: NftMetadata): any {
   // TODO: figure out if Buffer.from method is working in browser in final build
   // as BTOA is deprecated.
@@ -66,8 +69,21 @@ export function generateNftCreateData(nftMetadata: NftMetadata): any {
     name: nftMetadata.name,
     symbol: nftMetadata.symbol,
     templateIndex: 1,
-    tokenURI: `data:application/json;base64,${encodedMetadata}`
+    tokenURI: `${tokenUriPrefix}${encodedMetadata}`
   }
 
   return nftCreateData
+}
+
+export function decodeTokenURI(tokenURI: string): NftMetadata {
+  if (!tokenURI) return undefined
+  try {
+    const nftMeta = JSON.parse(
+      Buffer.from(tokenURI.replace(tokenUriPrefix, ''), 'base64').toString()
+    ) as NftMetadata
+
+    return nftMeta
+  } catch (error) {
+    LoggerInstance.error(`[NFT] ${error.message}`)
+  }
 }
