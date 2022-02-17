@@ -79,7 +79,7 @@ export function transformQueryResult(
   result.results = (queryResult.hits.hits || []).map(
     (hit) => hit._source as Asset
   )
-  result.totalResults = queryResult.hits.total
+  result.totalResults = queryResult.hits.total.value
   result.totalPages =
     result.totalResults / size < 1
       ? Math.floor(result.totalResults / size)
