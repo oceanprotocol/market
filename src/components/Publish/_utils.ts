@@ -10,7 +10,7 @@ import {
   Metadata,
   NftCreateData,
   NftFactory,
-  Pool,
+  Nft,
   PoolCreationParams,
   Service,
   ZERO_ADDRESS
@@ -349,8 +349,6 @@ export async function getFeesTokensAndPricing(
   nftFactory: NftFactory,
   web3: Web3
 ) {
-  console.log(values)
-
   const nftCreateData: NftCreateData = generateNftCreateData(
     values.metadata.nft
   )
@@ -401,6 +399,7 @@ export async function getFeesTokensAndPricing(
         poolParams
       )
 
+      console.log(accountId, nftCreateData, ercParams, poolParams)
       result = await nftFactory.estGasCreateNftErc20WithPool(
         accountId,
         nftCreateData,
@@ -443,6 +442,8 @@ export async function getFeesTokensAndPricing(
         result
       )
 
+      console.log(accountId, nftCreateData, ercParams, freParams)
+
       break
     }
     case 'free': {
@@ -461,7 +462,7 @@ export async function getFeesTokensAndPricing(
         '[gas fee] Creating free pricing with dispenserParams',
         dispenserParams
       )
-
+      console.log(accountId, nftCreateData, ercParams, dispenserParams)
       result = await nftFactory.estGasCreateNftErc20WithDispenser(
         accountId,
         nftCreateData,
@@ -477,6 +478,48 @@ export async function getFeesTokensAndPricing(
       break
     }
   }
+
+  return result
+}
+
+export async function getFeesPublishDDO(
+  values: FormPublishData,
+  accountId: string,
+  config: Config,
+  nftFactory: NftFactory,
+  web3: Web3
+) {
+  const gasMetadataParams = {
+    nftAddress: '',
+    metadataUpdater: '',
+    metadataState: '',
+    metadataDecryptorUrl: '',
+    metadataDecryptorAddress: '',
+    flags: '',
+    data: '',
+    metadataHash: ''
+  }
+
+  LoggerInstance.log('[gas fee] Publish NFT with metadata', gasMetadataParams)
+
+  if (!_ddo || !_encryptedDdo) throw new Error('No DDO received.')
+
+  const metadataHash = getHash(JSON.stringify(_ddo))
+  const nft = new Nft(web3)
+
+  // theoretically used by aquarius or provider, not implemented yet, will remain hardcoded
+  const flags = '0x2'
+
+  const result = await nft.estGasSetMetadata(
+    _erc721Address,
+    accountId,
+    0,
+    values.services[0].providerUrl.url,
+    '',
+    flags,
+    _encryptedDdo,
+    '0x' + metadataHash
+  )
 
   return result
 }
