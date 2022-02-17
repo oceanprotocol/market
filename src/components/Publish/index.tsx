@@ -91,7 +91,8 @@ export default function PublishPage({
         '1': {
           ...prevState['1'],
           status: isSuccess ? 'success' : 'error',
-          txHash
+          txHash,
+          erc721Address
         }
       }))
     } catch (error) {
@@ -143,7 +144,9 @@ export default function PublishPage({
         ...prevState,
         '2': {
           ...prevState['2'],
-          status: encryptedDdo ? 'success' : 'error'
+          status: encryptedDdo ? 'success' : 'error',
+          encryptedDdo: encryptedDdo,
+          ddo: ddo
         }
       }))
     } catch (error) {

@@ -16,6 +16,7 @@ export function Feedback(): ReactElement {
   const { values } = useFormikContext<FormPublishData>()
   const nftFactory = useNftFactory()
   const [gasFeeToken, setGasFeeToken] = useState('')
+  const [gasFeeDDO, setGasFeeDDO] = useState('')
   const { web3, chainId } = useWeb3()
 
   const getEstGasFeeToken = async (
@@ -43,12 +44,33 @@ export function Feedback(): ReactElement {
     return result
   }
 
+  const getEstGasFeeDDO = async (
+    values: FormPublishData,
+    accountId: string,
+    nftFactory: NftFactory,
+    web3: Web3
+  ): Promise<string> => {
+    if (!nftFactory) return
+
+    const config = getOceanConfig(chainId)
+    LoggerInstance.log('[gas fee] using config: ', config)
+
+    const result = await getFeesTokensAndPricing(
+      values,
+      accountId,
+      config,
+      nftFactory,
+      web3
+    )
+
+    LoggerInstance.log('[gas fee] createTokensAndPricing tx', result)
+    console.log(result)
+
+    return result
+  }
+
   useEffect(() => {
-    const calculateGasFeeToken = async () =>
-      setGasFeeToken(
-        await getEstGasFeeToken(values, values.user.accountId, nftFactory, web3)
-      )
-    calculateGasFeeToken()
+    console.log(values)
   }, [values, nftFactory])
 
   const items = Object.entries(values.feedback).map(([key, value], index) => (
@@ -62,7 +84,12 @@ export function Feedback(): ReactElement {
             txHash={value.txHash}
           />
         )}
-        {value.txCount > 0 && <GasFees gasFees={gasFeeToken} />}
+        {value.txCount > 0 && gasFeeToken && index === 0 && (
+          <GasFees gasFees={gasFeeToken} />
+        )}
+        {value.txCount > 0 && gasFeeDDO && index === 2 && (
+          <GasFees gasFees={gasFeeDDO} />
+        )}
       </h3>
       <p className={styles.description}>{value.description}</p>
       {value.errorMessage && (

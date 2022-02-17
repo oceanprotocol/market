@@ -1,8 +1,7 @@
-import { ServiceComputeOptions } from '@oceanprotocol/lib'
+import { ServiceComputeOptions, DDO } from '@oceanprotocol/lib'
 import { NftMetadata } from '@utils/nft'
 import { ReactElement } from 'react'
 import { PriceOptions } from 'src/@types/Price'
-
 interface FileMetadata {
   url: string
   valid?: boolean
@@ -60,5 +59,8 @@ export interface PublishFeedback {
     txCount: number
     errorMessage?: string
     txHash?: string
+    ddo?: DDO
+    encryptedDdo?: string
+    erc721Address?: string
   }
 }
