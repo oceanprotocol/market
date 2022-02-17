@@ -13,10 +13,6 @@ async function liquidateAndCreatePool(
   web3: Web3,
   accountId: string,
   migrationAddress: string,
-  did: string,
-  ddo: DDO,
-  encryptedFiles: string,
-  dtV3Address: string,
   poolV3Address: string
 ) {
   const migration = new Migration(web3)
@@ -30,14 +26,16 @@ async function liquidateAndCreatePool(
 
 export default function CreateV4Pool(): ReactElement {
   const { accountId } = useWeb3()
-  const { owner, did, ddo, metadata, price } = useAsset()
-  const { status, migrationAddress, thresholdMet } = useMigrationStatus()
+  const { owner, price } = useAsset()
+  const { status, migrationAddress, thresholdMet, deadlinePassed } =
+    useMigrationStatus()
   const { web3 } = useWeb3()
   console.log('Start Migration status', status)
   console.log('Start Migration thresholdMet', thresholdMet)
+
   return (
     <>
-      {owner === accountId && status === '0' && (
+      {owner === accountId && status === '1' && thresholdMet && deadlinePassed && (
         <Container className={styles.container}>
           <Alert
             title="V4 Pool can now be created"
@@ -51,10 +49,6 @@ export default function CreateV4Pool(): ReactElement {
                   web3,
                   accountId,
                   migrationAddress,
-                  did,
-                  ddo,
-                  metadata.encryptedFiles,
-                  ddo.dataToken,
                   price.address
                 )
             }}

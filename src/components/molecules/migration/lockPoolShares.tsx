@@ -64,9 +64,8 @@ export default function LockPoolShares(): ReactElement {
   const { accountId } = useWeb3()
   const { owner, ddo, price } = useAsset()
   const [poolTokens, setPoolTokens] = useState<string>()
-  const [currentBlock, setCurrentBlock] = useState<number>()
 
-  const { status, migrationAddress, poolV3Address, deadline } =
+  const { status, migrationAddress, poolV3Address, deadlinePassed } =
     useMigrationStatus()
   // console.log('[LockPoolShares] status', status)
   // console.log('[LockPoolShares] migrationAddress', migrationAddress)
@@ -101,19 +100,16 @@ export default function LockPoolShares(): ReactElement {
         const poolTokens = await getUserPoolShareBalance()
         console.log('getUserPoolShareBalance', poolTokens)
         setPoolTokens(poolTokens)
-
-        const currentBlock = await web3.eth.getBlockNumber()
-        setCurrentBlock(currentBlock)
       } catch (error) {
         Logger.error(error.message)
       }
     }
     init()
   }, [accountId])
-  console.log('currentBlock > deadline', currentBlock, deadline)
+
   return (
     <>
-      {currentBlock > parseInt(deadline) &&
+      {deadlinePassed &&
         owner !== accountId &&
         status !== '0' &&
         poolTokens !== '0' &&
