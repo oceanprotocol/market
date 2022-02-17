@@ -118,10 +118,10 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   useEffect(() => {
     if (!poolData) return
 
-    // Fees
-    const poolFee = getFee(poolData.poolFee)
-    const marketFee = getFee(poolData.marketFee)
-    const opfFee = getFee(poolData.opfFee)
+    // Fees - this will be renamed again in subgraph
+    const poolFee = getFee(poolData.liquidityProviderFee)
+    const marketFee = getFee(poolData.marketSwapFee)
+    const opfFee = getFee(poolData.opcFee)
 
     // Total Liquidity
     const totalLiquidityInOcean = isValidNumber(poolData.spotPrice)

@@ -10,7 +10,7 @@
 .token {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   margin-bottom: calc(var(--spacer) / 2);
 }
 
@@ -60,8 +60,7 @@
   flex-wrap: wrap;
   justify-content: center;
   text-align: center;
-  max-width: 12rem;
-  margin: auto;
+  margin: auto 0;
 }
 
 .max {
@@ -72,4 +71,14 @@
 
 .weight strong {
   color: var(--font-color-text);
+}
+
+@media screen and (min-width: 41rem) {
+  .token {
+    justify-content: center;
+  }
+  .data {
+    margin: auto;
+    max-width: 12rem;
+  }
 }

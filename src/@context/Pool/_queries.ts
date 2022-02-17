@@ -10,9 +10,9 @@ export const poolDataQuery = gql`
     poolData: pool(id: $pool) {
       id
       totalShares
-      poolFee
-      opfFee
-      marketFee
+      liquidityProviderFee
+      opcFee
+      marketSwapFee
       spotPrice
       baseToken {
         address
