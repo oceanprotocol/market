@@ -34,19 +34,23 @@ export default function FormEditComputeDataset({
   const { publisherTrustedAlgorithms } = getServiceByName(
     asset,
     'compute'
-  ).compute
+  )?.compute
 
   async function getAlgorithmList(
     publisherTrustedAlgorithms: PublisherTrustedAlgorithm[]
   ): Promise<AssetSelectionAsset[]> {
+    console.log('getAlgorithmList', getAlgorithmList)
     const baseParams = {
       chainIds: [asset.chainId],
       sort: { sortBy: SortTermOptions.Created },
       filters: [getFilterTerm('metadata.type', 'algorithm')]
     } as BaseQueryParams
 
+    console.log('baseParams', baseParams)
     const query = generateBaseQuery(baseParams)
+    console.log('query', query)
     const querryResult = await queryMetadata(query, newCancelToken())
+    console.log('querryResult', querryResult)
     const datasetComputeService = getServiceByName(asset, 'compute')
     const algorithmSelectionList = await transformDDOToAssetSelection(
       datasetComputeService?.serviceEndpoint,
