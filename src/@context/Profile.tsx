@@ -177,6 +177,8 @@ function ProfileProvider({
     if (!accountId || !isEthAddress) return
 
     const cancelTokenSource = axios.CancelToken.source()
+    console.log('ACC ID: ', accountId)
+    console.log('CHAINIDS: ', chainIds)
 
     async function getAllPublished() {
       try {
@@ -185,8 +187,9 @@ function ProfileProvider({
           chainIds,
           cancelTokenSource.token
         )
+        console.log('RESULTS: ', result)
         setAssets(result.results)
-        setAssetsTotal(result.totalResults)
+        setAssetsTotal(result.results.length)
         LoggerInstance.log(
           `[profile] Fetched ${result.totalResults} assets.`,
           result.results
