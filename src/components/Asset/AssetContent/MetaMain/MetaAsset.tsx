@@ -1,35 +1,27 @@
-import React, { ReactElement } from 'react'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
+import { Asset } from '@oceanprotocol/lib'
+import AddToken from '@shared/AddToken'
 import ExplorerLink from '@shared/ExplorerLink'
 import Publisher from '@shared/Publisher'
-import AddToken from '@shared/AddToken'
-import Time from '@shared/atoms/Time'
-import AssetType from '@shared/AssetType'
-import styles from './MetaMain.module.css'
-import { getServiceByName } from '@utils/ddo'
-import { Asset } from '@oceanprotocol/lib'
+import React, { ReactElement } from 'react'
+import styles from './MetaAsset.module.css'
 
-export default function MetaMain({ ddo }: { ddo: Asset }): ReactElement {
+export default function MetaAsset({ ddo }: { ddo: Asset }): ReactElement {
   const { isAssetNetwork } = useAsset()
   const { web3ProviderInfo } = useWeb3()
 
-  const isCompute = Boolean(getServiceByName(ddo, 'compute'))
-  const accessType = isCompute ? 'compute' : 'access'
   const blockscoutNetworks = [1287, 2021000, 2021001, 44787, 246, 1285]
   const isBlockscoutExplorer = blockscoutNetworks.includes(ddo?.chainId)
 
-  const dataTokenName = ddo?.datatokens[0]?.name
   const dataTokenSymbol = ddo?.datatokens[0]?.symbol
 
   return (
-    <aside className={styles.meta}>
-      <header className={styles.asset}>
-        <AssetType
-          type={ddo?.metadata.type}
-          accessType={accessType}
-          className={styles.assetType}
-        />
+    <div className={styles.wrapper}>
+      <span className={styles.owner}>
+        Owned by <Publisher account={ddo?.nft?.owner} />
+      </span>
+      <span>
         <ExplorerLink
           className={styles.datatoken}
           networkId={ddo?.chainId}
@@ -39,9 +31,8 @@ export default function MetaMain({ ddo }: { ddo: Asset }): ReactElement {
               : `token/${ddo?.services[0].datatokenAddress}`
           }
         >
-          {`${dataTokenName} — ${dataTokenSymbol}`}
+          {`Accessed with ${dataTokenSymbol}`}
         </ExplorerLink>
-
         {web3ProviderInfo?.name === 'MetaMask' && isAssetNetwork && (
           <span className={styles.addWrap}>
             <AddToken
@@ -54,22 +45,7 @@ export default function MetaMain({ ddo }: { ddo: Asset }): ReactElement {
             />
           </span>
         )}
-      </header>
-
-      <div className={styles.byline}>
-        Published By <Publisher account={(ddo as Asset)?.nft?.owner} />
-        <p>
-          <Time date={ddo?.metadata.created} relative />
-          {ddo?.metadata.created !== ddo?.metadata.updated && (
-            <>
-              {' — '}
-              <span className={styles.updated}>
-                updated <Time date={ddo?.metadata.updated} relative />
-              </span>
-            </>
-          )}
-        </p>
-      </div>
-    </aside>
+      </span>
+    </div>
   )
 }

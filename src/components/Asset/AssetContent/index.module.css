@@ -16,6 +16,7 @@
 
 .content {
   composes: box from '@shared/atoms/Box.module.css';
+  padding-top: 0;
   margin-top: var(--spacer);
   position: relative;
 }

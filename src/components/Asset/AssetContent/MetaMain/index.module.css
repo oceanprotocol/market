@@ -1,0 +1,22 @@
+.meta {
+  margin-left: calc(var(--spacer) * -1);
+  margin-right: calc(var(--spacer) * -1);
+  margin-bottom: calc(var(--spacer) / 1.5);
+  color: var(--color-secondary);
+  font-size: var(--font-size-small);
+}
+
+.asset {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: calc(var(--spacer) * 2);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.nftImage {
+  margin: 0;
+  border-right: 1px solid var(--border-color);
+  width: calc(var(--spacer) * 2);
+  height: calc(var(--spacer) * 2);
+}

@@ -1,0 +1,19 @@
+.wrapper {
+  padding: calc(var(--spacer) / 2);
+}
+
+.assetType {
+  display: inline-block;
+  border-right: 1px solid var(--border-color);
+  padding-right: calc(var(--spacer) / 3.5);
+  margin-right: calc(var(--spacer) / 4);
+}
+
+.byline {
+  display: inline-block;
+  font-size: var(--font-size-small);
+}
+
+.updated {
+  font-size: var(--font-size-mini);
+}

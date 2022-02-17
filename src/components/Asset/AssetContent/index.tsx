@@ -14,6 +14,8 @@ import styles from './index.module.css'
 import NetworkName from '@shared/NetworkName'
 import content from '../../../../content/purgatory.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
+import Dotdotdot from 'react-dotdotdot'
+import { decodeTokenURI } from '@utils/nft'
 
 export default function AssetContent({
   asset
@@ -36,7 +38,6 @@ export default function AssetContent({
             {asset?.accessDetails?.datatoken !== null && (
               <Bookmark did={asset?.id} />
             )}
-
             {isInPurgatory === true ? (
               <Alert
                 title={content.asset.title}
@@ -53,7 +54,6 @@ export default function AssetContent({
                 <MetaSecondary ddo={asset} />
               </>
             )}
-
             <MetaFull ddo={asset} />
             <EditHistory />
             {debug === true && <DebugOutput title="DDO" output={asset} />}
