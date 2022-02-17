@@ -1,0 +1,30 @@
+.wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.wrapper img {
+  margin: 0;
+}
+
+.info {
+  padding: calc(var(--spacer) / 2);
+  color: var(--color-secondary);
+}
+
+.info h5 {
+  margin-bottom: 0;
+}
+
+.address {
+  word-break: break-all;
+}
+
+.address button::after {
+  word-break: normal;
+}
+
+.links {
+  margin-top: calc(var(--spacer) / 3);
+}

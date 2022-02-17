@@ -7,12 +7,15 @@ import Publisher from '@shared/Publisher'
 import React, { ReactElement } from 'react'
 import styles from './MetaAsset.module.css'
 
-export default function MetaAsset({ ddo }: { ddo: Asset }): ReactElement {
+export default function MetaAsset({
+  ddo,
+  isBlockscoutExplorer
+}: {
+  ddo: Asset
+  isBlockscoutExplorer: boolean
+}): ReactElement {
   const { isAssetNetwork } = useAsset()
   const { web3ProviderInfo } = useWeb3()
-
-  const blockscoutNetworks = [1287, 2021000, 2021001, 44787, 246, 1285]
-  const isBlockscoutExplorer = blockscoutNetworks.includes(ddo?.chainId)
 
   const dataTokenSymbol = ddo?.datatokens[0]?.symbol
 
