@@ -69,7 +69,8 @@ function AssetProvider({
 
       if (!asset) {
         setError(
-          `[asset] The asset for ${did} was not found in MetadataCache. If you just published a new data set, wait some seconds and refresh this page.`
+          `\`${did}\`` +
+            '\n\nWe could not find an asset for this DID in the cache. If you just published a new asset, wait some seconds and refresh this page.'
         )
         LoggerInstance.error(`[asset] Failed getting asset for ${did}`, asset)
       } else {
