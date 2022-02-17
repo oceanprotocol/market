@@ -1,7 +1,7 @@
 import { useFormikContext } from 'formik'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { FormPublishData } from '../_types'
-import { getFeesTokensAndPricing } from '../_utils'
+import { getFeesTokensAndPricing, getFeesPublishDDO } from '../_utils'
 import { useWeb3 } from '@context/Web3'
 import styles from './Feedback.module.css'
 import TransactionCount from './TransactionCount'
@@ -25,8 +25,6 @@ export function Feedback(): ReactElement {
     nftFactory: NftFactory,
     web3: Web3
   ): Promise<string> => {
-    if (!nftFactory) return
-
     const config = getOceanConfig(chainId)
     LoggerInstance.log('[gas fee] using config: ', config)
 
@@ -39,7 +37,6 @@ export function Feedback(): ReactElement {
     )
 
     LoggerInstance.log('[gas fee] createTokensAndPricing tx', result)
-    console.log(result)
 
     return result
   }
@@ -47,7 +44,6 @@ export function Feedback(): ReactElement {
   const getEstGasFeeDDO = async (
     values: FormPublishData,
     accountId: string,
-    nftFactory: NftFactory,
     web3: Web3
   ): Promise<string> => {
     if (!nftFactory) return
@@ -55,22 +51,41 @@ export function Feedback(): ReactElement {
     const config = getOceanConfig(chainId)
     LoggerInstance.log('[gas fee] using config: ', config)
 
-    const result = await getFeesTokensAndPricing(
-      values,
-      accountId,
-      config,
-      nftFactory,
-      web3
-    )
+    const result = await getFeesPublishDDO(values, accountId, web3)
 
-    LoggerInstance.log('[gas fee] createTokensAndPricing tx', result)
-    console.log(result)
+    LoggerInstance.log('[gas fee] getFeesPublishDDO tx', result)
 
     return result
   }
 
   useEffect(() => {
-    console.log(values)
+    setGasFeeToken('')
+    setGasFeeDDO('')
+
+    const calculateGasFeeToken = async () =>
+      setGasFeeToken(
+        await getEstGasFeeToken(values, values.user.accountId, nftFactory, web3)
+      )
+
+    const calculateGasFeeDDO = async () =>
+      setGasFeeDDO(await getEstGasFeeDDO(values, values.user.accountId, web3))
+
+    const { feedback } = values
+
+    if (
+      feedback['1'].status === 'pending' ||
+      feedback['1'].status === 'error'
+    ) {
+      calculateGasFeeToken()
+    }
+
+    if (
+      feedback['1'].status === 'success' &&
+      feedback['2'].status === 'success' &&
+      feedback['3'].status === 'pending'
+    ) {
+      calculateGasFeeDDO()
+    }
   }, [values, nftFactory])
 
   const items = Object.entries(values.feedback).map(([key, value], index) => (

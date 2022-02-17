@@ -370,8 +370,6 @@ export async function getFeesTokensAndPricing(
 
   LoggerInstance.log('[gas fee] Creating datatoken with ercParams', ercParams)
 
-  console.log(values)
-
   let result
 
   switch (values.pricing.type) {
@@ -407,8 +405,6 @@ export async function getFeesTokensAndPricing(
         ercParams,
         poolParams
       )
-
-      console.log(result)
 
       LoggerInstance.log('[gas fee] estGasCreateNftErc20WithPool tx', result)
       break
@@ -486,10 +482,9 @@ export async function getFeesPublishDDO(
   accountId: string,
   web3: Web3
 ) {
-  if (!values.feedback[1].ddo || values.feedback[1].encryptedDdo)
-    throw new Error('No DDO received.')
+  const { feedback } = values
 
-  const metadataHash = getHash(JSON.stringify(values.feedback[1].ddo))
+  const metadataHash = getHash(JSON.stringify(values.feedback['2'].ddo))
   const nft = new Nft(web3)
 
   LoggerInstance.log('[gas fee] Publish NFT with metadata', values)
@@ -497,13 +492,13 @@ export async function getFeesPublishDDO(
   const flags = '0x2'
 
   const result = await nft.estGasSetMetadata(
-    values.feedback[0].erc721Address,
+    feedback['1'].erc721Address,
     accountId,
     0,
-    values.services[0].providerUrl.url,
+    values.services['0'].providerUrl.url,
     '',
     flags,
-    values.feedback[1].encryptedDdo,
+    feedback['2'].encryptedDdo,
     '0x' + metadataHash
   )
 
