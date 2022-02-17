@@ -43,31 +43,41 @@ export default function StartMigration(): ReactElement {
   const { status, migrationAddress } = useMigrationStatus()
   const { web3 } = useWeb3()
   console.log('Start Migration status', status)
-  console.log('Start Migration status TYPE', typeof status)
+  console.log('Start Migration owner === accountId', owner === accountId)
   return (
-    owner === accountId &&
-    status === '0' && (
-      <Container className={styles.container}>
-        <Alert
-          text="**Time to migrate from V3 to V4** \n\nAs the asset publisher you can initiate the migration from a V3 pool to
+    <>
+      {owner === accountId && status === '0' && (
+        <Container className={styles.container}>
+          <Alert
+            text="**Time to migrate from V3 to V4** \n\nAs the asset publisher you can initiate the migration from a V3 pool to
         a V4 pool. \n\nThe migration requires 80% of liquidity providers to lock their shares in the migration contract."
-          state="info"
-          action={{
-            name: 'Start Migration',
-            handleAction: () =>
-              startMigration(
-                web3,
-                accountId,
-                migrationAddress,
-                did,
-                ddo,
-                metadata.encryptedFiles,
-                ddo.dataToken,
-                price.address
-              )
-          }}
-        />
-      </Container>
-    )
+            state="info"
+            action={{
+              name: 'Start Migration',
+              handleAction: () =>
+                startMigration(
+                  web3,
+                  accountId,
+                  migrationAddress,
+                  did,
+                  ddo,
+                  metadata.encryptedFiles,
+                  ddo.dataToken,
+                  price.address
+                )
+            }}
+          />
+        </Container>
+      )}
+      {owner === accountId && status !== '0' && (
+        <Container className={styles.container}>
+          <Alert
+            title="Migration in progress"
+            text="**The threshold of 80% of pool shares locked has not been reached yet**  \n\nThe migration requires 80% of liquidity providers to lock their shares in the migration contract."
+            state="info"
+          />
+        </Container>
+      )}
+    </>
   )
 }

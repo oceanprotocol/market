@@ -56,6 +56,10 @@ export default function LockPoolShares(): ReactElement {
   // console.log('[LockPoolShares] status', status)
   // console.log('[LockPoolShares] migrationAddress', migrationAddress)
   const { web3 } = useWeb3()
+  console.log('Missing values?', owner, ddo, price)
+  if (!owner || !ddo || !price) {
+    console.log('Missing values: ', owner, ddo, price)
+  }
 
   async function getUserPoolShareBalance() {
     const queryContext = getQueryContext(ddo.chainId)
@@ -88,8 +92,10 @@ export default function LockPoolShares(): ReactElement {
     }
     init()
   }, [accountId])
+
   return (
-    !owner.localeCompare(accountId) &&
+    owner !== accountId &&
+    status !== '0' &&
     poolTokens !== '0' &&
     poolTokens !== undefined && (
       <Container className={styles.container}>
