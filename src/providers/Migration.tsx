@@ -34,6 +34,7 @@ interface MigrationProviderValue {
     migrationAddress: string
   ) => Promise<void>
   thresholdMet: boolean
+  deadlinePassed: boolean
 }
 
 const MigrationContext = createContext({} as MigrationProviderValue)
@@ -60,6 +61,8 @@ function MigrationProvider({
   const [lptRounding, setLptRounding] = useState<string>()
   const [deadline, setDeadline] = useState<string>()
   const [thresholdMet, setThresholdMet] = useState<boolean>()
+  const [deadlinePassed, setDeadlinePassed] = useState<boolean>()
+
   const { chainId } = useWeb3()
   const { price } = useAsset()
   const { web3 } = useWeb3()
@@ -211,6 +214,20 @@ function MigrationProvider({
     }
     init()
   }, [chainId, migrationAddress, price])
+
+  useEffect(() => {
+    async function init() {
+      try {
+        const currentBlock = await web3.eth.getBlockNumber()
+        const deadlinePassed = currentBlock > parseInt(deadline)
+        setDeadlinePassed(deadlinePassed)
+      } catch (error) {
+        Logger.error(error.message)
+      }
+    }
+    init()
+  }, [deadline])
+
   return (
     <MigrationContext.Provider
       value={
@@ -230,7 +247,8 @@ function MigrationProvider({
           lptRounding,
           deadline,
           refreshMigrationStatus,
-          thresholdMet
+          thresholdMet,
+          deadlinePassed
         } as MigrationProviderValue
       }
     >
