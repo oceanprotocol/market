@@ -69,13 +69,14 @@ export default function MarketStats(): ReactElement {
 
       try {
         const response = await fetchData(queryGlobalStatistics, null, context)
+        if (!response) continue
 
         setData((prevState) => ({
           ...prevState,
           [chainId]: response?.data?.globalStatistics[0]
         }))
       } catch (error) {
-        LoggerInstance.error('Error fetchData: ', error.message)
+        LoggerInstance.error('Error fetching global stats: ', error.message)
       }
     }
   }, [mainChainIds])
@@ -97,30 +98,37 @@ export default function MarketStats(): ReactElement {
     const newTotalOceanLiquiditySum = 0
     let newPoolCountSum = 0
 
-    for (const chainId of mainChainIds) {
-      const { totalLiquidity, poolCount } = data[chainId]
-      const conversionSpotPrice = prices[currency.toLowerCase()]
-      const totalValueLocked = new Decimal(totalLiquidity[0].value)
-        .mul(conversionSpotPrice)
-        .toString()
+    try {
+      for (const chainId of mainChainIds) {
+        const conversionSpotPrice = prices[currency.toLowerCase()]
+        const totalValueLocked = data[chainId]
+          ? new Decimal(data[chainId]?.totalLiquidity[0].value)
+              .mul(conversionSpotPrice)
+              .toString()
+          : '0'
 
-      setTotalValueLocked((prevState) => ({
-        ...prevState,
-        [chainId]: totalValueLocked
-      }))
-      // TODO: how to get total OCEAN liquidity?
-      setTotalOceanLiquidity((prevState) => ({
-        ...prevState,
-        [chainId]: totalLiquidity[0].value
-      }))
-      setPoolCount((prevState) => ({
-        ...prevState,
-        [chainId]: `${poolCount}`
-      }))
+        setTotalValueLocked((prevState) => ({
+          ...prevState,
+          [chainId]: totalValueLocked
+        }))
+        // TODO: how to get total OCEAN liquidity?
+        setTotalOceanLiquidity((prevState) => ({
+          ...prevState,
+          [chainId]: data[chainId]?.totalLiquidity[0].value
+        }))
+        setPoolCount((prevState) => ({
+          ...prevState,
+          [chainId]: `${data[chainId]?.poolCount}`
+        }))
 
-      newTotalValueLockedSum += parseInt(totalLiquidity[0].value)
-      // newTotalOceanLiquiditySum += parseInt(totalOceanLiquidity.value)
-      newPoolCountSum += poolCount
+        newTotalValueLockedSum += parseInt(
+          data[chainId]?.totalLiquidity[0].value
+        )
+        // newTotalOceanLiquiditySum += parseInt(totalOceanLiquidity.value)
+        newPoolCountSum += data[chainId]?.poolCount
+      }
+    } catch (error) {
+      LoggerInstance.error('Error data manipulation: ', error.message)
     }
 
     setTotalValueLockedSum(`${newTotalValueLockedSum}`)
