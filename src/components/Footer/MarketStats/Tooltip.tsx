@@ -34,7 +34,11 @@ export default function MarketStatsTooltip({
               {' | '}
               <strong>{poolCount[chainId] || '0'}</strong> pools
               {' | '}
-              <PriceUnit price={totalOceanLiquidity[chainId] || '0'} small />
+              <PriceUnit
+                price={totalOceanLiquidity[chainId] || '0'}
+                symbol="OCEAN"
+                small
+              />
             </li>
           ))}
       </ul>
