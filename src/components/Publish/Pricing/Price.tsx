@@ -16,7 +16,6 @@ export default function Price({
   content?: any
 }): ReactElement {
   const [field, meta] = useField('pricing.price')
-  const [checkbox] = useField('pricing.freeAgreement')
 
   const { values } = useFormikContext<FormPublishData>()
   const { dataTokenOptions } = values.services[0]
@@ -25,9 +24,10 @@ export default function Price({
     <div className={styles.price}>
       {values.pricing.type === 'free' ? (
         <div className={styles.free}>
-          <Input
+          <Field
             {...getFieldContent('freeAgreement', content.fields)}
-            {...checkbox}
+            component={Input}
+            name="pricing.freeAgreement"
           />
         </div>
       ) : (
