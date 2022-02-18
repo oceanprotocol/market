@@ -12,7 +12,7 @@ export default function MarketStatsTotal({
     <>
       <p>
         <strong>{total.orders}</strong> orders across{' '}
-        <strong>{total.nfts}</strong> Data NFTs with{' '}
+        <strong>{total.nfts}</strong> assets with{' '}
         <strong>{total.datatokens}</strong> different datatokens.
       </p>
       <Conversion

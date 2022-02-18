@@ -39,7 +39,6 @@ export default function MarketStats(): ReactElement {
     useState<StatsValue>()
   const [totalOceanLiquidity, setTotalOceanLiquidity] = useState<StatsValue>()
   const [poolCount, setPoolCount] = useState<StatsValue>()
-
   const [total, setTotal] = useState(initialTotal)
 
   //
