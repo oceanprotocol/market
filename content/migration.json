@@ -48,5 +48,9 @@
       "title": "Free",
       "text": "Set your data set as free. The datatoken for this data set will be given for free via creating a faucet."
     }
+  },
+  "migrationComplete": {
+    "title": "This asset has been migrated to Ocean V4",
+    "text": "Head over to our new V4 market to view and interact with this asset."
   }
 }

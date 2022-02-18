@@ -10,6 +10,7 @@ import StartMigration from './startMigration'
 import LockShares from './lockPoolShares'
 import CompleteMigration from './createV4Pool'
 import CancelMigration from './cancelMigration'
+import MigrationCompleted from './migrationCompleted'
 
 const query = graphql`
   query {
@@ -86,6 +87,7 @@ export default function Migration(): ReactElement {
       | 'cancelMigration'
       | 'lockShares'
       | 'removeShares'
+      | 'viewV4Asset'
     >()
   const [sharesLocked, setSharesLocked] = useState<boolean>()
   const { accountId } = useWeb3()
@@ -182,6 +184,10 @@ export default function Migration(): ReactElement {
       setTitle(content.liquidityProvider.deadlineMetThresholdMet.title)
       setMessage(content.liquidityProvider.deadlineMetThresholdMet.text)
       setAction('none')
+    } else if (status === '3') {
+      setTitle(content.migrationComplete.title)
+      setMessage(content.migrationComplete.text)
+      setAction('viewV4Asset')
     }
   }
   useEffect(() => {
@@ -219,6 +225,7 @@ export default function Migration(): ReactElement {
         {action === 'lockShares' && <LockShares />}
         {action === 'completeMigration' && <CompleteMigration />}
         {action === 'cancelMigration' && <CancelMigration />}
+        {action === 'viewV4Asset' && <MigrationCompleted />}
       </Container>
     </>
   )
