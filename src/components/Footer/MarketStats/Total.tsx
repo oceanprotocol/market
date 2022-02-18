@@ -6,12 +6,14 @@ export default function MarketStatsTotal({
   totalValueLockedInOcean,
   poolCount,
   nftCount,
+  datatokenCount,
   orderCount,
   totalOceanLiquidity
 }: {
   totalValueLockedInOcean: string
   poolCount: string
   nftCount: string
+  datatokenCount: string
   orderCount: string
   totalOceanLiquidity: string
 }): ReactElement {
@@ -19,7 +21,7 @@ export default function MarketStatsTotal({
     <>
       <p>
         <strong>{orderCount}</strong> orders across <strong>{nftCount}</strong>{' '}
-        Data NFTs.
+        Data NFTs with <strong>{datatokenCount}</strong> different datatokens.
       </p>
       <Conversion price={totalValueLockedInOcean} hideApproximateSymbol />{' '}
       <abbr title="Total Value Locked">TVL</abbr> across{' '}

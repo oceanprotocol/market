@@ -34,6 +34,7 @@ export default function MarketStats(): ReactElement {
   const [totalOceanLiquiditySum, setTotalOceanLiquiditySum] = useState<string>()
   const [poolCountSum, setPoolCountSum] = useState<string>()
   const [nftCountSum, setNftCountSum] = useState<string>()
+  const [datatokenCountSum, setDatatokenCountSum] = useState<string>()
   const [orderCountSum, setOrderCountSum] = useState<string>()
   const [mainChainIds, setMainChainIds] = useState<number[]>()
   const { appConfig } = useSiteMetadata()
@@ -99,6 +100,7 @@ export default function MarketStats(): ReactElement {
     let newPoolCountSum = 0
     let newNftCountSum = 0
     let newOrderCountSum = 0
+    let newDatatokenCountSum = 0
 
     for (const chainId of mainChainIds) {
       const baseTokenValue = data[chainId]?.totalLiquidity[0]?.value
@@ -130,12 +132,14 @@ export default function MarketStats(): ReactElement {
         }))
 
         const nftCount = data[chainId]?.nftCount || 0
+        const datatokenCount = data[chainId]?.datatokenCount || 0
         const orderCount = data[chainId]?.orderCount || 0
 
         newTotalValueLockedSum += totalValueLockedInOcean.toNumber()
         newTotalOceanLiquiditySum += totalOceanLiquidity
         newPoolCountSum += poolCount
         newNftCountSum += nftCount
+        newDatatokenCountSum += datatokenCount
         newOrderCountSum += orderCount
       } catch (error) {
         LoggerInstance.error('Error data manipulation: ', error.message)
@@ -146,6 +150,7 @@ export default function MarketStats(): ReactElement {
     setTotalOceanLiquiditySum(`${newTotalOceanLiquiditySum}`)
     setPoolCountSum(`${newPoolCountSum}`)
     setNftCountSum(`${newNftCountSum}`)
+    setDatatokenCountSum(`${newDatatokenCountSum}`)
     setOrderCountSum(`${newOrderCountSum}`)
   }, [data, mainChainIds, prices, currency])
 
@@ -157,6 +162,7 @@ export default function MarketStats(): ReactElement {
           totalOceanLiquidity={totalOceanLiquiditySum}
           poolCount={poolCountSum}
           nftCount={nftCountSum}
+          datatokenCount={datatokenCountSum}
           orderCount={orderCountSum}
         />{' '}
         <Tooltip
