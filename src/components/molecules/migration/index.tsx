@@ -92,7 +92,7 @@ export default function Migration(): ReactElement {
   const [sharesLocked, setSharesLocked] = useState<boolean>()
   const { accountId } = useWeb3()
   const { owner } = useAsset()
-  const { status, thresholdMet, deadlinePassed, poolShares } =
+  const { status, thresholdMet, deadlinePassed, poolShares, poolShareOwners } =
     useMigrationStatus()
   // Get content
   const data = useStaticQuery(query)
@@ -198,7 +198,12 @@ export default function Migration(): ReactElement {
     } else {
       setUser('observer')
     }
-    setSharesLocked(false) // TODO: check if shares have already been locked
+    // Check if user has already locked liquidity
+    for (let i = 0; i < poolShareOwners.length; i++) {
+      if (accountId === poolShareOwners[i]) {
+        setSharesLocked(true)
+      }
+    }
     switchMessage(user, status, thresholdMet, deadlinePassed, sharesLocked)
   }, [
     owner,
@@ -208,7 +213,8 @@ export default function Migration(): ReactElement {
     status,
     thresholdMet,
     deadlinePassed,
-    sharesLocked
+    sharesLocked,
+    poolShareOwners
   ])
 
   return (
