@@ -6,12 +6,12 @@ import styles from './Tooltip.module.css'
 import { StatsValue } from './index'
 
 export default function MarketStatsTooltip({
-  totalValueLocked,
+  totalValueLockedInOcean,
   poolCount,
   totalOceanLiquidity,
   mainChainIds
 }: {
-  totalValueLocked: StatsValue
+  totalValueLockedInOcean: StatsValue
   poolCount: StatsValue
   totalOceanLiquidity: StatsValue
   mainChainIds: number[]
@@ -19,7 +19,7 @@ export default function MarketStatsTooltip({
   return (
     <>
       <ul className={styles.statsList}>
-        {totalValueLocked &&
+        {totalValueLockedInOcean &&
           totalOceanLiquidity &&
           poolCount &&
           mainChainIds?.map((chainId, key) => (
@@ -27,7 +27,7 @@ export default function MarketStatsTooltip({
               <NetworkName networkId={chainId} className={styles.network} />
               <br />
               <Conversion
-                price={totalValueLocked[chainId] || '0'}
+                price={totalValueLockedInOcean[chainId] || '0'}
                 hideApproximateSymbol
               />{' '}
               <abbr title="Total Value Locked">TVL</abbr>

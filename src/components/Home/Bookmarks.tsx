@@ -69,7 +69,6 @@ export default function Bookmarks(): ReactElement {
           chainIds,
           newCancelToken()
         )
-
         if (!result?.length) return
 
         const pinnedAssets: AssetExtended[] = await getAccessDetailsForAssets(

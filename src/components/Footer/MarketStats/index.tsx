@@ -26,12 +26,15 @@ export default function MarketStats(): ReactElement {
 
   const [data, setData] =
     useState<{ [chainId: number]: FooterStatsValuesGlobalStatistics }>()
-  const [totalValueLocked, setTotalValueLocked] = useState<StatsValue>()
+  const [totalValueLockedInOcean, setTotalValueLockedInOcean] =
+    useState<StatsValue>()
   const [totalOceanLiquidity, setTotalOceanLiquidity] = useState<StatsValue>()
   const [poolCount, setPoolCount] = useState<StatsValue>()
   const [totalValueLockedSum, setTotalValueLockedSum] = useState<string>()
   const [totalOceanLiquiditySum, setTotalOceanLiquiditySum] = useState<string>()
   const [poolCountSum, setPoolCountSum] = useState<string>()
+  const [nftCountSum, setNftCountSum] = useState<string>()
+  const [orderCountSum, setOrderCountSum] = useState<string>()
   const [mainChainIds, setMainChainIds] = useState<number[]>()
   const { appConfig } = useSiteMetadata()
   const { networksList } = useNetworkMetadata()
@@ -94,6 +97,8 @@ export default function MarketStats(): ReactElement {
     let newTotalValueLockedSum = 0
     let newTotalOceanLiquiditySum = 0
     let newPoolCountSum = 0
+    let newNftCountSum = 0
+    let newOrderCountSum = 0
 
     for (const chainId of mainChainIds) {
       const baseTokenValue = data[chainId]?.totalLiquidity[0]?.value
@@ -105,7 +110,7 @@ export default function MarketStats(): ReactElement {
           ? new Decimal(baseTokenValue).mul(2)
           : new Decimal(0)
 
-        setTotalValueLocked((prevState) => ({
+        setTotalValueLockedInOcean((prevState) => ({
           ...prevState,
           [chainId]: `${totalValueLockedInOcean}`
         }))
@@ -126,9 +131,14 @@ export default function MarketStats(): ReactElement {
           [chainId]: `${poolCount}`
         }))
 
+        const nftCount = data[chainId]?.nftCount || 0
+        const orderCount = data[chainId]?.orderCount || 0
+
         newTotalValueLockedSum += totalValueLockedInOcean.toNumber()
         newTotalOceanLiquiditySum += totalOceanLiquidity.toNumber()
         newPoolCountSum += poolCount
+        newNftCountSum += nftCount
+        newOrderCountSum += orderCount
       } catch (error) {
         LoggerInstance.error('Error data manipulation: ', error.message)
       }
@@ -137,21 +147,25 @@ export default function MarketStats(): ReactElement {
     setTotalValueLockedSum(`${newTotalValueLockedSum}`)
     setTotalOceanLiquiditySum(`${newTotalOceanLiquiditySum}`)
     setPoolCountSum(`${newPoolCountSum}`)
+    setNftCountSum(`${newNftCountSum}`)
+    setOrderCountSum(`${newOrderCountSum}`)
   }, [data, mainChainIds, prices, currency])
 
   return (
     <div className={styles.stats}>
       <>
         <MarketStatsTotal
-          totalValueLocked={totalValueLockedSum}
+          totalValueLockedInOcean={totalValueLockedSum}
           totalOceanLiquidity={totalOceanLiquiditySum}
           poolCount={poolCountSum}
+          nftCount={nftCountSum}
+          orderCount={orderCountSum}
         />{' '}
         <Tooltip
           className={styles.info}
           content={
             <MarketStatsTooltip
-              totalValueLocked={totalValueLocked}
+              totalValueLockedInOcean={totalValueLockedInOcean}
               poolCount={poolCount}
               totalOceanLiquidity={totalOceanLiquidity}
               mainChainIds={mainChainIds}

@@ -3,17 +3,23 @@ import Conversion from '@shared/Price/Conversion'
 import PriceUnit from '@shared/Price/PriceUnit'
 
 export default function MarketStatsTotal({
-  totalValueLocked,
+  totalValueLockedInOcean,
   poolCount,
+  nftCount,
+  orderCount,
   totalOceanLiquidity
 }: {
-  totalValueLocked: string
+  totalValueLockedInOcean: string
   poolCount: string
+  nftCount: string
+  orderCount: string
   totalOceanLiquidity: string
 }): ReactElement {
   return (
     <>
-      <Conversion price={totalValueLocked} hideApproximateSymbol />{' '}
+      <strong>{orderCount}</strong> orders across <strong>{nftCount}</strong>{' '}
+      Data NFTs.
+      <Conversion price={totalValueLockedInOcean} hideApproximateSymbol />{' '}
       <abbr title="Total Value Locked">TVL</abbr> across{' '}
       <strong>{poolCount}</strong> asset pools holding{' '}
       <PriceUnit price={totalOceanLiquidity} symbol="OCEAN" small />.
