@@ -19,28 +19,25 @@ export default function MarketStatsTooltip({
   return (
     <>
       <ul className={styles.statsList}>
-        {totalValueLockedInOcean &&
-          totalOceanLiquidity &&
-          poolCount &&
-          mainChainIds?.map((chainId, key) => (
-            <li className={styles.tooltipStats} key={key}>
-              <NetworkName networkId={chainId} className={styles.network} />
-              <br />
-              <Conversion
-                price={totalValueLockedInOcean[chainId] || '0'}
-                hideApproximateSymbol
-              />{' '}
-              <abbr title="Total Value Locked">TVL</abbr>
-              {' | '}
-              <strong>{poolCount[chainId] || '0'}</strong> pools
-              {' | '}
-              <PriceUnit
-                price={totalOceanLiquidity[chainId] || '0'}
-                symbol="OCEAN"
-                small
-              />
-            </li>
-          ))}
+        {mainChainIds?.map((chainId, key) => (
+          <li className={styles.tooltipStats} key={key}>
+            <NetworkName networkId={chainId} className={styles.network} />
+            <br />
+            <Conversion
+              price={totalValueLockedInOcean?.[chainId] || '0'}
+              hideApproximateSymbol
+            />{' '}
+            <abbr title="Total Value Locked">TVL</abbr>
+            {' | '}
+            <strong>{poolCount?.[chainId] || '0'}</strong> pools
+            {' | '}
+            <PriceUnit
+              price={totalOceanLiquidity?.[chainId] || '0'}
+              symbol="OCEAN"
+              small
+            />
+          </li>
+        ))}
       </ul>
       <p className={styles.note}>
         Counted on-chain from our NFT and pool factories. Does not filter out
