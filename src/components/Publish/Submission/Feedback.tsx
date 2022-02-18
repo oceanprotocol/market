@@ -9,6 +9,7 @@ import GasFees from './GasFees'
 import useNftFactory from '@hooks/contracts/useNftFactory'
 import { NftFactory, LoggerInstance } from '@oceanprotocol/lib'
 import { getOceanConfig } from '@utils/ocean'
+import { usePrices } from '@context/Prices'
 
 import Web3 from 'web3'
 
@@ -18,6 +19,7 @@ export function Feedback(): ReactElement {
   const [gasFeeToken, setGasFeeToken] = useState('')
   const [gasFeeDDO, setGasFeeDDO] = useState('')
   const { web3, chainId } = useWeb3()
+  const { prices } = usePrices()
 
   const getEstGasFeeToken = async (
     values: FormPublishData,
@@ -25,6 +27,8 @@ export function Feedback(): ReactElement {
     nftFactory: NftFactory,
     web3: Web3
   ): Promise<string> => {
+    if (!nftFactory) return
+
     const config = getOceanConfig(chainId)
     LoggerInstance.log('[gas fee] using config: ', config)
 
@@ -33,7 +37,8 @@ export function Feedback(): ReactElement {
       accountId,
       config,
       nftFactory,
-      web3
+      web3,
+      (prices as any)?.eth
     )
 
     LoggerInstance.log('[gas fee] createTokensAndPricing tx', result)
@@ -51,7 +56,12 @@ export function Feedback(): ReactElement {
     const config = getOceanConfig(chainId)
     LoggerInstance.log('[gas fee] using config: ', config)
 
-    const result = await getFeesPublishDDO(values, accountId, web3)
+    const result = await getFeesPublishDDO(
+      values,
+      accountId,
+      web3,
+      (prices as any)?.eth
+    )
 
     LoggerInstance.log('[gas fee] getFeesPublishDDO tx', result)
 
@@ -82,7 +92,7 @@ export function Feedback(): ReactElement {
     if (
       feedback['1'].status === 'success' &&
       feedback['2'].status === 'success' &&
-      feedback['3'].status === 'pending'
+      (feedback['3'].status === 'pending' || feedback['3'].status === 'error')
     ) {
       calculateGasFeeDDO()
     }

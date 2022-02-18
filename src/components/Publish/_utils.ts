@@ -347,7 +347,8 @@ export async function getFeesTokensAndPricing(
   accountId: string,
   config: Config,
   nftFactory: NftFactory,
-  web3: Web3
+  web3: Web3,
+  ethToOceanConversionRate: number
 ) {
   const nftCreateData: NftCreateData = generateNftCreateData(
     values.metadata.nft
@@ -370,7 +371,7 @@ export async function getFeesTokensAndPricing(
 
   LoggerInstance.log('[gas fee] Creating datatoken with ercParams', ercParams)
 
-  let result
+  let gasLimit
 
   switch (values.pricing.type) {
     case 'dynamic': {
@@ -399,14 +400,14 @@ export async function getFeesTokensAndPricing(
         poolParams
       )
 
-      result = await nftFactory.estGasCreateNftErc20WithPool(
+      gasLimit = await nftFactory.estGasCreateNftErc20WithPool(
         accountId,
         nftCreateData,
         ercParams,
         poolParams
       )
 
-      LoggerInstance.log('[gas fee] estGasCreateNftErc20WithPool tx', result)
+      LoggerInstance.log('[gas fee] estGasCreateNftErc20WithPool tx', gasLimit)
       break
     }
     case 'fixed': {
@@ -427,16 +428,18 @@ export async function getFeesTokensAndPricing(
         freParams
       )
 
-      result = await nftFactory.estGasCreateNftErc20WithFixedRate(
+      gasLimit = await nftFactory.estGasCreateNftErc20WithFixedRate(
         accountId,
         nftCreateData,
         ercParams,
         freParams
       )
 
+      console.log(accountId, nftCreateData, ercParams, freParams)
+
       LoggerInstance.log(
         '[gas fee] estGasCreateNftErc20WithFixedRate tx',
-        result
+        gasLimit
       )
 
       break
@@ -458,7 +461,7 @@ export async function getFeesTokensAndPricing(
         dispenserParams
       )
 
-      result = await nftFactory.estGasCreateNftErc20WithDispenser(
+      gasLimit = await nftFactory.estGasCreateNftErc20WithDispenser(
         accountId,
         nftCreateData,
         ercParams,
@@ -467,20 +470,27 @@ export async function getFeesTokensAndPricing(
 
       LoggerInstance.log(
         '[gas fee] estGasCreateNftErc20WithDispenser tx',
-        result
+        gasLimit
       )
 
       break
     }
   }
 
-  return result
+  const gasPrice = await web3.eth.getGasPrice()
+  const gasFeeEth = web3.utils.fromWei(
+    (+gasPrice * +gasLimit).toString(),
+    'ether'
+  )
+  const gasFeeOcean = (+gasFeeEth / +ethToOceanConversionRate).toString()
+  return gasFeeOcean
 }
 
 export async function getFeesPublishDDO(
   values: FormPublishData,
   accountId: string,
-  web3: Web3
+  web3: Web3,
+  ethToOceanConversionRate: number
 ) {
   const { feedback } = values
 
@@ -491,7 +501,7 @@ export async function getFeesPublishDDO(
   // theoretically used by aquarius or provider, not implemented yet, will remain hardcoded
   const flags = '0x2'
 
-  const result = await nft.estGasSetMetadata(
+  const gasLimit = await nft.estGasSetMetadata(
     feedback['1'].erc721Address,
     accountId,
     0,
@@ -502,5 +512,11 @@ export async function getFeesPublishDDO(
     '0x' + metadataHash
   )
 
-  return result
+  const gasPrice = await web3.eth.getGasPrice()
+  const gasFeeEth = web3.utils.fromWei(
+    (+gasPrice * +gasLimit).toString(),
+    'ether'
+  )
+  const gasFeeOcean = (+gasFeeEth / +ethToOceanConversionRate).toString()
+  return gasFeeOcean
 }
