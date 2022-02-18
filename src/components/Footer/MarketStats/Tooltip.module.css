@@ -4,13 +4,14 @@
   border-bottom: 1px solid var(--border-color);
 }
 
+.statsList {
+  composes: statsList from './index.module.css';
+  padding-bottom: 0;
+}
+
 .statsList,
 .note {
   padding: calc(var(--spacer) / 4);
-}
-
-.statsList {
-  padding-bottom: 0;
 }
 
 .note {
