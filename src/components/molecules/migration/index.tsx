@@ -123,7 +123,7 @@ export default function Migration(): ReactElement {
     } else if (
       user === 'owner' &&
       status !== '0' &&
-      thresholdMet !== true &&
+      !thresholdMet &&
       !deadlinePassed
     ) {
       // Message for Pool Owner: Migration has been started. Waiting for the deadline.
@@ -141,7 +141,7 @@ export default function Migration(): ReactElement {
       setMessage(content.owner.deadlineMetThresholdMet.text)
       // Action: Migration can now be completed.
       setAction('completeMigration')
-    } else if (user === 'owner' && status !== '0' && thresholdMet !== true) {
+    } else if (user === 'owner' && status !== '0' && !thresholdMet) {
       // Message for Pool Owner: Deadline has passed & Threshold has NOT been met.
       setTitle(content.owner.deadlineMetThresholdNotMet.title)
       setMessage(content.owner.deadlineMetThresholdNotMet.text)
@@ -158,11 +158,7 @@ export default function Migration(): ReactElement {
       setMessage(content.liquidityProvider.migrationStarted.text)
       // Action: Lock your pool shares.
       setAction('lockShares')
-    } else if (
-      user === 'liquidityProvider' &&
-      status === '1' &&
-      sharesLocked === true
-    ) {
+    } else if (user === 'liquidityProvider' && status === '1' && sharesLocked) {
       // Message for Liquidity Provider: Your pool shares have been locked.
       setTitle(content.liquidityProvider.poolSharesLocked.title)
       setMessage(content.liquidityProvider.poolSharesLocked.text)
