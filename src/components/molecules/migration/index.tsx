@@ -100,8 +100,10 @@ export default function Migration(): ReactElement {
     user: 'observer' | 'owner' | 'liquidityProvider',
     status: string,
     thresholdMet: boolean,
-    deadlinePassed: boolean
+    deadlinePassed: boolean,
+    sharesLocked: boolean
   ) {
+    console.log('User', user)
     if (user === 'observer' && status === '0') {
       // Message for Observer: Migration has not been started.
       setTitle(content.observer.migrationNotStarted.title)
@@ -187,7 +189,7 @@ export default function Migration(): ReactElement {
     }
   }
   useEffect(() => {
-    if (owner === accountId) {
+    if (owner.toLowerCase() === accountId.toLowerCase()) {
       setUser('owner')
     } else if (poolShares !== undefined) {
       setUser('liquidityProvider')
@@ -195,8 +197,18 @@ export default function Migration(): ReactElement {
       setUser('observer')
     }
     setSharesLocked(false) // TODO: check if shares have already been locked
-    switchMessage(user, status, thresholdMet, deadlinePassed)
-  }, [owner, accountId, poolShares, user, status, thresholdMet, deadlinePassed])
+    switchMessage(user, status, thresholdMet, deadlinePassed, sharesLocked)
+    console.log('Action ', action)
+  }, [
+    owner,
+    accountId,
+    poolShares,
+    user,
+    status,
+    thresholdMet,
+    deadlinePassed,
+    sharesLocked
+  ])
 
   return (
     <>

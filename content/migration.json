@@ -24,7 +24,7 @@
     },
     "deadlineMetThresholdNotMet": {
       "title": "Migration Deadline is Reached",
-      "text": "**The threshold of 80% of pool shares locked has not been achieved**  \n\nThe migration requires 80% of liquidity providers to lock their shares in the migration contract."
+      "text": "**Unfortunately the threshold of 80% of pool shares locked has not been achieved** \n\nThe migration required 80% of liquidity providers to lock their shares in the migration contract and this was not achieved before the deadline. \n\nYou can now cancel this migration."
     }
   },
   "liquidityProvider": {
