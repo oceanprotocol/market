@@ -11,11 +11,11 @@ import useNetworkMetadata, {
 } from '@hooks/useNetworkMetadata'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import styles from './MarketStats.module.css'
-import { FooterStatsValues_globalStats_totalLiquidity_token as LiquidityToken } from 'src/@types/subgraph/FooterStatsValues'
+import { FooterStatsValues_globalStatistics_totalLiquidity as LiquidityToken } from 'src/@types/subgraph/FooterStatsValues'
 
 const getGlobalStatsValues = gql`
   query FooterStatsValues {
-    globalStats {
+    globalStatistics {
       poolCount
       nftCount
       datatokenCount
@@ -150,7 +150,7 @@ export default function MarketStats(): ReactElement {
         await setTotalOceanLiquidity((prevState) => ({
           ...prevState,
           [chainId]: totalLiquidity.filter(
-            (token: LiquidityToken) => token.symbol === 'OCEAN'
+            (token: LiquidityToken) => token.token.symbol === 'OCEAN'
           )[0]
         }))
         await setPoolCount((prevState) => ({
