@@ -137,12 +137,38 @@ export default function Migration(): ReactElement {
             `You currently have ${poolShares} Pool Shares`
           </>
         )}
+      {!deadlinePassed &&
+        owner !== accountId &&
+        status !== '0' &&
+        poolShares !== '0' &&
+        poolShares !== undefined && (
+          // Message for Liquidity Provider: Your pool shares have been locked.
+          <Alert
+            title={content.liquidityProvider.poolSharesLocked.title}
+            text={content.liquidityProvider.poolSharesLocked.text}
+            state="info"
+          />
+        )}
       {deadlinePassed &&
         owner !== accountId &&
         status !== '0' &&
         poolShares !== '0' &&
         poolShares !== undefined &&
         thresholdMet === true && (
+          // Message for Liquidity Provider: Migration has been a success.
+          <Alert
+            title={content.liquidityProvider.deadlineMetThresholdMet.title}
+            text={content.liquidityProvider.deadlineMetThresholdMet.text}
+            state="info"
+          />
+        )}
+      {deadlinePassed &&
+        owner !== accountId &&
+        status !== '0' &&
+        poolShares !== '0' &&
+        poolShares !== undefined &&
+        thresholdMet === false && (
+          // Message for Liquidity Provider: Migration has not met threshold.
           <Alert
             title={content.liquidityProvider.deadlineMetThresholdMet.title}
             text={content.liquidityProvider.deadlineMetThresholdMet.text}

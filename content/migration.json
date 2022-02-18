@@ -27,8 +27,8 @@
       "text": "**The publisher of this data asset has initiated the migration of this pool from V3 to V4** \n\nYou can now lock your liquidity pool tokens in the smart contract to ensure you will receive tokens from the new V4 pool when it is created.\n\nThe migration requires 80% of liquidity providers to lock their shares in the migration contract."
     },
     "poolSharesLocked": {
-      "title": "Dynamic",
-      "text": "Let's create a decentralized, automated market for your data set. The datatoken for this data set will be worth the entered amount of OCEAN. Additionally, you will provide liquidity into a Datatoken/OCEAN liquidity pool with Balancer."
+      "title": "Your pool shares have been locked",
+      "text": "You have successfully locked your pool shares in the migration smart contract.\n\nThe migration won't be completed until the deadline has been reached and the required 80% of pool shares are locked."
     },
     "deadlineMetThresholdMet": {
       "title": "V4 Migration Will be Completed Soon",

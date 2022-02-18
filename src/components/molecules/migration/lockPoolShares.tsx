@@ -11,8 +11,6 @@ import { Logger } from '@oceanprotocol/lib'
 import { gql, OperationResult } from 'urql'
 import { fetchData, getQueryContext } from '../../../utils/subgraph'
 import { PoolLiquidity } from '../../../@types/apollo/PoolLiquidity'
-console.log('useMigrationStatus', useMigrationStatus)
-console.log('useAsset', useAsset)
 
 const userPoolShareQuery = gql`
   query poolShare($id: ID!, $shareId: ID) {
