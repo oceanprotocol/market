@@ -36,26 +36,28 @@ export default function NftTooltip({
 
   return (
     <div className={styles.wrapper}>
-      <img src={nft?.image_data} alt={nft?.name} />
+      {nft && <img src={nft.image_data} alt={nft?.name} />}
       <div className={styles.info}>
-        <h5>{nft?.name}</h5>
+        {nft && <h5>{nft.name}</h5>}
         {address && (
           <span title={address} className={styles.address}>
             {address} <Copy text={address} />
           </span>
         )}
         <div className={styles.links}>
-          <ExplorerLink
-            className={styles.datatoken}
-            networkId={chainId}
-            path={
-              isBlockscoutExplorer ? `tokens/${address}` : `token/${address}`
-            }
-          >
-            View on explorer
-          </ExplorerLink>
-          <br />
-          {openSeaSupported && (
+          {address && (
+            <ExplorerLink
+              className={styles.datatoken}
+              networkId={chainId}
+              path={
+                isBlockscoutExplorer ? `tokens/${address}` : `token/${address}`
+              }
+            >
+              View on explorer
+            </ExplorerLink>
+          )}
+
+          {openSeaSupported && nft && address && (
             <a
               href={`${openSeaBaseUri}/assets/${address}/1`}
               target="_blank"

@@ -19,17 +19,19 @@ export default function MetaMain({ ddo }: { ddo: Asset }): ReactElement {
         <div className={styles.nftImage}>
           <img src={nftMetadata?.image_data} alt={ddo?.nft?.name} />
 
-          <Tooltip
-            className={styles.tooltip}
-            content={
-              <NftTooltip
-                nft={nftMetadata}
-                address={ddo?.nftAddress}
-                chainId={ddo?.chainId}
-                isBlockscoutExplorer={isBlockscoutExplorer}
-              />
-            }
-          />
+          {(nftMetadata || ddo?.nftAddress) && (
+            <Tooltip
+              className={styles.tooltip}
+              content={
+                <NftTooltip
+                  nft={nftMetadata}
+                  address={ddo?.nftAddress}
+                  chainId={ddo?.chainId}
+                  isBlockscoutExplorer={isBlockscoutExplorer}
+                />
+              }
+            />
+          )}
         </div>
         <MetaAsset ddo={ddo} isBlockscoutExplorer={isBlockscoutExplorer} />
       </header>
