@@ -116,9 +116,9 @@ export default function Migration(): ReactElement {
       setAction('none')
     } else if (user === 'owner' && status === '0') {
       // Message for Pool Owner: Migration has not been started.
-      // Action: Owner can start migration
       setTitle(content.owner.migrationNotStarted.title)
       setMessage(content.owner.migrationNotStarted.text)
+      // Action: Owner can start migration
       setAction('startMigration')
     } else if (
       user === 'owner' &&
@@ -137,15 +137,15 @@ export default function Migration(): ReactElement {
       deadlinePassed
     ) {
       // Message for Pool Owner: Deadline has passed & Threshold has been met.
-      // Action: Migration can now be completed.
       setTitle(content.owner.deadlineMetThresholdMet.title)
       setMessage(content.owner.deadlineMetThresholdMet.text)
+      // Action: Migration can now be completed.
       setAction('completeMigration')
     } else if (user === 'owner' && status !== '0' && thresholdMet !== true) {
       // Message for Pool Owner: Deadline has passed & Threshold has NOT been met.
-      // Action: Migration can now be canceled.
       setTitle(content.owner.deadlineMetThresholdNotMet.title)
       setMessage(content.owner.deadlineMetThresholdNotMet.text)
+      // Action: Migration can now be canceled.
       setAction('cancelMigration')
     } else if (user === 'liquidityProvider' && status === '0') {
       // Message for Liquidity Provider: Migration has not yet been started by pool owner.
@@ -154,9 +154,9 @@ export default function Migration(): ReactElement {
       setAction('none')
     } else if (user === 'liquidityProvider' && status !== '0') {
       // Message for Liquidity Provider: Migration has been started by pool owner.
-      // Action: Lock your pool shares.
       setTitle(content.liquidityProvider.migrationStarted.title)
       setMessage(content.liquidityProvider.migrationStarted.text)
+      // Action: Lock your pool shares.
       setAction('lockShares')
     } else if (
       user === 'liquidityProvider' &&
@@ -198,7 +198,6 @@ export default function Migration(): ReactElement {
     }
     setSharesLocked(false) // TODO: check if shares have already been locked
     switchMessage(user, status, thresholdMet, deadlinePassed, sharesLocked)
-    console.log('Action ', action)
   }, [
     owner,
     accountId,
@@ -214,7 +213,12 @@ export default function Migration(): ReactElement {
     <>
       <header className={styles.header}>V4 Migration Status</header>
       <Container className={styles.container}>
-        <Alert title={title} text={message} state="info" />
+        <Alert
+          title={title}
+          text={message}
+          state="info"
+          className={styles.alert}
+        />
         {action === 'startMigration' && <StartMigration />}
         {action === 'lockShares' && <LockShares />}
         {action === 'completeMigration' && <CompleteMigration />}
