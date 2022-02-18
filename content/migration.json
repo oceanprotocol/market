@@ -1,4 +1,14 @@
 {
+  "observer": {
+    "migrationNotStarted": {
+      "title": "Pool migration has not started",
+      "text": "It is still possible to add liquidity for this asset as the the owner has not initiated the migration from Ocean V3 to V4. However, they may choose to start the migration soon."
+    },
+    "migrationInProgress": {
+      "title": "Migration in progress",
+      "text": "**You cannot add liquidity to this pool while the migration is in progress**  \n\nWhen the migration is complete you will be able to add liquidity in the new V4 pool for this asset."
+    }
+  },
   "owner": {
     "migrationNotStarted": {
       "title": "Start V4 Migration",

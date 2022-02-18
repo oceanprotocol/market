@@ -15,7 +15,7 @@
   padding-right: calc(var(--spacer) / 1.2);
   border: 1px solid var(--border-color);
   background-color: var(--background-body);
-  margin-bottom: -1px;
+  border-bottom: none;
   padding-top: 1rem;
   padding-bottom: 1rem;
   color: var(--color-secondary);
