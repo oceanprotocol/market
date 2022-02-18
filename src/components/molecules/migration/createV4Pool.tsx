@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 import Container from '../../atoms/Container'
 import Alert from '../../atoms/Alert'
-import styles from './startMigration.module.css'
+import styles from './migration.module.css'
 import { useWeb3 } from '../../../providers/Web3'
 import Web3 from 'web3'
 import { useAsset } from '../../../providers/Asset'
