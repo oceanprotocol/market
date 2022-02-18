@@ -3,7 +3,7 @@ import Conversion from '@shared/Price/Conversion'
 import PriceUnit from '@shared/Price/PriceUnit'
 import NetworkName from '@shared/NetworkName'
 import styles from './Tooltip.module.css'
-import { StatsValue } from './index'
+import { StatsValue } from './_types'
 
 export default function MarketStatsTooltip({
   totalValueLockedInOcean,
@@ -43,7 +43,8 @@ export default function MarketStatsTooltip({
           ))}
       </ul>
       <p className={styles.note}>
-        Counted on-chain from our pool factory. Does not filter out assets in{' '}
+        Counted on-chain from our NFT and pool factories. Does not filter out
+        assets in{' '}
         <a href="https://github.com/oceanprotocol/list-purgatory">
           list-purgatory
         </a>

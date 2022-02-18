@@ -15,30 +15,32 @@ import { queryGlobalStatistics } from './_queries'
 import { usePrices } from '@context/Prices'
 import { useUserPreferences } from '@context/UserPreferences'
 import Decimal from 'decimal.js'
+import { StatsTotal, StatsValue } from './_types'
 
-export interface StatsValue {
-  [chainId: number]: string
+const initialTotal: StatsTotal = {
+  totalValueLockedInOcean: 0,
+  totalOceanLiquidity: 0,
+  pools: 0,
+  nfts: 0,
+  datatokens: 0,
+  orders: 0
 }
 
 export default function MarketStats(): ReactElement {
+  const { appConfig } = useSiteMetadata()
+  const { networksList } = useNetworkMetadata()
   const { currency } = useUserPreferences()
   const { prices } = usePrices()
 
+  const [mainChainIds, setMainChainIds] = useState<number[]>()
   const [data, setData] =
     useState<{ [chainId: number]: FooterStatsValuesGlobalStatistics }>()
   const [totalValueLockedInOcean, setTotalValueLockedInOcean] =
     useState<StatsValue>()
   const [totalOceanLiquidity, setTotalOceanLiquidity] = useState<StatsValue>()
   const [poolCount, setPoolCount] = useState<StatsValue>()
-  const [totalValueLockedSum, setTotalValueLockedSum] = useState<string>()
-  const [totalOceanLiquiditySum, setTotalOceanLiquiditySum] = useState<string>()
-  const [poolCountSum, setPoolCountSum] = useState<string>()
-  const [nftCountSum, setNftCountSum] = useState<string>()
-  const [datatokenCountSum, setDatatokenCountSum] = useState<string>()
-  const [orderCountSum, setOrderCountSum] = useState<string>()
-  const [mainChainIds, setMainChainIds] = useState<number[]>()
-  const { appConfig } = useSiteMetadata()
-  const { networksList } = useNetworkMetadata()
+
+  const [total, setTotal] = useState(initialTotal)
 
   //
   // Set the main chain ids we want to display stats for
@@ -95,12 +97,9 @@ export default function MarketStats(): ReactElement {
   useEffect(() => {
     if (!data || !mainChainIds?.length) return
 
-    let newTotalValueLockedSum = 0
-    let newTotalOceanLiquiditySum = 0
-    let newPoolCountSum = 0
-    let newNftCountSum = 0
-    let newOrderCountSum = 0
-    let newDatatokenCountSum = 0
+    const newTotal: StatsTotal = {
+      ...initialTotal // always start calculating beginning from initial 0 values
+    }
 
     for (const chainId of mainChainIds) {
       const baseTokenValue = data[chainId]?.totalLiquidity[0]?.value
@@ -135,36 +134,24 @@ export default function MarketStats(): ReactElement {
         const datatokenCount = data[chainId]?.datatokenCount || 0
         const orderCount = data[chainId]?.orderCount || 0
 
-        newTotalValueLockedSum += totalValueLockedInOcean.toNumber()
-        newTotalOceanLiquiditySum += totalOceanLiquidity
-        newPoolCountSum += poolCount
-        newNftCountSum += nftCount
-        newDatatokenCountSum += datatokenCount
-        newOrderCountSum += orderCount
+        newTotal.totalValueLockedInOcean += totalValueLockedInOcean.toNumber()
+        newTotal.totalOceanLiquidity += totalOceanLiquidity
+        newTotal.pools += poolCount
+        newTotal.nfts += nftCount
+        newTotal.datatokens += datatokenCount
+        newTotal.orders += orderCount
       } catch (error) {
         LoggerInstance.error('Error data manipulation: ', error.message)
       }
     }
 
-    setTotalValueLockedSum(`${newTotalValueLockedSum}`)
-    setTotalOceanLiquiditySum(`${newTotalOceanLiquiditySum}`)
-    setPoolCountSum(`${newPoolCountSum}`)
-    setNftCountSum(`${newNftCountSum}`)
-    setDatatokenCountSum(`${newDatatokenCountSum}`)
-    setOrderCountSum(`${newOrderCountSum}`)
+    setTotal(newTotal)
   }, [data, mainChainIds, prices, currency])
 
   return (
     <div className={styles.stats}>
       <>
-        <MarketStatsTotal
-          totalValueLockedInOcean={totalValueLockedSum}
-          totalOceanLiquidity={totalOceanLiquiditySum}
-          poolCount={poolCountSum}
-          nftCount={nftCountSum}
-          datatokenCount={datatokenCountSum}
-          orderCount={orderCountSum}
-        />{' '}
+        <MarketStatsTotal total={total} />{' '}
         <Tooltip
           className={styles.info}
           content={
