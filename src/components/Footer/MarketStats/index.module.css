@@ -14,3 +14,8 @@
 .info {
   width: 0.85rem;
 }
+
+.stats p {
+  display: block;
+  margin-bottom: 0;
+}

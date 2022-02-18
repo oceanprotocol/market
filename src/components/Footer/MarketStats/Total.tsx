@@ -17,12 +17,15 @@ export default function MarketStatsTotal({
 }): ReactElement {
   return (
     <>
-      <strong>{orderCount}</strong> orders across <strong>{nftCount}</strong>{' '}
-      Data NFTs.
+      <p>
+        <strong>{orderCount}</strong> orders across <strong>{nftCount}</strong>{' '}
+        Data NFTs.
+      </p>
       <Conversion price={totalValueLockedInOcean} hideApproximateSymbol />{' '}
       <abbr title="Total Value Locked">TVL</abbr> across{' '}
-      <strong>{poolCount}</strong> asset pools holding{' '}
-      <PriceUnit price={totalOceanLiquidity} symbol="OCEAN" small />.
+      <strong>{poolCount}</strong> asset pools that contain{' '}
+      <PriceUnit price={totalOceanLiquidity} symbol="OCEAN" small />, plus
+      datatokens for each pool.
     </>
   )
 }

@@ -115,9 +115,7 @@ export default function MarketStats(): ReactElement {
           [chainId]: `${totalValueLockedInOcean}`
         }))
 
-        // TODO: how to get total OCEAN liquidity?
-        // We can just double it again?
-        const totalOceanLiquidity = totalValueLockedInOcean
+        const totalOceanLiquidity = Number(baseTokenValue) || 0
 
         setTotalOceanLiquidity((prevState) => ({
           ...prevState,
@@ -135,7 +133,7 @@ export default function MarketStats(): ReactElement {
         const orderCount = data[chainId]?.orderCount || 0
 
         newTotalValueLockedSum += totalValueLockedInOcean.toNumber()
-        newTotalOceanLiquiditySum += totalOceanLiquidity.toNumber()
+        newTotalOceanLiquiditySum += totalOceanLiquidity
         newPoolCountSum += poolCount
         newNftCountSum += nftCount
         newOrderCountSum += orderCount
