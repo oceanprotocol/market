@@ -18,8 +18,6 @@ import {
 import { mapTimeoutStringToSeconds } from '@utils/ddo'
 import { generateNftCreateData } from '@utils/nft'
 import { getEncryptedFiles } from '@utils/provider'
-import { getSiteMetadata } from '@utils/siteConfig'
-import Decimal from 'decimal.js'
 import slugify from 'slugify'
 import Web3 from 'web3'
 import {
@@ -81,7 +79,8 @@ export async function transformPublishFormToDdo(
     dockerImageCustom,
     dockerImageCustomTag,
     dockerImageCustomEntrypoint,
-    dockerImageCustomChecksum
+    dockerImageCustomChecksum,
+    parameters
   } = metadata
   const { access, files, links, providerUrl, timeout } = services[0]
 
@@ -132,7 +131,10 @@ export async function transformPublishFormToDdo(
               dockerImage === 'custom'
                 ? dockerImageCustomChecksum
                 : getAlgorithmContainerPreset(dockerImage).checksum
-          }
+          },
+          ...(parameters?.length && {
+            userInput: metadata.parameters
+          })
         }
       })
   }
@@ -193,6 +195,7 @@ export async function transformPublishFormToDdo(
 export async function createTokensAndPricing(
   values: FormPublishData,
   accountId: string,
+  marketFeeAddress: string,
   config: Config,
   nftFactory: NftFactory,
   web3: Web3
@@ -200,17 +203,19 @@ export async function createTokensAndPricing(
   const nftCreateData: NftCreateData = generateNftCreateData(
     values.metadata.nft
   )
-  const { appConfig } = getSiteMetadata()
+
   LoggerInstance.log('[publish] Creating NFT with metadata', nftCreateData)
 
   // TODO: cap is hardcoded for now to 1000, this needs to be discussed at some point
+  // fee is default 0 for now
+  // TODO: templateIndex is hardcoded for now but this is incorrect, in the future it should be something like 1 for pools, and 2 for fre and free
   const ercParams: Erc20CreateParams = {
     templateIndex: values.pricing.type === 'dynamic' ? 1 : 2,
     minter: accountId,
     feeManager: accountId,
-    mpFeeAddress: appConfig.marketFeeAddress,
+    mpFeeAddress: marketFeeAddress,
     feeToken: config.oceanTokenAddress,
-    feeAmount: appConfig.publisherMarketOrderFee,
+    feeAmount: `0`,
     cap: '1000',
     name: values.services[0].dataTokenOptions.name,
     symbol: values.services[0].dataTokenOptions.symbol
@@ -225,22 +230,21 @@ export async function createTokensAndPricing(
     case 'dynamic': {
       // no vesting in market by default, maybe at a later time , vestingAmount and vestedBlocks are hardcoded
       // we use only ocean as basetoken
-      // swapFeeLiquidityProvider is the swap fee of the liquidity providers
-      // swapFeeMarketRunner is the swap fee of the market where the swap occurs
+      // TODO: discuss swapFeeLiquidityProvider, swapFeeMarketPlaceRunner
       const poolParams: PoolCreationParams = {
         ssContract: config.sideStakingAddress,
         baseTokenAddress: config.oceanTokenAddress,
         baseTokenSender: config.erc721FactoryAddress,
         publisherAddress: accountId,
-        marketFeeCollector: appConfig.marketFeeAddress,
+        marketFeeCollector: marketFeeAddress,
         poolTemplateAddress: config.poolTemplateAddress,
-        rate: new Decimal(1).div(values.pricing.price).toString(),
+        rate: values.pricing.price.toString(),
         baseTokenDecimals: 18,
         vestingAmount: '0',
         vestedBlocks: 2726000,
         initialBaseTokenLiquidity: values.pricing.amountOcean.toString(),
-        swapFeeLiquidityProvider: (values.pricing.swapFee / 100).toString(),
-        swapFeeMarketRunner: appConfig.publisherMarketPoolSwapFee
+        swapFeeLiquidityProvider: 1e15,
+        swapFeeMarketRunner: 1e15
       }
 
       LoggerInstance.log(
@@ -249,17 +253,18 @@ export async function createTokensAndPricing(
       )
 
       // the spender in this case is the erc721Factory because we are delegating
+      const pool = new Pool(web3)
       const txApprove = await approve(
         web3,
         accountId,
         config.oceanTokenAddress,
         config.erc721FactoryAddress,
-        values.pricing.amountOcean.toString(),
+        '200',
         false
       )
-      LoggerInstance.log('[publish] pool.approve tx', txApprove, nftFactory)
+      LoggerInstance.log('[publish] pool.approve tx', txApprove)
 
-      const result = await nftFactory.createNftErc20WithPool(
+      const result = await nftFactory.createNftErcWithPool(
         accountId,
         nftCreateData,
         ercParams,
@@ -278,11 +283,11 @@ export async function createTokensAndPricing(
         fixedRateAddress: config.fixedRateExchangeAddress,
         baseTokenAddress: config.oceanTokenAddress,
         owner: accountId,
-        marketFeeCollector: appConfig.marketFeeAddress,
+        marketFeeCollector: marketFeeAddress,
         baseTokenDecimals: 18,
         datatokenDecimals: 18,
         fixedRate: values.pricing.price.toString(),
-        marketFee: appConfig.publisherMarketFixedSwapFee,
+        marketFee: 1e15,
         withMint: true
       }
 
@@ -291,7 +296,7 @@ export async function createTokensAndPricing(
         freParams
       )
 
-      const result = await nftFactory.createNftErc20WithFixedRate(
+      const result = await nftFactory.createNftErcWithFixedRate(
         accountId,
         nftCreateData,
         ercParams,
@@ -323,7 +328,7 @@ export async function createTokensAndPricing(
         dispenserParams
       )
 
-      const result = await nftFactory.createNftErc20WithDispenser(
+      const result = await nftFactory.createNftErcWithDispenser(
         accountId,
         nftCreateData,
         ercParams,

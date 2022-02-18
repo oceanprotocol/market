@@ -6,7 +6,7 @@
         "name": "nft",
         "label": "Data NFT",
         "type": "nft",
-        "help": "All metadata is stored on-chain in a newly deployed ERC-721 contract representing this asset, created with this name, symbol, description and image.",
+        "help": "All metadata is stored on-chain in a newly deployed ERC-721 contract representing this asset, created with this name & symbol.",
         "required": true
       },
       {
@@ -72,6 +72,12 @@
         "placeholder": "e.g. python $ALGO",
         "help": "Provide the entrypoint for your algorithm.",
         "required": true
+      },
+      {
+        "name": "parameters",
+        "label": "Parameters",
+        "help": "Enter parameters for your algorithm.",
+        "type": "parameters"
       },
       {
         "name": "termsAndConditions",

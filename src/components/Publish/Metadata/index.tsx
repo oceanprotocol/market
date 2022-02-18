@@ -118,6 +118,11 @@ export default function MetadataFields(): ReactElement {
               />
             </>
           )}
+          <Field
+            {...getFieldContent('parameters', content.metadata.fields)}
+            component={Input}
+            name="metadata.parameters"
+          />
         </>
       )}
 

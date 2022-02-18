@@ -1,0 +1,97 @@
+.parameters {
+  padding: 0px 20px;
+}
+
+.parameter {
+}
+
+.field {
+  display: block;
+  clear: both;
+  margin-bottom: 10px;
+  height: 43px;
+}
+
+.requiredfield {
+  clear: both;
+  width: 120px;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  margin: 0 0 10px 0;
+}
+.requiredfield label {
+  width: 100px;
+  float: left;
+  font-weight: 100;
+  padding: 0;
+  font-size: 100%;
+}
+
+.label {
+  display: inline-block;
+  width: 100px;
+  float: left;
+  line-height: 43px;
+}
+
+.input {
+  width: calc(100% - 100px);
+  float: left;
+}
+
+.select {
+  width: calc(100% - 100px);
+  float: left;
+  height: 43px;
+}
+
+.options {
+  width: calc(100% - 100px);
+  float: right;
+  margin-bottom: 10px;
+}
+
+.option {
+  width: calc(50% - 85px);
+  float: left;
+  margin: 0 10px 10px 0;
+}
+
+.button {
+  width: 65px;
+  height: 43px;
+  margin: 0 10px 10px 0;
+}
+
+.error {
+  display: inline-block;
+  font-size: var(--font-size-mini);
+  line-height: 1.2;
+  font-weight: var(--font-weight-bold);
+  color: var(--brand-white);
+  background: var(--brand-alert-red);
+  border-radius: var(--border-radius);
+  padding: 0.2rem 0.4rem;
+  position: absolute;
+  right: 0;
+  top: 85%;
+  z-index: 1;
+}
+
+.hasError label {
+  color: var(--brand-alert-red);
+}
+
+.hasError input,
+.hasError input:focus,
+.hasError select,
+.hasError textarea,
+.hasError [class*='prefix'],
+.hasError [class*='postfix'] {
+  border-color: var(--brand-alert-red);
+}
+
+.red {
+  background: red;
+}

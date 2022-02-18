@@ -68,7 +68,8 @@ export const initialValues: FormPublishData = {
     dockerImage: '',
     dockerImageCustom: '',
     dockerImageCustomTag: '',
-    dockerImageCustomEntrypoint: ''
+    dockerImageCustomEntrypoint: '',
+    parameters: []
   },
   services: [
     {
@@ -96,8 +97,7 @@ export const initialValues: FormPublishData = {
     amountOcean: 50,
     weightOnOcean: '5', // 50% on OCEAN
     weightOnDataToken: '5', // 50% on datatoken
-    swapFee: 0.1, // in %
-    freeAgreement: false
+    swapFee: 0.1 // in %
   }
 }
 
