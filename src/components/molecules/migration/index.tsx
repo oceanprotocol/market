@@ -11,6 +11,7 @@ import LockShares from './lockPoolShares'
 import CompleteMigration from './createV4Pool'
 import CancelMigration from './cancelMigration'
 import MigrationCompleted from './migrationCompleted'
+import UnlockPoolShares from './unlockPoolsShares'
 
 const query = graphql`
   query {
@@ -232,6 +233,7 @@ export default function Migration(): ReactElement {
         {action === 'completeMigration' && <CompleteMigration />}
         {action === 'cancelMigration' && <CancelMigration />}
         {action === 'viewV4Asset' && <MigrationCompleted />}
+        {action === 'removeShares' && <UnlockPoolShares />}
       </Container>
     </>
   )
