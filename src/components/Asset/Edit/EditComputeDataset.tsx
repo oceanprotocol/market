@@ -3,7 +3,11 @@ import { Formik } from 'formik'
 import React, { ReactElement, useState } from 'react'
 import { useAsset } from '@context/Asset'
 import FormEditComputeDataset from './FormEditComputeDataset'
-import { LoggerInstance, ServiceComputeOptions } from '@oceanprotocol/lib'
+import {
+  LoggerInstance,
+  ServiceComputeOptions,
+  Metadata
+} from '@oceanprotocol/lib'
 import { useUserPreferences } from '@context/UserPreferences'
 import DebugEditCompute from './DebugEditCompute'
 import styles from './index.module.css'
@@ -17,6 +21,7 @@ import {
 import content from '../../../../content/pages/editComputeDataset.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { getServiceByName } from '@utils/ddo'
+import { setMinterToPublisher } from '@utils/dispenser'
 
 export default function EditComputeDataset({
   asset
@@ -24,7 +29,7 @@ export default function EditComputeDataset({
   asset: AssetExtended
 }): ReactElement {
   const { debug } = useUserPreferences()
-  const { accountId } = useWeb3()
+  const { accountId, web3 } = useWeb3()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
 
@@ -34,56 +39,67 @@ export default function EditComputeDataset({
     values: ComputePrivacyForm,
     resetForm: () => void
   ) {
-    // try {
-    //   if (price.type === 'free') {
-    //     const tx = await setMinterToPublisher(
-    //       ocean,
-    //       ddo.services[0].datatokenAddress,
-    //       accountId,
-    //       setError
-    //     )
-    //     if (!tx) return
-    //   }
-    //   const privacy = await transformComputeFormToServiceComputePrivacy(
-    //     values,
-    //     ocean
-    //   )
-    //   const ddoEditedComputePrivacy = await ocean.compute.editComputePrivacy(
-    //     ddo,
-    //     1,
-    //     privacy as ServiceComputePrivacy
-    //   )
-    //   if (!ddoEditedComputePrivacy) {
-    //     setError(content.form.error)
-    //     LoggerInstance.error(content.form.error)
-    //     return
-    //   }
-    //   const storedddo = await ocean.assets.updateMetadata(
-    //     ddoEditedComputePrivacy,
-    //     accountId
-    //   )
-    //   if (!storedddo) {
-    //     setError(content.form.error)
-    //     LoggerInstance.error(content.form.error)
-    //     return
-    //   } else {
-    //     if (price.type === 'free') {
-    //       const tx = await setMinterToDispenser(
-    //         ocean,
-    //         ddo.services[0].datatokenAddress,
-    //         accountId,
-    //         setError
-    //       )
-    //       if (!tx) return
-    //     }
-    //     // Edit succeeded
-    //     setSuccess(content.form.success)
-    //     resetForm()
-    //   }
-    // } catch (error) {
-    //   LoggerInstance.error(error.message)
-    //   setError(error.message)
-    // }
+    try {
+      if (asset?.accessDetails?.type === 'free') {
+        const tx = await setMinterToPublisher(
+          web3,
+          asset?.accessDetails?.addressOrId,
+          asset?.accessDetails?.datatoken?.address,
+          accountId,
+          setError
+        )
+        if (!tx) return
+      }
+      // const privacy = await transformComputeFormToServiceComputePrivacy(
+      //   values,
+      //   ocean
+      // )
+      // const ddoEditedComputePrivacy = await ocean.compute.editComputePrivacy(
+      //   ddo,
+      //   1,
+      //   privacy as ServiceComputePrivacy
+      // )
+      // if (!ddoEditedComputePrivacy) {
+      //   setError(content.form.error)
+      //   LoggerInstance.error(content.form.error)
+      //   return
+      // }
+      const newComputeSettings: ServiceComputeOptions = {
+        publisherTrustedAlgorithms = values.publisherTrustedAlgorithms
+      }
+      const newMetadata: Metadata = {
+        name: values.name,
+        description: values.description,
+        links: typeof values.links !== 'string' ? values.links : [],
+        author: values.author,
+        ...asset.metadata
+      }
+      // const storedddo = await ocean.assets.updateMetadata(
+      //   ddoEditedComputePrivacy,
+      //   accountId
+      // )
+      // if (!storedddo) {
+      //   setError(content.form.error)
+      //   LoggerInstance.error(content.form.error)
+      //   return
+      // } else {
+      //   if (price.type === 'free') {
+      //     const tx = await setMinterToDispenser(
+      //       ocean,
+      //       ddo.services[0].datatokenAddress,
+      //       accountId,
+      //       setError
+      //     )
+      //     if (!tx) return
+      //   }
+      //   // Edit succeeded
+      //   setSuccess(content.form.success)
+      //   resetForm()
+      // }
+    } catch (error) {
+      LoggerInstance.error(error.message)
+      setError(error.message)
+    }
   }
 
   return (

@@ -9,7 +9,11 @@
 //   Account
 // } from '@oceanprotocol/lib'
 // import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
-import { Asset } from '@oceanprotocol/lib'
+import {
+  Asset,
+  ServiceComputeOptions,
+  PublisherTrustedAlgorithm
+} from '@oceanprotocol/lib'
 import { CancelToken } from 'axios'
 import { gql } from 'urql'
 import { queryMetadata, getFilterTerm, generateBaseQuery } from './aquarius'
@@ -258,37 +262,33 @@ function getServiceEndpoints(data: TokenOrder[], assets: Asset[]): string[] {
 //   return computeResult
 // }
 
-// export async function createTrustedAlgorithmList(
-//   selectedAlgorithms: string[], // list of DIDs
-//   ocean: Ocean
-// ): Promise<PublisherTrustedAlgorithm[]> {
-//   const trustedAlgorithms = []
+export async function createTrustedAlgorithmList(
+  selectedAlgorithms: string[] // list of DIDs
+): Promise<PublisherTrustedAlgorithm[]> {
+  const trustedAlgorithms: PublisherTrustedAlgorithm[] = []
 
-//   for (const selectedAlgorithm of selectedAlgorithms) {
-//     const trustedAlgorithm =
-//       await ocean.compute.createPublisherTrustedAlgorithmfromDID(
-//         selectedAlgorithm
-//       )
-//     trustedAlgorithms.push(trustedAlgorithm)
-//   }
-//   return trustedAlgorithms
-// }
+  // for (const selectedAlgorithm of selectedAlgorithms) {
+  //   const trustedAlgorithm =
+  //     await ocean.compute.createPublisherTrustedAlgorithmfromDID(
+  //       selectedAlgorithm
+  //     )
+  //   trustedAlgorithms.push(trustedAlgorithm)
+  // }
+  return trustedAlgorithms
+}
 
-// export async function transformComputeFormToServiceComputePrivacy(
-//   values: ComputePrivacyForm,
-//   ocean: Ocean
-// ): Promise<ServiceComputePrivacy> {
-//   const { allowAllPublishedAlgorithms } = values
-//   const publisherTrustedAlgorithms = values.allowAllPublishedAlgorithms
-//     ? []
-//     : await createTrustedAlgorithmList(values.publisherTrustedAlgorithms, ocean)
+export async function transformComputeFormToServiceComputeOptions(
+  values: ComputePrivacyForm,
+  currentOptions: ServiceComputeOptions
+): Promise<ServiceComputeOptions> {
+  const publisherTrustedAlgorithms = values.allowAllPublishedAlgorithms
+    ? []
+    : await createTrustedAlgorithmList(values.publisherTrustedAlgorithms)
 
-//   const privacy: ServiceComputePrivacy = {
-//     allowNetworkAccess: false,
-//     allowRawAlgorithm: false,
-//     allowAllPublishedAlgorithms,
-//     publisherTrustedAlgorithms
-//   }
+  const privacy: ServiceComputeOptions = {
+    publisherTrustedAlgorithms,
+    ...currentOptions
+  }
 
-//   return privacy
-// }
+  return privacy
+}
