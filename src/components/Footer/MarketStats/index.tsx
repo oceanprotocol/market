@@ -48,7 +48,7 @@ export default function MarketStats(): ReactElement {
     if (!networksList) return
 
     const mainChainIdsList = filterNetworksByType(
-      'testnet', // TODO: switch back to `mainnet` when we have a mainnet deployment
+      'mainnet',
       appConfig.chainIdsSupported,
       networksList
     )
@@ -104,8 +104,6 @@ export default function MarketStats(): ReactElement {
       const baseTokenValue = data[chainId]?.totalLiquidity[0]?.value
 
       try {
-        // TODO: how to get total liquidity in OCEAN?
-        // We can just double it again?
         const totalValueLockedInOcean = baseTokenValue
           ? new Decimal(baseTokenValue).mul(2)
           : new Decimal(0)
