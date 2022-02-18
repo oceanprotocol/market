@@ -1,0 +1,23 @@
+.container {
+  border: 1px solid var(--border-color);
+  margin-bottom: 2rem;
+  background-color: var(--background-body);
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+.alert {
+  margin-bottom: 2rem;
+}
+.button {
+}
+.header {
+  padding-left: calc(var(--spacer) / 1.2);
+  padding-right: calc(var(--spacer) / 1.2);
+  border: 1px solid var(--border-color);
+  background-color: var(--background-body);
+  margin-bottom: -1px;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  color: var(--color-secondary);
+  font-weight: 600;
+}

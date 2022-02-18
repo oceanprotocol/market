@@ -17,8 +17,7 @@ import axios from 'axios'
 import { getOceanConfig } from '../../../utils/ocean'
 import { useCancelToken } from '../../../hooks/useCancelToken'
 import { useIsMounted } from '../../../hooks/useIsMounted'
-import StartMigration from '../../molecules/migration/startMigration'
-import LockPoolShares from '../../molecules/migration/lockPoolShares'
+import Migration from '../../molecules/migration/index'
 
 export default function AssetActions(): ReactElement {
   const { accountId, balance } = useWeb3()
@@ -144,8 +143,7 @@ export default function AssetActions(): ReactElement {
 
   return (
     <>
-      <StartMigration />
-      <LockPoolShares />
+      <Migration />
       <Permission eventType="consume">
         <Tabs items={tabs} className={styles.actions} />
       </Permission>

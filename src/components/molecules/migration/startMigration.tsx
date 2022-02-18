@@ -1,13 +1,12 @@
 import React, { ReactElement } from 'react'
-import Container from '../../atoms/Container'
-import Alert from '../../atoms/Alert'
-import styles from './startMigration.module.css'
+import Button from '../../atoms/Button'
 import { useWeb3 } from '../../../providers/Web3'
 import Web3 from 'web3'
 import { useAsset } from '../../../providers/Asset'
 import { useMigrationStatus } from '../../../providers/Migration'
 import { Migration } from 'v4-migration-lib'
-import { DDO, MetadataMain } from '@oceanprotocol/lib'
+import { DDO } from '@oceanprotocol/lib'
+import styles from './migration.module.css'
 
 async function startMigration(
   web3: Web3,
@@ -19,8 +18,6 @@ async function startMigration(
   dtV3Address: string,
   poolV3Address: string
 ) {
-  console.log('Start Migration Clicked')
-  console.log('Price', ddo.price)
   const v4DtName = 'V4 - ' + ddo.dataTokenInfo.name
   const v4DtSymbol = 'V4-' + ddo.dataTokenInfo.symbol
 
@@ -39,45 +36,27 @@ async function startMigration(
 
 export default function StartMigration(): ReactElement {
   const { accountId } = useWeb3()
-  const { owner, did, ddo, metadata, price } = useAsset()
-  const { status, migrationAddress, thresholdMet } = useMigrationStatus()
+  const { did, ddo, metadata, price } = useAsset()
+  const { migrationAddress } = useMigrationStatus()
   const { web3 } = useWeb3()
-  console.log('Start Migration status', status)
-  console.log('Start Migration thresholdMet', thresholdMet)
   return (
-    <>
-      {owner === accountId && status === '0' && (
-        <Container className={styles.container}>
-          <Alert
-            text="**Time to migrate from V3 to V4** \n\nAs the asset publisher you can initiate the migration from a V3 pool to
-        a V4 pool. \n\nThe migration requires 80% of liquidity providers to lock their shares in the migration contract."
-            state="info"
-            action={{
-              name: 'Start Migration',
-              handleAction: () =>
-                startMigration(
-                  web3,
-                  accountId,
-                  migrationAddress,
-                  did,
-                  ddo,
-                  metadata.encryptedFiles,
-                  ddo.dataToken,
-                  price.address
-                )
-            }}
-          />
-        </Container>
-      )}
-      {owner === accountId && status !== '0' && thresholdMet !== true && (
-        <Container className={styles.container}>
-          <Alert
-            title="Migration in progress"
-            text="**The threshold of 80% of pool shares locked has not been reached yet**  \n\nThe migration requires 80% of liquidity providers to lock their shares in the migration contract."
-            state="info"
-          />
-        </Container>
-      )}
-    </>
+    <Button
+      style="primary"
+      className={styles.button}
+      onClick={() =>
+        startMigration(
+          web3,
+          accountId,
+          migrationAddress,
+          did,
+          ddo,
+          metadata.encryptedFiles,
+          ddo.dataToken,
+          price.address
+        )
+      }
+    >
+      <span>Start Migration</span>
+    </Button>
   )
 }

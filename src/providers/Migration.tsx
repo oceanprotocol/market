@@ -17,7 +17,7 @@ import { fetchData, getQueryContext } from '../utils/subgraph'
 import { PoolLiquidity } from '../@types/apollo/PoolLiquidity'
 
 const userPoolShareQuery = gql`
-  query poolShare($id: ID!, $shareId: ID) {
+  query poolShareQuery($id: ID!, $shareId: ID) {
     pool(id: $id) {
       id
       shares(where: { id: $shareId }) {
