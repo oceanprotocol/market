@@ -16,7 +16,7 @@
     },
     "migrationInProgress": {
       "title": "Migration in progress",
-      "text": "**The threshold of 80% of pool shares locked has not been reached yet**  \n\nThe migration requires 80% of liquidity providers to lock their shares in the migration contract."
+      "text": "**The deadline has not been reached yet**  \n\nThe migration requires 80% of liquidity providers to lock their shares in the migration contract."
     },
     "deadlineMetThresholdMet": {
       "title": "V4 Pool can now be created",
