@@ -200,9 +200,11 @@ export default function Migration(): ReactElement {
       setUser('observer')
     }
     // Check if user has already locked liquidity
-    for (let i = 0; i < poolShareOwners.length; i++) {
-      if (accountId === poolShareOwners[i]) {
-        setSharesLocked(true)
+    if (poolShareOwners) {
+      for (let i = 0; i < poolShareOwners.length; i++) {
+        if (accountId === poolShareOwners[i]) {
+          setSharesLocked(true)
+        }
       }
     }
     switchMessage(user, status, thresholdMet, deadlinePassed, sharesLocked)
