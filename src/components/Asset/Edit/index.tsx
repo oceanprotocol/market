@@ -6,8 +6,9 @@ import styles from './index.module.css'
 import Tabs from '@shared/atoms/Tabs'
 import EditMetadata from './EditMetadata'
 import EditComputeDataset from './EditComputeDataset'
+import Page from '@shared/Page'
 
-export default function Edit({}): ReactElement {
+export default function Edit({ uri }: { uri: string }): ReactElement {
   const { accountId } = useWeb3()
   const { asset } = useAsset()
   const [isCompute, setIsCompute] = useState(false)
@@ -38,11 +39,15 @@ export default function Edit({}): ReactElement {
   ].filter((tab) => tab !== undefined)
 
   return (
-    <Tabs
-      items={tabs}
-      handleTabChange={handleTabChange}
-      defaultIndex={0}
-      className={styles.edit}
-    />
+    <Page uri={uri}>
+      <div className={styles.contianer}>
+        <Tabs
+          items={tabs}
+          handleTabChange={handleTabChange}
+          defaultIndex={0}
+          className={styles.edit}
+        />
+      </div>
+    </Page>
   )
 }

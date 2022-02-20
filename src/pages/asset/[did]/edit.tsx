@@ -8,7 +8,7 @@ export default function PageEditAsset(): ReactElement {
   const { did } = router.query
   return (
     <AssetProvider did={did as string}>
-      <EditPage />
+      <EditPage uri={router.pathname} />
     </AssetProvider>
   )
 }
