@@ -202,21 +202,21 @@ export async function retrieveDDOListByDIDs(
 
 export async function transformDDOToAssetSelection(
   datasetProviderEndpoint: string,
-  ddoList: Asset[],
+  assets: Asset[],
   selectedAlgorithms?: PublisherTrustedAlgorithm[],
   cancelToken?: CancelToken
 ): Promise<AssetSelectionAsset[]> {
   const didList: string[] = []
-  // const priceList: PriceList = await getAssetsPriceList(ddoList)
+  //const priceList: PriceList = await getAssetsPriceList(ddoList)
   const priceList: PriceList = null
   const symbolList: any = {}
   const didProviderEndpointMap: any = {}
-  for (const ddo of ddoList) {
-    didList.push(ddo.id)
-    symbolList[ddo.id] = ddo.datatokens[0].symbol
-    const algoComputeService = getServiceByName(ddo, 'compute')
+  for (const asset of assets) {
+    didList.push(asset.id)
+    symbolList[asset.id] = asset.datatokens[0].symbol
+    const algoComputeService = getServiceByName(asset, 'compute')
     algoComputeService?.serviceEndpoint &&
-      (didProviderEndpointMap[ddo.id] = algoComputeService?.serviceEndpoint)
+      (didProviderEndpointMap[asset.id] = algoComputeService?.serviceEndpoint)
   }
   const ddoNames = await getAssetsNames(didList, cancelToken)
   const algorithmList: AssetSelectionAsset[] = []
@@ -262,7 +262,7 @@ export async function getAlgorithmDatasetsForCompute(
     chainIds: [datasetChainId],
     filters: [
       getFilterTerm(
-        'service.attributes.main.privacy.publisherTrustedAlgorithms.did',
+        'service.compite.publisherTrustedAlgorithms.did',
         algorithmId
       )
     ],

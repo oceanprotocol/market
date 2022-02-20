@@ -12,11 +12,17 @@
 import {
   Asset,
   ServiceComputeOptions,
-  PublisherTrustedAlgorithm
+  PublisherTrustedAlgorithm,
+  getHash
 } from '@oceanprotocol/lib'
 import { CancelToken } from 'axios'
 import { gql } from 'urql'
-import { queryMetadata, getFilterTerm, generateBaseQuery } from './aquarius'
+import {
+  queryMetadata,
+  getFilterTerm,
+  generateBaseQuery,
+  retrieveDDOListByDIDs
+} from './aquarius'
 import { fetchDataForMultipleChains } from './subgraph'
 
 const getComputeOrders = gql`
@@ -263,27 +269,44 @@ function getServiceEndpoints(data: TokenOrder[], assets: Asset[]): string[] {
 // }
 
 export async function createTrustedAlgorithmList(
-  selectedAlgorithms: string[] // list of DIDs
+  selectedAlgorithms: string[], // list of DIDs,
+  assetChainId: number,
+  cancelToken: CancelToken
 ): Promise<PublisherTrustedAlgorithm[]> {
   const trustedAlgorithms: PublisherTrustedAlgorithm[] = []
 
-  // for (const selectedAlgorithm of selectedAlgorithms) {
-  //   const trustedAlgorithm =
-  //     await ocean.compute.createPublisherTrustedAlgorithmfromDID(
-  //       selectedAlgorithm
-  //     )
-  //   trustedAlgorithms.push(trustedAlgorithm)
-  // }
+  const selectedAssets = await retrieveDDOListByDIDs(
+    selectedAlgorithms,
+    [assetChainId],
+    cancelToken
+  )
+
+  for (const selectedAlgorithm of selectedAssets) {
+    const trustedAlgorithm = {
+      did: selectedAlgorithm.id,
+      containerSectionChecksum: getHash(
+        JSON.stringify(selectedAlgorithm.metadata.algorithm.container)
+      ),
+      filesChecksum: getHash(selectedAlgorithm.services[0].files)
+    }
+    trustedAlgorithms.push(trustedAlgorithm)
+  }
   return trustedAlgorithms
 }
 
 export async function transformComputeFormToServiceComputeOptions(
   values: ComputePrivacyForm,
-  currentOptions: ServiceComputeOptions
+  currentOptions: ServiceComputeOptions,
+  assetChainId: number,
+  cancelToken: CancelToken
 ): Promise<ServiceComputeOptions> {
   const publisherTrustedAlgorithms = values.allowAllPublishedAlgorithms
     ? []
-    : await createTrustedAlgorithmList(values.publisherTrustedAlgorithms)
+    : await createTrustedAlgorithmList(
+        values.publisherTrustedAlgorithms,
+        assetChainId,
+        cancelToken
+      )
 
   const privacy: ServiceComputeOptions = {
     publisherTrustedAlgorithms,

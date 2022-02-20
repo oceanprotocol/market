@@ -6,13 +6,19 @@ import FormEditComputeDataset from './FormEditComputeDataset'
 import {
   LoggerInstance,
   ServiceComputeOptions,
-  Metadata
+  Metadata,
+  DDO,
+  Service,
+  ProviderInstance,
+  getHash,
+  Nft
 } from '@oceanprotocol/lib'
 import { useUserPreferences } from '@context/UserPreferences'
 import DebugEditCompute from './DebugEditCompute'
 import styles from './index.module.css'
 // import { transformComputeFormToServiceComputePrivacy } from '@utils/compute'
 import Web3Feedback from '@shared/Web3Feedback'
+import { useCancelToken } from '@hooks/useCancelToken'
 import {
   getInitialValues,
   validationSchema,
@@ -21,7 +27,9 @@ import {
 import content from '../../../../content/pages/editComputeDataset.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { getServiceByName } from '@utils/ddo'
-import { setMinterToPublisher } from '@utils/dispenser'
+import { setMinterToPublisher, setMinterToDispenser } from '@utils/dispenser'
+import { transformComputeFormToServiceComputeOptions } from '@utils/compute'
+import { useAbortController } from '@hooks/useAbortController'
 
 export default function EditComputeDataset({
   asset
@@ -32,7 +40,8 @@ export default function EditComputeDataset({
   const { accountId, web3 } = useWeb3()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
-
+  const newAbortController = useAbortController()
+  const newCancelToken = useCancelToken()
   const hasFeedback = error || success
 
   async function handleSubmit(
@@ -50,52 +59,69 @@ export default function EditComputeDataset({
         )
         if (!tx) return
       }
-      // const privacy = await transformComputeFormToServiceComputePrivacy(
-      //   values,
-      //   ocean
-      // )
-      // const ddoEditedComputePrivacy = await ocean.compute.editComputePrivacy(
-      //   ddo,
-      //   1,
-      //   privacy as ServiceComputePrivacy
-      // )
-      // if (!ddoEditedComputePrivacy) {
-      //   setError(content.form.error)
-      //   LoggerInstance.error(content.form.error)
-      //   return
-      // }
-      const newComputeSettings: ServiceComputeOptions = {
-        publisherTrustedAlgorithms = values.publisherTrustedAlgorithms
+      const newComputeSettings: ServiceComputeOptions =
+        await transformComputeFormToServiceComputeOptions(
+          values,
+          asset.services[0].compute,
+          asset.chainId,
+          newCancelToken()
+        )
+
+      const updatedService: Service = {
+        compute: newComputeSettings,
+        ...asset.services[0]
       }
-      const newMetadata: Metadata = {
-        name: values.name,
-        description: values.description,
-        links: typeof values.links !== 'string' ? values.links : [],
-        author: values.author,
-        ...asset.metadata
+
+      const newDdo: DDO = {
+        services: [updatedService],
+        ...asset
       }
-      // const storedddo = await ocean.assets.updateMetadata(
-      //   ddoEditedComputePrivacy,
-      //   accountId
-      // )
-      // if (!storedddo) {
-      //   setError(content.form.error)
-      //   LoggerInstance.error(content.form.error)
-      //   return
-      // } else {
-      //   if (price.type === 'free') {
-      //     const tx = await setMinterToDispenser(
-      //       ocean,
-      //       ddo.services[0].datatokenAddress,
-      //       accountId,
-      //       setError
-      //     )
-      //     if (!tx) return
-      //   }
-      //   // Edit succeeded
-      //   setSuccess(content.form.success)
-      //   resetForm()
-      // }
+
+      LoggerInstance.log('[edit compute settings]  newDdo', newDdo)
+      const encryptedDdo = await ProviderInstance.encrypt(
+        newDdo,
+        newDdo.services[0].serviceEndpoint,
+        newAbortController()
+      )
+      LoggerInstance.log(
+        '[edit compute settings] Got encrypted DDO',
+        encryptedDdo
+      )
+
+      const metadataHash = getHash(JSON.stringify(newDdo))
+      const nft = new Nft(web3)
+
+      const setMetadataTx = await nft.setMetadata(
+        asset.nftAddress,
+        accountId,
+        0,
+        asset.services[0].serviceEndpoint,
+        '',
+        '0x2',
+        encryptedDdo,
+        '0x' + metadataHash
+      )
+
+      LoggerInstance.log('[edit] setMetadata result', setMetadataTx)
+
+      if (!setMetadataTx) {
+        setError(content.form.error)
+        LoggerInstance.error(content.form.error)
+        return
+      } else {
+        if (asset.accessDetails.type === 'free') {
+          const tx = await setMinterToDispenser(
+            web3,
+            asset?.accessDetails?.datatoken?.address,
+            accountId,
+            setError
+          )
+          if (!tx) return
+        }
+      }
+      // Edit succeeded
+      setSuccess(content.form.success)
+      resetForm()
     } catch (error) {
       LoggerInstance.error(error.message)
       setError(error.message)
