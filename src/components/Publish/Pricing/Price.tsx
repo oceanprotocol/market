@@ -1,16 +1,19 @@
 import Conversion from '@shared/Price/Conversion'
-import { useField, useFormikContext } from 'formik'
+import { Field, useField, useFormikContext } from 'formik'
 import React, { ReactElement } from 'react'
 import Input from '@shared/FormInput'
 import Error from './Error'
 import PriceUnit from '@shared/Price/PriceUnit'
 import styles from './Price.module.css'
 import { FormPublishData } from '../_types'
+import { getFieldContent } from '../_utils'
 
 export default function Price({
-  firstPrice
+  firstPrice,
+  content
 }: {
   firstPrice?: string
+  content?: any
 }): ReactElement {
   const [field, meta] = useField('pricing.price')
 
@@ -20,7 +23,13 @@ export default function Price({
   return (
     <div className={styles.price}>
       {values.pricing.type === 'free' ? (
-        <h4 className={styles.free}>Free</h4>
+        <div className={styles.free}>
+          <Field
+            {...getFieldContent('freeAgreement', content.fields)}
+            component={Input}
+            name="pricing.freeAgreement"
+          />
+        </div>
       ) : (
         <>
           <div className={styles.grid}>
