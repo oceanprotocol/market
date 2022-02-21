@@ -348,7 +348,8 @@ export async function getFeesTokensAndPricing(
   config: Config,
   nftFactory: NftFactory,
   web3: Web3,
-  ethToOceanConversionRate: number
+  ethToOceanConversionRate: number,
+  balance: string
 ) {
   const nftCreateData: NftCreateData = generateNftCreateData(
     values.metadata.nft
@@ -479,16 +480,12 @@ export async function getFeesTokensAndPricing(
   }
 
   const gasPrice = await web3.eth.getGasPrice()
-  const userBalance = web3.utils.fromWei(
-    await web3.eth.getBalance(accountId, 'latest')
-  )
-
   const gasFeeEth = web3.utils.fromWei(
     (+gasPrice * +gasEstimate).toString(),
     'ether'
   )
 
-  const totalCostCalc = parseFloat(userBalance) - parseFloat(gasFeeEth)
+  const totalCostCalc = parseFloat(balance) - parseFloat(gasFeeEth)
 
   if (totalCostCalc < 0) return 'insufficient-funds'
 
@@ -500,7 +497,8 @@ export async function getFeesPublishDDO(
   values: FormPublishData,
   accountId: string,
   web3: Web3,
-  ethToOceanConversionRate: number
+  ethToOceanConversionRate: number,
+  balance: string
 ) {
   const { feedback, services } = values
 
@@ -524,16 +522,12 @@ export async function getFeesPublishDDO(
   )
 
   const gasPrice = await web3.eth.getGasPrice()
-  const userBalance = web3.utils.fromWei(
-    await web3.eth.getBalance(accountId, 'latest')
-  )
-
   const gasFeeEth = web3.utils.fromWei(
     (+gasPrice * +gasEstimate).toString(),
     'ether'
   )
 
-  const totalCostCalc = parseFloat(userBalance) - parseFloat(gasFeeEth)
+  const totalCostCalc = parseFloat(balance) - parseFloat(gasFeeEth)
 
   if (totalCostCalc < 0) return 'insufficient-funds'
 

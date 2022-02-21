@@ -5,7 +5,6 @@ import { getFeesTokensAndPricing, getFeesPublishDDO } from '../_utils'
 import { useWeb3 } from '@context/Web3'
 import styles from './Feedback.module.css'
 import TransactionCount from './TransactionCount'
-import GasFees from './GasFees'
 import useNftFactory from '@hooks/contracts/useNftFactory'
 import { NftFactory, LoggerInstance } from '@oceanprotocol/lib'
 import { getOceanConfig } from '@utils/ocean'
@@ -18,14 +17,13 @@ export function Feedback(): ReactElement {
   const nftFactory = useNftFactory()
   const [gasFeeToken, setGasFeeToken] = useState('')
   const [gasFeeDDO, setGasFeeDDO] = useState('')
-  const { web3, chainId } = useWeb3()
+  const { balance, web3, chainId } = useWeb3()
   const { prices } = usePrices()
 
   const getEstGasFeeToken = async (
     values: FormPublishData,
     accountId: string,
-    nftFactory: NftFactory,
-    web3: Web3
+    nftFactory: NftFactory
   ): Promise<string> => {
     if (!nftFactory) return
 
@@ -38,7 +36,8 @@ export function Feedback(): ReactElement {
       config,
       nftFactory,
       web3,
-      (prices as any)?.eth
+      (prices as any)?.eth,
+      balance.eth
     )
 
     LoggerInstance.log('[gas fee] createTokensAndPricing tx', result)
@@ -48,8 +47,7 @@ export function Feedback(): ReactElement {
 
   const getEstGasFeeDDO = async (
     values: FormPublishData,
-    accountId: string,
-    web3: Web3
+    accountId: string
   ): Promise<string> => {
     if (!nftFactory) return
 
@@ -60,7 +58,8 @@ export function Feedback(): ReactElement {
       values,
       accountId,
       web3,
-      (prices as any)?.eth
+      (prices as any)?.eth,
+      balance.eth
     )
 
     LoggerInstance.log('[gas fee] getFeesPublishDDO tx', result)
@@ -68,14 +67,14 @@ export function Feedback(): ReactElement {
     return result
   }
 
-  useEffect(() => {
+  const calculateFees = () => {
     const calculateGasFeeToken = async () =>
       setGasFeeToken(
-        await getEstGasFeeToken(values, values.user.accountId, nftFactory, web3)
+        await getEstGasFeeToken(values, values.user.accountId, nftFactory)
       )
 
     const calculateGasFeeDDO = async () =>
-      setGasFeeDDO(await getEstGasFeeDDO(values, values.user.accountId, web3))
+      setGasFeeDDO(await getEstGasFeeDDO(values, values.user.accountId))
 
     const { feedback } = values
 
@@ -84,24 +83,31 @@ export function Feedback(): ReactElement {
     if (!gasFeeDDO && feedback['2'].status === 'success') {
       calculateGasFeeDDO()
     }
+  }
+
+  useEffect(() => {
+    calculateFees()
   }, [values, nftFactory])
 
   const items = Object.entries(values.feedback).map(([key, value], index) => (
     <li key={index} className={styles[value.status]}>
       <h3 className={styles.title}>
         {value.name}
-        {value.txCount > 0 && (
+        {value.txCount > 0 && index === 0 && (
           <TransactionCount
             txCount={value.txCount}
             chainId={values.user.chainId}
             txHash={value.txHash}
+            gasFees={gasFeeToken}
           />
         )}
-        {value.txCount > 0 && gasFeeToken && index === 0 && (
-          <GasFees gasFees={gasFeeToken} />
-        )}
-        {value.txCount > 0 && gasFeeDDO && index === 2 && (
-          <GasFees gasFees={gasFeeDDO} />
+        {value.txCount > 0 && index === 2 && (
+          <TransactionCount
+            txCount={value.txCount}
+            chainId={values.user.chainId}
+            txHash={value.txHash}
+            gasFees={gasFeeDDO}
+          />
         )}
       </h3>
       <p className={styles.description}>{value.description}</p>
