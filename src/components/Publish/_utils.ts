@@ -512,8 +512,7 @@ export async function getFeesPublishDDO(
     '',
     flags,
     feedback['2'].encryptedDdo,
-    '0x' + metadataHash,
-    []
+    '0x' + metadataHash
   )
 
   const gasPrice = await web3.eth.getGasPrice()
