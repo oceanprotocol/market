@@ -20,7 +20,7 @@ export default function GasFees({ gasFees }: { gasFees: string }) {
 
   return gasFees === 'insufficient-funds' ? (
     <span className={`${styles.gasFees} ${styles.noFunds}`}>
-      Insufficient ETH balance to cover gas fees
+      Insufficient balance for gas fees
     </span>
   ) : (
     <span className={styles.gasFees}>
