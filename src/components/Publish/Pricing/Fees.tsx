@@ -50,10 +50,10 @@ export default function Fees({
   const { chainId } = useWeb3()
 
   useEffect(() => {
-    getOpcFeees(chainId).then((response: OpcFeesData) => {
+    getOpcFeees(chainId || 1).then((response: OpcFeesData) => {
       setOpcFees(response)
     })
-  }, [])
+  }, [chainId])
 
   return (
     <>
