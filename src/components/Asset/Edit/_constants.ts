@@ -51,8 +51,6 @@ export function getComputeSettingsInitialValues(
 
   //TODO: should we add publisherTrustedAlgorithmPublishers to the form?
 
-  console.log('allowAllPublishedAlgorithms', allowAllPublishedAlgorithms)
-  console.log('publisherTrustedAlgorithms', publisherTrustedAlgorithms)
   return {
     allowAllPublishedAlgorithms,
     publisherTrustedAlgorithms: publisherTrustedAlgorithmsForForm

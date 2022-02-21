@@ -13,7 +13,6 @@ import {
   Asset
 } from '@oceanprotocol/lib'
 import { useUserPreferences } from '@context/UserPreferences'
-import a from './DebugEditCompute'
 import styles from './index.module.css'
 // import { transformComputeFormToServiceComputePrivacy } from '@utils/compute'
 import Web3Feedback from '@shared/Web3Feedback'
@@ -28,6 +27,7 @@ import { getServiceByName } from '@utils/ddo'
 import { setMinterToPublisher, setMinterToDispenser } from '@utils/dispenser'
 import { transformComputeFormToServiceComputeOptions } from '@utils/compute'
 import { useAbortController } from '@hooks/useAbortController'
+import DebugEditCompute from './DebugEditCompute'
 
 export default function EditComputeDataset({
   asset
@@ -167,7 +167,7 @@ export default function EditComputeDataset({
             />
             {debug === true && (
               <div className={styles.grid}>
-                {/* <DebugEditCompute values={values} ddo={ddo} /> */}
+                <DebugEditCompute values={values} asset={asset} />
               </div>
             )}
           </>
