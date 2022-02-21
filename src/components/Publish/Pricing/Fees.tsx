@@ -45,7 +45,7 @@ export default function Fees({
   pricingType: 'dynamic' | 'fixed'
 }): ReactElement {
   const [field, meta] = useField('pricing.swapFee')
-  const [opcFees, setOpcFees] = useState()
+  const [opcFees, setOpcFees] = useState(undefined)
 
   useMemo(() => {
     getOpcFeees(chainIds[0]).then((response: any) => {
