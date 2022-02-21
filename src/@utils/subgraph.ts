@@ -250,12 +250,12 @@ export async function fetchDataForMultipleChains(
   return datas
 }
 
-export async function getOpcFeees() {
+export async function getOpcFeees(chainId: number) {
   let opcFees
   const variables = {
     id: 1
   }
-  const context = getQueryContext(4)
+  const context = getQueryContext(chainId)
   try {
     const response: OperationResult<OpcFeesData> = await fetchData(
       OpcFeesQuery,

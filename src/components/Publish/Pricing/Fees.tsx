@@ -10,6 +10,7 @@ import {
 } from '../../../../app.config'
 import { getOpcFeees } from '../../../@utils/subgraph'
 import { OpcFeesQuery_opc as OpcFeesData } from '../../../@types/subgraph/OpcFeesQuery'
+import { useWeb3 } from '@context/Web3'
 
 const Default = ({
   title,
@@ -46,9 +47,10 @@ export default function Fees({
 }): ReactElement {
   const [field, meta] = useField('pricing.swapFee')
   const [opcFees, setOpcFees] = useState<OpcFeesData>(undefined)
+  const { chainId } = useWeb3()
 
   useEffect(() => {
-    getOpcFeees().then((response: OpcFeesData) => {
+    getOpcFeees(chainId).then((response: OpcFeesData) => {
       setOpcFees(response)
     })
   }, [])
