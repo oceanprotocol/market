@@ -1,7 +1,6 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import { useAsset } from '@context/Asset'
-import { useWeb3 } from '@context/Web3'
 import styles from './index.module.css'
 import Tabs from '@shared/atoms/Tabs'
 import EditMetadata from './EditMetadata'
@@ -10,7 +9,6 @@ import Page from '@shared/Page'
 import Loader from '@shared/atoms/Loader'
 
 export default function Edit({ uri }: { uri: string }): ReactElement {
-  const { accountId } = useWeb3()
   const { asset, error, loading } = useAsset()
   const [isCompute, setIsCompute] = useState(false)
 

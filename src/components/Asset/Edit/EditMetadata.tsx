@@ -22,8 +22,6 @@ import content from '../../../../content/pages/edit.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { setMinterToPublisher, setMinterToDispenser } from '@utils/dispenser'
 import { useAbortController } from '@hooks/useAbortController'
-import { getAccessDetails } from '@utils/accessDetailsAndPricing'
-import Debug from './DebugEditMetadata'
 import DebugEditMetadata from './DebugEditMetadata'
 
 export default function Edit({
@@ -39,11 +37,6 @@ export default function Edit({
   const [timeoutStringValue, setTimeoutStringValue] = useState<string>()
   const isComputeType = asset?.services[0]?.type === 'compute' ? true : false
   const hasFeedback = error || success
-
-  // console.log(
-  //   'getAccessDetails ',
-  //   getAccessDetails(asset.chainId, asset.datatokens[0].address)
-  // )
 
   async function updateFixedPrice(newPrice: string) {
     const fixedRateInstance = new FixedRateExchange(
