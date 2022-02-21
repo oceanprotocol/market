@@ -1,12 +1,10 @@
 import { useWeb3 } from '@context/Web3'
 import { Formik } from 'formik'
 import React, { ReactElement, useState } from 'react'
-import { useAsset } from '@context/Asset'
 import FormEditComputeDataset from './FormEditComputeDataset'
 import {
   LoggerInstance,
   ServiceComputeOptions,
-  Metadata,
   DDO,
   Service,
   ProviderInstance,
@@ -14,16 +12,12 @@ import {
   Nft
 } from '@oceanprotocol/lib'
 import { useUserPreferences } from '@context/UserPreferences'
-import DebugEditCompute from './DebugEditCompute'
+import a from './DebugEditCompute'
 import styles from './index.module.css'
 // import { transformComputeFormToServiceComputePrivacy } from '@utils/compute'
 import Web3Feedback from '@shared/Web3Feedback'
 import { useCancelToken } from '@hooks/useCancelToken'
-import {
-  getInitialValues,
-  validationSchema,
-  getComputeSettingsInitialValues
-} from './_constants'
+import { validationSchema, getComputeSettingsInitialValues } from './_constants'
 import content from '../../../../content/pages/editComputeDataset.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { getServiceByName } from '@utils/ddo'
@@ -147,7 +141,7 @@ export default function EditComputeDataset({
         ) : (
           <>
             <p className={styles.description}>{content.description}</p>
-            <article className={styles.grid}>
+            <article>
               <FormEditComputeDataset
                 title={content.form.title}
                 data={content.form.data}

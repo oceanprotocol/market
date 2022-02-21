@@ -7,13 +7,12 @@ import Tabs from '@shared/atoms/Tabs'
 import EditMetadata from './EditMetadata'
 import EditComputeDataset from './EditComputeDataset'
 import Page from '@shared/Page'
+import Loader from '@shared/atoms/Loader'
 
 export default function Edit({ uri }: { uri: string }): ReactElement {
   const { accountId } = useWeb3()
-  const { asset } = useAsset()
+  const { asset, error, loading } = useAsset()
   const [isCompute, setIsCompute] = useState(false)
-  LoggerInstance.log('asset edit main = ', asset)
-  LoggerInstance.log('accountId = ', accountId)
 
   // Switch type value upon tab change
   function handleTabChange(tabName: string) {
@@ -22,6 +21,7 @@ export default function Edit({ uri }: { uri: string }): ReactElement {
   }
 
   useEffect(() => {
+    if (!asset || error) return
     const isCompute = asset?.services[0]?.type === 'compute' ? true : false
     setIsCompute(isCompute)
   }, [asset])
@@ -38,7 +38,7 @@ export default function Edit({ uri }: { uri: string }): ReactElement {
     }
   ].filter((tab) => tab !== undefined)
 
-  return (
+  return asset && !loading ? (
     <Page uri={uri}>
       <div className={styles.contianer}>
         <Tabs
@@ -48,6 +48,10 @@ export default function Edit({ uri }: { uri: string }): ReactElement {
           className={styles.edit}
         />
       </div>
+    </Page>
+  ) : (
+    <Page title={undefined} uri={uri}>
+      <Loader />
     </Page>
   )
 }

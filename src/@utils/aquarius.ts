@@ -13,6 +13,8 @@ import {
   SortTermOptions
 } from '../@types/aquarius/SearchQuery'
 import { getServiceByName } from './ddo'
+import { getAccessDetailsForAssets } from './accessDetailsAndPricing'
+import { AssetExtended } from 'src/@types/AssetExtended'
 
 export const MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS = 476
 
@@ -208,49 +210,36 @@ export async function transformDDOToAssetSelection(
   selectedAlgorithms?: PublisherTrustedAlgorithm[],
   cancelToken?: CancelToken
 ): Promise<AssetSelectionAsset[]> {
-  const didList: string[] = []
-  //const priceList: PriceList = await getAssetsPriceList(ddoList)
-  const priceList: PriceList = null
-  const symbolList: any = {}
-  const didProviderEndpointMap: any = {}
-  for (const asset of assets) {
-    didList.push(asset.id)
-    symbolList[asset.id] = asset.datatokens[0].symbol
-    const algoComputeService = getServiceByName(asset, 'compute')
-    algoComputeService?.serviceEndpoint &&
-      (didProviderEndpointMap[asset.id] = algoComputeService?.serviceEndpoint)
-  }
-  const ddoNames = await getAssetsNames(didList, cancelToken)
+  const extendedAssets: AssetExtended[] = await getAccessDetailsForAssets(
+    assets
+  )
   const algorithmList: AssetSelectionAsset[] = []
-  didList?.forEach((did: string) => {
+
+  for (const asset of extendedAssets) {
+    const algoComputeService = getServiceByName(asset, 'compute')
+
     if (
-      priceList[did] &&
-      (!didProviderEndpointMap[did] ||
-        didProviderEndpointMap[did] === datasetProviderEndpoint)
+      asset?.accessDetails.price &&
+      algoComputeService?.serviceEndpoint === datasetProviderEndpoint
     ) {
       let selected = false
       selectedAlgorithms?.forEach((algorithm: PublisherTrustedAlgorithm) => {
-        if (algorithm.did === did) {
+        if (algorithm.did === asset.id) {
           selected = true
         }
       })
+      const algorithmAsset: AssetSelectionAsset = {
+        did: asset.id,
+        name: asset.datatokens[0].name,
+        price: asset.accessDetails.price,
+        checked: selected,
+        symbol: asset.datatokens[0].symbol
+      }
       selected
-        ? algorithmList.unshift({
-            did: did,
-            name: ddoNames[did],
-            price: priceList[did],
-            checked: selected,
-            symbol: symbolList[did]
-          })
-        : algorithmList.push({
-            did: did,
-            name: ddoNames[did],
-            price: priceList[did],
-            checked: selected,
-            symbol: symbolList[did]
-          })
+        ? algorithmList.unshift(algorithmAsset)
+        : algorithmList.push(algorithmAsset)
     }
-  })
+  }
   return algorithmList
 }
 

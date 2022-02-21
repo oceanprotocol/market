@@ -21,7 +21,6 @@
 
 .contianer {
   composes: box from '@shared/atoms/Box.module.css';
-  margin-top: var(--spacer);
   position: relative;
 }
 
@@ -29,4 +28,19 @@
   .grid {
     grid-template-columns: 1.5fr 1fr;
   }
+}
+
+.description {
+  font-size: var(--font-size-large);
+}
+
+.title {
+  font-size: var(--font-size-large);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: calc(var(--spacer) / 2);
+  margin-top: -1rem;
+  margin-left: -2rem;
+  margin-right: -2rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
 }

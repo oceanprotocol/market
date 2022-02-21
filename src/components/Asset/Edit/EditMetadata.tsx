@@ -2,7 +2,6 @@ import React, { ReactElement, useState } from 'react'
 import { Formik } from 'formik'
 import {
   LoggerInstance,
-  Asset,
   Metadata,
   FixedRateExchange,
   DDO,
@@ -12,7 +11,6 @@ import {
 } from '@oceanprotocol/lib'
 import { validationSchema, getInitialValues } from './_constants'
 import { MetadataEditForm } from './_types'
-import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import { useUserPreferences } from '@context/UserPreferences'
 import Web3Feedback from '@shared/Web3Feedback'
@@ -22,10 +20,8 @@ import styles from './index.module.css'
 import content from '../../../../content/pages/edit.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { setMinterToPublisher, setMinterToDispenser } from '@utils/dispenser'
-import Debug from 'src/components/Publish/Debug'
 import { useAbortController } from '@hooks/useAbortController'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
-
 // import Debug from './DebugEditMetadata'
 
 export default function Edit({
@@ -42,7 +38,6 @@ export default function Edit({
   const isComputeType = asset?.services[0]?.type === 'compute' ? true : false
   const hasFeedback = error || success
 
-  console.log('asset', asset)
   // console.log(
   //   'getAccessDetails ',
   //   getAccessDetails(asset.chainId, asset.datatokens[0].address)
@@ -188,7 +183,7 @@ export default function Edit({
         ) : (
           <>
             <p className={styles.description}>{content.description}</p>
-            <article className={styles.grid}>
+            <article>
               <FormEditMetadata
                 data={content.form.data}
                 setTimeoutStringValue={setTimeoutStringValue}

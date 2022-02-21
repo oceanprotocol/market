@@ -180,6 +180,20 @@ export default function PublishPage({
       // theoretically used by aquarius or provider, not implemented yet, will remain hardcoded
       const flags = '0x2'
 
+      const estGasSetMetadata = await nft.estGasSetMetadata(
+        _erc721Address,
+        accountId,
+        0,
+        values.services[0].providerUrl.url,
+        '',
+        flags,
+        _encryptedDdo,
+        '0x' + metadataHash,
+        []
+      )
+
+      console.log('est Gas set metadata --', estGasSetMetadata)
+
       const res = await nft.setMetadata(
         _erc721Address,
         accountId,
