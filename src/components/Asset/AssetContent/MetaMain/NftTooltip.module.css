@@ -30,3 +30,7 @@
 .links {
   margin-top: calc(var(--spacer) / 3);
 }
+
+.links a {
+  display: block;
+}

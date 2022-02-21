@@ -47,7 +47,6 @@ export default function NftTooltip({
         <div className={styles.links}>
           {address && (
             <ExplorerLink
-              className={styles.datatoken}
               networkId={chainId}
               path={
                 isBlockscoutExplorer ? `tokens/${address}` : `token/${address}`
