@@ -79,9 +79,7 @@ export function Feedback(): ReactElement {
 
     const { feedback } = values
 
-    if (!gasFeeToken) {
-      calculateGasFeeToken()
-    }
+    calculateGasFeeToken()
 
     if (!gasFeeDDO && feedback['2'].status === 'success') {
       calculateGasFeeDDO()

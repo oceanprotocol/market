@@ -11,6 +11,10 @@
   padding: calc(var(--spacer) / 16) calc(var(--spacer) / 4);
 }
 
+.noFunds {
+  color: var(--brand-alert-red);
+}
+
 a.gasFees {
   color: var(--color-primary);
 }

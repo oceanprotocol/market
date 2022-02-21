@@ -248,17 +248,6 @@ export async function createTokensAndPricing(
         poolParams
       )
 
-      // the spender in this case is the erc721Factory because we are delegating
-      const txApprove = await approve(
-        web3,
-        accountId,
-        config.oceanTokenAddress,
-        config.erc721FactoryAddress,
-        values.pricing.amountOcean.toString(),
-        false
-      )
-      LoggerInstance.log('[publish] pool.approve tx', txApprove, nftFactory)
-
       const result = await nftFactory.createNftErc20WithPool(
         accountId,
         nftCreateData,
@@ -479,11 +468,16 @@ export async function getFeesTokensAndPricing(
   }
 
   const gasPrice = await web3.eth.getGasPrice()
+  const userBalance = await web3.eth.getBalance(accountId)
 
   const gasFeeEth = web3.utils.fromWei(
     (+gasPrice * +gasEstimate).toString(),
     'ether'
   )
+  const balanceEth = web3.utils.fromWei(userBalance.toString(), 'ether')
+  const totalCostCalc = parseFloat(balanceEth) - parseFloat(gasFeeEth)
+
+  if (totalCostCalc < 0) return 'insufficient-funds'
 
   const gasFeeOcean = (+gasFeeEth / +ethToOceanConversionRate).toString()
   return gasFeeOcean
@@ -517,11 +511,16 @@ export async function getFeesPublishDDO(
   )
 
   const gasPrice = await web3.eth.getGasPrice()
+  const userBalance = await web3.eth.getBalance(accountId)
 
   const gasFeeEth = web3.utils.fromWei(
     (+gasPrice * +gasEstimate).toString(),
     'ether'
   )
+  const balanceEth = web3.utils.fromWei(userBalance.toString(), 'ether')
+  const totalCostCalc = parseFloat(balanceEth) - parseFloat(gasFeeEth)
+
+  if (totalCostCalc < 0) return 'insufficient-funds'
 
   const gasFeeOcean = (+gasFeeEth / +ethToOceanConversionRate).toString()
   return gasFeeOcean
