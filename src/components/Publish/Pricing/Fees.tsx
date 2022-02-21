@@ -4,15 +4,21 @@ import styles from './Fees.module.css'
 import { useField } from 'formik'
 import Input from '@shared/FormInput'
 import Error from './Error'
+import {
+  publisherMarketPoolSwapFee,
+  publisherMarketFixedSwapFee
+} from '../../../../app.config'
 
 const Default = ({
   title,
   name,
-  tooltip
+  tooltip,
+  value
 }: {
   title: string
   name: string
   tooltip: string
+  value: string
 }) => (
   <Input
     label={
@@ -21,7 +27,7 @@ const Default = ({
         <Tooltip content={tooltip} />
       </>
     }
-    value="0.1"
+    value={value}
     name={name}
     postfix="%"
     readOnly
@@ -64,12 +70,18 @@ export default function Fees({
           title="Community Fee"
           name="communityFee"
           tooltip={tooltips.communityFee}
+          value="0.1"
         />
 
         <Default
           title="Marketplace Fee"
           name="marketplaceFee"
           tooltip={tooltips.marketplaceFee}
+          value={
+            pricingType === 'dynamic'
+              ? publisherMarketPoolSwapFee
+              : publisherMarketFixedSwapFee
+          }
         />
       </div>
     </>
