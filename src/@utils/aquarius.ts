@@ -79,7 +79,7 @@ export function transformQueryResult(
   result.results = (queryResult.hits.hits || []).map(
     (hit) => hit._source as Asset
   )
-  result.totalResults = queryResult.hits.total
+  result.totalResults = queryResult.hits.total.value
   result.totalPages =
     result.totalResults / size < 1
       ? Math.floor(result.totalResults / size)
@@ -180,8 +180,9 @@ export async function retrieveDDOListByDIDs(
   chainIds: number[],
   cancelToken: CancelToken
 ): Promise<Asset[]> {
+  if (didList?.length === 0 || chainIds?.length === 0) return []
+
   try {
-    if (didList?.length === 0 || chainIds?.length === 0) return []
     const orderedDDOListByDIDList: Asset[] = []
     const baseQueryparams = {
       chainIds,
@@ -190,9 +191,10 @@ export async function retrieveDDOListByDIDs(
     } as BaseQueryParams
     const query = generateBaseQuery(baseQueryparams)
     const result = await queryMetadata(query, cancelToken)
+
     didList.forEach((did: string) => {
       const ddo = result.results.find((ddo: Asset) => ddo.id === did)
-      orderedDDOListByDIDList.push(ddo)
+      if (ddo) orderedDDOListByDIDList.push(ddo)
     })
     return orderedDDOListByDIDList
   } catch (error) {
