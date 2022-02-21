@@ -23,6 +23,7 @@ import { AssetExtended } from 'src/@types/AssetExtended'
 import { setMinterToPublisher, setMinterToDispenser } from '@utils/dispenser'
 import { useAbortController } from '@hooks/useAbortController'
 import DebugEditMetadata from './DebugEditMetadata'
+import { getOceanConfig } from '@utils/ocean'
 
 export default function Edit({
   asset
@@ -39,13 +40,19 @@ export default function Edit({
   const hasFeedback = error || success
 
   async function updateFixedPrice(newPrice: string) {
+    console.log('updateFixedPrice newPrice: ', newPrice)
+    console.log('updateFixedPrice asset.accessDetails: ', asset.accessDetails)
+    const config = getOceanConfig(asset.chainId)
+
     const fixedRateInstance = new FixedRateExchange(
       web3,
-      asset?.accessDetails?.addressOrId
+      config.fixedRateExchangeAddress
     )
+
+    console.log('updateFixedPrice fixedRateInstance: ', fixedRateInstance)
     const setPriceResp = await fixedRateInstance.setRate(
       accountId,
-      asset?.accessDetails?.addressOrId,
+      asset.accessDetails.addressOrId,
       newPrice
     )
     LoggerInstance.log('[edit] setFixedRate result', setPriceResp)
@@ -182,7 +189,7 @@ export default function Edit({
                 data={content.form.data}
                 setTimeoutStringValue={setTimeoutStringValue}
                 values={initialValues}
-                showPrice={asset?.accessDetails?.price?.type === 'fixed'}
+                showPrice={asset?.accessDetails?.type === 'fixed'}
                 isComputeDataset={isComputeType}
               />
 
