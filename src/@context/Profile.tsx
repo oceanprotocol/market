@@ -186,7 +186,7 @@ function ProfileProvider({
           cancelTokenSource.token
         )
         setAssets(result.results)
-        setAssetsTotal(result.results.length)
+        setAssetsTotal(result.totalResults)
         LoggerInstance.log(
           `[profile] Fetched ${result.totalResults} assets.`,
           result.results
@@ -220,14 +220,14 @@ function ProfileProvider({
     async (cancelToken: CancelToken) => {
       if (!accountId || !chainIds) return
 
-      const didList: string[] = []
+      const dtList: string[] = []
       const tokenOrders = await getUserTokenOrders(accountId, chainIds)
 
       for (let i = 0; i < tokenOrders?.length; i++) {
-        didList.push(tokenOrders[i].datatoken.address)
+        dtList.push(tokenOrders[i].datatoken.address)
       }
       const downloads = await getDownloadAssets(
-        didList,
+        dtList,
         tokenOrders,
         chainIds,
         cancelToken

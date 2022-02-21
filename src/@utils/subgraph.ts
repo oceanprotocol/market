@@ -162,7 +162,6 @@ const UserTokenOrders = gql`
   }
 `
 
-// TODO: counting orders might be enough here to get sales for a user
 const UserSalesQuery = gql`
   query UserSalesQuery($user: String!) {
     users(where: { id: $user }) {
