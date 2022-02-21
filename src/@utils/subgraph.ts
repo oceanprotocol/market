@@ -12,7 +12,10 @@ import {
   PoolShares as PoolSharesList,
   PoolShares_poolShares as PoolShare
 } from '../@types/subgraph/PoolShares'
-import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
+import {
+  OrdersData_orders as OrdersData,
+  OrdersData_orders_datatoken as OrdersDatatoken
+} from '../@types/subgraph/OrdersData'
 import { UserSalesQuery as UsersSalesList } from '../@types/subgraph/UserSalesQuery'
 
 export interface UserLiquidity {
@@ -141,7 +144,11 @@ const UserTokenOrders = gql`
       orderDirection: desc
       where: { consumer: $user }
     ) {
+      consumer {
+        id
+      }
       datatoken {
+        id
         address
         symbol
       }
@@ -157,12 +164,10 @@ const UserTokenOrders = gql`
 
 // TODO: counting orders might be enough here to get sales for a user
 const UserSalesQuery = gql`
-  query UserSalesQuery($userSalesId: ID) {
-    users(where: { id: $userSalesId }) {
+  query UserSalesQuery($user: String!) {
+    users(where: { id: $user }) {
       id
-      orders(first: 10000) {
-        id
-      }
+      totalSales
     }
   }
 `
@@ -368,8 +373,8 @@ export async function getPoolSharesData(
 export async function getUserTokenOrders(
   accountId: string,
   chainIds: number[]
-): Promise<OrdersData[]> {
-  const data: OrdersData[] = []
+): Promise<string[]> {
+  const data: string[] = []
   const variables = { user: accountId?.toLowerCase() }
 
   try {
@@ -378,13 +383,13 @@ export async function getUserTokenOrders(
       variables,
       chainIds
     )
+    console.log('TOKEN ORDERS: ', tokenOrders)
 
     for (let i = 0; i < tokenOrders?.length; i++) {
-      tokenOrders[i].tokenOrders.forEach((tokenOrder: OrdersData) => {
-        data.push(tokenOrder)
+      tokenOrders[i].orders.forEach((tokenOrder: OrdersDatatoken) => {
+        data.push(tokenOrder.address)
       })
     }
-
     return data
   } catch (error) {
     LoggerInstance.error(error.message)
@@ -395,7 +400,7 @@ export async function getUserSales(
   accountId: string,
   chainIds: number[]
 ): Promise<number> {
-  const variables = { userSalesId: accountId?.toLowerCase() }
+  const variables = { user: accountId?.toLowerCase() }
   try {
     const userSales = await fetchDataForMultipleChains(
       UserSalesQuery,
@@ -404,8 +409,8 @@ export async function getUserSales(
     )
     let salesSum = 0
     for (let i = 0; i < userSales.length; i++) {
-      if (userSales[i].users.length > 0) {
-        salesSum += userSales[i].users[0].nrSales
+      if (userSales[i].users[0].totalSales > 0) {
+        salesSum += parseInt(userSales[i].users[0].totalSales)
       }
     }
     return salesSum
