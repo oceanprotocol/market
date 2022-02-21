@@ -438,7 +438,7 @@ export async function getTopAssetsPublishers(
       if (publishersIndex === -1) {
         const publisher: AccountTeaserVM = {
           address: fetchedUsers.data.users[i].id,
-          nrSales: fetchedUsers.data.users[i].orders.length
+          nrSales: fetchedUsers.data.users[i].totalSales
         }
         publisherSales.push(publisher)
       } else {
