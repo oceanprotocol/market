@@ -4,13 +4,10 @@ import styles from './Fees.module.css'
 import { useField } from 'formik'
 import Input from '@shared/FormInput'
 import Error from './Error'
-import {
-  publisherMarketPoolSwapFee,
-  publisherMarketFixedSwapFee
-} from '../../../../app.config'
 import { getOpcFeees } from '../../../@utils/subgraph'
 import { OpcFeesQuery_opc as OpcFeesData } from '../../../@types/subgraph/OpcFeesQuery'
 import { useWeb3 } from '@context/Web3'
+import { useSiteMetadata } from '@hooks/useSiteMetadata'
 
 const Default = ({
   title,
@@ -48,6 +45,7 @@ export default function Fees({
   const [field, meta] = useField('pricing.swapFee')
   const [opcFees, setOpcFees] = useState<OpcFeesData>(undefined)
   const { chainId } = useWeb3()
+  const { appConfig } = useSiteMetadata()
 
   useEffect(() => {
     getOpcFeees(chainId || 1).then((response: OpcFeesData) => {
@@ -90,8 +88,8 @@ export default function Fees({
           tooltip={tooltips.marketplaceFee}
           value={
             pricingType === 'dynamic'
-              ? publisherMarketPoolSwapFee
-              : publisherMarketFixedSwapFee
+              ? appConfig.publisherMarketPoolSwapFee
+              : appConfig.publisherMarketFixedSwapFee
           }
         />
       </div>
