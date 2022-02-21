@@ -15,7 +15,7 @@
     "type-check": "tsc --noEmit",
     "deploy:s3": "bash scripts/deploy-s3.sh",
     "postinstall": "husky install",
-    "codegen:apollo": "apollo client:codegen --endpoint=https://subgraphv4.rinkeby.oceanprotocol.com/subgraphs/name/oceanprotocol/ocean-subgraph --target typescript --tsFileExtension=d.ts --outputFlat src/@types/subgraph/"
+    "codegen:apollo": "apollo client:codegen --endpoint=https://v4.subgraph.rinkeby.oceanprotocol.com/subgraphs/name/oceanprotocol/ocean-subgraph --target typescript --tsFileExtension=d.ts --outputFlat src/@types/subgraph/"
   },
   "dependencies": {
     "@coingecko/cryptoformat": "^0.4.4",
@@ -43,7 +43,7 @@
     "jwt-decode": "^3.1.2",
     "lodash.debounce": "^4.0.8",
     "lodash.omit": "^4.5.0",
-    "next": "^12.0.9",
+    "next": "^12.1.0",
     "query-string": "^7.1.0",
     "react": "^17.0.2",
     "react-chartjs-2": "^4.0.1",

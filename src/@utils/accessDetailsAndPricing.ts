@@ -334,12 +334,12 @@ export async function getAccessDetailsForAssets(
   for (const asset of assets) {
     if (chainAssetLists[asset.chainId]) {
       chainAssetLists[asset.chainId].push(
-        asset?.services[0].datatokenAddress.toLowerCase()
+        asset.services[0].datatokenAddress.toLowerCase()
       )
     } else {
       chainAssetLists[asset.chainId] = []
       chainAssetLists[asset.chainId].push(
-        asset?.services[0].datatokenAddress.toLowerCase()
+        asset.services[0].datatokenAddress.toLowerCase()
       )
     }
   }

@@ -20,7 +20,10 @@ interface SearchResponse {
   _scroll_id?: string | undefined
   _shards: ShardsResponse
   hits: {
-    total: number
+    total: {
+      relation: string
+      value: number
+    }
     max_score: number
     hits: Array<{
       _index: string
