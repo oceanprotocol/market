@@ -479,14 +479,16 @@ export async function getFeesTokensAndPricing(
   }
 
   const gasPrice = await web3.eth.getGasPrice()
-  const userBalance = await web3.eth.getBalance(accountId)
+  const userBalance = web3.utils.fromWei(
+    await web3.eth.getBalance(accountId, 'latest')
+  )
 
   const gasFeeEth = web3.utils.fromWei(
     (+gasPrice * +gasEstimate).toString(),
     'ether'
   )
-  const balanceEth = web3.utils.fromWei(userBalance.toString(), 'ether')
-  const totalCostCalc = parseFloat(balanceEth) - parseFloat(gasFeeEth)
+
+  const totalCostCalc = parseFloat(userBalance) - parseFloat(gasFeeEth)
 
   if (totalCostCalc < 0) return 'insufficient-funds'
 
@@ -522,14 +524,16 @@ export async function getFeesPublishDDO(
   )
 
   const gasPrice = await web3.eth.getGasPrice()
-  const userBalance = await web3.eth.getBalance(accountId)
+  const userBalance = web3.utils.fromWei(
+    await web3.eth.getBalance(accountId, 'latest')
+  )
 
   const gasFeeEth = web3.utils.fromWei(
     (+gasPrice * +gasEstimate).toString(),
     'ether'
   )
-  const balanceEth = web3.utils.fromWei(userBalance.toString(), 'ether')
-  const totalCostCalc = parseFloat(balanceEth) - parseFloat(gasFeeEth)
+
+  const totalCostCalc = parseFloat(userBalance) - parseFloat(gasFeeEth)
 
   if (totalCostCalc < 0) return 'insufficient-funds'
 
