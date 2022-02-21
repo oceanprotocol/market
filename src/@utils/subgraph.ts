@@ -373,8 +373,8 @@ export async function getPoolSharesData(
 export async function getUserTokenOrders(
   accountId: string,
   chainIds: number[]
-): Promise<string[]> {
-  const data: string[] = []
+): Promise<OrdersData[]> {
+  const data: OrdersData[] = []
   const variables = { user: accountId?.toLowerCase() }
 
   try {
@@ -383,13 +383,12 @@ export async function getUserTokenOrders(
       variables,
       chainIds
     )
-    console.log('TOKEN ORDERS: ', tokenOrders)
-
     for (let i = 0; i < tokenOrders?.length; i++) {
-      tokenOrders[i].orders.forEach((tokenOrder: OrdersDatatoken) => {
-        data.push(tokenOrder.address)
+      tokenOrders[i].orders.forEach((tokenOrder: OrdersData) => {
+        data.push(tokenOrder)
       })
     }
+
     return data
   } catch (error) {
     LoggerInstance.error(error.message)

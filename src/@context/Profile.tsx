@@ -177,8 +177,6 @@ function ProfileProvider({
     if (!accountId || !isEthAddress) return
 
     const cancelTokenSource = axios.CancelToken.source()
-    console.log('ACC ID: ', accountId)
-    console.log('CHAINIDS: ', chainIds)
 
     async function getAllPublished() {
       try {
@@ -187,7 +185,6 @@ function ProfileProvider({
           chainIds,
           cancelTokenSource.token
         )
-        console.log('RESULTS: ', result)
         setAssets(result.results)
         setAssetsTotal(result.results.length)
         LoggerInstance.log(
@@ -227,12 +224,8 @@ function ProfileProvider({
       const tokenOrders = await getUserTokenOrders(accountId, chainIds)
 
       for (let i = 0; i < tokenOrders?.length; i++) {
-        const did = web3.utils
-          .toChecksumAddress(tokenOrders[i].datatoken.address)
-          .replace('0x', 'did:op:')
-        didList.push(did)
+        didList.push(tokenOrders[i].datatoken.address)
       }
-
       const downloads = await getDownloadAssets(
         didList,
         tokenOrders,
