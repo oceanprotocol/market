@@ -39,17 +39,16 @@ export function getComputeSettingsInitialValues(
 ): ComputePrivacyForm {
   const { publisherTrustedAlgorithmPublishers, publisherTrustedAlgorithms } =
     compute
-  const allowAllPublishedAlgorithms =
+  const allowAllPublishedAlgorithms = !(
     publisherTrustedAlgorithms?.length > 0 ||
     publisherTrustedAlgorithmPublishers?.length > 0
-      ? false
-      : true
+  )
 
   const publisherTrustedAlgorithmsForForm = (
     publisherTrustedAlgorithms || []
   ).map((algo) => algo.did)
 
-  //TODO: should we add publisherTrustedAlgorithmPublishers to the form?
+  // TODO: should we add publisherTrustedAlgorithmPublishers to the form?
 
   return {
     allowAllPublishedAlgorithms,

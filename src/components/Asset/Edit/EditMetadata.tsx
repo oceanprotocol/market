@@ -35,7 +35,7 @@ export default function Edit({
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const [timeoutStringValue, setTimeoutStringValue] = useState<string>()
-  const isComputeType = asset?.services[0]?.type === 'compute' ? true : false
+  const isComputeType = asset?.services[0]?.type === 'compute'
   const hasFeedback = error || success
 
   async function updateFixedPrice(newPrice: string) {
@@ -147,7 +147,7 @@ export default function Edit({
           if (!tx) return
         }
       }
-      //Edit succeeded
+      // Edit succeeded
       setSuccess(content.form.success)
       resetForm()
     } catch (error) {

@@ -20,18 +20,18 @@ export default function Edit({ uri }: { uri: string }): ReactElement {
 
   useEffect(() => {
     if (!asset || error) return
-    const isCompute = asset?.services[0]?.type === 'compute' ? true : false
+    const isCompute = asset?.services[0]?.type === 'compute'
     setIsCompute(isCompute)
   }, [asset])
 
   const tabs = [
     {
       title: 'Edit Metadata',
-      content: <EditMetadata asset={asset}></EditMetadata>
+      content: <EditMetadata asset={asset} />
     },
     {
       title: 'Edit Compute Settings',
-      content: <EditComputeDataset asset={asset}></EditComputeDataset>,
+      content: <EditComputeDataset asset={asset} />,
       disabled: !isCompute
     }
   ].filter((tab) => tab !== undefined)
