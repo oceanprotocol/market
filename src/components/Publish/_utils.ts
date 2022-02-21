@@ -248,6 +248,17 @@ export async function createTokensAndPricing(
         poolParams
       )
 
+      // the spender in this case is the erc721Factory because we are delegating
+      const txApprove = await approve(
+        web3,
+        accountId,
+        config.oceanTokenAddress,
+        config.erc721FactoryAddress,
+        values.pricing.amountOcean.toString(),
+        false
+      )
+      LoggerInstance.log('[publish] pool.approve tx', txApprove, nftFactory)
+
       const result = await nftFactory.createNftErc20WithPool(
         accountId,
         nftCreateData,
