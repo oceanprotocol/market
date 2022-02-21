@@ -4,7 +4,7 @@ import styles from './Fees.module.css'
 import { useField } from 'formik'
 import Input from '@shared/FormInput'
 import Error from './Error'
-import { getOpcFeees } from '../../../@utils/subgraph'
+import { getOpcFees } from '../../../@utils/subgraph'
 import { OpcFeesQuery_opc as OpcFeesData } from '../../../@types/subgraph/OpcFeesQuery'
 import { useWeb3 } from '@context/Web3'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
@@ -48,7 +48,7 @@ export default function Fees({
   const { appConfig } = useSiteMetadata()
 
   useEffect(() => {
-    getOpcFeees(chainId || 1).then((response: OpcFeesData) => {
+    getOpcFees(chainId || 1).then((response: OpcFeesData) => {
       setOpcFees(response)
     })
   }, [chainId])

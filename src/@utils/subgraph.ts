@@ -250,7 +250,7 @@ export async function fetchDataForMultipleChains(
   return datas
 }
 
-export async function getOpcFeees(chainId: number) {
+export async function getOpcFees(chainId: number) {
   let opcFees
   const variables = {
     id: 1
