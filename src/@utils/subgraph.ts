@@ -14,6 +14,7 @@ import {
 } from '../@types/subgraph/PoolShares'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { UserSalesQuery as UsersSalesList } from '../@types/subgraph/UserSalesQuery'
+import { OpcFeesQuery as OpcFeesData } from '../@types/subgraph/OpcFeesQuery'
 
 export interface UserLiquidity {
   price: string
@@ -249,16 +250,18 @@ export async function fetchDataForMultipleChains(
   return datas
 }
 
-export async function getOpcFeees(chainId?: number) {
+export async function getOpcFeees() {
   let opcFees
   const variables = {
     id: 1
   }
-  console.log(chainId)
   const context = getQueryContext(4)
   try {
-    const response = await fetchData(OpcFeesQuery, variables, context)
-    console.log(response)
+    const response: OperationResult<OpcFeesData> = await fetchData(
+      OpcFeesQuery,
+      variables,
+      context
+    )
     opcFees = response?.data?.opc
   } catch (error) {
     console.error('Error fetchData: ', error.message)

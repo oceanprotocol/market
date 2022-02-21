@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useMemo, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import Tooltip from '@shared/atoms/Tooltip'
 import styles from './Fees.module.css'
 import { useField } from 'formik'
@@ -9,7 +9,7 @@ import {
   publisherMarketFixedSwapFee
 } from '../../../../app.config'
 import { getOpcFeees } from '../../../@utils/subgraph'
-import { chainIds } from 'app.config'
+import { OpcFeesQuery_opc as OpcFeesData } from '../../../@types/subgraph/OpcFeesQuery'
 
 const Default = ({
   title,
@@ -45,11 +45,10 @@ export default function Fees({
   pricingType: 'dynamic' | 'fixed'
 }): ReactElement {
   const [field, meta] = useField('pricing.swapFee')
-  const [opcFees, setOpcFees] = useState(undefined)
+  const [opcFees, setOpcFees] = useState<OpcFeesData>(undefined)
 
   useEffect(() => {
-    getOpcFeees(chainIds[0]).then((response: any) => {
-      console.log(response)
+    getOpcFeees().then((response: OpcFeesData) => {
       setOpcFees(response)
     })
   }, [])
