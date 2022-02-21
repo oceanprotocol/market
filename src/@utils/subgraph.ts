@@ -185,8 +185,8 @@ const TopSalesQuery = gql`
 `
 
 const OpcFeesQuery = gql`
-  query OpcFeesQuery {
-    opc(where: { id: $id }) {
+  query OpcFeesQuery($id: ID!) {
+    opc(id: $id) {
       swapOceanFee
       swapNonOceanFee
       consumeFee
@@ -252,11 +252,12 @@ export async function fetchDataForMultipleChains(
 export async function getOpcFeees(chainId?: number) {
   let opcFees
   const variables = {
-    id: chainId
+    id: 1
   }
   console.log(chainId)
+  const context = getQueryContext(4)
   try {
-    const response = await fetchData(OpcFeesQuery, variables, null)
+    const response = await fetchData(OpcFeesQuery, variables, context)
     console.log(response)
     opcFees = response?.data?.opc
   } catch (error) {

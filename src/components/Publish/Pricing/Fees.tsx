@@ -1,4 +1,4 @@
-import React, { ReactElement, useMemo, useState } from 'react'
+import React, { ReactElement, useEffect, useMemo, useState } from 'react'
 import Tooltip from '@shared/atoms/Tooltip'
 import styles from './Fees.module.css'
 import { useField } from 'formik'
@@ -47,7 +47,7 @@ export default function Fees({
   const [field, meta] = useField('pricing.swapFee')
   const [opcFees, setOpcFees] = useState(undefined)
 
-  useMemo(() => {
+  useEffect(() => {
     getOpcFeees(chainIds[0]).then((response: any) => {
       console.log(response)
       setOpcFees(response)
