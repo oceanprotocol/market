@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useMemo, useState } from 'react'
 import Tooltip from '@shared/atoms/Tooltip'
 import styles from './Fees.module.css'
 import { useField } from 'formik'
@@ -8,6 +8,8 @@ import {
   publisherMarketPoolSwapFee,
   publisherMarketFixedSwapFee
 } from '../../../../app.config'
+import { getOpcFeees } from '../../../@utils/subgraph'
+import { chainIds } from 'app.config'
 
 const Default = ({
   title,
@@ -43,6 +45,14 @@ export default function Fees({
   pricingType: 'dynamic' | 'fixed'
 }): ReactElement {
   const [field, meta] = useField('pricing.swapFee')
+  const [opcFees, setOpcFees] = useState()
+
+  useMemo(() => {
+    getOpcFeees(chainIds[0]).then((response: any) => {
+      console.log(response)
+      setOpcFees(response)
+    })
+  }, [])
 
   return (
     <>
@@ -70,7 +80,7 @@ export default function Fees({
           title="Community Fee"
           name="communityFee"
           tooltip={tooltips.communityFee}
-          value="0.1"
+          value={opcFees?.consumeFee || '0'}
         />
 
         <Default

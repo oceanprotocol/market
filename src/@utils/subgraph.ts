@@ -184,6 +184,17 @@ const TopSalesQuery = gql`
   }
 `
 
+const OpcFeesQuery = gql`
+  query OpcFeesQuery {
+    opc(where: { id: $id }) {
+      swapOceanFee
+      swapNonOceanFee
+      consumeFee
+      providerFee
+    }
+  }
+`
+
 export function getSubgraphUri(chainId: number): string {
   const config = getOceanConfig(chainId)
   return config.subgraphUri
@@ -236,6 +247,23 @@ export async function fetchDataForMultipleChains(
     }
   }
   return datas
+}
+
+export async function getOpcFeees(chainId?: number) {
+  let opcFees
+  const variables = {
+    id: chainId
+  }
+  console.log(chainId)
+  try {
+    const response = await fetchData(OpcFeesQuery, variables, null)
+    console.log(response)
+    opcFees = response?.data?.opc
+  } catch (error) {
+    console.error('Error fetchData: ', error.message)
+    throw Error(error.message)
+  }
+  return opcFees
 }
 
 export async function getPreviousOrders(
