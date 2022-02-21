@@ -69,9 +69,6 @@ export function Feedback(): ReactElement {
   }
 
   useEffect(() => {
-    setGasFeeToken('')
-    setGasFeeDDO('')
-
     const calculateGasFeeToken = async () =>
       setGasFeeToken(
         await getEstGasFeeToken(values, values.user.accountId, nftFactory, web3)
@@ -82,18 +79,11 @@ export function Feedback(): ReactElement {
 
     const { feedback } = values
 
-    if (
-      feedback['1'].status === 'pending' ||
-      feedback['1'].status === 'error'
-    ) {
+    if (!gasFeeToken) {
       calculateGasFeeToken()
     }
 
-    if (
-      feedback['1'].status === 'success' &&
-      feedback['2'].status === 'success' &&
-      (feedback['3'].status === 'pending' || feedback['3'].status === 'error')
-    ) {
+    if (!gasFeeDDO && feedback['2'].status === 'success') {
       calculateGasFeeDDO()
     }
   }, [values, nftFactory])
