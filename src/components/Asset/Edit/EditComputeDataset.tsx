@@ -5,7 +5,6 @@ import FormEditComputeDataset from './FormEditComputeDataset'
 import {
   LoggerInstance,
   ServiceComputeOptions,
-  DDO,
   Service,
   ProviderInstance,
   getHash,
@@ -14,7 +13,6 @@ import {
 } from '@oceanprotocol/lib'
 import { useUserPreferences } from '@context/UserPreferences'
 import styles from './index.module.css'
-// import { transformComputeFormToServiceComputePrivacy } from '@utils/compute'
 import Web3Feedback from '@shared/Web3Feedback'
 import { useCancelToken } from '@hooks/useCancelToken'
 import {
@@ -163,7 +161,7 @@ export default function EditComputeDataset({
             </article>
             <Web3Feedback
               networkId={asset?.chainId}
-              // isAssetNetwork={isAssetNetwork}
+              // isAssetNetwork={asset.accessDetails}
             />
             {debug === true && (
               <div className={styles.grid}>

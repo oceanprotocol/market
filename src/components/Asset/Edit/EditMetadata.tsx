@@ -23,7 +23,8 @@ import { AssetExtended } from 'src/@types/AssetExtended'
 import { setMinterToPublisher, setMinterToDispenser } from '@utils/dispenser'
 import { useAbortController } from '@hooks/useAbortController'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
-// import Debug from './DebugEditMetadata'
+import Debug from './DebugEditMetadata'
+import DebugEditMetadata from './DebugEditMetadata'
 
 export default function Edit({
   asset
@@ -196,7 +197,11 @@ export default function Edit({
                 <Web3Feedback networkId={asset?.chainId} />
               </aside>
 
-              {/* {debug === true && <Debug />} */}
+              {debug === true && (
+                <div className={styles.grid}>
+                  <DebugEditMetadata values={values} asset={asset} />
+                </div>
+              )}
             </article>
           </>
         )
