@@ -9,7 +9,8 @@ import {
   Service,
   ProviderInstance,
   getHash,
-  Nft
+  Nft,
+  Asset
 } from '@oceanprotocol/lib'
 import { useUserPreferences } from '@context/UserPreferences'
 import a from './DebugEditCompute'
@@ -17,7 +18,10 @@ import styles from './index.module.css'
 // import { transformComputeFormToServiceComputePrivacy } from '@utils/compute'
 import Web3Feedback from '@shared/Web3Feedback'
 import { useCancelToken } from '@hooks/useCancelToken'
-import { validationSchema, getComputeSettingsInitialValues } from './_constants'
+import {
+  getComputeSettingsInitialValues,
+  computeSettingsValidationSchema
+} from './_constants'
 import content from '../../../../content/pages/editComputeDataset.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { getServiceByName } from '@utils/ddo'
@@ -61,14 +65,24 @@ export default function EditComputeDataset({
           newCancelToken()
         )
 
+      LoggerInstance.log(
+        '[edit compute settings]  newComputeSettings',
+        newComputeSettings
+      )
+
       const updatedService: Service = {
-        compute: newComputeSettings,
-        ...asset.services[0]
+        ...asset.services[0],
+        compute: newComputeSettings
       }
 
-      const newDdo: DDO = {
-        services: [updatedService],
-        ...asset
+      LoggerInstance.log(
+        '[edit compute settings]  updatedService',
+        updatedService
+      )
+
+      const newDdo: Asset = {
+        ...asset,
+        services: [updatedService]
       }
 
       LoggerInstance.log('[edit compute settings]  newDdo', newDdo)
@@ -127,7 +141,7 @@ export default function EditComputeDataset({
       initialValues={getComputeSettingsInitialValues(
         getServiceByName(asset, 'compute')?.compute
       )}
-      validationSchema={validationSchema}
+      validationSchema={computeSettingsValidationSchema}
       onSubmit={async (values, { resetForm }) => {
         // move user's focus to top of screen
         window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })

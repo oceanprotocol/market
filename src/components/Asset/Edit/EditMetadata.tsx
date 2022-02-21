@@ -7,7 +7,8 @@ import {
   DDO,
   ProviderInstance,
   getHash,
-  Nft
+  Nft,
+  Asset
 } from '@oceanprotocol/lib'
 import { validationSchema, getInitialValues } from './_constants'
 import { MetadataEditForm } from './_types'
@@ -65,8 +66,6 @@ export default function Edit({
     resetForm: () => void
   ) {
     try {
-      console.log('asset ', asset)
-      console.log('values ', values)
       if (asset?.accessDetails?.type === 'free') {
         const tx = await setMinterToPublisher(
           web3,
@@ -78,19 +77,20 @@ export default function Edit({
         if (!tx) return
       }
       const newMetadata: Metadata = {
+        ...asset.metadata,
         name: values.name,
         description: values.description,
         links: typeof values.links !== 'string' ? values.links : [],
-        author: values.author,
-        ...asset.metadata
+        author: values.author
       }
+
       LoggerInstance.log('[edit] newMetadata', newMetadata)
+
       asset?.accessDetails?.type === 'fixed' &&
         values.price !== asset.accessDetails.price &&
         (await updateFixedPrice(values.price))
 
       // let ddoEditedTimeout = newMetadata
-
       if (asset?.services[0]?.timeout !== values.timeout) {
         const service =
           getServiceByName(asset, 'access') ||
@@ -109,9 +109,9 @@ export default function Edit({
       //   return
       // }
 
-      const newDdo: DDO = {
-        metadata: newMetadata,
-        ...asset
+      const newDdo: Asset = {
+        ...asset,
+        metadata: newMetadata
       }
 
       LoggerInstance.log('[edit]  newDdo', newDdo)

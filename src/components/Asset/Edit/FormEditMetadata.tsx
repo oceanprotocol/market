@@ -2,7 +2,7 @@ import React, { ChangeEvent, ReactElement, useState } from 'react'
 import { Field, Form, FormikContextType, useFormikContext } from 'formik'
 import Input, { InputProps } from '@shared/FormInput'
 import FormActions from './FormActions'
-import styles from './FormEditMetadata.module.css'
+import styles from './FormEdit.module.css'
 import { FormPublishData } from '../../Publish/_types'
 import { useAsset } from '@context/Asset'
 
@@ -76,8 +76,6 @@ export default function FormEditMetadata({
     e: ChangeEvent<HTMLInputElement>,
     field: InputProps
   ) {
-    console.log('field ', field.name)
-    console.log('val ', e.target.value)
     validateField(field.name)
     setFieldValue(field.name, e.target.value)
   }
@@ -121,7 +119,7 @@ export default function FormEditMetadata({
 
       <FormActions
         setShowEdit={setShowEdit}
-        handleClick={() => setTimeoutStringValue(values?.services[0]?.timeout)}
+        // handleClick={() => setTimeoutStringValue(values?.services[0]?.timeout)}
       />
     </Form>
   )

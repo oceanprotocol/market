@@ -29,7 +29,7 @@ export function getInitialValues(
   }
 }
 
-export const ComputeSettingsValidationSchema = Yup.object().shape({
+export const computeSettingsValidationSchema = Yup.object().shape({
   allowAllPublishedAlgorithms: Yup.boolean().nullable(),
   publisherTrustedAlgorithms: Yup.array().nullable()
 })

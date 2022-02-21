@@ -308,9 +308,10 @@ export async function transformComputeFormToServiceComputeOptions(
         cancelToken
       )
 
+  console.log('publisherTrustedAlgorithms', publisherTrustedAlgorithms)
   const privacy: ServiceComputeOptions = {
-    publisherTrustedAlgorithms,
-    ...currentOptions
+    ...currentOptions,
+    publisherTrustedAlgorithms
   }
 
   return privacy
