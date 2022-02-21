@@ -407,7 +407,7 @@ export async function getUserSales(
     )
     let salesSum = 0
     for (let i = 0; i < userSales.length; i++) {
-      if (userSales[i].users[0].totalSales > 0) {
+      if (userSales[i].users.length > 0) {
         salesSum += parseInt(userSales[i].users[0].totalSales)
       }
     }
