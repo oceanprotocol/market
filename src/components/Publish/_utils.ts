@@ -29,6 +29,7 @@ import {
 } from './_constants'
 import { FormPublishData } from './_types'
 import { AssetExtended } from 'src/@types/AssetExtended'
+import { getDummyWeb3 } from '@utils/web3'
 
 export function getFieldContent(
   fieldName: string,
@@ -350,9 +351,15 @@ export async function getFeesTokensAndPricing(
   config: Config,
   nftFactory: NftFactory,
   web3: Web3,
-  ethToOceanConversionRate: number,
-  balance: string
+  ethToOceanConversionRate: number
 ) {
+  if (!web3 && !values.user.chainId)
+    throw new Error("web3 and chainId can't be undefined at the same time!")
+
+  if (!web3) {
+    web3 = await getDummyWeb3(values.user.chainId)
+  }
+
   const nftCreateData: NftCreateData = generateNftCreateData(
     values.metadata.nft
   )
@@ -482,14 +489,11 @@ export async function getFeesTokensAndPricing(
   }
 
   const gasPrice = await web3.eth.getGasPrice()
+
   const gasFeeEth = web3.utils.fromWei(
     (+gasPrice * +gasEstimate).toString(),
     'ether'
   )
-
-  const totalCostCalc = parseFloat(balance) - parseFloat(gasFeeEth)
-
-  if (totalCostCalc < 0) return 'insufficient-funds'
 
   const gasFeeOcean = (+gasFeeEth / +ethToOceanConversionRate).toString()
   return gasFeeOcean
@@ -499,10 +503,16 @@ export async function getFeesPublishDDO(
   values: FormPublishData,
   accountId: string,
   web3: Web3,
-  ethToOceanConversionRate: number,
-  balance: string
+  ethToOceanConversionRate: number
 ) {
-  const { feedback, services } = values
+  if (!web3 && !values.user.chainId)
+    throw new Error("web3 and chainId can't be undefined at the same time!")
+
+  if (!web3) {
+    web3 = await getDummyWeb3(values.user.chainId)
+  }
+
+  const { services } = values
 
   async function makeDdo() {
     // dummy DDO to calculate estGasSetMetadata
@@ -542,13 +552,13 @@ export async function getFeesPublishDDO(
   )
 
   const gasEstimate = await nft.estGasSetMetadata(
-    feedback['1'].erc721Address || '0x8280a5C364192c135C9676786B31fF83401b872f', // dummy address needed to calculate gas fees
+    '0x8280a5C364192c135C9676786B31fF83401b872f', // dummy address needed to calculate gas fees
     accountId,
     0,
     services['0'].providerUrl.url,
     '',
     flags,
-    feedback['2'].encryptedDdo || encryptedDdo,
+    encryptedDdo,
     '0x' + metadataHash
   )
 
@@ -557,10 +567,6 @@ export async function getFeesPublishDDO(
     (+gasPrice * +gasEstimate).toString(),
     'ether'
   )
-
-  const totalCostCalc = parseFloat(balance) - parseFloat(gasFeeEth)
-
-  if (totalCostCalc < 0) return 'insufficient-funds'
 
   const gasFeeOcean = (+gasFeeEth / +ethToOceanConversionRate).toString()
   return gasFeeOcean

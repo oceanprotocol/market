@@ -15,7 +15,7 @@ export function Feedback(): ReactElement {
   const nftFactory = useNftFactory()
   const [gasFeeToken, setGasFeeToken] = useState('')
   const [gasFeeDDO, setGasFeeDDO] = useState('')
-  const { balance, web3, chainId } = useWeb3()
+  const { web3, chainId } = useWeb3()
   const { prices } = usePrices()
 
   const getEstGasFeeToken = async (
@@ -34,8 +34,7 @@ export function Feedback(): ReactElement {
       config,
       nftFactory,
       web3,
-      (prices as any)?.eth,
-      balance.eth
+      (prices as any)?.eth
     )
 
     LoggerInstance.log('[gas fee] createTokensAndPricing tx', result)
@@ -56,8 +55,7 @@ export function Feedback(): ReactElement {
       values,
       accountId,
       web3,
-      (prices as any)?.eth,
-      balance.eth
+      (prices as any)?.eth
     )
 
     LoggerInstance.log('[gas fee] getFeesPublishDDO tx', result)
