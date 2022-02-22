@@ -116,7 +116,6 @@ export default function Download({
         queryContext
       )
       for (let i = 0; i < result.data.fixedRateExchanges.length; i++) {
-        console.log(result.data.fixedRateExchanges[i])
         baseTokenSum += parseInt(
           result.data.fixedRateExchanges[i].baseTokenBalance
         )
@@ -174,12 +173,11 @@ export default function Download({
   }
 
   async function handleCollectTokens() {
-    const config = getOceanConfig(asset.chainId)
-
+    const config = getOceanConfig(asset?.chainId)
     const fixed = new FixedRateExchange(web3, config.fixedRateExchangeAddress)
     const tx = await fixed.collectBT(
-      asset?.accessDetails?.addressOrId.toString(),
-      accountId
+      accountId,
+      asset?.accessDetails?.addressOrId
     )
     return tx
   }
