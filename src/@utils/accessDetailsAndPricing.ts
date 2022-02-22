@@ -104,6 +104,7 @@ const TokenPriceQuery = gql`
       }
       fixedRateExchanges {
         id
+        exchangeId
         price
         baseToken {
           symbol
@@ -179,7 +180,7 @@ function getAccessDetailsFromTokenPrice(
   ) {
     const fixed = tokenPrice.fixedRateExchanges[0]
     accessDetails.type = 'fixed'
-    accessDetails.addressOrId = fixed.id
+    accessDetails.addressOrId = fixed.exchangeId
     accessDetails.price = fixed.price
     // in theory we should check dt balance here, we can skip this because in the market we always create fre with minting capabilities.
     accessDetails.isPurchasable = fixed.active
