@@ -27,6 +27,7 @@ import DebugEditMetadata from './DebugEditMetadata'
 import { getOceanConfig } from '@utils/ocean'
 import EditFeedback from './EditFeedback'
 import { useAsset } from '@context/Asset'
+import { setNftMetadata } from '@utils/nft'
 
 export default function Edit({
   asset
@@ -86,8 +87,6 @@ export default function Edit({
         author: values.author
       }
 
-      LoggerInstance.log('[edit] updatedMetadata', updatedMetadata)
-
       asset?.accessDetails?.type === 'fixed' &&
         values.price !== asset.accessDetails.price &&
         (await updateFixedPrice(values.price))
@@ -103,26 +102,11 @@ export default function Edit({
         services: [updatedService]
       }
 
-      LoggerInstance.log('[edit]  newDdo', updatedAsset)
-      const encryptedDdo = await ProviderInstance.encrypt(
+      const setMetadataTx = await setNftMetadata(
         updatedAsset,
-        updatedAsset.services[0].serviceEndpoint,
-        newAbortController()
-      )
-      LoggerInstance.log('[edit] Got encrypted DDO', encryptedDdo)
-
-      const metadataHash = getHash(JSON.stringify(updatedAsset))
-      const nft = new Nft(web3)
-
-      const setMetadataTx = await nft.setMetadata(
-        asset.nftAddress,
         accountId,
-        0,
-        asset.services[0].serviceEndpoint,
-        '',
-        '0x2',
-        encryptedDdo,
-        '0x' + metadataHash
+        web3,
+        newAbortController()
       )
 
       LoggerInstance.log('[edit] setMetadata result', setMetadataTx)

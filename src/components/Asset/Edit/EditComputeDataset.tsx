@@ -28,6 +28,7 @@ import { useAbortController } from '@hooks/useAbortController'
 import DebugEditCompute from './DebugEditCompute'
 import { useAsset } from '@context/Asset'
 import EditFeedback from './EditFeedback'
+import { setNftMetadata } from '@utils/nft'
 
 export default function EditComputeDataset({
   asset
@@ -86,29 +87,11 @@ export default function EditComputeDataset({
         services: [updatedService]
       }
 
-      LoggerInstance.log('[edit compute settings]  newDdo', updatedAsset)
-      const encryptedDdo = await ProviderInstance.encrypt(
+      const setMetadataTx = await setNftMetadata(
         updatedAsset,
-        updatedAsset.services[0].serviceEndpoint,
-        newAbortController()
-      )
-      LoggerInstance.log(
-        '[edit compute settings] Got encrypted DDO',
-        encryptedDdo
-      )
-
-      const metadataHash = getHash(JSON.stringify(updatedAsset))
-      const nft = new Nft(web3)
-
-      const setMetadataTx = await nft.setMetadata(
-        asset.nftAddress,
         accountId,
-        0,
-        asset.services[0].serviceEndpoint,
-        '',
-        '0x2',
-        encryptedDdo,
-        '0x' + metadataHash
+        web3,
+        newAbortController()
       )
 
       LoggerInstance.log('[edit] setMetadata result', setMetadataTx)

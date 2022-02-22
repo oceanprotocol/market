@@ -24,6 +24,7 @@ import {
 import { getOceanConfig } from '@utils/ocean'
 import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
+import { setNftMetadata } from '@utils/nft'
 
 // TODO: restore FormikPersist, add back clear form action
 const formName = 'ocean-publish-form'
@@ -172,37 +173,11 @@ export default function PublishPage({
 
       if (!_ddo || !_encryptedDdo) throw new Error('No DDO received.')
 
-      // TODO: this whole setMetadata needs to go in a function ,too many hardcoded/calculated params
-      // TODO: hash generation : this needs to be moved in a function (probably on ocean.js) after we figure out what is going on in provider, leave it here for now
-      const metadataHash = getHash(JSON.stringify(_ddo))
-      const nft = new Nft(web3)
-
-      // theoretically used by aquarius or provider, not implemented yet, will remain hardcoded
-      const flags = '0x2'
-
-      const estGasSetMetadata = await nft.estGasSetMetadata(
-        _erc721Address,
+      const res = await setNftMetadata(
+        _ddo,
         accountId,
-        0,
-        values.services[0].providerUrl.url,
-        '',
-        flags,
-        _encryptedDdo,
-        '0x' + metadataHash,
-        []
-      )
-
-      console.log('est Gas set metadata --', estGasSetMetadata)
-
-      const res = await nft.setMetadata(
-        _erc721Address,
-        accountId,
-        0,
-        values.services[0].providerUrl.url,
-        '',
-        flags,
-        _encryptedDdo,
-        '0x' + metadataHash
+        web3,
+        newAbortController()
       )
 
       LoggerInstance.log('[publish] setMetadata result', res)
