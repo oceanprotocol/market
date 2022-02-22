@@ -34,7 +34,7 @@ export default function TradeInput({
   }: FormikContextType<FormTradeData> = useFormikContext()
 
   const isTopField =
-    (name === 'ocean' && values.type === 'buy') ||
+    (name === 'baseToken' && values.type === 'buy') ||
     (name === 'datatoken' && values.type === 'sell')
   const titleAvailable = isTopField ? `Balance` : `Available from pool`
   const titleMaximum = isTopField ? `Maximum to spend` : `Maximum to receive`

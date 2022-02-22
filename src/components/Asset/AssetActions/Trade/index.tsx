@@ -16,9 +16,6 @@ export default function Trade(): ReactElement {
   const { asset } = useAsset()
   const { poolInfo } = usePool()
 
-  const [maxDt, setMaxDt] = useState('0')
-  const [maxBaseToken, setMaxBaseToken] = useState('0')
-
   // Get datatoken balance, and combine with OCEAN balance from hooks into one object
   useEffect(() => {
     if (
@@ -51,51 +48,5 @@ export default function Trade(): ReactElement {
     isAssetNetwork
   ])
 
-  // Get maximum amount for either OCEAN or datatoken
-  useEffect(() => {
-    if (
-      !web3 ||
-      !isAssetNetwork ||
-      !asset.accessDetails.addressOrId ||
-      asset.accessDetails.price === 0
-    )
-      return
-
-    async function getMaximum() {
-      try {
-        const poolInstance = new Pool(web3)
-
-        const maxTokensInPool = await poolInstance.getReserve(
-          asset.accessDetails.addressOrId,
-          poolInfo.datatokenAddress
-        )
-        setMaxDt(
-          isValidNumber(maxTokensInPool)
-            ? new Decimal(maxTokensInPool).toString()
-            : '0'
-        )
-        const maxBaseTokenInPool = await poolInstance.getReserve(
-          asset.accessDetails.addressOrId,
-          poolInfo.baseTokenAddress
-        )
-        setMaxBaseToken(
-          isValidNumber(maxBaseTokenInPool)
-            ? new Decimal(maxBaseTokenInPool).toString()
-            : '0'
-        )
-      } catch (error) {
-        LoggerInstance.log(error.message)
-      }
-    }
-    getMaximum()
-  }, [isAssetNetwork, web3, balance, asset, poolInfo])
-
-  return (
-    <FormTrade
-      asset={asset}
-      balance={tokenBalance}
-      maxDt={maxDt}
-      maxBaseToken={maxBaseToken}
-    />
-  )
+  return <FormTrade asset={asset} balance={tokenBalance} />
 }

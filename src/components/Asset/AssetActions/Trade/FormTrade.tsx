@@ -26,14 +26,10 @@ import { useSiteMetadata } from '@hooks/useSiteMetadata'
 
 export default function FormTrade({
   asset,
-  balance,
-  maxDt,
-  maxBaseToken
+  balance
 }: {
   asset: AssetExtended
   balance: PoolBalance
-  maxDt: string
-  maxBaseToken: string
 }): ReactElement {
   const { web3, accountId } = useWeb3()
   const { isAssetNetwork } = useAsset()
@@ -43,8 +39,8 @@ export default function FormTrade({
   const [txId, setTxId] = useState<string>()
   const [coinFrom, setCoinFrom] = useState<string>('OCEAN')
 
-  const [maximumBaseToken, setMaximumBaseToken] = useState(maxBaseToken)
-  const [maximumDt, setMaximumDt] = useState(maxDt)
+  const [maximumBaseToken, setMaximumBaseToken] = useState('0')
+  const [maximumDt, setMaximumDt] = useState('0')
   const [isWarningAccepted, setIsWarningAccepted] = useState(false)
 
   const validationSchema: Yup.SchemaOf<FormTradeData> = Yup.object()
@@ -75,55 +71,76 @@ export default function FormTrade({
 
     try {
       const poolInstance = new Pool(web3)
-
-      const tokenInOutMarket: TokenInOutMarket = {
-        tokenIn: poolInfo.baseTokenAddress,
-        tokenOut: poolInfo.datatokenAddress,
-        marketFeeAddress: appConfig.marketFeeAddress
-      }
-      const tokenOutMarket: TokenInOutMarket = {
-        tokenIn: poolInfo.datatokenAddress,
-        tokenOut: poolInfo.baseTokenAddress,
-        marketFeeAddress: appConfig.marketFeeAddress
-      }
-
+      let tx
+      // TODO:  don't need this here
       const impact = new Decimal(
         new Decimal(100).sub(new Decimal(values.slippage))
       ).div(100)
-      const precision = 15
+      console.log('values ', values)
+      if (values.output === 'exactIn') {
+        const tokenInOutMarket: TokenInOutMarket = {
+          tokenIn:
+            values.type === 'sell'
+              ? poolInfo.datatokenAddress
+              : poolInfo.baseTokenAddress,
+          tokenOut:
+            values.type === 'sell'
+              ? poolInfo.baseTokenAddress
+              : poolInfo.datatokenAddress,
+          marketFeeAddress: appConfig.marketFeeAddress
+        }
 
-      const amountsInOutMaxFee: AmountsInMaxFee = {
-        tokenAmountIn: new Decimal(values.datatoken)
-          .mul(impact)
-          .toFixed(precision)
-          .toString(),
-        minAmountOut: '2',
-        swapMarketFee: appConfig.consumeMarketPoolSwapFee
+        const amountsInOutMaxFee: AmountsInMaxFee = {
+          tokenAmountIn:
+            values.type === 'sell' ? values.datatoken : values.baseToken,
+          minAmountOut: new Decimal(
+            values.type === 'sell' ? values.baseToken : values.datatoken
+          )
+            .mul(values.slippage)
+            .toString(),
+          swapMarketFee: appConfig.consumeMarketPoolSwapFee
+        }
+
+        console.log('swapExactAmountIn', tokenInOutMarket, amountsInOutMaxFee)
+        tx = await poolInstance.swapExactAmountIn(
+          accountId,
+          asset.accessDetails.addressOrId,
+          tokenInOutMarket,
+          amountsInOutMaxFee
+        )
+      }
+      if (values.output === 'exactOut') {
+        const tokenOutMarket: TokenInOutMarket = {
+          tokenIn:
+            values.type === 'sell'
+              ? poolInfo.datatokenAddress
+              : poolInfo.baseTokenAddress,
+          tokenOut:
+            values.type === 'sell'
+              ? poolInfo.baseTokenAddress
+              : poolInfo.datatokenAddress,
+          marketFeeAddress: appConfig.marketFeeAddress
+        }
+
+        const amountsOutMaxFee: AmountsOutMaxFee = {
+          maxAmountIn: new Decimal(
+            values.type === 'sell' ? values.datatoken : values.baseToken
+          )
+            .mul(values.slippage)
+            .toString(),
+          tokenAmountOut:
+            values.type === 'sell' ? values.baseToken : values.datatoken,
+          swapMarketFee: appConfig.consumeMarketPoolSwapFee
+        }
+        console.log('swapExactAmountOut', tokenOutMarket, amountsOutMaxFee)
+        tx = await poolInstance.swapExactAmountOut(
+          accountId,
+          asset.accessDetails.addressOrId,
+          tokenOutMarket,
+          amountsOutMaxFee
+        )
       }
 
-      const amountsOutMaxFee: AmountsOutMaxFee = {
-        maxAmountIn: '50',
-        tokenAmountOut: new Decimal(values.baseToken)
-          .mul(impact)
-          .toFixed(precision)
-          .toString(),
-        swapMarketFee: appConfig.consumeMarketPoolSwapFee
-      }
-
-      const tx =
-        values.type === 'buy'
-          ? await poolInstance.swapExactAmountIn(
-              accountId,
-              asset.accessDetails.addressOrId,
-              tokenInOutMarket,
-              amountsInOutMaxFee
-            )
-          : await poolInstance.swapExactAmountOut(
-              accountId,
-              asset.accessDetails.addressOrId,
-              tokenOutMarket,
-              amountsOutMaxFee
-            )
       setTxId(tx?.transactionHash)
     } catch (error) {
       LoggerInstance.error(error.message)
@@ -147,8 +164,6 @@ export default function FormTrade({
             <Swap
               asset={asset}
               balance={balance}
-              maxDt={maxDt}
-              maxBaseToken={maxBaseToken}
               setCoin={setCoinFrom}
               setMaximumBaseToken={setMaximumBaseToken}
               setMaximumDt={setMaximumDt}
