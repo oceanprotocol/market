@@ -163,7 +163,7 @@ function getAccessDetailsFromTokenPrice(
   if (tokenPrice.dispensers && tokenPrice.dispensers.length > 0) {
     const dispenser = tokenPrice.dispensers[0]
     accessDetails.type = 'free'
-    accessDetails.addressOrId = dispenser.id
+    accessDetails.addressOrId = dispenser.token.id
     accessDetails.price = '0'
     accessDetails.isPurchasable = dispenser.active
     accessDetails.datatoken = {
