@@ -77,16 +77,13 @@ export function Feedback(): ReactElement {
     const { feedback } = values
 
     calculateGasFeeToken()
-
+    calculateGasFeeDDO()
     let timer: number
     if (feedback['1'].status !== 'success') {
       timer = window.setInterval(() => {
         calculateGasFeeToken()
+        calculateGasFeeDDO()
       }, 3000)
-    }
-
-    if (!gasFeeDDO && feedback['2'].status === 'success') {
-      calculateGasFeeDDO()
     }
 
     return () => {

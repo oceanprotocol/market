@@ -7,6 +7,7 @@ import {
   generateDid,
   getHash,
   LoggerInstance,
+  ProviderInstance,
   Metadata,
   NftCreateData,
   NftFactory,
@@ -27,6 +28,7 @@ import {
   MetadataAlgorithmContainer
 } from './_constants'
 import { FormPublishData } from './_types'
+import { AssetExtended } from 'src/@types/AssetExtended'
 
 export function getFieldContent(
   fieldName: string,
@@ -502,21 +504,51 @@ export async function getFeesPublishDDO(
 ) {
   const { feedback, services } = values
 
-  const metadataHash = getHash(JSON.stringify(feedback['2'].ddo))
+  async function makeDdo() {
+    // dummy DDO to calculate estGasSetMetadata
+    const asset = (await transformPublishFormToDdo(values)) as AssetExtended
+    asset.accessDetails = {
+      type: values.pricing.type,
+      addressOrId: ZERO_ADDRESS,
+      price: values.pricing.price,
+      baseToken: {
+        address: ZERO_ADDRESS,
+        name: 'OCEAN',
+        symbol: 'OCEAN'
+      },
+      datatoken: {
+        address: ZERO_ADDRESS,
+        name: '',
+        symbol: ''
+      },
+      isPurchasable: true,
+      isOwned: false,
+      validOrderTx: ''
+    }
+    return asset
+  }
+
+  const ddo = makeDdo()
+  const metadataHash = getHash(JSON.stringify(ddo))
   const nft = new Nft(web3)
 
   LoggerInstance.log('[gas fee] Publish NFT with metadata', values)
   // theoretically used by aquarius or provider, not implemented yet, will remain hardcoded
   const flags = '0x2'
 
+  const encryptedDdo = await ProviderInstance.encrypt(
+    ddo,
+    services['0'].providerUrl.url
+  )
+
   const gasEstimate = await nft.estGasSetMetadata(
-    feedback['1'].erc721Address,
+    feedback['1'].erc721Address || '0x8280a5C364192c135C9676786B31fF83401b872f', // dummy address needed to calculate gas fees
     accountId,
     0,
     services['0'].providerUrl.url,
     '',
     flags,
-    feedback['2'].encryptedDdo,
+    feedback['2'].encryptedDdo || encryptedDdo,
     '0x' + metadataHash
   )
 
