@@ -11,7 +11,7 @@ import { useWeb3 } from '@context/Web3'
 import Alert from '@shared/atoms/Alert'
 
 export default function Edit({ uri }: { uri: string }): ReactElement {
-  const { asset, error, title, isInPurgatory, loading, owner } = useAsset()
+  const { asset, error, loading, owner } = useAsset()
   const [isCompute, setIsCompute] = useState(false)
   const [isOnwer, setIsOwner] = useState(false)
   const { accountId } = useWeb3()
@@ -55,12 +55,12 @@ export default function Edit({ uri }: { uri: string }): ReactElement {
     </Page>
   ) : !isOnwer ? (
     <Page
-      title={'Edit action available only to asset owner'}
+      title="Edit action available only to asset owner"
       noPageHeader
       uri={uri}
     >
       <Alert
-        title={'Edit action available only to asset owner'}
+        title="Edit action available only to asset owner"
         text={error}
         state="error"
       />

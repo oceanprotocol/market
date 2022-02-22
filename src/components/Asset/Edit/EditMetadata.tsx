@@ -48,7 +48,6 @@ export default function Edit({
       config.fixedRateExchangeAddress
     )
 
-    console.log('updateFixedPrice fixedRateInstance: ', fixedRateInstance)
     const setPriceResp = await fixedRateInstance.setRate(
       accountId,
       asset.accessDetails.addressOrId,
