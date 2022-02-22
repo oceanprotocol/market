@@ -4,12 +4,13 @@ import { useUserPreferences } from '@context/UserPreferences'
 import ExplorerLink from '@shared/ExplorerLink'
 import { formatPrice } from '@shared/Price/PriceUnit'
 import styles from './Title.module.css'
+import { PoolTransactionType } from '../../../@types/subgraph/globalTypes'
 
 function getTitle(row: PoolTransaction, locale: string) {
   let title = ''
 
   switch (row.type) {
-    case 'SWAP': {
+    case PoolTransactionType.SWAP: {
       const { datatoken, baseToken, datatokenValue, baseTokenValue } = row
 
       const outToken =
@@ -36,7 +37,7 @@ function getTitle(row: PoolTransaction, locale: string) {
 
       break
     }
-    case 'SETUP': {
+    case PoolTransactionType.SETUP: {
       const firstToken = row.baseToken
       const firstTokenSymbol = firstToken?.symbol
       const secondToken = row.datatoken
@@ -50,8 +51,8 @@ function getTitle(row: PoolTransaction, locale: string) {
       )}${secondTokenSymbol}`
       break
     }
-    case 'JOIN':
-    case 'EXIT': {
+    case PoolTransactionType.JOIN:
+    case PoolTransactionType.EXIT: {
       const tokenMoved = row.baseTokenValue > 0 ? row.baseToken : row.datatoken
       const tokenValueMoved =
         row.baseTokenValue > 0 ? row.baseTokenValue : row.datatokenValue

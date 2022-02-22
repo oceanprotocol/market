@@ -6,6 +6,7 @@ import { gql, OperationContext, useQuery } from 'urql'
 import { ReceiptData_nftUpdates as ReceiptData } from '../../../@types/subgraph/ReceiptData'
 import { getQueryContext } from '@utils/subgraph'
 import styles from './EditHistory.module.css'
+import { NftUpdateType } from '../../../@types/subgraph/globalTypes'
 
 const getReceipts = gql`
   query ReceiptData($address: String!) {
@@ -30,13 +31,13 @@ export default function EditHistory(): ReactElement {
 
   function getUpdateType(type: string): string {
     switch (type) {
-      case 'METADATA_CREATED':
+      case NftUpdateType.METADATA_CREATED:
         return 'published'
-      case 'METADATA_UPDATED':
+      case NftUpdateType.METADATA_UPDATED:
         return 'updated'
-      case 'STATE_UPDATED':
+      case NftUpdateType.STATE_UPDATED:
         return 'state updated'
-      case 'TOKENURI_UPDATED':
+      case NftUpdateType.TOKENURI_UPDATED:
         return 'NFT metadata updated'
       default:
         return ''
