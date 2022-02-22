@@ -332,22 +332,21 @@ export async function getPublishedAssets(
 }
 
 export async function getDownloadAssets(
-  didList: string[],
+  dtList: string[],
   tokenOrders: OrdersData[],
   chainIds: number[],
   cancelToken: CancelToken
 ): Promise<DownloadedAsset[]> {
+  const baseQueryparams = {
+    chainIds,
+    filters: [
+      getFilterTerm('services.datatokenAddress', dtList),
+      getFilterTerm('services.type', 'access')
+    ]
+  } as BaseQueryParams
+  const query = generateBaseQuery(baseQueryparams)
   try {
-    const baseQueryparams = {
-      chainIds,
-      filters: [
-        getFilterTerm('_id', didList),
-        getFilterTerm('service.type', 'access')
-      ]
-    } as BaseQueryParams
-    const query = generateBaseQuery(baseQueryparams)
     const result = await queryMetadata(query, cancelToken)
-
     const downloadedAssets: DownloadedAsset[] = result.results
       .map((asset) => {
         const order = tokenOrders.find(
@@ -367,6 +366,10 @@ export async function getDownloadAssets(
 
     return downloadedAssets
   } catch (error) {
-    LoggerInstance.error(error.message)
+    if (axios.isCancel(error)) {
+      LoggerInstance.log(error.message)
+    } else {
+      LoggerInstance.error(error.message)
+    }
   }
 }
