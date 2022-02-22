@@ -18,8 +18,14 @@ export default function TransactionCount({
   gasFees?: string
 }) {
   const { prices } = usePrices()
-  const gasFeeEth = (+gasFees * +(prices as any)?.eth).toString()
-  const gasFeeGwei = web3.utils.toWei(gasFeeEth, 'ether')
+  let gasFeeEth = '0'
+  if (gasFees) {
+    gasFeeEth = (
+      +parseFloat(gasFees).toPrecision(10) * +(prices as any)?.eth
+    ).toString()
+  }
+  const gasFeeWei = web3.utils.toWei(gasFeeEth, 'ether')
+  const gasFeeGwei = web3.utils.fromWei(gasFeeWei, 'gwei')
   return txHash ? (
     <ExplorerLink
       networkId={chainId}
