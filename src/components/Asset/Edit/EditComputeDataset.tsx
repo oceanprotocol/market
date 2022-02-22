@@ -78,15 +78,15 @@ export default function EditComputeDataset({
         updatedService
       )
 
-      const newDdo: Asset = {
+      const updatedAsset: Asset = {
         ...asset,
         services: [updatedService]
       }
 
-      LoggerInstance.log('[edit compute settings]  newDdo', newDdo)
+      LoggerInstance.log('[edit compute settings]  newDdo', updatedAsset)
       const encryptedDdo = await ProviderInstance.encrypt(
-        newDdo,
-        newDdo.services[0].serviceEndpoint,
+        updatedAsset,
+        updatedAsset.services[0].serviceEndpoint,
         newAbortController()
       )
       LoggerInstance.log(
@@ -94,7 +94,7 @@ export default function EditComputeDataset({
         encryptedDdo
       )
 
-      const metadataHash = getHash(JSON.stringify(newDdo))
+      const metadataHash = getHash(JSON.stringify(updatedAsset))
       const nft = new Nft(web3)
 
       const setMetadataTx = await nft.setMetadata(

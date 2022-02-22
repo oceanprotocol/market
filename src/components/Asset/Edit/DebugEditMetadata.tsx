@@ -1,7 +1,8 @@
-import { Asset, Metadata } from '@oceanprotocol/lib'
+import { Asset, Metadata, Service } from '@oceanprotocol/lib'
 import React, { ReactElement } from 'react'
 import DebugOutput from '@shared/DebugOutput'
 import { MetadataEditForm } from './_types'
+import { mapTimeoutStringToSeconds } from '@utils/ddo'
 
 export default function DebugEditMetadata({
   values,
@@ -17,9 +18,14 @@ export default function DebugEditMetadata({
     links: typeof values.links !== 'string' ? values.links : [],
     author: values.author
   }
+  const updatedService: Service = {
+    ...asset.services[0],
+    timeout: mapTimeoutStringToSeconds(values.timeout)
+  }
   const updatedAsset: Asset = {
     ...asset,
-    metadata: newMetadata
+    metadata: newMetadata,
+    services: [updatedService]
   }
 
   return (

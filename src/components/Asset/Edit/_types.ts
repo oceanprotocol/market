@@ -3,7 +3,7 @@
 export interface MetadataEditForm {
   name: string
   description: string
-  timeout: number
+  timeout: string
   price?: string
   links?: string | any[]
   author?: string

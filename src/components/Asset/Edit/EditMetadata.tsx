@@ -8,7 +8,8 @@ import {
   ProviderInstance,
   getHash,
   Nft,
-  Asset
+  Asset,
+  Service
 } from '@oceanprotocol/lib'
 import { validationSchema, getInitialValues } from './_constants'
 import { MetadataEditForm } from './_types'
@@ -40,8 +41,6 @@ export default function Edit({
   const hasFeedback = error || success
 
   async function updateFixedPrice(newPrice: string) {
-    console.log('updateFixedPrice newPrice: ', newPrice)
-    console.log('updateFixedPrice asset.accessDetails: ', asset.accessDetails)
     const config = getOceanConfig(asset.chainId)
 
     const fixedRateInstance = new FixedRateExchange(
@@ -77,7 +76,7 @@ export default function Edit({
         )
         if (!tx) return
       }
-      const newMetadata: Metadata = {
+      const updatedMetadata: Metadata = {
         ...asset.metadata,
         name: values.name,
         description: values.description,
@@ -85,45 +84,32 @@ export default function Edit({
         author: values.author
       }
 
-      LoggerInstance.log('[edit] newMetadata', newMetadata)
+      LoggerInstance.log('[edit] updatedMetadata', updatedMetadata)
 
       asset?.accessDetails?.type === 'fixed' &&
         values.price !== asset.accessDetails.price &&
         (await updateFixedPrice(values.price))
 
-      // let ddoEditedTimeout = newMetadata
-      if (asset?.services[0]?.timeout !== values.timeout) {
-        const service =
-          getServiceByName(asset, 'access') ||
-          getServiceByName(asset, 'compute')
-        // const timeout = mapTimeoutStringToSeconds(values.timeout)
-        // ddoEditedTimeout = await ocean.assets.editServiceTimeout(
-        //   ddoEditedMetdata,
-        //   service.index,
-        //   timeout
-        // )
+      const updatedService: Service = {
+        ...asset.services[0],
+        timeout: mapTimeoutStringToSeconds(values.timeout)
       }
 
-      // if (!ddoEditedTimeout) {
-      //   setError(content.form.error)
-      //   LoggerInstance.error(content.form.error)
-      //   return
-      // }
-
-      const newDdo: Asset = {
+      const updatedAsset: Asset = {
         ...asset,
-        metadata: newMetadata
+        metadata: updatedMetadata,
+        services: [updatedService]
       }
 
-      LoggerInstance.log('[edit]  newDdo', newDdo)
+      LoggerInstance.log('[edit]  newDdo', updatedAsset)
       const encryptedDdo = await ProviderInstance.encrypt(
-        newDdo,
-        newDdo.services[0].serviceEndpoint,
+        updatedAsset,
+        updatedAsset.services[0].serviceEndpoint,
         newAbortController()
       )
       LoggerInstance.log('[edit] Got encrypted DDO', encryptedDdo)
 
-      const metadataHash = getHash(JSON.stringify(newDdo))
+      const metadataHash = getHash(JSON.stringify(updatedAsset))
       const nft = new Nft(web3)
 
       const setMetadataTx = await nft.setMetadata(
