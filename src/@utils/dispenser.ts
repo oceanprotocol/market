@@ -11,7 +11,7 @@ export async function setMinterToPublisher(
 ): Promise<TransactionReceipt> {
   const dispenserInstance = new Dispenser(web3, dispenserAddress)
   const status = await dispenserInstance.status(datatokenAddress)
-  if (!status?.minterApproved) return
+  if (!status?.active) return
 
   const datatokenInstance = new Datatoken(web3)
 

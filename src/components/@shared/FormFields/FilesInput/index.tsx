@@ -14,7 +14,9 @@ export default function FilesInput(props: InputProps): ReactElement {
   const { values } = useFormikContext<FormPublishData>()
 
   function loadFileInfo(url: string) {
-    const providerUri = values.services[0].providerUrl.url
+    const providerUri =
+      (values.services && values.services[0].providerUrl.url) ||
+      'https://provider.mainnet.oceanprotocol.com'
 
     async function validateUrl() {
       try {

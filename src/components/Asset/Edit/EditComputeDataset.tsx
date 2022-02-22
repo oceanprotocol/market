@@ -26,6 +26,8 @@ import { setMinterToPublisher, setMinterToDispenser } from '@utils/dispenser'
 import { transformComputeFormToServiceComputeOptions } from '@utils/compute'
 import { useAbortController } from '@hooks/useAbortController'
 import DebugEditCompute from './DebugEditCompute'
+import { useAsset } from '@context/Asset'
+import EditFeedback from './EditFeedback'
 
 export default function EditComputeDataset({
   asset
@@ -34,6 +36,7 @@ export default function EditComputeDataset({
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { accountId, web3 } = useWeb3()
+  const { fetchAsset, isAssetNetwork } = useAsset()
   const [success, setSuccess] = useState<string>()
   const [error, setError] = useState<string>()
   const newAbortController = useAbortController()
@@ -149,7 +152,19 @@ export default function EditComputeDataset({
     >
       {({ values, isSubmitting }) =>
         isSubmitting || hasFeedback ? (
-          <div />
+          <EditFeedback
+            title="Updating Data Set"
+            error={error}
+            success={success}
+            setError={setError}
+            successAction={{
+              name: 'View Asset',
+              onClick: async () => {
+                await fetchAsset()
+              },
+              to: `/asset/${asset.id}`
+            }}
+          />
         ) : (
           <>
             <p className={styles.description}>{content.description}</p>
@@ -161,7 +176,7 @@ export default function EditComputeDataset({
             </article>
             <Web3Feedback
               networkId={asset?.chainId}
-              // isAssetNetwork={asset.accessDetails}
+              isAssetNetwork={isAssetNetwork}
             />
             {debug === true && (
               <div className={styles.grid}>
