@@ -44,6 +44,7 @@ const TokensPriceQuery = gql`
       }
       fixedRateExchanges {
         id
+        exchangeId
         price
         baseToken {
           symbol
