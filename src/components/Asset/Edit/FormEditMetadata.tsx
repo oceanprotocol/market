@@ -5,6 +5,7 @@ import FormActions from './FormActions'
 import styles from './FormEdit.module.css'
 import { FormPublishData } from '../../Publish/_types'
 import { useAsset } from '@context/Asset'
+import { MetadataEditForm } from './_types'
 
 export function checkIfTimeoutInPredefinedValues(
   timeout: string,
@@ -59,7 +60,7 @@ export default function FormEditMetadata({
 }: {
   data: InputProps[]
   setTimeoutStringValue: (value: string) => void
-  values: Partial<FormPublishData>
+  values: Partial<MetadataEditForm>
   showPrice: boolean
   isComputeDataset: boolean
 }): ReactElement {
@@ -68,7 +69,7 @@ export default function FormEditMetadata({
   const {
     validateField,
     setFieldValue
-  }: FormikContextType<Partial<FormPublishData>> = useFormikContext()
+  }: FormikContextType<Partial<MetadataEditForm>> = useFormikContext()
 
   // Manually handle change events instead of using `handleChange` from Formik.
   // Workaround for default `validateOnChange` not kicking in

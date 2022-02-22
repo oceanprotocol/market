@@ -1,6 +1,5 @@
 import { Metadata, ServiceComputeOptions } from '@oceanprotocol/lib'
 import { mapTimeoutStringToSeconds, secondsToString } from '@utils/ddo'
-// import { EditableMetadataLinks } from '@oceanprotocol/lib'
 import * as Yup from 'yup'
 import { MetadataEditForm } from './_types'
 
@@ -24,7 +23,7 @@ export function getInitialValues(
     name: metadata?.name,
     description: metadata?.description,
     price,
-    timeout,
+    timeout: secondsToString(timeout),
     author: metadata?.author
   }
 }
