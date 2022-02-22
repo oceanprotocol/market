@@ -79,7 +79,7 @@ export default function Fees({
           title="Community Fee"
           name="communityFee"
           tooltip={tooltips.communityFee}
-          value={opcFees?.consumeFee || '0'}
+          value={opcFees?.swapOceanFee || '0'}
         />
 
         <Default
