@@ -20,9 +20,8 @@ export default function TransactionCount({
   const { prices } = usePrices()
   let gasFeeEth = '0'
   if (gasFees) {
-    gasFeeEth = (
-      +parseFloat(gasFees).toPrecision(10) * +(prices as any)?.eth
-    ).toString()
+    gasFeeEth = (+gasFees * +(prices as any)?.eth).toString()
+    gasFeeEth = parseFloat(gasFeeEth).toPrecision(10).toString()
   }
   const gasFeeWei = web3.utils.toWei(gasFeeEth, 'ether')
   const gasFeeGwei = web3.utils.fromWei(gasFeeWei, 'gwei')
