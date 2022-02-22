@@ -10,8 +10,6 @@ import { NftFactory, LoggerInstance } from '@oceanprotocol/lib'
 import { getOceanConfig } from '@utils/ocean'
 import { usePrices } from '@context/Prices'
 
-import Web3 from 'web3'
-
 export function Feedback(): ReactElement {
   const { values } = useFormikContext<FormPublishData>()
   const nftFactory = useNftFactory()
@@ -67,7 +65,7 @@ export function Feedback(): ReactElement {
     return result
   }
 
-  const calculateFees = () => {
+  useEffect(() => {
     const calculateGasFeeToken = async () =>
       setGasFeeToken(
         await getEstGasFeeToken(values, values.user.accountId, nftFactory)
@@ -80,13 +78,20 @@ export function Feedback(): ReactElement {
 
     calculateGasFeeToken()
 
+    let timer: number
+    if (feedback['1'].status !== 'success') {
+      timer = window.setInterval(() => {
+        calculateGasFeeToken()
+      }, 3000)
+    }
+
     if (!gasFeeDDO && feedback['2'].status === 'success') {
       calculateGasFeeDDO()
     }
-  }
 
-  useEffect(() => {
-    calculateFees()
+    return () => {
+      window.clearInterval(timer)
+    }
   }, [values, nftFactory])
 
   const items = Object.entries(values.feedback).map(([key, value], index) => (
