@@ -9,9 +9,9 @@ import AlgorithmDatasetsListForCompute from './Compute/AlgorithmDatasetsListForC
 import styles from './Download.module.css'
 import {
   FileMetadata,
-  FixedRateExchange,
   LoggerInstance,
-  ZERO_ADDRESS
+  ZERO_ADDRESS,
+  FixedRateExchange
 } from '@oceanprotocol/lib'
 import { order } from '@utils/order'
 import { AssetExtended } from 'src/@types/AssetExtended'
@@ -21,20 +21,22 @@ import { getOrderFeedback } from '@utils/feedback'
 import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
 import { OrderPriceAndFees } from 'src/@types/Price'
 import { toast } from 'react-toastify'
-import { gql } from 'urql'
+import { gql, OperationResult } from 'urql'
 import { fetchData, getQueryContext } from '@utils/subgraph'
 import { getOceanConfig } from '@utils/ocean'
+import { FixedRateExchanges } from 'src/@types/subgraph/FixedRateExchanges'
 
-const baseTokensBalanceQuery = gql`
-  query BaseTokenbalance($user: String) {
+const FixedRateExchangesQuery = gql`
+  query FixedRateExchanges($user: String) {
     fixedRateExchanges(where: { owner: $user }) {
       id
-      owner
+      owner {
+        id
+      }
       baseTokenBalance
     }
   }
 `
-
 export default function Download({
   asset,
   file,
@@ -58,7 +60,7 @@ export default function Download({
   const [isLoading, setIsLoading] = useState(false)
   const [isOwned, setIsOwned] = useState(false)
   const [validOrderTx, setValidOrderTx] = useState('')
-  const [baseTokenBalance, setBaseTokenBalance] = useState<number>(0)
+  const [baseTokenBalance, setBaseTokenBalance] = useState(0)
   const [orderPriceAndFees, setOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
   useEffect(() => {
@@ -104,15 +106,22 @@ export default function Download({
     const queryContext = getQueryContext(Number(asset.chainId))
 
     async function getBaseTokenBalance() {
+      let baseTokenSum = 0
       const variables = {
         user: accountId.toLowerCase()
       }
-      const result = await fetchData(
-        baseTokensBalanceQuery,
+      const result: OperationResult<FixedRateExchanges> = await fetchData(
+        FixedRateExchangesQuery,
         variables,
         queryContext
       )
-      setBaseTokenBalance(result.data.fixedRateExchanges[0])
+      for (let i = 0; i < result.data.fixedRateExchanges.length; i++) {
+        console.log(result.data.fixedRateExchanges[i])
+        baseTokenSum += parseInt(
+          result.data.fixedRateExchanges[i].baseTokenBalance
+        )
+      }
+      setBaseTokenBalance(baseTokenSum)
     }
     getBaseTokenBalance()
   }, [accountId, asset.chainId, asset.nft])
@@ -168,7 +177,11 @@ export default function Download({
     const config = getOceanConfig(asset.chainId)
 
     const fixed = new FixedRateExchange(web3, config.fixedRateExchangeAddress)
-    const tx = await fixed.collectBT(asset.accessDetails.addressOrId, accountId)
+    const tx = await fixed.collectBT(
+      asset?.accessDetails?.addressOrId.toString(),
+      accountId
+    )
+    return tx
   }
 
   const PurchaseButton = () => (
