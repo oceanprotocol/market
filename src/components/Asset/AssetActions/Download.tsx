@@ -17,7 +17,7 @@ import { order } from '@utils/order'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { buyDtFromPool } from '@utils/pool'
 import { downloadFile } from '@utils/provider'
-import { getOrderFeedback } from '@utils/feedback'
+import { getCollectTokensFeedback, getOrderFeedback } from '@utils/feedback'
 import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
 import { OrderPriceAndFees } from 'src/@types/Price'
 import { toast } from 'react-toastify'
@@ -60,7 +60,9 @@ export default function Download({
   const [isLoading, setIsLoading] = useState(false)
   const [isOwned, setIsOwned] = useState(false)
   const [validOrderTx, setValidOrderTx] = useState('')
+  const [isCollectLoading, setIsCollectLoading] = useState(false)
   const [baseTokenBalance, setBaseTokenBalance] = useState(0)
+  const [collectStatusText, setCollectStatusText] = useState('')
   const [orderPriceAndFees, setOrderPriceAndFees] =
     useState<OrderPriceAndFees>()
   useEffect(() => {
@@ -173,13 +175,34 @@ export default function Download({
   }
 
   async function handleCollectTokens() {
+    setIsCollectLoading(true)
     const config = getOceanConfig(asset?.chainId)
     const fixed = new FixedRateExchange(web3, config.fixedRateExchangeAddress)
-    const tx = await fixed.collectBT(
-      accountId,
-      asset?.accessDetails?.addressOrId
-    )
-    return tx
+    try {
+      setCollectStatusText(
+        getCollectTokensFeedback(
+          asset.accessDetails.baseToken?.symbol,
+          baseTokenBalance.toString()
+        )
+      )
+
+      const tx = await fixed.collectBT(
+        accountId,
+        asset?.accessDetails?.addressOrId
+      )
+
+      if (!tx) {
+        setIsCollectLoading(false)
+        return
+      }
+
+      return tx
+    } catch (error) {
+      LoggerInstance.log(error.message)
+      setIsCollectLoading(false)
+    } finally {
+      setIsCollectLoading(false)
+    }
   }
 
   const PurchaseButton = () => (
@@ -215,11 +238,12 @@ export default function Download({
       dtBalance={baseTokenBalance.toString()}
       datasetLowPoolLiquidity={false}
       assetType=""
+      stepText={collectStatusText}
       assetTimeout=""
       isConsumable={false}
       consumableFeedback=""
       isBalanceSufficient={false}
-      isLoading={false}
+      isLoading={isCollectLoading}
     />
   )
 
