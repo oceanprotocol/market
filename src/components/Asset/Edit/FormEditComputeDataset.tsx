@@ -7,8 +7,7 @@ import styles from './FormEdit.module.css'
 import {
   generateBaseQuery,
   getFilterTerm,
-  queryMetadata,
-  transformDDOToAssetSelection
+  queryMetadata
 } from '@utils/aquarius'
 import { useAsset } from '@context/Asset'
 import { PublisherTrustedAlgorithm } from '@oceanprotocol/lib'
@@ -17,6 +16,7 @@ import FormActions from './FormActions'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { SortTermOptions } from '../../../@types/aquarius/SearchQuery'
 import { getServiceByName } from '@utils/ddo'
+import { transformAssetToAssetSelection } from '@utils/assetConvertor'
 
 export default function FormEditComputeDataset({
   data,
@@ -48,11 +48,10 @@ export default function FormEditComputeDataset({
     const query = generateBaseQuery(baseParams)
     const querryResult = await queryMetadata(query, newCancelToken())
     const datasetComputeService = getServiceByName(asset, 'compute')
-    const algorithmSelectionList = await transformDDOToAssetSelection(
+    const algorithmSelectionList = await transformAssetToAssetSelection(
       datasetComputeService?.serviceEndpoint,
       querryResult?.results,
-      publisherTrustedAlgorithms,
-      newCancelToken()
+      publisherTrustedAlgorithms
     )
     return algorithmSelectionList
   }
