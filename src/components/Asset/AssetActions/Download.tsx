@@ -238,7 +238,9 @@ export default function Download({
           {!isInPurgatory && <PurchaseButton />}
         </div>
       </div>
-      {asset.nft.owner === accountId && <CollectTokensButton />}
+      <div className={styles.collect}>
+        {asset.nft.owner === accountId && <CollectTokensButton />}
+      </div>
       {asset?.metadata?.type === 'algorithm' && (
         <AlgorithmDatasetsListForCompute
           algorithmDid={asset.id}
