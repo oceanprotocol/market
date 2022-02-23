@@ -175,6 +175,28 @@ export async function getAssetsFromDidList(
   }
 }
 
+export async function getAssetsFromDtList(
+  dtList: string[],
+  chainIds: number[],
+  cancelToken: CancelToken
+): Promise<any> {
+  try {
+    if (!(dtList.length > 0)) return
+
+    const baseParams = {
+      chainIds: chainIds,
+      filters: [getFilterTerm('services.datatokenAddress', dtList)],
+      ignorePurgatory: true
+    } as BaseQueryParams
+    const query = generateBaseQuery(baseParams)
+
+    const queryResult = await queryMetadata(query, cancelToken)
+    return queryResult.results
+  } catch (error) {
+    LoggerInstance.error(error.message)
+  }
+}
+
 export async function retrieveDDOListByDIDs(
   didList: string[],
   chainIds: number[],

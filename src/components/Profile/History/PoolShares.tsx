@@ -8,7 +8,7 @@ import web3 from 'web3'
 import Token from '../../Asset/AssetActions/Pool/Token'
 import { calculateUserLiquidity } from '@utils/subgraph'
 import NetworkName from '@shared/NetworkName'
-import { retrieveDDOListByDIDs } from '@utils/aquarius'
+import { getAssetsFromDtList, retrieveDDOListByDIDs } from '@utils/aquarius'
 import { CancelToken } from 'axios'
 import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
@@ -120,18 +120,15 @@ async function getPoolSharesAssets(
   chainIds: number[],
   cancelToken: CancelToken
 ) {
-  if (data.length < 1) return
+  if (data.length === 0) return
 
   const assetList: AssetPoolShare[] = []
-  const didList: string[] = []
+  const dtList: string[] = []
 
   for (let i = 0; i < data.length; i++) {
-    const did = web3.utils
-      .toChecksumAddress(data[i].pool.datatoken.address)
-      .replace('0x', 'did:op:')
-    didList.push(did)
+    dtList.push(data[i].pool.datatoken.address)
   }
-  const ddoList = await retrieveDDOListByDIDs(didList, chainIds, cancelToken)
+  const ddoList = await getAssetsFromDtList(dtList, chainIds, cancelToken)
 
   for (let i = 0; i < data.length; i++) {
     const userLiquidity = calculateUserLiquidity(data[i])
