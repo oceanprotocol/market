@@ -52,10 +52,7 @@ export default function Graph({
 
     const timestamps = poolSnapshots.map((item) => {
       const date = new Date(item.date * 1000)
-      return `${date.toLocaleDateString(locale)} ${date.toLocaleTimeString(
-        locale,
-        { hour: '2-digit', minute: '2-digit' }
-      )}`
+      return `${date.toLocaleDateString(locale)}`
     })
 
     let baseTokenLiquidityCumulative = '0'
@@ -71,7 +68,7 @@ export default function Graph({
     })
 
     const priceHistory = poolSnapshots.map((item) => item.spotPrice)
-
+    console.log('priceHistory', poolSnapshots[0])
     let volumeCumulative = '0'
     const volumeHistory = poolSnapshots.map((item) => {
       volumeCumulative = new Decimal(volumeCumulative)

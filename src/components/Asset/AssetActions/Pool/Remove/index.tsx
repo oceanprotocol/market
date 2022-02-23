@@ -9,11 +9,10 @@ import styles from './index.module.css'
 import Header from '../Header'
 import { toast } from 'react-toastify'
 import Actions from '../Actions'
-import { LoggerInstance, Pool } from '@oceanprotocol/lib'
+import { LoggerInstance, Pool, calcMaxExactOut } from '@oceanprotocol/lib'
 import Token from '../Token'
 import FormHelp from '@shared/FormInput/Help'
 import Button from '@shared/atoms/Button'
-import { getMaxPercentRemove } from '../utils'
 import debounce from 'lodash.debounce'
 import UserLiquidity from '../../UserLiquidity'
 import InputElement from '@shared/FormInput/InputElement'
@@ -77,16 +76,27 @@ export default function Remove({
     }
   }
 
-  // TODO: Get and set max percentage
   useEffect(() => {
     if (!accountId || !poolTokens) return
 
     async function getMax() {
-      // const amountMaxPercent = await getMaxPercentRemove(poolAddress, poolTokens)
-      // setAmountMaxPercent(amountMaxPercent)
+      const maxTokensToRemove = calcMaxExactOut(totalPoolTokens)
+
+      const maxPercent = new Decimal(100)
+        .mul(maxTokensToRemove)
+        .div(new Decimal(poolTokens))
+      console.log(
+        'maxTokensToRemove',
+        maxTokensToRemove.toString(),
+        poolTokens,
+        maxPercent.toDecimalPlaces(0, Decimal.ROUND_DOWN).toString()
+      )
+      setAmountMaxPercent(
+        maxPercent.toDecimalPlaces(0, Decimal.ROUND_DOWN).toString()
+      )
     }
     getMax()
-  }, [accountId, poolAddress, poolTokens])
+  }, [accountId, poolAddress, poolTokens, totalPoolTokens])
 
   const getValues = useRef(
     debounce(async (newAmountPoolShares) => {
@@ -188,7 +198,7 @@ export default function Remove({
         </div> */}
       </div>
       <div className={styles.slippage}>
-        <strong>Expected price impact</strong>
+        <strong>Slippage Tolerance</strong>
         <InputElement
           name="slippage"
           type="select"
