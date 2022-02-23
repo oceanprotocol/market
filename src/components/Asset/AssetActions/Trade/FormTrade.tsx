@@ -72,11 +72,6 @@ export default function FormTrade({
     try {
       const poolInstance = new Pool(web3)
       let tx
-      // TODO:  don't need this here
-      const impact = new Decimal(
-        new Decimal(100).sub(new Decimal(values.slippage))
-      ).div(100)
-      console.log('values ', values)
       if (values.output === 'exactIn') {
         const tokenInOutMarket: TokenInOutMarket = {
           tokenIn:
@@ -96,12 +91,14 @@ export default function FormTrade({
           minAmountOut: new Decimal(
             values.type === 'sell' ? values.baseToken : values.datatoken
           )
-            .mul(values.slippage)
+            .mul(
+              new Decimal(1)
+                .minus(new Decimal(values.slippage).div(new Decimal(100)))
+                .toString()
+            )
             .toString(),
           swapMarketFee: appConfig.consumeMarketPoolSwapFee
         }
-
-        console.log('swapExactAmountIn', tokenInOutMarket, amountsInOutMaxFee)
         tx = await poolInstance.swapExactAmountIn(
           accountId,
           asset.accessDetails.addressOrId,
@@ -126,13 +123,16 @@ export default function FormTrade({
           maxAmountIn: new Decimal(
             values.type === 'sell' ? values.datatoken : values.baseToken
           )
-            .mul(values.slippage)
+            .mul(
+              new Decimal(1)
+                .plus(new Decimal(values.slippage).div(new Decimal(100)))
+                .toString()
+            )
             .toString(),
           tokenAmountOut:
             values.type === 'sell' ? values.baseToken : values.datatoken,
           swapMarketFee: appConfig.consumeMarketPoolSwapFee
         }
-        console.log('swapExactAmountOut', tokenOutMarket, amountsOutMaxFee)
         tx = await poolInstance.swapExactAmountOut(
           accountId,
           asset.accessDetails.addressOrId,

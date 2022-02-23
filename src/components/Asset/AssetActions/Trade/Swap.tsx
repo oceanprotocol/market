@@ -11,7 +11,13 @@ import Decimal from 'decimal.js'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
 import { FormTradeData, TradeItem } from './_types'
-import { LoggerInstance, Pool, PoolPriceAndFees } from '@oceanprotocol/lib'
+import {
+  calcMaxExactIn,
+  calcMaxExactOut,
+  LoggerInstance,
+  Pool,
+  PoolPriceAndFees
+} from '@oceanprotocol/lib'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { usePool } from '@context/Pool'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
@@ -66,16 +72,26 @@ export default function Swap({
     const poolInstance = new Pool(web3)
 
     async function calculateMaximum() {
-      console.log('calculateMaximum', balance, poolData)
-      const amountDataToken =
+      const maxDtFromPool =
         values.type === 'buy'
-          ? new Decimal(poolData.datatokenLiquidity)
-          : new Decimal(balance.datatoken)
+          ? calcMaxExactIn(poolData.datatokenLiquidity)
+          : calcMaxExactOut(poolData.datatokenLiquidity)
+
+      const maxBaseTokenFromPool =
+        values.type === 'buy'
+          ? calcMaxExactOut(poolData.baseTokenLiquidity)
+          : calcMaxExactIn(poolData.baseTokenLiquidity)
+      const amountDataToken =
+        values.type === 'buy' ? maxDtFromPool : new Decimal(balance.datatoken)
 
       const amountBaseToken =
         values.type === 'buy'
-          ? new Decimal(balance.baseToken)
-          : new Decimal(poolData.baseTokenLiquidity)
+          ? new Decimal(balance.baseToken).greaterThan(
+              calcMaxExactIn(poolData.baseTokenLiquidity)
+            )
+            ? calcMaxExactIn(poolData.baseTokenLiquidity)
+            : new Decimal(balance.baseToken)
+          : maxBaseTokenFromPool
 
       try {
         setSwapFee(poolInfo.poolFee)
@@ -88,11 +104,7 @@ export default function Swap({
             amountDataToken.toString(),
             appConfig.consumeMarketPoolSwapFee
           )
-        console.log(
-          'maxBuyBaseToken',
-          maxBuyBaseToken,
-          amountDataToken.toString()
-        )
+
         const maxBuyDt: PoolPriceAndFees =
           await poolInstance.getAmountOutExactIn(
             asset.accessDetails?.addressOrId,
@@ -175,8 +187,6 @@ export default function Swap({
     const poolInstance = new Pool(web3)
     let newValue: PoolPriceAndFees
 
-    console.log('name type', name, values.type, value)
-
     if (name === 'baseToken') {
       if (values.type === 'sell') {
         newValue = await poolInstance.getAmountInExactOut(
@@ -187,7 +197,6 @@ export default function Swap({
           swapFee
         )
 
-        console.log('getAmountInExactOut', newValue)
         setFieldValue('output', 'exactOut')
 
         setTotalValue(newValue.tokenAmount)
@@ -203,7 +212,7 @@ export default function Swap({
           value.toString(),
           swapFee
         )
-        console.log('getAmountOutExactIn', newValue)
+
         setFieldValue('output', 'exactIn')
         setTotalValue(value.toString())
         setTokenAmount(newValue.tokenAmount)
@@ -219,7 +228,7 @@ export default function Swap({
           value.toString(),
           swapFee
         )
-        console.log('getAmountOutExactIn dt', newValue)
+
         setFieldValue('output', 'exactIn')
         setTotalValue(value.toString())
         setTokenAmount(newValue.tokenAmount)
@@ -234,7 +243,6 @@ export default function Swap({
           swapFee
         )
 
-        console.log('getAmountInExactOut dt', newValue)
         setFieldValue('output', 'exactOut')
 
         setTotalValue(newValue.tokenAmount)

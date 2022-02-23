@@ -18,7 +18,7 @@ export default function Output({
 }): ReactElement {
   const { isAssetNetwork } = useAsset()
   const { poolInfo } = usePool()
-  const [maxOutput, setMaxOutput] = useState<string>()
+  const [outputWithSlippage, setOutputWithSlippage] = useState<string>('0')
   const [swapFee, setSwapFee] = useState<string>()
   const [swapFeeValue, setSwapFeeValue] = useState<string>()
   // Connect with form
@@ -50,21 +50,30 @@ export default function Output({
     if (!poolAddress || !isAssetNetwork) return
 
     async function getOutput() {
-      // Minimum received
-      // TODO: check if this here is redundant cause we call some of that already in Swap.tsx
-      const maxImpact = 1 - Number(values.slippage) / 100
-      const maxPrice =
-        values.type === 'buy'
-          ? isValidNumber(values.datatoken) && isValidNumber(maxImpact)
-            ? new Decimal(values.datatoken)
-                .mul(new Decimal(maxImpact))
-                .toString()
-            : '0'
-          : isValidNumber(values.baseToken) && isValidNumber(maxImpact)
-          ? new Decimal(values.baseToken).mul(new Decimal(maxImpact)).toString()
-          : '0'
+      if (!values.baseToken || !values.datatoken || !values.output) return
 
-      setMaxOutput(maxPrice)
+      const output =
+        values.output === 'exactIn'
+          ? new Decimal(
+              values.type === 'sell' ? values.baseToken : values.datatoken
+            )
+              .mul(
+                new Decimal(1)
+                  .minus(new Decimal(values.slippage).div(new Decimal(100)))
+                  .toString()
+              )
+              .toString()
+          : new Decimal(
+              values.type === 'sell' ? values.datatoken : values.baseToken
+            )
+              .mul(
+                new Decimal(1)
+                  .plus(new Decimal(values.slippage).div(new Decimal(100)))
+                  .toString()
+              )
+              .toString()
+
+      setOutputWithSlippage(output)
     }
     getOutput()
   }, [poolAddress, values, isAssetNetwork])
@@ -72,14 +81,20 @@ export default function Output({
   return (
     <div className={styles.output}>
       <div>
-        <p>Minimum Received</p>
+        <p>
+          {values.output === 'exactIn' ? 'Minimum Received' : 'Maximum Sent'}
+        </p>
         <Token
           symbol={
             values.type === 'buy'
-              ? poolInfo.datatokenSymbol
-              : poolInfo.baseTokenSymbol
+              ? values.output === 'exactIn'
+                ? poolInfo.datatokenSymbol
+                : poolInfo.baseTokenSymbol
+              : values.output === 'exactIn'
+              ? poolInfo.baseTokenSymbol
+              : poolInfo.datatokenSymbol
           }
-          balance={maxOutput}
+          balance={outputWithSlippage}
         />
       </div>
       <div>
