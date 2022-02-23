@@ -490,12 +490,15 @@ export async function getFeesTokensAndPricing(
 
   const gasPrice = await web3.eth.getGasPrice()
 
-  const gasFeeEth = web3.utils.fromWei(
+  const gasFee = web3.utils.fromWei(
     (+gasPrice * +gasEstimate).toString(),
     'ether'
   )
 
-  const gasFeeOcean = (+gasFeeEth / +ethToOceanConversionRate).toString()
+  const gasFeeOcean =
+    ethToOceanConversionRate > 0
+      ? (+gasFee / +ethToOceanConversionRate).toString()
+      : ''
   return gasFeeOcean
 }
 
@@ -563,11 +566,14 @@ export async function getFeesPublishDDO(
   )
 
   const gasPrice = await web3.eth.getGasPrice()
-  const gasFeeEth = web3.utils.fromWei(
+  const gasFee = web3.utils.fromWei(
     (+gasPrice * +gasEstimate).toString(),
     'ether'
   )
 
-  const gasFeeOcean = (+gasFeeEth / +ethToOceanConversionRate).toString()
+  const gasFeeOcean =
+    ethToOceanConversionRate > 0
+      ? (+gasFee / +ethToOceanConversionRate).toString()
+      : ''
   return gasFeeOcean
 }

@@ -98,7 +98,7 @@ export function Feedback(): ReactElement {
             txCount={value.txCount}
             chainId={values.user.chainId}
             txHash={value.txHash}
-            gasFees={gasFeeToken}
+            gasFeesOcean={gasFeeToken}
           />
         )}
         {value.txCount > 0 && index === 2 && (
@@ -106,7 +106,7 @@ export function Feedback(): ReactElement {
             txCount={value.txCount}
             chainId={values.user.chainId}
             txHash={value.txHash}
-            gasFees={gasFeeDDO}
+            gasFeesOcean={gasFeeDDO}
           />
         )}
       </h3>
