@@ -7,7 +7,7 @@ module.exports = {
   // return appConfig.metadataCacheUri
   metadataCacheUri:
     process.env.NEXT_PUBLIC_METADATACACHE_URI ||
-    'https://aquariusv4.oceanprotocol.com',
+    'https://v4.aquarius.oceanprotocol.com',
 
   // List of chainIds which metadata cache queries will return by default.
   // This preselects the Chains user preferences.
@@ -22,6 +22,25 @@ module.exports = {
   marketFeeAddress:
     process.env.NEXT_PUBLIC_MARKET_FEE_ADDRESS ||
     '0x9984b2453eC7D99a73A5B3a46Da81f197B753C8d',
+  // publisher market fee that is taken upon ordering an asset, it is an absolute value, it is declared on erc20 creation
+  publisherMarketOrderFee:
+    process.env.NEXT_PUBLIC_PUBLISHER_MARKET_ORDER_FEE || '0',
+  // fee recieved by the publisher market when a dt is swaped from a pool, percent
+  publisherMarketPoolSwapFee:
+    process.env.NEXT_PUBLIC_PUBLISHER_MARKET_POOL_SWAP_FEE || '0',
+  // fee recieved by the publisher market when a dt is bought from a fixed rate exchange, percent
+  publisherMarketFixedSwapFee:
+    process.env.NEXT_PUBLIC_PUBLISHER_MARKET_FIXED_SWAP_FEE || '0',
+
+  // consume market fee that is taken upon ordering an asset, it is an absolute value, it is specified on order
+  consumeMarketOrderFee:
+    process.env.NEXT_PUBLIC_CONSUME_MARKET_ORDER_FEE || '0',
+  // fee recieved by the consume market when a dt is swaped from a pool, percent
+  consumeMarketPoolSwapFee:
+    process.env.NEXT_PUBLIC_CONSUME_MARKET_POOL_SWAP_FEE || '0',
+  // fee recieved by the consume market when a dt is bought from a fixed rate exchange, percent
+  consumeMarketFixedSwapFee:
+    process.env.NEXT_PUBLIC_CONSUME_MARKET_FIXED_SWAP_FEE || '0',
 
   // Used for conversion display, can be whatever coingecko API supports
   // see: https://api.coingecko.com/api/v3/simple/supported_vs_currencies

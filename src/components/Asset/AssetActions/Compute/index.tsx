@@ -26,7 +26,6 @@ import FileIcon from '@shared/FileIcon'
 import Alert from '@shared/atoms/Alert'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { useWeb3 } from '@context/Web3'
-import { usePricing } from '@hooks/usePricing'
 import {
   generateBaseQuery,
   getFilterTerm,
@@ -59,6 +58,7 @@ import { Decimal } from 'decimal.js'
 import { TransactionReceipt } from 'web3-core'
 import { useAbortController } from '@hooks/useAbortController'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
+import { AccessDetails } from 'src/@types/Price'
 
 export default function Compute({
   asset,
@@ -78,8 +78,7 @@ export default function Compute({
   consumableFeedback?: string
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
-  const { accountId, web3 } = useWeb3()
-  const { pricingError, pricingStepText } = usePricing()
+  const { accountId } = useWeb3()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
   const newAbortController = useAbortController()
@@ -156,13 +155,13 @@ export default function Compute({
   useEffect(() => {
     if (!algorithmConsumeDetails) return
 
-    setIsAlgoConsumablePrice(algorithmConsumeDetails.isConsumable)
+    setIsAlgoConsumablePrice(algorithmConsumeDetails.isPurchasable)
   }, [algorithmConsumeDetails])
 
   useEffect(() => {
     if (!accessDetails) return
 
-    setIsConsumablePrice(accessDetails.isConsumable)
+    setIsConsumablePrice(accessDetails.isPurchasable)
   }, [accessDetails])
 
   // useEffect(() => {
@@ -217,10 +216,10 @@ export default function Compute({
 
   // Output errors in toast UI
   useEffect(() => {
-    const newError = error || pricingError
+    const newError = error
     if (!newError) return
     toast.error(newError)
-  }, [error, pricingError])
+  }, [error])
 
   async function startJob(algorithmId: string): Promise<string> {
     try {
@@ -646,7 +645,7 @@ export default function Compute({
           />
           <AlgorithmDatasetsListForCompute
             algorithmDid={asset.id}
-            ddo={asset}
+            asset={asset}
           />
         </>
       ) : (
@@ -680,7 +679,8 @@ export default function Compute({
             selectedComputeAssetLowPoolLiquidity={!isAlgoConsumablePrice}
             selectedComputeAssetType="algorithm"
             selectedComputeAssetTimeout={algorithmTimeout}
-            stepText={pricingStepText || 'Starting Compute Job...'}
+            // lazy comment when removing pricingStepText
+            stepText={'pricingStepText' || 'Starting Compute Job...'}
             algorithmConsumeDetails={algorithmConsumeDetails}
             isConsumable={isConsumable}
             consumableFeedback={consumableFeedback}

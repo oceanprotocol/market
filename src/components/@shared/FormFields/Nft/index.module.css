@@ -1,7 +1,8 @@
 .nft {
   display: grid;
   gap: var(--spacer);
-  grid-template-columns: 1fr 11fr;
+  grid-template-columns: none;
+  margin-top: calc(var(--spacer) / 2);
   margin-bottom: var(--spacer);
   align-items: center;
 }
@@ -19,16 +20,32 @@
   border-radius: var(--border-radius);
   border: 1px solid var(--border-color);
   position: relative;
+  margin: 0;
 }
 
-.refresh {
+.actions {
   position: absolute;
-  right: calc(var(--spacer) / 4);
-  bottom: calc(var(--spacer) / 4);
+  left: 0;
+  bottom: 0;
+  padding: 0 calc(var(--spacer) / 4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.actions svg {
+  margin: 0;
+  fill: var(--font-color-text);
 }
 
 .refresh svg {
-  fill: var(--brand-pink);
-  width: var(--font-size-mini);
-  height: var(--font-size-mini);
+  transform: scale(0.9);
+  transform-origin: center;
+}
+
+@media (min-width: 40rem) {
+  .nft {
+    grid-template-columns: 1fr 11fr;
+  }
 }

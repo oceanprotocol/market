@@ -79,7 +79,7 @@ export function transformQueryResult(
   result.results = (queryResult.hits.hits || []).map(
     (hit) => hit._source as Asset
   )
-  result.totalResults = queryResult.hits.total
+  result.totalResults = queryResult.hits.total.value
   result.totalPages =
     result.totalResults / size < 1
       ? Math.floor(result.totalResults / size)
@@ -163,7 +163,7 @@ export async function getAssetsFromDidList(
 
     const baseParams = {
       chainIds: chainIds,
-      filters: [getFilterTerm('id', didList)],
+      filters: [getFilterTerm('_id', didList)],
       ignorePurgatory: true
     } as BaseQueryParams
     const query = generateBaseQuery(baseParams)
@@ -180,19 +180,21 @@ export async function retrieveDDOListByDIDs(
   chainIds: number[],
   cancelToken: CancelToken
 ): Promise<Asset[]> {
+  if (didList?.length === 0 || chainIds?.length === 0) return []
+
   try {
-    if (didList?.length === 0 || chainIds?.length === 0) return []
     const orderedDDOListByDIDList: Asset[] = []
     const baseQueryparams = {
       chainIds,
-      filters: [getFilterTerm('id', didList)],
+      filters: [getFilterTerm('_id', didList)],
       ignorePurgatory: true
     } as BaseQueryParams
     const query = generateBaseQuery(baseQueryparams)
     const result = await queryMetadata(query, cancelToken)
+
     didList.forEach((did: string) => {
       const ddo = result.results.find((ddo: Asset) => ddo.id === did)
-      orderedDDOListByDIDList.push(ddo)
+      if (ddo) orderedDDOListByDIDList.push(ddo)
     })
     return orderedDDOListByDIDList
   } catch (error) {
@@ -330,22 +332,21 @@ export async function getPublishedAssets(
 }
 
 export async function getDownloadAssets(
-  didList: string[],
+  dtList: string[],
   tokenOrders: OrdersData[],
   chainIds: number[],
   cancelToken: CancelToken
 ): Promise<DownloadedAsset[]> {
+  const baseQueryparams = {
+    chainIds,
+    filters: [
+      getFilterTerm('services.datatokenAddress', dtList),
+      getFilterTerm('services.type', 'access')
+    ]
+  } as BaseQueryParams
+  const query = generateBaseQuery(baseQueryparams)
   try {
-    const baseQueryparams = {
-      chainIds,
-      filters: [
-        getFilterTerm('id', didList),
-        getFilterTerm('service.type', 'access')
-      ]
-    } as BaseQueryParams
-    const query = generateBaseQuery(baseQueryparams)
     const result = await queryMetadata(query, cancelToken)
-
     const downloadedAssets: DownloadedAsset[] = result.results
       .map((asset) => {
         const order = tokenOrders.find(
@@ -365,6 +366,10 @@ export async function getDownloadAssets(
 
     return downloadedAssets
   } catch (error) {
-    LoggerInstance.error(error.message)
+    if (axios.isCancel(error)) {
+      LoggerInstance.log(error.message)
+    } else {
+      LoggerInstance.error(error.message)
+    }
   }
 }

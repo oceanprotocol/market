@@ -11,6 +11,7 @@ import { useWeb3 } from '@context/Web3'
 import { checkIfConsumable } from '@utils/ddo'
 import content from '../../../../../content/pages/startComputeDataset.json'
 import { Asset } from '@oceanprotocol/lib'
+import { AccessDetails } from 'src/@types/Price'
 
 export default function FormStartCompute({
   algorithms,
@@ -104,7 +105,7 @@ export default function FormStartCompute({
         ? 0
         : Number(algorithmConsumeDetails.price)
 
-    setTotalPrice(priceDataset + priceAlgo)
+    setTotalPrice((priceDataset + priceAlgo).toString())
   }, [
     asset?.accessDetails,
     algorithmConsumeDetails,
@@ -143,7 +144,7 @@ export default function FormStartCompute({
         hasDatatokenSelectedComputeAsset={hasDatatokenSelectedComputeAsset}
         algorithmConsumeDetails={algorithmConsumeDetails}
         symbol={oceanSymbol}
-        totalPrice={totalPrice}
+        totalPrice={Number.parseFloat(totalPrice)}
       />
 
       <ButtonBuy

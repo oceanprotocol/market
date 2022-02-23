@@ -1,6 +1,6 @@
 import React, { ReactElement, useState, useEffect } from 'react'
 import Compute from './Compute'
-import Consume from './Consume'
+import Consume from './Download'
 import { FileMetadata, LoggerInstance, Datatoken } from '@oceanprotocol/lib'
 import Tabs, { TabsItem } from '@shared/atoms/Tabs'
 import { compareAsBN } from '@utils/numbers'
@@ -141,13 +141,11 @@ export default function AssetActions({
     />
   ) : (
     <Consume
-      ddo={asset}
-      accessDetails={asset?.accessDetails}
+      asset={asset}
       dtBalance={dtBalance}
       isBalanceSufficient={isBalanceSufficient}
       file={fileMetadata}
       fileIsLoading={fileIsLoading}
-      isConsumable={isConsumable}
       consumableFeedback={consumableFeedback}
     />
   )
