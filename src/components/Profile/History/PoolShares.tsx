@@ -4,11 +4,10 @@ import Conversion from '@shared/Price/Conversion'
 import styles from './PoolShares.module.css'
 import AssetTitle from '@shared/AssetList/AssetListTitle'
 import { PoolShares_poolShares as PoolShare } from '../../../@types/subgraph/PoolShares'
-import web3 from 'web3'
 import Token from '../../Asset/AssetActions/Pool/Token'
 import { calculateUserLiquidity } from '@utils/subgraph'
 import NetworkName from '@shared/NetworkName'
-import { getAssetsFromDtList, retrieveDDOListByDIDs } from '@utils/aquarius'
+import { getAssetsFromDtList } from '@utils/aquarius'
 import { CancelToken } from 'axios'
 import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
@@ -104,6 +103,7 @@ const columns = [
     selector: function getAssetRow(row: AssetPoolShare) {
       return <Liquidity row={row} type="user" />
     },
+    grow: 1.5,
     right: true
   },
   {
@@ -111,6 +111,7 @@ const columns = [
     selector: function getAssetRow(row: AssetPoolShare) {
       return <Liquidity row={row} type="pool" />
     },
+    grow: 1.5,
     right: true
   }
 ]
@@ -206,7 +207,9 @@ export default function PoolShares({
     isPoolSharesLoading,
     newCancelToken,
     poolShares,
-    isMounted
+    isMounted,
+    chainIds,
+    dataFetchInterval
   ])
 
   return accountId ? (

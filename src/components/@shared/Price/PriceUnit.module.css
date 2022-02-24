@@ -19,7 +19,8 @@
 
 .price.small {
   display: inline-block;
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-small);
+  color: var(--color-secondary);
 }
 
 .price.small .symbol {
