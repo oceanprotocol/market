@@ -38,8 +38,6 @@
   color: var(--brand-grey-light);
   cursor: not-allowed;
   pointer-events: none;
-  /* for hiding spin buttons in Firefox */
-  -moz-appearance: textfield;
 }
 
 .input[readonly]::-webkit-inner-spin-button,
