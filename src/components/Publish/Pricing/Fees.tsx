@@ -1,18 +1,24 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import Tooltip from '@shared/atoms/Tooltip'
 import styles from './Fees.module.css'
 import { useField } from 'formik'
 import Input from '@shared/FormInput'
 import Error from './Error'
+import { getOpcFees } from '../../../@utils/subgraph'
+import { OpcFeesQuery_opc as OpcFeesData } from '../../../@types/subgraph/OpcFeesQuery'
+import { useWeb3 } from '@context/Web3'
+import { useSiteMetadata } from '@hooks/useSiteMetadata'
 
 const Default = ({
   title,
   name,
-  tooltip
+  tooltip,
+  value
 }: {
   title: string
   name: string
   tooltip: string
+  value: string
 }) => (
   <Input
     label={
@@ -21,7 +27,7 @@ const Default = ({
         <Tooltip content={tooltip} />
       </>
     }
-    value="0.1"
+    value={value}
     name={name}
     postfix="%"
     readOnly
@@ -37,6 +43,15 @@ export default function Fees({
   pricingType: 'dynamic' | 'fixed'
 }): ReactElement {
   const [field, meta] = useField('pricing.swapFee')
+  const [opcFees, setOpcFees] = useState<OpcFeesData>(undefined)
+  const { chainId } = useWeb3()
+  const { appConfig } = useSiteMetadata()
+
+  useEffect(() => {
+    getOpcFees(chainId || 1).then((response: OpcFeesData) => {
+      setOpcFees(response)
+    })
+  }, [chainId])
 
   return (
     <>
@@ -64,12 +79,18 @@ export default function Fees({
           title="Community Fee"
           name="communityFee"
           tooltip={tooltips.communityFee}
+          value={opcFees?.swapOceanFee || '0'}
         />
 
         <Default
           title="Marketplace Fee"
           name="marketplaceFee"
           tooltip={tooltips.marketplaceFee}
+          value={
+            pricingType === 'dynamic'
+              ? appConfig.publisherMarketPoolSwapFee
+              : appConfig.publisherMarketFixedSwapFee
+          }
         />
       </div>
     </>

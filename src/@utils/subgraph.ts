@@ -17,6 +17,7 @@ import {
   OrdersData_orders_datatoken as OrdersDatatoken
 } from '../@types/subgraph/OrdersData'
 import { UserSalesQuery as UsersSalesList } from '../@types/subgraph/UserSalesQuery'
+import { OpcFeesQuery as OpcFeesData } from '../@types/subgraph/OpcFeesQuery'
 
 export interface UserLiquidity {
   price: string
@@ -188,6 +189,17 @@ const TopSalesQuery = gql`
   }
 `
 
+const OpcFeesQuery = gql`
+  query OpcFeesQuery($id: ID!) {
+    opc(id: $id) {
+      swapOceanFee
+      swapNonOceanFee
+      consumeFee
+      providerFee
+    }
+  }
+`
+
 export function getSubgraphUri(chainId: number): string {
   const config = getOceanConfig(chainId)
   return config.subgraphUri
@@ -240,6 +252,26 @@ export async function fetchDataForMultipleChains(
     }
   }
   return datas
+}
+
+export async function getOpcFees(chainId: number) {
+  let opcFees
+  const variables = {
+    id: 1
+  }
+  const context = getQueryContext(chainId)
+  try {
+    const response: OperationResult<OpcFeesData> = await fetchData(
+      OpcFeesQuery,
+      variables,
+      context
+    )
+    opcFees = response?.data?.opc
+  } catch (error) {
+    console.error('Error fetchData: ', error.message)
+    throw Error(error.message)
+  }
+  return opcFees
 }
 
 export async function getPreviousOrders(
