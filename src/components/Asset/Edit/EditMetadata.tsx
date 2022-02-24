@@ -4,10 +4,6 @@ import {
   LoggerInstance,
   Metadata,
   FixedRateExchange,
-  DDO,
-  ProviderInstance,
-  getHash,
-  Nft,
   Asset,
   Service
 } from '@oceanprotocol/lib'
@@ -69,21 +65,15 @@ export default function Edit({
     resetForm: () => void
   ) {
     try {
-      if (asset?.accessDetails?.type === 'free') {
-        const tx = await setMinterToPublisher(
-          web3,
-          asset?.accessDetails?.addressOrId,
-          asset?.accessDetails?.datatoken?.address,
-          accountId,
-          setError
-        )
-        if (!tx) return
-      }
+      const linksTransformed = values.links?.length &&
+        values.links[0].valid && [
+          values.links[0].url.replace('javascript:', '')
+        ]
       const updatedMetadata: Metadata = {
         ...asset.metadata,
         name: values.name,
         description: values.description,
-        links: typeof values.links !== 'string' ? values.links : [],
+        links: linksTransformed,
         author: values.author
       }
 
@@ -115,16 +105,6 @@ export default function Edit({
         setError(content.form.error)
         LoggerInstance.error(content.form.error)
         return
-      } else {
-        if (asset.accessDetails.type === 'free') {
-          const tx = await setMinterToDispenser(
-            web3,
-            asset?.accessDetails?.datatoken?.address,
-            accountId,
-            setError
-          )
-          if (!tx) return
-        }
       }
       // Edit succeeded
       setSuccess(content.form.success)

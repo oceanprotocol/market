@@ -11,11 +11,13 @@ export default function DebugEditMetadata({
   values: Partial<MetadataEditForm>
   asset: Asset
 }): ReactElement {
+  const linksTransformed = values.links?.length &&
+    values.links[0].valid && [values.links[0].url.replace('javascript:', '')]
   const newMetadata: Metadata = {
     ...asset.metadata,
     name: values.name,
     description: values.description,
-    links: typeof values.links !== 'string' ? values.links : [],
+    links: linksTransformed,
     author: values.author
   }
   const updatedService: Service = {
