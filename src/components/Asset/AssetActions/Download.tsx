@@ -118,9 +118,11 @@ export default function Download({
         variables,
         queryContext
       )
-      setBaseTokenBalance(
-        parseInt(result.data.fixedRateExchanges[0].baseTokenBalance)
-      )
+      result?.data?.fixedRateExchanges[0]?.baseTokenBalance
+        ? setBaseTokenBalance(
+            parseInt(result?.data?.fixedRateExchanges[0]?.baseTokenBalance)
+          )
+        : setBaseTokenBalance(0)
     }
     getBaseTokenBalance()
   }, [accountId, asset?.accessDetails?.addressOrId, asset.chainId, asset.nft])
@@ -229,7 +231,7 @@ export default function Download({
     <ButtonBuy
       action="collect"
       onClick={handleCollectTokens}
-      disabled={baseTokenBalance === 0}
+      disabled={baseTokenBalance === 0 || !baseTokenBalance}
       hasPreviousOrder={false}
       hasDatatoken={false}
       dtSymbol={asset.datatokens[0].symbol}
