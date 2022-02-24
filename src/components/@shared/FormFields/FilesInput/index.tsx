@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react'
+import React, { ReactElement, useCallback, useEffect, useState } from 'react'
 import { useField, useFormikContext } from 'formik'
 import { toast } from 'react-toastify'
 import FileInfo from './Info'
@@ -13,26 +13,43 @@ export default function FilesInput(props: InputProps): ReactElement {
   const [isLoading, setIsLoading] = useState(false)
   const { values } = useFormikContext<FormPublishData>()
 
-  function loadFileInfo(url: string) {
-    const providerUri =
-      (values.services && values.services[0].providerUrl.url) ||
-      'https://provider.mainnet.oceanprotocol.com'
+  const loadFileInfo = useCallback(
+    (url: string) => {
+      const providerUri =
+        (values.services && values.services[0].providerUrl.url) ||
+        'https://provider.mainnet.oceanprotocol.com'
 
-    async function validateUrl() {
-      try {
-        setIsLoading(true)
-        const checkedFile = await getFileUrlInfo(url, providerUri)
-        checkedFile && helpers.setValue([{ url, ...checkedFile[0] }])
-      } catch (error) {
-        toast.error('Could not fetch file info. Please check URL and try again')
-        console.error(error.message)
-      } finally {
-        setIsLoading(false)
+      async function validateUrl() {
+        try {
+          setIsLoading(true)
+          const checkedFile = await getFileUrlInfo(url, providerUri)
+          checkedFile && helpers.setValue([{ url, ...checkedFile[0] }])
+        } catch (error) {
+          toast.error(
+            'Could not fetch file info. Please check URL and try again'
+          )
+          console.error(error.message)
+        } finally {
+          setIsLoading(false)
+        }
       }
-    }
 
-    validateUrl()
-  }
+      validateUrl()
+    },
+    [helpers, values.services]
+  )
+
+  useEffect(() => {
+    // try load from initial values, kinda hacky but it works
+    if (
+      props.value &&
+      props.value.length > 0 &&
+      typeof props.value[0] === 'string'
+    ) {
+      console.log('loadFileInfo eff')
+      loadFileInfo(props.value[0].toString())
+    }
+  }, [loadFileInfo, props])
 
   async function handleButtonClick(e: React.SyntheticEvent, url: string) {
     // File example 'https://oceanprotocol.com/tech-whitepaper.pdf'

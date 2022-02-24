@@ -23,6 +23,7 @@ export function getInitialValues(
     name: metadata?.name,
     description: metadata?.description,
     price,
+    links: metadata?.links,
     timeout: secondsToString(timeout),
     author: metadata?.author
   }
