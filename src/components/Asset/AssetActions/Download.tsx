@@ -195,7 +195,7 @@ export default function Download({
         setIsCollectLoading(false)
         return
       }
-
+      setBaseTokenBalance(0)
       return tx
     } catch (error) {
       LoggerInstance.log(error.message)
@@ -234,7 +234,7 @@ export default function Download({
       disabled={baseTokenBalance === 0 || !baseTokenBalance}
       hasPreviousOrder={false}
       hasDatatoken={false}
-      dtSymbol={asset.datatokens[0].symbol}
+      dtSymbol={asset?.accessDetails?.baseToken.symbol}
       dtBalance={baseTokenBalance.toString()}
       datasetLowPoolLiquidity={false}
       assetType=""
