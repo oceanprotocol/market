@@ -22,9 +22,14 @@
   height: calc(var(--spacer) * 2);
 }
 
-.nftImage img {
+.nftImage img,
+.nftImage > svg:first-of-type {
   width: 100%;
   height: 100%;
+}
+
+.nftImage > svg:first-of-type {
+  transform: scale(0.7);
 }
 
 .nftImage .tooltip {

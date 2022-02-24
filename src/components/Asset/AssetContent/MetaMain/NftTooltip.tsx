@@ -67,6 +67,11 @@ export default function NftTooltip({
             </a>
           )}
         </div>
+        {!nft?.image_data && (
+          <p className={styles.fallback}>
+            This Data NFT was not created on Ocean Market
+          </p>
+        )}
       </div>
     </div>
   )

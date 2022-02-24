@@ -34,3 +34,8 @@
 .links a {
   display: block;
 }
+
+.fallback {
+  padding-top: calc(var(--spacer) / 3);
+  font-style: italic;
+}

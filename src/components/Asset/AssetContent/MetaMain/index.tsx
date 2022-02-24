@@ -6,6 +6,7 @@ import MetaAsset from './MetaAsset'
 import MetaInfo from './MetaInfo'
 import Tooltip from '@shared/atoms/Tooltip'
 import NftTooltip from './NftTooltip'
+import Logo from '@shared/atoms/Logo'
 
 export default function MetaMain({ ddo }: { ddo: Asset }): ReactElement {
   const nftMetadata = decodeTokenURI(ddo?.nft?.tokenURI)
@@ -17,7 +18,11 @@ export default function MetaMain({ ddo }: { ddo: Asset }): ReactElement {
     <aside className={styles.meta}>
       <header className={styles.asset}>
         <div className={styles.nftImage}>
-          <img src={nftMetadata?.image_data} alt={ddo?.nft?.name} />
+          {nftMetadata?.image_data ? (
+            <img src={nftMetadata?.image_data} alt={ddo?.nft?.name} />
+          ) : (
+            <Logo noWordmark />
+          )}
 
           {(nftMetadata || ddo?.nftAddress) && (
             <Tooltip
