@@ -16,16 +16,16 @@
   margin: calc(var(--spacer) / 2) 0;
 }
 
-.poolSharesTable [class*='AssetListTitle-module--title'] {
+.poolSharesTable [class*='AssetListTitle_title'] {
   line-height: 0 !important;
 }
 
-.poolSharesTable [class*='Token-module--token'] div {
+.poolSharesTable [class*='Token_token'] div {
   color: var(--color-secondary);
 }
 
 @media (min-width: 30rem) {
-  .poolSharesTable [class*='AssetListTitle-module--title'] {
+  .poolSharesTable [class*='AssetListTitle_title'] {
     line-height: 0 !important;
   }
 }
@@ -36,25 +36,25 @@
   align-items: flex-end;
 }
 
-.userLiquidity [class*='Conversion-module--'] {
+.userLiquidity [class*='Conversion_conversion'] {
   margin-bottom: calc(var(--spacer) / 8);
 }
 
-.userLiquidity [class*='Conversion-module--'] strong {
+.userLiquidity [class*='Conversion_conversion'] strong {
   font-size: var(--font-size-base);
 }
 
-.userLiquidity [class*='Token-module--token'] {
+.userLiquidity [class*='Token_token'] {
   display: flex;
   align-items: center;
   justify-content: flex-end;
   margin-bottom: calc(var(--spacer) / 8);
 }
 
-.userLiquidity [class*='Token-module--token'] div {
+.userLiquidity [class*='Token_token'] div {
   font-size: var(--font-size-small);
 }
 
-.userLiquidity [class*='Token-module--icon'] {
+.userLiquidity [class*='Token_icon'] {
   display: none;
 }
