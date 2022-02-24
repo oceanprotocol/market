@@ -103,7 +103,6 @@ const columns = [
     selector: function getAssetRow(row: AssetPoolShare) {
       return <Liquidity row={row} type="user" />
     },
-    grow: 1.5,
     right: true
   },
   {
@@ -111,7 +110,6 @@ const columns = [
     selector: function getAssetRow(row: AssetPoolShare) {
       return <Liquidity row={row} type="pool" />
     },
-    grow: 1.5,
     right: true
   }
 ]
