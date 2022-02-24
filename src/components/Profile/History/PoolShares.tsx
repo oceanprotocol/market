@@ -119,7 +119,7 @@ async function getPoolSharesAssets(
   chainIds: number[],
   cancelToken: CancelToken
 ) {
-  if (data.length === 0) return
+  if (data.length < 1) return
 
   const assetList: AssetPoolShare[] = []
   const dtList: string[] = []
@@ -206,8 +206,7 @@ export default function PoolShares({
     newCancelToken,
     poolShares,
     isMounted,
-    chainIds,
-    dataFetchInterval
+    chainIds
   ])
 
   return accountId ? (
