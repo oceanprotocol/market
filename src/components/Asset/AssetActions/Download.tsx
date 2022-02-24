@@ -27,12 +27,13 @@ import { getOceanConfig } from '@utils/ocean'
 import { FixedRateExchanges } from 'src/@types/subgraph/FixedRateExchanges'
 
 const FixedRateExchangesQuery = gql`
-  query FixedRateExchanges($user: String) {
-    fixedRateExchanges(where: { owner: $user }) {
+  query FixedRateExchanges($user: String, $exchangeId: String) {
+    fixedRateExchanges(where: { owner: $user, exchangeId: $exchangeId }) {
       id
       owner {
         id
       }
+      exchangeId
       baseTokenBalance
     }
   }
@@ -108,24 +109,21 @@ export default function Download({
     const queryContext = getQueryContext(Number(asset.chainId))
 
     async function getBaseTokenBalance() {
-      let baseTokenSum = 0
       const variables = {
-        user: accountId.toLowerCase()
+        user: accountId.toLowerCase(),
+        exchangeId: asset?.accessDetails?.addressOrId
       }
       const result: OperationResult<FixedRateExchanges> = await fetchData(
         FixedRateExchangesQuery,
         variables,
         queryContext
       )
-      for (let i = 0; i < result.data.fixedRateExchanges.length; i++) {
-        baseTokenSum += parseInt(
-          result.data.fixedRateExchanges[i].baseTokenBalance
-        )
-      }
-      setBaseTokenBalance(baseTokenSum)
+      setBaseTokenBalance(
+        parseInt(result.data.fixedRateExchanges[0].baseTokenBalance)
+      )
     }
     getBaseTokenBalance()
-  }, [accountId, asset.chainId, asset.nft])
+  }, [accountId, asset?.accessDetails?.addressOrId, asset.chainId, asset.nft])
 
   async function handleOrderOrDownload() {
     setIsLoading(true)
@@ -231,7 +229,7 @@ export default function Download({
     <ButtonBuy
       action="collect"
       onClick={handleCollectTokens}
-      disabled={false}
+      disabled={baseTokenBalance === 0}
       hasPreviousOrder={false}
       hasDatatoken={false}
       dtSymbol={asset.datatokens[0].symbol}
