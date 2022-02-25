@@ -2,24 +2,32 @@ import { Asset, ServiceComputeOptions } from '@oceanprotocol/lib'
 import React, { ReactElement, useEffect, useState } from 'react'
 // import { transformComputeFormToServiceComputePrivacy } from '@utils/compute'
 import DebugOutput from '@shared/DebugOutput'
+import { useCancelToken } from '@hooks/useCancelToken'
+import { transformComputeFormToServiceComputeOptions } from '@utils/compute'
 
 export default function DebugEditCompute({
   values,
-  ddo
+  asset
 }: {
   values: ComputePrivacyForm
-  ddo: Asset
+  asset: Asset
 }): ReactElement {
   const [formTransformed, setFormTransformed] =
     useState<ServiceComputeOptions>()
+  const newCancelToken = useCancelToken()
 
   useEffect(() => {
-    // async function transformValues() {
-    //   const privacy = await transformComputeFormToServiceComputePrivacy(values)
-    //   setFormTransformed(privacy)
-    // }
-    // transformValues()
-  }, [values, ddo])
+    async function transformValues() {
+      const privacy = await transformComputeFormToServiceComputeOptions(
+        values,
+        asset.services[0].compute,
+        asset.chainId,
+        newCancelToken()
+      )
+      setFormTransformed(privacy)
+    }
+    transformValues()
+  }, [values, asset])
 
   return (
     <>
