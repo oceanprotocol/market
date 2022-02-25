@@ -5,25 +5,25 @@ import { getServiceByName } from '@utils/ddo'
 import React, { ReactElement } from 'react'
 import styles from './MetaInfo.module.css'
 
-export default function MetaInfo({ ddo }: { ddo: Asset }): ReactElement {
-  const isCompute = Boolean(getServiceByName(ddo, 'compute'))
+export default function MetaInfo({ asset }: { asset: Asset }): ReactElement {
+  const isCompute = Boolean(getServiceByName(asset, 'compute'))
   const accessType = isCompute ? 'compute' : 'access'
 
   return (
     <div className={styles.wrapper}>
       <AssetType
-        type={ddo?.metadata.type}
+        type={asset?.metadata.type}
         accessType={accessType}
         className={styles.assetType}
       />
       <div className={styles.byline}>
         <p>
-          Published <Time date={ddo?.metadata.created} relative />
-          {ddo?.metadata.created !== ddo?.metadata.updated && (
+          Published <Time date={asset?.metadata.created} relative />
+          {asset?.metadata.created !== asset?.metadata.updated && (
             <>
               {' — '}
               <span className={styles.updated}>
-                updated <Time date={ddo?.metadata.updated} relative />
+                updated <Time date={asset?.metadata.updated} relative />
               </span>
             </>
           )}

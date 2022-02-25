@@ -8,30 +8,30 @@ import React, { ReactElement } from 'react'
 import styles from './MetaAsset.module.css'
 
 export default function MetaAsset({
-  ddo,
+  asset,
   isBlockscoutExplorer
 }: {
-  ddo: Asset
+  asset: Asset
   isBlockscoutExplorer: boolean
 }): ReactElement {
   const { isAssetNetwork } = useAsset()
   const { web3ProviderInfo } = useWeb3()
 
-  const dataTokenSymbol = ddo?.datatokens[0]?.symbol
+  const dataTokenSymbol = asset?.datatokens[0]?.symbol
 
   return (
     <div className={styles.wrapper}>
       <span className={styles.owner}>
-        Owned by <Publisher account={ddo?.nft?.owner} />
+        Owned by <Publisher account={asset?.nft?.owner} />
       </span>
       <span>
         <ExplorerLink
           className={styles.datatoken}
-          networkId={ddo?.chainId}
+          networkId={asset?.chainId}
           path={
             isBlockscoutExplorer
-              ? `tokens/${ddo?.services[0].datatokenAddress}`
-              : `token/${ddo?.services[0].datatokenAddress}`
+              ? `tokens/${asset?.services[0].datatokenAddress}`
+              : `token/${asset?.services[0].datatokenAddress}`
           }
         >
           {`Accessed with ${dataTokenSymbol}`}
@@ -39,10 +39,10 @@ export default function MetaAsset({
         {web3ProviderInfo?.name === 'MetaMask' && isAssetNetwork && (
           <span className={styles.addWrap}>
             <AddToken
-              address={ddo?.services[0].datatokenAddress}
-              symbol={(ddo as Asset)?.datatokens[0]?.symbol}
+              address={asset?.services[0].datatokenAddress}
+              symbol={(asset as Asset)?.datatokens[0]?.symbol}
               logo="https://raw.githubusercontent.com/oceanprotocol/art/main/logo/datatoken.png"
-              text={`Add ${(ddo as Asset)?.datatokens[0]?.symbol} to wallet`}
+              text={`Add ${(asset as Asset)?.datatokens[0]?.symbol} to wallet`}
               className={styles.add}
               minimal
             />

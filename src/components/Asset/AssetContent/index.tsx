@@ -34,7 +34,7 @@ export default function AssetContent({
       <article className={styles.grid}>
         <div>
           <div className={styles.content}>
-            <MetaMain ddo={asset} />
+            <MetaMain asset={asset} />
             {asset?.accessDetails?.datatoken !== null && (
               <Bookmark did={asset?.id} />
             )}

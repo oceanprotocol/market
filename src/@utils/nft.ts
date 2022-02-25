@@ -58,9 +58,6 @@ export function generateNftMetadata(): NftMetadata {
 const tokenUriPrefix = 'data:application/json;base64,'
 
 export function generateNftCreateData(nftMetadata: NftMetadata): any {
-  // TODO: figure out if Buffer.from method is working in browser in final build
-  // as BTOA is deprecated.
-  // tokenURI: window?.btoa(JSON.stringify(nftMetadata))
   const encodedMetadata = Buffer.from(JSON.stringify(nftMetadata)).toString(
     'base64'
   )

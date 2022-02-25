@@ -8,40 +8,40 @@ import Tooltip from '@shared/atoms/Tooltip'
 import NftTooltip from './NftTooltip'
 import Logo from '@shared/atoms/Logo'
 
-export default function MetaMain({ ddo }: { ddo: Asset }): ReactElement {
-  const nftMetadata = decodeTokenURI(ddo?.nft?.tokenURI)
+export default function MetaMain({ asset }: { asset: Asset }): ReactElement {
+  const nftMetadata = decodeTokenURI(asset?.nft?.tokenURI)
 
   const blockscoutNetworks = [1287, 2021000, 2021001, 44787, 246, 1285]
-  const isBlockscoutExplorer = blockscoutNetworks.includes(ddo?.chainId)
+  const isBlockscoutExplorer = blockscoutNetworks.includes(asset?.chainId)
 
   return (
     <aside className={styles.meta}>
       <header className={styles.asset}>
         <div className={styles.nftImage}>
           {nftMetadata?.image_data ? (
-            <img src={nftMetadata?.image_data} alt={ddo?.nft?.name} />
+            <img src={nftMetadata?.image_data} alt={asset?.nft?.name} />
           ) : (
             <Logo noWordmark />
           )}
 
-          {(nftMetadata || ddo?.nftAddress) && (
+          {(nftMetadata || asset?.nftAddress) && (
             <Tooltip
               className={styles.tooltip}
               content={
                 <NftTooltip
                   nft={nftMetadata}
-                  address={ddo?.nftAddress}
-                  chainId={ddo?.chainId}
+                  address={asset?.nftAddress}
+                  chainId={asset?.chainId}
                   isBlockscoutExplorer={isBlockscoutExplorer}
                 />
               }
             />
           )}
         </div>
-        <MetaAsset ddo={ddo} isBlockscoutExplorer={isBlockscoutExplorer} />
+        <MetaAsset asset={asset} isBlockscoutExplorer={isBlockscoutExplorer} />
       </header>
 
-      <MetaInfo ddo={ddo} />
+      <MetaInfo asset={asset} />
     </aside>
   )
 }
