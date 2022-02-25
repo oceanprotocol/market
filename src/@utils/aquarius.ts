@@ -1,10 +1,5 @@
-import {
-  Asset,
-  LoggerInstance,
-  PublisherTrustedAlgorithm
-} from '@oceanprotocol/lib'
+import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
-import { PriceList } from './subgraph'
 import axios, { CancelToken, AxiosResponse } from 'axios'
 import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { metadataCacheUri } from '../../app.config'
@@ -12,7 +7,7 @@ import {
   SortDirectionOptions,
   SortTermOptions
 } from '../@types/aquarius/SearchQuery'
-import { getServiceByName } from './ddo'
+import { transformAssetToAssetSelection } from './assetConvertor'
 
 export const MAXIMUM_NUMBER_OF_PAGES_WITH_RESULTS = 476
 
@@ -202,58 +197,6 @@ export async function retrieveDDOListByDIDs(
   }
 }
 
-export async function transformDDOToAssetSelection(
-  datasetProviderEndpoint: string,
-  ddoList: Asset[],
-  selectedAlgorithms?: PublisherTrustedAlgorithm[],
-  cancelToken?: CancelToken
-): Promise<AssetSelectionAsset[]> {
-  const didList: string[] = []
-  // const priceList: PriceList = await getAssetsPriceList(ddoList)
-  const priceList: PriceList = null
-  const symbolList: any = {}
-  const didProviderEndpointMap: any = {}
-  for (const ddo of ddoList) {
-    didList.push(ddo.id)
-    symbolList[ddo.id] = ddo.datatokens[0].symbol
-    const algoComputeService = getServiceByName(ddo, 'compute')
-    algoComputeService?.serviceEndpoint &&
-      (didProviderEndpointMap[ddo.id] = algoComputeService?.serviceEndpoint)
-  }
-  const ddoNames = await getAssetsNames(didList, cancelToken)
-  const algorithmList: AssetSelectionAsset[] = []
-  didList?.forEach((did: string) => {
-    if (
-      priceList[did] &&
-      (!didProviderEndpointMap[did] ||
-        didProviderEndpointMap[did] === datasetProviderEndpoint)
-    ) {
-      let selected = false
-      selectedAlgorithms?.forEach((algorithm: PublisherTrustedAlgorithm) => {
-        if (algorithm.did === did) {
-          selected = true
-        }
-      })
-      selected
-        ? algorithmList.unshift({
-            did: did,
-            name: ddoNames[did],
-            price: priceList[did],
-            checked: selected,
-            symbol: symbolList[did]
-          })
-        : algorithmList.push({
-            did: did,
-            name: ddoNames[did],
-            price: priceList[did],
-            checked: selected,
-            symbol: symbolList[did]
-          })
-    }
-  })
-  return algorithmList
-}
-
 export async function getAlgorithmDatasetsForCompute(
   algorithmId: string,
   datasetProviderUri: string,
@@ -264,7 +207,7 @@ export async function getAlgorithmDatasetsForCompute(
     chainIds: [datasetChainId],
     filters: [
       getFilterTerm(
-        'service.attributes.main.privacy.publisherTrustedAlgorithms.did',
+        'service.compite.publisherTrustedAlgorithms.did',
         algorithmId
       )
     ],
@@ -279,11 +222,10 @@ export async function getAlgorithmDatasetsForCompute(
 
   if (computeDatasets.totalResults === 0) return []
 
-  const datasets = await transformDDOToAssetSelection(
+  const datasets = await transformAssetToAssetSelection(
     datasetProviderUri,
     computeDatasets.results,
-    [],
-    cancelToken
+    []
   )
   return datasets
 }
