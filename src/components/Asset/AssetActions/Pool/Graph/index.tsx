@@ -57,6 +57,8 @@ export default function Graph({
 
     const liquidityHistory = poolSnapshots.map((item) => {
       const conversionSpotPrice = prices[currency.toLowerCase()]
+
+      // the tab is name liquidity, why convert to fiat?
       const convertedLiquidity = new Decimal(item.baseTokenLiquidity)
         .mul(conversionSpotPrice) // convert to user currency
         .toString()
