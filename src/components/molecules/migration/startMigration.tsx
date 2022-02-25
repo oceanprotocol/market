@@ -19,12 +19,11 @@ async function startMigration(
   dtV3Address: string,
   poolV3Address: string
 ) {
-  console.log('Start Migration Clicked')
-  console.log('Price', ddo.price)
   const v4DtName = 'V4 - ' + ddo.dataTokenInfo.name
   const v4DtSymbol = 'V4-' + ddo.dataTokenInfo.symbol
 
   const migration = new Migration(web3)
+
   await migration.startMigration(
     accountId,
     migrationAddress,
@@ -42,8 +41,7 @@ export default function StartMigration(): ReactElement {
   const { owner, did, ddo, metadata, price } = useAsset()
   const { status, migrationAddress, thresholdMet } = useMigrationStatus()
   const { web3 } = useWeb3()
-  console.log('Start Migration status', status)
-  console.log('Start Migration thresholdMet', thresholdMet)
+
   return (
     <>
       {owner === accountId && status === '0' && (
@@ -66,15 +64,6 @@ export default function StartMigration(): ReactElement {
                   price.address
                 )
             }}
-          />
-        </Container>
-      )}
-      {owner === accountId && status !== '0' && thresholdMet !== true && (
-        <Container className={styles.container}>
-          <Alert
-            title="Migration in progress"
-            text="**The threshold of 80% of pool shares locked has not been reached yet**  \n\nThe migration requires 80% of liquidity providers to lock their shares in the migration contract."
-            state="info"
           />
         </Container>
       )}

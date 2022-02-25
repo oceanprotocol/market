@@ -16,25 +16,37 @@ async function liquidateAndCreatePool(
   poolV3Address: string
 ) {
   const migration = new Migration(web3)
-  await migration.liquidateAndCreatePool(
-    accountId,
-    migrationAddress,
-    poolV3Address,
-    ['1', '1']
-  )
+
+  await migration.runMigration(accountId, migrationAddress, poolV3Address, [
+    '1',
+    '1'
+  ])
+}
+
+function openMarketV4(
+  did: string,
+  marketV4Url: string = 'http://localhost:8001/'
+) {
+  window.open(`${marketV4Url}/asset/${did}`, '_blank')
 }
 
 export default function CreateV4Pool(): ReactElement {
   const { accountId } = useWeb3()
-  const { owner, price } = useAsset()
-  const { status, migrationAddress, thresholdMet, deadlinePassed } =
+  const { owner, price, ddo } = useAsset()
+  const { status, migrationAddress, thresholdMet, deadlinePassed, didV4 } =
     useMigrationStatus()
   const { web3 } = useWeb3()
-  console.log('Start Migration status', status)
-  console.log('Start Migration thresholdMet', thresholdMet)
 
   return (
     <>
+      {/*       <Container className={styles.container}>
+        <Alert
+          title={'Pablo test'}
+          text="**The V3 pool will be liquidated** \n\nOver 80% of pool shares have now been locked and the threshold has therefore been reached for completing the migration.
+            \n\nThe deadline for locking pool shares has now passed so no additional pool shares can be locked."
+          state="info"
+        />
+      </Container> */}
       {owner === accountId && status === '1' && thresholdMet && deadlinePassed && (
         <Container className={styles.container}>
           <Alert
@@ -55,12 +67,18 @@ export default function CreateV4Pool(): ReactElement {
           />
         </Container>
       )}
-      {owner === accountId && status !== '0' && thresholdMet !== true && (
+      {status === '3' && (
         <Container className={styles.container}>
           <Alert
-            title="Migration in progress"
-            text="**The threshold of 80% of pool shares locked has not been reached yet**  \n\nThe migration requires 80% of liquidity providers to lock their shares in the migration contract."
+            title="This asset has been migrated to Ocean V4"
+            text={
+              'Head over to our new V4 market to view and interact with this asset.'
+            }
             state="info"
+            action={{
+              name: 'Market v4',
+              handleAction: () => openMarketV4(didV4)
+            }}
           />
         </Container>
       )}

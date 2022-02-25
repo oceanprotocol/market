@@ -15,18 +15,19 @@ import { useAsset } from './Asset'
 import { gql, OperationResult } from 'urql'
 import { fetchData, getQueryContext } from '../utils/subgraph'
 import { PoolLiquidity } from '../@types/apollo/PoolLiquidity'
+import { userPoolShareQuery } from '../components/molecules/migration/lockPoolShares'
 
-const userPoolShareQuery = gql`
-  query poolShare($id: ID!, $shareId: ID) {
-    pool(id: $id) {
-      id
-      shares(where: { id: $shareId }) {
-        id
-        balance
-      }
-    }
-  }
-`
+// const userPoolShareQuery = gql`
+//   query poolShare($id: ID!, $shareId: ID) {
+//     pool(id: $id) {
+//       id
+//       shares(where: { id: $shareId }) {
+//         id
+//         balance
+//       }
+//     }
+//   }
+// `
 
 interface MigrationProviderValue {
   migrationAddress: string
@@ -80,7 +81,7 @@ function MigrationProvider({
   const [poolTokens, setPoolTokens] = useState<string>()
 
   const { chainId, accountId, web3 } = useWeb3()
-  const { price } = useAsset()
+  const { price, ddo } = useAsset()
 
   async function switchMigrationAddress(chainId: number): Promise<void> {
     switch (chainId) {
@@ -202,7 +203,7 @@ function MigrationProvider({
       queryVariables,
       queryContext
     )
-    return queryResult?.data.pool.shares[0]?.balance
+    return queryResult?.data.pool?.shares[0]?.balance
   }
 
   useEffect(() => {

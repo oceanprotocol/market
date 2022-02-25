@@ -18,6 +18,8 @@ import { getOceanConfig } from '../../../utils/ocean'
 import { useCancelToken } from '../../../hooks/useCancelToken'
 import { useIsMounted } from '../../../hooks/useIsMounted'
 import StartMigration from '../../molecules/migration/startMigration'
+import CancelMigration from '../../molecules/migration/cancelMigration'
+import CreateV4Pool from '../../molecules/migration/createV4Pool'
 import LockPoolShares from '../../molecules/migration/lockPoolShares'
 
 export default function AssetActions(): ReactElement {
@@ -145,6 +147,8 @@ export default function AssetActions(): ReactElement {
   return (
     <>
       <StartMigration />
+      <CancelMigration />
+      <CreateV4Pool />
       <LockPoolShares />
       <Permission eventType="consume">
         <Tabs items={tabs} className={styles.actions} />

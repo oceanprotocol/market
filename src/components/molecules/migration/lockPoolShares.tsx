@@ -11,10 +11,8 @@ import { Logger } from '@oceanprotocol/lib'
 import { gql, OperationResult } from 'urql'
 import { fetchData, getQueryContext } from '../../../utils/subgraph'
 import { PoolLiquidity } from '../../../@types/apollo/PoolLiquidity'
-console.log('useMigrationStatus', useMigrationStatus)
-console.log('useAsset', useAsset)
 
-const userPoolShareQuery = gql`
+export const userPoolShareQuery = gql`
   query poolShare($id: ID!, $shareId: ID) {
     pool(id: $id) {
       id
@@ -33,47 +31,41 @@ async function addShares(
   poolV3Address: string,
   lptV3Amount: string
 ) {
-  console.log('add shares', {
-    accountId,
-    migrationAddress,
-    poolV3Address,
-    lptV3Amount
-  })
   const migration = new Migration(web3)
   const { userV3Shares } = await migration.getShareAllocation(
     migrationAddress,
     poolV3Address,
     accountId
   )
-  console.log('userV3Shares', userV3Shares)
   await migration.approve(
     accountId,
     poolV3Address,
     migrationAddress,
-    web3.utils.toWei('1')
+    web3.utils.toWei(lptV3Amount)
   )
+
   await migration.addShares(
     accountId,
     migrationAddress,
     poolV3Address,
-    web3.utils.toWei('1')
+    web3.utils.toWei(lptV3Amount)
   )
 }
 
 export default function LockPoolShares(): ReactElement {
-  const { accountId } = useWeb3()
+  const { accountId, block } = useWeb3()
   const { owner, ddo, price } = useAsset()
   const [poolTokens, setPoolTokens] = useState<string>()
 
-  const { status, migrationAddress, poolV3Address, deadlinePassed } =
-    useMigrationStatus()
-  // console.log('[LockPoolShares] status', status)
-  // console.log('[LockPoolShares] migrationAddress', migrationAddress)
+  const {
+    status,
+    migrationAddress,
+    poolV3Address,
+    deadlinePassed,
+    thresholdMet,
+    deadline
+  } = useMigrationStatus()
   const { web3 } = useWeb3()
-  console.log('Missing values?', owner, ddo, price)
-  if (!owner || !ddo || !price) {
-    console.log('Missing values: ', owner, ddo, price)
-  }
 
   async function getUserPoolShareBalance() {
     const queryContext = getQueryContext(ddo.chainId)
@@ -87,7 +79,7 @@ export default function LockPoolShares(): ReactElement {
       queryVariables,
       queryContext
     )
-    return queryResult?.data.pool.shares[0]?.balance
+    return queryResult?.data.pool?.shares[0]?.balance
   }
 
   useEffect(() => {
@@ -98,7 +90,6 @@ export default function LockPoolShares(): ReactElement {
         // Get everything the user has put into the pool
         //
         const poolTokens = await getUserPoolShareBalance()
-        console.log('getUserPoolShareBalance', poolTokens)
         setPoolTokens(poolTokens)
       } catch (error) {
         Logger.error(error.message)
@@ -110,7 +101,6 @@ export default function LockPoolShares(): ReactElement {
   return (
     <>
       {deadlinePassed &&
-        owner !== accountId &&
         status !== '0' &&
         poolTokens !== '0' &&
         poolTokens !== undefined && (
@@ -124,31 +114,51 @@ export default function LockPoolShares(): ReactElement {
             />
           </Container>
         )}
-      {owner !== accountId &&
-        status !== '0' &&
-        poolTokens !== '0' &&
-        poolTokens !== undefined && (
-          <Container className={styles.container}>
-            <Alert
-              text={`**The publisher of this data asset has initiated the migration of this pool from V3 to V4** 
+      {status !== '0' && poolTokens !== '0' && poolTokens !== undefined && (
+        <Container className={styles.container}>
+          <Alert
+            text={`**The publisher of this data asset has initiated the migration of this pool from V3 to V4** 
           \n\nYou can now lock your liquidity pool tokens in the smart contract to ensure you will receive tokens from the new V4 pool when it is created.
           \n\nThe migration requires 80% of liquidity providers to lock their shares in the migration contract.
           \n\nYou currently have ${poolTokens} Pool Shares`}
-              state="info"
-              action={{
-                name: `Lock Pool Shares`,
-                handleAction: () =>
-                  addShares(
-                    web3,
-                    accountId,
-                    migrationAddress,
-                    poolV3Address,
-                    poolTokens
-                  )
-              }}
-            />
-          </Container>
-        )}
+            state="info"
+            action={{
+              name: `Lock Pool Shares`,
+              handleAction: () =>
+                addShares(
+                  web3,
+                  accountId,
+                  migrationAddress,
+                  poolV3Address,
+                  poolTokens
+                )
+            }}
+          />
+        </Container>
+      )}
+
+      {status && status !== '0' && status !== '2' && !deadline && (
+        <Container className={styles.container}>
+          <Alert
+            title={'Migration in progress'}
+            text="**The threshold of 80% of pool shares locked has not been reached yet**  \n\nThe migration requires 80% of liquidity providers to lock their shares in the migration contract."
+            state="info"
+          />
+        </Container>
+      )}
+
+      {status !== '0' && thresholdMet === true && !deadlinePassed && (
+        <Container className={styles.container}>
+          <Alert
+            title="Migration in progress"
+            text={
+              '**The threshold of 80% of pool shares locked has been reached.**  \n\n The migration can be completed when the deadline is reached in ' +
+              `${Number(deadline) - block} blocks.`
+            }
+            state="info"
+          />
+        </Container>
+      )}
     </>
   )
 }

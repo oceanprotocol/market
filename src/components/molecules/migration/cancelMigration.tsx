@@ -29,35 +29,29 @@ export default function CreateV4Pool(): ReactElement {
 
   return (
     <>
-      {owner === accountId && status === '1' && thresholdMet && deadlinePassed && (
-        <Container className={styles.container}>
-          <Alert
-            title="V4 Migration can be canceled"
-            text="**The V3 pool will be remain** \n\Less than 80% of pool shares have now locked and the threshold has not been reached for completing the migration.
+      {owner === accountId &&
+        status === '1' &&
+        !thresholdMet &&
+        deadlinePassed && (
+          <Container className={styles.container}>
+            <Alert
+              title="V4 Migration can be canceled"
+              text="**The V3 pool will be remain** \n\Less than 80% of pool shares have now locked and the threshold has not been reached for completing the migration.
             \n\nThe deadline for locking pool shares has now passed so no additional pool shares can be locked."
-            state="info"
-            action={{
-              name: 'Cancel Migration',
-              handleAction: () =>
-                liquidateAndCreatePool(
-                  web3,
-                  accountId,
-                  migrationAddress,
-                  price.address
-                )
-            }}
-          />
-        </Container>
-      )}
-      {owner === accountId && status !== '0' && thresholdMet !== true && (
-        <Container className={styles.container}>
-          <Alert
-            title="Migration in progress"
-            text="**The threshold of 80% of pool shares locked has not been reached yet**  \n\nThe migration requires 80% of liquidity providers to lock their shares in the migration contract."
-            state="info"
-          />
-        </Container>
-      )}
+              state="info"
+              action={{
+                name: 'Cancel Migration',
+                handleAction: () =>
+                  liquidateAndCreatePool(
+                    web3,
+                    accountId,
+                    migrationAddress,
+                    price.address
+                  )
+              }}
+            />
+          </Container>
+        )}
     </>
   )
 }
