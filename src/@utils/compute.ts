@@ -1,14 +1,3 @@
-// import {
-//   ServiceComputePrivacy,
-//   publisherTrustedAlgorithm as PublisherTrustedAlgorithm,
-//   Service,
-//   LoggerInstance,
-//   Provider,
-//   Config,
-//   Ocean,
-//   Account
-// } from '@oceanprotocol/lib'
-// import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
 import {
   Asset,
   DDO,

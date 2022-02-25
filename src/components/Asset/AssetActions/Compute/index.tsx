@@ -78,7 +78,7 @@ export default function Compute({
   consumableFeedback?: string
 }): ReactElement {
   const { appConfig } = useSiteMetadata()
-  const { accountId } = useWeb3()
+  const { accountId, web3 } = useWeb3()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
   const newAbortController = useAbortController()
