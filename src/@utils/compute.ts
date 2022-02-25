@@ -1,11 +1,20 @@
+// import {
+//   ServiceComputePrivacy,
+//   publisherTrustedAlgorithm as PublisherTrustedAlgorithm,
+//   Service,
+//   LoggerInstance,
+//   Provider,
+//   Config,
+//   Ocean,
+//   Account
+// } from '@oceanprotocol/lib'
+// import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
 import {
   Asset,
-  DDO,
-  ComputeAlgorithm,
-  Service,
-  LoggerInstance,
-  ProviderInstance,
-  PublisherTrustedAlgorithm
+  ServiceComputeOptions,
+  PublisherTrustedAlgorithm,
+  getHash,
+  LoggerInstance
 } from '@oceanprotocol/lib'
 import { CancelToken } from 'axios'
 import { gql } from 'urql'
@@ -13,7 +22,7 @@ import {
   queryMetadata,
   getFilterTerm,
   generateBaseQuery,
-  transformDDOToAssetSelection
+  retrieveDDOListByDIDs
 } from './aquarius'
 import { fetchDataForMultipleChains } from './subgraph'
 import { getServiceById, getServiceByName } from './ddo'
@@ -364,37 +373,50 @@ function getServiceEndpoints(data: TokenOrder[], assets: Asset[]): string[] {
 //   return computeResult
 // }
 
-// export async function createTrustedAlgorithmList(
-//   selectedAlgorithms: string[], // list of DIDs
-//   ocean: Ocean
-// ): Promise<PublisherTrustedAlgorithm[]> {
-//   const trustedAlgorithms = []
+export async function createTrustedAlgorithmList(
+  selectedAlgorithms: string[], // list of DIDs,
+  assetChainId: number,
+  cancelToken: CancelToken
+): Promise<PublisherTrustedAlgorithm[]> {
+  const trustedAlgorithms: PublisherTrustedAlgorithm[] = []
 
-//   for (const selectedAlgorithm of selectedAlgorithms) {
-//     const trustedAlgorithm =
-//       await ocean.compute.createPublisherTrustedAlgorithmfromDID(
-//         selectedAlgorithm
-//       )
-//     trustedAlgorithms.push(trustedAlgorithm)
-//   }
-//   return trustedAlgorithms
-// }
+  const selectedAssets = await retrieveDDOListByDIDs(
+    selectedAlgorithms,
+    [assetChainId],
+    cancelToken
+  )
 
-// export async function transformComputeFormToServiceComputePrivacy(
-//   values: ComputePrivacyForm,
-//   ocean: Ocean
-// ): Promise<ServiceComputePrivacy> {
-//   const { allowAllPublishedAlgorithms } = values
-//   const publisherTrustedAlgorithms = values.allowAllPublishedAlgorithms
-//     ? []
-//     : await createTrustedAlgorithmList(values.publisherTrustedAlgorithms, ocean)
+  for (const selectedAlgorithm of selectedAssets) {
+    const trustedAlgorithm = {
+      did: selectedAlgorithm.id,
+      containerSectionChecksum: getHash(
+        JSON.stringify(selectedAlgorithm.metadata.algorithm.container)
+      ),
+      filesChecksum: getHash(selectedAlgorithm.services[0].files)
+    }
+    trustedAlgorithms.push(trustedAlgorithm)
+  }
+  return trustedAlgorithms
+}
 
-//   const privacy: ServiceComputePrivacy = {
-//     allowNetworkAccess: false,
-//     allowRawAlgorithm: false,
-//     allowAllPublishedAlgorithms,
-//     publisherTrustedAlgorithms
-//   }
+export async function transformComputeFormToServiceComputeOptions(
+  values: ComputePrivacyForm,
+  currentOptions: ServiceComputeOptions,
+  assetChainId: number,
+  cancelToken: CancelToken
+): Promise<ServiceComputeOptions> {
+  const publisherTrustedAlgorithms = values.allowAllPublishedAlgorithms
+    ? []
+    : await createTrustedAlgorithmList(
+        values.publisherTrustedAlgorithms,
+        assetChainId,
+        cancelToken
+      )
 
-//   return privacy
-// }
+  const privacy: ServiceComputeOptions = {
+    ...currentOptions,
+    publisherTrustedAlgorithms
+  }
+
+  return privacy
+}

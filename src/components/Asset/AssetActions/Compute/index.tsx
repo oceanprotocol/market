@@ -29,8 +29,7 @@ import { useWeb3 } from '@context/Web3'
 import {
   generateBaseQuery,
   getFilterTerm,
-  queryMetadata,
-  transformDDOToAssetSelection
+  queryMetadata
 } from '@utils/aquarius'
 import { Formik } from 'formik'
 import { getInitialValues, validationSchema } from './_constants'
@@ -59,6 +58,7 @@ import { TransactionReceipt } from 'web3-core'
 import { useAbortController } from '@hooks/useAbortController'
 import { getAccessDetails } from '@utils/accessDetailsAndPricing'
 import { AccessDetails } from 'src/@types/Price'
+import { transformAssetToAssetSelection } from '@utils/assetConvertor'
 
 export default function Compute({
   asset,
@@ -141,6 +141,54 @@ export default function Compute({
     )
     setAlgorithmDTBalance(new Decimal(AssetDtBalance).toString())
     setHasAlgoAssetDatatoken(Number(AssetDtBalance) >= 1)
+  }
+
+  function getQuerryString(
+    trustedAlgorithmList: PublisherTrustedAlgorithm[],
+    chainId?: number
+  ): SearchQuery {
+    const algorithmDidList = trustedAlgorithmList.map((x) => x.did)
+
+    const baseParams = {
+      chainIds: [chainId],
+      sort: { sortBy: SortTermOptions.Created },
+      filters: [
+        getFilterTerm('service.attributes.main.type', 'algorithm'),
+        getFilterTerm('id', algorithmDidList)
+      ]
+    } as BaseQueryParams
+
+    const query = generateBaseQuery(baseParams)
+    return query
+  }
+
+  async function getAlgorithmList(): Promise<AssetSelectionAsset[]> {
+    const source = axios.CancelToken.source()
+    const computeService = ddo.services[0]
+    let algorithmSelectionList: AssetSelectionAsset[]
+    if (
+      !computeService.compute ||
+      !computeService.compute.publisherTrustedAlgorithms ||
+      computeService.compute.publisherTrustedAlgorithms.length === 0
+    ) {
+      algorithmSelectionList = []
+    } else {
+      const gueryResults = await queryMetadata(
+        getQuerryString(
+          computeService.compute.publisherTrustedAlgorithms,
+          ddo.chainId
+        ),
+        source.token
+      )
+      setDdoAlgorithmList(gueryResults.results)
+
+      algorithmSelectionList = await transformAssetToAssetSelection(
+        computeService?.serviceEndpoint,
+        gueryResults.results,
+        []
+      )
+    }
+    return algorithmSelectionList
   }
 
   const initMetadata = useCallback(async (asset: Asset): Promise<void> => {

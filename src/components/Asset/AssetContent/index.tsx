@@ -1,5 +1,5 @@
-import React, { ReactElement, useEffect, useState } from 'react'
-import { useWeb3 } from '@context/Web3'
+import React, { ReactElement, useState, useEffect } from 'react'
+import Link from 'next/link'
 import Markdown from '@shared/Markdown'
 import MetaFull from './MetaFull'
 import MetaSecondary from './MetaSecondary'
@@ -15,39 +15,32 @@ import styles from './index.module.css'
 import NetworkName from '@shared/NetworkName'
 import content from '../../../../content/purgatory.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
-import Button from '@shared/atoms/Button'
-import { getServiceById, getServiceByName } from '@utils/ddo'
-import EditComputeDataset from '../Edit/EditComputeDataset'
+import { useWeb3 } from '@context/Web3'
 
 export default function AssetContent({
   asset
 }: {
   asset: AssetExtended
 }): ReactElement {
-  const { accountId } = useWeb3()
   const { debug } = useUserPreferences()
-  const { owner, isInPurgatory, purgatoryData, isAssetNetwork } = useAsset()
   const [isOwner, setIsOwner] = useState(false)
-  const [isComputeType, setIsComputeType] = useState<boolean>(false)
-  const [showEditCompute, setShowEditCompute] = useState<boolean>()
+  const { accountId } = useWeb3()
+  const { isInPurgatory, purgatoryData, owner, isAssetNetwork } = useAsset()
 
   useEffect(() => {
     if (!accountId || !owner) return
 
     const isOwner = accountId.toLowerCase() === owner.toLowerCase()
     setIsOwner(isOwner)
-    // setShowPricing(isOwner && price.type === '')
-    setIsComputeType(Boolean(getServiceByName(asset, 'compute')))
+  }, [accountId, owner, asset])
+
+  useEffect(() => {
+    if (!accountId || !owner) return
+
+    const isOwner = accountId.toLowerCase() === owner.toLowerCase()
+    setIsOwner(isOwner)
   }, [accountId, asset?.accessDetails, owner, asset])
 
-  function handleEditComputeButton() {
-    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
-    setShowEditCompute(true)
-  }
-
-  // return showEditCompute ? (
-  //   <EditComputeDataset setShowEdit={setShowEditCompute} />
-  // ) : (
   return (
     <>
       <div className={styles.networkWrap}>
@@ -87,33 +80,11 @@ export default function AssetContent({
 
         <div className={styles.actions}>
           <AssetActions asset={asset} />
-
-          {/* 
-            TODO: restore edit actions, ideally put edit screens on new page 
-            with own URL instead of switching out AssetContent in place. 
-            Simple way would be modal usage 
-          */}
           {isOwner && isAssetNetwork && (
             <div className={styles.ownerActions}>
-              {/* <Button
-                style="text"
-                size="small"
-                onClick={handleEditComputeButton}
-              >
-                Edit Metadata
-              </Button> */}
-              {isComputeType && asset.metadata.type === 'dataset' && (
-                <>
-                  <span className={styles.separator}>|</span>
-                  <Button
-                    style="text"
-                    size="small"
-                    onClick={handleEditComputeButton}
-                  >
-                    Edit Compute Settings
-                  </Button>
-                </>
-              )}
+              <Link href={`/asset/${asset?.id}/edit`}>
+                <a>Edit</a>
+              </Link>
             </div>
           )}
         </div>
