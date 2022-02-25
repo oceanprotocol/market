@@ -22,8 +22,8 @@ export default function NftTooltip({
   //
   // Supported OpeanSea networks:
   // https://support.opensea.io/hc/en-us/articles/4404027708051-Which-blockchains-does-OpenSea-support-
-  const openseaNetworks = [1, 137, 8217]
-  const openseaTestNetworks = [4, 1001, 80001, 97, 420]
+  const openseaNetworks = [1, 137]
+  const openseaTestNetworks = [4]
   const openSeaSupported = openseaNetworks
     .concat(openseaTestNetworks)
     .includes(chainId)
