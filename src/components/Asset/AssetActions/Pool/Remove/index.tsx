@@ -85,12 +85,7 @@ export default function Remove({
       const maxPercent = new Decimal(100)
         .mul(maxTokensToRemove)
         .div(new Decimal(poolTokens))
-      console.log(
-        'maxTokensToRemove',
-        maxTokensToRemove.toString(),
-        poolTokens,
-        maxPercent.toDecimalPlaces(0, Decimal.ROUND_DOWN).toString()
-      )
+
       setAmountMaxPercent(
         maxPercent.toDecimalPlaces(0, Decimal.ROUND_DOWN).toString()
       )

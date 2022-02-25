@@ -55,20 +55,15 @@ export default function Graph({
       return `${date.toLocaleDateString(locale)}`
     })
 
-    let baseTokenLiquidityCumulative = '0'
     const liquidityHistory = poolSnapshots.map((item) => {
       const conversionSpotPrice = prices[currency.toLowerCase()]
-      baseTokenLiquidityCumulative = new Decimal(baseTokenLiquidityCumulative)
-        .add(item.baseTokenLiquidity)
-        .mul(2) // double baseTokenLiquidity as we have 50/50 weight
+      const convertedLiquidity = new Decimal(item.baseTokenLiquidity)
         .mul(conversionSpotPrice) // convert to user currency
         .toString()
-
-      return baseTokenLiquidityCumulative
+      return convertedLiquidity
     })
 
     const priceHistory = poolSnapshots.map((item) => item.spotPrice)
-    console.log('priceHistory', poolSnapshots[0])
     let volumeCumulative = '0'
     const volumeHistory = poolSnapshots.map((item) => {
       volumeCumulative = new Decimal(volumeCumulative)
