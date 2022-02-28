@@ -170,6 +170,7 @@ export default function PoolShares({
         )
         setAssets(assets)
       } catch (error) {
+        setLoading(false)
         console.error('Error fetching pool shares: ', error.message)
       } finally {
         setLoading(false)
@@ -182,9 +183,10 @@ export default function PoolShares({
     const cancelToken = newCancelToken()
     async function init() {
       setLoading(true)
-
-      if (!poolShares || isPoolSharesLoading || !chainIds || !isMounted())
+      if (!poolShares || !chainIds || !isMounted()) {
+        setLoading(false)
         return
+      }
       await fetchPoolSharesAssets(chainIds, poolShares, cancelToken)
       setLoading(false)
 

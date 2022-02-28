@@ -201,19 +201,27 @@ const OpcFeesQuery = gql`
 `
 
 export function getSubgraphUri(chainId: number): string {
-  const config = getOceanConfig(chainId)
-  return config.subgraphUri
+  try {
+    const config = getOceanConfig(chainId)
+    return config.subgraphUri
+  } catch (error) {
+    console.log('Get ocean config error: ', error.message)
+  }
 }
 
 export function getQueryContext(chainId: number): OperationContext {
-  const queryContext: OperationContext = {
-    url: `${getSubgraphUri(
-      Number(chainId)
-    )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-    requestPolicy: 'cache-and-network'
-  }
+  try {
+    const queryContext: OperationContext = {
+      url: `${getSubgraphUri(
+        Number(chainId)
+      )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
+      requestPolicy: 'cache-and-network'
+    }
 
-  return queryContext
+    return queryContext
+  } catch (error) {
+    console.log('Get context error: ', error.message)
+  }
 }
 
 export async function fetchData(
@@ -224,6 +232,10 @@ export async function fetchData(
   try {
     const client = getUrqlClientInstance()
     const response = await client.query(query, variables, context).toPromise()
+    if (response.error !== undefined) {
+      return
+    }
+    console.log('FETCH DATA RESPONSE: ', response)
     return response
   } catch (error) {
     console.error('Error fetchData: ', error.message)
@@ -237,41 +249,23 @@ export async function fetchDataForMultipleChains(
   chainIds: number[]
 ): Promise<any[]> {
   let datas: any[] = []
-  for (const chainId of chainIds) {
-    const context: OperationContext = {
-      url: `${getSubgraphUri(
-        chainId
-      )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-      requestPolicy: 'network-only'
-    }
-    try {
-      const response = await fetchData(query, variables, context)
-      datas = datas.concat(response.data)
-    } catch (error) {
-      console.error('Error fetchData: ', error.message)
-    }
-  }
-  return datas
-}
-
-export async function getOpcFees(chainId: number) {
-  let opcFees
-  const variables = {
-    id: 1
-  }
-  const context = getQueryContext(chainId)
   try {
-    const response: OperationResult<OpcFeesData> = await fetchData(
-      OpcFeesQuery,
-      variables,
-      context
-    )
-    opcFees = response?.data?.opc
+    for (const chainId of chainIds) {
+      const context: OperationContext = {
+        url: `${getSubgraphUri(
+          chainId
+        )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
+        requestPolicy: 'cache-and-network'
+      }
+      const response = await fetchData(query, variables, context)
+      console.log('RESPONSE in multi chain: ', response.data)
+      if (response?.data === null || response.data === undefined) continue
+      if (response?.data) datas = datas.concat(response.data)
+    }
+    return datas
   } catch (error) {
     console.error('Error fetchData: ', error.message)
-    throw Error(error.message)
   }
-  return opcFees
 }
 
 export async function getPreviousOrders(
@@ -387,18 +381,39 @@ export async function getPoolSharesData(
   chainIds: number[]
 ): Promise<PoolShare[]> {
   const variables = { user: accountId?.toLowerCase() }
-  const data: PoolShare[] = []
-  const result = await fetchDataForMultipleChains(
-    userPoolSharesQuery,
-    variables,
-    chainIds
-  )
-  for (let i = 0; i < result.length; i++) {
-    result[i].poolShares.forEach((poolShare: PoolShare) => {
-      data.push(poolShare)
-    })
+  let data: PoolShare[] = []
+  try {
+    // const result = await fetchDataForMultipleChains(
+    //   userPoolSharesQuery,
+    //   variables,
+    //   chainIds
+    // )
+    // for (let i = 0; i < result.length; i++) {
+    //   if (result[i].poolShares.length > 0) {
+    //     result[i].poolShares.forEach((poolShare: PoolShare) => {
+    //       data.push(poolShare)
+    //     })
+    //   }
+    // }
+    for (const chainId of chainIds) {
+      const queryContext = getQueryContext(Number(chainId))
+      const result: OperationResult<PoolSharesList> = await fetchData(
+        userPoolSharesQuery,
+        variables,
+        queryContext
+      )
+      console.log('RESULT: ', result)
+      if (result?.data.poolShares.length > 0 && result.error === undefined) {
+        data = data.concat(result.data.poolShares)
+      } else {
+        continue
+      }
+    }
+    console.log('DATA RETURNED: ', data)
+    return data
+  } catch (error) {
+    console.error('Error fetchData: ', error.message)
   }
-  return data
 }
 
 export async function getUserTokenOrders(

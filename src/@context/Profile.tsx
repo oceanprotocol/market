@@ -141,6 +141,7 @@ function ProfileProvider({
           poolShares
         )
       } catch (error) {
+        setIsPoolSharesLoading(false)
         LoggerInstance.error('Error fetching pool shares: ', error.message)
       } finally {
         setIsPoolSharesLoading(false)
