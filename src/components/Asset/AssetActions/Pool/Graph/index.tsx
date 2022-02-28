@@ -24,7 +24,7 @@ export default function Graph({
   const darkMode = useDarkMode(false, darkModeConfig)
 
   const [options, setOptions] = useState<ChartOptions<any>>()
-  const [graphType, setGraphType] = useState<GraphType>('liquidity')
+  const [graphType, setGraphType] = useState<GraphType>('tvl')
   const [graphData, setGraphData] = useState<ChartData<any>>()
 
   //
@@ -35,11 +35,7 @@ export default function Graph({
 
     LoggerInstance.log('[pool graph] Fired getOptions().')
     const symbol =
-      graphType === 'liquidity'
-        ? currency
-        : // TODO: remove any once baseToken works
-          // see https://github.com/oceanprotocol/ocean-subgraph/issues/312
-          (poolSnapshots[0] as any)?.baseToken?.symbol
+      graphType === 'tvl' ? currency : poolSnapshots[0]?.baseToken?.symbol
     const options = getOptions(locale, darkMode.value, symbol)
     setOptions(options)
   }, [locale, darkMode.value, graphType, currency, poolSnapshots])
@@ -55,23 +51,23 @@ export default function Graph({
       return `${date.toLocaleDateString(locale)}`
     })
 
-    const liquidityHistory = poolSnapshots.map((item) => {
+    const tvlHistory = poolSnapshots.map((item) => {
       const conversionSpotPrice = prices[currency.toLowerCase()]
 
-      // the tab is name liquidity, why convert to fiat?
-      const convertedLiquidity = new Decimal(item.baseTokenLiquidity)
+      const tvl = new Decimal(item.baseTokenLiquidity)
+        .mul(2)
         .mul(conversionSpotPrice) // convert to user currency
         .toString()
-      return convertedLiquidity
+      return tvl
     })
 
     const priceHistory = poolSnapshots.map((item) => item.spotPrice)
-    let volumeCumulative = '0'
     const volumeHistory = poolSnapshots.map((item) => {
-      volumeCumulative = new Decimal(volumeCumulative)
-        .add(item.swapVolume)
+      const volume = new Decimal(item.swapVolume)
+        // TODO: replace 5 with a constant, it is implemented in https://github.com/oceanprotocol/market/pull/1047
+        .toDecimalPlaces(5)
         .toString()
-      return volumeCumulative
+      return volume
     })
 
     let data
@@ -83,7 +79,7 @@ export default function Graph({
         data = volumeHistory
         break
       default:
-        data = liquidityHistory
+        data = tvlHistory
         break
     }
 
