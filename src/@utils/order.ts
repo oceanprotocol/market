@@ -12,6 +12,12 @@ import { TransactionReceipt } from 'web3-eth'
 import { getSiteMetadata } from './siteConfig'
 import { OrderPriceAndFees } from 'src/@types/Price'
 
+function getValidUntilTime() {
+  const mytime = new Date()
+  mytime.setMinutes(mytime.getMinutes() + 19)
+  return Math.floor(mytime.getTime() / 1000)
+}
+
 /**
  * For pool you need to buy the datatoken beforehand, this always assumes you want to order the first service
  * @param web3
@@ -29,12 +35,27 @@ export async function order(
   const config = getOceanConfig(asset.chainId)
   const { appConfig } = getSiteMetadata()
 
+  const computeEnvs =
+    asset.services[0].type === 'compute'
+      ? await ProviderInstance.getComputeEnvironments(
+          asset.services[0].serviceEndpoint
+        )
+      : null
+  const computeEnviroment =
+    computeEnvs && computeEnvs[0] ? computeEnvs[0].id : null
+  const computeValidUntil =
+    asset.services[0].type === 'compute' ? getValidUntilTime() : null
+
   const initializeData = await ProviderInstance.initialize(
     asset.id,
     asset.services[0].id,
     0,
     accountId,
-    asset.services[0].serviceEndpoint
+    asset.services[0].serviceEndpoint,
+    null,
+    null,
+    computeEnviroment,
+    computeValidUntil
   )
 
   const orderParams = {

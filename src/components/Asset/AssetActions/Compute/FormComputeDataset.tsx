@@ -8,14 +8,16 @@ import ButtonBuy from '@shared/ButtonBuy'
 import PriceOutput from './PriceOutput'
 import { useAsset } from '@context/Asset'
 import { useWeb3 } from '@context/Web3'
-import { checkIfConsumable } from '@utils/ddo'
 import content from '../../../../../content/pages/startComputeDataset.json'
 import { Asset } from '@oceanprotocol/lib'
 import { AccessDetails } from 'src/@types/Price'
+import { getAccessDetailsForAssets } from '@utils/accessDetailsAndPricing'
+import { AssetExtended } from 'src/@types/AssetExtended'
 
 export default function FormStartCompute({
   algorithms,
   ddoListAlgorithms,
+  selectedAlgorithmAsset,
   setSelectedAlgorithm,
   isLoading,
   isComputeButtonDisabled,
@@ -34,13 +36,13 @@ export default function FormStartCompute({
   selectedComputeAssetType,
   selectedComputeAssetTimeout,
   stepText,
-  algorithmConsumeDetails,
   isConsumable,
   consumableFeedback
 }: {
   algorithms: AssetSelectionAsset[]
   ddoListAlgorithms: Asset[]
-  setSelectedAlgorithm: React.Dispatch<React.SetStateAction<Asset>>
+  selectedAlgorithmAsset: AssetExtended
+  setSelectedAlgorithm: React.Dispatch<React.SetStateAction<AssetExtended>>
   isLoading: boolean
   isComputeButtonDisabled: boolean
   hasPreviousOrder: boolean
@@ -58,7 +60,6 @@ export default function FormStartCompute({
   selectedComputeAssetType?: string
   selectedComputeAssetTimeout?: string
   stepText: string
-  algorithmConsumeDetails: AccessDetails
   isConsumable: boolean
   consumableFeedback: string
 }): ReactElement {
@@ -68,8 +69,6 @@ export default function FormStartCompute({
   const [totalPrice, setTotalPrice] = useState(asset?.accessDetails?.price)
   const [isBalanceSufficient, setIsBalanceSufficient] = useState<boolean>(false)
   const { accountId, balance } = useWeb3()
-  const [algorithmConsumableStatus, setAlgorithmConsumableStatus] =
-    useState<number>()
 
   function getAlgorithmAsset(algorithmId: string): Asset {
     let assetDdo = null
@@ -80,35 +79,32 @@ export default function FormStartCompute({
   }
 
   useEffect(() => {
-    if (!values.algorithm) return
-    const algorithmDDO = getAlgorithmAsset(values.algorithm)
-    setSelectedAlgorithm(algorithmDDO)
-
-    if (!accountId || !isConsumable) return
-    async function checkIsConsumable() {
-      const consumable = await checkIfConsumable(algorithmDDO as any)
-      if (consumable) setAlgorithmConsumableStatus(consumable.status)
+    if (!values.algorithm || !accountId || !isConsumable) return
+    async function fetchAlgorithmAssetExtended() {
+      const algorithmDDO = getAlgorithmAsset(values.algorithm)
+      const extendedAlgoAsset = await getAccessDetailsForAssets([algorithmDDO])
+      setSelectedAlgorithm(extendedAlgoAsset[0])
     }
-    checkIsConsumable()
+    fetchAlgorithmAssetExtended()
   }, [values.algorithm, accountId, isConsumable])
 
   //
   // Set price for calculation output
   //
   useEffect(() => {
-    if (!asset?.accessDetails || !algorithmConsumeDetails) return
+    if (!asset?.accessDetails || !selectedAlgorithmAsset?.accessDetails) return
 
     const priceDataset =
       hasPreviousOrder || hasDatatoken ? 0 : Number(asset.accessDetails.price)
     const priceAlgo =
       hasPreviousOrderSelectedComputeAsset || hasDatatokenSelectedComputeAsset
         ? 0
-        : Number(algorithmConsumeDetails.price)
+        : Number(selectedAlgorithmAsset?.accessDetails.price)
 
     setTotalPrice((priceDataset + priceAlgo).toString())
   }, [
     asset?.accessDetails,
-    algorithmConsumeDetails,
+    selectedAlgorithmAsset?.accessDetails,
     hasPreviousOrder,
     hasDatatoken,
     hasPreviousOrderSelectedComputeAsset,
@@ -142,7 +138,7 @@ export default function FormStartCompute({
         hasDatatoken={hasDatatoken}
         selectedComputeAssetTimeout={selectedComputeAssetTimeout}
         hasDatatokenSelectedComputeAsset={hasDatatokenSelectedComputeAsset}
-        algorithmConsumeDetails={algorithmConsumeDetails}
+        algorithmConsumeDetails={selectedAlgorithmAsset?.accessDetails}
         symbol={oceanSymbol}
         totalPrice={Number.parseFloat(totalPrice)}
       />
@@ -154,7 +150,7 @@ export default function FormStartCompute({
           !isValid ||
           !isBalanceSufficient ||
           !isAssetNetwork ||
-          algorithmConsumableStatus > 0
+          !selectedAlgorithmAsset?.accessDetails.isPurchasable
         }
         hasPreviousOrder={hasPreviousOrder}
         hasDatatoken={hasDatatoken}
@@ -177,11 +173,13 @@ export default function FormStartCompute({
         isLoading={isLoading}
         type="submit"
         priceType={asset?.accessDetails?.type}
-        algorithmPriceType={algorithmConsumeDetails?.type}
+        algorithmPriceType={selectedAlgorithmAsset?.accessDetails?.type}
         isBalanceSufficient={isBalanceSufficient}
         isConsumable={isConsumable}
         consumableFeedback={consumableFeedback}
-        algorithmConsumableStatus={algorithmConsumableStatus}
+        isAlgorithmConsumable={
+          selectedAlgorithmAsset?.accessDetails?.isPurchasable
+        }
       />
     </Form>
   )

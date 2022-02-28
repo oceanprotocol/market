@@ -222,6 +222,12 @@ function getAccessDetailsFromTokenPrice(
   return accessDetails
 }
 
+function getValidUntilTime() {
+  const mytime = new Date()
+  mytime.setMinutes(mytime.getMinutes() + 19)
+  return Math.floor(mytime.getTime() / 1000)
+}
+
 /**
  * This will be used to get price including feed before ordering
  * @param {AssetExtended} asset
@@ -251,12 +257,27 @@ export async function getOrderPriceAndFees(
   // fetch consume market order fee
   orderPriceAndFee.consumeMarketOrderFee = appConfig.consumeMarketOrderFee
   // fetch provider fee
+  const computeEnvs =
+    asset.services[0].type === 'compute'
+      ? await ProviderInstance.getComputeEnvironments(
+          asset.services[0].serviceEndpoint
+        )
+      : null
+  const computeEnviroment =
+    computeEnvs && computeEnvs[0] ? computeEnvs[0].id : null
+  const computeValidUntil =
+    asset.services[0].type === 'compute' ? getValidUntilTime() : null
+
   const initializeData = await ProviderInstance.initialize(
     asset.id,
     asset.services[0].id,
     0,
     accountId,
-    asset.services[0].serviceEndpoint
+    asset.services[0].serviceEndpoint,
+    null,
+    null,
+    computeEnviroment,
+    computeValidUntil
   )
   orderPriceAndFee.providerFee = initializeData.providerFee
 

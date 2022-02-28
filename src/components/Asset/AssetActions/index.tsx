@@ -132,7 +132,6 @@ export default function AssetActions({
   const UseContent = isCompute ? (
     <Compute
       asset={asset}
-      accessDetails={asset?.accessDetails}
       dtBalance={dtBalance}
       file={fileMetadata}
       fileIsLoading={fileIsLoading}

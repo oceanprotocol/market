@@ -18,7 +18,8 @@ import {
   TokenInOutMarket,
   AmountsInMaxFee,
   AmountsOutMaxFee,
-  Service
+  Service,
+  ZERO_ADDRESS
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
@@ -57,21 +58,25 @@ import { SortTermOptions } from '../../../../@types/aquarius/SearchQuery'
 import { Decimal } from 'decimal.js'
 import { TransactionReceipt } from 'web3-core'
 import { useAbortController } from '@hooks/useAbortController'
-import { getAccessDetails } from '@utils/accessDetailsAndPricing'
-import { AccessDetails } from 'src/@types/Price'
+import {
+  getAccessDetails,
+  getOrderPriceAndFees
+} from '@utils/accessDetailsAndPricing'
+import { AccessDetails, OrderPriceAndFees } from 'src/@types/Price'
 import { transformAssetToAssetSelection } from '@utils/assetConvertor'
+import { buyDtFromPool } from '@utils/pool'
+import { order } from '@utils/order'
+import { AssetExtended } from 'src/@types/AssetExtended'
 
 export default function Compute({
   asset,
-  accessDetails,
   dtBalance,
   file,
   fileIsLoading,
   isConsumable,
   consumableFeedback
 }: {
-  asset: Asset
-  accessDetails: AccessDetails
+  asset: AssetExtended
   dtBalance: string
   file: FileMetadata
   fileIsLoading?: boolean
@@ -86,18 +91,25 @@ export default function Compute({
 
   const [algorithmList, setAlgorithmList] = useState<AssetSelectionAsset[]>()
   const [ddoAlgorithmList, setDdoAlgorithmList] = useState<Asset[]>()
-  const [selectedAlgorithmAsset, setSelectedAlgorithmAsset] = useState<Asset>()
+  const [selectedAlgorithmAsset, setSelectedAlgorithmAsset] =
+    useState<AssetExtended>()
   const [hasAlgoAssetDatatoken, setHasAlgoAssetDatatoken] = useState<boolean>()
   const [isPublished, setIsPublished] = useState(false)
-  const [hasPreviousDatasetOrder, setHasPreviousDatasetOrder] = useState(false)
-  const [previousDatasetOrderId, setPreviousDatasetOrderId] = useState<string>()
   const [hasPreviousAlgorithmOrder, setHasPreviousAlgorithmOrder] =
     useState(false)
   const [algorithmDTBalance, setAlgorithmDTBalance] = useState<string>()
   const [algorithmConsumeDetails, setAlgorithmConsumeDetails] =
     useState<AccessDetails>()
-  const [previousAlgorithmOrderId, setPreviousAlgorithmOrderId] =
-    useState<string>()
+
+  const [isOwned, setIsOwned] = useState(false)
+  const [validOrderTx, setValidOrderTx] = useState('')
+  const [orderPriceAndFees, setOrderPriceAndFees] =
+    useState<OrderPriceAndFees>()
+  const [isAlgorithmOwned, setIsAlgorithmOwned] = useState(false)
+  const [validAlgorithmOrderTx, setValidAlgorithmOrderTx] = useState('')
+  const [orderAlgorithmPriceAndFees, setOrderAlgorithmPriceAndFees] =
+    useState<OrderPriceAndFees>()
+
   const [datasetTimeout, setDatasetTimeout] = useState<string>()
   const [algorithmTimeout, setAlgorithmTimeout] = useState<string>()
   const hasDatatoken = Number(dtBalance) >= 1
@@ -108,36 +120,15 @@ export default function Compute({
   const isComputeButtonDisabled =
     isJobStarting === true ||
     file === null ||
-    (!hasPreviousDatasetOrder && !hasDatatoken && !isConsumablePrice) ||
+    (!validOrderTx && !hasDatatoken && !isConsumablePrice) ||
     (!hasPreviousAlgorithmOrder &&
       !hasAlgoAssetDatatoken &&
       !isAlgoConsumablePrice)
 
-  const { timeout } = asset?.services[0]
-
-  async function checkPreviousOrders(asset: DDO) {
-    const { type } = asset.metadata
-
-    const orderId = await getPreviousOrders(
-      asset.services[0].datatokenAddress?.toLowerCase(),
-      accountId?.toLowerCase(),
-      timeout.toString()
-    )
-
-    if (!isMounted()) return
-    if (type === 'algorithm') {
-      setPreviousAlgorithmOrderId(orderId)
-      setHasPreviousAlgorithmOrder(!!orderId)
-    } else {
-      setPreviousDatasetOrderId(orderId)
-      setHasPreviousDatasetOrder(!!orderId)
-    }
-  }
-
   async function checkAssetDTBalance(asset: DDO) {
     const datatokenInstance = new Datatoken(web3)
     const AssetDtBalance = await datatokenInstance.balance(
-      asset.services[0].datatokenAddress,
+      asset?.services[0].datatokenAddress,
       accountId
     )
     setAlgorithmDTBalance(new Decimal(AssetDtBalance).toString())
@@ -145,8 +136,7 @@ export default function Compute({
   }
 
   async function getAlgorithmList(): Promise<AssetSelectionAsset[]> {
-    const source = axios.CancelToken.source()
-    const computeService = asset.services[0]
+    const computeService = asset?.services[0]
     let algorithmSelectionList: AssetSelectionAsset[]
     if (
       !computeService.compute ||
@@ -160,7 +150,7 @@ export default function Compute({
           computeService.compute.publisherTrustedAlgorithms,
           asset.chainId
         ),
-        source.token
+        newCancelToken()
       )
       setDdoAlgorithmList(gueryResults.results)
 
@@ -173,26 +163,44 @@ export default function Compute({
     return algorithmSelectionList
   }
 
-  const initMetadata = useCallback(async (asset: Asset): Promise<void> => {
-    if (!asset) return
-    const accessDetails = await getAccessDetails(
-      asset.chainId,
-      asset.services[0].datatokenAddress
+  useEffect(() => {
+    if (!asset?.accessDetails && !accountId) return
+
+    setIsConsumablePrice(asset?.accessDetails?.isPurchasable)
+    setIsOwned(asset?.accessDetails?.isOwned)
+    setValidOrderTx(asset?.accessDetails?.validOrderTx)
+
+    async function init() {
+      if (asset?.accessDetails?.addressOrId === ZERO_ADDRESS) return
+
+      const orderPriceAndFees = await getOrderPriceAndFees(asset, ZERO_ADDRESS)
+      setOrderPriceAndFees(orderPriceAndFees)
+    }
+    init()
+  }, [asset?.accessDetails])
+
+  useEffect(() => {
+    if (!selectedAlgorithmAsset?.accessDetails && !accountId) return
+
+    checkAssetDTBalance(selectedAlgorithmAsset)
+    setIsConsumablePrice(selectedAlgorithmAsset?.accessDetails?.isPurchasable)
+    setIsAlgorithmOwned(selectedAlgorithmAsset?.accessDetails?.isOwned)
+    setValidAlgorithmOrderTx(
+      selectedAlgorithmAsset?.accessDetails?.validOrderTx
     )
-    setAlgorithmConsumeDetails(accessDetails)
-  }, [])
 
-  useEffect(() => {
-    if (!algorithmConsumeDetails) return
+    async function init() {
+      if (selectedAlgorithmAsset?.accessDetails?.addressOrId === ZERO_ADDRESS)
+        return
 
-    setIsAlgoConsumablePrice(algorithmConsumeDetails.isPurchasable)
-  }, [algorithmConsumeDetails])
-
-  useEffect(() => {
-    if (!accessDetails) return
-
-    setIsConsumablePrice(accessDetails.isPurchasable)
-  }, [accessDetails])
+      const orderPriceAndFees = await getOrderPriceAndFees(
+        selectedAlgorithmAsset,
+        ZERO_ADDRESS
+      )
+      setOrderAlgorithmPriceAndFees(orderPriceAndFees)
+    }
+    init()
+  }, [selectedAlgorithmAsset])
 
   // useEffect(() => {
   //   setDatasetTimeout(secondsToString(timeout))
@@ -202,7 +210,6 @@ export default function Compute({
     if (!asset) return
 
     getAlgorithmsForAsset(asset, newCancelToken()).then((algorithmsAssets) => {
-      console.log('getAlgorithmsForAsset', algorithmsAssets)
       setDdoAlgorithmList(algorithmsAssets)
       getAlgorithmAssetSelectionList(asset, algorithmsAssets).then(
         (algorithmSelectionList) => {
@@ -211,37 +218,6 @@ export default function Compute({
       )
     })
   }, [asset])
-
-  useEffect(() => {
-    if (!accountId) return
-    checkPreviousOrders(asset)
-  }, [asset, accountId])
-
-  useEffect(() => {
-    if (!selectedAlgorithmAsset) return
-
-    initMetadata(selectedAlgorithmAsset)
-
-    const { timeout } = asset.services[0]
-
-    // setAlgorithmTimeout(secondsToString(timeout))
-
-    if (accountId) {
-      if (getServiceByName(selectedAlgorithmAsset, 'access')) {
-        checkPreviousOrders(selectedAlgorithmAsset).then(() => {
-          if (
-            !hasPreviousAlgorithmOrder &&
-            getServiceByName(selectedAlgorithmAsset, 'compute')
-          ) {
-            checkPreviousOrders(selectedAlgorithmAsset)
-          }
-        })
-      } else if (getServiceByName(selectedAlgorithmAsset, 'compute')) {
-        checkPreviousOrders(selectedAlgorithmAsset)
-      }
-    }
-    checkAssetDTBalance(selectedAlgorithmAsset)
-  }, [asset, selectedAlgorithmAsset, accountId, hasPreviousAlgorithmOrder])
 
   // Output errors in toast UI
   useEffect(() => {
@@ -252,385 +228,136 @@ export default function Compute({
 
   async function startJob(algorithmId: string): Promise<string> {
     try {
-      //   setIsJobStarting(true)
-      //   setIsPublished(false) // would be nice to rename this
-      //   setError(undefined)
-      //   const computeService = getServiceByName(asset, 'compute')
-      //   const serviceAlgo = getServiceByName(selectedAlgorithmAsset, 'access')
-      //     ? getServiceByName(selectedAlgorithmAsset, 'access')
-      //     : getServiceByName(selectedAlgorithmAsset, 'compute')
-      //   const computeAlgorithm: ComputeAlgorithm = {
-      //     documentId: selectedAlgorithmAsset.id,
-      //     serviceId: selectedAlgorithmAsset.services[0].id
-      //   }
-      //   const allowed = await isOrderable(
-      //     asset,
-      //     computeService.id,
-      //     computeAlgorithm,
-      //     selectedAlgorithmAsset
-      //   )
-      //   LoggerInstance.log('[compute] Is data set orderable?', allowed)
-      //   if (!allowed) {
-      //     setError(
-      //       'Data set is not orderable in combination with selected algorithm.'
-      //     )
-      //     LoggerInstance.error(
-      //       '[compute] Error starting compute job. Dataset is not orderable in combination with selected algorithm.'
-      //     )
-      //     return
-      //   }
-      //   let assetOrderId = hasPreviousDatasetOrder ? previousDatasetOrderId : ''
-      //   if (!hasPreviousDatasetOrder) {
-      //     // going to move/replace part of this logic when the use consume hook will be ready
-      //     const initializeData = await ProviderInstance.initialize(
-      //       asset.id,
-      //       asset.services[0].id,
-      //       0,
-      //       accountId,
-      //       asset.services[0].serviceEndpoint // to check
-      //     )
-      //     const providerFees: ProviderFees = {
-      //       providerFeeAddress: initializeData.providerFee.providerFeeAddress,
-      //       providerFeeToken: initializeData.providerFee.providerFeeToken,
-      //       providerFeeAmount: initializeData.providerFee.providerFeeAmount,
-      //       v: initializeData.providerFee.v,
-      //       r: initializeData.providerFee.r,
-      //       s: initializeData.providerFee.s,
-      //       providerData: initializeData.providerFee.providerData,
-      //       validUntil: initializeData.providerFee.validUntil
-      //     }
-      //     if (!hasDatatoken) {
-      //       let tx: TransactionReceipt
-      //       switch (accessDetails?.type) {
-      //         case 'dynamic': {
-      //           const oceanAmmount = new Decimal(accessDetails.price)
-      //             .times(1.05)
-      //             .toString()
-      //           const maxPrice = new Decimal(accessDetails.price)
-      //             .times(2)
-      //             .toString()
-      //           const poolInstance = new Pool(web3)
-      //           if (
-      //             new Decimal('1').greaterThan(
-      //               await poolInstance.getReserve(
-      //                 accessDetails.addressOrId,
-      //                 accessDetails.datatoken.address
-      //               )
-      //             )
-      //           ) {
-      //             LoggerInstance.error(
-      //               'ERROR: Buy quantity exceeds quantity allowed'
-      //             )
-      //           }
-      //           const calcInGivenOut = await poolInstance.getAmountInExactOut(
-      //             accessDetails.addressOrId,
-      //             accessDetails.baseToken.address,
-      //             accessDetails.datatoken.address,
-      //             '1',
-      //             '0.1'
-      //           )
-      //           if (new Decimal(calcInGivenOut).greaterThan(oceanAmmount)) {
-      //             this.logger.error('ERROR: Not enough Ocean Tokens')
-      //             return null
-      //           }
-      //           const approvetx = await approve(
-      //             web3,
-      //             accountId,
-      //             accessDetails.baseToken.address,
-      //             accountId,
-      //             '1'
-      //           )
-      //           if (!approvetx) {
-      //             LoggerInstance.error(
-      //               'ERROR: Failed to call approve OCEAN token'
-      //             )
-      //           }
-      //           const tokenInOutMarket: TokenInOutMarket = {
-      //             tokenIn: accessDetails.baseToken.address,
-      //             tokenOut: accessDetails.datatoken.address,
-      //             marketFeeAddress: appConfig.marketFeeAddress
-      //           }
-      //           const amountsInOutMaxFee: AmountsOutMaxFee = {
-      //             maxAmountIn: oceanAmmount,
-      //             tokenAmountOut: '1',
-      //             swapMarketFee: '0.1'
-      //           }
-      //           const tx = await poolInstance.swapExactAmountOut(
-      //             accountId,
-      //             accessDetails.addressOrId,
-      //             tokenInOutMarket,
-      //             amountsInOutMaxFee
-      //           )
-      //           break
-      //         }
-      //         case 'fixed': {
-      //           const datatokenInstance = new Datatoken(web3)
-      //           const order: OrderParams = {
-      //             consumer: accountId,
-      //             serviceIndex: 1,
-      //             _providerFees: providerFees
-      //           }
-      //           const fre: FreOrderParams = {
-      //             exchangeContract: accessDetails.addressOrId,
-      //             exchangeId:
-      //               '0x7ac824fef114255e5e3521a161ef692ec32003916fb6f3fe985cb74790d053ca',
-      //             maxBaseTokenAmount: '1',
-      //             swapMarketFee: web3.utils.toWei('0.1'),
-      //             marketFeeAddress: appConfig.marketFeeAddress
-      //           }
-      //           tx = await datatokenInstance.buyFromFreAndOrder(
-      //             asset.datatokens[0].address,
-      //             accountId,
-      //             order,
-      //             fre
-      //           )
-      //           assetOrderId = tx.transactionHash
-      //           break
-      //         }
-      //         case 'free': {
-      //           const datatokenInstance = new Datatoken(web3)
-      //           const order: OrderParams = {
-      //             consumer: accountId,
-      //             serviceIndex: 0,
-      //             _providerFees: providerFees
-      //           }
-      //           const fre: FreOrderParams = {
-      //             exchangeContract: accessDetails.addressOrId,
-      //             exchangeId:
-      //               '0x7ac824fef114255e5e3521a161ef692ec32003916fb6f3fe985cb74790d053ca',
-      //             maxBaseTokenAmount: '1',
-      //             swapMarketFee: web3.utils.toWei('0.1'),
-      //             marketFeeAddress: appConfig.marketFeeAddress
-      //           }
-      //           tx = await datatokenInstance.buyFromDispenserAndOrder(
-      //             asset.datatokens[0].address,
-      //             accountId,
-      //             order,
-      //             accessDetails.addressOrId
-      //           )
-      //           assetOrderId = tx.transactionHash
-      //           if (!tx) {
-      //             setError('Error buying datatoken.')
-      //             LoggerInstance.error(
-      //               '[compute] Error buying datatoken for data set ',
-      //               asset.id
-      //             )
-      //             return
-      //           }
-      //           break
-      //         }
-      //       }
-      //     } else {
-      //       const datatokenInstance = new Datatoken(web3)
-      //       const tx = await datatokenInstance.startOrder(
-      //         asset.datatokens[0].address,
-      //         accountId,
-      //         initializeData.computeAddress,
-      //         0,
-      //         providerFees
-      //       )
-      //       assetOrderId = tx.transactionHash
-      //     }
-      //   }
-      //   let algorithmAssetOrderId = hasPreviousAlgorithmOrder
-      //     ? previousAlgorithmOrderId
-      //     : ''
-      //   // add method for this logic
-      //   if (!hasPreviousAlgorithmOrder) {
-      //     // going to move replace part of this logic when the use consume hook will be ready
-      //     const initializeData = await ProviderInstance.initialize(
-      //       selectedAlgorithmAsset.id,
-      //       selectedAlgorithmAsset.services[0].id,
-      //       0,
-      //       accountId,
-      //       selectedAlgorithmAsset.services[0].serviceEndpoint // to check
-      //     )
-      //     const providerFees: ProviderFees = {
-      //       providerFeeAddress: initializeData.providerFee.providerFeeAddress,
-      //       providerFeeToken: initializeData.providerFee.providerFeeToken,
-      //       providerFeeAmount: initializeData.providerFee.providerFeeAmount,
-      //       v: initializeData.providerFee.v,
-      //       r: initializeData.providerFee.r,
-      //       s: initializeData.providerFee.s,
-      //       providerData: initializeData.providerFee.providerData,
-      //       validUntil: initializeData.providerFee.validUntil
-      //     }
-      //     if (!hasAlgoAssetDatatoken) {
-      //       let tx: TransactionReceipt
-      //       switch (algorithmConsumeDetails?.type) {
-      //         case 'dynamic': {
-      //           const oceanAmmount = new Decimal(algorithmConsumeDetails.price)
-      //             .times(1.05)
-      //             .toString()
-      //           const maxPrice = new Decimal(algorithmConsumeDetails.price)
-      //             .times(2)
-      //             .toString()
-      //           const poolInstance = new Pool(web3)
-      //           if (
-      //             new Decimal('1').greaterThan(
-      //               await poolInstance.getReserve(
-      //                 algorithmConsumeDetails.addressOrId,
-      //                 algorithmConsumeDetails.datatoken.address
-      //               )
-      //             )
-      //           ) {
-      //             LoggerInstance.error(
-      //               'ERROR: Buy quantity exceeds quantity allowed'
-      //             )
-      //           }
-      //           const calcInGivenOut = await poolInstance.getAmountInExactOut(
-      //             algorithmConsumeDetails.addressOrId,
-      //             algorithmConsumeDetails.baseToken.address,
-      //             algorithmConsumeDetails.datatoken.address,
-      //             '1',
-      //             '0.1'
-      //           )
-      //           if (new Decimal(calcInGivenOut).greaterThan(oceanAmmount)) {
-      //             this.logger.error('ERROR: Not enough Ocean Tokens')
-      //             return null
-      //           }
-      //           const approvetx = await approve(
-      //             web3,
-      //             accountId,
-      //             algorithmConsumeDetails.baseToken.address,
-      //             accountId,
-      //             '1'
-      //           )
-      //           if (!approvetx) {
-      //             LoggerInstance.error(
-      //               'ERROR: Failed to call approve OCEAN token'
-      //             )
-      //           }
-      //           const tokenInOutMarket: TokenInOutMarket = {
-      //             tokenIn: algorithmConsumeDetails.baseToken.address,
-      //             tokenOut: algorithmConsumeDetails.datatoken.address,
-      //             marketFeeAddress: appConfig.marketFeeAddress
-      //           }
-      //           const amountsInOutMaxFee: AmountsOutMaxFee = {
-      //             maxAmountIn: oceanAmmount,
-      //             tokenAmountOut: '1',
-      //             swapMarketFee: '0.1'
-      //           }
-      //           const tx = await poolInstance.swapExactAmountOut(
-      //             accountId,
-      //             algorithmConsumeDetails.addressOrId,
-      //             tokenInOutMarket,
-      //             amountsInOutMaxFee
-      //           )
-      //           break
-      //         }
-      //         case 'fixed': {
-      //           const datatokenInstance = new Datatoken(web3)
-      //           const order: OrderParams = {
-      //             consumer: accountId,
-      //             serviceIndex: 1,
-      //             _providerFees: providerFees
-      //           }
-      //           const fre: FreOrderParams = {
-      //             exchangeContract: algorithmConsumeDetails.addressOrId,
-      //             exchangeId:
-      //               '0x7ac824fef114255e5e3521a161ef692ec32003916fb6f3fe985cb74790d053ca',
-      //             maxBaseTokenAmount: '1',
-      //             swapMarketFee: web3.utils.toWei('0.1'), // to update
-      //             marketFeeAddress: appConfig.marketFeeAddress
-      //           }
-      //           tx = await datatokenInstance.buyFromFreAndOrder(
-      //             selectedAlgorithmAsset.datatokens[0].address,
-      //             accountId,
-      //             order,
-      //             fre
-      //           )
-      //           algorithmAssetOrderId = tx.transactionHash
-      //           break
-      //         }
-      //         case 'free': {
-      //           const datatokenInstance = new Datatoken(web3)
-      //           const order: OrderParams = {
-      //             consumer: accountId,
-      //             serviceIndex: 1,
-      //             _providerFees: providerFees
-      //           }
-      //           const fre: FreOrderParams = {
-      //             exchangeContract: algorithmConsumeDetails.addressOrId,
-      //             exchangeId:
-      //               '0x7ac824fef114255e5e3521a161ef692ec32003916fb6f3fe985cb74790d053ca',
-      //             maxBaseTokenAmount: '1',
-      //             swapMarketFee: web3.utils.toWei('0.1'), // to update
-      //             marketFeeAddress: appConfig.marketFeeAddress
-      //           }
-      //           tx = await datatokenInstance.buyFromDispenserAndOrder(
-      //             selectedAlgorithmAsset.datatokens[0].address,
-      //             accountId,
-      //             order,
-      //             algorithmConsumeDetails.addressOrId
-      //           )
-      //           algorithmAssetOrderId = tx.transactionHash
-      //           break
-      //         }
-      //       }
-      //     } else {
-      //       const datatokenInstance = new Datatoken(web3)
-      //       const tx = await datatokenInstance.startOrder(
-      //         selectedAlgorithmAsset.datatokens[0].address,
-      //         accountId,
-      //         initializeData.computeAddress,
-      //         0,
-      //         providerFees
-      //       )
-      //       algorithmAssetOrderId = tx.transactionHash
-      //     }
-      //   }
-      //   LoggerInstance.log(
-      //     `[compute] Got ${
-      //       hasPreviousDatasetOrder ? 'existing' : 'new'
-      //     } order ID for dataset: `,
-      //     assetOrderId
-      //   )
-      //   LoggerInstance.log(
-      //     `[compute] Got ${
-      //       hasPreviousAlgorithmOrder ? 'existing' : 'new'
-      //     } order ID for algorithm: `,
-      //     algorithmAssetOrderId
-      //   )
-      //   if (!assetOrderId || !algorithmAssetOrderId) {
-      //     setError('Error ordering assets.')
-      //     return
-      //   }
-      //   computeAlgorithm.transferTxId = algorithmAssetOrderId
-      //   LoggerInstance.log('[compute] Starting compute job.')
-      //   const computeAsset: ComputeAsset = {
-      //     documentId: asset.id,
-      //     serviceId: asset.services[0].id,
-      //     transferTxId: assetOrderId
-      //   }
-      //   computeAlgorithm.transferTxId = algorithmAssetOrderId
-      //   const output: ComputeOutput = {
-      //     publishAlgorithmLog: true,
-      //     publishOutput: true
-      //   }
-      //   const response = await ProviderInstance.computeStart(
-      //     asset.services[0].serviceEndpoint,
-      //     web3,
-      //     accountId,
-      //     'env1',
-      //     computeAsset,
-      //     computeAlgorithm,
-      //     newAbortController(),
-      //     null,
-      //     output
-      //   )
-      //   if (!response) {
-      //     setError('Error starting compute job.')
-      //     return
-      //   }
-      //   LoggerInstance.log('[compute] Starting compute job response: ', response)
-      //   await checkPreviousOrders(selectedAlgorithmAsset)
-      //   await checkPreviousOrders(asset)
-      //   setIsPublished(true)
-      return 'dummy'
+      setIsJobStarting(true)
+      setIsPublished(false) // would be nice to rename this
+      setError(undefined)
+      const computeService = getServiceByName(asset, 'compute')
+      const computeAlgorithm: ComputeAlgorithm = {
+        documentId: selectedAlgorithmAsset.id,
+        serviceId: selectedAlgorithmAsset.services[0].id
+      }
+      const allowed = await isOrderable(
+        asset,
+        computeService.id,
+        computeAlgorithm,
+        selectedAlgorithmAsset
+      )
+      LoggerInstance.log('[compute] Is data set orderable?', allowed)
+      if (!allowed) {
+        setError(
+          'Data set is not orderable in combination with selected algorithm.'
+        )
+        LoggerInstance.error(
+          '[compute] Error starting compute job. Dataset is not orderable in combination with selected algorithm.'
+        )
+        return
+      }
+
+      if (!isOwned) {
+        try {
+          if (!hasDatatoken && asset?.accessDetails.type === 'dynamic') {
+            const tx = await buyDtFromPool(
+              asset?.accessDetails,
+              accountId,
+              web3
+            )
+
+            LoggerInstance.log('[compute] Buy dataset dt from pool: ', tx)
+            if (!tx) {
+              toast.error('Failed to buy datatoken from pool!')
+              return
+            }
+          }
+          LoggerInstance.log('dataset orderPriceAndFees: ', orderPriceAndFees)
+          const orderTx = await order(web3, asset, orderPriceAndFees, accountId)
+          LoggerInstance.log(
+            '[compute] Order dataset: ',
+            orderTx.transactionHash
+          )
+          setIsOwned(true)
+          setValidOrderTx(orderTx.transactionHash)
+        } catch (e) {
+          LoggerInstance.log(e.message)
+        }
+      } else {
+        LoggerInstance.log('[compute] Dataset owned txId:', validOrderTx)
+      }
+
+      if (!isAlgorithmOwned) {
+        try {
+          if (
+            !hasAlgoAssetDatatoken &&
+            selectedAlgorithmAsset?.accessDetails?.type === 'dynamic'
+          ) {
+            const tx = await buyDtFromPool(
+              selectedAlgorithmAsset?.accessDetails,
+              accountId,
+              web3
+            )
+
+            LoggerInstance.log('[compute] Buy algorithm dt from pool: ', tx)
+            if (!tx) {
+              toast.error('Failed to buy datatoken from pool!')
+              return
+            }
+          }
+          LoggerInstance.log(
+            'algorithm orderPriceAndFees: ',
+            orderAlgorithmPriceAndFees
+          )
+          const orderTx = await order(
+            web3,
+            selectedAlgorithmAsset,
+            orderAlgorithmPriceAndFees,
+            accountId
+          )
+
+          LoggerInstance.log(
+            '[compute] Order dataset: ',
+            orderTx.transactionHash
+          )
+          setIsAlgorithmOwned(true)
+          setValidAlgorithmOrderTx(orderTx.transactionHash)
+        } catch (e) {
+          LoggerInstance.log(e.message)
+        }
+      } else {
+        LoggerInstance.log(
+          '[compute] Algorithm owned txId:',
+          validAlgorithmOrderTx
+        )
+      }
+
+      LoggerInstance.log('[compute] Starting compute job.')
+      const computeAsset: ComputeAsset = {
+        documentId: asset.id,
+        serviceId: asset.services[0].id,
+        transferTxId: validOrderTx
+      }
+      computeAlgorithm.transferTxId = validAlgorithmOrderTx
+      const output: ComputeOutput = {
+        publishAlgorithmLog: true,
+        publishOutput: true
+      }
+      const response = await ProviderInstance.computeStart(
+        asset.services[0].serviceEndpoint,
+        web3,
+        accountId,
+        'env1',
+        computeAsset,
+        computeAlgorithm,
+        newAbortController(),
+        null,
+        output
+      )
+      if (!response) {
+        setError('Error starting compute job.')
+        return
+      }
+      LoggerInstance.log('[compute] Starting compute job response: ', response)
+
+      setIsPublished(true)
     } catch (error) {
-      await checkPreviousOrders(selectedAlgorithmAsset)
-      await checkPreviousOrders(asset)
       setError('Failed to start job!')
       LoggerInstance.error('[compute] Failed to start job: ', error.message)
     } finally {
@@ -642,7 +369,7 @@ export default function Compute({
     <>
       <div className={styles.info}>
         <FileIcon file={file} isLoading={fileIsLoading} small />
-        <Price accessDetails={accessDetails} conversion />
+        <Price accessDetails={asset?.accessDetails} conversion />
       </div>
 
       {asset.metadata.type === 'algorithm' ? (
@@ -668,10 +395,11 @@ export default function Compute({
           <FormStartComputeDataset
             algorithms={algorithmList}
             ddoListAlgorithms={ddoAlgorithmList}
+            selectedAlgorithmAsset={selectedAlgorithmAsset}
             setSelectedAlgorithm={setSelectedAlgorithmAsset}
             isLoading={isJobStarting}
             isComputeButtonDisabled={isComputeButtonDisabled}
-            hasPreviousOrder={hasPreviousDatasetOrder}
+            hasPreviousOrder={validOrderTx !== ''}
             hasDatatoken={hasDatatoken}
             dtBalance={dtBalance}
             datasetLowPoolLiquidity={!isConsumablePrice}
@@ -679,7 +407,9 @@ export default function Compute({
             assetTimeout={datasetTimeout}
             hasPreviousOrderSelectedComputeAsset={hasPreviousAlgorithmOrder}
             hasDatatokenSelectedComputeAsset={hasAlgoAssetDatatoken}
-            oceanSymbol={accessDetails ? accessDetails.baseToken.symbol : ''}
+            oceanSymbol={
+              asset?.accessDetails ? asset?.accessDetails.baseToken.symbol : ''
+            }
             dtSymbolSelectedComputeAsset={
               selectedAlgorithmAsset?.datatokens[0]?.symbol
             }
@@ -689,7 +419,6 @@ export default function Compute({
             selectedComputeAssetTimeout={algorithmTimeout}
             // lazy comment when removing pricingStepText
             stepText={'pricingStepText' || 'Starting Compute Job...'}
-            algorithmConsumeDetails={algorithmConsumeDetails}
             isConsumable={isConsumable}
             consumableFeedback={consumableFeedback}
           />
@@ -701,7 +430,7 @@ export default function Compute({
           <SuccessConfetti success="Your job started successfully! Watch the progress below or on your profile." />
         )}
       </footer>
-      {accountId && accessDetails?.datatoken && (
+      {accountId && asset?.accessDetails?.datatoken && (
         <AssetActionHistoryTable title="Your Compute Jobs">
           <ComputeJobs minimal />
         </AssetActionHistoryTable>

@@ -89,6 +89,7 @@ export async function isOrderable(
   algorithmDDO: Asset | DDO
 ): Promise<boolean> {
   const datasetService: Service = getServiceById(asset, serviceId)
+  console.log('datasetService', datasetService)
   if (!datasetService) return false
   if (datasetService.type === 'compute') {
     if (algorithm.meta) {
@@ -112,6 +113,7 @@ export async function isOrderable(
       }
     }
   }
+  return true
 }
 
 export function getQuerryString(
