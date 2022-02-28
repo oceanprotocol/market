@@ -10,7 +10,10 @@ export default function Blockies({
   className?: string
 }): ReactElement {
   if (!accountId) return null
-  const blockies = toDataUrl(accountId)
+
+  // TODO: just put this back once finished
+  // const blockies = toDataUrl(accountId)
+  const blockies = 'randomstring12345'
 
   return (
     <img

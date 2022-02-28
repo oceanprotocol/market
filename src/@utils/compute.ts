@@ -1,20 +1,12 @@
-// import {
-//   ServiceComputePrivacy,
-//   publisherTrustedAlgorithm as PublisherTrustedAlgorithm,
-//   Service,
-//   LoggerInstance,
-//   Provider,
-//   Config,
-//   Ocean,
-//   Account
-// } from '@oceanprotocol/lib'
-// import { ComputeJob } from '@oceanprotocol/lib/dist/node/ocean/interfaces/Compute'
 import {
   Asset,
   ServiceComputeOptions,
   PublisherTrustedAlgorithm,
   getHash,
-  LoggerInstance
+  LoggerInstance,
+  ComputeAlgorithm,
+  DDO,
+  Service
 } from '@oceanprotocol/lib'
 import { CancelToken } from 'axios'
 import { gql } from 'urql'
@@ -29,6 +21,7 @@ import { getServiceById, getServiceByName } from './ddo'
 import { getOceanConfig } from './ocean'
 import { SortTermOptions } from 'src/@types/aquarius/SearchQuery'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
+import { transformAssetToAssetSelection } from './assetConvertor'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -121,7 +114,7 @@ export async function isOrderable(
   }
 }
 
-function getQuerryString(
+export function getQuerryString(
   trustedAlgorithmList: PublisherTrustedAlgorithm[],
   chainId?: number
 ): SearchQuery {
@@ -132,11 +125,12 @@ function getQuerryString(
     sort: { sortBy: SortTermOptions.Created },
     filters: [
       getFilterTerm('metadata.type', 'algorithm'),
-      getFilterTerm('id', algorithmDidList)
+      getFilterTerm('_id', algorithmDidList)
     ]
   } as BaseQueryParams
 
   const query = generateBaseQuery(baseParams)
+  console.log('querry', query)
   return query
 }
 
@@ -145,12 +139,14 @@ export async function getAlgorithmsForAsset(
   token: CancelToken
 ): Promise<Asset[]> {
   const computeService: Service = getServiceByName(asset, 'compute')
+  console.log('computeService: ', computeService)
   let algorithms: Asset[]
   if (
     !computeService.compute ||
     !computeService.compute.publisherTrustedAlgorithms ||
     computeService.compute.publisherTrustedAlgorithms.length === 0
   ) {
+    console.log('computeService: []')
     algorithms = []
   } else {
     const gueryResults = await queryMetadata(
@@ -160,6 +156,7 @@ export async function getAlgorithmsForAsset(
       ),
       token
     )
+    console.log('gueryResults: ', gueryResults)
     algorithms = gueryResults?.results
   }
   return algorithms
@@ -167,8 +164,7 @@ export async function getAlgorithmsForAsset(
 
 export async function getAlgorithmAssetSelectionList(
   asset: Asset,
-  algorithms: Asset[],
-  token: CancelToken
+  algorithms: Asset[]
 ): Promise<AssetSelectionAsset[]> {
   const computeService: Service = getServiceByName(asset, 'compute')
   let algorithmSelectionList: AssetSelectionAsset[]
@@ -179,11 +175,10 @@ export async function getAlgorithmAssetSelectionList(
   ) {
     algorithmSelectionList = []
   } else {
-    algorithmSelectionList = await transformDDOToAssetSelection(
+    algorithmSelectionList = await transformAssetToAssetSelection(
       computeService?.serviceEndpoint,
       algorithms,
-      [],
-      token
+      []
     )
   }
   return algorithmSelectionList
