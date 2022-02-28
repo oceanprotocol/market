@@ -1,14 +1,14 @@
 import React, { ReactElement } from 'react'
 import { useRouter } from 'next/router'
-import PageTemplateAssetDetails from '../../components/Asset'
+import EditPage from '../../../components/Asset/Edit'
 import AssetProvider from '@context/Asset'
 
-export default function PageAssetDetails(): ReactElement {
+export default function PageEditAsset(): ReactElement {
   const router = useRouter()
   const { did } = router.query
   return (
     <AssetProvider did={did as string}>
-      <PageTemplateAssetDetails uri={router.pathname} />
+      <EditPage uri={router.pathname} />
     </AssetProvider>
   )
 }
