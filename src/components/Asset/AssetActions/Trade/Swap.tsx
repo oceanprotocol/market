@@ -168,7 +168,7 @@ export default function Swap({
     web3,
     dtItem.token,
     baseTokenItem.token,
-    poolInfo.poolFee,
+    poolInfo.liquidityProviderSwapFee,
     poolInfo.datatokenAddress,
     poolInfo.baseTokenAddress,
     appConfig.consumeMarketPoolSwapFee

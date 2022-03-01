@@ -82,7 +82,11 @@ export default function Output({
             values.type === 'buy'
               ? poolInfo.baseTokenSymbol
               : poolInfo.datatokenSymbol
-          } ${poolInfo.poolFee ? `(${poolInfo.poolFee}%)` : ''}`}
+          } ${
+            poolInfo.liquidityProviderSwapFee
+              ? `(${poolInfo.liquidityProviderSwapFee}%)`
+              : ''
+          }`}
           balance={lpSwapFee}
         />
       </div>

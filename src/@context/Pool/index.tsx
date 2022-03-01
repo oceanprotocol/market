@@ -119,8 +119,6 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
     if (!poolData) return
 
     // Fees - this will be renamed again in subgraph
-    const poolFee = getFee(poolData.liquidityProviderFee)
-    const marketFee = getFee(poolData.marketSwapFee)
     const opfFee = getFee(poolData.opcFee)
 
     // Total Liquidity
@@ -131,9 +129,9 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
       : new Decimal(0)
 
     const newPoolInfo = {
-      poolFee,
-      marketFee,
-      opfFee,
+      liquidityProviderSwapFee: getFee(poolData.liquidityProviderSwapFee),
+      publishMarketSwapFee: getFee(poolData.publishMarketSwapFee),
+      opcFee: getFee(poolData.opcFee),
       weightBaseToken: getWeight(poolData.baseTokenWeight),
       weightDt: getWeight(poolData.datatokenWeight),
       datatokenSymbol: poolData.datatoken.symbol,
