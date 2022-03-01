@@ -25,7 +25,7 @@ async function liquidateAndCreatePool(
 
 function openMarketV4(
   did: string,
-  marketV4Url: string = 'http://localhost:8001/'
+  marketV4Url = 'https://market-git-v4-oceanprotocol.vercel.app/'
 ) {
   window.open(`${marketV4Url}/asset/${did}`, '_blank')
 }
@@ -71,9 +71,7 @@ export default function CreateV4Pool(): ReactElement {
         <Container className={styles.container}>
           <Alert
             title="This asset has been migrated to Ocean V4"
-            text={
-              'Head over to our new V4 market to view and interact with this asset.'
-            }
+            text="Head over to our new V4 market to view and interact with this asset."
             state="info"
             action={{
               name: 'Market v4',

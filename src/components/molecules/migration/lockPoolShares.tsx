@@ -120,7 +120,8 @@ export default function LockPoolShares(): ReactElement {
             text={`**The publisher of this data asset has initiated the migration of this pool from V3 to V4** 
           \n\nYou can now lock your liquidity pool tokens in the smart contract to ensure you will receive tokens from the new V4 pool when it is created.
           \n\nThe migration requires 80% of liquidity providers to lock their shares in the migration contract.
-          \n\nYou currently have ${poolTokens} Pool Shares`}
+          \n\nYou currently have ${poolTokens} Pool Shares
+          \n\nThe migration will end in ${Number(deadline) - block} blocks.`}
             state="info"
             action={{
               name: `Lock Pool Shares`,
