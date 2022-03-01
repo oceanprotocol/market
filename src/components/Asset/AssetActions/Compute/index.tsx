@@ -45,7 +45,6 @@ import {
   getAlgorithmsForAsset,
   getQuerryString,
   getValidUntilTime,
-  getComputeEnviromen,
   getComputeEnviroment
 } from '@utils/compute'
 import AssetSelection, {
@@ -266,6 +265,9 @@ export default function Compute({
         return
       }
 
+      const validUntil = getValidUntilTime()
+      const computeEnv = await getComputeEnviroment(asset)
+
       if (!isOwned) {
         try {
           if (!hasDatatoken && asset?.accessDetails.type === 'dynamic') {
@@ -282,7 +284,15 @@ export default function Compute({
             }
           }
           LoggerInstance.log('dataset orderPriceAndFees: ', orderPriceAndFees)
-          const orderTx = await order(web3, asset, orderPriceAndFees, accountId)
+          const orderTx = await order(
+            web3,
+            asset,
+            orderPriceAndFees,
+            accountId,
+            computeEnv.id,
+            validUntil,
+            computeEnv.consumerAddress
+          )
           LoggerInstance.log(
             '[compute] Order dataset: ',
             orderTx.transactionHash
@@ -322,7 +332,10 @@ export default function Compute({
             web3,
             selectedAlgorithmAsset,
             orderAlgorithmPriceAndFees,
-            accountId
+            accountId,
+            computeEnv.id,
+            validUntil,
+            computeEnv.consumerAddress
           )
 
           LoggerInstance.log(
