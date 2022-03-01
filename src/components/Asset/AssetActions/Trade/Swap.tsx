@@ -66,7 +66,7 @@ export default function Swap({
   const [spotPrice, setSpotPrice] = useState<string>()
   const [totalValue, setTotalValue] = useState<string>()
   const [tokenAmount, setTokenAmount] = useState<string>()
-  const [swapFee, setSwapFee] = useState<string>()
+  const [lpSwapFee, setLpSwapFee] = useState<string>()
 
   useEffect(() => {
     if (!asset || !balance || !values?.type || !web3) return
@@ -101,23 +101,7 @@ export default function Swap({
             : new Decimal(balance.baseToken)
           : maxBaseTokenFromPool
 
-      const reserver = await poolInstance.getReserve(
-        asset.accessDetails.addressOrId,
-        poolInfo.datatokenAddress
-      )
-      console.log(
-        'max',
-        reserver,
-        poolData.datatokenLiquidity,
-        calcMaxExactIn(poolData.datatokenLiquidity).toString(),
-        amountBaseToken.toDecimalPlaces(MAX_DECIMALS).toString(),
-        amountDataToken.toDecimalPlaces(MAX_DECIMALS).toString(),
-        maxBaseTokenFromPool.toDecimalPlaces(MAX_DECIMALS).toString(),
-        maxDtFromPool.toDecimalPlaces(MAX_DECIMALS).toString()
-      )
       try {
-        setSwapFee(poolInfo.poolFee)
-
         const maxBuyBaseToken: PoolPriceAndFees =
           await poolInstance.getAmountOutExactIn(
             asset.accessDetails.addressOrId,
@@ -139,10 +123,10 @@ export default function Swap({
           values.type === 'buy'
             ? amountDataToken.greaterThan(new Decimal(maxBuyDt.tokenAmount))
               ? maxBuyDt.tokenAmount
-              : amountDataToken
+              : amountDataToken.toDecimalPlaces(MAX_DECIMALS).toString()
             : amountDataToken.greaterThan(new Decimal(balance.datatoken))
             ? balance.datatoken
-            : amountDataToken
+            : amountDataToken.toDecimalPlaces(MAX_DECIMALS).toString()
 
         const maximumBaseToken =
           values.type === 'sell'
@@ -150,24 +134,24 @@ export default function Swap({
                 new Decimal(maxBuyBaseToken.tokenAmount)
               )
               ? maxBuyBaseToken.tokenAmount
-              : amountBaseToken
+              : amountBaseToken.toDecimalPlaces(MAX_DECIMALS).toString()
             : amountBaseToken.greaterThan(new Decimal(balance.baseToken))
             ? balance.baseToken
-            : amountBaseToken
+            : amountBaseToken.toDecimalPlaces(MAX_DECIMALS).toString()
 
-        setMaximumDt(maximumDt.toString())
-        setMaximumBaseToken(maximumBaseToken.toString())
+        setMaximumDt(maximumDt)
+        setMaximumBaseToken(maximumBaseToken)
 
         setBaseTokenItem((prevState) => ({
           ...prevState,
-          amount: amountBaseToken.toString(),
-          maxAmount: maximumBaseToken.toString()
+          amount: amountBaseToken.toDecimalPlaces(MAX_DECIMALS).toString(),
+          maxAmount: maximumBaseToken
         }))
 
         setDtItem((prevState) => ({
           ...prevState,
-          amount: amountDataToken.toString(),
-          maxAmount: maximumDt.toString()
+          amount: amountDataToken.toDecimalPlaces(MAX_DECIMALS).toString(),
+          maxAmount: maximumDt
         }))
       } catch (error) {
         LoggerInstance.error(error.message)
@@ -204,91 +188,131 @@ export default function Swap({
   }
 
   const handleValueChange = async (name: string, value: number) => {
-    let tokenIn = ''
-    let tokenOut = ''
-    const poolInstance = new Pool(web3)
-    let newValue: PoolPriceAndFees
+    try {
+      let tokenIn = ''
+      let tokenOut = ''
+      const poolInstance = new Pool(web3)
+      let newValue: PoolPriceAndFees
 
-    if (name === 'baseToken') {
-      if (values.type === 'sell') {
-        newValue = await poolInstance.getAmountInExactOut(
-          asset.accessDetails.addressOrId,
-          dtItem.address,
-          baseTokenItem.address,
-          value.toString(),
-          swapFee
-        )
+      if (name === 'baseToken') {
+        if (values.type === 'sell') {
+          newValue = await poolInstance.getAmountInExactOut(
+            asset.accessDetails.addressOrId,
+            dtItem.address,
+            baseTokenItem.address,
+            value.toString(),
+            appConfig.consumeMarketPoolSwapFee
+          )
 
-        setFieldValue('output', 'exactOut')
+          setFieldValue('output', 'exactOut')
 
-        setTotalValue(newValue.tokenAmount)
-        setTokenAmount(value.toString())
+          setTotalValue(
+            new Decimal(newValue.tokenAmount)
+              .toDecimalPlaces(MAX_DECIMALS)
+              .toString()
+          )
+          setLpSwapFee(
+            new Decimal(newValue.liquidityProviderSwapFeeAmount)
+              .toDecimalPlaces(MAX_DECIMALS)
+              .toString()
+          )
+          setTokenAmount(value.toString())
 
-        tokenIn = poolInfo.datatokenAddress
-        tokenOut = poolInfo.baseTokenAddress
+          tokenIn = poolInfo.datatokenAddress
+          tokenOut = poolInfo.baseTokenAddress
+        } else {
+          newValue = await poolInstance.getAmountOutExactIn(
+            asset.accessDetails.addressOrId,
+            baseTokenItem.address,
+            dtItem.address,
+            value.toString(),
+            appConfig.consumeMarketPoolSwapFee
+          )
+
+          setFieldValue('output', 'exactIn')
+          setTotalValue(value.toString())
+          setTokenAmount(
+            new Decimal(newValue.tokenAmount)
+              .toDecimalPlaces(MAX_DECIMALS)
+              .toString()
+          )
+          setLpSwapFee(
+            new Decimal(newValue.liquidityProviderSwapFeeAmount)
+              .toDecimalPlaces(MAX_DECIMALS)
+              .toString()
+          )
+          tokenIn = poolInfo.baseTokenAddress
+          tokenOut = poolInfo.datatokenAddress
+        }
       } else {
-        newValue = await poolInstance.getAmountOutExactIn(
-          asset.accessDetails.addressOrId,
-          baseTokenItem.address,
-          dtItem.address,
-          value.toString(),
-          swapFee
-        )
+        if (values.type === 'sell') {
+          newValue = await poolInstance.getAmountOutExactIn(
+            asset.accessDetails.addressOrId,
+            dtItem.address,
+            baseTokenItem.address,
+            value.toString(),
+            appConfig.consumeMarketPoolSwapFee
+          )
 
-        setFieldValue('output', 'exactIn')
-        setTotalValue(value.toString())
-        setTokenAmount(newValue.tokenAmount)
-        tokenIn = poolInfo.baseTokenAddress
-        tokenOut = poolInfo.datatokenAddress
+          setFieldValue('output', 'exactIn')
+          setTotalValue(value.toString())
+          setTokenAmount(
+            new Decimal(newValue.tokenAmount)
+              .toDecimalPlaces(MAX_DECIMALS)
+              .toString()
+          )
+          setLpSwapFee(
+            new Decimal(newValue.liquidityProviderSwapFeeAmount)
+              .toDecimalPlaces(MAX_DECIMALS)
+              .toString()
+          )
+          tokenIn = poolInfo.datatokenAddress
+          tokenOut = poolInfo.baseTokenAddress
+        } else {
+          newValue = await poolInstance.getAmountInExactOut(
+            asset.accessDetails.addressOrId,
+            baseTokenItem.address,
+            dtItem.address,
+            value.toString(),
+            appConfig.consumeMarketPoolSwapFee
+          )
+
+          setFieldValue('output', 'exactOut')
+
+          setTotalValue(
+            new Decimal(newValue.tokenAmount)
+              .toDecimalPlaces(MAX_DECIMALS)
+              .toString()
+          )
+          setTokenAmount(value.toString())
+          setLpSwapFee(
+            new Decimal(newValue.liquidityProviderSwapFeeAmount)
+              .toDecimalPlaces(MAX_DECIMALS)
+              .toString()
+          )
+          tokenIn = poolInfo.baseTokenAddress
+          tokenOut = poolInfo.datatokenAddress
+        }
       }
-    } else {
-      if (values.type === 'sell') {
-        newValue = await poolInstance.getAmountOutExactIn(
-          asset.accessDetails.addressOrId,
-          dtItem.address,
-          baseTokenItem.address,
-          value.toString(),
-          swapFee
-        )
 
-        setFieldValue('output', 'exactIn')
-        setTotalValue(value.toString())
-        setTokenAmount(newValue.tokenAmount)
-        tokenIn = poolInfo.datatokenAddress
-        tokenOut = poolInfo.baseTokenAddress
-      } else {
-        newValue = await poolInstance.getAmountInExactOut(
-          asset.accessDetails.addressOrId,
-          baseTokenItem.address,
-          dtItem.address,
-          value.toString(),
-          swapFee
-        )
+      await setFieldValue(
+        name === 'baseToken' ? 'datatoken' : 'baseToken',
+        new Decimal(newValue.tokenAmount)
+          .toDecimalPlaces(MAX_DECIMALS)
+          .toString()
+      )
 
-        setFieldValue('output', 'exactOut')
-
-        setTotalValue(newValue.tokenAmount)
-        setTokenAmount(value.toString())
-
-        tokenIn = poolInfo.baseTokenAddress
-        tokenOut = poolInfo.datatokenAddress
-      }
+      const spotPrice = await poolInstance.getSpotPrice(
+        asset.accessDetails.addressOrId,
+        tokenIn,
+        tokenOut,
+        appConfig.consumeMarketPoolSwapFee
+      )
+      setSpotPrice(spotPrice)
+      validateForm()
+    } catch (ex) {
+      LoggerInstance.error(ex)
     }
-
-    await setFieldValue(
-      name === 'baseToken' ? 'datatoken' : 'baseToken',
-      newValue.tokenAmount
-    )
-
-    const spotPrice = await poolInstance.getSpotPrice(
-      asset.accessDetails.addressOrId,
-      tokenIn,
-      tokenOut,
-      swapFee
-    )
-
-    setSpotPrice(spotPrice)
-    validateForm()
   }
 
   return (
@@ -316,7 +340,10 @@ export default function Swap({
         handleValueChange={handleValueChange}
       />
 
-      <Output poolAddress={asset.accessDetails?.addressOrId} />
+      <Output
+        poolAddress={asset.accessDetails?.addressOrId}
+        lpSwapFee={lpSwapFee}
+      />
 
       <PriceImpact
         totalValue={totalValue}
