@@ -6,7 +6,9 @@ import {
   LoggerInstance,
   ComputeAlgorithm,
   DDO,
-  Service
+  Service,
+  ProviderInstance,
+  ComputeEnvironment
 } from '@oceanprotocol/lib'
 import { CancelToken } from 'axios'
 import { gql } from 'urql'
@@ -114,6 +116,27 @@ export async function isOrderable(
     }
   }
   return true
+}
+
+export function getValidUntilTime() {
+  const mytime = new Date()
+  mytime.setMinutes(mytime.getMinutes() + 19)
+  return Math.floor(mytime.getTime() / 1000)
+}
+
+export async function getComputeEnviroment(
+  asset: Asset
+): Promise<ComputeEnvironment> {
+  if (asset?.services[0]?.type !== 'compute') return null
+  try {
+    const computeEnvs = await ProviderInstance.getComputeEnvironments(
+      asset.services[0].serviceEndpoint
+    )
+    if (!computeEnvs[0]) return null
+    return computeEnvs[0]
+  } catch (e) {
+    LoggerInstance.error('[compute] Fetch compute enviroment: ', e.message)
+  }
 }
 
 export function getQuerryString(

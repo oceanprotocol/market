@@ -23,28 +23,23 @@ function getValidUntilTime() {
  * @param web3
  * @param asset
  * @param accountId
+ * @param computeEnv
+ * @param computeValidUntil
+ * @param computeConsumerAddress
  * @returns {TransactionReceipt} receipt of the order
  */
 export async function order(
   web3: Web3,
   asset: AssetExtended,
   orderPriceAndFees: OrderPriceAndFees,
-  accountId: string
+  accountId: string,
+  computeEnv: string = null,
+  computeValidUntil: number = null,
+  computeConsumerAddress?: string
 ): Promise<TransactionReceipt> {
   const datatoken = new Datatoken(web3)
   const config = getOceanConfig(asset.chainId)
   const { appConfig } = getSiteMetadata()
-
-  const computeEnvs =
-    asset.services[0].type === 'compute'
-      ? await ProviderInstance.getComputeEnvironments(
-          asset.services[0].serviceEndpoint
-        )
-      : null
-  const computeEnviroment =
-    computeEnvs && computeEnvs[0] ? computeEnvs[0].id : null
-  const computeValidUntil =
-    asset.services[0].type === 'compute' ? getValidUntilTime() : null
 
   const initializeData = await ProviderInstance.initialize(
     asset.id,
@@ -54,12 +49,12 @@ export async function order(
     asset.services[0].serviceEndpoint,
     null,
     null,
-    computeEnviroment,
+    computeEnv,
     computeValidUntil
   )
 
   const orderParams = {
-    consumer: accountId,
+    consumer: computeConsumerAddress || accountId,
     serviceIndex: 0,
     _providerFee: initializeData.providerFee,
     _consumeMarketFee: {
@@ -102,7 +97,7 @@ export async function order(
       const tx = await datatoken.startOrder(
         asset.accessDetails.datatoken.address,
         accountId,
-        accountId,
+        computeConsumerAddress || accountId,
         0,
         initializeData.providerFee
       )

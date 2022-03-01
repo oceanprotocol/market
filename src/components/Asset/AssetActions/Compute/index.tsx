@@ -43,7 +43,10 @@ import {
   isOrderable,
   getAlgorithmAssetSelectionList,
   getAlgorithmsForAsset,
-  getQuerryString
+  getQuerryString,
+  getValidUntilTime,
+  getComputeEnviromen,
+  getComputeEnviroment
 } from '@utils/compute'
 import AssetSelection, {
   AssetSelectionAsset
@@ -172,8 +175,14 @@ export default function Compute({
 
     async function init() {
       if (asset?.accessDetails?.addressOrId === ZERO_ADDRESS) return
-
-      const orderPriceAndFees = await getOrderPriceAndFees(asset, ZERO_ADDRESS)
+      const validUntil = getValidUntilTime()
+      const computeEnv = await getComputeEnviroment(asset)
+      const orderPriceAndFees = await getOrderPriceAndFees(
+        asset,
+        computeEnv.id,
+        validUntil,
+        ZERO_ADDRESS
+      )
       setOrderPriceAndFees(orderPriceAndFees)
     }
     init()
@@ -192,9 +201,13 @@ export default function Compute({
     async function init() {
       if (selectedAlgorithmAsset?.accessDetails?.addressOrId === ZERO_ADDRESS)
         return
+      const validUntil = getValidUntilTime()
+      const computeEnv = await getComputeEnviroment(selectedAlgorithmAsset)
 
       const orderPriceAndFees = await getOrderPriceAndFees(
         selectedAlgorithmAsset,
+        computeEnv.id,
+        validUntil,
         ZERO_ADDRESS
       )
       setOrderAlgorithmPriceAndFees(orderPriceAndFees)

@@ -235,6 +235,8 @@ function getValidUntilTime() {
  */
 export async function getOrderPriceAndFees(
   asset: AssetExtended,
+  computeEnv: string = null,
+  computeValidUntil: number = null,
   accountId?: string
 ): Promise<OrderPriceAndFees> {
   const orderPriceAndFee = {
@@ -257,16 +259,6 @@ export async function getOrderPriceAndFees(
   // fetch consume market order fee
   orderPriceAndFee.consumeMarketOrderFee = appConfig.consumeMarketOrderFee
   // fetch provider fee
-  const computeEnvs =
-    asset.services[0].type === 'compute'
-      ? await ProviderInstance.getComputeEnvironments(
-          asset.services[0].serviceEndpoint
-        )
-      : null
-  const computeEnviroment =
-    computeEnvs && computeEnvs[0] ? computeEnvs[0].id : null
-  const computeValidUntil =
-    asset.services[0].type === 'compute' ? getValidUntilTime() : null
 
   const initializeData = await ProviderInstance.initialize(
     asset.id,
@@ -276,7 +268,7 @@ export async function getOrderPriceAndFees(
     asset.services[0].serviceEndpoint,
     null,
     null,
-    computeEnviroment,
+    computeEnv,
     computeValidUntil
   )
   orderPriceAndFee.providerFee = initializeData.providerFee
