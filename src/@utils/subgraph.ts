@@ -232,10 +232,10 @@ export async function fetchData(
   try {
     const client = getUrqlClientInstance()
     const response = await client.query(query, variables, context).toPromise()
-    if (response.error !== undefined) {
-      return
+    if (response === undefined || response === null) {
+      return []
     }
-    console.log('FETCH DATA RESPONSE: ', response)
+    // console.log('FETCH DATA RESPONSE: ', response)
     return response
   } catch (error) {
     console.error('Error fetchData: ', error.message)
@@ -258,8 +258,7 @@ export async function fetchDataForMultipleChains(
         requestPolicy: 'cache-and-network'
       }
       const response = await fetchData(query, variables, context)
-      console.log('RESPONSE in multi chain: ', response.data)
-      if (response?.data === null || response.data === undefined) continue
+      // if (response?.data === null || response.data === undefined) continue
       if (response?.data) datas = datas.concat(response.data)
     }
     return datas
@@ -403,14 +402,11 @@ export async function getPoolSharesData(
         queryContext
       )
       console.log('RESULT: ', result)
-      if (result?.data.poolShares.length > 0 && result.error === undefined) {
-        data = data.concat(result.data.poolShares)
-      } else {
-        continue
-      }
+      if (!result.data.poolShares) continue
+      data = data.concat(result.data.poolShares)
+      console.log('DATA RETURNED: ', data)
+      return data
     }
-    console.log('DATA RETURNED: ', data)
-    return data
   } catch (error) {
     console.error('Error fetchData: ', error.message)
   }
