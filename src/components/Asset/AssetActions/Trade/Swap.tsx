@@ -21,8 +21,9 @@ import {
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { usePool } from '@context/Pool'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
+import { MAX_DECIMALS } from '@utils/constants'
 
-Decimal.set({ toExpNeg: -15, precision: 15, rounding: 1 })
+// Decimal.set({ toExpNeg: -15, precision: 5, rounding: Decimal.ROUND_DOWN })
 
 export default function Swap({
   asset,
@@ -81,8 +82,15 @@ export default function Swap({
         values.type === 'buy'
           ? calcMaxExactOut(poolData.baseTokenLiquidity)
           : calcMaxExactIn(poolData.baseTokenLiquidity)
+
       const amountDataToken =
-        values.type === 'buy' ? maxDtFromPool : new Decimal(balance.datatoken)
+        values.type === 'buy'
+          ? maxDtFromPool
+          : new Decimal(balance.baseToken).greaterThan(
+              calcMaxExactIn(poolData.datatokenLiquidity)
+            )
+          ? calcMaxExactIn(poolData.datatokenLiquidity)
+          : new Decimal(balance.datatoken)
 
       const amountBaseToken =
         values.type === 'buy'
@@ -93,6 +101,20 @@ export default function Swap({
             : new Decimal(balance.baseToken)
           : maxBaseTokenFromPool
 
+      const reserver = await poolInstance.getReserve(
+        asset.accessDetails.addressOrId,
+        poolInfo.datatokenAddress
+      )
+      console.log(
+        'max',
+        reserver,
+        poolData.datatokenLiquidity,
+        calcMaxExactIn(poolData.datatokenLiquidity).toString(),
+        amountBaseToken.toDecimalPlaces(MAX_DECIMALS).toString(),
+        amountDataToken.toDecimalPlaces(MAX_DECIMALS).toString(),
+        maxBaseTokenFromPool.toDecimalPlaces(MAX_DECIMALS).toString(),
+        maxDtFromPool.toDecimalPlaces(MAX_DECIMALS).toString()
+      )
       try {
         setSwapFee(poolInfo.poolFee)
 
