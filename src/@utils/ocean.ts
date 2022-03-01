@@ -4,26 +4,22 @@ import { AbiItem } from 'web3-utils/types'
 import Web3 from 'web3'
 
 export function getOceanConfig(network: string | number): Config {
-  try {
-    const config = new ConfigHelper().getConfig(
-      network,
-      network === 'polygon' ||
-        network === 'moonbeamalpha' ||
-        network === 1287 ||
-        network === 'bsc' ||
-        network === 56 ||
-        network === 'gaiaxtestnet' ||
-        network === 2021000
-        ? undefined
-        : process.env.NEXT_PUBLIC_INFURA_PROJECT_ID
-    ) as Config
-    // TODO: remove hack once address is fixed
-    if (network === 'rinkeby' || network === 4)
-      config.oceanTokenAddress = '0x8967bcf84170c91b0d24d4302c2376283b0b3a07'
-    return config as Config
-  } catch (error) {
-    throw Error(error)
-  }
+  const config = new ConfigHelper().getConfig(
+    network,
+    network === 'polygon' ||
+      network === 'moonbeamalpha' ||
+      network === 1287 ||
+      network === 'bsc' ||
+      network === 56 ||
+      network === 'gaiaxtestnet' ||
+      network === 2021000
+      ? undefined
+      : process.env.NEXT_PUBLIC_INFURA_PROJECT_ID
+  ) as Config
+  // TODO: remove hack once address is fixed
+  if (network === 'rinkeby' || network === 4)
+    config.oceanTokenAddress = '0x8967bcf84170c91b0d24d4302c2376283b0b3a07'
+  return config as Config
 }
 
 export function getDevelopmentConfig(): Config {

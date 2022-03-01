@@ -235,7 +235,6 @@ export async function fetchData(
     if (response === undefined || response === null) {
       return []
     }
-    // console.log('FETCH DATA RESPONSE: ', response)
     return response
   } catch (error) {
     console.error('Error fetchData: ', error.message)
@@ -258,13 +257,33 @@ export async function fetchDataForMultipleChains(
         requestPolicy: 'cache-and-network'
       }
       const response = await fetchData(query, variables, context)
-      // if (response?.data === null || response.data === undefined) continue
-      if (response?.data) datas = datas.concat(response.data)
+      if (!response.data) continue
+      datas = datas.concat(response.data)
     }
     return datas
   } catch (error) {
     console.error('Error fetchData: ', error.message)
   }
+}
+
+export async function getOpcFees(chainId: number) {
+  let opcFees
+  const variables = {
+    id: 1
+  }
+  const context = getQueryContext(chainId)
+  try {
+    const response: OperationResult<OpcFeesData> = await fetchData(
+      OpcFeesQuery,
+      variables,
+      context
+    )
+    opcFees = response?.data?.opc
+  } catch (error) {
+    console.error('Error fetchData: ', error.message)
+    throw Error(error.message)
+  }
+  return opcFees
 }
 
 export async function getPreviousOrders(
@@ -388,12 +407,13 @@ export async function getPoolSharesData(
     //   chainIds
     // )
     // for (let i = 0; i < result.length; i++) {
-    //   if (result[i].poolShares.length > 0) {
-    //     result[i].poolShares.forEach((poolShare: PoolShare) => {
-    //       data.push(poolShare)
-    //     })
-    //   }
+    //   if (!result[i].poolShares || result[i].poolShares.length === 0) continue
+    //   result[i].poolShares.forEach((poolShare: PoolShare) => {
+    //     data.push(poolShare)
+    //   })
     // }
+    // return data
+
     for (const chainId of chainIds) {
       const queryContext = getQueryContext(Number(chainId))
       const result: OperationResult<PoolSharesList> = await fetchData(
@@ -401,10 +421,8 @@ export async function getPoolSharesData(
         variables,
         queryContext
       )
-      console.log('RESULT: ', result)
       if (!result.data.poolShares) continue
       data = data.concat(result.data.poolShares)
-      console.log('DATA RETURNED: ', data)
       return data
     }
   } catch (error) {
