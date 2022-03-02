@@ -555,7 +555,7 @@ export async function getFeesPublishDDO(
   )
 
   const gasEstimate = await nft.estGasSetMetadata(
-    '0x8280a5C364192c135C9676786B31fF83401b872f', // dummy address needed to calculate gas fees
+    '0xF620b6F6DE8f568FCb955d953886eDAE612e3f9B', // dummy address needed to calculate gas fees
     accountId,
     0,
     services['0'].providerUrl.url,
