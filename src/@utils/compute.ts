@@ -91,7 +91,6 @@ export async function isOrderable(
   algorithmDDO: Asset | DDO
 ): Promise<boolean> {
   const datasetService: Service = getServiceById(asset, serviceId)
-  console.log('datasetService', datasetService)
   if (!datasetService) return false
   if (datasetService.type === 'compute') {
     if (algorithm.meta) {
@@ -155,7 +154,6 @@ export function getQuerryString(
   } as BaseQueryParams
 
   const query = generateBaseQuery(baseParams)
-  console.log('querry', query)
   return query
 }
 
@@ -164,14 +162,12 @@ export async function getAlgorithmsForAsset(
   token: CancelToken
 ): Promise<Asset[]> {
   const computeService: Service = getServiceByName(asset, 'compute')
-  console.log('computeService: ', computeService)
   let algorithms: Asset[]
   if (
     !computeService.compute ||
     !computeService.compute.publisherTrustedAlgorithms ||
     computeService.compute.publisherTrustedAlgorithms.length === 0
   ) {
-    console.log('computeService: []')
     algorithms = []
   } else {
     const gueryResults = await queryMetadata(
@@ -181,7 +177,6 @@ export async function getAlgorithmsForAsset(
       ),
       token
     )
-    console.log('gueryResults: ', gueryResults)
     algorithms = gueryResults?.results
   }
   return algorithms

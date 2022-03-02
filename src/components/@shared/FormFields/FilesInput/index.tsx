@@ -46,7 +46,6 @@ export default function FilesInput(props: InputProps): ReactElement {
       props.value.length > 0 &&
       typeof props.value[0] === 'string'
     ) {
-      console.log('loadFileInfo eff')
       loadFileInfo(props.value[0].toString())
     }
   }, [loadFileInfo, props])

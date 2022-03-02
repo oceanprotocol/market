@@ -128,13 +128,16 @@ export default function Compute({
       !isAlgoConsumablePrice)
 
   async function checkAssetDTBalance(asset: DDO) {
+    console.log('checkAssetDTBalance asset ', asset)
+    if (!asset?.services[0].datatokenAddress) return
     const datatokenInstance = new Datatoken(web3)
-    const AssetDtBalance = await datatokenInstance.balance(
+    const dtBalance = await datatokenInstance.balance(
       asset?.services[0].datatokenAddress,
       accountId
     )
-    setAlgorithmDTBalance(new Decimal(AssetDtBalance).toString())
-    setHasAlgoAssetDatatoken(Number(AssetDtBalance) >= 1)
+    setAlgorithmDTBalance(new Decimal(dtBalance).toString())
+    console.log('dtBalance ', dtBalance)
+    setHasAlgoAssetDatatoken(Number(dtBalance) >= 1)
   }
 
   async function getAlgorithmList(): Promise<AssetSelectionAsset[]> {
@@ -166,7 +169,7 @@ export default function Compute({
   }
 
   useEffect(() => {
-    if (!asset?.accessDetails && !accountId) return
+    if (!asset?.accessDetails || !accountId) return
 
     setIsConsumablePrice(asset?.accessDetails?.isPurchasable)
     setIsOwned(asset?.accessDetails?.isOwned)
@@ -176,19 +179,21 @@ export default function Compute({
       if (asset?.accessDetails?.addressOrId === ZERO_ADDRESS) return
       const validUntil = getValidUntilTime()
       const computeEnv = await getComputeEnviroment(asset)
+      console.log('asset compute env', computeEnv)
       const orderPriceAndFees = await getOrderPriceAndFees(
         asset,
         computeEnv.id,
         validUntil,
         ZERO_ADDRESS
       )
+      console.log('asset orderPriceAndFees', orderPriceAndFees)
       setOrderPriceAndFees(orderPriceAndFees)
     }
     init()
   }, [asset?.accessDetails])
 
   useEffect(() => {
-    if (!selectedAlgorithmAsset?.accessDetails && !accountId) return
+    if (!selectedAlgorithmAsset?.accessDetails || !accountId) return
 
     checkAssetDTBalance(selectedAlgorithmAsset)
     setIsConsumablePrice(selectedAlgorithmAsset?.accessDetails?.isPurchasable)
@@ -202,7 +207,6 @@ export default function Compute({
         return
       const validUntil = getValidUntilTime()
       const computeEnv = await getComputeEnviroment(selectedAlgorithmAsset)
-
       const orderPriceAndFees = await getOrderPriceAndFees(
         selectedAlgorithmAsset,
         computeEnv.id,
@@ -268,6 +272,7 @@ export default function Compute({
       const validUntil = getValidUntilTime()
       const computeEnv = await getComputeEnviroment(asset)
 
+      let datasetOrderTx
       if (!isOwned) {
         try {
           if (!hasDatatoken && asset?.accessDetails.type === 'dynamic') {
@@ -293,19 +298,26 @@ export default function Compute({
             validUntil,
             computeEnv.consumerAddress
           )
+          if (!orderTx) {
+            toast.error('Failed to order dataset asset!')
+            return
+          }
           LoggerInstance.log(
             '[compute] Order dataset: ',
             orderTx.transactionHash
           )
           setIsOwned(true)
           setValidOrderTx(orderTx.transactionHash)
+          datasetOrderTx = orderTx.transactionHash
         } catch (e) {
           LoggerInstance.log(e.message)
         }
       } else {
+        datasetOrderTx = validOrderTx
         LoggerInstance.log('[compute] Dataset owned txId:', validOrderTx)
       }
 
+      let algorithmOrderTx
       if (!isAlgorithmOwned) {
         try {
           if (
@@ -317,7 +329,6 @@ export default function Compute({
               accountId,
               web3
             )
-
             LoggerInstance.log('[compute] Buy algorithm dt from pool: ', tx)
             if (!tx) {
               toast.error('Failed to buy datatoken from pool!')
@@ -337,17 +348,22 @@ export default function Compute({
             validUntil,
             computeEnv.consumerAddress
           )
-
+          if (!orderTx) {
+            toast.error('Failed to order algorithm asset!')
+            return
+          }
           LoggerInstance.log(
-            '[compute] Order dataset: ',
+            '[compute] Order algorithm: ',
             orderTx.transactionHash
           )
           setIsAlgorithmOwned(true)
           setValidAlgorithmOrderTx(orderTx.transactionHash)
+          algorithmOrderTx = orderTx.transactionHash
         } catch (e) {
           LoggerInstance.log(e.message)
         }
       } else {
+        algorithmOrderTx = validAlgorithmOrderTx
         LoggerInstance.log(
           '[compute] Algorithm owned txId:',
           validAlgorithmOrderTx
@@ -358,9 +374,9 @@ export default function Compute({
       const computeAsset: ComputeAsset = {
         documentId: asset.id,
         serviceId: asset.services[0].id,
-        transferTxId: validOrderTx
+        transferTxId: datasetOrderTx
       }
-      computeAlgorithm.transferTxId = validAlgorithmOrderTx
+      computeAlgorithm.transferTxId = algorithmOrderTx
       const output: ComputeOutput = {
         publishAlgorithmLog: true,
         publishOutput: true
@@ -369,7 +385,7 @@ export default function Compute({
         asset.services[0].serviceEndpoint,
         web3,
         accountId,
-        'env1',
+        computeEnv.id,
         computeAsset,
         computeAlgorithm,
         newAbortController(),

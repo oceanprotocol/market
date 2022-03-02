@@ -113,8 +113,6 @@ export async function setNftMetadata(
     []
   )
 
-  console.log('[setNftMetadata]  est Gas set metadata --', estGasSetMetadata)
-
   const setMetadataTx = await nft.setMetadata(
     asset.nftAddress,
     accountId,
