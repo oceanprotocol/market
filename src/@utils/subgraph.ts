@@ -206,6 +206,7 @@ export function getSubgraphUri(chainId: number): string {
     return config.subgraphUri
   } catch (error) {
     console.log('Get ocean config error: ', error.message)
+    throw Error(error.message)
   }
 }
 
@@ -217,10 +218,10 @@ export function getQueryContext(chainId: number): OperationContext {
       )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
       requestPolicy: 'cache-and-network'
     }
-
     return queryContext
   } catch (error) {
     console.log('Get context error: ', error.message)
+    throw Error(error.message)
   }
 }
 
@@ -230,10 +231,12 @@ export async function fetchData(
   context: OperationContext
 ): Promise<any> {
   try {
+    console.log('CONTEXT: ', context)
     const client = getUrqlClientInstance()
     const response = await client.query(query, variables, context).toPromise()
-    if (response === undefined || response === null) {
-      return []
+    console.log('RESPONSE: ', response)
+    if (!response) {
+      return
     }
     return response
   } catch (error) {
@@ -257,7 +260,8 @@ export async function fetchDataForMultipleChains(
         requestPolicy: 'cache-and-network'
       }
       const response = await fetchData(query, variables, context)
-      if (!response.data) continue
+      if (!response) continue
+
       datas = datas.concat(response.data)
     }
     return datas
@@ -401,19 +405,6 @@ export async function getPoolSharesData(
   const variables = { user: accountId?.toLowerCase() }
   let data: PoolShare[] = []
   try {
-    // const result = await fetchDataForMultipleChains(
-    //   userPoolSharesQuery,
-    //   variables,
-    //   chainIds
-    // )
-    // for (let i = 0; i < result.length; i++) {
-    //   if (!result[i].poolShares || result[i].poolShares.length === 0) continue
-    //   result[i].poolShares.forEach((poolShare: PoolShare) => {
-    //     data.push(poolShare)
-    //   })
-    // }
-    // return data
-
     for (const chainId of chainIds) {
       const queryContext = getQueryContext(Number(chainId))
       const result: OperationResult<PoolSharesList> = await fetchData(
@@ -421,10 +412,12 @@ export async function getPoolSharesData(
         variables,
         queryContext
       )
+      // console.log('RESULT: ', result)
       if (!result.data.poolShares) continue
       data = data.concat(result.data.poolShares)
-      return data
+      // console.log('DATA: ', chainId, data)
     }
+    return data
   } catch (error) {
     console.error('Error fetchData: ', error.message)
   }
