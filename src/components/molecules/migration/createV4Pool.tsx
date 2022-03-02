@@ -39,14 +39,6 @@ export default function CreateV4Pool(): ReactElement {
 
   return (
     <>
-      {/*       <Container className={styles.container}>
-        <Alert
-          title={'Pablo test'}
-          text="**The V3 pool will be liquidated** \n\nOver 80% of pool shares have now been locked and the threshold has therefore been reached for completing the migration.
-            \n\nThe deadline for locking pool shares has now passed so no additional pool shares can be locked."
-          state="info"
-        />
-      </Container> */}
       {owner === accountId && status === '1' && thresholdMet && deadlinePassed && (
         <Container className={styles.container}>
           <Alert
