@@ -71,7 +71,7 @@ const poolLiquidityQuery = gql`
   }
 `
 
-const userPoolShareQuery = gql`
+export const userPoolShareQuery = gql`
   query PoolShare($id: ID!, $shareId: ID) {
     pool(id: $id) {
       id

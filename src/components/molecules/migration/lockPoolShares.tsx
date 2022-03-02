@@ -1,28 +1,17 @@
-import React, { ReactElement, useState, useEffect } from 'react'
-import Container from '../../atoms/Container'
-import Alert from '../../atoms/Alert'
-import styles from './startMigration.module.css'
-import { useWeb3 } from '../../../providers/Web3'
+import { Logger } from '@oceanprotocol/lib'
+import React, { ReactElement, useEffect, useState } from 'react'
+import { OperationResult } from 'urql'
+import { Migration } from 'v4-migration-lib'
 import Web3 from 'web3'
+import { PoolLiquidity } from '../../../@types/apollo/PoolLiquidity'
 import { useAsset } from '../../../providers/Asset'
 import { useMigrationStatus } from '../../../providers/Migration'
-import { Migration } from 'v4-migration-lib'
-import { Logger } from '@oceanprotocol/lib'
-import { gql, OperationResult } from 'urql'
+import { useWeb3 } from '../../../providers/Web3'
 import { fetchData, getQueryContext } from '../../../utils/subgraph'
-import { PoolLiquidity } from '../../../@types/apollo/PoolLiquidity'
-
-export const userPoolShareQuery = gql`
-  query poolShare($id: ID!, $shareId: ID) {
-    pool(id: $id) {
-      id
-      shares(where: { id: $shareId }) {
-        id
-        balance
-      }
-    }
-  }
-`
+import Alert from '../../atoms/Alert'
+import Container from '../../atoms/Container'
+import { userPoolShareQuery } from '../../organisms/AssetActions/Pool'
+import styles from './startMigration.module.css'
 
 async function addShares(
   web3: Web3,
@@ -32,11 +21,11 @@ async function addShares(
   lptV3Amount: string
 ) {
   const migration = new Migration(web3)
-  const { userV3Shares } = await migration.getShareAllocation(
-    migrationAddress,
-    poolV3Address,
-    accountId
-  )
+  // const { userV3Shares } = await migration.getShareAllocation(
+  //   migrationAddress,
+  //   poolV3Address,
+  //   accountId
+  // )
   await migration.approve(
     accountId,
     poolV3Address,
@@ -54,7 +43,7 @@ async function addShares(
 
 export default function LockPoolShares(): ReactElement {
   const { accountId, block } = useWeb3()
-  const { owner, ddo, price } = useAsset()
+  const { ddo, price } = useAsset()
   const [poolTokens, setPoolTokens] = useState<string>()
 
   const {
@@ -141,7 +130,7 @@ export default function LockPoolShares(): ReactElement {
       {status && status !== '0' && status !== '2' && !deadline && (
         <Container className={styles.container}>
           <Alert
-            title={'Migration in progress'}
+            title="Migration in progress"
             text="**The threshold of 80% of pool shares locked has not been reached yet**  \n\nThe migration requires 80% of liquidity providers to lock their shares in the migration contract."
             state="info"
           />

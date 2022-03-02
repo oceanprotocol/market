@@ -89,7 +89,7 @@
     "swr": "^0.5.6",
     "urql": "^2.0.3",
     "use-dark-mode": "^2.3.1",
-    "v4-migration-lib": "npm:v4-migration-lib-test@^0.0.0",
+    "v4-migration-lib": "npm:v4-migration-lib-test@^0.0.1",
     "web3": "^1.5.2",
     "web3modal": "^1.9.4",
     "yup": "^0.32.9"

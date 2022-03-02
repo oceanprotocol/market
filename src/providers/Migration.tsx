@@ -1,33 +1,20 @@
+import { Logger } from '@oceanprotocol/lib'
 import React, {
-  useContext,
-  useState,
-  useEffect,
   createContext,
   ReactElement,
   ReactNode,
-  useCallback
+  useContext,
+  useEffect,
+  useState
 } from 'react'
-import { DDO, Logger } from '@oceanprotocol/lib'
-import { PoolStatus as MigrationPoolStatus, Migration } from 'v4-migration-lib' // currently using npm link
+import { OperationResult } from 'urql'
+import { Migration, PoolStatus as MigrationPoolStatus } from 'v4-migration-lib' // currently using npm link
 import appConfig from '../../app.config'
-import { useWeb3 } from './Web3'
-import { useAsset } from './Asset'
-import { gql, OperationResult } from 'urql'
-import { fetchData, getQueryContext } from '../utils/subgraph'
 import { PoolLiquidity } from '../@types/apollo/PoolLiquidity'
-import { userPoolShareQuery } from '../components/molecules/migration/lockPoolShares'
-
-// const userPoolShareQuery = gql`
-//   query poolShare($id: ID!, $shareId: ID) {
-//     pool(id: $id) {
-//       id
-//       shares(where: { id: $shareId }) {
-//         id
-//         balance
-//       }
-//     }
-//   }
-// `
+import { userPoolShareQuery } from '../components/organisms/AssetActions/Pool'
+import { fetchData, getQueryContext } from '../utils/subgraph'
+import { useAsset } from './Asset'
+import { useWeb3 } from './Web3'
 
 interface MigrationProviderValue {
   migrationAddress: string
@@ -81,7 +68,7 @@ function MigrationProvider({
   const [poolTokens, setPoolTokens] = useState<string>()
 
   const { chainId, accountId, web3 } = useWeb3()
-  const { price, ddo } = useAsset()
+  const { price } = useAsset()
 
   async function switchMigrationAddress(chainId: number): Promise<void> {
     switch (chainId) {
@@ -309,10 +296,6 @@ function MigrationProvider({
 const useMigrationStatus = (): MigrationProviderValue =>
   useContext(MigrationContext)
 
-export {
-  MigrationProvider,
-  useMigrationStatus,
-  MigrationProviderValue,
-  MigrationContext
-}
+export { MigrationProvider, useMigrationStatus, MigrationContext }
+export type { MigrationProviderValue }
 export default MigrationProvider
