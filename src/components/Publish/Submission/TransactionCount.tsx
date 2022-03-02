@@ -5,6 +5,9 @@ import Conversion from '@shared/Price/Conversion'
 import Tooltip from '@shared/atoms/Tooltip'
 import { usePrices } from '@context/Prices'
 import { useWeb3 } from '@context/Web3'
+import Decimal from 'decimal.js'
+
+Decimal.set({ toExpNeg: -18, precision: 17, rounding: 1 })
 
 export default function TransactionCount({
   txCount,
@@ -19,14 +22,22 @@ export default function TransactionCount({
 }) {
   const { accountId, web3 } = useWeb3()
   const { prices } = usePrices()
-  let gasFeeBase = '0'
+  let gasFeeBase = 0
   let gasFeeWei = '0'
   let gasFeeGwei = '0'
-  if (gasFeesOcean) {
-    gasFeeBase = (+gasFeesOcean * +(prices as any)?.eth).toString()
-    gasFeeBase = parseFloat(gasFeeBase).toPrecision(10).toString()
-    gasFeeWei = web3.utils.toWei(gasFeeBase, 'ether')
-    gasFeeGwei = web3.utils.fromWei(gasFeeWei, 'gwei')
+  const price =
+    chainId === 80001 || chainId === 137
+      ? (prices as any)?.matic
+      : (prices as any)?.eth
+
+  if (gasFeesOcean && price) {
+    gasFeeBase = +parseFloat(gasFeesOcean) * +price
+
+    gasFeeWei = web3.utils.toWei(
+      new Decimal(gasFeeBase.toFixed(18)).toString(),
+      'ether'
+    )
+    gasFeeGwei = web3.utils.fromWei(new Decimal(gasFeeWei).toString(), 'gwei')
   }
   return txHash ? (
     <ExplorerLink

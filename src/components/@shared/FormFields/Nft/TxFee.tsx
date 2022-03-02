@@ -33,7 +33,7 @@ export default function TxFee({
 }: {
   nftMetadata: NftMetadata
 }): ReactElement {
-  const { accountId } = useWeb3()
+  const { accountId, chainId } = useWeb3()
   const { prices } = usePrices()
   const nftFactory = useNftFactory()
   const [gasFee, setGasFee] = useState('')
@@ -45,7 +45,9 @@ export default function TxFee({
           accountId,
           nftFactory,
           nftMetadata,
-          (prices as any)?.eth
+          chainId === 80001 || chainId === 137
+            ? (prices as any)?.matic
+            : (prices as any)?.eth
         )
       )
     calculateGasFee()

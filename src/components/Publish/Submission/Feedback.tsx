@@ -34,7 +34,9 @@ export function Feedback(): ReactElement {
       config,
       nftFactory,
       web3,
-      (prices as any)?.eth
+      chainId === 80001 || chainId === 137
+        ? (prices as any)?.matic
+        : (prices as any)?.eth
     )
 
     LoggerInstance.log('[gas fee] createTokensAndPricing tx', result)
@@ -55,7 +57,9 @@ export function Feedback(): ReactElement {
       values,
       accountId,
       web3,
-      (prices as any)?.eth
+      chainId === 80001 || chainId === 137
+        ? (prices as any)?.matic
+        : (prices as any)?.eth
     )
 
     LoggerInstance.log('[gas fee] getFeesPublishDDO tx', result)
