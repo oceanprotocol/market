@@ -18,6 +18,7 @@ import {
 } from '../@types/subgraph/OrdersData'
 import { UserSalesQuery as UsersSalesList } from '../@types/subgraph/UserSalesQuery'
 import { OpcFeesQuery as OpcFeesData } from '../@types/subgraph/OpcFeesQuery'
+import axios from 'axios'
 
 export interface UserLiquidity {
   price: string
@@ -200,6 +201,15 @@ const OpcFeesQuery = gql`
   }
 `
 
+async function verifyUrl(url: string): Promise<any> {
+  try {
+    const response = await axios.get(url)
+    return response.status
+  } catch (error) {
+    return error.message
+  }
+}
+
 export function getSubgraphUri(chainId: number): string {
   try {
     const config = getOceanConfig(chainId)
@@ -231,10 +241,10 @@ export async function fetchData(
   context: OperationContext
 ): Promise<any> {
   try {
-    console.log('CONTEXT: ', context)
     const client = getUrqlClientInstance()
+    const checkUrl = await verifyUrl(context.url)
+    if (checkUrl !== 200) return
     const response = await client.query(query, variables, context).toPromise()
-    console.log('RESPONSE: ', response)
     if (!response) {
       return
     }
@@ -261,8 +271,7 @@ export async function fetchDataForMultipleChains(
       }
       const response = await fetchData(query, variables, context)
       if (!response) continue
-
-      datas = datas.concat(response.data)
+      datas = datas.concat(response?.data)
     }
     return datas
   } catch (error) {
@@ -412,10 +421,8 @@ export async function getPoolSharesData(
         variables,
         queryContext
       )
-      // console.log('RESULT: ', result)
       if (!result.data.poolShares) continue
       data = data.concat(result.data.poolShares)
-      // console.log('DATA: ', chainId, data)
     }
     return data
   } catch (error) {

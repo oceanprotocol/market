@@ -308,22 +308,26 @@ export async function getAccessDetails(
   timeout?: number,
   account = ''
 ): Promise<AccessDetails> {
-  const queryContext = getQueryContext(Number(chainId))
-  const tokenQueryResult: OperationResult<
-    TokenPriceQuery,
-    { datatokenId: string; account: string }
-  > = await fetchData(
-    TokenPriceQuery,
-    {
-      datatokenId: datatokenAddress.toLowerCase(),
-      account: account?.toLowerCase()
-    },
-    queryContext
-  )
+  try {
+    const queryContext = getQueryContext(Number(chainId))
+    const tokenQueryResult: OperationResult<
+      TokenPriceQuery,
+      { datatokenId: string; account: string }
+    > = await fetchData(
+      TokenPriceQuery,
+      {
+        datatokenId: datatokenAddress.toLowerCase(),
+        account: account?.toLowerCase()
+      },
+      queryContext
+    )
 
-  const tokenPrice: TokenPrice = tokenQueryResult.data.token
-  const accessDetails = getAccessDetailsFromTokenPrice(tokenPrice, timeout)
-  return accessDetails
+    const tokenPrice: TokenPrice = tokenQueryResult.data.token
+    const accessDetails = getAccessDetailsFromTokenPrice(tokenPrice, timeout)
+    return accessDetails
+  } catch (error) {
+    console.log('Error getting access details: ', error.message)
+  }
 }
 
 export async function getAccessDetailsForAssets(
@@ -333,43 +337,48 @@ export async function getAccessDetailsForAssets(
   const assetsExtended: AssetExtended[] = assets
   const chainAssetLists: { [key: number]: string[] } = {}
 
-  for (const asset of assets) {
-    if (chainAssetLists[asset.chainId]) {
-      chainAssetLists[asset.chainId].push(
-        asset.services[0].datatokenAddress.toLowerCase()
-      )
-    } else {
-      chainAssetLists[asset.chainId] = []
-      chainAssetLists[asset.chainId].push(
-        asset.services[0].datatokenAddress.toLowerCase()
-      )
+  try {
+    for (const asset of assets) {
+      if (chainAssetLists[asset.chainId]) {
+        chainAssetLists[asset.chainId].push(
+          asset.services[0].datatokenAddress.toLowerCase()
+        )
+      } else {
+        chainAssetLists[asset.chainId] = []
+        chainAssetLists[asset.chainId].push(
+          asset.services[0].datatokenAddress.toLowerCase()
+        )
+      }
     }
-  }
 
-  for (const chainKey in chainAssetLists) {
-    const queryContext = getQueryContext(Number(chainKey))
-    const tokenQueryResult: OperationResult<
-      TokensPriceQuery,
-      { datatokenIds: [string]; account: string }
-    > = await fetchData(
-      TokensPriceQuery,
-      {
-        datatokenIds: chainAssetLists[chainKey],
-        account: account?.toLowerCase()
-      },
-      queryContext
-    )
-    tokenQueryResult.data?.tokens.forEach((token) => {
-      const currentAsset = assetsExtended.find(
-        (asset) => asset.services[0].datatokenAddress.toLowerCase() === token.id
+    for (const chainKey in chainAssetLists) {
+      const queryContext = getQueryContext(Number(chainKey))
+      const tokenQueryResult: OperationResult<
+        TokensPriceQuery,
+        { datatokenIds: [string]; account: string }
+      > = await fetchData(
+        TokensPriceQuery,
+        {
+          datatokenIds: chainAssetLists[chainKey],
+          account: account?.toLowerCase()
+        },
+        queryContext
       )
-      const accessDetails = getAccessDetailsFromTokenPrice(
-        token,
-        currentAsset?.services[0]?.timeout
-      )
+      tokenQueryResult.data?.tokens.forEach((token) => {
+        const currentAsset = assetsExtended.find(
+          (asset) =>
+            asset.services[0].datatokenAddress.toLowerCase() === token.id
+        )
+        const accessDetails = getAccessDetailsFromTokenPrice(
+          token,
+          currentAsset?.services[0]?.timeout
+        )
 
-      currentAsset.accessDetails = accessDetails
-    })
+        currentAsset.accessDetails = accessDetails
+      })
+    }
+    return assetsExtended
+  } catch (error) {
+    console.log('Error getting access details: ', error.message)
   }
-  return assetsExtended
 }
