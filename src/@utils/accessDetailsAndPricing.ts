@@ -8,7 +8,7 @@ import {
   TokensPriceQuery,
   TokensPriceQuery_tokens as TokensPrice
 } from '../@types/subgraph/TokensPriceQuery'
-import { Asset, ProviderInstance } from '@oceanprotocol/lib'
+import { Asset, LoggerInstance, ProviderInstance } from '@oceanprotocol/lib'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import { calculateBuyPrice } from './pool'
 import { getFixedBuyPrice } from './fixedRateExchange'
@@ -326,7 +326,7 @@ export async function getAccessDetails(
     const accessDetails = getAccessDetailsFromTokenPrice(tokenPrice, timeout)
     return accessDetails
   } catch (error) {
-    console.log('Error getting access details: ', error.message)
+    LoggerInstance.log('Error getting access details: ', error.message)
   }
 }
 
@@ -379,6 +379,6 @@ export async function getAccessDetailsForAssets(
     }
     return assetsExtended
   } catch (error) {
-    console.log('Error getting access details: ', error.message)
+    LoggerInstance.log('Error getting access details: ', error.message)
   }
 }

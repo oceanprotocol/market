@@ -272,7 +272,7 @@ export async function fetchDataForMultipleChains(
         requestPolicy: 'cache-and-network'
       }
       const response = await fetchData(query, variables, context)
-      if (response === undefined || response === null) continue
+      if (!response) continue
       datas = datas.concat(response?.data)
     }
     return datas
