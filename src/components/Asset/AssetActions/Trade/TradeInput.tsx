@@ -69,7 +69,8 @@ export default function TradeInput({
           />
         )}
       </Field>
-      {!isTopField && (
+
+      {/* {!isTopField && (
         <Button
           className={styles.buttonMax}
           disabled={disabled}
@@ -82,7 +83,7 @@ export default function TradeInput({
         >
           Use Max
         </Button>
-      )}
+      )} */}
     </section>
   )
 }

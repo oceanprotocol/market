@@ -112,7 +112,10 @@ export async function setNftMetadata(
     '0x' + metadataHash,
     []
   )
-
+  LoggerInstance.log(
+    '[setNftMetadata] est Gas set metadata --',
+    estGasSetMetadata
+  )
   const setMetadataTx = await nft.setMetadata(
     asset.nftAddress,
     accountId,
