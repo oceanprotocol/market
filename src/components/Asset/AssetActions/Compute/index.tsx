@@ -128,7 +128,6 @@ export default function Compute({
       !isAlgoConsumablePrice)
 
   async function checkAssetDTBalance(asset: DDO) {
-    console.log('checkAssetDTBalance asset ', asset)
     if (!asset?.services[0].datatokenAddress) return
     const datatokenInstance = new Datatoken(web3)
     const dtBalance = await datatokenInstance.balance(
@@ -136,36 +135,7 @@ export default function Compute({
       accountId
     )
     setAlgorithmDTBalance(new Decimal(dtBalance).toString())
-    console.log('dtBalance ', dtBalance)
     setHasAlgoAssetDatatoken(Number(dtBalance) >= 1)
-  }
-
-  async function getAlgorithmList(): Promise<AssetSelectionAsset[]> {
-    const computeService = asset?.services[0]
-    let algorithmSelectionList: AssetSelectionAsset[]
-    if (
-      !computeService.compute ||
-      !computeService.compute.publisherTrustedAlgorithms ||
-      computeService.compute.publisherTrustedAlgorithms.length === 0
-    ) {
-      algorithmSelectionList = []
-    } else {
-      const gueryResults = await queryMetadata(
-        getQuerryString(
-          computeService.compute.publisherTrustedAlgorithms,
-          asset.chainId
-        ),
-        newCancelToken()
-      )
-      setDdoAlgorithmList(gueryResults.results)
-
-      algorithmSelectionList = await transformAssetToAssetSelection(
-        computeService?.serviceEndpoint,
-        gueryResults.results,
-        []
-      )
-    }
-    return algorithmSelectionList
   }
 
   useEffect(() => {
@@ -179,14 +149,12 @@ export default function Compute({
       if (asset?.accessDetails?.addressOrId === ZERO_ADDRESS) return
       const validUntil = getValidUntilTime()
       const computeEnv = await getComputeEnviroment(asset)
-      console.log('asset compute env', computeEnv)
       const orderPriceAndFees = await getOrderPriceAndFees(
         asset,
         computeEnv.id,
         validUntil,
         ZERO_ADDRESS
       )
-      console.log('asset orderPriceAndFees', orderPriceAndFees)
       setOrderPriceAndFees(orderPriceAndFees)
     }
     init()
@@ -390,7 +358,7 @@ export default function Compute({
         computeAlgorithm,
         newAbortController(),
         null,
-        output
+        null
       )
       if (!response) {
         setError('Error starting compute job.')

@@ -149,11 +149,13 @@ export function getQuerryString(
     sort: { sortBy: SortTermOptions.Created },
     filters: [
       getFilterTerm('metadata.type', 'algorithm'),
-      getFilterTerm('_id', algorithmDidList)
+      algorithmDidList.length > 0 && getFilterTerm('_id', algorithmDidList)
     ]
   } as BaseQueryParams
 
   const query = generateBaseQuery(baseParams)
+  console.log('query', query)
+
   return query
 }
 
@@ -162,22 +164,29 @@ export async function getAlgorithmsForAsset(
   token: CancelToken
 ): Promise<Asset[]> {
   const computeService: Service = getServiceByName(asset, 'compute')
+  const publisherTrustedAlgorithms =
+    computeService.compute.publisherTrustedAlgorithms || []
+  console.log('asset', asset)
+  console.log('computeService', computeService)
+
   let algorithms: Asset[]
   if (
-    !computeService.compute ||
-    !computeService.compute.publisherTrustedAlgorithms ||
-    computeService.compute.publisherTrustedAlgorithms.length === 0
+    !computeService.compute
+    // !computeService.compute.publisherTrustedAlgorithms ||
+    // computeService.compute.publisherTrustedAlgorithms.length === 0
   ) {
     algorithms = []
   } else {
+    console.log(
+      'computeService.compute.publisherTrustedAlgorithms',
+      publisherTrustedAlgorithms
+    )
     const gueryResults = await queryMetadata(
-      getQuerryString(
-        computeService.compute.publisherTrustedAlgorithms,
-        asset.chainId
-      ),
+      getQuerryString(publisherTrustedAlgorithms, asset.chainId),
       token
     )
     algorithms = gueryResults?.results
+    console.log('algorithms', algorithms)
   }
   return algorithms
 }
@@ -188,11 +197,7 @@ export async function getAlgorithmAssetSelectionList(
 ): Promise<AssetSelectionAsset[]> {
   const computeService: Service = getServiceByName(asset, 'compute')
   let algorithmSelectionList: AssetSelectionAsset[]
-  if (
-    !computeService.compute ||
-    !computeService.compute.publisherTrustedAlgorithms ||
-    computeService.compute.publisherTrustedAlgorithms.length === 0
-  ) {
+  if (!computeService.compute) {
     algorithmSelectionList = []
   } else {
     algorithmSelectionList = await transformAssetToAssetSelection(
