@@ -80,12 +80,17 @@ export default function Remove({
     if (!accountId || !poolTokens) return
 
     async function getMax() {
-      const maxTokensToRemove = calcMaxExactOut(totalPoolTokens)
+      const maxTokensToRemoveFromPool = calcMaxExactOut(totalPoolTokens)
+      const poolTokensDecimal = new Decimal(poolTokens)
+      const maxTokensToRemoveForUser = maxTokensToRemoveFromPool.greaterThan(
+        poolTokensDecimal
+      )
+        ? poolTokensDecimal
+        : maxTokensToRemoveFromPool
 
       const maxPercent = new Decimal(100)
-        .mul(maxTokensToRemove)
-        .div(new Decimal(poolTokens))
-
+        .mul(maxTokensToRemoveForUser)
+        .div(poolTokensDecimal)
       setAmountMaxPercent(
         maxPercent.toDecimalPlaces(0, Decimal.ROUND_DOWN).toString()
       )
