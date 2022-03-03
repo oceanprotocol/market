@@ -251,7 +251,7 @@ export async function fetchDataForMultipleChains(
     }
     return datas
   } catch (error) {
-    LoggerInstance.error('Error fetchData: ', error.message)
+    LoggerInstance.error('Error fetchDataForMultipleChains: ', error.message)
   }
 }
 
@@ -269,7 +269,7 @@ export async function getOpcFees(chainId: number) {
     )
     opcFees = response?.data?.opc
   } catch (error) {
-    LoggerInstance.error('Error fetchData: ', error.message)
+    LoggerInstance.error('Error getOpcFees: ', error.message)
     throw Error(error.message)
   }
   return opcFees
@@ -402,7 +402,7 @@ export async function getPoolSharesData(
     }
     return data
   } catch (error) {
-    LoggerInstance.error('Error fetchData: ', error.message)
+    LoggerInstance.error('Error getPoolSharesData: ', error.message)
   }
 }
 
@@ -427,7 +427,7 @@ export async function getUserTokenOrders(
 
     return data
   } catch (error) {
-    LoggerInstance.error(error.message)
+    LoggerInstance.error('Error getUserTokenOrders', error.message)
   }
 }
 
@@ -450,7 +450,7 @@ export async function getUserSales(
     }
     return salesSum
   } catch (error) {
-    LoggerInstance.error(error.message)
+    LoggerInstance.error('Error getUserSales', error.message)
   }
 }
 

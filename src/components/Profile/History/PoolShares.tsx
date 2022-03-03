@@ -93,12 +93,6 @@ const columns = [
     }
   },
   {
-    name: 'Datatoken',
-    selector: function getSymbol(row: AssetPoolShare) {
-      return <>{row.poolShare.pool.datatoken.symbol}</>
-    }
-  },
-  {
     name: 'Liquidity',
     selector: function getAssetRow(row: AssetPoolShare) {
       return <Liquidity row={row} type="user" />
@@ -119,7 +113,7 @@ async function getPoolSharesAssets(
   chainIds: number[],
   cancelToken: CancelToken
 ) {
-  if (data.length < 1) return
+  if (data.length < 1) return []
 
   const assetList: AssetPoolShare[] = []
   const dtList: string[] = []
