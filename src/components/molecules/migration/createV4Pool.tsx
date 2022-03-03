@@ -7,7 +7,6 @@ import Web3 from 'web3'
 import { useAsset } from '../../../providers/Asset'
 import { useMigrationStatus } from '../../../providers/Migration'
 import { Migration } from 'v4-migration-lib'
-import { DDO, MetadataMain } from '@oceanprotocol/lib'
 
 async function liquidateAndCreatePool(
   web3: Web3,

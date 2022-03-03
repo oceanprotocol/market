@@ -30,7 +30,7 @@ async function startMigration(
     dtV3Address,
     poolV3Address,
     did,
-    encryptedFiles,
+    encryptedFiles, // TODO this seems wrong, it's the tokenUri see tokenUri in ocean.js v4
     ['Ocean Asset NFT', 'OCEAN-NFT'],
     [v4DtName, v4DtSymbol]
   )
