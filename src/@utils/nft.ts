@@ -112,7 +112,6 @@ export async function setNftMetadata(
     '0x' + metadataHash,
     []
   )
-
   const setMetadataTx = await nft.setMetadata(
     asset.nftAddress,
     accountId,
