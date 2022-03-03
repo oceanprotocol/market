@@ -94,7 +94,7 @@ export default function Pool(): ReactElement {
           <TokenList
             title={
               <>
-                Your Liquidity
+                Your Value Locked
                 <Tooltip
                   content={content.pool.tooltips.liquidity.replace(
                     'SWAPFEE',
