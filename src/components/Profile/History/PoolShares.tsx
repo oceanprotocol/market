@@ -15,7 +15,7 @@ import { useProfile } from '@context/Profile'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
 import { useUserPreferences } from '@context/UserPreferences'
-import { Asset } from '@oceanprotocol/lib'
+import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
@@ -170,8 +170,7 @@ export default function PoolShares({
         )
         setAssets(assets)
       } catch (error) {
-        setLoading(false)
-        console.error('Error fetching pool shares: ', error.message)
+        LoggerInstance.error('Error fetching pool shares: ', error.message)
       } finally {
         setLoading(false)
       }

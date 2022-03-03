@@ -78,7 +78,7 @@ export default function Stats({
         const totalLiquidity = await getPoolSharesLiquidity(poolShares)
         setTotalLiquidity(totalLiquidity)
       } catch (error) {
-        console.error('Error fetching pool shares: ', error.message)
+        LoggerInstance.error('Error fetching pool shares: ', error.message)
       }
     }
     getTotalLiquidity()
