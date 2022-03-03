@@ -201,12 +201,16 @@ const OpcFeesQuery = gql`
   }
 `
 
-async function verifyUrl(url: string): Promise<any> {
+async function verifyUrl(url: string): Promise<number> {
   try {
     const response = await axios.get(url)
     return response.status
   } catch (error) {
-    return error.message
+    if (!error.response) {
+      LoggerInstance.error('Subgraph network error')
+    } else {
+      LoggerInstance.error('Subgraph network error', error.message)
+    }
   }
 }
 
@@ -215,8 +219,7 @@ export function getSubgraphUri(chainId: number): string {
     const config = getOceanConfig(chainId)
     return config.subgraphUri
   } catch (error) {
-    console.log('Get ocean config error: ', error.message)
-    throw Error(error.message)
+    LoggerInstance.log('Get ocean config error: ', error.message)
   }
 }
 
@@ -230,8 +233,7 @@ export function getQueryContext(chainId: number): OperationContext {
     }
     return queryContext
   } catch (error) {
-    console.log('Get context error: ', error.message)
-    throw Error(error.message)
+    LoggerInstance.error('Get query context error: ', error.message)
   }
 }
 
@@ -250,7 +252,7 @@ export async function fetchData(
     }
     return response
   } catch (error) {
-    console.error('Error fetchData: ', error.message)
+    LoggerInstance.error('Error fetchData: ', error.message)
     throw Error(error.message)
   }
 }
@@ -270,12 +272,12 @@ export async function fetchDataForMultipleChains(
         requestPolicy: 'cache-and-network'
       }
       const response = await fetchData(query, variables, context)
-      if (!response) continue
+      if (response === undefined || response === null) continue
       datas = datas.concat(response?.data)
     }
     return datas
   } catch (error) {
-    console.error('Error fetchData: ', error.message)
+    LoggerInstance.error('Error fetchData: ', error.message)
   }
 }
 
@@ -293,7 +295,7 @@ export async function getOpcFees(chainId: number) {
     )
     opcFees = response?.data?.opc
   } catch (error) {
-    console.error('Error fetchData: ', error.message)
+    LoggerInstance.error('Error fetchData: ', error.message)
     throw Error(error.message)
   }
   return opcFees
@@ -412,17 +414,17 @@ export async function getPoolSharesData(
   chainIds: number[]
 ): Promise<PoolShare[]> {
   const variables = { user: accountId?.toLowerCase() }
-  let data: PoolShare[] = []
+  const data: PoolShare[] = []
   try {
-    for (const chainId of chainIds) {
-      const queryContext = getQueryContext(Number(chainId))
-      const result: OperationResult<PoolSharesList> = await fetchData(
-        userPoolSharesQuery,
-        variables,
-        queryContext
-      )
-      if (!result.data.poolShares) continue
-      data = data.concat(result.data.poolShares)
+    const result = await fetchDataForMultipleChains(
+      userPoolSharesQuery,
+      variables,
+      chainIds
+    )
+    for (let i = 0; i < result.length; i++) {
+      result[i].poolShares.forEach((poolShare: PoolShare) => {
+        data.push(poolShare)
+      })
     }
     return data
   } catch (error) {
