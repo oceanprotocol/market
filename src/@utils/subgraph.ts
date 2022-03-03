@@ -244,17 +244,13 @@ export async function fetchData(
 ): Promise<any> {
   try {
     const client = getUrqlClientInstance()
-    const checkUrl = await verifyUrl(context.url)
-    if (checkUrl !== 200) return
+
     const response = await client.query(query, variables, context).toPromise()
-    if (!response) {
-      return
-    }
     return response
   } catch (error) {
     LoggerInstance.error('Error fetchData: ', error.message)
-    throw Error(error.message)
   }
+  return null
 }
 
 export async function fetchDataForMultipleChains(
@@ -272,7 +268,7 @@ export async function fetchDataForMultipleChains(
         requestPolicy: 'cache-and-network'
       }
       const response = await fetchData(query, variables, context)
-      if (!response) continue
+      if (!response || response.error) continue
       datas = datas.concat(response?.data)
     }
     return datas
