@@ -119,8 +119,8 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
     if (!poolData) return
 
     // Fees - this will be renamed again in subgraph
-    const poolFee = getFee(poolData.liquidityProviderFee)
-    const marketFee = getFee(poolData.marketSwapFee)
+    const poolFee = getFee(poolData.liquidityProviderSwapFee)
+    const marketFee = getFee(poolData.publishMarketSwapFee)
     const opfFee = getFee(poolData.opcFee)
 
     // Total Liquidity
