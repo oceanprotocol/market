@@ -41,6 +41,14 @@ export const poolDataQuery = gql`
       baseTokenLiquidity
       datatokenLiquidity
       swapVolume
+      baseToken {
+        address
+        symbol
+      }
+      datatoken {
+        address
+        symbol
+      }
     }
   }
 `
