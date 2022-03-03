@@ -76,12 +76,7 @@ export default function Download({
       if (asset?.accessDetails?.addressOrId === ZERO_ADDRESS) return
       setIsLoading(true)
       setStatusText('Calculating price including fees.')
-      const orderPriceAndFees = await getOrderPriceAndFees(
-        asset,
-        null,
-        null,
-        ZERO_ADDRESS
-      )
+      const orderPriceAndFees = await getOrderPriceAndFees(asset, ZERO_ADDRESS)
       setOrderPriceAndFees(orderPriceAndFees)
 
       setIsLoading(false)

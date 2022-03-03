@@ -147,13 +147,16 @@ export default function Compute({
 
     async function init() {
       if (asset?.accessDetails?.addressOrId === ZERO_ADDRESS) return
-      const validUntil = getValidUntilTime()
       const computeEnv = await getComputeEnviroment(asset)
+      const validUntil = getValidUntilTime(
+        computeEnv.maxJobDuration,
+        asset?.services[0]?.timeout
+      )
       const orderPriceAndFees = await getOrderPriceAndFees(
         asset,
+        ZERO_ADDRESS,
         computeEnv.id,
-        validUntil,
-        ZERO_ADDRESS
+        validUntil
       )
       setOrderPriceAndFees(orderPriceAndFees)
     }
@@ -173,13 +176,16 @@ export default function Compute({
     async function init() {
       if (selectedAlgorithmAsset?.accessDetails?.addressOrId === ZERO_ADDRESS)
         return
-      const validUntil = getValidUntilTime()
       const computeEnv = await getComputeEnviroment(selectedAlgorithmAsset)
+      const validUntil = getValidUntilTime(
+        computeEnv.maxJobDuration,
+        selectedAlgorithmAsset?.services[0]?.timeout
+      )
       const orderPriceAndFees = await getOrderPriceAndFees(
         selectedAlgorithmAsset,
+        ZERO_ADDRESS,
         computeEnv.id,
-        validUntil,
-        ZERO_ADDRESS
+        validUntil
       )
       setOrderAlgorithmPriceAndFees(orderPriceAndFees)
     }
@@ -237,9 +243,12 @@ export default function Compute({
         return
       }
 
-      const validUntil = getValidUntilTime()
       const computeEnv = await getComputeEnviroment(asset)
-
+      const validUntil = getValidUntilTime(
+        computeEnv.maxJobDuration,
+        asset.services[0].timeout,
+        selectedAlgorithmAsset.services[0].timeout
+      )
       let datasetOrderTx
       if (!isOwned) {
         try {

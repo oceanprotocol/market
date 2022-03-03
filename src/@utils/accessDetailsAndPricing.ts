@@ -222,12 +222,6 @@ function getAccessDetailsFromTokenPrice(
   return accessDetails
 }
 
-function getValidUntilTime() {
-  const mytime = new Date()
-  mytime.setMinutes(mytime.getMinutes() + 19)
-  return Math.floor(mytime.getTime() / 1000)
-}
-
 /**
  * This will be used to get price including feed before ordering
  * @param {AssetExtended} asset
@@ -235,9 +229,9 @@ function getValidUntilTime() {
  */
 export async function getOrderPriceAndFees(
   asset: AssetExtended,
+  accountId?: string,
   computeEnv: string = null,
-  computeValidUntil: number = null,
-  accountId?: string
+  computeValidUntil: number = null
 ): Promise<OrderPriceAndFees> {
   const orderPriceAndFee = {
     price: '0',

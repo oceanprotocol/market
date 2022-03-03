@@ -11,13 +11,6 @@ import { getOceanConfig } from './ocean'
 import { TransactionReceipt } from 'web3-eth'
 import { getSiteMetadata } from './siteConfig'
 import { OrderPriceAndFees } from 'src/@types/Price'
-
-function getValidUntilTime() {
-  const mytime = new Date()
-  mytime.setMinutes(mytime.getMinutes() + 19)
-  return Math.floor(mytime.getTime() / 1000)
-}
-
 /**
  * For pool you need to buy the datatoken beforehand, this always assumes you want to order the first service
  * @param web3

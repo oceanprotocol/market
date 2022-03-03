@@ -117,9 +117,19 @@ export async function isOrderable(
   return true
 }
 
-export function getValidUntilTime() {
+export function getValidUntilTime(
+  computeEnvMaxJobDuration: number,
+  datasetTimeout?: number,
+  algorithmTimeout?: number
+) {
+  const inputValues = []
+  computeEnvMaxJobDuration && inputValues.push(computeEnvMaxJobDuration * 60)
+  datasetTimeout && inputValues.push(datasetTimeout)
+  algorithmTimeout && inputValues.push(algorithmTimeout)
+
+  const minValue = Math.min(...inputValues)
   const mytime = new Date()
-  mytime.setMinutes(mytime.getMinutes() + 19)
+  mytime.setMinutes(mytime.getMinutes() + Math.floor(minValue / 60))
   return Math.floor(mytime.getTime() / 1000)
 }
 
@@ -400,7 +410,9 @@ export async function createTrustedAlgorithmList(
       containerSectionChecksum: getHash(
         JSON.stringify(selectedAlgorithm.metadata.algorithm.container)
       ),
-      filesChecksum: getHash(selectedAlgorithm.services[0].files)
+      filesChecksum: getHash(
+        JSON.stringify(selectedAlgorithm.services[0].files)
+      )
     }
     trustedAlgorithms.push(trustedAlgorithm)
   }
