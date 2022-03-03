@@ -13,6 +13,7 @@ import Nav from './Nav'
 import { getOptions } from './_utils'
 import { PoolData_poolSnapshots as PoolDataPoolSnapshots } from 'src/@types/subgraph/PoolData'
 import { usePrices } from '@context/Prices'
+import { MAX_DECIMALS } from '@utils/constants'
 
 export default function Graph({
   poolSnapshots
@@ -64,8 +65,7 @@ export default function Graph({
     const priceHistory = poolSnapshots.map((item) => item.spotPrice)
     const volumeHistory = poolSnapshots.map((item) => {
       const volume = new Decimal(item.swapVolume)
-        // TODO: replace 5 with a constant, it is implemented in https://github.com/oceanprotocol/market/pull/1047
-        .toDecimalPlaces(5)
+        .toDecimalPlaces(MAX_DECIMALS)
         .toString()
       return volume
     })
