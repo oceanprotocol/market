@@ -154,7 +154,6 @@ export function getQuerryString(
   } as BaseQueryParams
 
   const query = generateBaseQuery(baseParams)
-  console.log('query', query)
 
   return query
 }
@@ -166,27 +165,16 @@ export async function getAlgorithmsForAsset(
   const computeService: Service = getServiceByName(asset, 'compute')
   const publisherTrustedAlgorithms =
     computeService.compute.publisherTrustedAlgorithms || []
-  console.log('asset', asset)
-  console.log('computeService', computeService)
 
   let algorithms: Asset[]
-  if (
-    !computeService.compute
-    // !computeService.compute.publisherTrustedAlgorithms ||
-    // computeService.compute.publisherTrustedAlgorithms.length === 0
-  ) {
+  if (!computeService.compute) {
     algorithms = []
   } else {
-    console.log(
-      'computeService.compute.publisherTrustedAlgorithms',
-      publisherTrustedAlgorithms
-    )
     const gueryResults = await queryMetadata(
       getQuerryString(publisherTrustedAlgorithms, asset.chainId),
       token
     )
     algorithms = gueryResults?.results
-    console.log('algorithms', algorithms)
   }
   return algorithms
 }
@@ -426,7 +414,7 @@ export async function transformComputeFormToServiceComputeOptions(
   cancelToken: CancelToken
 ): Promise<ServiceComputeOptions> {
   const publisherTrustedAlgorithms = values.allowAllPublishedAlgorithms
-    ? []
+    ? null
     : await createTrustedAlgorithmList(
         values.publisherTrustedAlgorithms,
         assetChainId,
