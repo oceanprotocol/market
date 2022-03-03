@@ -4,73 +4,54 @@ import { useAsset } from '@context/Asset'
 import Token from '../Pool/Token'
 import styles from './Output.module.css'
 
-import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
 import { FormTradeData } from './_types'
+import { usePool } from '@context/Pool'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
 export default function Output({
-  dtSymbol,
-  oceanSymbol,
-  poolAddress
+  poolAddress,
+  lpSwapFee
 }: {
-  dtSymbol: string
-  oceanSymbol: string
   poolAddress: string
+  lpSwapFee: string
 }): ReactElement {
   const { isAssetNetwork } = useAsset()
-  const [maxOutput, setMaxOutput] = useState<string>()
-  const [swapFee, setSwapFee] = useState<string>()
-  const [swapFeeValue, setSwapFeeValue] = useState<string>()
+  const { poolInfo } = usePool()
+  const [outputWithSlippage, setOutputWithSlippage] = useState<string>('0')
   // Connect with form
   const { values }: FormikContextType<FormTradeData> = useFormikContext()
-
-  // Get swap fee
-  useEffect(() => {
-    if (!poolAddress || !isAssetNetwork) return
-
-    async function getSwapFee() {
-      // const swapFee = await ocean.pool.getSwapFee(poolAddress)
-
-      // // swapFee is tricky: to get 0.1% you need to convert from 0.001
-      // setSwapFee(
-      //   isValidNumber(swapFee) ? new Decimal(swapFee).mul(100).toString() : '0'
-      // )
-
-      const value =
-        values.type === 'buy'
-          ? isValidNumber(swapFee) && isValidNumber(values.baseToken)
-            ? new Decimal(swapFee).mul(new Decimal(values.baseToken))
-            : 0
-          : isValidNumber(swapFee) && isValidNumber(values.datatoken)
-          ? new Decimal(swapFee).mul(new Decimal(values.datatoken))
-          : 0
-      setSwapFeeValue(value.toString())
-    }
-    getSwapFee()
-  }, [poolAddress, values, isAssetNetwork, swapFee])
 
   // Get output values
   useEffect(() => {
     if (!poolAddress || !isAssetNetwork) return
 
     async function getOutput() {
-      // Minimum received
-      // TODO: check if this here is redundant cause we call some of that already in Swap.tsx
-      const maxImpact = 1 - Number(values.slippage) / 100
-      const maxPrice =
-        values.type === 'buy'
-          ? isValidNumber(values.datatoken) && isValidNumber(maxImpact)
-            ? new Decimal(values.datatoken)
-                .mul(new Decimal(maxImpact))
-                .toString()
-            : '0'
-          : isValidNumber(values.baseToken) && isValidNumber(maxImpact)
-          ? new Decimal(values.baseToken).mul(new Decimal(maxImpact)).toString()
-          : '0'
+      if (!values.baseToken || !values.datatoken || !values.output) return
 
-      setMaxOutput(maxPrice)
+      const output =
+        values.output === 'exactIn'
+          ? new Decimal(
+              values.type === 'sell' ? values.baseToken : values.datatoken
+            )
+              .mul(
+                new Decimal(1)
+                  .minus(new Decimal(values.slippage).div(new Decimal(100)))
+                  .toString()
+              )
+              .toString()
+          : new Decimal(
+              values.type === 'sell' ? values.datatoken : values.baseToken
+            )
+              .mul(
+                new Decimal(1)
+                  .plus(new Decimal(values.slippage).div(new Decimal(100)))
+                  .toString()
+              )
+              .toString()
+
+      setOutputWithSlippage(output)
     }
     getOutput()
   }, [poolAddress, values, isAssetNetwork])
@@ -78,19 +59,35 @@ export default function Output({
   return (
     <div className={styles.output}>
       <div>
-        <p>Minimum Received</p>
+        <p>
+          {values.output === 'exactIn' ? 'Minimum Received' : 'Maximum Sent'}
+        </p>
         <Token
-          symbol={values.type === 'buy' ? dtSymbol : oceanSymbol}
-          balance={maxOutput}
+          symbol={
+            values.type === 'buy'
+              ? values.output === 'exactIn'
+                ? poolInfo.datatokenSymbol
+                : poolInfo.baseTokenSymbol
+              : values.output === 'exactIn'
+              ? poolInfo.baseTokenSymbol
+              : poolInfo.datatokenSymbol
+          }
+          balance={outputWithSlippage}
         />
       </div>
       <div>
         <p>Swap fee</p>
         <Token
-          symbol={`${values.type === 'buy' ? oceanSymbol : dtSymbol} ${
-            swapFee ? `(${swapFee}%)` : ''
+          symbol={`${
+            values.type === 'buy'
+              ? poolInfo.baseTokenSymbol
+              : poolInfo.datatokenSymbol
+          } ${
+            poolInfo.liquidityProviderSwapFee
+              ? `(${poolInfo.liquidityProviderSwapFee}%)`
+              : ''
           }`}
-          balance={swapFeeValue}
+          balance={lpSwapFee}
         />
       </div>
     </div>
