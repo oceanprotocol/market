@@ -4,6 +4,7 @@ export const initialValues: FormTradeData = {
   baseToken: undefined,
   datatoken: undefined,
   type: 'buy',
+  output: 'exactIn',
   slippage: '5'
 }
 

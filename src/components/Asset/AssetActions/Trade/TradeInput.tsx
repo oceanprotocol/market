@@ -34,7 +34,7 @@ export default function TradeInput({
   }: FormikContextType<FormTradeData> = useFormikContext()
 
   const isTopField =
-    (name === 'ocean' && values.type === 'buy') ||
+    (name === 'baseToken' && values.type === 'buy') ||
     (name === 'datatoken' && values.type === 'sell')
   const titleAvailable = isTopField ? `Balance` : `Available from pool`
   const titleMaximum = isTopField ? `Maximum to spend` : `Maximum to receive`
@@ -54,6 +54,7 @@ export default function TradeInput({
           <Input
             type="number"
             max={`${item?.maxAmount}`}
+            min="0"
             prefix={item?.token}
             placeholder="0"
             field={field}
@@ -68,7 +69,8 @@ export default function TradeInput({
           />
         )}
       </Field>
-      {!isTopField && (
+
+      {/* {!isTopField && (
         <Button
           className={styles.buttonMax}
           disabled={disabled}
@@ -81,7 +83,7 @@ export default function TradeInput({
         >
           Use Max
         </Button>
-      )}
+      )} */}
     </section>
   )
 }
