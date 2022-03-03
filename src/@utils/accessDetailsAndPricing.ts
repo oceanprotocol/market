@@ -326,7 +326,7 @@ export async function getAccessDetails(
     const accessDetails = getAccessDetailsFromTokenPrice(tokenPrice, timeout)
     return accessDetails
   } catch (error) {
-    LoggerInstance.log('Error getting access details: ', error.message)
+    LoggerInstance.error('Error getting access details: ', error.message)
   }
 }
 
@@ -379,6 +379,6 @@ export async function getAccessDetailsForAssets(
     }
     return assetsExtended
   } catch (error) {
-    LoggerInstance.log('Error getting access details: ', error.message)
+    LoggerInstance.error('Error getting access details: ', error.message)
   }
 }

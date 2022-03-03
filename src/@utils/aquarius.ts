@@ -174,7 +174,7 @@ export async function getAssetsFromDtList(
   dtList: string[],
   chainIds: number[],
   cancelToken: CancelToken
-): Promise<any> {
+): Promise<Asset[]> {
   try {
     if (!(dtList.length > 0)) return
 

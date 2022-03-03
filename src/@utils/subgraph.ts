@@ -201,26 +201,9 @@ const OpcFeesQuery = gql`
   }
 `
 
-async function verifyUrl(url: string): Promise<number> {
-  try {
-    const response = await axios.get(url)
-    return response.status
-  } catch (error) {
-    if (!error.response) {
-      LoggerInstance.error('Subgraph network error')
-    } else {
-      LoggerInstance.error('Subgraph network error', error.message)
-    }
-  }
-}
-
 export function getSubgraphUri(chainId: number): string {
-  try {
-    const config = getOceanConfig(chainId)
-    return config.subgraphUri
-  } catch (error) {
-    LoggerInstance.log('Get ocean config error: ', error.message)
-  }
+  const config = getOceanConfig(chainId)
+  return config.subgraphUri
 }
 
 export function getQueryContext(chainId: number): OperationContext {
@@ -261,12 +244,7 @@ export async function fetchDataForMultipleChains(
   let datas: any[] = []
   try {
     for (const chainId of chainIds) {
-      const context: OperationContext = {
-        url: `${getSubgraphUri(
-          chainId
-        )}/subgraphs/name/oceanprotocol/ocean-subgraph`,
-        requestPolicy: 'cache-and-network'
-      }
+      const context: OperationContext = getQueryContext(chainId)
       const response = await fetchData(query, variables, context)
       if (!response || response.error) continue
       datas = datas.concat(response?.data)
@@ -424,7 +402,7 @@ export async function getPoolSharesData(
     }
     return data
   } catch (error) {
-    console.error('Error fetchData: ', error.message)
+    LoggerInstance.error('Error fetchData: ', error.message)
   }
 }
 
@@ -472,7 +450,7 @@ export async function getUserSales(
     }
     return salesSum
   } catch (error) {
-    LoggerInstance.log(error.message)
+    LoggerInstance.error(error.message)
   }
 }
 
