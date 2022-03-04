@@ -10,7 +10,7 @@ export default function AccountPage({
   return (
     <>
       <AccountHeader accountId={accountId} />
-      <HistoryPage accountIdentifier={accountId} />
+      {/* <HistoryPage accountIdentifier={accountId} /> */}
     </>
   )
 }

@@ -19,6 +19,9 @@ import {
 import { UserSalesQuery as UsersSalesList } from '../@types/subgraph/UserSalesQuery'
 import { OpcFeesQuery as OpcFeesData } from '../@types/subgraph/OpcFeesQuery'
 import axios from 'axios'
+import { calculateUserLiquidity, calculateUserTVL } from './pool'
+import Decimal from 'decimal.js'
+import { MAX_DECIMALS } from './constants'
 
 export interface UserLiquidity {
   price: string
@@ -244,10 +247,13 @@ export async function fetchDataForMultipleChains(
   let datas: any[] = []
   try {
     for (const chainId of chainIds) {
+      console.log('fetch chainID', chainId)
       const context: OperationContext = getQueryContext(chainId)
       const response = await fetchData(query, variables, context)
+      console.log('fetch response', response)
       if (!response || response.error) continue
       datas = datas.concat(response?.data)
+      console.log('fetch datas', datas)
     }
     return datas
   } catch (error) {
@@ -340,22 +346,11 @@ export async function getHighestLiquidityDatatokens(
   return dtList
 }
 
-export function calculateUserLiquidity(poolShare: PoolShare): number {
-  const ocean =
-    (poolShare.shares / poolShare.pool.totalShares) *
-    poolShare.pool.baseTokenLiquidity
-  const datatokens =
-    (poolShare.shares / poolShare.pool.totalShares) *
-    poolShare.pool.datatokenLiquidity
-  const totalLiquidity = ocean + datatokens * poolShare.pool.spotPrice
-  return totalLiquidity
-}
-
-export async function getAccountLiquidityInOwnAssets(
+export async function getAccountTVLInOwnAssets(
   accountId: string,
   chainIds: number[],
   pools: string[]
-): Promise<UserLiquidity> {
+): Promise<string> {
   const queryVariables = {
     user: accountId.toLowerCase(),
     pools: pools
@@ -365,22 +360,21 @@ export async function getAccountLiquidityInOwnAssets(
     queryVariables,
     chainIds
   )
-  let totalLiquidity = 0
-  let totalOceanLiquidity = 0
-
+  let tvl = new Decimal(0)
+  console.log('resss', results)
   for (const result of results) {
+    console.log('result.poolShares', result.poolShares)
     for (const poolShare of result.poolShares) {
-      const userShare = poolShare.shares / poolShare.pool.totalShares
-      const userBalance = userShare * poolShare.pool.baseTokenLiquidity
-      totalOceanLiquidity += userBalance
-      const poolLiquidity = calculateUserLiquidity(poolShare)
-      totalLiquidity += poolLiquidity
+      const poolUserTvl = calculateUserTVL(
+        poolShare.shares,
+        poolShare.pool.totalShares,
+        poolShare.pool.baseTokenLiquidity
+      )
+      tvl = tvl.add(new Decimal(poolUserTvl))
+      console.log('result.poolShares', tvl.toString())
     }
   }
-  return {
-    price: totalLiquidity.toString(),
-    oceanBalance: totalOceanLiquidity.toString()
-  }
+  return tvl.toDecimalPlaces(MAX_DECIMALS).toString()
 }
 
 export async function getPoolSharesData(

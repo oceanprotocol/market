@@ -5,7 +5,8 @@ import { getDummyWeb3 } from './web3'
 import { TransactionReceipt } from 'web3-eth'
 import Decimal from 'decimal.js'
 import { AccessDetails } from 'src/@types/Price'
-
+import { isValidNumber } from './numbers'
+import { MAX_DECIMALS } from './constants'
 /**
  * This is used to calculate the price to buy one datatoken from a pool, that is different from spot price. You need to pass either a web3 object or a chainId. If you pass a chainId a dummy web3 object will be created
  * @param {AccessDetails} accessDetails
@@ -72,4 +73,41 @@ export async function buyDtFromPool(
   )
 
   return result
+}
+
+/**
+ * Calculate the base token liquidity based on shares info
+ * @param {string} shares
+ * @param {string} totalShares
+ * @param {string} baseTokenLiquidity
+ * @returns
+ */
+export function calculateUserLiquidity(
+  shares: string,
+  totalShares: string,
+  baseTokenLiquidity: string
+): string {
+  const totalLiquidity =
+    isValidNumber(shares) &&
+    isValidNumber(totalShares) &&
+    isValidNumber(baseTokenLiquidity)
+      ? new Decimal(shares)
+          .dividedBy(new Decimal(totalShares))
+          .mul(baseTokenLiquidity)
+      : new Decimal(0)
+  return totalLiquidity.toDecimalPlaces(MAX_DECIMALS).toString()
+}
+
+export function calculateUserTVL(
+  shares: string,
+  totalShares: string,
+  baseTokenLiquidity: string
+): string {
+  const liquidity = calculateUserLiquidity(
+    shares,
+    totalShares,
+    baseTokenLiquidity
+  )
+  const tvl = new Decimal(liquidity).mul(2) // we multiply by 2 because of ss bot
+  return tvl.toDecimalPlaces(MAX_DECIMALS).toString()
 }

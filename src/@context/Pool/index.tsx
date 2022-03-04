@@ -172,7 +172,6 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
             .mul(100)
             .toFixed(2)
         : '0'
-
     const newPoolOwnerInfo = {
       liquidity,
       poolShares: ownerPoolShares,
