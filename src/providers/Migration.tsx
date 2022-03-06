@@ -8,7 +8,11 @@ import React, {
   useState
 } from 'react'
 import { OperationResult } from 'urql'
-import { Migration, PoolStatus as MigrationPoolStatus } from 'v4-migration-lib' // currently using npm link
+import {
+  Migration,
+  PoolStatus as MigrationPoolStatus,
+  TokensDetails
+} from 'v4-migration-lib' // currently using npm link
 import appConfig from '../../app.config'
 import { PoolLiquidity } from '../@types/apollo/PoolLiquidity'
 import { userPoolShareQuery } from '../components/organisms/AssetActions/Pool'
@@ -37,7 +41,9 @@ interface MigrationProviderValue {
   ) => Promise<void>
   thresholdMet: boolean
   deadlinePassed: boolean
-  poolTokens: string
+  poolShares: number
+  lockedSharesV3: string
+  migrationTokenDetails: TokensDetails
 }
 
 const MigrationContext = createContext({} as MigrationProviderValue)
@@ -65,7 +71,10 @@ function MigrationProvider({
   const [deadline, setDeadline] = useState<string>()
   const [thresholdMet, setThresholdMet] = useState<boolean>()
   const [deadlinePassed, setDeadlinePassed] = useState<boolean>()
-  const [poolTokens, setPoolTokens] = useState<string>()
+  const [poolShares, setpoolShares] = useState<number>()
+  const [lockedSharesV3, setLockedSharesV3] = useState<string>()
+  const [migrationTokenDetails, setMigrationTokenDetails] =
+    useState<TokensDetails>()
 
   const { chainId, accountId, web3 } = useWeb3()
   const { price } = useAsset()
@@ -190,7 +199,28 @@ function MigrationProvider({
       queryVariables,
       queryContext
     )
-    return queryResult?.data.pool?.shares[0]?.balance
+    return queryResult?.data.pool.shares[0]?.balance
+  }
+
+  async function fetchUserLockedSharesForMigration(
+    poolAddressV3: string,
+    migrationAddress: string
+  ): Promise<string> {
+    const migration = new Migration(web3)
+    const { userV3Shares } = await migration.getShareAllocation(
+      migrationAddress,
+      poolAddressV3,
+      accountId
+    )
+    return userV3Shares
+  }
+
+  async function fetchTokenDetailsFromMigration(
+    poolAddressV3: string,
+    migrationAddress: string
+  ): Promise<TokensDetails> {
+    const migration = new Migration(web3)
+    return migration.getTokensDetails(migrationAddress, poolAddressV3)
   }
 
   useEffect(() => {
@@ -231,6 +261,13 @@ function MigrationProvider({
       setThresholdMet(thresholdMet)
     }
     init()
+
+    if (price?.address)
+      fetchTokenDetailsFromMigration(price.address, migrationAddress)
+        .then(setMigrationTokenDetails)
+        .catch((error) =>
+          Logger.error('fetchTokenDetailsFromMigration error', error.message)
+        )
   }, [chainId, migrationAddress, price])
 
   useEffect(() => {
@@ -247,21 +284,23 @@ function MigrationProvider({
   }, [deadline])
 
   useEffect(() => {
-    if (!accountId) return
-    async function init() {
-      try {
-        //
-        // Get everything the user has put into the pool
-        //
-        const poolTokens = await getUserPoolShareBalance()
-        console.log('getUserPoolShareBalance', poolTokens)
-        setPoolTokens(poolTokens)
-      } catch (error) {
-        Logger.error(error.message)
-      }
-    }
-    init()
-  }, [accountId])
+    if (!accountId && price?.address) return
+    getUserPoolShareBalance()
+      .then((poolSharesRaw) => {
+        const poolShares = isNaN(Number(poolSharesRaw))
+          ? 0
+          : Number(poolSharesRaw)
+        setpoolShares(poolShares)
+      })
+      .catch((error) => Logger.error(error.message))
+  }, [accountId, price])
+
+  useEffect(() => {
+    if (!price?.address) return
+    fetchUserLockedSharesForMigration(price.address, migrationAddress)
+      .then(setLockedSharesV3)
+      .catch((error) => Logger.error(error.message))
+  }, [price])
 
   return (
     <MigrationContext.Provider
@@ -284,7 +323,9 @@ function MigrationProvider({
           refreshMigrationStatus,
           thresholdMet,
           deadlinePassed,
-          poolTokens
+          poolShares,
+          lockedSharesV3,
+          migrationTokenDetails
         } as MigrationProviderValue
       }
     >
@@ -296,6 +337,10 @@ function MigrationProvider({
 const useMigrationStatus = (): MigrationProviderValue =>
   useContext(MigrationContext)
 
-export { MigrationProvider, useMigrationStatus, MigrationContext }
-export type { MigrationProviderValue }
+export {
+  MigrationProvider,
+  useMigrationStatus,
+  MigrationProviderValue,
+  MigrationContext
+}
 export default MigrationProvider

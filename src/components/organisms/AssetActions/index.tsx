@@ -1,26 +1,22 @@
-import React, { ReactElement, useState, useEffect } from 'react'
-import Permission from '../Permission'
-import styles from './index.module.css'
-import Compute from './Compute'
-import Consume from './Consume'
-import { Logger, File as FileMetadata, DID } from '@oceanprotocol/lib'
-import Tabs from '../../atoms/Tabs'
-import compareAsBN from '../../../utils/compareAsBN'
-import Pool from './Pool'
-import Trade from './Trade'
+import { DID, File as FileMetadata, Logger } from '@oceanprotocol/lib'
+import React, { ReactElement, useEffect, useState } from 'react'
+import { useCancelToken } from '../../../hooks/useCancelToken'
+import { useIsMounted } from '../../../hooks/useIsMounted'
 import { useAsset } from '../../../providers/Asset'
 import { useOcean } from '../../../providers/Ocean'
 import { useWeb3 } from '../../../providers/Web3'
-import Web3Feedback from '../../molecules/Web3Feedback'
-import { fileinfo, getFileInfo } from '../../../utils/provider'
-import axios from 'axios'
+import compareAsBN from '../../../utils/compareAsBN'
 import { getOceanConfig } from '../../../utils/ocean'
-import { useCancelToken } from '../../../hooks/useCancelToken'
-import { useIsMounted } from '../../../hooks/useIsMounted'
-import StartMigration from '../../molecules/migration/startMigration'
-import CancelMigration from '../../molecules/migration/cancelMigration'
-import CreateV4Pool from '../../molecules/migration/createV4Pool'
-import LockPoolShares from '../../molecules/migration/lockPoolShares'
+import { getFileInfo } from '../../../utils/provider'
+import Tabs from '../../atoms/Tabs'
+import Migration from '../../molecules/Migration/index'
+import Web3Feedback from '../../molecules/Web3Feedback'
+import Permission from '../Permission'
+import Compute from './Compute'
+import Consume from './Consume'
+import styles from './index.module.css'
+import Pool from './Pool'
+import Trade from './Trade'
 
 export default function AssetActions(): ReactElement {
   const { accountId, balance } = useWeb3()
@@ -146,10 +142,7 @@ export default function AssetActions(): ReactElement {
 
   return (
     <>
-      <StartMigration />
-      <CancelMigration />
-      <CreateV4Pool />
-      <LockPoolShares />
+      {price?.type === 'pool' && <Migration />}
       <Permission eventType="consume">
         <Tabs items={tabs} className={styles.actions} />
       </Permission>

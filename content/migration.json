@@ -1,0 +1,60 @@
+{
+  "observer": {
+    "migrationNotStarted": {
+      "title": "Pool migration has not started",
+      "text": "It is still possible to add liquidity for this asset as the the owner has not initiated the migration from Ocean V3 to V4. However, they may choose to start the migration soon."
+    },
+    "migrationInProgress": {
+      "title": "Migration in progress",
+      "text": "**You cannot add liquidity to this pool while the migration is in progress**  \n\nWhen the migration is complete you will be able to add liquidity in the new V4 pool for this asset."
+    }
+  },
+  "owner": {
+    "migrationNotStarted": {
+      "title": "Start V4 Migration",
+      "text": "**It's time to migrate from V3 to V4** \n\nAs the asset publisher you can initiate the migration from a V3 pool to a V4 pool. \n\nThe migration requires 80% of liquidity providers to lock their shares in the migration contract."
+    },
+    "migrationStarted": {
+      "title": "Lock Your Pool Shares",
+      "text": "**You have initiated the migration of this pool from V3 to V4** \n\nYou can now lock your liquidity pool tokens in the smart contract to ensure you will receive tokens from the new V4 pool when it is created.\n\nThe migration requires 80% of liquidity providers to lock their shares in the migration contract."
+    },
+    "migrationInProgress": {
+      "title": "Migration in progress",
+      "text": "**The deadline has not been reached yet**  \n\nThe migration requires 80% of liquidity providers to lock their shares in the migration contract."
+    },
+    "deadlineMetThresholdMet": {
+      "title": "V4 Pool can now be created",
+      "text": "**The V3 pool will be liquidated** \n\nOver 80% of pool shares have now been locked and the threshold has therefore been reached for completing the migration.\n\nThe deadline for locking pool shares has now passed so no additional pool shares can be locked."
+    },
+    "deadlineMetThresholdNotMet": {
+      "title": "Migration Deadline is Reached",
+      "text": "**Unfortunately the threshold of 80% of pool shares locked has not been achieved** \n\nThe migration required 80% of liquidity providers to lock their shares in the migration contract and this was not achieved before the deadline. \n\nYou can now cancel this migration."
+    }
+  },
+  "liquidityProvider": {
+    "migrationNotStarted": {
+      "title": "This Pool May be Migrated to V4",
+      "text": "The publisher has not yet initiated a migration of the pool from V3 to V4 but they maybe choose to do so soon. \n\nYou can check on this page to see if the migration has started."
+    },
+    "migrationStarted": {
+      "title": "Lock Your Pool Shares",
+      "text": "**The publisher of this data asset has initiated the migration of this pool from V3 to V4** \n\nYou can now lock your liquidity pool tokens in the smart contract to ensure you will receive tokens from the new V4 pool when it is created.\n\nThe migration requires 80% of liquidity providers to lock their shares in the migration contract."
+    },
+    "poolSharesLocked": {
+      "title": "Your pool shares have been locked",
+      "text": "You have successfully locked your pool shares in the migration smart contract.\n\nThe migration won't be completed until the deadline has been reached and the required 80% of pool shares are locked."
+    },
+    "deadlineMetThresholdMet": {
+      "title": "V4 Migration Will be Completed Soon",
+      "text": "**You can no longer lock  or release pool shares** The deadline for locking pool shares has passed and the required threshold of 80% of pool shares were locked in the migration smart contract.\n\nThe owner of the pool will complete the migration of the pool from V3 to V4 soon."
+    },
+    "deadlineMetThresholdNotMet": {
+      "title": "Free",
+      "text": "Set your data set as free. The datatoken for this data set will be given for free via creating a faucet."
+    }
+  },
+  "migrationComplete": {
+    "title": "This asset has been migrated to Ocean V4",
+    "text": "Head over to our new V4 market to view and interact with this asset."
+  }
+}
