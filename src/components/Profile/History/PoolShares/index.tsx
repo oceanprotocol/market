@@ -87,24 +87,10 @@ export default function PoolShares({
     } finally {
       setLoading(false)
     }
-  }, [chainIds, poolShares, newCancelToken])
-
-  // Helper: start interval fetching
-  const initFetchInterval = useCallback(() => {
-    if (dataFetchInterval) return
-
-    const newInterval = setInterval(() => {
-      fetchPoolSharesAssets()
-      LoggerInstance.log(
-        `[pool] Refetch interval fired after ${REFETCH_INTERVAL / 1000}s`
-      )
-    }, REFETCH_INTERVAL)
-    setDataFetchInterval(newInterval)
-
-    // Having `accountId` as dependency is important for interval to
-    // change after user account switch.
+    // We do not need to react to `chainIds` changes here, cause changing them
+    // triggers change of `poolShares` from `useProfile()` already.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataFetchInterval, fetchPoolSharesAssets, accountId])
+  }, [poolShares, newCancelToken])
 
   //
   // 1. Kick off data fetching
@@ -113,10 +99,8 @@ export default function PoolShares({
     if (!isMounted()) return
 
     setLoading(true)
-
     fetchPoolSharesAssets()
-    initFetchInterval()
-  }, [fetchPoolSharesAssets, initFetchInterval, isMounted])
+  }, [fetchPoolSharesAssets, isMounted])
 
   return accountId ? (
     <Table
