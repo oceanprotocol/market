@@ -51,8 +51,6 @@ export default function Stats({
 
     async function getPublisherLiquidity() {
       try {
-        console.log('GET PUB LIQ', chainIds)
-
         const accountPoolAdresses: string[] = []
         const assetsPrices = await getAccessDetailsForAssets(assets)
         for (const priceInfo of assetsPrices) {

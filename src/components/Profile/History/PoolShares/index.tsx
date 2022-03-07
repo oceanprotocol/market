@@ -4,7 +4,6 @@ import styles from './index.module.css'
 import AssetTitle from '@shared/AssetList/AssetListTitle'
 import { PoolShares_poolShares as PoolShare } from '../../../../@types/subgraph/PoolShares'
 import NetworkName from '@shared/NetworkName'
-import { CancelToken } from 'axios'
 import Decimal from 'decimal.js'
 import { useProfile } from '@context/Profile'
 import { useCancelToken } from '@hooks/useCancelToken'
@@ -12,7 +11,7 @@ import { useIsMounted } from '@hooks/useIsMounted'
 import { useUserPreferences } from '@context/UserPreferences'
 import { Asset, LoggerInstance } from '@oceanprotocol/lib'
 import { Liquidity } from './Liquidity'
-import { getPoolSharesAssets } from './_utils'
+import { getAssetsFromPoolShares } from './_utils'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
@@ -41,14 +40,14 @@ const columns = [
     }
   },
   {
-    name: 'Liquidity',
+    name: 'Your Value Locked',
     selector: function getAssetRow(row: AssetPoolShare) {
       return <Liquidity row={row} type="user" />
     },
     right: true
   },
   {
-    name: 'Pool Liquidity',
+    name: 'Total Value Locked',
     selector: function getAssetRow(row: AssetPoolShare) {
       return <Liquidity row={row} type="pool" />
     },
@@ -77,7 +76,7 @@ export default function PoolShares({
     if (!poolShares || !chainIds) return
 
     try {
-      const assets = await getPoolSharesAssets(
+      const assets = await getAssetsFromPoolShares(
         poolShares,
         chainIds,
         newCancelToken()

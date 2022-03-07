@@ -4,7 +4,7 @@ import { CancelToken } from 'axios'
 import { PoolShares_poolShares as PoolShare } from '../../../../@types/subgraph/PoolShares'
 import { AssetPoolShare } from '.'
 
-export async function getPoolSharesAssets(
+export async function getAssetsFromPoolShares(
   data: PoolShare[],
   chainIds: number[],
   cancelToken: CancelToken
@@ -33,6 +33,6 @@ export async function getPoolSharesAssets(
       asset: ddoList[i]
     })
   }
-  const assets = assetList.sort((a, b) => b.createTime - a.createTime)
-  return assets
+  // const assets = assetList.sort((a, b) => b.createTime - a.createTime)
+  return assetList
 }

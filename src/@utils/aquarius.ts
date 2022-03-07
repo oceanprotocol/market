@@ -186,7 +186,7 @@ export async function getAssetsFromDtList(
     const query = generateBaseQuery(baseParams)
 
     const queryResult = await queryMetadata(query, cancelToken)
-    return queryResult.results
+    return queryResult?.results
   } catch (error) {
     LoggerInstance.error(error.message)
   }

@@ -5,6 +5,7 @@ import Token from '../../../Asset/AssetActions/Pool/Token'
 import { isValidNumber } from '@utils/numbers'
 import Decimal from 'decimal.js'
 import { AssetPoolShare } from './index'
+import { calculateUserTVL } from '@utils/pool'
 
 export function Liquidity({
   row,
@@ -13,19 +14,18 @@ export function Liquidity({
   row: AssetPoolShare
   type: string
 }) {
-  let price = ''
-  let oceanTokenBalance = ''
-  let dataTokenBalance = ''
+  let price = '0'
+  let liquidity = '0'
 
   if (type === 'user') {
     price = row.userLiquidity
-    const userShare = row.poolShare.shares / row.poolShare.pool.totalShares
-    oceanTokenBalance = (
-      userShare * row.poolShare.pool.baseTokenLiquidity
-    ).toString()
-    dataTokenBalance = (
-      userShare * row.poolShare.pool.datatokenLiquidity
-    ).toString()
+
+    // Liquidity in base token, calculated from pool share tokens.
+    liquidity = calculateUserTVL(
+      row.poolShare.shares,
+      row.poolShare.pool.totalShares,
+      row.poolShare.pool.baseTokenLiquidity
+    )
   }
   if (type === 'pool') {
     price =
@@ -38,8 +38,9 @@ export function Liquidity({
             .toString()
         : '0'
 
-    oceanTokenBalance = row.poolShare.pool.baseTokenLiquidity.toString()
-    dataTokenBalance = row.poolShare.pool.datatokenLiquidity.toString()
+    liquidity = new Decimal(row.poolShare.pool.baseTokenLiquidity)
+      .mul(2)
+      .toString()
   }
   return (
     <div className={styles.userLiquidity}>
@@ -50,12 +51,7 @@ export function Liquidity({
       />
       <Token
         symbol={row.poolShare.pool.baseToken.symbol}
-        balance={oceanTokenBalance}
-        noIcon
-      />
-      <Token
-        symbol={row.poolShare.pool.datatoken.symbol}
-        balance={dataTokenBalance}
+        balance={liquidity}
         noIcon
       />
     </div>
