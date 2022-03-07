@@ -24,7 +24,7 @@ import {
 import { getOceanConfig } from '@utils/ocean'
 import { validationSchema } from './_validation'
 import { useAbortController } from '@hooks/useAbortController'
-import { setNftMetadata } from '@utils/nft'
+import { setNftMetadata, setNFTMetadataAndTokenURI } from '@utils/nft'
 
 // TODO: restore FormikPersist, add back clear form action
 const formName = 'ocean-publish-form'
@@ -50,7 +50,8 @@ export default function PublishPage({
     let _erc721Address: string,
       _datatokenAddress: string,
       _ddo: DDO,
-      _encryptedDdo: string
+      _encryptedDdo: string,
+      _tokenURI: string
 
     // reset all feedback state
     setFeedback(initialPublishFeedback)
@@ -70,7 +71,7 @@ export default function PublishPage({
       const config = getOceanConfig(chainId)
       LoggerInstance.log('[publish] using config: ', config)
 
-      const { erc721Address, datatokenAddress, txHash } =
+      const { erc721Address, datatokenAddress, txHash, tokenURI } =
         await createTokensAndPricing(
           values,
           accountId,
@@ -82,6 +83,7 @@ export default function PublishPage({
       const isSuccess = Boolean(erc721Address && datatokenAddress && txHash)
       _erc721Address = erc721Address
       _datatokenAddress = datatokenAddress
+      _tokenURI = tokenURI
 
       LoggerInstance.log('[publish] createTokensAndPricing tx', txHash)
       LoggerInstance.log('[publish] erc721Address', erc721Address)
@@ -173,10 +175,18 @@ export default function PublishPage({
 
       if (!_ddo || !_encryptedDdo) throw new Error('No DDO received.')
 
-      const res = await setNftMetadata(
+      // const res = await setNftMetadata(
+      //   _ddo,
+      //   accountId,
+      //   web3,
+      //   newAbortController()
+      // )
+
+      const res = await setNFTMetadataAndTokenURI(
         _ddo,
         accountId,
         web3,
+        _tokenURI,
         newAbortController()
       )
 

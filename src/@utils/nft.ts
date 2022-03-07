@@ -5,7 +5,8 @@ import {
   getHash,
   Nft,
   ProviderInstance,
-  DDO
+  DDO,
+  MetadataAndTokenURI
 } from '@oceanprotocol/lib'
 import Web3 from 'web3'
 import { TransactionReceipt } from 'web3-core'
@@ -128,4 +129,54 @@ export async function setNftMetadata(
   )
 
   return setMetadataTx
+}
+
+export async function setNFTMetadataAndTokenURI(
+  asset: Asset | DDO,
+  accountId: string,
+  web3: Web3,
+  tokenURI: string,
+  signal: AbortSignal
+): Promise<TransactionReceipt> {
+  const encryptedDdo = await ProviderInstance.encrypt(
+    asset,
+    asset.services[0].serviceEndpoint,
+    signal
+  )
+  LoggerInstance.log('[setNftMetadata] Got encrypted DDO', encryptedDdo)
+
+  const metadataHash = getHash(JSON.stringify(asset))
+  const nft = new Nft(web3)
+
+  // theoretically used by aquarius or provider, not implemented yet, will remain hardcoded
+  const flags = '0x2'
+
+  const metadataAndTokenURI: MetadataAndTokenURI = {
+    metaDataState: 0,
+    metaDataDecryptorUrl: asset.services[0].serviceEndpoint,
+    metaDataDecryptorAddress: '',
+    flags,
+    data: encryptedDdo,
+    metaDataHash: '0x' + metadataHash,
+    tokenId: 1,
+    tokenURI,
+    metadataProofs: []
+  }
+
+  const estGasSetMetadataAndTokenURI = await nft.estGasSetMetadataAndTokenURI(
+    asset.nftAddress,
+    accountId,
+    metadataAndTokenURI
+  )
+  LoggerInstance.log(
+    '[setNftMetadata] est Gas set metadata and token uri --',
+    estGasSetMetadataAndTokenURI
+  )
+  const setMetadataAndTokenURITx = await nft.setMetadataAndTokenURI(
+    asset.nftAddress,
+    accountId,
+    metadataAndTokenURI
+  )
+
+  return setMetadataAndTokenURITx
 }
