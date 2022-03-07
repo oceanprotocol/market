@@ -74,12 +74,7 @@ export default function PoolShares({
   // Helper: fetch assets from pool shares data
   //
   const fetchPoolSharesAssets = useCallback(async () => {
-    if (!poolShares || !chainIds) {
-      setLoading(false)
-      return
-    }
-
-    setLoading(true)
+    if (!poolShares || !chainIds) return
 
     try {
       const assets = await getPoolSharesAssets(
@@ -117,6 +112,8 @@ export default function PoolShares({
   //
   useEffect(() => {
     if (!isMounted()) return
+
+    setLoading(true)
 
     fetchPoolSharesAssets()
     initFetchInterval()
