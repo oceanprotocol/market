@@ -8,7 +8,8 @@ import {
   DDO,
   Service,
   ProviderInstance,
-  ComputeEnvironment
+  ComputeEnvironment,
+  ComputeJob
 } from '@oceanprotocol/lib'
 import { CancelToken } from 'axios'
 import { gql } from 'urql'
@@ -24,6 +25,7 @@ import { getOceanConfig } from './ocean'
 import { SortTermOptions } from 'src/@types/aquarius/SearchQuery'
 import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import { transformAssetToAssetSelection } from './assetConvertor'
+import { AssetExtended } from 'src/@types/AssetExtended'
 
 const getComputeOrders = gql`
   query ComputeOrders($user: String!) {
@@ -321,75 +323,64 @@ function getServiceEndpoints(data: TokenOrder[], assets: Asset[]): string[] {
 //   return computeJobs
 // }
 
-// function getDtList(data: TokenOrder[]): string[] {
-//   const dtList = []
+export async function getComputeJobs(
+  chainIds: number[],
+  accountId: string,
+  asset?: AssetExtended,
+  token?: CancelToken
+): Promise<ComputeResults> {
+  if (!accountId) return
+  const assetDTAddress = asset.datatokens[0].address
+  const computeResult: ComputeResults = {
+    computeJobs: [],
+    isLoaded: false
+  }
+  let isLoading = true
+  const variables = assetDTAddress
+    ? {
+        user: accountId.toLowerCase(),
+        datatokenAddress: assetDTAddress.toLowerCase()
+      }
+    : {
+        user: accountId.toLowerCase()
+      }
 
-//   for (let i = 0; i < data.length; i++) {
-//     dtList.push(data[i].datatokenId.address)
-//   }
+  const results = await fetchDataForMultipleChains(
+    assetDTAddress ? getComputeOrdersByDatatokenAddress : getComputeOrders,
+    variables,
+    assetDTAddress ? [asset?.chainId] : chainIds
+  )
 
-//   return dtList
-// }
+  let data: TokenOrder[] = results.map((result) =>
+    result.tokenOrders.forEach((tokenOrder: TokenOrder) => {
+      return tokenOrder
+    })
+  )
 
-// export async function getComputeJobs(
-//   chainIds: number[],
-//   account: Account,
-//   ddo?: Asset,
-//   token?: CancelToken
-// ): Promise<ComputeResults> {
-//   const assetDTAddress = ddo?.dataTokenInfo?.address
-//   let computeResult: ComputeResults = {
-//     computeJobs: [],
-//     isLoaded: false
-//   }
-//   let isLoading = true
-//   const variables = assetDTAddress
-//     ? {
-//         user: account?.getId().toLowerCase(),
-//         datatokenAddress: assetDTAddress.toLowerCase()
-//       }
-//     : {
-//         user: account?.getId().toLowerCase()
-//       }
+  if (data.length === 0) {
+    return computeResult
+  }
 
-//   const result = await fetchDataForMultipleChains(
-//     assetDTAddress ? getComputeOrdersByDatatokenAddress : getComputeOrders,
-//     variables,
-//     assetDTAddress ? [ddo?.chainId] : chainIds
-//   )
-//   let data: TokenOrder[] = []
-//   for (let i = 0; i < result.length; i++) {
-//     if (!result[i]?.tokenOrders || result[i].tokenOrders.length === 0) continue
-//     result[i]?.tokenOrders.forEach((tokenOrder: TokenOrder) => {
-//       data.push(tokenOrder)
-//     })
-//   }
-//   if (!ocean || !account || !data) return
+  data = data.sort((a, b) => b.timestamp - a.timestamp)
+  const queryDtList = data.map((tokenOrder) => tokenOrder.datatokenId.address)
+  if (!queryDtList) return
 
-//   if (data.length === 0) {
-//     return computeResult
-//   }
+  const assets = await getAssetMetadata(queryDtList, token, chainIds)
+  const serviceEndpoints = getServiceEndpoints(data, assets)
+  // const providers: Provider[] = await getProviders(
+  //   serviceEndpoints,
+  //   config,
+  //   ocean
+  // )
+  // const computeJobs = await getJobs(providers, account, assets)
+  isLoading = false
+  // computeResult = {
+  //   computeJobs: computeJobs,
+  //   isLoaded: isLoading
+  // }
 
-//   data = data.sort((a, b) => b.timestamp - a.timestamp)
-//   const queryDtList = getDtList(data)
-//   if (!queryDtList) return
-
-//   const assets = await getAssetMetadata(queryDtList, token, chainIds)
-//   const serviceEndpoints = getServiceEndpoints(data, assets)
-//   const providers: Provider[] = await getProviders(
-//     serviceEndpoints,
-//     config,
-//     ocean
-//   )
-//   const computeJobs = await getJobs(providers, account, assets)
-//   isLoading = false
-//   computeResult = {
-//     computeJobs: computeJobs,
-//     isLoaded: isLoading
-//   }
-
-//   return computeResult
-// }
+  return computeResult
+}
 
 export async function createTrustedAlgorithmList(
   selectedAlgorithms: string[], // list of DIDs,

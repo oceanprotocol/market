@@ -10,7 +10,7 @@ import Details from './Details'
 import Refresh from '@images/refresh.svg'
 import { useUserPreferences } from '@context/UserPreferences'
 import NetworkName from '@shared/NetworkName'
-// import { getComputeJobs } from '@utils/compute'
+import { getComputeJobs } from '@utils/compute'
 import styles from './index.module.css'
 import { useAsset } from '@context/Asset'
 import { useIsMounted } from '@hooks/useIsMounted'
@@ -90,9 +90,9 @@ export default function ComputeJobs({
     }
     try {
       setIsLoading(true)
-      // const jobs = await getComputeJobs(chainIds, accountId, ddo)
-      // isMounted() && setJobs(jobs.computeJobs)
-      // setIsLoading(jobs.isLoaded)
+      const jobs = await getComputeJobs(chainIds, accountId, asset)
+      isMounted() && setJobs(jobs.computeJobs)
+      setIsLoading(jobs.isLoaded)
     } catch (error) {
       LoggerInstance.error(error.message)
     }
