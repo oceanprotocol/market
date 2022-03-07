@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import { useUserPreferences } from '@context/UserPreferences'
 import ExplorerLink from '@shared/ExplorerLink'
 import NetworkName from '@shared/NetworkName'
-import jellyfish from '@oceanprotocol/art/creatures/jellyfish/jellyfish-grid.svg'
+import Jellyfish from '@oceanprotocol/art/creatures/jellyfish/jellyfish-grid.svg'
 import Copy from '@shared/atoms/Copy'
 import Blockies from '@shared/atoms/Blockies'
 import styles from './Account.module.css'
@@ -29,12 +29,7 @@ export default function Account({
         ) : accountId ? (
           <Blockies accountId={accountId} className={styles.image} />
         ) : (
-          <img
-            src={jellyfish}
-            className={styles.image}
-            width="96"
-            height="96"
-          />
+          <Jellyfish className={styles.image} />
         )}
       </figure>
 

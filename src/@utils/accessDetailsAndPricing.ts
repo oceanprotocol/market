@@ -239,7 +239,9 @@ export async function getOrderPriceAndFees(
     consumeMarketOrderFee: '0',
     consumeMarketPoolSwapFee: '0',
     consumeMarketFixedSwapFee: '0',
-    providerFee: {},
+    providerFee: {
+      providerFeeAmount: '0'
+    },
     opcFee: '0'
   } as OrderPriceAndFees
   const { accessDetails } = asset
