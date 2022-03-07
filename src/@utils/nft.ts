@@ -60,6 +60,17 @@ export function generateNftMetadata(): NftMetadata {
   return newNft
 }
 
+export function generateNftCreateData(nftMetadata: NftMetadata): any {
+  const nftCreateData = {
+    name: nftMetadata.name,
+    symbol: nftMetadata.symbol,
+    templateIndex: 1,
+    tokenURI: ''
+  }
+
+  return nftCreateData
+}
+
 export async function setNftMetadata(
   asset: Asset | DDO,
   accountId: string,
@@ -124,6 +135,7 @@ export async function setNFTMetadataAndTokenURI(
     '[setNFTMetadataAndTokenURI] Got encrypted DDO',
     encryptedDdo
   )
+
   const metadataHash = getHash(JSON.stringify(asset))
 
   // add final did to external_url in nftMetadata before encoding
