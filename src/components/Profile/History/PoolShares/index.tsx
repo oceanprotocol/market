@@ -15,8 +15,6 @@ import { getAssetsFromPoolShares } from './_utils'
 
 Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 
-const REFETCH_INTERVAL = 20000
-
 export interface AssetPoolShare {
   userLiquidity: string
   poolShare: PoolShare
@@ -67,7 +65,6 @@ export default function PoolShares({
 
   const [assets, setAssets] = useState<AssetPoolShare[]>()
   const [loading, setLoading] = useState<boolean>(false)
-  const [dataFetchInterval, setDataFetchInterval] = useState<NodeJS.Timeout>()
 
   //
   // Helper: fetch assets from pool shares data

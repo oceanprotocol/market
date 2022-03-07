@@ -243,13 +243,13 @@ export async function fetchDataForMultipleChains(
   let datas: any[] = []
   try {
     for (const chainId of chainIds) {
-      console.log('fetch chainID', chainId)
+      // console.log('fetch chainID', chainId)
       const context: OperationContext = getQueryContext(chainId)
       const response = await fetchData(query, variables, context)
-      console.log('fetch response', response)
+      // console.log('fetch response', response)
       if (!response || response.error) continue
       datas = datas.concat(response?.data)
-      console.log('fetch datas', datas)
+      // console.log('fetch datas', datas)
     }
     return datas
   } catch (error) {
@@ -323,6 +323,7 @@ export async function getHighestLiquidityDatatokens(
 ): Promise<string[]> {
   const dtList: string[] = []
   let highestLiquidityAssets: HighestLiquidityAssetsPool[] = []
+
   for (const chain of chainIds) {
     const queryContext = getQueryContext(Number(chain))
     const fetchedPools: OperationResult<HighestLiquidityGraphAssets, any> =
@@ -357,9 +358,10 @@ export async function getAccountTVLInOwnAssets(
     chainIds
   )
   let tvl = new Decimal(0)
-  console.log('resss', results)
+  // console.log('resss', results)
+
   for (const result of results) {
-    console.log('result.poolShares', result.poolShares)
+    // console.log('result.poolShares', result.poolShares)
     for (const poolShare of result.poolShares) {
       const poolUserTvl = calculateUserTVL(
         poolShare.shares,
@@ -367,7 +369,7 @@ export async function getAccountTVLInOwnAssets(
         poolShare.pool.baseTokenLiquidity
       )
       tvl = tvl.add(new Decimal(poolUserTvl))
-      console.log('result.poolShares', tvl.toString())
+      // console.log('result.poolShares', tvl.toString())
     }
   }
   return tvl.toDecimalPlaces(MAX_DECIMALS).toString()

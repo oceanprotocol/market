@@ -18,7 +18,7 @@ export function Liquidity({
   let liquidity = '0'
 
   if (type === 'user') {
-    price = row.userLiquidity
+    price = new Decimal(row.userLiquidity).mul(2).toString()
 
     // Liquidity in base token, calculated from pool share tokens.
     liquidity = calculateUserTVL(

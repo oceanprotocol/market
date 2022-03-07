@@ -16,6 +16,7 @@ async function getPoolSharesLiquidity(
   poolShares: PoolShare[]
 ): Promise<string> {
   let tvl = new Decimal(0)
+
   for (const poolShare of poolShares) {
     const poolUserTvl = calculateUserTVL(
       poolShare.shares,

@@ -108,6 +108,6 @@ export function calculateUserTVL(
     totalShares,
     baseTokenLiquidity
   )
-  const tvl = new Decimal(liquidity).mul(2) // we multiply by 2 because of ss bot
+  const tvl = new Decimal(liquidity).mul(2) // we multiply by 2 because of 50/50 weight
   return tvl.toDecimalPlaces(MAX_DECIMALS).toString()
 }
