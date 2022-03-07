@@ -5,7 +5,7 @@ import styles from './PoolShares.module.css'
 import AssetTitle from '@shared/AssetList/AssetListTitle'
 import { PoolShares_poolShares as PoolShare } from '../../../@types/subgraph/PoolShares'
 import Token from '../../Asset/AssetActions/Pool/Token'
-import { calculateUserLiquidity } from '@utils/subgraph'
+import { calculateUserLiquidity } from '@utils/pool'
 import NetworkName from '@shared/NetworkName'
 import { getAssetsFromDtList } from '@utils/aquarius'
 import { CancelToken } from 'axios'
@@ -22,7 +22,7 @@ Decimal.set({ toExpNeg: -18, precision: 18, rounding: 1 })
 const REFETCH_INTERVAL = 20000
 
 interface AssetPoolShare {
-  userLiquidity: number
+  userLiquidity: string
   poolShare: PoolShare
   networkId: number
   createTime: number
@@ -124,10 +124,14 @@ async function getPoolSharesAssets(
   const ddoList = await getAssetsFromDtList(dtList, chainIds, cancelToken)
 
   for (let i = 0; i < data.length; i++) {
-    const userLiquidity = calculateUserLiquidity(data[i])
+    const userLiquidity = calculateUserLiquidity(
+      data[i].shares,
+      data[i].pool.totalShares,
+      data[i].pool.baseTokenLiquidity
+    )
     assetList.push({
       poolShare: data[i],
-      userLiquidity: userLiquidity,
+      userLiquidity,
       networkId: ddoList[i].chainId,
       createTime: data[i].pool.createdTimestamp,
       asset: ddoList[i]

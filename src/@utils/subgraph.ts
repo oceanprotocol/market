@@ -12,14 +12,10 @@ import {
   PoolShares as PoolSharesList,
   PoolShares_poolShares as PoolShare
 } from '../@types/subgraph/PoolShares'
-import {
-  OrdersData_orders as OrdersData,
-  OrdersData_orders_datatoken as OrdersDatatoken
-} from '../@types/subgraph/OrdersData'
+import { OrdersData_orders as OrdersData } from '../@types/subgraph/OrdersData'
 import { UserSalesQuery as UsersSalesList } from '../@types/subgraph/UserSalesQuery'
 import { OpcFeesQuery as OpcFeesData } from '../@types/subgraph/OpcFeesQuery'
-import axios from 'axios'
-import { calculateUserLiquidity, calculateUserTVL } from './pool'
+import { calculateUserTVL } from './pool'
 import Decimal from 'decimal.js'
 import { MAX_DECIMALS } from './constants'
 
@@ -181,7 +177,7 @@ const TopSalesQuery = gql`
   query TopSalesQuery {
     users(
       first: 20
-      orderBy: tokensOwned
+      orderBy: sharesOwned
       orderDirection: desc
       where: { tokenBalancesOwned_not: "0" }
     ) {

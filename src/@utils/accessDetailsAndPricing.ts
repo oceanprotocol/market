@@ -229,14 +229,17 @@ function getAccessDetailsFromTokenPrice(
  */
 export async function getOrderPriceAndFees(
   asset: AssetExtended,
-  accountId?: string
+  accountId: string
 ): Promise<OrderPriceAndFees> {
+  const { appConfig } = getSiteMetadata()
+
   const orderPriceAndFee = {
     price: '0',
-    publisherMarketOrderFee: '0',
+    publisherMarketOrderFee:
+      asset?.accessDetails?.publisherMarketOrderFee || '0',
     publisherMarketPoolSwapFee: '0',
     publisherMarketFixedSwapFee: '0',
-    consumeMarketOrderFee: '0',
+    consumeMarketOrderFee: appConfig.consumeMarketOrderFee || '0',
     consumeMarketPoolSwapFee: '0',
     consumeMarketFixedSwapFee: '0',
     providerFee: {
@@ -244,28 +247,24 @@ export async function getOrderPriceAndFees(
     },
     opcFee: '0'
   } as OrderPriceAndFees
-  const { accessDetails } = asset
-  const { appConfig } = getSiteMetadata()
 
-  // fetch publish market order fee
-  orderPriceAndFee.publisherMarketOrderFee =
-    asset.accessDetails.publisherMarketOrderFee
-  // fetch consume market order fee
-  orderPriceAndFee.consumeMarketOrderFee = appConfig.consumeMarketOrderFee
   // fetch provider fee
   const initializeData = await ProviderInstance.initialize(
-    asset.id,
+    asset?.id,
     asset.services[0].id,
     0,
     accountId,
-    asset.services[0].serviceEndpoint
+    asset?.services[0].serviceEndpoint
   )
   orderPriceAndFee.providerFee = initializeData.providerFee
 
   // fetch price and swap fees
-  switch (accessDetails.type) {
+  switch (asset?.accessDetails?.type) {
     case 'dynamic': {
-      const poolPrice = await calculateBuyPrice(accessDetails, asset.chainId)
+      const poolPrice = await calculateBuyPrice(
+        asset?.accessDetails,
+        asset?.chainId
+      )
       orderPriceAndFee.price = poolPrice.tokenAmount
       orderPriceAndFee.liquidityProviderSwapFee =
         poolPrice.liquidityProviderSwapFeeAmount
@@ -276,7 +275,7 @@ export async function getOrderPriceAndFees(
       break
     }
     case 'fixed': {
-      const fixed = await getFixedBuyPrice(accessDetails, asset.chainId)
+      const fixed = await getFixedBuyPrice(asset?.accessDetails, asset?.chainId)
       orderPriceAndFee.price = fixed.baseTokenAmount
       orderPriceAndFee.opcFee = fixed.oceanFeeAmount
       orderPriceAndFee.publisherMarketFixedSwapFee = fixed.marketFeeAmount
@@ -299,9 +298,9 @@ export async function getOrderPriceAndFees(
 /**
  * @param {number} chain
  * @param {string} datatokenAddress
- * @param {number=} timeout timout of the service, this is needed to return order details
- * @param {string=} account account that wants to buy, is needed to return order details
- * @param {bool=} includeOrderPriceAndFees if false price will be spot price (pool) and rate (fre), if true you will get the order price including fees !! fees not yet done
+ * @param {number} timeout timout of the service, this is needed to return order details
+ * @param {string} account account that wants to buy, is needed to return order details
+ * @param {bool} includeOrderPriceAndFees if false price will be spot price (pool) and rate (fre), if true you will get the order price including fees !! fees not yet done
  * @returns {Promise<AccessDetails>}
  */
 export async function getAccessDetails(
