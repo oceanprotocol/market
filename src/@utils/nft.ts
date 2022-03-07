@@ -83,8 +83,10 @@ export async function setNFTMetadataAndTokenURI(
     asset.services[0].serviceEndpoint,
     signal
   )
-  LoggerInstance.log('[setNftMetadata] Got encrypted DDO', encryptedDdo)
-
+  LoggerInstance.log(
+    '[setNFTMetadataAndTokenURI] Got encrypted DDO',
+    encryptedDdo
+  )
   const metadataHash = getHash(JSON.stringify(asset))
 
   // add final did to external_url in nftMetadata before encoding
@@ -118,7 +120,7 @@ export async function setNFTMetadataAndTokenURI(
     metadataAndTokenURI
   )
   LoggerInstance.log(
-    '[setNftMetadata] est Gas set metadata and token uri --',
+    '[setNFTMetadataAndTokenURI] est Gas set metadata and token uri --',
     estGasSetMetadataAndTokenURI
   )
   const setMetadataAndTokenURITx = await nft.setMetadataAndTokenURI(
