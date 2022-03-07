@@ -21,7 +21,7 @@ import { getInitialValues, validationSchema } from './_constants'
 import FormStartComputeDataset from './FormComputeDataset'
 import styles from './index.module.css'
 import SuccessConfetti from '@shared/SuccessConfetti'
-import { getServiceByName } from '@utils/ddo'
+import { getServiceByName, secondsToString } from '@utils/ddo'
 import {
   isOrderable,
   getAlgorithmAssetSelectionList,
@@ -392,7 +392,7 @@ export default function Compute({
             dtBalance={dtBalance}
             datasetLowPoolLiquidity={!isConsumablePrice}
             assetType={asset?.metadata.type}
-            assetTimeout={asset?.services[0].timeout}
+            assetTimeout={secondsToString(asset?.services[0].timeout)}
             hasPreviousOrderSelectedComputeAsset={
               validAlgorithmOrderTx !== undefined
             }
@@ -406,9 +406,9 @@ export default function Compute({
             dtBalanceSelectedComputeAsset={algorithmDTBalance}
             selectedComputeAssetLowPoolLiquidity={!isAlgoConsumablePrice}
             selectedComputeAssetType="algorithm"
-            selectedComputeAssetTimeout={
+            selectedComputeAssetTimeout={secondsToString(
               selectedAlgorithmAsset?.services[0]?.timeout
-            }
+            )}
             // lazy comment when removing pricingStepText
             stepText={'pricingStepText' || 'Starting Compute Job...'}
             isConsumable={isConsumable}
