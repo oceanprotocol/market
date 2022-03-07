@@ -13,9 +13,9 @@ import {
   defaults
 } from 'chart.js'
 
-export declare type GraphType = 'liquidity' | 'price' | 'volume'
+export declare type GraphType = 'tvl' | 'price' | 'volume'
 
-export const graphTypes = ['Liquidity', 'Price', 'Volume']
+export const graphTypes = ['TVL', 'Price', 'Volume']
 
 // Chart.js global defaults
 ChartJS.register(

@@ -16,7 +16,6 @@
 
 .tradeInput div[class*='prefix'] {
   min-width: 6.5rem;
-  width: fit-content;
   justify-content: center;
 }
 

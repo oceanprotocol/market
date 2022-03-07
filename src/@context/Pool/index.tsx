@@ -118,11 +118,6 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
   useEffect(() => {
     if (!poolData) return
 
-    // Fees - this will be renamed again in subgraph
-    const poolFee = getFee(poolData.liquidityProviderFee)
-    const marketFee = getFee(poolData.marketSwapFee)
-    const opfFee = getFee(poolData.opcFee)
-
     // Total Liquidity
     const totalLiquidityInOcean = isValidNumber(poolData.spotPrice)
       ? new Decimal(poolData.baseTokenLiquidity).add(
@@ -131,12 +126,13 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
       : new Decimal(0)
 
     const newPoolInfo = {
-      poolFee,
-      marketFee,
-      opfFee,
+      liquidityProviderSwapFee: getFee(poolData.liquidityProviderSwapFee),
+      publishMarketSwapFee: getFee(poolData.publishMarketSwapFee),
+      opcFee: getFee(poolData.opcFee),
       weightBaseToken: getWeight(poolData.baseTokenWeight),
       weightDt: getWeight(poolData.datatokenWeight),
       datatokenSymbol: poolData.datatoken.symbol,
+      datatokenAddress: poolData.datatoken.address,
       baseTokenSymbol: poolData.baseToken.symbol,
       baseTokenAddress: poolData.baseToken.address,
       totalPoolTokens: poolData.totalShares,
@@ -193,6 +189,7 @@ function PoolProvider({ children }: { children: ReactNode }): ReactElement {
     if (
       !poolData ||
       !poolInfo?.totalPoolTokens ||
+      !poolInfoUser?.poolShares ||
       !asset?.chainId ||
       !accountId ||
       !poolInfoUser

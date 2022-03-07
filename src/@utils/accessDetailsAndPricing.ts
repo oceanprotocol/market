@@ -44,6 +44,7 @@ const TokensPriceQuery = gql`
       }
       fixedRateExchanges {
         id
+        exchangeId
         price
         baseToken {
           symbol
@@ -104,6 +105,7 @@ const TokenPriceQuery = gql`
       }
       fixedRateExchanges {
         id
+        exchangeId
         price
         baseToken {
           symbol
@@ -161,7 +163,7 @@ function getAccessDetailsFromTokenPrice(
   if (tokenPrice.dispensers && tokenPrice.dispensers.length > 0) {
     const dispenser = tokenPrice.dispensers[0]
     accessDetails.type = 'free'
-    accessDetails.addressOrId = dispenser.id
+    accessDetails.addressOrId = dispenser.token.id
     accessDetails.price = '0'
     accessDetails.isPurchasable = dispenser.active
     accessDetails.datatoken = {
@@ -179,7 +181,7 @@ function getAccessDetailsFromTokenPrice(
   ) {
     const fixed = tokenPrice.fixedRateExchanges[0]
     accessDetails.type = 'fixed'
-    accessDetails.addressOrId = fixed.id
+    accessDetails.addressOrId = fixed.exchangeId
     accessDetails.price = fixed.price
     // in theory we should check dt balance here, we can skip this because in the market we always create fre with minting capabilities.
     accessDetails.isPurchasable = fixed.active
