@@ -12,8 +12,7 @@ export default function Blockies({
   if (!accountId) return null
 
   // TODO: just put this back once finished
-  // const blockies = toDataUrl(accountId)
-  const blockies = 'randomstring12345'
+  const blockies = toDataUrl(accountId)
 
   return (
     <img

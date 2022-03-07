@@ -5,67 +5,40 @@ import {
   ComputeOutput,
   Asset,
   DDO,
-  PublisherTrustedAlgorithm,
   FileMetadata,
   Datatoken,
   ProviderInstance,
-  ProviderFees,
-  Pool,
-  OrderParams,
-  FreOrderParams,
   ComputeAsset,
-  approve,
-  TokenInOutMarket,
-  AmountsInMaxFee,
-  AmountsOutMaxFee,
-  Service,
   ZERO_ADDRESS
 } from '@oceanprotocol/lib'
 import { toast } from 'react-toastify'
 import Price from '@shared/Price'
 import FileIcon from '@shared/FileIcon'
 import Alert from '@shared/atoms/Alert'
-import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { useWeb3 } from '@context/Web3'
-import {
-  generateBaseQuery,
-  getFilterTerm,
-  queryMetadata
-} from '@utils/aquarius'
 import { Formik } from 'formik'
 import { getInitialValues, validationSchema } from './_constants'
-import axios from 'axios'
 import FormStartComputeDataset from './FormComputeDataset'
 import styles from './index.module.css'
 import SuccessConfetti from '@shared/SuccessConfetti'
-import { getServiceByName, secondsToString } from '@utils/ddo'
+import { getServiceByName } from '@utils/ddo'
 import {
   isOrderable,
   getAlgorithmAssetSelectionList,
   getAlgorithmsForAsset,
-  getQuerryString,
   getValidUntilTime,
   getComputeEnviroment
 } from '@utils/compute'
-import AssetSelection, {
-  AssetSelectionAsset
-} from '@shared/FormFields/AssetSelection'
+import { AssetSelectionAsset } from '@shared/FormFields/AssetSelection'
 import AlgorithmDatasetsListForCompute from './AlgorithmDatasetsListForCompute'
-import { getPreviousOrders } from '@utils/subgraph'
 import AssetActionHistoryTable from '../AssetActionHistoryTable'
 import ComputeJobs from '../../../Profile/History/ComputeJobs'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { useIsMounted } from '@hooks/useIsMounted'
-import { SortTermOptions } from '../../../../@types/aquarius/SearchQuery'
 import { Decimal } from 'decimal.js'
-import { TransactionReceipt } from 'web3-core'
 import { useAbortController } from '@hooks/useAbortController'
-import {
-  getAccessDetails,
-  getOrderPriceAndFees
-} from '@utils/accessDetailsAndPricing'
-import { AccessDetails, OrderPriceAndFees } from 'src/@types/Price'
-import { transformAssetToAssetSelection } from '@utils/assetConvertor'
+import { getOrderPriceAndFees } from '@utils/accessDetailsAndPricing'
+import { OrderPriceAndFees } from 'src/@types/Price'
 import { buyDtFromPool } from '@utils/pool'
 import { order } from '@utils/order'
 import { AssetExtended } from 'src/@types/AssetExtended'
@@ -85,7 +58,6 @@ export default function Compute({
   isConsumable?: boolean
   consumableFeedback?: string
 }): ReactElement {
-  const { appConfig } = useSiteMetadata()
   const { accountId, web3 } = useWeb3()
   const [isJobStarting, setIsJobStarting] = useState(false)
   const [error, setError] = useState<string>()
@@ -97,11 +69,7 @@ export default function Compute({
     useState<AssetExtended>()
   const [hasAlgoAssetDatatoken, setHasAlgoAssetDatatoken] = useState<boolean>()
   const [isPublished, setIsPublished] = useState(false)
-  const [hasPreviousAlgorithmOrder, setHasPreviousAlgorithmOrder] =
-    useState(false)
   const [algorithmDTBalance, setAlgorithmDTBalance] = useState<string>()
-  const [algorithmConsumeDetails, setAlgorithmConsumeDetails] =
-    useState<AccessDetails>()
 
   const [isOwned, setIsOwned] = useState(false)
   const [validOrderTx, setValidOrderTx] = useState('')
@@ -112,8 +80,6 @@ export default function Compute({
   const [orderAlgorithmPriceAndFees, setOrderAlgorithmPriceAndFees] =
     useState<OrderPriceAndFees>()
 
-  const [datasetTimeout, setDatasetTimeout] = useState<string>()
-  const [algorithmTimeout, setAlgorithmTimeout] = useState<string>()
   const hasDatatoken = Number(dtBalance) >= 1
   const isMounted = useIsMounted()
   const newCancelToken = useCancelToken()
@@ -123,9 +89,7 @@ export default function Compute({
     isJobStarting === true ||
     file === null ||
     (!validOrderTx && !hasDatatoken && !isConsumablePrice) ||
-    (!hasPreviousAlgorithmOrder &&
-      !hasAlgoAssetDatatoken &&
-      !isAlgoConsumablePrice)
+    (!validAlgorithmOrderTx && !hasAlgoAssetDatatoken && !isAlgoConsumablePrice)
 
   async function checkAssetDTBalance(asset: DDO) {
     if (!asset?.services[0].datatokenAddress) return
@@ -149,13 +113,13 @@ export default function Compute({
       if (asset?.accessDetails?.addressOrId === ZERO_ADDRESS) return
       const computeEnv = await getComputeEnviroment(asset)
       const validUntil = getValidUntilTime(
-        computeEnv.maxJobDuration,
+        computeEnv?.maxJobDuration,
         asset?.services[0]?.timeout
       )
       const orderPriceAndFees = await getOrderPriceAndFees(
         asset,
         ZERO_ADDRESS,
-        computeEnv.id,
+        computeEnv?.id,
         validUntil
       )
       setOrderPriceAndFees(orderPriceAndFees)
@@ -164,6 +128,10 @@ export default function Compute({
   }, [asset?.accessDetails])
 
   useEffect(() => {
+    console.log(
+      'selectedAlgorithmAsset?.accessDetails == ',
+      selectedAlgorithmAsset?.accessDetails
+    )
     if (!selectedAlgorithmAsset?.accessDetails || !accountId) return
 
     checkAssetDTBalance(selectedAlgorithmAsset)
@@ -178,23 +146,21 @@ export default function Compute({
         return
       const computeEnv = await getComputeEnviroment(selectedAlgorithmAsset)
       const validUntil = getValidUntilTime(
-        computeEnv.maxJobDuration,
+        computeEnv?.maxJobDuration,
+        asset?.services[0]?.timeout,
         selectedAlgorithmAsset?.services[0]?.timeout
       )
       const orderPriceAndFees = await getOrderPriceAndFees(
         selectedAlgorithmAsset,
         ZERO_ADDRESS,
-        computeEnv.id,
+        computeEnv?.id,
         validUntil
       )
       setOrderAlgorithmPriceAndFees(orderPriceAndFees)
+      console.log('orderPriceAndFees ', orderPriceAndFees)
     }
     init()
   }, [selectedAlgorithmAsset])
-
-  // useEffect(() => {
-  //   setDatasetTimeout(secondsToString(timeout))
-  // }, [ddo])
 
   useEffect(() => {
     if (!asset) return
@@ -216,7 +182,7 @@ export default function Compute({
     toast.error(newError)
   }, [error])
 
-  async function startJob(algorithmId: string): Promise<string> {
+  async function startJob(): Promise<string> {
     try {
       setIsJobStarting(true)
       setIsPublished(false) // would be nice to rename this
@@ -245,12 +211,15 @@ export default function Compute({
 
       const computeEnv = await getComputeEnviroment(asset)
       const validUntil = getValidUntilTime(
-        computeEnv.maxJobDuration,
+        computeEnv?.maxJobDuration,
         asset.services[0].timeout,
         selectedAlgorithmAsset.services[0].timeout
       )
       let datasetOrderTx
-      if (!isOwned) {
+      if (isOwned) {
+        datasetOrderTx = validOrderTx
+        LoggerInstance.log('[compute] Dataset owned txId:', validOrderTx)
+      } else {
         try {
           if (!hasDatatoken && asset?.accessDetails.type === 'dynamic') {
             const tx = await buyDtFromPool(
@@ -258,7 +227,6 @@ export default function Compute({
               accountId,
               web3
             )
-
             LoggerInstance.log('[compute] Buy dataset dt from pool: ', tx)
             if (!tx) {
               toast.error('Failed to buy datatoken from pool!')
@@ -271,9 +239,9 @@ export default function Compute({
             asset,
             orderPriceAndFees,
             accountId,
-            computeEnv.id,
+            computeEnv?.id,
             validUntil,
-            computeEnv.consumerAddress
+            computeEnv?.consumerAddress
           )
           if (!orderTx) {
             toast.error('Failed to order dataset asset!')
@@ -288,14 +256,19 @@ export default function Compute({
           datasetOrderTx = orderTx.transactionHash
         } catch (e) {
           LoggerInstance.log(e.message)
+          toast.error('Failed to order dataset asset!')
+          return
         }
-      } else {
-        datasetOrderTx = validOrderTx
-        LoggerInstance.log('[compute] Dataset owned txId:', validOrderTx)
       }
 
       let algorithmOrderTx
-      if (!isAlgorithmOwned) {
+      if (isAlgorithmOwned) {
+        algorithmOrderTx = validAlgorithmOrderTx
+        LoggerInstance.log(
+          '[compute] Algorithm owned txId:',
+          validAlgorithmOrderTx
+        )
+      } else {
         try {
           if (
             !hasAlgoAssetDatatoken &&
@@ -321,9 +294,9 @@ export default function Compute({
             selectedAlgorithmAsset,
             orderAlgorithmPriceAndFees,
             accountId,
-            computeEnv.id,
+            computeEnv?.id,
             validUntil,
-            computeEnv.consumerAddress
+            computeEnv?.consumerAddress
           )
           if (!orderTx) {
             toast.error('Failed to order algorithm asset!')
@@ -338,13 +311,9 @@ export default function Compute({
           algorithmOrderTx = orderTx.transactionHash
         } catch (e) {
           LoggerInstance.log(e.message)
+          toast.error('Failed to order algorithm asset!')
+          return
         }
-      } else {
-        algorithmOrderTx = validAlgorithmOrderTx
-        LoggerInstance.log(
-          '[compute] Algorithm owned txId:',
-          validAlgorithmOrderTx
-        )
       }
 
       LoggerInstance.log('[compute] Starting compute job.')
@@ -362,19 +331,18 @@ export default function Compute({
         asset.services[0].serviceEndpoint,
         web3,
         accountId,
-        computeEnv.id,
+        computeEnv?.id,
         computeAsset,
         computeAlgorithm,
         newAbortController(),
         null,
-        null
+        output
       )
       if (!response) {
         setError('Error starting compute job.')
         return
       }
       LoggerInstance.log('[compute] Starting compute job response: ', response)
-
       setIsPublished(true)
     } catch (error) {
       setError('Failed to start job!')
@@ -408,7 +376,8 @@ export default function Compute({
           validateOnMount
           validationSchema={validationSchema}
           onSubmit={async (values) => {
-            await startJob(values.algorithm)
+            if (!values.algorithm) return
+            await startJob()
           }}
         >
           <FormStartComputeDataset
@@ -418,13 +387,15 @@ export default function Compute({
             setSelectedAlgorithm={setSelectedAlgorithmAsset}
             isLoading={isJobStarting}
             isComputeButtonDisabled={isComputeButtonDisabled}
-            hasPreviousOrder={validOrderTx !== ''}
+            hasPreviousOrder={validOrderTx !== undefined}
             hasDatatoken={hasDatatoken}
             dtBalance={dtBalance}
             datasetLowPoolLiquidity={!isConsumablePrice}
             assetType={asset?.metadata.type}
-            assetTimeout={datasetTimeout}
-            hasPreviousOrderSelectedComputeAsset={hasPreviousAlgorithmOrder}
+            assetTimeout={asset?.services[0].timeout}
+            hasPreviousOrderSelectedComputeAsset={
+              validAlgorithmOrderTx !== undefined
+            }
             hasDatatokenSelectedComputeAsset={hasAlgoAssetDatatoken}
             oceanSymbol={
               asset?.accessDetails ? asset?.accessDetails.baseToken.symbol : ''
@@ -435,7 +406,9 @@ export default function Compute({
             dtBalanceSelectedComputeAsset={algorithmDTBalance}
             selectedComputeAssetLowPoolLiquidity={!isAlgoConsumablePrice}
             selectedComputeAssetType="algorithm"
-            selectedComputeAssetTimeout={algorithmTimeout}
+            selectedComputeAssetTimeout={
+              selectedAlgorithmAsset?.services[0]?.timeout
+            }
             // lazy comment when removing pricingStepText
             stepText={'pricingStepText' || 'Starting Compute Job...'}
             isConsumable={isConsumable}
