@@ -60,23 +60,52 @@ export function generateNftMetadata(): NftMetadata {
   return newNft
 }
 
-export function generateNftCreateData(nftMetadata: NftMetadata): any {
-  const nftCreateData = {
-    name: nftMetadata.name,
-    symbol: nftMetadata.symbol,
-    templateIndex: 1,
-    tokenURI: ''
-  }
-
-  return nftCreateData
-}
-
-export function decodeTokenURI(tokenURI: string): NftMetadata {
-  const encodedMetadata = tokenURI.replace('data:application/json;base64,', '')
-  const decodedMetadata = JSON.parse(
-    Buffer.from(encodedMetadata, 'base64').toString()
+export async function setNftMetadata(
+  asset: Asset | DDO,
+  accountId: string,
+  web3: Web3,
+  signal: AbortSignal
+): Promise<TransactionReceipt> {
+  const encryptedDdo = await ProviderInstance.encrypt(
+    asset,
+    asset.services[0].serviceEndpoint,
+    signal
   )
-  return decodedMetadata
+  LoggerInstance.log('[setNftMetadata] Got encrypted DDO', encryptedDdo)
+
+  const metadataHash = getHash(JSON.stringify(asset))
+  const nft = new Nft(web3)
+
+  // theoretically used by aquarius or provider, not implemented yet, will remain hardcoded
+  const flags = '0x2'
+
+  const estGasSetMetadata = await nft.estGasSetMetadata(
+    asset.nftAddress,
+    accountId,
+    0,
+    asset.services[0].serviceEndpoint,
+    '',
+    flags,
+    encryptedDdo,
+    '0x' + metadataHash,
+    []
+  )
+  LoggerInstance.log(
+    '[setNftMetadata] est Gas set metadata --',
+    estGasSetMetadata
+  )
+  const setMetadataTx = await nft.setMetadata(
+    asset.nftAddress,
+    accountId,
+    0,
+    asset.services[0].serviceEndpoint,
+    '',
+    flags,
+    encryptedDdo,
+    '0x' + metadataHash
+  )
+
+  return setMetadataTx
 }
 
 export async function setNFTMetadataAndTokenURI(
@@ -104,7 +133,6 @@ export async function setNFTMetadataAndTokenURI(
       external_url: `${nftMetadata.external_url}/asset/${asset.id}`
     })
   ).toString('base64')
-
   const nft = new Nft(web3)
 
   // theoretically used by aquarius or provider, not implemented yet, will remain hardcoded

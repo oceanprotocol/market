@@ -28,7 +28,7 @@ import { useAbortController } from '@hooks/useAbortController'
 import DebugEditCompute from './DebugEditCompute'
 import { useAsset } from '@context/Asset'
 import EditFeedback from './EditFeedback'
-import { decodeTokenURI, setNFTMetadataAndTokenURI } from '@utils/nft'
+import { setNftMetadata } from '@utils/nft'
 
 export default function EditComputeDataset({
   asset
@@ -87,17 +87,16 @@ export default function EditComputeDataset({
         services: [updatedService]
       }
 
-      const setMetadataAndTokenURITx = await setNFTMetadataAndTokenURI(
+      const setMetadataTx = await setNftMetadata(
         updatedAsset,
         accountId,
         web3,
-        decodeTokenURI(asset.nft.tokenURI),
         newAbortController()
       )
 
-      LoggerInstance.log('[edit] setMetadata result', setMetadataAndTokenURITx)
+      LoggerInstance.log('[edit] setMetadata result', setMetadataTx)
 
-      if (!setMetadataAndTokenURITx) {
+      if (!setMetadataTx) {
         setError(content.form.error)
         LoggerInstance.error(content.form.error)
         return

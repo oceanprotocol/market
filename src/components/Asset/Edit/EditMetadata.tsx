@@ -23,7 +23,7 @@ import DebugEditMetadata from './DebugEditMetadata'
 import { getOceanConfig } from '@utils/ocean'
 import EditFeedback from './EditFeedback'
 import { useAsset } from '@context/Asset'
-import { decodeTokenURI, setNFTMetadataAndTokenURI } from '@utils/nft'
+import { setNftMetadata } from '@utils/nft'
 
 export default function Edit({
   asset
@@ -92,11 +92,10 @@ export default function Edit({
         services: [updatedService]
       }
 
-      const setMetadataTx = await setNFTMetadataAndTokenURI(
+      const setMetadataTx = await setNftMetadata(
         updatedAsset,
         accountId,
         web3,
-        decodeTokenURI(asset.nft.tokenURI),
         newAbortController()
       )
 
