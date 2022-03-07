@@ -200,7 +200,6 @@ export async function createTokensAndPricing(
   const nftCreateData: NftCreateData = generateNftCreateData(
     values.metadata.nft
   )
-  const { tokenURI } = nftCreateData
   const { appConfig } = getSiteMetadata()
   LoggerInstance.log('[publish] Creating NFT with metadata', nftCreateData)
 
@@ -341,5 +340,5 @@ export async function createTokensAndPricing(
     }
   }
 
-  return { erc721Address, datatokenAddress, txHash, tokenURI }
+  return { erc721Address, datatokenAddress, txHash }
 }

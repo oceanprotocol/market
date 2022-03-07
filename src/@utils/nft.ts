@@ -69,15 +69,15 @@ export function generateNftCreateData(nftMetadata: NftMetadata): any {
   // TODO: figure out if Buffer.from method is working in browser in final build
   // as BTOA is deprecated.
   // tokenURI: window?.btoa(JSON.stringify(nftMetadata))
-  const encodedMetadata = Buffer.from(JSON.stringify(nftMetadata)).toString(
-    'base64'
-  )
+  // const encodedMetadata = Buffer.from(JSON.stringify(nftMetadata)).toString(
+  //   'base64'
+  // )
 
   const nftCreateData = {
     name: nftMetadata.name,
     symbol: nftMetadata.symbol,
     templateIndex: 1,
-    tokenURI: `data:application/json;base64,${encodedMetadata}`
+    tokenURI: ''
   }
 
   return nftCreateData
@@ -135,7 +135,7 @@ export async function setNFTMetadataAndTokenURI(
   asset: Asset | DDO,
   accountId: string,
   web3: Web3,
-  tokenURI: string,
+  nftMetadata: NftMetadata,
   signal: AbortSignal
 ): Promise<TransactionReceipt> {
   const encryptedDdo = await ProviderInstance.encrypt(
@@ -146,10 +146,13 @@ export async function setNFTMetadataAndTokenURI(
   LoggerInstance.log('[setNftMetadata] Got encrypted DDO', encryptedDdo)
 
   const metadataHash = getHash(JSON.stringify(asset))
+  const encodedMetadata = Buffer.from(JSON.stringify(nftMetadata)).toString(
+    'base64'
+  )
   const nft = new Nft(web3)
 
   // theoretically used by aquarius or provider, not implemented yet, will remain hardcoded
-  const flags = '0x2'
+  const flags = '0x02'
 
   const metadataAndTokenURI: MetadataAndTokenURI = {
     metaDataState: 0,
@@ -159,7 +162,7 @@ export async function setNFTMetadataAndTokenURI(
     data: encryptedDdo,
     metaDataHash: '0x' + metadataHash,
     tokenId: 1,
-    tokenURI,
+    tokenURI: `data:application/json;base64,${encodedMetadata}`,
     metadataProofs: []
   }
 

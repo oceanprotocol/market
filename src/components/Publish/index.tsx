@@ -50,8 +50,7 @@ export default function PublishPage({
     let _erc721Address: string,
       _datatokenAddress: string,
       _ddo: DDO,
-      _encryptedDdo: string,
-      _tokenURI: string
+      _encryptedDdo: string
 
     // reset all feedback state
     setFeedback(initialPublishFeedback)
@@ -71,7 +70,7 @@ export default function PublishPage({
       const config = getOceanConfig(chainId)
       LoggerInstance.log('[publish] using config: ', config)
 
-      const { erc721Address, datatokenAddress, txHash, tokenURI } =
+      const { erc721Address, datatokenAddress, txHash } =
         await createTokensAndPricing(
           values,
           accountId,
@@ -83,7 +82,6 @@ export default function PublishPage({
       const isSuccess = Boolean(erc721Address && datatokenAddress && txHash)
       _erc721Address = erc721Address
       _datatokenAddress = datatokenAddress
-      _tokenURI = tokenURI
 
       LoggerInstance.log('[publish] createTokensAndPricing tx', txHash)
       LoggerInstance.log('[publish] erc721Address', erc721Address)
@@ -186,7 +184,7 @@ export default function PublishPage({
         _ddo,
         accountId,
         web3,
-        _tokenURI,
+        values.metadata.nft,
         newAbortController()
       )
 
