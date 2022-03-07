@@ -28,14 +28,15 @@ export default function TokenList({
       <h3 className={styles.title}>{title}</h3>
       <div className={styles.tokens}>
         <Token symbol={baseTokenSymbol} balance={baseTokenValue} />
-        {datatokenValue && (
-          <Token symbol={datatokenSymbol} balance={datatokenValue} />
-        )}
+
         {conversion.greaterThan(0) && (
           <Conversion
             price={conversion.toString()}
             className={styles.totalLiquidity}
           />
+        )}
+        {datatokenValue && (
+          <Token symbol={datatokenSymbol} balance={datatokenValue} />
         )}
         {children}
       </div>
