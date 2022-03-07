@@ -46,17 +46,12 @@ function encodeSvg(svgString: string): string {
 export function generateNftMetadata(): NftMetadata {
   const waves = new SvgWaves()
   const svg = waves.generateSvg()
-
-  // TODO: figure out if also image URI needs base64 encoding
-  // e.g. 'data:image/svg+xml;base64,'
-  // generated SVG embedded as 'data:image/svg+xml' and encoded characters
   const imageData = `data:image/svg+xml,${encodeSvg(svg.outerHTML)}`
 
   const newNft: NftMetadata = {
     name: 'Ocean Asset NFT',
     symbol: 'OCEAN-NFT',
     description: `This NFT represents an asset in the Ocean Protocol v4 ecosystem.`,
-    // TODO: ideally this includes the final DID
     external_url: 'https://market.oceanprotocol.com',
     background_color: '141414', // dark background
     image_data: imageData
@@ -66,13 +61,6 @@ export function generateNftMetadata(): NftMetadata {
 }
 
 export function generateNftCreateData(nftMetadata: NftMetadata): any {
-  // TODO: figure out if Buffer.from method is working in browser in final build
-  // as BTOA is deprecated.
-  // tokenURI: window?.btoa(JSON.stringify(nftMetadata))
-  // const encodedMetadata = Buffer.from(JSON.stringify(nftMetadata)).toString(
-  //   'base64'
-  // )
-
   const nftCreateData = {
     name: nftMetadata.name,
     symbol: nftMetadata.symbol,
@@ -81,54 +69,6 @@ export function generateNftCreateData(nftMetadata: NftMetadata): any {
   }
 
   return nftCreateData
-}
-
-export async function setNftMetadata(
-  asset: Asset | DDO,
-  accountId: string,
-  web3: Web3,
-  signal: AbortSignal
-): Promise<TransactionReceipt> {
-  const encryptedDdo = await ProviderInstance.encrypt(
-    asset,
-    asset.services[0].serviceEndpoint,
-    signal
-  )
-  LoggerInstance.log('[setNftMetadata] Got encrypted DDO', encryptedDdo)
-
-  const metadataHash = getHash(JSON.stringify(asset))
-  const nft = new Nft(web3)
-
-  // theoretically used by aquarius or provider, not implemented yet, will remain hardcoded
-  const flags = '0x2'
-
-  const estGasSetMetadata = await nft.estGasSetMetadata(
-    asset.nftAddress,
-    accountId,
-    0,
-    asset.services[0].serviceEndpoint,
-    '',
-    flags,
-    encryptedDdo,
-    '0x' + metadataHash,
-    []
-  )
-  LoggerInstance.log(
-    '[setNftMetadata] est Gas set metadata --',
-    estGasSetMetadata
-  )
-  const setMetadataTx = await nft.setMetadata(
-    asset.nftAddress,
-    accountId,
-    0,
-    asset.services[0].serviceEndpoint,
-    '',
-    flags,
-    encryptedDdo,
-    '0x' + metadataHash
-  )
-
-  return setMetadataTx
 }
 
 export async function setNFTMetadataAndTokenURI(
@@ -146,9 +86,15 @@ export async function setNFTMetadataAndTokenURI(
   LoggerInstance.log('[setNftMetadata] Got encrypted DDO', encryptedDdo)
 
   const metadataHash = getHash(JSON.stringify(asset))
-  const encodedMetadata = Buffer.from(JSON.stringify(nftMetadata)).toString(
-    'base64'
-  )
+
+  // add final did to external_url in nftMetadata before encoding
+  const encodedMetadata = Buffer.from(
+    JSON.stringify({
+      ...nftMetadata,
+      external_url: `${nftMetadata.external_url}/asset/${asset.id}`
+    })
+  ).toString('base64')
+
   const nft = new Nft(web3)
 
   // theoretically used by aquarius or provider, not implemented yet, will remain hardcoded
