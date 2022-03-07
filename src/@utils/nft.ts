@@ -71,6 +71,14 @@ export function generateNftCreateData(nftMetadata: NftMetadata): any {
   return nftCreateData
 }
 
+export function decodeTokenURI(tokenURI: string): NftMetadata {
+  const encodedMetadata = tokenURI.replace('data:application/json;base64,', '')
+  const decodedMetadata = JSON.parse(
+    Buffer.from(encodedMetadata, 'base64').toString()
+  )
+  return decodedMetadata
+}
+
 export async function setNFTMetadataAndTokenURI(
   asset: Asset | DDO,
   accountId: string,
