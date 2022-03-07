@@ -170,8 +170,7 @@ export default function Migration(): ReactElement {
       const { title, text } = ownerContent.migrationStarted
       return {
         title,
-        message:
-          'text' + getLockedSharesMessage() + getRemainingBlocksMessage(),
+        message: text + getLockedSharesMessage() + getRemainingBlocksMessage(),
         action: MigrationAction.LOCK_SHARES
       }
     }
