@@ -16,7 +16,6 @@ import content from '../../../../content/purgatory.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import Dotdotdot from 'react-dotdotdot'
 import { decodeTokenURI } from '@utils/nft'
-import { ReceiptData } from 'src/@types/subgraph/ReceiptData'
 
 export default function AssetContent({
   asset
