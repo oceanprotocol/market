@@ -14,6 +14,7 @@ import styles from './index.module.css'
 import NetworkName from '@shared/NetworkName'
 import content from '../../../../content/purgatory.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
+import web3 from 'web3'
 import Dotdotdot from 'react-dotdotdot'
 import { decodeTokenURI } from '@utils/nft'
 
@@ -29,7 +30,9 @@ export default function AssetContent({
 
   useEffect(() => {
     setNftPublisher(
-      receipts?.find((e) => e.type === 'METADATA_CREATED')?.nft?.owner
+      web3.utils.toChecksumAddress(
+        receipts?.find((e) => e.type === 'METADATA_CREATED')?.nft?.owner
+      )
     )
   }, [receipts])
 

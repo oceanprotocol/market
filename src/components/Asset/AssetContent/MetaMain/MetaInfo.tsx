@@ -27,7 +27,7 @@ export default function MetaInfo({
       <div className={styles.byline}>
         <p>
           Published <Time date={asset?.metadata.created} relative />
-          {nftPublisher !== nftOwner.toLowerCase() && (
+          {nftPublisher && nftPublisher !== nftOwner && (
             <span>
               {' by '} <Publisher account={nftPublisher} />
             </span>
