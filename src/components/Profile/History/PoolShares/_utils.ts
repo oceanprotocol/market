@@ -3,6 +3,18 @@ import { calculateUserLiquidity } from '@utils/pool'
 import { CancelToken } from 'axios'
 import { PoolShares_poolShares as PoolShare } from '../../../../@types/subgraph/PoolShares'
 import { AssetPoolShare } from '.'
+import { Asset } from '@oceanprotocol/lib'
+
+function getAsset(items: Asset[], datatoken: string): Asset {
+  for (let i = 0; i < items.length; i++) {
+    if (
+      items[i].datatokens[0].address.toLowerCase() ===
+      datatoken.toLocaleLowerCase()
+    )
+      return items[i]
+  }
+  return null
+}
 
 export async function getAssetsFromPoolShares(
   data: PoolShare[],
@@ -25,12 +37,13 @@ export async function getAssetsFromPoolShares(
       data[i].pool.totalShares,
       data[i].pool.baseTokenLiquidity
     )
+    console.log(data[i].pool.datatoken.address, userLiquidity)
     assetList.push({
       poolShare: data[i],
       userLiquidity,
-      networkId: ddoList[i].chainId,
+      networkId: getAsset(ddoList, data[i].pool.datatoken.address).chainId,
       createTime: data[i].pool.createdTimestamp,
-      asset: ddoList[i]
+      asset: getAsset(ddoList, data[i].pool.datatoken.address)
     })
   }
   // const assets = assetList.sort((a, b) => b.createTime - a.createTime)
