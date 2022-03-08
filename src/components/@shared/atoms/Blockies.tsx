@@ -1,4 +1,4 @@
-import { toDataUrl } from 'ethereum-blockies'
+import { toDataUrl } from 'myetherwallet-blockies'
 import React, { ReactElement } from 'react'
 import styles from './Blockies.module.css'
 

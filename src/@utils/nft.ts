@@ -1,5 +1,14 @@
-import { LoggerInstance } from '@oceanprotocol/lib'
+import {
+  LoggerInstance,
+  Asset,
+  getHash,
+  Nft,
+  ProviderInstance,
+  DDO
+} from '@oceanprotocol/lib'
 import { SvgWaves } from './SvgWaves'
+import Web3 from 'web3'
+import { TransactionReceipt } from 'web3-core'
 
 // https://docs.opensea.io/docs/metadata-standards
 export interface NftMetadata {
@@ -83,4 +92,52 @@ export function decodeTokenURI(tokenURI: string): NftMetadata {
   } catch (error) {
     LoggerInstance.error(`[NFT] ${error.message}`)
   }
+}
+
+export async function setNftMetadata(
+  asset: Asset | DDO,
+  accountId: string,
+  web3: Web3,
+  signal: AbortSignal
+): Promise<TransactionReceipt> {
+  const encryptedDdo = await ProviderInstance.encrypt(
+    asset,
+    asset.services[0].serviceEndpoint,
+    signal
+  )
+  LoggerInstance.log('[setNftMetadata] Got encrypted DDO', encryptedDdo)
+
+  const metadataHash = getHash(JSON.stringify(asset))
+  const nft = new Nft(web3)
+
+  // theoretically used by aquarius or provider, not implemented yet, will remain hardcoded
+  const flags = '0x2'
+
+  const estGasSetMetadata = await nft.estGasSetMetadata(
+    asset.nftAddress,
+    accountId,
+    0,
+    asset.services[0].serviceEndpoint,
+    '',
+    flags,
+    encryptedDdo,
+    '0x' + metadataHash,
+    []
+  )
+  LoggerInstance.log(
+    '[setNftMetadata] est Gas set metadata --',
+    estGasSetMetadata
+  )
+  const setMetadataTx = await nft.setMetadata(
+    asset.nftAddress,
+    accountId,
+    0,
+    asset.services[0].serviceEndpoint,
+    '',
+    flags,
+    encryptedDdo,
+    '0x' + metadataHash
+  )
+
+  return setMetadataTx
 }

@@ -1,12 +1,11 @@
 import { useUserPreferences } from '@context/UserPreferences'
-import React, { ReactElement, useEffect, useState, useCallback } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import Table from '@shared/atoms/Table'
 import { LoggerInstance } from '@oceanprotocol/lib'
 import Price from '@shared/Price'
 import Tooltip from '@shared/atoms/Tooltip'
 import AssetTitle from '@shared/AssetList/AssetListTitle'
 import { retrieveDDOListByDIDs } from '@utils/aquarius'
-import { CancelToken } from 'axios'
 import { useSiteMetadata } from '@hooks/useSiteMetadata'
 import { useCancelToken } from '@hooks/useCancelToken'
 import { AssetExtended } from 'src/@types/AssetExtended'
@@ -53,26 +52,6 @@ export default function Bookmarks(): ReactElement {
   const { chainIds } = useUserPreferences()
   const newCancelToken = useCancelToken()
 
-  const getAssetsBookmarked = useCallback(
-    async (
-      bookmarks: string[],
-      chainIds: number[],
-      cancelToken: CancelToken
-    ) => {
-      try {
-        const result = await retrieveDDOListByDIDs(
-          bookmarks,
-          chainIds,
-          cancelToken
-        )
-        return result
-      } catch (error) {
-        LoggerInstance.error(error.message)
-      }
-    },
-    []
-  )
-
   useEffect(() => {
     if (!appConfig?.metadataCacheUri || bookmarks === []) return
 
@@ -85,21 +64,23 @@ export default function Bookmarks(): ReactElement {
       setIsLoading(true)
 
       try {
-        const resultPinned = await getAssetsBookmarked(
+        const result = await retrieveDDOListByDIDs(
           bookmarks,
           chainIds,
           newCancelToken()
         )
+        if (!result?.length) return
+
         const pinnedAssets: AssetExtended[] = await getAccessDetailsForAssets(
-          resultPinned,
+          result,
           accountId
         )
         setPinned(pinnedAssets)
       } catch (error) {
-        LoggerInstance.error(error.message)
+        LoggerInstance.error(`Bookmarks error:`, error.message)
+      } finally {
+        setIsLoading(false)
       }
-
-      setIsLoading(false)
     }
     init()
   }, [
@@ -107,7 +88,6 @@ export default function Bookmarks(): ReactElement {
     bookmarks,
     chainIds,
     accountId,
-    getAssetsBookmarked,
     newCancelToken
   ])
 

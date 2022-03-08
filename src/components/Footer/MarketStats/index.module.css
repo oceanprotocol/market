@@ -1,0 +1,21 @@
+.stats {
+  margin-bottom: calc(var(--spacer) * 2);
+}
+
+/* specificity sledgehammer override without !important */
+.stats,
+.stats *,
+.statsList * {
+  font-size: var(--font-size-small);
+  color: var(--color-secondary);
+  margin-left: 0;
+}
+
+.info {
+  width: 0.85rem;
+}
+
+.stats p {
+  display: block;
+  margin-bottom: 0;
+}

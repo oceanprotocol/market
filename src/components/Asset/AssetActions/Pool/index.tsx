@@ -46,7 +46,7 @@ export default function Pool(): ReactElement {
             baseToken: new Decimal(poolData?.baseTokenLiquidity).toString(),
             datatoken: new Decimal(poolData?.datatokenLiquidity).toString()
           }}
-          swapFee={poolInfo?.poolFee}
+          swapFee={poolInfo?.liquidityProviderSwapFee}
           datatokenSymbol={poolInfo?.datatokenSymbol}
           tokenInAddress={poolInfo?.baseTokenAddress}
           tokenInSymbol={poolInfo?.baseTokenSymbol}
@@ -94,11 +94,11 @@ export default function Pool(): ReactElement {
           <TokenList
             title={
               <>
-                Your Liquidity
+                Your Value Locked
                 <Tooltip
                   content={content.pool.tooltips.liquidity.replace(
                     'SWAPFEE',
-                    poolInfo?.poolFee
+                    poolInfo?.liquidityProviderSwapFee
                   )}
                 />
                 {poolInfoUser?.poolShare && (

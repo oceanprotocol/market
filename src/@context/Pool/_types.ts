@@ -5,12 +5,13 @@ import {
 } from 'src/@types/subgraph/PoolData'
 
 export interface PoolInfo {
-  poolFee: string
-  marketFee: string
-  opfFee: string
+  liquidityProviderSwapFee: string
+  publishMarketSwapFee: string
+  opcFee: string
   weightBaseToken: string
   weightDt: string
   datatokenSymbol: string
+  datatokenAddress: string
   baseTokenSymbol: string
   baseTokenAddress: string
   totalPoolTokens: string

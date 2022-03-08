@@ -45,6 +45,13 @@
   margin-bottom: 0;
 }
 
+.text code {
+  font-size: 0.8rem;
+  color: inherit;
+  padding-left: 0;
+  padding-right: 0;
+}
+
 .action,
 button.action {
   margin-top: calc(var(--spacer) / 2);

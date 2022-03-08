@@ -60,4 +60,5 @@ interface PriceOptions {
   weightOnOcean: string
   // easier to keep this as number for Yup input validation
   swapFee: number
+  freeAgreement: boolean
 }
