@@ -8,8 +8,7 @@ import { Asset } from '@oceanprotocol/lib'
 function getAsset(items: Asset[], datatoken: string): Asset {
   for (let i = 0; i < items.length; i++) {
     if (
-      items[i].datatokens[0].address.toLowerCase() ===
-      datatoken.toLocaleLowerCase()
+      items[i].datatokens[0].address.toLowerCase() === datatoken.toLowerCase()
     )
       return items[i]
   }
@@ -46,6 +45,5 @@ export async function getAssetsFromPoolShares(
       asset: getAsset(ddoList, data[i].pool.datatoken.address)
     })
   }
-  // const assets = assetList.sort((a, b) => b.createTime - a.createTime)
   return assetList
 }
