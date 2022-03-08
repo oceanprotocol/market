@@ -138,11 +138,13 @@ export async function setNFTMetadataAndTokenURI(
 
   const metadataHash = getHash(JSON.stringify(asset))
 
-  // add final did to external_url in nftMetadata before encoding
+  // add final did to external_url and asset link to description in nftMetadata before encoding
+  const externalUrl = `${nftMetadata.external_url}/asset/${asset.id}`
   const encodedMetadata = Buffer.from(
     JSON.stringify({
       ...nftMetadata,
-      external_url: `${nftMetadata.external_url}/asset/${asset.id}`
+      description: `${nftMetadata.description}\n\nView on Ocean Market: ${externalUrl}`,
+      external_url: externalUrl
     })
   ).toString('base64')
   const nft = new Nft(web3)
