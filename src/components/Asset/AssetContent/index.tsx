@@ -63,11 +63,7 @@ export default function AssetContent({
               </>
             )}
             <MetaFull ddo={asset} />
-            <EditHistory
-              receipts={receipts}
-              setReceipts={setReceipts}
-              setNftPublisher={setNftPublisher}
-            />
+            <EditHistory receipts={receipts} setReceipts={setReceipts} />
             {debug === true && <DebugOutput title="DDO" output={asset} />}
           </div>
         </div>
