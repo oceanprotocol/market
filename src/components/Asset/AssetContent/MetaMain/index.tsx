@@ -8,7 +8,13 @@ import Tooltip from '@shared/atoms/Tooltip'
 import NftTooltip from './NftTooltip'
 import Logo from '@shared/atoms/Logo'
 
-export default function MetaMain({ asset }: { asset: Asset }): ReactElement {
+export default function MetaMain({
+  asset,
+  nftPublisher
+}: {
+  asset: Asset
+  nftPublisher: string
+}): ReactElement {
   const nftMetadata = decodeTokenURI(asset?.nft?.tokenURI)
 
   const blockscoutNetworks = [1287, 2021000, 2021001, 44787, 246, 1285]
@@ -41,7 +47,7 @@ export default function MetaMain({ asset }: { asset: Asset }): ReactElement {
         <MetaAsset asset={asset} isBlockscoutExplorer={isBlockscoutExplorer} />
       </header>
 
-      <MetaInfo asset={asset} />
+      <MetaInfo asset={asset} nftPublisher={nftPublisher} />
     </aside>
   )
 }

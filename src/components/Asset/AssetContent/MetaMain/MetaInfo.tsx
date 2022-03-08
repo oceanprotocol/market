@@ -1,13 +1,21 @@
 import { Asset } from '@oceanprotocol/lib'
 import AssetType from '@shared/AssetType'
 import Time from '@shared/atoms/Time'
+import Publisher from '@shared/Publisher'
 import { getServiceByName } from '@utils/ddo'
 import React, { ReactElement } from 'react'
 import styles from './MetaInfo.module.css'
 
-export default function MetaInfo({ asset }: { asset: Asset }): ReactElement {
+export default function MetaInfo({
+  asset,
+  nftPublisher
+}: {
+  asset: Asset
+  nftPublisher: string
+}): ReactElement {
   const isCompute = Boolean(getServiceByName(asset, 'compute'))
   const accessType = isCompute ? 'compute' : 'access'
+  const nftOwner = asset?.nft?.owner
 
   return (
     <div className={styles.wrapper}>
@@ -19,6 +27,11 @@ export default function MetaInfo({ asset }: { asset: Asset }): ReactElement {
       <div className={styles.byline}>
         <p>
           Published <Time date={asset?.metadata.created} relative />
+          {nftPublisher !== nftOwner.toLowerCase() && (
+            <span>
+              {' by '} <Publisher account={nftPublisher} />
+            </span>
+          )}
           {asset?.metadata.created !== asset?.metadata.updated && (
             <>
               {' — '}

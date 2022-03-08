@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import Markdown from '@shared/Markdown'
 import MetaFull from './MetaFull'
 import MetaSecondary from './MetaSecondary'
@@ -16,6 +16,7 @@ import content from '../../../../content/purgatory.json'
 import { AssetExtended } from 'src/@types/AssetExtended'
 import Dotdotdot from 'react-dotdotdot'
 import { decodeTokenURI } from '@utils/nft'
+import { ReceiptData } from 'src/@types/subgraph/ReceiptData'
 
 export default function AssetContent({
   asset
@@ -24,6 +25,14 @@ export default function AssetContent({
 }): ReactElement {
   const { debug } = useUserPreferences()
   const { isInPurgatory, purgatoryData } = useAsset()
+  const [receipts, setReceipts] = useState([])
+  const [nftPublisher, setNftPublisher] = useState<string>()
+
+  useEffect(() => {
+    setNftPublisher(
+      receipts?.find((e) => e.type === 'METADATA_CREATED')?.nft?.owner
+    )
+  }, [receipts])
 
   return (
     <>
@@ -34,7 +43,7 @@ export default function AssetContent({
       <article className={styles.grid}>
         <div>
           <div className={styles.content}>
-            <MetaMain asset={asset} />
+            <MetaMain asset={asset} nftPublisher={nftPublisher} />
             {asset?.accessDetails?.datatoken !== null && (
               <Bookmark did={asset?.id} />
             )}
@@ -55,7 +64,11 @@ export default function AssetContent({
               </>
             )}
             <MetaFull ddo={asset} />
-            <EditHistory />
+            <EditHistory
+              receipts={receipts}
+              setReceipts={setReceipts}
+              setNftPublisher={setNftPublisher}
+            />
             {debug === true && <DebugOutput title="DDO" output={asset} />}
           </div>
         </div>
