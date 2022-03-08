@@ -83,11 +83,15 @@ export function generateNftCreateData(nftMetadata: NftMetadata): any {
 
 export function decodeTokenURI(tokenURI: string): NftMetadata {
   if (!tokenURI) return undefined
-  const nftMeta = JSON.parse(
-    Buffer.from(tokenURI.replace(tokenUriPrefix, ''), 'base64').toString()
-  ) as NftMetadata
+  try {
+    const nftMeta = JSON.parse(
+      Buffer.from(tokenURI.replace(tokenUriPrefix, ''), 'base64').toString()
+    ) as NftMetadata
 
-  return nftMeta
+    return nftMeta
+  } catch (error) {
+    LoggerInstance.error(`[NFT] ${error.message}`)
+  }
 }
 
 export async function setNftMetadata(
