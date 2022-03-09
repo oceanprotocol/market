@@ -36,7 +36,7 @@ const columns = [
   {
     name: 'Price',
     selector: function getAssetRow(row: AssetExtended) {
-      return <Price accessDetails={row.accessDetails} small />
+      return <Price accessDetails={row.accessDetails} size="small" />
     },
     right: true
   }
