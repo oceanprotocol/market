@@ -16,6 +16,7 @@ import PoolTransactions from '@shared/PoolTransactions'
 import Decimal from 'decimal.js'
 import content from '../../../../../content/price.json'
 import { usePool } from '@context/Pool'
+import Token from './Token'
 
 export default function Pool(): ReactElement {
   const { accountId } = useWeb3()
@@ -90,7 +91,6 @@ export default function Pool(): ReactElement {
               </ExplorerLink>
             </div>
           </div>
-
           <TokenList
             title={
               <>
@@ -113,7 +113,6 @@ export default function Pool(): ReactElement {
             conversion={poolInfoUser?.liquidity}
             highlight
           />
-
           <TokenList
             title={
               <>
@@ -127,7 +126,6 @@ export default function Pool(): ReactElement {
             baseTokenSymbol={poolInfo?.baseTokenSymbol}
             conversion={poolInfoOwner?.liquidity}
           />
-
           <TokenList
             title={
               <>
@@ -143,21 +141,56 @@ export default function Pool(): ReactElement {
                 <Graph poolSnapshots={poolSnapshots} />
               </>
             }
+            baseTokenValue={`${poolInfo?.totalLiquidityInOcean}`}
+            baseTokenSymbol={poolInfo?.baseTokenSymbol}
+            // datatokenValue={`${poolData?.datatokenLiquidity}`}
+            // datatokenSymbol={poolInfo?.datatokenSymbol}
+            conversion={poolInfo?.totalLiquidityInOcean}
+          />
+
+          <TokenList
+            size="mini"
             baseTokenValue={`${poolData?.baseTokenLiquidity}`}
             baseTokenSymbol={poolInfo?.baseTokenSymbol}
             datatokenValue={`${poolData?.datatokenLiquidity}`}
             datatokenSymbol={poolInfo?.datatokenSymbol}
-            conversion={poolInfo?.totalLiquidityInOcean}
           >
-            {/* <Token symbol="% pool fee" balance={poolInfo?.poolFee} noIcon />
-            <Token symbol="% market fee" balance={poolInfo?.marketFee} noIcon />
-            <Token symbol="% OPF fee" balance={poolInfo?.opfFee} noIcon /> */}
+            <Token
+              symbol="% pool fee"
+              balance={poolInfo?.liquidityProviderSwapFee}
+              noIcon
+              size="mini"
+            />
+            <Token
+              symbol="% market fee"
+              balance={poolInfo?.publishMarketSwapFee}
+              noIcon
+              size="mini"
+            />
+            <Token
+              symbol="% OPF fee"
+              balance={poolInfo?.opcFee}
+              noIcon
+              size="mini"
+            />
           </TokenList>
+          {/* 
+          <div className={styles.poolTokensInfo}>
+            <Token
+              balance={poolData.baseTokenLiquidity}
+              symbol={poolInfo?.baseTokenSymbol}
+              size="mini"
+            />
+            <Token
+              balance={poolData.datatokenLiquidity}
+              symbol={poolInfo?.datatokenSymbol}
+              size="mini"
+            />
+          </div> */}
 
           <div className={styles.update}>
             Fetching every {refreshInterval / 1000} sec.
           </div>
-
           <div className={stylesActions.actions}>
             <Button
               style="primary"
@@ -178,7 +211,6 @@ export default function Pool(): ReactElement {
               </Button>
             )}
           </div>
-
           {accountId && (
             <AssetActionHistoryTable title="Your Pool Transactions">
               <PoolTransactions

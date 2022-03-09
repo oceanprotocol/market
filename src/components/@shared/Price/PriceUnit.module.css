@@ -26,6 +26,15 @@
   font-size: var(--font-size-small);
 }
 
+.price.mini {
+  display: inline-block;
+  font-size: var(--font-size-small);
+}
+
+.price.mini .symbol {
+  font-size: var(--font-size-mini);
+}
+
 .price .badge {
   vertical-align: middle;
   margin-left: calc(var(--spacer) / 6);
