@@ -100,7 +100,7 @@ export default function Pool(): ReactElement {
           <TokenList
             title={
               <>
-                Your Locked Value
+                Your Value Locked
                 <Tooltip
                   content={content.pool.tooltips.liquidity.replace(
                     'SWAPFEE',
@@ -122,7 +122,7 @@ export default function Pool(): ReactElement {
           <TokenList
             title={
               <>
-                Owner Locked Value
+                Owner Value Locked
                 <span className={styles.titleInfo}>
                   {poolInfoOwner?.poolShare}% of pool
                 </span>
