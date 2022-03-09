@@ -9,13 +9,11 @@ export default function Price({
   accessDetails,
   orderPriceAndFees,
   className,
-  small,
   conversion
 }: {
   accessDetails: AccessDetails
   orderPriceAndFees?: OrderPriceAndFees
   className?: string
-  small?: boolean
   conversion?: boolean
 }): ReactElement {
   return accessDetails?.price || accessDetails?.type === 'free' ? (
@@ -23,7 +21,7 @@ export default function Price({
       price={`${orderPriceAndFees?.price || accessDetails?.price}`}
       symbol={accessDetails.baseToken?.symbol}
       className={className}
-      small={small}
+      size="large"
       conversion={conversion}
       type={accessDetails.type}
     />

@@ -2,7 +2,7 @@
   display: inline-block;
   font-weight: var(--font-weight-bold);
   font-family: var(--font-family-base);
-  font-size: var(--font-size-large);
+
   color: var(--font-color-text);
   line-height: 1.2;
 }
@@ -15,6 +15,10 @@
   font-weight: var(--font-weight-base);
   color: var(--color-secondary);
   font-size: var(--font-size-base);
+}
+
+.price.large {
+  font-size: var(--font-size-large);
 }
 
 .price.small {

@@ -17,7 +17,7 @@ export function formatPrice(price: string, locale: string): string {
 export default function PriceUnit({
   price,
   className,
-  size,
+  size = 'small',
   conversion,
   symbol,
   type
@@ -25,7 +25,7 @@ export default function PriceUnit({
   price: string
   type?: string
   className?: string
-  size?: 'small' | 'mini'
+  size?: 'small' | 'mini' | 'large'
   conversion?: boolean
   symbol?: string
 }): ReactElement {
