@@ -36,7 +36,11 @@ export default function AssetComputeSelection({
                     {asset.symbol} | {asset.did}
                   </Dotdotdot>
                 </div>
-                <PriceUnit price={asset.price} small className={styles.price} />
+                <PriceUnit
+                  price={asset.price}
+                  size="small"
+                  className={styles.price}
+                />
               </a>
             </Link>
           ))
