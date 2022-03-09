@@ -258,6 +258,7 @@ export default function Download({
             accessDetails={asset.accessDetails}
             orderPriceAndFees={orderPriceAndFees}
             conversion
+            size="large"
           />
           {!isInPurgatory && <PurchaseButton />}
         </div>

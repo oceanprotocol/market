@@ -39,11 +39,6 @@
   margin-left: 0.3rem;
 }
 
-.poolTokensInfo {
-  color: var(--color-secondary);
-  padding-bottom: calc(var(--spacer) / 4);
-}
-
 .update {
   composes: container;
   font-size: var(--font-size-mini);

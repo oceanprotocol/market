@@ -66,10 +66,16 @@ export default function Pool(): ReactElement {
       ) : (
         <>
           <div className={styles.dataToken}>
-            <PriceUnit price="1" symbol={poolInfo?.datatokenSymbol} /> ={' '}
+            <PriceUnit
+              price="1"
+              symbol={poolInfo?.datatokenSymbol}
+              size="large"
+            />{' '}
+            ={' '}
             <PriceUnit
               price={`${poolData?.spotPrice}`}
               symbol={poolInfo?.baseTokenSymbol}
+              size="large"
             />
             <Tooltip content={content.pool.tooltips.price} />
             <div className={styles.dataTokenLinks}>
@@ -174,19 +180,6 @@ export default function Pool(): ReactElement {
               size="mini"
             />
           </TokenList>
-          {/* 
-          <div className={styles.poolTokensInfo}>
-            <Token
-              balance={poolData.baseTokenLiquidity}
-              symbol={poolInfo?.baseTokenSymbol}
-              size="mini"
-            />
-            <Token
-              balance={poolData.datatokenLiquidity}
-              symbol={poolInfo?.datatokenSymbol}
-              size="mini"
-            />
-          </div> */}
 
           <div className={styles.update}>
             Fetching every {refreshInterval / 1000} sec.
