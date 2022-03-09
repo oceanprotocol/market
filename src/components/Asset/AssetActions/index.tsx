@@ -162,12 +162,12 @@ export default function AssetActions({
       {
         title: 'Pool',
         content: <Pool />,
-        disabled: !asset?.accessDetails.datatoken
+        disabled: asset?.accessDetails.datatoken.name === ''
       },
       {
         title: 'Trade',
         content: <Trade />,
-        disabled: !asset?.accessDetails.datatoken
+        disabled: asset?.accessDetails.datatoken.name === ''
       }
     )
 
