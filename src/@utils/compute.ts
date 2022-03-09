@@ -263,7 +263,7 @@ export async function getComputeJobs(
   cancelToken?: CancelToken
 ): Promise<ComputeResults> {
   if (!accountId) return
-  const assetDTAddress = asset.datatokens[0].address
+  const assetDTAddress = asset?.datatokens[0]?.address
   const computeResult: ComputeResults = {
     computeJobs: [],
     isLoaded: false
