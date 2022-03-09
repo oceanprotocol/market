@@ -264,8 +264,8 @@ export default function Download({
         </div>
       </div>
 
-      {asset.accessDetails.datatoken.name !== '' &&
-        asset.nft.owner === accountId && (
+      {asset?.accessDetails?.datatoken?.name !== '' &&
+        asset?.nft.owner === accountId && (
           <div className={styles.collect}>
             <CollectTokensButton />
           </div>
