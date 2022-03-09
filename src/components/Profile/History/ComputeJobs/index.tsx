@@ -14,6 +14,7 @@ import { getComputeJobs } from '@utils/compute'
 import styles from './index.module.css'
 import { useAsset } from '@context/Asset'
 import { useIsMounted } from '@hooks/useIsMounted'
+import { useCancelToken } from '@hooks/useCancelToken'
 
 export function Status({ children }: { children: string }): ReactElement {
   return <div className={styles.status}>{children}</div>
@@ -79,6 +80,7 @@ export default function ComputeJobs({
   const [isLoading, setIsLoading] = useState(false)
   const [jobs, setJobs] = useState<ComputeJobMetaData[]>([])
   const isMounted = useIsMounted()
+  const newCancelToken = useCancelToken()
 
   const columnsMinimal = [columns[4], columns[5], columns[3]]
 
@@ -90,9 +92,14 @@ export default function ComputeJobs({
     }
     try {
       setIsLoading(true)
-      const jobs = await getComputeJobs(chainIds, accountId, asset)
+      const jobs = await getComputeJobs(
+        chainIds,
+        accountId,
+        asset,
+        newCancelToken()
+      )
       isMounted() && setJobs(jobs.computeJobs)
-      setIsLoading(jobs.isLoaded)
+      setIsLoading(!jobs.isLoaded)
     } catch (error) {
       LoggerInstance.error(error.message)
     }
